@@ -2774,8 +2774,7 @@ UINT32 MapScreenHandle(void)
 		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", -1, 0, -1, 1, -1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		SpecifyGeneralButtonTextAttributes(giMapContractButton, pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 
-		// create mouse region for pause clock
-		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
+		CreateMouseRegionForPauseOfClock();
 
 		// create mouse regions
 		CreateMouseRegionsForTeamList( );
@@ -3194,8 +3193,7 @@ UINT32 MapScreenHandle(void)
 	// is there a description to be displayed?
 	RenderItemDescriptionBox( );
 
-	// render clock
-	RenderClock(CLOCK_X, CLOCK_Y + 1 );
+	RenderClock();
 
 	#ifdef JA2TESTVERSION
 	if( !gfWorldLoaded )

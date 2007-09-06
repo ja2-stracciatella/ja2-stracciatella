@@ -4,16 +4,6 @@
 #include "Types.h"
 
 
-// where the time string itself is rendered
-#define			CLOCK_X										554
-#define			CLOCK_Y										459
-
-// the mouse region around the clock (bigger)
-#define			CLOCK_REGION_START_X			552
-#define			CLOCK_REGION_START_Y			456
-#define			CLOCK_REGION_WIDTH				( 620 - CLOCK_REGION_START_X )
-#define			CLOCK_REGION_HEIGHT				( 468 - CLOCK_REGION_START_Y )
-
 #define			NUM_SEC_IN_DAY						86400
 #define			NUM_SEC_IN_HOUR						3600
 #define			NUM_SEC_IN_MIN						60
@@ -153,7 +143,7 @@ void InitNewGameClock( );
 
 void GotoNextTimeOfDay( UINT32 uiTOD );
 
-void RenderClock( INT16 sX, INT16 sY );
+void RenderClock(void);
 
 //IMPORTANT FUNCTION:  Used whenever an event or situation is deemed important enough to cancel the
 //further processing of time in this current time slice!  This can only be used inside of event callback
@@ -176,7 +166,7 @@ void SetFactTimeCompressHasOccured( void );
 
 
 // create mouse region to pause game
-void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY );
+void CreateMouseRegionForPauseOfClock(void);
 
 // remove mouse region for pause game
 void RemoveMouseRegionForPauseOfClock( void );

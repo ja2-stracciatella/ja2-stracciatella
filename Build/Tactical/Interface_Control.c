@@ -46,8 +46,6 @@
 #include "Video.h"
 
 
-#define				CLOCK_X								554
-#define				CLOCK_Y								459
 SGPRect				gOldClippingRect, gOldDirtyClippingRect;
 
 UINT32		guiTacticalInterfaceFlags;
@@ -871,10 +869,9 @@ void RenderTopmostTacticalInterface( )
 
 	if( fRenderRadarScreen == TRUE )
 	{
-	  // Render clock
-	  RenderClock( CLOCK_X, CLOCK_Y );
+	  RenderClock();
 	  RenderTownIDString( );
-		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
+		CreateMouseRegionForPauseOfClock();
 	}
 	else
 	{

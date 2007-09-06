@@ -406,7 +406,7 @@ void HandleOverheadMap( )
 			}
 			RenderTacticalInterface( );
 			RenderRadarScreen( );
-			RenderClock( CLOCK_X, CLOCK_Y );
+			RenderClock();
 			RenderTownIDString( );
 
     	HandleAutoFaces( );

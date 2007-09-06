@@ -944,9 +944,7 @@ static void ExitQuestDebugSystem(void)
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
 		MSYS_RemoveRegion( &gFactListRegion[ i ] );
 
-
-	//Create the clock mouse region
-	CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
+	CreateMouseRegionForPauseOfClock();
 
 	giHaveSelectedNPC = gNpcListBox.sCurSelectedItem;
 	giHaveSelectedItem = gItemListBox.sCurSelectedItem;

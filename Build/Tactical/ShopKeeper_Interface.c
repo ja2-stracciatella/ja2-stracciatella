@@ -997,7 +997,7 @@ static void HandleShopKeeperInterface(void)
 		fInterfacePanelDirty = DIRTYLEVEL0;
 	}
 
-	RenderClock( CLOCK_X, CLOCK_Y );
+	RenderClock();
 	RenderTownIDString( );
 
 	DisplayTalkingArmsDealer();
@@ -1131,8 +1131,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 
 	CrossOutUnwantedItems( );
 
-	//Render the clock and the town name
-	RenderClock( CLOCK_X, CLOCK_Y );
+	RenderClock();
 	RenderTownIDString( );
 
 //	RenderTacticalInterface( );

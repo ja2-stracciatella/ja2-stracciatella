@@ -61,10 +61,13 @@ MOUSE_REGION gClockScreenMaskMouseRegion;
 extern BOOLEAN fMapScreenBottomDirty;
 
 
-#define			SECONDS_PER_COMPRESSION						1 // 1/2 minute passes every 1 second of real time
-#define			CLOCK_STRING_HEIGHT				13
-#define			CLOCK_STRING_WIDTH				66
-#define			CLOCK_FONT							COMPFONT
+#define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
+
+#define CLOCK_X      554
+#define CLOCK_Y      457
+#define CLOCK_HEIGHT  13
+#define CLOCK_WIDTH   66
+#define CLOCK_FONT   COMPFONT
 
 
 //These contain all of the information about the game time, rate of time, etc.
@@ -272,8 +275,7 @@ BOOLEAN HasTimeCompressOccured( void )
 }
 
 
-
-void RenderClock( INT16 sX, INT16 sY )
+void RenderClock(void)
 {
 	SetFont( CLOCK_FONT );
 	SetFontBackground( FONT_MCOLOR_BLACK );
@@ -289,17 +291,13 @@ void RenderClock( INT16 sX, INT16 sY )
 	}
 
 	// Erase first!
-	RestoreExternBackgroundRect(sX, sY, CLOCK_STRING_WIDTH, CLOCK_STRING_HEIGHT );
+	INT16 x = CLOCK_X;
+	INT16 y = CLOCK_Y;
+	RestoreExternBackgroundRect(x, y, CLOCK_WIDTH, CLOCK_HEIGHT);
 
-	if( ( gfPauseDueToPlayerGamePause == FALSE ) )
-	{
-		mprintf( sX + (CLOCK_STRING_WIDTH - StringPixLength( WORLDTIMESTR, CLOCK_FONT ))/2, sY, WORLDTIMESTR );
-	}
-	else
-	{
-		mprintf( sX + (CLOCK_STRING_WIDTH - StringPixLength( pPausedGameText[ 0 ], CLOCK_FONT ))/2, sY, pPausedGameText[ 0 ] );
-	}
-
+	const wchar_t* const str = (gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR);
+	FindFontCenterCoordinates(x, y, CLOCK_WIDTH, CLOCK_HEIGHT, str, CLOCK_FONT, &x, &y);
+	mprintf(x, y, str);
 }
 
 
@@ -887,13 +885,16 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void CreateMouseRegionForPauseOfClock( INT16 sX, INT16 sY )
+void CreateMouseRegionForPauseOfClock(void)
 {
 	if( fClockMouseRegionCreated == FALSE )
 	{
 		// create a mouse region for pausing of game clock
-		MSYS_DefineRegion( &gClockMouseRegion, (UINT16)( sX ), (UINT16)( sY ),(UINT16)( sX + CLOCK_REGION_WIDTH ), (UINT16)( sY + CLOCK_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback );
+		MSYS_DefineRegion(
+			&gClockMouseRegion,
+			CLOCK_X, CLOCK_Y, CLOCK_X + CLOCK_WIDTH, CLOCK_Y + CLOCK_HEIGHT,
+			MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback
+		);
 
 		fClockMouseRegionCreated = TRUE;
 
@@ -974,7 +975,6 @@ static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReas
 static void CreateDestroyScreenMaskForPauseGame(void)
 {
 	static BOOLEAN fCreated = FALSE;
-	INT16 sX = 0, sY = 0;
 
 	if( ( ( fClockMouseRegionCreated == FALSE ) || ( gfGamePaused == FALSE ) || ( gfPauseDueToPlayerGamePause == FALSE ) ) && ( fCreated == TRUE ) )
 	{
@@ -996,13 +996,9 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		MSYS_DefineRegion(&gClockScreenMaskMouseRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack);
 		fCreated = TRUE;
 
-		// get region x and y values
-		sX = ( &gClockMouseRegion ) -> RegionTopLeftX;
-		sY = ( &gClockMouseRegion ) -> RegionTopLeftY;
-
 		//re create region on top of this
 		RemoveMouseRegionForPauseOfClock( );
-		CreateMouseRegionForPauseOfClock( sX, sY );
+		CreateMouseRegionForPauseOfClock();
 
 		SetRegionFastHelpText( &gClockMouseRegion, pPausedGameText[ 1 ] );
 

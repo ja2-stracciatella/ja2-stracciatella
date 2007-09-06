@@ -506,8 +506,7 @@ static void ExitOptionsScreen(void)
 	//The save the current settings to disk
 	SaveGameSettings();
 
-	//Create the clock mouse region
-	CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
+	CreateMouseRegionForPauseOfClock();
 
 	if( guiOptionsScreen == GAME_SCREEN )
 		EnterTacticalScreen( );

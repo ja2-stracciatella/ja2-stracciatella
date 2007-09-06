@@ -3186,7 +3186,7 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 
 	if( fRenderRadarScreen == TRUE )
 	{
-		CreateMouseRegionForPauseOfClock( CLOCK_REGION_START_X, CLOCK_REGION_START_Y );
+		CreateMouseRegionForPauseOfClock();
 	}
 	else
 	{

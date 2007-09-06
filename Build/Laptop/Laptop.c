@@ -3885,29 +3885,6 @@ void PrintDate( void )
 	mprintf( 30 + (70 - StringPixLength( WORLDTIMESTR, FONT10ARIAL ))/2, 433, WORLDTIMESTR );
 
 	SetFontShadow( DEFAULT_SHADOW );
-
-//	RenderClock( 35, 414 );
-
-/*
-	def: removed 3/8/99.
- Now use the render clock function used every where else
-
-	CHAR16 pString[ 32 ];
-//	UINT16 usX, usY;
-
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-
-	SetFontShadow( NO_SHADOW );
-
-	swprintf(pString, L"%ls %d", pMessageStrings[MSG_DAY], GetWorldDay());
-
-//	gprintfdirty(35, 413 + 19,pString);
-	mprintf(35, 413 + 19,pString);
-
-	SetFontShadow( DEFAULT_SHADOW );
-*/
 }
 
 
