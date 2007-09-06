@@ -1817,36 +1817,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 {
 	// Select the graphics to use depending on the current state of the button
 	HVOBJECT BPic;
-	if (b->uiFlags & BUTTON_ENABLED)
-	{
-		if (!(b->uiFlags & BUTTON_ENABLED))
-		{
-			BPic = GenericButtonOffNormal[b->ImageNum];
-		}
-		else if(b->uiFlags & BUTTON_CLICKED_ON)
-		{
-			if  (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOnHilite[b->ImageNum] != NULL && gfRenderHilights)
-			{
-				BPic = GenericButtonOnHilite[b->ImageNum];
-			}
-			else
-			{
-				BPic = GenericButtonOnNormal[b->ImageNum];
-			}
-		}
-		else
-		{
-			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOffHilite[b->ImageNum] != NULL && gfRenderHilights)
-			{
-				BPic = GenericButtonOffHilite[b->ImageNum];
-			}
-			else
-			{
-				BPic = GenericButtonOffNormal[b->ImageNum];
-			}
-		}
-	}
-	else
+	if (!(b->uiFlags & BUTTON_ENABLED))
 	{
 		BPic = GenericButtonOffNormal[b->ImageNum];
 		switch (b->bDisabledStyle)
@@ -1859,6 +1830,28 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 			case DISABLED_STYLE_SHADED:
 				gbDisabledButtonStyle = b->bDisabledStyle;
 				break;
+		}
+	}
+	else if (b->uiFlags & BUTTON_CLICKED_ON)
+	{
+		if  (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOnHilite[b->ImageNum] != NULL && gfRenderHilights)
+		{
+			BPic = GenericButtonOnHilite[b->ImageNum];
+		}
+		else
+		{
+			BPic = GenericButtonOnNormal[b->ImageNum];
+		}
+	}
+	else
+	{
+		if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOffHilite[b->ImageNum] != NULL && gfRenderHilights)
+		{
+			BPic = GenericButtonOffHilite[b->ImageNum];
+		}
+		else
+		{
+			BPic = GenericButtonOffNormal[b->ImageNum];
 		}
 	}
 
