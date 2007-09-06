@@ -2481,7 +2481,6 @@ static void HandlePreBattleInterfaceWithInventoryPanelUp(void);
 static void HandleSpontanousTalking(void);
 static void InitPreviousPaths(void);
 static void InterruptTimeForMenus(void);
-static void InvmaskRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -2760,8 +2759,7 @@ UINT32 MapScreenHandle(void)
 		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
 							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback );
 
-		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X+INV_REGION_WIDTH, INV_REGION_Y+INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH,
-							 MSYS_NO_CURSOR, MSYS_NO_CALLBACK,InvmaskRegionBtnCallBack);
+		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		// screen mask for animated cursors
 		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
@@ -8875,12 +8873,6 @@ static void CreateDestroyTrashCanRegion(void)
 		}
 
 	}
-}
-
-
-static void InvmaskRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	// CJC, December 15 1998: do NOTHING for clicks here
 }
 
 
