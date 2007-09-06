@@ -96,7 +96,7 @@ static INT8 gbDisabledButtonStyle;
 
 BOOLEAN gfRenderHilights = TRUE;
 
-BUTTON_PICS  ButtonPictures[MAX_BUTTON_PICS];
+BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
 
 UINT32 ButtonDestBuffer = FRAME_BUFFER;
 
@@ -138,20 +138,22 @@ static INT32 FindFreeButtonSlot(void)
 
 static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
-	ButtonPictures[UseSlot].vobj = VObj;
+	BUTTON_PICS* const pics = &ButtonPictures[UseSlot];
+
+	pics->vobj = VObj;
 
 	// Init the QuickButton image structure with indexes to use
-	ButtonPictures[UseSlot].Grayed    = Grayed;
-	ButtonPictures[UseSlot].OffNormal = OffNormal;
-	ButtonPictures[UseSlot].OffHilite = OffHilite;
-	ButtonPictures[UseSlot].OnNormal  = OnNormal;
-	ButtonPictures[UseSlot].OnHilite  = OnHilite;
-	ButtonPictures[UseSlot].fFlags    = Flags;
+	pics->Grayed    = Grayed;
+	pics->OffNormal = OffNormal;
+	pics->OffHilite = OffHilite;
+	pics->OnNormal  = OnNormal;
+	pics->OnHilite  = OnHilite;
+	pics->fFlags    = Flags;
 
 	// Fit the button size to the largest image in the set
 	UINT32 MaxWidth  = 0;
 	UINT32 MaxHeight = 0;
-	const ETRLEObject* const Travs = ButtonPictures[UseSlot].vobj->pETRLEObject;
+	const ETRLEObject* const Travs = pics->vobj->pETRLEObject;
 	if (Grayed != BUTTON_NO_IMAGE)
 	{
 		const ETRLEObject* pTrav = &Travs[Grayed];
@@ -203,8 +205,8 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 	}
 
 	// Set the width and height for this image set
-	ButtonPictures[UseSlot].MaxHeight = MaxHeight;
-	ButtonPictures[UseSlot].MaxWidth  = MaxWidth;
+	pics->MaxHeight = MaxHeight;
+	pics->MaxWidth  = MaxWidth;
 }
 
 
@@ -261,13 +263,14 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 	}
 
 	// Is button image index given valid?
-	if (ButtonPictures[LoadedImg].vobj == NULL)
+	const HVOBJECT vobj = ButtonPictures[LoadedImg].vobj;
+	if (vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %d", LoadedImg));
 		return -1;
 	}
 
-	InitButtonImage(UseSlot, ButtonPictures[LoadedImg].vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
+	InitButtonImage(UseSlot, vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
 
@@ -276,7 +279,9 @@ void UnloadButtonImage(INT32 Index)
 {
 	AssertMsg(0 <= Index && Index < MAX_BUTTON_PICS, String("Attempting to UnloadButtonImage with out of range index %d.", Index));
 
-	if (ButtonPictures[Index].vobj == NULL)
+	BUTTON_PICS* const pics = &ButtonPictures[Index];
+
+	if (pics->vobj == NULL)
 	{
 #if defined BUTTONSYSTEM_DEBUGGING
 		if (gfIgnoreShutdownAssertions)
@@ -286,7 +291,7 @@ void UnloadButtonImage(INT32 Index)
 	}
 
 	// If this is a duplicated button image, then don't trash the vobject
-	if (!(ButtonPictures[Index].fFlags & GUI_BTN_DUPLICATE_VOBJ))
+	if (!(pics->fFlags & GUI_BTN_DUPLICATE_VOBJ))
 	{
 		/* Deleting a non-duplicate, so see if any dups present. if so, then convert
 		 * one of them to an original!
@@ -294,23 +299,24 @@ void UnloadButtonImage(INT32 Index)
 		for (INT32 x = 0; x < MAX_BUTTON_PICS; ++x)
 		{
 			if (x == Index) continue;
-			if (ButtonPictures[x].vobj != ButtonPictures[Index].vobj) continue;
-			if (!(ButtonPictures[x].fFlags & GUI_BTN_DUPLICATE_VOBJ)) continue;
+			BUTTON_PICS* const other = &ButtonPictures[x];
+			if (other->vobj != pics->vobj) continue;
+			if (!(other->fFlags & GUI_BTN_DUPLICATE_VOBJ)) continue;
 
 			/* If we got here, then we got a duplicate object of the one we want to
 			 * delete, so convert it to an original!
 			 */
-			ButtonPictures[x].fFlags &= ~GUI_BTN_DUPLICATE_VOBJ;
+			other->fFlags &= ~GUI_BTN_DUPLICATE_VOBJ;
 
 			// Now remove this button, but not its vobject
 			goto remove_pic;
 		}
 
-		DeleteVideoObject(ButtonPictures[Index].vobj);
+		DeleteVideoObject(pics->vobj);
 	}
 
 remove_pic:
-	ButtonPictures[Index].vobj = NULL;
+	pics->vobj = NULL;
 }
 
 
@@ -350,12 +356,13 @@ static BOOLEAN InitializeButtonImageManager(void)
 	// Blank out all QuickButton images
 	for (int x = 0; x < MAX_BUTTON_PICS; ++x)
 	{
-		ButtonPictures[x].vobj      = NULL;
-		ButtonPictures[x].Grayed    = -1;
-		ButtonPictures[x].OffNormal = -1;
-		ButtonPictures[x].OffHilite = -1;
-		ButtonPictures[x].OnNormal  = -1;
-		ButtonPictures[x].OnHilite  = -1;
+		BUTTON_PICS* const pics = &ButtonPictures[x];
+		pics->vobj      = NULL;
+		pics->Grayed    = -1;
+		pics->OffNormal = -1;
+		pics->OffHilite = -1;
+		pics->OnNormal  = -1;
+		pics->OnHilite  = -1;
 	}
 
 	// Blank out all Generic button data
@@ -765,7 +772,7 @@ static INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT
 	AssertMsg(0 <= Image && Image < MAX_BUTTON_PICS, String("Attempting to QuickCreateButton with out of range ImageID %d.", Image));
 
 	// Is there a QuickButton image in the given image slot?
-	const BUTTON_PICS* BtnPic = &ButtonPictures[Image];
+	const BUTTON_PICS* const BtnPic = &ButtonPictures[Image];
 	if (BtnPic->vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "QuickCreateButton: Invalid button image number");
@@ -1349,6 +1356,8 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 // Draws a QuickButton type button on the screen.
 static void DrawQuickButton(const GUI_BUTTON* b)
 {
+	const BUTTON_PICS* const pics = &ButtonPictures[b->ImageNum];
+
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
 	{
@@ -1357,13 +1366,13 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 			// Is the mouse over this area, and we have a hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					ButtonPictures[b->ImageNum].OnHilite != -1)
+					pics->OnHilite != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OnHilite;
+				UseImage = pics->OnHilite;
 			}
-			else if (ButtonPictures[b->ImageNum].OnNormal != -1)
+			else if (pics->OnNormal != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OnNormal;
+				UseImage = pics->OnNormal;
 			}
 		}
 		else
@@ -1371,24 +1380,24 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 			// Is the mouse over the button, and do we have hilite image?
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
-					ButtonPictures[b->ImageNum].OffHilite != -1)
+					pics->OffHilite != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OffHilite;
+				UseImage = pics->OffHilite;
 			}
-			else if(ButtonPictures[b->ImageNum].OffNormal != -1)
+			else if (pics->OffNormal != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OffNormal;
+				UseImage = pics->OffNormal;
 			}
 		}
 	}
-	else if (ButtonPictures[b->ImageNum].Grayed != -1)
+	else if (pics->Grayed != -1)
 	{
 		// Button is diabled so use the "Grayed-out" image
-		UseImage = ButtonPictures[b->ImageNum].Grayed;
+		UseImage = pics->Grayed;
 	}
 	else
 	{
-		UseImage = ButtonPictures[b->ImageNum].OffNormal;
+		UseImage = pics->OffNormal;
 		switch (b->bDisabledStyle)
 		{
 			case DISABLED_STYLE_DEFAULT:
@@ -1402,7 +1411,7 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 		}
 	}
 
-	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, UseImage, b->XLoc, b->YLoc);
+	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->XLoc, b->YLoc);
 }
 
 
@@ -1459,6 +1468,8 @@ void DrawCheckBoxButtonOff(INT32 iButtonID)
 
 static void DrawCheckBoxButton(const GUI_BUTTON *b)
 {
+	const BUTTON_PICS* const pics = &ButtonPictures[b->ImageNum];
+
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
 	{
@@ -1468,13 +1479,13 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
 					gfLeftButtonState &&
-					ButtonPictures[b->ImageNum].OnHilite != -1)
+					pics->OnHilite != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OnHilite;
+				UseImage = pics->OnHilite;
 			}
-			else if (ButtonPictures[b->ImageNum].OnNormal != -1)
+			else if (pics->OnNormal != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OnNormal;
+				UseImage = pics->OnNormal;
 			}
 		}
 		else
@@ -1483,30 +1494,30 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 			if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA &&
 					gfRenderHilights &&
 					gfLeftButtonState &&
-					ButtonPictures[b->ImageNum].OffHilite != -1)
+					pics->OffHilite != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OffHilite;
+				UseImage = pics->OffHilite;
 			}
-			else if (ButtonPictures[b->ImageNum].OffNormal != -1)
+			else if (pics->OffNormal != -1)
 			{
-				UseImage = ButtonPictures[b->ImageNum].OffNormal;
+				UseImage = pics->OffNormal;
 			}
 		}
 	}
-	else if (ButtonPictures[b->ImageNum].Grayed != -1)
+	else if (pics->Grayed != -1)
 	{
 		// Button is disabled so use the "Grayed-out" image
-		UseImage = ButtonPictures[b->ImageNum].Grayed;
+		UseImage = pics->Grayed;
 	}
 	else //use the disabled style
 	{
 		if (b->uiFlags & BUTTON_CLICKED_ON)
 		{
-			UseImage = ButtonPictures[b->ImageNum].OnHilite;
+			UseImage = pics->OnHilite;
 		}
 		else
 		{
-			UseImage = ButtonPictures[b->ImageNum].OffHilite;
+			UseImage = pics->OffHilite;
 		}
 		switch (b->bDisabledStyle)
 		{
@@ -1521,7 +1532,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 		}
 	}
 
-	BltVideoObject(ButtonDestBuffer, ButtonPictures[b->ImageNum].vobj, UseImage, b->XLoc, b->YLoc);
+	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->XLoc, b->YLoc);
 }
 
 
