@@ -1157,37 +1157,23 @@ static void GetHelpScreenTextPositions(UINT16* pusPosX, UINT16* pusPosY, UINT16*
 
 static void DisplayCurrentScreenTitleAndFooter(void)
 {
-	INT32	iStartLoc = -1;
 	CHAR16	zText[1024];
 	UINT16	usPosX=0, usPosY=0, usWidth=0;
 
 //new screen:
 
 	//switch on the current screen
-	switch( gHelpScreen.bCurrentHelpScreen )
+	INT32	iStartLoc = -1;
+	switch (gHelpScreen.bCurrentHelpScreen)
 	{
-		case HELP_SCREEN_LAPTOP:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_LAPTOP_TITLE;
-			break;
-		case HELP_SCREEN_MAPSCREEN:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_WELCOM_TO_ARULCO_TITLE;
-			break;
-		case HELP_SCREEN_TACTICAL:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_TACTICAL_TITLE;
-			break;
-		case HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_MPSCRN_NO_1_HIRED_YET_TITLE;
-			break;
-		case HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_MPSCRN_NOT_IN_ARULCO_TITLE;
-			break;
-		case HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY:
-			iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_SECTOR_INVTRY_TITLE;
-			break;
-		case HELP_SCREEN_OPTIONS:
-			break;
-		case HELP_SCREEN_LOAD_GAME:
-			break;
+		case HELP_SCREEN_LAPTOP:                     iStartLoc = HLP_TXT_LAPTOP_TITLE;                break;
+		case HELP_SCREEN_MAPSCREEN:                  iStartLoc = HLP_TXT_WELCOM_TO_ARULCO_TITLE;      break;
+		case HELP_SCREEN_TACTICAL:                   iStartLoc = HLP_TXT_TACTICAL_TITLE;              break;
+		case HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED:     iStartLoc = HLP_TXT_MPSCRN_NO_1_HIRED_YET_TITLE; break;
+		case HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO:    iStartLoc = HLP_TXT_MPSCRN_NOT_IN_ARULCO_TITLE;  break;
+		case HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY: iStartLoc = HLP_TXT_SECTOR_INVTRY_TITLE;         break;
+		case HELP_SCREEN_OPTIONS:                    break;
+		case HELP_SCREEN_LOAD_GAME:                  break;
 
 		default:
 			#ifdef JA2BETAVERSION
@@ -1207,7 +1193,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	//if this screen has a valid title
 	if( iStartLoc != -1 )
 	{
-		LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, iStartLoc, HELPSCREEN_RECORD_SIZE );
+		GetHelpScreenText(iStartLoc, zText);
 
 		SetFontShadow( NO_SHADOW );
 
@@ -1218,8 +1204,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	}
 
 	//Display the '( press H to get help... )'
-	iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_CONSTANT_SUBTITLE;
-	LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, iStartLoc, HELPSCREEN_RECORD_SIZE );
+	GetHelpScreenText(HLP_TXT_CONSTANT_SUBTITLE, zText);
 
 	usPosX = gHelpScreen.usLeftMarginPosX;
 
@@ -1230,8 +1215,7 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
 		//calc location for the ' [ x ] Dont display again...'
-		iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_CONSTANT_FOOTER;
-		LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, iStartLoc, HELPSCREEN_RECORD_SIZE );
+		GetHelpScreenText(HLP_TXT_CONSTANT_FOOTER, zText);
 
 		usPosX = gHelpScreen.usLeftMarginPosX + HELP_SCREEN_SHOW_HELP_AGAIN_REGION_TEXT_OFFSET_X;
 
@@ -1313,10 +1297,7 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 
 static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText)
 {
-	INT32	iStartLoc = -1;
-
-	iStartLoc = HELPSCREEN_RECORD_SIZE * uiRecordToGet;
-	LoadEncryptedDataFromFile(HELPSCREEN_FILE, pText, iStartLoc, HELPSCREEN_RECORD_SIZE );
+	LoadEncryptedDataFromFile(HELPSCREEN_FILE, pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
 }
 
 
@@ -1330,10 +1311,6 @@ static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16
 	SetFontShadow( NO_SHADOW );
 
 	GetHelpScreenText( uiRecord, zText );
-
-	//Get the record
-	uiStartLoc = HELPSCREEN_RECORD_SIZE * uiRecord;
-	LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, uiStartLoc, HELPSCREEN_RECORD_SIZE );
 
 	//Display the text
 	usNumVertPixels = IanDisplayWrappedString(usPosX, usPosY, usWidth, HELP_SCREEN_GAP_BTN_LINES, HELP_SCREEN_TEXT_BODY_FONT, HELP_SCREEN_TEXT_BODY_COLOR, zText, HELP_SCREEN_TEXT_BACKGROUND, 0);
