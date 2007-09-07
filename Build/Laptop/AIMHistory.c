@@ -160,7 +160,7 @@ static BOOLEAN InitTocMenu(void);
 
 void RenderAimHistory()
 {
-	wchar_t	sText[400];
+	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
 
 	DrawAimDefaults();
 //	DrawAimHistoryMenuBar();
@@ -267,7 +267,7 @@ static BOOLEAN ExitAimHistoryMenuBar(void)
 
 static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 {
-	wchar_t	sText[400];
+	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
 	UINT16	usPosY=0;
 	UINT16	usNumPixels=0;
 
@@ -309,7 +309,6 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 static BOOLEAN InitTocMenu(void)
 {
 	UINT16			i, usPosY;
-	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
 								{IN_THE_BEGINNING,
 								 THE_ISLAND_METAVIRA,
@@ -322,6 +321,7 @@ static BOOLEAN InitTocMenu(void)
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
+		wchar_t sText[AIM_HISTORY_LINE_SIZE];
 		LoadAIMHistoryText(sText, ubLocInFile[i]);
 
 		//if the mouse regions havent been inited, init them

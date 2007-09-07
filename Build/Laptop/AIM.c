@@ -469,7 +469,7 @@ static void LoadAIMText(wchar_t buf[], UINT32 entry)
 
 BOOLEAN DisplayAimSlogan()
 {
-	wchar_t	sSlogan[400];
+	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
 	LoadAIMText(sSlogan, 0);
 	//Display Aim Text under the logo
 	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -481,7 +481,7 @@ BOOLEAN DisplayAimSlogan()
 
 BOOLEAN DisplayAimCopyright()
 {
-	wchar_t	sSlogan[400];
+	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
 
 	//Load and Display the copyright notice
 
@@ -762,7 +762,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiWarning, 0,WARNING_X, WARNING_Y);
 
 		//Display Aim Warning Text
-		wchar_t sText[400];
+		wchar_t sText[AIM_HISTORY_LINE_SIZE];
 		LoadAIMText(sText, AIM_WARNING_1);
 		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 

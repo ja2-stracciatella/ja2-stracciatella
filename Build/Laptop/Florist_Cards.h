@@ -3,7 +3,7 @@
 
 
 #define		FLOR_CARD_TEXT_FILE							"BINARYDATA/FlowerCard.edt"
-#define		FLOR_CARD_TEXT_TITLE_SIZE				5 * 80 * 2
+#define FLOR_CARD_TEXT_TITLE_SIZE 5 * 80
 
 
 BOOLEAN EnterFloristCards();

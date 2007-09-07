@@ -30,7 +30,7 @@
 
 #define VIEWER_X 155
 #define VIEWER_Y 70 + 21
-#define MAIL_STRING_SIZE 640
+#define MAIL_STRING_SIZE 320
 
 
 typedef enum EMailSortCriteria
@@ -557,7 +557,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 	pTempEmail->iFirstData = iFirstData;
   pTempEmail->uiSecondData = uiSecondData;
 
-	wchar_t pSubject[320];
+	wchar_t pSubject[MAIL_STRING_SIZE];
 	LoadEMailText(pSubject, iMessageOffset);
 	ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
 	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
@@ -2158,7 +2158,7 @@ static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 
 static void AddIMPResultText(UINT32 Offset)
 {
-	wchar_t Text[MAIL_STRING_SIZE / 2];
+	wchar_t Text[MAIL_STRING_SIZE];
 	LoadIMPResultText(Text, Offset);
 	AddEmailRecordToList(Text);
 }
@@ -2683,8 +2683,8 @@ static void PreProcessEmail(Email* pMail)
   {
 	  while(pMail->usLength > iCounter)
 		{
-			wchar_t pString[320];
       // read one record from email file
+			wchar_t pString[MAIL_STRING_SIZE];
 			LoadEMailText(pString, iOffSet + iCounter);
 
 			// add to list
@@ -2867,12 +2867,12 @@ static void PreProcessEmail(Email* pMail)
 
 static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumberOfRecords)
 {
-	wchar_t pString[MAIL_STRING_SIZE];
 	UINT8	ubCnt;
 
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{
 		// read one record from email file
+		wchar_t pString[MAIL_STRING_SIZE];
 		LoadEMailText(pString, usMessageId);
 
 		//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.

@@ -34,7 +34,7 @@
 #define		AIM_ALUMNI_PAGE_COLOR_UP			FONT_MCOLOR_DKWHITE
 #define		AIM_ALUMNI_PAGE_COLOR_DOWN		138
 
-#define		AIM_ALUMNI_NAME_LINESIZE			80 * 2
+#define AIM_ALUMNI_NAME_LINESIZE 80
 #define		AIM_ALUMNI_ALUMNI_LINESIZE		7 * 80 * 2
 
 
@@ -95,11 +95,10 @@
 #define		AIM_ALUMNI_DONE_WIDTH						36
 #define		AIM_ALUMNI_DONE_HEIGHT					16
 
-#define		AIM_ALUMNI_NAME_SIZE						80 * 2
-#define		AIM_ALUMNI_DECRIPTION_SIZE			80 * 7 * 2
-#define		AIM_ALUMNI_FILE_RECORD_SIZE			80 * 8 * 2
-//#define		AIM_ALUMNI_FILE_RECORD_SIZE			80 * 7 * 2
-#define		AIM_ALUMNI_FULL_NAME_SIZE				80 * 2
+#define AIM_ALUMNI_NAME_SIZE        80
+#define AIM_ALUMNI_DECRIPTION_SIZE  80 * 7
+#define AIM_ALUMNI_FILE_RECORD_SIZE 80 * 8
+#define AIM_ALUMNI_FULL_NAME_SIZE   80
 
 UINT32		guiAlumniFrame;
 UINT32		guiOldAim;
@@ -282,7 +281,7 @@ void RenderAimArchives()
 		BltVideoObject(FRAME_BUFFER, hFrameHandle, 0, usPosX,     usPosY);     // Blt the alumni frame background
 
 		// Display the merc's name
-		wchar_t sText[80];
+		wchar_t sText[AIM_ALUMNI_NAME_SIZE];
 		LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, AIM_ALUMNI_NAME_LINESIZE * i, AIM_ALUMNI_NAME_SIZE);
 		DrawTextToScreen(sText, usPosX + AIM_ALUMNI_NAME_OFFSET_X, usPosY + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
@@ -383,15 +382,13 @@ static void DisplayAlumniOldMercPopUp(void)
 	UINT8			i,ubNumLines=11; //17
 	UINT16		usPosY;
 	UINT8			ubNumDescLines;
-//	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
-	wchar_t	sName[AIM_ALUMNI_NAME_SIZE];
-	wchar_t	sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	UINT32		uiStartLoc;
 	UINT16	usStringPixLength;
 
 	HVOBJECT hAlumniPopUpHandle = GetVideoObject(guiAlumniPopUp);
 
 	//Load the description
+	wchar_t	sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc + AIM_ALUMNI_FULL_NAME_SIZE;
 	LoadEncryptedDataFromFile(AIM_ALUMNI_FILE, sDesc, uiStartLoc, AIM_ALUMNI_DECRIPTION_SIZE);
 
@@ -426,8 +423,9 @@ static void DisplayAlumniOldMercPopUp(void)
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiOldAim, gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
+	wchar_t	sName[AIM_ALUMNI_FULL_NAME_SIZE];
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc;
-	LoadEncryptedDataFromFile( AIM_ALUMNI_FILE, sName, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE );
+	LoadEncryptedDataFromFile(AIM_ALUMNI_FILE, sName, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE);
 
 	DrawTextToScreen(sName, AIM_ALUMNI_POPUP_NAME_X, AIM_ALUMNI_POPUP_NAME_Y, 0, AIM_ALUMNI_POPUP_NAME_FONT, AIM_ALUMNI_POPUP_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

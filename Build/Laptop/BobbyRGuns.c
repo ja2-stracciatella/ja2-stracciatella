@@ -973,17 +973,18 @@ static UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
-	wchar_t	sText[400];
 	wchar_t	sTemp[20];
-	UINT32	uiStartLoc=0;
-
+	UINT32 uiStartLoc;
 	UINT8	ubPurchaseNumber;
 
+	{
 		//Display Items Name
-	uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
-	LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-	ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
-	DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		wchar_t sText[BOBBYR_ITEM_DESC_NAME_SIZE];
+		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
+		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+		ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
+		DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	}
 
 	//number bought
 	//Display the # bought
@@ -1009,10 +1010,13 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		DrawTextToScreen(sTemp, BOBBYR_ITEM_NAME_X - 2, usPosY - BOBBYR_ORDER_NUM_Y_OFFSET, BOBBYR_ORDER_NUM_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
-	//Display Items description
-	uiStartLoc = (BOBBYR_ITEM_DESC_FILE_SIZE * usIndex) + BOBBYR_ITEM_DESC_NAME_SIZE;
-	LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
-	DisplayWrappedString(BOBBYR_ITEM_DESC_START_X, usPosY, BOBBYR_ITEM_DESC_START_WIDTH, 2, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	{
+		//Display Items description
+		wchar_t sText[BOBBYR_ITEM_DESC_INFO_SIZE];
+		uiStartLoc += BOBBYR_ITEM_DESC_NAME_SIZE;
+		LoadEncryptedDataFromFile(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_INFO_SIZE);
+		DisplayWrappedString(BOBBYR_ITEM_DESC_START_X, usPosY, BOBBYR_ITEM_DESC_START_WIDTH, 2, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	}
 }
 
 /*

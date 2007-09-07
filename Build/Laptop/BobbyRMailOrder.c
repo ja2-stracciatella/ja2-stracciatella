@@ -811,7 +811,6 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum )
 {
 	UINT16  i;
-	wchar_t	sText[400];
 	wchar_t	sTemp[20];
 	UINT16	usPosY;
 	UINT32	uiStartLoc=0;
@@ -893,9 +892,10 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			}
 
 
+			wchar_t	sText[BOBBYR_ITEM_DESC_NAME_SIZE + 2];
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				wchar_t	sBack[400];
+				wchar_t	sBack[BOBBYR_ITEM_DESC_NAME_SIZE];
 				LoadEncryptedDataFromFile(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 				swprintf(sText, lengthof(sText), L"* %ls", sBack);
 			}

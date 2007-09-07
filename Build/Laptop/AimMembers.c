@@ -84,8 +84,8 @@
 #define	MED_STAT_COLOR											FONT_MCOLOR_DKWHITE//FONT_MCOLOR_WHITE
 #define	LOW_STAT_COLOR											FONT_MCOLOR_DKWHITE//FONT_MCOLOR_DKGRAY
 
-#define	SIZE_MERC_BIO_INFO	400	* 2
-#define SIZE_MERC_ADDITIONAL_INFO 160 * 2
+#define SIZE_MERC_BIO_INFO        400
+#define SIZE_MERC_ADDITIONAL_INFO 160
 
 #define	MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES	6 * 60
 #define	NUMBER_HATED_MERCS_ONTEAM							3
@@ -956,9 +956,6 @@ static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
 
 static BOOLEAN UpdateMercInfo(void)
 {
-  wchar_t					MercInfoString[ SIZE_MERC_BIO_INFO ];
-  wchar_t					AdditionalInfoString[ SIZE_MERC_BIO_INFO ];
-
 	//Display the salaries
 	DrawMoneyToScreen(gMercProfiles[gbCurrentSoldier].sSalary, FEE_WIDTH, FEE_X, HEALTH_Y, AIM_M_NUMBER_FONT, AIM_M_COLOR_DYNAMIC_TEXT	);
 	DrawMoneyToScreen(gMercProfiles[gbCurrentSoldier].uiWeeklySalary, FEE_WIDTH, FEE_X, AGILITY_Y, AIM_M_NUMBER_FONT, AIM_M_COLOR_DYNAMIC_TEXT	);
@@ -982,6 +979,8 @@ static BOOLEAN UpdateMercInfo(void)
 			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
+	wchar_t MercInfoString[SIZE_MERC_BIO_INFO];
+	wchar_t AdditionalInfoString[SIZE_MERC_BIO_INFO];
 	LoadMercBioInfo( gbCurrentSoldier, MercInfoString, AdditionalInfoString);
 	if( MercInfoString[0] != 0)
 	{

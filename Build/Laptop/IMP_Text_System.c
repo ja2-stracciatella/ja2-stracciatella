@@ -13,7 +13,7 @@
 #include "Font_Control.h"
 
 
-#define IMP_SEEK_AMOUNT (5 * 80 * 2)
+#define IMP_SEEK_AMOUNT (5 * 80)
 
 #define IMP_LEFT_IDENT_TEXT_X  116
 #define IMP_RIGHT_IDENT_TEXT_X 509
@@ -35,17 +35,14 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 {
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
 	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in font uiFont
-	wchar_t sString[1024];
-
 	if (!fShadow)
 	{
 		// don't want shadow, remove it
 		SetFontShadow(NO_SHADOW);
 	}
 
-	// load the string
+	wchar_t sString[IMP_SEEK_AMOUNT];
 	LoadEncryptedDataFromFile("BINARYDATA/IMPText.EDT", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
-
 	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow

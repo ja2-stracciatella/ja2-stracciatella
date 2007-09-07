@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 Seek, UINT32 ReadBytes);
-BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 Seek, UINT32 ReadBytes);
+BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, UINT32 read_chars);
+BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 seek_chars, UINT32 read_chars);
 
 #endif

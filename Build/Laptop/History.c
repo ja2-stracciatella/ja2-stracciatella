@@ -22,6 +22,9 @@
 #include "FileMan.h"
 
 
+#define HISTORY_QUEST_TEXT_SIZE 80
+
+
 typedef struct HistoryUnit HistoryUnit;
 struct HistoryUnit
 {
@@ -953,8 +956,6 @@ static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString);
 
 static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnit* pHistory)
 {
-	CHAR16 sString[ 128 ];
-
 	switch( pHistory->ubCode)
 	{
 		case HISTORY_ENTERED_HISTORY_MODE:
@@ -1020,15 +1021,21 @@ static void ProcessHistoryTransactionString(STR16 pString, size_t Length, Histor
 		  break;
 
 		case( HISTORY_QUEST_STARTED ):
-			GetQuestStartedString( pHistory->ubSecondCode, sString );
-			swprintf(pString, Length, sString );
+		{
+			wchar_t sString[HISTORY_QUEST_TEXT_SIZE];
+			GetQuestStartedString(pHistory->ubSecondCode, sString);
+			swprintf(pString, Length, sString);
+			break;
+		}
 
-		  break;
 		case( HISTORY_QUEST_FINISHED ):
-			GetQuestEndedString( pHistory->ubSecondCode, sString );
-			swprintf(pString, Length, sString );
+		{
+			wchar_t sString[HISTORY_QUEST_TEXT_SIZE];
+			GetQuestEndedString(pHistory->ubSecondCode, sString);
+			swprintf(pString, Length, sString);
+			break;
+		}
 
-		  break;
 		case( HISTORY_TALKED_TO_MINER ):
 			swprintf(pString, Length, pHistoryStrings[ HISTORY_TALKED_TO_MINER ], pTownNames[ pHistory->ubSecondCode ] );
 		  break;
@@ -1611,14 +1618,14 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ubQuestValue * 2  ), 160 );
+	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
 }
 
 
 static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString)
 {
 	// open the file and copy the string
-	LoadEncryptedDataFromFile( "BINARYDATA/quests.edt", sQuestString, 160 * ( ( ubQuestValue  * 2 ) + 1), 160 );
+	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
 }
 
 

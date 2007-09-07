@@ -72,7 +72,7 @@ enum
 //#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.txt"
 #define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.edt"
 
-#define		CREDITS_LINESIZE								80 * 2
+#define CREDITS_LINESIZE 80
 
 
 //
@@ -983,7 +983,6 @@ static void HandleCreditFlags(UINT32 uiFlags);
 //return false from this function when there are no more items in the text file
 static BOOLEAN GetNextCreditFromTextFile(void)
 {
-	CHAR16	zOriginalString[512];
 	CHAR16	zString[512];
 	CHAR16	zCodes[512];
 	STR16		pzNewCode=NULL;
@@ -993,6 +992,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 
 
 	//Get the current Credit record
+	wchar_t zOriginalString[CREDITS_LINESIZE];
 	uiStartLoc = CREDITS_LINESIZE * guiCurrentCreditRecord;
 	if( !LoadEncryptedDataFromFile( CRDT_NAME_OF_CREDIT_FILE, zOriginalString, uiStartLoc, CREDITS_LINESIZE ) )
 	{

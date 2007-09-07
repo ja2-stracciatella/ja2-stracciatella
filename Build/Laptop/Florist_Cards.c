@@ -124,7 +124,6 @@ void RenderFloristCards()
 {
 	UINT8	i,j, ubCount;
 	UINT16	usPosX, usPosY;
-	wchar_t		sTemp[ 640 ];
 	UINT32	uiStartLoc=0;
 	UINT16		usHeightOffset;
 
@@ -144,6 +143,7 @@ void RenderFloristCards()
 			BltVideoObject(FRAME_BUFFER, hPixHandle, 0, usPosX, usPosY);
 
 			//Get and display the card saying
+			wchar_t sTemp[FLOR_CARD_TEXT_TITLE_SIZE];
 			uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * ubCount;
 			LoadEncryptedDataFromFile(FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 

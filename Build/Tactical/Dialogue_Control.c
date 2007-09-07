@@ -60,7 +60,7 @@
 #include "Container.h"
 
 
-#define		DIALOGUESIZE					480
+#define DIALOGUESIZE 240
 #define   QUOTE_MESSAGE_SIZE		520
 
 #define		TALK_PANEL_FACE_X				6

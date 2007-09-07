@@ -29,6 +29,9 @@
 #include "FileMan.h"
 
 
+#define CIV_QUOTE_TEXT_SIZE 160
+
+
 #define			DIALOGUE_DEFAULT_WIDTH			200
 #define			EXTREAMLY_LOW_TOWN_LOYALTY	20
 #define			HIGH_TOWN_LOYALTY						80
@@ -163,7 +166,7 @@ static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQu
 	CHECKF( FileExists( zFileName ) );
 
 	// Get data...
-	LoadEncryptedDataFromFile( zFileName, zQuote, ubEntryID * 320, 320 );
+	LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
 
 	if( zQuote[0] == 0 )
 	{
@@ -356,7 +359,6 @@ static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY )
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	wchar_t								zQuote[ 320 ];
 
 	// OK, do we have another on?
 	if ( gCivQuoteData.bActive )
@@ -366,6 +368,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 	// get text
+	wchar_t zQuote[CIV_QUOTE_TEXT_SIZE];
 	if ( !GetCivQuoteText( ubCivQuoteID, ubEntryID, zQuote ) )
 	{
 		return;

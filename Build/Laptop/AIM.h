@@ -2,7 +2,7 @@
 #define __AIM_H
 
 #define	AIMHISTORYFILE		"BINARYDATA/AimHist.edt"
-#define AIM_HISTORY_LINE_SIZE 400 * 2
+#define AIM_HISTORY_LINE_SIZE 400
 
 
 #define		MAX_NUMBER_MERCS							40

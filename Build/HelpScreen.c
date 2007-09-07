@@ -859,7 +859,6 @@ static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText);
 static void CreateHelpScreenButtons(void)
 {
 	UINT16 usPosX, usPosY;
-	CHAR16	sText[1024];
 	INT32	i;
 
 	//if there are buttons to create
@@ -874,6 +873,7 @@ static void CreateHelpScreenButtons(void)
 		for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
 		{
 			//get the text for the button
+			wchar_t sText[HELPSCREEN_RECORD_SIZE];
 			GetHelpScreenText(gHelpScreenBtnTextRecordNum[gHelpScreen.bCurrentHelpScreen][i], sText);
 
 			giHelpScreenButtonsImage[i] = UseLoadedButtonImage( giExitBtnImage, -1,1,5,3,7 );
@@ -1157,7 +1157,6 @@ static void GetHelpScreenTextPositions(UINT16* pusPosX, UINT16* pusPosY, UINT16*
 
 static void DisplayCurrentScreenTitleAndFooter(void)
 {
-	CHAR16	zText[1024];
 	UINT16	usPosX=0, usPosY=0, usWidth=0;
 
 //new screen:
@@ -1189,6 +1188,8 @@ static void DisplayCurrentScreenTitleAndFooter(void)
 		usWidth = gHelpScreen.usScreenWidth - HELP_SCREEN_TEXT_LEFT_MARGIN_WITH_BTN - HELP_SCREEN_TEXT_RIGHT_MARGIN_SPACE;
 	else
 		usWidth = gHelpScreen.usScreenWidth - HELP_SCREEN_TEXT_LEFT_MARGIN - HELP_SCREEN_TEXT_RIGHT_MARGIN_SPACE;
+
+	wchar_t zText[HELPSCREEN_RECORD_SIZE];
 
 	//if this screen has a valid title
 	if( iStartLoc != -1 )
@@ -1304,12 +1305,12 @@ static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText)
 //returns the number of vertical pixels printed
 static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth)
 {
-	CHAR16	zText[1024];
 	UINT16	usNumVertPixels = 0;
 	UINT32 uiStartLoc;
 
 	SetFontShadow( NO_SHADOW );
 
+	wchar_t zText[HELPSCREEN_RECORD_SIZE];
 	GetHelpScreenText( uiRecord, zText );
 
 	//Display the text

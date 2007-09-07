@@ -17,7 +17,7 @@
 #define	NUM_AIM_POLICY_PAGES				11
 #define	NUM_AIM_POLICY_TOC_BUTTONS	9
 #define	AIMPOLICYFILE		"BINARYDATA/AimPol.edt"
-#define AIM_POLICY_LINE_SIZE 80 * 5 * 2 // 80 columns of 5 lines that are wide chars, 800 bytes total
+#define AIM_POLICY_LINE_SIZE 80 * 5
 
 #define AIM_POLICY_TITLE_FONT				FONT14ARIAL
 #define AIM_POLICY_TITLE_COLOR			AIM_GREEN
@@ -430,7 +430,6 @@ static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
 static BOOLEAN DrawAimPolicyMenu(void)
 {
 	UINT16			i, usPosY;
-	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
 								{	DEFINITIONS,
 									LENGTH_OF_ENGAGEMENT,
@@ -449,6 +448,7 @@ static BOOLEAN DrawAimPolicyMenu(void)
 	{
 	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_POLICY_TOC_X, usPosY);
 
+		wchar_t sText[AIM_POLICY_LINE_SIZE];
 		LoadAIMPolicyText(sText, ubLocInFile[i]);
 		DrawTextToScreen(sText, AIM_POLICY_TOC_X + AIM_POLICY_TOC_TEXT_OFFSET_X, usPosY + AIM_POLICY_TOC_TEXT_OFFSET_Y, AIM_CONTENTBUTTON_WIDTH, AIM_POLICY_TOC_FONT, AIM_POLICY_TOC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
@@ -522,7 +522,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static BOOLEAN DisplayAimPolicyTitleText(void)
 {
-	wchar_t	sText[400];
+	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY);
 
 	UINT16 y = (gubCurPageNum == 0 ? AIM_POLICY_TITLE_STATEMENT_Y - 25 : AIM_POLICY_TITLE_Y);
@@ -534,7 +534,7 @@ static BOOLEAN DisplayAimPolicyTitleText(void)
 
 static BOOLEAN DisplayAimPolicyStatement(void)
 {
-	wchar_t	sText[400];
+	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	UINT16	usNumPixels;
 
 	//load and display the statment of policies
@@ -597,7 +597,7 @@ static BOOLEAN ExitAgreementButton(void)
 
 static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
 {
-	wchar_t	sText[400];
+	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, ubPageNum);
 	DrawTextToScreen(sText, AIM_POLICY_SUBTITLE_NUMBER, usPosY, 0, AIM_POLICY_SUBTITLE_FONT, AIM_POLICY_SUBTITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
@@ -607,10 +607,10 @@ static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
 
 static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
-	wchar_t	sText[400];
 	wchar_t	sTemp[20];
 	UINT16	usNumPixels;
 
+	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, ubPageNum);
 
 	if(fNumber != 0.0)
@@ -629,10 +629,10 @@ static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fN
 
 static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
-	wchar_t	sText[400];
 	wchar_t	sTemp[20];
 	UINT16	usNumPixels;
 
+	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, ubPageNum);
 
 	//Display the section number

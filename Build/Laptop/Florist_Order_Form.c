@@ -479,7 +479,6 @@ static void FlowerOrderDisplayShippingLocationCity(void);
 void RenderFloristOrderForm()
 {
 	UINT16 usPosX;
-	wchar_t		sTemp[ 640 ];
 	UINT32	uiStartLoc=0;
 
 	DisplayFloristDefaults();
@@ -498,6 +497,7 @@ void RenderFloristOrderForm()
 	//The flower name
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_NAME_BOUQUET], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_FLOWER_NAME_X;
 	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower;
+	wchar_t sTemp[FLOR_GALLERY_TEXT_TITLE_SIZE];
 	LoadEncryptedDataFromFile(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
 	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_FLOWER_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
@@ -1002,11 +1002,6 @@ static void FlowerOrderDisplayShippingLocationCity(void)
 
 static void InitFlowerOrderTextInputBoxes(void)
 {
-	UINT32	uiStartLoc=0;
-	wchar_t	sTemp[ 640 ];
-	wchar_t	sText[ 640 ];
-
-
 	InitTextInputMode();
 	SetTextInputFont(FONT12ARIAL);
 	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 255, 255, 255) ) );
@@ -1022,8 +1017,10 @@ static void InitFlowerOrderTextInputBoxes(void)
 		//Get and display the card saying
 		//Display Flower Desc
 
-		uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * + gbCurrentlySelectedCard;
+		wchar_t	sTemp[FLOR_CARD_TEXT_TITLE_SIZE];
+		const UINT32 uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * gbCurrentlySelectedCard;
 		LoadEncryptedDataFromFile( FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
+		wchar_t	sText[FLOR_CARD_TEXT_TITLE_SIZE];
 		CleanOutControlCodesFromString(sTemp, sText);
 
 		wcslcpy(gsSentimentTextField, sText, lengthof(gsSentimentTextField));

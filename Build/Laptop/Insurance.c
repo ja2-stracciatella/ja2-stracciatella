@@ -325,13 +325,13 @@ void GetInsuranceText( UINT8 ubNumber, STR16 pString )
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_SINGLE_LINE_SIZE * ubNumber;
-		LoadEncryptedDataFromFile(INSURANCE_TEXT_SINGLE_FILE, pString, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE );
+		LoadEncryptedDataFromFile(INSURANCE_TEXT_SINGLE_FILE, pString, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE);
 	}
 	else
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_MULTI_LINE_SIZE * ( ubNumber - INS_MULTI_LINE_BEGINS - 1 );
-		LoadEncryptedDataFromFile(INSURANCE_TEXT_MULTI_FILE, pString, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE );
+		LoadEncryptedDataFromFile(INSURANCE_TEXT_MULTI_FILE, pString, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE);
 	}
 }
 

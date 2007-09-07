@@ -808,7 +808,6 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 static BOOLEAN HandleSpecialFiles(void)
 {
 	INT32 iCounter = 0;
-  wchar_t sString[2048];
 	FileString* pTempString = NULL;
 	FileString* pLocatorString = NULL;
 	INT32 iYPositionOnPage = 0;
@@ -829,7 +828,8 @@ static BOOLEAN HandleSpecialFiles(void)
 	WidthList = CreateWidthRecordsForAruloIntelFile( );
 	while( iCounter < LENGTH_OF_ENRICO_FILE )
 	{
-		LoadEncryptedDataFromFile( "BINARYDATA/RIS.EDT", sString, FILE_STRING_SIZE * ( iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		wchar_t sString[FILE_STRING_SIZE];
+		LoadEncryptedDataFromFile("BINARYDATA/RIS.EDT", sString, FILE_STRING_SIZE * iCounter, FILE_STRING_SIZE);
 		AddStringToFilesList( sString );
 		iCounter++;
 	}
@@ -1320,7 +1320,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 {
 
 	INT32 iCounter = 0;
-  wchar_t sString[2048];
 	FileString* pTempString = NULL;
 	FileString* pLocatorString = NULL;
 	INT32 iYPositionOnPage = 0;
@@ -1340,7 +1339,8 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 
 	while( iCounter < ubFileRecordsLength[ iFileNumber ] )
 	{
-		LoadEncryptedDataFromFile( "BINARYDATA/files.EDT", sString, FILE_STRING_SIZE * ( iOffset + iCounter ) * 2, FILE_STRING_SIZE * 2 );
+		wchar_t sString[FILE_STRING_SIZE];
+		LoadEncryptedDataFromFile("BINARYDATA/files.EDT", sString, FILE_STRING_SIZE * (iOffset + iCounter), FILE_STRING_SIZE);
 		AddStringToFilesList( sString );
 		iCounter++;
 	}
