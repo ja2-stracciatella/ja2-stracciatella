@@ -426,8 +426,6 @@ static void DisplayAlumniOldMercPopUp(void)
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiOldAim, gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
-//	uiStartLoc = AIM_ALUMNI_NAME_SIZE * gubDrawOldMerc;
-//	LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sName, uiStartLoc, AIM_ALUMNI_NAME_SIZE);
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc;
 	LoadEncryptedDataFromFile( AIM_ALUMNI_FILE, sName, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE );
 

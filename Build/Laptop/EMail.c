@@ -527,6 +527,12 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 }
 
 
+static void LoadEMailText(wchar_t buf[], UINT32 entry)
+{
+	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+}
+
+
 static void AddMessageToPages(Email* Mail);
 static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
 
@@ -552,7 +558,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
   pTempEmail->uiSecondData = uiSecondData;
 
 	wchar_t pSubject[320];
-	LoadEncryptedDataFromFile("BINARYDATA/Email.edt", pSubject, 640 * iMessageOffset, 640);
+	LoadEMailText(pSubject, iMessageOffset);
 	ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
 	wcscpy(pTempEmail->pSubject, pSubject); // XXX potential buffer overflow
 
@@ -2677,9 +2683,9 @@ static void PreProcessEmail(Email* pMail)
   {
 	  while(pMail->usLength > iCounter)
 		{
-			wchar_t pString[512];
+			wchar_t pString[320];
       // read one record from email file
-		  LoadEncryptedDataFromFile( "BINARYDATA/Email.edt", pString, MAIL_STRING_SIZE * ( iOffSet + iCounter ), MAIL_STRING_SIZE );
+			LoadEMailText(pString, iOffSet + iCounter);
 
 			// add to list
 			AddEmailRecordToList( pString );
@@ -2867,7 +2873,7 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumb
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{
 		// read one record from email file
-		LoadEncryptedDataFromFile( "BINARYDATA/Email.edt", pString, MAIL_STRING_SIZE * usMessageId, MAIL_STRING_SIZE );
+		LoadEMailText(pString, usMessageId);
 
 		//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.
 		ReplaceMercNameAndAmountWithProperData( pString, pMail );

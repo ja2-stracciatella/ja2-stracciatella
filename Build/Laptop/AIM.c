@@ -461,13 +461,16 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+static void LoadAIMText(wchar_t buf[], UINT32 entry)
+{
+	LoadEncryptedDataFromFile(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+}
 
 
 BOOLEAN DisplayAimSlogan()
 {
 	wchar_t	sSlogan[400];
-
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, 0, AIM_HISTORY_LINE_SIZE);
+	LoadAIMText(sSlogan, 0);
 	//Display Aim Text under the logo
 	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
@@ -479,20 +482,16 @@ BOOLEAN DisplayAimSlogan()
 BOOLEAN DisplayAimCopyright()
 {
 	wchar_t	sSlogan[400];
-	UINT32	uiStartLoc=0;
 
 	//Load and Display the copyright notice
 
-	uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_COPYRIGHT_1;
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+	LoadAIMText(sSlogan, AIM_COPYRIGHT_1);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_COPYRIGHT_2;
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+	LoadAIMText(sSlogan, AIM_COPYRIGHT_2);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_COPYRIGHT_3;
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, sSlogan, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+	LoadAIMText(sSlogan, AIM_COPYRIGHT_3);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP * 2, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	return(TRUE);
@@ -760,15 +759,11 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 
 	if( fInit || fRedraw)
 	{
-		wchar_t			sText[400];
-		UINT32	uiStartLoc=0;
-
 		BltVideoObjectFromIndex(FRAME_BUFFER, guiWarning, 0,WARNING_X, WARNING_Y);
 
-		uiStartLoc = AIM_HISTORY_LINE_SIZE * AIM_WARNING_1;
-		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
-
 		//Display Aim Warning Text
+		wchar_t sText[400];
+		LoadAIMText(sText, AIM_WARNING_1);
 		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);

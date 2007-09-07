@@ -712,23 +712,8 @@ static void DisplayFlowerDynamicItems(void)
 	UINT32	uiStartLoc=0;
 	UINT16	usPosX;
 	wchar_t	sTemp[ 640 ];
-//	wchar_t	sText[ 640 ];
 	UINT16	usPrice;
-/*
-	//display the card saying
-	if( gbCurrentlySelectedCard != -1 )
-	{
-		//Get and display the card saying
-		//Display Flower Desc
 
-		uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * + gbCurrentlySelectedCard;
-		LoadEncryptedDataFromFile( FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
-
-		CleanOutControlCodesFromString(sTemp, sText);
-
-		DisplayWrappedString(FLOWER_ORDER_SENTIMENT_BOX_X + 10, FLOWER_ORDER_SENTIMENT_BOX_Y + 7, FLOWER_ORDER_PERSONAL_SENT_TEXT_WIDTH, 2, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	}
-*/
 	//order number
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_ORDER_NUMBER], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_ORDER_NUM_NAME_X;
 	swprintf(sTemp, lengthof(sTemp), L"%d", LaptopSaveInfo.uiFlowerOrderNumber );

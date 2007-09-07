@@ -148,6 +148,12 @@ void HandleAimHistory()
 }
 
 
+static void LoadAIMHistoryText(wchar_t buf[], UINT32 entry)
+{
+	LoadEncryptedDataFromFile(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+}
+
+
 static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs);
 static BOOLEAN InitTocMenu(void);
 
@@ -155,7 +161,6 @@ static BOOLEAN InitTocMenu(void);
 void RenderAimHistory()
 {
 	wchar_t	sText[400];
-	UINT32	uiStartLoc=0;
 
 	DrawAimDefaults();
 //	DrawAimHistoryMenuBar();
@@ -191,8 +196,7 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(WORD_FROM_FOUNDER, 1);
 
 			// display coloniel Mohanned...
-			uiStartLoc = AIM_HISTORY_LINE_SIZE * COLONEL_MOHANNED;
-			LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+			LoadAIMHistoryText(sText, COLONEL_MOHANNED);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 210 + LAPTOP_SCREEN_WEB_DELTA_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 			break;
 
@@ -201,13 +205,11 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(INCORPORATION, 2);
 
 			// display dunn and bradbord...
-			uiStartLoc = AIM_HISTORY_LINE_SIZE * DUNN_AND_BRADROAD;
-			LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+			LoadAIMHistoryText(sText, DUNN_AND_BRADROAD);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 270 + LAPTOP_SCREEN_WEB_DELTA_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//AIM_HISTORY_PARAGRAPH_Y
-			uiStartLoc = AIM_HISTORY_LINE_SIZE * INCORPORATION_3;
-			LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+			LoadAIMHistoryText(sText, INCORPORATION_3);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 290 + LAPTOP_SCREEN_WEB_DELTA_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			break;
 	}
@@ -266,21 +268,18 @@ static BOOLEAN ExitAimHistoryMenuBar(void)
 static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 {
 	wchar_t	sText[400];
-	UINT32	uiStartLoc=0;
 	UINT16	usPosY=0;
 	UINT16	usNumPixels=0;
 
 	//title
-	uiStartLoc = AIM_HISTORY_LINE_SIZE * ubPageNum;
-	LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+	LoadAIMHistoryText(sText, ubPageNum);
 	DrawTextToScreen(sText, AIM_HISTORY_PARAGRAPH_X, AIM_HISTORY_SUBTITLE_Y, 0, AIM_HISTORY_PARAGRAPH_TITLE_FONT, AIM_HISTORY_PARAGRAPH_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	if(ubNumParagraphs >= 1)
 	{
 		usPosY = AIM_HISTORY_PARAGRAPH_Y;
 		//1st paragraph
-		uiStartLoc = AIM_HISTORY_LINE_SIZE * (ubPageNum + 1 );
-		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+		LoadAIMHistoryText(sText, ubPageNum + 1);
 		usNumPixels = DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -288,8 +287,7 @@ static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs
 	{
 		//2nd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-		uiStartLoc = AIM_HISTORY_LINE_SIZE * (ubPageNum + 2 );
-		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+		LoadAIMHistoryText(sText, ubPageNum + 2);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -297,9 +295,7 @@ static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs
 	{
 		//3rd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-
-		uiStartLoc = AIM_HISTORY_LINE_SIZE * (ubPageNum + 3 );
-		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+		LoadAIMHistoryText(sText, ubPageNum + 3);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -313,7 +309,6 @@ static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 static BOOLEAN InitTocMenu(void)
 {
 	UINT16			i, usPosY;
-	UINT32			uiStartLoc=0;
 	wchar_t			sText[400];
 	UINT8				ubLocInFile[]=
 								{IN_THE_BEGINNING,
@@ -327,8 +322,7 @@ static BOOLEAN InitTocMenu(void)
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
-		uiStartLoc = AIM_HISTORY_LINE_SIZE * ubLocInFile[i];
-		LoadEncryptedDataFromFile(AIMHISTORYFILE, sText, uiStartLoc, AIM_HISTORY_LINE_SIZE);
+		LoadAIMHistoryText(sText, ubLocInFile[i]);
 
 		//if the mouse regions havent been inited, init them
 		if( !gfInToc )

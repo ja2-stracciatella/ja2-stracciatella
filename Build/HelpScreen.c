@@ -306,8 +306,6 @@ void SelectHelpScrollAreaArrowsCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 //checkbox to toggle show help again toggle
 UINT32	gHelpScreenDontShowHelpAgainToggle;
-//MOUSE_REGION    HelpScreenDontShowHelpAgainToggleTextRegion;
-//void		HelpScreenDontShowHelpAgainToggleTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
 INT32		giHelpScreenButtonsImage[ HELP_SCREEN_NUM_BTNS ];
@@ -487,9 +485,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void);
 
 static BOOLEAN EnterHelpScreen(void)
 {
-	UINT16 usPosX, usPosY;//, usWidth, usHeight;
-//	INT32	iStartLoc;
-//	CHAR16 zText[1024];
+	UINT16 usPosX, usPosY;
 
 	//Clear out all the save background rects
 	EmptyBackgroundRects( );
@@ -553,19 +549,6 @@ static BOOLEAN EnterHelpScreen(void)
 		else
 			ButtonList[ gHelpScreenDontShowHelpAgainToggle ]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
-
-/*
-	///creatre a region for the text that says ' [ x ] click to continue seeing ....'
-	iStartLoc = HELPSCREEN_RECORD_SIZE * HLP_TXT_CONSTANT_FOOTER;
-	LoadEncryptedDataFromFile(HELPSCREEN_FILE, zText, iStartLoc, HELPSCREEN_RECORD_SIZE );
-
-	usWidth = StringPixLength( zText, HELP_SCREEN_TEXT_BODY_FONT );
-	usHeight = GetFontHeight( HELP_SCREEN_TEXT_BODY_FONT );
-
-/*
-	MSYS_DefineRegion( &HelpScreenDontShowHelpAgainToggleTextRegion, usPosX, usPosY, (UINT16)(usPosX+usWidth), (UINT16)(usPosY+usHeight), MSYS_PRIORITY_HIGHEST-1,
-							 gHelpScreen.usCursor, MSYS_NO_CALLBACK, HelpScreenDontShowHelpAgainToggleTextRegionCallBack );
-*/
 
 	// load the help screen background graphic and add it
 	guiHelpScreenBackGround = AddVideoObjectFromFile("INTERFACE/HelpScreen.sti");
@@ -722,10 +705,6 @@ static void ExitHelpScreen(void)
 
 	//remove the mouse region that blankets
 	MSYS_RemoveRegion( &gHelpScreenFullScreenMask );
-
-	//checkbox to toggle show help again toggle
-//	MSYS_RemoveRegion( &HelpScreenDontShowHelpAgainToggleTextRegion );
-
 
 	//remove the hepl graphic
 	DeleteVideoObjectFromIndex( guiHelpScreenBackGround );
@@ -1384,15 +1363,6 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason
 	}
 }
 
-/*
-void HelpScreenDontShowHelpAgainToggleTextRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason )
-{
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
-	}
-}
-*/
 
 //set the fact the we have chmaged to a new screen
 void NewScreenSoResetHelpScreen( )
