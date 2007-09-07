@@ -91,8 +91,6 @@ BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile );
 
 BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY );
 
-void HandleFactForNPCUnescorted( UINT8 ubNPC );
-
 
 enum
 {

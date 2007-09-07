@@ -10676,8 +10676,6 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 	  }
 	  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0 );
 
-	  HandleFactForNPCUnescorted( pSoldier->ubProfile );
-
 	  if ( pSoldier->ubProfile == JOHN )
 	  {
 		  SOLDIERTYPE * pSoldier2;

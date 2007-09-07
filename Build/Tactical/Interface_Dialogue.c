@@ -1636,31 +1636,6 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 	}
 }
 
-void HandleFactForNPCUnescorted( UINT8 ubNPC )
-{
-	// obsolete!
-	/*
-	switch( ubNPC )
-	{
-		case MARIA:
-			SetFactFalse( FACT_MARIA_ESCORTED );
-			break;
-		case JOEY:
-			SetFactFalse( FACT_JOEY_ESCORTED );
-			break;
-		case SKYRIDER:
-			SetFactFalse( FACT_ESCORTING_SKYRIDER );
-			break;
-		case MARY:
-			SetFactFalse( FACT_JOHN_AND_MARY_EPCS );
-			break;
-		case JOHN:
-			SetFactFalse( FACT_JOHN_AND_MARY_EPCS );
-			break;
-	}
-	*/
-}
-
 
 static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType);
 static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor);
@@ -2693,7 +2668,6 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					ubTargetNPC = MARIA;
 				}
 				UnRecruitEPC( ubTargetNPC );
-				HandleFactForNPCUnescorted( ubTargetNPC );
 				switch( ubTargetNPC )
 				{
 					case MARY:
