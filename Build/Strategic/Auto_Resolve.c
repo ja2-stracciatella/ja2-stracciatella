@@ -2247,14 +2247,22 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 }
 
 
+static void DepressAutoButton(UINT btn)
+{
+	ButtonList[gpAR->iButton[PAUSE_BUTTON ]]->uiFlags &= ~BUTTON_CLICKED_ON;
+	ButtonList[gpAR->iButton[PLAY_BUTTON  ]]->uiFlags &= ~BUTTON_CLICKED_ON;
+	ButtonList[gpAR->iButton[FAST_BUTTON  ]]->uiFlags &= ~BUTTON_CLICKED_ON;
+	ButtonList[gpAR->iButton[FINISH_BUTTON]]->uiFlags &= ~BUTTON_CLICKED_ON;
+	ButtonList[gpAR->iButton[btn          ]]->uiFlags |=  BUTTON_CLICKED_ON;
+	gpAR->fPaused = (btn == PAUSE_BUTTON);
+}
+
+
 static void PauseButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FAST_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		gpAR->fPaused = TRUE;
+		DepressAutoButton(PAUSE_BUTTON);
 	}
 }
 
@@ -2263,11 +2271,8 @@ static void PlayButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FAST_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		DepressAutoButton(PLAY_BUTTON);
 		gpAR->uiTimeSlice = 1000 * gpAR->ubTimeModifierPercentage / 100;
-		gpAR->fPaused = FALSE;
 	}
 }
 
@@ -2276,11 +2281,8 @@ static void FastButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		DepressAutoButton(FAST_BUTTON);
 		gpAR->uiTimeSlice = 4000;
-		gpAR->fPaused = FALSE;
 	}
 }
 
@@ -2289,12 +2291,9 @@ static void FinishButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ gpAR->iButton[ FAST_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		DepressAutoButton(FINISH_BUTTON);
 		gpAR->uiTimeSlice = 0xffffffff;
 		gpAR->fSound = FALSE;
-		gpAR->fPaused = FALSE;
 		PlayJA2StreamingSample(AUTORESOLVE_FINISHFX, HIGHVOLUME, 1, MIDDLEPAN);
 	}
 }
@@ -2828,20 +2827,9 @@ static void HandleAutoResolveInput(void)
 			switch( InputEvent.usParam )
 			{
 				case SDLK_SPACE:
-					gpAR->fPaused ^= TRUE;
-					if( gpAR->fPaused )
-					{
-						ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-						ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-						ButtonList[ gpAR->iButton[ FAST_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-						ButtonList[ gpAR->iButton[ FINISH_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-					}
-					else
-					{
-						ButtonList[ gpAR->iButton[ PAUSE_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-						ButtonList[ gpAR->iButton[ PLAY_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-					}
+					DepressAutoButton(gpAR->fPaused ? PLAY_BUTTON : PAUSE_BUTTON);
 					break;
+
 				case 'x':
 					if( _KeyDown( ALT ) )
 					{
