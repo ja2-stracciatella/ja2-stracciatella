@@ -1762,8 +1762,6 @@ static void InitBookMarkList(void)
 void SetBookMark(INT32 iBookId)
 {
 	// find first empty spot, set to iBookId
-	if (iBookId == -2) return;
-
 	INT32 i;
 	for (i = 0; LaptopSaveInfo.iBookMarkList[i] != -1; ++i)
 	{
