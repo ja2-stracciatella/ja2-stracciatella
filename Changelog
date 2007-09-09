@@ -1,4 +1,4 @@
-v0.6
+v0.6 - 2007-09-09 - Strawberry
 (r1472) Fix graphically stuck buttons.
 (r1461, r1475) Fix wide string/string format specifiers.
 (r1458) Fix an infinite loop when throwing objects.
@@ -13,7 +13,7 @@ v0.6
 (r1271) Implement SoundSetPan(). This caused an unexpected termination of the game in certain places.
 (r1267) Fix a vanilla bug where some texts were not displayed because of uninitialised drawing coordinates.
 
-v0.5
+v0.5 - 2007-07-24 - Hazelnut
 (r1259) Implement Blt16BPPTo16BPPTrans(). It is used in the editor.
 (r1257) Fix a transcription error in IsTileRedundent(): The source data only uses one byte per pixel, not two.
 (r1253) Fix incorrectly encoded cyrillic texts in the non-Russion versions when loading them from the data files.
@@ -32,7 +32,7 @@ v0.5
 (r1196) Correct the char to glyph translation table. This should fix the Polish translation.
 (r1193) Simplify the interface of GetTileIndexFromTypeSubIndex(). This also fixes one incorrect use of this function in PasteSingleBrokenWall().
 
-v0.4
+v0.4 - 2007-07-08 - Cherry
 (r1183) Add configfile handling and change the code to use the configfile to determine the path to the binary data.
 (r1139) In SwapLarrysProfiles() ->bInvStatus[] gets copied twice, but ->bInvNumber[] not at all. Rectify this.
 (r1121) If text is highlighted and delete gets pressed do not just beep but actually delete the text.
@@ -51,7 +51,7 @@ v0.4
 (r777) Just use *.jsd as pattern instead of *.[Jj][Ss][Dd]. The former works on Windows' FindFirstFile() and should work on case sensitive filesystems too, because all filenames are required to be lowercase. This fixes the problem of missing corpses on Windows.
 (r711) Use given parameter Length instead of lengthof(sString). This fixes the sector a merc is in not being displayed in the strategic screen.
 
-v0.3
+v0.3 - 2007-04-08 - Chocolate
 (r688, r690, r696, r698, r699, r700, r703, r704, r706) Windows support
 (r676) The yes/no buttons for deleting emails work again now.
 (r674) Simplify the code to swap emails. This fixes the bug that sorting emails corrupts emails with variable content (i.e. mercenary names and monetary amounts), because not all parts of emails got swapped.
@@ -70,7 +70,7 @@ v0.3
 (r528) Use scroll lock to toggle input grabbing. This is useful for scrolling with the mouse in tactical mode when playing in windowed mode.
 (r505, r583, r584, r602, r606, r705) Fix wide string/string format specifiers.
 
-v0.2
+v0.2 - 2007-03-15 - Pistachio
 (r497) Fix scrolling of the tactical view: SDL_UpdateRect() was missing.
 (r491) Implement sound support.
 (r484) Fix some format string vulnerabilities which lead to crashes when a text field (for example the savegame title) contains a percent sign.
@@ -97,7 +97,7 @@ v0.2
 (r381) Fix a memory leak which happens during loading savegames.
 (r378) Fix Blt8BPPDataTo16BPPBufferMonoShadowClip(), clipping was done incorrectly which lead to graphical artifacts when drawing text.
 
-v0.1 - First release
+v0.1 - 2006-11-16 - Vanilla - First release
 (r369) Fixing german translation - there is no longer a time limit, only an option to set whether saving in battles is allowed. Changing text accordingly.
 (r363) Add a crude manpage.
 (r359) Also check the DATADIR when opening a file/checking if a file exists.
