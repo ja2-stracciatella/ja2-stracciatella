@@ -3095,9 +3095,11 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 			break;
 #endif
 
+#if defined JA2BETAVERSION
 		case 'e':
 			if (usKeyState & ALT_DOWN && CHEATER_CHEAT_LEVEL()) AddAllEmails();
 			break;
+#endif
 
 		case '=':
 			if (CHEATER_CHEAT_LEVEL())
