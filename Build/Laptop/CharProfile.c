@@ -26,7 +26,6 @@
 #include "Text.h"
 
 
-//BOOLEAN fIMPCompletedFlag = FALSE;
 BOOLEAN fReDrawCharProfile = FALSE;
 BOOLEAN fButtonPendingFlag = FALSE;
 BOOLEAN fAddCreatedCharToPlayersTeam = FALSE;

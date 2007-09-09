@@ -4,39 +4,39 @@
 #include "MessageBoxScreen.h"
 #include "Types.h"
 
-void			ExitLaptop();
-void			SetBookMark(INT32 iBookId);
-BOOLEAN		LeaveLapTopScreen( );
-void			SetLaptopExitScreen( UINT32 uiExitScreen );
-void			SetLaptopNewGameFlag( );
-void			LapTopScreenCallBack(MOUSE_REGION * pRegion, INT32 iReason );
-void			HandleRightButtonUpEvent( void );
-BOOLEAN		DoLapTopMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-void			GoToWebPage(INT32 iPageId);
-BOOLEAN		WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackGround);
-void			BlitTitleBarIcons( void );
-void			HandleKeyBoardShortCutsForLapTop( UINT16 usEvent, UINT32 usParam, UINT16 usKeyState );
-BOOLEAN		RenderWWWProgramTitleBar( void );
-void			DisplayProgramBoundingBox( BOOLEAN fMarkButtons );
-BOOLEAN		DoLapTopSystemMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
-void			CreateFileAndNewEmailIconFastHelpText( UINT32 uiHelpTextID, BOOLEAN fClearHelpText );
-BOOLEAN		InitLaptopAndLaptopScreens();
+void    ExitLaptop(void);
+void    SetBookMark(INT32 iBookId);
+BOOLEAN LeaveLapTopScreen(void);
+void    SetLaptopExitScreen(UINT32 uiExitScreen);
+void    SetLaptopNewGameFlag(void);
+void    LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
+void    HandleRightButtonUpEvent(void);
+BOOLEAN DoLapTopMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void    GoToWebPage(INT32 iPageId);
+BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackGround);
+void    BlitTitleBarIcons(void);
+void    HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usKeyState);
+BOOLEAN RenderWWWProgramTitleBar(void);
+void    DisplayProgramBoundingBox(BOOLEAN fMarkButtons);
+BOOLEAN DoLapTopSystemMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void    CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHelpText);
+BOOLEAN InitLaptopAndLaptopScreens();
 
-// clear out all tempf iles from laptop
-void ClearOutTempLaptopFiles( void );
+// clear out all temp files from laptop
+void ClearOutTempLaptopFiles(void);
 
 void HaventMadeImpMercEmailCallBack();
 
-extern UINT32 guiCurrentLaptopMode;
-extern UINT32 guiPreviousLaptopMode;
-extern INT32	 giCurrentSubPage;
+extern UINT32  guiCurrentLaptopMode;
+extern UINT32  guiPreviousLaptopMode;
+extern INT32   giCurrentSubPage;
 extern BOOLEAN fReDrawScreenFlag;
 extern BOOLEAN fPausedReDrawScreenFlag;
 extern BOOLEAN fLoadPendingFlag;
 extern BOOLEAN fReDrawPostButtonRender;
 extern BOOLEAN fCurrentlyInLaptop;
-extern UINT32 guiLaptopBACKGROUND;
-extern UINT32 guiTITLEBARICONS;
+extern UINT32  guiLaptopBACKGROUND;
+extern UINT32  guiTITLEBARICONS;
 extern BOOLEAN fDoneLoadPending;
 extern BOOLEAN fConnectingToSubPage;
 extern BOOLEAN fFastLoadFlag;
@@ -47,7 +47,7 @@ extern BOOLEAN fReDrawBookMarkInfo;
 
 enum
 {
-	LAPTOP_MODE_NONE=0,
+	LAPTOP_MODE_NONE = 0,
 	LAPTOP_MODE_FINANCES,
 	LAPTOP_MODE_PERSONNEL,
 	LAPTOP_MODE_HISTORY,
@@ -101,12 +101,12 @@ enum
 
 
 #define LAPTOP_SCREEN_UL_X 111
-#define LAPTOP_SCREEN_UL_Y 27
+#define LAPTOP_SCREEN_UL_Y  27
 #define LAPTOP_SCREEN_LR_X 613
 #define LAPTOP_SCREEN_LR_Y 427
 #define LAPTOP_UL_X 24
 #define LAPTOP_UL_Y 27
-#define LAPTOP_SCREEN_WIDTH LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X
+#define LAPTOP_SCREEN_WIDTH  LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X
 #define LAPTOP_SCREEN_HEIGHT LAPTOP_SCREEN_LR_Y - LAPTOP_SCREEN_UL_Y
 
 // new positions for web browser
@@ -118,7 +118,7 @@ enum
 // the bookmark values, move cancel down as bookmarks added
 
 enum{
-	AIM_BOOKMARK=0,
+	AIM_BOOKMARK = 0,
 	BOBBYR_BOOKMARK,
 	IMP_BOOKMARK,
 	MERC_BOOKMARK,
@@ -129,9 +129,9 @@ enum{
 };
 
 
-#define	DEAD_MERC_COLOR_RED							255
-#define	DEAD_MERC_COLOR_GREEN						55
-#define	DEAD_MERC_COLOR_BLUE						55
+#define DEAD_MERC_COLOR_RED   255
+#define DEAD_MERC_COLOR_GREEN  55
+#define DEAD_MERC_COLOR_BLUE   55
 
 
 BOOLEAN DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
