@@ -1656,44 +1656,15 @@ static void NewEye(FACETYPE* pFace)
 
 static void NewMouth(FACETYPE* pFace)
 {
- BOOLEAN OK		= FALSE;
- UINT16 sOld	= pFace->sMouthFrame;
-
-// if (audio_gap_active == 1)
- //  {
- //   Talk.mouth = 0;
- //   return;
- //  }
-
- do
- {
-  //Talk.mouth = random(4);
-
-  pFace->sMouthFrame = (INT16)Random(6);
-
-  if ( pFace->sMouthFrame > 3)
+	const UINT16 old_frame = pFace->sMouthFrame;
+	UINT16       new_frame;
+	do
 	{
-    pFace->sMouthFrame = 0;
+		new_frame = Random(6);
+		if (new_frame > 3) new_frame = 0;
 	}
-
-  switch( sOld)
-  {
-    case 0 : if ( pFace->sMouthFrame != 0 )
-	     OK = TRUE;
-	     break;
-    case 1 : if ( pFace->sMouthFrame != 1 )
-			 OK = TRUE;
-	     break;
-    case 2 : if ( pFace->sMouthFrame != 2 )
-		   OK = TRUE;
-	     break;
-    case 3 : if ( pFace->sMouthFrame != 3 )
-		   OK = TRUE;
-	     break;
-  }
-
- } while (!OK);
-
+	while (new_frame == old_frame);
+	pFace->sMouthFrame = new_frame;
 }
 
 
