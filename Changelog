@@ -1,3 +1,4 @@
+(r1523) Fix a mixup in r1487: The end turn button in the single merc panel was linked to the mute button callback.
 (r1522) Fix a crash caused by r1400 in battles with bloodcats.
 
 v0.6 - 2007-09-09 - Strawberry
