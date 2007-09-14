@@ -3648,7 +3648,7 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 				usStructureID = pCurrSoldier->pLevelNode->pStructureData->usStructureID;
 			}
 
-			if (InternalOkayToAddStructureToWorld(sGridNo, pCurrSoldier->bLevel, &pStructureFileRef->pDBStructureRef[gOneCDirection[bLoop]], usStructureID, !fPeopleToo))
+			if (InternalOkayToAddStructureToWorld(sGridNo, pCurrSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bLoop)], usStructureID, !fPeopleToo))
 			{
 				return TRUE;
 			}
@@ -3954,7 +3954,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 		// For switches, ALLOW them to walk through walls to reach it....
 		if (pDoor && pDoor->fFlags & STRUCTURE_SWITCH)
 		{
-			ubTestDirection = gOppositeDirection[ubTestDirection];
+			ubTestDirection = OppositeDirection(ubTestDirection);
 		}
 
 		if (fDoor)
@@ -4156,7 +4156,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 		if (pDoor && pDoor->fFlags & STRUCTURE_SWITCH)
 		{
-			ubTestDirection = gOppositeDirection[ubTestDirection];
+			ubTestDirection = OppositeDirection(ubTestDirection);
 		}
 
 		if (gubWorldMovementCosts[sSpot][ubTestDirection][pSoldier->bLevel] >= TRAVELCOST_BLOCKED)

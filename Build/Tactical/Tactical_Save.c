@@ -977,7 +977,7 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 					// requires non-wall movement cost from one location to the other!
 					if ( gpWorldLevelData[ sNewLoc ].uiFlags & MAPELEMENT_REACHABLE )
 					{
- 						ubMovementCost = gubWorldMovementCosts[ gWorldItems[ uiCounter ].sGridNo ][ gOppositeDirection[ ubDir ] ][ 0 ];
+						ubMovementCost = gubWorldMovementCosts[gWorldItems[uiCounter].sGridNo][OppositeDirection(ubDir)][0];
 						// if we find a door movement cost, if the door is open the gridno should be accessible itself
 						if ( ubMovementCost != TRAVELCOST_DOOR && ubMovementCost != TRAVELCOST_WALL )
 						{

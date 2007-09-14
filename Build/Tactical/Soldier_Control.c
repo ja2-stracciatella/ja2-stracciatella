@@ -3794,13 +3794,14 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, IN
 						// possibly play torso explosion anim!
 						if (pSoldier->bDirection == bDirection)
 						{
-							usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ pSoldier->bDirection ] ) );
+							const UINT8 opp_dir = OppositeDirection(bDirection);
+							usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(opp_dir));
 
-							if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
+							if (OKFallDirection(pSoldier, usNewGridNo, pSoldier->bLevel, opp_dir, FLYBACK_HIT))
 							{
-								usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+								usNewGridNo = NewGridNo(usNewGridNo, DirectionInc(opp_dir));
 
-								if ( OKFallDirection( pSoldier, usNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], pSoldier->usAnimState ) )
+								if (OKFallDirection(pSoldier, usNewGridNo, pSoldier->bLevel, opp_dir, pSoldier->usAnimState))
 								{
 									fBlownAway = TRUE;
 								}
@@ -3917,9 +3918,9 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, 
 			EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
 
 			// Check behind us!
-			sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+			sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 
-			if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, gOppositeDirection[ bDirection ], FLYBACK_HIT ) )
+			if (OKFallDirection(pSoldier, sNewGridNo, pSoldier->bLevel, OppositeDirection(bDirection), FLYBACK_HIT))
 			{
 				ChangeToFallbackAnimation( pSoldier, (INT8)bDirection );
 			}
@@ -4112,7 +4113,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 				// If we have reach the max, go back one sFinalDest....
 				if ( pSoldier->usPathDataSize == MAX_PATH_LIST_SIZE )
 				{
-					//pSoldier->sFinalDestination = NewGridNo( (UINT16)pSoldier->sFinalDestination, DirectionInc( gOppositeDirection[ ubPathingMaxDirection ] ) );
+					//pSoldier->sFinalDestination = NewGridNo(pSoldier->sFinalDestination, DirectionInc(OppositeDirection(ubPathingMaxDirection)));
 				}
 				else
 				{
@@ -4431,7 +4432,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 			}
 
 			// check to see if we can add creature in that direction
-			fOk = OkayToAddStructureToWorld( pSoldier->sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[ gOneCDirection[ bCurrentDirection	] ]), usStructureID );
+			fOk = OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bCurrentDirection)], usStructureID);
 			if (!fOk)
 			{
 				break;
@@ -4464,7 +4465,7 @@ void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usN
 	if ( pSoldier->bReverse && usAnimState != SIDE_STEP )
 	{
 		// OK, check if we are going to go in the exact opposite than our facing....
-		usNewDirection = gOppositeDirection[ usNewDirection ];
+		usNewDirection = OppositeDirection(usNewDirection);
 	}
 
 
@@ -4856,7 +4857,7 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
 	CHECKF( usAnimSurface != INVALID_ANIMATION_SURFACE );
 
 	// COnvert world direction into sprite direction
-	ubTempDir = gOneCDirection[ pSoldier->bDirection ];
+	ubTempDir = OneCDirection(pSoldier->bDirection);
 
 	//If we are only one frame, ignore what the script is telling us!
 	if ( gAnimSurfaceDatabase[ usAnimSurface ].ubFlags & ANIM_DATA_FLAG_NOFRAMES )
@@ -7074,26 +7075,26 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 		{
 			// We are near a lower level.
 			// Use opposite direction
-			bNewDirection = gOppositeDirection[ bNewDirection ];
+			bNewDirection = OppositeDirection(bNewDirection);
 
 			// Alrighty, let's not blindly change here, look at whether the dest gridno is good!
-			sNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bNewDirection ] ) );
+			sNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bNewDirection)));
 			if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, 0 ) )
 			{
 				return( FALSE );
 			}
-			sNewGridNo = NewGridNo( (UINT16)sNewGridNo, DirectionInc( gOppositeDirection[ bNewDirection ] ) );
+			sNewGridNo = NewGridNo(sNewGridNo, DirectionInc(OppositeDirection(bNewDirection)));
 			if ( !NewOKDestination( pSoldier, sNewGridNo, TRUE, 0 ) )
 			{
 				return( FALSE );
 			}
 
 			// Are wee near enough to fall forwards....
-			if ( pSoldier->bDirection == gOneCDirection[ bNewDirection ] ||
-					 pSoldier->bDirection == gTwoCDirection[ bNewDirection ] ||
-					 pSoldier->bDirection == bNewDirection ||
-					 pSoldier->bDirection == gOneCCDirection[ bNewDirection ] ||
-					 pSoldier->bDirection == gTwoCCDirection[ bNewDirection ] )
+			if (pSoldier->bDirection == OneCDirection(bNewDirection) ||
+					pSoldier->bDirection == TwoCDirection(bNewDirection) ||
+					pSoldier->bDirection == bNewDirection ||
+					pSoldier->bDirection == OneCCDirection(bNewDirection) ||
+					pSoldier->bDirection == TwoCCDirection(bNewDirection))
 			{
 				// Do backwards...
 				fDoForwards = FALSE;
@@ -7105,7 +7106,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 			{
 				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT16)( -1 * DirectionInc(bNewDirection ) ) );
 				pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sTempNewGridNo, (INT16)( -1 * DirectionInc( bNewDirection ) ) );
-				EVENT_SetSoldierDesiredDirection( pSoldier, gOppositeDirection[ bNewDirection ] );
+				EVENT_SetSoldierDesiredDirection(pSoldier, OppositeDirection(bNewDirection));
 				pSoldier->fTurningUntilDone = TRUE;
 				pSoldier->usPendingAnimation = FALLFORWARD_ROOF;
 				//EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_ROOF, 0 , FALSE );
@@ -7152,7 +7153,7 @@ void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier )
 
 			pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) );
 
-			bNewDirection = gTwoCDirection[ bNewDirection ];
+			bNewDirection = TwoCDirection(bNewDirection);
 
 			pSoldier->ubPendingDirection = bNewDirection;
 			EVENT_InitNewSoldierAnim( pSoldier, CLIMBDOWNROOF, 0 , FALSE );
@@ -9161,7 +9162,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 	if ( pStructureFileRef != NULL )
 	{
 		// Can we add structure data for this stance...?
-		if ( !OkayToAddStructureToWorld( pSoldier->sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ bDirection ]]), usOKToAddStructID ) )
+		if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bDirection)], usOKToAddStructID))
 		{
 			return( FALSE );
 		}
@@ -10060,8 +10061,8 @@ static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 	UINT16 usNewGridNo;
 
 	// Get dest gridno, convert to center coords
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
-	usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
+	usNewGridNo = NewGridNo(usNewGridNo,       DirectionInc(OppositeDirection(bDirection)));
 
 	// Remove any previous actions
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -10069,9 +10070,9 @@ static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 	// Set path....
 	pSoldier->usPathDataSize = 0;
 	pSoldier->usPathIndex    = 0;
-	pSoldier->usPathingData[ pSoldier->usPathDataSize ] = gOppositeDirection[ pSoldier->bDirection ];
+	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
-	pSoldier->usPathingData[ pSoldier->usPathDataSize ] = gOppositeDirection[ pSoldier->bDirection ];
+	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
 	pSoldier->sFinalDestination = usNewGridNo;
 	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, FLYBACK_HIT );
@@ -10085,7 +10086,7 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 	UINT16 usNewGridNo;
 
 	// Get dest gridno, convert to center coords
-	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( gOppositeDirection[ bDirection ] ) );
+	usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(OppositeDirection(bDirection)));
 	//usNewGridNo = NewGridNo( (UINT16)usNewGridNo, (UINT16)(-1 * DirectionInc( bDirection ) ) );
 
 	// Remove any previous actions
@@ -10094,7 +10095,7 @@ void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection )
 	// Set path....
 	pSoldier->usPathDataSize = 0;
 	pSoldier->usPathIndex    = 0;
-	pSoldier->usPathingData[ pSoldier->usPathDataSize ] = gOppositeDirection[ pSoldier->bDirection ];
+	pSoldier->usPathingData[pSoldier->usPathDataSize] = OppositeDirection(pSoldier->bDirection);
 	pSoldier->usPathDataSize++;
 	pSoldier->sFinalDestination = usNewGridNo;
 	EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, FALLBACK_HIT_STAND );
@@ -10228,7 +10229,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	SendSoldierSetDesiredDirectionEvent( pSoldier, sFacingDir );
 
 	// Set NPC facing
-	SendSoldierSetDesiredDirectionEvent( pTSoldier, gOppositeDirection[ sFacingDir ] );
+	SendSoldierSetDesiredDirectionEvent(pTSoldier, OppositeDirection(sFacingDir));
 
 	// Stop our guys...
 	EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );

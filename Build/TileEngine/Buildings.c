@@ -110,11 +110,11 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 
 		// if point to (2 clockwise) is not part of building and is not visited,
 		// or is starting point, turn!
-		sRightGridNo = NewGridNo( sCurrGridNo, DirectionInc( gTwoCDirection[ bDirection ] ) );
+		sRightGridNo = NewGridNo(sCurrGridNo, DirectionInc(TwoCDirection(bDirection)));
 		sTempGridNo = sRightGridNo;
 		if ( ( ( !(gpWorldLevelData[ sTempGridNo ].uiFlags & MAPELEMENT_REACHABLE) && !(gpWorldLevelData[ sTempGridNo ].ubExtFlags[0] & MAPELEMENT_EXT_ROOFCODE_VISITED) ) || (sTempGridNo == sStartGridNo) ) && (sCurrGridNo != sStartGridNo) )
 		{
-			bDirection = gTwoCDirection[ bDirection ];
+			bDirection = TwoCDirection(bDirection);
 			// try in that direction
 			continue;
 		}
@@ -126,7 +126,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			// first search for a spot that is neither part of the building or visited
 
 			// we KNOW that the spot in the original direction is blocked, so only loop 3 times
-			bTempDirection = gTwoCDirection[ bDirection ];
+			bTempDirection = TwoCDirection(bDirection);
 			fFoundDir = FALSE;
 			for ( uiLoop = 0; uiLoop < 3; uiLoop++ )
 			{
@@ -137,12 +137,12 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 					fFoundDir = TRUE;
 					break;
 				}
-				bTempDirection = gTwoCDirection[ bTempDirection ];
+				bTempDirection = TwoCDirection(bTempDirection);
 			}
 			if (!fFoundDir)
 			{
 				// now search for a spot that is just not part of the building
-				bTempDirection = gTwoCDirection[ bDirection ];
+				bTempDirection = TwoCDirection(bDirection);
 				fFoundDir = FALSE;
 				for ( uiLoop = 0; uiLoop < 3; uiLoop++ )
 				{
@@ -153,7 +153,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 						fFoundDir = TRUE;
 						break;
 					}
-					bTempDirection = gTwoCDirection[ bTempDirection ];
+					bTempDirection = TwoCDirection(bTempDirection);
 				}
 				if (!fFoundDir)
 				{
@@ -169,7 +169,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 		// move ahead
 		sPrevGridNo = sCurrGridNo;
 		sCurrGridNo = sTempGridNo;
-		sRightGridNo = NewGridNo( sCurrGridNo, DirectionInc( gTwoCDirection[ bDirection ] ) );
+		sRightGridNo = NewGridNo( sCurrGridNo, DirectionInc(TwoCDirection(bDirection)));
 
 #ifdef ROOF_DEBUG
 		if (gsCoverValue[sCurrGridNo] == 0x7F7F)
@@ -213,11 +213,11 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 					bDesiredOrientation = OUTSIDE_TOP_LEFT;
 					break;
 				case SOUTH:
-					sWallGridNo = (INT16) ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
+					sWallGridNo = (INT16)(sCurrGridNo + DirectionInc(TwoCDirection(bDirection)));
 					bDesiredOrientation = OUTSIDE_TOP_RIGHT;
 					break;
 				case WEST:
-					sWallGridNo = (INT16) ( sCurrGridNo + DirectionInc( gTwoCDirection[ bDirection ] ) );
+					sWallGridNo = (INT16)(sCurrGridNo + DirectionInc(TwoCDirection(bDirection)));
 					bDesiredOrientation = OUTSIDE_TOP_LEFT;
 					break;
 				default:

@@ -1386,7 +1386,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier
 		}
 		else
 		{
-			fReturn = AddStructureToWorld(sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[gOneCDirection[pSoldier->bDirection]], pSoldier->pLevelNode);
+			fReturn = AddStructureToWorld(sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(pSoldier->bDirection)], pSoldier->pLevelNode);
 		}
 
 		if (!fReturn)
@@ -1394,7 +1394,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier
 			// Debug msg
 			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%ls), at %d direction %d", pSoldier->ubID, pSoldier->name, sGridNo, pSoldier->bDirection);
 
-			if (pStructureFileRef->pDBStructureRef[gOneCDirection[pSoldier->bDirection]].pDBStructure->ubNumberOfTiles > 1)
+			if (pStructureFileRef->pDBStructureRef[OneCDirection(pSoldier->bDirection)].pDBStructure->ubNumberOfTiles > 1)
 			{
 				// If we have more than one tile
 				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
@@ -1442,7 +1442,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 				usOKToAddStructID = INVALID_STRUCTURE_ID;
 			}
 
-			if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructFileRef->pDBStructureRef[gOneCDirection[bDirection]], usOKToAddStructID))
+			if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructFileRef->pDBStructureRef[OneCDirection(bDirection)], usOKToAddStructID))
 			{
 				return FALSE;
 			}

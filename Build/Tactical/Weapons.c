@@ -1169,7 +1169,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
 		// Direction to center of explosion
-	  ubDirection = gOppositeDirection[ pSoldier->bDirection ];
+	  ubDirection = OppositeDirection(pSoldier->bDirection);
 		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
@@ -4377,7 +4377,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 								{
 									// Hit!
 									iImpact = HTHImpact( pQueenSoldier, pSoldier, iHitBy, TRUE );
-			 						EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, gOppositeDirection[bDir], 50, pQueenSoldier->ubID, 0, ANIM_CROUCH, 0);
+			 						EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, OppositeDirection(bDir), 50, pQueenSoldier->ubID, 0, ANIM_CROUCH, 0);
 								}
 							}
 						}

@@ -238,7 +238,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	if ( ( uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = gOneCDirection[ pAniParams->uiUserData3 ];
+		ubTempDir = OneCDirection(pAniParams->uiUserData3);
 		sStartFrame = (UINT16)sStartFrame + ( pNewAniNode->usNumFrames * ubTempDir );
 	}
 
@@ -478,7 +478,7 @@ void UpdateAniTiles( )
 
 				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = gOneCDirection[ pNode->uiUserData3 ];
+					ubTempDir = OneCDirection(pNode->uiUserData3);
 					usMaxFrames = (UINT16)usMaxFrames + ( pNode->usNumFrames * ubTempDir );
 				}
 
@@ -561,7 +561,7 @@ void UpdateAniTiles( )
 						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = gOneCDirection[ pNode->uiUserData3 ];
+							ubTempDir = OneCDirection(pNode->uiUserData3);
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 
@@ -615,7 +615,7 @@ void UpdateAniTiles( )
 
 				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = gOneCDirection[ pNode->uiUserData3 ];
+					ubTempDir = OneCDirection(pNode->uiUserData3);
 					usMinFrames = ( pNode->usNumFrames * ubTempDir );
 				}
 
@@ -656,7 +656,7 @@ void UpdateAniTiles( )
 						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = gOneCDirection[ pNode->uiUserData3 ];
+							ubTempDir = OneCDirection(pNode->uiUserData3);
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 						if ( ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
@@ -740,7 +740,7 @@ static void SetAniTileFrame(ANITILE* pAniTile, INT16 sFrame)
 	if ( (pAniTile->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = gOneCDirection[ pAniTile->uiUserData3 ];
+		ubTempDir = OneCDirection(pAniTile->uiUserData3);
 		sStartFrame = (UINT16)sFrame + ( pAniTile->usNumFrames * ubTempDir );
 	}
 

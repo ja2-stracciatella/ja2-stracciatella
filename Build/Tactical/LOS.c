@@ -1929,7 +1929,9 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			if ( (pTarget->ubBodyType >= ADULTFEMALEMONSTER) && (pTarget->ubBodyType <=	YAM_MONSTER) )
 			{
 				ubAttackDirection = (UINT8) GetDirectionToGridNoFromGridNo( pBullet->pFirer->sGridNo, pTarget->sGridNo );
-				if ( ubAttackDirection == pTarget->bDirection || ubAttackDirection == gOneCCDirection[ pTarget->bDirection ] || ubAttackDirection == gOneCDirection[ pTarget->bDirection ] )
+				if (ubAttackDirection == pTarget->bDirection ||
+						ubAttackDirection == OneCCDirection(pTarget->bDirection) ||
+						ubAttackDirection == OneCDirection(pTarget->bDirection))
 				{
 					// may hit weak spot!
 					if (0) // check fact
@@ -2013,9 +2015,11 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			UINT8			ubOppositeDirection;
 
 			ubAttackDirection = (UINT8) GetDirectionToGridNoFromGridNo( pBullet->pFirer->sGridNo, pTarget->sGridNo );
-			ubOppositeDirection = gOppositeDirection[ ubAttackDirection ];
+			ubOppositeDirection = OppositeDirection(ubAttackDirection);
 
-			if ( ! ( ubOppositeDirection == pTarget->bDirection || ubAttackDirection == gOneCCDirection[ pTarget->bDirection ] || ubAttackDirection == gOneCDirection[ pTarget->bDirection ] ) )
+			if (ubOppositeDirection != pTarget->bDirection &&
+					ubAttackDirection != OneCCDirection(pTarget->bDirection) &&
+					ubAttackDirection != OneCDirection(pTarget->bDirection))
 			{
 				// lucky bastard was facing away!
 			}
@@ -2224,7 +2228,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     // get a new gridno based on direction it was moving.  Check to see if we're not
     // going through walls, etc by testing for a path, unless on the roof, in which case it would always
     // be legal, but the bLevel May change...
-  	sNewGridNo = NewGridNo( (INT16)pBullet->sGridNo, DirectionInc( gOppositeDirection[ SWeaponHit.usDirection ] ) );
+  	sNewGridNo = NewGridNo(pBullet->sGridNo, DirectionInc(OppositeDirection(SWeaponHit.usDirection)));
 
     bSpewBloodLevel = MercPtrs[ SWeaponHit.usSoldierID ]->bLevel;
     fCanSpewBlood   = TRUE;
@@ -2232,7 +2236,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     // If on anything other than bLevel of 0, we can pretty much freely spew blood
     if ( bSpewBloodLevel == 0 )
     {
-      if ( gubWorldMovementCosts[ sNewGridNo ][ gOppositeDirection[ SWeaponHit.usDirection ] ][ 0 ] >= TRAVELCOST_BLOCKED )
+      if (gubWorldMovementCosts[sNewGridNo][OppositeDirection(SWeaponHit.usDirection)][0] >= TRAVELCOST_BLOCKED)
       {
         fCanSpewBlood = FALSE;
       }

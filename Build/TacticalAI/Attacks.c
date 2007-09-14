@@ -197,7 +197,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 					usStructureID = INVALID_STRUCTURE_ID;
 				}
 
-				if ( ! OkayToAddStructureToWorld( pSoldier->sGridNo, pSoldier->bLevel, &(pStructureFileRef->pDBStructureRef[ gOneCDirection[ bDir ] ]), usStructureID ) )
+				if (!OkayToAddStructureToWorld(pSoldier->sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bDir)], usStructureID))
 				{
 					// can't turn in that dir.... next opponent
 					continue;

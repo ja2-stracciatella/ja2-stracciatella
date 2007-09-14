@@ -940,7 +940,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											}
 											else
 											{
-												sMultiTransShadowZBlitterIndex = gOneCDirection[pSoldier->bDirection];
+												sMultiTransShadowZBlitterIndex = OneCDirection(pSoldier->bDirection);
 											}
 										}
 									}

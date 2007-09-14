@@ -1242,7 +1242,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 
 			// if the soldier is behind him and not very close, forget it
 			bDir = atan8( pSoldier->sX, pSoldier->sY, pOpponent->sX, pOpponent->sY );
-			if ( gOppositeDirection[ pSoldier->bDesiredDirection ] == bDir )
+			if (OppositeDirection(pSoldier->bDesiredDirection) == bDir)
 			{
 				// directly behind; allow interrupts only within # of tiles equal to level
 				if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > EffectiveExpLevel( pSoldier ) )

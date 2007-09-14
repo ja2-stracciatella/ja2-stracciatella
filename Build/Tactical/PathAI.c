@@ -861,7 +861,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			{
 				if (fReverse)
 				{
-					iLastDir = gOppositeDirection[s->bDirection];
+					iLastDir = OppositeDirection(s->bDirection);
 				}
 				else
 				{
@@ -908,7 +908,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			}
 			else if ( trailTree[pCurrPtr->sPathNdx].fFlags & STEP_BACKWARDS )
 			{
-				iLastDir = gOppositeDirection[ trailTree[pCurrPtr->sPathNdx].stepDir ];
+				iLastDir = OppositeDirection(trailTree[pCurrPtr->sPathNdx].stepDir);
 			}
 			else
 			{
@@ -931,7 +931,9 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			{
 				if (iLastDir == iPrevToLastDir)
 				{
-					if ( iCnt != iLastDir && iCnt != gOneCDirection[ iLastDir ] && iCnt != gOneCCDirection[ iLastDir ])
+					if (iCnt != iLastDir &&
+							iCnt != OneCDirection(iLastDir) &&
+							iCnt != OneCCDirection(iLastDir))
 					{
 						goto NEXTDIR;
 					}
@@ -948,11 +950,11 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			if ( bLoopState == LOOPING_REVERSE )
 			{
-				iStructIndex = gOppositeDirection[ gOneCDirection[ iCnt ] ];
+				iStructIndex = OppositeDirection(OneCDirection(iCnt));
 			}
 			else
 			{
-				iStructIndex = gOneCDirection[ iCnt ];
+				iStructIndex = OneCDirection(iCnt);
 			}
 
 			if (fMultiTile)
@@ -982,7 +984,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 								// NB we're stuck with adding 1 to the loop counter down below so configure to accomodate...
 								//iLoopStart = (iLastDir + (MAXDIR / 2) - 1) % MAXDIR;
-								iLoopStart = gOppositeDirection[ gOneCCDirection[ iLastDir ] ];
+								iLoopStart = OppositeDirection(OneCCDirection(iLastDir));
 								iLoopEnd = (iLoopStart + 2) % MAXDIR;
 								iCnt = iLoopStart;
 								fCheckedBehind = TRUE;
@@ -1822,18 +1824,18 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 NEXTDIR:
 			if (bLoopState == LOOPING_CLOCKWISE) // backwards
 			{
-				iCnt = gOneCCDirection[ iCnt ];
+				iCnt = OneCCDirection(iCnt);
 			}
 			else
 			{
-				iCnt = gOneCDirection[ iCnt ];
+				iCnt = OneCDirection(iCnt);
 			}
 			if ( iCnt == iLoopEnd )
 			{
 ENDOFLOOP:
 				break;
 			}
-			else if ( fContinuousTurnNeeded && iCnt == gOppositeDirection[ iLoopStart ] )
+			else if (fContinuousTurnNeeded && iCnt == OppositeDirection(iLoopStart))
 			{
 				fCheckedBehind = TRUE;
 			}

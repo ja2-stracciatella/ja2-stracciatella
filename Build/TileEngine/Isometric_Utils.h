@@ -19,11 +19,11 @@
 #define	ADJUST_Y_FOR_HEIGHT( pos, y )				( y -= gpWorldLevelData[ pos ].sHeight )
 
 
-UINT8 gOppositeDirection[ NUM_WORLD_DIRECTIONS ];
-UINT8 gTwoCCDirection[ NUM_WORLD_DIRECTIONS ];
-UINT8 gTwoCDirection[ NUM_WORLD_DIRECTIONS ];
-UINT8 gOneCDirection[ NUM_WORLD_DIRECTIONS ];
-UINT8 gOneCCDirection[ NUM_WORLD_DIRECTIONS ];
+static inline UINT8 OppositeDirection(UINT dir) { return (dir + 4) % NUM_WORLD_DIRECTIONS; }
+static inline UINT8 TwoCCDirection(UINT dir)    { return (dir + 6) % NUM_WORLD_DIRECTIONS; }
+static inline UINT8 TwoCDirection(UINT dir)     { return (dir + 2) % NUM_WORLD_DIRECTIONS; }
+static inline UINT8 OneCCDirection(UINT dir)    { return (dir + 7) % NUM_WORLD_DIRECTIONS; }
+static inline UINT8 OneCDirection(UINT dir)     { return (dir + 1) % NUM_WORLD_DIRECTIONS; }
 
 extern const UINT8 gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS];
 

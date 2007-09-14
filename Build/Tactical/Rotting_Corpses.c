@@ -401,10 +401,7 @@ UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN
 
 			// OK , these have 2 directions....
 			bDirection = gb2DirectionsFrom8[ pCorpseDef->bDirection ];
-      if ( fForImage )
-      {
-			  bDirection = gOneCDirection[ bDirection ];
-      }
+			if (fForImage) bDirection = OneCDirection(bDirection);
 			break;
 
 		case SMERC_FALL:
@@ -419,7 +416,7 @@ UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN
 
       if ( fForImage )
       {
-			  bDirection = gOneCDirection[ bDirection ];
+			  bDirection = OneCDirection(bDirection);
       }
 			break;
 
@@ -427,11 +424,7 @@ UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN
 
 			// Uses 8
 			bDirection =  pCorpseDef->bDirection;
-
-      if ( fForImage )
-      {
-			  bDirection = gOneCDirection[ bDirection ];
-      }
+			if (fForImage) bDirection = OneCDirection(bDirection);
 			break;
 	}
 
@@ -826,7 +819,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	// ATE: If bDirection, get opposite
 //	if ( ubType == SMERC_FALLF || ubType == MMERC_FALLF || ubType == FMERC_FALLF )
 	//{
-	//	Corpse.bDirection = gOppositeDirection[ Corpse.bDirection ];
+	//	Corpse.bDirection = OppositeDirection(Corpse.bDirection);
 //	}
 
 	// Set time of death
@@ -1539,7 +1532,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 					{
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )
 						{
-							if ( OkayToAddStructureToWorld( (INT16)sGridNo, pDef->bLevel, &(pStructureFileRef->pDBStructureRef[gOneCDirection[ cnt3 ]]), INVALID_STRUCTURE_ID ) )
+							if (OkayToAddStructureToWorld(sGridNo, pDef->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(cnt3)], INVALID_STRUCTURE_ID))
 							{
 								fDirectionFound = TRUE;
 								fCanSetDirection = TRUE;

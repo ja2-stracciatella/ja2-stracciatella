@@ -5086,7 +5086,9 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
 		bDirection = atan8(pSoldier->sX,pSoldier->sY,sNoiseX,sNoiseY);
-		if ( pSoldier->bDirection != bDirection && pSoldier->bDirection != gOneCDirection[ bDirection ] && pSoldier->bDirection != gOneCCDirection[ bDirection ] )
+		if (pSoldier->bDirection != bDirection &&
+				pSoldier->bDirection != OneCDirection(bDirection) &&
+				pSoldier->bDirection != OneCCDirection(bDirection))
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 			MercPtrs[ ubNoiseMaker ]->fMuzzleFlash = FALSE;
@@ -5917,7 +5919,9 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		if ( pAttacker->fMuzzleFlash )
 		{
 			bDirection = atan8( pDefender->sX,pDefender->sY, pAttacker->sX, pAttacker->sY );
-			if ( pDefender->bDirection != bDirection && pDefender->bDirection != gOneCDirection[ bDirection ] && pDefender->bDirection != gOneCCDirection[ bDirection ] )
+			if (pDefender->bDirection != bDirection &&
+					pDefender->bDirection != OneCDirection(bDirection) &&
+					pDefender->bDirection != OneCCDirection(bDirection))
 			{
 				// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
 				pAttacker->fMuzzleFlash = FALSE;

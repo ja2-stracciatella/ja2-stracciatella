@@ -3947,7 +3947,7 @@ static BOOLEAN SoldierCanSeeCatchComing(SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 			return( TRUE );
 		}
 
-		bDirection = gOneCDirection[ bDirection ];
+		bDirection = OneCDirection(bDirection);
 	}
 
 	// Look 3 directions CounterClockwise from what we are facing....
@@ -3960,7 +3960,7 @@ static BOOLEAN SoldierCanSeeCatchComing(SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 			return( TRUE );
 		}
 
-		bDirection = gOneCCDirection[ bDirection ];
+		bDirection = OneCCDirection(bDirection);
 	}
 
 	// If here, nothing good can happen!
@@ -4623,7 +4623,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 						  if ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubEndHeight == ANIM_STAND && !MercInWater( gpItemPointerSoldier ) )
 						  {
-							  EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, gOppositeDirection[ ubFacingDirection ] );
+							  EVENT_SetSoldierDesiredDirection(gpItemPointerSoldier, OppositeDirection(ubFacingDirection));
 							  gpItemPointerSoldier->fTurningUntilDone	 = TRUE;
 							  gpItemPointerSoldier->usPendingAnimation = PASS_OBJECT;
 						  }
