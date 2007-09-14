@@ -1,3 +1,5 @@
+(r1522) Fix a crash caused by r1400 in battles with bloodcats.
+
 v0.6 - 2007-09-09 - Strawberry
 (r1472) Fix graphically stuck buttons.
 (r1461, r1475) Fix wide string/string format specifiers.

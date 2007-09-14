@@ -279,7 +279,7 @@ const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES] =
 	{ "LOW PUNCH",                        70, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_NO_EFFORT   | ANIM_NOCHANGE_WEAPON,                                                                                C, C }, // Punch LOw
 	{ "SHOOT (P) STAND LOW",             100, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_RAISE_WEAPON | ANIM_LIGHT_EFFORT | ANIM_FIRE,                                                                      S, S }, // SHOOT_PISTOL_STAND LOW
 	{ "DECAPITATE",                       70, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_FASTTURN | ANIM_NORESTART | ANIM_LIGHT_EFFORT   | ANIM_NONINTERRUPT,                                               C, C }, //DECAPITATE
-	{ "BLOODCAT BITE",                        0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_NORESTART | ANIM_NONINTERRUPT | ANIM_MIN_EFFORT,                                                                   S, S },
+	{ "BLOODCAT BITE",                    70, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_NORESTART | ANIM_NONINTERRUPT | ANIM_MIN_EFFORT,                                                                   S, S },
 	{ "BIGMERC S NECK",                  110, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_MERCIDLE | ANIM_NOCHANGE_WEAPON | ANIM_NO_EFFORT,                                                                  S, S },
 	{ "BIGMERC CROUCH TRANS INTO",        90, 0.0f, ANIM_STATIONARY | ANIM_TURNING  | ANIM_NOMOVE_MARKER | ANIM_STANCECHANGEANIM  | ANIM_RAISE_WEAPON | ANIM_MIN_EFFORT,                                     S, C }, //CROUCH TRANSITION
 	{ "BIGMERC CROUCH TRANS OUTOF",       90, 0.0f, ANIM_STATIONARY | ANIM_TURNING  | ANIM_NOMOVE_MARKER | ANIM_STANCECHANGEANIM  | ANIM_RAISE_WEAPON | ANIM_MIN_EFFORT,                                     C, S }, //CROUCH TRANSITION
@@ -354,6 +354,7 @@ const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES] =
 	{ "END OPEN LOCKED DOOR",            100, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_FASTTURN | ANIM_NORESTART | ANIM_NONINTERRUPT | ANIM_MIN_EFFORT,                                                   S, S }, //CRIPPLE END OPEN LOCKED DOOR
 	{ "CROUCH PICK LOCK",                 70, 0.0f, ANIM_STATIONARY | ANIM_TURNING | ANIM_FASTTURN | ANIM_NORESTART | ANIM_LOWER_WEAPON | ANIM_LIGHT_EFFORT,                                                 C, C }  //CROUCH PICK LOCK
 };
+CASSERT(lengthof(gAnimControl) == NUMANIMATIONSTATES)
 
 #undef P
 #undef C
