@@ -82,7 +82,6 @@ GetIdOfPastMercInSlot(): callers
 GetIdOfThisSlot(): callers
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetMLGFilename(): complicated
-GetNextString(): callers
 GetNumberOfDeadOnPastTeam(): callers
 GetNumberOfLeftOnPastTeam(): callers
 GetNumberOfMercsOnPlayersTeam(): callers
@@ -91,7 +90,6 @@ GetQuoteBitNumberFromQuoteID(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
-GetSlotInvHeightWidth(), GetSlotInvXY(): interface complicated, callers
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTheStateOfDepartedMerc(): callers
 GetTileFlags(): interface complicated
@@ -131,7 +129,6 @@ InternalIsPerceivedDifferentThanReality(): complicated
 InternalReduceAttackBusyCount(): callers
 InternalSetDoorPerceivedOpenStatus(): callers
 InvPanelButtonClickCallback(): pointless
-InvmaskRegionBtnCallBack(): empty
 IsDoorOpen(): sGridNo is INT16, but used as %s
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
@@ -239,10 +236,7 @@ SaveLightEffectsToSaveGameFile(): empty
 SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
-ScreenRegionMvtCallback(): empty
 SectorExitBackgroundCallback(): empty
-SelectCreditFaceRegionCallBack(): empty
-SelectMainMenuBackGroundRegionCallBack(): empty
 SelectPlayersOfferSlotsRegionCallBack(): [...].uiItemPrice = [...].bMoneyStatus seems wrong
 SetClockResolutionPerSecond(): complicated
 SetExclusive24HourTimeValue(): complicated, use swprintf()

@@ -171,7 +171,6 @@ typedef struct
 {
 	CHAR8				zName[20];
 	UINT8				ubRandomVal;
-	BOOLEAN			fPreload;
 	BOOLEAN			fBadGuy;
 	BOOLEAN			fDontAllowTwoInRow;
 	BOOLEAN			fStopDialogue;
@@ -181,23 +180,23 @@ typedef struct
 
 static const BATTLESNDS_STRUCT gBattleSndsData[] =
 {
-	{ "ok1",    2, 1, 1, 1, 2 },
-	{ "ok2",    0, 1, 1, 1, 2 },
-	{ "cool",   0, 1, 0, 1, 0 },
-	{ "curse",  0, 1, 1, 1, 0 },
-	{ "hit1",   2, 1, 1, 1, 1 },
-	{ "hit2",   0, 1, 1, 1, 1 },
-	{ "laugh",  0, 1, 1, 1, 0 },
-	{ "attn",   0, 1, 0, 1, 0 },
-	{ "dying",  0, 1, 1, 1, 1 },
-	{ "humm",   0, 0, 0, 1, 1 },
-	{ "noth",   0, 0, 0, 1, 1 },
-	{ "gotit",  0, 0, 0, 1, 1 },
-	{ "lmok1",  2, 1, 0, 1, 2 },
-	{ "lmok2",  0, 1, 0, 1, 2 },
-	{ "lmattn", 0, 1, 0, 1, 0 },
-	{ "locked", 0, 0, 0, 1, 0 },
-	{ "enem",   0, 1, 1, 1, 0 }
+	{ "ok1",    2, 1, 1, 2 },
+	{ "ok2",    0, 1, 1, 2 },
+	{ "cool",   0, 0, 1, 0 },
+	{ "curse",  0, 1, 1, 0 },
+	{ "hit1",   2, 1, 1, 1 },
+	{ "hit2",   0, 1, 1, 1 },
+	{ "laugh",  0, 1, 1, 0 },
+	{ "attn",   0, 0, 1, 0 },
+	{ "dying",  0, 1, 1, 1 },
+	{ "humm",   0, 0, 1, 1 },
+	{ "noth",   0, 0, 1, 1 },
+	{ "gotit",  0, 0, 1, 1 },
+	{ "lmok1",  2, 0, 1, 2 },
+	{ "lmok2",  0, 0, 1, 2 },
+	{ "lmattn", 0, 0, 1, 0 },
+	{ "locked", 0, 0, 1, 0 },
+	{ "enem",   0, 1, 1, 0 }
 };
 
 
