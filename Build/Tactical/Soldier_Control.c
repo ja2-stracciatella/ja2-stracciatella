@@ -200,12 +200,6 @@ static const BATTLESNDS_STRUCT gBattleSndsData[] =
 };
 
 
-
-BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
-
-
-
-
 UINT8	bHealthStrRanges[] =
 {
 	15,
