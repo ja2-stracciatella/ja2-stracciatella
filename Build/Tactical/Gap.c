@@ -219,7 +219,7 @@ UINT32 PlayJA2GapSample(const char *zSoundFile, UINT32 ubVolume, UINT32 ubLoops,
 
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	spParms.uiVolume =  (UINT32) (  ( ubVolume / (FLOAT) HIGHVOLUME ) * GetSpeechVolume( ) );
+	spParms.uiVolume = CalculateSpeechVolume(ubVolume);
 	spParms.uiLoop = ubLoops;
 	spParms.uiPan = uiPan;
 
