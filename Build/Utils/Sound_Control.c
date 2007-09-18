@@ -539,14 +539,15 @@ UINT32 GetSoundEffectsVolume( )
 }
 
 
-UINT32 CalculateSpeechVolume( UINT32 uiVolume )
+UINT32 CalculateSpeechVolume(UINT32 uiVolume)
 {
-	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSpeechVolume +.5 ) );
+	return (uiVolume * guiSpeechVolume + HIGHVOLUME / 2) / HIGHVOLUME;
 }
 
-UINT32 CalculateSoundEffectsVolume( UINT32 uiVolume )
+
+UINT32 CalculateSoundEffectsVolume(UINT32 uiVolume)
 {
-	return( (UINT32) ( ( uiVolume / (FLOAT) HIGHVOLUME ) * guiSoundEffectsVolume +.5 ) );
+	return (uiVolume * guiSoundEffectsVolume + HIGHVOLUME / 2) / HIGHVOLUME;
 }
 
 
