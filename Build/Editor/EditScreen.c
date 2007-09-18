@@ -79,8 +79,6 @@
 #include "Stubs.h" // XXX
 
 
-extern CHAR8 *szMusicList[NUM_MUSIC];
-
 BOOLEAN gfCorruptMap = FALSE;
 BOOLEAN gfCorruptSchedules = FALSE;
 BOOLEAN gfProfileDataLoaded = FALSE;

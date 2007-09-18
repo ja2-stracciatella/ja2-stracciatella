@@ -12,73 +12,58 @@
 #include "ScreenIDs.h"
 
 
-UINT32 uiMusicHandle=NO_SAMPLE;
-UINT32 uiMusicVolume=50;
-BOOLEAN fMusicPlaying=FALSE;
-BOOLEAN fMusicFadingOut=FALSE;
-BOOLEAN fMusicFadingIn=FALSE;
+static UINT32  uiMusicHandle   = NO_SAMPLE;
+static UINT32  uiMusicVolume   = 50;
+static BOOLEAN fMusicPlaying   = FALSE;
+static BOOLEAN fMusicFadingOut = FALSE;
+static BOOLEAN fMusicFadingIn  = FALSE;
 
-BOOLEAN	gfMusicEnded = FALSE;
+static BOOLEAN gfMusicEnded = FALSE;
 
-UINT8		gubMusicMode = 0;
-UINT8		gubOldMusicMode = 0;
+UINT8        gubMusicMode    = 0;
+static UINT8 gubOldMusicMode = 0;
 
-INT8		gbVictorySongCount = 0;
-INT8		gbDeathSongCount = 0;
+static INT8 gbVictorySongCount = 0;
+static INT8 gbDeathSongCount   = 0;
 
-INT8		bNothingModeSong;
-INT8		bEnemyModeSong;
-INT8		bBattleModeSong;
+static INT8 bNothingModeSong;
+static INT8 bEnemyModeSong;
+static INT8 bBattleModeSong;
 
 INT8		gbFadeSpeed = 1;
 
+
+const char* const szMusicList[]=
+{
+	"MUSIC/marimbad 2.wav",
+	"MUSIC/menumix1.wav",
+	"MUSIC/nothing A.wav",
+	"MUSIC/nothing B.wav",
 #ifdef JA2DEMO
-
-const char *szMusicList[NUM_MUSIC]=
-{
-	"MUSIC/marimbad 2.wav",
-	"MUSIC/menumix1.wav",
-	"MUSIC/nothing A.wav",
-	"MUSIC/nothing B.wav",
 	"MUSIC/nothing A.wav",
 	"MUSIC/nothing B.wav",
 	"MUSIC/tensor B.wav",
 	"MUSIC/tensor B.wav",
 	"MUSIC/tensor B.wav",
-	"MUSIC/triumph.wav",
-	"MUSIC/death.wav",
-	"MUSIC/battle A.wav",
-	"MUSIC/tensor B.wav",
-	"MUSIC/creepy.wav",
-	"MUSIC/creature battle.wav",
-};
-
-
 #else
-
-const char *szMusicList[NUM_MUSIC]=
-{
-	"MUSIC/marimbad 2.wav",
-	"MUSIC/menumix1.wav",
-	"MUSIC/nothing A.wav",
-	"MUSIC/nothing B.wav",
 	"MUSIC/nothing C.wav",
 	"MUSIC/nothing D.wav",
 	"MUSIC/tensor A.wav",
 	"MUSIC/tensor B.wav",
 	"MUSIC/tensor C.wav",
+#endif
 	"MUSIC/triumph.wav",
 	"MUSIC/death.wav",
 	"MUSIC/battle A.wav",
 	"MUSIC/tensor B.wav",
 	"MUSIC/creepy.wav",
-	"MUSIC/creature battle.wav",
+	"MUSIC/creature battle.wav"
 };
 
-#endif
 
-BOOLEAN	gfForceMusicToTense = FALSE;
-BOOLEAN gfDontRestartSong   = FALSE;
+
+BOOLEAN	       gfForceMusicToTense = FALSE;
+static BOOLEAN gfDontRestartSong   = FALSE;
 
 extern void HandleEndDemoInCreatureLevel( );
 

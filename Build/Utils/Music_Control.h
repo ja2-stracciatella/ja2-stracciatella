@@ -22,6 +22,8 @@ enum MusicList {
 	NUM_MUSIC
 };
 
+extern const char* const szMusicList[NUM_MUSIC];
+
 enum MusicMode {
 
 	MUSIC_NONE,
@@ -35,8 +37,6 @@ enum MusicMode {
 	MUSIC_LAPTOP,
 };
 
-extern UINT32		uiMusicHandle;
-extern BOOLEAN	fMusicPlaying;
 extern UINT8		gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;
 
