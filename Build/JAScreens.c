@@ -912,7 +912,7 @@ void DoDemoIntroduction()
 			GetCursorPos(&MousePos);
 			// Hook into mouse stuff for MOVEMENT MESSAGES
 			MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
-			MusicPoll( FALSE );
+			MusicPoll();
 			if( uiStartTime != 0xffffffff )
 			{
 				if( GetJA2Clock() > uiStartTime )

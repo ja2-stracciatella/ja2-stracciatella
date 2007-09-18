@@ -218,7 +218,7 @@ void GameLoop(void)
 	GetCursorPos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
 	MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
-	MusicPoll( FALSE );
+	MusicPoll();
 
   while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
   {

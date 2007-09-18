@@ -288,7 +288,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 	// update music here
 	if( uiCurTime > ( uiLastTime + 200 ) )
 	{
-		MusicPoll( TRUE );
+		MusicPoll();
 		uiLastTime = GetJA2Clock();
 	}
 }

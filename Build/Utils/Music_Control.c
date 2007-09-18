@@ -210,16 +210,7 @@ static BOOLEAN MusicFadeIn(void)
 static void DoneFadeOutDueToEndMusic(void);
 
 
-//********************************************************************************
-// MusicPoll
-//
-//		Handles any maintenance the music system needs done. Should be polled from
-//	the main loop, or somewhere with a high frequency of calls.
-//
-//	Returns:	TRUE always
-//
-//********************************************************************************
-BOOLEAN MusicPoll( BOOLEAN fForce )
+void MusicPoll(void)
 {
 	INT32 iVol;
 
@@ -312,8 +303,6 @@ BOOLEAN MusicPoll( BOOLEAN fForce )
       gfDontRestartSong = FALSE;
 		}
 	}
-
-	return(TRUE);
 }
 
 

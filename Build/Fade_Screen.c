@@ -201,7 +201,7 @@ UINT32	FadeScreenHandle( )
 	// Get time
 	uiTime = GetJA2Clock( );
 
-	MusicPoll( TRUE );
+	MusicPoll();
 
 	if ( ( uiTime - guiTime ) > guiFadeDelay )
 	{
