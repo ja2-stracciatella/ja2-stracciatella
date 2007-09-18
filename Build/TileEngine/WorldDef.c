@@ -36,7 +36,6 @@
 #include "PathAI.h"
 #include "EditorBuildings.h"
 #include "FileMan.h"
-#include "Music_Control.h"
 #include "Map_Edgepoints.h"
 #include "Environment.h"
 #include "Shade_Table_Util.h"

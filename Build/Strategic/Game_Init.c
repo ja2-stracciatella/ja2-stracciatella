@@ -13,7 +13,6 @@
 #include "Finances.h"
 #include "Soldier_Create.h"
 #include "Soldier_Init_List.h"
-#include "Music_Control.h"
 #include "Strategic.h"
 #include "History.h"
 #include "Merc_Entering.h"

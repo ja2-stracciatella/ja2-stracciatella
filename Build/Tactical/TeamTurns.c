@@ -18,7 +18,6 @@
 #include "Soldier_Functions.h"
 #include "Queen_Command.h"
 #include "PathAI.h"
-#include "Music_Control.h"
 #include "Strategic_Turns.h"
 #include "Lighting.h"
 #include "Environment.h"

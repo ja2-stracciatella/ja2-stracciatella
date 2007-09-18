@@ -5,7 +5,6 @@
 #include "GameScreen.h"
 #include "StrategicMap.h"
 #include "Game_Clock.h"
-#include "Music_Control.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
 #include "PopUpBox.h"

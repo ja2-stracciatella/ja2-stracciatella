@@ -15,7 +15,6 @@
 #include "RenderWorld.h"
 #include "Strategic_Turns.h"
 #include "Event_Pump.h"
-#include "Music_Control.h"
 #include "Dialogue_Control.h"
 #include "AI.h"
 #include "Interface_Control.h"

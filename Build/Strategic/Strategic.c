@@ -4,7 +4,6 @@
 #include "Assignments.h"
 #include "Interface_Control.h"
 #include "Overhead.h"
-#include "Music_Control.h"
 #include "Soldier_Profile.h"
 #include "Dialogue_Control.h"
 #include "Personnel.h"

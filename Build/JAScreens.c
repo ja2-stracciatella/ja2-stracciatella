@@ -25,7 +25,6 @@
 #include "Environment.h"
 #include "Animation_Cache.h"
 #include "Lighting.h"
-#include "Music_Control.h"
 #include "Sound_Control.h"
 #include "MainMenuScreen.h"
 #include "Game_Init.h"

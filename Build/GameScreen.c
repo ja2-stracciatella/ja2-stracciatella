@@ -24,7 +24,6 @@
 #include "RenderWorld.h"
 #include "Sys_Globals.h"
 #include "Environment.h"
-#include "Music_Control.h"
 #include "Bullets.h"
 #include "Assignments.h"
 #include "Message.h"
