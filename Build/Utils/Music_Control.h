@@ -43,7 +43,7 @@ extern BOOLEAN	gfForceMusicToTense;
 
 BOOLEAN SetMusicMode( UINT8 ubMusicMode );
 BOOLEAN MusicPlay(UINT32 uiNum);
-BOOLEAN MusicSetVolume(UINT32 uiVolume);
+void MusicSetVolume(UINT32 uiVolume);
 UINT32 MusicGetVolume(void);
 BOOLEAN MusicPoll( BOOLEAN fForce );
 

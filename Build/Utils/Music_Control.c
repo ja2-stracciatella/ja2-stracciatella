@@ -113,15 +113,7 @@ SOUNDPARMS spParms;
 static BOOLEAN StartMusicBasedOnMode(void);
 
 
-//********************************************************************************
-// MusicSetVolume
-//
-//		Sets the volume on the currently playing music.
-//
-//	Returns:	TRUE if the volume was set, FALSE if an error occurred
-//
-//********************************************************************************
-BOOLEAN MusicSetVolume(UINT32 uiVolume)
+void MusicSetVolume(UINT32 uiVolume)
 {
   INT32 uiOldMusicVolume = uiMusicVolume;
 
@@ -134,23 +126,23 @@ BOOLEAN MusicSetVolume(UINT32 uiVolume)
     {
       gfDontRestartSong = TRUE;
       MusicStop( );
-      return( TRUE );
     }
-
-		SoundSetVolume(uiMusicHandle, uiMusicVolume);
-
-		return(TRUE);
+		else
+		{
+			SoundSetVolume(uiMusicHandle, uiMusicVolume);
+		}
 	}
-
-  // If here, check if we need to re-start music
-  // Have we re-started?
-  if ( uiMusicVolume > 0 && uiOldMusicVolume == 0 )
-  {
-    StartMusicBasedOnMode( );
-  }
-
-	return(FALSE);
+	else
+	{
+		// If here, check if we need to re-start music
+		// Have we re-started?
+		if ( uiMusicVolume > 0 && uiOldMusicVolume == 0 )
+		{
+			StartMusicBasedOnMode( );
+		}
+	}
 }
+
 
 //********************************************************************************
 // MusicGetVolume
