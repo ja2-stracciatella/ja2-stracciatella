@@ -443,17 +443,17 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	RenderOptionsScreen();
 
 	//Add a slider bar for the Sound Effects
-	guiSoundEffectsSliderID = AddSlider( SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, 127, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0 );
+	guiSoundEffectsSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0);
 	AssertMsg( guiSoundEffectsSliderID, "Failed to AddSlider" );
 	SetSliderValue( guiSoundEffectsSliderID, GetSoundEffectsVolume() );
 
 	//Add a slider bar for the Speech
-	guiSpeechSliderID = AddSlider( SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, 127, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack, 0 );
+	guiSpeechSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack, 0);
 	AssertMsg( guiSpeechSliderID, "Failed to AddSlider" );
 	SetSliderValue( guiSpeechSliderID, GetSpeechVolume() );
 
 	//Add a slider bar for the Music
-	guiMusicSliderID = AddSlider( SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, 127, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack, 0 );
+	guiMusicSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack, 0);
 	AssertMsg( guiMusicSliderID, "Failed to AddSlider" );
 	SetSliderValue( guiMusicSliderID, MusicGetVolume() );
 

@@ -510,15 +510,10 @@ UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 u
 }
 
 
-
-
-
-
-void SetSpeechVolume( UINT32 uiNewVolume )
+void SetSpeechVolume(UINT32 uiNewVolume)
 {
-	guiSpeechVolume = __min( uiNewVolume, 127);
+	guiSpeechVolume = __min(uiNewVolume, MAXVOLUME);
 }
-
 
 
 UINT32 GetSpeechVolume( )
@@ -527,9 +522,9 @@ UINT32 GetSpeechVolume( )
 }
 
 
-void SetSoundEffectsVolume( UINT32 uiNewVolume )
+void SetSoundEffectsVolume(UINT32 uiNewVolume)
 {
-	guiSoundEffectsVolume = __min( uiNewVolume, 127);
+	guiSoundEffectsVolume = __min(uiNewVolume, MAXVOLUME);
 }
 
 

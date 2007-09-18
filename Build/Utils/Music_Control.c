@@ -1,6 +1,5 @@
 #include "Types.h"
 #include "Music_Control.h"
-#include "SoundMan.h"
 #include "Random.h"
 #include "GameScreen.h"
 #include "JAScreens.h"
@@ -168,7 +167,7 @@ BOOLEAN MusicSetVolume(UINT32 uiVolume)
 {
   INT32 uiOldMusicVolume = uiMusicVolume;
 
-	uiMusicVolume=__min(uiVolume, 127);
+	uiMusicVolume = __min(uiVolume, MAXVOLUME);
 
 	if(uiMusicHandle!=NO_SAMPLE)
 	{

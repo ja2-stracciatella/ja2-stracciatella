@@ -3139,10 +3139,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if( fAlt )
 						{
-							if(MusicGetVolume() >= 20)
-								MusicSetVolume(MusicGetVolume()-20);
-							else
-								MusicSetVolume(0);
+							const UINT32 vol = MusicGetVolume();
+							MusicSetVolume(vol > 20 ? vol - 20 : 0);
 						}
 						else if( fCtrl )
 						{
@@ -3165,10 +3163,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #ifdef JA2TESTVERSION
 					if( fAlt )
 					{
-						if(MusicGetVolume() <= 107)
-							MusicSetVolume(MusicGetVolume()+20);
-						else
-							MusicSetVolume(127);
+						const UINT32 vol = MusicGetVolume();
+  					MusicSetVolume(min(vol + 20, MAXVOLUME));
 					}
 					else if( fCtrl )
 					{

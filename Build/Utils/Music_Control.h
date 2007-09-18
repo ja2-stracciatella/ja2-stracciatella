@@ -1,6 +1,8 @@
 #ifndef _MUSIC_CONTROL_H_
 #define _MUSIC_CONTROL_H_
 
+#include "SoundMan.h"
+
 enum MusicList {
 	MARIMBAD2_MUSIC,
 	MENUMIX_MUSIC,

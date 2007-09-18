@@ -137,7 +137,7 @@ static BOOLEAN SoundStopIndex(UINT32 uiSound);
 static UINT32 SoundGetVolumeIndex(UINT32 uiChannel);
 
 // Global variables
-static const UINT32 guiSoundDefaultVolume = 127;
+static const UINT32 guiSoundDefaultVolume = MAXVOLUME;
 static UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 static UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
@@ -498,7 +498,7 @@ BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
 	if (uiSound == NO_SAMPLE) return FALSE;
 
-	pSoundList[uiSound].uiFadeVolume = __min(uiVolume, 127);
+	pSoundList[uiSound].uiFadeVolume = __min(uiVolume, MAXVOLUME);
 	return TRUE;
 }
 
@@ -1268,8 +1268,8 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 			{
 				SAMPLETAG* Sample = Sound->pSample;
 				UINT32 Samples = len / 4;
-				INT32 VolLeft  = Sound->uiFadeVolume * (127 - Sound->Pan) / 127;
-				INT32 VolRight = Sound->uiFadeVolume * (  0 + Sound->Pan) / 127;
+				INT32 VolLeft  = Sound->uiFadeVolume * (127 - Sound->Pan) / MAXVOLUME;
+				INT32 VolRight = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
 				UINT32 Amount;
 
 mixing:

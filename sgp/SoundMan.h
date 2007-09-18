@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#define MAXVOLUME 127
+
 	// Sample status flags
 #define		SAMPLE_ALLOCATED			0x00000001
 #define		SAMPLE_LOCKED					0x00000002
