@@ -4,8 +4,6 @@
 #include "GameScreen.h"
 #include "JAScreens.h"
 #include "Creature_Spreading.h"
-#include "Soldier_Control.h"
-#include "Overhead.h"
 #include "Timer_Control.h"
 #include "StrategicMap.h"
 #include "Debug.h"
@@ -66,31 +64,6 @@ BOOLEAN	       gfForceMusicToTense = FALSE;
 static BOOLEAN gfDontRestartSong   = FALSE;
 
 extern void HandleEndDemoInCreatureLevel( );
-
-
-static BOOLEAN NoEnemiesInSight(void)
-{
-	SOLDIERTYPE             *pSoldier;
-	INT32										cnt;
-
-	// Loop through our guys
-	// End the turn of player charactors
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
-	{
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE )
-		{
-			if ( pSoldier->bOppCnt != 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
-
-	return( TRUE );
-}
 
 
 static BOOLEAN MusicFadeIn(void);
