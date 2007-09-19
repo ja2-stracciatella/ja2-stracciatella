@@ -71,15 +71,7 @@ static BOOLEAN MusicStop(void);
 static void MusicStopCallback(void* pData);
 
 
-//********************************************************************************
-// MusicPlay
-//
-//		Starts up one of the tunes in the music list.
-//
-//	Returns:	TRUE if the music was started, FALSE if an error occurred
-//
-//********************************************************************************
-BOOLEAN MusicPlay(UINT32 uiNum)
+void MusicPlay(UINT32 uiNum)
 {
 SOUNDPARMS spParms;
 
@@ -101,12 +93,10 @@ SOUNDPARMS spParms;
 		gfMusicEnded				= FALSE;
 		fMusicPlaying=TRUE;
 		MusicFadeIn();
-		return(TRUE);
+		return;
 	}
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Music PLay %d %d", uiMusicHandle, gubMusicMode  ) );
-
-	return(FALSE);
 }
 
 
