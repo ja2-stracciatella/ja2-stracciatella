@@ -757,7 +757,7 @@ static void ProcessImplicationsOfMeanwhile(void)
 			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, SAM_2_X, SAM_2_Y );
 			break;
 		case CENTRAL_SAM:
-			ExecuteStrategicAIAction( NPC_ACTION_SEND_TROOPS_TO_SAM, SAM_3_X, SAM_3_X );
+			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, SAM_3_X, SAM_3_Y);
 			break;
 
 		default:
