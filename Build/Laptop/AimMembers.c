@@ -3401,119 +3401,93 @@ void DisableNewMailMessage(void)
 }
 
 
+static INT32 Interpolate(INT32 start, INT32 end, INT32 step)
+{
+	return start + (end - start) * step / AIM_MEMBER_VIDEO_TITLE_ITERATIONS;
+}
+
+
 static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 {
-	static 	UINT8			ubCount;
-	UINT16		usPosX, usPosY, usPosRightX, usPosBottomY, usWidth, usHeight;
-	SGPRect		SrcRect;
-	SGPRect		DestRect;
-	static SGPRect		LastRect;
-	FLOAT		usTemp;
+	static UINT8   ubCount;
+	static SGPRect LastRect;
 
-	if( fForward )
+	if (gfJustSwitchedVideoConferenceMode)
 	{
-		if (gfJustSwitchedVideoConferenceMode)
-			ubCount = 1;
-
-		usTemp = (331 - 125) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS ;
-		usPosX = (UINT16)(331 - usTemp * ubCount);
-
-		usTemp = (490 - 405) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS;
-		usPosRightX = (UINT16)(405 + usTemp * ubCount);
-
-		usTemp = (AIM_MEMBER_VIDEO_TITLE_START_Y - 96) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS;
-		usPosY = (UINT16)(AIM_MEMBER_VIDEO_TITLE_START_Y - usTemp * ubCount);
-
-		usPosBottomY = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
-	}
-	else
-	{
-		if (gfJustSwitchedVideoConferenceMode)
-			ubCount = AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1;
-
-		usTemp = (331 - 125) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS ;
-		usPosX = (UINT16)(331 - usTemp * ubCount);
-
-		usTemp = (490 - 405) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS;
-		usPosRightX = (UINT16)(405 + usTemp * ubCount);
-
-		usTemp = (AIM_MEMBER_VIDEO_TITLE_START_Y - 96) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS;
-		usPosY = (UINT16)(AIM_MEMBER_VIDEO_TITLE_START_Y - usTemp * ubCount);
-
-		usPosBottomY = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
+		ubCount = (fForward ? 1 : AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1);
 	}
 
+	const UINT16 usPosX      = Interpolate(331, 125, ubCount);
+	const UINT16 usPosRightX = Interpolate(405, 490, ubCount);
 
+	const UINT16 usPosY       = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, 96, ubCount);
+	const UINT16 usPosBottomY = usPosY + AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
 
-		SrcRect.iLeft = 0;
-		SrcRect.iTop = 0;
-		SrcRect.iRight = AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH;
-		SrcRect.iBottom = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
+	SGPRect SrcRect;
+	SrcRect.iLeft   = 0;
+	SrcRect.iTop    = 0;
+	SrcRect.iRight  = AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH;
+	SrcRect.iBottom = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
 
-		DestRect.iLeft = usPosX;
-		DestRect.iTop = usPosY;
-		DestRect.iRight = usPosRightX;
-		DestRect.iBottom = DestRect.iTop + usPosBottomY;
+	SGPRect DestRect;
+	DestRect.iLeft   = usPosX;
+	DestRect.iTop    = usPosY;
+	DestRect.iRight  = usPosRightX;
+	DestRect.iBottom = usPosBottomY;
 
-	if( fForward )
+	if (fForward)
 	{
 		//Restore the old rect
-		if( ubCount > 2 )
+		if (ubCount > 2)
 		{
-			usWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
-			usHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
+			const UINT16 usWidth  = LastRect.iRight  - LastRect.iLeft;
+			const UINT16 usHeight = LastRect.iBottom - LastRect.iTop;
 			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
 		}
 
 		//Save rectangle
-		if( ubCount > 1 )
+		if (ubCount > 1)
 		{
-			usWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
-			usHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
+			const UINT16 usWidth  = DestRect.iRight  - DestRect.iLeft;
+			const UINT16 usHeight = DestRect.iBottom - DestRect.iTop;
 			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
 		}
 	}
 	else
 	{
 		//Restore the old rect
-		if( ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 2 )
+		if (ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 2)
 		{
-			usWidth = (UINT16)(LastRect.iRight - LastRect.iLeft);
-			usHeight = (UINT16)(LastRect.iBottom - LastRect.iTop);
+			const UINT16 usWidth  = LastRect.iRight  - LastRect.iLeft;
+			const UINT16 usHeight = LastRect.iBottom - LastRect.iTop;
 			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
 		}
 
 		//Save rectangle
-		if( ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1 )
+		if (ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1)
 		{
-			usWidth = (UINT16)(DestRect.iRight - DestRect.iLeft);
-			usHeight = (UINT16)(DestRect.iBottom - DestRect.iTop);
+			const UINT16 usWidth  = DestRect.iRight  - DestRect.iLeft;
+			const UINT16 usHeight = DestRect.iBottom - DestRect.iTop;
 			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
 		}
 	}
 
 	BltStretchVideoSurface(FRAME_BUFFER, guiVideoTitleBar, &SrcRect, &DestRect);
 
-	InvalidateRegion(DestRect.iLeft,DestRect.iTop, DestRect.iRight, DestRect.iBottom);
-	InvalidateRegion(LastRect.iLeft,LastRect.iTop, LastRect.iRight, LastRect.iBottom);
+	InvalidateRegion(DestRect.iLeft, DestRect.iTop, DestRect.iRight, DestRect.iBottom);
+	InvalidateRegion(LastRect.iLeft, LastRect.iTop, LastRect.iRight, LastRect.iBottom);
 
 	LastRect = DestRect;
 
-	if( fForward )
+	if (fForward)
 	{
 		ubCount++;
-		if( ubCount == AIM_MEMBER_VIDEO_TITLE_ITERATIONS-1)
-			return(TRUE);
-		else
-			return(FALSE);
+		return ubCount == AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1;
 	}
 	else
 	{
 		ubCount--;
-		if( ubCount == 0)
-			return(TRUE);
-		else
-			return(FALSE);
+		return ubCount == 0;
 	}
 }
 
