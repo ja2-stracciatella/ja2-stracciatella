@@ -39,9 +39,6 @@ DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
-DisplayMercStats(): callers
-DisplayMovingTitleBar(): callers
-DisplayOnScreenNumber(): callers
 DisplayOrderGrid(): call IsMercDead() more early
 DisplayPurchasedItems(): iSubTotal undefined value
 Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
@@ -49,7 +46,6 @@ DoWeHaveThisManyBonusPoints(): complicated
 DoesTownHaveRatingToTrainMilitia(): complicated
 DoesVehicleHaveAnyPassengers(): complicated
 DoneFadeInActionLeaveBasement(): empty
-DoneFadeInForSaveLoadScreen(): callers
 DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
@@ -75,26 +71,18 @@ GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetHelpTextForItem(): complicated
-GetIdOfPastMercInSlot(): callers
-GetIdOfThisSlot(): callers
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetMLGFilename(): complicated
-GetNumberOfDeadOnPastTeam(): callers
-GetNumberOfLeftOnPastTeam(): callers
-GetNumberOfMercsOnPlayersTeam(): callers
 GetNumberOfPastMercsOnPlayersTeam(): callers
-GetQuoteBitNumberFromQuoteID(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
-GetTheStateOfDepartedMerc(): callers
 GetTileFlags(): interface complicated
 GetTileType(): interface complicated
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers
 GetTypeSubIndexFromTileIndex(): interface complicated
-GetUIApsToDisplay(): callers
 GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
 Handle.*TextEvent(): code duplication
 HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FALSE;
@@ -103,28 +91,22 @@ HandleEndConfirmCursor(): empty
 HandleEquipmentLeftInOmerta(), HandleEquipmentLeftInDrassen(): very similar
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
 HandleHighLightedText(): MARK_DIRTY necessary?
-HandleItemGlowFlag(): callers/complicated
 HandleLeftClickCursor(): if ()s without decision
 HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers
 HandleOpinionOfTownsAboutSoldier(): empty
-HandleOptionToggle(): callers
 HandlePlayerTeamMemberDeathAfterSkullAnimation(): declaration in .c
 HandleSoldierFaceFlash(): empty
 HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
-HandleSuppressionFire(): callers
 HeliCharacterDialogue(): callers
 IMPVideoObjects.h(): many needlessly called functions?
 I_CHANGELEVEL: unused
 InitStrategicRow[A-P](): complicated?
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
-InsContractNoMercsPopupCallBack(): callers
 InternalDoMercBattleSound(): Sound file selection complicated
 InternalIsPerceivedDifferentThanReality(): complicated
-InternalReduceAttackBusyCount(): callers
-InternalSetDoorPerceivedOpenStatus(): callers
 InvPanelButtonClickCallback(): pointless
 IsDoorOpen(): sGridNo is INT16, but used as %s
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
@@ -156,8 +138,6 @@ LoadSavedGameWarningMessageBoxCallBack(): users
 LoadShadeTablesFromTextFile(): *scanf()
 LoadSummary(): filename yuck
 LocationOfNearestRefuelPoint(): callers
-LoopLevelNodeForItemGlowFlag(): callers
-LoopLevelNodeForShowThroughFlag(): callers
 MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
 MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
@@ -165,7 +145,6 @@ MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
 MSG_BOX_FLAG_CANCEL, MSG_BOX_FLAG_YESNOCONTRACT: never set
 MapExists(): complicated
 MapX(): use %
-MapscreenMarkButtonsDirty(): callers
 MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
 MergeMessageBoxCallBack(): users
@@ -178,7 +157,6 @@ NPC.h: RUSSIAN quirk
 NPCQuoteInfo: weird preprocessor magic
 NewOKDestination(): boolean parameter with three (four?) values
 NextPersonnelFace(): callers
-NumMercsCloseTo(): callers
 OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
@@ -204,7 +182,6 @@ RemoveGraphicFromTempFile(): memory leak
 RemoveItemGUI(): callers
 RenderFaceOverlay(): users
 RenderFemaleGenderIcon(): complicated
-RenderInventoryForCharacter(): callers
 RenderItemDescriptionBox(): code duplication
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderSummaryWindow(): LockVideoSurface() called unnecessarily often

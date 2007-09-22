@@ -1689,14 +1689,8 @@ static BOOLEAN InternalSetDoorPerceivedOpenStatus(DOOR_STATUS* pDoorStatus, BOOL
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* pDoorStatus)
 {
 	// OK, look at door, set perceived value the same as actual....
-	if ( pDoorStatus->ubFlags & DOOR_OPEN )
-	{
-		InternalSetDoorPerceivedOpenStatus( pDoorStatus, TRUE );
-	}
-	else
-	{
-		InternalSetDoorPerceivedOpenStatus( pDoorStatus, FALSE );
-	}
+	const BOOLEAN perceived_open = (pDoorStatus->ubFlags & DOOR_OPEN) != 0;
+	InternalSetDoorPerceivedOpenStatus(pDoorStatus, perceived_open);
 }
 
 

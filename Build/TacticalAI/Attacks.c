@@ -1574,19 +1574,16 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 	{
 		// cheat and emphasize shots
 		//iDamage = (iDamage * 15) / 10;
-		switch( pSoldier->inv[pSoldier->ubAttackingHand].usItem )
+		UINT32 gas;
+		switch (pSoldier->inv[pSoldier->ubAttackingHand].usItem)
 		{
 			// explosive damage is 100-200% that of the rated, so multiply by 3/2s here
-			case CREATURE_QUEEN_SPIT:
-				iDamage += ( 3 * Explosive[ Item[ LARGE_CREATURE_GAS ].ubClassIndex ].ubDamage * NumMercsCloseTo( pOpponent->sGridNo, Explosive[ Item[ LARGE_CREATURE_GAS ].ubClassIndex ].ubRadius ) ) / 2;
-				break;
-			case CREATURE_OLD_MALE_SPIT:
-				iDamage += ( 3 * Explosive[ Item[ SMALL_CREATURE_GAS ].ubClassIndex ].ubDamage * NumMercsCloseTo( pOpponent->sGridNo, Explosive[ Item[ SMALL_CREATURE_GAS ].ubClassIndex  ].ubRadius ) ) / 2;
-				break;
-			default:
-				iDamage += ( 3 * Explosive[ Item[ VERY_SMALL_CREATURE_GAS ].ubClassIndex ].ubDamage * NumMercsCloseTo( pOpponent->sGridNo, Explosive[ Item[ VERY_SMALL_CREATURE_GAS ].ubClassIndex  ].ubRadius ) ) / 2;
-				break;
+			case CREATURE_QUEEN_SPIT:    gas = LARGE_CREATURE_GAS;      break;
+			case CREATURE_OLD_MALE_SPIT: gas = SMALL_CREATURE_GAS;      break;
+			default:                     gas = VERY_SMALL_CREATURE_GAS; break;
 		}
+		const EXPLOSIVETYPE* const e = &Explosive[Item[gas].ubClassIndex];
+		iDamage += e->ubDamage * NumMercsCloseTo(pOpponent->sGridNo, e->ubRadius) * 3 / 2;
   }
 
  if (iDamage < 1)

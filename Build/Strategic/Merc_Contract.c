@@ -585,32 +585,16 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 	fSayPrecedent = FALSE;
 
 	// check if we say the precdent for merc
-	if( fSayQuote )
+	if (fSayQuote && fUnhappy)
 	{
-		if (fUnhappy)
+		const UINT8 quote_bit = GetQuoteBitNumberFromQuoteID(fBuddyAround ? usBuddyQuote : usReasonQuote);
+		if (GetMercPrecedentQuoteBitStatus(pSoldier->ubProfile, quote_bit))
 		{
-			if (fBuddyAround)
-			{
-				if( GetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usBuddyQuote ) ) ) == TRUE )
-				{
-					fSayPrecedent = TRUE;
-				}
-				else
-				{
-					SetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usBuddyQuote ) ) );
-				}
-			}
-			else
-			{
-				if( GetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usReasonQuote ) ) ) == TRUE )
-				{
-					fSayPrecedent = TRUE;
-				}
-				else
-				{
-					SetMercPrecedentQuoteBitStatus( pSoldier->ubProfile , GetQuoteBitNumberFromQuoteID( ( UINT32 ) ( usReasonQuote ) )  );
-				}
-			}
+			fSayPrecedent = TRUE;
+		}
+		else
+		{
+			SetMercPrecedentQuoteBitStatus(pSoldier->ubProfile, quote_bit);
 		}
 	}
 

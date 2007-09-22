@@ -518,7 +518,7 @@ static void RenderPersonnelStats(INT32 iId)
 }
 
 
-static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther)
+static void RenderPersonnelFace(INT32 iId, INT32 state)
 {
 	char sTemp[100];
 
@@ -527,6 +527,8 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 	// special case?..player generated merc
 	if (fCurrentTeamMode)
 	{
+		if (MercPtrs[iId]->uiStatusFlags & SOLDIER_VEHICLE) return;
+
 		if (50 < MercPtrs[iId]->ubProfile && MercPtrs[iId]->ubProfile < 57)
 		{
 			sprintf(sTemp, "%s%03d.sti", FACES_DIR, gMercProfiles[MercPtrs[iId]->ubProfile].ubFaceIndex);
@@ -539,9 +541,11 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 	else
 	{
 		//if this is not a valid merc
-		if (!fDead && !fFired && !fOther)
+		if (state != DEPARTED_DEAD &&
+				state != DEPARTED_FIRED &&
+				state != DEPARTED_OTHER)
 		{
-			return TRUE;
+			return;
 		}
 
 		if (50 < iId && iId < 57)
@@ -554,13 +558,8 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 		}
 	}
 
-	if (fCurrentTeamMode && MercPtrs[iId]->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		return TRUE;
-	}
-
 	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
-	CHECKF(guiFACE != NO_VOBJECT);
+	CHECKV(guiFACE != NO_VOBJECT);
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
@@ -575,7 +574,7 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 	}
 	else
 	{
-		if (fDead)
+		if (state == DEPARTED_DEAD)
 		{
 			hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
@@ -606,13 +605,10 @@ static BOOLEAN RenderPersonnelFace(INT32 iId, BOOLEAN fDead, BOOLEAN fFired, BOO
 	}
 
 	DeleteVideoObjectFromIndex(guiFACE);
-	return TRUE;
 }
 
 
-static INT32 GetNumberOfDeadOnPastTeam(void);
-static INT32 GetNumberOfLeftOnPastTeam(void);
-static INT32 GetNumberOfOtherOnPastTeam(void);
+static INT32 GetNumberOfPastMercsOnPlayersTeam(void);
 
 
 static BOOLEAN NextPersonnelFace(void)
@@ -637,7 +633,7 @@ static BOOLEAN NextPersonnelFace(void)
 	}
 	else
 	{
-		if (iCurPortraitId + 1 == GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam() - giCurrentUpperLeftPortraitNumber)
+		if (iCurPortraitId + 1 == GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
 		{
 			// about to go off the end
 			giCurrentUpperLeftPortraitNumber = 0;
@@ -690,8 +686,9 @@ static BOOLEAN PrevPersonnelFace(void)
 		if (iCurPortraitId == 0 && giCurrentUpperLeftPortraitNumber == 0)
 		{
 			// about to go off the end
-			giCurrentUpperLeftPortraitNumber = (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) - (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) % 20;
-			iCurPortraitId = (GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) % 20;
+			INT32 count_past = GetNumberOfPastMercsOnPlayersTeam();
+			giCurrentUpperLeftPortraitNumber = count_past - count_past % 20;
+			iCurPortraitId = count_past % 20;
 			iCurPortraitId--;
 		}
 		else if (iCurPortraitId == 0)
@@ -1386,7 +1383,6 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 
 
 static INT32 GetIdOfThisSlot(INT32 iSlot);
-static INT32 GetNumberOfPastMercsOnPlayersTeam(void);
 
 
 static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1479,9 +1475,6 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
 static INT32 GetIdOfPastMercInSlot(INT32 iSlot);
 static INT32 GetTheStateOfDepartedMerc(INT32 iId);
-static BOOLEAN IsPastMercDead(INT32 iId);
-static BOOLEAN IsPastMercFired(INT32 iId);
-static BOOLEAN IsPastMercOther(INT32 iId);
 
 
 static void DisplayFaceOfDisplayedMerc(void)
@@ -1495,27 +1488,24 @@ static void DisplayFaceOfDisplayedMerc(void)
 		// if showing inventory, leave
 		if (fCurrentTeamMode)
 		{
-			RenderPersonnelFace(GetIdOfThisSlot(iCurrentPersonSelectedId), FALSE, FALSE, FALSE);
-			DisplayCharName(GetIdOfThisSlot(iCurrentPersonSelectedId));
+			const INT32 id = GetIdOfThisSlot(iCurrentPersonSelectedId);
+			RenderPersonnelFace(id, -1);
+			DisplayCharName(id);
 
-			if (gubPersonnelInfoState == PRSNL_INV)
-			{
-				return;
-			}
+			if (gubPersonnelInfoState == PRSNL_INV) return;
 
-			RenderPersonnelStats(GetIdOfThisSlot(iCurrentPersonSelectedId));
+			RenderPersonnelStats(id);
 		}
 		else
 		{
-			RenderPersonnelFace(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), IsPastMercDead(iCurrentPersonSelectedId), IsPastMercFired(iCurrentPersonSelectedId), IsPastMercOther(iCurrentPersonSelectedId));
-			DisplayDepartedCharName(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iCurrentPersonSelectedId)));
+			const INT32 id    = GetIdOfPastMercInSlot(iCurrentPersonSelectedId);
+			const INT32 state = GetTheStateOfDepartedMerc(id);
+			RenderPersonnelFace(id, state);
+			DisplayDepartedCharName(id, state);
 
-			if (gubPersonnelInfoState == PRSNL_INV)
-			{
-				return;
-			}
+			if (gubPersonnelInfoState == PRSNL_INV) return;
 
-			DisplayDepartedCharStats(GetIdOfPastMercInSlot(iCurrentPersonSelectedId), GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iCurrentPersonSelectedId)));
+			DisplayDepartedCharStats(id, state);
 		}
 	}
 }
@@ -2439,8 +2429,8 @@ static void DisplayHighestStatValuesForCurrentTeam(void)
 		INT32 iStat = 0;
 		if (fCurrentTeamMode)
 		{
-			INT32 id = GetIdOfMercWithHighestStat(i);
-			const SOLDIERTYPE* s = MercPtrs[id];
+			const INT32 id = GetIdOfMercWithHighestStat(i);
+			const SOLDIERTYPE* const s = MercPtrs[id];
 			name = (id == -1 ? pPOWStrings[1] : s->name);
 			switch (i)
 			{
@@ -2459,8 +2449,8 @@ static void DisplayHighestStatValuesForCurrentTeam(void)
 		}
 		else
 		{
-			INT32 id = GetIdOfDepartedMercWithHighestStat(i);
-			const MERCPROFILESTRUCT* p = &gMercProfiles[id];
+			const INT32 id = GetIdOfDepartedMercWithHighestStat(i);
+			const MERCPROFILESTRUCT* const p = &gMercProfiles[id];
 			name = p->zNickname;
 			switch (i)
 			{
@@ -2517,10 +2507,15 @@ static void DisplayPersonnelTeamStats(void)
 }
 
 
+static INT32 GetNumberOfDeadOnPastTeam(void);
+static INT32 GetNumberOfLeftOnPastTeam(void);
+static INT32 GetNumberOfOtherOnPastTeam(void);
+
+
 static INT32 GetNumberOfPastMercsOnPlayersTeam(void)
 {
 	INT32 iPastNumberOfMercs = 0;
-	// will run through the list of past mercs on the players team and return thier number
+	// will run through the list of past mercs on the players team and return their number
 
 	iPastNumberOfMercs += GetNumberOfDeadOnPastTeam();
 	iPastNumberOfMercs += GetNumberOfLeftOnPastTeam();
@@ -2745,7 +2740,7 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentUpperLeftPortraitNumber + 20 < GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam())
+		if (giCurrentUpperLeftPortraitNumber + 20 < GetNumberOfPastMercsOnPlayersTeam())
 		{
 			giCurrentUpperLeftPortraitNumber += 20;
 			fReDrawScreenFlag = TRUE;
@@ -2870,7 +2865,7 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 		return -1;
 	}
 
-	if (iSlot > GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam() - giCurrentUpperLeftPortraitNumber)
+	if (iSlot > GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
 	{
 		// invalid slot
 		return iCurrentPersonSelectedId;
@@ -2961,19 +2956,15 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
 		switch (i)
 		{
 			case 0: // health
-				// dead?
-				if (iState == 0)
-				{
-					swprintf(sString, lengthof(sString), L"%d/%d", 0, p->bLife);
-				}
-				else
-				{
-					swprintf(sString, lengthof(sString), L"%d/%d", p->bLife, p->bLife);
-				}
+			{
+				const INT8 life = p->bLife;
+				const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
+				swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
 				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
 				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				mprintf(sX, pers_stat_y[i], sString);
 				break;
+			}
 
 			case 1: // agility
 				swprintf(sString, lengthof(sString), L"%d", p->bAgility);
@@ -3115,7 +3106,7 @@ static void EnableDisableDeparturesButtons(void)
 		// enable up button
 		EnableButton(giPersonnelButton[4]);
 	}
-	if ((GetNumberOfDeadOnPastTeam() + GetNumberOfLeftOnPastTeam() + GetNumberOfOtherOnPastTeam()) - giCurrentUpperLeftPortraitNumber  >= 20)
+	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber  >= 20)
 	{
 		// enable down button
 		EnableButton(giPersonnelButton[5]);
@@ -3689,24 +3680,6 @@ static void HandlePersonnelKeyboard(void)
 	{
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
-}
-
-
-static BOOLEAN IsPastMercDead(INT32 iId)
-{
-	return GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iId)) == DEPARTED_DEAD;
-}
-
-
-static BOOLEAN IsPastMercFired(INT32 iId)
-{
-	return GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iId)) == DEPARTED_FIRED;
-}
-
-
-static BOOLEAN IsPastMercOther(INT32 iId)
-{
-	return GetTheStateOfDepartedMerc(GetIdOfPastMercInSlot(iId)) == DEPARTED_OTHER;
 }
 
 

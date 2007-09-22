@@ -747,7 +747,7 @@ static void HandleSaveLoadScreen(void)
 }
 
 
-static void DisplayOnScreenNumber(BOOLEAN fErase);
+static void DisplayOnScreenNumber(BOOLEAN display);
 static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
 static void MoveSelectionUpOrDown(BOOLEAN fUp);
 static void SetSelection(UINT8 ubNewSelection);
@@ -769,15 +769,7 @@ static void GetSaveLoadScreenUserInput(void)
 		return;
 	}
 
-
-	if( gfKeyState[ ALT ] )
-	{
-		DisplayOnScreenNumber( FALSE );
-	}
-	else
-	{
-		DisplayOnScreenNumber( TRUE );
-	}
+	DisplayOnScreenNumber(gfKeyState[ALT]);
 
 	if( gfKeyState[ CTRL ] || fWasCtrlHeldDownLastFrame )
 	{
@@ -1883,44 +1875,26 @@ void DeleteSaveGameNumber( UINT8 ubSaveGameSlotID )
 }
 
 
-static void DisplayOnScreenNumber(BOOLEAN fErase)
+static void DisplayOnScreenNumber(BOOLEAN display)
 {
-	wchar_t		zTempString[16];
-	UINT16		usPosX = 6;
-	UINT16		usPosY;
-	INT8			bLoopNum;
-	INT8			bNum=0;
-
-	usPosY = SLG_FIRST_SAVED_SPOT_Y;
-
-	for( bLoopNum=0; bLoopNum<NUM_SAVE_GAMES; bLoopNum++)
+	// Start at 1 - don't diplay it for the quicksave
+	for (INT8 bLoopNum = 1; bLoopNum < NUM_SAVE_GAMES; ++bLoopNum)
 	{
-		//Dont diplay it for the quicksave
-		if( bLoopNum == 0 )
-		{
-			usPosY += SLG_GAP_BETWEEN_LOCATIONS;
-			continue;
-		}
+		const UINT16 usPosX = 6;
+		const UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * bLoopNum;
 
 		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, usPosX, usPosY + SLG_DATE_OFFSET_Y, 10, 10);
 
-		if( bLoopNum != 10 )
-		{
-			bNum = bLoopNum;
-			swprintf( zTempString, lengthof(zTempString), L"%2d", bNum );
-		}
-		else
-		{
-			bNum = 0;
-			swprintf( zTempString, lengthof(zTempString), L"%2d", bNum );
-		}
+		wchar_t zTempString[16];
+		const INT8 bNum = (bLoopNum == 10 ? 0 : bLoopNum);
+		swprintf(zTempString, lengthof(zTempString), L"%2d", bNum);
 
-		if( !fErase )
+		if (display)
+		{
 			DrawTextToScreen(zTempString, usPosX, usPosY + SLG_DATE_OFFSET_Y, 0, SAVE_LOAD_NUMBER_FONT, SAVE_LOAD_NUMBER_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		}
 
-		InvalidateRegion( usPosX, usPosY+SLG_DATE_OFFSET_Y, usPosX+10, usPosY+SLG_DATE_OFFSET_Y+10 );
-
-		usPosY += SLG_GAP_BETWEEN_LOCATIONS;
+		InvalidateRegion(usPosX, usPosY + SLG_DATE_OFFSET_Y, usPosX + 10, usPosY + SLG_DATE_OFFSET_Y + 10);
 	}
 }
 
@@ -1969,11 +1943,11 @@ static void DoneFadeOutForSaveLoadScreen(void)
 		ValidateSoldierInitLinks( 1 );
 		{
 		#endif
+			gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
+
 			//If we are to go to map screen after loading the game
 			if( guiScreenToGotoAfterLoadingSavedGame == MAP_SCREEN )
 			{
-				gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
-
 				SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
 
 	//			LeaveTacticalScreen( MAP_SCREEN );
@@ -1984,8 +1958,6 @@ static void DoneFadeOutForSaveLoadScreen(void)
 			else
 			{
 				//if we are to go to the Tactical screen after loading
-				gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
-
 				SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
 
 				PauseTime( FALSE );

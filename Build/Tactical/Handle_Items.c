@@ -2544,50 +2544,27 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 }
 
 
-static void LoopLevelNodeForShowThroughFlag(LEVELNODE* pNode, INT16 sGridNo, UINT8 ubLevel)
+static void LoopLevelNodeForShowThroughFlag(LEVELNODE* pNode)
 {
-	while ( pNode != NULL )
+	for (; pNode != NULL; pNode = pNode->pNext)
 	{
-		if ( pNode->uiFlags & LEVELNODE_ITEM )
+		if (!(pNode->uiFlags & LEVELNODE_ITEM)) continue;
+
+		pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
+
+		if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
 		{
-			if ( ubLevel == 0 )
-			{
-				// If we are in a room....
-				// if ( IsRoofPresentAtGridno( sGridNo ) || gfCaves || gfBasement )
-				{
-					pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
-				}
-			}
-			else
-			{
-				pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
-			}
-
-			if( gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] )
-			{
-				pNode->uiFlags |= LEVELNODE_DYNAMIC;
-			}
-
+			pNode->uiFlags |= LEVELNODE_DYNAMIC;
 		}
-		pNode = pNode->pNext;
 	}
 }
 
 
 static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel)
 {
-	LEVELNODE *pNode;
-
-	if ( ubLevel == 0 )
-	{
-		pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-		LoopLevelNodeForShowThroughFlag( pNode, sGridNo,  ubLevel );
-	}
-	else
-	{
-		pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
-		LoopLevelNodeForShowThroughFlag( pNode, sGridNo, ubLevel );
-	}
+	MAP_ELEMENT* const e = &gpWorldLevelData[sGridNo];
+	LEVELNODE* const   n = (ubLevel == 0 ? e->pStructHead : e->pOnRoofHead);
+	LoopLevelNodeForShowThroughFlag(n);
 }
 
 
@@ -4849,63 +4826,32 @@ static void CheckForPickedOwnership(void)
 }
 
 
-static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn)
+static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, BOOLEAN fOn)
 {
-	while ( pNode != NULL )
+	for (; pNode != NULL; pNode = pNode->pNext)
 	{
-		if ( pNode->uiFlags & LEVELNODE_ITEM )
-		{
-			if ( fOn )
-			{
-				pNode->uiFlags |= LEVELNODE_DYNAMIC;
-			}
-			else
-			{
-				pNode->uiFlags &= (~LEVELNODE_DYNAMIC);
-			}
-		}
-		pNode = pNode->pNext;
+		if (!(pNode->uiFlags & LEVELNODE_ITEM)) continue;
+
+		pNode->uiFlags &= ~LEVELNODE_DYNAMIC;
+		pNode->uiFlags |= (fOn ? LEVELNODE_DYNAMIC : 0);
 	}
 }
 
 
-static void HandleItemGlowFlag(INT16 sGridNo, UINT8 ubLevel, BOOLEAN fOn)
+void ToggleItemGlow(BOOLEAN fOn)
 {
-	LEVELNODE *pNode;
-
-	if ( ubLevel == 0 )
+	for (UINT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
-		pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-		LoopLevelNodeForItemGlowFlag( pNode, sGridNo,  ubLevel, fOn );
-	}
-	else
-	{
-		pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
-		LoopLevelNodeForItemGlowFlag( pNode, sGridNo, ubLevel, fOn );
-	}
-}
-
-void ToggleItemGlow( BOOLEAN fOn )
-{
-	UINT32 cnt;
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-	{
-		HandleItemGlowFlag( ( INT16 )cnt, 0, fOn );
-		HandleItemGlowFlag( ( INT16 )cnt, 1, fOn );
+		MAP_ELEMENT* const e = &gpWorldLevelData[cnt];
+		LoopLevelNodeForItemGlowFlag(e->pStructHead, fOn);
+		LoopLevelNodeForItemGlowFlag(e->pOnRoofHead, fOn);
 	}
 
-	if ( !fOn )
-	{
-		gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] = FALSE;
-	}
-	else
-	{
-		gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] = TRUE;
-	}
+	gGameSettings.fOptions[TOPTION_GLOW_ITEMS] = fOn;
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
+
 
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier )
 {

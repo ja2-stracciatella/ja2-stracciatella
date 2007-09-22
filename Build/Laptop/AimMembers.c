@@ -774,10 +774,8 @@ void HandleAIMMembers()
 		fReDrawPostButtonRender = TRUE;
 	}
 
- 	//Gets set in the InitDeleteVideoConferencePopUp() function
-	if( gfJustSwitchedVideoConferenceMode )
-		gfJustSwitchedVideoConferenceMode = FALSE;
-
+	// Gets set in the InitDeleteVideoConferencePopUp() function
+	gfJustSwitchedVideoConferenceMode = FALSE;
 
 	if( gfRedrawScreen )
 	{
@@ -856,16 +854,14 @@ BOOLEAN RenderAIMMembers()
 
 	DisplayMercsFace();
 
+	DisplayMercStats();
+
 	if( gubVideoConferencingMode)
 	{
-		DisplayMercStats();
 		DisplayVideoConferencingDisplay();
 	}
 	else
 	{
-		//Display the mercs stats and face
-		DisplayMercStats();
-
 		gubMercAttitudeLevel=0;
 		gfIsAnsweringMachineActive = FALSE;
 	}
@@ -3139,7 +3135,7 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 }
 
 
-static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit);
+static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward);
 
 
 static BOOLEAN HandleCurrentVideoConfMode(void)
@@ -3156,20 +3152,11 @@ static BOOLEAN HandleCurrentVideoConfMode(void)
 
 
 		case AIM_VIDEO_POPUP_MODE:
-		{
-			BOOLEAN ubDone;
-
-			if( gfJustSwitchedVideoConferenceMode )
-				ubDone = DisplayMovingTitleBar( TRUE, TRUE );
-			else
-				ubDone = DisplayMovingTitleBar( TRUE, FALSE );
-
-
-			if(ubDone)
+			if (DisplayMovingTitleBar(TRUE))
+			{
 				gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
-
+			}
 			break;
-		}
 
 		// The opening animation of the vc (fuzzy screen, then goes to black)
 		case AIM_VIDEO_INIT_MODE:
@@ -3233,18 +3220,9 @@ static BOOLEAN HandleCurrentVideoConfMode(void)
 		}
 
 		case AIM_VIDEO_POPDOWN_MODE:
-		{
-			BOOLEAN ubDone;
-
-			if( gfJustSwitchedVideoConferenceMode )
-				ubDone = DisplayMovingTitleBar( FALSE, TRUE );
-			else
-				ubDone = DisplayMovingTitleBar( FALSE, FALSE );
-
-			if(ubDone)
+			if (DisplayMovingTitleBar(FALSE))
 			{
 				gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-
 
 				//display the popup telling the user when the just hired merc is going to land
 				DisplayPopUpBoxExplainingMercArrivalLocationAndTime( giIdOfLastHiredMerc );
@@ -3254,9 +3232,7 @@ static BOOLEAN HandleCurrentVideoConfMode(void)
 				RenderAIMMembers();
 				gfVideoFaceActive = FALSE;
 			}
-
 			break;
-		}
 	}
 
 	//Gets set in the InitDeleteVideoConferencePopUp() function
@@ -3425,7 +3401,7 @@ void DisableNewMailMessage(void)
 }
 
 
-static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
+static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 {
 	static 	UINT8			ubCount;
 	UINT16		usPosX, usPosY, usPosRightX, usPosBottomY, usWidth, usHeight;
@@ -3436,7 +3412,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 
 	if( fForward )
 	{
-		if( fInit )
+		if (gfJustSwitchedVideoConferenceMode)
 			ubCount = 1;
 
 		usTemp = (331 - 125) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS ;
@@ -3452,7 +3428,7 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward, BOOLEAN fInit)
 	}
 	else
 	{
-		if( fInit )
+		if (gfJustSwitchedVideoConferenceMode)
 			ubCount = AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1;
 
 		usTemp = (331 - 125) / (FLOAT)AIM_MEMBER_VIDEO_TITLE_ITERATIONS ;

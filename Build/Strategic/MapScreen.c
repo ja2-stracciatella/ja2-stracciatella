@@ -3245,12 +3245,8 @@ UINT32 MapScreenHandle(void)
 	if( fShowDescriptionFlag == TRUE )
 	{
 		// unmark done button
-		if( gpItemDescObject->usItem == MONEY )
-		{
-			MapscreenMarkButtonsDirty();
-		}
-
-		if( Item[ gpItemDescObject->usItem ].usItemClass & IC_GUN )
+		if (gpItemDescObject->usItem == MONEY ||
+				Item[gpItemDescObject->usItem].usItemClass & IC_GUN)
 		{
 			MapscreenMarkButtonsDirty();
 		}

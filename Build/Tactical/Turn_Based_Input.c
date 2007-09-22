@@ -132,7 +132,6 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
 
 
 extern SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier );
-extern void ToggleItemGlow( BOOLEAN fOn );
 extern void HandleTalkingMenuBackspace( void );
 extern void BeginKeyPanelFromKeyShortcut( );
 
@@ -2478,24 +2477,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else
 					{
-						if ( gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] )
-						{
-							gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] = FALSE;
-							ToggleItemGlow( FALSE );
-						}
-						else
-						{
-							gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] = TRUE;
-							ToggleItemGlow( TRUE );
-						}
+						ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]);
 					}
 					break;
 
-
-				case '$':
-
-
-					break;
+				case '$': break;
 
 				case 'k':
 					if( fAlt )
@@ -3551,14 +3537,7 @@ static void ToggleViewAllItems(void)
 		gTacticalStatus.uiFlags |= SHOW_ALL_ITEMS;
 	}
 
-	if ( gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ] )
-	{
-		ToggleItemGlow( TRUE );
-	}
-	else
-	{
-		ToggleItemGlow( FALSE );
-	}
+	ToggleItemGlow(gGameSettings.fOptions[TOPTION_GLOW_ITEMS]);
 
 	// RE-RENDER
 	SetRenderFlags(RENDER_FLAG_FULL);

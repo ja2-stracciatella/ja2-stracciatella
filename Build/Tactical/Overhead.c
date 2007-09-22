@@ -6512,17 +6512,9 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 
 	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 	{
-
 		// Check to see if anyone was suppressed
-		if (pSoldier)
-		{
-			HandleSuppressionFire( pSoldier->ubTargetID, ubID );
-		}
-		else
-		{
-			HandleSuppressionFire( NOBODY, ubID );
-		}
-
+		const UINT8 target = (pSoldier == NULL ? NOBODY : pSoldier->ubTargetID);
+		HandleSuppressionFire(target, ubID);
 
 		//HandleAfterShootingGuy( pSoldier, pTarget );
 
@@ -6761,14 +6753,8 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 
 SOLDIERTYPE* ReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker)
 {
-	if (ubID == NOBODY)
-	{
-		return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, NOBODY);
-	}
-	else
-	{
-		return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, MercPtrs[ubID]->ubTargetID);
-	}
+	const UINT8 target = (ubID == NOBODY ? NOBODY : MercPtrs[ubID]->ubTargetID);
+	return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, target);
 }
 
 

@@ -468,28 +468,19 @@ extern void UpdateItemHatches();
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
-static INT8 GetUIApsToDisplay(SOLDIERTYPE* pSoldier)
+static INT8 GetUIApsToDisplay(const SOLDIERTYPE* s)
 {
-	SOLDIERTYPE *pVehicle;
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_DRIVER )
+	if (s->uiStatusFlags & SOLDIER_DRIVER)
 	{
-    pVehicle = GetSoldierStructureForVehicle( pSoldier->iVehicleId );
-
-		if ( pVehicle != NULL )
-		{
-			return( pVehicle->bActionPoints );
-		}
-		else
-		{
-			return( 0 );
-		}
+		const SOLDIERTYPE* const v = GetSoldierStructureForVehicle(s->iVehicleId);
+		return v == NULL ? 0 : v->bActionPoints;
 	}
 	else
 	{
-		return ( pSoldier->bActionPoints );
+		return s->bActionPoints;
 	}
 }
+
 
 void CheckForDisabledForGiveItem( )
 {
@@ -1713,35 +1704,33 @@ void RenderSMPanel( BOOLEAN *pfDirty )
 		{
 			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) && gpSMCurrentMerc->bLife >= OKLIFE )
 			{
-				SetFont( TINYFONT1 );
-				//if ( gpSMCurrentMerc->sLastTarget != NOWHERE && !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 )
-				if ( !EnoughPoints( gpSMCurrentMerc, MinAPsToAttack( gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE ), 0, FALSE ) || GetUIApsToDisplay( gpSMCurrentMerc ) < 0 )
+				SetFont(TINYFONT1);
+				const INT8 ap = GetUIApsToDisplay(gpSMCurrentMerc);
+				//if (gpSMCurrentMerc->sLastTarget != NOWHERE && !EnoughPoints(gpSMCurrentMerc, MinAPsToAttack(gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE), 0, FALSE) || ap < 0)
+				if (!EnoughPoints(gpSMCurrentMerc, MinAPsToAttack(gpSMCurrentMerc, gpSMCurrentMerc->sLastTarget, FALSE), 0, FALSE) || ap < 0)
 				{
-					SetFontBackground( FONT_MCOLOR_BLACK );
-					SetFontForeground( FONT_MCOLOR_DKRED );
+					SetFontForeground(FONT_MCOLOR_DKRED);
 				}
 				else
 				{
-					if ( MercUnderTheInfluence( gpSMCurrentMerc ) )
+					if (MercUnderTheInfluence(gpSMCurrentMerc))
 					{
-						SetFontBackground( FONT_MCOLOR_BLACK );
-						SetFontForeground( FONT_MCOLOR_LTBLUE );
+						SetFontForeground(FONT_MCOLOR_LTBLUE);
 					}
-					else if ( gpSMCurrentMerc->bStealthMode )
+					else if (gpSMCurrentMerc->bStealthMode)
 					{
-						SetFontBackground( FONT_MCOLOR_BLACK );
-						SetFontForeground( FONT_MCOLOR_LTYELLOW );
+						SetFontForeground(FONT_MCOLOR_LTYELLOW);
 					}
 					else
 					{
-						SetFontBackground( FONT_MCOLOR_BLACK );
-						SetFontForeground( FONT_MCOLOR_LTGRAY );
+						SetFontForeground(FONT_MCOLOR_LTGRAY);
 					}
 				}
+				SetFontBackground(FONT_MCOLOR_BLACK);
 
 				RestoreExternBackgroundRect(SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
-				VarFindFontCenterCoordinates( SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", GetUIApsToDisplay( gpSMCurrentMerc ) );
-				mprintf(sFontX, sFontY, L"%d", GetUIApsToDisplay(gpSMCurrentMerc));
+				VarFindFontCenterCoordinates(SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", ap);
+				mprintf(sFontX, sFontY, L"%d", ap);
 			}
 
 			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
@@ -3125,38 +3114,36 @@ void RenderTEAMPanel( BOOLEAN fDirty )
 					if ( gTacticalStatus.uiFlags & TURNBASED && pSoldier->bLife >= OKLIFE )
 					{
 						// Render APs
-						SetFont( TINYFONT1 );
+						SetFont(TINYFONT1);
 
-						//if ( pSoldier->sLastTarget != NOWHERE && !EnoughPoints( pSoldier, MinAPsToAttack( pSoldier, pSoldier->sLastTarget, TRUE ), 0, FALSE ) || GetUIApsToDisplay( pSoldier ) < 0 )
-						if ( !EnoughPoints( pSoldier, MinAPsToAttack( pSoldier, pSoldier->sLastTarget, TRUE ), 0, FALSE ) || GetUIApsToDisplay( pSoldier ) < 0 )
+						const INT8 ap = GetUIApsToDisplay(pSoldier);
+						//if (pSoldier->sLastTarget != NOWHERE && !EnoughPoints(pSoldier, MinAPsToAttack(pSoldier, pSoldier->sLastTarget, TRUE), 0, FALSE) || ap < 0)
+						if (!EnoughPoints(pSoldier, MinAPsToAttack(pSoldier, pSoldier->sLastTarget, TRUE), 0, FALSE) || ap < 0)
 						{
-							SetFontBackground( FONT_MCOLOR_BLACK );
-							SetFontForeground( FONT_MCOLOR_DKRED );
+							SetFontForeground(FONT_MCOLOR_DKRED);
 						}
 						else
 						{
-							if ( MercUnderTheInfluence( pSoldier ) )
+							if (MercUnderTheInfluence(pSoldier))
 							{
-								SetFontBackground( FONT_MCOLOR_BLACK );
-								SetFontForeground( FONT_MCOLOR_LTBLUE );
+								SetFontForeground(FONT_MCOLOR_LTBLUE);
 							}
-							else if ( pSoldier->bStealthMode )
+							else if (pSoldier->bStealthMode)
 							{
-								SetFontBackground( FONT_MCOLOR_BLACK );
-								SetFontForeground( FONT_MCOLOR_LTYELLOW );
+								SetFontForeground(FONT_MCOLOR_LTYELLOW);
 							}
 							else
 							{
-								SetFontBackground( FONT_MCOLOR_BLACK );
-								SetFontForeground( FONT_MCOLOR_LTGRAY );
+								SetFontForeground(FONT_MCOLOR_LTGRAY);
 							}
 						}
+						SetFontBackground(FONT_MCOLOR_BLACK);
 						RestoreExternBackgroundRect( sTEAMApXY[ posIndex ], sTEAMApXY[ posIndex + 1 ], TM_AP_WIDTH, TM_AP_HEIGHT );
 
 						if (gTacticalStatus.uiFlags & INCOMBAT )
 						{
-							VarFindFontCenterCoordinates( sTEAMApXY[ posIndex ], sTEAMApXY[ posIndex + 1], TM_AP_WIDTH, TM_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", GetUIApsToDisplay( pSoldier ) );
-							mprintf( sFontX, sTEAMApXY[ posIndex + 1], L"%d", GetUIApsToDisplay( pSoldier ) );
+							VarFindFontCenterCoordinates(sTEAMApXY[posIndex], sTEAMApXY[posIndex + 1], TM_AP_WIDTH, TM_AP_HEIGHT, TINYFONT1, &sFontX, &sFontY, L"%d", ap);
+							mprintf(sFontX, sTEAMApXY[posIndex + 1], L"%d", ap);
 						}
 					}
 				}

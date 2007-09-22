@@ -373,14 +373,13 @@ void RenderInsuranceContract()
 		{
 			//Display Error Message, all aim mercs are on short contract
 			GetInsuranceText( INS_MLTI_ALL_AIM_MERCS_ON_SHORT_CONTRACT, sText );
-			DoLapTopMessageBox( MSG_BOX_RED_ON_WHITE, sText, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InsContractNoMercsPopupCallBack);
 		}
 		else
 		{
 			//Display Error Message, no valid mercs
 			GetInsuranceText( INS_MLTI_NO_QUALIFIED_MERCS, sText );
-			DoLapTopMessageBox( MSG_BOX_RED_ON_WHITE, sText, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InsContractNoMercsPopupCallBack);
 		}
+		DoLapTopMessageBox(MSG_BOX_RED_ON_WHITE, sText, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, InsContractNoMercsPopupCallBack);
 	}
 
 

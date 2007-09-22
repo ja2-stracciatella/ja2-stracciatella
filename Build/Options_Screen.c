@@ -196,9 +196,6 @@ MOUSE_REGION    gSelectedOptionTextRegion[ NUM_GAME_OPTIONS ];
 MOUSE_REGION    gSelectedToggleBoxAreaRegion;
 
 
-extern	void ToggleItemGlow( BOOLEAN fOn );
-
-
 UINT32	OptionsScreenInit()
 {
 
@@ -783,30 +780,22 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	UINT8	ubButton = MSYS_GetBtnUserData(btn);
-
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	BOOLEAN down;
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
-		{
-			HandleOptionToggle( ubButton, TRUE, FALSE, FALSE );
-		}
-		else
-		{
-			HandleOptionToggle( ubButton, FALSE, FALSE, FALSE);
-		}
+		down = FALSE;
 	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if( btn->uiFlags & BUTTON_CLICKED_ON )
-		{
-			HandleOptionToggle( ubButton, TRUE, TRUE, FALSE );
-		}
-		else
-		{
-			HandleOptionToggle( ubButton, FALSE, TRUE, FALSE );
-		}
+		down = TRUE;
 	}
+	else
+	{
+		return;
+	}
+	const BOOLEAN clicked  = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
+	const UINT8   ubButton = MSYS_GetBtnUserData(btn);
+	HandleOptionToggle(ubButton, clicked, TRUE, FALSE);
 }
 
 
@@ -1006,22 +995,12 @@ static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		HandleOptionToggle( ubButton, (BOOLEAN)(!gGameSettings.fOptions[ ubButton ]), FALSE, TRUE );
-
+		HandleOptionToggle(ubButton, !gGameSettings.fOptions[ubButton], FALSE, TRUE);
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
-
-
 	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		if( gGameSettings.fOptions[ ubButton ] )
-		{
-			HandleOptionToggle( ubButton, TRUE, TRUE, TRUE );
-		}
-		else
-		{
-			HandleOptionToggle( ubButton, FALSE, TRUE, TRUE );
-		}
+		HandleOptionToggle(ubButton, gGameSettings.fOptions[ubButton], TRUE, TRUE);
 	}
 }
 
