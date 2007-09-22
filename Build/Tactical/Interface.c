@@ -707,8 +707,6 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	if (!MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
 
-	//LockTacticalInterface( );
-
 	gfInMovementMenu = TRUE;
 
 	// Ignore scrolling
@@ -738,9 +736,7 @@ void PopDownMovementMenu( )
 
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
-		//UnLockTacticalInterface( );
 		MSYS_RemoveRegion( &gMenuOverlayRegion );
-
 	}
 
 	gfInMovementMenu = FALSE;
@@ -1854,8 +1850,6 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 
 	if (!MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
 
-	//LockTacticalInterface( );
-
 	gfInOpenDoorMenu = TRUE;
 
 	// Ignore scrolling
@@ -1890,9 +1884,7 @@ void PopDownOpenDoorMenu( )
 
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
-		//UnLockTacticalInterface( );
 		MSYS_RemoveRegion( &gMenuOverlayRegion);
-
 	}
 
 	gfInOpenDoorMenu = FALSE;

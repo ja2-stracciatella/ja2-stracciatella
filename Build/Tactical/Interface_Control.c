@@ -56,8 +56,6 @@ UINT8			gsUICurIntTileOldShade;
 
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
-MOUSE_REGION		gLockPanelOverlayRegion;
-
 extern void			RenderTownIDString( );
 extern BOOLEAN	gfUIOverItemPool;
 extern INT16		gfUIOverItemPoolGridNo;
@@ -937,32 +935,6 @@ static void EndViewportOverlays(void)
 
 }
 
-
-static void LockTacticalInterface(void)
-{
-	// OK, check and see if we are not locked, if so
-	// 1) create a mouse region over the entrie interface panel
-	// 2) set flag for use in tactical to indicate we are locked
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
-	{
-		MSYS_DefineRegion(&gLockPanelOverlayRegion, 0, gsVIEWPORT_WINDOW_END_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-
-		guiTacticalInterfaceFlags |= INTERFACE_LOCKEDLEVEL1;
-	}
-}
-
-
-static void UnLockTacticalInterface(void)
-{
-	if ( (guiTacticalInterfaceFlags & INTERFACE_LOCKEDLEVEL1 ) )
-	{
-		// Remove region
-		MSYS_RemoveRegion( &gLockPanelOverlayRegion);
-
-		guiTacticalInterfaceFlags &= (~INTERFACE_LOCKEDLEVEL1);
-	}
-
-}
 
 void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 {
