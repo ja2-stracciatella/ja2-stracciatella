@@ -437,22 +437,11 @@ INT32 EffectStatForBeingDrunk(const SOLDIERTYPE* pSoldier, INT32 iStat)
 }
 
 
-BOOLEAN MercUnderTheInfluence( SOLDIERTYPE *pSoldier )
+BOOLEAN MercUnderTheInfluence(const SOLDIERTYPE* pSoldier)
 {
 	// Are we in a side effect or good effect?
-	if ( pSoldier->bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
-	{
-		return( TRUE );
-	}
-	else if ( pSoldier->bDrugSideEffect[ DRUG_TYPE_ADRENALINE ] )
-	{
-		return( TRUE );
-	}
-
-	if ( GetDrunkLevel( pSoldier ) != SOBER )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return
+		pSoldier->bDrugEffect[DRUG_TYPE_ADRENALINE] ||
+		pSoldier->bDrugSideEffect[DRUG_TYPE_ADRENALINE] ||
+		GetDrunkLevel(pSoldier) != SOBER;
 }
