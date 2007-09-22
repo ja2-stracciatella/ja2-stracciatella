@@ -18,23 +18,11 @@ CASSERT(sizeof(KEY) == 8)
 #define LOCK_UNOPENABLE	255
 #define NO_KEY					255
 
-#define MAX_KEYS_PER_LOCK 4
-
 #define LOCK_REGULAR			1
 #define LOCK_PADLOCK			2
 #define LOCK_CARD					3
 #define LOCK_ELECTRONIC		4
 #define LOCK_SPECIAL			5
-
-/*
-typedef struct
-{
-	UINT8		ubKeyID[MAX_KEYS_PER_LOCK];
-	UINT8		ubLockType;							// numeric lock type value... easier to use than flags!
-	INT8		bPickSkillAdjustment;		// difficulty to pick a lock which takes this key
-	INT8		bSmashSkillAdjustment;	// the strength of the lock (resistance to smashing)
-} LOCK;
-*/
 
 #define MAXLOCKDESCLENGTH 40
 typedef struct
@@ -173,8 +161,8 @@ DOOR * FindDoorInfoAtGridNo( INT32 iMapIndex );
 //Upon world deallocation, the door table needs to be deallocated.
 extern void TrashDoorTable();
 
-BOOLEAN AttemptToUnlockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );
-BOOLEAN AttemptToLockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );
+BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
+BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
 BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );

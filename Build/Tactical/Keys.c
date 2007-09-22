@@ -258,43 +258,34 @@ static BOOLEAN DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
 	}
 }
 
-BOOLEAN AttemptToUnlockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
-{
-	UINT8		ubLoop;
-	UINT8		ubKeyID;
 
-	for( ubLoop = 0; ubLoop < MAX_KEYS_PER_LOCK; ubLoop++)
+BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
+{
+	const UINT8 ubKeyID = pDoor->ubLockID;
+	if (SoldierHasKey(pSoldier, ubKeyID))
 	{
-		ubKeyID = pDoor->ubLockID;
-		if (SoldierHasKey(pSoldier, ubKeyID))
-		{
-			DoUnlockDoor( pDoor, ubKeyID );
-			return( TRUE );
-		}
+		DoUnlockDoor(pDoor, ubKeyID);
+		return TRUE;
 	}
 
 	// drat, couldn't find the key
 	PlayJA2Sample(KEY_FAILURE, MIDVOLUME, 1, MIDDLEPAN);
 
-	return( FALSE );
+	return FALSE;
 }
 
-BOOLEAN AttemptToLockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
-{
-	UINT8		ubLoop;
-	UINT8		ubKeyID;
 
-	for( ubLoop = 0; ubLoop < MAX_KEYS_PER_LOCK; ubLoop++)
+BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
+{
+	const UINT8 ubKeyID = pDoor->ubLockID;
+	if (SoldierHasKey(pSoldier, ubKeyID))
 	{
-		ubKeyID = pDoor->ubLockID;
-		if (SoldierHasKey(pSoldier, ubKeyID))
-		{
-			DoLockDoor( pDoor, ubKeyID );
-			return( TRUE );
-		}
+		DoLockDoor(pDoor, ubKeyID);
+		return TRUE;
 	}
+
 	// drat, couldn't find the key
-	return( FALSE );
+	return FALSE;
 }
 
 
