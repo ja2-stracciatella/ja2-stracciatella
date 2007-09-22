@@ -1066,18 +1066,11 @@ void HandleAirRaid( )
 					break;
 
 				case AIR_RAID_DIVING:
-
 					// If in combat, check if we have reached our max...
-					if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
+					if (!(gTacticalStatus.uiFlags & INCOMBAT) ||
+							giNumGridNosMovedThisTurn < 6)
 					{
-						if ( giNumGridNosMovedThisTurn < 6 )
-						{
-							DoDive( );
-						}
-					}
-					else
-					{
-						DoDive( );
+						DoDive();
 					}
 					break;
 
