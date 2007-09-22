@@ -157,17 +157,14 @@ BOOLEAN LoadLockTable( void )
 }
 
 
-static BOOLEAN KeyExistsInInventory(SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
+static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
 
 
-BOOLEAN SoldierHasKey( SOLDIERTYPE *pSoldier, UINT8 ubKeyID )
+BOOLEAN SoldierHasKey(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
 {
-	if ( KeyExistsInKeyRing( pSoldier, ubKeyID, NULL ) || KeyExistsInInventory( pSoldier, ubKeyID ) )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return
+		KeyExistsInKeyRing(pSoldier, ubKeyID, NULL) ||
+		KeyExistsInInventory(pSoldier, ubKeyID);
 }
 
 
@@ -202,7 +199,7 @@ BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pu
 }
 
 
-static BOOLEAN KeyExistsInInventory(SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
+static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
 {
 	UINT8				ubLoop;
 
@@ -269,15 +266,8 @@ BOOLEAN AttemptToUnlockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	for( ubLoop = 0; ubLoop < MAX_KEYS_PER_LOCK; ubLoop++)
 	{
 		ubKeyID = pDoor->ubLockID;
-		if (KeyExistsInKeyRing( pSoldier, ubKeyID, NULL ))
+		if (SoldierHasKey(pSoldier, ubKeyID))
 		{
-			// unlock door and move key to front of key ring!
-			DoUnlockDoor( pDoor, ubKeyID );
-			return( TRUE );
-		}
-		else if (KeyExistsInInventory( pSoldier, ubKeyID ))
-		{
-			// unlock door!
 			DoUnlockDoor( pDoor, ubKeyID );
 			return( TRUE );
 		}
@@ -297,15 +287,8 @@ BOOLEAN AttemptToLockDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	for( ubLoop = 0; ubLoop < MAX_KEYS_PER_LOCK; ubLoop++)
 	{
 		ubKeyID = pDoor->ubLockID;
-		if (KeyExistsInKeyRing( pSoldier, ubKeyID, NULL ))
+		if (SoldierHasKey(pSoldier, ubKeyID))
 		{
-			// lock door and move key to front of key ring!
-			DoLockDoor( pDoor, ubKeyID );
-			return( TRUE );
-		}
-		else if (KeyExistsInInventory( pSoldier, ubKeyID ))
-		{
-			// lock door!
 			DoLockDoor( pDoor, ubKeyID );
 			return( TRUE );
 		}

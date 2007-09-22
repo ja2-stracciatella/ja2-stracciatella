@@ -45,8 +45,6 @@ DisplayOnScreenNumber(): callers
 DisplayOrderGrid(): call IsMercDead() more early
 DisplayPurchasedItems(): iSubTotal undefined value
 Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
-DoLockDoor(): callers
-DoUnlockDoor(): callers
 DoWeHaveThisManyBonusPoints(): complicated
 DoesTownHaveRatingToTrainMilitia(): complicated
 DoesVehicleHaveAnyPassengers(): complicated
