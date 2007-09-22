@@ -224,37 +224,25 @@ static BOOLEAN ValidKey(DOOR* pDoor, UINT8 ubKeyID)
 }
 
 
-static BOOLEAN DoLockDoor(DOOR* pDoor, UINT8 ubKeyID)
+static void DoLockDoor(DOOR* pDoor, UINT8 ubKeyID)
 {
-	// if the door is unlocked and this is the right key, lock the door and
-	// return true, otherwise return false
+	// if the door is unlocked and this is the right key, lock the door
 	if (!(pDoor->fLocked) && ValidKey( pDoor, ubKeyID ))
 	{
 		pDoor->fLocked = TRUE;
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
 	}
 }
 
 
-static BOOLEAN DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
+static void DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
 {
-	// if the door is locked and this is the right key, unlock the door and
-	// return true, otherwise return false
+	// if the door is locked and this is the right key, unlock the door
 	if ( (pDoor->fLocked) && ValidKey( pDoor, ubKeyID ))
 	{
 		// Play lockpicking
 		PlayJA2Sample(UNLOCK_DOOR_1, SoundVolume(MIDVOLUME, pDoor->sGridNo), 1, SoundDir(pDoor->sGridNo));
 
 		pDoor->fLocked = FALSE;
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
 	}
 }
 
