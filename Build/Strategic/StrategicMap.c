@@ -1012,7 +1012,7 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 		// Update all the doors in the sector according to the temp file previously
 		// loaded, and any changes made by the schedules
-		UpdateDoorGraphicsFromStatus( TRUE, FALSE );
+		UpdateDoorGraphicsFromStatus();
 
 		//Set the fact we have visited the  sector
 		SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_ALREADY_LOADED );

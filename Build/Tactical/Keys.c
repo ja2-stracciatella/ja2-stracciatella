@@ -1461,19 +1461,16 @@ static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
 	}
 }
 
-void UpdateDoorGraphicsFromStatus( BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty )
+void UpdateDoorGraphicsFromStatus(void)
 {
-	INT32                    cnt;
-	DOOR_STATUS							 *pDoorStatus;
-
-	for ( cnt = 0; cnt < gubNumDoorStatus; cnt++ )
+	for (INT32 cnt = 0; cnt < gubNumDoorStatus; ++cnt)
 	{
-		pDoorStatus = &( gpDoorStatus[ cnt ] );
+		DOOR_STATUS* pDoorStatus = &gpDoorStatus[cnt];
 
 		// ATE: Make sure door status flag and struct info are syncronized....
-		SyncronizeDoorStatusToStructureData( pDoorStatus );
+		SyncronizeDoorStatusToStructureData(pDoorStatus);
 
-		InternalUpdateDoorGraphicFromStatus( pDoorStatus, fUsePerceivedStatus, fDirty );
+		InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE, FALSE);
 	}
 }
 
@@ -1813,7 +1810,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 		gpWorldLevelData[ gpDoorStatus[ ubLoop ].sGridNo ].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	}
 
-	UpdateDoorGraphicsFromStatus( TRUE, FALSE );
+	UpdateDoorGraphicsFromStatus();
 
 	return( TRUE );
 }

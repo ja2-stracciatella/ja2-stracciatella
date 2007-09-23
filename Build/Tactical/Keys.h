@@ -208,7 +208,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue );
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue );
 
-void UpdateDoorGraphicsFromStatus( BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty );
+void UpdateDoorGraphicsFromStatus(void);
 
 BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 
