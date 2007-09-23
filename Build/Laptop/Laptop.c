@@ -368,7 +368,7 @@ static void GetLaptopKeyboardInput(void)
 			case RIGHT_BUTTON_UP:
 			case RIGHT_BUTTON_REPEAT:
 			case LEFT_BUTTON_REPEAT:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
+				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 				break;
 		}
 

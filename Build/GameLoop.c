@@ -217,7 +217,7 @@ void GameLoop(void)
 
 	GetCursorPos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
-	MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
+	MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y);
 	MusicPoll();
 
   while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
@@ -231,7 +231,7 @@ void GameLoop(void)
 			case RIGHT_BUTTON_UP:
 			case LEFT_BUTTON_REPEAT:
 			case RIGHT_BUTTON_REPEAT:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
+				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 				break;
 	  }
 	}

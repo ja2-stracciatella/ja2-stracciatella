@@ -789,7 +789,7 @@ static void GetSaveLoadScreenUserInput(void)
 			case RIGHT_BUTTON_UP:
 			case RIGHT_BUTTON_REPEAT:
 			case LEFT_BUTTON_REPEAT:
-				MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
+				MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
 				break;
 		}
 

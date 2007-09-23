@@ -194,7 +194,7 @@ static void MSYS_UpdateMouseRegion(void);
 //
 //	Hook to the SGP's mouse handler
 //
-void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLEAN LeftButton, BOOLEAN RightButton)
+void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord)
 {
 	// If the mouse system isn't initialized, get out o' here
 	if(!MSYS_SystemInitialized)
@@ -233,12 +233,12 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord, BOOLE
 			else if(Type == RIGHT_BUTTON_UP)
 				MSYS_Action |= MSYS_DO_RBUTTON_UP;
 
-			if(LeftButton)
+			if (_LeftButtonDown)
 				MSYS_CurrentButtons|=MSYS_LEFT_BUTTON;
 			else
 				MSYS_CurrentButtons&=(~MSYS_LEFT_BUTTON);
 
-			if(RightButton)
+			if (_RightButtonDown)
 				MSYS_CurrentButtons|=MSYS_RIGHT_BUTTON;
 			else
 				MSYS_CurrentButtons&=(~MSYS_RIGHT_BUTTON);

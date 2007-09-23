@@ -911,7 +911,7 @@ void DoDemoIntroduction()
 
 			GetCursorPos(&MousePos);
 			// Hook into mouse stuff for MOVEMENT MESSAGES
-			MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y, _LeftButtonDown, _RightButtonDown);
+			MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y);
 			MusicPoll();
 			if( uiStartTime != 0xffffffff )
 			{
