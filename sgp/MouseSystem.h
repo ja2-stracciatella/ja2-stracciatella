@@ -54,7 +54,6 @@ typedef struct _MOUSE_REGION {
 // Mouse Region Flags
 #define MSYS_NO_FLAGS										0x00000000
 #define MSYS_MOUSE_IN_AREA							0x00000001
-#define MSYS_SET_CURSOR									0x00000002
 #define MSYS_REGION_EXISTS							0x00000010
 #define MSYS_REGION_ENABLED							0x00000040
 #define MSYS_FASTHELP										0x00000080

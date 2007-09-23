@@ -30,7 +30,7 @@
 #include "ScreenIDs.h"
 
 
-#define BASE_REGION_FLAGS (MSYS_REGION_ENABLED | MSYS_SET_CURSOR)
+#define BASE_REGION_FLAGS (MSYS_REGION_ENABLED)
 
 
 //Kris:	Nov 31, 1999 -- Added support for double clicking
@@ -501,8 +501,6 @@ static void MSYS_UpdateMouseRegion(void)
 {
 	INT32 found;
 	UINT32 ButtonReason;
-  MOUSE_REGION *pTempRegion;
-	BOOLEAN fFound=FALSE;
 	found=FALSE;
 
 	MSYS_CurrRegion = MSYS_RegList;
@@ -576,32 +574,25 @@ static void MSYS_UpdateMouseRegion(void)
 
 			// if the cursor is set and is not set to no cursor
       if( MSYS_CurrRegion->uiFlags & MSYS_REGION_ENABLED &&
-					MSYS_CurrRegion->uiFlags & MSYS_SET_CURSOR &&
 					MSYS_CurrRegion->Cursor != MSYS_NO_CURSOR )
 			{
 				MSYS_SetCurrentCursor(MSYS_CurrRegion->Cursor);
 			}
 			else
 			{
-	     // Addition Oct 10/1997 Carter, patch for mouse cursor
-			 // start at region and find another region encompassing
-			 pTempRegion=MSYS_CurrRegion->next;
-			 while((pTempRegion!=NULL)&&(!fFound))
-			 {
-        if((pTempRegion->uiFlags & MSYS_REGION_ENABLED) &&
-		       (pTempRegion->RegionTopLeftX <= MSYS_CurrentMX) &&
-		       (pTempRegion->RegionTopLeftY <= MSYS_CurrentMY) &&
-		       (pTempRegion->RegionBottomRightX >= MSYS_CurrentMX) &&
-		       (pTempRegion->RegionBottomRightY >= MSYS_CurrentMY)&&(pTempRegion->uiFlags & MSYS_SET_CURSOR))
+				/* Addition Oct 10/1997 Carter, patch for mouse cursor
+				 * start at region and find another region encompassing */
+				for (const MOUSE_REGION* i = MSYS_CurrRegion->next; i != NULL; i = i->next)
 				{
-	  	   fFound=TRUE;
-				 if( pTempRegion->Cursor != MSYS_NO_CURSOR )
-				 {
-					 MSYS_SetCurrentCursor(pTempRegion->Cursor);
-				 }
+					if (i->uiFlags & MSYS_REGION_ENABLED &&
+							i->RegionTopLeftX <= MSYS_CurrentMX && MSYS_CurrentMX <= i->RegionBottomRightX &&
+							i->RegionTopLeftY <= MSYS_CurrentMY && MSYS_CurrentMY <= i->RegionBottomRightY &&
+							i->Cursor != MSYS_NO_CURSOR)
+					{
+						MSYS_SetCurrentCursor(i->Cursor);
+						break;
+					}
 				}
-        pTempRegion=pTempRegion->next;
-			 }
       }
 		}
 
@@ -797,8 +788,6 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 	region->ButtonCallback = buttoncallback;
 
 	region->Cursor = crsr;
-	if(crsr != MSYS_NO_CURSOR)
-		region->uiFlags |= MSYS_SET_CURSOR;
 
 	region->RegionTopLeftX = tlx;
 	region->RegionTopLeftY = tly;
@@ -834,20 +823,10 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 //
 void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr)
 {
-	region->uiFlags &= (~MSYS_SET_CURSOR);
 	region->Cursor = crsr;
-	if(crsr != MSYS_NO_CURSOR)
+	if (crsr != MSYS_NO_CURSOR && region->uiFlags & MSYS_MOUSE_IN_AREA)
 	{
-		region->uiFlags |= MSYS_SET_CURSOR;
-
-		// If we are not in the region, donot update!
-		if ( !( region->uiFlags & MSYS_MOUSE_IN_AREA ) )
-		{
-			return;
-		}
-
-		// Update cursor
-		MSYS_SetCurrentCursor( crsr );
+		MSYS_SetCurrentCursor(crsr);
 	}
 }
 
