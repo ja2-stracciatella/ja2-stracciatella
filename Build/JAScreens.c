@@ -644,41 +644,31 @@ static void DebugRenderHook(void)
 
 static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 {
-  if ((pInputEvent->usEvent == KEY_UP )&& ( pInputEvent->usParam == 'q' ))
+  if (pInputEvent->usEvent == KEY_UP)
   {
-		gfExitDebugScreen = TRUE;
-		return( TRUE );
-	}
+  	switch (pInputEvent->usParam)
+  	{
+  		case 'q':
+				gfExitDebugScreen = TRUE;
+				return TRUE;
 
-	if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_PAGEUP)
-  {
-		// Page down
-		gCurDebugPage++;
+  		case SDLK_PAGEUP:
+				gCurDebugPage++;
+				if (gCurDebugPage == MAX_DEBUG_PAGES) gCurDebugPage = 0;
+				FreeBackgroundRect(guiBackgroundRect);
+				guiBackgroundRect = NO_BGND_RECT;
+  			break;
 
-		if ( gCurDebugPage == MAX_DEBUG_PAGES )
-		{
-			gCurDebugPage = 0;
-		}
-
-		FreeBackgroundRect( guiBackgroundRect );
-		guiBackgroundRect = NO_BGND_RECT;
+  		case SDLK_PAGEDOWN:
+				gCurDebugPage--;
+				if (gCurDebugPage < 0) gCurDebugPage = MAX_DEBUG_PAGES - 1;
+				FreeBackgroundRect(guiBackgroundRect);
+				guiBackgroundRect = NO_BGND_RECT;
+  			break;
+  	}
   }
 
-	if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_PAGEDOWN)
-  {
-		// Page down
-		gCurDebugPage--;
-
-		if ( gCurDebugPage < 0 )
-		{
-			gCurDebugPage = MAX_DEBUG_PAGES-1;
-		}
-
-		FreeBackgroundRect( guiBackgroundRect );
-		guiBackgroundRect = NO_BGND_RECT;
-  }
-
-	return( FALSE );
+	return FALSE;
 }
 
 
