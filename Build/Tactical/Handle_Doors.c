@@ -31,9 +31,6 @@
 #include "Debug.h"
 
 
-BOOLEAN gfSetPerceivedDoorState = FALSE;
-
-
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations);
 
 
@@ -1023,14 +1020,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 	{
 		//ATE, the last parameter is the perceived value, I dont know what it is so could you please add the value?
 		//ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPercievedOpen )
-		if ( gfSetPerceivedDoorState )
-		{
-			ModifyDoorStatus( sGridNo, TRUE, TRUE );
-		}
-		else
-		{
-			ModifyDoorStatus( sGridNo, TRUE, DONTSETDOORSTATUS );
-		}
+		ModifyDoorStatus(sGridNo, TRUE, DONTSETDOORSTATUS);
 
 		if ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_I )
 		{
@@ -1147,15 +1137,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 	{
 		//ATE, the last parameter is the perceived value, I dont know what it is so could you please add the value?
 		//ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen )
-
-		if ( gfSetPerceivedDoorState )
-		{
-			ModifyDoorStatus( sGridNo, FALSE, FALSE );
-		}
-		else
-		{
-			ModifyDoorStatus( sGridNo, FALSE, DONTSETDOORSTATUS );
-		}
+		ModifyDoorStatus(sGridNo, FALSE, DONTSETDOORSTATUS);
 
 		if (pSoldier )
 		{

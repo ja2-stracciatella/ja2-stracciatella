@@ -184,8 +184,6 @@ INT8 gbSAMGraphicList[ NUMBER_OF_SAMS ]={
   3,
 };
 
-INT8 gbMercIsNewInThisSector[ MAX_NUM_SOLDIERS ];
-
 
 // the amount of time that a soldier will wait to return to desired/old squad
 #define DESIRE_SQUAD_RESET_DELAY 12 * 60
@@ -865,9 +863,6 @@ static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode);
 BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	BOOLEAN									fChangeMusic = TRUE;
-
-	// ATE: Zero out accounting functions
-	memset( gbMercIsNewInThisSector, 0, sizeof( gbMercIsNewInThisSector ) );
 
 	SyncStrategicTurnTimes();
 
@@ -1653,8 +1648,6 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 				if ( pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ && !pSoldier->fBetweenSectors )
 				{
-					gbMercIsNewInThisSector[ pSoldier->ubID ] = 1;
-
 					UpdateMercInSector( pSoldier, sSectorX, sSectorY, bSectorZ );
 
 					if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )

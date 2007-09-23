@@ -37,7 +37,6 @@
 
 DOOR_STATUS		*gpDoorStatus = NULL;
 UINT8					gubNumDoorStatus=0;
-extern INT8 gbMercIsNewInThisSector[ MAX_NUM_SOLDIERS ];
 
 
 KEY KeyTable[NUM_KEYS] =
@@ -1889,88 +1888,6 @@ void ExamineDoorsOnEnteringSector( )
 			{
 				// If open, close!
 				HandleDoorChangeFromGridNo( NULL, pDoorStatus->sGridNo, TRUE );
-			}
-		}
-	}
-}
-
-
-static void HandleDoorsChangeWhenEnteringSectorCurrentlyLoaded(void)
-{
-	INT32                    cnt;
-	DOOR_STATUS							 *pDoorStatus;
-	SOLDIERTYPE              *pSoldier;
-	BOOLEAN									 fOK = FALSE;
-	INT32										 iNumNewMercs = 0;
-	INT8										 bTownId;
-
-	// OK, only do this if conditions are met....
-
-	// If this is any omerta tow, don't do it...
-	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
-
-	if ( bTownId == OMERTA )
-	{
-		return;
-	}
-
-	// 1 ) there is at least one human being in that sector.
-	// check for civ
-	cnt = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-
-	// Check time...
-	if ( ( GetWorldTotalMin( ) - gTacticalStatus.uiTimeSinceLastInTactical ) < 30 )
-	{
-		return;
-	}
-
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ LAST_TEAM ].bLastID; cnt++ ,pSoldier++ )
-	{
-		if ( pSoldier->bActive && pSoldier->bInSector )
-		{
-			fOK = TRUE;
-			break;
-		}
-	}
-
-	// Loop through our team now....
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++ ,pSoldier++ )
-	{
-		if ( pSoldier->bActive && pSoldier->bInSector && gbMercIsNewInThisSector[ cnt ] )
-		{
-			iNumNewMercs++;
-		}
-	}
-
-	// ATE: Only do for newly added mercs....
-	if ( iNumNewMercs == 0 )
-	{
-		return;
-	}
-
-	// Let's do it!
-	if ( fOK )
-	{
-		for ( cnt = 0; cnt < gubNumDoorStatus; cnt++ )
-		{
-			pDoorStatus = &( gpDoorStatus[ cnt ] );
-
-			// Get status of door....
-			if ( pDoorStatus->ubFlags & DOOR_OPEN )
-			{
-				// If open, close!
-				gfSetPerceivedDoorState = TRUE;
-
-				HandleDoorChangeFromGridNo( NULL, pDoorStatus->sGridNo, TRUE );
-
-				gfSetPerceivedDoorState = FALSE;
-
-				AllMercsLookForDoor( pDoorStatus->sGridNo, TRUE );
-
-				InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
-
 			}
 		}
 	}

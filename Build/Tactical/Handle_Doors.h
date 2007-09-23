@@ -11,8 +11,6 @@
 #define HANDLE_DOOR_UNTRAP			8
 #define HANDLE_DOOR_CROWBAR			9
 
-extern BOOLEAN gfSetPerceivedDoorState;
-
 
 BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *pStructure );
 
