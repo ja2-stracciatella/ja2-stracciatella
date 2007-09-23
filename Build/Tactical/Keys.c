@@ -1321,7 +1321,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 
 
 static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus);
-static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty);
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fDirty);
 
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
@@ -1362,7 +1362,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 					InternalUpdateDoorsPerceivedValue( pDoorStatus );
 
 					// Update graphic....
-					InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
+					InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE);
 				}
 				return( TRUE );
 			}
@@ -1385,7 +1385,7 @@ BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
 							InternalUpdateDoorsPerceivedValue( pDoorStatus );
 
 							// Update graphic....
-							InternalUpdateDoorGraphicFromStatus( pDoorStatus, TRUE, TRUE );
+							InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE);
 
 						}
 						return( TRUE );
@@ -1470,18 +1470,17 @@ void UpdateDoorGraphicsFromStatus(void)
 		// ATE: Make sure door status flag and struct info are syncronized....
 		SyncronizeDoorStatusToStructureData(pDoorStatus);
 
-		InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE, FALSE);
+		InternalUpdateDoorGraphicFromStatus(pDoorStatus, FALSE);
 	}
 }
 
 
-static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fUsePerceivedStatus, BOOLEAN fDirty)
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fDirty)
 {
 	STRUCTURE *pStructure, *pBaseStructure;
 	INT32			cnt;
 	BOOLEAN		fOpenedGraphic = FALSE;
 	LEVELNODE * pNode;
-	BOOLEAN		fWantToBeOpen  = FALSE;
 	BOOLEAN		fDifferent     = FALSE;
 	INT16 sBaseGridNo				 = NOWHERE;
 
@@ -1517,21 +1516,8 @@ static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEA
 		return;
 	}
 
-	// Get status we want to chenge to.....
-	if ( fUsePerceivedStatus )
-	{
-		if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
-		{
-			fWantToBeOpen = TRUE;
-		}
-	}
-	else
-	{
-		if ( pDoorStatus->ubFlags & DOOR_OPEN )
-		{
-			fWantToBeOpen = TRUE;
-		}
-	}
+	// Get status we want to change to.....
+	const BOOLEAN fWantToBeOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
 
 	// First look for an opened door
 	// get what it is now...
