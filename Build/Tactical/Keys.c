@@ -1246,7 +1246,7 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 }
 
 
-static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* pDoorStatus);
+static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
 
 
 BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
@@ -1683,106 +1683,11 @@ static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus)
 }
 
 
-static BOOLEAN InternalSetDoorPerceivedOpenStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fPerceivedOpen);
-
-
-static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* pDoorStatus)
+static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d)
 {
 	// OK, look at door, set perceived value the same as actual....
-	const BOOLEAN perceived_open = (pDoorStatus->ubFlags & DOOR_OPEN) != 0;
-	InternalSetDoorPerceivedOpenStatus(pDoorStatus, perceived_open);
-}
-
-
-static BOOLEAN UpdateDoorStatusPerceivedValue(INT16 sGridNo)
-{
-	DOOR_STATUS	*pDoorStatus = NULL;
-
-	pDoorStatus = GetDoorStatus( sGridNo );
-	CHECKF( pDoorStatus != NULL );
-
-	InternalUpdateDoorsPerceivedValue( pDoorStatus );
-
-	return( TRUE );
-}
-
-
-//Returns true if the door is perceioved as open
-static BOOLEAN IsDoorPerceivedOpen(INT16 sGridNo)
-{
-	DOOR_STATUS	* pDoorStatus;
-
-	pDoorStatus = GetDoorStatus( sGridNo );
-
-	if (pDoorStatus && pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN)
-	{
-		return( TRUE );
-	}
-	else
-	{
-		#ifdef JA2TESTVERSION
-			if (!pDoorStatus)
-			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"WARNING! Failed to find the Perceived Open Door Status on Gridno %s", sGridNo );
-			}
-		#endif
-
-		return( FALSE );
-	}
-}
-
-
-static BOOLEAN InternalSetDoorPerceivedOpenStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fPerceivedOpen)
-{
-	if( fPerceivedOpen )
-		pDoorStatus->ubFlags |= DOOR_PERCEIVED_OPEN;
-	else
-		pDoorStatus->ubFlags &= ~DOOR_PERCEIVED_OPEN;
-
-	// Turn off perceived not set flag....
-	pDoorStatus->ubFlags &= ~DOOR_PERCEIVED_NOTSET;
-
-	return( TRUE );
-}
-
-
-//Modify the doors perceived open status
-static BOOLEAN SetDoorPerceivedOpenStatus(INT16 sGridNo, BOOLEAN fPerceivedOpen)
-{
-	DOOR_STATUS	*pDoorStatus = NULL;
-
-	pDoorStatus = GetDoorStatus( sGridNo );
-
-	CHECKF( pDoorStatus != NULL );
-
-	return( InternalSetDoorPerceivedOpenStatus( pDoorStatus, fPerceivedOpen ) );
-}
-
-
-//Modify the Doors open status
-static BOOLEAN SetDoorOpenStatus(INT16 sGridNo, BOOLEAN fOpen)
-{
-	DOOR_STATUS * pDoorStatus;
-
-	pDoorStatus = GetDoorStatus( sGridNo );
-
-	if ( pDoorStatus )
-	{
-		if( fOpen )
-		{
-			pDoorStatus->ubFlags |= DOOR_OPEN;
-		}
-		else
-		{
-			pDoorStatus->ubFlags &= ~DOOR_OPEN;
-		}
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
-
+	d->ubFlags &= ~(DOOR_PERCEIVED_NOTSET | DOOR_PERCEIVED_OPEN);
+	d->ubFlags |= (d->ubFlags & DOOR_OPEN ? DOOR_PERCEIVED_OPEN : 0);
 }
 
 
