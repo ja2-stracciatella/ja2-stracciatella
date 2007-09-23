@@ -53,7 +53,7 @@
 
 // GLOBAL FOR PAL EDITOR
 UINT8	 CurrentPalette = 0;
-UINT32  guiBackgroundRect;
+static UINT32  guiBackgroundRect = NO_BGND_RECT;
 BOOLEAN	gfExitPalEditScreen = FALSE;
 BOOLEAN	gfExitDebugScreen = FALSE;
 BOOLEAN gfInitRect = TRUE;

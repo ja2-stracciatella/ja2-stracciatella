@@ -3546,7 +3546,6 @@ void RenderTopmostFlashingItems( )
 					FLOAT				dOffsetX, dOffsetY;
 					FLOAT				dTempX_S, dTempY_S;
 					INT16				sX, sY, sXPos, sYPos;
-					INT32				iBack;
 
 					ConvertGridNoToCenterCellXY( pItemPool->sGridNo, &sX, &sY );
 
@@ -3577,11 +3576,8 @@ void RenderTopmostFlashingItems( )
 					sXPos -= 20;
 					sYPos -= 20;
 
-					iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-					if ( iBack != -1 )
-					{
-						SetBackgroundRectFilled( iBack );
-					}
+					const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
+					if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
 					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos);
 

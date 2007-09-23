@@ -418,7 +418,7 @@ static void RenderRubberBanding(void)
 	UINT32										 uiDestPitchBYTES;
 	UINT8											 *pDestBuf;
 	INT16											 iLeft, iRight, iTop, iBottom;
-	INT32											 iBack = -1;
+	INT32											 iBack = NO_BGND_RECT;
 	static INT32							 iFlashColor = 0;
 	static INT32							 uiTimeOfLastUpdate = 0;
 
@@ -463,13 +463,13 @@ static void RenderRubberBanding(void)
 		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iTop, iLeft + 1, iTop + 1);
 	}
 
-	if ( iBack != -1 )
+	if (iBack != NO_BGND_RECT)
 	{
 		SetBackgroundRectFilled( iBack );
 	}
 
 
-	iBack = -1;
+	iBack = NO_BGND_RECT;
 
 	if ( ( iRight - iLeft ) > 0 )
 	{
@@ -482,14 +482,14 @@ static void RenderRubberBanding(void)
 		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iBottom, iLeft + 1, iBottom + 1);
 	}
 
-	if ( iBack != -1 )
+	if (iBack != NO_BGND_RECT)
 	{
 		SetBackgroundRectFilled( iBack );
 	}
 
 
 
-	iBack = -1;
+	iBack = NO_BGND_RECT;
 
 	if ( ( iBottom - iTop ) > 0 )
 	{
@@ -502,13 +502,13 @@ static void RenderRubberBanding(void)
 		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iLeft, iBottom, iLeft + 1, iTop);
 	}
 
-	if ( iBack != -1 )
+	if (iBack != NO_BGND_RECT)
 	{
 		SetBackgroundRectFilled( iBack );
 	}
 
 
-	iBack = -1;
+	iBack = NO_BGND_RECT;
 
 	if ( ( iBottom - iTop ) > 0 )
 	{
@@ -521,7 +521,7 @@ static void RenderRubberBanding(void)
 		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iBottom, iRight + 1, iTop);
 	}
 
-	if ( iBack != -1 )
+	if (iBack != NO_BGND_RECT)
 	{
 		SetBackgroundRectFilled( iBack );
 	}

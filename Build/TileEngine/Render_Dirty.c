@@ -114,7 +114,7 @@ UINT32 uiCount;
 	}
 #endif
 
-	return(-1);
+	return NO_BGND_RECT;
 }
 
 
@@ -145,7 +145,7 @@ INT32	 iTempX, iTempY;
 	// Don't register if we are rendering and we are below the viewport
 	//if ( sTop >= gsVIEWPORT_WINDOW_END_Y )
 	//{
-	//	return(-1 );
+	//	return NO_BGND_RECT;
 	//}
 
 	ClipX1= gDirtyClipRect.iLeft;
@@ -157,7 +157,7 @@ INT32	 iTempX, iTempY;
 	usWidth  = sRight -  sLeft;
 
 	//if((sClipLeft >= sClipRight) || (sClipTop >= sClipBottom))
-	//	return(-1);
+	//	return NO_BGND_RECT;
 	iTempX = sLeft;
 	iTempY = sTop;
 
@@ -169,11 +169,11 @@ INT32	 iTempX, iTempY;
 
 	// check if whole thing is clipped
 	if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))
-		return(-1 );
+		return NO_BGND_RECT;
 
 	// check if whole thing is clipped
 	if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))
-		return(-1 );
+		return NO_BGND_RECT;
 
 	// Set re-set values given based on clipping
 	sLeft  = sLeft + (INT16)uiLeftSkip;
@@ -181,8 +181,8 @@ INT32	 iTempX, iTempY;
 	sTop   = sTop + (INT16)uiTopSkip;
 	sBottom = sBottom - (INT16)uiBottomSkip;
 
-	if((iBackIndex=GetFreeBackgroundBuffer())==(-1))
-		return(-1);
+	iBackIndex = GetFreeBackgroundBuffer();
+	if (iBackIndex == NO_BGND_RECT) return NO_BGND_RECT;
 
 	memset(&gBackSaves[iBackIndex], 0, sizeof(BACKGROUND_SAVE));
 
@@ -191,18 +191,18 @@ INT32	 iTempX, iTempY;
 	UINT32 uiBufSize = (sRight - sLeft) * 2 * (sBottom - sTop);
 
 	if (uiBufSize == 0)
-		return -1;
+		return NO_BGND_RECT;
 
 	if (uiFlags & BGND_FLAG_SAVERECT)
 	{
 		if ((gBackSaves[iBackIndex].pSaveArea = MemAlloc(uiBufSize)) == NULL)
-			return -1;
+			return NO_BGND_RECT;
 	}
 
 	if (uiFlags & BGND_FLAG_SAVE_Z)
 	{
 		if ((gBackSaves[iBackIndex].pZSaveArea = MemAlloc(uiBufSize)) == NULL)
-			return -1;
+			return NO_BGND_RECT;
 		gBackSaves[iBackIndex].fZBuffer = TRUE;
 	}
 
@@ -581,7 +581,6 @@ UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...)
 va_list argptr;
 wchar_t	string[512];
 UINT16 uiStringLength, uiStringHeight;
-INT32 iBack;
 
 	Assert(pFontString!=NULL);
 
@@ -594,11 +593,8 @@ INT32 iBack;
 
 	if ( uiStringLength > 0 )
 	{
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + uiStringLength, y + uiStringHeight);
-		if ( iBack != -1 )
-		{
-			SetBackgroundRectFilled( iBack );
-		}
+		const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + uiStringLength, y + uiStringHeight);
+		if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 	}
 
 	return(uiStringLength);
@@ -704,12 +700,7 @@ INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDes
 		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
 	}
 
-
-	if ( iBackIndex == -1 )
-	{
-		return( -1 );
-	}
-
+	if (iBackIndex == NO_BGND_RECT) return -1;
 
 	// Get next free topmost blitter index
 	if( ( iBlitterIndex = GetFreeVideoOverlay())==(-1))

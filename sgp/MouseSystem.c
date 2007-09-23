@@ -151,7 +151,7 @@ INT32 MSYS_Init(void)
 
 	MSYS_SystemBaseRegion.FastHelpTimer				= 0;
 	MSYS_SystemBaseRegion.FastHelpText				= 0;
-	MSYS_SystemBaseRegion.FastHelpRect				= -1;
+	MSYS_SystemBaseRegion.FastHelpRect				= NO_BGND_RECT;
 
 	MSYS_SystemBaseRegion.next								= NULL;
 	MSYS_SystemBaseRegion.prev								= NULL;

@@ -158,7 +158,6 @@ void RenderAccumulatedBurstLocations( )
 			FLOAT				dOffsetX, dOffsetY;
 			FLOAT				dTempX_S, dTempY_S;
 			INT16				sXPos, sYPos;
-			INT32				iBack;
 
 			dOffsetX = (FLOAT)( gsBurstLocations[ cnt ].sX - gsRenderCenterX );
 			dOffsetY = (FLOAT)( gsBurstLocations[ cnt ].sY - gsRenderCenterY );
@@ -182,11 +181,8 @@ void RenderAccumulatedBurstLocations( )
 			//sXPos -= 10;
 			//sYPos -= 10;
 
-			iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-			if ( iBack != -1 )
-			{
-				SetBackgroundRectFilled( iBack );
-			}
+			const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
+			if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
 			BltVideoObject(  FRAME_BUFFER, hVObject, 1, sXPos, sYPos);
 		}
