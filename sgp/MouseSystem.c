@@ -57,7 +57,6 @@ static INT16 MSYS_CurrentButtons = 0;
 static INT16 MSYS_Action         = 0;
 
 static BOOLEAN MSYS_SystemInitialized   = FALSE;
-static BOOLEAN MSYS_UseMouseHandlerHook = FALSE;
 
 static UINT16  gusClickedIDNumber;
 static BOOLEAN gfClickedModeOn = FALSE;
@@ -128,7 +127,6 @@ INT32 MSYS_Init(void)
 
 	MSYS_PrevRegion = NULL;
 	MSYS_SystemInitialized = TRUE;
-	MSYS_UseMouseHandlerHook = FALSE;
 
 	// Setup the system's background region
 	MSYS_SystemBaseRegion.IDNumber						= MSYS_ID_SYSTEM;
@@ -161,10 +159,6 @@ INT32 MSYS_Init(void)
 	// Add the base region to the list
 	MSYS_AddRegionToList(&MSYS_SystemBaseRegion);
 
-#ifdef _MOUSE_SYSTEM_HOOK_
-	MSYS_UseMouseHandlerHook = TRUE;
-#endif
-
 	return(1);
 }
 
@@ -181,7 +175,6 @@ void MSYS_Shutdown(void)
 		gfIgnoreShutdownAssertions = TRUE;
 	#endif
 	MSYS_SystemInitialized = FALSE;
-	MSYS_UseMouseHandlerHook = FALSE;
 	MSYS_TrashRegList();
 }
 
@@ -198,10 +191,6 @@ void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord)
 {
 	// If the mouse system isn't initialized, get out o' here
 	if(!MSYS_SystemInitialized)
-			return;
-
-	// If we're not using the handler stuff, ignore this call
-	if(!MSYS_UseMouseHandlerHook)
 			return;
 
 	MSYS_Action=MSYS_NO_ACTION;
