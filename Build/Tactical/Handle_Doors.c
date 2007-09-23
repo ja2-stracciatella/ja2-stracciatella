@@ -1034,7 +1034,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...
-				if ( pSoldier->bVisible == -1 && !AllMercsLookForDoor( sGridNo, FALSE ) && !( gTacticalStatus.uiFlags&SHOW_ALL_MERCS ) )
+				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 				{
 					fDoAnimation = FALSE;
 				}
@@ -1043,7 +1043,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 		else
 		{
 			// door opening by action item... just do a LOS check
-			if ( !AllMercsLookForDoor( sGridNo, FALSE ) )
+			if (!AllMercsLookForDoor(sGridNo))
 			{
 				fDoAnimation = FALSE;
 			}
@@ -1146,7 +1146,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			{
 				// If an AI guy... do LOS check first....
 				// If guy is visible... OR fading...
-				if ( pSoldier->bVisible == -1 && !AllMercsLookForDoor( sGridNo, FALSE ) && !( gTacticalStatus.uiFlags&SHOW_ALL_MERCS ) )
+				if (pSoldier->bVisible == -1 && !AllMercsLookForDoor(sGridNo) && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 				{
 					fDoAnimation = FALSE;
 				}
@@ -1155,7 +1155,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 		else
 		{
 			// door opening by action item... just do a LOS check
-			if ( !AllMercsLookForDoor( sGridNo, FALSE ) )
+			if (!AllMercsLookForDoor(sGridNo))
 			{
 				fDoAnimation = FALSE;
 			}

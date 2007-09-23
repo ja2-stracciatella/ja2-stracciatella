@@ -204,7 +204,7 @@ BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile );
 // Returns a doors status value, NULL if not found
 DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );
 
-BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue );
+BOOLEAN AllMercsLookForDoor(INT16 sGridNo);
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue );
 

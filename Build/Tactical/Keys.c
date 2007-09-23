@@ -1245,25 +1245,15 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 }
 
 
-static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
-
-
-BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
+BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 {
 	INT32                    cnt, cnt2;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;
-	DOOR_STATUS							 *pDoorStatus;
 	INT16											usNewGridNo;
 
-	// Get door
-	pDoorStatus = GetDoorStatus( sGridNo );
-
-	if ( pDoorStatus == NULL )
-	{
-		return( FALSE );
-	}
+	if (GetDoorStatus(sGridNo) == NULL) return FALSE;
 
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -1283,11 +1273,6 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 				// (taking into account we are definitely aware of this guy now)
 				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
 				{
-					// Update status...
-					if ( fUpdateValue )
-					{
-						InternalUpdateDoorsPerceivedValue( pDoorStatus );
-					}
 					return( TRUE );
 				}
 			}
@@ -1304,11 +1289,6 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 						// (taking into account we are definitely aware of this guy now)
 						if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
 						{
-							// Update status...
-							if ( fUpdateValue )
-							{
-								InternalUpdateDoorsPerceivedValue( pDoorStatus );
-							}
 							return( TRUE );
 						}
 					}
@@ -1322,6 +1302,7 @@ BOOLEAN AllMercsLookForDoor( INT16 sGridNo, BOOLEAN fUpdateValue )
 
 static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus);
 static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fDirty);
+static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
 
 
 BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
