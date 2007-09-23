@@ -1300,83 +1300,74 @@ BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 }
 
 
-static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus);
-static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fDirty);
+static BOOLEAN InternalIsPerceivedDifferentThanReality(const DOOR_STATUS* d);
+static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fDirty);
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
 
 
-BOOLEAN MercLooksForDoors( SOLDIERTYPE *pSoldier, BOOLEAN fUpdateValue )
+BOOLEAN MercLooksForDoors(const SOLDIERTYPE* s, BOOLEAN fUpdateValue)
 {
-	INT32                    cnt, cnt2;
-	INT16										 sDistVisible;
-	INT16										 sGridNo;
-	DOOR_STATUS							 *pDoorStatus;
-	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	INT16										 usNewGridNo;
-
-
+	static const INT8 bDirs[] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 
 	// Loop through all corpses....
-	for ( cnt = 0; cnt < gubNumDoorStatus; cnt++ )
+	for (INT32 cnt = 0; cnt < gubNumDoorStatus; ++cnt)
 	{
-		pDoorStatus = &( gpDoorStatus[ cnt ] );
+		DOOR_STATUS* d = &gpDoorStatus[cnt];
 
-		if ( !InternalIsPerceivedDifferentThanReality( pDoorStatus ) )
+		if (!InternalIsPerceivedDifferentThanReality(d))
 		{
 			continue;
 		}
 
-		sGridNo = pDoorStatus->sGridNo;
+		const INT16 sGridNo = d->sGridNo;
 
 		// is he close enough to see that gridno if he turns his head?
-		sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0 );
+		const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0);
 
-		if ( PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
+		if (PythSpacesAway(s->sGridNo, sGridNo) <= sDistVisible)
 		{
 			// and we can trace a line of sight to his x,y coordinates?
 			// (taking into account we are definitely aware of this guy now)
-			if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
+			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, 0, 0, sDistVisible, TRUE))
 			{
 				// OK, here... update perceived value....
-				if ( fUpdateValue )
+				if (fUpdateValue)
 				{
-					InternalUpdateDoorsPerceivedValue( pDoorStatus );
+					InternalUpdateDoorsPerceivedValue(d);
 
 					// Update graphic....
-					InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE);
+					InternalUpdateDoorGraphicFromStatus(d, TRUE);
 				}
-				return( TRUE );
+				return TRUE;
 			}
 		}
 
 		// Now try other adjacent gridnos...
-		for ( cnt2 = 0; cnt2 < 8; cnt2++ )
+		for (INT32 cnt2 = 0; cnt2 < 8; ++cnt2)
 		{
-			  usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
+			const INT16 usNewGridNo = NewGridNo(sGridNo, DirectionInc(bDirs[cnt2]));
 
-				if (PythSpacesAway( pSoldier->sGridNo, usNewGridNo ) <= sDistVisible )
+			if (PythSpacesAway(s->sGridNo, usNewGridNo) <= sDistVisible)
+			{
+				// and we can trace a line of sight to his x,y coordinates?
+				// (taking into account we are definitely aware of this guy now)
+				if (SoldierTo3DLocationLineOfSightTest(s, usNewGridNo, 0, 0, sDistVisible, TRUE))
 				{
-					// and we can trace a line of sight to his x,y coordinates?
-					// (taking into account we are definitely aware of this guy now)
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
+					// Update status...
+					if (fUpdateValue)
 					{
-						// Update status...
-						if ( fUpdateValue )
-						{
-							InternalUpdateDoorsPerceivedValue( pDoorStatus );
+						InternalUpdateDoorsPerceivedValue(d);
 
-							// Update graphic....
-							InternalUpdateDoorGraphicFromStatus(pDoorStatus, TRUE);
-
-						}
-						return( TRUE );
+						// Update graphic....
+						InternalUpdateDoorGraphicFromStatus(d, TRUE);
 					}
+					return TRUE;
 				}
+			}
 		}
-
 	}
 
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -1456,193 +1447,143 @@ void UpdateDoorGraphicsFromStatus(void)
 }
 
 
-static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS* pDoorStatus, BOOLEAN fDirty)
+static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fDirty)
 {
-	STRUCTURE *pStructure, *pBaseStructure;
-	INT32			cnt;
-	BOOLEAN		fOpenedGraphic = FALSE;
-	LEVELNODE * pNode;
-	BOOLEAN		fDifferent     = FALSE;
-	INT16 sBaseGridNo				 = NOWHERE;
-
-
 	// OK, look at perceived status and adjust graphic
 	// First look for a door structure here...
-	pStructure = FindStructure( pDoorStatus->sGridNo, STRUCTURE_ANYDOOR );
+	STRUCTURE* const pStructure = FindStructure(d->sGridNo, STRUCTURE_ANYDOOR);
 
+	STRUCTURE* pBaseStructure;
+	INT16      sBaseGridNo;
 	if (pStructure)
 	{
-		pBaseStructure = FindBaseStructure( pStructure );
+		pBaseStructure = FindBaseStructure(pStructure);
 		sBaseGridNo    = pBaseStructure->sGridNo;
 	}
 	else
 	{
 		pBaseStructure = NULL;
+		sBaseGridNo    = NOWHERE;
 	}
 
-	if ( pBaseStructure == NULL )
+	if (pBaseStructure == NULL)
 	{
 #if 0
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", pDoorStatus->sGridNo );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", d->sGridNo);
 #endif
 		return;
 	}
 
-	pNode = FindLevelNodeBasedOnStructure( sBaseGridNo, pBaseStructure );
+	LEVELNODE* const pNode = FindLevelNodeBasedOnStructure(sBaseGridNo, pBaseStructure);
 	if (!pNode)
 	{
 #ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Could not find levelnode from door structure at %d", pDoorStatus->sGridNo );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Could not find levelnode from door structure at %d", d->sGridNo);
 #endif
 		return;
 	}
 
 	// Get status we want to change to.....
-	const BOOLEAN fWantToBeOpen = (pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+	const BOOLEAN fWantToBeOpen = (d->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
 
 	// First look for an opened door
 	// get what it is now...
-	cnt = 0;
-	while( gClosedDoorList[ cnt ] != -1 )
+	BOOLEAN fOpenedGraphic = FALSE;
+	INT32 cnt;
+	for (cnt = 0; gClosedDoorList[cnt] != -1; ++cnt)
 	{
 		// IF WE ARE A SHADOW TYPE
-		if ( pNode->usIndex == gClosedDoorList[ cnt ] )
+		if (pNode->usIndex == gClosedDoorList[cnt])
 		{
 			fOpenedGraphic = TRUE;
 			break;
 		}
-		cnt++;
 	};
 
-	// OK, we either have an opened graphic, in which case we want to switch to the closed, or a closed
-	// in which case we want to switch to opened...
-	// adjust o' graphic
+	/* OK, we either have an opened graphic, in which case we want to switch to
+	 * the closed, or a closed in which case we want to switch to opened...
+	 * adjust o' graphic */
 
-
-	// OK, we now need to test these things against the true structure data
-	// we may need to only adjust the graphic here....
-	if ( fWantToBeOpen && ( pStructure->fFlags & STRUCTURE_OPEN ) )
+	/* OK, we now need to test these things against the true structure data we may
+	 * need to only adjust the graphic here... */
+	if (fWantToBeOpen && pStructure->fFlags & STRUCTURE_OPEN)
 	{
-		BOOLEAN fFound = FALSE;
 		// Adjust graphic....
 
 		// Loop through and and find opened graphic for the closed one....
-		cnt = 0;
-		while( gOpenDoorList[ cnt ] != -1 )
+		for (INT32 i = 0; gOpenDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if ( pNode->usIndex == gOpenDoorList[ cnt ] )
+			if (pNode->usIndex == gOpenDoorList[i])
 			{
-				fFound = TRUE;
-				break;
-			}
-			cnt++;
-		};
-
-		// OK, now use opened graphic.
-		if ( fFound )
-		{
-			pNode->usIndex = gClosedDoorList[ cnt ];
-
-			if ( fDirty )
-			{
-				InvalidateWorldRedundency( );
-				SetRenderFlags( RENDER_FLAG_FULL );
+				// OK, now use opened graphic.
+				pNode->usIndex = gClosedDoorList[i];
+				goto dirty_end;
 			}
 		}
-
 		return;
 	}
 
 	// If we want to be closed but structure is closed
-	if ( !fWantToBeOpen && !( pStructure->fFlags & STRUCTURE_OPEN ) )
+	if (!fWantToBeOpen && !(pStructure->fFlags & STRUCTURE_OPEN))
 	{
-		BOOLEAN fFound = FALSE;
 		// Adjust graphic....
 
 		// Loop through and and find closed graphic for the opend one....
-		cnt = 0;
-		while( gClosedDoorList[ cnt ] != -1 )
+		for (INT32 i = 0; gClosedDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if ( pNode->usIndex == gClosedDoorList[ cnt ] )
+			if (pNode->usIndex == gClosedDoorList[i])
 			{
-				fFound = TRUE;
-				break;
-			}
-			cnt++;
-		};
-
-		// OK, now use opened graphic.
-		if ( fFound )
-		{
-			pNode->usIndex = gOpenDoorList[ cnt ];
-
-			if ( fDirty )
-			{
-				InvalidateWorldRedundency( );
-				SetRenderFlags( RENDER_FLAG_FULL );
+				pNode->usIndex = gOpenDoorList[i];
+				goto dirty_end;
 			}
 		}
-
 		return;
 	}
 
-
-	if ( fOpenedGraphic && !fWantToBeOpen )
+	BOOLEAN fDifferent = FALSE;
+	if (fOpenedGraphic && !fWantToBeOpen)
 	{
 		// Close the beast!
 		fDifferent = TRUE;
-		pNode->usIndex = gOpenDoorList[ cnt ];
+		pNode->usIndex = gOpenDoorList[cnt];
 	}
-	else if ( !fOpenedGraphic && fWantToBeOpen )
+	else if (!fOpenedGraphic && fWantToBeOpen)
 	{
 		// Find the closed door graphic and adjust....
-		cnt = 0;
-		while( gOpenDoorList[ cnt ] != -1 )
+		for (INT32 i = 0; gOpenDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if ( pNode->usIndex == gOpenDoorList[ cnt ] )
+			if (pNode->usIndex == gOpenDoorList[i])
 			{
 				// Open the beast!
 				fDifferent = TRUE;
-				pNode->usIndex = gClosedDoorList[ cnt ];
+				pNode->usIndex = gClosedDoorList[i];
 				break;
 			}
-			cnt++;
-		};
+		}
 	}
 
-	if ( fDifferent )
+	if (!fDifferent) return;
+
+	SwapStructureForPartner(sBaseGridNo, pBaseStructure);
+	RecompileLocalMovementCosts(sBaseGridNo);
+
+dirty_end:
+	if (fDirty)
 	{
-		SwapStructureForPartner( sBaseGridNo, pBaseStructure );
-
-		RecompileLocalMovementCosts( sBaseGridNo );
-
-		if ( fDirty )
-		{
-			InvalidateWorldRedundency( );
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
+		InvalidateWorldRedundency();
+		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 }
 
 
-static BOOLEAN InternalIsPerceivedDifferentThanReality(DOOR_STATUS* pDoorStatus)
+static BOOLEAN InternalIsPerceivedDifferentThanReality(const DOOR_STATUS* d)
 {
-	if ( ( pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ) )
-	{
-		return( TRUE );
-	}
-
-	// Compare flags....
-	if ( ( pDoorStatus->ubFlags & DOOR_OPEN && pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN ) ||
-			 ( !( pDoorStatus->ubFlags & DOOR_OPEN ) && !( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN ) ) )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		d->ubFlags & DOOR_PERCEIVED_NOTSET ||
+		((d->ubFlags & DOOR_OPEN) != 0) != ((d->ubFlags & DOOR_PERCEIVED_OPEN) != 0);
 }
 
 
