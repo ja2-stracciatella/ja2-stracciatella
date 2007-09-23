@@ -56,7 +56,6 @@ UINT8	 CurrentPalette = 0;
 static UINT32  guiBackgroundRect = NO_BGND_RECT;
 BOOLEAN	gfExitPalEditScreen = FALSE;
 BOOLEAN	gfExitDebugScreen = FALSE;
-BOOLEAN gfInitRect = TRUE;
 static BOOLEAN FirstTime = TRUE;
 BOOLEAN	gfDoneWithSplashScreen = FALSE;
 
@@ -373,7 +372,8 @@ UINT32 PalEditScreenHandle(void)
 	{
 		gfExitPalEditScreen = FALSE;
 		FirstTime = TRUE;
-		FreeBackgroundRect( guiBackgroundRect );
+		FreeBackgroundRect(guiBackgroundRect);
+		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
 		SetUIKeyboardHook(NULL);
 		return( GAME_SCREEN );
@@ -570,9 +570,9 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 	if ( gfExitDebugScreen )
 	{
 		FirstTime = TRUE;
-		gfInitRect = TRUE;
 		gfExitDebugScreen = FALSE;
 		FreeBackgroundRect( guiBackgroundRect );
+		guiBackgroundRect = NO_BGND_RECT;
 		SetRenderHook(NULL);
 		SetUIKeyboardHook(NULL);
 
@@ -605,10 +605,9 @@ UINT32 DebugScreenHandle(void)
 		return( GAME_SCREEN );
 	}
 
-	if ( gfInitRect )
+	if (guiBackgroundRect == NO_BGND_RECT)
 	{
 		guiBackgroundRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, 0, 0, 600 , 360);
-		gfInitRect = FALSE;
 	}
 
 
@@ -662,8 +661,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 		}
 
 		FreeBackgroundRect( guiBackgroundRect );
-		gfInitRect = TRUE;
-
+		guiBackgroundRect = NO_BGND_RECT;
   }
 
 	if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_PAGEDOWN)
@@ -677,8 +675,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent)
 		}
 
 		FreeBackgroundRect( guiBackgroundRect );
-		gfInitRect = TRUE;
-
+		guiBackgroundRect = NO_BGND_RECT;
   }
 
 	return( FALSE );
