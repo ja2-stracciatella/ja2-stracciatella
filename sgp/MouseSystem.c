@@ -182,12 +182,7 @@ void MSYS_Shutdown(void)
 static void MSYS_UpdateMouseRegion(void);
 
 
-//======================================================================================================
-//	MSYS_SGP_Mouse_Handler_Hook
-//
-//	Hook to the SGP's mouse handler
-//
-void MSYS_SGP_Mouse_Handler_Hook(UINT16 Type,UINT16 Xcoord, UINT16 Ycoord)
+void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord)
 {
 	// If the mouse system isn't initialized, get out o' here
 	if(!MSYS_SystemInitialized)

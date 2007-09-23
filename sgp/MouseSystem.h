@@ -10,10 +10,10 @@
 //
 // *****************************************************************************
 
-#include "MouseSystem_Macros.h"
-
 #ifndef _MOUSE_SYSTEM_H_
 #define _MOUSE_SYSTEM_H_
+
+#include "Types.h"
 
 #ifdef JA2
 #define _JA2_RENDER_DIRTY		// Undef this if not using the JA2 Dirty Rectangle System.
@@ -127,9 +127,6 @@ typedef struct _MOUSE_REGION {
 extern "C" {
 #endif
 
-// Note:
-//		The prototype for MSYS_SGP_Mouse_Handler_Hook() is defined in mousesystem_macros.h
-
 // Internal Functions
 void MSYS_SetCurrentCursor(UINT16 Cursor);
 
@@ -155,6 +152,9 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
 
 // Now also used by Wizardry -- DB
 void RenderFastHelp();
+
+// Hook to the SGP's mouse handler
+void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord);
 
 #ifdef __cplusplus
 }
