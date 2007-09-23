@@ -94,7 +94,6 @@ enum //GraphicIDs for the panel
 #define ROW_HEIGHT				10
 
 BOOLEAN gfDisplayPotentialRetreatPaths = FALSE;
-UINT16 gusRetreatButtonLeft, gusRetreatButtonTop, gusRetreatButtonRight, gusRetreatButtonBottom;
 
 GROUP *gpBattleGroup = NULL;
 
@@ -414,11 +413,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);
 	MakeButton(1,  98, gpStrategicString[STR_PB_GOTOSECTOR_BTN],   GoToSectorCallback);
 	MakeButton(2, 169, gpStrategicString[STR_PB_RETREATMERCS_BTN], RetreatMercsCallback);
-
-	gusRetreatButtonLeft		= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftX;
-	gusRetreatButtonTop			= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftY;
-	gusRetreatButtonRight		= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightX;
-	gusRetreatButtonBottom	= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightY;
 
 	gfPBButtonsHidden = TRUE;
 
@@ -922,20 +916,19 @@ void RenderPreBattleInterface()
 	INT32 i, x, y, line, width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
-	BOOLEAN fMouseInRetreatButtonArea;
 	UINT8 ubJunk;
 	//PLAYERGROUP *pPlayer;
 
 	//This code determines if the cursor is inside the rectangle consisting of the
 	//retreat button.  If it is inside, then we set up the variables so that the retreat
 	//arrows get drawn in the mapscreen.
-	if( ButtonList[ iPBButton[ 2 ] ]->uiFlags & BUTTON_ENABLED )
+	const GUI_BUTTON* const retreat = ButtonList[iPBButton[2]];
+	if (retreat->uiFlags & BUTTON_ENABLED)
 	{
-		if( gusMouseXPos < gusRetreatButtonLeft || gusMouseXPos > gusRetreatButtonRight ||
-				gusMouseYPos < gusRetreatButtonTop || gusMouseYPos > gusRetreatButtonBottom )
-			fMouseInRetreatButtonArea = FALSE;
-		else
-			fMouseInRetreatButtonArea = TRUE;
+		const MOUSE_REGION* const r = &retreat->Area;
+		const BOOLEAN fMouseInRetreatButtonArea =
+			r->RegionTopLeftX <= gusMouseXPos && gusMouseXPos <= r->RegionBottomRightX &&
+			r->RegionTopLeftY <= gusMouseYPos && gusMouseYPos <= r->RegionBottomRightY;
 		if( fMouseInRetreatButtonArea != gfDisplayPotentialRetreatPaths )
 		{
 			gfDisplayPotentialRetreatPaths = fMouseInRetreatButtonArea;
