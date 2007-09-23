@@ -5455,7 +5455,6 @@ typedef struct
 	BOOLEAN				fCanScrollUp;
 	BOOLEAN				fCanScrollDown;
 	BOOLEAN				fDirtyLevel;
-	INT32					iDirtyRect;
 	BOOLEAN				fHandled;
 	INT16					sGridNo;
 	INT8					bZLevel;
@@ -5689,9 +5688,6 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 
 		sCenY += ITEMPICK_GRAPHIC_YSPACE;
 	}
-
-	//Save dirty rect
-	//gItemPickupMenu.iDirtyRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, gItemPickupMenu.sX, gItemPickupMenu.sY, gItemPickupMenu.sX + gItemPickupMenu.sWidth, gItemPickupMenu.sY + gItemPickupMenu.sHeight);
 
 	SetupPickupPage( 0 );
 
@@ -6086,12 +6082,6 @@ void RemoveItemPickupMenu( )
 		for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
 		{
 			MSYS_RemoveRegion( &(gItemPickupMenu.Regions[cnt]));
-		}
-
-		// Remove register rect
-		if ( gItemPickupMenu.iDirtyRect != -1 )
-		{
-			//FreeBackgroundRect( gItemPickupMenu.iDirtyRect );
 		}
 
 		// Free selection list...
