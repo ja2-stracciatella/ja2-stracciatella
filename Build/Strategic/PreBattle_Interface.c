@@ -214,6 +214,20 @@ static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 #endif
 
 
+static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK click)
+{
+	INT32 btn = QuickCreateButton(iPBButtonImage[idx], x, 54, MSYS_PRIORITY_HIGHEST - 2, click);
+	iPBButton[idx] = btn;
+
+	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
+	SpecifyButtonHilitedTextColors(btn, FONT_WHITE, FONT_NEARBLACK);
+	SpecifyButtonTextOffsets(btn, 8, 7, TRUE);
+	SpecifyButtonTextWrappedWidth(btn, 51);
+	AllowDisabledButtonFastHelp(btn);
+	HideButton(btn);
+}
+
+
 static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason);
 static void CheckForRobotAndIfItsControlled(void);
 static void DoTransitionFromMapscreenToPreBattleInterface(void);
@@ -396,34 +410,16 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface/PreBattleButton.sti");
 	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
-	iPBButton[0] = QuickCreateButton(iPBButtonImage[0],  27, 54, MSYS_PRIORITY_HIGHEST - 2, AutoResolveBattleCallback);
-	iPBButton[1] = QuickCreateButton(iPBButtonImage[1],  98, 54, MSYS_PRIORITY_HIGHEST - 2, GoToSectorCallback);
-	iPBButton[2] = QuickCreateButton(iPBButtonImage[2], 169, 54, MSYS_PRIORITY_HIGHEST - 2, RetreatMercsCallback);
 
-	SpecifyGeneralButtonTextAttributes( iPBButton[0], gpStrategicString[ STR_PB_AUTORESOLVE_BTN ], BLOCKFONT, FONT_BEIGE, 141 );
-	SpecifyGeneralButtonTextAttributes( iPBButton[1], gpStrategicString[ STR_PB_GOTOSECTOR_BTN ], BLOCKFONT, FONT_BEIGE, 141 );
-	SpecifyGeneralButtonTextAttributes( iPBButton[2], gpStrategicString[ STR_PB_RETREATMERCS_BTN ], BLOCKFONT, FONT_BEIGE, 141 );
-	SpecifyButtonHilitedTextColors( iPBButton[0], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonHilitedTextColors( iPBButton[1], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonHilitedTextColors( iPBButton[2], FONT_WHITE, FONT_NEARBLACK );
-	SpecifyButtonTextOffsets( iPBButton[0], 8, 7, TRUE );
-	SpecifyButtonTextOffsets( iPBButton[1], 8, 7, TRUE );
-	SpecifyButtonTextOffsets( iPBButton[2], 8, 7, TRUE );
-	SpecifyButtonTextWrappedWidth( iPBButton[0], 51 );
-	SpecifyButtonTextWrappedWidth( iPBButton[1], 51 );
-	SpecifyButtonTextWrappedWidth( iPBButton[2], 51 );
-	AllowDisabledButtonFastHelp(iPBButton[0]);
-	AllowDisabledButtonFastHelp(iPBButton[1]);
-	AllowDisabledButtonFastHelp(iPBButton[2]);
+	MakeButton(0,  27, gpStrategicString[STR_PB_AUTORESOLVE_BTN],  AutoResolveBattleCallback);
+	MakeButton(1,  98, gpStrategicString[STR_PB_GOTOSECTOR_BTN],   GoToSectorCallback);
+	MakeButton(2, 169, gpStrategicString[STR_PB_RETREATMERCS_BTN], RetreatMercsCallback);
 
 	gusRetreatButtonLeft		= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftX;
 	gusRetreatButtonTop			= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftY;
 	gusRetreatButtonRight		= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightX;
 	gusRetreatButtonBottom	= ButtonList[ iPBButton[2] ]->Area.RegionBottomRightY;
 
-	HideButton( iPBButton[0] );
-	HideButton( iPBButton[1] );
-	HideButton( iPBButton[2] );
 	gfPBButtonsHidden = TRUE;
 
 	// ARM: this must now be set before any calls utilizing the GetCurrentBattleSectorXYZ() function
