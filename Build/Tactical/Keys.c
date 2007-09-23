@@ -35,8 +35,8 @@
 #include "FileMan.h"
 
 
-DOOR_STATUS		*gpDoorStatus = NULL;
-UINT8					gubNumDoorStatus=0;
+static DOOR_STATUS* gpDoorStatus     = NULL;
+static UINT8        gubNumDoorStatus = 0;
 
 
 KEY KeyTable[NUM_KEYS] =
@@ -88,7 +88,7 @@ UINT8 gubNumDoors = 0;
 //world, we may run out of space in the DoorTable, so we will allocate a new array with extra slots,
 //then copy everything over again.  gubMaxDoors holds the arrays actual number of slots, even though
 //the current number (gubNumDoors) will be <= to it.
-UINT8 gubMaxDoors = 0;
+static UINT8 gubMaxDoors = 0;
 
 LOCK LockTable[NUM_LOCKS];
 

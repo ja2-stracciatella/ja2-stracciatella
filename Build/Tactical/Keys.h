@@ -136,11 +136,6 @@ extern DOOR *DoorTable;
 
 //Current number of doors in world.
 extern UINT8 gubNumDoors;
-//Current max number of doors.  This is only used by the editor.  When adding doors to the
-//world, we may run out of space in the DoorTable, so we will allocate a new array with extra slots,
-//then copy everything over again.  gubMaxDoors holds the arrays actual number of slots, even though
-//the current number (gubNumDoors) will be <= to it.
-extern UINT8 gubMaxDoors;
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
 
