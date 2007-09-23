@@ -238,7 +238,7 @@ void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOff
 void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth);
 
-void AllowDisabledButtonFastHelp(INT32 iButtonID, BOOLEAN fAllow);
+void AllowDisabledButtonFastHelp(INT32 iButtonID);
 
 enum // for use with SpecifyDisabledButtonStyle
 {

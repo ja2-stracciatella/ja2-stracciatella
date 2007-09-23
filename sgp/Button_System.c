@@ -986,7 +986,7 @@ BOOLEAN SpecifyButtonIcon(INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoO
 }
 
 
-void AllowDisabledButtonFastHelp(INT32 iButtonID, BOOLEAN fAllow)
+void AllowDisabledButtonFastHelp(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C

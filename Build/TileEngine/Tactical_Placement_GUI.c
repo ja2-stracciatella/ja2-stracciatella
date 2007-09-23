@@ -243,7 +243,7 @@ void InitTacticalPlacementGUI()
 	MakeButton(SPREAD_BUTTON, 367, SpreadPlacementsCallback,           gpStrategicString[STR_TP_SPREAD], gpStrategicString[STR_TP_SPREADHELP]);
 	MakeButton(GROUP_BUTTON,  402, GroupPlacementsCallback,            gpStrategicString[STR_TP_GROUP],  gpStrategicString[STR_TP_GROUPHELP]);
 	MakeButton(DONE_BUTTON,   437, DoneOverheadPlacementClickCallback, gpStrategicString[STR_TP_DONE],   gpStrategicString[STR_TP_DONEHELP]);
-	AllowDisabledButtonFastHelp(iTPButtons[DONE_BUTTON], TRUE);
+	AllowDisabledButtonFastHelp(iTPButtons[DONE_BUTTON]);
 
 	//First pass:  Count the number of mercs that are going to be placed by the player.
 	//             This determines the size of the array we will allocate.

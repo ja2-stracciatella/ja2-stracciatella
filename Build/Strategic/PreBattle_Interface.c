@@ -412,9 +412,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	SpecifyButtonTextWrappedWidth( iPBButton[0], 51 );
 	SpecifyButtonTextWrappedWidth( iPBButton[1], 51 );
 	SpecifyButtonTextWrappedWidth( iPBButton[2], 51 );
-	AllowDisabledButtonFastHelp( iPBButton[0], TRUE );
-	AllowDisabledButtonFastHelp( iPBButton[1], TRUE );
-	AllowDisabledButtonFastHelp( iPBButton[2], TRUE );
+	AllowDisabledButtonFastHelp(iPBButton[0]);
+	AllowDisabledButtonFastHelp(iPBButton[1]);
+	AllowDisabledButtonFastHelp(iPBButton[2]);
 
 	gusRetreatButtonLeft		= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftX;
 	gusRetreatButtonTop			= ButtonList[ iPBButton[2] ]->Area.RegionTopLeftY;
