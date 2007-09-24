@@ -222,20 +222,8 @@ void GameLoop(void)
 
   while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
   {
-		// HOOK INTO MOUSE HOOKS
-		switch(InputEvent.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-			case LEFT_BUTTON_UP:
-			case RIGHT_BUTTON_DOWN:
-			case RIGHT_BUTTON_UP:
-			case LEFT_BUTTON_REPEAT:
-			case RIGHT_BUTTON_REPEAT:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
-				break;
-	  }
+		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 	}
-
 
 
 	if ( gfGlobalError )

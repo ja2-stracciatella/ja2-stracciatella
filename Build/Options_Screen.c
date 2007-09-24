@@ -659,18 +659,7 @@ static void GetOptionsScreenUserInput(void)
 
 	while( DequeueEvent( &Event ) )
 	{
-		// HOOK INTO MOUSE HOOKS
-		switch( Event.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-			case LEFT_BUTTON_UP:
-			case RIGHT_BUTTON_DOWN:
-			case RIGHT_BUTTON_UP:
-			case RIGHT_BUTTON_REPEAT:
-			case LEFT_BUTTON_REPEAT:
-				MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
-				break;
-		}
+		MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
 
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{

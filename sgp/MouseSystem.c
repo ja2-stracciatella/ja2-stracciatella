@@ -225,9 +225,7 @@ update_buttons:
 			if (gfRefreshUpdate) goto force_move;
 			break;
 
-		default:
-		  DebugMsg(TOPIC_MOUSE_SYSTEM, DBG_LEVEL_0, "ERROR -- MSYS 2 SGP Mouse Hook got bad type");
-			return;
+		default: return; /* Not a mouse message, ignore it */
 	}
 
 	if (Xcoord != MSYS_CurrentMX || Ycoord != MSYS_CurrentMY)

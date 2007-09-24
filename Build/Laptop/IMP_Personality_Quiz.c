@@ -939,25 +939,12 @@ static void HandleIMPQuizKeyBoard(void)
 			fSkipFrame = TRUE;
 		}
 		else
+*/
 		{
-
-*/			switch(InputEvent.usEvent)
-			{
-				case LEFT_BUTTON_DOWN:
-				case LEFT_BUTTON_UP:
-				case RIGHT_BUTTON_DOWN:
-				case RIGHT_BUTTON_UP:
-				case RIGHT_BUTTON_REPEAT:
-				case LEFT_BUTTON_REPEAT:
-					MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
-					break;
-
-				default:
-					HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );
-					break;
-//			}
+			MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 		}
-		}
+	}
 	}
 }
 

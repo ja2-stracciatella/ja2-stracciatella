@@ -359,19 +359,7 @@ static void GetLaptopKeyboardInput(void)
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
 	{
-		// HOOK INTO MOUSE HOOKS
-		switch (InputEvent.usEvent)
-		{
-			case LEFT_BUTTON_DOWN:
-			case LEFT_BUTTON_UP:
-			case RIGHT_BUTTON_DOWN:
-			case RIGHT_BUTTON_UP:
-			case RIGHT_BUTTON_REPEAT:
-			case LEFT_BUTTON_REPEAT:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
-				break;
-		}
-
+		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
 }

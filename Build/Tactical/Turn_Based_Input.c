@@ -1381,17 +1381,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {
-		// HOOK INTO MOUSE HOOKS
-		switch(InputEvent.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-			case LEFT_BUTTON_UP:
-			case RIGHT_BUTTON_DOWN:
-			case RIGHT_BUTTON_UP:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
-				break;
-
-	  }
+		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 
 		// handle for fast help text for interface stuff
 		if( IsTheInterfaceFastHelpTextActive() )

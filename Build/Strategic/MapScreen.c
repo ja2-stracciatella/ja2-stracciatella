@@ -4008,20 +4008,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 //		while( DequeueSpecificEvent( &InputEvent, KEY_DOWN ) )		// doesn't work for some reason
   {
 		GetCursorPos(&MousePos);
-
-		// HOOK INTO MOUSE HOOKS
-		switch(InputEvent.usEvent)
-	  {
-			case LEFT_BUTTON_DOWN:
-			case LEFT_BUTTON_UP:
-			case RIGHT_BUTTON_DOWN:
-			case RIGHT_BUTTON_UP:
-			case RIGHT_BUTTON_REPEAT:
-			case LEFT_BUTTON_REPEAT:
-				MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
-				break;
-	  }
-
+		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
