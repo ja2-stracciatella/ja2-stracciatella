@@ -185,95 +185,61 @@ static void MSYS_UpdateMouseRegion(void);
 void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord)
 {
 	// If the mouse system isn't initialized, get out o' here
-	if(!MSYS_SystemInitialized)
-			return;
+	if (!MSYS_SystemInitialized) return;
 
-	MSYS_Action=MSYS_NO_ACTION;
-	switch(Type)
+	INT16 action = MSYS_NO_ACTION;
+	switch (Type)
 	{
-		case LEFT_BUTTON_DOWN:
+		case LEFT_BUTTON_DOWN:  action |= MSYS_DO_LBUTTON_DWN; goto update_buttons;
+
 		case LEFT_BUTTON_UP:
-		case RIGHT_BUTTON_DOWN:
-		case RIGHT_BUTTON_UP:
-			//MSYS_Action|=MSYS_DO_BUTTONS;
-			if(Type == LEFT_BUTTON_DOWN)
-				MSYS_Action |= MSYS_DO_LBUTTON_DWN;
-			else if(Type == LEFT_BUTTON_UP)
-			{
-				MSYS_Action |= MSYS_DO_LBUTTON_UP;
-				//Kris:
-				//Used only if applicable.  This is used for that special button that is locked with the
-				//mouse press -- just like windows.  When you release the button, the previous state
-				//of the button is restored if you released the mouse outside of it's boundaries.  If
-				//you release inside of the button, the action is selected -- but later in the code.
-				//NOTE:  It has to be here, because the mouse can be released anywhere regardless of
-				//regions, buttons, etc.
-				#ifdef JA2
-					ReleaseAnchorMode();
-				#endif
-			}
-			else if(Type == RIGHT_BUTTON_DOWN)
-				MSYS_Action |= MSYS_DO_RBUTTON_DWN;
-			else if(Type == RIGHT_BUTTON_UP)
-				MSYS_Action |= MSYS_DO_RBUTTON_UP;
+#ifdef JA2
+			/* Kris:
+			 * Used only if applicable.  This is used for that special button that is
+			 * locked with the mouse press -- just like windows.  When you release the
+			 * button, the previous state of the button is restored if you released
+			 * the mouse outside of it's boundaries.  If you release inside of the
+			 * button, the action is selected -- but later in the code.
+			 * NOTE:  It has to be here, because the mouse can be released anywhere
+			 *        regardless of regions, buttons, etc. */
+			ReleaseAnchorMode();
+#endif
+			action |= MSYS_DO_LBUTTON_UP;
+			goto update_buttons;
 
-			if (_LeftButtonDown)
-				MSYS_CurrentButtons|=MSYS_LEFT_BUTTON;
-			else
-				MSYS_CurrentButtons&=(~MSYS_LEFT_BUTTON);
+		case RIGHT_BUTTON_DOWN: action |= MSYS_DO_RBUTTON_DWN; goto update_buttons;
+		case RIGHT_BUTTON_UP:   action |= MSYS_DO_RBUTTON_UP;  goto update_buttons;
 
-			if (_RightButtonDown)
-				MSYS_CurrentButtons|=MSYS_RIGHT_BUTTON;
-			else
-				MSYS_CurrentButtons&=(~MSYS_RIGHT_BUTTON);
-
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY))
-			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
-			}
-
-			MSYS_UpdateMouseRegion();
+update_buttons:
+			MSYS_CurrentButtons &= ~(MSYS_LEFT_BUTTON | MSYS_RIGHT_BUTTON);
+			MSYS_CurrentButtons |= (_LeftButtonDown  ? MSYS_LEFT_BUTTON  : 0);
+			MSYS_CurrentButtons |= (_RightButtonDown ? MSYS_RIGHT_BUTTON : 0);
 			break;
 
 		// ATE: Checks here for mouse button repeats.....
 		// Call mouse region with new reason
-		case LEFT_BUTTON_REPEAT:
-		case RIGHT_BUTTON_REPEAT:
-
-			if(Type == LEFT_BUTTON_REPEAT)
-				MSYS_Action |= MSYS_DO_LBUTTON_REPEAT;
-			else if(Type == RIGHT_BUTTON_REPEAT)
-				MSYS_Action |= MSYS_DO_RBUTTON_REPEAT;
-
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY))
-			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
-			}
-
-			MSYS_UpdateMouseRegion();
-			break;
+		case LEFT_BUTTON_REPEAT:  action |= MSYS_DO_LBUTTON_REPEAT; break;
+		case RIGHT_BUTTON_REPEAT: action |= MSYS_DO_RBUTTON_REPEAT; break;
 
 		case MOUSE_POS:
-			if((Xcoord != MSYS_CurrentMX) || (Ycoord != MSYS_CurrentMY) || gfRefreshUpdate )
-			{
-				MSYS_Action|=MSYS_DO_MOVE;
-				MSYS_CurrentMX = Xcoord;
-				MSYS_CurrentMY = Ycoord;
-
-				gfRefreshUpdate = FALSE;
-
-				MSYS_UpdateMouseRegion();
-			}
+			if (gfRefreshUpdate) goto force_move;
 			break;
 
 		default:
 		  DebugMsg(TOPIC_MOUSE_SYSTEM, DBG_LEVEL_0, "ERROR -- MSYS 2 SGP Mouse Hook got bad type");
-			break;
+			return;
 	}
+
+	if (Xcoord != MSYS_CurrentMX || Ycoord != MSYS_CurrentMY)
+	{
+force_move:
+		action         |= MSYS_DO_MOVE;
+		MSYS_CurrentMX  = Xcoord;
+		MSYS_CurrentMY  = Ycoord;
+	}
+
+	MSYS_Action = action;
+	if (action != MSYS_NO_ACTION) MSYS_UpdateMouseRegion();
 }
 
 
