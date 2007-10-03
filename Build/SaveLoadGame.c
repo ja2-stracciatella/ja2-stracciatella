@@ -516,14 +516,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );
 
-	//if the file already exists, delete it
-	if( FileExists( zSaveGameName ) )
-	{
-		if( !FileDelete( zSaveGameName ) )
-		{
-			goto FAILED_TO_SAVE_NO_CLOSE;
-		}
-	}
+	if (!FileDelete(zSaveGameName)) goto FAILED_TO_SAVE_NO_CLOSE;
 
 	// create the save game file
 	hFile = FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
@@ -2982,14 +2975,10 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 	HWFILE	hSrcFile;
 	UINT8		*pData;
 
-	//If the source file exists, delete it
-	if( FileExists( pSrcFileName ) )
+	if (!FileDelete(pSrcFileName))
 	{
-		if( !FileDelete( pSrcFileName ) )
-		{
-			//unable to delete the original file
-			return( FALSE );
-		}
+		// unable to delete the original file
+		return FALSE;
 	}
 
 	#ifdef JA2BETAVERSION
@@ -4032,10 +4021,7 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 		guiNumberOfMapTempFiles = 0;		//Test:  To determine where the temp files are crashing
 		guiSizeOfTempFiles = 0;
 
-		if( FileExists( zFileName ) )
-		{
-			FileDelete( zFileName );
-		}
+		FileDelete(zFileName);
 	}
 	else
 	{

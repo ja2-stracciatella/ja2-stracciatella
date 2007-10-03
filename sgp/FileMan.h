@@ -71,7 +71,11 @@ BOOLEAN InitializeFileManager(void);
 
 extern BOOLEAN	FileExists( const char *strFilename );
 extern BOOLEAN	FileExistsNoDB(const char *strFilename);
-extern BOOLEAN	FileDelete( const char *strFilename );
+
+/* Delete the file at path. Returns true iff deleting the file succeeded or
+ * the file did not exist in the first place. */
+BOOLEAN FileDelete(const char* path);
+
 extern HWFILE	FileOpen(const char* strFilename, UINT32 uiOptions);
 extern void		FileClose( HWFILE );
 

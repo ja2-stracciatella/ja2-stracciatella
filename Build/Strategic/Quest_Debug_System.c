@@ -2896,15 +2896,10 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	{
 		//open a new file for writing
 
-		//if the file exists
-		if( FileExists( QUEST_DEBUG_FILE ) )
+		if (!FileDelete(QUEST_DEBUG_FILE))
 		{
-			//delete the file
-			if( !FileDelete( QUEST_DEBUG_FILE ) )
-			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to delete %s file", QUEST_DEBUG_FILE) );
-				return;
-			}
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to delete %s file", QUEST_DEBUG_FILE) );
+			return;
 		}
 		fFirstTimeIn = FALSE;
 	}

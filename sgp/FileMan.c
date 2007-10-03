@@ -260,38 +260,14 @@ BOOLEAN FileExistsNoDB(const char *strFilename)
 	}
 
 	return( fExists );
-
 }
 
-//**************************************************************************
-//
-// FileDelete
-//
-//		Deletes a file.
-//
-// Parameter List :
-//
-//		STR	-> name of file to delete
-//
-// Return Value :
-//
-//		BOOLEAN	-> TRUE if successful
-//					-> FALSE if not
-//
-// Modification history :
-//
-//		24sep96:HJH		-> creation
-//
-//**************************************************************************
 
-BOOLEAN FileDelete(const char *strFilename)
+BOOLEAN FileDelete(const char* path)
 {
-#if 1 // XXX TODO
-	return unlink(strFilename) == 0;
-#else
-	return( DeleteFile( strFilename ) );
-#endif
+	return unlink(path) == 0 || errno == ENOENT;
 }
+
 
 //**************************************************************************
 //

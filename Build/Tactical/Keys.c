@@ -905,17 +905,8 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	//if the file already exists, delete it
-	if( FileExists( zMapName ) )
-	{
-		//We are going to be overwriting the file
-		if( !FileDelete( zMapName ) )
-		{
-			return(FALSE);
-		}
-	}
-
-
+	// We are going to be overwriting the file
+	if (!FileDelete(zMapName)) return FALSE;
 
 	//Open the file for writing, Create it if it doesnt exist
 	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
