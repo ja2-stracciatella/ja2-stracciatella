@@ -3005,9 +3005,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case 'y':
 					if( fAlt )
 					{
-						OBJECTTYPE		Object;
-						SOLDIERTYPE *pSoldier;
-
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
 							QuickCreateProfileMerc( CIV_TEAM, MARIA ); //Ira
@@ -3016,13 +3013,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							RecruitEPC( MARIA );
 						}
 
-						// Create object and set
-						CreateItem( (UINT16) G41, 100, &Object );
-
-				    pSoldier = FindSoldierByProfileID( ROBOT, FALSE );
-
-						AutoPlaceObject( pSoldier, &Object, FALSE );
-
+						SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT, FALSE);
+						if (robot != NULL)
+						{
+							OBJECTTYPE Object;
+							CreateItem(G41, 100, &Object);
+							AutoPlaceObject(robot, &Object, FALSE);
+						}
 					}
 					else
 					{
