@@ -1980,7 +1980,6 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	INT16							sGridNo;
 	ANITILE_PARAMS	AniParams;
 	UINT16					usMissTileIndex, usMissTileType;
-	STRUCTURE				*pStructure = NULL;
 	UINT32					uiMissVolume = MIDVOLUME;
 	BOOLEAN					fHitSameStructureAsBefore;
 	SOLDIERTYPE *		pAttacker;
@@ -2019,17 +2018,8 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	sGridNo = MAPROWCOLTOPOS( (sYPos/CELL_Y_SIZE), (sXPos/CELL_X_SIZE) );
 	if ( !fHitSameStructureAsBefore )
 	{
-
-
-		if (sZPos > WALL_HEIGHT)
-		{
-			MakeNoise( ubAttackerID, sGridNo, 1, gpWorldLevelData[sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
-		}
-		else
-		{
-			MakeNoise( ubAttackerID, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
-		}
-
+		const INT8 level = (sZPos > WALL_HEIGHT ? 1 : 0);
+		MakeNoise(ubAttackerID, sGridNo, level, gpWorldLevelData[sGridNo].ubTerrainID, Weapon[usWeaponIndex].ubHitVolume, NOISE_BULLET_IMPACT);
 	}
 
 	if (fStopped)
@@ -2066,8 +2056,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	// Get Structure pointer and damage it!
 	if ( usStructureID != INVALID_STRUCTURE_ID )
 	{
-		pStructure = FindStructureByID( sGridNo, usStructureID );
-
+		STRUCTURE* const pStructure = FindStructureByID(sGridNo, usStructureID);
 		DamageStructure( pStructure, (UINT8)iImpact, STRUCTURE_DAMAGE_GUNFIRE, sGridNo, sXPos, sYPos, ubAttackerID );
 	}
 
