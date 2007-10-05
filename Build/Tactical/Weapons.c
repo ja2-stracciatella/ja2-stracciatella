@@ -1853,7 +1853,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 }
 
 
-static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, INT32 iBullet)
+static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, BULLET* bullet)
 {
 	ANITILE_PARAMS	AniParams;
 	UINT8						ubAmmoType;
@@ -1881,7 +1881,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 
 			if ( fFreeupAttacker )
 			{
-				RemoveBullet( iBullet );
+				RemoveBullet(bullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo");
 				FreeUpAttacker( (UINT8) ubAttackerID );
 			}
@@ -1955,7 +1955,7 @@ void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
 		return;
 	}
 
-	DoSpecialEffectAmmoMiss( ubAttackerID, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, 0 );
+	DoSpecialEffectAmmoMiss(ubAttackerID, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, NULL);
 
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
   // ATE: This is 'cause of that darn smoke effect that could potnetially kill
@@ -1983,10 +1983,9 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	STRUCTURE				*pStructure = NULL;
 	UINT32					uiMissVolume = MIDVOLUME;
 	BOOLEAN					fHitSameStructureAsBefore;
-	BULLET *				pBullet;
 	SOLDIERTYPE *		pAttacker;
 
-	pBullet = GetBulletPtr( iBullet );
+	BULLET* const pBullet = GetBulletPtr(iBullet);
 
 	if ( fStopped && ubAttackerID != NOBODY )
 	{
@@ -2037,7 +2036,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	{
 		if ( usWeaponIndex == ROCKET_LAUNCHER )
 		{
-			RemoveBullet( iBullet );
+			RemoveBullet(pBullet);
 
 			// Reduce attacker count!
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
@@ -2051,7 +2050,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 
 		if ( usWeaponIndex == TANK_CANNON )
 		{
-			RemoveBullet( iBullet );
+			RemoveBullet(pBullet);
 
 			// Reduce attacker count!
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of TANK fire");
@@ -2097,10 +2096,9 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 			break;
 
 		case MONSTERCLASS:
+			DoSpecialEffectAmmoMiss(ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet);
 
-      DoSpecialEffectAmmoMiss( ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, iBullet );
-
-			RemoveBullet( iBullet );
+			RemoveBullet(pBullet);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - monster attack hit structure");
 			FreeUpAttacker( (UINT8) ubAttackerID );
 
@@ -2131,7 +2129,7 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 					PlayJA2Sample(MISS_KNIFE, uiMissVolume, 1, SoundDir(sGridNo));
 				}
 
-				RemoveBullet( iBullet );
+				RemoveBullet(pBullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - knife attack hit structure");
 				FreeUpAttacker( (UINT8) ubAttackerID );
 			}
@@ -2159,15 +2157,14 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 		{
 			if ( fStopped )
 			{
-				RemoveBullet( iBullet );
+				RemoveBullet(pBullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit same structure twice");
 				FreeUpAttacker( (UINT8) ubAttackerID );
 			}
 		}
 		else
 		{
-
-			if ( !fStopped || !DoSpecialEffectAmmoMiss( ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, iBullet ) )
+			if (!fStopped || !DoSpecialEffectAmmoMiss(ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet))
 			{
 				if ( sZPos == 0 )
 				{
@@ -3670,8 +3667,7 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 	{
 		// PLAY SOUND AND FLING DEBRIS
 		// RANDOMIZE SOUND SYSTEM
-
-		if ( !DoSpecialEffectAmmoMiss( ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, 0 ) )
+		if (!DoSpecialEffectAmmoMiss(ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
 		{
 			PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
 		}

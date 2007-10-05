@@ -65,17 +65,17 @@ CASSERT(sizeof(BULLET) == 128)
 
 extern UINT32 guiNumBullets;
 
-INT32  CreateBullet( UINT8 ubFirer, BOOLEAN fFake, UINT16 usFlags );
-void	 RemoveBullet( INT32 iBullet );
-void	 StopBullet( INT32 iBullet );
-void	 UpdateBullets( );
-BULLET *GetBulletPtr( INT32 iBullet );
+BULLET* CreateBullet(UINT8 ubFirer, BOOLEAN fFake, UINT16 usFlags);
+void    RemoveBullet(BULLET* b);
+void    StopBullet(BULLET* b);
+void    UpdateBullets(void);
+BULLET* GetBulletPtr(INT32 iBullet);
 
-void DeleteAllBullets( );
+void DeleteAllBullets(void);
 
-void LocateBullet( INT32 iBulletIndex );
+void LocateBullet(BULLET* b);
 
-void HandleBulletSpecialFlags( INT32 iBulletIndex );
+void HandleBulletSpecialFlags(BULLET* b);
 
 void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ );
 

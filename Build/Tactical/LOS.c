@@ -2218,7 +2218,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 	if (fStopped)
 	{
-		RemoveBullet( pBullet->iBullet );
+		RemoveBullet(pBullet);
 	}
   else
   {
@@ -3331,7 +3331,7 @@ static INT8 FireBullet(SOLDIERTYPE* pFirer, BULLET* pBullet, BOOLEAN fFake)
 			pBullet->usClockTicksPerUpdate = Weapon[ pFirer->usAttackingWeapon ].ubBulletSpeed / 10;
 		}
 
-		HandleBulletSpecialFlags( pBullet->iBullet );
+		HandleBulletSpecialFlags(pBullet);
 
 		MoveBullet( pBullet->iBullet );
 
@@ -3379,9 +3379,6 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	DOUBLE	ddAdjustedVerticAngle;
 	DOUBLE	ddDummyHorizAngle;
 	DOUBLE	ddDummyVerticAngle;
-
-	BULLET *				pBullet;
-	INT32						iBullet;
 
 	INT32		iDistance;
 
@@ -3474,14 +3471,12 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	// GET BULLET
 	for (ubLoop = 0; ubLoop < ubShots; ubLoop++)
 	{
-		iBullet = CreateBullet( pFirer->ubID, fFake, usBulletFlags );
-		if (iBullet == -1)
+		BULLET* const pBullet = CreateBullet(pFirer->ubID, fFake, usBulletFlags);
+		if (pBullet == NULL)
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Failed to create bullet");
-
-			return( FALSE );
+			return FALSE;
 		}
-		pBullet = GetBulletPtr( iBullet );
 		pBullet->sHitBy	= sHitBy;
 
 		if (dStartZ < WALL_HEIGHT_UNITS)
@@ -3586,7 +3581,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 		if (fFake)
 		{
 			bCTGT = FireBullet( pFirer, pBullet, TRUE );
-			RemoveBullet( iBullet );
+			RemoveBullet(pBullet);
 			return( bCTGT );
 		}
 		else
@@ -3704,7 +3699,7 @@ void MoveBullet( INT32 iBullet )
 			// bullet outside of world!
 			// NB remove bullet only flags a bullet for deletion; we still have access to the
 			// information in the structure
-			RemoveBullet( pBullet->iBullet );
+			RemoveBullet(pBullet);
 			BulletMissed( pBullet, pBullet->pFirer );
 			return;
 		}
@@ -3830,7 +3825,7 @@ void MoveBullet( INT32 iBullet )
 					if ( (qLastZ > qWallHeight && pBullet->qCurrZ <= qWallHeight) || (qLastZ < qWallHeight && pBullet->qCurrZ >= qWallHeight))
 					{
 						// hit a roof
-						StopBullet( pBullet->iBullet );
+						StopBullet(pBullet);
 						BulletHitStructure( pBullet, 0, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 						return;
 					}
@@ -4038,7 +4033,7 @@ void MoveBullet( INT32 iBullet )
 			if (iCurrAboveLevelZ < 0)
 			{
 				// ground is in the way!
-				StopBullet( pBullet->iBullet );
+				StopBullet(pBullet);
 				BulletHitStructure( pBullet, INVALID_STRUCTURE_ID, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 				return;
 			}
@@ -4096,7 +4091,7 @@ void MoveBullet( INT32 iBullet )
 					pBullet->qCurrY += pBullet->qIncrY * iStepsToTravel;
 					pBullet->qCurrZ += pBullet->qIncrZ * iStepsToTravel;
 
-					StopBullet( pBullet->iBullet );
+					StopBullet(pBullet);
 					BulletHitStructure( pBullet, INVALID_STRUCTURE_ID, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 					return;
 				}
@@ -4250,44 +4245,27 @@ void MoveBullet( INT32 iBullet )
 												NotifySoldiersToLookforItems( );
 
 												// bullet must end here!
-												StopBullet( pBullet->iBullet );
+												StopBullet(pBullet);
 												BulletHitStructure( pBullet, pStructure->usStructureID, 1, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 												return;
 											}
 										}
 										else
 										{
-											if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
+											BOOLEAN blow_south;
+											if (pStructure->ubWallOrientation == INSIDE_TOP_RIGHT ||
+													pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT)
 											{
-												if ( pBullet->qIncrX > 0)
-												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
-													LocateBullet( pBullet->iBullet );
-													// have to remove this window from future hit considerations so the deleted structure data can't be referenced!
-													gpLocalStructure[ iStructureLoop ] = NULL;
-												}
-												else
-												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
-													LocateBullet( pBullet->iBullet );
-													gpLocalStructure[ iStructureLoop ] = NULL;
-												}
+												blow_south = pBullet->qIncrX > 0;
 											}
 											else
 											{
-												if (pBullet->qIncrY > 0)
-												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, TRUE );
-													LocateBullet( pBullet->iBullet );
-													gpLocalStructure[ iStructureLoop ] = NULL;
-												}
-												else
-												{
-													BulletHitWindow( pBullet, (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS), pStructure->usStructureID, FALSE );
-													LocateBullet( pBullet->iBullet );
-													gpLocalStructure[ iStructureLoop ] = NULL;
-												}
+												blow_south = pBullet->qIncrY > 0;
 											}
+											BulletHitWindow(pBullet, pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS, pStructure->usStructureID, blow_south);
+											LocateBullet(pBullet);
+											// have to remove this window from future hit considerations so the deleted structure data can't be referenced!
+											gpLocalStructure[iStructureLoop] = NULL;
 											// but the bullet keeps on going!!!
 										}
 
@@ -4316,7 +4294,7 @@ void MoveBullet( INT32 iBullet )
 											{
 												// ATE: In enemy territory here... ;)
 												// Now that we have hit a corpse, make the bugger twich!
-												RemoveBullet( pBullet->iBullet );
+												RemoveBullet(pBullet);
 
 												CorpseHit( (INT16)pBullet->sGridNo, pStructure->usStructureID );
 												DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., CORPSE HIT");
@@ -4326,7 +4304,7 @@ void MoveBullet( INT32 iBullet )
 											}
 											else if ( iRemainingImpact <= 0 )
 											{
-												StopBullet( pBullet->iBullet );
+												StopBullet(pBullet);
 												BulletHitStructure( pBullet, pStructure->usStructureID, 1, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 												return;
 											}
@@ -4363,7 +4341,7 @@ void MoveBullet( INT32 iBullet )
 
 							if ( 1 /*HandleBulletStructureInteraction( pBullet, pRoofStructure, &fHitStructure ) <= 0 */)
 							{
-								StopBullet( pBullet->iBullet );
+								StopBullet(pBullet);
 								BulletHitStructure( pBullet, 0, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
 								return;
 							}
@@ -4416,7 +4394,7 @@ void MoveBullet( INT32 iBullet )
 		if ( !GridNoOnVisibleWorldTile( (INT16) (pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS) ) || (pBullet->iCurrCubesZ > PROFILE_Z_SIZE * 2 && FIXEDPT_TO_INT32( pBullet->qIncrZ ) > 0 ) )
 		{
 			// bullet outside of world!
-			RemoveBullet( pBullet->iBullet );
+			RemoveBullet(pBullet);
 			BulletMissed( pBullet, pBullet->pFirer );
 			return;
 		}
@@ -4567,7 +4545,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		//	{
 		//		// generate roof-hitting event
 		//		BulletHitStructure( pBullet->pFirer, pBullet->dCurrX, pBullet->dCurrY, pBullet->dCurrZ );
-		//		RemoveBullet( pBullet->iBullet );
+		//		RemoveBullet(pBullet);
 		//		return;
 		//	}
 		//}

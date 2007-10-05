@@ -59,46 +59,31 @@ static void RecountBullets(void)
 }
 
 
-INT32	CreateBullet( UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags )
+BULLET* CreateBullet(UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags)
 {
-	INT32			iBulletIndex;
-	BULLET		*pBullet;
+	const INT32 iBulletIndex = GetFreeBullet();
+	if (iBulletIndex == -1) return NULL;
 
-	if( ( iBulletIndex = GetFreeBullet() )==(-1) )
-		return(-1);
+	BULLET* const b = &gBullets[iBulletIndex];
+	memset(b, 0, sizeof(*b));
 
-	memset(&gBullets[ iBulletIndex ], 0, sizeof( BULLET ) );
+	b->iBullet            = iBulletIndex;
+	b->fAllocated         = TRUE;
+	b->fLocated		        = FALSE;
+	b->ubFirerID	        = ubFirerID;
+	b->usFlags		        = usFlags;
+	b->usLastStructureHit = 0;
+	b->fReal              = !fFake;
 
-	pBullet = &gBullets[ iBulletIndex ];
-
-	pBullet->iBullet = iBulletIndex;
-	pBullet->fAllocated = TRUE;
-	pBullet->fLocated		= FALSE;
-	pBullet->ubFirerID	= ubFirerID;
-	pBullet->usFlags		= usFlags;
-	pBullet->usLastStructureHit = 0;
-
-	if (fFake)
-	{
-		pBullet->fReal = FALSE;
-	}
-	else
-	{
-		pBullet->fReal = TRUE;
-	}
-
-	return( iBulletIndex );
+	return b;
 }
 
 
-void HandleBulletSpecialFlags( INT32 iBulletIndex )
+void HandleBulletSpecialFlags(BULLET* pBullet)
 {
-	BULLET		*pBullet;
 	ANITILE_PARAMS	AniParams;
 	FLOAT		dX, dY;
 	UINT8		ubDirection;
-
-	pBullet = &( gBullets[ iBulletIndex ] );
 
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
@@ -149,76 +134,69 @@ void HandleBulletSpecialFlags( INT32 iBulletIndex )
 }
 
 
-void RemoveBullet( INT32 iBullet )
+void RemoveBullet(BULLET* b)
 {
-	CHECKV( iBullet < NUM_BULLET_SLOTS );
+	CHECKV(b != NULL);
 
 	// decrease soldier's bullet count
 
-	if (gBullets[ iBullet ].fReal)
+	if (b->fReal)
 	{
 		// set to be deleted at next update
-		gBullets[ iBullet ].fToDelete = TRUE;
+		b->fToDelete = TRUE;
 
 		// decrement reference to bullet in the firer
-		gBullets[ iBullet ].pFirer->bBulletsLeft--;
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending bullet, bullets left %d", gBullets[ iBullet ].pFirer->bBulletsLeft ) );
+		b->pFirer->bBulletsLeft--;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Ending bullet, bullets left %d", b->pFirer->bBulletsLeft));
 
-		if ( gBullets[ iBullet ].usFlags & ( BULLET_FLAG_KNIFE ) )
+		if (b->usFlags & BULLET_FLAG_KNIFE)
 		{
 			// Delete ani tile
-			if ( gBullets[ iBullet ].pAniTile != NULL )
+			if (b->pAniTile != NULL)
 			{
-				DeleteAniTile( gBullets[ iBullet ].pAniTile );
-				gBullets[ iBullet ].pAniTile = NULL;
+				DeleteAniTile(b->pAniTile);
+				b->pAniTile = NULL;
 			}
 
 			// Delete shadow
-			if ( gBullets[ iBullet ].usFlags & ( BULLET_FLAG_KNIFE ) )
+			if (b->usFlags & BULLET_FLAG_KNIFE)
 			{
-				if ( gBullets[ iBullet ].pShadowAniTile != NULL )
+				if (b->pShadowAniTile != NULL)
 				{
-					DeleteAniTile( gBullets[ iBullet ].pShadowAniTile );
-					gBullets[ iBullet ].pShadowAniTile = NULL;
+					DeleteAniTile(b->pShadowAniTile);
+					b->pShadowAniTile = NULL;
 				}
 			}
-
 		}
 	}
 	else
 	{
 		// delete this fake bullet right away!
-		gBullets[ iBullet ].fAllocated = FALSE;
+		b->fAllocated = FALSE;
 		RecountBullets();
 	}
 }
 
-void LocateBullet( INT32 iBulletIndex )
-{
-	if ( gGameSettings.fOptions[ TOPTION_SHOW_MISSES ] )
-	{
-	  // Check if a bad guy fired!
-	  if ( gBullets[ iBulletIndex ].ubFirerID != NOBODY )
-	  {
-		  if ( MercPtrs[ gBullets[ iBulletIndex ].ubFirerID ]->bSide == gbPlayerNum )
-		  {
-			  if ( !gBullets[ iBulletIndex ].fLocated )
-			  {
-				  gBullets[ iBulletIndex ].fLocated = TRUE;
 
-				  //Only if we are in turnbased and noncombat
-				  if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
-				  {
-					  LocateGridNo( (INT16)gBullets[ iBulletIndex ].sGridNo );
-				  }
-			  }
-		  }
-	  }
-  }
+void LocateBullet(BULLET* b)
+{
+	if (!gGameSettings.fOptions[TOPTION_SHOW_MISSES]) return;
+	if (b->ubFirerID == NOBODY) return;
+	// Check if a bad guy fired!
+	if (MercPtrs[b->ubFirerID]->bSide != gbPlayerNum) return;
+	if (b->fLocated) return;
+
+	b->fLocated = TRUE;
+
+	//Only if we are in turnbased and noncombat
+	if (!(gTacticalStatus.uiFlags & TURNBASED)) return;
+	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return;
+
+	LocateGridNo(b->sGridNo);
 }
 
 
-void UpdateBullets( )
+void UpdateBullets(void)
 {
 	UINT32					uiCount;
 	LEVELNODE				*pNode;
@@ -330,16 +308,10 @@ void UpdateBullets( )
 }
 
 
-
-BULLET *GetBulletPtr( INT32 iBullet )
+BULLET* GetBulletPtr(INT32 iBullet)
 {
-	BULLET	*pBullet;
-
-	CHECKN( iBullet < NUM_BULLET_SLOTS );
-
-	pBullet = &gBullets[ iBullet ];
-
-	return( pBullet );
+	CHECKN(0 <= iBullet && iBullet < NUM_BULLET_SLOTS);
+	return &gBullets[iBullet];
 }
 
 
@@ -436,59 +408,53 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 {
-	UINT16	usCnt;
-
 	//make sure the bullets are not allocated
-	memset( gBullets, 0, NUM_BULLET_SLOTS * sizeof( BULLET ) );
+	memset(gBullets, 0, sizeof(gBullets));
 
 	//Load the number of Bullets in the array
 	if (!FileRead(hFile, &guiNumBullets, sizeof(UINT32))) return FALSE;
 
-	for( usCnt=0; usCnt<guiNumBullets; usCnt++ )
+	for (UINT i = 0; i < guiNumBullets; ++i)
 	{
+		BULLET* const b = &gBullets[i];
 		//Load the the Bullet structure
-		if (!FileRead(hFile, &gBullets[usCnt], sizeof(BULLET))) return FALSE;
+		if (!FileRead(hFile, b, sizeof(*b))) return FALSE;
 
 		//Set some parameters
-		gBullets[usCnt].uiLastUpdate = 0;
-		if( gBullets[usCnt].ubFirerID != NOBODY )
-			gBullets[usCnt].pFirer = &Menptr[ gBullets[usCnt].ubFirerID ];
-		else
-			gBullets[usCnt].pFirer = NULL;
+		b->uiLastUpdate   = 0;
+		b->pFirer         = (b->ubFirerID == NOBODY ? NULL : &Menptr[b->ubFirerID]);
+		b->pAniTile       = NULL;
+		b->pShadowAniTile = NULL;
+		b->iBullet        = i;
 
-		gBullets[usCnt].pAniTile = NULL;
-		gBullets[usCnt].pShadowAniTile = NULL;
-		gBullets[usCnt].iBullet = usCnt;
-
-		HandleBulletSpecialFlags( gBullets[usCnt].iBullet );
+		HandleBulletSpecialFlags(b);
 	}
 
-	return( TRUE );
-}
-
-void StopBullet( INT32 iBullet )
-{
-	gBullets[ iBullet ].usFlags |= BULLET_STOPPED;
-
-	RemoveStruct( gBullets[ iBullet ].sGridNo, BULLETTILE1 );
-	RemoveStruct( gBullets[ iBullet ].sGridNo, BULLETTILE2 );
+	return TRUE;
 }
 
 
-void DeleteAllBullets( )
+void StopBullet(BULLET* b)
 {
-	UINT32					uiCount;
+	b->usFlags |= BULLET_STOPPED;
 
-	for ( uiCount = 0; uiCount < guiNumBullets; uiCount++ )
+	RemoveStruct(b->sGridNo, BULLETTILE1);
+	RemoveStruct(b->sGridNo, BULLETTILE2);
+}
+
+
+void DeleteAllBullets(void)
+{
+	for (UINT32 i = 0; i < guiNumBullets; ++i)
 	{
-		if ( gBullets[ uiCount ].fAllocated)
+		BULLET* const b = &gBullets[i];
+		if (b->fAllocated)
 		{
 			// Remove from old position
-			RemoveBullet( uiCount );
-			gBullets[ uiCount ].fAllocated = FALSE;
+			RemoveBullet(b);
+			b->fAllocated = FALSE;
 		}
 	}
 
 	RecountBullets( );
-
 }
