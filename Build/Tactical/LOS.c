@@ -2269,8 +2269,12 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 }
 
 
-static void BulletHitStructure(BULLET* pBullet, UINT16 usStructureID, INT32 iImpact, SOLDIERTYPE* pFirer, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ, BOOLEAN fStopped)
+static void BulletHitStructure(BULLET* pBullet, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped)
 {
+	const SOLDIERTYPE* const pFirer = pBullet->pFirer;
+	const FIXEDPT            qCurrX = pBullet->qCurrX;
+	const FIXEDPT            qCurrY = pBullet->qCurrY;
+	const FIXEDPT            qCurrZ = pBullet->qCurrZ;
 	INT16 sXPos = FIXEDPT_TO_INT32(qCurrX + FloatToFixed(0.5f)); // + 0.5);
 	INT16 sYPos = FIXEDPT_TO_INT32(qCurrY + FloatToFixed(0.5f)); // (dCurrY + 0.5);
 	INT16 sZPos = CONVERT_HEIGHTUNITS_TO_PIXELS((INT16)FIXEDPT_TO_INT32(qCurrZ + FloatToFixed(0.5f)));// dCurrZ + 0.5) );
@@ -3826,7 +3830,7 @@ void MoveBullet( INT32 iBullet )
 					{
 						// hit a roof
 						StopBullet(pBullet);
-						BulletHitStructure( pBullet, 0, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+						BulletHitStructure(pBullet, 0, 0, TRUE);
 						return;
 					}
 
@@ -4034,7 +4038,7 @@ void MoveBullet( INT32 iBullet )
 			{
 				// ground is in the way!
 				StopBullet(pBullet);
-				BulletHitStructure( pBullet, INVALID_STRUCTURE_ID, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+				BulletHitStructure(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
 				return;
 			}
 			// check for the existence of structures
@@ -4092,7 +4096,7 @@ void MoveBullet( INT32 iBullet )
 					pBullet->qCurrZ += pBullet->qIncrZ * iStepsToTravel;
 
 					StopBullet(pBullet);
-					BulletHitStructure( pBullet, INVALID_STRUCTURE_ID, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+					BulletHitStructure(pBullet, INVALID_STRUCTURE_ID, 0, TRUE);
 					return;
 				}
 
@@ -4246,7 +4250,7 @@ void MoveBullet( INT32 iBullet )
 
 												// bullet must end here!
 												StopBullet(pBullet);
-												BulletHitStructure( pBullet, pStructure->usStructureID, 1, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+												BulletHitStructure(pBullet, pStructure->usStructureID, 1, TRUE);
 												return;
 											}
 										}
@@ -4305,13 +4309,13 @@ void MoveBullet( INT32 iBullet )
 											else if ( iRemainingImpact <= 0 )
 											{
 												StopBullet(pBullet);
-												BulletHitStructure( pBullet, pStructure->usStructureID, 1, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+												BulletHitStructure(pBullet, pStructure->usStructureID, 1, TRUE);
 												return;
 											}
 											else if (fHitStructure && (gubLocalStructureNumTimesHit[iStructureLoop] == 0) )
 											{
 												// play animation to indicate structure being hit
-												BulletHitStructure( pBullet, pStructure->usStructureID, 1, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, FALSE );
+												BulletHitStructure(pBullet, pStructure->usStructureID, 1, FALSE);
 												gubLocalStructureNumTimesHit[iStructureLoop] = 1;
 											}
 										}
@@ -4342,7 +4346,7 @@ void MoveBullet( INT32 iBullet )
 							if ( 1 /*HandleBulletStructureInteraction( pBullet, pRoofStructure, &fHitStructure ) <= 0 */)
 							{
 								StopBullet(pBullet);
-								BulletHitStructure( pBullet, 0, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ, TRUE );
+								BulletHitStructure(pBullet, 0, 0, TRUE);
 								return;
 							}
 							/*
@@ -4350,7 +4354,7 @@ void MoveBullet( INT32 iBullet )
 							{
 								// ATE: Found this: Should we be calling this because if we do, it will
 								// delete a bullet that was not supposed to be deleted....
-								//BulletHitStructure( pBullet, 0, 0, pBullet->pFirer, pBullet->qCurrX, pBullet->qCurrY, pBullet->qCurrZ );
+								//BulletHitStructure(pBullet, 0, 0);
 							}
 							*/
 						}
@@ -4544,7 +4548,7 @@ INT32	CheckForCollision( FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDel
 		//	if ( (dLastZ > WALL_HEIGHT && pBullet->dCurrZ < WALL_HEIGHT) || (dLastZ < WALL_HEIGHT && pBullet->dCurrZ > WALL_HEIGHT))
 		//	{
 		//		// generate roof-hitting event
-		//		BulletHitStructure( pBullet->pFirer, pBullet->dCurrX, pBullet->dCurrY, pBullet->dCurrZ );
+		//		BulletHitStructure(pBullet);
 		//		RemoveBullet(pBullet);
 		//		return;
 		//	}
