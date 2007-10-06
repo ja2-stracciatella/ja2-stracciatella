@@ -3606,45 +3606,50 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 	return( iImpact );
 }
 
-void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
+
+void ShotMiss(UINT8 ubAttackerID, INT32 iBullet)
 {
-	BOOLEAN						fDoMissForGun = FALSE;
-	SOLDIERTYPE				*pAttacker;
-	BULLET						*pBullet;
+	SOLDIERTYPE* const pAttacker = MercPtrs[ubAttackerID];
 
-	pAttacker = MercPtrs[ ubAttackerID ];
-
-	if ( pAttacker->ubOppNum != NOBODY )
+	if (pAttacker->ubOppNum != NOBODY)
 	{
+		SOLDIERTYPE* const opponent = &Menptr[pAttacker->ubOppNum];
 		// if it was another team shooting at someone under our control
-		if ( (pAttacker->bTeam != Menptr[ pAttacker->ubOppNum ].bTeam ) )
+		if (opponent->bTeam != pAttacker->bTeam &&
+				opponent->bTeam == gbPlayerNum)
 		{
-			// if OPPONENT is under our control
-      if (Menptr[ pAttacker->ubOppNum ].bTeam == gbPlayerNum )
-			{
-				// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-				StatChange( MercPtrs[ pAttacker->ubOppNum ], AGILAMT, 5, FROM_FAILURE );
-			}
+			// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
+			StatChange(opponent, AGILAMT, 5, FROM_FAILURE);
 		}
 	}
 
-	switch(  Weapon[ MercPtrs[ ubAttackerID ]->usAttackingWeapon ].ubWeaponClass )
+	switch (Weapon[pAttacker->usAttackingWeapon].ubWeaponClass)
 	{
 		case HANDGUNCLASS:
 		case RIFLECLASS:
 		case SHOTGUNCLASS:
 		case SMGCLASS:
 		case MGCLASS:
-
 			// Guy has missed, play random sound
-			if (  MercPtrs[ ubAttackerID ]->bTeam == gbPlayerNum )
+			if (pAttacker->bTeam == gbPlayerNum && Random(40) == 0)
 			{
-				if ( Random(40) == 0 )
-				{
-					DoMercBattleSound(  MercPtrs[ ubAttackerID ], BATTLE_SOUND_CURSE1 );
-				}
+				DoMercBattleSound(pAttacker, BATTLE_SOUND_CURSE1);
 			}
-			fDoMissForGun = TRUE;
+
+			// PLAY SOUND AND FLING DEBRIS
+			// RANDOMIZE SOUND SYSTEM
+			if (!DoSpecialEffectAmmoMiss(ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
+			{
+				PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
+			}
+
+			// ATE: Show misses...( if our team )
+			if (gGameSettings.fOptions[TOPTION_SHOW_MISSES] &&
+					pAttacker->bTeam == gbPlayerNum)
+			{
+				const BULLET* const pBullet = GetBulletPtr(iBullet);
+				LocateGridNo(pBullet->sGridNo);
+			}
 			break;
 
 		case MONSTERCLASS:
@@ -3652,30 +3657,8 @@ void ShotMiss( UINT8 ubAttackerID, INT32 iBullet )
 			break;
 	}
 
-	if ( fDoMissForGun )
-	{
-		// PLAY SOUND AND FLING DEBRIS
-		// RANDOMIZE SOUND SYSTEM
-		if (!DoSpecialEffectAmmoMiss(ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
-		{
-			PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
-		}
-
-		// ATE: Show misses...( if our team )
-		if ( gGameSettings.fOptions[ TOPTION_SHOW_MISSES ] )
-		{
-			pBullet = GetBulletPtr( iBullet );
-
-			if ( pAttacker->bTeam == gbPlayerNum )
-			{
-				LocateGridNo( (INT16)pBullet->sGridNo );
-			}
-		}
-
-	}
-
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet missed");
-	FreeUpAttacker( ubAttackerID );
+	FreeUpAttacker(ubAttackerID);
 }
 
 
