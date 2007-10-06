@@ -222,7 +222,11 @@ update_buttons:
 		case RIGHT_BUTTON_REPEAT: action |= MSYS_DO_RBUTTON_REPEAT; break;
 
 		case MOUSE_POS:
-			if (gfRefreshUpdate) goto force_move;
+			if (gfRefreshUpdate)
+			{
+				gfRefreshUpdate = FALSE;
+				goto force_move;
+			}
 			break;
 
 		default: return; /* Not a mouse message, ignore it */
