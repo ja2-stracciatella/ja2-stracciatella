@@ -715,7 +715,9 @@ static void MSYS_UpdateMouseRegion(void)
 			MSYS_Action &= ~MSYS_DO_MOVE;
 		}
 	}
-	MSYS_PrevRegion = cur;
+	/* the current region can get deleted during this function, so fetch the
+	 * latest value here */
+	MSYS_PrevRegion = MSYS_CurrRegion;
 }
 
 
