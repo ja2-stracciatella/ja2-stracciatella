@@ -2288,9 +2288,9 @@ static void BulletHitWindow(BULLET* pBullet, INT16 sGridNo, UINT16 usStructureID
 }
 
 
-static void BulletMissed(BULLET* pBullet, SOLDIERTYPE* pFirer)
+static void BulletMissed(BULLET* pBullet)
 {
-	ShotMiss( pFirer->ubID, pBullet->iBullet );
+	ShotMiss(pBullet->pFirer->ubID, pBullet->iBullet);
 }
 
 
@@ -3704,7 +3704,7 @@ void MoveBullet( INT32 iBullet )
 			// NB remove bullet only flags a bullet for deletion; we still have access to the
 			// information in the structure
 			RemoveBullet(pBullet);
-			BulletMissed( pBullet, pBullet->pFirer );
+			BulletMissed(pBullet);
 			return;
 		}
 
@@ -4399,7 +4399,7 @@ void MoveBullet( INT32 iBullet )
 		{
 			// bullet outside of world!
 			RemoveBullet(pBullet);
-			BulletMissed( pBullet, pBullet->pFirer );
+			BulletMissed(pBullet);
 			return;
 		}
 
