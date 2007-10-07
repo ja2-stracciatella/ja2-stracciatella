@@ -200,7 +200,6 @@ INT32 iHeightOfInitFastHelpText = 0;
 
 extern INT32 giMapContractButton;
 extern INT32 giCharInfoButton[];
-extern STR16 pUpdatePanelButtons[];
 
 // the list of soldiers that are moving
 SOLDIERTYPE * pSoldierMovingList[ MAX_CHARACTER_COUNT ];
@@ -1086,7 +1085,7 @@ void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, I
 */
 
 
-INT32 DoMapMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+INT32 DoMapMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {	// reset the highlighted line
 	giHighLine = -1;
 	return DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);

@@ -876,9 +876,9 @@ static void DoneFadeOutForExitGameInitOptionScreen(void)
 }
 
 
-static BOOLEAN DoGioMessageBox(UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
+static void DoGioMessageBox(const wchar_t *zString, MSGBOX_CALLBACK ReturnCallback)
 {
-	return DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL) != -1;
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ReturnCallback, NULL);
 }
 
 
@@ -893,7 +893,7 @@ static void DisplayMessageToUserAboutGameDifficulty(void)
 		case 2: text = zGioDifConfirmText[GIO_CFS_EXPERT];      break;
 		default: return;
 	}
-	DoGioMessageBox(MSG_BOX_BASIC_STYLE, text, GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmGioDifSettingMessageBoxCallBack);
+	DoGioMessageBox(text, ConfirmGioDifSettingMessageBoxCallBack);
 }
 
 
@@ -913,7 +913,7 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	//if the user has selected IRON MAN mode
 	if (ubIronManMode)
 	{
-		DoGioMessageBox(MSG_BOX_BASIC_STYLE, gzIronManModeWarningText[IMM__IRON_MAN_MODE_WARNING_TEXT], GAME_INIT_OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmGioIronManMessageBoxCallBack);
+		DoGioMessageBox(gzIronManModeWarningText[IMM__IRON_MAN_MODE_WARNING_TEXT], ConfirmGioIronManMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;

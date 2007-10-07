@@ -531,9 +531,6 @@ extern BOOLEAN			gfFadeOutDone;
 
 extern UINT32 guiPendingScreen;
 
-extern CHAR16		gzUserDefinedButton1[ 128 ];
-extern CHAR16		gzUserDefinedButton2[ 128 ];
-
 extern BOOLEAN gfMilitiaPopupCreated;
 
 #ifdef JA2TESTVERSION

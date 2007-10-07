@@ -112,7 +112,6 @@ IsDoorOpen(): sGridNo is INT16, but used as %s
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapInventory(): complicated
-IsPastMercDead(), IsPastMercFired(), IsPastMercOther(): complicated
 IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
@@ -150,6 +149,7 @@ MercDepartEquipmentBoxCallBack(): users
 MergeMessageBoxCallBack(): users
 MinAPsToThrow(): usInHand is INT16, but used as %s
 MiscPal: unused
+MoveBullet(): RemoveBullet() before BulletMissed() (twice) and CorpseHit() seems wrong
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
 MoveOverheadRegionCallback(): empty
 MsgBoxClickCallback(): empty

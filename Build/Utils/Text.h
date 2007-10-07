@@ -1340,4 +1340,6 @@ extern const wchar_t pContractButtonString[];
 
 extern const wchar_t gzIntroScreen[];
 
+extern const wchar_t* pUpdatePanelButtons[];
+
 #endif

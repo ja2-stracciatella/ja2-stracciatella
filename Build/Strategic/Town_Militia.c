@@ -546,7 +546,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 }
 
 
-static void DoContinueMilitiaTrainingMessageBox(INT16 sSectorX, INT16 sSectorY, wchar_t* str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
+static void DoContinueMilitiaTrainingMessageBox(INT16 sSectorX, INT16 sSectorY, const wchar_t* str, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	if( sSectorX <= 10 && sSectorY >= 6 && sSectorY <= 11 )
 	{

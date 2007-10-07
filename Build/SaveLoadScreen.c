@@ -141,7 +141,7 @@ BOOLEAN		gfSaveLoadScreenExit	= FALSE;
 BOOLEAN		gfRedrawSaveLoadScreen = TRUE;
 
 BOOLEAN		gfExitAfterMessageBox = FALSE;
-INT32			giSaveLoadMessageBox = -1;					// SaveLoad pop up messages index value
+static INT32 giSaveLoadMessageBox = -1; // SaveLoad pop up messages index value
 
 UINT32		guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
@@ -1004,13 +1004,13 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 }
 
 
-BOOLEAN DoSaveLoadMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
 	// do message box and return
 	giSaveLoadMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 
 	// send back return state
-	return( ( giSaveLoadMessageBox != -1 ) );
+	return giSaveLoadMessageBox != -1;
 }
 
 

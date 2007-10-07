@@ -33,41 +33,40 @@
 #endif
 
 
-#define		MSGBOX_DEFAULT_WIDTH							300
+#define MSGBOX_DEFAULT_WIDTH      300
 
-#define		MSGBOX_BUTTON_WIDTH								61
-#define		MSGBOX_BUTTON_HEIGHT							20
-#define		MSGBOX_BUTTON_X_SEP								15
+#define MSGBOX_BUTTON_WIDTH        61
+#define MSGBOX_BUTTON_HEIGHT       20
+#define MSGBOX_BUTTON_X_SEP        15
 
-#define		MSGBOX_SMALL_BUTTON_WIDTH					31
-#define		MSGBOX_SMALL_BUTTON_X_SEP					8
+#define MSGBOX_SMALL_BUTTON_WIDTH  31
+#define MSGBOX_SMALL_BUTTON_X_SEP   8
 
 // old mouse x and y positions
-SGPPoint pOldMousePosition;
-SGPRect MessageBoxRestrictedCursorRegion;
+static SGPPoint pOldMousePosition;
+static SGPRect  MessageBoxRestrictedCursorRegion;
 
 // if the cursor was locked to a region
-BOOLEAN fCursorLockedToArea = FALSE;
-BOOLEAN	gfInMsgBox = FALSE;
+static BOOLEAN fCursorLockedToArea = FALSE;
+BOOLEAN        gfInMsgBox = FALSE;
 
 extern BOOLEAN fInMapMode;
 extern BOOLEAN gfOverheadMapDirty;
 
 
-SGPRect gOldCursorLimitRectangle;
+static SGPRect gOldCursorLimitRectangle;
 
 
-MESSAGE_BOX_STRUCT	gMsgBox;
-BOOLEAN							gfNewMessageBox = FALSE;
-BOOLEAN							gfStartedFromGameScreen = FALSE;
-BOOLEAN							gfStartedFromMapScreen = FALSE;
-BOOLEAN							fRestoreBackgroundForMessageBox = FALSE;
-BOOLEAN							gfDontOverRideSaveBuffer = TRUE;	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
+MESSAGE_BOX_STRUCT gMsgBox;
+static BOOLEAN     gfNewMessageBox = FALSE;
+static BOOLEAN     gfStartedFromGameScreen = FALSE;
+BOOLEAN            gfStartedFromMapScreen = FALSE;
+BOOLEAN            fRestoreBackgroundForMessageBox = FALSE;
+BOOLEAN            gfDontOverRideSaveBuffer = TRUE;	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
 extern void HandleTacticalUILoseCursorFromOtherScreen( );
-extern STR16 pUpdatePanelButtons[];
 
-CHAR16		gzUserDefinedButton1[ 128 ];
-CHAR16		gzUserDefinedButton2[ 128 ];
+wchar_t gzUserDefinedButton1[128];
+wchar_t gzUserDefinedButton2[128];
 
 
 static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
@@ -80,123 +79,105 @@ static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
+{
+	INT32 btn = CreateIconAndTextButton(gMsgBox.iButtonImages, text, FONT12ARIAL, fore_colour, shadow_colour, fore_colour, shadow_colour, x, y, MSYS_PRIORITY_HIGHEST, click);
+	SetButtonCursor(btn, cursor);
+	ForceButtonUnDirty(btn);
+	return btn;
+}
+
+
 INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
-	UINT16	usTextBoxWidth;
-	UINT16	usTextBoxHeight;
-	SGPRect	aRect;
-	INT16	sButtonX, sButtonY, sBlankSpace;
-	UINT8	ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND, ubMercBoxBorder = BASIC_MERC_POPUP_BORDER;
-	UINT8	ubFontColor, ubFontShadowColor;
-	UINT16	usCursor;
-	INT32 iId = -1;
-
-	GetMousePos( &pOldMousePosition );
+	GetMousePos(&pOldMousePosition);
 
 	//this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
 	gfDontOverRideSaveBuffer = TRUE;
 
-	SetCurrentCursorFromDatabase( CURSOR_NORMAL );
+	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
-	if( gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS )
+	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS)
 	{
-		return( 0 );
+		return 0;
 	}
 
 	// Based on style....
-	switch( ubStyle )
+	UINT8  ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND;
+	UINT8  ubMercBoxBorder     = BASIC_MERC_POPUP_BORDER;
+	UINT8  ubFontColor;
+	UINT8  ubFontShadowColor;
+	UINT16 usCursor;
+	switch (ubStyle)
 	{
-		//default
-		case 	MSG_BOX_BASIC_STYLE:
-
-			ubMercBoxBackground = DIALOG_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
-			ubFontColor	= FONT_MCOLOR_WHITE;
-			ubFontShadowColor = DEFAULT_SHADOW;
-			usCursor = CURSOR_NORMAL;
-
+		case MSG_BOX_BASIC_STYLE:
+			ubMercBoxBackground   = DIALOG_MERC_POPUP_BACKGROUND;
+			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = FONT_MCOLOR_WHITE;
+			ubFontShadowColor     = DEFAULT_SHADOW;
+			usCursor              = CURSOR_NORMAL;
 			break;
 
 		case MSG_BOX_RED_ON_WHITE:
-			ubMercBoxBackground = WHITE_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder			= RED_MERC_POPUP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxRedButtons.sti", -1,0,-1,1,-1 );
-
-			ubFontColor	= 2;
-			ubFontShadowColor = NO_SHADOW;
-			usCursor = CURSOR_LAPTOP_SCREEN;
+			ubMercBoxBackground   = WHITE_MERC_POPUP_BACKGROUND;
+			ubMercBoxBorder       = RED_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxRedButtons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = 2;
+			ubFontShadowColor     = NO_SHADOW;
+			usCursor              = CURSOR_LAPTOP_SCREEN;
 			break;
 
 		case MSG_BOX_BLUE_ON_GREY:
-			ubMercBoxBackground = GREY_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder			= BLUE_MERC_POPUP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxGreyButtons.sti", -1,0,-1,1,-1 );
-
-			ubFontColor	= 2;
-			ubFontShadowColor = FONT_MCOLOR_WHITE;
-			usCursor = CURSOR_LAPTOP_SCREEN;
+			ubMercBoxBackground   = GREY_MERC_POPUP_BACKGROUND;
+			ubMercBoxBorder       = BLUE_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxGreyButtons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = 2;
+			ubFontShadowColor     = FONT_MCOLOR_WHITE;
+			usCursor              = CURSOR_LAPTOP_SCREEN;
 			break;
-	  case MSG_BOX_IMP_STYLE:
-			ubMercBoxBackground = IMP_POPUP_BACKGROUND;
-			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
 
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxGreyButtons.sti", -1,0,-1,1,-1 );
-
-			ubFontColor	= 2;
-			ubFontShadowColor = FONT_MCOLOR_WHITE;
-			usCursor = CURSOR_LAPTOP_SCREEN;
+		case MSG_BOX_IMP_STYLE:
+			ubMercBoxBackground   = IMP_POPUP_BACKGROUND;
+			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxGreyButtons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = 2;
+			ubFontShadowColor     = FONT_MCOLOR_WHITE;
+			usCursor              = CURSOR_LAPTOP_SCREEN;
 			break;
+
 		case MSG_BOX_BASIC_SMALL_BUTTONS:
-
-			ubMercBoxBackground = DIALOG_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder			= DIALOG_MERC_POPUP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,2,-1,3,-1 );
-			ubFontColor	= FONT_MCOLOR_WHITE;
-			ubFontShadowColor = DEFAULT_SHADOW;
-			usCursor = CURSOR_NORMAL;
-
+			ubMercBoxBackground   = DIALOG_MERC_POPUP_BACKGROUND;
+			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 2, -1, 3, -1);
+			ubFontColor           = FONT_MCOLOR_WHITE;
+			ubFontShadowColor     = DEFAULT_SHADOW;
+			usCursor              = CURSOR_NORMAL;
 			break;
 
 		case MSG_BOX_LAPTOP_DEFAULT:
-			ubMercBoxBackground = LAPTOP_POPUP_BACKGROUND;
-			ubMercBoxBorder			= LAPTOP_POP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/popupbuttons.sti", -1,0,-1,1,-1 );
-			ubFontColor	= FONT_MCOLOR_WHITE;
-			ubFontShadowColor = DEFAULT_SHADOW;
-			usCursor = CURSOR_LAPTOP_SCREEN;
+			ubMercBoxBackground   = LAPTOP_POPUP_BACKGROUND;
+			ubMercBoxBorder       = LAPTOP_POP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = FONT_MCOLOR_WHITE;
+			ubFontShadowColor     = DEFAULT_SHADOW;
+			usCursor              = CURSOR_LAPTOP_SCREEN;
 			break;
 
 		default:
-			ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder			= BASIC_MERC_POPUP_BORDER;
-
-			// Add button images
-			gMsgBox.iButtonImages			= LoadButtonImage( "INTERFACE/msgboxbuttons.sti", -1,0,-1,1,-1 );
-			ubFontColor	= FONT_MCOLOR_WHITE;
-			ubFontShadowColor = DEFAULT_SHADOW;
-			usCursor = CURSOR_NORMAL;
+			ubMercBoxBackground   = BASIC_MERC_POPUP_BACKGROUND;
+			ubMercBoxBorder       = BASIC_MERC_POPUP_BORDER;
+			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxbuttons.sti", -1, 0, -1, 1, -1);
+			ubFontColor           = FONT_MCOLOR_WHITE;
+			ubFontShadowColor     = DEFAULT_SHADOW;
+			usCursor              = CURSOR_NORMAL;
 			break;
 	}
 
-
+	SGPRect	aRect;
 	if (pCenteringRect != NULL)
 	{
-		aRect.iTop = 	pCenteringRect->iTop;
-		aRect.iLeft = 	pCenteringRect->iLeft;
-		aRect.iBottom = 	pCenteringRect->iBottom;
-		aRect.iRight = 	pCenteringRect->iRight;
+		aRect = *pCenteringRect;
 	}
 	else
 	{
@@ -208,45 +189,48 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	}
 
 	// Set some values!
-	gMsgBox.usFlags				= usFlags;
-	gMsgBox.uiExitScreen	= uiExitScreen;
-	gMsgBox.ExitCallback  = ReturnCallback;
-	gMsgBox.fRenderBox		= TRUE;
-	gMsgBox.bHandled			= 0;
+	gMsgBox.usFlags      = usFlags;
+	gMsgBox.uiExitScreen = uiExitScreen;
+	gMsgBox.ExitCallback = ReturnCallback;
+	gMsgBox.fRenderBox   = TRUE;
+	gMsgBox.bHandled     = 0;
 
 	// Init message box
-	gMsgBox.iBoxId = PrepareMercPopupBox( iId, ubMercBoxBackground, ubMercBoxBorder, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight );
+	UINT16 usTextBoxWidth;
+	UINT16 usTextBoxHeight;
+	const INT32 iId = -1;
+	gMsgBox.iBoxId = PrepareMercPopupBox(iId, ubMercBoxBackground, ubMercBoxBorder, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
 
-	if( gMsgBox.iBoxId == -1 )
+	if (gMsgBox.iBoxId == -1)
 	{
-		#ifdef JA2BETAVERSION
-			AssertMsg( 0, "Failed in DoMessageBox().  Probable reason is because the string was too large to fit in max message box size." );
-		#endif
+#ifdef JA2BETAVERSION
+		AssertMsg(0, "Failed in DoMessageBox().  Probable reason is because the string was too large to fit in max message box size.");
+#endif
 		return 0;
 	}
 
 	// Save height,width
-	gMsgBox.usWidth = usTextBoxWidth;
+	gMsgBox.usWidth  = usTextBoxWidth;
 	gMsgBox.usHeight = usTextBoxHeight;
 
 	// Determine position ( centered in rect )
-	gMsgBox.sX = (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - usTextBoxWidth ) / 2 ) + aRect.iLeft );
-	gMsgBox.sY = (INT16)( ( ( ( aRect.iBottom - aRect.iTop ) - usTextBoxHeight ) / 2 ) + aRect.iTop );
+	gMsgBox.sX = ((aRect.iRight  - aRect.iLeft) - usTextBoxWidth)  / 2 + aRect.iLeft;
+	gMsgBox.sY = ((aRect.iBottom - aRect.iTop)  - usTextBoxHeight) / 2 + aRect.iTop;
 
-	if ( guiCurrentScreen == GAME_SCREEN )
+	if (guiCurrentScreen == GAME_SCREEN)
 	{
 		gfStartedFromGameScreen = TRUE;
 	}
 
-	if ( (fInMapMode == TRUE ) )
+	if (fInMapMode)
 	{
 		gfStartedFromMapScreen = TRUE;
-		fMapPanelDirty = TRUE;
+		fMapPanelDirty         = TRUE;
 	}
 
 
 	// Set pending screen
-	SetPendingNewScreen( MSG_BOX_SCREEN);
+	SetPendingNewScreen(MSG_BOX_SCREEN);
 
 	// Init save buffer
 	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
@@ -259,347 +243,135 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	// Create top-level mouse region
 	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, usCursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
 
-	if( gGameSettings.fOptions[ TOPTION_DONT_MOVE_MOUSE ] == FALSE )
+	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
 	{
-		if( usFlags & MSG_BOX_FLAG_OK )
+		UINT32 x = gMsgBox.sX + usTextBoxWidth / 2;
+		UINT32 y = gMsgBox.sY + usTextBoxHeight - 4;
+		if (usFlags == MSG_BOX_FLAG_OK)
 		{
-			SimulateMouseMovement( ( gMsgBox.sX + ( usTextBoxWidth / 2 ) + 27 ), ( gMsgBox.sY + ( usTextBoxHeight - 10 ) ) );
+			x += 27;
+			y -=  6;
 		}
-		else
-		{
-			SimulateMouseMovement( gMsgBox.sX + usTextBoxWidth / 2 , gMsgBox.sY + usTextBoxHeight - 4 );
-		}
+		SimulateMouseMovement(x, y);
 	}
 
 	// findout if cursor locked, if so, store old params and store, restore when done
-	if( IsCursorRestricted() )
+	if (IsCursorRestricted())
 	{
 		fCursorLockedToArea = TRUE;
-		GetRestrictedClipCursor( &MessageBoxRestrictedCursorRegion );
-		FreeMouseCursor( );
+		GetRestrictedClipCursor(&MessageBoxRestrictedCursorRegion);
+		FreeMouseCursor();
 	}
 
+	INT16       x = gMsgBox.sX;
+	const INT16 y = gMsgBox.sY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
+
 	// Create four numbered buttons
-	if ( usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
+	if (usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS)
 	{
 		// This is exclusive of any other buttons... no ok, no cancel, no nothing
 
-		sBlankSpace = usTextBoxWidth - MSGBOX_SMALL_BUTTON_WIDTH * 4 - MSGBOX_SMALL_BUTTON_X_SEP * 3;
-		sButtonX = sBlankSpace / 2;
-		sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
+		const INT16 dx = MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
+		x += (usTextBoxWidth - (MSGBOX_SMALL_BUTTON_WIDTH + dx * 3)) / 2;
 
-		gMsgBox.uiButton[0] = CreateIconAndTextButton( gMsgBox.iButtonImages, L"1", FONT12ARIAL,
-														 ubFontColor, ubFontShadowColor,
-														 ubFontColor, ubFontShadowColor,
-														 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-														 NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData(gMsgBox.uiButton[0], 1);
-		SetButtonCursor(gMsgBox.uiButton[0], usCursor);
-
-		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
-		gMsgBox.uiButton[1] = CreateIconAndTextButton( gMsgBox.iButtonImages, L"2", FONT12ARIAL,
-														 ubFontColor, ubFontShadowColor,
-														 ubFontColor, ubFontShadowColor,
-														 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-														 NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData(gMsgBox.uiButton[1], 2);
-		SetButtonCursor(gMsgBox.uiButton[1], usCursor);
-
-		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
-		gMsgBox.uiButton[2] = CreateIconAndTextButton( gMsgBox.iButtonImages, L"3", FONT12ARIAL,
-														 ubFontColor, ubFontShadowColor,
-														 ubFontColor, ubFontShadowColor,
-														 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-														 NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData(gMsgBox.uiButton[2], 3);
-		SetButtonCursor(gMsgBox.uiButton[2], usCursor);
-
-		sButtonX += MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
-		gMsgBox.uiButton[3] = CreateIconAndTextButton( gMsgBox.iButtonImages, L"4", FONT12ARIAL,
-														 ubFontColor, ubFontShadowColor,
-														 ubFontColor, ubFontShadowColor,
-														 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-														 NumberedMsgBoxCallback );
-		MSYS_SetBtnUserData(gMsgBox.uiButton[3], 4);
-		SetButtonCursor(gMsgBox.uiButton[3], usCursor);
-		ForceButtonUnDirty( gMsgBox.uiButton[3] );
-		ForceButtonUnDirty( gMsgBox.uiButton[2] );
-		ForceButtonUnDirty( gMsgBox.uiButton[1] );
-		ForceButtonUnDirty( gMsgBox.uiButton[0] );
-
+		for (UINT i = 0; i < 4; ++i)
+		{
+			wchar_t text[] = { '1' + i, '\0' };
+			const INT32 btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
+			gMsgBox.uiButton[i] = btn;
+			MSYS_SetBtnUserData(btn, i + 1);
+		}
 	}
 	else
 	{
+		const INT16 dx = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
 
-		// Create text button
-		if ( usFlags & MSG_BOX_FLAG_OK )
+		if (usFlags & MSG_BOX_FLAG_OK)
 		{
-
-
-//			sButtonX = ( usTextBoxWidth - MSGBOX_BUTTON_WIDTH ) / 2;
-			sButtonX = ( usTextBoxWidth - GetMSgBoxButtonWidth( gMsgBox.iButtonImages ) ) / 2;
-
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiOKButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_OK ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 OKMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiOKButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiOKButton );
+			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
+			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 		}
 
-
-
-		// Create text button
-		if ( usFlags & MSG_BOX_FLAG_CANCEL )
+		if (usFlags & MSG_BOX_FLAG_CANCEL)
 		{
-			sButtonX = ( usTextBoxWidth - GetMSgBoxButtonWidth( gMsgBox.iButtonImages ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiOKButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_CANCEL ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 OKMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiOKButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiOKButton );
-
+			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
+			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_YESNO )
+		if (usFlags & MSG_BOX_FLAG_YESNO)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_YES ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_NO ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_CONTINUESTOP )
+		if (usFlags & MSG_BOX_FLAG_CONTINUESTOP)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pUpdatePanelButtons[ 0 ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pUpdatePanelButtons[ 1 ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
+			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_OKCONTRACT )
+		if (usFlags & MSG_BOX_FLAG_OKCONTRACT)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_OK ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 OKMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_REHIRE ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 ContractMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback,      usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx, y, ContractMsgBoxCallback, usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_YESNOCONTRACT )
+		if (usFlags & MSG_BOX_FLAG_YESNOCONTRACT)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 3;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_YES ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_NO ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
-			gMsgBox.uiOKButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_REHIRE ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + 2 * (MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP), gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 ContractMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiOKButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiOKButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
 		}
 
-
-		if ( usFlags & MSG_BOX_FLAG_GENERICCONTRACT )
+		if (usFlags & MSG_BOX_FLAG_GENERICCONTRACT)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 3;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, gzUserDefinedButton1, FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, gzUserDefinedButton2, FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
-			gMsgBox.uiOKButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_REHIRE ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + 2 * (MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP), gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 ContractMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiOKButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiOKButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_GENERIC )
+		if (usFlags & MSG_BOX_FLAG_GENERIC)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, gzUserDefinedButton1, FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, gzUserDefinedButton2, FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_YESNOLIE )
+		if (usFlags & MSG_BOX_FLAG_YESNOLIE)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 3;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_YES ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_NO ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
-
-			gMsgBox.uiOKButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_LIE ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + 2 * (MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP), gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 LieMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiOKButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiOKButton );
-
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback, usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,  usCursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], ubFontColor, ubFontShadowColor, x + dx * 2, y, LieMsgBoxCallback, usCursor);
 		}
 
-		if ( usFlags & MSG_BOX_FLAG_OKSKIP )
+		if (usFlags & MSG_BOX_FLAG_OKSKIP)
 		{
-			sButtonX = ( usTextBoxWidth - ( MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP ) ) / 2;
-			sButtonY = usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
-
-			gMsgBox.uiYESButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_OK ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX, gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 YESMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiYESButton, usCursor);
-
-			ForceButtonUnDirty( gMsgBox.uiYESButton );
-
-			gMsgBox.uiNOButton = CreateIconAndTextButton( gMsgBox.iButtonImages, pMessageStrings[ MSG_SKIP ], FONT12ARIAL,
-															 ubFontColor, ubFontShadowColor,
-															 ubFontColor, ubFontShadowColor,
-															 gMsgBox.sX + sButtonX + (MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP), gMsgBox.sY + sButtonY, MSYS_PRIORITY_HIGHEST,
-															 NOMsgBoxCallback );
-			SetButtonCursor(gMsgBox.uiNOButton, usCursor);
-			ForceButtonUnDirty( gMsgBox.uiNOButton );
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
 		}
-
 	}
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState( 1 );
+	LockPauseState(1);
 	// Pause timers as well....
-	PauseTime( TRUE );
+	PauseTime(TRUE);
 
   // Save mouse restriction region...
-  GetRestrictedClipCursor( &gOldCursorLimitRectangle );
-  FreeMouseCursor( );
+  GetRestrictedClipCursor(&gOldCursorLimitRectangle);
+  FreeMouseCursor();
 
 	gfNewMessageBox = TRUE;
+	gfInMsgBox     = TRUE;
 
-	gfInMsgBox			= TRUE;
-
-	return( iId );
+	return iId;
 }
 
 
@@ -664,460 +436,320 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 
 static UINT32 ExitMsgBox(INT8 ubExitCode)
 {
-	SGPPoint pPosition;
-
 	// Delete popup!
-	RemoveMercPopupBoxFromIndex( gMsgBox.iBoxId );
+	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
 	gMsgBox.iBoxId = -1;
 
 	//Delete buttons!
-	if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
+	switch (gMsgBox.usFlags)
 	{
-		RemoveButton( gMsgBox.uiButton[0] );
-		RemoveButton( gMsgBox.uiButton[1] );
-		RemoveButton( gMsgBox.uiButton[2] );
-		RemoveButton( gMsgBox.uiButton[3] );
-	}
-	else
-	{
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OK )
-		{
-			RemoveButton( gMsgBox.uiOKButton );
-		}
+		case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
+			RemoveButton(gMsgBox.uiButton[0]);
+			RemoveButton(gMsgBox.uiButton[1]);
+			RemoveButton(gMsgBox.uiButton[2]);
+			RemoveButton(gMsgBox.uiButton[3]);
+			break;
 
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-		}
+		case MSG_BOX_FLAG_OK:
+			RemoveButton(gMsgBox.uiOKButton);
+			break;
 
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OKCONTRACT )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-		}
+		case MSG_BOX_FLAG_YESNO:
+		case MSG_BOX_FLAG_OKCONTRACT:
+		case MSG_BOX_FLAG_GENERIC:
+		case MSG_BOX_FLAG_CONTINUESTOP:
+		case MSG_BOX_FLAG_OKSKIP:
+			RemoveButton(gMsgBox.uiYESButton);
+			RemoveButton(gMsgBox.uiNOButton);
+			break;
 
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNOCONTRACT )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-			RemoveButton( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_GENERICCONTRACT )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-			RemoveButton( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_GENERIC )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNOLIE )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-			RemoveButton( gMsgBox.uiOKButton );
-		}
-
-		if( gMsgBox.usFlags & MSG_BOX_FLAG_CONTINUESTOP )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OKSKIP )
-		{
-			RemoveButton( gMsgBox.uiYESButton );
-			RemoveButton( gMsgBox.uiNOButton );
-		}
-
+		case MSG_BOX_FLAG_YESNOCONTRACT:
+		case MSG_BOX_FLAG_GENERICCONTRACT:
+		case MSG_BOX_FLAG_YESNOLIE:
+			RemoveButton(gMsgBox.uiYESButton);
+			RemoveButton(gMsgBox.uiNOButton);
+			RemoveButton(gMsgBox.uiOKButton);
+			break;
 	}
 
 	// Delete button images
-	UnloadButtonImage( gMsgBox.iButtonImages );
+	UnloadButtonImage(gMsgBox.iButtonImages);
 
 	// Unpause game....
 	UnLockPauseState();
 	UnPauseGame();
 	// UnPause timers as well....
-	PauseTime( FALSE );
+	PauseTime(FALSE);
 
   // Restore mouse restriction region...
-  RestrictMouseCursor( &gOldCursorLimitRectangle );
-
+  RestrictMouseCursor(&gOldCursorLimitRectangle);
 
 	gfInMsgBox = FALSE;
 
 	// Call done callback!
-	if ( gMsgBox.ExitCallback != NULL )
-	{
-		(*(gMsgBox.ExitCallback))( ubExitCode );
-	}
+	if (gMsgBox.ExitCallback != NULL) gMsgBox.ExitCallback(ubExitCode);
 
-
-	//if ur in a non gamescreen and DONT want the msg box to use the save buffer, unset gfDontOverRideSaveBuffer in ur callback
-	if( ( ( gMsgBox.uiExitScreen != GAME_SCREEN ) || ( fRestoreBackgroundForMessageBox == TRUE ) ) && gfDontOverRideSaveBuffer )
+	//if you are in a non gamescreen and DONT want the msg box to use the save buffer, unset gfDontOverRideSaveBuffer in your callback
+	if ((gMsgBox.uiExitScreen != GAME_SCREEN || fRestoreBackgroundForMessageBox) && gfDontOverRideSaveBuffer)
 	{
 		// restore what we have under here...
 		BltVideoSurface(FRAME_BUFFER, gMsgBox.uiSaveBuffer, gMsgBox.sX, gMsgBox.sY, NULL);
-		InvalidateRegion( gMsgBox.sX, gMsgBox.sY, (INT16)( gMsgBox.sX + gMsgBox.usWidth ), (INT16)( gMsgBox.sY + gMsgBox.usHeight ) );
+		InvalidateRegion(gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + gMsgBox.usWidth, gMsgBox.sY + gMsgBox.usHeight);
 	}
 
 	fRestoreBackgroundForMessageBox = FALSE;
-	gfDontOverRideSaveBuffer = TRUE;
+	gfDontOverRideSaveBuffer        = TRUE;
 
-	if( fCursorLockedToArea == TRUE )
+	if (fCursorLockedToArea)
 	{
-		GetMousePos( &pPosition );
+		SGPPoint pPosition;
+		GetMousePos(&pPosition);
 
-		if( ( pPosition.iX > MessageBoxRestrictedCursorRegion.iRight ) || ( pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft ) && ( pPosition.iY < MessageBoxRestrictedCursorRegion.iTop ) && ( pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom ) )
+		if (pPosition.iX > MessageBoxRestrictedCursorRegion.iRight ||
+				pPosition.iX > MessageBoxRestrictedCursorRegion.iLeft && pPosition.iY < MessageBoxRestrictedCursorRegion.iTop && pPosition.iY > MessageBoxRestrictedCursorRegion.iBottom)
 		{
-			SimulateMouseMovement( pOldMousePosition.iX , pOldMousePosition.iY );
+			SimulateMouseMovement(pOldMousePosition.iX, pOldMousePosition.iY);
 		}
 
 		fCursorLockedToArea = FALSE;
-		RestrictMouseCursor( &MessageBoxRestrictedCursorRegion );
+		RestrictMouseCursor(&MessageBoxRestrictedCursorRegion);
 	}
 
 	// Remove region
-	MSYS_RemoveRegion(&(gMsgBox.BackRegion) );
+	MSYS_RemoveRegion(&gMsgBox.BackRegion);
 
 	// Remove save buffer!
-	DeleteVideoSurfaceFromIndex( gMsgBox.uiSaveBuffer );
+	DeleteVideoSurfaceFromIndex(gMsgBox.uiSaveBuffer);
 
 
-	switch( gMsgBox.uiExitScreen )
+	switch (gMsgBox.uiExitScreen)
 	{
 		case GAME_SCREEN:
-
-      if ( InOverheadMap( ) )
-      {
-        gfOverheadMapDirty = TRUE;
-      }
-      else
-      {
-			  SetRenderFlags( RENDER_FLAG_FULL );
-      }
+			if (InOverheadMap())
+			{
+				gfOverheadMapDirty = TRUE;
+			}
+			else
+			{
+				SetRenderFlags(RENDER_FLAG_FULL);
+			}
 			break;
+
 		case MAP_SCREEN:
 			fMapPanelDirty = TRUE;
 			break;
 	}
 
-  if ( gfFadeInitialized )
-  {
-    SetPendingNewScreen(FADE_SCREEN);
-    return( FADE_SCREEN );
-  }
+	if (gfFadeInitialized)
+	{
+		SetPendingNewScreen(FADE_SCREEN);
+		return FADE_SCREEN;
+	}
 
-	return( gMsgBox.uiExitScreen );
-}
-
-UINT32	MessageBoxScreenInit( )
-{
-	return( TRUE );
+	return gMsgBox.uiExitScreen;
 }
 
 
-UINT32	MessageBoxScreenHandle( )
+UINT32 MessageBoxScreenInit(void)
 {
-	InputAtom  InputEvent;
+	return TRUE;
+}
 
-	if ( gfNewMessageBox )
+
+UINT32	MessageBoxScreenHandle(void)
+{
+	if (gfNewMessageBox)
 	{
 		// If in game screen....
-		if ( ( gfStartedFromGameScreen )||( gfStartedFromMapScreen ) )
+		if (gfStartedFromGameScreen || gfStartedFromMapScreen)
 		{
-			if( gfStartedFromGameScreen )
+			if (gfStartedFromGameScreen)
 			{
-				HandleTacticalUILoseCursorFromOtherScreen( );
+				HandleTacticalUILoseCursorFromOtherScreen();
 			}
 			else
 			{
-				HandleMAPUILoseCursorFromOtherScreen( );
+				HandleMAPUILoseCursorFromOtherScreen();
 			}
 
 			gfStartedFromGameScreen = FALSE;
-			gfStartedFromMapScreen = FALSE;
+			gfStartedFromMapScreen  = FALSE;
 		}
 
 		gfNewMessageBox = FALSE;
 
-		return( MSG_BOX_SCREEN );
+		return MSG_BOX_SCREEN;
 	}
 
-
-
-	UnmarkButtonsDirty( );
+	UnmarkButtonsDirty();
 
 	// Render the box!
-	if ( gMsgBox.fRenderBox )
+	if (gMsgBox.fRenderBox)
 	{
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
+		switch (gMsgBox.usFlags)
 		{
-			MarkAButtonDirty( gMsgBox.uiButton[0] );
-			MarkAButtonDirty( gMsgBox.uiButton[1] );
-			MarkAButtonDirty( gMsgBox.uiButton[2] );
-			MarkAButtonDirty( gMsgBox.uiButton[3] );
+			case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
+				MarkAButtonDirty(gMsgBox.uiButton[0]);
+				MarkAButtonDirty(gMsgBox.uiButton[1]);
+				MarkAButtonDirty(gMsgBox.uiButton[2]);
+				MarkAButtonDirty(gMsgBox.uiButton[3]);
+				break;
+
+			case MSG_BOX_FLAG_OK:
+			case MSG_BOX_FLAG_CANCEL:
+				MarkAButtonDirty(gMsgBox.uiOKButton);
+				break;
+
+			case MSG_BOX_FLAG_YESNO:
+			case MSG_BOX_FLAG_OKCONTRACT:
+			case MSG_BOX_FLAG_GENERIC:
+			case MSG_BOX_FLAG_CONTINUESTOP:
+			case MSG_BOX_FLAG_OKSKIP:
+				MarkAButtonDirty(gMsgBox.uiYESButton);
+				MarkAButtonDirty(gMsgBox.uiNOButton);
+				break;
+
+			case MSG_BOX_FLAG_YESNOCONTRACT:
+			case MSG_BOX_FLAG_GENERICCONTRACT:
+			case MSG_BOX_FLAG_YESNOLIE:
+				MarkAButtonDirty(gMsgBox.uiYESButton);
+				MarkAButtonDirty(gMsgBox.uiNOButton);
+				MarkAButtonDirty(gMsgBox.uiOKButton);
+				break;
 		}
 
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OK )
-		{
-			MarkAButtonDirty( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_CANCEL )
-		{
-			MarkAButtonDirty( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OKCONTRACT )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNOCONTRACT )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-			MarkAButtonDirty( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_GENERICCONTRACT )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-			MarkAButtonDirty( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_GENERIC )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-		}
-
-		if( gMsgBox.usFlags & MSG_BOX_FLAG_CONTINUESTOP )
-		{
-			// Exit messagebox
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNOLIE )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-			MarkAButtonDirty( gMsgBox.uiOKButton );
-		}
-
-		if ( gMsgBox.usFlags & MSG_BOX_FLAG_OKSKIP )
-		{
-			MarkAButtonDirty( gMsgBox.uiYESButton );
-			MarkAButtonDirty( gMsgBox.uiNOButton );
-		}
-
-
-		RenderMercPopUpBoxFromIndex( gMsgBox.iBoxId, gMsgBox.sX, gMsgBox.sY,  FRAME_BUFFER );
+		RenderMercPopUpBoxFromIndex(gMsgBox.iBoxId, gMsgBox.sX, gMsgBox.sY, FRAME_BUFFER);
 		//gMsgBox.fRenderBox = FALSE;
 		// ATE: Render each frame...
 	}
 
-	// Render buttons
-	RenderButtons( );
-
-	EndFrameBufferRender( );
+	RenderButtons();
+	EndFrameBufferRender();
 
 	// carter, need key shortcuts for clearing up message boxes
 	// Check for esc
-	while (DequeueEvent(&InputEvent) == TRUE)
-  {
-      if( InputEvent.usEvent == KEY_UP )
-			{
-				if (InputEvent.usParam == SDLK_ESCAPE || InputEvent.usParam == 'n')
-				{
-          if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
-          {
-					  // Exit messagebox
-					  gMsgBox.bHandled = MSG_BOX_RETURN_NO;
-          }
-				}
-
-				if (InputEvent.usParam == SDLK_RETURN)
-				{
-					if ( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = MSG_BOX_RETURN_YES;
-					}
-					else if( gMsgBox.usFlags & MSG_BOX_FLAG_OK )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = MSG_BOX_RETURN_OK;
-					}
-					else if( gMsgBox.usFlags & MSG_BOX_FLAG_CONTINUESTOP )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = MSG_BOX_RETURN_OK;
-					}
-				}
-				if( InputEvent.usParam == 'o' )
-				{
-					if( gMsgBox.usFlags & MSG_BOX_FLAG_OK )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = MSG_BOX_RETURN_OK;
-					}
-				}
-				if( InputEvent.usParam == 'y' )
-				{
-					if( gMsgBox.usFlags & MSG_BOX_FLAG_YESNO )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = MSG_BOX_RETURN_YES;
-					}
-				}
-				if( InputEvent.usParam == '1' )
-				{
-					if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = 1;
-					}
-				}
-				if( InputEvent.usParam == '2' )
-				{
-					if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = 1;
-					}
-				}
-				if( InputEvent.usParam == '3' )
-				{
-					if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = 1;
-					}
-				}
-				if( InputEvent.usParam == '4' )
-				{
-					if ( gMsgBox.usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS )
-					{
-						// Exit messagebox
-						gMsgBox.bHandled = 1;
-					}
-				}
-
-			}
-	}
-
-  if ( gMsgBox.bHandled )
+	InputAtom InputEvent;
+	while (DequeueEvent(&InputEvent))
 	{
-		SetRenderFlags( RENDER_FLAG_FULL );
-		return( ExitMsgBox( gMsgBox.bHandled ) );
+		if (InputEvent.usEvent != KEY_UP) continue;
+
+		switch (gMsgBox.usFlags)
+		{
+			case MSG_BOX_FLAG_YESNO:
+				switch (InputEvent.usParam)
+				{
+					case 'n':
+					case SDLK_ESCAPE: gMsgBox.bHandled = MSG_BOX_RETURN_NO;  break;
+					case 'y':
+					case SDLK_RETURN: gMsgBox.bHandled = MSG_BOX_RETURN_YES; break;
+				}
+				break;
+
+			case MSG_BOX_FLAG_OK:
+				switch (InputEvent.usParam)
+				{
+					case 'o':
+					case SDLK_RETURN: gMsgBox.bHandled = MSG_BOX_RETURN_OK; break;
+				}
+				break;
+
+			case MSG_BOX_FLAG_CONTINUESTOP:
+				switch (InputEvent.usParam)
+				{
+					case SDLK_RETURN: gMsgBox.bHandled = MSG_BOX_RETURN_OK; break;
+				}
+				break;
+
+			case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
+				switch (InputEvent.usParam)
+				{
+					case '1': gMsgBox.bHandled = 1; break;
+					case '2': gMsgBox.bHandled = 2; break;
+					case '3': gMsgBox.bHandled = 3; break;
+					case '4': gMsgBox.bHandled = 4; break;
+				}
+				break;
+		}
 	}
 
-	return( MSG_BOX_SCREEN );
+  if (gMsgBox.bHandled)
+	{
+		SetRenderFlags(RENDER_FLAG_FULL);
+		return ExitMsgBox(gMsgBox.bHandled);
+	}
+
+	return MSG_BOX_SCREEN;
 }
 
-UINT32	MessageBoxScreenShutdown(  )
+
+UINT32 MessageBoxScreenShutdown(void)
 {
-	return( FALSE );
+	return FALSE;
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect* pCenteringRect);
+static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
 
 
 // a basic box that don't care what screen we came from
-void DoScreenIndependantMessageBox(const wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
+	const SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
 }
 
 
 // a basic box that don't care what screen we came from
 static void DoUpperScreenIndependantMessageBox(wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
-	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
+	const SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
+	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
 }
 
 // a basic box that don't care what screen we came from
-void DoLowerScreenIndependantMessageBox( wchar_t *zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoLowerScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	SGPRect CenteringRect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoScreenIndependantMessageBoxWithRect( zString, usFlags, ReturnCallback, &CenteringRect );
+	const SGPRect CenteringRect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect* pCenteringRect)
+static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
-
 	/// which screen are we in?
 
 	// Map Screen (excluding AI Viewer)
 #ifdef JA2BETAVERSION
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( guiCurrentScreen != AIVIEWER_SCREEN ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && guiCurrentScreen != AIVIEWER_SCREEN)
 #else
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 #endif
 	{
-
 		// auto resolve is a special case
-		if( guiCurrentScreen == AUTORESOLVE_SCREEN )
+		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 		{
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zString, AUTORESOLVE_SCREEN, usFlags, ReturnCallback, pCenteringRect );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zString, AUTORESOLVE_SCREEN, usFlags, ReturnCallback, pCenteringRect);
 		}
 		else
 		{
 			// set up for mapscreen
-			DoMapMessageBoxWithRect( MSG_BOX_BASIC_STYLE, zString, MAP_SCREEN, usFlags, ReturnCallback, pCenteringRect );
+			DoMapMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, MAP_SCREEN, usFlags, ReturnCallback, pCenteringRect);
 		}
 	}
-
-	//Laptop
-	else if( guiCurrentScreen == LAPTOP_SCREEN )
+	else
 	{
-		// set up for laptop
-		DoLapTopSystemMessageBoxWithRect( MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN, usFlags, ReturnCallback, pCenteringRect );
-	}
-
-	//Save Load Screen
-	else if( guiCurrentScreen == SAVE_LOAD_SCREEN )
-	{
-		DoSaveLoadMessageBoxWithRect( MSG_BOX_BASIC_STYLE, zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, pCenteringRect );
-	}
-
-	//Options Screen
-	else if( guiCurrentScreen == OPTIONS_SCREEN )
-	{
-		DoOptionsMessageBoxWithRect( MSG_BOX_BASIC_STYLE, zString, OPTIONS_SCREEN, usFlags, ReturnCallback, pCenteringRect );
-	}
-
-	// Tactical
-	else if( guiCurrentScreen == GAME_SCREEN )
-	{
-		DoMessageBox(  MSG_BOX_BASIC_STYLE, zString,  guiCurrentScreen, usFlags,  ReturnCallback,  pCenteringRect );
+		switch (guiCurrentScreen)
+		{
+			case LAPTOP_SCREEN:    DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN,    usFlags, ReturnCallback, pCenteringRect); break;
+			case SAVE_LOAD_SCREEN: DoSaveLoadMessageBoxWithRect(    MSG_BOX_BASIC_STYLE,    zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, pCenteringRect); break;
+			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(     MSG_BOX_BASIC_STYLE,    zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, pCenteringRect); break;
+			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, pCenteringRect); break;
+		}
 	}
 }
 
 
 static UINT16 GetMSgBoxButtonWidth(INT32 iButtonImage)
 {
-	return( GetWidthOfButtonPic( (UINT16)iButtonImage, ButtonPictures[iButtonImage].OnNormal ) );
+	return GetWidthOfButtonPic(iButtonImage, ButtonPictures[iButtonImage].OnNormal);
 }

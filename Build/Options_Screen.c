@@ -150,7 +150,7 @@ BOOLEAN		gfExitOptionsAfterMessageBox = FALSE;
 UINT32		guiSoundFxSliderMoving = 0xffffffff;
 UINT32		guiSpeechSliderMoving = 0xffffffff;
 
-INT32			giOptionsMessageBox = -1;					// Options pop up messages index value
+static INT32 giOptionsMessageBox = -1; // Options pop up messages index value
 
 INT8			gbHighLightedOptionText = -1;
 
@@ -877,7 +877,7 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect *pCenteringRect )
+BOOLEAN DoOptionsMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
@@ -886,7 +886,7 @@ BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t *zString, UINT
 	giOptionsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 
 	// send back return state
-	return( ( giOptionsMessageBox != -1 ) );
+	return giOptionsMessageBox != -1;
 }
 
 

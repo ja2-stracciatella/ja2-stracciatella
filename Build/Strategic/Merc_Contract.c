@@ -46,9 +46,6 @@ extern BOOLEAN fPausedTimeDuringQuote;
 UINT8 ubQuitType = 0;
 BOOLEAN gfFirstMercSayQuote  = FALSE;
 
-extern CHAR16		gzUserDefinedButton1[ 128 ];
-extern CHAR16		gzUserDefinedButton2[ 128 ];
-
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
 
