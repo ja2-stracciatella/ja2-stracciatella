@@ -321,7 +321,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 		if (usFlags & MSG_BOX_FLAG_YESNOCONTRACT)
 		{
-			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
@@ -329,7 +329,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 		if (usFlags & MSG_BOX_FLAG_GENERICCONTRACT)
 		{
-			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
 			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
@@ -344,7 +344,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 		if (usFlags & MSG_BOX_FLAG_YESNOLIE)
 		{
-			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 3;
+			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,  usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], ubFontColor, ubFontShadowColor, x + dx * 2, y, LieMsgBoxCallback, usCursor);
