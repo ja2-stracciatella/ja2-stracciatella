@@ -266,96 +266,85 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	INT16       x = gMsgBox.sX;
 	const INT16 y = gMsgBox.sY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
 
-	// Create four numbered buttons
-	if (usFlags & MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS)
+	const INT16 dx = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
+	switch (usFlags)
 	{
-		// This is exclusive of any other buttons... no ok, no cancel, no nothing
-
-		const INT16 dx = MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
-		x += (usTextBoxWidth - (MSGBOX_SMALL_BUTTON_WIDTH + dx * 3)) / 2;
-
-		for (UINT i = 0; i < 4; ++i)
+		case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
 		{
-			wchar_t text[] = { '1' + i, '\0' };
-			const INT32 btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
-			gMsgBox.uiButton[i] = btn;
-			MSYS_SetBtnUserData(btn, i + 1);
+			// This is exclusive of any other buttons... no ok, no cancel, no nothing
+			const INT16 dx = MSGBOX_SMALL_BUTTON_WIDTH + MSGBOX_SMALL_BUTTON_X_SEP;
+			x += (usTextBoxWidth - (MSGBOX_SMALL_BUTTON_WIDTH + dx * 3)) / 2;
+
+			for (UINT i = 0; i < 4; ++i)
+			{
+				wchar_t text[] = { '1' + i, '\0' };
+				const INT32 btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
+				gMsgBox.uiButton[i] = btn;
+				MSYS_SetBtnUserData(btn, i + 1);
+			}
+			break;
 		}
-	}
-	else
-	{
-		const INT16 dx = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
 
-		if (usFlags & MSG_BOX_FLAG_OK)
-		{
+		case MSG_BOX_FLAG_OK:
 			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_CANCEL)
-		{
+		case MSG_BOX_FLAG_CANCEL:
 			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_YESNO)
-		{
+		case MSG_BOX_FLAG_YESNO:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_CONTINUESTOP)
-		{
+		case MSG_BOX_FLAG_CONTINUESTOP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_OKCONTRACT)
-		{
+		case MSG_BOX_FLAG_OKCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback,      usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx, y, ContractMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_YESNOCONTRACT)
-		{
+		case MSG_BOX_FLAG_YESNOCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_GENERICCONTRACT)
-		{
+		case MSG_BOX_FLAG_GENERICCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
 			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_GENERIC)
-		{
+		case MSG_BOX_FLAG_GENERIC:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_YESNOLIE)
-		{
+		case MSG_BOX_FLAG_YESNOLIE:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,  usCursor);
 			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], ubFontColor, ubFontShadowColor, x + dx * 2, y, LieMsgBoxCallback, usCursor);
-		}
+			break;
 
-		if (usFlags & MSG_BOX_FLAG_OKSKIP)
-		{
+		case MSG_BOX_FLAG_OKSKIP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
-		}
+			break;
 	}
 
 	InterruptTime();
