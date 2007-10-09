@@ -13,6 +13,9 @@
 #include "VSurface.h"
 
 
+#define WHEEL_MOVE_FRACTION 32
+
+
 #define		DEFUALT_SLIDER_SIZE					7
 
 
@@ -482,6 +485,16 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 }
 
 
+static void SetSliderPos(SLIDER* s, INT32 pos)
+{
+	if (pos == s->usCurrentIncrement) return;
+	s->usCurrentIncrement = pos;
+	CalculateNewSliderBoxPosition(s);
+	if (s->uiFlags & SLIDER_VERTICAL) pos = s->usNumberOfIncrements - pos;
+	s->SliderChangeCallback(pos);
+}
+
+
 static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32	uiSelectedSlider;
@@ -540,6 +553,24 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			CalculateNewSliderIncrement( uiSelectedSlider, pRegion->RelativeXPos );
 		}
 	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		const UINT32 id = MSYS_GetRegionUserData(pRegion, 1);
+		SLIDER* const s = GetSliderFromID(id);
+		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
+		INT32 pos = s->usCurrentIncrement - step;
+		pos = max(0, pos);
+		SetSliderPos(s, pos);
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		const UINT32 id = MSYS_GetRegionUserData(pRegion, 1);
+		SLIDER* const s = GetSliderFromID(id);
+		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
+		INT32 pos = s->usCurrentIncrement + step;
+		pos = min(pos, s->usNumberOfIncrements);
+		SetSliderPos(s, pos);
+	}
 }
 
 
@@ -579,27 +610,7 @@ static void CalculateNewSliderIncrement(UINT32 uiSliderID, UINT16 usPos)
 		dNewIncrement = ( usPos / (FLOAT)pSlider->usWidth ) * pSlider->usNumberOfIncrements;
 	}
 
-
-	pSlider->usCurrentIncrement = (UINT16)( dNewIncrement + .5 );
-
-	CalculateNewSliderBoxPosition( pSlider );
-
-
-	//if the the new value is different
-	if( usOldIncrement != pSlider->usCurrentIncrement )
-	{
-		if( pSlider->uiFlags & SLIDER_VERTICAL )
-		{
-			//Call the call back for the slider
-			(*(pSlider->SliderChangeCallback) )( pSlider->usNumberOfIncrements - pSlider->usCurrentIncrement );
-		}
-		else
-		{
-			//Call the call back for the slider
-			(*(pSlider->SliderChangeCallback) )( pSlider->usCurrentIncrement );
-		}
-	}
-
+	SetSliderPos(pSlider, dNewIncrement + .5);
 }
 
 

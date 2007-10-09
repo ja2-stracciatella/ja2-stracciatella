@@ -52,6 +52,11 @@
 #define MAP_BOTTOM_X 0
 #define MAP_BOTTOM_Y 359
 
+#define MESSAGE_BOX_X  17
+#define MESSAGE_BOX_Y 377
+#define MESSAGE_BOX_W 301
+#define MESSAGE_BOX_H  86
+
 #define MESSAGE_SCROLL_AREA_START_X	330
 #define MESSAGE_SCROLL_AREA_END_X		344
 #define MESSAGE_SCROLL_AREA_WIDTH		( MESSAGE_SCROLL_AREA_END_X - MESSAGE_SCROLL_AREA_START_X + 1 )
@@ -722,6 +727,22 @@ static void DeleteMessageSliderBar(void)
 }
 
 
+static void MapScreenMessageBoxCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		MapScreenMsgScrollUp(3);
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		MapScreenMsgScrollDown(3);
+	}
+}
+
+
+static MOUSE_REGION MapMessageBoxRegion;
+
+
 static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
@@ -736,12 +757,18 @@ static void CreateMapScreenBottomMessageScrollBarRegion(void)
 								MESSAGE_SCROLL_AREA_END_X, MESSAGE_SCROLL_AREA_END_Y,
 								MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageScrollBarCallBack );
 	#endif
+	const UINT16 x = MESSAGE_BOX_X;
+	const UINT16 y = MESSAGE_BOX_Y;
+	const UINT16 w = MESSAGE_BOX_W;
+	const UINT16 h = MESSAGE_BOX_H;
+	MSYS_DefineRegion(&MapMessageBoxRegion, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageBoxCallBack);
 }
 
 
 static void DeleteMapScreenBottomMessageScrollRegion(void)
 {
   MSYS_RemoveRegion( &gMapMessageScrollBarRegion );
+  MSYS_RemoveRegion(&MapMessageBoxRegion);
 }
 
 
@@ -795,6 +822,14 @@ static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReas
 				ChangeCurrentMapscreenMessageIndex( ubDesiredMessageIndex );
 			}
 		}
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		MapScreenMsgScrollUp(3);
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		MapScreenMsgScrollDown(3);
 	}
 }
 

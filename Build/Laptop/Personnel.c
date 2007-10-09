@@ -32,6 +32,12 @@
 #include "Stubs.h" // XXX
 
 
+#define INVENTORY_BOX_X 399
+#define INVENTORY_BOX_Y 205
+#define INVENTORY_BOX_W 171
+#define INVENTORY_BOX_H 232
+
+
 #define IMAGE_BOX_X              395
 #define IMAGE_BOX_Y              LAPTOP_SCREEN_UL_Y + 24
 #define IMAGE_NAME_WIDTH         106
@@ -1643,20 +1649,38 @@ static void RenderInventoryForCharacter(INT32 iId)
 static void FindPositionOfPersInvSlider(void);
 
 
+static void InventoryUp(void)
+{
+	if (uiCurrentInventoryIndex == 0) return;
+	uiCurrentInventoryIndex--;
+	fReDrawScreenFlag = TRUE;
+	FindPositionOfPersInvSlider();
+}
+
+
+static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void);
+
+
+static void InventoryDown(void)
+{
+	if ((INT32)uiCurrentInventoryIndex >= (INT32)(GetNumberOfInventoryItemsOnCurrentMerc() - NUMBER_OF_INVENTORY_PERSONNEL))
+	{
+		return;
+	}
+	uiCurrentInventoryIndex++;
+	fReDrawScreenFlag = TRUE;
+	FindPositionOfPersInvSlider();
+}
+
+
 static void InventoryUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (uiCurrentInventoryIndex == 0) return;
-		uiCurrentInventoryIndex--;
-		fReDrawScreenFlag = TRUE;
-		FindPositionOfPersInvSlider();
+		InventoryUp();
 	}
 }
-
-
-static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void);
 
 
 static void InventoryDownButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -1664,13 +1688,7 @@ static void InventoryDownButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if ((INT32)uiCurrentInventoryIndex >= (INT32)(GetNumberOfInventoryItemsOnCurrentMerc() - NUMBER_OF_INVENTORY_PERSONNEL))
-		{
-			return;
-		}
-		uiCurrentInventoryIndex++;
-		fReDrawScreenFlag = TRUE;
-		FindPositionOfPersInvSlider();
+		InventoryDown();
 	}
 }
 
@@ -1725,6 +1743,22 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 }
 
 
+static void HandleInventoryCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		InventoryUp();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		InventoryDown();
+	}
+}
+
+
+static MOUSE_REGION InventoryRegion;
+
+
 static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
@@ -1744,6 +1778,12 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
+		const UINT16 x = INVENTORY_BOX_X;
+		const UINT16 y = INVENTORY_BOX_Y;
+		const UINT16 w = INVENTORY_BOX_W;
+		const UINT16 h = INVENTORY_BOX_H;
+		MSYS_DefineRegion(&InventoryRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleInventoryCallBack);
+
 		fCreated = TRUE;
 	}
 	else if (fCreated && gubPersonnelInfoState != PERSONNEL_INV_BTN)
@@ -1753,6 +1793,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 		RemoveButton(giPersonnelInventoryButtons[1]);
 
 		MSYS_RemoveRegion(&gMouseScrollPersonnelINV);
+		MSYS_RemoveRegion(&InventoryRegion);
 
 		fCreated = FALSE;
 	}
@@ -3503,6 +3544,14 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// force update
 			fReDrawScreenFlag = TRUE;
 		}
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		InventoryUp();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		InventoryDown();
 	}
 }
 
