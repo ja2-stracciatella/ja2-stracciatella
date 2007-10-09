@@ -1,3 +1,4 @@
+(r1580) Add support for the mouse wheel.
 (r1545) Fix a vanilla glitch: The colour used for the APs in the single merc panel can differ from the colour used in the team panel.
 (r1535) Fix a vanilla bug: After losing the central SAM, the queen sends troops to recapture the SAM to the wrong sector.
 (r1523) Fix a mixup in r1487: The end turn button in the single merc panel was linked to the mute button callback.

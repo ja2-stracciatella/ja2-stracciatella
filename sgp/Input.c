@@ -125,6 +125,9 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 			gfRightButtonState = TRUE;
 			QueueMouseEvent(RIGHT_BUTTON_DOWN);
 			break;
+
+		case SDL_BUTTON_WHEELUP:   QueueMouseEvent(MOUSE_WHEEL_UP);   break;
+		case SDL_BUTTON_WHEELDOWN: QueueMouseEvent(MOUSE_WHEEL_DOWN); break;
 	}
 }
 

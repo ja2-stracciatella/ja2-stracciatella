@@ -220,7 +220,7 @@ void GameLoop(void)
 	MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y);
 	MusicPoll();
 
-  while (DequeueSpecificEvent(&InputEvent, LEFT_BUTTON_REPEAT|RIGHT_BUTTON_REPEAT|LEFT_BUTTON_DOWN|LEFT_BUTTON_UP|RIGHT_BUTTON_DOWN|RIGHT_BUTTON_UP ) == TRUE )
+  while (DequeueSpecificEvent(&InputEvent, INPUT_MOUSE))
   {
 		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
 	}

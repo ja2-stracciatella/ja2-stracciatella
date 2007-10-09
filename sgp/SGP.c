@@ -47,12 +47,6 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 
 	switch(Message)
   {
-		case WM_MOUSEWHEEL:
-			{
-				QueueEvent(MOUSE_WHEEL, wParam);
-				break;
-			}
-
     case WM_ACTIVATEAPP:
       switch(wParam)
       {

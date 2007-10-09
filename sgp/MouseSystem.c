@@ -221,6 +221,9 @@ update_buttons:
 		case LEFT_BUTTON_REPEAT:  action |= MSYS_DO_LBUTTON_REPEAT; break;
 		case RIGHT_BUTTON_REPEAT: action |= MSYS_DO_RBUTTON_REPEAT; break;
 
+		case MOUSE_WHEEL_UP:   action |= MSYS_DO_WHEEL_UP;   break;
+		case MOUSE_WHEEL_DOWN: action |= MSYS_DO_WHEEL_DOWN; break;
+
 		case MOUSE_POS:
 			if (gfRefreshUpdate)
 			{
@@ -622,6 +625,9 @@ static void MSYS_UpdateMouseRegion(void)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_REPEAT;
 					}
+
+					if (MSYS_Action & MSYS_DO_WHEEL_UP)   ButtonReason |= MSYS_CALLBACK_REASON_WHEEL_UP;
+					if (MSYS_Action & MSYS_DO_WHEEL_DOWN) ButtonReason |= MSYS_CALLBACK_REASON_WHEEL_DOWN;
 
 					if (ButtonReason != MSYS_CALLBACK_REASON_NONE)
 					{
