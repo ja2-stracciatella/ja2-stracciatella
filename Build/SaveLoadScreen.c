@@ -1874,12 +1874,11 @@ static void DisplayOnScreenNumber(BOOLEAN display)
 
 		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, usPosX, usPosY + SLG_DATE_OFFSET_Y, 10, 10);
 
-		wchar_t zTempString[16];
-		const INT8 bNum = (bLoopNum == 10 ? 0 : bLoopNum);
-		swprintf(zTempString, lengthof(zTempString), L"%2d", bNum);
-
 		if (display)
 		{
+			const INT8 bNum = (bLoopNum == 10 ? 0 : bLoopNum);
+			wchar_t zTempString[16];
+			swprintf(zTempString, lengthof(zTempString), L"%2d", bNum);
 			DrawTextToScreen(zTempString, usPosX, usPosY + SLG_DATE_OFFSET_Y, 0, SAVE_LOAD_NUMBER_FONT, SAVE_LOAD_NUMBER_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 
