@@ -790,67 +790,33 @@ static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BOOLEAN fPlaySound)
 {
-	static UINT32	uiOptionToggleSound = NO_SAMPLE;
-//	static	BOOLEAN	fCheckBoxDrawnDownLastTime = FALSE;
+	gGameSettings.fOptions[ubButton] = fState;
 
-	if( fState )
+	GUI_BUTTON* const b = ButtonList[guiOptionsToggles[ubButton]];
+	b->uiFlags &= ~BUTTON_CLICKED_ON;
+	b->uiFlags |= (fState ? BUTTON_CLICKED_ON : 0);
+
+	if (fDown) DrawCheckBoxButtonOnOff(guiOptionsToggles[ubButton], fState);
+
+	/* Check if the user is unselecting either the spech or subtitles toggle.
+	 * Make sure that at least one of the toggles is still enabled. */
+	if (!fState &&
+			(ubButton == TOPTION_SPEECH || ubButton == TOPTION_SUBTITLES) &&
+			!(ButtonList[guiOptionsToggles[TOPTION_SPEECH]]->uiFlags    & BUTTON_CLICKED_ON) &&
+			!(ButtonList[guiOptionsToggles[TOPTION_SUBTITLES]]->uiFlags & BUTTON_CLICKED_ON))
 	{
-		gGameSettings.fOptions[ ubButton ] = TRUE;
+		gGameSettings.fOptions[ubButton] = TRUE;
+		b->uiFlags |= BUTTON_CLICKED_ON;
 
-		ButtonList[ guiOptionsToggles[ ubButton ] ]->uiFlags |= BUTTON_CLICKED_ON;
-
-		if( fDown )
-			DrawCheckBoxButtonOn( guiOptionsToggles[ ubButton ] );
-	}
-	else
-	{
-		gGameSettings.fOptions[ ubButton ] = FALSE;
-
-		ButtonList[ guiOptionsToggles[ ubButton ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-
-		if( fDown )
-			DrawCheckBoxButtonOff( guiOptionsToggles[ ubButton ] );
-
-		//check to see if the user is unselecting either the spech or subtitles toggle
-		if( ubButton == TOPTION_SPEECH  || ubButton == TOPTION_SUBTITLES )
-		{
-			//make sure that at least of of the toggles is still enabled
-			if( !(ButtonList[ guiOptionsToggles[ TOPTION_SPEECH ] ]->uiFlags & BUTTON_CLICKED_ON) )
-			{
-				if( !( ButtonList[ guiOptionsToggles[ TOPTION_SUBTITLES ] ]->uiFlags & BUTTON_CLICKED_ON ) )
-				{
-					gGameSettings.fOptions[ ubButton ] = TRUE;
-					ButtonList[ guiOptionsToggles[ ubButton ] ]->uiFlags |= BUTTON_CLICKED_ON;
-
-					//Confirm the Exit to the main menu screen
-					DoOptionsMessageBox( MSG_BOX_BASIC_STYLE, zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, NULL );
-					gfExitOptionsDueToMessageBox = FALSE;
-				}
-			}
-		}
+		//Confirm the Exit to the main menu screen
+		DoOptionsMessageBox(MSG_BOX_BASIC_STYLE, zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		gfExitOptionsDueToMessageBox = FALSE;
 	}
 
-
-
-	//stop the sound if
-//	if( SoundIsPlaying( uiOptionToggleSound ) && !fDown )
+	if (fPlaySound)
 	{
-		SoundStop( uiOptionToggleSound );
-	}
-
-
-	if( fPlaySound )
-	{
-		if( fDown )
-		{
-		//				case BTN_SND_CLICK_OFF:
-			PlayJA2Sample(BIG_SWITCH3_IN, BTNVOLUME, 1, MIDDLEPAN);
-		}
-		else
-		{
-		//		case BTN_SND_CLICK_ON:
-			PlayJA2Sample(BIG_SWITCH3_OUT, BTNVOLUME, 1, MIDDLEPAN);
-		}
+		const UINT32 sound = (fDown ? BIG_SWITCH3_IN : BIG_SWITCH3_OUT);
+		PlayJA2Sample(sound, BTNVOLUME, 1, MIDDLEPAN);
 	}
 }
 

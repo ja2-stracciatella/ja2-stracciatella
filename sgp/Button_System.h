@@ -267,8 +267,7 @@ void UnmarkButtonsDirty(void); // unmark ALL the buttoms on the screen dirty
 void ForceButtonUnDirty(INT32 iButtonIndex); // forces button undirty no matter the reason, only lasts one frame
 
 
-void DrawCheckBoxButtonOn(INT32 iButtonID);
-void DrawCheckBoxButtonOff(INT32 iButtonID);
+void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on);
 
 extern UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID, INT32 iSlot);
 

@@ -1436,29 +1436,14 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void DrawCheckBoxButtonOn(INT32 iButtonID)
+void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
-	gfLeftButtonState = TRUE;
-	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	DrawButton(iButtonID);
-
-	gfLeftButtonState = fLeftButtonState;
-}
-
-
-void DrawCheckBoxButtonOff(INT32 iButtonID)
-{
-	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
-
-	BOOLEAN fLeftButtonState = gfLeftButtonState;
-
-	gfLeftButtonState = FALSE;
+	gfLeftButtonState = on;
 	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
 	DrawButton(iButtonID);
 
