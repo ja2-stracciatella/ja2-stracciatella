@@ -59,20 +59,11 @@
 #define		OPTIONS__BOTTOM_RIGHT_X								OPTIONS__TOP_LEFT_X + OPTIONS_SCREEN_WIDTH
 #define		OPTIONS__BOTTOM_RIGHT_Y								OPTIONS__TOP_LEFT_Y + OPTIONS_SCREEN_HEIGHT
 
-#define		OPT_SAVE_BTN_X												51
-#define		OPT_SAVE_BTN_Y												438
-
-#define		OPT_LOAD_BTN_X												190
-#define		OPT_LOAD_BTN_Y												OPT_SAVE_BTN_Y
-
-#define		OPT_QUIT_BTN_X												329
-#define		OPT_QUIT_BTN_Y												OPT_SAVE_BTN_Y
-
-#define		OPT_DONE_BTN_X												469
-#define		OPT_DONE_BTN_Y												OPT_SAVE_BTN_Y
-
-
-
+#define OPT_SAVE_BTN_X  51
+#define OPT_LOAD_BTN_X 190
+#define OPT_QUIT_BTN_X 329
+#define OPT_DONE_BTN_X 469
+#define OPT_BTN_Y      438
 
 
 #define		OPT_GAP_BETWEEN_TOGGLE_BOXES					31//40
@@ -162,25 +153,11 @@ BOOLEAN		gfSettingOfTreeTopStatusOnEnterOfOptionScreen;
 BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
 BOOLEAN   gfSettingOfDontAnimateSmoke;
 
-// Goto save game Button
-static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiOptGotoSaveGameBtn;
-INT32		giOptionsButtonImages;
-
-// Goto load game button
-static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiOptGotoLoadGameBtn;
-INT32		giGotoLoadBtnImage;
-
-// QuitButton
-static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiQuitButton;
-INT32		giQuitBtnImage;
-
-// Done Button
-static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiDoneButton;
-INT32		giDoneBtnImage;
+static INT32  giOptionsButtonImages;
+static UINT32 guiOptGotoSaveGameBtn;
+static UINT32 guiOptGotoLoadGameBtn;
+static UINT32 guiQuitButton;
+static UINT32 guiDoneButton;
 
 
 //checkbox to toggle tracking mode on or off
@@ -282,6 +259,16 @@ UINT32	OptionsScreenShutdown()
 }
 
 
+static INT32 MakeButton(INT16 x, GUI_CALLBACK click, const wchar_t* text)
+{
+	return CreateIconAndTextButton(giOptionsButtonImages, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, OPT_BTN_Y, MSYS_PRIORITY_HIGH, click);
+}
+
+
+static void BtnOptGotoSaveGameCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnDoneCallback(GUI_BUTTON* btn, INT32 reason);
 static void MusicSliderChangeCallBack(INT32 iNewValue);
 static void SelectedOptionTextRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedOptionTextRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
@@ -349,42 +336,19 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiOptionsAddOnImages != NO_VOBJECT);
 
+	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1, 2, -1, 3, -1);
+
 	//Save game button
-	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1,2,-1,3,-1 );
-	guiOptGotoSaveGameBtn = CreateIconAndTextButton( giOptionsButtonImages, zOptionsText[OPT_SAVE_GAME], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 OPT_SAVE_BTN_X, OPT_SAVE_BTN_Y, MSYS_PRIORITY_HIGH,
-													 BtnOptGotoSaveGameCallback);
+	guiOptGotoSaveGameBtn = MakeButton(OPT_SAVE_BTN_X, BtnOptGotoSaveGameCallback, zOptionsText[OPT_SAVE_GAME]);
 	SpecifyDisabledButtonStyle( guiOptGotoSaveGameBtn, DISABLED_STYLE_HATCHED );
 	if( guiPreviousOptionScreen == MAINMENU_SCREEN || !CanGameBeSaved() )
 	{
 		DisableButton( guiOptGotoSaveGameBtn );
 	}
 
-	//Load game button
-	giGotoLoadBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiOptGotoLoadGameBtn = CreateIconAndTextButton( giGotoLoadBtnImage, zOptionsText[OPT_LOAD_GAME], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 OPT_LOAD_BTN_X, OPT_LOAD_BTN_Y, MSYS_PRIORITY_HIGH,
-													 BtnOptGotoLoadGameCallback);
-
-	//Quit to main menu button
-	giQuitBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiQuitButton = CreateIconAndTextButton( giQuitBtnImage, zOptionsText[OPT_MAIN_MENU], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 OPT_QUIT_BTN_X, OPT_QUIT_BTN_Y, MSYS_PRIORITY_HIGH,
-													 BtnOptQuitCallback);
-
-	//Done button
-	giDoneBtnImage = UseLoadedButtonImage( giOptionsButtonImages, -1,2,-1,3,-1 );
-	guiDoneButton = CreateIconAndTextButton( giDoneBtnImage, zOptionsText[OPT_DONE], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 OPT_DONE_BTN_X, OPT_DONE_BTN_Y, MSYS_PRIORITY_HIGH,
-													 BtnDoneCallback);
+	guiOptGotoLoadGameBtn = MakeButton(OPT_LOAD_BTN_X, BtnOptGotoLoadGameCallback, zOptionsText[OPT_LOAD_GAME]);
+	guiQuitButton         = MakeButton(OPT_QUIT_BTN_X, BtnOptQuitCallback,         zOptionsText[OPT_MAIN_MENU]);
+	guiDoneButton         = MakeButton(OPT_DONE_BTN_X, BtnDoneCallback,            zOptionsText[OPT_DONE]);
 
 	// Toggle Boxes
 	UINT16 usTextHeight = GetFontHeight(OPT_MAIN_FONT);
@@ -409,8 +373,9 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		}
 
 		//Check box to toggle tracking mode
-		guiOptionsToggles[cnt] = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
-		MSYS_SetBtnUserData(guiOptionsToggles[cnt], cnt);
+		INT32 check = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
+		guiOptionsToggles[cnt] = check;
+		MSYS_SetBtnUserData(check, cnt);
 
 		UINT32 height;
 		UINT16 usTextWidth = StringPixLength(zOptionsToggleText[cnt], OPT_MAIN_FONT);
@@ -424,11 +389,12 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 		{
 			height = usTextHeight;
 		}
-		MSYS_DefineRegion(&gSelectedOptionTextRegion[cnt], pos_x + 13, pos_y, pos_x + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX + usTextWidth, pos_y + height, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack);
-		MSYS_SetRegionUserData(&gSelectedOptionTextRegion[cnt], 0, cnt);
+		MOUSE_REGION* reg = &gSelectedOptionTextRegion[cnt];
+		MSYS_DefineRegion(reg, pos_x + 13, pos_y, pos_x + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX + usTextWidth, pos_y + height, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack);
+		MSYS_SetRegionUserData(reg, 0, cnt);
 
-		SetRegionFastHelpText(&gSelectedOptionTextRegion[cnt], zOptionsScreenHelpText[cnt]);
-		SetButtonFastHelpText(guiOptionsToggles[cnt], zOptionsScreenHelpText[cnt]);
+		SetRegionFastHelpText(reg, zOptionsScreenHelpText[cnt]);
+		SetButtonFastHelpText(check, zOptionsScreenHelpText[cnt]);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
@@ -513,10 +479,7 @@ static void ExitOptionsScreen(void)
 	RemoveButton( guiQuitButton );
 	RemoveButton( guiDoneButton );
 
-	UnloadButtonImage( giOptionsButtonImages );
-	UnloadButtonImage( giGotoLoadBtnImage );
-	UnloadButtonImage( giQuitBtnImage );
-	UnloadButtonImage( giDoneBtnImage );
+	UnloadButtonImage(giOptionsButtonImages);
 
 	DeleteVideoObjectFromIndex( guiOptionBackGroundImage );
 	DeleteVideoObjectFromIndex( guiOptionsAddOnImages );
