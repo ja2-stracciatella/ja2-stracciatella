@@ -261,6 +261,12 @@ UINT32 GameInitOptionsScreenShutdown(void)
 }
 
 
+static void ClickButton(UINT32 btn)
+{
+	ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
+}
+
+
 static BOOLEAN EnterGIOScreen(void)
 {
 	UINT16					cnt;
@@ -304,14 +310,15 @@ static BOOLEAN EnterGIOScreen(void)
 		MSYS_SetBtnUserData(guiDifficultySettingsToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
-	if (gGameOptions.ubDifficultyLevel == DIF_LEVEL_EASY)
-		ButtonList[guiDifficultySettingsToggles[GIO_DIFF_EASY]]->uiFlags |= BUTTON_CLICKED_ON;
-	else if(gGameOptions.ubDifficultyLevel == DIF_LEVEL_MEDIUM )
-		ButtonList[guiDifficultySettingsToggles[GIO_DIFF_MED]]->uiFlags |= BUTTON_CLICKED_ON;
-	else if(gGameOptions.ubDifficultyLevel == DIF_LEVEL_HARD)
-		ButtonList[guiDifficultySettingsToggles[GIO_DIFF_HARD]]->uiFlags |= BUTTON_CLICKED_ON;
-	else
-		ButtonList[guiDifficultySettingsToggles[GIO_DIFF_MED]]->uiFlags |= BUTTON_CLICKED_ON;
+	UINT diff_btn;
+	switch (gGameOptions.ubDifficultyLevel)
+	{
+		case DIF_LEVEL_EASY:   diff_btn = GIO_DIFF_EASY; break;
+		default:
+		case DIF_LEVEL_MEDIUM: diff_btn = GIO_DIFF_MED;  break;
+		case DIF_LEVEL_HARD:   diff_btn = GIO_DIFF_HARD; break;
+	}
+	ClickButton(guiDifficultySettingsToggles[diff_btn]);
 
 	//Check box to toggle Game settings ( realistic, sci fi )
 	usPosY = GIO_GAME_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
@@ -323,10 +330,8 @@ static BOOLEAN EnterGIOScreen(void)
 		MSYS_SetBtnUserData(guiGameStyleToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
-	if (gGameOptions.fSciFi)
-		ButtonList[guiGameStyleToggles[GIO_SCI_FI]]->uiFlags |= BUTTON_CLICKED_ON;
-	else
-		ButtonList[guiGameStyleToggles[GIO_REALISTIC]]->uiFlags |= BUTTON_CLICKED_ON;
+	const UINT style_btn = (gGameOptions.fSciFi ? GIO_SCI_FI : GIO_REALISTIC);
+	ClickButton(guiGameStyleToggles[style_btn]);
 
 	// JA2Gold: iron man buttons
 	usPosY = GIO_IRON_MAN_SETTING_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
@@ -338,10 +343,8 @@ static BOOLEAN EnterGIOScreen(void)
 		MSYS_SetBtnUserData(guiGameSaveToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
-	if (gGameOptions.fIronManMode)
-		ButtonList[guiGameSaveToggles[GIO_IRON_MAN]]->uiFlags |= BUTTON_CLICKED_ON;
-	else
-		ButtonList[guiGameSaveToggles[GIO_CAN_SAVE]]->uiFlags |= BUTTON_CLICKED_ON;
+	const UINT mode_btn = (gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE);
+	ClickButton(guiGameSaveToggles[mode_btn]);
 
 	// Check box to toggle Gun options
 	usPosY = GIO_GUN_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;
@@ -359,10 +362,8 @@ static BOOLEAN EnterGIOScreen(void)
 	gGameOptions.fGunNut = TRUE;
 #endif
 
-	if (gGameOptions.fGunNut)
-		ButtonList[guiGunOptionToggles[GIO_GUN_NUT]]->uiFlags |= BUTTON_CLICKED_ON;
-	else
-		ButtonList[guiGunOptionToggles[GIO_REDUCED_GUNS]]->uiFlags |= BUTTON_CLICKED_ON;
+	const UINT gun_btn = (gGameOptions.fGunNut ? GIO_GUN_NUT : GIO_REDUCED_GUNS);
+	ClickButton(guiGunOptionToggles[gun_btn]);
 
 //if its the demo, make sure to disable the buttons
 #ifdef JA2DEMO
@@ -385,10 +386,8 @@ static BOOLEAN EnterGIOScreen(void)
 		MSYS_SetBtnUserData(guiTimedTurnToggles[cnt], cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
-	if (gGameOptions.fTurnTimeLimit)
-		ButtonList[guiTimedTurnToggles[GIO_TIMED_TURNS]]->uiFlags |= BUTTON_CLICKED_ON;
-	else
-		ButtonList[guiTimedTurnToggles[GIO_NO_TIMED_TURNS]]->uiFlags |= BUTTON_CLICKED_ON;
+	const UINT time_btn = (gGameOptions.fGunNut ? GIO_TIMED_TURNS : GIO_NO_TIMED_TURNS);
+	ClickButton(guiTimedTurnToggles[time_btn];
 #endif
 
 	//Reset the exit screen
