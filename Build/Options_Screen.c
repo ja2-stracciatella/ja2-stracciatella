@@ -128,7 +128,6 @@ BOOLEAN		gfOptionsScreenEntry = TRUE;
 BOOLEAN		gfOptionsScreenExit	= FALSE;
 BOOLEAN		gfRedrawOptionsScreen = TRUE;
 
-CHAR8			gzSavedGameName[ 128 ];
 BOOLEAN		gfEnteredFromMapScreen=FALSE;
 
 UINT32		guiOptionsScreen = OPTIONS_SCREEN;
