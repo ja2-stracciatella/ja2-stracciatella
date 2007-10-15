@@ -38,7 +38,6 @@ struct SLIDER
 
 	MOUSE_REGION  ScrollAreaMouseRegion;
 
-	UINT32				uiSliderBoxImage;
 	UINT16				usCurrentSliderBoxPosition;
 
 	SGPRect				LastRect;
