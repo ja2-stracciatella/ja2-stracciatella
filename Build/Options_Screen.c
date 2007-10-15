@@ -405,15 +405,15 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	RenderOptionsScreen();
 
 	//Add a slider bar for the Sound Effects
-	guiSoundEffectsSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0);
+	guiSoundEffectsSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack);
 	SetSliderValue(guiSoundEffectsSlider, GetSoundEffectsVolume());
 
 	//Add a slider bar for the Speech
-	guiSpeechSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack, 0);
+	guiSpeechSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack);
 	SetSliderValue(guiSpeechSlider, GetSpeechVolume());
 
 	//Add a slider bar for the Music
-	guiMusicSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack, 0);
+	guiMusicSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack);
 	SetSliderValue(guiMusicSlider, MusicGetVolume());
 
 

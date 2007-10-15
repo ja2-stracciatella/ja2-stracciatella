@@ -104,7 +104,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 
 
-SLIDER* AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback, UINT32 uiFlags )
+SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
 {
 	SLIDER *pTemp = NULL;
 	SLIDER *pNewSlider = NULL;
@@ -128,7 +128,6 @@ SLIDER* AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY,
 	pNewSlider->SliderChangeCallback = SliderChangeCallback;
 	pNewSlider->usCurrentIncrement = 0;
 	pNewSlider->usBackGroundColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
-	pNewSlider->uiFlags = uiFlags;
 
 	//
 	// Create the mouse regions for each increment in the slider
@@ -142,8 +141,7 @@ SLIDER* AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY,
 	switch( ubStyle )
 	{
 		case SLIDER_VERTICAL_STEEL:
-
-			pNewSlider->uiFlags |= SLIDER_VERTICAL;
+			pNewSlider->uiFlags = SLIDER_VERTICAL;
 			pNewSlider->usWidth = STEEL_SLIDER_WIDTH;
 			pNewSlider->usHeight = usWidth;
 			pNewSlider->ubSliderWidth = STEEL_SLIDER_WIDTH;
@@ -157,8 +155,7 @@ SLIDER* AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY,
 
 		case SLIDER_DEFAULT_STYLE:
 		default:
-
-			pNewSlider->uiFlags |= SLIDER_HORIZONTAL;
+			pNewSlider->uiFlags = SLIDER_HORIZONTAL;
 			pNewSlider->usWidth = usWidth;
 			pNewSlider->usHeight = DEFUALT_SLIDER_SIZE;
 
