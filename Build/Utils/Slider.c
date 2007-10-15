@@ -359,6 +359,10 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	{
 		s = MSYS_GetRegionUserPtr(pRegion);
 	}
+	else
+	{
+		return;
+	}
 
 	if (s->uiFlags & SLIDER_VERTICAL)
 	{
