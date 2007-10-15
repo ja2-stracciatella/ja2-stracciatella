@@ -25,7 +25,6 @@
 
 struct SLIDER
 {
-	UINT8					ubStyle;
 	UINT16				usPosX;
 	UINT16				usPosY;
 	UINT16				usWidth;
@@ -120,7 +119,6 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 
 	//Assign the settings to the current slider
-	pNewSlider->ubStyle = ubStyle;
 	pNewSlider->usPosX = usPosX;
 	pNewSlider->usPosY = usPosY;
 //	pNewSlider->usWidth = usWidth;
