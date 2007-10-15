@@ -142,10 +142,10 @@ INT32 MSYS_Init(void)
 	MSYS_SystemBaseRegion.RelativeYPos				= 0;
 	MSYS_SystemBaseRegion.ButtonState					= 0;
 	MSYS_SystemBaseRegion.Cursor							= 0;
-	MSYS_SystemBaseRegion.UserData[0]					= 0;
-	MSYS_SystemBaseRegion.UserData[1]					= 0;
-	MSYS_SystemBaseRegion.UserData[2]					= 0;
-	MSYS_SystemBaseRegion.UserData[3]					= 0;
+	MSYS_SystemBaseRegion.user.data[0]       = 0;
+	MSYS_SystemBaseRegion.user.data[1]       = 0;
+	MSYS_SystemBaseRegion.user.data[2]       = 0;
+	MSYS_SystemBaseRegion.user.data[3]       = 0;
 	MSYS_SystemBaseRegion.MovementCallback		= MSYS_NO_CALLBACK;
 	MSYS_SystemBaseRegion.ButtonCallback			= MSYS_NO_CALLBACK;
 
@@ -918,7 +918,7 @@ void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata)
 		sprintf( str, "Attempting MSYS_SetRegionUserData() with out of range index %d.", index );
 		AssertMsg( 0, str );
 	}
-	region->UserData[index]=userdata;
+	region->user.data[index] = userdata;
 }
 
 
@@ -940,7 +940,19 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 		sprintf( str, "Attempting MSYS_GetRegionUserData() with out of range index %d", index );
 		AssertMsg( 0, str );
 	}
-	return(region->UserData[index]);
+	return region->user.data[index];
+}
+
+
+void MSYS_SetRegionUserPtr(MOUSE_REGION* r, void* ptr)
+{
+	r->user.ptr = ptr;
+}
+
+
+void* MSYS_GetRegionUserPtr(MOUSE_REGION* r)
+{
+	return r->user.ptr;
 }
 
 

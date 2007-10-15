@@ -39,7 +39,11 @@ typedef struct _MOUSE_REGION {
 	UINT16								Cursor;							// Cursor to use when mouse in this region (see flags)
 	MOUSE_CALLBACK				MovementCallback;		// Pointer to callback function if movement occured in this region
 	MOUSE_CALLBACK				ButtonCallback;		// Pointer to callback function if button action occured in this region
-	INT32									UserData[4];				// User Data, can be set to anything!
+	union // User Data, can be set to anything!
+	{
+		INT32 data[4];
+		void* ptr;
+	} user;
 
 	//Fast help vars.
 	INT16					FastHelpTimer;		// Countdown timer for FastHelp text
@@ -144,6 +148,8 @@ void MSYS_EnableRegion(MOUSE_REGION *region);
 void MSYS_DisableRegion(MOUSE_REGION *region);
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata);
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index);
+void  MSYS_SetRegionUserPtr(MOUSE_REGION* r, void* ptr);
+void* MSYS_GetRegionUserPtr(MOUSE_REGION* r);
 
 void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
 
