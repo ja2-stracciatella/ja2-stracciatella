@@ -352,7 +352,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 		s = MSYS_GetRegionUserPtr(pRegion);
 
 		// set the currently selectd slider bar
-		if (gfLeftButtonState) gpCurrentSlider = s;
+		gpCurrentSlider = s;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE ||
 			reason & MSYS_CALLBACK_REASON_MOVE)
