@@ -96,8 +96,8 @@ void ShutDownSlider()
 
 
 static void CalculateNewSliderBoxPosition(SLIDER* pSlider);
-static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason);
+static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason);
 
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
@@ -202,17 +202,11 @@ void RenderAllSliderBars()
 	SLIDER *pTemp = NULL;
 
 	// set the currently selectd slider bar
-	if( gfLeftButtonState && gpCurrentSlider != NULL )
+	if (gfLeftButtonState && gpCurrentSlider != NULL)
 	{
-		UINT16 usPosY = 0;
-
-		if( gusMouseYPos < gpCurrentSlider->usPosY )
-			usPosY = 0;
-		else
-			usPosY = gusMouseYPos - gpCurrentSlider->usPosY;
-
-		//if the mouse
-		CalculateNewSliderIncrement(gpCurrentSlider, usPosY);
+		SLIDER* const s = gpCurrentSlider;
+		const UINT16 pos = gusMouseYPos < s->usPosY ? 0 : gusMouseYPos - s->usPosY;
+		CalculateNewSliderIncrement(s, pos);
 	}
 	else
 	{
@@ -338,7 +332,7 @@ void RemoveSliderBar(SLIDER* s)
 }
 
 
-static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
+static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason)
 {
 	//if we already have an anchored slider bar
 	if( gpCurrentSlider != NULL )
@@ -349,7 +343,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	SLIDER* s;
 	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
-		s = MSYS_GetRegionUserPtr(pRegion);
+		s = MSYS_GetRegionUserPtr(r);
 
 		// set the currently selectd slider bar
 		gpCurrentSlider = s;
@@ -357,21 +351,15 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE ||
 			reason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		s = MSYS_GetRegionUserPtr(pRegion);
+		s = MSYS_GetRegionUserPtr(r);
 	}
 	else
 	{
 		return;
 	}
 
-	if (s->uiFlags & SLIDER_VERTICAL)
-	{
-		CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-	}
-	else
-	{
-		CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-	}
+	const UINT16 pos = s->uiFlags & SLIDER_VERTICAL ? r->RelativeYPos : r->RelativeXPos;
+	CalculateNewSliderIncrement(s, pos);
 }
 
 
@@ -385,7 +373,7 @@ static void SetSliderPos(SLIDER* s, INT32 pos)
 }
 
 
-static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
+static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 {
 	//if we already have an anchored slider bar
 	if( gpCurrentSlider != NULL )
@@ -394,20 +382,13 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
- 		SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
-
-		if (s->uiFlags & SLIDER_VERTICAL)
-		{
-			CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-		}
-		else
-		{
-			CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-		}
+ 		SLIDER* const s = MSYS_GetRegionUserPtr(r);
+		const UINT16 pos = s->uiFlags & SLIDER_VERTICAL ? r->RelativeYPos : r->RelativeXPos;
+		CalculateNewSliderIncrement(s, pos);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
-		SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
+		SLIDER* const s = MSYS_GetRegionUserPtr(r);
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement - step;
 		pos = max(0, pos);
@@ -415,7 +396,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
 	{
-		SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
+		SLIDER* const s = MSYS_GetRegionUserPtr(r);
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement + step;
 		pos = min(pos, s->usNumberOfIncrements);
@@ -424,38 +405,26 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void CalculateNewSliderIncrement(SLIDER* pSlider, UINT16 usPos)
+static void CalculateNewSliderIncrement(SLIDER* s, UINT16 usPos)
 {
-	FLOAT		dNewIncrement=0.0;
-	UINT16	usOldIncrement;
-	BOOLEAN	fLastSpot=FALSE;
-	BOOLEAN	fFirstSpot=FALSE;
-
-	usOldIncrement = pSlider->usCurrentIncrement;
-
-	if( pSlider->uiFlags & SLIDER_VERTICAL )
+	INT32 pos;
+	if (s->uiFlags & SLIDER_VERTICAL)
 	{
-		if( usPos >= (UINT16)(pSlider->usHeight * (FLOAT).99 ) )
-			fLastSpot = TRUE;
-
-		if( usPos <= (UINT16)(pSlider->usHeight * (FLOAT).01 ) )
-			fFirstSpot = TRUE;
-
-
-		//pSlider->usNumberOfIncrements
-		if( fFirstSpot )
-			dNewIncrement = 0;
-		else if( fLastSpot )
-			dNewIncrement = pSlider->usNumberOfIncrements;
+		if (usPos <= s->usHeight)
+		{
+			pos = s->usNumberOfIncrements * usPos / s->usHeight;
+		}
 		else
-			dNewIncrement = ( usPos / (FLOAT)pSlider->usHeight ) * pSlider->usNumberOfIncrements;
+		{
+			pos = s->usNumberOfIncrements;
+		}
 	}
 	else
 	{
-		dNewIncrement = ( usPos / (FLOAT)pSlider->usWidth ) * pSlider->usNumberOfIncrements;
+		pos = s->usNumberOfIncrements * usPos /  s->usWidth;
 	}
 
-	SetSliderPos(pSlider, dNewIncrement + .5);
+	SetSliderPos(s, pos);
 }
 
 
