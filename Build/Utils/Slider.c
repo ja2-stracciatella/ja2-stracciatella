@@ -23,10 +23,8 @@
 #define		STEEL_SLIDER_HEIGHT					25
 
 
-typedef struct TAG_SLIDER
+struct SLIDER
 {
-	UINT32				uiSliderID;
-
 	UINT8					ubStyle;
 	UINT16				usPosX;
 	UINT16				usPosY;
@@ -51,14 +49,12 @@ typedef struct TAG_SLIDER
 	UINT8					ubSliderWidth;
 	UINT8					ubSliderHeight;
 
-	struct TAG_SLIDER		*pNext;
-	struct TAG_SLIDER		*pPrev;
-
-} SLIDER;
+	SLIDER* pNext;
+	SLIDER* pPrev;
+};
 
 
 SLIDER *pSliderHead = NULL;
-UINT32	guiCurrentSliderID=1;
 
 BOOLEAN	gfSliderInited=FALSE;
 
@@ -92,7 +88,7 @@ void ShutDownSlider()
 	{
 		pRemove = pTemp;
 		pTemp = pTemp->pNext;
-		RemoveSliderBar( pRemove->uiSliderID );
+		RemoveSliderBar(pRemove);
 
 		//Report an error
 	}
@@ -108,7 +104,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 
 
-INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback, UINT32 uiFlags )
+SLIDER* AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback, UINT32 uiFlags )
 {
 	SLIDER *pTemp = NULL;
 	SLIDER *pNewSlider = NULL;
@@ -116,15 +112,10 @@ INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, U
 	AssertMsg( gfSliderInited, "Trying to Add a Slider Bar when the Slider System was never inited");
 
 	//checks
-	if( ubStyle >= NUM_SLIDER_STYLES )
-		return( -1 );
-
+	if (ubStyle >= NUM_SLIDER_STYLES) return NULL;
 
 	pNewSlider = MemAlloc( sizeof( SLIDER ) );
-	if( pNewSlider == NULL )
-	{
-		return( -1 );
-	}
+	if (pNewSlider == NULL) return NULL;
 	memset( pNewSlider, 0, sizeof( SLIDER ) );
 
 
@@ -138,14 +129,6 @@ INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, U
 	pNewSlider->usCurrentIncrement = 0;
 	pNewSlider->usBackGroundColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
 	pNewSlider->uiFlags = uiFlags;
-
-	//Get a new Identifier for the slider
-	//Temp just increment for now
-	pNewSlider->uiSliderID = guiCurrentSliderID;
-
-	//increment counter
-	guiCurrentSliderID++;
-
 
 	//
 	// Create the mouse regions for each increment in the slider
@@ -214,7 +197,7 @@ INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, U
 
 	CalculateNewSliderBoxPosition( pNewSlider );
 
-	return( pNewSlider->uiSliderID );
+	return pNewSlider;
 }
 
 
@@ -351,52 +334,16 @@ static void RenderSliderBox(SLIDER* pSlider)
 }
 
 
-void RemoveSliderBar( UINT32 uiSliderID )
+void RemoveSliderBar(SLIDER* s)
 {
-	SLIDER *pTemp = NULL;
-	SLIDER *pNodeToRemove = NULL;
-//	UINT32	cnt;
+	if (s == pSliderHead) pSliderHead = pSliderHead->pNext;
 
-	pTemp = pSliderHead;
+	if (s->pNext) s->pNext->pPrev = s->pPrev;
+	if (s->pPrev) s->pPrev->pNext = s->pNext;
 
-	//Get the required slider
-	while( pTemp && pTemp->uiSliderID != uiSliderID )
-	{
-		pTemp = pTemp->pNext;
-	}
-
-	//if we could not find the required slider
-	if( pTemp == NULL )
-	{
-		//return an error
-		return;
-	}
-
-	pNodeToRemove = pTemp;
-
-	if( pTemp == pSliderHead )
-		pSliderHead = pSliderHead->pNext;
-
-	//Detach the node.
-	if( pTemp->pNext )
-		pTemp->pNext->pPrev = pTemp->pPrev;
-
-	if( pTemp->pPrev )
-		pTemp->pPrev->pNext = pTemp->pNext;
-
-	MSYS_RemoveRegion( &pNodeToRemove->ScrollAreaMouseRegion );
-
-	//if its the last node
-	if( pNodeToRemove == pSliderHead )
-		pSliderHead = NULL;
-
-	//Remove the slider node
-	MemFree( pNodeToRemove );
-	pNodeToRemove = NULL;
+	MSYS_RemoveRegion(&s->ScrollAreaMouseRegion);
+	MemFree(s);
 }
-
-
-static SLIDER* GetSliderFromID(UINT32 uiSliderID);
 
 
 static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
@@ -622,41 +569,18 @@ static void CalculateNewSliderBoxPosition(SLIDER* pSlider)
 }
 
 
-static SLIDER* GetSliderFromID(UINT32 uiSliderID)
+void SetSliderValue(SLIDER* s, UINT32 uiNewValue)
 {
-	SLIDER *pTemp = NULL;
+	if (uiNewValue >= s->usNumberOfIncrements) return;
 
-	pTemp = pSliderHead;
-
-	//Get the required slider
-	while( pTemp && pTemp->uiSliderID != uiSliderID )
+	if (s->uiFlags & SLIDER_VERTICAL)
 	{
-		pTemp = pTemp->pNext;
+		s->usCurrentIncrement = s->usNumberOfIncrements - (UINT16)uiNewValue;
+	}
+	else
+	{
+		s->usCurrentIncrement = (UINT16)uiNewValue;
 	}
 
-	// if we couldnt find the right slider
-	if( pTemp == NULL )
-		return( NULL );
-
-	return( pTemp );
-}
-
-
-void SetSliderValue( UINT32 uiSliderID, UINT32 uiNewValue )
-{
-	SLIDER *pSlider = NULL;
-
-	pSlider = GetSliderFromID( uiSliderID );
-	if( pSlider == NULL )
-		return;
-
-	if( uiNewValue >= pSlider->usNumberOfIncrements )
-		return;
-
-	if( pSlider->uiFlags & SLIDER_VERTICAL )
-		pSlider->usCurrentIncrement = pSlider->usNumberOfIncrements - (UINT16)uiNewValue;
-	else
-		pSlider->usCurrentIncrement = (UINT16)uiNewValue;
-
-	CalculateNewSliderBoxPosition( pSlider );
+	CalculateNewSliderBoxPosition(s);
 }

@@ -120,9 +120,9 @@
 UINT32		guiOptionBackGroundImage;
 UINT32		guiOptionsAddOnImages;
 
-UINT32		guiSoundEffectsSliderID;
-UINT32		guiSpeechSliderID;
-UINT32		guiMusicSliderID;
+static SLIDER* guiSoundEffectsSlider;
+static SLIDER* guiSpeechSlider;
+static SLIDER* guiMusicSlider;
 
 BOOLEAN		gfOptionsScreenEntry = TRUE;
 BOOLEAN		gfOptionsScreenExit	= FALSE;
@@ -405,20 +405,16 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	RenderOptionsScreen();
 
 	//Add a slider bar for the Sound Effects
-	guiSoundEffectsSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0);
-	AssertMsg( guiSoundEffectsSliderID, "Failed to AddSlider" );
-	SetSliderValue( guiSoundEffectsSliderID, GetSoundEffectsVolume() );
+	guiSoundEffectsSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SOUND_EFFECTS_SLIDER_X, OPT_SOUND_EFFECTS_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SoundFXSliderChangeCallBack, 0);
+	SetSliderValue(guiSoundEffectsSlider, GetSoundEffectsVolume());
 
 	//Add a slider bar for the Speech
-	guiSpeechSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack, 0);
-	AssertMsg( guiSpeechSliderID, "Failed to AddSlider" );
-	SetSliderValue( guiSpeechSliderID, GetSpeechVolume() );
+	guiSpeechSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_SPEECH_SLIDER_X, OPT_SPEECH_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, SpeechSliderChangeCallBack, 0);
+	SetSliderValue(guiSpeechSlider, GetSpeechVolume());
 
 	//Add a slider bar for the Music
-	guiMusicSliderID = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack, 0);
-	AssertMsg( guiMusicSliderID, "Failed to AddSlider" );
-	SetSliderValue( guiMusicSliderID, MusicGetVolume() );
-
+	guiMusicSlider = AddSlider(SLIDER_VERTICAL_STEEL, CURSOR_NORMAL, OPT_MUSIC_SLIDER_X, OPT_MUSIC_SLIDER_Y, OPT_SLIDER_BAR_SIZE, MAXVOLUME, MSYS_PRIORITY_HIGH, MusicSliderChangeCallBack, 0);
+	SetSliderValue(guiMusicSlider, MusicGetVolume());
 
 
 	//Remove the mouse region over the clock
@@ -501,9 +497,9 @@ static void ExitOptionsScreen(void)
 
 
 	//REmove the slider bars
-	RemoveSliderBar( guiSoundEffectsSliderID );
-	RemoveSliderBar( guiSpeechSliderID );
-	RemoveSliderBar( guiMusicSliderID );
+	RemoveSliderBar(guiSoundEffectsSlider);
+	RemoveSliderBar(guiSpeechSlider);
+	RemoveSliderBar(guiMusicSlider);
 
 
   MSYS_RemoveRegion( &gSelectedToggleBoxAreaRegion );

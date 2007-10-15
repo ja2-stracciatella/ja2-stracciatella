@@ -1,6 +1,7 @@
 #ifndef _SLIDER__H_
 #define _SLIDER__H_
 
+typedef struct SLIDER SLIDER;
 
 #define		SLIDER_VERTICAL						0x00000001
 #define		SLIDER_HORIZONTAL					0x00000002
@@ -20,24 +21,10 @@ enum
 
 typedef void ( *SLIDER_CHANGE_CALLBACK )	(INT32);
 
+SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback, UINT32 uiFlags);
+void RemoveSliderBar(SLIDER* s);
 
-
-
-
-/*
-
-ubStyle
-usPosX
-usPosY
-usWidth
-usNumberOfIncrements
-sPriority
-SliderChangeCallback
-	void SliderChangeCallBack( INT32 iNewValue )
-*/
-
-INT32	AddSlider( UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback, UINT32 uiFlags );
-
+void SetSliderValue(SLIDER* s, UINT32 uiNewValue);
 
 BOOLEAN InitSlider();
 
@@ -45,18 +32,5 @@ void ShutDownSlider();
 
 
 void RenderAllSliderBars();
-
-
-
-
-void RemoveSliderBar( UINT32 uiSliderID );
-
-
-
-
-void SetSliderValue( UINT32 uiSliderID, UINT32 uiNewValue );
-
-
-
 
 #endif
