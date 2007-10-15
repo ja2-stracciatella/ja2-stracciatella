@@ -62,16 +62,14 @@ SLIDER	*gpCurrentSlider=NULL;
 UINT32	guiSliderBoxImage=0;
 
 
-BOOLEAN InitSlider()
+void InitSlider(void)
 {
 	// load Slider Box Graphic graphic and add it
 	guiSliderBoxImage = AddVideoObjectFromFile("INTERFACE/SliderBox.sti");
-	CHECKF(guiSliderBoxImage != NO_VOBJECT);
-
+	CHECKV(guiSliderBoxImage != NO_VOBJECT);
 	gfSliderInited = TRUE;
-
-	return( TRUE );
 }
+
 
 void ShutDownSlider()
 {
