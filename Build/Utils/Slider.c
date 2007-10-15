@@ -344,58 +344,29 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 	if( gpCurrentSlider != NULL )
 		return;
 
-	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	if (!gfLeftButtonState) return;
+
+	SLIDER* s;
+	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
-		if( gfLeftButtonState )
-		{
-			SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
+		s = MSYS_GetRegionUserPtr(pRegion);
 
-			// set the currently selectd slider bar
-			if (gfLeftButtonState) gpCurrentSlider = s;
-
-			if (s->uiFlags & SLIDER_VERTICAL)
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-			}
-			else
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-			}
-		}
+		// set the currently selectd slider bar
+		if (gfLeftButtonState) gpCurrentSlider = s;
 	}
-	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE ||
+			reason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		if( gfLeftButtonState )
-		{
-			SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
-
-			if (s->uiFlags & SLIDER_VERTICAL)
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-			}
-			else
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-			}
-
-		}
+		s = MSYS_GetRegionUserPtr(pRegion);
 	}
 
-	else if( reason & MSYS_CALLBACK_REASON_MOVE )
+	if (s->uiFlags & SLIDER_VERTICAL)
 	{
-		if( gfLeftButtonState )
-		{
-			SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
-
-			if (s->uiFlags & SLIDER_VERTICAL)
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-			}
-			else
-			{
-				CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-			}
-		}
+		CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
+	}
+	else
+	{
+		CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
 	}
 }
 
@@ -416,22 +387,10 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if( gpCurrentSlider != NULL )
 		return;
 
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
+			iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
  		SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
-
-		if (s->uiFlags & SLIDER_VERTICAL)
-		{
-			CalculateNewSliderIncrement(s, pRegion->RelativeYPos);
-		}
-		else
-		{
-			CalculateNewSliderIncrement(s, pRegion->RelativeXPos);
-		}
-	}
-	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT )
-	{
-		SLIDER* const s = MSYS_GetRegionUserPtr(pRegion);
 
 		if (s->uiFlags & SLIDER_VERTICAL)
 		{
