@@ -56,7 +56,6 @@ SLIDER *pSliderHead = NULL;
 
 BOOLEAN	gfSliderInited=FALSE;
 
-BOOLEAN	gfCurrentSliderIsAnchored=FALSE;		//if true, the current selected slider mouse button is down
 SLIDER	*gpCurrentSlider=NULL;
 
 UINT32	guiSliderBoxImage=0;
