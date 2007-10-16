@@ -1,6 +1,7 @@
 #include "Local.h"
 #include "MapScreen.h"
 #include "Gameloop.h"
+#include "Merc_Hiring.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "WorldDef.h"

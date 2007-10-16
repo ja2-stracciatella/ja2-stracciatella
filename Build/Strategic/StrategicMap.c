@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Interface.h"
 #include "Local.h"
+#include "Merc_Hiring.h"
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"

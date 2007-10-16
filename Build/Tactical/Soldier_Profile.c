@@ -1,4 +1,5 @@
 #include "LoadSaveMercProfile.h"
+#include "Merc_Hiring.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "math.h"

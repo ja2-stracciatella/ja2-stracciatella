@@ -2,7 +2,6 @@
 #define __OVERHEAD_H
 
 #include "Soldier_Control.h"
-#include "Overhead_Types.h"
 
 
 #define MAX_REALTIME_SPEED_VAL 10

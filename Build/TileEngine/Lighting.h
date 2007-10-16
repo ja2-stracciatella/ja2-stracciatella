@@ -2,6 +2,7 @@
 #define _LIGHTING_H_
 
 #include "Soldier_Control.h"
+#include "VObject.h"
 
 /****************************************************************************************
 * JA2 Lighting Module

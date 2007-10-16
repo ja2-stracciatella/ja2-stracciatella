@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "Insurance.h"
 #include "Insurance_Contract.h"
+#include "Merc_Hiring.h"
 #include "WCheck.h"
 #include "Utilities.h"
 #include "WordWrap.h"

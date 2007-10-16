@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "Merc_Hiring.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "WCheck.h"

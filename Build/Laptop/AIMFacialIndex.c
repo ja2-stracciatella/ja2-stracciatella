@@ -1,6 +1,7 @@
 #include "Cursors.h"
 #include "Laptop.h"
 #include "AIMFacialIndex.h"
+#include "Merc_Hiring.h"
 #include "WordWrap.h"
 #include "Utilities.h"
 #include "WCheck.h"

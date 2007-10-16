@@ -8,7 +8,7 @@
 
 #include "Animation_Cache.h"
 #include "Timer_Control.h"
-#include "VObject.h"
+#include "HImage.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 

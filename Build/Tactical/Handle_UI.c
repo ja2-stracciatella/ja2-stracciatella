@@ -1,6 +1,7 @@
 #include "FileMan.h"
 #include "Font_Control.h"
 #include "Local.h"
+#include "Merc_Hiring.h"
 #include "Soldier_Find.h"
 #include "WCheck.h"
 #include "Debug.h"

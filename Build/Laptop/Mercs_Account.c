@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Laptop.h"
+#include "Merc_Hiring.h"
 #include "Mercs_Account.h"
 #include "Mercs.h"
 #include "Utilities.h"

@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "JAScreens.h"
 #include "Laptop.h"
+#include "Merc_Hiring.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"

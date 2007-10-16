@@ -3,7 +3,6 @@
 
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
-#include "Merc_Hiring.h"
 
 extern INT8 gbSkillTraitBonus[NUM_SKILLTRAITS];
 extern UINT8 gubTerrorists[];

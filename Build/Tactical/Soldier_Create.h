@@ -1,9 +1,6 @@
 #ifndef _SOLDIER_CREATE_H
 #define _SOLDIER_CREATE_H
 
-#include "Animation_Cache.h"
-#include "Timer_Control.h"
-#include "VObject.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 #include "Soldier_Control.h"

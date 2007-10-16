@@ -6,6 +6,7 @@
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface_Border.h"
+#include "Merc_Hiring.h"
 #include "Overhead.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"

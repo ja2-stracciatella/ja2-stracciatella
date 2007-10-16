@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "IMPVideoObjects.h"
 #include "LoadSaveMercProfile.h"
+#include "Merc_Hiring.h"
 #include "Text.h"
 #include "Utilities.h"
 #include "WCheck.h"

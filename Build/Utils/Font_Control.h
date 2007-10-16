@@ -2,7 +2,7 @@
 #define __FONT_CONTROL_H
 
 #include "BuildDefines.h"
-#include "VObject.h"
+#include "Types.h"
 
 
 extern INT32 gp10PointArial;

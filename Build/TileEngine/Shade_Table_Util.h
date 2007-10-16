@@ -2,6 +2,7 @@
 #define __SHADE_TABLE_UTIL_H
 
 #include "TileDat.h"
+#include "VObject.h"
 
 void DetermineRGBDistributionSettings();
 BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex );
