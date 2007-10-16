@@ -150,7 +150,7 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 		case SLIDER_DEFAULT_STYLE:
 		default:
-			pNewSlider->uiFlags = SLIDER_HORIZONTAL;
+			pNewSlider->uiFlags = 0;
 			pNewSlider->usWidth = usWidth;
 			pNewSlider->usHeight = DEFUALT_SLIDER_SIZE;
 

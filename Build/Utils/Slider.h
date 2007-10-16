@@ -4,8 +4,6 @@
 typedef struct SLIDER SLIDER;
 
 #define		SLIDER_VERTICAL						0x00000001
-#define		SLIDER_HORIZONTAL					0x00000002
-
 
 
 //defines for the different styles of sliders
