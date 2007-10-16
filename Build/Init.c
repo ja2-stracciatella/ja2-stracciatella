@@ -22,7 +22,6 @@
 #include "Sys_Globals.h"
 #include "MapScreen.h"
 #include "Interface_Items.h"
-#include "MapUtility.h"
 #include "Strategic.h"
 #include "Dialogue_Control.h"
 #include "Text.h"

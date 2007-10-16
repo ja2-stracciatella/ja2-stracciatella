@@ -3,7 +3,6 @@
 #	include "Font.h"
 #	include "Local.h"
 #	include "Screens.h"
-#	include "MapUtility.h"
 #	include "WorldDef.h"
 #	include "Overhead.h"
 #	include "FileMan.h"
