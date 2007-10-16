@@ -1,6 +1,8 @@
 #include "FileMan.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Input.h"
+#include "Interface.h"
 #include "Local.h"
 #include "Timer.h"
 #include "Utilities.h"

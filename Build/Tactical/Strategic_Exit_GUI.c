@@ -1,5 +1,6 @@
 #include "Button_System.h"
 #include "Font.h"
+#include "Interface.h"
 #include "Local.h"
 #include "MouseSystem.h"
 #include "GameScreen.h"

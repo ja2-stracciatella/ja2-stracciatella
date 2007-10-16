@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "Interface.h"
 #include "Types.h"
 #include "VSurface.h"
 #include "MouseSystem.h"

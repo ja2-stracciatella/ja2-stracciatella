@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Interface.h"
 #include "Local.h"
 #include "StrategicMap.h"
 #include "Strategic.h"

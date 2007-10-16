@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Isometric_Utils.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Render_Dirty.h"

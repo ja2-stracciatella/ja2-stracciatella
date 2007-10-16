@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Input.h"
 #include "Local.h"
 #include "PreBattle_Interface.h"
 #include "Button_System.h"

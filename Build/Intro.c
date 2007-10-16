@@ -3,6 +3,7 @@
 #include "Debug.h"
 #include "English.h"
 #include "Game_Init.h"
+#include "Input.h"
 #include "Intro.h"
 #include "Local.h"
 #include "LibraryDataBase.h"

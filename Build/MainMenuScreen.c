@@ -7,6 +7,7 @@
 #include "GameSettings.h"
 #include "GameVersion.h"
 #include "Gameloop.h"
+#include "Input.h"
 #include "JA2_Splash.h"
 #include "JAScreens.h"
 #include "Local.h"

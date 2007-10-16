@@ -1,4 +1,6 @@
 #include "Font.h"
+#include "Input.h"
+#include "Interface.h"
 #include "Local.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"

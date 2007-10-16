@@ -1,4 +1,6 @@
 #include "Font.h"
+#include "Handle_UI.h"
+#include "Interface.h"
 #include "Local.h"
 #include "Video.h"
 #include "Soldier_Control.h"

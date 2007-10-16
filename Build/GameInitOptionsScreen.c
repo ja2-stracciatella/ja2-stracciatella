@@ -8,6 +8,7 @@
 #include "Font_Control.h"
 #include "GameInitOptionsScreen.h"
 #include "GameSettings.h"
+#include "Input.h"
 #include "Intro.h"
 #include "Local.h"
 #include "MainMenuScreen.h"

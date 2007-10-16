@@ -13,6 +13,7 @@
 #ifdef JA2EDITOR
 
 #include "Button_System.h"
+#include "Input.h"
 #include "Local.h"
 #include "TileDef.h"
 #include "SysUtil.h"
@@ -34,6 +35,7 @@
 #include "Item_Statistics.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "WorldDef.h"
 
 
 CurrentPopupMenuInformation gPopup;

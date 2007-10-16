@@ -4,6 +4,7 @@
 
 #include "Button_System.h"
 #include "Font.h"
+#include "Input.h"
 #include "TileDef.h"
 #include "VSurface.h"
 #include "WorldDat.h"
@@ -16,6 +17,7 @@
 #include "MemMan.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
+#include "WorldDef.h"
 
 
 // defines for DisplaySpec.ubType

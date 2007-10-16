@@ -1,5 +1,8 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "Handle_UI.h"
+#include "Interface.h"
+#include "Isometric_Utils.h"
 #include "Local.h"
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"

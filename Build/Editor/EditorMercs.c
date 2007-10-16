@@ -2,6 +2,8 @@
 
 #ifdef JA2EDITOR
 
+#include "Handle_UI.h"
+#include "Interface.h"
 #include "Local.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"

@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Isometric_Utils.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"
 #include "VSurface.h"
@@ -16,6 +17,7 @@
 #include "EditScreen.h"
 #include "SelectWin.h"
 #include "Utilities.h"
+#include "WorldDef.h"
 #include "World_Items.h"
 #include "EditorDefines.h"
 #include "EditorTerrain.h"

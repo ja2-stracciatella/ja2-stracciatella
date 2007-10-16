@@ -1,5 +1,6 @@
 #include "Encrypted_File.h"
 #include "Font.h"
+#include "Interface.h"
 #include "Local.h"
 #include "Sys_Globals.h"
 #include "SysUtil.h"

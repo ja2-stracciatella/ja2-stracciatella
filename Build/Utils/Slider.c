@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "Input.h"
 #include "Line.h"
 #include "Local.h"
 #include "MemMan.h"
