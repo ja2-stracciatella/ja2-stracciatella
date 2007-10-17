@@ -410,16 +410,8 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 static void RenderMainMenu(void)
 {
-	HVOBJECT hPixHandle;
-
-	//Get and display the background image
-	hPixHandle = GetVideoObject(guiMainMenuBackGroundImage);
-	BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 0, 0);
-	BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 0, 0);
-
-	hPixHandle = GetVideoObject(guiJa2LogoImage);
-	BltVideoObject(FRAME_BUFFER,  hPixHandle, 0, 188, 15);
-	BltVideoObject(guiSAVEBUFFER, hPixHandle, 0, 188, 15);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
+	BltVideoObjectFromIndex(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
 
 #if defined TESTFOREIGNFONTS
 	DrawTextToScreen(L"LARGEFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 105, 640, LARGEFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -443,7 +435,7 @@ static void RenderMainMenu(void)
 	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 #endif
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
