@@ -72,7 +72,6 @@ wchar_t gzUserDefinedButton2[128];
 
 
 static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static UINT16 GetMSgBoxButtonWidth(INT32 iButtonImage);
 static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void MsgBoxClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
@@ -288,12 +287,12 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 		}
 
 		case MSG_BOX_FLAG_OK:
-			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
+			x += (usTextBoxWidth - GetWidthOfButtonPic(gMsgBox.iButtonImages)) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 			break;
 
 		case MSG_BOX_FLAG_CANCEL:
-			x += (usTextBoxWidth - GetMSgBoxButtonWidth(gMsgBox.iButtonImages)) / 2;
+			x += (usTextBoxWidth - GetWidthOfButtonPic(gMsgBox.iButtonImages)) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 			break;
 
@@ -737,10 +736,4 @@ static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16
 			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, pCenteringRect); break;
 		}
 	}
-}
-
-
-static UINT16 GetMSgBoxButtonWidth(INT32 iButtonImage)
-{
-	return GetWidthOfButtonPic(iButtonImage, ButtonPictures[iButtonImage].OnNormal);
 }

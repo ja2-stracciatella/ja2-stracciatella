@@ -110,23 +110,6 @@ struct GUI_BUTTON
 
 extern GUI_BUTTON* ButtonList[MAX_BUTTONS]; // Button System's Main Button List
 
-// Struct definition for the QuickButton pictures.
-typedef struct BUTTON_PICS
-{
-	HVOBJECT vobj;      // The Image itself
-	INT32    Grayed;    // Index to use for a "Grayed-out" button
-	INT32    OffNormal; // Index to use when button is OFF
-	INT32    OffHilite; // Index to use when button is OFF w/ hilite on it
-	INT32    OnNormal;  // Index to use when button is ON
-	INT32    OnHilite;  // Index to use when button is ON w/ hilite on it
-	UINT32   MaxWidth;  // Width of largest image in use
-	UINT32   MaxHeight; // Height of largest image in use
-	UINT32   fFlags;    // Special image flags
-} BUTTON_PICS;
-
-
-extern BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
-
 
 /* Initializes the GUI button system for use. Must be called before using any
  * other button functions.
@@ -269,7 +252,7 @@ void ForceButtonUnDirty(INT32 iButtonIndex); // forces button undirty no matter 
 
 void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on);
 
-extern UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID, INT32 iSlot);
+extern UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID);
 
 UINT16 GetGenericButtonFillColor(void);
 

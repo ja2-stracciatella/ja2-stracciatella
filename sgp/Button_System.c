@@ -96,16 +96,30 @@ static INT8 gbDisabledButtonStyle;
 
 BOOLEAN gfRenderHilights = TRUE;
 
-BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
+// Struct definition for the QuickButton pictures.
+typedef struct BUTTON_PICS
+{
+	HVOBJECT vobj;      // The Image itself
+	INT32    Grayed;    // Index to use for a "Grayed-out" button
+	INT32    OffNormal; // Index to use when button is OFF
+	INT32    OffHilite; // Index to use when button is OFF w/ hilite on it
+	INT32    OnNormal;  // Index to use when button is ON
+	INT32    OnHilite;  // Index to use when button is ON w/ hilite on it
+	UINT32   MaxWidth;  // Width of largest image in use
+	UINT32   MaxHeight; // Height of largest image in use
+	UINT32   fFlags;    // Special image flags
+} BUTTON_PICS;
+
+static BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
 
 UINT32 ButtonDestBuffer = FRAME_BUFFER;
 
 GUI_BUTTON* ButtonList[MAX_BUTTONS];
 
 
-UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID, INT32 iSlot)
+UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID)
 {
-	return ButtonPictures[usButtonPicID].vobj->pETRLEObject[iSlot].usWidth;
+	return ButtonPictures[usButtonPicID].MaxWidth;
 }
 
 
