@@ -449,7 +449,6 @@ MOUSE_REGION		gTEAM_FirstHandInv[ 6 ];
 MOUSE_REGION		gTEAM_SecondHandInv[ 6 ];
 MOUSE_REGION		gTEAM_EnemyIndicator[ 6 ];
 
-BOOLEAN		gfTEAM_HandInvDispText[ 6 ][ NUM_INV_SLOTS ];
 BOOLEAN		gfSM_HandInvDispText[ NUM_INV_SLOTS ];
 
 
@@ -2816,10 +2815,6 @@ BOOLEAN InitializeTEAMPanel(  )
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
 	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
-	// Clear inv display stuff
-	memset( gfTEAM_HandInvDispText, 0, sizeof( gfTEAM_HandInvDispText ) );
-
-
 	// Create buttons
 	CHECKF( CreateTEAMPanelButtons( ) );
 
@@ -3909,7 +3904,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 		else
 		{
 			// Look in primary hand
-			INVRenderItem( guiSAVEBUFFER, pSoldier, &(pSoldier->inv[ HANDPOS ]), sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, &(gfTEAM_HandInvDispText[ ubPanelNum ][ HANDPOS ] ), 0 , FALSE, 0);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, FALSE, 0);
 		}
 
 		if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
@@ -3920,9 +3915,8 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 		else
 		{
 			// Do secondary hand
-			INVRenderItem( guiSAVEBUFFER, pSoldier, &(pSoldier->inv[ SECONDHANDPOS ]), sX, (INT16)(sY + TM_INV_HAND_SEPY), TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, &(gfTEAM_HandInvDispText[ ubPanelNum ][ SECONDHANDPOS ] ), 0 , FALSE, 0);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, FALSE, 0);
 		}
-
 	}
 }
 

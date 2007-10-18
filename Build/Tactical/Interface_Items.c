@@ -21,7 +21,6 @@
 #include "Radar_Screen.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"
-#include "Utilities.h"
 #include "Interface_Panels.h"
 #include "Animation_Control.h"
 #include "Soldier_Control.h"
@@ -174,8 +173,6 @@
 #define		ITEMDESC_AMMO_TEXT_X	3
 #define		ITEMDESC_AMMO_TEXT_Y	1
 #define		ITEMDESC_AMMO_TEXT_WIDTH 31
-
-#define		WORD_WRAP_INV_WIDTH			58
 
 #define		ITEM_BAR_WIDTH					2
 #define		ITEM_BAR_HEIGHT					20
@@ -1037,8 +1034,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	}
 
 	//Now render as normal
-	//INVRenderItem( guiSAVEBUFFER, pObject, (INT16)(sX + gSMInvData[ sPocket ].sSubX), (INT16)(sY + gSMInvData[ sPocket ].sSubY), gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight, fDirtyLevel, &(gfSM_HandInvDispText[ sPocket ] ) );
-	INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ sPocket ].sWidth, gSMInvData[ sPocket ].sHeight, fRenderDirtyLevel, NULL, 0, fOutline, sOutlineColor );
+	INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, fOutline, sOutlineColor);
 
 	if ( gbInvalidPlacementSlot[ sPocket ] )
 	{
@@ -1724,10 +1720,8 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 				continue;
 			}
 
-			INVRenderItem( guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[ cnt ].sWidth, gSMInvData[ cnt ].sHeight, DIRTYLEVEL2, NULL, 0, TRUE, us16BPPItemCyclePlacedItemColors[ pSoldier->bNewItemCycleCount[ cnt ] ] );
-
+			INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, TRUE, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
 		}
-
 	}
 }
 
@@ -1810,16 +1804,14 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8* pubHighlightCounter, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
+void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
 	INT16									sNewY, sNewX;
-	BOOLEAN								fLineSplit = FALSE;
-	INT16									sFontX2, sFontY2;
 	INT16									sFontX, sFontY;
 
-	static wchar_t				pStr[ 100 ], pStr2[ 100 ];
+	static wchar_t pStr[100];
 
 	if ( pObject->usItem == NOTHING )
 	{
@@ -2016,62 +2008,6 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 				}
 				mprintf(sNewX, sNewY, ModeMarker);
 				gprintfinvalidate(sNewX, sNewY, ModeMarker);
-			}
-		}
-	}
-
-	if ( pubHighlightCounter != NULL )
-	{
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTGRAY );
-
-		// DO HIGHLIGHT
-		if ( *pubHighlightCounter )
-		{
-			// Set string
-			const wchar_t* ItemName;
-			if ( ubStatusIndex < RENDER_ITEM_ATTACHMENT1 )
-			{
-				ItemName = ShortItemNames[pObject->usItem];
-			}
-			else
-			{
-				ItemName = ShortItemNames[pObject->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
-			}
-			wcslcpy(pStr, ItemName, lengthof(pStr));
-
-			fLineSplit = WrapString( pStr, pStr2, lengthof(pStr2), WORD_WRAP_INV_WIDTH, ITEM_FONT );
-
-			FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr, ITEM_FONT, &sFontX, &sFontY);
-			sFontY = sY + 1;
-			gprintfinvalidate( sFontX, sFontY, pStr );
-
-			if ( fLineSplit )
-			{
-				FindFontCenterCoordinates(sX, sY, sWidth, sHeight, pStr2, ITEM_FONT, &sFontX2, &sFontY2);
-				sFontY2 = sY + 13;
-				gprintfinvalidate( sFontX2, sFontY2, pStr2 );
-			}
-
-		}
-
-		if ( *pubHighlightCounter == 2 )
-		{
-			mprintf( sFontX, sFontY, pStr );
-
-			if ( fLineSplit )
-			{
-				mprintf( sFontX2, sFontY2, pStr2 );
-			}
-		}
-		else if ( *pubHighlightCounter == 1 )
-		{
-			*pubHighlightCounter = 0;
-			gprintfRestore( sFontX, sFontY, pStr );
-
-			if ( fLineSplit )
-			{
-				gprintfRestore( sFontX2, sFontY2, pStr2 );
 			}
 		}
 	}
@@ -2784,7 +2720,7 @@ void RenderItemDescriptionBox( )
          sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 				 sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
 
-				 INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+				 INVRenderItem(guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, FALSE, 0);
 
 				 sCenX = sCenX - gMapItemDescAttachmentsXY[cnt].sBarDx;
 				 sCenY = sCenY + gMapItemDescAttachmentsXY[cnt].sBarDy;
@@ -2796,7 +2732,7 @@ void RenderItemDescriptionBox( )
 				 sCenX = (INT16)( gsInvDescX + gMapItemDescAttachmentsXY[cnt].sX + 5 );
 				 sCenY = (INT16)( gsInvDescY + gMapItemDescAttachmentsXY[cnt].sY - 1 );
 
-				 INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+				 INVRenderItem(guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gMapItemDescAttachmentsXY[cnt].sWidth, gMapItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, FALSE, 0);
 
 				 sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
 				 sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
@@ -3220,7 +3156,7 @@ void RenderItemDescriptionBox( )
         sCenX = (INT16)( gsInvDescX + gItemDescAttachmentsXY[cnt].sX + 5 );
 				sCenY = (INT16)( gsInvDescY + gItemDescAttachmentsXY[cnt].sY - 1 );
 
-				INVRenderItem( guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, NULL, (UINT8)(RENDER_ITEM_ATTACHMENT1 + cnt), FALSE, 0 );
+				INVRenderItem(guiSAVEBUFFER, NULL, gpItemDescObject, sCenX, sCenY, gItemDescAttachmentsXY[cnt].sWidth, gItemDescAttachmentsXY[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, FALSE, 0);
 
 				sCenX = sCenX - gItemDescAttachmentsXY[cnt].sBarDx;
 				sCenY = sCenY + gItemDescAttachmentsXY[cnt].sBarDy;
@@ -4927,7 +4863,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
 			INT16 sY = gsItemPopupY + 3;
 
-			INVRenderItem( FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, NULL, (UINT8)RENDER_ITEM_NOSTATUS, FALSE, 0 );
+			INVRenderItem(FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, FALSE, 0);
 
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
@@ -5129,8 +5065,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 			pObject.usItem = FIRST_KEY + LockTable[ gpItemPopupSoldier->pKeyRing[ cnt].ubKeyID ].usKeyItem;
 
 			// render the item
-			INVRenderItem( FRAME_BUFFER, NULL, &pObject, (INT16)(gsKeyRingPopupInvX + sOffSetX +( cnt % sKeyRingItemWidth * usWidth ) + 8), ( INT16 )( gsKeyRingPopupInvY + sOffSetY + ( cnt / sKeyRingItemWidth * usHeight ) ),
-				( UINT16 )( usWidth - 8 ), ( UINT16 )( usHeight - 2 ) , DIRTYLEVEL2,  NULL, 0, 0, 0 );
+			INVRenderItem(FRAME_BUFFER, NULL, &pObject, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 8, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight, usWidth - 8, usHeight - 2, DIRTYLEVEL2, 0, 0, 0);
 		}
 
 		//BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, (INT16)(gsKeyRingPopupInvX + ( cnt % KEY_RING_ROW_WIDTH * usWidth ) ), ( INT16 )( gsKeyRingPopupInvY + ( cnt / KEY_RING_ROW_WIDTH * usHeight ) ));
