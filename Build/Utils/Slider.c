@@ -226,18 +226,18 @@ static void RenderSliderBox(SLIDER* s)
 		DestRect.iRight  = DestRect.iLeft                + s->ubSliderWidth;
 		DestRect.iBottom = DestRect.iTop                 + s->ubSliderHeight;
 
-		//If it is not the first time to render the slider
-		if (s->LastRect.iLeft != 0 || s->LastRect.iRight != 0)
-		{
-			//Restore the old rect
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, s->LastRect.iLeft, s->LastRect.iTop, s->ubSliderWidth, s->ubSliderHeight);
+		if (s->LastRect.iTop == DestRect.iTop) return;
 
-			//invalidate the old area
-			InvalidateRegion(s->LastRect.iLeft, s->LastRect.iTop, s->LastRect.iRight, s->LastRect.iBottom);
-		}
+		//Restore the old rect
+		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, s->LastRect.iLeft, s->LastRect.iTop, s->ubSliderWidth, s->ubSliderHeight);
 
-		//Blit the new rect
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, s->ubSliderWidth, s->ubSliderHeight);
+		//invalidate the old area
+		InvalidateRegion(s->LastRect.iLeft, s->LastRect.iTop, s->LastRect.iRight, s->LastRect.iBottom);
+
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
+
+		//invalidate the area
+		InvalidateRegion(DestRect.iLeft, DestRect.iTop, DestRect.iRight, DestRect.iBottom);
 	}
 	else
 	{
@@ -247,34 +247,19 @@ static void RenderSliderBox(SLIDER* s)
 		DestRect.iRight  = DestRect.iLeft                + s->ubSliderWidth;
 		DestRect.iBottom = DestRect.iTop                 + s->ubSliderHeight;
 
-		//If it is not the first time to render the slider
-		if (s->LastRect.iLeft != 0 || s->LastRect.iRight != 0)
-		{
-			//Restore the old rect
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, s->LastRect.iLeft, s->LastRect.iTop, 8, 15);
-		}
+		if (s->LastRect.iLeft == DestRect.iLeft) return;
 
-		//save the new rect
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, 8, 15);
+		//Restore the old rect
+		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, s->LastRect.iLeft, s->LastRect.iTop, 8, 15);
+
+		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
+
+		//invalidate the area
+		InvalidateRegion(DestRect.iLeft, DestRect.iTop, s->usCurrentSliderBoxPosition+9, s->usPosY + DEFUALT_SLIDER_SIZE);
 	}
 
 	//Save the new rect location
 	s->LastRect = DestRect;
-
-	if (s->uiFlags & SLIDER_VERTICAL)
-	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, s->LastRect.iLeft, s->LastRect.iTop);
-
-		//invalidate the area
-		InvalidateRegion(s->LastRect.iLeft, s->LastRect.iTop, s->LastRect.iRight, s->LastRect.iBottom);
-	}
-	else
-	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, s->usCurrentSliderBoxPosition, s->usPosY - DEFUALT_SLIDER_SIZE);
-
-		//invalidate the area
-		InvalidateRegion(s->usCurrentSliderBoxPosition, s->usPosY - DEFUALT_SLIDER_SIZE, s->usCurrentSliderBoxPosition+9, s->usPosY + DEFUALT_SLIDER_SIZE);
-	}
 }
 
 
