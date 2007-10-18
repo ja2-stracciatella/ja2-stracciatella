@@ -24,7 +24,6 @@
 #include "WorldMan.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"
-#include "Utilities.h"
 #include "Interface_Cursors.h"
 #include "Sound_Control.h"
 #include "Lighting.h"

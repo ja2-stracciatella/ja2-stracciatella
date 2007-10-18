@@ -16,7 +16,6 @@
 #include "Font_Control.h"
 #include "EditScreen.h"
 #include "SelectWin.h"
-#include "Utilities.h"
 #include "WorldDef.h"
 #include "World_Items.h"
 #include "EditorDefines.h"

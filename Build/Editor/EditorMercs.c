@@ -22,7 +22,6 @@
 #include "Video.h"
 #include "Interface_Items.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "World_Items.h"
 #include "WorldMan.h"
 #include "Overhead.h"	//GetSoldier

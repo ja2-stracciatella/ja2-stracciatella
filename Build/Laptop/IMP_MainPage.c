@@ -3,7 +3,6 @@
 #include "CharProfile.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

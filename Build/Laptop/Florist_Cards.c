@@ -2,7 +2,6 @@
 #include "Florist.h"
 #include "Florist_Cards.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Encrypted_File.h"

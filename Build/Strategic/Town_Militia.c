@@ -6,7 +6,6 @@
 #include "StrategicMap.h"
 #include "Overhead.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Utilities.h"
 #include "Random.h"
 #include "Text.h"
 #include "Map_Screen_Interface.h"

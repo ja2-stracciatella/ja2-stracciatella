@@ -2,7 +2,6 @@
 #include "BobbyRArmour.h"
 #include "BobbyRGuns.h"
 #include "BobbyR.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "Text.h"
 #include "Button_System.h"

@@ -10,7 +10,6 @@
 #include "Cursor_Control.h"
 #include "Render_Dirty.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "HelpScreen.h"

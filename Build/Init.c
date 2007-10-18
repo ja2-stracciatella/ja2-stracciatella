@@ -11,7 +11,6 @@
 #include "Overhead.h"
 #include "Font_Control.h"
 #include "Timer_Control.h"
-#include "Utilities.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
 #include "Sound_Control.h"

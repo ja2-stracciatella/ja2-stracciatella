@@ -10,7 +10,6 @@
 #include "WordWrap.h"
 #include "Video.h"
 #include "Render_Dirty.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "Font_Control.h"
 #include "Cursors.h"

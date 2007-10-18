@@ -3,7 +3,6 @@
 #include "Local.h"
 #include "Types.h"
 #include "ShopKeeper_Interface.h"
-#include "Utilities.h"
 #include "Game_Clock.h"
 #include "Render_Dirty.h"
 #include "WCheck.h"

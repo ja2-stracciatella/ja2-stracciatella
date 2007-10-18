@@ -13,7 +13,6 @@
 #include "StrategicMap.h"
 #include "Finances.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "Cursors.h"
 #include "VObject.h"
 #include "Merc_Hiring.h"

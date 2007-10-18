@@ -4,7 +4,6 @@
 #include "AIMSort.h"
 #include "AIM.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Soldier_Profile.h"
 #include "Game_Clock.h"

@@ -17,7 +17,6 @@
 #include "Text.h"
 #include "Font_Control.h"
 #include "VObject.h"
-#include "Utilities.h"
 #include "Interface_Control.h"
 #include "Game_Clock.h"
 #include "Map_Screen_Interface_Map_Inventory.h"

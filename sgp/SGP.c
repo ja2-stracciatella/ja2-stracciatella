@@ -23,7 +23,6 @@
 #include "Random.h"
 #include "SGP.h"
 #include "SoundMan.h"
-#include "Utilities.h"
 #include "Video.h"
 #include "VSurface.h"
 #include <SDL.h>

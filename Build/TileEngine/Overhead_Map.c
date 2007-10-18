@@ -3,7 +3,6 @@
 #include "VObject.h"
 #include "TileDef.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WorldDef.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

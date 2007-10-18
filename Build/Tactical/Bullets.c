@@ -4,7 +4,6 @@
 #include "SysUtil.h"
 #include "WCheck.h"
 #include "Faces.h"
-#include "Utilities.h"
 #include "Overhead.h"
 #include "Gap.h"
 #include "Soldier_Profile.h"

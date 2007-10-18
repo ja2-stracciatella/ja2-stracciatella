@@ -13,7 +13,6 @@
 #include "Quests.h"
 #include "QuestText.h"
 #include "Soldier_Profile.h"
-#include "Utilities.h"
 #include "Text.h"
 #include "Text_Input.h"
 #include "Soldier_Create.h"

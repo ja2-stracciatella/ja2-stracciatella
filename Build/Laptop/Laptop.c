@@ -5,7 +5,6 @@
 #include "Interface.h"
 #include "Local.h"
 #include "Timer.h"
-#include "Utilities.h"
 #include "VSurface.h"
 #include "WCheck.h"
 #include "Render_Dirty.h"

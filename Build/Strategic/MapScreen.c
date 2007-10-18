@@ -28,7 +28,6 @@
 #include "Environment.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
-#include "Utilities.h"
 #include "Game_Init.h"
 #include "RenderWorld.h"
 #include "Finances.h"

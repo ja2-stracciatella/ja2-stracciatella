@@ -19,7 +19,6 @@
 #include "Radar_Screen.h"
 #include "Font_Control.h"
 #include "Render_Dirty.h"
-#include "Utilities.h"
 #include "Sound_Control.h"
 #include "Interface_Panels.h"
 #include "Animation_Control.h"

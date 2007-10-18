@@ -4,7 +4,6 @@
 #include "Insurance.h"
 #include "Insurance_Comments.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Text.h"

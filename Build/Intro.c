@@ -18,7 +18,6 @@
 #include "SysUtil.h"
 #include "Sys_Globals.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "WCheck.h"

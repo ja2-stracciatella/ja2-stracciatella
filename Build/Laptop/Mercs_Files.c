@@ -3,7 +3,6 @@
 #include "Merc_Hiring.h"
 #include "Mercs_Files.h"
 #include "Mercs.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

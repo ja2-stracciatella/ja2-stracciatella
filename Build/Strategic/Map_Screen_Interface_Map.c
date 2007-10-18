@@ -34,7 +34,6 @@
 #include "Finances.h"
 #include "Line.h"
 #include "PreBattle_Interface.h"
-#include "Utilities.h"
 #include "Town_Militia.h"
 #include "Militia_Control.h"
 #include "Tactical_Save.h"

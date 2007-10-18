@@ -9,7 +9,6 @@
 #include "Rotting_Corpses.h"
 #include "Isometric_Utils.h"
 #include "Animation_Control.h"
-#include "Utilities.h"
 #include "Game_Clock.h"
 #include "Soldier_Create.h"
 #include "RenderWorld.h"

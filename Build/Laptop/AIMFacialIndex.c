@@ -3,7 +3,6 @@
 #include "AIMFacialIndex.h"
 #include "Merc_Hiring.h"
 #include "WordWrap.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "AIM.h"
 #include "Soldier_Profile.h"

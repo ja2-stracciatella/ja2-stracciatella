@@ -4,7 +4,6 @@
 #include "AIMArchives.h"
 #include "AIM.h"
 #include "WordWrap.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "Encrypted_File.h"
 #include "Text.h"

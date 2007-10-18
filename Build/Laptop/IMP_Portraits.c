@@ -4,7 +4,6 @@
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "Input.h"
 #include "Isometric_Utils.h"

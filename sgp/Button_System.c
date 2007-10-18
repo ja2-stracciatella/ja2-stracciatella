@@ -14,7 +14,6 @@
 
 #ifdef _JA2_RENDER_DIRTY
 #	include "Font_Control.h"
-#	include "Utilities.h"
 #endif
 
 

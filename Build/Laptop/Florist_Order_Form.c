@@ -3,7 +3,6 @@
 #include "Florist.h"
 #include "Florist_Order_Form.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Florist_Gallery.h"

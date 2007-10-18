@@ -37,7 +37,6 @@
 #include "Interface.h"
 #include "Soldier_Find.h"
 #include "AI.h"
-#include "Utilities.h"
 #include "Random.h"
 #include "Line.h"
 #include "Soldier_Add.h"

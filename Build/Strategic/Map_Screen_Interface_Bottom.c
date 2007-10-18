@@ -7,7 +7,6 @@
 #include "MouseSystem.h"
 #include "Button_System.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "Message.h"
 #include "MapScreen.h"
 #include "StrategicMap.h"

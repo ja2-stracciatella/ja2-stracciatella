@@ -18,7 +18,6 @@
 #include "VObject_Blitters.h"
 #include "Interface_Items.h"
 #include "Text.h"
-#include "Utilities.h"
 #include "Action_Items.h"
 #include "World_Items.h"
 #include "EditorDefines.h"

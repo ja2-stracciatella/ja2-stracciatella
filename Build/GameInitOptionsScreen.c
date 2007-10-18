@@ -20,7 +20,6 @@
 #include "SysUtil.h"
 #include "Text.h"
 #include "Types.h"
-#include "Utilities.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "WCheck.h"

@@ -7,7 +7,6 @@
 #include "TileDef.h"
 #include "Sys_Globals.h"
 #include "Debug_Control.h"
-#include "Utilities.h"
 #include "WorldDef.h"
 #include "FileMan.h"
 #include "MemMan.h"

@@ -4,7 +4,6 @@
 #include "Insurance_Contract.h"
 #include "Local.h"
 #include "WCheck.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Line.h"

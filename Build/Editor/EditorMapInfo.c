@@ -16,7 +16,6 @@
 #include "EditScreen.h"
 #include "SelectWin.h"
 #include "Interface_Items.h"
-#include "Utilities.h"
 #include "World_Items.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"

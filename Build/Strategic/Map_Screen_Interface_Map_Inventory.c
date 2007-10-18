@@ -4,7 +4,6 @@
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Render_Dirty.h"
 #include "VObject.h"
-#include "Utilities.h"
 #include "WCheck.h"
 #include "SysUtil.h"
 #include "Map_Screen_Interface_Border.h"

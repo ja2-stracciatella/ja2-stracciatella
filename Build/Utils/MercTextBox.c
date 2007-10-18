@@ -4,7 +4,6 @@
 #include "VSurface.h"
 #include "WCheck.h"
 #include "Font_Control.h"
-#include "Utilities.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
 #include "Debug.h"
