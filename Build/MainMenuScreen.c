@@ -54,8 +54,6 @@ enum
 static INT32 iMenuImages[NUM_MENU_ITEMS];
 static INT32 iMenuButtons[NUM_MENU_ITEMS];
 
-static UINT16 gusMainMenuButtonWidths[NUM_MENU_ITEMS];
-
 static UINT32 guiMainMenuBackGroundImage;
 static UINT32 guiJa2LogoImage;
 
@@ -376,9 +374,12 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 		{
-			gusMainMenuButtonWidths[cnt] = GetWidthOfButtonPic(iMenuImages[cnt]);
-			iMenuButtons[cnt] = QuickCreateButton(iMenuImages[cnt], (SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
-			if (iMenuButtons[cnt] == -1) return FALSE;
+			const INT32  img = iMenuImages[cnt];
+			const UINT16 w   = GetWidthOfButtonPic(img);
+			const INT16  x   = (SCREEN_WIDTH - w) / 2;
+			const INT16  y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
+			iMenuButtons[cnt] = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
+			if (iMenuButtons[cnt] == BUTTON_NO_SLOT) return FALSE;
 			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);
 		}
 
@@ -437,7 +438,12 @@ static void RestoreButtonBackGrounds(void)
 #ifndef TESTFOREIGNFONTS
 	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 	{
-		RestoreExternBackgroundRect((SCREEN_WIDTH - gusMainMenuButtonWidths[cnt]) / 2, MAINMENU_Y + cnt * MAINMENU_Y_SPACE - 1, gusMainMenuButtonWidths[cnt] + 1, 23);
+		const MOUSE_REGION* const r = &ButtonList[iMenuButtons[cnt]]->Area;
+		const INT16 x = r->RegionTopLeftX;
+		const INT16 y = r->RegionTopLeftY;
+		const INT16 w = r->RegionBottomRightX - x + 1;
+		const INT16 h = r->RegionBottomRightY - y + 1;
+		RestoreExternBackgroundRect(x, y, w, h);
 	}
 #endif
 }
