@@ -449,8 +449,6 @@ MOUSE_REGION		gTEAM_FirstHandInv[ 6 ];
 MOUSE_REGION		gTEAM_SecondHandInv[ 6 ];
 MOUSE_REGION		gTEAM_EnemyIndicator[ 6 ];
 
-BOOLEAN		gfSM_HandInvDispText[ NUM_INV_SLOTS ];
-
 
 // Globals - for one - the current merc here
 UINT16					gusSMCurrentMerc = 0;
@@ -1184,9 +1182,6 @@ BOOLEAN InitializeSMPanel(  )
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
 	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
-	// Clear inv display stuff
-	memset( gfSM_HandInvDispText, 0, sizeof( gfSM_HandInvDispText ) );
-
 	// INit viewport region
 	// Set global mouse regions
 	// Define region for viewport
@@ -1829,7 +1824,6 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		//gfSM_HandInvDispText[ uiHandPos ] = 1;
 		if ( gpItemPointer == NULL )
 		{
 			HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)uiHandPos, FALSE );
@@ -1856,7 +1850,6 @@ static void SMInvMoveCammoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 	if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		//gfSM_HandInvDispText[ uiHandPos ] = 1;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)NO_SLOT, FALSE );
 		gfCheckForMouseOverItem = FALSE;
 	}
