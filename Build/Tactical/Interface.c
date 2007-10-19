@@ -433,24 +433,18 @@ void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 			SetTEAMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
 			break;
 	}
-
-
 }
 
-void CreateCurrentTacticalPanelButtons( )
+
+void CreateCurrentTacticalPanelButtons(void)
 {
-	switch( gsCurInterfacePanel )
+	switch (gsCurInterfacePanel)
 	{
-		case SM_PANEL:
-			CreateSMPanelButtons( fInterfacePanelDirty );
-			break;
-
-		case TEAM_PANEL:
-			CreateTEAMPanelButtons( fInterfacePanelDirty );
-			break;
+		case SM_PANEL:   CreateSMPanelButtons();   break;
+		case TEAM_PANEL: CreateTEAMPanelButtons(); break;
 	}
-
 }
+
 
 void SetCurrentInterfacePanel( UINT8 ubNewPanel )
 {
@@ -481,17 +475,12 @@ void ToggleTacticalPanels( )
 }
 
 
-void RemoveCurrentTacticalPanelButtons( )
+void RemoveCurrentTacticalPanelButtons(void)
 {
-	switch( gsCurInterfacePanel )
+	switch (gsCurInterfacePanel)
 	{
-		case SM_PANEL:
-			RemoveSMPanelButtons( fInterfacePanelDirty );
-			break;
-
-		case TEAM_PANEL:
-			RemoveTEAMPanelButtons( fInterfacePanelDirty );
-			break;
+		case SM_PANEL:   RemoveSMPanelButtons();   break;
+		case TEAM_PANEL: RemoveTEAMPanelButtons(); break;
 	}
 }
 
