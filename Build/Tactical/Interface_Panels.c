@@ -78,28 +78,28 @@
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X       67
-#define SM_SELMERC_AP_Y      393
-#define SM_SELMERC_AP_HEIGHT  10
-#define SM_SELMERC_AP_WIDTH   17
+#define SM_SELMERC_AP_X      67
+#define SM_SELMERC_AP_Y      53
+#define SM_SELMERC_AP_HEIGHT 10
+#define SM_SELMERC_AP_WIDTH  17
 
-#define SM_SELMERC_HEALTH_X					69
-#define SM_SELMERC_HEALTH_Y					387
+#define SM_SELMERC_HEALTH_X 69
+#define SM_SELMERC_HEALTH_Y 47
 
-#define SM_SELMERCNAME_X       11
-#define SM_SELMERCNAME_Y      393
-#define SM_SELMERCNAME_WIDTH   53
-#define SM_SELMERCNAME_HEIGHT  10
+#define SM_SELMERCNAME_X      11
+#define SM_SELMERCNAME_Y      53
+#define SM_SELMERCNAME_WIDTH  53
+#define SM_SELMERCNAME_HEIGHT 10
 
-#define	SM_SELMERC_FACE_X						13
-#define	SM_SELMERC_FACE_Y						346
-#define	SM_SELMERC_FACE_HEIGHT			42
-#define	SM_SELMERC_FACE_WIDTH				48
+#define SM_SELMERC_FACE_X      13
+#define SM_SELMERC_FACE_Y       6
+#define SM_SELMERC_FACE_HEIGHT 42
+#define SM_SELMERC_FACE_WIDTH  48
 
-#define	SM_SELMERC_PLATE_X						4
-#define	SM_SELMERC_PLATE_Y						342
-#define	SM_SELMERC_PLATE_HEIGHT				65
-#define	SM_SELMERC_PLATE_WIDTH				83
+#define	SM_SELMERC_PLATE_X       4
+#define	SM_SELMERC_PLATE_Y       2
+#define	SM_SELMERC_PLATE_HEIGHT 65
+#define	SM_SELMERC_PLATE_WIDTH  83
 
 
 #define SM_BODYINV_X									244
@@ -110,36 +110,36 @@
 #define STATS_TEXT_FONT_COLOR					5
 
 
-#define	SM_TALKB_X									155
-#define	SM_TALKB_Y									448
-#define	SM_MUTEB_X									91
-#define	SM_MUTEB_Y									448
-#define	SM_STANCEUPB_X							187
-#define SM_STANCEUPB_Y							380
-#define	SM_UPDOWNB_X								91
-#define SM_UPDOWNB_Y								413
-#define	SM_CLIMBB_X									187
-#define SM_CLIMBB_Y									348
-#define	SM_STANCEDOWNB_X						187
-#define SM_STANCEDOWNB_Y						448
-#define	SM_HANDCURSORB_X						123
-#define SM_HANDCURSORB_Y						413
-#define	SM_PREVMERCB_X							9
-#define SM_PREVMERCB_Y							410
-#define	SM_NEXTMERCB_X							51
-#define SM_NEXTMERCB_Y							410
-#define	SM_OPTIONSB_X								9
-#define SM_OPTIONSB_Y								445
-#define	SM_BURSTMODEB_X							155
-#define SM_BURSTMODEB_Y							413
-#define	SM_LOOKB_X									123
-#define SM_LOOKB_Y									448
-#define	SM_STEALTHMODE_X						187
-#define	SM_STEALTHMODE_Y						413
-#define SM_DONE_X										543
-#define SM_DONE_Y										344
-#define SM_MAPSCREEN_X							589
-#define SM_MAPSCREEN_Y							344
+#define SM_TALKB_X       155
+#define SM_TALKB_Y       108
+#define SM_MUTEB_X        91
+#define SM_MUTEB_Y       108
+#define SM_STANCEUPB_X   187
+#define SM_STANCEUPB_Y    40
+#define SM_UPDOWNB_X      91
+#define SM_UPDOWNB_Y      73
+#define SM_CLIMBB_X      187
+#define SM_CLIMBB_Y        8
+#define SM_STANCEDOWNB_X 187
+#define SM_STANCEDOWNB_Y 108
+#define SM_HANDCURSORB_X 123
+#define SM_HANDCURSORB_Y  73
+#define SM_PREVMERCB_X     9
+#define SM_PREVMERCB_Y    70
+#define SM_NEXTMERCB_X    51
+#define SM_NEXTMERCB_Y    70
+#define SM_OPTIONSB_X      9
+#define SM_OPTIONSB_Y    105
+#define SM_BURSTMODEB_X  155
+#define SM_BURSTMODEB_Y  73
+#define SM_LOOKB_X       123
+#define SM_LOOKB_Y       108
+#define SM_STEALTHMODE_X 187
+#define SM_STEALTHMODE_Y 73
+#define SM_DONE_X        543
+#define SM_DONE_Y          4
+#define SM_MAPSCREEN_X   589
+#define SM_MAPSCREEN_Y     4
 
 
 #define	SM_POSITIONB_X							106 + INTERFACE_START_X
@@ -148,69 +148,69 @@
 #define SM_POSITIONB_HEIGHT					24
 
 
-#define	SM_PERCENT_WIDTH						20
-#define	SM_PERCENT_HEIGHT						10
-#define	SM_ARMOR_X									347
-#define	SM_ARMOR_Y									419
-#define	SM_ARMOR_LABEL_X						363
-#define	SM_ARMOR_LABEL_Y						409
-#define	SM_ARMOR_PERCENT_X					368
-#define	SM_ARMOR_PERCENT_Y					419
+#define SM_PERCENT_WIDTH    20
+#define SM_PERCENT_HEIGHT   10
+#define SM_ARMOR_X         347
+#define SM_ARMOR_Y          79
+#define SM_ARMOR_LABEL_X   363
+#define SM_ARMOR_LABEL_Y    69
+#define SM_ARMOR_PERCENT_X 368
+#define SM_ARMOR_PERCENT_Y  79
 
-#define	SM_WEIGHT_LABEL_X						430
-#define	SM_WEIGHT_LABEL_Y						447
-#define	SM_WEIGHT_PERCENT_X					449
-#define	SM_WEIGHT_PERCENT_Y					446
-#define	SM_WEIGHT_X									428
-#define	SM_WEIGHT_Y									446
+#define SM_WEIGHT_LABEL_X    430
+#define SM_WEIGHT_LABEL_Y    107
+#define SM_WEIGHT_PERCENT_X  449
+#define SM_WEIGHT_PERCENT_Y  106
+#define SM_WEIGHT_X          428
+#define SM_WEIGHT_Y          106
 
-#define	SM_CAMMO_LABEL_X						430
-#define	SM_CAMMO_LABEL_Y						462
-#define	SM_CAMMO_PERCENT_X					449
-#define	SM_CAMMO_PERCENT_Y					461
-#define	SM_CAMMO_X									428
-#define	SM_CAMMO_Y									461
+#define SM_CAMMO_LABEL_X     430
+#define SM_CAMMO_LABEL_Y     122
+#define SM_CAMMO_PERCENT_X   449
+#define SM_CAMMO_PERCENT_Y   121
+#define SM_CAMMO_X           428
+#define SM_CAMMO_Y           121
 
 
-#define SM_STATS_WIDTH							30
-#define SM_STATS_HEIGHT							8
-#define	SM_AGI_X										99
-#define	SM_AGI_Y										347
-#define	SM_DEX_X										99
-#define	SM_DEX_Y										357
-#define	SM_STR_X										99
-#define	SM_STR_Y										367
-#define	SM_CHAR_X										99
-#define	SM_CHAR_Y										377
-#define	SM_WIS_X										99
-#define	SM_WIS_Y										387
-#define	SM_EXPLVL_X									148
-#define	SM_EXPLVL_Y									347
-#define	SM_MRKM_X										148
-#define	SM_MRKM_Y										357
-#define	SM_EXPL_X										148
-#define	SM_EXPL_Y										367
-#define	SM_MECH_X										148
-#define	SM_MECH_Y										377
-#define	SM_MED_X										148
-#define	SM_MED_Y										387
+#define SM_STATS_WIDTH   30
+#define SM_STATS_HEIGHT   8
+#define SM_AGI_X         99
+#define SM_AGI_Y          7
+#define SM_DEX_X         99
+#define SM_DEX_Y         17
+#define SM_STR_X         99
+#define SM_STR_Y         27
+#define SM_CHAR_X        99
+#define SM_CHAR_Y        37
+#define SM_WIS_X         99
+#define SM_WIS_Y         47
+#define SM_EXPLVL_X     148
+#define SM_EXPLVL_Y       7
+#define SM_MRKM_X       148
+#define SM_MRKM_Y        17
+#define SM_EXPL_X       148
+#define SM_EXPL_Y        27
+#define SM_MECH_X       148
+#define SM_MECH_Y        37
+#define SM_MED_X        148
+#define SM_MED_Y         47
 
-#define MONEY_X											460
-#define MONEY_Y											445
-#define MONEY_WIDTH									30
-#define MONEY_HEIGHT								22
+#define MONEY_X      460
+#define MONEY_Y      105
+#define MONEY_WIDTH   30
+#define MONEY_HEIGHT  22
 
 #define TM_FACE_X      14
 #define TM_FACE_Y       6
-#define TM_FACE_WIDTH								48
-#define TM_FACE_HEIGHT							43
+#define TM_FACE_WIDTH  48
+#define TM_FACE_HEIGHT 43
 
-#define TM_ENDTURN_X								507
-#define TM_ENDTURN_Y								( 9 + INTERFACE_START_Y )
-#define TM_ROSTERMODE_X							507
-#define TM_ROSTERMODE_Y							( 45 + INTERFACE_START_Y )
-#define TM_DISK_X										507
-#define TM_DISK_Y										( 81 + INTERFACE_START_Y )
+#define TM_ENDTURN_X    507
+#define TM_ENDTURN_Y      9
+#define TM_ROSTERMODE_X 507
+#define TM_ROSTERMODE_Y  45
+#define TM_DISK_X       507
+#define TM_DISK_Y        81
 
 #define TM_NAME_X      11
 #define TM_NAME_Y      53
@@ -222,29 +222,29 @@
 #define TM_AP_WIDTH  18
 #define TM_AP_HEIGHT 10
 
-#define	TM_LIFEBAR_HEIGHT						42
+#define TM_LIFEBAR_HEIGHT 42
 
 #define TM_FACEHIGHTL_X        4
 #define TM_FACEHIGHTL_Y        2
-#define	TM_FACEHIGHTL_WIDTH					84
-#define	TM_FACEHIGHTL_HEIGHT				114
+#define TM_FACEHIGHTL_WIDTH   84
+#define TM_FACEHIGHTL_HEIGHT 114
 
-#define	TM_INV_WIDTH								58
-#define	TM_INV_HEIGHT								23
-#define	TM_INV_HAND1STARTX					8
-#define	TM_INV_HAND1STARTY					( 67 + INTERFACE_START_Y )
-#define	TM_INV_HAND2STARTX					8
-#define	TM_INV_HAND2STARTY					( 93 + INTERFACE_START_Y )
-#define	TM_INV_HAND_SEP							83
-#define	TM_INV_HAND_SEPY						24
+#define TM_INV_WIDTH       58
+#define TM_INV_HEIGHT      23
+#define TM_INV_HAND1STARTX  8
+#define TM_INV_HAND1STARTY 67
+#define TM_INV_HAND2STARTX          8
+#define TM_INV_HAND2STARTY          ( 93 + INTERFACE_START_Y )
+#define TM_INV_HAND_SEP    83
+#define TM_INV_HAND_SEPY   24
 
 #define TM_BARS_X      67
 #define TM_BARS_Y       3
 #define TM_BARS_WIDTH  19
 #define TM_BARS_HEIGHT 47
 
-#define	INDICATOR_BOX_WIDTH					12
-#define	INDICATOR_BOX_HEIGHT				10
+#define INDICATOR_BOX_WIDTH  12
+#define INDICATOR_BOX_HEIGHT 10
 
 
 enum
@@ -693,7 +693,8 @@ static void UpdateSMPanel(void)
 		// Make new
 		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
 		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
-		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
+		const INT32 dy = INV_INTERFACE_START_Y;
+		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, dy + SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
 		SetButtonFastHelpText(giSMStealthButton, TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
 		gfUIStanceDifferent = FALSE;
@@ -1049,11 +1050,13 @@ BOOLEAN InitializeSMPanel(void)
 	// Define region for panel
 	MSYS_DefineRegion(&gSMPanelRegion, 0, INV_INTERFACE_START_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback);
 
+	const INT32 dy = INV_INTERFACE_START_Y;
+
 	INT32 x;
 	INT32 y;
 
 	x = SM_SELMERC_FACE_X;
-	y = SM_SELMERC_FACE_Y;
+	y = dy + SM_SELMERC_FACE_Y;
 
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCPanelRegion, x, y, x + SM_SELMERC_FACE_WIDTH, y + SM_SELMERC_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, SelectedMercButtonMoveCallback, SelectedMercButtonCallback);
@@ -1063,7 +1066,7 @@ BOOLEAN InitializeSMPanel(void)
 
 	//DEfine region for money button
 	x = MONEY_X;
-	y = MONEY_Y;
+	y = dy + MONEY_Y;
 	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion, x, y, x + MONEY_WIDTH, y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
 	SetRegionFastHelpText(&gSM_SELMERCMoneyRegion, TacticalStr[MONEY_BUTTON_HELP_TEXT]);
 
@@ -1179,23 +1182,25 @@ BOOLEAN CreateSMPanelButtons(void)
 	// SET BUTTONS TO -1
 	memset( iSMPanelButtons, -1, sizeof( iSMPanelButtons ) );
 
-	if (!MakeButtonT(SM_MAP_SCREEN_BUTTON, iSMPanelImages[MAPSCREEN_IMAGES],  SM_MAPSCREEN_X,   SM_MAPSCREEN_Y,   BtnMapScreenCallback,  TacticalStr[MAPSCREEN_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(SM_DONE_BUTTON,       iSMPanelImages[DONE_IMAGES],       SM_DONE_X,        SM_DONE_Y,        BtnSMDoneCallback,     TacticalStr[END_TURN_POPUPTEXT]))           return FALSE;
-	if (!MakeButtonN(TALK_BUTTON,          iSMPanelImages[TALK_IMAGES],       SM_TALKB_X,       SM_TALKB_Y,       BtnTalkCallback,       TacticalStr[TALK_CURSOR_POPUPTEXT]))        return FALSE;
-	if (!MakeButtonN(MUTE_BUTTON,          iSMPanelImages[MUTE_IMAGES],       SM_MUTEB_X,       SM_MUTEB_Y,       BtnMuteCallback,       TacticalStr[TOGGLE_MUTE_POPUPTEXT]))        return FALSE;
-	if (!MakeButtonT(STANCEUP_BUTTON,      iSMPanelImages[STANCEUP_IMAGES],   SM_STANCEUPB_X,   SM_STANCEUPB_Y,   BtnStanceUpCallback,   TacticalStr[CHANGE_STANCE_UP_POPUPTEXT]))   return FALSE;
-	if (!MakeButtonN(UPDOWN_BUTTON,        iSMPanelImages[UPDOWN_IMAGES],     SM_UPDOWNB_X,     SM_UPDOWNB_Y,     BtnUpdownCallback,     TacticalStr[CURSOR_LEVEL_POPUPTEXT]))       return FALSE;
-	if (!MakeButtonT(CLIMB_BUTTON,         iSMPanelImages[CLIMB_IMAGES],      SM_CLIMBB_X,      SM_CLIMBB_Y,      BtnClimbCallback,      TacticalStr[JUMPCLIMB_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(STANCEDOWN_BUTTON,    iSMPanelImages[STANCEDOWN_IMAGES], SM_STANCEDOWNB_X, SM_STANCEDOWNB_Y, BtnStanceDownCallback, TacticalStr[CHANGE_STANCE_DOWN_POPUPTEXT])) return FALSE;
-	if (!MakeButtonN(HANDCURSOR_BUTTON,    iSMPanelImages[HANDCURSOR_IMAGES], SM_HANDCURSORB_X, SM_HANDCURSORB_Y, BtnHandCursorCallback, TacticalStr[EXAMINE_CURSOR_POPUPTEXT]))     return FALSE;
-	if (!MakeButtonT(PREVMERC_BUTTON,      iSMPanelImages[PREVMERC_IMAGES],   SM_PREVMERCB_X,   SM_PREVMERCB_Y,   BtnPrevMercCallback,   TacticalStr[PREV_MERC_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(NEXTMERC_BUTTON,      iSMPanelImages[NEXTMERC_IMAGES],   SM_NEXTMERCB_X,   SM_NEXTMERCB_Y,   BtnNextMercCallback,   TacticalStr[NEXT_MERC_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(OPTIONS_BUTTON,       iSMPanelImages[OPTIONS_IMAGES],    SM_OPTIONSB_X,    SM_OPTIONSB_Y,    BtnOptionsCallback,    TacticalStr[CHANGE_OPTIONS_POPUPTEXT]))     return FALSE;
+	const INT32 dy = INV_INTERFACE_START_Y;
+
+	if (!MakeButtonT(SM_MAP_SCREEN_BUTTON, iSMPanelImages[MAPSCREEN_IMAGES],  SM_MAPSCREEN_X,   dy + SM_MAPSCREEN_Y,   BtnMapScreenCallback,  TacticalStr[MAPSCREEN_POPUPTEXT]))          return FALSE;
+	if (!MakeButtonT(SM_DONE_BUTTON,       iSMPanelImages[DONE_IMAGES],       SM_DONE_X,        dy + SM_DONE_Y,        BtnSMDoneCallback,     TacticalStr[END_TURN_POPUPTEXT]))           return FALSE;
+	if (!MakeButtonN(TALK_BUTTON,          iSMPanelImages[TALK_IMAGES],       SM_TALKB_X,       dy + SM_TALKB_Y,       BtnTalkCallback,       TacticalStr[TALK_CURSOR_POPUPTEXT]))        return FALSE;
+	if (!MakeButtonN(MUTE_BUTTON,          iSMPanelImages[MUTE_IMAGES],       SM_MUTEB_X,       dy + SM_MUTEB_Y,       BtnMuteCallback,       TacticalStr[TOGGLE_MUTE_POPUPTEXT]))        return FALSE;
+	if (!MakeButtonT(STANCEUP_BUTTON,      iSMPanelImages[STANCEUP_IMAGES],   SM_STANCEUPB_X,   dy + SM_STANCEUPB_Y,   BtnStanceUpCallback,   TacticalStr[CHANGE_STANCE_UP_POPUPTEXT]))   return FALSE;
+	if (!MakeButtonN(UPDOWN_BUTTON,        iSMPanelImages[UPDOWN_IMAGES],     SM_UPDOWNB_X,     dy + SM_UPDOWNB_Y,     BtnUpdownCallback,     TacticalStr[CURSOR_LEVEL_POPUPTEXT]))       return FALSE;
+	if (!MakeButtonT(CLIMB_BUTTON,         iSMPanelImages[CLIMB_IMAGES],      SM_CLIMBB_X,      dy + SM_CLIMBB_Y,      BtnClimbCallback,      TacticalStr[JUMPCLIMB_POPUPTEXT]))          return FALSE;
+	if (!MakeButtonT(STANCEDOWN_BUTTON,    iSMPanelImages[STANCEDOWN_IMAGES], SM_STANCEDOWNB_X, dy + SM_STANCEDOWNB_Y, BtnStanceDownCallback, TacticalStr[CHANGE_STANCE_DOWN_POPUPTEXT])) return FALSE;
+	if (!MakeButtonN(HANDCURSOR_BUTTON,    iSMPanelImages[HANDCURSOR_IMAGES], SM_HANDCURSORB_X, dy + SM_HANDCURSORB_Y, BtnHandCursorCallback, TacticalStr[EXAMINE_CURSOR_POPUPTEXT]))     return FALSE;
+	if (!MakeButtonT(PREVMERC_BUTTON,      iSMPanelImages[PREVMERC_IMAGES],   SM_PREVMERCB_X,   dy + SM_PREVMERCB_Y,   BtnPrevMercCallback,   TacticalStr[PREV_MERC_POPUPTEXT]))          return FALSE;
+	if (!MakeButtonT(NEXTMERC_BUTTON,      iSMPanelImages[NEXTMERC_IMAGES],   SM_NEXTMERCB_X,   dy + SM_NEXTMERCB_Y,   BtnNextMercCallback,   TacticalStr[NEXT_MERC_POPUPTEXT]))          return FALSE;
+	if (!MakeButtonT(OPTIONS_BUTTON,       iSMPanelImages[OPTIONS_IMAGES],    SM_OPTIONSB_X,    dy + SM_OPTIONSB_Y,    BtnOptionsCallback,    TacticalStr[CHANGE_OPTIONS_POPUPTEXT]))     return FALSE;
 #if 0
-	if (!MakeButtonN(BURSTMODE_BUTTON,     iSMPanelImages[BURSTMODE_IMAGES],  SM_BURSTMODEB_X,  SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
+	if (!MakeButtonN(BURSTMODE_BUTTON,     iSMPanelImages[BURSTMODE_IMAGES],  SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
 #endif
-	if (!MakeButtonT(BURSTMODE_BUTTON,     iBurstButtonImages[WM_NORMAL],     SM_BURSTMODEB_X,  SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
-	if (!MakeButtonN(LOOK_BUTTON,          iSMPanelImages[LOOK_IMAGES],       SM_LOOKB_X,       SM_LOOKB_Y,       BtnLookCallback,       TacticalStr[LOOK_CURSOR_POPUPTEXT]))        return FALSE;
+	if (!MakeButtonT(BURSTMODE_BUTTON,     iBurstButtonImages[WM_NORMAL],     SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
+	if (!MakeButtonN(LOOK_BUTTON,          iSMPanelImages[LOOK_IMAGES],       SM_LOOKB_X,       dy + SM_LOOKB_Y,       BtnLookCallback,       TacticalStr[LOOK_CURSOR_POPUPTEXT]))        return FALSE;
 
 	return TRUE;
 }
@@ -1385,19 +1390,20 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		HandleItemDescriptionBox( pfDirty );
 	}
 
+	const INT32 dy = INV_INTERFACE_START_Y;
+
 	if ( *pfDirty == DIRTYLEVEL2 )
 	{
 		if ( InItemDescriptionBox( ) )
 		{
 			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, INV_INTERFACE_START_Y);
-			RenderSoldierFace( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, TRUE );
-
+			RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
 
 			// ATE: Need these lines here to fix flash bug with face selection box
 			if ( gfSMDisableForItems )
 			{
 				const INT32 x = SM_SELMERC_PLATE_X;
-				const INT32 y = SM_SELMERC_PLATE_Y;
+				const INT32 y = dy + SM_SELMERC_PLATE_Y;
 				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
 				RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 			}
@@ -1406,7 +1412,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 				if ( gusSelectedSoldier == gpSMCurrentMerc->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(  gpSMCurrentMerc ) )
 				{
 					const INT32 x = SM_SELMERC_PLATE_X;
-					const INT32 y = SM_SELMERC_PLATE_Y;
+					const INT32 y = dy + SM_SELMERC_PLATE_Y;
 					BltVideoObjectFromIndex(guiSAVEBUFFER, guiSMObjects, 0, x, y);
 					RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 				}
@@ -1426,7 +1432,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			if ( gfSMDisableForItems )
 			{
 				const INT32 x = SM_SELMERC_PLATE_X;
-				const INT32 y = SM_SELMERC_PLATE_Y;
+				const INT32 y = dy + SM_SELMERC_PLATE_Y;
 				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
 				RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 			}
@@ -1435,7 +1441,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 				if ( gusSelectedSoldier == gpSMCurrentMerc->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(  gpSMCurrentMerc ) )
 				{
 					const INT32 x = SM_SELMERC_PLATE_X;
-					const INT32 y = SM_SELMERC_PLATE_Y;
+					const INT32 y = dy + SM_SELMERC_PLATE_Y;
 					BltVideoObjectFromIndex(guiSAVEBUFFER, guiSMObjects, 0, x, y);
 					RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 				}
@@ -1457,31 +1463,31 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			SetFontForeground( STATS_TITLE_FONT_COLOR );
 			for( cnt = 0; cnt < 5; cnt++ )
 			{
-				const INT32 y = 347 + cnt * 10;
+				const INT32 y = dy + 7 + cnt * 10;
 				mprintf( 92, y, pShortAttributeStrings[cnt]);
 				mprintf(137, y, pShortAttributeStrings[cnt + 5]);
 			}
 
-				mprintf( SM_ARMOR_LABEL_X - StringPixLength( pInvPanelTitleStrings[0], BLOCKFONT2 ) / 2, SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[ 0 ] );
-			mprintf( SM_ARMOR_PERCENT_X, SM_ARMOR_PERCENT_Y, L"%%" );
+			mprintf(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
+			mprintf(SM_ARMOR_PERCENT_X, dy + SM_ARMOR_PERCENT_Y, L"%%");
 
-			mprintf( SM_WEIGHT_LABEL_X - StringPixLength( pInvPanelTitleStrings[1], BLOCKFONT2 ), SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[ 1 ] );
-			mprintf( SM_WEIGHT_PERCENT_X, SM_WEIGHT_PERCENT_Y, L"%%" );
+			mprintf(SM_WEIGHT_LABEL_X - StringPixLength(pInvPanelTitleStrings[1], BLOCKFONT2), dy + SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
+			mprintf(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, L"%%");
 
-			mprintf( SM_CAMMO_LABEL_X - StringPixLength( pInvPanelTitleStrings[2], BLOCKFONT2 ), SM_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ] );
-			mprintf( SM_CAMMO_PERCENT_X, SM_CAMMO_PERCENT_Y, L"%%" );
+			mprintf(SM_CAMMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMMO_LABEL_Y, pInvPanelTitleStrings[2]);
+			mprintf(SM_CAMMO_PERCENT_X, dy + SM_CAMMO_PERCENT_Y, L"%%");
 
 			const SOLDIERTYPE* const s = gpSMCurrentMerc;
-			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    SM_AGI_Y);
-			PrintStat(s->uiChangeDexterityTime,    DEX_INCREASE,      s->bDexterity,    SM_DEX_X,    SM_DEX_Y);
-			PrintStat(s->uiChangeStrengthTime,     STRENGTH_INCREASE, s->bStrength,     SM_STR_X,    SM_STR_Y);
-			PrintStat(s->uiChangeLeadershipTime,   LDR_INCREASE,      s->bLeadership,   SM_CHAR_X,   SM_CHAR_Y);
-			PrintStat(s->uiChangeWisdomTime,       WIS_INCREASE,      s->bWisdom,       SM_WIS_X,    SM_WIS_Y);
-			PrintStat(s->uiChangeLevelTime,        LVL_INCREASE,      s->bExpLevel,     SM_EXPLVL_X, SM_EXPLVL_Y);
-			PrintStat(s->uiChangeMarksmanshipTime, MRK_INCREASE,      s->bMarksmanship, SM_MRKM_X,   SM_MRKM_Y);
-			PrintStat(s->uiChangeExplosivesTime,   EXP_INCREASE,      s->bExplosive,    SM_EXPL_X,   SM_EXPL_Y);
-			PrintStat(s->uiChangeMechanicalTime,   MECH_INCREASE,     s->bMechanical,   SM_MECH_X,   SM_MECH_Y);
-			PrintStat(s->uiChangeMedicalTime,      MED_INCREASE,      s->bMedical,      SM_MED_X,    SM_MED_Y);
+			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
+			PrintStat(s->uiChangeDexterityTime,    DEX_INCREASE,      s->bDexterity,    SM_DEX_X,    dy + SM_DEX_Y);
+			PrintStat(s->uiChangeStrengthTime,     STRENGTH_INCREASE, s->bStrength,     SM_STR_X,    dy + SM_STR_Y);
+			PrintStat(s->uiChangeLeadershipTime,   LDR_INCREASE,      s->bLeadership,   SM_CHAR_X,   dy + SM_CHAR_Y);
+			PrintStat(s->uiChangeWisdomTime,       WIS_INCREASE,      s->bWisdom,       SM_WIS_X,    dy + SM_WIS_Y);
+			PrintStat(s->uiChangeLevelTime,        LVL_INCREASE,      s->bExpLevel,     SM_EXPLVL_X, dy + SM_EXPLVL_Y);
+			PrintStat(s->uiChangeMarksmanshipTime, MRK_INCREASE,      s->bMarksmanship, SM_MRKM_X,   dy + SM_MRKM_Y);
+			PrintStat(s->uiChangeExplosivesTime,   EXP_INCREASE,      s->bExplosive,    SM_EXPL_X,   dy + SM_EXPL_Y);
+			PrintStat(s->uiChangeMechanicalTime,   MECH_INCREASE,     s->bMechanical,   SM_MECH_X,   dy + SM_MECH_Y);
+			PrintStat(s->uiChangeMedicalTime,      MED_INCREASE,      s->bMedical,      SM_MED_X,    dy + SM_MED_Y);
 
 			if ( gpSMCurrentMerc->bLife >= OKLIFE )
 			{
@@ -1495,17 +1501,17 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 			// Display armour value!
 			swprintf( sString, lengthof(sString), L"%3d", ArmourPercent( gpSMCurrentMerc ) );
-			FindFontRightCoordinates(SM_ARMOR_X, SM_ARMOR_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(SM_ARMOR_X, dy + SM_ARMOR_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString );
 
 			// Display wieght value!
 			swprintf( sString, lengthof(sString), L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
-			FindFontRightCoordinates(SM_WEIGHT_X, SM_WEIGHT_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(SM_WEIGHT_X, dy + SM_WEIGHT_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString );
 
 			// Display cammo value!
 			swprintf( sString, lengthof(sString), L"%3d", gpSMCurrentMerc->bCamo );
-			FindFontRightCoordinates(SM_CAMMO_X, SM_CAMMO_Y ,SM_PERCENT_WIDTH ,SM_PERCENT_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(SM_CAMMO_X, dy + SM_CAMMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString );
 
 
@@ -1514,9 +1520,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 
-
-			RenderSoldierFace( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y, TRUE );
-
+			RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
 		}
 
 		// Render Name!
@@ -1533,7 +1537,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		SetFontBackground(FONT_MCOLOR_BLACK);
 
 		const INT32 x = SM_SELMERCNAME_X;
-		const INT32 y = SM_SELMERCNAME_Y;
+		const INT32 y = dy + SM_SELMERCNAME_Y;
 		const INT32 w = SM_SELMERCNAME_WIDTH;
 		const INT32 h = SM_SELMERCNAME_HEIGHT;
 		RestoreExternBackgroundRect(x, y, w, h);
@@ -1550,8 +1554,8 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		// display AP
 		if (!(gpSMCurrentMerc->uiStatusFlags & SOLDIER_DEAD))
 		{
-			PrintAP(gpSMCurrentMerc, SM_SELMERC_AP_X, SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
-			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
+			PrintAP(gpSMCurrentMerc, SM_SELMERC_AP_X, dy + SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
+			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, dy + SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
 		}
 	}
 
@@ -2654,7 +2658,7 @@ BOOLEAN InitializeTEAMPanel(void)
 		MSYS_SetRegionUserData(&gTEAM_LeftBarsRegions[i], 0, i);
 
 		x = dx + TM_INV_HAND1STARTX;
-		y = TM_INV_HAND1STARTY;
+		y = dy + TM_INV_HAND1STARTY;
 		MSYS_DefineRegion(&gTEAM_FirstHandInv[i], x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
 		MSYS_SetRegionUserData(&gTEAM_FirstHandInv[i], 0, i);
 
@@ -2870,7 +2874,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 			}
 
-			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, TM_INV_HAND1STARTY, i, fDirty);
+			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, i, fDirty);
 		}
 	}
 	UpdateTEAMPanel();
@@ -2912,9 +2916,10 @@ BOOLEAN CreateTEAMPanelButtons(void)
 	iTEAMPanelImages[ROSTERMODE_IMAGES] = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES], -1, 1, -1, 4, -1);
 	iTEAMPanelImages[DISK_IMAGES]       = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES], -1, 2, -1, 5, -1);
 
-	if (!MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]))     return FALSE;
-	if (!MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]))    return FALSE;
-	if (!MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT])) return FALSE;
+	const INT32 dy = INTERFACE_START_Y;
+	if (!MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]))     return FALSE;
+	if (!MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]))    return FALSE;
+	if (!MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       dy + TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT])) return FALSE;
 
 	return TRUE;
 }
