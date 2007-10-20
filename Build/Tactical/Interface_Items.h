@@ -121,4 +121,6 @@ void ResetCompatibleItemArray( );
 
 void CycleItemDescriptionItem( );
 
+void UpdateItemHatches(void);
+
 #endif

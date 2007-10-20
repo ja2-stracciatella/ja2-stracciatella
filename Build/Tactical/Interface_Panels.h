@@ -47,73 +47,77 @@ BOOLEAN CreateSMPanelButtons(void);
 void    RemoveSMPanelButtons(void);
 BOOLEAN InitializeSMPanel(void);
 BOOLEAN ShutdownSMPanel(void);
-void RenderSMPanel( BOOLEAN *pfDirty );
-void EnableSMPanelButtons( BOOLEAN fEnable, BOOLEAN fFromItemPickup );
+void RenderSMPanel(BOOLEAN* pfDirty);
+void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 
 
 BOOLEAN CreateTEAMPanelButtons(void);
 void    RemoveTEAMPanelButtons(void);
 BOOLEAN InitializeTEAMPanel(void);
 BOOLEAN ShutdownTEAMPanel(void);
-void RenderTEAMPanel( BOOLEAN fDirty );
+void    RenderTEAMPanel(BOOLEAN fDirty);
 
 
-void SetSMPanelCurrentMerc( UINT8 ubNewID );
-void SetTEAMPanelCurrentMerc( UINT8 ubNewID );
-UINT16 GetSMPanelCurrentMerc(  );
+void SetSMPanelCurrentMerc(UINT8 ubNewID);
+void SetTEAMPanelCurrentMerc(UINT8 ubNewID);
+UINT16 GetSMPanelCurrentMerc(void);
 
-BOOLEAN InitTEAMSlots( );
-void AddPlayerToInterfaceTeamSlot( UINT8 ubID );
-UINT8 GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot);
-void RemoveAllPlayersFromSlot( );
-BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID );
-void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier );
+BOOLEAN InitTEAMSlots(void);
+void    AddPlayerToInterfaceTeamSlot(UINT8 ubID);
+UINT8   GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot);
+void    RemoveAllPlayersFromSlot(void);
+BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID);
+void    CheckForAndAddMercToTeamPanel(SOLDIERTYPE* s);
 
-void DisableTacticalTeamPanelButtons( BOOLEAN fDisable );
-void			RenderTownIDString( );
-void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason );
+void DisableTacticalTeamPanelButtons(BOOLEAN fDisable);
+void RenderTownIDString(void);
 
-
-void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed );
-void EndRadioLocator( UINT8 ubID );
+void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
+void KeyRingSlotInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-MOUSE_REGION		gSMPanelRegion;
+void ShowRadioLocator(UINT8 ubID, UINT8 ubLocatorSpeed);
+void EndRadioLocator(UINT8 ubID);
 
 
-UINT32					guiSecItemHiddenVO;
-
-extern BOOLEAN	gfDisableTacticalPanelButtons;
+extern MOUSE_REGION gSMPanelRegion;
 
 
-typedef struct
+extern UINT32 guiSecItemHiddenVO;
+
+extern BOOLEAN gfDisableTacticalPanelButtons;
+
+
+typedef struct TEAM_PANEL_SLOTS_TYPE
 {
 	UINT8	ubID;
 	BOOLEAN	fOccupied;
-
 } TEAM_PANEL_SLOTS_TYPE;
 
-TEAM_PANEL_SLOTS_TYPE		gTeamPanel[ NUM_TEAM_SLOTS ];
+extern TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
 
 
 
 //Used when the shop keeper interface is active
 void DisableSMPpanelButtonsWhenInShopKeeperInterface(void);
 
-//
-void ReEvaluateDisabledINVPanelButtons( );
+void ReEvaluateDisabledINVPanelButtons(void);
 
-void CheckForDisabledForGiveItem( );
-void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fEnable );
+void CheckForDisabledForGiveItem(void);
+void ReevaluateItemHatches(SOLDIERTYPE* s, BOOLEAN fEnable);
 
-void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier );
+void HandlePanelFaceAnimations(SOLDIERTYPE* s);
 
-void GoToMapScreenFromTactical( void );
+void GoToMapScreenFromTactical(void);
 
-void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem );
+void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* s, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem);
 
-void FinishAnySkullPanelAnimations( );
+void FinishAnySkullPanelAnimations(void);
 
-UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
+UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE *prev, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+
+void BeginKeyPanelFromKeyShortcut(void);
+
+void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
 
 #endif

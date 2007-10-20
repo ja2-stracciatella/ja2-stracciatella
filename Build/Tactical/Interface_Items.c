@@ -322,8 +322,6 @@ extern void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier );
 extern BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern void	StartSKIDescriptionBox( void );
 
-void UpdateItemHatches();
-
 
 static const UINT8 ubRGBItemCyclePlacedItemColors[] =
 {
@@ -6679,8 +6677,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 }
 
 
-
-void UpdateItemHatches()
+void UpdateItemHatches(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 

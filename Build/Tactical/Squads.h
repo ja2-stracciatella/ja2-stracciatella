@@ -126,7 +126,7 @@ BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue );
 BOOLEAN ResetDeadSquadMemberList( INT32 iSquadValue );
 
 // this passed  soldier on the current squad int he tactical map
-BOOLEAN IsMercOnCurrentSquad( SOLDIERTYPE *pSoldier );
+BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier);
 
 // is this squad filled up?
 BOOLEAN IsThisSquadFull( INT8 bSquadValue );

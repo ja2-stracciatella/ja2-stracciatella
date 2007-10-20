@@ -133,8 +133,6 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
 
 extern SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier );
 extern void HandleTalkingMenuBackspace( void );
-extern void BeginKeyPanelFromKeyShortcut( );
-
 
 
 extern INT32		iSMPanelButtons[ NUM_SM_BUTTONS ];

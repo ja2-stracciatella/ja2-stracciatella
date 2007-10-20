@@ -442,12 +442,9 @@ SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 extern	SOLDIERTYPE *gpItemPopupSoldier;
 extern	INT8		gbCompatibleApplyItem;
 
+MOUSE_REGION gSMPanelRegion;
 
-// keyring stuff
-void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason );
-
-
-extern void UpdateItemHatches();
+TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
@@ -465,7 +462,7 @@ static INT8 GetUIApsToDisplay(const SOLDIERTYPE* s)
 }
 
 
-void CheckForDisabledForGiveItem( )
+void CheckForDisabledForGiveItem(void)
 {
 	INT16			sDist;
 	INT16			sDistVisible;
@@ -569,7 +566,7 @@ void CheckForDisabledForGiveItem( )
 static void UpdateSMPanel(void);
 
 
-void SetSMPanelCurrentMerc( UINT8 ubNewID )
+void SetSMPanelCurrentMerc(UINT8 ubNewID)
 {
 	gubSelectSMPanelToMerc = NOBODY;
 
@@ -962,7 +959,7 @@ extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, IN
 extern INT8		 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
-void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
+void ReevaluateItemHatches(SOLDIERTYPE* pSoldier, BOOLEAN fAllValid)
 {
 	INT32	cnt;
 
@@ -1004,7 +1001,7 @@ void ReevaluateItemHatches( SOLDIERTYPE *pSoldier, BOOLEAN fAllValid )
 }
 
 
-void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
+void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 {
 	if ( fFromItemPickup )
 	{
@@ -1137,7 +1134,8 @@ void EnableSMPanelButtons( BOOLEAN fEnable , BOOLEAN fFromItemPickup )
 	}
 }
 
-UINT16 GetSMPanelCurrentMerc( )
+
+UINT16 GetSMPanelCurrentMerc(void)
 {
 	return( gusSMCurrentMerc );
 }
@@ -1466,7 +1464,7 @@ static void HandleSoldierFaceFlash(SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sF
 static void UpdateStatColor(UINT32 uiTimer, BOOLEAN fIncrease);
 
 
-void RenderSMPanel( BOOLEAN *pfDirty )
+void RenderSMPanel(BOOLEAN* pfDirty)
 {
 	UINT16	usX, usY;
 	wchar_t sString[9];
@@ -3459,7 +3457,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 }
 
 
-void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed )
+void ShowRadioLocator(UINT8 ubID, UINT8 ubLocatorSpeed)
 {
 	RESETTIMECOUNTER( MercPtrs[ ubID ]->FlashSelCounter, FLASH_SELECTOR_DELAY );
 
@@ -3486,14 +3484,15 @@ void ShowRadioLocator( UINT8 ubID, UINT8 ubLocatorSpeed )
 	}
 }
 
-void EndRadioLocator( UINT8 ubID )
+
+void EndRadioLocator(UINT8 ubID)
 {
 	MercPtrs[ ubID ]->fFlashLocator = FALSE;
 	MercPtrs[ ubID ]->fShowLocator = FALSE;
 }
 
 
-void FinishAnySkullPanelAnimations( )
+void FinishAnySkullPanelAnimations(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32		cnt2;
@@ -3514,10 +3513,10 @@ void FinishAnySkullPanelAnimations( )
 			}
 		}
 	}
-
 }
 
-void HandlePanelFaceAnimations( SOLDIERTYPE *pSoldier )
+
+void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
@@ -3839,7 +3838,7 @@ static INT8 GetTeamSlotFromPlayerID(UINT8 ubID)
 static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
 
 
-BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID )
+BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID)
 {
 	INT32 cnt;
 
@@ -3859,7 +3858,7 @@ BOOLEAN RemovePlayerFromTeamSlotGivenMercID( UINT8 ubMercID )
 }
 
 
-void AddPlayerToInterfaceTeamSlot( UINT8 ubID )
+void AddPlayerToInterfaceTeamSlot(UINT8 ubID)
 {
 	INT32  cnt;
 
@@ -3894,7 +3893,8 @@ void AddPlayerToInterfaceTeamSlot( UINT8 ubID )
 	}
 }
 
-BOOLEAN InitTEAMSlots( )
+
+BOOLEAN InitTEAMSlots(void)
 {
 	INT32 cnt;
 
@@ -3918,7 +3918,7 @@ BOOLEAN GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 }
 
 
-void RemoveAllPlayersFromSlot( )
+void RemoveAllPlayersFromSlot(void)
 {
 	int cnt;
 
@@ -3966,7 +3966,7 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 }
 
 
-void RenderTownIDString( )
+void RenderTownIDString(void)
 {
 	CHAR16	zTownIDString[80];
 	INT16 sFontX, sFontY;
@@ -3983,7 +3983,7 @@ void RenderTownIDString( )
 }
 
 
-void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
+void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* pSoldier)
 {
 
 	if ( pSoldier->bActive  )
@@ -4031,7 +4031,7 @@ void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier )
 }
 
 
-UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs )
+UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
 	INT32 cnt;
   INT32 bFirstID;
@@ -4112,17 +4112,16 @@ UINT8 FindNextMercInTeamPanel( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife
 
 	// IF we are here, keep as we always were!
 	return( pSoldier->ubID );
-
 }
 
 
-void DisableTacticalTeamPanelButtons( BOOLEAN fDisable )
+void DisableTacticalTeamPanelButtons(BOOLEAN fDisable)
 {
 	gfDisableTacticalPanelButtons = fDisable;
 }
 
 
-void BeginKeyPanelFromKeyShortcut( )
+void BeginKeyPanelFromKeyShortcut(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sStartYPosition = 0;
@@ -4157,7 +4156,7 @@ void BeginKeyPanelFromKeyShortcut( )
 }
 
 
-void KeyRingItemPanelButtonCallback( MOUSE_REGION * pRegion, INT32 iReason )
+void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sStartYPosition = 0;
@@ -4618,7 +4617,7 @@ static void ConfirmationToDepositMoneyToPlayersAccount(UINT8 ubExitValue)
 }
 
 
-void ReEvaluateDisabledINVPanelButtons( )
+void ReEvaluateDisabledINVPanelButtons(void)
 {
 	gfReEvaluateDisabledINVPanelButtons = TRUE;
 }
@@ -4654,7 +4653,8 @@ static void AbandonBoxingCallback(UINT8 ubExitValue)
 	// otherwise do nothing
 }
 
-void GoToMapScreenFromTactical( void )
+
+void GoToMapScreenFromTactical(void)
 {
 	if ( gTacticalStatus.bBoxingState != NOT_BOXING )
 	{
@@ -4667,7 +4667,7 @@ void GoToMapScreenFromTactical( void )
 }
 
 
-void HandleTacticalEffectsOfEquipmentChange( SOLDIERTYPE *pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem )
+void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* pSoldier, UINT32 uiInvPos, UINT16 usOldItem, UINT16 usNewItem)
 {
 	// if in attached weapon mode and don't have weapon with GL attached in hand, reset weapon mode
 	if ( pSoldier->bWeaponMode == WM_ATTACHED && FindAttachment( &(pSoldier->inv[ HANDPOS ]), UNDER_GLAUNCHER ) == NO_SLOT )

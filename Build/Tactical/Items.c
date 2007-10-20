@@ -2828,7 +2828,7 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 }
 
 
-BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement )
+BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos, BOOLEAN fDoingPlacement)
 {
 	UINT8					ubSlotLimit;
 	INT8					bNewPos;

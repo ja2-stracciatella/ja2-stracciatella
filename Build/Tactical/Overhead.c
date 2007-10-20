@@ -110,7 +110,6 @@ static INT32   giPauseAllAITimer = 0;
 
 extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
 extern void HandleExplosionQueue( void );
-extern void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
 extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
 
 extern BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID );

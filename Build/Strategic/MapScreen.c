@@ -498,7 +498,6 @@ extern INT32 giMapBorderButtons[];
 
 // the mine icon
 extern UINT32 guiMINEICON;
-extern UINT32 guiSecItemHiddenVO;
 
 extern UINT32	guiUIMessageTimeDelay;
 
@@ -559,8 +558,6 @@ void DetermineWhichAssignmentMenusCanBeShown( void );
 // screen mask for pop up menus
 void ClearScreenMaskForMapScreenExit( void );
 
-
-extern void KeyRingItemPanelButtonCallback( MOUSE_REGION *pRegion, INT32 iReason );
 
 BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
 extern void CreateDestroyMilitiaSectorButtons( void );
