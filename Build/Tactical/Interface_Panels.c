@@ -214,6 +214,9 @@
 #define TM_NAME_WIDTH								60
 #define TM_NAME_HEIGHT							9
 #define	TM_LIFEBAR_HEIGHT						42
+
+#define TM_FACEHIGHTL_X        4
+#define TM_FACEHIGHTL_Y        2
 #define	TM_FACEHIGHTL_WIDTH					84
 #define	TM_FACEHIGHTL_HEIGHT				114
 #define TM_AP_HEIGHT								10
@@ -362,16 +365,6 @@ INT16					sTEAMNamesXY[] =
 	256, ( 415 ),
 	339, ( 415 ),
 	422, ( 415 )
-};
-
-INT16					sTEAMFaceHighlXY[] =
-{
-	4,	( 2 + INTERFACE_START_Y ),
-	87, ( 2 + INTERFACE_START_Y ),
-	170, ( 2 + INTERFACE_START_Y ),
-	253, ( 2 + INTERFACE_START_Y ),
-	336, ( 2 + INTERFACE_START_Y ),
-	419, ( 2 + INTERFACE_START_Y )
 };
 
 
@@ -2762,6 +2755,9 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
+			const INT32 dx = TM_INV_HAND_SEP * i;
+			const INT32 dy = INTERFACE_START_Y;
+
 			// GET SOLDIER
 			if (!gTeamPanel[i].fOccupied)
 			{
@@ -2774,8 +2770,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || INTERRUPT_QUEUED)
 				{
 					// Hatch out...
-					const INT32 x = sTEAMFaceHighlXY[i * 2];
-					const INT32 y = sTEAMFaceHighlXY[i * 2 + 1];
+					const INT32 x = dx + TM_FACEHIGHTL_X;
+					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObjectFromIndex(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
 					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
@@ -2822,15 +2818,15 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				// Render Selected guy if selected
 				if (gusSelectedSoldier == s->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(s))
 				{
-					const INT32 x = sTEAMFaceHighlXY[i * 2];
-					const INT32 y = sTEAMFaceHighlXY[i * 2 + 1];
+					const INT32 x = dx + TM_FACEHIGHTL_X;
+					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObjectFromIndex(guiSAVEBUFFER, guiTEAMObjects, 0, x, y);
 					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 				else if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s))
 				{
-					const INT32 x = sTEAMFaceHighlXY[i * 2];
-					const INT32 y = sTEAMFaceHighlXY[i * 2 + 1];
+					const INT32 x = dx + TM_FACEHIGHTL_X;
+					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObjectFromIndex(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
 					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
