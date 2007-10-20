@@ -217,14 +217,17 @@
 #define TM_NAME_WIDTH  53
 #define TM_NAME_HEIGHT 10
 
+#define TM_AP_X      67
+#define TM_AP_Y      53
+#define TM_AP_WIDTH  18
+#define TM_AP_HEIGHT 10
+
 #define	TM_LIFEBAR_HEIGHT						42
 
 #define TM_FACEHIGHTL_X        4
 #define TM_FACEHIGHTL_Y        2
 #define	TM_FACEHIGHTL_WIDTH					84
 #define	TM_FACEHIGHTL_HEIGHT				114
-#define TM_AP_HEIGHT								10
-#define TM_AP_WIDTH									15
 
 #define	TM_INV_WIDTH								58
 #define	TM_INV_HEIGHT								23
@@ -348,17 +351,6 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 INV_REGION_DESC gSMCamoXY =
 {
 	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
-};
-
-
-INT16					sTEAMApXY[] =
-{
-	70,	( 413 ),
-	153, ( 413 ),
-	235, ( 413 ),
-	319, ( 413 ),
-	402, ( 413 ),
-	485, ( 413 )
 };
 
 
@@ -2863,6 +2855,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			}
 
 			const INT32 dx = TM_INV_HAND_SEP * i;
+			const INT32 dy = INTERFACE_START_Y;
 
 			if (fDirty != DIRTYLEVEL0)
 			{
@@ -2872,8 +2865,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					SetStatsHelp(&gTEAM_BarsRegions[i], s);
         }
 
-				const INT32 x = sTEAMApXY[i * 2];
-				const INT32 y = sTEAMApXY[i * 2 + 1];
+				const INT32 x = dx + TM_AP_X;
+				const INT32 y = dy + TM_AP_Y;
 				const INT32 w = TM_AP_WIDTH;
 				const INT32 h = TM_AP_HEIGHT;
 				if (!(s->uiStatusFlags & SOLDIER_DEAD))
