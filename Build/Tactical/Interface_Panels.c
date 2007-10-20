@@ -397,19 +397,6 @@ INT16					sTEAMBarsXY[] =
 };
 
 
-
-INT16					sTEAMHandInvXY[] =
-{
-	TM_INV_HAND1STARTX + ( 0 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY,
-	TM_INV_HAND1STARTX + ( 1 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY,
-	TM_INV_HAND1STARTX + ( 2 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY,
-	TM_INV_HAND1STARTX + ( 3 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY,
-	TM_INV_HAND1STARTX + ( 4 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY,
-	TM_INV_HAND1STARTX + ( 5 * TM_INV_HAND_SEP ),											TM_INV_HAND1STARTY
-};
-
-
-
 INT32					iSMPanelButtons[ NUM_SM_BUTTONS ];
 INT32					iTEAMPanelButtons[ NUM_TEAM_BUTTONS ];
 
@@ -2677,6 +2664,8 @@ BOOLEAN InitializeTEAMPanel(void)
 
 	for (UINT32 i = 0; i < 6; ++i)
 	{
+		const INT32 dx = TM_INV_HAND_SEP * i;
+
 		INT32 x;
 		INT32 y;
 
@@ -2706,8 +2695,8 @@ BOOLEAN InitializeTEAMPanel(void)
 		MSYS_DefineRegion(&gTEAM_LeftBarsRegions[i], x - 8, y, x, y + TM_BARS_REGION_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_LeftBarsRegions[i], 0, i);
 
-		x = sTEAMHandInvXY[i * 2];
-		y = sTEAMHandInvXY[i * 2 + 1];
+		x = dx + TM_INV_HAND1STARTX;
+		y = TM_INV_HAND1STARTY;
 		MSYS_DefineRegion(&gTEAM_FirstHandInv[i], x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
 		MSYS_SetRegionUserData(&gTEAM_FirstHandInv[i], 0, i);
 
@@ -2893,6 +2882,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				s->sPanelFaceY = gFacesData[s->iFaceIndex].usFaceY;
 			}
 
+			const INT32 dx = TM_INV_HAND_SEP * i;
+
 			if (fDirty != DIRTYLEVEL0)
 			{
 				// UPdate stats!
@@ -2917,7 +2908,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 			}
 
-			RenderSoldierTeamInv(s, sTEAMHandInvXY[i * 2], sTEAMHandInvXY[i * 2 + 1], i, fDirty);
+			RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, TM_INV_HAND1STARTY, i, fDirty);
 		}
 	}
 	UpdateTEAMPanel();
