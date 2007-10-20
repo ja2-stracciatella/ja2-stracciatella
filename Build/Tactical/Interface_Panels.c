@@ -374,12 +374,12 @@ MOUSE_REGION		gSM_SELMERCBarsRegion;
 MOUSE_REGION		gSM_SELMERCMoneyRegion;
 MOUSE_REGION		gSM_SELMERCEnemyIndicatorRegion;
 MOUSE_REGION		gTEAM_PanelRegion;
-MOUSE_REGION		gTEAM_FaceRegions[ 6 ];
-MOUSE_REGION		gTEAM_BarsRegions[ 6 ];
-MOUSE_REGION		gTEAM_LeftBarsRegions[ 6 ];
-MOUSE_REGION		gTEAM_FirstHandInv[ 6 ];
-MOUSE_REGION		gTEAM_SecondHandInv[ 6 ];
-MOUSE_REGION		gTEAM_EnemyIndicator[ 6 ];
+MOUSE_REGION gTEAM_FaceRegions[NUM_TEAM_SLOTS];
+MOUSE_REGION gTEAM_BarsRegions[NUM_TEAM_SLOTS];
+MOUSE_REGION gTEAM_LeftBarsRegions[NUM_TEAM_SLOTS];
+MOUSE_REGION gTEAM_FirstHandInv[NUM_TEAM_SLOTS];
+MOUSE_REGION gTEAM_SecondHandInv[NUM_TEAM_SLOTS];
+MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
 
 
 // Globals - for one - the current merc here
@@ -589,8 +589,6 @@ static BOOLEAN IsMouseInRegion(MOUSE_REGION* pRegion);
 
 void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 {
-	INT32 cnt;
-
 	if ( gsCurInterfacePanel == SM_PANEL )
 	{
 		if ( gpSMCurrentMerc != NULL )
@@ -604,7 +602,7 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	}
 	else
 	{
-		for ( cnt = 0; cnt < 6; cnt++ )
+		for (INT32 cnt = 0; cnt < NUM_TEAM_SLOTS; ++cnt)
 		{
 			if ( gTeamPanel[ cnt ].ubID == pSoldier->ubID )
 			{
@@ -2621,7 +2619,7 @@ BOOLEAN InitializeTEAMPanel(void)
 	// Define region for panel
 	MSYS_DefineRegion(&gTEAM_PanelRegion, 0, gsVIEWPORT_END_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	for (UINT32 i = 0; i < 6; ++i)
+	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
 		const INT32 dx = TM_INV_HAND_SEP * i;
 		const INT32 dy = INTERFACE_START_Y;
@@ -2680,7 +2678,7 @@ BOOLEAN ShutdownTEAMPanel(void)
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);
 
-	for (UINT32 i = 0; i < 6; ++i)
+	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
 		MSYS_RemoveRegion(&gTEAM_EnemyIndicator[i]);
 		MSYS_RemoveRegion(&gTEAM_FaceRegions[i]);
@@ -3000,7 +2998,7 @@ static void UpdateTEAMPanel(void)
 		DisableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
 		// OK, disable item regions.......
-		for (INT32 i = 0; i < 6; ++i)
+		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
 			MSYS_DisableRegion(&gTEAM_EnemyIndicator[i]);
 			MSYS_DisableRegion(&gTEAM_FirstHandInv[i]);
@@ -3018,7 +3016,7 @@ static void UpdateTEAMPanel(void)
 	{
 		EnableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
-		for (INT32 i = 0; i < 6; ++i)
+		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
 			MSYS_EnableRegion(&gTEAM_EnemyIndicator[i]);
 			MSYS_EnableRegion(&gTEAM_FirstHandInv[i]);
