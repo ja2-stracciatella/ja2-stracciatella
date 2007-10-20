@@ -212,8 +212,11 @@
 #define TM_DISK_X										507
 #define TM_DISK_Y										( 81 + INTERFACE_START_Y )
 
-#define TM_NAME_WIDTH								60
-#define TM_NAME_HEIGHT							9
+#define TM_NAME_X      11
+#define TM_NAME_Y      53
+#define TM_NAME_WIDTH  53
+#define TM_NAME_HEIGHT 10
+
 #define	TM_LIFEBAR_HEIGHT						42
 
 #define TM_FACEHIGHTL_X        4
@@ -345,17 +348,6 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 INV_REGION_DESC gSMCamoXY =
 {
 	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
-};
-
-
-INT16					sTEAMNamesXY[] =
-{
-	7,	( 415 ),
-	90, ( 415 ),
-	173, ( 415 ),
-	256, ( 415 ),
-	339, ( 415 ),
-	422, ( 415 )
 };
 
 
@@ -2844,7 +2836,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 				INT16 sFontX;
 				INT16 sFontY;
-				FindFontCenterCoordinates(sTEAMNamesXY[i * 2] + 2, sTEAMNamesXY[i * 2 + 1], TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
+				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
 				mprintf(sFontX, sFontY, L"%ls", s->name);
 				gprintfRestore(sFontX, sFontY, L"%ls", s->name);
 				// reset to frame buffer!
