@@ -142,12 +142,6 @@
 #define SM_MAPSCREEN_Y     4
 
 
-#define	SM_POSITIONB_X							106 + INTERFACE_START_X
-#define SM_POSITIONB_Y							34 + INV_INTERFACE_START_Y
-#define	SM_POSITIONB_WIDTH					19
-#define SM_POSITIONB_HEIGHT					24
-
-
 #define SM_PERCENT_WIDTH    20
 #define SM_PERCENT_HEIGHT   10
 #define SM_ARMOR_X         347
@@ -233,8 +227,6 @@
 #define TM_INV_HEIGHT      23
 #define TM_INV_HAND1STARTX  8
 #define TM_INV_HAND1STARTY 67
-#define TM_INV_HAND2STARTX          8
-#define TM_INV_HAND2STARTY          ( 93 + INTERFACE_START_Y )
 #define TM_INV_HAND_SEP    83
 #define TM_INV_HAND_SEPY   24
 
