@@ -1390,6 +1390,18 @@ static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
 static void UpdateStatColor(UINT32 uiTimer, BOOLEAN fIncrease);
 
 
+static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 x, INT16 y)
+{
+	UpdateStatColor(change_time, (gpSMCurrentMerc->usValueGoneUp & stat_bit) != 0);
+	wchar_t str[9];
+	swprintf(str, lengthof(str), L"%2d", stat_val);
+	UINT16 usX;
+	UINT16 usY;
+	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
+	mprintf(usX, usY, str);
+}
+
+
 void RenderSMPanel(BOOLEAN* pfDirty)
 {
 	UINT16	usX, usY;
@@ -1515,65 +1527,17 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			mprintf( SM_CAMMO_LABEL_X - StringPixLength( pInvPanelTitleStrings[2], BLOCKFONT2 ), SM_CAMMO_LABEL_Y, pInvPanelTitleStrings[ 2 ] );
 			mprintf( SM_CAMMO_PERCENT_X, SM_CAMMO_PERCENT_Y, L"%%" );
 
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeAgilityTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & AGIL_INCREASE? TRUE: FALSE ) );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bAgility );
-			FindFontRightCoordinates(SM_AGI_X, SM_AGI_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeDexterityTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & DEX_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bDexterity );
-			FindFontRightCoordinates(SM_DEX_X, SM_DEX_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeStrengthTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & STRENGTH_INCREASE?TRUE: FALSE ) );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bStrength );
-			FindFontRightCoordinates(SM_STR_X, SM_STR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeLeadershipTime, ( BOOLEAN )( gpSMCurrentMerc->usValueGoneUp & LDR_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bLeadership );
-			FindFontRightCoordinates(SM_CHAR_X, SM_CHAR_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeWisdomTime,( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & WIS_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bWisdom );
-			FindFontRightCoordinates(SM_WIS_X, SM_WIS_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeLevelTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & LVL_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bExpLevel );
-			FindFontRightCoordinates(SM_EXPLVL_X, SM_EXPLVL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeMarksmanshipTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MRK_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bMarksmanship );
-			FindFontRightCoordinates(SM_MRKM_X, SM_MRKM_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeExplosivesTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & EXP_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bExplosive );
-			FindFontRightCoordinates(SM_EXPL_X, SM_EXPL_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeMechanicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MECH_INCREASE ? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bMechanical );
-			FindFontRightCoordinates(SM_MECH_X, SM_MECH_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
-			UpdateStatColor( gpSMCurrentMerc-> uiChangeMedicalTime, ( BOOLEAN ) ( gpSMCurrentMerc->usValueGoneUp & MED_INCREASE? TRUE: FALSE )  );
-
-			swprintf( sString, lengthof(sString), L"%2d", gpSMCurrentMerc->bMedical );
-			FindFontRightCoordinates(SM_MED_X, SM_MED_Y ,SM_STATS_WIDTH ,SM_STATS_HEIGHT ,sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
+			const SOLDIERTYPE* const s = gpSMCurrentMerc;
+			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    SM_AGI_Y);
+			PrintStat(s->uiChangeDexterityTime,    DEX_INCREASE,      s->bDexterity,    SM_DEX_X,    SM_DEX_Y);
+			PrintStat(s->uiChangeStrengthTime,     STRENGTH_INCREASE, s->bStrength,     SM_STR_X,    SM_STR_Y);
+			PrintStat(s->uiChangeLeadershipTime,   LDR_INCREASE,      s->bLeadership,   SM_CHAR_X,   SM_CHAR_Y);
+			PrintStat(s->uiChangeWisdomTime,       WIS_INCREASE,      s->bWisdom,       SM_WIS_X,    SM_WIS_Y);
+			PrintStat(s->uiChangeLevelTime,        LVL_INCREASE,      s->bExpLevel,     SM_EXPLVL_X, SM_EXPLVL_Y);
+			PrintStat(s->uiChangeMarksmanshipTime, MRK_INCREASE,      s->bMarksmanship, SM_MRKM_X,   SM_MRKM_Y);
+			PrintStat(s->uiChangeExplosivesTime,   EXP_INCREASE,      s->bExplosive,    SM_EXPL_X,   SM_EXPL_Y);
+			PrintStat(s->uiChangeMechanicalTime,   MECH_INCREASE,     s->bMechanical,   SM_MECH_X,   SM_MECH_Y);
+			PrintStat(s->uiChangeMedicalTime,      MED_INCREASE,      s->bMedical,      SM_MED_X,    SM_MED_Y);
 
 			if ( gpSMCurrentMerc->bLife >= OKLIFE )
 			{
