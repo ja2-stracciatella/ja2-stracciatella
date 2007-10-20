@@ -672,6 +672,15 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 }
 
 
+static void SetButtonState(UINT idx, BOOLEAN clicked)
+{
+	GUI_BUTTON* const b = ButtonList[iSMPanelButtons[idx]];
+	if (b->ubToggleButtonActivated) return;
+	b->uiFlags &= ~BUTTON_CLICKED_ON;
+	b->uiFlags |= (clicked ? BUTTON_CLICKED_ON : 0);
+}
+
+
 static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason);
 static void CheckForReEvaluateDisabledINVPanelButtons(void);
 
@@ -775,39 +784,11 @@ static void UpdateSMPanel(void)
 	}
 
 	/*
-	if ( gpSMCurrentMerc->bDoBurst )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
+	SetButtonState(BURSTMODE_BUTTON, gpSMCurrentMerc->bDoBurst);
 	*/
 
-
 	// Toggle MUTE button...
-	if ( gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ MUTE_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
-
+	SetButtonState(MUTE_BUTTON, (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE) != 0);
 
 	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 
@@ -847,65 +828,11 @@ static void UpdateSMPanel(void)
 	}
 
 //	if ( gpSMCurrentMerc->bUIInterfaceLevel > 0 )
-	if ( gsInterfaceLevel > 0 )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags |= (BUTTON_CLICKED_ON);
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
+	SetButtonState(UPDOWN_BUTTON, gsInterfaceLevel > 0);
 
-	if ( gCurrentUIMode == HANDCURSOR_MODE )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ HANDCURSOR_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
-
-	if ( gCurrentUIMode == TALKCURSOR_MODE )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ TALK_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
-
-	if ( gCurrentUIMode == LOOKCURSOR_MODE )
-	{
-		if ( !ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		}
-	}
-	else
-	{
-		if ( !ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->ubToggleButtonActivated )
-		{
-			ButtonList[ iSMPanelButtons[ LOOK_BUTTON ] ]->uiFlags &= ( ~BUTTON_CLICKED_ON );
-		}
-	}
+	SetButtonState(HANDCURSOR_BUTTON, gCurrentUIMode == HANDCURSOR_MODE);
+	SetButtonState(TALK_BUTTON,       gCurrentUIMode == TALKCURSOR_MODE);
+	SetButtonState(LOOK_BUTTON,       gCurrentUIMode == LOOKCURSOR_MODE);
 
 	// If not selected ( or dead ), disable/gray some buttons
 	if ( gusSelectedSoldier != gpSMCurrentMerc->ubID || ( gpSMCurrentMerc->bLife < OKLIFE ) || (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || gfSMDisableForItems )
