@@ -131,11 +131,11 @@
 #define SM_OPTIONSB_X      9
 #define SM_OPTIONSB_Y    105
 #define SM_BURSTMODEB_X  155
-#define SM_BURSTMODEB_Y  73
+#define SM_BURSTMODEB_Y   73
 #define SM_LOOKB_X       123
 #define SM_LOOKB_Y       108
 #define SM_STEALTHMODE_X 187
-#define SM_STEALTHMODE_Y 73
+#define SM_STEALTHMODE_Y  73
 #define SM_DONE_X        543
 #define SM_DONE_Y          4
 #define SM_MAPSCREEN_X   589
@@ -151,19 +151,19 @@
 #define SM_ARMOR_PERCENT_X 368
 #define SM_ARMOR_PERCENT_Y  79
 
-#define SM_WEIGHT_LABEL_X    430
-#define SM_WEIGHT_LABEL_Y    107
-#define SM_WEIGHT_PERCENT_X  449
-#define SM_WEIGHT_PERCENT_Y  106
-#define SM_WEIGHT_X          428
-#define SM_WEIGHT_Y          106
+#define SM_WEIGHT_LABEL_X   430
+#define SM_WEIGHT_LABEL_Y   107
+#define SM_WEIGHT_PERCENT_X 449
+#define SM_WEIGHT_PERCENT_Y 106
+#define SM_WEIGHT_X         428
+#define SM_WEIGHT_Y         106
 
-#define SM_CAMMO_LABEL_X     430
-#define SM_CAMMO_LABEL_Y     122
-#define SM_CAMMO_PERCENT_X   449
-#define SM_CAMMO_PERCENT_Y   121
-#define SM_CAMMO_X           428
-#define SM_CAMMO_Y           121
+#define SM_CAMMO_LABEL_X    430
+#define SM_CAMMO_LABEL_Y    122
+#define SM_CAMMO_PERCENT_X  449
+#define SM_CAMMO_PERCENT_Y  121
+#define SM_CAMMO_X          428
+#define SM_CAMMO_Y          121
 
 
 #define SM_STATS_WIDTH   30
