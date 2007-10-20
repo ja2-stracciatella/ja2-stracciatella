@@ -238,8 +238,10 @@
 #define	TM_INV_HAND_SEP							83
 #define	TM_INV_HAND_SEPY						24
 
-#define	TM_BARS_REGION_HEIGHT				47
-#define	TM_BARS_REGION_WIDTH				26
+#define TM_BARS_X      67
+#define TM_BARS_Y       3
+#define TM_BARS_WIDTH  19
+#define TM_BARS_HEIGHT 47
 
 #define	INDICATOR_BOX_WIDTH					12
 #define	INDICATOR_BOX_HEIGHT				10
@@ -351,17 +353,6 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 INV_REGION_DESC gSMCamoXY =
 {
 	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
-};
-
-
-INT16					sTEAMBarsXY[] =
-{
-	61,	 ( 363 ),
-	145, ( 363 ),
-	228, ( 363 ),
-	311, ( 363 ),
-	394, ( 363 ),
-	477, ( 362 )
 };
 
 
@@ -2654,14 +2645,14 @@ BOOLEAN InitializeTEAMPanel(void)
 			}
 		}
 
-		x = sTEAMBarsXY[i * 2];
-		y = sTEAMBarsXY[i * 2 + 1];
-		MSYS_DefineRegion(&gTEAM_BarsRegions[i], x, y , x + TM_BARS_REGION_WIDTH, y + TM_BARS_REGION_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		x = dx + TM_BARS_X;
+		y = dy + TM_BARS_Y;
+		MSYS_DefineRegion(&gTEAM_BarsRegions[i], x, y , x + TM_BARS_WIDTH, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_BarsRegions[i], 0, i);
 
 		x = dx + TM_FACE_X;
 		y = dy + TM_FACE_Y;
-		MSYS_DefineRegion(&gTEAM_LeftBarsRegions[i], x - 8, y, x, y + TM_BARS_REGION_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MSYS_DefineRegion(&gTEAM_LeftBarsRegions[i], x - 8, y, x, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_LeftBarsRegions[i], 0, i);
 
 		x = dx + TM_INV_HAND1STARTX;
