@@ -4477,13 +4477,11 @@ static void ChangeCurrentSquad(INT32 iSquad)
 
 static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 {
-	UINT8 ubID;
-
-	if ( GetPlayerIDFromInterfaceTeamSlot( ubPanelSlot, &ubID ) )
+	const UINT8 id = GetPlayerIDFromInterfaceTeamSlot(ubPanelSlot);
+	if (id != NOBODY)
 	{
-		HandleLocateSelectMerc( ubID, bCode );
-
-		ErasePath( TRUE );
+		HandleLocateSelectMerc(id, bCode);
+		ErasePath(TRUE);
 		gfPlotNewMovement = TRUE;
 	}
 }

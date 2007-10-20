@@ -3909,23 +3909,14 @@ BOOLEAN InitTEAMSlots( )
 }
 
 
-BOOLEAN GetPlayerIDFromInterfaceTeamSlot( UINT8 ubPanelSlot, UINT8 *pubID )
+BOOLEAN GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 {
-	if ( ubPanelSlot >= NUM_TEAM_SLOTS )
-	{
-		return( FALSE );
-	}
+	if (ubPanelSlot >= NUM_TEAM_SLOTS) return NOBODY;
 
-	if ( gTeamPanel[ ubPanelSlot ].fOccupied )
-	{
-		*pubID = gTeamPanel[ ubPanelSlot ].ubID;
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	const TEAM_PANEL_SLOTS_TYPE* const p = &gTeamPanel[ubPanelSlot];
+	return p->fOccupied ? p->ubID : NOBODY;
 }
+
 
 void RemoveAllPlayersFromSlot( )
 {
