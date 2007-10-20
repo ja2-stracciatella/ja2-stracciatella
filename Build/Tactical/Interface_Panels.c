@@ -200,7 +200,8 @@
 #define MONEY_WIDTH									30
 #define MONEY_HEIGHT								22
 
-
+#define TM_FACE_X      14
+#define TM_FACE_Y       6
 #define TM_FACE_WIDTH								48
 #define TM_FACE_HEIGHT							43
 
@@ -346,16 +347,6 @@ INV_REGION_DESC gSMCamoXY =
 	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
 };
 
-
-INT16					sTEAMFacesXY[] =
-{
-	13,	( 366 ),
-	97, ( 366 ),
-	180, ( 366 ),
-	263, ( 366 ),
-	346, ( 366 ),
-	429, ( 366 )
-};
 
 INT16					sTEAMNamesXY[] =
 {
@@ -2658,12 +2649,13 @@ BOOLEAN InitializeTEAMPanel(void)
 	for (UINT32 i = 0; i < 6; ++i)
 	{
 		const INT32 dx = TM_INV_HAND_SEP * i;
+		const INT32 dy = INTERFACE_START_Y;
 
 		INT32 x;
 		INT32 y;
 
-		x = sTEAMFacesXY[i * 2];
-		y = sTEAMFacesXY[i * 2 + 1];
+		x = dx + TM_FACE_X;
+		y = dy + TM_FACE_Y;
 		MSYS_DefineRegion(&gTEAM_FaceRegions[i], x, y , x + TM_FACE_WIDTH, y + TM_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_FaceRegions[i], 0, i);
 
@@ -2683,8 +2675,8 @@ BOOLEAN InitializeTEAMPanel(void)
 		MSYS_DefineRegion(&gTEAM_BarsRegions[i], x, y , x + TM_BARS_REGION_WIDTH, y + TM_BARS_REGION_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_BarsRegions[i], 0, i);
 
-		x = sTEAMFacesXY[i * 2];
-		y = sTEAMFacesXY[i * 2 + 1];
+		x = dx + TM_FACE_X;
+		y = dy + TM_FACE_Y;
 		MSYS_DefineRegion(&gTEAM_LeftBarsRegions[i], x - 8, y, x, y + TM_BARS_REGION_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
 		MSYS_SetRegionUserData(&gTEAM_LeftBarsRegions[i], 0, i);
 
@@ -2762,8 +2754,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			if (!gTeamPanel[i].fOccupied)
 			{
 				//BLIT CLOSE PANEL
-				const INT32 x = sTEAMFacesXY[i * 2];
-				const INT32 y = sTEAMFacesXY[i * 2 + 1];
+				const INT32 x = dx + TM_FACE_X;
+				const INT32 y = dy + TM_FACE_Y;
 				BltVideoObjectFromIndex(guiSAVEBUFFER, guiCLOSE, 5, x, y);
 				RestoreExternBackgroundRect(x, y, TM_FACE_WIDTH, TM_FACE_HEIGHT);
 
@@ -2831,7 +2823,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 
-				RenderSoldierFace(s, sTEAMFacesXY[i * 2], sTEAMFacesXY[i * 2 + 1], TRUE);
+				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y, TRUE);
 
 				// Restore AP/LIFE POSIITONS
 
@@ -3550,7 +3542,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 		{
 			RestoreExternBackgroundRect(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT);
 			BltVideoObjectFromIndex(FRAME_BUFFER, guiCLOSE, pSoldier->bOpenPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
-			//InvalidateRegion(sTEAMFacesXY[ubOpenPanelID], sTEAMFacesXY[ubOpenPanelID + 1], sTEAMFacesXY[ubOpenPanelID] + TM_FACE_WIDTH, sTEAMFacesXY[ubOpenPanelID + 1] + TM_FACE_HEIGHT);
 		}
 	}
 }
