@@ -1387,7 +1387,6 @@ static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
 }
 
 
-static void HandleSoldierFaceFlash(SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY);
 static void UpdateStatColor(UINT32 uiTimer, BOOLEAN fIncrease);
 
 
@@ -1652,8 +1651,6 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 
 	//HandlePanelFaceAnimations( gpSMCurrentMerc );
-
-	HandleSoldierFaceFlash( gpSMCurrentMerc, SM_SELMERC_FACE_X, SM_SELMERC_FACE_Y );
 
 	// Render items in guy's hand!
 	HandleRenderInvSlots( gpSMCurrentMerc, *pfDirty );
@@ -2957,7 +2954,6 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			}
 
 			RenderSoldierTeamInv(s, sTEAMHandInvXY[i * 2], sTEAMHandInvXY[i * 2 + 1], i, fDirty);
-			HandleSoldierFaceFlash(s, sTEAMFacesXY[i * 2], sTEAMFacesXY[i * 2 + 1]);
 		}
 	}
 	UpdateTEAMPanel();
@@ -3606,12 +3602,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 			//InvalidateRegion(sTEAMFacesXY[ubOpenPanelID], sTEAMFacesXY[ubOpenPanelID + 1], sTEAMFacesXY[ubOpenPanelID] + TM_FACE_WIDTH, sTEAMFacesXY[ubOpenPanelID + 1] + TM_FACE_HEIGHT);
 		}
 	}
-
-}
-
-
-static void HandleSoldierFaceFlash(SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY)
-{
 }
 
 
