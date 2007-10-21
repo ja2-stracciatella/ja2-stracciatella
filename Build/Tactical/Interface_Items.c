@@ -268,7 +268,7 @@ typedef struct
 	UINT16 y;
 } MoneyLoc;
 
-static const MoneyLoc gMoneyButtonLoc = { 343, 351 };
+static const MoneyLoc gMoneyButtonLoc = { 343, INV_INTERFACE_START_Y + 11 };
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
 static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
@@ -995,8 +995,10 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 //			if( guiCurrentScreen != MAP_SCREEN )
 			if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiSecItemHiddenVO, 0, 217, 448);
-				RestoreExternBackgroundRect( 217, 448, 72, 28 );
+				const INT32 x = 217;
+				const INT32 y = INV_INTERFACE_START_Y + 108;
+				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
+				RestoreExternBackgroundRect(x, y, 72, 28);
 			}
 			else
 			{
@@ -5540,11 +5542,10 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 		}
 
 		// Check for bottom
-		if ( ( sY + gItemPickupMenu.sHeight ) > 340 )
+		if (sY + gItemPickupMenu.sHeight > gsVIEWPORT_WINDOW_END_Y)
 		{
-			sY = 340 - gItemPickupMenu.sHeight;
+			sY = gsVIEWPORT_WINDOW_END_Y - gItemPickupMenu.sHeight;
 		}
-
 	}
 
 	// Set some values

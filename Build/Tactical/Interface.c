@@ -351,7 +351,7 @@ BOOLEAN InitializeCurrentPanel( )
 	{
 		case SM_PANEL:
 			// Set new viewport
-			gsVIEWPORT_WINDOW_END_Y = 340;
+			gsVIEWPORT_WINDOW_END_Y = INV_INTERFACE_START_Y;
 
 			// Render full
 			SetRenderFlags(RENDER_FLAG_FULL);
@@ -359,7 +359,7 @@ BOOLEAN InitializeCurrentPanel( )
 			break;
 
 		case TEAM_PANEL:
-			gsVIEWPORT_WINDOW_END_Y = 360;
+			gsVIEWPORT_WINDOW_END_Y = INTERFACE_START_Y;
 			// Render full
 			SetRenderFlags(RENDER_FLAG_FULL);
 			fOK = InitializeTEAMPanel( );

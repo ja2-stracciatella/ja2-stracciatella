@@ -1991,21 +1991,21 @@ static void CreateAutoResolveInterface(void)
 	gpAR->bVerticalOffset = (SCREEN_HEIGHT - gpAR->sHeight) / 2 > 120 ? -40 : 0;
 
 	const INT16 dx = gpAR->sCenterStartX;
-	const INT16 dy = gpAR->bVerticalOffset;
+	const INT16 dy = gpAR->bVerticalOffset + SCREEN_HEIGHT / 2;
 
 	//Create the buttons -- subject to relocation
-	MakeButton(PLAY_BUTTON,     dx + 11, dy + 240, PlayButtonCallback,      FALSE, NULL);
-	MakeButton(FAST_BUTTON,     dx + 51, dy + 240, FastButtonCallback,      FALSE, NULL);
-	MakeButton(FINISH_BUTTON,   dx + 91, dy + 240, FinishButtonCallback,    FALSE, NULL);
-	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 274, PauseButtonCallback,     FALSE, NULL);
-	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 274, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
+	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, NULL);
+	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, NULL);
+	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, NULL);
+	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, NULL);
+	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 34, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
 	if (!gpAR->ubMercs) DisableButton(gpAR->iButton[RETREAT_BUTTON]);
 
-	MakeButton(BANDAGE_BUTTON,  dx + 11, dy + 245, BandageButtonCallback,   TRUE,  NULL);
-	MakeButton(DONEWIN_BUTTON,  dx + 51, dy + 245, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(DONELOSE_BUTTON, dx + 25, dy + 245, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(YES_BUTTON,      dx + 21, dy + 257, AcceptSurrenderCallback, TRUE,  NULL);
-	MakeButton(NO_BUTTON,       dx + 81, dy + 257, RejectSurrenderCallback, TRUE,  NULL);
+	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  NULL);
+	MakeButton(DONEWIN_BUTTON,  dx + 51, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
+	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  NULL);
+	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  NULL);
 	ButtonList[gpAR->iButton[PLAY_BUTTON]]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
