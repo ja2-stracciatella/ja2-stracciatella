@@ -374,7 +374,7 @@ sTempNewGridNo: strange
 sRoomNo
 fPausedMove: strange
 fUIdeadMerc: strange
-fUInewMerc: pointless, if (fUInewMerc) fUInewMerc = FALSE
+fUInewMerc: write-only
 fUICloseMerc: strange
 fUIFirstTimeNOAP: write-only
 fUIFirstTimeUNCON: write-only

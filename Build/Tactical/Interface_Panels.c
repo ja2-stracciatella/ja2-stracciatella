@@ -3350,10 +3350,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 	}
 
 	// If this is the first time we are active, open panel!
-	if ( pSoldier->fUInewMerc )
-	{
-		pSoldier->fUInewMerc = FALSE;
-	}
+	pSoldier->fUInewMerc = FALSE;
 
 	if ( pSoldier->fUICloseMerc )
 	{
