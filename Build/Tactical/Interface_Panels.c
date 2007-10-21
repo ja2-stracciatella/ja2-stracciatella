@@ -102,8 +102,8 @@
 #define	SM_SELMERC_PLATE_WIDTH  83
 
 
-#define SM_BODYINV_X									244
-#define SM_BODYINV_Y									346
+#define SM_BODYINV_X 244
+#define SM_BODYINV_Y (INV_INTERFACE_START_Y + 6)
 
 
 #define STATS_TITLE_FONT_COLOR				6
@@ -321,25 +321,25 @@ BOOLEAN gfDeductPoints;
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS
 static const INV_REGION_DESC gSMInvPocketXY[] =
 {
-	{ 344, 347 }, // HELMETPOS
-	{ 344, 376 }, // VESTPOS
-	{ 344, 436 }, // LEGPOS,
-	{ 226, 347 }, // HEAD1POS
-	{ 226, 371 }, // HEAD2POS
-	{ 226, 424 }, // HANDPOS,
-	{ 226, 448 }, // SECONDHANDPOS
-	{ 468, 346 }, // BIGPOCK1
-	{ 468, 370 }, // BIGPOCK2
-	{ 468, 394 }, // BIGPOCK3
-	{ 468, 418 }, // BIGPOCK4
-	{ 396, 346 }, // SMALLPOCK1
-	{ 396, 370 }, // SMALLPOCK2
-	{ 396, 394 }, // SMALLPOCK3
-	{ 396, 418 }, // SMALLPOCK4
-	{ 432, 346 }, // SMALLPOCK5
-	{ 432, 370 }, // SMALLPOCK6
-	{ 432, 394 }, // SMALLPOCK7
-	{ 432, 418 }  // SMALLPOCK8
+	{ 344, INV_INTERFACE_START_Y +   7 }, // HELMETPOS
+	{ 344, INV_INTERFACE_START_Y +  36 }, // VESTPOS
+	{ 344, INV_INTERFACE_START_Y +  96 }, // LEGPOS,
+	{ 226, INV_INTERFACE_START_Y +   7 }, // HEAD1POS
+	{ 226, INV_INTERFACE_START_Y +  31 }, // HEAD2POS
+	{ 226, INV_INTERFACE_START_Y +  84 }, // HANDPOS,
+	{ 226, INV_INTERFACE_START_Y + 108 }, // SECONDHANDPOS
+	{ 468, INV_INTERFACE_START_Y +   6 }, // BIGPOCK1
+	{ 468, INV_INTERFACE_START_Y +  30 }, // BIGPOCK2
+	{ 468, INV_INTERFACE_START_Y +  54 }, // BIGPOCK3
+	{ 468, INV_INTERFACE_START_Y +  78 }, // BIGPOCK4
+	{ 396, INV_INTERFACE_START_Y +   6 }, // SMALLPOCK1
+	{ 396, INV_INTERFACE_START_Y +  30 }, // SMALLPOCK2
+	{ 396, INV_INTERFACE_START_Y +  54 }, // SMALLPOCK3
+	{ 396, INV_INTERFACE_START_Y +  78 }, // SMALLPOCK4
+	{ 432, INV_INTERFACE_START_Y +   6 }, // SMALLPOCK5
+	{ 432, INV_INTERFACE_START_Y +  30 }, // SMALLPOCK6
+	{ 432, INV_INTERFACE_START_Y +  54 }, // SMALLPOCK7
+	{ 432, INV_INTERFACE_START_Y +  78 }  // SMALLPOCK8
 };
 
 INV_REGION_DESC gSMCamoXY =
@@ -1388,7 +1388,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 	{
 		if ( InItemDescriptionBox( ) )
 		{
-			BltVideoObjectFromIndex( guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, INV_INTERFACE_START_Y);
+			BltVideoObjectFromIndex(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, dy);
 			RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
 
 			// ATE: Need these lines here to fix flash bug with face selection box
@@ -2857,7 +2857,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				if (!(s->uiStatusFlags & SOLDIER_DEAD))
 				{
 					PrintAP(s, x, y, w, h);
-					DrawSoldierUIBars(s, 69 + 83 * i, 365 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
+					DrawSoldierUIBars(s, dx + TM_BARS_X + 2, dy + TM_BARS_Y + 2 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
 				}
 				else
 				{
@@ -3808,7 +3808,7 @@ void RenderTownIDString(void)
 
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
-	FindFontCenterCoordinates(548, 425, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	mprintf( sFontX, sFontY, L"%ls", zTownIDString );
 }
 
