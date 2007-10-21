@@ -1,3 +1,4 @@
+#include "Map_Screen_Interface_Bottom.h"
 #include "Player_Command.h"
 #include "Queen_Command.h"
 #include "Campaign_Types.h"
@@ -20,10 +21,6 @@
 #include "PreBattle_Interface.h"
 #include "Map_Screen_Interface.h"
 #include "Tactical_Save.h"
-
-
-extern BOOLEAN fMapScreenBottomDirty;
-
 
 
 void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString, size_t Length)

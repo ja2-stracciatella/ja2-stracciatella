@@ -4,6 +4,7 @@
 #include "Local.h"
 #include "Gameloop.h"
 #include "HImage.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "Text_Utils.h"
 #include "VObject.h"
 #include "SysUtil.h"
@@ -212,15 +213,11 @@ enum
 	M_DONE,
 };
 
-extern	MOUSE_REGION    gMPanelRegion;
-extern	BOOLEAN					gfAddingMoneyToMercFromPlayersAccount;
-extern	SOLDIERTYPE			*gpSMCurrentMerc;
-extern  UINT8 gubSelectSMPanelToMerc;
-extern	MOUSE_REGION		gSM_SELMERCMoneyRegion;
-extern	UINT32					guiMapInvSecondHandBlockout;
+BOOLEAN gfAddingMoneyToMercFromPlayersAccount;
 
 MOUSE_REGION				gInvDesc;
 
+OBJECTTYPE* gpItemPointer;
 OBJECTTYPE		gItemPointer;
 BOOLEAN				gfItemPointerDifferentThanDefault = FALSE;
 SOLDIERTYPE		*gpItemPointerSoldier;
@@ -264,7 +261,6 @@ static INT32 guiMoneyDoneButtonImage;
 static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE* gpAttachSoldier;
-extern BOOLEAN	gfSMDisableForItems;
 
 typedef struct
 {
@@ -275,10 +271,6 @@ typedef struct
 static const MoneyLoc gMoneyButtonLoc = { 343, 351 };
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
 static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
-
-// show the description
-extern BOOLEAN fShowDescriptionFlag;
-extern BOOLEAN fShowInventoryFlag;
 
 
 // number of keys on keyring, temp for now
@@ -309,18 +301,12 @@ static INT16 gsKeyRingPopupInvHeight;
 
 
 SOLDIERTYPE *gpItemPopupSoldier;
-extern BOOLEAN fMapScreenBottomDirty;
 
 // inventory description done button for mapscreen
 INT32 giMapInvDescButton = -1;
 
 
 static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
-extern void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier );
-
-
-extern BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
-extern void	StartSKIDescriptionBox( void );
 
 
 static const UINT8 ubRGBItemCyclePlacedItemColors[] =
@@ -1162,7 +1148,7 @@ static BOOLEAN SoldierContainsAnyCompatibleStuff(SOLDIERTYPE* pSoldier, OBJECTTY
 }
 
 
-void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset )
+void HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, BOOLEAN fReset)
 {
 	INT32 iCounter = 0;
 

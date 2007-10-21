@@ -1171,10 +1171,10 @@ static void ExpandWindow(void)
 	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight+1, gpAR->ExRect.iTop+1 );
 	//bottom
 	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iBottom, gpAR->ExRect.iRight+1, gpAR->ExRect.iBottom+1 );
-
 }
 
-UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OBJECTTYPE *pKit, INT16 sKitPts, INT16 sStatus )
+
+UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJECTTYPE* pKit, INT16 sKitPts, INT16 sStatus)
 {
 	UINT32 uiDressSkill, uiPossible, uiActual, uiMedcost, uiDeficiency, uiAvailAPs, uiUsedAPs;
 	UINT8 bBelowOKlife, bPtsLeft;
@@ -4597,8 +4597,8 @@ BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *ps
 	}
 }
 
-//Returns TRUE if a battle is happening ONLY
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ )
+
+BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ)
 {
 	if( gpAR )
 	{

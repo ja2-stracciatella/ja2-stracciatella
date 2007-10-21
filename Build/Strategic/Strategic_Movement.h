@@ -277,4 +277,8 @@ BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
 
 BOOLEAN GroupHasInTransitDeadOrPOWMercs( GROUP *pGroup );
 
+void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle);
+
+extern BOOLEAN gfUndergroundTacticalTraversal;
+
 #endif

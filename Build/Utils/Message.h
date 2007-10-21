@@ -60,4 +60,6 @@ void UnHideMessagesDuringNPCDialogue( void );
 void DisableScrollMessages( void );
 void EnableScrollMessages( void );
 
+extern UINT8 gubStartOfMapScreenMessageList;
+
 #endif

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Gameloop.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Types.h"
@@ -303,16 +304,6 @@ static BOOLEAN gfPerformTransactionInProgress = FALSE;
 static BOOLEAN gfCommonQuoteUsedThisSession[NUM_COMMON_SK_QUOTES];
 
 
-extern		SOLDIERTYPE			*gpSMCurrentMerc;
-extern		MOUSE_REGION		gItemDescAttachmentRegions[MAX_ATTACHMENTS];
-extern		MOUSE_REGION		gInvDesc;
-extern		BOOLEAN					gfSMDisableForItems;
-extern		void						HandleShortCutExitState( void );
-extern		UINT8						gubSelectSMPanelToMerc;
-
-extern		UINT8 gubLastSpecialItemAddedAtElement;
-
-
 // Enums for possible evaluation results
 enum
 {
@@ -394,13 +385,6 @@ static MOUSE_REGION gArmsDealersFaceMouseRegions;
 
 //Region to allow the user to drop items to the ground
 static MOUSE_REGION gArmsDealersDropItemToGroundMouseRegions;
-
-
-BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-void			StartSKIDescriptionBox( void );
-
-
-extern BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
 
 
 #ifdef JA2TESTVERSION
@@ -5109,8 +5093,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 }
 
 
-
-BOOLEAN DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback )
+BOOLEAN DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;
@@ -5397,7 +5380,7 @@ static void InitShopKeeperItemDescBox(OBJECTTYPE* pObject, UINT8 ubPocket, UINT8
 }
 
 
-void StartSKIDescriptionBox( void )
+void StartSKIDescriptionBox(void)
 {
 	INT32 iCnt;
 

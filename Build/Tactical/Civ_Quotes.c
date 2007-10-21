@@ -46,10 +46,6 @@ typedef struct
 CASSERT(sizeof(CIV_QUOTE) == 2)
 
 
-extern void CaptureTimerCallback( void );
-
-BOOLEAN gfSurrendered = FALSE;
-
 CIV_QUOTE	gCivQuotes[ NUM_CIV_QUOTES ];
 
 UINT8	gubNumEntries[ NUM_CIV_QUOTES ] =

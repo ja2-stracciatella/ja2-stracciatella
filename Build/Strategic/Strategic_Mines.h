@@ -180,4 +180,7 @@ BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex );
 // use this to determine whether or not the player has spoken to a head miner
 BOOLEAN SpokenToHeadMiner( UINT8 ubMineIndex );
 
+extern const MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES];
+extern MINE_STATUS_TYPE         gMineStatus[MAX_NUMBER_OF_MINES];
+
 #endif

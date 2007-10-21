@@ -48,7 +48,7 @@ extern void ActivatePreBattleAutoresolveAction();
 extern void ActivatePreBattleEnterSectorAction();
 extern void ActivatePreBattleRetreatAction();
 
-void CalculateNonPersistantPBIInfo();
+void CalculateNonPersistantPBIInfo(void);
 
 //SAVE START
 
@@ -92,5 +92,7 @@ enum
 	LOG_VICTORY,
 };
 void LogBattleResults( UINT8 ubVictoryCode);
+
+extern BOOLEAN gfUsePersistantPBI;
 
 #endif

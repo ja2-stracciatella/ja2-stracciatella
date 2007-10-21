@@ -18,5 +18,6 @@ void HandleShortCutExitState( void );
 
 void SetPendingNewScreen( UINT32 uiNewScreen );
 
+extern UINT32 guiPendingScreen;
 
 #endif

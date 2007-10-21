@@ -69,29 +69,16 @@
 
 BOOLEAN		gfLastMercTalkedAboutKillingID = NOBODY;
 
-extern void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle );
 
-
-DOUBLE		gHopFenceForwardSEDist[ NUMSOLDIERBODYTYPES ] = { 2.2, 0.7, 3.2, 0.7 };
-DOUBLE		gHopFenceForwardNWDist[ NUMSOLDIERBODYTYPES ] = { 2.7, 1.0, 2.7, 1.0 };
-DOUBLE  	gHopFenceForwardFullSEDist[ NUMSOLDIERBODYTYPES ] = { 1.1, 1.0, 2.1, 1.1 };
-DOUBLE  	gHopFenceForwardFullNWDist[ NUMSOLDIERBODYTYPES ] = { 0.8, 0.2, 2.7, 0.8 };
-DOUBLE		gFalloffBackwardsDist[ NUMSOLDIERBODYTYPES ] = { 1, 0.8, 1, 1 };
-DOUBLE		gClimbUpRoofDist[ NUMSOLDIERBODYTYPES ] = { 2, 0.1, 2, 2 };
-DOUBLE		gClimbUpRoofLATDist[ NUMSOLDIERBODYTYPES ] = { 0.7, 0.5, 0.7, 0.5 };
-DOUBLE		gClimbDownRoofStartDist[ NUMSOLDIERBODYTYPES ] = { 5.0, 1.0, 1, 1 };
-DOUBLE		gClimbUpRoofDistGoingLower[ NUMSOLDIERBODYTYPES ] = { 0.9, 0.1, 1, 1 };
-
-
-
-BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse );
-
-extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
-extern void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-extern UINT8 NumCapableEnemyInSector( );
-extern BOOLEAN gfKillingGuysForLosingBattle;
-
-extern UINT8 gubInterruptProvoker;
+static const DOUBLE gHopFenceForwardSEDist[NUMSOLDIERBODYTYPES]     = { 2.2, 0.7, 3.2, 0.7 };
+static const DOUBLE gHopFenceForwardNWDist[NUMSOLDIERBODYTYPES]     = { 2.7, 1.0, 2.7, 1.0 };
+static const DOUBLE gHopFenceForwardFullSEDist[NUMSOLDIERBODYTYPES] = { 1.1, 1.0, 2.1, 1.1 };
+static const DOUBLE gHopFenceForwardFullNWDist[NUMSOLDIERBODYTYPES] = { 0.8, 0.2, 2.7, 0.8 };
+static const DOUBLE gFalloffBackwardsDist[NUMSOLDIERBODYTYPES]      = { 1, 0.8, 1, 1 };
+static const DOUBLE gClimbUpRoofDist[NUMSOLDIERBODYTYPES]           = { 2, 0.1, 2, 2 };
+static const DOUBLE gClimbUpRoofLATDist[NUMSOLDIERBODYTYPES]        = { 0.7, 0.5, 0.7, 0.5 };
+static const DOUBLE gClimbDownRoofStartDist[NUMSOLDIERBODYTYPES]    = { 5.0, 1.0, 1, 1 };
+static const DOUBLE gClimbUpRoofDistGoingLower[NUMSOLDIERBODYTYPES] = { 0.9, 0.1, 1, 1 };
 
 
 static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier);
@@ -2871,7 +2858,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 }
 
 
-void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
+void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
@@ -3222,7 +3209,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 }
 
 
-void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier )
+void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier)
 {
 	// Release attacker
   if ( !pSoldier->fDoingExternalDeath )

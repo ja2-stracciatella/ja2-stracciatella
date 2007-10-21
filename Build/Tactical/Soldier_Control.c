@@ -79,8 +79,10 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#if defined JA2BETAVERSION
+#	include "Strategic_AI.h"
+#endif
 
-extern INT16 DirIncrementer[8];
 
 #define		PALETTEFILENAME							"BINARYDATA/ja2pal.dat"
 
@@ -253,24 +255,7 @@ static PaletteSubRangeType* gpPaletteSubRanges;
 // Palette replacements
 static UINT32 guiNumReplacements;
 
-extern BOOLEAN fReDrawFace;
-extern UINT8 gubWaitingForAllMercsToExitCode;
 BOOLEAN	gfGetNewPathThroughPeople = FALSE;
-
-// DO NOT CALL UNLESS THROUGH EVENT_SetSoldierPosition
-UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
-BOOLEAN InitNewSoldierState( SOLDIERTYPE *pSoldier, UINT8 ubNewState, UINT16 usStartingAniCode );
-void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
-void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
-
-void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState );
-
-#ifdef JA2BETAVERSION
-extern void ValidatePlayersAreInOneGroupOnly();
-extern void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
-void SAIReportError( STR16 wErrorString );
-#endif
 
 
 static void HandleVehicleMovementSound(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
@@ -3067,7 +3052,8 @@ BOOLEAN InternalSoldierReadyWeapon( SOLDIERTYPE *pSoldier, UINT8 sFacingDir, BOO
 	return( fReturnVal );
 }
 
-UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
+
+UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady)
 {
 
 	// Invalid animation if nothing in our hands
@@ -3204,9 +3190,6 @@ UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady )
 
 	return( INVALID_ANIMATION );
 }
-
-extern SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID );
-extern SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID );
 
 
 static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss);
@@ -4451,8 +4434,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 }
 
 
-
-void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState )
+void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState)
 {
 	//if ( usAnimState == WALK_BACKWARDS )
 	if ( pSoldier->bReverse && usAnimState != SIDE_STEP )
@@ -5661,11 +5643,10 @@ static void CalculateSoldierAniSpeed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pStatsS
 
 		//pSoldier->sAniDelay = pSoldier->sAniDelay * ( 1 * gTacticalStatus.bRealtimeSpeed / 2 );
 	}
-
 }
 
 
-void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier )
+void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 {
 	SOLDIERTYPE *pStatsSoldier;
 
@@ -6664,9 +6645,6 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 
 	return( ubCombinedLoss );
 }
-
-
-extern BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID );
 
 
 BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID, INT8 bSpecialCode )
@@ -10502,7 +10480,7 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* pSoldier)
 }
 
 
-void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC )
+void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 {
 	// Are we an AI guy?
 	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
@@ -10624,7 +10602,8 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 	}
 }
 
-void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier )
+
+void PlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 {
 	// normally, not in stealth mode
 	if ( !pSoldier->bStealthMode )
@@ -10633,12 +10612,12 @@ void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void PlayStealthySoldierFootstepSound( SOLDIERTYPE *pSoldier )
+
+void PlayStealthySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 {
 	// even if in stealth mode
 	InternalPlaySoldierFootstepSound( pSoldier );
 }
-
 
 
 void CrowsFlyAway( UINT8 ubTeam )

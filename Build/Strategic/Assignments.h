@@ -181,7 +181,6 @@ extern BOOLEAN gfReEvaluateEveryonesNothingToDo;
 
 
 void CreateDestroyMouseRegionsForContractMenu( void );
-void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter );
 void HandleShadingOfLinesForAssignmentMenus( void );
 void CreateDestroyScreenMaskForAssignmentAndContractMenus( void );
 
@@ -228,5 +227,8 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier );
 
 SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThisHour );
 
+void    DetermineWhichAssignmentMenusCanBeShown(void);
+void    ResumeOldAssignment(SOLDIERTYPE* pSoldier);
+BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier);
 
 #endif

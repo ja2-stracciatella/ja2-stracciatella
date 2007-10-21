@@ -161,4 +161,9 @@ extern INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
 
 BOOLEAN CanItemFitInPosition(SOLDIERTYPE* s, OBJECTTYPE* pObj, INT8 bPos, BOOLEAN fDoingPlacement);
 
+void    SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem);
+void    CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj);
+void    StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy);
+BOOLEAN ItemIsCool(const OBJECTTYPE* pObj);
+
 #endif

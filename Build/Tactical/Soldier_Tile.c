@@ -39,9 +39,6 @@
 #include "NPC.h"
 
 
-extern UINT8	gubWaitingForAllMercsToExitCode;
-
-
 #define NEXT_TILE_CHECK_DELAY		700
 
 #ifdef JA2BETAVERSION

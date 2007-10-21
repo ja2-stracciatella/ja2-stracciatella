@@ -44,7 +44,6 @@
 #define ANY_MAGSIZE 255
 
 void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
-void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
 
 // weight units are 100g each
 
@@ -1937,7 +1936,8 @@ void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 	}
 }
 
-void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy )
+
+void StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy)
 {
 	UINT8		ubLoop;
 
@@ -1959,7 +1959,8 @@ void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumber
 	pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
 }
 
-void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj )
+
+void CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj)
 {
 	INT8	bLoop, bLoop2;
 	INT8	bMaxPoints, bPointsToMove;
@@ -4140,7 +4141,8 @@ BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewO
 	return( TRUE );
 }
 
-void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem )
+
+void SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem)
 {
 	if( fNewItem )
 	{
@@ -4866,7 +4868,8 @@ static UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue(UINT32 uiMoneyAmount
 	return( (UINT8)( uiMoneyAmount / 50 ) );
 }
 
-BOOLEAN ItemIsCool( OBJECTTYPE * pObj )
+
+BOOLEAN ItemIsCool(const OBJECTTYPE* pObj)
 {
 	if (pObj->bStatus[0] < 60)
 	{

@@ -40,7 +40,7 @@
 MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
 
 // this table holds mine values that never change and don't need to be saved
-MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES] =
+const MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES] =
 {
 	{		 4,		4,		SAN_MONA		},
 	{		13,		4,		DRASSEN			},

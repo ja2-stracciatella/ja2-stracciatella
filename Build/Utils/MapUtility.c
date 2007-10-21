@@ -30,11 +30,11 @@
 
 #define		WINDOW_SIZE					2
 
-FLOAT			gdXStep, gdYStep;
-INT32			giMiniMap, gi8BitMiniMap;
-HVSURFACE	ghvSurface;
-
-extern BOOLEAN gfOverheadMapDirty;
+static float     gdXStep;
+static float     gdYStep;
+static INT32     giMiniMap;
+static INT32     gi8BitMiniMap;
+static HVSURFACE ghvSurface;
 
 // Utililty file for sub-sampling/creating our radar screen maps
 // Loops though our maps directory and reads all .map files, subsamples an area, color

@@ -278,5 +278,6 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
 void RecompileLocalMovementCostsInAreaWithFlags( void );
 void AddTileToRecompileArea( INT16 sGridNo );
 
+void InitLoadedWorld(void);
 
 #endif

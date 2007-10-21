@@ -267,4 +267,8 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 
 UINT16 GunRange(const OBJECTTYPE* pObj);
 
+extern BOOLEAN gfNextFireJam;
+extern BOOLEAN gfNextShotKills;
+extern BOOLEAN gfReportHitChances;
+
 #endif

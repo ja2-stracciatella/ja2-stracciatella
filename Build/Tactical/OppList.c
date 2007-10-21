@@ -54,8 +54,6 @@
 static const BOOLEAN gbShowEnemies = FALSE; // XXX seems to be a debug switch
 
 
-extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
-
 //#define TESTOPPLIST
 
 
@@ -588,7 +586,6 @@ static UINT8 SelectSpeakerFromHostileOrSayQuoteList(void)
 	}
 }
 
-extern BOOLEAN gfWaitingForTriggerTimer;
 
 void CheckHostileOrSayQuoteList( void )
 {
@@ -6030,7 +6027,8 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 	}
 }
 
-void CheckForAlertWhenEnemyDies( SOLDIERTYPE * pDyingSoldier )
+
+void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 {
 	UINT8						ubID;
 	SOLDIERTYPE *		pSoldier;

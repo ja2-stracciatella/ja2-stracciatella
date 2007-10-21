@@ -66,5 +66,7 @@ void MoveToEndOfMapScreenMessageList( void );
 void HandleLeavingOfMapScreenDuringDemo( void );
 #endif
 
+// the dirty state of the mapscreen interface bottom
+extern BOOLEAN fMapScreenBottomDirty;
 
 #endif

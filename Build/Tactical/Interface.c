@@ -113,12 +113,6 @@ static BOOLEAN      gfUseSkullIconMessage = FALSE;
 
 static BOOLEAN gfPanelAllocated = FALSE;
 
-extern MOUSE_REGION	gDisableRegion;
-extern MOUSE_REGION gUserTurnRegion;
-extern BOOLEAN gfUserTurnRegionActive;
-extern UINT8 gubSelectSMPanelToMerc;
-extern BOOLEAN gfIgnoreOnSelectedGuy;
-
 
 enum
 {

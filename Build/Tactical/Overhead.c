@@ -108,27 +108,9 @@ static UINT32 guiAIAwaySlotToHandle = RESET_HANDLE_OF_OFF_MAP_MERCS;
 static BOOLEAN gfPauseAllAI      = FALSE;
 static INT32   giPauseAllAITimer = 0;
 
-extern void SetSoldierAniSpeed( SOLDIERTYPE *pSoldier );
-extern void HandleExplosionQueue( void );
-extern void HandleSystemNewAISituation( SOLDIERTYPE *pSoldier, BOOLEAN fResetABC );
 
-extern BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID );
+BOOLEAN gfSurrendered = FALSE;
 
-extern INT8 gbInvalidPlacementSlot[NUM_INV_SLOTS];
-
-
-void CaptureTimerCallback( void );
-
-
-extern void CheckForAlertWhenEnemyDies( SOLDIERTYPE * pDyingSoldier );
-extern void PlaySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-extern void HandleKilledQuote( SOLDIERTYPE *pKilledSoldier, SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel );
-extern UINT16 PickSoldierReadyAnimation( SOLDIERTYPE *pSoldier, BOOLEAN fEndReady );
-
-
-extern void PlayStealthySoldierFootstepSound( SOLDIERTYPE *pSoldier );
-
-extern BOOLEAN gfSurrendered;
 
 #define NEW_FADE_DELAY 60
 
@@ -240,7 +222,6 @@ CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS);
 
 
 UINT8 NumEnemyInSector( );
-UINT8 NumCapableEnemyInSector( );
 
 
 UINT8         gubWaitingForAllMercsToExitCode  = 0;
@@ -3385,11 +3366,10 @@ UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLe
 
 	// IF we are here, keep as we always were!
 	return( pSoldier->ubID );
-
 }
 
 
-SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier )
+SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* pSoldier)
 {
 	for (INT32 cnt = pSoldier->bAssignment + 1 ; cnt <  NUMBER_OF_SQUADS; ++cnt)
 	{
@@ -4812,12 +4792,8 @@ void SetEnemyPresence( )
 		//SayQuoteFromAnyBodyInSector( QUOTE_ENEMY_PRESENCE );
 
 		gTacticalStatus.fEnemyInSector = TRUE;
-
 	}
 }
-
-
-extern BOOLEAN gfLastMercTalkedAboutKillingID;
 
 
 static BOOLEAN SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE* pTeamSoldier)
@@ -5766,7 +5742,7 @@ static UINT8 NumBloodcatsInSectorNotDeadOrDying(void)
 }
 
 
-UINT8 NumCapableEnemyInSector( )
+UINT8 NumCapableEnemyInSector(void)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32				cnt = 0;
@@ -6766,7 +6742,8 @@ SOLDIERTYPE * FreeUpAttacker( UINT8 ubID )
 	return( ReduceAttackBusyCount( ubID, TRUE ) );
 }
 
-SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID )
+
+SOLDIERTYPE* FreeUpAttackerGivenTarget(UINT8 ubID, UINT8 ubTargetID)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
@@ -6775,7 +6752,8 @@ SOLDIERTYPE * FreeUpAttackerGivenTarget( UINT8 ubID, UINT8 ubTargetID )
 	return( InternalReduceAttackBusyCount( ubID, TRUE, ubTargetID ) );
 }
 
-SOLDIERTYPE * ReduceAttackBusyGivenTarget( UINT8 ubID, UINT8 ubTargetID )
+
+SOLDIERTYPE* ReduceAttackBusyGivenTarget(UINT8 ubID, UINT8 ubTargetID)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
@@ -7058,10 +7036,10 @@ static void DemoEndOKCallback(UINT8 bExitCode)
 	#endif
 }
 
-void HandleEndDemoInCreatureLevel( )
-{
-	#ifdef JA2DEMO
 
+#ifdef JA2DEMO
+void HandleEndDemoInCreatureLevel(void)
+{
 	if ( gbWorldSectorZ == 1 )
 	{
 		// Is dynamo recruited?
@@ -7079,8 +7057,8 @@ void HandleEndDemoInCreatureLevel( )
 			DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_GO_SEE_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL );
 		}
 	}
-	#endif
 }
+#endif
 
 
 static void DeathTimerCallback(void)

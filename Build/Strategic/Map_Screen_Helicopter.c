@@ -54,9 +54,6 @@
 #define MAX_SAM_SITE_ACCURACY		33
 
 
-extern FACETYPE	*gpCurrentTalkingFace;
-extern UINT8			gubCurrentTalkingID;
-
 // current temp path for dest char
 extern PathSt* pTempHelicopterPath;
 

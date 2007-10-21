@@ -72,11 +72,6 @@ ARMS_DEALER_STATUS	gArmsDealerStatus[ NUM_ARMS_DEALERS ];
 DEALER_ITEM_HEADER	gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 
 
-void		GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
-
-BOOLEAN ItemIsARocketRifle( INT16 sItemIndex );
-
-
 static BOOLEAN AdjustCertainDealersInventory(void);
 static void InitializeOneArmsDealer(UINT8 ubArmsDealer);
 
@@ -755,7 +750,7 @@ static void GuaranteeAtLeastOneItemOfType(UINT8 ubArmsDealer, UINT32 uiDealerIte
 }
 
 
-void GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany )
+void GuaranteeAtLeastXItemsOfIndex(UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany)
 {
 	// not permitted for repair dealers - would take extra code to avoid counting items under repair!
 	Assert( !DoesDealerDoRepairs( ubArmsDealer ) );
@@ -2630,8 +2625,7 @@ static void GuaranteeMinimumAlcohol(UINT8 ubArmsDealer)
 }
 
 
-
-BOOLEAN ItemIsARocketRifle( INT16 sItemIndex )
+BOOLEAN ItemIsARocketRifle(INT16 sItemIndex)
 {
 	if ( ( sItemIndex == ROCKET_RIFLE ) || ( sItemIndex == AUTO_ROCKET_RIFLE ) )
 	{

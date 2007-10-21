@@ -34,7 +34,9 @@ CASSERT(sizeof(WORLDITEM) == 52)
 
 
 extern WORLDITEM		*gWorldItems;
-extern UINT32				guiNumWorldItems;
+
+// number of items in currently loaded sector
+extern UINT32 guiNumWorldItems;
 
 INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible );
 void RemoveItemFromWorld( INT32 iItemIndex );

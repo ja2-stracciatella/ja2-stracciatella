@@ -1,3 +1,5 @@
+#include "Interface_Control.h"
+#include "Interface_Panels.h"
 #include "LoadSaveMercProfile.h"
 #include "Merc_Hiring.h"
 #include "WCheck.h"
@@ -194,11 +196,6 @@ INT8 gbAssassinTown[NUM_ASSASSINS][NUM_ASSASSIN_POSSIBLE_TOWNS] =
 	// Tyrone
 	{ CAMBRIA, BALIME, ALMA, GRUMM, DRASSEN },
 };
-
-extern void HandleEndDemoInCreatureLevel( );
-
-extern SOLDIERTYPE			*gpSMCurrentMerc;
-extern BOOLEAN	gfRerenderInterfaceFromHelpText;
 
 
 static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile);

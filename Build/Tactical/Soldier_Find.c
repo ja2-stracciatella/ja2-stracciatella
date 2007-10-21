@@ -1,3 +1,4 @@
+#include "Turn_Based_Input.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "WorldDef.h"
@@ -72,9 +73,6 @@ typedef struct
 
 SOLDIER_STACK_TYPE		gSoldierStack;
 BOOLEAN								gfHandleStack = FALSE;
-
-extern								BOOLEAN	gUIActionModeChangeDueToMouseOver;
-extern								UINT32	guiUITargetSoldierId;
 
 
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )

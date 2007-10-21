@@ -40,8 +40,6 @@
 #define ALWAYS_CONSIDER_HIT (STRUCTURE_WALLSTUFF | STRUCTURE_CAVEWALL | STRUCTURE_FENCE)
 
 
-extern INT16 DirIncrementer[8];
-
 static const FIXEDPT gqStandardWallHeight         = INT32_TO_FIXEDPT(WALL_HEIGHT_UNITS);
 static const FIXEDPT gqStandardWindowBottomHeight = INT32_TO_FIXEDPT(WINDOW_BOTTOM_HEIGHT_UNITS);
 static const FIXEDPT gqStandardWindowTopHeight    = INT32_TO_FIXEDPT(WINDOW_TOP_HEIGHT_UNITS);

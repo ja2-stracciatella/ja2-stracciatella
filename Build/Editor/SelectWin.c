@@ -5,6 +5,7 @@
 #include "Button_System.h"
 #include "Font.h"
 #include "Input.h"
+#include "Overhead_Map.h"
 #include "TileDef.h"
 #include "VSurface.h"
 #include "WorldDat.h"
@@ -64,9 +65,6 @@ struct DisplayList
 	BOOLEAN      fChosen;
 	DisplayList* pNext;
 };
-
-
-extern BOOLEAN gfOverheadMapDirty;
 
 
 extern BOOLEAN fDontUseRandom;

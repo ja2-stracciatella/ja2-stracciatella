@@ -123,4 +123,6 @@ extern UINT32	gCurrentBackground;
 
 void SetTreeTopStateForMap(void);
 
+void DebugLevelNodePage(void);
+
 #endif

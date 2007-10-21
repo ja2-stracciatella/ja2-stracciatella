@@ -90,8 +90,8 @@ BOOLEAN InKeyRingPopup( void );
 void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition );
 
 
-OBJECTTYPE		*gpItemPointer;
-OBJECTTYPE		gItemPointer;
+extern OBJECTTYPE* gpItemPointer;
+extern OBJECTTYPE  gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
 BOOLEAN				gfItemPointerDifferentThanDefault;
 
@@ -122,5 +122,19 @@ void ResetCompatibleItemArray( );
 void CycleItemDescriptionItem( );
 
 void UpdateItemHatches(void);
+
+extern BOOLEAN      gfInKeyRingPopup;
+extern BOOLEAN      gfInItemPickupMenu;
+extern SOLDIERTYPE* gpItemPopupSoldier;
+extern INT8         gbCompatibleApplyItem;
+extern INT8         gbInvalidPlacementSlot[NUM_INV_SLOTS];
+extern MOUSE_REGION gInvDesc;
+extern BOOLEAN      gfAddingMoneyToMercFromPlayersAccount;
+extern MOUSE_REGION gItemDescAttachmentRegions[MAX_ATTACHMENTS];
+extern INT8         gbItemPointerSrcSlot;
+extern BOOLEAN      gfDontChargeAPsToPickup;
+
+void    HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, BOOLEAN fReset);
+BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn);
 
 #endif

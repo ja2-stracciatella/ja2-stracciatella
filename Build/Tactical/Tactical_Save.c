@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "Soldier_Init_List.h"
 #include "Types.h"
 #include "MemMan.h"
 #include "Message.h"
@@ -71,28 +72,12 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
 
 
-extern	UINT32			guiNumWorldItems;
-
-extern	NPCQuoteInfo *	gpNPCQuoteInfoArray[NUM_PROFILES];
-
-extern UINT32	guiJA2EncryptionSet;
-
 static const UINT8 gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
 static const UINT8 gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
 static const UINT8 gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
 static const UINT8 gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
 
 static INT32 giErrorMessageBox = 0;
-
-
-extern void InitLoadedWorld( );
-extern void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot );
-
-extern void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
-
-#ifdef JA2BETAVERSION
-extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
-#endif
 
 
 static BOOLEAN AddTempFileToSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);

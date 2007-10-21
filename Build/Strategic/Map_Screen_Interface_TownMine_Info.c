@@ -1,3 +1,4 @@
+#include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_TownMine_Info.h"
 #include "StrategicMap.h"
 #include "PopUpBox.h"
@@ -45,11 +46,6 @@ UINT32 guiMapButtonInventoryImage[2];
 static UINT32 guiMapButtonInventory[2];
 
 static UINT16 sTotalButtonWidth = 0;
-
-extern MINE_LOCATION_TYPE gMineLocation[];
-extern MINE_STATUS_TYPE gMineStatus[];
-extern BOOLEAN fMapScreenBottomDirty;
-//extern UINT8 gubMonsterMineInfestation[];
 
 
 // add "sector" line text to any popup box

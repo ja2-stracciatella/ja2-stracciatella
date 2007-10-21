@@ -284,5 +284,9 @@ BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex );
 UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeToStartIt, UINT32 uiMinutesToFix );
 UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UINT32 uiEndTime );
 
+void    GuaranteeAtLeastXItemsOfIndex(UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany);
+BOOLEAN ItemIsARocketRifle(INT16 sItemIndex);
+
+extern UINT8 gubLastSpecialItemAddedAtElement;
 
 #endif

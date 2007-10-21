@@ -15,8 +15,6 @@
 
 StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
-extern BOOLEAN fReDrawFace;
-
 
 static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier);
 

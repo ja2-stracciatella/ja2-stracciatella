@@ -87,6 +87,8 @@ BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPR
 
 BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
+extern UINT32 guiVSurfaceSize;
+
 #ifdef __cplusplus
 }
 #endif

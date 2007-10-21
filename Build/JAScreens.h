@@ -137,5 +137,7 @@ void EnableFPSOverlay(BOOLEAN fEnable);
 void EnterTacticalScreen( );
 void LeaveTacticalScreen( );
 
+extern BOOLEAN gfExitDebugScreen;
+extern INT8    gCurDebugPage;
 
 #endif

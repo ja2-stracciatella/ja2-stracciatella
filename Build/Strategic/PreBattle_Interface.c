@@ -58,8 +58,6 @@ extern BOOLEAN gfDelayAutoResolveStart;
 extern BOOLEAN gfExitViewer;
 #endif
 
-extern BOOLEAN fMapScreenBottomDirty;
-
 
 BOOLEAN gfTacticalTraversal = FALSE;
 GROUP *gpTacticalTraversalGroup = NULL;
@@ -109,13 +107,6 @@ BOOLEAN	gfPBButtonsHidden;
 BOOLEAN fDisableMapInterfaceDueToBattle = FALSE;
 
 BOOLEAN gfBlinkHeader;
-
-// mouse regions in mapscreen proper than must have thier help text disabled then re-enabled
-extern MOUSE_REGION gMapStatusBarsRegion;
-extern MOUSE_REGION gCharInfoHandRegion;
-
-extern INT32 giMapContractButton;
-extern INT32 giCharInfoButton[ 2 ];
 
 UINT32 guiNumInvolved;
 UINT32 guiNumUninvolved;
@@ -1578,7 +1569,8 @@ static void ActivateAutomaticAutoResolveStart()
 	AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 }
 
-void CalculateNonPersistantPBIInfo()
+
+void CalculateNonPersistantPBIInfo(void)
 {
 	//We need to set up the non-persistant PBI
 	if( !gfBlitBattleSectorLocator ||

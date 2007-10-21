@@ -41,4 +41,6 @@ void InitHelicopterEntranceByMercs( void );
 
 void InternalLeaveTacticalScreen( UINT32 uiNewScreen );
 
+extern BOOLEAN gfBeginEndTurn;
+
 #endif

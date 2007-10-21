@@ -42,9 +42,12 @@
 #include "Campaign_Init.h"
 #include "Stubs.h" // XXX
 
+#if defined JA2BETAVERSION
+#include "Soldier_Init_List.h"
+#endif
+
 
 BOOLEAN gfSchedulesHosed = FALSE;
-extern UINT32 guiBrokenSaveGameVersion;
 
 
 #define		SAVE_LOAD_TITLE_FONT								FONT14ARIAL
@@ -1885,10 +1888,6 @@ static void DisplayOnScreenNumber(BOOLEAN display)
 	}
 }
 
-#ifdef JA2BETAVERSION
-	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
-#endif
-
 
 static void DoneFadeInForSaveLoadScreen(void);
 static void FailedLoadingGameCallBack(UINT8 bExitValue);
@@ -2044,8 +2043,9 @@ static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue)
 	}
 }
 
+
 #ifdef JA2BETAVERSION
-void ErrorDetectedInSaveCallback( UINT8 bValue )
+void ErrorDetectedInSaveCallback(UINT8 bValue)
 {
 	//If we are to go to map screen after loading the game
 	if( guiScreenToGotoAfterLoadingSavedGame == MAP_SCREEN )

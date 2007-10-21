@@ -48,7 +48,6 @@ SOLDIERINITNODE *gOriginalSoldierInitListHead = NULL;
 SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 
 #ifdef JA2BETAVERSION
-	BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
 	BOOLEAN gfDoDialogOnceGameScreenFadesIn = FALSE;
 #endif
 
@@ -2027,10 +2026,9 @@ void AddProfilesNotUsingProfileInsertionData()
 	}
 }
 
-#ifdef JA2BETAVERSION
-extern void ErrorDetectedInSaveCallback( UINT8 bValue );
 
-BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode )
+#ifdef JA2BETAVERSION
+BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 {
 	SOLDIERINITNODE *curr;
 	UINT32 uiNumInvalids = 0;
@@ -2182,7 +2180,8 @@ BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 	return TRUE;
 }
 
-void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
+
+void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 {
 	SECTORINFO *pSector;
 	SOLDIERINITNODE *curr;

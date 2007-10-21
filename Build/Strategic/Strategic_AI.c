@@ -405,10 +405,8 @@ void ClearPreviousAIGroupAssignment( GROUP *pGroup );
 extern INT16 sWorldSectorLocationOfFirstBattle;
 
 
-#ifdef JA2BETAVERSION
-void SAIReportError(const wchar_t *wErrorString);
-#else
-#define SAIReportError( a ) //define it out
+#if !defined JA2BETAVERSION
+#	define SAIReportError(a) //define it out
 #endif
 
 
@@ -730,8 +728,9 @@ static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 }
 #endif
 
+
 #ifdef JA2BETAVERSION
-void ValidatePlayersAreInOneGroupOnly()
+void ValidatePlayersAreInOneGroupOnly(void)
 {
 	INT32 i;
 	INT32 iGroups;
@@ -926,8 +925,9 @@ void ValidatePlayersAreInOneGroupOnly()
 }
 #endif
 
+
 #ifdef JA2BETAVERSION
-void SAIReportError(const wchar_t *wErrorString)
+void SAIReportError(const wchar_t* wErrorString)
 {
 	// runtime static only, don't save
 	#ifdef JA2TESTVERSION

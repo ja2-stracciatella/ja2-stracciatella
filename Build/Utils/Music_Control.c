@@ -59,11 +59,8 @@ const char* const szMusicList[]=
 };
 
 
-
 BOOLEAN	       gfForceMusicToTense = FALSE;
 static BOOLEAN gfDontRestartSong   = FALSE;
-
-extern void HandleEndDemoInCreatureLevel( );
 
 
 static BOOLEAN MusicFadeIn(void);

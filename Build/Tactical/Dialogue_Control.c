@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "Gameloop.h"
 #include "Handle_UI.h"
 #include "Interface.h"
 #include "Isometric_Utils.h"
@@ -98,11 +99,6 @@ typedef struct
 	BOOLEAN fPauseTime;
 } DIALOGUE_Q_STRUCT, *DIALOGUE_Q_STRUCT_PTR;
 
-extern BOOLEAN gfSKIScreenExit;
-extern UINT32 guiPendingScreen;
-extern BOOLEAN fReDrawFace;
-extern BOOLEAN gfWaitingForTriggerTimer;
-
 
 BOOLEAN fExternFacesLoaded = FALSE;
 
@@ -120,10 +116,6 @@ UINT32 uiExternalFaceProfileIds[ NUMBER_OF_EXTERNAL_NPC_FACES ]=
 UINT8	gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES ] =
 					{ 80, 81, 82, 83, 86, 87, 88, 95, 97, 99, 100, 101, 102 };
 
-
-extern INT32 iInterfaceDialogueBox;
-extern BOOLEAN	gfRerenderInterfaceFromHelpText;
-extern UINT32 guiSKI_TransactionButton;
 
 UINT16	gusStopTimeQuoteList[ ] =
 {
@@ -186,11 +178,6 @@ BOOLEAN fDialogueBoxDueToLastMessage = FALSE;
 // last quote timers
 UINT32 guiDialogueLastQuoteTime = 0;
 UINT32 guiDialogueLastQuoteDelay = 0;
-
-
-extern BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
-extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-
 
 
 void UnPauseGameDuringNextQuote( void )
@@ -2603,7 +2590,7 @@ void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack )
 }
 
 
-BOOLEAN IsMercSayingDialogue( UINT8 ubProfileID )
+BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID)
 {
 	if ( gpCurrentTalkingFace != NULL && gubCurrentTalkingID == ubProfileID )
 	{

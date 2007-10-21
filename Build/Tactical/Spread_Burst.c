@@ -1,3 +1,4 @@
+#include "Real_Time_Input.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
@@ -26,8 +27,6 @@ typedef struct
 
 static BURST_LOCATIONS gsBurstLocations[MAX_BURST_LOCATIONS];
 static INT8            gbNumBurstLocations = 0;
-
-extern BOOLEAN gfBeginBurstSpreadTracking;
 
 
 void ResetBurstLocations( )

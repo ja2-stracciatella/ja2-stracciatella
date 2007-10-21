@@ -2,6 +2,7 @@
 #define _HANDLE_UI_
 
 #include "Input.h"
+#include "MouseSystem.h"
 #include "Soldier_Control.h"
 
 
@@ -157,7 +158,8 @@ typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 
 // GLOBAL STATUS VARS
 UI_MODE									gCurrentUIMode;
-UINT32									guiCurrentEvent;
+extern UINT32 guiCurrentEvent;
+extern UINT32 guiCurrentUICursor;
 INT16										gsSelectedLevel;
 BOOLEAN									gfPlotNewMovement;
 UINT32									guiPendingOverrideEvent;
@@ -232,9 +234,6 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 void HandleKeyInputOnEnemyTurn(  );
 
 
-void GetRTMouseButtonInput( UINT32 *puiNewEvent );
-void GetRTMousePositionInput( UINT32 *puiNewEvent );
-
 BOOLEAN SelectedMercCanAffordAttack( );
 BOOLEAN SelectedMercCanAffordMove(  );
 void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp );
@@ -268,8 +267,6 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay );
 void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 
-BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
-
 UINT32	UIHandleChangeLevel( UI_EVENT *pUIEvent );
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );
 
@@ -288,5 +285,26 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier );
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath);
 
 void PopupAssignmentMenuInTactical(void);
+
+extern BOOLEAN         gfUIOverItemPool;
+extern INT16           gfUIOverItemPoolGridNo;
+extern BOOLEAN         fRightButtonDown;
+extern BOOLEAN         fLeftButtonDown;
+extern BOOLEAN         fIgnoreLeftUp;
+extern BOOLEAN         gfIgnoreOnSelectedGuy;
+extern BOOLEAN         gUIActionModeChangeDueToMouseOver;
+extern MOUSE_REGION    gDisableRegion;
+extern BOOLEAN         gfDisableRegionActive;
+extern MOUSE_REGION    gUserTurnRegion;
+extern BOOLEAN         gfUserTurnRegionActive;
+extern UIKEYBOARD_HOOK gUIKeyboardHook;
+extern BOOLEAN         gfResetUIMovementOptimization;
+
+extern BOOLEAN gfUIShowExitEast;
+extern BOOLEAN gfUIShowExitWest;
+extern BOOLEAN gfUIShowExitNorth;
+extern BOOLEAN gfUIShowExitSouth;
+
+BOOLEAN ValidQuickExchangePosition(void);
 
 #endif

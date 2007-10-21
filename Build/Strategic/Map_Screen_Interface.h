@@ -545,5 +545,8 @@ void EndUpdateBox( BOOLEAN fContinueTimeCompression );
 
 extern BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot );
 
+INT32 GetNumberOfMercsInUpdateList(void);
+
+extern MOUSE_REGION gMapStatusBarsRegion;
 
 #endif

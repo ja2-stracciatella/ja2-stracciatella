@@ -106,13 +106,6 @@
 
 
 extern INT16		gsRobotGridNo;
-extern BOOLEAN	gfUndergroundTacticalTraversal;
-
-extern MINE_LOCATION_TYPE gMineLocation[MAX_NUMBER_OF_MINES];
-
-extern void CalculateNonPersistantPBIInfo();
-
-extern void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
 
 BOOLEAN		gfGettingNameFromSaveLoadScreen;
 
@@ -141,8 +134,6 @@ INT8 gbGreenToRegPromotions = 0;
 INT8 gbRegToElitePromotions = 0;
 INT8 gbMilitiaPromotions = 0;
 
-
-extern BOOLEAN gfUsePersistantPBI;
 
 BOOLEAN		gfUseAlternateMap = FALSE;
 // whether or not we have found Orta yet

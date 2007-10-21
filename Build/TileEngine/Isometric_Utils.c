@@ -17,7 +17,7 @@
 UINT32 guiForceRefreshMousePositionCalculation = 0;
 
 // GLOBALS
-INT16 DirIncrementer[8] =
+const INT16 DirIncrementer[8] =
  {
   -MAPWIDTH,        //N
 	1-MAPWIDTH,       //NE

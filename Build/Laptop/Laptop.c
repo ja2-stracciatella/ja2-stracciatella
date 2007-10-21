@@ -179,9 +179,6 @@ UINT32 guiPreviousLaptopMode;
 static UINT32 guiCurrentWWWMode = LAPTOP_MODE_NONE;
 INT32  giCurrentSubPage;
 
-extern UINT32 guiVObjectSize;
-extern UINT32 guiVSurfaceSize;
-
 
 static INT32 iHighLightBookLine = -1;
 BOOLEAN fFastLoadFlag = FALSE;

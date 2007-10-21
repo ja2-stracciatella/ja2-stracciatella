@@ -868,7 +868,8 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 	}
 }
 
-void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE *pSoldier )
+
+void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE* pSoldier)
 {
 	INT32 iCounter = 0;
 	INT16 sSector = 0, sCurrentSector = 0;

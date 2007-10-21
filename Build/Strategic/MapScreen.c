@@ -429,16 +429,6 @@ INT32 giFlashContractBaseTime = 0;
 UINT32 guiFlashCursorBaseTime = 0;
 INT32 giPotCharPathBaseTime = 0;
 
-extern UINT32 guiVObjectSize;
-extern UINT32 guiVSurfaceSize;
-
-extern UINT8 gubHandPos;
-extern UINT16 gusOldItemIndex;
-extern UINT16 gusNewItemIndex;
-extern BOOLEAN gfDeductPoints;
-
-extern void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
-
 static UINT32 guiCHARLIST;
 static UINT32 guiCHARINFO;
 static UINT32 guiSleepIcon;
@@ -467,7 +457,6 @@ static MOUSE_REGION gTeamListDestinationRegion[MAX_CHARACTER_COUNT];
 static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 
 
-OBJECTTYPE		gItemPointer;
 SOLDIERTYPE		*gpItemPointerSoldier;
 
 static PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
@@ -479,7 +468,6 @@ static PathSt* gpHelicopterPreviousMercPath = NULL;
 
 extern BOOLEAN fDeletedNode;
 extern BOOLEAN gfRenderPBInterface;
-extern BOOLEAN fMapScreenBottomDirty;
 extern BOOLEAN fResetTimerForFirstEntryIntoMapScreen;
 extern BOOLEAN gfStartedFromMapScreen;
 
@@ -499,8 +487,6 @@ extern INT32 giMapBorderButtons[];
 // the mine icon
 extern UINT32 guiMINEICON;
 
-extern UINT32	guiUIMessageTimeDelay;
-
 
 extern PathSt* pTempCharacterPath;
 extern PathSt* pTempHelicopterPath;
@@ -513,10 +499,6 @@ extern STR16 pBullseyeStrings[];
 extern OBJECTTYPE	*gpItemDescObject;
 
 
-// faces stuff
-extern FACETYPE	*gpCurrentTalkingFace;
-//extern BOOLEAN	gfFacePanelActive;
-
 // externs for highlighting of ammo/weapons
 extern UINT32 guiMouseOverItemTime;
 extern BOOLEAN gfCheckForMouseOverItem;
@@ -528,8 +510,6 @@ extern INT16 gsCiviliansEatenByMonsters;
 
 extern BOOLEAN			gfFadeOutDone;
 
-extern UINT32 guiPendingScreen;
-
 extern BOOLEAN gfMilitiaPopupCreated;
 
 #ifdef JA2TESTVERSION
@@ -537,10 +517,6 @@ extern BOOLEAN gfMilitiaPopupCreated;
 	extern INT16 MSYS_CurrentMY;
 #endif
 
-
-BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY );
-
-void EndConfirmMapMoveMode( void );
 
 void CancelMapUIMessage( void );
 
@@ -553,35 +529,16 @@ extern BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, U
 void CreateContractBox( SOLDIERTYPE *pCharacter );
 void CreateMercRemoveAssignBox( void );
 
-void DetermineWhichAssignmentMenusCanBeShown( void );
-
 // screen mask for pop up menus
 void ClearScreenMaskForMapScreenExit( void );
-
-
-BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone );
-extern void CreateDestroyMilitiaSectorButtons( void );
 
 
 // create/destroy inventory button as needed
 void CreateDestroyMapInvButton();
 
 
-void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
-
-void RememberPreviousPathForAllSelectedChars( void );
-
-BOOLEAN CanDrawSectorCursor( void );
-
-
-extern BOOLEAN CanRedistributeMilitiaInSector( INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId );
-
-extern INT32 GetNumberOfMercsInUpdateList( void );
-
-
 #ifdef JA2TESTVERSION
 void TestDumpStatChanges( void );
-void DumpSectorDifficultyInfo( void );
 void DumpItemsList( void );
 #endif
 
@@ -5192,7 +5149,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorldY);
 
 
-BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY )
+BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 {
 	POINT  MousePos;
 
@@ -5780,8 +5737,8 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 }
 
-// mapscreen wrapper to init the item description box
-BOOLEAN MAPInternalInitItemDescriptionBox( OBJECTTYPE *pObject, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
+
+BOOLEAN MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier)
 {
 	BOOLEAN fRet;
 
@@ -6004,11 +5961,10 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		fRightDown = FALSE;
 	}
-
 }
 
 
-void InternalMAPBeginItemPointer( SOLDIERTYPE *pSoldier )
+void InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier)
 {
 	// If not null return
 	if ( gpItemPointer != NULL )
@@ -6083,7 +6039,8 @@ static void MAPBeginKeyRingItemPointer(SOLDIERTYPE* pSoldier, UINT8 uiKeySlot)
 	fTeamPanelDirty=TRUE;
 }
 
-void MAPEndItemPointer( )
+
+void MAPEndItemPointer(void)
 {
 	if ( gpItemPointer != NULL )
 	{
@@ -6221,7 +6178,7 @@ static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInt
 static void ChangeMapScreenMaskCursor(UINT16 usCursor);
 
 
-void SetUpCursorForStrategicMap( void )
+void SetUpCursorForStrategicMap(void)
 {
 	if ( gfInChangeArrivalSectorMode == FALSE )
 	{
@@ -7889,7 +7846,7 @@ static void HandleChangeOfInfoChar(void)
 }
 
 
-void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter )
+void RebuildContractBoxForMerc(SOLDIERTYPE* pCharacter)
 {
 	// rebuild contractbox for this merc
 	RemoveBox( ghContractBox );
@@ -8058,7 +8015,7 @@ static void UpdatePausedStatesDueToTimeCompression(void)
 }
 
 
-BOOLEAN ContinueDialogue(SOLDIERTYPE *pSoldier, BOOLEAN fDone )
+BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone)
 {
 	// continue this grunts dialogue, restore when done
 	static INT8 bOldSelectedInfoChar = -1;
@@ -8874,13 +8831,12 @@ static void StartConfirmMapMoveMode(INT16 sMapY)
 }
 
 
-void EndConfirmMapMoveMode( void )
+void EndConfirmMapMoveMode(void)
 {
 	CancelMapUIMessage( );
 
 	gfInConfirmMapMoveMode = FALSE;
 }
-
 
 
 void CancelMapUIMessage( void )
@@ -9373,8 +9329,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 }
 
 
-
-void MapScreenDefaultOkBoxCallback( UINT8 bExitValue )
+void MapScreenDefaultOkBoxCallback(UINT8 bExitValue)
 {
 	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_OK )
@@ -10902,9 +10857,8 @@ static void HandleMilitiaRedistributionClick(void)
 }
 
 
-
 #ifdef JA2TESTVERSION
-void DumpSectorDifficultyInfo( void )
+void DumpSectorDifficultyInfo(void)
 {
 	// NOTE: This operates on the selected map sector!
 	CHAR16 wSectorName[ 128 ];
@@ -11241,7 +11195,7 @@ static void InitPreviousPaths(void)
 }
 
 
-void RememberPreviousPathForAllSelectedChars( void )
+void RememberPreviousPathForAllSelectedChars(void)
 {
 	INT32 iCounter = 0;
 
@@ -11439,8 +11393,7 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber)
 }
 
 
-
-BOOLEAN CanDrawSectorCursor( void )
+BOOLEAN CanDrawSectorCursor(void)
 {
 	if( /*( fCursorIsOnMapScrollButtons == FALSE ) && */
 			( fShowTownInfo == FALSE ) && ( ghTownMineBox == -1 ) &&

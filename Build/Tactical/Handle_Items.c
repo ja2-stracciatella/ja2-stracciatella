@@ -96,17 +96,11 @@ static INT16					gsTempGridno;
 static INT8						bTempFrequency;
 
 
-extern BOOLEAN ItemIsCool( OBJECTTYPE * pObj );
-extern INT8	gbItemPointerSrcSlot;
-extern void MAPEndItemPointer( );
-extern BOOLEAN	gfResetUIMovementOptimization;
-
 SOLDIERTYPE *		gpBoobyTrapSoldier;
 ITEM_POOL *			gpBoobyTrapItemPool;
 INT16						gsBoobyTrapGridNo;
 INT8            gbBoobyTrapLevel;
 BOOLEAN					gfDisarmingBuriedBomb;
-extern BOOLEAN	gfDontChargeAPsToPickup;
 INT8						gbTrapDifficulty;
 BOOLEAN					gfJustFoundBoobyTrap = FALSE;
 
@@ -3041,9 +3035,6 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 
 	return( TRUE );
 }
-
-
-extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 
 BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos)

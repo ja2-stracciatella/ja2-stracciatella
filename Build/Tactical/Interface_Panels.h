@@ -2,6 +2,7 @@
 #define __INTERFACE_PANELS
 
 #include "MouseSystem.h"
+#include "Soldier_Control.h"
 
 enum
 {
@@ -119,5 +120,18 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE *prev, BOOLEAN fGoodForLessOKLif
 void BeginKeyPanelFromKeyShortcut(void);
 
 void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
+
+extern UINT16       gusSMCurrentMerc;
+extern SOLDIERTYPE* gpSMCurrentMerc;
+extern INT32        iSMPanelButtons[NUM_SM_BUTTONS];
+extern INT32        iTEAMPanelButtons[NUM_TEAM_BUTTONS];
+extern INT32        giSMStealthButton;
+extern UINT8        gubSelectSMPanelToMerc;
+extern MOUSE_REGION gSM_SELMERCMoneyRegion;
+extern UINT8        gubHandPos;
+extern UINT16       gusOldItemIndex;
+extern UINT16       gusNewItemIndex;
+extern BOOLEAN      gfDeductPoints;
+extern BOOLEAN      gfSMDisableForItems;
 
 #endif

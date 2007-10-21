@@ -140,7 +140,6 @@ UINT8										gubPersonToSetOffExplosions = NOBODY;
 
 INT16			gsTempActionGridNo = NOWHERE;
 
-extern UINT8 gubInterruptProvoker;
 
 #define		NUM_EXPLOSION_SLOTS					100
 
@@ -2752,7 +2751,8 @@ static void AddBombToQueue(UINT32 uiWorldBombIndex, UINT32 uiTimeStamp)
 	gfExplosionQueueActive = TRUE;
 }
 
-void HandleExplosionQueue( void )
+
+void HandleExplosionQueue(void)
 {
 	UINT32				uiIndex;
 	UINT32				uiWorldBombIndex;

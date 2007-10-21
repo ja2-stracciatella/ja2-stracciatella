@@ -208,4 +208,6 @@ BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach );
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void );
 
+extern NPCQuoteInfo* gpNPCQuoteInfoArray[];
+
 #endif

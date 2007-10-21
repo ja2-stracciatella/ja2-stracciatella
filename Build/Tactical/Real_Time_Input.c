@@ -1,5 +1,7 @@
 #include "Font_Control.h"
+#include "Real_Time_Input.h"
 #include "Soldier_Find.h"
+#include "Turn_Based_Input.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "PathAI.h"
@@ -50,37 +52,22 @@
 #include "Render_Dirty.h"
 
 
-extern BOOLEAN	fRightButtonDown;
-extern BOOLEAN	fLeftButtonDown;
-extern BOOLEAN fIgnoreLeftUp;
-extern UINT32  guiCurrentEvent;
-extern UINT32 guiCurrentUICursor;
-extern void DetermineWhichAssignmentMenusCanBeShown( void );
-extern BOOLEAN gfIgnoreOnSelectedGuy;
-extern INT16 gsOverItemsGridNo;
-extern INT16 gsOverItemsLevel;
-extern UINT32	guiUITargetSoldierId;
-extern BOOLEAN	gfUIShowExitSouth;
-
-
-BOOLEAN	gfStartLookingForRubberBanding	 = FALSE;
-UINT16	gusRubberBandX									 = 0;
-UINT16	gusRubberBandY									 = 0;
+static BOOLEAN gfStartLookingForRubberBanding = FALSE;
+static UINT16  gusRubberBandX                 = 0;
+static UINT16  gusRubberBandY                 = 0;
 
 
 BOOLEAN	gfBeginBurstSpreadTracking = FALSE;
 
 BOOLEAN	gfRTClickLeftHoldIntercepted = FALSE;
-BOOLEAN	gfRTHaveClickedRightWhileLeftDown = FALSE;
-
-extern BOOLEAN ValidQuickExchangePosition( );
+static BOOLEAN gfRTHaveClickedRightWhileLeftDown = FALSE;
 
 
 static void QueryRTLeftButton(UINT32* puiNewEvent);
 static void QueryRTRightButton(UINT32* puiNewEvent);
 
 
-void	GetRTMouseButtonInput( UINT32 *puiNewEvent )
+void GetRTMouseButtonInput(UINT32* puiNewEvent)
 {
 	 QueryRTLeftButton( puiNewEvent );
 	 QueryRTRightButton( puiNewEvent );
@@ -1199,21 +1186,13 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 
 				// Reset counter
 				RESETCOUNTER( RMOUSECLICK_DELAY_COUNTER );
-
 			}
-
 		}
 	}
-
 }
 
 
-extern BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
-
-extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
-
-
-void GetRTMousePositionInput( UINT32 *puiNewEvent )
+void GetRTMousePositionInput(UINT32* puiNewEvent)
 {
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;

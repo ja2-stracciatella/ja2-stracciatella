@@ -58,8 +58,6 @@ BOOLEAN gfJustFinishedAPause = FALSE;
 MOUSE_REGION gClockMouseRegion;
 MOUSE_REGION gClockScreenMaskMouseRegion;
 
-extern BOOLEAN fMapScreenBottomDirty;
-
 
 #define SECONDS_PER_COMPRESSION 1 // 1/2 minute passes every 1 second of real time
 

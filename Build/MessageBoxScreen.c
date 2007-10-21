@@ -52,9 +52,6 @@ static SGPRect  MessageBoxRestrictedCursorRegion;
 static BOOLEAN fCursorLockedToArea = FALSE;
 BOOLEAN        gfInMsgBox = FALSE;
 
-extern BOOLEAN fInMapMode;
-extern BOOLEAN gfOverheadMapDirty;
-
 
 static SGPRect gOldCursorLimitRectangle;
 

@@ -3,6 +3,7 @@
 #include "Local.h"
 #include "Gameloop.h"
 #include "HImage.h"
+#include "Soldier_Ani.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"
@@ -288,8 +289,6 @@ BOOLEAN									gfSMDisableForItems = FALSE;
 
 BOOLEAN									gfDisableTacticalPanelButtons = FALSE;
 
-BOOLEAN									gfAddingMoneyToMercFromPlayersAccount=FALSE;
-
 BOOLEAN	gfCheckForMouseOverItem = FALSE;
 UINT32	guiMouseOverItemTime		= 0;
 INT8		gbCheckForMouseOverItemPos = 0;
@@ -297,18 +296,6 @@ UINT8		gubSelectSMPanelToMerc   = NOBODY;
 static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
 UINT32 guiBrownBackgroundForTeamPanel;
-
-extern BOOLEAN							gfInKeyRingPopup;
-extern UINT32	 guiVEHINV;
-extern BOOLEAN	gfBeginEndTurn;
-extern	BOOLEAN	gfInItemPickupMenu;
-extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
-extern BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn  );
-extern void SetNewItem( SOLDIERTYPE *pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem );
-
-extern void CleanUpStack( OBJECTTYPE * pObj, OBJECTTYPE * pCursorObj );
-
-void HandlePlayerTeamMemberDeathAfterSkullAnimation( SOLDIERTYPE *pSoldier );
 
 
 UINT8 gubHandPos;
@@ -376,8 +363,6 @@ static MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
 // Globals - for one - the current merc here
 UINT16					gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
-extern	SOLDIERTYPE *gpItemPopupSoldier;
-extern	INT8		gbCompatibleApplyItem;
 
 MOUSE_REGION gSMPanelRegion;
 
@@ -815,11 +800,7 @@ static void UpdateSMPanel(void)
 	{
 		EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
 	}
-
 }
-
-extern BOOLEAN CanItemFitInPosition( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObj, INT8 bPos, BOOLEAN fDoingPlacement );
-extern INT8		 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 
 
 void ReevaluateItemHatches(SOLDIERTYPE* pSoldier, BOOLEAN fAllValid)
@@ -3183,9 +3164,6 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 	}
 }
-
-
-extern void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI);
 
 
 void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)

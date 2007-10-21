@@ -1,0 +1,6 @@
+#ifndef STRATEGIC_MOVEMENT_COSTS_H
+#define STRATEGIC_MOVEMENT_COSTS_H
+
+BOOLEAN SectorIsImpassable(INT16 sSector);
+
+#endif

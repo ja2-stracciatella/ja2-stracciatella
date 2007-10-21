@@ -1,6 +1,7 @@
 #ifndef __INTERFACE_CONTROL_H
 #define __INTERFACE_CONTROL_H
 
+#include "Types.h"
 
 #define		INTERFACE_MAPSCREEN							0x00000001
 #define		INTERFACE_NORENDERBUTTONS				0x00000002
@@ -28,5 +29,6 @@ void HandleTacticalPanelSwitch( );
 
 BOOLEAN InterfaceOKForMeanwhilePopup();
 
+extern BOOLEAN gfRerenderInterfaceFromHelpText;
 
 #endif

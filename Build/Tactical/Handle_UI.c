@@ -2,6 +2,7 @@
 #include "Font_Control.h"
 #include "Local.h"
 #include "Merc_Hiring.h"
+#include "Real_Time_Input.h"
 #include "Soldier_Find.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -180,28 +181,15 @@ static UINT32 UIHandleOpenDoorMenu(UI_EVENT* pUIEvent);
 
 static UINT32 UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent);
 
-BOOLEAN ValidQuickExchangePosition( );
-
-
-extern void DebugLevelNodePage( void );
 
 INT16							gsTreeRevealXPos, gsTreeRevealYPos;
-
-
-extern void EVENT_InternalSetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState );
-
-extern BOOLEAN gfExitDebugScreen;
-extern INT8		 gCurDebugPage;
-extern BOOLEAN gfGetNewPathThroughPeople;
-extern BOOLEAN gfIgnoreOnSelectedGuy;
-extern BOOLEAN gfInOpenDoorMenu;
 
 
 SOLDIERTYPE			*gpRequesterMerc = NULL;
 SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
 INT16						gsRequesterGridNo;
-INT16						gsOverItemsGridNo = NOWHERE;
-INT16						gsOverItemsLevel	= 0;
+static INT16 gsOverItemsGridNo = NOWHERE;
+static INT16 gsOverItemsLevel  = 0;
 BOOLEAN					gfUIInterfaceSetBusy = FALSE;
 UINT32					guiUIInterfaceBusyTime = 0;
 
@@ -366,11 +354,11 @@ UINT32		guiShowUPDownArrows							= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 INT8			gbAdjustStanceDiff							= 0;
 INT8			gbClimbID												= 0;
 
-BOOLEAN		gfUIShowExitEast								= FALSE;
-BOOLEAN		gfUIShowExitWest								= FALSE;
-BOOLEAN		gfUIShowExitNorth								= FALSE;
-BOOLEAN		gfUIShowExitSouth								= FALSE;
-BOOLEAN		gfUIShowExitExitGrid						= FALSE;
+BOOLEAN        gfUIShowExitEast     = FALSE;
+BOOLEAN        gfUIShowExitWest     = FALSE;
+BOOLEAN        gfUIShowExitNorth    = FALSE;
+BOOLEAN        gfUIShowExitSouth    = FALSE;
+static BOOLEAN gfUIShowExitExitGrid = FALSE;
 
 BOOLEAN		gfUINewStateForIntTile						= FALSE;
 
@@ -1164,9 +1152,6 @@ UINT32 UIHandleChangeLevel(UI_EVENT* pUIEvent)
 
 	return( GAME_SCREEN );
 }
-
-
-extern void InternalSelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI );
 
 
 static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent)
@@ -5801,7 +5786,8 @@ void SetInterfaceHeightLevel( )
 	}
 }
 
-BOOLEAN ValidQuickExchangePosition( )
+
+BOOLEAN ValidQuickExchangePosition(void)
 {
 	SOLDIERTYPE				*pOverSoldier;
 	INT16							sDistVisible = FALSE;

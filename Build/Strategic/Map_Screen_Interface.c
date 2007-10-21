@@ -18,6 +18,8 @@
 #include "Isometric_Utils.h"
 #include "Interface.h"
 #include "Game_Event_Hook.h"
+#include "SysUtil.h"
+#include "Tactical_Placement_GUI.h"
 #include "Tactical_Save.h"
 #include "Quests.h"
 #include "StrategicMap.h"
@@ -138,10 +140,6 @@ BOOLEAN fShowMapScreenHelpText = FALSE;
 BOOLEAN fScreenMaskForMoveCreated = FALSE;
 BOOLEAN fLockOutMapScreenInterface = FALSE;
 
-extern INT32 giMercPanelImage;
-extern BOOLEAN fShowDescriptionFlag;
-extern BOOLEAN fInMapMode;
-
 CHAR16 gsCustomErrorString[ 128 ];
 
 BOOLEAN fShowUpdateBox = FALSE;
@@ -198,9 +196,6 @@ INT32 giNumberOfVehiclesInSectorMoving = 0;
 
 INT32 iHeightOfInitFastHelpText = 0;
 
-extern INT32 giMapContractButton;
-extern INT32 giCharInfoButton[];
-
 // the list of soldiers that are moving
 SOLDIERTYPE * pSoldierMovingList[ MAX_CHARACTER_COUNT ];
 BOOLEAN fSoldierIsMoving[ MAX_CHARACTER_COUNT ];
@@ -219,13 +214,6 @@ INT32 fVehicleIsMoving[ NUMBER_OF_SQUADS ];
 
 MOUSE_REGION gMoveBoxScreenMask;
 
-// the save buffer
-extern UINT32 guiSAVEBUFFER;
-
-extern BOOLEAN fShowInventoryFlag;
-extern BOOLEAN fMapScreenBottomDirty;
-extern MOUSE_REGION    gMPanelRegion;
-
 
 // has the inventory pool been selected to be on or off?
 BOOLEAN fMapInventoryPoolInited = FALSE;
@@ -234,7 +222,6 @@ BOOLEAN fShowMapScreenMovementList = FALSE;
 
 MapScreenCharacterSt gCharactersList[ MAX_CHARACTER_COUNT+1];
 
-extern MOUSE_REGION gCharInfoHandRegion;
 MOUSE_REGION	gMapStatusBarsRegion;
 
 SGPPoint MovePosition={450, 100 };
@@ -346,23 +333,9 @@ SGPPoint OrigVehiclePosition={160,150};
 // at least one merc was hired at some time
 BOOLEAN gfAtLeastOneMercWasHired = FALSE;
 
-// rebuild contract box this character
-extern void RebuildContractBoxForMerc( SOLDIERTYPE *pCharacter );
-
-extern void SetUpCursorForStrategicMap( void );
-
-extern void MapScreenDefaultOkBoxCallback( UINT8 bExitValue );
-
-extern BOOLEAN PlayerSoldierTooTiredToTravel( SOLDIERTYPE *pSoldier );
-
-extern void RememberPreviousPathForAllSelectedChars( void );
-
 
 // how many people does the player have?
 //INT32 GetNumberOfCharactersOnPlayersTeam( void );
-
-extern void ResumeOldAssignment( SOLDIERTYPE *pSoldier );
-
 
 
 void InitalizeVehicleAndCharacterList( void )
@@ -4396,7 +4369,7 @@ static void ResetSoldierUpdateBox(void)
 }
 
 
-INT32 GetNumberOfMercsInUpdateList( void )
+INT32 GetNumberOfMercsInUpdateList(void)
 {
 	INT32 iCounter = 0, iCount = 0;
 

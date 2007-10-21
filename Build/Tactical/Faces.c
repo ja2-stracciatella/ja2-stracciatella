@@ -1,4 +1,6 @@
 #include "Font.h"
+#include "Interface_Control.h"
+#include "Interface_Panels.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "WorldDef.h"
@@ -124,13 +126,6 @@ static const UINT8 gubRPCSmallFaceProfileNum[] =
 };
 
 static const UINT8 ubRPCNumSmallFaceValues = 28;
-
-
-extern BOOLEAN	gfSMDisableForItems;
-extern INT16		gsCurInterfacePanel;
-extern UINT16		gusSMCurrentMerc;
-extern BOOLEAN	gfRerenderInterfaceFromHelpText;
-extern	BOOLEAN	gfInItemPickupMenu;
 
 
 static INT32 GetFreeFace(void)

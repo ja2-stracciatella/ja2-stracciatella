@@ -55,4 +55,10 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier );
 void AddProfilesUsingProfileInsertionData();
 void AddProfilesNotUsingProfileInsertionData();
 
+void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void);
+
+#if defined JA2BETAVERSION
+BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode);
+#endif
+
 #endif

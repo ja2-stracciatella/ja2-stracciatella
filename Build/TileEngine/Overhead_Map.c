@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Interface_Items.h"
 #include "Local.h"
 #include "VObject.h"
 #include "TileDef.h"
@@ -87,13 +88,6 @@ extern BOOLEAN		gfRadarCurrentGuyFlash;
 INT16							gsStartRestrictedX, gsStartRestrictedY;
 BOOLEAN						gfOverItemPool = FALSE;
 INT16							gsOveritemPoolGridNo;
-
-
-extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
-
-
-//Isometric utilities (for overhead stuff only)
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo );
 
 
 static void CopyOverheadDBShadetablesFromTileset(void);
@@ -1458,7 +1452,8 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
   //*psScreenY -= gpWorldLevelData[ sGridNo ].sHeight / 5;
 }
 
-BOOLEAN GetOverheadMouseGridNo( INT16 *psGridNo )
+
+BOOLEAN GetOverheadMouseGridNo(INT16* psGridNo)
 {
 	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;

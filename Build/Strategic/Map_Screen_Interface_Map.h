@@ -252,4 +252,7 @@ extern BOOLEAN fFoundTixa;
 
 extern UINT32 guiSubLevel1, guiSubLevel2, guiSubLevel3;
 
+void    CreateDestroyMilitiaSectorButtons(void);
+BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
+
 #endif

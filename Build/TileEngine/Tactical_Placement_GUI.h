@@ -17,4 +17,8 @@ extern SOLDIERTYPE *gpTacticalPlacementHilightedSoldier;
 //Saved value.  Contains the last choice for future battles.
 extern UINT8	gubDefaultButton;
 
+extern BOOLEAN gfTacticalPlacementGUIDirty;
+extern BOOLEAN gfValidLocationsChanged;
+extern INT32   giMercPanelImage;
+
 #endif

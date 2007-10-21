@@ -103,7 +103,6 @@ UINT8	gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 
 BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 #endif
 
-extern void PauseAITemporarily( void );
 //
 // NPC QUOTE LOW LEVEL ROUTINES
 //

@@ -41,14 +41,6 @@ static INT16 gsCurrentGlowFrame     = 0;
 static INT16 gsCurrentItemGlowFrame = 0;
 
 
-extern BOOLEAN gfUIShowExitEast;
-extern BOOLEAN gfUIShowExitWest;
-extern BOOLEAN gfUIShowExitNorth;
-extern BOOLEAN gfUIShowExitSouth;
-
-extern BOOLEAN gfTopMessageDirty;
-
-
 // VIEWPORT OFFSET VALUES
 // NOTE: THESE VALUES MUST BE MULTIPLES OF TILE SIZES!
 #define VIEWPORT_XOFFSET_S        (WORLD_TILE_X * 1)

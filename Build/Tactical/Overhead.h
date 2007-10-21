@@ -183,6 +183,7 @@ void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 
 void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
+void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI);
 
 
 void LocateGridNo( UINT16 sGridNo );
@@ -286,5 +287,20 @@ UINT8 NumPCsInSector( void );
 
 void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier );
 void SetSoldierNeutral( SOLDIERTYPE * pSoldier );
+
+void         CaptureTimerCallback(void);
+SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* pSoldier);
+
+extern BOOLEAN gfSurrendered;
+extern BOOLEAN gfKillingGuysForLosingBattle;
+extern UINT8   gubWaitingForAllMercsToExitCode;
+
+UINT8        NumCapableEnemyInSector(void);
+SOLDIERTYPE* FreeUpAttackerGivenTarget(UINT8 ubID, UINT8 ubTargetID);
+SOLDIERTYPE* ReduceAttackBusyGivenTarget(UINT8 ubID, UINT8 ubTargetID);
+
+#ifdef JA2DEMO
+void HandleEndDemoInCreatureLevel(void);
+#endif
 
 #endif

@@ -130,4 +130,8 @@ void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
 
 extern INT8 gbLightSighting[1][16];
 
+void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier);
+
+extern UINT8 gubInterruptProvoker;
+
 #endif

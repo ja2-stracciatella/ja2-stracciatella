@@ -35,5 +35,8 @@ BOOLEAN IsThereAnySavedGameFiles();
 
 void			DeleteSaveGameNumber( UINT8 ubSaveGameSlotID );
 
+#if defined JA2BETAVERSION
+void ErrorDetectedInSaveCallback(UINT8 bValue);
+#endif
 
 #endif

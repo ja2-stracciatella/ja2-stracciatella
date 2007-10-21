@@ -90,11 +90,6 @@ enum{
 };
 
 
-
-// GLOBALS
-
-
-// the dirty state of the mapscreen interface bottom
 BOOLEAN fMapScreenBottomDirty = TRUE;
 
 BOOLEAN fMapBottomDirtied = FALSE;
@@ -139,17 +134,6 @@ MOUSE_REGION gTimeCompressionMask[ 3 ];
 	MOUSE_REGION MapButtonScreenMasks[ 14 ];
 	MOUSE_REGION MapScreenmaskForDemo;
 #endif
-
-
-extern UINT8 gubStartOfMapScreenMessageList;
-
-extern INT32 giMapInvDoneButton;
-
-extern BOOLEAN fInMapMode;
-extern BOOLEAN fShowInventoryFlag;
-extern BOOLEAN fShowDescriptionFlag;
-
-extern MOUSE_REGION gMPanelRegion;
 
 
 static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason);

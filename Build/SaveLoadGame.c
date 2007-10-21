@@ -114,7 +114,6 @@ static UINT32 guiSizeOfTempFiles;
 static char   gzNameOfMapTempFile[128];
 #endif
 
-extern		SOLDIERTYPE		*gpSMCurrentMerc;
 extern		INT32					giSortStateForMapScreenList;
 extern		INT16					sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 extern		INT32					giRTAILastUpdateTime;
@@ -358,11 +357,6 @@ static UINT8 gubSaveGameLoc = 0;
 UINT32		guiScreenToGotoAfterLoadingSavedGame = 0;
 
 extern		UINT32		guiCurrentUniqueSoldierId;
-
-
-#ifdef JA2BETAVERSION
-	extern BOOLEAN ValidateSoldierInitLinks( UINT8 ubCode );
-#endif
 
 
 static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);

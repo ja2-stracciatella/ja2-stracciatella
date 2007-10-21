@@ -137,8 +137,6 @@ UINT8 gubSectorIDOfCreatureAttack = 0;
 extern UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
 extern void BuildUndergroundSectorInfoList();
 
-extern MINE_STATUS_TYPE gMineStatus[ MAX_NUMBER_OF_MINES ];
-
 
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {

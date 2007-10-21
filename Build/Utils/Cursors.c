@@ -13,10 +13,6 @@
 #include "VSurface.h"
 
 
-extern MOUSE_REGION	gDisableRegion;
-extern MOUSE_REGION gUserTurnRegion;
-
-
 #define SCURSOR(name)         { name, NULL, 0,                   0 }
 #define ECURSOR()             { NULL, NULL, USE_OUTLINE_BLITTER, 0 }
 

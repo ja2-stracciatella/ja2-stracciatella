@@ -2081,7 +2081,8 @@ static void SetBlueFlagFlags(void)
 	}
 }
 
-void InitLoadedWorld( )
+
+void InitLoadedWorld(void)
 {
 	//if the current sector is not valid, dont init the world
 	if( gWorldSectorX == 0 || gWorldSectorY == 0 )

@@ -2247,11 +2247,11 @@ UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 		ubDirection = NORTH_STRATEGIC_MOVE;
 	}
 
-
 	return( SectorInfo[ sStartSector ].ubTraversability[ ubDirection ] );
 }
 
-BOOLEAN SectorIsImpassable( INT16 sSector )
+
+BOOLEAN SectorIsImpassable(INT16 sSector)
 {
 	// returns true if the sector is impassable in all directions
 	return( SectorInfo[ sSector ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == GROUNDBARRIER ||

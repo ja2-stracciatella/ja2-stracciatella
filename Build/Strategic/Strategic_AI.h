@@ -133,5 +133,9 @@ typedef struct GARRISON_GROUP
 }GARRISON_GROUP;
 CASSERT(sizeof(GARRISON_GROUP) == 14)
 
+#if defined JA2BETAVERSION
+void ValidatePlayersAreInOneGroupOnly(void);
+void SAIReportError(const wchar_t* wErrorString);
+#endif
 
 #endif

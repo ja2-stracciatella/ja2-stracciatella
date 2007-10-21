@@ -334,17 +334,12 @@ INT16 sElitesOnCursor = 0;
 INT16 sSelectedMilitiaTown = 0;
 
 
-extern MINE_LOCATION_TYPE gMineLocation[];
-extern MINE_STATUS_TYPE gMineStatus[];
-
 // sublevel graphics
 UINT32 guiSubLevel1, guiSubLevel2, guiSubLevel3;
 
 // the between sector icons
 UINT32    guiCHARBETWEENSECTORICONS;
 UINT32		guiCHARBETWEENSECTORICONSCLOSE;
-
-extern BOOLEAN fMapScreenBottomDirty;
 
 // tixa found
 BOOLEAN fFoundTixa = FALSE;
@@ -479,17 +474,9 @@ INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
 
 
-extern BOOLEAN GetMouseMapXY( INT16 *psMapWorldX, INT16 *psMapWorldY );
-void CreateDestroyMilitiaSectorButtons( void );
-
-
 #ifdef JA2DEMO
 BOOLEAN DrawMapForDemo( void );
 #endif
-
-extern void EndConfirmMapMoveMode( void );
-extern BOOLEAN CanDrawSectorCursor( void );
-
 
 
 void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
@@ -5196,7 +5183,7 @@ static void MilitiaBoxMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MilitiaButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-void CreateDestroyMilitiaSectorButtons( void )
+void CreateDestroyMilitiaSectorButtons(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	static INT16 sOldSectorValue = -1;
@@ -6615,8 +6602,7 @@ void InitMapSecrets( void )
 }
 
 
-
-BOOLEAN CanRedistributeMilitiaInSector( INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId )
+BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId)
 {
 	INT32 iCounter = 0;
 	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;

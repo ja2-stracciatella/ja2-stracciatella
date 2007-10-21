@@ -1,6 +1,8 @@
+#include "Auto_Resolve.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Render_Dirty.h"
 #include "VObject.h"
@@ -132,28 +134,6 @@ INT32 giCompatibleItemBaseTime = 0;
 UINT32 guiMapInvenButton[ 3 ];
 
 BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
-
-
-extern UINT32	guiNumWorldItems;
-extern BOOLEAN fShowInventoryFlag;
-extern BOOLEAN fMapScreenBottomDirty;
-
-extern OBJECTTYPE gItemPointer;
-
-extern OBJECTTYPE * gpItemPointer;
-
-// outside vidieo objects for cursor
-extern UINT32 guiExternVo;
-extern UINT16 gusExternVoSubIndex;
-
-extern	MOUSE_REGION    gMPanelRegion;
-
-
-BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem );
-
-extern void StackObjs( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubNumberToCopy );
-extern void MAPEndItemPointer( );
-extern	BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ );
 
 
 // load the background panel graphics for inventory

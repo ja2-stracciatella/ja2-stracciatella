@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "Finances.h"
 #include "Game_Clock.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
@@ -123,7 +124,6 @@ static UINT32 guiLISTCOLUMNS;
 
 // are in the financial system right now?
 static BOOLEAN fInFinancialMode = FALSE;
-extern BOOLEAN fMapScreenBottomDirty;
 
 
 // the last page altogether

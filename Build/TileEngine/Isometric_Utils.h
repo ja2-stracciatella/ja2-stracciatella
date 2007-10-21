@@ -102,5 +102,6 @@ INT16 RandomGridNo();
 
 extern UINT32 guiForceRefreshMousePositionCalculation;
 
+extern const INT16 DirIncrementer[8];
 
 #endif

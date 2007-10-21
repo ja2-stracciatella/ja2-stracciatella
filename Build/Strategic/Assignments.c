@@ -1,6 +1,8 @@
 #include "Assignments.h"
+#include "Auto_Resolve.h"
 #include "Font.h"
 #include "Local.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"
 #include "Strategic.h"
@@ -15,6 +17,7 @@
 #include "Campaign.h"
 #include "Queen_Command.h"
 #include "StrategicMap.h"
+#include "Strategic_Movement_Costs.h"
 #include "Text.h"
 #include "Dialogue_Control.h"
 #include "NPC.h"
@@ -116,7 +119,6 @@ REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
 	{ /* pockets */         12, { BIGPOCK1POS, BIGPOCK2POS, BIGPOCK3POS, BIGPOCK4POS, SMALLPOCK1POS, SMALLPOCK2POS, SMALLPOCK3POS, SMALLPOCK4POS, SMALLPOCK5POS, SMALLPOCK6POS, SMALLPOCK7POS, SMALLPOCK8POS } }
 };
 
-extern STR16 sRepairsDoneString[];
 
 // PopUp Box Handles
 INT32 ghAssignmentBox = -1;
@@ -158,11 +160,7 @@ BOOLEAN fFirstClickInAssignmentScreenMask = FALSE;
 
 // render pre battle interface?
 extern BOOLEAN gfRenderPBInterface;
-extern BOOLEAN fMapScreenBottomDirty;
 extern SOLDIERTYPE *pMilitiaTrainerSoldier;
-
-// in the mapscreen?
-extern BOOLEAN fInMapMode;
 
 // we are in fact training?..then who temmates, or self?
 INT8 gbTrainingMode = -1;
@@ -278,14 +276,6 @@ BOOLEAN fGlowContractRegion = FALSE;
 INT8 GetRegainDueToSleepNeeded( SOLDIERTYPE *pSoldier, INT32 iRateOfReGain );
 */
 
-extern void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining( SOLDIERTYPE *pSoldier );
-
-extern BOOLEAN SectorIsImpassable( INT16 sSector );
-
-extern UINT32 VirtualSoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, OBJECTTYPE *pKit, INT16 sKitPts, INT16 sStatus );
-
-
-BOOLEAN PlayerSoldierTooTiredToTravel( SOLDIERTYPE *pSoldier );
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 BOOLEAN IsTheSAMSiteInSectorRepairable( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
@@ -5434,7 +5424,7 @@ static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox);
 static BOOLEAN HandleShowingOfMovementBox(void);
 
 
-void DetermineWhichAssignmentMenusCanBeShown( void )
+void DetermineWhichAssignmentMenusCanBeShown(void)
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -9935,8 +9925,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
 }
 
 
-
-BOOLEAN PlayerSoldierTooTiredToTravel( SOLDIERTYPE *pSoldier )
+BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier)
 {
 	Assert( pSoldier );
 
@@ -10908,8 +10897,7 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 }
 
 
-
-void ResumeOldAssignment( SOLDIERTYPE *pSoldier )
+void ResumeOldAssignment(SOLDIERTYPE* pSoldier)
 {
 	BOOLEAN fOldAssignmentInvalid = FALSE;
 

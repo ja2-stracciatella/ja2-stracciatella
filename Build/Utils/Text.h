@@ -1342,4 +1342,6 @@ extern const wchar_t gzIntroScreen[];
 
 extern const wchar_t* pUpdatePanelButtons[];
 
+extern const wchar_t* sRepairsDoneString[];
+
 #endif

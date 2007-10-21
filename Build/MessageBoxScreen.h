@@ -94,4 +94,6 @@ INT32   DoMapMessageBoxWithRect(     UINT8 ubStyle, const wchar_t* zString, UINT
 BOOLEAN DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
 BOOLEAN DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
 
+extern BOOLEAN gfInMsgBox;
+
 #endif

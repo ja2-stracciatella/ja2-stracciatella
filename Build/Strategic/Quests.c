@@ -41,10 +41,6 @@ UINT8 gubFact[ NUM_FACTS ]; // this has to be updated when we figure out how man
 INT16	gsFoodQuestSectorX;
 INT16	gsFoodQuestSectorY;
 
-extern void	GuaranteeAtLeastXItemsOfIndex( UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubHowMany );
-
-
-
 
 void SetFactTrue( UINT16 usFact )
 {
@@ -334,7 +330,8 @@ static BOOLEAN CheckNPCIsEPC(UINT8 ubProfileID)
 	return( (pNPC->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) );
 }
 
-BOOLEAN NPCInRoom( UINT8 ubProfileID, UINT8 ubRoomID )
+
+BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID)
 {
 	SOLDIERTYPE *		pNPC;
 

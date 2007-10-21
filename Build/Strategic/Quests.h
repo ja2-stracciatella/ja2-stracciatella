@@ -561,5 +561,6 @@ void InitQuestEngine();
 BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile );
 BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile );
 
+BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID);
 
 #endif

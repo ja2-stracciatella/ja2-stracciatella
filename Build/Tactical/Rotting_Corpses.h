@@ -176,4 +176,6 @@ INT16 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID );
 void DecayRottingCorpseAIWarnings( void );
 UINT8 GetNearestRottingCorpseAIWarning( INT16 sGridNo );
 
+void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE* pSoldier, INT32 iInvSlot);
+
 #endif

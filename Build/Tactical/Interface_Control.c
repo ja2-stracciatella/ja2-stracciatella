@@ -56,21 +56,9 @@ UINT8			gsUICurIntTileOldShade;
 
 BOOLEAN		gfRerenderInterfaceFromHelpText = FALSE;
 
-extern void			RenderTownIDString( );
-extern BOOLEAN	gfUIOverItemPool;
-extern INT16		gfUIOverItemPoolGridNo;
-extern BOOLEAN	gfInMovementMenu;
-extern BOOLEAN	gfInItemPickupMenu;
-extern BOOLEAN	gfInOpenDoorMenu;
-extern UINT32		guiUIMessageTimeDelay;
-
 
 BOOLEAN	gfPausedTacticalRenderInterfaceFlags = FALSE;
 BOOLEAN	gfPausedTacticalRenderFlags					 = FALSE;
-
-// which assignment menu can be shown?
-extern void DetermineWhichAssignmentMenusCanBeShown( void );
-extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags )

@@ -42,14 +42,9 @@
 #include "Debug.h"
 
 
-extern void PauseAITemporarily( void );
 extern void UpdateEnemyUIBar( void );
 extern void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier );
 extern void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
-
-extern UINT8 gubElementsOnExplosionQueue;
-
-extern BOOLEAN gfWaitingForTriggerTimer;
 
 //
 // Commented out/ to fix:

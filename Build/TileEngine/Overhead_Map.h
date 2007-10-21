@@ -14,4 +14,8 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 void TrashOverheadMap( );
 
+BOOLEAN GetOverheadMouseGridNo(INT16* psGridNo);
+
+extern BOOLEAN gfOverheadMapDirty;
+
 #endif

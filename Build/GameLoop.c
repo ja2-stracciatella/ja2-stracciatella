@@ -2,6 +2,8 @@
 #include "SGP.h"
 #include "Gameloop.h"
 #include "Screens.h"
+#include "ShopKeeper_Interface.h"
+#include "Tactical_Placement_GUI.h"
 #include "WCheck.h"
 #include "Cursors.h"
 #include "Init.h"
@@ -40,14 +42,7 @@ UINT32 guiPendingScreen = NO_PENDING_SCREEN;
 UINT32 guiPreviousScreen = NO_PENDING_SCREEN;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
-UINT8		gubCheckForFreeSpaceOnHardDriveCount=DONT_CHECK_FOR_FREE_SPACE;
-
-extern	BOOLEAN		DoSkiMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback );
-extern BOOLEAN gfTacticalPlacementGUIActive;
-extern BOOLEAN gfTacticalPlacementGUIDirty;
-extern BOOLEAN gfValidLocationsChanged;
-extern BOOLEAN	gfInMsgBox;
-
+static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
 
 // callback to confirm game is over
 void EndGameMessageBoxCallBack( UINT8 bExitValue );

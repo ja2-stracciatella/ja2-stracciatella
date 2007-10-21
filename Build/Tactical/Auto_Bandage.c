@@ -8,6 +8,7 @@
 #include "Message.h"
 #include "Game_Clock.h"
 #include "Items.h"
+#include "Tactical_Placement_GUI.h"
 #include "Text.h"
 #include "MercTextBox.h"
 #include "Interface.h"
@@ -53,8 +54,6 @@ BOOLEAN gfAutoBandageFailed;
 static INT32 iEndAutoBandageButton[2];
 
 
-extern FACETYPE *gpCurrentTalkingFace;
-extern INT32 giMercPanelImage;
 MOUSE_REGION gAutoBandageRegion;
 
 

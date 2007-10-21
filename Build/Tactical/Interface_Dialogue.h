@@ -363,6 +363,9 @@ extern UINT32 CalcMedicalCost( UINT8 ubId );
 
 BOOLEAN							gfInTalkPanel;
 
+void HandleTalkingMenuBackspace(void);
 
+extern BOOLEAN gfWaitingForTriggerTimer;
+extern INT32   iInterfaceDialogueBox;
 
 #endif

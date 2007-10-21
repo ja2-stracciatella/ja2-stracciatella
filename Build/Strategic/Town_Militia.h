@@ -68,4 +68,6 @@ void ClearSectorListForCompletedTrainingOfMilitia( void );
 BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId );
 
+void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE* pSoldier);
+
 #endif

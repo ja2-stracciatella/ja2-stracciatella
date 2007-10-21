@@ -1,6 +1,7 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
+#include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
 
 
@@ -99,5 +100,11 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
 #endif
 
 void			RestrictSkiMouseCursor();
+
+BOOLEAN DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void    StartSKIDescriptionBox(void);
+
+extern BOOLEAN gfSKIScreenExit;
+extern UINT32  guiSKI_TransactionButton;
 
 #endif

@@ -345,9 +345,6 @@ ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 INT32						giNumRottingCorpse = 0;
 
 
-void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot );
-
-
 static INT32 GetFreeRottingCorpse(void)
 {
 	INT32 iCount;
@@ -1727,8 +1724,7 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 }
 
 
-
-void ReduceAmmoDroppedByNonPlayerSoldiers( SOLDIERTYPE *pSoldier, INT32 iInvSlot )
+void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE* pSoldier, INT32 iInvSlot)
 {
 	OBJECTTYPE *pObj;
 

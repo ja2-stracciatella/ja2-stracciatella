@@ -1147,4 +1147,16 @@ void BeginTyingToFall( SOLDIERTYPE *pSoldier );
 void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldier );
 void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue );
 
+void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC);
+void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier);
+void PlaySoldierFootstepSound(SOLDIERTYPE* pSoldier);
+void PlayStealthySoldierFootstepSound(SOLDIERTYPE* pSoldier);
+
+// DO NOT CALL UNLESS THROUGH EVENT_SetSoldierPosition
+UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady);
+
+void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState);
+
+extern BOOLEAN gfGetNewPathThroughPeople;
+
 #endif

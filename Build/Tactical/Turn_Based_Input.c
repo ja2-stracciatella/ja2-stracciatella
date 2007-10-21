@@ -1,4 +1,6 @@
+#include "Real_Time_Input.h"
 #include "Soldier_Find.h"
+#include "Turn_Based_Input.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "JAScreens.h"
@@ -98,66 +100,16 @@
 #endif
 
 
-extern UIKEYBOARD_HOOK					gUIKeyboardHook;
-extern BOOLEAN	fRightButtonDown;
-extern BOOLEAN	fLeftButtonDown;
-extern BOOLEAN fIgnoreLeftUp;
-extern UINT32  guiCurrentEvent;
-extern UINT32	guiCurrentUICursor;
-extern SOLDIERTYPE *gpSMCurrentMerc;
-extern INT16 gsOverItemsGridNo;
-extern INT16 gsOverItemsLevel;
-extern BOOLEAN	gfUIShowExitSouth;
-
-extern BOOLEAN gfBeginBurstSpreadTracking;
-extern BOOLEAN gfRTClickLeftHoldIntercepted;
-
-extern BOOLEAN gfReportHitChances;
-
-BOOLEAN gfFirstCycleMovementStarted = FALSE;
-
-extern UINT32 guiVObjectSize;
-extern UINT32 guiVSurfaceSize;
-
-extern BOOLEAN gfNextShotKills;
+static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 
 UINT32 guiUITargetSoldierId = NOBODY;
 
-void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 
-extern BOOLEAN ValidQuickExchangePosition( );
-
-
-BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier );
-
-
-extern SOLDIERTYPE *FindNextActiveSquad( SOLDIERTYPE *pSoldier );
-extern void HandleTalkingMenuBackspace( void );
-
-
-extern INT32		iSMPanelButtons[ NUM_SM_BUTTONS ];
-extern INT32		iTEAMPanelButtons[ NUM_TEAM_BUTTONS ];
-extern INT32		giSMStealthButton;
-
-SOLDIERTYPE *gpExchangeSoldier1;
-SOLDIERTYPE *gpExchangeSoldier2;
-
-
-BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos );
-
-BOOLEAN	gfNextFireJam = FALSE;
-
-
-#ifdef JA2TESTVERSION
-void DumpSectorDifficultyInfo( void );
-#endif
+static SOLDIERTYPE* gpExchangeSoldier1;
+static SOLDIERTYPE* gpExchangeSoldier2;
 
 
 UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
-
-
-
-extern void DetermineWhichAssignmentMenusCanBeShown( void );
 
 
 static void QueryTBLeftButton(UINT32* puiNewEvent);
@@ -889,14 +841,10 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 
 			// Reset counter
 			RESETCOUNTER( RMOUSECLICK_DELAY_COUNTER );
-
 		}
 	}
-
 }
 
-
-extern BOOLEAN	gUIActionModeChangeDueToMouseOver;
 
 void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
@@ -1322,12 +1270,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 
 		fEndDown = FALSE;
 	}
-
 }
-
-
-extern	BOOLEAN		gfDisableRegionActive;
-extern	BOOLEAN		gfUserTurnRegionActive;
 
 
 static void ChangeCurrentSquad(INT32 iSquad);
@@ -2408,14 +2351,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
-							if ( gfReportHitChances )
-							{
-								gfReportHitChances = FALSE;
-							}
-							else
-							{
-								gfReportHitChances = TRUE;
-							}
+							gfReportHitChances = !gfReportHitChances;
 						}
 					}
 					else if( fCtrl )
@@ -2479,14 +2415,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							if ( CHEATER_CHEAT_LEVEL( ) )
 							{
 								// next shot by anybody is auto kill
-								if (gfNextShotKills)
-								{
-									gfNextShotKills = FALSE;
-								}
-								else
-								{
-									gfNextShotKills = TRUE;
-								}
+								gfNextShotKills = !gfNextShotKills;
 							}
 						}
 						else
@@ -4392,7 +4321,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 }
 
 
-BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier )
+BOOLEAN HandleUIReloading(SOLDIERTYPE* pSoldier)
 {
 	INT8 bAPs = 0;
 
@@ -4433,7 +4362,7 @@ BOOLEAN HandleUIReloading( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN ConfirmActionCancel( UINT16 usMapPos, UINT16 usOldMapPos )
+BOOLEAN ConfirmActionCancel(UINT16 usMapPos, UINT16 usOldMapPos)
 {
 	// OK, most times we want to leave confirm mode if our
 	// gridno is different... but if we are in the grenade throw

@@ -111,4 +111,6 @@ void RemoveAllActiveTimedBombs( void );
 
 BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, UINT8 ubOwner );
 
+void HandleExplosionQueue(void);
+
 #endif

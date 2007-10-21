@@ -77,8 +77,6 @@
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
 
-extern	UINT8		gubWaitingForAllMercsToExitCode;
-
 
 #define		TALK_PANEL_FACE_X				6
 #define		TALK_PANEL_FACE_Y				9
@@ -1103,7 +1101,8 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 	return( FALSE );
 }
 
-void HandleTalkingMenuBackspace( void )
+
+void HandleTalkingMenuBackspace(void)
 {
 	FACETYPE				*pFace;
 	BOOLEAN					fTalking = FALSE;

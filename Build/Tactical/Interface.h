@@ -207,4 +207,9 @@ void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
 void HandleMultiPurposeLocator( );
 void RenderTopmostMultiPurposeLocator( );
 
+extern UINT32  guiVEHINV;
+extern BOOLEAN gfInOpenDoorMenu;
+extern UINT32  guiUIMessageTimeDelay;
+extern BOOLEAN gfTopMessageDirty;
+
 #endif

@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "Interface.h"
 #include "Local.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "Sys_Globals.h"
 #include "SysUtil.h"
 #include "WCheck.h"
@@ -38,7 +39,6 @@
 extern void PrintDate( void );
 extern void PrintNumberOnTeam( void );
 extern void PrintBalance( void );
-extern		BOOLEAN fMapScreenBottomDirty;
 extern		BOOLEAN	gfGamePaused;
 
 

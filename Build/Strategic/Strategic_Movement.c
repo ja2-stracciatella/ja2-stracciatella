@@ -1,3 +1,4 @@
+#include "Map_Screen_Interface_Bottom.h"
 #include "Strategic_Movement.h"
 #include "MemMan.h"
 #include "Debug.h"
@@ -53,10 +54,6 @@
 GROUP *gpGroupList;
 
 static GROUP* gpPendingSimultaneousGroup = NULL;
-
-// is the bottom of the map panel dirty?
-extern BOOLEAN fMapScreenBottomDirty;
-extern BOOLEAN gfUsePersistantPBI;
 
 #ifdef JA2BETAVERSION
 	extern BOOLEAN gfExitViewer;
@@ -960,11 +957,6 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		InitPreBattleInterface( pInitiatingBattleGroup, TRUE );
 	}
 }
-
-
-#ifdef JA2BETAVERSION
-	extern void ValidatePlayersAreInOneGroupOnly();
-#endif
 
 
 static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ);
@@ -4406,7 +4398,8 @@ static BOOLEAN SpendVehicleFuel(SOLDIERTYPE* pSoldier, INT16 sFuelSpent)
 	return( FALSE );
 }
 
-void AddFuelToVehicle( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVehicle )
+
+void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 {
 	OBJECTTYPE *pItem;
 	INT16 sFuelNeeded, sFuelAvailable, sFuelAdded;

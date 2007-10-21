@@ -5,6 +5,7 @@
 #include "LoadSaveSoldierCreate.h"
 #include "Local.h"
 #include "Font.h"
+#include "Overhead_Map.h"
 #include "Types.h"
 #include "Sector_Summary.h"
 #include "Timer_Control.h"
@@ -37,8 +38,6 @@
 #include "Video.h"
 #include "Stubs.h" // XXX
 
-
-extern BOOLEAN gfOverheadMapDirty;
 
 #define MAP_SIZE			208
 #define MAP_LEFT			417
