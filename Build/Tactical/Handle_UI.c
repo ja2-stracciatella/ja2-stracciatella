@@ -182,27 +182,24 @@ static UINT32 UIHandleOpenDoorMenu(UI_EVENT* pUIEvent);
 static UINT32 UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent);
 
 
-INT16							gsTreeRevealXPos, gsTreeRevealYPos;
+static SOLDIERTYPE* gpRequesterMerc        = NULL;
+static SOLDIERTYPE* gpRequesterTargetMerc  = NULL;
+static INT16        gsRequesterGridNo;
+static INT16        gsOverItemsGridNo      = NOWHERE;
+static INT16        gsOverItemsLevel       = 0;
+static BOOLEAN      gfUIInterfaceSetBusy   = FALSE;
+static UINT32       guiUIInterfaceBusyTime = 0;
 
-
-SOLDIERTYPE			*gpRequesterMerc = NULL;
-SOLDIERTYPE			*gpRequesterTargetMerc = NULL;
-INT16						gsRequesterGridNo;
-static INT16 gsOverItemsGridNo = NOWHERE;
-static INT16 gsOverItemsLevel  = 0;
-BOOLEAN					gfUIInterfaceSetBusy = FALSE;
-UINT32					guiUIInterfaceBusyTime = 0;
-
-UINT32	gfTacticalForceNoCursor = FALSE;
-LEVELNODE				*gpInvTileThatCausedMoveConfirm = NULL;
-BOOLEAN					gfResetUIMovementOptimization = FALSE;
-BOOLEAN					gfResetUIItemCursorOptimization = FALSE;
-BOOLEAN					gfBeginVehicleCursor = FALSE;
-UINT16					gsOutOfRangeGridNo = NOWHERE;
-UINT8						gubOutOfRangeMerc = NOBODY;
-BOOLEAN					gfOKForExchangeCursor = FALSE;
-UINT32					guiUIInterfaceSwapCursorsTime = 0;
-INT16						gsJumpOverGridNo = 0;
+static UINT32     gfTacticalForceNoCursor         = FALSE;
+static LEVELNODE* gpInvTileThatCausedMoveConfirm  = NULL;
+BOOLEAN           gfResetUIMovementOptimization   = FALSE;
+static BOOLEAN    gfResetUIItemCursorOptimization = FALSE;
+static BOOLEAN    gfBeginVehicleCursor            = FALSE;
+static UINT16     gsOutOfRangeGridNo              = NOWHERE;
+static UINT8      gubOutOfRangeMerc               = NOBODY;
+static BOOLEAN    gfOKForExchangeCursor           = FALSE;
+static UINT32     guiUIInterfaceSwapCursorsTime   = 0;
+INT16             gsJumpOverGridNo                = 0;
 
 
 #define M(flags, to, handler) { flags, to, handler, FALSE, FALSE, 0, { 0, 0, 0 } }
