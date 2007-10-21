@@ -3838,7 +3838,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* pSoldier)
 }
 
 
-UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier)
 {
 	INT32 cnt;
   INT32 bFirstID;
@@ -3859,28 +3859,12 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessO
 		  // Set Id to close
 		  pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
 
-		  if ( fOnlyRegularMercs )
-		  {
-			  if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
-			  {
-				  continue;
-			  }
-		  }
-
-		  if ( fGoodForLessOKLife )
-		  {
-			  if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			  {
-				  return( (UINT8)gTeamPanel[ cnt ].ubID );
-			  }
-		  }
-		  else
-		  {
-			  if ( OK_CONTROLLABLE_MERC( pTeamSoldier) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			  {
-				  return( (UINT8)gTeamPanel[ cnt ].ubID );
-			  }
-		  }
+			if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+					OK_INTERRUPT_MERC(pTeamSoldier) &&
+					pSoldier->bAssignment == pTeamSoldier->bAssignment)
+			{
+				return gTeamPanel[cnt].ubID;
+			}
 	  }
   }
 
@@ -3892,28 +3876,12 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessO
 	  {
       pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
 
-		  if ( fOnlyRegularMercs )
-		  {
-			  if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
-			  {
-				  continue;
-			  }
-		  }
-
-		  if ( fGoodForLessOKLife )
-		  {
-			  if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			  {
-				  return( (UINT8)gTeamPanel[ cnt ].ubID );
-			  }
-		  }
-		  else
-		  {
-			  if ( OK_CONTROLLABLE_MERC( pTeamSoldier) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			  {
-				  return( (UINT8)gTeamPanel[ cnt ].ubID );
-			  }
-		  }
+			if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+					OK_INTERRUPT_MERC(pTeamSoldier) &&
+					pSoldier->bAssignment == pTeamSoldier->bAssignment)
+			{
+				return gTeamPanel[cnt].ubID;
+			}
     }
 	}
 

@@ -115,7 +115,7 @@ void HandleTacticalEffectsOfEquipmentChange(SOLDIERTYPE* s, UINT32 uiInvPos, UIN
 
 void FinishAnySkullPanelAnimations(void);
 
-UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE *prev, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* prev);
 
 void BeginKeyPanelFromKeyShortcut(void);
 
