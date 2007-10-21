@@ -193,7 +193,6 @@ static UINT32       guiUIInterfaceBusyTime = 0;
 static UINT32     gfTacticalForceNoCursor         = FALSE;
 static LEVELNODE* gpInvTileThatCausedMoveConfirm  = NULL;
 BOOLEAN           gfResetUIMovementOptimization   = FALSE;
-static BOOLEAN    gfResetUIItemCursorOptimization = FALSE;
 static BOOLEAN    gfBeginVehicleCursor            = FALSE;
 static UINT16     gsOutOfRangeGridNo              = NOWHERE;
 static UINT8      gubOutOfRangeMerc               = NOBODY;
@@ -5378,14 +5377,6 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 	STRUCTURE					*pStructure = NULL;
 	BOOLEAN						fPoolContainsHiddenItems = FALSE;
 	SOLDIERTYPE       *pTSoldier;
-
-
-	if ( gfResetUIItemCursorOptimization )
-	{
-		gfResetUIItemCursorOptimization = FALSE;
-		fOverPool = FALSE;
-		fOverEnemy = FALSE;
-	}
 
 	GetCursorMovementFlags( &uiCursorFlags );
 
