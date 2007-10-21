@@ -301,7 +301,6 @@ UINT32 guiBrownBackgroundForTeamPanel;
 extern BOOLEAN							gfInKeyRingPopup;
 extern UINT32	 guiVEHINV;
 extern BOOLEAN	gfBeginEndTurn;
-extern	BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 extern	BOOLEAN	gfInItemPickupMenu;
 extern void HandleAnyMercInSquadHasCompatibleStuff( UINT8 ubSquad, OBJECTTYPE *pObject, BOOLEAN fReset );
 extern BOOLEAN InternalHandleCompatibleAmmoUI( SOLDIERTYPE *pSoldier, OBJECTTYPE *pTestObject, BOOLEAN fOn  );
@@ -342,7 +341,7 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 	{ 432, INV_INTERFACE_START_Y +  78 }  // SMALLPOCK8
 };
 
-INV_REGION_DESC gSMCamoXY =
+static const INV_REGION_DESC gSMCamoXY =
 {
 	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
 };
@@ -352,26 +351,26 @@ INT32					iSMPanelButtons[ NUM_SM_BUTTONS ];
 INT32					iTEAMPanelButtons[ NUM_TEAM_BUTTONS ];
 
 // Video Surface for Single Merc Panel
-UINT32					guiSMPanel;
-UINT32					guiSMObjects;
-UINT32					guiSMObjects2;
+static UINT32 guiSMPanel;
+static UINT32 guiSMObjects;
+static UINT32 guiSMObjects2;
 UINT32					guiSecItemHiddenVO;
 
-UINT32					guiTEAMPanel;
-UINT32					guiTEAMObjects;
+static UINT32 guiTEAMPanel;
+static UINT32 guiTEAMObjects;
 
 // Globals for various mouse regions
-MOUSE_REGION		gSM_SELMERCPanelRegion;
-MOUSE_REGION		gSM_SELMERCBarsRegion;
+static MOUSE_REGION gSM_SELMERCPanelRegion;
+static MOUSE_REGION gSM_SELMERCBarsRegion;
 MOUSE_REGION		gSM_SELMERCMoneyRegion;
-MOUSE_REGION		gSM_SELMERCEnemyIndicatorRegion;
-MOUSE_REGION		gTEAM_PanelRegion;
-MOUSE_REGION gTEAM_FaceRegions[NUM_TEAM_SLOTS];
-MOUSE_REGION gTEAM_BarsRegions[NUM_TEAM_SLOTS];
-MOUSE_REGION gTEAM_LeftBarsRegions[NUM_TEAM_SLOTS];
-MOUSE_REGION gTEAM_FirstHandInv[NUM_TEAM_SLOTS];
-MOUSE_REGION gTEAM_SecondHandInv[NUM_TEAM_SLOTS];
-MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
+static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
+static MOUSE_REGION gTEAM_PanelRegion;
+static MOUSE_REGION gTEAM_FaceRegions[NUM_TEAM_SLOTS];
+static MOUSE_REGION gTEAM_BarsRegions[NUM_TEAM_SLOTS];
+static MOUSE_REGION gTEAM_LeftBarsRegions[NUM_TEAM_SLOTS];
+static MOUSE_REGION gTEAM_FirstHandInv[NUM_TEAM_SLOTS];
+static MOUSE_REGION gTEAM_SecondHandInv[NUM_TEAM_SLOTS];
+static MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
 
 
 // Globals - for one - the current merc here
