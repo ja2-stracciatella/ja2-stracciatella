@@ -1042,10 +1042,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 	}
 
 	return( 1 );
-
 }
-
-STRUCTURE *gStruct;
 
 
 static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist, BOOLEAN* pfRecompileMovementCosts, BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, BOOLEAN fSubSequentMultiTilesTransitionDamage, UINT8 ubOwner, INT8 bLevel)
@@ -1100,7 +1097,6 @@ static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist,
 		}
 
 		pNextCurrent = pCurrent->pNext;
-		gStruct = pNextCurrent;
 
 		// Check level!
 		if (pCurrent->sCubeOffset == sDesiredLevel )
