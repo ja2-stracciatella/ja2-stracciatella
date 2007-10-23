@@ -4385,28 +4385,50 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 }
 
 
-static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
+static void DrawSite(INT16 sector_x, INT16 sector_y, UINT32 icon)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8 *pDestBuf2;
-	INT16 sScreenX, sScreenY;
-
-	pDestBuf2 = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X - 1, MAP_VIEW_START_Y+MAP_GRID_Y - 1, MAP_VIEW_WIDTH+1,MAP_VIEW_HEIGHT-9 );
-	UnLockVideoSurface(guiSAVEBUFFER);
-
-	if( fZoomFlag )
+	INT16  x;
+	INT16  y;
+	UINT16 max_w;
+	UINT16 max_h;
+	UINT8  vo_idx;
+	if (fZoomFlag)
 	{
-		GetScreenXYFromMapXYStationary( ( INT16 )( sMapX ), ( INT16 )( sMapY ) , &sScreenX, &sScreenY );
-		// when zoomed, the x,y returned is the CENTER of the map square in question
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMINEICON, 0, sScreenX - MAP_GRID_ZOOM_X / 4, sScreenY - MAP_GRID_ZOOM_Y / 4);
+		UINT32 uiDestPitchBYTES;
+		UINT8* pDestBuf2 = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, MAP_VIEW_START_X + MAP_GRID_X - 1, MAP_VIEW_START_Y + MAP_GRID_Y - 1, MAP_VIEW_WIDTH + 1, MAP_VIEW_HEIGHT - 9);
+		UnLockVideoSurface(guiSAVEBUFFER);
+
+		GetScreenXYFromMapXYStationary(sector_x, sector_y, &x, &y);
+		x -= MAP_GRID_X - 1;
+		y -= MAP_GRID_Y;
+		max_w = MAP_GRID_ZOOM_X - 1;
+		max_h = MAP_GRID_ZOOM_Y - 1;
+		vo_idx = 0;
 	}
 	else
 	{
-		GetScreenXYFromMapXY( ( INT16 )( sMapX ), ( INT16 )( sMapY ), &sScreenX, &sScreenY );
-		// when not zoomed, the x,y returned is the top left CORNER of the map square in question
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMINEICON, 1, sScreenX + MAP_GRID_X / 4, sScreenY + MAP_GRID_Y / 4);
+		GetScreenXYFromMapXY(sector_x, sector_y, &x, &y);
+		++x;
+		max_w = MAP_GRID_X - 1;
+		max_h = MAP_GRID_Y - 1;
+		vo_idx = 1;
 	}
+
+	const ETRLEObject* const ETRLEProps = GetVideoObjectETRLESubregionProperties(icon, vo_idx);
+	const UINT16 w = ETRLEProps->usWidth;
+	const UINT16 h = ETRLEProps->usHeight;
+	x += (max_w - w) / 2;
+	/* If the icon is higher than a map cell, align with the bottom of the cell */
+	y += (h > max_h ? max_h - h : (max_h - h) / 2);
+
+	BltVideoObjectFromIndex(guiSAVEBUFFER, icon, vo_idx, x, y);
+}
+
+
+static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
+{
+	DrawSite(sMapX, sMapY, guiMINEICON);
 }
 
 
@@ -6205,19 +6227,12 @@ static void BlitSAMGridMarkers(void);
 
 static void ShowSAMSitesOnStrategicMap(void)
 {
-	INT32 iCounter = 0;
-	INT16 sSectorX = 0, sSectorY = 0;
-	INT16 sX = 0, sY = 0;
-	INT8 ubVidObjIndex = 0;
-	UINT8 *pDestBuf2;
-	UINT32 uiDestPitchBYTES;
-
 	if( fShowAircraftFlag )
 	{
 		BlitSAMGridMarkers( );
 	}
 
-	for( iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < NUMBER_OF_SAM_SITES; ++iCounter)
 	{
 		// has the sam site here been found?
 		if( !fSamSiteFound[ iCounter ] )
@@ -6225,44 +6240,28 @@ static void ShowSAMSitesOnStrategicMap(void)
 			continue;
 		}
 
-		// get the sector x and y
-		sSectorX = gpSamSectorX[ iCounter ];
-		sSectorY = gpSamSectorY[ iCounter ];
+		const INT16 sSectorX = gpSamSectorX[iCounter];
+		const INT16 sSectorY = gpSamSectorY[iCounter];
 
-		if( fZoomFlag )
-		{
-			pDestBuf2 = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
-			SetClippingRegionAndImageWidth( uiDestPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X - 1, MAP_VIEW_START_Y+MAP_GRID_Y - 1, MAP_VIEW_WIDTH+1,MAP_VIEW_HEIGHT-9 );
-			UnLockVideoSurface(guiSAVEBUFFER);
-
-			GetScreenXYFromMapXYStationary( sSectorX, sSectorY, &sX, &sY );
-			sX -= 8;
-			sY -= 10;
-			ubVidObjIndex = 0;
-		}
-		else
-		{
-			GetScreenXYFromMapXY( sSectorX, sSectorY, &sX, &sY );
-			sX += 5;
-			sY += 3;
-			ubVidObjIndex = 1;
-		}
-
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiSAMICON, ubVidObjIndex, sX, sY);
+		DrawSite(sSectorX, sSectorY, guiSAMICON);
 
 		if( fShowAircraftFlag )
 		{
 			// write "SAM Site" centered underneath
 
+			INT16 sX;
+			INT16 sY;
 			if( fZoomFlag )
 			{
-				sX +=  9;
-				sY += 19;
+				GetScreenXYFromMapXYStationary(sSectorX, sSectorY, &sX, &sY);
+				sX += 1;
+				sY += 9;
 			}
 			else
 			{
-				sX +=  6;
-				sY += 16;
+				GetScreenXYFromMapXY(sSectorX, sSectorY, &sX, &sY);
+				sX += 11;
+				sY += 19;
 			}
 
 			const wchar_t* SAMSite = pLandTypeStrings[SAM_SITE];
@@ -6508,60 +6507,13 @@ static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, 
 
 static void DrawOrta(void)
 {
-	UINT8 *pDestBuf2;
-  UINT32 uiDestPitchBYTES;
-	INT16 sX, sY;
-	UINT8 ubVidObjIndex;
-
-	if( fZoomFlag )
-	{
-		pDestBuf2 = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X - 1, MAP_VIEW_START_Y+MAP_GRID_Y - 1, MAP_VIEW_WIDTH+1,MAP_VIEW_HEIGHT-9 );
-		UnLockVideoSurface(guiSAVEBUFFER);
-
-		GetScreenXYFromMapXYStationary( ORTA_SECTOR_X, ORTA_SECTOR_Y, &sX, &sY );
-		sX += -MAP_GRID_X + 2;
-		sY += -MAP_GRID_Y - 6;
-		ubVidObjIndex = 0;
-	}
-	else
-	{
-		GetScreenXYFromMapXY( ORTA_SECTOR_X, ORTA_SECTOR_Y, &sX, &sY );
-		sX += +2;
-		sY += -3;
-		ubVidObjIndex = 1;
-	}
-
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiORTAICON, ubVidObjIndex, sX, sY);
+	DrawSite(ORTA_SECTOR_X, ORTA_SECTOR_Y, guiORTAICON);
 }
 
 
 static void DrawTixa(void)
 {
-	UINT8 *pDestBuf2;
-  UINT32 uiDestPitchBYTES;
-	INT16 sX, sY;
-	UINT8 ubVidObjIndex;
-
-	if( fZoomFlag )
-	{
-		pDestBuf2 = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, MAP_VIEW_START_X+MAP_GRID_X - 1, MAP_VIEW_START_Y+MAP_GRID_Y - 1, MAP_VIEW_WIDTH+1,MAP_VIEW_HEIGHT-9 );
-		UnLockVideoSurface(guiSAVEBUFFER);
-
-		GetScreenXYFromMapXYStationary( TIXA_SECTOR_X, TIXA_SECTOR_Y, &sX, &sY );
-		sX += -MAP_GRID_X + 3;
-		sY += -MAP_GRID_Y + 6;
-		ubVidObjIndex = 0;
-	}
-	else
-	{
-		GetScreenXYFromMapXY( TIXA_SECTOR_X, TIXA_SECTOR_Y, &sX, &sY );
-		sY += +2;
-		ubVidObjIndex = 1;
-	}
-
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiTIXAICON, ubVidObjIndex, sX, sY);
+	DrawSite(TIXA_SECTOR_X, TIXA_SECTOR_Y, guiTIXAICON);
 }
 
 
