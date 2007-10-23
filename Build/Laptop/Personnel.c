@@ -1818,139 +1818,69 @@ static void DisplayNumberDeparted(void)
 }
 
 
-static INT32 GetTotalDailyCostOfCurrentTeam(void)
-{
-	// will return the total daily cost of the current team
-	INT32 iCostOfTeam = 0;
-
-	// run through active soldiers
-	for (INT32 cnt = 0; cnt <= gTacticalStatus.Team[OUR_TEAM].bLastID; cnt++)
-	{
-		const SOLDIERTYPE* s = MercPtrs[cnt];
-		if (!s->bActive || s->bLife <= 0) continue;
-
-		// valid soldier, get cost
-		const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
-		switch (s->ubWhatKindOfMercAmI)
-		{
-			case MERC_TYPE__AIM_MERC:
-				switch (s->bTypeOfLastContract)
-				{
-					case CONTRACT_EXTEND_2_WEEK: iCostOfTeam += p->uiBiWeeklySalary / 14; break;
-					case CONTRACT_EXTEND_1_WEEK: iCostOfTeam += p->uiWeeklySalary   /  7; break;
-					default:                     iCostOfTeam += p->sSalary;               break;
-				}
-				break;
-
-			default: iCostOfTeam += p->sSalary; break;
-		}
-	}
-	return iCostOfTeam;
-}
-
-
-static INT32 GetLowestDailyCostOfCurrentTeam(void)
-{
-	// will return the lowest daily cost of the current team
-	INT32 iLowest = 999999;
-
-	// run through active soldiers
-	for (INT32 cnt = 0; cnt <= gTacticalStatus.Team[OUR_TEAM].bLastID; cnt++)
-	{
-		const SOLDIERTYPE* s = MercPtrs[cnt];
-		if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0) continue;
-
-		// valid soldier, get cost
-		INT32 iCost;
-		const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
-		switch (s->ubWhatKindOfMercAmI)
-		{
-			case MERC_TYPE__AIM_MERC:
-				switch (s->bTypeOfLastContract)
-				{
-					case CONTRACT_EXTEND_2_WEEK: iCost = p->uiBiWeeklySalary / 14; break;
-					case CONTRACT_EXTEND_1_WEEK: iCost = p->uiWeeklySalary   /  7; break;
-					default:                     iCost = p->sSalary;               break;
-				}
-				break;
-
-			default: iCost = p->sSalary; break;
-		}
-
-		if (iCost <= iLowest) iLowest = iCost;
-	}
-
-	// if no mercs, send 0
-	if (iLowest == 999999) iLowest = 0;
-
-	return iLowest;
-}
-
-
-static INT32 GetHighestDailyCostOfCurrentTeam(void)
-{
-	// will return the lowest daily cost of the current team
-	INT32 iHighest = 0;
-
-	// run through active soldiers
-	for (INT32 cnt = 0; cnt <= gTacticalStatus.Team[OUR_TEAM].bLastID; cnt++)
-	{
-		const SOLDIERTYPE* s = MercPtrs[cnt];
-		if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0) continue;
-
-		// valid soldier, get cost
-		INT32 iCost;
-		const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
-		switch (s->ubWhatKindOfMercAmI)
-		{
-			case MERC_TYPE__AIM_MERC:
-				switch (s->bTypeOfLastContract)
-				{
-					case CONTRACT_EXTEND_2_WEEK: iCost = p->uiBiWeeklySalary / 14; break;
-					case CONTRACT_EXTEND_1_WEEK: iCost = p->uiWeeklySalary   /  7; break;
-					default:                     iCost = p->sSalary;               break;
-				}
-				break;
-
-			default: iCost = p->sSalary; break;
-		}
-
-		if (iCost >= iHighest) iHighest = iCost;
-	}
-	return iHighest;
-}
-
-
 static void DisplayCostOfCurrentTeam(void)
 {
+	if (!fCurrentTeamMode) return;
+
 	SetFont(FONT10ARIAL);
 	SetFontBackground(FONT_BLACK);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 
-	if (fCurrentTeamMode)
+	INT32 min_cost = 999999;
+	INT32 max_cost = 0;
+	INT32 sum_cost = 0;
+
+	// run through active soldiers
+	for (INT32 i = 0; i <= gTacticalStatus.Team[OUR_TEAM].bLastID; ++i)
 	{
-		wchar_t sString[32];
-		INT16 sX;
-		INT16 sY;
+		const SOLDIERTYPE* const s = MercPtrs[i];
+		if (!s->bActive || s->bLife <= 0) continue;
 
-		// daily cost
-		mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[2]);
-		SPrintMoney(sString, GetTotalDailyCostOfCurrentTeam());
-		FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-		mprintf(sX, PERS_CURR_TEAM_COST_Y, sString);
+		// valid soldier, get cost
+		INT32 cost;
+		const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+		switch (s->ubWhatKindOfMercAmI)
+		{
+			case MERC_TYPE__AIM_MERC:
+				switch (s->bTypeOfLastContract)
+				{
+					case CONTRACT_EXTEND_2_WEEK: cost = p->uiBiWeeklySalary / 14; break;
+					case CONTRACT_EXTEND_1_WEEK: cost = p->uiWeeklySalary   /  7; break;
+					default:                     cost = p->sSalary;               break;
+				}
+				break;
 
-		// highest cost
-		mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[3]);
-		SPrintMoney(sString, GetHighestDailyCostOfCurrentTeam());
-		FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-		mprintf(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
+			default: cost = p->sSalary; break;
+		}
 
-		// the lowest cost
-		mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[4]);
-		SPrintMoney(sString, GetLowestDailyCostOfCurrentTeam());
-		FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-		mprintf(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
+		if (cost > max_cost) max_cost = cost;
+		if (cost < min_cost) min_cost = cost;
+		sum_cost += cost;
 	}
+
+	if (min_cost == 999999) min_cost = 0;
+
+	wchar_t sString[32];
+	INT16 sX;
+	INT16 sY;
+
+	// daily cost
+	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[2]);
+	SPrintMoney(sString, sum_cost);
+	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, PERS_CURR_TEAM_COST_Y, sString);
+
+	// highest cost
+	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[3]);
+	SPrintMoney(sString, max_cost);
+	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
+
+	// the lowest cost
+	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[4]);
+	SPrintMoney(sString, min_cost);
+	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
 }
 
 
