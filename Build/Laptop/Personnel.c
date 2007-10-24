@@ -512,23 +512,16 @@ static void RenderPersonnelStats(INT32 iId)
 
 static void RenderPersonnelFace(INT32 iId, INT32 state)
 {
-	char sTemp[100];
-
 	// draw face to soldier iId
 
 	// special case?..player generated merc
+	INT32 profile;
 	if (fCurrentTeamMode)
 	{
-		if (MercPtrs[iId]->uiStatusFlags & SOLDIER_VEHICLE) return;
+		const SOLDIERTYPE* const s = MercPtrs[iId];
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
-		if (50 < MercPtrs[iId]->ubProfile && MercPtrs[iId]->ubProfile < 57)
-		{
-			sprintf(sTemp, "%s%03d.sti", FACES_DIR, gMercProfiles[MercPtrs[iId]->ubProfile].ubFaceIndex);
-		}
-		else
-		{
-			sprintf(sTemp, "%s%02d.sti", FACES_DIR, Menptr[iId].ubProfile);
-		}
+		profile = s->ubProfile;
 	}
 	else
 	{
@@ -540,15 +533,11 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 			return;
 		}
 
-		if (50 < iId && iId < 57)
-		{
-			sprintf(sTemp, "%s%03d.sti", FACES_DIR, gMercProfiles[iId].ubFaceIndex);
-		}
-		else
-		{
-			sprintf(sTemp, "%s%02d.sti", FACES_DIR, iId);
-		}
+		profile = iId;
 	}
+
+	char sTemp[100];
+	sprintf(sTemp, FACES_DIR "%02d.sti", gMercProfiles[profile].ubFaceIndex);
 
 	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKV(guiFACE != NO_VOBJECT);
@@ -1311,25 +1300,19 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 	INT32 iCnt = 0;
 	for (INT32 i = 0; i < iTotalOnTeam; iCnt++)
 	{
-		const SOLDIERTYPE* merc = MercPtrs[iId + iCnt]; // XXX TODO0010
+		const SOLDIERTYPE* const merc = MercPtrs[iId + iCnt]; // XXX TODO0010
 		if (!merc->bActive) continue;
 
-		const SOLDIERTYPE* man = &Menptr[iId + iCnt]; // XXX TODO0010
 		// found the next actual guy
 		char sTemp[100];
-		if (50 < merc->ubProfile && merc->ubProfile < 57)
-		{
-			sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR, gMercProfiles[merc->ubProfile].ubFaceIndex);
-		}
-		else
-		{
-			sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, man->ubProfile);
-		}
+		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[merc->ubProfile].ubFaceIndex);
 
 		UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 		CHECKF(guiFACE != NO_VOBJECT);
 
 		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
+
+		const SOLDIERTYPE* const man = &Menptr[iId + iCnt]; // XXX TODO0010
 
 		if (man->bLife <= 0)
 		{
@@ -2429,14 +2412,7 @@ static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
 static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther)
 {
 	char sTemp[100];
-	if (50 < iId && iId < 57)
-	{
-		sprintf(sTemp, "%s%03d.sti", SMALL_FACES_DIR, gMercProfiles[iId].ubFaceIndex);
-	}
-	else
-	{
-		sprintf(sTemp, "%s%02d.sti", SMALL_FACES_DIR, iId);
-	}
+	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
 
 	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKF(guiFACE != NO_VOBJECT);
