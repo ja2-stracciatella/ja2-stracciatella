@@ -565,28 +565,27 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 		}
 	}
 
-
 	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
-
-	//if the merc is dead, display it
-	if (!fCurrentTeamMode)
-	{
-		const wchar_t* const name = p->zName;
-		const INT32 iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
-
-		//if the string will rap
-		if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
-		{
-			//raise where we display it, and rap it
-			DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED);
-		}
-		else
-		{
-			DrawTextToScreen(name, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
-		}
-	}
-
 	DeleteVideoObjectFromIndex(guiFACE);
+
+	// Display the merc's name on the portrait
+	const wchar_t* name = p->zName;
+
+	const UINT16 x = IMAGE_BOX_X;
+	const UINT16 y = IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y;
+	const UINT16 w = IMAGE_NAME_WIDTH;
+	const INT32 iHeightOfText = DisplayWrappedString(x, y, w, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
+
+	const UINT16 line_height = GetFontHeight(PERS_FONT);
+	if (iHeightOfText - 2 > line_height) // If the string will wrap
+	{
+		// Raise where we display it, and wrap it
+		DisplayWrappedString(x, y - line_height, w, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED);
+	}
+	else
+	{
+		DrawTextToScreen(name, x, y, w, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
+	}
 }
 
 
@@ -780,25 +779,6 @@ static void DisplayCharName(INT32 iId)
 	const wchar_t* Assignment = pPersonnelAssignmentStrings[man->bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_LOC_Y, Assignment);
-
-	//
-	// Display the mercs FULL name over top of their portrait
-	//
-
-	//first get height of text to be displayed
-	const wchar_t* const name = p->zName;
-	const INT32 iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
-
-	//if the string will rap
-	if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
-	{
-		//raise where we display it, and rap it
-		DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED);
-	}
-	else
-	{
-		DrawTextToScreen(name, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
-	}
 }
 
 
