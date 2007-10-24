@@ -536,8 +536,10 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 		profile = iId;
 	}
 
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[profile];
+
 	char sTemp[100];
-	sprintf(sTemp, FACES_DIR "%02d.sti", gMercProfiles[profile].ubFaceIndex);
+	sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
 
 	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKV(guiFACE != NO_VOBJECT);
@@ -569,19 +571,18 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 	//if the merc is dead, display it
 	if (!fCurrentTeamMode)
 	{
-		INT32 iHeightOfText;
-
-		iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
+		const wchar_t* const name = p->zName;
+		const INT32 iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 		//if the string will rap
 		if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
 		{
 			//raise where we display it, and rap it
-			DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[iId].zName, 0, CENTER_JUSTIFIED);
+			DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED);
 		}
 		else
 		{
-			DrawTextToScreen(gMercProfiles[iId].zName, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
+			DrawTextToScreen(name, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
 		}
 	}
 
@@ -741,44 +742,42 @@ static void DisplayCharName(INT32 iId)
 {
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
-	SOLDIERTYPE* pSoldier;
-	INT32 iHeightOfText;
-
-	pSoldier = MercPtrs[iId];
 
 	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-	if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		return;
-	}
+	const SOLDIERTYPE* const merc = MercPtrs[iId]; // XXX TODO0010
+	if (merc->uiStatusFlags & SOLDIER_VEHICLE) return;
+
+	const SOLDIERTYPE* const man = &Menptr[iId]; // XXX TODO0010
 
 	const wchar_t* sTownName = NULL;
-	if (Menptr[iId].bAssignment != ASSIGNMENT_POW &&
-			Menptr[iId].bAssignment != IN_TRANSIT)
+	if (man->bAssignment != ASSIGNMENT_POW &&
+			man->bAssignment != IN_TRANSIT)
 	{
 		// name of town, if any
-		INT8 bTownId = GetTownIdForSector(Menptr[iId].sSectorX, Menptr[iId].sSectorY);
+		INT8 bTownId = GetTownIdForSector(man->sSectorX, man->sSectorY);
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
+
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[man->ubProfile];
 
 	wchar_t sString[64];
 	if (sTownName != NULL)
 	{
 		//nick name - town name
-		swprintf(sString, lengthof(sString), L"%ls - %ls", gMercProfiles[Menptr[iId].ubProfile].zNickname, sTownName);
+		swprintf(sString, lengthof(sString), L"%ls - %ls", p->zNickname, sTownName);
 	}
 	else
 	{
 		//nick name
-		wcslcpy(sString, gMercProfiles[Menptr[iId].ubProfile].zNickname, lengthof(sString));
+		wcslcpy(sString, p->zNickname, lengthof(sString));
 	}
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, sString);
 
-	const wchar_t* Assignment = pPersonnelAssignmentStrings[Menptr[iId].bAssignment];
+	const wchar_t* Assignment = pPersonnelAssignmentStrings[man->bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_LOC_Y, Assignment);
 
@@ -787,17 +786,18 @@ static void DisplayCharName(INT32 iId)
 	//
 
 	//first get height of text to be displayed
-	iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
+	const wchar_t* const name = p->zName;
+	const INT32 iHeightOfText = DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT);
 
 	//if the string will rap
 	if (iHeightOfText - 2 > GetFontHeight(PERS_FONT))
 	{
 		//raise where we display it, and rap it
-		DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, gMercProfiles[Menptr[iId].ubProfile].zName, 0, CENTER_JUSTIFIED);
+		DisplayWrappedString(IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y - GetFontHeight(PERS_FONT), IMAGE_NAME_WIDTH, 1, PERS_FONT, PERS_FONT_COLOR, name, 0, CENTER_JUSTIFIED);
 	}
 	else
 	{
-		DrawTextToScreen(gMercProfiles[Menptr[iId].ubProfile].zName, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
+		DrawTextToScreen(name, IMAGE_BOX_X, IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y, IMAGE_NAME_WIDTH, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
 	}
 }
 
@@ -2624,12 +2624,14 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 		return;
 	}
 
-	const wchar_t* name = gMercProfiles[iId].zNickname;
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[iId];
+
+	const wchar_t* name = p->zNickname;
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, name);
 
 	const wchar_t* State;
-	if (gMercProfiles[iId].ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
+	if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
 	{
 		//displaye 'married'
 		State = pPersonnelDepartedStateStrings[DEPARTED_MARRIED];
