@@ -782,367 +782,177 @@ static void DisplayCharName(INT32 iId)
 }
 
 
+static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
+{
+	wchar_t sString[50];
+	INT16 sX;
+	INT16 sY;
+
+	const INT32 y = pers_stat_y[idx];
+	if (delta > 0)
+	{
+		swprintf(sString, lengthof(sString), L"( %+d )", delta);
+		FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
+		mprintf(sX, y, sString);
+	}
+	swprintf(sString, lengthof(sString), L"%d", stat);
+	mprintf(pers_stat_x, y, pPersonnelScreenStrings[idx]);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, y, sString);
+}
+
+
+static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
+{
+	wchar_t sString[50];
+	INT16 sX;
+	INT16 sY;
+
+	mprintf(pers_stat_x, y, text);
+	swprintf(sString, lengthof(sString), L"%d", stat);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, y, sString);
+}
+
+
 static void DisplayCharStats(INT32 iId)
 {
 	wchar_t sString[50];
-	INT16 sX, sY;
+	INT16 sX;
+	INT16 sY;
 
-	const SOLDIERTYPE* s = &Menptr[iId];
+	const SOLDIERTYPE* const s = &Menptr[iId];
 	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
-	const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
-	BOOLEAN fAmIaRobot = AM_A_ROBOT(s);
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+	const BOOLEAN fAmIaRobot = AM_A_ROBOT(s);
 
-	// display the stats for a char
-	for (INT32 i = 0; i < MAX_STATS; i++)
+	// Health
+	if (s->bAssignment != ASSIGNMENT_POW)
 	{
-		switch (i)
+		if (p->bLifeDelta > 0)
 		{
-			case 0: // health
-				if (s->bAssignment != ASSIGNMENT_POW)
-				{
-					if (p->bLifeDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bLifeDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d/%d", s->bLife, s->bLifeMax);
-				}
-				else
-				{
-					wcslcpy(sString, pPOWStrings[1], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+			swprintf(sString, lengthof(sString), L"( %+d )", p->bLifeDelta);
+			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
+			mprintf(sX, pers_stat_y[0], sString);
+		}
+		swprintf(sString, lengthof(sString), L"%d/%d", s->bLife, s->bLifeMax);
+	}
+	else
+	{
+		wcslcpy(sString, pPOWStrings[1], lengthof(sString));
+	}
+	mprintf(pers_stat_x, pers_stat_y[0], pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, pers_stat_y[0], sString);
 
-			case 1: // agility
-				if (!fAmIaRobot)
-				{
-					if (p->bAgilityDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bAgilityDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bAgility);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	if  (fAmIaRobot)
+	{
+		for (INT32 i = 1; i < 11; ++i)
+		{
+			const INT32 y = pers_stat_y[i];
+			mprintf(pers_stat_x, y, pPersonnelScreenStrings[i]);
+			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
+			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
+			mprintf(sX, y, na);
+		}
+	}
+	else
+	{
+		PrintStatWithDelta( 1, p->bAgility,      p->bAgilityDelta);
+		PrintStatWithDelta( 2, p->bDexterity,    p->bDexterityDelta);
+		PrintStatWithDelta( 3, p->bStrength,     p->bStrengthDelta);
+		PrintStatWithDelta( 4, p->bLeadership,   p->bLeadershipDelta);
+		PrintStatWithDelta( 5, p->bWisdom,       p->bWisdomDelta);
+		PrintStatWithDelta( 6, p->bExpLevel,     p->bExpLevelDelta);
+		PrintStatWithDelta( 7, p->bMarksmanship, p->bMarksmanshipDelta);
+		PrintStatWithDelta( 8, p->bMechanical,   p->bMechanicDelta);
+		PrintStatWithDelta( 9, p->bExplosive,    p->bExplosivesDelta);
+		PrintStatWithDelta(10, p->bMedical,      p->bMedicalDelta);
+	}
 
-			case 2: // dexterity
-				if (!fAmIaRobot)
-				{
-					if (p->bDexterityDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bDexterityDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bDexterity);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	PrintStat(p->usKills,   pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p->usAssists, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
-			case 3: // strength
-				if (!fAmIaRobot)
-				{
-					if (p->bStrengthDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bStrengthDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bStrength);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	// Shots/hits
+	mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	// check we have shot at least once
+	const UINT32 fired = p->usShotsFired;
+	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
+	swprintf(sString, lengthof(sString), L"%d %%", hits);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, pers_stat_y[23], L"%ls", sString);
 
-			case 4: // leadership
-				if (!fAmIaRobot)
-				{
-					if (p->bLeadershipDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bLeadershipDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bLeadership);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 
-			case 5: // wisdom
-				if (!fAmIaRobot)
-				{
-					if (p->bWisdomDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bWisdomDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bWisdom);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	//Display the 'Skills' text
+	mprintf(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
 
-			case 6: // exper
-				if (!fAmIaRobot)
-				{
-					if (p->bExpLevelDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bExpLevelDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bExpLevel);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	/* KM: April 16, 1999
+	 * Added support for the German version, which has potential string
+	 * overrun problems.  For example, the text "Skills:" can overlap
+	 * "NightOps (Expert)" because the German strings are much longer.  In
+	 * these cases, I ensure that the right justification of the traits
+	 * do not overlap.  If it would, I move it over to the right. */
+	const INT32 iWidth = StringPixLength(pPersonnelScreenStrings[PRSNL_TXT_SKILLS], PERS_FONT);
+	const INT32 iMinimumX = iWidth + pers_stat_x + 2;
 
-			case 7: //mrkmanship
-				if (!fAmIaRobot)
-				{
-					if (p->bMarksmanshipDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bMarksmanshipDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bMarksmanship);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	if (!fAmIaRobot)
+	{
+		INT8 bSkill1 = p->bSkillTrait;
+		INT8 bSkill2 = p->bSkillTrait2;
 
-			case 8: // mech
-				if (!fAmIaRobot)
-				{
-					if (p->bMechanicDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bMechanicDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bMechanical);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 9: // exp
-				if (!fAmIaRobot)
-				{
-					if (p->bExplosivesDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bExplosivesDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bExplosive);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 10: // med
-				if (!fAmIaRobot)
-				{
-					if (p->bMedicalDelta > 0)
-					{
-						swprintf(sString, lengthof(sString), L"( %+d )", p->bMedicalDelta);
-						FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[i], sString);
-					}
-					swprintf(sString, lengthof(sString), L"%d", s->bMedical);
-				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
-				}
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 14: // kills
-				mprintf(pers_stat_x, pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-				swprintf(sString, lengthof(sString), L"%d", p->usKills);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[21], sString);
-				break;
-
-			case 15: // assists
-				mprintf(pers_stat_x, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
-				swprintf(sString, lengthof(sString), L"%d", p->usAssists);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[22], sString);
-				break;
-
-			case 16: // shots/hits
+		if (bSkill1 == NO_SKILLTRAIT) bSkill1 = bSkill2;
+		if (bSkill1 != NO_SKILLTRAIT)
+		{
+			if (bSkill1 == bSkill2)
 			{
-				mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
-				UINT32 uiHits;
-				// check we have shot at least once
-				if (p->usShotsFired > 0)
-				{
-					uiHits = 100 * p->usShotsHit / p->usShotsFired;
-				}
-				else
-				{
-					// no, set hit % to 0
-					uiHits = 0;
-				}
-				swprintf(sString, lengthof(sString), L"%d %%", uiHits);
+				// The 2 skills are the same, add the '(expert)' at the end
+				swprintf(sString, lengthof(sString), L"%ls %ls", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS]);
 				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[23], L"%ls", sString);
-				break;
+
+				//KM: April 16, 1999
+				//Perform the potential overrun check
+				if (sX <= iMinimumX)
+				{
+					FindFontRightCoordinates(pers_stat_x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
+					sX = max(sX, iMinimumX);
+				}
+
+				mprintf(sX, pers_stat_y[19], sString);
 			}
-
-			case 17: // battles
-				mprintf(pers_stat_x, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-				swprintf(sString, lengthof(sString), L"%d", p->usBattlesFought);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[24], sString);
-				break;
-
-			case 18: // wounds
-				mprintf(pers_stat_x, pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
-				swprintf(sString, lengthof(sString), L"%d", p->usTimesWounded);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[25], sString);
-				break;
-
-			case 19: // The Mercs Skills
+			else
 			{
-				//Display the 'Skills' text
-				mprintf(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
+				const wchar_t* Skill = gzMercSkillText[bSkill1];
 
-				/* KM: April 16, 1999
-				 * Added support for the German version, which has potential string
-				 * overrun problems.  For example, the text "Skills:" can overlap
-				 * "NightOps (Expert)" because the German strings are much longer.  In
-				 * these cases, I ensure that the right justification of the traits
-				 * do not overlap.  If it would, I move it over to the right. */
-				const INT32 iWidth = StringPixLength(pPersonnelScreenStrings[PRSNL_TXT_SKILLS], PERS_FONT);
-				const INT32 iMinimumX = iWidth + pers_stat_x + 2;
+				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
 
-				if (!fAmIaRobot)
+				//KM: April 16, 1999
+				//Perform the potential overrun check
+				sX = max(sX, iMinimumX);
+
+				mprintf(sX, pers_stat_y[19], Skill);
+
+				if (bSkill2 != NO_SKILLTRAIT)
 				{
-					INT8 bSkill1 = p->bSkillTrait;
-					INT8 bSkill2 = p->bSkillTrait2;
+					const wchar_t* Skill = gzMercSkillText[bSkill2];
 
-					if (bSkill1 == NO_SKILLTRAIT) bSkill1 = bSkill2;
-					if (bSkill1 != NO_SKILLTRAIT)
-					{
-						if (bSkill1 == bSkill2)
-						{
-							// The 2 skills are the same, add the '(expert)' at the end
-							swprintf(sString, lengthof(sString), L"%ls %ls", gzMercSkillText[bSkill1], gzMercSkillText[NUM_SKILLTRAITS]);
-							FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+					FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
 
-							//KM: April 16, 1999
-							//Perform the potential overrun check
-							if (sX <= iMinimumX)
-							{
-								FindFontRightCoordinates(pers_stat_x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-								sX = max(sX, iMinimumX);
-							}
+					//KM: April 16, 1999
+					//Perform the potential overrun check
+					sX = max(sX, iMinimumX);
 
-							mprintf(sX, pers_stat_y[19], sString);
-						}
-						else
-						{
-							const wchar_t* Skill = gzMercSkillText[bSkill1];
-
-							FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
-
-							//KM: April 16, 1999
-							//Perform the potential overrun check
-							sX = max(sX, iMinimumX);
-
-							mprintf(sX, pers_stat_y[19], Skill);
-
-							if (bSkill2 != NO_SKILLTRAIT)
-							{
-								const wchar_t* Skill = gzMercSkillText[bSkill2];
-
-								FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, Skill, PERS_FONT, &sX, &sY);
-
-								//KM: April 16, 1999
-								//Perform the potential overrun check
-								sX = max(sX, iMinimumX);
-
-								mprintf(sX, pers_stat_y[20], Skill);
-							}
-						}
-					}
-					else
-					{
-						const wchar_t* NoSkill = pPersonnelScreenStrings[PRSNL_TXT_NOSKILLS];
-						FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
-						mprintf(sX, pers_stat_y[19], NoSkill);
-					}
+					mprintf(sX, pers_stat_y[20], Skill);
 				}
-				else
-				{
-					wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString)); // XXX unused?
-				}
-				break;
 			}
+		}
+		else
+		{
+			const wchar_t* NoSkill = pPersonnelScreenStrings[PRSNL_TXT_NOSKILLS];
+			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
+			mprintf(sX, pers_stat_y[19], NoSkill);
 		}
 	}
 }
