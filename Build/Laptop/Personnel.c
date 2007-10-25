@@ -2229,148 +2229,46 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
 {
 	wchar_t sString[50];
-	INT16 sX, sY;
+	INT16 sX;
+	INT16 sY;
 
 	SetFont(FONT10ARIAL);
 	SetFontBackground(FONT_BLACK);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 
-	// display the stats for a char
-	for (INT32 i = 0; i < MAX_STATS; i++)
-	{
-		const MERCPROFILESTRUCT* p = &gMercProfiles[iId];
-		switch (i)
-		{
-			case 0: // health
-			{
-				const INT8 life = p->bLife;
-				const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
-				swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-			}
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[iId];
 
-			case 1: // agility
-				swprintf(sString, lengthof(sString), L"%d", p->bAgility);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	const INT8 life = p->bLife;
+	const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
+	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
+	mprintf(pers_stat_x, pers_stat_y[0], pPersonnelScreenStrings[0]);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, pers_stat_y[0], sString);
 
-			case 2: // dexterity
-				swprintf(sString, lengthof(sString), L"%d", p->bDexterity);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	PrintStat(p->bAgility,     pers_stat_y[ 1], pPersonnelScreenStrings[1]);
+	PrintStat(p->bDexterity,   pers_stat_y[ 2], pPersonnelScreenStrings[2]);
+	PrintStat(p->bStrength,    pers_stat_y[ 3], pPersonnelScreenStrings[3]);
+	PrintStat(p->bLeadership,  pers_stat_y[ 4], pPersonnelScreenStrings[4]);
+	PrintStat(p->bWisdom,      pers_stat_y[ 5], pPersonnelScreenStrings[5]);
+	PrintStat(p->bExpLevel,    pers_stat_y[ 6], pPersonnelScreenStrings[6]);
+	PrintStat(p->bMarksmanship,pers_stat_y[ 7], pPersonnelScreenStrings[7]);
+	PrintStat(p->bMechanical,  pers_stat_y[ 8], pPersonnelScreenStrings[8]);
+	PrintStat(p->bExplosive,   pers_stat_y[ 9], pPersonnelScreenStrings[9]);
+	PrintStat(p->bMedical,     pers_stat_y[10], pPersonnelScreenStrings[10]);
+	PrintStat(p->usKills,      pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p->usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
-			case 3: // strength
-				swprintf(sString, lengthof(sString), L"%d", p->bStrength);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
+	// Shots/hits
+	mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	// check we have shot at least once
+	const UINT32 fired = p->usShotsFired;
+	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
+	swprintf(sString, lengthof(sString), L"%d %%", hits);
+	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
+	mprintf(sX, pers_stat_y[23], L"%ls", sString);
 
-			case 4: // leadership
-				swprintf(sString, lengthof(sString), L"%d", p->bLeadership);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 5: // wisdom
-				swprintf(sString, lengthof(sString), L"%d", p->bWisdom);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 6: // exper
-				swprintf(sString, lengthof(sString), L"%d", p->bExpLevel);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 7: //mrkmanship
-				swprintf(sString, lengthof(sString), L"%d", p->bMarksmanship);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 8: // mech
-				swprintf(sString, lengthof(sString), L"%d", p->bMechanical);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 9: // exp
-				swprintf(sString, lengthof(sString), L"%d", p->bExplosive);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 10: // med
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[i]);
-				swprintf(sString, lengthof(sString), L"%d", p->bMedical);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
-				break;
-
-			case 14: // kills
-				mprintf(pers_stat_x, pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-				swprintf(sString, lengthof(sString), L"%d", p->usKills);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[21], sString);
-				break;
-
-			case 15: // assists
-				mprintf(pers_stat_x, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
-				swprintf(sString, lengthof(sString), L"%d", p->usAssists);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[22], sString);
-				break;
-
-			case 16: // shots/hits
-			{
-				mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
-				UINT32 uiHits;
-				// check we have shot at least once
-				if (p->usShotsFired > 0)
-				{
-					uiHits = 100 * p->usShotsHit / p->usShotsFired;
-				}
-				else
-				{
-					// no, set hit % to 0
-					uiHits = 0;
-				}
-				swprintf(sString, lengthof(sString), L"%d %%", uiHits);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[23], L"%ls", sString);
-				break;
-			}
-
-			case 17: // battles
-				mprintf(pers_stat_x, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-				swprintf(sString, lengthof(sString), L"%d", p->usBattlesFought);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[24], sString);
-				break;
-
-			case 18: // wounds
-				mprintf(pers_stat_x, pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
-				swprintf(sString, lengthof(sString), L"%d", p->usTimesWounded);
-				FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[25], sString);
-				break;
-		}
-	}
+	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 }
 
 
