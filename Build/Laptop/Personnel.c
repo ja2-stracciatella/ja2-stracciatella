@@ -2631,17 +2631,9 @@ static void CreateDestroyStartATMButton(void)
 
 static void FindPositionOfPersInvSlider(void)
 {
-	// find out how many there are
-	INT32 iValue = GetNumberOfInventoryItemsOnCurrentMerc();
-
-	// otherwise there is more than one item
-	INT32 iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
-
-	// get the subregion sizes
-	INT16 sSizeOfEachSubRegion = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / iNumberOfItems;
-
-	// get slider position
-	guiSliderPosition = uiCurrentInventoryIndex * sSizeOfEachSubRegion;
+	const INT32 item_count   = GetNumberOfInventoryItemsOnCurrentMerc();
+	const INT32 scroll_count = item_count - NUMBER_OF_INVENTORY_PERSONNEL;
+	guiSliderPosition = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) * uiCurrentInventoryIndex / scroll_count;
 }
 
 
@@ -2649,42 +2641,28 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN || iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		// find out how many there are
-		INT32 iValue = GetNumberOfInventoryItemsOnCurrentMerc();
+		const INT32 item_count = GetNumberOfInventoryItemsOnCurrentMerc();
+		if (item_count <= NUMBER_OF_INVENTORY_PERSONNEL) return;
 
-		// make sure there are more than one page
-		if ((INT32)uiCurrentInventoryIndex >= iValue - NUMBER_OF_INVENTORY_PERSONNEL + 1)
-		{
-			return;
-		}
-
-		// otherwise there are more than one item
-		INT32 iNumberOfItems = iValue - NUMBER_OF_INVENTORY_PERSONNEL;
-
-		if (iNumberOfItems == 0) return;
+		const INT32 scroll_count = item_count - NUMBER_OF_INVENTORY_PERSONNEL;
 
 		// find the x, y on the slider bar
 		POINT MousePos;
 		GetCursorPos(&MousePos);
 
-		// get the subregion sizes
-		INT16 sSizeOfEachSubRegion = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) / iNumberOfItems;
-
 		// get the cursor placement
 		INT16 sYPositionOnBar = MousePos.y - Y_OF_PERSONNEL_SCROLL_REGION;
 
-		if (sSizeOfEachSubRegion == 0) return;
-
 		// get the actual item position
-		INT16 iCurrentItemValue = sYPositionOnBar / sSizeOfEachSubRegion;
+		const INT16 new_item_idx = scroll_count * sYPositionOnBar / (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR);
 
-		if (uiCurrentInventoryIndex != iCurrentItemValue)
+		if (uiCurrentInventoryIndex != new_item_idx)
 		{
 			// get slider position
-			guiSliderPosition = iCurrentItemValue * sSizeOfEachSubRegion;
+			guiSliderPosition = (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR) * new_item_idx / scroll_count;
 
 			// set current inventory value
-			uiCurrentInventoryIndex = iCurrentItemValue;
+			uiCurrentInventoryIndex = new_item_idx;
 
 			// force update
 			fReDrawScreenFlag = TRUE;

@@ -1,3 +1,5 @@
+(r1650) Fix vanilla rounding errors: The scrollbar in the inventory view of the personnel screen was not positioned correctly and could be moved one beyond the last item.
+
 v0.7 - 2007-10-21 - Cinnamon
 (r1581) Enable scrolling with the mouse wheel for sliders (volume sliders in the options menu), the message log box in the map screen and the inventory list in the personnel screen.
 (r1580) Add support for the mouse wheel.
