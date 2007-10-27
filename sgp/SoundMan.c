@@ -128,7 +128,6 @@ static UINT32 SoundGetUniqueID(void);
 static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
 static BOOLEAN SoundSampleIsPlaying(UINT32 uiSample);
-static BOOLEAN SoundStopIndex(UINT32 uiSound);
 
 // Global variables
 static const UINT32 guiSoundDefaultVolume = MAXVOLUME;
@@ -413,6 +412,9 @@ BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 }
 
 
+static BOOLEAN SoundStopChannel(SOUNDTAG* channel);
+
+
 //*******************************************************************************
 // SoundStop
 //
@@ -430,7 +432,7 @@ BOOLEAN SoundStop(UINT32 uiSoundID)
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
 	if (uiSound == NO_SAMPLE) return FALSE;
 
-	SoundStopIndex(uiSound);
+	SoundStopChannel(&pSoundList[uiSound]);
 	return TRUE;
 }
 
@@ -448,16 +450,15 @@ BOOLEAN SoundStopAll(void)
 	if (!fSoundSystemInit) return TRUE;
 
 	SDL_PauseAudio(1);
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
+	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
 	{
-		if (SoundStopIndex(uiCount))
+		if (SoundStopChannel(i))
 		{
-			SOUNDTAG* Sound = &pSoundList[uiCount];
-			assert(Sound->pSample->uiInstances != 0);
-			--Sound->pSample->uiInstances;
-			Sound->pSample   = NULL;
-			Sound->uiSoundID = SOUND_ERROR;
-			Sound->State = CHANNEL_FREE;
+			assert(i->pSample->uiInstances != 0);
+			i->pSample->uiInstances -= 1;
+			i->pSample               = NULL;
+			i->uiSoundID             = SOUND_ERROR;
+			i->State                 = CHANNEL_FREE;
 		}
 	}
 	SDL_PauseAudio(0);
@@ -629,7 +630,7 @@ BOOLEAN SoundStopAllRandom(void)
 			// if this was a random sample, decrease the iteration count
 			if (Sound->pSample->uiFlags & SAMPLE_RANDOM)
 			{
-				SoundStopIndex(uiChannel);
+				SoundStopChannel(Sound);
 			}
 		}
 	}
@@ -1529,28 +1530,20 @@ static BOOLEAN SoundPlayStreamed(const char* pFilename)
 }
 
 
-//*******************************************************************************
-// SoundStopIndex
-//
-//		Stops a sound referred to by it's slot number. This function is the only
-//	one that should be deallocating sample handles. The random sounds have to have
-//	their counters maintained, and using this as the central function ensures
-//	that they stay in sync.
-//
-//	Returns:	TRUE if the sample was stopped, FALSE if it could not be found.
-//
-//*******************************************************************************
-static BOOLEAN SoundStopIndex(UINT32 uiChannel)
+/* Stops a sound referred to by its channel.  This function is the only one
+ * that should be deallocating sample handles. The random sounds have to have
+ * their counters maintained, and using this as the central function ensures
+ * that they stay in sync.
+ *
+ * Returns: TRUE if the sample was stopped, FALSE if it could not be found. */
+static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 {
 	if (!fSoundSystemInit) return FALSE;
-	if (uiChannel == NO_SAMPLE) return FALSE;
 
-	SOUNDTAG* Sound = &pSoundList[uiChannel];
+	if (channel->pSample == NULL) return FALSE;
 
-	if (Sound->pSample == NULL) return FALSE;
-
-	SNDDBG("STOP channel %u\n", uiChannel);
-	Sound->State = CHANNEL_STOP;
+	SNDDBG("STOP channel %u\n", channel - pSoundList);
+	channel->State = CHANNEL_STOP;
 	return TRUE;
 }
 
