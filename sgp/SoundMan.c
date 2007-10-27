@@ -121,7 +121,6 @@ static UINT32 SoundLoadDisk(const char* pFilename);
 // Low level
 static UINT32 SoundGetEmptySample(void);
 static UINT32 SoundFreeSampleIndex(UINT32 uiSample);
-static UINT32 SoundGetIndexByID(UINT32 uiSoundID);
 static BOOLEAN SoundInitHardware(void);
 static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetUniqueID(void);
@@ -397,6 +396,9 @@ UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 }
 
 
+static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID);
+
+
 //*******************************************************************************
 // SoundIsPlaying
 //
@@ -407,8 +409,8 @@ BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return FALSE;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	return uiSound != NO_SAMPLE && pSoundList[uiSound].State != CHANNEL_FREE;
+	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	return channel != NULL && channel->State != CHANNEL_FREE;
 }
 
 
@@ -429,10 +431,10 @@ BOOLEAN SoundStop(UINT32 uiSoundID)
 	if (!fSoundSystemInit) return FALSE;
 	if (!SoundIsPlaying(uiSoundID)) return FALSE;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	if (uiSound == NO_SAMPLE) return FALSE;
+	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	if (channel == NULL) return FALSE;
 
-	SoundStopChannel(&pSoundList[uiSound]);
+	SoundStopChannel(channel);
 	return TRUE;
 }
 
@@ -480,10 +482,10 @@ BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 {
 	if (!fSoundSystemInit) return FALSE;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	if (uiSound == NO_SAMPLE) return FALSE;
+	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	if (channel == NULL) return FALSE;
 
-	pSoundList[uiSound].uiFadeVolume = __min(uiVolume, MAXVOLUME);
+	channel->uiFadeVolume = __min(uiVolume, MAXVOLUME);
 	return TRUE;
 }
 
@@ -501,13 +503,10 @@ BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
 	if (!fSoundSystemInit) return FALSE;
 
-	UINT32 uiPanCap = __min(uiPan, 127);
+	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	if (channel == NULL) return FALSE;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	if (uiSound == NO_SAMPLE) return FALSE;
-
-	pSoundList[uiSound].Pan = uiPanCap;
-
+	channel->Pan = __min(uiPan, 127);
 	return TRUE;
 }
 
@@ -523,10 +522,10 @@ UINT32 SoundGetVolume(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	if (uiSound == NO_SAMPLE) SOUND_ERROR;
+	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
+	if (channel == NULL) return SOUND_ERROR;
 
-	return pSoundList[uiSound].uiFadeVolume;
+	return channel->uiFadeVolume;
 }
 
 
@@ -700,27 +699,25 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return 0;
 
-	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
+	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
 #if 0
 	UINT32 uiPosition = 0;
 	UINT32 uiFreq = 0;
 	UINT32 uiFormat = 0;
-	if (uiSound != NO_SAMPLE)
+	if (channel != NULL)
 	{
-		SOUNDTAG* Sound = &pSoundList[uiSound];
-
-		if (Sound->hMSSStream != NULL)
+		if (channel->hMSSStream != NULL)
 		{
-			uiPosition = (UINT32)AIL_stream_position(Sound->hMSSStream);
-			uiFreq     = (UINT32)Sound->hMSSStream->samp->playback_rate;
-			uiFormat   = (UINT32)Sound->hMSSStream->samp->format;
+			uiPosition = (UINT32)AIL_stream_position(channel->hMSSStream);
+			uiFreq     = (UINT32)channel->hMSSStream->samp->playback_rate;
+			uiFormat   = (UINT32)channel->hMSSStream->samp->format;
 
 		}
-		else if (Sound->hMSS != NULL)
+		else if (channel->hMSS != NULL)
 		{
-			uiPosition = (UINT32)AIL_sample_position(Sound->hMSS);
-			uiFreq     = (UINT32)Sound->hMSS->playback_rate;
-			uiFormat   = (UINT32)Sound->hMSS->format;
+			uiPosition = (UINT32)AIL_sample_position(channel->hMSS);
+			uiFreq     = (UINT32)channel->hMSS->playback_rate;
+			uiFormat   = (UINT32)channel->hMSS->format;
 		}
 	}
 
@@ -737,20 +734,18 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 
 	return uiPosition / uiBytesPerSample / (uiFreq / 1000);
 #else
-	if (uiSound == NO_SAMPLE) return 0;
-
-	SOUNDTAG* Sound = &pSoundList[uiSound];
+	if (channel == NULL) return 0;
 
 	UINT32 uiTime = GetClock();
 	// check for rollover
 	UINT32 uiPosition;
-	if (uiTime < Sound->uiTimeStamp)
+	if (uiTime < channel->uiTimeStamp)
 	{
-		uiPosition = 0 - Sound->uiTimeStamp + uiTime;
+		uiPosition = 0 - channel->uiTimeStamp + uiTime;
 	}
 	else
 	{
-		uiPosition = uiTime - Sound->uiTimeStamp;
+		uiPosition = uiTime - channel->uiTimeStamp;
 	}
 
 	return uiPosition;
@@ -1191,22 +1186,19 @@ static UINT32 SoundFreeSampleIndex(UINT32 uiSample)
 	return uiSample;
 }
 
-//*******************************************************************************
-// SoundGetIndexByID
-//
-//		Searches out a sound instance referred to by it's ID number.
-//
-//	Returns:	If the instance was found, the slot number. NO_SAMPLE otherwise.
-//
-//*******************************************************************************
-static UINT32 SoundGetIndexByID(UINT32 uiSoundID)
+
+/* Searches out a sound instance referred to by its ID number.
+ *
+ * Returns: If the instance was found, the pointer to the channel.  NULL
+ *          otherwise. */
+static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 {
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
+	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
 	{
-		if (pSoundList[uiCount].uiSoundID == uiSoundID) return uiCount;
+		if (i->uiSoundID == uiSoundID) return i;
 	}
 
-	return NO_SAMPLE;
+	return NULL;
 }
 
 
