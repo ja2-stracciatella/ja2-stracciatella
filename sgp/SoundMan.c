@@ -736,19 +736,8 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 #else
 	if (channel == NULL) return 0;
 
-	UINT32 uiTime = GetClock();
-	// check for rollover
-	UINT32 uiPosition;
-	if (uiTime < channel->uiTimeStamp)
-	{
-		uiPosition = 0 - channel->uiTimeStamp + uiTime;
-	}
-	else
-	{
-		uiPosition = uiTime - channel->uiTimeStamp;
-	}
-
-	return uiPosition;
+	const UINT32 now = GetClock();
+	return now - channel->uiTimeStamp;
 #endif
 }
 
