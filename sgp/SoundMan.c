@@ -131,7 +131,6 @@ static UINT32 SoundGetUniqueID(void);
 static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
 static BOOLEAN SoundSampleIsPlaying(UINT32 uiSample);
-static BOOLEAN SoundIndexIsPlaying(UINT32 uiSound);
 static BOOLEAN SoundStopIndex(UINT32 uiSound);
 static UINT32 SoundGetVolumeIndex(UINT32 uiChannel);
 
@@ -406,27 +405,9 @@ BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 	if (!fSoundSystemInit) return FALSE;
 
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
-	return uiSound != NO_SAMPLE && SoundIndexIsPlaying(uiSound);
+	return uiSound != NO_SAMPLE && pSoundList[uiSound].State != CHANNEL_FREE;
 }
 
-
-//*****************************************************************************************
-// SoundIndexIsPlaying
-//
-// Returns TRUE/FALSE whether a sound channel's sample is currently playing.
-//
-// Returns BOOLEAN            - TRUE = playing, FALSE = stopped or nothing allocated
-//
-// UINT32 uiSound             - Channel number of sound
-//
-// Created:  2/24/00 Derek Beland
-//*****************************************************************************************
-static BOOLEAN SoundIndexIsPlaying(UINT32 uiSound)
-{
-	return
-		fSoundSystemInit &&
-		pSoundList[uiSound].State != CHANNEL_FREE;
-}
 
 //*******************************************************************************
 // SoundStop
