@@ -124,9 +124,6 @@ static UINT32 SoundFreeSampleIndex(UINT32 uiSample);
 static UINT32 SoundGetIndexByID(UINT32 uiSoundID);
 static BOOLEAN SoundInitHardware(void);
 static BOOLEAN SoundShutdownHardware(void);
-static UINT32 SoundGetFreeChannel(void);
-static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPARMS* pParms);
-static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SOUNDPARMS* pParms);
 static UINT32 SoundGetUniqueID(void);
 static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
@@ -205,6 +202,11 @@ void ShutdownSoundManager(void)
 	fSoundSystemInit=FALSE;
 }
 
+
+static SOUNDTAG* SoundGetFreeChannel(void);
+static UINT32    SoundStartSample(UINT32 uiSample, SOUNDTAG* channel, const SOUNDPARMS* pParms);
+
+
 //*******************************************************************************
 // SoundPlay
 //
@@ -244,11 +246,14 @@ UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
 	UINT32 uiSample = SoundLoadSample(pFilename);
 	if (uiSample == NO_SAMPLE) return SOUND_ERROR;
 
-	UINT32 uiChannel = SoundGetFreeChannel();
-	if (uiChannel == SOUND_ERROR) return SOUND_ERROR;
+	SOUNDTAG* const channel = SoundGetFreeChannel();
+	if (channel == NULL) return SOUND_ERROR;
 
-	return SoundStartSample(uiSample, uiChannel, pParms);
+	return SoundStartSample(uiSample, channel, pParms);
 }
+
+
+static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const SOUNDPARMS* pParms);
 
 
 //*******************************************************************************
@@ -272,8 +277,8 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 #else
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	UINT32 uiChannel = SoundGetFreeChannel();
-	if (uiChannel == SOUND_ERROR) return SOUND_ERROR;
+	SOUNDTAG* const channel = SoundGetFreeChannel();
+	if (channel == NULL) return SOUND_ERROR;
 
 	//Open the file
 	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
@@ -288,7 +293,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 	if (DB_EXTRACT_LIBRARY(hFile) == REAL_FILE_LIBRARY_ID)
 	{
 		FileClose(hFile);
-		return SoundStartStream(pFilename, uiChannel, pParms);
+		return SoundStartStream(pFilename, channel, pParms);
 	}
 
 	//Get the real file handle of the file
@@ -304,12 +309,12 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 	sprintf(pFileHandlefileName, "\\\\\\\\%d", hRealFileHandle);
 
 	//Start the sound stream
-	UINT32 uiRetVal = SoundStartStream( pFileHandlefileName, uiChannel, pParms);
+	UINT32 uiRetVal = SoundStartStream(pFileHandlefileName, channel, pParms);
 
 	//if it succeeded, record the file handle
 	if (uiRetVal != SOUND_ERROR)
 	{
-		pSoundList[uiChannel].hFile = hFile;
+		channel->hFile = hFile;
 	}
 	else
 	{
@@ -578,8 +583,8 @@ static BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 //*******************************************************************************
 static UINT32 SoundStartRandom(UINT32 uiSample)
 {
-	UINT32 uiChannel = SoundGetFreeChannel();
-	if (uiChannel == SOUND_ERROR) return NO_SAMPLE;
+	SOUNDTAG* const channel = SoundGetFreeChannel();
+	if (channel == NULL) return NO_SAMPLE;
 
 	SAMPLETAG* Sample = &pSampleList[uiSample];
 
@@ -589,7 +594,7 @@ static UINT32 SoundStartRandom(UINT32 uiSample)
 	spParms.uiPan      = Sample->uiPanMin + Random(Sample->uiPanMax - Sample->uiPanMin);
 	spParms.uiLoop     = 1;
 
-	UINT32 uiSoundID = SoundStartSample(uiSample, uiChannel, &spParms);
+	UINT32 uiSoundID = SoundStartSample(uiSample, channel, &spParms);
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
 
 	Sample->uiTimeNext =
@@ -1330,22 +1335,17 @@ static BOOLEAN SoundShutdownHardware(void)
 }
 
 
-//*******************************************************************************
-// SoundGetFreeChannel
-//
-//		Finds an unused sound channel in the channel list.
-//
-//	Returns:	Index of a sound channel if one was found, SOUND_ERROR if not.
-//
-//*******************************************************************************
-static UINT32 SoundGetFreeChannel(void)
+/* Finds an unused sound channel in the channel list.
+ *
+ * Returns: Pointer to a sound channel if one was found, NULL if not. */
+static SOUNDTAG* SoundGetFreeChannel(void)
 {
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CHANNELS; uiCount++)
+	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
 	{
-		if (pSoundList[uiCount].State == CHANNEL_FREE) return uiCount;
+		if (i->State == CHANNEL_FREE) return i;
 	}
 
-	return SOUND_ERROR;
+	return NULL;
 }
 
 //*******************************************************************************
@@ -1358,59 +1358,58 @@ static UINT32 SoundGetFreeChannel(void)
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPARMS* pParms)
+static UINT32 SoundStartSample(UINT32 uiSample, SOUNDTAG* channel, const SOUNDPARMS* pParms)
 {
-	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", uiChannel, uiSample, pSampleList[uiSample].pName);
+	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, uiSample, pSampleList[uiSample].pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	SOUNDTAG* Sound = &pSoundList[uiChannel];
 	SAMPLETAG* Sample = &pSampleList[uiSample];
 
 	if (pParms != NULL && pParms->uiVolume != SOUND_PARMS_DEFAULT)
 	{
-		Sound->uiFadeVolume = pParms->uiVolume;
+		channel->uiFadeVolume = pParms->uiVolume;
 	}
 	else
 	{
-		Sound->uiFadeVolume = guiSoundDefaultVolume;
+		channel->uiFadeVolume = guiSoundDefaultVolume;
 	}
 
 	if (pParms != NULL && pParms->uiLoop != SOUND_PARMS_DEFAULT)
 	{
-		Sound->Loops = pParms->uiLoop;
+		channel->Loops = pParms->uiLoop;
 	}
 	else
 	{
-		Sound->Loops = 1;
+		channel->Loops = 1;
 	}
 
 	if (pParms != NULL && pParms->uiPan != SOUND_PARMS_DEFAULT)
 	{
-		Sound->Pan = pParms->uiPan;
+		channel->Pan = pParms->uiPan;
 	}
 	else
 	{
-		Sound->Pan = 64;
+		channel->Pan = 64;
 	}
 
 	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
 	{
-		Sound->EOSCallback   = pParms->EOSCallback;
-		Sound->pCallbackData = pParms->pCallbackData;
+		channel->EOSCallback   = pParms->EOSCallback;
+		channel->pCallbackData = pParms->pCallbackData;
 	}
 	else
 	{
-		Sound->EOSCallback   = NULL;
-		Sound->pCallbackData = NULL;
+		channel->EOSCallback   = NULL;
+		channel->pCallbackData = NULL;
 	}
 
 	UINT32 uiSoundID = SoundGetUniqueID();
-	Sound->uiSoundID    = uiSoundID;
-	Sound->pSample      = Sample;
-	Sound->uiTimeStamp  = GetClock();
-	Sound->Pos          = 0;
-	Sound->State        = CHANNEL_PLAY;
+	channel->uiSoundID    = uiSoundID;
+	channel->pSample      = Sample;
+	channel->uiTimeStamp  = GetClock();
+	channel->Pos          = 0;
+	channel->State        = CHANNEL_PLAY;
 
 	Sample->uiInstances++;
 	Sample->uiCacheHits++;
@@ -1428,7 +1427,7 @@ static UINT32 SoundStartSample(UINT32 uiSample, UINT32 uiChannel, const SOUNDPAR
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SOUNDPARMS* pParms)
+static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const SOUNDPARMS* pParms)
 {
 #if 1 // XXX TODO
 	FIXME
@@ -1436,16 +1435,14 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 #else
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	SOUNDTAG* Sound = &pSoundList[uiChannel];
-
-	Sound->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM)
-	if (Sound->hMSSStream == NULL)
+	channel->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM)
+	if (channel->hMSSStream == NULL)
 	{
 		SoundCleanCache();
-		Sound->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM);
+		channel->hMSSStream = AIL_open_stream(hSoundDriver, pFilename, SOUND_DEFAULT_STREAM);
 	}
 
-	if (Sound->hMSSStream == NULL)
+	if (channel->hMSSStream == NULL)
 	{
 		char AILString[200];
 		sprintf(AILString, "Stream Error: %s", AIL_last_error());
@@ -1455,41 +1452,41 @@ static UINT32 SoundStartStream(const char* pFilename, UINT32 uiChannel, const SO
 
 	if (pParms != NULL && pParms->uiVolume != SOUND_PARMS_DEFAULT)
 	{
-		AIL_set_stream_volume(Sound->hMSSStream, pParms->uiVolume);
+		AIL_set_stream_volume(channel->hMSSStream, pParms->uiVolume);
 	}
 	else
 	{
-		AIL_set_stream_volume(Sound->hMSSStream, guiSoundDefaultVolume);
+		AIL_set_stream_volume(channel->hMSSStream, guiSoundDefaultVolume);
 	}
 
 	if (pParms != NULL && pParms->uiLoop != SOUND_PARMS_DEFAULT)
 	{
-		AIL_set_stream_loop_count(Sound->hMSSStream, pParms->uiLoop);
+		AIL_set_stream_loop_count(channel->hMSSStream, pParms->uiLoop);
 	}
 
 	if (pParms != NULL && pParms->uiPan != SOUND_PARMS_DEFAULT)
 	{
-		AIL_set_stream_pan(Sound->hMSSStream, pParms->uiPan);
+		AIL_set_stream_pan(channel->hMSSStream, pParms->uiPan);
 	}
 
-	AIL_start_stream(Sound->hMSSStream);
+	AIL_start_stream(channel->hMSSStream);
 
 	UINT32 uiSoundID=SoundGetUniqueID();
-	Sound->uiSoundID = uiSoundID;
+	channel->uiSoundID = uiSoundID;
 
 	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
 	{
-		Sound->EOSCallback   = pParms->EOSCallback;
-		Sound->pCallbackData = pParms->pCallbackData;
+		channel->EOSCallback   = pParms->EOSCallback;
+		channel->pCallbackData = pParms->pCallbackData;
 	}
 	else
 	{
-		Sound->EOSCallback   = NULL;
-		Sound->pCallbackData = NULL;
+		channel->EOSCallback   = NULL;
+		channel->pCallbackData = NULL;
 	}
 
-	Sound->uiTimeStamp  = GetClock();
-	Sound->uiFadeVolume = SoundGetVolumeIndex(uiChannel);
+	channel->uiTimeStamp  = GetClock();
+	channel->uiFadeVolume = SoundGetVolumeIndex(uiChannel);
 
 	return uiSoundID;
 #endif
