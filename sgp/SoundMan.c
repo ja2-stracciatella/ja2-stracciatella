@@ -120,7 +120,7 @@ static UINT32 SoundLoadDisk(const char* pFilename);
 
 // Low level
 static UINT32 SoundGetEmptySample(void);
-static UINT32 SoundFreeSampleIndex(UINT32 uiSample);
+static void    SoundFreeSampleIndex(UINT32 uiSample);
 static BOOLEAN SoundInitHardware(void);
 static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetUniqueID(void);
@@ -1147,26 +1147,18 @@ static UINT32 SoundGetEmptySample(void)
 }
 
 
-//*******************************************************************************
-// SoundFreeSampleIndex
-//
-//		Frees up a sample referred to by it's index slot number.
-//
-//	Returns:	Slot number if something was free, NO_SAMPLE otherwise.
-//
-//*******************************************************************************
-static UINT32 SoundFreeSampleIndex(UINT32 uiSample)
+// Frees up a sample referred to by its index slot number.
+static void SoundFreeSampleIndex(UINT32 uiSample)
 {
 	SAMPLETAG* Sample = &pSampleList[uiSample];
 
-	if (!(Sample->uiFlags & SAMPLE_ALLOCATED)) return NO_SAMPLE;
+	if (!(Sample->uiFlags & SAMPLE_ALLOCATED)) return;
 
 	assert(Sample->uiInstances == 0);
 
 	guiSoundMemoryUsed -= Sample->uiSoundSize;
 	free(Sample->pData);
 	memset(Sample, 0, sizeof(SAMPLETAG));
-	return uiSample;
 }
 
 
