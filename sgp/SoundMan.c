@@ -620,17 +620,11 @@ static UINT32 SoundStartRandom(UINT32 uiSample)
 BOOLEAN SoundStopAllRandom(void)
 {
 	// Stop all currently playing random sounds
-	for (UINT32 uiChannel = 0; uiChannel < SOUND_MAX_CHANNELS; uiChannel++)
+	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
 	{
-		SOUNDTAG* Sound = &pSoundList[uiChannel];
-
-		if (Sound->State == CHANNEL_PLAY)
+		if (i->State == CHANNEL_PLAY && i->pSample->uiFlags & SAMPLE_RANDOM)
 		{
-			// if this was a random sample, decrease the iteration count
-			if (Sound->pSample->uiFlags & SAMPLE_RANDOM)
-			{
-				SoundStopChannel(Sound);
-			}
+			SoundStopChannel(i);
 		}
 	}
 
