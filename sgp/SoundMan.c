@@ -73,7 +73,6 @@ enum
 typedef struct
 {
 	CHAR8   pName[128];  // Path to sample data
-	UINT32  uiSize;      // Size of sample data
 	UINT32  uiSoundSize; // Playable sound size
 	UINT32  uiFlags;     // Status flags
 	UINT32  uiSpeed;     // Playback frequency
