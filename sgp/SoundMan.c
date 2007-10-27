@@ -132,7 +132,6 @@ static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
 static BOOLEAN SoundSampleIsPlaying(UINT32 uiSample);
 static BOOLEAN SoundStopIndex(UINT32 uiSound);
-static UINT32 SoundGetVolumeIndex(UINT32 uiChannel);
 
 // Global variables
 static const UINT32 guiSoundDefaultVolume = MAXVOLUME;
@@ -521,26 +520,7 @@ UINT32 SoundGetVolume(UINT32 uiSoundID)
 	UINT32 uiSound = SoundGetIndexByID(uiSoundID);
 	if (uiSound == NO_SAMPLE) SOUND_ERROR;
 
-	return SoundGetVolumeIndex(uiSound);
-}
-
-
-//*****************************************************************************************
-// SoundGetVolumeIndex
-//
-// Returns the current volume of a sound channel.
-//
-// Returns UINT32             - Volume 0-127
-//
-// UINT32 uiChannel           - Channel
-//
-// Created:  3/17/00 Derek Beland
-//*****************************************************************************************
-static UINT32 SoundGetVolumeIndex(UINT32 uiChannel)
-{
-	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	return pSoundList[uiChannel].uiFadeVolume;
+	return pSoundList[uiSound].uiFadeVolume;
 }
 
 
