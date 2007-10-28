@@ -275,14 +275,13 @@ void RemoveCoverOfSelectedGridNo()
 }
 
 
-static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance);
+static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance);
 static SOLDIERTYPE* GetCurrentMercForDisplayCover(void);
 
 
 static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
 	INT16	sCounterX, sCounterY;
 	UINT8	ubID;
@@ -316,7 +315,7 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 	//Find out which tiles around the location are reachable
 	LocalReachableTest( sTargetGridNo, bSearchRange );
 
-	pSoldier = GetCurrentMercForDisplayCover();
+	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
 
 	sCounterX = sCounterY = 0;
 
@@ -391,15 +390,13 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 }
 
 
-static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance)
+static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance)
 {
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
 	INT8		bPercentCoverForGridno=0;
 	UINT32	uiLoop;
 	SOLDIERTYPE *pOpponent;
-	INT8		*pbPersOL;
-	INT8		*pbPublOL;
 	INT32		iGetThrough=0;
 	INT32		iBulletGetThrough=0;
 	INT32		iHighestValue=0;
@@ -425,8 +422,8 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE* pSoldier, INT
 			continue;          // next merc
 		}
 
-		pbPersOL = pSoldier->bOppList + pOpponent->ubID;
-		pbPublOL = gbPublicOpplist[ OUR_TEAM ] + pOpponent->ubID;
+		const INT8* const pbPersOL = pSoldier->bOppList        + pOpponent->ubID;
+		const INT8* const pbPublOL = gbPublicOpplist[OUR_TEAM] + pOpponent->ubID;
 
 		// if this opponent is unknown personally and publicly
 		if( *pbPersOL != SEEN_CURRENTLY &&
@@ -556,10 +553,8 @@ static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 
 static INT8 GetCurrentMercForDisplayCoverStance(void)
 {
+	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
 	INT8	bStance;
-	SOLDIERTYPE *pSoldier = NULL;
-
-	pSoldier = GetCurrentMercForDisplayCover();
 
 	switch( pSoldier->usUIMovementMode )
 	{
@@ -686,14 +681,13 @@ void DisplayGridNoVisibleToSoldierGrid( )
 }
 
 
-static INT8 CalcIfSoldierCanSeeGridNo(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof);
+static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof);
 static BOOLEAN IsTheRoofVisible(INT16 sGridNo);
 
 
 static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
 {
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	SOLDIERTYPE *pSoldier=NULL;
 	INT16	sGridNo;
 	INT16	sCounterX, sCounterY;
 	BOOLEAN	fRoof=FALSE;
@@ -713,7 +707,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
 	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
-	pSoldier = GetCurrentMercForDisplayCover();
+	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
 
 	sCounterX=0;
 	sCounterY=0;
@@ -899,12 +893,11 @@ void RemoveVisibleGridNoAtSelectedGridNo()
 }
 
 
-static INT8 CalcIfSoldierCanSeeGridNo(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof)
+static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fRoof)
 {
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
-	INT8  *pPersOL,*pbPublOL;
 	UINT8 ubID;
 	BOOLEAN	bAware=FALSE;
 
@@ -919,8 +912,8 @@ static INT8 CalcIfSoldierCanSeeGridNo(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo
 
 	if( ubID != NOBODY )
 	{
-		pPersOL = &(pSoldier->bOppList[ubID]);
-		pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][ubID]);
+		const INT8* const pPersOL  = &pSoldier->bOppList[ubID];
+		const INT8* const pbPublOL = &gbPublicOpplist[pSoldier->bTeam][ubID];
 
 		 // if soldier is known about (SEEN or HEARD within last few turns)
 		if (*pPersOL || *pbPublOL)
