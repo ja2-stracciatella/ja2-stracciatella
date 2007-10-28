@@ -67,7 +67,6 @@ Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
 GetCostOfPassageForHelicopter(): callers
-GetCurrentMercForDisplayCover(): complicated
 GetDialogue(): code duplication
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetHelpTextForItem(): complicated

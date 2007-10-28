@@ -537,17 +537,7 @@ static void RemoveCoverObjectFromWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN 
 
 static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 {
-	SOLDIERTYPE *pSoldier=NULL;
-	//Get a soldier that is on the player team
-	if( gusSelectedSoldier != NOBODY )
-	{
-		pSoldier = GetSoldier(gusSelectedSoldier);
-	}
-	else
-	{
-		Assert( 0 );
-	}
-	return( pSoldier );
+	return GetSoldier(gusSelectedSoldier);
 }
 
 
