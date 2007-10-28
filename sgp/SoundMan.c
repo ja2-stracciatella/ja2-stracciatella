@@ -144,28 +144,12 @@ static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
 static SOUNDTAG pSoundList[SOUND_MAX_CHANNELS];
 
 
-//*******************************************************************************
-// SoundEnableSound
-//
-//	Allows or disallows the startup of the sound hardware.
-//
-//	Returns:	Nothing.
-//
-//*******************************************************************************
 void SoundEnableSound(BOOLEAN fEnable)
 {
 	gfEnableStartup=fEnable;
 }
 
 
-//*******************************************************************************
-// InitializeSoundManager
-//
-//	Zeros out the structs for the system info, and initializes the cache.
-//
-//	Returns:	TRUE always
-//
-//*******************************************************************************
 BOOLEAN InitializeSoundManager(void)
 {
 	if (fSoundSystemInit) ShutdownSoundManager();
@@ -183,13 +167,7 @@ BOOLEAN InitializeSoundManager(void)
 	return TRUE;
 }
 
-//*******************************************************************************
-// ShutdownSoundManager
-//
-//		Silences all currently playing sound, deallocates any memory allocated,
-//	and releases the sound hardware.
-//
-//*******************************************************************************
+
 void ShutdownSoundManager(void)
 {
 	SoundStopAll();
@@ -204,14 +182,6 @@ static SAMPLETAG* SoundLoadSample(const char* pFilename);
 static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
-/* Starts a sample playing. If the sample is not loaded in the cache, it will
- * be found and loaded.
- *
- * Returns: If the sound was started, it returns a sound ID unique to that
- *          instance of the sound If an error occured, SOUND_ERROR will be
- *          returned
- *
- * !!Note:  Can no longer play streamed files */
 UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
@@ -244,11 +214,6 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
-/* The sample will be played as a double-buffered sample.
- *
- * Returns: If the sound was started, it returns a sound ID unique to that
- *          instance of the sound If an error occured, SOUND_ERROR will be
- *          returned */
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 #if 1
@@ -306,14 +271,6 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 }
 
 
-/* Registers a sample to be played randomly within the specified parameters.
- *
- * * Samples designated "random" are ALWAYS loaded into the cache, and locked
- * in place. They are never double-buffered, and this call will fail if they
- * cannot be loaded. *
- *
- * Returns: If successful, it returns the sample index it is loaded to, else
- *          SOUND_ERROR is returned. */
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
 	SNDDBG("RAND \"%s\"\n", pFilename);
@@ -344,12 +301,6 @@ UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, 
 static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID);
 
 
-//*******************************************************************************
-// SoundIsPlaying
-//
-//		Returns TRUE/FALSE that an instance of a sound is still playing.
-//
-//*******************************************************************************
 BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return FALSE;
@@ -362,15 +313,6 @@ BOOLEAN SoundIsPlaying(UINT32 uiSoundID)
 static BOOLEAN SoundStopChannel(SOUNDTAG* channel);
 
 
-//*******************************************************************************
-// SoundStop
-//
-//		Stops the playing of a sound instance, if still playing.
-//
-//	Returns:	TRUE if the sample was actually stopped, FALSE if it could not be
-//						found, or was not playing.
-//
-//*******************************************************************************
 BOOLEAN SoundStop(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return FALSE;
@@ -384,14 +326,6 @@ BOOLEAN SoundStop(UINT32 uiSoundID)
 }
 
 
-//*******************************************************************************
-// SoundStopAll
-//
-//		Stops all currently playing sounds.
-//
-//	Returns:	TRUE, always
-//
-//*******************************************************************************
 BOOLEAN SoundStopAll(void)
 {
 	if (!fSoundSystemInit) return TRUE;
@@ -414,15 +348,6 @@ BOOLEAN SoundStopAll(void)
 }
 
 
-//*******************************************************************************
-// SoundSetVolume
-//
-//		Sets the volume on a currently playing sound.
-//
-//	Returns:	TRUE if the volume was actually set on the sample, FALSE if the
-//						sample had already expired or couldn't be found
-//
-//*******************************************************************************
 BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 {
 	if (!fSoundSystemInit) return FALSE;
@@ -435,15 +360,6 @@ BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 }
 
 
-//*******************************************************************************
-// SoundSetPan
-//
-//		Sets the pan on a currently playing sound.
-//
-//	Returns:	TRUE if the pan was actually set on the sample, FALSE if the
-//						sample had already expired or couldn't be found
-//
-//*******************************************************************************
 BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 {
 	if (!fSoundSystemInit) return FALSE;
@@ -456,13 +372,6 @@ BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 }
 
 
-//*******************************************************************************
-// SoundGetVolume
-//
-//		Returns the current volume setting of a sound that is playing. If the sound
-//	has expired, or could not be found, SOUND_ERROR is returned.
-//
-//*******************************************************************************
 UINT32 SoundGetVolume(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
@@ -478,19 +387,6 @@ static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s);
 static UINT32 SoundStartRandom(SAMPLETAG* s);
 
 
-//*******************************************************************************
-// SoundServiceRandom
-//
-//		This function should be polled by the application if random samples are
-//	used. The time marks on each are checked and if it is time to spawn a new
-//	instance of the sound, the number already in existance are checked, and if
-//	there is room, a new one is made and the count updated.
-//		If random samples are not being used, there is no purpose in polling this
-//	function.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
 BOOLEAN SoundServiceRandom(void)
 {
 	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
@@ -501,14 +397,10 @@ BOOLEAN SoundServiceRandom(void)
 	return FALSE;
 }
 
-//*******************************************************************************
-// SoundRandomShouldPlay
-//
-//	Determines whether a random sound is ready for playing or not.
-//
-//	Returns:	TRUE if a the sample should be played.
-//
-//*******************************************************************************
+
+/* Determines whether a random sound is ready for playing or not.
+ *
+ * Returns: TRUE if a the sample should be played. */
 static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
 {
 	return
@@ -517,14 +409,10 @@ static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
 		s->uiInstances < s->uiMaxInstances;
 }
 
-//*******************************************************************************
-// SoundStartRandom
-//
-//	Starts an instance of a random sample.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
+
+/* Starts an instance of a random sample.
+ *
+ * Returns: TRUE if a new random sound was created, FALSE if nothing was done. */
 static UINT32 SoundStartRandom(SAMPLETAG* s)
 {
 	SOUNDTAG* const channel = SoundGetFreeChannel();
@@ -543,19 +431,7 @@ static UINT32 SoundStartRandom(SAMPLETAG* s)
 	return uiSoundID;
 }
 
-//*******************************************************************************
-// SoundStopAllRandom
-//
-//		This function should be polled by the application if random samples are
-//	used. The time marks on each are checked and if it is time to spawn a new
-//	instance of the sound, the number already in existance are checked, and if
-//	there is room, a new one is made and the count updated.
-//		If random samples are not being used, there is no purpose in polling this
-//	function.
-//
-//	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
-//
-//*******************************************************************************
+
 BOOLEAN SoundStopAllRandom(void)
 {
 	// Stop all currently playing random sounds
@@ -580,19 +456,7 @@ BOOLEAN SoundStopAllRandom(void)
 	return FALSE;
 }
 
-//*******************************************************************************
-// SoundServiceStreams
-//
-//		Can be polled in tight loops where sound buffers might starve due to heavy
-//	hardware use, etc. Streams DO NOT normally need to be serviced manually, but
-//	in some cases (heavy file loading) it might be desirable.
-//
-//		If you are using the end of sample callbacks, you must call this function
-//	periodically to check the sample's status.
-//
-//	Returns:	TRUE always.
-//
-//*******************************************************************************
+
 BOOLEAN SoundServiceStreams(void)
 {
 	if (!fSoundSystemInit) return TRUE;
@@ -616,17 +480,6 @@ BOOLEAN SoundServiceStreams(void)
 }
 
 
-//*******************************************************************************
-// SoundGetPosition
-//
-//	Reports the current time position of the sample.
-//
-//	Note: You should be checking SoundIsPlaying very carefully while
-//	calling this function.
-//
-//	Returns:	The current time of the sample in milliseconds.
-//
-//*******************************************************************************
 UINT32 SoundGetPosition(UINT32 uiSoundID)
 {
 	if (!fSoundSystemInit) return 0;
@@ -674,12 +527,7 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 }
 
 
-//*******************************************************************************
-// SoundInitCache
-//
-//		Zeros out the structures of the sample list.
-//
-//*******************************************************************************
+// Zeros out the structures of the sample list.
 static BOOLEAN SoundInitCache(void)
 {
 	memset(pSampleList, 0, sizeof(pSampleList));
@@ -690,14 +538,7 @@ static BOOLEAN SoundInitCache(void)
 static BOOLEAN SoundEmptyCache(void);
 
 
-//*******************************************************************************
-// SoundShutdownCache
-//
-//		Empties out the cache.
-//
-//	Returns: TRUE, always
-//
-//*******************************************************************************
+// Empties out the cache.
 static BOOLEAN SoundShutdownCache(void)
 {
 	SoundEmptyCache();
@@ -708,14 +549,7 @@ static BOOLEAN SoundShutdownCache(void)
 static void SoundFreeSample(SAMPLETAG* s);
 
 
-//*******************************************************************************
-// SoundEmptyCache
-//
-//		Frees up all samples in the cache.
-//
-//	Returns: TRUE, always
-//
-//*******************************************************************************
+// Frees up all samples in the cache.
 static BOOLEAN SoundEmptyCache(void)
 {
 	SoundStopAll();
@@ -742,16 +576,10 @@ static SAMPLETAG* SoundLoadSample(const char* pFilename)
 }
 
 
-//*******************************************************************************
-// SoundGetCached
-//
-//		Tries to locate a sound by looking at what is currently loaded in the
-//	cache.
-//
-//	Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
-//						in the cache.
-//
-//*******************************************************************************
+/* Tries to locate a sound by looking at what is currently loaded in the cache.
+ *
+ * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
+ *          in the cache. */
 static SAMPLETAG* SoundGetCached(const char* pFilename)
 {
 	if (pFilename[0] == '\0') return NULL; // XXX HACK0009
@@ -787,17 +615,11 @@ static inline int Clamp(int min, int x, int max)
 static SAMPLETAG* SoundGetEmptySample(void);
 
 
-//*******************************************************************************
-// SoundLoadDisk
-//
-//		Loads a sound file from disk into the cache, allocating memory and a slot
-//	for storage.
-//
-//
-//	Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
-//						in the cache.
-//
-//*******************************************************************************
+/* Loads a sound file from disk into the cache, allocating memory and a slot
+ * for storage.
+ *
+ * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
+ *          in the cache. */
 static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 {
 	Assert(pFilename != NULL);
@@ -1016,14 +838,9 @@ error_out:
 static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s);
 
 
-//*******************************************************************************
-// SoundCleanCache
-//
-//		Removes the least-used sound from the cache to make room.
-//
-//	Returns:	TRUE if a sample was freed, FALSE if none
-//
-//*******************************************************************************
+/* Removes the least-used sound from the cache to make room.
+ *
+ * Returns: TRUE if a sample was freed, FALSE if none */
 static BOOLEAN SoundCleanCache(void)
 {
 	SAMPLETAG* candidate = NULL;
@@ -1052,12 +869,7 @@ static BOOLEAN SoundCleanCache(void)
 // Low Level Interface (Local use only)
 //*******************************************************************************
 
-//*******************************************************************************
-// SoundSampleIsPlaying
-//
-//		Returns TRUE/FALSE that a sample is currently in use for playing a sound.
-//
-//*******************************************************************************
+// Returns TRUE/FALSE that a sample is currently in use for playing a sound.
 static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
 {
 	return s->uiInstances > 0;
@@ -1245,16 +1057,12 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 	return NULL;
 }
 
-//*******************************************************************************
-// SoundStartSample
-//
-//		Starts up a sample on the specified channel. Override parameters are passed
-//	in through the structure pointer pParms. Any entry with a value of 0xffffffff
-//	will be filled in by the system.
-//
-//	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
-//
-//*******************************************************************************
+
+/* Starts up a sample on the specified channel. Override parameters are passed
+ * in through the structure pointer pParms. Any entry with a value of 0xffffffff
+ * will be filled in by the system.
+ *
+ * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, sample - pSampleList, sample->pName);
@@ -1280,16 +1088,12 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	return uiSoundID;
 }
 
-//*******************************************************************************
-// SoundStartStream
-//
-//		Starts up a stream on the specified channel. Override parameters are passed
-//	in through the structure pointer pParms. Any entry with a value of 0xffffffff
-//	will be filled in by the system.
-//
-//	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
-//
-//*******************************************************************************
+
+/* Starts up a stream on the specified channel. Override parameters are passed
+ * in through the structure pointer pParms. Any entry with a value of 0xffffffff
+ * will be filled in by the system.
+ *
+ * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 #if 1 // XXX TODO
@@ -1332,13 +1136,9 @@ static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 
 #endif
 }
 
-//*******************************************************************************
-// SoundGetUniqueID
-//
-//		Returns a unique ID number with every call. Basically it's just a 32-bit
-// static value that is incremented each time.
-//
-//*******************************************************************************
+
+/* Returns a unique ID number with every call. Basically it's just a 32-bit
+ * static value that is incremented each time. */
 static UINT32 SoundGetUniqueID(void)
 {
 	static UINT32 uiNextID = 0;
@@ -1348,16 +1148,12 @@ static UINT32 SoundGetUniqueID(void)
 	return uiNextID++;
 }
 
-//*******************************************************************************
-// SoundPlayStreamed
-//
-//		Returns TRUE/FALSE whether a sound file should be played as a streamed
-//	sample, or loaded into the cache. The decision is based on the size of the
-//	file compared to the guiSoundCacheThreshold.
-//
-//	Returns:	TRUE if it should be streamed, FALSE if loaded.
-//
-//*******************************************************************************
+
+/* Returns TRUE/FALSE whether a sound file should be played as a streamed
+ * sample, or loaded into the cache. The decision is based on the size of the
+ * file compared to the guiSoundCacheThreshold.
+ *
+ * Returns: TRUE if it should be streamed, FALSE if loaded. */
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
 {
 	HWFILE hDisk = FileOpen(pFilename, FILE_ACCESS_READ);
