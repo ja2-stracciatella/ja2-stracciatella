@@ -59,19 +59,18 @@ enum
 };
 
 
-// global settings
-#define		SOUND_MAX_CACHED			128						// number of cache slots
+#define SOUND_MAX_CACHED 128 // number of cache slots
 
 #ifdef JA2
-#define		SOUND_MAX_CHANNELS		16						// number of mixer channels
+#	define SOUND_MAX_CHANNELS 16 // number of mixer channels
 #else
-#define		SOUND_MAX_CHANNELS		32						// number of mixer channels
+#	define SOUND_MAX_CHANNELS 32 // number of mixer channels
 #endif
 
 
 #define SOUND_DEFAULT_MEMORY (16 * 1024 * 1024) // default memory limit
-#define		SOUND_DEFAULT_THRESH	(256*8024)		// size for sample to be double-buffered
-#define		SOUND_DEFAULT_STREAM	(64*1024)			// double-buffered buffer size
+#define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
+#define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
 
 // Struct definition for sample slots in the cache
@@ -89,9 +88,12 @@ typedef struct
 
 	// Random sound data
 	UINT32  uiTimeNext;
-	UINT32  uiTimeMin, uiTimeMax;
-	UINT32  uiVolMin, uiVolMax;
-	UINT32  uiPanMin, uiPanMax;
+	UINT32  uiTimeMin;
+	UINT32  uiTimeMax;
+	UINT32  uiVolMin;
+	UINT32  uiVolMax;
+	UINT32  uiPanMin;
+	UINT32  uiPanMax;
 	UINT32  uiInstances;
 	UINT32  uiMaxInstances;
 } SAMPLETAG;
@@ -102,36 +104,28 @@ typedef struct
 typedef struct
 {
 	volatile UINT State;
-	SAMPLETAG* pSample;
-	UINT32     uiSoundID;
-	void       (*EOSCallback)(void*);
-	void*      pCallbackData;
-	UINT32     uiTimeStamp;
-	HWFILE     hFile;
-	UINT32     uiFadeVolume;
-	UINT32     uiFadeRate;
-	UINT32     uiFadeTime;
-	UINT32 Pos;
-	UINT32 Loops;
-	UINT32 Pan;
+	SAMPLETAG*    pSample;
+	UINT32        uiSoundID;
+	void          (*EOSCallback)(void*);
+	void*         pCallbackData;
+	UINT32        uiTimeStamp;
+	HWFILE        hFile;
+	UINT32        uiFadeVolume;
+	UINT32        uiFadeRate;
+	UINT32        uiFadeTime;
+	UINT32        Pos;
+	UINT32        Loops;
+	UINT32        Pan;
 } SOUNDTAG;
 
 
-// Low level
-static BOOLEAN SoundInitHardware(void);
-static UINT32 SoundGetUniqueID(void);
-static BOOLEAN SoundPlayStreamed(const char* pFilename);
-static BOOLEAN SoundCleanCache(void);
-
-// Global variables
 static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;
 static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
 
-// Local module variables
-static BOOLEAN fSoundSystemInit = FALSE; // Startup called T/F
-static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to starup
+static BOOLEAN fSoundSystemInit = FALSE; // Startup called
+static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
 
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
@@ -141,11 +135,12 @@ static SOUNDTAG pSoundList[SOUND_MAX_CHANNELS];
 
 void SoundEnableSound(BOOLEAN fEnable)
 {
-	gfEnableStartup=fEnable;
+	gfEnableStartup = fEnable;
 }
 
 
-static void SoundInitCache(void);
+static void    SoundInitCache(void);
+static BOOLEAN SoundInitHardware(void);
 
 
 void InitializeSoundManager(void)
@@ -173,12 +168,13 @@ void ShutdownSoundManager(void)
 	SoundStopAll();
 	SoundEmptyCache();
 	SoundShutdownHardware();
-	fSoundSystemInit=FALSE;
+	fSoundSystemInit = FALSE;
 }
 
 
 static SOUNDTAG*  SoundGetFreeChannel(void);
 static SAMPLETAG* SoundLoadSample(const char* pFilename);
+static BOOLEAN    SoundPlayStreamed(const char* pFilename);
 static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
@@ -590,6 +586,7 @@ static inline int Clamp(int min, int x, int max)
 }
 
 
+static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
 
 
@@ -1033,6 +1030,9 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 
 	return NULL;
 }
+
+
+static UINT32 SoundGetUniqueID(void);
 
 
 /* Starts up a sample on the specified channel. Override parameters are passed
