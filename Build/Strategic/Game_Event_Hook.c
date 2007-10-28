@@ -122,10 +122,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_AMBIENT:
 			if( pEvent->ubEventType == ENDRANGED_EVENT )
 			{
-				if ( pEvent->uiParam != NO_SAMPLE )
-				{
-					SoundRemoveSampleFlags( pEvent->uiParam, SAMPLE_RANDOM );
-				}
+				if (pEvent->uiParam != NO_SAMPLE) SoundStopRandom(pEvent->uiParam);
 			}
 			else
 			{

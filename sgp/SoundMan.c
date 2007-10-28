@@ -50,6 +50,15 @@ enum
 };
 
 
+// Sample status flags
+enum
+{
+	SAMPLE_ALLOCATED = 1U << 0,
+	SAMPLE_LOCKED    = 1U << 1,
+	SAMPLE_RANDOM    = 1U << 2
+};
+
+
 // global settings
 #define		SOUND_MAX_CACHED			128						// number of cache slots
 
@@ -1380,12 +1389,12 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 }
 
 
-void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags )
+void SoundStopRandom(UINT32 uiSample)
 {
 	// CHECK FOR VALID SAMPLE
-	if (pSampleList[uiSample].uiFlags & SAMPLE_ALLOCATED)
+	SAMPLETAG* const s = &pSampleList[uiSample];
+	if (s->uiFlags & SAMPLE_ALLOCATED)
 	{
-		//REMOVE
-		pSampleList[uiSample].uiFlags &= ~uiFlags;
+		s->uiFlags &= ~SAMPLE_RANDOM;
 	}
 }

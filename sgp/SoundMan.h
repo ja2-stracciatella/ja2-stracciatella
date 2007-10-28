@@ -9,11 +9,6 @@ extern "C" {
 
 #define MAXVOLUME 127
 
-	// Sample status flags
-#define		SAMPLE_ALLOCATED			0x00000001
-#define		SAMPLE_LOCKED					0x00000002
-#define		SAMPLE_RANDOM					0x00000004
-
 
 // Sound error values (they're all the same)
 #define		NO_SAMPLE							0xffffffff
@@ -36,13 +31,12 @@ extern BOOLEAN	SoundServiceRandom(void);
 extern BOOLEAN	SoundStopAll(void);
 extern BOOLEAN	SoundStopAllRandom(void);
 extern BOOLEAN	SoundStop(UINT32 uiSoundID);
+void SoundStopRandom(UINT32 uiSample);
 extern BOOLEAN	SoundIsPlaying(UINT32 uiSoundID);
 extern BOOLEAN	SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume);
 extern BOOLEAN	SoundSetPan(UINT32 uiSoundID, UINT32 uiPan);
 extern UINT32		SoundGetVolume(UINT32 uiSoundID);
 extern UINT32		SoundGetPosition(UINT32 uiSoundID);
-
-extern void SoundRemoveSampleFlags( UINT32 uiSample, UINT32 uiFlags );
 
 extern void SoundEnableSound(BOOLEAN fEnable);
 
