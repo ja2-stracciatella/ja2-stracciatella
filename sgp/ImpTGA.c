@@ -12,6 +12,7 @@
 
 #include "Types.h"
 #include "FileMan.h"
+#include "ImpTGA.h"
 #include "MemMan.h"
 #include "WCheck.h"
 #include "HImage.h"

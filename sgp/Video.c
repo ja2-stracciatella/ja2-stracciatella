@@ -1,7 +1,6 @@
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
-#include "ImpTGA.h"
 #include "Input.h"
 #include "Local.h"
 #include "MemMan.h"

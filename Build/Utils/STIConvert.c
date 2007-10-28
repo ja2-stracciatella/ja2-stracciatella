@@ -4,7 +4,6 @@
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "PCX.h"
-#include "ImpTGA.h"
 #include "WCheck.h"
 #include "MemMan.h"
 
