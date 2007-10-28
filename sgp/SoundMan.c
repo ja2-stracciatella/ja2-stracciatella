@@ -119,7 +119,6 @@ typedef struct
 
 // Local Function Prototypes
 static BOOLEAN SoundInitCache(void);
-static BOOLEAN SoundShutdownCache(void);
 
 // Low level
 static BOOLEAN SoundInitHardware(void);
@@ -168,10 +167,13 @@ BOOLEAN InitializeSoundManager(void)
 }
 
 
+static BOOLEAN SoundEmptyCache(void);
+
+
 void ShutdownSoundManager(void)
 {
 	SoundStopAll();
-	SoundShutdownCache();
+	SoundEmptyCache();
 	SoundShutdownHardware();
 	fSoundSystemInit=FALSE;
 }
@@ -531,17 +533,6 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 static BOOLEAN SoundInitCache(void)
 {
 	memset(pSampleList, 0, sizeof(pSampleList));
-	return TRUE;
-}
-
-
-static BOOLEAN SoundEmptyCache(void);
-
-
-// Empties out the cache.
-static BOOLEAN SoundShutdownCache(void)
-{
-	SoundEmptyCache();
 	return TRUE;
 }
 
