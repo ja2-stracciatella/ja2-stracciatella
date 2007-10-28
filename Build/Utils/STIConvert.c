@@ -1,5 +1,4 @@
 #include "Types.h"
-#include "Compression.h"
 #include "Debug.h"
 #include "ImgFmt.h"
 #include "HImage.h"
