@@ -522,8 +522,8 @@ UINT32 SoundGetVolume(UINT32 uiSoundID)
 }
 
 
-static BOOLEAN SoundRandomShouldPlay(UINT32 uiSample);
-static UINT32 SoundStartRandom(UINT32 uiSample);
+static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s);
+static UINT32 SoundStartRandom(SAMPLETAG* s);
 
 
 //*******************************************************************************
@@ -541,9 +541,9 @@ static UINT32 SoundStartRandom(UINT32 uiSample);
 //*******************************************************************************
 BOOLEAN SoundServiceRandom(void)
 {
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		if (SoundRandomShouldPlay(uiCount)) SoundStartRandom(uiCount);
+		if (SoundRandomShouldPlay(i)) SoundStartRandom(i);
 	}
 
 	return FALSE;
@@ -557,13 +557,12 @@ BOOLEAN SoundServiceRandom(void)
 //	Returns:	TRUE if a the sample should be played.
 //
 //*******************************************************************************
-static BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
+static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s)
 {
-	SAMPLETAG* Sample = &pSampleList[uiSample];
 	return
-		Sample->uiFlags & SAMPLE_RANDOM &&
-		Sample->uiTimeNext <= GetClock() &&
-		Sample->uiInstances < Sample->uiMaxInstances;
+		s->uiFlags & SAMPLE_RANDOM &&
+		s->uiTimeNext <= GetClock() &&
+		s->uiInstances < s->uiMaxInstances;
 }
 
 //*******************************************************************************
@@ -574,26 +573,24 @@ static BOOLEAN SoundRandomShouldPlay(UINT32 uiSample)
 //	Returns:	TRUE if a new random sound was created, FALSE if nothing was done.
 //
 //*******************************************************************************
-static UINT32 SoundStartRandom(UINT32 uiSample)
+static UINT32 SoundStartRandom(SAMPLETAG* s)
 {
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return NO_SAMPLE;
 
-	SAMPLETAG* Sample = &pSampleList[uiSample];
-
 	SOUNDPARMS spParms;
 	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-	spParms.uiVolume   = Sample->uiVolMin + Random(Sample->uiVolMax - Sample->uiVolMin);
-	spParms.uiPan      = Sample->uiPanMin + Random(Sample->uiPanMax - Sample->uiPanMin);
+	spParms.uiVolume   = s->uiVolMin + Random(s->uiVolMax - s->uiVolMin);
+	spParms.uiPan      = s->uiPanMin + Random(s->uiPanMax - s->uiPanMin);
 	spParms.uiLoop     = 1;
 
-	UINT32 uiSoundID = SoundStartSample(Sample, channel, &spParms);
+	UINT32 uiSoundID = SoundStartSample(s, channel, &spParms);
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
 
-	Sample->uiTimeNext =
+	s->uiTimeNext =
 		GetClock() +
-		Sample->uiTimeMin +
-		Random(Sample->uiTimeMax - Sample->uiTimeMin);
+		s->uiTimeMin +
+		Random(s->uiTimeMax - s->uiTimeMin);
 	return uiSoundID;
 }
 
