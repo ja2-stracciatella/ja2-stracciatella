@@ -3,7 +3,6 @@
 #endif
 
 #include "Types.h"
-#include "HImage.h"
 #include "Quantize.h"
 #include "Quantize_Wrap.h"
 #include "Phys_Math.h"

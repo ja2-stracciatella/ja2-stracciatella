@@ -2,7 +2,6 @@
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Gameloop.h"
-#include "HImage.h"
 #include "Soldier_Ani.h"
 #include "VObject.h"
 #include "SysUtil.h"

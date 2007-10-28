@@ -4,7 +4,6 @@
 
 #include "Quantize.h"
 #include "Types.h"
-#include "HImage.h"
 
 CQuantizer::CQuantizer (UINT nMaxColors, UINT nColorBits)
 {

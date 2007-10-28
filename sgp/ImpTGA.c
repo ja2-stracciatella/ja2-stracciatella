@@ -15,7 +15,6 @@
 #include "ImpTGA.h"
 #include "MemMan.h"
 #include "WCheck.h"
-#include "HImage.h"
 #include "Debug.h"
 
 
