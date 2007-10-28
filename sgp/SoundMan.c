@@ -120,13 +120,11 @@ static UINT32 SoundLoadDisk(const char* pFilename);
 
 // Low level
 static UINT32 SoundGetEmptySample(void);
-static void    SoundFreeSampleIndex(UINT32 uiSample);
 static BOOLEAN SoundInitHardware(void);
 static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetUniqueID(void);
 static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
-static BOOLEAN SoundSampleIsPlaying(UINT32 uiSample);
 
 // Global variables
 static const UINT32 guiSoundDefaultVolume = MAXVOLUME;
@@ -767,6 +765,9 @@ static BOOLEAN SoundShutdownCache(void)
 }
 
 
+static void SoundFreeSample(SAMPLETAG* s);
+
+
 //*******************************************************************************
 // SoundEmptyCache
 //
@@ -779,9 +780,9 @@ static BOOLEAN SoundEmptyCache(void)
 {
 	SoundStopAll();
 
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		SoundFreeSampleIndex(uiCount);
+		SoundFreeSample(i);
 	}
 
 	return TRUE;
@@ -1074,6 +1075,9 @@ error_out:
 }
 
 
+static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s);
+
+
 //*******************************************************************************
 // SoundCleanCache
 //
@@ -1084,29 +1088,22 @@ error_out:
 //*******************************************************************************
 static BOOLEAN SoundCleanCache(void)
 {
-	UINT32 uiLowestHits = NO_SAMPLE;
-	UINT32 uiLowestHitsCount = 0;
+	SAMPLETAG* candidate = NULL;
 
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		SAMPLETAG* Sample = &pSampleList[uiCount];
-		if ((Sample->uiFlags & SAMPLE_ALLOCATED) && !(Sample->uiFlags & SAMPLE_LOCKED))
+		if (i->uiFlags & SAMPLE_ALLOCATED &&
+				!(i->uiFlags & SAMPLE_LOCKED) &&
+				(candidate == NULL || candidate->uiCacheHits > i->uiCacheHits))
 		{
-			if (uiLowestHits == NO_SAMPLE || uiLowestHitsCount > Sample->uiCacheHits)
-			{
-				if (!SoundSampleIsPlaying(uiCount))
-				{
-					uiLowestHits = uiCount;
-					uiLowestHitsCount = Sample->uiCacheHits;
-				}
-			}
+			if (!SoundSampleIsPlaying(i)) candidate = i;
 		}
 	}
 
-	if (uiLowestHits != NO_SAMPLE)
+	if (candidate != NULL)
 	{
-		SNDDBG("FREE sample %u \"%s\" with %u hits\n", uiLowestHits, pSampleList[uiLowestHits].pName, uiLowestHitsCount);
-		SoundFreeSampleIndex(uiLowestHits);
+		SNDDBG("FREE sample %u \"%s\" with %u hits\n", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SoundFreeSample(candidate);
 		return TRUE;
 	}
 
@@ -1123,9 +1120,9 @@ static BOOLEAN SoundCleanCache(void)
 //		Returns TRUE/FALSE that a sample is currently in use for playing a sound.
 //
 //*******************************************************************************
-static BOOLEAN SoundSampleIsPlaying(UINT32 uiSample)
+static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
 {
-	return pSampleList[uiSample].uiInstances > 0;
+	return s->uiInstances > 0;
 }
 
 //*******************************************************************************
@@ -1148,17 +1145,15 @@ static UINT32 SoundGetEmptySample(void)
 
 
 // Frees up a sample referred to by its index slot number.
-static void SoundFreeSampleIndex(UINT32 uiSample)
+static void SoundFreeSample(SAMPLETAG* s)
 {
-	SAMPLETAG* Sample = &pSampleList[uiSample];
+	if (!(s->uiFlags & SAMPLE_ALLOCATED)) return;
 
-	if (!(Sample->uiFlags & SAMPLE_ALLOCATED)) return;
+	assert(s->uiInstances == 0);
 
-	assert(Sample->uiInstances == 0);
-
-	guiSoundMemoryUsed -= Sample->uiSoundSize;
-	free(Sample->pData);
-	memset(Sample, 0, sizeof(SAMPLETAG));
+	guiSoundMemoryUsed -= s->uiSoundSize;
+	free(s->pData);
+	memset(s, 0, sizeof(*s));
 }
 
 
