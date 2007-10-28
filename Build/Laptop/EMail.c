@@ -610,33 +610,21 @@ static void RemoveEmailMessage(Email* Mail)
 
 static void AddEmailPage(void)
 {
-	// simple adds a page to the list
-	Page* pPage = pPageList;
-	if(pPage)
+	Page* const p = MemAlloc(sizeof(*p));
+	for (Email** i = p->Mail; i != endof(p->Mail); ++i) *i = NULL;
+	p->Next = NULL;
+
+	if (pPageList)
 	{
-	 while(pPage->Next)
-		 pPage=pPage->Next;
-	}
-
-
-	if(pPage)
-	{
-
-		// there is a page, add current page after it
-		pPage->Next=MemAlloc(sizeof(Page));
-    pPage=pPage->Next;
-		pPage->Next=NULL;
+		Page* last = pPageList;
+		while (last->Next) last = last->Next;
+		last->Next = p;
 	}
 	else
 	{
-
-		// page becomes head of page list
-		pPageList=MemAlloc(sizeof(Page));
-		pPage=pPageList;
-		pPage->Next=NULL;
-    pPageList=pPage;
+		pPageList = p;
 	}
-	for (size_t i = 0; i < lengthof(pPage->Mail); ++i) pPage->Mail[i] = NULL;
+
 	iLastPage++;
 }
 
