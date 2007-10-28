@@ -20,16 +20,6 @@ extern "C" {
 #define		SOUND_ERROR						0xffffffff
 
 
-// Structure definition for parameters to the random sample playing
-//		function
-typedef struct {
-				UINT32			uiTimeMin, uiTimeMax;
-				UINT32			uiVolMin, uiVolMax;
-				UINT32			uiPanMin, uiPanMax;
-				UINT32			uiMaxInstances;
-				} RANDOMPARMS;
-
-
 // Global startup/shutdown functions
 extern BOOLEAN	InitializeSoundManager(void);
 extern void			ShutdownSoundManager(void);
@@ -38,7 +28,7 @@ extern void			ShutdownSoundManager(void);
 UINT32 SoundPlay(            const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
-UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms);
+UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances);
 extern BOOLEAN	SoundServiceStreams(void);
 extern BOOLEAN	SoundServiceRandom(void);
 

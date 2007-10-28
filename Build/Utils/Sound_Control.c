@@ -441,18 +441,10 @@ UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 
 static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
 {
-RANDOMPARMS rpParms;
-
-	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
-
-	rpParms.uiTimeMin=uiTimeMin;
-	rpParms.uiTimeMax=uiTimeMax;
-	rpParms.uiVolMin = CalculateSoundEffectsVolume( AmbientVols[usNum] );
-	rpParms.uiVolMax = CalculateSoundEffectsVolume( AmbientVols[usNum] );
-
-	return(SoundPlayRandom(szAmbientEffects[usNum], &rpParms));
+	const char* const filename = szAmbientEffects[usNum];
+	const UINT32      vol      = AmbientVols[usNum];
+	return SoundPlayRandom(filename, uiTimeMin, uiTimeMax, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
 }
-
 
 
 UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck)

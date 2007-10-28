@@ -64,9 +64,6 @@ enum
 #define		SOUND_DEFAULT_THRESH	(256*8024)		// size for sample to be double-buffered
 #define		SOUND_DEFAULT_STREAM	(64*1024)			// double-buffered buffer size
 
-// playing/random value to indicate default
-#define		SOUND_PARMS_DEFAULT		0xffffffff
-
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -200,23 +197,14 @@ static SAMPLETAG* SoundLoadSample(const char* pFilename);
 static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
-//*******************************************************************************
-// SoundPlay
-//
-//		Starts a sample playing. If the sample is not loaded in the cache, it will
-//	be found and loaded. The pParms structure is used to
-//	override the attributes of the sample such as playback speed, and to specify
-//	a volume. Any entry containing SOUND_PARMS_DEFAULT will be set by the system.
-//
-//	Returns:	If the sound was started, it returns a sound ID unique to that
-//						instance of the sound
-//						If an error occured, SOUND_ERROR will be returned
-//
-//
-//	!!Note:  Can no longer play streamed files
-//
-//*******************************************************************************
-
+/* Starts a sample playing. If the sample is not loaded in the cache, it will
+ * be found and loaded.
+ *
+ * Returns: If the sound was started, it returns a sound ID unique to that
+ *          instance of the sound If an error occured, SOUND_ERROR will be
+ *          returned
+ *
+ * !!Note:  Can no longer play streamed files */
 UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
@@ -249,19 +237,11 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
-//*******************************************************************************
-// SoundPlayStreamedFile
-//
-//		The sample will
-//	be played as a double-buffered sample. The pParms structure is used to
-//	override the attributes of the sample such as playback speed, and to specify
-//	a volume. Any entry containing SOUND_PARMS_DEFAULT will be set by the system.
-//
-//	Returns:	If the sound was started, it returns a sound ID unique to that
-//						instance of the sound
-//						If an error occured, SOUND_ERROR will be returned
-//
-//*******************************************************************************
+/* The sample will be played as a double-buffered sample.
+ *
+ * Returns: If the sound was started, it returns a sound ID unique to that
+ *          instance of the sound If an error occured, SOUND_ERROR will be
+ *          returned */
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 #if 1
@@ -318,23 +298,16 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 #endif
 }
 
-//*******************************************************************************
-// SoundPlayRandom
-//
-//		Registers a sample to be played randomly within the specified parameters.
-//	Parameters are passed in through pParms. Any parameter containing
-//	SOUND_PARMS_DEFAULT will be set by the system. Only the uiTimeMin entry may
-//	NOT be defaulted.
-//
-//	* Samples designated "random" are ALWAYS loaded into the cache, and locked
-//	in place. They are never double-buffered, and this call will fail if they
-//	cannot be loaded. *
-//
-//	Returns:	If successful, it returns the sample index it is loaded to, else
-//						SOUND_ERROR is returned.
-//
-//*******************************************************************************
-UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
+
+/* Registers a sample to be played randomly within the specified parameters.
+ *
+ * * Samples designated "random" are ALWAYS loaded into the cache, and locked
+ * in place. They are never double-buffered, and this call will fail if they
+ * cannot be loaded. *
+ *
+ * Returns: If successful, it returns the sample index it is loaded to, else
+ *          SOUND_ERROR is returned. */
+UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
 	SNDDBG("RAND \"%s\"\n", pFilename);
 
@@ -343,42 +316,14 @@ UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 	SAMPLETAG* const s = SoundLoadSample(pFilename);
 	if (s == NULL) return SOUND_ERROR;
 
-	s->uiFlags |= SAMPLE_RANDOM | SAMPLE_LOCKED;
-
-	if (pParms->uiTimeMin == SOUND_PARMS_DEFAULT)
-		return SOUND_ERROR;
-	else
-		s->uiTimeMin = pParms->uiTimeMin;
-
-	if (pParms->uiTimeMax == SOUND_PARMS_DEFAULT)
-		s->uiTimeMax = pParms->uiTimeMin;
-	else
-		s->uiTimeMax = pParms->uiTimeMax;
-
-	if (pParms->uiVolMin == SOUND_PARMS_DEFAULT)
-		s->uiVolMin = guiSoundDefaultVolume;
-	else
-		s->uiVolMin = pParms->uiVolMin;
-
-	if (pParms->uiVolMax == SOUND_PARMS_DEFAULT)
-		s->uiVolMax = guiSoundDefaultVolume;
-	else
-		s->uiVolMax = pParms->uiVolMax;
-
-	if (pParms->uiPanMin == SOUND_PARMS_DEFAULT)
-		s->uiPanMin = 64;
-	else
-		s->uiPanMin = pParms->uiPanMin;
-
-	if (pParms->uiPanMax == SOUND_PARMS_DEFAULT)
-		s->uiPanMax = 64;
-	else
-		s->uiPanMax = pParms->uiPanMax;
-
-	if (pParms->uiMaxInstances == SOUND_PARMS_DEFAULT)
-		s->uiMaxInstances = 1;
-	else
-		s->uiMaxInstances = pParms->uiMaxInstances;
+	s->uiFlags        |= SAMPLE_RANDOM | SAMPLE_LOCKED;
+	s->uiTimeMin       = time_min;
+	s->uiTimeMax       = time_max;
+	s->uiVolMin        = vol_min;
+	s->uiVolMax        = vol_max;
+	s->uiPanMin        = pan_min;
+	s->uiPanMax        = pan_max;
+	s->uiMaxInstances  = max_instances;
 
 	s->uiTimeNext =
 		GetClock() +

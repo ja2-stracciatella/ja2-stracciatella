@@ -84,16 +84,10 @@ void DeleteAllAmbients()
 	DeleteAllStrategicEventsOfType( EVENT_AMBIENT );
 }
 
+
 UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 {
-	RANDOMPARMS rpParms;
-
-	memset(&rpParms, 0xff, sizeof(RANDOMPARMS));
-
-	rpParms.uiTimeMin		=	gAmbData[ uiAmbientID ].uiMinTime;
-	rpParms.uiTimeMax		=	gAmbData[ uiAmbientID ].uiMaxTime;
-	rpParms.uiVolMin		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
-	rpParms.uiVolMax		= CalculateSoundEffectsVolume( gAmbData[ uiAmbientID ].uiVol );
-
-	return SoundPlayRandom( gAmbData[ uiAmbientID ].zFilename, &rpParms );
+	const AMBIENTDATA_STRUCT* const a   = &gAmbData[uiAmbientID];
+	const UINT32                    vol = CalculateSoundEffectsVolume(a->uiVol);
+	return SoundPlayRandom(a->zFilename, a->uiMinTime, a->uiMaxTime, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
 }
