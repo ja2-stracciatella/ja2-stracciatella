@@ -114,12 +114,8 @@ typedef struct
 // Local Function Prototypes
 static BOOLEAN SoundInitCache(void);
 static BOOLEAN SoundShutdownCache(void);
-static UINT32 SoundLoadSample(const char* pFilename);
-static UINT32 SoundGetCached(const char* pFilename);
-static UINT32 SoundLoadDisk(const char* pFilename);
 
 // Low level
-static UINT32 SoundGetEmptySample(void);
 static BOOLEAN SoundInitHardware(void);
 static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetUniqueID(void);
@@ -199,8 +195,9 @@ void ShutdownSoundManager(void)
 }
 
 
-static SOUNDTAG* SoundGetFreeChannel(void);
-static UINT32    SoundStartSample(UINT32 uiSample, SOUNDTAG* channel, const SOUNDPARMS* pParms);
+static SOUNDTAG*  SoundGetFreeChannel(void);
+static SAMPLETAG* SoundLoadSample(const char* pFilename);
+static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const SOUNDPARMS* pParms);
 
 
 //*******************************************************************************
@@ -239,13 +236,13 @@ UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
 	}
 #endif
 
-	UINT32 uiSample = SoundLoadSample(pFilename);
-	if (uiSample == NO_SAMPLE) return SOUND_ERROR;
+	SAMPLETAG* const sample = SoundLoadSample(pFilename);
+	if (sample == NULL) return SOUND_ERROR;
 
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	return SoundStartSample(uiSample, channel, pParms);
+	return SoundStartSample(sample, channel, pParms);
 }
 
 
@@ -343,54 +340,52 @@ UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms)
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	UINT32 uiSample = SoundLoadSample(pFilename);
-	if (uiSample == NO_SAMPLE) return SOUND_ERROR;
+	SAMPLETAG* const s = SoundLoadSample(pFilename);
+	if (s == NULL) return SOUND_ERROR;
 
-	SAMPLETAG* Sample = &pSampleList[uiSample];
-
-	Sample->uiFlags |= SAMPLE_RANDOM | SAMPLE_LOCKED;
+	s->uiFlags |= SAMPLE_RANDOM | SAMPLE_LOCKED;
 
 	if (pParms->uiTimeMin == SOUND_PARMS_DEFAULT)
 		return SOUND_ERROR;
 	else
-		Sample->uiTimeMin = pParms->uiTimeMin;
+		s->uiTimeMin = pParms->uiTimeMin;
 
 	if (pParms->uiTimeMax == SOUND_PARMS_DEFAULT)
-		Sample->uiTimeMax = pParms->uiTimeMin;
+		s->uiTimeMax = pParms->uiTimeMin;
 	else
-		Sample->uiTimeMax = pParms->uiTimeMax;
+		s->uiTimeMax = pParms->uiTimeMax;
 
 	if (pParms->uiVolMin == SOUND_PARMS_DEFAULT)
-		Sample->uiVolMin = guiSoundDefaultVolume;
+		s->uiVolMin = guiSoundDefaultVolume;
 	else
-		Sample->uiVolMin = pParms->uiVolMin;
+		s->uiVolMin = pParms->uiVolMin;
 
 	if (pParms->uiVolMax == SOUND_PARMS_DEFAULT)
-		Sample->uiVolMax = guiSoundDefaultVolume;
+		s->uiVolMax = guiSoundDefaultVolume;
 	else
-		Sample->uiVolMax = pParms->uiVolMax;
+		s->uiVolMax = pParms->uiVolMax;
 
 	if (pParms->uiPanMin == SOUND_PARMS_DEFAULT)
-		Sample->uiPanMin = 64;
+		s->uiPanMin = 64;
 	else
-		Sample->uiPanMin = pParms->uiPanMin;
+		s->uiPanMin = pParms->uiPanMin;
 
 	if (pParms->uiPanMax == SOUND_PARMS_DEFAULT)
-		Sample->uiPanMax = 64;
+		s->uiPanMax = 64;
 	else
-		Sample->uiPanMax = pParms->uiPanMax;
+		s->uiPanMax = pParms->uiPanMax;
 
 	if (pParms->uiMaxInstances == SOUND_PARMS_DEFAULT)
-		Sample->uiMaxInstances = 1;
+		s->uiMaxInstances = 1;
 	else
-		Sample->uiMaxInstances = pParms->uiMaxInstances;
+		s->uiMaxInstances = pParms->uiMaxInstances;
 
-	Sample->uiTimeNext =
+	s->uiTimeNext =
 		GetClock() +
-		Sample->uiTimeMin +
-		Random(Sample->uiTimeMax - Sample->uiTimeMin);
+		s->uiTimeMin +
+		Random(s->uiTimeMax - s->uiTimeMin);
 
-	return uiSample;
+	return s - pSampleList;
 }
 
 
@@ -592,7 +587,7 @@ static UINT32 SoundStartRandom(UINT32 uiSample)
 	spParms.uiPan      = Sample->uiPanMin + Random(Sample->uiPanMax - Sample->uiPanMin);
 	spParms.uiLoop     = 1;
 
-	UINT32 uiSoundID = SoundStartSample(uiSample, channel, &spParms);
+	UINT32 uiSoundID = SoundStartSample(Sample, channel, &spParms);
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
 
 	Sample->uiTimeNext =
@@ -789,18 +784,14 @@ static BOOLEAN SoundEmptyCache(void)
 }
 
 
-//*******************************************************************************
-// SoundLoadSample
-//
-//		Frees up all samples in the cache.
-//
-//	Returns: TRUE, always
-//
-//*******************************************************************************
-static UINT32 SoundLoadSample(const char* pFilename)
+static SAMPLETAG* SoundGetCached(const char* pFilename);
+static SAMPLETAG* SoundLoadDisk(const char* pFilename);
+
+
+static SAMPLETAG* SoundLoadSample(const char* pFilename)
 {
-	UINT32 uiSample = SoundGetCached(pFilename);
-	if (uiSample != NO_SAMPLE) return uiSample;
+	SAMPLETAG* const s = SoundGetCached(pFilename);
+	if (s != NULL) return s;
 
 	return SoundLoadDisk(pFilename);
 }
@@ -816,16 +807,16 @@ static UINT32 SoundLoadSample(const char* pFilename)
 //						in the cache.
 //
 //*******************************************************************************
-static UINT32 SoundGetCached(const char* pFilename)
+static SAMPLETAG* SoundGetCached(const char* pFilename)
 {
-	if (pFilename[0] == '\0') return SOUND_ERROR; // XXX HACK0009
+	if (pFilename[0] == '\0') return NULL; // XXX HACK0009
 
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		if (strcasecmp(pSampleList[uiCount].pName, pFilename) == 0) return uiCount;
+		if (strcasecmp(i->pName, pFilename) == 0) return i;
 	}
 
-	return NO_SAMPLE;
+	return NULL;
 }
 
 
@@ -848,6 +839,9 @@ static inline int Clamp(int min, int x, int max)
 }
 
 
+static SAMPLETAG* SoundGetEmptySample(void);
+
+
 //*******************************************************************************
 // SoundLoadDisk
 //
@@ -859,12 +853,12 @@ static inline int Clamp(int min, int x, int max)
 //						in the cache.
 //
 //*******************************************************************************
-static UINT32 SoundLoadDisk(const char* pFilename)
+static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 {
 	Assert(pFilename != NULL);
 
 	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
-	if (hFile == 0) return NO_SAMPLE;
+	if (hFile == 0) return NULL;
 
 	UINT32 uiSize = FileGetSize(hFile);
 
@@ -881,22 +875,21 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 	}
 
 	// if all the sample slots are full, unloading one
-	UINT32 uiSample = SoundGetEmptySample();
-	if (uiSample == NO_SAMPLE)
+	SAMPLETAG* s = SoundGetEmptySample();
+	if (s == NULL)
 	{
 		SoundCleanCache();
-		uiSample = SoundGetEmptySample();
+		s = SoundGetEmptySample();
 	}
 
 	// if we still don't have a sample slot
-	if (uiSample == NO_SAMPLE)
+	if (s == NULL)
 	{
 		FastDebugMsg(String("SoundLoadDisk:  ERROR: Trying to play %s, sound channels are full\n", pFilename));
 		goto error_out;
 	}
 
-	SAMPLETAG* Sample = &pSampleList[uiSample];
-	memset(Sample, 0, sizeof(SAMPLETAG));
+	memset(s, 0, sizeof(*s));
 
   if (!FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT)) goto error_out;
 
@@ -936,9 +929,9 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 					default: goto error_out;
 				}
 
-				Sample->uiSpeed = Rate;
-				Sample->fStereo = (Channels != 1);
-				Sample->ubBits  = BitsPerSample;
+				s->uiSpeed = Rate;
+				s->fStereo = (Channels != 1);
+				s->ubBits  = BitsPerSample;
 				break;
 			}
 
@@ -946,7 +939,7 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 			{
 				UINT32 Samples;
 				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-				Sample->uiSoundSize = Samples * (Sample->fStereo ? 2 : 1) * 2;
+				s->uiSoundSize = Samples * (s->fStereo ? 2 : 1) * 2;
 				break;
 			}
 
@@ -964,16 +957,16 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 							goto error_out;
 						}
 
-						Sample->uiSoundSize = Size;
-						Sample->pData       = Data;
+						s->uiSoundSize = Size;
+						s->pData       = Data;
 						goto sound_loaded;
 					}
 
 					case WAVE_FORMAT_DVI_ADPCM:
 					{
-						INT16* Data = malloc(Sample->uiSoundSize);
+						INT16* Data = malloc(s->uiSoundSize);
 
-						UINT CountSamples = Sample->uiSoundSize >> (1 + (Sample->fStereo ? 1 : 0));
+						UINT CountSamples = s->uiSoundSize >> (1 + (s->fStereo ? 1 : 0));
 						INT16* D = Data;
 
 						for (;;)
@@ -992,8 +985,8 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 							*D++ = CurSample;
 							if (--CountSamples == 0)
 							{
-								Sample->ubBits = 16;
-								Sample->pData  = Data;
+								s->ubBits = 16;
+								s->pData  = Data;
 								goto sound_loaded;
 							}
 
@@ -1042,8 +1035,8 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 									*D++ = CurSample;
 									if (--CountSamples == 0)
 									{
-										Sample->ubBits = 16;
-										Sample->pData  = Data;
+										s->ubBits = 16;
+										s->pData  = Data;
 										goto sound_loaded;
 									}
 								}
@@ -1063,15 +1056,15 @@ static UINT32 SoundLoadDisk(const char* pFilename)
 
 sound_loaded:
 	FileClose(hFile);
-	guiSoundMemoryUsed += Sample->uiSoundSize;
-	strcpy(Sample->pName, pFilename);
-	Sample->uiFlags = SAMPLE_ALLOCATED;
-	Sample->uiInstances = 0;
-	return uiSample;
+	guiSoundMemoryUsed += s->uiSoundSize;
+	strcpy(s->pName, pFilename);
+	s->uiFlags     = SAMPLE_ALLOCATED;
+	s->uiInstances = 0;
+	return s;
 
 error_out:
 	FileClose(hFile);
-	return NO_SAMPLE;
+	return NULL;
 }
 
 
@@ -1125,22 +1118,18 @@ static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)
 	return s->uiInstances > 0;
 }
 
-//*******************************************************************************
-// SoundGetEmptySample
-//
-//		Returns the slot number of an available sample index.
-//
-//	Returns:	A free sample index, or NO_SAMPLE if none are left.
-//
-//*******************************************************************************
-static UINT32 SoundGetEmptySample(void)
+
+/* Returns an available sample.
+ *
+ * Returns: A free sample or NULL if none are left. */
+static SAMPLETAG* SoundGetEmptySample(void)
 {
-	for (UINT32 uiCount = 0; uiCount < SOUND_MAX_CACHED; uiCount++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		if (!(pSampleList[uiCount].uiFlags & SAMPLE_ALLOCATED)) return uiCount;
+		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
 	}
 
-	return NO_SAMPLE;
+	return NULL;
 }
 
 
@@ -1321,13 +1310,11 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-static UINT32 SoundStartSample(UINT32 uiSample, SOUNDTAG* channel, const SOUNDPARMS* pParms)
+static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const SOUNDPARMS* pParms)
 {
-	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, uiSample, pSampleList[uiSample].pName);
+	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
-
-	SAMPLETAG* Sample = &pSampleList[uiSample];
 
 	if (pParms != NULL && pParms->uiVolume != SOUND_PARMS_DEFAULT)
 	{
@@ -1369,13 +1356,13 @@ static UINT32 SoundStartSample(UINT32 uiSample, SOUNDTAG* channel, const SOUNDPA
 
 	UINT32 uiSoundID = SoundGetUniqueID();
 	channel->uiSoundID    = uiSoundID;
-	channel->pSample      = Sample;
+	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
 	channel->Pos          = 0;
 	channel->State        = CHANNEL_PLAY;
 
-	Sample->uiInstances++;
-	Sample->uiCacheHits++;
+	sample->uiInstances++;
+	sample->uiCacheHits++;
 
 	return uiSoundID;
 }
