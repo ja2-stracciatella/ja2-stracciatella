@@ -49,10 +49,7 @@ DoneFadeInActionLeaveBasement(): empty
 DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
-DrawAssignment(): code duplication
 DrawBreathUIBar(): overdraw
-DrawName(): complicated
-DrawOrta(), DrawTixa(): factorise
 DrawTownLabels(): complicated coordinates (FindFontCenterCoordinates() necessary at all?)
 ET_ENDENEMYS_TURN: unused
 EXPLOSION_PARAMS: all attributes used?
