@@ -172,13 +172,8 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 
 	FastDebugMsg("Initializing Sound Manager");
-	// Initialize the Sound Manager (DirectSound)
 #ifndef UTIL
-	if (InitializeSoundManager() == FALSE)
-	{ // We were unable to initialize the sound manager
-		FastDebugMsg("FAILED : Initializing Sound Manager");
-		return FALSE;
-	}
+	InitializeSoundManager();
 #endif
 
 	FastDebugMsg("Initializing Random");

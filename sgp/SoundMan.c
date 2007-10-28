@@ -117,12 +117,8 @@ typedef struct
 } SOUNDTAG;
 
 
-// Local Function Prototypes
-static BOOLEAN SoundInitCache(void);
-
 // Low level
 static BOOLEAN SoundInitHardware(void);
-static BOOLEAN SoundShutdownHardware(void);
 static UINT32 SoundGetUniqueID(void);
 static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
@@ -149,7 +145,10 @@ void SoundEnableSound(BOOLEAN fEnable)
 }
 
 
-BOOLEAN InitializeSoundManager(void)
+static void SoundInitCache(void);
+
+
+void InitializeSoundManager(void)
 {
 	if (fSoundSystemInit) ShutdownSoundManager();
 
@@ -162,12 +161,11 @@ BOOLEAN InitializeSoundManager(void)
 	SoundInitCache();
 
 	guiSoundMemoryUsed = 0;
-
-	return TRUE;
 }
 
 
-static BOOLEAN SoundEmptyCache(void);
+static void SoundEmptyCache(void);
+static void SoundShutdownHardware(void);
 
 
 void ShutdownSoundManager(void)
@@ -328,9 +326,9 @@ BOOLEAN SoundStop(UINT32 uiSoundID)
 }
 
 
-BOOLEAN SoundStopAll(void)
+void SoundStopAll(void)
 {
-	if (!fSoundSystemInit) return TRUE;
+	if (!fSoundSystemInit) return;
 
 	SDL_PauseAudio(1);
 	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
@@ -345,8 +343,6 @@ BOOLEAN SoundStopAll(void)
 		}
 	}
 	SDL_PauseAudio(0);
-
-	return TRUE;
 }
 
 
@@ -389,14 +385,12 @@ static BOOLEAN SoundRandomShouldPlay(const SAMPLETAG* s);
 static UINT32 SoundStartRandom(SAMPLETAG* s);
 
 
-BOOLEAN SoundServiceRandom(void)
+void SoundServiceRandom(void)
 {
 	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
 		if (SoundRandomShouldPlay(i)) SoundStartRandom(i);
 	}
-
-	return FALSE;
 }
 
 
@@ -434,7 +428,7 @@ static UINT32 SoundStartRandom(SAMPLETAG* s)
 }
 
 
-BOOLEAN SoundStopAllRandom(void)
+void SoundStopAllRandom(void)
 {
 	// Stop all currently playing random sounds
 	for (SOUNDTAG* i = pSoundList; i != endof(pSoundList); ++i)
@@ -454,14 +448,12 @@ BOOLEAN SoundStopAllRandom(void)
 			i->uiFlags &= ~(SAMPLE_RANDOM | SAMPLE_LOCKED);
 		}
 	}
-
-	return FALSE;
 }
 
 
-BOOLEAN SoundServiceStreams(void)
+void SoundServiceStreams(void)
 {
-	if (!fSoundSystemInit) return TRUE;
+	if (!fSoundSystemInit) return;
 
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
 	{
@@ -477,8 +469,6 @@ BOOLEAN SoundServiceStreams(void)
 			Sound->State     = CHANNEL_FREE;
 		}
 	}
-
-	return TRUE;
 }
 
 
@@ -530,10 +520,9 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 
 
 // Zeros out the structures of the sample list.
-static BOOLEAN SoundInitCache(void)
+static void SoundInitCache(void)
 {
 	memset(pSampleList, 0, sizeof(pSampleList));
-	return TRUE;
 }
 
 
@@ -541,7 +530,7 @@ static void SoundFreeSample(SAMPLETAG* s);
 
 
 // Frees up all samples in the cache.
-static BOOLEAN SoundEmptyCache(void)
+static void SoundEmptyCache(void)
 {
 	SoundStopAll();
 
@@ -549,8 +538,6 @@ static BOOLEAN SoundEmptyCache(void)
 	{
 		SoundFreeSample(i);
 	}
-
-	return TRUE;
 }
 
 
@@ -1028,10 +1015,9 @@ static BOOLEAN SoundInitHardware(void)
 }
 
 
-static BOOLEAN SoundShutdownHardware(void)
+static void SoundShutdownHardware(void)
 {
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
-	return TRUE;
 }
 
 

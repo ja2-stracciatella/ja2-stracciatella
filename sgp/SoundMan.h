@@ -16,7 +16,7 @@ extern "C" {
 
 
 // Zeros out the structs for the system info, and initializes the cache.
-BOOLEAN InitializeSoundManager(void);
+void InitializeSoundManager(void);
 
 /* Silences all currently playing sound, deallocates any memory allocated, and
  * releases the sound hardware. */
@@ -54,7 +54,7 @@ UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, 
  * in some cases (heavy file loading) it might be desirable.
  * If you are using the end of sample callbacks, you must call this function
  * periodically to check the sample's status. */
-BOOLEAN SoundServiceStreams(void);
+void SoundServiceStreams(void);
 
 /* This function should be polled by the application if random samples are
  * used. The time marks on each are checked and if it is time to spawn a new
@@ -62,21 +62,12 @@ BOOLEAN SoundServiceStreams(void);
  * there is room, a new one is made and the count updated.
  * If random samples are not being used, there is no purpose in polling this
  * function. */
-BOOLEAN SoundServiceRandom(void);
+void SoundServiceRandom(void);
 
 // Stops all currently playing sounds.
-BOOLEAN SoundStopAll(void);
+void SoundStopAll(void);
 
-/* This function should be polled by the application if random samples are
- * used. The time marks on each are checked and if it is time to spawn a new
- * instance of the sound, the number already in existance are checked, and if
- * there is room, a new one is made and the count updated.
- * If random samples are not being used, there is no purpose in polling this
- * function.
- *
- * Returns: TRUE if a new random sound was created, FALSE if nothing was done.
- */
-BOOLEAN SoundStopAllRandom(void);
+void SoundStopAllRandom(void);
 
 /* Stops the playing of a sound instance, if still playing.
  *
