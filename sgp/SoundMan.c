@@ -129,10 +129,10 @@ static BOOLEAN SoundPlayStreamed(const char* pFilename);
 static BOOLEAN SoundCleanCache(void);
 
 // Global variables
-static const UINT32 guiSoundDefaultVolume = MAXVOLUME;
-static UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
-static UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
-static UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
+static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;
+static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
+static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
+static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
 
 // Local module variables
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called T/F
@@ -178,9 +178,7 @@ BOOLEAN InitializeSoundManager(void)
 
 	SoundInitCache();
 
-	guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY;
-	guiSoundMemoryUsed     = 0;
-	guiSoundCacheThreshold = SOUND_DEFAULT_THRESH;
+	guiSoundMemoryUsed = 0;
 
 	return TRUE;
 }
