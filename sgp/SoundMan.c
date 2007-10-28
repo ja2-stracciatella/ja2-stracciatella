@@ -578,11 +578,110 @@ enum WaveFormatTag
 };
 
 
+static BOOLEAN LoadPCM(SAMPLETAG* s, HWFILE file, UINT32 size)
+{
+	void* Data = malloc(size);
+	if (Data == NULL) return FALSE;
+	if (!FileRead(file, Data, size))
+	{
+		free(Data);
+		return FALSE;
+	}
+
+	s->uiSoundSize = size;
+	s->pData       = Data;
+	return TRUE;
+}
+
+
 static inline int Clamp(int min, int x, int max)
 {
 	if (x < min) return min;
 	if (x > max) return max;
 	return x;
+}
+
+
+static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
+{
+	INT16* const Data = malloc(s->uiSoundSize);
+
+	UINT CountSamples = s->uiSoundSize >> (1 + (s->fStereo ? 1 : 0));
+	INT16* D = Data;
+
+	for (;;)
+	{
+		INT16 CurSample_;
+		if (!FileRead(file, &CurSample_, sizeof(CurSample_))) return FALSE;
+
+		UINT8 StepIndex_;
+		if (!FileRead(file, &StepIndex_, sizeof(StepIndex_))) return FALSE;
+
+		if (!FileSeek(file, 1 , FILE_SEEK_FROM_CURRENT)) return FALSE; // reserved byte
+
+		INT32 CurSample = CurSample_;
+		INT32 StepIndex = StepIndex_;
+
+		*D++ = CurSample;
+		if (--CountSamples == 0)
+		{
+			s->ubBits = 16;
+			s->pData  = Data;
+			return TRUE;
+		}
+
+		UINT DataCount = block_align / 4;
+		while (--DataCount != 0)
+		{
+			UINT32 DataWord;
+			if (!FileRead(file, &DataWord, sizeof(DataWord))) return FALSE;
+			for (UINT i = 0; i < 8; i++)
+			{
+				static const INT16 StepTable[] =
+				{
+							7,     8,     9,    10,    11,    12,    13,    14,
+						 16,    17,    19,    21,    23,    25,    28,    31,
+						 34,    37,    41,    45,    50,    55,    60,    66,
+						 73,    80,    88,    97,   107,   118,   130,   143,
+						157,   173,   190,   209,   230,   253,   279,   307,
+						337,   371,   408,   449,   494,   544,   598,   658,
+						724,   796,   876,   963,  1060,  1166,  1282,  1411,
+					 1552,  1707,  1878,  2066,  2272,  2499,  2749,  3024,
+					 3327,  3660,  4026,  4428,  4871,  5358,  5894,  6484,
+					 7132,  7845,  8630,  9493, 10442, 11487, 12635, 13899,
+					15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794,
+					32767
+				};
+
+				static const INT8 IndexTable[] =
+				{
+					-1, -1, -1, -1, 2, 4, 6, 8
+				};
+
+#if 1
+				INT32 Diff = ((DataWord & 7) * 2 + 1) * StepTable[StepIndex] >> 3;
+#else
+				INT32 Diff = 0;
+				if (DataWord & 4) Diff += StepTable[StepIndex];
+				if (DataWord & 2) Diff += StepTable[StepIndex] >> 1;
+				if (DataWord & 1) Diff += StepTable[StepIndex] >> 2;
+				Diff += StepTable[StepIndex] >> 3;
+#endif
+				if (DataWord & 8) Diff = -Diff;
+				CurSample = Clamp(-32768, CurSample + Diff, 32767);
+				StepIndex = Clamp(0, StepIndex + IndexTable[DataWord & 7], 88);
+				DataWord >>= 4;
+
+				*D++ = CurSample;
+				if (--CountSamples == 0)
+				{
+					s->ubBits = 16;
+					s->pData  = Data;
+					return TRUE;
+				}
+			}
+		}
+	}
 }
 
 
@@ -690,101 +789,12 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				switch (FormatTag)
 				{
 					case WAVE_FORMAT_PCM:
-					{
-						void* Data = malloc(Size);
-						if (Data == NULL) goto error_out;
-						if (!FileRead(hFile, Data, Size))
-						{
-							free(Data);
-							goto error_out;
-						}
-
-						s->uiSoundSize = Size;
-						s->pData       = Data;
+						if (!LoadPCM(s, hFile, Size)) goto error_out;
 						goto sound_loaded;
-					}
 
 					case WAVE_FORMAT_DVI_ADPCM:
-					{
-						INT16* Data = malloc(s->uiSoundSize);
-
-						UINT CountSamples = s->uiSoundSize >> (1 + (s->fStereo ? 1 : 0));
-						INT16* D = Data;
-
-						for (;;)
-						{
-							INT16 CurSample_;
-							if (!FileRead(hFile, &CurSample_, sizeof(CurSample_))) goto error_out;
-
-							UINT8 StepIndex_;
-							if (!FileRead(hFile, &StepIndex_, sizeof(StepIndex_))) goto error_out;
-
-							if (!FileSeek(hFile, 1 , FILE_SEEK_FROM_CURRENT)) goto error_out; // reserved byte
-
-							INT32 CurSample = CurSample_;
-							INT32 StepIndex = StepIndex_;
-
-							*D++ = CurSample;
-							if (--CountSamples == 0)
-							{
-								s->ubBits = 16;
-								s->pData  = Data;
-								goto sound_loaded;
-							}
-
-							UINT DataCount = BlockAlign / 4;
-							while (--DataCount != 0)
-							{
-								UINT32 DataWord;
-								if (!FileRead(hFile, &DataWord, sizeof(DataWord))) goto error_out;
-								for (UINT i = 0; i < 8; i++)
-								{
-									static const INT16 StepTable[] =
-									{
-										    7,     8,     9,    10,    11,    12,    13,    14,
-										   16,    17,    19,    21,    23,    25,    28,    31,
-										   34,    37,    41,    45,    50,    55,    60,    66,
-										   73,    80,    88,    97,   107,   118,   130,   143,
-										  157,   173,   190,   209,   230,   253,   279,   307,
-										  337,   371,   408,   449,   494,   544,   598,   658,
-										  724,   796,   876,   963,  1060,  1166,  1282,  1411,
-										 1552,  1707,  1878,  2066,  2272,  2499,  2749,  3024,
-										 3327,  3660,  4026,  4428,  4871,  5358,  5894,  6484,
-										 7132,  7845,  8630,  9493, 10442, 11487, 12635, 13899,
-										15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794,
-										32767
-									};
-
-									static const INT8 IndexTable[] =
-									{
-										-1, -1, -1, -1, 2, 4, 6, 8
-									};
-
-#if 1
-									INT32 Diff = ((DataWord & 7) * 2 + 1) * StepTable[StepIndex] >> 3;
-#else
-									INT32 Diff = 0;
-									if (DataWord & 4) Diff += StepTable[StepIndex];
-									if (DataWord & 2) Diff += StepTable[StepIndex] >> 1;
-									if (DataWord & 1) Diff += StepTable[StepIndex] >> 2;
-									Diff += StepTable[StepIndex] >> 3;
-#endif
-									if (DataWord & 8) Diff = -Diff;
-									CurSample = Clamp(-32768, CurSample + Diff, 32767);
-									StepIndex = Clamp(0, StepIndex + IndexTable[DataWord & 7], 88);
-									DataWord >>= 4;
-
-									*D++ = CurSample;
-									if (--CountSamples == 0)
-									{
-										s->ubBits = 16;
-										s->pData  = Data;
-										goto sound_loaded;
-									}
-								}
-							}
-						}
-					}
+						if (!LoadDVIADPCM(s, hFile, BlockAlign)) goto error_out;
+						goto sound_loaded;
 
 					default: goto error_out;
 				}
