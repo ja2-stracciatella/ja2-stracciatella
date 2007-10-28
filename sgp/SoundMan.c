@@ -620,12 +620,11 @@ BOOLEAN SoundStopAllRandom(void)
 
 	// Unlock all random sounds so they can be dumped from the cache, and
 	// take the random flag off so they won't be serviced/played
-	for (UINT32 uiSample = 0; uiSample < SOUND_MAX_CACHED; uiSample++)
+	for (SAMPLETAG* i = pSampleList; i != endof(pSampleList); ++i)
 	{
-		SAMPLETAG* Sample = &pSampleList[uiSample];
-		if (Sample->uiFlags & SAMPLE_RANDOM)
+		if (i->uiFlags & SAMPLE_RANDOM)
 		{
-			Sample->uiFlags &= ~(SAMPLE_RANDOM | SAMPLE_LOCKED);
+			i->uiFlags &= ~(SAMPLE_RANDOM | SAMPLE_LOCKED);
 		}
 	}
 
@@ -914,7 +913,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT))            goto error_out;
 				if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    goto error_out;
 				if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) goto error_out;
-				SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, uiSample);
+				SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
 				switch (FormatTag)
 				{
 					case WAVE_FORMAT_PCM: break;
