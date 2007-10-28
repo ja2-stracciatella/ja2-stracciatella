@@ -404,77 +404,38 @@ BOOLEAN ShutdownJA2Sound( )
 
 UINT32 PlayJA2Sample( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
-  SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-
-	return(SoundPlay(szSoundEffects[usNum], &spParms));
+	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
 UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
-  SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-
-	return(SoundPlayStreamedFile(szSoundEffects[usNum], &spParms));
+	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	return SoundPlayStreamedFile(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
 UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
-
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
-
-  SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-
-	return(SoundPlay(szFileName, &spParms));
+	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	return SoundPlay(szFileName, vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
 UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback)
 {
-
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
-
-  SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-  spParms.EOSCallback=EndsCallback;
-
-	return( SoundPlayStreamedFile(szFileName, &spParms) );
+	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	return SoundPlayStreamedFile(szFileName, vol, uiPan, ubLoops, EndsCallback, NULL);
 }
 
 
 UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
 {
-SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSoundEffectsVolume( ubVolume );
-	spParms.uiLoop = ubLoops;
-
-	return(SoundPlay(szAmbientEffects[usNum], &spParms));
+	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	return SoundPlay(szAmbientEffects[usNum], vol, MIDDLEPAN, ubLoops, NULL, NULL);
 }
 
 

@@ -70,18 +70,10 @@ static void MusicStopCallback(void* pData);
 
 void MusicPlay(UINT32 uiNum)
 {
-SOUNDPARMS spParms;
-
 	if(fMusicPlaying)
 		MusicStop();
 
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-	spParms.uiVolume=0;
-
-	spParms.EOSCallback = MusicStopCallback;
-
-
-	uiMusicHandle=SoundPlayStreamedFile(szMusicList[uiNum], &spParms);
+	uiMusicHandle = SoundPlayStreamedFile(szMusicList[uiNum], 0, 64, 1, MusicStopCallback, NULL);
 
 	if(uiMusicHandle!=SOUND_ERROR)
 	{

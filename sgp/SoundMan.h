@@ -20,17 +20,6 @@ extern "C" {
 #define		SOUND_ERROR						0xffffffff
 
 
-// Structure definition for sound parameters being passed down to
-//		the sample playing function
-typedef struct {
-				UINT32			uiVolume;
-				UINT32			uiPan;
-				UINT32			uiLoop;
-				void				(*EOSCallback)(void *);
-				void				*pCallbackData;
-				} SOUNDPARMS;
-
-
 // Structure definition for parameters to the random sample playing
 //		function
 typedef struct {
@@ -46,8 +35,8 @@ extern BOOLEAN	InitializeSoundManager(void);
 extern void			ShutdownSoundManager(void);
 
 // Play/service sample functions
-extern UINT32		SoundPlay(const char *pFilename, SOUNDPARMS *pParms);
-extern UINT32		SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms );
+UINT32 SoundPlay(            const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
+UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 UINT32 SoundPlayRandom(const char* pFilename, const RANDOMPARMS* pParms);
 extern BOOLEAN	SoundServiceStreams(void);

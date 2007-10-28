@@ -215,17 +215,10 @@ void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
 
 UINT32 PlayJA2GapSample(const char *zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData )
 {
-	SOUNDPARMS spParms;
-
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-
-	spParms.uiVolume = CalculateSpeechVolume(ubVolume);
-	spParms.uiLoop = ubLoops;
-	spParms.uiPan = uiPan;
-
 	// Setup Gap Detection, if it is not null
 	if( pData != NULL )
 		AudioGapListInit( zSoundFile, pData );
 
-	return(SoundPlayStreamedFile( zSoundFile, &spParms));
+	const UINT32 vol = CalculateSpeechVolume(ubVolume);
+	return SoundPlayStreamedFile(zSoundFile, vol, uiPan, ubLoops, NULL, NULL);
 }

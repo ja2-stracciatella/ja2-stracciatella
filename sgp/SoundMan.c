@@ -197,7 +197,7 @@ void ShutdownSoundManager(void)
 
 static SOUNDTAG*  SoundGetFreeChannel(void);
 static SAMPLETAG* SoundLoadSample(const char* pFilename);
-static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const SOUNDPARMS* pParms);
+static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
 //*******************************************************************************
@@ -217,7 +217,7 @@ static UINT32     SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const S
 //
 //*******************************************************************************
 
-UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
+UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -242,11 +242,11 @@ UINT32 SoundPlay(const char *pFilename, SOUNDPARMS *pParms)
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	return SoundStartSample(sample, channel, pParms);
+	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
 }
 
 
-static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const SOUNDPARMS* pParms);
+static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
 //*******************************************************************************
@@ -262,11 +262,11 @@ static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const S
 //						If an error occured, SOUND_ERROR will be returned
 //
 //*******************************************************************************
-UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
+UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 #if 1
 	// TODO0003 implement streaming
-	return SoundPlay(pFilename, pParms);
+	return SoundPlay(pFilename, volume, pan, loop, end_callback, data);
 #else
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -286,7 +286,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 	if (DB_EXTRACT_LIBRARY(hFile) == REAL_FILE_LIBRARY_ID)
 	{
 		FileClose(hFile);
-		return SoundStartStream(pFilename, channel, pParms);
+		return SoundStartStream(pFilename, channel, volume, pan, loop, end_callback, data);
 	}
 
 	//Get the real file handle of the file
@@ -302,7 +302,7 @@ UINT32	SoundPlayStreamedFile(const char *pFilename, SOUNDPARMS *pParms )
 	sprintf(pFileHandlefileName, "\\\\\\\\%d", hRealFileHandle);
 
 	//Start the sound stream
-	UINT32 uiRetVal = SoundStartStream(pFileHandlefileName, channel, pParms);
+	UINT32 uiRetVal = SoundStartStream(pFileHandlefileName, channel, volume, pan, loop, end_callback, data);
 
 	//if it succeeded, record the file handle
 	if (uiRetVal != SOUND_ERROR)
@@ -578,13 +578,10 @@ static UINT32 SoundStartRandom(SAMPLETAG* s)
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return NO_SAMPLE;
 
-	SOUNDPARMS spParms;
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
-	spParms.uiVolume   = s->uiVolMin + Random(s->uiVolMax - s->uiVolMin);
-	spParms.uiPan      = s->uiPanMin + Random(s->uiPanMax - s->uiPanMin);
-	spParms.uiLoop     = 1;
+	const UINT32 volume = s->uiVolMin + Random(s->uiVolMax - s->uiVolMin);
+	const UINT32 pan    = s->uiPanMin + Random(s->uiPanMax - s->uiPanMin);
 
-	UINT32 uiSoundID = SoundStartSample(s, channel, &spParms);
+	const UINT32 uiSoundID = SoundStartSample(s, channel, volume, pan, 1, NULL, NULL);
 	if (uiSoundID == SOUND_ERROR) return NO_SAMPLE;
 
 	s->uiTimeNext =
@@ -1306,49 +1303,17 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const SOUNDPARMS* pParms)
+static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 	SNDDBG("PLAY channel %u sample %u file \"%s\"\n", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
-	if (pParms != NULL && pParms->uiVolume != SOUND_PARMS_DEFAULT)
-	{
-		channel->uiFadeVolume = pParms->uiVolume;
-	}
-	else
-	{
-		channel->uiFadeVolume = guiSoundDefaultVolume;
-	}
-
-	if (pParms != NULL && pParms->uiLoop != SOUND_PARMS_DEFAULT)
-	{
-		channel->Loops = pParms->uiLoop;
-	}
-	else
-	{
-		channel->Loops = 1;
-	}
-
-	if (pParms != NULL && pParms->uiPan != SOUND_PARMS_DEFAULT)
-	{
-		channel->Pan = pParms->uiPan;
-	}
-	else
-	{
-		channel->Pan = 64;
-	}
-
-	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
-	{
-		channel->EOSCallback   = pParms->EOSCallback;
-		channel->pCallbackData = pParms->pCallbackData;
-	}
-	else
-	{
-		channel->EOSCallback   = NULL;
-		channel->pCallbackData = NULL;
-	}
+	channel->uiFadeVolume  = volume;
+	channel->Loops         = loop;
+	channel->Pan           = pan;
+	channel->EOSCallback   = end_callback;
+	channel->pCallbackData = data;
 
 	UINT32 uiSoundID = SoundGetUniqueID();
 	channel->uiSoundID    = uiSoundID;
@@ -1373,7 +1338,7 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, const SOUND
 //	Returns:	Unique sound ID if successful, SOUND_ERROR if not.
 //
 //*******************************************************************************
-static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const SOUNDPARMS* pParms)
+static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
 #if 1 // XXX TODO
 	FIXME
@@ -1396,40 +1361,17 @@ static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, const S
 		return SOUND_ERROR;
 	}
 
-	if (pParms != NULL && pParms->uiVolume != SOUND_PARMS_DEFAULT)
-	{
-		AIL_set_stream_volume(channel->hMSSStream, pParms->uiVolume);
-	}
-	else
-	{
-		AIL_set_stream_volume(channel->hMSSStream, guiSoundDefaultVolume);
-	}
-
-	if (pParms != NULL && pParms->uiLoop != SOUND_PARMS_DEFAULT)
-	{
-		AIL_set_stream_loop_count(channel->hMSSStream, pParms->uiLoop);
-	}
-
-	if (pParms != NULL && pParms->uiPan != SOUND_PARMS_DEFAULT)
-	{
-		AIL_set_stream_pan(channel->hMSSStream, pParms->uiPan);
-	}
+	AIL_set_stream_volume(    channel->hMSSStream, volume);
+	AIL_set_stream_loop_count(channel->hMSSStream, loop);
+	AIL_set_stream_pan(       channel->hMSSStream, pan);
 
 	AIL_start_stream(channel->hMSSStream);
 
 	UINT32 uiSoundID=SoundGetUniqueID();
 	channel->uiSoundID = uiSoundID;
 
-	if (pParms != NULL && (UINT32)pParms->EOSCallback != SOUND_PARMS_DEFAULT)
-	{
-		channel->EOSCallback   = pParms->EOSCallback;
-		channel->pCallbackData = pParms->pCallbackData;
-	}
-	else
-	{
-		channel->EOSCallback   = NULL;
-		channel->pCallbackData = NULL;
-	}
+	channel->EOSCallback   = end_callback;
+	channel->pCallbackData = data;
 
 	channel->uiTimeStamp  = GetClock();
 	channel->uiFadeVolume = SoundGetVolumeIndex(uiChannel);

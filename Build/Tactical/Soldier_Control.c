@@ -666,39 +666,37 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 
 	if (pSoldier->ubProfile == DR_Q)
 	{
-		UINT32 uiSoundID;
-		SOUNDPARMS		spParms;
 		INT32		iFaceIndex;
 
 		// Play sound!
-		memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-		spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
+		UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
 
 		// If we are an enemy.....reduce due to volume
 		if ( pSoldier->bTeam != gbPlayerNum )
 		{
-			spParms.uiVolume = SoundVolume( (UINT8)spParms.uiVolume, pSoldier->sGridNo );
+			volume = SoundVolume(volume, pSoldier->sGridNo);
 		}
-		spParms.uiLoop = 1;
-		spParms.uiPan = SoundDir( pSoldier->sGridNo );
 
+		const UINT32 pan = SoundDir(pSoldier->sGridNo);
+
+		const char* filename;
 		if ( pSoldier->usAnimState == NINJA_SPINKICK )
 		{
-			uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP2.WAV", &spParms );
+			filename = "BATTLESNDS/033_CHOP2.WAV";
 		}
 		else
 		{
 			if ( Random( 2 ) == 0 )
 			{
-				uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP3.WAV", &spParms );
+				filename = "BATTLESNDS/033_CHOP3.WAV";
 			}
 			else
 			{
-				uiSoundID = SoundPlay( "BATTLESNDS/033_CHOP1.WAV", &spParms );
+				filename = "BATTLESNDS/033_CHOP1.WAV";
 			}
 		}
-
+		const UINT32 uiSoundID = SoundPlay(filename, volume, pan, 1, NULL, NULL);
 
 		if ( uiSoundID != SOUND_ERROR )
 		{
@@ -6650,9 +6648,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID, INT8 bSpecialCode )
 {
 	SGPFILENAME		zFilename;
-	SOUNDPARMS		spParms;
 	UINT8					ubSoundID;
-	UINT32				uiSoundID;
 	UINT32				iFaceIndex;
 	BOOLEAN				fDoSub = FALSE;
 	INT32					uiSubSoundID = 0;
@@ -6958,29 +6954,26 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	}
 
 	// Play sound!
-	memset(&spParms, 0xff, sizeof(SOUNDPARMS));
 
-	//spParms.uiVolume = CalculateSpeechVolume( pSoldier->bVocalVolume );
-
-	spParms.uiVolume = (INT8)CalculateSpeechVolume( HIGHVOLUME );
+	//UINT32 volume = CalculateSpeechVolume(pSoldier->bVocalVolume);
+	UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
 
 	// ATE: Reduce volume for OK sounds...
 	// ( Only for all-moves or multi-selection cases... )
 	if ( bSpecialCode == BATTLE_SND_LOWER_VOLUME )
 	{
-		spParms.uiVolume = (INT8)CalculateSpeechVolume( MIDVOLUME );
+		volume = CalculateSpeechVolume(MIDVOLUME);
 	}
 
 	// If we are an enemy.....reduce due to volume
 	if ( pSoldier->bTeam != gbPlayerNum )
 	{
-		spParms.uiVolume = SoundVolume( (UINT8)spParms.uiVolume, pSoldier->sGridNo );
+		volume = SoundVolume(volume, pSoldier->sGridNo);
 	}
 
-	spParms.uiLoop = 1;
-	spParms.uiPan = SoundDir( pSoldier->sGridNo );
-
-	if ( ( uiSoundID = SoundPlay( zFilename, &spParms ) ) == SOUND_ERROR )
+	const UINT32 pan       = SoundDir(pSoldier->sGridNo);
+	const UINT32 uiSoundID = SoundPlay(zFilename, volume, pan, 1, NULL, NULL);
+	if (uiSoundID == SOUND_ERROR)
 	{
 		return( FALSE );
 	}
