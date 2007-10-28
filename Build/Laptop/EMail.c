@@ -716,24 +716,15 @@ static void SortMessages(EMailSortCriteria Criterium)
 static void ClearPages(void)
 {
 	// run through list of message pages and set to -1
-	Page* pPage = pPageList;
-
-	// error check
-	if( pPageList == NULL )
+	for (Page* i = pPageList; i;)
 	{
-		return;
+		Page* const next = i->Next;
+		MemFree(i);
+		i = next;
 	}
 
-	while(pPage->Next)
-	{
-		Page* Next = pPage->Next;
-		MemFree(pPage);
-		pPage = Next;
-	}
-	if(pPage)
-   MemFree(pPage);
-	pPageList=NULL;
-	iLastPage=-1;
+	pPageList = NULL;
+	iLastPage = -1;
 }
 
 
