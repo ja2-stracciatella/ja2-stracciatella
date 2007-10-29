@@ -242,39 +242,39 @@ BOOLEAN fReDrawNewMailFlag = FALSE;
 static INT32 iTotalHeight = 0;
 
 
-static void CreateDestroyNextPreviousRegions(void);
+static void CreateNextPreviousEmailPageButtons(void);
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void EmailMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void InitializeMouseRegions(void)
 {
-	INT32 iCounter=0;
-
 	// init mouseregions
-	for(iCounter=0; iCounter <MAX_MESSAGES_PAGE; iCounter++)
+	for (INT32 i = 0; i < MAX_MESSAGES_PAGE; ++i)
 	{
-	 MSYS_DefineRegion(&pEmailRegions[iCounter],MIDDLE_X ,((INT16)(MIDDLE_Y+iCounter*MIDDLE_WIDTH)), MIDDLE_X+LINE_WIDTH ,(INT16)(MIDDLE_Y+iCounter*MIDDLE_WIDTH+MIDDLE_WIDTH),
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, EmailMvtCallBack, EmailBtnCallBack );
-		MSYS_SetRegionUserData(&pEmailRegions[iCounter],0,iCounter);
+		const UINT16 x = MIDDLE_X;
+		const UINT16 y = MIDDLE_Y + MIDDLE_WIDTH * i;
+		const UINT16 w = LINE_WIDTH;
+		const UINT16 h = MIDDLE_WIDTH;
+		MOUSE_REGION* const r = &pEmailRegions[i];
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, EmailMvtCallBack, EmailBtnCallBack);
+		MSYS_SetRegionUserData(r, 0, i);
 	}
 
-	CreateDestroyNextPreviousRegions();
+	CreateNextPreviousEmailPageButtons();
 }
 
 
 static void DeleteEmailMouseRegions(void)
 {
-
 	// this function will remove the mouse regions added
-	INT32 iCounter=0;
-
-
-	for(iCounter=0; iCounter <MAX_MESSAGES_PAGE; iCounter++)
+	for(INT32 i = 0; i < MAX_MESSAGES_PAGE; ++i)
 	{
-	 MSYS_RemoveRegion( &pEmailRegions[iCounter]);
+		MSYS_RemoveRegion(&pEmailRegions[i]);
 	}
-  CreateDestroyNextPreviousRegions();
+
+	RemoveButton(giMailPageButtons[0]);
+	RemoveButton(giMailPageButtons[1]);
 }
 
 
@@ -1433,30 +1433,6 @@ static void BtnDeleteYesback(GUI_BUTTON* btn, INT32 reason)
 	{
 		fReDrawScreenFlag = TRUE;
 		DeleteEmail();
-	}
-}
-
-
-static void CreateNextPreviousEmailPageButtons(void);
-
-
-static void CreateDestroyNextPreviousRegions(void)
-{
-	static BOOLEAN fCreated=FALSE;
-	if(fCreated)
-	{
-		// destroy already create next, previous mouse regions
-	  fCreated=FALSE;
-
-		RemoveButton( giMailPageButtons[ 1 ] );
-		RemoveButton( giMailPageButtons[ 0 ] );
-	}
-	else
-	{
-		// create uncreated mouse regions
-		fCreated=TRUE;
-
-		CreateNextPreviousEmailPageButtons( );
 	}
 }
 
