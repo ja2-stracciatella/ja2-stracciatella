@@ -1093,6 +1093,14 @@ static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static INT32 MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	INT32 btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, image, -1, image + 3, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
+
 static void BtnDeleteCallback(GUI_BUTTON* btn, INT32 iReason);
 static void BtnNextEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
@@ -1115,18 +1123,13 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		if( giNumberOfPagesToCurrentEmail > 2 )
 		{
 			// add next and previous mail page buttons
-			giMailMessageButtons[0] = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, 0, -1, 3, -1, PREVIOUS_PAGE_BUTTON_X, LOWER_BUTTON_Y + iViewerY + 2, MSYS_PRIORITY_HIGHEST - 1, BtnPreviousEmailPageCallback);
-			SetButtonCursor(giMailMessageButtons[0], CURSOR_LAPTOP_SCREEN);
-
-			giMailMessageButtons[1] = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, 1, -1, 4, -1, NEXT_PAGE_BUTTON_X,     LOWER_BUTTON_Y + iViewerY + 2, MSYS_PRIORITY_HIGHEST - 1, BtnNextEmailPageCallback);
-			SetButtonCursor(giMailMessageButtons[1], CURSOR_LAPTOP_SCREEN);
-
+			const INT16 y = LOWER_BUTTON_Y + iViewerY + 2;
+			giMailMessageButtons[0] = MakeButtonNewMail(0, PREVIOUS_PAGE_BUTTON_X, y, BtnPreviousEmailPageCallback);
+			giMailMessageButtons[1] = MakeButtonNewMail(1, NEXT_PAGE_BUTTON_X,     y, BtnNextEmailPageCallback);
 			gfPageButtonsWereCreated = TRUE;
-
 		}
 
-		giMailMessageButtons[2] = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, 2, -1, 5, -1, DELETE_BUTTON_X, BUTTON_LOWER_Y + iViewerY + 2, MSYS_PRIORITY_HIGHEST - 1, BtnDeleteCallback);
-    SetButtonCursor(giMailMessageButtons[2], CURSOR_LAPTOP_SCREEN);
+		giMailMessageButtons[2] = MakeButtonNewMail(2, DELETE_BUTTON_X, BUTTON_LOWER_Y + iViewerY + 2, BtnDeleteCallback);
 
 		// force update of screen
 	  fReDrawScreenFlag=TRUE;
@@ -1148,8 +1151,16 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
     // force update of screen
 		fReDrawScreenFlag=TRUE;
 	}
-
 }
+
+
+static INT32 MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
+{
+	INT32 btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, image, -1, image + 1, -1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
 
 void CreateDestroyNewMailButton()
 {
@@ -1169,10 +1180,7 @@ void CreateDestroyNewMailButton()
 	 // set old flag (stating button has been created)
   fOldNewMailFlag=TRUE;
 
-	giNewMailButton = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, 0, -1, 1, -1, NEW_BTN_X + 10, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, BtnNewOkback);
-
-	// set cursor
-	SetButtonCursor(giNewMailButton, CURSOR_LAPTOP_SCREEN);
+	giNewMailButton = MakeButtonYesNo(0, NEW_BTN_X + 10, BtnNewOkback);
 
 	// set up screen mask region
 	MSYS_DefineRegion(&pScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
@@ -1386,12 +1394,8 @@ void CreateDestroyDeleteNoticeMailButton()
 
 	 // YES/NO buttons
   fOldDeleteMailFlag=TRUE;
-  giDeleteMailButton[0] = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, 0, -1, 1, -1, NEW_BTN_X +  1, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, BtnDeleteYesback);
-  giDeleteMailButton[1] = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, 2, -1, 3, -1, NEW_BTN_X + 40, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, BtnDeleteNoback);
-
-	// set up cursors
-	SetButtonCursor(giDeleteMailButton[0], CURSOR_LAPTOP_SCREEN);
-  SetButtonCursor(giDeleteMailButton[1], CURSOR_LAPTOP_SCREEN);
+	giDeleteMailButton[0] = MakeButtonYesNo(0, NEW_BTN_X +  1, BtnDeleteYesback);
+	giDeleteMailButton[1] = MakeButtonYesNo(2, NEW_BTN_X + 40, BtnDeleteNoback);
 
 	// set up screen mask to prevent other actions while delete mail box is destroyed
 	MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
@@ -2334,16 +2338,9 @@ static void HandleEmailViewerButtonStates(void)
 
 static void CreateNextPreviousEmailPageButtons(void)
 {
-
 	// this function will create the buttons to advance and go back email pages
-
-	// next button
-	giMailPageButtons[0] = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, 1, -1, 4, -1, NEXT_PAGE_X, NEXT_PAGE_Y, MSYS_PRIORITY_HIGHEST - 1, NextRegionButtonCallback);
-	SetButtonCursor(giMailPageButtons[0], CURSOR_LAPTOP_SCREEN);
-
-	// previous button
-	giMailPageButtons[1] = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, 0, -1, 3, -1, PREVIOUS_PAGE_X, NEXT_PAGE_Y, MSYS_PRIORITY_HIGHEST - 1, PreviousRegionButtonCallback);
-	SetButtonCursor(giMailPageButtons[1], CURSOR_LAPTOP_SCREEN);
+	giMailPageButtons[0] = MakeButtonNewMail(1, NEXT_PAGE_X,     NEXT_PAGE_Y, NextRegionButtonCallback);
+	giMailPageButtons[1] = MakeButtonNewMail(0, PREVIOUS_PAGE_X, NEXT_PAGE_Y, PreviousRegionButtonCallback);
 }
 
 
