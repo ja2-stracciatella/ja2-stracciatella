@@ -744,83 +744,35 @@ static void PlaceMessagesinPages(void)
 }
 
 
-static void DrawLetterIcon(INT32 iCounter, BOOLEAN fRead)
+// Draw the icon, sender, date, subject
+static void DrawEmailSummary(INT32 pos, const Email* e)
 {
+	const INT32   y    = MIDDLE_Y + MIDDLE_WIDTH * pos;
+	const BOOLEAN read = e->fRead;
+	const UINT32  font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
+
   // will draw the icon for letter in mail list depending if the mail has been read or not
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiEmailIndicator, fRead ? 0 : 1, INDIC_X, MIDDLE_Y + iCounter * MIDDLE_WIDTH + 2);
-}
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiEmailIndicator, read ? 0 : 1, INDIC_X, y + 2);
 
+	SetFontShadow(NO_SHADOW);
 
-static void DrawSubject(INT32 iCounter, STR16 pSubject, BOOLEAN fRead)
-{
+	SetFontDestBuffer(FRAME_BUFFER, SUBJECT_X, y, SUBJECT_X + SUBJECT_WIDTH, y + MIDDLE_WIDTH);
 	wchar_t pTempSubject[320];
-
-
-	// draw subject line of mail being viewed in viewer
-
-	// lock buffer to prevent overwrite
-	SetFontDestBuffer(FRAME_BUFFER, SUBJECT_X , MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_X + SUBJECT_WIDTH , MIDDLE_Y + iCounter * MIDDLE_WIDTH + MIDDLE_WIDTH);
-	SetFontShadow(NO_SHADOW);
-	SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-
-
-	wcscpy( pTempSubject, pSubject );
-
-	UINT32 Font = fRead ? MESSAGE_FONT : FONT10ARIALBOLD;
-	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, Font);
-	IanDisplayWrappedString(SUBJECT_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, SUBJECT_WIDTH, MESSAGE_GAP, Font, MESSAGE_COLOR, pTempSubject, 0, LEFT_JUSTIFIED);
-
-	SetFontShadow(DEFAULT_SHADOW);
-	// reset font dest buffer
+	wcscpy(pTempSubject, e->pSubject);
+	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
+	IanDisplayWrappedString(SUBJECT_X, y + 4, SUBJECT_WIDTH, MESSAGE_GAP, font, MESSAGE_COLOR, pTempSubject, FONT_BLACK, LEFT_JUSTIFIED);
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-}
 
+	SetFont(font);
+	SetFontForeground(FONT_BLACK);
+	SetFontBackground(FONT_BLACK);
 
-static void DrawSender(INT32 iCounter, UINT8 ubSender, BOOLEAN fRead)
-{
+	mprintf(SENDER_X, y + 4, pSenderNameList[e->ubSender]);
 
-	// draw name of sender in mail viewer
-	SetFontShadow(NO_SHADOW);
-
-	SetFontShadow(NO_SHADOW);
-  SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-
-	if( fRead )
-	{
-		SetFont( MESSAGE_FONT );
-	}
-	else
-	{
-		SetFont( FONT10ARIALBOLD );
-	}
-
-  mprintf(SENDER_X,(( UINT16 )( 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH ) ) ,pSenderNameList[ubSender]);
-
-	SetFont( MESSAGE_FONT );
-	SetFontShadow(DEFAULT_SHADOW);
-}
-
-
-static void DrawDate(INT32 iCounter, INT32 iDate, BOOLEAN fRead)
-{
-	SetFontShadow(NO_SHADOW);
-  SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-
-	if( fRead )
-	{
-		SetFont( MESSAGE_FONT );
-	}
-	else
-	{
-		SetFont( FONT10ARIALBOLD );
-	}
 	// draw date of message being displayed in mail viewer
-	mprintf(DATE_X, 4 + MIDDLE_Y + iCounter * MIDDLE_WIDTH, L"%ls %d", pDayStrings, iDate / (24 * 60));
+	mprintf(DATE_X, y + 4, L"%ls %d", pDayStrings, e->iDate / (24 * 60));
 
-	SetFont( MESSAGE_FONT );
+	SetFont(MESSAGE_FONT);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
@@ -879,11 +831,7 @@ static void DisplayEmailList(void)
 		}
     SetFontBackground(FONT_BLACK);
 
-		//draw the icon, sender, date, subject
-		DrawLetterIcon(iCounter,pEmail->fRead );
-		DrawSubject(iCounter, pEmail->pSubject, pEmail->fRead );
-		DrawSender(iCounter, pEmail->ubSender, pEmail->fRead );
-		DrawDate(iCounter, pEmail->iDate, pEmail->fRead );
+		DrawEmailSummary(iCounter, pEmail);
 
 		iCounter++;
 
