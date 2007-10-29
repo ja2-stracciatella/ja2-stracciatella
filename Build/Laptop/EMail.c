@@ -234,9 +234,6 @@ enum{
 };
 
 
-// current line in the email list that is highlighted, -1 is no line highlighted
-static INT32 iHighLightLine = -1;
-
 // whther or not we need to redraw the new mail box
 BOOLEAN fReDrawNewMailFlag = FALSE;
 static INT32 iTotalHeight = 0;
@@ -244,7 +241,6 @@ static INT32 iTotalHeight = 0;
 
 static void CreateNextPreviousEmailPageButtons(void);
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
-static void EmailMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void InitializeMouseRegions(void)
@@ -257,7 +253,7 @@ static void InitializeMouseRegions(void)
 		const UINT16 w = LINE_WIDTH;
 		const UINT16 h = MIDDLE_WIDTH;
 		MOUSE_REGION* const r = &pEmailRegions[i];
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, EmailMvtCallBack, EmailBtnCallBack);
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, NULL, EmailBtnCallBack);
 		MSYS_SetRegionUserData(r, 0, i);
 	}
 
@@ -807,27 +803,6 @@ static void DisplayEmailList(void)
 	// draw each line of the list for this page
 	while(pEmail)
 	{
-
-		// highlighted message, set text of message in list to blue
-		if(iCounter==iHighLightLine)
-		{
-			SetFontForeground(FONT_BLUE);
-		}
-		else if(pEmail->fRead)
-		{
-			// message has been read, reset color to black
-      SetFontForeground(FONT_BLACK);
-	    //SetFontBackground(FONT_BLACK);
-
-		}
-		else
-		{
-      // defualt, message is not read, set font red
-      SetFontForeground(FONT_RED);
-	    //SetFontBackground(FONT_BLACK);
-		}
-    SetFontBackground(FONT_BLACK);
-
 		DrawEmailSummary(iCounter, pEmail);
 
 		iCounter++;
@@ -925,25 +900,6 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			MailToDelete = Mail;
 	 }
  }
-}
-
-
-static void EmailMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
-{
-  if(fDisplayMessageFlag)
-		return;
-	if (iReason == MSYS_CALLBACK_REASON_MOVE)
-	{
-
-		// set highlight to current regions data, this is the message to display
-	 iHighLightLine=MSYS_GetRegionUserData(pRegion, 0);
-	}
-  if (iReason == MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-
-		// reset highlight line to invalid message
-    iHighLightLine=-1;
-	}
 }
 
 
