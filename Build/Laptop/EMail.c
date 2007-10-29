@@ -754,18 +754,15 @@ static void DrawEmailSummary(INT32 pos, const Email* e)
   // will draw the icon for letter in mail list depending if the mail has been read or not
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiEmailIndicator, read ? 0 : 1, INDIC_X, y + 2);
 
-	SetFontShadow(NO_SHADOW);
-
-	SetFontDestBuffer(FRAME_BUFFER, SUBJECT_X, y, SUBJECT_X + SUBJECT_WIDTH, y + MIDDLE_WIDTH);
-	wchar_t pTempSubject[320];
-	wcscpy(pTempSubject, e->pSubject);
-	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
-	IanDisplayWrappedString(SUBJECT_X, y + 4, SUBJECT_WIDTH, MESSAGE_GAP, font, MESSAGE_COLOR, pTempSubject, FONT_BLACK, LEFT_JUSTIFIED);
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	SetFont(font);
 	SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
+	SetFontShadow(NO_SHADOW);
+
+	wchar_t pTempSubject[320];
+	wcscpy(pTempSubject, e->pSubject);
+	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
+	mprintf(SUBJECT_X, y + 4, L"%ls", pTempSubject);
 
 	mprintf(SENDER_X, y + 4, pSenderNameList[e->ubSender]);
 
