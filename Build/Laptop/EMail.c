@@ -741,9 +741,8 @@ static void PlaceMessagesinPages(void)
 
 
 // Draw the icon, sender, date, subject
-static void DrawEmailSummary(INT32 pos, const Email* e)
+static void DrawEmailSummary(INT32 y, const Email* e)
 {
-	const INT32   y    = MIDDLE_Y + MIDDLE_WIDTH * pos;
 	const BOOLEAN read = e->fRead;
 	const UINT32  font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
 
@@ -751,9 +750,6 @@ static void DrawEmailSummary(INT32 pos, const Email* e)
 	BltVideoObjectFromIndex(FRAME_BUFFER, guiEmailIndicator, read ? 0 : 1, INDIC_X, y + 2);
 
 	SetFont(font);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
 
 	wchar_t pTempSubject[320];
 	wcscpy(pTempSubject, e->pSubject);
@@ -764,9 +760,6 @@ static void DrawEmailSummary(INT32 pos, const Email* e)
 
 	// draw date of message being displayed in mail viewer
 	mprintf(DATE_X, y + 4, L"%ls %d", pDayStrings, e->iDate / (24 * 60));
-
-	SetFont(MESSAGE_FONT);
-	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
@@ -783,39 +776,30 @@ static Page* GetCurrentPage(void)
 
 static void DisplayEmailList(void)
 {
-	INT32 iCounter=0;
 	// look at current page, and display
-	Email* pEmail = NULL;
 
 	// if current page ever ends up negative, reset to 0
-	if(iCurrentPage==-1)
-		iCurrentPage=0;
+	if (iCurrentPage == -1) iCurrentPage = 0;
 
-	Page* pPage = GetCurrentPage();
-	if (pPage == NULL) return;
+	const Page* const p = GetCurrentPage();
+	if (p == NULL) return;
 
 	// now we have current page, display it
-	pEmail = pPage->Mail[iCounter];
+	SetFontForeground(FONT_BLACK);
+	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
-	SetFont(EMAIL_TEXT_FONT);
-
 
 	// draw each line of the list for this page
-	while(pEmail)
+	INT32 y = MIDDLE_Y;
+	for (Email* const * e = p->Mail; e != endof(p->Mail) && *e != NULL; ++e)
 	{
-		DrawEmailSummary(iCounter, pEmail);
-
-		iCounter++;
-
-		// too many messages onthis page, reset pEmail, so no more are drawn
-    if(iCounter >=MAX_MESSAGES_PAGE)
-     pEmail=NULL;
-		else
-			pEmail = pPage->Mail[iCounter];
+		DrawEmailSummary(y, *e);
+		y += MIDDLE_WIDTH;
 	}
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y);
 
+	SetFont(MESSAGE_FONT);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
