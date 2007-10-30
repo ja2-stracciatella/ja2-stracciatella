@@ -70,7 +70,6 @@ typedef struct
 	BOOLEAN		fAnimatingTalking;							// Set if the face is animating right now
 	BOOLEAN		fDisabled;											// Not active
 	BOOLEAN		fValidSpeech;
-	BOOLEAN		fStartFrame;										// Flag for the first start frame
 	BOOLEAN		fInvalidAnim;
 
 	UINT32		uiTalkingDuration;							// A delay based on text length for how long to talk if no speech

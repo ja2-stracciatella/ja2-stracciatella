@@ -572,7 +572,6 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 	pFace->uiLastBlink			=		GetJA2Clock();
 	pFace->uiLastExpression	=		GetJA2Clock();
 	pFace->uiEyelast				=		GetJA2Clock();
-	pFace->fStartFrame			=  TRUE;
 
 	// Are we a soldier?
 	if ( pFace->ubSoldierID != NOBODY )
@@ -681,7 +680,6 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 {
 	FACETYPE				*pFace;
 	INT16						sFrame;
-	BOOLEAN					fDoBlink = FALSE;
 
 	if ( gFacesData[ iFaceIndex ].fAllocated && !gFacesData[ iFaceIndex ].fDisabled && !gFacesData[ iFaceIndex ].fInvalidAnim )
 	{
@@ -730,24 +728,8 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 
 		if ( pFace->ubExpression != NO_EXPRESSION )
 		{
-			if ( pFace->fStartFrame )
-			{
-				if ( ( GetJA2Clock() - pFace->uiEyelast ) > pFace->uiEyeDelay ) //> Random( 10000 ) )
-				{
-					fDoBlink						= TRUE;
-					pFace->fStartFrame	= FALSE;
-				}
-			}
-			else
-			{
-				if ( ( GetJA2Clock() - pFace->uiEyelast ) > pFace->uiEyeDelay )
-				{
-					fDoBlink = TRUE;
-				}
-			}
-
 			// Are we going to blink?
-			if ( fDoBlink )
+			if (GetJA2Clock() - pFace->uiEyelast > pFace->uiEyeDelay)
 			{
 				pFace->uiEyelast = GetJA2Clock();
 
