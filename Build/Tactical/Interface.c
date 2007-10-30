@@ -177,7 +177,6 @@ enum
 static INT32 iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
-static UINT32 guiINTEXT;
 UINT32					guiCLOSE;
 UINT32					guiDEAD;
 UINT32					guiHATCH;
@@ -246,11 +245,6 @@ BOOLEAN InitializeTacticalInterface(  )
 
 	// Load interface panels
 	// failing the CHECKF after this will cause you to lose your mouse
-
-	guiINTEXT = AddVideoSurfaceFromFile("INTERFACE/IN_TEXT.STI");
-	AssertMsg(guiINTEXT != NO_VSURFACE, "Missing INTERFACE/In_text.sti");
-	SetVideoSurfaceTransparency( guiINTEXT, FROMRGB( 255, 0, 0 ) );
-
 
 	// LOAD CLOSE ANIM
 	guiCLOSE = AddVideoObjectFromFile("INTERFACE/p_close.sti");
