@@ -22,7 +22,6 @@ struct audio_gap
 #define  FACE_NO_RESTORE_BUFFER			0xFFFFFFF0
 
 // FLAGS....
-#define	 FACE_DESTROY_OVERLAY								0x00000000						// A face may contain a video overlay
 #define	 FACE_BIGFACE												0x00000001						// A BIGFACE instead of small face
 #define	 FACE_POTENTIAL_KEYWAIT							0x00000002						// If the option is set, will not stop face until key pressed
 #define	 FACE_PCTRIGGER_NPC									0x00000004						// This face has to trigger an NPC after being done
@@ -120,7 +119,6 @@ typedef struct
   UINT32		uiEyeDelay;
 	UINT32		uiBlinkFrequency;
 	UINT32		uiExpressionFrequency;
-	UINT32		uiStopOverlayTimer;
 
 	UINT8			ubExpression;
 

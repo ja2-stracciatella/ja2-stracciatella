@@ -38,8 +38,6 @@
 // Defines
 #define		NUM_FACE_SLOTS					50
 
-#define		END_FACE_OVERLAY_DELAY	2000
-
 
 // GLOBAL FOR FACES LISTING
 FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
@@ -899,22 +897,6 @@ static void MouthAutoFace(INT32 iFaceIndex)
 	{
 		pFace = &gFacesData[ iFaceIndex ];
 
-		// Remove video overlay is present....
-		if ( pFace->uiFlags & FACE_DESTROY_OVERLAY )
-		{
-			//if ( pFace->iVideoOverlay != -1 )
-			//{
-			//	if ( pFace->uiStopOverlayTimer != 0 )
-			//	{
-			//		if ( ( GetJA2Clock( ) - pFace->uiStopOverlayTimer ) > END_FACE_OVERLAY_DELAY )
-			//		{
-					//	RemoveVideoOverlay( pFace->iVideoOverlay );
-			//			pFace->iVideoOverlay = -1;
-			//		}
-			//	}
-			//}
-		}
-
 		if ( pFace->fTalking )
 		{
 			if ( !gFacesData[ iFaceIndex ].fDisabled && !gFacesData[ iFaceIndex ].fInvalidAnim )
@@ -1038,15 +1020,6 @@ static void HandleTalkingAutoFace(INT32 iFaceIndex)
 
 						// Remove gap info
 						AudioGapListDone( &(pFace->GapList) );
-
-						// Remove video overlay is present....
-						if ( pFace->iVideoOverlay != -1 )
-						{
-							//if ( pFace->uiStopOverlayTimer == 0 )
-							//{
-							//	pFace->uiStopOverlayTimer = GetJA2Clock();
-							//}
-						}
 
 						// Call dialogue handler function
 						HandleDialogueEnd( pFace );
