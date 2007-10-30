@@ -675,7 +675,7 @@ void SetAllAutoFacesInactive(  )
 
 
 static void NewEye(FACETYPE* pFace);
-static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, BOOLEAN fUseExternBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
+static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
 static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
@@ -790,8 +790,7 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 
 				}
 
-				HandleRenderFaceAdjustments( pFace, TRUE, FALSE, 0, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY );
-
+				HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
 			}
 		}
 
@@ -978,8 +977,7 @@ static void MouthAutoFace(INT32 iFaceIndex)
 
 							}
 
-							HandleRenderFaceAdjustments( pFace, TRUE, FALSE, 0, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY );
-
+							HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
 						}
 					}
 				}
@@ -1137,7 +1135,7 @@ static void DoRightIcon(UINT32 uiRenderBuffer, FACETYPE* pFace, INT16 sFaceX, IN
 }
 
 
-static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, BOOLEAN fUseExternBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY)
+static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY)
 {
 	INT16						sIconX, sIconY;
 	INT16						sIconIndex=-1;
@@ -1158,7 +1156,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
   INT8            bNumRightIcons = 0;
 
 	// If we are using an extern buffer...
-	if ( fUseExternBuffer )
+	if (uiBuffer != NO_VSURFACE)
 	{
 		uiRenderBuffer = uiBuffer;
 	}
@@ -1219,7 +1217,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
     }
 
 		// ATE: Only do this, because we can be talking during an interrupt....
-		if ( ( pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE ) && !fUseExternBuffer )
+		if (pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE && uiBuffer == NO_VSURFACE)
 		{
 			// Don't do this if we are being handled elsewhere and it's not an extern buffer...
 		}
@@ -1499,7 +1497,7 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 		}
 	}
 
-	HandleRenderFaceAdjustments( pFace, FALSE, FALSE, 0, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY );
+	HandleRenderFaceAdjustments(pFace, FALSE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
 
 	// Restore extern rect
 	if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
@@ -1558,7 +1556,7 @@ static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT
 
 	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
 
-	HandleRenderFaceAdjustments( pFace, FALSE, TRUE, uiBuffer, sX, sY, ( UINT16)( sX + usEyesX ), ( UINT16)( sY + usEyesY ) );
+	HandleRenderFaceAdjustments(pFace, FALSE, uiBuffer, sX, sY, sX + usEyesX, sY + usEyesY);
 
 	// Restore extern rect
 	if ( uiBuffer == guiSAVEBUFFER )
