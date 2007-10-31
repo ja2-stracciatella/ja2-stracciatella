@@ -5,7 +5,6 @@
 #include "WCheck.h"
 #include "Faces.h"
 #include "Overhead.h"
-#include "Gap.h"
 #include "Soldier_Profile.h"
 #include "Bullets.h"
 #include "LOS.h"

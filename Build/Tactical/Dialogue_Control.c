@@ -10,7 +10,6 @@
 #include "Faces.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "Gap.h"
 #include "Overhead.h"
 #include "Dialogue_Control.h"
 #include "Message.h"

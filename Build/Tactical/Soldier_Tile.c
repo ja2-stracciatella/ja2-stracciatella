@@ -26,7 +26,6 @@
 #include "Interface.h"
 #include "Faces.h"
 #include "Soldier_Profile.h"
-#include "Gap.h"
 #include "Campaign.h"
 #include "Structure_Wrap.h"
 #include "Items.h"
