@@ -10,13 +10,6 @@
 // Defines
 #define		NUM_FACE_SLOTS					50
 
-struct audio_gap
-{
-	UINT32 uiStart;
-	UINT32 uiEnd;
-	struct audio_gap *pNext;
-};
-
 #define FACE_AUTO_DISPLAY_BUFFER NO_VSURFACE
 #define FACE_AUTO_RESTORE_BUFFER NO_VSURFACE
 
@@ -42,15 +35,18 @@ struct audio_gap
 // duration for talking
 #define		FINAL_TALKING_DURATION	2000
 
-typedef struct audio_gap AUDIO_GAP;
-
-typedef struct
+typedef struct AUDIO_GAP
 {
-  // This is a structure that will contain data about the gaps in a particular
-	// wave file
+	UINT32 start;
+	UINT32 end;
+} AUDIO_GAP;
 
-  // Pointer to head and current entry of gap list
-	AUDIO_GAP *pHead;
+/* This is a structure that will contain data about the gaps in a particular
+ * wave file */
+typedef struct AudioGapList
+{
+	AUDIO_GAP*       gaps; // Pointer to gap array
+	const AUDIO_GAP* end;  // Pointer one past the end of the gap array
 } AudioGapList;
 
 
