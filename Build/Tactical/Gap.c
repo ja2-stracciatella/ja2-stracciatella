@@ -1,223 +1,167 @@
 #include "Debug.h"
-#include "Types.h"
-#include "Gap.h"
-#include "Sound_Control.h"
-#include "SoundMan.h"
-#include "Timer_Control.h"
 #include "FileMan.h"
+#include "Gap.h"
 #include "MemMan.h"
+#include "SoundMan.h"
+#include "Sound_Control.h"
 
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {
-	// This procedure will load in the appropriate .gap file, corresponding
-	// to the .wav file in szSoundEffects indexed by uiSampleNum
-	// The procedure will then allocate and load in the AUDIO_GAP information,
-	// while counting the number of elements loaded
+	/* This procedure will load in the appropriate .gap file, corresponding to
+	 * the .wav file in szSoundEffects indexed by uiSampleNum.  The procedure
+	 * will then allocate and load in the AUDIO_GAP information, while counting
+	 * the number of elements loaded */
 
-//	FILE *pFile;
-	HWFILE pFile;
-	const char *pSourceFileName;
-	STR pDestFileName;
-	char sFileName[256];
-	UINT8 counter=0;
-	AUDIO_GAP *pCurrentGap, *pPreviousGap;
-	UINT32 Start;
-	UINT32 End;
-
-
-	pSourceFileName= zSoundFile;
-	pDestFileName=sFileName;
 	//Initialize GapList
-	pGapList->size=0;
-	pGapList->current_time=0;
-	pGapList->pHead=0;
-	pGapList->pCurrent=0;
-	pGapList->audio_gap_active=FALSE;
-	pPreviousGap=pCurrentGap=0;
-	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3,String("File is %s", szSoundEffects[uiSampleNum]));
-	// Get filename
-	strcpy(pDestFileName, pSourceFileName);
+	pGapList->size             = 0;
+	pGapList->current_time     = 0;
+	pGapList->pHead            = NULL;
+	pGapList->pCurrent         = NULL;
+	pGapList->audio_gap_active = FALSE;
+	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
+
 	// strip .wav and change to .gap
+	char sFileName[256];
+	strcpy(sFileName, zSoundFile);
+	char* const dot = strchr(sFileName, '.');
+	dot[1] = 'g';
+	dot[2] = 'a';
+	dot[3] = 'p';
+	dot[4] = '\0';
 
-	while(pDestFileName[counter] !='.')
+	const HWFILE pFile = FileOpen(sFileName, FILE_ACCESS_READ);
+	if (pFile)
 	{
-   		counter++;
-	}
+		// gap file exists
+		// now read in the AUDIO_GAPs
+		AUDIO_GAP* pPreviousGap = NULL;
+		for (;;)
+		{
+			UINT32 Start;
+			FileRead(pFile, &Start, sizeof(UINT32));
 
-	pDestFileName[counter+1]='g';
-	pDestFileName[counter+2]='a';
-	pDestFileName[counter+3]='p';
-	pDestFileName[counter+4]='\0';
+			if (FileCheckEndOfFile(pFile)) break;
 
-	pFile = FileOpen(pDestFileName, FILE_ACCESS_READ);
-	if( pFile )
-	{
-			counter=0;
-		 // gap file exists
-		 // now read in the AUDIO_GAPs
+			// can read the first element, there exists a second
+			UINT32 End;
+			FileRead(pFile, &End, sizeof(UINT32));
 
-		 //fread(&Start,sizeof(UINT32), 1, pFile);
-		FileRead(pFile, &Start, sizeof(UINT32));
-
-
-		//	while ( !feof(pFile) )
-			while ( !FileCheckEndOfFile( pFile ) )
+			// allocate space for AUDIO_GAP
+			AUDIO_GAP* const pCurrentGap = MemAlloc(sizeof(*pCurrentGap));
+			if (pPreviousGap != NULL)
 			{
-				 // can read the first element, there exists a second
-					//fread(&End, sizeof(UINT32),1,pFile);
-				FileRead(pFile, &End, sizeof(UINT32));
-
-				 // allocate space for AUDIO_GAP
-				 pCurrentGap = MemAlloc( sizeof(AUDIO_GAP) );
-				 if (pPreviousGap !=0)
-						 pPreviousGap->pNext=pCurrentGap;
-				 else
-						{
-						 // Start of list
-						 pGapList->pCurrent=pCurrentGap;
-						 pGapList->pHead=pCurrentGap;
-						}
-
-				 pGapList->size++;
-				 pCurrentGap->pNext=0;
-				 pCurrentGap->uiStart=Start;
-				 pCurrentGap->uiEnd=End;
-				 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Gap Start %d and Ends %d", Start, End) );
-
-				 // Increment pointer
-				 pPreviousGap=pCurrentGap;
-
-				//	fread(&Start,sizeof(UINT32), 1, pFile);
-				FileRead(pFile, &Start, sizeof(UINT32));
+				pPreviousGap->pNext = pCurrentGap;
+			}
+			else
+			{
+				// Start of list
+				pGapList->pCurrent = pCurrentGap;
+				pGapList->pHead    = pCurrentGap;
 			}
 
-			pGapList->audio_gap_active=FALSE;
-			pGapList->current_time=0;
+			pGapList->size++;
+			pCurrentGap->pNext   = 0;
+			pCurrentGap->uiStart = Start;
+			pCurrentGap->uiEnd   = End;
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Start %d and Ends %d", Start, End));
 
+			// Increment pointer
+			pPreviousGap = pCurrentGap;
+		}
 
-	//fclose(pFile);
-			 FileClose( pFile );
-		 }
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s and has %d gaps", pDestFileName,  pGapList->size) );
+		pGapList->audio_gap_active = FALSE;
+		pGapList->current_time     = 0;
 
+		FileClose(pFile);
+	}
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s and has %d gaps", sFileName, pGapList->size));
 }
 
-void AudioGapListDone( AudioGapList	*pGapList )
+
+void AudioGapListDone(AudioGapList* pGapList)
 {
- // This procedure will go through the  AudioGapList and free space/nullify pointers
- // for any allocated elements
-
-	AUDIO_GAP *pCurrent, *pNext;
- if (pGapList->pHead !=0)
-		{
-
-	   pCurrent=pGapList->pHead;
-     pNext=pCurrent->pNext;
-	   // There are elements in the list
-	    while(pNext !=0)
-						{
-             // kill pCurrent
-				     MemFree(pCurrent);
-						 pCurrent=pNext;
-						 pNext=pNext->pNext;
-						}
-			// now kill the last element
-			MemFree(pCurrent);
-      pCurrent=0;
-
-		}
- pGapList->pHead=0;
- pGapList->pCurrent=0;
- pGapList->size = 0;
+	/* This procedure will go through the AudioGapList and free space/nullify
+	 * pointers for all allocated elements */
+	for (AUDIO_GAP* i = pGapList->pHead; i != NULL;)
+	{
+		AUDIO_GAP* const next = i->pNext;
+		MemFree(i);
+		i = next;
+	}
+	pGapList->pHead    = NULL;
+	pGapList->pCurrent = NULL;
+	pGapList->size     = 0;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Audio Gap List Deleted");
 }
 
 
-
-void PollAudioGap( UINT32 uiSampleNum, AudioGapList *pGapList )
+void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 {
- // This procedure will access the AudioGapList pertaining to the .wav about
- // to be played and sets the audio_gap_active flag. This is done by
- // going to the current AUDIO_GAP element in the AudioGapList, comparing to see if
- //	the current time is between the uiStart and uiEnd. If so, set flag..if not and
- // the uiStart of the next element is not greater than current time, set current to next and repeat
- // ...if next elements uiStart is larger than current_time, or no more elements..
- // set flag FALSE
+	/* This procedure will access the AudioGapList pertaining to the .wav about
+	 * to be played and sets the audio_gap_active flag. This is done by going to
+	 * the current AUDIO_GAP element in the AudioGapList, comparing to see if the
+	 * current time is between the uiStart and uiEnd. If so, set flag..if not and
+	 * the uiStart of the next element is not greater than current time, set
+	 * current to next and repeat ...if next elements uiStart is larger than
+	 * current_time, or no more elements..  set flag FALSE */
 
-	UINT32 time;
- AUDIO_GAP *pCurrent;
-
- if(!pGapList)
- {
-	 // no gap list, return
-	 return;
- }
-
- if (pGapList->size > 0)
- {
-  time=SoundGetPosition(uiSampleNum);
-//  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Sound Sample Time is %d", time) );
- }
- else
- {
-    pGapList->audio_gap_active=(FALSE);
-		return;
- }
-
- // set current ot head of gap list for this sound
- pCurrent = pGapList -> pHead;
-
- // check to see if we have fallen behind
- if( ( time > pCurrent-> uiEnd ) )
- {
-	 // fallen behind
-	 // catchup
-	 while( time > pCurrent -> uiEnd )
-	 {
-		 pCurrent = pCurrent -> pNext;
-		 if( ! pCurrent )
-		 {
-       pGapList->audio_gap_active=(FALSE);
-			 return;
-		 }
-	 }
- }
-
-
-
-
- // check to see if time is within the next AUDIO_GAPs start time
- if ( ( time > pCurrent ->uiStart ) && ( time < pCurrent->uiEnd ) )
-			{
-
-	     if ((time >pCurrent->uiStart)&&(time < pCurrent->uiEnd))
-			 {
-				 // we are within the time frame
-		  	 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time) );
-				 pGapList->audio_gap_active=(TRUE);
-
-			 }
-       else if ( (time > pCurrent->uiEnd)&&(pGapList->audio_gap_active == TRUE) )
-			 {
-				 // reset if already set
-				 pGapList->audio_gap_active=(FALSE);
-			   DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Gap Ended at %d", time) );
-			 }
-			}
-  else
+	if (!pGapList)
 	{
-    pGapList->audio_gap_active=(FALSE);
+		// no gap list, return
+		return;
 	}
 
+	if (pGapList->size == 0)
+	{
+		pGapList->audio_gap_active = FALSE;
+		return;
+	}
+
+	const UINT32 time = SoundGetPosition(uiSampleNum);
+	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Sound Sample Time is %d", time));
+
+	// set current ot head of gap list for this sound
+	const AUDIO_GAP* pCurrent = pGapList->pHead;
+
+	// Check to see if we have fallen behind.  If so, catch up
+	while (time > pCurrent->uiEnd)
+	{
+		pCurrent = pCurrent->pNext;
+		if (!pCurrent)
+		{
+			pGapList->audio_gap_active = FALSE;
+			return;
+		}
+	}
+
+	// check to see if time is within the next AUDIO_GAPs start time
+	if (pCurrent->uiStart < time && time < pCurrent->uiEnd)
+	{
+		if (pCurrent->uiStart < time && time < pCurrent->uiEnd)
+		{
+			// we are within the time frame
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time));
+			pGapList->audio_gap_active = TRUE;
+		}
+		else if (time > pCurrent->uiEnd && pGapList->audio_gap_active)
+		{
+			// reset if already set
+			pGapList->audio_gap_active = FALSE;
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Ended at %d", time));
+		}
+	}
+	else
+	{
+		pGapList->audio_gap_active = FALSE;
+	}
 }
 
 
-UINT32 PlayJA2GapSample(const char *zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData )
+UINT32 PlayJA2GapSample(const char* zSoundFile, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, AudioGapList* pData)
 {
 	// Setup Gap Detection, if it is not null
-	if( pData != NULL )
-		AudioGapListInit( zSoundFile, pData );
+	if (pData != NULL) AudioGapListInit(zSoundFile, pData);
 
 	const UINT32 vol = CalculateSpeechVolume(ubVolume);
 	return SoundPlayStreamedFile(zSoundFile, vol, uiPan, ubLoops, NULL, NULL);
