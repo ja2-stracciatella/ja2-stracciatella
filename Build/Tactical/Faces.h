@@ -93,7 +93,6 @@ typedef struct
 	BOOLEAN		fAutoRestoreBuffer;							// Flag to indicate our own restorebuffer or not
 	BOOLEAN		fAutoDisplayBuffer;							// Flag to indicate our own display buffer or not
 	BOOLEAN		fDisplayTextOver;								// Boolean indicating to display text on face
-	BOOLEAN		fOldDisplayTextOver;						// OLD Boolean indicating to display text on face
 	BOOLEAN		fCanHandleInactiveNow;
 	wchar_t			zDisplayText[ 30 ];							// String of text that can be displayed
 
@@ -123,7 +122,6 @@ typedef struct
 
 	INT8			bOldSoldierLife;
 	INT8			bOldActionPoints;
-	BOOLEAN		fOldHandleUIHatch;
 	BOOLEAN		fOldShowHighlight;
 	INT8			bOldAssignment;
 	INT8			ubOldServiceCount;

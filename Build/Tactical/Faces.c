@@ -1624,7 +1624,6 @@ void HandleAutoFaces( )
 	INT8	bAPs;
 	BOOLEAN	fRerender = FALSE;
 	BOOLEAN	fHandleFace;
-	BOOLEAN	fHandleUIHatch;
 	SOLDIERTYPE *pSoldier;
 
 
@@ -1632,7 +1631,6 @@ void HandleAutoFaces( )
 	{
 		fRerender = FALSE;
 		fHandleFace = TRUE;
-		fHandleUIHatch = FALSE;
 
 		// OK, NOW, check if our bLife status has changed, re-render if so!
 		if ( gFacesData[ uiCount ].fAllocated  )
@@ -1754,7 +1752,6 @@ void HandleAutoFaces( )
 					 pFace->ubOldServicePartner = pSoldier->ubServicePartner;
 				 }
 
-				 pFace->fOldHandleUIHatch = fHandleUIHatch;
 				 pFace->bOldSoldierLife		= bLife;
 				 pFace->bOldActionPoints	= bAPs;
 				 pFace->bOldStealthMode		= pSoldier->bStealthMode;
