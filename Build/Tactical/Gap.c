@@ -138,18 +138,9 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	// check to see if time is within the next AUDIO_GAPs start time
 	if (pCurrent->uiStart < time && time < pCurrent->uiEnd)
 	{
-		if (pCurrent->uiStart < time && time < pCurrent->uiEnd)
-		{
-			// we are within the time frame
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time));
-			pGapList->audio_gap_active = TRUE;
-		}
-		else if (time > pCurrent->uiEnd && pGapList->audio_gap_active)
-		{
-			// reset if already set
-			pGapList->audio_gap_active = FALSE;
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Ended at %d", time));
-		}
+		// we are within the time frame
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time));
+		pGapList->audio_gap_active = TRUE;
 	}
 	else
 	{
