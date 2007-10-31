@@ -3,9 +3,6 @@
 
 #include "Faces.h"
 
-typedef UINT8		AudioSample8;
-typedef INT16		AudioSample16;
-
 
 void AudioGapListDone( AudioGapList	*pGapList );
 
