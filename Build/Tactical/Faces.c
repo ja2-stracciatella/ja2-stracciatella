@@ -1124,11 +1124,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 		else
 		{
 			uiRenderBuffer = pFace->uiAutoRestoreBuffer;
-
-			if ( pFace->uiAutoRestoreBuffer == FACE_NO_RESTORE_BUFFER )
-			{
-				return;
-			}
 		}
 	}
 
@@ -1440,16 +1435,13 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 	}
 
 	// Blit face to save buffer!
-	if ( pFace->uiAutoRestoreBuffer != FACE_NO_RESTORE_BUFFER )
+	if (pFace->uiAutoRestoreBuffer == guiSAVEBUFFER)
 	{
-		if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
-		{
-			BltVideoObjectFromIndex( pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, pFace->usFaceX, pFace->usFaceY);
-		}
-		else
-		{
-			BltVideoObjectFromIndex( pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
-		}
+		BltVideoObjectFromIndex(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, pFace->usFaceX, pFace->usFaceY);
+	}
+	else
+	{
+		BltVideoObjectFromIndex(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
 	}
 
 	HandleRenderFaceAdjustments(pFace, FALSE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
@@ -1881,12 +1873,6 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft,
 	CHECKF( iFaceIndex != -1 );
 
 	pFace = &gFacesData[ iFaceIndex ];
-
-	// DOn't continue if we do not want the resotre to happen ( ei blitting entrie thing every frame...
-	if ( pFace->uiAutoRestoreBuffer == FACE_NO_RESTORE_BUFFER )
-	{
-		return( FALSE );
-	}
 
 	const SGPRect r = { sSrcLeft, sSrcTop, sSrcLeft + sWidth, sSrcTop + sHeight };
 	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);

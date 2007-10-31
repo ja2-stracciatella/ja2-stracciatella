@@ -19,7 +19,6 @@ struct audio_gap
 
 #define  FACE_AUTO_DISPLAY_BUFFER		0xFFFFF000
 #define  FACE_AUTO_RESTORE_BUFFER		0xFFFFFF00
-#define  FACE_NO_RESTORE_BUFFER			0xFFFFFFF0
 
 // FLAGS....
 #define	 FACE_BIGFACE												0x00000001						// A BIGFACE instead of small face
