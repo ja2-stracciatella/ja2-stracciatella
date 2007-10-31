@@ -15,7 +15,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	//Initialize GapList
 	pGapList->pHead            = NULL;
-	pGapList->audio_gap_active = FALSE;
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
 
 	// strip .wav and change to .gap
@@ -65,8 +64,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 			pPreviousGap = pCurrentGap;
 		}
 
-		pGapList->audio_gap_active = FALSE;
-
 		FileClose(pFile);
 	}
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s", sFileName));
@@ -88,28 +85,24 @@ void AudioGapListDone(AudioGapList* pGapList)
 }
 
 
-void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
+BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 {
 	/* This procedure will access the AudioGapList pertaining to the .wav about
-	 * to be played and sets the audio_gap_active flag. This is done by going to
-	 * the current AUDIO_GAP element in the AudioGapList, comparing to see if the
-	 * current time is between the uiStart and uiEnd. If so, set flag..if not and
-	 * the uiStart of the next element is not greater than current time, set
-	 * current to next and repeat ...if next elements uiStart is larger than
-	 * current time, or no more elements..  set flag FALSE */
+	 * to be played and returns whether there is a gap currently.  This is done
+	 * by going to the current AUDIO_GAP element in the AudioGapList, comparing
+	 * to see if the current time is between the uiStart and uiEnd. If so, return
+	 * TRUE..if not and the uiStart of the next element is not greater than
+	 * current time, set current to next and repeat ...if next elements uiStart
+	 * is larger than current time, or no more elements..  return FALSE */
 
 	if (!pGapList)
 	{
 		// no gap list, return
-		return;
+		return FALSE;
 	}
 
 	const AUDIO_GAP* pCurrent = pGapList->pHead;
-	if (pCurrent == NULL)
-	{
-		pGapList->audio_gap_active = FALSE;
-		return;
-	}
+	if (pCurrent == NULL) return FALSE;
 
 	const UINT32 time = SoundGetPosition(uiSampleNum);
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Sound Sample Time is %d", time));
@@ -118,11 +111,7 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	while (time > pCurrent->uiEnd)
 	{
 		pCurrent = pCurrent->pNext;
-		if (!pCurrent)
-		{
-			pGapList->audio_gap_active = FALSE;
-			return;
-		}
+		if (!pCurrent) return FALSE;
 	}
 
 	// check to see if time is within the next AUDIO_GAPs start time
@@ -130,11 +119,11 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	{
 		// we are within the time frame
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap Started at %d", time));
-		pGapList->audio_gap_active = TRUE;
+		return TRUE;
 	}
 	else
 	{
-		pGapList->audio_gap_active = FALSE;
+		return FALSE;
 	}
 }
 

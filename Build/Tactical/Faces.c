@@ -885,10 +885,8 @@ static void MouthAutoFace(INT32 iFaceIndex)
 			{
 				if ( pFace->fAnimatingTalking )
 				{
-					PollAudioGap( pFace->uiSoundID, &(pFace->GapList ) );
-
 					// Check if we have an audio gap
-					if ( pFace->GapList.audio_gap_active )
+					if (PollAudioGap(pFace->uiSoundID, &pFace->GapList))
 					{
 						pFace->sMouthFrame = 0;
 

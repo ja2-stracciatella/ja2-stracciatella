@@ -51,9 +51,6 @@ typedef struct
 
   // Pointer to head and current entry of gap list
 	AUDIO_GAP *pHead;
-
-	BOOLEAN					audio_gap_active;
-
 } AudioGapList;
 
 
