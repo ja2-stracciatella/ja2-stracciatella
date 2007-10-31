@@ -49,7 +49,6 @@ typedef struct
   // This is a structure that will contain data about the gaps in a particular
 	// wave file
 
-  UINT32					size; /* the number of entries in the list of AUDIO_GAPs itself*/
   // Pointer to head and current entry of gap list
 	AUDIO_GAP *pHead;
 

@@ -14,7 +14,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	 * the number of elements loaded */
 
 	//Initialize GapList
-	pGapList->size             = 0;
 	pGapList->pHead            = NULL;
 	pGapList->audio_gap_active = FALSE;
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
@@ -57,7 +56,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 				pGapList->pHead = pCurrentGap;
 			}
 
-			pGapList->size++;
 			pCurrentGap->pNext   = 0;
 			pCurrentGap->uiStart = Start;
 			pCurrentGap->uiEnd   = End;
@@ -71,7 +69,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 		FileClose(pFile);
 	}
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s and has %d gaps", sFileName, pGapList->size));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Gap List Started From File %s", sFileName));
 }
 
 
@@ -85,8 +83,7 @@ void AudioGapListDone(AudioGapList* pGapList)
 		MemFree(i);
 		i = next;
 	}
-	pGapList->pHead    = NULL;
-	pGapList->size     = 0;
+	pGapList->pHead = NULL;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Audio Gap List Deleted");
 }
 
@@ -107,7 +104,8 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 		return;
 	}
 
-	if (pGapList->size == 0)
+	const AUDIO_GAP* pCurrent = pGapList->pHead;
+	if (pCurrent == NULL)
 	{
 		pGapList->audio_gap_active = FALSE;
 		return;
@@ -115,9 +113,6 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 
 	const UINT32 time = SoundGetPosition(uiSampleNum);
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Sound Sample Time is %d", time));
-
-	// set current ot head of gap list for this sound
-	const AUDIO_GAP* pCurrent = pGapList->pHead;
 
 	// Check to see if we have fallen behind.  If so, catch up
 	while (time > pCurrent->uiEnd)
