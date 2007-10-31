@@ -17,7 +17,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	pGapList->size             = 0;
 	pGapList->current_time     = 0;
 	pGapList->pHead            = NULL;
-	pGapList->pCurrent         = NULL;
 	pGapList->audio_gap_active = FALSE;
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
 
@@ -56,8 +55,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 			else
 			{
 				// Start of list
-				pGapList->pCurrent = pCurrentGap;
-				pGapList->pHead    = pCurrentGap;
+				pGapList->pHead = pCurrentGap;
 			}
 
 			pGapList->size++;
@@ -90,7 +88,6 @@ void AudioGapListDone(AudioGapList* pGapList)
 		i = next;
 	}
 	pGapList->pHead    = NULL;
-	pGapList->pCurrent = NULL;
 	pGapList->size     = 0;
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Audio Gap List Deleted");
 }

@@ -53,7 +53,6 @@ typedef struct
   UINT32					current_time;
   // Pointer to head and current entry of gap list
 	AUDIO_GAP *pHead;
-	AUDIO_GAP *pCurrent;
 
 	BOOLEAN					audio_gap_active;
 
