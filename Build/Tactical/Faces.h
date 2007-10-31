@@ -50,7 +50,6 @@ typedef struct
 	// wave file
 
   UINT32					size; /* the number of entries in the list of AUDIO_GAPs itself*/
-  UINT32					current_time;
   // Pointer to head and current entry of gap list
 	AUDIO_GAP *pHead;
 

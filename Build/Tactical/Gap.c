@@ -15,7 +15,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	//Initialize GapList
 	pGapList->size             = 0;
-	pGapList->current_time     = 0;
 	pGapList->pHead            = NULL;
 	pGapList->audio_gap_active = FALSE;
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("File is %s", szSoundEffects[uiSampleNum]));
@@ -69,7 +68,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 		}
 
 		pGapList->audio_gap_active = FALSE;
-		pGapList->current_time     = 0;
 
 		FileClose(pFile);
 	}
@@ -101,7 +99,7 @@ void PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	 * current time is between the uiStart and uiEnd. If so, set flag..if not and
 	 * the uiStart of the next element is not greater than current time, set
 	 * current to next and repeat ...if next elements uiStart is larger than
-	 * current_time, or no more elements..  set flag FALSE */
+	 * current time, or no more elements..  set flag FALSE */
 
 	if (!pGapList)
 	{
