@@ -17,8 +17,8 @@ struct audio_gap
 	struct audio_gap *pNext;
 };
 
-#define  FACE_AUTO_DISPLAY_BUFFER		0xFFFFF000
-#define  FACE_AUTO_RESTORE_BUFFER		0xFFFFFF00
+#define FACE_AUTO_DISPLAY_BUFFER NO_VSURFACE
+#define FACE_AUTO_RESTORE_BUFFER NO_VSURFACE
 
 // FLAGS....
 #define	 FACE_BIGFACE												0x00000001						// A BIGFACE instead of small face
