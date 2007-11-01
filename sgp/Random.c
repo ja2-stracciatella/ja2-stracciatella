@@ -17,7 +17,7 @@
 #endif
 
 
-void InitializeRandom()
+void InitializeRandom(void)
 {
   // Seed the random-number generator with current time so that
   // the numbers will be different every time we run.

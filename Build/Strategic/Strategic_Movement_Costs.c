@@ -2152,7 +2152,8 @@ static void InitStrategicRowP(void)
 	pSector->ubTraversability[ THROUGH_STRATEGIC_MOVE ] = EDGEOFWORLD;
 }
 
-void InitStrategicMovementCosts()
+
+void InitStrategicMovementCosts(void)
 {
 	InitStrategicRowA();
 	InitStrategicRowB();

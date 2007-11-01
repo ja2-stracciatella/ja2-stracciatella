@@ -81,7 +81,7 @@ extern	BOOLEAN fStartOverFlag;
 extern void SetAttributes( void );
 
 
-void GameInitCharProfile()
+void GameInitCharProfile(void)
 {
 	LaptopSaveInfo.iVoiceId = 0;
 	iCurrentPortrait = 0;
@@ -93,7 +93,7 @@ void GameInitCharProfile()
 static void LoadImpGraphics(void);
 
 
-void EnterCharProfile()
+void EnterCharProfile(void)
 {
 	// reset previous page
   iPreviousImpPage = -1;
@@ -107,7 +107,7 @@ static void ExitOldIMPMode(void);
 static void RemoveImpGraphics(void);
 
 
-void ExitCharProfile()
+void ExitCharProfile(void)
 {
   // get rid of graphics
 	RemoveImpGraphics( );
@@ -121,7 +121,7 @@ static void EnterNewIMPMode(void);
 static BOOLEAN HasTheCurrentIMPPageBeenVisited(void);
 
 
-void HandleCharProfile()
+void HandleCharProfile(void)
 {
 	if( fReDrawCharProfile )
   {
@@ -240,7 +240,8 @@ void HandleCharProfile()
 	 }
 }
 
-void RenderCharProfile()
+
+void RenderCharProfile(void)
 {
 	// button is waiting to go up?...do nothing,
 

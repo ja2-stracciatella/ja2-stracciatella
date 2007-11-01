@@ -395,7 +395,7 @@ static const UINT8 AmbientVols[NUM_AMBIENTS] = {
 };
 
 
-BOOLEAN ShutdownJA2Sound( )
+BOOLEAN ShutdownJA2Sound(void)
 {
 	SoundStopAll();
 
@@ -469,7 +469,7 @@ void SetSpeechVolume(UINT32 uiNewVolume)
 }
 
 
-UINT32 GetSpeechVolume( )
+UINT32 GetSpeechVolume(void)
 {
 	return( guiSpeechVolume );
 }
@@ -481,7 +481,7 @@ void SetSoundEffectsVolume(UINT32 uiNewVolume)
 }
 
 
-UINT32 GetSoundEffectsVolume( )
+UINT32 GetSoundEffectsVolume(void)
 {
 	return( guiSoundEffectsVolume );
 }
@@ -764,7 +764,8 @@ void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
   }
 }
 
-void SetPositionSndsActive( )
+
+void SetPositionSndsActive(void)
 {
   UINT32 cnt;
 	POSITIONSND *pPositionSnd;
@@ -790,7 +791,7 @@ void SetPositionSndsActive( )
 }
 
 
-void SetPositionSndsInActive( )
+void SetPositionSndsInActive(void)
 {
   UINT32 cnt;
 	POSITIONSND *pPositionSnd;
@@ -922,7 +923,7 @@ static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
 }
 
 
-void SetPositionSndsVolumeAndPanning( )
+void SetPositionSndsVolumeAndPanning(void)
 {
   UINT32 cnt;
 	POSITIONSND *pPositionSnd;

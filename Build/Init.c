@@ -3,6 +3,7 @@
 #include "SGP.h"
 #include "Gameloop.h"
 #include "Screens.h"
+#include "Strategic_Movement_Costs.h"
 #include "WCheck.h"
 #include "RenderWorld.h"
 #include "MouseSystem.h"

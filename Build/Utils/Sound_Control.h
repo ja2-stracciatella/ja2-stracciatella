@@ -387,7 +387,7 @@ enum AmbientDefines
 typedef void (*SOUND_STOP_CALLBACK)( void *pData );
 
 
-BOOLEAN ShutdownJA2Sound( );
+BOOLEAN ShutdownJA2Sound(void);
 UINT32 PlayJA2Sample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
@@ -400,10 +400,10 @@ UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 u
 
 
 
-UINT32	GetSoundEffectsVolume( );
+UINT32 GetSoundEffectsVolume(void);
 void		SetSoundEffectsVolume( UINT32 uiNewVolume );
 
-UINT32	GetSpeechVolume( );
+UINT32 GetSpeechVolume(void);
 void		SetSpeechVolume( UINT32 uiNewVolume );
 
 
@@ -422,9 +422,9 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 
 INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, const SOLDIERTYPE* SoundSource, UINT32 iSoundToPlay);
 void DeletePositionSnd( INT32 iPositionSndIndex );
-void SetPositionSndsActive( );
-void SetPositionSndsInActive( );
-void SetPositionSndsVolumeAndPanning( );
+void SetPositionSndsActive(void);
+void SetPositionSndsInActive(void);
+void SetPositionSndsVolumeAndPanning(void);
 void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo );
 
 

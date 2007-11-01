@@ -5,6 +5,7 @@
 #include "Queen_Command.h"
 #include "Overhead.h"
 #include "Strategic_Movement.h"
+#include "Strategic_Movement_Costs.h"
 #include "Strategic_Status.h"
 #include "GameSettings.h"
 #include "Creature_Spreading.h"
@@ -13,8 +14,6 @@
 #include "MemMan.h"
 #include "Debug.h"
 
-
-extern void	InitStrategicMovementCosts();
 
 UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 

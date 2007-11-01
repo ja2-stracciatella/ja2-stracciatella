@@ -2,11 +2,11 @@
 #define __CHARPROFILE_H
 
 #include "Types.h"
-void GameInitCharProfile();
-void EnterCharProfile();
-void ExitCharProfile();
-void HandleCharProfile();
-void RenderCharProfile();
+void GameInitCharProfile(void);
+void EnterCharProfile(void);
+void ExitCharProfile(void);
+void HandleCharProfile(void);
+void RenderCharProfile(void);
 void ResetCharacterStats( void );
 void InitIMPSubPageList( void );
 

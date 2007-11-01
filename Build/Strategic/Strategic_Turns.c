@@ -25,20 +25,21 @@ UINT32		guiLastStrategicTime = 0;
 UINT32		guiLastTacticalRealTime = 0;
 
 
-void StrategicTurnsNewGame( )
+void StrategicTurnsNewGame(void)
 {
 	// Sync game start time
 	SyncStrategicTurnTimes( );
 }
 
 
-void SyncStrategicTurnTimes( )
+void SyncStrategicTurnTimes(void)
 {
 	guiLastStrategicTime =  GetWorldTotalSeconds( );
 	guiLastTacticalRealTime =  GetJA2Clock( );
 }
 
-void HandleStrategicTurn( )
+
+void HandleStrategicTurn(void)
 {
 	UINT32	uiTime;
 	UINT32	uiCheckTime;

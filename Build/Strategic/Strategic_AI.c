@@ -3,6 +3,7 @@
 #include "Font_Control.h"
 #include "Types.h"
 #include "Strategic_Movement.h"
+#include "Strategic_Movement_Costs.h"
 #include "Queen_Command.h"
 #include "Strategic_AI.h"
 #include "Game_Event_Hook.h"

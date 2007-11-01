@@ -327,18 +327,21 @@ UINT32 MapUtilScreenShutdown( )
 #include "Types.h"
 #include "ScreenIDs.h"
 
-UINT32	MapUtilScreenInit( )
+
+UINT32 MapUtilScreenInit(void)
 {
 	return( TRUE );
 }
 
-UINT32	MapUtilScreenHandle( )
+
+UINT32 MapUtilScreenHandle(void)
 {
 	//If this screen ever gets set, then this is a bad thing -- endless loop
 	return( ERROR_SCREEN );
 }
 
-UINT32 MapUtilScreenShutdown( )
+
+UINT32 MapUtilScreenShutdown(void)
 {
 	return( TRUE );
 }
