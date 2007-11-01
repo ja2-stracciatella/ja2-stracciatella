@@ -28,8 +28,6 @@
 
 BOOLEAN fReDrawCharProfile = FALSE;
 BOOLEAN fButtonPendingFlag = FALSE;
-BOOLEAN fAddCreatedCharToPlayersTeam = FALSE;
-BOOLEAN fReEnterIMP = FALSE;
 
 INT32 iCurrentImpPage = IMP_HOME_PAGE;
 INT32 iPreviousImpPage = -1;
