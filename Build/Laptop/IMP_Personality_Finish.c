@@ -26,9 +26,7 @@ UINT8 bPersonalityEndState = 0;
 // flag set when player hits  YES/NO button
 BOOLEAN fConfirmHasBeenSelectedFlag = FALSE;
 BOOLEAN fConfirmIsYesFlag = FALSE;
-BOOLEAN fOkToReturnIMPMainPageFromPersonalityFlag = FALSE;
 BOOLEAN fCreatedOkIMPButton = FALSE;
-BOOLEAN fExitDueFrIMPPerFinToOkButton = FALSE;
 BOOLEAN fExitIMPPerFinAtOk = FALSE;
 BOOLEAN fCreateFinishOkButton = FALSE;
 
@@ -98,8 +96,7 @@ void ExitIMPPersonalityFinish( void )
 	  DestroyPersonalityFinishOkButton( );
 	}
 
-
-	if( ( fExitDueFrIMPPerFinToOkButton == FALSE ) &&( fExitIMPPerFinAtOk == FALSE ) )
+	if (!fExitIMPPerFinAtOk)
 	{
 		// exit due to cancel button, not ok or Yes/no button
 		// get rid of yes no
@@ -108,7 +105,6 @@ void ExitIMPPersonalityFinish( void )
 
 
 	fCreatedOkIMPButton = FALSE;
-	fOkToReturnIMPMainPageFromPersonalityFlag = FALSE;
 	fConfirmHasBeenSelectedFlag = FALSE;
 }
 
@@ -153,16 +149,6 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 		DestroyIMPersonalityFinishButtons( );
 		fCreateFinishOkButton = TRUE;
 		fExitIMPPerFinAtOk = TRUE;
-	}
-
-	// ok to return
-	if( fOkToReturnIMPMainPageFromPersonalityFlag == TRUE )
-	{
-		DestroyPersonalityFinishOkButton( );
-		fCreatedOkIMPButton = FALSE;
-		fOkToReturnIMPMainPageFromPersonalityFlag = FALSE;
-		fConfirmHasBeenSelectedFlag = FALSE;
-		fExitDueFrIMPPerFinToOkButton = TRUE;
 	}
 }
 
