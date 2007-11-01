@@ -55,10 +55,6 @@
  * s indicates the smell byte, b indicates the blood byte
  */
 
-// LUT for which graphic to use based on strength
-//                                         0  1, 2, 3, 4, 5, 6, 7
-static const UINT8 ubBloodGraphicLUT[] = { 3, 3, 2, 2, 1, 1, 0, 0 };
-
 
 #define SMELL_STRENGTH_MAX		63
 #define BLOOD_STRENGTH_MAX		7
@@ -539,7 +535,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 
 			if ( bValue > 0 )
 			{
-				usIndex = (UINT16)( ( Random( 4 ) * 4 ) + ubBloodGraphicLUT[ bValue ] );
+				usIndex = Random(4) * 4 + 3 - bValue / 2U;
 
 				UINT16 usNewIndex;
 				if ( BLOOD_FLOOR_TYPE( pMapElement->ubSmellInfo )	== 0 )
