@@ -13,8 +13,8 @@
 
 
 // IMP AboutUs buttons
-INT32 giIMPAboutUsButton[1];
-INT32 giIMPAboutUsButtonImage[1];
+static INT32 giIMPAboutUsButton[1];
+static INT32 giIMPAboutUsButtonImage[1];
 
 static void BtnIMPBackCallback(GUI_BUTTON *btn, INT32 reason);
 

@@ -31,7 +31,7 @@ enum
 #define FRENZY_THRESHOLD 8
 #define MAX_EAT_DIST 5
 
-INT8 gbCallPriority[NUM_CREATURE_CALLS][NUM_CREATURE_CALLERS] =
+static const INT8 gbCallPriority[NUM_CREATURE_CALLS][NUM_CREATURE_CALLERS] =
 {
 	{0, 0, 0 },//CALL_NONE
 	{3, 5, 12},//CALL_1_PREY
@@ -40,7 +40,7 @@ INT8 gbCallPriority[NUM_CREATURE_CALLS][NUM_CREATURE_CALLERS] =
 	{6, 9, 12},//CALL_CRIPPLED
 };
 
-INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
+static const INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
 {
 	4, //CALL_1_PREY
 	5, //CALL_MULTIPLE_PREY

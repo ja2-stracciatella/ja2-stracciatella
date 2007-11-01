@@ -21,7 +21,7 @@
 #define	NUM_SEC_PER_STRATEGIC_TURN					( NUM_SEC_IN_MIN * 15 )	// Every fifteen minutes
 
 
-UINT32		guiLastTacticalRealTime = 0;
+static UINT32 guiLastTacticalRealTime = 0;
 
 
 void StrategicTurnsNewGame(void)

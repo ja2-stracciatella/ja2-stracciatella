@@ -24,16 +24,16 @@ UINT8 bPersonalityEndState = 0;
 
 
 // flag set when player hits  YES/NO button
-BOOLEAN fConfirmHasBeenSelectedFlag = FALSE;
-BOOLEAN fConfirmIsYesFlag = FALSE;
-BOOLEAN fCreatedOkIMPButton = FALSE;
-BOOLEAN fExitIMPPerFinAtOk = FALSE;
-BOOLEAN fCreateFinishOkButton = FALSE;
+static BOOLEAN fConfirmHasBeenSelectedFlag = FALSE;
+static BOOLEAN fConfirmIsYesFlag           = FALSE;
+static BOOLEAN fCreatedOkIMPButton         = FALSE;
+static BOOLEAN fExitIMPPerFinAtOk          = FALSE;
+static BOOLEAN fCreateFinishOkButton       = FALSE;
 
 
 // buttons
-UINT32 giIMPPersonalityFinishButton[2];
-UINT32 giIMPPersonalityFinishButtonImage[2];
+static UINT32 giIMPPersonalityFinishButton[2];
+static UINT32 giIMPPersonalityFinishButtonImage[2];
 
 
 static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason);

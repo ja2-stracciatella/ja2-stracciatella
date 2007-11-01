@@ -13,8 +13,8 @@
 
 
 // IMP personality entrance buttons
-INT32 giIMPPersonalityEntranceButton[1];
-INT32 giIMPPersonalityEntranceButtonImage[1];
+static INT32 giIMPPersonalityEntranceButton[1];
+static INT32 giIMPPersonalityEntranceButtonImage[1];
 
 
 static void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn, INT32 reason);

@@ -30,7 +30,7 @@ BOOLEAN fReDrawCharProfile = FALSE;
 BOOLEAN fButtonPendingFlag = FALSE;
 
 INT32 iCurrentImpPage = IMP_HOME_PAGE;
-INT32 iPreviousImpPage = -1;
+static INT32 iPreviousImpPage = -1;
 
 
 // attributes
@@ -66,11 +66,11 @@ INT32 iAttitude = 0;
 
 
 // IMP global buttons
-INT32 giIMPButton[1];
-INT32 giIMPButtonImage[1];
+static INT32 giIMPButton[1];
+static INT32 giIMPButtonImage[1];
 
 // visted subpages
-BOOLEAN fVisitedIMPSubPages[ IMP_NUM_PAGES ];
+static BOOLEAN fVisitedIMPSubPages[IMP_NUM_PAGES];
 extern INT32 iCurrentPortrait;
 extern int iCurrentVoices;
 extern	INT32 giMaxPersonalityQuizQuestion;
