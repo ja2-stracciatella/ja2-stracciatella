@@ -179,7 +179,6 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 	AssertMsg( pGroup->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 	pPlayer->pSoldier = pSoldier;
 	pPlayer->ubProfileID = pSoldier->ubProfile;
-	pPlayer->ubID = pSoldier->ubID;
 	pPlayer->bFlags = 0;
 	pPlayer->next = NULL;
 
@@ -3702,9 +3701,7 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 
 		//Should never happen
 		//Assert( sTempID != -1 );
-		pTemp->ubID = (UINT8) sTempID;
-
-		pTemp->pSoldier = &Menptr[ pTemp->ubID ];
+		pTemp->pSoldier = &Menptr[sTempID];
 
 		pTemp->next = NULL;
 
