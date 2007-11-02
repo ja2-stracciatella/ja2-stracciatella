@@ -156,26 +156,24 @@ void HandleIMPConfirm( void )
 }
 
 
+static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
+	giIMPConfirmButtonImage[idx] = img;
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 136, y, MSYS_PRIORITY_HIGH, click);
+	giIMPConfirmButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_WWW);
+}
+
+
 static void CreateConfirmButtons(void)
 {
 	// create buttons for confirm screen
-
-	giIMPConfirmButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	giIMPConfirmButton[0] = CreateIconAndTextButton( giIMPConfirmButtonImage[0], pImpButtonText[ 16 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 254, MSYS_PRIORITY_HIGH,
-														 BtnIMPConfirmYes);
-
-	giIMPConfirmButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	giIMPConfirmButton[1] = CreateIconAndTextButton( giIMPConfirmButtonImage[ 1 ], pImpButtonText[ 17 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
-														 BtnIMPConfirmNo);
-
- SetButtonCursor(giIMPConfirmButton[ 0 ], CURSOR_WWW);
- SetButtonCursor(giIMPConfirmButton[ 1 ], CURSOR_WWW);
+	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
+	MakeButton(0, pImpButtonText[16], dy + 254, BtnIMPConfirmYes);
+	MakeButton(1, pImpButtonText[17], dy + 314, BtnIMPConfirmNo);
 }
 
 

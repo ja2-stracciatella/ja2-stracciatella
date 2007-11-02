@@ -165,6 +165,17 @@ static void EnterLaptopInitInsuranceContract(void)
 }
 
 
+static INT32 MakeButtonBig(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
+{
+	const INT16 text_col   = INS_FONT_COLOR;
+	const INT16 shadow_col = INS_FONT_SHADOW;
+	const INT32 btn  = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_WWW);
+	SpecifyButtonTextOffsets(btn, offset_x, 16, FALSE);
+	return btn;
+}
+
+
 static void BuildInsuranceArray(void);
 static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate);
 static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID);
@@ -208,24 +219,11 @@ BOOLEAN EnterInsuranceContract()
 
 	//left arrow
 	guiInsContractPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
-	guiInsContractPrevBackButton = CreateIconAndTextButton( guiInsContractPrevButtonImage, InsContractText[INS_CONTRACT_PREVIOUS], INS_FONT_BIG,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnInsContractPrevButtonCallback);
-	SetButtonCursor( guiInsContractPrevBackButton, CURSOR_WWW );
-	SpecifyButtonTextOffsets( guiInsContractPrevBackButton, 17, 16, FALSE );
-
+	guiInsContractPrevBackButton  = MakeButtonBig(guiInsContractPrevButtonImage, InsContractText[INS_CONTRACT_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsContractPrevButtonCallback, 17);
 
 	//Right arrow
 	guiInsContractNextButtonImage	= LoadButtonImage("LAPTOP/InsRightButton.sti", 2,0,-1,1,-1 );
-	guiInsContractNextBackButton = CreateIconAndTextButton( guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_FONT_BIG,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnInsContractNextButtonCallBack);
-	SetButtonCursor( guiInsContractNextBackButton, CURSOR_WWW );
-	SpecifyButtonTextOffsets( guiInsContractNextBackButton, 18, 16, FALSE );
+	guiInsContractNextBackButton  = MakeButtonBig(guiInsContractNextButtonImage, InsContractText[INS_CONTRACT_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsContractNextButtonCallBack, 18);
 
 	//create the new set of buttons
 	CreateDestroyInsuranceContractFormButtons( TRUE );
@@ -829,7 +827,19 @@ static void DisableInsuranceContractNextPreviousbuttons(void)
 	}
 	else
 		EnableButton( guiInsContractPrevBackButton );
+}
 
+
+static INT32 MakeButtonMed(INT16 x, GUI_CALLBACK click)
+{
+	const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
+	const INT16          text_col   = INS_FONT_BTN_COLOR;
+	const INT16          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
+	const INT16          y          = INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y;
+	const INT32 btn  = CreateIconAndTextButton(guiInsuranceAcceptClearForm1ButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	MSYS_SetBtnUserData(btn, 0);
+	return btn;
 }
 
 
@@ -847,43 +857,19 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		if( gubNumberofDisplayedInsuranceGrids >= 1 )
 		{
 			//the accept button for form 1
-			guiInsuranceAcceptClearForm1Button = CreateIconAndTextButton( guiInsuranceAcceptClearForm1ButtonImage, InsContractText[INS_CONTRACT_ACCEPT], INS_FONT_MED,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
-															 BtnInsuranceAcceptClearForm1ButtonCallback);
-			SetButtonCursor( guiInsuranceAcceptClearForm1Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm1Button, 0);
+			guiInsuranceAcceptClearForm1Button = MakeButtonMed(INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm1ButtonCallback);
 		}
-
-
 
 		if( gubNumberofDisplayedInsuranceGrids >= 2 )
 		{
 			//the accept button for form 2
-			guiInsuranceAcceptClearForm2Button = CreateIconAndTextButton( guiInsuranceAcceptClearForm1ButtonImage, InsContractText[INS_CONTRACT_ACCEPT], INS_FONT_MED,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_CTRCT_ORDER_GRID2_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
-															 BtnInsuranceAcceptClearForm2ButtonCallback);
-			SetButtonCursor(guiInsuranceAcceptClearForm2Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm2Button, 0);
-
+			guiInsuranceAcceptClearForm2Button = MakeButtonMed(INS_CTRCT_ORDER_GRID2_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm2ButtonCallback);
 		}
-
-
-
 
 		if( gubNumberofDisplayedInsuranceGrids >= 3 )
 		{
 			//the accept button for form 3
-			guiInsuranceAcceptClearForm3Button = CreateIconAndTextButton( guiInsuranceAcceptClearForm1ButtonImage, InsContractText[INS_CONTRACT_ACCEPT], INS_FONT_MED,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_FONT_BTN_COLOR, INS_FONT_BTN_SHADOW_COLOR,
-															 INS_CTRCT_ORDER_GRID3_X + INS_CTRCT_ACCEPT_BTN_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y, MSYS_PRIORITY_HIGH,
-															 BtnInsuranceAcceptClearForm3ButtonCallback);
-			SetButtonCursor( guiInsuranceAcceptClearForm3Button, CURSOR_LAPTOP_SCREEN );
-			MSYS_SetBtnUserData(guiInsuranceAcceptClearForm3Button, 0);
+			guiInsuranceAcceptClearForm3Button = MakeButtonMed(INS_CTRCT_ORDER_GRID3_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm3ButtonCallback);
 		}
 
 		fButtonsCreated = TRUE;

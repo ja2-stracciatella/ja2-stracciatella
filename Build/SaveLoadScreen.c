@@ -112,12 +112,10 @@ BOOLEAN gfSchedulesHosed = FALSE;
 #define		SLG_TITLE_POS_X											0
 #define		SLG_TITLE_POS_Y											0
 
-#define		SLG_SAVE_CANCEL_POS_X								226//329
-#define		SLG_LOAD_CANCEL_POS_X								329
-#define		SLG_CANCEL_POS_Y										438
-
-#define		SLG_SAVE_LOAD_BTN_POS_X							123
-#define		SLG_SAVE_LOAD_BTN_POS_Y							438
+#define SLG_SAVE_CANCEL_POS_X   226//329
+#define SLG_LOAD_CANCEL_POS_X   329
+#define SLG_SAVE_LOAD_BTN_POS_X 123
+#define SLG_BTN_POS_Y           438
 
 #define		SLG_SELECTED_SLOT_GRAPHICS_NUMBER		3
 #define		SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER	2
@@ -382,6 +380,12 @@ static void SetSaveLoadExitScreen(UINT32 uiScreen)
 }
 
 
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
+}
+
+
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
 static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue);
@@ -455,37 +459,22 @@ static BOOLEAN EnterSaveLoadScreen(void)
 //	else
 		usPosX = SLG_LOAD_CANCEL_POS_X;
 
-	guiSlgCancelBtn = CreateIconAndTextButton( guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 usPosX, SLG_CANCEL_POS_Y, MSYS_PRIORITY_HIGH,
-													 BtnSlgCancelCallback );
-
+	guiSlgCancelBtn = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], usPosX, BtnSlgCancelCallback);
 
 	//Either the save or load button
+	const wchar_t* text;
 	if( gfSaveGame )
 	{
-
 		//If we are saving, dont have the save game button
 		guiSaveLoadImage = UseLoadedButtonImage( guiSlgButtonImage, -1,5,-1,8,-1 );
-
-		guiSlgSaveLoadBtn = CreateIconAndTextButton( guiSaveLoadImage, zSaveLoadText[SLG_SAVE_GAME], OPT_BUTTON_FONT,
-														 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, MSYS_PRIORITY_HIGH,
-														 BtnSlgSaveLoadCallback );
-
+		text = zSaveLoadText[SLG_SAVE_GAME];
 	}
 	else
 	{
 		guiSaveLoadImage = UseLoadedButtonImage( guiSlgButtonImage, -1,4,-1,7,-1 );
-
-		guiSlgSaveLoadBtn = CreateIconAndTextButton( guiSaveLoadImage, zSaveLoadText[SLG_LOAD_GAME], OPT_BUTTON_FONT,
-														 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-														 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-														 SLG_SAVE_LOAD_BTN_POS_X, SLG_SAVE_LOAD_BTN_POS_Y, MSYS_PRIORITY_HIGH,
-														 BtnSlgSaveLoadCallback );
+		text = zSaveLoadText[SLG_LOAD_GAME];
 	}
+	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
 
 	//if we are loading, disable the load button
 //	if( !gfSaveGame )

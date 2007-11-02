@@ -36,11 +36,9 @@
 #define		MERC_AC_ACCOUNT_NUMBER_X			LAPTOP_SCREEN_UL_X + 23
 #define		MERC_AC_ACCOUNT_NUMBER_Y			LAPTOP_SCREEN_WEB_UL_Y + 13
 
-#define		MERC_AC_AUTHORIZE_BUTTON_X		128
-#define		MERC_AC_AUTHORIZE_BUTTON_Y		380
-
-#define		MERC_AC_CANCEL_BUTTON_X				490
-#define		MERC_AC_CANCEL_BUTTON_Y				MERC_AC_AUTHORIZE_BUTTON_Y
+#define MERC_AC_AUTHORIZE_BUTTON_X 128
+#define MERC_AC_CANCEL_BUTTON_X    490
+#define MERC_AC_BUTTON_Y           380
 
 #define		MERC_AC_ACCOUNT_NUMBER_TEXT_X	MERC_AC_ACCOUNT_NUMBER_X + 5
 #define		MERC_AC_ACCOUNT_NUMBER_TEXT_Y	MERC_AC_ACCOUNT_NUMBER_Y + 12
@@ -80,6 +78,15 @@ INT32		guiMercAuthorizeButtonImage;
 UINT32	guiMercBackBoxButton;
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(guiMercAuthorizeButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_AC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
+
 static void BtnMercAuthorizeButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnMercBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
@@ -100,23 +107,9 @@ BOOLEAN EnterMercsAccount()
 
 
 	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
-
-	guiMercAuthorizeBoxButton = CreateIconAndTextButton( guiMercAuthorizeButtonImage, MercAccountText[MERC_ACCOUNT_AUTHORIZE],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_AC_AUTHORIZE_BUTTON_X, MERC_AC_AUTHORIZE_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercAuthorizeButtonCallback);
-	SetButtonCursor(guiMercAuthorizeBoxButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiMercAuthorizeBoxButton, DISABLED_STYLE_SHADED);
-
-	guiMercBackBoxButton = CreateIconAndTextButton( guiMercAuthorizeButtonImage, MercAccountText[MERC_ACCOUNT_HOME],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_AC_CANCEL_BUTTON_X, MERC_AC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercBackButtonCallback);
-	SetButtonCursor(guiMercBackBoxButton, CURSOR_LAPTOP_SCREEN);
+	guiMercAuthorizeBoxButton   = MakeButton(MercAccountText[MERC_ACCOUNT_AUTHORIZE], MERC_AC_AUTHORIZE_BUTTON_X, BtnMercAuthorizeButtonCallback);
+	SpecifyDisabledButtonStyle(guiMercAuthorizeBoxButton, DISABLED_STYLE_SHADED);
+	guiMercBackBoxButton        = MakeButton(MercAccountText[MERC_ACCOUNT_HOME],      MERC_AC_CANCEL_BUTTON_X,    BtnMercBackButtonCallback);
 
 //	RenderMercsAccount();
 

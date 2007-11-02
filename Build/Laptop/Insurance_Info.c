@@ -85,6 +85,17 @@ void EnterInitInsuranceInfo()
 }
 
 
+static INT32 MakeButtonBig(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
+{
+	const INT16 text_col   = INS_FONT_COLOR;
+	const INT16 shadow_col = INS_FONT_SHADOW;
+	const INT32 btn  = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_WWW);
+	SpecifyButtonTextOffsets(btn, offset_x, 16, FALSE);
+	return btn;
+}
+
+
 static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
@@ -102,25 +113,11 @@ BOOLEAN EnterInsuranceInfo()
 
 	//left arrow
 	guiInsPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
-	guiInsPrevBackButton = CreateIconAndTextButton( guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_FONT_BIG,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_INFO_LEFT_ARROW_BUTTON_X, INS_INFO_LEFT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnInsPrevButtonCallback);
-	SetButtonCursor( guiInsPrevBackButton, CURSOR_WWW );
-	SpecifyButtonTextOffsets( guiInsPrevBackButton, 17, 16, FALSE );
-
+	guiInsPrevBackButton  = MakeButtonBig(guiInsPrevButtonImage, InsInfoText[INS_INFO_PREVIOUS], INS_INFO_LEFT_ARROW_BUTTON_X, BtnInsPrevButtonCallback, 17);
 
 	//Right arrow
 	guiInsNextButtonImage	= LoadButtonImage("LAPTOP/InsRightButton.sti", 2,0,-1,1,-1 );
-	guiInsNextBackButton = CreateIconAndTextButton( guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_FONT_BIG,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_FONT_COLOR, INS_FONT_SHADOW,
-													 INS_INFO_RIGHT_ARROW_BUTTON_X, INS_INFO_RIGHT_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnInsNextButtonCallback);
-	SetButtonCursor( guiInsNextBackButton, CURSOR_WWW );
-	SpecifyButtonTextOffsets( guiInsNextBackButton, 18, 16, FALSE );
-
+	guiInsNextBackButton  = MakeButtonBig(guiInsNextButtonImage, InsInfoText[INS_INFO_NEXT], INS_INFO_RIGHT_ARROW_BUTTON_X, BtnInsNextButtonCallback, 18);
 
 	usPosX = INS_INFO_LINK_START_X;
 	//link to go to the contract page

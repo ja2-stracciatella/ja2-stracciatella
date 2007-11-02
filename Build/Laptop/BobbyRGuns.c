@@ -336,9 +336,13 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 }
 
 
-
-
-
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
+	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
 
 
 BOOLEAN InitBobbyMenuBar(  )
@@ -349,12 +353,7 @@ BOOLEAN InitBobbyMenuBar(  )
 
 	// Previous button
 	guiBobbyRPreviousPageImage = LoadButtonImage("LAPTOP/PreviousButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRPreviousPage = CreateIconAndTextButton( guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRNextPreviousPageCallback);
-	SetButtonCursor(guiBobbyRPreviousPage, CURSOR_LAPTOP_SCREEN);
+	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
 	MSYS_SetBtnUserData(guiBobbyRPreviousPage, BOBBYR_PREVIOUS_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRPreviousPage, DISABLED_STYLE_SHADED );
 
@@ -363,12 +362,7 @@ BOOLEAN InitBobbyMenuBar(  )
 
 	// Next button
 	guiBobbyRNextPageImage  = LoadButtonImage("LAPTOP/NextButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRNextPage = CreateIconAndTextButton( guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRNextPreviousPageCallback);
-	SetButtonCursor(guiBobbyRNextPage, CURSOR_LAPTOP_SCREEN);
+	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
 	MSYS_SetBtnUserData(guiBobbyRNextPage, BOBBYR_NEXT_PAGE);
 	SpecifyDisabledButtonStyle( guiBobbyRNextPage, DISABLED_STYLE_SHADED );
 
@@ -378,14 +372,7 @@ BOOLEAN InitBobbyMenuBar(  )
 	for(i=0; i<NUM_CATALOGUE_BUTTONS; i++)
 	{
 		// Catalogue Buttons button
-		guiBobbyRPageMenu[i] = CreateIconAndTextButton( guiBobbyRPageMenuImage, BobbyRText[BOBBYR_GUNS_GUNS+i], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 usPosX, BOBBYR_CATALOGUE_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRPageMenuCallback);
-
-		SetButtonCursor(guiBobbyRPageMenu[i], CURSOR_LAPTOP_SCREEN);
-
+		guiBobbyRPageMenu[i] = MakeButton(guiBobbyRPageMenuImage, BobbyRText[BOBBYR_GUNS_GUNS + i], usPosX, BOBBYR_CATALOGUE_BUTTON_Y, BtnBobbyRPageMenuCallback);
 		MSYS_SetBtnUserData(guiBobbyRPageMenu[i], ubCatalogueButtonValues[bCurMode]);
 
 		usPosX += BOBBYR_CATALOGUE_BUTTON_GAP;
@@ -394,24 +381,11 @@ BOOLEAN InitBobbyMenuBar(  )
 
 	// Order Form button
 	guiBobbyROrderFormImage  = LoadButtonImage("LAPTOP/OrderFormButton.sti", -1,0,-1,1,-1 );
-	guiBobbyROrderForm = CreateIconAndTextButton( guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyROrderFormCallback);
-
-	SetButtonCursor(guiBobbyROrderForm, CURSOR_LAPTOP_SCREEN);
-
+	guiBobbyROrderForm = MakeButton(guiBobbyROrderFormImage, BobbyRText[BOBBYR_GUNS_ORDER_FORM], BOBBYR_ORDER_FORM_X, BOBBYR_ORDER_FORM_Y, BtnBobbyROrderFormCallback);
 
 	// Home button
-
 	guiBobbyRHomeImage  = LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRHome = CreateIconAndTextButton( guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRHomeButtonCallback);
-	SetButtonCursor(guiBobbyRHome, CURSOR_LAPTOP_SCREEN);
+	guiBobbyRHome = MakeButton(guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeButtonCallback);
 
 	return(TRUE);
 }

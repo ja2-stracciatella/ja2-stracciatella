@@ -65,29 +65,24 @@ void HandleIMPAttributeFinish( void )
 }
 
 
+static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
+	giIMPAttributeFinishButtonImage[idx] = img;
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 130, y, MSYS_PRIORITY_HIGH, click);
+	giIMPAttributeFinishButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_WWW);
+}
+
+
 static void CreateAttributeFinishButtons(void)
 {
-
 	// this procedure will create the buttons needed for the attribute finish screen
-
-	// the yes button
-  giIMPAttributeFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	 giIMPAttributeFinishButton[0] = CreateIconAndTextButton(  giIMPAttributeFinishButtonImage[0], pImpButtonText[ 20 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 180, MSYS_PRIORITY_HIGH,
-														 	BtnIMPAttributeFinishYesCallback );
-
-	// the no button
-  giIMPAttributeFinishButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	 giIMPAttributeFinishButton[1] = CreateIconAndTextButton(  giIMPAttributeFinishButtonImage[1], pImpButtonText[ 21 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 130, LAPTOP_SCREEN_WEB_UL_Y + 264, MSYS_PRIORITY_HIGH,
-														 	BtnIMPAttributeFinishNoCallback);
-
-  SetButtonCursor(giIMPAttributeFinishButton[0], CURSOR_WWW);
-	SetButtonCursor(giIMPAttributeFinishButton[1], CURSOR_WWW);
+	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
+	MakeButton(0, pImpButtonText[20], dy + 180, BtnIMPAttributeFinishYesCallback); // Yes button
+	MakeButton(1, pImpButtonText[21], dy + 264, BtnIMPAttributeFinishNoCallback);  // No button
 }
 
 

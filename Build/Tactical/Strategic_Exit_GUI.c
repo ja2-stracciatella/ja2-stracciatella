@@ -94,6 +94,14 @@ INT8    gbWarpWorldZ;
 INT16   gsWarpGridNo;
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 dx, GUI_CALLBACK click)
+{
+	const INT16 text_col   = FONT_MCOLOR_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	return CreateIconAndTextButton(gExitDialog.iButtonImages, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, gExitDialog.sX + dx, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST, click);
+}
+
+
 static void AllMoveCallback(GUI_BUTTON* btn, INT32 reason);
 static void AllRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void AllRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -349,17 +357,8 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	gExitDialog.uiAllMoveButton			=  CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 20 ), (INT16)(gExitDialog.sY + 55 ), "INTERFACE/popupradiobuttons.sti", MSYS_PRIORITY_HIGHEST, AllMoveCallback );
 
-	gExitDialog.uiOKButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ OK_BUTTON_TEXT_STR ], FONT12ARIAL,
-																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																gExitDialog.sX + 65, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST,
-																OKCallback );
-
-	gExitDialog.uiCancelButton =	CreateIconAndTextButton( gExitDialog.iButtonImages, TacticalStr[ CANCEL_BUTTON_TEXT_STR ], FONT12ARIAL,
-																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																FONT_MCOLOR_WHITE, DEFAULT_SHADOW,
-																gExitDialog.sX + 135, gExitDialog.sY + 78, MSYS_PRIORITY_HIGHEST,
-																CancelCallback );
+	gExitDialog.uiOKButton     = MakeButton(TacticalStr[OK_BUTTON_TEXT_STR],      65, OKCallback);
+	gExitDialog.uiCancelButton = MakeButton(TacticalStr[CANCEL_BUTTON_TEXT_STR], 135, CancelCallback);
 
 	gfIgnoreScrolling = TRUE;
 

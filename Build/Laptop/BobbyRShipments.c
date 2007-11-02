@@ -36,11 +36,9 @@
 #define		BOBBYR_SHIPMENT_ORDER_GRID_Y							LAPTOP_SCREEN_WEB_UL_Y + 62
 
 
-#define		BOBBYR_SHIPMENT_BACK_BUTTON_X							130
-#define		BOBBYR_SHIPMENT_BACK_BUTTON_Y							400 + LAPTOP_SCREEN_WEB_DELTA_Y + 4
-
-#define		BOBBYR_SHIPMENT_HOME_BUTTON_X							515
-#define		BOBBYR_SHIPMENT_HOME_BUTTON_Y							BOBBYR_SHIPMENT_BACK_BUTTON_Y
+#define BOBBYR_SHIPMENT_BACK_BUTTON_X 130
+#define BOBBYR_SHIPMENT_HOME_BUTTON_X 515
+#define BOBBYR_SHIPMENT_BUTTON_Y      (400 + LAPTOP_SCREEN_WEB_DELTA_Y + 4)
 
 #define		BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS		13
 
@@ -87,6 +85,15 @@ INT32		giBobbyRShipmentHomeImage;
 MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
 
 
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
+	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, BOBBYR_SHIPMENT_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
+
 static void CreatePreviousShipmentsMouseRegions(void);
 
 
@@ -100,21 +107,10 @@ BOOLEAN EnterBobbyRShipments()
 
 
 	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRShipmetBack = CreateIconAndTextButton( guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_SHIPMENT_BACK_BUTTON_X, BOBBYR_SHIPMENT_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRShipmentBackCallback);
-	SetButtonCursor( guiBobbyRShipmetBack, CURSOR_LAPTOP_SCREEN);
-
+	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
 
 	giBobbyRShipmentHomeImage =  UseLoadedButtonImage( guiBobbyRShipmentBackImage, -1,0,-1,1,-1 );
-	guiBobbyRShipmentHome = CreateIconAndTextButton( giBobbyRShipmentHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_GUNS_BUTTON_FONT,
-													 BOBBYR_GUNS_TEXT_COLOR_ON, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_GUNS_TEXT_COLOR_OFF, BOBBYR_GUNS_SHADOW_COLOR,
-													 BOBBYR_SHIPMENT_HOME_BUTTON_X, BOBBYR_SHIPMENT_HOME_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnBobbyRShipmentHomeCallback);
-	SetButtonCursor( guiBobbyRShipmentHome, CURSOR_LAPTOP_SCREEN);
+	guiBobbyRShipmentHome = MakeButton(giBobbyRShipmentHomeImage, BobbyROrderFormText[BOBBYR_HOME], BOBBYR_SHIPMENT_HOME_BUTTON_X, BtnBobbyRShipmentHomeCallback);
 
 	CreateBobbyRayOrderTitle();
 

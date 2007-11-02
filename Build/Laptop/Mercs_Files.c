@@ -59,17 +59,11 @@
 #define		MERC_FILES_BIO_BOX_X							MERC_FILES_PORTRAIT_BOX_X
 #define		MERC_FILES_BIO_BOX_Y							LAPTOP_SCREEN_WEB_UL_Y + 155
 
-#define		MERC_FILES_PREV_BUTTON_X					128
-#define		MERC_FILES_PREV_BUTTON_Y					380
-
-#define		MERC_FILES_NEXT_BUTTON_X					490
-#define		MERC_FILES_NEXT_BUTTON_Y					MERC_FILES_PREV_BUTTON_Y
-
-#define		MERC_FILES_HIRE_BUTTON_X					260
-#define		MERC_FILES_HIRE_BUTTON_Y					MERC_FILES_PREV_BUTTON_Y
-
-#define		MERC_FILES_BACK_BUTTON_X					380
-#define		MERC_FILES_BACK_BUTTON_Y					MERC_FILES_PREV_BUTTON_Y
+#define MERC_FILES_PREV_BUTTON_X 128
+#define MERC_FILES_NEXT_BUTTON_X 490
+#define MERC_FILES_HIRE_BUTTON_X 260
+#define MERC_FILES_BACK_BUTTON_X 380
+#define MERC_FILES_BUTTON_Y      380
 
 #define		MERC_NAME_X												MERC_FILES_STATS_BOX_X + 50
 #define		MERC_NAME_Y												MERC_FILES_STATS_BOX_Y + 10
@@ -127,6 +121,16 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiMercBackButton;
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(guiButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_FILES_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
+	return btn;
+}
+
+
 BOOLEAN EnterMercsFiles()
 {
 	InitMercBackGround();
@@ -145,49 +149,11 @@ BOOLEAN EnterMercsFiles()
 	guiBioBox = AddVideoObjectFromFile("LAPTOP/BioBox.sti");
 	CHECKF(guiBioBox != NO_VOBJECT);
 
-
-	// Prev Box button
 	guiButtonImage  = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
-
-	guiPrevButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_PREVIOUS],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_FILES_PREV_BUTTON_X, MERC_FILES_PREV_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercPrevButtonCallback);
-
-	SetButtonCursor(guiPrevButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiPrevButton, DISABLED_STYLE_SHADED);
-
-	//Next Button
-	guiNextButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_NEXT],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_FILES_NEXT_BUTTON_X, MERC_FILES_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercNextButtonCallback);
-
-	SetButtonCursor(guiNextButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiNextButton, DISABLED_STYLE_SHADED);
-
-	//Hire button
-	guiHireButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HIRE],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_FILES_HIRE_BUTTON_X, MERC_FILES_HIRE_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercHireButtonCallback);
-	SetButtonCursor(guiHireButton, CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiHireButton, DISABLED_STYLE_SHADED);
-
-	//Back button
-	guiMercBackButton = CreateIconAndTextButton( guiButtonImage, MercInfo[MERC_FILES_HOME],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_FILES_BACK_BUTTON_X, MERC_FILES_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnMercFilesBackButtonCallback);
-	SetButtonCursor(guiMercBackButton, CURSOR_LAPTOP_SCREEN);
+	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
+	guiNextButton     = MakeButton(MercInfo[MERC_FILES_NEXT],     MERC_FILES_NEXT_BUTTON_X, BtnMercNextButtonCallback);
+	guiHireButton     = MakeButton(MercInfo[MERC_FILES_HIRE],     MERC_FILES_HIRE_BUTTON_X, BtnMercHireButtonCallback);
+	guiMercBackButton = MakeButton(MercInfo[MERC_FILES_HOME],     MERC_FILES_BACK_BUTTON_X, BtnMercFilesBackButtonCallback);
 
 //	RenderMercsFiles();
 	return( TRUE );

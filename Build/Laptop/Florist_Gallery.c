@@ -29,11 +29,9 @@
 #define	FLOR_GALLERY_FLOWER_DESC_TEXT_FONT		FONT12ARIAL
 #define	FLOR_GALLERY_FLOWER_DESC_TEXT_COLOR		FONT_MCOLOR_WHITE
 
-#define FLOR_GALLERY_BACK_BUTTON_X						LAPTOP_SCREEN_UL_X + 8
-#define FLOR_GALLERY_BACK_BUTTON_Y						LAPTOP_SCREEN_WEB_UL_Y + 12
-
-#define FLOR_GALLERY_NEXT_BUTTON_X						LAPTOP_SCREEN_UL_X + 420
-#define FLOR_GALLERY_NEXT_BUTTON_Y						FLOR_GALLERY_BACK_BUTTON_Y
+#define FLOR_GALLERY_BACK_BUTTON_X (LAPTOP_SCREEN_UL_X +   8)
+#define FLOR_GALLERY_NEXT_BUTTON_X (LAPTOP_SCREEN_UL_X + 420)
+#define FLOR_GALLERY_BUTTON_Y      (LAPTOP_SCREEN_WEB_UL_Y + 12)
 
 #define FLOR_GALLERY_FLOWER_BUTTON_X					LAPTOP_SCREEN_UL_X + 7
 #define FLOR_GALLERY_FLOWER_BUTTON_Y					LAPTOP_SCREEN_WEB_UL_Y + 74
@@ -83,6 +81,15 @@ void EnterInitFloristGallery()
 }
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = FLORIST_BUTTON_TEXT_SHADOW_COLOR;
+	const INT32 btn = CreateIconAndTextButton(guiFloralGalleryButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, FLOR_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_WWW);
+	return btn;
+}
+
+
 static BOOLEAN InitFlowerButtons(void);
 
 
@@ -92,20 +99,8 @@ BOOLEAN EnterFloristGallery()
 
 	//the next previous buttons
 	guiFloralGalleryButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
-
-	guiFloralGalleryButton[0] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_PREV], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOR_GALLERY_BACK_BUTTON_X, FLOR_GALLERY_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFloralGalleryBackButtonCallback);
-	SetButtonCursor(guiFloralGalleryButton[0], CURSOR_WWW );
-
-	guiFloralGalleryButton[1] = CreateIconAndTextButton( guiFloralGalleryButtonImage, sFloristGalleryText[FLORIST_GALLERY_NEXT], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOR_GALLERY_NEXT_BUTTON_X, FLOR_GALLERY_NEXT_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFloralGalleryNextButtonCallback);
-	SetButtonCursor(guiFloralGalleryButton[1], CURSOR_WWW );
+	guiFloralGalleryButton[0] = MakeButton(sFloristGalleryText[FLORIST_GALLERY_PREV], FLOR_GALLERY_BACK_BUTTON_X, BtnFloralGalleryBackButtonCallback);
+	guiFloralGalleryButton[1] = MakeButton(sFloristGalleryText[FLORIST_GALLERY_NEXT], FLOR_GALLERY_NEXT_BUTTON_X, BtnFloralGalleryNextButtonCallback);
 
 	RenderFloristGallery();
 

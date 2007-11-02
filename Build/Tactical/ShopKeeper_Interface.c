@@ -93,11 +93,9 @@
 //#define		SKI_EVALUATE_BUTTON_X							15
 //#define		SKI_EVALUATE_BUTTON_Y							233
 
-#define		SKI_TRANSACTION_BUTTON_X					147//214
-#define		SKI_TRANSACTION_BUTTON_Y					233//SKI_EVALUATE_BUTTON_Y
-
-#define		SKI_DONE_BUTTON_X										292//414
-#define		SKI_DONE_BUTTON_Y										233//SKI_EVALUATE_BUTTON_Y
+#define SKI_TRANSACTION_BUTTON_X 147//214
+#define SKI_DONE_BUTTON_X        292//414
+#define SKI_BUTTON_Y             233
 
 #define		SKI_MAIN_TITLE_X										112
 #define		SKI_MAIN_TITLE_Y										12
@@ -516,6 +514,17 @@ UINT32	ShopKeeperScreenShutdown()
 }
 
 
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 prio, GUI_CALLBACK click, const wchar_t* help)
+{
+	const INT16 text_col   = SKI_BUTTON_COLOR;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, SKI_BUTTON_FONT, text_col, shadow_col, text_col, shadow_col, x, SKI_BUTTON_Y, prio, click);
+	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_HATCHED);
+	SetButtonFastHelpText(btn, help);
+	return btn;
+}
+
+
 static UINT8 CountNumberOfItemsInThePlayersOfferArea(void);
 static void CreateSkiInventorySlotMouseRegions(void);
 static void HandlePossibleRepairDelays(void);
@@ -639,29 +648,20 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	guiSKI_DoneButtonImage = UseLoadedButtonImage( guiSKI_TransactionButtonImage, -1,0,-1,1,-1 );
 
 	//Transaction button
-	guiSKI_TransactionButton = CreateIconAndTextButton( guiSKI_TransactionButtonImage, SKI_Text[SKI_TEXT_TRANSACTION], SKI_BUTTON_FONT,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 SKI_TRANSACTION_BUTTON_X, SKI_TRANSACTION_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnSKI_TransactionButtonCallback);
-	SpecifyDisabledButtonStyle( guiSKI_TransactionButton, DISABLED_STYLE_HATCHED );
-
 	//if the dealer repairs, use the repair fast help text for the transaction button
-	if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		SetButtonFastHelpText( guiSKI_TransactionButton, SkiMessageBoxText[ SKI_REPAIR_TRANSACTION_BUTTON_HELP_TEXT ] );
+	const wchar_t* help;
+	if (ArmsDealerInfo[gbSelectedArmsDealerID].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS)
+	{
+		help = SkiMessageBoxText[SKI_REPAIR_TRANSACTION_BUTTON_HELP_TEXT];
+	}
 	else
-		SetButtonFastHelpText( guiSKI_TransactionButton, SkiMessageBoxText[ SKI_TRANSACTION_BUTTON_HELP_TEXT ] );
-
+	{
+		help = SkiMessageBoxText[SKI_TRANSACTION_BUTTON_HELP_TEXT];
+	}
+	guiSKI_TransactionButton = MakeButton(guiSKI_TransactionButtonImage, SKI_Text[SKI_TEXT_TRANSACTION], SKI_TRANSACTION_BUTTON_X, MSYS_PRIORITY_HIGH, BtnSKI_TransactionButtonCallback, help);
 
 	//Done button
-	guiSKI_DoneButton = CreateIconAndTextButton( guiSKI_DoneButtonImage, SKI_Text[SKI_TEXT_DONE], SKI_BUTTON_FONT,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 SKI_BUTTON_COLOR, DEFAULT_SHADOW,
-													 SKI_DONE_BUTTON_X, SKI_DONE_BUTTON_Y, MSYS_PRIORITY_HIGH + 10,
-													 BtnSKI_DoneButtonCallback);
-	SpecifyDisabledButtonStyle( guiSKI_DoneButton, DISABLED_STYLE_HATCHED );
-	SetButtonFastHelpText( guiSKI_DoneButton, SkiMessageBoxText[ SKI_DONE_BUTTON_HELP_TEXT ] );
-
+	guiSKI_DoneButton = MakeButton(guiSKI_DoneButtonImage, SKI_Text[SKI_TEXT_DONE], SKI_DONE_BUTTON_X,  MSYS_PRIORITY_HIGH + 10, BtnSKI_DoneButtonCallback, SkiMessageBoxText[SKI_DONE_BUTTON_HELP_TEXT]);
 
 	//Blanket the entire screen
 	MSYS_DefineRegion(&gSKI_EntireScreenMouseRegions, 0, 0, SCREEN_WIDTH, 339, MSYS_PRIORITY_HIGH - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

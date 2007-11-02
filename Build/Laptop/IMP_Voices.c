@@ -141,6 +141,18 @@ static void DecrementVoice(void)
 }
 
 
+static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 on_normal, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage(img_file, -1, off_normal, -1, on_normal, -1);
+	giIMPVoicesButtonImage[idx] = img;
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	giIMPVoicesButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_WWW);
+}
+
+
 static void BtnIMPVoicesDoneCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPVoicesNextCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPVoicesPreviousCallback(GUI_BUTTON* btn, INT32 reason);
@@ -149,38 +161,11 @@ static void BtnIMPVoicesPreviousCallback(GUI_BUTTON* btn, INT32 reason);
 static void CreateIMPVoicesButtons(void)
 {
   // will create buttons need for the IMP Voices screen
-
-	// next button
-  giIMPVoicesButtonImage[0]=  LoadButtonImage( "LAPTOP/voicearrows.sti" ,-1,1,-1,3,-1 );
-	giIMPVoicesButton[0] = CreateIconAndTextButton( giIMPVoicesButtonImage[0], pImpButtonText[ 13 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														  LAPTOP_SCREEN_UL_X + 343, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
-														 	BtnIMPVoicesNextCallback);
-
-
-	// previous button
-	giIMPVoicesButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/voicearrows.sti" ,-1,0,-1,2,-1 );
-  giIMPVoicesButton[ 1 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 1 ], pImpButtonText[ 12 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 93, LAPTOP_SCREEN_WEB_UL_Y + 205, MSYS_PRIORITY_HIGH,
-														 BtnIMPVoicesPreviousCallback);
-
-
-	// done button
-  giIMPVoicesButtonImage[ 2 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPVoicesButton[ 2 ] = CreateIconAndTextButton( giIMPVoicesButtonImage[ 2 ], pImpButtonText[ 11 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 187, LAPTOP_SCREEN_WEB_UL_Y + 330, MSYS_PRIORITY_HIGH,
-														 	BtnIMPVoicesDoneCallback);
-
-
-
-   SetButtonCursor(giIMPVoicesButton[0], CURSOR_WWW);
-	 SetButtonCursor(giIMPVoicesButton[1], CURSOR_WWW);
-	 SetButtonCursor(giIMPVoicesButton[2], CURSOR_WWW);
+	const INT16 dx = LAPTOP_SCREEN_UL_X;
+	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
+	MakeButton(0, "LAPTOP/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPVoicesNextCallback);     // Next button
+	MakeButton(1, "LAPTOP/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPVoicesPreviousCallback); // Previous button
+	MakeButton(2, "LAPTOP/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPVoicesDoneCallback);     // Done button
 }
 
 

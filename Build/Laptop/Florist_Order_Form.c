@@ -247,6 +247,15 @@ MOUSE_REGION    gSelectedFlowerDropDownRegion[ FLOWER_ORDER_NUMBER_OF_DROP_DOWN_
 //void SelectFloristPersonalSentimentBoxRegionCallBack(MOUSE_REGION * pRegion, INT32 iReason );
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = FLORIST_BUTTON_TEXT_SHADOW_COLOR;
+	const INT32 btn = CreateIconAndTextButton(guiFlowerOrderButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_WWW);
+	return btn;
+}
+
+
 static void InitFlowerOrderTextInputBoxes(void);
 static void SelectFloristCardGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFloristDisableDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -295,35 +304,10 @@ BOOLEAN EnterFloristOrderForm()
 
 
 	guiFlowerOrderButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
-
-	guiFlowerOrderBackButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_BACK], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOWER_ORDER_BACK_BUTTON_X, FLOWER_ORDER_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFlowerOrderBackButtonCallback);
-	SetButtonCursor(guiFlowerOrderBackButton, CURSOR_WWW );
-
-	guiFlowerOrderSendButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_SEND], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOWER_ORDER_SEND_BUTTON_X, FLOWER_ORDER_SEND_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFlowerOrderSendButtonCallback);
-	SetButtonCursor(guiFlowerOrderSendButton, CURSOR_WWW );
-
-	guiFlowerOrderClearButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_CLEAR], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOWER_ORDER_CLEAR_BUTTON_X, FLOWER_ORDER_CLEAR_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFlowerOrderClearButtonCallback);
-	SetButtonCursor(guiFlowerOrderClearButton, CURSOR_WWW );
-
-	guiFlowerOrderGalleryButton = CreateIconAndTextButton( guiFlowerOrderButtonImage, sOrderFormText[FLORIST_ORDER_GALLERY], FLORIST_BUTTON_TEXT_FONT,
-													 FLORIST_BUTTON_TEXT_UP_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
-													 FLOWER_ORDER_GALLERY_BUTTON_X, FLOWER_ORDER_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnFlowerOrderGalleryButtonCallback);
-	SetButtonCursor(guiFlowerOrderGalleryButton, CURSOR_WWW );
-
+	guiFlowerOrderBackButton    = MakeButton(sOrderFormText[FLORIST_ORDER_BACK],    FLOWER_ORDER_BACK_BUTTON_X,    FLOWER_ORDER_BACK_BUTTON_Y,    BtnFlowerOrderBackButtonCallback);
+	guiFlowerOrderSendButton    = MakeButton(sOrderFormText[FLORIST_ORDER_SEND],    FLOWER_ORDER_SEND_BUTTON_X,    FLOWER_ORDER_SEND_BUTTON_Y,    BtnFlowerOrderSendButtonCallback);
+	guiFlowerOrderClearButton   = MakeButton(sOrderFormText[FLORIST_ORDER_CLEAR],   FLOWER_ORDER_CLEAR_BUTTON_X,   FLOWER_ORDER_CLEAR_BUTTON_Y,   BtnFlowerOrderClearButtonCallback);
+	guiFlowerOrderGalleryButton = MakeButton(sOrderFormText[FLORIST_ORDER_GALLERY], FLOWER_ORDER_GALLERY_BUTTON_X, FLOWER_ORDER_GALLERY_BUTTON_Y, BtnFlowerOrderGalleryButtonCallback);
 
 	//
 	//	The check box mouse regions

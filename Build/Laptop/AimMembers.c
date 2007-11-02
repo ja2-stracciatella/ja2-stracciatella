@@ -145,18 +145,10 @@
 #define		ONEWEEK_X					AIM_CONTRACT_X
 #define		TWOWEEK_X					AIM_CONTRACT_X
 
-#define		PREVIOUS_X				224
-#define		PREVIOUS_Y				386 + LAPTOP_SCREEN_WEB_DELTA_Y
-#define		PREVIOUS_BOX_Y		PREVIOUS_Y - 4
-
-
-#define		CONTACT_X					331
-#define		CONTACT_Y					PREVIOUS_Y
-#define		CONTACT_BOX_Y			CONTACT_Y - 4
-
-#define		NEXT_X						431
-#define		NEXT_Y						PREVIOUS_Y
-#define		NEXT_BOX_Y				NEXT_Y - 4
+#define PREVIOUS_X 224
+#define CONTACT_X  331
+#define NEXT_X     431
+#define BTN_BOX_Y  (386 + LAPTOP_SCREEN_WEB_DELTA_Y - 4)
 
 #define		AIM_MERC_INFO_X		124
 #define		AIM_MERC_INFO_Y		223 + LAPTOP_SCREEN_WEB_DELTA_Y
@@ -445,6 +437,20 @@ void EnterInitAimMembers()
 }
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT32 btn = CreateIconAndTextButton
+	(
+		guiPreviousContactNextButtonImage, text, AIM_M_FONT_PREV_NEXT_CONTACT,
+		AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP,   DEFAULT_SHADOW,
+		AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
+		x, BTN_BOX_Y, MSYS_PRIORITY_HIGH, click
+	);
+	SetButtonCursor(btn, CURSOR_WWW);
+	return btn;
+}
+
+
 static void BtnContactButtonCallback( GUI_BUTTON* btn, INT32 reason);
 static void BtnNextButtonCallback(    GUI_BUTTON* btn, INT32 reason);
 static void BtnPreviousButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -527,30 +533,9 @@ BOOLEAN EnterAIMMembers()
 
 	guiPreviousContactNextButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
 
-	giPreviousButton = CreateIconAndTextButton( guiPreviousContactNextButtonImage, CharacterInfo[AIM_MEMBER_PREVIOUS], AIM_M_FONT_PREV_NEXT_CONTACT,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP, DEFAULT_SHADOW,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
-													 PREVIOUS_X, PREVIOUS_BOX_Y, MSYS_PRIORITY_HIGH,
-													 BtnPreviousButtonCallback);
-	SetButtonCursor(giPreviousButton, CURSOR_WWW );
-
-
-	giContactButton = CreateIconAndTextButton( guiPreviousContactNextButtonImage, CharacterInfo[AIM_MEMBER_CONTACT], AIM_M_FONT_PREV_NEXT_CONTACT,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP, DEFAULT_SHADOW,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
-													 CONTACT_X, CONTACT_BOX_Y, MSYS_PRIORITY_HIGH,
-													 BtnContactButtonCallback);
-	SetButtonCursor(giContactButton, CURSOR_WWW );
-
-
-
-	giNextButton = CreateIconAndTextButton( guiPreviousContactNextButtonImage, CharacterInfo[AIM_MEMBER_NEXT], AIM_M_FONT_PREV_NEXT_CONTACT,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP, DEFAULT_SHADOW,
-													 AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
-													 NEXT_X, NEXT_BOX_Y, MSYS_PRIORITY_HIGH,
-													 BtnNextButtonCallback);
-	SetButtonCursor(giNextButton, CURSOR_WWW );
-
+	giPreviousButton = MakeButton(CharacterInfo[AIM_MEMBER_PREVIOUS], PREVIOUS_X, BtnPreviousButtonCallback);
+	giContactButton  = MakeButton(CharacterInfo[AIM_MEMBER_CONTACT],  CONTACT_X,  BtnContactButtonCallback);
+	giNextButton     = MakeButton(CharacterInfo[AIM_MEMBER_NEXT],     NEXT_X,     BtnNextButtonCallback);
 
 	gbCurrentSoldier = AimMercArray[gbCurrentIndex];
 
@@ -2605,6 +2590,16 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static INT32 MakeButtonVideo(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
+	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, txt_col, shadow_col, txt_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
+
 static BOOLEAN DeleteVideoConfPopUp(void);
 
 
@@ -2753,15 +2748,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
 		for(i=0; i<2; i++)
 		{
-			giAuthorizeButton[i] = CreateIconAndTextButton( guiVideoConferenceButtonImage[2], VideoConfercingText[i+AIM_MEMBER_HIRE],
-															 FONT12ARIAL,
-															 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-															 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-															 usPosX, AIM_MEMBER_HANG_UP_Y, MSYS_PRIORITY_HIGH,
-															 BtnFirstContactButtonCallback);
-
+			giAuthorizeButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HIRE + i], usPosX, AIM_MEMBER_HANG_UP_Y, BtnFirstContactButtonCallback);
 			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
-			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 		}
 
@@ -2788,13 +2776,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 		for(i=0; i<3; i++)
 		{
-			giContractLengthButton[i] = CreateIconAndTextButton( guiVideoConferenceButtonImage[0], VideoConfercingText[i+AIM_MEMBER_ONE_DAY], FONT12ARIAL,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, MSYS_PRIORITY_HIGH,
-																 BtnContractLengthButtonCallback);
+			giContractLengthButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_ONE_DAY + i], AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BtnContractLengthButtonCallback);
 			SpecifyButtonTextJustification(giContractLengthButton[i], BUTTON_TEXT_LEFT);
-			SetButtonCursor(giContractLengthButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giContractLengthButton[i], i);
 			SpecifyDisabledButtonStyle( giContractLengthButton[i], DISABLED_STYLE_NONE );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
@@ -2804,14 +2787,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
 		for(i=0; i<2; i++)
 		{
-			giBuyEquipmentButton[i] = CreateIconAndTextButton( guiVideoConferenceButtonImage[0], VideoConfercingText[i+AIM_MEMBER_NO_EQUIPMENT],
-																	FONT12ARIAL,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, MSYS_PRIORITY_HIGH,
-																 BtnBuyEquipmentButtonCallback);
+			giBuyEquipmentButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_NO_EQUIPMENT + i], AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BtnBuyEquipmentButtonCallback);
 			SpecifyButtonTextJustification(giBuyEquipmentButton[i], BUTTON_TEXT_LEFT);
-			SetButtonCursor(giBuyEquipmentButton[i], CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
 			SpecifyDisabledButtonStyle( giBuyEquipmentButton[i], DISABLED_STYLE_SHADED );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
@@ -2825,14 +2802,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		guiVideoConferenceButtonImage[1] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
 		for(i=0; i<2; i++)
 		{
-				giAuthorizeButton[i] = CreateIconAndTextButton( guiVideoConferenceButtonImage[1], VideoConfercingText[i+AIM_MEMBER_TRANSFER_FUNDS],
-																 FONT12ARIAL,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-																 usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, MSYS_PRIORITY_HIGH,
-																 BtnAuthorizeButtonCallback);
-
-			SetButtonCursor(giAuthorizeButton[i], CURSOR_LAPTOP_SCREEN);
+			giAuthorizeButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[1], VideoConfercingText[AIM_MEMBER_TRANSFER_FUNDS + i], usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BtnAuthorizeButtonCallback);
 			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
 			SpecifyDisabledButtonStyle( giAuthorizeButton[i], DISABLED_STYLE_NONE );
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
@@ -2856,14 +2826,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
 		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
 
-		giAnsweringMachineButton[0] = CreateIconAndTextButton( guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE],
-														 FONT12ARIAL,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 usPosX, AIM_MEMBER_HANG_UP_Y, MSYS_PRIORITY_HIGH,
-														 BtnAnsweringMachineButtonCallback);
+		giAnsweringMachineButton[0] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
 		MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
-		SetButtonCursor(giAnsweringMachineButton[0], CURSOR_LAPTOP_SCREEN);
 
 		//if the user has already left a message, disable the button
 		if( gMercProfiles[ gbCurrentSoldier ].ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM )
@@ -2871,15 +2835,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 		usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 
-		giAnsweringMachineButton[1] = CreateIconAndTextButton( guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP],
-														 FONT12ARIAL,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 usPosX, AIM_MEMBER_HANG_UP_Y, MSYS_PRIORITY_HIGH,
-														 BtnAnsweringMachineButtonCallback);
-
+		giAnsweringMachineButton[1] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
 		MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
-		SetButtonCursor(giAnsweringMachineButton[1], CURSOR_LAPTOP_SCREEN);
 
 		//The face must be inited even though the face wont appear.  It is so the voice is played
 		InitVideoFace(gbCurrentSoldier);
@@ -2908,16 +2865,8 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 		// The hangup button
 		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-
-		giHangUpButton = CreateIconAndTextButton( guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP],
-														 FONT12ARIAL,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-														 AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, MSYS_PRIORITY_HIGH,
-														 BtnHangUpButtonCallback);
-
+		giHangUpButton = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
 		MSYS_SetBtnUserData(giHangUpButton, 1);
-		SetButtonCursor(giHangUpButton, CURSOR_LAPTOP_SCREEN);
 
 		//set the flag saying specifying that merc is busy
 		gubMercAttitudeLevel = QUOTE_MERC_BUSY;

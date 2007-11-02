@@ -153,28 +153,23 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 }
 
 
+static void MakeButton(UINT idx, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage("LAPTOP/button_5.sti", -1, 0, -1, 1, -1);
+	giIMPPersonalityFinishButtonImage[idx] = img;
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, LAPTOP_SCREEN_UL_X + 224, MSYS_PRIORITY_HIGH, click);
+	giIMPPersonalityFinishButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_WWW);
+}
+
+
 static void CreateIMPPersonalityFinishButtons(void)
 {
   // this function will create the buttons needed for the IMP personality Finish Page
-
-	// ths Yes button
-  giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
-	giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 9 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 90, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
-														 	BtnIMPPersonalityFinishYesCallback);
-
-  // the no Button
-	giIMPPersonalityFinishButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
-	giIMPPersonalityFinishButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[ 1 ], pImpButtonText[ 10 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 276, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
-														 	BtnIMPPersonalityFinishNoCallback);
-
-	 SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
-	 SetButtonCursor(giIMPPersonalityFinishButton[1], CURSOR_WWW);
+	MakeButton(0, pImpButtonText[ 9], LAPTOP_SCREEN_UL_X +  90, BtnIMPPersonalityFinishYesCallback); // Yes button
+	MakeButton(1, pImpButtonText[10], LAPTOP_SCREEN_UL_X + 276, BtnIMPPersonalityFinishNoCallback);  // No button
 }
 
 
@@ -253,16 +248,8 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void CreatePersonalityFinishOkButton(void)
 {
-
 	// create personality button finish button
-	giIMPPersonalityFinishButtonImage[0]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPPersonalityFinishButton[0] = CreateIconAndTextButton( giIMPPersonalityFinishButtonImage[0], pImpButtonText[ 24 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 186, LAPTOP_SCREEN_WEB_UL_Y + 224, MSYS_PRIORITY_HIGH,
-														 BtnIMPPersonalityFinishOkCallback);
-
-	SetButtonCursor(giIMPPersonalityFinishButton[0], CURSOR_WWW);
+	MakeButton(0, pImpButtonText[24], LAPTOP_SCREEN_UL_X + 186, BtnIMPPersonalityFinishOkCallback);
 }
 
 

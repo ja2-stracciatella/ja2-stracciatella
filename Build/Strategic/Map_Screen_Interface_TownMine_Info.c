@@ -679,9 +679,17 @@ static void PositionTownMineInfoBox(void)
 }
 
 
+static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage("INTERFACE/mapinvbtns.sti", -1, idx, -1, idx + 2, -1);
+	guiMapButtonInventoryImage[idx] = img;
+	const INT32 btn = CreateIconAndTextButton(img, text, BLOCKFONT2, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	guiMapButtonInventory[idx] = btn;
+}
+
+
 static void AddInventoryButtonForMapPopUpBox(void)
 {
-	INT16 sX, sY;
 	SGPRect pDimensions;
 	SGPPoint pPosition;
 
@@ -697,28 +705,13 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	GetBoxSize( ghTownMineBox , &pDimensions );
 	GetBoxPosition( ghTownMineBox, &pPosition );
 
-	sX = pPosition.iX + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
-	sY = pPosition.iY + pDimensions.iBottom - ( (  BOX_BUTTON_HEIGHT + 5 ) );
+	const INT16 y  = pPosition.iY + pDimensions.iBottom - (BOX_BUTTON_HEIGHT + 5);
+	const INT16 dx = (pDimensions.iRight - sTotalBoxWidth) / 3;
+	INT16       x  = pPosition.iX + dx;
+	MakeButton(0, pMapPopUpInventoryText[0], x, y, MapTownMineInventoryButtonCallBack);
 
-	guiMapButtonInventoryImage[0] =  LoadButtonImage( "INTERFACE/mapinvbtns.sti" ,-1,0,-1,2,-1 );
-
-	guiMapButtonInventory[0] = CreateIconAndTextButton( guiMapButtonInventoryImage[0], pMapPopUpInventoryText[ 0 ], BLOCKFONT2,
-														 FONT_WHITE, FONT_BLACK,
-														 FONT_WHITE, FONT_BLACK,
-														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
-														 MapTownMineInventoryButtonCallBack );
-
-
-	sX = sX + sWidthA + ( pDimensions.iRight - sTotalBoxWidth ) / 3;
-	sY = pPosition.iY + pDimensions.iBottom - ( ( BOX_BUTTON_HEIGHT + 5) );
-
-	guiMapButtonInventoryImage[1] =  LoadButtonImage( "INTERFACE/mapinvbtns.sti" ,-1,1,-1,3,-1 );
-
-	guiMapButtonInventory[1] = CreateIconAndTextButton( guiMapButtonInventoryImage[1], pMapPopUpInventoryText[ 1 ], BLOCKFONT2,
-														 FONT_WHITE, FONT_BLACK,
-														 FONT_WHITE, FONT_BLACK,
-														 sX, sY, MSYS_PRIORITY_HIGHEST - 1,
-														 MapTownMineExitButtonCallBack );
+	x += sWidthA + dx;
+	MakeButton(1, pMapPopUpInventoryText[1], x, y, MapTownMineExitButtonCallBack);
 
 	// delete video object
 	DeleteVideoObjectFromIndex( uiObject );

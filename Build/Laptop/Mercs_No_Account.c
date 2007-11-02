@@ -22,11 +22,9 @@
 #define		MERC_NO_ACCOUNT_IMAGE_X						LAPTOP_SCREEN_UL_X + 23
 #define		MERC_NO_ACCOUNT_IMAGE_Y						LAPTOP_SCREEN_UL_Y + 52
 
-#define		MERC_OPEN_BUTTON_X								130
-#define		MERC_OPEN_BUTTON_Y								380
-
-#define		MERC_CANCEL_BUTTON_X							490
-#define		MERC_CANCEL_BUTTON_Y							MERC_OPEN_BUTTON_Y
+#define MERC_OPEN_BUTTON_X   130
+#define MERC_CANCEL_BUTTON_X 490
+#define MERC_BUTTON_Y        380
 
 #define		MERC_NA_SENTENCE_X								MERC_NO_ACCOUNT_IMAGE_X + 10
 #define		MERC_NA_SENTENCE_Y								MERC_NO_ACCOUNT_IMAGE_Y + 75
@@ -46,6 +44,15 @@ static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiCancelBoxButton;
 
 
+static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(guiOpenAccountBoxButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	return btn;
+}
+
+
 BOOLEAN EnterMercsNoAccount()
 {
 	InitMercBackGround();
@@ -57,22 +64,8 @@ BOOLEAN EnterMercsNoAccount()
 
 	// Open Accouint button
 	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
-
-	guiOpenAccountBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_OPEN_BUTTON_X, MERC_OPEN_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnOpenAccountBoxButtonCallback);
-	SetButtonCursor(guiOpenAccountBoxButton, CURSOR_LAPTOP_SCREEN);
-
-	guiCancelBoxButton = CreateIconAndTextButton( guiOpenAccountBoxButtonImage, MercNoAccountText[MERC_NO_ACC_CANCEL],
-													 FONT12ARIAL,
-													 MERC_BUTTON_UP_COLOR, DEFAULT_SHADOW,
-													 MERC_BUTTON_DOWN_COLOR, DEFAULT_SHADOW,
-													 MERC_CANCEL_BUTTON_X, MERC_CANCEL_BUTTON_Y, MSYS_PRIORITY_HIGH,
-													 BtnCancelBoxButtonCallback);
-	SetButtonCursor(guiCancelBoxButton, CURSOR_LAPTOP_SCREEN);
+	guiOpenAccountBoxButton = MakeButton(MercNoAccountText[MERC_NO_ACC_OPEN_ACCOUNT], MERC_OPEN_BUTTON_X,   BtnOpenAccountBoxButtonCallback);
+	guiCancelBoxButton      = MakeButton(MercNoAccountText[MERC_NO_ACC_CANCEL],       MERC_CANCEL_BUTTON_X, BtnCancelBoxButtonCallback);
 
 	RenderMercsNoAccount();
 

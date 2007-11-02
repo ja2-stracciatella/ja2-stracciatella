@@ -262,6 +262,14 @@ UINT32 GameInitOptionsScreenShutdown(void)
 }
 
 
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+{
+	INT32 btn = CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH, click);
+	SpecifyButtonSoundScheme(btn, BUTTON_SOUND_SCHEME_BIGSWITCH3);
+	return btn;
+}
+
+
 static void ClickButton(UINT32 btn)
 {
 	ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
@@ -283,22 +291,12 @@ static BOOLEAN EnterGIOScreen(void)
 
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );
-	guiGIODoneButton = CreateIconAndTextButton( giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 GIO_BTN_OK_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
-													 BtnGIODoneCallback);
-	SpecifyButtonSoundScheme( guiGIODoneButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
+	guiGIODoneButton = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
 	SpecifyDisabledButtonStyle( guiGIODoneButton, DISABLED_STYLE_NONE );
 
 	//Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
-	guiGIOCancelButton = CreateIconAndTextButton( giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], OPT_BUTTON_FONT,
-													 OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW,
-													 OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
-													 GIO_CANCEL_X, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH,
-													 BtnGIOCancelCallback );
-	SpecifyButtonSoundScheme( guiGIOCancelButton, BUTTON_SOUND_SCHEME_BIGSWITCH3 );
+	guiGIOCancelButton = MakeButton(giGIOCancelBtnImage, gzGIOScreenText[GIO_CANCEL_TEXT], GIO_CANCEL_X, BtnGIOCancelCallback);
 
 	//Check box to toggle Difficulty settings
 	usPosY = GIO_DIF_SETTINGS_Y - GIO_OFFSET_TO_TOGGLE_BOX_Y;

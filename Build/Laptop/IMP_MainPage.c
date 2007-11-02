@@ -124,6 +124,23 @@ void HandleIMPMainPage( void )
 }
 
 
+static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT32 img = LoadButtonImage(img_file, -1, 0, -1, 1, -1);
+	giIMPMainPageButtonImage[idx] = img;
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	giIMPMainPageButton[idx] = btn;
+	SetButtonCursor(btn, CURSOR_WWW);
+	if (idx >= 2)
+	{
+		SpecifyButtonTextOffsets(btn, 10, 40, TRUE);
+		SpecifyButtonTextWrappedWidth(btn, MAIN_PAGE_BUTTON_TEXT_WIDTH);
+	}
+}
+
+
 static void BtnIMPMainPageAttributesCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPMainPageBackCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPMainPageBeginCallback(GUI_BUTTON* btn, INT32 reason);
@@ -132,105 +149,38 @@ static void BtnIMPMainPagePersonalityCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateIMPMainPageButtons(void)
 {
-
   // this function will create the buttons needed for th IMP about us page
-  CHAR16 sString[ 128 ];
-
+  const INT16 dx = LAPTOP_SCREEN_UL_X;
+  const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// the back button button
-  giIMPMainPageButtonImage[0]=  LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
-		 giIMPMainPageButton[0] = CreateIconAndTextButton( giIMPMainPageButtonImage[0], pImpButtonText[ 19 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPageBackCallback);
-
-
-		 SpecifyButtonTextSubOffsets( giIMPMainPageButton[0], 0, -1, FALSE );
+	MakeButton(0, "LAPTOP/button_3.sti", pImpButtonText[19], dx + 15, dy + 360, BtnIMPMainPageBackCallback);
+	SpecifyButtonTextSubOffsets(giIMPMainPageButton[0], 0, -1, FALSE);
 
 	// the begin profiling button
-	giIMPMainPageButtonImage[1]=  LoadButtonImage( "LAPTOP/button_2.sti" ,-1,0,-1,1,-1 );
-	if(( iCurrentProfileMode ==0 )||( iCurrentProfileMode > 2) )
-	{
-	  giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 1 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPageBeginCallback);
-  }
-	else
-	{
-    giIMPMainPageButton[1] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 1 ], pImpButtonText[ 22 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 174, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPageBeginCallback);
-	}
-	// the personality button
-	giIMPMainPageButtonImage[2]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-  giIMPMainPageButton[2] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 2 ], pImpButtonText[ 2 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														LAPTOP_SCREEN_UL_X + 13, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPagePersonalityCallback);
+	const wchar_t* const profiling_text = (iCurrentProfileMode == 0 || iCurrentProfileMode > 2 ? pImpButtonText[1] : pImpButtonText[22]);
+	MakeButton(1, "LAPTOP/button_2.sti", profiling_text, dx + 136, dy + 174, BtnIMPMainPageBeginCallback);
 
+	// the personality button
+	MakeButton(2, "LAPTOP/button_8.sti", pImpButtonText[2], dx + 13, dy + 245, BtnIMPMainPagePersonalityCallback);
 
 	// the attribs button
-	giIMPMainPageButtonImage[3]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-  giIMPMainPageButton[3] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 3 ], pImpButtonText[ 3 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 133, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPageAttributesCallback);
-
+	MakeButton(3, "LAPTOP/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPMainPageAttributesCallback);
 
   // the portrait button
-	giIMPMainPageButtonImage[4]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-  giIMPMainPageButton[4] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 4 ], pImpButtonText[ 4 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 253, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPagePortraitCallback);
-
-
+	MakeButton(4, "LAPTOP/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
 
 	// the voice button
-	giIMPMainPageButtonImage[5]=  LoadButtonImage( "LAPTOP/button_8.sti" ,-1,0,-1,1,-1 );
-	if( iCurrentProfileMode == 5 )
+	wchar_t sString[128];
+	if (iCurrentProfileMode == 5)
 	{
-		swprintf( sString, lengthof(sString), pImpButtonText[ 5 ], iCurrentVoices + 1 );
+		swprintf(sString, lengthof(sString), pImpButtonText[5], iCurrentVoices + 1);
 	}
 	else
 	{
-		swprintf( sString, lengthof(sString), pImpButtonText[ 25 ] );
+		swprintf(sString, lengthof(sString), pImpButtonText[25]);
 	}
-	giIMPMainPageButton[5] = CreateIconAndTextButton( giIMPMainPageButtonImage[ 5 ], sString, FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														  LAPTOP_SCREEN_UL_X + 373, LAPTOP_SCREEN_WEB_UL_Y + 245, MSYS_PRIORITY_HIGH,
-														 BtnIMPMainPageVoiceCallback);
-
-
-
-
-
-  SetButtonCursor(giIMPMainPageButton[ 0 ], CURSOR_WWW);
-	SetButtonCursor(giIMPMainPageButton[ 1 ], CURSOR_WWW);
-	SetButtonCursor(giIMPMainPageButton[ 2 ], CURSOR_WWW);
-	SetButtonCursor(giIMPMainPageButton[ 3 ], CURSOR_WWW);
-	SetButtonCursor(giIMPMainPageButton[ 4 ], CURSOR_WWW);
-	SetButtonCursor(giIMPMainPageButton[ 5 ], CURSOR_WWW);
-
-	SpecifyButtonTextOffsets( giIMPMainPageButton[ 2 ], 10, 40, TRUE );
-	SpecifyButtonTextOffsets( giIMPMainPageButton[ 3 ], 10, 40, TRUE );
-	SpecifyButtonTextOffsets( giIMPMainPageButton[ 4 ], 10, 40, TRUE );
-	SpecifyButtonTextOffsets( giIMPMainPageButton[ 5 ], 10, 40, TRUE );
-
-
-	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 2 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
-	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 3 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
-	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 4 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
-	SpecifyButtonTextWrappedWidth( giIMPMainPageButton[ 5 ], MAIN_PAGE_BUTTON_TEXT_WIDTH);
+	MakeButton(5, "LAPTOP/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
 }
 
 

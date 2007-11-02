@@ -151,6 +151,16 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
+static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+{
+	const INT16 text_col   = FONT_WHITE;
+	const INT16 shadow_col = DEFAULT_SHADOW;
+	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	SetButtonCursor(btn, CURSOR_WWW);
+	return btn;
+}
+
+
 static void BtnIMPPersonalityQuizAnswerConfirmCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPPersonalityQuizStartOverCallback(GUI_BUTTON *btn, INT32 reason);
 static void PreviousQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
@@ -160,40 +170,22 @@ static void NextQuestionButtonCallback(GUI_BUTTON *btn, INT32 iReason);
 static void CreateIMPPersonalityQuizButtons(void)
 {
   // this function will create the buttons needed for the IMP personality quiz Page
-
-
-
-
+  const INT16 dx = LAPTOP_SCREEN_UL_X;
+  const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
 
 	// ths Done button
   giIMPPersonalityQuizButtonImage[0]=  LoadButtonImage( "LAPTOP/button_7.sti" ,-1,0,-1,1,-1 );
-	giIMPPersonalityQuizButton[0] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[0], pImpButtonText[ 8 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
-														 	BtnIMPPersonalityQuizAnswerConfirmCallback);
+	giIMPPersonalityQuizButton[0] = MakeButton(giIMPPersonalityQuizButtonImage[0], pImpButtonText[8], dx + 197, dy + 302, BtnIMPPersonalityQuizAnswerConfirmCallback);
 
   // start over
 	giIMPPersonalityQuizButtonImage[ 1 ]=  LoadButtonImage( "LAPTOP/button_5.sti" ,-1,0,-1,1,-1 );
-	giIMPPersonalityQuizButton[ 1 ] = CreateIconAndTextButton( giIMPPersonalityQuizButtonImage[ 1 ], pImpButtonText[ 7 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + BTN_FIRST_COLUMN_X, LAPTOP_SCREEN_WEB_UL_Y + 302, MSYS_PRIORITY_HIGH,
-														 	BtnIMPPersonalityQuizStartOverCallback);
+	giIMPPersonalityQuizButton[1] = MakeButton(giIMPPersonalityQuizButtonImage[1], pImpButtonText[7], dx + BTN_FIRST_COLUMN_X, dy + 302, BtnIMPPersonalityQuizStartOverCallback);
 
 	giPreviousQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
-	giPreviousQuestionButton = CreateIconAndTextButton( giPreviousQuestionButtonImage, pImpButtonText[ 12 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 197, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
-														 	PreviousQuestionButtonCallback);
+	giPreviousQuestionButton = MakeButton(giPreviousQuestionButtonImage, pImpButtonText[12], dx + 197, dy + 361, PreviousQuestionButtonCallback);
 
 	giNextQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
-	giNextQuestionButton = CreateIconAndTextButton( giNextQuestionButtonImage, pImpButtonText[ 13 ], FONT12ARIAL,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 FONT_WHITE, DEFAULT_SHADOW,
-														 LAPTOP_SCREEN_UL_X + 417, LAPTOP_SCREEN_WEB_UL_Y + 361, MSYS_PRIORITY_HIGH,
-														 	NextQuestionButtonCallback);
+	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13], dx + 417, dy + 361, NextQuestionButtonCallback);
 
 
 	SpecifyButtonTextSubOffsets( giNextQuestionButton, 0, -1, FALSE );
@@ -201,11 +193,6 @@ static void CreateIMPPersonalityQuizButtons(void)
 
 	DisableButton( giPreviousQuestionButton );
 	DisableButton( giNextQuestionButton );
-
-  SetButtonCursor( giIMPPersonalityQuizButton[0], CURSOR_WWW );
-	SetButtonCursor( giIMPPersonalityQuizButton[1], CURSOR_WWW );
-	SetButtonCursor( giPreviousQuestionButton, CURSOR_WWW );
-	SetButtonCursor( giNextQuestionButton, CURSOR_WWW );
 }
 
 

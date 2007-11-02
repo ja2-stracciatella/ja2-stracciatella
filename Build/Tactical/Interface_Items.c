@@ -2143,28 +2143,16 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 		}
 
-		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		INT16 x = ITEMDESC_AMMO_X;
+		INT16 y = ITEMDESC_AMMO_Y;
+		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		{
 			// in mapscreen, move over a bit
-			giItemDescAmmoButton = CreateIconAndTextButton( giItemDescAmmoButtonImages, pStr, TINYFONT1,
-															 sForeColour, FONT_MCOLOR_BLACK,
-															 sForeColour, FONT_MCOLOR_BLACK,
-															 ITEMDESC_AMMO_X + 18, ITEMDESC_AMMO_Y - 5, MSYS_PRIORITY_HIGHEST,
-															 ItemDescAmmoCallback );
-
+			x += 18;
+			y -=  5;
 		}
-		else
-		{
+		giItemDescAmmoButton = CreateIconAndTextButton(giItemDescAmmoButtonImages, pStr, TINYFONT1, sForeColour, FONT_MCOLOR_BLACK, sForeColour, FONT_MCOLOR_BLACK, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 
-			// not in mapscreen
-		 giItemDescAmmoButton = CreateIconAndTextButton( giItemDescAmmoButtonImages, pStr, TINYFONT1,
-															 sForeColour, FONT_MCOLOR_BLACK,
-															 sForeColour, FONT_MCOLOR_BLACK,
-															 ITEMDESC_AMMO_X, ITEMDESC_AMMO_Y, MSYS_PRIORITY_HIGHEST,
-															 ItemDescAmmoCallback );
-
-		 //if we are being called from the
-		}
 		//if we are being init from the shop keeper screen and this is a dealer item we are getting info from
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL )
 		{
