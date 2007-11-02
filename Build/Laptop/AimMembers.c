@@ -63,16 +63,12 @@
 #define AIM_M_WEAPON_TEXT_FONT					FONT10ARIAL
 #define AIM_M_WEAPON_TEXT_COLOR					FONT_MCOLOR_WHITE
 #define AIM_M_NUMBER_FONT								FONT12ARIAL
-#define AIM_M_NUMBER_COLOR							FONT_MCOLOR_WHITE
 #define AIM_M_ACTIVE_MEMBER_TITLE_COLOR	AIM_GREEN
 #define AIM_M_FEE_CONTRACT_COLOR				AIM_GREEN
 #define	AIM_M_VIDEO_TITLE_COLOR					AIM_FONT_GOLD
 #define	AIM_M_VIDEO_NAME_COLOR					FONT_MCOLOR_BLACK
 #define	AIM_M_VIDEO_NAME_SHADOWCOLOR		AIM_FONT_GOLD
 
-
-#define	AIM_M_VIDEO_CONTRACT_LENGTH_FONT	FONT12ARIAL
-#define	AIM_M_VIDEO_CONTRACT_LENGTH_COLOR	FONT_MCOLOR_BLACK
 
 #define	AIM_M_VIDEO_CONTRACT_AMOUNT_FONT	FONT10ARIAL
 #define	AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR	183
@@ -152,23 +148,15 @@
 #define		PREVIOUS_X				224
 #define		PREVIOUS_Y				386 + LAPTOP_SCREEN_WEB_DELTA_Y
 #define		PREVIOUS_BOX_Y		PREVIOUS_Y - 4
-#define		PREVIOUS_BR_X			PREVIOUS_X + BOTTOM_BUTTON_START_WIDTH
-#define		PREVIOUS_BR_Y			PREVIOUS_BOX_Y + BOTTOM_BUTTON_START_HEIGHT
 
 
 #define		CONTACT_X					331
 #define		CONTACT_Y					PREVIOUS_Y
 #define		CONTACT_BOX_Y			CONTACT_Y - 4
-#define		CONTACT_BOX_WIDTH		75
-#define		CONTACT_BOX_HEIGHT	18
-#define		CONTACT_BR_X			CONTACT_X + BOTTOM_BUTTON_START_WIDTH
-#define		CONTACT_BR_Y			CONTACT_BOX_Y + BOTTOM_BUTTON_START_HEIGHT
 
 #define		NEXT_X						431
 #define		NEXT_Y						PREVIOUS_Y
 #define		NEXT_BOX_Y				NEXT_Y - 4
-#define		NEXT_BR_X					NEXT_X + BOTTOM_BUTTON_START_WIDTH
-#define		NEXT_BR_Y					NEXT_BOX_Y + BOTTOM_BUTTON_START_HEIGHT
 
 #define		AIM_MERC_INFO_X		124
 #define		AIM_MERC_INFO_Y		223 + LAPTOP_SCREEN_WEB_DELTA_Y
@@ -190,34 +178,18 @@
 
 #define		AIM_MEMBER_OPTIONAL_GEAR_X		AIM_MERC_INFO_X
 #define		AIM_MEMBER_OPTIONAL_GEAR_Y		WEAPONBOX_Y - 13
-//#define		AIM_MEMBER_OPTIONAL_GEAR_NUMBER_X		AIM_MEMBER_OPTIONAL_GEAR_X
 
-#define		AIM_MEMBER_WEAPON_NAME_X			WEAPONBOX_X
 #define		AIM_MEMBER_WEAPON_NAME_Y			WEAPONBOX_Y + WEAPONBOX_SIZE_Y + 1
 #define		AIM_MEMBER_WEAPON_NAME_WIDTH	WEAPONBOX_SIZE_X - 2
-/*
-#define		AIM_MEMBER_PREVIOUS 0
-#define		AIM_MEMBER_CONTACT	1
-#define		AIM_MEMBER_NEXT			2
-*/
 
 //video Conferencing Info
 #define		AIM_MEMBER_VIDEO_CONF_TERMINAL_X	125
 #define		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y	97 + LAPTOP_SCREEN_WEB_DELTA_Y
 
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_WIDTH	368
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_HEIGHT	150
-
 #define		AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH			368
 #define		AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT			21
 #define		AIM_MEMBER_VIDEO_TITLE_ITERATIONS			18
 #define		AIM_MEMBER_VIDEO_TITLE_START_Y				382 + LAPTOP_SCREEN_WEB_DELTA_Y
-#define		AIM_MEMBER_VIDEO_TITLE_END_Y					96
-#define		AIM_MEMBER_VIDEO_TITLE_START_X				330
-#define		AIM_MEMBER_VIDEO_TITLE_END_X					125
-
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_RIGHT		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + AIM_MEMBER_VIDEO_CONF_TERMINAL_WIDTH
-#define		AIM_MEMBER_VIDEO_CONF_TERMINAL_BOTTOM		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TERMINAL_HEIGHT
 
 
 #define		AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 6
@@ -237,7 +209,6 @@
 
 #define		AIM_MEMBER_AUTHORIZE_PAY_X				AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
 #define		AIM_MEMBER_AUTHORIZE_PAY_Y				AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 92
-#define		AIM_MEMBER_AUTHORIZE_PAY_WIDTH		116
 #define		AIM_MEMBER_AUTHORIZE_PAY_GAP			122
 
 #define		AIM_MEMBER_VIDEO_FACE_X						AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 + 1
@@ -264,14 +235,11 @@
 
 #define		AIM_CONTRACT_CHARGE_AMOUNNT_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7//8
 #define		AIM_CONTRACT_CHARGE_AMOUNNT_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 111//114
-#define		AIM_CONTRACT_CHARGE_AMOUNNT_WIDTH		98
-#define		AIM_CONTRACT_CHARGE_AMOUNNT_HEIGHT	12
 
 #define		AIM_POPUP_BOX_X										260
 #define		AIM_POPUP_BOX_Y										140 + LAPTOP_SCREEN_WEB_DELTA_Y
 
 #define		AIM_POPUP_BOX_WIDTH								162
-#define		AIM_POPUP_BOX_HEIGHT							100
 #define		AIM_POPUP_BOX_STRING1_Y						6
 #define		AIM_POPUP_BOX_BUTTON_OFFSET_X			20
 #define		AIM_POPUP_BOX_BUTTON_OFFSET_Y			62
@@ -280,10 +248,6 @@
 
 #define		AIM_MEMBER_HANG_UP_X							290
 #define		AIM_MEMBER_HANG_UP_Y							AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 42
-
-#define		AIM_MEMBER_VIDEO_TALKING_TEXT_X				AIM_MEMBER_AUTHORIZE_PAY_X
-#define		AIM_MEMBER_VIDEO_TALKING_TEXT_Y				AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 30
-#define		AIM_MEMBER_VIDEO_TALKING_TEXT_WIDTH		240
 
 #define		VC_CONTACT_STATIC_TIME						30
 #define		VC_CONTACT_FUZZY_LINE_TIME				100
@@ -304,7 +268,6 @@
 #define		QUOTE_DELAY_NO_ACTION						5
 #define		QUOTE_MERC_BUSY									6
 
-#define		TEXT_POPUP_WINDOW_X								180
 #define		TEXT_POPUP_WINDOW_Y								255 + LAPTOP_SCREEN_WEB_DELTA_Y
 #define		TEXT_POPUP_STRING_SIZE						512
 
@@ -314,9 +277,6 @@
 #define		MINIMUM_TALKING_TIME_FOR_MERC			1500
 
 #define		AIM_TEXT_SPEECH_MODIFIER					80
-
-#define		AIM_WEAPONBOX_NAME_WIDTH					93
-
 
 
 // enumerated types used for the Video Conferencing Display
@@ -357,124 +317,110 @@ enum
 
 
 //Image Identifiers
-UINT32		guiStats;
-UINT32		guiPrice;
-UINT32		guiPortrait;
-UINT32		guiWeaponBox;
-UINT32		guiFace;
+static UINT32 guiStats;
+static UINT32 guiPrice;
+static UINT32 guiPortrait;
+static UINT32 guiWeaponBox;
+static UINT32 guiFace;
 //UINT32		guiVideoFace;
 //UINT32		guiContactButton;
-UINT32		guiVideoConfPopup;
-UINT32		guiVideoConfTerminal;
-UINT32		guiPopUpBox;
-UINT32		guiVideoFaceBackground;
-UINT32		guiBWSnow;
-UINT32		guiFuzzLine;
-UINT32		guiStraightLine;
-UINT32		guiTransSnow;
-UINT32		guiVideoContractCharge;
+static UINT32 guiVideoConfPopup;
+static UINT32 guiVideoConfTerminal;
+static UINT32 guiPopUpBox;
+static UINT32 guiVideoFaceBackground;
+static UINT32 guiBWSnow;
+static UINT32 guiFuzzLine;
+static UINT32 guiStraightLine;
+static UINT32 guiTransSnow;
+static UINT32 guiVideoContractCharge;
 //UINT32		guiAnsweringMachineImage;
-UINT32		guiVideoTitleBar;
-INT32			iAimMembersBoxId = -1;
+static UINT32 guiVideoTitleBar;
+static INT32  iAimMembersBoxId = -1;
 
-UINT8			gbCurrentSoldier = 0;
-UINT8			gbCurrentIndex = 0;
+static UINT8 gbCurrentSoldier = 0;
+UINT8        gbCurrentIndex = 0;
 
-UINT8			gubVideoConferencingMode;
-UINT8			gubVideoConferencingPreviousMode;
-BOOLEAN		gfJustSwitchedVideoConferenceMode;
+UINT8          gubVideoConferencingMode;
+static UINT8   gubVideoConferencingPreviousMode;
+static BOOLEAN gfJustSwitchedVideoConferenceMode;
 
-BOOLEAN		gfMercIsTalking=FALSE;
-BOOLEAN		gfVideoFaceActive=FALSE;
+static BOOLEAN gfMercIsTalking=FALSE;
+static BOOLEAN gfVideoFaceActive=FALSE;
 
-UINT8			gubPopUpBoxAction = AIM_POPUP_NOTHING;
-BOOLEAN		gfRedrawScreen = FALSE;
-UINT8			gubContractLength;
-BOOLEAN		gfBuyEquipment;
-INT32			giContractAmount=0;
-INT32			giMercFaceIndex;
-wchar_t		gsTalkingMercText[ TEXT_POPUP_STRING_SIZE ];
-UINT32		guiTimeThatMercStartedTalking;
-UINT32		guiLastHandleMercTime;
-BOOLEAN		gfFirstTimeInContactScreen;
+static UINT8   gubPopUpBoxAction = AIM_POPUP_NOTHING;
+static BOOLEAN gfRedrawScreen = FALSE;
+UINT8          gubContractLength;
+static BOOLEAN gfBuyEquipment;
+static INT32   giContractAmount=0;
+static INT32   giMercFaceIndex;
+static wchar_t gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
+static UINT32  guiTimeThatMercStartedTalking;
+static UINT32  guiLastHandleMercTime;
+static BOOLEAN gfFirstTimeInContactScreen;
 
-UINT8			gubCurrentCount;
-UINT8			gubCurrentStaticMode;
-UINT32		guiMercAttitudeTime;			//retains the amount of time the user is in a screen, if over a certain time, the merc gets miffed
-UINT8			gubMercAttitudeLevel;			//retains the current level the merc is  P.O.'ed at the caller.
-BOOLEAN		gfHangUpMerc;							// if we have to cancel the video conferencing after the merc is finsihed talking
-BOOLEAN		gfIsShutUpMouseRegionActive;
-BOOLEAN		gfIsAnsweringMachineActive;
-BOOLEAN		gfRenderTopLevel;
-BOOLEAN		gfStopMercFromTalking;
+static UINT8   gubCurrentCount;
+static UINT8   gubCurrentStaticMode;
+static UINT32  guiMercAttitudeTime;         // retains the amount of time the user is in a screen, if over a certain time, the merc gets miffed
+static UINT8   gubMercAttitudeLevel;        // retains the current level the merc is  P.O.'ed at the caller.
+static BOOLEAN gfHangUpMerc;                // if we have to cancel the video conferencing after the merc is finsihed talking
+static BOOLEAN gfIsShutUpMouseRegionActive;
+static BOOLEAN gfIsAnsweringMachineActive;
+static BOOLEAN gfStopMercFromTalking;
 
-UINT16		usAimMercSpeechDuration=0;
+static UINT16 usAimMercSpeechDuration=0;
 
-BOOLEAN		gfIsNewMailFlagSet = FALSE;
+static BOOLEAN gfIsNewMailFlagSet = FALSE;
 
 extern		BOOLEAN fExitDueToMessageBox;
 
-BOOLEAN		gfWaitingForMercToStopTalkingOrUserToClick=FALSE;
+static BOOLEAN gfWaitingForMercToStopTalkingOrUserToClick=FALSE;
 
-INT32			giIdOfLastHiredMerc = -1;
+static INT32 giIdOfLastHiredMerc = -1;
 
-BOOLEAN		gfAimMemberDisplayFaceHelpText = FALSE;
-
-
-BOOLEAN		gfAimMemberCanMercSayOpeningQuote = TRUE;
+static BOOLEAN gfAimMemberDisplayFaceHelpText = FALSE;
 
 
-//Graphic for following
-INT32		guiPreviousContactNextButtonImage;
-//Previous Button
-static void BtnPreviousButtonCallback(GUI_BUTTON *btn, INT32 reason);
-INT32	giPreviousButton;
+static BOOLEAN gfAimMemberCanMercSayOpeningQuote = TRUE;
 
-//Contact
-static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason);
-INT32	giContactButton;
 
-//NExt
-static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
-INT32	giNextButton;
+static INT32 guiPreviousContactNextButtonImage;
+static INT32 giPreviousButton;
+static INT32 giContactButton;
+static INT32 giNextButton;
 
 //Video conference buttons
-INT32		guiVideoConferenceButtonImage[3];
+static INT32 guiVideoConferenceButtonImage[3];
 
 //Contract Length Button
-INT32	giContractLengthButton[3];
+static INT32 giContractLengthButton[3];
 
 //BuyEquipment Button
-INT32	giBuyEquipmentButton[2];
+static INT32 giBuyEquipmentButton[2];
 
 //Authorize Payment Button
-INT32	giAuthorizeButton[2];
+static INT32 giAuthorizeButton[2];
 
 //Hang up Button
-INT32	giHangUpButton;
+static INT32 giHangUpButton;
 
 // PopupBox button
-static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiPopUpOkButton;
-INT32		guiPopUpImage;
-
-//First Contact Screen, Goto Hire merc Button
-INT32	giFirstContactButton[2];
+static UINT32 guiPopUpOkButton;
+static INT32  guiPopUpImage;
 
 //Leave Message merc Button
-INT32	giAnsweringMachineButton[2];
+static INT32 giAnsweringMachineButton[2];
 
 //X to Close the video conference Button
-INT32		giXToCloseVideoConfButtonImage;
-INT32	giXToCloseVideoConfButton;
+static INT32 giXToCloseVideoConfButtonImage;
+static INT32 giXToCloseVideoConfButton;
 
 
 //Mouse Regions
 //Clicking on guys Face
-MOUSE_REGION    gSelectedFaceRegion;
+static MOUSE_REGION    gSelectedFaceRegion;
 
 //Clicking To shut merc up
-MOUSE_REGION    gSelectedShutUpMercRegion;
+static MOUSE_REGION    gSelectedShutUpMercRegion;
 
 
 void EnterInitAimMembers()
@@ -499,6 +445,9 @@ void EnterInitAimMembers()
 }
 
 
+static void BtnContactButtonCallback( GUI_BUTTON* btn, INT32 reason);
+static void BtnNextButtonCallback(    GUI_BUTTON* btn, INT32 reason);
+static void BtnPreviousButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BOOLEAN InitDeleteVideoConferencePopUp(void);
 static BOOLEAN InitVideoFace(UINT8 ubMercID);
 static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -608,8 +557,6 @@ BOOLEAN EnterAIMMembers()
 	gfStopMercFromTalking = FALSE;
 	gubVideoConferencingMode = (UINT8)giCurrentSubPage;
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
-
-	gfRenderTopLevel = FALSE;
 
 	// if we are re-entering but the video conference should still be up
 	if( gubVideoConferencingMode != 0 )
@@ -1694,6 +1641,9 @@ static UINT32 DisplayMercChargeAmount(void)
 
 	return(giContractAmount);
 }
+
+
+static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
