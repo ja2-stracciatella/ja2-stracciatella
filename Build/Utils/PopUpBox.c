@@ -324,11 +324,8 @@ void SetBoxSize(INT32 hBoxHandle,SGPRect Dimensions)
 
 	Assert(Box);
 
-	Box->Dimensions.iLeft   = Dimensions.iLeft;
-	Box->Dimensions.iBottom = Dimensions.iBottom;
-	Box->Dimensions.iRight  = Dimensions.iRight;
-	Box->Dimensions.iTop    = Dimensions.iTop;
-	Box->fUpdated           = FALSE;
+	Box->Dimensions = Dimensions;
+	Box->fUpdated   = FALSE;
 }
 
 
@@ -341,10 +338,7 @@ void GetBoxSize( INT32 hBoxHandle, SGPRect *Dimensions )
 
 	Assert(Box);
 
-	Dimensions->iLeft   = Box->Dimensions.iLeft;
-	Dimensions->iBottom = Box->Dimensions.iBottom;
-	Dimensions->iRight  = Box->Dimensions.iRight;
-	Dimensions->iTop    = Box->Dimensions.iTop;
+	*Dimensions = Box->Dimensions;
 }
 
 
