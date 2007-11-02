@@ -652,20 +652,15 @@ static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm1);
 
-		//the accept button
-		if (ubButton == 0)
-		{
-			HandleAcceptButton(ubSoldierID);
+		HandleAcceptButton(ubSoldierID);
 
-			//specify the length of the insurance contract
-			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
+		//specify the length of the insurance contract
+		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
 
-			//reset the insurance length
-			gsForm1InsuranceLengthNumber = 0;
-		}
+		//reset the insurance length
+		gsForm1InsuranceLengthNumber = 0;
 
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
@@ -677,20 +672,15 @@ static void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm2);
 
-		//the accept button
-		if (ubButton == 0)
-		{
-			HandleAcceptButton(ubSoldierID);
+		HandleAcceptButton(ubSoldierID);
 
-			//specify the length of the insurance contract
-			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
+		//specify the length of the insurance contract
+		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
 
-			//reset the insurance length
-			gsForm2InsuranceLengthNumber = 0;
-		}
+		//reset the insurance length
+		gsForm2InsuranceLengthNumber = 0;
 
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
@@ -702,20 +692,15 @@ static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 re
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubButton    = MSYS_GetBtnUserData(btn);
 		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm3);
 
-		//the accept button
-		if (ubButton == 0)
-		{
-			HandleAcceptButton(ubSoldierID);
+		HandleAcceptButton(ubSoldierID);
 
-			//specify the length of the insurance contract
-			Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
+		//specify the length of the insurance contract
+		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
 
-			//reset the insurance length
-			gsForm3InsuranceLengthNumber = 0;
-		}
+		//reset the insurance length
+		gsForm3InsuranceLengthNumber = 0;
 
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
@@ -838,7 +823,6 @@ static INT32 MakeButtonMed(INT16 x, GUI_CALLBACK click)
 	const INT16          y          = INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y;
 	const INT32 btn  = CreateIconAndTextButton(guiInsuranceAcceptClearForm1ButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
-	MSYS_SetBtnUserData(btn, 0);
 	return btn;
 }
 
