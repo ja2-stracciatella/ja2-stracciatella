@@ -34,15 +34,10 @@
 
 #define		INS_CTRCT_ORDER_GRID_WIDTH					132
 #define		INS_CTRCT_ORDER_GRID_HEIGHT					216
-#define		INS_CTRCT_ORDER_GRID_OFFSET_X				INS_CTRCT_ORDER_GRID_WIDTH + 2
 
-
-#define		INS_CTRCT_ORDER_GRID1_X							76 + LAPTOP_SCREEN_UL_X
-#define		INS_CTRCT_ORDER_GRID1_Y							126 + LAPTOP_SCREEN_WEB_UL_Y
-
-#define		INS_CTRCT_ORDER_GRID2_X							INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ORDER_GRID_OFFSET_X
-
-#define		INS_CTRCT_ORDER_GRID3_X							INS_CTRCT_ORDER_GRID2_X + INS_CTRCT_ORDER_GRID_OFFSET_X
+#define INS_CTRCT_ORDER_GRID_X        (LAPTOP_SCREEN_UL_X         +  76)
+#define INS_CTRCT_ORDER_GRID_Y        (LAPTOP_SCREEN_WEB_UL_Y     + 126)
+#define INS_CTRCT_ORDER_GRID_OFFSET_X (INS_CTRCT_ORDER_GRID_WIDTH +   2)
 
 #define		INS_CTRCT_OG_FACE_OFFSET_X					5
 #define		INS_CTRCT_OG_FACE_OFFSET_Y					4
@@ -111,14 +106,6 @@
 UINT32	guiInsOrderGridImage;
 UINT32	guiInsOrderBulletImage;
 
-INT16		gsForm1InsuranceLengthNumber;
-INT16		gsForm2InsuranceLengthNumber;
-INT16		gsForm3InsuranceLengthNumber;
-
-UINT8		gubMercIDForMercInForm1;
-UINT8		gubMercIDForMercInForm2;
-UINT8		gubMercIDForMercInForm3;
-
 UINT8		gubNumberofDisplayedInsuranceGrids;
 
 BOOLEAN	gfChangeInsuranceFormButtons = FALSE;
@@ -141,14 +128,18 @@ UINT32	guiInsContractNextBackButton;
 
 
 //Graphic for Accept, Clear button for form 1
-INT32		guiInsuranceAcceptClearForm1ButtonImage;
-UINT32	guiInsuranceAcceptClearForm1Button;
+static INT32 guiInsuranceAcceptClearFormButtonImage;
 
-//Graphic for Accept, Clear button for form 2
-UINT32	guiInsuranceAcceptClearForm2Button;
 
-//Graphic for Accept, Clear button for form 3
-UINT32	guiInsuranceAcceptClearForm3Button;
+typedef struct InsuranceInfo
+{
+	UINT32 button;
+	INT16  length;
+	INT8   merc_id;
+} InsuranceInfo;
+
+
+static InsuranceInfo insurance_info[3];
 
 
 void GameInitInsuranceContract()
@@ -419,7 +410,6 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 {
-	UINT16	usPosX;
 	UINT32	uiInsMercFaceImage;
 	INT32		iCostOfContract=0;
 	char			sTemp[100];
@@ -431,36 +421,16 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 	pSoldier = &Menptr[ GetSoldierIDFromMercID( ubMercID ) ];
 
+	Assert(ubGridNumber < 3);
 
-	usPosX = 0;
+	InsuranceInfo* const i = &insurance_info[ubGridNumber];
+	i->merc_id = ubMercID;
+	i->length  = pSoldier->iTotalLengthOfInsuranceContract;
 
-	switch( ubGridNumber )
-	{
-		case 0:
-			usPosX = INS_CTRCT_ORDER_GRID1_X;
-			gubMercIDForMercInForm1 = ubMercID;
-			gsForm1InsuranceLengthNumber = (INT16) pSoldier->iTotalLengthOfInsuranceContract;
-			break;
+	const INT32 dx = INS_CTRCT_ORDER_GRID_X + INS_CTRCT_ORDER_GRID_OFFSET_X * ubGridNumber;
+	const INT32 dy = INS_CTRCT_ORDER_GRID_Y;
 
-		case 1:
-			usPosX = INS_CTRCT_ORDER_GRID2_X;
-			gubMercIDForMercInForm2 = ubMercID;
-			gsForm2InsuranceLengthNumber = (INT16) pSoldier->iTotalLengthOfInsuranceContract;
-			break;
-
-		case 2:
-			usPosX = INS_CTRCT_ORDER_GRID3_X;
-			gubMercIDForMercInForm3 = ubMercID;
-			gsForm3InsuranceLengthNumber = (INT16) pSoldier->iTotalLengthOfInsuranceContract;
-			break;
-
-		default:
-			//should never get in here
-			Assert(0);
-			break;
-	}
-
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderGridImage, 0, usPosX, INS_CTRCT_ORDER_GRID1_Y);
+	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
 
 	// load the mercs face graphic and add it
 	sprintf(sTemp, "FACES/%02d.sti", ubMercID);
@@ -481,13 +451,13 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	}
 
 	//Get and display the mercs face
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, usPosX+INS_CTRCT_OG_FACE_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y+INS_CTRCT_OG_FACE_OFFSET_Y);
+	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
 
 	// the face images isn't needed anymore so delete it
 	DeleteVideoObjectFromIndex( uiInsMercFaceImage );
 
 	//display the mercs nickname
-	DrawTextToScreen(gMercProfiles[ubMercID].zNickname, usPosX + INS_CTRCT_OG_NICK_NAME_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(gMercProfiles[ubMercID].zNickname, dx + INS_CTRCT_OG_NICK_NAME_OFFSET_X, dy + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Get the text to display the mercs current insurance contract status
 	if( IsMercDead( pSoldier->ubProfile ) )
@@ -503,7 +473,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 			//Display the contract text
 			GetInsuranceText( INS_SNGL_DEAD_NO_CONTRACT, sText );
 		}
-		DisplayWrappedString(usPosX + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, INS_FONT_COLOR_RED, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DisplayWrappedString(dx + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, dy + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, INS_FONT_COLOR_RED, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 	else
 	{
@@ -530,30 +500,28 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 			GetInsuranceText( INS_SNGL_NOCONTRACT, sText );
 			fDisplayMercContractStateTextColorInRed = TRUE;
 		}
-		if( fDisplayMercContractStateTextColorInRed )
-			DisplayWrappedString(usPosX + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, INS_FONT_COLOR_RED, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-		else
-			DisplayWrappedString(usPosX + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		const UINT8 colour = (fDisplayMercContractStateTextColorInRed ? INS_FONT_COLOR_RED : INS_FONT_COLOR);
+		DisplayWrappedString(dx + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, dy + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, colour, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 
 
 	//Display the Emplyment contract text
 	GetInsuranceText( INS_SNGL_EMPLOYMENT_CONTRACT, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, dy + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Display the merc contract Length text
 	GetInsuranceText( INS_SNGL_LENGTH, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_LENGTH_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_LENGTH_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_LENGTH_OFFSET_X, dy + INS_CTRCT_LENGTH_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the mercs contract length
 	swprintf( sText, lengthof(sText), L"%d", pSoldier->iTotalContractLength );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_OG_BOX_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_LENGTH_OFFSET_Y, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_OG_BOX_OFFSET_X, dy + INS_CTRCT_LENGTH_OFFSET_Y, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 
 	//Display the days remaining for the emplyment contract text
 	GetInsuranceText( INS_SNGL_DAYS_REMAINING, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_LENGTH_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_DAYS_REMAINING_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_LENGTH_OFFSET_X, dy + INS_CTRCT_DAYS_REMAINING_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 
 	//display the amount of time the merc has left on their Regular contract
@@ -562,19 +530,19 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	else
 		swprintf( sText, lengthof(sText), L"%d", GetTimeRemainingOnSoldiersContract( pSoldier ) );
 
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_OG_BOX_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_DAYS_REMAINING_OFFSET_Y, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_OG_BOX_OFFSET_X, dy + INS_CTRCT_DAYS_REMAINING_OFFSET_Y, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 	//Display the Insurqance contract
 	GetInsuranceText( INS_SNGL_INSURANCE_CONTRACT, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_INSURANCE_CNTRCT_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, dy + INS_CTRCT_INSURANCE_CNTRCT_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
 	GetInsuranceText( INS_SNGL_LENGTH, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_LENGTH_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_LENGTH_OFFSET_Y + 54, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_LENGTH_OFFSET_X, dy + INS_CTRCT_LENGTH_OFFSET_Y + 54, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the insurance days remaining text
 	GetInsuranceText( INS_SNGL_DAYS_REMAINING, sText );
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_LENGTH_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_DAYS_REMAINING_OFFSET_Y + 54, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_LENGTH_OFFSET_X, dy + INS_CTRCT_DAYS_REMAINING_OFFSET_Y + 54, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 
 	//
@@ -590,7 +558,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	else
 		swprintf( sText, lengthof(sText), L"%d", 0 );
 
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_OG_BOX_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_DAYS_REMAINING_OFFSET_Y + 54, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_OG_BOX_OFFSET_X, dy + INS_CTRCT_DAYS_REMAINING_OFFSET_Y + 54, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 
 	//
@@ -617,7 +585,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	{
 		//Display the premium owing text
 		GetInsuranceText( INS_SNGL_PREMIUM_OWING, sText );
-		DrawTextToScreen(sText, usPosX + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_PREMIUM_OWING_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DrawTextToScreen(sText, dx + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, dy + INS_CTRCT_PREMIUM_OWING_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		//display the amount of refund
 		SPrintMoney(sText, iCostOfContract);
@@ -629,7 +597,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 		wcslcpy(sText, L"$0", lengthof(sText));
 	}
 	//display the amount owing
-	DrawTextToScreen(sText, usPosX + 32, INS_CTRCT_ORDER_GRID1_Y + 179, 72, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + 32, dy + 179, 72, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 
 	//
@@ -639,7 +607,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 
 
 	//Display the length of time the player can get for the insurance contract
-	DrawTextToScreen(sText, usPosX + INS_CTRCT_OG_BOX_OFFSET_X, INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_LENGTH_OFFSET_Y + 52 + 2, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sText, dx + INS_CTRCT_OG_BOX_OFFSET_X, dy + INS_CTRCT_LENGTH_OFFSET_Y + 52 + 2, INS_CTRCT_OG_BOX_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 	return( TRUE );
 }
@@ -648,59 +616,21 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 static void HandleAcceptButton(UINT8 ubSoldierID);
 
 
-static void BtnInsuranceAcceptClearForm1ButtonCallback(GUI_BUTTON *btn, INT32 reason)
+static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm1);
+		const UINT idx = MSYS_GetBtnUserData(btn);
+		InsuranceInfo* const i = &insurance_info[idx];
+		UINT8	ubSoldierID = GetSoldierIDFromMercID(i->merc_id);
 
 		HandleAcceptButton(ubSoldierID);
 
 		//specify the length of the insurance contract
-		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm1InsuranceLengthNumber;
+		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = i->length;
 
 		//reset the insurance length
-		gsForm1InsuranceLengthNumber = 0;
-
-		//redraw the screen
-		fPausedReDrawScreenFlag = TRUE;
-	}
-}
-
-
-static void BtnInsuranceAcceptClearForm2ButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm2);
-
-		HandleAcceptButton(ubSoldierID);
-
-		//specify the length of the insurance contract
-		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm2InsuranceLengthNumber;
-
-		//reset the insurance length
-		gsForm2InsuranceLengthNumber = 0;
-
-		//redraw the screen
-		fPausedReDrawScreenFlag = TRUE;
-	}
-}
-
-
-static void BtnInsuranceAcceptClearForm3ButtonCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		UINT8	ubSoldierID = (UINT8)GetSoldierIDFromMercID(gubMercIDForMercInForm3);
-
-		HandleAcceptButton(ubSoldierID);
-
-		//specify the length of the insurance contract
-		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = gsForm3InsuranceLengthNumber;
-
-		//reset the insurance length
-		gsForm3InsuranceLengthNumber = 0;
+		i->length = 0;
 
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
@@ -815,18 +745,6 @@ static void DisableInsuranceContractNextPreviousbuttons(void)
 }
 
 
-static INT32 MakeButtonMed(INT16 x, GUI_CALLBACK click)
-{
-	const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
-	const INT16          text_col   = INS_FONT_BTN_COLOR;
-	const INT16          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
-	const INT16          y          = INS_CTRCT_ORDER_GRID1_Y + INS_CTRCT_ACCEPT_BTN_Y;
-	const INT32 btn  = CreateIconAndTextButton(guiInsuranceAcceptClearForm1ButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
-	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
-	return btn;
-}
-
-
 static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 {
 	static BOOLEAN	fButtonsCreated = FALSE;
@@ -836,24 +754,19 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		//place the 3 accept buttons for the different forms
 
 		//The accept button image
-		guiInsuranceAcceptClearForm1ButtonImage	= LoadButtonImage("LAPTOP/AcceptClearBox.sti", -1,0,-1,1,-1 );
+		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage("LAPTOP/AcceptClearBox.sti", -1, 0, -1, 1, -1);
 
-		if( gubNumberofDisplayedInsuranceGrids >= 1 )
+		const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
+		const INT16          text_col   = INS_FONT_BTN_COLOR;
+		const INT16          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
+		const INT16          y          = INS_CTRCT_ORDER_GRID_Y + INS_CTRCT_ACCEPT_BTN_Y;
+		for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 		{
-			//the accept button for form 1
-			guiInsuranceAcceptClearForm1Button = MakeButtonMed(INS_CTRCT_ORDER_GRID1_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm1ButtonCallback);
-		}
-
-		if( gubNumberofDisplayedInsuranceGrids >= 2 )
-		{
-			//the accept button for form 2
-			guiInsuranceAcceptClearForm2Button = MakeButtonMed(INS_CTRCT_ORDER_GRID2_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm2ButtonCallback);
-		}
-
-		if( gubNumberofDisplayedInsuranceGrids >= 3 )
-		{
-			//the accept button for form 3
-			guiInsuranceAcceptClearForm3Button = MakeButtonMed(INS_CTRCT_ORDER_GRID3_X + INS_CTRCT_ACCEPT_BTN_X, BtnInsuranceAcceptClearForm3ButtonCallback);
+			const INT16 x   = INS_CTRCT_ORDER_GRID_X + INS_CTRCT_ORDER_GRID_OFFSET_X * i + INS_CTRCT_ACCEPT_BTN_X;
+			const INT32 btn = CreateIconAndTextButton(guiInsuranceAcceptClearFormButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, BtnInsuranceAcceptClearFormButtonCallback);
+			insurance_info[i].button = btn;
+			SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+			MSYS_SetBtnUserData(btn, i);
 		}
 
 		fButtonsCreated = TRUE;
@@ -862,24 +775,11 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 	if( fButtonsCreated && ! fCreate )
 	{
 		//the accept image
-		UnloadButtonImage( guiInsuranceAcceptClearForm1ButtonImage );
+		UnloadButtonImage(guiInsuranceAcceptClearFormButtonImage);
 
-		if( gubNumberofDisplayedInsuranceGrids >= 1 )
+		for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 		{
-			//the accept for the first form
-			RemoveButton( guiInsuranceAcceptClearForm1Button );
-		}
-
-		if( gubNumberofDisplayedInsuranceGrids >= 2 )
-		{
-			//the accept clear for the second form
-			RemoveButton( guiInsuranceAcceptClearForm2Button );
-		}
-
-		if( gubNumberofDisplayedInsuranceGrids >= 3 )
-		{
-			//the accept clear for the third form
-			RemoveButton( guiInsuranceAcceptClearForm3Button );
+			RemoveButton(insurance_info[i].button);
 		}
 
 		fButtonsCreated = FALSE;
@@ -1282,50 +1182,23 @@ static BOOLEAN MercIsInsurable(SOLDIERTYPE* pSoldier)
 }
 
 
-static void EnableDisableIndividualInsuranceContractButton(UINT8 ubMercIDForMercInForm, UINT32* puiAcceptButton);
-
-
 static void EnableDisableInsuranceContractAcceptButtons(void)
 {
-	//If it is the first grid
-	if( gubNumberofDisplayedInsuranceGrids >= 1 )
+	for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 	{
-		EnableDisableIndividualInsuranceContractButton( gubMercIDForMercInForm1, &guiInsuranceAcceptClearForm1Button );
+		const InsuranceInfo* const ins = &insurance_info[i];
+		const INT16 sSoldierID = GetSoldierIDFromMercID(ins->merc_id);
+		if (sSoldierID == -1) continue;
+
+		if (CanSoldierExtendInsuranceContract(&Menptr[sSoldierID]) && !IsMercDead(ins->merc_id))
+		{
+			EnableButton(ins->button);
+		}
+		else
+		{
+			DisableButton(ins->button);
+		}
 	}
-
-	//If it is the 2nd grid
-	if( gubNumberofDisplayedInsuranceGrids >= 2 )
-	{
-		EnableDisableIndividualInsuranceContractButton( gubMercIDForMercInForm2, &guiInsuranceAcceptClearForm2Button );
-	}
-
-	//If it is the 3rd grid
-	if( gubNumberofDisplayedInsuranceGrids >= 3 )
-	{
-		EnableDisableIndividualInsuranceContractButton( gubMercIDForMercInForm3, &guiInsuranceAcceptClearForm3Button );
-	}
-}
-
-
-static void EnableDisableIndividualInsuranceContractButton(UINT8 ubMercIDForMercInForm, UINT32* puiAcceptButton)
-{
-	INT16	sSoldierID = 0;
-
-	sSoldierID = GetSoldierIDFromMercID( ubMercIDForMercInForm );
-	if( sSoldierID == - 1)
-		return;
-
-	// if the soldiers contract can be extended, enable the button
-	if( CanSoldierExtendInsuranceContract( &Menptr[ sSoldierID ] ) )
-		EnableButton( *puiAcceptButton );
-
-	// else the soldier cant extend their insurance contract, disable the button
-	else
-		DisableButton( *puiAcceptButton );
-
-	//if the merc is dead, disable the button
-	if( IsMercDead( ubMercIDForMercInForm ) )
-		DisableButton( *puiAcceptButton );
 }
 
 
