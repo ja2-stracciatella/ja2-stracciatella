@@ -473,22 +473,14 @@ void RemoveCurrentTacticalPanelButtons(void)
 }
 
 
-BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID )
+BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s)
 {
-	if ( gsCurInterfacePanel == TEAM_PANEL )
+	switch (gsCurInterfacePanel)
 	{
-		return( TRUE );
+		case TEAM_PANEL: return TRUE;
+		case SM_PANEL:   return gpSMCurrentMerc == s;
+		default:         return FALSE;
 	}
-
-	if ( gsCurInterfacePanel == SM_PANEL )
-	{
-		if ( GetSMPanelCurrentMerc() == ubSoldierID )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
 }
 
 

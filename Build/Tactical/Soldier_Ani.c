@@ -3058,10 +3058,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		{
 			// Set guy to close panel!
 			// ONLY IF VISIBLE ON SCREEN
-			if ( IsMercPortraitVisible( pSoldier->ubID ) )
-			{
-				fInterfacePanelDirty = DIRTYLEVEL2;
-			}
+			if (IsMercPortraitVisible(pSoldier)) fInterfacePanelDirty = DIRTYLEVEL2;
 			pSoldier->fUIdeadMerc = TRUE;
 
 			if ( !gfKillingGuysForLosingBattle )

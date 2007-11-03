@@ -139,7 +139,7 @@ void CreateCurrentTacticalPanelButtons( );
 void RemoveCurrentTacticalPanelButtons( );
 void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID );
 void SetCurrentInterfacePanel( UINT8 ubNewPanel );
-BOOLEAN IsMercPortraitVisible( UINT8 ubSoldierID );
+BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s);
 
 BOOLEAN InitializeCurrentPanel( );
 void ShutdownCurrentPanel( );
