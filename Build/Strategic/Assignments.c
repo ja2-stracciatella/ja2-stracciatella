@@ -3408,7 +3408,7 @@ static int TownTrainerQsortCompare(const void* pArg1, const void* pArg2)
 }
 
 
-INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE *pStudent, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16 *pusMaxPts )
+INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const SOLDIERTYPE* pStudent, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
 	// return the bonus training pts of this instructor with this student,...if student null, simply assignment student skill of 0 and student wisdom of 100
 	INT16 sTrainingPts = 0;
@@ -3597,7 +3597,7 @@ INT16 GetBonusTrainingPtsDueToInstructor( SOLDIERTYPE *pInstructor, SOLDIERTYPE 
 }
 
 
-INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16 *pusMaxPts )
+INT16 GetSoldierTrainingPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
 	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
@@ -3609,33 +3609,15 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 	// use NATURAL not EFFECTIVE values here
 	switch( bTrainStat )
 	{
-		case( STRENGTH ):
-			bSkill = pSoldier -> bStrength;
-		break;
-		case( DEXTERITY ):
-			bSkill = pSoldier -> bDexterity;
-		break;
-		case( AGILITY ):
-			bSkill = pSoldier -> bAgility;
-		break;
-		case( HEALTH ):
-			bSkill = pSoldier -> bLifeMax;
-		break;
-		case( LEADERSHIP ):
-			bSkill = pSoldier -> bLeadership;
-		break;
-		case( MARKSMANSHIP ):
-			bSkill = pSoldier -> bMarksmanship;
-		break;
-		case( EXPLOSIVE_ASSIGN ):
-			bSkill = pSoldier -> bExplosive;
-		break;
-		case( MEDICAL ):
-			bSkill = pSoldier -> bMedical;
-		break;
-		case( MECHANICAL ):
-			bSkill = pSoldier -> bMechanical;
-		break;
+		case STRENGTH:         bSkill = s->bStrength;     break;
+		case DEXTERITY:        bSkill = s->bDexterity;    break;
+		case AGILITY:          bSkill = s->bAgility;      break;
+		case HEALTH:           bSkill = s->bLifeMax;      break;
+		case LEADERSHIP:       bSkill = s->bLeadership;   break;
+		case MARKSMANSHIP:     bSkill = s->bMarksmanship; break;
+		case EXPLOSIVE_ASSIGN: bSkill = s->bExplosive;    break;
+		case MEDICAL:          bSkill = s->bMedical;      break;
+		case MECHANICAL:       bSkill = s->bMechanical;   break;
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
@@ -3653,10 +3635,10 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts = __max( ( ( pSoldier->bWisdom * ( TRAINING_RATING_CAP - bSkill ) ) / SELF_TRAINING_DIVISOR ), 1 );
+	*pusMaxPts = __max(s->bWisdom * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// calculate effective training pts
-	sTrainingPts = __max( ( ( EffectiveWisdom( pSoldier ) * ( TRAINING_RATING_CAP - bSkill ) ) / SELF_TRAINING_DIVISOR ), 1 );
+	sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// get special bonus if we're training marksmanship and we're in the gun range sector in Alma
 	if ( ( bTrainStat == MARKSMANSHIP ) && fAtGunRange )
@@ -3668,12 +3650,13 @@ INT16 GetSoldierTrainingPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAt
 	sTrainingPts += ( ( bTrainingBonus * sTrainingPts ) / 100 );
 
 	// adjust for fatigue
-	ReducePointsForFatigue( pSoldier, &sTrainingPts );
+	ReducePointsForFatigue(s, &sTrainingPts);
 
 	return( sTrainingPts );
 }
 
-INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16 *pusMaxPts )
+
+INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
 	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
@@ -3690,33 +3673,15 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	// use NATURAL not EFFECTIVE values here
 	switch( bTrainStat )
 	{
-		case( STRENGTH ):
-			bSkill = pSoldier -> bStrength;
-		break;
-		case( DEXTERITY ):
-			bSkill = pSoldier -> bDexterity;
-		break;
-		case( AGILITY ):
-			bSkill = pSoldier -> bAgility;
-		break;
-		case( HEALTH ):
-			bSkill = pSoldier -> bLifeMax;
-		break;
-		case( LEADERSHIP ):
-			bSkill = pSoldier -> bLeadership;
-		break;
-		case( MARKSMANSHIP ):
-			bSkill = pSoldier -> bMarksmanship;
-		break;
-		case( EXPLOSIVE_ASSIGN ):
-			bSkill = pSoldier -> bExplosive;
-		break;
-		case( MEDICAL ):
-			bSkill = pSoldier -> bMedical;
-		break;
-		case( MECHANICAL ):
-			bSkill = pSoldier -> bMechanical;
-		break;
+		case STRENGTH:         bSkill = s->bStrength;     break;
+		case DEXTERITY:        bSkill = s->bDexterity;    break;
+		case AGILITY:          bSkill = s->bAgility;      break;
+		case HEALTH:           bSkill = s->bLifeMax;      break;
+		case LEADERSHIP:       bSkill = s->bLeadership;   break;
+		case MARKSMANSHIP:     bSkill = s->bMarksmanship; break;
+		case EXPLOSIVE_ASSIGN: bSkill = s->bExplosive;    break;
+		case MEDICAL:          bSkill = s->bMedical;      break;
+		case MECHANICAL:       bSkill = s->bMechanical;   break;
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
@@ -3734,10 +3699,10 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
-	*pusMaxPts = __max( ( ( pSoldier->bWisdom * ( TRAINING_RATING_CAP - bSkill ) ) / SELF_TRAINING_DIVISOR ), 1 );
+	*pusMaxPts = __max(s->bWisdom * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// calculate effective training pts
-	sTrainingPts = __max( ( ( EffectiveWisdom( pSoldier ) * ( TRAINING_RATING_CAP - bSkill ) ) / SELF_TRAINING_DIVISOR ), 1 );
+	sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// get special bonus if we're training marksmanship and we're in the gun range sector in Alma
 	if ( ( bTrainStat == MARKSMANSHIP ) && fAtGunRange )
@@ -3749,7 +3714,7 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	sTrainingPts += ( ( bTrainingBonus * sTrainingPts ) / 100 );
 
 	// adjust for fatigue
-	ReducePointsForFatigue( pSoldier, &sTrainingPts );
+	ReducePointsForFatigue(s, &sTrainingPts);
 
 
 	// now add in stuff for trainer
@@ -3760,13 +3725,13 @@ INT16 GetSoldierStudentPts( SOLDIERTYPE *pSoldier, INT8 bTrainStat, BOOLEAN fAtG
 	// search team for active instructors in this sector
 	for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pTrainer++)
 	{
-		if( pTrainer->bActive && ( pTrainer->sSectorX == pSoldier->sSectorX ) && ( pTrainer->sSectorY == pSoldier->sSectorY ) && ( pTrainer->bSectorZ == pSoldier->bSectorZ) )
+		if (pTrainer->bActive && pTrainer->sSectorX == s->sSectorX && pTrainer->sSectorY == s->sSectorY && pTrainer->bSectorZ == s->bSectorZ)
 		{
 			// if he's training teammates in this stat
 			// NB skip the EnoughTime requirement to display what the value should be even if haven't been training long yet...
 			if ( ( pTrainer->bAssignment == TRAIN_TEAMMATE ) && ( pTrainer->bTrainStat == bTrainStat) && ( pTrainer->fMercAsleep == FALSE ) )
 			{
-				sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor( pTrainer, pSoldier, bTrainStat, fAtGunRange, &usMaxTrainerPts );
+				sTrainingPtsDueToInstructor = GetBonusTrainingPtsDueToInstructor(pTrainer, s, bTrainStat, fAtGunRange, &usMaxTrainerPts);
 
 				// if he's the best trainer so far for this stat
 				if (sTrainingPtsDueToInstructor > sBestTrainingPts)
@@ -3901,7 +3866,7 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY
 }
 
 
-INT16 GetTownTrainPtsForCharacter( SOLDIERTYPE *pTrainer, UINT16 *pusMaxPts )
+INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts)
 {
 	INT16 sTotalTrainingPts = 0;
 	INT8 bTrainingBonus = 0;

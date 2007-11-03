@@ -5,22 +5,22 @@
 #include "Types.h"
 #include "Soldier_Control.h"
 
-extern void ReducePointsForFatigue( SOLDIERTYPE *pSoldier, UINT16 *pusPoints );
+void ReducePointsForFatigue(const SOLDIERTYPE* s, UINT16* pusPoints);
 extern INT32 GetSkillCheckPenaltyForFatigue( SOLDIERTYPE *pSoldier, INT32 iSkill );
 extern INT32 SkillCheck( SOLDIERTYPE *pSoldier, INT8 bReason, INT8 bDifficulty );
 extern INT8 CalcTrapDetectLevel( SOLDIERTYPE *pSoldier, BOOLEAN fExamining );
 
 
-extern INT8 EffectiveStrength(const SOLDIERTYPE* pSoldier);
-extern	INT8 EffectiveWisdom( SOLDIERTYPE *pSoldier );
-extern INT8 EffectiveAgility(const SOLDIERTYPE* pSoldier);
-extern	INT8 EffectiveMechanical( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveExplosive( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveLeadership( SOLDIERTYPE *pSoldier );
-extern INT8 EffectiveMarksmanship(const SOLDIERTYPE* pSoldier);
-extern INT8 EffectiveDexterity(const SOLDIERTYPE* pSoldier);
-extern	INT8 EffectiveExpLevel( SOLDIERTYPE *pSoldier );
-extern	INT8 EffectiveMedical( SOLDIERTYPE *pSoldier );
+INT8 EffectiveStrength(    const SOLDIERTYPE* s);
+INT8 EffectiveWisdom(      const SOLDIERTYPE* s);
+INT8 EffectiveAgility(     const SOLDIERTYPE* s);
+INT8 EffectiveMechanical(  const SOLDIERTYPE* s);
+INT8 EffectiveExplosive(   const SOLDIERTYPE* s);
+INT8 EffectiveLeadership(  const SOLDIERTYPE* s);
+INT8 EffectiveMarksmanship(const SOLDIERTYPE* s);
+INT8 EffectiveDexterity(   const SOLDIERTYPE* s);
+INT8 EffectiveExpLevel(    const SOLDIERTYPE* s);
+INT8 EffectiveMedical(     const SOLDIERTYPE* s);
 
 
 enum

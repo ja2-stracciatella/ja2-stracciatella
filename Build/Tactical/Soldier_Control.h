@@ -1125,7 +1125,7 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier );
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pSoldier );
 SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier );
 BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier);
-BOOLEAN ControllingRobot( SOLDIERTYPE *pSoldier );
+BOOLEAN ControllingRobot(const SOLDIERTYPE* s);
 
 void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, UINT8 ubMercSlot );
 

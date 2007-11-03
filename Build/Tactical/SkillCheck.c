@@ -11,17 +11,14 @@
 #include "StrategicMap.h"
 
 
-INT8 EffectiveStrength(const SOLDIERTYPE* pSoldier)
+INT8 EffectiveStrength(const SOLDIERTYPE* s)
 {
-	INT8	bBandaged;
-	INT32	iEffStrength;
-
 	// Effective strength is:
 	// 1/2 full strength
 	// plus 1/2 strength scaled according to how hurt we are
-  bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-	iEffStrength = pSoldier->bStrength / 2;
-	iEffStrength += (pSoldier->bStrength / 2) * (pSoldier->bLife + bBandaged / 2) / (pSoldier->bLifeMax);
+  const INT8 bBandaged    = s->bLifeMax - s->bLife - s->bBleeding;
+	INT32      iEffStrength = s->bStrength / 2;
+	iEffStrength += (s->bStrength / 2) * (s->bLife + bBandaged / 2) / (s->bLifeMax);
 
 	// ATE: Make sure at least 2...
 	iEffStrength = __max( iEffStrength, 2 );
@@ -30,79 +27,51 @@ INT8 EffectiveStrength(const SOLDIERTYPE* pSoldier)
 }
 
 
-INT8 EffectiveWisdom( SOLDIERTYPE * pSoldier )
+INT8 EffectiveWisdom(const SOLDIERTYPE* s)
 {
-	INT32	iEffWisdom;
-
-	iEffWisdom = pSoldier->bWisdom;
-
-	iEffWisdom = EffectStatForBeingDrunk( pSoldier, iEffWisdom );
-
-	return( (INT8) iEffWisdom );
+	return EffectStatForBeingDrunk(s, s->bWisdom);
 }
 
 
-INT8 EffectiveAgility(const SOLDIERTYPE* pSoldier)
+INT8 EffectiveAgility(const SOLDIERTYPE* s)
 {
-	INT32	iEffAgility;
-
-	iEffAgility = pSoldier->bAgility;
-
-	iEffAgility = EffectStatForBeingDrunk( pSoldier, iEffAgility );
-
-	if ( pSoldier->sWeightCarriedAtTurnStart > 100 )
+	INT32 iEffAgility = EffectStatForBeingDrunk(s, s->bAgility);
+	if (s->sWeightCarriedAtTurnStart > 100)
 	{
-		iEffAgility = (iEffAgility * 100) / pSoldier->sWeightCarriedAtTurnStart;
+		iEffAgility = (iEffAgility * 100) / s->sWeightCarriedAtTurnStart;
 	}
 
 	return( (INT8) iEffAgility );
 }
 
 
-INT8 EffectiveMechanical( SOLDIERTYPE * pSoldier )
+INT8 EffectiveMechanical(const SOLDIERTYPE* s)
 {
-	INT32	iEffMechanical;
-
-	iEffMechanical = pSoldier->bMechanical;
-
-	iEffMechanical = EffectStatForBeingDrunk( pSoldier, iEffMechanical );
-
-	return( (INT8) iEffMechanical );
+	return EffectStatForBeingDrunk(s, s->bMechanical);
 }
 
 
-INT8 EffectiveExplosive( SOLDIERTYPE * pSoldier )
+INT8 EffectiveExplosive(const SOLDIERTYPE* s)
 {
-	INT32	iEffExplosive;
-
-	iEffExplosive = pSoldier->bExplosive;
-
-	iEffExplosive = EffectStatForBeingDrunk( pSoldier, iEffExplosive );
-
-	return( (INT8) iEffExplosive );
+	return EffectStatForBeingDrunk(s, s->bExplosive);
 }
 
 
-INT8 EffectiveMedical( SOLDIERTYPE * pSoldier )
+INT8 EffectiveMedical(const SOLDIERTYPE* s)
 {
-	INT32	iEffMedical;
-
-	iEffMedical = pSoldier->bMedical;
-
-	iEffMedical = EffectStatForBeingDrunk( pSoldier, iEffMedical );
-
-	return( (INT8) iEffMedical );
+	return EffectStatForBeingDrunk(s, s->bMedical);
 }
 
-INT8 EffectiveLeadership( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveLeadership(const SOLDIERTYPE* s)
 {
 	INT32	iEffLeadership;
 	INT8	bDrunkLevel;
 
-	iEffLeadership = pSoldier->bLeadership;
+	iEffLeadership = s->bLeadership;
 
 	// if we are drunk, effect leader ship in a +ve way...
-	bDrunkLevel = GetDrunkLevel( pSoldier );
+	bDrunkLevel = GetDrunkLevel(s);
 
 	if ( bDrunkLevel == FEELING_GOOD )
 	{
@@ -112,7 +81,8 @@ INT8 EffectiveLeadership( SOLDIERTYPE * pSoldier )
 	return( (INT8) iEffLeadership );
 }
 
-INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
+
+INT8 EffectiveExpLevel(const SOLDIERTYPE* s)
 {
 	INT32	iEffExpLevel;
 	INT8	bDrunkLevel;
@@ -124,15 +94,15 @@ INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
 		 0,		// Hung
 		};
 
-	iEffExpLevel = pSoldier->bExpLevel;
+	iEffExpLevel = s->bExpLevel;
 
-	bDrunkLevel = GetDrunkLevel( pSoldier );
+	bDrunkLevel = GetDrunkLevel(s);
 
 	iEffExpLevel = iEffExpLevel + iExpModifier[ bDrunkLevel ];
 
-	if (pSoldier->ubProfile != NO_PROFILE)
+	if (s->ubProfile != NO_PROFILE)
 	{
-		if ( (gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == CLAUSTROPHOBIC) && pSoldier->bActive && pSoldier->bInSector && gbWorldSectorZ > 0)
+		if ( (gMercProfiles[s->ubProfile].bPersonalityTrait == CLAUSTROPHOBIC) && s->bActive && s->bInSector && gbWorldSectorZ > 0)
 		{
 			// claustrophobic!
 			iEffExpLevel--;
@@ -151,49 +121,51 @@ INT8 EffectiveExpLevel( SOLDIERTYPE * pSoldier )
 }
 
 
-INT8 EffectiveMarksmanship(const SOLDIERTYPE* pSoldier)
+INT8 EffectiveMarksmanship(const SOLDIERTYPE* s)
 {
 	INT32	iEffMarksmanship;
 
-	iEffMarksmanship = pSoldier->bMarksmanship;
+	iEffMarksmanship = s->bMarksmanship;
 
-	iEffMarksmanship = EffectStatForBeingDrunk( pSoldier, iEffMarksmanship );
+	iEffMarksmanship = EffectStatForBeingDrunk(s, iEffMarksmanship);
 
 	return( (INT8) iEffMarksmanship );
 }
 
 
-INT8 EffectiveDexterity(const SOLDIERTYPE* pSoldier)
+INT8 EffectiveDexterity(const SOLDIERTYPE* s)
 {
 	INT32	iEffDexterity;
 
-	iEffDexterity = pSoldier->bDexterity;
+	iEffDexterity = s->bDexterity;
 
-	iEffDexterity = EffectStatForBeingDrunk( pSoldier, iEffDexterity );
+	iEffDexterity = EffectStatForBeingDrunk(s, iEffDexterity);
 
 	return( (INT8) iEffDexterity );
 }
 
 
-static UINT8 GetPenaltyForFatigue(SOLDIERTYPE* pSoldier)
+static UINT8 GetPenaltyForFatigue(const SOLDIERTYPE* s)
 {
 	UINT8 ubPercentPenalty;
 
-	if			( pSoldier->bBreathMax >= 85 )	ubPercentPenalty =   0;
-	else if ( pSoldier->bBreathMax >= 70 )	ubPercentPenalty =  10;
-	else if ( pSoldier->bBreathMax >= 50 )	ubPercentPenalty =  25;
-	else if ( pSoldier->bBreathMax >= 30 )	ubPercentPenalty =  50;
-	else if ( pSoldier->bBreathMax >= 15 )	ubPercentPenalty =  75;
-	else if ( pSoldier->bBreathMax >   0 )	ubPercentPenalty =  90;
-	else																		ubPercentPenalty = 100;
+	if      (s->bBreathMax >= 85) ubPercentPenalty =   0;
+	else if (s->bBreathMax >= 70) ubPercentPenalty =  10;
+	else if (s->bBreathMax >= 50) ubPercentPenalty =  25;
+	else if (s->bBreathMax >= 30) ubPercentPenalty =  50;
+	else if (s->bBreathMax >= 15) ubPercentPenalty =  75;
+	else if (s->bBreathMax >   0) ubPercentPenalty =  90;
+	else                          ubPercentPenalty = 100;
 
 	return( ubPercentPenalty );
 }
 
-void ReducePointsForFatigue( SOLDIERTYPE *pSoldier, UINT16 *pusPoints )
+
+void ReducePointsForFatigue(const SOLDIERTYPE* s, UINT16* pusPoints)
 {
-	*pusPoints -= (*pusPoints * GetPenaltyForFatigue( pSoldier )) / 100;
+	*pusPoints -= *pusPoints * GetPenaltyForFatigue(s) / 100;
 }
+
 
 INT32 GetSkillCheckPenaltyForFatigue( SOLDIERTYPE *pSoldier, INT32 iSkill )
 {

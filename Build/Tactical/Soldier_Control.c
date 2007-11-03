@@ -10308,38 +10308,32 @@ BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN ControllingRobot( SOLDIERTYPE *pSoldier )
+BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 {
 	SOLDIERTYPE *pRobot;
 	INT8				bPos;
 
-	if ( !pSoldier->bActive )
-	{
-		return( FALSE );
-	}
+	if (!s->bActive) return FALSE;
 
 	// EPCs can't control the robot (no inventory to hold remote, for one)
-	if ( AM_AN_EPC( pSoldier ) )
-	{
-		return( FALSE );
-	}
+	if (AM_AN_EPC(s)) return FALSE;
 
-	// Don't require pSoldier->bInSector here, it must work from mapscreen!
+	// Don't require s->bInSector here, it must work from mapscreen!
 
 	// are we in ok shape?
-	if ( pSoldier->bLife < OKLIFE || ( pSoldier->bTeam != gbPlayerNum ) )
+	if (s->bLife < OKLIFE || s->bTeam != gbPlayerNum)
 	{
 		return( FALSE );
 	}
 
 	// allow control from within vehicles - allows strategic travel in a vehicle with robot!
-	if ( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
+	if (s->bAssignment >= ON_DUTY && s->bAssignment != VEHICLE)
 	{
 		return( FALSE );
 	}
 
 	// is the soldier wearing a robot remote control?
-	bPos = FindObj( pSoldier, ROBOT_REMOTE_CONTROL );
+	bPos = FindObj(s, ROBOT_REMOTE_CONTROL);
 	if ( bPos != HEAD1POS && bPos != HEAD2POS )
 	{
 		return( FALSE );
@@ -10356,24 +10350,21 @@ BOOLEAN ControllingRobot( SOLDIERTYPE *pSoldier )
 	{
 		// Are we in the same sector....?
 		// ARM: CHANGED TO WORK IN MAPSCREEN, DON'T USE WorldSector HERE
-		if ( pRobot->sSectorX == pSoldier->sSectorX &&
-				 pRobot->sSectorY == pSoldier->sSectorY &&
-				 pRobot->bSectorZ == pSoldier->bSectorZ )
+		if (pRobot->sSectorX == s->sSectorX &&
+				pRobot->sSectorY == s->sSectorY &&
+				pRobot->bSectorZ == s->bSectorZ)
 		{
 			// they have to be either both in sector, or both on the road
-			if ( pRobot->fBetweenSectors == pSoldier->fBetweenSectors )
+			if (pRobot->fBetweenSectors == s->fBetweenSectors)
 			{
 				// if they're on the road...
 				if ( pRobot->fBetweenSectors )
 				{
 					// they have to be in the same squad or vehicle
-					if ( pRobot->bAssignment != pSoldier->bAssignment )
-					{
-						return( FALSE );
-					}
+					if (pRobot->bAssignment != s->bAssignment) return FALSE;
 
 					// if in a vehicle, must be the same vehicle
-					if ( pRobot->bAssignment == VEHICLE && ( pRobot->iVehicleId != pSoldier->iVehicleId ) )
+					if (pRobot->bAssignment == VEHICLE && pRobot->iVehicleId != s->iVehicleId)
 					{
 						return( FALSE );
 					}
