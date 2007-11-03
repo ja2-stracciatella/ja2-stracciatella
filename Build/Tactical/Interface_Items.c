@@ -4175,12 +4175,12 @@ void DrawItemTileCursor( )
 }
 
 
-static BOOLEAN IsValidAmmoToReloadRobot(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObject)
+static BOOLEAN IsValidAmmoToReloadRobot(const SOLDIERTYPE* s, const OBJECTTYPE* pObject)
 {
-	if ( !CompatibleAmmoForGun( pObject, &( pSoldier->inv[ HANDPOS ] ) ) )
+	if (!CompatibleAmmoForGun(pObject, &s->inv[HANDPOS]))
 	{
 		// Build string...
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ ROBOT_NEEDS_GIVEN_CALIBER_STR ], AmmoCaliber[ Weapon[ pSoldier->inv[ HANDPOS ].usItem ].ubCalibre ] );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], AmmoCaliber[Weapon[s->inv[HANDPOS].usItem].ubCalibre]);
 
 		return( FALSE );
 	}

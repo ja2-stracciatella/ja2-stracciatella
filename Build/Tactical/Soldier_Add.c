@@ -586,7 +586,7 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 }
 
 
-UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc, SOLDIERTYPE *pSrcSoldier )
+UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8* pubDirection, BOOLEAN fClosestToMerc, const SOLDIERTYPE* pSrcSoldier)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;

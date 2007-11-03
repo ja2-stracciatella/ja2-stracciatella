@@ -1651,7 +1651,8 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	return( bAPCost );
 }
 
-UINT16 GetAPsToReloadRobot( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pRobot )
+
+UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot)
 {
 	UINT16						sAPCost = 0;
   INT16             sActionGridNo;
