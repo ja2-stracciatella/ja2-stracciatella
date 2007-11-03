@@ -1640,21 +1640,20 @@ static void SelectDealersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion,
 static void SelectPlayersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
+	const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubSelectedInvSlot];
 
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		//if there is nothing in the slot, exit
-		if( PlayersOfferArea[ ubSelectedInvSlot ].fActive == FALSE )
-			return;
+		if (!o->fActive) return;
 
-		gpHighLightedItemObject = &PlayersOfferArea[ ubSelectedInvSlot ].ItemObject;
+		gpHighLightedItemObject = &o->ItemObject;
 		HandleCompatibleAmmoUI( gpSMCurrentMerc, -1, TRUE );
 	}
 	else if(iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		//if there is nothing in the slot, exit
-		if( PlayersOfferArea[ ubSelectedInvSlot ].fActive == FALSE )
-			return;
+		if (!o->fActive) return;
 
 		gpHighLightedItemObject = NULL;
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
@@ -1797,6 +1796,7 @@ static BOOLEAN RemoveItemFromPlayersOfferArea(INT8 bSlot);
 static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT8	ubSelectedInvSlot = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
+	INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubSelectedInvSlot];
 	INT8 bAddedToSlotID = -1;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -1805,7 +1805,7 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 		if( gMoveingItem.sItemIndex == 0 )
 		{
 			//if there is nothing here, return
-			if( PlayersOfferArea[ ubSelectedInvSlot ].fActive == FALSE )
+			if (!o->fActive)
 				return;
 
 			// pick it up into the cursor
@@ -1815,12 +1815,12 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 		{
 			//Drop the item into the current slot
 			//if there is something already there
-			if( PlayersOfferArea[ ubSelectedInvSlot ].fActive )
+			if (o->fActive)
 			{
 				//swap what is in the cursor with what is in the player offer slot
 
 				// if the slot is overloaded (holds more objects than we have room for valid statuses of)
-				if ( PlayersOfferArea[ ubSelectedInvSlot ].ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
+				if (o->ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT)
 				{
 					// then ignore the click - we can't do the swap, or anything very useful, because we can't allow overloaded
 					// items into the player's cursor - if he put them into a merc's inventory, the extra statuses are missing!
@@ -1830,8 +1830,8 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 				IfMercOwnedCopyItemToMercInv( &gMoveingItem );
 
-				INVENTORY_IN_SLOT TempSlot = PlayersOfferArea[ubSelectedInvSlot];
-				PlayersOfferArea[ubSelectedInvSlot] = gMoveingItem;
+				const INVENTORY_IN_SLOT TempSlot = *o;
+				*o = gMoveingItem;
 				gMoveingItem = TempSlot;
 
 				IfMercOwnedRemoveItemFromMercInv( &gMoveingItem );
@@ -1841,11 +1841,11 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 				SetSkiCursor( EXTERN_CURSOR );
 
 				//if the item we are adding is money
-				if( Item[ PlayersOfferArea[ ubSelectedInvSlot ].sItemIndex ].usItemClass == IC_MONEY )
+				if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 				{
 					//Since money is always evaluated
-					PlayersOfferArea[ ubSelectedInvSlot ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-					PlayersOfferArea[ ubSelectedInvSlot ].uiItemPrice = PlayersOfferArea[ ubSelectedInvSlot ].ItemObject.bMoneyStatus;
+					o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
+					o->uiItemPrice  = o->ItemObject.bMoneyStatus;
 				}
 			}
 			else	// slot is empty
@@ -1875,7 +1875,7 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 	else if(iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) //MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//if the box is active
-		if( PlayersOfferArea[ ubSelectedInvSlot ].fActive )
+		if (o->fActive)
 		{
 			RemoveItemFromPlayersOfferArea( ubSelectedInvSlot );
 /*
@@ -1884,7 +1884,7 @@ item description
 			{
 				if ( !InItemDescriptionBox( ) )
 				{
-					InitItemDescriptionBox( gpSMCurrentMerc, (UINT8)PlayersOfferArea[ ubSelectedInvSlot ].bSlotIdInOtherLocation, 214, 1 + INV_INTERFACE_START_Y, 0 );
+					InitItemDescriptionBox(gpSMCurrentMerc, o->bSlotIdInOtherLocation, 214, 1 + INV_INTERFACE_START_Y, 0);
 				}
 				else
 				{
@@ -2194,22 +2194,23 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	//Display the Items Cost
 	if( ubItemArea == PLAYERS_OFFER_AREA )
 	{
+		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubSlotNum];
 		//if the item has value
-		if( PlayersOfferArea[ ubSlotNum ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
+		if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 		{
-			uiItemCost = PlayersOfferArea[ ubSlotNum ].uiItemPrice;
+			uiItemCost = o->uiItemPrice;
 		}
 
 		//if the item belongs to a merc
-		if( PlayersOfferArea[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
+		if (o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
 		{
 			//Display the face of the merc
 			fDisplayMercFace = TRUE;
-			ubMercID = PlayersOfferArea[ ubSlotNum ].ubIdOfMercWhoOwnsTheItem;
+			ubMercID = o->ubIdOfMercWhoOwnsTheItem;
 		}
 
 		// if the item has just been repaired
-		if ( PlayersOfferArea[ ubSlotNum ].uiFlags & ARMS_INV_ITEM_REPAIRED )
+		if (o->uiFlags & ARMS_INV_ITEM_REPAIRED)
 		{
 			fPrintRepaired = TRUE;
 		}
@@ -3011,29 +3012,30 @@ static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, INVENTORY_IN_SLOT* pInv
 	//look for the first free slot
 	for( bCnt=0; bCnt<SKI_NUM_TRADING_INV_SLOTS; bCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bCnt];
 		//if there are no items here, copy the data in
-		if( PlayersOfferArea[bCnt].fActive == FALSE )
+		if (!o->fActive)
 		{
-			PlayersOfferArea[bCnt] = *pInvSlot;
+			*o = *pInvSlot;
 
-			PlayersOfferArea[bCnt].fActive = TRUE;
+			o->fActive = TRUE;
 
 			//Specify the owner of the merc
-			PlayersOfferArea[bCnt].ubIdOfMercWhoOwnsTheItem = ubProfileID;
-			PlayersOfferArea[bCnt].bSlotIdInOtherLocation = bSlotIdInOtherLocation;
+			o->ubIdOfMercWhoOwnsTheItem = ubProfileID;
+			o->bSlotIdInOtherLocation = bSlotIdInOtherLocation;
 
-			IfMercOwnedCopyItemToMercInv( &(PlayersOfferArea[bCnt]) );
+			IfMercOwnedCopyItemToMercInv(o);
 
-			SetSkiRegionHelpText( &PlayersOfferArea[bCnt], &gPlayersOfferSlotsMouseRegions[ bCnt ], PLAYERS_OFFER_AREA );
-			SetSkiFaceRegionHelpText( &PlayersOfferArea[bCnt], &gPlayersOfferSlotsSmallFaceMouseRegions[ bCnt ], PLAYERS_OFFER_AREA );
+			SetSkiRegionHelpText(    o, &gPlayersOfferSlotsMouseRegions[bCnt],          PLAYERS_OFFER_AREA);
+			SetSkiFaceRegionHelpText(o, &gPlayersOfferSlotsSmallFaceMouseRegions[bCnt], PLAYERS_OFFER_AREA);
 
 
 			//if the item we are adding is money
-			if( Item[ PlayersOfferArea[ bCnt ].sItemIndex ].usItemClass == IC_MONEY )
+			if( Item[ o->sItemIndex ].usItemClass == IC_MONEY )
 			{
 				//Since money is always evaluated
-				PlayersOfferArea[ bCnt ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-				PlayersOfferArea[ bCnt ].uiItemPrice = PlayersOfferArea[ bCnt ].ItemObject.uiMoneyAmount;
+				o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
+				o->uiItemPrice  = o->ItemObject.uiMoneyAmount;
 			}
 			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 
@@ -3051,14 +3053,13 @@ static BOOLEAN SKITryToReturnInvToOwnerOrCurrentMerc(INVENTORY_IN_SLOT* pInv);
 
 static BOOLEAN RemoveItemFromPlayersOfferArea(INT8 bSlot)
 {
+	INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlot];
 	//if the item doesn't have a duplicate copy in its owner merc's inventory slot
-	if( PlayersOfferArea[ bSlot ].bSlotIdInOtherLocation == -1 )
+	if (o->bSlotIdInOtherLocation == -1 &&
+			!SKITryToReturnInvToOwnerOrCurrentMerc(o))
 	{
-		if ( !SKITryToReturnInvToOwnerOrCurrentMerc( &( PlayersOfferArea[ bSlot ] ) ) )
-		{
-			//failed to add item, inventory probably filled up or item is unowned and current merc ineligible
-			return( FALSE );
-		}
+		//failed to add item, inventory probably filled up or item is unowned and current merc ineligible
+		return( FALSE );
 	}
 
 	// Clear the contents
@@ -3100,21 +3101,20 @@ static void DisplayPlayersOfferArea(void)
 	uiTotalCost = 0;
 	for( sCnt=0; sCnt<SKI_NUM_TRADING_INV_SLOTS; sCnt++)
 	{
-		if( PlayersOfferArea[ sCnt ].fActive )
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[sCnt];
+		if (o->fActive)
 		{
 			//if the item is money
-			if( Item[ PlayersOfferArea[ sCnt ].sItemIndex ].usItemClass == IC_MONEY )
+			if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 			{
 				//get an updated status from the amount in the pocket
-				if( PlayersOfferArea[ sCnt ].bSlotIdInOtherLocation != -1 && PlayersOfferArea[ sCnt ].ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
+				if (o->bSlotIdInOtherLocation != -1 && o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
 				{
-					INT16 sSoldierID;
-
-					sSoldierID = GetSoldierIDFromMercID( PlayersOfferArea[ sCnt ].ubIdOfMercWhoOwnsTheItem );
+					const INT16 sSoldierID = GetSoldierIDFromMercID(o->ubIdOfMercWhoOwnsTheItem);
 					Assert(sSoldierID != -1);
 
-					PlayersOfferArea[ sCnt ].ItemObject.uiMoneyAmount = Menptr[ sSoldierID ].inv[ PlayersOfferArea[ sCnt ].bSlotIdInOtherLocation ].uiMoneyAmount;
-					PlayersOfferArea[ sCnt ].uiItemPrice = PlayersOfferArea[ sCnt ].ItemObject.uiMoneyAmount;
+					o->ItemObject.uiMoneyAmount = Menptr[sSoldierID].inv[o->bSlotIdInOtherLocation].uiMoneyAmount;
+					o->uiItemPrice = o->ItemObject.uiMoneyAmount;
 				}
 			}
 			else	// not money
@@ -3126,26 +3126,25 @@ static void DisplayPlayersOfferArea(void)
 					if( WillShopKeeperRejectObjectsFromPlayer( gbSelectedArmsDealerID, ( INT8 ) sCnt ) == FALSE )
 					{
 						// skip purchased items!
-						if ( !( PlayersOfferArea[ sCnt ].uiFlags & ARMS_INV_JUST_PURCHASED ) )
+						if (!(o->uiFlags & ARMS_INV_JUST_PURCHASED))
 						{
 							// re-evaluate the value of the item (needed for Flo's discount handling)
-							EvaluateInvSlot( &( PlayersOfferArea[ sCnt ] ) );
+							EvaluateInvSlot(o);
 						}
 					}
 				}
 			}
 
 			// hatch it out if it hasn't been evaluated or just purchased
-//			fDisplayHatchOnItem = ( PlayersOfferArea[ sCnt ].uiFlags & ( ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED | ARMS_INV_JUST_PURCHASED ) ) == 0;
+//			fDisplayHatchOnItem = (o->uiFlags & (ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED | ARMS_INV_JUST_PURCHASED)) == 0;
 
 			// Display the inventory slot
-			DisplayInvSlot( (UINT8)sCnt, PlayersOfferArea[ sCnt ].sItemIndex, usPosX, usPosY,
-											&PlayersOfferArea[ sCnt ].ItemObject,
-											fDisplayHatchOnItem,
-											PLAYERS_OFFER_AREA );
+			DisplayInvSlot(sCnt, o->sItemIndex, usPosX, usPosY, &o->ItemObject, fDisplayHatchOnItem, PLAYERS_OFFER_AREA);
 
-			if( PlayersOfferArea[ sCnt ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
-				uiTotalCost += PlayersOfferArea[ sCnt ].uiItemPrice;
+			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
+			{
+				uiTotalCost += o->uiItemPrice;
+			}
 		}
 			usPosX += SKI_INV_OFFSET_X;
 
@@ -3183,11 +3182,12 @@ static INVENTORY_IN_SLOT* GetPtrToOfferSlotWhereThisItemIs(UINT8 ubProfileID, IN
 
 	for( ubCnt = 0; ubCnt < SKI_NUM_TRADING_INV_SLOTS; ubCnt++ )
 	{
-		if( ( PlayersOfferArea[ ubCnt ].bSlotIdInOtherLocation == bInvPocket ) &&
-				( PlayersOfferArea[ ubCnt ].ubIdOfMercWhoOwnsTheItem == ubProfileID ) &&
-				( PlayersOfferArea[ ubCnt ].ItemObject.ubNumberOfObjects != 0 ) )
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
+		if (o->bSlotIdInOtherLocation       == bInvPocket  &&
+				o->ubIdOfMercWhoOwnsTheItem     == ubProfileID &&
+				o->ItemObject.ubNumberOfObjects != 0)
 		{
-			return( &( PlayersOfferArea[ ubCnt ] ) );
+			return o;
 		}
 
 		if( ( ArmsDealerOfferArea[ ubCnt ].bSlotIdInOtherLocation == bInvPocket ) &&
@@ -3245,13 +3245,18 @@ static UINT32 CalculateTotalPlayersValue(void)
 
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
-		if( ( PlayersOfferArea[ ubCnt ].fActive ) && ( PlayersOfferArea[ ubCnt ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE ) )
+		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
+		if (o->fActive && o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 		{
 			//Calculate a price for the item
-			if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass == IC_MONEY )
-				uiTotal += PlayersOfferArea[ ubCnt ].ItemObject.uiMoneyAmount;
+			if (Item[o->sItemIndex].usItemClass == IC_MONEY)
+			{
+				uiTotal += o->ItemObject.uiMoneyAmount;
+			}
 			else
-				uiTotal += PlayersOfferArea[ ubCnt ].uiItemPrice;
+			{
+				uiTotal += o->uiItemPrice;
+			}
 		}
 	}
 
@@ -3566,20 +3571,21 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 	//loop through all the slots in the players offer area
 	for( uiCnt=0; uiCnt<SKI_NUM_TRADING_INV_SLOTS; uiCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[uiCnt];
 		//if there is an item here
-		if( PlayersOfferArea[ uiCnt ].fActive )
+		if (o->fActive)
 		{
 			// and it has value
-			if( PlayersOfferArea[ uiCnt ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
+			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{
 				//Remove the item from the owner merc's inventory
-				IfMercOwnedRemoveItemFromMercInv( &(PlayersOfferArea[ uiCnt ]) );
+				IfMercOwnedRemoveItemFromMercInv(o);
 
 				//if the item is money
-				if( Item[ PlayersOfferArea[ uiCnt ].sItemIndex ].usItemClass == IC_MONEY )
+				if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 				{
 					//add the money to the dealers 'cash'
-					gArmsDealerStatus[ gbSelectedArmsDealerID ].uiArmsDealersCash += PlayersOfferArea[ uiCnt ].ItemObject.uiMoneyAmount;
+					gArmsDealerStatus[gbSelectedArmsDealerID].uiArmsDealersCash += o->ItemObject.uiMoneyAmount;
 				}
 				else
 				{
@@ -3587,7 +3593,7 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 					if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_BUYS_ONLY )
 					{
 						// item cease to be merc-owned during this operation
-						AddObjectToArmsDealerInventory( gbSelectedArmsDealerID, &( PlayersOfferArea[ uiCnt ].ItemObject ) );
+						AddObjectToArmsDealerInventory(gbSelectedArmsDealerID, &o->ItemObject);
 					}
 				}
 
@@ -3663,18 +3669,20 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 
 
 		case PLAYERS_OFFER_AREA:
+		{
+			INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlotNum];
 			//Get the item from the slot.
-			gMoveingItem = PlayersOfferArea[bSlotNum];
+			gMoveingItem = *o;
 
 			// if the slot is overloaded (holds more objects than we have room for valid statuses of)
-			if ( PlayersOfferArea[ bSlotNum ].ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
+			if (o->ItemObject.ubNumberOfObjects > MAX_OBJECTS_PER_SLOT )
 			{
 				// allow only MAX_OBJECTS_PER_SLOT of those objects to be picked up at a time
 				// (sure it kind of sucks, but it's a lot easier than handling overloaded cursor objects in Interface Items!
 				gMoveingItem.ItemObject.ubNumberOfObjects = MAX_OBJECTS_PER_SLOT;
 
 				// decrease the number objects left in the slot by that much instead of deleting it
-				PlayersOfferArea[ bSlotNum ].ItemObject.ubNumberOfObjects -= MAX_OBJECTS_PER_SLOT;
+				o->ItemObject.ubNumberOfObjects -= MAX_OBJECTS_PER_SLOT;
 			}
 			else	// completely legal object
 			{
@@ -3709,10 +3717,8 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			}
 			else
 				gpItemPointerSoldier = gpSMCurrentMerc;
-
-
 			break;
-
+		}
 
 		case PLAYERS_INVENTORY:
 			// better be a valid merc pocket index, or -1
@@ -3977,24 +3983,25 @@ static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocat
 			break;
 
 		case PLAYERS_OFFER_AREA:
-
+		{
 			//If we can add the item into the slot that was clicked on
-			if( PlayersOfferArea[ ubSpotLocation ].fActive == FALSE )
+			INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubSpotLocation];
+			if (!o->fActive)
 			{
 				// put it down in that player offer area slot
-				PlayersOfferArea[ubSpotLocation] = *pInv;
+				*o = *pInv;
 				IfMercOwnedCopyItemToMercInv( pInv );
 
 				//if the item is money
-				if( Item[ PlayersOfferArea[ ubSpotLocation ].sItemIndex ].usItemClass == IC_MONEY )
+				if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 				{
 					//Since money is always evaluated
-					PlayersOfferArea[ ubSpotLocation ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
-					PlayersOfferArea[ ubSpotLocation ].uiItemPrice = PlayersOfferArea[ ubSpotLocation ].ItemObject.uiMoneyAmount;
+					o->uiFlags     |= ARMS_INV_PLAYERS_ITEM_HAS_VALUE;
+					o->uiItemPrice  = o->ItemObject.uiMoneyAmount;
 				}
 
-				SetSkiRegionHelpText( &PlayersOfferArea[ ubSpotLocation ], &gPlayersOfferSlotsMouseRegions[ ubSpotLocation ], PLAYERS_OFFER_AREA );
-				SetSkiFaceRegionHelpText( &PlayersOfferArea[ ubSpotLocation ], &gPlayersOfferSlotsSmallFaceMouseRegions[ ubSpotLocation ], PLAYERS_OFFER_AREA );
+				SetSkiRegionHelpText(    o, &gPlayersOfferSlotsMouseRegions[ubSpotLocation],          PLAYERS_OFFER_AREA);
+				SetSkiFaceRegionHelpText(o, &gPlayersOfferSlotsSmallFaceMouseRegions[ubSpotLocation], PLAYERS_OFFER_AREA);
 
 				bSlotAddedTo = ubSpotLocation;
 			}
@@ -4007,8 +4014,8 @@ static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocat
 				// add it elsewhere
 				bSlotAddedTo = AddItemToPlayersOfferArea( pInv->ubIdOfMercWhoOwnsTheItem, pInv, pInv->bSlotIdInOtherLocation );
 			}
-
-		break;
+			break;
+		}
 	}
 
 	//Redraw the screen
@@ -4402,14 +4409,12 @@ static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void)
 	//loop through the players offer area and see if there are any items there
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if is an item here
-		if( PlayersOfferArea[ubCnt].fActive )
+		if (o->fActive)
 		{
 			//and if it has no value
-			if( !( PlayersOfferArea[ubCnt].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE ) )
-			{
-				ubCount++;
-			}
+			if (!(o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)) ubCount++;
 		}
 	}
 	return( ubCount );
@@ -4424,14 +4429,12 @@ static UINT8 CountNumberOfItemsOfValueInThePlayersOfferArea(void)
 	//loop through the players offer area and see if there are any items there
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if is an item here
-		if( PlayersOfferArea[ubCnt].fActive )
+		if (o->fActive)
 		{
 			//and if it has not been evaluated
-			if( PlayersOfferArea[ubCnt].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
-			{
-				ubCount++;
-			}
+			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE) ubCount++;
 		}
 	}
 	return( ubCount );
@@ -4528,21 +4531,25 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 	//loop through all the items in the players offer area and determine if they can be sold here.
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if there is an item here
-		if( PlayersOfferArea[ ubCnt ].fActive )
+		if (o->fActive)
 		{
 			fItemsHere = TRUE;
 
 			//if the item has value
-			if( PlayersOfferArea[ ubCnt ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
+			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 			{
 				//if the item isnt money ( which is always evaluated )
-				if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass != IC_MONEY )
+				if (Item[o->sItemIndex].usItemClass != IC_MONEY)
+				{
 					fItemEvaluated = TRUE;
-
-				//else if it is not a repair dealer, and the item is money
-				else if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS && Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass == IC_MONEY )
+				}
+				else if (ArmsDealerInfo[gbSelectedArmsDealerID].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS && Item[o->sItemIndex].usItemClass == IC_MONEY)
+				{
+					//else if it is not a repair dealer, and the item is money
 					fItemEvaluated = TRUE;
+				}
 			}
 		}
 
@@ -4680,13 +4687,12 @@ static BOOLEAN IsMoneyTheOnlyItemInThePlayersOfferArea(void)
 
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if there is an item here
-		if( PlayersOfferArea[ ubCnt ].fActive )
+		if (o->fActive)
 		{
-			if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass != IC_MONEY )
-				return( FALSE );
-			else
-				fFoundMoney = TRUE;
+			if (Item[o->sItemIndex].usItemClass != IC_MONEY) return FALSE;
+			fFoundMoney = TRUE;
 		}
 	}
 
@@ -4707,9 +4713,10 @@ void MoveRepairEvaluatedPlayerOfferedItemsToArmsDealersOfferArea()
 	for( uiCnt=0; uiCnt<SKI_NUM_TRADING_INV_SLOTS; uiCnt++)
 	{
 		//if there is an item here
-		if( PlayersOfferArea[ uiCnt ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE )
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[uiCnt];
+		if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE)
 		{
-			AddItemToArmsDealerOfferArea( &PlayersOfferArea[ uiCnt ], -1 );
+			AddItemToArmsDealerOfferArea(o, -1);
 		}
 	}
 }
@@ -4725,12 +4732,13 @@ static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void)
 
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if there is an item here
-		if( PlayersOfferArea[ ubCnt ].fActive )
+		if (o->fActive)
 		{
-			if( Item[ PlayersOfferArea[ ubCnt ].sItemIndex ].usItemClass == IC_MONEY )
+			if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 			{
-				uiTotalMoneyValue += PlayersOfferArea[ ubCnt ].ItemObject.uiMoneyAmount;
+				uiTotalMoneyValue += o->ItemObject.uiMoneyAmount;
 			}
 		}
 	}
@@ -4852,20 +4860,16 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 	BOOLEAN	fRocketRifleWasEvaluated = FALSE;
 	UINT8		ubNumberOfItemsAddedToRepairDuringThisEvaluation=0;
 
+	INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlotID];
 
 	// there better be an item there
-	Assert ( PlayersOfferArea[ bSlotID ].fActive );
+	Assert(o->fActive);
 
 	//if money is the item being evaluated, leave
-	if( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].usItemClass == IC_MONEY )
-		return;
+	if (Item[o->sItemIndex].usItemClass == IC_MONEY) return;
 
 	// if already evaluated, don't do it again
-	if( PlayersOfferArea[ bSlotID ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED )
-	{
-		return;
-	}
-
+	if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED) return;
 
 	// say "Hmm... Let's see" once per trading session to start evaluation
 	// SPECIAL: Devin doesn't have this quote (he's the only one)
@@ -4886,7 +4890,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 			UINT32	uiNumberOfItemsAlreadyEvaluated = CountNumberOfItemsInTheArmsDealersOfferArea();
 
 			//Get the number of items being evaluated
-			ubNumberOfItemsAddedToRepairDuringThisEvaluation = PlayersOfferArea[ bSlotID ].ItemObject.ubNumberOfObjects;
+			ubNumberOfItemsAddedToRepairDuringThisEvaluation = o->ItemObject.ubNumberOfObjects;
 
 			//if there is already enough items in for repairs, complain about it and DON'T accept the item for repairs
 			if( ( uiNumberOfItemsAlreadyEvaluated + ubNumberOfItemsAddedToRepairDuringThisEvaluation + uiNumberOfItemsInForRepairs ) > SKI_MAX_AMOUNT_OF_ITEMS_DEALER_CAN_REPAIR_AT_A_TIME )
@@ -4901,19 +4905,15 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 			}
 
 			//if the item is a rocket rifle
-			if( ItemIsARocketRifle( PlayersOfferArea[ bSlotID ].sItemIndex ) )
-			{
-				fRocketRifleWasEvaluated = TRUE;
-			}
-
+			if (ItemIsARocketRifle(o->sItemIndex)) fRocketRifleWasEvaluated = TRUE;
 
 			//if the item is damaged, or is a rocket rifle (which always "need repairing" even at 100%, to reset imprinting)
-			if( ( PlayersOfferArea[ bSlotID ].ItemObject.bStatus[ 0 ] < 100 ) || fRocketRifleWasEvaluated )
+			if (o->ItemObject.bStatus[0] < 100 || fRocketRifleWasEvaluated)
 			{
 				INT8	bSlotAddedTo;
 
 				// Move the item to the Dealer's Offer Area
-				bSlotAddedTo = AddItemToArmsDealerOfferArea( &PlayersOfferArea[ bSlotID ], PlayersOfferArea[ bSlotID ].bSlotIdInOtherLocation );
+				bSlotAddedTo = AddItemToArmsDealerOfferArea(o, o->bSlotIdInOtherLocation);
 
 				if( bSlotAddedTo != -1 )
 				{
@@ -4966,7 +4966,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 		}
 		else	// not a repairman
 		{
-			uiEvalResult = EvaluateInvSlot( & ( PlayersOfferArea[ bSlotID ] ) );
+			uiEvalResult = EvaluateInvSlot(o);
 		}
 	}
 	else	// dealer doesn't handle this type of object
@@ -4974,7 +4974,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
 			// only otherwise repairable items count as actual rejections
-			if ( Item[ PlayersOfferArea[ bSlotID ].sItemIndex ].fFlags & ITEM_REPAIRABLE )
+			if (Item[o->sItemIndex].fFlags & ITEM_REPAIRABLE)
 			{
 				uiEvalResult = EVAL_RESULT_DONT_HANDLE;
 			}
@@ -4989,10 +4989,8 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 		}
 	}
 
-
 	// mark this item as having been evaluated
-	PlayersOfferArea[ bSlotID ].uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED;
-
+	o->uiFlags |= ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED;
 
 	// when evaluating complex items that get split into multiple subobjects, dealer will talk only about the first one!
 	// don't bother with any of this if shopkeeper can't talk right now
@@ -5147,11 +5145,12 @@ static BOOLEAN WillShopKeeperRejectObjectsFromPlayer(INT8 bDealerId, INT8 bSlotI
 {
 	BOOLEAN fRejected = TRUE;
 
-	if( Item[ PlayersOfferArea[ bSlotId ].sItemIndex ].usItemClass == IC_MONEY )
+	const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlotId];
+	if (Item[o->sItemIndex].usItemClass == IC_MONEY)
 	{
 		fRejected = FALSE;
 	}
-	else if( CanDealerTransactItem( gbSelectedArmsDealerID, PlayersOfferArea[ bSlotId ].sItemIndex, TRUE ) )
+	else if (CanDealerTransactItem(gbSelectedArmsDealerID, o->sItemIndex, TRUE))
 	{
 		fRejected = FALSE;
 	}
@@ -5225,15 +5224,16 @@ static void CrossOutUnwantedItems(void)
 
 	for( bSlotId = 0; bSlotId < SKI_NUM_TRADING_INV_SLOTS; bSlotId++ )
 	{
+		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[bSlotId];
 		// now run through what's on the players offer area
-		if( PlayersOfferArea[ bSlotId ].fActive )
+		if (o->fActive)
 		{
 			// skip purchased items!
-			if ( !( PlayersOfferArea[ bSlotId ].uiFlags & ARMS_INV_JUST_PURCHASED ) )
+			if (!(o->uiFlags & ARMS_INV_JUST_PURCHASED))
 			{
 				//If item can't be sold here, or it's completely worthless (very cheap / very broken)
 				if( ( WillShopKeeperRejectObjectsFromPlayer( gbSelectedArmsDealerID, bSlotId ) == TRUE ) ||
-						!( PlayersOfferArea[ bSlotId ].uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE ) )
+						!(o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE))
 				{
 					// get x and y positions
 					sBoxStartX = SKI_PLAYERS_TRADING_INV_X + ( bSlotId % SKI_NUM_TRADING_INV_COLS ) * ( SKI_INV_OFFSET_X );
@@ -6184,10 +6184,11 @@ static void DealWithItemsStillOnTheTable(void)
 	//loop through the players offer area and add return any items there to the player
 	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 	{
+		INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
 		//if there is an item here, give it back somehow
-		if( PlayersOfferArea[ ubCnt ].fActive )
+		if (o->fActive)
 		{
-			ReturnItemToPlayerSomehow( &( PlayersOfferArea[ ubCnt ] ), pDropSoldier );
+			ReturnItemToPlayerSomehow(o, pDropSoldier);
 			ClearPlayersOfferSlot( ubCnt );
 		}
 	}
