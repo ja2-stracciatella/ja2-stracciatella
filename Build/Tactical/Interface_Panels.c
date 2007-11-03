@@ -3293,10 +3293,10 @@ void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 }
 
 
-void EndRadioLocator(UINT8 ubID)
+void EndRadioLocator(SOLDIERTYPE* s)
 {
-	MercPtrs[ ubID ]->fFlashLocator = FALSE;
-	MercPtrs[ ubID ]->fShowLocator = FALSE;
+	s->fFlashLocator = FALSE;
+	s->fShowLocator = FALSE;
 }
 
 

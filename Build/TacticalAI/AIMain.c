@@ -681,7 +681,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 		}
 
 		// End this NPC's control, move to next dude
-		EndRadioLocator( pSoldier->ubID );
+		EndRadioLocator(pSoldier);
 		pSoldier->uiStatusFlags &= ( ~SOLDIER_UNDERAICONTROL );
 		pSoldier->fTurnInProgress = FALSE;
 		pSoldier->bMoved = TRUE;
