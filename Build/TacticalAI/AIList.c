@@ -19,6 +19,19 @@
 #include "Interface.h"
 
 
+#define MAX_AI_PRIORITY 100
+
+
+typedef struct AILIST AILIST;
+struct AILIST
+{
+	UINT8   ubID;
+	INT8    bPriority;
+	UINT8   ubUnused;
+	AILIST* pNext;
+};
+
+
 #define AI_LIST_SIZE TOTAL_SOLDIERS
 
 AILIST		gAIList[ AI_LIST_SIZE ];
