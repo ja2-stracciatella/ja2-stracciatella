@@ -1039,12 +1039,12 @@ static void SetFaceShade(SOLDIERTYPE* pSoldier, FACETYPE* pFace, BOOLEAN fExtern
 	}
 }
 
-BOOLEAN RenderAutoFaceFromSoldier( UINT8 ubSoldierID )
+
+BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s)
 {
 	// Check for valid soldier
-	CHECKF( ubSoldierID != NOBODY );
-
-	return( RenderAutoFace( MercPtrs[ ubSoldierID ]->iFaceIndex ) );
+	CHECKF(s != NULL);
+	return RenderAutoFace(s->iFaceIndex);
 }
 
 

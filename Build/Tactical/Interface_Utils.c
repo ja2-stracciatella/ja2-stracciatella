@@ -338,7 +338,7 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 		{
 			if ( fAutoFace )
 			{
-				RenderAutoFaceFromSoldier( pSoldier->ubID );
+				RenderAutoFaceFromSoldier(pSoldier);
 			}
 			else
 			{
