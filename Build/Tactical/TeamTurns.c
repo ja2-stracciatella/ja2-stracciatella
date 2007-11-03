@@ -1675,10 +1675,10 @@ static void VerifyOutOfTurnOrderArray(void)
 			}
 		}
 	}
-
 }
 
-void DoneAddingToIntList( SOLDIERTYPE * pSoldier, BOOLEAN fChange, UINT8 ubInterruptType)
+
+void DoneAddingToIntList(BOOLEAN fChange)
 {
 	if (fChange)
 	{
@@ -1882,7 +1882,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 
 		// sends off an end-of-list msg telling everyone whether to switch control,
 		// unless it's a MOVEMENT interrupt, in which case that is delayed til later
-		DoneAddingToIntList(pSoldier,fControlChanged,ubInterruptType);
+		DoneAddingToIntList(fControlChanged);
 	}
 }
 
