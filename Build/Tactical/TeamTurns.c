@@ -339,7 +339,6 @@ static void EndTurnEvents(void)
 void BeginTeamTurn( UINT8 ubTeam )
 {
 	INT32 cnt;
-	UINT8	ubID;
 	SOLDIERTYPE		*pSoldier;
 
 	while( 1 )
@@ -409,9 +408,8 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// Set First enemy merc to AI control
 			if ( BuildAIListForTeam( ubTeam ) )
 			{
-
-				ubID = RemoveFirstAIListEntry();
-				if (ubID != NOBODY)
+				SOLDIERTYPE* const s = RemoveFirstAIListEntry();
+				if (s != NULL)
 				{
 					// Dirty panel interface!
 					fInterfacePanelDirty = DIRTYLEVEL2;
@@ -423,7 +421,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 					{
 						AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ ubTeam ] );
 					}
-					StartNPCAI( MercPtrs[ ubID ] );
+					StartNPCAI(s);
 					return;
 				}
 			}
@@ -742,9 +740,8 @@ static void StartInterrupt(void)
 		BuildAIListForTeam( bTeam );
 
 		// set to the new first interrupter
-		cnt = RemoveFirstAIListEntry();
+		pSoldier = RemoveFirstAIListEntry();
 
-		pSoldier = MercPtrs[ cnt ];
 //		pSoldier = MercPtrs[ubFirstInterrupter];
 
 		//if ( gTacticalStatus.ubCurrentTeam == OUR_TEAM)
@@ -987,11 +984,11 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 						MoveToFrontOfAIList( gubOutOfTurnOrder[ cnt ] );
 					}
 
-					cnt = RemoveFirstAIListEntry();
-					if (cnt != NOBODY)
+					SOLDIERTYPE* const s = RemoveFirstAIListEntry();
+					if (s != NULL)
 					{
 						fFound = TRUE;
-						StartNPCAI( MercPtrs[ cnt ] );
+						StartNPCAI(s);
 					}
 				}
 

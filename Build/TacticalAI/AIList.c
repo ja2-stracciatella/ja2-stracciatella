@@ -88,10 +88,9 @@ static AILIST* CreateNewAIListEntry(UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority
 static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCount, BOOLEAN fDoRandomChecks);
 
 
-UINT8 RemoveFirstAIListEntry( void )
+SOLDIERTYPE* RemoveFirstAIListEntry(void)
 {
 	AILIST *	pOldFirstEntry;
-	UINT8			ubID;
 
 	while ( gpFirstAIListEntry != NULL)
 	{
@@ -100,17 +99,15 @@ UINT8 RemoveFirstAIListEntry( void )
 		gpFirstAIListEntry = gpFirstAIListEntry->pNext;
 
 		// record ID, and delete old now unused entry
-		ubID = pOldFirstEntry->ubID;
+		const UINT8 ubID = pOldFirstEntry->ubID;
 		DeleteAIListEntry( pOldFirstEntry );
 
 		// make sure conditions still met
-		if ( SatisfiesAIListConditions( MercPtrs[ ubID ], NULL, FALSE ) )
-		{
-			return( ubID );
-		}
+		SOLDIERTYPE* const s = MercPtrs[ubID];
+		if (SatisfiesAIListConditions(s, NULL, FALSE)) return s;
 	}
 
-	return( NOBODY );
+	return NULL;
 }
 
 

@@ -692,10 +692,10 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 	#endif
 
 		// find the next AI guy
-		ubID = RemoveFirstAIListEntry();
-		if (ubID != NOBODY)
+		SOLDIERTYPE* const s = RemoveFirstAIListEntry();
+		if (s != NULL)
 		{
-			StartNPCAI( MercPtrs[ ubID ] );
+			StartNPCAI(s);
 			return;
 		}
 
