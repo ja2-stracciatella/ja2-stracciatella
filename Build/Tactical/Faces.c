@@ -1207,7 +1207,9 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 
 			}
 
-			if ( MercPtrs[ pFace->ubSoldierID ]->bInSector && ( ( ( gTacticalStatus.ubCurrentTeam != OUR_TEAM ) || !OK_INTERRUPT_MERC(  MercPtrs[ pFace->ubSoldierID ] ) ) && !gfHiddenInterrupt ) || ( ( gfSMDisableForItems && !gfInItemPickupMenu ) && gusSMCurrentMerc == pFace->ubSoldierID && gsCurInterfacePanel == SM_PANEL ) )
+			const SOLDIERTYPE* const s = MercPtrs[pFace->ubSoldierID];
+			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) && !gfHiddenInterrupt) ||
+					(gfSMDisableForItems && !gfInItemPickupMenu && gpSMCurrentMerc == s && gsCurInterfacePanel == SM_PANEL))
 			{
 				// Blit hatch!
 				BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);

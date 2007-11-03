@@ -360,7 +360,6 @@ static MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
 
 
 // Globals - for one - the current merc here
-UINT16					gusSMCurrentMerc = 0;
 SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 
 MOUSE_REGION gSMPanelRegion;
@@ -443,22 +442,24 @@ void CheckForDisabledForGiveItem(void)
 		// OK buddy, check our currently selected merc and disable/enable if not close enough...
 		if ( ubSrcSoldier != NOBODY )
 		{
-			if ( gusSMCurrentMerc != ubSrcSoldier )
+			const SOLDIERTYPE* const src = MercPtrs[ubSrcSoldier];
+			const SOLDIERTYPE* const cur = gpSMCurrentMerc;
+			if (cur != src)
 			{
-				sDestGridNo = MercPtrs[ gusSMCurrentMerc ]->sGridNo;
-				bDestLevel	= MercPtrs[ gusSMCurrentMerc ]->bLevel;
+				sDestGridNo = cur->sGridNo;
+				bDestLevel	= cur->bLevel;
 
 				// Get distance....
-				sDist = PythSpacesAway( MercPtrs[ ubSrcSoldier ]->sGridNo, sDestGridNo );
+				sDist = PythSpacesAway(src->sGridNo, sDestGridNo);
 
 				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( MercPtrs[ ubSrcSoldier ], DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel );
+				sDistVisible = DistanceVisible(src, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel);
 
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubSrcSoldier ], sDestGridNo,  bDestLevel, 3, (UINT8) sDistVisible, TRUE )  )
+				if (SoldierTo3DLocationLineOfSightTest(src, sDestGridNo, bDestLevel, 3, sDistVisible, TRUE))
 				{
 					// UNCONSCIOUS GUYS ONLY 1 tile AWAY
-					if ( MercPtrs[ gusSMCurrentMerc ]->bLife < CONSCIOUSNESS )
+					if (cur->bLife < CONSCIOUSNESS)
 					{
 						if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
 						{
@@ -490,8 +491,6 @@ static void UpdateSMPanel(void);
 void SetSMPanelCurrentMerc(UINT8 ubNewID)
 {
 	gubSelectSMPanelToMerc = NOBODY;
-
-	gusSMCurrentMerc = ubNewID;
 
 	gpSMCurrentMerc = MercPtrs[ ubNewID ];
 
