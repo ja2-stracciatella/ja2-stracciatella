@@ -1984,7 +1984,7 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 static void GiveItemToArmsDealerforRepair(UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, UINT8 ubOwnerProfileId);
 
 
-void GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId )
+void GiveObjectToArmsDealerForRepair(UINT8 ubArmsDealer, const OBJECTTYPE* pObject, UINT8 ubOwnerProfileId)
 {
 //	UINT8 ubCnt;
 	SPECIAL_ITEM_INFO SpclItemInfo;
@@ -2322,7 +2322,7 @@ void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo )
 }
 
 
-void SetSpecialItemInfoFromObject( SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject )
+void SetSpecialItemInfoFromObject(SPECIAL_ITEM_INFO* pSpclItemInfo, const OBJECTTYPE* pObject)
 {
 	UINT8 ubCnt;
 
