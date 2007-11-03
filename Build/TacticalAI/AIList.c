@@ -27,7 +27,6 @@ struct AILIST
 {
 	UINT8   ubID;
 	INT8    bPriority;
-	UINT8   ubUnused;
 	AILIST* pNext;
 };
 
