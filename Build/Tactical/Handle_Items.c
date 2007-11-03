@@ -509,9 +509,8 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					// Locate to soldier if he's about to shoot!
 					if ( pSoldier->bTeam != gbPlayerNum  )
 					{
-						ShowRadioLocator( pSoldier->ubID, SHOW_LOCATOR_NORMAL );
+						ShowRadioLocator(pSoldier, SHOW_LOCATOR_NORMAL);
 					}
-
 				}
 			}
 

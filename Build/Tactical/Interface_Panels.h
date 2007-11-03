@@ -77,7 +77,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 void KeyRingSlotInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void ShowRadioLocator(UINT8 ubID, UINT8 ubLocatorSpeed);
+void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed);
 void EndRadioLocator(UINT8 ubID);
 
 

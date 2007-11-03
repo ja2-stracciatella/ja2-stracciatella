@@ -3270,30 +3270,30 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 }
 
 
-void ShowRadioLocator(UINT8 ubID, UINT8 ubLocatorSpeed)
+void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 {
-	RESETTIMECOUNTER( MercPtrs[ ubID ]->FlashSelCounter, FLASH_SELECTOR_DELAY );
+	RESETTIMECOUNTER(s->FlashSelCounter, FLASH_SELECTOR_DELAY);
 
 	//LocateSoldier( ubID, FALSE );	// IC - this is already being done outside of this function :)
-	MercPtrs[ ubID ]->fFlashLocator = TRUE;
+	s->fFlashLocator = TRUE;
 	//gbPanelSelectedGuy = ubID;	IC - had to move this outside to make this function versatile
-	MercPtrs[ ubID ]->sLocatorFrame = 0;
+	s->sLocatorFrame = 0;
 
 	if ( ubLocatorSpeed == SHOW_LOCATOR_NORMAL )
 	{
 		// If we are an AI guy, and we have the baton, make lower...
-		// ( MercPtrs[ ubID ]->uiStatusFlags & SOLDIER_UNDERAICONTROL && MercPtrs[ ubID ]->bTeam != gbPlayerNum )
+		// (s->uiStatusFlags & SOLDIER_UNDERAICONTROL && s->bTeam != gbPlayerNum)
 		//
-		//ercPtrs[ ubID ]->ubNumLocateCycles = 3;
+		//s->ubNumLocateCycles = 3;
 		//
 		//se
 		//
-			MercPtrs[ ubID ]->ubNumLocateCycles = 5;
+			s->ubNumLocateCycles = 5;
 		//
 	}
 	else
 	{
-		MercPtrs[ ubID ]->ubNumLocateCycles = 3;
+		s->ubNumLocateCycles = 3;
 	}
 }
 

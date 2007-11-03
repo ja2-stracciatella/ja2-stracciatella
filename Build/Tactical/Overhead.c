@@ -2434,7 +2434,7 @@ static void ResetAllAnimationCache(void)
 
 void LocateSoldier(UINT16 usID, BOOLEAN fSetLocator)
 {
-	const SOLDIERTYPE* const s = MercPtrs[usID];
+	SOLDIERTYPE* const s = MercPtrs[usID];
 	//if (!bCenter && SoldierOnScreen(s)) return;
 
 	// do we need to move the screen?
@@ -2455,8 +2455,8 @@ void LocateSoldier(UINT16 usID, BOOLEAN fSetLocator)
 	{
 		case DONTSETLOCATOR: break;
 		case 10:
-		case SETLOCATOR:     ShowRadioLocator(usID, SHOW_LOCATOR_NORMAL); break;
-		default:             ShowRadioLocator(usID, SHOW_LOCATOR_FAST);   break;
+		case SETLOCATOR:     ShowRadioLocator(s, SHOW_LOCATOR_NORMAL); break;
+		default:             ShowRadioLocator(s, SHOW_LOCATOR_FAST);   break;
 	}
 }
 
@@ -2496,14 +2496,16 @@ void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSet
 		}
 	}
 
+	SOLDIERTYPE* const s = MercPtrs[usSoldierID];
+
 	// Locate even if on screen
-	if (fSetLocator) ShowRadioLocator(usSoldierID, SHOW_LOCATOR_NORMAL);
+	if (fSetLocator) ShowRadioLocator(s, SHOW_LOCATOR_NORMAL);
 
 	// FIRST CHECK IF WE ARE ON SCREEN
-	if (GridNoOnScreen(MercPtrs[usSoldierID]->sGridNo)) return;
+	if (GridNoOnScreen(s->sGridNo)) return;
 
 	// sGridNo here for DG compatibility
-	gTacticalStatus.sSlideTarget = MercPtrs[usSoldierID]->sGridNo;
+	gTacticalStatus.sSlideTarget = s->sGridNo;
 	gTacticalStatus.sSlideReason = usReasonID;
 
 	// Plot new path!

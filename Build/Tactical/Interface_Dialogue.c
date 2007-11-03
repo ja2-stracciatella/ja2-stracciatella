@@ -1412,7 +1412,7 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 		guiWaitingForTriggerTime		= GetJA2Clock( );
 
 		// Setup locator!
-		ShowRadioLocator( (UINT8)pSoldier->ubID, SHOW_LOCATOR_FAST );
+		ShowRadioLocator(pSoldier, SHOW_LOCATOR_FAST);
 
 		// If he's visible, locate...
 		if ( pSoldier->bVisible != -1 )
