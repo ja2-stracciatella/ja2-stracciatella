@@ -2373,7 +2373,7 @@ static void BtnStanceUpCallback(GUI_BUTTON* btn, INT32 reason)
 			case ANIM_CROUCH: bNewStance = ANIM_STAND;  break;
 			case ANIM_PRONE:  bNewStance = ANIM_CROUCH; break;
 		}
-		UIHandleSoldierStanceChange(gpSMCurrentMerc->ubID, bNewStance);
+		UIHandleSoldierStanceChange(gpSMCurrentMerc, bNewStance);
 	}
 }
 
@@ -2420,7 +2420,7 @@ static void BtnStanceDownCallback(GUI_BUTTON* btn, INT32 reason)
 			case ANIM_STAND:  bNewStance = ANIM_CROUCH; break;
 			case ANIM_CROUCH: bNewStance = ANIM_PRONE;  break;
 		}
-		UIHandleSoldierStanceChange(gpSMCurrentMerc->ubID, bNewStance);
+		UIHandleSoldierStanceChange(gpSMCurrentMerc, bNewStance);
 	}
 }
 

@@ -242,7 +242,7 @@ void ToggleHandCursorMode( UINT32 *puiNewEvent );
 void ToggleTalkCursorMode( UINT32 *puiNewEvent );
 void ToggleLookCursorMode( UINT32 *puiNewEvent );
 
-void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance );
+void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
 void GetCursorMovementFlags( UINT32 *puiCursorFlags );
 
 BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags);

@@ -2683,29 +2683,29 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case 'r':
 					if( gusSelectedSoldier != NO_SOLDIER )
 					{
-
+						SOLDIERTYPE* const s = MercPtrs[gusSelectedSoldier];
 						if( fAlt ) //reload selected merc's weapon
 						{
 							if ( CHEATER_CHEAT_LEVEL( ) )
 							{
-								ReloadWeapon( MercPtrs[ gusSelectedSoldier ], MercPtrs[ gusSelectedSoldier ]->ubAttackingHand );
+								ReloadWeapon(s, s->ubAttackingHand);
 							}
 						}
 						else
 						{
-              if ( !MercInWater( MercPtrs[ gusSelectedSoldier ] ) && !(MercPtrs[ gusSelectedSoldier ]->uiStatusFlags & SOLDIER_ROBOT ) )
+							if (!MercInWater(s) && !(s->uiStatusFlags & SOLDIER_ROBOT))
               {
 							  //change selected merc to run
-							  if ( MercPtrs[ gusSelectedSoldier ]->usUIMovementMode != WALKING && MercPtrs[ gusSelectedSoldier ]->usUIMovementMode != RUNNING )
+								if (s->usUIMovementMode != WALKING && s->usUIMovementMode != RUNNING)
 							  {
-								  UIHandleSoldierStanceChange( (UINT8)gusSelectedSoldier, ANIM_STAND );
-								  MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = 1;
+									UIHandleSoldierStanceChange(s, ANIM_STAND);
+									s->fUIMovementFast = 1;
 							  }
 							  else
 							  {
-								   MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = 1;
-								   MercPtrs[ gusSelectedSoldier ]->usUIMovementMode = RUNNING;
-								   gfPlotNewMovement = TRUE;
+									s->fUIMovementFast = 1;
+									s->usUIMovementMode = RUNNING;
+									gfPlotNewMovement = TRUE;
 							  }
               }
 						}
@@ -4529,7 +4529,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 			{
 				if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
 				{
-					UIHandleSoldierStanceChange( pSoldier->ubID, ubAnimHeight );
+					UIHandleSoldierStanceChange(pSoldier, ubAnimHeight);
 				}
 			}
 		}
@@ -4537,7 +4537,9 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	else
 	{
 		if( gusSelectedSoldier != NO_SOLDIER )
-			UIHandleSoldierStanceChange( (UINT8)gusSelectedSoldier, ubAnimHeight );
+		{
+			UIHandleSoldierStanceChange(MercPtrs[gusSelectedSoldier], ubAnimHeight);
+		}
 	}
 }
 

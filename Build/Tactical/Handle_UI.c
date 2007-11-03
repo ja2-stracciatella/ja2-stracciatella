@@ -1429,7 +1429,7 @@ static UINT32 UIHandleMovementMenu(UI_EVENT* pUIEvent)
 
 							if ( pSoldier->usUIMovementMode != WALKING && pSoldier->usUIMovementMode != RUNNING )
 							{
-								UIHandleSoldierStanceChange( pSoldier->ubID, ANIM_STAND );
+								UIHandleSoldierStanceChange(pSoldier, ANIM_STAND);
 								pSoldier->fUIMovementFast = 1;
 							}
 							else
@@ -1440,21 +1440,9 @@ static UINT32 UIHandleMovementMenu(UI_EVENT* pUIEvent)
 							}
 							break;
 
-						case MOVEMENT_MENU_WALK:
-
-							UIHandleSoldierStanceChange( pSoldier->ubID, ANIM_STAND );
-							break;
-
-						case MOVEMENT_MENU_SWAT:
-
-							UIHandleSoldierStanceChange( pSoldier->ubID, ANIM_CROUCH );
-							break;
-
-						case MOVEMENT_MENU_PRONE:
-
-							UIHandleSoldierStanceChange( pSoldier->ubID, ANIM_PRONE );
-							break;
-
+						case MOVEMENT_MENU_WALK:  UIHandleSoldierStanceChange(pSoldier, ANIM_STAND);  break;
+						case MOVEMENT_MENU_SWAT:  UIHandleSoldierStanceChange(pSoldier, ANIM_CROUCH); break;
+						case MOVEMENT_MENU_PRONE: UIHandleSoldierStanceChange(pSoldier, ANIM_PRONE);  break;
 					}
 
 					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
@@ -2547,7 +2535,7 @@ static UINT32 UIHandlePADJAdjustStance(UI_EVENT* pUIEvent)
 					else
 					{
 						// Set state to result
-						UIHandleSoldierStanceChange( pSoldier->ubID, ubNewStance );
+						UIHandleSoldierStanceChange(pSoldier, ubNewStance);
 					}
 
 				  // Once we have APs, we can safely reset nomove flag!
@@ -3090,38 +3078,34 @@ static void SetUIbasedOnStance(SOLDIERTYPE* pSoldier, INT8 bNewStance);
 static BOOLEAN SoldierCanAffordNewStance(SOLDIERTYPE* pSoldier, UINT8 ubDesiredStance);
 
 
-void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
+void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 {
-	SOLDIERTYPE *pSoldier;
-
-	pSoldier = MercPtrs[ ubSoldierID ];
-
 	// Is this a valid stance for our position?
-	if ( !IsValidStance( pSoldier, bNewStance ) )
+	if (!IsValidStance(s, bNewStance))
 	{
-    if ( pSoldier->bCollapsed && pSoldier->bBreath < OKBREATH )
+    if (s->bCollapsed && s->bBreath < OKBREATH)
     {
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 4 ], pSoldier->name );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[4], s->name);
     }
     else
     {
-		  if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		  if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		  {
 			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ VEHICLES_NO_STANCE_CHANGE_STR ] );
 		  }
-		  else if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
+		  else if (s->uiStatusFlags & SOLDIER_ROBOT)
 		  {
 			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ ROBOT_NO_STANCE_CHANGE_STR ] );
 		  }
 		  else
 		  {
-			  if ( pSoldier->bCollapsed )
+			  if (s->bCollapsed)
 			  {
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[ MSG_CANT_CHANGE_STANCE ], pSoldier->name );
+				  ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[MSG_CANT_CHANGE_STANCE], s->name);
 			  }
 			  else
 			  {
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_STANCE_CHANGE_STR ], pSoldier->name );
+				  ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_STANCE_CHANGE_STR], s->name);
 			  }
 		  }
     }
@@ -3131,16 +3115,15 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 	// IF turn-based - adjust stance now!
 	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-		pSoldier->fTurningFromPronePosition = FALSE;
+		s->fTurningFromPronePosition = FALSE;
 
 		// Check if we have enough APS
-		if ( SoldierCanAffordNewStance( pSoldier, bNewStance ) )
+		if (SoldierCanAffordNewStance(s, bNewStance))
 		{
-			ChangeSoldierStance(pSoldier, bNewStance);
+			ChangeSoldierStance(s, bNewStance);
 
-			pSoldier->sFinalDestination = pSoldier->sGridNo;
-			pSoldier->bGoodContPath			= FALSE;
-
+			s->sFinalDestination = s->sGridNo;
+			s->bGoodContPath     = FALSE;
 		}
 		else
 			return;
@@ -3151,44 +3134,41 @@ void UIHandleSoldierStanceChange( UINT8 ubSoldierID, INT8	bNewStance )
 	{
 
 		// If we are stationary, do something else!
-		if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY )
+		if (gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY)
 		{
 			// Change stance normally
-			ChangeSoldierStance(pSoldier, bNewStance);
+			ChangeSoldierStance(s, bNewStance);
 		}
 		else
 		{
 			// Pick moving animation based on stance
 
 			// LOCK VARIBLE FOR NO UPDATE INDEX...
-			pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, bNewStance );
+			s->usUIMovementMode = GetMoveStateBasedOnStance(s, bNewStance);
 
-			if ( pSoldier->usUIMovementMode == CRAWLING && gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
+			if (s->usUIMovementMode == CRAWLING && gAnimControl[s->usAnimState].ubEndHeight != ANIM_PRONE)
 			{
-				pSoldier->usDontUpdateNewGridNoOnMoveAnimChange = LOCKED_NO_NEWGRIDNO;
-				pSoldier->bPathStored = FALSE;
+				s->usDontUpdateNewGridNoOnMoveAnimChange = LOCKED_NO_NEWGRIDNO;
+				s->bPathStored = FALSE;
 			}
 			else
 			{
-				pSoldier->usDontUpdateNewGridNoOnMoveAnimChange = 1;
+				s->usDontUpdateNewGridNoOnMoveAnimChange = 1;
 			}
 
-
-			ChangeSoldierState( pSoldier, pSoldier->usUIMovementMode, 0, FALSE );
-
+			ChangeSoldierState(s, s->usUIMovementMode, 0, FALSE);
 		}
 	}
 
 	// Set UI value for soldier
-	SetUIbasedOnStance( pSoldier, bNewStance );
+	SetUIbasedOnStance(s, bNewStance);
 
 	gfUIStanceDifferent = TRUE;
 
 	// ATE: If we are being serviced...stop...
-	// InternalReceivingSoldierCancelServices( pSoldier, FALSE );
-	InternalGivingSoldierCancelServices( pSoldier, FALSE );
+	// InternalReceivingSoldierCancelServices(s, FALSE);
+	InternalGivingSoldierCancelServices(s, FALSE);
 	//gfPlotNewMovement   = TRUE;
-
 }
 
 
