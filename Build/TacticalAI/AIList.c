@@ -25,7 +25,7 @@
 typedef struct AILIST AILIST;
 struct AILIST
 {
-	UINT8   ubID;
+	SOLDIERTYPE* soldier;
 	INT8    bPriority;
 	AILIST* pNext;
 };
@@ -37,25 +37,23 @@ AILIST		gAIList[ AI_LIST_SIZE ];
 AILIST *	gpFirstAIListEntry = NULL;
 
 
+static void DeleteAIListEntry(AILIST* pEntry)
+{
+	pEntry->soldier   = NULL;
+	pEntry->bPriority = 0;
+	pEntry->pNext     = NULL;
+}
+
+
 static void ClearAIList(void)
 {
 	UINT8	ubLoop;
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
 	{
-		gAIList[ ubLoop ].ubID = NOBODY;
-		gAIList[ ubLoop ].bPriority = 0;
-		gAIList[ ubLoop ].pNext = NULL;
+		DeleteAIListEntry(&gAIList[ubLoop]);
 	}
 	gpFirstAIListEntry = NULL; // ??
-}
-
-
-static void DeleteAIListEntry(AILIST* pEntry)
-{
-	pEntry->ubID = NOBODY;
-	pEntry->bPriority = 0;
-	pEntry->pNext = NULL;
 }
 
 
@@ -65,22 +63,20 @@ static UINT8 FindEmptyAIListEntry(void)
 
 	for ( ubLoop = 0; ubLoop < AI_LIST_SIZE; ubLoop++ )
 	{
-		if ( gAIList[ ubLoop ].ubID == NOBODY )
-		{
-			return( ubLoop );
-		}
+		if (gAIList[ubLoop].soldier == NULL) return ubLoop;
 	}
 	AssertMsg( 0, "Fatal error: Could not find empty AI list entry." );
 	return( AI_LIST_SIZE );
 }
 
 
-static AILIST* CreateNewAIListEntry(UINT8 ubNewEntry, UINT8 ubID, INT8 bPriority)
+static AILIST* CreateNewAIListEntry(UINT8 ubNewEntry, SOLDIERTYPE* s, INT8 bPriority)
 {
-	gAIList[ ubNewEntry ].ubID = ubID;
-	gAIList[ ubNewEntry ].bPriority = bPriority;
-	gAIList[ ubNewEntry ].pNext = NULL;
-	return( &(gAIList[ ubNewEntry ]) );
+	AILIST* const e = &gAIList[ubNewEntry];
+	e->soldier   = s;
+	e->bPriority = bPriority;
+	e->pNext     = NULL;
+	return e;
 }
 
 
@@ -98,11 +94,10 @@ SOLDIERTYPE* RemoveFirstAIListEntry(void)
 		gpFirstAIListEntry = gpFirstAIListEntry->pNext;
 
 		// record ID, and delete old now unused entry
-		const UINT8 ubID = pOldFirstEntry->ubID;
+		SOLDIERTYPE* const s = pOldFirstEntry->soldier;
 		DeleteAIListEntry( pOldFirstEntry );
 
 		// make sure conditions still met
-		SOLDIERTYPE* const s = MercPtrs[ubID];
 		if (SatisfiesAIListConditions(s, NULL, FALSE)) return s;
 	}
 
@@ -110,7 +105,7 @@ SOLDIERTYPE* RemoveFirstAIListEntry(void)
 }
 
 
-static void RemoveAIListEntryForID(UINT8 ubID)
+static void RemoveAIListEntryForID(const SOLDIERTYPE* s)
 {
 	AILIST *	pEntry;
 	AILIST *	pPrevEntry;
@@ -120,7 +115,7 @@ static void RemoveAIListEntryForID(UINT8 ubID)
 
 	while( pEntry != NULL )
 	{
-		if ( pEntry->ubID == ubID )
+		if (pEntry->soldier == s)
 		{
 			if ( pEntry == gpFirstAIListEntry )
 			{
@@ -140,14 +135,14 @@ static void RemoveAIListEntryForID(UINT8 ubID)
 }
 
 
-static BOOLEAN InsertIntoAIList(UINT8 ubID, INT8 bPriority)
+static BOOLEAN InsertIntoAIList(SOLDIERTYPE* s, INT8 bPriority)
 {
 	UINT8			ubNewEntry;
 	AILIST *	pEntry, * pNewEntry, * pPrevEntry = NULL;
 
 	ubNewEntry = FindEmptyAIListEntry();
 
-	pNewEntry = CreateNewAIListEntry( ubNewEntry, ubID, bPriority );
+	pNewEntry = CreateNewAIListEntry(ubNewEntry, s, bPriority);
 
 	// look through the list now to see where to insert the entry
 	if (gpFirstAIListEntry == NULL)
@@ -298,27 +293,28 @@ BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
 {
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
+	SOLDIERTYPE* const s = MercPtrs[ubID];
 	INT8			bPriority;
 	UINT8			ubNewEntry;
 	AILIST *	pNewEntry;
 
-	if ( !SatisfiesAIListConditions( MercPtrs[ ubID ], NULL, FALSE ) )
+	if ( !SatisfiesAIListConditions(s, NULL, FALSE))
 	{
 		// can't do dat!
 		return( FALSE );
 	}
 
-	RemoveAIListEntryForID( ubID );
+	RemoveAIListEntryForID(s);
 
 	if (gpFirstAIListEntry == NULL)
 	{
-		return( InsertIntoAIList( ubID, MAX_AI_PRIORITY ) );
+		return InsertIntoAIList(s, MAX_AI_PRIORITY);
 	}
 	else
 	{
 		bPriority = gpFirstAIListEntry->bPriority;
 		ubNewEntry = FindEmptyAIListEntry();
-		pNewEntry = CreateNewAIListEntry( ubNewEntry, ubID, bPriority );
+		pNewEntry = CreateNewAIListEntry(ubNewEntry, s, bPriority);
 
 		// insert at front
 		pNewEntry->pNext = gpFirstAIListEntry;
@@ -362,7 +358,7 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 				bPriority += 3;
 			}
 
-			fInsertRet = InsertIntoAIList( pSoldier->ubID, bPriority );
+			fInsertRet = InsertIntoAIList(pSoldier, bPriority);
 			if (fInsertRet == FALSE)
 			{
 				// wtf???
