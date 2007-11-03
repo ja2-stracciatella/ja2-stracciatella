@@ -51,8 +51,8 @@ CASSERT(sizeof(WAYPOINT) == 8)
 typedef struct PLAYERGROUP
 {
 	UINT8 ubProfileID;						//SAVE THIS VALUE ONLY.  The others are temp (for quick access)
-	SOLDIERTYPE *pSoldier;				//direct access to the soldier pointer
 	UINT8 bFlags;									//flags referring to individual player soldiers
+	SOLDIERTYPE *pSoldier;				//direct access to the soldier pointer
 	struct PLAYERGROUP *next;			//next player in list
 }PLAYERGROUP;
 
