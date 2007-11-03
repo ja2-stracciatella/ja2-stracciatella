@@ -1704,52 +1704,34 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
+static INT8 KillDyingInTeam(UINT team)
+{
+	INT8 kill_count = 0;
+	const TacticalTeamType* const t = &gTacticalStatus.Team[team];
+	for (INT32 i = t->bFirstID, end = t->bLastID + 1; i != end; ++i)
+	{
+		SOLDIERTYPE* const s = MercPtrs[i];
+		if (s->bActive && s->bLife < OKLIFE && s->bLife != 0)
+		{
+			s->bLife = 0;
+			BOOLEAN fMadeCorpse;
+			HandleSoldierDeath(s, &fMadeCorpse);
+			++kill_count;
+		}
+	}
+	return kill_count;
+}
+
+
 static void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap(void)
 {
-	INT32 i;
-	BOOLEAN fMadeCorpse;
-	INT8 bKilledEnemies = 0, bKilledCreatures = 0, bKilledRebels = 0, bKilledCivilians = 0;
 	return;
-	//If any of the soldiers are dying, kill them now.
-	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
-	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
-		{
-			MercPtrs[ i ]->bLife = 0;
-			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
-			bKilledEnemies++;
-		}
-	}
-	//Do the same for the creatures.
-	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
-	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
-		{
-			MercPtrs[ i ]->bLife = 0;
-			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
-			bKilledCreatures++;
-		}
-	}
-	//Militia
-	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
-	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
-		{
-			MercPtrs[ i ]->bLife = 0;
-			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
-			bKilledRebels++;
-		}
-	}
-	//Civilians
-	for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
-	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife < OKLIFE && MercPtrs[ i ]->bLife )
-		{
-			MercPtrs[ i ]->bLife = 0;
-			HandleSoldierDeath( MercPtrs[ i ], &fMadeCorpse );
-			bKilledCivilians++;
-		}
-	}
+
+	// If any of the soldiers/creatures/milita/civilians are dying, kill them now.
+	const INT8 bKilledEnemies   = KillDyingInTeam(ENEMY_TEAM);
+	const INT8 bKilledCreatures = KillDyingInTeam(CREATURE_TEAM);
+	const INT8 bKilledRebels    = KillDyingInTeam(MILITIA_TEAM);
+	const INT8 bKilledCivilians = KillDyingInTeam(CIV_TEAM);
 
 // TEST MESSAGES ONLY!
 	if( bKilledCivilians )
