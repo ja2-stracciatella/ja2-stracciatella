@@ -3094,51 +3094,44 @@ UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
 	}
 }
 
-void HandleNPCChangesForTacticalTraversal( SOLDIERTYPE * pSoldier )
+
+void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 {
-	if ( !pSoldier || pSoldier->ubProfile == NO_PROFILE || (pSoldier->fAIFlags & AI_CHECK_SCHEDULE) )
+	if (!s || s->ubProfile == NO_PROFILE || s->fAIFlags & AI_CHECK_SCHEDULE)
 	{
 		return;
 	}
 
-	switch( pSoldier->ubQuoteActionID )
+	switch (s->ubQuoteActionID)
 	{
 		case QUOTE_ACTION_ID_TRAVERSE_EAST:
-			gMercProfiles[pSoldier->ubProfile].sSectorX++;
+			gMercProfiles[s->ubProfile].sSectorX++;
 
 			// Call to change the NPC's Sector Location
-			ChangeNpcToDifferentSector( pSoldier->ubProfile,
-							gMercProfiles[pSoldier->ubProfile].sSectorX,
-							gMercProfiles[pSoldier->ubProfile].sSectorY,
-							gMercProfiles[pSoldier->ubProfile].bSectorZ );
+			ChangeNpcToDifferentSector(s->ubProfile, gMercProfiles[s->ubProfile].sSectorX, gMercProfiles[s->ubProfile].sSectorY, gMercProfiles[s->ubProfile].bSectorZ);
 			break;
+
 		case QUOTE_ACTION_ID_TRAVERSE_SOUTH:
-			gMercProfiles[pSoldier->ubProfile].sSectorY++;
+			gMercProfiles[s->ubProfile].sSectorY++;
 
 			// Call to change the NPC's Sector Location
-			ChangeNpcToDifferentSector( pSoldier->ubProfile,
-							gMercProfiles[pSoldier->ubProfile].sSectorX,
-							gMercProfiles[pSoldier->ubProfile].sSectorY,
-							gMercProfiles[pSoldier->ubProfile].bSectorZ );
+			ChangeNpcToDifferentSector(s->ubProfile, gMercProfiles[s->ubProfile].sSectorX, gMercProfiles[s->ubProfile].sSectorY, gMercProfiles[s->ubProfile].bSectorZ);
 			break;
+
 		case QUOTE_ACTION_ID_TRAVERSE_WEST:
-			gMercProfiles[pSoldier->ubProfile].sSectorX--;
+			gMercProfiles[s->ubProfile].sSectorX--;
 
 			// Call to change the NPC's Sector Location
-			ChangeNpcToDifferentSector( pSoldier->ubProfile,
-							gMercProfiles[pSoldier->ubProfile].sSectorX,
-							gMercProfiles[pSoldier->ubProfile].sSectorY,
-							gMercProfiles[pSoldier->ubProfile].bSectorZ );
+			ChangeNpcToDifferentSector(s->ubProfile, gMercProfiles[s->ubProfile].sSectorX, gMercProfiles[s->ubProfile].sSectorY, gMercProfiles[s->ubProfile].bSectorZ);
 			break;
+
 		case QUOTE_ACTION_ID_TRAVERSE_NORTH:
-			gMercProfiles[pSoldier->ubProfile].sSectorY--;
+			gMercProfiles[s->ubProfile].sSectorY--;
 
 			// Call to change the NPC's Sector Location
-			ChangeNpcToDifferentSector( pSoldier->ubProfile,
-							gMercProfiles[pSoldier->ubProfile].sSectorX,
-							gMercProfiles[pSoldier->ubProfile].sSectorY,
-							gMercProfiles[pSoldier->ubProfile].bSectorZ );
+			ChangeNpcToDifferentSector(s->ubProfile, gMercProfiles[s->ubProfile].sSectorX, gMercProfiles[s->ubProfile].sSectorY, gMercProfiles[s->ubProfile].bSectorZ);
 			break;
+
 		default:
 			break;
 	}

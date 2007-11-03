@@ -145,7 +145,7 @@ INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY );
 
 INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-void SetupProfileInsertionDataForSoldier( SOLDIERTYPE *pSoldier );
+void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 
 BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( );
 

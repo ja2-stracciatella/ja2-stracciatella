@@ -202,7 +202,7 @@ INT8 ConsiderCivilianQuotes( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ,  BO
 
 void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC );
 
-void HandleNPCChangesForTacticalTraversal( SOLDIERTYPE * pSoldier );
+void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s);
 
 BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach );
 
