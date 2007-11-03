@@ -2242,13 +2242,12 @@ static void MakeHeliReturnToBase(void)
 }
 
 
-
-BOOLEAN SoldierAboardAirborneHeli( SOLDIERTYPE *pSoldier )
+BOOLEAN SoldierAboardAirborneHeli(const SOLDIERTYPE* s)
 {
-	Assert( pSoldier );
+	Assert(s);
 
 	// if not in a vehicle, or not aboard the helicopter
-	if ( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) )
+	if (s->bAssignment != VEHICLE || s->iVehicleId != iHelicopterVehicleId)
 	{
 		return( FALSE );
 	}

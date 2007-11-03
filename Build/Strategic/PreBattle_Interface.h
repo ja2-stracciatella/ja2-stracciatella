@@ -84,7 +84,7 @@ void WakeUpAllMercsInSectorUnderAttack( void );
 void RetreatAllInvolvedPlayerGroups( void );
 
 BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup );
-BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier );
+BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s);
 
 enum
 {

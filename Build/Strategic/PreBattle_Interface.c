@@ -1814,21 +1814,21 @@ void RetreatAllInvolvedPlayerGroups( void )
 static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ);
 
 
-BOOLEAN PlayerMercInvolvedInThisCombat( SOLDIERTYPE *pSoldier )
+BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s)
 {
-	Assert( pSoldier );
-	Assert( pSoldier->bActive );
+	Assert(s);
+	Assert(s->bActive);
 
-	if( !pSoldier->fBetweenSectors &&
-			pSoldier->bAssignment != IN_TRANSIT &&
-			pSoldier->bAssignment != ASSIGNMENT_POW &&
-			pSoldier->bAssignment != ASSIGNMENT_DEAD &&
-			!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) &&
+	if (!s->fBetweenSectors &&
+			s->bAssignment != IN_TRANSIT &&
+			s->bAssignment != ASSIGNMENT_POW &&
+			s->bAssignment != ASSIGNMENT_DEAD &&
+			!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 			// Robot is involved if it has a valid controller with it, uninvolved otherwise
-			( !AM_A_ROBOT( pSoldier ) || ( pSoldier->ubRobotRemoteHolderID != NOBODY ) ) &&
-			!SoldierAboardAirborneHeli( pSoldier ) )
+			(!AM_A_ROBOT(s) || s->ubRobotRemoteHolderID != NOBODY) &&
+			!SoldierAboardAirborneHeli(s))
 	{
-		if ( CurrentBattleSectorIs( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
+		if (CurrentBattleSectorIs(s->sSectorX, s->sSectorY, s->bSectorZ))
 		{
 			// involved
 			return( TRUE );
