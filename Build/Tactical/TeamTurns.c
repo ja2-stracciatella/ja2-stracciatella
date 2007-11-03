@@ -1678,21 +1678,19 @@ static void VerifyOutOfTurnOrderArray(void)
 }
 
 
-void DoneAddingToIntList(BOOLEAN fChange)
+void DoneAddingToIntList(void)
 {
-	if (fChange)
+	VerifyOutOfTurnOrderArray();
+	if (EveryoneInInterruptListOnSameTeam())
 	{
-		VerifyOutOfTurnOrderArray();
-		if ( EveryoneInInterruptListOnSameTeam() )
-		{
-			EndInterrupt( TRUE );
-		}
-		else
-		{
-			StartInterrupt();
-		}
+		EndInterrupt(TRUE);
+	}
+	else
+	{
+		StartInterrupt();
 	}
 }
+
 
 void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 {
@@ -1705,7 +1703,6 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubLoop;
 	BOOLEAN fIntOccurs;
 	SOLDIERTYPE * pOpponent;
-	BOOLEAN fControlChanged = FALSE;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
@@ -1877,12 +1874,10 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 				}
 			}
 
-			fControlChanged = TRUE;
+			// sends off an end-of-list msg telling everyone whether to switch control,
+			// unless it's a MOVEMENT interrupt, in which case that is delayed til later
+			DoneAddingToIntList();
 		}
-
-		// sends off an end-of-list msg telling everyone whether to switch control,
-		// unless it's a MOVEMENT interrupt, in which case that is delayed til later
-		DoneAddingToIntList(fControlChanged);
 	}
 }
 

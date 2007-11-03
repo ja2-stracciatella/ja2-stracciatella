@@ -412,8 +412,7 @@ static void HandleBestSightingPositionInRealtime(void)
 					AddToIntList( gubBestToMakeSighting[ 1 ], FALSE, TRUE);
 					// 1st guy gains control
 					AddToIntList( gubBestToMakeSighting[ 0 ], TRUE, TRUE);
-					// done
-					DoneAddingToIntList(TRUE);
+					DoneAddingToIntList();
 				}
 			}
 		}
@@ -484,8 +483,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 				{
 					AddToIntList( gubBestToMakeSighting[ ubLoop2 ], TRUE, TRUE);
 				}
-				// done
-				DoneAddingToIntList(TRUE);
+				DoneAddingToIntList();
 			}
 
 		}
@@ -6012,7 +6010,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: NoticeUnseenAttacker, defender pts %d, attacker pts %d, defender gets interrupt", pDefender->bInterruptDuelPts, pAttacker->bInterruptDuelPts ) );
 			AddToIntList( pAttacker->ubID, FALSE, TRUE);
 			AddToIntList( pDefender->ubID, TRUE, TRUE);
-			DoneAddingToIntList(TRUE);
+			DoneAddingToIntList();
 		}
 		// either way, clear out both sides' duelPts fields to prepare next duel
 		pDefender->bInterruptDuelPts = NO_INTERRUPT;

@@ -15,7 +15,7 @@ extern void EndAITurn( void );
 extern void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier );
 extern BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent);
 extern void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate );
-void DoneAddingToIntList(BOOLEAN fChange);
+void DoneAddingToIntList(void);
 
 void ClearIntList( void );
 
