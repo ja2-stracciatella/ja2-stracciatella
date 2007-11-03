@@ -1011,20 +1011,24 @@ static void HandleTalkingAutoFace(INT32 iFaceIndex)
 
 
 // Local function - uses these variables because they have already been validated
-static void SetFaceShade(SOLDIERTYPE* pSoldier, FACETYPE* pFace, BOOLEAN fExternBlit)
+static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
 {
+	if (pFace->ubSoldierID == NOBODY) return;
+
 	// Set to default
 	SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE );
 
+	const SOLDIERTYPE* const s = MercPtrs[pFace->ubSoldierID];
+
 	if ( pFace->iVideoOverlay == -1 && !fExternBlit )
 	{
-		if ( ( pSoldier->bActionPoints == 0 ) && !( gTacticalStatus.uiFlags & REALTIME ) && (gTacticalStatus.uiFlags & INCOMBAT ) )
+		if (s->bActionPoints == 0 && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT)
 		{
 			SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_LITESHADE );
 		}
 	}
 
-	if ( pSoldier->bLife < OKLIFE  )
+	if (s->bLife < OKLIFE)
 	{
 		SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_DARKSHADE );
 	}
@@ -1032,9 +1036,9 @@ static void SetFaceShade(SOLDIERTYPE* pSoldier, FACETYPE* pFace, BOOLEAN fExtern
 	// ATE: Don't shade for damage if blitting extern face...
 	if ( !fExternBlit )
 	{
-		if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
+		if (s->fFlashPortrait == FLASH_PORTRAIT_START)
 		{
-			SetObjectHandleShade( pFace->uiVideoObject, pSoldier->bFlashPortraitFrame );
+			SetObjectHandleShade(pFace->uiVideoObject, s->bFlashPortraitFrame);
 		}
 	}
 }
@@ -1428,11 +1432,7 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 	// Check for disabled guy!
 	CHECKF( pFace->fDisabled != TRUE );
 
-	// Set shade
-	if ( pFace->ubSoldierID != NOBODY )
-	{
-		SetFaceShade( MercPtrs[ pFace->ubSoldierID ], pFace, FALSE );
-	}
+	SetFaceShade(pFace, FALSE);
 
 	// Blit face to save buffer!
 	if (pFace->uiAutoRestoreBuffer == guiSAVEBUFFER)
@@ -1491,11 +1491,7 @@ static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT
 
 	// Here, any face can be rendered, even if disabled
 
-	// Set shade
-	if ( pFace->ubSoldierID != NOBODY )
-	{
-		SetFaceShade( MercPtrs[ pFace->ubSoldierID ], pFace , TRUE );
-	}
+	SetFaceShade(pFace, TRUE);
 
 	// Blit face to save buffer!
 	BltVideoObjectFromIndex( uiBuffer, pFace->uiVideoObject, 0, sX, sY);
