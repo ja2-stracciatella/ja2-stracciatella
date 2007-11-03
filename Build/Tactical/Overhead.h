@@ -208,7 +208,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pubDirection, INT16 *psAdjustedGridNo, BOOLEAN fForceToPerson, BOOLEAN fDoor );
 
 
-void SelectNextAvailSoldier( SOLDIERTYPE *pSoldier );
+void SelectNextAvailSoldier(const SOLDIERTYPE* s);
 BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
 BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID );
 

@@ -2270,11 +2270,11 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 }
 
 
-void SelectNextAvailSoldier(SOLDIERTYPE* pSoldier)
+void SelectNextAvailSoldier(const SOLDIERTYPE* s)
 {
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
 	// look for all mercs on the same team,
-	for (INT32 i = gTacticalStatus.Team[pSoldier->bTeam].bFirstID; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
+	for (INT32 i = gTacticalStatus.Team[s->bTeam].bFirstID; i <= gTacticalStatus.Team[s->bTeam].bLastID; ++i)
 	{
 		if (OK_CONTROLLABLE_MERC(MercPtrs[i]))
 		{

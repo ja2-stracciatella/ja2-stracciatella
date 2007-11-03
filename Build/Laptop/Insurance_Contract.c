@@ -284,7 +284,7 @@ static BOOLEAN AreAnyAimMercsOnTeam(void);
 static void DisableInsuranceContractNextPreviousbuttons(void);
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID);
 static void InsContractNoMercsPopupCallBack(UINT8 bExitValue);
-static BOOLEAN MercIsInsurable(SOLDIERTYPE* pSoldier);
+static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier);
 
 
 void RenderInsuranceContract()
@@ -402,10 +402,10 @@ static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static INT32 CalculateSoldiersInsuranceContractLength(SOLDIERTYPE* pSoldier);
-static BOOLEAN CanSoldierExtendInsuranceContract(SOLDIERTYPE* pSoldier);
-static UINT32 GetTimeRemainingOnSoldiersContract(SOLDIERTYPE* pSoldier);
-static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier);
+static INT32 CalculateSoldiersInsuranceContractLength(const SOLDIERTYPE* pSoldier);
+static BOOLEAN CanSoldierExtendInsuranceContract(const SOLDIERTYPE* pSoldier);
+static UINT32 GetTimeRemainingOnSoldiersContract(const SOLDIERTYPE* pSoldier);
+static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSoldier);
 
 
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
@@ -1159,7 +1159,7 @@ void InsuranceContractEndGameShutDown()
 }
 
 
-static BOOLEAN MercIsInsurable(SOLDIERTYPE* pSoldier)
+static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier)
 {
 	// only A.I.M. mercs currently on player's team
 	if( ( pSoldier->bActive ) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
@@ -1202,7 +1202,7 @@ static void EnableDisableInsuranceContractAcceptButtons(void)
 }
 
 
-static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
+static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSoldier)
 {
 	//if the soldier has life insurance
 	if( pSoldier->usLifeInsurance )
@@ -1218,7 +1218,7 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(SOLDIERTYPE* pSoldier)
 }
 
 
-static UINT32 GetTimeRemainingOnSoldiersContract(SOLDIERTYPE* pSoldier)
+static UINT32 GetTimeRemainingOnSoldiersContract(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iDayMercLeaves = ( pSoldier->iEndofContractTime / 1440 ) - 1;
 
@@ -1313,7 +1313,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 }
 
 
-static BOOLEAN CanSoldierExtendInsuranceContract(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanSoldierExtendInsuranceContract(const SOLDIERTYPE* pSoldier)
 {
 	if( CalculateSoldiersInsuranceContractLength( pSoldier ) != 0 )
 		return( TRUE );
@@ -1322,7 +1322,7 @@ static BOOLEAN CanSoldierExtendInsuranceContract(SOLDIERTYPE* pSoldier)
 }
 
 
-static INT32 CalculateSoldiersInsuranceContractLength(SOLDIERTYPE* pSoldier)
+static INT32 CalculateSoldiersInsuranceContractLength(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iInsuranceContractLength=0;
 	UINT32 uiTimeRemainingOnSoldiersContract = GetTimeRemainingOnSoldiersContract( pSoldier );
