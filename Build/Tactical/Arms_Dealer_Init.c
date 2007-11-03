@@ -2146,7 +2146,7 @@ static UINT32 CalculateSpecialItemRepairTime(UINT8 ubArmsDealer, UINT16 usItemIn
 }
 
 
-UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
+UINT32 CalculateObjectItemRepairTime(UINT8 ubArmsDealer, const OBJECTTYPE* pItemObject)
 {
 	UINT32 uiRepairTime;
 	UINT8 ubCnt;

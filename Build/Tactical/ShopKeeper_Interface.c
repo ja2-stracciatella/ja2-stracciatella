@@ -1439,7 +1439,7 @@ static void DestroySkiInventorySlotMouseRegions(void)
 }
 
 
-static INT8 AddItemToArmsDealerOfferArea(INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation);
+static INT8 AddItemToArmsDealerOfferArea(const INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation);
 static void InitShopKeeperItemDescBox(OBJECTTYPE* pObject, UINT8 ubPocket, UINT8 ubFromLocation);
 
 
@@ -1662,9 +1662,9 @@ static void SelectPlayersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion,
 }
 
 
-static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocation, UINT8 ubWhere);
-static void IfMercOwnedCopyItemToMercInv(INVENTORY_IN_SLOT* pInv);
-static void IfMercOwnedRemoveItemFromMercInv(INVENTORY_IN_SLOT* pInv);
+static INT8 AddInventoryToSkiLocation(const INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocation, UINT8 ubWhere);
+static void IfMercOwnedCopyItemToMercInv(const INVENTORY_IN_SLOT* pInv);
+static void IfMercOwnedRemoveItemFromMercInv(const INVENTORY_IN_SLOT* pInv);
 static BOOLEAN RemoveItemFromArmsDealerOfferArea(INT8 bSlotId, BOOLEAN fKeepItem);
 static BOOLEAN RemoveRepairItemFromDealersOfferArea(INT8 bSlot);
 
@@ -2004,8 +2004,8 @@ static void CalculateFirstItemIndexOnPage(void)
 
 static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea);
 static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY);
-static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
-static void SetSkiRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
+static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
+static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
 
 
 static void DisplayArmsDealerCurrentInventoryPage(void)
@@ -2526,7 +2526,7 @@ static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM
 }
 
 
-static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation);
+static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, const INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation);
 
 
 static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
@@ -2886,7 +2886,7 @@ static void DisplayArmsDealerOfferArea(void)
 }
 
 
-static INT8 AddItemToArmsDealerOfferArea(INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation)
+static INT8 AddItemToArmsDealerOfferArea(const INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation)
 {
 	INT8	bCnt;
 
@@ -2955,10 +2955,10 @@ static BOOLEAN RemoveItemFromArmsDealerOfferArea(INT8 bSlotId, BOOLEAN fKeepItem
 }
 
 
-static void BuildItemHelpTextString(wchar_t sString[], size_t Length, INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea);
+static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea);
 
 
-static void SetSkiRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
+static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
 	CHAR16 zHelpText[ 512 ];
 
@@ -2970,7 +2970,7 @@ static void SetSkiRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion,
 }
 
 
-static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
+static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
 	CHAR16 zTempText[ 512 ];
 	CHAR16 zHelpText[ 512 ];
@@ -2996,7 +2996,7 @@ static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pReg
 static INVENTORY_IN_SLOT* GetPtrToOfferSlotWhereThisItemIs(UINT8 ubProfileID, INT8 bInvPocket);
 
 
-static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation)
+static INT8 AddItemToPlayersOfferArea(UINT8 ubProfileID, const INVENTORY_IN_SLOT* pInvSlot, INT8 bSlotIdInOtherLocation)
 {
 	INT8	bCnt;
 
@@ -3950,7 +3950,7 @@ void SetSkiCursor( UINT16	usCursor )
 }
 
 
-static INT8 AddInventoryToSkiLocation(INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocation, UINT8 ubWhere)
+static INT8 AddInventoryToSkiLocation(const INVENTORY_IN_SLOT* pInv, UINT8 ubSpotLocation, UINT8 ubWhere)
 {
 	INT8 bSlotAddedTo = -1;
 
@@ -5849,7 +5849,7 @@ static void ShopkeeperAddItemToPool(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVi
 }
 
 
-static void IfMercOwnedCopyItemToMercInv(INVENTORY_IN_SLOT* pInv)
+static void IfMercOwnedCopyItemToMercInv(const INVENTORY_IN_SLOT* pInv)
 {
 	INT16 sSoldierID;
 
@@ -5875,7 +5875,7 @@ static void IfMercOwnedCopyItemToMercInv(INVENTORY_IN_SLOT* pInv)
 static void IfMercOwnedRemoveItemFromMercInv2(UINT8 ubOwnerProfileId, INT8 bOwnerSlotId);
 
 
-static void IfMercOwnedRemoveItemFromMercInv(INVENTORY_IN_SLOT* pInv)
+static void IfMercOwnedRemoveItemFromMercInv(const INVENTORY_IN_SLOT* pInv)
 {
 	IfMercOwnedRemoveItemFromMercInv2( pInv->ubIdOfMercWhoOwnsTheItem, pInv->bSlotIdInOtherLocation );
 }
@@ -6676,7 +6676,7 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubAr
 }
 
 
-static void BuildItemHelpTextString(wchar_t sString[], size_t Length, INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea)
+static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea)
 {
 	CHAR16 zHelpText[ 512 ];
 	CHAR16 zRepairTime[ 64 ];

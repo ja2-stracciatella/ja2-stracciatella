@@ -269,7 +269,7 @@ void		MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIt
 
 void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, UINT8 ubOwnerProfileId );
 
-UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
+UINT32 CalculateObjectItemRepairTime(UINT8 ubArmsDealer, const OBJECTTYPE* pItemObject);
 
 UINT32 CalculateObjectItemRepairCost(UINT8 ubArmsDealer, const OBJECTTYPE* pItemObject);
 
