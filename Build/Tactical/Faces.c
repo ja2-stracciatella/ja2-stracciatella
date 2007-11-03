@@ -1463,12 +1463,11 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY);
 
 
-BOOLEAN ExternRenderFaceFromSoldier( UINT32 uiBuffer, UINT8 ubSoldierID, INT16 sX, INT16 sY )
+BOOLEAN ExternRenderFaceFromSoldier(UINT32 uiBuffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY)
 {
 	// Check for valid soldier
-	CHECKF( ubSoldierID != NOBODY );
-
-	return( ExternRenderFace( uiBuffer, MercPtrs[ ubSoldierID ]->iFaceIndex, sX, sY ) );
+	CHECKF(s != NULL);
+	return ExternRenderFace(uiBuffer, s->iFaceIndex, sX, sY);
 }
 
 

@@ -342,7 +342,7 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 			}
 			else
 			{
-				ExternRenderFaceFromSoldier( guiSAVEBUFFER, pSoldier->ubID, sFaceX, sFaceY );
+				ExternRenderFaceFromSoldier(guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
 			}
 		}
 	}
