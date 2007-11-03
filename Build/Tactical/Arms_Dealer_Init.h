@@ -271,7 +271,7 @@ void		GiveObjectToArmsDealerForRepair( UINT8 ubArmsDealer, OBJECTTYPE *pObject, 
 
 UINT32 CalculateObjectItemRepairTime( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
 
-UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject );
+UINT32 CalculateObjectItemRepairCost(UINT8 ubArmsDealer, const OBJECTTYPE* pItemObject);
 
 
 void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo );

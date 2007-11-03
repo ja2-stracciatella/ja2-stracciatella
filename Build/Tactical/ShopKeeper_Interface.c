@@ -2002,7 +2002,7 @@ static void CalculateFirstItemIndexOnPage(void)
 }
 
 
-static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea);
+static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea);
 static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY);
 static void SetSkiFaceRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
 static void SetSkiRegionHelpText(INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea);
@@ -2146,12 +2146,12 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 
 
 static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement);
-static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, OBJECTTYPE* pItemObject);
+static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
 static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
-static BOOLEAN IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE* pItemObject);
+static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject);
 
 
-static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea)
+static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea)
 {
 	CHAR16			zTemp[64];
 	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
@@ -2621,7 +2621,7 @@ void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT1
 static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus);
 
 
-static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, OBJECTTYPE* pItemObject)
+static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject)
 {
 	UINT8		ubCnt;
 	UINT32	uiUnitPrice = 0;
@@ -4232,7 +4232,7 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 }
 
 
-static BOOLEAN IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE* pItemObject)
+static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject)
 {
 	//if there is no item selected, return
 	if( gpHighLightedItemObject == NULL )

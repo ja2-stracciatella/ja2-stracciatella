@@ -2231,7 +2231,7 @@ static UINT32 CalculateSpecialItemRepairCost(UINT8 ubArmsDealer, UINT16 usItemIn
 }
 
 
-UINT32 CalculateObjectItemRepairCost( UINT8 ubArmsDealer, OBJECTTYPE *pItemObject )
+UINT32 CalculateObjectItemRepairCost(UINT8 ubArmsDealer, const OBJECTTYPE* pItemObject)
 {
 	UINT32 uiRepairCost;
 	UINT8 ubCnt;
