@@ -788,14 +788,9 @@ BOOLEAN GridNoOnScreen( INT16 sGridNo )
 }
 
 
-BOOLEAN SoldierOnScreen( UINT16 usID )
+BOOLEAN SoldierOnScreen(const SOLDIERTYPE* s)
 {
-	SOLDIERTYPE *pSoldier;
-
-	// Get pointer of soldier
-	pSoldier = MercPtrs[ usID ];
-
-	return( GridNoOnScreen( pSoldier->sGridNo ) );
+	return GridNoOnScreen(s->sGridNo);
 }
 
 

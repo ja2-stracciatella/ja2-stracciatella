@@ -2117,38 +2117,34 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					break;
 
 				case 710:
-
 					// Monster footstep in
-					if ( SoldierOnScreen( pSoldier->ubID ) )
+					if (SoldierOnScreen(pSoldier))
 					{
 						PlaySoldierJA2Sample(pSoldier->ubID, ACR_STEP_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 					}
 					break;
 
 				case 711:
-
 					// Monster footstep in
-					if ( SoldierOnScreen( pSoldier->ubID ) )
+					if (SoldierOnScreen(pSoldier))
 					{
 						PlaySoldierJA2Sample(pSoldier->ubID, ACR_STEP_2, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 					}
 					break;
 
 				case 712:
-
 					// Monster footstep in
-					if ( SoldierOnScreen( pSoldier->ubID ) )
+					if (SoldierOnScreen(pSoldier))
 					{
 						PlaySoldierJA2Sample(pSoldier->ubID, LCR_MOVEMENT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 					}
 					break;
 
 				case 713:
-
 					// Monster footstep in
 					if ( pSoldier->ubBodyType == INFANT_MONSTER )
 					{
-						if ( SoldierOnScreen( pSoldier->ubID ) )
+						if (SoldierOnScreen(pSoldier))
 						{
 							PlaySoldierJA2Sample(pSoldier->ubID, BCR_DRAGGING, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 						}
@@ -2180,7 +2176,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						INT32			iSoundID=0;
 						BOOLEAN		fDoCry = FALSE;
 
-						//if ( SoldierOnScreen( pSoldier->ubID ) )
+						//if (SoldierOnScreen(pSoldier))
 						{
 							switch( pSoldier->usActionData )
 							{

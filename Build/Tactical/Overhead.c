@@ -2434,18 +2434,16 @@ static void ResetAllAnimationCache(void)
 
 void LocateSoldier(UINT16 usID, BOOLEAN fSetLocator)
 {
-	//if (!bCenter && SoldierOnScreen(usID)) return;
+	const SOLDIERTYPE* const s = MercPtrs[usID];
+	//if (!bCenter && SoldierOnScreen(s)) return;
 
 	// do we need to move the screen?
 	//ATE: Force this baby to locate if told to
-	if (!SoldierOnScreen(usID) || fSetLocator == 10)
+	if (!SoldierOnScreen(s) || fSetLocator == 10)
 	{
-		// Get pointer of soldier
-		const SOLDIERTYPE* const pSoldier = MercPtrs[usID];
-
 		// Center on guy
-		const INT16 sNewCenterWorldX = (INT16)pSoldier->dXPos;
-		const INT16 sNewCenterWorldY = (INT16)pSoldier->dYPos;
+		const INT16 sNewCenterWorldX = (INT16)s->dXPos;
+		const INT16 sNewCenterWorldY = (INT16)s->dYPos;
 		SetRenderCenter(sNewCenterWorldX, sNewCenterWorldY);
 
 		// Plot new path!

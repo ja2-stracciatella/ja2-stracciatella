@@ -1799,7 +1799,7 @@ BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
 			// OK< check if we are the selected guy!
 			if ( pSoldier->ubID == gusSelectedSoldier )
 			{
-				if (SoldierOnScreen( pSoldier->ubID ) )
+				if (SoldierOnScreen(pSoldier))
 				{
 					sGridNo = pSoldier->sFinalDestination;
 

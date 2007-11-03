@@ -10544,7 +10544,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
       return;
     }
 
-		//if ( SoldierOnScreen( pSoldier->ubID ) )
+		//if (SoldierOnScreen(pSoldier))
 		{
 			if ( pSoldier->usAnimState == CRAWLING )
 			{
