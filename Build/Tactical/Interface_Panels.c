@@ -978,12 +978,6 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 }
 
 
-UINT16 GetSMPanelCurrentMerc(void)
-{
-	return( gusSMCurrentMerc );
-}
-
-
 static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);

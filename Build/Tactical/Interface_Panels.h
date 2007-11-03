@@ -61,7 +61,6 @@ void    RenderTEAMPanel(BOOLEAN fDirty);
 
 void SetSMPanelCurrentMerc(UINT8 ubNewID);
 void SetTEAMPanelCurrentMerc(UINT8 ubNewID);
-UINT16 GetSMPanelCurrentMerc(void);
 
 BOOLEAN InitTEAMSlots(void);
 void    AddPlayerToInterfaceTeamSlot(UINT8 ubID);
