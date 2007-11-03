@@ -2479,16 +2479,18 @@ static void SelectMerc(UINT16 id)
 
 	if (!gfInItemPickupMenu)
 	{
+		BOOLEAN set_locator;
 		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
 		{
 			// Refresh background for player slots (in case item values change due to Flo's discount)
 			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-			LocateSoldier(id, DONTSETLOCATOR);
+			set_locator = DONTSETLOCATOR;
 		}
 		else
 		{
-			LocateSoldier(id, SETLOCATOR);
+			set_locator = SETLOCATOR;
 		}
+		LocateSoldier(MercPtrs[id], set_locator);
 	}
 
 	// If the user is in the shop keeper interface and is in the item desc
@@ -3180,7 +3182,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 	// ATE: No matter what we do... if below OKLIFE, just locate....
 	if (s->bLife < OKLIFE)
 	{
-		LocateSoldier(ubID, SETLOCATOR);
+		LocateSoldier(s, SETLOCATOR);
 		return;
 	}
 
@@ -3196,7 +3198,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 		else
 		{
 			// Just locate....
-			LocateSoldier(ubID, SETLOCATOR);
+			LocateSoldier(s, SETLOCATOR);
 		}
 	}
 	else
@@ -3214,7 +3216,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			{
 				if (gGameSettings.fOptions[TOPTION_OLD_SELECTION_METHOD])
 				{
-					LocateSoldier(ubID, SETLOCATOR);
+					LocateSoldier(s, SETLOCATOR);
 				}
 				else
 				{
@@ -3233,7 +3235,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 				}
 				else
 				{
-					LocateSoldier(ubID, DONTSETLOCATOR);
+					LocateSoldier(s, DONTSETLOCATOR);
 				}
 
 				fSelect = TRUE;
@@ -3242,7 +3244,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			{
 				if (ubID == gusSelectedSoldier)
 				{
-					LocateSoldier(ubID, DONTSETLOCATOR);
+					LocateSoldier(s, DONTSETLOCATOR);
 				}
 				else
 				{
@@ -3274,7 +3276,7 @@ void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 {
 	RESETTIMECOUNTER(s->FlashSelCounter, FLASH_SELECTOR_DELAY);
 
-	//LocateSoldier( ubID, FALSE );	// IC - this is already being done outside of this function :)
+	//LocateSoldier(s, FALSE); // IC - this is already being done outside of this function :)
 	s->fFlashLocator = TRUE;
 	//gbPanelSelectedGuy = ubID;	IC - had to move this outside to make this function versatile
 	s->sLocatorFrame = 0;

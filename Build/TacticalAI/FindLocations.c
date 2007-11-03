@@ -1015,7 +1015,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	if (gfDisplayCoverValues)
 	{
 		// do a locate?
-		LocateSoldier( pSoldier->ubID, SETLOCATORFAST );
+		LocateSoldier(pSoldier, SETLOCATORFAST);
 		gsBestCover = sBestCover;
 		SetRenderFlags( RENDER_FLAG_FULL );
 		RenderWorld();

@@ -920,11 +920,7 @@ void LocateToMeanwhileCharacter( )
 	if ( gfInMeanwhile )
 	{
 		pSoldier = FindSoldierByProfileID( gCurrentMeanwhileDef.ubNPCNumber, FALSE );
-
-		if ( pSoldier != NULL )
-		{
-			LocateSoldier( pSoldier->ubID, FALSE );
-		}
+		if (pSoldier != NULL) LocateSoldier(pSoldier, FALSE);
 	}
 }
 

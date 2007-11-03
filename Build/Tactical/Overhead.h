@@ -187,7 +187,7 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 
 
 void LocateGridNo( UINT16 sGridNo );
-void LocateSoldier( UINT16 usID, BOOLEAN fSetLocator);
+void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
 void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator) ;

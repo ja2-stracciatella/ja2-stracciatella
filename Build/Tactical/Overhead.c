@@ -1444,7 +1444,7 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 		// IF tracking on, center on guy....
 		if (gGameSettings.fOptions[TOPTION_TRACKING_MODE])
 		{
-			LocateSoldier(pSoldier->ubID, FALSE);
+			LocateSoldier(pSoldier, FALSE);
 		}
 	}
 	else
@@ -1461,7 +1461,7 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 					SetRenderFlags(RENDER_FLAG_FULL);
 				}
 			}
-			LocateSoldier(pSoldier->ubID, FALSE);
+			LocateSoldier(pSoldier, FALSE);
 		}
 	}
 }
@@ -2432,9 +2432,8 @@ static void ResetAllAnimationCache(void)
 }
 
 
-void LocateSoldier(UINT16 usID, BOOLEAN fSetLocator)
+void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator)
 {
-	SOLDIERTYPE* const s = MercPtrs[usID];
 	//if (!bCenter && SoldierOnScreen(s)) return;
 
 	// do we need to move the screen?
@@ -5474,7 +5473,7 @@ void CycleThroughKnownEnemies( )
 					usStartToLook = (UINT16)cnt;
 
 					// Locate to!
-					//LocateSoldier( pSoldier->ubID, 1 );
+					//LocateSoldier(pSoldier, 1);
 
 					//ATE: Change to Slide To...
 					SlideTo( 0, pSoldier->ubID, 0, SETANDREMOVEPREVIOUSLOCATOR );

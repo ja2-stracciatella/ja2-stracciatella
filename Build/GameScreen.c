@@ -867,9 +867,10 @@ static void TacticalScreenLocateToSoldier(void)
 	if ( gubPreferredInitialSelectedGuy != NOBODY )
 	{
 		// ATE: Put condition here...
-		if ( OK_CONTROLLABLE_MERC( MercPtrs[ gubPreferredInitialSelectedGuy ] ) && OK_INTERRUPT_MERC( MercPtrs[ gubPreferredInitialSelectedGuy ] ) )
+		SOLDIERTYPE* const s = MercPtrs[gubPreferredInitialSelectedGuy];
+		if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s))
 		{
-			LocateSoldier( gubPreferredInitialSelectedGuy, 10 );
+			LocateSoldier(s, 10);
 			SelectSoldier( gubPreferredInitialSelectedGuy, FALSE, TRUE );
 			fPreferedGuyUsed = TRUE;
 		}
@@ -885,7 +886,7 @@ static void TacticalScreenLocateToSoldier(void)
 		{
 			if ( OK_CONTROLLABLE_MERC( pSoldier ) && OK_INTERRUPT_MERC( pSoldier ) )
 			{
-				LocateSoldier( pSoldier->ubID, 10 );
+				LocateSoldier(pSoldier, 10);
 				SelectSoldier( pSoldier->ubID, FALSE, TRUE );
 				break;
 			}

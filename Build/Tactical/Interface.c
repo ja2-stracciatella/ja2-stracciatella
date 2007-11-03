@@ -1694,7 +1694,7 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 	// OK, Determine position...
 	// Center on guy
 	// Locate to guy first.....
-	LocateSoldier( pSoldier->ubID, FALSE );
+	LocateSoldier(pSoldier, FALSE);
 	GetSoldierAnimDims( pSoldier, &sHeight, &sWidth );
 	GetSoldierScreenPos( pSoldier, &sScreenX, &sScreenY );
 	gOpenDoorMenu.sX = sScreenX - ( ( BUTTON_PANEL_WIDTH - sWidth ) / 2 );

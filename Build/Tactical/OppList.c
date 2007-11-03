@@ -1952,7 +1952,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 							{
 								EnterCombatMode( pSoldier->bTeam );
 
-                LocateSoldier( pSoldier->ubID, TRUE );
+								LocateSoldier(pSoldier, TRUE);
 	              GetSoldierScreenPos( pSoldier, &sX, &sY );
 	              // begin quote
 	              BeginCivQuote( pSoldier, CIV_QUOTE_HICKS_SEE_US_AT_NIGHT, 0, sX, sY );
@@ -2878,7 +2878,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 			if ( gTacticalStatus.fEnemySightingOnTheirTurn )
 			{
 				// Locate to our guy, then slide to enemy
-				LocateSoldier( pSoldier->ubID, SETLOCATOR );
+				LocateSoldier(pSoldier, SETLOCATOR);
 
 				// Now slide to other guy....
 				SlideTo( NOWHERE, gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID, NOBODY ,SETLOCATOR);

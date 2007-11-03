@@ -2734,7 +2734,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 
 					if ( pSoldier->bTeam != gbPlayerNum  && pSoldier->bVisible != -1)
 					{
-						LocateSoldier( pSoldier->ubID, DONTSETLOCATOR );
+						LocateSoldier(pSoldier, DONTSETLOCATOR);
 					}
 				}
 			}
@@ -3408,7 +3408,9 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!
 	if (gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bVisible != -1 && pSoldier->bTeam == gbPlayerNum )
-		LocateSoldier(pSoldier->ubID,DONTSETLOCATOR);
+	{
+		LocateSoldier(pSoldier, DONTSETLOCATOR);
+	}
 
 
 	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )

@@ -1415,10 +1415,7 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 		ShowRadioLocator(pSoldier, SHOW_LOCATOR_FAST);
 
 		// If he's visible, locate...
-		if ( pSoldier->bVisible != -1 )
-		{
-			LocateSoldier( pSoldier->ubID, FALSE );
-		}
+		if (pSoldier->bVisible != -1) LocateSoldier(pSoldier, FALSE);
 
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
 

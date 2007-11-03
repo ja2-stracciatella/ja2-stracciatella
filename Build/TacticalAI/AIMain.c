@@ -808,7 +808,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 				// Skip locator for green friendly militia
 				if ( !(pSoldier->bTeam == MILITIA_TEAM && pSoldier->bSide == 0 && pSoldier->bAlertStatus == STATUS_GREEN) )
 				{
-					LocateSoldier( pSoldier->ubID, SETLOCATORFAST );
+					LocateSoldier(pSoldier, SETLOCATORFAST);
 				}
 
 				// try commenting this out altogether

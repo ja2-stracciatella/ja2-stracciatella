@@ -1666,7 +1666,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 ) );
 
 							        // Center to guy....
-							        LocateSoldier( gusSelectedSoldier, SETLOCATOR );
+											LocateSoldier(MercPtrs[gusSelectedSoldier], SETLOCATOR);
 										}
 									}
 								}
@@ -1679,7 +1679,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 									HandleLocateSelectMerc( bID, LOCATEANDSELECT_MERC );
 
 							    // Center to guy....
-							    LocateSoldier( gusSelectedSoldier, SETLOCATOR );
+									LocateSoldier(MercPtrs[gusSelectedSoldier], SETLOCATOR);
 								}
 							}
 
@@ -1922,9 +1922,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							EVENT_InitNewSoldierAnim( MercPtrs[ gusSelectedSoldier ], KID_SKIPPING, 0 , TRUE );
 
 							//ChangeSoldiersBodyType( LARVAE_MONSTER, TRUE );
-							//MercPtrs[ gusSelectedSoldier ]->usAttackingWeapon = TANK_CANNON;
-							//LocateSoldier( gusSelectedSoldier, FALSE );
-							//EVENT_FireSoldierWeapon( MercPtrs[ gusSelectedSoldier ], usMapPos );
+							//SOLDIERTYPE* const s = MercPtrs[gusSelectedSoldier];
+							//s->usAttackingWeapon = TANK_CANNON;
+							//LocateSoldier(s, FALSE );
+							//EVENT_FireSoldierWeapon(s, usMapPos);
 						}
 					}
 					else
@@ -2034,7 +2035,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					// Center to guy....
 					if ( gusSelectedSoldier != NOBODY )
 					{
-						LocateSoldier( gusSelectedSoldier, 10 );
+						LocateSoldier(MercPtrs[gusSelectedSoldier], 10);
 					}
 					break;
 

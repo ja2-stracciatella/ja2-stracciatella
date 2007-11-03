@@ -1184,7 +1184,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 
 						gubSelectSMPanelToMerc = ubID;
 
-						LocateSoldier( ubID, DONTSETLOCATOR );
+						LocateSoldier(MercPtrs[ubID], DONTSETLOCATOR);
 						// refresh background for player slots (in case item values change due to Flo's discount)
 						gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 					}

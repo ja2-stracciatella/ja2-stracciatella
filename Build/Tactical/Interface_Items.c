@@ -3959,7 +3959,7 @@ void DrawItemTileCursor( )
 		if ( gbItemPointerLocateGood )
 		{
 			gbItemPointerLocateGood = FALSE;
-			LocateSoldier( gusSelectedSoldier, FALSE );
+			LocateSoldier(MercPtrs[gusSelectedSoldier], FALSE);
 		}
 
 		if ( !fGiveItem )
@@ -5436,7 +5436,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	EraseInterfaceMenus( TRUE );
 
 	// Make sure menu is located if not on screen
-	LocateSoldier( pSoldier->ubID, FALSE );
+	LocateSoldier(pSoldier, FALSE);
 
 	// memset values
 	memset( &gItemPickupMenu, 0, sizeof( gItemPickupMenu ) );
