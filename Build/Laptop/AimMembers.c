@@ -1335,7 +1335,6 @@ static INT8 AimMemberHireMerc(void)
 	MERC_HIRE_STRUCT HireMercStruct;
 	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
 	INT8		bReturnCode;
-	INT16		sSoldierID=0;
 	INT8		bTypeOfContract=0;
 
 
@@ -1410,11 +1409,9 @@ static INT8 AimMemberHireMerc(void)
 	}
 
 	//Set the type of contract the merc is on
-	sSoldierID = GetSoldierIDFromMercID( ubCurrentSoldier );
-	if( sSoldierID == -1 )
-		return( FALSE );
-	Menptr[ sSoldierID ].bTypeOfLastContract = bTypeOfContract;
-
+	SOLDIERTYPE* const s = GetSoldierFromMercID(ubCurrentSoldier);
+	if (s == NULL) return FALSE;
+	s->bTypeOfLastContract = bTypeOfContract;
 
 	//add an entry in the finacial page for the hiring of the merc
 	AddTransactionToPlayersBook(HIRED_MERC, ubCurrentSoldier, GetWorldTotalMin(), -( giContractAmount - gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount ) );

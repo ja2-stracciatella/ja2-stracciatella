@@ -3115,10 +3115,9 @@ static void DisplayPlayersOfferArea(void)
 				//get an updated status from the amount in the pocket
 				if (o->bSlotIdInOtherLocation != -1 && o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
 				{
-					const INT16 sSoldierID = GetSoldierIDFromMercID(o->ubIdOfMercWhoOwnsTheItem);
-					Assert(sSoldierID != -1);
-
-					o->ItemObject.uiMoneyAmount = Menptr[sSoldierID].inv[o->bSlotIdInOtherLocation].uiMoneyAmount;
+					const SOLDIERTYPE* const s = GetSoldierFromMercID(o->ubIdOfMercWhoOwnsTheItem);
+					Assert(s != NULL);
+					o->ItemObject.uiMoneyAmount = s->inv[o->bSlotIdInOtherLocation].uiMoneyAmount;
 					o->uiItemPrice = o->ItemObject.uiMoneyAmount;
 				}
 			}
@@ -5866,8 +5865,6 @@ static void ShopkeeperAddItemToPool(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVi
 
 static void IfMercOwnedCopyItemToMercInv(const INVENTORY_IN_SLOT* pInv)
 {
-	INT16 sSoldierID;
-
 	//if the item picked up was in a previous location, and that location is on a merc's inventory
 	if ( ( pInv->bSlotIdInOtherLocation != -1 ) && ( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE ) )
 	{
@@ -5877,12 +5874,12 @@ static void IfMercOwnedCopyItemToMercInv(const INVENTORY_IN_SLOT* pInv)
 		Assert( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE );
 
 		// get soldier
-		sSoldierID = GetSoldierIDFromMercID( pInv->ubIdOfMercWhoOwnsTheItem );
-		Assert( sSoldierID != -1 );
-		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
+		SOLDIERTYPE* const s = GetSoldierFromMercID(pInv->ubIdOfMercWhoOwnsTheItem);
+		Assert(s != NULL);
+		Assert(CanMercInteractWithSelectedShopkeeper(s));
 
 		//Copy the object back into that merc's original inventory slot
-		Menptr[sSoldierID].inv[pInv->bSlotIdInOtherLocation] = pInv->ItemObject;
+		s->inv[pInv->bSlotIdInOtherLocation] = pInv->ItemObject;
 	}
 }
 
@@ -5898,7 +5895,6 @@ static void IfMercOwnedRemoveItemFromMercInv(const INVENTORY_IN_SLOT* pInv)
 
 static void IfMercOwnedRemoveItemFromMercInv2(UINT8 ubOwnerProfileId, INT8 bOwnerSlotId)
 {
-	INT16 sSoldierID;
 	BOOLEAN fSuccess;
 	OBJECTTYPE ObjectToRemove;
 
@@ -5910,12 +5906,12 @@ static void IfMercOwnedRemoveItemFromMercInv2(UINT8 ubOwnerProfileId, INT8 bOwne
 		// and it better have a valid merc who owned it
 		Assert( ubOwnerProfileId != NO_PROFILE );
 
-		sSoldierID = GetSoldierIDFromMercID( ubOwnerProfileId );
-		Assert( sSoldierID != -1 );
-		Assert( CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) );
+		SOLDIERTYPE* const s = GetSoldierFromMercID(ubOwnerProfileId);
+		Assert(s != NULL);
+		Assert(CanMercInteractWithSelectedShopkeeper(s));
 
 		//remove the object from that merc's original inventory slot
-		fSuccess = RemoveObjectFromSlot( &Menptr[ sSoldierID ], bOwnerSlotId, &ObjectToRemove );
+		fSuccess = RemoveObjectFromSlot(s, bOwnerSlotId, &ObjectToRemove);
 		Assert(fSuccess);
 	}
 }
@@ -5932,27 +5928,16 @@ static BOOLEAN SKITryToReturnInvToOwnerOrCurrentMerc(INVENTORY_IN_SLOT* pInv)
 	// if it does have an owner
 	if( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
 	{
-		INT16 sSoldierID;
-
-		sSoldierID = GetSoldierIDFromMercID( pInv->ubIdOfMercWhoOwnsTheItem );
+		SOLDIERTYPE* const s = GetSoldierFromMercID(pInv->ubIdOfMercWhoOwnsTheItem);
 		// if that soldier is not in player's hire any longer
-		if ( sSoldierID == -1 )
-		{
-			return(FALSE);
-		}
+		if (s == NULL) return FALSE;
 
 		// For owners of repaired items, this checks that owner is still hired, in sector,
 		// on current squad, close enough to the shopkeeper, etc.
-		if ( !CanMercInteractWithSelectedShopkeeper( MercPtrs[ sSoldierID ] ) )
-		{
-			return(FALSE);
-		}
+		if (!CanMercInteractWithSelectedShopkeeper(s)) return FALSE;
 
 		// Try to find a place to put in its owner's inventory (regardless of which merc is currently displayed!)
-		if ( SKITryToAddInvToMercsInventory( pInv, MercPtrs[ sSoldierID ] ) )
-		{
-			return( TRUE );
-		}
+		if (SKITryToAddInvToMercsInventory(pInv, s)) return TRUE;
 
 		// owner's inventory is full, so we'll try to give it to the current merc instead
 	}
@@ -6544,9 +6529,8 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 	//if the dealer is Micky
 	if( gbSelectedArmsDealerID == ARMS_DEALER_MICKY )
 	{
-		INT16	sSoldierID;
-		sSoldierID = GetSoldierIDFromMercID( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID );
-		if( ( sSoldierID != -1 ) && ( GetDrunkLevel( &Menptr[ sSoldierID ] ) == DRUNK ) )
+		const SOLDIERTYPE* const s = GetSoldierFromMercID(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID);
+		if (s != NULL && GetDrunkLevel(s) == DRUNK)
 		{
 			//Micky is DRUNK, pays more!
 			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier;

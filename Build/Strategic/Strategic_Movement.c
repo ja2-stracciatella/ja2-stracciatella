@@ -3664,7 +3664,6 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 	UINT32	uiNumberOfNodes=0;
 	UINT32	uiProfileID=0;
 	UINT32	cnt=0;
-	INT16		sTempID;
 	GROUP		*pTempGroup = *pGroup;
 
 //	pTemp = pGroup;
@@ -3697,11 +3696,11 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 
 		//Set up the current node
 		pTemp->ubProfileID = (UINT8)uiProfileID;
-		sTempID = GetSoldierIDFromMercID( pTemp->ubProfileID );
 
+		SOLDIERTYPE* const s = GetSoldierFromMercID(pTemp->ubProfileID);
 		//Should never happen
-		//Assert( sTempID != -1 );
-		pTemp->pSoldier = &Menptr[sTempID];
+		//Assert(s != NULL);
+		pTemp->pSoldier = s;
 
 		pTemp->next = NULL;
 

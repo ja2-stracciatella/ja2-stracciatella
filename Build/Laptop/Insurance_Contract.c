@@ -294,7 +294,6 @@ void RenderInsuranceContract()
 	INT16			sMercID;
 	INT16			sNextMercID;
 	UINT16		usPosX;
-	SOLDIERTYPE *pSoldier = NULL;
 
 
 	SetFontShadow( INS_FONT_SHADOW );
@@ -343,9 +342,8 @@ void RenderInsuranceContract()
 	{
 		sMercID = gubInsuranceMercArray[ sNextMercID ];
 
-		pSoldier = &Menptr[ GetSoldierIDFromMercID( (UINT8) sMercID ) ];
-
-		if( ( sMercID != -1 ) && MercIsInsurable( pSoldier ) )
+		const SOLDIERTYPE* const s = GetSoldierFromMercID(sMercID);
+		if (sMercID != -1 && MercIsInsurable(s))
 		{
 			DisplayOrderGrid( ubCount, (UINT8)sMercID );
 			ubCount++;
@@ -416,10 +414,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	wchar_t		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
 
-	SOLDIERTYPE	*pSoldier;
-
-
-	pSoldier = &Menptr[ GetSoldierIDFromMercID( ubMercID ) ];
+	const SOLDIERTYPE* const pSoldier = GetSoldierFromMercID(ubMercID);
 
 	Assert(ubGridNumber < 3);
 
@@ -613,7 +608,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 }
 
 
-static void HandleAcceptButton(UINT8 ubSoldierID);
+static void HandleAcceptButton(SOLDIERTYPE* s);
 
 
 static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 reason)
@@ -622,12 +617,12 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 	{
 		const UINT idx = MSYS_GetBtnUserData(btn);
 		InsuranceInfo* const i = &insurance_info[idx];
-		UINT8	ubSoldierID = GetSoldierIDFromMercID(i->merc_id);
+		SOLDIERTYPE* const s = GetSoldierFromMercID(i->merc_id);
 
-		HandleAcceptButton(ubSoldierID);
+		HandleAcceptButton(s);
 
 		//specify the length of the insurance contract
-		Menptr[ubSoldierID].iTotalLengthOfInsuranceContract = i->length;
+		s->iTotalLengthOfInsuranceContract = i->length;
 
 		//reset the insurance length
 		i->length = 0;
@@ -787,9 +782,9 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 }
 
 
-static void HandleAcceptButton(UINT8 ubSoldierID)
+static void HandleAcceptButton(SOLDIERTYPE* s)
 {
-	PurchaseOrExtendInsuranceForSoldier( &Menptr[ ubSoldierID ], CalculateSoldiersInsuranceContractLength( &Menptr[ ubSoldierID ] ) );
+	PurchaseOrExtendInsuranceForSoldier(s, CalculateSoldiersInsuranceContractLength(s));
 
 	RenderInsuranceContract();
 }
@@ -849,10 +844,7 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 	FLOAT flRiskFactor;
 	UINT32 uiDailyInsurancePremium;
 	UINT32 uiTotalInsurancePremium;
-	SOLDIERTYPE	*pSoldier;
-
-
-	pSoldier = &Menptr[ GetSoldierIDFromMercID( ubMercID ) ];
+	const SOLDIERTYPE* const pSoldier = GetSoldierFromMercID(ubMercID);
 
 
 	// only mercs with at least 2 days to go on their employment contract are insurable
@@ -1187,10 +1179,10 @@ static void EnableDisableInsuranceContractAcceptButtons(void)
 	for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 	{
 		const InsuranceInfo* const ins = &insurance_info[i];
-		const INT16 sSoldierID = GetSoldierIDFromMercID(ins->merc_id);
-		if (sSoldierID == -1) continue;
+		const SOLDIERTYPE* const s = GetSoldierFromMercID(ins->merc_id);
+		if (s == NULL) continue;
 
-		if (CanSoldierExtendInsuranceContract(&Menptr[sSoldierID]) && !IsMercDead(ins->merc_id))
+		if (CanSoldierExtendInsuranceContract(s) && !IsMercDead(ins->merc_id))
 		{
 			EnableButton(ins->button);
 		}
@@ -1392,14 +1384,12 @@ static BOOLEAN AreAnyAimMercsOnTeam(void)
 {
 	INT16	sNextMercID = 0;
 	BOOLEAN fIsThereAnyAimMercs = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	for( sNextMercID = 0; sNextMercID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; sNextMercID++ )
 	{
-		pSoldier = &Menptr[ GetSoldierIDFromMercID( (UINT8) sNextMercID ) ];
-
 		//check to see if any of the mercs are AIM mercs
-		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
+		const SOLDIERTYPE* const s = GetSoldierFromMercID(sNextMercID);
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 		{
 			fIsThereAnyAimMercs = TRUE;
 		}

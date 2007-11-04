@@ -619,8 +619,6 @@ static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 
 void DailyUpdateOfMercSite( UINT16 usDate)
 {
-	SOLDIERTYPE *pSoldier;
-	INT16		sSoldierID, i;
 	UINT8		ubMercID;
 	INT32		iNumDays;
 	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
@@ -632,7 +630,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 	iNumDays = 0;
 
 	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (INT16 i = 0; i < NUMBER_OF_MERCS; ++i)
 	{
 		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
 		if( IsMercOnTeam( ubMercID ) )
@@ -641,19 +639,20 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 			if( i == MERC_LARRY_ROACHBURN )
 				continue;
 
-			sSoldierID = GetSoldierIDFromMercID( ubMercID );
-			pSoldier = MercPtrs[ sSoldierID ];
+			const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
 
 			//if the merc is dead, dont advance the contract length
-			if( !IsMercDead( pSoldier->ubProfile ) )
+			if (!IsMercDead(s->ubProfile))
 			{
-				gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength += 1;
-//				pSoldier->iTotalContractLength++;
+				gMercProfiles[s->ubProfile].iMercMercContractLength += 1;
+//				s->iTotalContractLength++;
 			}
 
 			//Get the longest time
-			if( gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength > iNumDays )
-				iNumDays = gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength;
+			if (gMercProfiles[s->ubProfile].iMercMercContractLength > iNumDays)
+			{
+				iNumDays = gMercProfiles[s->ubProfile].iMercMercContractLength;
+			}
 		}
 	}
 

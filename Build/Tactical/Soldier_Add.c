@@ -1691,26 +1691,15 @@ BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 }
 
 
-// GetSoldierIDFromMercID() Gets the Soldier ID from the Merc Profile ID, else returns -1
-INT16 GetSoldierIDFromMercID(UINT8 ubMercID)
+SOLDIERTYPE* GetSoldierFromMercID(UINT8 ubMercID)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
   // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
+	const TacticalTeamType* const t = &gTacticalStatus.Team[OUR_TEAM];
+	for (UINT i = t->bFirstID, end = t->bLastID + 1; i != end; ++i)
 	{
-		if ( pTeamSoldier->ubProfile == ubMercID )
-		{
-			if( pTeamSoldier->bActive )
-				return( cnt );
-		}
+		SOLDIERTYPE* const s = &Menptr[i];
+		if (s->ubProfile == ubMercID && s->bActive) return s;
 	}
 
-	return( -1 );
+	return NULL;
 }
