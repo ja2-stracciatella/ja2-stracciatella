@@ -21,7 +21,6 @@
 #include "SelectWin.h"
 #include "Interface.h"
 #include "Lighting.h"
-#include "Interactive_Tiles.h"
 #include "Overhead_Types.h"
 #include "Overhead.h"
 #include "Soldier_Control.h"

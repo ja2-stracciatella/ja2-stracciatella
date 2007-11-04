@@ -17,7 +17,6 @@
 #include "Points.h"
 #include "Random.h"
 #include "AI.h"
-#include "Interactive_Tiles.h"
 #include "Soldier_Ani.h"
 #include "Overhead.h"
 #include "Soldier_Profile.h"

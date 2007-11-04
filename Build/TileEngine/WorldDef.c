@@ -14,7 +14,6 @@
 #include "VObject.h"
 #include "Soldier_Control.h"
 #include "Isometric_Utils.h"
-#include "Interactive_Tiles.h"
 #include "Overhead.h"
 #include "Points.h"
 #include "Handle_UI.h"
