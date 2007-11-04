@@ -116,7 +116,7 @@ static void RecountObjectSlots(void)
 }
 
 
-INT32	CreatePhysicalObject( OBJECTTYPE *pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, UINT8 ubOwner, UINT8 ubActionCode, UINT32 uiActionData )
+INT32	CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, UINT8 ubOwner, UINT8 ubActionCode, UINT32 uiActionData)
 {
 	INT32			iObjectIndex;
 	FLOAT			mass;
@@ -1296,10 +1296,10 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 #endif
 
 
-static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
+static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo);
 
 
-static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dzDegrees, OBJECTTYPE* pItem, INT16* psGridNo, real* pdMagForce)
+static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo, real* pdMagForce)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1431,7 +1431,7 @@ static INT16 FindFinalGridNoGivenDirectionGridNoForceAngle(INT16 sSrcGridNo, INT
 }
 
 
-static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, OBJECTTYPE* pItem, INT16* psGridNo)
+static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1530,7 +1530,7 @@ static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sS
 }
 
 
-static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE* pItem, INT16* psGridNo)
+static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1567,7 +1567,7 @@ static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16
 
 // OK, this will, given a target Z, INVTYPE, source, target gridnos, initial force vector, will
 // return range
-static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)
+static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)
 {
 	INT32 iID;
 	REAL_OBJECT *pObject;
@@ -1621,7 +1621,7 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector
 }
 
 
-static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psNewGridNo, INT8* pbLevel, BOOLEAN fFromUI)
+static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psNewGridNo, INT8* pbLevel, BOOLEAN fFromUI)
 {
 	INT32 iID;
 	REAL_OBJECT *pObject;
@@ -1696,10 +1696,10 @@ FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHe
 
 
 static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees);
-static FLOAT CalculateSoldierMaxForce(SOLDIERTYPE* pSoldier, FLOAT dDegrees, OBJECTTYPE* pItem, BOOLEAN fArmed);
+static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegrees, const OBJECTTYPE* pItem, BOOLEAN fArmed);
 
 
-static void CalculateLaunchItemBasicParams(SOLDIERTYPE* pSoldier, OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT* pdMagForce, FLOAT* pdDegrees, INT16* psFinalGridNo, BOOLEAN fArmed)
+static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  FLOAT* pdMagForce, FLOAT* pdDegrees, INT16* psFinalGridNo, BOOLEAN fArmed)
 {
 	INT16		sInterGridNo;
 	INT16		sStartZ;
@@ -1868,7 +1868,7 @@ static void CalculateLaunchItemBasicParams(SOLDIERTYPE* pSoldier, OBJECTTYPE* pI
 }
 
 
-BOOLEAN CalculateLaunchItemChanceToGetThrough( SOLDIERTYPE *pSoldier, OBJECTTYPE *pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ,  INT16 *psFinalGridNo, BOOLEAN fArmed, INT8 *pbLevel, BOOLEAN fFromUI )
+BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, INT16* psFinalGridNo, BOOLEAN fArmed, INT8* pbLevel, BOOLEAN fFromUI)
 {
 	FLOAT				dForce, dDegrees;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -1943,7 +1943,7 @@ static FLOAT CalculateForceFromRange(INT16 sRange, FLOAT dDegrees)
 }
 
 
-static FLOAT CalculateSoldierMaxForce(SOLDIERTYPE* pSoldier, FLOAT dDegrees, OBJECTTYPE* pItem, BOOLEAN fArmed)
+static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegrees, const OBJECTTYPE* pItem, BOOLEAN fArmed)
 {
 	INT32 uiMaxRange;
 	FLOAT	dMagForce;
