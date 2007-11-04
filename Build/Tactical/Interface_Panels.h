@@ -59,7 +59,7 @@ BOOLEAN ShutdownTEAMPanel(void);
 void    RenderTEAMPanel(BOOLEAN fDirty);
 
 
-void SetSMPanelCurrentMerc(UINT8 ubNewID);
+void SetSMPanelCurrentMerc(SOLDIERTYPE* s);
 void SetTEAMPanelCurrentMerc(UINT8 ubNewID);
 
 BOOLEAN InitTEAMSlots(void);
@@ -124,7 +124,7 @@ extern SOLDIERTYPE* gpSMCurrentMerc;
 extern INT32        iSMPanelButtons[NUM_SM_BUTTONS];
 extern INT32        iTEAMPanelButtons[NUM_TEAM_BUTTONS];
 extern INT32        giSMStealthButton;
-extern UINT8        gubSelectSMPanelToMerc;
+extern SOLDIERTYPE* gSelectSMPanelToMerc;
 extern MOUSE_REGION gSM_SELMERCMoneyRegion;
 extern UINT8        gubHandPos;
 extern UINT16       gusOldItemIndex;

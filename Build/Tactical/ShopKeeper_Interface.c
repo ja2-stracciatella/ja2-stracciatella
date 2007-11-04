@@ -576,7 +576,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	//Reinitialize the team panel to be the SM panel
 	SetCurrentInterfacePanel( SM_PANEL );
 	SetCurrentTacticalPanelCurrentMerc( (UINT8)gusSelectedSoldier );
-	SetSMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
+	SetSMPanelCurrentMerc(MercPtrs[gusSelectedSoldier]);
 
 	// load the Main trade screen backgroiund image
 	guiMainTradeScreenImage = AddVideoObjectFromFile("InterFace/TradeScreen.sti");
@@ -1175,16 +1175,12 @@ static void GetShopKeeperInterfaceUserInput(void)
 
 				case SDLK_SPACE:
 					{
-						UINT8	ubID;
-
 						DeleteItemDescriptionBox( );
 
 						// skip Robot and EPCs
-						ubID = FindNextActiveAndAliveMerc( gpSMCurrentMerc, FALSE, TRUE );
-
-						gubSelectSMPanelToMerc = ubID;
-
-						LocateSoldier(MercPtrs[ubID], DONTSETLOCATOR);
+						SOLDIERTYPE* const s = MercPtrs[FindNextActiveAndAliveMerc(gpSMCurrentMerc, FALSE, TRUE)];
+						gSelectSMPanelToMerc = s;
+						LocateSoldier(s, DONTSETLOCATOR);
 						// refresh background for player slots (in case item values change due to Flo's discount)
 						gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 					}

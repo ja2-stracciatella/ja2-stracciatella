@@ -291,7 +291,7 @@ BOOLEAN									gfDisableTacticalPanelButtons = FALSE;
 BOOLEAN	gfCheckForMouseOverItem = FALSE;
 UINT32	guiMouseOverItemTime		= 0;
 INT8		gbCheckForMouseOverItemPos = 0;
-UINT8		gubSelectSMPanelToMerc   = NOBODY;
+SOLDIERTYPE* gSelectSMPanelToMerc = NULL;
 static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
 UINT32 guiBrownBackgroundForTeamPanel;
@@ -488,18 +488,18 @@ void CheckForDisabledForGiveItem(void)
 static void UpdateSMPanel(void);
 
 
-void SetSMPanelCurrentMerc(UINT8 ubNewID)
+void SetSMPanelCurrentMerc(SOLDIERTYPE* s)
 {
-	gubSelectSMPanelToMerc = NOBODY;
+	gSelectSMPanelToMerc = NULL;
 
-	gpSMCurrentMerc = MercPtrs[ ubNewID ];
+	gpSMCurrentMerc = s;
 
 	// Set to current guy's interface level
-	//if ( gsInterfaceLevel != gpSMCurrentMerc->bUIInterfaceLevel )
+	//if (gsInterfaceLevel != s->bUIInterfaceLevel)
 	//{
 	//	SetRenderFlags(RENDER_FLAG_FULL);
 	//	ErasePath(FALSE);
-	//	gsInterfaceLevel = gpSMCurrentMerc->bUIInterfaceLevel;
+	//	gsInterfaceLevel = s->bUIInterfaceLevel;
 	//}
 
 	// Disable all faces
@@ -508,14 +508,14 @@ void SetSMPanelCurrentMerc(UINT8 ubNewID)
 	// Turn off compat ammo....
 	if ( gpItemPointer == NULL )
 	{
-		HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)HANDPOS, FALSE );
+		HandleCompatibleAmmoUI(s, HANDPOS, FALSE);
 		gfCheckForMouseOverItem = FALSE;
 	}
 	else
 	{
 		// Turn it all false first....
-		InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, gpItemPointer, FALSE );
-		InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, gpItemPointer, TRUE );
+		InternalHandleCompatibleAmmoUI(s, gpItemPointer, FALSE);
+		InternalHandleCompatibleAmmoUI(s, gpItemPointer, TRUE);
 	}
 
 	// Remove item desc panel if one up....
@@ -530,7 +530,7 @@ void SetSMPanelCurrentMerc(UINT8 ubNewID)
 	}
 	else
 	{
-		if ( ( gpItemPointer != NULL || guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE || gpSMCurrentMerc->bLife < OKLIFE ) )
+		if (gpItemPointer != NULL || guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE || s->bLife < OKLIFE)
 		{
 			CheckForDisabledForGiveItem( );
 		}
@@ -540,11 +540,7 @@ void SetSMPanelCurrentMerc(UINT8 ubNewID)
 		}
 	}
 
-	if ( gpItemPointer != NULL )
-	{
-		ReevaluateItemHatches( gpSMCurrentMerc, FALSE );
-	}
-
+	if (gpItemPointer != NULL) ReevaluateItemHatches(s, FALSE);
 
 	DisableInvRegions( gfSMDisableForItems );
 
@@ -1201,7 +1197,7 @@ BOOLEAN ShutdownSMPanel(void)
 	DeleteVideoObjectFromIndex(guiSecItemHiddenVO);
 	DeleteVideoObjectFromIndex(guiBrownBackgroundForTeamPanel);
 
-	gubSelectSMPanelToMerc = NOBODY;
+	gSelectSMPanelToMerc = NULL;
 
 	// CJC: delete key ring if open
 	DeleteKeyRingPopup(); // function will abort if key ring is not up
@@ -1321,12 +1317,8 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 	wchar_t sString[9];
 	UINT32	cnt;
 
-	if ( gubSelectSMPanelToMerc != NOBODY )
-	{
-		// Give him the panel!
-		SetSMPanelCurrentMerc( gubSelectSMPanelToMerc );
-	}
-
+	// Give him the panel!
+	if (gSelectSMPanelToMerc != NULL) SetSMPanelCurrentMerc(gSelectSMPanelToMerc);
 
 	// ATE: Don't do anything if we are in stack popup and are refreshing stuff....
 	if ( ( InItemStackPopup( ) || ( InKeyRingPopup( ) ) ) && (*pfDirty) == DIRTYLEVEL1 )
@@ -2468,7 +2460,8 @@ static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void SelectMerc(UINT16 id)
 {
-	gubSelectSMPanelToMerc = id;
+	SOLDIERTYPE* const s = MercPtrs[id];
+	gSelectSMPanelToMerc = s;
 
 	if (!gfInItemPickupMenu)
 	{
@@ -2483,7 +2476,7 @@ static void SelectMerc(UINT16 id)
 		{
 			set_locator = SETLOCATOR;
 		}
-		LocateSoldier(MercPtrs[id], set_locator);
+		LocateSoldier(s, set_locator);
 	}
 
 	// If the user is in the shop keeper interface and is in the item desc

@@ -394,7 +394,7 @@ void ShutdownCurrentPanel( )
 
 void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 {
-	SOLDIERTYPE *pSoldier;
+	SOLDIERTYPE* const s = MercPtrs[ubID];
 
 	// Disable faces
 	SetAllAutoFacesInactive( );
@@ -402,9 +402,7 @@ void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 	if ( gsCurInterfacePanel == SM_PANEL )
 	{
 		// If we are not of merc bodytype, or am an epc, and going into inv, goto another....
-		pSoldier = MercPtrs[ ubID ];
-
-		if ( !IS_MERC_BODY_TYPE( pSoldier ) || AM_AN_EPC( pSoldier ) )
+		if (!IS_MERC_BODY_TYPE(s) || AM_AN_EPC(s))
 		{
 			SetCurrentInterfacePanel( TEAM_PANEL );
 		}
@@ -412,10 +410,7 @@ void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
 
 	switch( gsCurInterfacePanel )
 	{
-		case SM_PANEL:
-			//SetSMPanelCurrentMerc( ubID );
-			gubSelectSMPanelToMerc = ubID;
-			break;
+		case SM_PANEL: gSelectSMPanelToMerc = s; break;
 
 		case TEAM_PANEL:
 			SetTEAMPanelCurrentMerc( (UINT8)gusSelectedSoldier );

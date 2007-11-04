@@ -5606,7 +5606,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	gfIgnoreScrolling = TRUE;
 
 	HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
-	gubSelectSMPanelToMerc = pSoldier->ubID;
+	gSelectSMPanelToMerc = pSoldier;
 	ReEvaluateDisabledINVPanelButtons( );
 	DisableTacticalTeamPanelButtons( TRUE );
 
@@ -6016,8 +6016,7 @@ void RemoveItemPickupMenu( )
 		// Turn off Ignore scrolling
 		gfIgnoreScrolling = FALSE;
 			DisableTacticalTeamPanelButtons( FALSE );
-		gubSelectSMPanelToMerc = gpSMCurrentMerc->ubID;
-
+		gSelectSMPanelToMerc = gpSMCurrentMerc;
 	}
 }
 
