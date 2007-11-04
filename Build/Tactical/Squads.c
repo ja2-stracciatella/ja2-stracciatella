@@ -819,7 +819,7 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	// check if the currently selected guy is on this squad, if not, get the first one on the new squad
 	if ( gusSelectedSoldier != NO_SOLDIER )
 	{
-		if( Menptr[ gusSelectedSoldier ].bAssignment != iCurrentTacticalSquad )
+		if (GetSelectedMan()->bAssignment != iCurrentTacticalSquad)
 		{
 			// ATE: Changed this to FALSE for ackoledgement sounds.. sounds bad if just starting/entering sector..
 			SelectSoldier( Squad[ iCurrentTacticalSquad ][ 0 ]->ubID, FALSE, TRUE );

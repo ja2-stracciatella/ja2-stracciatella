@@ -3959,7 +3959,7 @@ void DrawItemTileCursor( )
 		if ( gbItemPointerLocateGood )
 		{
 			gbItemPointerLocateGood = FALSE;
-			LocateSoldier(MercPtrs[gusSelectedSoldier], FALSE);
+			LocateSoldier(GetSelectedMan(), FALSE);
 		}
 
 		if ( !fGiveItem )

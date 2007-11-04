@@ -3853,15 +3853,18 @@ void DebugSoldierPage3( )
 		ubLine++;
 
 		// OPIONION OF SELECTED MERC
-		if ( gusSelectedSoldier != NOBODY && ( MercPtrs[ gusSelectedSoldier ]->ubProfile < FIRST_NPC ) && pSoldier->ubProfile != NO_PROFILE )
+		if (gusSelectedSoldier != NOBODY)
 		{
-			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-			gprintf( 0, LINE_HEIGHT * ubLine, L"NPC Opinion:");
-			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			gprintf( 150, LINE_HEIGHT * ubLine, L"%d", gMercProfiles[ pSoldier->ubProfile ].bMercOpinion[ MercPtrs[ gusSelectedSoldier ]->ubProfile ] );
-			ubLine++;
+			const SOLDIERTYPE* const s = GetSelectedMan();
+			if (s->ubProfile < FIRST_NPC && pSoldier->ubProfile != NO_PROFILE)
+			{
+				SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+				gprintf( 0, LINE_HEIGHT * ubLine, L"NPC Opinion:");
+				SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+				gprintf(150, LINE_HEIGHT * ubLine, L"%d", gMercProfiles[pSoldier->ubProfile].bMercOpinion[s->ubProfile]);
+				ubLine++;
+			}
 		}
-
 	}
 	else if ( GetMouseMapPos( &usMapPos ) )
 	{

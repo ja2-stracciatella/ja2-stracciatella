@@ -234,9 +234,8 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 														}
 														else if ( SelectedMercCanAffordMove(  )  )
 														{
-															BOOLEAN fResult;
-
-															if ( ( fResult = UIOKMoveDestination( MercPtrs[ gusSelectedSoldier ], usMapPos ) ) == 1 )
+															const BOOLEAN fResult = UIOKMoveDestination(GetSelectedMan(), usMapPos);
+															if (fResult == 1)
 															{
 																// ATE: CHECK IF WE CAN GET TO POSITION
 																// Check if we are not in combat
@@ -729,10 +728,11 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 											 gfFirstCycleMovementStarted = TRUE;
 
 											 // OK, set this guy's movement mode to crawling fo rthat we will start cycling in run.....
-											 if ( MercPtrs[ gusSelectedSoldier ]->usUIMovementMode != RUNNING )
+												SOLDIERTYPE* const sel = GetSelectedMan();
+												if (sel->usUIMovementMode != RUNNING)
 											 {
 												 // ATE: UNLESS WE ARE IN RUNNING MODE ALREADY
-												 MercPtrs[ gusSelectedSoldier ]->usUIMovementMode = CRAWLING;
+													sel->usUIMovementMode = CRAWLING;
 											 }
 										 }
 
@@ -747,7 +747,7 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 								{
 									gfBeginBurstSpreadTracking = FALSE;
 									gfRTClickLeftHoldIntercepted = TRUE;
-									MercPtrs[ gusSelectedSoldier ]->fDoSpread				 = FALSE;
+									GetSelectedMan()->fDoSpread = FALSE;
 									fClickHoldIntercepted = TRUE;
 									*puiNewEvent = A_END_ACTION;
 									gCurrentUIMode = MOVE_MODE;
@@ -1504,11 +1504,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
   		// Cancel out of spread burst...
 			gfBeginBurstSpreadTracking = FALSE;
 			gfRTClickLeftHoldIntercepted = TRUE;
-			if ( gusSelectedSoldier != NO_SOLDIER )
-			{
-				MercPtrs[ gusSelectedSoldier ]->fDoSpread				 = FALSE;
-			}
-
+			if (gusSelectedSoldier != NO_SOLDIER) GetSelectedMan()->fDoSpread = FALSE;
 
 			// Befone anything, delete popup box!
 			EndUIMessage( );
@@ -1544,7 +1540,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			  if ( gusSelectedSoldier != NO_SOLDIER )
 			  {
 				  // If soldier is not stationary, stop
-				  StopSoldier( MercPtrs[ gusSelectedSoldier ] );
+					StopSoldier(GetSelectedMan());
 				  *puiNewEvent = A_CHANGE_TO_MOVE;
 			  }
 			  // ATE: OK, stop any mercs who are moving by selection method....
@@ -1620,7 +1616,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			for ( i = 0; i < 1000; i++ )
 			{
-				CalculateLaunchItemChanceToGetThrough( MercPtrs[ gusSelectedSoldier ], &(MercPtrs[ gusSelectedSoldier ]->inv[ HANDPOS ] ), usMapPos, 0, 0, &sGridNo, TRUE, &ubLevel, TRUE );
+				const SOLDIERTYPE* const sel = GetSelectedMan();
+				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], usMapPos, 0, 0, &sGridNo, TRUE, &ubLevel, TRUE);
 			}
 
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", ( GetJA2Clock( ) - iTime )  );
@@ -1657,7 +1654,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										//Select next squad
 										iCurrentSquad = CurrentSquad( );
 
-										pNewSoldier = FindNextActiveSquad( MercPtrs[ gusSelectedSoldier ] );
+										pNewSoldier = FindNextActiveSquad(GetSelectedMan());
 
 										if ( pNewSoldier->bAssignment != iCurrentSquad )
 										{
@@ -1666,7 +1663,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 ) );
 
 							        // Center to guy....
-											LocateSoldier(MercPtrs[gusSelectedSoldier], SETLOCATOR);
+											LocateSoldier(GetSelectedMan(), SETLOCATOR);
 										}
 									}
 								}
@@ -1675,11 +1672,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							{
 								if ( gusSelectedSoldier != NO_SOLDIER )
 								{ //Select next merc
-									const UINT8 bID = FindNextMercInTeamPanel(MercPtrs[gusSelectedSoldier]);
+									const UINT8 bID = FindNextMercInTeamPanel(GetSelectedMan());
 									HandleLocateSelectMerc( bID, LOCATEANDSELECT_MERC );
 
 							    // Center to guy....
-									LocateSoldier(MercPtrs[gusSelectedSoldier], SETLOCATOR);
+									LocateSoldier(GetSelectedMan(), SETLOCATOR);
 								}
 							}
 
@@ -1892,8 +1889,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
 							//ChangeSoldiersBodyType( TANK_NW, TRUE );
-							// MercPtrs[ gusSelectedSoldier ]->uiStatusFlags |= SOLDIER_CREATURE;
-							//EVENT_InitNewSoldierAnim( MercPtrs[ gusSelectedSoldier ], CRIPPLE_BEG, 0 , TRUE );
+							//SOLDIERTYPE* const sel = GetSelectedMan();
+							//sel->uiStatusFlags |= SOLDIER_CREATURE;
+							//EVENT_InitNewSoldierAnim(sel, CRIPPLE_BEG, 0 , TRUE);
 						}
 					}
 					else
@@ -1919,10 +1917,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
-							EVENT_InitNewSoldierAnim( MercPtrs[ gusSelectedSoldier ], KID_SKIPPING, 0 , TRUE );
+							EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE);
 
 							//ChangeSoldiersBodyType( LARVAE_MONSTER, TRUE );
-							//SOLDIERTYPE* const s = MercPtrs[gusSelectedSoldier];
+							//SOLDIERTYPE* const s = GetSelectedMan();
 							//s->usAttackingWeapon = TANK_CANNON;
 							//LocateSoldier(s, FALSE );
 							//EVENT_FireSoldierWeapon(s, usMapPos);
@@ -1986,17 +1984,15 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					if ( !fCtrl && !fAlt )
 					{
 						// Exchange places...
-						SOLDIERTYPE *pSoldier1, *pSoldier2;
-
 						//Check if we have a good selected guy
 						if ( gusSelectedSoldier != NOBODY )
 						{
-							pSoldier1 = MercPtrs[ gusSelectedSoldier ];
+							SOLDIERTYPE* const pSoldier1 = GetSelectedMan();
 
 							if ( gfUIFullTargetFound )
 							{
 								// Get soldier...
-								pSoldier2 = MercPtrs[ gusUIFullTargetID ];
+								SOLDIERTYPE* const pSoldier2 = MercPtrs[gusUIFullTargetID];
 
 								// Check if both OK....
 								if ( pSoldier1->bLife >= OKLIFE && pSoldier2->ubID != gusSelectedSoldier )
@@ -2031,14 +2027,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case '/':
-
 					// Center to guy....
 					if ( gusSelectedSoldier != NOBODY )
 					{
-						LocateSoldier(MercPtrs[gusSelectedSoldier], 10);
+						LocateSoldier(GetSelectedMan(), 10);
 					}
 					break;
-
 
 				case 'a':
 
@@ -2234,16 +2228,13 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 #endif
 					else
 					{
-						SOLDIERTYPE *pSoldier;
-
             if ( gusSelectedSoldier != NOBODY )
             {
-              pSoldier = MercPtrs[ gusSelectedSoldier ];
-
-			        if ( pSoldier->bOppCnt > 0 )
+							SOLDIERTYPE* const sel = GetSelectedMan();
+							if (sel->bOppCnt > 0)
 			        {
                 // Cycle....
-				        CycleVisibleEnemies( pSoldier );
+								CycleVisibleEnemies(sel);
 			        }
               else
               {
@@ -2291,16 +2282,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if( gusSelectedSoldier != NOBODY && sGridNo != NOWHERE )
 						{
 							//if the cursor is over someone
-							if( gfUIFullTargetFound )
-							{
-								//Display the range to the target
-								DisplayRangeToTarget( MercPtrs[ gusSelectedSoldier ], MercPtrs[ gusUIFullTargetID ]->sGridNo );
-							}
-							else
-							{
-								//Display the range to the target
-								DisplayRangeToTarget( MercPtrs[ gusSelectedSoldier ], sGridNo );
-							}
+							if (gfUIFullTargetFound) sGridNo = MercPtrs[gusUIFullTargetID]->sGridNo;
+							DisplayRangeToTarget(GetSelectedMan(), sGridNo);
 						}
 					}
 					break;
@@ -2443,10 +2426,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case SDLK_END:
 						if ( gusSelectedSoldier != NOBODY )
 						{
-							if ( CheckForMercContMove( MercPtrs[ gusSelectedSoldier ] ) )
+							SOLDIERTYPE* const sel = GetSelectedMan();
+							if (CheckForMercContMove(sel))
 							{
 								// Continue
-								ContinueMercMovement( MercPtrs[ gusSelectedSoldier ] );
+								ContinueMercMovement(sel);
 								ErasePath( TRUE );
 							}
 						}
@@ -2556,7 +2540,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 							if ( ( gpItemPointer == NULL ) )
 							{
-								GotoLowerStance( MercPtrs[ gusSelectedSoldier ] );
+								GotoLowerStance(GetSelectedMan());
 							}
 						}
 					}
@@ -2576,7 +2560,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 							if ( ( gpItemPointer == NULL ) )
 							{
-								GotoHeigherStance( MercPtrs[ gusSelectedSoldier ] );
+								GotoHeigherStance(GetSelectedMan());
 							}
 						}
 					}
@@ -2683,7 +2667,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case 'r':
 					if( gusSelectedSoldier != NO_SOLDIER )
 					{
-						SOLDIERTYPE* const s = MercPtrs[gusSelectedSoldier];
+						SOLDIERTYPE* const s = GetSelectedMan();
 						if( fAlt ) //reload selected merc's weapon
 						{
 							if ( CHEATER_CHEAT_LEVEL( ) )
@@ -2920,7 +2904,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							if ( gusSelectedSoldier != NOBODY )
 							{
-								CreateItem( FLAMETHROWER, 100, &( MercPtrs[ gusSelectedSoldier ]->inv[ HANDPOS ]) );
+								CreateItem(FLAMETHROWER, 100, &GetSelectedMan()->inv[HANDPOS]);
 							}
 						}
 					}
@@ -3220,34 +3204,33 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else if( gfLoneEPCAttemptingTraversal )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pExitingSectorHelpText[ EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR ], MercPtrs[ gusSelectedSoldier ]->name );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR], GetSelectedMan()->name);
 			gfLoneEPCAttemptingTraversal = FALSE;
 		}
 		else if( gubLoneMercAttemptingToAbandonEPCs )
 		{
+			const SOLDIERTYPE* const sel = GetSelectedMan();
 			wchar_t str[256];
 			if( gubLoneMercAttemptingToAbandonEPCs == 1 )
 			{ //Use the singular version of the string
-				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
+				if (gMercProfiles[sel->ubProfile ].bSex == MALE)
 				{ //male singular
-					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
-										MercPtrs[ gbPotentiallyAbandonedEPCSlotID ]->name );
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, MercPtrs[gbPotentiallyAbandonedEPCSlotID]->name);
 				}
 				else
 				{ //female singular
-					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR ], MercPtrs[ gusSelectedSoldier ]->name,
-										MercPtrs[ gbPotentiallyAbandonedEPCSlotID ]->name );
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, MercPtrs[gbPotentiallyAbandonedEPCSlotID]->name);
 				}
 			}
 			else
 			{ //Use the plural version of the string
-				if( gMercProfiles[ MercPtrs[ gusSelectedSoldier ]->ubProfile ].bSex == MALE )
+				if (gMercProfiles[sel->ubProfile].bSex == MALE)
 				{ //male plural
-					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
 				}
 				else
 				{ //female plural
-					swprintf( str, lengthof(str), pExitingSectorHelpText[ EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL ], MercPtrs[ gusSelectedSoldier ]->name );
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
 				}
 			}
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, str );
@@ -3255,7 +3238,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ MERC_IS_TOO_FAR_AWAY_STR ], MercPtrs[ gusSelectedSoldier ]->name );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_TOO_FAR_AWAY_STR], GetSelectedMan()->name);
 		}
 
 		return( TRUE );
@@ -3689,10 +3672,7 @@ static void TogglePlanningMode(void)
 
 static void SetBurstMode(void)
 {
-	if ( gusSelectedSoldier != NO_SOLDIER )
-	{
-		ChangeWeaponMode( MercPtrs[ gusSelectedSoldier ] );
-	}
+	if (gusSelectedSoldier != NO_SOLDIER) ChangeWeaponMode(GetSelectedMan());
 }
 
 
@@ -4296,14 +4276,15 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 
 			if ( fContinue )
 			{
-				sActionGridNo =  FindAdjacentGridEx( MercPtrs[ gusSelectedSoldier ], sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE );
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE);
 				if ( sActionGridNo == -1 )
 				{
 					sActionGridNo = sIntTileGridNo;
 				}
 
 				// If this is not the same tile as ours, check if we can get to dest!
-				if ( sActionGridNo != MercPtrs[ gusSelectedSoldier ]->sGridNo && gsCurrentActionPoints == 0 )
+				if (sActionGridNo != sel->sGridNo && gsCurrentActionPoints == 0)
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
 					bReturnCode = -1;
@@ -4538,7 +4519,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 	{
 		if( gusSelectedSoldier != NO_SOLDIER )
 		{
-			UIHandleSoldierStanceChange(MercPtrs[gusSelectedSoldier], ubAnimHeight);
+			UIHandleSoldierStanceChange(GetSelectedMan(), ubAnimHeight);
 		}
 	}
 }
@@ -4598,10 +4579,8 @@ static void HandleStealthChangeFromUIKeys(void)
 	{
 		if( gusSelectedSoldier != NO_SOLDIER )
     {
-      if ( !AM_A_ROBOT( MercPtrs[ gusSelectedSoldier ] ) )
-      {
-        ToggleStealthMode( MercPtrs[ gusSelectedSoldier ] );
-      }
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (!AM_A_ROBOT(sel)) ToggleStealthMode(sel);
     }
 	}
 }

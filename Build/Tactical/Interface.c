@@ -542,7 +542,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	}
 
 
-	const SOLDIERTYPE* const s = (gusSelectedSoldier == NOBODY ? NULL : MercPtrs[gusSelectedSoldier]);
+	const SOLDIERTYPE* const s = (gusSelectedSoldier == NOBODY ? NULL : GetSelectedMan());
 
 	// Blit background!
 	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, iMenuAnchorX, iMenuAnchorY);

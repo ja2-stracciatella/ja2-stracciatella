@@ -544,10 +544,8 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	CHAR8						zTemp[32];
 	SOLDIERTYPE			*pSoldier;
 
-
 	// make sure current merc is close enough and eligible to talk to the shopkeeper.
-	AssertMsg( CanMercInteractWithSelectedShopkeeper( MercPtrs[ gusSelectedSoldier ] ), "Selected merc can't interact with shopkeeper.  Send save AM-1");
-
+	AssertMsg(CanMercInteractWithSelectedShopkeeper(GetSelectedMan()), "Selected merc can't interact with shopkeeper.  Send save AM-1");
 
 	// Create a video surface to blt corner of the tactical screen that still shines through
 	guiCornerWhereTacticalIsStillSeenImage = AddVideoSurface(SKI_TACTICAL_BACKGROUND_START_WIDTH, SKI_TACTICAL_BACKGROUND_START_HEIGHT, PIXEL_DEPTH);
@@ -6170,7 +6168,7 @@ static void DealWithItemsStillOnTheTable(void)
 	}
 	else
 	{
-		pDropSoldier = MercPtrs[ gusSelectedSoldier ];
+		pDropSoldier = GetSelectedMan();
 	}
 
 	// this guy HAS to be valid!
@@ -6450,7 +6448,7 @@ static void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION* pRegio
 		}
 		else
 		{
-			pDropSoldier = MercPtrs[ gusSelectedSoldier ];
+			pDropSoldier = GetSelectedMan();
 		}
 
 		//if we don't have an item, pick one up

@@ -95,7 +95,7 @@ void DisplayCoverOfSelectedGridNo( )
 		//if the gridno is different then the last one that was displayed
 		if( sGridNo != gsLastCoverGridNo ||
 				gbLastStance != bStance ||
-				MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
+				GetSelectedMan()->sGridNo != gsLastSoldierGridNo)
 		{
 			//if the cover is currently being displayed
 			if( gsLastCoverGridNo != NOWHERE || gbLastStance != -1 || gsLastSoldierGridNo != NOWHERE )
@@ -120,7 +120,7 @@ void DisplayCoverOfSelectedGridNo( )
 
 			gbLastStance = bStance;
 			gsLastCoverGridNo = sGridNo;
-			gsLastSoldierGridNo = MercPtrs[ gusSelectedSoldier ]->sGridNo;
+			gsLastSoldierGridNo = GetSelectedMan()->sGridNo;
 
 			//Fill the array of gridno and cover values
 			CalculateCoverInRadiusAroundGridno( sGridNo, gGameSettings.ubSizeOfDisplayCover );
@@ -634,7 +634,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 	if( sGridNo != NOWHERE && sGridNo != 0 )
 	{
 		//if the gridno is different then the last one that was displayed
-		if( sGridNo != gsLastVisibleToSoldierGridNo || MercPtrs[ gusSelectedSoldier ]->sGridNo != gsLastSoldierGridNo )
+		if (sGridNo != gsLastVisibleToSoldierGridNo || GetSelectedMan()->sGridNo != gsLastSoldierGridNo)
 		{
 			//if the cover is currently being displayed
 			if( gsLastVisibleToSoldierGridNo != NOWHERE || gsLastSoldierGridNo != NOWHERE )
@@ -655,7 +655,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 			}
 
 			gsLastVisibleToSoldierGridNo = sGridNo;
-			gsLastSoldierGridNo = MercPtrs[ gusSelectedSoldier ]->sGridNo;
+			gsLastSoldierGridNo = GetSelectedMan()->sGridNo;
 
 
 			//Fill the array of gridno and cover values

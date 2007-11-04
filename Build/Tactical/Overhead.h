@@ -160,6 +160,11 @@ static inline SOLDIERTYPE* GetMan(UINT idx)
 	return &Menptr[idx];
 }
 
+static inline SOLDIERTYPE* GetSelectedMan(void)
+{
+	return GetMan(gusSelectedSoldier);
+}
+
 // MERC SLOTS - A LIST OF ALL ACTIVE MERCS
 extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 extern UINT32       guiNumMercSlots;

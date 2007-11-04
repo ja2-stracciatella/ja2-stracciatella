@@ -95,12 +95,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 			return;
 		}
 
-		if ( gusSelectedSoldier != NOBODY )
+		if (gusSelectedSoldier != NOBODY && GetSelectedMan()->pTempObject != NULL)
 		{
-			if ( MercPtrs[ gusSelectedSoldier ]->pTempObject != NULL )
-			{
-				return;
-			}
+			return;
 		}
 
 		if ( gViewportRegion.ButtonState & MSYS_LEFT_BUTTON )
@@ -197,7 +194,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 										{
 											if ( gusSelectedSoldier != NOBODY )
 											{
-												if (UIOKMoveDestination(MercPtrs[gusSelectedSoldier], usMapPos) == 1)
+												if (UIOKMoveDestination(GetSelectedMan(), usMapPos) == 1)
 												{
 													if ( gsCurrentActionPoints != 0 )
 													{
@@ -327,10 +324,11 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 									{
 										// Set movement mode
 										// OK, only change this if we are stationary!
-										//if ( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY )
-										//if ( MercPtrs[ gusSelectedSoldier ]->usAnimState == WALKING )
+										SOLDIERTYPE* const s = GetSelectedMan();
+										//if (gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY)
+										//if (s->usAnimState == WALKING)
 										{
-											MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = TRUE;
+											s->fUIMovementFast = TRUE;
 											*puiNewEvent = C_MOVE_MERC;
 										}
 									}
@@ -472,13 +470,14 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 															if ( gusSelectedSoldier != NO_SOLDIER )
 															{
-																if ( MercPtrs[ gusSelectedSoldier ]->usAnimState != RUNNING )
+																SOLDIERTYPE* const s = GetSelectedMan();
+																if (s->usAnimState != RUNNING)
 																{
 																	*puiNewEvent = C_MOVE_MERC;
 																}
 																else
 																{
-																	MercPtrs[ gusSelectedSoldier ]->fUIMovementFast = 2;
+																	s->fUIMovementFast = 2;
 																	*puiNewEvent = C_MOVE_MERC;
 																}
 															}
@@ -498,7 +497,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															//{
 															//	if ( gusSelectedSoldier != NO_SOLDIER )
 															//	{
-															//		if ( !( gAnimControl[ MercPtrs[ gusSelectedSoldier ]->usAnimState ].uiFlags & ANIM_STATIONARY ) )
+															//		if (!(gAnimControl[GetSelectedMan()->usAnimState].uiFlags & ANIM_STATIONARY))
 															//		{
 
 																		//gUITargetShotWaiting  = TRUE;
@@ -552,7 +551,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																								// OK, if we have a selected guy.. make him part too....
 																								if ( gusSelectedSoldier != NOBODY )
 																								{
-																									MercPtrs[ gusSelectedSoldier ]->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																									GetSelectedMan()->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																								}
 																							}
 
@@ -587,7 +586,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																						// OK, if we have a selected guy.. make him part too....
 																						if ( gusSelectedSoldier != NOBODY )
 																						{
-																							MercPtrs[ gusSelectedSoldier ]->uiStatusFlags |= (SOLDIER_MULTI_SELECTED );
+																							GetSelectedMan()->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																						}
 
 																						gfIgnoreOnSelectedGuy = TRUE;
@@ -666,7 +665,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 																						if ( gusSelectedSoldier != NOBODY )
 																						{
-																							if ( ( fResult = UIOKMoveDestination( MercPtrs[ gusSelectedSoldier ], usMapPos ) ) == 1 )
+																							fResult = UIOKMoveDestination(GetSelectedMan(), usMapPos);
+																							if (fResult == 1)
 																							{
 																								if ( gfUIAllMoveOn )
 																								{
@@ -687,7 +687,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																											pTeamSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
 
 																											// If controllable
-																											if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == MercPtrs[ gusSelectedSoldier ]->bAssignment )
+																											if (OK_CONTROLLABLE_MERC(pTeamSoldier) && pTeamSoldier->bAssignment == GetSelectedMan()->bAssignment)
 																											{
 																												pTeamSoldier->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																											}
@@ -938,7 +938,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 									if ( gfUICanBeginAllMoveCycle )
 									{
 										// ATE: Here, check if we can do this....
-										if ( !UIOKMoveDestination( MercPtrs[ gusSelectedSoldier ], usMapPos ) )
+										if (!UIOKMoveDestination(GetSelectedMan(), usMapPos))
 										{
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_MOVE_THERE_STR ] );
 											gfRTClickLeftHoldIntercepted = TRUE;
@@ -962,7 +962,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 						{
 							gfBeginBurstSpreadTracking = FALSE;
 							gfRTClickLeftHoldIntercepted = TRUE;
-							MercPtrs[ gusSelectedSoldier ]->fDoSpread				 = FALSE;
+							GetSelectedMan()->fDoSpread = FALSE;
 							fClickHoldIntercepted = TRUE;
 							*puiNewEvent = A_END_ACTION;
 							gCurrentUIMode = MOVE_MODE;

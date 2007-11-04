@@ -2274,7 +2274,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		// This guy should always be 1 ) selected and 2 ) close enough to exit sector to leave
 		if ( gusSelectedSoldier != NOBODY )
 		{
-			pValidSoldier = MercPtrs[ gusSelectedSoldier ];
+			pValidSoldier = GetSelectedMan();
 			ubDirection = GetInsertionDataFromAdjacentMoveDirection( ubTacticalDirection, sAdditionalData );
 		}
 
@@ -3280,12 +3280,13 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	// If we are here, at least one guy is controllable in this sector, at least he can go!
 	if( fAtLeastOneMercControllable )
 	{
-		ubPlayerControllableMercsInSquad = (UINT8)NumberOfPlayerControllableMercsInSquad( MercPtrs[ gusSelectedSoldier ]->bAssignment );
+		const SOLDIERTYPE* const s = GetSelectedMan();
+		ubPlayerControllableMercsInSquad = (UINT8)NumberOfPlayerControllableMercsInSquad(s->bAssignment);
 		if( fAtLeastOneMercControllable <= ubPlayerControllableMercsInSquad )
 		{ //if the selected merc is an EPC and we can only leave with that merc, then prevent it
 			//as EPCs aren't allowed to leave by themselves.  Instead of restricting this in the
 			//exiting sector gui, we restrict it by explaining it with a message box.
-			if ( AM_AN_EPC( MercPtrs[ gusSelectedSoldier ] ) )
+			if (AM_AN_EPC(s))
 			{
 				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
 				{

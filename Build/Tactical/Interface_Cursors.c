@@ -309,12 +309,9 @@ BOOLEAN DrawUICursor( )
 			usTileCursor = gUICursors[ guiCurUICursor ].usAdditionalData;
 
 			// ATE; Is the current guy in steath mode?
-			if ( gusSelectedSoldier != NOBODY )
+			if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bStealthMode)
 			{
-				if ( MercPtrs[ gusSelectedSoldier ]->bStealthMode )
-				{
-					usTileCursor = FIRSTPOINTERS9;
-				}
+				usTileCursor = FIRSTPOINTERS9;
 			}
 
 			if ( gfUIDisplayActionPointsInvalid || gsCurrentActionPoints == 0 )
@@ -322,12 +319,9 @@ BOOLEAN DrawUICursor( )
 				usTileCursor = FIRSTPOINTERS6;
 
 				// ATE; Is the current guy in steath mode?
-				if ( gusSelectedSoldier != NOBODY )
+				if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bStealthMode)
 				{
-					if ( MercPtrs[ gusSelectedSoldier ]->bStealthMode )
-					{
-						usTileCursor = FIRSTPOINTERS10;
-					}
+					usTileCursor = FIRSTPOINTERS10;
 				}
 			}
 

@@ -495,7 +495,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 	}
 
 	// Also, don't allow for mercs who are on upper level...
-	if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->bLevel == 1 )
+	if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bLevel == 1)
 	{
 		return;
 	}
@@ -779,7 +779,7 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 			return( FALSE );
 		}
 
-		if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->ubBodyType == ROBOTNOWEAPON )
+		if (gusSelectedSoldier != NOBODY && GetSelectedMan()->ubBodyType == ROBOTNOWEAPON)
 		{
 			return( FALSE );
 		}

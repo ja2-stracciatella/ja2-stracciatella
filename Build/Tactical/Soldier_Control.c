@@ -1027,16 +1027,8 @@ BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier )
 
 static BOOLEAN ReCreateSelectedSoldierLight(void)
 {
-	SOLDIERTYPE *pSoldier;
-
-	if ( gusSelectedSoldier == NO_SOLDIER )
-	{
-		return( FALSE );
-	}
-
-	pSoldier = MercPtrs[ gusSelectedSoldier ];
-
-	return( ReCreateSoldierLight( pSoldier ) );
+	if (gusSelectedSoldier == NO_SOLDIER) return FALSE;
+	return ReCreateSoldierLight(GetSelectedMan());
 }
 
 

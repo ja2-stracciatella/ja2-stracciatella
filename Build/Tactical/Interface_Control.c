@@ -264,7 +264,8 @@ void SetUpInterface( )
 	{
 		if ( gusSelectedSoldier != NOBODY )
 		{
-			if ( MercPtrs[ gusSelectedSoldier ]->sGridNo != gsUIHandleShowMoveGridLocation )
+			const SOLDIERTYPE* const s = GetSelectedMan();
+			if (s->sGridNo != gsUIHandleShowMoveGridLocation)
 			{
 				if ( gfUIHandleShowMoveGrid == 2 )
 				{
@@ -274,7 +275,7 @@ void SetUpInterface( )
 				}
 				else
 				{
-					if ( MercPtrs[ gusSelectedSoldier ]->bStealthMode )
+					if (s->bStealthMode)
 					{
 						AddTopmostToHead( gsUIHandleShowMoveGridLocation, GetSnapCursorIndex( FIRSTPOINTERS9 ) );
 						gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;

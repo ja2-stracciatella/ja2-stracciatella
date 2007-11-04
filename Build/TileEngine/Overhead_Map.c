@@ -479,8 +479,7 @@ void HandleOverheadMap( )
 	RenderOverheadOverlays();
 	if( !gfEditMode && !gfTacticalPlacementGUIActive && gusSelectedSoldier != NOBODY )
 	{
-		pSoldier = MercPtrs[ gusSelectedSoldier ];
-
+		pSoldier = GetSelectedMan();
     DisplayMercNameInOverhead( pSoldier );
 	}
 

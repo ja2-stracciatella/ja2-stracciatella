@@ -3034,12 +3034,9 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	RenderProgressBar( 0, 40 );
 
 	// CHECK IF OUR SELECTED GUY IS GONE!
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	if (gusSelectedSoldier != NO_SOLDIER && !GetSelectedMan()->bActive)
 	{
-		if ( MercPtrs[ gusSelectedSoldier ]->bActive == FALSE )
-		{
-			gusSelectedSoldier = NO_SOLDIER;
-		}
+		gusSelectedSoldier = NO_SOLDIER;
 	}
 
 	RenderProgressBar( 0, 60 );

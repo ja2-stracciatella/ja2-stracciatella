@@ -811,7 +811,7 @@ static void SetUIMouseCursor(void)
 
  		  if( GetMouseMapPos( &usMapPos) )
 			{
-				if ( gusSelectedSoldier != NOBODY && MercPtrs[ gusSelectedSoldier ]->bLevel == 0 )
+				if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bLevel == 0)
 				{
 					// ATE: Is this place revealed?
 					if ( !InARoom( usMapPos, &ubRoomNum ) || ( InARoom( usMapPos, &ubRoomNum ) && gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_REVEALED ) )
@@ -4996,13 +4996,9 @@ BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive , BOOLEAN fAllowMer
 	SOLDIERTYPE *pSoldier = MercPtrs[ ubSoldierID ];
 	BOOLEAN			fValidGuy = FALSE;
 
-
-	if ( gusSelectedSoldier != NOBODY )
+	if (gusSelectedSoldier != NOBODY && AM_A_ROBOT(GetSelectedMan()))
 	{
-		if ( AM_A_ROBOT( MercPtrs[ gusSelectedSoldier ] ) )
-		{
-			return( FALSE );
-		}
+		return( FALSE );
 	}
 
 	// CHECK IF ACTIVE!
@@ -5601,12 +5597,9 @@ void	HandleTacticalUILoseCursorFromOtherScreen( )
 
 BOOLEAN SelectedGuyInBusyAnimation( )
 {
-	SOLDIERTYPE *pSoldier;
-
 	if ( gusSelectedSoldier != NOBODY )
 	{
-		pSoldier = MercPtrs[ gusSelectedSoldier ];
-
+		const SOLDIERTYPE* const pSoldier = GetSelectedMan();
 		if ( pSoldier->usAnimState == LOB_ITEM ||
 				 pSoldier->usAnimState == THROW_ITEM ||
 				 pSoldier->usAnimState == PICKUP_ITEM ||

@@ -2330,7 +2330,7 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 	if (gusSelectedSoldier != NO_SOLDIER)
 	{
 		// Get guy
-		SOLDIERTYPE* const pOldSoldier = MercPtrs[gusSelectedSoldier];
+		SOLDIERTYPE* const pOldSoldier = GetSelectedMan();
 		pOldSoldier->fShowLocator  = FALSE;
 		pOldSoldier->fFlashLocator = FALSE;
 
@@ -4614,7 +4614,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 	if (ubStartingTeam == gbPlayerNum)
 	{
 		// OK, make sure we have a selected guy
-		if (gusSelectedSoldier == NO_SOLDIER || MercPtrs[gusSelectedSoldier]->bOppCnt == 0)
+		if (gusSelectedSoldier == NO_SOLDIER || GetSelectedMan()->bOppCnt == 0)
 		{
 			// OK, look through and find one....
 			for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++ )

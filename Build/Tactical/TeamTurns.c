@@ -136,10 +136,8 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 			if ( gusSelectedSoldier != NO_SOLDIER )
 			{
 				// Check if this guy is able to be selected....
-				if ( MercPtrs[ gusSelectedSoldier ]->bLife < OKLIFE )
-				{
-					SelectNextAvailSoldier( MercPtrs[ gusSelectedSoldier ] );
-				}
+				const SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel->bLife < OKLIFE) SelectNextAvailSoldier(sel);
 
 				// Slide to selected guy...
 				if ( gusSelectedSoldier != NO_SOLDIER )
@@ -149,7 +147,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 					if ( fDoBattleSnd )
 					{
 						// Say ATTENTION SOUND...
-						DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+						DoMercBattleSound(GetSelectedMan(), BATTLE_SOUND_ATTN1);
 					}
 
 					if ( gsInterfaceLevel == 1 )
@@ -886,14 +884,15 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 				gfHiddenInterrupt = FALSE;
 
 				// If we can continue a move, do so!
-				if ( MercPtrs[ gusSelectedSoldier ]->fNoAPToFinishMove && pSoldier->ubReasonCantFinishMove != REASON_STOPPED_SIGHT )
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel->fNoAPToFinishMove && pSoldier->ubReasonCantFinishMove != REASON_STOPPED_SIGHT)
 				{
 					// Continue
-					AdjustNoAPToFinishMove( MercPtrs[ gusSelectedSoldier ], FALSE );
+					AdjustNoAPToFinishMove(sel, FALSE);
 
-					if ( MercPtrs[ gusSelectedSoldier ]->sGridNo != MercPtrs[ gusSelectedSoldier ]->sFinalDestination )
+					if (sel->sGridNo != sel->sFinalDestination)
 					{
-						EVENT_GetNewSoldierPath( MercPtrs[ gusSelectedSoldier ], MercPtrs[ gusSelectedSoldier ]->sFinalDestination, MercPtrs[ gusSelectedSoldier ]->usUIMovementMode );
+						EVENT_GetNewSoldierPath(sel, sel->sFinalDestination, sel->usUIMovementMode);
 					}
 					else
 					{
@@ -925,7 +924,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					SlideTo( NOWHERE, gusSelectedSoldier, NOBODY ,SETLOCATOR);
 
 					// Say ATTENTION SOUND...
-					DoMercBattleSound( MercPtrs[ gusSelectedSoldier ], BATTLE_SOUND_ATTN1 );
+					DoMercBattleSound(GetSelectedMan(), BATTLE_SOUND_ATTN1);
 
 					if ( gsInterfaceLevel == 1 )
 					{
@@ -1200,7 +1199,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		// the selected character, ie. his friends...
 		if ( pOpponent->bTeam == gbPlayerNum )
 		{
-			if ((ubOpponentID != gusSelectedSoldier) && (pSoldier->bSide != Menptr[gusSelectedSoldier].bSide))
+			if (ubOpponentID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
 			{
 				return( FALSE );
 			}
@@ -1214,7 +1213,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		}
 		/* old DG code for same:
 
-		if ((ubOpponentID != gusSelectedSoldier) && (pSoldier->bSide != Menptr[gusSelectedSoldier].bSide))
+		if (ubOpponentID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
 		{
 			return(FALSE);
 		}
