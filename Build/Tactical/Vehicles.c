@@ -1409,8 +1409,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-
-BOOLEAN EnterVehicle( SOLDIERTYPE *pVehicle, SOLDIERTYPE *pSoldier )
+BOOLEAN EnterVehicle(const SOLDIERTYPE* pVehicle, SOLDIERTYPE* pSoldier)
 {
 	// TEST IF IT'S VALID...
 	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
