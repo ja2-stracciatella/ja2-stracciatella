@@ -77,7 +77,6 @@ void GetRTMouseButtonInput(UINT32* puiNewEvent)
 static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
 	UINT16	usSoldierIndex;
-	UINT32	uiMercFlags;
 	static	UINT32 uiSingleClickTime;
 	UINT16	usMapPos;
 	BOOLEAN fDone = FALSE;
@@ -239,15 +238,18 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 						case MOVE_MODE:
 						case CONFIRM_MOVE_MODE:
-
 							// First check if we clicked on a guy, if so, make selected if it's ours
-							if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+							if (FindSoldierFromMouse(&usSoldierIndex))
 							{
 								 // Select guy
-								 if ( (uiMercFlags & SELECTED_MERC) && !( uiMercFlags & UNCONSCIOUS_MERC ) && !( MercPtrs[ usSoldierIndex ]->uiStatusFlags & SOLDIER_VEHICLE ) )
-								 {
+								if (usSoldierIndex == gusSelectedSoldier)
+								{
+									const SOLDIERTYPE* const s = MercPtrs[usSoldierIndex];
+									if (s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+									{
 										*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
-								 }
+									}
+								}
 							}
 							else
 							{
@@ -439,10 +441,10 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 														case IDLE_MODE:
 
 															// First check if we clicked on a guy, if so, make selected if it's ours
-															if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+															if (FindSoldierFromMouse(&usSoldierIndex))
 															{
 																 // Select guy
-																 if ( uiMercFlags & OWNED_MERC )
+																if (IsOwnedMerc(GetMan(usSoldierIndex)))
 																 {
 																		*puiNewEvent = I_SELECT_MERC;
 																 }
@@ -645,7 +647,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			if (pSoldier != NULL)
 																			{
 																				// First check if we clicked on a guy, if so, make selected if it's ours
-																				if(  FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) && ( uiMercFlags & OWNED_MERC ) )
+																				if (FindSoldierFromMouse(&usSoldierIndex) &&
+																						IsOwnedMerc(GetMan(usSoldierIndex)))
 																				{
 																					 // Select guy
 																						*puiNewEvent = I_SELECT_MERC;

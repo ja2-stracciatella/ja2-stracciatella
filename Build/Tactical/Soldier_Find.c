@@ -75,20 +75,27 @@ SOLDIER_STACK_TYPE		gSoldierStack;
 BOOLEAN								gfHandleStack = FALSE;
 
 
-BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
+BOOLEAN FindSoldierFromMouse(UINT16* pusSoldierIndex)
 {
 	INT16							sMapPos;
 	if (GetMouseMapPos(&sMapPos))
 	{
 		if (FindSoldier(sMapPos, pusSoldierIndex, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
 		{
-			*pMercFlags = GetSoldierFindFlags(*pusSoldierIndex);
 			return TRUE;
 		}
 	}
 
-	*pMercFlags = 0;
 	return FALSE;
+}
+
+
+BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s)
+{
+	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
+	return
+		t->bFirstID <= s->ubID && s->ubID <= t->bLastID &&
+		(!(s->uiStatusFlags & SOLDIER_VEHICLE) || GetNumberInVehicle(s->bVehicleID) != 0);
 }
 
 

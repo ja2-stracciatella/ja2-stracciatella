@@ -3186,11 +3186,10 @@ extern UINT32 guiNumBackSaves;
 void DebugSoldierPage1( )
 {
 	UINT16						usSoldierIndex;
-	UINT32						uiMercFlags;
 	UINT16						usMapPos;
 	UINT8							ubLine=0;
 
-	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+	if (FindSoldierFromMouse(&usSoldierIndex))
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
@@ -3380,13 +3379,12 @@ void DebugSoldierPage2( )
 	};
 
 	UINT16						usSoldierIndex;
-	UINT32						uiMercFlags;
 	UINT16						usMapPos;
   TILE_ELEMENT							 TileElem;
 	LEVELNODE					*pNode;
 	UINT8							ubLine;
 
-	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+	if (FindSoldierFromMouse(&usSoldierIndex))
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
@@ -3657,11 +3655,10 @@ void DebugSoldierPage3( )
 	};
 
 	UINT16						usSoldierIndex;
-	UINT32						uiMercFlags;
 	UINT16						usMapPos;
 	UINT8							ubLine;
 
-	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+	if (FindSoldierFromMouse(&usSoldierIndex))
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
@@ -4049,11 +4046,10 @@ static void WriteQuantityAndAttachments(const OBJECTTYPE* pObject, INT32 yp)
 
 void DebugSoldierPage4( )
 {
-	UINT32						uiMercFlags;
 	UINT16						usSoldierIndex;
 	UINT8							ubLine;
 
-	if ( FindSoldierFromMouse( &usSoldierIndex, &uiMercFlags ) )
+	if (FindSoldierFromMouse(&usSoldierIndex))
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 

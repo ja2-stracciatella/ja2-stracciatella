@@ -27,10 +27,11 @@
 #define			FINDSOLDIERSELECTIVESAMELEVEL( l )		(	( ( FIND_SOLDIER_SELECTIVE | FIND_SOLDIER_SAMELEVEL ) | ( l << 16 ) ) )
 
 
-BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags );
+BOOLEAN FindSoldierFromMouse(UINT16* pusSoldierIndex);
 BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags);
 SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel );
 
+BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s);
 UINT32 GetSoldierFindFlags(UINT16 ubID);
 
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos );
