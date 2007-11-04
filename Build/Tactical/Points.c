@@ -1056,7 +1056,6 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
 {
 	 UINT8 ubDirection;
-   UINT16	usTargID;
    BOOLEAN	fAddingTurningCost = FALSE;
    BOOLEAN	fAddingRaiseGunCost = FALSE;
 
@@ -1066,10 +1065,8 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 		 if (ubAddTurningCost)
 		 {
 			 // Given a gridno here, check if we are on a guy - if so - get his gridno
-			 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
-			 {
-					sGridNo = MercPtrs[ usTargID ]->sGridNo;
-			 }
+			const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
+			if (tgt != NULL) sGridNo = tgt->sGridNo;
 
 			 ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
 
@@ -1108,7 +1105,6 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
- UINT16	usTargID;
  INT8	bFullAPs;
  INT8 bAimSkill;
  UINT8	bAPCost = AP_MIN_AIM_ATTACK;
@@ -1179,10 +1175,8 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 	if ( sGridNo != NOWHERE )
 	{
 		 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
-		 {
-				sGridNo = MercPtrs[ usTargID ]->sGridNo;
-		 }
+		const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
+		if (tgt != NULL) sGridNo = tgt->sGridNo;
 	}
 
   // if attacking a new target (or if the specific target is uncertain)
@@ -1931,7 +1925,6 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 	INT32	iFullAPs;
 	INT32 iAPCost = AP_MIN_AIM_ATTACK;
 	UINT16 usInHand;
-  UINT16 usTargID;
   UINT8 ubDirection;
 
 	// make sure the guy's actually got a throwable item in his hand!
@@ -1948,10 +1941,8 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
  if ( sGridNo != NOWHERE )
  {
 	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-	 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
-	 {
-			sGridNo = MercPtrs[ usTargID ]->sGridNo;
-	 }
+		const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
+		if (tgt != NULL) sGridNo = tgt->sGridNo;
 
 	 // OK, get a direction and see if we need to turn...
 	 if (ubAddTurningCost)

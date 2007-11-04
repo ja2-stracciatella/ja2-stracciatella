@@ -490,9 +490,15 @@ UINT32  HandleTacticalUI( void )
 		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			// Look for soldier full
-			if (FindSoldier(usMapPos, &gusUIFullTargetID, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
+			const SOLDIERTYPE* const s = FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
+			if (s != NULL)
 			{
+				gusUIFullTargetID = s->ubID;
 				guiUIFullTargetFlags = GetSoldierFindFlags(gusUIFullTargetID);
+			}
+			else
+			{
+				gusUIFullTargetID = NOBODY;
 			}
 		}
 		else

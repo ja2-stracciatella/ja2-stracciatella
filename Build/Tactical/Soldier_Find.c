@@ -78,16 +78,8 @@ BOOLEAN								gfHandleStack = FALSE;
 SOLDIERTYPE* FindSoldierFromMouse(void)
 {
 	INT16 sMapPos;
-	if (GetMouseMapPos(&sMapPos))
-	{
-		UINT16 soldier_index;
-		if (FindSoldier(sMapPos, &soldier_index, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
-		{
-			return GetMan(soldier_index);
-		}
-	}
-
-	return NULL;
+	if (!GetMouseMapPos(&sMapPos)) return NULL;
+	return FindSoldier(sMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
 }
 
 
@@ -176,7 +168,7 @@ static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect);
 
 
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
-BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
+SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 {
 	UINT32				cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -185,13 +177,11 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16					sMaxScreenMercY, sHeighestMercScreenY = -32000;
 	BOOLEAN				fDoFull;
-	UINT8					ubBestMerc = NOBODY;
+	SOLDIERTYPE* best_merc = NULL;
 	UINT16				usAnimSurface;
 	INT32					iMercScreenX, iMercScreenY;
 	BOOLEAN				fInScreenRect = FALSE;
 	BOOLEAN				fInGridNo			= FALSE;
-
-	*pusSoldierIndex = NOBODY;
 
 	if ( _KeyDown( SHIFT ) )
 	{
@@ -366,9 +356,7 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 								}
 								else if ( gSoldierStack.ubIDs[ gSoldierStack.bCur ] == pSoldier->ubID )
 								{
-									 // Set it!
-									 ubBestMerc = pSoldier->ubID;
-
+									 best_merc = pSoldier;
 									 fSoldierFound = TRUE;
 									 break;
 								}
@@ -380,9 +368,7 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 							 {
 									sMaxScreenMercY = (UINT16)aRect.iBottom;
 									sHeighestMercScreenY = sMaxScreenMercY;
-
-									// Set it!
-									ubBestMerc = pSoldier->ubID;
+									best_merc = pSoldier;
 							 }
 
 							 fSoldierFound = TRUE;
@@ -400,9 +386,7 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 					///&& !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel )
 					if ( pSoldier->sGridNo == sGridNo && !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel ) )
 					{
-						// Set it!
-						ubBestMerc = pSoldier->ubID;
-
+						best_merc = pSoldier;
 						fSoldierFound = TRUE;
 						break;
 					}
@@ -411,10 +395,9 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 		}
 	}
 
-	if ( fSoldierFound && ubBestMerc != NOBODY )
+	if (fSoldierFound && best_merc != NULL)
 	{
-		 *pusSoldierIndex = (UINT16)ubBestMerc;
- 		  return( TRUE );
+		return best_merc;
 	}
 	else
 	{
@@ -434,21 +417,17 @@ BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 			}
 		}
 	}
-	return( FALSE );
+	return NULL;
 }
+
 
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 {
-	UINT16  usSoldierIndex;
-
 	// Have we initalized for this yet?
-	if ( !gfHandleStack )
+	if (!gfHandleStack &&
+			FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel) | FIND_SOLDIER_BEGINSTACK) != NULL)
 	{
-		if (FindSoldier(usMapPos, &usSoldierIndex, FINDSOLDIERSAMELEVEL(gsInterfaceLevel) | FIND_SOLDIER_BEGINSTACK))
-		{
-			gfHandleStack = TRUE;
-		}
-
+		gfHandleStack = TRUE;
 	}
 
 	if ( gfHandleStack )

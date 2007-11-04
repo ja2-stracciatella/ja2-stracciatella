@@ -8353,16 +8353,8 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 
 void EVENT_SoldierEnterVehicle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	SOLDIERTYPE *pTSoldier;
-	UINT16 usSoldierIndex;
-
-	if (FindSoldier(sGridNo, &usSoldierIndex, FIND_SOLDIER_GRIDNO))
-	{
-		pTSoldier = MercPtrs[ usSoldierIndex ];
-
-		// Enter vehicle...
-		EnterVehicle( pTSoldier, pSoldier );
-	}
+	const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
+	if (tgt != NULL) EnterVehicle(tgt, pSoldier);
 
 	UnSetUIBusy( pSoldier->ubID );
 }
