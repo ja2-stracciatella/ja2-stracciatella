@@ -93,24 +93,6 @@ BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 }
 
 
-static BOOLEAN SelectiveFindSoldierFromMouse(UINT16* pusSoldierIndex, UINT32* pMercFlags)
-{
-	INT16							sMapPos;
-
-	*pMercFlags = 0;
-
-	 if ( GetMouseMapPos( &sMapPos ) )
-	 {
-			 if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
-			 {
-				 return( TRUE );
-			 }
-	 }
-
-	 return( FALSE );
-}
-
-
 static UINT32 GetSoldierFindFlags(UINT16 ubID)
 {
 	UINT32 MercFlags = 0;
