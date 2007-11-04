@@ -493,14 +493,14 @@ UINT32  HandleTacticalUI( void )
 		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			// Look for soldier full
-			if ( FindSoldier( usMapPos, &gusUIFullTargetID, &guiUIFullTargetFlags, ( FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) ) )
+			if (FindSoldier(usMapPos, &gusUIFullTargetID, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
 			{
+				guiUIFullTargetFlags = GetSoldierFindFlags(gusUIFullTargetID);
 				gfUIFullTargetFound = TRUE;
 			}
 
 			// Look for soldier selective
-			UINT32 guiUISelectiveTargetFlags;
-			if ( FindSoldier( usMapPos, &gusUISelectiveTargetID, &guiUISelectiveTargetFlags, FINDSOLDIERSELECTIVESAMELEVEL( gsInterfaceLevel ) ) )
+			if (FindSoldier(usMapPos, &gusUISelectiveTargetID, FINDSOLDIERSELECTIVESAMELEVEL(gsInterfaceLevel)))
 			{
 				gfUISelectiveTargetFound = TRUE;
 			}

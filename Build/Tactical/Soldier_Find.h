@@ -28,8 +28,10 @@
 
 
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags );
-BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags , UINT32 uiFlags );
+BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags);
 SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel );
+
+UINT32 GetSoldierFindFlags(UINT16 ubID);
 
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos );
 

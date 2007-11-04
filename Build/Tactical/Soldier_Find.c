@@ -78,22 +78,21 @@ BOOLEAN								gfHandleStack = FALSE;
 BOOLEAN FindSoldierFromMouse( UINT16 *pusSoldierIndex, UINT32 *pMercFlags )
 {
 	INT16							sMapPos;
+	if (GetMouseMapPos(&sMapPos))
+	{
+		if (FindSoldier(sMapPos, pusSoldierIndex, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
+		{
+			*pMercFlags = GetSoldierFindFlags(*pusSoldierIndex);
+			return TRUE;
+		}
+	}
 
 	*pMercFlags = 0;
-
-	 if ( GetMouseMapPos( &sMapPos ) )
-	 {
-			 if ( FindSoldier( sMapPos, pusSoldierIndex, pMercFlags ,FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) ) )
-			 {
-				 return( TRUE );
-			 }
-	 }
-
-	 return( FALSE );
+	return FALSE;
 }
 
 
-static UINT32 GetSoldierFindFlags(UINT16 ubID)
+UINT32 GetSoldierFindFlags(UINT16 ubID)
 {
 	UINT32 MercFlags = 0;
 	SOLDIERTYPE *pSoldier;
@@ -169,7 +168,7 @@ static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect);
 
 
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
-BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags, UINT32 uiFlags )
+BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags)
 {
 	UINT32				cnt;
 	SOLDIERTYPE		*pSoldier;
@@ -184,9 +183,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 	BOOLEAN				fInScreenRect = FALSE;
 	BOOLEAN				fInGridNo			= FALSE;
 
-
 	*pusSoldierIndex = NOBODY;
-	*pMercFlags			 = 0;
 
 	if ( _KeyDown( SHIFT ) )
 	{
@@ -409,11 +406,7 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 	if ( fSoldierFound && ubBestMerc != NOBODY )
 	{
 		 *pusSoldierIndex = (UINT16)ubBestMerc;
-
-		 (*pMercFlags) = GetSoldierFindFlags( ubBestMerc );
-
  		  return( TRUE );
-
 	}
 	else
 	{
@@ -439,12 +432,11 @@ BOOLEAN FindSoldier( INT16 sGridNo, UINT16 *pusSoldierIndex, UINT32 *pMercFlags,
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 {
 	UINT16  usSoldierIndex;
-	UINT32	uiMercFlags;
 
 	// Have we initalized for this yet?
 	if ( !gfHandleStack )
 	{
-		if ( FindSoldier( usMapPos, &usSoldierIndex, &uiMercFlags , FINDSOLDIERSAMELEVEL( gsInterfaceLevel ) | FIND_SOLDIER_BEGINSTACK ) )
+		if (FindSoldier(usMapPos, &usSoldierIndex, FINDSOLDIERSAMELEVEL(gsInterfaceLevel) | FIND_SOLDIER_BEGINSTACK))
 		{
 			gfHandleStack = TRUE;
 		}

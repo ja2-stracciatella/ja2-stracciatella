@@ -3745,7 +3745,6 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 	INT32 cnt;
 	INT16 sClosest=NOWHERE, sSpot;
 	INT16 sCloseGridNo=NOWHERE;
-	UINT32                                         uiMercFlags;
 	UINT16                                         usSoldierIndex;
 	UINT8                                          ubDir;
 	STRUCTURE                              *pDoor;
@@ -3827,7 +3826,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 
 	if (fForceToPerson)
 	{
-		if (FindSoldier(sGridNo, &usSoldierIndex, &uiMercFlags, FIND_SOLDIER_GRIDNO))
+		if (FindSoldier(sGridNo, &usSoldierIndex, FIND_SOLDIER_GRIDNO))
 		{
 			sGridNo = MercPtrs[usSoldierIndex]->sGridNo;
 			if (psAdjustedGridNo != NULL)
@@ -4016,7 +4015,6 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	INT32 cnt;
 	INT16 sClosest=WORLD_MAX, sSpot, sSpot2;
 	INT16 sCloseGridNo=NOWHERE;
-	UINT32                                         uiMercFlags;
 	UINT16                                         usSoldierIndex;
 	UINT8                                          ubDir;
 	STRUCTURE                              *pDoor;
@@ -4047,7 +4045,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 	if (fForceToPerson)
 	{
-		if (FindSoldier(sGridNo, &usSoldierIndex, &uiMercFlags, FIND_SOLDIER_GRIDNO))
+		if (FindSoldier(sGridNo, &usSoldierIndex, FIND_SOLDIER_GRIDNO))
 		{
 			sGridNo = MercPtrs[usSoldierIndex]->sGridNo;
 			if (psAdjustedGridNo != NULL) *psAdjustedGridNo = sGridNo;

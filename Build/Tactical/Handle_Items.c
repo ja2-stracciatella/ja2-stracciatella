@@ -195,7 +195,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	pSoldier->usAttackingWeapon = usHandItem;
 
 	// Find soldier flags depend on if it's our own merc firing or a NPC
-  //if ( FindSoldier( usGridNo, &usSoldierIndex, &uiMercFlags, FIND_SOLDIER_GRIDNO )  )
+  //if (FindSoldier(usGridNo, &usSoldierIndex, FIND_SOLDIER_GRIDNO))
 	if ( ( usSoldierIndex = WhoIsThere2( usGridNo, bLevel ) ) != NO_SOLDIER )
 	{
 		pTargetSoldier = MercPtrs[ usSoldierIndex ];

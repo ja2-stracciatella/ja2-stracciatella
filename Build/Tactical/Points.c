@@ -1056,7 +1056,6 @@ UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
 void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
 {
 	 UINT8 ubDirection;
-   UINT32	uiMercFlags;
    UINT16	usTargID;
    BOOLEAN	fAddingTurningCost = FALSE;
    BOOLEAN	fAddingRaiseGunCost = FALSE;
@@ -1067,7 +1066,7 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 		 if (ubAddTurningCost)
 		 {
 			 // Given a gridno here, check if we are on a guy - if so - get his gridno
-			 if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
+			 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
 			 {
 					sGridNo = MercPtrs[ usTargID ]->sGridNo;
 			 }
@@ -1109,7 +1108,6 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 
 UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
- UINT32	uiMercFlags;
  UINT16	usTargID;
  INT8	bFullAPs;
  INT8 bAimSkill;
@@ -1181,7 +1179,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 	if ( sGridNo != NOWHERE )
 	{
 		 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		 if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
+		 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
 		 {
 				sGridNo = MercPtrs[ usTargID ]->sGridNo;
 		 }
@@ -1934,7 +1932,6 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
 	INT32 iAPCost = AP_MIN_AIM_ATTACK;
 	UINT16 usInHand;
   UINT16 usTargID;
-  UINT32 uiMercFlags;
   UINT8 ubDirection;
 
 	// make sure the guy's actually got a throwable item in his hand!
@@ -1951,7 +1948,7 @@ INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCos
  if ( sGridNo != NOWHERE )
  {
 	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-	 if ( FindSoldier( sGridNo, &usTargID, &uiMercFlags, FIND_SOLDIER_GRIDNO ) )
+	 if (FindSoldier(sGridNo, &usTargID, FIND_SOLDIER_GRIDNO))
 	 {
 			sGridNo = MercPtrs[ usTargID ]->sGridNo;
 	 }
