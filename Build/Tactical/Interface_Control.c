@@ -71,7 +71,7 @@ void HandleTacticalPanelSwitch( )
 	if ( gfSwitchPanel )
 	{
 		SetCurrentInterfacePanel( gbNewPanel );
-		SetCurrentTacticalPanelCurrentMerc( gubNewPanelParam );
+		SetCurrentTacticalPanelCurrentMerc(GetMan(gubNewPanelParam));
 		gfSwitchPanel = FALSE;
 
 		if ( (!guiTacticalInterfaceFlags & INTERFACE_NORENDERBUTTONS ) && !( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )

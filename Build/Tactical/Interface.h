@@ -137,7 +137,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID );
 
 void CreateCurrentTacticalPanelButtons( );
 void RemoveCurrentTacticalPanelButtons( );
-void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID );
+void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s);
 void SetCurrentInterfacePanel( UINT8 ubNewPanel );
 BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s);
 

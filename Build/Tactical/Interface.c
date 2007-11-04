@@ -388,14 +388,8 @@ void ShutdownCurrentPanel( )
 }
 
 
-
-
-
-
-void SetCurrentTacticalPanelCurrentMerc( UINT8 ubID )
+void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s)
 {
-	SOLDIERTYPE* const s = MercPtrs[ubID];
-
 	// Disable faces
 	SetAllAutoFacesInactive( );
 

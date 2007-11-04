@@ -2365,7 +2365,7 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 	//SetCheckSoldierLightFlag( pSoldier );
 
 	// Set interface to reflect new selection!
-	SetCurrentTacticalPanelCurrentMerc(usSoldierID);
+	SetCurrentTacticalPanelCurrentMerc(pSoldier);
 
 	// PLay ATTN SOUND
 	if (fAcknowledge && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
