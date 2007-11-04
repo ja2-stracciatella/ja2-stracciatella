@@ -76,9 +76,6 @@ static UINT16 gusINTOldMousePosX    = 0;
 static UINT16 gusINTOldMousePosY    = 0;
 
 
-BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
-
-
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
 {
 	STRUCTURE * pStructure;
@@ -905,7 +902,7 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 s
 
 // This function will check the video object at SrcX and SrcY for the lack of transparency
 // will return true if data found, else false
-BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY )
+BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY)
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;

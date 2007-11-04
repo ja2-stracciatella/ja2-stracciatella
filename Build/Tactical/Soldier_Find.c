@@ -42,13 +42,11 @@
 #include "UI_Cursors.h"
 
 
-BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
-
 // This value is used to keep a small static array of uBID's which are stacked
 #define				MAX_STACKED_MERCS		10
 
 
-UINT32							gScrollSlideInertiaDirection[ NUM_WORLD_DIRECTIONS ] =
+static const UINT32 gScrollSlideInertiaDirection[NUM_WORLD_DIRECTIONS] =
 {
 	3,
 	0,
@@ -63,16 +61,15 @@ UINT32							gScrollSlideInertiaDirection[ NUM_WORLD_DIRECTIONS ] =
 // Struct used for cycling through multiple mercs per mouse position
 typedef struct
 {
-	INT8			bNum;
-	UINT8			ubIDs[ MAX_STACKED_MERCS ];
-	INT8			bCur;
-	BOOLEAN		fUseGridNo;
-	UINT16		sUseGridNoGridNo;
-
+	INT8    bNum;
+	UINT8   ubIDs[MAX_STACKED_MERCS];
+	INT8    bCur;
+	BOOLEAN fUseGridNo;
+	UINT16  sUseGridNoGridNo;
 } SOLDIER_STACK_TYPE;
 
-SOLDIER_STACK_TYPE		gSoldierStack;
-BOOLEAN								gfHandleStack = FALSE;
+static SOLDIER_STACK_TYPE gSoldierStack;
+static BOOLEAN            gfHandleStack = FALSE;
 
 
 SOLDIERTYPE* FindSoldierFromMouse(void)
@@ -160,8 +157,6 @@ UINT32 GetSoldierFindFlags(UINT16 ubID)
 
 	return( MercFlags );
 }
-
-extern BOOLEAN CheckVideoObjectScreenCoordinateInData( HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTextX, INT32 iTestY );
 
 
 static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect);
