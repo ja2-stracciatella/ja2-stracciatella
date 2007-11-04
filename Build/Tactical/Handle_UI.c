@@ -4175,10 +4175,6 @@ static UINT32 UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 	gUIDisplayActionPointsOffX = 14;
 	gUIDisplayActionPointsOffY = 7;
 
-
-	pSoldier = GetSoldier(gusSelectedSoldier);
-	if (pSoldier == NULL) return GAME_SCREEN;
-
 	GetMouseXY( &sXPos, &sYPos );
 
 	// Get direction from mouse pos
