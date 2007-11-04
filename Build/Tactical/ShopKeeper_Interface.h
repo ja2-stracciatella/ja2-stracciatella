@@ -92,7 +92,7 @@ void			BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDeale
 
 void			DeleteShopKeeperItemDescBox();
 
-BOOLEAN		CanMercInteractWithSelectedShopkeeper( SOLDIERTYPE *pSoldier );
+BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* s);
 
 
 #ifdef JA2TESTVERSION
