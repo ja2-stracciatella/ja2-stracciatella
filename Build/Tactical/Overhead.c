@@ -3296,182 +3296,136 @@ static INT8 NumActiveAndConsciousTeamMembers(UINT8 ubTeam)
 }
 
 
+static UINT8 FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+{
+	for (INT32 i = begin; i <= last; ++i)
+	{
+		const SOLDIERTYPE* const s = &Menptr[i];
+		if (fOnlyRegularMercs && s->bActive && (AM_AN_EPC(s) || AM_A_ROBOT(s)))
+		{
+			continue;
+		}
+
+		if (fGoodForLessOKLife)
+		{
+			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			{
+				return i;
+			}
+		}
+		else
+		{
+			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			{
+				return i;
+			}
+		}
+	}
+
+	return NOBODY;
+}
+
+
 UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
-	UINT8   bLastTeamID;
-	INT32 cnt;
-	SOLDIERTYPE             *pTeamSoldier;
-
-	cnt = pSoldier->ubID + 1;
-	bLastTeamID = gTacticalStatus.Team[ pSoldier->bTeam ].bLastID;
+	const TacticalTeamType* const t = &gTacticalStatus.Team[pSoldier->bTeam];
+	const UINT8 id = pSoldier->ubID;
+	const INT8 assignment = pSoldier->bAssignment;
+	UINT8 res;
 
 	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( fOnlyRegularMercs )
-		{
-			if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
-			{
-				continue;
-			}
-		}
+	res = FindNextActiveAndAliveMercRange(id + 1, t->bLastID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
+	if (res != NOBODY) return res;
 
-		if ( fGoodForLessOKLife )
-		{
-			if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-		else
-		{
-			if ( OK_CONTROLLABLE_MERC( pTeamSoldier) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-	}
-
-	// none found,
-	// Now loop back
-	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-	bLastTeamID = pSoldier->ubID;
-
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( fOnlyRegularMercs )
-		{
-			if ( pTeamSoldier->bActive && ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) ) )
-			{
-				continue;
-			}
-		}
-
-		if ( fGoodForLessOKLife )
-		{
-			if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-		else
-		{
-			if ( OK_CONTROLLABLE_MERC( pTeamSoldier) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-	}
+	// none found, now loop back
+	res = FindNextActiveAndAliveMercRange(t->bFirstID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
+	if (res != NOBODY) return res;
 
 	// IF we are here, keep as we always were!
-	return( pSoldier->ubID );
+	return id;
 }
 
 
-SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* pSoldier)
+static SOLDIERTYPE* FindNextActiveSquadRange(INT8 begin, INT8 end)
 {
-	for (INT32 cnt = pSoldier->bAssignment + 1 ; cnt <  NUMBER_OF_SQUADS; ++cnt)
+	for (INT32 i = begin; i != end; ++i)
 	{
-		for (INT32 cnt2 = 0; cnt2 < NUMBER_OF_SOLDIERS_PER_SQUAD; ++cnt2)
+		for (INT32 j = 0; j < NUMBER_OF_SOLDIERS_PER_SQUAD; ++j)
 		{
-			SOLDIERTYPE* const s = Squad[cnt][cnt2];
+			SOLDIERTYPE* const s = Squad[i][j];
 			if (s != NULL && s->bInSector && OK_INTERRUPT_MERC(s) && OK_CONTROLLABLE_MERC(s) && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				return s;
 			}
 		}
 	}
-
-	// none found,
-	// Now loop back
-	for (INT32 cnt = 0; cnt <= pSoldier->bAssignment; ++cnt)
-	{
-		for (INT32 cnt2 = 0; cnt2 < NUMBER_OF_SOLDIERS_PER_SQUAD; ++cnt2)
-		{
-			SOLDIERTYPE* const s = Squad[cnt][cnt2];
-			if (s != NULL && s->bInSector && OK_INTERRUPT_MERC(s) && OK_CONTROLLABLE_MERC(s) && !(s->uiStatusFlags & SOLDIER_VEHICLE))
-			{
-				return s;
-			}
-		}
-	}
-
-	// IF we are here, keep as we always were!
-	return pSoldier;
+	return NULL;
 }
 
 
-UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife,  BOOLEAN fOnlyRegularMercs )
+SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* s)
 {
-	UINT8   bLastTeamID;
-	INT32 cnt;
-	SOLDIERTYPE             *pTeamSoldier;
+	const INT8 assignment = s->bAssignment;
+	SOLDIERTYPE* res;
+
+	res = FindNextActiveSquadRange(assignment + 1, NUMBER_OF_SQUADS);
+	if (res != NULL) return res;
+
+	// none found, now loop back
+	res = FindNextActiveSquadRange(0, assignment);
+	if (res != NULL) return res;
+
+	// IF we are here, keep as we always were!
+	return s;
+}
 
 
-	// loop back
-	bLastTeamID = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-	cnt = pSoldier->ubID - 1;
-
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt >= bLastTeamID; cnt--,pTeamSoldier-- )
+static UINT8 FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+{
+	for (INT32 i = begin; i >= last; --i)
 	{
-		if ( fOnlyRegularMercs )
-		{
-			if ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
-			{
-				continue;
-			}
-		}
+		const SOLDIERTYPE* const s = &Menptr[i];
+		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
 
-		if ( fGoodForLessOKLife )
+		if (fGoodForLessOKLife)
 		{
 			// Check for bLife > 0
-			if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
+			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return( (UINT8)cnt );
+				return i;
 			}
 		}
 		else
 		{
-			if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
+			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return( (UINT8)cnt );
+				return i;
 			}
 		}
 	}
 
-	bLastTeamID = pSoldier->ubID;
-	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bLastID;
+	return NOBODY;
+}
+
+
+UINT8 FindPrevActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+{
+	const TacticalTeamType* const t = &gTacticalStatus.Team[s->bTeam];
+	const UINT8 id = s->ubID;
+	const INT8 assignment = s->bAssignment;
+	UINT8 res;
+
+	// loop back
+	res = FindPrevActiveAndAliveMercRange(id - 1, t->bFirstID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
+	if (res != NOBODY) return res;
 
 	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt >= bLastTeamID; cnt--,pTeamSoldier-- )
-	{
-		if ( fOnlyRegularMercs )
-		{
-			if ( AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
-			{
-				continue;
-			}
-		}
-
-		if ( fGoodForLessOKLife )
-		{
-			if ( pTeamSoldier->bLife > 0 && pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-		else
-		{
-			if ( OK_CONTROLLABLE_MERC( pTeamSoldier) && OK_INTERRUPT_MERC( pTeamSoldier ) && pSoldier->bAssignment == pTeamSoldier->bAssignment )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-	}
+	res = FindPrevActiveAndAliveMercRange(t->bLastID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
+	if (res != NOBODY) return res;
 
 	// none found,
 	// IF we are here, keep as we always were!
-	return( pSoldier->ubID );
+	return id;
 }
 
 
