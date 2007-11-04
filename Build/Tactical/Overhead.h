@@ -1,6 +1,7 @@
 #ifndef __OVERHEAD_H
 #define __OVERHEAD_H
 
+#include "Debug.h"
 #include "Soldier_Control.h"
 
 
@@ -152,6 +153,12 @@ extern const char* const gzActionStr[];
 // Soldier List used for all soldier overhead interaction
 extern SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];
 extern SOLDIERTYPE* MercPtrs[TOTAL_SOLDIERS];
+
+static inline SOLDIERTYPE* GetMan(UINT idx)
+{
+	Assert(idx < lengthof(Menptr));
+	return &Menptr[idx];
+}
 
 // MERC SLOTS - A LIST OF ALL ACTIVE MERCS
 extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
