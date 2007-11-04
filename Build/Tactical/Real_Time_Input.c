@@ -76,7 +76,6 @@ void GetRTMouseButtonInput(UINT32* puiNewEvent)
 
 static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
-	UINT16	usSoldierIndex;
 	static	UINT32 uiSingleClickTime;
 	UINT16	usMapPos;
 	BOOLEAN fDone = FALSE;
@@ -235,20 +234,17 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 					// HERE FOR CLICK-DRAG CLICK
 					switch( gCurrentUIMode )
 					{
-
 						case MOVE_MODE:
 						case CONFIRM_MOVE_MODE:
+						{
 							// First check if we clicked on a guy, if so, make selected if it's ours
-							if (FindSoldierFromMouse(&usSoldierIndex))
+							const SOLDIERTYPE* const s = FindSoldierFromMouse();
+							if (s != NULL)
 							{
 								 // Select guy
-								if (usSoldierIndex == gusSelectedSoldier)
+								if (s == GetSelectedMan() && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 								{
-									const SOLDIERTYPE* const s = MercPtrs[usSoldierIndex];
-									if (s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
-									{
-										*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
-									}
+									*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
 								}
 							}
 							else
@@ -300,6 +296,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 								}
 							}
 							break;
+						}
 					}
 				}
 			}
@@ -439,18 +436,15 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															break;
 
 														case IDLE_MODE:
-
+														{
 															// First check if we clicked on a guy, if so, make selected if it's ours
-															if (FindSoldierFromMouse(&usSoldierIndex))
+															const SOLDIERTYPE* const s = FindSoldierFromMouse();
+															if (s != NULL && IsOwnedMerc(s))
 															{
-																 // Select guy
-																if (IsOwnedMerc(GetMan(usSoldierIndex)))
-																 {
-																		*puiNewEvent = I_SELECT_MERC;
-																 }
-
+																*puiNewEvent = I_SELECT_MERC;
 															}
 															break;
+														}
 
 													case HANDCURSOR_MODE:
 
@@ -647,8 +641,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			if (pSoldier != NULL)
 																			{
 																				// First check if we clicked on a guy, if so, make selected if it's ours
-																				if (FindSoldierFromMouse(&usSoldierIndex) &&
-																						IsOwnedMerc(GetMan(usSoldierIndex)))
+																				const SOLDIERTYPE* const s = FindSoldierFromMouse();
+																				if (s != NULL && IsOwnedMerc(s))
 																				{
 																					 // Select guy
 																						*puiNewEvent = I_SELECT_MERC;

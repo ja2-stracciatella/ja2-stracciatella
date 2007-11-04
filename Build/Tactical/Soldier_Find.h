@@ -27,7 +27,7 @@
 #define			FINDSOLDIERSELECTIVESAMELEVEL( l )		(	( ( FIND_SOLDIER_SELECTIVE | FIND_SOLDIER_SAMELEVEL ) | ( l << 16 ) ) )
 
 
-BOOLEAN FindSoldierFromMouse(UINT16* pusSoldierIndex);
+SOLDIERTYPE* FindSoldierFromMouse(void);
 BOOLEAN FindSoldier(INT16 sGridNo, UINT16* pusSoldierIndex, UINT32 uiFlags);
 SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel );
 

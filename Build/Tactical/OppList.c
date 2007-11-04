@@ -3185,14 +3185,12 @@ extern UINT32 guiNumBackSaves;
 
 void DebugSoldierPage1( )
 {
-	UINT16						usSoldierIndex;
 	UINT16						usMapPos;
 	UINT8							ubLine=0;
 
-	if (FindSoldierFromMouse(&usSoldierIndex))
+	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
+	if (pSoldier != NULL)
 	{
-		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
-
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", pSoldier->sGridNo );
 		SetFont( LARGEFONT1 );
@@ -3378,16 +3376,14 @@ void DebugSoldierPage2( )
 		"NORTH"
 	};
 
-	UINT16						usSoldierIndex;
 	UINT16						usMapPos;
   TILE_ELEMENT							 TileElem;
 	LEVELNODE					*pNode;
 	UINT8							ubLine;
 
-	if (FindSoldierFromMouse(&usSoldierIndex))
+	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
+	if (pSoldier != NULL)
 	{
-		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
-
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", pSoldier->sGridNo );
 		SetFont( LARGEFONT1 );
@@ -3654,14 +3650,12 @@ void DebugSoldierPage3( )
 		"BLACK"
 	};
 
-	UINT16						usSoldierIndex;
 	UINT16						usMapPos;
 	UINT8							ubLine;
 
-	if (FindSoldierFromMouse(&usSoldierIndex))
+	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
+	if (pSoldier != NULL)
 	{
-		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
-
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", pSoldier->sGridNo );
 		SetFont( LARGEFONT1 );
@@ -4046,13 +4040,11 @@ static void WriteQuantityAndAttachments(const OBJECTTYPE* pObject, INT32 yp)
 
 void DebugSoldierPage4( )
 {
-	UINT16						usSoldierIndex;
 	UINT8							ubLine;
 
-	if (FindSoldierFromMouse(&usSoldierIndex))
+	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
+	if (pSoldier != NULL)
 	{
-		SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
-
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", pSoldier->sGridNo );
 		SetFont( LARGEFONT1 );

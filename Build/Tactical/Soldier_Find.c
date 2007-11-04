@@ -75,18 +75,19 @@ SOLDIER_STACK_TYPE		gSoldierStack;
 BOOLEAN								gfHandleStack = FALSE;
 
 
-BOOLEAN FindSoldierFromMouse(UINT16* pusSoldierIndex)
+SOLDIERTYPE* FindSoldierFromMouse(void)
 {
-	INT16							sMapPos;
+	INT16 sMapPos;
 	if (GetMouseMapPos(&sMapPos))
 	{
-		if (FindSoldier(sMapPos, pusSoldierIndex, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
+		UINT16 soldier_index;
+		if (FindSoldier(sMapPos, &soldier_index, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
 		{
-			return TRUE;
+			return GetMan(soldier_index);
 		}
 	}
 
-	return FALSE;
+	return NULL;
 }
 
 
