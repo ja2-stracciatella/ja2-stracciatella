@@ -482,14 +482,12 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 			gusUIFullTargetID = gSoldierStack.ubIDs[ gSoldierStack.bCur ];
 			guiUIFullTargetFlags = GetSoldierFindFlags( gusUIFullTargetID );
 			guiUITargetSoldierId = gusUIFullTargetID;
-			gfUIFullTargetFound			 = TRUE;
 		}
 		else
 		{
-			gfUIFullTargetFound			 = FALSE;
+			gusUIFullTargetID    = NOBODY;
+			guiUIFullTargetFlags = 0;
 		}
-
-
 	}
 
 	// Return if we are in the cycle mode now...

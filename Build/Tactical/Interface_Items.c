@@ -3902,7 +3902,7 @@ void DrawItemTileCursor( )
 
 	if (GetMouseMapPos( &usMapPos) )
 	{
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			// Force mouse position to guy...
 			usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
@@ -3967,7 +3967,7 @@ void DrawItemTileCursor( )
 			if ( UIHandleOnMerc( FALSE ) && usMapPos != gpItemPointerSoldier->sGridNo )
 			{
 				// We are on a guy.. check if they can catch or not....
-				if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 					// Get soldier
 					pSoldier = MercPtrs[ gusUIFullTargetID ];
@@ -4017,7 +4017,7 @@ void DrawItemTileCursor( )
 		}
 		else
 		{
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				UIHandleOnMerc( FALSE );
 
@@ -4231,8 +4231,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		return( FALSE );
 	}
 
-
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		// Force mouse position to guy...
 		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
@@ -4395,7 +4394,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 
 	// CHECK IF WE ARE NOT ON THE SAME GRIDNO
-	if ( sDist <= 1 && !( gfUIFullTargetFound && gusUIFullTargetID != gpItemPointerSoldier->ubID ) )
+	if (sDist <= 1 &&
+			(gusUIFullTargetID == NOBODY || gusUIFullTargetID == gpItemPointerSoldier->ubID))
 	{
 		// Check some things here....
 		// 1 ) are we at the exact gridno that we stand on?
@@ -4471,7 +4471,11 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	{
 		sGridNo = usMapPos;
 
-		if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE && gfUIFullTargetFound && MercPtrs[ gusUIFullTargetID ]->bTeam == gbPlayerNum && !AM_AN_EPC( MercPtrs[ gusUIFullTargetID ] ) && !( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if (sDist <= PASSING_ITEM_DISTANCE_OKLIFE &&
+				gusUIFullTargetID != NOBODY &&
+				MercPtrs[gusUIFullTargetID]->bTeam == gbPlayerNum &&
+				!AM_AN_EPC(MercPtrs[gusUIFullTargetID]) &&
+				!(MercPtrs[gusUIFullTargetID]->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			// OK, do the transfer...
 			{
@@ -4568,7 +4572,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// OK, CHECK FOR VALID THROW/CATCH
 			// IF OVER OUR GUY...
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				pSoldier = MercPtrs[ gusUIFullTargetID ];
 

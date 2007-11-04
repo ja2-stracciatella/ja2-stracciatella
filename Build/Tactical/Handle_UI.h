@@ -201,7 +201,6 @@ BOOLEAN		gfUIHandlePhysicsTrajectory;
 
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
-BOOLEAN gfUIFullTargetFound;
 UINT16	gusUIFullTargetID;
 UINT32	guiUIFullTargetFlags;
 

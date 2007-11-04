@@ -157,7 +157,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 								if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 								{
-									if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )  )
+									if (gusUIFullTargetID != NOBODY && guiUIFullTargetFlags & OWNED_MERC)
 									{
 										// Reset , if this guy is selected merc, reset any multi selections...
 										if ( gusUIFullTargetID == gusSelectedSoldier )
@@ -512,7 +512,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 																{
 																	// First check if we clicked on a guy, if so, make selected if it's ours
-																	if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )  )
+																	if (gusUIFullTargetID != NOBODY && guiUIFullTargetFlags & OWNED_MERC)
 																	{
 																		 if ( !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 																		 {
@@ -1165,7 +1165,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 							}
 							else
 							{
-								if ( gfUIFullTargetFound )
+								if (gusUIFullTargetID != NOBODY)
 								{
 									gfItemPointerDifferentThanDefault = !gfItemPointerDifferentThanDefault;
 								}
@@ -1258,19 +1258,12 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 
 				if ( uiMoveTargetSoldierId != NOBODY )
 				{
-					 if( gfUIFullTargetFound )
-					 {
-							if ( gusUIFullTargetID != uiMoveTargetSoldierId )
-							{
-								*puiNewEvent = A_CHANGE_TO_MOVE;
-								return;
-							}
-					 }
-					 else
-					 {
-							*puiNewEvent = A_CHANGE_TO_MOVE;
-							return;
-					 }
+					if (gusUIFullTargetID == NOBODY ||
+							gusUIFullTargetID != uiMoveTargetSoldierId)
+					{
+						*puiNewEvent = A_CHANGE_TO_MOVE;
+						return;
+					}
 				}
 			 *puiNewEvent = T_ON_TERRAIN;
 			 break;
@@ -1336,7 +1329,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 						 }
 						 else
 						 {
-							 if( gfUIFullTargetFound )
+							if (gusUIFullTargetID != NOBODY)
 							 {
 									if ( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, FALSE, FALSE, FALSE ) && !_KeyDown( SHIFT ) && !AM_AN_EPC( pSoldier ) && MercPtrs[ gusUIFullTargetID ]->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition( ) )
 									{
@@ -1377,8 +1370,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				// Check if the guy is visible
 				guiUITargetSoldierId = NOBODY;
 
-				if ( gfUIFullTargetFound  )
-				//if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) )
 						{
@@ -1444,7 +1436,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				}
 
 				// First check if we are on a guy, if so, make selected if it's ours
-					if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 					{
 					 if ( guiUITargetSoldierId != gusUIFullTargetID )
 					 {

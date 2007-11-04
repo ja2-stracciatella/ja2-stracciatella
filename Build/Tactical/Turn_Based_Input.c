@@ -167,7 +167,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 								if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 								{
 									// First check if we clicked on a guy, if so, make selected if it's ours
-									if ( gfUIFullTargetFound && ( guiUIFullTargetFlags & OWNED_MERC )  )
+									if (gusUIFullTargetID != NOBODY && guiUIFullTargetFlags & OWNED_MERC)
 									{
 										 if ( !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 										 {
@@ -308,16 +308,14 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 			{
 
 				case MOVE_MODE:
-
 						// First check if we clicked on a guy, if so, make selected if it's ours
-						if ( gfUIFullTargetFound )
+						if (gusUIFullTargetID != NOBODY &&
+								guiUIFullTargetFlags & SELECTED_MERC &&
+								!(guiUIFullTargetFlags & UNCONSCIOUS_MERC) &&
+								!(MercPtrs[gusUIFullTargetID]->uiStatusFlags & SOLDIER_VEHICLE))
 						{
-							 // Select guy
-							 if ( ( guiUIFullTargetFlags & SELECTED_MERC) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) && !( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_VEHICLE ) )
-							 {
-									*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
-									fIgnoreLeftUp = FALSE;
-							 }
+							*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
+							fIgnoreLeftUp = FALSE;
 						}
 						break;
 			}
@@ -436,14 +434,11 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 												case IDLE_MODE:
 
 													// First check if we clicked on a guy, if so, make selected if it's ours
-													if ( gfUIFullTargetFound )
+													if (gusUIFullTargetID != NOBODY &&
+															guiUIFullTargetFlags & OWNED_MERC &&
+															!(guiUIFullTargetFlags & UNCONSCIOUS_MERC))
 													{
-														 // Select guy
-														 if ( guiUIFullTargetFlags & OWNED_MERC && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
-														 {
-																*puiNewEvent = I_SELECT_MERC;
-														 }
-
+														*puiNewEvent = I_SELECT_MERC;
 													}
 													break;
 
@@ -647,7 +642,7 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 							case MOVE_MODE:
 
 								// Check if we're on terrain
-								//if ( !gfUIFullTargetFound )
+								//if (gusUIFullTargetID == NOBODY)
 								//{
 									// ATE:
 									fDone = FALSE;
@@ -826,7 +821,7 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 					 }
 					 else
 					 {
-							if ( gfUIFullTargetFound )
+							if (gusUIFullTargetID != NOBODY)
 							{
 								gfItemPointerDifferentThanDefault = !gfItemPointerDifferentThanDefault;
 							}
@@ -895,19 +890,12 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 			case TALKCURSOR_MODE:
 				if ( uiMoveTargetSoldierId != NOBODY )
 				{
-					 if( gfUIFullTargetFound )
-					 {
-							if ( gusUIFullTargetID != uiMoveTargetSoldierId )
-							{
-								*puiNewEvent = A_CHANGE_TO_MOVE;
-								return;
-							}
-					 }
-					 else
-					 {
-							*puiNewEvent = A_CHANGE_TO_MOVE;
-							return;
-					 }
+					if (gusUIFullTargetID == NOBODY ||
+							gusUIFullTargetID != uiMoveTargetSoldierId)
+					{
+						*puiNewEvent = A_CHANGE_TO_MOVE;
+						return;
+					}
 				}
 			 *puiNewEvent = T_ON_TERRAIN;
 				break;
@@ -928,7 +916,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 					 }
 					 else
 					 {
-						 if( gfUIFullTargetFound )
+						if (gusUIFullTargetID != NOBODY)
 						 {
 							 // ATE: Don't do this automatically for enemies......
 							 if ( MercPtrs[ gusUIFullTargetID ]->bTeam != ENEMY_TEAM )
@@ -955,8 +943,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
 				fOnValidGuy = FALSE;
 
-				if ( gfUIFullTargetFound  )
-				//if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) )
 						{
@@ -1078,7 +1065,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				}
 
 				// First check if we are on a guy, if so, make selected if it's ours
-				if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 					 if ( guiUITargetSoldierId != gusUIFullTargetID )
 					 {
@@ -1989,7 +1976,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							SOLDIERTYPE* const pSoldier1 = GetSelectedMan();
 
-							if ( gfUIFullTargetFound )
+							if (gusUIFullTargetID != NOBODY)
 							{
 								// Get soldier...
 								SOLDIERTYPE* const pSoldier2 = MercPtrs[gusUIFullTargetID];
@@ -2282,7 +2269,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if( gusSelectedSoldier != NOBODY && sGridNo != NOWHERE )
 						{
 							//if the cursor is over someone
-							if (gfUIFullTargetFound) sGridNo = MercPtrs[gusUIFullTargetID]->sGridNo;
+							if (gusUIFullTargetID != NOBODY) sGridNo = MercPtrs[gusUIFullTargetID]->sGridNo;
 							DisplayRangeToTarget(GetSelectedMan(), sGridNo);
 						}
 					}
@@ -2587,7 +2574,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 						if ( INFORMATION_CHEAT_LEVEL( ) )
 						{
-							if( gfUIFullTargetFound )
+							if (gusUIFullTargetID != NOBODY)
 							{
 								TacticalCharacterDialogue( MercPtrs[ gusUIFullTargetID ], gQuoteNum );
 								gQuoteNum++;
@@ -3367,7 +3354,7 @@ static void MakeSelectedSoldierTired(void)
 	}
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		const SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
 
@@ -3463,7 +3450,7 @@ static void CycleSelectedMercsItem(void)
 	UINT16 usOldItem;
 	SOLDIERTYPE *pSoldier;
 	// Cycle selected guy's item...
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		// Get soldier...
 		pSoldier = MercPtrs[ gusUIFullTargetID ];
@@ -3507,7 +3494,7 @@ static void ToggleWireFrame(void)
 static void RefreshSoldier(void)
 {
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
 		ReviveSoldier( pSoldier );
@@ -3952,7 +3939,7 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 	SOLDIERTYPE       *pTSoldier;
 	INT16							sAPCost = 0;
 
-	if ( gfUIFullTargetFound  )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		 pTSoldier = MercPtrs[ gusUIFullTargetID ];
 
@@ -4029,9 +4016,8 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 			return;
 		}
 
-
 		// Check if we are on a merc... if so.. steal!
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 			 {
@@ -4213,7 +4199,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 		}
 
 		// Check if we are over a civillian....
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			if ( ValidQuickExchangePosition( ) )
 			{

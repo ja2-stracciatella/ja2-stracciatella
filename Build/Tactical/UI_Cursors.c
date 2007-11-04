@@ -134,7 +134,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 	}
 
 	// Calculate target gridno!
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		sTargetGridNo = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 	}
@@ -179,7 +179,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 			if ( gCurrentUIMode == ACTION_MODE && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				// Alrighty, let's change the cursor!
-				if ( fRecalc && gfUIFullTargetFound )
+				if (fRecalc && gusUIFullTargetID != NOBODY)
 				{
 						// ATE: Check for ammo
 						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) && EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
@@ -218,7 +218,7 @@ UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPo
 			if ( gCurrentUIMode == ACTION_MODE && ubItemCursor == TRAJECTORYCURS && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				// Alrighty, let's change the cursor!
-				if ( fRecalc && gfUIFullTargetFound )
+				if (fRecalc && gusUIFullTargetID != NOBODY)
 				{
 						// ATE: Check for ammo
 						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) && EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
@@ -973,7 +973,7 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 		if ( !fOnGuy )
 		{
 			// Check if we can find a soldier here
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				 pTargetSoldier = MercPtrs[ gusUIFullTargetID ];
 
@@ -1009,7 +1009,7 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 
 	if ( fDisplay && ( !pSoldier->bDoBurst ) )
 	{
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			 pTargetSoldier = MercPtrs[ gusUIFullTargetID ];
 
@@ -1165,7 +1165,7 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if ( gfUIFullTargetFound && !( guiUIFullTargetFlags & SELECTED_MERC ) )
+		if (gusUIFullTargetID != NOBODY && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
 			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
 			return( KNIFE_HIT_UICURSOR );
@@ -1289,7 +1289,7 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if ( gfUIFullTargetFound && !( guiUIFullTargetFlags & SELECTED_MERC ) )
+		if (gusUIFullTargetID != NOBODY && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
 			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
 			return( ACTION_PUNCH_RED );
@@ -1313,8 +1313,8 @@ static UINT8 HandleAidCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAct
 	}
 	else
 	{
-		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if ( gfUIFullTargetFound ) // && !( guiUIFullTargetFlags & SELECTED_MERC ) )
+		// CHECK IF WE ARE ON A GUY
+		if (gusUIFullTargetID != NOBODY)
 		{
 			return( ACTION_FIRSTAID_RED );
 		}
@@ -1739,7 +1739,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	ubCursor =  GetActionModeCursor( pSoldier );
 
 	// 'snap' cursor to target tile....
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 	}
@@ -1761,7 +1761,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 				bTargetLevel	  = (INT8)gsInterfaceLevel;
 
 				// Look for a target here...
-				if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 					// Get target soldier, if one exists
 					pTSoldier = MercPtrs[ gusUIFullTargetID ];

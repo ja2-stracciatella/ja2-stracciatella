@@ -290,7 +290,7 @@ BOOLEAN DrawUICursor( )
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
 			{
 				// If we are over a target, jump to that....
-				if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 					gusTargetDropPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 				}

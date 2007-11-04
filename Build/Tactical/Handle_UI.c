@@ -487,16 +487,17 @@ UINT32  HandleTacticalUI( void )
 		guiCurrentEvent = uiNewEvent;
 
 		//ATE: New! Get flags for over soldier or not...
-		gfUIFullTargetFound				= FALSE;
-
 		if ( GetMouseMapPos( &usMapPos ) )
 		{
 			// Look for soldier full
 			if (FindSoldier(usMapPos, &gusUIFullTargetID, FINDSOLDIERSAMELEVEL(gsInterfaceLevel)))
 			{
 				guiUIFullTargetFlags = GetSoldierFindFlags(gusUIFullTargetID);
-				gfUIFullTargetFound = TRUE;
 			}
+		}
+		else
+		{
+			gusUIFullTargetID = NOBODY;
 		}
 
 		// Check if current event has changed and clear event if so, to prepare it for execution
@@ -1063,7 +1064,7 @@ static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent)
 	INT8							bDamage;
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
 
@@ -1146,7 +1147,7 @@ static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent)
 	INT32	iCurrentSquad;
 
 	// Get merc index at mouse and set current selection
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		 iCurrentSquad = CurrentSquad( );
 
@@ -1486,7 +1487,7 @@ static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 			 if ( !InRange( pSoldier, usMapPos ) )
 			 {
 				 // Are we over a guy?
-				 if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				 {
 						// No, ok display message IF this is the first time at this gridno
 						if ( gsOutOfRangeGridNo != MercPtrs[ gusUIFullTargetID ]->sGridNo || gubOutOfRangeMerc != gusSelectedSoldier )
@@ -2381,7 +2382,7 @@ static UINT32 UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 		if (pSoldier != NULL)
 		{
 			// Get target guy...
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				// Get target soldier, if one exists
 				pTSoldier = MercPtrs[ gusUIFullTargetID ];
@@ -2638,7 +2639,7 @@ BOOLEAN SelectedMercCanAffordAttack( )
 			else
 			{
 				 // Look for a soldier at this position
-				if ( gfUIFullTargetFound )
+				if (gusUIFullTargetID != NOBODY)
 				{
 						const SOLDIERTYPE* pTargetSoldier = GetSoldier(gusUIFullTargetID);
 						sTargetGridNo	= pTargetSoldier->sGridNo;
@@ -2871,19 +2872,17 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 	UINT16						usSoldierIndex;
 	UINT32						uiMercFlags;
 	UINT16						usMapPos;
-	BOOLEAN						fFoundMerc = FALSE;
 
 	if( !GetMouseMapPos( &usMapPos) )
 	{
 		return( GAME_SCREEN );
 	}
 
-	fFoundMerc     = gfUIFullTargetFound;
 	usSoldierIndex = gusUIFullTargetID;
 	uiMercFlags    = guiUIFullTargetFlags;
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	if ( fFoundMerc )
+	if (usSoldierIndex != NOBODY)
 	{
 		const SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
 
@@ -3224,7 +3223,6 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 {
 	BOOLEAN						fSetCursor = FALSE;
 	static						UINT16 usTargetID = NOBODY;
-	static						BOOLEAN	fTargetFound = FALSE;
 	BOOLEAN						fTargetFoundAndLookingForOne = FALSE;
 
 	 // Determine if we can afford!
@@ -3239,7 +3237,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 		  // If we are targeting a merc for some reason, don't go thorugh normal channels if we are on someone now
 			if ( uiFlags == MOVEUI_TARGET_MERCS || uiFlags == MOVEUI_TARGET_MERCSFORAID )
 			{
-				if ( gfUIFullTargetFound != fTargetFound || usTargetID != gusUIFullTargetID || gfResetUIMovementOptimization )
+				if (usTargetID != gusUIFullTargetID || gfResetUIMovementOptimization)
 				{
 					gfResetUIMovementOptimization = FALSE;
 
@@ -3251,13 +3249,9 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 				}
 
 				// Save for next time...
-				fTargetFound = gfUIFullTargetFound;
-				usTargetID	 = gusUIFullTargetID;
+				usTargetID = gusUIFullTargetID;
 
-				if ( fTargetFound )
-				{
-					fTargetFoundAndLookingForOne = TRUE;
-				}
+				if (gusUIFullTargetID != NOBODY) fTargetFoundAndLookingForOne = TRUE;
 			}
 
 			if ( uiFlags == MOVEUI_TARGET_ITEMS )
@@ -3587,7 +3581,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 		   BOOLEAN	fGotAdjacent = FALSE;
 
 			// Check if we are on a target
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				 INT32		cnt;
 				 INT16		sSpot;
@@ -3655,7 +3649,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	else if ( uiFlags == MOVEUI_TARGET_STEAL )
 	{
 			// Check if we are on a target
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				sActionGridNo =  FindAdjacentGridEx( pSoldier, MercPtrs[ gusUIFullTargetID ]->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 				if ( sActionGridNo == -1 )
@@ -3687,7 +3681,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	}
 	else if ( uiFlags == MOVEUI_TARGET_MERCSFORAID )
 	{
-			if ( gfUIFullTargetFound )
+			if (gusUIFullTargetID != NOBODY)
 			{
 				sActionGridNo =  FindAdjacentGridEx( pSoldier, MercPtrs[ gusUIFullTargetID ]->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
 
@@ -3790,7 +3784,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 
 	if ( ubItemCursor == REPAIRCURS )
 	{
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 		}
@@ -3807,7 +3801,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 
 	if ( ubItemCursor == REFUELCURS )
 	{
-		if ( gfUIFullTargetFound )
+		if (gusUIFullTargetID != NOBODY)
 		{
 			usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
 		}
@@ -3836,7 +3830,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 	}
 
 	// SEE IF THERE IS SOMEBODY HERE
-	if ( gfUIFullTargetFound  && ubItemCursor != KNIFECURS )
+	if (gusUIFullTargetID != NOBODY && ubItemCursor != KNIFECURS)
 	{
 		fGuyHere = TRUE;
 
@@ -4964,7 +4958,7 @@ static UINT32 UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID , BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed )
 {
 	// Check if there is a guy here to talk to!
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 			*pubSoldierID = (UINT8)gusUIFullTargetID;
 			return( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, fGive, fAllowMercs, fCheckCollapsed ) );
@@ -5086,7 +5080,7 @@ BOOLEAN HandleTalkInit(  )
 	}
 
 	// Check if there is a guy here to talk to!
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 			// Is he a valid NPC?
 			if ( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, FALSE, TRUE , FALSE ) )
@@ -5344,7 +5338,7 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 
 	gfBeginVehicleCursor = FALSE;
 
-	if ( gfUIFullTargetFound  )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		 pTSoldier = MercPtrs[ gusUIFullTargetID ];
 
@@ -5735,7 +5729,7 @@ BOOLEAN ValidQuickExchangePosition(void)
 	static BOOLEAN		fOldOnValidGuy = FALSE;
 
 	// Check if we over a civ
-	if ( gfUIFullTargetFound )
+	if (gusUIFullTargetID != NOBODY)
 	{
 		pOverSoldier = MercPtrs[ gusUIFullTargetID ];
 

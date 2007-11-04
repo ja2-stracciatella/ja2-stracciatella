@@ -381,10 +381,7 @@ void SetActionModeDoorCursorText( )
 	INT16			 sGridNo;
 
   // If we are over a merc, don't
-  if ( gfUIFullTargetFound )
-  {
-    return;
-  }
+	if (gusUIFullTargetID != NOBODY) return;
 
 	// OK, first see if we have an in tile...
 	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
