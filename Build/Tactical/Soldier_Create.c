@@ -1189,11 +1189,6 @@ BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVeh
 	{
 		gfUIFullTargetFound = FALSE;
 	}
-	//This one is for a single-gridno guy.....
-	if ( gfUISelectiveTargetFound && gusUISelectiveTargetID == usSoldierIndex )
-	{
-		gfUISelectiveTargetFound = FALSE;
-	}
 
 	pSoldier = MercPtrs[ usSoldierIndex ];
 

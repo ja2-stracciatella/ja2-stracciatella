@@ -488,7 +488,6 @@ UINT32  HandleTacticalUI( void )
 
 		//ATE: New! Get flags for over soldier or not...
 		gfUIFullTargetFound				= FALSE;
-		gfUISelectiveTargetFound		= FALSE;
 
 		if ( GetMouseMapPos( &usMapPos ) )
 		{
@@ -498,15 +497,7 @@ UINT32  HandleTacticalUI( void )
 				guiUIFullTargetFlags = GetSoldierFindFlags(gusUIFullTargetID);
 				gfUIFullTargetFound = TRUE;
 			}
-
-			// Look for soldier selective
-			if (FindSoldier(usMapPos, &gusUISelectiveTargetID, FINDSOLDIERSELECTIVESAMELEVEL(gsInterfaceLevel)))
-			{
-				gfUISelectiveTargetFound = TRUE;
-			}
-
 		}
-
 
 		// Check if current event has changed and clear event if so, to prepare it for execution
 		// Clearing it does things like set first time flag, param variavles, etc
@@ -2887,17 +2878,9 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 		return( GAME_SCREEN );
 	}
 
-	//if ( fMovementMode )
-	//{
-	//	fFoundMerc			= gfUISelectiveTargetFound;
-	//	usSoldierIndex	= gusUISelectiveTargetID;
-	//}
-	//else
-	{
-		fFoundMerc			= gfUIFullTargetFound;
-		usSoldierIndex	= gusUIFullTargetID;
-		uiMercFlags			= guiUIFullTargetFlags;
-	}
+	fFoundMerc     = gfUIFullTargetFound;
+	usSoldierIndex = gusUIFullTargetID;
+	uiMercFlags    = guiUIFullTargetFlags;
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if ( fFoundMerc )
