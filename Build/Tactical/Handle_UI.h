@@ -247,7 +247,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
 SOLDIERTYPE* GetValidTalkableNPCFromMouse(BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed);
-BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed );
+BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* s, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed);
 
 BOOLEAN HandleTalkInit(  );
 

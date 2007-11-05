@@ -4959,14 +4959,14 @@ SOLDIERTYPE* GetValidTalkableNPCFromMouse(BOOLEAN fGive, BOOLEAN fAllowMercs, BO
 {
 	// Check if there is a guy here to talk to!
 	if (gusUIFullTargetID == NOBODY) return NULL;
-	if (!IsValidTalkableNPC(gusUIFullTargetID, fGive, fAllowMercs, fCheckCollapsed)) return NULL;
-	return GetMan(gusUIFullTargetID);
+	SOLDIERTYPE* const s = GetMan(gusUIFullTargetID);
+	if (!IsValidTalkableNPC(s, fGive, fAllowMercs, fCheckCollapsed)) return NULL;
+	return s;
 }
 
 
-BOOLEAN IsValidTalkableNPC( UINT8 ubSoldierID, BOOLEAN fGive , BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed )
+BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* pSoldier, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed)
 {
-	SOLDIERTYPE *pSoldier = MercPtrs[ ubSoldierID ];
 	BOOLEAN			fValidGuy = FALSE;
 
 	if (gusSelectedSoldier != NOBODY && AM_A_ROBOT(GetSelectedMan()))
@@ -5078,11 +5078,10 @@ BOOLEAN HandleTalkInit(  )
 	// Check if there is a guy here to talk to!
 	if (gusUIFullTargetID != NOBODY)
 	{
+		const SOLDIERTYPE* const pTSoldier = GetMan(gusUIFullTargetID);
 			// Is he a valid NPC?
-			if ( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, FALSE, TRUE , FALSE ) )
+		if (IsValidTalkableNPC(pTSoldier, FALSE, TRUE, FALSE))
 			{
-				const SOLDIERTYPE* pTSoldier = GetSoldier(gusUIFullTargetID);
-
         if ( pTSoldier->ubID != pSoldier->ubID )
         {
 				  //ATE: Check if we have good LOS

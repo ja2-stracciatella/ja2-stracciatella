@@ -919,10 +919,11 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 						if (gusUIFullTargetID != NOBODY)
 						 {
 							 // ATE: Don't do this automatically for enemies......
-							 if ( MercPtrs[ gusUIFullTargetID ]->bTeam != ENEMY_TEAM )
+							const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
+							if (tgt->bTeam != ENEMY_TEAM)
 							 {
 									uiMoveTargetSoldierId = gusUIFullTargetID;
-									if ( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, FALSE, FALSE, FALSE ) && !_KeyDown( SHIFT ) && !AM_AN_EPC( pSoldier ) && !ValidQuickExchangePosition( ) )
+									if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && !ValidQuickExchangePosition())
 									{
 										*puiNewEvent = T_CHANGE_TO_TALKING;
 										return;

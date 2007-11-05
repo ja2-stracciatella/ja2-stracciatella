@@ -1331,7 +1331,8 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 						 {
 							if (gusUIFullTargetID != NOBODY)
 							 {
-									if ( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, FALSE, FALSE, FALSE ) && !_KeyDown( SHIFT ) && !AM_AN_EPC( pSoldier ) && MercPtrs[ gusUIFullTargetID ]->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition( ) )
+								const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
+								if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
 									{
 										uiMoveTargetSoldierId = gusUIFullTargetID;
 										*puiNewEvent = T_CHANGE_TO_TALKING;
