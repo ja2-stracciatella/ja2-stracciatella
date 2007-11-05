@@ -1477,7 +1477,7 @@ static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 	}
 
 	// Get soldier to determine range
-	const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+	SOLDIERTYPE* const pSoldier = GetSoldier(gusSelectedSoldier);
 	if (pSoldier != NULL)
 	{
 		 // ATE: Add stuff here to display a system message if we are targeting smeothing and
@@ -1511,7 +1511,7 @@ static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 
 		 }
 
-	   guiNewUICursor = GetProperItemCursor( (UINT8)gusSelectedSoldier, pSoldier->inv[ HANDPOS ].usItem, usMapPos, FALSE );
+		guiNewUICursor = GetProperItemCursor(pSoldier, pSoldier->inv[HANDPOS].usItem, usMapPos, FALSE);
 
 		  // Show UI ON GUY
 		  UIHandleOnMerc( FALSE );
@@ -2199,13 +2199,11 @@ static UINT32 UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 		return( GAME_SCREEN );
 	}
 
-	const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-	if (pSoldier != NULL)
+	SOLDIERTYPE* const sel = GetSoldier(gusSelectedSoldier);
+	if (sel != NULL)
 	{
-		 guiNewUICursor = GetProperItemCursor( (UINT8)gusSelectedSoldier, pSoldier->inv[ HANDPOS ].usItem, usMapPos, TRUE );
-
+		guiNewUICursor = GetProperItemCursor(sel, sel->inv[HANDPOS].usItem, usMapPos, TRUE);
 		 UIHandleOnMerc( FALSE );
-
 	}
 
 	return( GAME_SCREEN );

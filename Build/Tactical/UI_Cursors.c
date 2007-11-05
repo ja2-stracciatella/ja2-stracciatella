@@ -111,17 +111,14 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8	GetProperItemCursor( UINT8 ubSoldierID, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated )
+UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated)
 {
-	SOLDIERTYPE				*pSoldier;
 	UINT32						uiCursorFlags;
 	BOOLEAN						fShowAPs = FALSE;
 	BOOLEAN						fRecalc = FALSE;
 	INT16							sTargetGridNo = usMapPos;
 	UINT8							ubCursorID=0;
 	UINT8							ubItemCursor;
-
-	pSoldier = MercPtrs[ ubSoldierID ];
 
 	fRecalc = GetMouseRecalcAndShowAPFlags( &uiCursorFlags, &fShowAPs );
 
