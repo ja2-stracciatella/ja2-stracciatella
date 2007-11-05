@@ -384,44 +384,35 @@ static INT8 GetUIApsToDisplay(const SOLDIERTYPE* s)
 
 void CheckForDisabledForGiveItem(void)
 {
-	INT16			sDist;
-	INT16			sDistVisible;
-	INT16			sDestGridNo;
-	INT8			bDestLevel;
-	INT32			cnt;
-	SOLDIERTYPE	*pSoldier;
-	UINT8			ubSrcSoldier;
+	const SOLDIERTYPE* const cur = gpSMCurrentMerc;
+	Assert(cur != NULL);
 
-
-	Assert( gpSMCurrentMerc != NULL);
-
-	if ( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
+	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
 	{
-		gfSMDisableForItems = !CanMercInteractWithSelectedShopkeeper( gpSMCurrentMerc );
+		gfSMDisableForItems = !CanMercInteractWithSelectedShopkeeper(cur);
 		return;
 	}
-
 
 	// Default to true
 	gfSMDisableForItems = TRUE;
 
 	// ATE: Is the current merc unconscious.....
-	if ( gpSMCurrentMerc->bLife < OKLIFE && gpItemPointer != NULL )
+	if (cur->bLife < OKLIFE && gpItemPointer != NULL)
 	{
 		// Go through each merc and see if there is one closeby....
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+		const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
+		for (INT32 i = t->bFirstID, last = t->bLastID; i <= last; ++i)
 		{
-			if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) )
+			const SOLDIERTYPE* const s = GetMan(i);
+			if (s->bActive && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s) && s->bInSector && IsMercOnCurrentSquad(s))
 			{
-				sDist = PythSpacesAway( gpSMCurrentMerc->sGridNo, pSoldier->sGridNo );
-
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bLevel );
+				const INT16 sDist        = PythSpacesAway(cur->sGridNo, s->sGridNo);
+				const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, cur->sGridNo, cur->bLevel);
 
 				// Check LOS....
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, gpSMCurrentMerc->sGridNo,  gpSMCurrentMerc->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
+				if (SoldierTo3DLocationLineOfSightTest(s, cur->sGridNo, cur->bLevel, 3, sDistVisible, TRUE))
 				{
-					if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
+					if (sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE)
 					{
 						gfSMDisableForItems = FALSE;
 						break;	// found one, no need to keep looking
@@ -432,54 +423,52 @@ void CheckForDisabledForGiveItem(void)
 	}
 	else
 	{
-		ubSrcSoldier = (UINT8)gusSelectedSoldier;
-
-		if ( gpItemPointer != NULL )
+		const SOLDIERTYPE* src;
+		if (gpItemPointerSoldier != NULL)
 		{
-			ubSrcSoldier = gpItemPointerSoldier->ubID;
+			src = gpItemPointerSoldier;
 		}
-
-		// OK buddy, check our currently selected merc and disable/enable if not close enough...
-		if ( ubSrcSoldier != NOBODY )
+		else if (gusSelectedSoldier != NOBODY)
 		{
-			const SOLDIERTYPE* const src = MercPtrs[ubSrcSoldier];
-			const SOLDIERTYPE* const cur = gpSMCurrentMerc;
-			if (cur != src)
-			{
-				sDestGridNo = cur->sGridNo;
-				bDestLevel	= cur->bLevel;
-
-				// Get distance....
-				sDist = PythSpacesAway(src->sGridNo, sDestGridNo);
-
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible(src, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel);
-
-				// Check LOS....
-				if (SoldierTo3DLocationLineOfSightTest(src, sDestGridNo, bDestLevel, 3, sDistVisible, TRUE))
-				{
-					// UNCONSCIOUS GUYS ONLY 1 tile AWAY
-					if (cur->bLife < CONSCIOUSNESS)
-					{
-						if ( sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE )
-						{
-							gfSMDisableForItems = FALSE;
-						}
-					}
-					else if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE )
-					{
-						gfSMDisableForItems = FALSE;
-					}
-				}
-			}
-			else
-			{
-				gfSMDisableForItems = FALSE;
-			}
+			src = GetSelectedMan();
 		}
 		else
 		{
 			gfSMDisableForItems = FALSE;
+			return;
+		}
+
+		// OK buddy, check our currently selected merc and disable/enable if not close enough...
+		if (cur == src)
+		{
+			gfSMDisableForItems = FALSE;
+			return;
+		}
+
+		const INT16 sDestGridNo = cur->sGridNo;
+		const INT8  bDestLevel  = cur->bLevel;
+
+		// Get distance....
+		const INT16 sDist = PythSpacesAway(src->sGridNo, sDestGridNo);
+
+		// is he close enough to see that gridno if he turns his head?
+		const INT16 sDistVisible = DistanceVisible(src, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sDestGridNo, bDestLevel);
+
+		// Check LOS....
+		if (SoldierTo3DLocationLineOfSightTest(src, sDestGridNo, bDestLevel, 3, sDistVisible, TRUE))
+		{
+			// UNCONSCIOUS GUYS ONLY 1 tile AWAY
+			if (cur->bLife < CONSCIOUSNESS)
+			{
+				if (sDist <= PASSING_ITEM_DISTANCE_NOTOKLIFE)
+				{
+					gfSMDisableForItems = FALSE;
+				}
+			}
+			else if (sDist <= PASSING_ITEM_DISTANCE_OKLIFE)
+			{
+				gfSMDisableForItems = FALSE;
+			}
 		}
 	}
 }
