@@ -4271,10 +4271,8 @@ static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 
 static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 {
-	UINT8							ubTargID;
 	UINT32						uiRange;
 	UINT16						usMapPos;
-	BOOLEAN						fValidTalkableGuy = FALSE;
 	INT16							sTargetGridNo;
 	INT16							sDistVisible;
 
@@ -4300,14 +4298,11 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 
 
 	//CHECK FOR VALID TALKABLE GUY HERE
-	fValidTalkableGuy = IsValidTalkableNPCFromMouse( &ubTargID, FALSE, TRUE , FALSE );
+	const SOLDIERTYPE* const tgt = GetValidTalkableNPCFromMouse(FALSE, TRUE, FALSE);
 
 	// USe cursor based on distance
 	// Get distance away
-	if ( fValidTalkableGuy )
-	{
-		sTargetGridNo = MercPtrs[ ubTargID ]->sGridNo;
-	}
+	if (tgt != NULL) sTargetGridNo = tgt->sGridNo;
 
 	uiRange = GetRangeFromGridNoDiff( pSoldier->sGridNo, sTargetGridNo );
 
@@ -4319,7 +4314,7 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 
 	if ( uiRange <= NPC_TALK_RADIUS )
 	{
-		if ( fValidTalkableGuy )
+		if (tgt != NULL)
 		{
 			guiNewUICursor = TALK_A_UICURSOR;
 		}
@@ -4330,7 +4325,7 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 	}
 	else
 	{
-		if ( fValidTalkableGuy )
+		if (tgt != NULL)
 		{
 			//guiNewUICursor = TALK_OUT_RANGE_A_UICURSOR;
 			guiNewUICursor = TALK_A_UICURSOR;
@@ -4341,7 +4336,7 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 		}
 	}
 
-	if ( fValidTalkableGuy )
+	if (tgt != NULL)
 	{
 		if ( !SoldierTo3DLocationLineOfSightTest( pSoldier, sTargetGridNo,  pSoldier->bLevel, 3, (UINT8) sDistVisible, TRUE ) )
 		{
@@ -4960,17 +4955,12 @@ static UINT32 UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 }
 
 
-
-BOOLEAN IsValidTalkableNPCFromMouse( UINT8 *pubSoldierID , BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed )
+SOLDIERTYPE* GetValidTalkableNPCFromMouse(BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed)
 {
 	// Check if there is a guy here to talk to!
-	if (gusUIFullTargetID != NOBODY)
-	{
-			*pubSoldierID = (UINT8)gusUIFullTargetID;
-			return( IsValidTalkableNPC( (UINT8)gusUIFullTargetID, fGive, fAllowMercs, fCheckCollapsed ) );
-	}
-
-	return( FALSE );
+	if (gusUIFullTargetID == NOBODY) return NULL;
+	if (!IsValidTalkableNPC(gusUIFullTargetID, fGive, fAllowMercs, fCheckCollapsed)) return NULL;
+	return GetMan(gusUIFullTargetID);
 }
 
 

@@ -3884,7 +3884,6 @@ void DrawItemTileCursor( )
 {
 	UINT16						usMapPos;
 	UINT16						usIndex;
-	UINT8							ubSoldierID;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
 	UINT32						uiCursorFlags;
@@ -3922,7 +3921,7 @@ void DrawItemTileCursor( )
 		gfUIHandleShowMoveGrid = FALSE;
 
 		// If we are over a talkable guy, set flag
-		if ( IsValidTalkableNPCFromMouse( &ubSoldierID, TRUE, FALSE, TRUE ) )
+		if (GetValidTalkableNPCFromMouse(TRUE, FALSE, TRUE) != NULL)
 		{
 			fGiveItem = TRUE;
 		}
@@ -4193,14 +4192,12 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 {
 	// Determine what to do
 	UINT8 ubDirection;
-	UINT8	ubSoldierID;
 	UINT16	  usItem;
 	INT16			sAPCost;
 	SOLDIERTYPE		*pSoldier=NULL;
 	UINT8			ubThrowActionCode=0;
 	UINT32		uiThrowActionData=0;
 	INT16			sEndZ = 0;
-	BOOLEAN		fGiveItem = FALSE;
 	OBJECTTYPE TempObject;
 	INT16			sGridNo;
 	INT16			sDist;
@@ -4257,10 +4254,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 
 	// SEE IF WE ARE OVER A TALKABLE GUY!
-	if ( IsValidTalkableNPCFromMouse( &ubSoldierID, TRUE, FALSE, TRUE ) )
-	{
-		fGiveItem = TRUE;
-	}
+	SOLDIERTYPE* const tgt = GetValidTalkableNPCFromMouse(TRUE, FALSE, TRUE);
+	BOOLEAN fGiveItem = (tgt != NULL);
 
 	// OK, if different than default, change....
 	if ( gfItemPointerDifferentThanDefault )
@@ -4278,10 +4273,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		usItem = gpItemPointer->usItem;
 
 		// If the target is a robot,
-		if ( MercPtrs[ ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+		if (tgt->uiStatusFlags & SOLDIER_ROBOT)
 		{
 			// Charge APs to reload robot!
-			sAPCost = GetAPsToReloadRobot( gpItemPointerSoldier,  MercPtrs[ ubSoldierID ] );
+			sAPCost = GetAPsToReloadRobot(gpItemPointerSoldier, tgt);
 		}
 		else
 		{
@@ -4300,12 +4295,12 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		}
 /*
 		//if the user just clicked on an arms dealer
-		if( IsMercADealer( MercPtrs[ ubSoldierID ]->ubProfile ) )
+		if (IsMercADealer(tgt->ubProfile))
 		{
 			if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, TRUE ) )
 			{
 				//Enter the shopkeeper interface
-				EnterShopKeeperInterfaceScreen( MercPtrs[ ubSoldierID ]->ubProfile );
+				EnterShopKeeperInterfaceScreen(tgt->ubProfile);
 
 				EndItemPointer( );
 			}
@@ -4317,10 +4312,10 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		if ( EnoughPoints( gpItemPointerSoldier, sAPCost, 0, TRUE ) )
 		{
 			// If we are a robot, check if this is proper item to reload!
-			if ( MercPtrs[ ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+			if (tgt->uiStatusFlags & SOLDIER_ROBOT)
 			{
 				// Check if we can reload robot....
-				if ( IsValidAmmoToReloadRobot( MercPtrs[ ubSoldierID ], &TempObject ) )
+				if (IsValidAmmoToReloadRobot(tgt, &TempObject))
 				{
 					 INT16	sActionGridNo;
 					 UINT8	ubDirection;
@@ -4328,7 +4323,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 					 // Walk up to him and reload!
 					 // See if we can get there to stab
-					 sActionGridNo =  FindAdjacentGridEx( gpItemPointerSoldier, MercPtrs[ ubSoldierID ]->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+					 sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, tgt->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
 
 					 if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					 {
@@ -4372,13 +4367,13 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				//if (gbItemPointerSrcSlot != NO_SLOT )
 				{
 					// Give guy this item.....
-					SoldierGiveItem( gpItemPointerSoldier, MercPtrs[ ubSoldierID ], &TempObject, gbItemPointerSrcSlot );
+					SoldierGiveItem(gpItemPointerSoldier, tgt, &TempObject, gbItemPointerSrcSlot);
 
 					gfDontChargeAPsToPickup = FALSE;
 					EndItemPointer( );
 
 					// If we are giving it to somebody not on our team....
-					if ( MercPtrs[ ubSoldierID ]->ubProfile < FIRST_RPC || RPC_RECRUITED( MercPtrs[ ubSoldierID ] ) )
+					if (tgt->ubProfile < FIRST_RPC || RPC_RECRUITED(tgt))
 					{
 
 					}
