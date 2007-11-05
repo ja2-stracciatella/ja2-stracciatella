@@ -663,14 +663,10 @@ void RenderTopmostTacticalInterface( )
 	// Loop through all mercs and make go
 	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
 	{
-		const SOLDIERTYPE* pSoldier = MercSlots[cnt];
-
+		SOLDIERTYPE* const pSoldier = MercSlots[cnt];
 		if (pSoldier != NULL )
 		{
-			if (pSoldier != gSelectedGuy)
-			{
-				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
-			}
+			if (pSoldier != gSelectedGuy) DrawSelectedUIAboveGuy(pSoldier);
 
 			if ( pSoldier->fDisplayDamage )
 			{
@@ -718,12 +714,8 @@ void RenderTopmostTacticalInterface( )
 
 	}
 
-	if ( gusSelectedSoldier != NOBODY )
-	{
-		DrawSelectedUIAboveGuy( gusSelectedSoldier );
-	}
-
-	if (gSelectedGuy != NULL) DrawSelectedUIAboveGuy(gSelectedGuy->ubID);
+	if (gusSelectedSoldier != NOBODY) DrawSelectedUIAboveGuy(GetSelectedMan());
+	if (gSelectedGuy       != NULL)   DrawSelectedUIAboveGuy(gSelectedGuy);
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
 	if ( gTacticalStatus.ubCurrentTeam == gbPlayerNum )

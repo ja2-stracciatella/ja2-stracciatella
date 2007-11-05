@@ -133,7 +133,7 @@ void CancelOpenDoorMenu( );
 void HandleInterfaceBackgrounds( );
 
 
-void DrawSelectedUIAboveGuy( UINT16 usSoldierID );
+void DrawSelectedUIAboveGuy(SOLDIERTYPE* s);
 
 void CreateCurrentTacticalPanelButtons( );
 void RemoveCurrentTacticalPanelButtons( );

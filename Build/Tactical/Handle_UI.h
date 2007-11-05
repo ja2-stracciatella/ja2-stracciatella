@@ -175,7 +175,7 @@ INT16			gUIDisplayActionPointsOffX;
 UINT32		guiShowUPDownArrows;
 BOOLEAN		gfUIHandleSelection;
 INT16			gsSelectedGridNo;
-extern const SOLDIERTYPE* gSelectedGuy;
+extern SOLDIERTYPE* gSelectedGuy;
 BOOLEAN		gfUIInDeadlock;
 UINT8			gUIDeadlockedSoldier;
 

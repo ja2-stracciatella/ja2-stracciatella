@@ -1158,7 +1158,7 @@ void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY,
 static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight);
 
 
-void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
+void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 {
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
@@ -1168,8 +1168,6 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	UINT16										 usGraphicToUse = THIRDPOINTERS1;
   BOOLEAN                    fRaiseName = FALSE;
   BOOLEAN                    fDoName = TRUE;
-
-	SOLDIERTYPE* pSoldier = GetSoldier(usSoldierID);
 
 	if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
 	{
