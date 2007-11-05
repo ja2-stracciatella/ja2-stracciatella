@@ -60,7 +60,7 @@ void    RenderTEAMPanel(BOOLEAN fDirty);
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s);
-void SetTEAMPanelCurrentMerc(UINT8 ubNewID);
+void SetTEAMPanelCurrentMerc(void);
 
 BOOLEAN InitTEAMSlots(void);
 void    AddPlayerToInterfaceTeamSlot(UINT8 ubID);

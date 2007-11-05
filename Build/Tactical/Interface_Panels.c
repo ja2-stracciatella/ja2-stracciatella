@@ -2911,11 +2911,8 @@ static void BtnSquadCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-void SetTEAMPanelCurrentMerc(UINT8 ubNewID)
+void SetTEAMPanelCurrentMerc(void)
 {
-	// Ignore ther ID given!
-	// ALWYAS USE CURRENT MERC!
-
 	fInterfacePanelDirty = DIRTYLEVEL2;
 	UpdateTEAMPanel();
 }

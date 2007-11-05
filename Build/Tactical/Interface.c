@@ -404,11 +404,8 @@ void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s)
 
 	switch( gsCurInterfacePanel )
 	{
-		case SM_PANEL: gSelectSMPanelToMerc = s; break;
-
-		case TEAM_PANEL:
-			SetTEAMPanelCurrentMerc( (UINT8)gusSelectedSoldier );
-			break;
+		case SM_PANEL:   gSelectSMPanelToMerc = s;  break;
+		case TEAM_PANEL: SetTEAMPanelCurrentMerc(); break;
 	}
 }
 
