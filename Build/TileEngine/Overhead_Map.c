@@ -410,7 +410,7 @@ void HandleOverheadMap( )
 	{
 		INT16 usMapPos;
 
-		gfUIHandleSelectionAboveGuy			= FALSE;
+		gSelectedGuy = NULL;
 
 		HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
 
@@ -464,12 +464,7 @@ void HandleOverheadMap( )
     {
 			if ( GetClosestMercInOverheadMap( usMapPos, &pSoldier, 1 ) )
 			{
-        if ( pSoldier->bTeam == gbPlayerNum )
-        {
-    		  gfUIHandleSelectionAboveGuy			= TRUE;
-					gSelectedGuy = pSoldier;
-        }
-
+				if (pSoldier->bTeam == gbPlayerNum) gSelectedGuy = pSoldier;
         DisplayMercNameInOverhead( pSoldier );
       }
 		}

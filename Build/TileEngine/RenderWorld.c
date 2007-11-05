@@ -1040,7 +1040,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 											// Set shade
 											// If a bad guy is highlighted
-											if (gfUIHandleSelectionAboveGuy == TRUE && gSelectedGuy->bSide != gbPlayerNum)
+											if (gSelectedGuy != NULL && gSelectedGuy->bSide != gbPlayerNum)
 											{
 												if (gSelectedGuy == pSoldier)
 												{

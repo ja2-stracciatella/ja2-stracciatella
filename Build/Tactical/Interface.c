@@ -1260,7 +1260,7 @@ void DrawSelectedUIAboveGuy( UINT16 usSoldierID )
 	if ( !pSoldier->fShowLocator )
 	{
 		// RETURN IF MERC IS NOT SELECTED
-		if (gfUIHandleSelectionAboveGuy && pSoldier == gSelectedGuy && pSoldier->ubID != gusSelectedSoldier && !gfIgnoreOnSelectedGuy)
+		if (pSoldier == gSelectedGuy && pSoldier->ubID != gusSelectedSoldier && !gfIgnoreOnSelectedGuy)
 		{
 
 		}

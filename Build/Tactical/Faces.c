@@ -1632,7 +1632,7 @@ void HandleAutoFaces( )
 				 bLife		 = pSoldier->bLife;
 				 bAPs      = pSoldier->bActionPoints;
 
-				if (pSoldier == gSelectedGuy && gfUIHandleSelectionAboveGuy)
+				if (pSoldier == gSelectedGuy)
 				 {
 					 pFace->uiFlags |= FACE_SHOW_WHITE_HILIGHT;
 				 }

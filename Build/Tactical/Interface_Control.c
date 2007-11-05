@@ -667,11 +667,7 @@ void RenderTopmostTacticalInterface( )
 
 		if (pSoldier != NULL )
 		{
-			if (pSoldier == gSelectedGuy && gfUIHandleSelectionAboveGuy)
-			{
-
-			}
-			else
+			if (pSoldier != gSelectedGuy)
 			{
 				DrawSelectedUIAboveGuy((UINT16)pSoldier->ubID);
 			}
@@ -727,10 +723,7 @@ void RenderTopmostTacticalInterface( )
 		DrawSelectedUIAboveGuy( gusSelectedSoldier );
 	}
 
-	if (gfUIHandleSelectionAboveGuy && gSelectedGuy != NULL)
-	{
-		DrawSelectedUIAboveGuy(gSelectedGuy->ubID);
-	}
+	if (gSelectedGuy != NULL) DrawSelectedUIAboveGuy(gSelectedGuy->ubID);
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
 	if ( gTacticalStatus.ubCurrentTeam == gbPlayerNum )

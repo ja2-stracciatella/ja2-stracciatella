@@ -314,7 +314,6 @@ BOOLEAN		gfUIDisplayActionPointsCenter		= FALSE;
 INT16			gUIDisplayActionPointsOffY			= 0;
 INT16			gUIDisplayActionPointsOffX			= 0;
 BOOLEAN		gfUIHandleSelection							= FALSE;
-BOOLEAN		gfUIHandleSelectionAboveGuy			= FALSE;
 BOOLEAN		gfUIInDeadlock									= FALSE;
 UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
@@ -381,7 +380,7 @@ UINT32  HandleTacticalUI( void )
 		gfUIDisplayActionPointsBlack  	= FALSE;
 		gfUIDisplayActionPointsCenter		= FALSE;
 		gfUIHandleSelection							= NO_GUY_SELECTION;
-		gfUIHandleSelectionAboveGuy			= FALSE;
+		gSelectedGuy                    = NULL;
 		guiShowUPDownArrows							= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 		SetHitLocationText(NULL);
 		SetIntTileLocationText(NULL);
@@ -2938,8 +2937,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 						}
 						else
 						{
-							gfUIHandleSelection							= ENEMY_GUY_SELECTION;
-							gfUIHandleSelectionAboveGuy			= TRUE;
+							gfUIHandleSelection = ENEMY_GUY_SELECTION;
 						}
 					}
 				}
@@ -2961,7 +2959,6 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				}
 
 				gSelectedGuy = pSoldier;
-				gfUIHandleSelectionAboveGuy			= TRUE;
 			}
 		}
 		else if ( ( ( uiMercFlags & ENEMY_MERC ) || ( uiMercFlags & NEUTRAL_MERC ) ) && ( uiMercFlags & VISIBLE_MERC ) )
@@ -2999,7 +2996,6 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 					}
 				}
 
-				gfUIHandleSelectionAboveGuy			= TRUE;
 				gSelectedGuy = pSoldier;
 			}
 		}
