@@ -41,9 +41,6 @@
 // backgrounds for breath max background
 extern UINT32 guiBrownBackgroundForTeamPanel;
 
-// selected grunt
-extern UINT16 gusSelectedSoldier;
-
 // car portraits
 enum{
 	ELDORADO_PORTRAIT =0,
