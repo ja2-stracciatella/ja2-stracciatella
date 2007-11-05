@@ -1511,7 +1511,7 @@ static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 
 		 }
 
-		guiNewUICursor = GetProperItemCursor(pSoldier, pSoldier->inv[HANDPOS].usItem, usMapPos, FALSE);
+		guiNewUICursor = GetProperItemCursor(pSoldier, usMapPos, FALSE);
 
 		  // Show UI ON GUY
 		  UIHandleOnMerc( FALSE );
@@ -2202,7 +2202,7 @@ static UINT32 UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 	SOLDIERTYPE* const sel = GetSoldier(gusSelectedSoldier);
 	if (sel != NULL)
 	{
-		guiNewUICursor = GetProperItemCursor(sel, sel->inv[HANDPOS].usItem, usMapPos, TRUE);
+		guiNewUICursor = GetProperItemCursor(sel, usMapPos, TRUE);
 		 UIHandleOnMerc( FALSE );
 	}
 

@@ -111,7 +111,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 
 
 // FUNCTIONS FOR CURSOR DETERMINATION!
-UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated)
+UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN fActivated)
 {
 	UINT32						uiCursorFlags;
 	BOOLEAN						fShowAPs = FALSE;

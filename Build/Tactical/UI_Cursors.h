@@ -9,7 +9,7 @@
 #define REFINE_KNIFE_2				6
 
 
-UINT8 GetProperItemCursor(SOLDIERTYPE* s, UINT16 ubItemIndex, UINT16 usMapPos, BOOLEAN fActivated);
+UINT8 GetProperItemCursor(SOLDIERTYPE* s, UINT16 usMapPos, BOOLEAN fActivated);
 
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier );
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
