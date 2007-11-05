@@ -1040,9 +1040,9 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 											// Set shade
 											// If a bad guy is highlighted
-											if (gfUIHandleSelectionAboveGuy == TRUE && MercPtrs[gsSelectedGuy]->bSide != gbPlayerNum)
+											if (gfUIHandleSelectionAboveGuy == TRUE && gSelectedGuy->bSide != gbPlayerNum)
 											{
-												if (gsSelectedGuy == pSoldier->ubID)
+												if (gSelectedGuy == pSoldier)
 												{
 													pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
 													gsForceSoldierZLevel = TOPMOST_Z_LEVEL;

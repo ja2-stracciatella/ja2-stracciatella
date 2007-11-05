@@ -338,7 +338,7 @@ BOOLEAN		gfUICanBeginAllMoveCycle					= FALSE;		// GEts set so we know that the 
 
 INT16			gsSelectedGridNo								= 0;
 INT16			gsSelectedLevel									= I_GROUND_LEVEL;
-INT16			gsSelectedGuy										= NO_SOLDIER;
+const SOLDIERTYPE* gSelectedGuy = NULL;
 
 BOOLEAN		gfUIRefreshArrows								= FALSE;
 
@@ -2890,8 +2890,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	if (usSoldierIndex != NOBODY)
 	{
-		const SOLDIERTYPE* pSoldier = GetSoldier(usSoldierIndex);
-
+		const SOLDIERTYPE* const pSoldier = GetSoldier(usSoldierIndex);
 		if ( uiMercFlags & OWNED_MERC )
 		{
 			// ATE: Check if this is an empty vehicle.....
@@ -2961,10 +2960,9 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 					gsSelectedLevel									= pSoldier->bLevel;
 				}
 
-				gsSelectedGuy										= usSoldierIndex;
+				gSelectedGuy = pSoldier;
 				gfUIHandleSelectionAboveGuy			= TRUE;
 			}
-
 		}
 		else if ( ( ( uiMercFlags & ENEMY_MERC ) || ( uiMercFlags & NEUTRAL_MERC ) ) && ( uiMercFlags & VISIBLE_MERC ) )
 		{
@@ -3002,7 +3000,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				}
 
 				gfUIHandleSelectionAboveGuy			= TRUE;
-				gsSelectedGuy										= usSoldierIndex;
+				gSelectedGuy = pSoldier;
 			}
 		}
 		else

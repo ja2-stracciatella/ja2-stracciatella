@@ -467,7 +467,7 @@ void HandleOverheadMap( )
         if ( pSoldier->bTeam == gbPlayerNum )
         {
     		  gfUIHandleSelectionAboveGuy			= TRUE;
-          gsSelectedGuy                   = pSoldier->ubID;
+					gSelectedGuy = pSoldier;
         }
 
         DisplayMercNameInOverhead( pSoldier );
