@@ -1644,7 +1644,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 										if ( pNewSoldier->bAssignment != iCurrentSquad )
 										{
-  										HandleLocateSelectMerc( pNewSoldier->ubID, LOCATEANDSELECT_MERC );
+  										HandleLocateSelectMerc(pNewSoldier, LOCATEANDSELECT_MERC);
 
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 ) );
 
@@ -1659,7 +1659,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								if ( gusSelectedSoldier != NO_SOLDIER )
 								{ //Select next merc
 									const UINT8 bID = FindNextMercInTeamPanel(GetSelectedMan());
-									HandleLocateSelectMerc( bID, LOCATEANDSELECT_MERC );
+									HandleLocateSelectMerc(GetMan(bID), LOCATEANDSELECT_MERC);
 
 							    // Center to guy....
 									LocateSoldier(GetSelectedMan(), SETLOCATOR);
@@ -4359,7 +4359,7 @@ static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 	const UINT8 id = GetPlayerIDFromInterfaceTeamSlot(ubPanelSlot);
 	if (id != NOBODY)
 	{
-		HandleLocateSelectMerc(id, bCode);
+		HandleLocateSelectMerc(GetMan(id), bCode);
 		ErasePath(TRUE);
 		gfPlotNewMovement = TRUE;
 	}

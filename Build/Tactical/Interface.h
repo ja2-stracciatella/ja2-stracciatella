@@ -151,8 +151,6 @@ void EraseRenderArrows( );
 
 void EndDeadlockMsg( );
 
-void HandleLocateSelectMerc( UINT8 ubID, INT8 bFlag );
-
 void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel );
 
 

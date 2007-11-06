@@ -119,6 +119,8 @@ void BeginKeyPanelFromKeyShortcut(void);
 
 void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
 
+void HandleLocateSelectMerc(SOLDIERTYPE* s, INT8 bFlag);
+
 extern SOLDIERTYPE* gpSMCurrentMerc;
 extern INT32        iSMPanelButtons[NUM_SM_BUTTONS];
 extern INT32        iTEAMPanelButtons[NUM_TEAM_BUTTONS];

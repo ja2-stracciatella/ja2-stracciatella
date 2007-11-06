@@ -2251,8 +2251,6 @@ static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	SOLDIERTYPE *pVehicle;
-
 	if ( gpSMCurrentMerc == NULL )
 	{
 		return;
@@ -2269,9 +2267,8 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( gpSMCurrentMerc->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
 			{
-				pVehicle = GetSoldierStructureForVehicle( gpSMCurrentMerc->iVehicleId );
-
-				HandleLocateSelectMerc( pVehicle->ubID, 0 );
+				SOLDIERTYPE* const v = GetSoldierStructureForVehicle(gpSMCurrentMerc->iVehicleId);
+				HandleLocateSelectMerc(v, 0);
 			}
 			else
 			{
@@ -2283,7 +2280,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					HandleLocateSelectMerc( gpSMCurrentMerc->ubID, 0 );
+					HandleLocateSelectMerc(gpSMCurrentMerc, 0);
 				}
 			}
 		}
@@ -3095,8 +3092,8 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if (s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER))
 			{
-				const SOLDIERTYPE* const v = GetSoldierStructureForVehicle(s->iVehicleId);
-				HandleLocateSelectMerc(v->ubID, 0);
+				SOLDIERTYPE* const v = GetSoldierStructureForVehicle(s->iVehicleId);
+				HandleLocateSelectMerc(v, 0);
 			}
 			else
 			{
@@ -3111,7 +3108,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					}
 					else
 					{
-						HandleLocateSelectMerc(ubSoldierID, 0);
+						HandleLocateSelectMerc(s, 0);
 					}
 				}
 				else
@@ -3139,10 +3136,8 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
+void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 {
-	SOLDIERTYPE* const s = GetMan(ubID);
-
 	if (!s->bActive) return;
 
 	if (gpItemPointer != NULL)
@@ -3180,7 +3175,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 		if (s->fFlashLocator == FALSE)
 		{
 			// If we are currently selected, slide to location
-			if (ubID == gusSelectedSoldier)
+			if (s->ubID == gusSelectedSoldier)
 			{
 				SlideTo(NOWHERE, s, NOBODY, SETLOCATOR);
 			}
@@ -3201,7 +3196,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			if (gGameSettings.fOptions[TOPTION_OLD_SELECTION_METHOD])
 			{
 				// If we are currently selected, slide to location
-				if (ubID == gusSelectedSoldier)
+				if (s->ubID == gusSelectedSoldier)
 				{
 					SlideTo(NOWHERE, s, NOBODY, DONTSETLOCATOR);
 				}
@@ -3214,7 +3209,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			}
 			else
 			{
-				if (ubID == gusSelectedSoldier)
+				if (s->ubID == gusSelectedSoldier)
 				{
 					LocateSoldier(s, DONTSETLOCATOR);
 				}
