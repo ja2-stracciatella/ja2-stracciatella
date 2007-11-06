@@ -242,7 +242,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							if (s != NULL)
 							{
 								 // Select guy
-								if (s == GetSelectedMan() && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+								if (s->ubID == gusSelectedSoldier && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 								{
 									*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
 								}
