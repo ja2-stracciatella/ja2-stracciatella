@@ -922,7 +922,7 @@ BOOLEAN ExecuteOverhead(void)
 									// If we are a robot, play stop sound...
 									if (pSoldier->uiStatusFlags & SOLDIER_ROBOT)
 									{
-										PlaySoldierJA2Sample(pSoldier->ubID, ROBOT_STOP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+										PlaySoldierJA2Sample(pSoldier, ROBOT_STOP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
 									}
 
 									// Update to middle if we're on destination

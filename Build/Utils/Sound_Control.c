@@ -447,13 +447,12 @@ static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTime
 }
 
 
-UINT32 PlaySoldierJA2Sample(UINT16 usID, UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, BOOLEAN fCheck)
+UINT32 PlaySoldierJA2Sample(const SOLDIERTYPE* const s, const UINT32 usNum, const UINT32 ubVolume, const UINT32 ubLoops, const UINT32 uiPan, const BOOLEAN fCheck)
 {
-
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
   {
 	  // CHECK IF GUY IS ON SCREEN BEFORE PLAYING!
-	  if ( ( MercPtrs[ usID ]->bVisible != -1 ) || !fCheck )
+		if (s->bVisible != -1 || !fCheck)
 	  {
 		  return PlayJA2Sample(usNum, CalculateSoundEffectsVolume(ubVolume), ubLoops, uiPan);
 	  }
