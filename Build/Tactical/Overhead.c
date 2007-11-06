@@ -2479,10 +2479,8 @@ void LocateGridNo(UINT16 sGridNo)
 }
 
 
-void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSetLocator)
+void SlideTo(const INT16 sGridno, SOLDIERTYPE* const tgt, const UINT16 usReasonID, const BOOLEAN fSetLocator)
 {
-	if (usSoldierID == NOBODY) return;
-
 	if (fSetLocator == SETANDREMOVEPREVIOUSLOCATOR)
 	{
 		for (INT32 i = 0; i < TOTAL_SOLDIERS; ++i)
@@ -2495,16 +2493,14 @@ void SlideTo(INT16 sGridno, UINT16 usSoldierID , UINT16 usReasonID, BOOLEAN fSet
 		}
 	}
 
-	SOLDIERTYPE* const s = MercPtrs[usSoldierID];
-
 	// Locate even if on screen
-	if (fSetLocator) ShowRadioLocator(s, SHOW_LOCATOR_NORMAL);
+	if (fSetLocator) ShowRadioLocator(tgt, SHOW_LOCATOR_NORMAL);
 
 	// FIRST CHECK IF WE ARE ON SCREEN
-	if (GridNoOnScreen(s->sGridNo)) return;
+	if (GridNoOnScreen(tgt->sGridNo)) return;
 
 	// sGridNo here for DG compatibility
-	gTacticalStatus.sSlideTarget = s->sGridNo;
+	gTacticalStatus.sSlideTarget = tgt->sGridNo;
 	gTacticalStatus.sSlideReason = usReasonID;
 
 	// Plot new path!
@@ -5428,7 +5424,7 @@ void CycleThroughKnownEnemies( )
 					//LocateSoldier(pSoldier, 1);
 
 					//ATE: Change to Slide To...
-					SlideTo( 0, pSoldier->ubID, 0, SETANDREMOVEPREVIOUSLOCATOR );
+					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
 					return;
 				}
 				else
@@ -5474,7 +5470,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 					pSrcSoldier->ubLastEnemyCycledID = (UINT8)cnt;
 
 					//ATE: Change to Slide To...
-					SlideTo( 0, pSoldier->ubID, 0, SETANDREMOVEPREVIOUSLOCATOR );
+					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
 
 					ChangeInterfaceLevel( pSoldier->bLevel );
 					return;
@@ -5501,7 +5497,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 					pSrcSoldier->ubLastEnemyCycledID = (UINT8)cnt;
 
 					//ATE: Change to Slide To...
-					SlideTo( 0, pSoldier->ubID, 0, SETANDREMOVEPREVIOUSLOCATOR );
+					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
 
 					ChangeInterfaceLevel( pSoldier->bLevel );
 					return;

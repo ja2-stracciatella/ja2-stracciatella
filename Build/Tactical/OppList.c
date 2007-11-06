@@ -2204,7 +2204,7 @@ else
 		 {
 			 if (!pOpponent->bNeutral && (pSoldier->bSide != pOpponent->bSide))
 			 {
-					SlideTo(0,pOpponent->ubID, pSoldier->ubID, SETLOCATOR);
+				SlideTo(0, pOpponent, pSoldier->ubID, SETLOCATOR);
 			 }
 		 }
     }
@@ -2879,7 +2879,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 				LocateSoldier(pSoldier, SETLOCATOR);
 
 				// Now slide to other guy....
-				SlideTo( NOWHERE, gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID, NOBODY ,SETLOCATOR);
+				SlideTo(NOWHERE, GetMan(gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID), NOBODY, SETLOCATOR);
 
 			}
 
