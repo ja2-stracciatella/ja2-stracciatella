@@ -3657,10 +3657,11 @@ BOOLEAN InitTEAMSlots(void)
 }
 
 
-BOOLEAN GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot)
+SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 {
-	if (ubPanelSlot >= NUM_TEAM_SLOTS) return NOBODY;
-	return gTeamPanel[ubPanelSlot].ubID;
+	if (ubPanelSlot >= NUM_TEAM_SLOTS) return NULL;
+	const UINT8 id = gTeamPanel[ubPanelSlot].ubID;
+	return id != NOBODY ? GetMan(id) : NULL;
 }
 
 

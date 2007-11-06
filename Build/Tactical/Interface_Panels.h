@@ -64,7 +64,7 @@ void SetTEAMPanelCurrentMerc(void);
 
 BOOLEAN InitTEAMSlots(void);
 void    AddPlayerToInterfaceTeamSlot(UINT8 ubID);
-UINT8   GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot);
+SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
 void    RemoveAllPlayersFromSlot(void);
 BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID);
 void    CheckForAndAddMercToTeamPanel(SOLDIERTYPE* s);

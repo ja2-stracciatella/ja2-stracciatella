@@ -4356,10 +4356,10 @@ static void ChangeCurrentSquad(INT32 iSquad)
 
 static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 {
-	const UINT8 id = GetPlayerIDFromInterfaceTeamSlot(ubPanelSlot);
-	if (id != NOBODY)
+	SOLDIERTYPE* const s = GetPlayerFromInterfaceTeamSlot(ubPanelSlot);
+	if (s != NULL)
 	{
-		HandleLocateSelectMerc(GetMan(id), bCode);
+		HandleLocateSelectMerc(s, bCode);
 		ErasePath(TRUE);
 		gfPlotNewMovement = TRUE;
 	}
