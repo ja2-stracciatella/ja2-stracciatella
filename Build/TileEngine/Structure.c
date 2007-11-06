@@ -1628,14 +1628,12 @@ BOOLEAN DamageStructure( STRUCTURE * pStructure, UINT8 ubDamage, UINT8 ubReason,
 		// Make hit sound....
     if ( pStructure->fFlags & STRUCTURE_CAVEWALL )
     {
-			  PlayJA2Sample(S_VEG_IMPACT1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
+			PlayLocationJA2Sample(sGridNo, S_VEG_IMPACT1, HIGHVOLUME, 1);
     }
     else
     {
-		  if ( guiMaterialHitSound[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] != -1 )
-		  {
-			  PlayJA2Sample(guiMaterialHitSound[pStructure->pDBStructureRef->pDBStructure->ubArmour], SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
-		  }
+			const INT32 snd = guiMaterialHitSound[pStructure->pDBStructureRef->pDBStructure->ubArmour];
+			if (snd != -1) PlayLocationJA2Sample(sGridNo, snd, HIGHVOLUME, 1);
     }
 		// Don't update damage HPs....
 		return( TRUE );

@@ -207,16 +207,8 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 
 	// Do sound...
-	if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
-	{
-		// Play Opening sound...
-		PlayJA2Sample(GetStructureOpenSound(pStructure, FALSE), SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
-	}
-	else
-	{
-		// Play Opening sound...
-		PlayJA2Sample(GetStructureOpenSound(pStructure, TRUE), SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
-	}
+	const BOOLEAN closing = (pStructure->fFlags & STRUCTURE_OPEN) != 0;
+	PlayLocationJA2Sample(sGridNo, GetStructureOpenSound(pStructure, closing), HIGHVOLUME, 1);
 
 	// ATE: Don't handle switches!
 	if ( !( pStructure->fFlags & STRUCTURE_SWITCH ) )

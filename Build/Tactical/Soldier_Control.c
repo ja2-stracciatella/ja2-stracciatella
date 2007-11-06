@@ -265,7 +265,7 @@ static void HandleVehicleMovementSound(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
 	{
 		if ( pVehicle->iMovementSoundID == NO_SAMPLE )
 		{
-			pVehicle->iMovementSoundID = PlayJA2Sample(pVehicle->iMoveSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+			pVehicle->iMovementSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, pVehicle->iMoveSound, HIGHVOLUME, 1);
 		}
 	}
 	else
@@ -2526,8 +2526,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 					EVENT_InitNewSoldierAnim( pSoldier, LOW_TO_DEEP_WATER, 0 , FALSE );
 					pSoldier->usPendingAnimation = DEEP_WATER_SWIM;
 
-					PlayJA2Sample(ENTER_DEEP_WATER_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-
+					PlayLocationJA2Sample(pSoldier->sGridNo, ENTER_DEEP_WATER_1, MIDVOLUME, 1);
 				}
 			}
 
@@ -3407,11 +3406,11 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 
 	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
   {
-	  PlayJA2Sample(KNIFE_IMPACT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+	  PlayLocationJA2Sample(pSoldier->sGridNo, KNIFE_IMPACT, MIDVOLUME, 1);
   }
   else
   {
-	  PlayJA2Sample(BULLET_IMPACT_1 + Random(3), SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+	  PlayLocationJA2Sample(pSoldier->sGridNo, BULLET_IMPACT_1 + Random(3), MIDVOLUME, 1);
   }
 
 	// PLAY RANDOM GETTING HIT SOUND
@@ -3421,7 +3420,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 		if ( pSoldier->ubBodyType == CROW )
 		{
 			// Exploding crow...
-			PlayJA2Sample(CROW_EXPLODE_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+			PlayLocationJA2Sample(pSoldier->sGridNo, CROW_EXPLODE_1, HIGHVOLUME, 1);
 		}
 		else
 		{
@@ -6815,7 +6814,7 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 		}
 		else
 		{
-			PlayJA2Sample(uiSubSoundID, SoundVolume(CalculateSpeechVolume(HIGHVOLUME), pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+			PlayLocationJA2Sample(pSoldier->sGridNo, uiSubSoundID, CalculateSpeechVolume(HIGHVOLUME), 1);
 		}
 		return( TRUE );
 	}

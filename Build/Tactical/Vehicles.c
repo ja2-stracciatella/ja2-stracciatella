@@ -500,7 +500,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			SelectSoldier(pVehicleSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayJA2Sample(pVehicleList[pVehicleSoldier->bVehicleID].iOutOfSound, SoundVolume(HIGHVOLUME, pVehicleSoldier->sGridNo), 1, SoundDir(pVehicleSoldier->sGridNo));
+		PlayLocationJA2Sample(pVehicleSoldier->sGridNo, pVehicleList[pVehicleSoldier->bVehicleID].iOutOfSound, HIGHVOLUME, 1);
 	}
 
 	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
@@ -1512,7 +1512,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 			SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayJA2Sample(pVehicleList[pVehicle->bVehicleID].iOutOfSound, SoundVolume(HIGHVOLUME, pVehicle->sGridNo), 1, SoundDir(pVehicle->sGridNo));
+		PlayLocationJA2Sample(pVehicle->sGridNo, pVehicleList[pVehicle->bVehicleID].iOutOfSound, HIGHVOLUME, 1);
 		return( TRUE );
 	}
 
@@ -1542,7 +1542,7 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 {
   if ( ubReason != TAKE_DAMAGE_GAS )
   {
-  	PlayJA2Sample(S_METAL_IMPACT3, SoundVolume(MIDVOLUME, sGridNo), 1, SoundDir(sGridNo));
+  	PlayLocationJA2Sample(sGridNo, S_METAL_IMPACT3, MIDVOLUME, 1);
   }
 
 	// check if there was in fact damage done to the vehicle

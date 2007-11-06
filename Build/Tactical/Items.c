@@ -2652,15 +2652,15 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 					// attachment sounds
 					if ( Item[ pTargetObj->usItem ].usItemClass & IC_WEAPON )
 					{
-						PlayJA2Sample(ATTACH_TO_GUN, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_TO_GUN, MIDVOLUME, 1);
 					}
 					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_ARMOUR )
 					{
-						PlayJA2Sample(ATTACH_CERAMIC_PLATES, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_CERAMIC_PLATES, MIDVOLUME, 1);
 					}
 					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_BOMB )
 					{
-						PlayJA2Sample(ATTACH_DETONATOR, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_DETONATOR, MIDVOLUME, 1);
 					}
 				}
 			}
@@ -4545,7 +4545,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 				DamageItem( &(pSoldier->inv[bSlot]), iDamage, FALSE );
 				if ( !fPlayedGlassBreak && (ubNumberOfObjects != pSoldier->inv[bSlot].ubNumberOfObjects) )
 				{
-					PlayJA2Sample(GLASS_CRACK, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+					PlayLocationJA2Sample(pSoldier->sGridNo, GLASS_CRACK, MIDVOLUME, 1);
 					fPlayedGlassBreak = TRUE;
 					// only dirty once
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );

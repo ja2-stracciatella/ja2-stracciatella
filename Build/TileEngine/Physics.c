@@ -430,7 +430,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 
 			if ( !pObject->fTestObject && pObject->iOldCollisionCode == COLLISION_GROUND )
 			{
-				PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pObject->sGridNo), 1, SoundDir(pObject->sGridNo));
+				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
 
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
@@ -462,8 +462,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 						break;
 				}
 
-				PlayJA2Sample(CATCH_OBJECT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-
+				PlayLocationJA2Sample(pSoldier->sGridNo, CATCH_OBJECT, MIDVOLUME, 1);
 			}
 		}
 
@@ -887,7 +886,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 			if ( !pObject->fTestObject && !pObject->fHaveHitGround )
 			{
-				PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pObject->sGridNo), 1, SoundDir(pObject->sGridNo));
+				PlayLocationJA2Sample(pObject->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 			}
 
 			pObject->fHaveHitGround = TRUE;
@@ -2269,7 +2268,7 @@ static BOOLEAN DoCatchObject(REAL_OBJECT* pObject)
 			break;
 	}
 
-	PlayJA2Sample(CATCH_OBJECT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+	PlayLocationJA2Sample(pSoldier->sGridNo, CATCH_OBJECT, MIDVOLUME, 1);
 
 	pObject->fCatchAnimOn = FALSE;
 

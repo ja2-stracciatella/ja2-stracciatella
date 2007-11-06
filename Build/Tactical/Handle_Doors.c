@@ -1129,7 +1129,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			}
 
 			// OK, We must know what sound to play, for now use same sound for all doors...
-			PlayJA2Sample(uiSoundID, SoundVolume(MIDVOLUME, sGridNo), 1, SoundDir(sGridNo));
+			PlayLocationJA2Sample(sGridNo, uiSoundID, MIDVOLUME, 1);
 		}
 
 	}

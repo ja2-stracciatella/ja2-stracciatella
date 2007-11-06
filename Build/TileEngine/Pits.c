@@ -206,8 +206,7 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 	UINT8	ubID;
 	SOLDIERTYPE *pSoldier;
 
-
-	PlayJA2Sample(CAVE_COLLAPSE, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
+	PlayLocationJA2Sample(sGridNo, CAVE_COLLAPSE, HIGHVOLUME, 1);
 	for( y = -sRadius; y <= sRadius; y++ ) for( x = -sRadius; x <= sRadius; x++ )
 	{
 		sNewGridNo = sGridNo + y * WORLD_COLS + x;

@@ -447,6 +447,14 @@ static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTime
 }
 
 
+UINT32 PlayLocationJA2Sample(const UINT16 grid_no, const UINT32 idx, const UINT32 base_vol, const UINT32 loops)
+{
+	const UINT32 vol = SoundVolume(base_vol, grid_no);
+	const UINT32 pan = SoundDir(grid_no);
+	return PlayJA2Sample(idx, vol, loops, pan);
+}
+
+
 UINT32 PlaySoldierJA2Sample(const SOLDIERTYPE* const s, const UINT32 usNum, const UINT32 base_vol, const UINT32 ubLoops, const BOOLEAN fCheck)
 {
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )

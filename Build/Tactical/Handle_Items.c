@@ -1018,7 +1018,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			DeductPoints( pSoldier, sAPCost, 0 );
 			if ( usHandItem == XRAY_DEVICE )
 			{
-  			PlayJA2Sample(USE_X_RAY_MACHINE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+  			PlayLocationJA2Sample(pSoldier->sGridNo, USE_X_RAY_MACHINE, HIGHVOLUME, 1);
 
 				ActivateXRayDevice( pSoldier );
 				return( ITEM_HANDLE_OK );
@@ -1333,7 +1333,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 	{
 		if ( pSoldier->bVisible != -1 )
 		{
-			PlayJA2Sample(THROW_IMPACT_2, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+			PlayLocationJA2Sample(pSoldier->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 		}
 
 		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );

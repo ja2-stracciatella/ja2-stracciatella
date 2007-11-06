@@ -908,7 +908,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				if ( pSoldier->iBurstSoundID == NO_SAMPLE )
 				{
 					// If failed, play normal default....
-					pSoldier->iBurstSoundID = PlayJA2Sample(Weapon[usItemNum].sBurstSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+					pSoldier->iBurstSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, Weapon[usItemNum].sBurstSound, HIGHVOLUME, 1);
 				}
 			}
 
@@ -950,12 +950,11 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					uiSound = S_SILENCER_2;
 				}
 
-				PlayJA2Sample(uiSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
-
+				PlayLocationJA2Sample(pSoldier->sGridNo, uiSound, HIGHVOLUME, 1);
 			}
 			else
 			{
-				PlayJA2Sample(Weapon[usItemNum].sSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+				PlayLocationJA2Sample(pSoldier->sGridNo, Weapon[usItemNum].sSound, HIGHVOLUME, 1);
 			}
 		}
 	}
@@ -1804,7 +1803,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 	if ( Weapon[ usItemNum ].sSound != NO_WEAPON_SOUND  )
 	{
-		PlayJA2Sample(Weapon[usItemNum].sSound, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+		PlayLocationJA2Sample(pSoldier->sGridNo, Weapon[usItemNum].sSound, HIGHVOLUME, 1);
 	}
 
 	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
@@ -1888,7 +1887,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 
 		if ( sGridNo != NOWHERE )
 		{
-			PlayJA2Sample(SMALL_EXPLODE_1, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
+			PlayLocationJA2Sample(sGridNo, SMALL_EXPLODE_1, HIGHVOLUME, 1);
 		}
 		else
 		{
@@ -1903,7 +1902,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 	  // gTacticalStatus.ubAttackBusyCount++;
 	  // DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
 
-		PlayJA2Sample(CREATURE_GAS_NOISE, SoundVolume(HIGHVOLUME, sGridNo), 1, SoundDir(sGridNo));
+		PlayLocationJA2Sample(sGridNo, CREATURE_GAS_NOISE, HIGHVOLUME, 1);
 
     // Do Spread effect.......
     switch( usItem )

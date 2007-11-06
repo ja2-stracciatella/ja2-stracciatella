@@ -2294,7 +2294,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if ( CheckOnBoxers() )
 				{
 					DeleteTalkingMenu();
-					PlayJA2Sample(BOXING_BELL, SoundVolume(MIDVOLUME, 11237), 5, SoundDir(11237));
+					PlayLocationJA2Sample(11237, BOXING_BELL, MIDVOLUME, 5);
 					ClearAllBoxerFlags();
 					SetBoxingState( BOXING_WAITING_FOR_PLAYER );
 				}

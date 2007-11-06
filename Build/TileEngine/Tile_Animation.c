@@ -515,8 +515,7 @@ void UpdateAniTiles( )
 								break;
 
               case ANI_KEYFRAME_DO_SOUND:
-
-                PlayJA2Sample(pNode->uiUserData, SoundVolume(MIDVOLUME, (INT16)pNode->uiUserData3), 1, SoundDir((INT16)pNode->uiUserData3));
+                PlayLocationJA2Sample((INT16)pNode->uiUserData3, pNode->uiUserData, MIDVOLUME, 1);
                 break;
 						}
 
@@ -537,7 +536,7 @@ void UpdateAniTiles( )
                      ubExpType == EXPLOSV_SMOKE )
                 {
                   // Do sound....
-                  // PlayJA2Sample(AIR_ESCAPING_1, SoundVolume(HIGHVOLUME, pNode->sGridNo), 1, SoundDir(pNode->sGridNo));
+                  // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
 		              NewSmokeEffect( pNode->sGridNo, (UINT16)pNode->uiUserData, gExplosionData[ pNode->uiUserData3 ].Params.bLevel, (UINT8)pNode->ubUserData2 );
                 }
                 else
