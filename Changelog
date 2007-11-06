@@ -1,3 +1,4 @@
+(r1798) Fix vanilla display bug: No path was plotted and no APs for walking were calculated for refueling when the cursor was on a vehicle.
 (r1650) Fix vanilla rounding errors: The scrollbar in the inventory view of the personnel screen was not positioned correctly and could be moved one beyond the last item.
 
 v0.7 - 2007-10-21 - Cinnamon

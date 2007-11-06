@@ -3526,7 +3526,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	else if ( uiFlags == MOVEUI_TARGET_REFUEL )
 	{
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		if ( IsRefuelableStructAtGridNo( usMapPos, &ubMercID ) == 2 )
+		if (IsRefuelableStructAtGridNo(usMapPos, &ubMercID))
 		{
 			INT16 sNewGridNo;
 			UINT8	ubDirection;
