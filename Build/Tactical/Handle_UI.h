@@ -180,7 +180,7 @@ BOOLEAN		gfUIInDeadlock;
 UINT8			gUIDeadlockedSoldier;
 
 BOOLEAN		gfUIMouseOnValidCatcher;
-UINT8			gubUIValidCatcherID;
+extern const SOLDIERTYPE* gUIValidCatcher;
 BOOLEAN		gUIUseReverse;
 
 

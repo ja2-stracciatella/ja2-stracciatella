@@ -3839,7 +3839,7 @@ void DrawItemFreeCursor( )
 }
 
 
-static BOOLEAN SoldierCanSeeCatchComing(SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
+static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcGridNo)
 {
 	return( TRUE );
 /*-
@@ -3889,7 +3889,6 @@ void DrawItemTileCursor( )
 	UINT32						uiCursorFlags;
 	INT16							sFinalGridNo;
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
-	SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGiveItem = FALSE;
 	INT16							sActionGridNo;
 	UINT8							ubDirection;
@@ -3969,26 +3968,26 @@ void DrawItemTileCursor( )
 				if (gusUIFullTargetID != NOBODY)
 				{
 					// Get soldier
-					pSoldier = MercPtrs[ gusUIFullTargetID ];
+					const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
 
 					// Are they on our team?
 					// ATE: Can't be an EPC
-					if ( pSoldier->bTeam == gbPlayerNum && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+					if (tgt->bTeam == gbPlayerNum && !AM_AN_EPC(tgt) && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
 					{
 						if ( sDist <= PASSING_ITEM_DISTANCE_OKLIFE )
 						{
 							// OK, on a valid pass
 							gfUIMouseOnValidCatcher = 4;
-							gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+							gUIValidCatcher         = tgt;
 						}
 						else
 						{
 							// Can they see the throw?
-							if ( SoldierCanSeeCatchComing( pSoldier, gpItemPointerSoldier->sGridNo ) )
+							if (SoldierCanSeeCatchComing(tgt, gpItemPointerSoldier->sGridNo))
 							{
 								// OK, set global that this buddy can see catch...
 								gfUIMouseOnValidCatcher = TRUE;
-								gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+								gUIValidCatcher         = tgt;
 							}
 						}
 					}
@@ -4020,12 +4019,14 @@ void DrawItemTileCursor( )
 			{
 				UIHandleOnMerc( FALSE );
 
+				const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
+
 				// OK, set global that this buddy can see catch...
 				gfUIMouseOnValidCatcher = 2;
-				gubUIValidCatcherID			= (UINT8)gusUIFullTargetID;
+				gUIValidCatcher = tgt;
 
 				// If this is a robot, change to say 'reload'
-				if ( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_ROBOT )
+				if (tgt->uiStatusFlags & SOLDIER_ROBOT)
 				{
 					gfUIMouseOnValidCatcher = 3;
 				}
@@ -4045,9 +4046,9 @@ void DrawItemTileCursor( )
 
 
 					// Get AP cost
-					if ( MercPtrs[ gusUIFullTargetID ]->uiStatusFlags & SOLDIER_ROBOT )
+					if (tgt->uiStatusFlags & SOLDIER_ROBOT)
 					{
-						sAPCost = GetAPsToReloadRobot( gpItemPointerSoldier, MercPtrs[ gusUIFullTargetID ] );
+						sAPCost = GetAPsToReloadRobot(gpItemPointerSoldier, tgt);
 					}
 					else
 					{
@@ -4107,7 +4108,7 @@ void DrawItemTileCursor( )
 					{
 						if ( gfUIMouseOnValidCatcher )
 						{
-							switch( gAnimControl[ MercPtrs[ gubUIValidCatcherID ]->usAnimState ].ubHeight )
+							switch (gAnimControl[gUIValidCatcher->usAnimState].ubHeight)
 							{
 								case ANIM_STAND:
 
@@ -4125,10 +4126,7 @@ void DrawItemTileCursor( )
 									break;
 							}
 
-							if ( MercPtrs[ gubUIValidCatcherID ]->bLevel > 0 )
-							{
-								sEndZ = 0;
-							}
+							if (gUIValidCatcher->bLevel > 0) sEndZ = 0;
 						}
 
 						// Calculate chance to throw here.....

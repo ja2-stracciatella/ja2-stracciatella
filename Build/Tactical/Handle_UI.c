@@ -323,8 +323,7 @@ INT16			gfUIOverItemPoolGridNo					= 0;
 INT16			gsCurrentActionPoints						= 1;
 BOOLEAN		gfUIHandlePhysicsTrajectory			= FALSE;
 BOOLEAN		gfUIMouseOnValidCatcher					= FALSE;
-UINT8			gubUIValidCatcherID							= 0;
-
+const SOLDIERTYPE* gUIValidCatcher = NULL;
 
 
 BOOLEAN		gfUIConfirmExitArrows						= FALSE;
@@ -391,6 +390,7 @@ UINT32  HandleTacticalUI( void )
 		gfUIOverItemPool								= FALSE;
 		gfUIHandlePhysicsTrajectory			= FALSE;
 		gfUIMouseOnValidCatcher					= FALSE;
+		gUIValidCatcher                 = NULL;
     gfIgnoreOnSelectedGuy           = FALSE;
 
 		// Set old event value

@@ -1309,7 +1309,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 	if ( pSoldier->ubProfile != NO_PROFILE || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
-		if ( gfUIMouseOnValidCatcher == 1 && pSoldier->ubID == gubUIValidCatcherID )
+		if (gfUIMouseOnValidCatcher == 1 && pSoldier == gUIValidCatcher)
 		{
 			const wchar_t* Catch = TacticalStr[CATCH_STR];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Catch, TINYFONT1, &sX, &sY);
@@ -1317,7 +1317,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 			mprintf(sX, sY, Catch);
       fRaiseName = TRUE;
 		}
-		else if ( gfUIMouseOnValidCatcher == 3 && pSoldier->ubID == gubUIValidCatcherID )
+		else if (gfUIMouseOnValidCatcher == 3 && pSoldier == gUIValidCatcher)
 		{
 			const wchar_t* Reload = TacticalStr[RELOAD_STR];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Reload, TINYFONT1, &sX, &sY);
@@ -1325,7 +1325,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 			mprintf(sX, sY, Reload);
       fRaiseName = TRUE;
 		}
-		else if ( gfUIMouseOnValidCatcher == 4 && pSoldier->ubID == gubUIValidCatcherID )
+		else if (gfUIMouseOnValidCatcher == 4 && pSoldier == gUIValidCatcher)
 		{
 			const wchar_t* Pass = pMessageStrings[MSG_PASS];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Pass, TINYFONT1, &sX, &sY);
@@ -1410,7 +1410,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		}
 		else
 		{
-			if ( gfUIMouseOnValidCatcher == 2 && pSoldier->ubID == gubUIValidCatcherID )
+			if (gfUIMouseOnValidCatcher == 2 && pSoldier == gUIValidCatcher)
 			{
 				SetFont( TINYFONT1 );
 				SetFontBackground( FONT_MCOLOR_BLACK );
