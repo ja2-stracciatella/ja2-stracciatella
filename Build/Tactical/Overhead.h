@@ -194,7 +194,13 @@ BOOLEAN ExecuteOverhead(void);
 void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 
-void SelectSoldier( UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect  );
+typedef enum SelSoldierFlags
+{
+	SELSOLDIER_ACKNOWLEDGE    = 1U << 0,
+	SELSOLDIER_FORCE_RESELECT = 1U << 1,
+} SelSoldierFlags;
+
+void SelectSoldier(UINT16 usSoldierID, SelSoldierFlags flags);
 void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI);
 
 

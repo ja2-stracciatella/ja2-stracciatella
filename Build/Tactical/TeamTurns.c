@@ -650,7 +650,7 @@ static void StartInterrupt(void)
 		EndDeadlockMsg( );
 
 		// Select guy....
-		SelectSoldier( ubFirstInterrupter, TRUE, TRUE );
+		SelectSoldier(ubFirstInterrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
 
 		// ATE; Slide to guy who got interrupted!
 		SlideTo(NOWHERE, GetMan(gubLastInterruptedGuy), NOBODY, SETLOCATOR);
@@ -870,7 +870,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			}
 			else
 			{
-				SelectSoldier( ubInterruptedSoldier, FALSE, FALSE );
+				SelectSoldier(ubInterruptedSoldier, 0);
 			}
 
 			if (gfHiddenInterrupt)

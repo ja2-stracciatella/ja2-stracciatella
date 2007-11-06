@@ -2278,7 +2278,7 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* s)
 	{
 		if (OK_CONTROLLABLE_MERC(MercPtrs[i]))
 		{
-			SelectSoldier(i, FALSE, FALSE);
+			SelectSoldier(i, 0);
 			return;
 		}
 	}
@@ -2412,9 +2412,9 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 }
 
 
-void SelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect)
+void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 {
-	InternalSelectSoldier(usSoldierID, fAcknowledge, fForceReselect, FALSE);
+	InternalSelectSoldier(usSoldierID, (flags & SELSOLDIER_ACKNOWLEDGE) != 0, (flags & SELSOLDIER_FORCE_RESELECT) != 0, FALSE);
 }
 
 
@@ -2617,7 +2617,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	{
 		if (!fMissionFailed)
 		{
-			SelectSoldier(iNewSelectedSoldier, FALSE, FALSE);
+			SelectSoldier(iNewSelectedSoldier, 0);
 		}
 		else
 		{
@@ -4615,7 +4615,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 			{
 				if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bOppCnt > 0 )
 				{
-					SelectSoldier( pTeamSoldier->ubID, FALSE, TRUE );
+					SelectSoldier(pTeamSoldier->ubID, SELSOLDIER_FORCE_RESELECT);
 				}
 			}
 		}
@@ -6867,7 +6867,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 				const UINT8 ubID = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 				if (ubID != NOBODY && ubID != gusSelectedSoldier)
 				{
-					SelectSoldier(ubID, FALSE, FALSE);
+					SelectSoldier(ubID, 0);
 				}
 				else
 				{
@@ -6876,7 +6876,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 					if (pNewSoldier != pSoldier)
 					{
 						// Good squad found!
-						SelectSoldier(pNewSoldier->ubID, FALSE, FALSE);
+						SelectSoldier(pNewSoldier->ubID, 0);
 					}
 					else
 					{

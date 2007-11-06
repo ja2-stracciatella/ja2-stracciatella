@@ -485,7 +485,7 @@ void HandleHeliDrop( )
 
 
 			// Select our first guy
-			SelectSoldier( gusHeliSeats[ 0 ], FALSE, TRUE );
+			SelectSoldier(gusHeliSeats[0], SELSOLDIER_FORCE_RESELECT);
 
 			//guiCurrentEvent = LU_ENDUILOCK;
 			//gCurrentUIMode  = LOCKUI_MODE;
@@ -749,7 +749,7 @@ void HandleHeliDrop( )
 						gfIgnoreScrolling = FALSE;
 
 						// Select our first guy
-						SelectSoldier( gusHeliSeats[ 0 ], FALSE, TRUE );
+						SelectSoldier(gusHeliSeats[0], SELSOLDIER_FORCE_RESELECT);
 					}
 					break;
 

@@ -1893,7 +1893,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			if ( gpSMCurrentMerc->ubID != gusSelectedSoldier )
 			{
-				SelectSoldier( gpSMCurrentMerc->ubID, FALSE, FALSE );
+				SelectSoldier(gpSMCurrentMerc->ubID, 0);
 			}
 
 			// OK, check if this is Nails, and we're in the vest position , don't allow it to come off....
@@ -3116,7 +3116,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					SelectSoldier(ubSoldierID, TRUE, FALSE);
+					SelectSoldier(ubSoldierID, SELSOLDIER_ACKNOWLEDGE);
 				}
 			}
 		}
@@ -4030,7 +4030,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				if ( gpItemPopupSoldier->ubID != gusSelectedSoldier )
 				{
-					SelectSoldier( gpItemPopupSoldier->ubID, FALSE, FALSE );
+					SelectSoldier(gpItemPopupSoldier->ubID, 0);
 				}
 			}
 
