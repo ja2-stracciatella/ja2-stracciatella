@@ -447,11 +447,27 @@ static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTime
 }
 
 
+UINT32 PlayLocationJA2SampleFromFile(const UINT16 grid_no, const char* const filename, const UINT32 base_vol, const UINT32 loops)
+{
+	const UINT32 vol = SoundVolume(base_vol, grid_no);
+	const UINT32 pan = SoundDir(grid_no);
+	return PlayJA2SampleFromFile(filename, vol, loops, pan);
+}
+
+
 UINT32 PlayLocationJA2Sample(const UINT16 grid_no, const UINT32 idx, const UINT32 base_vol, const UINT32 loops)
 {
 	const UINT32 vol = SoundVolume(base_vol, grid_no);
 	const UINT32 pan = SoundDir(grid_no);
 	return PlayJA2Sample(idx, vol, loops, pan);
+}
+
+
+UINT32 PlayLocationJA2StreamingSample(const UINT16 grid_no, const UINT32 idx, const UINT32 base_vol, const UINT32 loops)
+{
+	const UINT32 vol = SoundVolume(base_vol, grid_no);
+	const UINT32 pan = SoundDir(grid_no);
+	return PlayJA2StreamingSample(idx, vol, loops, pan);
 }
 
 

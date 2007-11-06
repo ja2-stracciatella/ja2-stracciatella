@@ -894,7 +894,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					sprintf( zBurstString, "SOUNDS/WEAPONS/SILENCER BURST %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
 				}
 				else
 				{
@@ -902,7 +902,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					sprintf( zBurstString, "SOUNDS/WEAPONS/%s%d.wav", gzBurstSndStrings[ Weapon[ usItemNum ].ubCalibre ], pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayJA2SampleFromFile(zBurstString, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
 				}
 
 				if ( pSoldier->iBurstSoundID == NO_SAMPLE )

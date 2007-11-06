@@ -396,7 +396,10 @@ UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, U
 
 UINT32	PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops);
 
+UINT32 PlayLocationJA2SampleFromFile(UINT16 grid_no, const char* filename, UINT32 base_vol, UINT32 loops);
+
 UINT32 PlayLocationJA2Sample(UINT16 grid_no, UINT32 idx, UINT32 base_vol, UINT32 loops);
+UINT32 PlayLocationJA2StreamingSample(UINT16 grid_no, UINT32 idx, UINT32 base_vol, UINT32 loops);
 UINT32 PlaySoldierJA2Sample(const SOLDIERTYPE* s, UINT32 usNum, UINT32 base_vol, UINT32 ubLoops, BOOLEAN fCheck);
 
 

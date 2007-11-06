@@ -1536,7 +1536,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 													if (pSoldier->ubBodyType != COW ||
 															Random(2) != 0 && (!(gTacticalStatus.uiFlags & INCOMBAT) || pSoldier->bVisible != -1 || Random(100) < 10))
 													{
-														PlayJA2SampleFromFile(pAnimDef->zSoundFile, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+														PlayLocationJA2SampleFromFile(pSoldier->sGridNo, pAnimDef->zSoundFile, MIDVOLUME, 1);
 													}
 												}
 												else
@@ -2081,7 +2081,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 707:
 					// PLay creature battle cry
-					PlayJA2StreamingSample(CREATURE_BATTLECRY_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo));
+					PlayLocationJA2StreamingSample(pSoldier->sGridNo, CREATURE_BATTLECRY_1, HIGHVOLUME, 1);
 					break;
 
 				case 708:
