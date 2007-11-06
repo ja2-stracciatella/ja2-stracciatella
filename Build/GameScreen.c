@@ -91,7 +91,7 @@ BOOLEAN	gfExitToNewSector					= FALSE;
 BOOLEAN	gfGameScreenLocateToSoldier = FALSE;
 BOOLEAN	gfEnteringMapScreen					= FALSE;
 UINT32	uiOldMouseCursor;
-UINT8		gubPreferredInitialSelectedGuy = NOBODY;
+SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
 
 BOOLEAN				gfTacticalIsModal = FALSE;
 MOUSE_REGION	gTacticalDisableRegion;
@@ -865,17 +865,17 @@ static void TacticalScreenLocateToSoldier(void)
 	INT16					bLastTeamID;
 	BOOLEAN				fPreferedGuyUsed = FALSE;
 
-	if ( gubPreferredInitialSelectedGuy != NOBODY )
+	SOLDIERTYPE* const prefer = gPreferredInitialSelectedGuy;
+	if (prefer != NULL)
 	{
 		// ATE: Put condition here...
-		SOLDIERTYPE* const s = MercPtrs[gubPreferredInitialSelectedGuy];
-		if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s))
+		if (OK_CONTROLLABLE_MERC(prefer) && OK_INTERRUPT_MERC(prefer))
 		{
-			LocateSoldier(s, 10);
-			SelectSoldier( gubPreferredInitialSelectedGuy, FALSE, TRUE );
+			LocateSoldier(prefer, 10);
+			SelectSoldier(prefer->ubID, FALSE, TRUE);
 			fPreferedGuyUsed = TRUE;
 		}
-		gubPreferredInitialSelectedGuy = NOBODY;
+		gPreferredInitialSelectedGuy = NULL;
 	}
 
 	if ( !fPreferedGuyUsed )

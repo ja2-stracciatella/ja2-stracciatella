@@ -2243,7 +2243,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	// Set initial selected
 	// ATE: moved this towards top...
-	gubPreferredInitialSelectedGuy = (UINT8)gusSelectedSoldier;
+	gPreferredInitialSelectedGuy = (gusSelectedSoldier != NOBODY ? GetSelectedMan() : NULL);
 
 	if ( ubJumpCode == JUMP_ALL_LOAD_NEW || ubJumpCode == JUMP_ALL_NO_LOAD )
 	{

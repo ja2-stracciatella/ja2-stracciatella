@@ -1,7 +1,7 @@
 #ifndef _GAMESCREEN_H
 #define _GAMESCREEN_H
 
-
+#include "Soldier_Control.h"
 
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
@@ -16,7 +16,7 @@ typedef void (*MODAL_HOOK)( void );
 
 BOOLEAN	gfGameScreenLocateToSoldier;
 BOOLEAN	gfEnteringMapScreen;
-UINT8		gubPreferredInitialSelectedGuy;
+extern SOLDIERTYPE* gPreferredInitialSelectedGuy;
 
 
 void EnterMapScreen( );
