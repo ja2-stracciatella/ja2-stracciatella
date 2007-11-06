@@ -3163,7 +3163,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 		if (gGameSettings.fOptions[TOPTION_OLD_SELECTION_METHOD])
 		{
 			// Select merc
-			InternalSelectSoldier(ubID, TRUE, FALSE, TRUE);
+			SelectSoldier(ubID, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
 			s->fFlashLocator = FALSE;
 			ResetMultiSelection();
 		}
@@ -3232,7 +3232,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			// Select merc, only if alive!
 			if (!(s->uiStatusFlags & SOLDIER_DEAD))
 			{
-				InternalSelectSoldier(ubID, TRUE, FALSE, TRUE);
+				SelectSoldier(ubID, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
 			}
 		}
 	}

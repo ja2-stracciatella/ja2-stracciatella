@@ -2289,7 +2289,7 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* s)
 }
 
 
-void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI)
+void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 {
 	// ARM: can't call SelectSoldier() in mapscreen, that will initialize interface panels!!!
 	// ATE: Adjusted conditions a bit ( sometimes were not getting selected )
@@ -2314,14 +2314,14 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 	if (!OK_INTERRUPT_MERC(pSoldier))
 	{
 		// OK, we want to display message that we can't....
-		if (fFromUI)
+		if (flags & SELSOLDIER_FROM_UI)
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_UNAVAILABLE_STR], pSoldier->name);
 		}
 		return;
 	}
 
-	if (pSoldier->ubID == gusSelectedSoldier && !fForceReselect) return;
+	if (pSoldier->ubID == gusSelectedSoldier && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
 
 	// CANCEL FROM PLANNING MODE!
 	if (InUIPlanMode()) EndUIPlan();
@@ -2368,7 +2368,7 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 	SetCurrentTacticalPanelCurrentMerc(pSoldier);
 
 	// PLay ATTN SOUND
-	if (fAcknowledge && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
+	if (flags & SELSOLDIER_ACKNOWLEDGE && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
 	{
 		DoMercBattleSound(pSoldier, BATTLE_SOUND_ATTN1);
 	}
@@ -2409,12 +2409,6 @@ void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fFo
 
 	// Remove any interactive tiles we could be over!
 	BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
-}
-
-
-void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
-{
-	InternalSelectSoldier(usSoldierID, (flags & SELSOLDIER_ACKNOWLEDGE) != 0, (flags & SELSOLDIER_FORCE_RESELECT) != 0, FALSE);
 }
 
 

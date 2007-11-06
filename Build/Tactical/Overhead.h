@@ -198,10 +198,10 @@ typedef enum SelSoldierFlags
 {
 	SELSOLDIER_ACKNOWLEDGE    = 1U << 0,
 	SELSOLDIER_FORCE_RESELECT = 1U << 1,
+	SELSOLDIER_FROM_UI        = 1U << 2
 } SelSoldierFlags;
 
 void SelectSoldier(UINT16 usSoldierID, SelSoldierFlags flags);
-void InternalSelectSoldier(UINT16 usSoldierID, BOOLEAN fAcknowledge, BOOLEAN fForceReselect, BOOLEAN fFromUI);
 
 
 void LocateGridNo( UINT16 sGridNo );

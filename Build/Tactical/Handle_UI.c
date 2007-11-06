@@ -1156,7 +1156,7 @@ static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent)
 	{
 		 iCurrentSquad = CurrentSquad( );
 
-		 InternalSelectSoldier(gUIFullTarget->ubID, TRUE, FALSE, TRUE);
+		SelectSoldier(gUIFullTarget->ubID, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
 
 		 // If different, display message
 		 if ( CurrentSquad( ) != iCurrentSquad )
