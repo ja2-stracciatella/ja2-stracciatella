@@ -274,7 +274,7 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 	{
 		SetCurrentSquad( gpSrcSoldier->bAssignment, FALSE );
 
-    SelectSoldier(pSrcSoldier->ubID, 0);
+    SelectSoldier(pSrcSoldier, 0);
 	}
 
 	Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, uiApproachData );

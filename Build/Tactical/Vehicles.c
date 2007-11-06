@@ -497,7 +497,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 		// can't call SelectSoldier in mapscreen, that will initialize interface panels!!!
 	  if ( guiCurrentScreen == GAME_SCREEN )
 		{
-			SelectSoldier(pVehicleSoldier->ubID, SELSOLDIER_FORCE_RESELECT);
+			SelectSoldier(pVehicleSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
 		PlayJA2Sample(pVehicleList[pVehicleSoldier->bVehicleID].iOutOfSound, SoundVolume(HIGHVOLUME, pVehicleSoldier->sGridNo), 1, SoundDir(pVehicleSoldier->sGridNo));
@@ -1509,8 +1509,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 	  if ( guiCurrentScreen == GAME_SCREEN )
 		{
 			SetCurrentSquad( pSoldier->bAssignment, TRUE );
-
-			SelectSoldier(pSoldier->ubID, SELSOLDIER_FORCE_RESELECT);
+			SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
 		PlayJA2Sample(pVehicleList[pVehicle->bVehicleID].iOutOfSound, SoundVolume(HIGHVOLUME, pVehicle->sGridNo), 1, SoundDir(pVehicle->sGridNo));

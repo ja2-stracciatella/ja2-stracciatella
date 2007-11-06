@@ -548,7 +548,7 @@ UINT32  MainGameScreenHandle(void)
 		{
 			if (gusSelectedSoldier != NOBODY && OK_INTERRUPT_MERC(GetSelectedMan()))
 			{
-				SelectSoldier(gusSelectedSoldier, SELSOLDIER_FORCE_RESELECT);
+				SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
 			}
 		}
 	}
@@ -872,7 +872,7 @@ static void TacticalScreenLocateToSoldier(void)
 		if (OK_CONTROLLABLE_MERC(prefer) && OK_INTERRUPT_MERC(prefer))
 		{
 			LocateSoldier(prefer, 10);
-			SelectSoldier(prefer->ubID, SELSOLDIER_FORCE_RESELECT);
+			SelectSoldier(prefer, SELSOLDIER_FORCE_RESELECT);
 			fPreferedGuyUsed = TRUE;
 		}
 		gPreferredInitialSelectedGuy = NULL;
@@ -888,7 +888,7 @@ static void TacticalScreenLocateToSoldier(void)
 			if ( OK_CONTROLLABLE_MERC( pSoldier ) && OK_INTERRUPT_MERC( pSoldier ) )
 			{
 				LocateSoldier(pSoldier, 10);
-				SelectSoldier(pSoldier->ubID, SELSOLDIER_FORCE_RESELECT);
+				SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 				break;
 			}
 		}

@@ -2303,7 +2303,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//Initialize the current panel
 		InitializeCurrentPanel( );
 
-		SelectSoldier(gusSelectedSoldier, SELSOLDIER_FORCE_RESELECT);
+		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
 	}
 
 	uiRelEndPerc += 1;
@@ -3807,7 +3807,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 		//Initialize the current panel
 		InitializeCurrentPanel( );
 
-		SelectSoldier(gusSelectedSoldier, SELSOLDIER_FORCE_RESELECT);
+		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
 	}
 	*/
 

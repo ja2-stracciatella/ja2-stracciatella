@@ -3947,7 +3947,7 @@ void DrawItemTileCursor( )
 		// ATE Design discussion propably needed here...
 		if ( gpItemPointerSoldier->ubID != gusSelectedSoldier )
 		{
-			SelectSoldier(gpItemPointerSoldier->ubID, 0);
+			SelectSoldier(gpItemPointerSoldier, 0);
 		}
 
 		// ATE: if good for locate, locate to selected soldier....

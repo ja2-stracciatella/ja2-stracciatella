@@ -551,15 +551,13 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
 static void StartInterrupt(void)
 {
 	UINT8						ubFirstInterrupter;
-	INT8						bTeam;
-	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pTempSoldier;
 	UINT8						ubInterrupter;
 	INT32						cnt;
 
 	ubFirstInterrupter = LATEST_INTERRUPT_GUY;
-	pSoldier = MercPtrs[ubFirstInterrupter];
-	bTeam = pSoldier->bTeam;
+	SOLDIERTYPE* const first_interrupter = GetMan(ubFirstInterrupter);
+	const INT8         bTeam     = first_interrupter->bTeam;
 	ubInterrupter = ubFirstInterrupter;
 
 	// display everyone on int queue!
@@ -582,7 +580,7 @@ static void StartInterrupt(void)
 		}
 	}
 
-	if (pSoldier->bTeam == OUR_TEAM)
+	if (first_interrupter->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
 		wchar_t	sTemp[ 255 ];
@@ -650,14 +648,14 @@ static void StartInterrupt(void)
 		EndDeadlockMsg( );
 
 		// Select guy....
-		SelectSoldier(ubFirstInterrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
+		SelectSoldier(first_interrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
 
 		// ATE; Slide to guy who got interrupted!
 		SlideTo(NOWHERE, GetMan(gubLastInterruptedGuy), NOBODY, SETLOCATOR);
 
 		// Dirty panel interface!
 		fInterfacePanelDirty						= DIRTYLEVEL2;
-		gTacticalStatus.ubCurrentTeam   = pSoldier->bTeam;
+		gTacticalStatus.ubCurrentTeam   = first_interrupter->bTeam;
 
 		// Signal UI done enemy's turn
 		guiPendingOverrideEvent = LU_ENDUILOCK;
@@ -693,8 +691,8 @@ static void StartInterrupt(void)
 
 		// what we do is set everyone to moved except for people with interrupts at the moment
 		/*
-		cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-		for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTempSoldier++)
+		cnt = gTacticalStatus.Team[first_interrupter->bTeam].bFirstID;
+		for (pTempSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[first_interrupter->bTeam].bLastID; cnt++,pTempSoldier++)
 		{
 			if ( pTempSoldier->bActive )
 			{
@@ -733,7 +731,7 @@ static void StartInterrupt(void)
 		BuildAIListForTeam( bTeam );
 
 		// set to the new first interrupter
-		pSoldier = RemoveFirstAIListEntry();
+		SOLDIERTYPE* const pSoldier = RemoveFirstAIListEntry();
 
 //		pSoldier = MercPtrs[ubFirstInterrupter];
 
@@ -768,8 +766,6 @@ static void StartInterrupt(void)
 
 static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 {
-	UINT8						ubInterruptedSoldier;
-	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pTempSoldier;
 	INT32						cnt;
 	BOOLEAN					fFound;
@@ -815,11 +811,11 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	}
 	else
 	{
-		ubInterruptedSoldier = LATEST_INTERRUPT_GUY;
+		const UINT8 ubInterruptedSoldier = LATEST_INTERRUPT_GUY;
 
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: interrupt over, %d's team regains control", ubInterruptedSoldier ) );
 
-		pSoldier = MercPtrs[ubInterruptedSoldier];
+		SOLDIERTYPE* const interrupted = MercPtrs[ubInterruptedSoldier];
 
 		cnt = 0;
 		for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= MAX_NUM_SOLDIERS; cnt++,pTempSoldier++)
@@ -844,9 +840,9 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 
 		// change team
-		gTacticalStatus.ubCurrentTeam  = pSoldier->bTeam;
+		gTacticalStatus.ubCurrentTeam = interrupted->bTeam;
 		// switch appropriate messages & flags
-		if ( pSoldier->bTeam == OUR_TEAM)
+		if (interrupted->bTeam == OUR_TEAM)
 		{
 			// set everyone on the team to however they were set moved before the interrupt
 			// must do this before selecting soldier...
@@ -864,13 +860,13 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			ClearIntList();
 
 			// Select soldier....
-			if ( MercPtrs[ ubInterruptedSoldier ]->bLife < OKLIFE )
+			if (interrupted->bLife < OKLIFE)
 			{
-				SelectNextAvailSoldier( MercPtrs[ ubInterruptedSoldier ] );
+				SelectNextAvailSoldier(interrupted);
 			}
 			else
 			{
-				SelectSoldier(ubInterruptedSoldier, 0);
+				SelectSoldier(interrupted, 0);
 			}
 
 			if (gfHiddenInterrupt)
@@ -880,7 +876,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 				// If we can continue a move, do so!
 				SOLDIERTYPE* const sel = GetSelectedMan();
-				if (sel->fNoAPToFinishMove && pSoldier->ubReasonCantFinishMove != REASON_STOPPED_SIGHT)
+				if (sel->fNoAPToFinishMove && interrupted->ubReasonCantFinishMove != REASON_STOPPED_SIGHT)
 				{
 					// Continue
 					AdjustNoAPToFinishMove(sel, FALSE);
@@ -891,18 +887,18 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					}
 					else
 					{
-						UnSetUIBusy( pSoldier->ubID );
+						UnSetUIBusy(interrupted->ubID);
 					}
 				}
 				else
 				{
-					UnSetUIBusy( pSoldier->ubID );
+					UnSetUIBusy(interrupted->ubID);
 				}
 
 				if ( gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 				{
 					gTacticalStatus.fUnLockUIAfterHiddenInterrupt = FALSE;
-					UnSetUIBusy( pSoldier->ubID );
+					UnSetUIBusy(interrupted->ubID);
 				}
 			}
 			else

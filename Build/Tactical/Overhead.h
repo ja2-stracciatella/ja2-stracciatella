@@ -201,7 +201,7 @@ typedef enum SelSoldierFlags
 	SELSOLDIER_FROM_UI        = 1U << 2
 } SelSoldierFlags;
 
-void SelectSoldier(UINT16 usSoldierID, SelSoldierFlags flags);
+void SelectSoldier(SOLDIERTYPE* s, SelSoldierFlags flags);
 
 
 void LocateGridNo( UINT16 sGridNo );

@@ -822,13 +822,13 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 		if (GetSelectedMan()->bAssignment != iCurrentTacticalSquad)
 		{
 			// ATE: Changed this to FALSE for ackoledgement sounds.. sounds bad if just starting/entering sector..
-			SelectSoldier(Squad[iCurrentTacticalSquad][0]->ubID, SELSOLDIER_FORCE_RESELECT);
+			SelectSoldier(Squad[iCurrentTacticalSquad][0], SELSOLDIER_FORCE_RESELECT);
 		}
 	}
 	else
 	{
 		// ATE: Changed this to FALSE for ackoledgement sounds.. sounds bad if just starting/entering sector..
-		SelectSoldier(Squad[iCurrentTacticalSquad][0]->ubID, SELSOLDIER_FORCE_RESELECT);
+		SelectSoldier(Squad[iCurrentTacticalSquad][0], SELSOLDIER_FORCE_RESELECT);
 	}
 
 	return ( TRUE );
@@ -1207,7 +1207,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 
 		if ( ubID != NOBODY && ubID != gusSelectedSoldier )
 		{
-			SelectSoldier(ubID, 0);
+			SelectSoldier(GetMan(ubID), 0);
 		}
 		else
 		{

@@ -1893,7 +1893,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			if ( gpSMCurrentMerc->ubID != gusSelectedSoldier )
 			{
-				SelectSoldier(gpSMCurrentMerc->ubID, 0);
+				SelectSoldier(gpSMCurrentMerc, 0);
 			}
 
 			// OK, check if this is Nails, and we're in the vest position , don't allow it to come off....
@@ -3116,7 +3116,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					SelectSoldier(ubSoldierID, SELSOLDIER_ACKNOWLEDGE);
+					SelectSoldier(s, SELSOLDIER_ACKNOWLEDGE);
 				}
 			}
 		}
@@ -3141,7 +3141,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 {
-	SOLDIERTYPE* s = MercPtrs[ubID];
+	SOLDIERTYPE* const s = GetMan(ubID);
 
 	if (!s->bActive) return;
 
@@ -3163,7 +3163,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 		if (gGameSettings.fOptions[TOPTION_OLD_SELECTION_METHOD])
 		{
 			// Select merc
-			SelectSoldier(ubID, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
+			SelectSoldier(s, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
 			s->fFlashLocator = FALSE;
 			ResetMultiSelection();
 		}
@@ -3232,7 +3232,7 @@ void HandleLocateSelectMerc(UINT8 ubID, INT8 bFlag)
 			// Select merc, only if alive!
 			if (!(s->uiStatusFlags & SOLDIER_DEAD))
 			{
-				SelectSoldier(ubID, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
+				SelectSoldier(s, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FROM_UI);
 			}
 		}
 	}
@@ -4030,7 +4030,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			{
 				if ( gpItemPopupSoldier->ubID != gusSelectedSoldier )
 				{
-					SelectSoldier(gpItemPopupSoldier->ubID, 0);
+					SelectSoldier(gpItemPopupSoldier, 0);
 				}
 			}
 

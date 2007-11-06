@@ -2276,9 +2276,10 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* s)
 	// look for all mercs on the same team,
 	for (INT32 i = gTacticalStatus.Team[s->bTeam].bFirstID; i <= gTacticalStatus.Team[s->bTeam].bLastID; ++i)
 	{
-		if (OK_CONTROLLABLE_MERC(MercPtrs[i]))
+		SOLDIERTYPE* const s = GetMan(i);
+		if (OK_CONTROLLABLE_MERC(s))
 		{
-			SelectSoldier(i, 0);
+			SelectSoldier(s, 0);
 			return;
 		}
 	}
@@ -2289,13 +2290,11 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* s)
 }
 
 
-void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
+void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 {
 	// ARM: can't call SelectSoldier() in mapscreen, that will initialize interface panels!!!
 	// ATE: Adjusted conditions a bit ( sometimes were not getting selected )
 	if (guiCurrentScreen == LAPTOP_SCREEN || guiCurrentScreen == MAP_SCREEN) return;
-
-	if (usSoldierID == NOBODY) return;
 
 	//if we are in the shop keeper interface
 	if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
@@ -2304,24 +2303,21 @@ void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 		return;
 	}
 
-	// Get guy
-	SOLDIERTYPE* const pSoldier = MercPtrs[usSoldierID];
-
 	// If we are dead, ignore
-	if (!OK_CONTROLLABLE_MERC(pSoldier)) return;
+	if (!OK_CONTROLLABLE_MERC(s)) return;
 
 	// Don't do it if we don't have an interrupt
-	if (!OK_INTERRUPT_MERC(pSoldier))
+	if (!OK_INTERRUPT_MERC(s))
 	{
 		// OK, we want to display message that we can't....
 		if (flags & SELSOLDIER_FROM_UI)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_UNAVAILABLE_STR], pSoldier->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_UNAVAILABLE_STR], s->name);
 		}
 		return;
 	}
 
-	if (pSoldier->ubID == gusSelectedSoldier && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
+	if (s->ubID == gusSelectedSoldier && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
 
 	// CANCEL FROM PLANNING MODE!
 	if (InUIPlanMode()) EndUIPlan();
@@ -2334,7 +2330,7 @@ void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 		pOldSoldier->fShowLocator  = FALSE;
 		pOldSoldier->fFlashLocator = FALSE;
 
-		// DB This used to say pSoldier... I fixed it
+		// DB This used to say "s"... I fixed it
 		if (pOldSoldier->bLevel == 0)
 		{
 		//	ApplyTranslucencyToWalls((INT16)(pOldSoldier->dXPos/CELL_X_SIZE), (INT16)(pOldSoldier->dYPos/CELL_Y_SIZE));
@@ -2351,26 +2347,26 @@ void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 		UpdateForContOverPortrait(pOldSoldier, FALSE);
 	}
 
-	gusSelectedSoldier = usSoldierID;
+	gusSelectedSoldier = s->ubID;
 
 	// find which squad this guy is, then set selected squad to this guy
-	SetCurrentSquad(pSoldier->bAssignment, FALSE);
+	SetCurrentSquad(s->bAssignment, FALSE);
 
-	if (pSoldier->bLevel == 0)
+	if (s->bLevel == 0)
 	{
-	//	CalcTranslucentWalls((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE));
-		//LightTranslucentTrees((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE));
+		//CalcTranslucentWalls( s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
+		//LightTranslucentTrees(s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
 	}
 
-	//SetCheckSoldierLightFlag( pSoldier );
+	//SetCheckSoldierLightFlag(s);
 
 	// Set interface to reflect new selection!
-	SetCurrentTacticalPanelCurrentMerc(pSoldier);
+	SetCurrentTacticalPanelCurrentMerc(s);
 
 	// PLay ATTN SOUND
 	if (flags & SELSOLDIER_ACKNOWLEDGE && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
 	{
-		DoMercBattleSound(pSoldier, BATTLE_SOUND_ATTN1);
+		DoMercBattleSound(s, BATTLE_SOUND_ATTN1);
 	}
 
 	// Change UI mode to reflact that we are selected
@@ -2380,23 +2376,23 @@ void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 		guiPendingOverrideEvent = M_ON_TERRAIN;
 	}
 
-	ChangeInterfaceLevel(pSoldier->bLevel);
+	ChangeInterfaceLevel(s->bLevel);
 
-	if (pSoldier->fMercAsleep) PutMercInAwakeState(pSoldier);
+	if (s->fMercAsleep) PutMercInAwakeState(s);
 
 	// possibly say personality quote
-	if (pSoldier->bTeam == gbPlayerNum &&
-			pSoldier->ubProfile != NO_PROFILE &&
-			pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER &&
-			!(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY))
+	if (s->bTeam == gbPlayerNum &&
+			s->ubProfile != NO_PROFILE &&
+			s->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER &&
+			!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY))
 	{
-		switch (gMercProfiles[pSoldier->ubProfile].bPersonalityTrait)
+		switch (gMercProfiles[s->ubProfile].bPersonalityTrait)
 		{
 			case PSYCHO:
 				if (Random(50) == 0)
 				{
-					TacticalCharacterDialogue(pSoldier, QUOTE_PERSONALITY_TRAIT);
-					pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
+					TacticalCharacterDialogue(s, QUOTE_PERSONALITY_TRAIT);
+					s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
 				}
 				break;
 
@@ -2405,7 +2401,7 @@ void SelectSoldier(const UINT16 usSoldierID, const SelSoldierFlags flags)
 		}
 	}
 
-	UpdateForContOverPortrait(pSoldier, TRUE);
+	UpdateForContOverPortrait(s, TRUE);
 
 	// Remove any interactive tiles we could be over!
 	BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
@@ -2535,14 +2531,14 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	ReceivingSoldierCancelServices(pSoldier);
 
 	// look for all mercs on the same team,
-	INT32   iNewSelectedSoldier;
+	SOLDIERTYPE* new_selected_soldier;
 	BOOLEAN fMissionFailed = TRUE;
 	for (INT32 i = gTacticalStatus.Team[pSoldier->bTeam].bFirstID; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
 	{
-		const SOLDIERTYPE* const s = MercPtrs[i];
+		SOLDIERTYPE* const s = MercPtrs[i];
 		if (s->bLife >= OKLIFE && s->bActive && s->bInSector)
 		{
-			iNewSelectedSoldier = i;
+			new_selected_soldier = s;
 			fMissionFailed = FALSE;
 			break;
 		}
@@ -2611,7 +2607,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	{
 		if (!fMissionFailed)
 		{
-			SelectSoldier(iNewSelectedSoldier, 0);
+			SelectSoldier(new_selected_soldier, 0);
 		}
 		else
 		{
@@ -4609,7 +4605,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 			{
 				if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bOppCnt > 0 )
 				{
-					SelectSoldier(pTeamSoldier->ubID, SELSOLDIER_FORCE_RESELECT);
+					SelectSoldier(pTeamSoldier, SELSOLDIER_FORCE_RESELECT);
 				}
 			}
 		}
@@ -6861,16 +6857,16 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 				const UINT8 ubID = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 				if (ubID != NOBODY && ubID != gusSelectedSoldier)
 				{
-					SelectSoldier(ubID, 0);
+					SelectSoldier(GetMan(ubID), 0);
 				}
 				else
 				{
 					// OK - let's look for another squad...
-					const SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(pSoldier);
+					SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(pSoldier);
 					if (pNewSoldier != pSoldier)
 					{
 						// Good squad found!
-						SelectSoldier(pNewSoldier->ubID, 0);
+						SelectSoldier(pNewSoldier, 0);
 					}
 					else
 					{
