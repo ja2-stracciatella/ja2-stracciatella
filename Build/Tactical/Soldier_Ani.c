@@ -2059,7 +2059,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			{
 				case 702:
 					// Play fall to knees sound
-					PlaySoldierJA2Sample(pSoldier, FALL_1 + Random(2), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, FALL_1 + Random(2), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
 					break;
 
 				case 703:
@@ -2071,12 +2071,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 705:
 					// PLay body splat sound
-					PlaySoldierJA2Sample(pSoldier, BODY_SPLAT_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, BODY_SPLAT_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 706:
 					// PLay head splat
-					PlaySoldierJA2Sample(pSoldier, HEADSPLAT_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, HEADSPLAT_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 707:
@@ -2116,7 +2116,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Monster footstep in
 					if (SoldierOnScreen(pSoldier))
 					{
-						PlaySoldierJA2Sample(pSoldier, ACR_STEP_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, ACR_STEP_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
 					break;
 
@@ -2124,7 +2124,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Monster footstep in
 					if (SoldierOnScreen(pSoldier))
 					{
-						PlaySoldierJA2Sample(pSoldier, ACR_STEP_2, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, ACR_STEP_2, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
 					break;
 
@@ -2132,7 +2132,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Monster footstep in
 					if (SoldierOnScreen(pSoldier))
 					{
-						PlaySoldierJA2Sample(pSoldier, LCR_MOVEMENT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, LCR_MOVEMENT, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
 					break;
 
@@ -2142,7 +2142,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						if (SoldierOnScreen(pSoldier))
 						{
-							PlaySoldierJA2Sample(pSoldier, BCR_DRAGGING, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+							PlaySoldierJA2Sample(pSoldier, BCR_DRAGGING, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 						}
 					}
 					break;
@@ -2150,19 +2150,19 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 714:
 
 					// Lunges....
-					PlaySoldierJA2Sample(pSoldier, ACR_LUNGE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, ACR_LUNGE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 715:
 
 					// Swipe
-					PlaySoldierJA2Sample(pSoldier, ACR_SWIPE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, ACR_SWIPE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 716:
 
 					// Eat flesh
-					PlaySoldierJA2Sample(pSoldier, ACR_EATFLESH, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, ACR_EATFLESH, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 717:
@@ -2240,24 +2240,24 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 718:
 
 
-					PlaySoldierJA2Sample(pSoldier, LQ_RUPTURING, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, LQ_RUPTURING, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 719:
 
 					// Spit attack start sound...
-					PlaySoldierJA2Sample(pSoldier, LQ_ENRAGED_ATTACK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, LQ_ENRAGED_ATTACK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 720:
 
 					// Spit attack start sound...
-					PlaySoldierJA2Sample(pSoldier, LQ_WHIP_ATTACK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, LQ_WHIP_ATTACK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 721:
 					// Play fall from knees to ground...
-					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
 					if ( pSoldier->usAnimState == FALLFORWARD_FROMHIT_STAND )
 					{
 						CheckEquipmentForFragileItemDamage( pSoldier, 20 );
@@ -2266,7 +2266,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 722:
 					// Play fall heavy
-					PlaySoldierJA2Sample(pSoldier, HEAVY_FALL_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, HEAVY_FALL_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
 					if ( pSoldier->usAnimState == FALLFORWARD_FROMHIT_CROUCH )
 					{
 						CheckEquipmentForFragileItemDamage( pSoldier, 15 );
@@ -2276,55 +2276,55 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 723:
 
 					// Play armpit noise...
-					PlaySoldierJA2Sample(pSoldier, IDLE_ARMPIT, SoundVolume(LOWVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, IDLE_ARMPIT, SoundVolume(LOWVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 724:
 
 					// Play ass scratch
-					// PlaySoldierJA2Sample(pSoldier, IDLE_SCRATCH, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					// PlaySoldierJA2Sample(pSoldier, IDLE_SCRATCH, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 725:
 
 					// Play back crack
-					PlaySoldierJA2Sample(pSoldier, IDLE_BACKCRACK, SoundVolume(LOWVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, IDLE_BACKCRACK, SoundVolume(LOWVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 726:
 
 					// Kickin door
-					PlaySoldierJA2Sample(pSoldier, KICKIN_DOOR, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, KICKIN_DOOR, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 727:
 
 					// Swoosh
-					PlaySoldierJA2Sample(pSoldier, SWOOSH_1 + Random(6), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, SWOOSH_1 + Random(6), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 728:
 
 					// Creature fall
-					PlaySoldierJA2Sample(pSoldier, ACR_FALL_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, ACR_FALL_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 729:
 
 					// grab roof....
-					PlaySoldierJA2Sample(pSoldier, GRAB_ROOF, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, GRAB_ROOF, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 730:
 
 					// end climb roof....
-					PlaySoldierJA2Sample(pSoldier, LAND_ON_ROOF, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, LAND_ON_ROOF, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 731:
 
 					// Stop climb roof..
-					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 732:
@@ -2437,7 +2437,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							EVENT_InitNewSoldierAnim( pTarget, SLAP_HIT, 0 , FALSE );
 
 							// Play noise....
-							//PlaySoldierJA2Sample(pTarget, S_SLAP_IMPACT, SoundVolume(HIGHVOLUME, pTarget->sGridNo), 1, SoundDir(pTarget->sGridNo), TRUE);
+							//PlaySoldierJA2Sample(pTarget, S_SLAP_IMPACT, SoundVolume(HIGHVOLUME, pTarget->sGridNo), 1, TRUE);
 
 							//DoMercBattleSound( pTarget, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
 
@@ -2496,7 +2496,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 764:
 
-					PlaySoldierJA2Sample(pSoldier, PICKING_LOCK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, PICKING_LOCK, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					break;
 
 				case 765:
@@ -2525,7 +2525,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				case 767:
 
 					// Slap sound effect
-					PlaySoldierJA2Sample(pSoldier, SLAP_2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, SLAP_2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
 					break;
 
 				case 768:
@@ -2580,7 +2580,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // Kneel up...
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, KNEEL_UP_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, KNEEL_UP_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
@@ -2589,7 +2589,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // Kneel down..
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, KNEEL_DOWN_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, KNEEL_DOWN_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
@@ -2598,7 +2598,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // prone up..
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, PRONE_UP_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, PRONE_UP_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
@@ -2607,7 +2607,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // prone down..
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, PRONE_DOWN_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, PRONE_DOWN_SOUND, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
@@ -2616,78 +2616,78 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // picking something up
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, PICKING_SOMETHING_UP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, PICKING_SOMETHING_UP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
         case 778:
 					if ( !pSoldier->bStealthMode )
 					{
-						PlaySoldierJA2Sample(pSoldier, ENTER_DEEP_WATER_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, ENTER_DEEP_WATER_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
 					}
           break;
 
         case 779:
 
-					PlaySoldierJA2Sample(pSoldier, COW_FALL, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, COW_FALL, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 780:
 
-					PlaySoldierJA2Sample(pSoldier, COW_HIT_SND, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, COW_HIT_SND, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 781:
 
-					PlaySoldierJA2Sample(pSoldier, ACR_DIE_PART2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, ACR_DIE_PART2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
           break;
 
         case 782:
 
-					PlaySoldierJA2Sample(pSoldier, CREATURE_DISSOLVE_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, CREATURE_DISSOLVE_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
           break;
 
         case 784:
 
-					PlaySoldierJA2Sample(pSoldier, CREATURE_FALL, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, CREATURE_FALL, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
           break;
 
         case 785:
 
           if ( Random( 5 ) == 0 )
           {
-						PlaySoldierJA2Sample(pSoldier, CROW_PECKING_AT_FLESH, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+						PlaySoldierJA2Sample(pSoldier, CROW_PECKING_AT_FLESH, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
           }
           break;
 
         case 786:
 
-					PlaySoldierJA2Sample(pSoldier, CROW_FLYING_AWAY, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, CROW_FLYING_AWAY, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 787:
 
-					PlaySoldierJA2Sample(pSoldier, SLAP_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), FALSE);
+					PlaySoldierJA2Sample(pSoldier, SLAP_1, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, FALSE);
           break;
 
         case 788:
 
-					PlaySoldierJA2Sample(pSoldier, MORTAR_START, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, MORTAR_START, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 789:
 
-					PlaySoldierJA2Sample(pSoldier, MORTAR_LOAD, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, MORTAR_LOAD, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 790:
 
-					PlaySoldierJA2Sample(pSoldier, COW_FALL_2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, COW_FALL_2, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
         case 791:
 
-					PlaySoldierJA2Sample(pSoldier, FENCE_OPEN, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, SoundDir(pSoldier->sGridNo), TRUE);
+					PlaySoldierJA2Sample(pSoldier, FENCE_OPEN, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
           break;
 
 			}
