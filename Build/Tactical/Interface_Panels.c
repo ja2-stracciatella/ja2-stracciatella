@@ -3775,32 +3775,25 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* pSoldier)
 }
 
 
-UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier)
+SOLDIERTYPE* FindNextMercInTeamPanel(SOLDIERTYPE* const prev)
 {
 	INT32 cnt;
   INT32 bFirstID;
-	SOLDIERTYPE             *pTeamSoldier;
 
-
-  bFirstID = GetTeamSlotFromPlayerID( pSoldier->ubID );
-
-  if ( bFirstID == -1 )
-  {
-    return( pSoldier->ubID );
-  }
+	bFirstID = GetTeamSlotFromPlayerID(prev->ubID);
+	if (bFirstID == -1) return prev;
 
 	for ( cnt = ( bFirstID + 1 ); cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
 	  if (gTeamPanel[cnt].ubID != NOBODY)
 	  {
 		  // Set Id to close
-		  pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
-
-			if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-					OK_INTERRUPT_MERC(pTeamSoldier) &&
-					pSoldier->bAssignment == pTeamSoldier->bAssignment)
+			SOLDIERTYPE* const next = GetMan(gTeamPanel[cnt].ubID);
+			if (OK_CONTROLLABLE_MERC(next) &&
+					OK_INTERRUPT_MERC(next) &&
+					prev->bAssignment == next->bAssignment)
 			{
-				return gTeamPanel[cnt].ubID;
+				return next;
 			}
 	  }
   }
@@ -3811,19 +3804,18 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier)
 	{
 	  if (gTeamPanel[cnt].ubID != NOBODY)
 	  {
-      pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
-
-			if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-					OK_INTERRUPT_MERC(pTeamSoldier) &&
-					pSoldier->bAssignment == pTeamSoldier->bAssignment)
+			SOLDIERTYPE* const next = GetMan(gTeamPanel[cnt].ubID);
+			if (OK_CONTROLLABLE_MERC(next) &&
+					OK_INTERRUPT_MERC(next) &&
+					prev->bAssignment == next->bAssignment)
 			{
-				return gTeamPanel[cnt].ubID;
+				return next;
 			}
     }
 	}
 
 	// IF we are here, keep as we always were!
-	return( pSoldier->ubID );
+	return prev;
 }
 
 

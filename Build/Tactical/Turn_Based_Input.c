@@ -1658,8 +1658,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							{
 								if ( gusSelectedSoldier != NO_SOLDIER )
 								{ //Select next merc
-									const UINT8 bID = FindNextMercInTeamPanel(GetSelectedMan());
-									HandleLocateSelectMerc(GetMan(bID), LOCATEANDSELECT_MERC);
+									SOLDIERTYPE* const next = FindNextMercInTeamPanel(GetSelectedMan());
+									HandleLocateSelectMerc(next, LOCATEANDSELECT_MERC);
 
 							    // Center to guy....
 									LocateSoldier(GetSelectedMan(), SETLOCATOR);
