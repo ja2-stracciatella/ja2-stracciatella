@@ -827,23 +827,18 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
   if ( usHandItem == GAS_CAN )
 	{
-		 UINT8 ubMercID;
 		 INT16		sVehicleGridNo=-1;
 
-		 // For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		 if ( IsRefuelableStructAtGridNo( usGridNo, &ubMercID ) )
+		// For refueling, check if we are over a vehicle, then get gridno to edge of that vehicle!
+		const SOLDIERTYPE* const tgt = GetRefuelableStructAtGridNo(usGridNo);
+		if (tgt != NULL)
 		 {
-				INT16 sNewGridNo;
 				UINT8	ubDirection;
-
-				sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
-
+				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
 				if ( sNewGridNo != NOWHERE )
 				{
 					usGridNo = sNewGridNo;
-
-					sVehicleGridNo = MercPtrs[ ubMercID ]->sGridNo;
-
+					sVehicleGridNo = tgt->sGridNo;
 				}
 		 }
 

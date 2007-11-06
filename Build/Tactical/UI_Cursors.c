@@ -1494,8 +1494,8 @@ static UINT8 HandleRefuelCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, UINT32 ui
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REFUEL );
 
-	// Are we over a cuttable fence?
-	if ( IsRefuelableStructAtGridNo( sGridNo, NULL ) && pSoldier->bLevel == 0 )
+	// Are we over a refuelable vehicle?
+	if (pSoldier->bLevel == 0 && GetRefuelableStructAtGridNo(sGridNo) != NULL)
 	{
 		return( REFUEL_RED_UICURSOR );
 	}

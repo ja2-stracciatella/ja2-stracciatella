@@ -9863,13 +9863,8 @@ void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 
 void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	INT8 bRefuelItem;
-	UINT8	ubID;
-
 	// Make sure we have a structure here....
-	bRefuelItem = IsRefuelableStructAtGridNo( sGridNo, &ubID );
-
-	if ( bRefuelItem )
+	if (GetRefuelableStructAtGridNo(sGridNo) != NULL)
 	{
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );

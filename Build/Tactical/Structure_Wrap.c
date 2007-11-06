@@ -458,26 +458,16 @@ BOOLEAN IsRepairableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
 }
 
 
-BOOLEAN IsRefuelableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
+SOLDIERTYPE* GetRefuelableStructAtGridNo(INT16 sGridNo)
 {
-	UINT8 ubMerc;
-
 	// OK, first look for a vehicle....
-	ubMerc = WhoIsThere2( sGridNo, 0 );
-
-	if ( pubID != NULL )
+	const UINT8 tgt_id = WhoIsThere2(sGridNo, 0);
+	if (tgt_id != NOBODY)
 	{
-		(*pubID) = ubMerc;
+		SOLDIERTYPE* const tgt = GetMan(tgt_id);
+		if (tgt->uiStatusFlags & SOLDIER_VEHICLE) return tgt;
 	}
-
-	if ( ubMerc != NOBODY )
-	{
-		if ( MercPtrs[ ubMerc ]->uiStatusFlags & SOLDIER_VEHICLE )
-		{
-			return( TRUE );
-		}
-	}
-	return( FALSE );
+	return NULL;
 }
 
 

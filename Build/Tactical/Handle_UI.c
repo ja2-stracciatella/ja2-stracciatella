@@ -3525,14 +3525,12 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	}
 	else if ( uiFlags == MOVEUI_TARGET_REFUEL )
 	{
-		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		if (IsRefuelableStructAtGridNo(usMapPos, &ubMercID))
+		// For refueling, check if we are over a vehicle, then get gridno to edge of that vehicle!
+		const SOLDIERTYPE* const tgt = GetRefuelableStructAtGridNo(usMapPos);
+		if (tgt != NULL)
 		{
-			INT16 sNewGridNo;
 			UINT8	ubDirection;
-
-		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
-
+			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
 			if ( sNewGridNo != NOWHERE )
 			{
 				usMapPos = sNewGridNo;
@@ -3781,15 +3779,9 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 	if ( ubItemCursor == REFUELCURS )
 	{
 		if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
-
-		if ( IsRefuelableStructAtGridNo( usMapPos, NULL ) && pSoldier->bLevel == 0 )
-		{
-			return( TRUE );
-		}
-		else
-		{
-			return( FALSE );
-		}
+		return
+			pSoldier->bLevel == 0 &&
+			GetRefuelableStructAtGridNo(usMapPos) != NULL;
 	}
 
 	if ( ubItemCursor == BOMBCURS )
