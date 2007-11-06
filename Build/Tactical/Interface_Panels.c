@@ -3582,13 +3582,13 @@ static BOOLEAN PlayerExistsInSlot(UINT8 ubID)
 }
 
 
-static INT8 GetTeamSlotFromPlayerID(UINT8 ubID)
+static INT8 GetTeamSlotFromPlayer(const SOLDIERTYPE* const s)
 {
 	INT8 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if (gTeamPanel[cnt].ubID == ubID) return cnt;
+		if (gTeamPanel[cnt].ubID == s->ubID) return cnt;
 	}
 
 	return( -1 );
@@ -3780,7 +3780,7 @@ SOLDIERTYPE* FindNextMercInTeamPanel(SOLDIERTYPE* const prev)
 	INT32 cnt;
   INT32 bFirstID;
 
-	bFirstID = GetTeamSlotFromPlayerID(prev->ubID);
+	bFirstID = GetTeamSlotFromPlayer(prev);
 	if (bFirstID == -1) return prev;
 
 	for ( cnt = ( bFirstID + 1 ); cnt < NUM_TEAM_SLOTS; cnt++ )
