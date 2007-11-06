@@ -50,6 +50,6 @@ BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT
 UINT8 QuickFindSoldier( INT16 sGridNo );
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY );
 
-
+BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* s);
 
 #endif

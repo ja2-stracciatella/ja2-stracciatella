@@ -169,7 +169,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (fRecalc &&
 						tgt != NULL &&
-						IsValidTargetMerc(tgt->ubID) &&
+						IsValidTargetMerc(tgt) &&
 						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
 						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
 						guiUIFullTargetFlags & VISIBLE_MERC &&
@@ -207,7 +207,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (fRecalc &&
 						tgt != NOBODY &&
-						IsValidTargetMerc(tgt->ubID) &&
+						IsValidTargetMerc(tgt) &&
 						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
 						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
 						guiUIFullTargetFlags & VISIBLE_MERC &&
@@ -973,7 +973,7 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 
 		if ( fOnGuy )
 		{
-			if ( IsValidTargetMerc( pTargetSoldier->ubID ) )
+			if (IsValidTargetMerc(pTargetSoldier))
 			{
 				if ( usFlags & TILE_FLAG_FEET )
 				{

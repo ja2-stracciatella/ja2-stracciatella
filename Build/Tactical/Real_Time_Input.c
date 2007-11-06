@@ -1375,7 +1375,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (tgt != NULL)
 				{
-					if (IsValidTargetMerc(tgt->ubID))
+					if (IsValidTargetMerc(tgt))
 					{
 						guiUITargetSoldierId = tgt->ubID;
 						if (tgt->bTeam == gbPlayerNum && gUIActionModeChangeDueToMouseOver)

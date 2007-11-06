@@ -222,7 +222,6 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 void SelectNextAvailSoldier(const SOLDIERTYPE* s);
 BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
-BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID );
 
 
 // FUNCTIONS FOR MANIPULATING MERC SLOTS - A LIST OF ALL ACTIVE MERCS

@@ -944,7 +944,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (tgt != NULL)
 				{
-					if (IsValidTargetMerc(tgt->ubID))
+					if (IsValidTargetMerc(tgt))
 					{
 						guiUITargetSoldierId = gUIFullTarget->ubID;
 

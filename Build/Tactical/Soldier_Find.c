@@ -465,30 +465,21 @@ SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel )
 	}
 }
 
-BOOLEAN IsValidTargetMerc( UINT8 ubSoldierID )
+
+BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE *pSoldier = MercPtrs[ ubSoldierID ];
-
-
 	// CHECK IF ACTIVE!
-	if ( !pSoldier->bActive )
-	{
-		return( FALSE );
-	}
+	if (!s->bActive) return FALSE;
 
 	// CHECK IF DEAD
-	if( pSoldier->bLife == 0 )
-	{
-		//return( FALSE );
-	}
+	//if (s->bLife == 0) return FALSE;
 
 	// IF BAD GUY - CHECK VISIVILITY
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if (s->bTeam != gbPlayerNum &&
+			s->bVisible == -1 &&
+			!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 	{
-		if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
-		{
-			return( FALSE  );
-		}
+		return( FALSE  );
 	}
 
 	return( TRUE );
