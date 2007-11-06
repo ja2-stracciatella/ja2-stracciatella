@@ -696,7 +696,7 @@ static void UpdateSMPanel(void)
 
 	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 
-	GetMercClimbDirection( gpSMCurrentMerc->ubID, &fNearLowerLevel, &fNearHeigherLevel );
+	GetMercClimbDirection(gpSMCurrentMerc, &fNearLowerLevel, &fNearHeigherLevel);
 
 	if ( fNearLowerLevel || fNearHeigherLevel )
 	{
@@ -2378,7 +2378,7 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		BOOLEAN fNearHeigherLevel;
 		BOOLEAN fNearLowerLevel;
-		GetMercClimbDirection(gpSMCurrentMerc->ubID, &fNearLowerLevel, &fNearHeigherLevel);
+		GetMercClimbDirection(gpSMCurrentMerc, &fNearLowerLevel, &fNearHeigherLevel);
 		if (fNearLowerLevel)   BeginSoldierClimbDownRoof(gpSMCurrentMerc);
 		if (fNearHeigherLevel) BeginSoldierClimbUpRoof(gpSMCurrentMerc);
 

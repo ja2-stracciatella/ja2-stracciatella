@@ -2708,30 +2708,28 @@ BOOLEAN SelectedMercCanAffordMove(  )
 	return( FALSE );
 }
 
-void GetMercClimbDirection( UINT8 ubSoldierID, BOOLEAN *pfGoDown, BOOLEAN *pfGoUp )
+
+void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, BOOLEAN* const pfGoUp)
 {
 	INT8							bNewDirection;
 
 	*pfGoDown = FALSE;
 	*pfGoUp   = FALSE;
 
-	const SOLDIERTYPE* pSoldier = GetSoldier(ubSoldierID);
-	if (pSoldier == NULL) return;
-
 	// Check if we are close / can climb
-	if ( pSoldier->bLevel == 0 )
+	if (s->bLevel == 0)
 	{
 		// See if we are not in a building!
-		if ( FindHeigherLevel( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection ) )
+		if (FindHeigherLevel(s, s->sGridNo, s->bDirection, &bNewDirection))
 		{
 			*pfGoUp = TRUE;
 		}
 	}
 
 	// IF we are higher...
-	if ( pSoldier->bLevel > 0 )
+	if (s->bLevel > 0)
 	{
-		if ( FindLowerLevel( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection ) )
+		if (FindLowerLevel(s, s->sGridNo, s->bDirection, &bNewDirection))
 		{
 			*pfGoDown = TRUE;
 		}
@@ -5579,11 +5577,9 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		case ANIM_STAND:
-
 			// Nowhere
 			// Try to climb
-			GetMercClimbDirection( pSoldier->ubID, &fNearLowerLevel, &fNearHeigherLevel );
-
+			GetMercClimbDirection(pSoldier, &fNearLowerLevel, &fNearHeigherLevel);
 			if ( fNearHeigherLevel )
 			{
 				BeginSoldierClimbUpRoof( pSoldier );
@@ -5622,11 +5618,9 @@ void GotoLowerStance( SOLDIERTYPE *pSoldier )
 			break;
 
 		case ANIM_PRONE:
-
 			// Nowhere
 			// Try to climb
-			GetMercClimbDirection( pSoldier->ubID, &fNearLowerLevel, &fNearHeigherLevel );
-
+			GetMercClimbDirection(pSoldier, &fNearLowerLevel, &fNearHeigherLevel);
 			if ( fNearLowerLevel )
 			{
 				BeginSoldierClimbDownRoof( pSoldier );
