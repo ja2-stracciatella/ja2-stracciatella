@@ -7892,9 +7892,7 @@ static BOOLEAN GetProfileFlagsFromGridno(SOLDIERTYPE* pSoldier, UINT16 usAnimSta
 
 void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 {
-	SOLDIERTYPE *pTSoldier;
-
-	if ( VerifyGiveItem( pSoldier, &pTSoldier ) )
+	if (VerifyGiveItem(pSoldier) != NULL)
 	{
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		pSoldier->bDesiredDirection = pSoldier->bPendingActionData3;

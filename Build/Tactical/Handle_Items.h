@@ -63,7 +63,7 @@ void HandleFlashingItems( );
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 
 void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo );
-BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier );
+SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* pSoldier);
 void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier );
 void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECTTYPE *pObject, INT8 bInvPos );
 

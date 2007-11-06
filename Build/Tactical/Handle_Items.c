@@ -3570,13 +3570,10 @@ void RenderTopmostFlashingItems( )
 			}
 		}
 	}
-
 }
 
 
-
-
-BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
+SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 {
 	UINT16 usSoldierIndex;
 
@@ -3594,16 +3591,11 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 	if ( usSoldierIndex != NOBODY )
 	{
 		// Check if it's the same merc!
-		if ( usSoldierIndex != ubTargetMercID )
-		{
-			return( FALSE );
-		}
+		if (usSoldierIndex != ubTargetMercID) return NULL;
 
 		// Look for item in hand....
 
-		*ppTargetSoldier = GetSoldier(usSoldierIndex);
-
-		return( TRUE );
+		return GetSoldier(usSoldierIndex);
 	}
 	else
 	{
@@ -3628,13 +3620,12 @@ BOOLEAN VerifyGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE **ppTargetSoldier )
 		}
 	}
 
-	return( FALSE );
+	return NULL;
 }
 
 
 void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 {
-	SOLDIERTYPE *pTSoldier;
 	INT8				bInvPos;
 	OBJECTTYPE	TempObject;
 	UINT8				ubProfile;
@@ -3670,7 +3661,8 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 	// ATE: Deduct APs!
 	DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
 
-	if ( VerifyGiveItem( pSoldier, &pTSoldier ) )
+	SOLDIERTYPE* const pTSoldier = VerifyGiveItem(pSoldier);
+	if (pTSoldier != NULL)
 	{
 		// DAVE! - put stuff here to bring up shopkeeper.......
 
