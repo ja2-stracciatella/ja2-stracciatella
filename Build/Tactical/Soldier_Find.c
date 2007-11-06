@@ -61,11 +61,11 @@ static const UINT32 gScrollSlideInertiaDirection[NUM_WORLD_DIRECTIONS] =
 // Struct used for cycling through multiple mercs per mouse position
 typedef struct
 {
-	INT8    bNum;
-	UINT8   ubIDs[MAX_STACKED_MERCS];
-	INT8    bCur;
-	BOOLEAN fUseGridNo;
-	UINT16  sUseGridNoGridNo;
+	INT8         bNum;
+	SOLDIERTYPE* mercs[MAX_STACKED_MERCS];
+	INT8         bCur;
+	BOOLEAN      fUseGridNo;
+	UINT16       sUseGridNoGridNo;
 } SOLDIER_STACK_TYPE;
 
 static SOLDIER_STACK_TYPE gSoldierStack;
@@ -308,7 +308,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 							 gfHandleStack = TRUE;
 
 								// Add this one!
-							 gSoldierStack.ubIDs[ gSoldierStack.bNum ] = pSoldier->ubID;
+							 gSoldierStack.mercs[gSoldierStack.bNum] = pSoldier;
 							 gSoldierStack.bNum++;
 
 							 // Determine if it's the current
@@ -329,7 +329,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 									 fSoldierFound = FALSE;
 									 break;
 								}
-								else if ( gSoldierStack.ubIDs[ gSoldierStack.bCur ] == pSoldier->ubID )
+								else if (gSoldierStack.mercs[gSoldierStack.bCur] == pSoldier)
 								{
 									 best_merc = pSoldier;
 									 fSoldierFound = TRUE;
@@ -433,7 +433,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 
 		if ( !gSoldierStack.fUseGridNo )
 		{
-			gUIFullTarget        = GetMan(gSoldierStack.ubIDs[gSoldierStack.bCur]);
+			gUIFullTarget        = gSoldierStack.mercs[gSoldierStack.bCur];
 			guiUIFullTargetFlags = GetSoldierFindFlags(gUIFullTarget);
 			gUITargetSoldier     = gUIFullTarget;
 		}
