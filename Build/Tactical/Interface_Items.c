@@ -3900,11 +3900,8 @@ void DrawItemTileCursor( )
 
 	if (GetMouseMapPos( &usMapPos) )
 	{
-		if (gusUIFullTargetID != NOBODY)
-		{
-			// Force mouse position to guy...
-			usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
-		}
+		// Force mouse position to guy...
+		if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
 
 		gusCurMousePos = usMapPos;
 
@@ -3965,11 +3962,9 @@ void DrawItemTileCursor( )
 			if ( UIHandleOnMerc( FALSE ) && usMapPos != gpItemPointerSoldier->sGridNo )
 			{
 				// We are on a guy.. check if they can catch or not....
-				if (gusUIFullTargetID != NOBODY)
+				const SOLDIERTYPE* const tgt = gUIFullTarget;
+				if (tgt != NULL)
 				{
-					// Get soldier
-					const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
-
 					// Are they on our team?
 					// ATE: Can't be an EPC
 					if (tgt->bTeam == gbPlayerNum && !AM_AN_EPC(tgt) && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
@@ -4015,11 +4010,10 @@ void DrawItemTileCursor( )
 		}
 		else
 		{
-			if (gusUIFullTargetID != NOBODY)
+			const SOLDIERTYPE* const tgt = gUIFullTarget;
+			if (tgt != NULL)
 			{
 				UIHandleOnMerc( FALSE );
-
-				const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
 
 				// OK, set global that this buddy can see catch...
 				gfUIMouseOnValidCatcher = 2;
@@ -4192,7 +4186,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	UINT8 ubDirection;
 	UINT16	  usItem;
 	INT16			sAPCost;
-	SOLDIERTYPE		*pSoldier=NULL;
 	UINT8			ubThrowActionCode=0;
 	UINT32		uiThrowActionData=0;
 	INT16			sEndZ = 0;
@@ -4226,12 +4219,12 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		return( FALSE );
 	}
 
-	if (gusUIFullTargetID != NOBODY)
+	if (gUIFullTarget != NULL)
 	{
 		// Force mouse position to guy...
-		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
+		usMapPos = gUIFullTarget->sGridNo;
 
-		if ( gAnimControl[ MercPtrs[ gusUIFullTargetID ]->usAnimState ].uiFlags & ANIM_MOVING )
+		if (gAnimControl[gUIFullTarget->usAnimState].uiFlags & ANIM_MOVING)
 		{
 			return( FALSE );
 		}
@@ -4388,7 +4381,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 	// CHECK IF WE ARE NOT ON THE SAME GRIDNO
 	if (sDist <= 1 &&
-			(gusUIFullTargetID == NOBODY || gusUIFullTargetID == gpItemPointerSoldier->ubID))
+			(gUIFullTarget == NULL || gUIFullTarget == gpItemPointerSoldier))
 	{
 		// Check some things here....
 		// 1 ) are we at the exact gridno that we stand on?
@@ -4464,16 +4457,15 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	{
 		sGridNo = usMapPos;
 
+		SOLDIERTYPE* const pSoldier = gUIFullTarget;
 		if (sDist <= PASSING_ITEM_DISTANCE_OKLIFE &&
-				gusUIFullTargetID != NOBODY &&
-				MercPtrs[gusUIFullTargetID]->bTeam == gbPlayerNum &&
-				!AM_AN_EPC(MercPtrs[gusUIFullTargetID]) &&
-				!(MercPtrs[gusUIFullTargetID]->uiStatusFlags & SOLDIER_VEHICLE))
+				pSoldier != NULL &&
+				pSoldier->bTeam == gbPlayerNum &&
+				!AM_AN_EPC(pSoldier) &&
+				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			// OK, do the transfer...
 			{
-				pSoldier = MercPtrs[ gusUIFullTargetID ];
-
 				{
 					// Change to inventory....
 					//gfSwitchPanel = TRUE;
@@ -4565,10 +4557,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// OK, CHECK FOR VALID THROW/CATCH
 			// IF OVER OUR GUY...
-			if (gusUIFullTargetID != NOBODY)
+			if (pSoldier != NULL)
 			{
-				pSoldier = MercPtrs[ gusUIFullTargetID ];
-
 				if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
 					// OK, on our team,

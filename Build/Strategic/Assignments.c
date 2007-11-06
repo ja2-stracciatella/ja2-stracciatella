@@ -165,9 +165,6 @@ extern SOLDIERTYPE *pMilitiaTrainerSoldier;
 // we are in fact training?..then who temmates, or self?
 INT8 gbTrainingMode = -1;
 
-// who is the highlighted guy
-extern UINT16 gusUIFullTargetID;
-
 // showing town info?
 extern BOOLEAN fShowTownInfo;
 
@@ -10843,7 +10840,7 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 	else
 	{
 		// tactical version
-		pSoldier = &Menptr[ gusUIFullTargetID ];
+		pSoldier = gUIFullTarget;
 	}
 
 	if ( !fNullOK )

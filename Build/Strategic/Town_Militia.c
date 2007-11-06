@@ -993,7 +993,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 	else
 	{
 		// handle for tactical
-		pSoldier = &Menptr[ gusUIFullTargetID ];
+		pSoldier = gUIFullTarget;
 		iCounter = 0;
 
 		if( CanCharacterTrainMilitia( pSoldier ) == TRUE )

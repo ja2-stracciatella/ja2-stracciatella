@@ -1183,10 +1183,10 @@ BOOLEAN InternalTacticalRemoveSoldier( UINT16 usSoldierIndex, BOOLEAN fRemoveVeh
 		return( FALSE );
 	}
 
-	// ATE: If this guy is our global selected dude, take selection off...
-	if (gusUIFullTargetID == usSoldierIndex) gusUIFullTargetID = NOBODY;
-
 	pSoldier = MercPtrs[ usSoldierIndex ];
+
+	// ATE: If this guy is our global selected dude, take selection off...
+	if (gUIFullTarget == pSoldier) gUIFullTarget = NULL;
 
 	return TacticalRemoveSoldierPointer( pSoldier, fRemoveVehicle );
 }

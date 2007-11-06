@@ -129,15 +129,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 	}
 
 	// Calculate target gridno!
-	if (gusUIFullTargetID != NOBODY)
-	{
-		sTargetGridNo = MercPtrs[ gusUIFullTargetID ]->sGridNo;
-	}
-	else
-	{
-		sTargetGridNo = usMapPos;
-	}
-
+	sTargetGridNo = (gUIFullTarget != NULL ? gUIFullTarget->sGridNo : usMapPos);
 
 	ubItemCursor  =  GetActionModeCursor( pSoldier );
 
@@ -174,18 +166,17 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 			if ( gCurrentUIMode == ACTION_MODE && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				// Alrighty, let's change the cursor!
-				if (fRecalc && gusUIFullTargetID != NOBODY)
+				const SOLDIERTYPE* const tgt = gUIFullTarget;
+				if (fRecalc &&
+						tgt != NULL &&
+						IsValidTargetMerc(tgt->ubID) &&
+						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
+						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
+						guiUIFullTargetFlags & VISIBLE_MERC &&
+						!(guiUIFullTargetFlags & DEAD_MERC) &&
+						!gfCannotGetThrough)
 				{
-						// ATE: Check for ammo
-						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) && EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
-						{
-							 // IF it's an ememy, goto confirm action mode
-							 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) && !gfCannotGetThrough )
-							 {
-									guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
-							 }
-
-						}
+					guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
 				}
 			}
 			break;
@@ -213,18 +204,17 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 			if ( gCurrentUIMode == ACTION_MODE && ubItemCursor == TRAJECTORYCURS && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				// Alrighty, let's change the cursor!
-				if (fRecalc && gusUIFullTargetID != NOBODY)
+				const SOLDIERTYPE* const tgt = gUIFullTarget;
+				if (fRecalc &&
+						tgt != NOBODY &&
+						IsValidTargetMerc(tgt->ubID) &&
+						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
+						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
+						guiUIFullTargetFlags & VISIBLE_MERC &&
+						!(guiUIFullTargetFlags & DEAD_MERC) &&
+						!gfCannotGetThrough)
 				{
-						// ATE: Check for ammo
-						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) && EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
-						{
-							 // IF it's an ememy, goto confirm action mode
-							 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) && !gfCannotGetThrough )
-							 {
-									guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
-							 }
-
-						}
+					guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
 				}
 			}
 #endif
@@ -395,9 +385,10 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 
 		if ( fRecalc )
 		{
-			if ( gusUIFullTargetID != NOBODY )
+			const SOLDIERTYPE* const tgt = gUIFullTarget;
+			if (tgt != NULL)
 			{
-				if ( SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, MercPtrs[ gusUIFullTargetID ], pSoldier->bAimShotLocation ) < OK_CHANCE_TO_GET_THROUGH )
+				if (SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, tgt, pSoldier->bAimShotLocation) < OK_CHANCE_TO_GET_THROUGH)
 				{
 					gfCannotGetThrough = TRUE;
 				}
@@ -968,16 +959,15 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 		if ( !fOnGuy )
 		{
 			// Check if we can find a soldier here
-			if (gusUIFullTargetID != NOBODY)
+			SOLDIERTYPE* const tgt = gUIFullTarget;
+			if (tgt != NULL)
 			{
-				 pTargetSoldier = MercPtrs[ gusUIFullTargetID ];
-
-				 if ( FindRelativeSoldierPosition( pTargetSoldier, &usFlags, gusMouseXPos, gusMouseYPos )  )
-				 {
-						fOnGuy = TRUE;
-				 }
+				pTargetSoldier = tgt;
+				if (FindRelativeSoldierPosition(tgt, &usFlags, gusMouseXPos, gusMouseYPos))
+				{
+					fOnGuy = TRUE;
+				}
 			}
-
 		}
 
 
@@ -1004,9 +994,10 @@ static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOO
 
 	if ( fDisplay && ( !pSoldier->bDoBurst ) )
 	{
-		if (gusUIFullTargetID != NOBODY)
+		SOLDIERTYPE* const tgt = gUIFullTarget;
+		if (tgt != NULL)
 		{
-			 pTargetSoldier = MercPtrs[ gusUIFullTargetID ];
+			pTargetSoldier = tgt;
 
 				if ( pTargetSoldier->ubBodyType == CROW )
 				{
@@ -1160,7 +1151,7 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if (gusUIFullTargetID != NOBODY && !(guiUIFullTargetFlags & SELECTED_MERC))
+		if (gUIFullTarget != NULL && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
 			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
 			return( KNIFE_HIT_UICURSOR );
@@ -1284,7 +1275,7 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if (gusUIFullTargetID != NOBODY && !(guiUIFullTargetFlags & SELECTED_MERC))
+		if (gUIFullTarget != NULL && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
 			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
 			return( ACTION_PUNCH_RED );
@@ -1309,7 +1300,7 @@ static UINT8 HandleAidCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAct
 	else
 	{
 		// CHECK IF WE ARE ON A GUY
-		if (gusUIFullTargetID != NOBODY)
+		if (gUIFullTarget != NULL)
 		{
 			return( ACTION_FIRSTAID_RED );
 		}
@@ -1727,18 +1718,13 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 	INT16					sAPCosts;
 	INT8					bFutureAim;
 	UINT8					ubCursor;
-	SOLDIERTYPE		*pTSoldier;
 	INT16					sGridNo;
 	INT8					bTargetLevel;
 
 	ubCursor =  GetActionModeCursor( pSoldier );
 
 	// 'snap' cursor to target tile....
-	if (gusUIFullTargetID != NOBODY)
-	{
-		usMapPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
-	}
-
+	if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
 
 	switch( ubCursor )
 	{
@@ -1756,14 +1742,14 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 				bTargetLevel	  = (INT8)gsInterfaceLevel;
 
 				// Look for a target here...
-				if (gusUIFullTargetID != NOBODY)
+				const SOLDIERTYPE* const tgt = gUIFullTarget;
+				if (tgt != NULL)
 				{
 					// Get target soldier, if one exists
-					pTSoldier = MercPtrs[ gusUIFullTargetID ];
-					sGridNo = pTSoldier->sGridNo;
+					sGridNo = tgt->sGridNo;
 					bTargetLevel = pSoldier->bLevel;
 
-					if ( !HandleCheckForBadChangeToGetThrough( pSoldier, pTSoldier, sGridNo , bTargetLevel ) )
+					if (!HandleCheckForBadChangeToGetThrough(pSoldier, tgt, sGridNo, bTargetLevel))
 					{
 						return;
 					}

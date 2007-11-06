@@ -290,10 +290,7 @@ BOOLEAN DrawUICursor( )
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
 			{
 				// If we are over a target, jump to that....
-				if (gusUIFullTargetID != NOBODY)
-				{
-					gusTargetDropPos = MercPtrs[ gusUIFullTargetID ]->sGridNo;
-				}
+				if (gUIFullTarget != NULL) gusTargetDropPos = gUIFullTarget->sGridNo;
 
 				// Put tile on the floor
 				AddTopmostToTail( gusTargetDropPos, FIRSTPOINTERS14 );

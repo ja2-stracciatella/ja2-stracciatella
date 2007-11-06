@@ -157,10 +157,10 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 								if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 								{
-									if (gusUIFullTargetID != NOBODY && guiUIFullTargetFlags & OWNED_MERC)
+									if (gUIFullTarget != NULL && guiUIFullTargetFlags & OWNED_MERC)
 									{
 										// Reset , if this guy is selected merc, reset any multi selections...
-										if ( gusUIFullTargetID == gusSelectedSoldier )
+										if (gUIFullTarget->ubID == gusSelectedSoldier)
 										{
 											ResetMultiSelection( );
 										}
@@ -512,12 +512,12 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																if ( !HandleCheckForExitArrowsInput( FALSE ) && gpItemPointer == NULL )
 																{
 																	// First check if we clicked on a guy, if so, make selected if it's ours
-																	if (gusUIFullTargetID != NOBODY && guiUIFullTargetFlags & OWNED_MERC)
+																	if (gUIFullTarget != NULL && guiUIFullTargetFlags & OWNED_MERC)
 																	{
 																		 if ( !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 																		 {
 																			 // Select guy
-																			SOLDIERTYPE* pSoldier = GetSoldier(gusUIFullTargetID);
+																			SOLDIERTYPE* const pSoldier = gUIFullTarget;
 																			 if (pSoldier != NULL && gpItemPointer == NULL)
 																			 {
 																					if( pSoldier->bAssignment >= ON_DUTY && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -761,7 +761,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 #if 0
 															fDone = FALSE;
-															if(	GetSoldier( &pSoldier, gusUIFullTargetID ) && gpItemPointer == NULL )
+															pSoldier = gUIFullTarget;
+															if (pSoldier != NULL && gpItemPointer == NULL)
 															{
 																if( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) &&( pSoldier->bAssignment >= ON_DUTY )&&!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 																{
@@ -1165,7 +1166,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 							}
 							else
 							{
-								if (gusUIFullTargetID != NOBODY)
+								if (gUIFullTarget != NULL)
 								{
 									gfItemPointerDifferentThanDefault = !gfItemPointerDifferentThanDefault;
 								}
@@ -1258,8 +1259,8 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 
 				if ( uiMoveTargetSoldierId != NOBODY )
 				{
-					if (gusUIFullTargetID == NOBODY ||
-							gusUIFullTargetID != uiMoveTargetSoldierId)
+					if (gUIFullTarget       == NULL ||
+							gUIFullTarget->ubID != uiMoveTargetSoldierId)
 					{
 						*puiNewEvent = A_CHANGE_TO_MOVE;
 						return;
@@ -1329,12 +1330,12 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 						 }
 						 else
 						 {
-							if (gusUIFullTargetID != NOBODY)
+							const SOLDIERTYPE* const tgt = gUIFullTarget;
+							if (tgt != NULL)
 							 {
-								const SOLDIERTYPE* const tgt = GetMan(gusUIFullTargetID);
 								if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
 									{
-										uiMoveTargetSoldierId = gusUIFullTargetID;
+										uiMoveTargetSoldierId = gUIFullTarget->ubID;
 										*puiNewEvent = T_CHANGE_TO_TALKING;
 										return;
 									}
@@ -1343,7 +1344,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 										// IF it's an ememy, goto confirm action mode
 										if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )
 										{
-											//uiMoveTargetSoldierId = gusUIFullTargetID;
+											//uiMoveTargetSoldierId = gUIFullTarget->ubID;
 											//*puiNewEvent = A_ON_TERRAIN;
 											//return;
 										}
@@ -1353,7 +1354,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 										// IF it's an ememy, goto confirm action mode
 										if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )
 										{
-											uiMoveTargetSoldierId = gusUIFullTargetID;
+											uiMoveTargetSoldierId = gUIFullTarget->ubID;
 											*puiNewEvent = A_ON_TERRAIN;
 											return;
 										}
@@ -1366,24 +1367,23 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 			}
 
 			case ACTION_MODE:
-
+			{
 				// First check if we are on a guy, if so, make selected if it's ours
 				// Check if the guy is visible
 				guiUITargetSoldierId = NOBODY;
 
-				if (gusUIFullTargetID != NOBODY)
+				const SOLDIERTYPE* const tgt = gUIFullTarget;
+				if (tgt != NULL)
 				{
-						if ( IsValidTargetMerc( (UINT8)gusUIFullTargetID ) )
+					if (IsValidTargetMerc(tgt->ubID))
+					{
+						guiUITargetSoldierId = tgt->ubID;
+						if (tgt->bTeam == gbPlayerNum && gUIActionModeChangeDueToMouseOver)
 						{
-							 guiUITargetSoldierId = gusUIFullTargetID;
-
-							if (MercPtrs[gusUIFullTargetID]->bTeam == gbPlayerNum &&
-									gUIActionModeChangeDueToMouseOver)
-							{
-								*puiNewEvent = A_CHANGE_TO_MOVE;
-								return;
-							}
+							*puiNewEvent = A_CHANGE_TO_MOVE;
+							return;
 						}
+					}
 				}
 				else
 				{
@@ -1395,6 +1395,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				}
 				*puiNewEvent = A_ON_TERRAIN;
 				break;
+			}
 
 			case CONFIRM_MOVE_MODE:
 
@@ -1437,9 +1438,9 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				}
 
 				// First check if we are on a guy, if so, make selected if it's ours
-				if (gusUIFullTargetID != NOBODY)
-					{
-					 if ( guiUITargetSoldierId != gusUIFullTargetID )
+				if (gUIFullTarget != NULL)
+				{
+					if (guiUITargetSoldierId != gUIFullTarget->ubID)
 					 {
 							// Switch event out of confirm mode
 							*puiNewEvent = CA_END_CONFIRM_ACTION;
