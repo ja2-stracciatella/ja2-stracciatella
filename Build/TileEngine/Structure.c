@@ -49,12 +49,12 @@ UINT8 AtHeight[PROFILE_Z_SIZE] = { 0x01, 0x02, 0x04, 0x08 };
 
 #define FIRST_AVAILABLE_STRUCTURE_ID (INVALID_STRUCTURE_ID + 2)
 
-UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
+static UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 
-STRUCTURE_FILE_REF *		gpStructureFileRefs;
+static STRUCTURE_FILE_REF* gpStructureFileRefs;
 
 
-INT32 guiMaterialHitSound[ NUM_MATERIAL_TYPES ] =
+static const INT32 guiMaterialHitSound[NUM_MATERIAL_TYPES] =
 {
 	-1,
 	S_WOOD_IMPACT1,
@@ -87,9 +87,6 @@ INT32 guiMaterialHitSound[ NUM_MATERIAL_TYPES ] =
 };
 
 
-
-
-UINT8 gubMaterialArmour[] =
 /*
 index  1-10, organics
 index 11-20, rocks and concretes
@@ -108,7 +105,7 @@ index 23, really heavy metal
 index 24, indestructable stone
 index 25, indestructable metal
 */
-
+const UINT8 gubMaterialArmour[] =
 { // note: must increase; r.c. should block *AP* 7.62mm rounds
 	 0,		// nothing
 	25,		// dry timber; wood wall +1/2

@@ -114,11 +114,11 @@ enum
 	NUM_MATERIAL_TYPES
 };
 
-extern INT32 guiMaterialHitSound[ NUM_MATERIAL_TYPES ];
-
 STRUCTURE		*FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel );
 UINT8				StructureFlagToType( UINT32 uiFlag );
 
 UINT32 GetStructureOpenSound( STRUCTURE *pStructure, BOOLEAN fClose );
+
+extern const UINT8 gubMaterialArmour[];
 
 #endif

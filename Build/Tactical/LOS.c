@@ -167,8 +167,6 @@ static UINT32     guiLocalStructureCTH[MAX_LOCAL_STRUCTURES];
 static UINT8      gubLocalStructureNumTimesHit[MAX_LOCAL_STRUCTURES];
 
 
-extern UINT8 gubMaterialArmour[];
-
 #ifdef LOS_DEBUG
 LOSResults gLOSTestResults = {0};
 #endif
