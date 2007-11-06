@@ -843,12 +843,12 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 
 void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
+	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
+
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
-	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
-
 
 	if (!GetMouseMapPos( &usMapPos ) )
 	{
@@ -888,8 +888,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				break;
 
 			case TALKCURSOR_MODE:
-				if (uiMoveTargetSoldierId != NOBODY &&
-						(gUIFullTarget == NULL || gUIFullTarget->ubID != uiMoveTargetSoldierId))
+				if (MoveTargetSoldier != NULL && gUIFullTarget != MoveTargetSoldier)
 				{
 					*puiNewEvent = A_CHANGE_TO_MOVE;
 					return;
@@ -899,7 +898,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
 			case MOVE_MODE:
 			{
-				uiMoveTargetSoldierId = NO_SOLDIER;
+				MoveTargetSoldier = NULL;
 
 				// Check for being on terrain
 				const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
@@ -919,7 +918,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 							 // ATE: Don't do this automatically for enemies......
 							if (tgt->bTeam != ENEMY_TEAM)
 							 {
-									uiMoveTargetSoldierId = tgt->ubID;
+									MoveTargetSoldier = tgt;
 									if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && !ValidQuickExchangePosition())
 									{
 										*puiNewEvent = T_CHANGE_TO_TALKING;

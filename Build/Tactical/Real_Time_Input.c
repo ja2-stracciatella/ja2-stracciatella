@@ -1192,9 +1192,10 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 
 void GetRTMousePositionInput(UINT32* puiNewEvent)
 {
+	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
+
 	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
-	static UINT32			uiMoveTargetSoldierId = NO_SOLDIER;
 
 	if (!GetMouseMapPos( &usMapPos ) )
 	{
@@ -1256,15 +1257,10 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				break;
 
 			case TALKCURSOR_MODE:
-
-				if ( uiMoveTargetSoldierId != NOBODY )
+				if (MoveTargetSoldier != NULL && gUIFullTarget != MoveTargetSoldier)
 				{
-					if (gUIFullTarget       == NULL ||
-							gUIFullTarget->ubID != uiMoveTargetSoldierId)
-					{
-						*puiNewEvent = A_CHANGE_TO_MOVE;
-						return;
-					}
+					*puiNewEvent = A_CHANGE_TO_MOVE;
+					return;
 				}
 			 *puiNewEvent = T_ON_TERRAIN;
 			 break;
@@ -1310,7 +1306,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 					gfUIAllMoveOn = FALSE;
 				}
 
-				uiMoveTargetSoldierId = NO_SOLDIER;
+				MoveTargetSoldier = NULL;
 
 				// Check for being on terrain
 				const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
@@ -1335,7 +1331,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 							 {
 								if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
 									{
-										uiMoveTargetSoldierId = gUIFullTarget->ubID;
+										MoveTargetSoldier = gUIFullTarget;
 										*puiNewEvent = T_CHANGE_TO_TALKING;
 										return;
 									}
@@ -1344,7 +1340,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 										// IF it's an ememy, goto confirm action mode
 										if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )
 										{
-											//uiMoveTargetSoldierId = gUIFullTarget->ubID;
+											//MoveTargetSoldier = gUIFullTarget;
 											//*puiNewEvent = A_ON_TERRAIN;
 											//return;
 										}
@@ -1354,7 +1350,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 										// IF it's an ememy, goto confirm action mode
 										if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )
 										{
-											uiMoveTargetSoldierId = gUIFullTarget->ubID;
+											MoveTargetSoldier = gUIFullTarget;
 											*puiNewEvent = A_ON_TERRAIN;
 											return;
 										}
