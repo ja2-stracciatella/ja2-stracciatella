@@ -544,7 +544,7 @@ void GoIntoOverheadMap( )
 		// Make sure we are in team panel mode...
 		gfSwitchPanel = TRUE;
 		gbNewPanel = TEAM_PANEL;
-		gubNewPanelParam = (UINT8)gusSelectedSoldier;
+		gNewPanelSoldier = GetSelectedMan();
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
 		// Disable tactical buttons......

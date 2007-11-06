@@ -4470,7 +4470,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					// Change to inventory....
 					//gfSwitchPanel = TRUE;
 					//gbNewPanel = SM_PANEL;
-					//gubNewPanelParam = (UINT8)pSoldier->ubID;
+					//gNewPanelSoldier = pSoldier;
 					if ( !EnoughPoints( pSoldier, 3, 0, TRUE ) ||
 							 !EnoughPoints( gpItemPointerSoldier, 3, 0, TRUE ) )
 					{
@@ -5444,7 +5444,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	// Change to INV panel if not there already...
 	gfSwitchPanel = TRUE;
 	gbNewPanel = SM_PANEL;
-	gubNewPanelParam = (UINT8)pSoldier->ubID;
+	gNewPanelSoldier = pSoldier;
 
 	//Determine total #
 	cnt = 0;

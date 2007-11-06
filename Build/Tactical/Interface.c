@@ -436,7 +436,7 @@ void SetCurrentInterfacePanel( UINT8 ubNewPanel )
 void ToggleTacticalPanels( )
 {
 	gfSwitchPanel			= TRUE;
-	gubNewPanelParam  = (UINT8)gusSelectedSoldier;
+	gNewPanelSoldier = GetSelectedMan();
 
 	if ( gsCurInterfacePanel == SM_PANEL )
 	{

@@ -902,7 +902,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// open inv panel...
 					gfSwitchPanel = TRUE;
 					gbNewPanel = SM_PANEL;
-					gubNewPanelParam = (UINT8)gpSrcSoldier->ubID;
+					gNewPanelSoldier = gpSrcSoldier;
 
 					// Wait!
 					gpDestSoldier->bNextAction = AI_ACTION_WAIT;

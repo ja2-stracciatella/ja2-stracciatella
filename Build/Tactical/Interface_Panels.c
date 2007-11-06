@@ -279,7 +279,7 @@ INT32										giSMStealthButton = -1;
 
 BOOLEAN									gfSwitchPanel = FALSE;
 UINT8										gbNewPanel		= SM_PANEL;
-UINT8										gubNewPanelParam = 0;
+SOLDIERTYPE* gNewPanelSoldier = NULL;
 
 BOOLEAN									gfUIStanceDifferent = FALSE;
 static BOOLEAN gfAllDisabled = FALSE;
@@ -3132,7 +3132,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			{
 				gfSwitchPanel = TRUE;
 				gbNewPanel = SM_PANEL;
-				gubNewPanelParam = ubSoldierID;
+				gNewPanelSoldier = s;
 			}
 		}
 	}

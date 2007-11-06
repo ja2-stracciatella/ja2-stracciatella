@@ -65,7 +65,6 @@ enum
 BOOLEAN				gfSwitchPanel;
 BOOLEAN				gfUIStanceDifferent;
 UINT8					gbNewPanel;
-UINT8					gubNewPanelParam;
 INT16					gsCurInterfacePanel;
 
 
