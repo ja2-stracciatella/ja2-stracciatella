@@ -105,7 +105,7 @@ INT8						gbTrapDifficulty;
 BOOLEAN					gfJustFoundBoobyTrap = FALSE;
 
 
-BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel )
+BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTargetSoldier, const INT16 sTargetGridNo, const INT8 bLevel)
 {
 	BOOLEAN						fBadChangeToGetThrough = FALSE;
 

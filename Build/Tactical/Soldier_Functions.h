@@ -17,7 +17,7 @@ void HandlePlacingRoofMarker( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fSet
 
 void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 
-void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget );
+void MercStealFromMerc(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTarget);
 
 void HandleCrowShadowVisibility( SOLDIERTYPE *pSoldier );
 

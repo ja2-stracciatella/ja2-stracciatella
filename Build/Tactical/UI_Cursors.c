@@ -41,8 +41,6 @@ static UINT8 HandleBombCursor(              SOLDIERTYPE* pSoldier, UINT16 sGridN
 static UINT8 HandleJarCursor(               SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
 static UINT8 HandleTinCanCursor(            SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
 
-extern BOOLEAN	HandleCheckForBadChangeToGetThrough( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, INT16 sTargetGridNo , INT8 bLevel );
-
 
 static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;

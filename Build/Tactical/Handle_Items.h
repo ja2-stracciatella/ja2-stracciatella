@@ -133,4 +133,6 @@ BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool);
 
 void ToggleItemGlow(BOOLEAN fOn);
 
+BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTargetSoldier, INT16 sTargetGridNo, INT8 bLevel);
+
 #endif

@@ -3007,7 +3007,8 @@ static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* pStartSoldier, SOLD
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
-UINT8 SoldierToSoldierBodyPartChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier, UINT8 ubAimLocation )
+
+UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier, const UINT8 ubAimLocation)
 {
 	// does like StS-CTGT but with a particular body part in mind
 	FLOAT			dEndZPos;

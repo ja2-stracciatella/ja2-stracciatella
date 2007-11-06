@@ -10087,7 +10087,8 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	}
 }
 
-void MercStealFromMerc( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTarget )
+
+void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTarget)
 {
 		INT16 sActionGridNo, sGridNo, sAdjustedGridNo;
 		UINT8	ubDirection;
