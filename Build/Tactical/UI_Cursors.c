@@ -267,7 +267,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 }
 
 
-static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc);
+static void DetermineCursorBodyLocation(SOLDIERTYPE* s, BOOLEAN fDisplay, BOOLEAN fRecalc);
 
 
 static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags)
@@ -314,7 +314,7 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 		// Determine where we are shooting / aiming
 		//if ( fRecalc )
 		{
-			DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, TRUE, TRUE );
+			DetermineCursorBodyLocation(GetSelectedMan(), TRUE, TRUE);
 		}
 
 		if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -688,8 +688,8 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 	{
 		if (( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 		{
-			//DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, FALSE, fRecalc );
-			DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, fShowAPs, fRecalc );
+			//DetermineCursorBodyLocation(GetSelectedMan(), FALSE, fRecalc);
+			DetermineCursorBodyLocation(GetSelectedMan(), fShowAPs, fRecalc);
 
 			if ( pSoldier->fReloading || pSoldier->fPauseAim )
 			{
@@ -723,7 +723,7 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-		DetermineCursorBodyLocation( (UINT8)gusSelectedSoldier, fShowAPs, fRecalc );
+		DetermineCursorBodyLocation(GetSelectedMan(), fShowAPs, fRecalc);
 
 		gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->bShownAimTime / 2) );
 
@@ -825,16 +825,14 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 }
 
 
-static void DetermineCursorBodyLocation(UINT8 ubSoldierID, BOOLEAN fDisplay, BOOLEAN fRecalc)
+static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLEAN fDisplay, const BOOLEAN fRecalc)
 {
 	UINT16						usMapPos;
-	SOLDIERTYPE				*pTargetSoldier = NULL, *pSoldier;
+	SOLDIERTYPE* pTargetSoldier = NULL;
 	UINT16	usFlags;
 	INT16	sMouseX, sMouseY, sCellX, sCellY, sScreenX, sScreenY;
 	BOOLEAN	fOnGuy = FALSE;
 	LEVELNODE		*pNode;
-
-	pSoldier = MercPtrs[ ubSoldierID ];
 
 	if ( gTacticalStatus.ubAttackBusyCount > 0 )
 	{
@@ -1050,7 +1048,7 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 	if ( fActivated )
 	{
-		DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
+		DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
 
 		if ( gfUIHandleShowMoveGrid )
 		{
@@ -1153,7 +1151,7 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
 		if (gUIFullTarget != NULL && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
-			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
+			DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
 			return( KNIFE_HIT_UICURSOR );
 		}
 		else
@@ -1175,7 +1173,7 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 	if ( fActivated )
 	{
-		DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
+		DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
 
 		if ( gfUIHandleShowMoveGrid )
 		{
@@ -1277,7 +1275,7 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
 		if (gUIFullTarget != NULL && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
-			DetermineCursorBodyLocation( pSoldier->ubID, TRUE, TRUE );
+			DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
 			return( ACTION_PUNCH_RED );
 		}
 		else
