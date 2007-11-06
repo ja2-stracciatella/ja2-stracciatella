@@ -1989,7 +1989,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			case BODYEXPLODING:
 
 				// Merc on fire!
-				pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample(pSoldier, FIRE_ON_MERC, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 5, TRUE);
+				pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample(pSoldier, FIRE_ON_MERC, HIGHVOLUME, 5, TRUE);
 				break;
 		}
 	}
@@ -2499,7 +2499,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 				// Update sound...
 				if ( fInWaterValue )
 				{
-					PlaySoldierJA2Sample(pSoldier, ENTER_WATER_1, SoundVolume(MIDVOLUME, pSoldier->sGridNo), 1, TRUE);
+					PlaySoldierJA2Sample(pSoldier, ENTER_WATER_1, MIDVOLUME, 1, TRUE);
 				}
 				else
 				{
@@ -4990,7 +4990,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
        SoundStop( pSoldier->iTuringSoundID );
        pSoldier->iTuringSoundID = NO_SAMPLE;
 
-			 PlaySoldierJA2Sample(pSoldier, TURRET_STOP, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 1, TRUE);
+			 PlaySoldierJA2Sample(pSoldier, TURRET_STOP, HIGHVOLUME, 1, TRUE);
      }
    }
 
@@ -5115,7 +5115,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
      {
        if ( pSoldier->iTuringSoundID == NO_SAMPLE )
        {
-			   pSoldier->iTuringSoundID = PlaySoldierJA2Sample(pSoldier, TURRET_MOVE, SoundVolume(HIGHVOLUME, pSoldier->sGridNo), 100, TRUE);
+			   pSoldier->iTuringSoundID = PlaySoldierJA2Sample(pSoldier, TURRET_MOVE, HIGHVOLUME, 100, TRUE);
        }
      }
 	}
@@ -10507,7 +10507,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 
 	  if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	  {
-			PlaySoldierJA2Sample(pSoldier, ROBOT_BEEP, SoundVolume(bVolume, pSoldier->sGridNo), 1, TRUE);
+			PlaySoldierJA2Sample(pSoldier, ROBOT_BEEP, bVolume, 1, TRUE);
       return;
     }
 
@@ -10556,7 +10556,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 				bVolume = LOWVOLUME;
 			}
 
-			PlaySoldierJA2Sample(pSoldier, ubSoundBase + pSoldier->ubLastFootPrintSound, SoundVolume(bVolume, pSoldier->sGridNo), 1, TRUE);
+			PlaySoldierJA2Sample(pSoldier, ubSoundBase + pSoldier->ubLastFootPrintSound, bVolume, 1, TRUE);
 		}
 	}
 }
