@@ -89,22 +89,16 @@ BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s)
 }
 
 
-UINT32 GetSoldierFindFlags(UINT16 ubID)
+UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 {
 	UINT32 MercFlags = 0;
-	SOLDIERTYPE *pSoldier;
-
- // Get pSoldier!
- pSoldier = MercPtrs[ ubID ];
 
  // FInd out and set flags
- if ( ubID == gusSelectedSoldier )
+	if (s->ubID == gusSelectedSoldier) MercFlags |= SELECTED_MERC;
+	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
+	if (s->ubID >= t->bFirstID && s->ubID <= t->bLastID)
  {
-		MercFlags |= SELECTED_MERC;
- }
- if ( ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
- {
-	 if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !GetNumberInVehicle( pSoldier->bVehicleID ) )
+		if (s->uiStatusFlags & SOLDIER_VEHICLE && !GetNumberInVehicle(s->bVehicleID))
 	 {
 		 // Don't do anything!
 	 }
@@ -113,16 +107,13 @@ UINT32 GetSoldierFindFlags(UINT16 ubID)
 			// It's our own merc
 		 MercFlags  |= OWNED_MERC;
 
-		 if ( pSoldier->bAssignment < ON_DUTY )
-		 {
-				MercFlags |= ONDUTY_MERC;
-		 }
+			if (s->bAssignment < ON_DUTY) MercFlags |= ONDUTY_MERC;
 	 }
  }
  else
  {
 	 // Check the side, etc
-	 if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+		if (!s->bNeutral && s->bSide != gbPlayerNum)
 	 {
 			// It's an enemy merc
 		 MercFlags  |= ENEMY_MERC;
@@ -135,22 +126,11 @@ UINT32 GetSoldierFindFlags(UINT16 ubID)
  }
 
 	// Check for a guy who does not have an iterrupt ( when applicable! )
-	if ( !OK_INTERRUPT_MERC( pSoldier ) )
-	{
-			MercFlags  |=	NOINTERRUPT_MERC;
-	}
+	if (!OK_INTERRUPT_MERC(s)) MercFlags |= NOINTERRUPT_MERC;
+	if (s->bLife < OKLIFE)     MercFlags |= UNCONSCIOUS_MERC;
+	if (s->bLife == 0)         MercFlags |= DEAD_MERC;
 
-	if ( pSoldier->bLife < OKLIFE )
-	{
-		MercFlags  |=	UNCONSCIOUS_MERC;
-	}
-
-	if ( pSoldier->bLife == 0 )
-	{
-		MercFlags  |=	DEAD_MERC;
-	}
-
-	if ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
+	if (s->bVisible != -1 || gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
 	{
 		MercFlags  |=	VISIBLE_MERC;
 	}
@@ -454,7 +434,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 		if ( !gSoldierStack.fUseGridNo )
 		{
 			gusUIFullTargetID = gSoldierStack.ubIDs[ gSoldierStack.bCur ];
-			guiUIFullTargetFlags = GetSoldierFindFlags( gusUIFullTargetID );
+			guiUIFullTargetFlags = GetSoldierFindFlags(GetMan(gusUIFullTargetID));
 			guiUITargetSoldierId = gusUIFullTargetID;
 		}
 		else

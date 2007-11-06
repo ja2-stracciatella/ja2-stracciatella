@@ -493,7 +493,7 @@ UINT32  HandleTacticalUI( void )
 			if (s != NULL)
 			{
 				gusUIFullTargetID = s->ubID;
-				guiUIFullTargetFlags = GetSoldierFindFlags(gusUIFullTargetID);
+				guiUIFullTargetFlags = GetSoldierFindFlags(s);
 			}
 			else
 			{
