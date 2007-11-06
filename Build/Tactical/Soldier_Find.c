@@ -433,10 +433,9 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 
 		if ( !gSoldierStack.fUseGridNo )
 		{
-			const UINT8 tgt_id   = gSoldierStack.ubIDs[gSoldierStack.bCur];
-			gUIFullTarget        = GetMan(tgt_id);
+			gUIFullTarget        = GetMan(gSoldierStack.ubIDs[gSoldierStack.bCur]);
 			guiUIFullTargetFlags = GetSoldierFindFlags(gUIFullTarget);
-			guiUITargetSoldierId = tgt_id;
+			gUITargetSoldier     = gUIFullTarget;
 		}
 		else
 		{

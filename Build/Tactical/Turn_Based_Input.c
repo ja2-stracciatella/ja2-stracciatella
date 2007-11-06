@@ -102,7 +102,7 @@
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 
-UINT32 guiUITargetSoldierId = NOBODY;
+const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 
 static SOLDIERTYPE* gpExchangeSoldier1;
@@ -936,7 +936,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 			{
 				// First check if we are on a guy, if so, make selected if it's ours
 				// Check if the guy is visible
-				guiUITargetSoldierId = NOBODY;
+				gUITargetSoldier = NULL;
 
 				fOnValidGuy = FALSE;
 
@@ -945,7 +945,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				{
 					if (IsValidTargetMerc(tgt))
 					{
-						guiUITargetSoldierId = gUIFullTarget->ubID;
+						gUITargetSoldier = tgt;
 
 						if (tgt->bTeam != gbPlayerNum)
 						{
@@ -1066,7 +1066,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				// First check if we are on a guy, if so, make selected if it's ours
 				if (gUIFullTarget != NULL)
 				{
-					if (guiUITargetSoldierId != gUIFullTarget->ubID)
+					if (gUITargetSoldier != gUIFullTarget)
 					 {
 							// Switch event out of confirm mode
 							*puiNewEvent = CA_END_CONFIRM_ACTION;

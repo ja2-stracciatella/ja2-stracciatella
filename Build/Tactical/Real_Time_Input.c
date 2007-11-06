@@ -1366,14 +1366,14 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 			{
 				// First check if we are on a guy, if so, make selected if it's ours
 				// Check if the guy is visible
-				guiUITargetSoldierId = NOBODY;
+				gUITargetSoldier = NULL;
 
 				const SOLDIERTYPE* const tgt = gUIFullTarget;
 				if (tgt != NULL)
 				{
 					if (IsValidTargetMerc(tgt))
 					{
-						guiUITargetSoldierId = tgt->ubID;
+						gUITargetSoldier = tgt;
 						if (tgt->bTeam == gbPlayerNum && gUIActionModeChangeDueToMouseOver)
 						{
 							*puiNewEvent = A_CHANGE_TO_MOVE;
@@ -1436,7 +1436,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				// First check if we are on a guy, if so, make selected if it's ours
 				if (gUIFullTarget != NULL)
 				{
-					if (guiUITargetSoldierId != gUIFullTarget->ubID)
+					if (gUITargetSoldier != gUIFullTarget)
 					 {
 							// Switch event out of confirm mode
 							*puiNewEvent = CA_END_CONFIRM_ACTION;
