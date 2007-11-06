@@ -1742,7 +1742,7 @@ void DegradeNewlyAddedItems( )
 		for ( cnt2 = 0; cnt2 < NUM_TEAM_SLOTS; cnt2++ )
 		{
 			// GET SOLDIER
-			if ( gTeamPanel[ cnt2 ].fOccupied )
+			if (gTeamPanel[cnt2].ubID != NOBODY)
 			{
 				pSoldier = MercPtrs[ gTeamPanel[ cnt2 ].ubID ];
 

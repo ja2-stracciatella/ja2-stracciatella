@@ -2676,7 +2676,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			const INT32 dy = INTERFACE_START_Y;
 
 			// GET SOLDIER
-			if (!gTeamPanel[i].fOccupied)
+			if (gTeamPanel[i].ubID == NOBODY)
 			{
 				//BLIT CLOSE PANEL
 				const INT32 x = dx + TM_FACE_X;
@@ -2784,7 +2784,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
 		// GET SOLDIER
-		if (gTeamPanel[i].fOccupied)
+		if (gTeamPanel[i].ubID != NOBODY)
 		{
 			SOLDIERTYPE* const s = MercPtrs[gTeamPanel[i].ubID];
 
@@ -3580,13 +3580,7 @@ static BOOLEAN PlayerExistsInSlot(UINT8 ubID)
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if ( gTeamPanel[ cnt ].fOccupied	)
-		{
-			if ( gTeamPanel[ cnt ].ubID == ubID )
-			{
-				return( TRUE );
-			}
-		}
+		if (gTeamPanel[cnt].ubID == ubID) return TRUE;
 	}
 
 	return( FALSE );
@@ -3599,13 +3593,7 @@ static INT8 GetTeamSlotFromPlayerID(UINT8 ubID)
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if ( gTeamPanel[ cnt ].fOccupied	)
-		{
-			if ( gTeamPanel[ cnt ].ubID == ubID )
-			{
-				return( cnt );
-			}
-		}
+		if (gTeamPanel[cnt].ubID == ubID) return cnt;
 	}
 
 	return( -1 );
@@ -3621,13 +3609,10 @@ BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID)
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if ( gTeamPanel[ cnt ].fOccupied	)
+		if (gTeamPanel[cnt].ubID == ubMercID)
 		{
-			if ( gTeamPanel[ cnt ].ubID == ubMercID )
-			{
-				RemovePlayerFromInterfaceTeamSlot( (UINT8)cnt );
-				return( TRUE );
-			}
+			RemovePlayerFromInterfaceTeamSlot(cnt);
+			return TRUE;
 		}
 	}
 
@@ -3650,10 +3635,9 @@ void AddPlayerToInterfaceTeamSlot(UINT8 ubID)
 		// Find a free slot
 		for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 		{
-			if ( !gTeamPanel[ cnt ].fOccupied	)
+			if (gTeamPanel[cnt].ubID == NOBODY)
 			{
-				gTeamPanel[ cnt ].fOccupied = TRUE;
-				gTeamPanel[ cnt ].ubID			= ubID;
+				gTeamPanel[cnt].ubID = ubID;
 
 				MSYS_SetRegionUserData( &gTEAM_FirstHandInv[ cnt ], 0, cnt );
 				MSYS_SetRegionUserData( &gTEAM_FaceRegions[ cnt ], 0, cnt );
@@ -3673,15 +3657,7 @@ void AddPlayerToInterfaceTeamSlot(UINT8 ubID)
 
 BOOLEAN InitTEAMSlots(void)
 {
-	INT32 cnt;
-
-	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
-	{
-		gTeamPanel[ cnt ].fOccupied = FALSE;
-		gTeamPanel[ cnt ].ubID			= NOBODY;
-
-	}
-
+	for (INT32 i = 0; i < NUM_TEAM_SLOTS; i++) gTeamPanel[i].ubID = NOBODY;
 	return( TRUE );
 }
 
@@ -3689,9 +3665,7 @@ BOOLEAN InitTEAMSlots(void)
 BOOLEAN GetPlayerIDFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 {
 	if (ubPanelSlot >= NUM_TEAM_SLOTS) return NOBODY;
-
-	const TEAM_PANEL_SLOTS_TYPE* const p = &gTeamPanel[ubPanelSlot];
-	return p->fOccupied ? p->ubID : NOBODY;
+	return gTeamPanel[ubPanelSlot].ubID;
 }
 
 
@@ -3713,7 +3687,7 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 		return( FALSE );
 	}
 
-	if ( gTeamPanel[ ubPanelSlot ].fOccupied )
+	if (gTeamPanel[ubPanelSlot].ubID != NOBODY)
 	{
 		if ( !( MercPtrs[ gTeamPanel[ ubPanelSlot ].ubID ]->uiStatusFlags & SOLDIER_DEAD ) )
     {
@@ -3724,8 +3698,6 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 		// Set face to inactive...
 		SetAutoFaceInActive( MercPtrs[ gTeamPanel[ ubPanelSlot ].ubID ]->iFaceIndex );
 
-
-		gTeamPanel[ ubPanelSlot ].fOccupied = FALSE;
 		gTeamPanel[ ubPanelSlot ].ubID = NOBODY;
 
 		MSYS_SetRegionUserData( &gTEAM_FirstHandInv[ ubPanelSlot ], 0, NOBODY );
@@ -3824,7 +3796,7 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier)
 
 	for ( cnt = ( bFirstID + 1 ); cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-	  if ( gTeamPanel[ cnt ].fOccupied )
+	  if (gTeamPanel[cnt].ubID != NOBODY)
 	  {
 		  // Set Id to close
 		  pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
@@ -3842,7 +3814,7 @@ UINT8 FindNextMercInTeamPanel(const SOLDIERTYPE* pSoldier)
 	// Now loop back
 	for ( cnt = 0; cnt < bFirstID; cnt++ )
 	{
-	  if ( gTeamPanel[ cnt ].fOccupied )
+	  if (gTeamPanel[cnt].ubID != NOBODY)
 	  {
       pTeamSoldier = MercPtrs[ gTeamPanel[ cnt ].ubID ];
 

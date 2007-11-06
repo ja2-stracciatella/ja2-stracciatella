@@ -91,7 +91,6 @@ extern BOOLEAN gfDisableTacticalPanelButtons;
 typedef struct TEAM_PANEL_SLOTS_TYPE
 {
 	UINT8	ubID;
-	BOOLEAN	fOccupied;
 } TEAM_PANEL_SLOTS_TYPE;
 
 extern TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
