@@ -1834,8 +1834,6 @@ void UpdateAssignments()
 void VerifyTownTrainingIsPaidFor( void )
 {
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
 
  	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
@@ -1846,7 +1844,7 @@ void VerifyTownTrainingIsPaidFor( void )
 			continue;
 		}
 
-		pSoldier = &Menptr[ gCharactersList[ iCounter ].usSolID ];
+		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 		if( pSoldier->bActive && ( pSoldier->bAssignment == TRAIN_TOWN ) )
 		{
@@ -4306,7 +4304,8 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 			return;
 		}
-		if( ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].bLife == 0 ) || ( Menptr[gCharactersList[bSelectedAssignChar].usSolID].bAssignment == ASSIGNMENT_POW ) )
+		const SOLDIERTYPE* const s = gCharactersList[bSelectedAssignChar].merc;
+		if (s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW)
 		{
 			// dead guy handle menu stuff
 			fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
@@ -5504,8 +5503,9 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
 	CreateDestroyMouseRegionForRepairMenu(  );
 
-
-	if( ( ( Menptr[gCharactersList[ bSelectedInfoChar ].usSolID].bLife == 0 )||( Menptr[gCharactersList[bSelectedInfoChar].usSolID].bAssignment == ASSIGNMENT_POW ) ) && ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) ) )
+	const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+	if ((s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW) &&
+			guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		// show basic assignment menu
 		ShowBox( ghRemoveMercAssignBox );
@@ -5822,9 +5822,8 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 
 			return;
 		}
-		if( Menptr[gCharactersList[bSelectedContractChar].usSolID].bLife == 0 )
+		if (gCharactersList[bSelectedContractChar].merc->bLife == 0)
 		{
-
 			// dead guy handle menu stuff
 			fShowRemoveMenu =  fShowContractMenu;
 
@@ -6649,20 +6648,12 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for contract region
 	INT32 iValue = -1;
 	BOOLEAN fOkToClose = FALSE;
-	SOLDIERTYPE * pSoldier = NULL;
 
+	// can't renew contracts from tactical!
+	Assert(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN);
 
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		pSoldier = &Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ];
-	}
-	else
-	{
-		// can't renew contracts from tactical!
-	}
-
+	SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
 	Assert( pSoldier && pSoldier->bActive );
-
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -9983,18 +9974,14 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 {
 	BOOLEAN fSuccess = TRUE;
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	UINT8 ubNumberOfSelectedSoldiers = 0;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		pSoldier = NULL;
-
 		// if the current character in the list is valid...then grab soldier pointer for the character
 		if( gCharactersList[ iCounter ].fValid )
 		{
-			// get the soldier pointer
-			pSoldier = &Menptr[ gCharactersList[ iCounter ].usSolID ];
+			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 			if( pSoldier->bActive == FALSE )
 			{
@@ -10281,7 +10268,6 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSelectedSoldier = NULL;
-	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fItWorked;
 	BOOLEAN fRemoveFromSquad = TRUE;
 	BOOLEAN fNotifiedOfFailure = FALSE;
@@ -10298,7 +10284,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 	{
 		if( gCharactersList[ bSelectedAssignChar ].fValid == TRUE )
 		{
-			pSelectedSoldier = &Menptr[ gCharactersList[ bSelectedAssignChar ].usSolID ];
+			pSelectedSoldier = gCharactersList[bSelectedAssignChar].merc;
 		}
 	}
 
@@ -10311,9 +10297,9 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 		if( ( gCharactersList[ iCounter ].fValid ) &&
 				( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) &&
 				( iCounter != bSelectedAssignChar ) &&
-				!(Menptr[ gCharactersList[ iCounter ].usSolID].uiStatusFlags & SOLDIER_VEHICLE ) )
+				!(gCharactersList[iCounter].merc->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			pSoldier = MercPtrs[ gCharactersList[ iCounter ].usSolID ];
+			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 			// assume it's NOT gonna work
 			fItWorked = FALSE;
@@ -10832,7 +10818,7 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 		if( ( bSelectedAssignChar >= 0 ) && ( bSelectedAssignChar < MAX_CHARACTER_COUNT ) &&
 				( gCharactersList[ bSelectedAssignChar ].fValid ) )
 		{
-			pSoldier = &Menptr[ gCharactersList[ bSelectedAssignChar ].usSolID ];
+			pSoldier = gCharactersList[bSelectedAssignChar].merc;
 		}
 	}
 	else

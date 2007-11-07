@@ -267,11 +267,10 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	//
 	// if the item is not reachable, or if the selected merc is not in the current sector
 	//
-	if( !( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].usFlags & WORLD_ITEM_REACHABLE ) ||
-			!(( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorX == sSelMapX ) &&
-				( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorY == sSelMapY ) &&
-				( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ == iCurrentMapSectorZ )
-			) )
+	if (!(pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage].usFlags & WORLD_ITEM_REACHABLE) ||
+			gCharactersList[bSelectedInfoChar].merc->sSectorX != sSelMapX ||
+			gCharactersList[bSelectedInfoChar].merc->sSectorY != sSelMapY ||
+			gCharactersList[bSelectedInfoChar].merc->bSectorZ != iCurrentMapSectorZ)
 	{
 		//Shade the item
 		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
@@ -704,18 +703,19 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 		//if( fShowInventoryFlag )
 		{
 			// not in sector?
-			if( ( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorX != sSelMapX ) ||
-					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].sSectorY != sSelMapY ) ||
-					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].bSectorZ != iCurrentMapSectorZ ) ||
-					( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].fBetweenSectors ) )
+			const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+			if( s->sSectorX != sSelMapX ||
+					s->sSectorY != sSelMapY ||
+					s->bSectorZ != iCurrentMapSectorZ ||
+					s->fBetweenSectors)
 			{
 				if ( gpItemPointer == NULL )
 				{
-					swprintf( sString, lengthof(sString), pMapInventoryErrorString[ 2 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					swprintf(sString, lengthof(sString), pMapInventoryErrorString[2], s->name);
 				}
 				else
 				{
-					swprintf( sString, lengthof(sString), pMapInventoryErrorString[ 5 ], Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ].name );
+					swprintf(sString, lengthof(sString), pMapInventoryErrorString[5], s->name);
 				}
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -734,7 +734,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 
 			// if in battle inform player they will have to do this in tactical
 //			if( ( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) ) )
-			if( !CanPlayerUseSectorInventory( &Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] ) )
+			if (!CanPlayerUseSectorInventory(gCharactersList[bSelectedInfoChar].merc))
 			{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 3 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -748,7 +748,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 
 			// if in battle inform player they will have to do this in tactical
 //			if( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-			if( !CanPlayerUseSectorInventory( &Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] ) )
+			if (!CanPlayerUseSectorInventory(gCharactersList[bSelectedInfoChar].merc))
 			{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 4 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -802,7 +802,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 /*
 				if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
 				{
-					ReevaluateItemHatches( MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ], FALSE );
+					ReevaluateItemHatches(gCharactersList[bSelectedInfoChar].merc, FALSE);
 				}
 				*/
 			}
@@ -1257,7 +1257,7 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 
 		if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
 		{
-			ReevaluateItemHatches( MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ], FALSE );
+			ReevaluateItemHatches(gCharactersList[bSelectedInfoChar].merc, FALSE);
 			fTeamPanelDirty = TRUE;
 		}
 	}
@@ -1794,7 +1794,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		// check if any compatable items in the soldier inventory matches with this item
 		if( gfCheckForCursorOverMapSectorInventoryItem )
 		{
-			pSoldier = &Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ];
+			pSoldier = gCharactersList[bSelectedInfoChar].merc;
 			if( pSoldier )
 			{
 				if( HandleCompatibleAmmoUIForMapScreen( pSoldier, iCurrentSlot + ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), TRUE, FALSE ) )

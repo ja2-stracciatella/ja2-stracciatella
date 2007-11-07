@@ -974,14 +974,13 @@ static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, 
 static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 {
   UINT8 ubCounter = 0, ubIconPosition = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 
   // run through list
 	while(gCharactersList[ubCounter].fValid)
 	{
-		pSoldier = MercPtrs[ gCharactersList[ ubCounter ].usSolID ];
+		const SOLDIERTYPE* const pSoldier = gCharactersList[ubCounter].merc;
 
 		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 				 ( pSoldier->sSectorX == sMapX) &&
@@ -1004,7 +1003,6 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
  	UINT8 ubCounter, ubIconPosition;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 	ubCounter=0;
@@ -1014,7 +1012,7 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 
 	while(gCharactersList[ubCounter].fValid)
 	{
-		pSoldier = MercPtrs[ gCharactersList[ ubCounter ].usSolID ];
+		const SOLDIERTYPE* const pSoldier = gCharactersList[ubCounter].merc;
 
     // given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
@@ -6205,7 +6203,7 @@ UINT8 NumActiveCharactersInSector( INT16 sSectorX, INT16 sSectorY, INT16 bSector
 	{
 		if( gCharactersList[ iCounter ].fValid )
 		{
-			pSoldier = &( Menptr[ gCharactersList[ iCounter ].usSolID ] );
+			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 			if( pSoldier->bActive && ( pSoldier->bLife > 0 ) &&
 					( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )

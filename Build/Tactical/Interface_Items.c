@@ -6611,7 +6611,7 @@ void UpdateItemHatches(void)
   {
 		if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
 		{
-			pSoldier = MercPtrs[ gCharactersList[ bSelectedInfoChar ].usSolID ];
+			pSoldier = gCharactersList[bSelectedInfoChar].merc;
 		}
 	}
 	else

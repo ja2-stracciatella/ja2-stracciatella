@@ -197,11 +197,10 @@ extern BOOLEAN fFirstTimeInMapScreen;
 extern BOOLEAN fLockOutMapScreenInterface;
 
 // The character data structure
-typedef struct {
-
-	UINT16 usSolID;// soldier ID in MenPtrs
+typedef struct MapScreenCharacterSt
+{
+	SOLDIERTYPE* merc;
 	BOOLEAN fValid;// is the current soldier a valid soldier
-
 } MapScreenCharacterSt;
 
 

@@ -3809,10 +3809,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			return;
 		}
 
-
-
-
-		pSoldier = &( Menptr[ gCharactersList[ bSelectedInfoChar ].usSolID ] );
+		pSoldier = gCharactersList[bSelectedInfoChar].merc;
 		sStartYPosition = MAP_START_KEYRING_Y;
 		sWidth = 261;
 		sHeight = ( 359 - 107 );
@@ -3932,7 +3929,6 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		}
 		else
 		{
-			UINT8			ubSrcID, ubDestID;
 			BOOLEAN		fOKToGo = FALSE;
 			BOOLEAN		fDeductPoints = FALSE;
 
@@ -3942,17 +3938,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			}
 
 			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
-			ubSrcID  = ( UINT8 )gCharactersList[ bSelectedInfoChar ].usSolID;
-			if ( gpItemPointerSoldier )
-			{
-				ubDestID = gpItemPointerSoldier->ubID;
-			}
-			else
-			{
-				ubDestID = ubSrcID;
-			}
-
-			if ( ubSrcID == ubDestID )
+			if (gpItemPointerSoldier == NULL ||
+					gpItemPointerSoldier == gCharactersList[bSelectedInfoChar].merc)
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;

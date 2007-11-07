@@ -834,7 +834,6 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT8 bSectorZ = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter = 0;
 
 
@@ -852,7 +851,7 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 			continue;
 		}
 
-		pSoldier = &Menptr[ gCharactersList[ iCounter ].usSolID ];
+		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 		// valid soldier?
 		if( pSoldier->bActive == FALSE )
@@ -962,7 +961,6 @@ void HandleContinueOfTownTraining( void )
 static void BuildListOfUnpaidTrainableSectors(void)
 {
 	INT32 iCounter = 0, iCounterB = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	memset( gsUnpaidStrategicSector, 0, sizeof( INT16 ) * MAX_CHARACTER_COUNT );
 
@@ -976,7 +974,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 				// selected?
 				if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) || ( iCounter == bSelectedAssignChar ) )
 				{
-					pSoldier = &Menptr[ gCharactersList[ iCounter ].usSolID ];
+					const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
 					if( CanCharacterTrainMilitia( pSoldier ) == TRUE )
 					{
@@ -993,7 +991,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 	else
 	{
 		// handle for tactical
-		pSoldier = gUIFullTarget;
+		const SOLDIERTYPE* const pSoldier = gUIFullTarget;
 		iCounter = 0;
 
 		if( CanCharacterTrainMilitia( pSoldier ) == TRUE )
