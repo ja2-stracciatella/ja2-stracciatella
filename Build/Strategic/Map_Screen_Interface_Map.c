@@ -1521,8 +1521,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 }
 
 
-
-void PlotATemporaryPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY )
+void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const INT16 sX, const INT16 sY)
 {
 	// make sure we're at the beginning
 	pTempCharacterPath = MoveToBeginningOfPathList( pTempCharacterPath );

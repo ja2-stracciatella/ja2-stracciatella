@@ -2319,8 +2319,7 @@ static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSold
 }
 
 
-
-BOOLEAN IsSoldierInThisVehicleSquad( SOLDIERTYPE *pSoldier, INT8 bSquadNumber )
+BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT8 bSquadNumber)
 {
 	INT32 iVehicleId;
 	SOLDIERTYPE *pVehicleSoldier;

@@ -28,7 +28,7 @@ void DisplayPathArrows(UINT16 usCharNum, HVOBJECT hMapHandle);
 void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN fTacticalTraversal );
 
 // build temp path for character
-void PlotATemporaryPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY );
+void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, INT16 sX, INT16 sY);
 
 
 // display current/temp paths

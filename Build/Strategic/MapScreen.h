@@ -85,7 +85,7 @@ void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sStrin
 BOOLEAN MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
 
 // rebuild contract box this character
-void RebuildContractBoxForMerc(SOLDIERTYPE* pCharacter);
+void RebuildContractBoxForMerc(const SOLDIERTYPE* s);
 
 void    InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier);
 BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone);

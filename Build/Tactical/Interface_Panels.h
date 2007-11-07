@@ -112,6 +112,8 @@ void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
 
 void HandleLocateSelectMerc(SOLDIERTYPE* s, INT8 bFlag);
 
+BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem);
+
 extern SOLDIERTYPE* gpSMCurrentMerc;
 extern INT32        iSMPanelButtons[NUM_SM_BUTTONS];
 extern INT32        iTEAMPanelButtons[NUM_TEAM_BUTTONS];

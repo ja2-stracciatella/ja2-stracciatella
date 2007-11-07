@@ -231,4 +231,6 @@ void    DetermineWhichAssignmentMenusCanBeShown(void);
 void    ResumeOldAssignment(SOLDIERTYPE* pSoldier);
 BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier);
 
+void CreateContractBox(const SOLDIERTYPE* s);
+
 #endif

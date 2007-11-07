@@ -352,7 +352,7 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ );
 void HandleDisplayOfSelectedMercArrows( void );
 
 // check which guys can move with this guy
-void DeselectSelectedListMercsWhoCantMoveWithThisGuy( SOLDIERTYPE *pSoldier );
+void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* s);
 
 // get morale string for this grunt given this morale level
 const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier);

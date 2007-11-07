@@ -523,10 +523,7 @@ void CancelMapUIMessage( void );
 
 void RenderMapRegionBackground( void );
 
-extern BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem );
-
 // Pop Up Boxes
-void CreateContractBox( SOLDIERTYPE *pCharacter );
 void CreateMercRemoveAssignBox( void );
 
 // screen mask for pop up menus
@@ -7844,7 +7841,7 @@ static void HandleChangeOfInfoChar(void)
 }
 
 
-void RebuildContractBoxForMerc(SOLDIERTYPE* pCharacter)
+void RebuildContractBoxForMerc(const SOLDIERTYPE* const pCharacter)
 {
 	// rebuild contractbox for this merc
 	RemoveBox( ghContractBox );
@@ -9376,7 +9373,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 
 
 static INT16 CalcLocationValueForChar(INT32 iCounter);
-static INT32 GetContractExpiryTime(SOLDIERTYPE* pSoldier);
+static INT32 GetContractExpiryTime(const SOLDIERTYPE* s);
 static void SwapCharactersInList(INT32 iCharA, INT32 iCharB);
 
 
@@ -10240,7 +10237,7 @@ static BOOLEAN HandleCtrlOrShiftInTeamPanel(INT8 bCharNumber)
 }
 
 
-static INT32 GetContractExpiryTime(SOLDIERTYPE* pSoldier)
+static INT32 GetContractExpiryTime(const SOLDIERTYPE* const pSoldier)
 {
 	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) || ( pSoldier->ubProfile == SLAY ) )
 	{

@@ -532,7 +532,7 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* s, INT32 iVehicle1
 
 
 // check if the members of the selected list move with this guy... are they in the same mvt group?
-void DeselectSelectedListMercsWhoCantMoveWithThisGuy( SOLDIERTYPE *pSoldier )
+void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* const pSoldier)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier2 = NULL;

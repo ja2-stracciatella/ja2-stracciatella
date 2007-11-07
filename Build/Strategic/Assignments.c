@@ -7828,7 +7828,7 @@ static void CreateRepairBox(void)
 }
 
 
-void CreateContractBox( SOLDIERTYPE *pCharacter )
+void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 {
  UINT32 uiCounter;
  wchar_t sString[ 50 ];

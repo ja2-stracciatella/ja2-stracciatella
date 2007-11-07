@@ -1731,7 +1731,7 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-BOOLEAN HandleNailsVestFetish( SOLDIERTYPE *pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem )
+BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const pSoldier, const UINT32 uiHandPos, const UINT16 usReplaceItem)
 {
 	BOOLEAN fRefuse = FALSE;
 
