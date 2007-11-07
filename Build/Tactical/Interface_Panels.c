@@ -3577,13 +3577,13 @@ static INT8 GetTeamSlotFromPlayer(const SOLDIERTYPE* const s)
 static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
 
 
-BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID)
+BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 {
 	INT32 cnt;
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if (gTeamPanel[cnt].ubID == ubMercID)
+		if (gTeamPanel[cnt].ubID == s->ubID)
 		{
 			RemovePlayerFromInterfaceTeamSlot(cnt);
 			return TRUE;

@@ -66,7 +66,7 @@ BOOLEAN InitTEAMSlots(void);
 void         AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* s);
 SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
 void    RemoveAllPlayersFromSlot(void);
-BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID);
+BOOLEAN      RemovePlayerFromTeamSlot(const SOLDIERTYPE* s);
 void    CheckForAndAddMercToTeamPanel(SOLDIERTYPE* s);
 
 void DisableTacticalTeamPanelButtons(BOOLEAN fDisable);

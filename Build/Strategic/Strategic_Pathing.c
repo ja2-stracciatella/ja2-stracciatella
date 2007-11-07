@@ -786,8 +786,7 @@ void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 s
 		RemoveSoldierFromTacticalSector( pSoldier, TRUE );
 
 		// Remove from tactical team UI
-		RemovePlayerFromTeamSlotGivenMercID( pSoldier->ubID );
-
+		RemovePlayerFromTeamSlot(pSoldier);
 	}
 }
 */

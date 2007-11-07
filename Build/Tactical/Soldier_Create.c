@@ -1220,7 +1220,7 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		RemoveCharacterFromSquads( pSoldier );
 
 		//remove the soldier from the interface panel
-		RemovePlayerFromTeamSlotGivenMercID( pSoldier->ubID );
+		RemovePlayerFromTeamSlot(pSoldier);
 
 		// Check if a guy exists here
 		// Does another soldier exist here?
