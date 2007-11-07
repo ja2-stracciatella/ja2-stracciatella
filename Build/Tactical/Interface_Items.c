@@ -1723,46 +1723,41 @@ void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier )
 			pSoldier->bNewItemCount[ cnt ]	= NEW_ITEM_CYCLES - 1;
 		}
 	}
-
 }
+
 
 void DegradeNewlyAddedItems( )
 {
-	UINT32 uiTime;
-	UINT32 cnt, cnt2;
-
 	// If time done
-	uiTime = GetJA2Clock();
+	const UINT32 uiTime = GetJA2Clock();
+	if (uiTime - guiNewlyPlacedItemTimer <= 100) return;
 
-	if ( ( uiTime - guiNewlyPlacedItemTimer ) > 100 )
+	guiNewlyPlacedItemTimer = uiTime;
+
+	for (UINT32 cnt2 = 0; cnt2 < NUM_TEAM_SLOTS; ++cnt2)
 	{
-		guiNewlyPlacedItemTimer = uiTime;
+		SOLDIERTYPE* const s = GetPlayerFromInterfaceTeamSlot(cnt2);
+		if (s == NULL) continue;
 
-		for ( cnt2 = 0; cnt2 < NUM_TEAM_SLOTS; cnt2++ )
+		for (UINT32 cnt = 0; cnt < NUM_INV_SLOTS; ++cnt)
 		{
-			SOLDIERTYPE* const s = GetPlayerFromInterfaceTeamSlot(cnt2);
-			if (s == NULL) continue;
+			if (s->bNewItemCount[cnt] == 0) continue;
 
-			for (UINT32 cnt = 0; cnt < NUM_INV_SLOTS; ++cnt)
+			// Decrement all the time!
+			s->bNewItemCycleCount[cnt]--;
+			if (s->bNewItemCycleCount[cnt] != 0) continue;
+
+			// OK, cycle down....
+			s->bNewItemCount[cnt]--;
+			if (s->bNewItemCount[cnt] == 0)
 			{
-				if (s->bNewItemCount[cnt] == 0) continue;
-
-				// Decrement all the time!
-				s->bNewItemCycleCount[cnt]--;
-				if (s->bNewItemCycleCount[cnt] != 0) continue;
-
-				// OK, cycle down....
-				s->bNewItemCount[cnt]--;
-				if (s->bNewItemCount[cnt] == 0)
-				{
-					// Stop...
-					s->bNewItemCount[cnt] = -2;
-				}
-				else
-				{
-					// Reset!
-					s->bNewItemCycleCount[cnt] = NEW_ITEM_CYCLE_COUNT;
-				}
+				// Stop...
+				s->bNewItemCount[cnt] = -2;
+			}
+			else
+			{
+				// Reset!
+				s->bNewItemCycleCount[cnt] = NEW_ITEM_CYCLE_COUNT;
 			}
 		}
 	}
