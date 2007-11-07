@@ -973,14 +973,14 @@ static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, 
 // "on duty" includes mercs inside vehicles
 static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 {
-  UINT8 ubCounter = 0, ubIconPosition = 0;
-
 	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
 
   // run through list
-	while(gCharactersList[ubCounter].fValid)
+  UINT8 ubIconPosition = 0;
+	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[ubCounter].merc;
+		if (!gCharactersList[i].fValid) break;
+		const SOLDIERTYPE* const pSoldier = gCharactersList[i].merc;
 
 		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 				 ( pSoldier->sSectorX == sMapX) &&
@@ -993,8 +993,6 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 			DrawMapBoxIcon( hIconHandle, SMALL_YELLOW_BOX, sMapX, sMapY, ubIconPosition );
 			ubIconPosition++;
 		}
-
-		ubCounter++;
 	}
 	return ubIconPosition;
 }
@@ -1002,17 +1000,14 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 
 static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
- 	UINT8 ubCounter, ubIconPosition;
-
 	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-	ubCounter=0;
 
   // run through list
-	ubIconPosition = ( UINT8 ) iCount;
-
-	while(gCharactersList[ubCounter].fValid)
+	UINT8 ubIconPosition = iCount;
+	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[ubCounter].merc;
+		if (!gCharactersList[i].fValid) break;
+		const SOLDIERTYPE* const pSoldier = gCharactersList[i].merc;
 
     // given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
@@ -1033,8 +1028,6 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 				ubIconPosition++;
 			}
 		}
-
-		ubCounter++;
 	}
 	return ubIconPosition;
 }
