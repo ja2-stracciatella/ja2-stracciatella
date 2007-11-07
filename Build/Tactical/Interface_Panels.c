@@ -3055,10 +3055,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// If our flags are set to do this, gofoit!
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-		{
-			SetInfoChar(s->ubID);
-		}
+		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN) SetInfoChar(s);
 		return;
 	}
 

@@ -42,7 +42,7 @@ extern BOOLEAN gfInChangeArrivalSectorMode;
 extern BOOLEAN gfSkyriderEmptyHelpGiven;
 
 
-BOOLEAN SetInfoChar(UINT8 ubSolId);
+BOOLEAN SetInfoChar(const SOLDIERTYPE* s);
 void EndMapScreen( BOOLEAN fDuringFade );
 void ReBuildCharactersList( void );
 

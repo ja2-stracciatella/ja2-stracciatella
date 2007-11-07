@@ -9383,10 +9383,7 @@ static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 		RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 
 		// If we are in mapscreen, set this person as selected
-		if ( guiCurrentScreen == MAP_SCREEN )
-		{
-			SetInfoChar( pSoldier->ubID );
-		}
+		if (guiCurrentScreen == MAP_SCREEN) SetInfoChar(pSoldier);
 	}
 
 	// If we are already dead, don't show damage!

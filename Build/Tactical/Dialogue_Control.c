@@ -813,7 +813,7 @@ void HandleDialogue( )
 			// Setup face pointer
 			// ATE: THis is working with MARK'S STUFF :(
 			// Need this stuff so that bSelectedInfoChar is set...
-			SetInfoChar( pSoldier->ubID );
+			SetInfoChar(pSoldier);
 
 			fShowContractMenu = TRUE;
 			RebuildContractBoxForMerc( pSoldier );

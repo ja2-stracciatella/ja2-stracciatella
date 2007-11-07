@@ -549,20 +549,18 @@ static void DisplayExitToTacticalGlowDuringDemo(void);
 
 
 // the tries to select a mapscreen character by his soldier ID
-BOOLEAN SetInfoChar( UINT8 ubID )
+BOOLEAN SetInfoChar(const SOLDIERTYPE* const s)
 {
 	INT8 bCounter;
 
 	for ( bCounter = 0; bCounter < MAX_CHARACTER_COUNT; bCounter++)
 	{
 		// skip invalid characters
-		if ( gCharactersList[ bCounter ].fValid == TRUE )
+		if (gCharactersList[bCounter].fValid  == TRUE &&
+				gCharactersList[bCounter].usSolID == s->ubID)
 		{
-			if ( gCharactersList[ bCounter ].usSolID == (UINT16)ubID )
-			{
-				ChangeSelectedInfoChar( bCounter, TRUE );
-				return( TRUE );
-			}
+			ChangeSelectedInfoChar(bCounter, TRUE);
+			return TRUE;
 		}
 	}
 
