@@ -643,7 +643,7 @@ static void MapInvenPoolSlotsMove(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot);
-static BOOLEAN CanPlayerUseSectorInventory(SOLDIERTYPE* pSelectedSoldier);
+static BOOLEAN CanPlayerUseSectorInventory(void);
 static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr);
 
 
@@ -734,7 +734,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 
 			// if in battle inform player they will have to do this in tactical
 //			if( ( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) ) )
-			if (!CanPlayerUseSectorInventory(gCharactersList[bSelectedInfoChar].merc))
+			if (!CanPlayerUseSectorInventory())
 			{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 3 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -748,7 +748,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 
 			// if in battle inform player they will have to do this in tactical
 //			if( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-			if (!CanPlayerUseSectorInventory(gCharactersList[bSelectedInfoChar].merc))
+			if (!CanPlayerUseSectorInventory())
 			{
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 4 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 				return;
@@ -1965,7 +1965,7 @@ static INT32 MapScreenSectorInventoryCompare(const void* pNum1, const void* pNum
 }
 
 
-static BOOLEAN CanPlayerUseSectorInventory(SOLDIERTYPE* pSelectedSoldier)
+static BOOLEAN CanPlayerUseSectorInventory(void)
 {
 	INT16	sSectorX, sSectorY, sSectorZ;
 	BOOLEAN fInCombat;
