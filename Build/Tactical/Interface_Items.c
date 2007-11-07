@@ -309,33 +309,6 @@ INT32 giMapInvDescButton = -1;
 static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
 
 
-static const UINT8 ubRGBItemCyclePlacedItemColors[] =
-{
-	25,		25,		25,
-	50,		50,		50,
-	75,   75,   75,
-	100,	100,	100,
-	125,	125,	125,
-	150,	150,	150,
-	175,	175,	175,
-	200,	200,	200,
-	225,	225,	225,
-	250,	250,	250,
-
-	250,	250,	250,
-	225,	225,	225,
-	200,	200,	200,
-	175,	175,	175,
-	150,	150,	150,
-	125,	125,	125,
-	100,	100,	100,
-	75,   75,   75,
-	50,		50,		50,
-	25,		25,		25
-
-};
-
-
 typedef struct
 {
 	INT16 sX;
@@ -1766,13 +1739,19 @@ void DegradeNewlyAddedItems( )
 
 void InitItemInterface( )
 {
-	UINT32 cnt, cnt2;
-
-	for ( cnt = 0, cnt2 = 0; cnt2 < 20; cnt+=3, cnt2++ )
+	/* Build a sawtooth black-white-black colour gradient */
+	const UINT length = lengthof(us16BPPItemCyclePlacedItemColors);
+	UINT i = 0;
+	for (i; i != length / 2; ++i)
 	{
-		us16BPPItemCyclePlacedItemColors[ cnt2 ] = Get16BPPColor( FROMRGB( ubRGBItemCyclePlacedItemColors[ cnt ], ubRGBItemCyclePlacedItemColors[ cnt + 1 ], ubRGBItemCyclePlacedItemColors[ cnt + 2] ) );
+		const UINT l = 25 * (i + 1);
+		us16BPPItemCyclePlacedItemColors[i] = Get16BPPColor(FROMRGB(l, l, l));
 	}
-
+	for (; i != length; ++i)
+	{
+		const UINT l = 25 * (length - i);
+		us16BPPItemCyclePlacedItemColors[i] = Get16BPPColor(FROMRGB(l, l, l));
+	}
 }
 
 
