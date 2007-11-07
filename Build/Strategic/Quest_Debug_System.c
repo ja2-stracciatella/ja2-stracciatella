@@ -3300,7 +3300,7 @@ static void HandleQDSTalkingMerc(void)
 				//Start the merc talking
 				if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
 					TacticalCharacterDialogue( gTalkingMercSoldier, (UINT16)giSelectedMercCurrentQuote );
-				else if( gfRpcToSaySectorDesc && gTalkingMercSoldier->ubProfile >=57 && gTalkingMercSoldier->ubProfile <= 60 )
+				else if (gfRpcToSaySectorDesc && MIGUEL <= gTalkingMercSoldier->ubProfile && gTalkingMercSoldier->ubProfile <= DIMITRI)
 				{
 					//ATE: Trigger the sector desc here
 					CharacterDialogueWithSpecialEvent( gTalkingMercSoldier->ubProfile, (UINT16)giSelectedMercCurrentQuote, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, TRUE, FALSE, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, FALSE, FALSE );
@@ -3366,7 +3366,7 @@ static void SetQDSMercProfile(void)
 	ForceSoldierProfileID( gTalkingMercSoldier, (UINT8)gNpcListBox.sCurSelectedItem );
 
 	//if it is an rpc
-	if( gTalkingMercSoldier->ubProfile >= 57 && gTalkingMercSoldier->ubProfile <= 72 )
+	if (MIGUEL <= gTalkingMercSoldier->ubProfile && gTalkingMercSoldier->ubProfile <= MADDOG)
 	{
 		if( gfAddNpcToTeam )
 			gMercProfiles[ gTalkingMercSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;

@@ -1819,15 +1819,15 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 						if (pSoldier != NULL)
 						{
-							if( pSoldier->ubID == 46 )
+							if (pSoldier->ubID == LARRY_NORMAL)
 							{
 								// Change guy to drunk larry
-								ForceSoldierProfileID( pSoldier, 47 );
+								ForceSoldierProfileID(pSoldier, LARRY_DRUNK);
 							}
 							else
 							{
 								// Change guy to normal larry
-								ForceSoldierProfileID( pSoldier, 46 );
+								ForceSoldierProfileID(pSoldier, LARRY_NORMAL);
 							}
 
 							// Dirty interface
