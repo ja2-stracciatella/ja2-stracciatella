@@ -364,7 +364,13 @@ SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 
 MOUSE_REGION gSMPanelRegion;
 
-TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
+
+typedef struct TEAM_PANEL_SLOTS_TYPE
+{
+	UINT8	ubID;
+} TEAM_PANEL_SLOTS_TYPE;
+
+static TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...

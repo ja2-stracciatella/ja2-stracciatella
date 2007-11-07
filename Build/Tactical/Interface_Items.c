@@ -1730,7 +1730,6 @@ void DegradeNewlyAddedItems( )
 {
 	UINT32 uiTime;
 	UINT32 cnt, cnt2;
-	SOLDIERTYPE		*pSoldier;
 
 	// If time done
 	uiTime = GetJA2Clock();
@@ -1741,36 +1740,28 @@ void DegradeNewlyAddedItems( )
 
 		for ( cnt2 = 0; cnt2 < NUM_TEAM_SLOTS; cnt2++ )
 		{
-			// GET SOLDIER
-			if (gTeamPanel[cnt2].ubID != NOBODY)
+			SOLDIERTYPE* const s = GetPlayerFromInterfaceTeamSlot(cnt2);
+			if (s == NULL) continue;
+
+			for (UINT32 cnt = 0; cnt < NUM_INV_SLOTS; ++cnt)
 			{
-				pSoldier = MercPtrs[ gTeamPanel[ cnt2 ].ubID ];
+				if (s->bNewItemCount[cnt] == 0) continue;
 
-				for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+				// Decrement all the time!
+				s->bNewItemCycleCount[cnt]--;
+				if (s->bNewItemCycleCount[cnt] != 0) continue;
+
+				// OK, cycle down....
+				s->bNewItemCount[cnt]--;
+				if (s->bNewItemCount[cnt] == 0)
 				{
-					if ( pSoldier->bNewItemCount[ cnt ] > 0 )
-					{
-						// Decrement all the time!
-						pSoldier->bNewItemCycleCount[ cnt ]--;
-
-						if ( pSoldier->bNewItemCycleCount[ cnt ] == 0 )
-						{
-							// OK, cycle down....
-							pSoldier->bNewItemCount[ cnt ]--;
-
-							if ( pSoldier->bNewItemCount[ cnt ] == 0 )
-							{
-								// Stop...
-								pSoldier->bNewItemCount[ cnt ] = -2;
-							}
-							else
-							{
-								// Reset!
-								pSoldier->bNewItemCycleCount[ cnt ]	= NEW_ITEM_CYCLE_COUNT;
-								continue;
-							}
-						}
-					}
+					// Stop...
+					s->bNewItemCount[cnt] = -2;
+				}
+				else
+				{
+					// Reset!
+					s->bNewItemCycleCount[cnt] = NEW_ITEM_CYCLE_COUNT;
 				}
 			}
 		}

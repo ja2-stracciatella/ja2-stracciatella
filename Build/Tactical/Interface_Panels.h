@@ -88,15 +88,6 @@ extern UINT32 guiSecItemHiddenVO;
 extern BOOLEAN gfDisableTacticalPanelButtons;
 
 
-typedef struct TEAM_PANEL_SLOTS_TYPE
-{
-	UINT8	ubID;
-} TEAM_PANEL_SLOTS_TYPE;
-
-extern TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
-
-
-
 //Used when the shop keeper interface is active
 void DisableSMPpanelButtonsWhenInShopKeeperInterface(void);
 
