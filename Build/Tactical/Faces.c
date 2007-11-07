@@ -581,12 +581,10 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 }
 
 
-void SetAutoFaceInActiveFromSoldier( UINT8 ubSoldierID )
+void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* const s)
 {
-	// Check for valid soldier
-	CHECKV( ubSoldierID != NOBODY );
-
-	SetAutoFaceInActive( MercPtrs[ ubSoldierID ]->iFaceIndex );
+	CHECKV(s != NULL);
+	SetAutoFaceInActive(s->iFaceIndex);
 }
 
 
