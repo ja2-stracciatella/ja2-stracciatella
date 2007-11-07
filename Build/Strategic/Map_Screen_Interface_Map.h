@@ -33,7 +33,7 @@ void PlotATemporaryPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY
 
 // display current/temp paths
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter );
-void DisplaySoldierTempPath( SOLDIERTYPE *pCharacter );
+void DisplaySoldierTempPath(void);
 void DisplayHelicopterPath( void );
 void DisplayHelicopterTempPath( void );
 

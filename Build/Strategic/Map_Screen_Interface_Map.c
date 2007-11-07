@@ -1754,7 +1754,7 @@ void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 }
 
 
-void DisplaySoldierTempPath( SOLDIERTYPE *pCharacter )
+void DisplaySoldierTempPath(void)
 {
 	// now render temp route
 	TracePathRoute( FALSE, TRUE,  pTempCharacterPath );

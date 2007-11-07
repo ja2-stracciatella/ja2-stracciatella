@@ -7342,7 +7342,7 @@ static void PlotTemporaryPaths(void)
 				// clip region
 				ClipBlitsToMapViewRegion( );
 				// blit
-				DisplaySoldierTempPath( &Menptr[ gCharactersList[ bSelectedDestChar ].usSolID ] );
+				DisplaySoldierTempPath();
 				// restore
 				RestoreClipRegionToFullScreen( );
 			}
