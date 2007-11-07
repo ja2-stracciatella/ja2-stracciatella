@@ -343,7 +343,7 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 }
 
 
-static BOOLEAN BasicCanCharacterAssignment(SOLDIERTYPE* pSoldier, BOOLEAN fNotInCombat)
+static BOOLEAN BasicCanCharacterAssignment(const SOLDIERTYPE* const pSoldier, const BOOLEAN fNotInCombat)
 {
 	// global conditions restricting all assignment changes
 	if ( SectorIsImpassable( (INT16) SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ) )
@@ -398,7 +398,7 @@ BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 */
 
 
-static BOOLEAN CharacterIsBetweenSectors(SOLDIERTYPE* pSoldier);
+static BOOLEAN CharacterIsBetweenSectors(const SOLDIERTYPE* s);
 
 
 static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(SOLDIERTYPE* pSoldier)
@@ -837,7 +837,7 @@ static BOOLEAN CanCharacterPatient(SOLDIERTYPE* pSoldier)
 
 
 // can this character EVER train militia?
-static BOOLEAN BasicCanCharacterTrainMilitia(SOLDIERTYPE* pSoldier)
+static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
 {
 	// is the character capable of training a town?
 	// they must be alive/conscious and in the sector with the town
@@ -934,10 +934,10 @@ static BOOLEAN BasicCanCharacterTrainMilitia(SOLDIERTYPE* pSoldier)
 }
 
 
-static INT8 CountMilitiaTrainersInSoldiersSector(SOLDIERTYPE* pSoldier);
+static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* s);
 
 
-BOOLEAN CanCharacterTrainMilitia( SOLDIERTYPE *pSoldier )
+BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
 {
 	if( BasicCanCharacterTrainMilitia( pSoldier ) &&
 			MilitiaTrainingAllowedInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) &&
@@ -967,8 +967,7 @@ static BOOLEAN DoesTownHaveRatingToTrainMilitia(INT8 bTownId)
 }
 
 
-
-BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSoldier )
+BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* const pSoldier)
 {
 	INT8 bTownId = 0;
 	BOOLEAN fSamSitePresent = FALSE;
@@ -1007,7 +1006,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSol
 
 
 // only 2 trainers are allowed per sector, so this function counts the # in a guy's sector
-static INT8 CountMilitiaTrainersInSoldiersSector(SOLDIERTYPE* pSoldier)
+static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* const pSoldier)
 {
 	INT8	bLoop;
 	SOLDIERTYPE * pOtherSoldier;
@@ -1028,8 +1027,7 @@ static INT8 CountMilitiaTrainersInSoldiersSector(SOLDIERTYPE* pSoldier)
 }
 
 
-
-BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed( SOLDIERTYPE *pSoldier )
+BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed(const SOLDIERTYPE* const pSoldier)
 {
 	INT8 bTownId = 0;
 	BOOLEAN fSamSitePresent = FALSE;
@@ -1714,9 +1712,9 @@ static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 	return ( CHARACTER_CAN_JOIN_SQUAD );
 }
 
-BOOLEAN IsCharacterInTransit( SOLDIERTYPE *pSoldier )
-{
 
+BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* const pSoldier)
+{
 	// valid character?
 	if( pSoldier == NULL )
 	{
@@ -4050,7 +4048,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 
 
 // is the character between secotrs in mvt
-static BOOLEAN CharacterIsBetweenSectors(SOLDIERTYPE* pSoldier)
+static BOOLEAN CharacterIsBetweenSectors(const SOLDIERTYPE* const pSoldier)
 {
 	// is the character on the move
 	if( pSoldier == NULL )

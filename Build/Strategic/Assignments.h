@@ -95,7 +95,7 @@ typedef struct TOWN_TRAINER_TYPE
 //BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment );
 
 // can character train militia?
-BOOLEAN CanCharacterTrainMilitia( SOLDIERTYPE *pCharacter );
+BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* s);
 
 #define CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT -6
 #define CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING -5
@@ -107,10 +107,10 @@ BOOLEAN CanCharacterTrainMilitia( SOLDIERTYPE *pCharacter );
 #define CHARACTER_CAN_JOIN_SQUAD 1
 
 // if merc could train militia here, do they have sufficient loyalty?
-BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( SOLDIERTYPE *pSoldier );
+BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* s);
 
 // is the character in transit?
-BOOLEAN IsCharacterInTransit( SOLDIERTYPE *pCharacter );
+BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* s);
 
 // handler for assignments -- called once per hour via event
 void UpdateAssignments();
@@ -218,7 +218,7 @@ void ReEvaluateEveryonesNothingToDo();
 void SetAssignmentForList( INT8 bAssignment, INT8 bParam );
 
 // is this area maxed out on militia?
-BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed( SOLDIERTYPE *pSoldier );
+BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed(const SOLDIERTYPE* s);
 
 // function where we actually set someone's assignment so we can trap certain situations
 void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment );
