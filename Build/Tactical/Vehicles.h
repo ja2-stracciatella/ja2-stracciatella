@@ -179,7 +179,7 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId );
 
 void AddVehicleFuelToSave( );
 
-BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fTryingToTravel );
+BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* s, INT32 iVehicleId, BOOLEAN fTryingToTravel);
 
 BOOLEAN IsEnoughSpaceInVehicle( INT32 iID );
 

@@ -528,7 +528,7 @@ void PlotPathForSelectedCharacterList( INT16 sX, INT16 sY )
 */
 
 
-static BOOLEAN CanSoldierMoveWithVehicleId(SOLDIERTYPE* pSoldier, INT32 iVehicle1Id);
+static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* s, INT32 iVehicle1Id);
 
 
 // check if the members of the selected list move with this guy... are they in the same mvt group?
@@ -625,7 +625,7 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(SOLDIERTYPE* pSoldier);
+static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* s);
 
 
 void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
@@ -659,7 +659,7 @@ void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
 }
 
 
-static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(SOLDIERTYPE* pSoldier)
+static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* const pSoldier)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier2 = NULL;
@@ -2749,7 +2749,7 @@ static void MapScreenHelpTextScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 
 }
 
 
-static BOOLEAN IsSoldierSelectedForMovement(SOLDIERTYPE* pSoldier)
+static BOOLEAN IsSoldierSelectedForMovement(const SOLDIERTYPE* const pSoldier)
 {
 	INT32 iCounter = 0;
 
@@ -5655,7 +5655,7 @@ void RequestDecreaseInTimeCompression( void )
 }
 
 
-static BOOLEAN CanSoldierMoveWithVehicleId(SOLDIERTYPE* pSoldier, INT32 iVehicle1Id)
+static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, const INT32 iVehicle1Id)
 {
 	INT32 iVehicle2Id = -1;
 	VEHICLETYPE *pVehicle1, *pVehicle2;

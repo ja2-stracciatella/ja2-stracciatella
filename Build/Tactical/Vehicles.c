@@ -2199,7 +2199,7 @@ void AddVehicleFuelToSave( )
 }
 
 
-static BOOLEAN CanSoldierDriveVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId, BOOLEAN fIgnoreAsleep)
+static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 iVehicleId, const BOOLEAN fIgnoreAsleep)
 {
 	Assert( pSoldier );
 
@@ -2251,10 +2251,10 @@ static BOOLEAN CanSoldierDriveVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId, B
 }
 
 
-static BOOLEAN OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
+static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* pThisSoldier, INT32 iVehicleId);
 
 
-BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEAN fTryingToTravel )
+BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 iVehicleId, const BOOLEAN fTryingToTravel)
 {
 	Assert( pSoldier );
 
@@ -2286,7 +2286,7 @@ BOOLEAN SoldierMustDriveVehicle( SOLDIERTYPE *pSoldier, INT32 iVehicleId, BOOLEA
 }
 
 
-static BOOLEAN OnlyThisSoldierCanDriveVehicle(SOLDIERTYPE* pThisSoldier, INT32 iVehicleId)
+static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSoldier, const INT32 iVehicleId)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;

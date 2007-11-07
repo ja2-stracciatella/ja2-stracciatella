@@ -72,7 +72,7 @@ void AbortMovementPlottingMode( void );
 void ExplainWhySkyriderCantFly( void );
 
 BOOLEAN CanChangeSleepStatusForCharSlot( INT8 bCharNumber );
-BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier );
+BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* s);
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber );
 

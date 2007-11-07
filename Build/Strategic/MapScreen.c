@@ -10078,7 +10078,7 @@ BOOLEAN CanChangeSleepStatusForCharSlot( INT8 bCharNumber )
 }
 
 
-BOOLEAN CanChangeSleepStatusForSoldier( SOLDIERTYPE *pSoldier )
+BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* const pSoldier)
 {
 	// valid soldier?
 	Assert( pSoldier );

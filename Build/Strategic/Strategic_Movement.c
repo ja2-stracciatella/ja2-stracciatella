@@ -4367,7 +4367,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 }
 
 
-BOOLEAN VehicleHasFuel( SOLDIERTYPE *pSoldier )
+BOOLEAN VehicleHasFuel(const SOLDIERTYPE* const pSoldier)
 {
 	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
 	if( pSoldier->sBreathRed )
