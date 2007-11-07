@@ -3013,10 +3013,8 @@ static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// If our flags are set to do this, gofoit!
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	const UINT8 ubID = MSYS_GetRegionUserData(pRegion, 0);
-	if (ubID == NOBODY) return;
-
 	// Now use soldier ID values
+	const UINT8 ubID        = MSYS_GetRegionUserData(pRegion, 0);
 	const UINT8 ubSoldierID = gTeamPanel[ubID].ubID;
 	if (ubSoldierID == NOBODY) return;
 
@@ -3036,10 +3034,8 @@ static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void EnemyIndicatorClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID = MSYS_GetRegionUserData(pRegion, 0);
-	if (ubID == NOBODY) return;
-
 	// Now use soldier ID values
+	const UINT8 ubID        = MSYS_GetRegionUserData(pRegion, 0);
 	const UINT8 ubSoldierID = gTeamPanel[ubID].ubID;
 	if (ubSoldierID == NOBODY) return;
 
@@ -3076,8 +3072,6 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		return;
 	}
-
-	if (ubID == NOBODY) return;
 
 	// Now use soldier ID values
 	const UINT8 ubSoldierID = gTeamPanel[ubID].ubID;
@@ -3491,17 +3485,9 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 
 static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	UINT8		ubID, ubSoldierID;
-	UINT16	usOldHandItem;
-
-	ubID = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
-
-
-	if ( ubID == NOBODY )
-		return;
-
 	// Now use soldier ID values
-	ubSoldierID = gTeamPanel[ ubID ].ubID;
+	const UINT8 ubID        = MSYS_GetRegionUserData(pRegion, 0);
+	const UINT8 ubSoldierID = gTeamPanel[ubID].ubID;
 
 	if ( ubSoldierID == NOBODY )
 		return;
@@ -3516,7 +3502,7 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		if ( !AM_A_ROBOT( MercPtrs[ ubSoldierID ] ) )
 		{
-			usOldHandItem = MercPtrs[ ubSoldierID ]->inv[HANDPOS].usItem;
+			const UINT16 usOldHandItem = MercPtrs[ubSoldierID]->inv[HANDPOS].usItem;
 			//SwapOutHandItem( MercPtrs[ ubSoldierID ] );
 			SwapHandItems( MercPtrs[ ubSoldierID ] );
 			ReLoadSoldierAnimationDueToHandItemChange( MercPtrs[ ubSoldierID ], usOldHandItem, MercPtrs[ ubSoldierID ]->inv[HANDPOS].usItem );
@@ -3528,16 +3514,9 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	UINT8 ubID, ubSoldierID;
-	UINT16	usOldHandItem;
-
-	ubID = (UINT8) MSYS_GetRegionUserData( pRegion, 0 );
-
-	if ( ubID == NOBODY )
-		return;
-
 	// Now use soldier ID values
-	ubSoldierID = gTeamPanel[ ubID ].ubID;
+	const UINT8 ubID         = MSYS_GetRegionUserData(pRegion, 0);
+	const UINT16 ubSoldierID = gTeamPanel[ubID].ubID;
 
 	if ( ubSoldierID == NOBODY )
 		return;
@@ -3559,7 +3538,7 @@ static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( !AM_A_ROBOT( MercPtrs[ ubSoldierID ] ) )
 			{
-				usOldHandItem = MercPtrs[ ubSoldierID ]->inv[HANDPOS].usItem;
+				const UINT16 usOldHandItem = MercPtrs[ubSoldierID]->inv[HANDPOS].usItem;
 				SwapHandItems( MercPtrs[ ubSoldierID ] );
 				ReLoadSoldierAnimationDueToHandItemChange( MercPtrs[ ubSoldierID ], usOldHandItem, MercPtrs[ ubSoldierID ]->inv[HANDPOS].usItem );
 				fInterfacePanelDirty = DIRTYLEVEL2;
@@ -3629,9 +3608,6 @@ void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 		{
 			gTeamPanel[cnt].ubID = s->ubID;
 
-			MSYS_SetRegionUserData(&gTEAM_FirstHandInv[cnt], 0, cnt);
-			MSYS_SetRegionUserData(&gTEAM_FaceRegions[cnt], 0, cnt);
-
 			// DIRTY INTERFACE
 			fInterfacePanelDirty = DIRTYLEVEL2;
 
@@ -3689,9 +3665,6 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 		SetAutoFaceInActive( MercPtrs[ gTeamPanel[ ubPanelSlot ].ubID ]->iFaceIndex );
 
 		gTeamPanel[ ubPanelSlot ].ubID = NOBODY;
-
-		MSYS_SetRegionUserData( &gTEAM_FirstHandInv[ ubPanelSlot ], 0, NOBODY );
-		MSYS_SetRegionUserData( &gTEAM_FaceRegions[ ubPanelSlot ],	0, NOBODY );
 
 		// DIRTY INTERFACE
 		fInterfacePanelDirty = DIRTYLEVEL2;
