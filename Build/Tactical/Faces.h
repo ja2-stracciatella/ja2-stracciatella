@@ -204,7 +204,7 @@ void HandleTalkingAutoFaces( );
 // Same Functions but taking soldier ID first to get profile ID
 INT32		InitSoldierFace( SOLDIERTYPE *pSoldier );
 void		DeleteSoldierFace( SOLDIERTYPE *pSoldier );
-void		SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, UINT8 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY );
+void    SetAutoFaceActiveFromSoldier(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
 void    SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
 BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s);
 BOOLEAN ExternRenderFaceFromSoldier(UINT32 uiBuffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY);

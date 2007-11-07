@@ -324,8 +324,8 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 			}
 			else
 			{
-				SetAutoFaceActiveFromSoldier( FRAME_BUFFER, guiSAVEBUFFER, pSoldier->ubID , sFaceX, sFaceY );
-			//	SetAutoFaceActiveFromSoldier( FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, pSoldier->ubID , sFaceX, sFaceY );
+				SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
+			//	SetAutoFaceActiveFromSoldier(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, pSoldier, sFaceX, sFaceY);
 			}
 		}
 

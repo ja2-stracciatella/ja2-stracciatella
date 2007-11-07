@@ -412,18 +412,13 @@ void DeleteFace( INT32 iFaceIndex )
 	pFace->fAllocated = FALSE;
 
 	RecountFaces( );
-
 }
 
-void	SetAutoFaceActiveFromSoldier( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, UINT8 ubSoldierID , UINT16 usFaceX, UINT16 usFaceY )
+
+void SetAutoFaceActiveFromSoldier(const UINT32 uiDisplayBuffer, const UINT32 uiRestoreBuffer, const SOLDIERTYPE* const s, const UINT16 usFaceX, const UINT16 usFaceY)
 {
-	if( ubSoldierID == NOBODY )
-	{
-		return;
-	}
-
-	SetAutoFaceActive( uiDisplayBuffer, uiRestoreBuffer, MercPtrs[ ubSoldierID ]->iFaceIndex, usFaceX, usFaceY );
-
+	CHECKV(s != NULL);
+	SetAutoFaceActive(uiDisplayBuffer, uiRestoreBuffer, s->iFaceIndex, usFaceX, usFaceY);
 }
 
 
