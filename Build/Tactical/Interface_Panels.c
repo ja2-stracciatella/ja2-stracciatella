@@ -3048,20 +3048,19 @@ static void EnemyIndicatorClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID = MSYS_GetRegionUserData(pRegion, 0);
+	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
+	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
+	if (s == NULL || !s->bActive) return;
 
 	// If our flags are set to do this, gofoit!
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
-			SetInfoChar(ubID);
+			SetInfoChar(s->ubID);
 		}
 		return;
 	}
-
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL || !s->bActive) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
