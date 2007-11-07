@@ -3615,36 +3615,30 @@ BOOLEAN RemovePlayerFromTeamSlotGivenMercID(UINT8 ubMercID)
 }
 
 
-void AddPlayerToInterfaceTeamSlot(UINT8 ubID)
+void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 {
-	INT32  cnt;
-
 	// If we are a vehicle don't ever add.....
-	if ( MercPtrs[ ubID ]->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		return;
-	}
+	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
-	if ( !PlayerExistsInSlot( ubID ) )
+	if (PlayerExistsInSlot(s->ubID)) return;
+
+	// Find a free slot
+	for (INT32 cnt = 0; cnt < NUM_TEAM_SLOTS; ++cnt)
 	{
-		// Find a free slot
-		for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
+		if (gTeamPanel[cnt].ubID == NOBODY)
 		{
-			if (gTeamPanel[cnt].ubID == NOBODY)
-			{
-				gTeamPanel[cnt].ubID = ubID;
+			gTeamPanel[cnt].ubID = s->ubID;
 
-				MSYS_SetRegionUserData( &gTEAM_FirstHandInv[ cnt ], 0, cnt );
-				MSYS_SetRegionUserData( &gTEAM_FaceRegions[ cnt ], 0, cnt );
+			MSYS_SetRegionUserData(&gTEAM_FirstHandInv[cnt], 0, cnt);
+			MSYS_SetRegionUserData(&gTEAM_FaceRegions[cnt], 0, cnt);
 
-				// DIRTY INTERFACE
-				fInterfacePanelDirty = DIRTYLEVEL2;
+			// DIRTY INTERFACE
+			fInterfacePanelDirty = DIRTYLEVEL2;
 
-				// Set ID to do open anim
-				MercPtrs[ ubID ]->fUInewMerc						= TRUE;
+			// Set ID to do open anim
+			s->fUInewMerc = TRUE;
 
-				break;
-			}
+			break;
 		}
 	}
 }
@@ -3751,7 +3745,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* pSoldier)
 					/// ( will add in heli code )
 					if ( pSoldier->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER )
 					{
-						AddPlayerToInterfaceTeamSlot( pSoldier->ubID );
+						AddPlayerToInterfaceTeamSlot(pSoldier);
 					}
 
 					// ARE WE A VEHICLE.....

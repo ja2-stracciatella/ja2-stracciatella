@@ -1529,7 +1529,7 @@ void AddPassangersToTeamPanel( INT32 iId )
 		if( pVehicleList[ iId ].pPassengers[ cnt ] != NULL )
 		{
 			// add character
-			AddPlayerToInterfaceTeamSlot( pVehicleList[ iId ].pPassengers[ cnt ]->ubID );
+			AddPlayerToInterfaceTeamSlot(pVehicleList[iId].pPassengers[cnt]);
 		}
 	}
 }
