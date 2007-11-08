@@ -518,7 +518,7 @@ void ShutDownUserDefineHelpTextRegions( void );
 void ShowUpdateBox( void );
 
 // add special events
-void AddSoldierToWaitingListQueue( SOLDIERTYPE *pSoldier );
+void AddSoldierToWaitingListQueue(const SOLDIERTYPE* s);
 void AddReasonToWaitingListQueue( INT32 iReason );
 void AddDisplayBoxToWaitingQueue( void );
 

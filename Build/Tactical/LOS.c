@@ -1497,7 +1497,7 @@ BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT
 }
 
 
-INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware)
+INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier, UINT8 ubTileSightLimit, const INT8 bAware)
 {
 	FLOAT			dStartZPos, dEndZPos;
 	BOOLEAN		fOk;

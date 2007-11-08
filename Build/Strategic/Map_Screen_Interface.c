@@ -4346,15 +4346,9 @@ static BOOLEAN IsThePopUpBoxEmpty(void)
 }
 
 
-void AddSoldierToWaitingListQueue( SOLDIERTYPE *pSoldier )
+void AddSoldierToWaitingListQueue(const SOLDIERTYPE* const s)
 {
-	INT32 iSoldierId = 0;
-
-
-	// get soldier profile
-	iSoldierId = pSoldier->ubID;
-
-	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, iSoldierId, 0, 0, 0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, 0);
 }
 
 
