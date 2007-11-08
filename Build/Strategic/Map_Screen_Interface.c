@@ -1187,7 +1187,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 
 		// are they in the selected list or int he same mvt group as this guy
 		if (IsEntryInSelectedListSet(ubCount) == TRUE ||
-				(bSelectedDestChar != - 1 ? (s->ubGroupID != 0 ? gCharactersList[bSelectedDestChar].merc->ubGroupID == s->ubGroupID : FALSE) : FALSE))
+				(bSelectedDestChar != -1 && s->ubGroupID != 0 && gCharactersList[bSelectedDestChar].merc->ubGroupID == s->ubGroupID))
 		{
 			sYPosition = Y_START+( ubCount * ( Y_SIZE + 2) ) - 1;
 			if( ubCount >= FIRST_VEHICLE )
