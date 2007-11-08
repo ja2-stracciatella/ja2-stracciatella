@@ -2536,7 +2536,7 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 }
 
 
-static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID);
+static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, const SOLDIERTYPE* s);
 
 
 		//Not saving any of these in the soldier struct
@@ -2596,22 +2596,12 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 			}
 			if (!Ret) return FALSE;
 
-
-			//
 			// Save all the pointer info from the structure
-			//
-
 
 			//Save the pMercPath
-			if( !SaveMercPathFromSoldierStruct( hFile, (UINT8)cnt ) )
-				return( FALSE );
+			if (!SaveMercPathFromSoldierStruct(hFile, s)) return FALSE;
 
-
-
-			//
 			//do we have a 	KEY_ON_RING									*pKeyRing;
-			//
-
 			if (s->pKeyRing != NULL)
 			{
 				// write to the file saying we have the ....
@@ -3286,9 +3276,8 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 }
 
 
-static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
+static BOOLEAN SaveMercPathFromSoldierStruct(const HWFILE hFile, const SOLDIERTYPE* const s)
 {
-	const SOLDIERTYPE* const s = GetMan(ubID);
 	UINT32	uiNumOfNodes=0;
 	const PathSt* pTempPath = s->pMercPath;
 
