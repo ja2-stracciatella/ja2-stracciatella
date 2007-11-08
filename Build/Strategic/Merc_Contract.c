@@ -1167,7 +1167,7 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 		// no
 		if( StrategicMap[ BOBBYR_SHIPPING_DEST_SECTOR_X + ( BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X ) ].fEnemyControlled == FALSE )
 		{
-			HandleMercLeavingEquipmentInDrassen( pLeaveSoldier->ubID );
+			HandleMercLeavingEquipmentInDrassen(pLeaveSoldier);
 		}
 		else
 		{

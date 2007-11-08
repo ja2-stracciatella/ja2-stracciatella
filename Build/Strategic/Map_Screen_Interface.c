@@ -1400,10 +1400,10 @@ void HandleMercLeavingEquipmentInOmerta(SOLDIERTYPE* const s)
 }
 
 
-void HandleMercLeavingEquipmentInDrassen( UINT32 uiMercId )
+void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* const s)
 {
 	// stash the items into a linked list hanging of a free "leave item list" slot
-	const INT32 iSlotIndex = SetUpDropItemListForMerc(GetMan(uiMercId));
+	const INT32 iSlotIndex = SetUpDropItemListForMerc(s);
 	if (iSlotIndex != -1)
 	{
 		// post event to drop it there 6 hours later

@@ -359,7 +359,7 @@ const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier);
 void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* s);
 
 // set up a linked list of items being dropped and post an event to later drop them
-void HandleMercLeavingEquipmentInDrassen( UINT32 uiMercId );
+void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* s);
 void HandleMercLeavingEquipmentInOmerta(SOLDIERTYPE* s);
 
 // actually drop the stored list of items
