@@ -1043,12 +1043,11 @@ static void DrawCharBars(void)
 }
 
 
-static void DrawCharStats(INT16 sCharNum)
+// Draw attributes & skills for given soldier
+static void DrawCharStats(const SOLDIERTYPE* const pSoldier)
 {
 	// will draw the characters stats, max life, strength, dex, and skills
 	wchar_t sString[9];
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[sCharNum].merc;
 
 	// set up font
 	SetFont(CHAR_FONT);
@@ -1500,9 +1499,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		return;
 	}
 
-
-	// draw attributes & skills for currently displayed character
-	DrawCharStats(sCharNumber);
+	DrawCharStats(pSoldier);
 
 	// remaining contract length
 
