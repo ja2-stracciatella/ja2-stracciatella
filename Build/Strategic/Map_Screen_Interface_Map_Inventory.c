@@ -692,7 +692,8 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 		// check if selected merc is in this sector, if not, warn them and leave
 
 		// valid character?
-		if( gCharactersList[ bSelectedInfoChar ].fValid == FALSE )
+		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+		if (s == NULL)
 		{
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 			return;
@@ -703,7 +704,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 		//if( fShowInventoryFlag )
 		{
 			// not in sector?
-			const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
 			if( s->sSectorX != sSelMapX ||
 					s->sSectorY != sSelMapY ||
 					s->bSectorZ != iCurrentMapSectorZ ||
@@ -802,7 +802,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 /*
 				if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
 				{
-					ReevaluateItemHatches(gCharactersList[bSelectedInfoChar].merc, FALSE);
+					ReevaluateItemHatches(s, FALSE);
 				}
 				*/
 			}

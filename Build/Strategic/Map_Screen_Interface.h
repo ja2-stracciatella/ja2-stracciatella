@@ -200,7 +200,6 @@ extern BOOLEAN fLockOutMapScreenInterface;
 typedef struct MapScreenCharacterSt
 {
 	SOLDIERTYPE* merc;
-	BOOLEAN fValid;// is the current soldier a valid soldier
 } MapScreenCharacterSt;
 
 

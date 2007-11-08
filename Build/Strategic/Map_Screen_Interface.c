@@ -367,7 +367,7 @@ void ResetSelectedListForMapScreen( void )
 	memset( &fSelectedListOfMercsForMapScreen, FALSE, MAX_CHARACTER_COUNT * sizeof( BOOLEAN ) );
 
 	// if we still have a valid dude selected
-	if ( ( bSelectedInfoChar != -1 ) && ( gCharactersList[ bSelectedInfoChar ].fValid == TRUE ) )
+	if (bSelectedInfoChar != -1 && gCharactersList[bSelectedInfoChar].merc != NULL)
 	{
 		// then keep him selected
 		SetEntryInSelectedCharacterList( bSelectedInfoChar );
@@ -452,14 +452,8 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( INT8 bAssignme
 
  	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// valid character?
-		if( gCharactersList[ iCounter ].fValid == FALSE )
-		{
-			// nope
-			continue;
-		}
-
 		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
 
 		if( pSoldier->bActive == FALSE )
 		{
@@ -483,14 +477,8 @@ void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, 
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// valid character?
-		if( gCharactersList[ iCounter ].fValid == FALSE )
-		{
-			// nope
-			continue;
-		}
-
 		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
 
 		if( pSoldier->bActive == FALSE )
 		{
@@ -537,85 +525,79 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* const pS
 	// deselect any other selected mercs that can't travel together with pSoldier
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
+		const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
+		if (pSoldier2 == NULL) continue;
+
+		if (fSelectedListOfMercsForMapScreen[iCounter] == TRUE)
 		{
-			if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
+			// skip the guy we are
+			if (pSoldier == pSoldier2) continue;
+
+			// NOTE ABOUT THE VEHICLE TESTS BELOW:
+			// Vehicles and foot squads can't plot movement together!
+			// The ETAs are different, and unlike squads, vehicles can't travel everywhere!
+			// However, different vehicles CAN plot together, since they all travel at the same rates now
+
+			// if anchor guy is IN a vehicle
+			if( pSoldier->bAssignment == VEHICLE )
 			{
-				const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
-
-				// skip the guy we are
-				if ( pSoldier == pSoldier2 )
+				if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->iVehicleId ) )
 				{
-					continue;
+					// reset entry for selected list
+					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-
-
-				// NOTE ABOUT THE VEHICLE TESTS BELOW:
-				// Vehicles and foot squads can't plot movement together!
-				// The ETAs are different, and unlike squads, vehicles can't travel everywhere!
-				// However, different vehicles CAN plot together, since they all travel at the same rates now
-
-				// if anchor guy is IN a vehicle
-				if( pSoldier->bAssignment == VEHICLE )
+			}
+			// if anchor guy IS a vehicle
+			else if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+			{
+				if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->bVehicleID ) )
 				{
-					if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->iVehicleId ) )
-					{
-						// reset entry for selected list
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
+					// reset entry for selected list
+					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-				// if anchor guy IS a vehicle
-				else if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+			}
+			// if this guy is IN a vehicle
+			else if( pSoldier2->bAssignment == VEHICLE )
+			{
+				if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->iVehicleId ) )
 				{
-					if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->bVehicleID ) )
-					{
-						// reset entry for selected list
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
+					// reset entry for selected list
+					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-				// if this guy is IN a vehicle
-				else if( pSoldier2->bAssignment == VEHICLE )
+			}
+			// if this guy IS a vehicle
+			else if ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE )
+			{
+				if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->bVehicleID ) )
 				{
-					if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->iVehicleId ) )
-					{
-						// reset entry for selected list
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
+					// reset entry for selected list
+					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-				// if this guy IS a vehicle
-				else if ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE )
-				{
-					if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->bVehicleID ) )
-					{
-						// reset entry for selected list
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
-				}
-				// reject those not a squad (vehicle handled above)
-				else if( pSoldier2->bAssignment >= ON_DUTY )
+			}
+			// reject those not a squad (vehicle handled above)
+			else if( pSoldier2->bAssignment >= ON_DUTY )
+			{
+				ResetEntryForSelectedList( ( INT8 )iCounter );
+			}
+			else
+			{
+				// reject those not in the same sector
+				if( ( pSoldier->sSectorX != pSoldier2->sSectorX ) ||
+						( pSoldier->sSectorY != pSoldier2->sSectorY ) ||
+						( pSoldier->bSectorZ != pSoldier2->bSectorZ ) )
 				{
 					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-				else
+
+				// if either is between sectors, they must be in the same movement group
+				if ( ( pSoldier->fBetweenSectors || pSoldier2->fBetweenSectors ) &&
+						 ( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
 				{
-					// reject those not in the same sector
-					if( ( pSoldier->sSectorX != pSoldier2->sSectorX ) ||
-							( pSoldier->sSectorY != pSoldier2->sSectorY ) ||
-							( pSoldier->bSectorZ != pSoldier2->bSectorZ ) )
-					{
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
-
-					// if either is between sectors, they must be in the same movement group
-					if ( ( pSoldier->fBetweenSectors || pSoldier2->fBetweenSectors ) &&
-							 ( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
-					{
-						ResetEntryForSelectedList( ( INT8 )iCounter );
-					}
+					ResetEntryForSelectedList( ( INT8 )iCounter );
 				}
-
-				// different movement groups in same sector is OK, even if they're not travelling together
 			}
+
+			// different movement groups in same sector is OK, even if they're not travelling together
 		}
 	}
 }
@@ -630,22 +612,20 @@ void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
-		{
-			// if not already selected
-			if( fSelectedListOfMercsForMapScreen[ iCounter ] == FALSE )
-			{
-				const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
 
-				// if on a squad or in a vehicle
-				if ( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
+		// if not already selected
+		if( fSelectedListOfMercsForMapScreen[ iCounter ] == FALSE )
+		{
+			// if on a squad or in a vehicle
+			if ( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
+			{
+				// and a member of that squad or vehicle is selected
+				if ( AnyMercInSameSquadOrVehicleIsSelected( pSoldier ) )
 				{
-					// and a member of that squad or vehicle is selected
-					if ( AnyMercInSameSquadOrVehicleIsSelected( pSoldier ) )
-					{
-						// then also select this guy
-						SetEntryInSelectedCharacterList( ( INT8 ) iCounter );
-					}
+					// then also select this guy
+					SetEntryInSelectedCharacterList( ( INT8 ) iCounter );
 				}
 			}
 		}
@@ -659,42 +639,40 @@ static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* const pS
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
+		const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
+		if (pSoldier2 == NULL) continue;
+
+		// if selected
+		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
 		{
-			// if selected
-			if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
+			// if they have the same assignment
+			if( pSoldier->bAssignment == pSoldier2->bAssignment )
 			{
-				const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
-
-				// if they have the same assignment
-				if( pSoldier->bAssignment == pSoldier2->bAssignment )
-				{
-					// same squad?
-					if ( pSoldier->bAssignment < ON_DUTY )
-					{
-						return ( TRUE );
-					}
-
-					// same vehicle?
-					if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == pSoldier2->iVehicleId ) )
-					{
-						return ( TRUE );
-					}
-				}
-
-				// target guy is in a vehicle, and this guy IS that vehicle
-				if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE ) &&
-						( pSoldier->iVehicleId == pSoldier2->bVehicleID ) )
+				// same squad?
+				if ( pSoldier->bAssignment < ON_DUTY )
 				{
 					return ( TRUE );
 				}
 
-				// this guy is in a vehicle, and the target guy IS that vehicle
-				if( ( pSoldier2->bAssignment == VEHICLE ) && ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-						( pSoldier2->iVehicleId == pSoldier->bVehicleID ) )
+				// same vehicle?
+				if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == pSoldier2->iVehicleId ) )
 				{
 					return ( TRUE );
 				}
+			}
+
+			// target guy is in a vehicle, and this guy IS that vehicle
+			if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE ) &&
+					( pSoldier->iVehicleId == pSoldier2->bVehicleID ) )
+			{
+				return ( TRUE );
+			}
+
+			// this guy is in a vehicle, and the target guy IS that vehicle
+			if( ( pSoldier2->bAssignment == VEHICLE ) && ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+					( pSoldier2->iVehicleId == pSoldier->bVehicleID ) )
+			{
+				return ( TRUE );
 			}
 		}
 	}
@@ -857,10 +835,7 @@ INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber )
 	}
 
 	// is the character a valid one?
-	if( gCharactersList[ sCharNumber ].fValid == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (gCharactersList[sCharNumber].merc == NULL) return FALSE;
 
 	// if the highlighted line character is also selected
 	if ( ( ( giDestHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giDestHighLine ) ) ||
@@ -899,10 +874,7 @@ BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber )
 	}
 
 	// is the character a valid one?
-	if( gCharactersList[ sCharNumber ].fValid == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (gCharactersList[sCharNumber].merc == NULL) return FALSE;
 
 	// if the highlighted line character is also selected
 	if ( ( giAssignHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giAssignHighLine ) )
@@ -936,10 +908,7 @@ BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber )
 	}
 
 	// is the character a valid one?
-	if( gCharactersList[ sCharNumber ].fValid == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (gCharactersList[sCharNumber].merc == NULL) return FALSE;
 
 	// if the highlighted line character is also selected
 	if ( ( giSleepHighLine != -1 ) && IsEntryInSelectedListSet ( ( INT8 ) giSleepHighLine ) )
@@ -980,6 +949,7 @@ void EnableTeamInfoPanels( void )
 void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, INT16 yp )
 {
 	// will activate the pop up for prebattle interface
+	Assert(pSoldier != NULL);
 
 	// get the soldier id number
 	INT8 bCounter = 0;
@@ -988,14 +958,11 @@ void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, I
 
 	for( bCounter = 0; bCounter < MAX_CHARACTER_COUNT; bCounter++ )
 	{
-		if( gCharactersList[ bCounter ].fValid == TRUE )
+		// is this guy the passed soldier?
+		if (pSoldier == gCharactersList[bCounter].merc)
 		{
-			// is this guy the passed soldier?
-			if (pSoldier == gCharactersList[bCounter].merc)
-			{
-				bCharacter = bCounter;
-				break;
-			}
+			bCharacter = bCounter;
+			break;
 		}
 	}
 
@@ -1128,48 +1095,20 @@ void CheckAndUpdateBasedOnContractTimes( void )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[iCounter].fValid == TRUE )
+		const SOLDIERTYPE* const s = gCharactersList[iCounter].merc;
+		if (s == NULL) continue;
+
+		// what kind of merc
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 		{
-			const SOLDIERTYPE* const s = gCharactersList[iCounter].merc;
-				// what kind of merc
-			 if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			 {
-				 // amount of time left on contract
-				 iTimeRemaining = s->iEndofContractTime-GetWorldTotalMin();
-				 if(iTimeRemaining >60*24)
-				 {
-					 // more than a day, display in green
-					 iTimeRemaining/=(60*24);
-
-					 // check if real change in contract time
-					 if( iTimeRemaining != iOldContractTimes[ iCounter ])
-					 {
-						 iOldContractTimes[ iCounter ] = iTimeRemaining;
-
-						 // dirty screen
-						 fTeamPanelDirty = TRUE;
-						 fCharacterInfoPanelDirty = TRUE;
-					 }
-				}
-				else
-				{
-					// less than a day, display hours left in red
-				 iTimeRemaining/=60;
-
-					// check if real change in contract time
-					if( iTimeRemaining != iOldContractTimes[ iCounter ])
-					{
-						iOldContractTimes[ iCounter ] = iTimeRemaining;
-						// dirty screen
-						fTeamPanelDirty = TRUE;
-						fCharacterInfoPanelDirty = TRUE;
-					}
-				}
-			}
-			else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+			// amount of time left on contract
+			iTimeRemaining = s->iEndofContractTime-GetWorldTotalMin();
+			if(iTimeRemaining >60*24)
 			{
-				iTimeRemaining = s->iTotalContractLength;
+				// more than a day, display in green
+				iTimeRemaining/=(60*24);
 
+				// check if real change in contract time
 				if( iTimeRemaining != iOldContractTimes[ iCounter ])
 				{
 					iOldContractTimes[ iCounter ] = iTimeRemaining;
@@ -1178,6 +1117,33 @@ void CheckAndUpdateBasedOnContractTimes( void )
 					fTeamPanelDirty = TRUE;
 					fCharacterInfoPanelDirty = TRUE;
 				}
+			}
+			else
+			{
+				// less than a day, display hours left in red
+				iTimeRemaining/=60;
+
+				// check if real change in contract time
+				if( iTimeRemaining != iOldContractTimes[ iCounter ])
+				{
+					iOldContractTimes[ iCounter ] = iTimeRemaining;
+					// dirty screen
+					fTeamPanelDirty = TRUE;
+					fCharacterInfoPanelDirty = TRUE;
+				}
+			}
+		}
+		else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+		{
+			iTimeRemaining = s->iTotalContractLength;
+
+			if( iTimeRemaining != iOldContractTimes[ iCounter ])
+			{
+				iOldContractTimes[ iCounter ] = iTimeRemaining;
+
+				// dirty screen
+				fTeamPanelDirty = TRUE;
+				fCharacterInfoPanelDirty = TRUE;
 			}
 		}
 	}
@@ -1196,10 +1162,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 	}
 
 	// is the character valid?
-	if( gCharactersList[ bSelectedInfoChar ].fValid == FALSE )
-	{
-		return;
-	}
+	if (gCharactersList[bSelectedInfoChar].merc == NULL) return;
 
 	if( fShowInventoryFlag == TRUE )
 	{
@@ -1219,20 +1182,20 @@ void HandleDisplayOfSelectedMercArrows( void )
 	// now run through the selected list of guys, an arrow for each
 	for( ubCount = 0; ubCount < MAX_CHARACTER_COUNT; ubCount++ )
 	{
-		if( gCharactersList[ ubCount ].fValid == TRUE )
-		{
-			// are they in the selected list or int he same mvt group as this guy
-			if (IsEntryInSelectedListSet(ubCount) == TRUE ||
-					(bSelectedDestChar != - 1 ? (gCharactersList[ubCount].merc->ubGroupID != 0 ? gCharactersList[bSelectedDestChar].merc->ubGroupID == gCharactersList[ubCount].merc->ubGroupID : FALSE) : FALSE))
-			{
-				sYPosition = Y_START+( ubCount * ( Y_SIZE + 2) ) - 1;
-				if( ubCount >= FIRST_VEHICLE )
-				{
-					sYPosition += 6;
-				}
+		const SOLDIERTYPE* const s = gCharactersList[ubCount].merc;
+		if (s == NULL) continue;
 
-				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
+		// are they in the selected list or int he same mvt group as this guy
+		if (IsEntryInSelectedListSet(ubCount) == TRUE ||
+				(bSelectedDestChar != - 1 ? (s->ubGroupID != 0 ? gCharactersList[bSelectedDestChar].merc->ubGroupID == s->ubGroupID : FALSE) : FALSE))
+		{
+			sYPosition = Y_START+( ubCount * ( Y_SIZE + 2) ) - 1;
+			if( ubCount >= FIRST_VEHICLE )
+			{
+				sYPosition += 6;
 			}
+
+			BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
 		}
 	}
 }
@@ -1257,21 +1220,19 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 
 	if( ( fWasInited == FALSE ) && ( fMapInventoryPoolInited ) )
 	{
-		if( gCharactersList[ bSelectedInfoChar ].fValid == TRUE )
+		SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+		if (s != NULL &&
+				s->sSectorX == sMapX &&
+				s->sSectorY == sMapY &&
+				s->bSectorZ == sMapZ &&
+				s->bActive &&
+				s->bLife >= OKLIFE)
 		{
-			SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-			if (s->sSectorX == sMapX &&
-					s->sSectorY == sMapY &&
-					s->bSectorZ == sMapZ &&
-					s->bActive &&
-					s->bLife >= OKLIFE)
-			{
-				// valid character
-				InitializeItemPickupMenu(s, NOWHERE , pItemPool, MAP_INVEN_POOL_X, MAP_INVEN_POOL_Y, -1);
-				fWasInited = TRUE;
+			// valid character
+			InitializeItemPickupMenu(s, NOWHERE , pItemPool, MAP_INVEN_POOL_X, MAP_INVEN_POOL_Y, -1);
+			fWasInited = TRUE;
 
-				CreateScreenMaskForInventoryPoolPopUp( );
-			}
+			CreateScreenMaskForInventoryPoolPopUp( );
 		}
 	}
 	else if( ( fWasInited == TRUE ) && ( fMapInventoryPoolInited == FALSE ) )
@@ -1859,10 +1820,7 @@ INT32 GetNumberOfCharactersOnPlayersTeam( void )
 
 	for(iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
-		{
-			iNumberOfPeople++;
-		}
+		if (gCharactersList[iCounter].merc != NULL) iNumberOfPeople++;
 	}
 
 	return( iNumberOfPeople );
@@ -1890,91 +1848,92 @@ void UpdateCharRegionHelpText( void )
 {
 	CHAR16 sString[ 128 ];
 
-	if( ( bSelectedInfoChar != -1 ) && ( gCharactersList[ bSelectedInfoChar ].fValid == TRUE ) )
+	if (bSelectedInfoChar != -1)
 	{
-		// valid soldier selected
 		const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
-
-		// health/energy/morale
-		if( pSoldier->bAssignment != ASSIGNMENT_POW )
+		if (pSoldier != NULL)
 		{
-			if ( pSoldier->bLife != 0 )
+			// health/energy/morale
+			if( pSoldier->bAssignment != ASSIGNMENT_POW )
 			{
-				if (AM_A_ROBOT(pSoldier))
+				if ( pSoldier->bLife != 0 )
 				{
-					// robot (condition only)
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d",
-													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
-				}
-				else if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
-				{
-					// vehicle (condition/fuel)
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d",
-													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
-													pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
+					if (AM_A_ROBOT(pSoldier))
+					{
+						// robot (condition only)
+						swprintf( sString, lengthof(sString), L"%ls: %d/%d",
+														pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
+					}
+					else if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
+					{
+						// vehicle (condition/fuel)
+						swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d",
+														pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
+														pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
+					}
+					else
+					{
+						// person (health/energy/morale)
+						const wchar_t* Morale = GetMoraleString(pSoldier);
+						swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
+														pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
+														pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
+														pMapScreenStatusStrings[ 2 ], Morale);
+					}
 				}
 				else
 				{
-					// person (health/energy/morale)
-					const wchar_t* Morale = GetMoraleString(pSoldier);
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
-													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
-													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
-													pMapScreenStatusStrings[ 2 ], Morale);
+					wcscpy( sString, L"" );
 				}
 			}
 			else
 			{
-				wcscpy( sString, L"" );
+				// POW - stats unknown
+				swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
 			}
-		}
-		else
-		{
-			// POW - stats unknown
-			swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
-		}
 
-		SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
+			SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
 
 
-		// update CONTRACT button help text
-		if ( CanExtendContractForCharSlot( bSelectedInfoChar ) )
-		{
-			SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
-			EnableButton( giMapContractButton );
-		}
-		else
-		{
-			SetButtonFastHelpText( giMapContractButton, L"" );
-			DisableButton( giMapContractButton );
-		}
-
-
-		if ( CanToggleSelectedCharInventory( ) )
-		{
-			// inventory
-			if( fShowInventoryFlag )
+			// update CONTRACT button help text
+			if ( CanExtendContractForCharSlot( bSelectedInfoChar ) )
 			{
-				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
+				SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
+				EnableButton( giMapContractButton );
 			}
 			else
 			{
-				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+				SetButtonFastHelpText( giMapContractButton, L"" );
+				DisableButton( giMapContractButton );
 			}
-		}
-		else	// can't toggle it, don't show any inventory help text
-		{
-			SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
+
+
+			if ( CanToggleSelectedCharInventory( ) )
+			{
+				// inventory
+				if( fShowInventoryFlag )
+				{
+					SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
+				}
+				else
+				{
+					SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+				}
+			}
+			else	// can't toggle it, don't show any inventory help text
+			{
+				SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
+			}
+
+			return;
 		}
 	}
-	else
-	{
-		// invalid soldier
-		SetRegionFastHelpText( &(gMapStatusBarsRegion), L"" );
-		SetButtonFastHelpText( giMapContractButton, L"" );
-		SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
-		DisableButton( giMapContractButton );
-	}
+
+	// invalid soldier
+	SetRegionFastHelpText(&gMapStatusBarsRegion, L"");
+	SetButtonFastHelpText(giMapContractButton, L"");
+	SetRegionFastHelpText(&gCharInfoHandRegion, L"");
+	DisableButton(giMapContractButton);
 }
 
 
@@ -1987,20 +1946,20 @@ void FindAndSetThisContractSoldier( SOLDIERTYPE *pSoldier )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter].fValid == TRUE )
+		const SOLDIERTYPE* const s = gCharactersList[iCounter].merc;
+		if (s == NULL) continue;
+
+		if (s == pSoldier)
 		{
-			if (gCharactersList[iCounter].merc == pSoldier)
-			{
-				ChangeSelectedInfoChar( ( INT8 )iCounter, TRUE );
-				bSelectedContractChar = ( INT8 )iCounter;
-				fShowContractMenu = TRUE;
+			ChangeSelectedInfoChar( ( INT8 )iCounter, TRUE );
+			bSelectedContractChar = ( INT8 )iCounter;
+			fShowContractMenu = TRUE;
 
-				// create
-				RebuildContractBoxForMerc( pSoldier );
+			// create
+			RebuildContractBoxForMerc( pSoldier );
 
-				fTeamPanelDirty = TRUE;
-				fCharacterInfoPanelDirty = TRUE;
-			}
+			fTeamPanelDirty = TRUE;
+			fCharacterInfoPanelDirty = TRUE;
 		}
 	}
 }
@@ -2039,7 +1998,7 @@ void UpdateMapScreenAssignmentPositions( void )
 		return;
 	}
 
-	if( gCharactersList[ bSelectedAssignChar ].fValid == FALSE )
+	if (gCharactersList[bSelectedAssignChar].merc == NULL)
 	{
 		if( gfPreBattleInterfaceActive == FALSE )
 		{
@@ -2157,11 +2116,7 @@ INT32 GetNumberOfPeopleInCharacterList( void )
 	// get the number of valid mercs in the mapscreen character list
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter].fValid == TRUE )
-		{
-			// another valid character
-			iCount++;
-		}
+		if (gCharactersList[iCounter].merc != NULL) iCount++;
 	}
 
 	return( iCount );
@@ -2329,7 +2284,9 @@ void GoToNextCharacterInList( void )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if ( ( gCharactersList[ iCount ].fValid ) && ( iCount < MAX_CHARACTER_COUNT ) && ValidSelectableCharForNextOrPrev( iCount ) )
+		if (gCharactersList[iCount].merc != NULL &&
+				iCount < MAX_CHARACTER_COUNT &&
+				ValidSelectableCharForNextOrPrev(iCount))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
@@ -2375,7 +2332,9 @@ void GoToPrevCharacterInList( void )
 	// now run through the list and find first prev guy
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if ( ( gCharactersList[ iCount ].fValid ) && ( iCount < MAX_CHARACTER_COUNT ) && ValidSelectableCharForNextOrPrev( iCount ) )
+		if (gCharactersList[iCount].merc &&
+				iCount < MAX_CHARACTER_COUNT &&
+				ValidSelectableCharForNextOrPrev(iCount))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
@@ -3287,39 +3246,37 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid )
+		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
+
+		if( ( pSoldier->bActive ) &&
+				( pSoldier->bAssignment != IN_TRANSIT ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
+				( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == sSectorZ ) )
 		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-			if( ( pSoldier->bActive ) &&
-					( pSoldier->bAssignment != IN_TRANSIT ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
-					( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == sSectorZ ) )
+			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+				// vehicle
+				// if it can move (can't be empty)
+				if ( GetNumberInVehicle( pSoldier->bVehicleID ) > 0 )
 				{
-					// vehicle
-					// if it can move (can't be empty)
-					if ( GetNumberInVehicle( pSoldier->bVehicleID ) > 0 )
-					{
-						// add vehicle
-						AddVehicleToMovingLists( pSoldier->bVehicleID );
-					}
+					// add vehicle
+					AddVehicleToMovingLists( pSoldier->bVehicleID );
 				}
-				else // soldier
+			}
+			else // soldier
+			{
+				// alive, not aboard Skyrider (airborne or not!)
+				if ( ( pSoldier->bLife >= OKLIFE ) &&
+						 ( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) ) )
 				{
-					// alive, not aboard Skyrider (airborne or not!)
-					if ( ( pSoldier->bLife >= OKLIFE ) &&
-							 ( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) ) )
-					{
-						// add soldier
-						AddSoldierToMovingLists( pSoldier );
+					// add soldier
+					AddSoldierToMovingLists( pSoldier );
 
-						// if on a squad,
-						if ( pSoldier->bAssignment < ON_DUTY )
-						{
-							// add squad (duplicates ok, they're ignored inside the function)
-							AddSquadToMovingLists( pSoldier->bAssignment );
-						}
+					// if on a squad,
+					if ( pSoldier->bAssignment < ON_DUTY )
+					{
+						// add squad (duplicates ok, they're ignored inside the function)
+						AddSquadToMovingLists( pSoldier->bAssignment );
 					}
 				}
 			}
@@ -4108,39 +4065,36 @@ static void HandleSettingTheSelectedListOfMercs(void)
 	// run through the list of grunts
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// is the current guy a valid character?
-		if( gCharactersList[ iCounter ].fValid == TRUE )
+		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
+
+		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+			fSelected = IsVehicleSelectedForMovement( pSoldier->bVehicleID );
+		}
+		else
+		{
+			fSelected = IsSoldierSelectedForMovement( pSoldier );
+		}
 
-			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		// is he/she selected for movement?
+		if( fSelected )
+		{
+			// yes, are they the first one to be selected?
+			if( fFirstOne == TRUE )
 			{
-				fSelected = IsVehicleSelectedForMovement( pSoldier->bVehicleID );
+				// yes, then set them as the destination plotting character for movement arrow purposes
+				fFirstOne = FALSE;
+
+				bSelectedDestChar = ( INT8 )iCounter;
+				// make DEST column glow
+				giDestHighLine = iCounter;
+
+				ChangeSelectedInfoChar( ( INT8 ) iCounter, TRUE );
 			}
-			else
-			{
-				fSelected = IsSoldierSelectedForMovement( pSoldier );
-			}
 
-			// is he/she selected for movement?
-			if( fSelected )
-			{
-				// yes, are they the first one to be selected?
-				if( fFirstOne == TRUE )
-				{
-					// yes, then set them as the destination plotting character for movement arrow purposes
-					fFirstOne = FALSE;
-
-					bSelectedDestChar = ( INT8 )iCounter;
-					// make DEST column glow
-					giDestHighLine = iCounter;
-
-					ChangeSelectedInfoChar( ( INT8 ) iCounter, TRUE );
-				}
-
-				// add this guy to the selected list of grunts
-				SetEntryInSelectedCharacterList( ( INT8 )iCounter );
-			}
+			// add this guy to the selected list of grunts
+			SetEntryInSelectedCharacterList( ( INT8 )iCounter );
 		}
 	}
 
@@ -4932,45 +4886,48 @@ void InitTimersForMoveMenuMouseRegions( void )
 
 void UpdateHelpTextForMapScreenMercIcons( void )
 {
-	if( ( bSelectedInfoChar == -1 ) || ( gCharactersList[ bSelectedInfoChar ].fValid == FALSE ) )
-	{
-		SetRegionFastHelpText( &(gContractIconRegion), L"" );
-		SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
-		SetRegionFastHelpText( &(gDepositIconRegion), L"" );
-	}
-	else
+	if (bSelectedInfoChar != -1)
 	{
 		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-		// if merc is an AIM merc
-		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+		if (s != NULL)
 		{
-			SetRegionFastHelpText( &(gContractIconRegion), zMarksMapScreenText[ 22 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gContractIconRegion), L"" );
-		}
+			// if merc is an AIM merc
+			if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
+			{
+				SetRegionFastHelpText( &(gContractIconRegion), zMarksMapScreenText[ 22 ] );
+			}
+			else
+			{
+				SetRegionFastHelpText( &(gContractIconRegion), L"" );
+			}
 
-		// if merc has life insurance
-		if (s->usLifeInsurance > 0)
-		{
-			SetRegionFastHelpText( &(gInsuranceIconRegion), zMarksMapScreenText[ 3 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
-		}
+			// if merc has life insurance
+			if (s->usLifeInsurance > 0)
+			{
+				SetRegionFastHelpText( &(gInsuranceIconRegion), zMarksMapScreenText[ 3 ] );
+			}
+			else
+			{
+				SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
+			}
 
-		// if merc has a medical deposit
-		if (s->usMedicalDeposit > 0)
-		{
-			SetRegionFastHelpText( &(gDepositIconRegion), zMarksMapScreenText[ 12 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gDepositIconRegion), L"" );
+			// if merc has a medical deposit
+			if (s->usMedicalDeposit > 0)
+			{
+				SetRegionFastHelpText( &(gDepositIconRegion), zMarksMapScreenText[ 12 ] );
+			}
+			else
+			{
+				SetRegionFastHelpText( &(gDepositIconRegion), L"" );
+			}
+
+			return;
 		}
 	}
+
+	SetRegionFastHelpText(&gContractIconRegion,  L"");
+	SetRegionFastHelpText(&gInsuranceIconRegion, L"");
+	SetRegionFastHelpText(&gDepositIconRegion,   L"");
 }
 
 void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
@@ -5500,47 +5457,45 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 	// if anyone in the merc's group or also selected cannot move for whatever reason return false
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( gCharactersList[ iCounter ].fValid == TRUE )
+		SOLDIERTYPE* const pCurrentSoldier = gCharactersList[iCounter].merc;
+		if (pCurrentSoldier == NULL) continue;
+
+		// skip inactive grunts
+		if( pCurrentSoldier->bActive == FALSE )
 		{
-			SOLDIERTYPE* const pCurrentSoldier = gCharactersList[iCounter].merc;
+			continue;
+		}
 
-			// skip inactive grunts
-			if( pCurrentSoldier->bActive == FALSE )
-			{
-				continue;
-			}
+		// skip the same guy we did already
+		if ( pCurrentSoldier == pSoldier )
+		{
+			continue;
+		}
 
-			// skip the same guy we did already
-			if ( pCurrentSoldier == pSoldier )
-			{
-				continue;
-			}
+		// does character have group?
+		if( pCurrentSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		{
+			// IS a vehicle
+			ubCurrentGroup = pVehicleList[ pCurrentSoldier->bVehicleID ].ubMovementGroup;
+		}
+		else if( pCurrentSoldier->bAssignment == VEHICLE )
+		{
+			// IN a vehicle
+			ubCurrentGroup = pVehicleList[ pCurrentSoldier->iVehicleId ].ubMovementGroup;
+		}
+		else
+		{
+			ubCurrentGroup = pCurrentSoldier->ubGroupID;
+		}
 
-			// does character have group?
-			if( pCurrentSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
+		if( ( ubCurrentGroup == ubGroup ) || ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
+		{
+			// can this character also move strategically?
+			if( CanCharacterMoveInStrategic( pCurrentSoldier, pbErrorNumber ) == FALSE )
 			{
-				// IS a vehicle
-				ubCurrentGroup = pVehicleList[ pCurrentSoldier->bVehicleID ].ubMovementGroup;
-			}
-			else if( pCurrentSoldier->bAssignment == VEHICLE )
-			{
-				// IN a vehicle
-				ubCurrentGroup = pVehicleList[ pCurrentSoldier->iVehicleId ].ubMovementGroup;
-			}
-			else
-			{
-				ubCurrentGroup = pCurrentSoldier->ubGroupID;
-			}
-
-			// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
-			if( ( ubCurrentGroup == ubGroup ) || ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
-			{
-				// can this character also move strategically?
-				if( CanCharacterMoveInStrategic( pCurrentSoldier, pbErrorNumber ) == FALSE )
-				{
-					// cannot move, fail, and don't bother checking anyone else, either
-					return( FALSE );
-				}
+				// cannot move, fail, and don't bother checking anyone else, either
+				return( FALSE );
 			}
 		}
 	}

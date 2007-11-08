@@ -3804,12 +3804,9 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			return;
 		}
 
-		if( gCharactersList[ bSelectedInfoChar ].fValid == FALSE )
-		{
-			return;
-		}
-
 		pSoldier = gCharactersList[bSelectedInfoChar].merc;
+		if (pSoldier == NULL) return;
+
 		sStartYPosition = MAP_START_KEYRING_Y;
 		sWidth = 261;
 		sHeight = ( 359 - 107 );

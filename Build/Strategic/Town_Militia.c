@@ -844,20 +844,8 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// valid character?
-		if( gCharactersList[ iCounter ].fValid == FALSE )
-		{
-			// nope
-			continue;
-		}
-
 		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-		// valid soldier?
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
+		if (pSoldier == NULL || !pSoldier->bActive) continue;
 
 		if( ( pSoldier->bAssignment == TRAIN_TOWN ) && ( pSoldier->sSectorX == sSectorX )&&( pSoldier->sSectorY == sSectorY )&&( pSoldier->bSectorZ == bSectorZ ) )
 		{
@@ -968,23 +956,16 @@ static void BuildListOfUnpaidTrainableSectors(void)
 	{
 		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 		{
-			// valid character?
-			if( gCharactersList[ iCounter ].fValid )
-			{
-				// selected?
-				if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) || ( iCounter == bSelectedAssignChar ) )
-				{
-					const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+			if (pSoldier == NULL) continue;
 
-					if( CanCharacterTrainMilitia( pSoldier ) == TRUE )
-					{
-						if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
-						{
-							// check to see if this sector is a town and needs equipment
-							gsUnpaidStrategicSector[ iCounter ] = CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY );
-						}
-					}
-				}
+			// selected?
+			if ((fSelectedListOfMercsForMapScreen[iCounter] == TRUE || iCounter == bSelectedAssignChar) &&
+					CanCharacterTrainMilitia(pSoldier) == TRUE &&
+					!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
+			{
+				// check to see if this sector is a town and needs equipment
+				gsUnpaidStrategicSector[iCounter] = CALCULATE_STRATEGIC_INDEX(pSoldier->sSectorX, pSoldier->sSectorY);
 			}
 		}
 	}

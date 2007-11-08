@@ -1837,14 +1837,8 @@ void VerifyTownTrainingIsPaidFor( void )
 
  	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// valid character?
-		if( gCharactersList[ iCounter ].fValid == FALSE )
-		{
-			// nope
-			continue;
-		}
-
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
 
 		if( pSoldier->bActive && ( pSoldier->bAssignment == TRAIN_TOWN ) )
 		{
@@ -9979,50 +9973,27 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
-		if( gCharactersList[ iCounter ].fValid )
+		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier == NULL) continue;
+		if (!pSoldier->bActive) continue;
+		if (iCounter == bSelectedInfoChar) continue;
+		if (!IsEntryInSelectedListSet(iCounter)) continue;
+
+		// don't try to put vehicles, robots, to sleep if they're also selected
+		if (!CanChangeSleepStatusForCharSlot(iCounter)) continue;
+
+		// up the total number of soldiers
+		ubNumberOfSelectedSoldiers++;
+
+		if (fWakeUp)
 		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-			if( pSoldier->bActive == FALSE )
-			{
-				continue;
-			}
-
-			if( iCounter == bSelectedInfoChar )
-			{
-				continue;
-			}
-
-			if( IsEntryInSelectedListSet( ( INT8 )iCounter ) == FALSE )
-			{
-				continue;
-			}
-
-			// don't try to put vehicles, robots, to sleep if they're also selected
-			if ( CanChangeSleepStatusForCharSlot( (INT8) iCounter ) == FALSE )
-			{
-				continue;
-			}
-
-			// up the total number of soldiers
-			ubNumberOfSelectedSoldiers++;
-
-			if( fWakeUp )
-			{
-				// try to wake merc up
-				if( SetMercAwake( pSoldier, FALSE, FALSE ) == FALSE )
-				{
-					fSuccess = FALSE;
-				}
-			}
-			else
-			{
-				// set this soldier asleep
-				if( SetMercAsleep( pSoldier, FALSE ) == FALSE )
-				{
-					fSuccess = FALSE;
-				}
-			}
+			// try to wake merc up
+			if (!SetMercAwake(pSoldier, FALSE, FALSE)) fSuccess = FALSE;
+		}
+		else
+		{
+			// set this soldier asleep
+			if (!SetMercAsleep(pSoldier, FALSE)) fSuccess = FALSE;
 		}
 	}
 
@@ -10282,10 +10253,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 	// pSelectedSoldier is currently used only for REPAIR, and this block of code is copied from RepairMenuBtnCallback()
 	if( bSelectedAssignChar != -1 )
 	{
-		if( gCharactersList[ bSelectedAssignChar ].fValid == TRUE )
-		{
-			pSelectedSoldier = gCharactersList[bSelectedAssignChar].merc;
-		}
+		pSelectedSoldier = gCharactersList[bSelectedAssignChar].merc;
 	}
 
 	Assert( pSelectedSoldier && pSelectedSoldier->bActive );
@@ -10294,13 +10262,12 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 	// sets assignment for the list
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( ( gCharactersList[ iCounter ].fValid ) &&
+		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		if (pSoldier != NULL &&
 				( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) &&
 				( iCounter != bSelectedAssignChar ) &&
-				!(gCharactersList[iCounter].merc->uiStatusFlags & SOLDIER_VEHICLE))
+				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
 			// assume it's NOT gonna work
 			fItWorked = FALSE;
 
@@ -10815,8 +10782,7 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
 		// mapscreen version
-		if( ( bSelectedAssignChar >= 0 ) && ( bSelectedAssignChar < MAX_CHARACTER_COUNT ) &&
-				( gCharactersList[ bSelectedAssignChar ].fValid ) )
+		if (bSelectedAssignChar >= 0 && bSelectedAssignChar < MAX_CHARACTER_COUNT)
 		{
 			pSoldier = gCharactersList[bSelectedAssignChar].merc;
 		}
