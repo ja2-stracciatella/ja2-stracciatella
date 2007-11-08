@@ -1896,7 +1896,7 @@ void UpdateCharRegionHelpText( void )
 
 
 			// update CONTRACT button help text
-			if ( CanExtendContractForCharSlot( bSelectedInfoChar ) )
+			if (CanExtendContractForSoldier(pSoldier))
 			{
 				SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
 				EnableButton( giMapContractButton );

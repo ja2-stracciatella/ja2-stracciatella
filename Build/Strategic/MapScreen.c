@@ -7099,18 +7099,11 @@ static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		if (gCharactersList[iValue].merc != NULL)
+		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		if (s != NULL)
 		{
 			giHighLine = iValue;
-
-			if( CanExtendContractForCharSlot( (INT8) iValue ) )
-			{
-				giContractHighLine = iValue;
-			}
-			else
-			{
-				giContractHighLine = -1;
-			}
+			giContractHighLine = (CanExtendContractForSoldier(s) ? iValue : -1);
 		}
 		else
 		{
@@ -7134,11 +7127,8 @@ static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReas
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( CanExtendContractForCharSlot( (INT8) iValue ) )
-		{
-			// play click
-			PlayGlowRegionSound( );
-		}
+		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		if (s != NULL && CanExtendContractForSoldier(s)) PlayGlowRegionSound();
 	}
 }
 
@@ -7522,10 +7512,9 @@ static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			return;
 		}
 
-		if( CanExtendContractForCharSlot( bSelectedInfoChar ) )
+		SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
+		if (CanExtendContractForSoldier(pSoldier))
 		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
-
 			// create
 			RebuildContractBoxForMerc( pSoldier );
 
@@ -7622,7 +7611,7 @@ static void HandleShadingOfLinesForContractMenu(void)
 	const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedContractChar].merc;
 	if (pSoldier == NULL) return;
 
-	Assert( CanExtendContractForCharSlot( bSelectedContractChar ) );
+	Assert(CanExtendContractForSoldier(pSoldier));
 
 	// is guy in AIM? and well enough to talk and make such decisions?
 	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( pSoldier->bLife >= OKLIFE ) )
@@ -7817,8 +7806,7 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 				}
 			}
 
-
-			if ( CanExtendContractForCharSlot( bCharNum ) )
+			if (CanExtendContractForSoldier(s))
 			{
 				MSYS_EnableRegion( &gTeamListContractRegion[ bCharNum ] );
 			}
@@ -7826,7 +7814,6 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 			{
 				MSYS_DisableRegion( &gTeamListContractRegion[ bCharNum ] );
 			}
-
 
 			if (CanChangeSleepStatusForSoldier(s))
 			{
@@ -9868,23 +9855,15 @@ static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowEr
 }
 
 
-
-BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
+BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* const s)
 {
-	if ( bCharNumber == -1 )
-		return( FALSE );
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[bCharNumber].merc;
-	if (pSoldier == NULL) return FALSE;
-
-	// valid soldier?
-	Assert( pSoldier );
-	Assert( pSoldier->bActive );
+	Assert(s);
+	Assert(s->bActive);
 
 	// if a vehicle, in transit, or a POW
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||
-			( pSoldier->bAssignment == IN_TRANSIT ) ||
-			( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+	if (s->uiStatusFlags & SOLDIER_VEHICLE ||
+			s->bAssignment == IN_TRANSIT ||
+			s->bAssignment == ASSIGNMENT_POW)
 	{
 		// can't extend contracts at this time
 		return (FALSE);
@@ -11293,9 +11272,9 @@ static void RequestContractMenu(void)
 	// in case we have multiple guys selected, turn off everyone but the guy we're negotiating with
 	ChangeSelectedInfoChar( bSelectedInfoChar, TRUE );
 
-	if ( CanExtendContractForCharSlot( bSelectedInfoChar ) )
+	SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+	if (CanExtendContractForSoldier(s))
 	{
-		SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
 		// create
 		RebuildContractBoxForMerc(s);
 

@@ -54,7 +54,7 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 BOOLEAN CanToggleSelectedCharInventory( void );
 
-BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber );
+BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* s);
 
 void TellPlayerWhyHeCantCompressTime( void );
 
