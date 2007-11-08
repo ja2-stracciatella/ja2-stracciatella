@@ -1318,20 +1318,19 @@ const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier)
 }
 
 
-
 // NOTE: This doesn't use the "LeaveList" system at all!
-void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
+void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
 {
 	// just drop the stuff in the current sector
 	INT32 iCounter = 0;
   INT16 sGridNo, sTempGridNo;
 
-	if( Menptr[ uiMercId ].sSectorX != gWorldSectorX || Menptr[ uiMercId ].sSectorY != gWorldSectorY || Menptr[ uiMercId ].bSectorZ != gbWorldSectorZ )
+	if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
 	{
     // ATE: Use insertion gridno if not nowhere and insertion is gridno
-   if ( Menptr[ uiMercId ].ubStrategicInsertionCode == INSERTION_CODE_GRIDNO && Menptr[ uiMercId ].usStrategicInsertionData != NOWHERE )
+   if (s->ubStrategicInsertionCode == INSERTION_CODE_GRIDNO && s->usStrategicInsertionData != NOWHERE)
    {
-		  sGridNo = Menptr[ uiMercId ].usStrategicInsertionData;
+		  sGridNo = s->usStrategicInsertionData;
    }
    else
    {
@@ -1342,7 +1341,7 @@ void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
   else
   {
     // ATE: Mercs can have a gridno of NOWHERE.....
-    sGridNo = Menptr[ uiMercId ].sGridNo;
+    sGridNo = s->sGridNo;
 
     if ( sGridNo == NOWHERE )
     {
@@ -1363,21 +1362,21 @@ void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId )
 	{
 		// slot found,
 		// check if actual item
-		if(  Menptr[ uiMercId ].inv[ iCounter ].ubNumberOfObjects > 0 )
+		if (s->inv[iCounter].ubNumberOfObjects > 0)
 		{
-	    if( Menptr[ uiMercId ].sSectorX != gWorldSectorX || Menptr[ uiMercId ].sSectorY != gWorldSectorY || Menptr[ uiMercId ].bSectorZ != gbWorldSectorZ )
+	    if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
 	    {
         // Set flag for item...
-				AddItemsToUnLoadedSector( Menptr[ uiMercId ].sSectorX,  Menptr[ uiMercId ].sSectorY, Menptr[ uiMercId ].bSectorZ , sGridNo, 1, &( Menptr[ uiMercId ].inv[ iCounter ]) , Menptr[ uiMercId ].bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, 1, FALSE );
+				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, &s->inv[iCounter], s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, 1, FALSE);
       }
 			else
 			{
-				AddItemToPool( sGridNo, &( Menptr[ uiMercId ].inv[ iCounter ] ) , 1, Menptr[ uiMercId ].bLevel, WORLD_ITEM_REACHABLE, 0 );
+				AddItemToPool(sGridNo, &s->inv[iCounter], 1, s->bLevel, WORLD_ITEM_REACHABLE, 0);
 			}
 		}
 	}
 
-  DropKeysInKeyRing( MercPtrs[ uiMercId ], sGridNo, MercPtrs[ uiMercId ]->bLevel, 1, FALSE, 0, FALSE );
+  DropKeysInKeyRing(s, sGridNo, s->bLevel, 1, FALSE, 0, FALSE);
 }
 
 

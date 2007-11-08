@@ -356,7 +356,7 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* s);
 const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier);
 
 // handle leaving of equipment in sector
-void HandleLeavingOfEquipmentInCurrentSector( UINT32 uiMercId );
+void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* s);
 
 // set up a linked list of items being dropped and post an event to later drop them
 void HandleMercLeavingEquipmentInDrassen( UINT32 uiMercId );

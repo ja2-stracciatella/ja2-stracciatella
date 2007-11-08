@@ -1139,8 +1139,7 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
-		// yep (NOTE that this passes the SOLDIER index, not the PROFILE index as the others do)
-		HandleLeavingOfEquipmentInCurrentSector( pLeaveSoldier->ubID );
+		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
 
 		// aim merc will say goodbye when leaving
 		if( ( pLeaveSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( ubQuitType != HISTORY_MERC_FIRED ) )
@@ -1155,8 +1154,7 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 	}
   else if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-		// yep (NOTE that this passes the SOLDIER index, not the PROFILE index as the others do)
-		HandleLeavingOfEquipmentInCurrentSector( pLeaveSoldier->ubID );
+		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
 
 		// aim merc will say goodbye when leaving
 		if( ( pLeaveSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( ubQuitType != HISTORY_MERC_FIRED ) )
