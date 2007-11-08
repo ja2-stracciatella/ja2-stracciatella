@@ -2531,20 +2531,18 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	ReceivingSoldierCancelServices(pSoldier);
 
 	// look for all mercs on the same team,
-	SOLDIERTYPE* new_selected_soldier;
-	BOOLEAN fMissionFailed = TRUE;
+	SOLDIERTYPE* new_selected_soldier = NULL;
 	for (INT32 i = gTacticalStatus.Team[pSoldier->bTeam].bFirstID; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
 	{
 		SOLDIERTYPE* const s = MercPtrs[i];
 		if (s->bLife >= OKLIFE && s->bActive && s->bInSector)
 		{
 			new_selected_soldier = s;
-			fMissionFailed = FALSE;
 			break;
 		}
 	}
 
-	if (!fMissionFailed)
+	if (new_selected_soldier != NULL)
 	{
 		if (gTacticalStatus.fAutoBandageMode &&
 				pSoldier->ubAutoBandagingMedic != NOBODY)
@@ -2605,7 +2603,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 
 	if (gusSelectedSoldier == pSoldier->ubID)
 	{
-		if (!fMissionFailed)
+		if (new_selected_soldier)
 		{
 			SelectSoldier(new_selected_soldier, 0);
 		}
