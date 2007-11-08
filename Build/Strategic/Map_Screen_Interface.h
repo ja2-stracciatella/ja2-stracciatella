@@ -360,7 +360,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* s);
 
 // set up a linked list of items being dropped and post an event to later drop them
 void HandleMercLeavingEquipmentInDrassen( UINT32 uiMercId );
-void HandleMercLeavingEquipmentInOmerta( UINT32 uiMercId );
+void HandleMercLeavingEquipmentInOmerta(SOLDIERTYPE* s);
 
 // actually drop the stored list of items
 void HandleEquipmentLeftInOmerta( UINT32 uiSlotIndex );

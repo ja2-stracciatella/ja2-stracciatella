@@ -1171,7 +1171,7 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 		}
 		else
 		{
-			HandleMercLeavingEquipmentInOmerta( pLeaveSoldier->ubID );
+			HandleMercLeavingEquipmentInOmerta(pLeaveSoldier);
 		}
 	}
 
