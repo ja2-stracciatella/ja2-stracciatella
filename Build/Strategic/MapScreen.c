@@ -1264,13 +1264,11 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 ui
 static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
-static void DrawCharHealth(INT16 sCharNum)
+static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
 {
 	UINT32 uiHealthPercent = 0;
 	wchar_t sString[9];
 	UINT16 usX, usY;
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[sCharNum].merc;
 
 	if( pSoldier->bAssignment != ASSIGNMENT_POW )
 	{
@@ -1493,10 +1491,7 @@ static void DrawCharacterInfo(INT16 sCharNumber)
 		DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 	}
 
-
-	// draw health/condition
-	DrawCharHealth( sCharNumber );
-
+	DrawCharHealth(pSoldier);
 
 	// if a vehicle or robot
 	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
