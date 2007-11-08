@@ -9980,7 +9980,7 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 		if (!IsEntryInSelectedListSet(iCounter)) continue;
 
 		// don't try to put vehicles, robots, to sleep if they're also selected
-		if (!CanChangeSleepStatusForCharSlot(iCounter)) continue;
+		if (!CanChangeSleepStatusForSoldier(pSoldier)) continue;
 
 		// up the total number of soldiers
 		ubNumberOfSelectedSoldiers++;

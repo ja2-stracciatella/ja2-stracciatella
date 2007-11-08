@@ -6952,8 +6952,7 @@ static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			// reset list if the clicked character isn't also selected
 			ChangeSelectedInfoChar( ( INT8 ) iValue, ( BOOLEAN )( IsEntryInSelectedListSet( ( INT8 ) iValue ) == FALSE ) );
 
-			// if this slot's sleep status can be changed
-			if ( CanChangeSleepStatusForCharSlot( (INT8) iValue ) )
+			if (CanChangeSleepStatusForSoldier(pSoldier))
 			{
 				if( pSoldier->fMercAsleep == TRUE )
 				{
@@ -7014,18 +7013,11 @@ static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		if (gCharactersList[iValue].merc != NULL)
+		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		if (s != NULL)
 		{
 			giHighLine = iValue;
-
-			if ( CanChangeSleepStatusForCharSlot( (INT8) iValue ) )
-			{
-				giSleepHighLine = iValue;
-			}
-			else
-			{
-				giSleepHighLine = -1;
-			}
+			giSleepHighLine = (CanChangeSleepStatusForSoldier(s) ? iValue : -1);
 		}
 		else
 		{
@@ -7044,11 +7036,8 @@ static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if ( CanChangeSleepStatusForCharSlot( (INT8) iValue ) )
-		{
-			// play click
-			PlayGlowRegionSound( );
-		}
+		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		if (s != NULL && CanChangeSleepStatusForSoldier(s)) PlayGlowRegionSound();
 	}
 }
 
@@ -7839,7 +7828,7 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 			}
 
 
-			if ( CanChangeSleepStatusForCharSlot( bCharNum ) )
+			if (CanChangeSleepStatusForSoldier(s))
 			{
 				MSYS_EnableRegion( &gTeamListSleepRegion[ bCharNum ] );
 			}
@@ -9905,18 +9894,6 @@ BOOLEAN CanExtendContractForCharSlot( INT8 bCharNumber )
 
 	// everything OK
 	return( TRUE );
-}
-
-
-BOOLEAN CanChangeSleepStatusForCharSlot( INT8 bCharNumber )
-{
-	if ( bCharNumber == -1 )
-		return( FALSE );
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[bCharNumber].merc;
-	if (pSoldier == NULL) return FALSE;
-
-	return( CanChangeSleepStatusForSoldier( pSoldier ) );
 }
 
 
