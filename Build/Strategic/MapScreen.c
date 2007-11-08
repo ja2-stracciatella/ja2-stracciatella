@@ -1821,14 +1821,11 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 }
 
 
-static INT32 GetGroundTravelTimeOfCharacter(INT8 bCharNumber);
+static INT32 GetGroundTravelTimeOfSoldier(const SOLDIERTYPE* s);
 
 
 static void DisplayGroundEta(void)
 {
-	UINT32 iTotalTime = 0;
-
-
 	if( fPlotForHelicopter == TRUE )
 	{
 		return;
@@ -1839,9 +1836,10 @@ static void DisplayGroundEta(void)
 		return;
 	}
 
-	if (gCharactersList[bSelectedDestChar].merc == NULL) return;
+	const SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
+	if (s == NULL) return;
 
-	iTotalTime = GetGroundTravelTimeOfCharacter( bSelectedDestChar );
+	const UINT32 iTotalTime = GetGroundTravelTimeOfSoldier(s);
 
 	// now display it
 	SetFont( ETA_FONT );
@@ -10217,15 +10215,9 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sStrin
 }
 
 
-static INT32 GetGroundTravelTimeOfCharacter(INT8 bCharNumber)
+static INT32 GetGroundTravelTimeOfSoldier(const SOLDIERTYPE* const s)
 {
 	INT32 iTravelTime = 0;
-
-	if( bCharNumber == -1 )
-		return(0);
-
-	const SOLDIERTYPE* const s = gCharactersList[bCharNumber].merc;
-	if (s == NULL) return 0;
 
 	// get travel time for the last path segment (stored in pTempCharacterPath)
 	iTravelTime = GetPathTravelTimeDuringPlotting( pTempCharacterPath );
