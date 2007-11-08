@@ -2622,7 +2622,7 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 }
 
 
-static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID);
+static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, SOLDIERTYPE* s);
 
 
 static BOOLEAN LoadSoldierStructure(HWFILE hFile)
@@ -2723,20 +2723,15 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			if( !TacticalCreateSoldier( &CreateStruct, &ubId ) )
 				return( FALSE );
 
+			SOLDIERTYPE* const s = GetMan(cnt);
 
 			// Load the pMercPath
-			if( !LoadMercPathToSoldierStruct( hFile, ubId ) )
-				return( FALSE );
+			if (!LoadMercPathToSoldierStruct(hFile, s)) return FALSE;
 
-
-			//
 			//do we have a 	KEY_ON_RING									*pKeyRing;
-			//
 
 			// Read the file to see if we have to load the keys
 			if (!FileRead(hFile, &ubOne, 1)) return FALSE;
-
-			SOLDIERTYPE* const s = GetMan(cnt);
 
 			if( ubOne )
 			{
@@ -3310,9 +3305,8 @@ static BOOLEAN SaveMercPathFromSoldierStruct(const HWFILE hFile, const SOLDIERTY
 }
 
 
-static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
+static BOOLEAN LoadMercPathToSoldierStruct(const HWFILE hFile, SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT32	uiNumOfNodes=0;
 	PathSt* pTempPath = NULL;
 	PathSt* pTemp = NULL;
