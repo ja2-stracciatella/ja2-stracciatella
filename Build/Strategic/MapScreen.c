@@ -3585,10 +3585,11 @@ static UINT32 HandleMapUI(void)
 
 							 // check if last sector in character's path is same as where mouse is
 							 SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
-							 if (GetLastSectorIdInCharactersPath(s) != sMapX + sMapY * MAP_WORLD_X)
+							 const INT16 dst_sector = GetLastSectorIdInCharactersPath(s);
+							 if (dst_sector != sMapX + sMapY * MAP_WORLD_X)
 							 {
-								 sX = GetLastSectorIdInCharactersPath(s) % MAP_WORLD_X;
-								 sY = GetLastSectorIdInCharactersPath(s) / MAP_WORLD_X;
+								 sX = dst_sector % MAP_WORLD_X;
+								 sY = dst_sector / MAP_WORLD_X;
 								 RestoreBackgroundForMapGrid( sX, sY );
 								// fMapPanelDirty = TRUE;
 							 }
