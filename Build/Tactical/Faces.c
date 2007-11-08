@@ -1097,7 +1097,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 	UINT16					usTextWidth;
 	BOOLEAN					fAtGunRange = FALSE;
 	BOOLEAN					fShowNumber = FALSE;
-	SOLDIERTYPE			*pSoldier;
 	INT16						sFontX, sFontY;
 	INT16						sX1, sY1, sY2, sX2;
 	UINT32					uiDestPitchBYTES;
@@ -1125,9 +1124,9 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 	// BLIT HATCH
 	if ( pFace->ubSoldierID != NOBODY )
 	{
-		pSoldier = MercPtrs[ pFace->ubSoldierID ];
+		SOLDIERTYPE* const s = GetMan(pFace->ubSoldierID);
 
-		if ( ( MercPtrs[ pFace->ubSoldierID ]->bLife < CONSCIOUSNESS || MercPtrs[ pFace->ubSoldierID ]->fDeadPanel ) )
+		if (s->bLife < CONSCIOUSNESS || s->fDeadPanel)
 		{
 			// Blit Closed eyes here!
 			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
@@ -1136,16 +1135,16 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 		}
 
-		if( MercPtrs[ pFace->ubSoldierID ]->fMercAsleep == TRUE )
+		if (s->fMercAsleep == TRUE)
 		{
 			// blit eyes closed
 			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
 		}
 
-		if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+		if (s->uiStatusFlags & SOLDIER_DEAD)
 		{
 			// IF we are in the process of doing any deal/close animations, show face, not skill...
-			if ( !pSoldier->fClosePanel && !pSoldier->fDeadPanel && !pSoldier->fUIdeadMerc && !pSoldier->fUICloseMerc )
+			if (!s->fClosePanel && !s->fDeadPanel && !s->fUIdeadMerc && !s->fUICloseMerc)
 			{
 				// Put close panel there
 				BltVideoObjectFromIndex( uiRenderBuffer, guiDEAD, 5, sFaceX, sFaceY);
@@ -1171,14 +1170,14 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			HandleFaceHilights( pFace, uiRenderBuffer, sFaceX, sFaceY );
 
 #ifdef JA2BETAVERSION
-			if ( pSoldier->bOppCnt != 0 )
+			if (s->bOppCnt != 0)
 #else
-			if ( pSoldier->bOppCnt > 0 )
+			if (s->bOppCnt > 0)
 #endif
 			{
 				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-				swprintf( sString, lengthof(sString), L"%d", pSoldier->bOppCnt );
+				swprintf(sString, lengthof(sString), L"%d", s->bOppCnt);
 
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_DKRED );
@@ -1204,7 +1203,6 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 
 			}
 
-			const SOLDIERTYPE* const s = MercPtrs[pFace->ubSoldierID];
 			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) && !gfHiddenInterrupt) ||
 					(gfSMDisableForItems && !gfInItemPickupMenu && gpSMCurrentMerc == s && gsCurInterfacePanel == SM_PANEL))
 			{
@@ -1240,13 +1238,12 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 
 				}
 			}
-
 		}
 
     // Check if a robot and is not controlled....
-	  if ( MercPtrs[ pFace->ubSoldierID ]->uiStatusFlags & SOLDIER_ROBOT )
+	  if (s->uiStatusFlags & SOLDIER_ROBOT)
 	  {
-		  if ( !CanRobotBeControlled( MercPtrs[ pFace->ubSoldierID ] ) )
+		  if (!CanRobotBeControlled(s))
       {
         // Not controlled robot
 			  sIconIndex = 5;
@@ -1254,7 +1251,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
       }
     }
 
-    if ( ControllingRobot( MercPtrs[ pFace->ubSoldierID ] ) )
+    if (ControllingRobot(s))
     {
       // controlling robot
 			sIconIndex = 4;
@@ -1262,32 +1259,31 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
     }
 
     // If blind...
-    if ( MercPtrs[ pFace->ubSoldierID ]->bBlindedCounter > 0 )
+    if (s->bBlindedCounter > 0)
     {
       DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 6 );
       bNumRightIcons++;
     }
 
-    if ( MercPtrs[ pFace->ubSoldierID ]->bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
+    if (s->bDrugEffect[DRUG_TYPE_ADRENALINE])
     {
       DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 7 );
       bNumRightIcons++;
     }
 
-	  if ( GetDrunkLevel( MercPtrs[ pFace->ubSoldierID ] ) != SOBER )
+	  if (GetDrunkLevel(s) != SOBER)
 	  {
       DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 8 );
       bNumRightIcons++;
     }
 
-
-		switch( pSoldier->bAssignment )
+		switch (s->bAssignment)
 		{
 			case DOCTOR:
 
 				sIconIndex = 1;
 				fDoIcon		 = TRUE;
-				sPtsAvailable = CalculateHealingPointsForDoctor( MercPtrs[ pFace->ubSoldierID ], &usMaximumPts, FALSE );
+				sPtsAvailable = CalculateHealingPointsForDoctor(s, &usMaximumPts, FALSE);
 				fShowNumber = TRUE;
 
 				// divide both amounts by 10 to make the displayed numbers a little more user-palatable (smaller)
@@ -1300,8 +1296,8 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 				sIconIndex = 2;
 				fDoIcon		 = TRUE;
 				// show current health / maximum health
-				sPtsAvailable = MercPtrs[ pFace->ubSoldierID ]->bLife;
-				usMaximumPts  = MercPtrs[ pFace->ubSoldierID ]->bLifeMax;
+				sPtsAvailable = s->bLife;
+				usMaximumPts  = s->bLifeMax;
 				fShowNumber = TRUE;
 				break;
 
@@ -1309,44 +1305,46 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			case TRAIN_TOWN:
 			case TRAIN_TEAMMATE:
 			case TRAIN_BY_OTHER:
+			{
 				sIconIndex = 3;
 				fDoIcon		 = TRUE;
 				fShowNumber = TRUE;
 				// there could be bonus pts for training at gun range
-				if ( ( MercPtrs[ pFace->ubSoldierID ]->sSectorX == 13) && (MercPtrs[ pFace->ubSoldierID ]->sSectorY == MAP_ROW_H) && (MercPtrs[ pFace->ubSoldierID ]->bSectorZ == 0) )
+				if (s->sSectorX == 13 && s->sSectorY == MAP_ROW_H && s->bSectorZ == 0)
 				{
 					fAtGunRange = TRUE;
 				}
 
-				switch( MercPtrs[ pFace->ubSoldierID ]->bAssignment )
+				switch (s->bAssignment)
 				{
 					case( TRAIN_SELF ):
-						sPtsAvailable = GetSoldierTrainingPts( MercPtrs[ pFace->ubSoldierID ], MercPtrs[ pFace->ubSoldierID ]->bTrainStat, fAtGunRange, &usMaximumPts );
+						sPtsAvailable = GetSoldierTrainingPts(s, s->bTrainStat, fAtGunRange, &usMaximumPts);
 						break;
 					case( TRAIN_BY_OTHER ):
-						sPtsAvailable = GetSoldierStudentPts( MercPtrs[ pFace->ubSoldierID ], MercPtrs[ pFace->ubSoldierID ]->bTrainStat, fAtGunRange, &usMaximumPts );
+						sPtsAvailable = GetSoldierStudentPts(s, s->bTrainStat, fAtGunRange, &usMaximumPts);
 						break;
 					case( TRAIN_TOWN ):
-						sPtsAvailable = GetTownTrainPtsForCharacter( MercPtrs[ pFace->ubSoldierID ], &usMaximumPts );
+						sPtsAvailable = GetTownTrainPtsForCharacter(s, &usMaximumPts );
 						// divide both amounts by 10 to make the displayed numbers a little more user-palatable (smaller)
 						sPtsAvailable = ( sPtsAvailable + 5 ) / 10;
 						usMaximumPts  = ( usMaximumPts + 5 ) / 10;
 						break;
 					case( TRAIN_TEAMMATE ):
-						sPtsAvailable = GetBonusTrainingPtsDueToInstructor( MercPtrs[ pFace->ubSoldierID ], NULL , MercPtrs[ pFace->ubSoldierID ]->bTrainStat, fAtGunRange, &usMaximumPts );
+						sPtsAvailable = GetBonusTrainingPtsDueToInstructor(s, NULL , s->bTrainStat, fAtGunRange, &usMaximumPts );
 						break;
 				}
 				break;
+			}
 
 			case REPAIR:
 
 				sIconIndex = 0;
 				fDoIcon		 = TRUE;
-				sPtsAvailable = CalculateRepairPointsForRepairman( MercPtrs[ pFace->ubSoldierID ], &usMaximumPts, FALSE );
+				sPtsAvailable = CalculateRepairPointsForRepairman(s, &usMaximumPts, FALSE);
 				fShowNumber = TRUE;
 
 				// check if we are repairing a vehicle
-				if ( Menptr[ pFace->ubSoldierID ].bVehicleUnderRepairID != -1 )
+				if (s->bVehicleUnderRepairID != -1)
 				{
 					// reduce to a multiple of VEHICLE_REPAIR_POINTS_DIVISOR.  This way skill too low will show up as 0 repair pts.
 					sPtsAvailable -= ( sPtsAvailable % VEHICLE_REPAIR_POINTS_DIVISOR );
@@ -1357,14 +1355,14 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 		}
 
 		// Check for being serviced...
-		if ( MercPtrs[ pFace->ubSoldierID ]->ubServicePartner != NOBODY )
+		if (s->ubServicePartner != NOBODY)
 		{
 			// Doctor...
 			sIconIndex = 1;
 			fDoIcon		 = TRUE;
 		}
 
-		if ( MercPtrs[ pFace->ubSoldierID ]->ubServiceCount != 0 )
+		if (s->ubServiceCount != 0)
 		{
 			// Patient
 			sIconIndex = 2;

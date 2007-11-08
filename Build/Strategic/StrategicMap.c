@@ -4531,41 +4531,42 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 	//co-exist in the sector, then make them fight for control of the sector via autoresolve.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife )
-		{
-			if( MercPtrs[ i ]->sSectorX == gWorldSectorX &&
-					MercPtrs[ i ]->sSectorY == gWorldSectorY &&
-					MercPtrs[ i ]->bSectorZ == gbWorldSectorZ )
-			{ //We have enemies, now look for militia!
-				for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
-				{
-					if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && MercPtrs[ i ]->bSide == OUR_TEAM )
+		const SOLDIERTYPE* const creature = GetMan(i);
+		if (creature->bActive &&
+				creature->bLife != 0 &&
+				creature->sSectorX == gWorldSectorX &&
+				creature->sSectorY == gWorldSectorY &&
+				creature->bSectorZ == gbWorldSectorZ)
+		{ //We have enemies, now look for militia!
+			for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
+			{
+				const SOLDIERTYPE* const milita = GetMan(i);
+				if (milita->bActive &&
+						milita->bLife != 0 &&
+						milita->bSide    == OUR_TEAM &&
+						milita->sSectorX == gWorldSectorX &&
+						milita->sSectorY == gWorldSectorY &&
+						milita->bSectorZ == gbWorldSectorZ)
+				{ //We have militia and enemies and no mercs!  Let's finish this battle in autoresolve.
+					gfEnteringMapScreen = TRUE;
+					gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
+					gfAutomaticallyStartAutoResolve = TRUE;
+					gfUsePersistantPBI = FALSE;
+					gubPBSectorX = (UINT8)gWorldSectorX;
+					gubPBSectorY = (UINT8)gWorldSectorY;
+					gubPBSectorZ = (UINT8)gbWorldSectorZ;
+					gfBlitBattleSectorLocator = TRUE;
+					gfTransferTacticalOppositionToAutoResolve = TRUE;
+					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 					{
-						if( MercPtrs[ i ]->sSectorX == gWorldSectorX &&
-								MercPtrs[ i ]->sSectorY == gWorldSectorY &&
-								MercPtrs[ i ]->bSectorZ == gbWorldSectorZ )
-						{ //We have militia and enemies and no mercs!  Let's finish this battle in autoresolve.
-							gfEnteringMapScreen = TRUE;
-							gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
-							gfAutomaticallyStartAutoResolve = TRUE;
-							gfUsePersistantPBI = FALSE;
-							gubPBSectorX = (UINT8)gWorldSectorX;
-							gubPBSectorY = (UINT8)gWorldSectorY;
-							gubPBSectorZ = (UINT8)gbWorldSectorZ;
-							gfBlitBattleSectorLocator = TRUE;
-							gfTransferTacticalOppositionToAutoResolve = TRUE;
-							if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
-							{
-								gubEnemyEncounterCode = ENEMY_INVASION_CODE; //has to be, if militia are here.
-							}
-							else
-							{
-								//DoScreenIndependantMessageBox( gzLateLocalizedString[ 39 ], MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-							}
-
-              return( TRUE );
-						}
+						gubEnemyEncounterCode = ENEMY_INVASION_CODE; //has to be, if militia are here.
 					}
+					else
+					{
+						//DoScreenIndependantMessageBox( gzLateLocalizedString[ 39 ], MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+					}
+
+					return( TRUE );
 				}
 			}
 		}
@@ -4599,15 +4600,19 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 		{
 			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 			{ //If we have a live and valid soldier
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ) )
+				SOLDIERTYPE* const s = GetMan(i);
+				if (s->bActive &&
+						s->bLife != 0 &&
+						!s->fBetweenSectors &&
+						!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
+						!AM_A_ROBOT(s) &&
+						!AM_AN_EPC(s) &&
+						s->sSectorX == gWorldSectorX &&
+						s->sSectorY == gWorldSectorY &&
+						s->bSectorZ == gbWorldSectorZ)
 				{
-					if( MercPtrs[ i ]->sSectorX == gWorldSectorX &&
-							MercPtrs[ i ]->sSectorY == gWorldSectorY &&
-							MercPtrs[ i ]->bSectorZ == gbWorldSectorZ )
-					{
-						RemoveSoldierFromGridNo( MercPtrs[ i ] );
-						InitSoldierOppList( MercPtrs[ i ] );
-					}
+					RemoveSoldierFromGridNo(s);
+					InitSoldierOppList(s);
 				}
 			}
 		}
@@ -4616,14 +4621,18 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	{	//Check and see if we have any live mercs in the sector.
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{ //If we have a live and valid soldier
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( MercPtrs[ i ] ) && !AM_AN_EPC(  MercPtrs[ i ] ))
+			SOLDIERTYPE* const s = GetMan(i);
+			if (s->bActive &&
+					s->bLife != 0 &&
+					!s->fBetweenSectors &&
+					!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
+					!AM_A_ROBOT(s) &&
+					!AM_AN_EPC(s) &&
+					s->sSectorX == gWorldSectorX &&
+					s->sSectorY == gWorldSectorY &&
+					s->bSectorZ == gbWorldSectorZ)
 			{
-				if( MercPtrs[ i ]->sSectorX == gWorldSectorX &&
-						MercPtrs[ i ]->sSectorY == gWorldSectorY &&
-						MercPtrs[ i ]->bSectorZ == gbWorldSectorZ )
-				{
-					return FALSE;
-				}
+				return FALSE;
 			}
 		}
 		//KM : August 6, 1999 Patch fix

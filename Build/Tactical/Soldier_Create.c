@@ -1980,18 +1980,19 @@ static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 	}
 	for( i = iStart; i <= iEnd; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife && MercPtrs[ i ]->sGridNo != NOWHERE )
+		SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive && s->bInSector && s->bLife != 0 && s->sGridNo != NOWHERE)
 		{
-			if( MercPtrs[ i ]->ubSoldierClass == ubSoldierClass )
+			if (s->ubSoldierClass == ubSoldierClass)
 			{
 				//reserve this soldier
-				MercPtrs[ i ]->sGridNo = NOWHERE;
+				s->sGridNo = NOWHERE;
 
 				//Allocate and copy the soldier
 				pSoldier = (SOLDIERTYPE*)MemAlloc( sizeof( SOLDIERTYPE ) );
 				if( !pSoldier )
 					return NULL;
-				*pSoldier = *MercPtrs[i];
+				*pSoldier = *s;
 
 				//Assign a bogus ID, then return it
 				pSoldier->ubID = 255;

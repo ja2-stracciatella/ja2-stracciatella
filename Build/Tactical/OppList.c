@@ -5236,7 +5236,8 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 		}
 
 		// FIRST REQUIRE MUTUAL HOSTILES!
-		if (!CONSIDERED_NEUTRAL( MercPtrs[ ubNoiseMaker ], pSoldier ) && !CONSIDERED_NEUTRAL( pSoldier, MercPtrs[ ubNoiseMaker ] ) && (pSoldier->bSide != MercPtrs[ ubNoiseMaker ]->bSide))
+		const SOLDIERTYPE* const noise_maker = GetMan(ubNoiseMaker);
+		if (!CONSIDERED_NEUTRAL(noise_maker, pSoldier) && !CONSIDERED_NEUTRAL(pSoldier, noise_maker) && pSoldier->bSide != noise_maker->bSide)
 		{
 			// regardless of whether the noisemaker (who's not NOBODY) was seen or not,
 			// as long as listener meets minimum interrupt conditions
@@ -5253,7 +5254,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 					{
 						// require the enemy not to be dying if we are the sighter; in other words,
 						// always add for AI guys, and always add for people with life >= OKLIFE
-						if ( pSoldier->bTeam != gbPlayerNum || MercPtrs[ ubNoiseMaker ]->bLife >= OKLIFE )
+						if (pSoldier->bTeam != gbPlayerNum || noise_maker->bLife >= OKLIFE)
 						{
 							ReevaluateBestSightingPosition( pSoldier, (UINT8) (ubPoints + (ubVolume / 2)) );
 						}
@@ -6215,7 +6216,9 @@ static void CommunicateWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel, UINT8 
 
 	for ( ubLoop = gTacticalStatus.Team[ bTeam ].bFirstID; ubLoop < gTacticalStatus.Team[ bTeam ].bLastID; ubLoop++ )
 	{
-		if ( ubLoop == ubID || MercPtrs[ ubLoop ]->bActive == FALSE || MercPtrs[ ubLoop ]->bInSector == FALSE || MercPtrs[ ubLoop ]->bLife < OKLIFE )
+		if (ubLoop == ubID) continue;
+		const SOLDIERTYPE* const s = GetMan(ubLoop);
+		if (s->bActive == FALSE || s->bInSector == FALSE || s->bLife < OKLIFE)
 		{
 			continue;
 		}

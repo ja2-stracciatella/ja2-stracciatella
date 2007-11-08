@@ -422,9 +422,10 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	guiNumInvolved = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
+		const SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
+			if (PlayerMercInvolvedInThisCombat(s))
 			{
 				// involved
 				if( !ubGroupID )
@@ -432,12 +433,11 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 					//can detect it by comparing the first value with future values.  If we do, then
 					//we set a flag which determines whether to use the singular help text or plural version
 					//for the retreat button.
-					ubGroupID = MercPtrs[ i ]->ubGroupID;
+					ubGroupID = s->ubGroupID;
 					if( !gpBattleGroup )
 						gpBattleGroup = GetGroup( ubGroupID );
-					if( bBestExpLevel > MercPtrs[ i ]->bExpLevel )
-						bBestExpLevel = MercPtrs[ i ]->bExpLevel;
-					if( MercPtrs[ i ]->ubPrevSectorID == 255 )
+					if (bBestExpLevel > s->bExpLevel) bBestExpLevel = s->bExpLevel;
+					if (s->ubPrevSectorID == 255)
 					{ //Not able to retreat (calculate it for group)
 						GROUP *pTempGroup;
 						pTempGroup = GetGroup( ubGroupID );
@@ -445,7 +445,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 						CalculateGroupRetreatSector( pTempGroup );
 					}
 				}
-				else if( ubGroupID != MercPtrs[ i ]->ubGroupID )
+				else if (ubGroupID != s->ubGroupID)
 				{
 					fUsePluralVersion = TRUE;
 				}
@@ -1079,33 +1079,33 @@ void RenderPreBattleInterface()
 		y = TOP_Y + 1;
 		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 		{
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
+			const SOLDIERTYPE* const s = GetMan(i);
+			if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
-				if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
+				if (PlayerMercInvolvedInThisCombat(s))
 				{ //involved
 					if( line == giHilitedInvolved )
 						SetFontForeground( FONT_WHITE );
 					else
 						SetFontForeground( FONT_YELLOW );
 					//NAME
-					const wchar_t* Name = MercPtrs[i]->name;
+					const wchar_t* const Name = s->name;
 					x = 17 + (52-StringPixLength(Name, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", Name);
 					//ASSIGN
-					const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
+					const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
 					x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", Assignment);
 					//COND
-					const SOLDIERTYPE* Merc = MercPtrs[i];
-					const wchar_t* Condition = GetSoldierConditionInfo(Merc);
+					const wchar_t* const Condition = GetSoldierConditionInfo(s);
 					x = 129 + (58 - StringPixLength(Condition, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", Condition);
 					//HP
-					swprintf(str, lengthof(str), L"%d%%", Merc->bLife * 100 / Merc->bLifeMax);
+					swprintf(str, lengthof(str), L"%d%%", s->bLife * 100 / s->bLifeMax);
 					x = 189 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 					//BP
-					swprintf(str, lengthof(str), L"%d%%", Merc->bBreath);
+					swprintf(str, lengthof(str), L"%d%%", s->bBreath);
 					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 
@@ -1130,9 +1130,10 @@ void RenderPreBattleInterface()
 			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
 			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 			{
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) )
+				const SOLDIERTYPE* const s = GetMan(i);
+				if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 				{
-					if ( !PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
+					if (!PlayerMercInvolvedInThisCombat(s))
 					{
 						// uninvolved
 						if( line == giHilitedUninvolved )
@@ -1140,26 +1141,26 @@ void RenderPreBattleInterface()
 						else
 							SetFontForeground( FONT_YELLOW );
 						//NAME
-						const wchar_t* Name = MercPtrs[i]->name;
+						const wchar_t* const Name = s->name;
 						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
 						mprintf(x , y, Name);
 						//ASSIGN
-						const wchar_t* Assignment = GetMapscreenMercAssignmentString(MercPtrs[i]);
+						const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
 						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
 						mprintf(x, y, Assignment);
 						//LOC
-						GetMapscreenMercLocationString(MercPtrs[i], str, lengthof(str));
+						GetMapscreenMercLocationString(s, str, lengthof(str));
 						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						//DEST
-						GetMapscreenMercDestinationString(MercPtrs[i], str, lengthof(str));
+						GetMapscreenMercDestinationString(s, str, lengthof(str));
 						if( wcslen( str ) > 0 )
 						{
 							x = 164 + (41-StringPixLength( str, BLOCKFONT2)) / 2;
 							mprintf( x, y, str );
 						}
 						//DEP
-						GetMapscreenMercDepartureString(MercPtrs[i], str, lengthof(str), &ubJunk);
+						GetMapscreenMercDepartureString(s, str, lengthof(str), &ubJunk);
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
 						line++;
@@ -1891,15 +1892,16 @@ static void CheckForRobotAndIfItsControlled(void)
 	// search for the robot on player's team
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && AM_A_ROBOT( MercPtrs[ i ] ))
+		SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive && s->bLife != 0 && AM_A_ROBOT(s))
 		{
 			// check whether it has a valid controller with it. This sets its ubRobotRemoteHolderID field.
-			UpdateRobotControllerGivenRobot( MercPtrs[ i ] );
+			UpdateRobotControllerGivenRobot(s);
 
 			// if he has a controller, set controllers
-			if ( MercPtrs[ i ]->ubRobotRemoteHolderID != NOBODY )
+			if (s->ubRobotRemoteHolderID != NOBODY)
 			{
-				UpdateRobotControllerGivenController( MercPtrs[ MercPtrs[ i ]->ubRobotRemoteHolderID ] );
+				UpdateRobotControllerGivenController(GetMan(s->ubRobotRemoteHolderID));
 			}
 
 			break;

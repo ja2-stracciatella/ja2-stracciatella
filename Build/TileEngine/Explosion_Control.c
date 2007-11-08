@@ -2592,13 +2592,14 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 
 				for ( ubID = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubID++ )
 				{
-					if ( MercPtrs[ ubID ]->bActive && MercPtrs[ ubID ]->bInSector && MercPtrs[ ubID ]->ubCivilianGroup == KINGPIN_CIV_GROUP )
+					SOLDIERTYPE* const civ = GetMan(ubID);
+					if (civ->bActive && civ->bInSector && civ->ubCivilianGroup == KINGPIN_CIV_GROUP)
 					{
 						for ( ubID2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID2++ )
 						{
-							if ( MercPtrs[ ubID ]->bOppList[ ubID2 ] == SEEN_CURRENTLY )
+							if (civ->bOppList[ubID2] == SEEN_CURRENTLY)
 							{
-								MakeCivHostile( MercPtrs[ ubID ], 2 );
+								MakeCivHostile(civ, 2);
 							}
 						}
 					}
@@ -2626,67 +2627,68 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				UINT8		ubRoom, ubOldRoom;
 
 				ubID = WhoIsThere2( sGridNo, 0 );
-				if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) )
-				{
-					if ( InARoom( sGridNo, &ubRoom ) && InARoom( MercPtrs[ ubID ]->sOldGridNo, &ubOldRoom ) && ubOldRoom != ubRoom )
+				if (ubID != NOBODY)
+					const SOLDIERTYPE* const tgt = GetMan(ubID);
+					if (tgt->bTeam == gbPlayerNum)
 					{
-						// also require there to be a miniskirt civ in the room
-						if ( HookerInRoom( ubRoom ) )
+						if (InARoom(sGridNo, &ubRoom) && InARoom(tgt->sOldGridNo, &ubOldRoom) && ubOldRoom != ubRoom)
 						{
-
-							// stop the merc...
-							EVENT_StopMerc( MercPtrs[ ubID ], MercPtrs[ ubID ]->sGridNo, MercPtrs[ ubID ]->bDirection );
-
-							switch( sGridNo )
+							// also require there to be a miniskirt civ in the room
+							if ( HookerInRoom( ubRoom ) )
 							{
-								case 13414:
-									sDoorSpot = 13413;
-									sTeleportSpot = 13413;
-									break;
-								case 11174:
-									sDoorSpot = 11173;
-									sTeleportSpot = 11173;
-									break;
-								case 12290:
-									sDoorSpot = 12290;
-									sTeleportSpot = 12291;
-									break;
 
-								default:
+								// stop the merc...
+								EVENT_StopMerc(tgt, tgt->sGridNo, tgt->bDirection);
 
-									sDoorSpot = NOWHERE;
-									sTeleportSpot = NOWHERE;
+								switch( sGridNo )
+								{
+									case 13414:
+										sDoorSpot = 13413;
+										sTeleportSpot = 13413;
+										break;
+									case 11174:
+										sDoorSpot = 11173;
+										sTeleportSpot = 11173;
+										break;
+									case 12290:
+										sDoorSpot = 12290;
+										sTeleportSpot = 12291;
+										break;
+
+									default:
+
+										sDoorSpot = NOWHERE;
+										sTeleportSpot = NOWHERE;
 
 
+								}
+
+								if ( sDoorSpot != NOWHERE && sTeleportSpot != NOWHERE )
+								{
+									// close the door...
+									DoorCloser.bActionValue = ACTION_ITEM_CLOSE_DOOR;
+									PerformItemAction( sDoorSpot, &DoorCloser );
+
+									// have sex
+									HandleNPCDoAction( 0, NPC_ACTION_SEX, 0 );
+
+									// move the merc outside of the room again
+									sTeleportSpot = FindGridNoFromSweetSpotWithStructData(tgt, STANDING, sTeleportSpot, 2, &ubDirection, FALSE);
+									ChangeSoldierState(tgt, STANDING, 0, TRUE);
+									TeleportSoldier(tgt, sTeleportSpot, FALSE);
+
+									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+									FatigueCharacter(tgt);
+									FatigueCharacter(tgt);
+									FatigueCharacter(tgt);
+									FatigueCharacter(tgt);
+									DirtyMercPanelInterface(tgt, DIRTYLEVEL1);
+								}
 							}
 
-							if ( sDoorSpot != NOWHERE && sTeleportSpot != NOWHERE )
-							{
-								// close the door...
-								DoorCloser.bActionValue = ACTION_ITEM_CLOSE_DOOR;
-								PerformItemAction( sDoorSpot, &DoorCloser );
-
-								// have sex
-								HandleNPCDoAction( 0, NPC_ACTION_SEX, 0 );
-
-								// move the merc outside of the room again
-								sTeleportSpot = FindGridNoFromSweetSpotWithStructData( MercPtrs[ ubID ], STANDING, sTeleportSpot, 2, &ubDirection, FALSE );
-								ChangeSoldierState( MercPtrs[ ubID ], STANDING, 0, TRUE );
-								TeleportSoldier( MercPtrs[ ubID ], sTeleportSpot, FALSE );
-
-								HandleMoraleEvent( MercPtrs[ ubID ], MORALE_SEX, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-								FatigueCharacter( MercPtrs[ ubID ] );
-								FatigueCharacter( MercPtrs[ ubID ] );
-								FatigueCharacter( MercPtrs[ ubID ] );
-								FatigueCharacter( MercPtrs[ ubID ] );
-								DirtyMercPanelInterface( MercPtrs[ ubID ], DIRTYLEVEL1 );
-							}
 						}
-
+						break;
 					}
-					break;
-
-				}
 			}
 			*/
 			break;

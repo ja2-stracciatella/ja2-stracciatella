@@ -356,12 +356,14 @@ void EndTacticalBattleForEnemy()
 	//severe loyalty blow.
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife >= OKLIFE )
+		const SOLDIERTYPE* const milita = GetMan(i);
+		if (milita->bActive && milita->bInSector && milita->bLife >= OKLIFE)
 		{ //found one live militia, so look for any enemies/creatures.
 			// NOTE: this is relying on ENEMY_TEAM being immediately followed by CREATURE_TEAM
 			for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 			{
-				if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector && MercPtrs[ i ]->bLife >= OKLIFE )
+				const SOLDIERTYPE* const enemy = GetMan(i);
+				if (enemy->bActive && enemy->bInSector && enemy->bLife >= OKLIFE)
 				{ //confirmed at least one enemy here, so do the loyalty penalty.
 					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSectorX, gWorldSectorY, 0 );
 					break;

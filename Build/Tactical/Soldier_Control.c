@@ -3238,9 +3238,13 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	// handle morale for heavy damage attacks
 	if ( sDamage > 25 )
 	{
-		if ( pSoldier->ubAttackerID != NOBODY && MercPtrs[ pSoldier->ubAttackerID ]->bTeam == gbPlayerNum )
+		if (pSoldier->ubAttackerID != NOBODY)
 		{
-			HandleMoraleEvent( MercPtrs[ pSoldier->ubAttackerID ], MORALE_DID_LOTS_OF_DAMAGE, MercPtrs[ pSoldier->ubAttackerID ]->sSectorX, MercPtrs[ pSoldier->ubAttackerID ]->sSectorY, MercPtrs[ pSoldier->ubAttackerID ]->bSectorZ );
+			SOLDIERTYPE* const att = GetMan(pSoldier->ubAttackerID);
+			if (att->bTeam == gbPlayerNum)
+			{
+				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE, att->sSectorX, att->sSectorY, att->bSectorZ);
+			}
 		}
 		if (pSoldier->bTeam == gbPlayerNum)
 		{

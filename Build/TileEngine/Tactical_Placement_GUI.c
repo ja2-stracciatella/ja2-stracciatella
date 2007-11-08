@@ -249,14 +249,15 @@ void InitTacticalPlacementGUI()
 	giPlacements = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-
-		if( MercPtrs[ i ]->bActive && !MercPtrs[ i ]->fBetweenSectors &&
-				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
-				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&&
-				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
-				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
-				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
-				!MercPtrs[ i ]->bSectorZ )
+		const SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive &&
+				!s->fBetweenSectors &&
+				s->sSectorX == gpBattleGroup->ubSectorX &&
+				s->sSectorY == gpBattleGroup->ubSectorY	&&
+				!(s->uiStatusFlags & SOLDIER_VEHICLE) && // ATE Ignore vehicles
+				s->bAssignment != ASSIGNMENT_POW &&
+				s->bAssignment != IN_TRANSIT &&
+				!s->bSectorZ)
 		{
 			giPlacements++;
 		}
@@ -268,33 +269,36 @@ void InitTacticalPlacementGUI()
 	giPlacements = 0;
 	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !MercPtrs[ i ]->fBetweenSectors &&
-				MercPtrs[ i ]->sSectorX == gpBattleGroup->ubSectorX &&
-				MercPtrs[ i ]->sSectorY == gpBattleGroup->ubSectorY	&&
-				MercPtrs[ i ]->bAssignment != ASSIGNMENT_POW &&
-				MercPtrs[ i ]->bAssignment != IN_TRANSIT &&
-				!( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_VEHICLE ) ) && // ATE Ignore vehicles
-				!MercPtrs[ i ]->bSectorZ )
+		SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive &&
+				s->bLife != 0 &&
+				!s->fBetweenSectors &&
+				s->sSectorX == gpBattleGroup->ubSectorX &&
+				s->sSectorY == gpBattleGroup->ubSectorY	&&
+				s->bAssignment != ASSIGNMENT_POW &&
+				s->bAssignment != IN_TRANSIT &&
+				!(s->uiStatusFlags & SOLDIER_VEHICLE) && // ATE Ignore vehicles
+				!s->bSectorZ)
 		{
 
 			// ATE: If we are in a vehicle - remove ourselves from it!
-			//if ( MercPtrs[ i ]->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
+			//if (s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER))
 			//{
-			//	RemoveSoldierFromVehicle( MercPtrs[ i ], MercPtrs[ i ]->bVehicleID );
+			//	RemoveSoldierFromVehicle(s, s->bVehicleID);
 			//}
 
-			if( MercPtrs[ i ]->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
-					MercPtrs[ i ]->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX )
+			if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
+					s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
 			{
-				MercPtrs[ i ]->ubStrategicInsertionCode = (UINT8)MercPtrs[ i ]->usStrategicInsertionData;
+				s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
 			}
-			gMercPlacement[ giPlacements ].pSoldier = MercPtrs[ i ];
-			gMercPlacement[ giPlacements ].ubStrategicInsertionCode = MercPtrs[ i ]->ubStrategicInsertionCode;
+			gMercPlacement[giPlacements].pSoldier = s;
+			gMercPlacement[giPlacements].ubStrategicInsertionCode = s->ubStrategicInsertionCode;
 			gMercPlacement[ giPlacements ].fPlaced = FALSE;
 			#ifdef JA2BETAVERSION
-				CheckForValidMapEdge( &MercPtrs[ i ]->ubStrategicInsertionCode );
+				CheckForValidMapEdge(&s->ubStrategicInsertionCode);
 			#endif
-			switch( MercPtrs[ i ]->ubStrategicInsertionCode )
+			switch (s->ubStrategicInsertionCode)
 			{
 				case INSERTION_CODE_NORTH:
 					gfNorth = TRUE;

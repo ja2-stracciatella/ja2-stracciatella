@@ -1029,45 +1029,52 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 		// NB bDoBurst will be 2 at this point for the first shot since it was incremented
 		// above
-		if ( PTR_OURTEAM && pSoldier->ubTargetID != NOBODY && (!pSoldier->bDoBurst || pSoldier->bDoBurst == 2 ) && (gTacticalStatus.uiFlags & INCOMBAT ) && ( SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, MercPtrs[ pSoldier->ubTargetID ], pSoldier->bAimShotLocation ) > 0 ) )
+		if (PTR_OURTEAM &&
+				pSoldier->ubTargetID != NOBODY &&
+				(!pSoldier->bDoBurst || pSoldier->bDoBurst == 2) &&
+				gTacticalStatus.uiFlags & INCOMBAT)
 		{
-			if ( fGonnaHit )
+			const SOLDIERTYPE* const tgt = GetMan(pSoldier->ubTargetID);
+			if (SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, tgt, pSoldier->bAimShotLocation) > 0)
 			{
-				// grant extra exp for hitting a difficult target
-				usExpGain += (UINT8) (100 - uiHitChance) / 25;
-
-				if ( pSoldier->bAimTime && !pSoldier->bDoBurst )
+				if ( fGonnaHit )
 				{
-					// gain extra exp for aiming, up to the amount from
-					// the difficulty of the shot
-					usExpGain += __min( pSoldier->bAimTime, usExpGain );
+					// grant extra exp for hitting a difficult target
+					usExpGain += (UINT8) (100 - uiHitChance) / 25;
+
+					if ( pSoldier->bAimTime && !pSoldier->bDoBurst )
+					{
+						// gain extra exp for aiming, up to the amount from
+						// the difficulty of the shot
+						usExpGain += __min( pSoldier->bAimTime, usExpGain );
+					}
+
+					// base pts extra for hitting
+					usExpGain	+= 3;
 				}
 
-				// base pts extra for hitting
-				usExpGain	+= 3;
-			}
+				// add base pts for taking a shot, whether it hits or misses
+				usExpGain += 3;
 
-			// add base pts for taking a shot, whether it hits or misses
-			usExpGain += 3;
+				if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
+				{
+					// reduce exp gain for two pistol shooting since both shots give xp
+					usExpGain = (usExpGain * 2) / 3;
+				}
 
-			if ( IsValidSecondHandShot( pSoldier ) && pSoldier->inv[ HANDPOS ].bGunStatus >= USABLE && pSoldier->inv[HANDPOS].bGunAmmoStatus > 0 )
-			{
-				// reduce exp gain for two pistol shooting since both shots give xp
-				usExpGain = (usExpGain * 2) / 3;
-			}
+				if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
+				{
+					usExpGain /= 2;
+				}
+				else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
+				{
+					// no exp from shooting a vehicle that you can't damage and can't move!
+					usExpGain = 0;
+				}
 
-			if ( MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == COW || MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == CROW )
-			{
-				usExpGain /= 2;
+				// MARKSMANSHIP GAIN: gun attack
+				StatChange( pSoldier, MARKAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
-			{
-				// no exp from shooting a vehicle that you can't damage and can't move!
-				usExpGain = 0;
-			}
-
-			// MARKSMANSHIP GAIN: gun attack
-			StatChange( pSoldier, MARKAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
 		}
 
 		// set buckshot and muzzle flash
@@ -1117,11 +1124,12 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 10;
 
-			if ( MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == COW || MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == CROW )
+			const SOLDIERTYPE* const tgt = GetMan(pSoldier->ubTargetID);
+			if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
 			{
 				usExpGain /= 2;
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
+			else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
 			{
 				// no exp from shooting a vehicle that you can't damage and can't move!
 				usExpGain = 0;
@@ -1359,11 +1367,12 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 10;
 
-			if ( MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == COW || MercPtrs[ pSoldier->ubTargetID ]->ubBodyType == CROW )
+			const SOLDIERTYPE* const tgt = GetMan(pSoldier->ubTargetID);
+			if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
 			{
 				usExpGain /= 2;
 			}
-			else if ( MercPtrs[ pSoldier->ubTargetID ]->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( MercPtrs[ pSoldier->ubTargetID ] ) || TANK( MercPtrs[ pSoldier->ubTargetID ] ) )
+			else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
 			{
 				// no exp from shooting a vehicle that you can't damage and can't move!
 				usExpGain = 0;

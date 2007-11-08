@@ -1620,12 +1620,13 @@ static void RenderAutoResolve(void)
 				case BATTLE_CAPTURED:
 					for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
 					{
-						if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bLife && !(MercPtrs[ i ]->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( MercPtrs[ i ] ) )
+						SOLDIERTYPE* const s = GetMan(i);
+						if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
 						{ //Merc is active and alive, and not a vehicle or robot
-							if ( PlayerMercInvolvedInThisCombat( MercPtrs[ i ] ) )
+							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
-								HandleMoraleEvent( MercPtrs[ i ], MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+								HandleMoraleEvent(s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
 							}
 						}
 					}
