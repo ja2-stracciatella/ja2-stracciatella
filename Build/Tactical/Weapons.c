@@ -1999,14 +1999,15 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 
 		if ( pAttacker->ubOppNum != NOBODY )
 		{
+			SOLDIERTYPE* const opp = GetMan(pAttacker->ubOppNum);
 			// if it was another team shooting at someone under our control
-			if ( (pAttacker->bTeam != Menptr[ pAttacker->ubOppNum ].bTeam ) )
+			if (pAttacker->bTeam != opp->bTeam)
 			{
 				// if OPPONENT is under our control
-				if (Menptr[ pAttacker->ubOppNum ].bTeam == gbPlayerNum )
+				if (opp->bTeam == gbPlayerNum)
 				{
 					// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-					StatChange( MercPtrs[ pAttacker->ubOppNum ], AGILAMT, 5, FROM_FAILURE );
+					StatChange(opp, AGILAMT, 5, FROM_FAILURE);
 				}
 			}
 		}

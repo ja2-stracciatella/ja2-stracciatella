@@ -1568,19 +1568,20 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID)
 	//loop through all the mercs on the team
 	for( ubMercCount = ubFirstID; ubMercCount <= ubLastID; ubMercCount++ )
 	{
-		if( Menptr[ ubMercCount ].bActive )
+		const SOLDIERTYPE* const s = GetMan(ubMercCount);
+		if (!s->bActive) continue;
+
+		//loop through all the pockets on the merc
+		for( ubPocketCount=0; ubPocketCount<NUM_INV_SLOTS; ubPocketCount++)
 		{
-			//loop through all the pockets on the merc
-			for( ubPocketCount=0; ubPocketCount<NUM_INV_SLOTS; ubPocketCount++)
+			const OBJECTTYPE* const o = &s->inv[ubPocketCount];
+			//if there is a weapon here
+			if (Item[o->usItem].usItemClass == IC_GUN)
 			{
-				//if there is a weapon here
-				if( Item[ Menptr[ ubMercCount ].inv[ ubPocketCount ].usItem ].usItemClass == IC_GUN )
+				//if the weapon uses the same kind of ammo as the one passed in, return true
+				if (Weapon[o->usItem].ubCalibre == Magazine[Item[sItemID].ubClassIndex].ubCalibre)
 				{
-					//if the weapon uses the same kind of ammo as the one passed in, return true
-					if( Weapon[ Menptr[ ubMercCount ].inv[ ubPocketCount ].usItem ].ubCalibre == Magazine[ Item[ sItemID ].ubClassIndex ].ubCalibre )
-					{
-						ubItemCount++;
-					}
+					ubItemCount++;
 				}
 			}
 		}

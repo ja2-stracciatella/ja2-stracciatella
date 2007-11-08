@@ -188,13 +188,15 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_MERC_CONTRACT_OVER:
 			MercsContractIsFinished( (UINT8) pEvent->uiParam );
 			break;
+
 		case EVENT_ADDSOLDIER_TO_UPDATE_BOX:
+		{
+			const SOLDIERTYPE* const s = GetMan(pEvent->uiParam);
 			// if the grunt is currently active, add to update box
-			if( Menptr[ pEvent->uiParam ].bActive )
-			{
-				AddSoldierToWaitingListQueue( &( Menptr[ pEvent->uiParam ] ) );
-			}
+			if (s->bActive) AddSoldierToWaitingListQueue(s);
 			break;
+		}
+
 		case EVENT_SET_MENU_REASON:
 			AddReasonToWaitingListQueue( (UINT8) pEvent->uiParam );
 			break;

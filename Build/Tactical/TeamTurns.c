@@ -1541,21 +1541,23 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 	gubOutOfTurnPersons++;
 	gubOutOfTurnOrder[gubOutOfTurnPersons] = ubID;
 
+	SOLDIERTYPE* const s = GetMan(ubID);
+
 	// if the guy is gaining control
 	if (fGainControl)
 	{
 		// record his initial APs at the start of his interrupt at this time
 		// this is not the ideal place for this, but it's the best I could do...
-		Menptr[ubID].bIntStartAPs = Menptr[ubID].bActionPoints;
+		s->bIntStartAPs = s->bActionPoints;
 	}
 	else
 	{
 		gubLastInterruptedGuy = ubID;
 		// turn off AI control flag if they lost control
-		if (Menptr[ubID].uiStatusFlags & SOLDIER_UNDERAICONTROL)
+		if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 		{
 			DebugAI( String( "Taking away AI control from %d", ubID ) );
-			Menptr[ubID].uiStatusFlags &= (~SOLDIER_UNDERAICONTROL);
+			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 		}
 	}
 }

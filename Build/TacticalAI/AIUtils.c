@@ -636,11 +636,12 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 	{
 		// randomly select one of the remaining friends in the list
 		ubFriendID = ubFriendIDs[PreRandom(ubFriendCount)];
+		const SOLDIERTYPE* const friend = GetMan(ubFriendID);
 
 		// if our movement range is NOT restricted, or this friend's within range
 		// use distance - 1, because there must be at least 1 tile 1 space closer
 		if (!fRangeRestricted ||
-			(SpacesAway(usOrigin,Menptr[ubFriendID].sGridNo) - 1) <= usMaxDist)
+				(SpacesAway(usOrigin, friend->sGridNo) - 1) <= usMaxDist)
 		{
 			// should be close enough, try to find a legal ->sDestination within 1 tile
 
@@ -666,13 +667,10 @@ INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
 				fDirChecked[usDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				usDest = NewGridNo(Menptr[ubFriendID].sGridNo,DirectionInc((INT16)(usDirection + 1)));
+				usDest = NewGridNo(friend->sGridNo, DirectionInc((INT16)(usDirection + 1)));
 
 				// if that's out of bounds, ignore it & check next direction
-				if (usDest == Menptr[ubFriendID].sGridNo)
-				{
-					continue;
-				}
+				if (usDest == friend->sGridNo) continue;
 
 				// if our movement range is NOT restricted
 				if (!fRangeRestricted || (SpacesAway(usOrigin,usDest) <= usMaxDist))

@@ -565,10 +565,11 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 
 		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 		{
+			SOLDIERTYPE* const s = GetMan(Soldier.ubID);
 			// Copy into merc struct
-			*MercPtrs[Soldier.ubID] = Soldier;
+			*s = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
-			CHECKF(CreateSoldierCommon(Soldier.ubBodyType, MercPtrs[Soldier.ubID], Soldier.ubID, STANDING));
+			CHECKF(CreateSoldierCommon(Soldier.ubBodyType, s, Soldier.ubID, STANDING));
 		}
 	}
 	else
@@ -588,26 +589,30 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
       Soldier.bNeutral = TRUE;
     }
 
+		SOLDIERTYPE* const s = GetMan(Soldier.ubID);
+
 		// Copy into merc struct
-		*MercPtrs[Soldier.ubID] = Soldier;
+		*s = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
-		CHECKF(CreateSoldierCommon(Soldier.ubBodyType, MercPtrs[Soldier.ubID], Soldier.ubID, Menptr[Soldier.ubID].usAnimState));
+		CHECKF(CreateSoldierCommon(Soldier.ubBodyType, s, Soldier.ubID, s->usAnimState));
 
 		*pubID = Soldier.ubID;
 
 		// The soldiers animation frame gets reset, set
-//		Menptr[ Soldier.ubID ].usAniCode = pCreateStruct->pExistingSoldier->usAniCode;
-//		Menptr[ Soldier.ubID ].usAnimState = Soldier.usAnimState;
-//		Menptr[ Soldier.ubID ].usAniFrame = Soldier.usAniFrame;
+//		s->usAniCode   = pCreateStruct->pExistingSoldier->usAniCode;
+//		s->usAnimState = Soldier.usAnimState;
+//		s->usAniFrame  = Soldier.usAniFrame;
 	}
 
 
 	if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 	{
+		SOLDIERTYPE* const s = GetMan(Soldier.ubID);
+
 		if( pCreateStruct->fOnRoof && FlatRoofAboveGridNo( pCreateStruct->sInsertionGridNo ) )
 		{
-			SetSoldierHeight( MercPtrs[ Soldier.ubID ], 58.0 );
+			SetSoldierHeight(s, 58.0);
 		}
 
 		//if we are loading DONT add men to team, because the number is restored in gTacticalStatus
@@ -617,7 +622,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 			AddManToTeam( Soldier.bTeam );
 		}
 
-		return MercPtrs[ Soldier.ubID ];
+		return s;
 	}
 	else
 	{ //We are creating a dynamically allocated soldier for autoresolve.

@@ -2564,28 +2564,27 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 	//Loop through all the soldier structs to save
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
 	{
-
+		SOLDIERTYPE* const s = GetMan(cnt);
 		//if the soldier isnt active, dont add them to the saved game file.
-		if( !Menptr[ cnt ].bActive )
+		if (!s->bActive)
 		{
 			// Save the byte specifing to NOT load the soldiers
 			if (!FileWrite(hFile, &ubZero, 1)) return FALSE;
 		}
-
 		else
 		{
 			// Save the byte specifing to load the soldiers
 			if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
 
 			// calculate checksum for soldier
-			Menptr[ cnt ].uiMercChecksum = MercChecksum( &(Menptr[ cnt ]) );
+			s->uiMercChecksum = MercChecksum(s);
 			// Save the soldier structure
 #ifdef _WIN32 // XXX HACK000A
 			BYTE Data[2328];
 #else
 			BYTE Data[2352];
 #endif
-			InjectSoldierType(Data, &Menptr[cnt]);
+			InjectSoldierType(Data, s);
 			BOOLEAN Ret;
 			if ( guiSavedGameVersion < 87 )
 			{
@@ -2613,13 +2612,13 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 			//do we have a 	KEY_ON_RING									*pKeyRing;
 			//
 
-			if( Menptr[ cnt ].pKeyRing != NULL )
+			if (s->pKeyRing != NULL)
 			{
 				// write to the file saying we have the ....
 				if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
 
 				// Now save the ....
-				if (!FileWrite(hFile, Menptr[cnt].pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING))) return FALSE;
+				if (!FileWrite(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING))) return FALSE;
 			}
 			else
 			{
@@ -2747,10 +2746,12 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			// Read the file to see if we have to load the keys
 			if (!FileRead(hFile, &ubOne, 1)) return FALSE;
 
+			SOLDIERTYPE* const s = GetMan(cnt);
+
 			if( ubOne )
 			{
 				// Now Load the ....
-				if (!FileRead(hFile, Menptr[cnt].pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING)))
+				if (!FileRead(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING)))
 				{
 					return(FALSE);
 				}
@@ -2758,28 +2759,29 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			}
 			else
 			{
-				Assert( Menptr[ cnt ].pKeyRing == NULL );
+				Assert(s->pKeyRing == NULL);
 			}
 
 			//if the soldier is an IMP character
-			if( Menptr[cnt].ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && Menptr[cnt].bTeam == gbPlayerNum )
+			if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && s->bTeam == gbPlayerNum)
 			{
-				ResetIMPCharactersEyesAndMouthOffsets( Menptr[ cnt ].ubProfile );
+				ResetIMPCharactersEyesAndMouthOffsets(s->ubProfile);
 			}
 
 			//if the saved game version is before x, calculate the amount of money paid to mercs
 			if( guiSaveGameVersion < 83 )
 			{
 				//if the soldier is someone
-				if( Menptr[ cnt ].ubProfile != NO_PROFILE )
+				if (s->ubProfile != NO_PROFILE)
 				{
-					if( Menptr[cnt].ubWhatKindOfMercAmI == MERC_TYPE__MERC )
+					MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+					if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 					{
-						gMercProfiles[ Menptr[ cnt ].ubProfile ].uiTotalCostToDate = gMercProfiles[ Menptr[ cnt ].ubProfile ].sSalary * gMercProfiles[ Menptr[ cnt ].ubProfile ].iMercMercContractLength;
+						p->uiTotalCostToDate = p->sSalary * p->iMercMercContractLength;
 					}
 					else
 					{
-						gMercProfiles[ Menptr[ cnt ].ubProfile ].uiTotalCostToDate = gMercProfiles[ Menptr[ cnt ].ubProfile ].sSalary * Menptr[ cnt ].iTotalContractLength;
+						p->uiTotalCostToDate = p->sSalary * s->iTotalContractLength;
 					}
 				}
 			}
@@ -2788,41 +2790,39 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			// Fix neutral flags
 			if ( guiSaveGameVersion < 94 )
 			{
-				if ( Menptr[ cnt].bTeam == OUR_TEAM && Menptr[ cnt ].bNeutral && Menptr[ cnt ].bAssignment != ASSIGNMENT_POW )
+				if (s->bTeam == OUR_TEAM && s->bNeutral && s->bAssignment != ASSIGNMENT_POW)
 				{
 					// turn off neutral flag
-					Menptr[ cnt].bNeutral = FALSE;
+					s->bNeutral = FALSE;
 				}
 			}
 #endif
 			// JA2Gold: fix next-to-previous attacker value
 			if ( guiSaveGameVersion < 99 )
 			{
-				Menptr[ cnt ].ubNextToPreviousAttackerID = NOBODY;
+				s->ubNextToPreviousAttackerID = NOBODY;
 			}
-
 		}
 	}
 
 	// Fix robot
 	if ( guiSaveGameVersion <= 87 )
 	{
-		SOLDIERTYPE * pSoldier;
-
-		if ( gMercProfiles[ ROBOT ].inv[ VESTPOS ] == SPECTRA_VEST )
+		MERCPROFILESTRUCT* const robot_p = &gMercProfiles[ROBOT];
+		if (robot_p->inv[VESTPOS] == SPECTRA_VEST)
 		{
 			// update this
-			gMercProfiles[ ROBOT ].inv[ VESTPOS ] = SPECTRA_VEST_18;
-			gMercProfiles[ ROBOT ].inv[ HELMETPOS ] = SPECTRA_HELMET_18;
-			gMercProfiles[ ROBOT ].inv[ LEGPOS ] = SPECTRA_LEGGINGS_18;
-			gMercProfiles[ ROBOT ].bAgility = 50;
-			pSoldier = FindSoldierByProfileID( ROBOT, FALSE );
-			if ( pSoldier )
+			robot_p->inv[VESTPOS]   = SPECTRA_VEST_18;
+			robot_p->inv[HELMETPOS] = SPECTRA_HELMET_18;
+			robot_p->inv[LEGPOS]    = SPECTRA_LEGGINGS_18;
+			robot_p->bAgility = 50;
+			SOLDIERTYPE* const robot_s = FindSoldierByProfileID(ROBOT, FALSE);
+			if (robot_s)
 			{
-				pSoldier->inv[ VESTPOS ].usItem = SPECTRA_VEST_18;
-				pSoldier->inv[ HELMETPOS ].usItem = SPECTRA_HELMET_18;
-				pSoldier->inv[ LEGPOS ].usItem = SPECTRA_LEGGINGS_18;
-				pSoldier->bAgility = 50;
+				robot_s->inv[VESTPOS].usItem   = SPECTRA_VEST_18;
+				robot_s->inv[HELMETPOS].usItem = SPECTRA_HELMET_18;
+				robot_s->inv[LEGPOS].usItem    = SPECTRA_LEGGINGS_18;
+				robot_s->bAgility = 50;
 			}
 		}
 	}
@@ -3102,21 +3102,19 @@ static BOOLEAN SetMercsInsertionGridNo(void)
   // loop through all the mercs
   for ( cnt=0; cnt < TOTAL_SOLDIERS; cnt++ )
 	{
-		//if the soldier is active
-		if( Menptr[ cnt ].bActive )
+		SOLDIERTYPE* const s = GetMan(cnt);
+		if (!s->bActive) continue;
+
+		if (s->sGridNo != NOWHERE)
 		{
+			//set the insertion type to gridno
+			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 
-			if( Menptr[ cnt ].sGridNo != NOWHERE )
-			{
-				//set the insertion type to gridno
-				Menptr[ cnt ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+			//set the insertion gridno
+			s->usStrategicInsertionData = s->sGridNo;
 
-				//set the insertion gridno
-				Menptr[ cnt ].usStrategicInsertionData = Menptr[ cnt ].sGridNo;
-
-				//set the gridno
-				Menptr[ cnt ].sGridNo = NOWHERE;
-			}
+			//set the gridno
+			s->sGridNo = NOWHERE;
 		}
 	}
 
@@ -3290,8 +3288,9 @@ void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
 
 static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
+	const SOLDIERTYPE* const s = GetMan(ubID);
 	UINT32	uiNumOfNodes=0;
-	PathSt* pTempPath = Menptr[ubID].pMercPath;
+	const PathSt* pTempPath = s->pMercPath;
 
 	//loop through to get all the nodes
 	while( pTempPath )
@@ -3305,8 +3304,7 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 	if (!FileWrite(hFile, &uiNumOfNodes, sizeof(UINT32))) return FALSE;
 
 	//loop through all the nodes and add them
-	pTempPath = Menptr[ ubID ].pMercPath;
-
+	pTempPath = s->pMercPath;
 
 	//loop through nodes and save all the nodes
 	while( pTempPath )
@@ -3325,6 +3323,7 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, UINT8 ubID)
 
 static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 {
+	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT32	uiNumOfNodes=0;
 	PathSt* pTempPath = NULL;
 	PathSt* pTemp = NULL;
@@ -3333,9 +3332,9 @@ static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 	//The list SHOULD be empty at this point
 /*
 	//if there is nodes, loop through and delete them
-	if( Menptr[ ubID ].pMercPath )
+	if (s->pMercPath )
 	{
-		pTempPath = Menptr[ ubID ].pMercPath;
+		pTempPath = s->pMercPath;
 		while( pTempPath )
 		{
 			pTemp = pTempPath;
@@ -3345,7 +3344,7 @@ static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 			pTemp=NULL;
 		}
 
-		Menptr[ ubID ].pMercPath = NULL;
+		s->pMercPath = NULL;
 	}
 */
 
@@ -3383,9 +3382,8 @@ static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, UINT8 ubID)
 	//move to beginning of list
 	pTempPath = MoveToBeginningOfPathList( pTempPath );
 
-	Menptr[ ubID ].pMercPath = pTempPath;
-	if( Menptr[ ubID ].pMercPath )
-		Menptr[ ubID ].pMercPath->pPrev = NULL;
+	s->pMercPath = pTempPath;
+	if (s->pMercPath) s->pMercPath->pPrev = NULL;
 
 	return( TRUE );
 }

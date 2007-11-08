@@ -3142,12 +3142,8 @@ static INT16 IsMercInTheSector(UINT16 usMercID)
 
 	for ( cnt=0; cnt <= TOTAL_SOLDIERS; cnt++ )
 	{
-		//if the merc is active
-		if( Menptr[ cnt ].ubProfile == usMercID )
-		{
-			if( Menptr[ cnt ].bActive )
-				return( Menptr[ cnt ].ubID );
-		}
+		const SOLDIERTYPE* const s = GetMan(cnt);
+		if (s->bActive && s->ubProfile == usMercID) return s->ubID;
 	}
 
 	return( -1 );
@@ -3163,28 +3159,30 @@ static void RefreshAllNPCInventory(void)
 
   for ( usCnt=0; usCnt < TOTAL_SOLDIERS; usCnt++ )
 	{
+		SOLDIERTYPE* const s = GetMan(usCnt);
 		//if the is active
-		if( Menptr[ usCnt ].bActive == 1 )
+		if (s->bActive == 1)
 		{
 			//is the merc a rpc or npc
-			if( Menptr[ usCnt ].ubProfile >= FIRST_RPC )
+			if (s->ubProfile >= FIRST_RPC)
 			{
 				//refresh the mercs inventory
 				for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
 				{
 					//null out the items in the npc inventory
-					memset( &Menptr[ usCnt ].inv[ usItemCnt ], 0, sizeof( OBJECTTYPE ) );
+					memset(&s->inv[usItemCnt], 0, sizeof(s->inv[usItemCnt]));
 
-					if ( gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ] != NOTHING )
+					const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+					if (p->inv[usItemCnt] != NOTHING)
 					{
 						//get the item
-						usItem = gMercProfiles[ Menptr[ usCnt ].ubProfile ].inv[ usItemCnt ];
+						usItem = p->inv[usItemCnt];
 
 						//Create the object
 						CreateItem( usItem, 100, &TempObject );
 
 						//copy the item into the soldiers inventory
-						Menptr[usCnt].inv[usItemCnt] = TempObject;
+						s->inv[usItemCnt] = TempObject;
 					}
 				}
 

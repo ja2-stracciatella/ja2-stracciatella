@@ -2980,8 +2980,8 @@ bCanAttack = FALSE;
 					// if the selected opponent is not a threat (unconscious & !serviced)
 					// (usually, this means all the guys we see are unconscious, but, on
 					//  rare occasions, we may not be able to shoot a healthy guy, too)
-					if ((Menptr[BestShot.ubOpponent].bLife < OKLIFE) &&
-						 !Menptr[BestShot.ubOpponent].bService)
+					const SOLDIERTYPE* const opp = GetMan(BestShot.ubOpponent);
+					if (opp->bLife < OKLIFE && !opp->bService)
 					{
 						// if our attitude is NOT aggressive
 						if ( pSoldier->bAttitude != AGGRESSIVE || BestShot.ubChanceToReallyHit < 60 )
@@ -3096,8 +3096,8 @@ bCanAttack = FALSE;
 						// if the selected opponent is not a threat (unconscious & !serviced)
 						// (usually, this means all the guys we see are unconscious, but, on
 						//  rare occasions, we may not be able to shoot a healthy guy, too)
-						if ((Menptr[BestStab.ubOpponent].bLife < OKLIFE) &&
-							 !Menptr[BestStab.ubOpponent].bService)
+						const SOLDIERTYPE* const opp = GetMan(BestStab.ubOpponent);
+						if (opp->bLife < OKLIFE && !opp->bService)
 						{
 							// don't throw a knife at him.
 							BestStab.ubPossible = FALSE;
