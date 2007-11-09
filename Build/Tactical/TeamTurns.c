@@ -1497,13 +1497,12 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate)
 	gubOutOfTurnPersons--;
 }
 
-void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
+
+void AddToIntList(SOLDIERTYPE* const s, const BOOLEAN fGainControl, const BOOLEAN fCommunicate)
 {
-	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT8 ubLoop;
 
-//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%d added to int list", ubID );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: adding ID %d who %s", ubID, fGainControl ? "gains control" : "loses control" ) );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: adding ID %d who %s", s->ubID, fGainControl ? "gains control" : "loses control"));
 
 	// check whether 'who' is already anywhere on the queue after the first index
 	// which we want to preserve so we can restore turn order
@@ -1543,7 +1542,7 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 		// turn off AI control flag if they lost control
 		if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 		{
-			DebugAI( String( "Taking away AI control from %d", ubID ) );
+			DebugAI(String("Taking away AI control from %d", s->ubID));
 			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 		}
 	}
@@ -1676,7 +1675,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 {
 	UINT8 ubTeam, ubOpp;
 	UINT8 ubIntCnt;
-	UINT8 ubIntList[MAXMERCS];
+	SOLDIERTYPE* IntList[MAXMERCS];
 	UINT8 ubIntDiff[MAXMERCS];
 	UINT8 ubSmallestDiff;
 	UINT8 ubSlot, ubSmallestSlot;
@@ -1750,7 +1749,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						if (fIntOccurs)
 						{
 							// remember that this opponent's scheduled to interrupt us
-							ubIntList[ubIntCnt] = pOpponent->ubID;
+							IntList[ubIntCnt] = pOpponent;
 
 							// and by how much he beat us in the duel
 							ubIntDiff[ubIntCnt] = pOpponent->bInterruptDuelPts - pSoldier->bInterruptDuelPts;
@@ -1799,7 +1798,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			// USUALLY pSoldier->guynum, but NOT always, because one enemy can
 			// "interrupt" on another enemy's turn if he hears another team's wound
 			// victim's screaming...  the guy screaming is pSoldier here, it's not his turn!
-			//AddToIntList( (UINT8) gusSelectedSoldier, FALSE, TRUE);
+			//AddToIntList(GetSelectedMan(), FALSE, TRUE);
 
 			if ( (gTacticalStatus.ubCurrentTeam != pSoldier->bTeam) && !(gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bHuman) )
 			{
@@ -1807,11 +1806,12 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 				// their AI control flag and put them on the queue instead of this guy
 				for ( ubLoop = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID; ubLoop <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; ubLoop++ )
 				{
-					if ( (MercPtrs[ ubLoop ]->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
+					SOLDIERTYPE* const s = GetMan(ubLoop);
+					if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 					{
 						// this guy lost control
-						MercPtrs[ ubLoop ]->uiStatusFlags &= (~SOLDIER_UNDERAICONTROL);
-						AddToIntList( ubLoop, FALSE, TRUE);
+						s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
+						AddToIntList(s, FALSE, TRUE);
 						break;
 					}
 				}
@@ -1820,7 +1820,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			else
 			{
 				// this guy lost control
-				AddToIntList( pSoldier->ubID, FALSE, TRUE);
+				AddToIntList(pSoldier, FALSE, TRUE);
 			}
 
 			// loop once for each opponent who interrupted
@@ -1842,7 +1842,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 				if (ubSmallestSlot < NOBODY)
 				{
 					// add this guy to everyone's interrupt queue
-					AddToIntList(ubIntList[ubSmallestSlot],TRUE,TRUE);
+					AddToIntList(IntList[ubSmallestSlot], TRUE, TRUE);
 					if (INTERRUPTS_OVER)
 					{
 						// a loop was created which removed all the people in the interrupt queue!

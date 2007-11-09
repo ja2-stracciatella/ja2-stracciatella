@@ -407,9 +407,9 @@ static void HandleBestSightingPositionInRealtime(void)
 
 					EnterCombatMode(gBestToMakeSighting[1]->bTeam);
 					// 2nd guy loses control
-					AddToIntList(gBestToMakeSighting[1]->ubID, FALSE, TRUE);
+					AddToIntList(gBestToMakeSighting[1], FALSE, TRUE);
 					// 1st guy gains control
-					AddToIntList(gBestToMakeSighting[0]->ubID, TRUE, TRUE);
+					AddToIntList(gBestToMakeSighting[0], TRUE,  TRUE);
 					DoneAddingToIntList();
 				}
 			}
@@ -474,10 +474,10 @@ static void HandleBestSightingPositionInTurnbased(void)
 			if ( fOk )
 			{
 				// this is the guy who gets "interrupted"; all else before him interrupted him
-				AddToIntList(gBestToMakeSighting[ubLoop]->ubID, FALSE, TRUE);
+				AddToIntList(gBestToMakeSighting[ubLoop], FALSE, TRUE);
 				for ( ubLoop2 = 0; ubLoop2 < ubLoop; ubLoop2++ )
 				{
-					AddToIntList(gBestToMakeSighting[ubLoop2]->ubID, TRUE, TRUE);
+					AddToIntList(gBestToMakeSighting[ubLoop2], TRUE, TRUE);
 				}
 				DoneAddingToIntList();
 			}
@@ -5994,8 +5994,8 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		if ( InterruptDuel( pDefender, pAttacker ) )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: NoticeUnseenAttacker, defender pts %d, attacker pts %d, defender gets interrupt", pDefender->bInterruptDuelPts, pAttacker->bInterruptDuelPts ) );
-			AddToIntList( pAttacker->ubID, FALSE, TRUE);
-			AddToIntList( pDefender->ubID, TRUE, TRUE);
+			AddToIntList(pAttacker, FALSE, TRUE);
+			AddToIntList(pDefender, TRUE,  TRUE);
 			DoneAddingToIntList();
 		}
 		// either way, clear out both sides' duelPts fields to prepare next duel
