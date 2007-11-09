@@ -72,7 +72,7 @@ static BOOLEAN gfPlayerTeamSawCreatures = FALSE;
 BOOLEAN   gfPlayerTeamSawJoey			 = FALSE;
 BOOLEAN   gfMikeShouldSayHi				 = FALSE;
 
-static UINT8 gubBestToMakeSighting[BEST_SIGHTING_ARRAY_SIZE];
+static SOLDIERTYPE* gBestToMakeSighting[BEST_SIGHTING_ARRAY_SIZE];
 UINT8			gubBestToMakeSightingSize = 0;
 //BOOLEAN		gfHumanSawSomeoneInRealtime;
 
@@ -251,11 +251,9 @@ INT16 AdjustMaxSightRangeForEnvEffects(INT8 bLightLevel, INT16 sDistVisible)
 
 static void SwapBestSightingPositions(INT8 bPos1, INT8 bPos2)
 {
-	UINT8		ubTemp;
-
-	ubTemp = gubBestToMakeSighting[ bPos1 ];
-	gubBestToMakeSighting[ bPos1 ] = gubBestToMakeSighting[ bPos2 ];
-	gubBestToMakeSighting[ bPos2 ] = ubTemp;
+	SOLDIERTYPE* const temp = gBestToMakeSighting[bPos1];
+	gBestToMakeSighting[bPos1] = gBestToMakeSighting[bPos2];
+	gBestToMakeSighting[bPos2] = temp;
 }
 
 
@@ -285,7 +283,7 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 		// loop to end of array less 1 entry since we can't swap the last entry out of the array
 		for ( ubLoop = 0; ubLoop < gubBestToMakeSightingSize - 1; ubLoop++ )
 		{
-			if ( pSoldier->ubID == gubBestToMakeSighting[ ubLoop ] )
+			if (pSoldier == gBestToMakeSighting[ubLoop])
 			{
 				fFound = TRUE;
 				break;
@@ -302,7 +300,7 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 			// must percolate him down
 			for ( ubLoop2 = ubLoop + 1; ubLoop2 < gubBestToMakeSightingSize; ubLoop2++ )
 			{
-				if ( gubBestToMakeSighting[ ubLoop2 ] != NOBODY && MercPtrs[ gubBestToMakeSighting[ ubLoop2 - 1 ] ]->bInterruptDuelPts < MercPtrs[ gubBestToMakeSighting[ ubLoop2 ] ]->bInterruptDuelPts )
+				if (gBestToMakeSighting[ubLoop2] != NULL && gBestToMakeSighting[ubLoop2 - 1]->bInterruptDuelPts < gBestToMakeSighting[ubLoop2]->bInterruptDuelPts)
 				{
 					SwapBestSightingPositions( (UINT8) (ubLoop2 - 1), ubLoop2 );
 				}
@@ -312,7 +310,7 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 				}
 			}
 		}
-		else if ( pSoldier->ubID == gubBestToMakeSighting[ gubBestToMakeSightingSize - 1] )
+		else if (pSoldier == gBestToMakeSighting[gubBestToMakeSightingSize - 1])
 		{
 			// in list but can't be bumped down... set his new points
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "RBSP: reduced points for last individual %d to %d", pSoldier->ubID, bInterruptDuelPts ) );
@@ -324,7 +322,7 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 		// loop through whole array
 		for ( ubLoop = 0; ubLoop < gubBestToMakeSightingSize; ubLoop++ )
 		{
-			if ( pSoldier->ubID == gubBestToMakeSighting[ ubLoop ] )
+			if (pSoldier == gBestToMakeSighting[ubLoop])
 			{
 				fFound = TRUE;
 				break;
@@ -335,11 +333,11 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 		{
 			for ( ubLoop = 0; ubLoop < gubBestToMakeSightingSize; ubLoop++ )
 			{
-				if ( (gubBestToMakeSighting[ ubLoop ] == NOBODY) || (bInterruptDuelPts > MercPtrs[ gubBestToMakeSighting[ ubLoop ] ]->bInterruptDuelPts ) )
+				if (gBestToMakeSighting[ubLoop] == NULL || bInterruptDuelPts > gBestToMakeSighting[ubLoop]->bInterruptDuelPts)
 				{
-					if ( gubBestToMakeSighting[ gubBestToMakeSightingSize - 1 ] != NOBODY )
+					if (gBestToMakeSighting[gubBestToMakeSightingSize - 1] !=  NULL)
 					{
-						MercPtrs[ gubBestToMakeSighting[ gubBestToMakeSightingSize - 1 ] ]->bInterruptDuelPts = NO_INTERRUPT;
+						gBestToMakeSighting[gubBestToMakeSightingSize - 1]->bInterruptDuelPts = NO_INTERRUPT;
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "RBSP: resetting points for %d to zilch", pSoldier->ubID ) );
 					}
 
@@ -350,9 +348,9 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 					// insert here!
 					for ( ubLoop2 = gubBestToMakeSightingSize - 1; ubLoop2 > ubLoop; ubLoop2-- )
 					{
-						gubBestToMakeSighting[ ubLoop2 ] = gubBestToMakeSighting[ ubLoop2 - 1 ];
+						gBestToMakeSighting[ubLoop2] = gBestToMakeSighting[ubLoop2 - 1];
 					}
-					gubBestToMakeSighting[ ubLoop ] = pSoldier->ubID;
+					gBestToMakeSighting[ubLoop] = pSoldier;
 					break;
 				}
 			}
@@ -362,9 +360,9 @@ static void ReevaluateBestSightingPosition(SOLDIERTYPE* pSoldier, INT8 bInterrup
 
 	for ( ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ubLoop++ )
 	{
-		if ( (gubBestToMakeSighting[ ubLoop ] != NOBODY) )
+		if (gBestToMakeSighting[ubLoop] != NULL)
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "RBSP entry %d: %d (%d pts)", ubLoop, gubBestToMakeSighting[ ubLoop ], MercPtrs[ gubBestToMakeSighting[ ubLoop ] ]->bInterruptDuelPts ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("RBSP entry %d: %d (%d pts)", ubLoop, gBestToMakeSighting[ubLoop]->ubID, gBestToMakeSighting[ubLoop]->bInterruptDuelPts));
 		}
 	}
 }
@@ -383,35 +381,35 @@ static void HandleBestSightingPositionInRealtime(void)
 		return;
 	}
 
-	if (gubBestToMakeSighting[ 0 ] != NOBODY)
+	if (gBestToMakeSighting[0] != NULL)
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "HBSPIR called and there is someone in the list" );
 
 		//if (gfHumanSawSomeoneInRealtime)
 		{
-			if (gubBestToMakeSighting[ 1 ] == NOBODY)
+			if (gBestToMakeSighting[1] == NULL)
 			{
 				// award turn
-				EnterCombatMode( MercPtrs[gubBestToMakeSighting[ 0 ]]->bTeam );
+				EnterCombatMode(gBestToMakeSighting[0]->bTeam);
 			}
 			else
 			{
 				// if 1st and 2nd on same team, or 1st and 3rd on same team, or there IS no 3rd, award turn to 1st
-				if (	( MercPtrs[gubBestToMakeSighting[ 0 ]]->bTeam == MercPtrs[gubBestToMakeSighting[ 1 ]]->bTeam ) ||
-							( (gubBestToMakeSighting[ 2 ] == NOBODY) || ( MercPtrs[gubBestToMakeSighting[ 0 ]]->bTeam == MercPtrs[gubBestToMakeSighting[ 2 ]]->bTeam ) )
-					 )
+				if (gBestToMakeSighting[0]->bTeam == gBestToMakeSighting[1]->bTeam ||
+						gBestToMakeSighting[2] == NULL ||
+						gBestToMakeSighting[0]->bTeam == gBestToMakeSighting[2]->bTeam)
 				{
-					EnterCombatMode( MercPtrs[gubBestToMakeSighting[ 0 ]]->bTeam );
+					EnterCombatMode(gBestToMakeSighting[0]->bTeam);
 				}
 				else // give turn to 2nd best but interrupt to 1st
 				{
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Entering combat mode: turn for 2nd best, int for best" );
 
-					EnterCombatMode( MercPtrs[gubBestToMakeSighting[ 1 ]]->bTeam );
+					EnterCombatMode(gBestToMakeSighting[1]->bTeam);
 					// 2nd guy loses control
-					AddToIntList( gubBestToMakeSighting[ 1 ], FALSE, TRUE);
+					AddToIntList(gBestToMakeSighting[1]->ubID, FALSE, TRUE);
 					// 1st guy gains control
-					AddToIntList( gubBestToMakeSighting[ 0 ], TRUE, TRUE);
+					AddToIntList(gBestToMakeSighting[0]->ubID, TRUE, TRUE);
 					DoneAddingToIntList();
 				}
 			}
@@ -419,10 +417,10 @@ static void HandleBestSightingPositionInRealtime(void)
 
 		for ( ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ubLoop++ )
 		{
-			if ( gubBestToMakeSighting[ ubLoop ] != NOBODY )
+			if (gBestToMakeSighting[ubLoop] != NULL)
 			{
-				MercPtrs[ gubBestToMakeSighting[ ubLoop ]]->bInterruptDuelPts = NO_INTERRUPT;
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "RBSP: done, resetting points for %d to zilch", MercPtrs[ gubBestToMakeSighting[ ubLoop ] ]->ubID ) );
+				gBestToMakeSighting[ubLoop]->bInterruptDuelPts = NO_INTERRUPT;
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("RBSP: done, resetting points for %d to zilch", gBestToMakeSighting[ubLoop]->ubID));
 			}
 		}
 
@@ -444,15 +442,14 @@ static void HandleBestSightingPositionInTurnbased(void)
 	UINT8		ubLoop, ubLoop2;
 	BOOLEAN	fOk = FALSE;
 
-	if ( gubBestToMakeSighting[ 0 ] != NOBODY )
+	if (gBestToMakeSighting[0] != NULL)
 	{
-		if ( MercPtrs[ gubBestToMakeSighting[ 0 ] ]->bTeam != gTacticalStatus.ubCurrentTeam )
+		if (gBestToMakeSighting[0]->bTeam != gTacticalStatus.ubCurrentTeam)
 		{
-
 			// interrupt!
 			for ( ubLoop = 0; ubLoop < gubBestToMakeSightingSize; ubLoop++ )
 			{
-				if ( gubBestToMakeSighting[ ubLoop ] == NOBODY )
+				if (gBestToMakeSighting[ubLoop] == NULL)
 				{
 					if (gubInterruptProvoker == NOBODY)
 					{
@@ -462,13 +459,12 @@ static void HandleBestSightingPositionInTurnbased(void)
 					else
 					{
 						// use this guy as the "interrupted" fellow
-						gubBestToMakeSighting[ ubLoop ] = gubInterruptProvoker;
+						gBestToMakeSighting[ubLoop] = GetMan(gubInterruptProvoker);
 						fOk = TRUE;
 						break;
 					}
-
 				}
-				else if ( MercPtrs[ gubBestToMakeSighting[ ubLoop ] ]->bTeam == gTacticalStatus.ubCurrentTeam )
+				else if (gBestToMakeSighting[ubLoop]->bTeam == gTacticalStatus.ubCurrentTeam)
 				{
 					fOk = TRUE;
 					break;
@@ -478,10 +474,10 @@ static void HandleBestSightingPositionInTurnbased(void)
 			if ( fOk )
 			{
 				// this is the guy who gets "interrupted"; all else before him interrupted him
-				AddToIntList( gubBestToMakeSighting[ ubLoop ], FALSE, TRUE);
+				AddToIntList(gBestToMakeSighting[ubLoop]->ubID, FALSE, TRUE);
 				for ( ubLoop2 = 0; ubLoop2 < ubLoop; ubLoop2++ )
 				{
-					AddToIntList( gubBestToMakeSighting[ ubLoop2 ], TRUE, TRUE);
+					AddToIntList(gBestToMakeSighting[ubLoop2]->ubID, TRUE, TRUE);
 				}
 				DoneAddingToIntList();
 			}
@@ -489,10 +485,10 @@ static void HandleBestSightingPositionInTurnbased(void)
 		}
 		for ( ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ubLoop++ )
 		{
-			if ( gubBestToMakeSighting[ ubLoop ] != NOBODY )
+			if (gBestToMakeSighting[ubLoop] != NULL)
 			{
-				MercPtrs[ gubBestToMakeSighting[ ubLoop ]]->bInterruptDuelPts = NO_INTERRUPT;
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "RBSP (TB): done, resetting points for %d to zilch", MercPtrs[ gubBestToMakeSighting[ ubLoop ] ]->ubID ) );
+				gBestToMakeSighting[ubLoop]->bInterruptDuelPts = NO_INTERRUPT;
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("RBSP (TB): done, resetting points for %d to zilch", gBestToMakeSighting[ubLoop]->ubID));
 			}
 		}
 
@@ -503,8 +499,6 @@ static void HandleBestSightingPositionInTurnbased(void)
 				AssertMsg( MercSlots[ ubLoop ]->bInterruptDuelPts == NO_INTERRUPT, String( "%ls (%d) still has interrupt pts!", MercSlots[ ubLoop ]->name, MercSlots[ ubLoop ]->ubID ) );
 			}
 		}
-
-
 	}
 }
 
@@ -515,7 +509,7 @@ static void InitSightArrays(void)
 
 	for ( uiLoop = 0; uiLoop < BEST_SIGHTING_ARRAY_SIZE; uiLoop++ )
 	{
-		gubBestToMakeSighting[ uiLoop ] = NOBODY;
+		gBestToMakeSighting[uiLoop] = NULL;
 	}
 	//gfHumanSawSomeoneInRealtime = FALSE;
 }
