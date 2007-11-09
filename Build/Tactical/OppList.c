@@ -539,15 +539,14 @@ void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID )
 }
 
 
-static UINT8 SelectSpeakerFromHostileOrSayQuoteList(void)
+static SOLDIERTYPE* SelectSpeakerFromHostileOrSayQuoteList(void)
 {
-	UINT8						ubProfileList[ SHOULD_BECOME_HOSTILE_SIZE ]; // NB list of merc IDs, not profiles!
+	SOLDIERTYPE* speaker_list[SHOULD_BECOME_HOSTILE_SIZE];
 	UINT8						ubLoop, ubNumProfiles = 0;
-	SOLDIERTYPE *		pSoldier;
 
 	for ( ubLoop = 0; ubLoop < gubNumShouldBecomeHostileOrSayQuote; ubLoop++ )
 	{
-		pSoldier = MercPtrs[ gubShouldBecomeHostileOrSayQuote[ ubLoop ] ];
+		SOLDIERTYPE* const pSoldier = MercPtrs[gubShouldBecomeHostileOrSayQuote[ubLoop]];
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
 
@@ -556,8 +555,7 @@ static UINT8 SelectSpeakerFromHostileOrSayQuoteList(void)
 
 			if ( NPCHasUnusedHostileRecord( pSoldier->ubProfile, APPROACH_DECLARATION_OF_HOSTILITY ) )
 			{
-				ubProfileList[ ubNumProfiles ] = gubShouldBecomeHostileOrSayQuote[ ubLoop ];
-				ubNumProfiles++;
+				speaker_list[ubNumProfiles++] = pSoldier;
 			}
 			else
 			{
@@ -568,14 +566,7 @@ static UINT8 SelectSpeakerFromHostileOrSayQuoteList(void)
 		}
 	}
 
-	if ( ubNumProfiles == 0 )
-	{
-		return( NOBODY );
-	}
-	else
-	{
-		return( ubProfileList[ Random( ubNumProfiles ) ] );
-	}
+	return ubNumProfiles == 0 ? NULL : speaker_list[Random(ubNumProfiles)];
 }
 
 
@@ -587,11 +578,11 @@ void CheckHostileOrSayQuoteList( void )
 	}
 	else
 	{
-		UINT8	ubSpeaker, ubLoop;
+		UINT8	ubLoop;
 		SOLDIERTYPE * pSoldier;
 
-		ubSpeaker = SelectSpeakerFromHostileOrSayQuoteList();
-		if ( ubSpeaker == NOBODY )
+		SOLDIERTYPE* const speaker = SelectSpeakerFromHostileOrSayQuoteList();
+		if (speaker == NULL)
 		{
 			// make sure everyone on this list is hostile
 			for ( ubLoop = 0; ubLoop < gubNumShouldBecomeHostileOrSayQuote; ubLoop++ )
@@ -626,13 +617,13 @@ void CheckHostileOrSayQuoteList( void )
 			// stop everyone?
 
 			// We want to make this guy visible to the player.
-			if ( MercPtrs[ ubSpeaker ]->bVisible != TRUE )
+			if (speaker->bVisible != TRUE)
 			{
-				gbPublicOpplist[ gbPlayerNum ][ ubSpeaker ] = HEARD_THIS_TURN;
-				HandleSight( MercPtrs[ ubSpeaker ], SIGHT_LOOK | SIGHT_RADIO );
+				gbPublicOpplist[gbPlayerNum][speaker->ubID] = HEARD_THIS_TURN;
+				HandleSight(speaker, SIGHT_LOOK | SIGHT_RADIO);
 			}
 			// trigger hater
-			TriggerNPCWithIHateYouQuote( MercPtrs[ ubSpeaker ]->ubProfile );
+			TriggerNPCWithIHateYouQuote(speaker->ubProfile);
 		}
 	}
 }
