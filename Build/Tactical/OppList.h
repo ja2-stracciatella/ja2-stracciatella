@@ -126,7 +126,7 @@ void CheckHostileOrSayQuoteList( void );
 void InitOpplistForDoorOpening( void );
 UINT8 DoorOpeningNoise( SOLDIERTYPE * pSoldier );
 
-void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID );
+void AddToShouldBecomeHostileOrSayQuoteList(SOLDIERTYPE* s);
 
 extern INT8 gbLightSighting[1][16];
 

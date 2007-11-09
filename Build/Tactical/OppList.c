@@ -514,9 +514,9 @@ static void InitSightArrays(void)
 	//gfHumanSawSomeoneInRealtime = FALSE;
 }
 
-void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID )
+
+void AddToShouldBecomeHostileOrSayQuoteList(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT8		ubLoop;
 
 	Assert( gubNumShouldBecomeHostileOrSayQuote < SHOULD_BECOME_HOSTILE_SIZE );
@@ -1748,14 +1748,14 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 					{
 						if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ pSoldier->ubCivilianGroup ] >= CIV_GROUP_WILL_BECOME_HOSTILE )
 						{
-							AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+							AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 							fNotAddedToList = FALSE;
 						}
 					}
 					else if ( NPCHasUnusedRecordWithGivenApproach( pSoldier->ubProfile, APPROACH_DECLARATION_OF_HOSTILITY ) )
 					{
 						// only add if have something to say
-						AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+						AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 						fNotAddedToList = FALSE;
 					}
 
@@ -1792,7 +1792,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 									if ( ( CheckFact( FACT_MUSEUM_OPEN, 0 ) == FALSE && ubRoom >= 22 && ubRoom <= 41 ) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) || ( ubRoom == 39 || ubRoom == 40 ) || ( FindObj( pOpponent, CHALICE ) != NO_SLOT ) )
 									{
 										SetFactTrue( FACT_MUSEUM_ALARM_WENT_OFF );
-										AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+										AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 									}
 								}
 								break;
@@ -1880,7 +1880,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 				{
 					if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP && gTacticalStatus.fCivGroupHostile[ pSoldier->ubCivilianGroup ] >= CIV_GROUP_WILL_BECOME_HOSTILE && pSoldier->bNeutral )
 					{
-						AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+						AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 					}
 					else if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP )
 					{

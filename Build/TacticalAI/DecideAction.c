@@ -635,7 +635,7 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 			{
 				if ( sDesiredMercDist <= NPC_TALK_RADIUS * 2 )
 				{
-					AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 					// now wait a bit!
 					pSoldier->usActionData = 5000;
 					return( AI_ACTION_WAIT );

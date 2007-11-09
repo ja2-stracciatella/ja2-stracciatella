@@ -1951,7 +1951,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					// trigger quote!
 					//TriggerNPCWithIHateYouQuote( pSoldier->ubProfile );
-					AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 				}
 				break;
 

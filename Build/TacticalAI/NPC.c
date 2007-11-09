@@ -1832,7 +1832,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 							case TYRONE:
 								// Start combat etc
 								CancelAIAction( pNPC, TRUE );
-								AddToShouldBecomeHostileOrSayQuoteList( pNPC->ubID );
+								AddToShouldBecomeHostileOrSayQuoteList(pNPC);
 							default:
 								break;
 						}

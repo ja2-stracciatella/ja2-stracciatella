@@ -2254,7 +2254,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 							// stop
 							CancelAIAction(pSoldier, TRUE);
 							// aaaaaaaaaaaaaaaaaaaaatttaaaack!!!!
-							AddToShouldBecomeHostileOrSayQuoteList(pSoldier->ubID);
+							AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 							//MakeCivHostile( pSoldier, 2 );
 							//TriggerNPCWithIHateYouQuote( pSoldier->ubProfile );
 						}
@@ -3089,7 +3089,7 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity(SOLDIERTYPE* pAttacked)
 			MakeCivHostile(s, 2);
 			if (s->bOppCnt > 0)
 			{
-				AddToShouldBecomeHostileOrSayQuoteList(s->ubID);
+				AddToShouldBecomeHostileOrSayQuoteList(s);
 			}
 
 			if (s->ubProfile != NO_PROFILE &&
@@ -3191,7 +3191,7 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 				MakeCivHostile( pSoldier, 2 );
 				if ( pSoldier->bOppCnt > 0 )
 				{
-					AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 				}
 				/*
 				if ( (pSoldier->ubProfile != NO_PROFILE) && (pSoldier->bOppCnt > 0) && ( ubFirstProfile == NO_PROFILE || Random( 2 ) ) )
@@ -6254,7 +6254,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		else
 		{
 			// regular civ attacked, turn non-neutral
-			AddToShouldBecomeHostileOrSayQuoteList( pTarget->ubID );
+			AddToShouldBecomeHostileOrSayQuoteList(pTarget);
 
 			if ( pTarget->ubProfile == NO_PROFILE || !(gMercProfiles[ pTarget->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_TOWN_DOESNT_CARE_ABOUT_DEATH) )
 			{
@@ -6292,7 +6292,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 			{
 				// trigger quote!
 				PauseAITemporarily();
-				AddToShouldBecomeHostileOrSayQuoteList( pTarget->ubID );
+				AddToShouldBecomeHostileOrSayQuoteList(pTarget);
 				//TriggerNPCWithIHateYouQuote( pTarget->ubProfile );
 			}
 		}

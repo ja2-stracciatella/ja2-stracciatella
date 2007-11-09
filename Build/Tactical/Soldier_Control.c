@@ -10200,7 +10200,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 				// Start combat etc
 				DeleteTalkingMenu();
 				CancelAIAction( pTSoldier, TRUE );
-				AddToShouldBecomeHostileOrSayQuoteList( pTSoldier->ubID );
+				AddToShouldBecomeHostileOrSayQuoteList(pTSoldier);
 				break;
 			default:
 				// Start talking!

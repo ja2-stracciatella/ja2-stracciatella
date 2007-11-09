@@ -4726,7 +4726,7 @@ void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendi
 			break;
 		default:
 			// trigger NPCs with quote if available
-			AddToShouldBecomeHostileOrSayQuoteList( pSoldier->ubID );
+			AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 			break;
 	}
 
