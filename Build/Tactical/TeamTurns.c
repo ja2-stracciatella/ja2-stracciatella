@@ -42,16 +42,14 @@
 
 extern void DecayPublicOpplist(INT8 bTeam);
 
-#define END_OF_INTERRUPTS 255
 
-static UINT8 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
+static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 
 
 static inline SOLDIERTYPE* LatestInterruptGuy(void)
 {
-	if (gubOutOfTurnOrder[gubOutOfTurnPersons] == NOBODY) return NULL;
-	return GetMan(gubOutOfTurnOrder[gubOutOfTurnPersons]);
+	return gOutOfTurnOrder[gubOutOfTurnPersons];
 }
 
 
@@ -83,8 +81,7 @@ CASSERT(sizeof(TEAM_TURN_SAVE_STRUCT) == 26)
 
 void ClearIntList( void )
 {
-	memset( &gubOutOfTurnOrder, 0, MAXMERCS );
-	gubOutOfTurnOrder[0] = END_OF_INTERRUPTS;
+	memset(gOutOfTurnOrder, 0, sizeof(gOutOfTurnOrder));
 	gubOutOfTurnPersons = 0;
 }
 
@@ -539,11 +536,11 @@ static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 	{
 		if ( ubTeam == 255 )
 		{
-			ubTeam = MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->bTeam;
+			ubTeam = gOutOfTurnOrder[ubLoop]->bTeam;
 		}
 		else
 		{
-			if ( MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->bTeam != ubTeam )
+			if (gOutOfTurnOrder[ubLoop]->bTeam != ubTeam)
 			{
 				return( FALSE );
 			}
@@ -568,7 +565,7 @@ static void StartInterrupt(void)
 	// display everyone on int queue!
 	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:  Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:  Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID));
 	}
 
 	gTacticalStatus.fInterruptOccurred = TRUE;
@@ -772,7 +769,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ENDINT:  Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("ENDINT:  Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID));
 	}
 
 	// ATE: OK, now if this all happended on one frame, we may not have to stop
@@ -968,7 +965,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					// at the front of the array
 					for (cnt = 1; cnt <= gubOutOfTurnPersons; cnt++)
 					{
-						MoveToFrontOfAIList(GetMan(gubOutOfTurnOrder[cnt]));
+						MoveToFrontOfAIList(gOutOfTurnOrder[cnt]);
 					}
 
 					SOLDIERTYPE* const s = RemoveFirstAIListEntry();
@@ -1476,37 +1473,33 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate)
 {
 	UINT8 ubLoop;
-	UINT8 ubID;
 
 	if ( ubIndex > gubOutOfTurnPersons)
 	{
 		return;
 	}
 
-	// remember who we're getting rid of
-	ubID = gubOutOfTurnOrder[ubIndex];
-
-	#ifdef DEBUG_INTERRUPTS
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: removing ID %d", ubID ) );
-	#endif
-//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%d removed from int list", ubID );
+#ifdef DEBUG_INTERRUPTS
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: removing ID %d", gOutOfTurnOrder[ubIndex]->ubID));
+#endif
 	// if we're NOT deleting the LAST entry in the int list
 	if (ubIndex < gubOutOfTurnPersons)
 	{
 		// not the last entry, must move all those behind it over to fill the gap
 		for (ubLoop = ubIndex; ubLoop < gubOutOfTurnPersons; ubLoop++)
 		{
-			gubOutOfTurnOrder[ubLoop] = gubOutOfTurnOrder[ubLoop + 1];
+			gOutOfTurnOrder[ubLoop] = gOutOfTurnOrder[ubLoop + 1];
 		}
 	}
 
 	// either way, whack the last entry to NOBODY and decrement the list size
-	gubOutOfTurnOrder[gubOutOfTurnPersons] = NOBODY;
+	gOutOfTurnOrder[gubOutOfTurnPersons] = NULL;
 	gubOutOfTurnPersons--;
 }
 
 void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 {
+	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT8 ubLoop;
 
 //	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%d added to int list", ubID );
@@ -1516,7 +1509,7 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 	// which we want to preserve so we can restore turn order
 	for (ubLoop = 2; ubLoop <= gubOutOfTurnPersons; ubLoop++)
 	{
-		if (gubOutOfTurnOrder[ubLoop] == ubID)
+		if (gOutOfTurnOrder[ubLoop] == s)
 		{
 			if (!fGainControl)
 			{
@@ -1535,9 +1528,7 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 
 	// increment total (making index valid) and add him to list
 	gubOutOfTurnPersons++;
-	gubOutOfTurnOrder[gubOutOfTurnPersons] = ubID;
-
-	SOLDIERTYPE* const s = GetMan(ubID);
+	gOutOfTurnOrder[gubOutOfTurnPersons] = s;
 
 	// if the guy is gaining control
 	if (fGainControl)
@@ -1563,14 +1554,14 @@ static void VerifyOutOfTurnOrderArray(void)
 {
 	UINT8		ubTeamHighest[ MAXTEAMS ] = { 0 };
 	UINT8		ubTeamsInList;
-	UINT8		ubNextInArrayOnTeam, ubNextIndex;
+	UINT8		ubNextIndex;
 	UINT8		ubTeam;
 	UINT8		ubLoop, ubLoop2;
 	BOOLEAN	fFoundLoop = FALSE;
 
 	for (ubLoop = 1; ubLoop <= gubOutOfTurnPersons; ubLoop++)
 	{
-		ubTeam = Menptr[ gubOutOfTurnOrder[ ubLoop ] ].bTeam;
+		ubTeam = gOutOfTurnOrder[ubLoop]->bTeam;
 		if (ubTeamHighest[ ubTeam ] > 0)
 		{
 			// check the other teams to see if any of them are between our last team's mention in
@@ -1586,16 +1577,16 @@ static void VerifyOutOfTurnOrderArray(void)
 					if (ubTeamHighest[ ubLoop2 ] > ubTeamHighest[ ubTeam ])
 					{
 						// there's a loop!! delete it!
-						ubNextInArrayOnTeam = gubOutOfTurnOrder[ ubLoop ];
+						const SOLDIERTYPE* const NextInArrayOnTeam = gOutOfTurnOrder[ubLoop];
 						ubNextIndex = ubTeamHighest[ ubTeam ] + 1;
 
-						while( gubOutOfTurnOrder[ ubNextIndex ] != ubNextInArrayOnTeam )
+						while (gOutOfTurnOrder[ubNextIndex] != NextInArrayOnTeam)
 						{
 							// Pause them...
-							AdjustNoAPToFinishMove( MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ], TRUE );
+							AdjustNoAPToFinishMove(gOutOfTurnOrder[ubNextIndex], TRUE);
 
 							// If they were turning from prone, stop them
-							MercPtrs[ gubOutOfTurnOrder[ ubNextIndex ] ]->fTurningFromPronePosition = FALSE;
+							gOutOfTurnOrder[ubNextIndex]->fTurningFromPronePosition = FALSE;
 
 							DeleteFromIntList( ubNextIndex, FALSE );
 						}
@@ -1643,15 +1634,15 @@ static void VerifyOutOfTurnOrderArray(void)
 		// This is bad.  Loop through everyone but the first person in the INT list and remove 'em
 		for (ubLoop = 2; ubLoop <= gubOutOfTurnPersons; )
 		{
-			if ( MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->bTeam != MercPtrs[ gubOutOfTurnOrder[ 1 ] ]->bTeam )
+			if (gOutOfTurnOrder[ubLoop]->bTeam != gOutOfTurnOrder[1]->bTeam)
 			{
 				// remove!
 
 				// Pause them...
-				AdjustNoAPToFinishMove( MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ], TRUE );
+				AdjustNoAPToFinishMove(gOutOfTurnOrder[ubLoop], TRUE);
 
 				// If they were turning from prone, stop them
-				MercPtrs[ gubOutOfTurnOrder[ ubLoop ] ]->fTurningFromPronePosition = FALSE;
+				gOutOfTurnOrder[ubLoop]->fTurningFromPronePosition = FALSE;
 
 				DeleteFromIntList( ubLoop, FALSE );
 
@@ -1876,7 +1867,12 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
 	//Save the gubTurn Order Array
-	if (!FileWrite(hFile, gubOutOfTurnOrder, sizeof(UINT8) * MAXMERCS)) return FALSE;
+	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
+	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
+	{
+		ooto_ids[i] = (gOutOfTurnOrder[i] != NULL ? gOutOfTurnOrder[i]->ubID : NOBODY);
+	}
+	if (!FileWrite(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
 
 	TeamTurnStruct.ubOutOfTurnPersons = gubOutOfTurnPersons;
 
@@ -1898,7 +1894,12 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
 	//Load the gubTurn Order Array
-	if (!FileRead(hFile, gubOutOfTurnOrder, sizeof(UINT8) * MAXMERCS)) return FALSE;
+	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
+	if (!FileRead(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
+	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
+	{
+		gOutOfTurnOrder[i] = (ooto_ids[i] != NOBODY ? GetMan(ooto_ids[i]) : NULL);
+	}
 
 	//Load the Team turn save structure
 	if (!FileRead(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT))) return FALSE;
