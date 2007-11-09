@@ -282,7 +282,7 @@ void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
 #define REASON_NORMAL_ATTACK 1
 #define REASON_EXPLOSION 2
 
-BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** ppTarget, INT8 bReason );
+BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTarget, INT8 bReason);
 
 INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT16 * psAdjustedTargetGridNo, UINT8 * pubDirection );
 

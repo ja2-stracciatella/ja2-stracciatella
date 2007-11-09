@@ -6185,14 +6185,13 @@ static void HandleSuppressionFire(UINT8 ubTargetedMerc, UINT8 ubCausedAttacker)
 
 		} // end of examining one soldier
 	} // end of loop
-
 }
 
-BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** ppTarget, INT8 bReason )
+
+BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const pTarget, const INT8 bReason)
 {
 	INT16		sTargetXPos, sTargetYPos;
 	BOOLEAN	fEnterCombat = TRUE;
-	SOLDIERTYPE * pTarget = *ppTarget;
 
 	if ( pTarget->fAIFlags & AI_ASLEEP )
 	{
@@ -6348,7 +6347,6 @@ BOOLEAN ProcessImplicationsOfPCAttack( SOLDIERTYPE * pSoldier, SOLDIERTYPE ** pp
 		}
 	}
 
-	*ppTarget = pTarget;
 	return( fEnterCombat );
 }
 
@@ -6465,7 +6463,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 			{
 				if ( pSoldier->bTeam == gbPlayerNum )
 				{
-					fEnterCombat = ProcessImplicationsOfPCAttack( pSoldier, &pTarget, REASON_NORMAL_ATTACK );
+					fEnterCombat = ProcessImplicationsOfPCAttack(pSoldier, pTarget, REASON_NORMAL_ATTACK);
 					if ( !fEnterCombat )
 					{
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, ">>Not entering combat as a result of PC attack" );

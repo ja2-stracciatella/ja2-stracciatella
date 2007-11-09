@@ -1227,7 +1227,7 @@ static BOOLEAN DamageSoldierFromBlast(UINT8 ubPerson, UINT8 ubOwner, INT16 sBomb
 
 	 if ( ubOwner != NOBODY && MercPtrs[ ubOwner ]->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
 	 {
-		ProcessImplicationsOfPCAttack( MercPtrs[ ubOwner ], &pSoldier, REASON_EXPLOSION );
+		ProcessImplicationsOfPCAttack(MercPtrs[ubOwner], pSoldier, REASON_EXPLOSION);
 	 }
 
 	 return( TRUE );
@@ -1370,7 +1370,7 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 
 	  if ( ubOwner != NOBODY && MercPtrs[ ubOwner ]->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
 	  {
-		  ProcessImplicationsOfPCAttack( MercPtrs[ ubOwner ], &pSoldier, REASON_EXPLOSION );
+		  ProcessImplicationsOfPCAttack(MercPtrs[ubOwner], pSoldier, REASON_EXPLOSION);
 	  }
 	}
 	return( fRecompileMovementCosts );
