@@ -13,7 +13,7 @@ INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
-extern INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
+INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
 extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
 extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );

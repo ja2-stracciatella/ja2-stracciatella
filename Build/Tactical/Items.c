@@ -1121,7 +1121,7 @@ INT8 FindObjInObjRange( SOLDIERTYPE * pSoldier, UINT16 usItem1, UINT16 usItem2 )
 }
 
 
-INT8 FindObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
+INT8 FindObjClass(const SOLDIERTYPE* const pSoldier, const UINT32 usItemClass)
 {
 	INT8 bLoop;
 

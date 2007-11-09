@@ -1,6 +1,6 @@
+#include "Medical.h"
 #include "Types.h"
 #include "WCheck.h"
-#include "Soldier_Control.h"
 #include "Soldier_Functions.h"
 #include "AI.h"
 #include "AIInternals.h"
@@ -22,12 +22,6 @@ extern BOOLEAN gfAutoBandageFailed;
 
 #define NOT_GOING_TO_DIE -1
 #define NOT_GOING_TO_COLLAPSE -1
-
-// can this grunt be bandaged by a teammate?
-BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
-
-//c an this grunt help anyone else out?
-BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
 
 
 static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
@@ -183,8 +177,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 }
 
 
-BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
-// can this soldier autobandage others in sector
+BOOLEAN CanCharacterAutoBandageTeammate(const SOLDIERTYPE* const pSoldier)
 {
 	// if the soldier isn't active or in sector, we have problems..leave
 	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
@@ -202,8 +195,7 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
 }
 
 
-// can this soldier autobandage others in sector
-BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier )
+BOOLEAN CanCharacterBeAutoBandagedByTeammate(const SOLDIERTYPE* const pSoldier)
 {
 	// if the soldier isn't active or in sector, we have problems..leave
 	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )

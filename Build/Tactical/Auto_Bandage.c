@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Local.h"
+#include "Medical.h"
 #include "Overhead.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
@@ -68,8 +69,6 @@ INT32 giAutoBandagesSoldierFaces[ 2 * MAX_CHARACTER_COUNT ];
 BOOLEAN fAutoEndBandageButtonCreated = FALSE;
 
 
-extern BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier );
-extern BOOLEAN CanCharacterBeAutoBandagedByTeammate( SOLDIERTYPE *pSoldier );
 extern UINT8 NumEnemyInSector( );
 
 
