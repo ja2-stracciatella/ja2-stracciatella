@@ -1188,17 +1188,13 @@ static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist,
 
 		pCurrent = pNextCurrent;
 	}
-
 }
 
 
-static BOOLEAN DamageSoldierFromBlast(UINT8 ubPerson, UINT8 ubOwner, INT16 sBombGridNo, INT16 sWoundAmt, INT16 sBreathAmt, UINT32 uiDist, UINT16 usItem)
+static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, const UINT8 ubOwner, const INT16 sBombGridNo, const INT16 sWoundAmt, const INT16 sBreathAmt, const UINT32 uiDist, const UINT16 usItem)
 {
-	 SOLDIERTYPE *pSoldier;
 	 INT16 sNewWoundAmt = 0;
 	 UINT8		ubDirection;
-
-	 pSoldier = MercPtrs[ ubPerson ];   // someone is here, and they're gonna get hurt
 
 	 if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife )
 		 return( FALSE );
@@ -1611,7 +1607,7 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 		 // don't hurt anyone who is already dead & waiting to be removed
 		 if ( ( ubPerson = WhoIsThere2( sGridNo, bLevel ) ) != NOBODY )
 		 {
-			 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
+				DamageSoldierFromBlast(GetMan(ubPerson), ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
 		 }
 
 		 if ( bLevel == 1 )
@@ -1621,17 +1617,9 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 				 if ( (sWoundAmt / 2) > 20 )
 				 {
 					 // debris damage!
-					 if ( (sBreathAmt / 2) > 20 )
-					 {
-						 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, (INT16)Random(sWoundAmt / 2 - 20), (INT16)Random(sBreathAmt / 2 - 20), uiDist, usItem);
-					 }
-					 else
-					 {
-						 DamageSoldierFromBlast(ubPerson, ubOwner, sBombGridNo, (INT16)Random(sWoundAmt / 2 - 20), 1, uiDist, usItem);
-					 }
-
+						const INT16 breath = sBreathAmt / 2 - 20 > 0 ? Random(sBreathAmt / 2 - 20) : 1;
+						DamageSoldierFromBlast(GetMan(ubPerson), ubOwner, sBombGridNo, Random(sWoundAmt / 2 - 20), breath, uiDist, usItem);
 				 }
-
 			 }
 		 }
 	 }
