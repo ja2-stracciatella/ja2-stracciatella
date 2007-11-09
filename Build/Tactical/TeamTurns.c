@@ -1897,7 +1897,7 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 	if (!FileRead(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
 	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
 	{
-		gOutOfTurnOrder[i] = (ooto_ids[i] != NOBODY ? GetMan(ooto_ids[i]) : NULL);
+		gOutOfTurnOrder[i] = ID2Soldier(ooto_ids[i]);
 	}
 
 	//Load the Team turn save structure

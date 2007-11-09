@@ -420,7 +420,7 @@ BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 
 		//Set some parameters
 		b->uiLastUpdate   = 0;
-		b->pFirer         = (b->ubFirerID == NOBODY ? NULL : &Menptr[b->ubFirerID]);
+		b->pFirer         = ID2Soldier(b->ubFirerID);
 		b->pAniTile       = NULL;
 		b->pShadowAniTile = NULL;
 		b->iBullet        = i;
