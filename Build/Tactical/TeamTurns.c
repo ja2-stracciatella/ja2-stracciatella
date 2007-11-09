@@ -47,7 +47,14 @@ extern void DecayPublicOpplist(INT8 bTeam);
 static UINT8 gubOutOfTurnOrder[MAXMERCS] = { END_OF_INTERRUPTS, 0 };
 UINT8 gubOutOfTurnPersons = 0;
 
-#define LATEST_INTERRUPT_GUY (gubOutOfTurnOrder[gubOutOfTurnPersons])
+
+static inline SOLDIERTYPE* LatestInterruptGuy(void)
+{
+	if (gubOutOfTurnOrder[gubOutOfTurnPersons] == NOBODY) return NULL;
+	return GetMan(gubOutOfTurnOrder[gubOutOfTurnPersons]);
+}
+
+
 #define REMOVE_LATEST_INTERRUPT_GUY()	(DeleteFromIntList( (UINT8) (gubOutOfTurnPersons), TRUE ))
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
@@ -455,9 +462,10 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	gfPlotNewMovement = TRUE;
 
 	// Stop our guy....
-	AdjustNoAPToFinishMove( MercPtrs[ LATEST_INTERRUPT_GUY ], TRUE );
+	SOLDIERTYPE* const latest = LatestInterruptGuy();
+	AdjustNoAPToFinishMove(latest, TRUE);
 	// Stop him from going to prone position if doing a turn while prone
-	MercPtrs[ LATEST_INTERRUPT_GUY ]->fTurningFromPronePosition = FALSE;
+	latest->fTurningFromPronePosition = FALSE;
 
 	// get rid of any old overlay message
 	if ( pSoldier->bTeam == MILITIA_TEAM )
@@ -550,23 +558,18 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
 
 static void StartInterrupt(void)
 {
-	UINT8						ubFirstInterrupter;
 	SOLDIERTYPE *		pTempSoldier;
-	UINT8						ubInterrupter;
 	INT32						cnt;
 
-	ubFirstInterrupter = LATEST_INTERRUPT_GUY;
-	SOLDIERTYPE* const first_interrupter = GetMan(ubFirstInterrupter);
-	const INT8         bTeam     = first_interrupter->bTeam;
-	ubInterrupter = ubFirstInterrupter;
+	SOLDIERTYPE* first_interrupter = LatestInterruptGuy();
+	const INT8   bTeam             = first_interrupter->bTeam;
+	SOLDIERTYPE* Interrupter       = first_interrupter;
 
 	// display everyone on int queue!
 	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:  Q position %d: %d", cnt, gubOutOfTurnOrder[ cnt ] ) );
 	}
-
-	//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: %d is now on top of the interrupt queue", ubFirstInterrupter ) );
 
 	gTacticalStatus.fInterruptOccurred = TRUE;
 
@@ -590,18 +593,18 @@ static void StartInterrupt(void)
 		// build string for display of who gets interrupt
 		while( 1 )
 		{
-			MercPtrs[ubInterrupter]->bMoved = FALSE;
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: popping %d off of the interrupt queue", ubInterrupter ) );
+			Interrupter->bMoved = FALSE;
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: popping %d off of the interrupt queue", Interrupter->ubID));
 
 			REMOVE_LATEST_INTERRUPT_GUY();
-			// now LATEST_INTERRUPT_GUY is the guy before the previous
-			ubInterrupter = LATEST_INTERRUPT_GUY;
+			// now LatestInterruptGuy() is the guy before the previous
+			Interrupter = LatestInterruptGuy();
 
-			if (ubInterrupter == NOBODY) // previously emptied slot!
+			if (Interrupter == NULL) // previously emptied slot!
 			{
 				continue;
 			}
-			else if (MercPtrs[ubInterrupter]->bTeam != bTeam)
+			else if (Interrupter->bTeam != bTeam)
 			{
 				break;
 			}
@@ -640,9 +643,7 @@ static void StartInterrupt(void)
 
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp );
 
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: starting interrupt for %d", ubFirstInterrupter ) );
-		// gusSelectedSoldier should become the topmost guy on the interrupt list
-		//gusSelectedSoldier = ubFirstInterrupter;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: starting interrupt for %d", first_interrupter->ubID));
 
 		// Remove deadlock message
 		EndDeadlockMsg( );
@@ -704,25 +705,24 @@ static void StartInterrupt(void)
 
 		while( 1 )
 		{
+			Interrupter->bMoved = FALSE;
 
-			MercPtrs[ubInterrupter]->bMoved = FALSE;
-
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: popping %d off of the interrupt queue", ubInterrupter ) );
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: popping %d off of the interrupt queue", Interrupter->ubID));
 
 			REMOVE_LATEST_INTERRUPT_GUY();
-			// now LATEST_INTERRUPT_GUY is the guy before the previous
-			ubInterrupter = LATEST_INTERRUPT_GUY;
-			if (ubInterrupter == NOBODY) // previously emptied slot!
+			// now LatestInterruptGuy() is the guy before the previous
+			Interrupter = LatestInterruptGuy();
+			if (Interrupter == NULL) // previously emptied slot!
 			{
 				continue;
 			}
-			else if (MercPtrs[ubInterrupter]->bTeam != bTeam)
+			else if (Interrupter->bTeam != bTeam)
 			{
 				break;
 			}
-			else if (ubInterrupter < ubFirstInterrupter)
+			else if (Interrupter->ubID < first_interrupter->ubID)
 			{
-				ubFirstInterrupter = ubInterrupter;
+				first_interrupter = Interrupter;
 			}
 		}
 
@@ -732,8 +732,6 @@ static void StartInterrupt(void)
 
 		// set to the new first interrupter
 		SOLDIERTYPE* const pSoldier = RemoveFirstAIListEntry();
-
-//		pSoldier = MercPtrs[ubFirstInterrupter];
 
 		//if ( gTacticalStatus.ubCurrentTeam == OUR_TEAM)
 		if ( pSoldier->bTeam != OUR_TEAM )
@@ -758,8 +756,9 @@ static void StartInterrupt(void)
 	if ( !gfHiddenInterrupt )
 	{
 		// Stop this guy....
-		AdjustNoAPToFinishMove( MercPtrs[ LATEST_INTERRUPT_GUY ], TRUE );
-		MercPtrs[ LATEST_INTERRUPT_GUY ]->fTurningFromPronePosition = FALSE;
+		SOLDIERTYPE* const latest = LatestInterruptGuy();
+		AdjustNoAPToFinishMove(latest, TRUE);
+		latest->fTurningFromPronePosition = FALSE;
 	}
 }
 
@@ -811,11 +810,8 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	}
 	else
 	{
-		const UINT8 ubInterruptedSoldier = LATEST_INTERRUPT_GUY;
-
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: interrupt over, %d's team regains control", ubInterruptedSoldier ) );
-
-		SOLDIERTYPE* const interrupted = MercPtrs[ubInterruptedSoldier];
+		SOLDIERTYPE* const interrupted = LatestInterruptGuy();
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: interrupt over, %d's team regains control", interrupted->ubID));
 
 		cnt = 0;
 		for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= MAX_NUM_SOLDIERS; cnt++,pTempSoldier++)
