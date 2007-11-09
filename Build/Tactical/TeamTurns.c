@@ -57,7 +57,7 @@ static inline SOLDIERTYPE* LatestInterruptGuy(void)
 #define INTERRUPTS_OVER (gubOutOfTurnPersons == 1)
 
 BOOLEAN gfHiddenInterrupt = FALSE;
-static UINT8 gubLastInterruptedGuy = 0;
+static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
 extern INT16 gsWhoThrewRock;
 extern UINT8 gubSightFlags;
@@ -649,7 +649,7 @@ static void StartInterrupt(void)
 		SelectSoldier(first_interrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
 
 		// ATE; Slide to guy who got interrupted!
-		SlideTo(NOWHERE, GetMan(gubLastInterruptedGuy), NOBODY, SETLOCATOR);
+		SlideTo(NOWHERE, gLastInterruptedGuy, NOBODY, SETLOCATOR);
 
 		// Dirty panel interface!
 		fInterfacePanelDirty						= DIRTYLEVEL2;
@@ -1514,7 +1514,7 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 			if (!fGainControl)
 			{
 				// he's LOSING control; that's it, we're done, DON'T add him to the queue again
-				gubLastInterruptedGuy = ubID;
+				gLastInterruptedGuy = s;
 				return;
 			}
 			else
@@ -1539,7 +1539,7 @@ void AddToIntList( UINT8 ubID, BOOLEAN fGainControl, BOOLEAN fCommunicate )
 	}
 	else
 	{
-		gubLastInterruptedGuy = ubID;
+		gLastInterruptedGuy = s;
 		// turn off AI control flag if they lost control
 		if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 		{
@@ -1880,8 +1880,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	TeamTurnStruct.sWhoThrewRock = gsWhoThrewRock;
 	TeamTurnStruct.InterruptsAllowed_UNUSED = TRUE;
 	TeamTurnStruct.fHiddenInterrupt = gfHiddenInterrupt;
-	TeamTurnStruct.ubLastInterruptedGuy = gubLastInterruptedGuy;
-
+	TeamTurnStruct.ubLastInterruptedGuy = Soldier2ID(gLastInterruptedGuy);
 
 	//Save the Team turn save structure
 	if (!FileWrite(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT))) return FALSE;
@@ -1908,8 +1907,7 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 
 	gsWhoThrewRock = TeamTurnStruct.sWhoThrewRock;
 	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
-	gubLastInterruptedGuy = TeamTurnStruct.ubLastInterruptedGuy;
-
+	gLastInterruptedGuy = ID2Soldier(TeamTurnStruct.ubLastInterruptedGuy);
 
 	return( TRUE );
 }
