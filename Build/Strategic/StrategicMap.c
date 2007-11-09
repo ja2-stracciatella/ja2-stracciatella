@@ -1422,9 +1422,9 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 
 	if ( sNewSectorX == 5 && sNewSectorY == MAP_ROW_D )
 	{
-		gubBoxerID[ 0 ] = NOBODY;
-		gubBoxerID[ 1 ] = NOBODY;
-		gubBoxerID[ 2 ] = NOBODY;
+		gBoxer[0] = NULL;
+		gBoxer[1] = NULL;
+		gBoxer[2] = NULL;
 	}
 
 	if ( sNewSectorX == 3 && sNewSectorY == MAP_ROW_P )

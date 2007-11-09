@@ -3563,7 +3563,10 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 
 	// Save boxing info
 	memcpy( &sGeneralInfo.sBoxerGridNo, &gsBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
-	memcpy( &sGeneralInfo.ubBoxerID, &gubBoxerID, NUM_BOXERS * sizeof( INT8 ) );
+	for (UINT i = 0; i < lengthof(gBoxer); ++i)
+	{
+		sGeneralInfo.ubBoxerID[i] = Soldier2ID(gBoxer[i]);
+	}
 	memcpy( &sGeneralInfo.fBoxerFought, &gfBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
 
 	//Save the helicopter status
@@ -3800,7 +3803,10 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	fDisableMapInterfaceDueToBattle = sGeneralInfo.fDisableMapInterfaceDueToBattle;
 
 	memcpy( &gsBoxerGridNo, &sGeneralInfo.sBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
-	memcpy( &gubBoxerID, &sGeneralInfo.ubBoxerID, NUM_BOXERS * sizeof( INT8 ) );
+	for (UINT i = 0; i < lengthof(gBoxer); ++i)
+	{
+		gBoxer[i] = ID2Soldier(sGeneralInfo.ubBoxerID[i]);
+	}
 	memcpy( &gfBoxerFought, &sGeneralInfo.fBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
 
 	//Load the helicopter status

@@ -27,7 +27,7 @@
 
 
 INT16	gsBoxerGridNo[ NUM_BOXERS ] = { 11393, 11233, 11073 };
-UINT8 gubBoxerID[ NUM_BOXERS ] = { NOBODY, NOBODY, NOBODY };
+SOLDIERTYPE* gBoxer[NUM_BOXERS];
 BOOLEAN gfBoxerFought[ NUM_BOXERS ] = { FALSE, FALSE, FALSE };
 BOOLEAN	gfLastBoxingMatchWonByPlayer = FALSE;
 UINT8	gubBoxingMatchesWon = 0;
@@ -304,24 +304,23 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 BOOLEAN CheckOnBoxers( void )
 {
 	UINT32					uiLoop;
-	UINT8						ubID;
 
 	// repick boxer IDs every time
-	if ( gubBoxerID[0] == NOBODY )
+	if (gBoxer[0] == NULL)
 	{
 		// get boxer soldier IDs!
 		for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
 		{
-			ubID = WhoIsThere2( gsBoxerGridNo[ uiLoop ], 0 );
-			if ( FindObjClass( MercPtrs[ ubID ], IC_WEAPON ) == NO_SLOT )
+			SOLDIERTYPE* const s = GetMan(WhoIsThere2(gsBoxerGridNo[uiLoop], 0));
+			if (FindObjClass(s, IC_WEAPON) == NO_SLOT)
 			{
 				// no weapon so this guy is a boxer
-				gubBoxerID[ uiLoop ] = ubID;
+				gBoxer[uiLoop] = s;
 			}
 		}
 	}
 
-	if ( gubBoxerID[ 0 ] == NOBODY && gubBoxerID[ 1 ] == NOBODY && gubBoxerID[ 2 ] == NOBODY )
+	if (gBoxer[0] == NULL && gBoxer[1] == NULL && gBoxer[2] == NULL)
 	{
 		return( FALSE );
 	}
@@ -351,16 +350,16 @@ static BOOLEAN PickABoxer(void)
 
 	for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
 	{
-		if ( gubBoxerID[ uiLoop ] != NOBODY )
+		SOLDIERTYPE* const pBoxer = gBoxer[uiLoop];
+		if (pBoxer != NULL)
 		{
 			if ( gfBoxerFought[ uiLoop ] )
 			{
 				// pathetic attempt to prevent multiple AI boxers
-				MercPtrs[ gubBoxerID[ uiLoop ] ]->uiStatusFlags &= ~SOLDIER_BOXER;
+				pBoxer->uiStatusFlags &= ~SOLDIER_BOXER;
 			}
 			else
 			{
-				pBoxer = MercPtrs[ gubBoxerID[ uiLoop ] ];
 				// pick this boxer!
 				if ( pBoxer->bActive && pBoxer->bInSector && pBoxer->bLife >= OKLIFE )
 				{
@@ -401,10 +400,7 @@ BOOLEAN BoxerAvailable( void )
 
 	for( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 	{
-		if ( gubBoxerID[ ubLoop ] != NOBODY && !gfBoxerFought[ ubLoop ] )
-		{
-			return( TRUE );
-		}
+		if (gBoxer[ubLoop] != NULL && !gfBoxerFought[ubLoop]) return TRUE;
 	}
 
 	return( FALSE );
@@ -420,10 +416,7 @@ static UINT8 BoxersAvailable(void)
 
 	for( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 	{
-		if ( gubBoxerID[ ubLoop ] != NOBODY && !gfBoxerFought[ ubLoop ] )
-		{
-			ubCount++;
-		}
+		if (gBoxer[ubLoop] != NULL && !gfBoxerFought[ubLoop]) ubCount++;
 	}
 
 	return( ubCount );

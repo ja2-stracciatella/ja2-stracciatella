@@ -688,7 +688,7 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 					{
 						for ( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 						{
-							if (pSoldier->ubID == gubBoxerID[ ubLoop ])
+							if (pSoldier == gBoxer[ubLoop])
 							{
 								// we should go back where we started
 								pSoldier->usActionData = gsBoxerGridNo[ ubLoop ];
