@@ -296,7 +296,7 @@ void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
 
 BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTarget, INT8 bReason);
 
-INT16 FindAdjacentPunchTarget( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier, INT16 * psAdjustedTargetGridNo, UINT8 * pubDirection );
+INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTargetSoldier, INT16* psAdjustedTargetGridNo, UINT8* pubDirection);
 
 SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked );
 void CivilianGroupChangesSides( UINT8 ubCivilianGroup );
