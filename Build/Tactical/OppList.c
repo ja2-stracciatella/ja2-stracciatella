@@ -80,7 +80,7 @@ static BOOLEAN gfDelayResolvingBestSightingDueToDoor = FALSE;
 
 #define SHOULD_BECOME_HOSTILE_SIZE 32
 
-static UINT8 gubShouldBecomeHostileOrSayQuote[SHOULD_BECOME_HOSTILE_SIZE];
+static SOLDIERTYPE* gShouldBecomeHostileOrSayQuote[SHOULD_BECOME_HOSTILE_SIZE];
 static UINT8 gubNumShouldBecomeHostileOrSayQuote;
 
 // NB this ID is set for someone opening a door
@@ -516,26 +516,20 @@ static void InitSightArrays(void)
 
 void AddToShouldBecomeHostileOrSayQuoteList( UINT8 ubID )
 {
+	SOLDIERTYPE* const s = GetMan(ubID);
 	UINT8		ubLoop;
 
 	Assert( gubNumShouldBecomeHostileOrSayQuote < SHOULD_BECOME_HOSTILE_SIZE );
 
-	if ( MercPtrs[ ubID ]->bLife < OKLIFE )
-	{
-		return;
-	}
+	if (s->bLife < OKLIFE) return;
 
 	// make sure not already in list
 	for ( ubLoop = 0; ubLoop < gubNumShouldBecomeHostileOrSayQuote; ubLoop++ )
 	{
-		if ( gubShouldBecomeHostileOrSayQuote[ ubLoop ] == ubID )
-		{
-			return;
-		}
+		if (gShouldBecomeHostileOrSayQuote[ubLoop] == s) return;
 	}
 
-	gubShouldBecomeHostileOrSayQuote[ gubNumShouldBecomeHostileOrSayQuote ] = ubID;
-	gubNumShouldBecomeHostileOrSayQuote++;
+	gShouldBecomeHostileOrSayQuote[gubNumShouldBecomeHostileOrSayQuote++] = s;
 }
 
 
@@ -546,7 +540,7 @@ static SOLDIERTYPE* SelectSpeakerFromHostileOrSayQuoteList(void)
 
 	for ( ubLoop = 0; ubLoop < gubNumShouldBecomeHostileOrSayQuote; ubLoop++ )
 	{
-		SOLDIERTYPE* const pSoldier = MercPtrs[gubShouldBecomeHostileOrSayQuote[ubLoop]];
+		SOLDIERTYPE* const pSoldier = gShouldBecomeHostileOrSayQuote[ubLoop];
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
 
@@ -579,7 +573,6 @@ void CheckHostileOrSayQuoteList( void )
 	else
 	{
 		UINT8	ubLoop;
-		SOLDIERTYPE * pSoldier;
 
 		SOLDIERTYPE* const speaker = SelectSpeakerFromHostileOrSayQuoteList();
 		if (speaker == NULL)
@@ -587,7 +580,7 @@ void CheckHostileOrSayQuoteList( void )
 			// make sure everyone on this list is hostile
 			for ( ubLoop = 0; ubLoop < gubNumShouldBecomeHostileOrSayQuote; ubLoop++ )
 			{
-				pSoldier = MercPtrs[ gubShouldBecomeHostileOrSayQuote[ ubLoop ] ];
+				SOLDIERTYPE* const pSoldier = gShouldBecomeHostileOrSayQuote[ubLoop];
 				if ( pSoldier->bNeutral )
 				{
 					MakeCivHostile( pSoldier, 2 );
@@ -602,7 +595,7 @@ void CheckHostileOrSayQuoteList( void )
 			// unpause all AI
 			UnPauseAI();
 			// reset the list
-			memset( &gubShouldBecomeHostileOrSayQuote, NOBODY, SHOULD_BECOME_HOSTILE_SIZE );
+			memset(gShouldBecomeHostileOrSayQuote, 0, sizeof(gShouldBecomeHostileOrSayQuote));
 			gubNumShouldBecomeHostileOrSayQuote = 0;
 			//and return/go into combat
 			if ( !(gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -2626,7 +2619,7 @@ void InitOpponentKnowledgeSystem(void)
 
 	for ( cnt = 0; cnt < SHOULD_BECOME_HOSTILE_SIZE; cnt++ )
 	{
-		gubShouldBecomeHostileOrSayQuote[ cnt ] = NOBODY;
+		gShouldBecomeHostileOrSayQuote[cnt] = NULL;
 	}
 
 	gubNumShouldBecomeHostileOrSayQuote = 0;
