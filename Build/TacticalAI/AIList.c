@@ -289,11 +289,11 @@ static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCo
 	return( TRUE );
 }
 
-BOOLEAN MoveToFrontOfAIList( UINT8 ubID )
+
+BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 {
 	// we'll have to fake this guy's alert status (in the list) to be the same as the current
 	// front of the list
-	SOLDIERTYPE* const s = MercPtrs[ubID];
 	INT8			bPriority;
 	UINT8			ubNewEntry;
 	AILIST *	pNewEntry;

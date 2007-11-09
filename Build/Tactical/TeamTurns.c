@@ -972,7 +972,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					// at the front of the array
 					for (cnt = 1; cnt <= gubOutOfTurnPersons; cnt++)
 					{
-						MoveToFrontOfAIList( gubOutOfTurnOrder[ cnt ] );
+						MoveToFrontOfAIList(GetMan(gubOutOfTurnOrder[cnt]));
 					}
 
 					SOLDIERTYPE* const s = RemoveFirstAIListEntry();
