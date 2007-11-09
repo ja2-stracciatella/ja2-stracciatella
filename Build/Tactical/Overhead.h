@@ -160,6 +160,18 @@ static inline SOLDIERTYPE* GetMan(UINT idx)
 	return &Menptr[idx];
 }
 
+typedef UINT8 SoldierID;
+
+static inline SoldierID Soldier2ID(const SOLDIERTYPE* const s)
+{
+	return s != NULL ? s->ubID : NOBODY;
+}
+
+static inline SOLDIERTYPE* ID2Soldier(const SoldierID id)
+{
+	return id != NOBODY ? GetMan(id) : NULL;
+}
+
 static inline SOLDIERTYPE* GetSelectedMan(void)
 {
 	return GetMan(gusSelectedSoldier);
