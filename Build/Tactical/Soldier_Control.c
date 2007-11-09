@@ -9826,10 +9826,10 @@ void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	INT8 bRepairItem;
-	UINT8	ubID;
 
 	// Make sure we have a structure here....
-	bRepairItem = IsRepairableStructAtGridNo( sGridNo, &ubID );
+	SOLDIERTYPE* tgt;
+	bRepairItem = IsRepairableStructAtGridNo(sGridNo, &tgt);
 
 	if ( bRepairItem )
 	{
@@ -9853,7 +9853,7 @@ void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 		}
 		else if ( bRepairItem == 2 ) // ( 2 == VEHICLE )
 		{
-			SetSoldierAssignment( pSoldier, REPAIR, FALSE, FALSE, ubID );
+			SetSoldierAssignment(pSoldier, REPAIR, FALSE, FALSE, tgt->ubID);
 		}
 
 	}

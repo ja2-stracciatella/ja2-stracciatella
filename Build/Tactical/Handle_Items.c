@@ -748,23 +748,23 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
   if ( usHandItem == TOOLKIT )
 	{
-		 UINT8 ubMercID;
 		 BOOLEAN	fVehicle = FALSE;
 		 INT16		sVehicleGridNo=-1;
 
 		 // For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		 if ( IsRepairableStructAtGridNo( usGridNo, &ubMercID ) == 2 )
+		 SOLDIERTYPE* tgt;
+		 if (IsRepairableStructAtGridNo(usGridNo, &tgt) == 2)
 		 {
 				INT16 sNewGridNo;
 				UINT8	ubDirection;
 
-				sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
+				sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
 
 				if ( sNewGridNo != NOWHERE )
 				{
 					usGridNo = sNewGridNo;
 
-					sVehicleGridNo = MercPtrs[ ubMercID ]->sGridNo;
+					sVehicleGridNo = tgt->sGridNo;
 
 					fVehicle = TRUE;
 				}

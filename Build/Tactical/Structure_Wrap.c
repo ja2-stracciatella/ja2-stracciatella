@@ -426,24 +426,22 @@ BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo )
 }
 
 
-BOOLEAN IsRepairableStructAtGridNo( INT16 sGridNo, UINT8 *pubID )
+BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 {
 	UINT8 ubMerc;
 
 	// OK, first look for a vehicle....
 	ubMerc = WhoIsThere2( sGridNo, 0 );
 
-	if ( pubID != NULL )
-	{
-		(*pubID) = ubMerc;
-	}
-
 	if ( ubMerc != NOBODY )
 	{
-		if ( MercPtrs[ ubMerc ]->uiStatusFlags & SOLDIER_VEHICLE )
-		{
-			return( 2 );
-		}
+		SOLDIERTYPE* const s = GetMan(ubMerc);
+		if (tgt != NULL) *tgt = s;
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
+	}
+	else
+	{
+		if (tgt != NULL) *tgt = NULL;
 	}
 	// Then for over a robot....
 

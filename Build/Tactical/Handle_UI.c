@@ -3378,7 +3378,6 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	LEVELNODE					*pIntTile;
 	INT8							bReturnCode = 0;
 	BOOLEAN						fPlot;
-	UINT8							ubMercID;
 
 	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) || _KeyDown( SHIFT ) )
 	{
@@ -3494,12 +3493,13 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 	else if ( uiFlags == MOVEUI_TARGET_REPAIR )
 	{
 		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		if ( IsRepairableStructAtGridNo( usMapPos, &ubMercID ) == 2 )
+		SOLDIERTYPE* tgt;
+		if (IsRepairableStructAtGridNo(usMapPos, &tgt) == 2)
 		{
 			INT16 sNewGridNo;
 			UINT8	ubDirection;
 
-		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, MercPtrs[ ubMercID ] );
+		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
 
 			if ( sNewGridNo != NOWHERE )
 			{
