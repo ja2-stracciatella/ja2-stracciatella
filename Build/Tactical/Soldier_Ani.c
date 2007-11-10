@@ -2852,9 +2852,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 	BOOLEAN fDoSomeoneElse = FALSE;
 	BOOLEAN	fCanWeSeeLocation = FALSE;
 	INT16		sDistVisible = FALSE;
@@ -2918,6 +2916,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 				// run through list
+				SOLDIERTYPE* mercs_in_sector[20];
 				for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 				{
 					if ( cnt != pKillerSoldier->ubID )
@@ -2929,8 +2928,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 
 							if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
 							{
-								ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-								ubNumMercs++;
+								mercs_in_sector[ubNumMercs++] = pTeamSoldier;
 							}
 						}
 					}
@@ -2939,7 +2937,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 				// Did we find anybody?
 				if ( ubNumMercs > 0 )
 				{
-					ubChosenMerc = (UINT8)Random( ubNumMercs );
+					SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
 
 					// We have a random chance of not saying our we killed a guy quote
 					if ( Random( 100 ) < 50 )
@@ -2952,7 +2950,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 						}
 					}
 
-					TacticalCharacterDialogue( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], QUOTE_HEADSHOT );
+					TacticalCharacterDialogue(chosen, QUOTE_HEADSHOT);
 				}
 				else
 				{
