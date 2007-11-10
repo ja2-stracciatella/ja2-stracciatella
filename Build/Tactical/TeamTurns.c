@@ -1023,12 +1023,11 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 }
 
 
-BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, INT8 bOldOppList)
+BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const UINT8 ubOpponentID, const INT8 bOldOppList)
 {
 //	UINT8 ubAniType;
 	UINT8						ubMinPtsNeeded;
 	INT8						bDir;
-	SOLDIERTYPE *		pOpponent;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && !(gubSightFlags & SIGHT_INTERRUPT) )
 	{
@@ -1040,6 +1039,7 @@ BOOLEAN StandardInterruptConditionsMet( SOLDIERTYPE * pSoldier, UINT8 ubOpponent
 		return( FALSE );
 	}
 
+	const SOLDIERTYPE* pOpponent;
 	if (ubOpponentID < NOBODY)
 	{
 		pOpponent = MercPtrs[ ubOpponentID ];

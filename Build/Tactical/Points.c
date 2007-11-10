@@ -26,7 +26,7 @@
 #include "Debug.h"
 
 
-INT16 TerrainActionPoints( SOLDIERTYPE *pSoldier, INT16 sGridno, INT8 bDir, INT8 bLevel )
+INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {
 		INT16	sAPCost = 0;
 	  INT16  sSwitchValue;
@@ -222,7 +222,7 @@ INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT1
 }
 
 
-INT16 ActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode )
+INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, const INT8 bDir, UINT16 usMovementMode)
 {
 	INT16 sTileCost, sPoints, sSwitchValue;
 
@@ -1294,8 +1294,7 @@ static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurn
 }
 
 
-
-INT8 MinPtsToMove(SOLDIERTYPE *pSoldier)
+INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
 {
  // look around all 8 directions and return lowest terrain cost
  INT32	cnt;
