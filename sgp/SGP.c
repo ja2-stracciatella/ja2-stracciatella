@@ -342,6 +342,7 @@ static BOOLEAN ParseParameters(char* const argv[])
 	const char* const name = *argv;
 	if (name == NULL) return TRUE; // argv does not even contain the program name
 
+	BOOLEAN success = TRUE;
 	while (*++argv != NULL)
 	{
 		if (strcmp(*argv, "-fullscreen") == 0)
@@ -358,16 +359,19 @@ static BOOLEAN ParseParameters(char* const argv[])
 			{
 				fprintf(stderr, "Unknown switch \"%s\"\n", *argv);
 			}
-			fprintf(stderr,
-				"Usage: %s [-fullscreen] [-help] [-nosound]\n"
-				"  -fullscreen  Start the game in fullscreen mode\n"
-				"  -help        Display this information\n"
-				"  -nosound     Turn the sound and music off\n",
-				name
-			);
-			return FALSE;
+			success = FALSE;
 		}
 	}
 
-	return TRUE;
+	if (!success)
+	{
+		fprintf(stderr,
+			"Usage: %s [-fullscreen] [-help] [-nosound]\n"
+			"  -fullscreen  Start the game in fullscreen mode\n"
+			"  -help        Display this information\n"
+			"  -nosound     Turn the sound and music off\n",
+			name
+		);
+	}
+	return success;
 }
