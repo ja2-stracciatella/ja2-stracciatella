@@ -115,13 +115,13 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 }
 
 
-static void CopyProfileItems(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
+static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
-static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
-static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct);
+static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
+static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 
 
-SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *pubID )
+SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct, UINT8* const pubID)
 {
 	SOLDIERTYPE			Soldier;
 	INT32						cnt;
@@ -643,7 +643,7 @@ SOLDIERTYPE* TacticalCreateSoldier( SOLDIERCREATE_STRUCT *pCreateStruct, UINT8 *
 }
 
 
-static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
+static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
 {
 	UINT8						ubProfileIndex;
 	MERCPROFILESTRUCT * pProfile;
@@ -965,7 +965,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 }
 
 
-static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
+static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
 {
 	pSoldier->ubProfile							= NO_PROFILE;
 
@@ -2283,7 +2283,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 }
 
 
-static void CopyProfileItems(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT* pCreateStruct)
+static void CopyProfileItems(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
 {
 	UINT32								cnt, cnt2;
 	MERCPROFILESTRUCT *		pProfile;
