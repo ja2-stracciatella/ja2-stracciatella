@@ -2085,7 +2085,7 @@ else
 			if ( gTacticalStatus.uiFlags & INCOMBAT )
 			{
 				// presumably a door opening... we do require standard interrupt conditions
-				if (StandardInterruptConditionsMet(pSoldier,pOpponent->ubID,bOldOppList))
+				if (StandardInterruptConditionsMet(pSoldier, pOpponent, bOldOppList))
 				{
 					ReevaluateBestSightingPosition( pSoldier, CalcInterruptDuelPts( pSoldier, pOpponent->ubID, TRUE ) );
 				}
@@ -2269,7 +2269,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 					if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && pSoldier->bNewOppCnt )
 					{
 						// as long as viewer meets minimum interrupt conditions
-						if ( gubSightFlags & SIGHT_INTERRUPT && StandardInterruptConditionsMet(pSoldier,pOpponent->ubID,bOldOppList))
+						if (gubSightFlags & SIGHT_INTERRUPT && StandardInterruptConditionsMet(pSoldier, pOpponent, bOldOppList))
 						{
 							// calculate the interrupt duel points
 							pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent->ubID, TRUE);
@@ -5221,7 +5221,11 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 			// as long as listener meets minimum interrupt conditions
 			if ( gfDelayResolvingBestSightingDueToDoor)
 			{
-				if ( bSourceSeen && (!( (gTacticalStatus.uiFlags & TURNBASED) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) || (gubSightFlags & SIGHTINTERRUPT && StandardInterruptConditionsMet(pSoldier,ubNoiseMaker,bOldOpplist)) ) )
+				if (bSourceSeen && (
+							!(gTacticalStatus.uiFlags & TURNBASED) ||
+							!(gTacticalStatus.uiFlags & INCOMBAT) ||
+							(gubSightFlags & SIGHTINTERRUPT && StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))
+						))
 				{
 					// we should be adding this to the array for the AllTeamLookForAll to handle
 					// since this is a door opening noise, add a bonus equal to half the door volume
@@ -5243,7 +5247,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 			{
 				if ( (gTacticalStatus.uiFlags & TURNBASED) && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 				{
-					if (StandardInterruptConditionsMet(pSoldier,ubNoiseMaker,bOldOpplist))
+					if (StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))
 					{
 						// he gets a chance to interrupt the noisemaker
 						pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier,ubNoiseMaker, TRUE );
@@ -5331,7 +5335,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 			{
 				// give every ELIGIBLE listener an automatic interrupt, since it's
 				// reasonable to assume the guy throwing wants to wait for their reaction!
-				if (StandardInterruptConditionsMet(pSoldier,NOBODY,FALSE))
+				if (StandardInterruptConditionsMet(pSoldier, NULL, FALSE))
 				{
 					pSoldier->bInterruptDuelPts = AUTOMATIC_INTERRUPT;	     	// force automatic interrupt
 					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Calculating int duel pts in noise code, %d has %d points", pSoldier->ubID, pSoldier->bInterruptDuelPts ) );
@@ -5952,7 +5956,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		}
   }
 
-	if ( StandardInterruptConditionsMet( pDefender, pAttacker->ubID, bOldOppList ) )
+	if (StandardInterruptConditionsMet(pDefender, pAttacker, bOldOppList))
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: NoticeUnseenAttacker, standard conditions are met; defender %d, attacker %d", pDefender->ubID, pAttacker->ubID ) );
 

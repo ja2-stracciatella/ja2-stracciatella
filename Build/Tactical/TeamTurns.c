@@ -1023,7 +1023,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 }
 
 
-BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const UINT8 ubOpponentID, const INT8 bOldOppList)
+BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pOpponent, const INT8 bOldOppList)
 {
 //	UINT8 ubAniType;
 	UINT8						ubMinPtsNeeded;
@@ -1039,24 +1039,18 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		return( FALSE );
 	}
 
-	const SOLDIERTYPE* pOpponent;
-	if (ubOpponentID < NOBODY)
+	if (pOpponent == NULL)
 	{
-		pOpponent = MercPtrs[ ubOpponentID ];
-	}
-	else	// no opponent, so controller of 'ptr' makes the call instead
-	{
+		// no opponent, so controller of 'ptr' makes the call instead
 		// ALEX
 		if (gsWhoThrewRock >= NOBODY)
 		{
 #ifdef BETAVERSION
-			NumMessage("StandardInterruptConditions: ERROR - ubOpponentID is NOBODY, don't know who threw rock, guynum = ",pSoldier->guynum);
+			NumMessage("StandardInterruptConditions: ERROR - pOpponent is NULL, don't know who threw rock, guynum = ", pSoldier->guynum);
 #endif
 
 			return(FALSE);
 		}
-
-		pOpponent = NULL;
   }
 
 	// in non-combat allow interrupt points to be calculated freely (everyone's in control!)
@@ -1158,7 +1152,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	ubMinPtsNeeded = AP_CHANGE_FACING;
 
 	// if the opponent is SOMEBODY
-	if (ubOpponentID < NOBODY)
+	if (pOpponent != NULL)
 	{
 		// if the soldiers are on the same side
 		if (pSoldier->bSide == pOpponent->bSide)
@@ -1184,7 +1178,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// the selected character, ie. his friends...
 		if ( pOpponent->bTeam == gbPlayerNum )
 		{
-			if (ubOpponentID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
+			if (pOpponent->ubID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
 			{
 				return( FALSE );
 			}
@@ -1198,7 +1192,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		}
 		/* old DG code for same:
 
-		if (ubOpponentID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
+		if (pOpponent->ubID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
 		{
 			return(FALSE);
 		}
@@ -1212,7 +1206,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 
 
 		// if this is a "SEEING" interrupt
-		if (pSoldier->bOppList[ubOpponentID] == SEEN_CURRENTLY)
+		if (pSoldier->bOppList[pOpponent->ubID] == SEEN_CURRENTLY)
 		{
 			// if pSoldier already saw the opponent last "look" or at least this turn
 			if ((bOldOppList == SEEN_CURRENTLY) || (bOldOppList == SEEN_THIS_TURN))
@@ -1269,7 +1263,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 
 #ifdef RECORDINTERRUPT
 	// this usually starts a new series of logs, so that's why the blank line
-	fprintf(InterruptFile,"\nStandardInterruptConditionsMet by %d vs. %d\n",pSoldier->guynum,ubOpponentID);
+	fprintf(InterruptFile, "\nStandardInterruptConditionsMet by %d vs. %d\n", pSoldier->guynum, pOpponent->ubID);
 #endif
 
 	return(TRUE);
