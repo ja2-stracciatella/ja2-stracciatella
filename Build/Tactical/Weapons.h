@@ -238,7 +238,7 @@ extern void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatu
 extern void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
 extern INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, INT16 sHitBy, UINT8 * pubSpecial );
 BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo);
-extern void ShotMiss( UINT8 ubAttackerID, INT32 iBullet );
+void ShotMiss(SOLDIERTYPE* attacker, INT32 iBullet);
 extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);

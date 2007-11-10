@@ -3615,10 +3615,8 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 }
 
 
-void ShotMiss(UINT8 ubAttackerID, INT32 iBullet)
+void ShotMiss(SOLDIERTYPE* const pAttacker, INT32 iBullet)
 {
-	SOLDIERTYPE* const pAttacker = MercPtrs[ubAttackerID];
-
 	if (pAttacker->ubOppNum != NOBODY)
 	{
 		SOLDIERTYPE* const opponent = &Menptr[pAttacker->ubOppNum];
@@ -3646,7 +3644,7 @@ void ShotMiss(UINT8 ubAttackerID, INT32 iBullet)
 
 			// PLAY SOUND AND FLING DEBRIS
 			// RANDOMIZE SOUND SYSTEM
-			if (!DoSpecialEffectAmmoMiss(ubAttackerID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
+			if (!DoSpecialEffectAmmoMiss(pAttacker->ubID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
 			{
 				PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
 			}
@@ -3666,7 +3664,7 @@ void ShotMiss(UINT8 ubAttackerID, INT32 iBullet)
 	}
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet missed");
-	FreeUpAttacker(ubAttackerID);
+	FreeUpAttacker(pAttacker->ubID);
 }
 
 
