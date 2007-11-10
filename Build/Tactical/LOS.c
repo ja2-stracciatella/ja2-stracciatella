@@ -2484,12 +2484,6 @@ static INT32 CTGTHandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pS
 			return( pBullet->iImpact );
 		}
 	}
-	else if ( pStructure->fFlags & STRUCTURE_PERSON )
-	{
-		if ( pStructure->usStructureID != pBullet->ubFirerID && pStructure->usStructureID != pBullet->ubTargetID )
-		{
-		}
-	}
 
 	// okay, this seems pretty weird, so here's the comment to explain it:
 	// iImpactReduction is the reduction in impact due to the structure
@@ -2662,19 +2656,20 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 			}
 			else if (pStructure->fFlags & STRUCTURE_PERSON)
 			{
-				if ( (pStructure->usStructureID != pBullet->ubFirerID) && (pStructure->usStructureID != pBullet->ubTargetID ) )
+				const SOLDIERTYPE* const person = GetMan(pStructure->usStructureID);
+				if (person != pBullet->pFirer && pStructure->usStructureID != pBullet->ubTargetID)
 				{
 					// ignore intended target since we will get closure upon reaching the center
 					// of the destination tile
 
 					// ignore intervening target if not visible; PCs are always visible so AI will never skip them on that
 					// basis
-					if ( !fIntended && (MercPtrs[ pStructure->usStructureID ]->bVisible == TRUE) )
+					if (!fIntended && person->bVisible == TRUE)
 					{
 						// in actually moving the bullet, we consider only count friends as targets if the bullet is unaimed
 						// (buckshot), if they are the intended target, or beyond the range of automatic friendly fire hits
 						// OR a 1 in 30 chance occurs
-						if (gAnimControl[ MercPtrs[pStructure->usStructureID]->usAnimState ].ubEndHeight == ANIM_STAND &&
+						if (gAnimControl[person->usAnimState].ubEndHeight == ANIM_STAND &&
 									( (pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS) ||
 										(!pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS_UNAIMED)
 									)
@@ -3287,7 +3282,7 @@ static void CalculateFiringIncrements(DOUBLE ddHorizAngle, DOUBLE ddVerticAngle,
 }
 
 
-static INT8 FireBullet(SOLDIERTYPE* pFirer, BULLET* pBullet, BOOLEAN fFake)
+static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 {
 	pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;
 	pBullet->iCurrTileY = FIXEDPT_TO_INT32( pBullet->qCurrY ) / CELL_Y_SIZE;
@@ -3295,9 +3290,9 @@ static INT8 FireBullet(SOLDIERTYPE* pFirer, BULLET* pBullet, BOOLEAN fFake)
 	pBullet->bLOSIndexY = CONVERT_WITHINTILE_TO_INDEX( FIXEDPT_TO_INT32( pBullet->qCurrY ) % CELL_Y_SIZE );
 	pBullet->iCurrCubesZ = CONVERT_HEIGHTUNITS_TO_INDEX( FIXEDPT_TO_INT32( pBullet->qCurrZ ) );
 	pBullet->iLoop = 1;
-	pBullet->pFirer = pFirer;
 	pBullet->iImpactReduction = 0;
 	pBullet->sGridNo = MAPROWCOLTOPOS( pBullet->iCurrTileY, pBullet->iCurrTileX );
+	SOLDIERTYPE* const pFirer = pBullet->pFirer;
 	if (fFake)
 	{
 		pBullet->ubTargetID = pFirer->ubCTGTTargetID;
@@ -3360,7 +3355,7 @@ DOUBLE CalculateVerticalAngle( SOLDIERTYPE * pFirer, SOLDIERTYPE * pTarget )
 */
 
 
-INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT16 usHandItem, INT16 sHitBy, BOOLEAN fBuckshot, BOOLEAN fFake )
+INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const FLOAT dEndY, const FLOAT dEndZ, const UINT16 usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
 {
 	// fFake indicates that we should set things up for a call to ChanceToGetThrough
 	FLOAT		dStartZ;
@@ -3473,7 +3468,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 	// GET BULLET
 	for (ubLoop = 0; ubLoop < ubShots; ubLoop++)
 	{
-		BULLET* const pBullet = CreateBullet(pFirer->ubID, fFake, usBulletFlags);
+		BULLET* const pBullet = CreateBullet(pFirer, fFake, usBulletFlags);
 		if (pBullet == NULL)
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Failed to create bullet");
@@ -3582,7 +3577,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 		pBullet->iDistanceLimit = iDistance;
 		if (fFake)
 		{
-			bCTGT = FireBullet( pFirer, pBullet, TRUE );
+			bCTGT = FireBullet(pBullet, TRUE);
 			RemoveBullet(pBullet);
 			return( bCTGT );
 		}
@@ -3593,7 +3588,7 @@ INT8 FireBulletGivenTarget( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOA
 				// this is an error!!
 				ubLoop = ubLoop;
 			}
-			FireBullet( pFirer, pBullet, FALSE );
+			FireBullet(pBullet, FALSE);
 		}
 	}
 

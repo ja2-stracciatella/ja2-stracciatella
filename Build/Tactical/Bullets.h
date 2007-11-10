@@ -65,7 +65,7 @@ CASSERT(sizeof(BULLET) == 128)
 
 extern UINT32 guiNumBullets;
 
-BULLET* CreateBullet(UINT8 ubFirer, BOOLEAN fFake, UINT16 usFlags);
+BULLET* CreateBullet(SOLDIERTYPE* firer, BOOLEAN fFake, UINT16 usFlags);
 void    RemoveBullet(BULLET* b);
 void    StopBullet(BULLET* b);
 void    UpdateBullets(void);

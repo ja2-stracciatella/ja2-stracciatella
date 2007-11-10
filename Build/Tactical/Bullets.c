@@ -57,7 +57,7 @@ static void RecountBullets(void)
 }
 
 
-BULLET* CreateBullet(UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags)
+BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16 usFlags)
 {
 	const INT32 iBulletIndex = GetFreeBullet();
 	if (iBulletIndex == -1) return NULL;
@@ -68,7 +68,8 @@ BULLET* CreateBullet(UINT8 ubFirerID, BOOLEAN fFake, UINT16 usFlags)
 	b->iBullet            = iBulletIndex;
 	b->fAllocated         = TRUE;
 	b->fLocated		        = FALSE;
-	b->ubFirerID	        = ubFirerID;
+	b->ubFirerID	        = firer->ubID;
+	b->pFirer             = firer;
 	b->usFlags		        = usFlags;
 	b->usLastStructureHit = 0;
 	b->fReal              = !fFake;
@@ -179,9 +180,9 @@ void RemoveBullet(BULLET* b)
 void LocateBullet(BULLET* b)
 {
 	if (!gGameSettings.fOptions[TOPTION_SHOW_MISSES]) return;
-	if (b->ubFirerID == NOBODY) return;
+	if (b->pFirer == NULL) return;
 	// Check if a bad guy fired!
-	if (MercPtrs[b->ubFirerID]->bSide != gbPlayerNum) return;
+	if (b->pFirer->bSide != gbPlayerNum) return;
 	if (b->fLocated) return;
 
 	b->fLocated = TRUE;
