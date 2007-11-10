@@ -18,6 +18,6 @@ void KickOutWheelchair( SOLDIERTYPE *pSoldier );
 void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier);
 void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel);
 
-extern BOOLEAN gfLastMercTalkedAboutKillingID;
+extern const SOLDIERTYPE* gLastMercTalkedAboutKilling;
 
 #endif

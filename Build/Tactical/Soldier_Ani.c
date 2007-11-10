@@ -67,7 +67,7 @@
 //#define		TIME_FOR_RANDOM_ANIM_CHECK	10
 #define		TIME_FOR_RANDOM_ANIM_CHECK	2
 
-BOOLEAN		gfLastMercTalkedAboutKillingID = NOBODY;
+const SOLDIERTYPE* gLastMercTalkedAboutKilling = NULL;
 
 
 static const DOUBLE gHopFenceForwardSEDist[NUMSOLDIERBODYTYPES]     = { 2.2, 0.7, 3.2, 0.7 };
@@ -2860,7 +2860,7 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 	BOOLEAN	fCanWeSeeLocation = FALSE;
 	INT16		sDistVisible = FALSE;
 
-	gfLastMercTalkedAboutKillingID = pKilledSoldier->ubID;
+	gLastMercTalkedAboutKilling = pKilledSoldier;
 
 	// Can we see location?
 	sDistVisible = DistanceVisible( pKillerSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );

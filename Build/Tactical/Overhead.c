@@ -5267,7 +5267,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 				// Change music modes
-				if (gfLastMercTalkedAboutKillingID == NOBODY || !(MercPtrs[gfLastMercTalkedAboutKillingID]->uiStatusFlags & SOLDIER_MONSTER))
+				if (gLastMercTalkedAboutKilling == NULL || !(gLastMercTalkedAboutKilling->uiStatusFlags & SOLDIER_MONSTER))
 				{
 					SetMusicMode(MUSIC_TACTICAL_VICTORY);
 				}
@@ -5283,11 +5283,11 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				{
 					// OK, If we have just finished a battle with creatures........ play killed creature quote...
 					//
-					if ( gfLastMercTalkedAboutKillingID != NOBODY && ( MercPtrs[ gfLastMercTalkedAboutKillingID ]->uiStatusFlags & SOLDIER_MONSTER ) )
+					if (gLastMercTalkedAboutKilling != NULL && gLastMercTalkedAboutKilling->uiStatusFlags & SOLDIER_MONSTER)
 					{
 
 					}
-					else if ( gfLastMercTalkedAboutKillingID != NOBODY && ( MercPtrs[ gfLastMercTalkedAboutKillingID ]->ubBodyType == BLOODCAT ) )
+					if (gLastMercTalkedAboutKilling != NULL && gLastMercTalkedAboutKilling->ubBodyType == BLOODCAT)
 					{
 						SayBattleSoundFromAnyBodyInSector(BATTLE_SOUND_COOL1);
 					}
