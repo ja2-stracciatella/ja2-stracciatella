@@ -140,7 +140,6 @@ UINT8 gubCurrentScheduleActionIndex = 0;
 SCHEDULENODE gCurrSchedule;
 UINT8 gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
 
-extern BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode );
 
 //array which keeps track of which item is in which slot.  This is dependant on the selected merc, so
 //these temp values must be updated when different mercs are selected, and reset when a merc detailed
@@ -514,7 +513,7 @@ void AddMercToWorld( INT32 iMapIndex )
 			pNode->pSoldier = pSoldier;
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector(pSoldier->ubID, FALSE, FALSE, 0, 0);
+			InternalAddSoldierToSector(pSoldier, FALSE, FALSE, 0, 0);
 			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.
@@ -3693,7 +3692,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 			}
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector(pSoldier->ubID, FALSE, FALSE, 0, 0);
+			InternalAddSoldierToSector(pSoldier, FALSE, FALSE, 0, 0);
 			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.

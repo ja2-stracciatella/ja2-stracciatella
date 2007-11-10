@@ -1077,14 +1077,11 @@ static UINT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot(SOLDIERTYPE *pSold
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode);
 
 
-BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode )
+BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const pSoldier, BOOLEAN fCalculateDirection, const BOOLEAN fUseAnimation, const UINT16 usAnimState, const UINT16 usAnimCode)
 {
 	UINT8					ubDirection, ubCalculatedDirection;
-	SOLDIERTYPE		*pSoldier;
 	INT16					sGridNo;
 	INT16					sExitGridNo;
-
-	pSoldier = MercPtrs[ ubID ];
 
 	if ( pSoldier->bActive  )
 	{
@@ -1211,19 +1208,19 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 
 BOOLEAN AddSoldierToSector(SOLDIERTYPE* const s)
 {
-	return InternalAddSoldierToSector(s->ubID, TRUE, FALSE, 0 , 0);
+	return InternalAddSoldierToSector(s, TRUE, FALSE, 0 , 0);
 }
 
 
 BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* const s)
 {
-	return InternalAddSoldierToSector(s->ubID, FALSE, FALSE, 0, 0);
+	return InternalAddSoldierToSector(s, FALSE, FALSE, 0, 0);
 }
 
 
 BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s, UINT16 usAnimState, UINT16 usAnimCode)
 {
-	return InternalAddSoldierToSector(s->ubID, FALSE, TRUE, usAnimState, usAnimCode);
+	return InternalAddSoldierToSector(s, FALSE, TRUE, usAnimState, usAnimCode);
 }
 
 
