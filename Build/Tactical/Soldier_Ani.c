@@ -2744,7 +2744,6 @@ static BOOLEAN ShouldMercSayHappyWithGunQuote(SOLDIERTYPE* pSoldier)
 
 static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	INT8	bBuddyIndex[ 20 ] = { -1 };
   INT8  bTempBuddyIndex;
 	UINT8	ubNumMercs = 0;
@@ -2760,6 +2759,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// run through list
+	SOLDIERTYPE* mercs_in_sector[20];
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
@@ -2811,7 +2811,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
         }
 
         // OK, a good candidate...
-			  ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
+				mercs_in_sector[ubNumMercs] = pTeamSoldier;
 			  bBuddyIndex[ ubNumMercs ]     = bTempBuddyIndex;
 			  ubNumMercs++;
       }
@@ -2825,25 +2825,25 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
     if ( Random( 100 ) < 20 )
     {
 		  ubChosenMerc = (UINT8)Random( ubNumMercs );
-
+			SOLDIERTYPE* const chosen = mercs_in_sector[ubChosenMerc];
       switch( bBuddyIndex[ ubChosenMerc ] )
       {
         case 0:
           usQuoteNum = QUOTE_BUDDY_1_GOOD;
-          MercPtrs[ ubMercsInSector[ ubChosenMerc ] ]->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED;
+					chosen->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED;
           break;
 
         case 1:
           usQuoteNum = QUOTE_BUDDY_2_GOOD;
-          MercPtrs[ ubMercsInSector[ ubChosenMerc ] ]->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED;
+					chosen->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED;
           break;
 
         case 2:
           usQuoteNum = QUOTE_LEARNED_TO_LIKE_WITNESSED;
-          MercPtrs[ ubMercsInSector[ ubChosenMerc ] ]->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED;
+					chosen->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED;
           break;
       }
-   		TacticalCharacterDialogue( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], usQuoteNum );
+			TacticalCharacterDialogue(chosen, usQuoteNum);
     }
 	}
 }
