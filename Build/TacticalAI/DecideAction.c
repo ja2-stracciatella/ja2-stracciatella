@@ -2980,7 +2980,7 @@ bCanAttack = FALSE;
 					// if the selected opponent is not a threat (unconscious & !serviced)
 					// (usually, this means all the guys we see are unconscious, but, on
 					//  rare occasions, we may not be able to shoot a healthy guy, too)
-					const SOLDIERTYPE* const opp = GetMan(BestShot.ubOpponent);
+					const SOLDIERTYPE* const opp = BestShot.opponent;
 					if (opp->bLife < OKLIFE && !opp->bService)
 					{
 						// if our attitude is NOT aggressive
@@ -3096,7 +3096,7 @@ bCanAttack = FALSE;
 						// if the selected opponent is not a threat (unconscious & !serviced)
 						// (usually, this means all the guys we see are unconscious, but, on
 						//  rare occasions, we may not be able to shoot a healthy guy, too)
-						const SOLDIERTYPE* const opp = GetMan(BestStab.ubOpponent);
+						const SOLDIERTYPE* const opp = BestStab.opponent;
 						if (opp->bLife < OKLIFE && !opp->bService)
 						{
 							// don't throw a knife at him.
@@ -3417,7 +3417,7 @@ bCanAttack = FALSE;
 			//////////////////////////////////////////////////////////////////////////
 
 			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
-				!(Menptr[BestShot.ubOpponent].bLife < OKLIFE) && // don't burst at downed targets
+					BestShot.opponent->bLife >= OKLIFE && // don't burst at downed targets
 				pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
 				(pSoldier->bTeam != gbPlayerNum || pSoldier->bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
 			{
@@ -3530,13 +3530,14 @@ bCanAttack = FALSE;
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-			#ifdef DEBUGDECISIONS
-					DebugAI( String( "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-						pSoldier->ubID,pSoldier->name,
-						(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
-						BestAttack.ubOpponent,ExtMen[BestAttack.ubOpponent].name,
-						BestAttack.target,BestAttack.aimTime ) );
-			#endif
+#ifdef DEBUGDECISIONS
+			DebugAI(String("%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
+				pSoldier->ubID,pSoldier->name,
+				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
+				BestAttack.opponent->ubID, BestAttack.opponent->name,
+				BestAttack.target, BestAttack.aimTime
+			));
+#endif
 
 			return(ubBestAttackAction);
 		}

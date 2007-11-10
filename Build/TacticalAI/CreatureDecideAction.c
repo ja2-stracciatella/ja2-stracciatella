@@ -1127,7 +1127,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 						// if the selected opponent is not a threat (unconscious & !serviced)
 						// (usually, this means all the guys we see our unconscious, but, on
 						//  rare occasions, we may not be able to shoot a healthy guy, too)
-						const SOLDIERTYPE* const opp = GetMan(BestShot.ubOpponent);
+						const SOLDIERTYPE* const opp = BestShot.opponent;
 						if (opp->bLife < OKLIFE && !opp->bService)
 						{
 							// if our attitude is NOT aggressive

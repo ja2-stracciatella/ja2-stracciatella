@@ -117,8 +117,8 @@ typedef struct
 
 typedef struct
 {
+	SOLDIERTYPE* opponent;      // which soldier is the victim?
  UINT8 ubPossible;            // is this attack form possible?  T/F
- UINT8 ubOpponent;            // which soldier is the victim?
  UINT8 ubAimTime;							// how many extra APs to spend on aiming
  UINT8 ubChanceToReallyHit;   // chance to hit * chance to get through cover
  INT32 iAttackValue;          // relative worthiness of this type of attack

@@ -312,7 +312,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 
        // if this chance to really hit is more than 50% worse, and the other
        // guy is conscious at all
-       if ((iPercentBetter < -PERCENT_TO_IGNORE_THREAT) && (Menptr[pBestShot->ubOpponent].bLife >= OKLIFE))
+       if (iPercentBetter < -PERCENT_TO_IGNORE_THREAT && pBestShot->opponent->bLife >= OKLIFE)
 				 // then stick with the older guy as the better target
 				 continue;
 
@@ -328,7 +328,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 
      // OOOF!  That was a lot of work!  But we've got a new best target!
      pBestShot->ubPossible          = TRUE;
-     pBestShot->ubOpponent          = pOpponent->ubID;
+     pBestShot->opponent            = pOpponent;
      pBestShot->ubAimTime           = ubBestAimTime;
      pBestShot->ubChanceToReallyHit = ubChanceToReallyHit;
      pBestShot->sTarget             = pOpponent->sGridNo;
@@ -417,7 +417,9 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	INT16 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
 	INT8	bFriendLevel[MAXMERCS], bOpponentLevel[MAXMERCS];
 	INT32 iEstDamage;
-	UINT8 ubFriendCnt = 0,ubOpponentCnt = 0, ubOpponentID[MAXMERCS];
+	UINT8 ubFriendCnt = 0;
+	UINT8 ubOpponentCnt = 0;
+	SOLDIERTYPE* opponents[MAXMERCS];
 	UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime;
 	UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit;
 	UINT32 uiPenalty;
@@ -675,7 +677,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 
 		// also remember who he is (which soldier #)
-		ubOpponentID[ubOpponentCnt] = pOpponent->ubID;
+		opponents[ubOpponentCnt] = pOpponent;
 
 		// remember how relatively dangerous this opponent is (ignore my cover)
 		iOppThreatValue[ubOpponentCnt] = CalcManThreatValue(pOpponent,pSoldier->sGridNo,FALSE,pSoldier);
@@ -719,8 +721,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	// while avoiding one's friends
 	for (ubLoop = 0; ubLoop < ubOpponentCnt; ubLoop++)
 	{
-		//NumMessage("Checking Guy#",ubOpponentID[ubLoop]);
-
 		// search all tiles within 2 squares of this opponent
 		ubSearchRange = MAX_TOSS_SEARCH_DIST;
 
@@ -855,7 +855,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 						iThreatValue = iOppThreatValue[ubLoop2];
 
 						// estimate how much damage this tossed item would do to him
-						iEstDamage = EstimateThrowDamage(pSoldier,bPayloadPocket,MercPtrs[ubOpponentID[ubLoop2]],sGridNo);
+						iEstDamage = EstimateThrowDamage(pSoldier, bPayloadPocket, opponents[ubLoop2], sGridNo);
 						//NumMessage("THROW EstDamage = ",iEstDamage);
 
 						if (usOppDist)
@@ -875,7 +875,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 						iTotalThreatValue += (iThreatValue * iEstDamage);
 
 						// only count opponents still standing worth shooting at (in range)
-						if (Menptr[ ubOpponentID[ubLoop2] ].bLife >= OKLIFE)
+						if (opponents[ubLoop2]->bLife >= OKLIFE)
 						{
 							ubOppsInRange++;
 							if (usOppDist < 2)
@@ -1026,13 +1026,13 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				// unlike SHOOTing and STABbing, find strictly the highest attackValue
 				if (iAttackValue > pBestThrow->iAttackValue)
 				{
-					#ifdef DEBUGATTACKS
-						DebugAI( String( "CalcBestThrow: new best attackValue vs %d = %d\n",ubOpponentID[ubLoop],iAttackValue ) );
-					#endif
+#ifdef DEBUGATTACKS
+					DebugAI(String("CalcBestThrow: new best attackValue vs %d = %d\n", opponents[ubLoop]->ubID, iAttackValue));
+#endif
 
 					// OOOF!  That was a lot of work!  But we've got a new best target!
 					pBestThrow->ubPossible           = TRUE;
-					pBestThrow->ubOpponent           = ubOpponentID[ubLoop];
+					pBestThrow->opponent            = opponents[ubLoop];
 					pBestThrow->ubAimTime           = ubMaxPossibleAimTime;
 					pBestThrow->ubChanceToReallyHit = ubChanceToReallyHit;
 					pBestThrow->sTarget             = sGridNo;
@@ -1256,7 +1256,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
        // if this chance to really hit is more than 50% worse, and the other
        // guy is conscious at all
-       if ((iPercentBetter < -PERCENT_TO_IGNORE_THREAT) && (Menptr[pBestStab->ubOpponent].bLife >= OKLIFE))
+       if (iPercentBetter < -PERCENT_TO_IGNORE_THREAT && pBestStab->opponent->bLife >= OKLIFE)
 				 // then stick with the older guy as the better target
 				 continue;
 
@@ -1272,7 +1272,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
      // OOOF!  That was a lot of work!  But we've got a new best target!
      pBestStab->ubPossible          = TRUE;
-     pBestStab->ubOpponent          = pOpponent->ubID;
+     pBestStab->opponent            = pOpponent;
      pBestStab->ubAimTime           = ubBestAimTime;
      pBestStab->ubChanceToReallyHit = ubChanceToReallyHit;
      pBestStab->sTarget             = pOpponent->sGridNo;
@@ -1421,7 +1421,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
     {
      // OOOF!  That was a lot of work!  But we've got a new best target!
      pBestStab->ubPossible          = TRUE;
-     pBestStab->ubOpponent          = pOpponent->ubID;
+     pBestStab->opponent            = pOpponent;
      pBestStab->ubAimTime           = ubBestAimTime;
      pBestStab->ubChanceToReallyHit = ubChanceToReallyHit;
      pBestStab->sTarget             = pOpponent->sGridNo;

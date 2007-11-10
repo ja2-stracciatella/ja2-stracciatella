@@ -2298,7 +2298,7 @@ void InitAttackType(ATTACKTYPE *pAttack)
 {
  // initialize the given bestAttack structure fields to their default values
  pAttack->ubPossible          = FALSE;
- pAttack->ubOpponent          = NOBODY;
+ pAttack->opponent            = NULL;
  pAttack->ubAimTime           = 0;
  pAttack->ubChanceToReallyHit = 0;
  pAttack->sTarget							= NOWHERE;
