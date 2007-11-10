@@ -38,9 +38,7 @@ extern UINT8 NumEnemyInSector();
 
 void HandleRPCDescription(  )
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32		cnt2;
   BOOLEAN fSAMSite = FALSE;
@@ -97,6 +95,7 @@ void HandleRPCDescription(  )
 		cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 		// run through list
+		SOLDIERTYPE* mercs_in_sector[20];
 		for ( pTeamSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt2++,pTeamSoldier++ )
 		{
 			// Add guy if he's a candidate...
@@ -112,8 +111,7 @@ void HandleRPCDescription(  )
 							 pTeamSoldier->ubProfile == CARLOS ||
 							 pTeamSoldier->ubProfile == DIMITRI )
 					{
-						ubMercsInSector[ ubNumMercs ] = (UINT8)cnt2;
-						ubNumMercs++;
+						mercs_in_sector[ubNumMercs++] = pTeamSoldier;
 					}
 				}
 			}
@@ -122,9 +120,8 @@ void HandleRPCDescription(  )
 		// If we are > 0
 		if ( ubNumMercs > 0 )
 		{
-			ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], gTacticalStatus.ubGuideDescriptionToUse, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, 0, 0 );
+			SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
+			TacticalCharacterDialogueWithSpecialEvent(chosen, gTacticalStatus.ubGuideDescriptionToUse, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, 0, 0);
 		}
 	}
 }
