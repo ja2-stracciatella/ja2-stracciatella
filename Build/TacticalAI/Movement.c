@@ -832,13 +832,8 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 }
 
 
-static void SetCivilianDestination(UINT8 ubWho, INT16 sGridno)
+static void SetCivilianDestination(SOLDIERTYPE* const pSoldier, const INT16 sGridno)
 {
- SOLDIERTYPE *pSoldier;
-
-
- pSoldier = MercPtrs[ubWho];
-
 	// if the destination is different from what he has now
 	if (pSoldier->usActionData != sGridno)
 	{
