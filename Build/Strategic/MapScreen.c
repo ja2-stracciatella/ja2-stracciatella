@@ -10516,7 +10516,7 @@ static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY)
 static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 {
 	INT32 iCounter;
-	UINT8	ubSelectedMercID[ 20 ];
+	SOLDIERTYPE* selected_merc[20];
 	UINT8	ubSelectedMercIndex[ 20 ];
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
@@ -10525,12 +10525,11 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 	{
 		if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
 		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
+			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 			if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 						!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
 			{
-				ubSelectedMercID[ ubNumMercs ] = pSoldier->ubID;
+				selected_merc[ubNumMercs] = pSoldier;
 				ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;
 
 				ubNumMercs++;
@@ -10545,8 +10544,8 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 		// select that merc so that when he speaks we're showing his portrait and not someone else
 		ChangeSelectedInfoChar( ubSelectedMercIndex[ ubChosenMerc ], FALSE );
 
-		DoMercBattleSound( MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ], ( UINT8 ) ( Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2 ) );
-		//TacticalCharacterDialogue( MercPtrs[ ubSelectedMercID[ ubChosenMerc ] ], ubQuoteNum );
+		DoMercBattleSound(selected_merc[ubChosenMerc], Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2);
+		//TacticalCharacterDialogue(selected_merc[ubChosenMerc], ubQuoteNum);
 	}
 }
 
