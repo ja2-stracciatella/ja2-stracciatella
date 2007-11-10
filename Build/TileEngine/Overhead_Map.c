@@ -251,7 +251,7 @@ static const ITEM_POOL* GetClosestItemPool(INT16 sSweetGridNo, UINT8 ubRadius, I
 }
 
 
-static BOOLEAN GetClosestMercInOverheadMap(INT16 sSweetGridNo, SOLDIERTYPE** ppReturnedSoldier, UINT8 ubRadius)
+static SOLDIERTYPE* GetClosestMercInOverheadMap(INT16 sSweetGridNo, UINT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -259,7 +259,6 @@ static BOOLEAN GetClosestMercInOverheadMap(INT16 sSweetGridNo, SOLDIERTYPE** ppR
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
@@ -271,6 +270,7 @@ static BOOLEAN GetClosestMercInOverheadMap(INT16 sSweetGridNo, SOLDIERTYPE** ppR
 
 	uiLowestRange = 999999;
 
+	SOLDIERTYPE* res = NULL;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
@@ -287,16 +287,15 @@ static BOOLEAN GetClosestMercInOverheadMap(INT16 sSweetGridNo, SOLDIERTYPE** ppR
 
 					if ( uiRange < uiLowestRange )
 					{
-						(*ppReturnedSoldier) = gpWorldLevelData[ sGridNo ].pMercHead->pSoldier;
+						res = gpWorldLevelData[sGridNo].pMercHead->pSoldier;
 						uiLowestRange = uiRange;
-						fFound = TRUE;
 					}
 				}
 			}
 		}
 	}
 
-	return( fFound );
+	return res;
 }
 
 
@@ -335,7 +334,6 @@ static void RenderOverheadOverlays(void);
 void HandleOverheadMap( )
 {
 	static BOOLEAN fFirst = TRUE;
-	SOLDIERTYPE *pSoldier;
 
 	if ( fFirst )
 	{
@@ -462,10 +460,11 @@ void HandleOverheadMap( )
 
     if ( GetOverheadMouseGridNoForFullSoldiersGridNo( &usMapPos ) )
     {
-			if ( GetClosestMercInOverheadMap( usMapPos, &pSoldier, 1 ) )
+			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
+			if (s != NULL)
 			{
-				if (pSoldier->bTeam == gbPlayerNum) gSelectedGuy = pSoldier;
-        DisplayMercNameInOverhead( pSoldier );
+				if (s->bTeam == gbPlayerNum) gSelectedGuy = s;
+				DisplayMercNameInOverhead(s);
       }
 		}
 	}
@@ -474,8 +473,7 @@ void HandleOverheadMap( )
 	RenderOverheadOverlays();
 	if( !gfEditMode && !gfTacticalPlacementGUIActive && gusSelectedSoldier != NOBODY )
 	{
-		pSoldier = GetSelectedMan();
-    DisplayMercNameInOverhead( pSoldier );
+		DisplayMercNameInOverhead(GetSelectedMan());
 	}
 
 	RenderButtons( );
