@@ -367,9 +367,8 @@ void ResetHeliSeats( )
 	gbNumHeliSeatsOccupied = 0;
 }
 
-void AddMercToHeli( UINT8 ubID )
+void AddMercToHeli(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const s = GetMan(ubID);
 	INT32 cnt;
 
 	if ( gbNumHeliSeatsOccupied < MAX_MERC_IN_HELI )
@@ -764,13 +763,10 @@ void HandleHeliDrop( )
 }
 
 
-static void BeginMercEntering(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
+static void BeginMercEntering(SOLDIERTYPE* const pSoldier, const INT16 sGridNo)
 {
 	ResetHeliSeats( );
-
-	AddMercToHeli( pSoldier->ubID );
-
-
+	AddMercToHeli(pSoldier);
 	StartHelicopterRun( sGridNo );
 
 	// Make sure AI does nothing.....

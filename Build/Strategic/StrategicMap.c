@@ -1826,7 +1826,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 					// Try another location and walk into map
 					// Add merc to chopper....
 					//pSoldier->sInsertionGridNo = 4058;
-					AddMercToHeli( pSoldier->ubID );
+					AddMercToHeli(pSoldier);
 					return;
 
 				default:
