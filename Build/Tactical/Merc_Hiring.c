@@ -65,7 +65,6 @@ INT16	gsMercArriveSectorY = 1;
 
 INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 {
-	SOLDIERTYPE	*pSoldier;
 	UINT8		iNewIndex;
 	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
 	MERCPROFILESTRUCT				*pMerc;
@@ -109,6 +108,8 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		return( MERC_HIRE_FAILED );
 	}
 
+	SOLDIERTYPE* const pSoldier = GetMan(iNewIndex);
+
 	if( DidGameJustStart() )
 	{
 		// OK, CHECK FOR FIRST GUY, GIVE HIM SPECIAL ITEM!
@@ -124,7 +125,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 			Object.ubNumberOfObjects = 1;
 			Object.bStatus[0]				= 100;
 			// Give it
-			fReturn = AutoPlaceObject( MercPtrs[iNewIndex], &Object, FALSE );
+			fReturn = AutoPlaceObject(pSoldier, &Object, FALSE);
 			Assert( fReturn );
 		}
 
@@ -135,11 +136,8 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		#endif
 	}
 
-
 	//record how long the merc will be gone for
 	pMerc->bMercStatus = (UINT8)pHireMerc->iTotalContractLength;
-
-	pSoldier = &Menptr[iNewIndex];
 
 	//Copy over insertion data....
 	pSoldier->ubStrategicInsertionCode = pHireMerc->ubInsertionCode;
