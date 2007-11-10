@@ -2448,9 +2448,8 @@ static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void SelectMerc(UINT16 id)
+static void SelectMerc(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const s = MercPtrs[id];
 	gSelectSMPanelToMerc = s;
 
 	if (!gfInItemPickupMenu)
@@ -2482,7 +2481,7 @@ static void BtnPrevMercCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SelectMerc(FindPrevActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE));
+		SelectMerc(GetMan(FindPrevActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE)));
 	}
 }
 
@@ -2491,7 +2490,7 @@ static void BtnNextMercCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SelectMerc(FindNextActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE));
+		SelectMerc(GetMan(FindNextActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE)));
 	}
 }
 
