@@ -2066,10 +2066,7 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 {
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
-	UINT8				ubMercsInGroup[ 20 ];
 	UINT8				ubNumMercs = 0;
-	UINT8				ubChosenMerc;
-
 
 	// if traversing tactically, don't do this, unless time compression was required for some reason (don't go to sector)
 	if ( ( gfTacticalTraversal || ( pGroup->ubSectorZ > 0 ) ) && !IsTimeBeingCompressed() )
@@ -2081,6 +2078,7 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 	// Let's choose somebody in group.....
 	pPlayer = pGroup->pPlayerList;
 
+	SOLDIERTYPE* mercs_in_group[20];
 	while( pPlayer != NULL )
 	{
 		pSoldier = pPlayer->pSoldier;
@@ -2089,8 +2087,7 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
 		{
-			ubMercsInGroup[ ubNumMercs ] = pSoldier->ubID;
-			ubNumMercs++;
+			mercs_in_group[ubNumMercs++] = pSoldier;
 		}
 
 		pPlayer = pPlayer->next;
@@ -2099,10 +2096,8 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 	// At least say quote....
 	if ( ubNumMercs > 0 )
 	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-		pSoldier = MercPtrs[ ubMercsInGroup[ ubChosenMerc ] ];
-
-		TacticalCharacterDialogue( pSoldier, usQuoteNum );
+		SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
+		TacticalCharacterDialogue(chosen, usQuoteNum);
 	}
 }
 
