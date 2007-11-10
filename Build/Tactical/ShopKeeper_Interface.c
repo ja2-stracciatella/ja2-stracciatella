@@ -1177,7 +1177,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 						DeleteItemDescriptionBox( );
 
 						// skip Robot and EPCs
-						SOLDIERTYPE* const s = MercPtrs[FindNextActiveAndAliveMerc(gpSMCurrentMerc, FALSE, TRUE)];
+						SOLDIERTYPE* const s = FindNextActiveAndAliveMerc(gpSMCurrentMerc, FALSE, TRUE);
 						gSelectSMPanelToMerc = s;
 						LocateSoldier(s, DONTSETLOCATOR);
 						// refresh background for player slots (in case item values change due to Flo's discount)

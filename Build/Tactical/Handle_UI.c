@@ -1294,16 +1294,15 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 			// THIS IS JUST A CRUDE TEST FOR NOW
 			if ( pSoldier->bLife < OKLIFE )
 			{
-        UINT8 ubID;
 				// Show reg. cursor
 				// GO INTO IDLE MODE
 				// guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
 				// gusSelectedSoldier = NO_SOLDIER;
-      	ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE );
 
-        if ( ubID != NOBODY )
+				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
+				if (next != NULL)
         {
-        	SelectSoldier(GetMan(ubID), 0);
+					SelectSoldier(next, 0);
         }
         else
         {

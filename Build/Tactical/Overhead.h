@@ -227,8 +227,8 @@ void RebuildAllSoldierShadeTables(void);
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
 
-UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
-SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+SOLDIERTYPE* FindNextActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
 
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
 

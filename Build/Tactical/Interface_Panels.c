@@ -2490,7 +2490,7 @@ static void BtnNextMercCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SelectMerc(GetMan(FindNextActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE)));
+		SelectMerc(FindNextActiveAndAliveMerc(gpSMCurrentMerc, TRUE, TRUE));
 	}
 }
 

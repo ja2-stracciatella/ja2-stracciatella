@@ -1192,8 +1192,6 @@ static void RebuildSquad(INT8 bSquadValue)
 // update current merc selected in tactical
 static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 {
-	UINT8	ubID;
-
 	// if this squad is the current one and and the psoldier is the currently selected soldier, get rid of 'em
 	if( bSquadValue != iCurrentTacticalSquad )
 	{
@@ -1203,11 +1201,10 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 	// Are we the selected guy?
 	if( gusSelectedSoldier == pSoldier->ubID )
 	{
-		ubID = FindNextActiveAndAliveMerc( pSoldier, FALSE, FALSE );
-
-		if ( ubID != NOBODY && ubID != gusSelectedSoldier )
+		SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
+		if (next != NULL && next->ubID != gusSelectedSoldier)
 		{
-			SelectSoldier(GetMan(ubID), 0);
+			SelectSoldier(next, 0);
 		}
 		else
 		{

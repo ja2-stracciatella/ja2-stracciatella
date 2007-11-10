@@ -3280,11 +3280,11 @@ static INT8 NumActiveAndConsciousTeamMembers(UINT8 ubTeam)
 }
 
 
-static UINT8 FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+static SOLDIERTYPE* FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
 	for (INT32 i = begin; i <= last; ++i)
 	{
-		const SOLDIERTYPE* const s = &Menptr[i];
+		SOLDIERTYPE* const s = &Menptr[i];
 		if (fOnlyRegularMercs && s->bActive && (AM_AN_EPC(s) || AM_A_ROBOT(s)))
 		{
 			continue;
@@ -3294,39 +3294,39 @@ static UINT8 FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assig
 		{
 			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return i;
+				return s;
 			}
 		}
 		else
 		{
 			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return i;
+				return s;
 			}
 		}
 	}
 
-	return NOBODY;
+	return NULL;
 }
 
 
-UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+SOLDIERTYPE* FindNextActiveAndAliveMerc(SOLDIERTYPE* const s, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
 {
-	const TacticalTeamType* const t = &gTacticalStatus.Team[pSoldier->bTeam];
-	const UINT8 id = pSoldier->ubID;
-	const INT8 assignment = pSoldier->bAssignment;
-	UINT8 res;
+	const TacticalTeamType* const t = &gTacticalStatus.Team[s->bTeam];
+	const UINT8 id = s->ubID;
+	const INT8 assignment = s->bAssignment;
+	SOLDIERTYPE* res;
 
 	// look for all mercs on the same team,
 	res = FindNextActiveAndAliveMercRange(id + 1, t->bLastID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NOBODY) return res;
+	if (res != NULL) return res;
 
 	// none found, now loop back
 	res = FindNextActiveAndAliveMercRange(t->bFirstID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NOBODY) return res;
+	if (res != NULL) return res;
 
 	// IF we are here, keep as we always were!
-	return id;
+	return s;
 }
 
 
@@ -6846,10 +6846,10 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 		{
 			if (gusSelectedSoldier == pSoldier->ubID )
 			{
-				const UINT8 ubID = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-				if (ubID != NOBODY && ubID != gusSelectedSoldier)
+				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
+				if (next != NULL && next->ubID != gusSelectedSoldier)
 				{
-					SelectSoldier(GetMan(ubID), 0);
+					SelectSoldier(next, 0);
 				}
 				else
 				{
