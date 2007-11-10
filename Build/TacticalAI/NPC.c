@@ -2486,9 +2486,7 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 {
 	// Loop through all mercs, gather closest mercs who can see and trigger one!
-	UINT8	ubMercsInSector[ 40 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier, *pSoldier;
 	INT32 cnt;
 
@@ -2501,20 +2499,20 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// run through list
+	SOLDIERTYPE* mercs_in_sector[40];
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
 		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
 		{
-			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-			ubNumMercs++;
+			mercs_in_sector[ubNumMercs++] = pTeamSoldier;
 		}
 	}
 
 	// If we are > 0
 	if ( ubNumMercs > 0 )
 	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
+		SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
 
 		// Post action to close panel
 		NPCClosePanel( );
@@ -2522,11 +2520,11 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 		// If 64, do something special
 		if ( pQuotePtr->ubTriggerNPCRec == QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO )
 		{
-			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], pQuotePtr->ubTriggerNPCRec, DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC, 57, 6 );
+			TacticalCharacterDialogueWithSpecialEvent(chosen, pQuotePtr->ubTriggerNPCRec, DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC, 57, 6);
 		}
 		else
 		{
-			TacticalCharacterDialogue( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], pQuotePtr->ubTriggerNPCRec );
+			TacticalCharacterDialogue(chosen, pQuotePtr->ubTriggerNPCRec);
 		}
 	}
 
