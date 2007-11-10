@@ -912,7 +912,7 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 	}
 
 	//remove the merc from the tactical
-	TacticalRemoveSoldier( pSoldier->ubID );
+	TacticalRemoveSoldier(pSoldier);
 
 	// Check if we should remove loaded world...
 	CheckAndHandleUnloadingOfCurrentWorld();

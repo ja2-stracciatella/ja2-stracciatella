@@ -157,7 +157,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 	{
 		if( pNode->pSoldier->ubID >= 20 )
 		{
-			TacticalRemoveSoldier( pNode->pSoldier->ubID );
+			TacticalRemoveSoldier(pNode->pSoldier);
 		}
 		else
 		{

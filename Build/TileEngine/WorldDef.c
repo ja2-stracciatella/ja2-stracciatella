@@ -3156,7 +3156,7 @@ void TrashWorld( void )
 			else
 			{
 				// Delete from world
-				TacticalRemoveSoldier( (UINT16)cnt );
+				TacticalRemoveSoldier(pSoldier);
 			}
 		}
 	}

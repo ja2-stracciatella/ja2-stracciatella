@@ -2350,10 +2350,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 			// see if we can find him and remove him if so....
 			pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
 
-			if ( pSoldier != NULL )
-			{
-				TacticalRemoveSoldier( pSoldier->ubID );
-			}
+			if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
 			// add the pilot at a random location!
 			pProfile = &(gMercProfiles[ SKYRIDER ]);
@@ -2639,7 +2636,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 	//Loop through all the soldier and delete them all
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
 	{
-		TacticalRemoveSoldier( cnt );
+		TacticalRemoveSoldier(GetMan(cnt));
 	}
 
 

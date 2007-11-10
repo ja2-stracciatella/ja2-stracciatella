@@ -132,7 +132,7 @@ CASSERT(sizeof(SOLDIERCREATE_STRUCT) == 1060)
 
 
 //Original functions currently used throughout the game.
-BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex );
+BOOLEAN TacticalRemoveSoldier(SOLDIERTYPE* s);
 BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle );
 
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass );

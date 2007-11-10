@@ -1625,7 +1625,7 @@ static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 
 		{
 			// Tacticlly remove soldier....
 			// EVENT_InitNewSoldierAnim( pSoldier, VEHICLE_DIE, 0, FALSE );
-			//TacticalRemoveSoldier( pSoldier->ubID );
+			//TacticalRemoveSoldier(pSoldier);
 
 			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
 		}

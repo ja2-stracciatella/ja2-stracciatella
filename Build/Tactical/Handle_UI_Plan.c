@@ -253,7 +253,7 @@ void EndUIPlan(  )
 			{
 				SetRenderFlags(RENDER_FLAG_FULL );
 			}
-			TacticalRemoveSoldier( pSoldier->ubID );
+			TacticalRemoveSoldier(pSoldier);
 		}
 
 

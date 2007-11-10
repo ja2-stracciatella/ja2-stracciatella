@@ -31,10 +31,8 @@ static void RemoveMilitiaFromTactical(void)
 	INT32 i;
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
-		if( MercPtrs[ i ]->bActive )
-		{
-			TacticalRemoveSoldier( MercPtrs[ i ]->ubID );
-		}
+		SOLDIERTYPE* const s = GetMan(i);
+		if (s->bActive) TacticalRemoveSoldier(s);
 	}
 	curr = gSoldierInitHead;
 	while( curr )

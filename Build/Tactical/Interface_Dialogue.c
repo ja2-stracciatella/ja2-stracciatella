@@ -2461,34 +2461,17 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_REMOVE_JOE_QUEEN:
-
 				// Find queen and joe and remove from sector...
 				pSoldier = FindSoldierByProfileID( QUEEN, FALSE );
+				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
-				if ( pSoldier != NULL )
-				{
-					TacticalRemoveSoldier( pSoldier->ubID );
-				}
-
-				// Find queen and joe and remove from sector...
 				pSoldier = FindSoldierByProfileID( JOE, FALSE );
-
-				if ( pSoldier != NULL )
-				{
-					TacticalRemoveSoldier( pSoldier->ubID );
-				}
+				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 				break;
 
-
 			case NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE:
-
-				// Find queen and joe and remove from sector...
 				pSoldier = FindSoldierByProfileID( ELLIOT, FALSE );
-
-				if ( pSoldier != NULL )
-				{
-					TacticalRemoveSoldier( pSoldier->ubID );
-				}
+				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
 				// End meanwhile....
 				// End meanwhile....
@@ -3945,7 +3928,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					EndAIGuysTurn( pSoldier );
 					RemoveManAsTarget( pSoldier );
-					TacticalRemoveSoldier( pSoldier->ubID );
+					TacticalRemoveSoldier(pSoldier);
 					gMercProfiles[ ubTargetNPC ].sSectorX = 0;
 					gMercProfiles[ ubTargetNPC ].sSectorY = 0;
 					CheckForEndOfBattle( TRUE );

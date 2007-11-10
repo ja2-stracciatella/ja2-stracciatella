@@ -1548,7 +1548,7 @@ void HandleHelicopterOnGroundGraphic( void )
           // ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
 					{
-						TacticalRemoveSoldier( pSoldier->ubID );
+						TacticalRemoveSoldier(pSoldier);
 					}
 				}
 			}
@@ -1604,7 +1604,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
           // ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
 					{
-						TacticalRemoveSoldier( pSoldier->ubID );
+						TacticalRemoveSoldier(pSoldier);
 					}
 				}
 			}

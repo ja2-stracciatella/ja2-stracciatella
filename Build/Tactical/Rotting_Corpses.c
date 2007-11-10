@@ -893,7 +893,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 		{
 			// Remove merc!
 			// ATE: Remove merc slot first - will disappear if no corpse data found!
-			TacticalRemoveSoldier( pSoldier->ubID );
+			TacticalRemoveSoldier(pSoldier);
 		}
 		else
 		{

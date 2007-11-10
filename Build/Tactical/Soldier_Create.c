@@ -1248,9 +1248,10 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 	return( TRUE );
 }
 
-BOOLEAN TacticalRemoveSoldier( UINT16 usSoldierIndex )
+
+BOOLEAN TacticalRemoveSoldier(SOLDIERTYPE* const s)
 {
-	return InternalTacticalRemoveSoldier(GetMan(usSoldierIndex), TRUE);
+	return InternalTacticalRemoveSoldier(s, TRUE);
 }
 
 
@@ -2469,11 +2470,7 @@ void TrashAllSoldiers( )
 
 	for ( pSoldier = MercPtrs[ cnt ]; cnt < MAX_NUM_SOLDIERS; pSoldier++, cnt++ )
 	{
-		if ( pSoldier->bActive )
-		{
-			// Delete from world
-			TacticalRemoveSoldier( (UINT16)cnt );
-		}
+		if (pSoldier->bActive) TacticalRemoveSoldier(pSoldier);
 	}
 }
 

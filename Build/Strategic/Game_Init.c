@@ -771,7 +771,7 @@ void ReStartingGame()
 	//Loop through all the soldier and delete them all
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
 	{
-		TacticalRemoveSoldier( cnt );
+		TacticalRemoveSoldier(GetMan(cnt));
 	}
 
 	// Re-init overhead...
