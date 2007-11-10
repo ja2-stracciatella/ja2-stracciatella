@@ -513,7 +513,7 @@ void AddMercToWorld( INT32 iMapIndex )
 			pNode->pSoldier = pSoldier;
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector(pSoldier, FALSE, FALSE, 0, 0);
+			AddSoldierToSectorNoCalculateDirection(pSoldier);
 			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.
@@ -3692,7 +3692,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 			}
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector(pSoldier, FALSE, FALSE, 0, 0);
+			AddSoldierToSectorNoCalculateDirection(pSoldier);
 			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.

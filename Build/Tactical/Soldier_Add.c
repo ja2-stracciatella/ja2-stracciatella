@@ -1077,7 +1077,7 @@ static UINT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot(SOLDIERTYPE *pSold
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode);
 
 
-BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const pSoldier, BOOLEAN fCalculateDirection, const BOOLEAN fUseAnimation, const UINT16 usAnimState, const UINT16 usAnimCode)
+static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const pSoldier, BOOLEAN fCalculateDirection, const BOOLEAN fUseAnimation, const UINT16 usAnimState, const UINT16 usAnimCode)
 {
 	UINT8					ubDirection, ubCalculatedDirection;
 	INT16					sGridNo;
