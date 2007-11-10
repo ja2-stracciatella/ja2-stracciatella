@@ -6557,7 +6557,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 		}
 		else
 		{
-			FreeUpNPCFromAttacking( ubID );
+			FreeUpNPCFromAttacking(pSoldier);
 		}
 
 		if ( !fEnterCombat )

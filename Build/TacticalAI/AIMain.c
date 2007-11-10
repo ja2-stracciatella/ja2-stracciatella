@@ -972,11 +972,9 @@ void FreeUpNPCFromPendingAction( 	SOLDIERTYPE *pSoldier )
 	}
 }
 
-void FreeUpNPCFromAttacking(UINT8 ubID)
-{
-	SOLDIERTYPE *pSoldier;
 
-	pSoldier = MercPtrs[ubID];
+void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
+{
 	ActionDone(pSoldier);
 	pSoldier->bNeedToLook = TRUE;
 
