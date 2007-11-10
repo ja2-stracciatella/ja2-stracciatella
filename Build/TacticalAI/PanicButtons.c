@@ -15,7 +15,6 @@ void MakeClosestEnemyChosenOne()
 	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
 	INT8					bOldKeys = -1;
-	UINT8					ubClosestEnemy = NOBODY;
 	SOLDIERTYPE *	pSoldier;
 	INT8					bPanicTrigger;
 	INT16					sPanicTriggerGridNo;
@@ -36,6 +35,7 @@ void MakeClosestEnemyChosenOne()
 	}
 
 	// consider every enemy, looking for the closest capable, unbusy one
+	SOLDIERTYPE* closest_enemy = NULL;
 	for (cnt = 0; cnt < guiNumMercSlots; cnt++)
 	{
 		pSoldier = MercSlots[cnt];
@@ -145,7 +145,7 @@ void MakeClosestEnemyChosenOne()
 			if (sPathCost < sShortestPath)
 			{
 				sShortestPath = sPathCost;
-				ubClosestEnemy = pSoldier->ubID;
+				closest_enemy = pSoldier;
 			}
 		}
 		//else
@@ -153,23 +153,22 @@ void MakeClosestEnemyChosenOne()
 	}
 
 	// if we found have an eligible enemy, make him our "chosen one"
-	if (ubClosestEnemy < NOBODY)
+	if (closest_enemy != NULL)
 	{
-		gTacticalStatus.ubTheChosenOne = ubClosestEnemy;       // flag him as the chosen one
+		gTacticalStatus.ubTheChosenOne = closest_enemy->ubID; // flag him as the chosen one
 
 #ifdef TESTVERSION
 		NumMessage("TEST MSG: The chosen one is ",TheChosenOne);
 #endif
 
-		pSoldier = MercPtrs[gTacticalStatus.ubTheChosenOne];
-		if ( pSoldier->bAlertStatus < STATUS_RED )
+		if (closest_enemy->bAlertStatus < STATUS_RED)
 		{
-			pSoldier->bAlertStatus = STATUS_RED;
-			CheckForChangingOrders( pSoldier );
+			closest_enemy->bAlertStatus = STATUS_RED;
+			CheckForChangingOrders(closest_enemy);
 		}
-		SetNewSituation( pSoldier );    // set new situation for the chosen one
-		pSoldier->bHasKeys = (pSoldier->bHasKeys << 1) | 1; // cheat and give him keys to every door
-		//pSoldier->bHasKeys = TRUE;
+		SetNewSituation(closest_enemy); // set new situation for the chosen one
+		closest_enemy->bHasKeys = (closest_enemy->bHasKeys << 1) | 1; // cheat and give him keys to every door
+		//closest_enemy->bHasKeys = TRUE;
 	}
 #ifdef TESTVERSION
 	else
