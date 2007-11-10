@@ -444,12 +444,11 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 }
 
 
-static void HandleQueenBitchDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
+static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 sGridNo, const INT8 bLevel)
 {
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 	INT16		sDistVisible = FALSE;
-	UINT8		ubKillerSoldierID = NOBODY;
 
 	// Start victory music here...
 	SetMusicMode( MUSIC_TACTICAL_VICTORY );
@@ -457,7 +456,6 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, IN
 	if ( pKillerSoldier )
 	{
 		TacticalCharacterDialogue( pKillerSoldier, QUOTE_KILLING_QUEEN );
-		ubKillerSoldierID = pKillerSoldier->ubID;
 	}
 
 	// STEP 1 ) START ALL QUOTES GOING!
@@ -467,20 +465,19 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, IN
 	// run through list
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
-		if ( cnt != ubKillerSoldierID )
-		{
-			if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
-			{
-					if ( QuoteExp_WitnessQueenBugDeath[ pTeamSoldier->ubProfile ] )
-					{
-						// Can we see location?
-						sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
+		if (pTeamSoldier == pKillerSoldier) continue;
 
-						if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-						{
-							TacticalCharacterDialogue( pTeamSoldier, QUOTE_KILLING_QUEEN );
-						}
-					}
+		if (OK_INSECTOR_MERC(pTeamSoldier) && !(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) && !AM_AN_EPC(pTeamSoldier))
+		{
+			if (QuoteExp_WitnessQueenBugDeath[pTeamSoldier->ubProfile])
+			{
+				// Can we see location?
+				sDistVisible = DistanceVisible(pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
+
+				if (SoldierTo3DLocationLineOfSightTest(pTeamSoldier, sGridNo, bLevel, 3, sDistVisible, TRUE))
+				{
+					TacticalCharacterDialogue(pTeamSoldier, QUOTE_KILLING_QUEEN);
+				}
 			}
 		}
 	}
