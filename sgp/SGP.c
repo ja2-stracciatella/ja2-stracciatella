@@ -339,7 +339,8 @@ static void SGPExit(void)
 
 static BOOLEAN ParseParameters(char* const argv[])
 {
-	if (*argv == NULL) return TRUE; // argv does not even contain the program name
+	const char* const name = *argv;
+	if (name == NULL) return TRUE; // argv does not even contain the program name
 
 	while (*++argv != NULL)
 	{
@@ -353,7 +354,17 @@ static BOOLEAN ParseParameters(char* const argv[])
 		}
 		else
 		{
-			fprintf(stderr, "Unknown switch \"%s\"\n", *argv);
+			if (strcmp(*argv, "-help") != 0)
+			{
+				fprintf(stderr, "Unknown switch \"%s\"\n", *argv);
+			}
+			fprintf(stderr,
+				"Usage: %s [-fullscreen] [-help] [-nosound]\n"
+				"  -fullscreen  Start the game in fullscreen mode\n"
+				"  -help        Display this information\n"
+				"  -nosound     Turn the sound and music off\n",
+				name
+			);
 			return FALSE;
 		}
 	}
