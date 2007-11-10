@@ -3907,13 +3907,9 @@ void DrawItemTileCursor( )
 		// Get Pyth spaces away.....
 		sDist = PythSpacesAway( gpItemPointerSoldier->sGridNo, gusCurMousePos );
 
-
 		// If we are here and we are not selected, select!
 		// ATE Design discussion propably needed here...
-		if ( gpItemPointerSoldier->ubID != gusSelectedSoldier )
-		{
-			SelectSoldier(gpItemPointerSoldier, 0);
-		}
+		SelectSoldier(gpItemPointerSoldier, 0);
 
 		// ATE: if good for locate, locate to selected soldier....
 		if ( gbItemPointerLocateGood )
