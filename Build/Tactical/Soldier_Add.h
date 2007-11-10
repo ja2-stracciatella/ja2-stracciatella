@@ -26,7 +26,7 @@ BOOLEAN AddSoldierToSector(SOLDIERTYPE* s);
 
 BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* s);
 
-BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation( UINT8 ubID, UINT16 usAnimState, UINT16 usAnimCode );
+BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* s, UINT16 usAnimState, UINT16 usAnimCode);
 
 // IsMercOnTeam() checks to see if the passed in Merc Profile ID is currently on the player's team
 BOOLEAN IsMercOnTeam(UINT8 ubMercID);

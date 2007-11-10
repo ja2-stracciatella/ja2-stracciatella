@@ -903,7 +903,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		//pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ
 		 )
 		{
-			AddSoldierToSectorNoCalculateDirectionUseAnimation(pNewSoldier->ubID, pSoldier->usAnimState, pSoldier->usAniCode );
+			AddSoldierToSectorNoCalculateDirectionUseAnimation(pNewSoldier, pSoldier->usAnimState, pSoldier->usAniCode);
 			HandleSight(pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
 		}
 
