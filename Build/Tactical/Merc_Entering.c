@@ -335,9 +335,9 @@ static const UINT8 ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =
 };
 
 
-static BOOLEAN gfHandleHeli = FALSE;
-static UINT8   gusHeliSeats[ MAX_MERC_IN_HELI ];
-static INT8    gbNumHeliSeatsOccupied = 0;
+static BOOLEAN      gfHandleHeli = FALSE;
+static SOLDIERTYPE* gHeliSeats[MAX_MERC_IN_HELI];
+static INT8         gbNumHeliSeatsOccupied = 0;
 
 static BOOLEAN gfFirstGuyDown = FALSE;
 
@@ -369,6 +369,7 @@ void ResetHeliSeats( )
 
 void AddMercToHeli( UINT8 ubID )
 {
+	SOLDIERTYPE* const s = GetMan(ubID);
 	INT32 cnt;
 
 	if ( gbNumHeliSeatsOccupied < MAX_MERC_IN_HELI )
@@ -376,14 +377,10 @@ void AddMercToHeli( UINT8 ubID )
 		// Check if it already exists!
 		for ( cnt = 0; cnt < gbNumHeliSeatsOccupied; cnt++ )
 		{
-			if ( gusHeliSeats[ cnt ] == ubID )
-			{
-				return;
-			}
+			if (gHeliSeats[cnt] == s) return;
 		}
 
-		gusHeliSeats[ gbNumHeliSeatsOccupied ] = ubID;
-		gbNumHeliSeatsOccupied++;
+		gHeliSeats[gbNumHeliSeatsOccupied++] = s;
 	}
 }
 
@@ -456,14 +453,14 @@ void HandleHeliDrop( )
 			for ( cnt = gbCurDrop; cnt < gbNumHeliSeatsOccupied; cnt++ )
 			{
 				// Add merc to sector
-				MercPtrs[ gusHeliSeats[ cnt ] ]->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				UpdateMercInSector( MercPtrs[ gusHeliSeats[ cnt ] ], 9, 1, 0 );
+				SOLDIERTYPE* const s = gHeliSeats[cnt];
+				s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+				UpdateMercInSector(s, 9, 1, 0);
 
 				// Check for merc arrives quotes...
-				HandleMercArrivesQuotes( MercPtrs[ gusHeliSeats[ cnt ] ] );
+				HandleMercArrivesQuotes(s);
 
-				ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[ MERC_HAS_ARRIVED_STR ], MercPtrs[ gusHeliSeats[ cnt ] ]->name );
-
+				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s->name);
 			}
 
 			// Remove heli
@@ -483,9 +480,8 @@ void HandleHeliDrop( )
 			UnLockPauseState();
 			UnPauseGame();
 
-
 			// Select our first guy
-			SelectSoldier(GetMan(gusHeliSeats[0]), SELSOLDIER_FORCE_RESELECT);
+			SelectSoldier(gHeliSeats[0], SELSOLDIER_FORCE_RESELECT);
 
 			//guiCurrentEvent = LU_ENDUILOCK;
 			//gCurrentUIMode  = LOCKUI_MODE;
@@ -588,21 +584,22 @@ void HandleHeliDrop( )
 					{
 						//sWorldX = CenterX( gsGridNoSweetSpot );
 						//sWorldY = CenterY( gsGridNoSweetSpot );
-						EVENT_InitNewSoldierAnim( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], HELIDROP, 0 , FALSE );
+						SOLDIERTYPE* const s = gHeliSeats[gbCurDrop];
+						EVENT_InitNewSoldierAnim(s, HELIDROP, 0 , FALSE);
 
 						// Change insertion code
-						MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+						s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
-						UpdateMercInSector( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], 9, 1, 0 );
-						//EVENT_SetSoldierPosition( MercPtrs[ gusHeliSeats[ gbCurDrop ] ], sWorldX, sWorldY );
+						UpdateMercInSector(s, 9, 1, 0);
+						//EVENT_SetSoldierPosition(s, sWorldX, sWorldY);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )
 						{
 							gfFirstGuyDown = FALSE;
-							SetCurrentSquad( MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->bAssignment, TRUE );
+							SetCurrentSquad(s->bAssignment, TRUE );
 						}
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[ MERC_HAS_ARRIVED_STR ], MercPtrs[ gusHeliSeats[ gbCurDrop ] ]->name );
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s->name);
 
 						gbCurDrop++;
 
@@ -749,7 +746,7 @@ void HandleHeliDrop( )
 						gfIgnoreScrolling = FALSE;
 
 						// Select our first guy
-						SelectSoldier(GetMan(gusHeliSeats[0]), SELSOLDIER_FORCE_RESELECT);
+						SelectSoldier(gHeliSeats[0], SELSOLDIER_FORCE_RESELECT);
 					}
 					break;
 
