@@ -24,7 +24,7 @@ UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo,
 // Finds a good placement based on data in the loaded sector and if they are enemy's or not, etc...
 BOOLEAN AddSoldierToSector(SOLDIERTYPE* s);
 
-BOOLEAN AddSoldierToSectorNoCalculateDirection( UINT8 ubID );
+BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* s);
 
 BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation( UINT8 ubID, UINT16 usAnimState, UINT16 usAnimCode );
 

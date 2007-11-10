@@ -650,7 +650,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 	{
 		curr->pSoldier = pSoldier;
 		curr->ubSoldierID = pSoldier->ubID;
-		AddSoldierToSectorNoCalculateDirection(pSoldier->ubID);
+		AddSoldierToSectorNoCalculateDirection(pSoldier);
 
 		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bTeam == ENEMY_TEAM && !pSoldier->inv[ HANDPOS ].usItem )
 		{
