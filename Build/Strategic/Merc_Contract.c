@@ -1264,7 +1264,6 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	// find out is something was said
 	SOLDIERTYPE *pSoldier = NULL, *pSoldierWhoWillQuit = NULL;
 	INT32				iCounter= 0, iNumberOnTeam = 0;
-	UINT8				ubPotentialMercs[ 20 ] = { 0 };
 	UINT8				ubNumMercs = 0;
 	UINT8				ubChosenMerc;
 
@@ -1279,6 +1278,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	// to stay if offered. Durning that process, also check if there
 	// is any merc that does not want to stay and only display that quote
 	// if they are the only one here....
+	SOLDIERTYPE* potential_mercs[20];
 	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
 	{
 		pSoldier = &Menptr[ iCounter ];
@@ -1304,8 +1304,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 
 				if( WillMercRenew( pSoldier, FALSE ) )
 				{
-					ubPotentialMercs[ ubNumMercs ] = pSoldier->ubID;
-					ubNumMercs++;
+					potential_mercs[ubNumMercs++] = pSoldier;
 				}
 				else
 				{
@@ -1346,16 +1345,16 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 		// OK, pick one....
 		if ( ubNumMercs > 0 )
 		{
-			ubChosenMerc = (UINT8)Random( ubNumMercs );
+			SOLDIERTYPE* const chosen = potential_mercs[Random(ubNumMercs)];
 
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-			HandleImportantMercQuote( MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ], QUOTE_CONTRACTS_OVER );
+			HandleImportantMercQuote(chosen, QUOTE_CONTRACTS_OVER);
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 
 			AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
-			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ], 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0,0 );
+			TacticalCharacterDialogueWithSpecialEvent(chosen, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
 
-			MercPtrs[ ubPotentialMercs[ ubChosenMerc ] ]->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
+			chosen->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
 		}
 	}
 }
