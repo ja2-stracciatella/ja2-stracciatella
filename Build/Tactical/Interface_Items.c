@@ -6534,14 +6534,7 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 	gItemPointer = SaveStruct.ItemPointerInfo;
 
 	// Copy soldier ID
-	if ( SaveStruct.ubSoldierID == NOBODY )
-	{
-		gpItemPointerSoldier = NULL;
-	}
-	else
-	{
-		gpItemPointerSoldier = MercPtrs[ SaveStruct.ubSoldierID ];
-	}
+	gpItemPointerSoldier = ID2Soldier(SaveStruct.ubSoldierID);
 
 	// Inv slot
 	gbItemPointerSrcSlot = SaveStruct.ubInvSlot;
@@ -6571,14 +6564,7 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 	SaveStruct.ItemPointerInfo = gItemPointer;
 
 	// Soldier
-	if ( gpItemPointerSoldier != NULL )
-	{
-		SaveStruct.ubSoldierID = gpItemPointerSoldier->ubID;
-	}
-	else
-	{
-		SaveStruct.ubSoldierID = NOBODY;
-	}
+	SaveStruct.ubSoldierID = Soldier2ID(gpItemPointerSoldier);
 
 	// INv slot
 	SaveStruct.ubInvSlot = gbItemPointerSrcSlot;
