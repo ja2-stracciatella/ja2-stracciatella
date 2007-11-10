@@ -420,143 +420,50 @@ static void PalEditRenderHook(void)
 }
 
 
+static BOOLEAN CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
+{
+	UINT8 ubPaletteRep;
+	CHECKF(GetPaletteRepIndexFromID(pal, &ubPaletteRep));
+	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;
+
+	ubPaletteRep++;
+
+	// Count start and end index
+	UINT8 ubStartRep = 0;
+	for (UINT32 cnt = 0; cnt < ubType; ++cnt)
+	{
+		ubStartRep = ubStartRep + gubpNumReplacementsPerRange[cnt];
+	}
+
+	const UINT8 ubEndRep = ubStartRep + gubpNumReplacementsPerRange[ubType];
+
+	if (ubPaletteRep == ubEndRep) ubPaletteRep = ubStartRep;
+	SET_PALETTEREP_ID(pal, gpPalRep[ubPaletteRep].ID);
+
+	CreateSoldierPalettes(s);
+	return TRUE;
+}
+
+
 static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 {
-	UINT8					ubType;
-	UINT8					ubPaletteRep;
-	UINT32				cnt;
-	UINT8					ubStartRep = 0;
-	UINT8					ubEndRep = 0;
+	if (gusSelectedSoldier == NO_SOLDIER) return FALSE;
+	if (pInputEvent->usEvent != KEY_DOWN) return FALSE;
 
-	if ( gusSelectedSoldier == NO_SOLDIER )
-	{
-		return( FALSE );
-	}
-
-  if (pInputEvent->usEvent == KEY_DOWN && pInputEvent->usParam == SDLK_ESCAPE)
+  SOLDIERTYPE* const sel = GetSoldier(gusSelectedSoldier);
+  switch (pInputEvent->usParam)
   {
-		gfExitPalEditScreen = TRUE;
-		return( TRUE );
-	}
+  	case SDLK_ESCAPE:
+  		gfExitPalEditScreen = TRUE;
+  		return TRUE;
 
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'h' ))
-  {
-			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
+  	case 'h': return CyclePaletteReplacement(sel, sel->HeadPal);
+  	case 'v': return CyclePaletteReplacement(sel, sel->VestPal);
+  	case 'p': return CyclePaletteReplacement(sel, sel->PantsPal);
+  	case 's': return CyclePaletteReplacement(sel, sel->SkinPal);
 
-			// Get index of current
-			CHECKF( GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep ) );
-			ubType = gpPalRep[ ubPaletteRep ].ubType;
-
-			ubPaletteRep++;
-
-			// Count start and end index
-			for ( cnt = 0; cnt < ubType; cnt++ )
-			{
-				ubStartRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ cnt ]);
-			}
-
-			ubEndRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ ubType ]);
-
-			if ( ubPaletteRep == ubEndRep )
-			{
-				ubPaletteRep = ubStartRep;
-			}
-			SET_PALETTEREP_ID ( pSoldier->HeadPal,	gpPalRep[ ubPaletteRep ].ID );
-
-			CreateSoldierPalettes( pSoldier );
-
-			return( TRUE );
+  	default: return FALSE;
   }
-
-
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'v' ))
-  {
-			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-
-			// Get index of current
-			CHECKF( GetPaletteRepIndexFromID( pSoldier->VestPal, &ubPaletteRep ) );
-			ubType = gpPalRep[ ubPaletteRep ].ubType;
-
-			ubPaletteRep++;
-
-			// Count start and end index
-			for ( cnt = 0; cnt < ubType; cnt++ )
-			{
-				ubStartRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ cnt ]);
-			}
-
-			ubEndRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ ubType ]);
-
-			if ( ubPaletteRep == ubEndRep )
-			{
-				ubPaletteRep = ubStartRep;
-			}
-			SET_PALETTEREP_ID ( pSoldier->VestPal,	gpPalRep[ ubPaletteRep ].ID );
-
-			CreateSoldierPalettes( pSoldier );
-
-			return( TRUE );
-  }
-
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 'p' ))
-  {
-			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-
-			// Get index of current
-			CHECKF( GetPaletteRepIndexFromID( pSoldier->PantsPal, &ubPaletteRep ) );
-			ubType = gpPalRep[ ubPaletteRep ].ubType;
-
-			ubPaletteRep++;
-
-			// Count start and end index
-			for ( cnt = 0; cnt < ubType; cnt++ )
-			{
-				ubStartRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ cnt ]);
-			}
-
-			ubEndRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ ubType ]);
-
-			if ( ubPaletteRep == ubEndRep )
-			{
-				ubPaletteRep = ubStartRep;
-			}
-			SET_PALETTEREP_ID ( pSoldier->PantsPal,	gpPalRep[ ubPaletteRep ].ID );
-
-			CreateSoldierPalettes( pSoldier );
-
-			return( TRUE );
-  }
-
-  if ((pInputEvent->usEvent == KEY_DOWN )&& ( pInputEvent->usParam == 's' ))
-  {
-			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-
-			// Get index of current
-			CHECKF( GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep ) );
-			ubType = gpPalRep[ ubPaletteRep ].ubType;
-
-			ubPaletteRep++;
-
-			// Count start and end index
-			for ( cnt = 0; cnt < ubType; cnt++ )
-			{
-				ubStartRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ cnt ]);
-			}
-
-			ubEndRep = (UINT8)(ubStartRep + gubpNumReplacementsPerRange[ ubType ]);
-
-			if ( ubPaletteRep == ubEndRep )
-			{
-				ubPaletteRep = ubStartRep;
-			}
-			SET_PALETTEREP_ID ( pSoldier->SkinPal,	gpPalRep[ ubPaletteRep ].ID );
-
-			CreateSoldierPalettes( pSoldier );
-
-			return( TRUE );
-  }
-
-	return( FALSE );
 }
 
 UINT32 DebugScreenInit(void)
