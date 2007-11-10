@@ -22,7 +22,7 @@ UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo,
 
 // Adds a soldier ( already created in mercptrs[] array )!
 // Finds a good placement based on data in the loaded sector and if they are enemy's or not, etc...
-BOOLEAN AddSoldierToSector( UINT8 ubID );
+BOOLEAN AddSoldierToSector(SOLDIERTYPE* s);
 
 BOOLEAN AddSoldierToSectorNoCalculateDirection( UINT8 ubID );
 

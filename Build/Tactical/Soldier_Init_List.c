@@ -1969,7 +1969,7 @@ void AddProfilesUsingProfileInsertionData()
 			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 			// CJC: Note well that unless an error occurs, UpdateMercInSector calls
 			// AddSoldierToSector
-			// AddSoldierToSector( pSoldier->ubID );
+			// AddSoldierToSector(pSoldier);
 
 			// check action ID values
 			if ( gMercProfiles[ i ].ubQuoteRecord )

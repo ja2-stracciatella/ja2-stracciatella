@@ -1008,7 +1008,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 			pSoldier->sInsertionGridNo		= sGridNo;
 			pSoldier->sDesiredHeight			= 0;
 
-			AddSoldierToSector(pSoldier->ubID);
+			AddSoldierToSector(pSoldier);
 
 		  // Change to fly animation
 		  //sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 5, &ubDirection );

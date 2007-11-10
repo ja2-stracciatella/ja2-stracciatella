@@ -1871,7 +1871,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				{
 					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", szSector, pSoldier->name);
 					pSoldier->sInsertionGridNo = 12880;
-					AddSoldierToSector( pSoldier->ubID );
+					AddSoldierToSector(pSoldier);
 					return;
 				}
 				pSoldier->sInsertionGridNo = sGridNo;
@@ -1901,7 +1901,7 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 				pSoldier->sInsertionGridNo = 12880;
 			}
 
-			AddSoldierToSector( pSoldier->ubID );
+			AddSoldierToSector(pSoldier);
 		}
 	}
 }

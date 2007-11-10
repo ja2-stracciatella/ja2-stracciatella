@@ -1209,10 +1209,11 @@ BOOLEAN InternalAddSoldierToSector( UINT8 ubID, BOOLEAN fCalculateDirection, BOO
 }
 
 
-BOOLEAN AddSoldierToSector( UINT8 ubID )
+BOOLEAN AddSoldierToSector(SOLDIERTYPE* const s)
 {
-	return( InternalAddSoldierToSector( ubID, TRUE, FALSE, 0 , 0) );
+	return InternalAddSoldierToSector(s->ubID, TRUE, FALSE, 0 , 0);
 }
+
 
 BOOLEAN AddSoldierToSectorNoCalculateDirection( UINT8 ubID )
 {
