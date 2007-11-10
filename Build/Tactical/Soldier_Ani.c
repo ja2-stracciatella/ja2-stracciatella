@@ -2372,8 +2372,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					break;
 
 				case 754:
-
-					HandleFallIntoPitFromAnimation( pSoldier->ubID );
+					HandleFallIntoPitFromAnimation(pSoldier);
 					break;
 
 				case 755 :
