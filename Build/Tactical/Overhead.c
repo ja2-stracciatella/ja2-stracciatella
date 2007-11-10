@@ -7104,22 +7104,21 @@ static void HandleCreatureTenseQuote(void)
 
 		// run through list
 		UINT8	ubNumMercs = 0;
-		UINT8	ubMercsInSector[20] = { 0 };
+		SOLDIERTYPE* mercs_in_sector[20];
 		for (INT32 i = gTacticalStatus.Team[gbPlayerNum].bFirstID; i <= gTacticalStatus.Team[gbPlayerNum].bLastID; i++)
 		{
-			const SOLDIERTYPE* const s = MercPtrs[i];
+			SOLDIERTYPE* const s = MercPtrs[i];
 			// Add guy if he's a candidate...
 			if (OK_INSECTOR_MERC(s) && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
 			{
-				ubMercsInSector[ubNumMercs++] = i;
+				mercs_in_sector[ubNumMercs++] = s;
 			}
 		}
 
-		// If we are > 0
 		if (ubNumMercs > 0)
 		{
-			UINT8 ubChosenMerc = (UINT8)Random(ubNumMercs);
-			DoCreatureTensionQuote(MercPtrs[ubMercsInSector[ubChosenMerc]]);
+			SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
+			DoCreatureTensionQuote(chosen);
 		}
 
 		// Adjust delay....
