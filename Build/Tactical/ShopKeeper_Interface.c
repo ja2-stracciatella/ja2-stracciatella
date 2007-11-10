@@ -6052,7 +6052,6 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo )
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;
-	UINT8									ubID;
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
@@ -6064,9 +6063,10 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo )
 	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
 	MercCreateStruct.sInsertionGridNo		= sGridNo;
 
-	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
+	const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL)
 	{
-		AddSoldierToSector( ubID );
+		AddSoldierToSector(s->ubID);
 
 		// So we can see them!
 		AllTeamsLookForAll(NO_INTERRUPTS);

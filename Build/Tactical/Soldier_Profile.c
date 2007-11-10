@@ -804,7 +804,6 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
-	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT32									cnt;
 	INT16										sOldGridNo;
@@ -845,11 +844,9 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		MercCreateStruct.fPlayerMerc = TRUE;
 	}
 
-	UINT8 ubID;
-	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
+	SOLDIERTYPE* const pNewSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	if (pNewSoldier != NULL)
 	{
-		pNewSoldier = MercPtrs[ ubID ];
-
 		// Copy vital stats back!
 		pNewSoldier->bLife													= pSoldier->bLife;
 		pNewSoldier->bLifeMax												= pSoldier->bLifeMax;
@@ -906,7 +903,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		//pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ
 		 )
 		{
-			AddSoldierToSectorNoCalculateDirectionUseAnimation( ubID, pSoldier->usAnimState, pSoldier->usAniCode );
+			AddSoldierToSectorNoCalculateDirectionUseAnimation(pNewSoldier->ubID, pSoldier->usAnimState, pSoldier->usAniCode );
 			HandleSight(pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
 		}
 

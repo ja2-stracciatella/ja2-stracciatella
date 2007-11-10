@@ -2525,7 +2525,6 @@ static void AddNPCToGridNo(INT32 iGridNo)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sSectorX, sSectorY;
-	UINT8									ubID;
 
 	GetCurrentWorldSector( &sSectorX, &sSectorY );
 
@@ -2539,9 +2538,10 @@ static void AddNPCToGridNo(INT32 iGridNo)
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );
 
-	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
+	const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL)
 	{
-		AddSoldierToSector( ubID );
+		AddSoldierToSector(s->ubID);
 
 		// So we can see them!
 		AllTeamsLookForAll(NO_INTERRUPTS);

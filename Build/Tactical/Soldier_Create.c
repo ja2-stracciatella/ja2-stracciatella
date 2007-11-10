@@ -121,7 +121,7 @@ static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, const 
 static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 
 
-SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct, UINT8* const pubID)
+SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct)
 {
 	SOLDIERTYPE			Soldier;
 	INT32						cnt;
@@ -129,8 +129,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	BOOLEAN					fGuyAvail = FALSE;
 	UINT8						bLastTeamID;
 	UINT8						ubVehicleID = 0;
-
-	*pubID = NOBODY;
 
 	//Kris:
 	//Huge no no!  See the header file for description of static detailed placements.
@@ -288,7 +286,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 			// OK, set ID
 			Soldier.ubID = (UINT8)cnt;
-			*pubID = Soldier.ubID;
 		}
 
 
@@ -597,8 +594,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
 		CHECKF(CreateSoldierCommon(Soldier.ubBodyType, s, Soldier.ubID, s->usAnimState));
 
-		*pubID = Soldier.ubID;
-
 		// The soldiers animation frame gets reset, set
 //		s->usAniCode   = pCreateStruct->pExistingSoldier->usAniCode;
 //		s->usAnimState = Soldier.usAnimState;
@@ -637,7 +632,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		pSoldier->sSectorX = (INT16)SECTORX( ubSectorID );
 		pSoldier->sSectorY = (INT16)SECTORY( ubSectorID );
 		pSoldier->bSectorZ = 0;
-		*pubID = 255;
 		return pSoldier;
 	}
 }
@@ -1998,8 +1992,6 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
-	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
@@ -2016,7 +2008,7 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 	bp.bBodyType = -1;
 	bp.ubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	pSoldier = TacticalCreateSoldier( &pp, &ubID );
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -2031,8 +2023,6 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
-	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
@@ -2049,7 +2039,7 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 	bp.bBodyType = -1;
 	bp.ubSoldierClass = SOLDIER_CLASS_ARMY;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	pSoldier = TacticalCreateSoldier( &pp, &ubID );
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -2064,8 +2054,6 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
-	SOLDIERTYPE * pSoldier;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
@@ -2091,7 +2079,7 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	//NOTE:  We don't want to add Mike or Iggy if this is being called from autoresolve!
 	OkayToUpgradeEliteToSpecialProfiledEnemy( &pp );
 
-	pSoldier = TacticalCreateSoldier( &pp, &ubID );
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -2105,7 +2093,6 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
 
 	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
 	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
@@ -2118,14 +2105,13 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	//bp.bAttitude = AGGRESSIVE;
 	bp.bBodyType = -1;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	return TacticalCreateSoldier( &pp, &ubID );
+	return TacticalCreateSoldier(&pp);
 }
 
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 {
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
-	UINT8 ubID;
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
 	{
@@ -2142,7 +2128,7 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 	bp.bAttitude = AGGRESSIVE;
 	bp.bBodyType = bCreatureBodyType;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	return TacticalCreateSoldier( &pp, &ubID );
+	return TacticalCreateSoldier(&pp);
 }
 
 
@@ -2249,7 +2235,6 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	// Create guy # X
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
-	UINT8									ubID;
 	UINT16 usMapPos;
 
 	if ( GetMouseXY( &sGridX, &sGridY ) )
@@ -2271,9 +2256,10 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 
 			RandomizeNewSoldierStats( &MercCreateStruct );
 
-			if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
+			const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+			if (s != NULL)
 			{
-				AddSoldierToSector( ubID );
+				AddSoldierToSector(s->ubID);
 
 				// So we can see them!
 				AllTeamsLookForAll(NO_INTERRUPTS);

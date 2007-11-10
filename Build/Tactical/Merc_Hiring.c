@@ -65,7 +65,6 @@ INT16	gsMercArriveSectorY = 1;
 
 INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 {
-	UINT8		iNewIndex;
 	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
 	MERCPROFILESTRUCT				*pMerc;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
@@ -102,19 +101,18 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	MercCreateStruct.bTeam								= SOLDIER_CREATE_AUTO_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver= pHireMerc->fCopyProfileItemsOver;
 
-	if ( !TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	if (pSoldier == NULL)
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return( MERC_HIRE_FAILED );
 	}
 
-	SOLDIERTYPE* const pSoldier = GetMan(iNewIndex);
-
 	if( DidGameJustStart() )
 	{
 		// OK, CHECK FOR FIRST GUY, GIVE HIM SPECIAL ITEM!
-		#ifndef JA2DEMO
-		if ( iNewIndex == 0 )
+#ifndef JA2DEMO
+		if (pSoldier->ubID == 0)
 		{
 			// OK, give this item to our merc!
 			OBJECTTYPE Object;
@@ -133,7 +131,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 
 		// ATE: Insert for demo , not using the heli sequence....
 		pHireMerc->ubInsertionCode				= INSERTION_CODE_CHOPPER;
-		#endif
+#endif
 	}
 
 	//record how long the merc will be gone for

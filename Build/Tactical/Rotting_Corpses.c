@@ -973,10 +973,8 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
-	UINT8										iNewIndex;
 	INT16										sGridNo;
 	UINT8										ubDirection;
-	SOLDIERTYPE							*pSoldier;
 	UINT8										ubRoomNum;
 
 	// No crows inside :(
@@ -997,10 +995,9 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	MercCreateStruct.sInsertionGridNo		= pCorpse->def.sGridNo;
 	RandomizeNewSoldierStats( &MercCreateStruct );
 
-	if ( TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) != NULL )
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	if (pSoldier != NULL)
 	{
-		pSoldier = MercPtrs[ iNewIndex ];
-
 		sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 2, &ubDirection );
 
 		if ( sGridNo != NOWHERE )
@@ -1011,8 +1008,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 			pSoldier->sInsertionGridNo		= sGridNo;
 			pSoldier->sDesiredHeight			= 0;
 
-		  // Add to sector
-		  AddSoldierToSector( iNewIndex );
+			AddSoldierToSector(pSoldier->ubID);
 
 		  // Change to fly animation
 		  //sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 5, &ubDirection );

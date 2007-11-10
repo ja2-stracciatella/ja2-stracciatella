@@ -3153,7 +3153,6 @@ static UINT8 GetUnusedMercProfileID(void)
 static void CreateTempPlayerMerc(void)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT8							ubID;
 
 	//Init the merc create structure with basic information
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
@@ -3167,7 +3166,7 @@ static void CreateTempPlayerMerc(void)
 
 	//Create the player soldier
 
-	gpMercs[ gpAR->iNumMercFaces ].pSoldier = TacticalCreateSoldier( &MercCreateStruct, &ubID );
+	gpMercs[gpAR->iNumMercFaces].pSoldier = TacticalCreateSoldier(&MercCreateStruct);
 	if( gpMercs[ gpAR->iNumMercFaces ].pSoldier )
 	{
 		gpAR->iNumMercFaces++;

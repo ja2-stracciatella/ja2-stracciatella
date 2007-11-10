@@ -444,7 +444,6 @@ void ProcessMercEditing()
 
 void AddMercToWorld( INT32 iMapIndex )
 {
-	SOLDIERTYPE *pSoldier;
 	INT32 i;
 
 	memset( &gTempBasicPlacement, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
@@ -480,7 +479,6 @@ void AddMercToWorld( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		UINT8	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
 
@@ -504,7 +502,8 @@ void AddMercToWorld( INT32 iMapIndex )
 		gTempDetailedPlacement.sSectorY = sSectorY;
 
 		//Create the soldier, but don't place it yet.
-		if ( pSoldier = TacticalCreateSoldier( &gTempDetailedPlacement, &ubID ) )
+		SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&gTempDetailedPlacement);
+		if (pSoldier != NULL)
 		{
 			pSoldier->bVisible = 1;
 			pSoldier->bLastRenderVisibleValue = 1;
@@ -515,8 +514,8 @@ void AddMercToWorld( INT32 iMapIndex )
 			pNode->pSoldier = pSoldier;
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector( ubID, FALSE, FALSE, 0, 0 );
-			IndicateSelectedMerc( ubID );
+			InternalAddSoldierToSector(pSoldier->ubID, FALSE, FALSE, 0, 0);
+			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.
 			if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
@@ -3592,7 +3591,6 @@ void CopyMercPlacement( INT32 iMapIndex )
 
 void PasteMercPlacement( INT32 iMapIndex )
 {
-	SOLDIERTYPE *pSoldier;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 
@@ -3635,7 +3633,6 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 	if( IsLocationSittable( iMapIndex, gfRoofPlacement ) )
 	{
-		UINT8	ubID;
 		INT16 sSectorX, sSectorY;
 		SOLDIERINITNODE *pNode;
 
@@ -3669,7 +3666,8 @@ void PasteMercPlacement( INT32 iMapIndex )
 		}
 
 		//Create the soldier, but don't place it yet.
-		if ( pSoldier = TacticalCreateSoldier( &tempDetailedPlacement, &ubID ) )
+		SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&tempDetailedPlacement);
+		if (pSoldier != NULL)
 		{
 			pSoldier->bVisible = 1;
 			pSoldier->bLastRenderVisibleValue = 1;
@@ -3695,8 +3693,8 @@ void PasteMercPlacement( INT32 iMapIndex )
 			}
 
 			//Add the soldier to physically appear on the map now.
-			InternalAddSoldierToSector( ubID, FALSE, FALSE, 0, 0 );
-			IndicateSelectedMerc( ubID );
+			InternalAddSoldierToSector(pSoldier->ubID, FALSE, FALSE, 0, 0);
+			IndicateSelectedMerc(pSoldier->ubID);
 
 			//Move him to the roof if intended and possible.
 			if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )

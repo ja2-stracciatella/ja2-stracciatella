@@ -3721,8 +3721,6 @@ static void CreateNextCivType(void)
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{
-		INT8							iNewIndex;
-
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3742,9 +3740,10 @@ static void CreateNextCivType(void)
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
+		const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+		if (s != NULL)
 		{
-			AddSoldierToSector( iNewIndex );
+			AddSoldierToSector(s->ubID);
 
 			// So we can see them!
 			AllTeamsLookForAll(NO_INTERRUPTS);
@@ -3781,8 +3780,6 @@ static void CreateCow(void)
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{
-		INT8							iNewIndex;
-
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3794,9 +3791,10 @@ static void CreateCow(void)
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
+		const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+		if (s != NULL)
 		{
-			AddSoldierToSector( iNewIndex );
+			AddSoldierToSector(s->ubID);
 
 			// So we can see them!
 			AllTeamsLookForAll(NO_INTERRUPTS);
@@ -3814,8 +3812,6 @@ static void CreatePlayerControlledCow(void)
 	// Get Grid Corrdinates of mouse
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{
-		INT8							iNewIndex;
-
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= 12;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3828,9 +3824,10 @@ static void CreatePlayerControlledCow(void)
 
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
+		const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+		if (s != NULL)
 		{
-			AddSoldierToSector( iNewIndex );
+			AddSoldierToSector(s->ubID);
 
 			// So we can see them!
 			AllTeamsLookForAll(NO_INTERRUPTS);
@@ -3891,8 +3888,6 @@ static void CreatePlayerControlledMonster(void)
 	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
 	{
 		SOLDIERCREATE_STRUCT		MercCreateStruct;
-		INT8							iNewIndex;
-
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3909,10 +3904,8 @@ static void CreatePlayerControlledMonster(void)
 		MercCreateStruct.sInsertionGridNo		= usMapPos;
 		RandomizeNewSoldierStats( &MercCreateStruct );
 
-		if ( TacticalCreateSoldier( &MercCreateStruct, &iNewIndex ) )
-		{
-			AddSoldierToSector( iNewIndex );
-		}
+		const SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+		if (s != NULL) AddSoldierToSector(s->ubID);
 	}
 }
 

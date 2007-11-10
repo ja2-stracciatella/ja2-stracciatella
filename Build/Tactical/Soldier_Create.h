@@ -141,7 +141,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct );
 
 //Kris:
 //Modified return type from BOOLEAN to SOLDIERTYPE*
-SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* pCreateStruct, UINT8* pubID);
+SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* pCreateStruct);
 
 //Randomly generated enemies used by strategic AI.
 SOLDIERTYPE* TacticalCreateAdministrator();

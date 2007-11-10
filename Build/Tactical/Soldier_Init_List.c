@@ -486,8 +486,6 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 {
 	UINT8 ubProfile;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
-	SOLDIERTYPE *pSoldier;
-	UINT8 ubID;
 	// First check if this guy has a profile and if so check his location such that it matches!
 	// Get profile from placement info
 	memset( &tempDetailedPlacement, 0, sizeof( SOLDIERCREATE_STRUCT ) );
@@ -647,11 +645,12 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 		}
 	}
 
-	if ( pSoldier = TacticalCreateSoldier( &tempDetailedPlacement, &ubID ) )
+	SOLDIERTYPE* pSoldier = TacticalCreateSoldier(&tempDetailedPlacement);
+	if (pSoldier != NULL)
 	{
 		curr->pSoldier = pSoldier;
-		curr->ubSoldierID = ubID;
-		AddSoldierToSectorNoCalculateDirection( ubID );
+		curr->ubSoldierID = pSoldier->ubID;
+		AddSoldierToSectorNoCalculateDirection(pSoldier->ubID);
 
 		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bTeam == ENEMY_TEAM && !pSoldier->inv[ HANDPOS ].usItem )
 		{
@@ -1952,7 +1951,6 @@ void AddProfilesUsingProfileInsertionData()
 		if( !pSoldier )
 		{ //Create a new soldier, as this one doesn't exist
 			SOLDIERCREATE_STRUCT		MercCreateStruct;
-			UINT8									ubID;
 
 			//Set up the create struct so that we can properly create the profile soldier.
 			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
@@ -1962,7 +1960,7 @@ void AddProfilesUsingProfileInsertionData()
 			MercCreateStruct.sSectorY					= gWorldSectorY;
 			MercCreateStruct.bSectorZ					= gbWorldSectorZ;
 
-			pSoldier = TacticalCreateSoldier( &MercCreateStruct, &ubID );
+			pSoldier = TacticalCreateSoldier(&MercCreateStruct);
 		}
 		if ( pSoldier )
 		{ //Now, insert the soldier.

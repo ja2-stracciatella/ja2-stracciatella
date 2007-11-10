@@ -44,7 +44,6 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 	INT8							bDirection;
 	INT32							iLoop;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT8							ubNewIndex;
 
 	// Depeding on stance and direction facing, add guy!
 
@@ -78,10 +77,9 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 			MercCreateStruct.sInsertionGridNo		= sGridNo;
 
 			// Get Grid Corrdinates of mouse
-			if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
+			SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(&MercCreateStruct);
+			if (pPlanSoldier != NULL)
 			{
-				SOLDIERTYPE* pPlanSoldier = GetSoldier(ubNewIndex);
-
 				pPlanSoldier->sPlannedTargetX = -1;
 				pPlanSoldier->sPlannedTargetY = -1;
 
@@ -159,10 +157,9 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 				MercCreateStruct.sInsertionGridNo		= sGridNo;
 
 				// Get Grid Corrdinates of mouse
-				if ( TacticalCreateSoldier( &MercCreateStruct, &ubNewIndex ) )
+				SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(&MercCreateStruct);
+				if (pPlanSoldier != NULL)
 				{
-					SOLDIERTYPE* pPlanSoldier = GetSoldier(ubNewIndex);
-
 					pPlanSoldier->sPlannedTargetX = -1;
 					pPlanSoldier->sPlannedTargetY = -1;
 

@@ -2626,7 +2626,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
 	SOLDIERTYPE SavedSoldierInfo;
-	UINT8		ubId;
 	UINT8		ubOne = 1;
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
@@ -2717,7 +2716,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			CreateStruct.fUseExistingSoldier	= TRUE;
 			CreateStruct.pExistingSoldier			= &SavedSoldierInfo;
 
-			if( !TacticalCreateSoldier( &CreateStruct, &ubId ) )
+			if (!TacticalCreateSoldier(&CreateStruct))
 				return( FALSE );
 
 			SOLDIERTYPE* const s = GetMan(cnt);
