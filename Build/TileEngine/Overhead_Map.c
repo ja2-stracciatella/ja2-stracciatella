@@ -565,23 +565,6 @@ static void HandleOverheadUI(void)
 {
   InputAtom					InputEvent;
 	INT16							sMousePos=0;
-	UINT8							ubID;
-
-	// CHECK FOR MOUSE OVER REGIONS...
-	if ( GetOverheadMouseGridNo( &sMousePos ) )
-	{
-		// Look quickly for a soldier....
-		ubID =  QuickFindSoldier( sMousePos );
-
-		if ( ubID != NOBODY )
-		{
-			// OK, selected guy is here...
-			//gprintfdirty( gusMouseXPos, gusMouseYPos, MercPtrs[ ubID ]->name );
-			//mprintf( gusMouseXPos, gusMouseYPos, MercPtrs[ ubID ]->name );
-
-		}
-
-	}
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {

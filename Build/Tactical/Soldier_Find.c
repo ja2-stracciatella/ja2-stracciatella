@@ -870,30 +870,6 @@ BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT
 	return( FALSE );
 }
 
-// VERY quickly finds a soldier at gridno , ( that is visible )
-UINT8 QuickFindSoldier( INT16 sGridNo )
-{
-	UINT32 cnt;
-	SOLDIERTYPE *pSoldier = NULL;
-
-	// Loop through all mercs and make go
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
-	{
-		pSoldier = MercSlots[ cnt ];
-
-		if ( pSoldier != NULL )
-		{
-			if ( pSoldier->sGridNo == sGridNo && pSoldier->bVisible != -1 )
-			{
-				return( (UINT8)cnt );
-			}
-		}
-
-	}
-
-	return( NOBODY );
-}
-
 
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY )
 {
