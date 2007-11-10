@@ -804,7 +804,6 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 {
-	UINT8										ubID;
 	SOLDIERTYPE							*pNewSoldier = NULL;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	UINT32									cnt;
@@ -818,13 +817,10 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		DeleteTalkingMenu();
 	}
 
-	// Save merc id for this guy...
-	ubID = pSoldier->ubID;
-
 	sOldGridNo = pSoldier->sGridNo;
 
 	// Remove him from the game!
-	InternalTacticalRemoveSoldier( ubID, FALSE );
+	InternalTacticalRemoveSoldier(pSoldier, FALSE);
 
 	// Create a new one!
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
@@ -849,6 +845,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		MercCreateStruct.fPlayerMerc = TRUE;
 	}
 
+	UINT8 ubID;
 	if ( TacticalCreateSoldier( &MercCreateStruct, &ubID ) )
 	{
 		pNewSoldier = MercPtrs[ ubID ];
