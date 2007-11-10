@@ -24,6 +24,7 @@ typedef struct
 	UINT8		ubMercID;
 	INT32		iPayOutPrice;
 } LIFE_INSURANCE_PAYOUT;
+CASSERT(sizeof(LIFE_INSURANCE_PAYOUT) == 8)
 
 
 typedef struct
@@ -32,6 +33,7 @@ typedef struct
 	INT32		iIdOfMerc;
 	UINT32	uiArrivalTime;
 } LAST_HIRED_MERC_STRUCT;
+CASSERT(sizeof(LAST_HIRED_MERC_STRUCT) == 12)
 
 
 typedef struct
@@ -42,7 +44,7 @@ typedef struct
 	UINT16	usBobbyItemIndex;						//Item number in the BobbyRayInventory structure
 	BOOLEAN	fUsed;											//Indicates wether or not the item is from the used inventory or the regular inventory
 } BobbyRayPurchaseStruct;
-
+CASSERT(sizeof(BobbyRayPurchaseStruct) == 8)
 
 
 typedef struct
@@ -51,6 +53,7 @@ typedef struct
 	BobbyRayPurchaseStruct BobbyRayPurchase[ MAX_PURCHASE_AMOUNT ];
 	UINT8	ubNumberPurchases;
 } BobbyRayOrderStruct;
+CASSERT(sizeof(BobbyRayOrderStruct) == 84)
 
 
 //used when the player goes to bobby rays when it is still down
