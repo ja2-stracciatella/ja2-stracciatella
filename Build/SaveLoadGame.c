@@ -2716,10 +2716,9 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			CreateStruct.fUseExistingSoldier	= TRUE;
 			CreateStruct.pExistingSoldier			= &SavedSoldierInfo;
 
-			if (!TacticalCreateSoldier(&CreateStruct))
-				return( FALSE );
-
-			SOLDIERTYPE* const s = GetMan(cnt);
+			SOLDIERTYPE* const s = TacticalCreateSoldier(&CreateStruct);
+			if (s == NULL) return FALSE;
+			Assert(s->ubID == cnt);
 
 			// Load the pMercPath
 			if (!LoadMercPathToSoldierStruct(hFile, s)) return FALSE;
