@@ -3364,11 +3364,11 @@ SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* s)
 }
 
 
-static UINT8 FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+static SOLDIERTYPE* FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
 	for (INT32 i = begin; i >= last; --i)
 	{
-		const SOLDIERTYPE* const s = &Menptr[i];
+		SOLDIERTYPE* const s = &Menptr[i];
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
 
 		if (fGoodForLessOKLife)
@@ -3376,40 +3376,40 @@ static UINT8 FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assig
 			// Check for bLife > 0
 			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return i;
+				return s;
 			}
 		}
 		else
 		{
 			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
-				return i;
+				return s;
 			}
 		}
 	}
 
-	return NOBODY;
+	return NULL;
 }
 
 
-UINT8 FindPrevActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* const s, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
 {
 	const TacticalTeamType* const t = &gTacticalStatus.Team[s->bTeam];
 	const UINT8 id = s->ubID;
 	const INT8 assignment = s->bAssignment;
-	UINT8 res;
+	SOLDIERTYPE* res;
 
 	// loop back
 	res = FindPrevActiveAndAliveMercRange(id - 1, t->bFirstID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NOBODY) return res;
+	if (res != NULL) return res;
 
 	// look for all mercs on the same team,
 	res = FindPrevActiveAndAliveMercRange(t->bLastID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NOBODY) return res;
+	if (res != NULL) return res;
 
 	// none found,
 	// IF we are here, keep as we always were!
-	return id;
+	return s;
 }
 
 

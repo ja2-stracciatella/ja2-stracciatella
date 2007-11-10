@@ -228,7 +228,7 @@ void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
 
 UINT8 FindNextActiveAndAliveMerc(const SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
-UINT8 FindPrevActiveAndAliveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs );
+SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
 
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
 
