@@ -5267,15 +5267,11 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 				// Change music modes
-				if ( gfLastMercTalkedAboutKillingID == NOBODY || ( gfLastMercTalkedAboutKillingID != NOBODY && !( MercPtrs[ gfLastMercTalkedAboutKillingID ]->uiStatusFlags & SOLDIER_MONSTER ) ) )
+				if (gfLastMercTalkedAboutKillingID == NOBODY || !(MercPtrs[gfLastMercTalkedAboutKillingID]->uiStatusFlags & SOLDIER_MONSTER))
 				{
 					SetMusicMode(MUSIC_TACTICAL_VICTORY);
-					ShouldBeginAutoBandage( );
 				}
-				else if ( gfLastMercTalkedAboutKillingID != NOBODY && ( MercPtrs[ gfLastMercTalkedAboutKillingID ]->uiStatusFlags & SOLDIER_MONSTER ) )
-				{
-					ShouldBeginAutoBandage( );
-				}
+				ShouldBeginAutoBandage();
 
 				// Say battle end quote....
 
