@@ -860,10 +860,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	// ATE; Changed alogrithm here...
 	// We first loop through the group and save ubID's ov valid guys to talk....
 	// ( Can't if sleeping, unconscious, and EPC, etc....
-	UINT8				ubMercsInGroup[ 20 ] = { 0 };
 	UINT8				ubNumMercs = 0;
-	UINT8				ubChosenMerc;
-	SOLDIERTYPE *pSoldier;
 	PLAYERGROUP *pPlayer;
 
 	if( fDisableMapInterfaceDueToBattle )
@@ -878,16 +875,15 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	pPlayer = pPlayerDialogGroup->pPlayerList;
 	AssertMsg( pPlayer, String( "Player group %d doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID ) );
 
-
+	SOLDIERTYPE* mercs_in_group[20];
 	while( pPlayer != NULL )
 	{
-		pSoldier = pPlayer->pSoldier;
+		SOLDIERTYPE* const pSoldier = pPlayer->pSoldier;
 
 		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) )
 		{
-			ubMercsInGroup[ ubNumMercs ] = pSoldier->ubID;
-			ubNumMercs++;
+			mercs_in_group[ubNumMercs++] = pSoldier;
 		}
 
 		pPlayer = pPlayer->next;
@@ -908,14 +904,12 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 				gfCantRetreatInPBI = TRUE;
 			}
 
-			ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-			pSoldier = MercPtrs[ ubMercsInGroup[ ubChosenMerc ] ];
-			gpTacticalTraversalChosenSoldier = pSoldier;
+			SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
+			gpTacticalTraversalChosenSoldier = chosen;
 
 			if( !gfTacticalTraversal )
 			{
-				HandleImportantPBIQuote( pSoldier, pInitiatingBattleGroup );
+				HandleImportantPBIQuote(chosen, pInitiatingBattleGroup);
 			}
 
 			InterruptTime();
@@ -937,11 +931,8 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 			gfCantRetreatInPBI = TRUE;
 		}
 
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		pSoldier = MercPtrs[ ubMercsInGroup[ ubChosenMerc ] ];
-
-		HandleImportantPBIQuote( pSoldier, pInitiatingBattleGroup );
+		SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
+		HandleImportantPBIQuote(chosen, pInitiatingBattleGroup);
 		InterruptTime();
 		PauseGame();
 		LockPauseState( 12 );
