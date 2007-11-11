@@ -743,18 +743,16 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
 
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-
 	wchar_t sString[64];
 	if (sTownName != NULL)
 	{
 		//nick name - town name
-		swprintf(sString, lengthof(sString), L"%ls - %ls", p->zNickname, sTownName);
+		swprintf(sString, lengthof(sString), L"%ls - %ls", s->name, sTownName);
 	}
 	else
 	{
 		//nick name
-		wcslcpy(sString, p->zNickname, lengthof(sString));
+		wcslcpy(sString, s->name, lengthof(sString));
 	}
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, sString);
