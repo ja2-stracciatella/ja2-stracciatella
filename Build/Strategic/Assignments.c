@@ -3029,27 +3029,6 @@ static BOOLEAN IsItemRepairable(UINT16 usItem, INT8 bStatus)
 }
 
 
-static void HandleRestAndFatigueInSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
-{
-	// this will handle all sleeping characters in this sector
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	pSoldier = MercPtrs[0];
-
-	// go through list of characters, find all sleepers in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
-	{
-		if( ( pTeamSoldier -> bActive ) && ( pSoldier -> bAssignment != ASSIGNMENT_POW ) )
-		{
-			if( ( pTeamSoldier -> sSectorX == sMapX ) && ( pTeamSoldier -> sSectorY == sMapY ) && ( pTeamSoldier -> bSectorZ == bMapZ ) )
-			{
-			}
-		}
-	}
-}
-
-
 /*
 INT8 GetRegainDueToSleepNeeded( SOLDIERTYPE *pSoldier, INT32 iRateOfReGain )
 {
