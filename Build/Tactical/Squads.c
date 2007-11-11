@@ -477,45 +477,6 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 }
 
 
-static BOOLEAN RemoveCharacterFromASquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
-{
-
-	INT32 iCounter =0, iCounterA = 0;
-
-	// remove character from particular squad..return if successful
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; iCounter++ )
-	{
-		// check if on current squad and current slot?
-		if( Squad[ bSquadValue ][ iCounter ] == pCharacter )
-		{
-
-			UpdateCurrentlySelectedMerc( pCharacter, bSquadValue );
-
-			// found and nulled
-			Squad[ bSquadValue ][ iCounter ] = NULL;
-
-			// remove character from mvt group
-			RemovePlayerFromGroup( SquadMovementGroups[ bSquadValue ], pCharacter );
-
-
-			if( pCharacter->bLife == 0 )
-			{
-				AddDeadCharacterToSquadDeadGuys( pCharacter, iCounterA );
-			}
-
-			RebuildSquad( bSquadValue );
-
-
-			// found
-			return ( TRUE );
-		}
-	}
-
-	// not found
-	return ( FALSE );
-}
-
-
 // check if character is in this squad
 static BOOLEAN IsCharacterInSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
