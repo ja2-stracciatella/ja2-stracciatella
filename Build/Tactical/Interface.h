@@ -184,7 +184,7 @@ void EndTopMessage( );
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 
-const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier );
+const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* s);
 
 
 void RenderAimCubeUI( );
@@ -203,6 +203,8 @@ void DirtyTopMessage( );
 void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
 void HandleMultiPurposeLocator( );
 void RenderTopmostMultiPurposeLocator( );
+
+void GetSoldierAboveGuyPositions(const SOLDIERTYPE* s, INT16* psX, INT16* psY, BOOLEAN fRadio);
 
 extern UINT32  guiVEHINV;
 extern BOOLEAN gfInOpenDoorMenu;

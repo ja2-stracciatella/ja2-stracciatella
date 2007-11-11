@@ -299,7 +299,7 @@ static SOLDIERTYPE* GetClosestMercInOverheadMap(INT16 sSweetGridNo, UINT8 ubRadi
 }
 
 
-static void DisplayMercNameInOverhead(SOLDIERTYPE* pSoldier)
+static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 {
 	INT16		sWorldScreenX, sX;
 	INT16		sWorldScreenY, sY;

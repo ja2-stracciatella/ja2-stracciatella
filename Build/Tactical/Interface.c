@@ -1052,7 +1052,7 @@ static void GetArrowsBackground(void)
 }
 
 
-void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY, BOOLEAN fRadio )
+void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const psX, INT16* const psY, const BOOLEAN fRadio)
 {
 	INT16 sMercScreenX, sMercScreenY;
 	INT16 sOffsetX, sOffsetY;
@@ -2777,26 +2777,15 @@ static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-const wchar_t *GetSoldierHealthString( SOLDIERTYPE *pSoldier )
+const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* const s)
 {
-	INT32 cnt, cntStart;
-	if( pSoldier->bLife == pSoldier->bLifeMax )
+	INT32 i;
+	const INT32 start = (s->bLife == s->bLifeMax ? 4 : 0);
+	for (i = start; i < 6; ++i)
 	{
-		cntStart = 4;
+		if (s->bLife < bHealthStrRanges[i]) break;
 	}
-	else
-	{
-		cntStart = 0;
-	}
-	//Show health on others.........
-	for ( cnt = cntStart; cnt < 6; cnt ++ )
-	{
-		if ( pSoldier->bLife < bHealthStrRanges[ cnt ] )
-		{
-			break;
-		}
-	}
-	return zHealthStr[ cnt ];
+	return zHealthStr[i];
 }
 
 

@@ -61,8 +61,6 @@
 #include "Message.h"
 
 
-extern void GetSoldierAboveGuyPositions( SOLDIERTYPE *pSoldier, INT16 *psX, INT16 *psY, BOOLEAN fRadio );
-
 //--------------------------------------------------
 //	NON_CIV_GROUP,
 //	REBEL_CIV_GROUP,
@@ -3084,7 +3082,6 @@ static void RenderCurrentSchedule(void);
 
 void RenderMercStrings()
 {
-	SOLDIERTYPE								 *pSoldier;
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
 	const wchar_t* pStr;
@@ -3096,7 +3093,7 @@ void RenderMercStrings()
 	{
 		if( curr->pSoldier && curr->pSoldier->bVisible == 1 )
 		{ //Render the health text
-			pSoldier = curr->pSoldier;
+			const SOLDIERTYPE* const pSoldier = curr->pSoldier;
 			GetSoldierAboveGuyPositions( pSoldier, &sXPos, &sYPos, FALSE );
 			// Display name
 			SetFont( TINYFONT1 );
