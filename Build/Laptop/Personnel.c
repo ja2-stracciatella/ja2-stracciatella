@@ -489,10 +489,10 @@ void RenderPersonnel(void)
 
 
 static void DisplayCharStats(const SOLDIERTYPE* s);
-static void DisplayEmploymentinformation(const SOLDIERTYPE* const s);
+static void DisplayEmploymentinformation(const SOLDIERTYPE* s);
 
 
-static void RenderPersonnelStats(INT32 iId)
+static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 {
 	// will render the stats of person iId
 	SetFont(PERS_FONT);
@@ -501,11 +501,11 @@ static void RenderPersonnelStats(INT32 iId)
 
 	if (gubPersonnelInfoState == PERSONNEL_STAT_BTN)
 	{
-		DisplayCharStats(GetMan(iId));
+		DisplayCharStats(s);
 	}
 	else if (gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN)
 	{
-		DisplayEmploymentinformation(GetMan(iId));
+		DisplayEmploymentinformation(s);
 	}
 }
 
@@ -1214,14 +1214,13 @@ static void DisplayFaceOfDisplayedMerc(void)
 		// if showing inventory, leave
 		if (fCurrentTeamMode)
 		{
-			const INT32 id = GetIdOfThisSlot(iCurrentPersonSelectedId);
-			const SOLDIERTYPE* const s = GetMan(id);
+			const SOLDIERTYPE* const s = GetMan(GetIdOfThisSlot(iCurrentPersonSelectedId));
 			RenderPersonnelFaceCurrent(s);
 			DisplayCharName(s);
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
 
-			RenderPersonnelStats(id);
+			RenderPersonnelStats(s);
 		}
 		else
 		{
