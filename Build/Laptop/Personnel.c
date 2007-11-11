@@ -489,7 +489,7 @@ void RenderPersonnel(void)
 
 
 static void DisplayCharStats(INT32 iId);
-static void DisplayEmploymentinformation(INT32 iId);
+static void DisplayEmploymentinformation(const SOLDIERTYPE* const s);
 
 
 static void RenderPersonnelStats(INT32 iId)
@@ -505,7 +505,7 @@ static void RenderPersonnelStats(INT32 iId)
 	}
 	else if (gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN)
 	{
-		DisplayEmploymentinformation(iId);
+		DisplayEmploymentinformation(GetMan(iId));
 	}
 }
 
@@ -2839,13 +2839,12 @@ static void HandlePersonnelKeyboard(void)
 static INT32 CalcTimeLeftOnMercContract(const SOLDIERTYPE* pSoldier);
 
 
-static void DisplayEmploymentinformation(INT32 iId)
+static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 {
 	wchar_t sString[50];
 	wchar_t sStringA[50];
 	INT16 sX, sY;
 
-	const SOLDIERTYPE* s = &Menptr[iId];
 	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
 	const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
