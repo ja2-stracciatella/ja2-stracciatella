@@ -539,24 +539,6 @@ PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSect
      return NULL;
 	 }
 
-
-	 // for strategic mvt events
-	 // we are at the new node, check if previous node was a change in deirection, ie change in delta..add waypoint
-	 // if -1, do not
-	 /*
-	 if( iOldDelta != 0 )
-	 {
-		 if( iOldDelta != iDelta )
-		 {
-			 // ok add last waypt
-			 if( fTempPath == FALSE )
-			 {
-				 // change in direction..add waypoint
-				 AddWaypointToGroup( ( UINT8 )sMvtGroupNumber, ( UINT8 )( ( iCurrentSectorNum - iDelta ) % MAP_WORLD_X ), ( UINT8 )( ( iCurrentSectorNum - iDelta ) / MAP_WORLD_X ) );
-			 }
-		 }
-	 }
-	 */
 	 iOldDelta = iDelta;
 
 
@@ -583,18 +565,8 @@ PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSect
 	  return FALSE;
 	}
 
-	/*
-	// ok add last waypt
-	if( fTempPath == FALSE )
-	{
-		// change in direction..add waypoint
-		AddWaypointToGroup( ( UINT8 )sMvtGroupNumber, ( UINT8 )( iCurrentSectorNum% MAP_WORLD_X ), ( UINT8 )( iCurrentSectorNum / MAP_WORLD_X ) );
-  }
-	*/
-
 	pPath=pHeadOfPathList;
 	return pPath;
-
 }
 
 

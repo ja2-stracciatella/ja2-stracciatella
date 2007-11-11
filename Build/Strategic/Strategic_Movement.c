@@ -616,22 +616,6 @@ BOOLEAN AddWaypointToPGroup( GROUP* pGroup, UINT8 ubSectorX, UINT8 ubSectorY ) /
 }
 
 
-static BOOLEAN AddWaypointToGroup(UINT8 ubGroupID, UINT8 ubSectorX, UINT8 ubSectorY)
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	return AddWaypointToPGroup( pGroup, ubSectorX, ubSectorY );
-}
-
-
-// NOTE: This does NOT expect a strategic sector ID
-static BOOLEAN AddWaypointIDToGroup(UINT8 ubGroupID, UINT8 ubSectorID)
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	return AddWaypointIDToPGroup( pGroup, ubSectorID );
-}
-
 // NOTE: This does NOT expect a strategic sector ID
 BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID )
 {
@@ -641,13 +625,6 @@ BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID )
 	return AddWaypointToPGroup( pGroup, ubSectorX, ubSectorY );
 }
 
-
-static BOOLEAN AddWaypointStrategicIDToGroup(UINT8 ubGroupID, UINT32 uiSectorID)
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	return AddWaypointStrategicIDToPGroup( pGroup, uiSectorID );
-}
 
 BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 {
