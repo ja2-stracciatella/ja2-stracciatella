@@ -2389,7 +2389,6 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 				continue;
 			}
 			mercs_in_sector[ubNumMercs++] = pTeamSoldier;
-			ubNumMercs++;
 		}
 	}
 
