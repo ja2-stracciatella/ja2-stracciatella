@@ -237,14 +237,6 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 #define MEDIUM_ACTIVITY_LEVEL   4
 #define HIGH_ACTIVITY_LEVEL			12
 
-/*
-// the min breath to stay awake
-#define MIN_BREATH_TO_STAY_AWAKE 15
-
-// average number of hours a merc needs to sleep per day
-#define AVG_NUMBER_OF_HOURS_OF_SLEEP_NEEDED 7
-*/
-
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 #define MAX_DISTANCE_FOR_DOCTORING	5
 #define MAX_DISTANCE_FOR_REPAIR			5
@@ -266,12 +258,6 @@ BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_Y ][ 4 ];
 
 // glow area for contract region?
 BOOLEAN fGlowContractRegion = FALSE;
-
-
-/*
-// get how fast the person regains sleep
-INT8 GetRegainDueToSleepNeeded( SOLDIERTYPE *pSoldier, INT32 iRateOfReGain );
-*/
 
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
@@ -3029,28 +3015,6 @@ static BOOLEAN IsItemRepairable(UINT16 usItem, INT8 bStatus)
 }
 
 
-/*
-INT8 GetRegainDueToSleepNeeded( SOLDIERTYPE *pSoldier, INT32 iRateOfReGain )
-{
-	// look at persons regain rate,
-	// if they infact loses sleep, make sure it doesn't go below the current rate
-	INT8 bRate = 0;
-	UINT8 ubNeedForSleep = 0;
-
-	// get profile id and then grab sleep need value
-	ubNeedForSleep = gMercProfiles[ pSoldier -> ubProfile ].ubNeedForSleep;
-
-	bRate = ( AVG_NUMBER_OF_HOURS_OF_SLEEP_NEEDED - ( INT8 )ubNeedForSleep );
-
-	if( bRate >= iRateOfReGain )
-	{
-		bRate = ( - iRateOfReGain ) + 1;
-	}
-	return( bRate );
-}
-*/
-
-
 static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE* pSoldier);
 
 
@@ -4153,78 +4117,6 @@ static void UpDateSoldierLife(SOLDIERTYPE* pSoldier)
 		pSoldier -> sFractLife = 0;
 	}
 }
-
-
-
-/*
-// merc is tired, put to sleep
-BOOLEAN AutoSleepMerc( SOLDIERTYPE *pSoldier )
-{
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-
-	// already asleep
-	if( pSoldier -> fMercAsleep == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	if( pSoldier -> bBreathMax > MIN_BREATH_TO_STAY_AWAKE )
-	{
-		if( ( pSoldier -> bAssignment < ON_DUTY ) )
-		{
-			return ( FALSE );
-		}
-
-		if( pSoldier -> bLife < OKLIFE )
-		{
-			// can't sleep
-			return ( FALSE );
-		}
-
-
-		// if  was forced to stay awake, leave
-		if( pSoldier -> fForcedToStayAwake == TRUE )
-		{
-			return( FALSE );
-		}
-	}
-	else
-	{
-	//	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls", pMercFellAsleepString[0], pSoldier->name);
-	}
-
-
-	// store old assignment
-	pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-
-	if( pSoldier -> bAssignment < ON_DUTY )
-	{
-		RemoveCharacterFromASquad( pSoldier, pSoldier -> bAssignment );
-	}
-
-	if( SetMercAsleep( pSoldier, FALSE ) )
-	{
-		// change soldier state
-		SoldierInSectorSleep( pSoldier, pSoldier -> usStrategicInsertionData );
-
-		// update mapscreen
-		fCharacterInfoPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
-}
-*/
-
 
 
 void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier )

@@ -1300,14 +1300,6 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 }
 
 
-/*
-void SoldierInSectorSleep( SOLDIERTYPE *pSoldier, INT16 sGridNo )
-{
-	InternalSoldierInSectorSleep( pSoldier, sGridNo, TRUE );
-}
-*/
-
-
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	INT16 sWorldX, sWorldY;
