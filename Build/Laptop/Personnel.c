@@ -723,7 +723,7 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void DisplayCharName(INT32 iId)
+static void DisplayCharName(const SOLDIERTYPE* const s)
 {
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
@@ -732,21 +732,18 @@ static void DisplayCharName(INT32 iId)
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-	const SOLDIERTYPE* const merc = MercPtrs[iId]; // XXX TODO0010
-	if (merc->uiStatusFlags & SOLDIER_VEHICLE) return;
-
-	const SOLDIERTYPE* const man = &Menptr[iId]; // XXX TODO0010
+	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
 	const wchar_t* sTownName = NULL;
-	if (man->bAssignment != ASSIGNMENT_POW &&
-			man->bAssignment != IN_TRANSIT)
+	if (s->bAssignment != ASSIGNMENT_POW &&
+			s->bAssignment != IN_TRANSIT)
 	{
 		// name of town, if any
-		INT8 bTownId = GetTownIdForSector(man->sSectorX, man->sSectorY);
+		INT8 bTownId = GetTownIdForSector(s->sSectorX, s->sSectorY);
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
 
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[man->ubProfile];
+	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
 
 	wchar_t sString[64];
 	if (sTownName != NULL)
@@ -762,7 +759,7 @@ static void DisplayCharName(INT32 iId)
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, sString);
 
-	const wchar_t* Assignment = pPersonnelAssignmentStrings[man->bAssignment];
+	const wchar_t* Assignment = pPersonnelAssignmentStrings[s->bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_LOC_Y, Assignment);
 }
@@ -1223,7 +1220,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		{
 			const INT32 id = GetIdOfThisSlot(iCurrentPersonSelectedId);
 			RenderPersonnelFaceCurrent(id);
-			DisplayCharName(id);
+			DisplayCharName(GetMan(id));
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
 
