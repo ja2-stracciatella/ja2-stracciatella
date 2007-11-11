@@ -453,11 +453,11 @@ static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice(void);
-static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pItemNumbers);
+static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* items[]);
 static void DisableBobbyRButtons(void);
 static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY);
+static BOOLEAN DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
 static BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -473,7 +473,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	UINT16	usItemIndex;
 	wchar_t	sDollarTemp[60];
 	wchar_t	sTemp[60];
-	INT16		pItemNumbers[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
 
 	PosY = BOBBYR_GRID_PIC_Y;
 	usTextPosY = BOBBYR_ITEM_DESC_START_Y;
@@ -507,8 +506,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 
 	}
 
-
-
+	const INVTYPE* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
 	for(i=gusCurWeaponIndex; ((i<=gusLastItemIndex) && (ubCount < 4)); i++)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
@@ -531,21 +529,18 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 		}
 
 		// skip items that aren't of the right item class
-		if( ! ( Item[ usItemIndex ].usItemClass & uiItemClass ) )
-		{
-			continue;
-		}
+		const INVTYPE* const item = &Item[usItemIndex];
+		if (!(item->usItemClass & uiItemClass)) continue;
 
+		items[ubCount] = item;
 
-		pItemNumbers[ ubCount ] = usItemIndex;
-
-		switch( Item[ usItemIndex ].usItemClass )
+		switch (item->usItemClass)
 		{
 			case IC_GUN:
 			case IC_LAUNCHER:
 				gusItemNumberForItemsOnScreen[ ubCount ] = i;
 
-				DisplayBigItemImage( usItemIndex, PosY);
+				DisplayBigItemImage(item, PosY);
 
 				//Display Items Name
 				DisplayItemNameAndInfo(usTextPosY, usItemIndex, i, gfOnUsedPage);
@@ -560,7 +555,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 			case IC_AMMO:
 				gusItemNumberForItemsOnScreen[ ubCount ] = i;
 
-				DisplayBigItemImage( usItemIndex, PosY);
+				DisplayBigItemImage(item, PosY);
 
 				//Display Items Name
 				DisplayItemNameAndInfo(usTextPosY, usItemIndex, i, gfOnUsedPage);
@@ -575,7 +570,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 			case IC_ARMOUR:
 				gusItemNumberForItemsOnScreen[ ubCount ] = i;
 
-				DisplayBigItemImage( usItemIndex, PosY);
+				DisplayBigItemImage(item, PosY);
 
 				//Display Items Name
 				DisplayItemNameAndInfo(usTextPosY, usItemIndex, i, gfOnUsedPage);
@@ -592,7 +587,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 			case IC_PUNCH:
 				gusItemNumberForItemsOnScreen[ ubCount ] = i;
 
-				DisplayBigItemImage( usItemIndex, PosY);
+				DisplayBigItemImage(item, PosY);
 
 				//Display Items Name
 				DisplayItemNameAndInfo(usTextPosY, usItemIndex, i, gfOnUsedPage);
@@ -612,7 +607,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 			case IC_FACE:
 				gusItemNumberForItemsOnScreen[ ubCount ] = i;
 
-				DisplayBigItemImage( usItemIndex, PosY);
+				DisplayBigItemImage(item, PosY);
 
 				//Display Items Name
 				DisplayItemNameAndInfo(usTextPosY, usItemIndex, i, gfOnUsedPage);
@@ -628,8 +623,7 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 
 	if( gusOldItemNumOnTopOfPage != gusCurWeaponIndex )
 	{
-		CreateMouseRegionForBigImage(BOBBYR_GRID_PIC_Y, ubCount, pItemNumbers );
-
+		CreateMouseRegionForBigImage(BOBBYR_GRID_PIC_Y, ubCount, items);
 		gusOldItemNumOnTopOfPage = gusCurWeaponIndex;
 	}
 
@@ -744,12 +738,11 @@ static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 }
 
 
-static BOOLEAN DisplayBigItemImage(UINT16 usIndex, UINT16 PosY)
+static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	const INVTYPE* pItem = &Item[usIndex];
-	UINT32 uiImage = LoadTileGraphicForItem(pItem);
+	UINT32 uiImage = LoadTileGraphicForItem(item);
 
 	//center picture in frame
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiImage, 0);
@@ -908,19 +901,13 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 
 static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
+	const INVTYPE* const item = &Item[usIndex];
 	CHAR16	zTemp[128];
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	//	if ammo is begin drawn
-	if( Item[ usIndex].usItemClass == IC_AMMO )
-	{
-		wcslcpy(zTemp, BobbyRayAmmoCaliber[Magazine[Item[usIndex].ubClassIndex].ubCalibre], lengthof(zTemp));
-	}
-	else
-	{
-		//else a gun is being displayed
-		wcslcpy(zTemp, BobbyRayAmmoCaliber[Weapon[Item[usIndex].ubClassIndex].ubCalibre], lengthof(zTemp));
-	}
+	// ammo or gun?
+	const UINT8 calibre = (item->usItemClass == IC_AMMO ? Magazine[item->ubClassIndex].ubCalibre : Weapon[item->ubClassIndex].ubCalibre);
+	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre], lengthof(zTemp));
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1129,11 +1116,11 @@ void SetFirstLastPagesForUsed()
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID);
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* ammo);
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pItemNumbers)
+static void CreateMouseRegionForBigImage(UINT16 usPosY, const UINT8 ubCount, const INVTYPE* items[])
 {
 	UINT8	i;
 	CHAR16		zItemName[ SIZE_ITEM_NAME ];
@@ -1150,10 +1137,11 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, INT16* pI
 		MSYS_SetRegionUserData( &gSelectedBigImageRegion[ i ], 0, i);
 
 		//specify the help text only if the items is ammo
-		if( Item[ pItemNumbers[ i ] ].usItemClass == IC_AMMO )
+		const INVTYPE* const item = items[i];
+		if (item->usItemClass == IC_AMMO)
 		{
 			//and only if the user has an item that can use the particular type of ammo
-			ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID( pItemNumbers[ i ] );
+			ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
 			if( ubItemCount != 0 )
 			{
 				swprintf( zItemName, lengthof(zItemName), L"%ls %d %ls",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
@@ -1555,7 +1543,7 @@ static void OutOfStockMessageBoxCallBack(UINT8 bExitValue)
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID)
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* const ammo)
 {
 	UINT8	ubItemCount=0;
 	UINT8	ubMercCount;
@@ -1579,7 +1567,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INT16 sItemID)
 			if (Item[o->usItem].usItemClass == IC_GUN)
 			{
 				//if the weapon uses the same kind of ammo as the one passed in, return true
-				if (Weapon[o->usItem].ubCalibre == Magazine[Item[sItemID].ubClassIndex].ubCalibre)
+				if (Weapon[o->usItem].ubCalibre == Magazine[ammo->ubClassIndex].ubCalibre)
 				{
 					ubItemCount++;
 				}
