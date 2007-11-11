@@ -1,6 +1,7 @@
 #ifndef __SOLDER_PROFILE_H
 #define __SOLDER_PROFILE_H
 
+#include "Debug.h"
 #include "Soldier_Control.h"
 #include "Soldier_Profile_Type.h"
 
@@ -10,6 +11,14 @@ extern INT16 gsTerroristSector[][5][2];
 extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
+
+typedef UINT8 ProfileID;
+
+static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
+{
+	Assert(id < lengthof(gMercProfiles));
+	return &gMercProfiles[id];
+}
 
 #define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50
 
