@@ -6847,7 +6847,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 			if (gusSelectedSoldier == pSoldier->ubID )
 			{
 				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-				if (next != NULL && next->ubID != gusSelectedSoldier)
+				if (next->ubID != gusSelectedSoldier)
 				{
 					SelectSoldier(next, 0);
 				}

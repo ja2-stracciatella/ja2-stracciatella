@@ -1202,7 +1202,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 	if( gusSelectedSoldier == pSoldier->ubID )
 	{
 		SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-		if (next != NULL && next->ubID != gusSelectedSoldier)
+		if (next->ubID != gusSelectedSoldier)
 		{
 			SelectSoldier(next, 0);
 		}

@@ -1299,17 +1299,7 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 				// guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
 				// gusSelectedSoldier = NO_SOLDIER;
 
-				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-				if (next != NULL)
-        {
-					SelectSoldier(next, 0);
-        }
-        else
-        {
-		      gusSelectedSoldier = NO_SOLDIER;
-		      // Change UI mode to reflact that we are selected
-		      guiPendingOverrideEvent = I_ON_TERRAIN;
-        }
+				SelectSoldier(FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE), 0);
 			}
 			else if ( ( UIOKMoveDestination( pSoldier, usMapPos ) != 1 ) && pIntNode == NULL )
 			{
