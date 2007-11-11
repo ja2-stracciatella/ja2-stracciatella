@@ -267,10 +267,6 @@ BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints );
 BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier );
 */
 
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-BOOLEAN IsSoldierCloseEnoughToADoctor( SOLDIERTYPE *pPatient );
-*/
-
 #ifdef JA2BETAVERSION
 void VerifyTownTrainingIsPaidFor( void );
 #endif
@@ -7132,14 +7128,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// can character doctor?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-						if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
-						{
-							return;
-						}
-*/
-
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
@@ -7277,14 +7265,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// can character patient?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-						if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
-						{
-							return;
-						}
-*/
-
 						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
@@ -8873,14 +8853,6 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 			if( CanCharacterPatient( pSoldier ) )
 			{
 				// set as doctor
-
-/* Assignment distance limits removed.  Sep/11/98.  ARM
-				if( IsSoldierCloseEnoughToADoctor( pSoldier ) == FALSE )
-				{
-					return;
-				}
-*/
-
 				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
 
 
