@@ -664,16 +664,6 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			if( pVehicleList[ iId ].ubMovementGroup != 0 )
 			{
 				RemovePlayerFromGroup( pVehicleList[ iId ].ubMovementGroup, pSoldier );
-
-/* ARM 20-01-99, now gonna disallow exiting vehicles between sectors except if merc is leaving (fired, dies, contract runs out)
-									in which case we don't need to give them up for anything movement related since they're gone.
-
-				// check if vehicle was between sectors, if so, grunt must go it on foot
-				if( pVehicleList[ iId ].fBetweenSectors == TRUE )
-				{
-					RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId );
-				}
-*/
 			}
 
 			break;
@@ -763,102 +753,6 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	// soldier successfully removed
 	return( TRUE );
 }
-
-
-/*
-void RemoveSoldierFromVehicleBetweenSectors( pSoldier, iId )
-{
-	GROUP *pGroup;
-	INT32 iCurrentCostInTime = 0;
-	INT8 bDelta = 0;
-	UINT8 ubCurrent, ubNext, ubDirection, ubSector;
-	UINT8 ubNextX, ubNextY, ubPrevX, ubPrevY;
-	UINT32 uiTraverseTime, uiArriveTime;
-	UINT8 ubGroupId;
-	float flTripFractionCovered;
-
-
-	// set up a mvt group for the grunt
-	pSoldier->fBetweenSectors = TRUE;
-
-	// ok, the guy wasn't in a squad
-	// get his mvt groups position and set the squads to this
-	GetGroupPosition(&ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime, pVehicleList[ iId ].ubMovementGroup );
-
-	ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pSoldier -> sSectorX ) , ( INT8 ) ( pSoldier -> sSectorY ) );
-
-	// assign to a group
-	AddPlayerToGroup( ubGroupId, pSoldier );
-
-	// get the group
-	pGroup = GetGroup( ubGroupId );
-
-
-	// find total time for traversal between sectors for foot mvt type
-
-	// get current and next sector values (DON'T use prevX, prevY, that's the sector BEFORE the current one!!!)
-	ubCurrent = CALCULATE_STRATEGIC_INDEX( pGroup->ubSectorX, pGroup->ubSectorY );
-	ubNext = CALCULATE_STRATEGIC_INDEX( ubNextX, ubNextY );
-
-	// handle errors
-	Assert( ubCurrent != ubNext );
-	if ( ubCurrent == ubNext )
-		continue;
-
-	// which direction are we moving in?
-	bDelta = (INT8) ubNext - ubCurrent;
-	if( bDelta > 0 )
-	{
-		if( bDelta % SOUTH_MOVE == 0 )
-		{
-			ubDirection = SOUTH_STRATEGIC_MOVE;
-		}
-		else
-		{
-			ubDirection = EAST_STRATEGIC_MOVE;
-		}
-	}
-	else
-	{
-		if( bDelta % NORTH_MOVE == 0 )
-		{
-			ubDirection = NORTH_STRATEGIC_MOVE;
-		}
-		else
-		{
-			ubDirection = WEST_STRATEGIC_MOVE;
-		}
-	}
-
-
-	// calculate how long the entire trip would have taken on foot
-	ubSector = ( UINT8 ) SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
-	iCurrentCostInTime = GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup );
-
-	if( iCurrentCostInTime == 0xffffffff )
-	{
-		AssertMsg( 0, String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
-				pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
-				ubSector, ubDirection,
-				gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
-	}
-
-	// figure out what how far along ( percentage ) the vehicle's trip duration we bailed out at
-	flTripFractionCovered = ( uiTraverseTime - uiArriveTime + GetWorldTotalMin( ) ) / (float)uiTraverseTime;
-
-	// calculate how much longer we have to go on foot to get there
-	uiArriveTime = ( UINT32 )( ( ( 1.0 - flTripFractionCovered ) * ( float )iCurrentCostInTime ) + GetWorldTotalMin( ) );
-
-	SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, iCurrentCostInTime, uiArriveTime, pSoldier -> ubGroupID );
-
-// ARM: if this is ever reactivated, there seem to be the following additional problems:
-	1) The soldier removed isn't showing any DEST.  Must set up his strategic path/destination.
-	2) The arrive time seems to be much later than it should have been, suggesting the math above is wrong somehow
-	3) Reassigning multiple mercs at once out of a vehicle onroute doesn't work 'cause the group is between sectors so only
-			the first merc gets added successfully, the others all fail.
-}
-*/
-
 
 
 BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )

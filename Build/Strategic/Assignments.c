@@ -6673,13 +6673,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	SOLDIERTYPE * pSoldier = NULL;
 	CHAR16 sString[ 128 ];
 	INT8	bCanJoinSquad;
-/* ARM: Squad menu is now disabled for anyone between sectors
-	UINT8 ubNextX, ubNextY, ubPrevX, ubPrevY;
-	UINT32 uiTraverseTime, uiArriveTime;
-	INT32 iOldSquadValue = -1;
-	BOOLEAN fCharacterWasBetweenSectors = FALSE;
-*/
-
 
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
@@ -6712,31 +6705,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 			{
 				// able to add, do it
-
-/* ARM: Squad menu is now disabled for anyone between sectors
-				// old squad character was in
-				iOldSquadValue = SquadCharacterIsIn( pSoldier );
-
-				// grab if char was between sectors
-				fCharacterWasBetweenSectors = pSoldier -> fBetweenSectors;
-
-				if( fCharacterWasBetweenSectors )
-				{
-					if( pSoldier -> bAssignment == VEHICLE )
-					{
-						if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
-						{
-							// can't change, go away
-							return;
-						}
-					}
-				}
-
-				if( pSoldier -> ubGroupID )
-				{
-					GetGroupPosition(&ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime, pSoldier -> ubGroupID );
-				}
-*/
 				pSoldier->bOldAssignment = pSoldier->bAssignment;
 
 				if( pSoldier->bOldAssignment == VEHICLE )
@@ -6754,20 +6722,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				//Clear any desired squad assignments -- seeing the player has physically changed it!
 				pSoldier -> ubNumTraversalsAllowedToMerge = 0;
 				pSoldier -> ubDesiredSquadAssignment = NO_ASSIGNMENT;
-
-
-/* ARM: Squad menu is now disabled for anyone between sectors
-				if( fCharacterWasBetweenSectors )
-				{
-					// grab location of old squad and set this value for new squad
-					if( iOldSquadValue != -1 )
-					{
-						GetSquadPosition( &ubNextX, &ubNextY, &ubPrevX, &ubPrevY, &uiTraverseTime, &uiArriveTime,  ( UINT8 )iOldSquadValue );
-					}
-
-					SetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, pSoldier -> ubGroupID );
-				}
-*/
 
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 			}

@@ -913,41 +913,6 @@ INT32 GetLastSquadActive( void )
 }
 
 
-// get squads between sector positions and times
-static void GetSquadPosition(UINT8* ubNextX, UINT8* ubNextY, UINT8* ubPrevX, UINT8* ubPrevY, UINT32* uiTraverseTime, UINT32* uiArriveTime, UINT8 ubSquadValue)
-{
-	// grab the mvt group for this squad and find all this information
-
-	if( SquadMovementGroups[ ubSquadValue ] == 0 )
-	{
-		*ubNextX = 0;
-		*ubNextY = 0;
-		*ubPrevX = 0;
-		*ubPrevY = 0;
-		*uiTraverseTime = 0;
-		*uiArriveTime = 0;
-		return;
-	}
-
-	// grab this squads mvt position
-	GetGroupPosition( ubNextX, ubNextY, ubPrevX, ubPrevY, uiTraverseTime, uiArriveTime, SquadMovementGroups[ ubSquadValue ] );
-}
-
-
-// set squads between sector position
-static void SetSquadPositionBetweenSectors(UINT8 ubNextX, UINT8 ubNextY, UINT8 ubPrevX, UINT8 ubPrevY, UINT32 uiTraverseTime, UINT32 uiArriveTime, UINT8 ubSquadValue)
-{
-	// set mvt group position for squad for
-
-	if( SquadMovementGroups[ ubSquadValue ] == 0 )
-	{
-		return;
-	}
-	SetGroupPosition(  ubNextX,  ubNextY,  ubPrevX,  ubPrevY,  uiTraverseTime,  uiArriveTime,   SquadMovementGroups[ ubSquadValue ] );
-}
-
-
-
 BOOLEAN SaveSquadInfoToSavedGameFile( HWFILE hFile )
 {
 	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
