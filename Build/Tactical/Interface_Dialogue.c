@@ -1644,29 +1644,17 @@ static void CarmenLeavesSectorCallback(void);
 
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
-	INT32										cnt;
-	SOLDIERTYPE             *pSoldier, *pSoldier2;
-	INT8										bNumDone = 0;
-	INT16										sGridNo = NOWHERE, sAdjustedGridNo;
-	INT8										bItemIn;
-	UINT8										ubDesiredMercDir;
-	EXITGRID								ExitGrid;
-	INT32 iRandom = 0;
-	UINT8										ubMineIndex;
-
-
-	pSoldier2 = NULL;
 	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %ls, action %d at %ld", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
 
 	// Switch on action code!
 	if (usActionCode > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && usActionCode < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE)
 	{
-		pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
-		pSoldier2 = FindSoldierByProfileID( (UINT8) (usActionCode - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC), FALSE );
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+		SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID((UINT8)(usActionCode - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC), FALSE);
 		if (pSoldier && pSoldier2)
 		{
 			// see if we are facing this person
-			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(pSoldier2->sGridNo),CenterY(pSoldier2->sGridNo));
+			const UINT8 ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(pSoldier2->sGridNo), CenterY(pSoldier2->sGridNo));
 			// if not already facing in that direction,
 			if (pSoldier->bDirection != ubDesiredMercDir)
 			{
@@ -1683,11 +1671,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_GOTO_HIDEOUT:
-
+			{
 				// OK, we want to goto the basement level!
 
 				//DEF: First thing, Add the exit grid to the map temps file
-
+				EXITGRID ExitGrid;
 				ExitGrid.ubGotoSectorX = 10;
 				ExitGrid.ubGotoSectorY = 1;
 				ExitGrid.ubGotoSectorZ = 1;
@@ -1698,13 +1686,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ApplyMapChangesToMapTempFile( FALSE );
 
 				// For one, loop through our current squad and move them over
-				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+				INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
 
 				//ATE:Alrighty, instead of being a dufuss here, let's actually use the current
 				// Squad here to search for...
 
 				// look for all mercs on the same team,
-				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+				INT8 bNumDone = 0;
+				for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
 				{
 					// Are we in this sector, On the current squad?
 					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
@@ -1747,14 +1736,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				FadeOutGameScreen( );
 				break;
+			}
 
 			case NPC_ACTION_FATIMA_GIVE_LETTER:
-
+			{
 				// Delete menu, give item to megual
 				DeleteTalkingMenu( );
 
-				pSoldier  = FindSoldierByProfileID(FATIMA, FALSE);
-				pSoldier2 = FindSoldierByProfileID(MIGUEL, FALSE);
+				SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(FATIMA, FALSE);
+				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(MIGUEL, FALSE);
 
 				// Give item!
 				if ( !pSoldier || !pSoldier2 )
@@ -1771,11 +1761,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					SoldierGiveItem( pSoldier, pSoldier2, &(pSoldier->inv[ bInvPos ] ), bInvPos );
 				}
 				break;
+			}
 
 			case NPC_ACTION_FACE_CLOSEST_PLAYER:
-
+			{
 				// Get pointer for player
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -1787,14 +1778,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// handle AI for this person every frame until a player merc is near
 				pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
 				break;
+			}
 
 			case NPC_ACTION_OPEN_CLOSEST_DOOR:
-
+			{
 				// Delete menu
 				DeleteTalkingMenu( );
 
 				// Get pointer to NPC
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -1805,10 +1797,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				NPCOpenThing( pSoldier, TRUE );
 
 				break;
+			}
 
 			case NPC_ACTION_LOWER_GUN:
+			{
 				// Get pointer for player
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -1842,32 +1836,39 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_READY_GUN:
+			{
 				// Get pointer for player
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
 					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
 				}
 				break;
+			}
 
 			case NPC_ACTION_START_RUNNING:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					pSoldier->fUIMovementFast = TRUE;
 				}
 				break;
+			}
 
 			case NPC_ACTION_STOP_RUNNING:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					pSoldier->fUIMovementFast = FALSE;
 				}
 				break;
+			}
 
 			case NPC_ACTION_BOOST_TOWN_LOYALTY:
 				HandleLoyaltyChangeForNPCAction( ubTargetNPC );
@@ -1877,21 +1878,25 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			// break;
 
 			case NPC_ACTION_STOP_PLAYER_GIVING_FIRST_AID:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					ReceivingSoldierCancelServices( pSoldier );
 				}
 				break;
+			}
 
 			case NPC_ACTION_FACE_NORTH:
+			{
 				// handle this separately to keep the code clean...
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					SendSoldierSetDesiredDirectionEvent( pSoldier, NORTHWEST );
 				}
 				break;
+			}
 
 			case NPC_ACTION_FACE_NORTH_EAST:
 			case NPC_ACTION_FACE_EAST:
@@ -1900,13 +1905,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_FACE_SOUTH_WEST:
 			case NPC_ACTION_FACE_WEST:
 			case NPC_ACTION_FACE_NORTH_WEST:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					// screen NORTHEAST corresponds to in-game NORTH
 					SendSoldierSetDesiredDirectionEvent( pSoldier, (UINT16) (NORTH + (usActionCode - NPC_ACTION_FACE_NORTH_EAST)) );
 				}
 				break;
+			}
 
 			case NPC_ACTION_RECRUIT:
 				// gonna work for free!
@@ -1932,8 +1939,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_BECOME_ENEMY:
+			{
 				// CJC: disable because of new system?
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -1954,6 +1962,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 				}
 				break;
+			}
 
 			case NPC_ACTION_CLOSE_DIALOGUE_PANEL:
 				DeleteTalkingMenu();
@@ -1966,7 +1975,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_LEAVE_HIDEOUT:
-
+			{
 				// Delete menu, give item to megual
 				DeleteTalkingMenu( );
 
@@ -1976,10 +1985,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// OK, we want to goto the basement level!
 				// For one, loop through our current squad and move them over
-				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+				INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
 
 				// look for all mercs on the same team,
-				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+				INT8 bNumDone = 0;
+				for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
 				{
 					// Are we in this sector, On the current squad?
 					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
@@ -2011,11 +2021,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				gTacticalStatus.uiFlags &= ~ENGAGED_IN_CONV;
 				// Decrement refrence count...
 				giNPCReferenceCount = 0;
-
 				break;
+			}
 
 			case NPC_ACTION_TRAVERSE_MAP_EAST:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -2023,9 +2034,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				pSoldier->ubQuoteActionID = QUOTE_ACTION_ID_TRAVERSE_EAST;
 				break;
+			}
 
 			case NPC_ACTION_TRAVERSE_MAP_SOUTH:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -2033,9 +2046,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				pSoldier->ubQuoteActionID = QUOTE_ACTION_ID_TRAVERSE_SOUTH;
 				break;
+			}
 
 			case NPC_ACTION_TRAVERSE_MAP_WEST:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -2043,9 +2058,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				pSoldier->ubQuoteActionID = QUOTE_ACTION_ID_TRAVERSE_WEST;
 				break;
+			}
 
 			case NPC_ACTION_TRAVERSE_MAP_NORTH:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -2053,6 +2070,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				pSoldier->ubQuoteActionID = QUOTE_ACTION_ID_TRAVERSE_NORTH;
 				break;
+			}
 
 			case NPC_ACTION_REPORT_SHIPMENT_SIZE:
 				// for now, hard-coded to small shipment...
@@ -2080,9 +2098,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS:
+			{
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 480 + Random( 60 ), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS, 1 );
 				// also make Pablo neutral again and exit combat if we're in combat
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
@@ -2099,33 +2118,37 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_THREATENINGLY_RAISE_GUN:
-
+			{
 				// Get pointer for NPC
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( !pSoldier )
 				{
 					return;
 				}
 
-				bItemIn = FindAIUsableObjClass( pSoldier, IC_GUN );
+				const INT8 bItemIn = FindAIUsableObjClass(pSoldier, IC_GUN);
 				if (bItemIn != NO_SLOT && bItemIn != HANDPOS)
 				{
 					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
-					sGridNo = pSoldier->sGridNo + DirectionInc( pSoldier->bDirection );
+					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
 					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
 				}
 				// fall through so that the person faces the nearest merc!
+			}
+
 			case NPC_ACTION_TURN_TO_FACE_NEAREST_MERC:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
-					sGridNo = ClosestPC( pSoldier, NULL );
+					const INT16 sGridNo = ClosestPC(pSoldier, NULL);
 					if (sGridNo != NOWHERE)
 					{
 						// see if we are facing this person
-						ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sGridNo),CenterY(sGridNo));
+						const UINT8 ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sGridNo), CenterY(sGridNo));
 						// if not already facing in that direction,
 						if (pSoldier->bDirection != ubDesiredMercDir)
 						{
@@ -2134,10 +2157,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_SEND_PACOS_INTO_HIDING:
-				pSoldier = FindSoldierByProfileID(PACOS, FALSE);
-				sGridNo = 16028;
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS, FALSE);
+				const INT16 sGridNo = 16028;
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2147,7 +2172,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 					else
 					{
-						sAdjustedGridNo = FindAdjacentGridEx( pSoldier, sGridNo, NULL, NULL, FALSE, FALSE );
+						const INT16 sAdjustedGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, NULL, FALSE, FALSE);
 						if (sAdjustedGridNo != -1)
 						{
 							NPCGotoGridNo( 114, sAdjustedGridNo, ubQuoteNum );
@@ -2155,9 +2180,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
+
 			case NPC_ACTION_HAVE_PACOS_FOLLOW:
-				pSoldier = FindSoldierByProfileID(PACOS, FALSE);
-				sGridNo = 18193;
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS, FALSE);
+				const INT16 sGridNo = 18193;
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2167,7 +2195,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 					else
 					{
-						sAdjustedGridNo = FindAdjacentGridEx( pSoldier, sGridNo, NULL, NULL, FALSE, FALSE );
+						const INT16 sAdjustedGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, NULL, FALSE, FALSE);
 						if (sAdjustedGridNo != -1)
 						{
 							NPCGotoGridNo( 114, sAdjustedGridNo, ubQuoteNum );
@@ -2175,6 +2203,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
+
 			case NPC_ACTION_SET_DELAYED_PACKAGE_TIMER:
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), FACT_SHIPMENT_DELAYED_24_HOURS, 1 );
 				break;
@@ -2184,10 +2214,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_ENABLE_CAMBRIA_DOCTOR_BONUS:
+			{
 				// add event in a
-				iRandom = Random( 24 );
+				const INT32 iRandom = Random(24);
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, ( GetWorldMinutesInDay() + ( ( 24 + iRandom ) * 60 ) ), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_ENABLE_CAMBRIA_DOCTOR_BONUS, 1 );
 				break;
+			}
+
 			case NPC_ACTION_TRIGGER_END_OF_FOOD_QUEST:
 				AddHistoryToPlayersLog( HISTORY_TALKED_TO_FATHER_WALKER, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_TRIGGER_END_OF_FOOD_QUEST, 1 );
@@ -2247,6 +2280,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_KYLE_GETS_MONEY:
+			{
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
@@ -2254,7 +2288,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					INT16				sGridNo = 14952;
 					INT32				iWorldItem;
 
-					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &Object );
@@ -2272,19 +2306,22 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_DRINK_DRINK_DRINK:
 				gMercProfiles[ ubTargetNPC ].bNPCData++;
 				break;
 
 			case NPC_ACTION_MARTHA_DIES:
-				pSoldier = FindSoldierByProfileID( MARTHA, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARTHA, FALSE);
 				if (pSoldier)
 				{
 					DeleteTalkingMenu();
 					EVENT_SoldierGotHit(pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NOBODY, FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, NOWHERE);
 				}
 				break;
+			}
 
 			//case NPC_ACTION_DARREN_GIVEN_CASH:
 			// Handled in NPC.c
@@ -2327,29 +2364,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 
-			case NPC_ACTION_OPEN_CARLAS_DOOR:
-				if (usActionCode == NPC_ACTION_OPEN_CARLAS_DOOR )
-				{
-					sGridNo = 12290;
-				}
-				// fall through
-			case NPC_ACTION_OPEN_CINDYS_DOOR:
-				if (usActionCode == NPC_ACTION_OPEN_CINDYS_DOOR )
-				{
-					sGridNo = 13413;
-				}
-				// fall through
-			case NPC_ACTION_OPEN_BAMBIS_DOOR:
-				if (usActionCode == NPC_ACTION_OPEN_BAMBIS_DOOR )
-				{
-					sGridNo = 11173;
-				}
-				// fall through
-			case NPC_ACTION_OPEN_MARIAS_DOOR:
-				if (usActionCode == NPC_ACTION_OPEN_MARIAS_DOOR )
-				{
-					sGridNo = 10852;
-				}
+			{
+				INT16 sGridNo;
+				case NPC_ACTION_OPEN_CARLAS_DOOR: sGridNo = 12290; goto unlock;
+				case NPC_ACTION_OPEN_CINDYS_DOOR: sGridNo = 13413; goto unlock;
+				case NPC_ACTION_OPEN_BAMBIS_DOOR: sGridNo = 11173; goto unlock;
+				case NPC_ACTION_OPEN_MARIAS_DOOR: sGridNo = 10852; goto unlock;
+unlock:
 				// JA3Gold: unlock the doors instead of opening them
 				{
 					DOOR* pDoor;
@@ -2392,6 +2413,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				*/
 				break;
+			}
 
 			case NPC_ACTION_POSSIBLY_ADVERTISE_CINDY:
 				if ( CheckFact( FACT_CINDY_AVAILABLE, 0 ) )
@@ -2461,16 +2483,19 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_REMOVE_JOE_QUEEN:
+			{
 				// Find queen and joe and remove from sector...
-				pSoldier = FindSoldierByProfileID( QUEEN, FALSE );
-				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
+				SOLDIERTYPE* const queen = FindSoldierByProfileID(QUEEN, FALSE);
+				if (queen != NULL) TacticalRemoveSoldier(queen);
 
-				pSoldier = FindSoldierByProfileID( JOE, FALSE );
-				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
+				SOLDIERTYPE* const joe = FindSoldierByProfileID(JOE, FALSE);
+				if (joe != NULL) TacticalRemoveSoldier(joe);
 				break;
+			}
 
 			case NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE:
-				pSoldier = FindSoldierByProfileID( ELLIOT, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELLIOT, FALSE);
 				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
 				// End meanwhile....
@@ -2478,6 +2503,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				DeleteTalkingMenu();
 				EndMeanwhile( );
 				break;
+			}
+
 			case NPC_ACTION_NO_SCI_FI_END_MEANWHILE:
 
 				if ( !( gGameOptions.fSciFi ) )
@@ -2496,11 +2523,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				DeleteTalkingMenu();
 				StartDialogueMessageBox( ubTargetNPC, usActionCode );
 				break;
-			case NPC_ACTION_HAVE_MARRIED_NPC_LEAVE_TEAM:
 
+			case NPC_ACTION_HAVE_MARRIED_NPC_LEAVE_TEAM:
+			{
 				// get the soldier
-				pSoldier = FindSoldierByProfileID( gMercProfiles[ DARYL ].bNPCData, FALSE );
-				pSoldier2 = gpDestSoldier;
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gMercProfiles[DARYL].bNPCData, FALSE);
+				SOLDIERTYPE* const pSoldier2 = gpDestSoldier;
 
 				if ( !pSoldier || !pSoldier2 )
 				{
@@ -2525,8 +2553,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				//Since the married merc is leaving the team, add them to the departed list for the personnel screen
 				AddCharacterToOtherList( pSoldier );
-
 				break;
+			}
+
 			case NPC_ACTION_TRIGGER_ANGEL_17_OR_18:
 				if (CheckFact( FACT_ANGEL_SOLD_VEST, ANGEL ))
 				{
@@ -2579,10 +2608,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_ANGEL_LEAVES_DEED:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
-					bItemIn = FindObj( pSoldier, DEED );
+					const INT8 bItemIn = FindObj(pSoldier, DEED);
 					if (bItemIn != NO_SLOT)
 					{
 						AddItemToPool( 12541, &(pSoldier->inv[bItemIn]), -1 , 0, 0, 0 );
@@ -2595,6 +2625,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				NPCDoAction( ubTargetNPC, NPC_ACTION_GRANT_EXPERIENCE_3, 0 );
 				TriggerNPCRecord( ANGEL, 24 );
 				break;
+			}
 
 			case NPC_ACTION_SET_GIRLS_AVAILABLE:
 
@@ -2691,7 +2722,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_ENTER_COMBAT:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier )
 				{
 					if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP )
@@ -2713,6 +2745,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_DECIDE_ACTIVE_TERRORISTS:
 				{
@@ -2780,7 +2813,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_BECOME_FRIENDLY_END_COMBAT:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier )
 				{
 					DeleteTalkingMenu();
@@ -2809,6 +2843,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_TERRORIST_REVEALS_SELF:
 				// WAS swap names in profile
@@ -2816,7 +2851,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// copy new nickname into soldier structure
 				{
 					wcslcpy(gMercProfiles[ubTargetNPC].zNickname, gMercProfiles[ubTargetNPC].zName, lengthof(gMercProfiles[ubTargetNPC].zNickname));
-					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+					SOLDIERTYPE* const  pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if ( pSoldier )
 					{
 						wcslcpy(pSoldier->name, gMercProfiles[ubTargetNPC].zNickname, lengthof(pSoldier->name));
@@ -2836,7 +2871,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_START_MINE:
-				ubMineIndex = GetHeadMinersMineIndex ( ubTargetNPC );
+			{
+				const UINT8 ubMineIndex = GetHeadMinersMineIndex(ubTargetNPC);
 
 				// record the fact that player has spoken with this head miner so he can now get production from that mine
 				PlayerSpokeToHeadMiner( ubTargetNPC );
@@ -2846,15 +2882,18 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					RestartMineProduction( ubMineIndex );
 				}
 				break;
+			}
 
 			case NPC_ACTION_STOP_MINE:
-				ubMineIndex = GetHeadMinersMineIndex ( ubTargetNPC );
+			{
+				const UINT8 ubMineIndex = GetHeadMinersMineIndex(ubTargetNPC);
 
 				if ( !IsMineShutDown( ubMineIndex ) )
 				{
 					ShutOffMineProduction( ubMineIndex );
 				}
 				break;
+			}
 
 			case NPC_ACTION_RESET_MINE_CAPTURED:
 				ResetQueenRetookMine( ubTargetNPC );
@@ -2904,9 +2943,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_MADLAB_ATTACHES_GOOD_CAMERA:
+			{
 				SetFactFalse( FACT_MADLAB_HAS_GOOD_CAMERA );
-				pSoldier = FindSoldierByProfileID( MADLAB, FALSE );
-				pSoldier2 = FindSoldierByProfileID( ROBOT, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MADLAB, FALSE);
+				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ROBOT, FALSE);
 				if ( pSoldier && pSoldier2 )
 				{
 					// Give weapon to robot
@@ -2921,6 +2961,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Allow robot to be controlled by remote!
 				RecruitEPC( ROBOT );
 				break;
+			}
 
 			case NPC_ACTION_READY_ROBOT:
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 420, NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_READY_ROBOT, 1 );
@@ -2945,9 +2986,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_DARREN_PAYS_PLAYER:
+			{
 				// should change to split up cash
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
-
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 				if ( pSoldier )
 				{
 					INT16		sNearestPC;
@@ -2957,6 +2998,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 					sNearestPC = ClosestPC( pSoldier, NULL );
 
+					SOLDIERTYPE* pSoldier2;
 					if ( sNearestPC != NOWHERE )
 					{
 						ubID = WhoIsThere2( sNearestPC, 0 );
@@ -2989,13 +3031,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 							}
 						}
 					}
-
 				}
-
 				break;
+			}
 
 			case NPC_ACTION_TRIGGER_SPIKE_OR_DARREN:
-				pSoldier = FindSoldierByProfileID( KINGPIN, FALSE );
+			{
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(KINGPIN, FALSE);
 				if (pSoldier)
 				{
 					UINT8 ubRoom;
@@ -3009,14 +3051,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Kingpin not in club
 				TriggerNPCRecord( SPIKE, 11 );
 				break;
+			}
 
 			case NPC_ACTION_OPEN_CLOSEST_CABINET:
-
+			{
 				// Delete menu
 				DeleteTalkingMenu( );
 
 				// Get pointer to NPC
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 
 				if ( !pSoldier )
 				{
@@ -3025,11 +3068,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// FInd, open Closest non-door
 				NPCOpenThing( pSoldier, FALSE );
-
 				break;
+			}
 
 			case NPC_ACTION_GET_ITEMS_FROM_CLOSEST_CABINET:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					// shouldn't have any current action but make sure everything
@@ -3042,6 +3086,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					pSoldier->fInNonintAnim = FALSE;
 					pSoldier->fRTInNonintAnim = FALSE;
 
+					INT16 sGridNo;
 					if ( pSoldier->ubProfile == ARMAND )
 					{
 						sGridNo = 6968;
@@ -3053,8 +3098,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 					SoldierPickupItem( pSoldier, ITEM_PICKUP_ACTION_ALL, sGridNo, ITEM_IGNORE_Z_LEVEL );
 				}
-
 				break;
+			}
+
 			case NPC_ACTION_SHOW_TIXA:
 				SetTixaAsFound();
 				AddHistoryToPlayersLog( HISTORY_DISCOVERED_TIXA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
@@ -3063,29 +3109,32 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				SetOrtaAsFound();
 				AddHistoryToPlayersLog( HISTORY_DISCOVERED_ORTA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
-			case NPC_ACTION_SLAP:
 
+			case NPC_ACTION_SLAP:
+			{
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				pSoldier = FindSoldierByProfileID( QUEEN, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(QUEEN, FALSE);
 				if (pSoldier)
 				{
 					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_SLAP, 0 , FALSE );
 				}
 				break;
+			}
 
 			case NPC_ACTION_PUNCH_PC_SLOT_0:
 			case NPC_ACTION_PUNCH_PC_SLOT_1:
 			case NPC_ACTION_PUNCH_PC_SLOT_2:
-
+			{
 				DeleteTalkingMenu( );
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					UINT8 ubTargetID;
 					SOLDIERTYPE *pTarget;
 
 					// Target a different merc....
+					INT16 sGridNo;
 					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
 					{
 						sGridNo = gsInterrogationGridNo[ 0 ];
@@ -3149,13 +3198,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
-
+			}
 
 			case NPC_ACTION_SHOOT_ELLIOT:
-
+			{
 				DeleteTalkingMenu( );
 
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					SOLDIERTYPE *pTarget;
@@ -3190,16 +3239,17 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 				//Emmons: is this line of code part of something missing
 				//or no longer necessary?  CJC
 				//if ( pSoldier->uiStatusFlags & SOLDIER_NPC_SHOOTING )
 
 			case NPC_ACTION_PUNCH_FIRST_LIVING_PC:
-
+			{
 				// Punch first living pc....
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					UINT8 ubTargetID;
@@ -3263,16 +3313,19 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
 
 			case NPC_ACTION_FRUSTRATED_SLAP:
-
+			{
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
 					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_FRUSTRATED_SLAP, 0 , FALSE );
 				}
 				break;
+			}
+
 			case NPC_ACTION_START_TIMER_ON_KEITH_GOING_OUT_OF_BUSINESS:
 				// start timer to place keith out of business
 				AddStrategicEvent( EVENT_KEITH_GOING_OUT_OF_BUSINESS, GetWorldTotalMin() + ( 6 * 24 * 60 ), 0 );
@@ -3377,7 +3430,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 					else
 					{
-						iRandom = PreRandom( 100 );
+						const INT32 iRandom = PreRandom(100);
 						if( ubTargetNPC == VINCE )
 						{
 							if ( (gbHospitalPriceModifier == HOSPITAL_RANDOM_FREEBIE || gbHospitalPriceModifier == HOSPITAL_FREEBIE) || (CheckFact( FACT_HOSPITAL_FREEBIE_DECISION_MADE, 0 ) == FALSE && iRandom < CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE ) )
@@ -3436,14 +3489,16 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 			case NPC_ACTION_CHECK_DOCTORING_MONEY_GIVEN:
 				break;
+
 			case NPC_ACTION_DOCTOR_ESCORT_PATIENTS:
+			{
 				// find anyone in sector who is wounded; set to hospital patient
-				pSoldier2 = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				const SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
-					cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-					for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+					INT32 cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+					for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++,pSoldier++)
 					{
 						// Are we in this sector, On the current squad?
 						if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->bLife < pSoldier->bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < HOSPITAL_PATIENT_DISTANCE )
@@ -3460,6 +3515,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					gbHospitalPriceModifier = HOSPITAL_NORMAL;
 				}
 				break;
+			}
+
 			case NPC_ACTION_START_DOCTORING:
 				{
 
@@ -3551,8 +3608,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_CHOOSE_DOCTOR:
+			{
 				// find doctors available and trigger record 12 or 13
-				pSoldier = FindSoldierByProfileID( STEVE, FALSE ); // Steve Willis, 80
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(STEVE, FALSE); // Steve Willis, 80
 				if (pSoldier)
 				{
 					if ( !pSoldier->bActive || !pSoldier->bInSector || !(pSoldier->bTeam == CIV_TEAM) || !(pSoldier->bNeutral) || (pSoldier->bLife < OKLIFE) )
@@ -3561,7 +3619,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 
-				pSoldier2 = FindSoldierByProfileID( VINCE, FALSE ); // Vince, 69
+				SOLDIERTYPE* pSoldier2 = FindSoldierByProfileID(VINCE, FALSE); // Vince, 69
 				if (pSoldier2)
 				{
 					if ( !pSoldier2->bActive || !pSoldier2->bInSector || !(pSoldier2->bTeam == CIV_TEAM) || !(pSoldier2->bNeutral) || (pSoldier2->bLife < OKLIFE) )
@@ -3611,8 +3669,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					TriggerNPCRecord( ubTargetNPC, 13 );
 				}
-
 				break;
+			}
 
 			case NPC_ACTION_INVOKE_CONVERSATION_MODE:
 				if ( !gfInTalkPanel )
@@ -3620,10 +3678,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					INT16		sNearestPC;
 					UINT8		ubID;
 
-					pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if ( pSoldier )
 					{
-						pSoldier2 = NULL;
+						SOLDIERTYPE* pSoldier2 = NULL;
 
 						sNearestPC = ClosestPC( pSoldier, NULL );
 						if ( sNearestPC != NOWHERE )
@@ -3709,7 +3767,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9:
-				pSoldier = FindSoldierByProfileID ( MARY, FALSE );
+			{
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY, FALSE);
 				if ( pSoldier && pSoldier->bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 9 );
@@ -3719,8 +3778,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					TriggerNPCRecord( JOHN, 9 );
 				}
 				break;
+			}
+
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10:
-				pSoldier = FindSoldierByProfileID ( MARY, FALSE );
+			{
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY, FALSE);
 				if ( pSoldier && pSoldier->bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 10 );
@@ -3730,18 +3792,22 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					TriggerNPCRecord( JOHN, 10 );
 				}
 				break;
+			}
 
 			case NPC_ACTION_GET_OUT_OF_WHEELCHAIR:
-				pSoldier = FindSoldierByProfileID ( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
 					EVENT_InitNewSoldierAnim( pSoldier, CRIPPLE_KICKOUT, 0, TRUE );
 				}
 				break;
+			}
 
 			case NPC_ACTION_GET_OUT_OF_WHEELCHAIR_AND_BECOME_HOSTILE:
-				pSoldier = FindSoldierByProfileID ( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
@@ -3749,6 +3815,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				TriggerFriendWithHostileQuote( ubTargetNPC );
 				break;
+			}
 
 			case NPC_ACTION_ADD_JOHNS_GUN_SHIPMENT:
 				AddJohnsGunShipment();
@@ -3761,12 +3828,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_CANCEL_WAYPOINTS:
-				pSoldier = FindSoldierByProfileID ( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier )
 				{
 					pSoldier->bOrders = ONGUARD;
 				}
 				break;
+			}
 
 			case NPC_ACTION_MAKE_RAT_DISAPPEAR:
 				// hack a flag to determine when RAT should leave
@@ -3795,11 +3864,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_CHANGE_MANNY_POSITION:
+			{
 				gMercProfiles[ MANNY ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 				gMercProfiles[ MANNY ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 				gMercProfiles[ MANNY ].usStrategicInsertionData = 19904;
 				gMercProfiles[ MANNY ].fUseProfileInsertionInfo = TRUE;
-				pSoldier = FindSoldierByProfileID( MANNY, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MANNY, FALSE);
 				if ( pSoldier )
 				{
 					pSoldier->bOrders = STATIONARY;
@@ -3807,9 +3877,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// close his panel too
 				DeleteTalkingMenu();
 				break;
+			}
 
 			case NPC_ACTION_MAKE_BRENDA_STATIONARY:
-				pSoldier = FindSoldierByProfileID( BRENDA, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BRENDA, FALSE);
 				if ( pSoldier )
 				{
 					gMercProfiles[ BRENDA ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
@@ -3819,9 +3891,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					pSoldier->bOrders = STATIONARY;
 				}
 				break;
+			}
 
 			case NPC_ACTION_MAKE_MIGUEL_STATIONARY:
-				pSoldier = FindSoldierByProfileID( MIGUEL, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MIGUEL, FALSE);
 				if ( pSoldier )
 				{
 					gMercProfiles[ MIGUEL ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
@@ -3831,7 +3905,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					pSoldier->bOrders = STATIONARY;
 				}
 				break;
-
+			}
 
 			case NPC_ACTION_TRIGGER_DARREN_OR_KINGPIN_IMPRESSED:
 				if ( BoxerAvailable() )
@@ -3892,7 +3966,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier )
 				{
 					pSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );
@@ -3904,6 +3979,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// set to 0 civ group
 				pSoldier->ubCivilianGroup = 0;
 				break;
+			}
 
 			case NPC_ACTION_TIMER_FOR_VEHICLE:
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_TIMER_FOR_VEHICLE, 1 );
@@ -3923,7 +3999,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 			case NPC_ACTION_REMOVE_NPC:
-				pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+			{
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if ( pSoldier )
 				{
 					EndAIGuysTurn( pSoldier );
@@ -3934,6 +4011,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					CheckForEndOfBattle( TRUE );
 				}
 				break;
+			}
 
 			case NPC_ACTION_HISTORY_GOT_ROCKET_RIFLES:
 				AddHistoryToPlayersLog( HISTORY_GOT_ROCKET_RIFLES, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
@@ -4067,10 +4145,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				break;
 			case NPC_ACTION_TRIGGER_BREWSTER_BY_WARDEN_PROXIMITY:
-				pSoldier = FindSoldierByProfileID( BREWSTER, FALSE );
+			{
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BREWSTER, FALSE);
 				if ( pSoldier )
 				{
-					sGridNo = GetGridNoOfCorpseGivenProfileID( WARDEN );
+					const INT16 sGridNo = GetGridNoOfCorpseGivenProfileID(WARDEN);
 					if ( sGridNo != NOWHERE && PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= 10 )
 					{
 						TriggerNPCRecord( BREWSTER, 16 );
@@ -4081,8 +4160,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					}
 				}
 				break;
+			}
+
 			case NPC_ACTION_FILL_UP_CAR:
-				pSoldier = FindSoldierByProfileID( PROF_HUMMER, TRUE );
+			{
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileID( PROF_HUMMER, TRUE );
 				if ( !pSoldier )
 				{
 					// ice cream truck?
@@ -4090,7 +4172,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 				else if ( pSoldier->sBreathRed == 10000 )
 				{
-					pSoldier2 = FindSoldierByProfileID( PROF_ICECREAM, TRUE );
+					SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(PROF_ICECREAM, TRUE);
 					if ( pSoldier2 )
 					{
 						// try refueling this vehicle instead
@@ -4104,6 +4186,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 50 ] );
 				}
 				break;
+			}
+
 			case NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY:
 				if ( gMercProfiles[ WALTER ].iBalance >= WALTER_BRIBE_AMOUNT )
 				{
