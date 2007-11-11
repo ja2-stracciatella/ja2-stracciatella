@@ -510,32 +510,9 @@ static void RenderPersonnelStats(INT32 iId)
 }
 
 
-static void RenderPersonnelFace(INT32 iId, INT32 state)
+static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
 {
-	// draw face to soldier iId
-
-	// special case?..player generated merc
-	INT32 profile;
-	if (fCurrentTeamMode)
-	{
-		const SOLDIERTYPE* const s = MercPtrs[iId];
-		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
-
-		profile = s->ubProfile;
-	}
-	else
-	{
-		//if this is not a valid merc
-		if (state != DEPARTED_DEAD &&
-				state != DEPARTED_FIRED &&
-				state != DEPARTED_OTHER)
-		{
-			return;
-		}
-
-		profile = iId;
-	}
-
+	// draw face to profile iId
 	const MERCPROFILESTRUCT* const p = &gMercProfiles[profile];
 
 	char sTemp[100];
@@ -546,23 +523,11 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 
 	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
-	if (fCurrentTeamMode)
+	if (!alive)
 	{
-		if (MercPtrs[iId]->bLife <= 0)
-		{
-			hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-			//set the red pallete to the face
-			SetObjectHandleShade(guiFACE, 0);
-		}
-	}
-	else
-	{
-		if (state == DEPARTED_DEAD)
-		{
-			hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-			//set the red pallete to the face
-			SetObjectHandleShade(guiFACE, 0);
-		}
+		hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		//set the red pallete to the face
+		SetObjectHandleShade(guiFACE, 0);
 	}
 
 	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
@@ -586,6 +551,27 @@ static void RenderPersonnelFace(INT32 iId, INT32 state)
 	{
 		DrawTextToScreen(name, x, y, w, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
 	}
+}
+
+
+static void RenderPersonnelFaceCurrent(const SoldierID id)
+{
+	const SOLDIERTYPE* const s = GetMan(id);
+	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
+	RenderPersonnelFace(s->ubProfile, s->bLife > 0);
+}
+
+
+static void RenderPersonnelFacePast(const UINT8 profile, const INT32 state)
+{
+	//if this is not a valid merc
+	if (state != DEPARTED_DEAD &&
+			state != DEPARTED_FIRED &&
+			state != DEPARTED_OTHER)
+	{
+		return;
+	}
+	RenderPersonnelFace(profile, state != DEPARTED_DEAD);
 }
 
 
@@ -1236,7 +1222,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		if (fCurrentTeamMode)
 		{
 			const INT32 id = GetIdOfThisSlot(iCurrentPersonSelectedId);
-			RenderPersonnelFace(id, -1);
+			RenderPersonnelFaceCurrent(id);
 			DisplayCharName(id);
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
@@ -1247,7 +1233,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		{
 			const INT32 id    = GetIdOfPastMercInSlot(iCurrentPersonSelectedId);
 			const INT32 state = GetTheStateOfDepartedMerc(id);
-			RenderPersonnelFace(id, state);
+			RenderPersonnelFacePast(id, state);
 			DisplayDepartedCharName(id, state);
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
