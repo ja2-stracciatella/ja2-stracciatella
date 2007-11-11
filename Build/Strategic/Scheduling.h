@@ -92,8 +92,6 @@ void OptimizeSchedules();
 
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime );
 
-void ReconnectSchedules( void );
-
 BOOLEAN BumpAnyExistingMerc( INT16 sGridNo );
 
 #endif

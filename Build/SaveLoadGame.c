@@ -2235,7 +2235,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Update the mercs in the sector with the new soldier info
 	UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//ReconnectSchedules();
 	PostSchedules();
 
 
