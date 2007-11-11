@@ -112,53 +112,6 @@ static void InitMiningLocations(void)
 }
 
 
-//Mobile groups are handled separately from sectors, because they are on the move.
-static void GeneratePatrolGroups(void)
-{
-	GROUP *pGroup;
-	UINT8 ubNumTroops;
-	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_C7, 0, ubNumTroops, 0 );
-	pGroup->ubTransportationMask = CAR;
-	AddWaypointToPGroup( pGroup, 8, 3 ); //C8
-	AddWaypointToPGroup( pGroup, 7, 3 ); //C7
-
-	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_D9, 0, ubNumTroops, 0 );
-	AddWaypointToPGroup( pGroup, 9, 5 ); //E9
-	AddWaypointToPGroup( pGroup, 9, 4 ); //D9
-	pGroup->ubTransportationMask = TRUCK;
-
-	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_B9, 0, ubNumTroops, 0 );
-	AddWaypointToPGroup( pGroup, 12, 2 ); //B12
-	AddWaypointToPGroup( pGroup, 9, 2 ); //B9
-	pGroup->ubTransportationMask = FOOT;
-
-	ubNumTroops = (UINT8)(3 + gGameOptions.ubDifficultyLevel + Random( 3 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_A14, 0, ubNumTroops, 0 );
-	pGroup->ubMoveType = ENDTOEND_FORWARDS;
-	AddWaypointToPGroup( pGroup, 13, 1 ); //A13
-	AddWaypointToPGroup( pGroup, 15, 1 ); //A15
-	AddWaypointToPGroup( pGroup, 15, 5 ); //E15
-	AddWaypointToPGroup( pGroup, 13, 5 ); //E13
-	AddWaypointToPGroup( pGroup, 12, 5 ); //E12
-	AddWaypointToPGroup( pGroup, 12, 3 ); //C12
-	pGroup->ubTransportationMask = TRACKED;
-
-	ubNumTroops = (UINT8)(5 + gGameOptions.ubDifficultyLevel * 2 + Random( 4 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_N6, 0, ubNumTroops, 0 );
-	AddWaypointToPGroup( pGroup, 9, 14 ); //N9
-	AddWaypointToPGroup( pGroup, 6, 14 ); //N6
-	pGroup->ubTransportationMask = CAR;
-
-	ubNumTroops = (UINT8)(5 + gGameOptions.ubDifficultyLevel * 2 + Random( 4 ));
-	pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_N10, 0, ubNumTroops, 0 );
-	AddWaypointToPGroup( pGroup, 10, 11 ); //K10
-	AddWaypointToPGroup( pGroup, 10, 14 ); //N10
-	pGroup->ubTransportationMask = CAR;
-}
-
 void TrashUndergroundSectorInfo()
 {
 	UNDERGROUND_SECTORINFO *curr;
