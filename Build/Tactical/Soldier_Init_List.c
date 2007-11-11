@@ -1995,7 +1995,7 @@ void AddProfilesUsingProfileInsertionData()
 					SCHEDULENODE * pSchedule = GetSchedule( curr->pDetailedPlacement->ubScheduleID );
 					if ( pSchedule )
 					{
-						pSchedule->ubSoldierID = pSoldier->ubID;
+						pSchedule->soldier     = pSoldier;
 						pSoldier->ubScheduleID = curr->pDetailedPlacement->ubScheduleID;
 					}
 				}

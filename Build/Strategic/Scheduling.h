@@ -48,8 +48,8 @@ typedef struct SCHEDULENODE
 	UINT16 usData2[MAX_SCHEDULE_ACTIONS]; //secondary information, not used by most actions
 	UINT8 ubAction[MAX_SCHEDULE_ACTIONS];
 	UINT8 ubScheduleID;
-	UINT8 ubSoldierID;
 	UINT16 usFlags;
+	SOLDIERTYPE* soldier;
 }SCHEDULENODE;
 
 
