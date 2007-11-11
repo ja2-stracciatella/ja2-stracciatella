@@ -488,7 +488,7 @@ void RenderPersonnel(void)
 }
 
 
-static void DisplayCharStats(INT32 iId);
+static void DisplayCharStats(const SOLDIERTYPE* s);
 static void DisplayEmploymentinformation(const SOLDIERTYPE* const s);
 
 
@@ -501,7 +501,7 @@ static void RenderPersonnelStats(INT32 iId)
 
 	if (gubPersonnelInfoState == PERSONNEL_STAT_BTN)
 	{
-		DisplayCharStats(iId);
+		DisplayCharStats(GetMan(iId));
 	}
 	else if (gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN)
 	{
@@ -795,13 +795,12 @@ static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
 }
 
 
-static void DisplayCharStats(INT32 iId)
+static void DisplayCharStats(const SOLDIERTYPE* const s)
 {
 	wchar_t sString[50];
 	INT16 sX;
 	INT16 sY;
 
-	const SOLDIERTYPE* const s = &Menptr[iId];
 	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
 	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
