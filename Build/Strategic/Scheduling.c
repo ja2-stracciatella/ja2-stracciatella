@@ -1325,35 +1325,4 @@ static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
 			}
 		}
 	}
-
 }
-
-/*
-void SecureSleepSpots( void )
-{
-	// make sure no one else has the same sleep dest as another merc, and if they do
-	// move extras away!
-	UINT32						uiLoop;
-	SOLDIERTYPE *			pSoldier;
-	SCHEDULENODE *		pSchedule;
-	UINT16						usSleepSpot;
-
-	for ( uiLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; uiLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
-	{
-		pSoldier = MercPtrs[ uiLoop ];
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->ubScheduleID != 0 )
-		{
-			pSchedule = GetSchedule( pSoldier->ubScheduleID );
-			if ( pSchedule )
-			{
-				usSleepSpot = FindSleepSpot( pSchedule );
-				if ( usSleepSpot != NOWHERE )
-				{
-					SecureSleepSpot( pSoldier, usSleepSpot );
-				}
-			}
-		}
-	}
-
-}
-*/
