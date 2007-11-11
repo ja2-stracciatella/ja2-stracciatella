@@ -346,7 +346,6 @@ BOOLEAN BoxerExists( void )
 static BOOLEAN PickABoxer(void)
 {
 	UINT32					uiLoop;
-	SOLDIERTYPE *		pBoxer;
 
 	for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
 	{
