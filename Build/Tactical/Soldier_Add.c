@@ -1224,7 +1224,7 @@ BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s,
 }
 
 
-static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fDoTransition)
+static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
 	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
@@ -1260,14 +1260,7 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo, B
 	}
 	else
 	{
-		if ( fDoTransition )
-		{
-			EVENT_InitNewSoldierAnim( pSoldier, GOTO_SLEEP, 1, TRUE );
-		}
-		else
-		{
-			EVENT_InitNewSoldierAnim( pSoldier, SLEEPING, 1, TRUE );
-		}
+		EVENT_InitNewSoldierAnim(pSoldier, SLEEPING, 1, TRUE);
 	}
 }
 
@@ -1539,7 +1532,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 				}
 				else if ( pSoldier->fMercAsleep == TRUE )
 				{
-					InternalSoldierInSectorSleep( pSoldier, pSoldier->sInsertionGridNo, FALSE );
+					InternalSoldierInSectorSleep(pSoldier, pSoldier->sInsertionGridNo);
 				}
 				else if ( pSoldier->bAssignment == PATIENT )
 				{
