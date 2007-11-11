@@ -554,9 +554,8 @@ static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
 }
 
 
-static void RenderPersonnelFaceCurrent(const SoldierID id)
+static void RenderPersonnelFaceCurrent(const SOLDIERTYPE* const s)
 {
-	const SOLDIERTYPE* const s = GetMan(id);
 	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 	RenderPersonnelFace(s->ubProfile, s->bLife > 0);
 }
@@ -1217,8 +1216,9 @@ static void DisplayFaceOfDisplayedMerc(void)
 		if (fCurrentTeamMode)
 		{
 			const INT32 id = GetIdOfThisSlot(iCurrentPersonSelectedId);
-			RenderPersonnelFaceCurrent(id);
-			DisplayCharName(GetMan(id));
+			const SOLDIERTYPE* const s = GetMan(id);
+			RenderPersonnelFaceCurrent(s);
+			DisplayCharName(s);
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
 
