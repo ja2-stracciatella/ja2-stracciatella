@@ -51,7 +51,6 @@ typedef struct SCHEDULENODE
 	UINT8 ubSoldierID;
 	UINT16 usFlags;
 }SCHEDULENODE;
-CASSERT(sizeof(SCHEDULENODE) == 36)
 
 
 extern UINT8				gubScheduleID;

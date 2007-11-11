@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Scheduling.h"
 #include "Soldier_Control.h"
@@ -395,14 +396,11 @@ extern BOOLEAN gfSchedulesHosed;
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 {
 	SCHEDULENODE *pSchedule = NULL;
-	SCHEDULENODE temp;
 	UINT8 ubNum;
 	UINT32 ubRealNum;
-	UINT32 uiNumBytesToRead;
 
 	//LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
-	uiNumBytesToRead = sizeof( UINT8 );
-	if (!FileRead(hFile, &ubNum, uiNumBytesToRead)) return FALSE;
+	if (!FileRead(hFile, &ubNum, sizeof(ubNum))) return FALSE;
 
 	//Hack problem with schedules getting misaligned.
 	ubRealNum = gfSchedulesHosed ? ubNum + 256 : ubNum;
@@ -410,23 +408,31 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	gubScheduleID = 1;
 	while( ubRealNum )
 	{
-		uiNumBytesToRead = sizeof( SCHEDULENODE );
-		if (!FileRead(hFile, &temp, uiNumBytesToRead)) return FALSE;
-		//LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
+		BYTE data[36];
+		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
 
-		if( gpScheduleList )
+		SCHEDULENODE* const node = MemAlloc(sizeof(*node));
+
+		const BYTE* s = data;
+		EXTR_PTR( s, node->next)
+		EXTR_U16A(s, node->usTime,   lengthof(node->usTime))
+		EXTR_U16A(s, node->usData1,  lengthof(node->usData1))
+		EXTR_U16A(s, node->usData2,  lengthof(node->usData2))
+		EXTR_U8A( s, node->ubAction, lengthof(node->ubAction))
+		EXTR_U8(  s, node->ubScheduleID)
+		EXTR_U8(  s, node->ubSoldierID)
+		EXTR_U16( s, node->usFlags)
+		Assert(s == endof(data));
+
+		if (pSchedule != NULL)
 		{
-			pSchedule->next = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
-			Assert( pSchedule->next );
-			pSchedule = pSchedule->next;
-			*pSchedule = temp;
+			pSchedule->next = node;
 		}
 		else
 		{
-			gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
-			Assert( gpScheduleList );
-			*gpScheduleList = temp;
-			pSchedule = gpScheduleList;
+			Assert(gpScheduleList == NULL);
+			pSchedule      = node;
+			gpScheduleList = node;
 		}
 
 		// should be unnecessary here, then we can toast reconnect schedule
@@ -435,7 +441,6 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 		pSchedule->ubSoldierID = NO_SOLDIER;
 		*/
 
-		pSchedule->next = NULL;
 		gubScheduleID++;
 		ubRealNum--;
 	}
@@ -527,7 +532,20 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 			{
 				return( TRUE );
 			}
-			if (!FileWrite(hFile, curr, sizeof(SCHEDULENODE))) return FALSE;
+
+			BYTE data[36];
+			BYTE* d = data;
+			INJ_PTR( d, curr->next)
+			INJ_U16A(d, curr->usTime,   lengthof(curr->usTime))
+			INJ_U16A(d, curr->usData1,  lengthof(curr->usData1))
+			INJ_U16A(d, curr->usData2,  lengthof(curr->usData2))
+			INJ_U8A( d, curr->ubAction, lengthof(curr->ubAction))
+			INJ_U8(  d, curr->ubScheduleID)
+			INJ_U8(  d, curr->ubSoldierID)
+			INJ_U16( d, curr->usFlags)
+			Assert(d == endof(data));
+
+			if (!FileWrite(hFile, data, sizeof(data))) return FALSE;
 		}
 		curr = curr->next;
 	}
