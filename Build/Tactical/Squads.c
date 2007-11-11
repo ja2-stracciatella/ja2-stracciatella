@@ -477,46 +477,6 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 }
 
 
-// check if character is in this squad
-static BOOLEAN IsCharacterInSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
-{
-	INT32 iCounter =0;
-		// find character in particular squad..return if successful
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; iCounter++ )
-	{
-		// check if on current squad and current slot?
-		if( Squad[ bSquadValue ][ iCounter ] == pCharacter )
-		{
-			// found
-			return ( TRUE );
-		}
-	}
-
-	// not found
-	return ( FALSE );
-}
-
-
-// what slot is character in in this squad?..-1 if not found in squad
-static INT8 SlotCharacterIsInSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
-{
-	INT8 bCounter =0;
-
-	// find character in particular squad..return slot if successful, else -1
-	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
-	{
-		// check if on current squad and current slot?
-		if( Squad[ bSquadValue ][ bCounter ] == pCharacter )
-		{
-			// found
-			return ( bCounter );
-		}
-	}
-
-	// not found
-	return ( -1 );
-}
-
 INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter )
 {
 	// returns which squad character is in, -1 if none found
@@ -871,28 +831,6 @@ void ExamineCurrentSquadLights( void )
 	//		PositionSoldierLight( Squad[ iCurrentTacticalSquad ][ iCounter ] );
 	//	}
 	//}
-}
-
-
-static BOOLEAN GetSoldiersInSquad(INT32 iCurrentSquad, SOLDIERTYPE* pSoldierArray[])
-{
-	INT32 iCounter = 0;
-	// will get the soldiertype pts for every merc in this squad
-
-	// check if valid value passed
-	if( ( iCurrentSquad >= NUMBER_OF_SQUADS ) || ( iCurrentSquad < 0 ) )
-	{
-		// no
-		return ( FALSE );
-	}
-
-	// copy pts values over
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	{
-		pSoldierArray[ iCounter ] = Squad[ iCurrentSquad ][ iCounter ];
-	}
-
-	return ( TRUE );
 }
 
 
