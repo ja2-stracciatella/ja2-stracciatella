@@ -2168,14 +2168,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
 					{
 						// go for it!
-						NPCGotoGridNo( 114, sGridNo, ubQuoteNum );
+						NPCGotoGridNo(PACOS, sGridNo, ubQuoteNum);
 					}
 					else
 					{
 						const INT16 sAdjustedGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, NULL, FALSE, FALSE);
 						if (sAdjustedGridNo != -1)
 						{
-							NPCGotoGridNo( 114, sAdjustedGridNo, ubQuoteNum );
+							NPCGotoGridNo(PACOS, sAdjustedGridNo, ubQuoteNum);
 						}
 					}
 				}
@@ -2191,14 +2191,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
 					{
 						// go for it!
-						NPCGotoGridNo( 114, sGridNo, ubQuoteNum );
+						NPCGotoGridNo(PACOS, sGridNo, ubQuoteNum);
 					}
 					else
 					{
 						const INT16 sAdjustedGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, NULL, FALSE, FALSE);
 						if (sAdjustedGridNo != -1)
 						{
-							NPCGotoGridNo( 114, sAdjustedGridNo, ubQuoteNum );
+							NPCGotoGridNo(PACOS, sAdjustedGridNo, ubQuoteNum);
 						}
 					}
 				}
