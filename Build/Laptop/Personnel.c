@@ -1108,7 +1108,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 }
 
 
-static INT32 GetIdOfThisSlot(INT32 iSlot);
+static INT32 GetIdOfThisSlot(void);
 
 
 static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1136,7 +1136,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fReDrawScreenFlag = TRUE;
 
 			if (iCurrentPersonSelectedId != -1 &&
-					Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)].bAssignment == ASSIGNMENT_POW &&
+					Menptr[GetIdOfThisSlot()].bAssignment == ASSIGNMENT_POW &&
 					gubPersonnelInfoState == PERSONNEL_INV_BTN)
 			{
 				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
@@ -1188,7 +1188,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			guiSliderPosition = 0;
 
 			//if the selected merc is valid, and they are a POW, change to the inventory display
-			if (iCurrentPersonSelectedId != -1 && Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)].bAssignment == ASSIGNMENT_POW && gubPersonnelInfoState == PERSONNEL_INV_BTN)
+			if (iCurrentPersonSelectedId != -1 && Menptr[GetIdOfThisSlot()].bAssignment == ASSIGNMENT_POW && gubPersonnelInfoState == PERSONNEL_INV_BTN)
 			{
 				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
 			}
@@ -1215,7 +1215,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		// if showing inventory, leave
 		if (fCurrentTeamMode)
 		{
-			const SOLDIERTYPE* const s = GetMan(GetIdOfThisSlot(iCurrentPersonSelectedId));
+			const SOLDIERTYPE* const s = GetMan(GetIdOfThisSlot());
 			RenderPersonnelFaceCurrent(s);
 			DisplayCharName(s);
 
@@ -1263,7 +1263,7 @@ static void DisplayInventoryForSelectedChar(void)
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
 
-	const SOLDIERTYPE* const pSoldier = &Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)];
+	const SOLDIERTYPE* const pSoldier = &Menptr[GetIdOfThisSlot()];
 
 	//if this is a robot, dont display any inventory
 	if (AM_A_ROBOT(pSoldier)) return;
@@ -1432,7 +1432,7 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 	// in current team mode?..nope...move on
 	if (!fCurrentTeamMode) return 0;
 
-	INT32 iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
+	INT32 iId = GetIdOfThisSlot();
 	const OBJECTTYPE* Inv = Menptr[iId].inv;
 
 	UINT32 ubCount = 0;
@@ -2500,7 +2500,7 @@ static INT32 GetIdOfFirstDisplayedMerc(void)
 
 
 // id of merc in this slot
-static INT32 GetIdOfThisSlot(INT32 iSlot)
+static INT32 GetIdOfThisSlot(void)
 {
 	Assert(fCurrentTeamMode);
 
@@ -2512,8 +2512,7 @@ static INT32 GetIdOfThisSlot(INT32 iSlot)
 	{
 		if (pSoldier->bActive)
 		{
-			// same character as slot, return this value
-			if (iCounter == iSlot) return cnt;
+			if (iCounter == iCurrentPersonSelectedId) return cnt;
 
 			// found another soldier
 			iCounter++;
@@ -2747,8 +2746,7 @@ static void UpDateStateOfStartButton(void)
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]);
 
-			iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
-
+			iId = GetIdOfThisSlot();
 			if (iId != -1)
 			{
 				if (Menptr[iId].bAssignment == ASSIGNMENT_POW)
@@ -2786,7 +2784,7 @@ static void DisplayAmountOnCurrentMerc(void)
 	if (!fCurrentTeamMode) return;
 
 	// will display the amount that the merc is carrying on him or herself
-	INT32 iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
+	INT32 iId = GetIdOfThisSlot();
 	const SOLDIERTYPE* pSoldier = (iId == -1 ? NULL : MercPtrs[iId]);
 
 	CHAR16 sString[64];
