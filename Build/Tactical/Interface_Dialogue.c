@@ -2998,7 +2998,7 @@ unlock:
 
 					sNearestPC = ClosestPC( pSoldier, NULL );
 
-					SOLDIERTYPE* pSoldier2;
+					SOLDIERTYPE* pSoldier2 = NULL;
 					if ( sNearestPC != NOWHERE )
 					{
 						ubID = WhoIsThere2( sNearestPC, 0 );
