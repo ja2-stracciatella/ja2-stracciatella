@@ -1108,7 +1108,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 }
 
 
-static INT32 GetIdOfThisSlot(void);
+static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void);
 
 
 static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1136,7 +1136,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fReDrawScreenFlag = TRUE;
 
 			if (iCurrentPersonSelectedId != -1 &&
-					Menptr[GetIdOfThisSlot()].bAssignment == ASSIGNMENT_POW &&
+					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
 					gubPersonnelInfoState == PERSONNEL_INV_BTN)
 			{
 				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
@@ -1188,7 +1188,9 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			guiSliderPosition = 0;
 
 			//if the selected merc is valid, and they are a POW, change to the inventory display
-			if (iCurrentPersonSelectedId != -1 && Menptr[GetIdOfThisSlot()].bAssignment == ASSIGNMENT_POW && gubPersonnelInfoState == PERSONNEL_INV_BTN)
+			if (iCurrentPersonSelectedId != -1 &&
+					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
+					gubPersonnelInfoState == PERSONNEL_INV_BTN)
 			{
 				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
 			}
@@ -1215,7 +1217,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		// if showing inventory, leave
 		if (fCurrentTeamMode)
 		{
-			const SOLDIERTYPE* const s = GetMan(GetIdOfThisSlot());
+			const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
 			RenderPersonnelFaceCurrent(s);
 			DisplayCharName(s);
 
@@ -1263,7 +1265,7 @@ static void DisplayInventoryForSelectedChar(void)
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
 
-	const SOLDIERTYPE* const pSoldier = &Menptr[GetIdOfThisSlot()];
+	const SOLDIERTYPE* const pSoldier = GetSoldierOfCurrentSlot();
 
 	//if this is a robot, dont display any inventory
 	if (AM_A_ROBOT(pSoldier)) return;
@@ -1432,8 +1434,7 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 	// in current team mode?..nope...move on
 	if (!fCurrentTeamMode) return 0;
 
-	INT32 iId = GetIdOfThisSlot();
-	const OBJECTTYPE* Inv = Menptr[iId].inv;
+	const OBJECTTYPE* const Inv = GetSoldierOfCurrentSlot()->inv;
 
 	UINT32 ubCount = 0;
 	for (UINT32 ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++)
@@ -2500,7 +2501,7 @@ static INT32 GetIdOfFirstDisplayedMerc(void)
 
 
 // id of merc in this slot
-static INT32 GetIdOfThisSlot(void)
+static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 {
 	Assert(fCurrentTeamMode);
 
@@ -2512,14 +2513,14 @@ static INT32 GetIdOfThisSlot(void)
 	{
 		if (pSoldier->bActive)
 		{
-			if (iCounter == iCurrentPersonSelectedId) return cnt;
+			if (iCounter == iCurrentPersonSelectedId) return pSoldier;
 
 			// found another soldier
 			iCounter++;
 		}
 	}
 
-	return 0;
+	return NULL;
 }
 
 
@@ -2709,8 +2710,6 @@ static INT32 GetFundsOnMerc(const SOLDIERTYPE* pSoldier)
 // check if current guy can have atm
 static void UpDateStateOfStartButton(void)
 {
-	INT32 iId = 0;
-
 	// start button being shown?
 	if (!fShowAtmPanelStartButton)
 	{
@@ -2746,18 +2745,15 @@ static void UpDateStateOfStartButton(void)
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]);
 
-			iId = GetIdOfThisSlot();
-			if (iId != -1)
+			const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
+			if (s != NULL && s->bAssignment == ASSIGNMENT_POW)
 			{
-				if (Menptr[iId].bAssignment == ASSIGNMENT_POW)
-				{
-					DisableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
+				DisableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 
-					if (gubPersonnelInfoState == PRSNL_INV)
-					{
-						gubPersonnelInfoState = PRSNL_STATS;
-						fPausedReDrawScreenFlag = TRUE;
-					}
+				if (gubPersonnelInfoState == PRSNL_INV)
+				{
+					gubPersonnelInfoState = PRSNL_STATS;
+					fPausedReDrawScreenFlag = TRUE;
 				}
 			}
 		}
@@ -2784,11 +2780,8 @@ static void DisplayAmountOnCurrentMerc(void)
 	if (!fCurrentTeamMode) return;
 
 	// will display the amount that the merc is carrying on him or herself
-	INT32 iId = GetIdOfThisSlot();
-	const SOLDIERTYPE* pSoldier = (iId == -1 ? NULL : MercPtrs[iId]);
-
 	CHAR16 sString[64];
-	SPrintMoney(sString, GetFundsOnMerc(pSoldier));
+	SPrintMoney(sString, GetFundsOnMerc(GetSoldierOfCurrentSlot()));
 
 	SetFont(ATM_FONT);
 	SetFontForeground(FONT_WHITE);
