@@ -184,6 +184,10 @@ extern UINT32       guiNumMercSlots;
 
 extern TacticalStatusType gTacticalStatus;
 
+#define BASE_FOR_ALL_IN_TEAM(type, iter, team) for (type* iter = &Menptr[gTacticalStatus.Team[(team)].bFirstID], * const end__##iter = &Menptr[gTacticalStatus.Team[(team)].bLastID + 1]; iter != end__##iter; ++iter)
+#define FOR_ALL_IN_TEAM( iter, team) BASE_FOR_ALL_IN_TEAM(      SOLDIERTYPE, iter, (team))
+#define CFOR_ALL_IN_TEAM(iter, team) BASE_FOR_ALL_IN_TEAM(const SOLDIERTYPE, iter, (team))
+
 
 BOOLEAN InitTacticalEngine(void);
 void ShutdownTacticalEngine(void);
