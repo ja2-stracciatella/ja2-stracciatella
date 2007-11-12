@@ -1238,7 +1238,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 }
 
 
-static void RenderInventoryForCharacter(INT32 iId);
+static void RenderSliderBarForPersonnelInventory(void);
 
 
 static void DisplayInventoryForSelectedChar(void)
@@ -1251,24 +1251,6 @@ static void DisplayInventoryForSelectedChar(void)
 
 	CreateDestroyPersonnelInventoryScrollButtons();
 
-	INT32 Id;
-	if (fCurrentTeamMode)
-	{
-		Id = GetIdOfThisSlot(iCurrentPersonSelectedId);
-	}
-	else
-	{
-		Id = GetIdOfPastMercInSlot(iCurrentPersonSelectedId);
-	}
-	RenderInventoryForCharacter(Id);
-}
-
-
-static void RenderSliderBarForPersonnelInventory(void);
-
-
-static void RenderInventoryForCharacter(INT32 iId)
-{
 	UINT8 ubItemCount = 0;
 	UINT8 ubUpToCount = 0;
 	INT16 sX, sY;
@@ -1281,7 +1263,7 @@ static void RenderInventoryForCharacter(INT32 iId)
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
 
-	const SOLDIERTYPE* pSoldier = &Menptr[iId];
+	const SOLDIERTYPE* const pSoldier = &Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)];
 
 	//if this is a robot, dont display any inventory
 	if (AM_A_ROBOT(pSoldier)) return;
