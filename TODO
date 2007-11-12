@@ -29,5 +29,4 @@ low prio
 - TODO0008 The random call here seems to be off-by-one. If it returns its maximum value then no assignment to iAttitude happens, because the next loop tries to find the n+1th peak of n peaks.
 - TODO0009 Possible endless loop
 - TODO000A Memory leak?
-- TODO0010 Is there a difference between MercPtrs[i] and &Menptr[i]?
 - TODO0012 Is this fix for the infinite loop when throwing right?

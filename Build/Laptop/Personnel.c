@@ -1069,21 +1069,19 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 	INT32 iCnt = 0;
 	for (INT32 i = 0; i < iTotalOnTeam; iCnt++)
 	{
-		const SOLDIERTYPE* const merc = MercPtrs[iId + iCnt]; // XXX TODO0010
-		if (!merc->bActive) continue;
+		const SOLDIERTYPE* const s = GetMan(iId + iCnt);
+		if (!s->bActive) continue;
 
 		// found the next actual guy
 		char sTemp[100];
-		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[merc->ubProfile].ubFaceIndex);
+		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
 
 		UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
 		CHECKF(guiFACE != NO_VOBJECT);
 
 		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
-		const SOLDIERTYPE* const man = &Menptr[iId + iCnt]; // XXX TODO0010
-
-		if (man->bLife <= 0)
+		if (s->bLife <= 0)
 		{
 			hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
@@ -1094,7 +1092,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 		const INT32 y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, x, y);
 
-		if (man->bLife <= 0)
+		if (s->bLife <= 0)
 		{
 			//if the merc is dead, display it
 			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], x, y + SMALL_PORT_HEIGHT / 2, SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
