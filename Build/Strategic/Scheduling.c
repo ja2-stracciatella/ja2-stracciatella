@@ -353,7 +353,6 @@ void PrepareSchedulesForEditorExit()
 void LoadSchedules( INT8 **hBuffer )
 {
 	SCHEDULENODE *pSchedule = NULL;
-	SCHEDULENODE temp;
 	UINT8 ubNum;
 
 	// delete all the schedules we might have loaded (though we shouldn't have any loaded!!)
@@ -366,26 +365,36 @@ void LoadSchedules( INT8 **hBuffer )
 	gubScheduleID = 1;
 	while( ubNum )
 	{
-		LOADDATA( &temp, *hBuffer, sizeof( SCHEDULENODE ) );
+		BYTE data[36];
+		LOADDATA(data, *hBuffer, sizeof(data));
 
-		if( gpScheduleList )
+		SCHEDULENODE* const node = MemAlloc(sizeof(*node));
+
+		const BYTE* s = data;
+		EXTR_PTR( s, node->next)
+		EXTR_U16A(s, node->usTime,   lengthof(node->usTime))
+		EXTR_U16A(s, node->usData1,  lengthof(node->usData1))
+		EXTR_U16A(s, node->usData2,  lengthof(node->usData2))
+		EXTR_U8A( s, node->ubAction, lengthof(node->ubAction))
+		EXTR_SKIP(s, 2) // skip schedule ID and soldier ID, they get overwritten
+		EXTR_U16( s, node->usFlags)
+		Assert(s == endof(data));
+
+		node->ubScheduleID = gubScheduleID++;
+		node->soldier      = NULL;
+
+		if (pSchedule != NULL)
 		{
-			pSchedule->next = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
-			Assert( pSchedule->next );
-			pSchedule = pSchedule->next;
-			*pSchedule = temp;
+			Assert(pSchedule->next == NULL);
+			pSchedule->next = node;
 		}
 		else
 		{
-			gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
-			Assert( gpScheduleList );
-			*gpScheduleList = temp;
-			pSchedule = gpScheduleList;
+			Assert(gpScheduleList == NULL);
+			gpScheduleList = node;
 		}
-		pSchedule->ubScheduleID = gubScheduleID;
-		pSchedule->soldier      = NULL;
-		pSchedule->next = NULL;
-		gubScheduleID++;
+		pSchedule = node;
+
 		ubNum--;
 	}
 	//Schedules are posted when the soldier is added...
