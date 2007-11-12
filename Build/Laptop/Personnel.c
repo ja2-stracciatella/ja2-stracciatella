@@ -2520,31 +2520,25 @@ static INT32 GetIdOfFirstDisplayedMerc(void)
 // id of merc in this slot
 static INT32 GetIdOfThisSlot(INT32 iSlot)
 {
-	if (fCurrentTeamMode)
+	Assert(fCurrentTeamMode);
+
+	// run through list of soldiers on players current team
+	const SOLDIERTYPE* pSoldier = MercPtrs[0];
+	INT32 cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
+	INT32 iCounter = 0;
+	for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
 	{
-		// run through list of soldiers on players current team
-		const SOLDIERTYPE* pSoldier = MercPtrs[0];
-		INT32 cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
-		INT32 iCounter = 0;
-		for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
+		if (pSoldier->bActive)
 		{
-			if (pSoldier->bActive)
-			{
-				// same character as slot, return this value
-				if (iCounter == iSlot) return cnt;
+			// same character as slot, return this value
+			if (iCounter == iSlot) return cnt;
 
-				// found another soldier
-				iCounter++;
-			}
+			// found another soldier
+			iCounter++;
 		}
+	}
 
-		return 0;
-	}
-	else
-	{
-		// run through list of soldier on players old team...the slot id will be translated
-		return iSlot;
-	}
+	return 0;
 }
 
 
