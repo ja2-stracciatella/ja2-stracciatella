@@ -1776,42 +1776,32 @@ static void InitPastCharactersList(void)
 }
 
 
+static INT32 CountList(const INT16* const list)
+{
+	INT32 count = 0;
+	for (const INT16* i = list, * const end = list + 256; i != end; ++i)
+	{
+		if (*i != -1) ++count;
+	}
+	return count;
+}
+
+
 static INT32 GetNumberOfDeadOnPastTeam(void)
 {
-	INT32 iNumberDead = 0;
-
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubDeadCharactersList[i] != -1) iNumberDead++;
-	}
-
-	return iNumberDead;
+	return CountList(LaptopSaveInfo.ubDeadCharactersList);
 }
 
 
 static INT32 GetNumberOfLeftOnPastTeam(void)
 {
-	INT32 iNumberLeft = 0;
-
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubLeftCharactersList[i] != -1) iNumberLeft++;
-	}
-
-	return iNumberLeft;
+	return CountList(LaptopSaveInfo.ubLeftCharactersList);
 }
 
 
 static INT32 GetNumberOfOtherOnPastTeam(void)
 {
-	INT32 iNumberOther = 0;
-
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubOtherCharactersList[i] != -1) iNumberOther++;
-	}
-
-	return iNumberOther;
+	return CountList(LaptopSaveInfo.ubOtherCharactersList);
 }
 
 
