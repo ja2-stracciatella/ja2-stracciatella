@@ -434,14 +434,15 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 
 		if (pSchedule != NULL)
 		{
+			Assert(pSchedule->next == NULL);
 			pSchedule->next = node;
 		}
 		else
 		{
 			Assert(gpScheduleList == NULL);
-			pSchedule      = node;
 			gpScheduleList = node;
 		}
+		pSchedule = node;
 
 		gubScheduleID++;
 		ubRealNum--;
