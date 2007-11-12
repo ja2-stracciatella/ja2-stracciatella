@@ -1134,6 +1134,13 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			iCurrentPersonSelectedId = iPortraitId;
 			fReDrawScreenFlag = TRUE;
+
+			if (iCurrentPersonSelectedId != -1 &&
+					Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)].bAssignment == ASSIGNMENT_POW &&
+					gubPersonnelInfoState == PERSONNEL_INV_BTN)
+			{
+				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
+			}
 		}
 		else
 		{
@@ -1144,12 +1151,6 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			iCurrentPersonSelectedId = iPortraitId;
 			fReDrawScreenFlag = TRUE;
 			iCurPortraitId = iPortraitId;
-		}
-
-		//if the selected merc is valid, and they are a POW, change to the inventory display
-		if (iCurrentPersonSelectedId != -1 && Menptr[GetIdOfThisSlot(iCurrentPersonSelectedId)].bAssignment == ASSIGNMENT_POW && gubPersonnelInfoState == PERSONNEL_INV_BTN)
-		{
-			gubPersonnelInfoState = PERSONNEL_STAT_BTN;
 		}
 
 		if (iOldPortraitId != iPortraitId)
