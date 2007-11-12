@@ -1053,23 +1053,11 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 {
 	// will display the 20 small portraits of the current team
+	if (!fCurrentTeamMode) return TRUE;
 
-	// get number of mercs on team
-	const INT32 iTotalOnTeam = GetNumberOfMercsDeadOrAliveOnPlayersTeam();
-
-	if (iTotalOnTeam == 0 || !fCurrentTeamMode)
+	INT32 i = 0;
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		// nobody on team, leave
-		return TRUE;
-	}
-
-	// start id
-	const INT32 iId = gTacticalStatus.Team[MercPtrs[0]->bTeam].bFirstID;
-
-	INT32 iCnt = 0;
-	for (INT32 i = 0; i < iTotalOnTeam; iCnt++)
-	{
-		const SOLDIERTYPE* const s = GetMan(iId + iCnt);
 		if (!s->bActive) continue;
 
 		// found the next actual guy
