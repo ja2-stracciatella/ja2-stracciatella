@@ -2807,6 +2807,8 @@ static void UpDateStateOfStartButton(void)
 
 static void DisplayAmountOnCurrentMerc(void)
 {
+	if (!fCurrentTeamMode) return;
+
 	// will display the amount that the merc is carrying on him or herself
 	INT32 iId = GetIdOfThisSlot(iCurrentPersonSelectedId);
 	const SOLDIERTYPE* pSoldier = (iId == -1 ? NULL : MercPtrs[iId]);
