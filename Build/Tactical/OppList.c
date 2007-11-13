@@ -800,46 +800,38 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 }
 
 
+// All mercs on our local team check if they should radio about him
 static void OurTeamRadiosRandomlyAbout(UINT8 ubAbout)
 {
- INT32				iLoop;
- INT8					radioCnt = 0,radioMan[20];
- SOLDIERTYPE	*pSoldier;
-
- // All mercs on our local team check if they should radio about him
- iLoop = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-
- // make a list of all of our team's mercs
- for (pSoldier = MercPtrs[iLoop]; iLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; iLoop++,pSoldier++)
-  {
-   // if this merc is active, in this sector, and well enough to look
-   if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE))
-     // put him on our list, and increment the counter
-     radioMan[radioCnt++] = (INT8)iLoop;
+	// make a list of all of our team's mercs
+	UINT radio_cnt = 0;
+	SOLDIERTYPE* radio_men[20];
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	{
+		/* if this merc is in this sector, and well enough to look, then put him on
+		 * our list */
+		if (s->bInSector && s->bLife >= OKLIFE)
+			radio_men[radio_cnt++] = s;
   }
 
+	/* Now RANDOMLY handle each of the mercs on our list, until none remain (this
+	 * is all being done ONLY so that the mercs in the earliest merc slots do not
+	 * arbitrarily get the bulk of the sighting speech quote action, while the
+	 * later ones almost never pipe up, and is NOT strictly necessary, but a nice
+	 * improvement over original JA) */
+	for (; radio_cnt > 0; --radio_cnt)
+	{
+		// Pick a merc from one of the remaining slots at random
+		const UINT chosen_idx = Random(radio_cnt);
+		SOLDIERTYPE* const chosen = radio_men[chosen_idx];
 
- // now RANDOMLY handle each of the mercs on our list, until none remain
- // (this is all being done ONLY so that the mercs in the earliest merc
- //  slots do not arbitrarily get the bulk of the sighting speech quote
- //  action, while the later ones almost never pipe up, and is NOT
- //  strictly necessary, but a nice improvement over original JA)
- while (radioCnt)
-  {
-   // pick a merc from one of the remaining slots at random
-   iLoop = Random(radioCnt);
+		// Handle radioing for that merc
+		RadioSightings(chosen, ubAbout, chosen->bTeam);
+		chosen->bNewOppCnt = 0;
 
-   // handle radioing for that merc
-   RadioSightings(MercPtrs[radioMan[iLoop]],ubAbout,MercPtrs[radioMan[iLoop]]->bTeam);
-   Menptr[radioMan[iLoop]].bNewOppCnt = 0;
-
-   // unless it WAS the last used slot that we happened to pick
-   if (iLoop != (radioCnt - 1))
-     // move the contents of the last slot into the one just handled
-     radioMan[iLoop] = radioMan[radioCnt - 1];
-
-   radioCnt--;
-  }
+		/* Move the contents of the last slot into the one just handled */
+		radio_men[chosen_idx] = radio_men[radio_cnt - 1];
+	}
 }
 
 
