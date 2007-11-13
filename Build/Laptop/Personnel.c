@@ -288,7 +288,6 @@ static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create);
 static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create);
 static void CreatePersonnelButtons(void);
 static void SelectFirstDisplayedMerc(void);
-static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void);
 static BOOLEAN LoadPersonnelGraphics(void);
 static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void);
 static void SetPersonnelButtonStates(void);
@@ -568,6 +567,7 @@ static void RenderPersonnelFacePast(const UINT8 profile, const INT32 state)
 }
 
 
+static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void);
 static INT32 GetNumberOfPastMercsOnPlayersTeam(void);
 
 
@@ -1182,7 +1182,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void DisplayDepartedCharName(INT32 iId, INT32 iState);
 static void DisplayDepartedCharStats(INT32 iId, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
-static INT32 GetIdOfPastMercInSlot(INT32 iSlot);
+static INT32 GetIdOfSelectedPastMerc(void);
 static INT32 GetTheStateOfDepartedMerc(INT32 iId);
 
 
@@ -1207,7 +1207,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		}
 		else
 		{
-			const INT32 id    = GetIdOfPastMercInSlot(iCurrentPersonSelectedId);
+			const INT32 id    = GetIdOfSelectedPastMerc();
 			const INT32 state = GetTheStateOfDepartedMerc(id);
 			RenderPersonnelFacePast(id, state);
 			DisplayDepartedCharName(id, state);
@@ -2060,56 +2060,28 @@ static void DisplayPastMercsPortraits(void)
 }
 
 
-static INT32 GetIdOfPastMercInSlot(INT32 iSlot)
+// returns ID of Merc in this slot
+static INT32 GetIdOfSelectedPastMerc(void)
 {
-	INT32 iCounter = -1;
-	INT32 iCounterA;
-	// returns ID of Merc in this slot
+	INT32 iSlot = giCurrentUpperLeftPortraitNumber + iCurrentPersonSelectedId;
 
-	// not time to display
-	if (fCurrentTeamMode)
+	Assert(!fCurrentTeamMode);
+	Assert(iSlot < GetNumberOfPastMercsOnPlayersTeam());
+
+	const LaptopSaveInfoStruct* const l = &LaptopSaveInfo;
+	for (const INT16* i = l->ubDeadCharactersList; i != endof(l->ubDeadCharactersList); ++i)
 	{
-		return -1;
+		if (*i != -1 && iSlot-- == 0) return *i;
 	}
-
-	if (iSlot > GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
+	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
-		// invalid slot
-		return iCurrentPersonSelectedId;
+		if (*i != -1 && iSlot-- == 0) return *i;
 	}
-
-	// go through dead list
-	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber;  iCounterA++)
+	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
-		if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
-			iCounter++;
+		if (*i != -1 && iSlot-- == 0) return *i;
 	}
-
-	if (iSlot + giCurrentUpperLeftPortraitNumber == iCounter)
-	{
-		return LaptopSaveInfo.ubDeadCharactersList[iCounterA - 1];
-	}
-
-	// now the fired list
-	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber; iCounterA++)
-	{
-		if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
-			iCounter++;
-	}
-
-	if (iSlot + giCurrentUpperLeftPortraitNumber == iCounter)
-	{
-		return LaptopSaveInfo.ubLeftCharactersList[iCounterA  - 1];
-	}
-
-	// now the fired list
-	for (iCounterA = 0; iCounter < iSlot + giCurrentUpperLeftPortraitNumber; iCounterA++)
-	{
-		if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
-			iCounter++;
-	}
-
-	return LaptopSaveInfo.ubOtherCharactersList[iCounterA  - 1];
+	return -1;
 }
 
 
