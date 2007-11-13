@@ -1179,11 +1179,17 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+typedef struct PastMercInfo
+{
+	ProfileID id;
+	INT8      state;
+} PastMercInfo;
+
+
 static void DisplayDepartedCharName(INT32 iId, INT32 iState);
 static void DisplayDepartedCharStats(INT32 iId, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
-static INT32 GetIdOfSelectedPastMerc(void);
-static INT32 GetTheStateOfDepartedMerc(INT32 iId);
+static PastMercInfo GetSelectedPastMercInfo(void);
 
 
 static void DisplayFaceOfDisplayedMerc(void)
@@ -1207,14 +1213,13 @@ static void DisplayFaceOfDisplayedMerc(void)
 		}
 		else
 		{
-			const INT32 id    = GetIdOfSelectedPastMerc();
-			const INT32 state = GetTheStateOfDepartedMerc(id);
-			RenderPersonnelFacePast(id, state);
-			DisplayDepartedCharName(id, state);
+			const PastMercInfo info = GetSelectedPastMercInfo();
+			RenderPersonnelFacePast(info.id, info.state);
+			DisplayDepartedCharName(info.id, info.state);
 
 			if (gubPersonnelInfoState == PRSNL_INV) return;
 
-			DisplayDepartedCharStats(id, state);
+			DisplayDepartedCharStats(info.id, info.state);
 		}
 	}
 }
@@ -2061,7 +2066,7 @@ static void DisplayPastMercsPortraits(void)
 
 
 // returns ID of Merc in this slot
-static INT32 GetIdOfSelectedPastMerc(void)
+static PastMercInfo GetSelectedPastMercInfo(void)
 {
 	INT32 iSlot = giCurrentUpperLeftPortraitNumber + iCurrentPersonSelectedId;
 
@@ -2071,17 +2076,17 @@ static INT32 GetIdOfSelectedPastMerc(void)
 	const LaptopSaveInfoStruct* const l = &LaptopSaveInfo;
 	for (const INT16* i = l->ubDeadCharactersList; i != endof(l->ubDeadCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return *i;
+		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_DEAD };
 	}
 	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return *i;
+		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_QUIT };
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return *i;
+		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_OTHER };
 	}
-	return -1;
+	return (PastMercInfo){ -1, -1 };
 }
 
 
@@ -2242,28 +2247,6 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, State, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_LOC_Y, State);
-}
-
-
-static INT32 GetTheStateOfDepartedMerc(INT32 iId)
-{
-	// will run through each list until merc is found, if not a -1 is returned
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubDeadCharactersList[i] == iId) return DEPARTED_DEAD;
-	}
-
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubLeftCharactersList[i] == iId) return DEPARTED_FIRED;
-	}
-
-	for (INT32 i = 0; i < 256; i++)
-	{
-		if (LaptopSaveInfo.ubOtherCharactersList[i] == iId) return DEPARTED_OTHER;
-	}
-
-	return -1;
 }
 
 
