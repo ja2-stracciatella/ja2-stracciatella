@@ -2461,7 +2461,7 @@ static INT32 GetIdOfFirstDisplayedMerc(void)
 		//cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
 		for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
 		{
-			if (pSoldier->bActive && pSoldier->bLife > 0)
+			if (pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				return 0;
 			}
