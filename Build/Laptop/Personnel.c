@@ -997,7 +997,7 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 	// grab number on team
 	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (i->bActive && !(i->uiStatusFlags & SOLDIER_VEHICLE)) iCounter++;
+		if (!(i->uiStatusFlags & SOLDIER_VEHICLE)) iCounter++;
 	}
 
 	return iCounter;
@@ -1048,7 +1048,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 	INT32 i = 0;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue;
 
 		// found the next actual guy
 		char sTemp[100];
@@ -1546,7 +1546,7 @@ static void DisplayCostOfCurrentTeam(void)
 
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (!s->bActive || s->bLife <= 0) continue;
+		if (s->bLife <= 0) continue;
 
 		// valid soldier, get cost
 		INT32 cost;
@@ -1636,7 +1636,7 @@ static void DisplayTeamStats(void)
 		{
 			CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 			{
-				if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
+				if (s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
 				INT32 val;
 				switch (stat)
@@ -2377,7 +2377,7 @@ static void SelectFirstDisplayedMerc(void)
 	{
 		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if (s->bActive && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+			if (!(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				iCurrentPersonSelectedId = 0;
 				return;
@@ -2399,7 +2399,7 @@ static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 	INT32 slot = iCurrentPersonSelectedId;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (s->bActive && slot-- == 0) return s;
+		if (slot-- == 0) return s;
 	}
 
 	return NULL;
