@@ -265,7 +265,7 @@ static BOOLEAN fCurrentTeamMode = TRUE;
 BOOLEAN fShowAtmPanelStartButton = TRUE;
 
 // mouse regions
-static MOUSE_REGION gPortraitMouseRegions[20];
+static MOUSE_REGION gPortraitMouseRegions[PERSONNEL_PORTRAIT_NUMBER];
 
 static MOUSE_REGION gTogglePastCurrentTeam[2];
 
@@ -601,7 +601,7 @@ static BOOLEAN NextPersonnelFace(void)
 		}
 		else if (iCurPortraitId == 19)
 		{
-			giCurrentUpperLeftPortraitNumber += 20;
+			giCurrentUpperLeftPortraitNumber += PERSONNEL_PORTRAIT_NUMBER;
 			iCurPortraitId = 0;
 		}
 		else
@@ -647,13 +647,13 @@ static BOOLEAN PrevPersonnelFace(void)
 		{
 			// about to go off the end
 			INT32 count_past = GetNumberOfPastMercsOnPlayersTeam();
-			giCurrentUpperLeftPortraitNumber = count_past - count_past % 20;
-			iCurPortraitId = count_past % 20;
+			giCurrentUpperLeftPortraitNumber = count_past - count_past % PERSONNEL_PORTRAIT_NUMBER;
+			iCurPortraitId = count_past % PERSONNEL_PORTRAIT_NUMBER;
 			iCurPortraitId--;
 		}
 		else if (iCurPortraitId == 0)
 		{
-			giCurrentUpperLeftPortraitNumber -= 20;
+			giCurrentUpperLeftPortraitNumber -= PERSONNEL_PORTRAIT_NUMBER;
 			iCurPortraitId = 19;
 		}
 		else
@@ -1042,7 +1042,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 
 static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 {
-	// will display the 20 small portraits of the current team
+	// will display the small portraits of the current team
 	if (!fCurrentTeamMode) return TRUE;
 
 	INT32 i = 0;
@@ -1929,9 +1929,9 @@ static void DepartedUpCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentUpperLeftPortraitNumber - 20 >= 0)
+		if (giCurrentUpperLeftPortraitNumber - PERSONNEL_PORTRAIT_NUMBER >= 0)
 		{
-			giCurrentUpperLeftPortraitNumber -= 20;
+			giCurrentUpperLeftPortraitNumber -= PERSONNEL_PORTRAIT_NUMBER;
 			fReDrawScreenFlag = TRUE;
 		}
 	}
@@ -1942,9 +1942,9 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentUpperLeftPortraitNumber + 20 < GetNumberOfPastMercsOnPlayersTeam())
+		if (giCurrentUpperLeftPortraitNumber + PERSONNEL_PORTRAIT_NUMBER < GetNumberOfPastMercsOnPlayersTeam())
 		{
-			giCurrentUpperLeftPortraitNumber += 20;
+			giCurrentUpperLeftPortraitNumber += PERSONNEL_PORTRAIT_NUMBER;
 			fReDrawScreenFlag = TRUE;
 		}
 	}
@@ -1957,7 +1957,8 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 static void DisplayPastMercsPortraits(void)
 {
 	/* display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber
-	 * and going up 20 mercs start at dead mercs, then fired, then other */
+	 * and going up PERSONNEL_PORTRAIT_NUMBER mercs start at dead mercs, then
+	 * fired, then other */
 	INT32 iCounter = 0;
 	INT32 iCounterA;
 	INT32 iStartArray; // 0 = dead list, 1 = fired list, 2 = other list
@@ -1983,7 +1984,7 @@ static void DisplayPastMercsPortraits(void)
 			}
 		}
 
-		iStartArray = (iCounter < 20 ? 0 : 1);
+		iStartArray = (iCounter < PERSONNEL_PORTRAIT_NUMBER ? 0 : 1);
 	}
 	else
 	{
@@ -1999,7 +2000,7 @@ static void DisplayPastMercsPortraits(void)
 				iCounter++;
 		}
 
-		iStartArray = (iCounter < 20 ? 1 : 2);
+		iStartArray = (iCounter < PERSONNEL_PORTRAIT_NUMBER ? 1 : 2);
 	}
 	else if (iStartArray != 0)
 	{
@@ -2012,7 +2013,7 @@ static void DisplayPastMercsPortraits(void)
 	if (iStartArray == 0)
 	{
 		// run through list and display
-		for (iCounterA; iCounter < 20 && iCounterA < 256; iCounterA++)
+		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER && iCounterA < 256; iCounterA++)
 		{
 			// show dead pictures
 			if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
@@ -2027,7 +2028,7 @@ static void DisplayPastMercsPortraits(void)
 
 	if (iStartArray <= 1)
 	{
-		for (iCounterA; iCounter < 20  && iCounterA < 256; iCounterA++)
+		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER  && iCounterA < 256; iCounterA++)
 		{
 			// show fired pics
 			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
@@ -2042,7 +2043,7 @@ static void DisplayPastMercsPortraits(void)
 
 	if (iStartArray <= 2)
 	{
-		for (iCounterA; iCounter < 20  && iCounterA < 256; iCounterA++)
+		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER  && iCounterA < 256; iCounterA++)
 		{
 			// show other pics
 			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
@@ -2171,7 +2172,7 @@ static void EnableDisableDeparturesButtons(void)
 		// enable up button
 		EnableButton(giPersonnelButton[4]);
 	}
-	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber  >= 20)
+	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber >= PERSONNEL_PORTRAIT_NUMBER)
 	{
 		// enable down button
 		EnableButton(giPersonnelButton[5]);
