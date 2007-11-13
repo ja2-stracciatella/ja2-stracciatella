@@ -1872,14 +1872,10 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+		if (fCurrentTeamMode) return;
 		fCurrentTeamMode = TRUE;
 
-		if (fCurrentTeamMode)
-		{
-			SelectFirstDisplayedMerc();
-		}
-
-		fCurrentTeamMode = TRUE;
+		SelectFirstDisplayedMerc();
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -1889,15 +1885,13 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+		if (!fCurrentTeamMode) return;
 		fCurrentTeamMode = FALSE;
 
-		if (!fCurrentTeamMode)
-		{
-			SelectFirstDisplayedMerc();
+		SelectFirstDisplayedMerc();
 
-			//Switch the panel on the right to be the stat panel
-			gubPersonnelInfoState = PERSONNEL_STAT_BTN;
-		}
+		//Switch the panel on the right to be the stat panel
+		gubPersonnelInfoState = PERSONNEL_STAT_BTN;
 
 		fReDrawScreenFlag = TRUE;
 	}
