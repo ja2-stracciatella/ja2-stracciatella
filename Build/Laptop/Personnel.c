@@ -1058,7 +1058,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 	INT32 i = 0;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (!s->bActive) continue;
+		if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
 
 		// found the next actual guy
 		char sTemp[100];
