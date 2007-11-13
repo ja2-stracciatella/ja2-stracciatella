@@ -1568,122 +1568,41 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 }
 
 
-
-
 // IsMercOnTeam() checks to see if the passed in Merc Profile ID is currently on the player's team
 BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( pTeamSoldier->ubProfile == ubMercID )
-		{
-			if( pTeamSoldier->bActive )
-				return(TRUE);
-		}
-	}
-
-	return(FALSE);
+	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	return s != NULL;
 }
+
 
 // ATE: Added this new function for contract renewals
 BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( pTeamSoldier->ubProfile == ubMercID )
-		{
-			if( pTeamSoldier->bActive )
-      {
-        if ( pTeamSoldier->bLife > 0 )
-        {
-				  return(TRUE);
-        }
-      }
-		}
-	}
-
-	return(FALSE);
+	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	return s != NULL && s->bLife > 0;
 }
+
 
 BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( pTeamSoldier->ubProfile == ubMercID )
-		{
-			if ( pTeamSoldier->bActive && pTeamSoldier->bAssignment != IN_TRANSIT )
-				return(TRUE);
-		}
-	}
-
-	return(FALSE);
+	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	return s != NULL && s->bAssignment != IN_TRANSIT;
 }
+
 
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
-	{
-		if ( pTeamSoldier->ubProfile == ubMercID )
-		{
-			if ( pTeamSoldier->bActive && pTeamSoldier->bAssignment != IN_TRANSIT )
-      {
-        if ( pTeamSoldier->bLife > 0 )
-        {
-				  return(TRUE);
-        }
-      }
-		}
-	}
-
-	return(FALSE);
+	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	return s != NULL && s->bAssignment != IN_TRANSIT && s->bLife > 0;
 }
 
 
 SOLDIERTYPE* GetSoldierFromMercID(UINT8 ubMercID)
 {
-  // look for all mercs on the same team,
-	const TacticalTeamType* const t = &gTacticalStatus.Team[OUR_TEAM];
-	for (UINT i = t->bFirstID, end = t->bLastID + 1; i != end; ++i)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		SOLDIERTYPE* const s = &Menptr[i];
-		if (s->ubProfile == ubMercID && s->bActive) return s;
+		if (s->ubProfile == ubMercID) return s;
 	}
-
 	return NULL;
 }
