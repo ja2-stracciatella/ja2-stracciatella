@@ -995,13 +995,9 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 	INT32 iCounter = 0;
 
 	// grab number on team
-	const SOLDIERTYPE* pSoldier = MercPtrs[0];
-
-	for (INT32 cnt = 0; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++)
+	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		const SOLDIERTYPE* i = MercPtrs[cnt];
-		if (i->bActive && !(i->uiStatusFlags & SOLDIER_VEHICLE))
-			iCounter++;
+		if (i->bActive && !(i->uiStatusFlags & SOLDIER_VEHICLE)) iCounter++;
 	}
 
 	return iCounter;
@@ -1548,10 +1544,8 @@ static void DisplayCostOfCurrentTeam(void)
 	INT32 max_cost = 0;
 	INT32 sum_cost = 0;
 
-	// run through active soldiers
-	for (INT32 i = 0; i <= gTacticalStatus.Team[OUR_TEAM].bLastID; ++i)
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		const SOLDIERTYPE* const s = MercPtrs[i];
 		if (!s->bActive || s->bLife <= 0) continue;
 
 		// valid soldier, get cost
@@ -1640,9 +1634,8 @@ static void DisplayTeamStats(void)
 		INT32 count             = 0;
 		if (fCurrentTeamMode)
 		{
-			for (INT32 i = 0; i <= gTacticalStatus.Team[OUR_TEAM].bLastID; ++i)
+			CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 			{
-				const SOLDIERTYPE* const s = MercPtrs[i];
 				if (!s->bActive || s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
 				INT32 val;
@@ -2382,13 +2375,9 @@ static void SelectFirstDisplayedMerc(void)
 	// set current soldier
 	if (fCurrentTeamMode)
 	{
-		// run through list of soldiers on players current team
-		const SOLDIERTYPE* pSoldier = MercPtrs[0];
-		INT32 cnt = 0;
-		//cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
-		for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if (pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+			if (s->bActive && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				iCurrentPersonSelectedId = 0;
 				return;
@@ -2403,24 +2392,14 @@ static void SelectFirstDisplayedMerc(void)
 }
 
 
-// id of merc in this slot
 static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 {
 	Assert(fCurrentTeamMode);
 
-	// run through list of soldiers on players current team
-	const SOLDIERTYPE* pSoldier = MercPtrs[0];
-	INT32 cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
-	INT32 iCounter = 0;
-	for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++, pSoldier++)
+	INT32 slot = iCurrentPersonSelectedId;
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (pSoldier->bActive)
-		{
-			if (iCounter == iCurrentPersonSelectedId) return pSoldier;
-
-			// found another soldier
-			iCounter++;
-		}
+		if (s->bActive && slot-- == 0) return s;
 	}
 
 	return NULL;
