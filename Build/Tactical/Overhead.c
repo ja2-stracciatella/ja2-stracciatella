@@ -6592,36 +6592,6 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(UINT8 ubID, UINT8 ubTargetID)
 }
 
 
-static void StopMercAnimation(BOOLEAN fStop)
-{
-	static INT8 bOldRealtimeSpeed;
-
-	if ( fStop )
-	{
-		if ( !(gTacticalStatus.uiFlags & SLOW_ANIMATION ) )
-		{
-			bOldRealtimeSpeed = gTacticalStatus.bRealtimeSpeed;
-			gTacticalStatus.bRealtimeSpeed = -1;
-
-			gTacticalStatus.uiFlags |=(SLOW_ANIMATION );
-
-			ResetAllMercSpeeds( );
-		}
-	}
-	else
-	{
-		if ( gTacticalStatus.uiFlags & SLOW_ANIMATION )
-		{
-			gTacticalStatus.bRealtimeSpeed = bOldRealtimeSpeed;
-
-			gTacticalStatus.uiFlags &=(~SLOW_ANIMATION );
-
-			ResetAllMercSpeeds( );
-		}
-	}
-}
-
-
 void ResetAllMercSpeeds(void)
 {
 	FOR_ALL_SOLDIERS(s)
