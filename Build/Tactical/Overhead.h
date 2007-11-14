@@ -188,6 +188,10 @@ extern TacticalStatusType gTacticalStatus;
 #define FOR_ALL_IN_TEAM( iter, team) BASE_FOR_ALL_IN_TEAM(      SOLDIERTYPE, iter, (team))
 #define CFOR_ALL_IN_TEAM(iter, team) BASE_FOR_ALL_IN_TEAM(const SOLDIERTYPE, iter, (team))
 
+#define BASE_FOR_ALL_SOLDIERS(type, iter) for (type* iter = Menptr; iter != endof(Menptr); ++iter) if (!iter->bActive) continue; else
+#define FOR_ALL_SOLDIERS( iter) BASE_FOR_ALL_SOLDIERS(      SOLDIERTYPE, iter)
+#define CFOR_ALL_SOLDIERS(iter) BASE_FOR_ALL_SOLDIERS(const SOLDIERTYPE, iter)
+
 
 BOOLEAN InitTacticalEngine(void);
 void ShutdownTacticalEngine(void);
