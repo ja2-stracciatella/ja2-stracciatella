@@ -990,7 +990,6 @@ static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY,
 static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 static UINT32 GetLastTimePlayerWasInSector(void);
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-static void LoadNPCInformationFromProfileStruct(void);
 
 
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
@@ -1115,9 +1114,6 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 		if( !LoadLightEffectsFromMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 			return( FALSE );
 	}
-
-	// Check to see if any npc are in this sector, if so load up some saved data for them
-	LoadNPCInformationFromProfileStruct();
 
 	//if we are loading a saved game
 //	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -1706,134 +1702,6 @@ static void SaveNPCInformationToProfileStruct(void)
 	}
 }
 
-extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest );
-
-
-static SOLDIERTYPE* GetSoldierFromAnyMercID(ProfileID p);
-static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId);
-
-
-static void LoadNPCInformationFromProfileStruct(void)
-{
-	UINT32					cnt;
-
-	// CJC: disabled this Dec 21, 1998 as unnecessary (and messing up quote files for recruited/escorted NPCs
-	return;
-
-	for ( cnt = FIRST_RPC; cnt < NUM_PROFILES; cnt++ )
-	{
-		if ( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-		{
-			// don't load
-			continue;
-		}
-
-		const SOLDIERTYPE* const pSoldier = GetSoldierFromAnyMercID(cnt);
-		if (pSoldier == NULL) continue;
-
-		// load quote info if it exists
-		if ( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS )
-		{
-			LoadTempNpcQuoteInfoForNPCFromTempFile( (UINT8)cnt );
-		}
-
-		// load insertion info
-		/*
-		if ( gMercProfiles[ cnt ] )
-		{
-			pSoldier->ubInsertionCode = pProfile->ubStrategicInsertionCode;
-			pSoldier->usInsertionData = pProfile->usStrategicInsertionData;
-		}
-		*/
-
-	}
-
-
-/*
-	INT16 sX, sY;
-	UINT16	cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16		sXPos, sYPos;
-
-	sXPos = sYPos = 0;
-
-	//Loop through the active NPC's
-//	cnt = gTacticalStatus.Team[ OUR_TEAM ].bLastID + 1;
-	for(cnt=FIRST_RPC; cnt<NUM_PROFILES; cnt++)
-	{
-		if ( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-		{
-			// don't load
-			continue;
-		}
-
-		SOLDIERTYPE* const pSoldier = GetSoldierFromAnyMercID(cnt);
-		if (pSoldier == NULL) continue;
-
-		pSoldier->ubQuoteActionID = gMercProfiles[ cnt ].ubQuoteActionID;
-		pSoldier->ubQuoteRecord = gMercProfiles[ cnt ].ubQuoteRecord;
-
-		if( gMercProfiles[ cnt ].fUseProfileInsertionInfo == PROFILE_USE_GRIDNO )
-		{
-			sX = CenterX( gMercProfiles[ cnt ].sGridNo );
-			sY = CenterY( gMercProfiles[ cnt ].sGridNo );
-
-			//Load the Temp Npc Quote Info array
-
-			//if the NPC has been recruited, continue
-			if( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS )
-				LoadTempNpcQuoteInfoForNPCFromTempFile( (UINT8)cnt );
-
-			//if the NPC has been recruited, continue
-			if( gMercProfiles[ cnt ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-				continue;
-
-			//If the NPC was supposed to do something when they reached their target destination
-			if( pSoldier->sGridNo == pSoldier->sFinalDestination )
-			{
-				if (pSoldier->ubQuoteRecord && pSoldier->ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST )
-				{
-					//the mercs gridno has to be the same as the final destination
-					EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
-
-					NPCReachedDestination( pSoldier, FALSE );
-				}
-			}
-
-			//If the NPC's gridno is not nowhere, set him to that position
-			if( gMercProfiles[ cnt ].sGridNo != NOWHERE )
-			{
-				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-				{
-					//Set the NPC's destination
-					pSoldier->sDestination = gMercProfiles[ cnt ].sGridNo;
-					pSoldier->sDestXPos = sXPos;
-					pSoldier->sDestYPos = sYPos;
-
-					// We have moved to a diferent sector and are returning to it, therefore the merc should be in the final dest
-					EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, TRUE );
-				}
-
-				//else we are saving
-				else
-				{
-
-					//Set the NPC's position
-	//				EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
-					EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, FALSE );
-				}
-			}
-		}
-
-		//else if we are NOT to use the gridno, dont use it but reset the flag
-		else if( gMercProfiles[ cnt ].fUseProfileInsertionInfo == PROFILE_DONT_USE_GRIDNO )
-		{
-			gMercProfiles[ cnt ].fUseProfileInsertionInfo = PROFILE_NOT_SET;
-		}
-	}
-*/
-}
-
 
 BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pNumberOfData )
 {
@@ -1938,16 +1806,6 @@ static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY,
 }
 
 
-static SOLDIERTYPE* GetSoldierFromAnyMercID(const ProfileID p)
-{
-	FOR_ALL_SOLDIERS(s)
-	{
-		if (s->ubProfile == p) return s;
-	}
-	return NULL;
-}
-
-
 //Initializes the NPC temp array
 static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 {
@@ -2045,66 +1903,6 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 
 	return( TRUE );
 }
-
-
-static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId)
-{
-	UINT8		ubCnt;
-	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
-	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
-	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
-	HWFILE	hFile;
-
-
-	//Init the array
-	memset( TempNpcQuote, 0, uiSizeOfTempArray );
-
-
-	//If there isnt already memory allocated, allocate memory to hold the array
-	if( gpNPCQuoteInfoArray[ ubNpcId ] == NULL )
-	{
-		gpNPCQuoteInfoArray[ ubNpcId ] = MemAlloc( sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS );
-		if( gpNPCQuoteInfoArray[ ubNpcId ] == NULL )
-			return( FALSE );
-	}
-
-
-	hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_READ | FILE_OPEN_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening temp npc quote info
-		return( FALSE );
-	}
-
-	//Seek to the correct spot in the file
-	FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
-
-	//Save the array to a temp file
-	if (!FileRead(hFile, TempNpcQuote, uiSizeOfTempArray))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-
-
-	//Loop through and build the temp array to save
-	for( ubCnt=0; ubCnt<NUM_NPC_QUOTE_RECORDS; ubCnt++ )
-	{
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].fFlags					= TempNpcQuote[ ubCnt ].usFlags;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].sRequiredItem		= TempNpcQuote[ ubCnt ].sRequiredItem;
-		gpNPCQuoteInfoArray[ ubNpcId ][ ubCnt ].usGoToGridno		= TempNpcQuote[ ubCnt ].usGoToGridno;
-	}
-
-	FileClose( hFile );
-
-	return( TRUE );
-}
-
-
-
-
-
 
 
 void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
