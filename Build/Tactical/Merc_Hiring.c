@@ -270,10 +270,9 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 static void CheckForValidArrivalSector(void);
 
 
-void MercArrivesCallback(	UINT8	ubSoldierID )
+void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 {
 	MERCPROFILESTRUCT				*pMerc;
-	SOLDIERTYPE							*pSoldier;
 	UINT32									uiTimeOfPost;
 
 	if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
@@ -291,8 +290,6 @@ void MercArrivesCallback(	UINT8	ubSoldierID )
 
 	// stop time compression until player restarts it
 	StopTimeCompression();
-
-	pSoldier = &Menptr[ ubSoldierID ];
 
 	pMerc = &gMercProfiles[ pSoldier->ubProfile ];
 

@@ -957,8 +957,7 @@ static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent)
 			{
 				// Get soldier from profile
 				pSoldier = FindSoldierByProfileID( ubTemp, FALSE );
-
-				MercArrivesCallback( pSoldier->ubID );
+				MercArrivesCallback(pSoldier);
 				SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 			}
 
