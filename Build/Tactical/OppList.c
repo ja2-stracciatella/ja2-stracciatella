@@ -84,7 +84,7 @@ static SOLDIERTYPE* gShouldBecomeHostileOrSayQuote[SHOULD_BECOME_HOSTILE_SIZE];
 static UINT8 gubNumShouldBecomeHostileOrSayQuote;
 
 // NB this ID is set for someone opening a door
-UINT8			gubInterruptProvoker = NOBODY;
+SOLDIERTYPE* gInterruptProvoker = NULL;
 
 INT8 gbPublicOpplist[MAXTEAMS][TOTAL_SOLDIERS];
 INT8 gbSeenOpponents[TOTAL_SOLDIERS][TOTAL_SOLDIERS];
@@ -451,18 +451,13 @@ static void HandleBestSightingPositionInTurnbased(void)
 			{
 				if (gBestToMakeSighting[ubLoop] == NULL)
 				{
-					if (gubInterruptProvoker == NOBODY)
-					{
-						// do nothing (for now) - abort!
-						return;
-					}
-					else
-					{
-						// use this guy as the "interrupted" fellow
-						gBestToMakeSighting[ubLoop] = GetMan(gubInterruptProvoker);
-						fOk = TRUE;
-						break;
-					}
+					// If nobody, do nothing (for now) - abort!
+					if (gInterruptProvoker == NULL) return;
+
+					// use this guy as the "interrupted" fellow
+					gBestToMakeSighting[ubLoop] = gInterruptProvoker;
+					fOk = TRUE;
+					break;
 				}
 				else if (gBestToMakeSighting[ubLoop]->bTeam == gTacticalStatus.ubCurrentTeam)
 				{
@@ -1292,7 +1287,7 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 	}
 
  // reset interrupt only guynum which may have been used
- gubInterruptProvoker = NOBODY;
+ gInterruptProvoker = NULL;
 }
 
 

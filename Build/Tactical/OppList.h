@@ -132,6 +132,6 @@ extern INT8 gbLightSighting[1][16];
 
 void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier);
 
-extern UINT8 gubInterruptProvoker;
+extern SOLDIERTYPE* gInterruptProvoker;
 
 #endif

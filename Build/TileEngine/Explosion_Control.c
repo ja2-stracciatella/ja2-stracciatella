@@ -2838,7 +2838,7 @@ void HandleExplosionQueue(void)
 			SOLDIERTYPE * pTeamSoldier;
 
 			// set variable so we may at least have someone to resolve interrupts vs
-			gubInterruptProvoker = gubPersonToSetOffExplosions;
+			gInterruptProvoker = (gubPersonToSetOffExplosions != NOBODY ? GetMan(gubPersonToSetOffExplosions) : NULL);
 			AllTeamsLookForAll( TRUE );
 
 			// call fov code

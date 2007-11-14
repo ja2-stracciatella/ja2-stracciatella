@@ -1654,7 +1654,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							  MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING );
 						  //	gfDelayResolvingBestSighting = FALSE;
 
-							  gubInterruptProvoker = pSoldier->ubID;
+								gInterruptProvoker = pSoldier;
 							  AllTeamsLookForAll( TRUE );
 
 							  // ATE: Now, check AI guy to cancel what he was going....
