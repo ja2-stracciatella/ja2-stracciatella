@@ -4679,15 +4679,13 @@ void CheckIfAnyoneLeftInSector( INT16 sX, INT16 sY, INT16 sNewX, INT16 sNewY, IN
 
 UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumFriendlies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bLife > 0 )
+		if (pTeamSoldier->bLife > 0)
 		{
 			if ( (pTeamSoldier->bSide == gbPlayerNum ) && ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) && ( pTeamSoldier->bSectorZ == bZ ) )
 			{

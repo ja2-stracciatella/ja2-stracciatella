@@ -488,14 +488,7 @@ BOOLEAN InitOverhead(void)
 BOOLEAN ShutdownOverhead(void)
 {
 	// Delete any soldiers which have been created!
-	for (UINT32 i = 0; i < TOTAL_SOLDIERS; ++i)
-	{
-		if (MercPtrs[i] != NULL && MercPtrs[i]->bActive)
-		{
-			DeleteSoldier(MercPtrs[i]);
-		}
-	}
-
+	FOR_ALL_SOLDIERS(s) DeleteSoldier(s);
 	return TRUE;
 }
 
@@ -2473,12 +2466,12 @@ void SlideTo(const INT16 sGridno, SOLDIERTYPE* const tgt, const UINT16 usReasonI
 {
 	if (fSetLocator == SETANDREMOVEPREVIOUSLOCATOR)
 	{
-		for (INT32 i = 0; i < TOTAL_SOLDIERS; ++i)
+		FOR_ALL_SOLDIERS(s)
 		{
-			if (MercPtrs[i]->bActive && MercPtrs[i]->bInSector)
+			if (s->bInSector)
 			{
 				// Remove all existing locators...
-				MercPtrs[i]->fFlashLocator = FALSE;
+				s->fFlashLocator = FALSE;
 			}
 		}
 	}
@@ -2517,11 +2510,7 @@ void SlideToLocation(UINT16 usReasonID, INT16 sDestGridNo)
 void RebuildAllSoldierShadeTables(void)
 {
 	// Loop through all mercs and make go
-	for (UINT32 i = 0; i < TOTAL_SOLDIERS; ++i)
-	{
-		SOLDIERTYPE* const s = &Menptr[i];
-		if (s->bActive) CreateSoldierPalettes(s);
-	}
+	FOR_ALL_SOLDIERS(s) CreateSoldierPalettes(s);
 }
 
 
@@ -4464,9 +4453,6 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 
 void CommonEnterCombatModeCode( )
 {
-	UINT32                   cnt;
-	SOLDIERTYPE             *pSoldier;
-
 	gTacticalStatus.uiFlags |= INCOMBAT;
 
 	//gTacticalStatus.ubAttackBusyCount = 0;
@@ -4487,62 +4473,59 @@ void CommonEnterCombatModeCode( )
 
 	// OK, loop thorugh all guys and stop them!
 	// Loop through all mercs and make go
-	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
+	FOR_ALL_SOLDIERS(pSoldier)
 	{
-		if ( pSoldier->bActive )
+		if ( pSoldier->bInSector && pSoldier->ubBodyType != CROW )
 		{
-			if ( pSoldier->bInSector && pSoldier->ubBodyType != CROW )
+			// Set some flags for quotes
+			pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_IN_SHIT );
+			pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_MULTIPLE_CREATURES);
+
+			// Hault!
+			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+
+			// END AI actions
+			CancelAIAction( pSoldier, TRUE );
+
+			// turn off AI controlled flag
+			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
+
+			// Check if this guy is an enemy....
+			CheckForPotentialAddToBattleIncrement( pSoldier );
+
+			// If guy is sleeping, wake him up!
+			if ( pSoldier->fMercAsleep == TRUE )
 			{
-				// Set some flags for quotes
-				pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_IN_SHIT );
-				pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_MULTIPLE_CREATURES);
+				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
+			}
 
-				// Hault!
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+			// ATE: Refresh APs
+			CalcNewActionPoints( pSoldier );
 
-				// END AI actions
-				CancelAIAction( pSoldier, TRUE );
-
-				// turn off AI controlled flag
-				pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
-
-				// Check if this guy is an enemy....
-				CheckForPotentialAddToBattleIncrement( pSoldier );
-
-				// If guy is sleeping, wake him up!
-				if ( pSoldier->fMercAsleep == TRUE )
+			if ( pSoldier->ubProfile != NO_PROFILE )
+			{
+				if ( pSoldier->bTeam == CIV_TEAM && pSoldier->bNeutral )
 				{
-					ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
-				}
-
-				// ATE: Refresh APs
-				CalcNewActionPoints( pSoldier );
-
-				if ( pSoldier->ubProfile != NO_PROFILE )
-				{
-					if ( pSoldier->bTeam == CIV_TEAM && pSoldier->bNeutral )
+					// only set precombat gridno if unset
+					if ( gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo == 0 || gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo == NOWHERE )
 					{
-						// only set precombat gridno if unset
-						if ( gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo == 0 || gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo == NOWHERE )
-						{
-							gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo = pSoldier->sGridNo;
-						}
-					}
-					else
-					{
-						gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo = NOWHERE;
+						gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo = pSoldier->sGridNo;
 					}
 				}
-
-				if ( !gTacticalStatus.fHasEnteredCombatModeSinceEntering )
+				else
 				{
-					// ATE: reset player's movement mode at the very start of
-					// combat
-					//if ( pSoldier->bTeam == gbPlayerNum )
-					//{
-						//pSoldier->usUIMovementMode = RUNNING;
-					//}
+					gMercProfiles[ pSoldier->ubProfile ].sPreCombatGridNo = NOWHERE;
 				}
+			}
+
+			if ( !gTacticalStatus.fHasEnteredCombatModeSinceEntering )
+			{
+				// ATE: reset player's movement mode at the very start of
+				// combat
+				//if ( pSoldier->bTeam == gbPlayerNum )
+				//{
+					//pSoldier->usUIMovementMode = RUNNING;
+				//}
 			}
 		}
 	}
@@ -4623,9 +4606,6 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 
 void ExitCombatMode( )
 {
-	UINT32                          cnt;
-	SOLDIERTYPE             *pSoldier;
-
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Exiting combat mode" );
 
 	// Leave combat mode
@@ -4639,34 +4619,30 @@ void ExitCombatMode( )
 	// Set virgin sector to true....
 	gTacticalStatus.fVirginSector = TRUE;
 
-	// Loop through all mercs and make go
-	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
+	FOR_ALL_SOLDIERS(pSoldier)
 	{
-		if ( pSoldier->bActive )
+		if ( pSoldier->bInSector )
 		{
-			if ( pSoldier->bInSector )
+			// Reset some flags
+			if ( pSoldier->fNoAPToFinishMove && pSoldier->bLife >= OKLIFE )
 			{
-				// Reset some flags
-				if ( pSoldier->fNoAPToFinishMove && pSoldier->bLife >= OKLIFE )
-				{
-					AdjustNoAPToFinishMove( pSoldier, FALSE );
-					SoldierGotoStationaryStance( pSoldier );
-				}
-
-				//Cancel pending events
-				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-				pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-				pSoldier->ubPendingAction    = NO_PENDING_ACTION;
-
-				// Reset moved flag
-				pSoldier->bMoved = FALSE;
-
-				// Set final destination
-				pSoldier->sFinalDestination = pSoldier->sGridNo;
-
-				// remove AI controlled flag
-				pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
+				AdjustNoAPToFinishMove( pSoldier, FALSE );
+				SoldierGotoStationaryStance( pSoldier );
 			}
+
+			//Cancel pending events
+			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
+			pSoldier->ubPendingAction    = NO_PENDING_ACTION;
+
+			// Reset moved flag
+			pSoldier->bMoved = FALSE;
+
+			// Set final destination
+			pSoldier->sFinalDestination = pSoldier->sGridNo;
+
+			// remove AI controlled flag
+			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 		}
 	}
 
@@ -5551,15 +5527,13 @@ UINT8 NumPCsInSector( void )
 
 UINT8 NumEnemyInSector( )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0)
 		{
 			// Checkf for any more bacguys
 			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != 0 ) )
@@ -5576,15 +5550,13 @@ UINT8 NumEnemyInSector( )
 
 static UINT8 NumEnemyInSectorExceptCreatures(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 && pTeamSoldier->bTeam != CREATURE_TEAM )
+		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 && pTeamSoldier->bTeam != CREATURE_TEAM)
 		{
 			// Checkf for any more bacguys
 			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != 0 ) )
@@ -5601,16 +5573,13 @@ static UINT8 NumEnemyInSectorExceptCreatures(void)
 
 static UINT8 NumEnemyInSectorNotDeadOrDying(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		// Kill those not already dead.,...
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+		if (pTeamSoldier->bInSector)
 		{
 			// For sure for flag thet they are dead is not set
 			if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_DEAD ) )
@@ -5637,16 +5606,13 @@ static UINT8 NumEnemyInSectorNotDeadOrDying(void)
 
 static UINT8 NumBloodcatsInSectorNotDeadOrDying(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		// Kill those not already dead.,...
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+		if (pTeamSoldier->bInSector)
 		{
 			if (pTeamSoldier->ubBodyType == BLOODCAT)
 			{
@@ -5675,16 +5641,13 @@ static UINT8 NumBloodcatsInSectorNotDeadOrDying(void)
 
 UINT8 NumCapableEnemyInSector(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	UINT8				ubNumEnemies = 0;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	CFOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		// Kill those not already dead.,...
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+		if (pTeamSoldier->bInSector)
 		{
 			// For sure for flag thet they are dead is not set
 			if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_DEAD ) )
@@ -5885,15 +5848,13 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 
 static BOOLEAN KillIncompacitatedEnemyInSector(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	BOOLEAN			fReturnVal = FALSE;
 
 	// Check if the battle is won!
 	// Loop through all mercs and make go
-	for ( pTeamSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pTeamSoldier++, cnt++ )
+	FOR_ALL_SOLDIERS(pTeamSoldier)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife < OKLIFE && !( pTeamSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+		if (pTeamSoldier->bInSector && pTeamSoldier->bLife < OKLIFE && !(pTeamSoldier->uiStatusFlags & SOLDIER_DEAD))
 		{
 			// Checkf for any more bacguys
 			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
@@ -6724,10 +6685,9 @@ static void StopMercAnimation(BOOLEAN fStop)
 
 void ResetAllMercSpeeds(void)
 {
-	for (UINT32 cnt = 0; cnt < TOTAL_SOLDIERS; ++cnt)
+	FOR_ALL_SOLDIERS(s)
 	{
-		SOLDIERTYPE* const s = MercPtrs[cnt];
-		if (s->bActive && s->bInSector) SetSoldierAniSpeed(s);
+		if (s->bInSector) SetSoldierAniSpeed(s);
 	}
 }
 
@@ -6767,22 +6727,15 @@ static void HandleBloodForNewGridNo(const SOLDIERTYPE* pSoldier)
 
 void CencelAllActionsForTimeCompression( void )
 {
-	SOLDIERTYPE *pSoldier;
-	INT32 cnt;
-
-	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
+	FOR_ALL_SOLDIERS(s)
 	{
-		if ( pSoldier->bActive )
-		{
-			if ( pSoldier->bInSector )
-			{
-					// Hault!
-				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		if (!s->bInSector) continue;
 
-				// END AI actions
-				CancelAIAction( pSoldier, TRUE );
-			}
-		}
+		// Hault!
+		EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+
+		// END AI actions
+		CancelAIAction(s, TRUE);
 	}
 }
 

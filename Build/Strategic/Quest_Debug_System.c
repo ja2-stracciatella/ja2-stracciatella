@@ -2796,23 +2796,15 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 rea
 
 static void AddNPCsInSectorToArray(void)
 {
-	SOLDIERTYPE *pSoldier;
-	UINT16 cnt,i;
-
 	//Setup array of merc who are in the current sector
-	i=0;
-	for ( pSoldier = Menptr, cnt = 0; cnt < TOTAL_SOLDIERS; pSoldier++, cnt++ )
+	UINT16 i = 0;
+	CFOR_ALL_SOLDIERS(pSoldier)
 	{
-		if ( ( pSoldier != NULL ) && pSoldier -> bActive )
+		//if soldier is a NPC, add him to the local NPC array
+		if (pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < NUM_PROFILES)
 		{
-			//if soldier is a NPC, add him to the local NPC array
-			if( ( pSoldier->ubProfile >= FIRST_RPC ) && ( pSoldier->ubProfile < NUM_PROFILES ) )
-			{
-				gubCurrentNpcInSector[ i ] = pSoldier->ubProfile;
-				i++;
-			}
+			gubCurrentNpcInSector[i++] = pSoldier->ubProfile;
 		}
-
 	}
 	gubNumNPCinSector = (UINT8)i;
 }
@@ -3135,15 +3127,12 @@ static void IncrementActiveDropDownBox(INT16 sIncrementValue)
 
 static INT16 IsMercInTheSector(UINT16 usMercID)
 {
-	UINT8					cnt;
-
 	if( usMercID == (UINT16)-1 ) /* XXX */
 		return( FALSE );
 
-	for ( cnt=0; cnt <= TOTAL_SOLDIERS; cnt++ )
+	CFOR_ALL_SOLDIERS(s)
 	{
-		const SOLDIERTYPE* const s = GetMan(cnt);
-		if (s->bActive && s->ubProfile == usMercID) return s->ubID;
+		if (s->ubProfile == usMercID) return s->ubID;
 	}
 
 	return( -1 );
@@ -3152,40 +3141,33 @@ static INT16 IsMercInTheSector(UINT16 usMercID)
 
 static void RefreshAllNPCInventory(void)
 {
-	UINT16	usCnt;
 	UINT16	usItemCnt;
 	OBJECTTYPE	TempObject;
 	UINT16		usItem;
 
-  for ( usCnt=0; usCnt < TOTAL_SOLDIERS; usCnt++ )
+	FOR_ALL_SOLDIERS(s)
 	{
-		SOLDIERTYPE* const s = GetMan(usCnt);
-		//if the is active
-		if (s->bActive == 1)
+		//is the merc a rpc or npc
+		if (s->ubProfile >= FIRST_RPC)
 		{
-			//is the merc a rpc or npc
-			if (s->ubProfile >= FIRST_RPC)
+			//refresh the mercs inventory
+			for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
 			{
-				//refresh the mercs inventory
-				for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
+				//null out the items in the npc inventory
+				memset(&s->inv[usItemCnt], 0, sizeof(s->inv[usItemCnt]));
+
+				const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+				if (p->inv[usItemCnt] != NOTHING)
 				{
-					//null out the items in the npc inventory
-					memset(&s->inv[usItemCnt], 0, sizeof(s->inv[usItemCnt]));
+					//get the item
+					usItem = p->inv[usItemCnt];
 
-					const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-					if (p->inv[usItemCnt] != NOTHING)
-					{
-						//get the item
-						usItem = p->inv[usItemCnt];
+					//Create the object
+					CreateItem( usItem, 100, &TempObject );
 
-						//Create the object
-						CreateItem( usItem, 100, &TempObject );
-
-						//copy the item into the soldiers inventory
-						s->inv[usItemCnt] = TempObject;
-					}
+					//copy the item into the soldiers inventory
+					s->inv[usItemCnt] = TempObject;
 				}
-
 			}
 		}
 	}

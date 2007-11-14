@@ -751,8 +751,6 @@ static BOOLEAN QuickGameMemberHireMerc(UINT8 ubCurrentSoldier)
 //This function is called when the game is REstarted.  Things that need to be reinited are placed in here
 void ReStartingGame()
 {
-	UINT16	cnt;
-
 	//Pause the game
 	gfGamePaused = TRUE;
 
@@ -769,10 +767,7 @@ void ReStartingGame()
 	InitTacticalSave( TRUE );
 
 	//Loop through all the soldier and delete them all
-	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
-	{
-		TacticalRemoveSoldier(GetMan(cnt));
-	}
+	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 
 	// Re-init overhead...
 	InitOverhead( );

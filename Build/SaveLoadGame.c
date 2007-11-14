@@ -2632,12 +2632,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 	SOLDIERCREATE_STRUCT CreateStruct;
 
 	//Loop through all the soldier and delete them all
-	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
-	{
-		TacticalRemoveSoldier(GetMan(cnt));
-	}
-
-
+	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 
 	//Loop through all the soldier structs to load
 	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
@@ -3076,14 +3071,8 @@ static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 
 static BOOLEAN SetMercsInsertionGridNo(void)
 {
-	UINT16 cnt=0;
-
-  // loop through all the mercs
-  for ( cnt=0; cnt < TOTAL_SOLDIERS; cnt++ )
+	FOR_ALL_SOLDIERS(s)
 	{
-		SOLDIERTYPE* const s = GetMan(cnt);
-		if (!s->bActive) continue;
-
 		if (s->sGridNo != NOWHERE)
 		{
 			//set the insertion type to gridno
