@@ -6807,14 +6807,6 @@ void InitializeTacticalStatusAtBattleStart(void)
 }
 
 
-static void DoneFadeOutDemoCreatureLevel(void)
-{
-	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector(1, 16, 0);
-	FadeInGameScreen( );
-}
-
-
 static void DemoEndOKCallback(UINT8 bExitCode)
 {
 	#ifdef JA2DEMO
