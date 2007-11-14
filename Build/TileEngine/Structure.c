@@ -1214,7 +1214,7 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 		if ( pNewBaseStructure->fFlags & STRUCTURE_SWITCH )
 		{
 			// just turned a switch on!
-			ActivateSwitchInGridNo( NOBODY, sGridNo );
+			ActivateSwitchInGridNo(NULL, sGridNo);
 		}
 	}
 	return( pNewBaseStructure );

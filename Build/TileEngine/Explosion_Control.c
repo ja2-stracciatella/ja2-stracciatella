@@ -3046,9 +3046,9 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 	return( fFoundMine );
 }
 
-void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
+
+void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 {
-	SOLDIERTYPE* const s = (ubID != NOBODY ? GetMan(ubID) : NULL);
 	UINT32				uiWorldBombIndex;
 	OBJECTTYPE *	pObj;
 

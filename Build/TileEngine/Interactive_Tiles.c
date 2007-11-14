@@ -307,10 +307,9 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		if ( pNewStructure->fFlags & STRUCTURE_SWITCH )
 		{
 			// just turned a switch on!
-			ActivateSwitchInGridNo( pSoldier->ubID, sGridNo );
+			ActivateSwitchInGridNo(pSoldier, sGridNo);
 		}
 	}
-
 }
 
 
