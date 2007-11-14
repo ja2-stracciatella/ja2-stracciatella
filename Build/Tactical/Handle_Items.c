@@ -3895,8 +3895,7 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 				if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == 31 )
 				{
-					SetOffBombsByFrequency( pSoldier->ubID, FIRST_MAP_PLACED_FREQUENCY + 4 );
-
+					SetOffBombsByFrequency(pSoldier, FIRST_MAP_PLACED_FREQUENCY + 4);
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
 				}
 				else
@@ -3949,7 +3948,7 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue)
 	{
 		if (gpTempSoldier->inv[HANDPOS].usItem == REMOTEBOMBTRIGGER)
 		{
-			SetOffBombsByFrequency( gpTempSoldier->ubID, ubExitValue );
+			SetOffBombsByFrequency(gpTempSoldier, ubExitValue);
 		}
 		else
 		{
@@ -4429,8 +4428,7 @@ static void SwitchMessageBoxCallBack(UINT8 ubExitValue)
 	{
     // Message that switch is activated...
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 60 ] );
-
-		SetOffBombsByFrequency( gpTempSoldier->ubID,  bTempFrequency );
+		SetOffBombsByFrequency(gpTempSoldier, bTempFrequency);
 	}
 }
 

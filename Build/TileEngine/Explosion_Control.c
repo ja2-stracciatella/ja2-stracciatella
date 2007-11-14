@@ -2911,9 +2911,9 @@ void DecayBombTimers( void )
 	}
 }
 
-void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
+
+void SetOffBombsByFrequency(SOLDIERTYPE* const s, const INT8 bFrequency)
 {
-	SOLDIERTYPE* const s = (ubID != NOBODY ? GetMan(ubID) : NULL);
 	UINT32				uiWorldBombIndex;
 	UINT32				uiTimeStamp;
 	OBJECTTYPE *	pObj;
@@ -2960,12 +2960,12 @@ void SetOffPanicBombs(SOLDIERTYPE* const s, const INT8 bPanicTrigger)
 	switch( bPanicTrigger )
 	{
 		case 0:
-			SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY);
+			SetOffBombsByFrequency(s, PANIC_FREQUENCY);
 			gTacticalStatus.fPanicFlags &= ~(PANIC_BOMBS_HERE);
 			break;
 
-		case 1: SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY_2); break;
-		case 2: SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY_3); break;
+		case 1: SetOffBombsByFrequency(s, PANIC_FREQUENCY_2); break;
+		case 2: SetOffBombsByFrequency(s, PANIC_FREQUENCY_3); break;
 
 		default:
 			break;
@@ -3020,7 +3020,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 					{
 						// send out a signal to detonate other bombs, rather than this which
 						// isn't a bomb but a trigger
-						SetOffBombsByFrequency(s->ubID, pObj->bFrequency);
+						SetOffBombsByFrequency(s, pObj->bFrequency);
 					}
 					else
 					{
@@ -3048,6 +3048,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 
 void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 {
+	SOLDIERTYPE* const s = (ubID != NOBODY ? GetMan(ubID) : NULL);
 	UINT32				uiWorldBombIndex;
 	OBJECTTYPE *	pObj;
 
@@ -3066,7 +3067,7 @@ void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo )
 				// first set attack busy count to 0 in case of a lingering a.b.c. problem...
 				gTacticalStatus.ubAttackBusyCount = 0;
 
-				SetOffBombsByFrequency( ubID, pObj->bFrequency );
+				SetOffBombsByFrequency(s, pObj->bFrequency);
 			}
 		}
 	}
