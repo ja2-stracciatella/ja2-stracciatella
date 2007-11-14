@@ -1334,12 +1334,12 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		else
 		{
 			// if it was another team shooting at someone under our control
-			if ( (pSoldier->bTeam != Menptr[ pTargetSoldier->ubID ].bTeam ) )
+			if (pSoldier->bTeam != pTargetSoldier->bTeam)
 			{
 				if (pTargetSoldier->bTeam == gbPlayerNum)
 				{
 				 // AGILITY GAIN (10):  Target avoids a knife attack
-				 StatChange( MercPtrs[ pTargetSoldier->ubID ], AGILAMT, 10, FALSE);
+					StatChange(pTargetSoldier, AGILAMT, 10, FALSE);
 				}
 			}
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - missed in knife attack");

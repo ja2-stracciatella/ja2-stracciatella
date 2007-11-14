@@ -757,7 +757,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 		else
 		{
 			//add the item back to the current PC into the slot it came from
-			Menptr[gpSMCurrentMerc->ubID].inv[gItemToAdd.bPreviousInvPos] = gItemToAdd.ItemObject;
+			gpSMCurrentMerc->inv[gItemToAdd.bPreviousInvPos] = gItemToAdd.ItemObject;
 		}
 
 		//Clear the contents of the structure
