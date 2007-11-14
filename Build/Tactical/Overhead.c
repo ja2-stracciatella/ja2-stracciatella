@@ -5834,32 +5834,6 @@ static BOOLEAN KillIncompacitatedEnemyInSector(void)
 }
 
 
-static BOOLEAN AttackOnGroupWitnessed(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTarget)
-{
-	UINT32					uiSlot;
-	SOLDIERTYPE *		pGroupMember;
-
-	// look for all group members... rebels could be on the civ team or ours!
-	for ( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
-	{
-		pGroupMember = MercSlots[ uiSlot ];
-		if (pGroupMember && (pGroupMember->ubCivilianGroup == pTarget->ubCivilianGroup) && pGroupMember != pTarget)
-		{
-			if (pGroupMember->bOppList[pSoldier->ubID] == SEEN_CURRENTLY || pGroupMember->bOppList[pTarget->ubID] == SEEN_CURRENTLY)
-			{
-				return( TRUE );
-			}
-			if ( SpacesAway( pGroupMember->sGridNo, pSoldier->sGridNo ) < 12 || SpacesAway( pGroupMember->sGridNo, pTarget->sGridNo ) < 12 )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
-}
-
-
 static INT8 CalcSuppressionTolerance(SOLDIERTYPE* pSoldier)
 {
 	INT8		bTolerance;
