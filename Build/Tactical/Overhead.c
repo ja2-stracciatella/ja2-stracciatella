@@ -2401,20 +2401,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 }
 
 
-static void ResetAllAnimationCache(void)
-{
-	// Loop through all mercs and make go
-	for (UINT32 i = 0; i < TOTAL_SOLDIERS; ++i)
-	{
-		SOLDIERTYPE* const s = &Menptr[i];
-		if (s != NULL)
-		{
-			InitAnimationCache(i, &s->AnimCache);
-		}
-	}
-}
-
-
 void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator)
 {
 	//if (!bCenter && SoldierOnScreen(s)) return;
