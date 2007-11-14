@@ -127,7 +127,7 @@ BOOLEAN		gfInvalidTraversal = FALSE;
 BOOLEAN		gfLoneEPCAttemptingTraversal = FALSE;
 BOOLEAN		gfRobotWithoutControllerAttemptingTraversal = FALSE;
 BOOLEAN   gubLoneMercAttemptingToAbandonEPCs = 0;
-INT8			gbPotentiallyAbandonedEPCSlotID = -1;
+const SOLDIERTYPE* gPotentiallyAbandonedEPC = NULL;
 
 INT8 gbGreenToElitePromotions = 0;
 INT8 gbGreenToRegPromotions = 0;
@@ -3198,7 +3198,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	gfInvalidTraversal = FALSE;
 	gfLoneEPCAttemptingTraversal = FALSE;
 	gubLoneMercAttemptingToAbandonEPCs = 0;
-	gbPotentiallyAbandonedEPCSlotID = -1;
+	gPotentiallyAbandonedEPC = NULL;
 
 	// Look through all mercs and check if they are within range of east end....
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
@@ -3222,7 +3222,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			{
 				ubNumEPCs++;
 				//Also record the EPC's slot ID incase we later build a string using the EPC's name.
-				gbPotentiallyAbandonedEPCSlotID = (INT8)cnt;
+				gPotentiallyAbandonedEPC = pSoldier;
 				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
 				{
 					gfRobotWithoutControllerAttemptingTraversal = TRUE;

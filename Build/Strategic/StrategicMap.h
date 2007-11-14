@@ -155,7 +155,7 @@ extern BOOLEAN	gfInvalidTraversal;
 extern BOOLEAN	gfLoneEPCAttemptingTraversal;
 extern BOOLEAN	gfRobotWithoutControllerAttemptingTraversal;
 extern UINT8		gubLoneMercAttemptingToAbandonEPCs;
-extern INT8			gbPotentiallyAbandonedEPCSlotID;
+extern const SOLDIERTYPE* gPotentiallyAbandonedEPC;
 
 extern INT8 gbGreenToElitePromotions;
 extern INT8 gbGreenToRegPromotions;
