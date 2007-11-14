@@ -363,7 +363,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			BeginContractRenewalSequence( );
 			break;
 		case EVENT_RPC_WHINE_ABOUT_PAY:
-			RPCWhineAboutNoPay( (UINT8) pEvent->uiParam );
+			RPCWhineAboutNoPay(GetMan(pEvent->uiParam));
 			break;
 
 		case EVENT_HAVENT_MADE_IMP_CHARACTER_EMAIL:

@@ -651,15 +651,11 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 	#endif
 }
 
+
 // ATE: Called for RPCs who should now complain about no pay...
-void RPCWhineAboutNoPay( UINT8	ubID )
+void RPCWhineAboutNoPay(SOLDIERTYPE* const pSoldier)
 {
-	SOLDIERTYPE *pSoldier;
-
 	#ifndef JA2DEMO
-
-	pSoldier = &Menptr[ ubID ];
-
 	//if the soldier was removed before getting into this function, return
 	if( !pSoldier->bActive )
 		return;

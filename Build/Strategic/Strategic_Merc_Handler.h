@@ -5,7 +5,7 @@
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier );
 void MercDailyUpdate();
 void MercsContractIsFinished(SOLDIERTYPE* s);
-void RPCWhineAboutNoPay( UINT8	ubID );
+void RPCWhineAboutNoPay(SOLDIERTYPE* s);
 void MercComplainAboutEquipment( UINT8 ubProfileID );
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier );
 void UpdateBuddyAndHatedCounters( void );
