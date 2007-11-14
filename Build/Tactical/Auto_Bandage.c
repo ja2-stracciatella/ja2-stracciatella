@@ -299,18 +299,18 @@ BOOLEAN HandleAutoBandage( )
 static BOOLEAN CreateAutoBandageString(void)
 {
 	INT32						cnt;
-	UINT8						ubDoctor[20], ubDoctors = 0;
 	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
 	STR16						sTemp;
 	SOLDIERTYPE *		pSoldier;
 
+	UINT8 ubDoctors = 0;
+	const SOLDIERTYPE* doctors[20];
 	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
 	{
 		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->bMedical > 0 && FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
 		{
-			ubDoctor[ubDoctors] = pSoldier->ubID;
-			ubDoctors++;
+			doctors[ubDoctors++] = pSoldier;
 			// increase the length of the string by the size of the name
 			// plus 2, one for the comma and one for the space after that
 			uiDoctorNameStringLength += wcslen( pSoldier->name ) + 2;
@@ -338,7 +338,7 @@ static BOOLEAN CreateAutoBandageString(void)
 
 	if (ubDoctors == 1)
 	{
-		swprintf( sAutoBandageString, uiDoctorNameStringLength, Message[STR_IS_APPLYING_FIRST_AID], MercPtrs[ubDoctor[0]]->name ); /* XXX uiDoctorNameStringLength? */
+		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_IS_APPLYING_FIRST_AID], doctors[0]->name); /* XXX uiDoctorNameStringLength? */
 	}
 	else
 	{
@@ -352,7 +352,7 @@ static BOOLEAN CreateAutoBandageString(void)
 		wcscpy( sTemp, L"" );
 		for (cnt = 0; cnt < ubDoctors - 1; cnt++)
 		{
-			wcscat( sTemp, MercPtrs[ubDoctor[cnt]]->name );
+			wcscat(sTemp, doctors[cnt]->name);
 			if (ubDoctors > 2)
 			{
 				if (cnt == ubDoctors - 2)
@@ -365,7 +365,7 @@ static BOOLEAN CreateAutoBandageString(void)
 				}
 			}
 		}
-		swprintf( sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], sTemp, MercPtrs[ubDoctor[ubDoctors - 1]]->name ); /* XXX uiDoctorNameStringLength? */
+		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], sTemp, doctors[ubDoctors - 1]->name); /* XXX uiDoctorNameStringLength? */
 		MemFree( sTemp );
 	}
 	return( TRUE );
