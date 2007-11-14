@@ -2519,7 +2519,7 @@ static INT8 OurMaxPublicOpplist(void)
 		 continue;		// next merc
 
    // if this man is NEUTRAL / on our side, he's not an opponent
-	 if (pSoldier->bNeutral || (gTacticalStatus.Team[gbPlayerNum].bSide == Menptr[pSoldier->ubID].bSide))
+		if (pSoldier->bNeutral || gTacticalStatus.Team[gbPlayerNum].bSide == pSoldier->bSide)
      continue;		// next merc
 
    // opponent, check our public opplist value for him

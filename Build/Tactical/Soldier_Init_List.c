@@ -2036,7 +2036,7 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 	{
 		if( curr->pSoldier )
 		{
-			if( curr->pSoldier->ubID < 20 && !MercPtrs[ curr->pSoldier->ubID ]->bActive )
+			if (curr->pSoldier->ubID < 20 && !curr->pSoldier->bActive)
 			{
 				uiNumInvalids++;
 			}
