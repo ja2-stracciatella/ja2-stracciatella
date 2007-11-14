@@ -535,7 +535,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						BoxingMovementCheck( pSoldier );
 					}
 
-					if ( SetOffBombsInGridNo( pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->bLevel ))
+					if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
 					{
 						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
 						return( TRUE );

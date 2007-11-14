@@ -2978,7 +2978,8 @@ void SetOffPanicBombs(SOLDIERTYPE* const s, const INT8 bPanicTrigger)
 	}
 }
 
-BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel )
+
+BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOOLEAN fAllBombs, const INT8 bLevel)
 {
 	UINT32				uiWorldBombIndex;
 	UINT32				uiTimeStamp;
@@ -2997,7 +2998,7 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 			{
 				if (fAllBombs || pObj->bDetonatorType == BOMB_PRESSURE)
 				{
-					if (!fAllBombs && MercPtrs[ ubID ]->bTeam != gbPlayerNum )
+					if (!fAllBombs && s->bTeam != gbPlayerNum)
 					{
 						// ignore this unless it is a mine, etc which would have to have been placed by the
 						// player, seeing as how the others are all marked as known to the AI.
@@ -3008,21 +3009,21 @@ BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 
 					}
 
 					// player and militia ignore bombs set by player
-					if ( pObj->ubBombOwner > 1 && (MercPtrs[ ubID ]->bTeam == gbPlayerNum || MercPtrs[ ubID ]->bTeam == MILITIA_TEAM) )
+					if (pObj->ubBombOwner > 1 &&
+							(s->bTeam == gbPlayerNum || s->bTeam == MILITIA_TEAM))
 					{
 						continue;
-
 					}
 
 					if (pObj->usItem == SWITCH)
 					{
 						// send out a signal to detonate other bombs, rather than this which
 						// isn't a bomb but a trigger
-						SetOffBombsByFrequency( ubID, pObj->bFrequency );
+						SetOffBombsByFrequency(s->ubID, pObj->bFrequency);
 					}
 					else
 					{
-						gubPersonToSetOffExplosions = ubID;
+						gubPersonToSetOffExplosions = s->ubID;
 
 						// put this bomb on the queue
 						AddBombToQueue( uiWorldBombIndex, uiTimeStamp );

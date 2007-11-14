@@ -89,7 +89,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 void DecayBombTimers( void );
 void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency );
-BOOLEAN SetOffBombsInGridNo( UINT8 ubID, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel );
+BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* s, INT16 sGridNo, BOOLEAN fAllBombs, INT8 bLevel);
 void ActivateSwitchInGridNo( UINT8 ubID, INT16 sGridNo );
 void SetOffPanicBombs(SOLDIERTYPE* s, INT8 bPanicTrigger);
 

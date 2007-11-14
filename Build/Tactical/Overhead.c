@@ -2078,7 +2078,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	}
 
 	// see if a mine gets set off...
-	if (SetOffBombsInGridNo(pSoldier->ubID, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
+	if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
 	{
 		*pfKeepMoving = FALSE;
 		EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);

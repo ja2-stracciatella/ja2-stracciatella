@@ -4310,7 +4310,7 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 
 			if (gfDisarmingBuriedBomb)
 			{
-				SetOffBombsInGridNo( gpBoobyTrapSoldier->ubID, gsBoobyTrapGridNo, TRUE, gbBoobyTrapLevel );
+				SetOffBombsInGridNo(gpBoobyTrapSoldier, gsBoobyTrapGridNo, TRUE, gbBoobyTrapLevel);
 			}
 			else
 			{
@@ -4404,7 +4404,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue)
 
 			if (gfDisarmingBuriedBomb)
 			{
-				SetOffBombsInGridNo( gpBoobyTrapSoldier->ubID, gsBoobyTrapGridNo, TRUE, gbBoobyTrapLevel );
+				SetOffBombsInGridNo(gpBoobyTrapSoldier, gsBoobyTrapGridNo, TRUE, gbBoobyTrapLevel);
 			}
 			else
 			{
