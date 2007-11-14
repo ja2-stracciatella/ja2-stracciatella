@@ -136,7 +136,7 @@ UINT8										gubElementsOnExplosionQueue = 0;
 BOOLEAN									gfExplosionQueueActive = FALSE;
 
 BOOLEAN									gfExplosionQueueMayHaveChangedSight = FALSE;
-UINT8										gubPersonToSetOffExplosions = NOBODY;
+static SOLDIERTYPE* gPersonToSetOffExplosions = NULL;
 
 INT16			gsTempActionGridNo = NOWHERE;
 
@@ -2820,16 +2820,17 @@ void HandleExplosionQueue(void)
 		gubElementsOnExplosionQueue--;
 	}
 
-	if ( gubElementsOnExplosionQueue == 0 && (gubPersonToSetOffExplosions == NOBODY || gTacticalStatus.ubAttackBusyCount == 0) )
+	if (gubElementsOnExplosionQueue == 0 &&
+			(gPersonToSetOffExplosions == NULL || gTacticalStatus.ubAttackBusyCount == 0))
 	{
 		// turn off explosion queue
 
 		// re-enable sight
 		gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
 
-		if ( gubPersonToSetOffExplosions != NOBODY && !(MercPtrs[ gubPersonToSetOffExplosions ]->uiStatusFlags & SOLDIER_PC) )
+		if (gPersonToSetOffExplosions != NULL && !(gPersonToSetOffExplosions->uiStatusFlags & SOLDIER_PC))
 		{
-			FreeUpNPCFromPendingAction( MercPtrs[ gubPersonToSetOffExplosions ] );
+			FreeUpNPCFromPendingAction(gPersonToSetOffExplosions);
 		}
 
 		if (gfExplosionQueueMayHaveChangedSight)
@@ -2838,7 +2839,7 @@ void HandleExplosionQueue(void)
 			SOLDIERTYPE * pTeamSoldier;
 
 			// set variable so we may at least have someone to resolve interrupts vs
-			gInterruptProvoker = (gubPersonToSetOffExplosions != NOBODY ? GetMan(gubPersonToSetOffExplosions) : NULL);
+			gInterruptProvoker = gPersonToSetOffExplosions;
 			AllTeamsLookForAll( TRUE );
 
 			// call fov code
@@ -2852,7 +2853,7 @@ void HandleExplosionQueue(void)
 			}
 
 			gfExplosionQueueMayHaveChangedSight = FALSE;
-			gubPersonToSetOffExplosions = NOBODY;
+			gPersonToSetOffExplosions = NULL;
 		}
 
 		// unlock UI
@@ -2893,11 +2894,11 @@ void DecayBombTimers( void )
           // ATE: CC black magic....
 			    if ( pObj->ubBombOwner > 1 )
           {
-            gubPersonToSetOffExplosions = (UINT8) (pObj->ubBombOwner - 2);
+            gPersonToSetOffExplosions = GetMan(pObj->ubBombOwner - 2);
           }
           else
           {
-            gubPersonToSetOffExplosions = NOBODY;
+            gPersonToSetOffExplosions = NULL;
           }
 
 					if (pObj->usItem != ACTION_ITEM || pObj->bActionValue == ACTION_ITEM_BLOW_UP)
@@ -2912,6 +2913,7 @@ void DecayBombTimers( void )
 
 void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 {
+	SOLDIERTYPE* const s = (ubID != NOBODY ? GetMan(ubID) : NULL);
 	UINT32				uiWorldBombIndex;
 	UINT32				uiTimeStamp;
 	OBJECTTYPE *	pObj;
@@ -2929,8 +2931,7 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 				// Found a remote bomb, so check to see if it has the same frequency
 				if (pObj->bFrequency == bFrequency)
 				{
-
-					gubPersonToSetOffExplosions = ubID;
+					gPersonToSetOffExplosions = s;
 
 					// put this bomb on the queue
 					AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
@@ -3023,7 +3024,7 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 					}
 					else
 					{
-						gubPersonToSetOffExplosions = s->ubID;
+						gPersonToSetOffExplosions = s;
 
 						// put this bomb on the queue
 						AddBombToQueue( uiWorldBombIndex, uiTimeStamp );
