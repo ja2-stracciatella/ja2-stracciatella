@@ -186,7 +186,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		//When a merc is supposed to leave
 		case EVENT_MERC_CONTRACT_OVER:
-			MercsContractIsFinished( (UINT8) pEvent->uiParam );
+			MercsContractIsFinished(GetMan(pEvent->uiParam));
 			break;
 
 		case EVENT_ADDSOLDIER_TO_UPDATE_BOX:

@@ -306,10 +306,8 @@ void MercDailyUpdate()
 						//if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS days, the merc will quit
 						if( ( gMercProfiles[ pSoldier->ubProfile ].iBalance - sSalary ) <= -( sSalary * NUM_DAYS_TILL_UNPAID_RPC_QUITS ) )
 						{
-							//
 							//Set it up so the merc quits
-							//
-							MercsContractIsFinished( pSoldier->ubID );
+							MercsContractIsFinished(pSoldier);
 						}
 						else
 						{
@@ -364,7 +362,7 @@ void MercDailyUpdate()
 					if( IsTheSoldierAliveAndConcious( pSoldier ) )
 					{
 						//if the merc should leave today
-						MercsContractIsFinished( pSoldier->ubID );
+						MercsContractIsFinished(pSoldier);
 					}
 				}
 			}
@@ -600,13 +598,9 @@ void HandleMercsAboutToLeave( SOLDIERTYPE *pMercList )
 
 // ATE: This function deals with MERC MERC and NPC's leaving because of not getting paid...
 // NOT AIM renewals....
-void MercsContractIsFinished( UINT8	ubID )
+void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 {
-	SOLDIERTYPE *pSoldier;
-
 	#ifndef JA2DEMO
-
-	pSoldier = &Menptr[ ubID ];
 
 	//if the soldier was removed before getting into this function, return
 	if( !pSoldier->bActive )
