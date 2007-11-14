@@ -1709,14 +1709,13 @@ static void SaveNPCInformationToProfileStruct(void)
 extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest );
 
 
-static INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID);
+static SOLDIERTYPE* GetSoldierFromAnyMercID(ProfileID p);
 static BOOLEAN LoadTempNpcQuoteInfoForNPCFromTempFile(UINT8 ubNpcId);
 
 
 static void LoadNPCInformationFromProfileStruct(void)
 {
 	UINT32					cnt;
-	INT16						sSoldierID;
 
 	// CJC: disabled this Dec 21, 1998 as unnecessary (and messing up quote files for recruited/escorted NPCs
 	return;
@@ -1729,14 +1728,7 @@ static void LoadNPCInformationFromProfileStruct(void)
 			continue;
 		}
 
-		sSoldierID = GetSoldierIDFromAnyMercID( (UINT8)cnt );
-
-		//if the soldier is not loaded, return
-		if( sSoldierID == -1 )
-			continue;
-
-		//if we cant get a pointer to the soldier, continue
-		SOLDIERTYPE* pSoldier = GetSoldier(sSoldierID);
+		const SOLDIERTYPE* const pSoldier = GetSoldierFromAnyMercID(cnt);
 		if (pSoldier == NULL) continue;
 
 		// load quote info if it exists
@@ -1761,7 +1753,6 @@ static void LoadNPCInformationFromProfileStruct(void)
 	INT16 sX, sY;
 	UINT16	cnt;
 	SOLDIERTYPE		*pSoldier;
-	INT16			sSoldierID;
 	INT16		sXPos, sYPos;
 
 	sXPos = sYPos = 0;
@@ -1776,15 +1767,8 @@ static void LoadNPCInformationFromProfileStruct(void)
 			continue;
 		}
 
-		sSoldierID = GetSoldierIDFromAnyMercID( (UINT8)cnt );
-
-		//if the soldier is not loaded, return
-		if( sSoldierID == -1 )
-			continue;
-
-		//if we cant get a pointer to the soldier, continue
-		if( !GetSoldier( &pSoldier, sSoldierID ) )
-			continue;
+		SOLDIERTYPE* const pSoldier = GetSoldierFromAnyMercID(cnt);
+		if (pSoldier == NULL) continue;
 
 		pSoldier->ubQuoteActionID = gMercProfiles[ cnt ].ubQuoteActionID;
 		pSoldier->ubQuoteRecord = gMercProfiles[ cnt ].ubQuoteRecord;
@@ -1954,29 +1938,13 @@ static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY,
 }
 
 
-static INT16 GetSoldierIDFromAnyMercID(UINT8 ubMercID)
+static SOLDIERTYPE* GetSoldierFromAnyMercID(const ProfileID p)
 {
-	UINT16 cnt;
-	UINT8		ubLastTeamID;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-
-	ubLastTeamID = TOTAL_SOLDIERS;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= ubLastTeamID; cnt++,pTeamSoldier++)
+	FOR_ALL_SOLDIERS(s)
 	{
-		if( pTeamSoldier->bActive )
-		{
-			if ( pTeamSoldier->ubProfile == ubMercID )
-			{
-				return( cnt );
-			}
-		}
+		if (s->ubProfile == p) return s;
 	}
-
-	return( -1 );
+	return NULL;
 }
 
 
