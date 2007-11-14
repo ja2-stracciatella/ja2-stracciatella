@@ -3234,27 +3234,6 @@ static void MilitiaChangesSides(void)
 }
 
 
-static INT8 NumActiveAndConsciousTeamMembers(UINT8 ubTeam)
-{
-	INT32 cnt;
-	SOLDIERTYPE             *pSoldier;
-	UINT8                                   ubCount = 0;
-
-	cnt = gTacticalStatus.Team[ ubTeam ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeam ].bLastID; cnt++,pSoldier++)
-	{
-		if ( OK_CONTROLLABLE_MERC( pSoldier) )
-		{
-			ubCount++;
-		}
-	}
-
-	return( ubCount );
-}
-
-
 static SOLDIERTYPE* FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
 {
 	for (INT32 i = begin; i <= last; ++i)
