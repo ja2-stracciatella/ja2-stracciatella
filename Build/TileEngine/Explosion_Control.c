@@ -2944,7 +2944,8 @@ void SetOffBombsByFrequency( UINT8 ubID, INT8 bFrequency )
 	}
 }
 
-void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger )
+
+void SetOffPanicBombs(SOLDIERTYPE* const s, const INT8 bPanicTrigger)
 {
 	// need to turn off gridnos & flags in gTacticalStatus
 	gTacticalStatus.sPanicTriggerGridNo[ bPanicTrigger ] = NOWHERE;
@@ -2958,17 +2959,12 @@ void SetOffPanicBombs( UINT8 ubID, INT8 bPanicTrigger )
 	switch( bPanicTrigger )
 	{
 		case 0:
-			SetOffBombsByFrequency( ubID, PANIC_FREQUENCY );
+			SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY);
 			gTacticalStatus.fPanicFlags &= ~(PANIC_BOMBS_HERE);
 			break;
 
-		case 1:
-			SetOffBombsByFrequency( ubID, PANIC_FREQUENCY_2 );
-			break;
-
-		case 2:
-			SetOffBombsByFrequency( ubID, PANIC_FREQUENCY_3 );
-			break;
+		case 1: SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY_2); break;
+		case 2: SetOffBombsByFrequency(s->ubID, PANIC_FREQUENCY_3); break;
 
 		default:
 			break;

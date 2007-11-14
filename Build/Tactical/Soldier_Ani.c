@@ -2466,7 +2466,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						INT8	bPanicTrigger;
 
 						bPanicTrigger = ClosestPanicTrigger( pSoldier );
-						SetOffPanicBombs( pSoldier->ubID, bPanicTrigger );
+						SetOffPanicBombs(pSoldier, bPanicTrigger);
 						// any AI guy has been specially given keys for this, now take them
 						// away
 						pSoldier->bHasKeys = pSoldier->bHasKeys >> 1;

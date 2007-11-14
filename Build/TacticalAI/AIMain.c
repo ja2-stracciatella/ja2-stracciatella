@@ -2043,8 +2043,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 		  // grab detonator and set off bomb(s)
 			DeductPoints( pSoldier, AP_USE_REMOTE, BP_USE_DETONATOR);// pay for it!
-			//SetOffPanicBombs(1000,COMMUNICATE);    // BOOOOOOOOOOOOOOOOOOOOM!!!!!
-			SetOffPanicBombs( pSoldier->ubID, 0 );
+			SetOffPanicBombs(pSoldier, 0);
 
 			// action completed immediately, cancel it right away
 			pSoldier->usActionData = NOWHERE;
