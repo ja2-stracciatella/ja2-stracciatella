@@ -59,8 +59,8 @@ MOUSE_REGION gAutoBandageRegion;
 
 
 // the lists of the doctor and patient
-INT32 iDoctorList[ MAX_CHARACTER_COUNT ];
-INT32 iPatientList[ MAX_CHARACTER_COUNT ];
+static const SOLDIERTYPE* gdoctor_list[MAX_CHARACTER_COUNT];
+static const SOLDIERTYPE* gpatient_list[MAX_CHARACTER_COUNT];
 
 // faces for update panel
 INT32 giAutoBandagesSoldierFaces[ 2 * MAX_CHARACTER_COUNT ];
@@ -546,10 +546,9 @@ static void SetUpAutoBandageUpdatePanel(void)
 	INT32 iNumberOnTeam = 0;
 	INT32 iCounterA = 0;
 
-	// reset the tables of merc ids
-	memset( iDoctorList, -1,  sizeof( INT32 ) * MAX_CHARACTER_COUNT );
-	memset( iPatientList, -1,  sizeof( INT32 ) * MAX_CHARACTER_COUNT );
-
+	// reset the tables of mercs
+	memset(gdoctor_list,  0, sizeof(gdoctor_list));
+	memset(gpatient_list, 0, sizeof(gpatient_list));
 
 	// grab number of potential grunts on players team
 	iNumberOnTeam = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
@@ -557,32 +556,31 @@ static void SetUpAutoBandageUpdatePanel(void)
 	// run through mercs on squad...if they can doctor, add to list
 	for( iCounterA = 0; iCounterA < iNumberOnTeam; iCounterA++ )
 	{
-		if( CanCharacterAutoBandageTeammate( &Menptr[ iCounterA ] ) )
+		const SOLDIERTYPE* const s = GetMan(iCounterA);
+		if (CanCharacterAutoBandageTeammate(s))
 		{
 			// add to list, up the count
-			iDoctorList[ iNumberDoctoring ] = iCounterA;
-			iNumberDoctoring++;
-
+			gdoctor_list[iNumberDoctoring++] = s;
 		}
 	}
 
 	// run through mercs on squad, if they can patient, add to list
 	for( iCounterA = 0; iCounterA < iNumberOnTeam; iCounterA++ )
 	{
-		if( CanCharacterBeAutoBandagedByTeammate( &Menptr[ iCounterA ] ) )
+		const SOLDIERTYPE* const s = GetMan(iCounterA);
+		if (CanCharacterBeAutoBandagedByTeammate(s))
 		{
 			// add to list, up the count
-			iPatientList[ iNumberPatienting ] = iCounterA;
-			iNumberPatienting++;
+			gpatient_list[iNumberPatienting++] = s;
 		}
 	}
 
 	// makes sure there is someone to doctor and patient...
 	if( ( iNumberDoctoring == 0 ) || ( iNumberPatienting == 0 ) )
 	{
-		// reset the tables of merc ids
-		memset( iDoctorList, -1,  sizeof( INT32 ) * MAX_CHARACTER_COUNT );
-		memset( iPatientList, -1, sizeof( INT32 ) * MAX_CHARACTER_COUNT );
+		// reset the tables of mercs
+		memset(gdoctor_list,  0, sizeof(gdoctor_list));
+		memset(gpatient_list, 0, sizeof(gpatient_list));
 	}
 
 	// now add the faces
@@ -617,20 +615,20 @@ static void DisplayAutoBandageUpdatePanel(void)
 	}
 
 	// make sure there is someone to doctor and patient
-	if( ( iDoctorList[ 0 ] == -1 ) || ( iPatientList[ 0 ] == -1 ) )
+	if (gdoctor_list[0] == NULL || gpatient_list[0] == NULL)
 	{
 		// nope, nobody here
 		return;
 	}
 
 	// grab number of doctors
-	for( iCounterA = 0; iDoctorList[ iCounterA ] != -1; iCounterA++ )
+	for (iCounterA = 0; gdoctor_list[iCounterA] != NULL; ++iCounterA)
 	{
 		iNumberDoctors++;
 	}
 
 	// grab number of patients
-	for( iCounterA = 0; iPatientList[ iCounterA ] != -1; iCounterA++ )
+	for (iCounterA = 0; gpatient_list[iCounterA] != NULL; ++iCounterA)
 	{
 		iNumberPatients++;
 	}
@@ -744,7 +742,8 @@ static void DisplayAutoBandageUpdatePanel(void)
 
 			iIndex = iCounterA * iNumberDoctorsWide + iCounterB;
 
-			if( iDoctorList[ iIndex ] != -1 )
+			const SOLDIERTYPE* const doctor = gdoctor_list[iIndex];
+			if (doctor != NULL)
 			{
 
 				sCurrentXPosition += TACT_UPDATE_MERC_FACE_X_OFFSET;
@@ -754,7 +753,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex, sCurrentXPosition, sCurrentYPosition );
 
 				// display the mercs name
-				const wchar_t* Name = Menptr[iDoctorList[iCounterA * iNumberDoctorsWide + iCounterB]].name;
+				const wchar_t* const Name = doctor->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_LTRED );
@@ -818,7 +817,8 @@ static void DisplayAutoBandageUpdatePanel(void)
 
 			iIndex = iCounterA * iNumberPatientsWide + iCounterB;
 
-			if( iPatientList[ iIndex ] != -1 )
+			const SOLDIERTYPE* const patient = gpatient_list[iIndex];
+			if (patient != NULL)
 			{
 
 				sCurrentXPosition += TACT_UPDATE_MERC_FACE_X_OFFSET;
@@ -828,7 +828,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex + iNumberDoctors, sCurrentXPosition, sCurrentYPosition );
 
 				// display the mercs name
-				const wchar_t* Name = Menptr[iPatientList[iIndex]].name;
+				const wchar_t* const Name = patient->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
 				SetFont( TINYFONT1 );
 				SetFontForeground( FONT_LTRED );
@@ -996,11 +996,11 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// find a free slot
-		if( iDoctorList[ iCounter ] != -1 )
+		const SOLDIERTYPE* const doctor = gdoctor_list[iCounter];
+		if (doctor != NULL)
 		{
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iDoctorList[iCounter]].ubProfile].ubFaceIndex);
+			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[doctor->ubProfile].ubFaceIndex);
 			giAutoBandagesSoldierFaces[iCounter] = AddVideoObjectFromFile(ImageFile);
 			iNumberOfDoctors++;
 
@@ -1009,11 +1009,11 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// find a free slot
-		if( iPatientList[ iCounter ] != -1 )
+		const SOLDIERTYPE* const patient = gpatient_list[iCounter];
+		if (patient != NULL)
 		{
 			SGPFILENAME ImageFile;
-			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[Menptr[iPatientList[iCounter]].ubProfile].ubFaceIndex);
+			sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[patient->ubProfile].ubFaceIndex);
 			giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors] = AddVideoObjectFromFile(ImageFile);
 		}
 	}
@@ -1033,10 +1033,8 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// find a free slot
-		if( iDoctorList[ iCounter ] != -1 )
+		if (gdoctor_list[iCounter] != NULL)
 		{
-			// load the face
 			DeleteVideoObjectFromIndex( giAutoBandagesSoldierFaces[ iCounter ] );
 			iNumberOfDoctors++;
 		}
@@ -1045,10 +1043,8 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// find a free slot
-		if( iPatientList[ iCounter ] != -1 )
+		if (gpatient_list[iCounter] != NULL)
 		{
-			// load the face
 			DeleteVideoObjectFromIndex( giAutoBandagesSoldierFaces[ iCounter + iNumberOfDoctors ] );
 		}
 	}
@@ -1061,9 +1057,7 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 
 static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCurrentXPosition, INT16 sCurrentYPosition)
 {
-
 	INT32 iStartY = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter = 0, iIndexCount = 0;
 
 	HVOBJECT hHandle = GetVideoObject(giAutoBandagesSoldierFaces[iIndex]);
@@ -1080,24 +1074,11 @@ static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCu
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		// find a free slot
-		if( iDoctorList[ iCounter ] != -1 )
-		{
-			iIndexCount++;
-		}
+		if (gdoctor_list[iCounter] != NULL) ++iIndexCount;
 	}
 
 	// see if we are looking into doctor or patient lists?
-	if( iIndexCount > iIndex )
-	{
-		//HEALTH BAR
-		pSoldier = &Menptr[ iDoctorList[ iIndex ] ];
-	}
-	else
-	{
-		//HEALTH BAR
-		pSoldier = &Menptr[ iPatientList[ iIndex - iIndexCount ] ];
-	}
+	const SOLDIERTYPE* const pSoldier = (iIndexCount > iIndex ? gdoctor_list[iIndex] : gpatient_list[iIndex - iIndexCount]);
 
 	// is the merc alive?
 	if( !pSoldier->bLife )
