@@ -91,7 +91,6 @@
 
 #define		MERC_INTRO_TIME									1000
 #define		MERC_EXIT_TIME									500
-#define		MERC_VIDEO_MERC_ID_FOR_SPECKS		159//255
 
 #define		MERC_TEXT_BOX_POS_Y							255
 
@@ -908,8 +907,8 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 
 static void InitMercVideoFace(void)
 {
-	//Alocates space, and loads the sti for SPECK
-	giVideoSpeckFaceIndex = InitFace(MERC_VIDEO_MERC_ID_FOR_SPECKS, NULL, 0);
+	// Allocates space, and loads the sti for SPECK
+	giVideoSpeckFaceIndex = InitFace(SPECK, NULL, 0);
 
 	// Sets up the eyes blinking and the mouth moving
 		SetAutoFaceActive( guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giVideoSpeckFaceIndex, 0, 0);
@@ -933,7 +932,7 @@ static BOOLEAN StartSpeckTalking(UINT16 usQuoteNum)
 	HandleSpeckIdleConversation( TRUE );
 
 	//Start Speck talking
-	if(!CharacterDialogue( MERC_VIDEO_MERC_ID_FOR_SPECKS, usQuoteNum, giVideoSpeckFaceIndex, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE, FALSE ) )
+	if (!CharacterDialogue(SPECK, usQuoteNum, giVideoSpeckFaceIndex, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE, FALSE))
 	{
 		Assert(0);
 		return(FALSE);
