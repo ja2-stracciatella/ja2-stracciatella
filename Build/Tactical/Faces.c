@@ -44,86 +44,52 @@ FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
 static UINT32 guiNumFaces = 0;
 
 
-typedef struct
+typedef struct RPC_SMALL_FACE_VALUES
 {
-	INT8		bEyesX;
-	INT8		bEyesY;
-	INT8		bMouthX;
-	INT8		bMouthY;
-
+	ProfileID profile;
+	INT8      bEyesX;
+	INT8      bEyesY;
+	INT8      bMouthX;
+	INT8      bMouthY;
 } RPC_SMALL_FACE_VALUES;
 
 
+// TODO0013
 static const RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[] =
 {
-	{  9, 8,  8, 24 }, // MIGUEL   (  57 )
-	{  8, 8,  7, 24 }, // CARLOS   (  58 )
-	{ 10, 8,  8, 26 }, // IRA      (  59 )
-	{  7, 8,  7, 26 }, // DIMITRI  (  60 )
-	{  6, 7,  7, 23 }, // DEVIN    (  61 )
-	{  0, 0,  0,  0 }, // THE RAT  (  62 )
-	{  8, 7,  8, 23 }, //          (  63 )
-	{  8, 8,  8, 22 }, // SLAY     (  64 )
-	{  0, 0,  0,  0 }, //          (  65 )
-	{  9, 4,  7, 22 }, // DYNAMO   (  66 )
-	{  8, 8,  8, 25 }, // SHANK    (  67 )
-	{  4, 6,  5, 22 }, // IGGY     (  68 )
-	{  8, 9,  7, 25 }, // VINCE    (  69 )
-	{  4, 7,  5, 25 }, // CONRAD   (  70 )
-	{  9, 7,  8, 22 }, // CARL     (  71 )
-	{  9, 7,  9, 25 }, // MADDOG   (  72 )
-	{  0, 0,  0,  0 }, //          (  73 )
-	{  0, 0,  0,  0 }, //          (  74 )
+	{ MIGUEL,    9, 8,  8, 24 },
+	{ CARLOS,    8, 8,  7, 24 },
+	{ IRA,      10, 8,  8, 26 },
+	{ DIMITRI,   7, 8,  7, 26 },
+	{ DEVIN,     6, 7,  7, 23 },
+	{ ROBOT,     0, 0,  0,  0 }, // THE RAT  (  62 )
+	{ HAMOUS,    8, 7,  8, 23 },
+	{ SLAY,      8, 8,  8, 22 },
+	{ RPC65,     0, 0,  0,  0 },
+	{ DYNAMO,    9, 4,  7, 22 },
+	{ SHANK,     8, 8,  8, 25 },
+	{ IGGY,      4, 6,  5, 22 },
+	{ VINCE,     8, 9,  7, 25 },
+	{ CONRAD,    4, 7,  5, 25 },
+	{ RPC71,     9, 7,  8, 22 }, // CARL     (  71 )
+	{ MADDOG,    9, 7,  9, 25 },
+	{ DARREL,    0, 0,  0,  0 },
+	{ PERKO,     0, 0,  0,  0 },
 
-	{  9, 3,  8, 23 }, // MARIA    (  88 )
+	{ MARIA,     9, 3,  8, 23 },
 
-	{  9, 3,  8, 25 }, // JOEY     (  90 )
+	{ JOEY,      9, 3,  8, 25 },
 
-	{ 11, 7,  9, 24 }, // SKYRIDER (  97 )
-	{  9, 5,  7, 23 }, // Miner    ( 106 )
+	{ SKYRIDER, 11, 7,  9, 24 },
+	{ FRED,      9, 5,  7, 23 }, // Miner    ( 106 )
 
-	{  6, 4,  6, 24 }, // JOHN     ( 118 )
-	{ 12, 4, 10, 24 }, //          ( 119 )
-	{  8, 6,  8, 23 }, // Miner    ( 148 )
-	{  6, 5,  6, 23 }, // Miner    ( 156 )
-	{ 13, 7, 11, 24 }, // Miner    ( 157 )
-	{  9, 7,  8, 22 }  // Miner    ( 158 )
+	{ JOHN,      6, 4,  6, 24 },
+	{ MARY,     12, 4, 10, 24 },
+	{ MATT,      8, 6,  8, 23 }, // Miner    ( 148 )
+	{ OSWALD,    6, 5,  6, 23 }, // Miner    ( 156 )
+	{ CALVIN,   13, 7, 11, 24 }, // Miner    ( 157 )
+	{ CARL,      9, 7,  8, 22 }  // Miner    ( 158 )
 };
-
-static const UINT8 gubRPCSmallFaceProfileNum[] =
-{
-	57, // entry 0
-	58,
-	59,
-	60,
-	61,
-	62,
-	63,
-	64,
-	65,
-	66, // entry 9
-	67,
-	68,
-	69,
-	70,
-	71,
-	72,
-	73,
-	74,
-	88,
-	90, // entry 19
-	97,
-	106,
-	118,
-	119,
-	148, // entry 24
-	156,
-	157,
-	158,
-
-};
-
-static const UINT8 ubRPCNumSmallFaceValues = 28;
 
 
 static INT32 GetFreeFace(void)
@@ -444,19 +410,16 @@ static void GetFaceRelativeCoordinates(const FACETYPE* pFace, UINT16* pusEyesX, 
 		// Are we a recruited merc? .. or small?
 		if( ( gMercProfiles[ usMercProfileID ].ubMiscFlags & ( PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE ) ) ||( pFace->uiFlags & FACE_FORCE_SMALL ) )
 		{
-			// Loop through all values of availible merc IDs to find ours!
-			for ( cnt = 0; cnt < ubRPCNumSmallFaceValues; cnt++ )
+			// Loop through all values of availible profiles to find ours!
+			for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
 			{
-				// We've found one!
-				if ( gubRPCSmallFaceProfileNum[ cnt ] == usMercProfileID )
-				{
-					usEyesX				= gRPCSmallFaceValues[ cnt ].bEyesX;
-					usEyesY				= gRPCSmallFaceValues[ cnt ].bEyesY;
-					usMouthY			=	gRPCSmallFaceValues[ cnt ].bMouthY;
-					usMouthX			= gRPCSmallFaceValues[ cnt ].bMouthX;
-				}
+				if (i->profile != usMercProfileID) continue;
+				usEyesX  = i->bEyesX;
+				usEyesY  = i->bEyesY;
+				usMouthX = i->bMouthX;
+				usMouthY = i->bMouthY;
+				break;
 			}
-
 		}
 	}
 
