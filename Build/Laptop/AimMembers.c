@@ -1859,7 +1859,7 @@ static void BtnHangUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static BOOLEAN InitVideoFace(UINT8 ubMercID)
 {
 	//Create the facial index
-	giMercFaceIndex = InitFace( ubMercID, NOBODY, 0 );
+	giMercFaceIndex = InitFace(ubMercID, NULL, 0);
 
 	SetAutoFaceActive( guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giMercFaceIndex, 0, 0);
 

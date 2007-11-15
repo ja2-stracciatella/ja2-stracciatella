@@ -791,22 +791,11 @@ static BOOLEAN EnterShopKeeperInterface(void)
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 {
 	SOLDIERTYPE *pSoldier = FindSoldierByProfileID( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID, FALSE );
+#if !defined JA2TESTVERSION
+	if (pSoldier == NULL) return FALSE;
+#endif
 
-	if( pSoldier == NULL )
-	{
-		#ifdef JA2TESTVERSION
-			//Create the facial index
-			giShopKeeperFaceIndex = InitFace( ubMercID, NOBODY, FACE_BIGFACE );
-		#else
-			return( FALSE );
-		#endif
-	}
-	else
-	{
-		//Create the facial index
-		giShopKeeperFaceIndex = InitFace( ubMercID, pSoldier->ubID, FACE_BIGFACE );
-	}
-
+	giShopKeeperFaceIndex = InitFace(ubMercID, pSoldier, FACE_BIGFACE);
 
 	SetAutoFaceActive( FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, giShopKeeperFaceIndex, SKI_FACE_X, SKI_FACE_Y );
 

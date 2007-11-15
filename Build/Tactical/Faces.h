@@ -144,11 +144,12 @@ FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
 // FACE HANDLING
 //
 // Faces are done like this: Call
-INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags );
-// The first parameter is the profile ID and the second is the soldier ID ( which for most cases
-// will be NOBODY if the face is not created from a SOLDIERTYPE )
-// This function allocates a slot in the table for the face, loads it's STI file, sets some
-// values for X,Y locations of eyes from the profile. Does not mkae the face visible or anything like that
+INT32 InitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags);
+/* The first parameter is the profile ID and the second is the soldier (which
+ * for most cases will be NULL if the face is not created from a SOLDIERTYPE).
+ * This function allocates a slot in the table for the face, loads its STI file,
+ * sets some values for X,Y locations of eyes from the profile. Does not make
+ * the face visible or anything like that */
 
 
 // Removes the face from the internal table, deletes any memory allocated if any.

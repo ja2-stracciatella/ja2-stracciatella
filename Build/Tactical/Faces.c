@@ -170,14 +170,14 @@ INT32	InitSoldierFace( SOLDIERTYPE *pSoldier )
 		return( iFaceIndex );
 	}
 
-	return( InitFace( pSoldier->ubProfile, pSoldier->ubID, 0) );
+	return InitFace(pSoldier->ubProfile, pSoldier, 0);
 }
 
 
-static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency);
+static INT32 InternalInitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency);
 
 
-INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
+INT32	InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
 {
 	UINT32	uiBlinkFrequency;
 	UINT32	uiExpressionFrequency;
@@ -199,12 +199,11 @@ INT32	InitFace( UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags )
 		uiBlinkFrequency		-= Random( 2000 );
 	}
 
-	return( InternalInitFace( usMercProfileID, ubSoldierID, uiInitFlags, gMercProfiles[ usMercProfileID ].ubFaceIndex, uiBlinkFrequency, uiExpressionFrequency ) );
-
+	return InternalInitFace(usMercProfileID, s, uiInitFlags, gMercProfiles[usMercProfileID].ubFaceIndex, uiBlinkFrequency, uiExpressionFrequency);
 }
 
 
-static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency)
+static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags, INT32 iFaceFileID, const UINT32 uiBlinkFrequency, const UINT32 uiExpressionFrequency)
 {
 	FACETYPE					*pFace;
 	UINT32						uiVideoObject;
@@ -280,7 +279,7 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Get profile data and set into face data
-	pFace->soldier = (ubSoldierID != NOBODY ? GetMan(ubSoldierID) : NULL);
+	pFace->soldier = s;
 
 	pFace->iID						= iFaceIndex;
 	pFace->fAllocated			= TRUE;

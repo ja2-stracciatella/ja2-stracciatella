@@ -405,7 +405,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	CalculatePopupTextOrientation( TALK_PANEL_CALC_SUBTITLE_WIDTH, TALK_PANEL_CALC_SUBTITLE_HEIGHT );
 
 	// Create face ( a big face! )....
-	iFaceIndex = InitFace( ubCharacterNum, NOBODY, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT );
+	iFaceIndex = InitFace(ubCharacterNum, NULL, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
 
 	CHECKF( iFaceIndex != -1 );
 
