@@ -2498,39 +2498,6 @@ static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, 
 }
 
 
-static INT8 OurMaxPublicOpplist(void)
-{
- UINT32 uiLoop;
- INT8 bHighestOpplist = 0;
- UINT8 ubOppValue,ubHighestValue = 0;
- SOLDIERTYPE * pSoldier;
-
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
-	{
-	 pSoldier = MercSlots[ uiLoop ];
-
-	 // if this merc is inactive, at base, on assignment, or dead
-	 if (!pSoldier || !pSoldier->bLife)
-		 continue;		// next merc
-
-   // if this man is NEUTRAL / on our side, he's not an opponent
-		if (pSoldier->bNeutral || gTacticalStatus.Team[gbPlayerNum].bSide == pSoldier->bSide)
-     continue;		// next merc
-
-   // opponent, check our public opplist value for him
-   ubOppValue = gubKnowledgeValue[0 - OLDEST_HEARD_VALUE][gbPublicOpplist[gbPlayerNum][pSoldier->ubID] - OLDEST_HEARD_VALUE];
-
-   if (ubOppValue > ubHighestValue)
-    {
-     ubHighestValue = ubOppValue;
-     bHighestOpplist = gbPublicOpplist[gbPlayerNum][pSoldier->ubID];
-    }
-  }
-
- return(bHighestOpplist);
-}
-
-
 static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier)
 {
 	UINT32 uiLoop;
