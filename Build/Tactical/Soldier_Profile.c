@@ -1391,7 +1391,7 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 	pSoldier->ubProfile = ubDestProfile;
 
 	// create new face
-	pSoldier->iFaceIndex = InitSoldierFace( pSoldier );
+	InitSoldierFace(pSoldier);
 
 	// replace profile in group
 	ReplaceSoldierProfileInPlayerGroup( pSoldier->ubGroupID, ubSrcProfile, ubDestProfile );

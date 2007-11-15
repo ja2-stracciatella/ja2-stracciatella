@@ -202,8 +202,8 @@ void HandleTalkingAutoFaces( );
 
 
 
-// Same Functions but taking soldier ID first to get profile ID
-INT32		InitSoldierFace( SOLDIERTYPE *pSoldier );
+// Same Functions but taking soldier first to get profile
+void    InitSoldierFace(SOLDIERTYPE* s);
 void		DeleteSoldierFace( SOLDIERTYPE *pSoldier );
 void    SetAutoFaceActiveFromSoldier(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
 void    SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);

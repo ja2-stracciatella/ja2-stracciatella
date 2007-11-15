@@ -124,19 +124,12 @@ INT32 uiCount;
 }
 
 
-INT32	InitSoldierFace( SOLDIERTYPE *pSoldier )
+void InitSoldierFace(SOLDIERTYPE* const s)
 {
-	INT32							iFaceIndex;
-
 	// Check if we have a face init already
-	iFaceIndex = pSoldier->iFaceIndex;
+	if (s->iFaceIndex != -1) return;
 
-	if ( iFaceIndex != -1 )
-	{
-		return( iFaceIndex );
-	}
-
-	return InitFace(pSoldier->ubProfile, pSoldier, 0);
+	s->iFaceIndex = InitFace(s->ubProfile, s, 0);
 }
 
 
