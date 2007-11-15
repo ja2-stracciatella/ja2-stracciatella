@@ -2254,24 +2254,23 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 
 /* Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
  * somebody else otherwise */
-void ChooseRedIfPresentAndAirRaid(SoldierID* const mercs_in_sector, size_t merc_count, UINT16 quote)
+void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, size_t merc_count, UINT16 quote)
 {
 	if (merc_count == 0) return;
 
 	SOLDIERTYPE* chosen;
 	if (quote == QUOTE_AIR_RAID)
 	{
-		for (SoldierID* i = mercs_in_sector; i != mercs_in_sector + merc_count; ++i)
+		for (SOLDIERTYPE*const* i = mercs_in_sector; i != mercs_in_sector + merc_count; ++i)
 		{
-			SOLDIERTYPE* const s = GetMan(*i);
-			if (s->ubProfile == RED)
+			if ((*i)->ubProfile == RED)
 			{
-				chosen = s;
+				chosen = *i;
 				goto talk;
 			}
 		}
 	}
-	chosen = GetMan(mercs_in_sector[Random(merc_count)]);
+	chosen = mercs_in_sector[Random(merc_count)];
 talk:
 	TacticalCharacterDialogue(chosen, quote);
 }
@@ -2279,73 +2278,54 @@ talk:
 
 void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	size_t merc_count = 0;
+	SOLDIERTYPE* mercs_in_sector[20];
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
+		if (OK_INSECTOR_MERC(s) && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
 		{
-			if ( gTacticalStatus.bNumFoughtInBattle[ ENEMY_TEAM ] == 0 )
+			if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
 			{
 				// quotes referring to Deidranna's men so we skip quote if there were no army guys fought
-				if ( (usQuoteNum == QUOTE_SECTOR_SAFE) && (pTeamSoldier->ubProfile == IRA || pTeamSoldier->ubProfile == MIGUEL || pTeamSoldier->ubProfile == SHANK ) )
+				if (usQuoteNum == QUOTE_SECTOR_SAFE &&
+						(s->ubProfile == IRA || s->ubProfile == MIGUEL || s->ubProfile == SHANK))
 				{
-
 					continue;
 				}
-				if ( (usQuoteNum == QUOTE_ENEMY_PRESENCE ) && (pTeamSoldier->ubProfile == IRA || pTeamSoldier->ubProfile == DIMITRI || pTeamSoldier->ubProfile == DYNAMO || pTeamSoldier->ubProfile == SHANK ) )
+				if (usQuoteNum == QUOTE_ENEMY_PRESENCE &&
+						(s->ubProfile == IRA || s->ubProfile == DIMITRI || s->ubProfile == DYNAMO || s->ubProfile == SHANK))
 				{
 					continue;
 				}
 			}
 
-			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-			ubNumMercs++;
+			mercs_in_sector[merc_count++] = s;
 		}
 	}
 
-	ChooseRedIfPresentAndAirRaid(ubMercsInSector, ubNumMercs, usQuoteNum);
+	ChooseRedIfPresentAndAirRaid(mercs_in_sector, merc_count, usQuoteNum);
 }
 
 
 void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 usQuoteNum )
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	size_t merc_count = 0;
+	SOLDIERTYPE* mercs_in_sector[20];
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pTeamSoldier->bActive )
+		// Add guy if he's a candidate...
+		if (s->sSectorX == sSectorX && s->sSectorY == sSectorY && s->bSectorZ == bSectorZ && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
 		{
-			// Add guy if he's a candidate...
-			if( pTeamSoldier->sSectorX == sSectorX && pTeamSoldier->sSectorY == sSectorY && pTeamSoldier -> bSectorZ == bSectorZ  && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
-			{
-				ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-				ubNumMercs++;
-			}
+			mercs_in_sector[merc_count++] = s;
 		}
 	}
 
-	ChooseRedIfPresentAndAirRaid(ubMercsInSector, ubNumMercs, usQuoteNum);
+	ChooseRedIfPresentAndAirRaid(mercs_in_sector, merc_count, usQuoteNum);
 }
+
 
 void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum )
 {
