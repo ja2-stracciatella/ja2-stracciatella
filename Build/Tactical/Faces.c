@@ -280,7 +280,7 @@ static INT32 InternalInitFace(UINT8 usMercProfileID, UINT8 ubSoldierID, UINT32 u
 	pFace = &gFacesData[ iFaceIndex ];
 
 	// Get profile data and set into face data
-	pFace->ubSoldierID		= ubSoldierID;
+	pFace->soldier = (ubSoldierID != NOBODY ? GetMan(ubSoldierID) : NULL);
 
 	pFace->iID						= iFaceIndex;
 	pFace->fAllocated			= TRUE;
@@ -569,9 +569,9 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 	pFace->uiEyelast				=		GetJA2Clock();
 
 	// Are we a soldier?
-	if ( pFace->ubSoldierID != NOBODY )
+	if (pFace->soldier != NULL)
 	{
-		 pFace->bOldSoldierLife = MercPtrs[ pFace->ubSoldierID ]->bLife;
+		pFace->bOldSoldierLife = pFace->soldier->bLife;
 	}
 }
 
@@ -586,7 +586,6 @@ void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* const s)
 void SetAutoFaceInActive(INT32 iFaceIndex )
 {
 	FACETYPE				*pFace;
-	SOLDIERTYPE			*pSoldier;
 
 	// Check face index
 	CHECKV( iFaceIndex != -1 );
@@ -608,11 +607,9 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 
 	if ( pFace->uiFlags & FACE_MAKEACTIVE_ONCE_DONE )
 	{
-		//
-		if ( pFace->ubSoldierID != NOBODY )
+		const SOLDIERTYPE* const pSoldier = pFace->soldier;
+		if (pSoldier != NULL)
 		{
-			pSoldier = MercPtrs[ pFace->ubSoldierID ];
-
 			// IF we are in tactical
 			if ( pSoldier->bAssignment == iCurrentTacticalSquad && guiCurrentScreen == GAME_SCREEN )
 			{
@@ -679,11 +676,12 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 		pFace = &gFacesData[ iFaceIndex ];
 
 		// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
-		if ( pFace->ubSoldierID != NOBODY )
+		const SOLDIERTYPE* const s = pFace->soldier;
+		if (s != NULL)
 		{
-			if ( ( MercPtrs[ pFace->ubSoldierID ]->bLife < OKLIFE ) ||
-					 ( MercPtrs[ pFace->ubSoldierID ]->fMercAsleep == TRUE ) ||
-					 ( MercPtrs[ pFace->ubSoldierID ]->bAssignment == ASSIGNMENT_POW ) )
+			if (s->bLife < OKLIFE ||
+					s->fMercAsleep == TRUE ||
+					s->bAssignment == ASSIGNMENT_POW)
 			{
 				return;
 			}
@@ -801,15 +799,16 @@ static void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, 
 	    }
 	    else if ( ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT  ) )
 	    {
-		    if ( pFace->ubSoldierID != NOBODY )
+		    const SOLDIERTYPE* const s = pFace->soldier;
+		    if (s != NULL)
 		    {
-			    if ( MercPtrs[ pFace->ubSoldierID ]->bLife >= OKLIFE )
+			    if (s->bLife >= OKLIFE)
 			    {
 				    // Lock buffer
 				    pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
 				    SetClippingRegionAndImageWidth( uiDestPitchBYTES, sFaceX-2, sFaceY-1, sFaceX + pFace->usFaceWidth + 4, sFaceY + pFace->usFaceHeight + 4 );
 
-				    if ( MercPtrs[ pFace->ubSoldierID ]->bStealthMode )
+				    if (s->bStealthMode)
 				    {
 					    usLineColor = Get16BPPColor( FROMRGB( 158, 158, 12 ) );
 				    }
@@ -1006,12 +1005,11 @@ static void HandleTalkingAutoFace(INT32 iFaceIndex)
 // Local function - uses these variables because they have already been validated
 static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
 {
-	if (pFace->ubSoldierID == NOBODY) return;
+	const SOLDIERTYPE* const s = pFace->soldier;
+	if (s == NULL) return;
 
 	// Set to default
 	SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE );
-
-	const SOLDIERTYPE* const s = MercPtrs[pFace->ubSoldierID];
 
 	if ( pFace->iVideoOverlay == -1 && !fExternBlit )
 	{
@@ -1122,10 +1120,9 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 	}
 
 	// BLIT HATCH
-	if ( pFace->ubSoldierID != NOBODY )
+	SOLDIERTYPE* const s = pFace->soldier;
+	if (s != NULL)
 	{
-		SOLDIERTYPE* const s = GetMan(pFace->ubSoldierID);
-
 		if (s->bLife < CONSCIOUSNESS || s->fDeadPanel)
 		{
 			// Blit Closed eyes here!
@@ -1602,8 +1599,6 @@ void HandleAutoFaces( )
 	INT8	bAPs;
 	BOOLEAN	fRerender = FALSE;
 	BOOLEAN	fHandleFace;
-	SOLDIERTYPE *pSoldier;
-
 
 	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
 	{
@@ -1616,10 +1611,10 @@ void HandleAutoFaces( )
 			pFace = &gFacesData[ uiCount ];
 
 			// Are we a soldier?
-			if ( pFace->ubSoldierID != NOBODY )
+			SOLDIERTYPE* const pSoldier = pFace->soldier;
+			if (pSoldier != NULL)
 			{
 				 // Get Life now
-				 pSoldier  = MercPtrs[ pFace->ubSoldierID ];
 				 bLife		 = pSoldier->bLife;
 				 bAPs      = pSoldier->bActionPoints;
 

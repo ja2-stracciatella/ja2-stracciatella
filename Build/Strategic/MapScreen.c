@@ -2718,7 +2718,7 @@ UINT32 MapScreenHandle(void)
 
 
 			// make him continue talking
-			ContinueDialogue( MercPtrs[ gpCurrentTalkingFace -> ubSoldierID ], FALSE );
+			ContinueDialogue(gpCurrentTalkingFace->soldier, FALSE);
 
 			// reset diabled flag
 			//gpCurrentTalkingFace->fDisabled = FALSE;

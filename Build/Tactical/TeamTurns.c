@@ -1889,7 +1889,7 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 	//Load the gubTurn Order Array
 	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
 	if (!FileRead(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
-	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
+	for (UINT i = 1; i < lengthof(gOutOfTurnOrder); ++i)
 	{
 		gOutOfTurnOrder[i] = ID2Soldier(ooto_ids[i]);
 	}

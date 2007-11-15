@@ -70,7 +70,7 @@ typedef struct
 	INT32			iVideoOverlay;									// Value for video overlay ( not used too much )
 
 	UINT32		uiSoundID;											// Sound ID if one being played
-	UINT8			ubSoldierID;										// SoldierID if one specified
+	SOLDIERTYPE* soldier;                     // Soldier if one specified
 	UINT8			ubCharacterNum;									// Profile ID num
 
   UINT16		usFaceX;												// X location to render face
