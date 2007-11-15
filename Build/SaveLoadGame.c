@@ -3069,27 +3069,6 @@ static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 }
 
 
-static BOOLEAN SetMercsInsertionGridNo(void)
-{
-	FOR_ALL_SOLDIERS(s)
-	{
-		if (s->sGridNo != NOWHERE)
-		{
-			//set the insertion type to gridno
-			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-
-			//set the insertion gridno
-			s->usStrategicInsertionData = s->sGridNo;
-
-			//set the gridno
-			s->sGridNo = NOWHERE;
-		}
-	}
-
-	return( TRUE );
-}
-
-
 static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 {
 	UINT32	uiSaveSize=0;
