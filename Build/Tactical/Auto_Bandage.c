@@ -541,47 +541,21 @@ static BOOLEAN AddFacesToAutoBandageBox(void);
 // the update box for autobandaging mercs
 static void SetUpAutoBandageUpdatePanel(void)
 {
-	INT32 iNumberDoctoring = 0;
-	INT32 iNumberPatienting = 0;
-	INT32 iNumberOnTeam = 0;
-	INT32 iCounterA = 0;
-
-	// reset the tables of mercs
-	memset(gdoctor_list,  0, sizeof(gdoctor_list));
-	memset(gpatient_list, 0, sizeof(gpatient_list));
-
-	// grab number of potential grunts on players team
-	iNumberOnTeam = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-	// run through mercs on squad...if they can doctor, add to list
-	for( iCounterA = 0; iCounterA < iNumberOnTeam; iCounterA++ )
+	const SOLDIERTYPE** next_doctor  = gdoctor_list;
+	const SOLDIERTYPE** next_patient = gpatient_list;
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		const SOLDIERTYPE* const s = GetMan(iCounterA);
-		if (CanCharacterAutoBandageTeammate(s))
-		{
-			// add to list, up the count
-			gdoctor_list[iNumberDoctoring++] = s;
-		}
-	}
-
-	// run through mercs on squad, if they can patient, add to list
-	for( iCounterA = 0; iCounterA < iNumberOnTeam; iCounterA++ )
-	{
-		const SOLDIERTYPE* const s = GetMan(iCounterA);
-		if (CanCharacterBeAutoBandagedByTeammate(s))
-		{
-			// add to list, up the count
-			gpatient_list[iNumberPatienting++] = s;
-		}
+		if (CanCharacterAutoBandageTeammate(s))      *next_doctor++  = s;
+		if (CanCharacterBeAutoBandagedByTeammate(s)) *next_patient++ = s;
 	}
 
 	// makes sure there is someone to doctor and patient...
-	if( ( iNumberDoctoring == 0 ) || ( iNumberPatienting == 0 ) )
-	{
-		// reset the tables of mercs
-		memset(gdoctor_list,  0, sizeof(gdoctor_list));
-		memset(gpatient_list, 0, sizeof(gpatient_list));
-	}
+	if (next_doctor  == gdoctor_list)  next_patient = gpatient_list;
+	if (next_patient == gpatient_list) next_doctor  = gdoctor_list;
+
+	// Clear the rest of the lists
+	while (next_doctor  != endof(gdoctor_list))  *next_doctor++  = NULL;
+	while (next_patient != endof(gpatient_list)) *next_patient++ = NULL;
 
 	// now add the faces
 	AddFacesToAutoBandageBox( );
