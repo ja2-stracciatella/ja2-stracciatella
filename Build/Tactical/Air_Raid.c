@@ -285,37 +285,16 @@ BOOLEAN BeginAirRaid( )
 
 static INT16 PickLocationNearAnyMercInSector(void)
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	size_t num_mercs = 0;
+	const SOLDIERTYPE* mercs_in_sector[20];
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) )
-		{
-			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-			ubNumMercs++;
-		}
+		if (OK_INSECTOR_MERC(s)) mercs_in_sector[num_mercs++] = s;
 	}
 
-	// If we are > 0
-	if ( ubNumMercs > 0 )
-	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		return( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ]->sGridNo );
-	}
-
-	return( NOWHERE );
+	return num_mercs > 0 ? mercs_in_sector[Random(num_mercs)]->sGridNo : NOWHERE;
 }
 
 
