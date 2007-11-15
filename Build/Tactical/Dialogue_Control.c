@@ -2254,7 +2254,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 
 /* Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
  * somebody else otherwise */
-void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, size_t merc_count, UINT16 quote)
+static void ChooseRedIfPresentAndAirRaid(SOLDIERTYPE*const*const mercs_in_sector, size_t merc_count, UINT16 quote)
 {
 	if (merc_count == 0) return;
 
