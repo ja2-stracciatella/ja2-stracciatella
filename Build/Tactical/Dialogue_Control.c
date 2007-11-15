@@ -2252,11 +2252,35 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 }
 
 
+/* Let Red talk, if he is in the list and the quote is QUOTE_AIR_RAID.  Choose
+ * somebody else otherwise */
+void ChooseRedIfPresentAndAirRaid(SoldierID* const mercs_in_sector, size_t merc_count, UINT16 quote)
+{
+	if (merc_count == 0) return;
+
+	SOLDIERTYPE* chosen;
+	if (quote == QUOTE_AIR_RAID)
+	{
+		for (SoldierID* i = mercs_in_sector; i != mercs_in_sector + merc_count; ++i)
+		{
+			SOLDIERTYPE* const s = GetMan(*i);
+			if (s->ubProfile == RED)
+			{
+				chosen = s;
+				goto talk;
+			}
+		}
+	}
+	chosen = GetMan(mercs_in_sector[Random(merc_count)]);
+talk:
+	TacticalCharacterDialogue(chosen, quote);
+}
+
+
 void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 
@@ -2290,28 +2314,7 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 		}
 	}
 
-	// If we are > 0
-	if ( ubNumMercs > 0 )
-	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		// If we are air raid, AND red exists somewhere...
-		if ( usQuoteNum == QUOTE_AIR_RAID )
-		{
-			for ( cnt = 0; cnt < ubNumMercs; cnt++ )
-			{
-				if ( ubMercsInSector[ cnt ] == 11 )
-				{
-					ubChosenMerc = (UINT8)cnt;
-					break;
-				}
-			}
-		}
-
-
-		TacticalCharacterDialogue( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], usQuoteNum );
-	}
-
+	ChooseRedIfPresentAndAirRaid(ubMercsInSector, ubNumMercs, usQuoteNum);
 }
 
 
@@ -2319,7 +2322,6 @@ void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSect
 {
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 	SOLDIERTYPE *pTeamSoldier;
 	INT32 cnt;
 
@@ -2342,27 +2344,7 @@ void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSect
 		}
 	}
 
-	// If we are > 0
-	if ( ubNumMercs > 0 )
-	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		// If we are air raid, AND red exists somewhere...
-		if ( usQuoteNum == QUOTE_AIR_RAID )
-		{
-			for ( cnt = 0; cnt < ubNumMercs; cnt++ )
-			{
-				if ( ubMercsInSector[ cnt ] == 11 )
-				{
-					ubChosenMerc = (UINT8)cnt;
-					break;
-				}
-			}
-		}
-
-
-		TacticalCharacterDialogue( MercPtrs[ ubMercsInSector[ ubChosenMerc ] ], usQuoteNum );
-	}
+	ChooseRedIfPresentAndAirRaid(ubMercsInSector, ubNumMercs, usQuoteNum);
 }
 
 void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum )
