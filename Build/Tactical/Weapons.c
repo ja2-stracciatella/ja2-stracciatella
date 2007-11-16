@@ -682,7 +682,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	{
 		// FREE UP NPC!
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - attack on own gridno!");
-		FreeUpAttacker( (UINT8) pSoldier->ubID );
+		FreeUpAttacker(pSoldier);
 		return( FALSE );
 	}
 
@@ -1343,7 +1343,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				}
 			}
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - missed in knife attack");
-			FreeUpAttacker( (UINT8) pSoldier->ubID );
+			FreeUpAttacker(pSoldier);
 		}
 
 		if ( PTR_OURTEAM && pSoldier->ubTargetID != NOBODY)
@@ -1385,7 +1385,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	else
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - missed in knife attack");
-		FreeUpAttacker( (UINT8) pSoldier->ubID );
+		FreeUpAttacker(pSoldier);
 	}
 
 	// possibly reduce monster smell
@@ -1561,8 +1561,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 #ifdef JA2BETAVERSION
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - steal");
 #endif
-			FreeUpAttacker( (UINT8) pSoldier->ubID );
-
+			FreeUpAttacker(pSoldier);
 		}
 		else
 		{
@@ -1643,7 +1642,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			else
 			{
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - missed in HTH attack");
-				FreeUpAttacker( (UINT8) pSoldier->ubID );
+				FreeUpAttacker(pSoldier);
 			}
 		}
 	}
@@ -1866,8 +1865,9 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 	UINT8						ubAmmoType;
   UINT16          usItem;
 
-	ubAmmoType = MercPtrs[ ubAttackerID ]->inv[ MercPtrs[ ubAttackerID ]->ubAttackingHand ].ubGunAmmoType;
-	usItem     = MercPtrs[ ubAttackerID ]->inv[ MercPtrs[ ubAttackerID ]->ubAttackingHand ].usItem;
+	SOLDIERTYPE* const attacker = GetMan(ubAttackerID);
+	ubAmmoType = attacker->inv[attacker->ubAttackingHand].ubGunAmmoType;
+	usItem     = attacker->inv[attacker->ubAttackingHand].usItem;
 
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
@@ -1890,7 +1890,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 			{
 				RemoveBullet(bullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo");
-				FreeUpAttacker( (UINT8) ubAttackerID );
+				FreeUpAttacker(attacker);
 			}
 		}
 
@@ -1958,7 +1958,7 @@ void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
 		}
 
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
-		FreeUpAttacker( ubAttackerID );
+		FreeUpAttacker(GetMan(ubAttackerID));
 		return;
 	}
 
@@ -2039,10 +2039,10 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 
 			// Reduce attacker count!
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
-			FreeUpAttacker( ubAttackerID );
+			FreeUpAttacker(attacker);
 
 			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, C1, (INT8)( sZPos >= WALL_HEIGHT ) );
-			//FreeUpAttacker( (UINT8) ubAttackerID );
+			//FreeUpAttacker(attacker);
 
 			return;
 		}
@@ -2053,10 +2053,10 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 
 			// Reduce attacker count!
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of TANK fire");
-			FreeUpAttacker( ubAttackerID );
+			FreeUpAttacker(attacker);
 
 			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, TANK_SHELL, (INT8)( sZPos >= WALL_HEIGHT ) );
-			//FreeUpAttacker( (UINT8) ubAttackerID );
+			//FreeUpAttacker(attacker);
 
 			return;
 		}
@@ -2093,7 +2093,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 
 			RemoveBullet(pBullet);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - monster attack hit structure");
-			FreeUpAttacker( (UINT8) ubAttackerID );
+			FreeUpAttacker(attacker);
 
 			//PlayJA2Sample(SPIT_RICOCHET, uiMissVolume, 1, SoundDir(sGridNo));
 			break;
@@ -2124,7 +2124,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 
 				RemoveBullet(pBullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - knife attack hit structure");
-				FreeUpAttacker( (UINT8) ubAttackerID );
+				FreeUpAttacker(attacker);
 			}
 	}
 
@@ -2138,7 +2138,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 
 		// Free guy!
 		//DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit structure");
-		//FreeUpAttacker( (UINT8) ubAttackerID );
+		//FreeUpAttacker(attacker);
 
 
 		// PLAY SOUND AND FLING DEBRIS
@@ -2152,7 +2152,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 			{
 				RemoveBullet(pBullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit same structure twice");
-				FreeUpAttacker( (UINT8) ubAttackerID );
+				FreeUpAttacker(attacker);
 			}
 		}
 		else
@@ -3655,7 +3655,7 @@ void ShotMiss(SOLDIERTYPE* const pAttacker, INT32 iBullet)
 	}
 
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet missed");
-	FreeUpAttacker(pAttacker->ubID);
+	FreeUpAttacker(pAttacker);
 }
 
 

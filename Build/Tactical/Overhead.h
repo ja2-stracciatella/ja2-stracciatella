@@ -278,7 +278,7 @@ void CycleThroughKnownEnemies( );
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen );
 
-SOLDIERTYPE * FreeUpAttacker( UINT8 ubID );
+SOLDIERTYPE* FreeUpAttacker(SOLDIERTYPE* attacker);
 
 BOOLEAN PlayerTeamFull( );
 

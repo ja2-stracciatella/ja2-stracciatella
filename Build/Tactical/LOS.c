@@ -4295,7 +4295,7 @@ void MoveBullet( INT32 iBullet )
 												CorpseHit( (INT16)pBullet->sGridNo, pStructure->usStructureID );
 												DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., CORPSE HIT");
 
-												FreeUpAttacker( pBullet->pFirer->ubID );
+												FreeUpAttacker(pBullet->pFirer);
 												return;
 											}
 											else if ( iRemainingImpact <= 0 )

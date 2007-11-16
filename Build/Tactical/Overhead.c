@@ -685,7 +685,7 @@ BOOLEAN ExecuteOverhead(void)
 						pSoldier->fPauseAim  = FALSE;
 						/*
 						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - realtime reloading");
-						FreeUpAttacker( pSoldier->ubID );
+						FreeUpAttacker(pSoldier);
 						*/
 					}
 				}
@@ -6562,13 +6562,12 @@ SOLDIERTYPE* ReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker)
 }
 
 
-SOLDIERTYPE * FreeUpAttacker( UINT8 ubID )
+SOLDIERTYPE* FreeUpAttacker(SOLDIERTYPE* const attacker)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-
-	return( ReduceAttackBusyCount( ubID, TRUE ) );
+	return ReduceAttackBusyCount(attacker->ubID, TRUE);
 }
 
 

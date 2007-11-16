@@ -688,7 +688,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							}
 
 							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - aborting start of attack due to burst gun jam");
-							FreeUpAttacker( pSoldier->ubID );
+							FreeUpAttacker(pSoldier);
 						}
 						else if ( bWeaponJammed == 255 )
 						{
@@ -708,7 +708,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( fFreeUpAttacker )
 						{
 //							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - aborting start of attack");
-//							FreeUpAttacker( pSoldier->ubID );
+//							FreeUpAttacker(pSoldier);
 						}
 
 						// ATE; Reduce it due to animation being stopped...
@@ -1117,8 +1117,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// Free-up!
 						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - gun failed to fire");
-						FreeUpAttacker( pSoldier->ubID );
-
+						FreeUpAttacker(pSoldier);
 					}
 					else if ( bOKFireWeapon == 255 )
 					{

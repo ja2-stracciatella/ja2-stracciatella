@@ -387,9 +387,8 @@ void DeleteAniTile( ANITILE *pAniTile )
 					RemoveBullet(GetBulletPtr(pAniNode->uiUserData3));
 
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
-					FreeUpAttacker( (UINT8) pAniNode->ubAttackerMissed );
+					FreeUpAttacker(GetMan(pAniNode->ubAttackerMissed));
 				}
-
 			}
 			else
 			{
