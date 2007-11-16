@@ -6247,13 +6247,12 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker, UINT8 ubTargetID)
+static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEAN fCalledByAttacker, SOLDIERTYPE* pTarget)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
 	SOLDIERTYPE *				pSoldier;
-	SOLDIERTYPE *				pTarget;
 	BOOLEAN							fEnterCombat = FALSE;
 
 	if (ubID == NOBODY)
@@ -6264,13 +6263,8 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 	else
 	{
 		pSoldier = MercPtrs[ ubID ];
-		if ( ubTargetID != NOBODY)
+		if (pTarget == NULL)
 		{
-			pTarget = MercPtrs[ ubTargetID ];
-		}
-		else
-		{
-			pTarget = NULL;
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, ">>Target ptr is null!");
 		}
 	}
@@ -6557,7 +6551,8 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByA
 
 SOLDIERTYPE* ReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker)
 {
-	const UINT8 target = (ubID == NOBODY ? NOBODY : MercPtrs[ubID]->ubTargetID);
+	const UINT8 target_id = (ubID == NOBODY ? NOBODY : MercPtrs[ubID]->ubTargetID);
+	SOLDIERTYPE* const target = (target_id == NOBODY ? NULL : GetMan(target_id));
 	return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, target);
 }
 
@@ -6576,7 +6571,7 @@ SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->ubAttackerID, TRUE, target->ubID);
+	return InternalReduceAttackBusyCount(target->ubAttackerID, TRUE, target);
 }
 
 
@@ -6585,7 +6580,7 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->ubAttackerID, FALSE, target->ubID);
+	return InternalReduceAttackBusyCount(target->ubAttackerID, FALSE, target);
 }
 
 
