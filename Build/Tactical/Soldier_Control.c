@@ -3345,11 +3345,11 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 		// ATE: If it's from GUNFIRE damage, keep in mind bullets...
 		if ( Item[ usWeaponIndex ].usItemClass & IC_GUN )
 		{
-			pNewSoldier = FreeUpAttackerGivenTarget( pSoldier->ubAttackerID, pSoldier->ubID );
+			pNewSoldier = FreeUpAttackerGivenTarget(pSoldier);
 		}
 		else
 		{
-			pNewSoldier = ReduceAttackBusyGivenTarget( pSoldier->ubAttackerID, pSoldier->ubID );
+			pNewSoldier = ReduceAttackBusyGivenTarget(pSoldier);
 		}
 
 		if (pNewSoldier != NULL)

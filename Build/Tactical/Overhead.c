@@ -6572,23 +6572,21 @@ SOLDIERTYPE * FreeUpAttacker( UINT8 ubID )
 }
 
 
-SOLDIERTYPE* FreeUpAttackerGivenTarget(UINT8 ubID, UINT8 ubTargetID)
+SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* const target)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-
-	return( InternalReduceAttackBusyCount( ubID, TRUE, ubTargetID ) );
+	return InternalReduceAttackBusyCount(target->ubAttackerID, TRUE, target->ubID);
 }
 
 
-SOLDIERTYPE* ReduceAttackBusyGivenTarget(UINT8 ubID, UINT8 ubTargetID)
+SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-
-	return( InternalReduceAttackBusyCount( ubID, FALSE, ubTargetID ) );
+	return InternalReduceAttackBusyCount(target->ubAttackerID, FALSE, target->ubID);
 }
 
 

@@ -340,8 +340,8 @@ extern BOOLEAN gfKillingGuysForLosingBattle;
 extern UINT8   gubWaitingForAllMercsToExitCode;
 
 UINT8        NumCapableEnemyInSector(void);
-SOLDIERTYPE* FreeUpAttackerGivenTarget(UINT8 ubID, UINT8 ubTargetID);
-SOLDIERTYPE* ReduceAttackBusyGivenTarget(UINT8 ubID, UINT8 ubTargetID);
+SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* target);
+SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* target);
 
 #ifdef JA2DEMO
 void HandleEndDemoInCreatureLevel(void);
