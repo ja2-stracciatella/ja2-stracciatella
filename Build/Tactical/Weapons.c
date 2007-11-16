@@ -1980,7 +1980,7 @@ void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
 }
 
 
-void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT8 ubAttackerID, INT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped )
+void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;
@@ -1992,6 +1992,10 @@ void StructureHit( INT32 iBullet, UINT16 usWeaponIndex, INT8 bWeaponStatus, UINT
 	SOLDIERTYPE *		pAttacker;
 
 	BULLET* const pBullet = GetBulletPtr(iBullet);
+	const SOLDIERTYPE* const attacker      = pBullet->pFirer;
+	const UINT16             usWeaponIndex = attacker->usAttackingWeapon;
+	const INT8               bWeaponStatus = pBullet->ubItemStatus;
+	const UINT8              ubAttackerID  = attacker->ubID;
 
 	if ( fStopped && ubAttackerID != NOBODY )
 	{

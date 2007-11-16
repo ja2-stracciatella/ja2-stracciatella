@@ -2268,14 +2268,13 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 static void BulletHitStructure(BULLET* pBullet, UINT16 usStructureID, INT32 iImpact, BOOLEAN fStopped)
 {
-	const SOLDIERTYPE* const pFirer = pBullet->pFirer;
-	const FIXEDPT            qCurrX = pBullet->qCurrX;
-	const FIXEDPT            qCurrY = pBullet->qCurrY;
-	const FIXEDPT            qCurrZ = pBullet->qCurrZ;
+	const FIXEDPT qCurrX = pBullet->qCurrX;
+	const FIXEDPT qCurrY = pBullet->qCurrY;
+	const FIXEDPT qCurrZ = pBullet->qCurrZ;
 	INT16 sXPos = FIXEDPT_TO_INT32(qCurrX + FloatToFixed(0.5f)); // + 0.5);
 	INT16 sYPos = FIXEDPT_TO_INT32(qCurrY + FloatToFixed(0.5f)); // (dCurrY + 0.5);
 	INT16 sZPos = CONVERT_HEIGHTUNITS_TO_PIXELS((INT16)FIXEDPT_TO_INT32(qCurrZ + FloatToFixed(0.5f)));// dCurrZ + 0.5) );
-	StructureHit(pBullet->iBullet, pFirer->usAttackingWeapon, pBullet->ubItemStatus, pFirer->ubID, sXPos, sYPos, sZPos, usStructureID, iImpact, fStopped);
+	StructureHit(pBullet->iBullet, sXPos, sYPos, sZPos, usStructureID, iImpact, fStopped);
 }
 
 
