@@ -1989,23 +1989,20 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 	UINT16					usMissTileIndex, usMissTileType;
 	UINT32					uiMissVolume = MIDVOLUME;
 	BOOLEAN					fHitSameStructureAsBefore;
-	SOLDIERTYPE *		pAttacker;
 
 	BULLET* const pBullet = GetBulletPtr(iBullet);
-	const SOLDIERTYPE* const attacker      = pBullet->pFirer;
-	const UINT16             usWeaponIndex = attacker->usAttackingWeapon;
-	const INT8               bWeaponStatus = pBullet->ubItemStatus;
-	const UINT8              ubAttackerID  = attacker->ubID;
+	SOLDIERTYPE* const attacker      = pBullet->pFirer;
+	const UINT16       usWeaponIndex = attacker->usAttackingWeapon;
+	const INT8         bWeaponStatus = pBullet->ubItemStatus;
+	const UINT8        ubAttackerID  = attacker->ubID;
 
-	if ( fStopped && ubAttackerID != NOBODY )
+	if (fStopped)
 	{
-		pAttacker = MercPtrs[ ubAttackerID ];
-
-		if ( pAttacker->ubOppNum != NOBODY )
+		if (attacker->ubOppNum != NOBODY)
 		{
-			SOLDIERTYPE* const opp = GetMan(pAttacker->ubOppNum);
+			SOLDIERTYPE* const opp = GetMan(attacker->ubOppNum);
 			// if it was another team shooting at someone under our control
-			if (pAttacker->bTeam != opp->bTeam)
+			if (attacker->bTeam != opp->bTeam)
 			{
 				// if OPPONENT is under our control
 				if (opp->bTeam == gbPlayerNum)
@@ -2079,17 +2076,12 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 		case SHOTGUNCLASS:
 		case SMGCLASS:
 		case MGCLASS:
-
 			// Guy has missed, play random sound
-			if (  MercPtrs[ ubAttackerID ]->bTeam == gbPlayerNum )
+			if (attacker->bTeam == gbPlayerNum &&
+					!attacker->bDoBurst &&
+					Random(40) == 0)
 			{
-				if ( !MercPtrs[ ubAttackerID ]->bDoBurst )
-				{
-					if ( Random( 40 ) == 0 )
-					{
-						DoMercBattleSound(  MercPtrs[ ubAttackerID ], BATTLE_SOUND_CURSE1 );
-					}
-				}
+				DoMercBattleSound(attacker, BATTLE_SOUND_CURSE1);
 			}
 			//fDoMissForGun = TRUE;
 			//break;
@@ -2236,15 +2228,10 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 				pNode->pLevelNode->sRelativeZ = sZPos;
 
 				// ATE: Show misses...( if our team )
-				if ( gGameSettings.fOptions[ TOPTION_SHOW_MISSES ] )
+				if (gGameSettings.fOptions[TOPTION_SHOW_MISSES] &&
+						attacker->bTeam == gbPlayerNum)
 				{
-					if ( ubAttackerID != NOBODY )
-					{
-						if ( MercPtrs[ ubAttackerID ]->bTeam == gbPlayerNum )
-						{
-							LocateGridNo( sGridNo );
-						}
-					}
+					LocateGridNo(sGridNo);
 				}
 			}
 
