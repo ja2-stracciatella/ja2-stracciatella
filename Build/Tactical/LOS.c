@@ -8,7 +8,6 @@
 #include "Animation_Control.h"
 #include "Random.h"
 #include "Soldier_Control.h"
-#include "Event_Pump.h"
 #include "Overhead.h"
 #include "Weapons.h"
 #include "OppList.h"
@@ -1852,10 +1851,8 @@ INT32 BulletImpactReducedByRange( INT32 iImpact, INT32 iDistanceTravelled, INT32
 
 static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIntended)
 {
+	SOLDIERTYPE* const pFirer = pBullet->pFirer;
 	INT32								iImpact, iDamage;
-	EV_S_WEAPONHIT			SWeaponHit;
-	INT16								sRange;
-	SOLDIERTYPE *				pFirer = pBullet->pFirer;
 	FLOAT								dZPosRelToMerc;
 	UINT8								ubHitLocation = AIM_SHOT_RANDOM;
 	UINT8								ubAttackDirection;
@@ -1867,13 +1864,12 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	INT8								bSlot;
 	INT8								bHeadSlot = NO_SLOT;
 	OBJECTTYPE					Object;
-	SOLDIERTYPE *				pTarget;
   INT16               sNewGridNo;
   BOOLEAN             fCanSpewBlood = FALSE;
   INT8                bSpewBloodLevel;
 
 	// structure IDs for mercs match their merc IDs
-	pTarget = MercPtrs[ pStructure->usStructureID ];
+	SOLDIERTYPE* const pTarget = MercPtrs[pStructure->usStructureID];
 
 	if (pBullet->usFlags & BULLET_FLAG_KNIFE)
 	{
@@ -2041,7 +2037,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 
 	// Determine damage, checking guy's armour, etc
-  sRange = (INT16)GetRangeInCellCoordsFromGridNoDiff( pFirer->sGridNo, pTarget->sGridNo );
+	const INT16 sRange = GetRangeInCellCoordsFromGridNoDiff(pFirer->sGridNo, pTarget->sGridNo);
 	if ( gTacticalStatus.uiFlags & GODMODE  && !(pFirer->uiStatusFlags & SOLDIER_PC))
 	{
 		// in god mode, and firer is computer controlled
@@ -2154,30 +2150,16 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 	}
 
-
-	// Send event for getting hit
-	memset( &(SWeaponHit), 0, sizeof( SWeaponHit ) );
-	SWeaponHit.usSoldierID			= pTarget->ubID;
-	SWeaponHit.uiUniqueId				= pTarget->uiUniqueSoldierIdValue;
-	SWeaponHit.usWeaponIndex		= pFirer->usAttackingWeapon;
-	SWeaponHit.sDamage					= (INT16) iDamage;
-	// breath loss is based on original impact of bullet
-	SWeaponHit.sBreathLoss			= (INT16) ( (iImpact * BP_GET_WOUNDED * (pTarget->bBreathMax * 100 - pTarget->sBreathRed)) / 10000 );
-	SWeaponHit.usDirection			= GetDirectionFromGridNo( pFirer->sGridNo, pTarget );
-	SWeaponHit.sXPos						= (INT16)pTarget->dXPos;
-	SWeaponHit.sYPos						= (INT16)pTarget->dYPos;
-	SWeaponHit.sZPos						= 20;
-	SWeaponHit.sRange						= sRange;
-	SWeaponHit.ubAttackerID			= pFirer->ubID;
-	SWeaponHit.ubLocation				= ubHitLocation;
-
 	if ( (pFirer->bDoBurst) && (ubSpecial == FIRE_WEAPON_NO_SPECIAL) )
 	{
 		// the animation required by the bullet hit (head explosion etc) overrides the
 		// hit-by-a-burst animation
 		ubSpecial = FIRE_WEAPON_BURST_SPECIAL;
 	}
-	SWeaponHit.ubSpecial = ubSpecial;
+
+	// breath loss is based on original impact of bullet
+	const INT16  breath_loss   = (iImpact * BP_GET_WOUNDED * (pTarget->bBreathMax * 100 - pTarget->sBreathRed)) / 10000;
+	const UINT16 hit_direction = GetDirectionFromGridNo(pFirer->sGridNo, pTarget);
 
 	// now check to see if the bullet goes THROUGH this person! (not vehicles)
 	if ( !(pTarget->uiStatusFlags & SOLDIER_VEHICLE) && (ubAmmoType == AMMO_REGULAR || ubAmmoType == AMMO_AP || ubAmmoType == AMMO_SUPER_AP) && !EXPLOSIVE_GUN( pFirer->usAttackingWeapon ) )
@@ -2225,15 +2207,15 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     // get a new gridno based on direction it was moving.  Check to see if we're not
     // going through walls, etc by testing for a path, unless on the roof, in which case it would always
     // be legal, but the bLevel May change...
-  	sNewGridNo = NewGridNo(pBullet->sGridNo, DirectionInc(OppositeDirection(SWeaponHit.usDirection)));
+		sNewGridNo = NewGridNo(pBullet->sGridNo, DirectionInc(OppositeDirection(hit_direction)));
 
-    bSpewBloodLevel = MercPtrs[ SWeaponHit.usSoldierID ]->bLevel;
+		bSpewBloodLevel = pTarget->bLevel;
     fCanSpewBlood   = TRUE;
 
     // If on anything other than bLevel of 0, we can pretty much freely spew blood
     if ( bSpewBloodLevel == 0 )
     {
-      if (gubWorldMovementCosts[sNewGridNo][OppositeDirection(SWeaponHit.usDirection)][0] >= TRAVELCOST_BLOCKED)
+			if (gubWorldMovementCosts[sNewGridNo][OppositeDirection(hit_direction)][0] >= TRAVELCOST_BLOCKED)
       {
         fCanSpewBlood = FALSE;
       }
@@ -2261,7 +2243,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
   }
 
 	// handle hit!
-	WeaponHit(SWeaponHit.usSoldierID, SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, SWeaponHit.ubAttackerID, SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
+	WeaponHit(pTarget->ubID, pFirer->usAttackingWeapon, iDamage, breath_loss, hit_direction, pTarget->dXPos, pTarget->dYPos, 20, sRange, pFirer->ubID, ubSpecial, ubHitLocation);
 	return( fStopped );
 }
 
