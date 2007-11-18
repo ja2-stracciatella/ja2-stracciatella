@@ -172,6 +172,10 @@ static inline SOLDIERTYPE* ID2Soldier(const SoldierID id)
 	return id != NOBODY ? GetMan(id) : NULL;
 }
 
+// For temporary use
+#define SOLDIER2ID(s) (Soldier2ID((s)))
+#define ID2SOLDIER(i) (ID2Soldier((i)))
+
 static inline SOLDIERTYPE* GetSelectedMan(void)
 {
 	return GetMan(gusSelectedSoldier);

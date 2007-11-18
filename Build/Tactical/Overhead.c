@@ -6552,7 +6552,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 SOLDIERTYPE* ReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker)
 {
 	const UINT8 target_id = (ubID == NOBODY ? NOBODY : MercPtrs[ubID]->ubTargetID);
-	SOLDIERTYPE* const target = (target_id == NOBODY ? NULL : GetMan(target_id));
+	SOLDIERTYPE* const target = ID2SOLDIER(target_id);
 	return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, target);
 }
 

@@ -1004,7 +1004,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
 										if (!pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
 										{
-											const SOLDIERTYPE* const sel = (gusSelectedSoldier != NOBODY ? GetSelectedMan(): NULL);
+											const SOLDIERTYPE* const sel = ID2SOLDIER(gusSelectedSoldier);
 
 											INT8 bGlowShadeOffset = 0;
 
