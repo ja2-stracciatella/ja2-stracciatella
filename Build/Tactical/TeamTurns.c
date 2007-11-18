@@ -1864,7 +1864,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
 	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
 	{
-		ooto_ids[i] = (gOutOfTurnOrder[i] != NULL ? gOutOfTurnOrder[i]->ubID : NOBODY);
+		ooto_ids[i] = Soldier2ID(gOutOfTurnOrder[i]);
 	}
 	if (!FileWrite(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
 
