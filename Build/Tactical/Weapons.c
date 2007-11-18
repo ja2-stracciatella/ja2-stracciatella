@@ -3089,7 +3089,7 @@ static INT32 ArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubArmourType, INT8* pb
 }
 
 
-INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, UINT8 ubAmmoType )
+INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocation, const INT32 iImpact, const UINT8 ubAmmoType)
 {
 	INT32					iTotalProtection = 0, iSlot;
 	OBJECTTYPE *	pArmour;
@@ -3232,7 +3232,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	}
 	else
 	{
-		iImpact = iOrigImpact - TotalArmourProtection( pFirer, pTarget, ubHitLocation, iOrigImpact, ubAmmoType );
+		iImpact = iOrigImpact - TotalArmourProtection(pTarget, ubHitLocation, iOrigImpact, ubAmmoType);
 	}
 
 	// calc minimum damage

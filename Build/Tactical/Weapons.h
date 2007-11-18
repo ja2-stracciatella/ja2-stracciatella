@@ -246,7 +246,7 @@ extern UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, U
 extern void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
 extern BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify );
 extern INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation );
-extern INT32 TotalArmourProtection( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, UINT8 ubAmmoType );
+INT32 TotalArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubHitLocation, INT32 iImpact, UINT8 ubAmmoType);
 INT8 ArmourPercent(const SOLDIERTYPE* pSoldier);
 
 extern void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT *pdXPos, FLOAT *pdYPos, FLOAT *pdZPos );
