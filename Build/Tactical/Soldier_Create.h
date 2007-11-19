@@ -116,7 +116,6 @@ typedef struct
 	INT8							bSectorZ;
 
 	SOLDIERTYPE				*pExistingSoldier;
-	BOOLEAN						fUseExistingSoldier;
 	UINT8							ubCivilianGroup;
 
 	BOOLEAN						fKillSlotIfOwnerDies;
@@ -128,7 +127,6 @@ typedef struct
 
 	INT8 bPadding[115];
 } SOLDIERCREATE_STRUCT;
-CASSERT(sizeof(SOLDIERCREATE_STRUCT) == 1060)
 
 
 //Original functions currently used throughout the game.

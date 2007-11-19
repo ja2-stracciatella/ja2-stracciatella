@@ -149,7 +149,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	}
 
 	// If we are NOT creating an existing soldier ( ie, this is not from a save game ), create soldier normally
-	if( !pCreateStruct->fUseExistingSoldier )
+	if (pCreateStruct->pExistingSoldier == NULL)
 	{
 		// We want to determine what team to place these guys in...
 

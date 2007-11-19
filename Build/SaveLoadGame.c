@@ -2707,7 +2707,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			memset( &CreateStruct, 0, sizeof( SOLDIERCREATE_STRUCT ) );
 			CreateStruct.bTeam								= SavedSoldierInfo.bTeam;
 			CreateStruct.ubProfile						= SavedSoldierInfo.ubProfile;
-			CreateStruct.fUseExistingSoldier	= TRUE;
 			CreateStruct.pExistingSoldier			= &SavedSoldierInfo;
 
 			SOLDIERTYPE* const s = TacticalCreateSoldier(&CreateStruct);
