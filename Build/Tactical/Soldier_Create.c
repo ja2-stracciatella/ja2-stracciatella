@@ -564,33 +564,28 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	}
 	else
 	{
+		Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
+
 		//Copy the data from the existing soldier struct to the new soldier struct
-		Soldier = *pCreateStruct->pExistingSoldier;
+		SOLDIERTYPE* const s = GetMan(pCreateStruct->pExistingSoldier->ubID);
+		*s = *pCreateStruct->pExistingSoldier;
 
 		//Reset the face index
-		Soldier.iFaceIndex = -1;
-		InitSoldierFace(&Soldier);
+		s->iFaceIndex = -1;
+		InitSoldierFace(s);
 
     // ATE: Reset soldier's light value to -1....
-    Soldier.iLight = -1;
+    s->iLight = -1;
 
-		if ( Soldier.ubBodyType == HUMVEE || Soldier.ubBodyType == ICECREAMTRUCK )
+		if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
     {
-      Soldier.bNeutral = TRUE;
+      s->bNeutral = TRUE;
     }
-
-		SOLDIERTYPE* const s = GetMan(Soldier.ubID);
-
-		// Copy into merc struct
-		*s = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
 		CHECKF(CreateSoldierCommon(s));
 
-		// The soldiers animation frame gets reset, set
-//		s->usAniCode   = pCreateStruct->pExistingSoldier->usAniCode;
-//		s->usAnimState = Soldier.usAnimState;
-//		s->usAniFrame  = Soldier.usAniFrame;
+		Soldier = *s;
 	}
 
 
