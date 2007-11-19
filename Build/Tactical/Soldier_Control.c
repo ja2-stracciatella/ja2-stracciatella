@@ -717,7 +717,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier, const UINT16 usState)
+BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier)
 {
 	BOOLEAN fSuccess = FALSE;
 	INT32 iCounter = 0;
@@ -777,6 +777,7 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier, const UINT16 usState)
 			break;
 		}
 
+		const UINT16 usState = pSoldier->usAnimState;
 		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 		{
 			// Init new soldier state
