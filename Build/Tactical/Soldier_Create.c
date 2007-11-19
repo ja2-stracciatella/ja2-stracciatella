@@ -149,6 +149,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	}
 
 	// If we are NOT creating an existing soldier ( ie, this is not from a save game ), create soldier normally
+	SOLDIERTYPE* s;
 	if (pCreateStruct->pExistingSoldier == NULL)
 	{
 		// We want to determine what team to place these guys in...
@@ -552,22 +553,31 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 		}
 
-		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
-		{
-			SOLDIERTYPE* const s = GetMan(Soldier.ubID);
-			// Copy into merc struct
+		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
+		{ //We are creating a dynamically allocated soldier for autoresolve.
+			SOLDIERTYPE* const s = MemAlloc(sizeof(*s));
+			if (!s) return NULL;
 			*s = Soldier;
-			// Alrighty then, we are set to create the merc, stuff after here can fail!
-			Assert(s->usAnimState == STANDING);
-			CHECKF(CreateSoldierCommon(s));
+			s->ubID = 255;
+			const UINT8 ubSectorID = GetAutoResolveSectorID();
+			s->sSectorX = SECTORX(ubSectorID);
+			s->sSectorY = SECTORY(ubSectorID);
+			s->bSectorZ = 0;
+			return s;
 		}
+
+		s = GetMan(Soldier.ubID);
+		// Copy into merc struct
+		*s = Soldier;
+
+		Assert(s->usAnimState == STANDING);
 	}
 	else
 	{
 		Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
 
 		//Copy the data from the existing soldier struct to the new soldier struct
-		SOLDIERTYPE* const s = GetMan(pCreateStruct->pExistingSoldier->ubID);
+		s = GetMan(pCreateStruct->pExistingSoldier->ubID);
 		*s = *pCreateStruct->pExistingSoldier;
 
 		//Reset the face index
@@ -582,46 +592,24 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
       s->bNeutral = TRUE;
     }
 
-		// Alrighty then, we are set to create the merc, stuff after here can fail!
-		CHECKF(CreateSoldierCommon(s));
-
-		Soldier = *s;
 	}
 
+	// Alrighty then, we are set to create the merc, stuff after here can fail!
+	CHECKF(CreateSoldierCommon(s));
 
-	if( guiCurrentScreen != AUTORESOLVE_SCREEN )
+	if (pCreateStruct->fOnRoof && FlatRoofAboveGridNo(pCreateStruct->sInsertionGridNo))
 	{
-		SOLDIERTYPE* const s = GetMan(Soldier.ubID);
-
-		if( pCreateStruct->fOnRoof && FlatRoofAboveGridNo( pCreateStruct->sInsertionGridNo ) )
-		{
-			SetSoldierHeight(s, 58.0);
-		}
-
-		//if we are loading DONT add men to team, because the number is restored in gTacticalStatus
-		if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-		{
-			// Increment men in sector number!
-			AddManToTeam( Soldier.bTeam );
-		}
-
-		return s;
+		SetSoldierHeight(s, 58.0);
 	}
-	else
-	{ //We are creating a dynamically allocated soldier for autoresolve.
-		SOLDIERTYPE *pSoldier;
-		UINT8 ubSectorID;
-		ubSectorID = GetAutoResolveSectorID();
-		pSoldier = (SOLDIERTYPE*)MemAlloc( sizeof( SOLDIERTYPE ) );
-		if( !pSoldier )
-			return NULL;
-		*pSoldier = Soldier;
-		pSoldier->ubID = 255;
-		pSoldier->sSectorX = (INT16)SECTORX( ubSectorID );
-		pSoldier->sSectorY = (INT16)SECTORY( ubSectorID );
-		pSoldier->bSectorZ = 0;
-		return pSoldier;
+
+	//if we are loading DONT add men to team, because the number is restored in gTacticalStatus
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
+	{
+		// Increment men in sector number!
+		AddManToTeam(s->bTeam);
 	}
+
+	return s;
 }
 
 
