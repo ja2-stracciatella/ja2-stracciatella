@@ -123,23 +123,14 @@ static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, const SOLDI
 
 SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct)
 {
-	SOLDIERTYPE			Soldier;
-	INT32						cnt;
-	SOLDIERTYPE			*pTeamSoldier;
-	BOOLEAN					fGuyAvail = FALSE;
-	UINT8						bLastTeamID;
-	UINT8						ubVehicleID = 0;
-
 	//Kris:
 	//Huge no no!  See the header file for description of static detailed placements.
 	//If this expression ever evaluates to true, then it will expose serious problems.
 	//Simply returning won't help.
-	if( pCreateStruct->fStatic )
-	{
-		Assert( 0 );
-	}
+	Assert(!pCreateStruct->fStatic);
 
 	// Some values initialized here but could be changed before going to the common one
+	SOLDIERTYPE Soldier;
 	InitSoldierStruct( &Soldier );
 
 	Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId;
@@ -252,7 +243,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
 		{
-			cnt = gTacticalStatus.Team[ Soldier.bTeam ].bFirstID;
+			INT32 cnt = gTacticalStatus.Team[Soldier.bTeam].bFirstID;
 
 			// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
 			if( Soldier.ubBodyType == HUMVEE ||
@@ -266,10 +257,11 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 				}
 			}
 
-			bLastTeamID = gTacticalStatus.Team[ Soldier.bTeam ].bLastID;
+			const UINT8 bLastTeamID = gTacticalStatus.Team[Soldier.bTeam].bLastID;
 
 			// look for all mercs on the same team,
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
+			BOOLEAN fGuyAvail = FALSE;
+			for (const SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= bLastTeamID; cnt++, pTeamSoldier++)
 			{
 				if ( !pTeamSoldier->bActive )
 				{
@@ -504,11 +496,11 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			case ELDORADO:
 			case ICECREAMTRUCK:
 			case JEEP:
-				case TANK_NW:
-				case TANK_NE:
-
+			case TANK_NW:
+			case TANK_NE:
 				Soldier.uiStatusFlags |= SOLDIER_VEHICLE;
 
+				UINT8 ubVehicleID = 0;
 				switch( Soldier.ubBodyType )
 				{
 					case HUMVEE:
