@@ -240,7 +240,15 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 		// Given team, get an ID for this guy!
 
-		if( guiCurrentScreen != AUTORESOLVE_SCREEN )
+		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
+		{
+			// We are creating a dynamically allocated soldier for autoresolve.
+			Soldier.ubID = 255;
+
+			s = MemAlloc(sizeof(*s));
+			if (!s) return NULL;
+		}
+		else
 		{
 			INT32 cnt = gTacticalStatus.Team[Soldier.bTeam].bFirstID;
 
@@ -277,58 +285,52 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 			// OK, set ID
 			Soldier.ubID = (UINT8)cnt;
-		}
 
+			s = GetMan(cnt);
+		}
+		*s = Soldier;
 
 		// LOAD MERC's FACE!
-		if ( pCreateStruct->ubProfile != NO_PROFILE && Soldier.bTeam == OUR_TEAM )
+		if (pCreateStruct->ubProfile != NO_PROFILE && s->bTeam == OUR_TEAM)
 		{
-			InitSoldierFace(&Soldier);
+			InitSoldierFace(s);
 		}
 
+		s->bActionPoints        = CalcActionPoints(s);
+		s->bInitialActionPoints = s->bActionPoints;
+		s->bSide                = gTacticalStatus.Team[s->bTeam].bSide;
+		s->bActive              = TRUE;
+		s->sSectorX             = pCreateStruct->sSectorX;
+		s->sSectorY             = pCreateStruct->sSectorY;
+		s->bSectorZ             = pCreateStruct->bSectorZ;
+		s->ubInsertionDirection = pCreateStruct->bDirection;
+		s->bDesiredDirection    = pCreateStruct->bDirection;
+		s->bDominantDir         = pCreateStruct->bDirection;
+		s->bDirection           = pCreateStruct->bDirection;
 
-		Soldier.bActionPoints					= CalcActionPoints( &Soldier );
-		Soldier.bInitialActionPoints	= Soldier.bActionPoints;
-		Soldier.bSide									= gTacticalStatus.Team[ Soldier.bTeam ].bSide;
-		Soldier.bActive								= TRUE;
-		Soldier.sSectorX							= pCreateStruct->sSectorX;
-		Soldier.sSectorY							= pCreateStruct->sSectorY;
-		Soldier.bSectorZ							= pCreateStruct->bSectorZ;
-		Soldier.ubInsertionDirection	= pCreateStruct->bDirection;
-		Soldier.bDesiredDirection			= pCreateStruct->bDirection;
-		Soldier.bDominantDir					= pCreateStruct->bDirection;
-		Soldier.bDirection						= pCreateStruct->bDirection;
-
-		Soldier.sInsertionGridNo			= pCreateStruct->sInsertionGridNo;
-		Soldier.bOldLife							= Soldier.bLifeMax;
+		s->sInsertionGridNo     = pCreateStruct->sInsertionGridNo;
+		s->bOldLife             = s->bLifeMax;
 
 		// If a civvy, set neutral
-		if ( Soldier.bTeam == CIV_TEAM )
+		if (s->bTeam == CIV_TEAM)
 		{
-			if (Soldier.ubProfile == WARDEN )
+			if (s->ubProfile == WARDEN)
 			{
-				Soldier.bNeutral = FALSE;
+				s->bNeutral = FALSE;
 			}
-			else if (Soldier.ubCivilianGroup != NON_CIV_GROUP)
+			else if (s->ubCivilianGroup != NON_CIV_GROUP)
 			{
-				if ( gTacticalStatus.fCivGroupHostile[ Soldier.ubCivilianGroup ] == CIV_GROUP_HOSTILE )
-				{
-					Soldier.bNeutral = FALSE;
-				}
-				else
-				{
-					Soldier.bNeutral = TRUE;
-				}
+				s->bNeutral = (gTacticalStatus.fCivGroupHostile[s->ubCivilianGroup] != CIV_GROUP_HOSTILE);
 			}
 			else
 			{
-				Soldier.bNeutral = TRUE;
+				s->bNeutral = TRUE;
 			}
 
 			//Weaken stats based on the bodytype of the civilian.
-			if( Soldier.ubProfile == NO_PROFILE )
+			if (s->ubProfile == NO_PROFILE)
 			{
-				switch( Soldier.ubBodyType )
+				switch (s->ubBodyType)
 				{
 					case REGMALE:
 					case BIGMALE:
@@ -338,95 +340,96 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 						break;
 					case FATCIV:
 						//fat, so slower
-						Soldier.bAgility = (INT8)( 30 + Random( 26 ) ); //30 - 55
+						s->bAgility = 30 + Random(26); //30 - 55
 						break;
 					case MANCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 35 + Random( 26 ) ); //35 - 60
+						s->bLife = s->bLifeMax = 35 + Random(26); //35 - 60
 						break;
 					case MINICIV:
 					case DRESSCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 30 + Random( 16 ) ); //30 - 45
+						s->bLife = s->bLifeMax = 30 + Random(16); //30 - 45
 						break;
 					case HATKIDCIV:
 					case KIDCIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 20 + Random( 16 ) ); //20 - 35
+						s->bLife = s->bLifeMax = 20 + Random(16); //20 - 35
 						break;
 					case CRIPPLECIV:
-						Soldier.bLife = Soldier.bLifeMax = (INT8)( 20 + Random( 26 ) ); //20 - 45
-						Soldier.bAgility = (INT8)( 30 + Random( 16 ) ); // 30 - 45
+						s->bLife = s->bLifeMax = 20 + Random(26); //20 - 45
+						s->bAgility = 30 + Random(16); // 30 - 45
 						break;
 				}
 			}
 		}
-		else if ( Soldier.bTeam == CREATURE_TEAM )
+		else if (s->bTeam == CREATURE_TEAM)
 		{
 			// bloodcats are neutral to start out
-			if ( Soldier.ubBodyType == BLOODCAT )
+			if (s->ubBodyType == BLOODCAT)
 			{
-				Soldier.bNeutral = TRUE;
+				s->bNeutral = TRUE;
 			} // otherwise (creatures) false
 		}
 
 		// OK, If not given a profile num, set a randomized defualt battle sound set
 		// and then adjust it according to body type!
-		if ( Soldier.ubProfile == NO_PROFILE )
+		if (s->ubProfile == NO_PROFILE)
 		{
-			Soldier.ubBattleSoundID = (UINT8)Random( 3 );
+			s->ubBattleSoundID = Random(3);
 		}
 
 		// ATE: TEMP : No enemy women mercs (unless elite)!
-		if( Soldier.ubProfile == NO_PROFILE && Soldier.bTeam == ENEMY_TEAM &&
-				Soldier.ubBodyType == REGFEMALE && Soldier.ubSoldierClass != SOLDIER_CLASS_ELITE )
+		if (s->ubProfile == NO_PROFILE &&
+				s->bTeam == ENEMY_TEAM &&
+				s->ubBodyType == REGFEMALE &&
+				s->ubSoldierClass != SOLDIER_CLASS_ELITE)
 		{
-			Soldier.ubBodyType = (UINT8)( REGMALE + Random( 3 ) );
+			s->ubBodyType = REGMALE + Random(3);
 		}
 
 		// ATE
 		// Set some values for variation in anims...
-		if ( Soldier.ubBodyType == BIGMALE )
+		if (s->ubBodyType == BIGMALE)
 		{
-			Soldier.uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
+			s->uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
 		}
 
 		//For inventory, look for any face class items that may be located in the big pockets and if found, move
 		//that item to a face slot and clear the pocket!
-		if( Soldier.bTeam != OUR_TEAM )
+		if (s->bTeam != OUR_TEAM)
 		{
 			INT32 i;
 			BOOLEAN fSecondFaceItem = FALSE;
 			for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
 			{
-				if( Item[ Soldier.inv[ i ].usItem ].usItemClass & IC_FACE )
+				if (Item[s->inv[i].usItem].usItemClass & IC_FACE)
 				{
 					if( !fSecondFaceItem )
 					{ //Don't check for compatibility...  automatically assume there are no head positions filled.
 						fSecondFaceItem = TRUE;
-						Soldier.inv[HEAD1POS] = Soldier.inv[i];
-						memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
+						s->inv[HEAD1POS] = s->inv[i];
+						memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
 					}
 					else
 					{ //if there is a second item, compare it to the first one we already added.
-						if( CompatibleFaceItem( Soldier.inv[ HEAD1POS ].usItem, Soldier.inv[ i ].usItem ) )
+						if (CompatibleFaceItem(s->inv[HEAD1POS].usItem, s->inv[i].usItem))
 						{
-							Soldier.inv[HEAD2POS] = Soldier.inv[i];
-							memset( &Soldier.inv[ i ], 0, sizeof( OBJECTTYPE ) );
+							s->inv[HEAD2POS] = s->inv[i];
+							memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
 							break;
 						}
 					}
 				}
 			}
 
-			if( guiCurrentScreen != AUTORESOLVE_SCREEN )
+			if (guiCurrentScreen != AUTORESOLVE_SCREEN)
 			{
 				// also, if an army guy has camouflage, roll to determine whether they start camouflaged
-				if ( Soldier.bTeam == ENEMY_TEAM )
+				if (s->bTeam == ENEMY_TEAM)
 				{
-					i = FindObj( &Soldier, CAMOUFLAGEKIT );
-
-					if ( i != NO_SLOT && Random( 5 ) < SoldierDifficultyLevel( &Soldier ))
+					i = FindObj(s, CAMOUFLAGEKIT);
+					if (i != NO_SLOT && Random(5) < SoldierDifficultyLevel(s))
 					{
 						// start camouflaged
-						Soldier.bCamo = 100;
+						s->bCamo = 100;
 					}
 				}
 			}
@@ -436,26 +439,24 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		//NOTE:  BE VERY CAREFUL WHAT YOU DO IN THIS SECTION!
 		//  It is very possible to override editor settings, especially orders and attitude.
 		//  In those cases, you can check for !gfEditMode (not in editor).
-		switch ( Soldier.ubBodyType )
+		switch (s->ubBodyType)
 		{
 			case HATKIDCIV:
 			case KIDCIV:
-
-				Soldier.ubBattleSoundID = (UINT8)Random( 2 );
+				s->ubBattleSoundID = Random(2);
 				break;
 
 			case REGFEMALE:
 			case MINICIV:
 			case DRESSCIV:
-
-				Soldier.ubBattleSoundID = 7 + (UINT8) Random( 2 );
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				s->ubBattleSoundID = 7 + Random(2);
+				s->bNormalSmell    = NORMAL_HUMAN_SMELL_STRENGTH;
 				break;
 
 			case BLOODCAT:
-				AssignCreatureInventory( &Soldier );
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
+				AssignCreatureInventory(s);
+				s->bNormalSmell   = NORMAL_HUMAN_SMELL_STRENGTH;
+				s->uiStatusFlags |= SOLDIER_ANIMAL;
 				break;
 
 			case ADULTFEMALEMONSTER:
@@ -465,30 +466,28 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			case LARVAE_MONSTER:
 			case INFANT_MONSTER:
 			case QUEENMONSTER:
-
-				AssignCreatureInventory( &Soldier );
-				Soldier.ubCaller = NOBODY;
+				AssignCreatureInventory(s);
+				s->ubCaller = NOBODY;
 				if( !gfEditMode )
 				{
-					Soldier.bOrders = FARPATROL;
-					Soldier.bAttitude = AGGRESSIVE;
+					s->bOrders = FARPATROL;
+					s->bAttitude = AGGRESSIVE;
 				}
-				Soldier.uiStatusFlags |= SOLDIER_MONSTER;
-				Soldier.bMonsterSmell = NORMAL_CREATURE_SMELL_STRENGTH;
+				s->uiStatusFlags |= SOLDIER_MONSTER;
+				s->bMonsterSmell  = NORMAL_CREATURE_SMELL_STRENGTH;
 				break;
 
 			case COW:
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
-				Soldier.bNormalSmell = COW_SMELL_STRENGTH;
+				s->uiStatusFlags |= SOLDIER_ANIMAL;
+				s->bNormalSmell   = COW_SMELL_STRENGTH;
 				break;
-			case CROW:
 
-				Soldier.uiStatusFlags |= SOLDIER_ANIMAL;
+			case CROW:
+				s->uiStatusFlags |= SOLDIER_ANIMAL;
 				break;
 
 			case ROBOTNOWEAPON:
-
-				Soldier.uiStatusFlags |= SOLDIER_ROBOT;
+				s->uiStatusFlags |= SOLDIER_ROBOT;
 				break;
 
 			case HUMVEE:
@@ -497,76 +496,61 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			case JEEP:
 			case TANK_NW:
 			case TANK_NE:
-				Soldier.uiStatusFlags |= SOLDIER_VEHICLE;
+				s->uiStatusFlags |= SOLDIER_VEHICLE;
 
 				UINT8 ubVehicleID = 0;
-				switch( Soldier.ubBodyType )
+				switch (s->ubBodyType)
 				{
 					case HUMVEE:
-
 						ubVehicleID = HUMMER;
-            Soldier.bNeutral = TRUE;
+            s->bNeutral = TRUE;
 						break;
 
 					case ELDORADO:
-
 						ubVehicleID = ELDORADO_CAR;
-            Soldier.bNeutral = TRUE;
+            s->bNeutral = TRUE;
 						break;
 
 					case ICECREAMTRUCK:
-
 						ubVehicleID = ICE_CREAM_TRUCK;
-            Soldier.bNeutral = TRUE;
+            s->bNeutral = TRUE;
 						break;
 
 					case JEEP:
-
 						ubVehicleID = JEEP_CAR;
 						break;
 
 					case TANK_NW:
 					case TANK_NE:
-
 						ubVehicleID = TANK_CAR;
 						break;
-
 				}
 
 				if ( pCreateStruct->fUseGivenVehicle )
 				{
-					Soldier.bVehicleID = pCreateStruct->bUseGivenVehicleID;
+					s->bVehicleID = pCreateStruct->bUseGivenVehicleID;
 				}
 				else
 				{
 					// Add vehicle to list....
-					Soldier.bVehicleID = (INT8)AddVehicleToList( Soldier.sSectorX, Soldier.sSectorY, Soldier.bSectorZ, ubVehicleID );
+					s->bVehicleID = (INT8)AddVehicleToList(s->sSectorX, s->sSectorY, s->bSectorZ, ubVehicleID);
 				}
-				SetVehicleValuesIntoSoldierType( &Soldier );
+				SetVehicleValuesIntoSoldierType(s);
 				break;
 
 			default:
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+				s->bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 				break;
-
 		}
 
 		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
-		{ //We are creating a dynamically allocated soldier for autoresolve.
-			SOLDIERTYPE* const s = MemAlloc(sizeof(*s));
-			if (!s) return NULL;
-			*s = Soldier;
-			s->ubID = 255;
+		{
 			const UINT8 ubSectorID = GetAutoResolveSectorID();
 			s->sSectorX = SECTORX(ubSectorID);
 			s->sSectorY = SECTORY(ubSectorID);
 			s->bSectorZ = 0;
 			return s;
 		}
-
-		s = GetMan(Soldier.ubID);
-		// Copy into merc struct
-		*s = Soldier;
 
 		Assert(s->usAnimState == STANDING);
 	}
