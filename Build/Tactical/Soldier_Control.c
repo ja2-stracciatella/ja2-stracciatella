@@ -714,11 +714,10 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 			}
 		}
 	}
-
 }
 
 
-BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usSoldierID, UINT16 usState )
+BOOLEAN CreateSoldierCommon(const UINT8 ubBodyType, SOLDIERTYPE* const pSoldier, const UINT16 usState)
 {
 	BOOLEAN fSuccess = FALSE;
 	INT32 iCounter = 0;
@@ -757,8 +756,7 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 	// ANYTHING AFTER HERE CAN FAIL
 	do
 	{
-
-		if (usSoldierID <= gTacticalStatus.Team[ OUR_TEAM ].bLastID)
+		if (pSoldier->ubID <= gTacticalStatus.Team[OUR_TEAM].bLastID)
 		{
 			pSoldier->pKeyRing = MemAlloc( NUM_KEYS * sizeof( KEY_ON_RING ) );
 			memset(  pSoldier->pKeyRing , 0, NUM_KEYS * sizeof( KEY_ON_RING ) );
@@ -773,7 +771,7 @@ BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usS
 			pSoldier->pKeyRing = NULL;
 		}
 		// Create frame cache
-		if( InitAnimationCache( usSoldierID, &( pSoldier->AnimCache) ) == FALSE )
+		if (!InitAnimationCache(pSoldier->ubID, &pSoldier->AnimCache))
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed animation cache creation");
 			break;

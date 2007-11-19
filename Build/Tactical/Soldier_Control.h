@@ -990,7 +990,7 @@ extern UINT8	bHealthStrRanges[];
 BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );
 BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier );
 
-BOOLEAN CreateSoldierCommon( UINT8 ubBodyType, SOLDIERTYPE *pSoldier, UINT16 usSoldierID, UINT16 usState );
+BOOLEAN CreateSoldierCommon(UINT8 ubBodyType, SOLDIERTYPE* pSoldier, UINT16 usState);
 
 
 // Soldier Management functions, called by Event Pump.c
