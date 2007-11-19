@@ -717,7 +717,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CreateSoldierCommon(const UINT8 ubBodyType, SOLDIERTYPE* const pSoldier, const UINT16 usState)
+BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier, const UINT16 usState)
 {
 	BOOLEAN fSuccess = FALSE;
 	INT32 iCounter = 0;

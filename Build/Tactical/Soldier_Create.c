@@ -566,7 +566,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			// Copy into merc struct
 			*s = Soldier;
 			// Alrighty then, we are set to create the merc, stuff after here can fail!
-			CHECKF(CreateSoldierCommon(Soldier.ubBodyType, s, STANDING));
+			CHECKF(CreateSoldierCommon(s, STANDING));
 		}
 	}
 	else
@@ -592,7 +592,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		*s = Soldier;
 
 		// Alrighty then, we are set to create the merc, stuff after here can fail!
-		CHECKF(CreateSoldierCommon(Soldier.ubBodyType, s, s->usAnimState));
+		CHECKF(CreateSoldierCommon(s, s->usAnimState));
 
 		// The soldiers animation frame gets reset, set
 //		s->usAniCode   = pCreateStruct->pExistingSoldier->usAniCode;
