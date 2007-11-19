@@ -129,29 +129,27 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	//Simply returning won't help.
 	Assert(!pCreateStruct->fStatic);
 
-	// Some values initialized here but could be changed before going to the common one
-	SOLDIERTYPE Soldier;
-	InitSoldierStruct( &Soldier );
-
-	Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId;
-
-	guiCurrentUniqueSoldierId++;
-
-	// OK, CHECK IF WE HAVE A VALID PROFILE ID!
-	if ( pCreateStruct->ubProfile != NO_PROFILE )
-	{
-		// We have a merc created by profile, do this!
-		TacticalCopySoldierFromProfile( &Soldier, pCreateStruct );
-	}
-	else
-	{
-		TacticalCopySoldierFromCreateStruct( &Soldier, pCreateStruct );
-	}
-
 	// If we are NOT creating an existing soldier ( ie, this is not from a save game ), create soldier normally
 	SOLDIERTYPE* s;
 	if (pCreateStruct->pExistingSoldier == NULL)
 	{
+		// Some values initialized here but could be changed before going to the common one
+		SOLDIERTYPE Soldier;
+		InitSoldierStruct(&Soldier);
+
+		Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
+
+		// OK, CHECK IF WE HAVE A VALID PROFILE ID!
+		if (pCreateStruct->ubProfile != NO_PROFILE)
+		{
+			// We have a merc created by profile, do this!
+			TacticalCopySoldierFromProfile(&Soldier, pCreateStruct);
+		}
+		else
+		{
+			TacticalCopySoldierFromCreateStruct(&Soldier, pCreateStruct);
+		}
+
 		// We want to determine what team to place these guys in...
 
 		// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
@@ -591,7 +589,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
     {
       s->bNeutral = TRUE;
     }
-
 	}
 
 	// Alrighty then, we are set to create the merc, stuff after here can fail!
