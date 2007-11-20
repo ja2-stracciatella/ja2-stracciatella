@@ -19,7 +19,7 @@
 typedef struct
 {
 	INT32		iBullet;
-	UINT8		ubTargetID;
+	SOLDIERTYPE* target;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;
 	UINT32	sGridNo;

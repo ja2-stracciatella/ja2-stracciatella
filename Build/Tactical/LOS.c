@@ -2627,7 +2627,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 			else if (pStructure->fFlags & STRUCTURE_PERSON)
 			{
 				const SOLDIERTYPE* const person = GetMan(pStructure->usStructureID);
-				if (person != pBullet->pFirer && pStructure->usStructureID != pBullet->ubTargetID)
+				if (person != pBullet->pFirer && person != pBullet->target)
 				{
 					// ignore intended target since we will get closure upon reaching the center
 					// of the destination tile
@@ -3264,12 +3264,12 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	SOLDIERTYPE* const pFirer = pBullet->pFirer;
 	if (fFake)
 	{
-		pBullet->ubTargetID = pFirer->ubCTGTTargetID;
+		pBullet->target = ID2SOLDIER(pFirer->ubCTGTTargetID);
 		return( CalcChanceToGetThrough( pBullet ) );
 	}
 	else
 	{
-		pBullet->ubTargetID = SOLDIER2ID(pFirer->target);
+		pBullet->target = pFirer->target;
 		//if ( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] )
 		//{
 		//	pBullet->uiLastUpdate = 0;
