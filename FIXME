@@ -282,6 +282,9 @@ wcscat(): check for overkill
 
 STRUCTS: unused attributes
 
+BULLET
+ubTilesPerUpdate: always 1
+
 FACETYPE
 uiMouthDelay: always 120
 

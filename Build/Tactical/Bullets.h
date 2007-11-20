@@ -22,9 +22,8 @@ typedef struct
 	SOLDIERTYPE* target;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;
-	UINT32	sGridNo;
-	INT16		sUnused;
 	UINT16	usLastStructureHit;
+	UINT32	sGridNo;
 	FIXEDPT	qCurrX;
 	FIXEDPT	qCurrY;
 	FIXEDPT	qCurrZ;
