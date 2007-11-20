@@ -2630,7 +2630,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	// the actual event call
 	pSoldier->sTargetGridNo = sTargetGridNo;
 	//pSoldier->sLastTarget = sTargetGridNo;
-	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
+	pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 
 	if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
   {
@@ -8067,7 +8067,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	// SET TARGET GRIDNO
 	pSoldier->sTargetGridNo = sGridNo;
 	pSoldier->bTargetLevel = pSoldier->bLevel;
-	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
+	pSoldier->target = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
 }
 
 
@@ -8186,7 +8186,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	pSoldier->sTargetGridNo = sGridNo;
 	pSoldier->bTargetLevel = pSoldier->bLevel;
 	pSoldier->sLastTarget		= sGridNo;
-	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
+	pSoldier->target = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
 }
 
 
@@ -8213,7 +8213,7 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	pSoldier->fTurningFromPronePosition	= 0;
 	// NB target level must be set by functions outside of here... but I think it
 	// is already set in HandleItem or in the AI code - CJC
-	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
+	pSoldier->target = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
 }
 
 

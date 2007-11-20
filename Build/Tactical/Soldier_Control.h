@@ -317,7 +317,8 @@ enum
 };
 
 
-typedef struct
+typedef struct SOLDIERTYPE SOLDIERTYPE;
+struct SOLDIERTYPE
 {
 	// ID
 	UINT8												ubID;
@@ -788,8 +789,8 @@ typedef struct
 	BOOLEAN											fBlockedByAnotherMerc;
 	INT8												bBlockedByAnotherMercDirection;
 	UINT16											usAttackingWeapon;
+	SOLDIERTYPE*                target;
 	INT8												bWeaponMode;
-	UINT8												ubTargetID;
 	INT8												bAIScheduleProgress;
 	INT16												sOffWorldGridNo;
 	struct TAG_anitile					*pAniTile;
@@ -920,8 +921,7 @@ typedef struct
   UINT8						ubNextToPreviousAttackerID;
 
 	UINT8												bFiller[ 39 ];
-
-} SOLDIERTYPE;
+};
 
 #define HEALTH_INCREASE			0x0001
 #define STRENGTH_INCREASE		0x0002

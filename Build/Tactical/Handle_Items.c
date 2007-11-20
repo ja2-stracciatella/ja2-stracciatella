@@ -1154,7 +1154,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		 // See if we can get there to stab
 		 //pSoldier->sTargetGridNo = sTargetGridNo;
 		 //pSoldier->sLastTarget = sTargetGridNo;
-		 //pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
+		 //pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 
 		 gTacticalStatus.ubAttackBusyCount++;
 		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount) );
@@ -1239,7 +1239,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			{
 				pSoldier->sTargetGridNo = sTargetGridNo;
 				//	pSoldier->sLastTarget = sTargetGridNo;
-				pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
+				pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 
 				// Increment attack counter...
 				gTacticalStatus.ubAttackBusyCount++;
@@ -1346,7 +1346,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	UINT8 ubDirection;
 
 	// Set attacker to NOBODY, since it's not a combat attack
-	pSoldier->ubTargetID = NOBODY;
+	pSoldier->target = NULL;
 
 	// Alrighty, switch based on stance!
 	switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )

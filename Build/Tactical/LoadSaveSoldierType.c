@@ -2,6 +2,7 @@
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 #include "LoadSaveSoldierType.h"
+#include "Overhead.h"
 
 
 void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
@@ -423,7 +424,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_I8(S, Soldier->bBlockedByAnotherMercDirection)
 	EXTR_U16(S, Soldier->usAttackingWeapon)
 	EXTR_I8(S, Soldier->bWeaponMode)
-	EXTR_U8(S, Soldier->ubTargetID)
+	EXTR_SOLDIER(S, Soldier->target)
 	EXTR_I8(S, Soldier->bAIScheduleProgress)
 	EXTR_SKIP(S, 1)
 	EXTR_I16(S, Soldier->sOffWorldGridNo)
@@ -973,7 +974,7 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_I8(D, Soldier->bBlockedByAnotherMercDirection)
 	INJ_U16(D, Soldier->usAttackingWeapon)
 	INJ_I8(D, Soldier->bWeaponMode)
-	INJ_U8(D, Soldier->ubTargetID)
+	INJ_SOLDIER(D, Soldier->target)
 	INJ_I8(D, Soldier->bAIScheduleProgress)
 	INJ_SKIP(D, 1)
 	INJ_I16(D, Soldier->sOffWorldGridNo)

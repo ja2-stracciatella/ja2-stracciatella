@@ -746,8 +746,7 @@ static void DoDive(void)
 
 					// For now use first position....
 
-
-					gpRaidSoldier->ubTargetID = NOBODY;
+					gpRaidSoldier->target = NULL;
 					FireBulletGivenTarget( gpRaidSoldier, sStrafeX, sStrafeY, 0, gpRaidSoldier->usAttackingWeapon, 10, FALSE, FALSE );
 				}
 

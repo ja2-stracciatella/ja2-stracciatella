@@ -1231,7 +1231,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( pSoldier->bTeam != gbPlayerNum )
 						{
 							// only locate if the enemy is visible or he's aiming at a player
-							if ( pSoldier->bVisible != -1 || (pSoldier->ubTargetID != NOBODY && MercPtrs[ pSoldier->ubTargetID ]->bTeam == gbPlayerNum) )
+							if (pSoldier->bVisible != -1 || (pSoldier->target != NULL && pSoldier->target->bTeam == gbPlayerNum))
 							{
 								LocateGridNo( pSoldier->sTargetGridNo );
 							}

@@ -1977,8 +1977,8 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
   INT8        bMinMissRadius, bMaxMissRadius, bMaxRadius;
   FLOAT       fScale;
 
-	// Set target ID if anyone
-	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, ubLevel));
+	// Set target if anyone
+	pSoldier->target = WhoIsThere2(sGridNo, ubLevel);
 
 	if ( ubActionCode == THROW_ARM_ITEM )
 	{

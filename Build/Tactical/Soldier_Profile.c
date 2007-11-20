@@ -883,9 +883,9 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 			if ( pGroupMember != NULL )
 			{
-				if ( pGroupMember->ubTargetID == pSoldier->ubID )
+				if (pGroupMember->target == pSoldier)
 				{
-					pGroupMember->ubTargetID = pNewSoldier->ubID;
+					pGroupMember->target = pNewSoldier;
 				}
 			}
 		}

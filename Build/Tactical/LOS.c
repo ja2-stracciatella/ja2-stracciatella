@@ -2063,7 +2063,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		// intentionally shot
 		pTarget->fIntendedTarget = TRUE;
 
-		if ( (pBullet->usFlags & BULLET_FLAG_BUCKSHOT) && ( pTarget->ubID == pFirer->ubTargetID ) )
+		if (pBullet->usFlags & BULLET_FLAG_BUCKSHOT && pTarget == pFirer->target)
 		{
 			pTarget->bNumPelletsHitBy++;
 		}
@@ -2124,17 +2124,17 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 
 	// check to see if someone was accidentally hit when no target was specified by the player
-	if ( pFirer->bTeam == gbPlayerNum && pFirer->ubTargetID == NOBODY && pTarget->bNeutral  )
+	if (pFirer->bTeam == gbPlayerNum && pFirer->target == NULL && pTarget->bNeutral)
 	{
 		if ( pTarget->ubCivilianGroup == KINGPIN_CIV_GROUP || pTarget->ubCivilianGroup == HICKS_CIV_GROUP )
 		{
 			// hicks and kingpin are touchy!
-			pFirer->ubTargetID = pTarget->ubID;
+			pFirer->target = pTarget;
 		}
 		else if ( Random( 100 ) < 60 )
 		{
 			// get touchy
-			pFirer->ubTargetID = pTarget->ubID;
+			pFirer->target = pTarget;
 		}
 
 	}
@@ -3269,7 +3269,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	}
 	else
 	{
-		pBullet->ubTargetID = pFirer->ubTargetID;
+		pBullet->ubTargetID = SOLDIER2ID(pFirer->target);
 		//if ( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] )
 		//{
 		//	pBullet->uiLastUpdate = 0;
@@ -3423,12 +3423,8 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 				{
 					ubSpreadIndex = 1;
 				}
-				if (pFirer->ubTargetID != NOBODY)
-				{
-					MercPtrs[ pFirer->ubTargetID ]->bNumPelletsHitBy = 0;
-				}
+				if (pFirer->target != NULL) pFirer->target->bNumPelletsHitBy = 0;
 				usBulletFlags |= BULLET_FLAG_BUCKSHOT;
-
 			}
 			ubImpact = AMMO_DAMAGE_ADJUSTMENT_BUCKSHOT( ubImpact );
 		}
@@ -4378,7 +4374,9 @@ void MoveBullet( INT32 iBullet )
 		}
 
 		// check to see if bullet is close to target
-		if ( pBullet->pFirer->ubTargetID != NOBODY && !(pBullet->pFirer->uiStatusFlags & SOLDIER_ATTACK_NOTICED) && PythSpacesAway( (INT16) pBullet->sGridNo, (INT16) pBullet->sTargetGridNo ) <= 3 )
+		if (pBullet->pFirer->target != NULL &&
+				!(pBullet->pFirer->uiStatusFlags & SOLDIER_ATTACK_NOTICED) &&
+				PythSpacesAway(pBullet->sGridNo, pBullet->sTargetGridNo) <= 3)
 		{
 			pBullet->pFirer->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
 		}
