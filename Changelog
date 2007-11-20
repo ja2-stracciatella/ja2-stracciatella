@@ -1,3 +1,4 @@
+(r2022) Fix a vanilla out of bounds array access in CalcChanceToHitGun().
 (r2021) Fix a vanilla bug: The Russian versions did not play NPC speeches, because they incorrectly used different filenames than all other languages, but the filenames in the data files are the same.
 (r1944) Fix a vanilla glitch: Do not show a balance in the personnel screen when looking at past mercs.
 (r1798) Fix vanilla display bug: No path was plotted and no APs for walking were calculated for refueling when the cursor was on a vehicle.

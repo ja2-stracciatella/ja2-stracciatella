@@ -2564,7 +2564,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 	// best to use team knowledge as well, in case of spotting for someone else
-	if (ubTargetID != NOBODY && pSoldier->bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY)
+	if (ubTargetID != NOBODY && (pSoldier->bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY))
 	{
 		iSightRange = SoldierToBodyPartLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bAimShotLocation, (UINT8) (MaxDistanceVisible() * 2), TRUE );
 	}
