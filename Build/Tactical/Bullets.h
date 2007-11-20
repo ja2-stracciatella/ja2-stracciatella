@@ -19,7 +19,6 @@
 typedef struct
 {
 	INT32		iBullet;
-	UINT8		ubFirerID;
 	UINT8		ubTargetID;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;
@@ -59,9 +58,7 @@ typedef struct
 	ANITILE			*pAniTile;
 	ANITILE			*pShadowAniTile;
 	UINT8		ubItemStatus;
-
 } BULLET;
-CASSERT(sizeof(BULLET) == 128)
 
 extern UINT32 guiNumBullets;
 

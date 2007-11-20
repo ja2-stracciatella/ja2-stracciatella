@@ -2,6 +2,7 @@
 #include "FileMan.h"
 #include "LoadSaveBullet.h"
 #include "LoadSaveData.h"
+#include "Overhead.h"
 
 
 BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
@@ -12,7 +13,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 	if (FileRead(file, src, sizeof(src))) return FALSE;
 
 	EXTR_I32(s, b->iBullet)
-	EXTR_U8(s, b->ubFirerID)
+	EXTR_SOLDIER(s, b->pFirer)
 	EXTR_U8(s, b->ubTargetID)
 	EXTR_I8(s, b->bStartCubesAboveLevelZ)
 	EXTR_I8(s, b->bEndCubesAboveLevelZ)
@@ -44,7 +45,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 	EXTR_U8(s, b->ubTilesPerUpdate)
 	EXTR_SKIP(s, 1)
 	EXTR_U16(s, b->usClockTicksPerUpdate)
-	EXTR_PTR(s, b->pFirer)
+	EXTR_SKIP(s, 4)
 	EXTR_U32(s, b->sTargetGridNo)
 	EXTR_I16(s, b->sHitBy)
 	EXTR_SKIP(s, 2)
@@ -70,7 +71,7 @@ BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
 	BYTE* d = dst;
 
 	INJ_I32(d, b->iBullet)
-	INJ_U8(d, b->ubFirerID)
+	INJ_SOLDIER(d, b->pFirer)
 	INJ_U8(d, b->ubTargetID)
 	INJ_I8(d, b->bStartCubesAboveLevelZ)
 	INJ_I8(d, b->bEndCubesAboveLevelZ)
@@ -102,7 +103,7 @@ BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
 	INJ_U8(d, b->ubTilesPerUpdate)
 	INJ_SKIP(d, 1)
 	INJ_U16(d, b->usClockTicksPerUpdate)
-	INJ_PTR(d, b->pFirer)
+	INJ_SKIP(d, 4)
 	INJ_U32(d, b->sTargetGridNo)
 	INJ_I16(d, b->sHitBy)
 	INJ_SKIP(d, 2)
