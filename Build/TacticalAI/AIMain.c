@@ -992,7 +992,7 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 				{
 					// now find the target and have them say "close call" quote if
 					// applicable
-					pTarget = SimpleFindSoldier( pSoldier->sTargetGridNo, pSoldier->bTargetLevel );
+					pTarget = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
 					if (pTarget && pTarget->bTeam == OUR_TEAM && pTarget->fCloseCall && pTarget->bShock == 0)
 					{
 						// say close call quote!
@@ -1005,7 +1005,7 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 			}
 			else
 			{
-				pTarget = SimpleFindSoldier( pSoldier->sTargetGridNo, pSoldier->bTargetLevel );
+				pTarget = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
 				if (pTarget && pTarget->bTeam == OUR_TEAM && pTarget->fCloseCall && pTarget->bShock == 0)
 				{
 					// say close call quote!

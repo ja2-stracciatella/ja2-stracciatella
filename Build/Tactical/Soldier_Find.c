@@ -449,12 +449,6 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 }
 
 
-SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel )
-{
-	return WhoIsThere2(sGridNo, bLevel);
-}
-
-
 BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 {
 	// CHECK IF ACTIVE!

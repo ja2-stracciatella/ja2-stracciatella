@@ -1,6 +1,5 @@
 #include "Font_Control.h"
 #include "Overhead_Types.h"
-#include "Soldier_Find.h"
 #include "Sound_Control.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
@@ -749,12 +748,11 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 	FLOAT								dTargetX;
 	FLOAT								dTargetY;
 	FLOAT								dTargetZ;
-	SOLDIERTYPE					*pTargetSoldier;
 	INT8								bStructHeight;
 	INT16								sXMapPos, sYMapPos;
 	UINT32							uiRoll;
 
-	pTargetSoldier = SimpleFindSoldier( sTargetGridNo, pSoldier->bTargetLevel );
+	const SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 	if ( pTargetSoldier )
 	{
 		// SAVE OPP ID
@@ -1230,7 +1228,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
-	SOLDIERTYPE *				pTargetSoldier;
 	INT32								iHitChance, iDiceRoll;
 	INT16								sXMapPos, sYMapPos;
 	INT16								sAPCost;
@@ -1250,7 +1247,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
 	// See if a guy is here!
-	pTargetSoldier = SimpleFindSoldier( sTargetGridNo, pSoldier->bTargetLevel );
+	SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 	if ( pTargetSoldier )
 	{
 		// set target as noticed attack
@@ -1402,7 +1399,6 @@ static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, 
 
 BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing )
 {
-	SOLDIERTYPE				*	pTargetSoldier;
 	INT32								iHitChance, iDiceRoll;
 	INT16								sXMapPos, sYMapPos;
 	INT16								sAPCost;
@@ -1422,7 +1418,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	}
 
 	// See if a guy is here!
-	pTargetSoldier = SimpleFindSoldier( sTargetGridNo, pSoldier->bTargetLevel );
+	SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 	if ( pTargetSoldier )
 	{
 		// set target as noticed attack
@@ -2380,7 +2376,6 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
 {
-	SOLDIERTYPE * pTarget;
   INT32 iChance, iRange, iSightRange, iMaxRange, iScopeBonus, iBonus; //, minRange;
   INT32 iGunCondition, iMarksmanship;
 	INT32 iPenalty;
@@ -2779,7 +2774,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	}
 
 
-	pTarget = SimpleFindSoldier( sGridNo, pSoldier->bTargetLevel );
+	const SOLDIERTYPE* const pTarget = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
 	if (pTarget != NULL)
 	{
 		// targeting a merc

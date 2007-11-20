@@ -4,7 +4,6 @@
 #include "LOS.h"
 #include "Physics.h"
 #include "Items.h"
-#include "Soldier_Find.h"
 #include "Weapons.h"
 #include "Spread_Burst.h"
 #include "Overhead.h"
@@ -17,6 +16,7 @@
 #include "StrategicMap.h"
 #include "Lighting.h"
 #include "Environment.h"
+#include "WorldMan.h"
 
 
 //
@@ -1885,12 +1885,12 @@ static INT8 CountAdjacentSpreadTargets(SOLDIERTYPE* pSoldier, INT16 sFirstTarget
 
 	INT8	bDirLoop, bDir, bCheckDir, bTargetIndex, bTargets;
 	INT16	sTarget;
-	SOLDIERTYPE * pTarget, * pTargets[5] = {NULL};
+	SOLDIERTYPE* pTargets[5] = {NULL};
 
 	bTargetIndex = -1;
 	bCheckDir = -1;
 
-	pTargets[2] = SimpleFindSoldier( sFirstTarget, bTargetLevel );
+	pTargets[2] = WhoIsThere2(sFirstTarget, bTargetLevel);
 	if (pTargets[2] == NULL)
 	{
 		return( 0 );
@@ -1994,7 +1994,7 @@ static INT8 CountAdjacentSpreadTargets(SOLDIERTYPE* pSoldier, INT16 sFirstTarget
 			continue;
 		}
 		sTarget = sFirstTarget + DirIncrementer[bCheckDir];
-		pTarget = SimpleFindSoldier( sTarget, bTargetLevel );
+		SOLDIERTYPE* const pTarget = WhoIsThere2(sTarget, bTargetLevel);
 		if (pTarget)
 		{
 			// check to see if guy is visible
@@ -2012,13 +2012,13 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 {
 	INT8	bDirLoop, bDir, bCheckDir, bTargetIndex = 0, bLoop, bTargets;
 	INT16	sTarget;
-	SOLDIERTYPE * pTarget, * pTargets[5] = {NULL};
+	SOLDIERTYPE* pTargets[5] = {NULL};
 	INT8 bAdjacents, bOtherAdjacents;
 
 
 	bCheckDir = -1;
 
-	pTargets[2] = SimpleFindSoldier( sFirstTarget, bTargetLevel );
+	pTargets[2] = WhoIsThere2(sFirstTarget, bTargetLevel);
 	if (pTargets[2] == NULL)
 	{
 		return( sFirstTarget );
@@ -2123,7 +2123,7 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 			continue;
 		}
 		sTarget = sFirstTarget + DirIncrementer[bCheckDir];
-		pTarget = SimpleFindSoldier( sTarget, bTargetLevel );
+		SOLDIERTYPE* const pTarget = WhoIsThere2(sTarget, bTargetLevel);
 		if (pTarget && pSoldier->bOppList[ pTarget->ubID ] == SEEN_CURRENTLY)
 		{
 			bOtherAdjacents = CountAdjacentSpreadTargets( pSoldier, sTarget, bTargetLevel );
@@ -2168,7 +2168,7 @@ INT16 CalcSpreadBurst( SOLDIERTYPE * pSoldier, INT16 sFirstTarget, INT8 bTargetL
 		{
 			for( bLoop = 0; bLoop < bTargets / 2; bLoop++)
 			{
-				pTarget = pTargets[bLoop];
+				SOLDIERTYPE* const pTarget = pTargets[bLoop];
 				pTargets[bLoop] = pTargets[bTargets - 1 - bLoop];
 				pTargets[bTargets - 1 - bLoop] = pTarget;
 			}

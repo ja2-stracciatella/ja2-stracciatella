@@ -29,7 +29,6 @@
 
 SOLDIERTYPE* FindSoldierFromMouse(void);
 SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags);
-SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel );
 
 BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s);
 UINT32 GetSoldierFindFlags(const SOLDIERTYPE* s);

@@ -922,9 +922,8 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 {
 	INT16 sDistVisible;
 	INT8	bLightLevel;
-	SOLDIERTYPE * pSubject;
 
-	pSubject = SimpleFindSoldier( sSubjectGridNo, bLevel );
+	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
 
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{

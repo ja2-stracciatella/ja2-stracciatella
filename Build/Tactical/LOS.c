@@ -1,6 +1,5 @@
 #include <math.h>
 #include "Font_Control.h"
-#include "Soldier_Find.h"
 #include "WCheck.h"
 #include "Isometric_Utils.h"
 #include "Debug.h"
@@ -3019,7 +3018,6 @@ UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sG
 	INT16			sXPos;
 	INT16			sYPos;
 	INT8			bStructHeight;
-	SOLDIERTYPE * pEndSoldier;
 
 	if (pStartSoldier->sGridNo == sGridNo)
 	{
@@ -3027,7 +3025,7 @@ UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sG
 	}
 	CHECKF( pStartSoldier );
 
-	pEndSoldier = SimpleFindSoldier( sGridNo, bLevel );
+	const SOLDIERTYPE* const pEndSoldier = WhoIsThere2(sGridNo, bLevel);
 	if (pEndSoldier != NULL)
 	{
 		return( SoldierToSoldierChanceToGetThrough( pStartSoldier, pEndSoldier ) );
@@ -3104,7 +3102,6 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 	INT16			sXPos;
 	INT16			sYPos;
 	INT8			bStructHeight;
-	SOLDIERTYPE * pEndSoldier;
 
 	UINT16		usTrueState;
 	UINT8			ubChance;
@@ -3115,7 +3112,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 	}
 	CHECKF( pStartSoldier );
 
-	pEndSoldier = SimpleFindSoldier( sGridNo, bLevel );
+	const SOLDIERTYPE* const pEndSoldier = WhoIsThere2(sGridNo, bLevel);
 	if (pEndSoldier != NULL)
 	{
 		return( AISoldierToSoldierChanceToGetThrough( pStartSoldier, pEndSoldier ) );
