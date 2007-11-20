@@ -2948,7 +2948,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ);;
 
 
-static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier)
+static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier)
 {
 	FLOAT			dEndZPos;
 	BOOLEAN		fOk;
@@ -3066,7 +3066,8 @@ UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sG
 	}
 }
 
-UINT8 AISoldierToSoldierChanceToGetThrough( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier )
+
+UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier)
 {
 	// Like a standard CTGT algorithm BUT fakes the start soldier at standing height
 	FLOAT			dEndZPos;

@@ -879,7 +879,7 @@ static INT16 TeamNoLongerSeesMan(UINT8 ubTeam, SOLDIERTYPE* pOpponent, UINT8 ubE
 }
 
 
-static INT16 DistanceSmellable(SOLDIERTYPE* pSubject)
+static INT16 DistanceSmellable(const SOLDIERTYPE* const pSubject)
 {
 	INT16 sDistVisible = STRAIGHT; // as a base
 
