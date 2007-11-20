@@ -5888,7 +5888,7 @@ static INT8 CalcSuppressionTolerance(SOLDIERTYPE* pSoldier)
 #define MAX_APS_SUPPRESSED 8
 
 
-static void HandleSuppressionFire(UINT8 ubTargetedMerc, UINT8 ubCausedAttacker)
+static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, const UINT8 ubCausedAttacker)
 {
 	INT8									bTolerance;
 	INT16									sClosestOpponent, sClosestOppLoc;
@@ -6018,7 +6018,7 @@ static void HandleSuppressionFire(UINT8 ubTargetedMerc, UINT8 ubCausedAttacker)
 			pSoldier->bActionPoints -= ubPointsLost;
 			pSoldier->ubAPsLostToSuppression = ubTotalPointsLost;
 
-			if ( (pSoldier->uiStatusFlags & SOLDIER_PC) && (pSoldier->ubSuppressionPoints > 8) && (pSoldier->ubID == ubTargetedMerc) )
+			if (pSoldier->uiStatusFlags & SOLDIER_PC && pSoldier->ubSuppressionPoints > 8 && pSoldier == targeted_merc)
 			{
 				if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_BEING_PUMMELED ) )
 				{
@@ -6301,7 +6301,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		// Check to see if anyone was suppressed
-		const UINT8 target = (pSoldier == NULL ? NOBODY : pSoldier->ubTargetID);
+		const SOLDIERTYPE* const target = (pSoldier == NULL ? NULL : ID2SOLDIER(pSoldier->ubTargetID));
 		HandleSuppressionFire(target, ubID);
 
 		//HandleAfterShootingGuy( pSoldier, pTarget );
