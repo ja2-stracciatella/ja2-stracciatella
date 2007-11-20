@@ -1688,11 +1688,7 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 		if ( fWavFile )
 		{
 			// build name of wav file (characternum + quotenum)
-			#ifdef RUSSIAN
-				sprintf( zFileName,"NPC_SPEECH/g_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
-			#else
-				sprintf( zFileName,"NPC_SPEECH/d_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
-			#endif
+			sprintf(zFileName, "NPC_SPEECH/d_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
 		}
 		else
 		{
