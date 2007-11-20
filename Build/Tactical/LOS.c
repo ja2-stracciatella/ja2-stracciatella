@@ -1671,8 +1671,6 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sXPos, sYPos;
-	UINT8						ubTargetID;
-	SOLDIERTYPE *		pTarget;
 	BOOLEAN					fOk;
 
 	CHECKF( pStartSoldier );
@@ -1687,12 +1685,11 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 	}
 	else
 	{
-		ubTargetID = WhoIsThere2( sGridNo, bLevel );
-		if (ubTargetID != NOBODY)
+		const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
+		if (tgt != NULL)
 		{
-			pTarget = MercPtrs[ubTargetID];
 			// there's a merc there; do a soldier-to-soldier test
-			return( SoldierToSoldierLineOfSightTest( pStartSoldier, pTarget, ubTileSightLimit, bAware) );
+			return SoldierToSoldierLineOfSightTest(pStartSoldier, tgt, ubTileSightLimit, bAware);
 		}
 		// else... assume standing height
 		dEndZPos = STANDING_LOS_POS + bLevel * HEIGHT_UNITS;
@@ -1709,20 +1706,14 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 
 INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
 {
-	SOLDIERTYPE * pEndSoldier;
-	UINT8 ubTargetID;
 	FLOAT			dStartZPos, dEndZPos;
 	INT16			sXPos, sYPos;
 	BOOLEAN		fOk;
 	UINT8			ubPosType;
 
+	const SOLDIERTYPE* const pEndSoldier = WhoIsThere2(sGridNo, bLevel);
 	// CJC August 13, 2002: for this routine to work there MUST be a target at the location specified
-	ubTargetID = WhoIsThere2( sGridNo, bLevel );
-	if (ubTargetID == NOBODY)
-	{
-		return( 0 );
-	}
-	pEndSoldier = MercPtrs[ubTargetID];
+	if (pEndSoldier == NULL) return 0;
 
 	CHECKF( pStartSoldier );
 
@@ -1808,12 +1799,11 @@ INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, I
 {
 	FLOAT						dStartZPos, dEndZPos;
 	INT16						sStartXPos, sStartYPos, sEndXPos, sEndYPos;
-	UINT8						ubStartID;
 
-	ubStartID = WhoIsThere2( sStartGridNo, bStartLevel );
-	if ( ubStartID != NOBODY )
+	const SOLDIERTYPE* const start_soldier = WhoIsThere2(sStartGridNo, bStartLevel);
+	if (start_soldier != NULL)
 	{
-		return( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubStartID ], sEndGridNo, bEndLevel, 0, ubTileSightLimit, bAware ) );
+		return SoldierTo3DLocationLineOfSightTest(start_soldier, sEndGridNo, bEndLevel, 0, ubTileSightLimit, bAware);
 	}
 
 	// else... assume standing heights
@@ -3620,8 +3610,6 @@ void MoveBullet( INT32 iBullet )
 
 	FIXEDPT					qLastZ;
 
-	SOLDIERTYPE *		pTarget;
-	UINT8						ubTargetID;
 	BOOLEAN					fIntended;
 	BOOLEAN					fStopped;
 	INT8						bOldLOSIndexX;
@@ -3951,10 +3939,9 @@ void MoveBullet( INT32 iBullet )
 
 					if ( gubWorldMovementCosts[ iAdjGridNo ][ sDesiredLevel ][ bDir ] < TRAVELCOST_BLOCKED)
 					{
-						ubTargetID = WhoIsThere2( (INT16) iAdjGridNo, (INT8) sDesiredLevel );
-						if (ubTargetID != NOBODY)
+						SOLDIERTYPE* const pTarget = WhoIsThere2(iAdjGridNo, sDesiredLevel);
+						if (pTarget != NULL)
 						{
-							pTarget = MercPtrs[ ubTargetID ];
 							if ( IS_MERC_BODY_TYPE( pTarget ) && pBullet->pFirer->bSide != pTarget->bSide )
 							{
 								if ( !(pBullet->usFlags & BULLET_FLAG_BUCKSHOT) || Random( 2 ) )

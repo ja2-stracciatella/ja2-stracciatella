@@ -870,7 +870,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	char zBurstString[50];
 	UINT8								ubDirection;
 	INT16								sNewGridNo;
-	UINT8								ubMerc;
 	BOOLEAN							fGonnaHit = FALSE;
 	UINT16							usExpGain = 0;
 	UINT32							uiDepreciateTest;
@@ -1179,17 +1178,16 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		sNewGridNo  = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(1 * DirectionInc( ubDirection ) ) );
 
 		// Check if a person exists here and is not prone....
-		ubMerc = WhoIsThere2( sNewGridNo, pSoldier->bLevel );
-
-		if ( ubMerc != NOBODY )
+		SOLDIERTYPE* const tgt = WhoIsThere2(sNewGridNo, pSoldier->bLevel);
+		if (tgt != NULL)
 		{
-			if ( gAnimControl[ MercPtrs[ ubMerc ]->usAnimState ].ubHeight != ANIM_PRONE )
+			if (gAnimControl[tgt->usAnimState].ubHeight != ANIM_PRONE)
 			{
 				// Increment attack counter...
 				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Exaust from LAW", gTacticalStatus.ubAttackBusyCount ) );
 
-				EVENT_SoldierGotHit(MercPtrs[ubMerc], MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, sNewGridNo);
+				EVENT_SoldierGotHit(tgt, MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, sNewGridNo);
 			}
 		}
 	}
@@ -1662,8 +1660,6 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32		uiHitChance, uiDiceRoll;
 	INT8			bLoop;
-	UINT8			ubTargetID;
-	SOLDIERTYPE	*	pTargetSoldier;
 
 	uiHitChance = CalcThrownChanceToHit( pSoldier, sTargetGridNo, pSoldier->bAimTime, AIM_SHOT_TORSO );
 
@@ -1679,16 +1675,7 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	if ( pSoldier->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		// check target gridno
-		ubTargetID = WhoIsThere2( pSoldier->sTargetGridNo, pSoldier->bTargetLevel );
-		if ( ubTargetID == NOBODY )
-		{
-			pTargetSoldier = NULL;
-		}
-		else
-		{
-			pTargetSoldier = MercPtrs[ ubTargetID ];
-		}
-
+		SOLDIERTYPE* pTargetSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
 		if ( pTargetSoldier && pTargetSoldier->bTeam == pSoldier->bTeam )
 		{
 			// ignore!
@@ -1700,16 +1687,8 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// search for an opponent near the target gridno
 			for ( bLoop = 0; bLoop < NUM_WORLD_DIRECTIONS; bLoop++ )
 			{
-				ubTargetID = WhoIsThere2( NewGridNo( pSoldier->sTargetGridNo, DirectionInc( bLoop ) ), pSoldier->bTargetLevel );
-				pTargetSoldier = NULL;
-				if ( ubTargetID != NOBODY )
-				{
-					pTargetSoldier = MercPtrs[ ubTargetID ];
-					if ( pTargetSoldier->bTeam != pSoldier->bTeam )
-					{
-						break;
-					}
-				}
+				pTargetSoldier = WhoIsThere2(NewGridNo(pSoldier->sTargetGridNo, DirectionInc(bLoop)), pSoldier->bTargetLevel);
+				if (pTargetSoldier->bTeam != pSoldier->bTeam) break;
 			}
 		}
 
@@ -2411,7 +2390,6 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	INT8 bBandaged;
 	INT16	sDistVis;
 	UINT8	ubAdjAimPos;
-	UINT8 ubTargetID;
 
 	if ( pSoldier->bMarksmanship == 0 )
 	{
@@ -2562,9 +2540,9 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	// If the start soldier has a body part they are aiming at, and know about the person in the tile, then use that height instead
 	iSightRange = -1;
 
-	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
 	// best to use team knowledge as well, in case of spotting for someone else
-	if (ubTargetID != NOBODY && (pSoldier->bOppList[ubTargetID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][ubTargetID] == SEEN_CURRENTLY))
+	const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
+	if (tgt != NULL && (pSoldier->bOppList[tgt->ubID] == SEEN_CURRENTLY || gbPublicOpplist[pSoldier->bTeam][tgt->ubID] == SEEN_CURRENTLY))
 	{
 		iSightRange = SoldierToBodyPartLineOfSightTest( pSoldier, sGridNo, pSoldier->bTargetLevel, pSoldier->bAimShotLocation, (UINT8) (MaxDistanceVisible() * 2), TRUE );
 	}

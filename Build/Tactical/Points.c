@@ -870,18 +870,12 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 			{
 				//INT32		cnt;
 				//INT16		sSpot;
-				UINT8		ubGuyThere;
 				INT16		sGotLocation = NOWHERE;
 				BOOLEAN	fGotAdjacent = FALSE;
-				SOLDIERTYPE	*pTarget;
 
-				ubGuyThere = WhoIsThere2( sGridNo, pSoldier->bLevel );
-
-				if ( ubGuyThere != NOBODY )
+				const SOLDIERTYPE* const pTarget = WhoIsThere2(sGridNo, pSoldier->bLevel);
+				if (pTarget != NULL)
 				{
-
-					pTarget = MercPtrs[ ubGuyThere ];
-
 					if ( pSoldier->ubBodyType == BLOODCAT )
 					{
 						sGotLocation = FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
@@ -1243,21 +1237,19 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
 {
  UINT8	bAPCost = 0;
- UINT16 usTargID;
  UINT8	ubDirection;
 
  //  bAimSkill = ( pSoldier->bDexterity + pSoldier->bAgility) / 2;
  if ( sGridNo != NOWHERE )
  {
-	 usTargID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
-
 	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-	 if ( usTargID != NOBODY  )
+		const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
+		if (tgt != NULL)
 	 {
-			sGridNo = MercPtrs[ usTargID ]->sGridNo;
+			sGridNo = tgt->sGridNo;
 
 		 // Check if target is prone, if so, calc cost...
-		 if ( gAnimControl[ MercPtrs[ usTargID ]->usAnimState ].ubEndHeight == ANIM_PRONE )
+			if (gAnimControl[tgt->usAnimState].ubEndHeight == ANIM_PRONE)
 		 {
 			 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_CROUCH );
 		 }

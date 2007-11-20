@@ -2161,30 +2161,29 @@ BOOLEAN IsRoofVisible2(INT16 sMapPos)
 }
 
 
-UINT8 WhoIsThere2(INT16 sGridNo, INT8 bLevel)
+SOLDIERTYPE* WhoIsThere2(INT16 sGridNo, INT8 bLevel)
 {
-  if (!GridNoOnVisibleWorldTile(sGridNo))
-  {
-    return NOBODY;
-  }
+	if (!GridNoOnVisibleWorldTile(sGridNo)) return NULL;
 
 	for (const STRUCTURE* pStructure = gpWorldLevelData[sGridNo].pStructureHead; pStructure != NULL; pStructure = pStructure->pNext)
 	{
+		if (!(pStructure->fFlags & STRUCTURE_PERSON)) continue;
+
+		SOLDIERTYPE* const tgt = GetMan(pStructure->usStructureID);
 		// person must either have their pSoldier->sGridNo here or be non-passable
-		if (pStructure->fFlags & STRUCTURE_PERSON &&
-				(!(pStructure->fFlags & STRUCTURE_PASSABLE) || MercPtrs[pStructure->usStructureID]->sGridNo == sGridNo))
+		if (!(pStructure->fFlags & STRUCTURE_PASSABLE) || tgt->sGridNo == sGridNo)
 		{
 			if (bLevel == 0 && pStructure->sCubeOffset == 0 ||
 					(bLevel > 0 && pStructure->sCubeOffset > 0))
 			{
 				// found a person, on the right level!
 				// structure ID and merc ID are identical for merc structures
-				return pStructure->usStructureID;
+				return tgt;
 			}
 		}
 	}
 
-	return NOBODY;
+	return NULL;
 }
 
 

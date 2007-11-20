@@ -30,7 +30,6 @@ static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 	BUILDING *	pBuilding;
 	UINT8				ubNumClimbSpots;
 	UINT8				ubLoop;
-	UINT8				ubWhoIsThere;
 
 	pBuilding = FindBuilding( sDesiredGridNo );
 	if (!pBuilding)
@@ -42,16 +41,10 @@ static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 
 	for ( ubLoop = 0; ubLoop < ubNumClimbSpots; ubLoop++ )
 	{
-		ubWhoIsThere = WhoIsThere2( pBuilding->sUpClimbSpots[ ubLoop ], 1 );
-		if ( ubWhoIsThere != NOBODY && !CanCharacterAutoBandageTeammate( MercPtrs[ ubWhoIsThere ] ) )
-		{
-			continue;
-		}
-		ubWhoIsThere = WhoIsThere2( pBuilding->sDownClimbSpots[ ubLoop ], 0 );
-		if ( ubWhoIsThere != NOBODY && !CanCharacterAutoBandageTeammate( MercPtrs[ ubWhoIsThere ] ) )
-		{
-			continue;
-		}
+		const SOLDIERTYPE* const up_there   = WhoIsThere2(pBuilding->sUpClimbSpots[ubLoop],   1);
+		if (up_there   != NULL && !CanCharacterAutoBandageTeammate(up_there))   continue;
+		const SOLDIERTYPE* const down_there = WhoIsThere2(pBuilding->sDownClimbSpots[ubLoop], 0);
+		if (down_there != NULL && !CanCharacterAutoBandageTeammate(down_there)) continue;
 		return( TRUE );
 	}
 
@@ -267,7 +260,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 						for ( cnt2 = 0; cnt2 < NUM_WORLD_DIRECTIONS; cnt2++ )
 						{
 							sPatientGridNo = pPatient->sGridNo + DirectionInc( cnt2 );
-							if ( WhoIsThere2( sPatientGridNo, pPatient->bLevel ) == pPatient->ubID )
+							if (WhoIsThere2(sPatientGridNo, pPatient->bLevel) == pPatient)
 							{
 								// patient is also here, try this location
 								sAdjacentGridNo = FindAdjacentGridEx( pSoldier, sPatientGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );

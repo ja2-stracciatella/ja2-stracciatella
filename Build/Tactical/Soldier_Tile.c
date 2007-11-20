@@ -54,7 +54,7 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 
 		// provide more info!!
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex ) );
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Who is at blocked gridno: %d", WhoIsThere2( usNewGridNo, pSoldier->bLevel ) ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("  Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel))));
 
 		for ( uiLoop = 0; uiLoop < pSoldier->usPathDataSize; uiLoop++ )
 		{
@@ -82,8 +82,6 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 
 void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bValue )
 {
-	UINT8		ubPerson;
-
 	// Cancel AI Action
 	// CancelAIAction( pSoldier, TRUE );
 
@@ -94,22 +92,22 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 
 	// ATE: Now update realtime movement speed....
 	// check if guy exists here...
-	ubPerson = WhoIsThere2( sCauseGridNo, pSoldier->bLevel );
+	const SOLDIERTYPE* person = WhoIsThere2(sCauseGridNo, pSoldier->bLevel);
 
 	// There may not be anybody there, but it's reserved by them!
 	if ( ( gpWorldLevelData[ sCauseGridNo ].uiFlags & MAPELEMENT_MOVEMENT_RESERVED ) )
 	{
-		ubPerson = gpWorldLevelData[ sCauseGridNo ].ubReservedSoldierID;
+		person = GetMan(gpWorldLevelData[sCauseGridNo].ubReservedSoldierID);
 	}
 
-	if ( ubPerson != NOBODY )
+	if (person != NULL)
 	{
 		// if they are our own team members ( both )
-		if ( MercPtrs[ ubPerson ]->bTeam == gbPlayerNum && pSoldier->bTeam == gbPlayerNum )
+		if (person->bTeam == gbPlayerNum && pSoldier->bTeam == gbPlayerNum)
 		{
 			// Here we have another guy.... save his stats so we can use them for
 			// speed determinations....
-			pSoldier->bOverrideMoveSpeed = ubPerson;
+			pSoldier->bOverrideMoveSpeed = person->ubID;
 			pSoldier->fUseMoverrideMoveSpeed = TRUE;
 		}
 	}
@@ -180,7 +178,6 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier )
 
 static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, INT8 bLevel)
 {
-	UINT8		ubPerson;
 	INT16		sTempDestGridNo;
 	INT16		sNewGridNo;
 
@@ -189,13 +186,9 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 		return( MOVE_TILE_CLEAR );
 	}
 
-	ubPerson = WhoIsThere2( sGridNo, bLevel );
-
-
-	if ( ubPerson != NO_SOLDIER )
+	SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
+	if (tgt != NULL)
 	{
-		SOLDIERTYPE* const tgt = GetMan(ubPerson);
-
 		// If this us?
 		if (tgt != pSoldier)
 		{
@@ -469,9 +462,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 	INT16		sCost;
 	INT16   sNewGridNo, sCheckGridNo;
 	UINT8		ubDirection, bCauseDirection;
-	UINT8		ubPerson;
 	UINT8		fFlags = 0;
-
 
 	if ( pSoldier->fDelayedMovement )
 	{
@@ -640,12 +631,10 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 				if (pSoldier->fDelayedMovement == 3 && (pSoldier->sAbsoluteFinalDestination != NOWHERE || gTacticalStatus.fAutoBandageMode) )
 				{
 					// with person who is in the way?
-					ubPerson = WhoIsThere2( pSoldier->sDelayedMovementCauseGridNo, pSoldier->bLevel );
-
 					// if either on a mission from god, or two AI guys not on stationary...
-					if (ubPerson != NOBODY)
+					SOLDIERTYPE* const tgt = WhoIsThere2(pSoldier->sDelayedMovementCauseGridNo, pSoldier->bLevel);
+					if (tgt != NULL)
 					{
-						SOLDIERTYPE* const tgt = GetMan(ubPerson);
 						if (pSoldier->ubQuoteRecord != 0 ||
 								(pSoldier->bTeam != gbPlayerNum && pSoldier->bOrders != STATIONARY && tgt->bTeam != gbPlayerNum && tgt->bOrders != STATIONARY) ||
 								(pSoldier->bTeam == gbPlayerNum && gTacticalStatus.fAutoBandageMode && (tgt->bTeam != CIV_TEAM || tgt->bOrders != STATIONARY)))

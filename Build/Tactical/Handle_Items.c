@@ -172,8 +172,6 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
 {
-	SOLDIERTYPE				*pTargetSoldier = NULL;
-	UINT16						usSoldierIndex;
 	INT16							sTargetGridNo;
 	INT16							sAPCost;
 	INT16							sActionGridNo;
@@ -195,10 +193,9 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	pSoldier->usAttackingWeapon = usHandItem;
 
 	// Find soldier flags depend on if it's our own merc firing or a NPC
-	if ( ( usSoldierIndex = WhoIsThere2( usGridNo, bLevel ) ) != NO_SOLDIER )
+	SOLDIERTYPE* pTargetSoldier = WhoIsThere2(usGridNo, bLevel);
+	if (pTargetSoldier != NULL)
 	{
-		pTargetSoldier = MercPtrs[ usSoldierIndex ];
-
     if ( fFromUI )
     {
 	    // ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
@@ -530,7 +527,6 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 	{
 		 INT16	sCnt;
 		 INT16	sSpot;
-		 UINT8		ubGuyThere;
 		 INT16		sGotLocation = NOWHERE;
 		 BOOLEAN	fGotAdjacent = FALSE;
 
@@ -545,17 +541,16 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
         }
 
 				// Check for who is there...
-				ubGuyThere = WhoIsThere2( sSpot, pSoldier->bLevel );
-
-				if ( pTargetSoldier != NULL && ubGuyThere == pTargetSoldier->ubID )
-				{
-					// We've got a guy here....
-					// Who is the one we want......
-					sGotLocation = sSpot;
-					sAdjustedGridNo	= pTargetSoldier->sGridNo;
-					ubDirection		= ( UINT8 )sCnt;
-					break;
-				}
+				if (pTargetSoldier != NULL &&
+						pTargetSoldier == WhoIsThere2(sSpot, pSoldier->bLevel))
+					{
+						// We've got a guy here....
+						// Who is the one we want......
+						sGotLocation = sSpot;
+						sAdjustedGridNo	= pTargetSoldier->sGridNo;
+						ubDirection		= ( UINT8 )sCnt;
+						break;
+					}
 		 }
 
 		 if ( sGotLocation == NOWHERE )
@@ -1159,7 +1154,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		 // See if we can get there to stab
 		 //pSoldier->sTargetGridNo = sTargetGridNo;
 		 //pSoldier->sLastTarget = sTargetGridNo;
-		 //pSoldier->ubTargetID = WhoIsThere2( sTargetGridNo, pSoldier->bTargetLevel );
+		 //pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
 
 		 gTacticalStatus.ubAttackBusyCount++;
 		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount) );
@@ -1244,7 +1239,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			{
 				pSoldier->sTargetGridNo = sTargetGridNo;
 				//	pSoldier->sLastTarget = sTargetGridNo;
-				pSoldier->ubTargetID = WhoIsThere2( sTargetGridNo, pSoldier->bTargetLevel );
+				pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
 
 				// Increment attack counter...
 				gTacticalStatus.ubAttackBusyCount++;
@@ -3575,8 +3570,6 @@ void RenderTopmostFlashingItems( )
 
 SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 {
-	UINT16 usSoldierIndex;
-
 	INT16				sGridNo;
 	UINT8				ubTargetMercID;
 
@@ -3585,17 +3578,16 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 	sGridNo		= pSoldier->sPendingActionData2;
 	ubTargetMercID = (UINT8)pSoldier->uiPendingActionData4;
 
-	usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bLevel );
-
 	// See if our target is still available
-	if ( usSoldierIndex != NOBODY )
+	SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+	if (tgt != NULL)
 	{
 		// Check if it's the same merc!
-		if (usSoldierIndex != ubTargetMercID) return NULL;
+		if (tgt->ubID != ubTargetMercID) return NULL;
 
 		// Look for item in hand....
 
-		return GetSoldier(usSoldierIndex);
+		return tgt;
 	}
 	else
 	{
@@ -3830,8 +3822,6 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	BOOLEAN			fStructFound = FALSE;
 	UINT8				ubDirection;
 	INT16				sAdjustedGridNo;
-	UINT8				ubTargetID;
-
 
 	sActionGridNo = sGridNo;
 
@@ -3857,9 +3847,8 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 
 	// ATE: IF a person is found, use adjacent gridno for it!
-	ubTargetID = WhoIsThere2( sGridNo, pSoldier->bLevel );
-
-	if ( fStructFound || ( ubTargetID != NOBODY && ubTargetID != pSoldier->ubID ) )
+	const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+	if (fStructFound || (tgt != NULL && tgt != pSoldier))
 	{
 		// GET ADJACENT GRIDNO
 		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );

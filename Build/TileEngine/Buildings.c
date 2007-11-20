@@ -440,8 +440,8 @@ INT16 FindClosestClimbPoint( INT16 sStartGridNo, INT16 sDesiredGridNo, BOOLEAN f
 
 	for ( ubLoop = 0; ubLoop < ubNumClimbSpots; ubLoop++ )
 	{
-		if ( (WhoIsThere2( pBuilding->sUpClimbSpots[ ubLoop ], 0 ) == NOBODY)
-			&& (WhoIsThere2( pBuilding->sDownClimbSpots[ ubLoop ], 1 ) == NOBODY) )
+		if (WhoIsThere2(pBuilding->sUpClimbSpots[ubLoop],   0) == NULL &&
+				WhoIsThere2(pBuilding->sDownClimbSpots[ubLoop], 1) == NULL)
 		{
 			sDistance = PythSpacesAway( sStartGridNo, psClimbSpots[ ubLoop ] );
 			if (sDistance < sClosestDistance )

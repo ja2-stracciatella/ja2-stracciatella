@@ -203,8 +203,6 @@ void RemoveAllPits()
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 sRadius )
 {
 	INT16 x, y, sNewGridNo;
-	UINT8	ubID;
-	SOLDIERTYPE *pSoldier;
 
 	PlayLocationJA2Sample(sGridNo, CAVE_COLLAPSE, HIGHVOLUME, 1);
 	for( y = -sRadius; y <= sRadius; y++ ) for( x = -sRadius; x <= sRadius; x++ )
@@ -216,14 +214,11 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 		{
 
 			// Check if buddy exists here.....
-			ubID = WhoIsThere2( sNewGridNo, 0 );
-
-			if ( ubID != NOBODY )
+			SOLDIERTYPE* const pSoldier = WhoIsThere2(sNewGridNo, 0);
+			if (pSoldier != NULL)
 			{
 				// OK, make guy fall...
 				// Set data to look for exit grid....
-				pSoldier = MercPtrs[ ubID ];
-
 				pSoldier->uiPendingActionData4 = sNewGridNo;
 
 				EVENT_InitNewSoldierAnim( pSoldier, FALL_INTO_PIT, 0 , FALSE );

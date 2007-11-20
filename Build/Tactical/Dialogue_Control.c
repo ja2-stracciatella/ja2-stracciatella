@@ -599,7 +599,6 @@ void HandleDialogue( )
 		{
 			SOLDIERTYPE * pMike;
 			INT16	sPlayerGridNo;
-			UINT8	ubPlayerID;
 
 			pMike = FindSoldierByProfileID( MIKE, FALSE );
 			if ( pMike )
@@ -607,10 +606,10 @@ void HandleDialogue( )
 				sPlayerGridNo = ClosestPC( pMike, NULL );
 				if (sPlayerGridNo != NOWHERE )
 				{
-					ubPlayerID = WhoIsThere2( sPlayerGridNo, 0 );
-					if (ubPlayerID != NOBODY)
+					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
+					if (player != NULL)
 					{
-						InitiateConversation( pMike, MercPtrs[ ubPlayerID ], NPC_INITIAL_QUOTE, 0 );
+						InitiateConversation(pMike, player, NPC_INITIAL_QUOTE, 0);
 						gMercProfiles[ pMike->ubProfile ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
 						// JA2Gold: special hack value of 2 to prevent dialogue from coming up more than once
 						gfMikeShouldSayHi = 2;

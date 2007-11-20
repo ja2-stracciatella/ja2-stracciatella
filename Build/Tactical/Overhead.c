@@ -3377,15 +3377,15 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 
 	if (fPeopleToo)
 	{
-		const UINT8 bPerson = WhoIsThere2(sGridNo, bLevel);
-		if (bPerson != NO_SOLDIER)
+		const SOLDIERTYPE* const person = WhoIsThere2(sGridNo, bLevel);
+		if (person != NULL)
 		{
 			// we could be multitiled... if the person there is us, and the gridno is not
 			// our base gridno, skip past these checks
-			if (bPerson != pCurrSoldier->ubID || sGridNo == pCurrSoldier->sGridNo)
+			if (person != pCurrSoldier || sGridNo == pCurrSoldier->sGridNo)
 			{
 				if (pCurrSoldier->bTeam != gbPlayerNum ||
-						Menptr[bPerson].bVisible >= 0 ||
+						person->bVisible >= 0 ||
 						gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
 				{
 					return FALSE; // if someone there it's NOT OK
@@ -3481,15 +3481,15 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 {
 	if (fPeopleToo)
 	{
-		const UINT8 bPerson = WhoIsThere2(sGridNo, bLevel);
-		if (bPerson != NO_SOLDIER)
+		const SOLDIERTYPE* const person = WhoIsThere2(sGridNo, bLevel);
+		if (person != NULL)
 		{
 			/* we could be multitiled... if the person there is us, and the gridno is
 			 * not our base gridno, skip past these checks */
-			if (bPerson != pCurrSoldier->ubID || sGridNo == pCurrSoldier->sGridNo)
+			if (person != pCurrSoldier || sGridNo == pCurrSoldier->sGridNo)
 			{
 				if (pCurrSoldier->bTeam != gbPlayerNum ||
-						Menptr[bPerson].bVisible >= 0 ||
+						person->bVisible >= 0 ||
 						gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
 				{
 					return FALSE; // if someone there it's NOT OK
@@ -3601,7 +3601,7 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
 	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
-	if (WhoIsThere2(iMapIndex, 0) != NO_SOLDIER) return FALSE;
+	if (WhoIsThere2(iMapIndex, 0) != NULL) return FALSE;
 	//Locations on roofs without a roof is not possible, so
 	//we convert the onroof intention to ground.
 	if( fOnRoof && !FlatRoofAboveGridNo( iMapIndex ) )
@@ -3958,7 +3958,6 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	UINT8                                          ubWallOrientation;
 	BOOLEAN																	fCheckGivenGridNo = TRUE;
 	UINT8																		ubTestDirection;
-	UINT8																		ubWhoIsThere;
 
 	// CHECK IF WE WANT TO FORCE GRIDNO TO PERSON
 	if (psAdjustedGridNo != NULL) *psAdjustedGridNo = sGridNo;
@@ -4033,8 +4032,8 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			continue;
 		}
 
-		ubWhoIsThere = WhoIsThere2(sSpot, pSoldier->bLevel);
-		if (ubWhoIsThere != NOBODY && ubWhoIsThere != pSoldier->ubID)
+		const SOLDIERTYPE* const tgt = WhoIsThere2(sSpot, pSoldier->bLevel);
+		if (tgt != NULL && tgt != pSoldier)
 		{
 			// skip this direction b/c it's blocked by another merc!
 			continue;
@@ -4070,8 +4069,8 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 			continue;
 		}
 
-		ubWhoIsThere = WhoIsThere2( sSpot2, pSoldier->bLevel );
-		if (ubWhoIsThere != NOBODY && ubWhoIsThere != pSoldier->ubID)
+		const SOLDIERTYPE* const tgt2 = WhoIsThere2(sSpot2, pSoldier->bLevel);
+		if (tgt2 != NULL && tgt2 != pSoldier)
 		{
 			// skip this direction b/c it's blocked by another merc!
 			continue;
@@ -4191,8 +4190,8 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 		}
 
 		// Check for who is there...
-		const UINT8 ubGuyThere = WhoIsThere2(sSpot, pSoldier->bLevel);
-		if (pTargetSoldier != NULL && ubGuyThere == pTargetSoldier->ubID)
+		if (pTargetSoldier != NULL &&
+				pTargetSoldier == WhoIsThere2(sSpot, pSoldier->bLevel))
 		{
 			// We've got a guy here....
 			// Who is the one we want......
@@ -4250,9 +4249,7 @@ BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 void HandleTeamServices( UINT8 ubTeamNum )
 {
 	INT32                           cnt;
-	SOLDIERTYPE             *pTeamSoldier, *pTargetSoldier;
 	UINT32                  uiPointsUsed;
-	UINT16                  usSoldierIndex;
 	UINT16                  usKitPts;
 	INT8										bSlot;
 	BOOLEAN									fDone;
@@ -4261,7 +4258,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 	cnt = gTacticalStatus.Team[ ubTeamNum ].bFirstID;
 
 	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeamNum ].bLastID; cnt++,pTeamSoldier++)
+	for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[ubTeamNum].bLastID; cnt++, pTeamSoldier++)
 	{
 		if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
 		{
@@ -4271,11 +4268,9 @@ void HandleTeamServices( UINT8 ubTeamNum )
 			if ( pTeamSoldier->usAnimState == GIVING_AID )
 			{
 				// Get victim pointer
-				usSoldierIndex = WhoIsThere2( pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel );
-				if ( usSoldierIndex != NOBODY )
+				SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel);
+				if (pTargetSoldier != NULL)
 				{
-					pTargetSoldier = MercPtrs[ usSoldierIndex ];
-
 					if ( pTargetSoldier->ubServiceCount )
 					{
 						usKitPts = TotalPoints( &(pTeamSoldier->inv[ HANDPOS ] ) );
@@ -4337,9 +4332,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 
 void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 {
-	SOLDIERTYPE     *pTargetSoldier;
 	UINT32                  uiPointsUsed;
-	UINT16                  usSoldierIndex;
 	UINT16                  usKitPts;
 	INT8										bSlot;
 	BOOLEAN									fDone = FALSE;
@@ -4351,12 +4344,9 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 		if ( pTeamSoldier->usAnimState == GIVING_AID )
 		{
 			// Get victim pointer
-			usSoldierIndex = WhoIsThere2( pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel );
-
-			if ( usSoldierIndex != NOBODY )
+			SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel);
+			if (pTargetSoldier != NULL)
 			{
-				pTargetSoldier = MercPtrs[ usSoldierIndex ];
-
 				if ( pTargetSoldier->ubServiceCount )
 				{
 					usKitPts = TotalPoints( &(pTeamSoldier->inv[ HANDPOS ] ) );

@@ -603,8 +603,6 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 
 BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 {
-	UINT8						ubID;
-	SOLDIERTYPE *		pSoldier; // NB this is the person already in the location,
 	INT16						sNewGridNo;
 	UINT8						ubDir;
 	INT16						sCellX, sCellY;
@@ -618,14 +616,8 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 		return( TRUE );
 	}
 
-	ubID = WhoIsThere2( sGridNo, 0 );
-
-	if ( ubID == NOBODY )
-	{
-		return( TRUE );
-	}
-
-	pSoldier = MercPtrs[ ubID ];
+	SOLDIERTYPE* const pSoldier = WhoIsThere2(sGridNo, 0);
+	if (pSoldier == NULL) return TRUE;
 
 	// what if the existing merc is prone?
 	sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, STANDING, 5, &ubDir, 1, pSoldier );

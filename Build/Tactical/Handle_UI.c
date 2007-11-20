@@ -3552,7 +3552,6 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 			{
 				 INT32		cnt;
 				 INT16		sSpot;
-				 UINT8		ubGuyThere;
 
 				 for ( cnt = 0; cnt < NUM_WORLD_DIRECTIONS; cnt++ )
 				 {
@@ -3564,11 +3563,8 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
               continue;
             }
 
-
 						// Check for who is there...
-						ubGuyThere = WhoIsThere2( sSpot, pSoldier->bLevel );
-
-						if (ubGuyThere == tgt->ubID)
+						if (WhoIsThere2(sSpot, pSoldier->bLevel) == tgt)
 						{
 							// We've got a guy here....
 							// Who is the one we want......
@@ -5728,7 +5724,6 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 	INT16 sSpot, sIntSpot;
 	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	INT32 cnt;
-	UINT8	ubGuyThere;
   UINT8 ubMovementCost;
   INT32 iDoorGridNo;
 
@@ -5764,10 +5759,7 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 		sSpot = NewGridNo( sIntSpot, DirectionInc( sDirs[ cnt ] ) );
 
 		// Is the soldier we're looking at here?
-		ubGuyThere = WhoIsThere2( sSpot, pSoldier->bLevel );
-
-		// Alright folks, here we are!
-		if ( ubGuyThere == pSoldier->ubID )
+		if (WhoIsThere2(sSpot, pSoldier->bLevel) == pSoldier)
 		{
 			// Double check OK destination......
 	    if ( NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel ) )
@@ -5776,12 +5768,12 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 				if ( !pSoldier->fTurningUntilDone )
 				{
 					// OK, NOW check if there is a guy in between us
-					//
-					//
-					ubGuyThere = WhoIsThere2( sIntSpot, pSoldier->bLevel );
+					const SOLDIERTYPE* const guy_there = WhoIsThere2(sIntSpot, pSoldier->bLevel);
 
 					// Is there a guy and is he prone?
-					if ( ubGuyThere != NOBODY && ubGuyThere != pSoldier->ubID && gAnimControl[ MercPtrs[ ubGuyThere ]->usAnimState ].ubHeight == ANIM_PRONE )
+					if (guy_there != NULL &&
+							guy_there != pSoldier &&
+							gAnimControl[guy_there->usAnimState].ubHeight == ANIM_PRONE)
 					{
 						// It's a GO!
 						return( TRUE );

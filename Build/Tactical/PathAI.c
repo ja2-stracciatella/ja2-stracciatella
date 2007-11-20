@@ -488,7 +488,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	INT8	bLoopState = LOOPING_CLOCKWISE;
 	//BOOLEAN fLoopForwards = FALSE;
 	BOOLEAN	fCheckedBehind = FALSE;
-	UINT8	ubMerc;
 	INT32 iDestX,iDestY, iLocX, iLocY, dx, dy;
 	INT32	newLoc,curLoc;
 	//INT32 curY;
@@ -1322,12 +1321,11 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			if (fPathAroundPeople && ( (newLoc != iDestination) || fCopyReachable) )
 			{
 				 // ATE: ONLY cancel if they are moving.....
-				ubMerc = WhoIsThere2( (UINT16) newLoc, s->bLevel);
-
-				if ( ubMerc < NOBODY && ubMerc != s->ubID )
+				const SOLDIERTYPE* const tgt = WhoIsThere2(newLoc, s->bLevel);
+				if (tgt != NULL && tgt != s)
 				{
 					// Check for movement....
-					//if ( fTurnBased || ( (Menptr[ ubMerc ].sFinalDestination == Menptr[ ubMerc ].sGridNo) || (Menptr[ ubMerc ].fDelayedMovement) ) )
+					//if (fTurnBased || tgt->sFinalDestination == tgt->sGridNo || tgt->fDelayedMovement)
 					//{
 						goto NEXTDIR;
 					//}

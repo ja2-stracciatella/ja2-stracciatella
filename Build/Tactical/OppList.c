@@ -6245,7 +6245,6 @@ static void SetWatchedLocAsUsed(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 static BOOLEAN WatchedLocLocationIsEmpty(INT16 sGridNo, INT8 bLevel, INT8 bTeam)
 {
 	// look to see if there is anyone near the watched loc who is not on this team
-	UINT8	ubID;
 	INT16	sTempGridNo, sX, sY;
 
 	for ( sY = -WATCHED_LOC_RADIUS; sY <= WATCHED_LOC_RADIUS; sY++ )
@@ -6257,11 +6256,8 @@ static BOOLEAN WatchedLocLocationIsEmpty(INT16 sGridNo, INT8 bLevel, INT8 bTeam)
 			{
 				continue;
 			}
-			ubID = WhoIsThere2( sTempGridNo, bLevel );
-			if ( ubID != NOBODY && MercPtrs[ ubID ]->bTeam != bTeam )
-			{
-				return( FALSE );
-			}
+			const SOLDIERTYPE* const tgt = WhoIsThere2(sTempGridNo, bLevel);
+			if (tgt != NULL && tgt->bTeam != bTeam) return FALSE;
 		}
 	}
 	return( TRUE );

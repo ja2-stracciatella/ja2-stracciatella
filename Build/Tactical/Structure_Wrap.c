@@ -428,14 +428,10 @@ BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo )
 
 BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 {
-	UINT8 ubMerc;
-
 	// OK, first look for a vehicle....
-	ubMerc = WhoIsThere2( sGridNo, 0 );
-
-	if ( ubMerc != NOBODY )
+	SOLDIERTYPE* const s = WhoIsThere2(sGridNo, 0);
+	if (s != NULL)
 	{
-		SOLDIERTYPE* const s = GetMan(ubMerc);
 		if (tgt != NULL) *tgt = s;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
 	}
@@ -459,13 +455,8 @@ BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 SOLDIERTYPE* GetRefuelableStructAtGridNo(INT16 sGridNo)
 {
 	// OK, first look for a vehicle....
-	const UINT8 tgt_id = WhoIsThere2(sGridNo, 0);
-	if (tgt_id != NOBODY)
-	{
-		SOLDIERTYPE* const tgt = GetMan(tgt_id);
-		if (tgt->uiStatusFlags & SOLDIER_VEHICLE) return tgt;
-	}
-	return NULL;
+	SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
+	return tgt != NULL && tgt->uiStatusFlags & SOLDIER_VEHICLE ? tgt : NULL;
 }
 
 

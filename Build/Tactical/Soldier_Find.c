@@ -451,17 +451,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 
 SOLDIERTYPE * SimpleFindSoldier( INT16 sGridNo, INT8 bLevel )
 {
-	UINT8 ubID;
-
-	ubID = WhoIsThere2( sGridNo, bLevel );
-	if ( ubID == NOBODY )
-	{
-		return( NULL );
-	}
-	else
-	{
-		return( MercPtrs[ ubID ] );
-	}
+	return WhoIsThere2(sGridNo, bLevel);
 }
 
 

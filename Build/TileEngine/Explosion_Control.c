@@ -1380,7 +1380,6 @@ static void HandleBuldingDestruction(INT16 sGridNo, UINT8 ubOwner);
 static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN* pfMercHit, INT8 bLevel, INT32 iSmokeEffectID)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
-	UINT8 ubPerson;
 	SOLDIERTYPE *pSoldier;
 	EXPLOSIVETYPE *pExplosive;
 	INT16 sX, sY;
@@ -1605,32 +1604,31 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	 if ( fBlastEffect )
 	 {
 		 // don't hurt anyone who is already dead & waiting to be removed
-		 if ( ( ubPerson = WhoIsThere2( sGridNo, bLevel ) ) != NOBODY )
+			SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
+			if (tgt != NULL)
 		 {
-				DamageSoldierFromBlast(GetMan(ubPerson), ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
+				DamageSoldierFromBlast(tgt, ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
 		 }
 
 		 if ( bLevel == 1 )
 		 {
-			 if ( ( ubPerson = WhoIsThere2(sGridNo, 0 ) ) != NOBODY )
+				SOLDIERTYPE* const tgt_below = WhoIsThere2(sGridNo, 0);
+				if (tgt_below != NULL)
 			 {
 				 if ( (sWoundAmt / 2) > 20 )
 				 {
 					 // debris damage!
 						const INT16 breath = sBreathAmt / 2 - 20 > 0 ? Random(sBreathAmt / 2 - 20) : 1;
-						DamageSoldierFromBlast(GetMan(ubPerson), ubOwner, sBombGridNo, Random(sWoundAmt / 2 - 20), breath, uiDist, usItem);
+						DamageSoldierFromBlast(tgt_below, ubOwner, sBombGridNo, Random(sWoundAmt / 2 - 20), breath, uiDist, usItem);
 				 }
 			 }
 		 }
 	 }
 	 else
 	 {
-		 if ( ( ubPerson = WhoIsThere2(sGridNo, bLevel ) ) >= NOBODY )
-		 {
-			 return( fRecompileMovementCosts );
-		 }
-
-		 pSoldier = MercPtrs[ ubPerson ];   // someone is here, and they're gonna get hurt
+			pSoldier = WhoIsThere2(sGridNo, bLevel);
+			if (pSoldier == NULL) return fRecompileMovementCosts;
+			// someone is here, and they're gonna get hurt
 
 		 fRecompileMovementCosts = DishOutGasDamage( pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, ubOwner );
 /*
@@ -2279,7 +2277,7 @@ static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 
 static void DelayedBillyTriggerToBlockOnExit(void)
 {
-	if ( WhoIsThere2( gsTempActionGridNo, 0 ) == NOBODY )
+	if (WhoIsThere2(gsTempActionGridNo, 0) == NULL)
 	{
 		TriggerNPCRecord( BILLY, 6 );
 	}
@@ -2476,12 +2474,10 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			/*
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
-				UINT8		ubID;
-
-				ubID = WhoIsThere2( sGridNo, 0 );
-				if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) )
+				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
+				if (tgt != NULL && tgt->bTeam == gbPlayerNum)
 				{
-					if ( MercPtrs[ ubID ]->sOldGridNo == sGridNo + DirectionInc( SOUTH ) )
+					if (tgt->sOldGridNo == sGridNo + DirectionInc(SOUTH))
 					{
 						gMercProfiles[ MADAME ].bNPCData2++;
 
@@ -2528,7 +2524,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 							}
 						}
 
-						if ( gMercProfiles[ MercPtrs[ ubID ]->ubProfile ].bSex == FEMALE )
+						if (gMercProfiles[tgt->ubProfile].bSex == FEMALE)
 						{
 							// woman walking into brothel
 							TriggerNPCRecordImmediately( MADAME, 33 );
@@ -2551,10 +2547,8 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			/*
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
-				UINT8		ubID;
-
-				ubID = WhoIsThere2( sGridNo, 0 );
-				if ( (ubID != NOBODY) && (MercPtrs[ ubID ]->bTeam == gbPlayerNum) && MercPtrs[ ubID ]->sOldGridNo == sGridNo + DirectionInc( NORTH ) )
+				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
+				if (tgt != NULL && tgt->bTeam == gbPlayerNum && tgt->sOldGridNo == sGridNo + DirectionInc(NORTH))
 				{
 					gMercProfiles[ MADAME ].bNPCData2--;
 					if ( gMercProfiles[ MADAME ].bNPCData2 == 0 )
@@ -2607,16 +2601,14 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			/*
 			if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
 			{
-				UINT8		ubID;
 				OBJECTTYPE DoorCloser;
 				INT16		sTeleportSpot;
 				INT16		sDoorSpot;
 				UINT8		ubDirection;
 				UINT8		ubRoom, ubOldRoom;
 
-				ubID = WhoIsThere2( sGridNo, 0 );
-				if (ubID != NOBODY)
-					const SOLDIERTYPE* const tgt = GetMan(ubID);
+				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
+				if (tgt != NULL)
 					if (tgt->bTeam == gbPlayerNum)
 					{
 						if (InARoom(sGridNo, &ubRoom) && InARoom(tgt->sOldGridNo, &ubOldRoom) && ubOldRoom != ubRoom)

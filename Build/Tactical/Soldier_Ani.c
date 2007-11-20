@@ -2383,16 +2383,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// Reload robot....
 					{
-						UINT8				ubPerson;
-						SOLDIERTYPE	*pRobot;
-
-						// Get pointer...
-						ubPerson = WhoIsThere2( pSoldier->sPendingActionData2, pSoldier->bLevel );
-
-						if ( ubPerson != NOBODY && MercPtrs[ ubPerson ]->uiStatusFlags & SOLDIER_ROBOT )
+						SOLDIERTYPE* const pRobot = WhoIsThere2(pSoldier->sPendingActionData2, pSoldier->bLevel);
+						if (pRobot != NULL && pRobot->uiStatusFlags & SOLDIER_ROBOT)
 						{
-							pRobot = MercPtrs[ ubPerson ];
-
 							ReloadGun( pRobot, &(pRobot->inv[ HANDPOS ] ), pSoldier->pTempObject );
 
 							// OK, check what was returned and place in inventory if it's non-zero
@@ -2542,12 +2535,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // REFUELING A VEHICLE
           // THE GAS_CAN IS IN THE MERCS MAIN HAND AT THIS TIME
           {
-          	UINT8				ubPerson;
-						SOLDIERTYPE *pVehicle;
-
-						// Get pointer to vehicle...
-						ubPerson = WhoIsThere2( pSoldier->sPendingActionData2, pSoldier->bLevel );
-						pVehicle = MercPtrs[ ubPerson ];
+						SOLDIERTYPE* const pVehicle = WhoIsThere2(pSoldier->sPendingActionData2, pSoldier->bLevel);
 
             // this is a ubID for soldiertype....
 						AddFuelToVehicle( pSoldier, pVehicle );

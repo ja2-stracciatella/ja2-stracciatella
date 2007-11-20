@@ -311,7 +311,7 @@ BOOLEAN CheckOnBoxers( void )
 		// get boxer soldier IDs!
 		for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
 		{
-			SOLDIERTYPE* const s = GetMan(WhoIsThere2(gsBoxerGridNo[uiLoop], 0));
+			SOLDIERTYPE* const s = WhoIsThere2(gsBoxerGridNo[uiLoop], 0);
 			if (FindObjClass(s, IC_WEAPON) == NO_SLOT)
 			{
 				// no weapon so this guy is a boxer
@@ -334,7 +334,7 @@ BOOLEAN BoxerExists( void )
 
 	for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
 	{
-		if ( WhoIsThere2( gsBoxerGridNo[ uiLoop ], 0 ) != NOBODY )
+		if (WhoIsThere2(gsBoxerGridNo[uiLoop], 0) != NULL)
 		{
 			return( TRUE );
 		}

@@ -1841,7 +1841,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 		if ( ubLevel == 1 && !fThroughIntermediateGridNo )
 		{
 			// Is there a guy here...?
-			if ( WhoIsThere2( sGridNo, ubLevel ) != NO_SOLDIER )
+			if (WhoIsThere2(sGridNo, ubLevel) != NULL)
 			{
 				dMagForce		=	(float)( dMagForce * 0.85 );
 
@@ -1978,7 +1978,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
   FLOAT       fScale;
 
 	// Set target ID if anyone
-	pSoldier->ubTargetID = WhoIsThere2( sGridNo, ubLevel );
+	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, ubLevel));
 
 	if ( ubActionCode == THROW_ARM_ITEM )
 	{

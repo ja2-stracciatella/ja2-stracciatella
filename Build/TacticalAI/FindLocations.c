@@ -488,18 +488,17 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 
 static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	UINT8	ubLoop, ubCount, ubWhoIsThere;
 	INT16	sTempGridNo;
 
-	ubCount = 0;
+	UINT8 ubCount = 0;
 
-	for( ubLoop = 0; ubLoop < NUM_WORLD_DIRECTIONS; ubLoop++ )
+	for (UINT8 ubLoop = 0; ubLoop < NUM_WORLD_DIRECTIONS; ++ubLoop)
 	{
 		sTempGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop ) );
 		if ( sTempGridNo != sGridNo );
 		{
-			ubWhoIsThere = WhoIsThere2( sGridNo, pSoldier->bLevel );
-			if ( ubWhoIsThere != NOBODY && ubWhoIsThere != pSoldier->ubID && MercPtrs[ ubWhoIsThere ]->bTeam == pSoldier->bTeam )
+			const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+			if (tgt != NULL && tgt != pSoldier && tgt->bTeam == pSoldier->bTeam)
 			{
 				ubCount++;
 			}
@@ -2258,7 +2257,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 				if ( (fInRing && ubRoom == BOXING_RING) || (!fInRing && ubRoom != BOXING_RING ) && LegalNPCDestination(pSoldier,sGridNo,IGNORE_PATH,NOWATER,0) )
 				{
 					iDistance = abs( sXOffset ) + abs( sYOffset );
-					if ( iDistance < iClosestDistance && WhoIsThere2( sGridNo, 0 ) == NOBODY )
+					if (iDistance < iClosestDistance && WhoIsThere2(sGridNo, 0) == NULL)
 					{
 						sClosestSpot = sGridNo;
 						iClosestDistance = iDistance;

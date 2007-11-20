@@ -284,7 +284,6 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16	sGridNo;
 	INT16	sCounterX, sCounterY;
-	UINT8	ubID;
 	INT8 bStance;
 //	BOOLEAN fRoof;
 
@@ -366,13 +365,10 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 
 			// if someone (visible) is there, skip
 			//Check both bottom level, and top level
-			ubID = WhoIsThere2( sGridNo, 0 );
-			if( ubID == NOBODY )
-			{
-				ubID = WhoIsThere2( sGridNo, 1 );
-			}
+			const SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
+			if (tgt == NULL) tgt = WhoIsThere2(sGridNo, 1);
 			//if someone is here, and they are an enemy, skip over them
-			if ( ubID != NOBODY && Menptr[ ubID ].bVisible == TRUE && Menptr[ ubID ].bTeam != pSoldier->bTeam )
+			if (tgt != NULL && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
 			{
 				continue;
 			}
@@ -745,13 +741,10 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 /*
 			// if someone (visible) is there, skip
 			//Check both bottom level, and top level
-			ubID = WhoIsThere2( sGridNo, 0 );
-			if( ubID == NOBODY )
-			{
-				ubID = WhoIsThere2( sGridNo, 1 );
-			}
+			SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
+			if (tgt == NULL) tgt = WhoIsThere2(sGridNo, 1);
 			//if someone is here, and they are an enemy, skip over them
-			if ( ubID != NOBODY && Menptr[ ubID ].bVisible == TRUE && Menptr[ ubID ].bTeam != pSoldier->bTeam )
+			if (tgt != NULL && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
 			{
 				continue;
 			}
@@ -888,22 +881,13 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 	INT8	bRetVal=0;
 	INT32 iLosForGridNo=0;
 	UINT16	usSightLimit=0;
-	UINT8 ubID;
 	BOOLEAN	bAware=FALSE;
 
-	if( fRoof )
+	const SOLDIERTYPE* const tgt = WhoIsThere2(sTargetGridNo, fRoof ? 1 : 0);
+	if (tgt != NULL)
 	{
-		ubID = WhoIsThere2( sTargetGridNo, 1 );
-	}
-	else
-	{
-		ubID = WhoIsThere2( sTargetGridNo, 0 );
-	}
-
-	if( ubID != NOBODY )
-	{
-		const INT8* const pPersOL  = &pSoldier->bOppList[ubID];
-		const INT8* const pbPublOL = &gbPublicOpplist[pSoldier->bTeam][ubID];
+		const INT8* const pPersOL  = &pSoldier->bOppList[tgt->ubID];
+		const INT8* const pbPublOL = &gbPublicOpplist[pSoldier->bTeam][tgt->ubID];
 
 		 // if soldier is known about (SEEN or HEARD within last few turns)
 		if (*pPersOL || *pbPublOL)

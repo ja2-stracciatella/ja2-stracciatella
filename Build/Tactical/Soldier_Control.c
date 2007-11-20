@@ -602,16 +602,12 @@ void CalcNewActionPoints( SOLDIERTYPE *pSoldier )
 void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 {
 	//UINT32						uiMercFlags;
-	UINT16						usSoldierIndex;
 	UINT8							ubTDirection;
 	UINT8							ubTargetStance;
 
-
-	usSoldierIndex = WhoIsThere2( pSoldier->sTargetGridNo, pSoldier->bLevel );
-	if ( usSoldierIndex != NOBODY )
+	const SOLDIERTYPE* const pTSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bLevel);
+	if (pTSoldier != NULL)
 	{
-		const SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
-
 		// Look at stance of target
 		ubTargetStance = gAnimControl[ pTSoldier->usAnimState ].ubEndHeight;
 
@@ -2634,7 +2630,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	// the actual event call
 	pSoldier->sTargetGridNo = sTargetGridNo;
 	//pSoldier->sLastTarget = sTargetGridNo;
-	pSoldier->ubTargetID = WhoIsThere2( sTargetGridNo, pSoldier->bTargetLevel );
+	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel));
 
 	if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN)
   {
@@ -7916,7 +7912,6 @@ void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	//UINT32 uiMercFlags;
-	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
 	ROTTING_CORPSE *pCorpse;
 
@@ -7938,14 +7933,11 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	// GET POINTER TO TAREGT
 	if (pSoldier->uiStatusFlags & SOLDIER_MONSTER)
 	{
-		UINT8 ubTargetID;
-
 		// Is there an unconscious guy at gridno......
-		ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
-
-		if ( ubTargetID != NOBODY && ( ( MercPtrs[ ubTargetID ]->bLife < OKLIFE && MercPtrs[ ubTargetID ]->bLife > 0 ) || ( MercPtrs[ ubTargetID ]->bBreath < OKBREATH && MercPtrs[ ubTargetID ]->bCollapsed ) ) )
+		const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
+		if (tgt != NULL && ((tgt->bLife < OKLIFE && tgt->bLife > 0) || (tgt->bBreath < OKBREATH && tgt->bCollapsed)))
 		{
-			pSoldier->uiPendingActionData4 = ubTargetID;
+			pSoldier->uiPendingActionData4 = tgt->ubID;
 			// add regen bonus
 			pSoldier->bRegenerationCounter++;
 			EVENT_InitNewSoldierAnim( pSoldier, MONSTER_BEGIN_EATTING_FLESH, 0, FALSE );
@@ -7976,11 +7968,9 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	}
 	else
 	{
-		usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
-		if ( usSoldierIndex != NOBODY )
+		SOLDIERTYPE* const pTSoldier = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
+		if (pTSoldier != NULL)
 		{
-			SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
-
 			// Look at stance of target
 			switch( gAnimControl[ pTSoldier->usAnimState ].ubEndHeight	)
 			{
@@ -8077,14 +8067,13 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	// SET TARGET GRIDNO
 	pSoldier->sTargetGridNo = sGridNo;
 	pSoldier->bTargetLevel = pSoldier->bLevel;
-	pSoldier->ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
+	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
 }
 
 
 void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
 	//UINT32 uiMercFlags;
-	UINT16 usSoldierIndex;
 	UINT8 ubTDirection;
 	BOOLEAN fChangeDirection = FALSE;
 	UINT16	usItem;
@@ -8102,10 +8091,8 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//}
 
 	// get target.....
-	usSoldierIndex = WhoIsThere2( pSoldier->sTargetGridNo, pSoldier->bLevel );
-	if (usSoldierIndex == NOBODY) return;
-
-	SOLDIERTYPE* pTSoldier = GetSoldier(usSoldierIndex);
+	SOLDIERTYPE* const pTSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bLevel);
+	if (pTSoldier == NULL) return;
 
 	fChangeDirection = TRUE;
 
@@ -8199,7 +8186,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	pSoldier->sTargetGridNo = sGridNo;
 	pSoldier->bTargetLevel = pSoldier->bLevel;
 	pSoldier->sLastTarget		= sGridNo;
-	pSoldier->ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
+	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
 }
 
 
@@ -8226,7 +8213,7 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 	pSoldier->fTurningFromPronePosition	= 0;
 	// NB target level must be set by functions outside of here... but I think it
 	// is already set in HandleItem or in the AI code - CJC
-	pSoldier->ubTargetID = WhoIsThere2( sGridNo, pSoldier->bTargetLevel );
+	pSoldier->ubTargetID = SOLDIER2ID(WhoIsThere2(sGridNo, pSoldier->bTargetLevel));
 }
 
 
@@ -8271,16 +8258,12 @@ void EVENT_SoldierBeginUseDetonator( SOLDIERTYPE *pSoldier )
 
 void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
 {
-	SOLDIERTYPE *pTSoldier;
 	//UINT32 uiMercFlags;
-	UINT16 usSoldierIndex;
 	BOOLEAN fRefused = FALSE;
 
-	usSoldierIndex = WhoIsThere2( sGridNo, pSoldier->bLevel );
-	if ( usSoldierIndex != NOBODY )
+	SOLDIERTYPE* const pTSoldier = WhoIsThere2(sGridNo, pSoldier->bLevel);
+	if (pTSoldier != NULL)
 	{
-		pTSoldier = MercPtrs[ usSoldierIndex ];
-
 		// OK, check if we should play quote...
 		if ( pTSoldier->bTeam != gbPlayerNum )
 		{
@@ -8337,7 +8320,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		pSoldier->sTargetGridNo = sGridNo;
 
 		// SET PARTNER ID
-		pSoldier->ubServicePartner = (UINT8)usSoldierIndex;
+		pSoldier->ubServicePartner = pTSoldier->ubID;
 
 		// SET PARTNER'S COUNT REFERENCE
 		pTSoldier->ubServiceCount++;
@@ -9962,12 +9945,9 @@ void EVENT_SoldierBeginAttachCan( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ub
 
 void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection, UINT8 ubMercSlot )
 {
-	UINT8 ubPerson;
-
 	// Make sure we have a robot here....
-	ubPerson = WhoIsThere2( sGridNo, pSoldier->bLevel );
-
-	if ( ubPerson != NOBODY && MercPtrs[ ubPerson ]->uiStatusFlags & SOLDIER_ROBOT )
+	const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+	if (tgt != NULL && tgt->uiStatusFlags & SOLDIER_ROBOT)
 	{
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );

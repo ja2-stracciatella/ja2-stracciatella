@@ -1439,7 +1439,6 @@ static void HandleNPCTrigger(void)
 {
 	SOLDIERTYPE *pSoldier;
 	INT16				sPlayerGridNo;
-	UINT8				ubPlayerID;
 
 	pSoldier = FindSoldierByProfileID( gubTargetNPC, FALSE );
 	if (!pSoldier)
@@ -1481,10 +1480,10 @@ static void HandleNPCTrigger(void)
 				sPlayerGridNo = ClosestPC( pSoldier, NULL );
 				if (sPlayerGridNo != NOWHERE )
 				{
-					ubPlayerID = WhoIsThere2( sPlayerGridNo, 0 );
-					if (ubPlayerID != NOBODY)
+					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
+					if (player != NULL)
 					{
-						InitiateConversation( pSoldier, MercPtrs[ ubPlayerID ], gubTargetApproach, gubTargetRecord );
+						InitiateConversation(pSoldier, player, gubTargetApproach, gubTargetRecord);
 						return;
 					}
 				}
@@ -2992,7 +2991,6 @@ unlock:
 				if ( pSoldier )
 				{
 					INT16		sNearestPC;
-					UINT8		ubID;
 					INT8		bMoneySlot;
 					INT8		bEmptySlot;
 
@@ -3001,11 +2999,7 @@ unlock:
 					SOLDIERTYPE* pSoldier2 = NULL;
 					if ( sNearestPC != NOWHERE )
 					{
-						ubID = WhoIsThere2( sNearestPC, 0 );
-						if (ubID != NOBODY)
-						{
-							pSoldier2 = MercPtrs[ ubID ];
-						}
+						pSoldier2 = WhoIsThere2(sNearestPC, 0);
 					}
 
 					if (pSoldier2)
@@ -3130,9 +3124,6 @@ unlock:
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
-					UINT8 ubTargetID;
-					SOLDIERTYPE *pTarget;
-
 					// Target a different merc....
 					INT16 sGridNo;
 					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
@@ -3151,15 +3142,7 @@ unlock:
 						sGridNo = gsInterrogationGridNo[ 2 ];
 					}
 
-					ubTargetID = WhoIsThere2( sGridNo, 0 );
-					if ( ubTargetID == NOBODY )
-					{
-						pTarget = NULL;
-					}
-					else
-					{
-						pTarget = MercPtrs[ ubTargetID ];
-					}
+					const SOLDIERTYPE* const pTarget = WhoIsThere2(sGridNo, 0);
 
 					// Use a different approach....
 					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
@@ -3252,22 +3235,13 @@ unlock:
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 				if (pSoldier)
 				{
-					UINT8 ubTargetID;
-					SOLDIERTYPE *pTarget;
 					INT32				cnt;
 					BOOLEAN			fGoodTarget = FALSE;
 
 					for ( cnt = 0; cnt < 3; cnt++ )
 					{
-						ubTargetID = WhoIsThere2( gsInterrogationGridNo[ cnt ], 0 );
-						if ( ubTargetID == NOBODY )
-						{
-							continue;
-						}
-						else
-						{
-							pTarget = MercPtrs[ ubTargetID ];
-						}
+						const SOLDIERTYPE* const pTarget = WhoIsThere2(gsInterrogationGridNo[cnt], 0);
+						if (pTarget == NULL) continue;
 
 						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
 
@@ -3676,7 +3650,6 @@ unlock:
 				if ( !gfInTalkPanel )
 				{
 					INT16		sNearestPC;
-					UINT8		ubID;
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
 					if ( pSoldier )
@@ -3686,11 +3659,7 @@ unlock:
 						sNearestPC = ClosestPC( pSoldier, NULL );
 						if ( sNearestPC != NOWHERE )
 						{
-							ubID = WhoIsThere2( sNearestPC, 0 );
-							if (ubID != NOBODY)
-							{
-								pSoldier2 = MercPtrs[ ubID ];
-							}
+							pSoldier2 = WhoIsThere2(sNearestPC, 0);
 						}
 
 						if ( pSoldier2 )
