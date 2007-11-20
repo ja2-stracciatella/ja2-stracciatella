@@ -1,6 +1,8 @@
 #ifndef _TILE_ANIMATION_H
 #define _TILE_ANIMATION_H
 
+#include "WorldDef.h"
+
 
 #define ANITILE_DOOR												0x00000001
 #define ANITILE_BACKWARD										0x00000020

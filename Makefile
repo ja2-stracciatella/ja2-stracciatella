@@ -272,6 +272,7 @@ SRCS += Build/Tactical/Inventory_Choosing.c
 SRCS += Build/Tactical/Items.c
 SRCS += Build/Tactical/Keys.c
 SRCS += Build/Tactical/LOS.c
+SRCS += Build/Tactical/LoadSaveBullet.c
 SRCS += Build/Tactical/LoadSaveMercProfile.c
 SRCS += Build/Tactical/LoadSaveObjectType.c
 SRCS += Build/Tactical/LoadSaveSoldierCreate.c

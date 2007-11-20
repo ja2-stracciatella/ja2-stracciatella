@@ -1,3 +1,4 @@
+#include "LoadSaveBullet.h"
 #include "WorldDef.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"
@@ -396,7 +397,7 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 			if( gBullets[ usCnt ].fAllocated )
 			{
 				//Save the the Bullet structure
-				if (!FileWrite(hFile, &gBullets[usCnt], sizeof(BULLET))) return FALSE;
+				if (!InjectBulletIntoFile(hFile, &gBullets[usCnt])) return FALSE;
 			}
 		}
 	}
@@ -417,14 +418,12 @@ BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 	{
 		BULLET* const b = &gBullets[i];
 		//Load the the Bullet structure
-		if (!FileRead(hFile, b, sizeof(*b))) return FALSE;
+		if (!ExtractBulletFromFile(hFile, b)) return FALSE;
 
 		//Set some parameters
-		b->uiLastUpdate   = 0;
-		b->pFirer         = ID2Soldier(b->ubFirerID);
-		b->pAniTile       = NULL;
-		b->pShadowAniTile = NULL;
-		b->iBullet        = i;
+		b->uiLastUpdate = 0;
+		b->pFirer       = ID2Soldier(b->ubFirerID);
+		b->iBullet      = i;
 
 		HandleBulletSpecialFlags(b);
 	}
