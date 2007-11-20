@@ -1963,7 +1963,6 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 	ANITILE_PARAMS	AniParams;
 	UINT16					usMissTileIndex, usMissTileType;
 	UINT32					uiMissVolume = MIDVOLUME;
-	BOOLEAN					fHitSameStructureAsBefore;
 
 	BULLET* const pBullet = GetBulletPtr(iBullet);
 	SOLDIERTYPE* const attacker      = pBullet->pFirer;
@@ -1989,15 +1988,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 		}
 	}
 
-	if ( pBullet )
-	{
-		fHitSameStructureAsBefore = ( usStructureID == pBullet->usLastStructureHit );
-	}
-	else
-	{
-		// WTF?
-		fHitSameStructureAsBefore = FALSE;
-	}
+	const BOOLEAN fHitSameStructureAsBefore = (usStructureID == pBullet->usLastStructureHit);
 
 	sGridNo = MAPROWCOLTOPOS( (sYPos/CELL_Y_SIZE), (sXPos/CELL_X_SIZE) );
 	if ( !fHitSameStructureAsBefore )
