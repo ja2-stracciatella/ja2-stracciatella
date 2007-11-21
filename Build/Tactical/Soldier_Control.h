@@ -845,7 +845,6 @@ struct SOLDIERTYPE
 	BOOLEAN											fUseMoverrideMoveSpeed;
 
 	UINT32											uiTimeSoldierWillArrive;
-	BOOLEAN											fDieSoundUsed;
 	BOOLEAN											fUseLandingZoneForArrival;
   BOOLEAN                     fFallClockwise;
   INT8												bVehicleUnderRepairID;

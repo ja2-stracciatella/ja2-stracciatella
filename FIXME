@@ -403,7 +403,6 @@ bOpenPanelFrame: probably unused, see fOpenPanel
 bVocalVolume: always MIDVOLUME
 usPendingAnimation2: always NO_PENDING_ANIMATION
 bTimesDrugUsedSinceSleep: write-only
-fDieSoundUsed: always FALSE
 fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?
 

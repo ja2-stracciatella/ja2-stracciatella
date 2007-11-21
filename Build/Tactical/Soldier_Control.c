@@ -6146,8 +6146,6 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 				{
 					StrategicHandlePlayerTeamMercDeath( pSoldier );
 
-          // ATE: Here, force always to use die sound...
-          pSoldier->fDieSoundUsed = FALSE;
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
       		pSoldier->fDeadSoundPlayed = TRUE;
 
@@ -6641,18 +6639,7 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
     {
       return( FALSE );
     }
-
   }
-
-	// If a death sound, and we have already done ours...
-	if ( ubBattleSoundID == BATTLE_SOUND_DIE1 )
-	{
-		if ( pSoldier->fDieSoundUsed )
-		{
-			return( TRUE );
-		}
-	}
-
 
 	// Are we mute?
 	if ( pSoldier->uiStatusFlags & SOLDIER_MUTE )
