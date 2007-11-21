@@ -1230,7 +1230,8 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 	 return( TRUE );
 }
 
-BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, INT16 sSubsequent, BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, UINT8 ubOwner )
+
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE* const pExplosive, const INT16 sSubsequent, const BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
 {
  INT8		bPosOfMask = NO_SLOT;
 
@@ -1365,9 +1366,9 @@ BOOLEAN DishOutGasDamage( SOLDIERTYPE * pSoldier, EXPLOSIVETYPE * pExplosive, IN
 			DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
 		}
 
-	  if ( ubOwner != NOBODY && MercPtrs[ ubOwner ]->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
+		if (owner != NULL && owner->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
 	  {
-		  ProcessImplicationsOfPCAttack(MercPtrs[ubOwner], pSoldier, REASON_EXPLOSION);
+			ProcessImplicationsOfPCAttack(owner, pSoldier, REASON_EXPLOSION);
 	  }
 	}
 	return( fRecompileMovementCosts );
@@ -1601,11 +1602,11 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 
  if ( sSubsequent != ERASE_SPREAD_EFFECT && sSubsequent != BLOOD_SPREAD_EFFECT )
  {
+		SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 	 // if an explosion effect....
 	 if ( fBlastEffect )
 	 {
 		 // don't hurt anyone who is already dead & waiting to be removed
-			SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 			SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
 			if (tgt != NULL)
 		 {
@@ -1632,7 +1633,7 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 			if (pSoldier == NULL) return fRecompileMovementCosts;
 			// someone is here, and they're gonna get hurt
 
-		 fRecompileMovementCosts = DishOutGasDamage( pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, ubOwner );
+			fRecompileMovementCosts = DishOutGasDamage(pSoldier, pExplosive, sSubsequent, fRecompileMovementCosts, sWoundAmt, sBreathAmt, owner);
 /*
 		 if (!pSoldier->bActive || !pSoldier->bInSector || !pSoldier->bLife || AM_A_ROBOT( pSoldier ) )
 		 {
