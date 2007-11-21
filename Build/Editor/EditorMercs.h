@@ -49,8 +49,6 @@ extern UINT8 gubCurrMercMode, gubPrevMercMode;
 
 #define NUM_DIFF_LVLS						5
 
-extern const wchar_t* zDiffNames[NUM_DIFF_LVLS];
-extern INT16 sCurBaseDiff;
 extern INT16 gsSelectedMercID;
 extern INT16 gsSelectedMercGridNo;
 extern UINT8 gubCurrMercMode;

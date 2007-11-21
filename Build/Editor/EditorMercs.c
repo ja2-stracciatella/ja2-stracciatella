@@ -222,17 +222,6 @@ BOOLEAN gfShowCreatures = TRUE;
 BOOLEAN gfShowRebels = TRUE;
 BOOLEAN gfShowCivilians = TRUE;
 
-#define BASE_STAT_DEVIATION			7
-#define BASE_EXPLVL_DEVIATION		1
-#define BASE_PROTLVL_DEVIATION	0
-#define BASE_GUNTYPE_DEVIATION	4
-#define DEFAULT_DIFF						2
-
-INT16 sCurBaseDiff = DEFAULT_DIFF;
-BOOLEAN fAskForBaseDifficulty = TRUE;
-const wchar_t* zDiffNames[NUM_DIFF_LVLS] = { L"Wimp", L"Easy", L"Average", L"Tough", L"Steroid Users Only" };
-INT16 sBaseStat[NUM_DIFF_LVLS] = { 50, 60, 70, 80, 90 };
-INT16 sBaseExpLvl[NUM_DIFF_LVLS] = { 1, 3, 5, 7, 9 };
 
 static const wchar_t* EditMercStat[12] = { L"Max Health",L"Cur Health",L"Strength",
 														 L"Agility",L"Dexterity",L"Charisma",
@@ -691,38 +680,6 @@ void EraseMercWaypoint()
 }
 
 
-//	This functions changes the stats of a given merc (PC or NPC, though should only be used
-//	for NPC mercs) to reflect the base difficulty level selected.
-static void ChangeBaseSoldierStats(SOLDIERTYPE* pSoldier)
-{
-	if ( pSoldier == NULL )
-		return;
-
-	pSoldier->bLifeMax = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bLife	= pSoldier->bLifeMax;
-
-	pSoldier->bBleeding	= 0;
-	pSoldier->bBreath	= 100;
-
-	pSoldier->bMarksmanship	= (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bMedical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bMechanical = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bExplosive = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bAgility = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bDexterity = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-
-	pSoldier->bStrength = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bLeadership = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bWisdom = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-	pSoldier->bScientific = (UINT8)(sBaseStat[sCurBaseDiff] + (UINT16)(Random(BASE_STAT_DEVIATION * 2)-BASE_STAT_DEVIATION));
-
-	pSoldier->bExpLevel = (UINT8)sBaseExpLvl[sCurBaseDiff];
-	pSoldier->bGunType = (INT8)Random(BASE_GUNTYPE_DEVIATION);
-
-	pSoldier->bActionPoints = CalcActionPoints( pSoldier );
-}
-
-
 //----------------------------------------------------------------------------------------------
 //	DisplayEditMercWindow
 //
@@ -1108,28 +1065,6 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 			ChangeBodyType( 1 );	//next
 		else
       ChangeBodyType( -1 ); //previous
-	}
-}
-
-
-static void EditMercDecDifficultyCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		iEditorToolbarState = TBAR_MODE_DEC_DIFF;
-	}
-}
-
-
-static void EditMercIncDifficultyCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-
-		iEditorToolbarState = TBAR_MODE_INC_DIFF;
 	}
 }
 

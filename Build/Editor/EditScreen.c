@@ -1026,16 +1026,6 @@ static void HandleJA2ToolbarSelection(void)
 			iCurrentAction = ACTION_LOWER_LAND;
 			break;
 
-		case TBAR_MODE_DEC_DIFF:
-			if ( sCurBaseDiff > 0 )
-				sCurBaseDiff--;
-			break;
-
-		case TBAR_MODE_INC_DIFF:
-			if ( sCurBaseDiff < 4 )
-				sCurBaseDiff++;
-			break;
-
 		case TBAR_MODE_FAKE_LIGHTING:
 			gfFakeLights ^= TRUE;
 			if ( gfFakeLights )
