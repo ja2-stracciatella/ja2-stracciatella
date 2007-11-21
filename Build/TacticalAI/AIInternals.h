@@ -50,9 +50,6 @@ enum
 #define ENSURE_PATH             1
 #define ENSURE_PATH_COST        2
 
-#define DONTFORCE       0
-#define FORCE           1
-
 #define MAX_ROAMING_RANGE       WORLD_COLS
 
 #define PTR_CIV_OR_MILITIA ( PTR_CIVILIAN || (pSoldier->bTeam == MILITIA_TEAM) )

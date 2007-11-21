@@ -1831,7 +1831,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 							case OLGA:
 							case TYRONE:
 								// Start combat etc
-								CancelAIAction( pNPC, TRUE );
+								CancelAIAction(pNPC);
 								AddToShouldBecomeHostileOrSayQuoteList(pNPC);
 							default:
 								break;

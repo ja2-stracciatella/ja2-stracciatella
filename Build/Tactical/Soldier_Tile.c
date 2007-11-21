@@ -83,7 +83,7 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bValue )
 {
 	// Cancel AI Action
-	// CancelAIAction( pSoldier, TRUE );
+	// CancelAIAction(pSoldier);
 
 	pSoldier->fDelayedMovement = bValue;
 	pSoldier->sDelayedMovementCauseGridNo = sCauseGridNo;

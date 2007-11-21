@@ -912,7 +912,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// Cancel anything he was doing
 					if ( gpDestSoldier->bAction != AI_ACTION_PENDING_ACTION )
 					{
-						CancelAIAction( gpDestSoldier, TRUE );
+						CancelAIAction(gpDestSoldier);
 					}
 				}
 			}
@@ -1561,7 +1561,7 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 	// Cancel anything he was doing
 	if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
 	{
-		CancelAIAction( pSoldier, TRUE );
+		CancelAIAction(pSoldier);
 	}
 	// Go for it!
 
@@ -2297,7 +2297,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move
 						// until the pickup is completed
-						CancelAIAction(pSoldier,FORCE);
+						CancelAIAction(pSoldier);
 						pSoldier->bAction = AI_ACTION_PENDING_ACTION;
 						pSoldier->ubQuoteRecord = NPC_ACTION_KYLE_GETS_MONEY;
 
@@ -2829,7 +2829,7 @@ unlock:
 						ExitCombatMode();
 					}
 
-					CancelAIAction( pSoldier, FORCE );
+					CancelAIAction(pSoldier);
 					// make stand up if not standing already
 					if ( ubTargetNPC == SLAY && pSoldier->ubBodyType == CRIPPLECIV )
 					{
@@ -3073,7 +3073,7 @@ unlock:
 					// shouldn't have any current action but make sure everything
 					// is clear... and set pending action so the guy won't move
 					// until the pickup is completed
-					CancelAIAction(pSoldier,FORCE);
+					CancelAIAction(pSoldier);
 					pSoldier->bAction = AI_ACTION_PENDING_ACTION;
 
 					// make sure the pickup starts dammit!
@@ -3168,7 +3168,7 @@ unlock:
 						// Cancel anything he was doing
 						if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
 						{
-							CancelAIAction( pSoldier, TRUE );
+							CancelAIAction(pSoldier);
 						}
 
 						//HandleItem( pSoldier, pTarget->sGridNo, 0, NOTHING, FALSE );
@@ -3214,7 +3214,7 @@ unlock:
 						// Cancel anything he was doing
 						if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
 						{
-							CancelAIAction( pSoldier, TRUE );
+							CancelAIAction(pSoldier);
 						}
 
             // change elliot portrait...
@@ -3272,7 +3272,7 @@ unlock:
 							// Cancel anything he was doing
 							if ( pSoldier->bAction != AI_ACTION_PENDING_ACTION )
 							{
-								CancelAIAction( pSoldier, TRUE );
+								CancelAIAction(pSoldier);
 							}
 
 							pSoldier->uiStatusFlags |= SOLDIER_NPC_DOING_PUNCH;

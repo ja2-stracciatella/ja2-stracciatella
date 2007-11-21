@@ -127,7 +127,7 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 					pReceiver->ubCaller = pCaller->ubID;
 					pReceiver->sCallerGridNo = pCaller->sGridNo;
 					pReceiver->bCallActedUpon = FALSE;
-					CancelAIAction(pReceiver, FORCE);
+					CancelAIAction(pReceiver);
 					if ((bPriority > FRENZY_THRESHOLD) && (pReceiver->ubBodyType == ADULTFEMALEMONSTER || pReceiver->ubBodyType == YAF_MONSTER))
 					{
 						// go berzerk!

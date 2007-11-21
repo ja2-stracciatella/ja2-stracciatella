@@ -77,7 +77,7 @@ void ExitBoxing( void )
 						SetSoldierNeutral( pSoldier );
 						RecalculateOppCntsDueToBecomingNeutral( pSoldier );
 					}
-					CancelAIAction( pSoldier, TRUE );
+					CancelAIAction(pSoldier);
 					pSoldier->bAlertStatus = STATUS_GREEN;
 					pSoldier->bUnderFire = 0;
 
@@ -365,7 +365,7 @@ static BOOLEAN PickABoxer(void)
 					pBoxer->uiStatusFlags |= SOLDIER_BOXER;
 					SetSoldierNonNeutral( pBoxer );
 					RecalculateOppCntsDueToNoLongerNeutral( pBoxer );
-					CancelAIAction( pBoxer, TRUE );
+					CancelAIAction(pBoxer);
 					RESETTIMECOUNTER( pBoxer->AICounter, 0 );
 					gfBoxerFought[ uiLoop ] = TRUE;
 					// improve stats based on the # of rests these guys have had

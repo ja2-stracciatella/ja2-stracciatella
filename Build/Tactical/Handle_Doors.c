@@ -423,7 +423,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 			// alert her if she hasn't been alerted
 			pGoon->bAlertStatus = STATUS_RED;
 			CheckForChangingOrders( pGoon );
-			CancelAIAction( pGoon, TRUE );
+			CancelAIAction(pGoon);
 		}
 	}
 }

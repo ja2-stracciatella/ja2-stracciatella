@@ -132,7 +132,7 @@ void CallEldinTo( INT16 sGridNo )
 				pSoldier->bAlertStatus = STATUS_RED;
 				if ( (pSoldier->bAction != AI_ACTION_GET_CLOSER) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) == FALSE )
 				{
-					CancelAIAction( pSoldier, TRUE );
+					CancelAIAction(pSoldier);
 					pSoldier->bNextAction = AI_ACTION_GET_CLOSER;
 					pSoldier->usNextActionData = sGridNo;
 					RESETTIMECOUNTER( pSoldier->AICounter, 100 );

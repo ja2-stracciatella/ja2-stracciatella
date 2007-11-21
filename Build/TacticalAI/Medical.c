@@ -359,7 +359,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 		if (pBestPatient->ubAutoBandagingMedic != NOBODY)
 		{
 			// cancel that medic
-			CancelAIAction( MercPtrs[ pBestPatient->ubAutoBandagingMedic ], TRUE );
+			CancelAIAction(MercPtrs[pBestPatient->ubAutoBandagingMedic]);
 		}
 		pBestPatient->ubAutoBandagingMedic = pSoldier->ubID;
 		*pfDoClimb = FALSE;

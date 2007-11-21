@@ -112,7 +112,6 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 
 int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 {
-	UINT8 ubGottaCancel = FALSE;
 	UINT8 ubSuccess = FALSE;
 
 
@@ -145,7 +144,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 #endif
 
 			// must work even for escorted civs, can't just set the flag
-			CancelAIAction(pSoldier,FORCE);
+			CancelAIAction(pSoldier);
 		}
 
   }
@@ -163,49 +162,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 
 #endif
 
-
-		if (!pSoldier->bUnderEscort)
-		{
-			CancelAIAction(pSoldier,DONTFORCE);	// no need to force this
-		}
-		else
-		{
-			// this is an escorted NPC, don't want to just completely stop
-			// moving, try to find a nearby "next best" destination if possible
-			pSoldier->usActionData = GoAsFarAsPossibleTowards(pSoldier,sGridno,pSoldier->bAction);
-
-			// if it's not possible to get any closer
-			if (pSoldier->usActionData == NOWHERE)
-			{
-				ubGottaCancel = TRUE;
-			}
-			else
-			{
-				// change his desired destination to this new one
-				sGridno = pSoldier->usActionData;
-
-				// GoAsFar... sets pathStored TRUE only if he could go all the way
-
-				// make him go to it (needed to continue movement across multiple turns)
-				NewDest(pSoldier,sGridno);
-
-
-				// make sure that it worked (check that pSoldier->sDestination == pSoldier->sGridNo)
-				if (pSoldier->sDestination == sGridno)
-					ubSuccess = TRUE;
-				else
-					ubGottaCancel = TRUE;
-			}
-
-			if (ubGottaCancel)
-			{
-				// can't get close, gotta abort the movement!
-				CancelAIAction(pSoldier,FORCE);
-
-				// tell the player doing the escorting that civilian has stopped
-				//EscortedMoveCanceled(pSoldier,COMMUNICATE);
-			}
-		}
+		CancelAIAction(pSoldier);
 	}
 
 	return(ubSuccess);
@@ -738,19 +695,19 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 
 	if (pSoldier->bNewSituation == IS_NEW_SITUATION)
 	{
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 		return;
 	}
 
 	if (pSoldier->usActionData >= NOWHERE)
 	{
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 		return;
 	}
 
 	if (!NewOKDestination( pSoldier,pSoldier->usActionData, TRUE, pSoldier->bLevel ))
 	{
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 		return;
 	}
 
@@ -772,7 +729,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	}
 	else
 	{
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 #ifdef TESTAI
 		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
 						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );
@@ -797,7 +754,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	}
 	else
 	 {
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 #ifdef TESTAI
 		DebugMsg( TOPIC_JA2AI, DBG_LEVEL_3,
 						String("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID) );

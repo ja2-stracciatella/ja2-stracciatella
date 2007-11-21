@@ -1371,7 +1371,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		{
 			// unauthorized!
 			// make guard run to block guard room
-			CancelAIAction( pSoldier, TRUE );
+			CancelAIAction(pSoldier);
 			RESETTIMECOUNTER( pSoldier->AICounter, 0 );
 			pSoldier->bNextAction = AI_ACTION_RUN;
 			pSoldier->usNextActionData = 13250;
@@ -1795,7 +1795,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 									if ( pSoldier->bOppCnt == 0 )
 									{
 										// didn't see anyone before!
-										CancelAIAction( pSoldier, TRUE );
+										CancelAIAction(pSoldier);
 										SetNewSituation( pSoldier );
 									}
 								}
@@ -1811,7 +1811,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 								}
 								else if ( ( CheckFact( FACT_ANGEL_LEFT_DEED, ANGEL ) == TRUE ) && ( CheckFact( FACT_ANGEL_MENTIONED_DEED, ANGEL ) == FALSE ) )
 								{
-									CancelAIAction( pSoldier, TRUE );
+									CancelAIAction(pSoldier);
 									pSoldier->sAbsoluteFinalDestination = NOWHERE;
 									EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
 									TriggerNPCRecord( ANGEL, 20 );

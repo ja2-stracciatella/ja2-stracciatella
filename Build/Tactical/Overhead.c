@@ -2245,7 +2245,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 						if (sDesiredMercDist <= NPC_TALK_RADIUS * 2)
 						{
 							// stop
-							CancelAIAction(pSoldier, TRUE);
+							CancelAIAction(pSoldier);
 							// aaaaaaaaaaaaaaaaaaaaatttaaaack!!!!
 							AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
 							//MakeCivHostile( pSoldier, 2 );
@@ -2522,7 +2522,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 		if (gTacticalStatus.fAutoBandageMode &&
 				pSoldier->ubAutoBandagingMedic != NOBODY)
 		{
-			CancelAIAction(MercPtrs[pSoldier->ubAutoBandagingMedic], TRUE);
+			CancelAIAction(MercPtrs[pSoldier->ubAutoBandagingMedic]);
 		}
 
 		// see if this was the friend of a living merc
@@ -4365,7 +4365,7 @@ void CommonEnterCombatModeCode( )
 			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
 
 			// END AI actions
-			CancelAIAction( pSoldier, TRUE );
+			CancelAIAction(pSoldier);
 
 			// turn off AI controlled flag
 			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
@@ -5978,7 +5978,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, const 
 				// AI people will have to have their actions cancelled
 				if (!(pSoldier->uiStatusFlags & SOLDIER_PC))
 				{
-					CancelAIAction( pSoldier, TRUE );
+					CancelAIAction(pSoldier);
 					pSoldier->bAction = AI_ACTION_CHANGE_STANCE;
 					pSoldier->usActionData = ubNewStance;
 					pSoldier->bActionInProgress = TRUE;
@@ -6550,7 +6550,7 @@ void CencelAllActionsForTimeCompression( void )
 		EVENT_StopMerc(s, s->sGridNo, s->bDirection);
 
 		// END AI actions
-		CancelAIAction(s, TRUE);
+		CancelAIAction(s);
 	}
 }
 

@@ -7850,7 +7850,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 							if ( pTSoldier->bTeam != gbPlayerNum )
 							{
-								CancelAIAction( pTSoldier, TRUE );
+								CancelAIAction(pTSoldier);
 							}
 
 							ubTDirection = (UINT8)GetDirectionFromGridNo( pSoldier->sGridNo, pTSoldier );
@@ -7991,7 +7991,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 						if ( pTSoldier->bTeam != gbPlayerNum )
 						{
-							CancelAIAction( pTSoldier, TRUE );
+							CancelAIAction(pTSoldier);
 						}
 
 						ubTDirection = (UINT8)GetDirectionFromGridNo( pSoldier->sGridNo, pTSoldier );
@@ -10022,7 +10022,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 			case TYRONE:
 				// Start combat etc
 				DeleteTalkingMenu();
-				CancelAIAction( pTSoldier, TRUE );
+				CancelAIAction(pTSoldier);
 				AddToShouldBecomeHostileOrSayQuoteList(pTSoldier);
 				break;
 			default:

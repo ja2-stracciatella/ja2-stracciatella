@@ -1576,7 +1576,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 										if ( pTSoldier->bTeam != gbPlayerNum )
 										{
-											CancelAIAction( pTSoldier, TRUE );
+											CancelAIAction(pTSoldier);
 										}
 
 										// Turn towards the person!
@@ -1927,7 +1927,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								{
 									if ( pSoldier->sAbsoluteFinalDestination != NOWHERE )
 									{
-										CancelAIAction( pSoldier, FORCE );
+										CancelAIAction(pSoldier);
 									}
 								}
 

@@ -2217,7 +2217,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 		if ( NPCFirstDraw( pSoldier, pTargetSoldier ) )
 		{
 			// go into turnbased for that person
-			CancelAIAction( pTargetSoldier, TRUE );
+			CancelAIAction(pTargetSoldier);
 			AddToShouldBecomeHostileOrSayQuoteList(pTargetSoldier);
 			//MakeCivHostile( pTargetSoldier, 2 );
 			//TriggerNPCWithIHateYouQuote( pTargetSoldier->ubProfile );

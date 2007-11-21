@@ -25,9 +25,6 @@ enum
 	NUM_CREATURE_CALLS
 } CreatureCalls;
 
-#define DONTFORCE       0
-#define FORCE           1
-
 // ANY NEW ACTIONS ADDED - UPDATE OVERHEAD.C ARRAY WITH ACTION'S STRING VALUE
 #define FIRST_MOVEMENT_ACTION AI_ACTION_RANDOM_PATROL
 #define LAST_MOVEMENT_ACTION AI_ACTION_MOVE_TO_CLIMB
@@ -144,7 +141,7 @@ void CallAvailableEnemiesTo(INT16 sGridno);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
 void CallEldinTo( INT16 sGridNo );
-void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce);
+void CancelAIAction(SOLDIERTYPE* pSoldier);
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
 
 INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier );

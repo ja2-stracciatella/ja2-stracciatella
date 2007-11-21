@@ -4690,7 +4690,7 @@ void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel )
 
 void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pOffendingSoldier)
 {
-	CancelAIAction( pSoldier, TRUE );
+	CancelAIAction(pSoldier);
 
 	switch( pSoldier->ubProfile )
 	{

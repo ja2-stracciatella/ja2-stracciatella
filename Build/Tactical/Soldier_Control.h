@@ -567,7 +567,6 @@ struct SOLDIERTYPE
 	INT8												bAttitude;
 	INT8												bUnderFire;
 	INT8												bShock;
-	INT8												bUnderEscort;
 	INT8												bBypassToGreen;
 	UINT8												ubLastMercToRadio;
 	INT8												bDominantDir;				// AI main direction to face...

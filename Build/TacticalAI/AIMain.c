@@ -358,7 +358,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		#endif
 
 		// stunned/collapsed!
-		CancelAIAction( pSoldier, FORCE );
+		CancelAIAction(pSoldier);
 		EndAIGuysTurn( pSoldier );
 		return;
 	}
@@ -418,7 +418,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			{
 				// don't force, don't want escorted mercs reacting to new opponents, etc.
 				// now we don't have AI controlled escorted mercs though - CJC
-				CancelAIAction( pSoldier, FORCE );
+				CancelAIAction(pSoldier);
 				// zap any next action too
 				if ( pSoldier->bAction != AI_ACTION_END_COWER_AND_MOVE )
 				{
@@ -727,7 +727,7 @@ void EndAIDeadlock(void)
 		{
 			if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 			{
-				CancelAIAction(pSoldier,FORCE);
+				CancelAIAction(pSoldier);
 				#ifdef TESTAICONTROL
 					if (gfTurnBasedAI)
 					{
@@ -1226,9 +1226,7 @@ static void NPCDoesNothing(SOLDIERTYPE* pSoldier)
 }
 
 
-
-
-void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
+void CancelAIAction(SOLDIERTYPE* const pSoldier)
 {
 #ifdef DEBUGDECISIONS
 	if (SkipCoverCheck)
@@ -1243,10 +1241,6 @@ void CancelAIAction(SOLDIERTYPE *pSoldier, UINT8 ubForce)
 	{
 		pSoldier->bNewSituation = WAS_NEW_SITUATION;
 	}
-
-	// NPCs getting escorted do NOT react to new situations, unless forced!
-	if (pSoldier->bUnderEscort && !ubForce)
-		return;
 
 	// turn off RED/YELLOW status "bypass to Green", to re-check all actions
 	pSoldier->bBypassToGreen = FALSE;
@@ -1370,7 +1364,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 	// move this clause outside of the function...
 	if (pSoldier->bNewSituation)
 		// don't force, don't want escorted mercs reacting to new opponents, etc.
-		CancelAIAction(pSoldier,DONTFORCE);
+		CancelAIAction(pSoldier);
 
 */
 
@@ -1733,7 +1727,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				// ZAP NPC's remaining action points so this isn't likely to repeat
 				pSoldier->bActionPoints = 0;
 
-				CancelAIAction(pSoldier,FORCE);
+				CancelAIAction(pSoldier);
 				return(FALSE);         // nothing is in progress
 			}
 			*/
@@ -1881,13 +1875,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 						if (!pSoldier->bPathStored)
 						{
-							CancelAIAction(pSoldier,FORCE);
+							CancelAIAction(pSoldier);
 							return(FALSE);         // nothing is in progress
 						}
 					}
 					else
 					{
-						CancelAIAction(pSoldier,FORCE);
+						CancelAIAction(pSoldier);
 						return(FALSE);         // nothing is in progress
 					}
 				}
@@ -1938,7 +1932,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 				DebugAI( String( "Setting blacklist for %d to %d", pSoldier->ubID, pSoldier->sBlackList ) );
 
-				CancelAIAction(pSoldier,FORCE);
+				CancelAIAction(pSoldier);
 				return(FALSE);         // nothing is in progress
 			}
 
@@ -2005,7 +1999,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					DebugAI( String( "AI %d got error code %ld from HandleItem, doing action %d, has %d APs... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction, pSoldier->bActionPoints ) );
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"AI %d got error code %ld from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction );
 				}
-				CancelAIAction( pSoldier, FORCE);
+				CancelAIAction(pSoldier);
 				#ifdef TESTAICONTROL
 					if (gfTurnBasedAI)
 					{
@@ -2130,7 +2124,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #ifdef JA2BETAVERSION
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %d got error code %ld from HandleItem, doing action %d... aborting deadlock!", pSoldier->ubID, iRetCode, pSoldier->bAction );
 #endif
-				CancelAIAction( pSoldier, FORCE);
+				CancelAIAction(pSoldier);
 				#ifdef TESTAICONTROL
 					if (gfTurnBasedAI)
 					{
@@ -2165,7 +2159,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 #ifdef JA2TESTVERSION
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"AI %d tried to open door it could not then find in %d", pSoldier->ubID, sDoorGridNo );
 #endif
-					CancelAIAction( pSoldier, FORCE);
+					CancelAIAction(pSoldier);
 					#ifdef TESTAICONTROL
 						if (gfTurnBasedAI)
 						{

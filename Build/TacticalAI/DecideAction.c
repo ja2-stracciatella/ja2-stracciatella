@@ -3866,95 +3866,81 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 
  //NumMessage("DecideAction - Guy#",pSoldier->ubID);
 
- // if the NPC is being "ESCORTED" (seen civilians only for now)
- if (pSoldier->bUnderEscort)
-  {
-#ifdef DEBUGDECISIONS
-   AIPopMessage("AlertStatus = ESCORT");
-#endif
-
-   //bAction = DecideActionEscort(pSoldier);
-  }
- else // "normal" NPC AI
-  {
-   // if status over-ride is set, bypass RED/YELLOW and go directly to GREEN!
-   if ((pSoldier->bBypassToGreen) && (pSoldier->bAlertStatus < STATUS_BLACK))
-	 {
-     bAction = DecideActionGreen(pSoldier);
-		 if ( !gfTurnBasedAI )
-		 {
+	// if status over-ride is set, bypass RED/YELLOW and go directly to GREEN!
+	if ((pSoldier->bBypassToGreen) && (pSoldier->bAlertStatus < STATUS_BLACK))
+	{
+		bAction = DecideActionGreen(pSoldier);
+		if (!gfTurnBasedAI)
+		{
 			// reset bypass now
 			pSoldier->bBypassToGreen = 0;
-		 }
-	 }
-   else
-    {
-     switch (pSoldier->bAlertStatus)
-      {
-       case STATUS_GREEN:
-					#ifdef DEBUGDECISIONS
-						AIPopMessage("AlertStatus = GREEN");
-					#endif
-					#ifdef AI_TIMING_TESTS
-						uiStartTime = GetJA2Clock();
-					#endif
-					bAction = DecideActionGreen(pSoldier);
-					#ifdef AI_TIMING_TESTS
-						uiEndTime = GetJA2Clock();
-						guiGreenTimeTotal += (uiEndTime - uiStartTime);
-						guiGreenCounter++;
-					#endif
-					break;
+		}
+	}
+	else
+	{
+		switch (pSoldier->bAlertStatus)
+		{
+			case STATUS_GREEN:
+#ifdef DEBUGDECISIONS
+				AIPopMessage("AlertStatus = GREEN");
+#endif
+#ifdef AI_TIMING_TESTS
+				uiStartTime = GetJA2Clock();
+#endif
+				bAction = DecideActionGreen(pSoldier);
+#ifdef AI_TIMING_TESTS
+				uiEndTime = GetJA2Clock();
+				guiGreenTimeTotal += (uiEndTime - uiStartTime);
+				guiGreenCounter++;
+#endif
+				break;
 
-       case STATUS_YELLOW:
-				#ifdef DEBUGDECISIONS
-					AIPopMessage("AlertStatus = YELLOW");
-				#endif
-					#ifdef AI_TIMING_TESTS
-						uiStartTime = GetJA2Clock();
-					#endif
-					bAction = DecideActionYellow(pSoldier);
-					#ifdef AI_TIMING_TESTS
-						uiEndTime = GetJA2Clock();
-						guiYellowTimeTotal += (uiEndTime - uiStartTime);
-						guiYellowCounter++;
-					#endif
-					break;
+			case STATUS_YELLOW:
+#ifdef DEBUGDECISIONS
+				AIPopMessage("AlertStatus = YELLOW");
+#endif
+#ifdef AI_TIMING_TESTS
+				uiStartTime = GetJA2Clock();
+#endif
+				bAction = DecideActionYellow(pSoldier);
+#ifdef AI_TIMING_TESTS
+				uiEndTime = GetJA2Clock();
+				guiYellowTimeTotal += (uiEndTime - uiStartTime);
+				guiYellowCounter++;
+#endif
+				break;
 
-       case STATUS_RED:
-				#ifdef DEBUGDECISIONS
-					AIPopMessage("AlertStatus = RED");
-				#endif
-					#ifdef AI_TIMING_TESTS
-						uiStartTime = GetJA2Clock();
-					#endif
-					bAction = DecideActionRed(pSoldier,TRUE);
-					#ifdef AI_TIMING_TESTS
-						uiEndTime = GetJA2Clock();
-						guiRedTimeTotal += (uiEndTime - uiStartTime);
-						guiRedCounter++;
-					#endif
-					break;
+			case STATUS_RED:
+#ifdef DEBUGDECISIONS
+				AIPopMessage("AlertStatus = RED");
+#endif
+#ifdef AI_TIMING_TESTS
+				uiStartTime = GetJA2Clock();
+#endif
+				bAction = DecideActionRed(pSoldier,TRUE);
+#ifdef AI_TIMING_TESTS
+				uiEndTime = GetJA2Clock();
+				guiRedTimeTotal += (uiEndTime - uiStartTime);
+				guiRedCounter++;
+#endif
+				break;
 
-       case STATUS_BLACK:
-				#ifdef DEBUGDECISIONS
-					AIPopMessage("AlertStatus = BLACK");
-				#endif
-					#ifdef AI_TIMING_TESTS
-						uiStartTime = GetJA2Clock();
-					#endif
-					bAction = DecideActionBlack(pSoldier);
-					#ifdef AI_TIMING_TESTS
-						uiEndTime = GetJA2Clock();
-						guiBlackTimeTotal += (uiEndTime - uiStartTime);
-						guiBlackCounter++;
-					#endif
-					break;
-      }
-    }
-  }
-
-
+			case STATUS_BLACK:
+#ifdef DEBUGDECISIONS
+				AIPopMessage("AlertStatus = BLACK");
+#endif
+#ifdef AI_TIMING_TESTS
+				uiStartTime = GetJA2Clock();
+#endif
+				bAction = DecideActionBlack(pSoldier);
+#ifdef AI_TIMING_TESTS
+				uiEndTime = GetJA2Clock();
+				guiBlackTimeTotal += (uiEndTime - uiStartTime);
+				guiBlackCounter++;
+#endif
+				break;
+		}
+	}
 
 #ifdef DEBUGDECISIONS
  DebugAI( String( "DecideAction: selected action %d, actionData %d\n\n",action,pSoldier->usActionData) );
