@@ -358,7 +358,6 @@ fUseExistingSoldier: strange
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange
-bPadding[]
 
 SOLDIERTYPE
 fReloading: always FALSE

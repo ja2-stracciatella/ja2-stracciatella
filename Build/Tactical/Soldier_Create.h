@@ -124,8 +124,6 @@ typedef struct
 	BOOLEAN						fUseGivenVehicle;
 	INT8							bUseGivenVehicleID;
 	BOOLEAN						fHasKeys;
-
-	INT8 bPadding[115];
 } SOLDIERCREATE_STRUCT;
 
 

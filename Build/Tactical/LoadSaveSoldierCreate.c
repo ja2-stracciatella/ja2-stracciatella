@@ -63,8 +63,7 @@ const BYTE* ExtractSoldierCreateUTF16(const BYTE* Src, SOLDIERCREATE_STRUCT* Sol
 	EXTR_BOOL(S, Soldier->fUseGivenVehicle)
 	EXTR_I8(S, Soldier->bUseGivenVehicleID)
 	EXTR_BOOL(S, Soldier->fHasKeys)
-	EXTR_I8A(S, Soldier->bPadding, lengthof(Soldier->bPadding))
-	EXTR_SKIP(S, 2)
+	EXTR_SKIP(S, 117)
 
 	Assert(S == Src + 1040);
 	return S;
@@ -142,8 +141,7 @@ static void ExtractSoldierCreate(const BYTE* Src, SOLDIERCREATE_STRUCT* Soldier)
 	EXTR_BOOL(S, Soldier->fUseGivenVehicle)
 	EXTR_I8(S, Soldier->bUseGivenVehicleID)
 	EXTR_BOOL(S, Soldier->fHasKeys)
-	EXTR_I8A(S, Soldier->bPadding, lengthof(Soldier->bPadding))
-	EXTR_SKIP(S, 2)
+	EXTR_SKIP(S, 117)
 
 #ifdef _WIN32 // XXX HACK000A
 	Assert(S == Src + 1040);
@@ -224,8 +222,7 @@ static void InjectSoldierCreateUTF16(BYTE* Dst, const SOLDIERCREATE_STRUCT* Sold
 	INJ_BOOL(D, Soldier->fUseGivenVehicle)
 	INJ_I8(D, Soldier->bUseGivenVehicleID)
 	INJ_BOOL(D, Soldier->fHasKeys)
-	INJ_I8A(D, Soldier->bPadding, lengthof(Soldier->bPadding))
-	INJ_SKIP(D, 2)
+	INJ_SKIP(D, 117)
 
 	Assert(D == Dst + 1040);
 }
@@ -301,8 +298,7 @@ static void InjectSoldierCreate(BYTE* Dst, const SOLDIERCREATE_STRUCT* Soldier)
 	INJ_BOOL(D, Soldier->fUseGivenVehicle)
 	INJ_I8(D, Soldier->bUseGivenVehicleID)
 	INJ_BOOL(D, Soldier->fHasKeys)
-	INJ_I8A(D, Soldier->bPadding, lengthof(Soldier->bPadding))
-	INJ_SKIP(D, 2)
+	INJ_SKIP(D, 117)
 
 #ifdef _WIN32 // XXX HACK000A
 	Assert(D == Dst + 1040);
