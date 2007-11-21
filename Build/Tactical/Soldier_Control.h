@@ -869,7 +869,7 @@ struct SOLDIERTYPE
 	UINT8												ubNumLocateCycles;
 	UINT8												ubDelayedMovementFlags;
 	BOOLEAN											fMuzzleFlash;
-	UINT8												ubCTGTTargetID;
+	const SOLDIERTYPE*          CTGTTarget;
 
 	TIMECOUNTER									PanelAnimateCounter;
 	UINT32											uiMercChecksum;

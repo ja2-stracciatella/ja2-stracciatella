@@ -2966,7 +2966,7 @@ static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier
 
 	// set startsoldier's target ID ... need an ID stored in case this
 	// is the AI calculating cover to a location where he might not be any more
-	pStartSoldier->ubCTGTTargetID = pEndSoldier->ubID;
+	pStartSoldier->CTGTTarget = pEndSoldier;
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
@@ -3008,7 +3008,7 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 
 	// set startsoldier's target ID ... need an ID stored in case this
 	// is the AI calculating cover to a location where he might not be any more
-	pStartSoldier->ubCTGTTargetID = pEndSoldier->ubID;
+	pStartSoldier->CTGTTarget = pEndSoldier;
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
@@ -3059,7 +3059,7 @@ UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sG
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
-		pStartSoldier->ubCTGTTargetID = ubTargetID;
+		pStartSoldier->CTGTTarget = ID2SOLDIER(ubTargetID);
 		return( ChanceToGetThrough( pStartSoldier, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos ) );
 	}
 }
@@ -3089,7 +3089,7 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 
 	// set startsoldier's target ID ... need an ID stored in case this
 	// is the AI calculating cover to a location where he might not be any more
-	pStartSoldier->ubCTGTTargetID = NOBODY;
+	pStartSoldier->CTGTTarget = NULL;
 
 	ubChance = ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos );
 	pStartSoldier->usAnimState = usTrueState;
@@ -3146,7 +3146,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
-		pStartSoldier->ubCTGTTargetID = NOBODY;
+		pStartSoldier->CTGTTarget = NULL;
 
 		usTrueState = pStartSoldier->usAnimState;
 		pStartSoldier->usAnimState = STANDING;
@@ -3264,7 +3264,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	SOLDIERTYPE* const pFirer = pBullet->pFirer;
 	if (fFake)
 	{
-		pBullet->target = ID2SOLDIER(pFirer->ubCTGTTargetID);
+		pBullet->target = pFirer->CTGTTarget;
 		return( CalcChanceToGetThrough( pBullet ) );
 	}
 	else
