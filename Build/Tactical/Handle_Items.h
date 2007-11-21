@@ -125,7 +125,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius );
 
 BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay );
 
-void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendingSoldier );
+void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pOffendingSoldier);
 
 BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel);
 

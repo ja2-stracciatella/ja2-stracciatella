@@ -4687,7 +4687,8 @@ void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel )
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-void MakeNPCGrumpyForMinorOffense( SOLDIERTYPE * pSoldier, SOLDIERTYPE *pOffendingSoldier )
+
+void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pOffendingSoldier)
 {
 	CancelAIAction( pSoldier, TRUE );
 

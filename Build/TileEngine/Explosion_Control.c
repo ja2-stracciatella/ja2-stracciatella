@@ -1375,7 +1375,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE* const pExpl
 }
 
 
-static void HandleBuldingDestruction(INT16 sGridNo, UINT8 ubOwner);
+static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 
 
 // Spreads the effects of explosions...
@@ -1459,8 +1459,10 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	// Calculate breath amount ( if stun damage applicable )
 	sBreathAmt = ( pExplosive->ubStunDamage * 100 ) + (INT16) ( ( ( pExplosive->ubStunDamage / 2 ) * 100 * uiRoll ) / 100 ) ;
 
+	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
+
   // ATE: Make sure guys get pissed at us!
-  HandleBuldingDestruction( sGridNo ,ubOwner );
+	HandleBuldingDestruction(sGridNo, owner);
 
 
 	if ( fBlastEffect )
@@ -1602,7 +1604,6 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 
  if ( sSubsequent != ERASE_SPREAD_EFFECT && sSubsequent != BLOOD_SPREAD_EFFECT )
  {
-		SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 	 // if an explosion effect....
 	 if ( fBlastEffect )
 	 {
@@ -3290,20 +3291,12 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 // loop through civ team and find
 // anybody who is an NPC and
 // see if they get angry
-static void HandleBuldingDestruction(INT16 sGridNo, UINT8 ubOwner)
+static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* const owner)
 {
 	SOLDIERTYPE *		pSoldier;
 	UINT8						cnt;
 
-  if ( ubOwner == NOBODY )
-  {
-    return;
-  }
-
-  if ( MercPtrs[ ubOwner ]->bTeam != gbPlayerNum )
-  {
-    return;
-  }
+	if (owner == NULL || owner->bTeam != gbPlayerNum) return;
 
 	cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
   for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++ ,pSoldier++ )
@@ -3320,7 +3313,7 @@ static void HandleBuldingDestruction(INT16 sGridNo, UINT8 ubOwner)
 
         if ( DoesNPCOwnBuilding( pSoldier, sGridNo ) )
         {
-					MakeNPCGrumpyForMinorOffense( pSoldier, MercPtrs[ ubOwner ] );
+					MakeNPCGrumpyForMinorOffense(pSoldier, owner);
         }
       }
 		}
