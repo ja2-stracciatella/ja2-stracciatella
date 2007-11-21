@@ -400,7 +400,6 @@ struct SOLDIERTYPE
 	BOOLEAN											fNoAPToFinishMove;
 	BOOLEAN											fPausedMove;
 	BOOLEAN											fUIdeadMerc;				// UI Flags for removing a newly dead merc
-	BOOLEAN											fUInewMerc;					// UI Flags for adding newly created merc ( panels, etc )
 	BOOLEAN											fUICloseMerc;				// UI Flags for closing panels
 	BOOLEAN											fUIFirstTimeNOAP;		// UI Flag for diming guys when no APs ( dirty flags )
 	BOOLEAN											fUIFirstTimeUNCON;	// UI FLAG For unconscious dirty

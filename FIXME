@@ -369,7 +369,6 @@ sDesiredHeight: strange
 sTempNewGridNo: strange
 fPausedMove: strange
 fUIdeadMerc: strange
-fUInewMerc: write-only
 fUICloseMerc: strange
 fUIFirstTimeNOAP: write-only
 fUIFirstTimeUNCON: write-only

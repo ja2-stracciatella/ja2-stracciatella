@@ -3286,9 +3286,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 		return;
 	}
 
-	// If this is the first time we are active, open panel!
-	pSoldier->fUInewMerc = FALSE;
-
 	if ( pSoldier->fUICloseMerc )
 	{
 		pSoldier->fUICloseMerc = FALSE;
@@ -3579,10 +3576,6 @@ void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 
 			// DIRTY INTERFACE
 			fInterfacePanelDirty = DIRTYLEVEL2;
-
-			// Set ID to do open anim
-			s->fUInewMerc = TRUE;
-
 			break;
 		}
 	}
