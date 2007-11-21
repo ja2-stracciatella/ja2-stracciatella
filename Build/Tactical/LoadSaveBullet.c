@@ -59,7 +59,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 	EXTR_PTR(s, b->pShadowAniTile)
 	EXTR_U8(s, b->ubItemStatus)
 	EXTR_SKIP(s, 3)
-	Assert(s = endof(src));
+	Assert(s == endof(src));
 
 	return TRUE;
 }
@@ -117,7 +117,7 @@ BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
 	INJ_PTR(d, b->pShadowAniTile)
 	INJ_U8(d, b->ubItemStatus)
 	INJ_SKIP(d, 3)
-	Assert(d = endof(dst));
+	Assert(d == endof(dst));
 
 	return FileWrite(file, dst, sizeof(dst));
 }

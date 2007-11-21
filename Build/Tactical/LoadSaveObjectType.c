@@ -94,7 +94,7 @@ extract_status:
 	EXTR_U8(S, o->fUsed)
 	EXTR_SKIP(S, 2)
 
-	Assert(S = Src + 36);
+	Assert(S == Src + 36);
 	return S;
 }
 
@@ -190,6 +190,6 @@ inject_status:
 	INJ_U8(D, o->fUsed)
 	INJ_SKIP(D, 2)
 
-	Assert(D = Dst + 36);
+	Assert(D == Dst + 36);
 	return D;
 }
