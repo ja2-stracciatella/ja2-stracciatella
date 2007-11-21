@@ -383,7 +383,6 @@ fTurnInProgress: only gets printed for debug
 bViewRange: always NORMAL_VIEW_RANGE
 bNewOppCnt: strange
 bService: always FALSE
-fTurningToFall: always false
 fShowLocator: maybe unnecessary
 MiscPal
 pThrowParams: load/save?

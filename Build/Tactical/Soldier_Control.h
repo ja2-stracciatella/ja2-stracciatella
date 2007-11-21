@@ -470,7 +470,6 @@ struct SOLDIERTYPE
 	UINT16											usLastMovementAnimPerRTBreathUpdate;
 
 	BOOLEAN											fTurningToShoot;
-	BOOLEAN											fTurningToFall;
 	BOOLEAN											fTurningUntilDone;
 	BOOLEAN											fGettingHit;
 	BOOLEAN											fInNonintAnim;

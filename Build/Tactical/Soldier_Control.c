@@ -2954,22 +2954,6 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 }
 
 
-static void SelectFallAnimation(SOLDIERTYPE* pSoldier)
-{
-	// Determine which animation to do...depending on stance and gun in hand...
-	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
-	{
-		case ANIM_STAND:
-			EVENT_InitNewSoldierAnim( pSoldier, FLYBACK_HIT, 0 , FALSE );
-			break;
-
-		case ANIM_PRONE:
-			EVENT_InitNewSoldierAnim( pSoldier, FLYBACK_HIT, 0 , FALSE );
-			break;
-	}
-
-}
-
 BOOLEAN SoldierReadyWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetXPos, INT16 sTargetYPos, BOOLEAN fEndReady )
 {
 	INT16								sFacingDir;
@@ -4927,15 +4911,6 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 				pSoldier->fTurningToShoot = FALSE;
 				pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
 			}
-		}
- }
-
- if ( pSoldier->fTurningToFall )
- {
-		if ( pSoldier->bDirection == pSoldier->bDesiredDirection )
-		{
-			SelectFallAnimation( pSoldier );
-			pSoldier->fTurningToFall = FALSE;
 		}
  }
 
