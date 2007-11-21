@@ -1904,13 +1904,8 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 }
 
 
-void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 usDirection, INT16 sXPos, INT16 sYPos, INT16 sZPos, INT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
+void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, const INT16 sDamage, const INT16 sBreathLoss, const UINT16 usDirection, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const INT16 sRange, const UINT8 ubAttackerID, const UINT8 ubSpecial, const UINT8 ubHitLocation)
 {
-	SOLDIERTYPE				*pTargetSoldier;
-
-	// Get Target
-	pTargetSoldier	= MercPtrs[ usSoldierID ];
-
 	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )

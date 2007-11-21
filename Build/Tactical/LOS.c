@@ -2232,7 +2232,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
   }
 
 	// handle hit!
-	WeaponHit(pTarget->ubID, pFirer->usAttackingWeapon, iDamage, breath_loss, hit_direction, pTarget->dXPos, pTarget->dYPos, 20, sRange, pFirer->ubID, ubSpecial, ubHitLocation);
+	WeaponHit(pTarget, pFirer->usAttackingWeapon, iDamage, breath_loss, hit_direction, pTarget->dXPos, pTarget->dYPos, 20, sRange, pFirer->ubID, ubSpecial, ubHitLocation);
 	return( fStopped );
 }
 
