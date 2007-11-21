@@ -1684,7 +1684,7 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			for ( bLoop = 0; bLoop < NUM_WORLD_DIRECTIONS; bLoop++ )
 			{
 				pTargetSoldier = WhoIsThere2(NewGridNo(pSoldier->sTargetGridNo, DirectionInc(bLoop)), pSoldier->bTargetLevel);
-				if (pTargetSoldier->bTeam != pSoldier->bTeam) break;
+				if (pTargetSoldier != NULL && pTargetSoldier->bTeam != pSoldier->bTeam) break;
 			}
 		}
 
