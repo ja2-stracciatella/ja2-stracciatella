@@ -6249,7 +6249,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 			}
 		}
 
-		VehicleTakeDamage(pSoldier->bVehicleID, ubReason, sLifeDeduct, pSoldier->sGridNo, SOLDIER2ID(attacker));
+		VehicleTakeDamage(pSoldier->bVehicleID, ubReason, sLifeDeduct, pSoldier->sGridNo, attacker);
 		HandleTakeDamageDeath( pSoldier, bOldLife, ubReason );
 		return( 0 );
 	}

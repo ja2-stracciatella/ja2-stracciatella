@@ -1429,10 +1429,10 @@ void AddPassangersToTeamPanel( INT32 iId )
 }
 
 
-static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID);
+static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, SOLDIERTYPE* att);
 
 
-void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, UINT8 ubAttackerID )
+void VehicleTakeDamage(const UINT8 ubID, const UINT8 ubReason, const INT16 sDamage, const INT16 sGridNo, SOLDIERTYPE* const att)
 {
   if ( ubReason != TAKE_DAMAGE_GAS )
   {
@@ -1454,7 +1454,7 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 			case( TAKE_DAMAGE_EXPLOSION):
 			case( TAKE_DAMAGE_STRUCTURE_EXPLOSION):
 
-			HandleCriticalHitForVehicleInLocation( ubID, sDamage, sGridNo, ubAttackerID );
+			HandleCriticalHitForVehicleInLocation(ubID, sDamage, sGridNo, att);
 			break;
 		}
 	}
@@ -1462,7 +1462,7 @@ void VehicleTakeDamage( UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo
 
 
 // handle crit hit to vehicle in this location
-static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, UINT8 ubAttackerID)
+static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 sDmg, const INT16 sGridNo, SOLDIERTYPE* const att)
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
@@ -1513,7 +1513,7 @@ static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 
 		pVehicleList[ ubID ].fDestroyed  = TRUE;
 
 		// Explode vehicle...
-		IgniteExplosion( ubAttackerID, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, GREAT_BIG_EXPLOSION, 0 );
+		IgniteExplosion(SOLDIER2ID(att), CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
 
 		if ( pSoldier != NULL )
 		{
