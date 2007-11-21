@@ -3184,7 +3184,7 @@ static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier);
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
-void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation, INT16 sLocationGrid)
+void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT16 sDamage, INT16 sBreathLoss, const UINT16 bDirection, const UINT16 sRange, SOLDIERTYPE* const att, const UINT8 ubSpecial, const UINT8 ubHitLocation, const INT16 sLocationGrid)
 {
 	UINT8		ubCombinedLoss, ubVolume, ubReason;
 	SOLDIERTYPE * pNewSoldier;
@@ -3204,13 +3204,11 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 			break;
 	}
 
-	SOLDIERTYPE* const att = ID2SOLDIER(ubAttackerID);
-
 	// DO STUFF COMMON FOR ALL TYPES
 	if (att != NULL) att->bLastAttackHit = TRUE;
 
 	// Set attacker's ID
-	pSoldier->ubAttackerID = ubAttackerID;
+	pSoldier->ubAttackerID = SOLDIER2ID(att);
 
 	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{

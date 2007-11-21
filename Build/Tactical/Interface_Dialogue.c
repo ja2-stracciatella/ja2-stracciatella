@@ -2317,7 +2317,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier)
 				{
 					DeleteTalkingMenu();
-					EVENT_SoldierGotHit(pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NOBODY, FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, NOWHERE);
+					EVENT_SoldierGotHit(pSoldier, 1, 100, 10, pSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, AIM_SHOT_TORSO, NOWHERE);
 				}
 				break;
 			}

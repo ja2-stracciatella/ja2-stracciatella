@@ -3678,7 +3678,7 @@ static void ObliterateSector(void)
 				//	CreateAnimationTile( &AniParams );
 					//PlayJA2Sample(EXPLOSION_1, MIDVOLUME, 1, MIDDLEPAN);
 
-			EVENT_SoldierGotHit(pTSoldier, 0, 400, 0, pTSoldier->bDirection, 320, NOBODY, FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, NOWHERE);
+			EVENT_SoldierGotHit(pTSoldier, 0, 400, 0, pTSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, NOWHERE);
 		}
 	}
 }

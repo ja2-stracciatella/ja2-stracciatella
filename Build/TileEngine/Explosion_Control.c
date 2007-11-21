@@ -1218,13 +1218,14 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, const UINT8 u
 	 {
 		sNewWoundAmt = 0;
 	 }
-	 EVENT_SoldierGotHit(pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, uiDist, ubOwner, 0, ANIM_CROUCH, sBombGridNo);
+	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
+	EVENT_SoldierGotHit(pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, uiDist, owner, 0, ANIM_CROUCH, sBombGridNo);
 
 	 pSoldier->ubMiscSoldierFlags |= SOLDIER_MISC_HURT_BY_EXPLOSION;
 
-	 if ( ubOwner != NOBODY && MercPtrs[ ubOwner ]->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum )
+	if (owner != NULL && owner->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
 	 {
-		ProcessImplicationsOfPCAttack(MercPtrs[ubOwner], pSoldier, REASON_EXPLOSION);
+		ProcessImplicationsOfPCAttack(owner, pSoldier, REASON_EXPLOSION);
 	 }
 
 	 return( TRUE );

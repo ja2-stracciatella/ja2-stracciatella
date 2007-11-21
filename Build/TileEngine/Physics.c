@@ -2152,7 +2152,7 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID
         sDamage = 1;
         sBreath = 0;
 
-        EVENT_SoldierGotHit(pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->ubOwner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
+				EVENT_SoldierGotHit(pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, ID2SOLDIER(pObject->ubOwner), FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
 
         pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
       }

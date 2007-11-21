@@ -1185,7 +1185,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				gTacticalStatus.ubAttackBusyCount++;
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Exaust from LAW", gTacticalStatus.ubAttackBusyCount ) );
 
-				EVENT_SoldierGotHit(tgt, MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier->ubID, 0, ANIM_CROUCH, sNewGridNo);
+				EVENT_SoldierGotHit(tgt, MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier, 0, ANIM_CROUCH, sNewGridNo);
 			}
 		}
 	}
@@ -1944,7 +1944,7 @@ void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
   // the poor bastard .. so check
   if ( !pTargetSoldier->fDoingExternalDeath )
   {
-	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation, NOWHERE);
+	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ID2SOLDIER(ubAttackerID), ubSpecial, ubHitLocation, NOWHERE);
   }
   else
   {
@@ -4306,7 +4306,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 								{
 									// Hit!
 									iImpact = HTHImpact( pQueenSoldier, pSoldier, iHitBy, TRUE );
-			 						EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, OppositeDirection(bDir), 50, pQueenSoldier->ubID, 0, ANIM_CROUCH, 0);
+			 						EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, OppositeDirection(bDir), 50, pQueenSoldier, 0, ANIM_CROUCH, 0);
 								}
 							}
 						}
