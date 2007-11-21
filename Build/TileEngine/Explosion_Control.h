@@ -26,8 +26,6 @@ typedef struct
 	INT16												sGridNo;							// World GridNo
 	BOOLEAN											fLocate;
 	INT8												bLevel;								// World level
-	UINT8												ubUnsed[1];
-
 } EXPLOSION_PARAMS;
 
 
