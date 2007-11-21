@@ -1834,13 +1834,12 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 }
 
 
-static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 sXPos, INT16 sYPos, INT16 sZPos, BOOLEAN fSoundOnly, BOOLEAN fFreeupAttacker, BULLET* bullet)
+static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 sGridNo, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const BOOLEAN fSoundOnly, const BOOLEAN fFreeupAttacker, BULLET* const bullet)
 {
 	ANITILE_PARAMS	AniParams;
 	UINT8						ubAmmoType;
   UINT16          usItem;
 
-	SOLDIERTYPE* const attacker = GetMan(ubAttackerID);
 	ubAmmoType = attacker->inv[attacker->ubAttackingHand].ubGunAmmoType;
 	usItem     = attacker->inv[attacker->ubAttackingHand].usItem;
 
@@ -1880,31 +1879,25 @@ static BOOLEAN DoSpecialEffectAmmoMiss(UINT8 ubAttackerID, INT16 sGridNo, INT16 
 
 		return( TRUE );
 	}
-  else if ( usItem == CREATURE_OLD_MALE_SPIT || usItem == CREATURE_QUEEN_SPIT || usItem == CREATURE_INFANT_SPIT || usItem == CREATURE_YOUNG_MALE_SPIT )
+  else
   {
+  	UINT16 gas;
+  	switch (usItem)
+  	{
+  		case CREATURE_YOUNG_MALE_SPIT:
+  		case CREATURE_INFANT_SPIT:     gas = VERY_SMALL_CREATURE_GAS; break;
+  		case CREATURE_OLD_MALE_SPIT:   gas = SMALL_CREATURE_GAS;      break;
+  		case CREATURE_QUEEN_SPIT:      gas = LARGE_CREATURE_GAS;      break;
+  		default: return FALSE;
+  	}
+
     // Increment attack busy...
 	  // gTacticalStatus.ubAttackBusyCount++;
 	  // DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
 
 		PlayLocationJA2Sample(sGridNo, CREATURE_GAS_NOISE, HIGHVOLUME, 1);
 
-    // Do Spread effect.......
-    switch( usItem )
-    {
-      case CREATURE_YOUNG_MALE_SPIT:
-      case CREATURE_INFANT_SPIT:
-
-      	NewSmokeEffect( sGridNo, VERY_SMALL_CREATURE_GAS, 0, ubAttackerID );
-        break;
-
-      case CREATURE_OLD_MALE_SPIT:
-      	NewSmokeEffect( sGridNo, SMALL_CREATURE_GAS, 0, ubAttackerID );
-        break;
-
-      case CREATURE_QUEEN_SPIT:
-      	NewSmokeEffect( sGridNo, LARGE_CREATURE_GAS, 0, ubAttackerID );
-        break;
-    }
+		NewSmokeEffect(sGridNo, gas, 0, SOLDIER2ID(attacker));
   }
 
 	return( FALSE );
@@ -1937,14 +1930,15 @@ void WeaponHit(UINT16 usSoldierID, UINT16 usWeaponIndex, INT16 sDamage, INT16 sB
 		return;
 	}
 
-	DoSpecialEffectAmmoMiss(ubAttackerID, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, NULL);
+	SOLDIERTYPE* const att = ID2SOLDIER(ubAttackerID);
+	DoSpecialEffectAmmoMiss(att, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, NULL);
 
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
   // ATE: This is 'cause of that darn smoke effect that could potnetially kill
   // the poor bastard .. so check
   if ( !pTargetSoldier->fDoingExternalDeath )
   {
-	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, ID2SOLDIER(ubAttackerID), ubSpecial, ubHitLocation, NOWHERE);
+	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, att, ubSpecial, ubHitLocation, NOWHERE);
   }
   else
   {
@@ -2055,7 +2049,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 			break;
 
 		case MONSTERCLASS:
-			DoSpecialEffectAmmoMiss(ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet);
+			DoSpecialEffectAmmoMiss(attacker, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet);
 
 			RemoveBullet(pBullet);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - monster attack hit structure");
@@ -2123,7 +2117,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 		}
 		else
 		{
-			if (!fStopped || !DoSpecialEffectAmmoMiss(ubAttackerID, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet))
+			if (!fStopped || !DoSpecialEffectAmmoMiss(attacker, sGridNo, sXPos, sYPos, sZPos, FALSE, TRUE, pBullet))
 			{
 				if ( sZPos == 0 )
 				{
@@ -3599,7 +3593,7 @@ void ShotMiss(SOLDIERTYPE* const pAttacker, INT32 iBullet)
 
 			// PLAY SOUND AND FLING DEBRIS
 			// RANDOMIZE SOUND SYSTEM
-			if (!DoSpecialEffectAmmoMiss(pAttacker->ubID, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
+			if (!DoSpecialEffectAmmoMiss(pAttacker, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
 			{
 				PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
 			}
