@@ -1192,7 +1192,7 @@ static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist,
 }
 
 
-static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, const UINT8 ubOwner, const INT16 sBombGridNo, const INT16 sWoundAmt, const INT16 sBreathAmt, const UINT32 uiDist, const UINT16 usItem)
+static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const owner, const INT16 sBombGridNo, const INT16 sWoundAmt, const INT16 sBreathAmt, const UINT32 uiDist, const UINT16 usItem)
 {
 	 INT16 sNewWoundAmt = 0;
 	 UINT8		ubDirection;
@@ -1218,7 +1218,6 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, const UINT8 u
 	 {
 		sNewWoundAmt = 0;
 	 }
-	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 	EVENT_SoldierGotHit(pSoldier, usItem, sNewWoundAmt, sBreathAmt, ubDirection, uiDist, owner, 0, ANIM_CROUCH, sBombGridNo);
 
 	 pSoldier->ubMiscSoldierFlags |= SOLDIER_MISC_HURT_BY_EXPLOSION;
@@ -1606,10 +1605,11 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 	 if ( fBlastEffect )
 	 {
 		 // don't hurt anyone who is already dead & waiting to be removed
+			SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 			SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, bLevel);
 			if (tgt != NULL)
 		 {
-				DamageSoldierFromBlast(tgt, ubOwner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
+				DamageSoldierFromBlast(tgt, owner, sBombGridNo, sWoundAmt, sBreathAmt, uiDist, usItem);
 		 }
 
 		 if ( bLevel == 1 )
@@ -1621,7 +1621,7 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 				 {
 					 // debris damage!
 						const INT16 breath = sBreathAmt / 2 - 20 > 0 ? Random(sBreathAmt / 2 - 20) : 1;
-						DamageSoldierFromBlast(tgt_below, ubOwner, sBombGridNo, Random(sWoundAmt / 2 - 20), breath, uiDist, usItem);
+						DamageSoldierFromBlast(tgt_below, owner, sBombGridNo, Random(sWoundAmt / 2 - 20), breath, uiDist, usItem);
 				 }
 			 }
 		 }
