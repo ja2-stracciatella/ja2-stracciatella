@@ -444,7 +444,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldie
 			continue;
 		}
 
-		iGetThrough = SoldierToLocationChanceToGetThrough( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NOBODY );
+		iGetThrough = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NULL);
 //	iBulletGetThrough = CalcChanceToHitGun( pOpponent, sTargetGridNo, AP_MAX_AIM_ATTACK, AIM_SHOT_TORSO );
 
 		if( WeaponInHand( pOpponent ) )

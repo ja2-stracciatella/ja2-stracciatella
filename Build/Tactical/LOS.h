@@ -57,7 +57,7 @@ INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, I
 UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* pStartSoldier, const SOLDIERTYPE* pEndSoldier, UINT8 ubAimLocation);
 UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* pStartSoldier, const SOLDIERTYPE* pEndSoldier);
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel );
-UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID );
+UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, const SOLDIERTYPE* target);
 INT32 SoldierToLocationVisibleDistance( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware );
 INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGridNo);
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );

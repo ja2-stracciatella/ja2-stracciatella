@@ -99,7 +99,7 @@ static void AICenterXY(INT16 sGridNo, FLOAT* pdX, FLOAT* pdY)
 }
 
 
-static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
+static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const opponent, const INT16 sOppGridNo, const INT8 bLevel, const INT32 iMyAPsLeft)
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
@@ -125,7 +125,7 @@ static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16
 				break;
 		}
 
-		bThisCTGT = SoldierToLocationChanceToGetThrough( pSoldier, sOppGridNo, bLevel, bCubeLevel, ubOppID );
+		bThisCTGT = SoldierToLocationChanceToGetThrough(pSoldier, sOppGridNo, bLevel, bCubeLevel, opponent);
 		if (bThisCTGT < bWorstCTGT)
 		{
 			bWorstCTGT = bThisCTGT;
@@ -139,7 +139,7 @@ static INT8 CalcWorstCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16
 }
 
 
-static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
+static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const opponent, const INT16 sOppGridNo, const INT8 bLevel, const INT32 iMyAPsLeft)
 {
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
@@ -165,7 +165,7 @@ static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT
 			default:
 				break;
 		}
-		iTotalCTGT += SoldierToLocationChanceToGetThrough( pSoldier, sOppGridNo, bLevel, bCubeLevel, ubOppID );
+		iTotalCTGT += SoldierToLocationChanceToGetThrough(pSoldier, sOppGridNo, bLevel, bCubeLevel, opponent);
 		bValidCubeLevels++;
 	}
 	iTotalCTGT /= bValidCubeLevels;
@@ -173,7 +173,7 @@ static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT
 }
 
 
-static INT8 CalcBestCTGT(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo, INT8 bLevel, INT32 iMyAPsLeft)
+static INT8 CalcBestCTGT(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const opponent, const INT16 sOppGridNo, const INT8 bLevel, const INT32 iMyAPsLeft)
 {
 	// NOTE: CTGT stands for "ChanceToGetThrough..."
 
@@ -234,7 +234,7 @@ static INT8 CalcBestCTGT(SOLDIERTYPE* pSoldier, UINT8 ubOppID, INT16 sOppGridNo,
 					// NOTE: GOTTA SET THESE 3 FIELDS *BACK* AFTER USING THIS FUNCTION!!!
 					pSoldier->sGridNo = sAdjSpot;     // pretend he's standing at 'sAdjSpot'
 					AICenterXY( sAdjSpot, &(pSoldier->dXPos), &(pSoldier->dYPos) );
-					bThisCTGT = CalcWorstCTGTForPosition( pSoldier, ubOppID, sOppGridNo, bLevel, iMyAPsLeft );
+					bThisCTGT = CalcWorstCTGTForPosition(pSoldier, opponent, sOppGridNo, bLevel, iMyAPsLeft);
 					if (bThisCTGT > bBestCTGT)
 					{
 						bBestCTGT = bThisCTGT;
@@ -308,7 +308,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 		// optimistically assume we'll be behind the best cover available at this spot
 
 		//bHisActualCTGT = ChanceToGetThrough(pHim,sMyGridNo,FAKE,ACTUAL,TESTWALLS,9999,M9PISTOL,NOT_FOR_LOS); // assume a gunshot
-		bHisActualCTGT = CalcWorstCTGTForPosition( pHim, pMe->ubID, sMyGridNo, pMe->bLevel, iMyAPsLeft );
+		bHisActualCTGT = CalcWorstCTGTForPosition(pHim, pMe, sMyGridNo, pMe->bLevel, iMyAPsLeft);
 	}
 
 	// normally, that will be the cover I'll use, unless worst case over-rides it
@@ -327,7 +327,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 		}
 
 		// calculate where my cover is worst if opponent moves just 1 tile over
-		bHisBestCTGT = CalcBestCTGT(pHim, pMe->ubID, sMyGridNo, pMe->bLevel, iMyAPsLeft);
+		bHisBestCTGT = CalcBestCTGT(pHim, pMe, sMyGridNo, pMe->bLevel, iMyAPsLeft);
 
 		// if he can actually improve his CTGT by moving to a nearby gridno
 		if (bHisBestCTGT > bHisActualCTGT)
@@ -358,7 +358,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 
 		// let's not assume anything about the stance the enemy might take, so take an average
 		// value... no cover give a higher value than partial cover
-		bMyCTGT = CalcAverageCTGTForPosition( pMe, pHim->ubID, sHisGridNo, pHim->bLevel, iMyAPsLeft );
+		bMyCTGT = CalcAverageCTGTForPosition(pMe, pHim, sHisGridNo, pHim->bLevel, iMyAPsLeft);
 
 		// since NPCs are too dumb to shoot "blind", ie. at opponents that they
 		// themselves can't see (mercs can, using another as a spotter!), if the

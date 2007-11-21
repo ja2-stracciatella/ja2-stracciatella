@@ -399,7 +399,7 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 			}
 			else
 			{
-				if ( SoldierToLocationChanceToGetThrough( pSoldier, usMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY ) < OK_CHANCE_TO_GET_THROUGH )
+				if (SoldierToLocationChanceToGetThrough(pSoldier, usMapPos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, NULL) < OK_CHANCE_TO_GET_THROUGH)
 				{
 					gfCannotGetThrough = TRUE;
 				}
@@ -749,7 +749,7 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 	{
 		if ( fRecalc )
 		{
-			if ( SoldierToLocationChanceToGetThrough( pSoldier, usMapPos, (INT8) gsInterfaceLevel, pSoldier->bTargetCubeLevel, NOBODY  ) < OK_CHANCE_TO_GET_THROUGH )
+			if (SoldierToLocationChanceToGetThrough(pSoldier, usMapPos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, NULL) < OK_CHANCE_TO_GET_THROUGH)
 			{
 				gfCannotGetThrough = TRUE;
 			}

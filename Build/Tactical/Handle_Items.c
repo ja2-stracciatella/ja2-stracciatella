@@ -118,7 +118,7 @@ BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const S
 	}
 	else
 	{
-		if ( SoldierToLocationChanceToGetThrough( pSoldier, sTargetGridNo, (INT8) bLevel, 0, NOBODY ) < OK_CHANCE_TO_GET_THROUGH )
+		if (SoldierToLocationChanceToGetThrough(pSoldier, sTargetGridNo, bLevel, 0, NULL) < OK_CHANCE_TO_GET_THROUGH)
 		{
 			fBadChangeToGetThrough = TRUE;
 		}

@@ -238,7 +238,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 				break;
 		}
 
-		uiChanceOfDamage = SoldierToLocationChanceToGetThrough(pSoldier, pAttack->sTarget, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, pAttack->opponent->ubID) * CalcChanceToHitGun(pSoldier, pAttack->sTarget, pAttack->ubAimTime, AIM_SHOT_TORSO) / 100;
+		uiChanceOfDamage = SoldierToLocationChanceToGetThrough(pSoldier, pAttack->sTarget, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, pAttack->opponent) * CalcChanceToHitGun(pSoldier, pAttack->sTarget, pAttack->ubAimTime, AIM_SHOT_TORSO) / 100;
 		if (uiChanceOfDamage > 0)
 		{
 			uiStanceBonus = 0;
@@ -2152,7 +2152,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 			// Reduce iThreatValue to same % as the chance HE has shoot through at ME
 			//iThreatValue = (iThreatValue * ChanceToGetThrough( pEnemy, myGrid, FAKE, ACTUAL, TESTWALLS, 9999, M9PISTOL, NOT_FOR_LOS)) / 100;
 			//iThreatValue = (iThreatValue * SoldierTo3DLocationChanceToGetThrough( pEnemy, myGrid, FAKE, ACTUAL, TESTWALLS, 9999, M9PISTOL, NOT_FOR_LOS)) / 100;
-			iThreatValue = (iThreatValue * SoldierToLocationChanceToGetThrough( pEnemy, sMyGrid, pMe->bLevel, 0, pMe->ubID ) ) / 100;
+			iThreatValue = iThreatValue * SoldierToLocationChanceToGetThrough(pEnemy, sMyGrid, pMe->bLevel, 0, pMe) / 100;
 		}
 	}
 	else

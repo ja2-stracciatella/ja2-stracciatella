@@ -3012,7 +3012,8 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
 }
 
-UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTargetID )
+
+UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const INT16 sGridNo, const INT8 bLevel, const INT8 bCubeLevel, const SOLDIERTYPE* const target)
 {
 	FLOAT			dEndZPos;
 	INT16			sXPos;
@@ -3059,7 +3060,7 @@ UINT8 SoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sG
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
-		pStartSoldier->CTGTTarget = ID2SOLDIER(ubTargetID);
+		pStartSoldier->CTGTTarget = target;
 		return( ChanceToGetThrough( pStartSoldier, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos ) );
 	}
 }
