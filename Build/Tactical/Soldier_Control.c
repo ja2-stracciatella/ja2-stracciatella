@@ -3178,7 +3178,7 @@ UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady)
 static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss);
 static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
 static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier);
-static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, UINT16 bDirection, UINT16 sRange);
 static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 bDirection, SOLDIERTYPE* att, UINT8 ubSpecial);
 static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
 
@@ -3615,7 +3615,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	}
 	if ( Item[ usWeaponIndex ].usItemClass & IC_EXPLOSV || Item[ usWeaponIndex ].usItemClass & IC_TENTACLES )
 	{
-		SoldierGotHitExplosion( pSoldier, usWeaponIndex, sDamage, bDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation );
+		SoldierGotHitExplosion(pSoldier, usWeaponIndex, bDirection, sRange);
 	}
 	if ( Item[ usWeaponIndex ].usItemClass & IC_PUNCH )
 	{
@@ -3828,7 +3828,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 }
 
 
-static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
+static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usWeaponIndex, const UINT16 bDirection, const UINT16 sRange)
 {
 	INT16 sNewGridNo;
 
