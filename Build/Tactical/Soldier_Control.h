@@ -145,7 +145,6 @@
 #define NO_PENDING_STANCE			254
 #define NO_DESIRED_HEIGHT			255
 
-#define MAX_FULLTILE_DIRECTIONS 3
 
 //ENUMERATIONS FOR ACTIONS
 enum
@@ -497,12 +496,6 @@ struct SOLDIERTYPE
 	PaletteRepID								VestPal;	// 30
 	PaletteRepID								SkinPal;	// 30
 	PaletteRepID								MiscPal;	// 30
-
-
-	// FULL 3-d TILE STUFF ( keep records of three tiles infront )
-	UINT16										  usFrontArcFullTileList[ MAX_FULLTILE_DIRECTIONS ];
-	INT16												usFrontArcFullTileGridNos[ MAX_FULLTILE_DIRECTIONS ];
-
 
 	SGPPaletteEntry							*p8BPPPalette; // 4
 	UINT16											*p16BPPPalette_UNUSED; // XXX HACK000B

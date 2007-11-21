@@ -234,13 +234,6 @@ static const INT16 gsTerrainTypeSpeedModifiers[] =
 BOOLEAN gfCalcTranslucency = FALSE;
 
 
-static const INT16 gsFullTileDirections[MAX_FULLTILE_DIRECTIONS] =
-{
-	-1, -WORLD_COLS - 1, -WORLD_COLS
-
-};
-
-
 typedef struct PaletteSubRangeType
 {
 	UINT8 ubStart;
@@ -2418,10 +2411,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			 //pSoldier->sZLevelOverride = (sZLevel*Z_SUBLAYERS)+ROOF_Z_LEVEL;
 			 pSoldier->sZLevelOverride = TOPMOST_Z_LEVEL;
 		}
-
-
-		// Add/ remove tree if we are near it
-		// CheckForFullStructures( pSoldier );
 
 		// Add merc at new pos
 		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
@@ -7412,146 +7401,6 @@ static UINT8 atan8FromAngle(DOUBLE angle)
 	} while( FALSE );
 
 	return( mFacing );
-}
-
-
-static BOOLEAN CheckForFullStruct(INT16 sGridNo, UINT16* pusIndex);
-
-
-static void CheckForFullStructures(SOLDIERTYPE* pSoldier)
-{
-	// This function checks to see if we are near a specific structure type which requires us to blit a
-	// small obscuring peice
-	INT16 sGridNo;
-	UINT16 usFullTileIndex;
-	INT32		cnt;
-
-
-	// Check in all 'Above' directions
-	for ( cnt = 0; cnt < MAX_FULLTILE_DIRECTIONS; cnt++ )
-	{
-		sGridNo = pSoldier->sGridNo + gsFullTileDirections[ cnt ];
-
-		if ( CheckForFullStruct( sGridNo, &usFullTileIndex ) )
-		{
-			// Add one for the item's obsuring part
-			pSoldier->usFrontArcFullTileList[ cnt ] = usFullTileIndex + 1;
-			pSoldier->usFrontArcFullTileGridNos[ cnt ] = sGridNo;
-			AddTopmostToHead(  sGridNo, pSoldier->usFrontArcFullTileList[ cnt ] );
-		}
-		else
-		{
-			if ( pSoldier->usFrontArcFullTileList[ cnt ] != 0 )
-			{
-				RemoveTopmost( pSoldier->usFrontArcFullTileGridNos[ cnt ], pSoldier->usFrontArcFullTileList[ cnt ] );
-			}
-			pSoldier->usFrontArcFullTileList[ cnt ] = 0;
-			pSoldier->usFrontArcFullTileGridNos[ cnt ] = 0;
-		}
-	}
-
-}
-
-
-static BOOLEAN FullStructAlone(INT16 sGridNo, UINT8 ubRadius);
-
-
-static BOOLEAN CheckForFullStruct(INT16 sGridNo, UINT16* pusIndex)
-{
-	LEVELNODE	*pStruct		 = NULL;
-	LEVELNODE	*pOldStruct		 = NULL;
-	UINT32				fTileFlags;
-
-	pStruct = gpWorldLevelData[ sGridNo ].pStructHead;
-
-	// Look through all structs and Search for type
-
-	while( pStruct != NULL )
-	{
-
-		if ( pStruct->usIndex != NO_TILE && pStruct->usIndex < NUMBEROFTILES )
-		{
-
-			GetTileFlags( pStruct->usIndex, &fTileFlags );
-
-			// Advance to next
-			pOldStruct = pStruct;
-			pStruct = pStruct->pNext;
-
-			//if( (pOldStruct->pStructureData!=NULL) && ( pOldStruct->pStructureData->fFlags&STRUCTURE_TREE ) )
-			if ( fTileFlags & FULL3D_TILE )
-			{
-				// CHECK IF THIS TREE IS FAIRLY ALONE!
-				if ( FullStructAlone( sGridNo, 2 ) )
-				{
-					// Return true and return index
-					*pusIndex = pOldStruct->usIndex;
-					return( TRUE );
-				}
-				else
-				{
-					return( FALSE );
-				}
-
-			}
-
-		}
-		else
-		{
-			// Advance to next
-			pOldStruct = pStruct;
-			pStruct = pStruct->pNext;
-		}
-
-	}
-
-	// Could not find it, return FALSE
-	return( FALSE );
-
-}
-
-
-static BOOLEAN FullStructAlone(INT16 sGridNo, UINT8 ubRadius)
-{
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT16	 iNewIndex;
-	INT32	 leftmost;
-
-
-	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-
-		leftmost = ( ( sGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			iNewIndex = sGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-
-
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
-			{
-				if ( iNewIndex != sGridNo )
-				{
-					if ( FindStructure( iNewIndex, STRUCTURE_TREE ) != NULL )
-					{
-						return( FALSE );
-					}
-				}
-			}
-
-		}
-	}
-
-	return( TRUE );
 }
 
 

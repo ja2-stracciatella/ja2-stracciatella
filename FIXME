@@ -390,8 +390,6 @@ bService: always FALSE
 ubDelayedMovementCauseMerc
 fHoldAttackerUntilDone
 fTurningToFall: always false
-usFrontArcFullTileList: only in unsed function
-usFrontArcFullTileGridNos: only in unsed function
 fShowLocator: maybe unnecessary
 MiscPal
 p16BPPPalette_UNUSED
