@@ -1904,36 +1904,29 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 }
 
 
-void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, const INT16 sDamage, const INT16 sBreathLoss, const UINT16 usDirection, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const INT16 sRange, const UINT8 ubAttackerID, const UINT8 ubSpecial, const UINT8 ubHitLocation)
+void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, const INT16 sDamage, const INT16 sBreathLoss, const UINT16 usDirection, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const INT16 sRange, SOLDIERTYPE* const attacker, const UINT8 ubSpecial, const UINT8 ubHitLocation)
 {
-	MakeNoise( ubAttackerID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
+	MakeNoise(attacker->ubID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
 		// Reduce attacker count!
-		if ( usWeaponIndex == ROCKET_LAUNCHER )
-		{
-			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), C1, pTargetSoldier->bLevel );
-		}
-		else // tank cannon
-		{
-			IgniteExplosion( ubAttackerID, sXPos, sYPos, 0, (INT16) (GETWORLDINDEXFROMWORLDCOORDS( sYPos, sXPos )), TANK_SHELL, pTargetSoldier->bLevel );
-		}
+		const UINT16 item = (usWeaponIndex == ROCKET_LAUNCHER ? C1 : TANK_SHELL);
+		IgniteExplosion(attacker->ubID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS(sYPos, sXPos), item, pTargetSoldier->bLevel);
 
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
-		FreeUpAttacker(GetMan(ubAttackerID));
+		FreeUpAttacker(attacker);
 		return;
 	}
 
-	SOLDIERTYPE* const att = ID2SOLDIER(ubAttackerID);
-	DoSpecialEffectAmmoMiss(att, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, NULL);
+	DoSpecialEffectAmmoMiss(attacker, pTargetSoldier->sGridNo, sXPos, sYPos, sZPos, FALSE, FALSE, NULL);
 
 	// OK, SHOT HAS HIT, DO THINGS APPROPRIATELY
   // ATE: This is 'cause of that darn smoke effect that could potnetially kill
   // the poor bastard .. so check
   if ( !pTargetSoldier->fDoingExternalDeath )
   {
-	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, att, ubSpecial, ubHitLocation, NOWHERE);
+	  EVENT_SoldierGotHit(pTargetSoldier,	usWeaponIndex, sDamage, sBreathLoss, usDirection, sRange, attacker, ubSpecial, ubHitLocation, NOWHERE);
   }
   else
   {
