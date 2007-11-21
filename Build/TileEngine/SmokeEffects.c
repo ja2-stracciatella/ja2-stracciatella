@@ -219,7 +219,7 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
   }
 
   // ATE: FALSE into subsequent-- it's the first one!
-  SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, FALSE, bLevel, iSmokeIndex );
+  SpreadEffectSmoke(pSmoke, FALSE, bLevel, iSmokeIndex);
 
 	return( iSmokeIndex );
 }
@@ -518,7 +518,7 @@ void DecaySmokeEffects( UINT32 uiTime )
   			    else
 				    {
 					    // deactivate tear gas cloud (use last known radius)
-					    SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, ERASE_SPREAD_EFFECT, bLevel, cnt );
+					    SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel, cnt);
 					    pSmoke->fAllocated = FALSE;
               break;
 				    }
@@ -528,7 +528,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 			else
 			{
 				// damage anyone standing in cloud
-				SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, REDO_SPREAD_EFFECT, 0, cnt );
+				SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0, cnt);
 			}
     }
   }
@@ -551,7 +551,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		  // if this cloud remains effective (duration not reached)
 		  if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
 			{
-  			SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, cnt );
+  			SpreadEffectSmoke(pSmoke, TRUE, bLevel, cnt);
         pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
 			}
     }
@@ -647,7 +647,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
           bLevel = 0;
         }
 
-				SpreadEffect( gSmokeEffectData[uiCount].sGridNo, gSmokeEffectData[uiCount].ubRadius, gSmokeEffectData[uiCount].usItem, gSmokeEffectData[uiCount].ubOwner, TRUE, bLevel, uiCount );
+				SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel, uiCount);
 			}
 		}
 	}
@@ -787,7 +787,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
         bLevel = 0;
       }
 
-			SpreadEffect( gSmokeEffectData[uiCount].sGridNo, gSmokeEffectData[uiCount].ubRadius, gSmokeEffectData[uiCount].usItem, gSmokeEffectData[uiCount].ubOwner, TRUE, bLevel, uiCount );
+			SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel, uiCount);
 		}
 	}
 
@@ -828,9 +828,8 @@ void UpdateSmokeEffectGraphics( )
         bLevel = 0;
       }
 
-			SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, ERASE_SPREAD_EFFECT, bLevel, uiCnt );
-
-  		SpreadEffect( pSmoke->sGridNo, pSmoke->ubRadius, pSmoke->usItem, pSmoke->ubOwner, TRUE, bLevel, uiCnt );
+			SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel, uiCnt);
+  		SpreadEffectSmoke(pSmoke, TRUE,                bLevel, uiCnt);
     }
   }
 }

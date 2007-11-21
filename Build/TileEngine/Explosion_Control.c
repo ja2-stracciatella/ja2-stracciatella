@@ -2218,6 +2218,12 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 }
 
 
+void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, const INT8 level, const INT32 smoke_effect_id)
+{
+	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, s->ubOwner, subsequent, level, smoke_effect_id);
+}
+
+
 static void ToggleActionItemsByFrequency(INT8 bFrequency)
 {
 	UINT32				uiWorldBombIndex;
