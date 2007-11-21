@@ -321,7 +321,6 @@ struct SOLDIERTYPE
 {
 	// ID
 	UINT8												ubID;
-	UINT8												bReserved1;
 
 	// DESCRIPTION / STATS, ETC
 	UINT8												ubBodyType;
@@ -351,11 +350,9 @@ struct SOLDIERTYPE
 	UINT8												ubWaitActionToDo;
 	BOOLEAN											fPauseAim;
 	INT8												ubInsertionDirection;
-	INT8												bGunType;
 	// skills
 	UINT8												ubOppNum;
 	INT8												bLastRenderVisibleValue;
-	BOOLEAN											fInMissionExitNode;
 	UINT8												ubAttackingHand;
 	INT8												bScientific;
 	// traits
@@ -390,7 +387,6 @@ struct SOLDIERTYPE
 	INT16												sHeightAdjustment;
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations
-	INT16												sRoomNo;
 	INT8												bOverTerrainType;
 	INT8												bOldOverTerrainType;
 
@@ -454,14 +450,12 @@ struct SOLDIERTYPE
 
 	// MOVEMENT TO NEXT TILE HANDLING STUFF
 	INT8												bAgility;			// agility (speed) value
-	UINT8												ubDelayedMovementCauseMerc;
 	INT16												sDelayedMovementCauseGridNo;
 	INT16												sReservedMovementGridNo;
 
 	INT8												bStrength;
 
 	// Weapon Stuff
-	BOOLEAN											fHoldAttackerUntilDone;
 	INT16												sTargetGridNo;
 	INT8												bTargetLevel;
 	INT8												bTargetCubeLevel;
@@ -498,10 +492,8 @@ struct SOLDIERTYPE
 	PaletteRepID								MiscPal;	// 30
 
 	SGPPaletteEntry							*p8BPPPalette; // 4
-	UINT16											*p16BPPPalette_UNUSED; // XXX HACK000B
 	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 	UINT16											*pGlowShades[ 20 ]; //
-	UINT16											*pCurrentShade_UNUSED; // XXX HACK000B
 	INT8												bMedical;
 	BOOLEAN											fBeginFade;
 	UINT8												ubFadeLevel;
@@ -513,14 +505,11 @@ struct SOLDIERTYPE
 	BOOLEAN											fTurningFromPronePosition;
 	INT8												bReverse;
 	struct TAG_level_node				*pLevelNode;
-	struct TAG_level_node				*pExternShadowLevelNode;
-	struct TAG_level_node				*pRoofUILevelNode;
 
 	// WALKING STUFF
 	INT8												bDesiredDirection;
 	INT16												sDestXPos;
 	INT16												sDestYPos;
-	INT16												sDesiredDest;
 	INT16												sDestination;
 	INT16												sFinalDestination;
 	INT8												bLevel;
@@ -539,13 +528,6 @@ struct SOLDIERTYPE
 	INT8												bShownAimTime;
 	INT8												bPathStored;	// good for AI to reduct redundancy
 	INT8												bHasKeys;			// allows AI controlled dudes to open locked doors
-
-
-	// UNBLIT BACKGROUND
-	UINT16											*pBackGround;
-	UINT16											*pZBackground;
-	UINT16											usUnblitX, usUnblitY;
-	UINT16											usUnblitWidth, usUnblitHeight;
 
 	UINT8												ubStrategicInsertionCode;
 	UINT16											usStrategicInsertionData;
@@ -567,8 +549,6 @@ struct SOLDIERTYPE
 
 	// STUFF FOR RANDOM ANIMATIONS
 	UINT32											uiTimeOfLastRandomAction;
-	INT16												usLastRandomAnim;
-
 
 	// AI STUFF
 	INT8												bOppList[MAX_NUM_SOLDIERS]; // AI knowledge database
@@ -616,7 +596,6 @@ struct SOLDIERTYPE
 	INT8												bIntStartAPs;
 	INT8												bMoved;
 	INT8												bHunting;
-	UINT8												ubLastCall;
 	UINT8												ubCaller;
 	INT16												sCallerGridNo;
 	UINT8												bCallPriority;
@@ -637,12 +616,8 @@ struct SOLDIERTYPE
 	INT16												sWalkToAttackGridNo;
 	INT16												sWalkToAttackWalkToCost;
 
-	BOOLEAN											fForceRenderColor;
-	BOOLEAN											fForceNoRenderPaletteCycle;
-
 	INT16												sLocatorOffX;
 	INT16												sLocatorOffY;
-	BOOLEAN											fStopPendingNextTile;
 
 	BOOLEAN											fForceShade;
 	UINT16											*pForcedShade;
@@ -652,7 +627,6 @@ struct SOLDIERTYPE
 	INT16												sDamage;
 	INT16												sDamageX;
 	INT16												sDamageY;
-	INT8												bDamageDir;
 	INT8												bDoBurst;
 	INT16												usUIMovementMode;
 	INT8												bUIInterfaceLevel;
@@ -726,19 +700,6 @@ struct SOLDIERTYPE
 	UINT16											usMedicalDeposit;         // is there a medical deposit on merc
 	UINT16											usLifeInsurance;          // is there life insurance taken out on merc
 
-
-	//DEF:  Used for the communications
-	UINT32												uiStartMovementTime;				// the time since the merc first started moving
-	UINT32												uiOptimumMovementTime;			// everytime in ececute overhead the time for the current ani will be added to this total
-	UINT32												usLastUpdateTime ;					// The last time the soldier was in ExecuteOverhead
-
-	BOOLEAN											fIsSoldierMoving;							// ie.  Record time is on
-	BOOLEAN											fIsSoldierDelayed;						//Is the soldier delayed Soldier
-	BOOLEAN											fSoldierUpdatedFromNetwork;
-	UINT32											uiSoldierUpdateNumber;
-	BYTE												ubSoldierUpdateType;
-	//END
-
 	INT32												iStartOfInsuranceContract;
 	UINT32											uiLastAssignmentChangeMin;		// timestamp of last assignment change in minutes
 	INT32												iTotalLengthOfInsuranceContract;
@@ -804,7 +765,6 @@ struct SOLDIERTYPE
 	INT16												sBoundingBoxOffsetY;
 	UINT32											uiTimeSameBattleSndDone;
 	INT8												bOldBattleSnd;
-	BOOLEAN											fReactingFromBeingShot;
 	BOOLEAN											fContractPriceHasIncreased;
 	INT32												iBurstSoundID;
 	BOOLEAN											fFixingSAMSite;
@@ -833,16 +793,11 @@ struct SOLDIERTYPE
 	BOOLEAN											fMercAsleep;
 	BOOLEAN											fDontChargeAPsForStanceChange;
 
-	UINT8												ubHoursOnAssignment;						// used for assignments handled only every X hours
-
-	UINT8												ubMercJustFired;   // the merc was just fired..there may be dialogue events occuring, this flag will prevent any interaction with contracts
-																								// until after the merc leaves
 	UINT8												ubTurnsUntilCanSayHeardNoise;
 	UINT16											usQuoteSaidExtFlags;
 
 	UINT16											sContPathLocation;
 	INT8												bGoodContPath;
-	UINT8												ubPendingActionInterrupted;
 	INT8												bNoiseLevel;
 	INT8												bRegenerationCounter;
 	INT8												bRegenBoostersUsedToday;
@@ -885,7 +840,6 @@ struct SOLDIERTYPE
 	INT8												bDelayedStrategicMoraleMod;
 	UINT8												ubDoorOpeningNoise;
 
-	struct GROUP								*pGroup;
 	UINT8												ubLeaveHistoryCode;
 	BOOLEAN											fDontUnsetLastTargetFromTurn;
 	INT8												bOverrideMoveSpeed;
@@ -898,22 +852,17 @@ struct SOLDIERTYPE
   INT8												bVehicleUnderRepairID;
   INT32                       iTimeCanSignElsewhere;
 	INT8												bHospitalPriceModifier;
-	INT8												bFillerBytes[3];
 	UINT32											uiStartTimeOfInsuranceContract;
 	BOOLEAN											fRTInNonintAnim;
   BOOLEAN                     fDoingExternalDeath;
   INT8                        bCorpseQuoteTolerance;
-  INT8                        bYetAnotherPaddingSpace;
   INT32                       iPositionSndID;
   INT32                       iTuringSoundID;
   UINT8                       ubLastDamageReason;
 	BOOLEAN											fComplainedThatTired;
 	INT16												sLastTwoLocations[2];
-  INT16                       bFillerDude;
   INT32                       uiTimeSinceLastBleedGrunt;
   UINT8						ubNextToPreviousAttackerID;
-
-	UINT8												bFiller[ 39 ];
 };
 
 #define HEALTH_INCREASE			0x0001

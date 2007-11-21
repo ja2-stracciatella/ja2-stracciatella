@@ -2537,18 +2537,12 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, const SOLDIERTYPE* s)
 
 		//Not saving any of these in the soldier struct
 		//	struct TAG_level_node				*pLevelNode;
-		//	struct TAG_level_node				*pExternShadowLevelNode;
-		//	struct TAG_level_node				*pRoofUILevelNode;
-		//	UINT16											*pBackGround;
-		//	UINT16											*pZBackground;
 		//	UINT16											*pForcedShade;
 		//
 		// 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
 		//  THROW_PARAMS								*pThrowParams;
-		//  UINT16											*pCurrentShade;
 		//	UINT16											*pGlowShades[ 20 ]; //
 		//	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
-		//	UINT16											*p16BPPPalette;
 		//	SGPPaletteEntry							*p8BPPPalette
 		//	OBJECTTYPE									*pTempObject;
 static BOOLEAN SaveSoldierStructure(HWFILE hFile)
@@ -2683,16 +2677,10 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			SavedSoldierInfo.pTempObject	 = NULL;
 			SavedSoldierInfo.pKeyRing	 = NULL;
 			SavedSoldierInfo.p8BPPPalette	 = NULL;
-			SavedSoldierInfo.p16BPPPalette_UNUSED = NULL; // XXX HACK000B
 			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
 			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
-			SavedSoldierInfo.pCurrentShade_UNUSED = NULL; // XXX HACK000B
 			SavedSoldierInfo.pThrowParams	 = NULL;
 			SavedSoldierInfo.pLevelNode	 = NULL;
-			SavedSoldierInfo.pExternShadowLevelNode	 = NULL;
-			SavedSoldierInfo.pRoofUILevelNode	 = NULL;
-			SavedSoldierInfo.pBackGround	 = NULL;
-			SavedSoldierInfo.pZBackground	 = NULL;
 			SavedSoldierInfo.pForcedShade	 = NULL;
 			SavedSoldierInfo.pMercPath	 = NULL;
 			memset( SavedSoldierInfo.pEffectShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_EFFECTSHADES );

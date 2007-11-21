@@ -361,9 +361,6 @@ fHasKeys: strange
 bPadding[]
 
 SOLDIERTYPE
-bReserved1
-bGunType
-fInMissionExitNode: read-only (in unused function)
 fReloading: always FALSE
 fPauseAim: always FALSE
 bScientific: just copied around a bit
@@ -372,7 +369,6 @@ dOldYPos: write-only
 sHeightAdjustment: seems to be always 0
 sDesiredHeight: strange
 sTempNewGridNo: strange
-sRoomNo
 fPausedMove: strange
 fUIdeadMerc: strange
 fUInewMerc: write-only
@@ -387,65 +383,29 @@ fTurnInProgress: only gets printed for debug
 bViewRange: always NORMAL_VIEW_RANGE
 bNewOppCnt: strange
 bService: always FALSE
-ubDelayedMovementCauseMerc
-fHoldAttackerUntilDone
 fTurningToFall: always false
 fShowLocator: maybe unnecessary
 MiscPal
-p16BPPPalette_UNUSED
-pCurrentShade_UNUSED
 pThrowParams: load/save?
 pLevelNode: load/save?
-pExternShadowLevelNode
-pRoofUILevelNode
-sDesiredDest
 bStopped: always FALSE, unused
 bNeedToLook: write-only
 sBlackList: strange
 bHasKeys: strange
-pBackGround: write-only
-pZBackground: write-only
-usUnblitX
-usUnblitY
-usUnblitWidth
-usUnblitHeight
-usLastRandomAnim
 bUnderEscort: seems to be always FASE, only set to true in unused function
-ubLastCall
 bRTPCombat: read-only
-fForceRenderColor
-fForceNoRenderPaletteCycle
 sLocatorOffX: read-only
 sLocatorOffY
-fStopPendingNextTile
 fForceShade: pForceShade != NULL?
-bDamageDir
 bUIInterfaceLevel: write-only
 fOpenPanel: always FALSE
 bOpenPanelFrame: probably unused, see fOpenPanel
 bVocalVolume: always MIDVOLUME
-uiStartMovementTime
-uiOptimumMovementTime
-usLastUpdateTime: write-only
-fIsSoldierMoving: read-only
-fIsSoldierDelayed
-fSoldierUpdatedFromNetwork: read-only
-uiSoldierUpdateNumber
-ubSoldierUpdateType
 usPendingAnimation2: always NO_PENDING_ANIMATION
-fReactingFromBeingShot
 bTimesDrugUsedSinceSleep: write-only
-ubHoursOnAssignment
-ubMercJustFired
-ubPendingActionInterrupted
-pGroup
 fDieSoundUsed: always FALSE
-bFillerBytes
 fDoingExternalDeath: always TRUE?
-bYetAnotherPaddingSpace
 ubLastDamageReason: necessary?
-bFillerDude
-bFiller
 
 StrategicMapElement
 UNUSEDuiFootEta
