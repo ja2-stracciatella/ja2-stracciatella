@@ -2782,7 +2782,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 	else
 	{
 		// if this merc is selected and he's actually moving
-		//if ((pSoldier->ubID == gusSelectedSoldier) && !pSoldier->bStopped)
+		//if (pSoldier->ubID == gusSelectedSoldier)
 		// ATE: Change this to if the guy is ours....
 		// How will this feel?
 		if ( pSoldier->bTeam == gbPlayerNum )

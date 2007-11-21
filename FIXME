@@ -387,7 +387,6 @@ fShowLocator: maybe unnecessary
 MiscPal
 pThrowParams: load/save?
 pLevelNode: load/save?
-bStopped: always FALSE, unused
 sBlackList: strange
 bHasKeys: strange
 bUnderEscort: always FALSE
