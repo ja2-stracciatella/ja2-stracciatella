@@ -3179,7 +3179,7 @@ static UINT8 CalcScreamVolume(SOLDIERTYPE* pSoldier, UINT8 ubCombinedLoss);
 static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
 static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
 static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
-static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, SOLDIERTYPE* att, UINT8 ubSpecial, UINT8 ubHitLocation);
 static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
 
 
@@ -3607,7 +3607,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	// SWITCH IN TYPE OF WEAPON
 	if ( Item[ usWeaponIndex ].usItemClass & ( IC_GUN | IC_THROWING_KNIFE ) )
 	{
-		SoldierGotHitGunFire( pSoldier, usWeaponIndex, sDamage, bDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation );
+		SoldierGotHitGunFire(pSoldier, usWeaponIndex, sDamage, bDirection, sRange, att, ubSpecial, ubHitLocation);
 	}
 	if ( Item[ usWeaponIndex ].usItemClass & IC_BLADE )
 	{
@@ -3713,7 +3713,7 @@ static void DoGenericHit(SOLDIERTYPE* pSoldier, UINT8 ubSpecial, INT16 bDirectio
 static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection);
 
 
-static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
+static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 usWeaponIndex, const INT16 sDamage, const UINT16 bDirection, const UINT16 sRange, SOLDIERTYPE* const att, const UINT8 ubSpecial, const UINT8 ubHitLocation)
 {
 	UINT16	usNewGridNo;
 	BOOLEAN	fBlownAway = FALSE;
@@ -3730,7 +3730,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, IN
 			{
 				if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 				{
-					if (SpacesAway( pSoldier->sGridNo, Menptr[ubAttackerID].sGridNo ) <= MAX_DISTANCE_FOR_MESSY_DEATH)
+					if (SpacesAway(pSoldier->sGridNo, att->sGridNo) <= MAX_DISTANCE_FOR_MESSY_DEATH)
 					{
 						usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT8)( DirectionInc( pSoldier->bDirection ) ) );
 
@@ -3751,7 +3751,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, IN
 			{
 				if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 				{
-					if (SpacesAway( pSoldier->sGridNo, Menptr[ubAttackerID].sGridNo ) <= MAX_DISTANCE_FOR_MESSY_DEATH)
+					if (SpacesAway(pSoldier->sGridNo, att->sGridNo) <= MAX_DISTANCE_FOR_MESSY_DEATH)
 					{
 
 						// possibly play torso explosion anim!
