@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveExplosionType.h"
 #include "Overhead.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -3106,9 +3107,10 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	//loop through and count all the active explosions
 	for( uiCnt=0; uiCnt< NUM_EXPLOSION_SLOTS; uiCnt++)
 	{
-		if( gExplosionData[ uiCnt ].fAllocated )
+		const EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
+		if (e->fAllocated)
 		{
-			if (!FileWrite(hFile, &gExplosionData[uiCnt], sizeof(EXPLOSIONTYPE))) return FALSE;
+			if (!InjectExplosionTypeIntoFile(hFile, e)) return FALSE;
 		}
 	}
 
@@ -3149,11 +3151,12 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 	//loop through and load all the active explosions
 	for( uiCnt=0; uiCnt< guiNumExplosions; uiCnt++)
 	{
-		if (!FileRead(hFile, &gExplosionData[uiCnt], sizeof(EXPLOSIONTYPE))) return FALSE;
-		gExplosionData[ uiCnt ].iID = uiCnt;
-		gExplosionData[ uiCnt ].iLightID = -1;
+		EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
+		if (!ExtractExplosionTypeFromFile(hFile, e)) return FALSE;
+		e->iID = uiCnt;
+		e->iLightID = -1;
 
-		GenerateExplosionFromExplosionPointer( &gExplosionData[ uiCnt ] );
+		GenerateExplosionFromExplosionPointer(e);
 	}
 
 	return( TRUE );

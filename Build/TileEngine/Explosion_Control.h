@@ -40,7 +40,6 @@ typedef struct
 	INT32								iLightID;
 	UINT8								ubUnsed[2];
 } EXPLOSIONTYPE;
-CASSERT(sizeof(EXPLOSIONTYPE) == 36)
 
 
 enum
