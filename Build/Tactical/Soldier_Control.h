@@ -513,10 +513,6 @@ struct SOLDIERTYPE
 	INT16												sFinalDestination;
 	INT8												bLevel;
 	INT8												bStopped;
-	INT8												bNeedToLook;
-
-
-
 
 	// PATH STUFF
 	UINT16											usPathingData[ MAX_PATH_LIST_SIZE ];

@@ -735,8 +735,6 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 		}
 
 		pSoldier->bNewOppCnt = 0;
-		pSoldier->bNeedToLook = FALSE;
-
 
 // Temporary for opplist synching - disable random order radioing
 #ifndef RECORDOPPLIST
@@ -782,9 +780,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 					}
 				}
 
-
 				pThem->bNewOppCnt = 0;
-				pThem->bNeedToLook = FALSE;
 			}
 		}
 	}

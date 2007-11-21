@@ -388,7 +388,6 @@ MiscPal
 pThrowParams: load/save?
 pLevelNode: load/save?
 bStopped: always FALSE, unused
-bNeedToLook: write-only
 sBlackList: strange
 bHasKeys: strange
 bUnderEscort: always FALSE

@@ -976,7 +976,6 @@ void FreeUpNPCFromPendingAction( 	SOLDIERTYPE *pSoldier )
 void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 {
 	ActionDone(pSoldier);
-	pSoldier->bNeedToLook = TRUE;
 
 /*
 	if (pSoldier->bActionInProgress)
@@ -1023,9 +1022,6 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 
 	// DO WE NEED THIS???
 	//pSoldier->sTarget = NOWHERE;
-
-	// make him look in case he turns to face a new direction
-	pSoldier->bNeedToLook = TRUE;
 
 	// This is here to speed up resolution of interrupts that have already been
 	// delayed while AttackingPerson was still set (causing ChangeControl to
