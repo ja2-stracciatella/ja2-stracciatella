@@ -38,7 +38,6 @@ typedef struct
 	INT16								sCurrentFrame;
 	INT32								iID;
 	INT32								iLightID;
-	UINT8								ubUnsed[2];
 } EXPLOSIONTYPE;
 
 
