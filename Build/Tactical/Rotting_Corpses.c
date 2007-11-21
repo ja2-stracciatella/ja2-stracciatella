@@ -1422,7 +1422,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		if ( pCorpse->def.bLevel == 0 )
 		{
 			// Set some blood......
-			SpreadEffect( sBaseGridNo, (UINT8)( ( 2 ) ), 0, NOBODY, BLOOD_SPREAD_EFFECT, 0, -1 );
+			SpreadEffect(sBaseGridNo, 2, 0, NOBODY, BLOOD_SPREAD_EFFECT, 0, NULL);
 		}
 	}
 

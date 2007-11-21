@@ -540,7 +540,7 @@ void UpdateAniTiles( )
                 }
                 else
                 {
-    							SpreadEffect( pNode->sGridNo, Explosive[ Item[ (UINT16)pNode->uiUserData ].ubClassIndex ].ubRadius, (UINT16)pNode->uiUserData, (UINT8)pNode->ubUserData2, FALSE, gExplosionData[ pNode->uiUserData3 ].Params.bLevel, -1 );
+									SpreadEffect(pNode->sGridNo, Explosive[Item[(UINT16)pNode->uiUserData].ubClassIndex].ubRadius, (UINT16)pNode->uiUserData, (UINT8)pNode->ubUserData2, FALSE, gExplosionData[pNode->uiUserData3].Params.bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;

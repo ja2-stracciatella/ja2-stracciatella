@@ -43,7 +43,7 @@ void DecaySmokeEffects( UINT32 uiTime );
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel );
+void AddSmokeEffectToTile(const SMOKEEFFECT* smoke, INT8 bType, INT16 sGridNo, INT8 bLevel);
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
 

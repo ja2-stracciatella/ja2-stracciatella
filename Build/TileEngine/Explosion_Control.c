@@ -1379,7 +1379,7 @@ static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 
 
 // Spreads the effects of explosions...
-static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16 usItem, UINT8 ubOwner, INT16 sSubsequent, BOOLEAN* pfMercHit, INT8 bLevel, INT32 iSmokeEffectID)
+static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, const UINT8 ubOwner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
 	SOLDIERTYPE *pSoldier;
@@ -1592,7 +1592,7 @@ static BOOLEAN ExpAffect(INT16 sBombGridNo, INT16 sGridNo, UINT32 uiDist, UINT16
 		}
 		else if ( sSubsequent != REDO_SPREAD_EFFECT )
 		{
-			AddSmokeEffectToTile( iSmokeEffectID, bSmokeEffectType, sGridNo, bLevel );
+			AddSmokeEffectToTile(smoke, bSmokeEffectType, sGridNo, bLevel);
 		}
  }
  else
@@ -1995,8 +1995,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 }
 
 
-
-void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectID  )
+void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, const UINT8 ubOwner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
  INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
  INT32  uiTempRange, ubBranchRange;
@@ -2032,7 +2031,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
  sRange = ubRadius * 2;
 
  // first, affect main spot
- if ( ExpAffect( sGridNo, sGridNo, 0, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+	if (ExpAffect(sGridNo, sGridNo, 0, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
  {
 		fRecompileMovement = TRUE;
  }
@@ -2075,7 +2074,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 
 			 //DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
        // ok, do what we do here...
-       if ( ExpAffect( sGridNo, (INT16)uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 			 {
 					fRecompileMovement = TRUE;
 			 }
@@ -2114,7 +2113,7 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 							{
 								// ok, do what we do here
 								//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
-								if ( ExpAffect( sGridNo, (INT16)uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, iSmokeEffectID ) )
+								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
 									fRecompileMovement = TRUE;
 								}
@@ -2218,9 +2217,9 @@ void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, 
 }
 
 
-void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, const INT8 level, const INT32 smoke_effect_id)
+void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, const INT8 level)
 {
-	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, s->ubOwner, subsequent, level, smoke_effect_id);
+	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, s->ubOwner, subsequent, level, s);
 }
 
 

@@ -82,8 +82,8 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 void GenerateExplosion( EXPLOSION_PARAMS *pExpParams );
 
-void SpreadEffect( INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, INT32 iSmokeEffectNum );
-void SpreadEffectSmoke(const SMOKEEFFECT* s, BOOLEAN subsequent, INT8 level, INT32 smoke_effect_id);
+void SpreadEffect(INT16 sGridNo, UINT8 ubRadius, UINT16 usItem, UINT8 ubOwner, BOOLEAN fSubsequent, INT8 bLevel, const SMOKEEFFECT* s);
+void SpreadEffectSmoke(const SMOKEEFFECT* s, BOOLEAN subsequent, INT8 level);
 
 void DecayBombTimers( void );
 void SetOffBombsByFrequency(SOLDIERTYPE* s, INT8 bFrequency);

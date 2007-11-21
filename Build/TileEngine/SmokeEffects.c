@@ -219,7 +219,7 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
   }
 
   // ATE: FALSE into subsequent-- it's the first one!
-  SpreadEffectSmoke(pSmoke, FALSE, bLevel, iSmokeIndex);
+  SpreadEffectSmoke(pSmoke, FALSE, bLevel);
 
 	return( iSmokeIndex );
 }
@@ -227,16 +227,13 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile( INT32 iSmokeEffectID, INT8 bType, INT16 sGridNo, INT8 bLevel )
+void AddSmokeEffectToTile(const SMOKEEFFECT* const smoke, const INT8 bType, const INT16 sGridNo, const INT8 bLevel)
 {
 	ANITILE_PARAMS	AniParams;
 	ANITILE					*pAniTile;
-	SMOKEEFFECT     *pSmoke;
   BOOLEAN         fDissipating = FALSE;
 
-	pSmoke = &gSmokeEffectData[ iSmokeEffectID ];
-
-  if ( ( pSmoke->ubDuration - pSmoke->bAge ) < 2 )
+	if (smoke->ubDuration - smoke->bAge < 2)
   {
     fDissipating = TRUE;
     // Remove old one...
@@ -518,7 +515,7 @@ void DecaySmokeEffects( UINT32 uiTime )
   			    else
 				    {
 					    // deactivate tear gas cloud (use last known radius)
-					    SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel, cnt);
+					    SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
 					    pSmoke->fAllocated = FALSE;
               break;
 				    }
@@ -528,7 +525,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 			else
 			{
 				// damage anyone standing in cloud
-				SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0, cnt);
+				SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0);
 			}
     }
   }
@@ -551,7 +548,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 		  // if this cloud remains effective (duration not reached)
 		  if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
 			{
-  			SpreadEffectSmoke(pSmoke, TRUE, bLevel, cnt);
+  			SpreadEffectSmoke(pSmoke, TRUE, bLevel);
         pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
 			}
     }
@@ -647,7 +644,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
           bLevel = 0;
         }
 
-				SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel, uiCount);
+				SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel);
 			}
 		}
 	}
@@ -787,7 +784,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
         bLevel = 0;
       }
 
-			SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel, uiCount);
+			SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel);
 		}
 	}
 
@@ -828,8 +825,8 @@ void UpdateSmokeEffectGraphics( )
         bLevel = 0;
       }
 
-			SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel, uiCnt);
-  		SpreadEffectSmoke(pSmoke, TRUE,                bLevel, uiCnt);
+			SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
+  		SpreadEffectSmoke(pSmoke, TRUE,                bLevel);
     }
   }
 }
