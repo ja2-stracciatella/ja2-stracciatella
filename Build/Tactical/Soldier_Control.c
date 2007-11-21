@@ -3204,11 +3204,10 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 			break;
 	}
 
+	SOLDIERTYPE* const att = ID2SOLDIER(ubAttackerID);
+
 	// DO STUFF COMMON FOR ALL TYPES
-	if (	ubAttackerID != NOBODY)
-	{
-		MercPtrs[ubAttackerID]->bLastAttackHit = TRUE;
-	}
+	if (att != NULL) att->bLastAttackHit = TRUE;
 
 	// Set attacker's ID
 	pSoldier->ubAttackerID = ubAttackerID;
@@ -3233,9 +3232,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	// handle morale for heavy damage attacks
 	if ( sDamage > 25 )
 	{
-		if (pSoldier->ubAttackerID != NOBODY)
+		if (att != NULL)
 		{
-			SOLDIERTYPE* const att = GetMan(pSoldier->ubAttackerID);
 			if (att->bTeam == gbPlayerNum)
 			{
 				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE, att->sSectorX, att->sSectorY, att->bSectorZ);
@@ -3358,12 +3356,12 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	// OK, If we are a vehicle.... damage vehicle...( people inside... )
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, pSoldier->ubAttackerID, NOWHERE, TRUE);
+		SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, att, NOWHERE, TRUE);
 		return;
 	}
 
 	// DEDUCT LIFE
-	ubCombinedLoss = SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, pSoldier->ubAttackerID, NOWHERE, TRUE);
+	ubCombinedLoss = SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, att, NOWHERE, TRUE);
 
 	// ATE: OK, Let's check our ASSIGNMENT state,
 	// If anything other than on a squad or guard, make them guard....
@@ -6188,7 +6186,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier);
 
 
-UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, BOOLEAN fShowDamage)
+UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, const UINT8 ubReason, SOLDIERTYPE* const attacker, const INT16 sSourceGrid, const BOOLEAN fShowDamage)
 {
 	INT8		bOldLife;
 	UINT8		ubCombinedLoss;
@@ -6253,7 +6251,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 			}
 		}
 
-		VehicleTakeDamage( pSoldier->bVehicleID, ubReason, sLifeDeduct, pSoldier->sGridNo, ubAttacker );
+		VehicleTakeDamage(pSoldier->bVehicleID, ubReason, sLifeDeduct, pSoldier->sGridNo, SOLDIER2ID(attacker));
 		HandleTakeDamageDeath( pSoldier, bOldLife, ubReason );
 		return( 0 );
 	}
@@ -6308,13 +6306,13 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 					break;
 				case QUEENMONSTER:
 					// increase with range!
-					if ( ubAttacker == NOBODY )
+					if (attacker == NULL)
 					{
 						sReductionFactor = 8;
 					}
 					else
 					{
-						sReductionFactor = 4 + PythSpacesAway( MercPtrs[ ubAttacker ]->sGridNo, pSoldier->sGridNo ) / 2;
+						sReductionFactor = 4 + PythSpacesAway(attacker->sGridNo, pSoldier->sGridNo) / 2;
 					}
 					break;
 			}
@@ -6562,21 +6560,21 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL1 );
 
 
-	if ( ubAttacker != NOBODY )
+	if (attacker != NULL)
 	{
 		// don't give exp for hitting friends!
-		if ( (MercPtrs[ ubAttacker ]->bTeam == gbPlayerNum) && (pSoldier->bTeam != gbPlayerNum) )
+		if (attacker->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
 		{
 			if ( ubReason == TAKE_DAMAGE_EXPLOSION )
 			{
 				// EXPLOSIVES GAIN (combLoss):  Causing wounds in battle
-				StatChange( MercPtrs[ ubAttacker ], EXPLODEAMT, (UINT16)( 10 * ubCombinedLoss ), FROM_FAILURE );
+				StatChange(attacker, EXPLODEAMT, 10 * ubCombinedLoss, FROM_FAILURE);
 			}
 			/*
 			else if ( ubReason == TAKE_DAMAGE_GUNFIRE )
 			{
 				// MARKSMANSHIP GAIN (combLoss):  Causing wounds in battle
-				StatChange( MercPtrs[ ubAttacker ], MARKAMT, (UINT16)( 5 * ubCombinedLoss ), FALSE );
+				StatChange(attacker, MARKAMT, 5 * ubCombinedLoss, FALSE);
 			}
 			*/
 		}
@@ -6592,7 +6590,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 		if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_BEING_PUMMELED ) )
 		{
 			// Check attacker!
-			if ( ubAttacker != NOBODY && ubAttacker != pSoldier->ubID )
+			if (attacker != NULL && attacker != pSoldier)
 			{
 				pSoldier->bNumHitsThisTurn++;
 
@@ -6609,7 +6607,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, 
 		}
 	}
 
-	if ((ubAttacker != NOBODY) && (Menptr[ubAttacker].bTeam == OUR_TEAM) && (pSoldier->ubProfile != NO_PROFILE) && (pSoldier->ubProfile >= FIRST_RPC))
+	if (attacker != NULL && attacker->bTeam == OUR_TEAM && pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile >= FIRST_RPC)
 	{
 		gMercProfiles[pSoldier->ubProfile].ubMiscFlags |= PROFILE_MISC_FLAG_WOUNDEDBYPLAYER;
 		if (pSoldier->ubProfile == PACOS)
@@ -7067,7 +7065,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 				//EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_ROOF, 0 , FALSE );
 
 				// Deduct hitpoints/breath for falling!
-				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NOBODY, NOWHERE, TRUE);
+				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, NOWHERE, TRUE);
 
 				fReturnVal = TRUE;
 
@@ -7082,7 +7080,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 				pSoldier->usPendingAnimation = FALLOFF;
 
 				// Deduct hitpoints/breath for falling!
-				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NOBODY, NOWHERE, TRUE);
+				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, NOWHERE, TRUE);
 
 				fReturnVal = TRUE;
 			}
@@ -9375,9 +9373,8 @@ static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 	// If we are already dead, don't show damage!
 	if ( !fBandagedBleed )
 	{
-		SoldierTakeDamage(pSoldier, ANIM_CROUCH, 1, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, TRUE);
+		SoldierTakeDamage(pSoldier, ANIM_CROUCH, 1, 100, TAKE_DAMAGE_BLOODLOSS, NULL, NOWHERE, TRUE);
 	}
-
 }
 
 

@@ -1095,7 +1095,7 @@ static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier)
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage(pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NOBODY, NOWHERE, TRUE);
+	SoldierTakeDamage(pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NULL, NOWHERE, TRUE);
 
 	return( TRUE );
 }

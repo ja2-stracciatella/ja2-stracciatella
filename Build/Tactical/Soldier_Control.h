@@ -1032,7 +1032,7 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
 void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 void ModifySoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void StopSoldier( SOLDIERTYPE *pSoldier );
-UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, UINT8 ubReason, UINT8 ubAttacker, INT16 sSourceGrid, BOOLEAN fShowDamage);
+UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, UINT8 ubReason, SOLDIERTYPE* attacker, INT16 sSourceGrid, BOOLEAN fShowDamage);
 void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 
