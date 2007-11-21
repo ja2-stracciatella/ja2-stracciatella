@@ -25,7 +25,6 @@ extern INT16 DirYIncrementer[8];
 // LegalNPCDestination - mode hardcoded to walking; C.O. tear gas related stuff commented out
 // TryToResumeMovement - C.O. EscortedMoveCanceled call
 // GoAsFarAsPossibleTowards - C.O. stuff related to current animation esp first aid
-// SetCivilianDestination - C.O. stuff for if we don't control the civ
 
 int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags)
 {
@@ -829,32 +828,6 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE *pSoldier)
 
 		EndAIGuysTurn(pSoldier);
 	}
-}
-
-
-static void SetCivilianDestination(SOLDIERTYPE* const pSoldier, const INT16 sGridno)
-{
-	// if the destination is different from what he has now
-	if (pSoldier->usActionData != sGridno)
-	{
-		// store his new destination
-		pSoldier->usActionData = sGridno;
-
-		// and cancel any movement in progress that he was still engaged in
-		pSoldier->bAction = AI_ACTION_NONE;
-		pSoldier->bActionInProgress = FALSE;
-	}
-
-	// only set the underEscort flag once you give him a destination
-	// (that way AI can keep him appearing to act on his own until you
-	// give him orders).
-	//
-	// Either way, once set, it should stay that way, preventing AI from
-	// doing anything other than advance him towards destination.
-	pSoldier->bUnderEscort = TRUE;
-
-	// change orders to maximize roaming range so he can Go As Far As Possible
-	pSoldier->bOrders = ONCALL;
 }
 
 

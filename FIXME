@@ -392,7 +392,7 @@ bStopped: always FALSE, unused
 bNeedToLook: write-only
 sBlackList: strange
 bHasKeys: strange
-bUnderEscort: seems to be always FASE, only set to true in unused function
+bUnderEscort: always FALSE
 bRTPCombat: read-only
 sLocatorOffX: read-only
 sLocatorOffY
