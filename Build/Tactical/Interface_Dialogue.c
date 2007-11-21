@@ -2995,12 +2995,7 @@ unlock:
 					INT8		bEmptySlot;
 
 					sNearestPC = ClosestPC( pSoldier, NULL );
-
-					SOLDIERTYPE* pSoldier2 = NULL;
-					if ( sNearestPC != NOWHERE )
-					{
-						pSoldier2 = WhoIsThere2(sNearestPC, 0);
-					}
+					SOLDIERTYPE* const pSoldier2 = (sNearestPC != NOWHERE ? WhoIsThere2(sNearestPC, 0) : NULL);
 
 					if (pSoldier2)
 					{

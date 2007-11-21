@@ -430,15 +430,9 @@ BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 {
 	// OK, first look for a vehicle....
 	SOLDIERTYPE* const s = WhoIsThere2(sGridNo, 0);
-	if (s != NULL)
-	{
-		if (tgt != NULL) *tgt = s;
-		if (s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
-	}
-	else
-	{
-		if (tgt != NULL) *tgt = NULL;
-	}
+	if (tgt != NULL) *tgt = s;
+
+	if (s != NULL && s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
 	// Then for over a robot....
 
 	// then for SAM site....

@@ -1671,7 +1671,7 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	if ( pSoldier->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		// check target gridno
-		SOLDIERTYPE* pTargetSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
+		const SOLDIERTYPE* pTargetSoldier = WhoIsThere2(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
 		if ( pTargetSoldier && pTargetSoldier->bTeam == pSoldier->bTeam )
 		{
 			// ignore!
