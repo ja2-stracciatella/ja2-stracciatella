@@ -1382,7 +1382,6 @@ static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, const UINT8 ubOwner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
-	SOLDIERTYPE *pSoldier;
 	EXPLOSIVETYPE *pExplosive;
 	INT16 sX, sY;
 	BOOLEAN fRecompileMovementCosts = FALSE;
@@ -1630,7 +1629,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	 }
 	 else
 	 {
-			pSoldier = WhoIsThere2(sGridNo, bLevel);
+			SOLDIERTYPE* const pSoldier = WhoIsThere2(sGridNo, bLevel);
 			if (pSoldier == NULL) return fRecompileMovementCosts;
 			// someone is here, and they're gonna get hurt
 
