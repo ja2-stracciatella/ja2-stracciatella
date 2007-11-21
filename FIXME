@@ -354,7 +354,6 @@ fPlayerPlan: strange
 fCopyProfileItemsOver: strange
 MiscPal
 pExistingSoldier: load/save?
-fUseExistingSoldier: strange
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange
@@ -410,9 +409,6 @@ TacticalStatusType
 fGoingToEnterDemo_UNUSED
 fNOTDOLASTDEMO_UNUSED
 fMultiplayer
-
-VIDEO_OVERLAY
-uiUserData[]: write-only in unused function
 
 
 BUGS
