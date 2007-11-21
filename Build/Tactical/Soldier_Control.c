@@ -3180,7 +3180,7 @@ static UINT32 SleepDartSuccumbChance(const SOLDIERTYPE* pSoldier);
 static void SoldierGotHitBlade(SOLDIERTYPE* pSoldier);
 static void SoldierGotHitExplosion(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, UINT16 bDirection, UINT16 sRange);
 static void SoldierGotHitGunFire(SOLDIERTYPE* pSoldier, UINT16 bDirection, SOLDIERTYPE* att, UINT8 ubSpecial);
-static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation);
+static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier);
 
 
 // ATE: THIS FUNCTION IS USED FOR ALL SOLDIER TAKE DAMAGE FUNCTIONS!
@@ -3619,7 +3619,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDam
 	}
 	if ( Item[ usWeaponIndex ].usItemClass & IC_PUNCH )
 	{
-		SoldierGotHitPunch( pSoldier, usWeaponIndex, sDamage, bDirection, sRange, ubAttackerID, ubSpecial, ubHitLocation );
+		SoldierGotHitPunch(pSoldier);
 	}
 }
 
@@ -3945,7 +3945,7 @@ static void SoldierGotHitBlade(SOLDIERTYPE* const pSoldier)
 }
 
 
-static void SoldierGotHitPunch(SOLDIERTYPE* pSoldier, UINT16 usWeaponIndex, INT16 sDamage, UINT16 bDirection, UINT16 sRange, UINT8 ubAttackerID, UINT8 ubSpecial, UINT8 ubHitLocation)
+static void SoldierGotHitPunch(SOLDIERTYPE* const pSoldier)
 {
 
 	// IF HERE AND GUY IS DEAD, RETURN!
