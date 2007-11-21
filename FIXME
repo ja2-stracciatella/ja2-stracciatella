@@ -364,8 +364,6 @@ SOLDIERTYPE
 fReloading: always FALSE
 fPauseAim: always FALSE
 bScientific: just copied around a bit
-dOldXPos: write-only
-dOldYPos: write-only
 sHeightAdjustment: seems to be always 0
 sDesiredHeight: strange
 sTempNewGridNo: strange
@@ -389,7 +387,6 @@ pThrowParams: load/save?
 pLevelNode: load/save?
 sBlackList: strange
 bHasKeys: strange
-bUnderEscort: always FALSE
 bRTPCombat: read-only
 sLocatorOffX: read-only
 sLocatorOffY

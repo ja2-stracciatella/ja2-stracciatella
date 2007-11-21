@@ -2183,10 +2183,6 @@ void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FL
 		pSoldier->sFinalDestination = sNewGridNo;
 	}
 
-	// Copy old values
-	pSoldier->dOldXPos = pSoldier->dXPos;
-	pSoldier->dOldYPos = pSoldier->dYPos;
-
 	// Set New pos
 	pSoldier->dXPos = dNewXPos;
 	pSoldier->dYPos = dNewYPos;

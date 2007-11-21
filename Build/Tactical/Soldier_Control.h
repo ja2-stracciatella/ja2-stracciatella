@@ -379,8 +379,6 @@ struct SOLDIERTYPE
 	// WORLD POSITION STUFF
 	FLOAT											  dXPos;
 	FLOAT											  dYPos;
-	FLOAT											  dOldXPos;
-	FLOAT											  dOldYPos;
 	INT16												sInitialGridNo;
 	INT16												sGridNo;
 	INT8												bDirection;
