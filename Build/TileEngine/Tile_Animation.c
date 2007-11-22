@@ -362,7 +362,9 @@ void DeleteAniTile( ANITILE *pAniTile )
 				if ( pAniNode->uiFlags & ANITILE_EXPLOSION )
 				{
 					// Talk to the explosion data...
-					RemoveExplosionData(pAniNode->v.user.uiData3);
+					EXPLOSIONTYPE* const e     = pAniNode->v.explosion;
+					SOLDIERTYPE*   const owner = ID2SOLDIER(e->Params.ubOwner);
+					RemoveExplosionData(e);
 
 					if ( !gfExplosionQueueActive )
 					{
@@ -373,7 +375,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 
           // Freeup attacker from explosion
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
-					ReduceAttackBusyCount(ID2SOLDIER(pAniNode->v.user.ubData2), FALSE);
+					ReduceAttackBusyCount(owner, FALSE);
 				}
 
 
@@ -491,7 +493,7 @@ void UpdateAniTiles( )
 					if ( pNode->uiFlags & ANITILE_EXPLOSION )
 					{
 						// Talk to the explosion data...
-						UpdateExplosionFrame(pNode->v.user.uiData3, pNode->sCurrentFrame);
+						UpdateExplosionFrame(pNode->v.explosion, pNode->sCurrentFrame);
 					}
 
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
@@ -518,26 +520,29 @@ void UpdateAniTiles( )
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
 					if ( pNode->sCurrentFrame == pNode->ubKeyFrame2 )
 					{
-            UINT8     ubExpType;
-
            	switch( pNode->uiKeyFrame2Code )
 						{
 							case ANI_KEYFRAME_BEGIN_DAMAGE:
-                ubExpType = Explosive[Item[(UINT16)pNode->v.user.uiData].ubClassIndex].ubType;
+							{
+                Assert(pNode->uiFlags & ANITILE_EXPLOSION);
+                const EXPLOSIONTYPE* const e    = pNode->v.explosion;
+                const UINT16               item = e->Params.usItem;
+                const UINT8 ubExpType = Explosive[Item[item].ubClassIndex].ubType;
 
                 if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
                      ubExpType == EXPLOSV_SMOKE )
                 {
                   // Do sound....
                   // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
-		              NewSmokeEffect(pNode->sGridNo, (UINT16)pNode->v.user.uiData, gExplosionData[pNode->v.user.uiData3].Params.bLevel, (UINT8)pNode->v.user.ubData2);
+		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, e->Params.ubOwner);
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[(UINT16)pNode->v.user.uiData].ubClassIndex].ubRadius, (UINT16)pNode->v.user.uiData, (UINT8)pNode->v.user.ubData2, FALSE, gExplosionData[pNode->v.user.uiData3].Params.bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->Params.ubOwner, FALSE, e->Params.bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;
+							}
 						}
 
 					}
@@ -625,7 +630,7 @@ void UpdateAniTiles( )
 					if ( pNode->uiFlags & ANITILE_EXPLOSION )
 					{
 						// Talk to the explosion data...
-						UpdateExplosionFrame(pNode->v.user.uiData3, pNode->sCurrentFrame);
+						UpdateExplosionFrame(pNode->v.explosion, pNode->sCurrentFrame);
 					}
 
 				}

@@ -1,6 +1,7 @@
 #ifndef _TILE_ANIMATION_H
 #define _TILE_ANIMATION_H
 
+#include "Explosion_Control.h"
 #include "WorldDef.h"
 
 
@@ -45,6 +46,7 @@ typedef union AniUserData
 		UINT8  ubData2;
 		UINT32 uiData3;
 	} user;
+	EXPLOSIONTYPE* explosion;
 } AniUserData;
 
 

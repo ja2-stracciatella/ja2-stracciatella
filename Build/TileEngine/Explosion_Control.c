@@ -145,8 +145,9 @@ INT16			gsTempActionGridNo = NOWHERE;
 #define		NUM_EXPLOSION_SLOTS					100
 
 // GLOBAL FOR SMOKE LISTING
-EXPLOSIONTYPE			gExplosionData[ NUM_EXPLOSION_SLOTS ];
-UINT32						guiNumExplosions = 0;
+#define	NUM_EXPLOSION_SLOTS 100
+static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
+static UINT32        guiNumExplosions = 0;
 
 
 static INT32 GetFreeExplosion(void)
@@ -278,13 +279,11 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 {
 	UINT32		uiFlags;
-	UINT8			ubOwner;
 	UINT8			ubTypeID;
 	INT16			sX;
 	INT16			sY;
 	INT16			sZ;
 	INT16			sGridNo;
-	UINT16		usItem;
 	UINT8			ubTerrainType;
 	INT8			bLevel;
   UINT32    uiSoundID;
@@ -293,13 +292,11 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 
 	// Assign param values
 	uiFlags				= pExplosion->Params.uiFlags;
-	ubOwner				= pExplosion->Params.ubOwner;
 	ubTypeID			= pExplosion->Params.ubTypeID;
 	sX						= pExplosion->Params.sX;
 	sY						= pExplosion->Params.sY;
 	sZ						= pExplosion->Params.sZ;
 	sGridNo				= pExplosion->Params.sGridNo;
-	usItem				= pExplosion->Params.usItem;
 	bLevel				= pExplosion->Params.bLevel;
 
   // If Z value given is 0 and bLevel > 0, make z heigher
@@ -352,9 +349,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		AniParams.ubKeyFrame2					= ubDamageKeyFrame[ ubTypeID ];
 		AniParams.uiKeyFrame2Code			= ANI_KEYFRAME_BEGIN_DAMAGE;
 	}
-	AniParams.v.user.uiData  = usItem;
-	AniParams.v.user.ubData2 = ubOwner;
-	AniParams.v.user.uiData3 = pExplosion->iID;
+	AniParams.v.explosion = pExplosion;
 	AniParams.zCachedFile = zBlastFilenames[ubTypeID];
 	CreateAnimationTile( &AniParams );
 
@@ -388,21 +383,22 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 }
 
 
-
-void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame )
+void UpdateExplosionFrame(EXPLOSIONTYPE* const e, const INT16 sCurrentFrame)
 {
-	gExplosionData[ iIndex ].sCurrentFrame = sCurrentFrame;
+	Assert(gExplosionData <= e && e < endof(gExplosionData));
+	Assert(e->fAllocated);
+
+	e->sCurrentFrame = sCurrentFrame;
 }
 
-void RemoveExplosionData( INT32 iIndex )
+
+void RemoveExplosionData(EXPLOSIONTYPE* const e)
 {
-	gExplosionData[ iIndex ].fAllocated = FALSE;
+	Assert(gExplosionData <= e && e < endof(gExplosionData));
+	Assert(e->fAllocated);
 
-	if ( gExplosionData[ iIndex ].iLightID != -1 )
-	{
-		LightSpriteDestroy( gExplosionData[ iIndex ].iLightID );
-	}
-
+	e->fAllocated = FALSE;
+	if (e->iLightID != -1) LightSpriteDestroy(e->iLightID);
 }
 
 

@@ -70,9 +70,6 @@ CASSERT(sizeof(ExplosionQueueElement) == 12)
 #define REDO_SPREAD_EFFECT					4
 
 
-#define	NUM_EXPLOSION_SLOTS					100
-extern	EXPLOSIONTYPE								gExplosionData[ NUM_EXPLOSION_SLOTS ];
-
 extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
@@ -91,8 +88,8 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* s, INT16 sGridNo, BOOLEAN fAllBombs, IN
 void ActivateSwitchInGridNo(SOLDIERTYPE* s, INT16 sGridNo);
 void SetOffPanicBombs(SOLDIERTYPE* s, INT8 bPanicTrigger);
 
-void UpdateExplosionFrame( INT32 iIndex, INT16 sCurrentFrame );
-void RemoveExplosionData( INT32 iIndex );
+void UpdateExplosionFrame(EXPLOSIONTYPE* e, INT16 sCurrentFrame);
+void RemoveExplosionData(EXPLOSIONTYPE* e);
 
 void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage );
 void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  );
