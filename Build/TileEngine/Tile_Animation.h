@@ -108,10 +108,7 @@ typedef struct TAG_anitile_params
 	UINT8												ubKeyFrame2;					// Key frame 2
 	UINT32											uiKeyFrame2Code;			// Key frame code
 
-	UINT32											uiUserData;
-	UINT8												ubUserData2;
-	UINT32											uiUserData3;
-
+	AniUserData v;
 } ANITILE_PARAMS;
 
 

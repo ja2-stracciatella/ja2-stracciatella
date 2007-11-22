@@ -936,8 +936,8 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					{
 						AniParams.ubKeyFrame1					= 11;
 						AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_CHAIN_WATER_EXPLOSION;
-						AniParams.uiUserData					= pObject->Obj.usItem;
-						AniParams.ubUserData2					= pObject->ubOwner;
+						AniParams.v.user.uiData   = pObject->Obj.usItem;
+						AniParams.v.user.ubData2  = pObject->ubOwner;
 					}
 
 					pNode = CreateAnimationTile( &AniParams );

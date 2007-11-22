@@ -1200,9 +1200,8 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			}
 
 	    AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_DO_SOUND;
-	    AniParams.uiUserData					= uiSoundID;
-	    AniParams.uiUserData3					= sGridNo;
-
+	    AniParams.v.user.uiData   = uiSoundID;
+	    AniParams.v.user.uiData3  = sGridNo;
 
 			if ( fOpenedGraphic )
 			{

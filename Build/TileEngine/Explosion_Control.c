@@ -352,9 +352,9 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		AniParams.ubKeyFrame2					= ubDamageKeyFrame[ ubTypeID ];
 		AniParams.uiKeyFrame2Code			= ANI_KEYFRAME_BEGIN_DAMAGE;
 	}
-	AniParams.uiUserData					= usItem;
-	AniParams.ubUserData2					= ubOwner;
-	AniParams.uiUserData3					= pExplosion->iID;
+	AniParams.v.user.uiData  = usItem;
+	AniParams.v.user.ubData2 = ubOwner;
+	AniParams.v.user.uiData3 = pExplosion->iID;
 	AniParams.zCachedFile = zBlastFilenames[ubTypeID];
 	CreateAnimationTile( &AniParams );
 

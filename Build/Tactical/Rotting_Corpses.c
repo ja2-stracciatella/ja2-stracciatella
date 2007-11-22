@@ -521,8 +521,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	AniParams.sX									= CenterX( pCorpse->def.sGridNo );
 	AniParams.sY									= CenterY( pCorpse->def.sGridNo );
 	AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
-	AniParams.uiUserData3					= pCorpse->def.bDirection;
-
+	AniParams.v.user.uiData3 = pCorpse->def.bDirection;
 
 	if ( !gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 	{

@@ -2162,7 +2162,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 					AniParams.uiFlags							= ANITILE_FORWARD;
 				}
 				// Save bullet ID!
-				AniParams.uiUserData3					= iBullet;
+				AniParams.v.user.uiData3 = iBullet;
 
 				pNode = CreateAnimationTile( &AniParams );
 

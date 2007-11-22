@@ -238,14 +238,14 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	if ( ( uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = OneCDirection(pAniParams->uiUserData3);
+		ubTempDir   = OneCDirection(pAniParams->v.user.uiData3);
 		sStartFrame = (UINT16)sStartFrame + ( pNewAniNode->usNumFrames * ubTempDir );
 	}
 
 	if ( ( uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = gb4DirectionsFrom8[ pAniParams->uiUserData3 ];
+		ubTempDir   = gb4DirectionsFrom8[pAniParams->v.user.uiData3];
 		sStartFrame = (UINT16)sStartFrame + ( pNewAniNode->usNumFrames * ubTempDir );
 	}
 
@@ -263,9 +263,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	pNewAniNode->uiKeyFrame1Code	= pAniParams->uiKeyFrame1Code;
 	pNewAniNode->ubKeyFrame2			= pAniParams->ubKeyFrame2;
 	pNewAniNode->uiKeyFrame2Code	= pAniParams->uiKeyFrame2Code;
-	pNewAniNode->v.user.uiData    = pAniParams->uiUserData;
-	pNewAniNode->v.user.ubData2   = pAniParams->ubUserData2;
-	pNewAniNode->v.user.uiData3   = pAniParams->uiUserData3;
+	pNewAniNode->v               = pAniParams->v;
 
 	//Set head
 	pAniTileHead = pNewAniNode;

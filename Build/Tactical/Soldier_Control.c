@@ -359,7 +359,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
 				AniParams.sZ									= 0;
 				AniParams.zCachedFile = "TILECACHE/fly_shdw.sti";
 
-				AniParams.uiUserData3					= pSoldier->bDirection;
+				AniParams.v.user.uiData3 = pSoldier->bDirection;
 
 				pSoldier->pAniTile = CreateAnimationTile( &AniParams );
 

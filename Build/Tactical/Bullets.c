@@ -116,7 +116,7 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 
 			ubDirection = atan8( 0, 0, (INT16)( dX * 100 ), (INT16)( dY * 100 ) );
 
-			AniParams.uiUserData3					= ubDirection;
+			AniParams.v.user.uiData3 = ubDirection;
 
 			pBullet->pAniTile = CreateAnimationTile( &AniParams );
 
