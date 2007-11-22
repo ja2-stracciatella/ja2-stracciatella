@@ -3795,7 +3795,8 @@ void MoveBullet( INT32 iBullet )
 			}
 			else if (pStructure->fFlags & STRUCTURE_PERSON)
 			{
-				if ( MercPtrs[ pStructure->usStructureID ] != pBullet->pFirer )
+				SOLDIERTYPE* const tgt = GetMan(pStructure->usStructureID);
+				if (tgt != pBullet->pFirer)
 				{
 					// in actually moving the bullet, we consider only count friends as targets if the bullet is unaimed
 					// (buckshot), if they are the intended target, or beyond the range of automatic friendly fire hits
@@ -3813,14 +3814,14 @@ void MoveBullet( INT32 iBullet )
 					else if ( pBullet->pFirer->uiStatusFlags & SOLDIER_MONSTER )
 					{
 						// monsters firing will always accidentally hit people but never accidentally hit each other.
-						if ( !(MercPtrs[ pStructure->usStructureID ]->uiStatusFlags & SOLDIER_MONSTER) )
+						if (!(tgt->uiStatusFlags & SOLDIER_MONSTER))
 						{
 							gpLocalStructure[iNumLocalStructures] = pStructure;
 							iNumLocalStructures++;
 						}
 					}
-					else if ( MercPtrs[ pStructure->usStructureID ]->bVisible == TRUE &&
-										gAnimControl[ MercPtrs[pStructure->usStructureID]->usAnimState ].ubEndHeight == ANIM_STAND &&
+					else if (tgt->bVisible == TRUE &&
+										gAnimControl[tgt->usAnimState].ubEndHeight == ANIM_STAND &&
 										( (pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS) ||
 											(!pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS_UNAIMED) ||
 											PreRandom( 100 ) < MIN_CHANCE_TO_ACCIDENTALLY_HIT_SOMEONE
@@ -3833,22 +3834,22 @@ void MoveBullet( INT32 iBullet )
 					}
 
 					// this might be a close call
-					if ( MercPtrs[ pStructure->usStructureID ]->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == MercPtrs[ pStructure->usStructureID ]->bLevel )
+					if (tgt->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == tgt->bLevel)
 					{
-						MercPtrs[ pStructure->usStructureID ]->fCloseCall = TRUE;
+						tgt->fCloseCall = TRUE;
 					}
 
-					if ( IS_MERC_BODY_TYPE( MercPtrs[pStructure->usStructureID] ) )
+					if (IS_MERC_BODY_TYPE(tgt))
 					{
 						// apply suppression, regardless of friendly or enemy
 						// except if friendly, not within a few tiles of shooter
-						if ( MercPtrs[ pStructure->usStructureID ]->bSide != pBullet->pFirer->bSide || pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS )
+						if (tgt->bSide != pBullet->pFirer->bSide || pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS)
 						{
 							// buckshot has only a 1 in 2 chance of applying a suppression point
 							if ( !(pBullet->usFlags & BULLET_FLAG_BUCKSHOT) || Random( 2 ) )
 							{
 								// bullet goes whizzing by this guy!
-								switch ( gAnimControl[ MercPtrs[pStructure->usStructureID]->usAnimState ].ubEndHeight )
+								switch (gAnimControl[tgt->usAnimState].ubEndHeight)
 								{
 									case ANIM_PRONE:
 										// two 1/4 chances of avoiding suppression pt - one below
@@ -3865,8 +3866,8 @@ void MoveBullet( INT32 iBullet )
 										}
 										// else fall through
 									default:
-										MercPtrs[pStructure->usStructureID]->ubSuppressionPoints++;
-										MercPtrs[pStructure->usStructureID]->ubSuppressorID = pBullet->pFirer->ubID;
+										tgt->ubSuppressionPoints++;
+										tgt->ubSuppressorID = pBullet->pFirer->ubID;
 										break;
 								}
 							}
