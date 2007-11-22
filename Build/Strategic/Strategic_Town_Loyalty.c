@@ -640,7 +640,7 @@ void UpdateTownLoyaltyBasedOnBadGuysInTown( INT8 bTownId )
 static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
-void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
+void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 {
 	// handle the impact on loyalty of the murder of a civilian
 	INT8 bTownId = 0;
@@ -726,7 +726,7 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 		iLoyaltyChange = BASIC_COST_FOR_CIV_MURDER;
 	}
 
-	if( !fIntentional )
+	if (!pSoldier->fIntendedTarget)
 	{
 		// accidental killing, reduce value
 		iLoyaltyChange *= REDUCTION_FOR_UNINTENTIONAL_KILLING;

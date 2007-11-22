@@ -2777,7 +2777,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		if (pSoldierOld->ubBodyType != CROW && pSoldierOld->ubBodyType != COW)
 		{
 			// handle death of civilian..and if it was intentional
-			HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
+			HandleMurderOfCivilian(pSoldierOld);
 		}
 	}
 	else if (pSoldierOld->bTeam == MILITIA_TEAM)
@@ -2790,7 +2790,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		}
 
 		// also treat this as murder - but player will never be blamed for militia death he didn't cause
-		HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
+		HandleMurderOfCivilian(pSoldierOld);
 
 		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}

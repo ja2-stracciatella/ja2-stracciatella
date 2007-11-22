@@ -112,7 +112,7 @@ void HandleTownLoyalty( void );
 void InitTownLoyalty( void );
 
 // handle the death of a civ
-void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional );
+void HandleMurderOfCivilian(const SOLDIERTYPE* pSoldier);
 
 // handle town loyalty adjustment for recruitment
 void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier );
