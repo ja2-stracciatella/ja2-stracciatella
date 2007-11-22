@@ -5813,7 +5813,7 @@ static INT8 CalcSuppressionTolerance(SOLDIERTYPE* pSoldier)
 #define MAX_APS_SUPPRESSED 8
 
 
-static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, const UINT8 ubCausedAttacker)
+static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, const SOLDIERTYPE* const caused_attacker)
 {
 	INT8									bTolerance;
 	INT16									sClosestOpponent, sClosestOppLoc;
@@ -5970,7 +5970,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, const 
 					gTacticalStatus.ubAttackBusyCount++;
 
 					// make sure supressor ID is the same!
-					pSoldier->ubSuppressorID = ubCausedAttacker;
+					pSoldier->ubSuppressorID = SOLDIER2ID(caused_attacker);
 				}
 				pSoldier->fChangingStanceDueToSuppression = TRUE;
 				pSoldier->fDontChargeAPsForStanceChange = TRUE;
@@ -6224,7 +6224,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	{
 		// Check to see if anyone was suppressed
 		const SOLDIERTYPE* const target = (pSoldier == NULL ? NULL : pSoldier->target);
-		HandleSuppressionFire(target, SOLDIER2ID(pSoldier));
+		HandleSuppressionFire(target, pSoldier);
 
 		//HandleAfterShootingGuy( pSoldier, pTarget );
 
