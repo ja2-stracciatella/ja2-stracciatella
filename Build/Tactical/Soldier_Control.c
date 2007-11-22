@@ -1158,7 +1158,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 		{
 			//ATE: Set previous attacker's value!
 			// This is so that the killer can say their killed quote....
-			pSoldier->attacker = ID2SOLDIER(pSoldier->ubPreviousAttackerID);
+			pSoldier->attacker = pSoldier->previous_attacker;
 		}
 	}
 }
@@ -7442,13 +7442,13 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 		{
 			// JA2 Gold
 			// set next-to-previous attacker, so long as this isn't a repeat attack
-			if (pSoldier->ubPreviousAttackerID != SOLDIER2ID(pSoldier->attacker))
+			if (pSoldier->previous_attacker != pSoldier->attacker)
 			{
-				pSoldier->ubNextToPreviousAttackerID = pSoldier->ubPreviousAttackerID;
+				pSoldier->ubNextToPreviousAttackerID = SOLDIER2ID(pSoldier->previous_attacker);
 			}
 
 			// get previous attacker id
-			pSoldier->ubPreviousAttackerID = SOLDIER2ID(pSoldier->attacker);
+			pSoldier->previous_attacker = pSoldier->attacker;
 
 			// Copy BeingAttackedCount here....
 			ubNumToFree = pSoldier->bBeingAttackedCount;

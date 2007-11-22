@@ -2858,21 +2858,14 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		}
 
 		// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
-		UINT8 ubAssister;
-		if (pSoldierOld->ubPreviousAttackerID == SOLDIER2ID(killer))
-		{
-			ubAssister = pSoldierOld->ubNextToPreviousAttackerID;
-		}
-		else
-		{
-			ubAssister = pSoldierOld->ubPreviousAttackerID;
-		}
+		SOLDIERTYPE* assister = pSoldierOld->previous_attacker;
+		if (assister == killer) assister = ID2SOLDIER(pSoldierOld->ubNextToPreviousAttackerID);
 
 		// if it was assisted by a player's merc
-		if (ubAssister != NOBODY && MercPtrs[ubAssister]->bTeam == gbPlayerNum)
+		if (assister != NULL && assister->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE CLASS GAIN:  Earned an assist
-			StatChange(MercPtrs[ubAssister], EXPERAMT, 5 * pSoldierOld->bExpLevel, FALSE);
+			StatChange(assister, EXPERAMT, 5 * pSoldierOld->bExpLevel, FALSE);
 		}
 	}
 

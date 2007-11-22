@@ -421,7 +421,7 @@ struct SOLDIERTYPE
 	INT8												bWisdom;
 	INT16												sReloadDelay;
 	SOLDIERTYPE*                attacker;
-	UINT8												ubPreviousAttackerID;
+	SOLDIERTYPE*                previous_attacker;
 	BOOLEAN											fTurnInProgress;
 
 	BOOLEAN											fIntendedTarget; // intentionally shot?

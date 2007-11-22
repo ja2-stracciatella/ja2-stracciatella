@@ -3048,8 +3048,6 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		}
 		else
 		{
-			UINT8	ubAssister;
-
 			// IF this guy has an attacker and he's a good guy, play sound
 			SOLDIERTYPE* const attacker = pSoldier->attacker;
 			if (attacker != NULL)
@@ -3099,25 +3097,19 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			}
 
 			// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
-			if (pSoldier->ubPreviousAttackerID == SOLDIER2ID(pSoldier->attacker))
-			{
-				ubAssister = pSoldier->ubNextToPreviousAttackerID;
-			}
-			else
-			{
-				ubAssister = pSoldier->ubPreviousAttackerID;
-			}
+			SOLDIERTYPE* assister = pSoldier->previous_attacker;
+			if (assister == attacker) assister = ID2SOLDIER(pSoldier->ubNextToPreviousAttackerID);
 
-			if ( ubAssister != NOBODY && ubAssister != SOLDIER2ID(pSoldier->attacker))
+			if (assister != NULL && assister != attacker)
 			{
-				if ( MercPtrs[ ubAssister ]->bTeam == gbPlayerNum )
+				if (assister->bTeam == gbPlayerNum )
 				{
-					gMercProfiles[ MercPtrs[ ubAssister ]->ubProfile ].usAssists++;
+					gMercProfiles[assister->ubProfile].usAssists++;
 				}
-				else if ( MercPtrs[ ubAssister ]->bTeam == MILITIA_TEAM )
+				else if (assister->bTeam == MILITIA_TEAM)
 				{
 					// get an assist - 1 points
-					MercPtrs[ ubAssister ]->ubMilitiaKills += 1;
+					assister->ubMilitiaKills += 1;
 				}
 			}
 		}
