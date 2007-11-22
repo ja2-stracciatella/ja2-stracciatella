@@ -2776,12 +2776,8 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		// crows/cows are on the civilian team, but none of the following applies to them
 		if (pSoldierOld->ubBodyType != CROW && pSoldierOld->ubBodyType != COW)
 		{
-			// If the civilian's killer is known
-			if (killer != NULL)
-			{
-				// handle death of civilian..and if it was intentional
-				HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
-			}
+			// handle death of civilian..and if it was intentional
+			HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
 		}
 	}
 	else if (pSoldierOld->bTeam == MILITIA_TEAM)
@@ -2793,12 +2789,8 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 			StrategicRemoveMilitiaFromSector(gWorldSectorX, gWorldSectorY, bMilitiaRank, 1);
 		}
 
-		// If the militia's killer is known
-		if (killer != NULL)
-		{
-			// also treat this as murder - but player will never be blamed for militia death he didn't cause
-			HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
-		}
+		// also treat this as murder - but player will never be blamed for militia death he didn't cause
+		HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
 
 		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
