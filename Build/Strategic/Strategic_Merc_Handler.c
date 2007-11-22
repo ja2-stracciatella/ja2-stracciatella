@@ -48,17 +48,12 @@ void BuildMercQuitList( SOLDIERTYPE *pMercList );
 
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 {
-	SOLDIERTYPE *pKiller = NULL;
 	INT16 sSectorX, sSectorY;
 
 	//if the soldier HAS a profile
 	if( pSoldier->ubProfile != NO_PROFILE )
 	{
 		//add to the history log the fact that the merc died and the circumstances
-		if( pSoldier->ubAttackerID != NOBODY )
-		{
-			pKiller = MercPtrs[ pSoldier->ubAttackerID ];
-		}
 
 		// CJC Nov 11, 2002
 		// Use the soldier's sector location unless impossible
@@ -73,7 +68,8 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 			sSectorY = gWorldSectorY;
 		}
 
-		if( pKiller && pKiller->bTeam == OUR_TEAM )
+		const SOLDIERTYPE* const killer = pSoldier->attacker;
+		if (killer && killer->bTeam == OUR_TEAM)
 		{
 			AddHistoryToPlayersLog( HISTORY_MERC_KILLED_CHARACTER, pSoldier->ubProfile, GetWorldTotalMin(), sSectorX, sSectorY );
 		}
@@ -118,7 +114,7 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 				gMercProfiles[ pSoldier->ubProfile ].ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
 			}
 			// if killed by someone on our team, or while there weren't any opponents around
-			else if (Menptr[ pSoldier->ubAttackerID ].bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector )
+			else if (pSoldier->attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
 			{
 				// cause insurance company to suspect fraud and investigate this claim
 				gMercProfiles[ pSoldier->ubProfile ].ubSuspiciousDeath = SUSPICIOUS_DEATH;

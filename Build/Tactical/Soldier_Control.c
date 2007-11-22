@@ -1158,7 +1158,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 		{
 			//ATE: Set previous attacker's value!
 			// This is so that the killer can say their killed quote....
-			pSoldier->ubAttackerID = pSoldier->ubPreviousAttackerID;
+			pSoldier->attacker = ID2SOLDIER(pSoldier->ubPreviousAttackerID);
 		}
 	}
 }
@@ -3175,8 +3175,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	// DO STUFF COMMON FOR ALL TYPES
 	if (att != NULL) att->bLastAttackHit = TRUE;
 
-	// Set attacker's ID
-	pSoldier->ubAttackerID = SOLDIER2ID(att);
+	pSoldier->attacker = att;
 
 	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
@@ -6436,8 +6435,8 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 		sTestOne = EffectiveStrength( pSoldier );
 		sTestTwo = ( 2 * ( __max( sLifeDeduct, ( sBreathLoss / 100 ) ) ) );
 
-
-		if (pSoldier->ubAttackerID != NOBODY && MercPtrs[ pSoldier->ubAttackerID ]->ubBodyType == BLOODCAT )
+		const SOLDIERTYPE* const attacker = pSoldier->attacker;
+		if (attacker != NULL && attacker->ubBodyType == BLOODCAT)
 		{
 			// bloodcat boost, let them make people drop items more
 			sTestTwo += 20;
@@ -7439,17 +7438,17 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 	//if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
 		// ATE: Removed...
-		//if ( pSoldier->ubAttackerID != NOBODY )
+		//if (pSoldier->attacker != NULL)
 		{
 			// JA2 Gold
 			// set next-to-previous attacker, so long as this isn't a repeat attack
-			if (pSoldier->ubPreviousAttackerID != pSoldier->ubAttackerID)
+			if (pSoldier->ubPreviousAttackerID != SOLDIER2ID(pSoldier->attacker))
 			{
 				pSoldier->ubNextToPreviousAttackerID = pSoldier->ubPreviousAttackerID;
 			}
 
 			// get previous attacker id
-			pSoldier->ubPreviousAttackerID = pSoldier->ubAttackerID;
+			pSoldier->ubPreviousAttackerID = SOLDIER2ID(pSoldier->attacker);
 
 			// Copy BeingAttackedCount here....
 			ubNumToFree = pSoldier->bBeingAttackedCount;
@@ -7458,15 +7457,15 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 
 			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
 			{
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker of %d (attacker is %d) - releasesoldierattacker num to free is %d", pSoldier->ubID, pSoldier->ubAttackerID, ubNumToFree ) );
-				ReduceAttackBusyCount(ID2SOLDIER(pSoldier->ubAttackerID), FALSE);
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker of %d (attacker is %d) - releasesoldierattacker num to free is %d", pSoldier->ubID, SOLDIER2ID(pSoldier->attacker), ubNumToFree));
+				ReduceAttackBusyCount(pSoldier->attacker, FALSE);
 			}
 
 			// ATE: Set to NOBODY if this person is NOT dead
 			// otherise, we keep it so the kill can be awarded!
 			if ( pSoldier->bLife != 0 && pSoldier->ubBodyType != QUEENMONSTER )
 			{
-				pSoldier->ubAttackerID = NOBODY;
+				pSoldier->attacker = NULL;
 			}
 		}
 	}

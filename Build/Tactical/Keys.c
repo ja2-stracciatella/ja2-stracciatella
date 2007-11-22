@@ -627,8 +627,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			// insert electrical sound effect here
 			PlayLocationJA2Sample(pDoor->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    // Set attacker's ID
-	    pSoldier->ubAttackerID = pSoldier->ubID;
+	    pSoldier->attacker = pSoldier;
 	    // Increment  being attacked count
 	    pSoldier->bBeingAttackedCount++;
 		  gTacticalStatus.ubAttackBusyCount++;
@@ -641,8 +640,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			// insert electrical sound effect here
 			PlayLocationJA2Sample(pDoor->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    // Set attacker's ID
-	    pSoldier->ubAttackerID = pSoldier->ubID;
+	    pSoldier->attacker = pSoldier;
 	    // Increment  being attacked count
 	    pSoldier->bBeingAttackedCount++;
 		  gTacticalStatus.ubAttackBusyCount++;

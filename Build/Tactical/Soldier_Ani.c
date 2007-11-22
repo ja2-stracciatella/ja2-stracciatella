@@ -3051,15 +3051,16 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			UINT8	ubAssister;
 
 			// IF this guy has an attacker and he's a good guy, play sound
-			if ( pSoldier->ubAttackerID != NOBODY )
+			SOLDIERTYPE* const attacker = pSoldier->attacker;
+			if (attacker != NULL)
 			{
-				if ( MercPtrs[ pSoldier->ubAttackerID ]->bTeam == gbPlayerNum && gTacticalStatus.ubAttackBusyCount > 0 )
+				if (attacker->bTeam == gbPlayerNum && gTacticalStatus.ubAttackBusyCount > 0)
 				{
 					gTacticalStatus.fKilledEnemyOnAttack	= TRUE;
 					gTacticalStatus.ubEnemyKilledOnAttack = pSoldier->ubID;
 					gTacticalStatus.ubEnemyKilledOnAttackLocation = pSoldier->sGridNo;
 					gTacticalStatus.bEnemyKilledOnAttackLevel = pSoldier->bLevel;
-					gTacticalStatus.ubEnemyKilledOnAttackKiller = pSoldier->ubAttackerID;
+					gTacticalStatus.ubEnemyKilledOnAttackKiller = pSoldier->attacker->ubID;
 
 					// also check if we are in mapscreen, if so update soldier's list
 					if( guiCurrentScreen == MAP_SCREEN )
@@ -3070,9 +3071,9 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 				else if ( pSoldier->bVisible == TRUE )
 				{
 					// We were a visible enemy, say laugh!
-					if ( Random(3) == 0 && !CREATURE_OR_BLOODCAT( MercPtrs[ pSoldier->ubAttackerID ] ) )
+					if (Random(3) == 0 && !CREATURE_OR_BLOODCAT(attacker))
 					{
-						DoMercBattleSound( MercPtrs[ pSoldier->ubAttackerID ], BATTLE_SOUND_LAUGH1 );
+						DoMercBattleSound(attacker, BATTLE_SOUND_LAUGH1);
 					}
 				}
 			}
@@ -3082,24 +3083,23 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 			// if a friendly with a profile, increment kills
 			// militia also now track kills...
-			if ( pSoldier->ubAttackerID != NOBODY )
+			if (attacker != NULL)
 			{
-				if ( MercPtrs[ pSoldier->ubAttackerID ]->bTeam == gbPlayerNum )
+				if (attacker->bTeam == gbPlayerNum)
 				{
 					// increment kills
-					gMercProfiles[ MercPtrs[ pSoldier->ubAttackerID ]->ubProfile ].usKills++;
+					gMercProfiles[attacker->ubProfile].usKills++;
 					gStrategicStatus.usPlayerKills++;
 				}
-				else if ( MercPtrs[ pSoldier->ubAttackerID ]->bTeam == MILITIA_TEAM )
+				else if (attacker->bTeam == MILITIA_TEAM)
 				{
 					// get a kill! 2 points!
-					MercPtrs[ pSoldier->ubAttackerID ]->ubMilitiaKills += 2;
+					attacker->ubMilitiaKills += 2;
 				}
-
 			}
 
 			// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
-			if (pSoldier->ubPreviousAttackerID == pSoldier->ubAttackerID)
+			if (pSoldier->ubPreviousAttackerID == SOLDIER2ID(pSoldier->attacker))
 			{
 				ubAssister = pSoldier->ubNextToPreviousAttackerID;
 			}
@@ -3108,7 +3108,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 				ubAssister = pSoldier->ubPreviousAttackerID;
 			}
 
-			if ( ubAssister != NOBODY && ubAssister != pSoldier->ubAttackerID )
+			if ( ubAssister != NOBODY && ubAssister != SOLDIER2ID(pSoldier->attacker))
 			{
 				if ( MercPtrs[ ubAssister ]->bTeam == gbPlayerNum )
 				{
@@ -3120,22 +3120,6 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 					MercPtrs[ ubAssister ]->ubMilitiaKills += 1;
 				}
 			}
-			/*
-			// handle assist
-			// if killer is assister, don't increment
-			if ( pSoldier->ubPreviousAttackerID != NOBODY && pSoldier->ubPreviousAttackerID != pSoldier->ubAttackerID )
-			{
-				if ( MercPtrs[ pSoldier->ubPreviousAttackerID ]->bTeam == gbPlayerNum )
-				{
-					gMercProfiles[ MercPtrs[ pSoldier->ubPreviousAttackerID ]->ubProfile ].usAssists++;
-				}
-				else if ( MercPtrs[ pSoldier->ubPreviousAttackerID ]->bTeam == MILITIA_TEAM )
-				{
-					// get an assist - 1 points
-					MercPtrs[ pSoldier->ubPreviousAttackerID ]->ubMilitiaKills += 1;
-				}
-			}
-			*/
 		}
 
 		if ( TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE ) )
@@ -3335,10 +3319,11 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 #endif
 			{
 				// CHECK IF WE HAVE AN ATTACKER, TAKE OPPOSITE DIRECTION!
-				if ( pSoldier->ubAttackerID != NOBODY )
+				const SOLDIERTYPE* const attacker = pSoldier->attacker;
+				if (attacker != NULL)
 				{
 					// Find direction!
-					bTestDirection = (INT8)GetDirectionFromGridNo( MercPtrs[ pSoldier->ubAttackerID ]->sGridNo, pSoldier );
+					bTestDirection = (INT8)GetDirectionFromGridNo(attacker->sGridNo, pSoldier);
 					fForceDirection = TRUE;
 				}
 

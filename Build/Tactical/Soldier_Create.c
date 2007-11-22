@@ -1075,7 +1075,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	// Set morale default
 	pSoldier->bMorale								= DEFAULT_MORALE;
 
-	pSoldier->ubAttackerID					= NOBODY;
+	pSoldier->attacker = NULL;
 	pSoldier->ubPreviousAttackerID	= NOBODY;
 	pSoldier->ubNextToPreviousAttackerID	= NOBODY;
 

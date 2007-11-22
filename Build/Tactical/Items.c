@@ -4505,14 +4505,8 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 		if (fBlowsUp)
 		{
 			// blow it up!
-			if ( gTacticalStatus.ubAttackBusyCount )
-			{
-				IgniteExplosion( pSoldier->ubAttackerID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->bLevel );
-			}
-			else
-			{
-				IgniteExplosion( pSoldier->ubID, CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, pSoldier->inv[ bSlot ].usItem, pSoldier->bLevel );
-			}
+			const SoldierID owner = (gTacticalStatus.ubAttackBusyCount ? SOLDIER2ID(pSoldier->attacker) : pSoldier->ubID);
+			IgniteExplosion(owner, CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), 0, pSoldier->sGridNo, pSoldier->inv[bSlot].usItem, pSoldier->bLevel);
 
 			// Remove item!
 			DeleteObj( &(pSoldier->inv[ bSlot ]) );

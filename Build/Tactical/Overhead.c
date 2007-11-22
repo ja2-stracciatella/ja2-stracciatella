@@ -2592,14 +2592,14 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 }
 
 
-void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
+void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 {
-	SOLDIERTYPE *pKiller = NULL;
-
 	pSoldierOld->uiStatusFlags |= SOLDIER_DEAD;
 	const INT8 bVisible = pSoldierOld->bVisible;
 
 	VerifyPublicOpplistDueToDeath(pSoldierOld);
+
+	SOLDIERTYPE* const killer = pSoldierOld->attacker;
 
 	if (pSoldierOld->ubProfile != NO_PROFILE)
 	{
@@ -2609,11 +2609,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 
 		if (!(pSoldierOld->uiStatusFlags & SOLDIER_VEHICLE) && !TANK(pSoldierOld))
 		{
-			if (pSoldierOld->ubAttackerID != NOBODY)
-			{
-				pKiller = MercPtrs[pSoldierOld->ubAttackerID];
-			}
-			if (pKiller && pKiller->bTeam == OUR_TEAM)
+			if (killer && killer->bTeam == OUR_TEAM)
 			{
 				AddHistoryToPlayersLog(HISTORY_MERC_KILLED_CHARACTER, pSoldierOld->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY);
 			}
@@ -2774,18 +2770,14 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 		// Are we looking at the queen?
 		if (pSoldierOld->ubProfile == QUEEN)
 		{
-			if (pSoldierOld->ubAttackerID != NOBODY)
-			{
-				pKiller = MercPtrs[pSoldierOld->ubAttackerID];
-			}
-			BeginHandleDeidrannaDeath(pKiller, pSoldierOld->sGridNo, pSoldierOld->bLevel);
+			BeginHandleDeidrannaDeath(killer, pSoldierOld->sGridNo, pSoldierOld->bLevel);
 		}
 
 		// crows/cows are on the civilian team, but none of the following applies to them
 		if (pSoldierOld->ubBodyType != CROW && pSoldierOld->ubBodyType != COW)
 		{
 			// If the civilian's killer is known
-			if (pSoldierOld->ubAttackerID != NOBODY)
+			if (killer != NULL)
 			{
 				// handle death of civilian..and if it was intentional
 				HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
@@ -2802,7 +2794,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 		}
 
 		// If the militia's killer is known
-		if (pSoldierOld->ubAttackerID != NOBODY)
+		if (killer != NULL)
 		{
 			// also treat this as murder - but player will never be blamed for militia death he didn't cause
 			HandleMurderOfCivilian(pSoldierOld, pSoldierOld->fIntendedTarget);
@@ -2812,11 +2804,9 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 	}
 	else // enemies and creatures... should any of this stuff not be called if a creature dies?
 	{
-		if (pSoldierOld->ubBodyType   == QUEENMONSTER &&
-				pSoldierOld->ubAttackerID != NOBODY)
+		if (pSoldierOld->ubBodyType == QUEENMONSTER && killer != NULL)
 		{
-			SOLDIERTYPE* const pKiller = MercPtrs[pSoldierOld->ubAttackerID];
-			BeginHandleQueenBitchDeath(pKiller, pSoldierOld->sGridNo, pSoldierOld->bLevel);
+			BeginHandleQueenBitchDeath(killer, pSoldierOld->sGridNo, pSoldierOld->bLevel);
 		}
 
 		if (pSoldierOld->bTeam == ENEMY_TEAM)
@@ -2825,9 +2815,9 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 			TrackEnemiesKilled(ENEMY_KILLED_IN_TACTICAL, pSoldierOld->ubSoldierClass);
 		}
 		// If enemy guy was killed by the player, give morale boost to player's team!
-		if (pSoldierOld->ubAttackerID != NOBODY && MercPtrs[pSoldierOld->ubAttackerID]->bTeam == gbPlayerNum)
+		if (killer != NULL && killer->bTeam == gbPlayerNum)
 		{
-			HandleMoraleEvent(MercPtrs[pSoldierOld->ubAttackerID], MORALE_KILLED_ENEMY, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			HandleMoraleEvent(killer, MORALE_KILLED_ENEMY, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 
 		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
@@ -2861,15 +2851,15 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 			pSoldierOld->ubLastDamageReason != TAKE_DAMAGE_BLOODLOSS)
 	{
 		// if it was a kill by a player's merc
-		if (pSoldierOld->ubAttackerID != NOBODY && MercPtrs[pSoldierOld->ubAttackerID]->bTeam == gbPlayerNum)
+		if (killer != NULL && killer->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE CLASS GAIN:  Earned a kill
-			StatChange(MercPtrs[pSoldierOld->ubAttackerID], EXPERAMT, 10 * pSoldierOld->bExpLevel, FALSE);
+			StatChange(killer, EXPERAMT, 10 * pSoldierOld->bExpLevel, FALSE);
 		}
 
 		// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
 		UINT8 ubAssister;
-		if (pSoldierOld->ubPreviousAttackerID == pSoldierOld->ubAttackerID)
+		if (pSoldierOld->ubPreviousAttackerID == SOLDIER2ID(killer))
 		{
 			ubAssister = pSoldierOld->ubNextToPreviousAttackerID;
 		}
@@ -2886,9 +2876,9 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* pSoldierOld)
 		}
 	}
 
-	if (pSoldierOld->ubAttackerID != NOBODY && MercPtrs[pSoldierOld->ubAttackerID]->bTeam == MILITIA_TEAM)
+	if (killer != NULL && killer->bTeam == MILITIA_TEAM)
 	{
-		MercPtrs[pSoldierOld->ubAttackerID]->ubMilitiaKills++;
+		killer->ubMilitiaKills++;
 	}
 
 	//if the NPC is a dealer, add the dealers items to the ground
@@ -3057,9 +3047,10 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity(SOLDIERTYPE* pAttacked)
 		if (s->ubCivilianGroup != pAttacked->ubCivilianGroup || s->ubBodyType == COW) continue;
 
 		// if in LOS of this guy's attacker
-		if ((pAttacked->ubAttackerID != NOBODY && s->bOppList[pAttacked->ubAttackerID] == SEEN_CURRENTLY) ||
+		const SOLDIERTYPE* const attacker = pAttacked->attacker;
+		if ((attacker != NULL && s->bOppList[attacker->ubID] == SEEN_CURRENTLY) ||
 				(PythSpacesAway(s->sGridNo, pAttacked->sGridNo) < MaxDistanceVisible()) ||
-				(pAttacked->ubAttackerID != NOBODY && PythSpacesAway(s->sGridNo, MercPtrs[pAttacked->ubAttackerID]->sGridNo) < MaxDistanceVisible()))
+				(attacker != NULL && PythSpacesAway(s->sGridNo, attacker->sGridNo) < MaxDistanceVisible()))
 		{
 			MakeCivHostile(s, 2);
 			if (s->bOppCnt > 0)
@@ -6482,7 +6473,7 @@ SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(ID2SOLDIER(target->ubAttackerID), TRUE, target);
+	return InternalReduceAttackBusyCount(target->attacker, TRUE, target);
 }
 
 
@@ -6491,7 +6482,7 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(ID2SOLDIER(target->ubAttackerID), FALSE, target);
+	return InternalReduceAttackBusyCount(target->attacker, FALSE, target);
 }
 
 

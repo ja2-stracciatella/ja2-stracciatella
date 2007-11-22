@@ -1931,7 +1931,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
   else
   {
     // Buddy had died from additional dammage - free up attacker here...
-		ReduceAttackBusyCount(ID2SOLDIER(pTargetSoldier->ubAttackerID), FALSE);
+		ReduceAttackBusyCount(pTargetSoldier->attacker, FALSE);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Special effect killed before bullet impact, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
   }
 }

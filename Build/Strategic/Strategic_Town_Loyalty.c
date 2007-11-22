@@ -655,11 +655,9 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 	UINT32 uiValue = 0;
 
 
-	// ubAttacker CAN be NOBODY...  Don't treat is as murder if NOBODY killed us...
-	if ( pSoldier->ubAttackerID == NOBODY )
-	{
-		return;
-	}
+	// attacker CAN be NOBODY...  Don't treat is as murder if NOBODY killed us...
+	SOLDIERTYPE* const killer = pSoldier->attacker;
+	if (killer == NULL) return;
 
 	// ignore murder of non-civilians!
 	if ( ( pSoldier->bTeam != CIV_TEAM ) || ( pSoldier->ubBodyType == CROW ) )
@@ -690,8 +688,6 @@ void HandleMurderOfCivilian( SOLDIERTYPE *pSoldier, BOOLEAN fIntentional )
 				return;
 		}
 	}
-
-	SOLDIERTYPE* const killer = GetMan(pSoldier->ubAttackerID);
 
 	// set killer team
 	bKillerTeam = killer->bTeam;

@@ -420,7 +420,7 @@ struct SOLDIERTYPE
 	INT8												bDexterity;		// dexterity (hand coord) value
 	INT8												bWisdom;
 	INT16												sReloadDelay;
-	UINT8												ubAttackerID;
+	SOLDIERTYPE*                attacker;
 	UINT8												ubPreviousAttackerID;
 	BOOLEAN											fTurnInProgress;
 
