@@ -520,7 +520,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_I16A(S, Soldier->sLastTwoLocations, lengthof(Soldier->sLastTwoLocations))
 	EXTR_SKIP(S, 2)
 	EXTR_I32(S, Soldier->uiTimeSinceLastBleedGrunt)
-	EXTR_U8(S, Soldier->ubNextToPreviousAttackerID)
+	EXTR_SOLDIER(S, Soldier->next_to_previous_attacker)
 	EXTR_SKIP(S, 39)
 
 #ifdef _WIN32 // XXX HACK000A
@@ -1046,7 +1046,7 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_I16A(D, Soldier->sLastTwoLocations, lengthof(Soldier->sLastTwoLocations))
 	INJ_SKIP(D, 2)
 	INJ_I32(D, Soldier->uiTimeSinceLastBleedGrunt)
-	INJ_U8(D, Soldier->ubNextToPreviousAttackerID)
+	INJ_SOLDIER(D, Soldier->next_to_previous_attacker)
 	INJ_SKIP(D, 39)
 
 #ifdef _WIN32 // XXX HACK000A

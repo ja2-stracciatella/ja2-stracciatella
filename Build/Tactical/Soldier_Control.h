@@ -422,6 +422,7 @@ struct SOLDIERTYPE
 	INT16												sReloadDelay;
 	SOLDIERTYPE*                attacker;
 	SOLDIERTYPE*                previous_attacker;
+	SOLDIERTYPE*                next_to_previous_attacker;
 	BOOLEAN											fTurnInProgress;
 
 	BOOLEAN											fIntendedTarget; // intentionally shot?
@@ -851,7 +852,6 @@ struct SOLDIERTYPE
 	BOOLEAN											fComplainedThatTired;
 	INT16												sLastTwoLocations[2];
   INT32                       uiTimeSinceLastBleedGrunt;
-  UINT8						ubNextToPreviousAttackerID;
 };
 
 #define HEALTH_INCREASE			0x0001

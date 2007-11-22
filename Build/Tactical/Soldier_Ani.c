@@ -3098,7 +3098,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 			// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
 			SOLDIERTYPE* assister = pSoldier->previous_attacker;
-			if (assister == attacker) assister = ID2SOLDIER(pSoldier->ubNextToPreviousAttackerID);
+			if (assister == attacker) assister = pSoldier->next_to_previous_attacker;
 
 			if (assister != NULL && assister != attacker)
 			{

@@ -2761,7 +2761,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			// JA2Gold: fix next-to-previous attacker value
 			if ( guiSaveGameVersion < 99 )
 			{
-				s->ubNextToPreviousAttackerID = NOBODY;
+				s->next_to_previous_attacker = NULL;
 			}
 		}
 	}

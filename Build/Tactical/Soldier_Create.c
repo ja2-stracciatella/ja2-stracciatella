@@ -1075,9 +1075,9 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	// Set morale default
 	pSoldier->bMorale								= DEFAULT_MORALE;
 
-	pSoldier->attacker          = NULL;
-	pSoldier->previous_attacker = NULL;
-	pSoldier->ubNextToPreviousAttackerID	= NOBODY;
+	pSoldier->attacker                  = NULL;
+	pSoldier->previous_attacker         = NULL;
+	pSoldier->next_to_previous_attacker = NULL;
 
 	//Set AI Delay!
 	pSoldier->uiAIDelay							= 100;

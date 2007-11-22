@@ -7444,7 +7444,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 			// set next-to-previous attacker, so long as this isn't a repeat attack
 			if (pSoldier->previous_attacker != pSoldier->attacker)
 			{
-				pSoldier->ubNextToPreviousAttackerID = SOLDIER2ID(pSoldier->previous_attacker);
+				pSoldier->next_to_previous_attacker = pSoldier->previous_attacker;
 			}
 
 			// get previous attacker id

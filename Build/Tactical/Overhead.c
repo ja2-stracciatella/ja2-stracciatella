@@ -2859,7 +2859,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 
 		// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
 		SOLDIERTYPE* assister = pSoldierOld->previous_attacker;
-		if (assister == killer) assister = ID2SOLDIER(pSoldierOld->ubNextToPreviousAttackerID);
+		if (assister == killer) assister = pSoldierOld->next_to_previous_attacker;
 
 		// if it was assisted by a player's merc
 		if (assister != NULL && assister->bTeam == gbPlayerNum)
