@@ -698,7 +698,7 @@ struct SOLDIERTYPE
 	UINT8												ubSoldierClass;									//admin, elite, troop (creature types?)
 	UINT8												ubAPsLostToSuppression;
 	BOOLEAN											fChangingStanceDueToSuppression;
-	UINT8												ubSuppressorID;
+	SOLDIERTYPE*                suppressor;
 
 	//Squad merging vars
 	UINT8												ubDesiredSquadAssignment;

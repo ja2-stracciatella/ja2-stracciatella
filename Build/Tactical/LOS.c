@@ -3867,7 +3867,7 @@ void MoveBullet( INT32 iBullet )
 										// else fall through
 									default:
 										tgt->ubSuppressionPoints++;
-										tgt->ubSuppressorID = pBullet->pFirer->ubID;
+										tgt->suppressor = pBullet->pFirer;
 										break;
 								}
 							}
@@ -3961,7 +3961,7 @@ void MoveBullet( INT32 iBullet )
 											// else fall through
 										default:
 											pTarget->ubSuppressionPoints++;
-											pTarget->ubSuppressorID = pBullet->pFirer->ubID;
+											pTarget->suppressor = pBullet->pFirer;
 											break;
 									}
 								}

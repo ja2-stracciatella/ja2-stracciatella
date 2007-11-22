@@ -1871,7 +1871,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							pSoldier->fChangingStanceDueToSuppression = FALSE;
 							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of suppression stance change");
-							ReduceAttackBusyCount(ID2SOLDIER(pSoldier->ubSuppressorID), FALSE);
+							ReduceAttackBusyCount(pSoldier->suppressor, FALSE);
 						}
 
 						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->fTurningFromPronePosition != 3 ) && ( pSoldier->fTurningFromPronePosition != 1 ) )
