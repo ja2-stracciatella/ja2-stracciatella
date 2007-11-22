@@ -6162,22 +6162,19 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEAN fCalledByAttacker, SOLDIERTYPE* pTarget)
+static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, const BOOLEAN fCalledByAttacker, SOLDIERTYPE* pTarget)
 {
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	SOLDIERTYPE *				pSoldier;
 	BOOLEAN							fEnterCombat = FALSE;
 
-	if (ubID == NOBODY)
+	if (pSoldier == NULL)
 	{
-		pSoldier = NULL;
 		pTarget = NULL;
 	}
 	else
 	{
-		pSoldier = MercPtrs[ ubID ];
 		if (pTarget == NULL)
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, ">>Target ptr is null!");
@@ -6227,7 +6224,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 	{
 		// Check to see if anyone was suppressed
 		const SOLDIERTYPE* const target = (pSoldier == NULL ? NULL : pSoldier->target);
-		HandleSuppressionFire(target, ubID);
+		HandleSuppressionFire(target, SOLDIER2ID(pSoldier));
 
 		//HandleAfterShootingGuy( pSoldier, pTarget );
 
@@ -6362,7 +6359,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)
 		{
-			UnSetUIBusy( ubID );
+			UnSetUIBusy(pSoldier->ubID);
 		}
 		else
 		{
@@ -6467,7 +6464,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* const attacker, const BOOLEAN fCalledByAttacker)
 {
 	SOLDIERTYPE* const target = (attacker == NULL ? NULL : attacker->target);
-	return InternalReduceAttackBusyCount(SOLDIER2ID(attacker), fCalledByAttacker, target);
+	return InternalReduceAttackBusyCount(attacker, fCalledByAttacker, target);
 }
 
 
@@ -6485,7 +6482,7 @@ SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->ubAttackerID, TRUE, target);
+	return InternalReduceAttackBusyCount(ID2SOLDIER(target->ubAttackerID), TRUE, target);
 }
 
 
@@ -6494,7 +6491,7 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* const target)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return InternalReduceAttackBusyCount(target->ubAttackerID, FALSE, target);
+	return InternalReduceAttackBusyCount(ID2SOLDIER(target->ubAttackerID), FALSE, target);
 }
 
 
