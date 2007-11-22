@@ -823,37 +823,3 @@ void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide )
 		pAniTile->pLevelNode->uiFlags &= (~LEVELNODE_HIDDEN );
 	}
 }
-
-
-static void PauseAniTile(ANITILE* pAniTile, BOOLEAN fPause)
-{
-	if ( fPause )
-	{
-		pAniTile->uiFlags |= ANITILE_PAUSED;
-	}
-	else
-	{
-		pAniTile->uiFlags &= (~ANITILE_PAUSED );
-	}
-}
-
-
-static void PauseAllAniTilesOfType(UINT32 uiType, BOOLEAN fPause)
-{
-	ANITILE *pAniNode			= NULL;
-	ANITILE *pNode				= NULL;
-
-	// LOOP THROUGH EACH NODE
-	pAniNode = pAniTileHead;
-
-	while( pAniNode != NULL )
-	{
-		pNode = pAniNode;
-		pAniNode = pAniNode->pNext;
-
-		if ( pNode->uiFlags & uiType )
-		{
-      PauseAniTile( pNode, fPause );
-		}
-	}
-}
