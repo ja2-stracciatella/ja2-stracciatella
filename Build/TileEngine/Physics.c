@@ -434,7 +434,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			}
 
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
-			ReduceAttackBusyCount( pObject->ubOwner, FALSE );
+			ReduceAttackBusyCount(ID2SOLDIER(pObject->ubOwner), FALSE);
 
 			// ATE: Handle end of animation...
 			if ( pObject->fCatchAnimOn )

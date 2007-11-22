@@ -376,8 +376,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 
           // Freeup attacker from explosion
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
-		      ReduceAttackBusyCount( (UINT8)pAniNode->ubUserData2, FALSE );
-
+					ReduceAttackBusyCount(ID2SOLDIER(pAniNode->ubUserData2), FALSE);
 				}
 
 

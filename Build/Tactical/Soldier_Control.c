@@ -3167,9 +3167,8 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		case SHOOT_MORTAR:
 		case THROW_ITEM:
 		case LOB_ITEM:
-
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %hs ENDED BY HIT ANIMATION, Now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount));
-			ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+			ReduceAttackBusyCount(pSoldier, FALSE);
 			break;
 	}
 
@@ -7460,7 +7459,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
 			{
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker of %d (attacker is %d) - releasesoldierattacker num to free is %d", pSoldier->ubID, pSoldier->ubAttackerID, ubNumToFree ) );
-				ReduceAttackBusyCount( pSoldier->ubAttackerID, FALSE );
+				ReduceAttackBusyCount(ID2SOLDIER(pSoldier->ubAttackerID), FALSE);
 			}
 
 			// ATE: Set to NOBODY if this person is NOT dead
@@ -8458,7 +8457,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 
 		// Decrement attack counter...
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something");
-		ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// ATE: Goto stationary stance......
 		SoldierGotoStationaryStance( pSoldier );
@@ -8490,7 +8489,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 			pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
 
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
-			ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+			ReduceAttackBusyCount(pSoldier, FALSE);
 		}
 
 		// OK, if we are stopped at our destination, cancel pending action...
@@ -8572,7 +8571,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 		pSoldier->fTurningToShoot = FALSE;
 		// Release attacker
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
-		ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+		ReduceAttackBusyCount(pSoldier, FALSE);
 	}
 
 	// Turn off multi-move speed override....
@@ -10247,7 +10246,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 			    // after turn is done - so set flag here to tell it not to...
 			    pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
 			    DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
-			    ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+					ReduceAttackBusyCount(pSoldier, FALSE);
         }
 
 	      if ( pSoldier->pTempObject != NULL )
@@ -10261,9 +10260,8 @@ void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 
 		      // Decrement attack counter...
 		      DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
-		      ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+					ReduceAttackBusyCount(pSoldier, FALSE);
 	      }
-
 			}
 		}
 	}

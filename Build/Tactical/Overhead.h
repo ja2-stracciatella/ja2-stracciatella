@@ -292,7 +292,7 @@ void ResetAllMercSpeeds(void);
 
 BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLEAN fInitialMove, UINT16 usAnimState );
 
-SOLDIERTYPE * ReduceAttackBusyCount( UINT8 ubID, BOOLEAN fCalledByAttacker );
+SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* attacker, BOOLEAN fCalledByAttacker);
 
 void CommonEnterCombatModeCode( );
 

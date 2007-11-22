@@ -6464,10 +6464,10 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(const UINT8 ubID, const BOOLEA
 }
 
 
-SOLDIERTYPE* ReduceAttackBusyCount(UINT8 ubID, BOOLEAN fCalledByAttacker)
+SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* const attacker, const BOOLEAN fCalledByAttacker)
 {
-	SOLDIERTYPE* const target = (ubID == NOBODY ? NULL : MercPtrs[ubID]->target);
-	return InternalReduceAttackBusyCount(ubID, fCalledByAttacker, target);
+	SOLDIERTYPE* const target = (attacker == NULL ? NULL : attacker->target);
+	return InternalReduceAttackBusyCount(SOLDIER2ID(attacker), fCalledByAttacker, target);
 }
 
 
@@ -6476,7 +6476,7 @@ SOLDIERTYPE* FreeUpAttacker(SOLDIERTYPE* const attacker)
 	// Strange as this may seem, this function returns a pointer to
 	// the *target* in case the target has changed sides as a result
 	// of being attacked
-	return ReduceAttackBusyCount(attacker->ubID, TRUE);
+	return ReduceAttackBusyCount(attacker, TRUE);
 }
 
 

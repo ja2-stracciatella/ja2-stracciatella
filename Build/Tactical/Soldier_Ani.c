@@ -713,7 +713,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// ATE; Reduce it due to animation being stopped...
 						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - Burst animation ended");
-						ReduceAttackBusyCount( (UINT8) pSoldier->ubID, FALSE );
+						ReduceAttackBusyCount(pSoldier, FALSE);
 
 
 						if ( CheckForImproperFireGunEnd( pSoldier ) )
@@ -1871,7 +1871,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							pSoldier->fChangingStanceDueToSuppression = FALSE;
 							DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of suppression stance change");
-							ReduceAttackBusyCount( pSoldier->ubSuppressorID, FALSE );
+							ReduceAttackBusyCount(ID2SOLDIER(pSoldier->ubSuppressorID), FALSE);
 						}
 
 						if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && ( pSoldier->fTurningFromPronePosition != 3 ) && ( pSoldier->fTurningFromPronePosition != 1 ) )
@@ -2360,13 +2360,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// code: freeup attcker
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )", gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState));
-					ReduceAttackBusyCount( (UINT8) pSoldier->ubID, FALSE );
+					ReduceAttackBusyCount(pSoldier, FALSE);
 
           // ATE: Here, reduce again if creaturequeen tentical attack...
           if ( pSoldier->usAnimState == QUEEN_SWIPE )
           {
 					  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count for end of queen swipe");
-					  ReduceAttackBusyCount( (UINT8) pSoldier->ubID, FALSE );
+					  ReduceAttackBusyCount(pSoldier, FALSE);
           }
 					break;
 

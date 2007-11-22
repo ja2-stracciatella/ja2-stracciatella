@@ -1150,7 +1150,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
       // Reduce again for attack end 'cause it has been incremented for a normal attack
       //
 		  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %hs ENDED BY BAD EXPLOSIVE CHECK, Now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount));
-		  ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+			ReduceAttackBusyCount(pSoldier, FALSE);
 
       return( FALSE );
     }
@@ -1777,7 +1777,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
     // Reduce again for attack end 'cause it has been incremented for a normal attack
     //
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("@@@@@@@ Freeing up attacker - ATTACK ANIMATION %hs ENDED BY BAD EXPLOSIVE CHECK, Now %d", gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount));
-		ReduceAttackBusyCount( pSoldier->ubID, FALSE );
+		ReduceAttackBusyCount(pSoldier, FALSE);
 
     // So all's well, should be good from here....
     return( FALSE );
@@ -1931,7 +1931,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
   else
   {
     // Buddy had died from additional dammage - free up attacker here...
-		ReduceAttackBusyCount( pTargetSoldier->ubAttackerID, FALSE );
+		ReduceAttackBusyCount(ID2SOLDIER(pTargetSoldier->ubAttackerID), FALSE);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Special effect killed before bullet impact, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
   }
 }
