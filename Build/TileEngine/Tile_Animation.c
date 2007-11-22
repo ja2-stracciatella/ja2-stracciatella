@@ -263,10 +263,9 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	pNewAniNode->uiKeyFrame1Code	= pAniParams->uiKeyFrame1Code;
 	pNewAniNode->ubKeyFrame2			= pAniParams->ubKeyFrame2;
 	pNewAniNode->uiKeyFrame2Code	= pAniParams->uiKeyFrame2Code;
-	pNewAniNode->uiUserData				= pAniParams->uiUserData;
-	pNewAniNode->ubUserData2			= pAniParams->ubUserData2;
-	pNewAniNode->uiUserData3			= pAniParams->uiUserData3;
-
+	pNewAniNode->v.user.uiData    = pAniParams->uiUserData;
+	pNewAniNode->v.user.ubData2   = pAniParams->ubUserData2;
+	pNewAniNode->v.user.uiData3   = pAniParams->uiUserData3;
 
 	//Set head
 	pAniTileHead = pNewAniNode;
@@ -365,7 +364,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 				if ( pAniNode->uiFlags & ANITILE_EXPLOSION )
 				{
 					// Talk to the explosion data...
-					RemoveExplosionData( pAniNode->uiUserData3 );
+					RemoveExplosionData(pAniNode->v.user.uiData3);
 
 					if ( !gfExplosionQueueActive )
 					{
@@ -376,14 +375,14 @@ void DeleteAniTile( ANITILE *pAniTile )
 
           // Freeup attacker from explosion
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
-					ReduceAttackBusyCount(ID2SOLDIER(pAniNode->ubUserData2), FALSE);
+					ReduceAttackBusyCount(ID2SOLDIER(pAniNode->v.user.ubData2), FALSE);
 				}
 
 
 				if ( pAniNode->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE )
 				{
 					// First delete the bullet!
-					RemoveBullet(GetBulletPtr(pAniNode->uiUserData3));
+					RemoveBullet(GetBulletPtr(pAniNode->v.user.uiData3));
 
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
 					FreeUpAttacker(GetMan(pAniNode->ubAttackerMissed));
@@ -476,13 +475,13 @@ void UpdateAniTiles( )
 
 				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = OneCDirection(pNode->uiUserData3);
+					ubTempDir   = OneCDirection(pNode->v.user.uiData3);
 					usMaxFrames = (UINT16)usMaxFrames + ( pNode->usNumFrames * ubTempDir );
 				}
 
 				if ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = gb4DirectionsFrom8[ pNode->uiUserData3 ];
+					ubTempDir   = gb4DirectionsFrom8[pNode->v.user.uiData3];
 					usMaxFrames = (UINT16)usMaxFrames + ( pNode->usNumFrames * ubTempDir );
 				}
 
@@ -494,7 +493,7 @@ void UpdateAniTiles( )
 					if ( pNode->uiFlags & ANITILE_EXPLOSION )
 					{
 						// Talk to the explosion data...
-						UpdateExplosionFrame( pNode->uiUserData3, pNode->sCurrentFrame );
+						UpdateExplosionFrame(pNode->v.user.uiData3, pNode->sCurrentFrame);
 					}
 
 					// CHECK IF WE SHOULD BE DISPLAYING TRANSLUCENTLY!
@@ -508,12 +507,11 @@ void UpdateAniTiles( )
 								break;
 
 							case ANI_KEYFRAME_CHAIN_WATER_EXPLOSION:
-
-								IgniteExplosion( pNode->ubUserData2, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)( pNode->uiUserData ), 0 );
+								IgniteExplosion(pNode->v.user.ubData2, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)pNode->v.user.uiData, 0);
 								break;
 
               case ANI_KEYFRAME_DO_SOUND:
-                PlayLocationJA2Sample((INT16)pNode->uiUserData3, pNode->uiUserData, MIDVOLUME, 1);
+                PlayLocationJA2Sample((INT16)pNode->v.user.uiData3, pNode->v.user.uiData, MIDVOLUME, 1);
                 break;
 						}
 
@@ -527,19 +525,18 @@ void UpdateAniTiles( )
            	switch( pNode->uiKeyFrame2Code )
 						{
 							case ANI_KEYFRAME_BEGIN_DAMAGE:
-
-                ubExpType = Explosive[ Item[ (UINT16)pNode->uiUserData ].ubClassIndex ].ubType;
+                ubExpType = Explosive[Item[(UINT16)pNode->v.user.uiData].ubClassIndex].ubType;
 
                 if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
                      ubExpType == EXPLOSV_SMOKE )
                 {
                   // Do sound....
                   // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
-		              NewSmokeEffect( pNode->sGridNo, (UINT16)pNode->uiUserData, gExplosionData[ pNode->uiUserData3 ].Params.bLevel, (UINT8)pNode->ubUserData2 );
+		              NewSmokeEffect(pNode->sGridNo, (UINT16)pNode->v.user.uiData, gExplosionData[pNode->v.user.uiData3].Params.bLevel, (UINT8)pNode->v.user.ubData2);
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[(UINT16)pNode->uiUserData].ubClassIndex].ubRadius, (UINT16)pNode->uiUserData, (UINT8)pNode->ubUserData2, FALSE, gExplosionData[pNode->uiUserData3].Params.bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[Item[(UINT16)pNode->v.user.uiData].ubClassIndex].ubRadius, (UINT16)pNode->v.user.uiData, (UINT8)pNode->v.user.ubData2, FALSE, gExplosionData[pNode->v.user.uiData3].Params.bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;
@@ -558,14 +555,14 @@ void UpdateAniTiles( )
 						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = OneCDirection(pNode->uiUserData3);
+							ubTempDir = OneCDirection(pNode->v.user.uiData3);
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 
 						if ( ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = gb4DirectionsFrom8[ pNode->uiUserData3 ];
+							ubTempDir = gb4DirectionsFrom8[pNode->v.user.uiData3];
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 
@@ -612,13 +609,13 @@ void UpdateAniTiles( )
 
 				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = OneCDirection(pNode->uiUserData3);
+					ubTempDir   = OneCDirection(pNode->v.user.uiData3);
 					usMinFrames = ( pNode->usNumFrames * ubTempDir );
 				}
 
 				if ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME )
 				{
-					ubTempDir = gb4DirectionsFrom8[ pNode->uiUserData3 ];
+					ubTempDir   = gb4DirectionsFrom8[pNode->v.user.uiData3];
 					usMinFrames = ( pNode->usNumFrames * ubTempDir );
 				}
 
@@ -630,7 +627,7 @@ void UpdateAniTiles( )
 					if ( pNode->uiFlags & ANITILE_EXPLOSION )
 					{
 						// Talk to the explosion data...
-						UpdateExplosionFrame( pNode->uiUserData3, pNode->sCurrentFrame );
+						UpdateExplosionFrame(pNode->v.user.uiData3, pNode->sCurrentFrame);
 					}
 
 				}
@@ -653,13 +650,13 @@ void UpdateAniTiles( )
 						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = OneCDirection(pNode->uiUserData3);
+							ubTempDir = OneCDirection(pNode->v.user.uiData3);
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 						if ( ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
 						{
 							// Our start frame is actually a direction indicator
-							ubTempDir = gb4DirectionsFrom8[ pNode->uiUserData3 ];
+							ubTempDir = gb4DirectionsFrom8[pNode->v.user.uiData3];
 							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
 						}
 
@@ -737,14 +734,14 @@ static void SetAniTileFrame(ANITILE* pAniTile, INT16 sFrame)
 	if ( (pAniTile->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = OneCDirection(pAniTile->uiUserData3);
+		ubTempDir   = OneCDirection(pAniTile->v.user.uiData3);
 		sStartFrame = (UINT16)sFrame + ( pAniTile->usNumFrames * ubTempDir );
 	}
 
 	if ( (pAniTile->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
 	{
 		// Our start frame is actually a direction indicator
-		ubTempDir = gb4DirectionsFrom8[ pAniTile->uiUserData3 ];
+		ubTempDir   = gb4DirectionsFrom8[pAniTile->v.user.uiData3];
 		sStartFrame = (UINT16)sFrame + ( pAniTile->usNumFrames * ubTempDir );
 	}
 

@@ -955,7 +955,7 @@ static STRUCTURE* InternalAddStructureToWorld(INT16 sBaseGridNo, INT8 bLevel, DB
 	else if (pLevelNode->uiFlags & LEVELNODE_ROTTINGCORPSE)
 	{
     // ATE: Offset IDs so they don't collide with soldiers
-		usStructureID = (UINT16)( TOTAL_SOLDIERS + pLevelNode->pAniTile->uiUserData );
+		usStructureID = (UINT16)(TOTAL_SOLDIERS + pLevelNode->pAniTile->v.user.uiData);
 	}
 	else
 	{

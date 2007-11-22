@@ -394,7 +394,7 @@ static void HandleCrowShadowNewDirection(SOLDIERTYPE* pSoldier)
 		{
 			if ( pSoldier->pAniTile != NULL )
 			{
-				pSoldier->pAniTile->uiUserData3	= pSoldier->bDirection;
+				pSoldier->pAniTile->v.user.uiData3 = pSoldier->bDirection;
 			}
 		}
 	}

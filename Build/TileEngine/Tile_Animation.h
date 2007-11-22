@@ -37,6 +37,17 @@
 #define ANI_TOPMOST_LEVEL				7
 
 
+typedef union AniUserData
+{
+	struct
+	{
+		UINT32 uiData;
+		UINT8  ubData2;
+		UINT32 uiData3;
+	} user;
+} AniUserData;
+
+
 typedef struct TAG_anitile
 {
 	struct TAG_anitile			 	  *pNext;
@@ -68,9 +79,7 @@ typedef struct TAG_anitile
 	UINT8												ubKeyFrame2;
 	UINT32											uiKeyFrame2Code;
 
-	UINT32											uiUserData;
-	UINT8												ubUserData2;
-	UINT32											uiUserData3;
+	AniUserData v;
 
 	INT8												bFrameCountAfterStart;
 

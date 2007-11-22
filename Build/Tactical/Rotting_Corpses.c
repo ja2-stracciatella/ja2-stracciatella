@@ -549,7 +549,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	pCorpse->pAniTile->pLevelNode->ubMaxLights					=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubMaxLights;
 	pCorpse->pAniTile->pLevelNode->ubNaturalShadeLevel	=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubNaturalShadeLevel;
 
-	pCorpse->pAniTile->uiUserData								= iIndex;
+	pCorpse->pAniTile->v.user.uiData = iIndex;
 	pCorpse->iID																= iIndex;
 
 	pCorpse->fActivated = TRUE;
@@ -1312,7 +1312,7 @@ static ROTTING_CORPSE* FindCorpseBasedOnStructure(INT16 sGridNo, STRUCTURE* pStr
 	if ( pLevelNode != NULL )
 	{
 		// Get our corpse....
-		pCorpse = &( gRottingCorpse[ pLevelNode->pAniTile->uiUserData ] );
+		pCorpse = &gRottingCorpse[pLevelNode->pAniTile->v.user.uiData];
 	}
 
 	return( pCorpse );

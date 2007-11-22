@@ -627,7 +627,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											// Position corpse based on it's float position
 											if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 											{
-												pCorpse     = &gRottingCorpse[pNode->pAniTile->uiUserData];
+												pCorpse     = &gRottingCorpse[pNode->pAniTile->v.user.uiData];
 												pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
 
 												dOffsetX = pCorpse->def.dXPos - gsRenderCenterX;
