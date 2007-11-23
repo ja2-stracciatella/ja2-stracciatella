@@ -189,7 +189,6 @@ extern SGPPaletteEntry	gpLightColors[3];
 
 
 // macros
-#define LightSpriteGetType(x)				(LightSprites[x].uiLightType)
 #define LightGetAmbient()						(ubAmbientLightLevel)
 
 static inline const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
