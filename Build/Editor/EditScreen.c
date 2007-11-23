@@ -2563,12 +2563,13 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	sprintf( Filename, "L-R%02d.LHT", sRadius );
 
 	// Attempt to create light
-	INT32 iLightHandle = LIGHT2ID(LightSpriteCreate(Filename, sType));
-	if (iLightHandle == -1)
+	LIGHT_SPRITE* l = LightSpriteCreate(Filename, sType);
+	if (l == NULL)
 	{
 		// Couldn't load file because it doesn't exist. So let's make the file
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
-		if ( (iLightHandle = LightCreateOmni( ubIntensity, sRadius )) == (-1) )
+		const INT32 iLightHandle = LightCreateOmni(ubIntensity, sRadius);
+		if (iLightHandle == -1)
 		{
 			// Can't create light template
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light template for radius %d",sRadius) );
@@ -2582,8 +2583,8 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 			return( FALSE );
 		}
 
-		iLightHandle = LIGHT2ID(LightSpriteCreate(Filename, sType));
-		if (iLightHandle == -1)
+		l = LightSpriteCreate(Filename, sType);
+		if (l == NULL)
 		{
 			// Can't create sprite
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d",sRadius) );
@@ -2591,13 +2592,12 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		}
 	}
 
-	LIGHT_SPRITE* const l = &LightSprites[iLightHandle];
 	LightSpritePower(l, TRUE);
 
 	if (!LightSpritePosition(l, iMapX, iMapY))
 	{
 		// Can't set light's position
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't set light position for light %d",iLightHandle) );
+		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't set light position for light %d", LIGHT2ID(l)));
 		return( FALSE );
 	}
 
