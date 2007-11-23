@@ -131,7 +131,7 @@ BOOLEAN		LightSpriteRenderAll(void);
 // Turns on/off power to a light
 BOOLEAN LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 // Moves light to/from roof position
-BOOLEAN		LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof);
+BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* l, BOOLEAN fOnRoof);
 
 BOOLEAN		ApplyTranslucencyToWalls(INT16 iX, INT16 iY);
 BOOLEAN		LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset);

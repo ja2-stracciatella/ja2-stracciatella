@@ -731,12 +731,16 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 		if ( pSoldier->bLevel == 0 )
 		{
 			if(pSoldier->iLight!=(-1))
-				LightSpriteRoofStatus(pSoldier->iLight, FALSE );
+			{
+				LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), FALSE);
+			}
 		}
 		else
 		{
 			if(pSoldier->iLight!=(-1))
-				LightSpriteRoofStatus(pSoldier->iLight, TRUE );
+			{
+				LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), TRUE);
+			}
 		}
 		return( TRUE );
 	}

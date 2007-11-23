@@ -3161,15 +3161,9 @@ BOOLEAN LightSpritePosition(LIGHT_SPRITE* const l, INT16 iX, INT16 iY)
 	return(TRUE);
 }
 
-/********************************************************************************
-* LightSpriteRoofStatus
-*
-*		Determines whether a light is on a roof or not.
-*
-********************************************************************************/
-BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
+
+BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* const l, BOOLEAN fOnRoof)
 {
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if ( fOnRoof &&  (l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
 	if (!fOnRoof && !(l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
 
@@ -3211,7 +3205,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 }
 
 
-BOOLEAN LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
+void LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 {
 	if(fOn)
 	{
@@ -3222,9 +3216,6 @@ BOOLEAN LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 	{
 		l->uiFlags &= ~LIGHT_SPR_ON;
 	}
-
-	return(TRUE);
-
 }
 
 

@@ -959,12 +959,10 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 			return FALSE;
 		}
 
-		LightSprites[pSoldier->iLight].uiFlags |= MERC_LIGHT;
+		LIGHT_SPRITE* const l = &LightSprites[pSoldier->iLight];
+		l->uiFlags |= MERC_LIGHT;
 
-    if ( pSoldier->bLevel != 0 )
-    {
-		  LightSpriteRoofStatus(pSoldier->iLight, TRUE );
-    }
+    if (pSoldier->bLevel != 0) LightSpriteRoofStatus(l, TRUE);
 	}
 
 	return( TRUE );
@@ -2402,12 +2400,16 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			if ( pSoldier->usAnimState == CLIMBUPROOF )
 			{
 				if(pSoldier->iLight!=(-1))
-					LightSpriteRoofStatus(pSoldier->iLight, TRUE );
+				{
+					LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), TRUE);
+				}
 			}
 			else if ( pSoldier->usAnimState == CLIMBDOWNROOF )
 			{
 				if(pSoldier->iLight!=(-1))
-					LightSpriteRoofStatus(pSoldier->iLight, FALSE );
+				{
+					LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), FALSE);
+				}
 			}
 
 			//JA2Gold:
