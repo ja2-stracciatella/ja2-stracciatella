@@ -1,6 +1,7 @@
 #ifndef __BULLETS_H
 #define __BULLETS_H
 
+#include "JA2Types.h"
 #include "Types.h"
 #include "Soldier_Control.h"
 #include "LOS.h"
@@ -16,7 +17,7 @@
 #define		BULLET_FLAG_BUCKSHOT				        0x0040
 #define		BULLET_FLAG_FLAME						        0x0080
 
-typedef struct
+struct BULLET
 {
 	INT32		iBullet;
 	const SOLDIERTYPE* target;
@@ -57,7 +58,7 @@ typedef struct
 	ANITILE			*pAniTile;
 	ANITILE			*pShadowAniTile;
 	UINT8		ubItemStatus;
-} BULLET;
+};
 
 extern UINT32 guiNumBullets;
 

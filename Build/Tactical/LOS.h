@@ -1,6 +1,8 @@
 #ifndef LOS_H
 #define LOS_H
 
+#include "JA2Types.h"
+
 //#define LOS_DEBUG
 
 
@@ -161,7 +163,7 @@ extern LOSResults gLOSTestResults;
 
 #endif
 
-void MoveBullet( INT32 iBullet );
+void MoveBullet(BULLET* b);
 //BOOLEAN FireBullet2( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, INT16 sHitBy );
 
 #endif

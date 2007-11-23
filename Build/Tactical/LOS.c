@@ -3300,7 +3300,7 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 
 		HandleBulletSpecialFlags(pBullet);
 
-		MoveBullet( pBullet->iBullet );
+		MoveBullet(pBullet);
 
 		return( TRUE );
 	}
@@ -3586,10 +3586,9 @@ static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FL
 	}
 }
 
-void MoveBullet( INT32 iBullet )
-{
-	BULLET	*pBullet;
 
+void MoveBullet(BULLET* const pBullet)
+{
 	FIXEDPT	qLandHeight;
 	INT32		iCurrAboveLevelZ;
 	INT32		iCurrCubesAboveLevelZ;
@@ -3637,8 +3636,6 @@ void MoveBullet( INT32 iBullet )
 	FIXEDPT					qWallHeight;
 	FIXEDPT					qWindowBottomHeight;
 	FIXEDPT					qWindowTopHeight;
-
-	pBullet = GetBulletPtr( iBullet );
 
 	// CHECK MIN TIME ELAPSED
 	uiTime = GetJA2Clock( );

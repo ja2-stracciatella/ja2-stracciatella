@@ -232,7 +232,7 @@ void UpdateBullets(void)
 					}
 				}
 
-				MoveBullet( uiCount );
+				MoveBullet(b);
 				if (b->fToDelete)
 				{
 					// Remove from old position
