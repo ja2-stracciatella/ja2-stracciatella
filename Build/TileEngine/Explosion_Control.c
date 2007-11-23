@@ -305,7 +305,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
     sZ = ROOF_LEVEL_HEIGHT;
   }
 
-	pExplosion->iLightID = -1;
+	pExplosion->light = NULL;
 
 	// OK, if we are over water.... use water explosion...
 	ubTerrainType = GetTerrainType( sGridNo );
@@ -354,13 +354,13 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	CreateAnimationTile( &AniParams );
 
 	//  set light source....
-	if ( pExplosion->iLightID == -1 )
+	if (pExplosion->light == NULL)
 	{
 		// DO ONLY IF WE'RE AT A GOOD LEVEL
 		if ( ubAmbientLightLevel >= MIN_AMB_LEVEL_FOR_MERC_LIGHTS )
 		{
 			LIGHT_SPRITE* const l = LightSpriteCreate("L-R04.LHT", 0);
-			pExplosion->iLightID = LIGHT2ID(l);
+			pExplosion->light = l;
 			if (l != NULL)
 			{
 				LightSpritePower(l, TRUE);
@@ -399,7 +399,7 @@ void RemoveExplosionData(EXPLOSIONTYPE* const e)
 	Assert(e->fAllocated);
 
 	e->fAllocated = FALSE;
-	if (e->iLightID != -1) LightSpriteDestroy(ID2LIGHT(e->iLightID));
+	if (e->light != NULL) LightSpriteDestroy(e->light);
 }
 
 
@@ -3158,7 +3158,6 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 		EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
 		if (!ExtractExplosionTypeFromFile(hFile, e)) return FALSE;
 		e->iID = uiCnt;
-		e->iLightID = -1;
 
 		GenerateExplosionFromExplosionPointer(e);
 	}

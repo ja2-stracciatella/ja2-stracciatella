@@ -1,6 +1,7 @@
 #ifndef _EXPLOSION_CONTROL_H
 #define _EXPLOSION_CONTROL_H
 
+#include "Lighting.h"
 #include "SmokeEffects.h"
 #include "Weapons.h"
 
@@ -36,7 +37,7 @@ typedef struct
 	BOOLEAN							fAllocated;
 	INT16								sCurrentFrame;
 	INT32								iID;
-	INT32								iLightID;
+	LIGHT_SPRITE* light;
 } EXPLOSIONTYPE;
 
 

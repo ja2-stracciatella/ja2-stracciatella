@@ -27,9 +27,10 @@ BOOLEAN ExtractExplosionTypeFromFile(const HWFILE file, EXPLOSIONTYPE* const e)
 	EXTR_SKIP(s, 1)
 	EXTR_I16(s, e->sCurrentFrame)
 	EXTR_I32(s, e->iID)
-	EXTR_I32(s, e->iLightID)
-	EXTR_SKIP(s, 4)
+	EXTR_SKIP(s, 8)
 	Assert(s == endof(src));
+
+	e->light = NULL;
 
 	return TRUE;
 }
@@ -55,8 +56,7 @@ BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, e->sCurrentFrame)
 	INJ_I32(d, e->iID)
-	INJ_I32(d, e->iLightID)
-	INJ_SKIP(d, 4)
+	INJ_SKIP(d, 8)
 	Assert(d == endof(dst));
 
 	return FileWrite(file, dst, sizeof(dst));
