@@ -1,7 +1,7 @@
 #ifndef _EXPLOSION_CONTROL_H
 #define _EXPLOSION_CONTROL_H
 
-#include "Lighting.h"
+#include "JA2Types.h"
 #include "SmokeEffects.h"
 #include "Weapons.h"
 

@@ -2,6 +2,7 @@
 #define _LIGHTING_H_
 
 #include "Debug.h"
+#include "JA2Types.h"
 #include "Soldier_Control.h"
 #include "VObject.h"
 
@@ -74,14 +75,15 @@ CASSERT(sizeof(LIGHT_NODE) == 6)
 
 
 // structure of light instance, or sprite (a copy of the template)
-typedef struct {
+struct LIGHT_SPRITE
+{
 					INT16		iX, iY;
 					INT16		iOldX, iOldY;
 					INT16		iAnimSpeed;
 					INT32		iTemplate;
 					UINT32	uiFlags;
 					UINT32	uiLightType;
-			} LIGHT_SPRITE;
+};
 CASSERT(sizeof(LIGHT_SPRITE) == 24)
 
 
