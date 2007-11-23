@@ -3023,7 +3023,7 @@ BOOLEAN LightSpriteFake(INT32 iSprite)
 }
 
 
-static BOOLEAN LightSpriteDirty(INT32 iSprite);
+static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* l);
 
 
 /********************************************************************************
@@ -3042,7 +3042,7 @@ BOOLEAN LightSpriteDestroy(INT32 iSprite)
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
 				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
-				LightSpriteDirty(iSprite);
+				LightSpriteDirty(l);
 			}
 			l->uiFlags &= ~LIGHT_SPR_ERASE;
 		}
@@ -3075,7 +3075,7 @@ static BOOLEAN LightSpriteRender(void)
 				if (l->iOldX < WORLD_COLS)
 				{
 					fRenderLights=TRUE;
-					LightSpriteDirty(iCount);
+					LightSpriteDirty(l);
 				}
 
 				l->iOldX = l->iX;
@@ -3083,7 +3083,7 @@ static BOOLEAN LightSpriteRender(void)
 
 				if (l->uiFlags & LIGHT_SPR_ON)
 				{
-						LightSpriteDirty(iCount);
+						LightSpriteDirty(l);
 						fRenderLights=TRUE;
 				}
 
@@ -3130,7 +3130,7 @@ INT32 iCount;
 		{
 			LightDraw(l);
 			l->uiFlags |= LIGHT_SPR_ERASE;
-			LightSpriteDirty(iCount);
+			LightSpriteDirty(l);
 		}
 
 		l->iOldX = l->iX;
@@ -3158,7 +3158,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
 				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
-				LightSpriteDirty(iSprite);
+				LightSpriteDirty(l);
 			}
 		}
 
@@ -3174,7 +3174,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 			{
 				LightDraw(l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
-				LightSpriteDirty(iSprite);
+				LightSpriteDirty(l);
 			}
 		}
 	}
@@ -3203,7 +3203,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
 				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
-				LightSpriteDirty(iSprite);
+				LightSpriteDirty(l);
 			}
 		}
 
@@ -3223,7 +3223,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 			{
 				LightDraw(l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
-				LightSpriteDirty(iSprite);
+				LightSpriteDirty(l);
 			}
 		}
 	}
@@ -3258,11 +3258,10 @@ BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 
 
 // Sets the flag for the renderer to draw all marked tiles.
-static BOOLEAN LightSpriteDirty(INT32 iSprite)
+static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* const l)
 {
 //INT16 iLeft_s, iTop_s;
 
-	//const LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	//CellXYToScreenXY(l->iX * CELL_X_SIZE, l->iY * CELL_Y_SIZE, &iLeft_s, &iTop_s);
 
 	//iLeft_s += LightXOffset[l->iTemplate];
