@@ -247,7 +247,6 @@ UINT32 EditScreenShutdown(void)
 static BOOLEAN EditModeInit(void)
 {
 	UINT32 x;
-	INT32 i;
 	SGPPaletteEntry	LColors[2];
 
 	OutputDebugString( "Entering editor mode...\n" );
@@ -368,10 +367,9 @@ static BOOLEAN EditModeInit(void)
 		SetEditorSmoothingMode( gMapInformation.ubEditorSmoothingType );
 		AddLockedDoorCursors();
 
-		for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+		FOR_ALL_LIGHT_SPRITES(l)
 		{
-			LIGHT_SPRITE* const l = &LightSprites[i];
-			if (l->uiFlags & LIGHT_SPR_ACTIVE && !(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
+			if (!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 			{
 				LightSpritePower(l, TRUE);
 			}

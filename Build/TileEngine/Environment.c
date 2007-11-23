@@ -531,14 +531,12 @@ void EnvEndRainStorm( )
 	guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );
 }
 
+
 void TurnOnNightLights()
 {
-	INT32 i;
-	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[i];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
-				l->uiFlags & LIGHT_NIGHTTIME &&
+		if (l->uiFlags & LIGHT_NIGHTTIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
 			LightSpritePower(l, TRUE);
@@ -546,14 +544,12 @@ void TurnOnNightLights()
 	}
 }
 
+
 void TurnOffNightLights()
 {
-	INT32 i;
-	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[i];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
-				l->uiFlags & LIGHT_NIGHTTIME &&
+		if (l->uiFlags & LIGHT_NIGHTTIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
 				!(l->uiFlags & MERC_LIGHT))
 		{
@@ -562,14 +558,12 @@ void TurnOffNightLights()
 	}
 }
 
+
 void TurnOnPrimeLights()
 {
-	INT32 i;
-	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[i];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
-				l->uiFlags & LIGHT_PRIMETIME &&
+		if (l->uiFlags & LIGHT_PRIMETIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
 			LightSpritePower(l, TRUE);
@@ -577,14 +571,12 @@ void TurnOnPrimeLights()
 	}
 }
 
+
 void TurnOffPrimeLights()
 {
-	INT32 i;
-	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[i];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
-				l->uiFlags & LIGHT_PRIMETIME &&
+		if (l->uiFlags & LIGHT_PRIMETIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
 				!(l->uiFlags & MERC_LIGHT))
 		{

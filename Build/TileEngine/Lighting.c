@@ -3058,50 +3058,41 @@ BOOLEAN LightSpriteDestroy(INT32 iSprite)
 // Updates any change in position in lights
 static BOOLEAN LightSpriteRender(void)
 {
-//INT32 iCount;
 //BOOLEAN fRenderLights=FALSE;
 
 	return(FALSE);
 
-/*	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+/*	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[iCount];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
+		if ((l->iX != l->iOldX) ||
+				(l->iY != l->iOldY) ||
+				(l->uiFlags & LIGHT_SPR_REDRAW))
 		{
-			if ((l->iX != l->iOldX) ||
-					(l->iY != l->iOldY) ||
-					(l->uiFlags & LIGHT_SPR_REDRAW))
+			if (l->iOldX < WORLD_COLS)
 			{
-				if (l->iOldX < WORLD_COLS)
-				{
-					fRenderLights=TRUE;
-					LightSpriteDirty(l);
-				}
-
-				l->iOldX = l->iX;
-				l->iOldY = l->iY;
-
-				if (l->uiFlags & LIGHT_SPR_ON)
-				{
-						LightSpriteDirty(l);
-						fRenderLights=TRUE;
-				}
-
-				l->uiFlags &= ~LIGHT_SPR_REDRAW;
+				fRenderLights=TRUE;
+				LightSpriteDirty(l);
 			}
+
+			l->iOldX = l->iX;
+			l->iOldY = l->iY;
+
+			if (l->uiFlags & LIGHT_SPR_ON)
+			{
+				LightSpriteDirty(l);
+				fRenderLights = TRUE;
+			}
+
+			l->uiFlags &= ~LIGHT_SPR_REDRAW;
 		}
 	}
 
 	if(fRenderLights)
 	{
 		LightResetAllTiles();
-		for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+		CFOR_ALL_LIGHT_SPRITES(l)
 		{
-			const LIGHT_SPRITE* const l = &LightSprites[iCount];
-			if (l->uiFlags & LIGHT_SPR_ACTIVE && l->uiFlags & LIGHT_SPR_ON)
-			{
-				LightDraw(l);
-			}
+			if (l->uiFlags & LIGHT_SPR_ON) LightDraw(l);
 		}
 		return(TRUE);
 	}
