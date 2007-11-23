@@ -2956,27 +2956,22 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 //---------------------------------------------------------------------------------------
 
 
-// Returns the index of the next available sprite.
-static INT32 LightSpriteGetFree(void)
+// Returns the next available sprite.
+static LIGHT_SPRITE* LightSpriteGetFree(void)
 {
-INT32 iCount;
-
-	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+	for (LIGHT_SPRITE* l = LightSprites; l != endof(LightSprites); ++l)
 	{
-		if(!(LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE))
-			return(iCount);
+		if (!(l->uiFlags % LIGHT_SPR_ACTIVE)) return l;
 	}
-
-	return(-1);
+	return NULL;
 }
 
 
 LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightType)
 {
-	const INT32 iSprite = LightSpriteGetFree();
-	if (iSprite == -1) return NULL;
+	LIGHT_SPRITE* const l = LightSpriteGetFree();
+	if (l == NULL) return NULL;
 
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	memset(l, 0, sizeof(LIGHT_SPRITE));
 	l->iX          = WORLD_COLS + 1;
 	l->iY          = WORLD_ROWS + 1;
