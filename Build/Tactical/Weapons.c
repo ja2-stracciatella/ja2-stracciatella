@@ -1937,7 +1937,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 }
 
 
-void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
+void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const UINT16 usStructureID, const INT32 iImpact, const BOOLEAN fStopped)
 {
 	BOOLEAN						fDoMissForGun = FALSE;
 	ANITILE						*pNode;
@@ -1946,7 +1946,6 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 	UINT16					usMissTileIndex, usMissTileType;
 	UINT32					uiMissVolume = MIDVOLUME;
 
-	BULLET* const pBullet = GetBulletPtr(iBullet);
 	SOLDIERTYPE* const attacker      = pBullet->pFirer;
 	const UINT16       usWeaponIndex = attacker->usAttackingWeapon;
 	const INT8         bWeaponStatus = pBullet->ubItemStatus;
@@ -2162,7 +2161,7 @@ void StructureHit(const INT32 iBullet, const INT16 sXPos, const INT16 sYPos, con
 					AniParams.uiFlags							= ANITILE_FORWARD;
 				}
 				// Save bullet ID!
-				AniParams.v.user.uiData3 = iBullet;
+				AniParams.v.user.uiData3 = pBullet->iBullet;
 
 				pNode = CreateAnimationTile( &AniParams );
 
