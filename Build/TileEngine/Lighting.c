@@ -2631,9 +2631,8 @@ UINT32	fTileFlags;
 
 
 // Reverts all tiles a given light affects to their natural light levels.
-static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
+static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, const LIGHT_SPRITE* const l)
 {
-	const LIGHT_SPRITE* const l = &LightSprites[uiSprite];
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -3034,7 +3033,7 @@ BOOLEAN LightSpriteDestroy(INT32 iSprite)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 				LightSpriteDirty(l);
 			}
 			l->uiFlags &= ~LIGHT_SPR_ERASE;
@@ -3141,7 +3140,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 				LightSpriteDirty(l);
 			}
 		}
@@ -3186,7 +3185,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 				LightSpriteDirty(l);
 			}
 		}
