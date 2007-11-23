@@ -3879,7 +3879,7 @@ static void SaveMapLights(HWFILE hfile)
 			{ //save the light
 				FileWrite(hfile, &LightSprites[cnt], sizeof(LIGHT_SPRITE));
 
-				const char* const light_name = pLightNames[l->iTemplate];
+				const char* const light_name = LightSpriteGetTypeName(l);
 				const UINT8 ubStrLen = strlen(light_name) + 1;
 				FileWrite(hfile, &ubStrLen, 1);
 				FileWrite(hfile, light_name, ubStrLen);
