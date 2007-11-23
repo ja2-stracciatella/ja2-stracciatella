@@ -121,10 +121,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->bMuzFlashCount > MAX_ANIFRAMES_PER_FLASH )
 			{
 				pSoldier->bMuzFlashCount = 0;
-				if ( pSoldier->iMuzFlash != -1 )
+				if (pSoldier->muzzle_flash != NULL)
 				{
-					LightSpriteDestroy(ID2LIGHT(pSoldier->iMuzFlash));
-          pSoldier->iMuzFlash = -1;
+					LightSpriteDestroy(pSoldier->muzzle_flash);
+					pSoldier->muzzle_flash = NULL;
 				}
 			}
 			else
@@ -467,7 +467,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					}
 
 					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT", 0);
-					pSoldier->iMuzFlash = LIGHT2ID(l);
+					pSoldier->muzzle_flash = l;
 					if (l == NULL) return TRUE;
 
 					LightSpritePower(l, TRUE);
@@ -3015,10 +3015,10 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 		ReceivingSoldierCancelServices( pSoldier );
 		GivingSoldierCancelServices( pSoldier );
 
-		if ( pSoldier->iMuzFlash != -1 )
+		if (pSoldier->muzzle_flash != NULL)
 		{
-			LightSpriteDestroy(ID2LIGHT(pSoldier->iMuzFlash));
-      pSoldier->iMuzFlash = -1;
+			LightSpriteDestroy(pSoldier->muzzle_flash);
+      pSoldier->muzzle_flash = NULL;
 		}
 		if (pSoldier->light != NULL) LightSpriteDestroy(pSoldier->light);
 

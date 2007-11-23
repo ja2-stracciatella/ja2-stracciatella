@@ -526,9 +526,8 @@ struct SOLDIERTYPE
 	UINT16											usStrategicInsertionData;
 
 	LIGHT_SPRITE*               light;
-	INT32												iMuzFlash;
+	LIGHT_SPRITE*               muzzle_flash;
 	INT8												bMuzFlashCount;
-
 
 	INT16												sX;
 	INT16												sY;
