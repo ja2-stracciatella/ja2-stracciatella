@@ -3841,7 +3841,16 @@ void ReloadTileset( UINT8 ubID )
 	sprintf( aFilename, "MAPS/%s", TEMP_FILE_FOR_TILESET_CHANGE );
 
 	FileDelete( aFilename );
+}
 
+
+BOOLEAN IsSoldierLight(const INT32 light)
+{
+	CFOR_ALL_NON_PLANNING_SOLDIERS(s)
+	{
+		if (s->iLight == light) return TRUE;
+	}
+	return FALSE;
 }
 
 
@@ -3849,9 +3858,7 @@ static void SaveMapLights(HWFILE hfile)
 {
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
-	BOOLEAN fSoldierLight;
 	UINT16 usNumLights = 0;
-	UINT16 cnt, cnt2;
 	UINT8 ubStrLen;
 
 	ubNumColors = LightGetColors( LColors );
@@ -3861,19 +3868,11 @@ static void SaveMapLights(HWFILE hfile)
 	FileWrite(hfile, LColors, sizeof(SGPPaletteEntry) * ubNumColors);
 
 	//count number of non-merc lights.
-	for( cnt = 0; cnt < MAX_LIGHT_SPRITES; cnt++ )
+	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
 	{
 		if( LightSprites[ cnt ].uiFlags & LIGHT_SPR_ACTIVE )
 		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			fSoldierLight = FALSE;
-			for ( cnt2 = 0; cnt2 < MAX_NUM_SOLDIERS && !fSoldierLight; cnt2++ )
-			{
-				const SOLDIERTYPE* pSoldier = GetSoldier(cnt2);
-				if (pSoldier != NULL && pSoldier->iLight == (INT32)cnt)
-					fSoldierLight = TRUE;
-			}
-			if( !fSoldierLight )
-				usNumLights++;
+			if (!IsSoldierLight(cnt)) ++usNumLights;
 		}
 	}
 
@@ -3881,18 +3880,11 @@ static void SaveMapLights(HWFILE hfile)
 	FileWrite(hfile, &usNumLights, 2);
 
 
-	for( cnt = 0; cnt < MAX_LIGHT_SPRITES; cnt++ )
+	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
 	{
 		if( LightSprites[ cnt ].uiFlags & LIGHT_SPR_ACTIVE )
 		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			fSoldierLight = FALSE;
-			for ( cnt2 = 0; cnt2 < MAX_NUM_SOLDIERS && !fSoldierLight; cnt2++ )
-			{
-				const SOLDIERTYPE* pSoldier = GetSoldier(cnt2);
-				if (pSoldier != NULL && pSoldier->iLight == (INT32)cnt)
-					fSoldierLight = TRUE;
-			}
-			if( !fSoldierLight )
+			if (!IsSoldierLight(cnt))
 			{ //save the light
 				FileWrite(hfile, &LightSprites[cnt], sizeof(LIGHT_SPRITE));
 

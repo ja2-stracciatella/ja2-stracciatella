@@ -2640,8 +2640,6 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
 	INT32 iCount;
-	UINT16 cnt;
-	BOOLEAN fSoldierLight;
 	BOOLEAN fRemovedLight;
 	INT32 iMapIndex;
 	UINT32 uiLastLightType;
@@ -2656,16 +2654,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 		{
 			if ( LightSprites[iCount].iX == iMapX && LightSprites[iCount].iY == iMapY )
 			{
-				// Found a light, so let's see if it belong to a merc!
-				fSoldierLight = FALSE;
-				for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
-				{
-					const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
-					if (pSoldier != NULL && pSoldier->iLight == iCount)
-						fSoldierLight = TRUE;
-				}
-
-				if ( !fSoldierLight )
+				if (!IsSoldierLight(iCount))
 				{
 					// Ok, it's not a merc's light so kill it!
 					pLastLightName = LightSpriteGetTypeName( iCount );
@@ -2703,25 +2692,14 @@ void ShowLightPositionHandles( void )
 {
 	INT32 iCount;
 	INT32 iMapIndex;
-	UINT16 cnt;
 	UINT16 usTmpIndex;
-	BOOLEAN fSoldierLight;
 
 	// Check all lights and place a position handle there!
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
 		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			// Found a light, so let's see if it belong to a merc!
-			fSoldierLight = FALSE;
-			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
-			{
-				const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
-				if (pSoldier != NULL && pSoldier->iLight == iCount)
-					fSoldierLight = TRUE;
-			}
-
-			if ( !fSoldierLight )
+			if (!IsSoldierLight(iCount))
 			{
  				iMapIndex = ((INT32)LightSprites[iCount].iY * WORLD_COLS) + (INT32)LightSprites[iCount].iX;
 				if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
@@ -2740,24 +2718,13 @@ static void RemoveLightPositionHandles(void)
 {
 	INT32 iCount;
 	INT32 iMapIndex;
-	UINT16 cnt;
-	BOOLEAN fSoldierLight;
 
 	// Check all lights and remove the position handle there!
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
 		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			// Found a light, so let's see if it belong to a merc!
-			fSoldierLight = FALSE;
-			for ( cnt = 0; cnt < MAX_NUM_SOLDIERS && !fSoldierLight; cnt++ )
-			{
-				const SOLDIERTYPE* pSoldier = GetSoldier(cnt);
-				if (pSoldier != NULL && pSoldier->iLight == iCount)
-					fSoldierLight = TRUE;
-			}
-
-			if ( !fSoldierLight )
+			if (!IsSoldierLight(iCount))
 			{
  				iMapIndex = ((INT32)LightSprites[iCount].iY * WORLD_COLS) + (INT32)LightSprites[iCount].iX;
 				RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );

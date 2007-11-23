@@ -280,4 +280,6 @@ void AddTileToRecompileArea( INT16 sGridNo );
 
 void InitLoadedWorld(void);
 
+BOOLEAN IsSoldierLight(INT32 light);
+
 #endif
