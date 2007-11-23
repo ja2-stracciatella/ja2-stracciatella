@@ -203,16 +203,17 @@ void UpdateBullets(void)
 
 	for ( uiCount = 0; uiCount < guiNumBullets; uiCount++ )
 	{
-		if ( gBullets[ uiCount ].fAllocated)
+		BULLET* const b = &gBullets[uiCount];
+		if (b->fAllocated)
 		{
-			if (gBullets[ uiCount ].fReal && !( gBullets[ uiCount ].usFlags & BULLET_STOPPED ) )
+			if (b->fReal && !(b->usFlags & BULLET_STOPPED))
 			{
 				// there are duplicate checks for deletion in case the bullet is deleted by shooting
 				// someone at point blank range, in the first MoveBullet call in the FireGun code
-				if ( gBullets[ uiCount ].fToDelete )
+				if (b->fToDelete)
 				{
 					// Remove from old position
-					gBullets[ uiCount ].fAllocated = FALSE;
+					b->fAllocated = FALSE;
 					fDeletedSome = TRUE;
 					continue;
 				}
@@ -221,79 +222,75 @@ void UpdateBullets(void)
 				{
 					// ALRIGHTY, CHECK WHAT TYPE OF BULLET WE ARE
 
-					if ( gBullets[ uiCount ].usFlags & ( BULLET_FLAG_CREATURE_SPIT | BULLET_FLAG_KNIFE | BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME ) )
+					if (b->usFlags & (BULLET_FLAG_CREATURE_SPIT | BULLET_FLAG_KNIFE | BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME))
 					{
 					}
 					else
 					{
-						RemoveStruct( gBullets[ uiCount ].sGridNo, BULLETTILE1 );
-						RemoveStruct( gBullets[ uiCount ].sGridNo, BULLETTILE2 );
+						RemoveStruct(b->sGridNo, BULLETTILE1);
+						RemoveStruct(b->sGridNo, BULLETTILE2);
 					}
 				}
 
 				MoveBullet( uiCount );
-				if ( gBullets[ uiCount ].fToDelete )
+				if (b->fToDelete)
 				{
 					// Remove from old position
-					gBullets[ uiCount ].fAllocated = FALSE;
+					b->fAllocated = FALSE;
 					fDeletedSome = TRUE;
 					continue;
 				}
 
-				if ( gBullets[ uiCount ].usFlags & BULLET_STOPPED )
-				{
-					continue;
-				}
+				if (b->usFlags & BULLET_STOPPED) continue;
 
 				// Display bullet
 				//if ( !( gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ) )
 				{
-					if ( gBullets[ uiCount ].usFlags & ( BULLET_FLAG_KNIFE ) )
+					if (b->usFlags & BULLET_FLAG_KNIFE)
 					{
-						if ( gBullets[ uiCount ].pAniTile != NULL )
+						if ( b->pAniTile != NULL )
 						{
-							gBullets[ uiCount ].pAniTile->sRelativeX	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrX );
-							gBullets[ uiCount ].pAniTile->sRelativeY	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrY );
-							gBullets[ uiCount ].pAniTile->pLevelNode->sRelativeZ  = (INT16) CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrZ ) );
+							b->pAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
+							b->pAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
+							b->pAniTile->pLevelNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
 
-							if ( gBullets[ uiCount ].usFlags & ( BULLET_FLAG_KNIFE ) )
+							if (b->usFlags & BULLET_FLAG_KNIFE)
 							{
-								gBullets[ uiCount ].pShadowAniTile->sRelativeX	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrX );
-								gBullets[ uiCount ].pShadowAniTile->sRelativeY	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrY );
+								b->pShadowAniTile->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
+								b->pShadowAniTile->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
 							}
-
 						}
 					}
 					// Are we a missle?
-					else if ( gBullets[ uiCount ].usFlags & ( BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT ) )
+					else if (b->usFlags & (BULLET_FLAG_MISSILE | BULLET_FLAG_SMALL_MISSILE | BULLET_FLAG_TANK_CANNON | BULLET_FLAG_FLAME | BULLET_FLAG_CREATURE_SPIT))
 					{
 					}
 					else
 					{
-						pNode = AddStructToTail( gBullets[ uiCount ].sGridNo, BULLETTILE1 );
+						pNode = AddStructToTail(b->sGridNo, BULLETTILE1);
 						pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->uiFlags |= ( LEVELNODE_USEABSOLUTEPOS | LEVELNODE_IGNOREHEIGHT );
-						pNode->sRelativeX	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrX );
-						pNode->sRelativeY	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrY );
-						pNode->sRelativeZ = (INT16) CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrZ ) );
+						pNode->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
+						pNode->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
+						pNode->sRelativeZ = CONVERT_HEIGHTUNITS_TO_PIXELS(FIXEDPT_TO_INT32(b->qCurrZ));
 
 						// Display shadow
-						pNode = AddStructToTail( gBullets[ uiCount ].sGridNo, BULLETTILE2 );
+						pNode = AddStructToTail(b->sGridNo, BULLETTILE2);
 						pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 						pNode->uiFlags |= ( LEVELNODE_USEABSOLUTEPOS | LEVELNODE_IGNOREHEIGHT );
-						pNode->sRelativeX	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrX );
-						pNode->sRelativeY	= (INT16) FIXEDPT_TO_INT32( gBullets[ uiCount ].qCurrY );
-						pNode->sRelativeZ = (INT16)gpWorldLevelData[ gBullets[ uiCount ].sGridNo ].sHeight;
+						pNode->sRelativeX	= FIXEDPT_TO_INT32(b->qCurrX);
+						pNode->sRelativeY	= FIXEDPT_TO_INT32(b->qCurrY);
+						pNode->sRelativeZ = gpWorldLevelData[b->sGridNo].sHeight;
 					}
 				}
 			}
 			else
 			{
-				if ( gBullets[ uiCount ].fToDelete )
+				if (b->fToDelete)
 				{
-					gBullets[ uiCount ].fAllocated = FALSE;
+					b->fAllocated = FALSE;
 					fDeletedSome = TRUE;
 				}
 			}
