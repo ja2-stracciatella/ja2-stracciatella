@@ -129,7 +129,7 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 // Renders all lights
 BOOLEAN		LightSpriteRenderAll(void);
 // Turns on/off power to a light
-BOOLEAN LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
+void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 // Moves light to/from roof position
 BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* l, BOOLEAN fOnRoof);
 

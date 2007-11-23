@@ -2591,12 +2591,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	}
 
 	LIGHT_SPRITE* const l = &LightSprites[iLightHandle];
-	if (!LightSpritePower(l, TRUE))
-	{
-		// Can't turn this light on
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't turn on light %d",iLightHandle) );
-		return( FALSE );
-	}
+	LightSpritePower(l, TRUE);
 
 	if (!LightSpritePosition(l, iMapX, iMapY))
 	{
