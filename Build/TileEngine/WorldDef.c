@@ -3835,11 +3835,11 @@ void ReloadTileset( UINT8 ubID )
 }
 
 
-BOOLEAN IsSoldierLight(const INT32 light)
+BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 {
 	CFOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if (s->light == ID2LIGHT(light)) return TRUE;
+		if (s->light == l) return TRUE;
 	}
 	return FALSE;
 }
@@ -3860,9 +3860,10 @@ static void SaveMapLights(HWFILE hfile)
 	//count number of non-merc lights.
 	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
 	{
-		if( LightSprites[ cnt ].uiFlags & LIGHT_SPR_ACTIVE )
+		const LIGHT_SPRITE* const l = &LightSprites[cnt];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			if (!IsSoldierLight(cnt)) ++usNumLights;
+			if (!IsSoldierLight(l)) ++usNumLights;
 		}
 	}
 
@@ -3875,7 +3876,7 @@ static void SaveMapLights(HWFILE hfile)
 		const LIGHT_SPRITE* const l = &LightSprites[cnt];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			if (!IsSoldierLight(cnt))
+			if (!IsSoldierLight(l))
 			{ //save the light
 				FileWrite(hfile, &LightSprites[cnt], sizeof(LIGHT_SPRITE));
 

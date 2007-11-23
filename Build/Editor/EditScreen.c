@@ -2647,7 +2647,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 		{
 			if (l->iX == iMapX && l->iY == iMapY )
 			{
-				if (!IsSoldierLight(iCount))
+				if (!IsSoldierLight(l))
 				{
 					// Ok, it's not a merc's light so kill it!
 					pLastLightName = LightSpriteGetTypeName(l);
@@ -2693,7 +2693,7 @@ void ShowLightPositionHandles( void )
 		const LIGHT_SPRITE* const l = &LightSprites[iCount];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			if (!IsSoldierLight(iCount))
+			if (!IsSoldierLight(l))
 			{
 				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
 				if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
@@ -2719,7 +2719,7 @@ static void RemoveLightPositionHandles(void)
 		const LIGHT_SPRITE* const l = &LightSprites[iCount];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			if (!IsSoldierLight(iCount))
+			if (!IsSoldierLight(l))
 			{
 				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
 				RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );
