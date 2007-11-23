@@ -211,12 +211,10 @@ static INT32 LightLoad(const char* pFilename);
 ***************************************************************************************/
 BOOLEAN InitLightingSystem(void)
 {
-UINT32 uiCount;
-
 	LoadShadeTablesFromTextFile();
 
 	// init all light lists
-	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
+	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
 	{
 		pLightList[uiCount]=NULL;
 		pLightNames[uiCount]=NULL;
@@ -226,8 +224,7 @@ UINT32 uiCount;
 	}
 
 	// init all light sprites
-	for(uiCount=0; uiCount < MAX_LIGHT_SPRITES; uiCount++)
-		memset(&LightSprites[uiCount], 0, sizeof(LIGHT_SPRITE));
+	memset(LightSprites, 0, sizeof(LightSprites));
 
 	if(LightLoad("TRANSLUC.LHT")!=0)
 	{
@@ -286,16 +283,13 @@ UINT32 uiCount;
 ***************************************************************************************/
 BOOLEAN LightReset(void)
 {
-UINT32 uiCount;
-
 	// reset all light lists
-	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
+	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
 		if(pLightList[uiCount]!=NULL)
 			LightDelete(uiCount);
 
 	// init all light sprites
-	for(uiCount=0; uiCount < MAX_LIGHT_SPRITES; uiCount++)
-		memset(&LightSprites[uiCount], 0, sizeof(LIGHT_SPRITE));
+	memset(LightSprites, 0, sizeof(LightSprites));
 
 	if(LightLoad("TRANSLUC.LHT")!=0)
 	{
@@ -304,7 +298,7 @@ UINT32 uiCount;
 	}
 
 	// Loop through mercs and reset light value
-	for ( uiCount = 0; uiCount < MAX_NUM_SOLDIERS; uiCount++ )
+	for (UINT32 uiCount = 0; uiCount < MAX_NUM_SOLDIERS; ++uiCount)
 	{
 		MercPtrs[ uiCount ]->iLight = -1;
 	}
