@@ -2255,12 +2255,6 @@ static void BulletHitWindow(BULLET* pBullet, INT16 sGridNo, UINT16 usStructureID
 }
 
 
-static void BulletMissed(BULLET* pBullet)
-{
-	ShotMiss(pBullet->pFirer, pBullet);
-}
-
-
 static UINT32 ChanceOfBulletHittingStructure(INT32 iDistance, INT32 iDistanceToTarget, INT16 sHitBy)
 {
 	INT32 iCloseToCoverPenalty;
@@ -3658,7 +3652,7 @@ void MoveBullet(BULLET* const pBullet)
 			// NB remove bullet only flags a bullet for deletion; we still have access to the
 			// information in the structure
 			RemoveBullet(pBullet);
-			BulletMissed(pBullet);
+			ShotMiss(pBullet);
 			return;
 		}
 
@@ -4353,7 +4347,7 @@ void MoveBullet(BULLET* const pBullet)
 		{
 			// bullet outside of world!
 			RemoveBullet(pBullet);
-			BulletMissed(pBullet);
+			ShotMiss(pBullet);
 			return;
 		}
 

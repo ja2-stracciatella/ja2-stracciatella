@@ -3552,8 +3552,9 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 }
 
 
-void ShotMiss(SOLDIERTYPE* const pAttacker, const BULLET* const b)
+void ShotMiss(const BULLET* const b)
 {
+	SOLDIERTYPE* const pAttacker = b->pFirer;
 	if (pAttacker->ubOppNum != NOBODY)
 	{
 		SOLDIERTYPE* const opponent = &Menptr[pAttacker->ubOppNum];
