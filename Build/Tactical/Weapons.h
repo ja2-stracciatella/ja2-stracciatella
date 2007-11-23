@@ -1,6 +1,7 @@
 #ifndef __WEAPONS_H
 #define __WEAPONS_H
 
+#include "JA2Types.h"
 #include "Soldier_Control.h"
 
 #define MAXCHANCETOHIT 99
@@ -238,7 +239,7 @@ void StructureHit(INT32 iBullet, INT16 sXPos, INT16 sYPos, INT16 sZPos, UINT16 u
 extern void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, BOOLEAN fLargeForce );
 extern INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, INT16 sHitBy, UINT8 * pubSpecial );
 BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo);
-void ShotMiss(SOLDIERTYPE* attacker, INT32 iBullet);
+void ShotMiss(SOLDIERTYPE* attacker, const BULLET* b);
 extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);

@@ -2257,7 +2257,7 @@ static void BulletHitWindow(BULLET* pBullet, INT16 sGridNo, UINT16 usStructureID
 
 static void BulletMissed(BULLET* pBullet)
 {
-	ShotMiss(pBullet->pFirer, pBullet->iBullet);
+	ShotMiss(pBullet->pFirer, pBullet);
 }
 
 

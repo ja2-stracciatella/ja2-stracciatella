@@ -3552,7 +3552,7 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 }
 
 
-void ShotMiss(SOLDIERTYPE* const pAttacker, INT32 iBullet)
+void ShotMiss(SOLDIERTYPE* const pAttacker, const BULLET* const b)
 {
 	if (pAttacker->ubOppNum != NOBODY)
 	{
@@ -3590,8 +3590,7 @@ void ShotMiss(SOLDIERTYPE* const pAttacker, INT32 iBullet)
 			if (gGameSettings.fOptions[TOPTION_SHOW_MISSES] &&
 					pAttacker->bTeam == gbPlayerNum)
 			{
-				const BULLET* const pBullet = GetBulletPtr(iBullet);
-				LocateGridNo(pBullet->sGridNo);
+				LocateGridNo(b->sGridNo);
 			}
 			break;
 
