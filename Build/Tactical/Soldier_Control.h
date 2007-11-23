@@ -7,6 +7,7 @@
 #define MAXPATROLGRIDS  10  // *** THIS IS A DUPLICATION - MUST BE MOVED !
 
 #include "Animation_Cache.h"
+#include "JA2Types.h"
 #include "Timer_Control.h"
 #include "HImage.h"
 #include "Overhead_Types.h"
@@ -524,8 +525,7 @@ struct SOLDIERTYPE
 	UINT8												ubStrategicInsertionCode;
 	UINT16											usStrategicInsertionData;
 
-
-	INT32												iLight;
+	LIGHT_SPRITE*               light;
 	INT32												iMuzFlash;
 	INT8												bMuzFlashCount;
 

@@ -566,8 +566,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		s->iFaceIndex = -1;
 		InitSoldierFace(s);
 
-    // ATE: Reset soldier's light value to -1....
-    s->iLight = -1;
+    Assert(s->light == NULL);
 
 		if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
     {
@@ -1082,7 +1081,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	//Set AI Delay!
 	pSoldier->uiAIDelay							= 100;
 
-	pSoldier->iLight								= -1;
+	pSoldier->light = NULL;
 
 	// Set update time to new speed
 	pSoldier->ubDesiredHeight				= NO_DESIRED_HEIGHT;

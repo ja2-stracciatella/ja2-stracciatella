@@ -300,7 +300,7 @@ BOOLEAN LightReset(void)
 	// Loop through mercs and reset light value
 	for (UINT32 uiCount = 0; uiCount < MAX_NUM_SOLDIERS; ++uiCount)
 	{
-		MercPtrs[ uiCount ]->iLight = -1;
+		MercPtrs[uiCount]->light = NULL;
 	}
 
 	return(TRUE);

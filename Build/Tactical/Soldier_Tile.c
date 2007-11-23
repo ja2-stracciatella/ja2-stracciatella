@@ -728,19 +728,9 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 		GivingSoldierCancelServices( pSoldier );
 
 		// Change light....
-		if ( pSoldier->bLevel == 0 )
+		if (pSoldier->light != NULL)
 		{
-			if(pSoldier->iLight!=(-1))
-			{
-				LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), FALSE);
-			}
-		}
-		else
-		{
-			if(pSoldier->iLight!=(-1))
-			{
-				LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), TRUE);
-			}
+			LightSpriteRoofStatus(pSoldier->light, pSoldier->bLevel != 0);
 		}
 		return( TRUE );
 	}

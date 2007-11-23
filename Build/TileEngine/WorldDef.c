@@ -3839,7 +3839,7 @@ BOOLEAN IsSoldierLight(const INT32 light)
 {
 	CFOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if (s->iLight == light) return TRUE;
+		if (s->light == ID2LIGHT(light)) return TRUE;
 	}
 	return FALSE;
 }

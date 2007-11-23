@@ -3020,10 +3020,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			LightSpriteDestroy(ID2LIGHT(pSoldier->iMuzFlash));
       pSoldier->iMuzFlash = -1;
 		}
-		if ( pSoldier->iLight != -1 )
-		{
-			LightSpriteDestroy(ID2LIGHT(pSoldier->iLight));
-		}
+		if (pSoldier->light != NULL) LightSpriteDestroy(pSoldier->light);
 
 		//FREEUP GETTING HIT FLAG
 		pSoldier->fGettingHit = FALSE;

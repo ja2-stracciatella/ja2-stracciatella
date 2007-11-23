@@ -201,7 +201,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_U8(S, Soldier->ubStrategicInsertionCode)
 	EXTR_SKIP(S, 1)
 	EXTR_U16(S, Soldier->usStrategicInsertionData)
-	EXTR_I32(S, Soldier->iLight)
+	EXTR_SKIP(S, 4)
 	EXTR_I32(S, Soldier->iMuzFlash)
 	EXTR_I8(S, Soldier->bMuzFlashCount)
 	EXTR_SKIP(S, 1)
@@ -523,6 +523,8 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_SOLDIER(S, Soldier->next_to_previous_attacker)
 	EXTR_SKIP(S, 39)
 
+	Soldier->light = NULL;
+
 #ifdef _WIN32 // XXX HACK000A
 	Assert(S == Src + 2328);
 #else
@@ -727,7 +729,7 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_U8(D, Soldier->ubStrategicInsertionCode)
 	INJ_SKIP(D, 1)
 	INJ_U16(D, Soldier->usStrategicInsertionData)
-	INJ_I32(D, Soldier->iLight)
+	INJ_SKIP(D, 4)
 	INJ_I32(D, Soldier->iMuzFlash)
 	INJ_I8(D, Soldier->bMuzFlashCount)
 	INJ_SKIP(D, 1)

@@ -933,7 +933,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	}
 
 	// DO ONLY IF WE'RE AT A GOOD LEVEL
-	if ( pSoldier->iLight == -1 )
+	if (pSoldier->light == NULL)
 	{
 		// ATE: Check for goggles in headpos....
 		const char* light_file;
@@ -953,7 +953,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 		}
 
 		LIGHT_SPRITE* const l = LightSpriteCreate(light_file, 0);
-		pSoldier->iLight = LIGHT2ID(l);
+		pSoldier->light = l;
 		if (l == NULL)
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
@@ -988,10 +988,7 @@ BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier )
 	// Delete Light!
 	DeleteSoldierLight( pSoldier );
 
-	if ( pSoldier->iLight == -1 )
-	{
-		CreateSoldierLight( pSoldier );
-	}
+	if (pSoldier->light == NULL) CreateSoldierLight(pSoldier);
 
 	return( TRUE );
 }
@@ -1006,10 +1003,10 @@ static BOOLEAN ReCreateSelectedSoldierLight(void)
 
 BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
 {
-	if( pSoldier->iLight!=(-1) )
+	if (pSoldier->light != NULL)
 	{
-		LightSpriteDestroy(ID2LIGHT(pSoldier->iLight));
-		pSoldier->iLight = -1;
+		LightSpriteDestroy(pSoldier->light);
+		pSoldier->light = NULL;
 	}
 
 	return( TRUE );
@@ -2399,16 +2396,16 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			// If we are in the middle of climbing the roof!
 			if ( pSoldier->usAnimState == CLIMBUPROOF )
 			{
-				if(pSoldier->iLight!=(-1))
+				if (pSoldier->light != NULL)
 				{
-					LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), TRUE);
+					LightSpriteRoofStatus(pSoldier->light, TRUE);
 				}
 			}
 			else if ( pSoldier->usAnimState == CLIMBDOWNROOF )
 			{
-				if(pSoldier->iLight!=(-1))
+				if (pSoldier->light != NULL)
 				{
-					LightSpriteRoofStatus(ID2LIGHT(pSoldier->iLight), FALSE);
+					LightSpriteRoofStatus(pSoldier->light, FALSE);
 				}
 			}
 
@@ -9401,14 +9398,11 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if ( pSoldier->iLight == -1 )
-	{
-		CreateSoldierLight( pSoldier );
-	}
+	if (pSoldier->light == NULL) CreateSoldierLight(pSoldier);
 
 	//if ( pSoldier->ubID == gusSelectedSoldier )
 	{
-		LIGHT_SPRITE* const l = ID2LIGHT(pSoldier->iLight);
+		LIGHT_SPRITE* const l = pSoldier->light;
 		LightSpritePower(l, TRUE);
 		LightSpriteFake(l);
 		LightSpritePosition(l, pSoldier->sX / CELL_X_SIZE, pSoldier->sY / CELL_Y_SIZE);
