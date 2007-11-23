@@ -466,12 +466,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						break;
 					}
 
-					if( ( pSoldier->iMuzFlash=LightSpriteCreate("L-R03.LHT", 0 ) )==(-1))
-					{
-						return( TRUE );
-					}
+					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT", 0);
+					pSoldier->iMuzFlash = LIGHT2ID(l);
+					if (l == NULL) return TRUE;
 
-					LIGHT_SPRITE* const l = ID2LIGHT(pSoldier->iMuzFlash);
 					LightSpritePower(l, TRUE);
 					// Get one move forward
 					{

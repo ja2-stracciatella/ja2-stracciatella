@@ -952,14 +952,14 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 			light_file = "Light2";
 		}
 
-		pSoldier->iLight = LightSpriteCreate(light_file, 0);
-		if (pSoldier->iLight == -1)
+		LIGHT_SPRITE* const l = LightSpriteCreate(light_file, 0);
+		pSoldier->iLight = LIGHT2ID(l);
+		if (l == NULL)
 		{
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
 			return FALSE;
 		}
 
-		LIGHT_SPRITE* const l = &LightSprites[pSoldier->iLight];
 		l->uiFlags |= MERC_LIGHT;
 
     if (pSoldier->bLevel != 0) LightSpriteRoofStatus(l, TRUE);

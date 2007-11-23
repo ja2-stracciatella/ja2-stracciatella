@@ -2555,7 +2555,6 @@ static void ShowCurrentSlotImage(HVOBJECT hVObj, INT32 iWindow)
 //
 BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 {
-	INT32 iLightHandle;
 	UINT8 ubIntensity;
 	STRING512 Filename;
 	INT32 iMapIndex;
@@ -2564,7 +2563,8 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	sprintf( Filename, "L-R%02d.LHT", sRadius );
 
 	// Attempt to create light
-	if ( (iLightHandle = LightSpriteCreate( Filename, sType )) == (-1) )
+	INT32 iLightHandle = LIGHT2ID(LightSpriteCreate(Filename, sType));
+	if (iLightHandle == -1)
 	{
 		// Couldn't load file because it doesn't exist. So let's make the file
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
@@ -2582,7 +2582,8 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 			return( FALSE );
 		}
 
-		if ( (iLightHandle = LightSpriteCreate( Filename, sType )) == (-1) )
+		iLightHandle = LIGHT2ID(LightSpriteCreate(Filename, sType));
+		if (iLightHandle == -1)
 		{
 			// Can't create sprite
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d",sRadius) );

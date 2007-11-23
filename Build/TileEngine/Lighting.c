@@ -2970,34 +2970,25 @@ INT32 iCount;
 	return(-1);
 }
 
-/********************************************************************************
-* LightSpriteCreate
-*
-*		Creates an instance of a light. The template is loaded if it isn't already.
-* If this function fails (out of sprites, or bad template name) it returns (-1).
-*
-********************************************************************************/
-INT32 LightSpriteCreate(const char *pName, UINT32 uiLightType)
+
+LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightType)
 {
-INT32 iSprite;
+	const INT32 iSprite = LightSpriteGetFree();
+	if (iSprite == -1) return NULL;
 
-	if((iSprite=LightSpriteGetFree())!=(-1))
-	{
-		LIGHT_SPRITE* const l = &LightSprites[iSprite];
-		memset(l, 0, sizeof(LIGHT_SPRITE));
-		l->iX          = WORLD_COLS + 1;
-		l->iY          = WORLD_ROWS + 1;
-		l->iOldX       = WORLD_COLS + 1;
-		l->iOldY       = WORLD_ROWS + 1;
-		l->uiLightType = uiLightType;
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	memset(l, 0, sizeof(LIGHT_SPRITE));
+	l->iX          = WORLD_COLS + 1;
+	l->iY          = WORLD_ROWS + 1;
+	l->iOldX       = WORLD_COLS + 1;
+	l->iOldY       = WORLD_ROWS + 1;
+	l->uiLightType = uiLightType;
 
-		l->iTemplate = LightLoadCachedTemplate(pName);
-		if (l->iTemplate == -1) return -1;
+	l->iTemplate = LightLoadCachedTemplate(pName);
+	if (l->iTemplate == -1) return NULL;
 
-		l->uiFlags |= LIGHT_SPR_ACTIVE;
-	}
-
-	return(iSprite);
+	l->uiFlags |= LIGHT_SPR_ACTIVE;
+	return l;
 }
 
 

@@ -3897,7 +3897,6 @@ static void LoadMapLights(INT8** hBuffer)
 	INT32 cnt;
 	UINT8 ubStrLen;
 	LIGHT_SPRITE	TmpLight;
-	INT32 iLSprite;
 	UINT32 uiHour;
 	BOOLEAN fPrimeTime = FALSE, fNightTime = FALSE;
 
@@ -3947,12 +3946,11 @@ static void LoadMapLights(INT8** hBuffer)
 
 		str[ ubStrLen ] = 0;
 
-		iLSprite = LightSpriteCreate( str, TmpLight.uiLightType );
+		LIGHT_SPRITE* const l = LightSpriteCreate(str, TmpLight.uiLightType);
 		//if this fails, then we will ignore the light.
 		// ATE: Don't add ANY lights of mapscreen util is on
-		if( iLSprite != -1 && guiCurrentScreen != MAPUTILITY_SCREEN )
+		if (l != NULL && guiCurrentScreen != MAPUTILITY_SCREEN)
 		{
-			LIGHT_SPRITE* const l = &LightSprites[iLSprite];
 			if( !gfCaves || gfEditMode )
 			{
 				if( gfEditMode ||

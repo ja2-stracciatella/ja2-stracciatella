@@ -118,8 +118,10 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal);
 
 // High-Level Sprite Interface
 
-// Creates a new light sprite from a given filename/predefined symbol
-INT32			LightSpriteCreate(const char *pName, UINT32 uiLightType);
+/* Creates an instance of a light. The template is loaded if it isn't already.
+ * If this function fails (out of sprites, or bad template name) it returns -1.
+ */
+LIGHT_SPRITE* LightSpriteCreate(const char* const pName, UINT32 uiLightType);
 // Removes an instance of a light. If it was on, it is erased from the scene.
 BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 // Sets the X,Y position (IN TILES) of a light instance.
@@ -163,13 +165,22 @@ extern STR							pLightNames[MAX_LIGHT_TEMPLATES];
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 
-static inline LIGHT_SPRITE* ID2Light(UINT idx)
+typedef UINT32 LightID;
+
+static inline LIGHT_SPRITE* ID2Light(LightID idx)
 {
 	Assert(idx < lengthof(LightSprites));
 	return &LightSprites[idx];
 }
 
+static inline LightID Light2ID(const LIGHT_SPRITE* const l)
+{
+	Assert(l == NULL || (LightSprites <= l && l < endof(LightSprites)));
+	return l == NULL ? -1 : l - LightSprites;
+}
+
 #define ID2LIGHT(i) (ID2Light(i))
+#define LIGHT2ID(l) (Light2ID(l))
 
 #define BASE_FOR_ALL_LIGHT_SPRITES(type, iter)                         \
 	for (type* iter = LightSprites; iter != endof(LightSprites); ++iter) \

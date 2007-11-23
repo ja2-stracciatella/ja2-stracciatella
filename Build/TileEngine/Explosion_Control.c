@@ -359,9 +359,10 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		// DO ONLY IF WE'RE AT A GOOD LEVEL
 		if ( ubAmbientLightLevel >= MIN_AMB_LEVEL_FOR_MERC_LIGHTS )
 		{
-			if( ( pExplosion->iLightID = LightSpriteCreate("L-R04.LHT", 0 ) ) != (-1) )
+			LIGHT_SPRITE* const l = LightSpriteCreate("L-R04.LHT", 0);
+			pExplosion->iLightID = LIGHT2ID(l);
+			if (l != NULL)
 			{
-				LIGHT_SPRITE* const l = ID2LIGHT(pExplosion->iLightID);
 				LightSpritePower(l, TRUE);
 				LightSpritePosition(l, sX / CELL_X_SIZE, sY / CELL_Y_SIZE);
 			}

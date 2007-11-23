@@ -74,13 +74,14 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 	}
 
 	// Effect light.....
-	if( ( pLight->iLight = LightSpriteCreate( LightName, 0 ) )==(-1))
+	LIGHT_SPRITE* const l = LightSpriteCreate(LightName, 0);
+	pLight->iLight = LIGHT2ID(l);
+	if (l == NULL)
 	{
 		// Could not light!
 		return;
 	}
 
-	LIGHT_SPRITE* const l = ID2LIGHT(pLight->iLight);
 	LightSpritePower(l, TRUE);
 	LightSpritePosition(l, CenterX(pLight->sGridNo) / CELL_X_SIZE, CenterY(pLight->sGridNo) / CELL_Y_SIZE);
 }
