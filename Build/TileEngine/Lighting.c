@@ -3123,15 +3123,9 @@ INT32 iCount;
 	return(TRUE);
 }
 
-/********************************************************************************
-* LightSpritePosition
-*
-*		Sets the X,Y position (IN TILES) of a light instance.
-*
-********************************************************************************/
-BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
+
+BOOLEAN LightSpritePosition(LIGHT_SPRITE* const l, INT16 iX, INT16 iY)
 {
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
 		if (l->iX == iX && l->iY == iY) return TRUE;

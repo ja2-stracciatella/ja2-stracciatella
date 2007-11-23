@@ -9409,8 +9409,7 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 		LIGHT_SPRITE* const l = ID2LIGHT(pSoldier->iLight);
 		LightSpritePower(l, TRUE);
 		LightSpriteFake(l);
-
-		LightSpritePosition( pSoldier->iLight, (INT16)(pSoldier->sX/CELL_X_SIZE), (INT16)(pSoldier->sY/CELL_Y_SIZE));
+		LightSpritePosition(l, pSoldier->sX / CELL_X_SIZE, pSoldier->sY / CELL_Y_SIZE);
 	}
 }
 

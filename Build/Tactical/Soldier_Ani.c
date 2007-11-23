@@ -471,7 +471,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						return( TRUE );
 					}
 
-					LightSpritePower(ID2LIGHT(pSoldier->iMuzFlash), TRUE);
+					LIGHT_SPRITE* const l = ID2LIGHT(pSoldier->iMuzFlash);
+					LightSpritePower(l, TRUE);
 					// Get one move forward
 					{
 						UINT16	usNewGridNo;
@@ -479,7 +480,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
 						ConvertGridNoToCenterCellXY( usNewGridNo, &sXPos, &sYPos );
-						LightSpritePosition( pSoldier->iMuzFlash, (INT16)(sXPos/CELL_X_SIZE), (INT16)(sYPos/CELL_Y_SIZE));
+						LightSpritePosition(l, sXPos / CELL_X_SIZE, sYPos / CELL_Y_SIZE);
 
 						// Start count
 						pSoldier->bMuzFlashCount = 1;

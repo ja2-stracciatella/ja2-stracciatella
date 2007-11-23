@@ -3963,7 +3963,7 @@ static void LoadMapLights(INT8** hBuffer)
 					LightSpritePower(l, TRUE);
 				}
 			}
-			LightSpritePosition( iLSprite, TmpLight.iX, TmpLight.iY );
+			LightSpritePosition(l, TmpLight.iX, TmpLight.iY );
 			if( TmpLight.uiFlags & LIGHT_PRIMETIME )
 			{
 				l->uiFlags |= LIGHT_PRIMETIME;

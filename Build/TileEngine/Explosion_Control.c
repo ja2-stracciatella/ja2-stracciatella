@@ -361,8 +361,9 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		{
 			if( ( pExplosion->iLightID = LightSpriteCreate("L-R04.LHT", 0 ) ) != (-1) )
 			{
-				LightSpritePower(ID2LIGHT(pExplosion->iLightID), TRUE);
-				LightSpritePosition( pExplosion->iLightID, (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE) );
+				LIGHT_SPRITE* const l = ID2LIGHT(pExplosion->iLightID);
+				LightSpritePower(l, TRUE);
+				LightSpritePosition(l, sX / CELL_X_SIZE, sY / CELL_Y_SIZE);
 			}
 		}
 	}

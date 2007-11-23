@@ -122,8 +122,8 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal);
 INT32			LightSpriteCreate(const char *pName, UINT32 uiLightType);
 // Destroys the instance of that light
 BOOLEAN		LightSpriteDestroy(INT32 iSprite);
-// Sets the tile position of the light instance
-BOOLEAN		LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY);
+// Sets the X,Y position (IN TILES) of a light instance.
+BOOLEAN LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
 // Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 // Renders all lights

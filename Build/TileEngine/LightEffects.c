@@ -80,8 +80,9 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 		return;
 	}
 
-	LightSpritePower(ID2LIGHT(pLight->iLight), TRUE);
-	LightSpritePosition( pLight->iLight, (INT16)( CenterX( pLight->sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( pLight->sGridNo ) / CELL_Y_SIZE ) );
+	LIGHT_SPRITE* const l = ID2LIGHT(pLight->iLight);
+	LightSpritePower(l, TRUE);
+	LightSpritePosition(l, CenterX(pLight->sGridNo) / CELL_X_SIZE, CenterY(pLight->sGridNo) / CELL_Y_SIZE);
 }
 
 

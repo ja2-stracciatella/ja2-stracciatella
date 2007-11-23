@@ -2598,7 +2598,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		return( FALSE );
 	}
 
-	if ( !LightSpritePosition( iLightHandle, iMapX, iMapY ) )
+	if (!LightSpritePosition(l, iMapX, iMapY))
 	{
 		// Can't set light's position
 		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't set light position for light %d",iLightHandle) );
