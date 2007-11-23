@@ -3233,15 +3233,9 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 	return(TRUE);
 }
 
-/********************************************************************************
-* LightSpritePower
-*
-*		Turns on or off a light, based on the BOOLEAN.
-*
-********************************************************************************/
-BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
+
+BOOLEAN LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 {
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if(fOn)
 	{
 		l->uiFlags |= LIGHT_SPR_ON | LIGHT_SPR_REDRAW;

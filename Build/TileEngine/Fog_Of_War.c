@@ -15,12 +15,12 @@ void RemoveFogFromGridNo( UINT32 uiGridNo )
 	y = uiGridNo / WORLD_COLS;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[i];
+		LIGHT_SPRITE* const l = &LightSprites[i];
 		if (l->iX == x && l->iY == y)
 		{
 			if (!(l->uiFlags & LIGHT_SPR_ON))
 			{
-				LightSpritePower( i, TRUE );
+				LightSpritePower(l, TRUE);
 				LightDraw(l);
 				MarkWorldDirty();
 				return;

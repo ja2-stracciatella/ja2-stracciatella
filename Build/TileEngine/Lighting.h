@@ -1,6 +1,7 @@
 #ifndef _LIGHTING_H_
 #define _LIGHTING_H_
 
+#include "Debug.h"
 #include "Soldier_Control.h"
 #include "VObject.h"
 
@@ -128,7 +129,7 @@ BOOLEAN LightSpriteFake(INT32 iSprite);
 // Renders all lights
 BOOLEAN		LightSpriteRenderAll(void);
 // Turns on/off power to a light
-BOOLEAN		LightSpritePower(INT32 iSprite, BOOLEAN fOn);
+BOOLEAN LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 // Moves light to/from roof position
 BOOLEAN		LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof);
 
@@ -161,6 +162,14 @@ extern STR							pLightNames[MAX_LIGHT_TEMPLATES];
 
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
+
+static inline LIGHT_SPRITE* ID2Light(UINT idx)
+{
+	Assert(idx < lengthof(LightSprites));
+	return &LightSprites[idx];
+}
+
+#define ID2LIGHT(i) (ID2Light(i))
 
 #define BASE_FOR_ALL_LIGHT_SPRITES(type, iter)                         \
 	for (type* iter = LightSprites; iter != endof(LightSprites); ++iter) \

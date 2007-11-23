@@ -3952,6 +3952,7 @@ static void LoadMapLights(INT8** hBuffer)
 		// ATE: Don't add ANY lights of mapscreen util is on
 		if( iLSprite != -1 && guiCurrentScreen != MAPUTILITY_SCREEN )
 		{
+			LIGHT_SPRITE* const l = &LightSprites[iLSprite];
 			if( !gfCaves || gfEditMode )
 			{
 				if( gfEditMode ||
@@ -3959,11 +3960,10 @@ static void LoadMapLights(INT8** hBuffer)
 					  TmpLight.uiFlags & LIGHT_NIGHTTIME && fNightTime ||
 						!(TmpLight.uiFlags & (LIGHT_PRIMETIME | LIGHT_NIGHTTIME)) )
 				{ //power only valid lights.
-					LightSpritePower( iLSprite, TRUE );
+					LightSpritePower(l, TRUE);
 				}
 			}
 			LightSpritePosition( iLSprite, TmpLight.iX, TmpLight.iY );
-			LIGHT_SPRITE* const l = &LightSprites[iLSprite];
 			if( TmpLight.uiFlags & LIGHT_PRIMETIME )
 			{
 				l->uiFlags |= LIGHT_PRIMETIME;

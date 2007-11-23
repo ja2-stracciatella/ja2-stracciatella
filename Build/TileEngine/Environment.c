@@ -536,12 +536,12 @@ void TurnOnNightLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[i];
+		LIGHT_SPRITE* const l = &LightSprites[i];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
 				l->uiFlags & LIGHT_NIGHTTIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
-			LightSpritePower( i, TRUE );
+			LightSpritePower(l, TRUE);
 		}
 	}
 }
@@ -551,13 +551,13 @@ void TurnOffNightLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[i];
+		LIGHT_SPRITE* const l = &LightSprites[i];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
 				l->uiFlags & LIGHT_NIGHTTIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
 				!(l->uiFlags & MERC_LIGHT))
 		{
-			LightSpritePower( i, FALSE );
+			LightSpritePower(l, FALSE);
 		}
 	}
 }
@@ -567,12 +567,12 @@ void TurnOnPrimeLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[i];
+		LIGHT_SPRITE* const l = &LightSprites[i];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
 				l->uiFlags & LIGHT_PRIMETIME &&
 				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
-			LightSpritePower( i, TRUE );
+			LightSpritePower(l, TRUE);
 		}
 	}
 }
@@ -582,13 +582,13 @@ void TurnOffPrimeLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[i];
+		LIGHT_SPRITE* const l = &LightSprites[i];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
 				l->uiFlags & LIGHT_PRIMETIME &&
 				l->uiFlags & LIGHT_SPR_ON &&
 				!(l->uiFlags & MERC_LIGHT))
 		{
-			LightSpritePower( i, FALSE );
+			LightSpritePower(l, FALSE);
 		}
 	}
 }

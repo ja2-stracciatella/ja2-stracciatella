@@ -370,10 +370,10 @@ static BOOLEAN EditModeInit(void)
 
 		for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 		{
-			const LIGHT_SPRITE* const l = &LightSprites[i];
+			LIGHT_SPRITE* const l = &LightSprites[i];
 			if (l->uiFlags & LIGHT_SPR_ACTIVE && !(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 			{
-				LightSpritePower( i, TRUE );
+				LightSpritePower(l, TRUE);
 			}
 		}
 
@@ -2592,7 +2592,8 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		}
 	}
 
-	if ( !LightSpritePower( iLightHandle, TRUE ) )
+	LIGHT_SPRITE* const l = &LightSprites[iLightHandle];
+	if (!LightSpritePower(l, TRUE))
 	{
 		// Can't turn this light on
 		DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't turn on light %d",iLightHandle) );
@@ -2606,7 +2607,6 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		return( FALSE );
 	}
 
-	LIGHT_SPRITE* const l = &LightSprites[iLightHandle];
 	switch( gbDefaultLightType )
 	{
 		case PRIMETIME_LIGHT: l->uiFlags |= LIGHT_PRIMETIME; break;
@@ -2648,7 +2648,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	// Check all lights if any at this given position
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[iCount];
+		LIGHT_SPRITE* const l = &LightSprites[iCount];
 		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
 			if (l->iX == iMapX && l->iY == iMapY )
@@ -2658,7 +2658,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 					// Ok, it's not a merc's light so kill it!
 					pLastLightName = LightSpriteGetTypeName( iCount );
 					uiLastLightType = l->uiLightType;
-					LightSpritePower( iCount, FALSE );
+					LightSpritePower(l, FALSE);
 					LightSpriteDestroy( iCount );
 					fRemovedLight = TRUE;
 	 				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
