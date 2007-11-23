@@ -105,7 +105,7 @@ BOOLEAN		LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 // Creates an omni (circular) light
 INT32			LightCreateOmni( UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
-BOOLEAN		LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite);
+BOOLEAN		LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, const LIGHT_SPRITE* l);
 // Save a light list into a file
 BOOLEAN		LightSave(INT32 uiLight, STR pFilename);
 

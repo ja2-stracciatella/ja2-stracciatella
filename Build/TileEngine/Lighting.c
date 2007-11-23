@@ -2000,15 +2000,9 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
   return( TRUE );
 }
 
-/****************************************************************************************
-	LightDraw
 
-		Renders a light template at the specified X,Y coordinates.
-
-***************************************************************************************/
-BOOLEAN LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
+BOOLEAN LightDraw(const UINT32 uiLightType, const INT32 iLight, const INT16 iX, const INT16 iY, const LIGHT_SPRITE* const l)
 {
-	const LIGHT_SPRITE* const l = &LightSprites[uiSprite];
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -3102,7 +3096,7 @@ static BOOLEAN LightSpriteRender(void)
 			const LIGHT_SPRITE* const l = &LightSprites[iCount];
 			if (l->uiFlags & LIGHT_SPR_ACTIVE && l->uiFlags & LIGHT_SPR_ON)
 			{
-				LightDraw(l->iTemplate, l->iX, l->iY, iCount);
+				LightDraw(l->iTemplate, l->iX, l->iY, l);
 			}
 		}
 		return(TRUE);
@@ -3130,7 +3124,7 @@ INT32 iCount;
 
 		if (l->uiFlags & LIGHT_SPR_ACTIVE && (l->uiFlags & LIGHT_SPR_ON))
 		{
-			LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, iCount);
+			LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 			l->uiFlags |= LIGHT_SPR_ERASE;
 			LightSpriteDirty(iCount);
 		}
@@ -3174,7 +3168,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(l->uiLightType, l->iTemplate, iX, iY, iSprite);
+				LightDraw(l->uiLightType, l->iTemplate, iX, iY, l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}
@@ -3223,7 +3217,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
+				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}

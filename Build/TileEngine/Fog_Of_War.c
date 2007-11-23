@@ -21,7 +21,7 @@ void RemoveFogFromGridNo( UINT32 uiGridNo )
 			if (!(l->uiFlags & LIGHT_SPR_ON))
 			{
 				LightSpritePower( i, TRUE );
-				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, i);
+				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
 				MarkWorldDirty();
 				return;
 			}
