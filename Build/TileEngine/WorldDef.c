@@ -3858,33 +3858,24 @@ static void SaveMapLights(HWFILE hfile)
 	FileWrite(hfile, LColors, sizeof(SGPPaletteEntry) * ubNumColors);
 
 	//count number of non-merc lights.
-	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
+	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[cnt];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
-		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			if (!IsSoldierLight(l)) ++usNumLights;
-		}
+		if (!IsSoldierLight(l)) ++usNumLights;
 	}
 
 	//save the number of lights.
 	FileWrite(hfile, &usNumLights, 2);
 
-
-	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
+	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[cnt];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
-		{ //found an active light.  Check to make sure it doesn't belong to a merc.
-			if (!IsSoldierLight(l))
-			{ //save the light
-				FileWrite(hfile, &LightSprites[cnt], sizeof(LIGHT_SPRITE));
+		if (!IsSoldierLight(l))
+		{ //save the light
+			FileWrite(hfile, l, sizeof(LIGHT_SPRITE));
 
-				const char* const light_name = LightSpriteGetTypeName(l);
-				const UINT8 ubStrLen = strlen(light_name) + 1;
-				FileWrite(hfile, &ubStrLen, 1);
-				FileWrite(hfile, light_name, ubStrLen);
-			}
+			const char* const light_name = LightSpriteGetTypeName(l);
+			const UINT8 ubStrLen = strlen(light_name) + 1;
+			FileWrite(hfile, &ubStrLen, 1);
+			FileWrite(hfile, light_name, ubStrLen);
 		}
 	}
 }

@@ -2631,7 +2631,6 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 //
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
-	INT32 iCount;
 	BOOLEAN fRemovedLight;
 	INT32 iMapIndex;
 	UINT32 uiLastLightType;
@@ -2640,24 +2639,20 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	fRemovedLight = FALSE;
 
 	// Check all lights if any at this given position
-	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		LIGHT_SPRITE* const l = &LightSprites[iCount];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
+		if (l->iX == iMapX && l->iY == iMapY)
 		{
-			if (l->iX == iMapX && l->iY == iMapY )
+			if (!IsSoldierLight(l))
 			{
-				if (!IsSoldierLight(l))
-				{
-					// Ok, it's not a merc's light so kill it!
-					pLastLightName = LightSpriteGetTypeName(l);
-					uiLastLightType = l->uiLightType;
-					LightSpritePower(l, FALSE);
-					LightSpriteDestroy(l);
-					fRemovedLight = TRUE;
-	 				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
-					RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );
-				}
+				// Ok, it's not a merc's light so kill it!
+				pLastLightName = LightSpriteGetTypeName(l);
+				uiLastLightType = l->uiLightType;
+				LightSpritePower(l, FALSE);
+				LightSpriteDestroy(l);
+				fRemovedLight = TRUE;
+				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
+				RemoveAllObjectsOfTypeRange(iMapIndex, GOODRING, GOODRING);
 			}
 		}
 	}
@@ -2683,24 +2678,19 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 //
 void ShowLightPositionHandles( void )
 {
-	INT32 iCount;
 	INT32 iMapIndex;
 	UINT16 usTmpIndex;
 
 	// Check all lights and place a position handle there!
-	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[iCount];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
+		if (!IsSoldierLight(l))
 		{
-			if (!IsSoldierLight(l))
+			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
+			if (!TypeExistsInObjectLayer(iMapIndex, GOODRING, &usTmpIndex))
 			{
-				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-				if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
-				{
-					AddObjectToHead( iMapIndex, GOODRING1 );
-					gpWorldLevelData[ iMapIndex ].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
-				}
+				AddObjectToHead(iMapIndex, GOODRING1);
+				gpWorldLevelData[iMapIndex].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 		}
 	}
@@ -2710,20 +2700,15 @@ void ShowLightPositionHandles( void )
 //	Scans through all light currently in the world and removes any light markers that may be present.
 static void RemoveLightPositionHandles(void)
 {
-	INT32 iCount;
 	INT32 iMapIndex;
 
 	// Check all lights and remove the position handle there!
-	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
+	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		const LIGHT_SPRITE* const l = &LightSprites[iCount];
-		if (l->uiFlags & LIGHT_SPR_ACTIVE)
+		if (!IsSoldierLight(l))
 		{
-			if (!IsSoldierLight(l))
-			{
-				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-				RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );
-			}
+			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
+			RemoveAllObjectsOfTypeRange(iMapIndex, GOODRING, GOODRING);
 		}
 	}
 }
