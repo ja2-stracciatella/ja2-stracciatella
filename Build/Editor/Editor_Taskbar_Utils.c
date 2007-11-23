@@ -665,21 +665,30 @@ static void RenderMapEntryPointsAndLights(void)
 		}
 	}
 	//Do the lights now.
-	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
+	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE )
+		sGridNo = l->iY * WORLD_COLS + l->iX;
+		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
+		if( sScreenY >= -50 && sScreenY < 300 && sScreenX >= -40  && sScreenX < 640 )
 		{
-			sGridNo = LightSprites[ i ].iY * WORLD_COLS + LightSprites[ i ].iX;
-			GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-			if( sScreenY >= -50 && sScreenY < 300 && sScreenX >= -40  && sScreenX < 640 )
+			UINT8 colour;
+			const wchar_t* text;
+			if (l->uiFlags & LIGHT_PRIMETIME)
 			{
-				if( LightSprites[ i ].uiFlags & LIGHT_PRIMETIME )
-					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_ORANGE, L"Prime", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-				else if( LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME )
-					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_RED, L"Night", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-				else
-					DisplayWrappedString(sScreenX, sScreenY - 5, 50, 2, FONT10ARIAL, FONT_YELLOW, L"24Hour", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+				colour = FONT_ORANGE;
+				text   = L"Prime";
 			}
+			else if (l->uiFlags & LIGHT_NIGHTTIME)
+			{
+				colour = FONT_RED;
+				text   = L"Night";
+			}
+			else
+			{
+				colour = FONT_YELLOW;
+				text   = L"24Hour";
+			}
+			DisplayWrappedString(sScreenY, sScreenY - 5, 50, 2, FONT10ARIAL, colour, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 }

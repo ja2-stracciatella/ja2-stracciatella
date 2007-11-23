@@ -162,6 +162,13 @@ extern STR							pLightNames[MAX_LIGHT_TEMPLATES];
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 
+#define BASE_FOR_ALL_LIGHT_SPRITES(type, iter)                         \
+	for (type* iter = LightSprites; iter != endof(LightSprites); ++iter) \
+		if (!(iter->uiFlags & LIGHT_SPR_ACTIVE)) continue; else
+#define FOR_ALL_LIGHT_SPRITES( iter) BASE_FOR_ALL_LIGHT_SPRITES(      LIGHT_SPRITE, iter)
+#define CFOR_ALL_LIGHT_SPRITES(iter) BASE_FOR_ALL_LIGHT_SPRITES(const LIGHT_SPRITE, iter)
+
+
 // Lighting system general data
 extern UINT8						ubAmbientLightLevel;
 extern UINT8						gubNumLightColors;
