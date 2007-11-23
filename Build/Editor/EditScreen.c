@@ -2649,7 +2649,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 				if (!IsSoldierLight(iCount))
 				{
 					// Ok, it's not a merc's light so kill it!
-					pLastLightName = LightSpriteGetTypeName( iCount );
+					pLastLightName = LightSpriteGetTypeName(l);
 					uiLastLightType = l->uiLightType;
 					LightSpritePower(l, FALSE);
 					LightSpriteDestroy(l);

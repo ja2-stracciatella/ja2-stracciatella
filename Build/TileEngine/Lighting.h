@@ -190,8 +190,12 @@ extern SGPPaletteEntry	gpLightColors[3];
 
 // macros
 #define LightSpriteGetType(x)				(LightSprites[x].uiLightType)
-#define LightSpriteGetTypeName(x)		(pLightNames[LightSprites[x].iTemplate])
 #define LightGetAmbient()						(ubAmbientLightLevel)
+
+static inline const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
+{
+	return pLightNames[l->iTemplate];
+}
 
 void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256], const SGPPaletteEntry* Bias);
 
