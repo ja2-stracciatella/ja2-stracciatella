@@ -2001,7 +2001,7 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 }
 
 
-BOOLEAN LightDraw(const UINT32 uiLightType, const INT32 iLight, const INT16 iX, const INT16 iY, const LIGHT_SPRITE* const l)
+BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 {
 LIGHT_NODE *pLight;
 UINT16 uiCount;
@@ -2013,6 +2013,7 @@ BOOLEAN fOnlyWalls;
 
 //MAP_ELEMENT * pMapElement;
 
+	const INT32 iLight = l->iTemplate;
 	if(pLightList[iLight]==NULL)
 		return(FALSE);
 
@@ -2047,9 +2048,13 @@ BOOLEAN fOnlyWalls;
 	}
 */
 
+	const INT16 iX = l->iX;
+	const INT16 iY = l->iY;
+
 	iOldX = iX;
 	iOldY = iY;
 
+	const UINT32 light_type = l->uiLightType;
 	for(uiCount=0; uiCount < usRaySize[iLight]; uiCount++)
 	{
 		usNodeIndex=*(pLightRayList[iLight]+uiCount);
@@ -2078,10 +2083,9 @@ BOOLEAN fOnlyWalls;
 				if (l->uiFlags & MERC_LIGHT)       uiFlags |= LIGHT_FAKE;
 				if (l->uiFlags & LIGHT_SPR_ONROOF) uiFlags |= LIGHT_ROOF_ONLY;
 
-				LightAddTile(uiLightType, (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), pLight->ubLight, uiFlags, fOnlyWalls );
+				LightAddTile(light_type, iOldX, iOldY, iX + pLight->iDX, iY + pLight->iDY, pLight->ubLight, uiFlags, fOnlyWalls);
 
 				pLight->uiFlags|=LIGHT_NODE_DRAWN;
-
 			}
 
 			if ( fBlocked )
@@ -3096,7 +3100,7 @@ static BOOLEAN LightSpriteRender(void)
 			const LIGHT_SPRITE* const l = &LightSprites[iCount];
 			if (l->uiFlags & LIGHT_SPR_ACTIVE && l->uiFlags & LIGHT_SPR_ON)
 			{
-				LightDraw(l->iTemplate, l->iX, l->iY, l);
+				LightDraw(l);
 			}
 		}
 		return(TRUE);
@@ -3124,7 +3128,7 @@ INT32 iCount;
 
 		if (l->uiFlags & LIGHT_SPR_ACTIVE && (l->uiFlags & LIGHT_SPR_ON))
 		{
-			LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+			LightDraw(l);
 			l->uiFlags |= LIGHT_SPR_ERASE;
 			LightSpriteDirty(iCount);
 		}
@@ -3168,7 +3172,7 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(l->uiLightType, l->iTemplate, iX, iY, l);
+				LightDraw(l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}
@@ -3217,7 +3221,7 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+				LightDraw(l);
 				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}
