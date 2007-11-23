@@ -2290,7 +2290,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 	BOOLEAN	fInWaterValue;
 	INT8		bDir;
 	INT32		cnt;
-	SOLDIERTYPE * pEnemy;
 
 	//INT16	sX, sY, sWorldX, sZLevel;
 
@@ -2554,17 +2553,16 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
       if ( pSoldier->bOppCnt > 0 )		// opponents in sight
 			{
 				// check each possible enemy
-				for ( cnt = 0; cnt < MAX_NUM_SOLDIERS; cnt++ )
+				CFOR_ALL_NON_PLANNING_SOLDIERS(pEnemy)
 				{
-					pEnemy = MercPtrs[ cnt ];
 					// if this guy is here and alive enough to be looking for us
-					if ( pEnemy->bActive && pEnemy->bInSector && ( pEnemy->bLife >= OKLIFE ) )
+					if (pEnemy->bInSector && pEnemy->bLife >= OKLIFE)
 					{
 						// no points for sneaking by the neutrals & friendlies!!!
 				    if ( !pEnemy->bNeutral && ( pSoldier->bSide != pEnemy->bSide ) && (pEnemy->ubBodyType != COW && pEnemy->ubBodyType != CROW) )
 						{
 							// if we SEE this particular oppponent, and he DOESN'T see us... and he COULD see us...
-							if ( (pSoldier->bOppList[ cnt ] == SEEN_CURRENTLY) &&
+							if (pSoldier->bOppList[pEnemy->ubID] == SEEN_CURRENTLY &&
 								 pEnemy->bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY &&
 								 PythSpacesAway( pSoldier->sGridNo, pEnemy->sGridNo ) < DistanceVisible( pEnemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->bLevel ) )
 							{
@@ -8350,45 +8348,33 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 
 static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEAN fPlayEndAnim)
 {
-	SOLDIERTYPE	*pTSoldier;
-	INT32		cnt;
+	if (pSoldier->ubServiceCount <= 0) return;
 
-	if ( pSoldier->ubServiceCount > 0 )
-  {
-	 // Loop through guys who have us as servicing
-	 for ( pTSoldier = Menptr, cnt = 0; cnt < MAX_NUM_SOLDIERS; pTSoldier++, cnt++ )
-	 {
-			if ( pTSoldier->bActive )
+	// Loop through guys who have us as servicing
+	FOR_ALL_NON_PLANNING_SOLDIERS(pTSoldier)
+	{
+		if (pTSoldier->ubServicePartner == pSoldier->ubID)
+		{
+			// END SERVICE!
+			pSoldier->ubServiceCount--;
+
+			pTSoldier->ubServicePartner = NOBODY;
+
+			if (gTacticalStatus.fAutoBandageMode)
 			{
-				if ( pTSoldier->ubServicePartner == pSoldier->ubID )
+				pSoldier->ubAutoBandagingMedic = NOBODY;
+				ActionDone(pTSoldier);
+			}
+			else
+			{
+				// don't use end aid animation in autobandage
+				if (pTSoldier->bLife >= OKLIFE && pTSoldier->bBreath > 0 && fPlayEndAnim)
 				{
-					// END SERVICE!
-					pSoldier->ubServiceCount--;
-
-					pTSoldier->ubServicePartner = NOBODY;
-
-					if ( gTacticalStatus.fAutoBandageMode )
-					{
-						pSoldier->ubAutoBandagingMedic = NOBODY;
-
-						ActionDone( pTSoldier );
-					}
-					else
-					{
-						// don't use end aid animation in autobandage
-						if ( pTSoldier->bLife >= OKLIFE && pTSoldier->bBreath > 0 && fPlayEndAnim )
-						{
-							EVENT_InitNewSoldierAnim( pTSoldier, END_AID, 0 , FALSE );
-						}
-					}
-
-
+					EVENT_InitNewSoldierAnim(pTSoldier, END_AID, 0, FALSE);
 				}
 			}
-	 }
-
+		}
 	}
-
 }
 
 

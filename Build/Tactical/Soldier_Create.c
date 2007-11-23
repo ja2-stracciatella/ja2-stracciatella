@@ -2405,15 +2405,7 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 
 void TrashAllSoldiers( )
 {
-  INT32       cnt;
-  SOLDIERTYPE *pSoldier;
-
-	cnt = 0;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt < MAX_NUM_SOLDIERS; pSoldier++, cnt++ )
-	{
-		if (pSoldier->bActive) TacticalRemoveSoldier(pSoldier);
-	}
+	FOR_ALL_NON_PLANNING_SOLDIERS(s) TacticalRemoveSoldier(s);
 }
 
 

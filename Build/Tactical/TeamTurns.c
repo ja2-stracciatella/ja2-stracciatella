@@ -555,29 +555,22 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
 
 static void StartInterrupt(void)
 {
-	SOLDIERTYPE *		pTempSoldier;
-	INT32						cnt;
-
 	SOLDIERTYPE* first_interrupter = LatestInterruptGuy();
 	const INT8   bTeam             = first_interrupter->bTeam;
 	SOLDIERTYPE* Interrupter       = first_interrupter;
 
 	// display everyone on int queue!
-	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
+	for (INT32 cnt = gubOutOfTurnPersons; cnt > 0; --cnt)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("STARTINT:  Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID));
 	}
 
 	gTacticalStatus.fInterruptOccurred = TRUE;
 
-	cnt = 0;
-	for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= MAX_NUM_SOLDIERS; cnt++,pTempSoldier++)
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if ( pTempSoldier->bActive )
-		{
-			pTempSoldier->bMovedPriorToInterrupt = pTempSoldier->bMoved;
-			pTempSoldier->bMoved = TRUE;
-		}
+		s->bMovedPriorToInterrupt = s->bMoved;
+		s->bMoved                 = TRUE;
 	}
 
 	if (first_interrupter->bTeam == OUR_TEAM)
@@ -614,7 +607,7 @@ static void StartInterrupt(void)
 		{
 			for ( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 			{
-				pTempSoldier = Squad[ iSquad ][ iCounter ];
+				const SOLDIERTYPE* const pTempSoldier = Squad[iSquad][iCounter];
 				if ( pTempSoldier && pTempSoldier->bActive && pTempSoldier->bInSector && !pTempSoldier->bMoved )
 				{
 					// then this guy got an interrupt...
@@ -689,8 +682,8 @@ static void StartInterrupt(void)
 
 		// what we do is set everyone to moved except for people with interrupts at the moment
 		/*
-		cnt = gTacticalStatus.Team[first_interrupter->bTeam].bFirstID;
-		for (pTempSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[first_interrupter->bTeam].bLastID; cnt++,pTempSoldier++)
+		INT32 cnt = gTacticalStatus.Team[first_interrupter->bTeam].bFirstID;
+		for (SOLDIERTYPE* pTempSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[first_interrupter->bTeam].bLastID; cnt++, pTempSoldier++)
 		{
 			if ( pTempSoldier->bActive )
 			{
@@ -810,27 +803,22 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 		SOLDIERTYPE* const interrupted = LatestInterruptGuy();
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: interrupt over, %d's team regains control", interrupted->ubID));
 
-		cnt = 0;
-		for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= MAX_NUM_SOLDIERS; cnt++,pTempSoldier++)
+		FOR_ALL_NON_PLANNING_SOLDIERS(s)
 		{
-			if ( pTempSoldier->bActive )
+			// AI guys only here...
+			if (s->bActionPoints == 0)
 			{
-				// AI guys only here...
-				if ( pTempSoldier->bActionPoints == 0 )
-				{
-					pTempSoldier->bMoved = TRUE;
-				}
-				else if ( pTempSoldier->bTeam != gbPlayerNum && pTempSoldier->bNewSituation == IS_NEW_SITUATION )
-				{
-					pTempSoldier->bMoved = FALSE;
-				}
-				else
-				{
-					pTempSoldier->bMoved = pTempSoldier->bMovedPriorToInterrupt;
-				}
+				s->bMoved = TRUE;
+			}
+			else if (s->bTeam != gbPlayerNum && s->bNewSituation == IS_NEW_SITUATION)
+			{
+				s->bMoved = FALSE;
+			}
+			else
+			{
+				s->bMoved = s->bMovedPriorToInterrupt;
 			}
 		}
-
 
 		// change team
 		gTacticalStatus.ubCurrentTeam = interrupted->bTeam;

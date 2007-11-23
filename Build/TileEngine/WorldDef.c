@@ -3120,8 +3120,6 @@ void TrashWorld( void )
 	LEVELNODE			*pOnRoofNode;
 	LEVELNODE			*pTopmostNode;
 //	STRUCTURE			*pStructureNode;
-	INT32					cnt;
-	SOLDIERTYPE		*pSoldier;
 
 	if( !gfWorldLoaded )
 		return;
@@ -3140,24 +3138,17 @@ void TrashWorld( void )
 	ResetLightEffects();
 
 	// Set soldiers to not active!
-	//ATE: FOR NOW, ONLY TRASH FROM NPC UP!!!!
-	//cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID + 1;
-	cnt = 0;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt < MAX_NUM_SOLDIERS; pSoldier++, cnt++ )
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if ( pSoldier->bActive )
+		if (s->bTeam == gbPlayerNum)
 		{
-			if ( pSoldier->bTeam == gbPlayerNum )
-			{
-				// Just delete levelnode
-				pSoldier->pLevelNode = NULL;
-			}
-			else
-			{
-				// Delete from world
-				TacticalRemoveSoldier(pSoldier);
-			}
+			// Just delete levelnode
+			s->pLevelNode = NULL;
+		}
+		else
+		{
+			// Delete from world
+			TacticalRemoveSoldier(s);
 		}
 	}
 
@@ -3180,7 +3171,7 @@ void TrashWorld( void )
 	HandleFirstMeanWhileSetUpWithTrashWorld( );
 
 	// Create world randomly from tiles
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
 		pMapTile = &gpWorldLevelData[ cnt ];
 
@@ -3264,7 +3255,7 @@ void TrashWorld( void )
 	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
 
 	// Set some default flags
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
 		gpWorldLevelData[ cnt ].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
 	}

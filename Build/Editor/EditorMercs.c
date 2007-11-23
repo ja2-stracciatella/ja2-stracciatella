@@ -780,23 +780,11 @@ static void DisplayEditMercWindow(void)
 //	otherwise it returns -1.
 static INT32 IsMercHere(INT32 iMapIndex)
 {
-	INT32 IDNumber;
-	INT32 RetIDNumber;
-	BOOLEAN fSoldierFound;
-
-	RetIDNumber = -1;
-	fSoldierFound = FALSE;
-	for ( IDNumber = 0; IDNumber < MAX_NUM_SOLDIERS && !fSoldierFound; IDNumber++ )
+	CFOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		const SOLDIERTYPE* pSoldier = GetSoldier(IDNumber);
-		if (pSoldier != NULL && pSoldier->sGridNo == (INT16)iMapIndex)
-		{
-			fSoldierFound = TRUE;
-			RetIDNumber = IDNumber;
-		}
+		if (s->sGridNo == iMapIndex) return s->ubID;
 	}
-
-	return( RetIDNumber );
+	return -1;
 }
 
 
