@@ -2008,6 +2008,7 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 ***************************************************************************************/
 BOOLEAN LightDraw(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
 {
+	const LIGHT_SPRITE* const l = &LightSprites[uiSprite];
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2029,7 +2030,7 @@ BOOLEAN fOnlyWalls;
 	}
 
 /*
-	if (!(LightSprites[uiSprite].uiFlags & MERC_LIGHT))
+	if (!(l->uiFlags & MERC_LIGHT))
 	{
 		uiFlags |= LIGHT_FAKE
 
@@ -2066,7 +2067,7 @@ BOOLEAN fOnlyWalls;
 
 			pLight=pLightList[iLight]+(usNodeIndex&(~LIGHT_BACKLIGHT));
 
-			if(!(LightSprites[uiSprite].uiFlags&LIGHT_SPR_ONROOF))
+			if (!(l->uiFlags & LIGHT_SPR_ONROOF))
 			{
 				if(LightTileBlocked( (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY)))
 				{
@@ -2080,10 +2081,8 @@ BOOLEAN fOnlyWalls;
 			if(!(pLight->uiFlags&LIGHT_NODE_DRAWN) && (pLight->ubLight) )
 			{
 				uiFlags=(UINT32)(usNodeIndex&LIGHT_BACKLIGHT);
-				if (LightSprites[uiSprite].uiFlags & MERC_LIGHT)
-					uiFlags |= LIGHT_FAKE;
-				if(LightSprites[uiSprite].uiFlags&LIGHT_SPR_ONROOF)
-					uiFlags|=LIGHT_ROOF_ONLY;
+				if (l->uiFlags & MERC_LIGHT)       uiFlags |= LIGHT_FAKE;
+				if (l->uiFlags & LIGHT_SPR_ONROOF) uiFlags |= LIGHT_ROOF_ONLY;
 
 				LightAddTile(uiLightType, (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), pLight->ubLight, uiFlags, fOnlyWalls );
 
@@ -2636,6 +2635,7 @@ UINT32	fTileFlags;
 // Reverts all tiles a given light affects to their natural light levels.
 static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, UINT32 uiSprite)
 {
+	const LIGHT_SPRITE* const l = &LightSprites[uiSprite];
 LIGHT_NODE *pLight;
 UINT16 uiCount;
 UINT16 usNodeIndex;
@@ -2668,7 +2668,7 @@ BOOLEAN fOnlyWalls;
 
 			pLight=pLightList[iLight]+(usNodeIndex&(~LIGHT_BACKLIGHT));
 
-			if(!(LightSprites[uiSprite].uiFlags&LIGHT_SPR_ONROOF))
+			if (!(l->uiFlags&LIGHT_SPR_ONROOF))
 			{
 				if(LightTileBlocked( (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY)))
 				{
@@ -2682,10 +2682,8 @@ BOOLEAN fOnlyWalls;
 			if(!(pLight->uiFlags&LIGHT_NODE_DRAWN) && (pLight->ubLight) )
 			{
 				uiFlags=(UINT32)(usNodeIndex&LIGHT_BACKLIGHT);
-				if (LightSprites[uiSprite].uiFlags & MERC_LIGHT)
-					uiFlags |= LIGHT_FAKE;
-				if(LightSprites[uiSprite].uiFlags&LIGHT_SPR_ONROOF)
-					uiFlags|=LIGHT_ROOF_ONLY;
+				if (l->uiFlags & MERC_LIGHT)       uiFlags |= LIGHT_FAKE;
+				if (l->uiFlags & LIGHT_SPR_ONROOF) uiFlags |= LIGHT_ROOF_ONLY;
 
 				LightSubtractTile(uiLightType, (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), pLight->ubLight, uiFlags, fOnlyWalls );
 				pLight->uiFlags|=LIGHT_NODE_DRAWN;
@@ -2988,17 +2986,18 @@ INT32 iSprite;
 
 	if((iSprite=LightSpriteGetFree())!=(-1))
 	{
-		memset(&LightSprites[iSprite], 0, sizeof(LIGHT_SPRITE));
-		LightSprites[iSprite].iX=WORLD_COLS+1;
-		LightSprites[iSprite].iY=WORLD_ROWS+1;
-		LightSprites[iSprite].iOldX=WORLD_COLS+1;
-		LightSprites[iSprite].iOldY=WORLD_ROWS+1;
-		LightSprites[iSprite].uiLightType=uiLightType;
+		LIGHT_SPRITE* const l = &LightSprites[iSprite];
+		memset(l, 0, sizeof(LIGHT_SPRITE));
+		l->iX          = WORLD_COLS + 1;
+		l->iY          = WORLD_ROWS + 1;
+		l->iOldX       = WORLD_COLS + 1;
+		l->iOldY       = WORLD_ROWS + 1;
+		l->uiLightType = uiLightType;
 
-		if((LightSprites[iSprite].iTemplate=LightLoadCachedTemplate(pName))==(-1))
-			return(-1);
+		l->iTemplate = LightLoadCachedTemplate(pName);
+		if (l->iTemplate == -1) return -1;
 
-		LightSprites[iSprite].uiFlags|=LIGHT_SPR_ACTIVE;
+		l->uiFlags |= LIGHT_SPR_ACTIVE;
 	}
 
 	return(iSprite);
@@ -3013,9 +3012,10 @@ INT32 iSprite;
 ********************************************************************************/
 BOOLEAN LightSpriteFake(INT32 iSprite)
 {
-	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
-		LightSprites[iSprite].uiFlags|=MERC_LIGHT;
+		l->uiFlags |= MERC_LIGHT;
 		return( TRUE );
 	}
 	else
@@ -3036,19 +3036,20 @@ static BOOLEAN LightSpriteDirty(INT32 iSprite);
 ********************************************************************************/
 BOOLEAN LightSpriteDestroy(INT32 iSprite)
 {
-	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
-		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ERASE)
+		if (l->uiFlags & LIGHT_SPR_ERASE)
 		{
-			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
+			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
 				LightSpriteDirty(iSprite);
 			}
-			LightSprites[iSprite].uiFlags&=(~LIGHT_SPR_ERASE);
+			l->uiFlags &= ~LIGHT_SPR_ERASE;
 		}
 
-		LightSprites[iSprite].uiFlags&=(~LIGHT_SPR_ACTIVE);
+		l->uiFlags &= ~LIGHT_SPR_ACTIVE;
 		return(TRUE);
 	}
 
@@ -3066,28 +3067,29 @@ static BOOLEAN LightSpriteRender(void)
 
 /*	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		if(LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE)
+		LIGHT_SPRITE* const l = &LightSprites[iCount];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			if((LightSprites[iCount].iX!=LightSprites[iCount].iOldX)
-				|| (LightSprites[iCount].iY!=LightSprites[iCount].iOldY)
-				|| (LightSprites[iCount].uiFlags&LIGHT_SPR_REDRAW))
+			if ((l->iX != l->iOldX) ||
+					(l->iY != l->iOldY) ||
+					(l->uiFlags & LIGHT_SPR_REDRAW))
 			{
-				if(LightSprites[iCount].iOldX < WORLD_COLS)
+				if (l->iOldX < WORLD_COLS)
 				{
 					fRenderLights=TRUE;
 					LightSpriteDirty(iCount);
 				}
 
-				LightSprites[iCount].iOldX=LightSprites[iCount].iX;
-				LightSprites[iCount].iOldY=LightSprites[iCount].iY;
+				l->iOldX = l->iX;
+				l->iOldY = l->iY;
 
-				if(LightSprites[iCount].uiFlags&LIGHT_SPR_ON)
+				if (l->uiFlags & LIGHT_SPR_ON)
 				{
 						LightSpriteDirty(iCount);
 						fRenderLights=TRUE;
 				}
 
-				LightSprites[iCount].uiFlags&=(~LIGHT_SPR_REDRAW);
+				l->uiFlags &= ~LIGHT_SPR_REDRAW;
 			}
 		}
 	}
@@ -3096,8 +3098,13 @@ static BOOLEAN LightSpriteRender(void)
 	{
 		LightResetAllTiles();
 		for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
-			if((LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE) && (LightSprites[iCount].uiFlags&LIGHT_SPR_ON))
-				LightDraw(LightSprites[iCount].iTemplate, LightSprites[iCount].iX, LightSprites[iCount].iY, iCount);
+		{
+			const LIGHT_SPRITE* const l = &LightSprites[iCount];
+			if (l->uiFlags & LIGHT_SPR_ACTIVE && l->uiFlags & LIGHT_SPR_ON)
+			{
+				LightDraw(l->iTemplate, l->iX, l->iY, iCount);
+			}
+		}
 		return(TRUE);
 	}
 
@@ -3118,17 +3125,18 @@ INT32 iCount;
 	LightResetAllTiles();
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		LightSprites[iCount].uiFlags&=(~LIGHT_SPR_ERASE);
+		LIGHT_SPRITE* const l = &LightSprites[iCount];
+		l->uiFlags &= ~LIGHT_SPR_ERASE;
 
-		if((LightSprites[iCount].uiFlags&LIGHT_SPR_ACTIVE) && (LightSprites[iCount].uiFlags&LIGHT_SPR_ON))
+		if (l->uiFlags & LIGHT_SPR_ACTIVE && (l->uiFlags & LIGHT_SPR_ON))
 		{
-			LightDraw(LightSprites[iCount].uiLightType, LightSprites[iCount].iTemplate, LightSprites[iCount].iX, LightSprites[iCount].iY, iCount);
-			LightSprites[iCount].uiFlags|=LIGHT_SPR_ERASE;
+			LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, iCount);
+			l->uiFlags |= LIGHT_SPR_ERASE;
 			LightSpriteDirty(iCount);
 		}
 
-		LightSprites[iCount].iOldX=LightSprites[iCount].iX;
-		LightSprites[iCount].iOldY=LightSprites[iCount].iY;
+		l->iOldX = l->iX;
+		l->iOldY = l->iY;
 	}
 
 	return(TRUE);
@@ -3142,32 +3150,32 @@ INT32 iCount;
 ********************************************************************************/
 BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 {
-	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
-		if((LightSprites[iSprite].iX==iX) && (LightSprites[iSprite].iY==iY))
-			return(TRUE);
+		if (l->iX == iX && l->iY == iY) return TRUE;
 
-		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ERASE)
+		if (l->uiFlags & LIGHT_SPR_ERASE)
 		{
-			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
+			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
 				LightSpriteDirty(iSprite);
 			}
 		}
 
-		//LightSprites[iSprite].iOldX=LightSprites[iSprite].iX;
-		//LightSprites[iSprite].iOldY=LightSprites[iSprite].iY;
+		//l->iOldX=l->iX;
+		//l->iOldY=l->iY;
 
-		LightSprites[iSprite].iX=iX;
-		LightSprites[iSprite].iY=iY;
+		l->iX = iX;
+		l->iY = iY;
 
-		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ON)
+		if (l->uiFlags & LIGHT_SPR_ON)
 		{
-			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
+			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, iX, iY, iSprite);
-				LightSprites[iSprite].uiFlags|=LIGHT_SPR_ERASE;
+				LightDraw(l->uiLightType, l->iTemplate, iX, iY, iSprite);
+				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}
 		}
@@ -3186,35 +3194,37 @@ BOOLEAN LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY)
 ********************************************************************************/
 BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 {
-	if(fOnRoof && (LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
-		return(FALSE);
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	if ( fOnRoof &&  (l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
+	if (!fOnRoof && !(l->uiFlags & LIGHT_SPR_ONROOF)) return FALSE;
 
-	if(!fOnRoof && !(LightSprites[iSprite].uiFlags&LIGHT_SPR_ONROOF))
-		return(FALSE);
-
-	if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ACTIVE)
+	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
-		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ERASE)
+		if (l->uiFlags & LIGHT_SPR_ERASE)
 		{
-			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
+			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite);
+				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
 				LightSpriteDirty(iSprite);
 			}
 		}
 
-		if(fOnRoof)
-			LightSprites[iSprite].uiFlags|=LIGHT_SPR_ONROOF;
-		else
-			LightSprites[iSprite].uiFlags&=(~LIGHT_SPR_ONROOF);
-
-
-		if(LightSprites[iSprite].uiFlags&LIGHT_SPR_ON)
+		if (fOnRoof)
 		{
-			if((LightSprites[iSprite].iX < WORLD_COLS) && (LightSprites[iSprite].iY < WORLD_ROWS))
+			l->uiFlags |= LIGHT_SPR_ONROOF;
+		}
+		else
+		{
+			l->uiFlags &= ~LIGHT_SPR_ONROOF;
+		}
+
+
+		if (l->uiFlags & LIGHT_SPR_ON)
+		{
+			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightDraw(LightSprites[iSprite].uiLightType, LightSprites[iSprite].iTemplate, LightSprites[iSprite].iX, LightSprites[iSprite].iY, iSprite);
-				LightSprites[iSprite].uiFlags|=LIGHT_SPR_ERASE;
+				LightDraw(l->uiLightType, l->iTemplate, l->iX, l->iY, iSprite);
+				l->uiFlags |= LIGHT_SPR_ERASE;
 				LightSpriteDirty(iSprite);
 			}
 		}
@@ -3233,13 +3243,16 @@ BOOLEAN LightSpriteRoofStatus(INT32 iSprite, BOOLEAN fOnRoof)
 ********************************************************************************/
 BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 {
+	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if(fOn)
 	{
-		LightSprites[iSprite].uiFlags|=(LIGHT_SPR_ON|LIGHT_SPR_REDRAW);
-		LightSprites[iSprite].iOldX=WORLD_COLS;
+		l->uiFlags |= LIGHT_SPR_ON | LIGHT_SPR_REDRAW;
+		l->iOldX    = WORLD_COLS;
 	}
 	else
-		LightSprites[iSprite].uiFlags&=(~LIGHT_SPR_ON);
+	{
+		l->uiFlags &= ~LIGHT_SPR_ON;
+	}
 
 	return(TRUE);
 
@@ -3250,24 +3263,21 @@ BOOLEAN LightSpritePower(INT32 iSprite, BOOLEAN fOn)
 static BOOLEAN LightSpriteDirty(INT32 iSprite)
 {
 //INT16 iLeft_s, iTop_s;
-//INT16 iMapLeft, iMapTop, iMapRight, iMapBottom;
 
-	//CellXYToScreenXY((INT16)(LightSprites[iSprite].iX*CELL_X_SIZE),
-	//								(INT16)(LightSprites[iSprite].iY*CELL_Y_SIZE),  &iLeft_s, &iTop_s);
+	//const LIGHT_SPRITE* const l = &LightSprites[iSprite];
+	//CellXYToScreenXY(l->iX * CELL_X_SIZE, l->iY * CELL_Y_SIZE, &iLeft_s, &iTop_s);
 
-	//iLeft_s+=LightXOffset[LightSprites[iSprite].iTemplate];
-	//iTop_s+=LightYOffset[LightSprites[iSprite].iTemplate];
+	//iLeft_s += LightXOffset[l->iTemplate];
+	//iTop_s  += LightYOffset[l->iTemplate];
 
-	//iMapLeft=LightSprites[iSprite].iX+LightMapLeft[LightSprites[iSprite].iTemplate];
-	//iMapTop=LightSprites[iSprite].iY+LightMapTop[LightSprites[iSprite].iTemplate];
-	//iMapRight=LightSprites[iSprite].iX+LightMapRight[LightSprites[iSprite].iTemplate];
-	//iMapBottom=LightSprites[iSprite].iY+LightMapBottom[LightSprites[iSprite].iTemplate];
+	//const INT16 iMapLeft   = l->iX + LightMapLeft[  l->iTemplate];
+	//const INT16 iMapTop    = l->iY + LightMapTop[   l->iTemplate];
+	//const INT16 iMapRight  = l->iX + LightMapRight[ l->iTemplate];
+	//const INT16 iMapBottom = l->iY + LightMapBottom[l->iTemplate];
 
 	//UpdateSaveBuffer();
 	//AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
-	//AddBaseDirtyRect(iLeft_s, iTop_s,
-	//								(INT16)(iLeft_s+LightWidth[LightSprites[iSprite].iTemplate]),
-	//								(INT16)(iTop_s+LightHeight[LightSprites[iSprite].iTemplate]));
+	//AddBaseDirtyRect(iLeft_s, iTop_s, (INT16)(iLeft_s + LightWidth[l->iTemplate]), (INT16)(iTop_s + LightHeight[l->iTemplate]));
 
 	SetRenderFlags(RENDER_FLAG_MARKED);
 

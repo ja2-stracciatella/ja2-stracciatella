@@ -536,9 +536,10 @@ void TurnOnNightLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME &&
-				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
+		const LIGHT_SPRITE* const l = &LightSprites[i];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
+				l->uiFlags & LIGHT_NIGHTTIME &&
+				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
 			LightSpritePower( i, TRUE );
 		}
@@ -550,10 +551,11 @@ void TurnOffNightLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_NIGHTTIME &&
-				LightSprites[ i ].uiFlags & LIGHT_SPR_ON &&
-				!(LightSprites[ i ].uiFlags & MERC_LIGHT) )
+		const LIGHT_SPRITE* const l = &LightSprites[i];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
+				l->uiFlags & LIGHT_NIGHTTIME &&
+				l->uiFlags & LIGHT_SPR_ON &&
+				!(l->uiFlags & MERC_LIGHT))
 		{
 			LightSpritePower( i, FALSE );
 		}
@@ -565,9 +567,10 @@ void TurnOnPrimeLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_PRIMETIME &&
-				!(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
+		const LIGHT_SPRITE* const l = &LightSprites[i];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
+				l->uiFlags & LIGHT_PRIMETIME &&
+				!(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 		{
 			LightSpritePower( i, TRUE );
 		}
@@ -579,10 +582,11 @@ void TurnOffPrimeLights()
 	INT32 i;
 	for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 	{
-		if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE &&
-			  LightSprites[ i ].uiFlags & LIGHT_PRIMETIME &&
-				LightSprites[ i ].uiFlags & LIGHT_SPR_ON &&
-				!(LightSprites[ i ].uiFlags & MERC_LIGHT) )
+		const LIGHT_SPRITE* const l = &LightSprites[i];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE &&
+				l->uiFlags & LIGHT_PRIMETIME &&
+				l->uiFlags & LIGHT_SPR_ON &&
+				!(l->uiFlags & MERC_LIGHT))
 		{
 			LightSpritePower( i, FALSE );
 		}

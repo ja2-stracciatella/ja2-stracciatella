@@ -3850,7 +3850,6 @@ static void SaveMapLights(HWFILE hfile)
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
 	UINT16 usNumLights = 0;
-	UINT8 ubStrLen;
 
 	ubNumColors = LightGetColors( LColors );
 
@@ -3873,15 +3872,17 @@ static void SaveMapLights(HWFILE hfile)
 
 	for (UINT16 cnt = 0; cnt < MAX_LIGHT_SPRITES; ++cnt)
 	{
-		if( LightSprites[ cnt ].uiFlags & LIGHT_SPR_ACTIVE )
+		const LIGHT_SPRITE* const l = &LightSprites[cnt];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{ //found an active light.  Check to make sure it doesn't belong to a merc.
 			if (!IsSoldierLight(cnt))
 			{ //save the light
 				FileWrite(hfile, &LightSprites[cnt], sizeof(LIGHT_SPRITE));
 
-				ubStrLen = strlen( pLightNames[LightSprites[cnt].iTemplate] ) + 1 ;
+				const char* const light_name = pLightNames[l->iTemplate];
+				const UINT8 ubStrLen = strlen(light_name) + 1;
 				FileWrite(hfile, &ubStrLen, 1);
-				FileWrite(hfile, pLightNames[LightSprites[cnt].iTemplate], ubStrLen);
+				FileWrite(hfile, light_name, ubStrLen);
 			}
 		}
 	}
@@ -3962,10 +3963,15 @@ static void LoadMapLights(INT8** hBuffer)
 				}
 			}
 			LightSpritePosition( iLSprite, TmpLight.iX, TmpLight.iY );
+			LIGHT_SPRITE* const l = &LightSprites[iLSprite];
 			if( TmpLight.uiFlags & LIGHT_PRIMETIME )
-				LightSprites[ iLSprite ].uiFlags |= LIGHT_PRIMETIME;
+			{
+				l->uiFlags |= LIGHT_PRIMETIME;
+			}
 			else if( TmpLight.uiFlags & LIGHT_NIGHTTIME )
-				LightSprites[ iLSprite ].uiFlags |= LIGHT_NIGHTTIME;
+			{
+				l->uiFlags |= LIGHT_NIGHTTIME;
+			}
 		}
 	}
 }

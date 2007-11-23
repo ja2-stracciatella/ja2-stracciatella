@@ -370,7 +370,8 @@ static BOOLEAN EditModeInit(void)
 
 		for( i = 0; i < MAX_LIGHT_SPRITES; i++ )
 		{
-			if( LightSprites[ i ].uiFlags & LIGHT_SPR_ACTIVE && !(LightSprites[ i ].uiFlags & (LIGHT_SPR_ON|MERC_LIGHT) ) )
+			const LIGHT_SPRITE* const l = &LightSprites[i];
+			if (l->uiFlags & LIGHT_SPR_ACTIVE && !(l->uiFlags & (LIGHT_SPR_ON | MERC_LIGHT)))
 			{
 				LightSpritePower( i, TRUE );
 			}
@@ -2605,14 +2606,11 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		return( FALSE );
 	}
 
+	LIGHT_SPRITE* const l = &LightSprites[iLightHandle];
 	switch( gbDefaultLightType )
 	{
-		case PRIMETIME_LIGHT:
-			LightSprites[ iLightHandle ].uiFlags |= LIGHT_PRIMETIME;
-			break;
-		case NIGHTTIME_LIGHT:
-			LightSprites[ iLightHandle ].uiFlags |= LIGHT_NIGHTTIME;
-			break;
+		case PRIMETIME_LIGHT: l->uiFlags |= LIGHT_PRIMETIME; break;
+		case NIGHTTIME_LIGHT: l->uiFlags |= LIGHT_NIGHTTIME; break;
 	}
 
 	iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
@@ -2650,15 +2648,16 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	// Check all lights if any at this given position
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
+		const LIGHT_SPRITE* const l = &LightSprites[iCount];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
-			if ( LightSprites[iCount].iX == iMapX && LightSprites[iCount].iY == iMapY )
+			if (l->iX == iMapX && l->iY == iMapY )
 			{
 				if (!IsSoldierLight(iCount))
 				{
 					// Ok, it's not a merc's light so kill it!
 					pLastLightName = LightSpriteGetTypeName( iCount );
-					uiLastLightType = LightSprites[iCount].uiLightType;
+					uiLastLightType = l->uiLightType;
 					LightSpritePower( iCount, FALSE );
 					LightSpriteDestroy( iCount );
 					fRemovedLight = TRUE;
@@ -2697,11 +2696,12 @@ void ShowLightPositionHandles( void )
 	// Check all lights and place a position handle there!
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
+		const LIGHT_SPRITE* const l = &LightSprites[iCount];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
 			if (!IsSoldierLight(iCount))
 			{
- 				iMapIndex = ((INT32)LightSprites[iCount].iY * WORLD_COLS) + (INT32)LightSprites[iCount].iX;
+				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
 				if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
 				{
 					AddObjectToHead( iMapIndex, GOODRING1 );
@@ -2722,11 +2722,12 @@ static void RemoveLightPositionHandles(void)
 	// Check all lights and remove the position handle there!
 	for(iCount=0; iCount < MAX_LIGHT_SPRITES; iCount++)
 	{
-		if(LightSprites[iCount].uiFlags & LIGHT_SPR_ACTIVE)
+		const LIGHT_SPRITE* const l = &LightSprites[iCount];
+		if (l->uiFlags & LIGHT_SPR_ACTIVE)
 		{
 			if (!IsSoldierLight(iCount))
 			{
- 				iMapIndex = ((INT32)LightSprites[iCount].iY * WORLD_COLS) + (INT32)LightSprites[iCount].iX;
+				iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
 				RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );
 			}
 		}

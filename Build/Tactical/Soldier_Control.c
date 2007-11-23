@@ -936,44 +936,30 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	if ( pSoldier->iLight == -1 )
 	{
 		// ATE: Check for goggles in headpos....
-		if ( pSoldier->inv[ HEAD1POS ].usItem == NIGHTGOGGLES ||
-				 pSoldier->inv[ HEAD2POS ].usItem == NIGHTGOGGLES	)
+		const char* light_file;
+		if (pSoldier->inv[HEAD1POS].usItem == NIGHTGOGGLES ||
+				pSoldier->inv[HEAD2POS].usItem == NIGHTGOGGLES)
 		{
-			if( ( pSoldier->iLight=LightSpriteCreate("Light3", 0 ) )==(-1))
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
-				return( FALSE );
-			}
-			else
-			{
-				LightSprites[ pSoldier->iLight ].uiFlags |= MERC_LIGHT;
-			}
+			light_file = "Light3";
 		}
-		else if ( pSoldier->inv[ HEAD1POS ].usItem == UVGOGGLES ||
-							pSoldier->inv[ HEAD2POS ].usItem == UVGOGGLES	)
+		else if (pSoldier->inv[HEAD1POS].usItem == UVGOGGLES ||
+			pSoldier->inv[HEAD2POS].usItem == UVGOGGLES)
 		{
-			if( ( pSoldier->iLight=LightSpriteCreate("Light4", 0 ) )==(-1))
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
-				return( FALSE );
-			}
-			else
-			{
-				LightSprites[ pSoldier->iLight ].uiFlags |= MERC_LIGHT;
-			}
+			light_file = "Light4";
 		}
 		else
 		{
-			if( ( pSoldier->iLight=LightSpriteCreate("Light2", 0 ) )==(-1))
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
-				return( FALSE );
-			}
-			else
-			{
-				LightSprites[ pSoldier->iLight ].uiFlags |= MERC_LIGHT;
-			}
+			light_file = "Light2";
 		}
+
+		pSoldier->iLight = LightSpriteCreate(light_file, 0);
+		if (pSoldier->iLight == -1)
+		{
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed loading light");
+			return FALSE;
+		}
+
+		LightSprites[pSoldier->iLight].uiFlags |= MERC_LIGHT;
 
     if ( pSoldier->bLevel != 0 )
     {
