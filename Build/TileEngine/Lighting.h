@@ -124,8 +124,8 @@ INT32			LightSpriteCreate(const char *pName, UINT32 uiLightType);
 BOOLEAN		LightSpriteDestroy(INT32 iSprite);
 // Sets the tile position of the light instance
 BOOLEAN		LightSpritePosition(INT32 iSprite, INT16 iX, INT16 iY);
-// Makes a light "fake"
-BOOLEAN LightSpriteFake(INT32 iSprite);
+// Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
+BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 // Renders all lights
 BOOLEAN		LightSpriteRenderAll(void);
 // Turns on/off power to a light

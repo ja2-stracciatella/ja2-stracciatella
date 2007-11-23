@@ -81,7 +81,6 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 	}
 
 	LightSpritePower(ID2LIGHT(pLight->iLight), TRUE);
-//	LightSpriteFake( pLight->iLight );
 	LightSpritePosition( pLight->iLight, (INT16)( CenterX( pLight->sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( pLight->sGridNo ) / CELL_Y_SIZE ) );
 }
 

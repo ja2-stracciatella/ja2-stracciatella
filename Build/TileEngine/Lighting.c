@@ -3002,15 +3002,8 @@ INT32 iSprite;
 }
 
 
-/********************************************************************************
-* LightSpriteFake
-*
-*		Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
-*
-********************************************************************************/
-BOOLEAN LightSpriteFake(INT32 iSprite)
+BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)
 {
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
 		l->uiFlags |= MERC_LIGHT;

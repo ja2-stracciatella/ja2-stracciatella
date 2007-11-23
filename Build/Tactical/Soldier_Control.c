@@ -9406,8 +9406,9 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 
 	//if ( pSoldier->ubID == gusSelectedSoldier )
 	{
-		LightSpritePower(ID2LIGHT(pSoldier->iLight), TRUE);
-		LightSpriteFake(pSoldier->iLight);
+		LIGHT_SPRITE* const l = ID2LIGHT(pSoldier->iLight);
+		LightSpritePower(l, TRUE);
+		LightSpriteFake(l);
 
 		LightSpritePosition( pSoldier->iLight, (INT16)(pSoldier->sX/CELL_X_SIZE), (INT16)(pSoldier->sY/CELL_Y_SIZE));
 	}
