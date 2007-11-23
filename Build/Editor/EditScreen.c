@@ -2652,7 +2652,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 					pLastLightName = LightSpriteGetTypeName( iCount );
 					uiLastLightType = l->uiLightType;
 					LightSpritePower(l, FALSE);
-					LightSpriteDestroy( iCount );
+					LightSpriteDestroy(l);
 					fRemovedLight = TRUE;
 	 				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
 					RemoveAllObjectsOfTypeRange( iMapIndex, GOODRING, GOODRING );

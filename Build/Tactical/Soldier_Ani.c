@@ -123,7 +123,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				pSoldier->bMuzFlashCount = 0;
 				if ( pSoldier->iMuzFlash != -1 )
 				{
-					LightSpriteDestroy( pSoldier->iMuzFlash );
+					LightSpriteDestroy(ID2LIGHT(pSoldier->iMuzFlash));
           pSoldier->iMuzFlash = -1;
 				}
 			}
@@ -3019,12 +3019,12 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 
 		if ( pSoldier->iMuzFlash != -1 )
 		{
-			LightSpriteDestroy( pSoldier->iMuzFlash );
+			LightSpriteDestroy(ID2LIGHT(pSoldier->iMuzFlash));
       pSoldier->iMuzFlash = -1;
 		}
 		if ( pSoldier->iLight != -1 )
 		{
-			LightSpriteDestroy( pSoldier->iLight );
+			LightSpriteDestroy(ID2LIGHT(pSoldier->iLight));
 		}
 
 		//FREEUP GETTING HIT FLAG

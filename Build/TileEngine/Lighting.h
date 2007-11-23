@@ -120,8 +120,8 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal);
 
 // Creates a new light sprite from a given filename/predefined symbol
 INT32			LightSpriteCreate(const char *pName, UINT32 uiLightType);
-// Destroys the instance of that light
-BOOLEAN		LightSpriteDestroy(INT32 iSprite);
+// Removes an instance of a light. If it was on, it is erased from the scene.
+BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 // Sets the X,Y position (IN TILES) of a light instance.
 BOOLEAN LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
 // Sets the flag of a light sprite to "fake" (in game for merc navig purposes)

@@ -398,7 +398,7 @@ void RemoveExplosionData(EXPLOSIONTYPE* const e)
 	Assert(e->fAllocated);
 
 	e->fAllocated = FALSE;
-	if (e->iLightID != -1) LightSpriteDestroy(e->iLightID);
+	if (e->iLightID != -1) LightSpriteDestroy(ID2LIGHT(e->iLightID));
 }
 
 

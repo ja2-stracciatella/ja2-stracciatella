@@ -3018,15 +3018,8 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)
 static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* l);
 
 
-/********************************************************************************
-* LightSpriteDestroy
-*
-*		Removes an instance of a light. If it was on, it is erased from the scene.
-*
-********************************************************************************/
-BOOLEAN LightSpriteDestroy(INT32 iSprite)
+BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 {
-	LIGHT_SPRITE* const l = &LightSprites[iSprite];
 	if (l->uiFlags & LIGHT_SPR_ACTIVE)
 	{
 		if (l->uiFlags & LIGHT_SPR_ERASE)

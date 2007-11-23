@@ -1008,7 +1008,7 @@ BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
 {
 	if( pSoldier->iLight!=(-1) )
 	{
-		LightSpriteDestroy( pSoldier->iLight );
+		LightSpriteDestroy(ID2LIGHT(pSoldier->iLight));
 		pSoldier->iLight = -1;
 	}
 

@@ -69,7 +69,7 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 	// Delete old one if one exists...
 	if( pLight->iLight!=(-1) )
 	{
-		LightSpriteDestroy( pLight->iLight );
+		LightSpriteDestroy(ID2LIGHT(pLight->iLight));
 		pLight->iLight = -1;
 	}
 
@@ -149,7 +149,7 @@ static void RemoveLightEffectFromTile(INT16 sGridNo)
 				// Remove light....
 				if( pLight->iLight != (-1) )
 				{
-					LightSpriteDestroy( pLight->iLight );
+					LightSpriteDestroy(ID2LIGHT(pLight->iLight));
 				}
 				break;
 			}
@@ -220,7 +220,7 @@ void DecayLightEffects( UINT32 uiTime )
 
 					if( pLight->iLight != (-1) )
 					{
-						LightSpriteDestroy( pLight->iLight );
+						LightSpriteDestroy(ID2LIGHT(pLight->iLight));
 					}
 				}
 
