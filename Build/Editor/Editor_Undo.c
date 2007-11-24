@@ -757,29 +757,6 @@ static void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElemen
 	}
 }
 
-/*
-	union
-	{
-		struct TAG_level_node				*pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
-		ITEM_POOL										*pItemPool;					// ITEM POOLS
-		STRUCTURE										*pStructureData;		// STRUCTURE DATA
-		INT32												iPhysicsObjectID;		// ID FOR PHYSICS ITEM
-		INT32												uiAPCost;						// FOR AP DISPLAY
-	}; // ( 4 byte union )
-	union
-	{
-		struct
-		{
-			UINT16										usIndex;							// TILE DATABASE INDEX
-			INT16											sCurrentFrame;				// Stuff for animated tiles for a given tile location ( doors, etc )
-		};
-		struct
-		{
-			SOLDIERTYPE								*pSoldier;					// POINTER TO SOLDIER
-		};
-	}; // ( 4 byte union )
-*/
-
 
 static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex)
 {

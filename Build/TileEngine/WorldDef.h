@@ -114,7 +114,6 @@ typedef struct TAG_level_node
 	{
 		struct TAG_level_node				*pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
 		STRUCTURE										*pStructureData;		// STRUCTURE DATA
-		INT32												iPhysicsObjectID;		// ID FOR PHYSICS ITEM
 		INT32												uiAPCost;						// FOR AP DISPLAY
 		INT32												iExitGridInfo;
 	}; // ( 4 byte union )
