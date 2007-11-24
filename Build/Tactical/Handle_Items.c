@@ -3980,7 +3980,7 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue)
 				else
 				{
 					// OOPS! ... BOOM!
-					IgniteExplosion( NOBODY, gpTempSoldier->sX, gpTempSoldier->sY, (INT16) (gpWorldLevelData[gpTempSoldier->sGridNo].sHeight), gpTempSoldier->sGridNo, gpTempSoldier->inv[ HANDPOS ].usItem, gpTempSoldier->bLevel );
+					IgniteExplosion(NULL, gpTempSoldier->sX, gpTempSoldier->sY, gpWorldLevelData[gpTempSoldier->sGridNo].sHeight, gpTempSoldier->sGridNo, gpTempSoldier->inv[HANDPOS].usItem, gpTempSoldier->bLevel);
 					return;
 				}
 			}
@@ -4091,7 +4091,7 @@ static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 		INT16 sX, sY;
 		sX = CenterX( pItemPool->sGridNo );
 		sY = CenterY( pItemPool->sGridNo );
-		IgniteExplosion( NOBODY, sX, sY, (INT16) (gpWorldLevelData[pItemPool->sGridNo].sHeight + pItemPool->bRenderZHeightAboveLevel), pItemPool->sGridNo, MINI_GRENADE, 0 );
+		IgniteExplosion(NULL, sX, sY, gpWorldLevelData[pItemPool->sGridNo].sHeight + pItemPool->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
 		RemoveItemFromPool( pItemPool->sGridNo, pItemPool->iItemIndex, pItemPool->ubLevel );
 	}
 }

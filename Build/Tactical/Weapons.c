@@ -1145,7 +1145,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		  CreateItem( DISCARDED_LAW, pSoldier->inv[ HANDPOS ].bStatus[ 0 ], &(pSoldier->inv[ HANDPOS ] ) );
 		  DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
-  		IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, C1, pSoldier->bLevel );
+			IgniteExplosion(pSoldier, CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), 0, pSoldier->sGridNo, C1, pSoldier->bLevel);
 
       // Reduce again for attack end 'cause it has been incremented for a normal attack
       //
@@ -1772,7 +1772,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
     // So we still should have ABC > 0
     // Begin explosion due to failure...
-		IgniteExplosion( pSoldier->ubID, (INT16)CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel );
+		IgniteExplosion(pSoldier, CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel);
 
     // Reduce again for attack end 'cause it has been incremented for a normal attack
     //
@@ -1912,7 +1912,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	{
 		// Reduce attacker count!
 		const UINT16 item = (usWeaponIndex == ROCKET_LAUNCHER ? C1 : TANK_SHELL);
-		IgniteExplosion(attacker->ubID, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS(sYPos, sXPos), item, pTargetSoldier->bLevel);
+		IgniteExplosion(attacker, sXPos, sYPos, 0, GETWORLDINDEXFROMWORLDCOORDS(sYPos, sXPos), item, pTargetSoldier->bLevel);
 
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
 		FreeUpAttacker(attacker);
@@ -1988,7 +1988,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of LAW fire");
 			FreeUpAttacker(attacker);
 
-			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, C1, (INT8)( sZPos >= WALL_HEIGHT ) );
+			IgniteExplosion(attacker, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, C1, sZPos >= WALL_HEIGHT);
 			//FreeUpAttacker(attacker);
 
 			return;
@@ -2002,7 +2002,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - end of TANK fire");
 			FreeUpAttacker(attacker);
 
-			IgniteExplosion( ubAttackerID, (INT16)CenterX( sGridNo ), (INT16)CenterY( sGridNo ), 0, sGridNo, TANK_SHELL, (INT8)( sZPos >= WALL_HEIGHT ) );
+			IgniteExplosion(attacker, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, TANK_SHELL, sZPos >= WALL_HEIGHT);
 			//FreeUpAttacker(attacker);
 
 			return;

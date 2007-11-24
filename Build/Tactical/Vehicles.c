@@ -1513,7 +1513,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 		pVehicleList[ ubID ].fDestroyed  = TRUE;
 
 		// Explode vehicle...
-		IgniteExplosion(SOLDIER2ID(att), CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
+		IgniteExplosion(att, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
 
 		if ( pSoldier != NULL )
 		{

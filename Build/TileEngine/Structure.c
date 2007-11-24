@@ -1,3 +1,4 @@
+#include "Overhead.h"
 #include "Types.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -1616,7 +1617,7 @@ BOOLEAN DamageStructure( STRUCTURE * pStructure, UINT8 ubDamage, UINT8 ubReason,
 			// ApplyMapChangesToMapTempFile( FALSE );
 
 			// Generate an explosion here!
-			IgniteExplosion( ubOwner, sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0 );
+			IgniteExplosion(ID2SOLDIER(ubOwner), sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0);
 
 			// ATE: Return false here, as we are dealing with deleting the graphic here...
 			return( FALSE );

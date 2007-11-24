@@ -604,7 +604,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	{
 		case EXPLOSION:
 			// cause damage as a regular hand grenade
-			IgniteExplosion( NOBODY, CenterX( pSoldier->sGridNo ), (INT16)CenterY( pSoldier->sGridNo ), 25, pSoldier->sGridNo, HAND_GRENADE, 0 );
+			IgniteExplosion(NULL, CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), 25, pSoldier->sGridNo, HAND_GRENADE, 0);
 			break;
 
  		case SIREN:
@@ -730,7 +730,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		}
 
 		// OOPS! ... BOOM!
-		IgniteExplosion( NOBODY, pSoldier->sX, pSoldier->sY, (INT16) (gpWorldLevelData[pSoldier->sGridNo].sHeight), pSoldier->sGridNo, SHAPED_CHARGE, 0 );
+		IgniteExplosion(NULL, pSoldier->sX, pSoldier->sY, gpWorldLevelData[pSoldier->sGridNo].sHeight, pSoldier->sGridNo, SHAPED_CHARGE, 0);
 	}
 	return( FALSE );
 }

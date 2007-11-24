@@ -222,12 +222,12 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	ExpParams.bLevel			= bLevel;
 
 	GenerateExplosion( &ExpParams );
-
 }
 
-void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel )
+
+void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel)
 {
-	InternalIgniteExplosion(ID2SOLDIER(ubOwner), sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
+	InternalIgniteExplosion(owner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
 }
 
 
@@ -1561,7 +1561,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 					RemoveItemFromPool( sGridNo, iWorldItem, bLevel );
 
 					// OK, Ignite this explosion!
-					IgniteExplosion( NOBODY, sX, sY, 0, sGridNo, usItem, bLevel );
+					IgniteExplosion(NULL, sX, sY, 0, sGridNo, usItem, bLevel);
 				}
 				else
 				{
@@ -2789,15 +2789,8 @@ void HandleExplosionQueue(void)
 				// BOOM!
 
 				// bomb objects only store the SIDE who placed the bomb! :-(
-				if ( pObj->ubBombOwner > 1 )
-				{
-					IgniteExplosion( (UINT8) (pObj->ubBombOwner - 2), CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->usBombItem, ubLevel );
-				}
-				else
-				{
-					// pre-placed
-					IgniteExplosion( NOBODY, CenterX( sGridNo ), CenterY( sGridNo ), 0, sGridNo, pObj->usBombItem, ubLevel );
-				}
+				SOLDIERTYPE* const owner = (pObj->ubBombOwner > 1 ? ID2SOLDIER(pObj->ubBombOwner - 2) : NULL);
+				IgniteExplosion(owner, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, pObj->usBombItem, ubLevel);
 			}
 
 			// Bye bye bomb

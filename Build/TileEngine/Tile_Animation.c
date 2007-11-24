@@ -507,7 +507,7 @@ void UpdateAniTiles( )
 								break;
 
 							case ANI_KEYFRAME_CHAIN_WATER_EXPLOSION:
-								IgniteExplosion(pNode->v.user.ubData2, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)pNode->v.user.uiData, 0);
+								IgniteExplosion(ID2SOLDIER(pNode->v.user.ubData2), pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)pNode->v.user.uiData, 0);
 								break;
 
               case ANI_KEYFRAME_DO_SOUND:
