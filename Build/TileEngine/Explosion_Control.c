@@ -1367,7 +1367,7 @@ static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 
 
 // Spreads the effects of explosions...
-static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, const UINT8 ubOwner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
+static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
 	EXPLOSIVETYPE *pExplosive;
@@ -1445,8 +1445,6 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 	// Calculate breath amount ( if stun damage applicable )
 	sBreathAmt = ( pExplosive->ubStunDamage * 100 ) + (INT16) ( ( ( pExplosive->ubStunDamage / 2 ) * 100 * uiRoll ) / 100 ) ;
-
-	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
 
   // ATE: Make sure guys get pissed at us!
 	HandleBuldingDestruction(sGridNo, owner);
@@ -1983,6 +1981,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 
 void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, const UINT8 ubOwner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
+	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
  INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
  INT32  uiTempRange, ubBranchRange;
  UINT8  ubDir,ubBranchDir, ubKeepGoing;
@@ -2017,7 +2016,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
  sRange = ubRadius * 2;
 
  // first, affect main spot
-	if (ExpAffect(sGridNo, sGridNo, 0, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
+	if (ExpAffect(sGridNo, sGridNo, 0, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
  {
 		fRecompileMovement = TRUE;
  }
@@ -2060,7 +2059,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 			 //DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
        // ok, do what we do here...
-				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
+				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 			 {
 					fRecompileMovement = TRUE;
 			 }
@@ -2099,7 +2098,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 							{
 								// ok, do what we do here
 								//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Explosion affects %d", uiNewSpot) );
-								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, ubOwner, fSubsequent, &fAnyMercHit, bLevel, smoke))
+								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
 									fRecompileMovement = TRUE;
 								}
