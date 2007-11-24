@@ -335,6 +335,7 @@ SRCS += Build/TileEngine/Isometric_Utils.c
 SRCS += Build/TileEngine/LightEffects.c
 SRCS += Build/TileEngine/Lighting.c
 SRCS += Build/TileEngine/LoadSaveExplosionType.c
+SRCS += Build/TileEngine/LoadSaveRealObject.c
 SRCS += Build/TileEngine/LoadSaveSmokeEffect.c
 SRCS += Build/TileEngine/Map_Edgepoints.c
 SRCS += Build/TileEngine/Overhead_Map.c

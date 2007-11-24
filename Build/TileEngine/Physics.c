@@ -1,5 +1,6 @@
 #include <math.h>
 #include "Font_Control.h"
+#include "LoadSaveRealObject.h"
 #include "Physics.h"
 #include "WCheck.h"
 #include "Timer_Control.h"
@@ -2443,11 +2444,10 @@ BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
 	{
 		for( usCnt=0; usCnt<NUM_OBJECT_SLOTS; usCnt++ )
 		{
-			//if the REAL_OBJECT is active, save it
-			if( ObjectSlots[ usCnt ].fAllocated )
+			const REAL_OBJECT* const o = &ObjectSlots[usCnt];
+			if (o->fAllocated)
 			{
-				//Save the the REAL_OBJECT structure
-				if (!FileWrite(hFile, &ObjectSlots[usCnt], sizeof(REAL_OBJECT))) return FALSE;
+				if (!InjectRealObjectIntoFile(hFile, o)) return FALSE;
 			}
 		}
 	}
@@ -2469,12 +2469,10 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 	//loop through and add the objects
 	for( usCnt=0; usCnt<guiNumObjectSlots; usCnt++ )
 	{
-		//Load the the REAL_OBJECT structure
-		if (!FileRead(hFile, &ObjectSlots[usCnt], sizeof(REAL_OBJECT))) return FALSE;
+		REAL_OBJECT* const o = &ObjectSlots[usCnt];
+		if (!ExtractRealObjectFromFile(hFile, o)) return FALSE;
 
-		ObjectSlots[usCnt].pNode = NULL;
-		ObjectSlots[usCnt].pShadow = NULL;
-		ObjectSlots[usCnt].iID = usCnt;
+		o->iID = usCnt;
 	}
 
 	return( TRUE );
