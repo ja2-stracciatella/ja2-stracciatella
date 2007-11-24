@@ -4398,8 +4398,7 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 		// AddGameEvent( S_NOISE, 0, &SNoise );
 
 		// now call directly
-		OurNoise( SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType );
-
+		OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType);
 	}
 }
 
@@ -4407,14 +4406,13 @@ void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType);
 
 
-void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
+void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubVolume, const UINT8 ubNoiseType)
 {
 #ifdef BYPASSNOISE
 	return;
 #endif
 
-	// see if anyone actually hears this noise, sees ubNoiseMaker, etc.
-	SOLDIERTYPE* const noise_maker = ID2SOLDIER(ubNoiseMaker);
+	// see if anyone actually hears this noise, sees noise_maker, etc.
 	ProcessNoise(noise_maker, sGridNo, bLevel, ubTerrType, ubVolume, ubNoiseType);
 
 	if (noise_maker != NULL                 &&
