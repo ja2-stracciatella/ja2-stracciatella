@@ -3429,7 +3429,7 @@ static void TestExplosion(void)
 	{
 		EXPLOSION_PARAMS	ExpParams ;
 		ExpParams.uiFlags			= 0;
-		ExpParams.ubOwner			= NOBODY;
+		ExpParams.owner       = NULL;
 		ExpParams.ubTypeID		= STUN_BLAST;
 		ExpParams.sGridNo			= usMapPos;
 

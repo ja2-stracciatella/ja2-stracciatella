@@ -13,7 +13,7 @@ BOOLEAN ExtractExplosionTypeFromFile(const HWFILE file, EXPLOSIONTYPE* const e)
 	if (FileRead(file, src, sizeof(src))) return FALSE;
 
 	EXTR_U32(s, e->Params.uiFlags)
-	EXTR_U8(s, e->Params.ubOwner)
+	EXTR_SOLDIER(s, e->Params.owner)
 	EXTR_U8(s, e->Params.ubTypeID)
 	EXTR_U16(s, e->Params.usItem)
 	EXTR_U16(s, e->Params.sX)
@@ -42,7 +42,7 @@ BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)
 	BYTE* d = dst;
 
 	INJ_U32(d, e->Params.uiFlags)
-	INJ_U8(d, e->Params.ubOwner)
+	INJ_SOLDIER(d, e->Params.owner)
 	INJ_U8(d, e->Params.ubTypeID)
 	INJ_U16(d, e->Params.usItem)
 	INJ_U16(d, e->Params.sX)

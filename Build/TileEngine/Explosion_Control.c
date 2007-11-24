@@ -213,7 +213,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 	// OK, go on!
 	ExpParams.uiFlags			= EXPLOSION_FLAG_USEABSPOS;
-	ExpParams.ubOwner			= ubOwner;
+	ExpParams.owner       = ID2SOLDIER(ubOwner);
 	ExpParams.ubTypeID		= Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
 	ExpParams.sX					= sX;
 	ExpParams.sY					= sY;

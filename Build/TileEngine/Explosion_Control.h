@@ -17,7 +17,7 @@ typedef struct
 {
 	UINT32											uiFlags;
 
-	UINT8												ubOwner;
+	SOLDIERTYPE*                owner;
 	UINT8												ubTypeID;
 
 	UINT16											usItem;

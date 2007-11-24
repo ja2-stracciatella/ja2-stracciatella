@@ -363,7 +363,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 				{
 					// Talk to the explosion data...
 					EXPLOSIONTYPE* const e     = pAniNode->v.explosion;
-					SOLDIERTYPE*   const owner = ID2SOLDIER(e->Params.ubOwner);
+					SOLDIERTYPE*   const owner = e->Params.owner;
 					RemoveExplosionData(e);
 
 					if ( !gfExplosionQueueActive )
@@ -534,11 +534,11 @@ void UpdateAniTiles( )
                 {
                   // Do sound....
                   // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
-		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, e->Params.ubOwner);
+		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, SOLDIER2ID(e->Params.owner));
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->Params.ubOwner, FALSE, e->Params.bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, SOLDIER2ID(e->Params.owner), FALSE, e->Params.bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;
