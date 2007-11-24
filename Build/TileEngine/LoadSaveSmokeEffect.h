@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s);
-BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* s);
+BOOLEAN ExtractSmokeEffectFromFile(HWFILE file, SMOKEEFFECT* s);
+BOOLEAN InjectSmokeEffectIntoFile(HWFILE file, const SMOKEEFFECT* s);
 
 #endif

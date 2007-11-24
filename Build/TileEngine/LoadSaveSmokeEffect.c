@@ -29,7 +29,7 @@ BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
 }
 
 
-BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* s)
+BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* const s)
 {
 	BYTE data[16];
 
