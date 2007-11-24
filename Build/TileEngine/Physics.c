@@ -161,7 +161,7 @@ INT32	CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xP
 	pObject->Position.y	= yPos;
 	pObject->Position.z	= zPos;
 	pObject->fVisible		= TRUE;
-	pObject->ubOwner    = ubOwner;
+	pObject->owner      = ID2SOLDIER(ubOwner);
 	pObject->ubActionCode = ubActionCode;
 	pObject->uiActionData = uiActionData;
 	pObject->fDropItem		= TRUE;
@@ -423,11 +423,11 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			// Make impact noise....
 			if ( pObject->Obj.usItem == ROCK || pObject->Obj.usItem == ROCK2 )
 			{
-				MakeNoise(ID2SOLDIER(pObject->ubOwner), pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_ROCK_IMPACT);
+				MakeNoise(pObject->owner, pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_ROCK_IMPACT);
 			}
 			else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE )
 			{
-				MakeNoise(ID2SOLDIER(pObject->ubOwner), pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_GRENADE_IMPACT);
+				MakeNoise(pObject->owner, pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_GRENADE_IMPACT);
 			}
 
 			if ( !pObject->fTestObject && pObject->iOldCollisionCode == COLLISION_GROUND )
@@ -436,7 +436,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			}
 
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., PHYSICS OBJECT DONE effect gone off");
-			ReduceAttackBusyCount(ID2SOLDIER(pObject->ubOwner), FALSE);
+			ReduceAttackBusyCount(pObject->owner, FALSE);
 
 			// ATE: Handle end of animation...
 			if ( pObject->fCatchAnimOn )
@@ -939,7 +939,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 						AniParams.ubKeyFrame1					= 11;
 						AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_CHAIN_WATER_EXPLOSION;
 						AniParams.v.user.uiData   = pObject->Obj.usItem;
-						AniParams.v.user.ubData2  = pObject->ubOwner;
+						AniParams.v.user.ubData2  = SOLDIER2ID(pObject->owner);
 					}
 
 					pNode = CreateAnimationTile( &AniParams );
@@ -2154,7 +2154,7 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID
         sDamage = 1;
         sBreath = 0;
 
-				EVENT_SoldierGotHit(pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, ID2SOLDIER(pObject->ubOwner), FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
+				EVENT_SoldierGotHit(pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->owner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
 
         pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
       }
@@ -2377,9 +2377,9 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 			// All teams lok for this...
 			NotifySoldiersToLookforItems( );
 
-			if ( pObject->ubOwner != NOBODY )
+			if (pObject->owner != NULL)
 			{
-				DoMercBattleSound( MercPtrs[ pObject->ubOwner ], (INT8)( BATTLE_SOUND_CURSE1 ) );
+				DoMercBattleSound(pObject->owner, BATTLE_SOUND_CURSE1);
 			}
 		}
 	}
@@ -2398,24 +2398,24 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 		else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE  )
 		{
 /* ARM: Removed.  Rewards even missed throws, and pulling a pin doesn't really teach anything about explosives
-			if ( MercPtrs[ pObject->ubOwner ]->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT )
+			if (pObject->owner->bTeam == gbPlayerNum && gTacticalStatus.uiFlags & INCOMBAT)
 			{
 				// tossed grenade, not a dud, so grant xp
 				// EXPLOSIVES GAIN (10):  Tossing grenade
-        if ( pObject->ubOwner != NOBODY )
+				if (pObject->owner != NULL)
         {
-				  StatChange( MercPtrs[ pObject->ubOwner ], EXPLODEAMT, 10, FALSE );
+					StatChange(pObject->owner, EXPLODEAMT, 10, FALSE);
         }
 			}
 */
 
-			IgniteExplosion(ID2SOLDIER(pObject->ubOwner), pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
+			IgniteExplosion(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
 		}
 		else if ( pObject->Obj.usItem == MORTAR_SHELL )
 		{
 			sZ = (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
 
-			IgniteExplosion(ID2SOLDIER(pObject->ubOwner), pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
+			IgniteExplosion(pObject->owner, pObject->Position.x, pObject->Position.y, sZ, pObject->sGridNo, pObject->Obj.usItem, GET_OBJECT_LEVEL(pObject->Position.z - CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[pObject->sGridNo].sHeight)));
 		}
 	}
 }

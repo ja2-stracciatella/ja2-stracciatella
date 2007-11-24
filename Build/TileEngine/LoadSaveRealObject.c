@@ -3,6 +3,7 @@
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 #include "LoadSaveRealObject.h"
+#include "Overhead.h"
 
 
 BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
@@ -49,7 +50,7 @@ BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
 	EXTR_BOOL(d, o->fFirstTimeMoved)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, o->sFirstGridNo)
-	EXTR_U8(d, o->ubOwner)
+	EXTR_SOLDIER(d, o->owner)
 	EXTR_U8(d, o->ubActionCode)
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, o->uiActionData)
@@ -118,7 +119,7 @@ BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)
 	INJ_BOOL(d, o->fFirstTimeMoved)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, o->sFirstGridNo)
-	INJ_U8(d, o->ubOwner)
+	INJ_SOLDIER(d, o->owner)
 	INJ_U8(d, o->ubActionCode)
 	INJ_SKIP(d, 2)
 	INJ_U32(d, o->uiActionData)

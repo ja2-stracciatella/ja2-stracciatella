@@ -48,9 +48,9 @@ typedef struct
 	FLOAT				dLifeLength;
 	FLOAT				dLifeSpan;
 	OBJECTTYPE	Obj;
-	BOOLEAN			fFirstTimeMoved;
+	SOLDIERTYPE* owner;
 	INT16				sFirstGridNo;
-	UINT8				ubOwner;
+	BOOLEAN			fFirstTimeMoved;
 	UINT8				ubActionCode;
 	UINT32			uiActionData;
 	BOOLEAN			fDropItem;
@@ -67,7 +67,6 @@ typedef struct
   INT32       iSoundID;
   UINT8       ubLastTargetTakenDamage;
 } REAL_OBJECT;
-CASSERT(sizeof(REAL_OBJECT) == 256)
 
 
 // OBJECT LIST STUFF
