@@ -70,7 +70,7 @@ typedef struct
 
 
 // OBJECT LIST STUFF
-INT32 CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, UINT32 uiActionData);
+REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, UINT32 uiActionData);
 void RemoveAllPhysicsObjects( );
 
 

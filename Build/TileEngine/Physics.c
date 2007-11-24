@@ -118,17 +118,14 @@ static void RecountObjectSlots(void)
 }
 
 
-INT32 CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, const UINT32 uiActionData)
+REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, const UINT32 uiActionData)
 {
-	INT32			iObjectIndex;
 	FLOAT			mass;
-	REAL_OBJECT		*pObject;
 
-	if( ( iObjectIndex = GetFreeObjectSlot() )==(-1) )
-		return(-1);
+	const INT32 iObjectIndex = GetFreeObjectSlot();
+	if (iObjectIndex == -1) return NULL;
 
-	pObject = &( ObjectSlots[ iObjectIndex ] );
-
+	REAL_OBJECT* const pObject = &ObjectSlots[iObjectIndex];
 	memset( pObject, 0, sizeof( REAL_OBJECT ) );
 
 	// OK, GET OBJECT DATA AND COPY
@@ -192,7 +189,7 @@ INT32 CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLength, c
 
 	PhysicsDebugMsg("NewPhysics Object");
 
-	return( iObjectIndex );
+	return pObject;
 }
 
 
@@ -1570,8 +1567,6 @@ static void FindTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16
 // return range
 static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psFinalGridNo)
 {
-	INT32 iID;
-	REAL_OBJECT *pObject;
 	FLOAT	dDiffX, dDiffY;
 	INT16	sGridNo;
 
@@ -1580,16 +1575,8 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 		(*psFinalGridNo) = NOWHERE;
 	}
 
-
-	// OK, create a physics object....
-	iID = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
-
-	if ( iID == -1 )
-	{
-		return( -1 );
-	}
-
-	pObject = &( ObjectSlots[ iID ] );
+	REAL_OBJECT* const pObject = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
+	if (pObject == NULL) return -1;
 
 	// Set some special values...
 	pObject->fTestObject = TEST_OBJECT_NO_COLLISIONS;
@@ -1624,18 +1611,8 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 
 static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, vector_3* vPosition, vector_3* vForce, INT16* psNewGridNo, INT8* pbLevel, BOOLEAN fFromUI)
 {
-	INT32 iID;
-	REAL_OBJECT *pObject;
-
-	// OK, create a physics object....
-	iID = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
-
-	if ( iID == -1 )
-	{
-		return( -1 );
-	}
-
-	pObject = &( ObjectSlots[ iID ] );
+	REAL_OBJECT* const pObject = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
+	if (pObject == NULL) return -1;
 
 	// Set some special values...
 	pObject->fTestObject = TEST_OBJECT_NOTWALLROOF_COLLISIONS;
