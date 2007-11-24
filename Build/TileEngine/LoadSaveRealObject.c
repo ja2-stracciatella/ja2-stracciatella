@@ -68,8 +68,7 @@ BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
 	EXTR_I16(d, o->sLevelNodeGridNo)
 	EXTR_I32(d, o->iSoundID)
 	EXTR_U8(d, o->ubLastTargetTakenDamage)
-	EXTR_U8A(d, o->ubPadding, lengthof(o->ubPadding))
-	EXTR_SKIP(d, 2)
+	EXTR_SKIP(d, 3)
 	Assert(d == endof(data));
 
 	return TRUE;
@@ -138,8 +137,7 @@ BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)
 	INJ_I16(d, o->sLevelNodeGridNo)
 	INJ_I32(d, o->iSoundID)
 	INJ_U8(d, o->ubLastTargetTakenDamage)
-	INJ_U8A(d, o->ubPadding, lengthof(o->ubPadding))
-	INJ_SKIP(d, 2)
+	INJ_SKIP(d, 3)
 	Assert(d == endof(data));
 
 	return FileWrite(file, data, sizeof(data));

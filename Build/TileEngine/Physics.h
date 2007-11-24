@@ -66,7 +66,6 @@ typedef struct
   INT16       sLevelNodeGridNo;
   INT32       iSoundID;
   UINT8       ubLastTargetTakenDamage;
-	UINT8				ubPadding[1];
 } REAL_OBJECT;
 CASSERT(sizeof(REAL_OBJECT) == 256)
 

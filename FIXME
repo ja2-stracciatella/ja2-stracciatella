@@ -347,6 +347,12 @@ bKeyStatus
 ubKeyUnused
 ubOwnershipUnused
 
+REAL_OBJECT
+fColliding: write-only
+fZOnRest: always FALSE, read-only
+OneOverMass: always 1/60.f
+uiActionData: probably always a SoldierID
+
 SOLDIERCREATESTRUCT
 fStatic: strange
 fPlayerMerc: strange
