@@ -118,7 +118,7 @@ static void RecountObjectSlots(void)
 }
 
 
-INT32	CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, UINT8 ubOwner, UINT8 ubActionCode, UINT32 uiActionData)
+INT32 CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, const UINT32 uiActionData)
 {
 	INT32			iObjectIndex;
 	FLOAT			mass;
@@ -161,7 +161,7 @@ INT32	CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xP
 	pObject->Position.y	= yPos;
 	pObject->Position.z	= zPos;
 	pObject->fVisible		= TRUE;
-	pObject->owner      = ID2SOLDIER(ubOwner);
+	pObject->owner      = owner;
 	pObject->ubActionCode = ubActionCode;
 	pObject->uiActionData = uiActionData;
 	pObject->fDropItem		= TRUE;
@@ -1582,7 +1582,7 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 
 
 	// OK, create a physics object....
-	iID = CreatePhysicalObject( pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NOBODY, NO_THROW_ACTION, 0 );
+	iID = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
 
 	if ( iID == -1 )
 	{
@@ -1628,7 +1628,7 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 	REAL_OBJECT *pObject;
 
 	// OK, create a physics object....
-	iID = CreatePhysicalObject( pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NOBODY, NO_THROW_ACTION, 0 );
+	iID = CreatePhysicalObject(pItem, -1, vPosition->x, vPosition->y, vPosition->z, vForce->x, vForce->y, vForce->z, NULL, NO_THROW_ACTION, 0);
 
 	if ( iID == -1 )
 	{

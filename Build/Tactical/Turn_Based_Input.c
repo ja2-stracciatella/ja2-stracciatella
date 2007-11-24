@@ -3846,7 +3846,7 @@ static void GrenadeTest1(void)
 		Object.usItem = MUSTARD_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -20, 20, 158, NOBODY, THROW_ARM_ITEM, 0 );
+		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, -20, 20, 158, NULL, THROW_ARM_ITEM, 0);
 	}
 }
 
@@ -3861,7 +3861,7 @@ static void GrenadeTest2(void)
 		Object.usItem = HAND_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, 0, -30, 158, NOBODY, THROW_ARM_ITEM, 0 );
+		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, 0, -30, 158, NULL, THROW_ARM_ITEM, 0);
 	}
 }
 
@@ -3876,7 +3876,7 @@ static void GrenadeTest3(void)
 		Object.usItem = HAND_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject( &Object, 60,  (FLOAT)(sX * CELL_X_SIZE), (FLOAT)(sY * CELL_Y_SIZE ), 256, -10, 10, 158, NOBODY, THROW_ARM_ITEM, 0 );
+		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, -10, 10, 158, NULL, THROW_ARM_ITEM, 0);
 	}
 }
 
