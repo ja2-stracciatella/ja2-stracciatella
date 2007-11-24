@@ -768,7 +768,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 					// exclude our own team, we've already done them, randomly
 					if (pThem->bTeam != gbPlayerNum)
 #endif
-						RadioSightings(pThem,pSoldier->ubID, pThem->bTeam);
+						RadioSightings(pThem, pSoldier, pThem->bTeam);
 				}
 				// unless in easy mode allow alerted enemies to radio
 				else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )
@@ -817,7 +817,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 		SOLDIERTYPE* const chosen = radio_men[chosen_idx];
 
 		// Handle radioing for that merc
-		RadioSightings(chosen, about->ubID, chosen->bTeam);
+		RadioSightings(chosen, about, chosen->bTeam);
 		chosen->bNewOppCnt = 0;
 
 		/* Move the contents of the last slot into the one just handled */
@@ -2825,11 +2825,10 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 			SetMusicMode( MUSIC_TACTICAL_BATTLE );
 		}
 	}
-
-
 }
 
-void RadioSightings(SOLDIERTYPE *pSoldier, UINT8 ubAbout, UINT8 ubTeamToRadioTo )
+
+void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8 ubTeamToRadioTo)
 {
  SOLDIERTYPE *pOpponent;
  INT32 	iLoop;
@@ -2841,29 +2840,22 @@ void RadioSightings(SOLDIERTYPE *pSoldier, UINT8 ubAbout, UINT8 ubTeamToRadioTo 
 
 
 #ifdef TESTOPPLIST
-DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
-			 String("RADIO SIGHTINGS: for %d about %d",pSoldier->ubID,ubAbout) );
+	DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("RADIO SIGHTINGS: for %d about %d", pSoldier->ubID, SOLDIER2ID(about)));
 #endif
 
  gTacticalStatus.Team[pSoldier->bTeam].ubLastMercToRadio = pSoldier->ubID;
 
-
-
-
-
-
  // who are we radioing about?
- if (ubAbout == EVERYBODY)
-  {
-   start	= 0;
-   end		= MAXMERCS;
-  }
- else
-  {
-   start	= ubAbout;
-   end 		= ubAbout + 1;
-  }
-
+	if (about == EVERYBODY)
+	{
+		start = 0;
+		end   = MAXMERCS;
+	}
+	else
+	{
+		start = about->ubID;
+		end   = start + 1;
+	}
 
  // hang a pointer to the start of our this guy's personal opplist
  pPersOL = &(pSoldier->bOppList[start]);
@@ -5869,8 +5861,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 			StatChange( pDefender, EXPERAMT, 5, FALSE );
 
 			// mark attacker as being SEEN right now
-			RadioSightings( pDefender, pAttacker->ubID, pDefender->bTeam );
-
+			RadioSightings(pDefender, pAttacker, pDefender->bTeam);
 		}
 		// NOTE: ENEMIES DON'T REPORT A SIGHTING PUBLICLY UNTIL THEY RADIO IT IN!
 		else

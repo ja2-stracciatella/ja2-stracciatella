@@ -2,7 +2,8 @@
 #define _OPPLIST_H
 
 
-#define EVERYBODY       MAXMERCS
+/* For RadioSightings() parameter about */
+#define EVERYBODY NULL
 
 #define MAX_MISC_NOISE_DURATION 12      // max dur for VERY loud NOBODY noises
 
@@ -93,7 +94,7 @@ void InitOpponentKnowledgeSystem(void);
 void InitSoldierOppList(SOLDIERTYPE *pSoldier);
 void BetweenTurnsVisibilityAdjustments(void);
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier);
-void RadioSightings(SOLDIERTYPE *pSoldier, UINT8 ubAbout, UINT8 ubTeamToRadioTo );
+void RadioSightings(SOLDIERTYPE* pSoldier, SOLDIERTYPE* about, UINT8 ubTeamToRadioTo);
 void DebugSoldierPage1( );
 void DebugSoldierPage2( );
 void DebugSoldierPage3( );
