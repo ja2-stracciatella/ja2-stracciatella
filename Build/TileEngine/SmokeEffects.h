@@ -47,7 +47,7 @@ void AddSmokeEffectToTile(const SMOKEEFFECT* smoke, INT8 bType, INT16 sGridNo, I
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
 
-INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner );
+INT32 NewSmokeEffect(INT16 sGridNo, UINT16 usItem, INT8 bLevel, SOLDIERTYPE* owner);
 
 
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile );

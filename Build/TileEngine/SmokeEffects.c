@@ -120,8 +120,7 @@ static UINT8 FromSmokeTypeToWorldFlags(INT8 bType)
 }
 
 
-
-INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
+INT32 NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
 {
 	SMOKEEFFECT *pSmoke;
 	INT32				iSmokeIndex;
@@ -205,7 +204,7 @@ INT32 NewSmokeEffect( INT16 sGridNo, UINT16 usItem, INT8 bLevel, UINT8 ubOwner )
 	pSmoke->bAge				= 0;
 	pSmoke->fAllocated  = TRUE;
 	pSmoke->bType				= bSmokeEffectType;
-  pSmoke->ubOwner     = ubOwner;
+	pSmoke->ubOwner     = SOLDIER2ID(owner);
 
   if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
   {

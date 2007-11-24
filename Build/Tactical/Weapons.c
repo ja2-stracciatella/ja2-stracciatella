@@ -1897,7 +1897,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 		PlayLocationJA2Sample(sGridNo, CREATURE_GAS_NOISE, HIGHVOLUME, 1);
 
-		NewSmokeEffect(sGridNo, gas, 0, SOLDIER2ID(attacker));
+		NewSmokeEffect(sGridNo, gas, 0, attacker);
   }
 
 	return( FALSE );

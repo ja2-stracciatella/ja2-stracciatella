@@ -534,7 +534,7 @@ void UpdateAniTiles( )
                 {
                   // Do sound....
                   // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
-		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, SOLDIER2ID(e->Params.owner));
+		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, e->Params.owner);
                 }
                 else
                 {
