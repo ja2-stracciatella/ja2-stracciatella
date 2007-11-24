@@ -193,11 +193,11 @@ REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLe
 }
 
 
-static BOOLEAN RemoveObjectSlot(INT32 iObject)
+static BOOLEAN RemoveRealObject(REAL_OBJECT* const o)
 {
-	CHECKF( iObject < NUM_OBJECT_SLOTS );
+	CHECKF(ObjectSlots <= o && o < endof(ObjectSlots));
 
-	ObjectSlots[iObject].fAllocated=FALSE;
+	o->fAllocated = FALSE;
 
 	RecountObjectSlots();
 
@@ -627,8 +627,7 @@ static void PhysicsDeleteObject(REAL_OBJECT* pObject)
 			RemoveShadowFromLevelNode( pObject->sLevelNodeGridNo, pObject->pShadow );
 		}
 
-
-		RemoveObjectSlot( pObject->iID );
+		RemoveRealObject(pObject);
 	}
 }
 
