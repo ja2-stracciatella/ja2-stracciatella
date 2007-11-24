@@ -4440,7 +4440,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 }
 
 
-static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen);
+static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen);
 static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
 static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
 
@@ -4736,7 +4736,7 @@ static void ProcessNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 u
 			if (ubEffVolume > 0)
 			{
 				// ALL RIGHT!  Passed all the tests, this listener hears this noise!!!
-				HearNoise(pSoldier,ubSource,sGridNo,bLevel,ubEffVolume,ubNoiseType,&bSeen);
+				HearNoise(pSoldier, ID2SOLDIER(ubSource), sGridNo, bLevel, ubEffVolume, ubNoiseType, &bSeen);
 
 				bHeard = TRUE;
 
@@ -4964,7 +4964,7 @@ static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLev
 }
 
 
-static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen)
+static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_maker, const UINT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, UINT8* const ubSeen)
 {
 	INT16		sNoiseX, sNoiseY;
 	INT8		bHadToTurn = FALSE, bSourceSeen = FALSE;
@@ -4973,7 +4973,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 	INT8		bDirection;
 	BOOLEAN fMuzzleFlash = FALSE;
 
-//	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "%d hears noise from %d (%d/%d) volume %d", pSoldier->ubID, ubNoiseMaker, sGridNo, bLevel, ubVolume ) );
+//	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("%d hears noise from %d (%d/%d) volume %d", pSoldier->ubID, SOLDIER2ID(noise_maker), sGridNo, bLevel, ubVolume));
 
 
 	if ( pSoldier->ubBodyType == CROW )
@@ -4994,7 +4994,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 	// is he close enough to see that gridno if he turns his head?
 
 	// ignore muzzle flashes when turning head to see noise
-	if ( ubNoiseType == NOISE_GUNFIRE && ubNoiseMaker != NOBODY && MercPtrs[ ubNoiseMaker ]->fMuzzleFlash )
+	if (ubNoiseType == NOISE_GUNFIRE && noise_maker != NULL && noise_maker->fMuzzleFlash)
 	{
 		sNoiseX = CenterX(sGridNo);
 		sNoiseY = CenterY(sGridNo);
@@ -5004,7 +5004,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 				pSoldier->bDirection != OneCCDirection(bDirection))
 		{
 			// temporarily turn off muzzle flash so DistanceVisible can be calculated without it
-			MercPtrs[ ubNoiseMaker ]->fMuzzleFlash = FALSE;
+			noise_maker->fMuzzleFlash = FALSE;
 			fMuzzleFlash = TRUE;
 		}
 	}
@@ -5014,7 +5014,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 	if ( fMuzzleFlash )
 	{
 		// turn flash on again
-		MercPtrs[ ubNoiseMaker ]->fMuzzleFlash = TRUE;
+		noise_maker->fMuzzleFlash = TRUE;
 	}
 
 	if (PythSpacesAway(pSoldier->sGridNo,sGridNo) <= sDistVisible )
@@ -5056,22 +5056,22 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 		fprintf(OpplistFile,"HN: %s by %2d(g%4d,x%3d,y%3d) at %2d(g%4d,x%3d,y%3d), hTT=%d\n",
 			(bSourceSeen) ? "SCS" : "FLR",
 			pSoldier->guynum,pSoldier->sGridNo,pSoldier->sX,pSoldier->sY,
-			ubNoiseMaker,sGridNo,sNoiseX,sNoiseY,
+			SOLDIER2ID(noise_maker), sGridNo, sNoiseX, sNoiseY,
 			bHadToTurn);
 #endif
 	}
 
 	// if noise is made by a person
-	if (ubNoiseMaker < NOBODY)
+	if (noise_maker != NULL)
 	{
-		bOldOpplist = pSoldier->bOppList[ubNoiseMaker];
+		bOldOpplist = pSoldier->bOppList[noise_maker->ubID];
 
 		// WE ALREADY KNOW THAT HE'S ON ANOTHER TEAM, AND HE'S NOT BEING SEEN
 		// ProcessNoise() ALREADY DID THAT WORK FOR US
 
 		if (bSourceSeen)
 		{
-			ManSeesMan(pSoldier, MercPtrs[ubNoiseMaker], Menptr[ubNoiseMaker].sGridNo, Menptr[ubNoiseMaker].bLevel, CALLER_UNKNOWN);
+			ManSeesMan(pSoldier, noise_maker, noise_maker->sGridNo, noise_maker->bLevel, CALLER_UNKNOWN);
 
 			// if it's an AI soldier, he is not allowed to automatically radio any
 			// noise heard, but manSeesMan has set his newOppCnt, so clear it here
@@ -5117,7 +5117,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 			}
 
 			// remember that the soldier has been heard and his new location
-			UpdatePersonal(pSoldier,ubNoiseMaker,HEARD_THIS_TURN,sGridNo, bLevel);
+			UpdatePersonal(pSoldier, noise_maker->ubID ,HEARD_THIS_TURN, sGridNo, bLevel);
 
 			// Public info is not set unless EVERYONE on the team fails to see the
 			// ubnoisemaker, leaving the 'seen' flag FALSE.  See ProcessNoise().
@@ -5163,7 +5163,6 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 		}
 
 		// FIRST REQUIRE MUTUAL HOSTILES!
-		const SOLDIERTYPE* const noise_maker = GetMan(ubNoiseMaker);
 		if (!CONSIDERED_NEUTRAL(noise_maker, pSoldier) && !CONSIDERED_NEUTRAL(pSoldier, noise_maker) && pSoldier->bSide != noise_maker->bSide)
 		{
 			// regardless of whether the noisemaker (who's not NOBODY) was seen or not,
