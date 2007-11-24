@@ -1258,11 +1258,10 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 }
 
 
-INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN fUseWatchSpots )
+INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const opponent, BOOLEAN fUseWatchSpots)
 {
 	INT8 bPoints;
 	INT8 bLightLevel;
-	UINT8	ubDistance;
 
 	// extra check to make sure neutral folks never get interrupts
 	if (pSoldier->bNeutral)
@@ -1299,7 +1298,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	if (fUseWatchSpots)
 	{
 		// if this is a previously noted spot of enemies, give bonus points!
-		bPoints += GetWatchedLocPoints( pSoldier->ubID, MercPtrs[ ubOpponentID ]->sGridNo, MercPtrs[ ubOpponentID ]->bLevel );
+		bPoints += GetWatchedLocPoints(pSoldier->ubID, opponent->sGridNo, opponent->bLevel);
 	}
 
 	// LOSE one point for each 2 additional opponents he currently sees, above 2
@@ -1310,7 +1309,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	}
 
 	// LOSE one point if he's trying to interrupt only by hearing
-	if (pSoldier->bOppList[ubOpponentID] == HEARD_THIS_TURN)
+	if (pSoldier->bOppList[opponent->ubID] == HEARD_THIS_TURN)
 	{
 		bPoints--;
 	}
@@ -1318,7 +1317,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	// if soldier is still in shock from recent injuries, that penalizes him
 	bPoints -= pSoldier->bShock;
 
-	ubDistance = (UINT8) PythSpacesAway( pSoldier->sGridNo, MercPtrs[ ubOpponentID ]->sGridNo );
+	const UINT8 ubDistance = PythSpacesAway(pSoldier->sGridNo, opponent->sGridNo);
 
 	// if we are in combat mode - thus doing an interrupt rather than determine who gets first turn -
 	// then give bonus
@@ -1334,7 +1333,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 		// the opplist has been updated to seen.  But we can use gbSeenOpponents ...
 
 		// this soldier is moving, so give them a bonus for crawling or swatting at long distances
-		if ( !gbSeenOpponents[ ubOpponentID ][ pSoldier->ubID ] )
+		if (!gbSeenOpponents[opponent->ubID][pSoldier->ubID])
 		{
 			if (pSoldier->usAnimState == SWATTING && ubDistance > (MaxDistanceVisible() / 2) ) // more than 1/2 sight distance
 			{
@@ -1348,7 +1347,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	}
 
 	// whether active or not, penalize people who are running
-	if ( pSoldier->usAnimState == RUNNING && !gbSeenOpponents[ pSoldier->ubID ][ ubOpponentID ] )
+	if (pSoldier->usAnimState == RUNNING && !gbSeenOpponents[pSoldier->ubID][opponent->ubID])
 	{
 		bPoints -= 2;
 	}
@@ -1383,7 +1382,7 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 
 		// GAIN one point if he's previously seen the opponent
 		// check for TRUE because -1 means we JUST saw him (always so here)
-		if (gbSeenOpponents[pSoldier->ubID][ubOpponentID] == TRUE)
+		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == TRUE)
 		{
 			bPoints++;  // seen him before, easier to react to him
 		}
@@ -1392,11 +1391,11 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 	{
 		// GAIN one point if he's previously seen the opponent
 		// check for TRUE because -1 means we JUST saw him (always so here)
-		if (gbSeenOpponents[pSoldier->ubID][ubOpponentID] == TRUE)
+		if (gbSeenOpponents[pSoldier->ubID][opponent->ubID] == TRUE)
 		{
 			bPoints++;  // seen him before, easier to react to him
 		}
-		else if (gbPublicOpplist[pSoldier->bTeam][ubOpponentID] != NOT_HEARD_OR_SEEN)
+		else if (gbPublicOpplist[pSoldier->bTeam][opponent->ubID] != NOT_HEARD_OR_SEEN)
 		{
 			// GAIN one point if opponent has been recently radioed in by his team
 			bPoints++;
@@ -1417,10 +1416,9 @@ INT8 CalcInterruptDuelPts( SOLDIERTYPE * pSoldier, UINT8 ubOpponentID, BOOLEAN f
 		bPoints = AUTOMATIC_INTERRUPT - 1;	// hack it to one less than max so its legal
 	}
 
-	#ifdef DEBUG_INTERRUPTS
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Calculating int pts for %d vs %d, number is %d", pSoldier->ubID, ubOpponentID, bPoints ) );
-	#endif
-
+#ifdef DEBUG_INTERRUPTS
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Calculating int pts for %d vs %d, number is %d", pSoldier->ubID, opponent->ubID, bPoints));
+#endif
 
 	return( bPoints );
 }
@@ -1716,7 +1714,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 
 							default:		// interrupt is possible, run a duel
 								DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Calculating int duel pts for onlooker in ResolveInterruptsVs" );
-								pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier,pOpponent->ubID,TRUE);
+								pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent, TRUE);
 								fIntOccurs = InterruptDuel(pOpponent,pSoldier);
 								#ifdef DEBUG_INTERRUPTS
 								if (fIntOccurs)

@@ -2069,14 +2069,14 @@ else
 				// presumably a door opening... we do require standard interrupt conditions
 				if (StandardInterruptConditionsMet(pSoldier, pOpponent, bOldOppList))
 				{
-					ReevaluateBestSightingPosition( pSoldier, CalcInterruptDuelPts( pSoldier, pOpponent->ubID, TRUE ) );
+					ReevaluateBestSightingPosition(pSoldier, CalcInterruptDuelPts(pSoldier, pOpponent, TRUE));
 				}
 			}
 			// require the enemy not to be dying if we are the sighter; in other words,
 			// always add for AI guys, and always add for people with life >= OKLIFE
 			else if ( !(pSoldier->bTeam == gbPlayerNum && pOpponent->bLife < OKLIFE ) )
 			{
-				ReevaluateBestSightingPosition( pSoldier, CalcInterruptDuelPts( pSoldier, pOpponent->ubID, TRUE ) );
+				ReevaluateBestSightingPosition(pSoldier, CalcInterruptDuelPts(pSoldier, pOpponent, TRUE));
 			}
 		}
 	}
@@ -2254,7 +2254,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 						if (gubSightFlags & SIGHT_INTERRUPT && StandardInterruptConditionsMet(pSoldier, pOpponent, bOldOppList))
 						{
 							// calculate the interrupt duel points
-							pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent->ubID, TRUE);
+							pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, pOpponent, TRUE);
 							DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Calculating int duel pts in OtherTeamsLookForMan, %d has %d points", pSoldier->ubID, pSoldier->bInterruptDuelPts ) );
 						}
 						else
@@ -5180,7 +5180,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 					// since this is a door opening noise, add a bonus equal to half the door volume
 					UINT8	ubPoints;
 
-					ubPoints = CalcInterruptDuelPts( pSoldier, ubNoiseMaker, TRUE );
+					ubPoints = CalcInterruptDuelPts(pSoldier, noise_maker, TRUE);
 					if ( ubPoints != NO_INTERRUPT )
 					{
 						// require the enemy not to be dying if we are the sighter; in other words,
@@ -5199,7 +5199,7 @@ static void HearNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, UINT16 sGridNo,
 					if (StandardInterruptConditionsMet(pSoldier, noise_maker, bOldOpplist))
 					{
 						// he gets a chance to interrupt the noisemaker
-						pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier,ubNoiseMaker, TRUE );
+						pSoldier->bInterruptDuelPts = CalcInterruptDuelPts(pSoldier, noise_maker, TRUE);
 						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Calculating int duel pts in noise code, %d has %d points", pSoldier->ubID, pSoldier->bInterruptDuelPts ) );
 					}
 					else
@@ -5911,7 +5911,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 
 		// calculate the interrupt duel points
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Calculating int duel pts for defender in NUA" );
-		pDefender->bInterruptDuelPts = CalcInterruptDuelPts( pDefender, pAttacker->ubID, FALSE);
+		pDefender->bInterruptDuelPts = CalcInterruptDuelPts(pDefender, pAttacker, FALSE);
 	}
 	else
 	{
@@ -5927,7 +5927,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 
 		// calculate active soldier's dueling pts for the upcoming interrupt duel
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Calculating int duel pts for attacker in NUA" );
-		pAttacker->bInterruptDuelPts = CalcInterruptDuelPts( pAttacker, pDefender->ubID, FALSE );
+		pAttacker->bInterruptDuelPts = CalcInterruptDuelPts(pAttacker, pDefender, FALSE);
 		if ( InterruptDuel( pDefender, pAttacker ) )
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INTERRUPT: NoticeUnseenAttacker, defender pts %d, attacker pts %d, defender gets interrupt", pDefender->bInterruptDuelPts, pAttacker->bInterruptDuelPts ) );
