@@ -4552,7 +4552,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 }
 
 
-BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, UINT8 ubOwner )
+BOOLEAN DamageItemOnGround(OBJECTTYPE* const pObject, const INT16 sGridNo, const INT8 bLevel, const INT32 iDamage, SOLDIERTYPE* const owner)
 {
 	BOOLEAN			fBlowsUp;
 
@@ -4560,7 +4560,7 @@ BOOLEAN DamageItemOnGround( OBJECTTYPE * pObject, INT16 sGridNo, INT8 bLevel, IN
 	if ( fBlowsUp )
 	{
 		// OK, Ignite this explosion!
-		IgniteExplosion(ID2SOLDIER(ubOwner), CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, pObject->usItem, bLevel);
+		IgniteExplosion(owner, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, pObject->usItem, bLevel);
 
 		// Remove item!
 		return( TRUE );

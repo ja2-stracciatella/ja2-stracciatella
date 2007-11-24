@@ -1533,7 +1533,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			{
 				const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
 
-				if ( DamageItemOnGround( &(gWorldItems[ pItemPool->iItemIndex ].o), sGridNo, bLevel, (INT32) (sWoundAmt * 2), ubOwner ) )
+				if (DamageItemOnGround(&gWorldItems[pItemPool->iItemIndex].o, sGridNo, bLevel, sWoundAmt * 2, owner))
 				{
 					// item was destroyed
 					RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, bLevel );
