@@ -1,6 +1,7 @@
 #ifndef __SMOKE_EFFECTS
 #define __SMOKE_EFFECTS
 
+#include "JA2Types.h"
 
 // Smoke effect types
 enum
@@ -17,7 +18,7 @@ enum
 #define SMOKE_EFFECT_MARK_FOR_UPDATE  0x04
 
 
-typedef struct TAG_SMOKE_EFFECT
+struct SMOKEEFFECT
 {
 	INT16		sGridNo;          // gridno at which the tear gas cloud is centered
 
@@ -31,8 +32,7 @@ typedef struct TAG_SMOKE_EFFECT
   UINT8   ubOwner;
   UINT8   ubPadding;
 	UINT32	uiTimeOfLastUpdate;
-} SMOKEEFFECT;
-CASSERT(sizeof(SMOKEEFFECT) == 16)
+};
 
 
 // Returns NO_SMOKE_EFFECT if none there...

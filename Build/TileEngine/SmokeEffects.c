@@ -1,3 +1,4 @@
+#include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -581,11 +582,10 @@ BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 		//loop through and save the number of smoke effects
 		for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
 		{
-			//if the smoke is active
-			if( gSmokeEffectData[ uiCnt ].fAllocated )
+			const SMOKEEFFECT* const s = &gSmokeEffectData[uiCnt];
+			if (s->fAllocated)
 			{
-				//Save the Smoke effect Data
-				if (!FileWrite(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT))) return FALSE;
+				if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
 			}
 		}
 	}
@@ -612,16 +612,14 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		//This is a TEMP hack to allow us to use the saves
 		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
 		{
-			//Load the Smoke effect Data
-			if (!FileRead(hFile, gSmokeEffectData, sizeof(SMOKEEFFECT))) return FALSE;
+			if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[0])) return FALSE;
 		}
 
 
 		//loop through and load the list
 		for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 		{
-			//Load the Smoke effect Data
-			if (!FileRead(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT))) return FALSE;
+			if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt])) return FALSE;
 			//This is a TEMP hack to allow us to use the saves
 			if( guiSaveGameVersion < 37 )
 				break;
@@ -703,11 +701,10 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	//loop through and save the number of smoke effects
 	for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
 	{
-		//if the smoke is active
-		if( gSmokeEffectData[ uiCnt ].fAllocated )
+		const SMOKEEFFECT* const s = &gSmokeEffectData[uiCnt];
+		if (s->fAllocated)
 		{
-			//Save the Smoke effect Data
-			if (!FileWrite(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT)))
+			if (!InjectSmokeEffectIntoFile(hFile, s))
 			{
 				//Close the file
 				FileClose( hFile );
@@ -759,8 +756,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 	{
-		//Load the Smoke effect Data
-		if (!FileRead(hFile, &gSmokeEffectData[uiCnt], sizeof(SMOKEEFFECT)))
+		if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]))
 		{
 			FileClose( hFile );
 			return( FALSE );

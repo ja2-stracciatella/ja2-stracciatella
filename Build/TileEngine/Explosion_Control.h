@@ -2,7 +2,6 @@
 #define _EXPLOSION_CONTROL_H
 
 #include "JA2Types.h"
-#include "SmokeEffects.h"
 #include "Weapons.h"
 
 #define MAX_DISTANCE_EXPLOSIVE_CAN_DESTROY_STRUCTURES 2
