@@ -20,7 +20,7 @@ BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
 	EXTR_I8(d, s->bType)
 	EXTR_U16(d, s->usItem)
 	EXTR_U8(d, s->ubOwner)
-	EXTR_U8(d, s->ubPadding)
+	EXTR_SKIP(d, 1)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
@@ -32,7 +32,7 @@ BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* s)
 {
 	BYTE data[16];
 
-	const BYTE* d = data;
+	BYTE* d = data;
 	INJ_I16(d, s->sGridNo)
 	INJ_U8(d, s->ubDuration)
 	INJ_U8(d, s->ubRadius)
@@ -42,7 +42,7 @@ BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* s)
 	INJ_I8(d, s->bType)
 	INJ_U16(d, s->usItem)
 	INJ_U8(d, s->ubOwner)
-	INJ_U8(d, s->ubPadding)
+	INJ_SKIP(d, 1)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
