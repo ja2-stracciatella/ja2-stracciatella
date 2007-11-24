@@ -182,10 +182,8 @@ static void RecountExplosions(void)
 }
 
 
-
-
 // GENERATE EXPLOSION
-void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel )
+void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
 	EXPLOSION_PARAMS	ExpParams ;
 
@@ -213,7 +211,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 	// OK, go on!
 	ExpParams.uiFlags			= EXPLOSION_FLAG_USEABSPOS;
-	ExpParams.owner       = ID2SOLDIER(ubOwner);
+	ExpParams.owner       = owner;
 	ExpParams.ubTypeID		= Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
 	ExpParams.sX					= sX;
 	ExpParams.sY					= sY;
@@ -229,7 +227,7 @@ void InternalIgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16
 
 void IgniteExplosion( UINT8 ubOwner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel )
 {
-	InternalIgniteExplosion( ubOwner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel );
+	InternalIgniteExplosion(ID2SOLDIER(ubOwner), sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
 }
 
 
@@ -1023,7 +1021,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 					// Make secondary explosion if eplosive....
 					if ( fExplosive )
 					{
-						InternalIgniteExplosion( ubOwner, CenterX( sBaseGridNo ), CenterY( sBaseGridNo ), 0, sBaseGridNo, STRUCTURE_EXPLOSION, FALSE, bLevel );
+						InternalIgniteExplosion(ID2SOLDIER(ubOwner), CenterX(sBaseGridNo), CenterY(sBaseGridNo), 0, sBaseGridNo, STRUCTURE_EXPLOSION, FALSE, bLevel);
 					}
 				}
 
@@ -1162,9 +1160,7 @@ static void ExplosiveDamageGridNo(INT16 sGridNo, INT16 sWoundAmt, UINT32 uiDist,
 										ExplosiveDamageGridNo( sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, 2, ubOwner, bLevel );
 									}
 
-									{
-										InternalIgniteExplosion( ubOwner, CenterX( sNewGridNo2 ), CenterY( sNewGridNo2 ), 0, sNewGridNo2, RDX, FALSE, bLevel );
-									}
+									InternalIgniteExplosion(ID2SOLDIER(ubOwner), CenterX(sNewGridNo2), CenterY(sNewGridNo2), 0, sNewGridNo2, RDX, FALSE, bLevel);
 
 									fToBreak = TRUE;
 								}
