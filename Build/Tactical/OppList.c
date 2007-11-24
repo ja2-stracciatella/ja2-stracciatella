@@ -4451,8 +4451,8 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 	INT8 bCheckTerrain = FALSE;
 	UINT8 ubSourceTerrType, ubSource;
 	INT8 bTellPlayer = FALSE, bHeard, bSeen;
-	UINT8 ubHeardLoudestBy, ubNoiseDir, ubLoudestNoiseDir;
-
+	UINT8 ubNoiseDir;
+	UINT8 ubLoudestNoiseDir;
 
 #ifdef RECORDOPPLIST
 	fprintf(OpplistFile,"PN: nType=%s, nMaker=%d, g=%d, tType=%d, bVol=%d\n",
@@ -4625,7 +4625,7 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 		bHeard = FALSE;
 		bSeen = FALSE;
 		ubLoudestEffVolume = 0;
-		ubHeardLoudestBy = NOBODY;
+		SOLDIERTYPE* heard_loudest_by = NULL;
 
 		// All mercs on this team check if they are eligible to hear this noise
 		for (bLoop = gTacticalStatus.Team[bTeam].bFirstID,pSoldier = Menptr + bLoop; bLoop <= gTacticalStatus.Team[bTeam].bLastID; bLoop++,pSoldier++)
@@ -4745,7 +4745,7 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 					if (ubEffVolume > ubLoudestEffVolume)
 					{
 						ubLoudestEffVolume = ubEffVolume;
-						ubHeardLoudestBy = pSoldier->ubID;
+						heard_loudest_by = pSoldier;
 						ubLoudestNoiseDir = ubNoiseDir;
 					}
 				}
@@ -4766,15 +4766,15 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 			if (bTeam == OUR_TEAM)
 			{
 				// if we are to tell the player about this type of noise
-				if (bTellPlayer && ubHeardLoudestBy != NOBODY )
+				if (bTellPlayer && heard_loudest_by != NULL)
 				{
 					// the merc that heard it the LOUDEST is the one to comment
 					// should add level to this function call
-					TellPlayerAboutNoise(MercPtrs[ubHeardLoudestBy], SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
+					TellPlayerAboutNoise(heard_loudest_by, SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
 
 					if ( ubNoiseType == NOISE_MOVEMENT)
 					{
-						MercPtrs[ ubHeardLoudestBy ]->ubMovementNoiseHeard |= (1 << ubNoiseDir);
+						heard_loudest_by->ubMovementNoiseHeard |= 1 << ubNoiseDir;
 					}
 
 				}
@@ -4785,7 +4785,7 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 			{
 				if (bTellPlayer)
 				{
-					TellPlayerAboutNoise(MercPtrs[ubHeardLoudestBy], SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
+					TellPlayerAboutNoise(heard_loudest_by, SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
 				}
 			}
 #endif
