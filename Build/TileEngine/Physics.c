@@ -66,7 +66,8 @@
 //#define					GRAVITY						( 9.8 * 2.8 )
 
 
-REAL_OBJECT			ObjectSlots[ NUM_OBJECT_SLOTS ];
+#define NUM_OBJECT_SLOTS 50
+static REAL_OBJECT ObjectSlots[NUM_OBJECT_SLOTS];
 UINT32					guiNumObjectSlots = 0;
 BOOLEAN					fDampingActive = FALSE;
 //real						Kdl	= (float)0.5;					// LINEAR DAMPENING ( WIND RESISTANCE )

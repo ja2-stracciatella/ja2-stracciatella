@@ -1726,7 +1726,6 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	OBJECTTYPE * pObj;
 	UINT16			usItemNum;
   INT32       iID;
-  REAL_OBJECT *pObject;
 
 	usItemNum = pSoldier->usAttackingWeapon;
 
@@ -1819,10 +1818,6 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	CalculateLaunchItemParamsForThrow( pSoldier, pSoldier->sTargetGridNo, pSoldier->bTargetLevel, 0, &Launchable, (INT8)(uiDiceRoll - uiHitChance), THROW_ARM_ITEM, 0 );
 
 	iID = CreatePhysicalObject( pSoldier->pTempObject, pSoldier->pThrowParams->dLifeSpan,  pSoldier->pThrowParams->dX, pSoldier->pThrowParams->dY, pSoldier->pThrowParams->dZ, pSoldier->pThrowParams->dForceX, pSoldier->pThrowParams->dForceY, pSoldier->pThrowParams->dForceZ, pSoldier->ubID, pSoldier->pThrowParams->ubActionCode, pSoldier->pThrowParams->uiActionData );
-
-	pObject = &( ObjectSlots[ iID ] );
-  //pObject->fPotentialForDebug = TRUE;
-
 
 	MemFree( pSoldier->pTempObject );
 	pSoldier->pTempObject = NULL;
