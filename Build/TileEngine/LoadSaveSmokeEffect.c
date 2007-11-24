@@ -1,7 +1,8 @@
 #include "Debug.h"
 #include "FileMan.h"
-#include "LoadSaveSmokeEffect.h"
 #include "LoadSaveData.h"
+#include "LoadSaveSmokeEffect.h"
+#include "Overhead.h"
 #include "SmokeEffects.h"
 
 
@@ -19,7 +20,7 @@ BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
 	EXTR_BOOL(d, s->fAllocated)
 	EXTR_I8(d, s->bType)
 	EXTR_U16(d, s->usItem)
-	EXTR_U8(d, s->ubOwner)
+	EXTR_SOLDIER(d, s->owner)
 	EXTR_SKIP(d, 1)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
@@ -41,7 +42,7 @@ BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* s)
 	INJ_BOOL(d, s->fAllocated)
 	INJ_I8(d, s->bType)
 	INJ_U16(d, s->usItem)
-	INJ_U8(d, s->ubOwner)
+	INJ_SOLDIER(d, s->owner)
 	INJ_SKIP(d, 1)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));

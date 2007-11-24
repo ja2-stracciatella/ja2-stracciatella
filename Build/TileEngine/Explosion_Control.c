@@ -2202,7 +2202,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, const INT8 level)
 {
-	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, ID2SOLDIER(s->ubOwner), subsequent, level, s);
+	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, s->owner, subsequent, level, s);
 }
 
 

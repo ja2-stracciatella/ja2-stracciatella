@@ -205,7 +205,7 @@ INT32 NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel
 	pSmoke->bAge				= 0;
 	pSmoke->fAllocated  = TRUE;
 	pSmoke->bType				= bSmokeEffectType;
-	pSmoke->ubOwner     = SOLDIER2ID(owner);
+	pSmoke->owner       = owner;
 
   if ( pSmoke->bFlags & SMOKE_EFFECT_INDOORS )
   {

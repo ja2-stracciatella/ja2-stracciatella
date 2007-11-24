@@ -29,7 +29,7 @@ struct SMOKEEFFECT
 	BOOLEAN	fAllocated;
 	INT8		bType;
 	UINT16	usItem;
-  UINT8   ubOwner;
+	SOLDIERTYPE* owner;
 	UINT32	uiTimeOfLastUpdate;
 };
 
