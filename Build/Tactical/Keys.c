@@ -290,7 +290,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 
 	// generate a noise for thumping on the door
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, CROWBAR_DOOR_VOLUME, NOISE_DOOR_SMASHING );
+	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, CROWBAR_DOOR_VOLUME, NOISE_DOOR_SMASHING);
 
 	if ( !pDoor->fLocked )
 	{
@@ -372,7 +372,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	LOCK * pLock;
 
 	// generate a noise for thumping on the door
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, SMASHING_DOOR_VOLUME, NOISE_DOOR_SMASHING );
+	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, SMASHING_DOOR_VOLUME, NOISE_DOOR_SMASHING);
 
 	if ( !pDoor->fLocked )
 	{

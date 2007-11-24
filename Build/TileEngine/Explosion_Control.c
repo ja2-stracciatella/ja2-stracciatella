@@ -2207,8 +2207,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )
 	{
-		MakeNoise( NOBODY, sGridNo, bLevel, gpWorldLevelData[sGridNo].ubTerrainID, Explosive[ Item [ usItem ].ubClassIndex ].ubVolume, NOISE_EXPLOSION );
-
+		MakeNoise(NULL, sGridNo, bLevel, gpWorldLevelData[sGridNo].ubTerrainID, Explosive[Item[usItem].ubClassIndex].ubVolume, NOISE_EXPLOSION);
 	}
 }
 
@@ -2687,7 +2686,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			}
 			break;
 		case ACTION_ITEM_LOCAL_ALARM:
-			MakeNoise( NOBODY, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, 30, NOISE_SILENT_ALARM );
+			MakeNoise(NULL, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, 30, NOISE_SILENT_ALARM);
 			break;
 		case ACTION_ITEM_GLOBAL_ALARM:
 			CallAvailableEnemiesTo( sGridNo );

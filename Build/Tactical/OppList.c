@@ -4377,28 +4377,24 @@ UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void MakeNoise(UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType )
+
+void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubVolume, const UINT8 ubNoiseType)
 {
-	EV_S_NOISE	SNoise;
-
-	SNoise.ubNoiseMaker = ubNoiseMaker;
-	SNoise.sGridNo = sGridNo;
-	SNoise.bLevel = bLevel;
-	SNoise.ubTerrType = ubTerrType;
-	SNoise.ubVolume = ubVolume;
-	SNoise.ubNoiseType = ubNoiseType;
-
 	if ( gTacticalStatus.ubAttackBusyCount )
 	{
 		// delay these events until the attack is over!
+		EV_S_NOISE SNoise;
+		SNoise.ubNoiseMaker = SOLDIER2ID(noise_maker);
+		SNoise.sGridNo      = sGridNo;
+		SNoise.bLevel       = bLevel;
+		SNoise.ubTerrType   = ubTerrType;
+		SNoise.ubVolume     = ubVolume;
+		SNoise.ubNoiseType  = ubNoiseType;
 		AddGameEvent( S_NOISE, DEMAND_EVENT_DELAY, &SNoise );
 	}
 	else
 	{
-		// AddGameEvent( S_NOISE, 0, &SNoise );
-
-		// now call directly
-		OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType);
+		OurNoise(noise_maker, sGridNo, bLevel, ubTerrType, ubVolume, ubNoiseType);
 	}
 }
 

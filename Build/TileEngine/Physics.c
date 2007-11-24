@@ -421,11 +421,11 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			// Make impact noise....
 			if ( pObject->Obj.usItem == ROCK || pObject->Obj.usItem == ROCK2 )
 			{
-				MakeNoise( pObject->ubOwner, pObject->sGridNo, 0, gpWorldLevelData[ pObject->sGridNo ].ubTerrainID, (UINT8) (9 + PreRandom( 9 ) ), NOISE_ROCK_IMPACT );
+				MakeNoise(ID2SOLDIER(pObject->ubOwner), pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_ROCK_IMPACT);
 			}
 			else if ( Item[ pObject->Obj.usItem ].usItemClass & IC_GRENADE )
 			{
-				MakeNoise( pObject->ubOwner, pObject->sGridNo, 0, gpWorldLevelData[ pObject->sGridNo ].ubTerrainID, (UINT8) (9 + PreRandom( 9 ) ), NOISE_GRENADE_IMPACT );
+				MakeNoise(ID2SOLDIER(pObject->ubOwner), pObject->sGridNo, 0, gpWorldLevelData[pObject->sGridNo].ubTerrainID, 9 + PreRandom(9), NOISE_GRENADE_IMPACT);
 			}
 
 			if ( !pObject->fTestObject && pObject->iOldCollisionCode == COLLISION_GROUND )

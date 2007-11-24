@@ -1200,7 +1200,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		}
 	}
 
-	MakeNoise( pSoldier->ubID, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_GUNFIRE );
+	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_GUNFIRE);
 
 	if ( pSoldier->bDoBurst )
 	{
@@ -1906,7 +1906,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, const INT16 sDamage, const INT16 sBreathLoss, const UINT16 usDirection, const INT16 sXPos, const INT16 sYPos, const INT16 sZPos, const INT16 sRange, SOLDIERTYPE* const attacker, const UINT8 ubSpecial, const UINT8 ubHitLocation)
 {
-	MakeNoise(attacker->ubID, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[ usWeaponIndex ].ubHitVolume, NOISE_BULLET_IMPACT );
+	MakeNoise(attacker, pTargetSoldier->sGridNo, pTargetSoldier->bLevel, gpWorldLevelData[pTargetSoldier->sGridNo].ubTerrainID, Weapon[usWeaponIndex].ubHitVolume, NOISE_BULLET_IMPACT);
 
 	if ( EXPLOSIVE_GUN( usWeaponIndex ) )
 	{
@@ -1975,7 +1975,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 	if ( !fHitSameStructureAsBefore )
 	{
 		const INT8 level = (sZPos > WALL_HEIGHT ? 1 : 0);
-		MakeNoise(ubAttackerID, sGridNo, level, gpWorldLevelData[sGridNo].ubTerrainID, Weapon[usWeaponIndex].ubHitVolume, NOISE_BULLET_IMPACT);
+		MakeNoise(attacker, sGridNo, level, gpWorldLevelData[sGridNo].ubTerrainID, Weapon[usWeaponIndex].ubHitVolume, NOISE_BULLET_IMPACT);
 	}
 
 	if (fStopped)
@@ -2250,10 +2250,10 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 
 	if (pWallAndWindowInDB->bPartnerDelta != NO_PARTNER_STRUCTURE  )
 	{ // just cracked; don't display the animation
-		MakeNoise( NOBODY, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, WINDOW_CRACK_VOLUME, NOISE_BULLET_IMPACT );
+		MakeNoise(NULL, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, WINDOW_CRACK_VOLUME, NOISE_BULLET_IMPACT);
 		return;
 	}
-	MakeNoise( NOBODY, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, WINDOW_SMASH_VOLUME, NOISE_BULLET_IMPACT );
+	MakeNoise(NULL, sGridNo, 0, gpWorldLevelData[sGridNo].ubTerrainID, WINDOW_SMASH_VOLUME, NOISE_BULLET_IMPACT);
 	if (pWallAndWindowInDB->ubWallOrientation == INSIDE_TOP_RIGHT || pWallAndWindowInDB->ubWallOrientation == OUTSIDE_TOP_RIGHT)
 	{
 	/*
