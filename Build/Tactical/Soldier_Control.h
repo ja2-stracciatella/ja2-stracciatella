@@ -317,7 +317,6 @@ enum
 };
 
 
-typedef struct SOLDIERTYPE SOLDIERTYPE;
 struct SOLDIERTYPE
 {
 	// ID

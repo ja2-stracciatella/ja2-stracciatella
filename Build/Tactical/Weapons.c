@@ -2013,7 +2013,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 	if ( usStructureID != INVALID_STRUCTURE_ID )
 	{
 		STRUCTURE* const pStructure = FindStructureByID(sGridNo, usStructureID);
-		DamageStructure( pStructure, (UINT8)iImpact, STRUCTURE_DAMAGE_GUNFIRE, sGridNo, sXPos, sYPos, ubAttackerID );
+		DamageStructure(pStructure, iImpact, STRUCTURE_DAMAGE_GUNFIRE, sGridNo, sXPos, sYPos, attacker);
 	}
 
 	switch(  Weapon[ usWeaponIndex ].ubWeaponClass )

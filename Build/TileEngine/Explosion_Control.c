@@ -497,7 +497,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* pCurrent, STRUCTURE**
 	else if ( !( pCurrent->fFlags & STRUCTURE_PERSON ) )
 	{
 		// Damage structure!
-		if ( ( bDamageReturnVal = DamageStructure( pCurrent, (UINT8)sWoundAmt, STRUCTURE_DAMAGE_EXPLOSION, sGridNo, sX, sY, NOBODY ) ) != 0 )
+		bDamageReturnVal = DamageStructure(pCurrent, sWoundAmt, STRUCTURE_DAMAGE_EXPLOSION, sGridNo, sX, sY, NULL);
+		if (bDamageReturnVal != 0)
 		{
 			fContinue = FALSE;
 

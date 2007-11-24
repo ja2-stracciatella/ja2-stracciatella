@@ -3,5 +3,6 @@
 
 typedef struct BULLET       BULLET;
 typedef struct LIGHT_SPRITE LIGHT_SPRITE;
+typedef struct SOLDIERTYPE  SOLDIERTYPE;
 
 #endif
