@@ -134,4 +134,6 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier);
 
 extern SOLDIERTYPE* gInterruptProvoker;
 
+extern const SOLDIERTYPE* gWhoThrewRock;
+
 #endif

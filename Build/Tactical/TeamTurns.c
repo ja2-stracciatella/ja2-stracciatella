@@ -59,7 +59,6 @@ static inline SOLDIERTYPE* LatestInterruptGuy(void)
 BOOLEAN gfHiddenInterrupt = FALSE;
 static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
-extern INT16 gsWhoThrewRock;
 extern UINT8 gubSightFlags;
 
 typedef struct
@@ -1031,7 +1030,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 	{
 		// no opponent, so controller of 'ptr' makes the call instead
 		// ALEX
-		if (gsWhoThrewRock >= NOBODY)
+		if (gWhoThrewRock == NULL)
 		{
 #ifdef BETAVERSION
 			NumMessage("StandardInterruptConditions: ERROR - pOpponent is NULL, don't know who threw rock, guynum = ", pSoldier->guynum);
@@ -1857,7 +1856,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	TeamTurnStruct.ubOutOfTurnPersons = gubOutOfTurnPersons;
 
 	TeamTurnStruct.InterruptOnlyGuynum_UNUSED = NOBODY;
-	TeamTurnStruct.sWhoThrewRock = gsWhoThrewRock;
+	TeamTurnStruct.sWhoThrewRock = Soldier2ID(gWhoThrewRock); // XXX attention: saved value is a INT16
 	TeamTurnStruct.InterruptsAllowed_UNUSED = TRUE;
 	TeamTurnStruct.fHiddenInterrupt = gfHiddenInterrupt;
 	TeamTurnStruct.ubLastInterruptedGuy = Soldier2ID(gLastInterruptedGuy);
@@ -1885,7 +1884,7 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 
 	gubOutOfTurnPersons = TeamTurnStruct.ubOutOfTurnPersons;
 
-	gsWhoThrewRock = TeamTurnStruct.sWhoThrewRock;
+	gWhoThrewRock = ID2Soldier(TeamTurnStruct.sWhoThrewRock); // XXX attention: saved value is a INT16
 	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
 	gLastInterruptedGuy = ID2Soldier(TeamTurnStruct.ubLastInterruptedGuy);
 
