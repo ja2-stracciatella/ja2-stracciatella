@@ -4439,7 +4439,7 @@ void OurNoise( UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType,
 
 static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen);
 static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
-static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
+static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
 
 
 static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubBaseVolume, const UINT8 ubNoiseType)
@@ -4770,7 +4770,7 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 				{
 					// the merc that heard it the LOUDEST is the one to comment
 					// should add level to this function call
-					TellPlayerAboutNoise(heard_loudest_by, SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
+					TellPlayerAboutNoise(heard_loudest_by, noise_maker, sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
 
 					if ( ubNoiseType == NOISE_MOVEMENT)
 					{
@@ -4785,7 +4785,7 @@ static void ProcessNoise(const SOLDIERTYPE* const noise_maker, const INT16 sGrid
 			{
 				if (bTellPlayer)
 				{
-					TellPlayerAboutNoise(heard_loudest_by, SOLDIER2ID(noise_maker), sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
+					TellPlayerAboutNoise(heard_loudest_by, noise_maker, sGridNo, bLevel, ubLoudestEffVolume, ubNoiseType, ubLoudestNoiseDir);
 				}
 			}
 #endif
@@ -5295,7 +5295,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 }
 
 
-static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir)
+static void TellPlayerAboutNoise(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, const UINT8 ubNoiseDir)
 {
 	UINT8 ubVolumeIndex;
 
@@ -5320,13 +5320,13 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, UINT8 ubNoiseMaker, INT1
 	// display a message about a noise...
 	// e.g. Sidney hears a loud splash from/to? the north.
 
-	if ( ubNoiseMaker != NOBODY && pSoldier->bTeam == gbPlayerNum && pSoldier->bTeam == Menptr[ubNoiseMaker].bTeam )
+#ifdef JA2BETAVERSION
+	if (noise_maker != NULL && pSoldier->bTeam == gbPlayerNum && pSoldier->bTeam == noise_maker->bTeam)
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( MSG_FONT_RED, MSG_ERROR, L"ERROR! TAKE SCREEN CAPTURE AND TELL CAMFIELD NOW!" );
-			ScreenMsg( MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", pSoldier->name, pSoldier->ubID, Menptr[ubNoiseMaker].name, ubNoiseMaker, sGridNo, bLevel, ubNoiseType );
-		#endif
+		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"ERROR! TAKE SCREEN CAPTURE AND TELL CAMFIELD NOW!");
+		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", pSoldier->name, pSoldier->ubID, noise_maker->name, noise_maker->ubID, sGridNo, bLevel, ubNoiseType);
 	}
+#endif
 
 	if ( bLevel == pSoldier->bLevel || ubNoiseType == NOISE_EXPLOSION || ubNoiseType == NOISE_SCREAM || ubNoiseType == NOISE_ROCK_IMPACT || ubNoiseType == NOISE_GRENADE_IMPACT )
 	{
