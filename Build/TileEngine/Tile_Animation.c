@@ -538,7 +538,7 @@ void UpdateAniTiles( )
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, SOLDIER2ID(e->Params.owner), FALSE, e->Params.bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->Params.owner, FALSE, e->Params.bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;

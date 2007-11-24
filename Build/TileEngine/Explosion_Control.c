@@ -1979,9 +1979,8 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 }
 
 
-void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, const UINT8 ubOwner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
+void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, SOLDIERTYPE* const owner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
-	SOLDIERTYPE* const owner = ID2SOLDIER(ubOwner);
  INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
  INT32  uiTempRange, ubBranchRange;
  UINT8  ubDir,ubBranchDir, ubKeepGoing;
@@ -2203,7 +2202,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, const INT8 level)
 {
-	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, s->ubOwner, subsequent, level, s);
+	SpreadEffect(s->sGridNo, s->ubRadius, s->usItem, ID2SOLDIER(s->ubOwner), subsequent, level, s);
 }
 
 
