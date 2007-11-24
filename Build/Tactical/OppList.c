@@ -618,7 +618,7 @@ void CheckHostileOrSayQuoteList( void )
 
 
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier);
-static void OurTeamRadiosRandomlyAbout(UINT8 ubAbout);
+static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* about);
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 
@@ -740,7 +740,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 #ifndef RECORDOPPLIST
 		// if this soldier's NOT on our team (MAY be under our control, though!)
 		if (!PTR_OURTEAM)
-			OurTeamRadiosRandomlyAbout(pSoldier->ubID);	// radio about him only
+			OurTeamRadiosRandomlyAbout(pSoldier);	// radio about him only
 #endif
 
 
@@ -792,7 +792,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 
 
 // All mercs on our local team check if they should radio about him
-static void OurTeamRadiosRandomlyAbout(UINT8 ubAbout)
+static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 {
 	// make a list of all of our team's mercs
 	UINT radio_cnt = 0;
@@ -817,7 +817,7 @@ static void OurTeamRadiosRandomlyAbout(UINT8 ubAbout)
 		SOLDIERTYPE* const chosen = radio_men[chosen_idx];
 
 		// Handle radioing for that merc
-		RadioSightings(chosen, ubAbout, chosen->bTeam);
+		RadioSightings(chosen, about->ubID, chosen->bTeam);
 		chosen->bNewOppCnt = 0;
 
 		/* Move the contents of the last slot into the one just handled */
@@ -4800,7 +4800,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 			if (bSeen)
 			{
 				// this team is now allowed to report sightings and set Public flags
-				OurTeamRadiosRandomlyAbout(source->ubID);
+				OurTeamRadiosRandomlyAbout(source);
 			}
 			else // not seen
 			{
