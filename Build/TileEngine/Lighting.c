@@ -2961,7 +2961,7 @@ static LIGHT_SPRITE* LightSpriteGetFree(void)
 {
 	for (LIGHT_SPRITE* l = LightSprites; l != endof(LightSprites); ++l)
 	{
-		if (!(l->uiFlags % LIGHT_SPR_ACTIVE)) return l;
+		if (!(l->uiFlags & LIGHT_SPR_ACTIVE)) return l;
 	}
 	return NULL;
 }
