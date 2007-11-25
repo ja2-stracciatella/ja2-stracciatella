@@ -1119,7 +1119,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	#endif
 	INT8 bSectorZ;
 	UINT8 ubSectorID;
-	BOOLEAN fDeleted;
 //	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
 
 	gfRestoringCiviliansFromTempFile = TRUE;
@@ -1344,8 +1343,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	}
 
 	// now remove any non-priority placement which matches the conditions!
-	fDeleted = FALSE;
-	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr;)
+	FOR_ALL_SOLDIERINITNODES_SAFE(curr)
 	{
 		if( !curr->pBasicPlacement->fPriorityExistance )
 		{
@@ -1353,23 +1351,9 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 			{
 				if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
 				{
-					// Save pointer to the next guy in the list
-					// and after deleting, set the 'curr' to that guy
-					SOLDIERINITNODE* const temp = curr->next;
 					RemoveSoldierNodeFromInitList( curr );
-					curr = temp;
-					fDeleted = TRUE;
 				}
 			}
-		}
-		if ( fDeleted )
-		{
-			// we've already done our pointer update so don't advance the pointer
-			fDeleted = FALSE;
-		}
-		else
-		{
-			curr = curr->next;
 		}
 	}
 

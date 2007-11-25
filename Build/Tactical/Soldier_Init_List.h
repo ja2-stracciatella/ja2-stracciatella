@@ -22,6 +22,11 @@ extern SOLDIERINITNODE *gSoldierInitTail;
 #define FOR_ALL_SOLDIERINITNODES( iter) BASE_FOR_ALL_SOLDIERINITNODES(      SOLDIERINITNODE, iter)
 #define CFOR_ALL_SOLDIERINITNODES(iter) BASE_FOR_ALL_SOLDIERINITNODES(const SOLDIERINITNODE, iter)
 
+#define FOR_ALL_SOLDIERINITNODES_SAFE(iter)                      \
+	for (SOLDIERINITNODE* iter = gSoldierInitHead, * iter##__next; \
+	     iter != NULL ? iter##__next = iter->next, TRUE : FALSE;   \
+	     iter = iter##__next)                                      \
+
 
 //These serialization functions are assuming the passing of a valid file
 //pointer to the beginning of the save/load area, at the correct part of the

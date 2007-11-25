@@ -575,10 +575,9 @@ void ResetAllMercPositions()
 {
 	//Remove all of the alternate placements (editor takes precedence)
 	UseEditorAlternateList();
-	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr;)
+	FOR_ALL_SOLDIERINITNODES_SAFE(curr)
 	{
 		gpSelected = curr;
-		curr = curr->next;
 		RemoveSoldierNodeFromInitList( gpSelected );
 	}
 	//Now, remove any existing original list mercs, then readd them.
