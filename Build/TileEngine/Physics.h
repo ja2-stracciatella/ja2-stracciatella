@@ -13,7 +13,6 @@ typedef struct
 	BOOLEAN			fAllocated;
 	BOOLEAN			fAlive;
 	BOOLEAN			fApplyFriction;
-	BOOLEAN			fZOnRest;
 	BOOLEAN			fVisible;
 	BOOLEAN			fInWater;
 	BOOLEAN			fTestObject;

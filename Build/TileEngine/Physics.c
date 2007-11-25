@@ -329,11 +329,7 @@ static BOOLEAN PhysicsComputeForces(REAL_OBJECT* pObject)
 	// Calculate forces
 	pObject->Force = pObject->InitialForce;
 
-	// Note: Only apply gravity if we are not resting on some structure surface
-	if ( !pObject->fZOnRest )
-	{
-		pObject->Force.z -= (real)GRAVITY;
-	}
+	pObject->Force.z -= (real)GRAVITY;
 
 	// Set intial force to zero
 	pObject->InitialForce = VMultScalar( &(pObject->InitialForce ), 0 );

@@ -348,7 +348,6 @@ ubKeyUnused
 ubOwnershipUnused
 
 REAL_OBJECT
-fZOnRest: always FALSE, read-only
 OneOverMass: always 1/60.f
 uiActionData: probably always a SoldierID
 
