@@ -2587,14 +2587,10 @@ void InitSoldierOppList(SOLDIERTYPE *pSoldier)
 
 void BetweenTurnsVisibilityAdjustments(void)
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
-
   // make all soldiers on other teams that are no longer seen not visible
-  for (cnt = 0, pSoldier = Menptr; cnt < MAXMERCS; cnt++,pSoldier++)
+	FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
 	{
-		if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife)
+		if (pSoldier->bInSector && pSoldier->bLife)
 		{
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 			if (!PTR_OURTEAM && pSoldier->bTeam != MILITIA_TEAM)

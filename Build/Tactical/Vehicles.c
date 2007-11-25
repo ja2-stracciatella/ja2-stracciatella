@@ -1625,30 +1625,16 @@ INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocatio
 
 SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 {
-	SOLDIERTYPE *pSoldier = NULL, *pFoundSoldier = NULL;
-	INT32 iCounter = 0, iNumberOnTeam = 0;
-
-	// get number of mercs on team
-	iNumberOnTeam = TOTAL_SOLDIERS; //gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_SOLDIERS(s)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if ( pSoldier->bActive )
+		if (s->uiStatusFlags & SOLDIER_VEHICLE &&
+				s->bVehicleID == iId)
 		{
-			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-			{
-				if( pSoldier->bVehicleID == iId )
-				{
-					pFoundSoldier = pSoldier;
-					iCounter = iNumberOnTeam;
-				}
-			}
+			return s;
 		}
 	}
 
-	return( pFoundSoldier );
+	return NULL;
 }
 
 

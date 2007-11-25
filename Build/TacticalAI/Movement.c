@@ -923,19 +923,18 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 	// we can only flee in the cardinal directions (NESW) so start with an
 	// alternating pattern of true/false
 	INT8 bOkayDir[8] = {TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE};
-	UINT8 ubLoop, ubBestDir, ubDistToEdge, ubBestDistToEdge = WORLD_COLS;
+	UINT8 ubBestDir, ubDistToEdge, ubBestDistToEdge = WORLD_COLS;
 	INT32	iSector, iSectorX, iSectorY;
 	INT32 iNewSectorX, iNewSectorY, iNewSector;
 	INT32	iRunX, iRunY, iRunGridNo;
-	SOLDIERTYPE * pOpponent;
 
 	iSector = pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X;
 
 	// first start by scanning through opposing mercs and find out what directions are blocked.
-	for (ubLoop = 0,pOpponent = Menptr; ubLoop < MAXMERCS; ubLoop++,pOpponent++)
+	CFOR_ALL_NON_PLANNING_SOLDIERS(pOpponent)
 	{
 		// if this merc is inactive, at base, on assignment, or dead
-		if (!pOpponent->bActive || !pOpponent->bInSector || !pOpponent->bLife)
+		if (!pOpponent->bInSector || !pOpponent->bLife)
 		{
 			continue;          // next merc
 		}
@@ -950,7 +949,7 @@ UINT16 RunAway( SOLDIERTYPE * pSoldier )
 		bOkayDir[ atan8( pSoldier->sX, pSoldier->sY, pOpponent->sX, pOpponent->sY ) ] = FALSE;
 	}
 
-	for (ubLoop = 0; ubLoop < 8; ubLoop += 2)
+	for (UINT8 ubLoop = 0; ubLoop < 8; ubLoop += 2)
 	{
 		if (bOkayDir[ubLoop])
 		{

@@ -714,16 +714,14 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 
 void EndAIDeadlock(void)
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
 	INT8 bFound=FALSE;
 
 	// ESCAPE ENEMY'S TURN
 
 	// find enemy with problem and free him up...
-	for (cnt=0,pSoldier=Menptr; cnt < MAXMERCS; cnt++,pSoldier++)
+	FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector )
+		if (pSoldier->bInSector)
 		{
 			if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 			{
