@@ -408,7 +408,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 //OLD SAVE METHOD:  This is the older way of saving the civilian and the enemies placement into a temp file
 static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubFirstIdTeam, UINT8 ubLastIdTeam, BOOLEAN fAppendToFile)
 {
-	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	INT32 slots = 0;
@@ -429,12 +428,8 @@ static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 
 
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife  )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
-			curr = gSoldierInitHead;
-			while( curr && curr->pSoldier != pSoldier )
-			{
-				curr = curr->next;
-			}
-			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
+			SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{ //found a match.
 
 				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) )
@@ -630,12 +625,8 @@ static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 
 		pSoldier = MercPtrs[ i ];
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
-			curr = gSoldierInitHead;
-			while( curr && curr->pSoldier != pSoldier )
-			{
-				curr = curr->next;
-			}
-			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
+			const SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{ //found a match.
 				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
@@ -1395,7 +1386,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 //soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
 {
-	SOLDIERINITNODE *curr;
 	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	INT32 slots = 0;
@@ -1437,12 +1427,8 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		//make sure the person is active, alive, in the sector, and is not a profiled person
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife && pSoldier->ubProfile == NO_PROFILE )
 		{ //soldier is valid, so find the matching soldier init list entry for modification.
-			curr = gSoldierInitHead;
-			while( curr && curr->pSoldier != pSoldier )
-			{
-				curr = curr->next;
-			}
-			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
+			SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{ //found a match.
 
 				if( !fValidateOnly )
@@ -1618,12 +1604,8 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
 		{
 			//soldier is valid, so find the matching soldier init list entry for modification.
-			curr = gSoldierInitHead;
-			while( curr && curr->pSoldier != pSoldier )
-			{
-				curr = curr->next;
-			}
-			if( curr && curr->pSoldier == pSoldier && pSoldier->ubProfile == NO_PROFILE )
+			const SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{
 				//found a match.
 				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;

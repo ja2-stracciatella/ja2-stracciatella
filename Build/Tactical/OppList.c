@@ -3989,7 +3989,6 @@ void DebugSoldierPage4( )
 
 		if( pSoldier->bTeam != OUR_TEAM )
 		{
-			SOLDIERINITNODE		*pNode;
 			const wchar_t* Orders;
 			switch( pSoldier->bOrders )
 			{
@@ -4014,14 +4013,8 @@ void DebugSoldierPage4( )
 				case CUNNINGAID:  Attitude = L"CUNNING AID";  break;
 				default:          Attitude = L"UNKNOWN";      break;
 			}
-			pNode = gSoldierInitHead;
-			while( pNode )
-			{
-				if( pNode->pSoldier == pSoldier )
-					break;
-				pNode = pNode->next;
-			}
 			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+			const SOLDIERINITNODE* const pNode = FindSoldierInitNodeBySoldier(pSoldier);
 			if( pNode )
 			{
 				gprintf( 0, LINE_HEIGHT * ubLine, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",

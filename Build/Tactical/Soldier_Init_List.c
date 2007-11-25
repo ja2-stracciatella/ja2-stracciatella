@@ -1586,6 +1586,17 @@ SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 	return NULL;
 }
 
+
+SOLDIERINITNODE* FindSoldierInitNodeBySoldier(const SOLDIERTYPE* const s)
+{
+	FOR_ALL_SOLDIERINITNODES(i)
+	{
+		if (i->pSoldier == s) return i;
+	}
+	return NULL;
+}
+
+
 void UseEditorOriginalList()
 {
 	SOLDIERINITNODE *curr;
@@ -1623,21 +1634,18 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 {
 	if( pSoldier->bTeam == MILITIA_TEAM )
 		return;
-	FOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if( curr->pSoldier == pSoldier )
-		{ //Matching soldier found
-			if( curr->pDetailedPlacement )
-			{ //This soldier used detailed placement information, so we must save the
-				//node ID into the temp file which signifies that the
+	SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+	if (curr != NULL)
+	{ //Matching soldier found
+		if (curr->pDetailedPlacement)
+		{ //This soldier used detailed placement information, so we must save the
+			//node ID into the temp file which signifies that the
 
-				//RECORD UBNODEID IN TEMP FILE.
+			//RECORD UBNODEID IN TEMP FILE.
 
-				curr->pSoldier = NULL;
-				MemFree( curr->pDetailedPlacement );
-				curr->pDetailedPlacement = NULL;
-				return;
-			}
+			curr->pSoldier = NULL;
+			MemFree(curr->pDetailedPlacement);
+			curr->pDetailedPlacement = NULL;
 		}
 	}
 }
