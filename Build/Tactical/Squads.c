@@ -1,3 +1,4 @@
+#include "Interface_Panels.h"
 #include "Types.h"
 #include "Squads.h"
 #include "Strategic_Pathing.h"
@@ -35,10 +36,6 @@ INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 INT8 SquadMovementGroups[ NUMBER_OF_SQUADS ];
 
 BOOLEAN fExitingVehicleToSquad = FALSE;
-
-extern void CheckForAndAddMercToTeamPanel( SOLDIERTYPE *pSoldier );
-extern void RemoveAllPlayersFromSlot( );
-extern INT32 iHelicopterVehicleId;
 
 
 INT32 iCurrentTacticalSquad = FIRST_SQUAD;
