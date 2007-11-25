@@ -1061,13 +1061,9 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 				  PhysicsDebugMsg(String("Object %d: Collision OldPos %f %f %f",   REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
 				  PhysicsDebugMsg(String("Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject), pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z));
         }
-
-				pObject->fColliding = TRUE;
-
 		}
 		else
 		{
-			pObject->fColliding = FALSE;
 			pObject->sConsecutiveCollisions = 0;
 			pObject->sConsecutiveZeroVelocityCollisions = 0;
 			pObject->fHaveHitGround = FALSE;
