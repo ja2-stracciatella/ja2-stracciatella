@@ -37,7 +37,6 @@ typedef struct
 	real				CollisionElasticity;
 
 	INT16				sGridNo;
-	INT32				iID;
 	LEVELNODE		*pNode;
 	LEVELNODE   *pShadow;
 

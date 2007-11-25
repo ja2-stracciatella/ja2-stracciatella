@@ -83,6 +83,9 @@ real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESI
 #define					SCALE_HORZ_VAL_TO_VERT( f )				( ( f / CELL_X_SIZE ) * HEIGHT_UNITS )
 
 
+#define REALOBJ2ID(o) ((o) - ObjectSlots)
+
+
 /// OBJECT POOL FUNCTIONS
 static INT32 GetFreeObjectSlot(void)
 {
@@ -176,7 +179,6 @@ REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLe
 
 	// Calculate gridNo
 	pObject->sGridNo = MAPROWCOLTOPOS( ( (INT16)yPos / CELL_Y_SIZE ), ( (INT16)xPos / CELL_X_SIZE ) );
-	pObject->iID = iObjectIndex;
 	pObject->pNode = NULL;
 	pObject->pShadow = NULL;
 
@@ -495,10 +497,10 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, real DeltaTime)
 
   if ( pObject->fPotentialForDebug )
   {
-	  PhysicsDebugMsg( String( "Object %d: Force		%f %f %f", pObject->iID, pObject->Force.x, pObject->Force.y, pObject->Force.z ) );
-	  PhysicsDebugMsg( String( "Object %d: Velocity %f %f %f", pObject->iID, pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z ) );
-	  PhysicsDebugMsg( String( "Object %d: Position %f %f %f", pObject->iID, pObject->Position.x, pObject->Position.y, pObject->Position.z ) );
-	  PhysicsDebugMsg( String( "Object %d: Delta Pos %f %f %f", pObject->iID, (pObject->OldPosition.x - pObject->Position.x ), (pObject->OldPosition.y - pObject->Position.y ), ( pObject->OldPosition.z - pObject->Position.z ) ) );
+	  PhysicsDebugMsg(String("Object %d: Force		%f %f %f",  REALOBJ2ID(pObject), pObject->Force.x, pObject->Force.y, pObject->Force.z));
+	  PhysicsDebugMsg(String("Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject), pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z));
+	  PhysicsDebugMsg(String("Object %d: Position %f %f %f",  REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
+	  PhysicsDebugMsg(String("Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject), pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y, pObject->OldPosition.z - pObject->Position.z));
   }
 
   if ( pObject->Obj.usItem == MORTAR_SHELL && !pObject->fTestObject && pObject->ubActionCode == THROW_ARM_ITEM )
@@ -850,7 +852,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( !pObject->fTestObject )
 			{
 				// Break window!
-				PhysicsDebugMsg( String( "Object %d: Collision Window", pObject->iID ) );
+				PhysicsDebugMsg(String("Object %d: Collision Window", REALOBJ2ID(pObject)));
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
@@ -1054,10 +1056,10 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
         if ( pObject->fPotentialForDebug )
         {
-				  PhysicsDebugMsg( String( "Object %d: Collision %d", pObject->iID, iCollisionCode ) );
-				  PhysicsDebugMsg( String( "Object %d: Collision Normal %f %f %f", pObject->iID, vTemp.x, vTemp.y, vTemp.z ) );
-				  PhysicsDebugMsg( String( "Object %d: Collision OldPos %f %f %f", pObject->iID, pObject->Position.x, pObject->Position.y, pObject->Position.z ) );
-				  PhysicsDebugMsg( String( "Object %d: Collision Velocity %f %f %f", pObject->iID, pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z ) );
+				  PhysicsDebugMsg(String("Object %d: Collision %d",                REALOBJ2ID(pObject), iCollisionCode));
+				  PhysicsDebugMsg(String("Object %d: Collision Normal %f %f %f",   REALOBJ2ID(pObject), vTemp.x, vTemp.y, vTemp.z));
+				  PhysicsDebugMsg(String("Object %d: Collision OldPos %f %f %f",   REALOBJ2ID(pObject), pObject->Position.x, pObject->Position.y, pObject->Position.z));
+				  PhysicsDebugMsg(String("Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject), pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z));
         }
 
 				pObject->fColliding = TRUE;
@@ -1221,7 +1223,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
     if ( pObject->fPotentialForDebug )
     {
-	    PhysicsDebugMsg( String( "Object %d: uiNumTilesMoved: %d", pObject->iID, pObject->uiNumTilesMoved ) );
+			PhysicsDebugMsg(String("Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved));
     }
 	}
 
@@ -2407,8 +2409,6 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 	{
 		REAL_OBJECT* const o = &ObjectSlots[usCnt];
 		if (!ExtractRealObjectFromFile(hFile, o)) return FALSE;
-
-		o->iID = usCnt;
 	}
 
 	return( TRUE );
