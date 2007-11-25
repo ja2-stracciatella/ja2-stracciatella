@@ -521,28 +521,24 @@ void AddMercToWorld( INT32 iMapIndex )
 }
 
 
-static INT32 IsMercHere(INT32 iMapIndex);
+static SOLDIERTYPE* IsMercHere(INT32 iMapIndex);
 
 
 void HandleRightClickOnMerc( INT32 iMapIndex )
 {
-	SOLDIERINITNODE *pNode;
-	INT16 sThisMercID;
 	INT16 sCellX, sCellY;
 
 	ConvertGridNoToCellXY( (INT16)iMapIndex, &sCellX, &sCellY );
 
-	sThisMercID = (INT16)IsMercHere( iMapIndex );
-
-	if ( sThisMercID != -1)
+	const SOLDIERTYPE* const this_merc = IsMercHere(iMapIndex);
+	if (this_merc != NULL)
 	{
-		if ( gsSelectedMercID != sThisMercID )
+		if (gsSelectedMercID != this_merc->ubID)
 		{ // We want to edit a new merc (or different merc)
 			//We need to avoid the editing of player mercs.
-			pNode = FindSoldierInitNodeWithID( (UINT8)sThisMercID );
-			if( !pNode )
+			if (FindSoldierInitNodeBySoldier(this_merc) == NULL)
 				return;		//this is a player merc (which isn't in the list), or an error in logic.
-			IndicateSelectedMerc( sThisMercID );
+			IndicateSelectedMerc(this_merc->ubID);
 		}
 	}
 	else if( gsSelectedMercID != -1 && IsLocationSittable( iMapIndex, gfRoofPlacement ) )// We want to move the selected merc to this new location.
@@ -771,15 +767,15 @@ static void DisplayEditMercWindow(void)
 }
 
 
-//	Checks for a soldier at the given map coordinates. If there is one, it returns it's ID number,
-//	otherwise it returns -1.
-static INT32 IsMercHere(INT32 iMapIndex)
+/* Checks for a soldier at the given map coordinates.  If there is one, it
+ * returns it, otherwise it returns NULL. */
+static SOLDIERTYPE* IsMercHere(INT32 iMapIndex)
 {
-	CFOR_ALL_NON_PLANNING_SOLDIERS(s)
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if (s->sGridNo == iMapIndex) return s->ubID;
+		if (s->sGridNo == iMapIndex) return s;
 	}
-	return -1;
+	return NULL;
 }
 
 
