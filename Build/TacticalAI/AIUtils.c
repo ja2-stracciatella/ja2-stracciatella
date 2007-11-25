@@ -1252,20 +1252,13 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 
 	// NOTE: skips EPCs!
 
-	UINT8					ubLoop;
-	SOLDIERTYPE		*pTargetSoldier;
 	INT16					sMinDist = (INT16)WORLD_MAX;
 	INT16					sDist;
 	INT16					sGridNo = NOWHERE;
 
-	// Loop through all mercs on player team
-	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)
+	CFOR_ALL_IN_TEAM(pTargetSoldier, gbPlayerNum)
 	{
-		pTargetSoldier = Menptr + ubLoop;
-
-		if (!pTargetSoldier->bActive || !pTargetSoldier->bInSector)
+		if (!pTargetSoldier->bInSector)
 		{
 			continue;
 		}
@@ -1285,7 +1278,7 @@ INT16 ClosestPC(const SOLDIERTYPE* pSoldier, INT16* psDistance)
 
 		// if this PC is not visible to the soldier, then add a penalty to the distance
 		// so that we weight in favour of visible mercs
-		if ( pTargetSoldier->bTeam != pSoldier->bTeam && pSoldier->bOppList[ ubLoop ] != SEEN_CURRENTLY )
+		if (pTargetSoldier->bTeam != pSoldier->bTeam && pSoldier->bOppList[pTargetSoldier->ubID] != SEEN_CURRENTLY)
 		{
 			sDist += 10;
 		}

@@ -1744,19 +1744,10 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVe
 
 void WakeUpAllMercsInSectorUnderAttack( void )
 {
-	INT32 iCounter = 0, iNumberOfMercsOnTeam = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
-	// get number of possible grunts on team
-	iNumberOfMercsOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
 	// any mercs not on duty should be added to the first avail squad
-	for( iCounter = 0; iCounter < iNumberOfMercsOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &( Menptr[ iCounter ] );
-
-		if ( pSoldier->bActive && pSoldier->bLife && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if (pSoldier->bLife && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			// if involved, but asleep
 			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->fMercAsleep == TRUE ) )

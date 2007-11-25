@@ -4423,8 +4423,6 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise
 
 static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubBaseVolume, const UINT8 ubNoiseType)
 {
-	SOLDIERTYPE *pSoldier;
-	UINT8 bLoop, bTeam;
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 //	UINT8 ubPlayVolume;
 	INT8 bCheckTerrain = FALSE;
@@ -4508,7 +4506,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 	}
 
 	// LOOP THROUGH EACH TEAM
-	for (bTeam = 0; bTeam < MAXTEAMS; bTeam++)
+	for (UINT8 bTeam = 0; bTeam < MAXTEAMS; ++bTeam)
 	{
 		// skip any inactive teams
 		if (!gTacticalStatus.Team[bTeam].bTeamActive)
@@ -4607,10 +4605,10 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 		SOLDIERTYPE* heard_loudest_by = NULL;
 
 		// All mercs on this team check if they are eligible to hear this noise
-		for (bLoop = gTacticalStatus.Team[bTeam].bFirstID,pSoldier = Menptr + bLoop; bLoop <= gTacticalStatus.Team[bTeam].bLastID; bLoop++,pSoldier++)
+		FOR_ALL_IN_TEAM(pSoldier, bTeam)
 		{
-			// if this "listener" is inactive, or in no condition to care
-			if (!pSoldier->bActive || !pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD || (pSoldier->bLife < OKLIFE) || pSoldier->ubBodyType == LARVAE_MONSTER)
+			// if this "listener" is in no condition to care
+			if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD || (pSoldier->bLife < OKLIFE) || pSoldier->ubBodyType == LARVAE_MONSTER)
 			{
 				continue;          // skip him!
 			}

@@ -1212,19 +1212,10 @@ BOOLEAN CommonTimeCompressionChecks( void )
 
 BOOLEAN AnyUsableRealMercenariesOnTeam( void )
 {
-	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iCounter = 0, iNumberOnTeam = 0;
-
-
-	// this is for speed, this runs once/frame
-	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
 	// get number of mercs on team who are not vehicles or robot, POWs or EPCs
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( ( pSoldier->bActive ) && ( pSoldier->bLife > 0 ) &&
+		if (pSoldier->bLife > 0 &&
 				!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) &&
 				( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
 				( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&

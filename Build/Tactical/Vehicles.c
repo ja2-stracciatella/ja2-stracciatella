@@ -2182,29 +2182,19 @@ BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 i
 
 static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSoldier, const INT32 iVehicleId)
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
-	for( iCounter = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		// get the current soldier
-		pSoldier = &Menptr[ iCounter ];
-
 		// skip checking THIS soldier, we wanna know about everyone else
 		if ( pSoldier == pThisSoldier )
 		{
 			continue;
 		}
 
-		if( pSoldier -> bActive )
+		// don't count mercs who are asleep here
+		if (CanSoldierDriveVehicle(pSoldier, iVehicleId, FALSE))
 		{
-			// don't count mercs who are asleep here
-			if ( CanSoldierDriveVehicle( pSoldier, iVehicleId, FALSE ) )
-			{
-				// this guy can drive it, too
-				return( FALSE );
-			}
+			// this guy can drive it, too
+			return FALSE;
 		}
 	}
 

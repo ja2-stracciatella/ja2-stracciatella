@@ -6076,26 +6076,8 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	INT32 iFirstId = 0, iLastId = 0;
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
-	// to speed it up a little?
-	iFirstId = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	iLastId = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-	for( iCounter = iFirstId; iCounter <= iLastId; iCounter++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		// get the soldier
-		pSoldier = &Menptr[ iCounter ];
-
-		// is the soldier active
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
-
 		// vehicles can't scout!
 		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{

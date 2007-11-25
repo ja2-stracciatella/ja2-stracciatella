@@ -1082,24 +1082,14 @@ static void PayForTrainingInSector(UINT8 ubSector)
 
 static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
-	for( iCounter = 0; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( pSoldier->bActive )
+		if (pSoldier->bAssignment == TRAIN_TOWN &&
+				SECTOR(pSoldier->sSectorX, pSoldier->sSectorY) == ubSector &&
+				pSoldier->bSectorZ == 0)
 		{
-			if( pSoldier->bAssignment == TRAIN_TOWN )
-			{
-				if( ( SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) == ubSector ) && ( pSoldier->bSectorZ == 0 ) )
-				{
-					pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
-					pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
-				}
-			}
+			pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
+			pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
 		}
 	}
 }

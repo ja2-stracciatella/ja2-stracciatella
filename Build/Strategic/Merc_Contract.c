@@ -1262,15 +1262,9 @@ static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier);
 void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 {
 	// find out is something was said
-	SOLDIERTYPE *pSoldier = NULL, *pSoldierWhoWillQuit = NULL;
-	INT32				iCounter= 0, iNumberOnTeam = 0;
 	UINT8				ubNumMercs = 0;
-	UINT8				ubChosenMerc;
 
 	gfFirstMercSayQuote = FALSE;
-
-	pSoldier = &Menptr[ 0 ];
-	iNumberOnTeam =gTacticalStatus.Team[ OUR_TEAM ].bLastID;
 
 	// run through list of grunts whoose contract are up in the next 2 hours
 	// ATE: AND - build list THEN choose one!
@@ -1278,13 +1272,12 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 	// to stay if offered. Durning that process, also check if there
 	// is any merc that does not want to stay and only display that quote
 	// if they are the only one here....
+	SOLDIERTYPE* pSoldierWhoWillQuit = NULL;
 	SOLDIERTYPE* potential_mercs[20];
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
 		// valid soldier?
-		if( ( pSoldier->bActive == FALSE ) || ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == IN_TRANSIT ) ||( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+		if (pSoldier->bLife == 0 || pSoldier->bAssignment == IN_TRANSIT || pSoldier->bAssignment == ASSIGNMENT_POW)
 		{
 			// no
 			continue;
