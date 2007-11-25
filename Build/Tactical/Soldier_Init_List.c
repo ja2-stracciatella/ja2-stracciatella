@@ -1621,8 +1621,6 @@ void UseEditorAlternateList()
 //if the map was loaded again!
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubNodeID;
-	ubNodeID = 0;
 	if( pSoldier->bTeam == MILITIA_TEAM )
 		return;
 	FOR_ALL_SOLDIERINITNODES(curr)
@@ -1641,7 +1639,6 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 				return;
 			}
 		}
-		ubNodeID++;
 	}
 }
 
