@@ -447,10 +447,8 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	if( pSector->uiFlags & SF_USE_MAP_SETTINGS )
 	{ //count the number of enemy placements in a map and use those
-		SOLDIERINITNODE *curr;
-		curr = gSoldierInitHead;
 		ubTotalAdmins = ubTotalTroops = ubTotalElites = 0;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			{
@@ -461,7 +459,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 					case SOLDIER_CLASS_ELITE:						ubTotalElites++;	break;
 				}
 			}
-			curr = curr->next;
 		}
 		pSector->ubNumAdmins = ubTotalAdmins;
 		pSector->ubNumTroops = ubTotalTroops;

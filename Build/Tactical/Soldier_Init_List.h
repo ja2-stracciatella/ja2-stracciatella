@@ -17,6 +17,12 @@ typedef struct SOLDIERINITNODE
 extern SOLDIERINITNODE *gSoldierInitHead;
 extern SOLDIERINITNODE *gSoldierInitTail;
 
+#define BASE_FOR_ALL_SOLDIERINITNODES(type, iter)                      \
+	for (type* iter = gSoldierInitHead; iter != NULL; iter = iter->next)
+#define FOR_ALL_SOLDIERINITNODES( iter) BASE_FOR_ALL_SOLDIERINITNODES(      SOLDIERINITNODE, iter)
+#define CFOR_ALL_SOLDIERINITNODES(iter) BASE_FOR_ALL_SOLDIERINITNODES(const SOLDIERINITNODE, iter)
+
+
 //These serialization functions are assuming the passing of a valid file
 //pointer to the beginning of the save/load area, at the correct part of the
 //map file.

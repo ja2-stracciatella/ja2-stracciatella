@@ -134,7 +134,6 @@ static void UpdateOldVersionMap(void)
 {
 #if 0 //This code is no longer needed since the major version update from 1.0 to 4.0
 			//However, I am keeping it in for reference.
-	SOLDIERINITNODE *curr;
 	INT32 i;
 	LEVELNODE *pStruct;
 	//VERSION 0 -- obsolete November 14, 1997
@@ -142,8 +141,7 @@ static void UpdateOldVersionMap(void)
 	{
 		//Soldier information contained two fixable bugs.
 		gMapInformation.ubMapVersion++;
-		curr = gSoldierInitHead;
-		while( curr )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			//Bug #01)  Nodes without detailed slots weren't initialized.
 			if( !curr->pBasicPlacement->fDetailedPlacement )
@@ -152,8 +150,6 @@ static void UpdateOldVersionMap(void)
 			//					which put it completely out of range.
 			if( curr->pBasicPlacement->bAttitude > 7 )
 				curr->pBasicPlacement->bAttitude = (INT8)Random(8);
-			//go to next node
-			curr = curr->next;
 		}
 	}
 	//VERSION 1 -- obsolete January 7, 1998
@@ -172,8 +168,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 2 )
 	{
 		gMapInformation.ubMapVersion++;
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			//Bug #04)  Assign enemy mercs default army color code if applicable
 			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM && !curr->pBasicPlacement->ubSoldierClass )
@@ -188,7 +183,6 @@ static void UpdateOldVersionMap(void)
 					curr->pDetailedPlacement->ubSoldierClass = SOLDIER_CLASS_ARMY;
 				}
 			}
-			curr = curr->next;
 		}
 	}
 	//VERSION 3 -- obsolete February 9, 1998
@@ -277,8 +271,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 6 )
 	{ //Bug 8)  Change droppable status of merc items so that they are all undroppable.
 		gMapInformation.ubMapVersion++;
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			//Bug #04)  Assign enemy mercs default army color code if applicable
 			if( curr->pDetailedPlacement )
@@ -290,7 +283,6 @@ static void UpdateOldVersionMap(void)
 					curr->pDetailedPlacement->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
-			curr = curr->next;
 		}
 	}
 	//VERSION 7 -- obsolete April 14, 1998
@@ -300,14 +292,12 @@ static void UpdateOldVersionMap(void)
 		//Bug 9)  Priority placements have been dropped in favor of splitting it into two categories.
 		//				The first is Detailed placements, and the second is priority existance.  So, all
 		//				current detailed placements will also have priority existance.
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
 				curr->pBasicPlacement->fPriorityExistance = TRUE;
 			}
-			curr = curr->next;
 		}
 	}
 
@@ -376,8 +366,7 @@ static void UpdateOldVersionMap(void)
 		gMapInformation.ubMapVersion++;
 		//Bug 10) Padding on detailed placements is uninitialized.  Clear all data starting at
 		//				fKillSlotIfOwnerDies.
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -385,15 +374,13 @@ static void UpdateOldVersionMap(void)
 				//and there were two one byte fields cleared, fKillSlotIfOwnerDies and ubScheduleID
 				memset( &curr->pDetailedPlacement->fKillSlotIfOwnerDies, 0, 120 );
 			}
-			curr = curr->next;
 		}
 	}
 	//Version 9 -- Kris -- obsolete April 27, 1998
 	if( gMapInformation.ubMapVersion == 9 )
 	{
 		gMapInformation.ubMapVersion++;
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			//Bug 11) Convert all wheelchaired placement bodytypes to cows.  Result of change in the animation database.
 			if( curr->pDetailedPlacement && curr->pDetailedPlacement->bBodyType == CRIPPLECIV )
@@ -401,7 +388,6 @@ static void UpdateOldVersionMap(void)
 				curr->pDetailedPlacement->bBodyType = COW;
 				curr->pBasicPlacement->bBodyType = COW;
 			}
-			curr = curr->next;
 		}
 	}
 	if( gMapInformation.ubMapVersion < 12 )
@@ -416,8 +402,7 @@ static void UpdateOldVersionMap(void)
 		gMapInformation.ubMapVersion++;
 		//Bug 10) Padding on detailed placements is uninitialized.  Clear all data starting at
 		//				fKillSlotIfOwnerDies.
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -433,7 +418,6 @@ static void UpdateOldVersionMap(void)
 					}
 				}
 			}
-			curr = curr->next;
 		}
 	}
 	if( gMapInformation.ubMapVersion < 14 )
@@ -497,13 +481,11 @@ static void UpdateOldVersionMap(void)
 	}
 	if( gMapInformation.ubMapVersion < 21 )
 	{
-		SOLDIERINITNODE *curr;
 		//override any item slots being locked if there is no item in that slot.
 		//Laymen terms:  If any items slots are locked to be empty, make them empty but available
 		//for random item generation.
 		gMapInformation.ubMapVersion = 21;
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pDetailedPlacement )
 			{
@@ -522,7 +504,6 @@ static void UpdateOldVersionMap(void)
 					}
 				}
 			}
-			curr = curr->next;
 		}
 	}
 	if( gMapInformation.ubMapVersion < 22 )
@@ -531,19 +512,16 @@ static void UpdateOldVersionMap(void)
 	}
 	if( gMapInformation.ubMapVersion < 23 )
 	{ //Allow map edgepoints to be regenerated as new system has been reenabled.
-		SOLDIERINITNODE *curr;
 		gMapInformation.ubMapVersion = 23;
 		if( giCurrentTilesetID == 1 ) //cave/mine tileset only
 		{ //convert all civilians to miners which use uniforms and more masculine body types.
-			curr = gSoldierInitHead;
-			while( curr )
+			CFOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( curr->pBasicPlacement->bTeam == CIV_TEAM && !curr->pDetailedPlacement )
 				{
 					curr->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
 					curr->pBasicPlacement->bBodyType = -1;
 				}
-				curr = curr->next;
 			}
 		}
 	}
@@ -560,15 +538,13 @@ static void UpdateOldVersionMap(void)
 
 static void AutoCalculateItemNoOverwriteStatus(void)
 {
-	SOLDIERINITNODE *curr;
 	INT32 i;
 	OBJECTTYPE *pItem;
 
 	//Recalculate the "no overwrite" status flag on all items.  There are two different cases:
 	//1)  If detailed placement has item, the item "no overwrite" flag is set
 	//2)  If detailed placement doesn't have item, but item is set to drop (forced empty slot), the "no overwrite" flag is set.
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pDetailedPlacement )
 		{
@@ -585,7 +561,6 @@ static void AutoCalculateItemNoOverwriteStatus(void)
 				}
 			}
 		}
-		curr = curr->next;
 	}
 }
 

@@ -27,21 +27,18 @@ void ResetMilitia()
 
 static void RemoveMilitiaFromTactical(void)
 {
-	SOLDIERINITNODE *curr;
 	INT32 i;
 	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 	{
 		SOLDIERTYPE* const s = GetMan(i);
 		if (s->bActive) TacticalRemoveSoldier(s);
 	}
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == MILITIA_TEAM )
 		{
 			curr->pSoldier = NULL;
 		}
-		curr = curr->next;
 	}
 }
 

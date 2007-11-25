@@ -54,16 +54,13 @@ SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 
 static UINT32 CountNumberOfNodesWithSoldiers(void)
 {
-	SOLDIERINITNODE *curr;
 	UINT32 num = 0;
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier )
 		{
 			num++;
 		}
-		curr = curr->next;
 	}
 	return num;
 }
@@ -669,10 +666,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 
 static void AddPlacementToWorldByProfileID(UINT8 ubProfile)
 {
-	SOLDIERINITNODE * curr;
-
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == ubProfile && !curr->pSoldier )
 		{
@@ -680,7 +674,6 @@ static void AddPlacementToWorldByProfileID(UINT8 ubProfile)
 			AddPlacementToWorld( curr );
 			break;
 		}
-		curr = curr->next;
 	}
 }
 
@@ -690,7 +683,6 @@ UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 	SOLDIERINITNODE *mark;
 	UINT8 ubSlotsToFill;
 	UINT8 ubSlotsAvailable;
-	SOLDIERINITNODE *curr;
 
 	//Sort the list in the following manner:
 	//-Priority placements first
@@ -700,28 +692,24 @@ UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 
 	if( giCurrentTilesetID == 1 ) //cave/mine tileset only
 	{ //convert all civilians to miners which use uniforms and more masculine body types.
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pBasicPlacement->bTeam == CIV_TEAM && !curr->pDetailedPlacement )
 			{
 				curr->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
 				curr->pBasicPlacement->bBodyType = -1;
 			}
-			curr = curr->next;
 		}
 	}
 
 	//Count the current number of soldiers of the specified team
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam && curr->pSoldier )
 			ubNumAdded++;  //already one here!
-		curr = curr->next;
 	}
 
-	curr = gSoldierInitHead;
+	SOLDIERINITNODE* curr = gSoldierInitHead;
 
 	//First fill up all of the priority existance slots...
 	while( curr && curr->pBasicPlacement->fPriorityExistance && ubNumAdded < ubMaxNum )
@@ -794,7 +782,6 @@ UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite )
 {
 	SOLDIERINITNODE *mark;
-	SOLDIERINITNODE *curr;
 	INT32 iRandom;
 	UINT8 ubMaxNum;
  	UINT8 ubElitePDSlots = 0, ubEliteDSlots = 0, ubElitePSlots = 0, ubEliteBSlots = 0;
@@ -825,9 +812,9 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	//Now count the number of nodes that are basic placements of desired team AND CLASS
 	//This information will be used to randomly determine which of these placements
 	//will be added based on the number of slots we can still add.
-	curr = gSoldierInitHead;
-	while( curr && !curr->pSoldier )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
+		if (curr->pSoldier) break;
 		if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 		{
 			switch( curr->pBasicPlacement->ubSoldierClass )
@@ -864,7 +851,6 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 					break;
 			}
 		}
-		curr = curr->next;
 	}
 
 	//ADD PLACEMENTS WITH PRIORITY EXISTANCE WITH DETAILED PLACEMENT INFORMATION FIRST
@@ -889,10 +875,16 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				break;
 		}
 		//Now, loop through the priority existance and detailed placement section of the list.
-		curr = gSoldierInitHead;
-		while( curr && ubMaxNum && *pCurrTotal && *pCurrSlots &&
-			 curr->pDetailedPlacement && curr->pBasicPlacement->fPriorityExistance )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
+			if (ubMaxNum == 0 ||
+					*pCurrTotal == 0 ||
+					*pCurrSlots == 0 ||
+					curr->pDetailedPlacement == NULL ||
+					!curr->pBasicPlacement->fPriorityExistance)
+			{
+				break;
+			}
 			if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			{
 				if( curr->pBasicPlacement->ubSoldierClass == ubCurrClass )
@@ -918,7 +910,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 	}
 	if( !ubMaxNum )
 		return;
-	curr = gSoldierInitHead;
+	SOLDIERINITNODE* curr = gSoldierInitHead;
 	while( curr && curr->pDetailedPlacement && curr->pBasicPlacement->fPriorityExistance )
 		curr = curr->next;
 	mark = curr;
@@ -1136,19 +1128,17 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 
 	//First, count up the total number of free slots.
 	ubFreeSlots = 0;
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 			ubFreeSlots++;
-		curr = curr->next;
 	}
 
 	//Now, loop through the entire list again, but for the last time.  All enemies will be inserted now ignoring
 	//detailed placements and classes.
-	curr = gSoldierInitHead;
-	while( curr && ubFreeSlots && ubMaxNum )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
+		if (ubFreeSlots == 0 || ubMaxNum == 0) break;
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == ENEMY_TEAM )
 		{
 			//Randomly determine if we will use this slot; the more available slots in proportion to
@@ -1193,7 +1183,6 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 			//With the decrementing of the slot vars in this manner, the chances increase so that all slots
 			//will be full by the time the end of the list comes up.
 		}
-		curr = curr->next;
 	}
 }
 
@@ -1367,19 +1356,17 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 
 	//First, count up the total number of free slots.
 	ubFreeSlots = 0;
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
 			ubFreeSlots++;
-		curr = curr->next;
 	}
 
 	//Now, loop through the entire list again, but for the last time.  All enemies will be inserted now ignoring
 	//detailed placements and classes.
-	curr = gSoldierInitHead;
-	while( curr && ubFreeSlots && ubMaxNum )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
+		if (ubFreeSlots == 0 || ubMaxNum == 0)
 		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
 		{
 			//Randomly determine if we will use this slot; the more available slots in proportion to
@@ -1427,7 +1414,6 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 			//With the decrementing of the slot vars in this manner, the chances increase so that all slots
 			//will be full by the time the end of the list comes up.
 		}
-		curr = curr->next;
 	}
 }
 
@@ -1435,7 +1421,6 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales,
 																	UINT8 ubNumAdultFemales )
 {
-	SOLDIERINITNODE *curr;
 	INT32 iRandom;
 	UINT8 ubFreeSlots;
 	BOOLEAN fDoPlacement;
@@ -1448,8 +1433,7 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 	ubNumCreatures = (UINT8)(ubNumLarvae + ubNumInfants + ubNumYoungMales + ubNumYoungFemales + ubNumAdultMales + ubNumAdultFemales);
 	if( fQueen )
 	{
-		curr = gSoldierInitHead;
-		while( curr  )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM && curr->pBasicPlacement->bBodyType == QUEENMONSTER )
 			{
@@ -1459,7 +1443,6 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 					break;
 				}
 			}
-			curr = curr->next;
 		}
 		if( !fQueen )
 		{
@@ -1470,9 +1453,9 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 	}
 
 	//First fill up only the priority existance slots (as long as the availability and bodytypes match)
-	curr = gSoldierInitHead;
-	while( curr && curr->pBasicPlacement->fPriorityExistance && ubNumCreatures )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
+		if (!curr->pBasicPlacement->fPriorityExistance || ubNumCreatures == 0) break;
 		fDoPlacement = TRUE;
 
 		if( curr->pBasicPlacement->bTeam == CREATURE_TEAM )
@@ -1502,25 +1485,22 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 					return;
 			}
 		}
-		curr = curr->next;
 	}
 	if( !ubNumCreatures )
 		return;
 
 	//Count how many free creature slots are left.
-	curr = gSoldierInitHead;
 	ubFreeSlots = 0;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM )
 			ubFreeSlots++;
-		curr = curr->next;
 	}
 	//Now, if we still have creatures to place, do so completely randomly, overriding priority
 	//placements, etc.
-	curr = gSoldierInitHead;
-	while( curr && ubFreeSlots && ubNumCreatures )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
+		if (ubFreeSlots == 0 || ubNumCreatures == 0) break;
 		if( !curr->pSoldier && curr->pBasicPlacement->bTeam == CREATURE_TEAM )
 		{
 			//Randomly determine if we will use this slot; the more available slots in proportion to
@@ -1581,20 +1561,16 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 			//With the decrementing of the slot vars in this manner, the chances increase so that all slots
 			//will be full by the time the end of the list comes up.
 		}
-		curr = curr->next;
 	}
 }
 
 
 static SOLDIERINITNODE* FindSoldierInitNodeWithProfileID(UINT16 usProfile)
 {
-	SOLDIERINITNODE *curr;
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == usProfile )
 			return curr;
-		curr = curr->next;
 	}
 	return NULL;
 }
@@ -1602,13 +1578,10 @@ static SOLDIERINITNODE* FindSoldierInitNodeWithProfileID(UINT16 usProfile)
 
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 {
-	SOLDIERINITNODE *curr;
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier->ubID == usID )
 			return curr;
-		curr = curr->next;
 	}
 	return NULL;
 }
@@ -1648,13 +1621,11 @@ void UseEditorAlternateList()
 //if the map was loaded again!
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubNodeID;
-	curr = gSoldierInitHead;
 	ubNodeID = 0;
 	if( pSoldier->bTeam == MILITIA_TEAM )
 		return;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier == pSoldier )
 		{ //Matching soldier found
@@ -1671,16 +1642,13 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 			}
 		}
 		ubNodeID++;
-		curr = curr->next;
 	}
 }
 
 
 static void RemoveDetailedPlacementInfo(UINT8 ubNodeID)
 {
-	SOLDIERINITNODE *curr;
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->ubNodeID == ubNodeID )
 		{
@@ -1691,7 +1659,6 @@ static void RemoveDetailedPlacementInfo(UINT8 ubNodeID)
 				return;
 			}
 		}
-		curr = curr->next;
 	}
 }
 
@@ -1700,21 +1667,14 @@ static void RemoveDetailedPlacementInfo(UINT8 ubNodeID)
 //soldier pointer whenever we load the game.
 BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubSlots = 0;
 
 	//count the number of soldier init nodes...
-	curr = gSoldierInitHead;
-	while( curr )
-	{
-		ubSlots++;
-		curr = curr->next;
-	}
+	CFOR_ALL_SOLDIERINITNODES(curr) ++ubSlots;
 	//...and save it.
 	if (!FileWrite(hfile, &ubSlots, 1)) return FALSE;
 	//Now, go through each node, and save just the ubSoldierID, if that soldier is alive.
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier && !curr->pSoldier->bActive )
 		{
@@ -1722,14 +1682,12 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 		}
 		if (!FileWrite(hfile, &curr->ubNodeID, 1)) return FALSE;
 		if (!FileWrite(hfile, &curr->ubSoldierID, 1)) return FALSE;
-		curr = curr->next;
 	}
 	return TRUE;
 }
 
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
 	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
@@ -1740,8 +1698,7 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
-			curr = gSoldierInitHead;
-			while( curr )
+			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( curr->ubNodeID == ubNodeID )
 				{
@@ -1754,7 +1711,6 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 						curr->pSoldier = MercPtrs[ ubSoldierID ];
 					}
 				}
-				curr = curr->next;
 			}
 		}
 	}
@@ -1764,7 +1720,6 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 void AddSoldierInitListBloodcats()
 {
 	SECTORINFO *pSector;
-	SOLDIERINITNODE *curr;
 	UINT8 ubSectorID;
 
 	if( gbWorldSectorZ )
@@ -1784,14 +1739,12 @@ void AddSoldierInitListBloodcats()
 	{ //We don't yet know the number of bloodcat placements in this sector so
 		//count them now, and permanently record it.
 		INT8 bBloodCatPlacements = 0;
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pBasicPlacement->bBodyType == BLOODCAT )
 			{
 				bBloodCatPlacements++;
 			}
-			curr = curr->next;
 		}
 		if( bBloodCatPlacements != pSector->bBloodCatPlacements &&
 				ubSectorID != SEC_I16 && ubSectorID != SEC_N5 )
@@ -1826,12 +1779,10 @@ void AddSoldierInitListBloodcats()
 		SortSoldierInitList();
 
 		//Count the current number of soldiers of the specified team
-		curr = gSoldierInitHead;
-		while( curr )
+		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pBasicPlacement->bBodyType == BLOODCAT && curr->pSoldier )
 				ubNumAdded++;  //already one here!
-			curr = curr->next;
 		}
 
 		curr = gSoldierInitHead;
@@ -1908,17 +1859,12 @@ void AddSoldierInitListBloodcats()
 
 static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 {
-	SOLDIERINITNODE * curr;
-
-	curr = gSoldierInitHead;
-
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == ubProfile )
 		{
 			return( curr );
 		}
-		curr = curr->next;
 	}
 	return( NULL );
 }
@@ -2006,10 +1952,7 @@ void AddProfilesUsingProfileInsertionData()
 
 void AddProfilesNotUsingProfileInsertionData()
 {
-	SOLDIERINITNODE *curr;
-	//Count the current number of soldiers of the specified team
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( !curr->pSoldier &&
 				curr->pBasicPlacement->bTeam == CIV_TEAM &&
@@ -2020,7 +1963,6 @@ void AddProfilesNotUsingProfileInsertionData()
 		{
 			AddPlacementToWorld( curr );
 		}
-		curr = curr->next;
 	}
 }
 
@@ -2028,11 +1970,9 @@ void AddProfilesNotUsingProfileInsertionData()
 #ifdef JA2BETAVERSION
 BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 {
-	SOLDIERINITNODE *curr;
 	UINT32 uiNumInvalids = 0;
 	wchar_t str[512];
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier )
 		{
@@ -2041,7 +1981,6 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 				uiNumInvalids++;
 			}
 		}
-		curr = curr->next;
 	}
 	if( uiNumInvalids || ubCode == 4)
 	{
@@ -2082,7 +2021,6 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
 	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
@@ -2093,8 +2031,7 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
-			curr = gSoldierInitHead;
-			while( curr )
+			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( curr->ubNodeID == ubNodeID )
 				{
@@ -2105,7 +2042,6 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 						curr->pSoldier = MercPtrs[ ubSoldierID ];
 					}
 				}
-				curr = curr->next;
 			}
 		}
 	}
@@ -2115,7 +2051,6 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
 	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
@@ -2126,8 +2061,7 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
-			curr = gSoldierInitHead;
-			while( curr )
+			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( curr->ubNodeID == ubNodeID )
 				{
@@ -2138,7 +2072,6 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 						curr->pSoldier = MercPtrs[ ubSoldierID ];
 					}
 				}
-				curr = curr->next;
 			}
 		}
 	}
@@ -2148,7 +2081,6 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 
 BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 {
-	SOLDIERINITNODE *curr;
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
 	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
@@ -2159,8 +2091,7 @@ BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
-			curr = gSoldierInitHead;
-			while( curr )
+			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( curr->ubNodeID == ubNodeID )
 				{
@@ -2171,7 +2102,6 @@ BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 						curr->pSoldier = MercPtrs[ ubSoldierID ];
 					}
 				}
-				curr = curr->next;
 			}
 		}
 	}
@@ -2182,7 +2112,6 @@ BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 {
 	SECTORINFO *pSector;
-	SOLDIERINITNODE *curr;
 
 	if( !gfWorldLoaded || gbWorldSectorZ )
 	{ //No world loaded or underground.  Underground sectors don't matter
@@ -2199,8 +2128,7 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 
 	//The player has owned the sector at one point.  By stripping all of the detailed placements, only basic
 	//placements will remain.  This prevents tanks and "specially detailed" enemies from coming back.
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pDetailedPlacement )
 		{
@@ -2215,7 +2143,5 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 				RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeEquipmentLevel ), curr->pBasicPlacement->ubSoldierClass );
 			}
 		}
-		curr = curr->next;
 	}
-
 }

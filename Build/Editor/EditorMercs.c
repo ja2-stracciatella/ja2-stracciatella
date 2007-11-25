@@ -573,11 +573,9 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 
 void ResetAllMercPositions()
 {
-	SOLDIERINITNODE *curr;
 	//Remove all of the alternate placements (editor takes precedence)
 	UseEditorAlternateList();
-	curr = gSoldierInitHead;
-	while( curr )
+	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr;)
 	{
 		gpSelected = curr;
 		curr = curr->next;
@@ -585,8 +583,7 @@ void ResetAllMercPositions()
 	}
 	//Now, remove any existing original list mercs, then readd them.
 	UseEditorOriginalList();
-	curr = gSoldierInitHead;
-	while( curr )
+	FOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier )
 		{
@@ -602,7 +599,6 @@ void ResetAllMercPositions()
 		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
 		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
 		//}
-		curr = curr->next;
 	}
 	AddSoldierInitListTeamToWorld( ENEMY_TEAM,		255 );
 	AddSoldierInitListTeamToWorld( CREATURE_TEAM, 255 );
@@ -3008,11 +3004,9 @@ void RenderMercStrings()
 	INT16 sXPos, sYPos;
 	INT16 sX, sY;
 	const wchar_t* pStr;
-	SOLDIERINITNODE *curr;
 	wchar_t str[50];
 
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier && curr->pSoldier->bVisible == 1 )
 		{ //Render the health text
@@ -3116,7 +3110,6 @@ void RenderMercStrings()
 				sYPos += 10;
 			}
 		}
-		curr = curr->next;
 	}
 	if( gubCurrMercMode == MERC_SCHEDULEMODE )
 	{
@@ -3126,11 +3119,9 @@ void RenderMercStrings()
 
 void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 {
-	SOLDIERINITNODE *curr;
 	INT8 bVisible;
-	curr = gSoldierInitHead;
 	bVisible = fVisible ? 1 : -1;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
@@ -3140,7 +3131,6 @@ void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 				curr->pSoldier->bVisible = bVisible;
 			}
 		}
-		curr = curr->next;
 	}
 	if( gpSelected && gpSelected->pSoldier && gpSelected->pSoldier->bTeam == bTeam && !fVisible )
 	{

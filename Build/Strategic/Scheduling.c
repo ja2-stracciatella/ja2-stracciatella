@@ -261,7 +261,6 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 void OptimizeSchedules()
 {
 	SCHEDULENODE *pSchedule;
-	SOLDIERINITNODE *pNode;
 	UINT8 ubOldScheduleID;
 	gubScheduleID = 0;
 	pSchedule = gpScheduleList;
@@ -272,8 +271,7 @@ void OptimizeSchedules()
 		if( ubOldScheduleID != gubScheduleID )
 		{ //The schedule ID has changed, so change all links accordingly.
 			pSchedule->ubScheduleID = gubScheduleID;
-			pNode = gSoldierInitHead;
-			while( pNode )
+			CFOR_ALL_SOLDIERINITNODES(pNode)
 			{
 				if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID == ubOldScheduleID )
 				{
@@ -286,20 +284,17 @@ void OptimizeSchedules()
 					}
 					break;
 				}
-				pNode = pNode->next;
 			}
 		}
 		pSchedule = pSchedule->next;
 	}
 	//Remove the +100 IDs.
-	pNode = gSoldierInitHead;
-	while( pNode )
+	CFOR_ALL_SOLDIERINITNODES(pNode)
 	{
 		if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID > 100 )
 		{
 			pNode->pDetailedPlacement->ubScheduleID -= 100;
 		}
-		pNode = pNode->next;
 	}
 }
 
@@ -484,10 +479,8 @@ void ReverseSchedules()
 //Another debug feature.
 void ClearAllSchedules()
 {
-	SOLDIERINITNODE *pNode;
 	DestroyAllSchedules();
-	pNode = gSoldierInitHead;
-	while( pNode )
+	CFOR_ALL_SOLDIERINITNODES(pNode)
 	{
 		if( pNode->pDetailedPlacement && pNode->pDetailedPlacement->ubScheduleID )
 		{
@@ -497,7 +490,6 @@ void ClearAllSchedules()
 				pNode->pSoldier->ubScheduleID = 0;
 			}
 		}
-		pNode = pNode->next;
 	}
 }
 
@@ -999,7 +991,6 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 
 void PostSchedules()
 {
-	SOLDIERINITNODE *curr;
 	BOOLEAN fDefaultSchedulesPossible = FALSE;
 
 	#if defined( DISABLESCHEDULES ) || defined( JA2DEMO ) //definition found at top of this .c file.
@@ -1013,8 +1004,7 @@ void PostSchedules()
 	{
 		fDefaultSchedulesPossible = TRUE;
 	}
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pSoldier && curr->pSoldier->bTeam == CIV_TEAM )
 		{
@@ -1036,7 +1026,6 @@ void PostSchedules()
 				}
 			}
 		}
-		curr = curr->next;
 	}
 }
 

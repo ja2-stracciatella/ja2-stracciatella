@@ -70,7 +70,6 @@ static void RemoveCivilianTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ
 //OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
 BOOLEAN LoadEnemySoldiersFromTempFile()
 {
-	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
@@ -199,8 +198,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->fPriorityExistance )
 		{
@@ -209,7 +207,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 				curr->pBasicPlacement->fPriorityExistance = FALSE;
 			}
 		}
-		curr = curr->next;
 	}
 
 	//get the number of enemies in this sector.
@@ -246,8 +243,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 			#endif
 			goto FAIL_LOAD;
 		}
-		curr = gSoldierInitHead;
-		while( curr )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
@@ -362,7 +358,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 					}
 				}
 			}
-			curr = curr->next;
 		}
 	}
 
@@ -695,7 +690,6 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 {
-	SOLDIERINITNODE *curr;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
@@ -872,8 +866,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->fPriorityExistance )
 		{
@@ -882,7 +875,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 				curr->pBasicPlacement->fPriorityExistance = FALSE;
 			}
 		}
-		curr = curr->next;
 	}
 
 	//get the number of enemies in this sector.
@@ -919,8 +911,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 			#endif
 			goto FAIL_LOAD;
 		}
-		curr = gSoldierInitHead;
-		while( curr )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
@@ -1025,7 +1016,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					break;
 				}
 			}
-			curr = curr->next;
 		}
 	}
 
@@ -1114,7 +1104,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 {
-	SOLDIERINITNODE *curr, *temp;
 	SOLDIERCREATE_STRUCT tempDetailedPlacement;
 	INT32 i;
 	INT32 slots = 0;
@@ -1240,8 +1229,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
 	//to determine which slots have been modified as we load the data into the map pristine soldier init list.
-	curr = gSoldierInitHead;
-	while( curr )
+	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
 		if( curr->pBasicPlacement->fPriorityExistance )
 		{
@@ -1250,7 +1238,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 				curr->pBasicPlacement->fPriorityExistance = FALSE;
 			}
 		}
-		curr = curr->next;
 	}
 
 	for( i = 0; i < slots; i++ )
@@ -1262,8 +1249,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 			#endif
 			goto FAIL_LOAD;
 		}
-		curr = gSoldierInitHead;
-		while( curr )
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( !curr->pBasicPlacement->fPriorityExistance )
 			{
@@ -1354,14 +1340,12 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 					}
 				}
 			}
-			curr = curr->next;
 		}
 	}
 
 	// now remove any non-priority placement which matches the conditions!
-	curr = gSoldierInitHead;
 	fDeleted = FALSE;
-	while( curr )
+	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr;)
 	{
 		if( !curr->pBasicPlacement->fPriorityExistance )
 		{
@@ -1371,7 +1355,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 				{
 					// Save pointer to the next guy in the list
 					// and after deleting, set the 'curr' to that guy
-					temp = curr->next;
+					SOLDIERINITNODE* const temp = curr->next;
 					RemoveSoldierNodeFromInitList( curr );
 					curr = temp;
 					fDeleted = TRUE;
