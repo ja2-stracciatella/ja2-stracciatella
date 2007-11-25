@@ -11,7 +11,6 @@ Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost ident
 Blt8BPPDataTo16BPPBufferOutlineZNB(): last two parameters unnecessary
 BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2]: merge
 BtnHelpScreenDontShowHelpAgainCallback(): empty
-BulletHitMerc: pointless EV_S_WEAPONHIT
 CalcInteractiveObjectAPs(): second parameter unnecessary
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
@@ -20,8 +19,6 @@ ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
 CheckForMultiTilesInTreeAndAddToUndoList(): unused (self recursion)
 ChooseCreatureQuestStartDay(): empty
-CleanUpStack(): declaration in .c
-CompileInteractiveTiles(): empty
 ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
@@ -39,8 +36,6 @@ DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
 DisplayOrderGrid(): call IsMercDead() more early
 DisplayPurchasedItems(): iSubTotal undefined value
-Display{Highest,Lowest}StatValuesForCurrentTeam(): code duplication
-DoWeHaveThisManyBonusPoints(): complicated
 DoesTownHaveRatingToTrainMilitia(): complicated
 DoesVehicleHaveAnyPassengers(): complicated
 DoneFadeInActionLeaveBasement(): empty
@@ -90,8 +85,6 @@ HandleMinuteUpdate(): empty
 HandleMinuteUpdate(): remove?
 HandleMoraleEventForSoldier(): callers
 HandleOpinionOfTownsAboutSoldier(): empty
-HandlePlayerTeamMemberDeathAfterSkullAnimation(): declaration in .c
-HandleSoldierFaceFlash(): empty
 HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HeliCharacterDialogue(): callers
 IMPVideoObjects.h(): many needlessly called functions?
@@ -155,7 +148,6 @@ OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
 PLAYER_TEAM_DEAD: never set
-PalEditKeyboardHook(): code duplication
 PayMilitiaTrainingYesNoBoxCallback(): users
 PersonnelDepartedTeamCallback(): x = 0; if (x == 0)
 PlayerGroupInMotion(): overkill
@@ -175,7 +167,6 @@ RemoveGraphicFromTempFile(): file leak on error
 RemoveGraphicFromTempFile(): memory leak
 RemoveItemGUI(): callers
 RenderFaceOverlay(): users
-RenderFemaleGenderIcon(): complicated
 RenderItemDescriptionBox(): code duplication
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderSummaryWindow(): LockVideoSurface() called unnecessarily often
@@ -184,7 +175,7 @@ RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
 SHOW_AP_LEFT: never set
-SLOW_ANIMATION: never set or cleared, only in unused function
+SLOW_ANIMATION: never set or cleared
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_GREEN_RAY: never set
 SOLDIER_QUOTE_SAID_DROWNING: never set
@@ -199,7 +190,6 @@ SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == 
 SaveEnemySoldiersToTempFile(), NewWayOfSavingEnemyAndCivliansToTempFile(): code duplication
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
-SaveLightEffectsToSaveGameFile(): empty
 SaveLightEffectsToSaveGameFile(): empty
 SaveMapTileset(): sizeof(TileSurfaceFilenames[cnt]) != 65
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
@@ -222,14 +212,12 @@ TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
 TwoHandedItem(): complicated
-UIHandleLCOnTerrain(): Redundant GetSoldier() calls?
 UIHandleMOnTerrain(): Redundant GetSoldier() calls?
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateGameEvents(): questionable
 ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
 VehicleHasFuel(): inline
-VerifyGiveItem(): complicated interface
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 WillShopKeeperRejectObjectsFromPlayer(): complicated
 WrapString(): Make 1st parameter read-only
@@ -253,7 +241,7 @@ gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfProgBarActive: once TRUE it never changes anymore
 gsRadarY: always RADAR_WINDOW_TM_Y?
-gsWhoThrewRock: useful?
+gWhoThrewRock: useful?
 gszCivGroupNames[]: move declaration
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
