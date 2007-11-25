@@ -2084,36 +2084,6 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 }
 
 
-BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile )
-{
-	UINT8 ubSlots, ubSoldierID, ubNodeID;
-
-	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
-	while( ubSlots-- )
-	{
-		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
-		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
-
-		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		{
-			FOR_ALL_SOLDIERINITNODES(curr)
-			{
-				if( curr->ubNodeID == ubNodeID )
-				{
-					curr->ubSoldierID = ubSoldierID;
-					if( ubSoldierID >= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID &&
-							ubSoldierID <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID )
-					{ //only enemies and creatures.
-						curr->pSoldier = MercPtrs[ ubSoldierID ];
-					}
-				}
-			}
-		}
-	}
-	return TRUE;
-}
-
-
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 {
 	SECTORINFO *pSector;

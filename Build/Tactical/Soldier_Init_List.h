@@ -41,7 +41,6 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile );
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile );
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile );
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile );
-BOOLEAN LookAtButDontProcessEnemySoldierInitListLinks( HWFILE hfile );
 
 void InitSoldierInitList();
 void KillSoldierInitList();

@@ -1726,7 +1726,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	}
 
 //	LoadSoldierInitListLinks( hfile );
-	LookAtButDontProcessEnemySoldierInitListLinks( hfile );
+	NewWayOfLoadingEnemySoldierInitListLinks(hfile);
 
 	//STEP THREE:  read the data
 
