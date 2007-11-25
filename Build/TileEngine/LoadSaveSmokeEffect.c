@@ -9,7 +9,7 @@
 BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
 {
 	BYTE data[16];
-	if (FileRead(file, data, sizeof(data))) return FALSE;
+	if (!FileRead(file, data, sizeof(data))) return FALSE;
 
 	const BYTE* d = data;
 	EXTR_I16(d, s->sGridNo)
