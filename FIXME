@@ -4,7 +4,6 @@ ACTIVE: never tested
 ANITILE_REVERSE_LOOPING: never set
 ARMY_COMPOSITION, PATROL_GROUP, GARRISON_GROUP: pointless padding
 AddCharacterToDeadList(): one caller
-AddStructureToWorld(): complicated, PTR as parameter
 BeginCurInteractiveTileCheck(): parameter is always INTILE_CHECK_SELECTIVE
 BeginMapUIMessage(): move from tactical to strategic
 BlitMineText(): code duplication

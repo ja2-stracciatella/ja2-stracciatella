@@ -1009,16 +1009,10 @@ static STRUCTURE* InternalAddStructureToWorld(INT16 sBaseGridNo, INT8 bLevel, DB
 	return( pBaseStructure );
 }
 
-BOOLEAN AddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, PTR pLevelN )
-{
-	STRUCTURE * pStructure;
 
-	pStructure = InternalAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, (LEVELNODE *) pLevelN );
-	if (pStructure == NULL)
-	{
-		return( FALSE );
-	}
-	return( TRUE );
+BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelN)
+{
+	return InternalAddStructureToWorld(sBaseGridNo, bLevel, pDBStructureRef, pLevelN) != NULL;
 }
 
 //
