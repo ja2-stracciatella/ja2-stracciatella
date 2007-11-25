@@ -52,20 +52,6 @@ SOLDIERINITNODE *gAlternateSoldierInitListHead = NULL;
 #endif
 
 
-static UINT32 CountNumberOfNodesWithSoldiers(void)
-{
-	UINT32 num = 0;
-	CFOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if( curr->pSoldier )
-		{
-			num++;
-		}
-	}
-	return num;
-}
-
-
 void InitSoldierInitList()
 {
 	if( gSoldierInitHead )
@@ -663,19 +649,6 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 	return FALSE;
 }
 
-
-static void AddPlacementToWorldByProfileID(UINT8 ubProfile)
-{
-	FOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if ( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == ubProfile && !curr->pSoldier )
-		{
-			//Matching profile, so add this placement.
-			AddPlacementToWorld( curr );
-			break;
-		}
-	}
-}
 
 UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 {
@@ -1565,17 +1538,6 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 }
 
 
-static SOLDIERINITNODE* FindSoldierInitNodeWithProfileID(UINT16 usProfile)
-{
-	FOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if( curr->pDetailedPlacement && curr->pDetailedPlacement->ubProfile == usProfile )
-			return curr;
-	}
-	return NULL;
-}
-
-
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 {
 	FOR_ALL_SOLDIERINITNODES(curr)
@@ -1650,22 +1612,6 @@ void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
 	}
 }
 
-
-static void RemoveDetailedPlacementInfo(UINT8 ubNodeID)
-{
-	FOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if( curr->ubNodeID == ubNodeID )
-		{
-			if( curr->pDetailedPlacement )
-			{
-				MemFree( curr->pDetailedPlacement );
-				curr->pDetailedPlacement = NULL;
-				return;
-			}
-		}
-	}
-}
 
 //For the purpose of keeping track of which soldier belongs to which placement within the game,
 //the only way we can do this properly is to save the soldier ID from the list and reconnect the
