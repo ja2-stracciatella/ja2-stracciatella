@@ -2536,7 +2536,7 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, const SOLDIERTYPE* s)
 
 
 		//Not saving any of these in the soldier struct
-		//	struct TAG_level_node				*pLevelNode;
+		//	LEVELNODE*                   pLevelNode;
 		//	UINT16											*pForcedShade;
 		//
 		// 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects

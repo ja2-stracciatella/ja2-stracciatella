@@ -50,8 +50,7 @@ typedef struct TAG_ITEM_POOL
 	UINT8				ubLevel;
 	UINT16			usFlags;
 	INT8				bRenderZHeightAboveLevel;
-	struct TAG_level_node	*pLevelNode;
-
+	LEVELNODE*  pLevelNode;
 } ITEM_POOL;
 
 

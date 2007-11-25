@@ -1,6 +1,7 @@
 #ifndef __WORLDDEF_H
 #define __WORLDDEF_H
 
+#include "JA2Types.h"
 #include "VObject.h"
 #include "TileDef.h"
 #include "Soldier_Control.h"
@@ -102,9 +103,9 @@
 #define ANY_SMOKE_EFFECT		( MAPELEMENT_EXT_CREATUREGAS | MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS )
 
 
-typedef struct TAG_level_node
+struct LEVELNODE
 {
-	struct TAG_level_node				*pNext;
+	LEVELNODE*                  pNext;
 	UINT32											uiFlags;							// flags struct
 
 	UINT8												ubSumLights;					// LIGHTING INFO
@@ -112,7 +113,7 @@ typedef struct TAG_level_node
 
 	union
 	{
-		struct TAG_level_node				*pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
+		LEVELNODE*                  pPrevNode;					// FOR LAND, GOING BACKWARDS POINTER
 		STRUCTURE										*pStructureData;		// STRUCTURE DATA
 		INT32												uiAPCost;						// FOR AP DISPLAY
 		INT32												iExitGridInfo;
@@ -169,8 +170,7 @@ typedef struct TAG_level_node
  	UINT8													ubShadeLevel;						// LIGHTING INFO
  	UINT8													ubNaturalShadeLevel;		// LIGHTING INFO
 	UINT8													ubFakeShadeLevel;				// LIGHTING INFO
-
-} LEVELNODE;
+};
 
 
 #define		LAND_START_INDEX									1

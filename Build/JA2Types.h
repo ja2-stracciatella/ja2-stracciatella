@@ -5,6 +5,7 @@
 
 
 typedef struct BULLET       BULLET;
+typedef struct LEVELNODE    LEVELNODE;
 typedef struct LIGHT_SPRITE LIGHT_SPRITE;
 typedef struct SMOKEEFFECT  SMOKEEFFECT;
 typedef struct SOLDIERTYPE  SOLDIERTYPE;

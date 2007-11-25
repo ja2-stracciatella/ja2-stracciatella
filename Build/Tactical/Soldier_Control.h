@@ -501,7 +501,7 @@ struct SOLDIERTYPE
 	THROW_PARAMS								*pThrowParams;
 	BOOLEAN											fTurningFromPronePosition;
 	INT8												bReverse;
-	struct TAG_level_node				*pLevelNode;
+	LEVELNODE*                  pLevelNode;
 
 	// WALKING STUFF
 	INT8												bDesiredDirection;
