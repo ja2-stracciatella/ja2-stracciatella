@@ -2115,21 +2115,11 @@ static void HighLightSleepLine(void)
 
 static void AddCharacter(SOLDIERTYPE* pCharacter)
 {
+	Assert(pCharacter != NULL);
+	Assert(pCharacter->bActive);
+
 	UINT16 usCount=0;
 	UINT16 usVehicleCount = 0, usVehicleLoop = 0;
-
-	// is character valid?
-	if( pCharacter == NULL)
-	{
-		// not valid, leave
-		return;
-	}
-
-	// valid character?
-	if( pCharacter -> bActive == FALSE )
-	{
-		return;
-	}
 
 	// adding a vehicle?
 	if( pCharacter->uiStatusFlags & SOLDIER_VEHICLE )
@@ -2193,19 +2183,12 @@ void RemoveCharacter(UINT16 uiCharPosition)
 static void LoadCharacters(void)
 {
 	UINT16 uiCount=0;
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-	INT32 cnt=0;
-
-	pSoldier = MercPtrs[ 0 ];
 
 	// fills array with pressence of player controlled characters
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if(pTeamSoldier->bActive)
-		{
-			AddCharacter( pTeamSoldier );
-			uiCount++;
-		}
+		AddCharacter(s);
+		++uiCount;
 	}
 
 	// set info char if no selected
@@ -7665,22 +7648,18 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs);
 void ReBuildCharactersList( void )
 {
 	// rebuild character's list
-	INT16 sCount = 0;
-
 
 	// add in characters
-  for ( sCount = 0; sCount < MAX_CHARACTER_COUNT; sCount++)
+	for (INT16 sCount = 0; sCount < MAX_CHARACTER_COUNT; ++sCount)
   {
 		// clear this slot
 		gCharactersList[sCount].merc = NULL;
 	}
 
-	for ( sCount = 0; sCount < MAX_CHARACTER_COUNT; sCount++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-	  // add character into the cleared slot
-	  AddCharacter( &Menptr[ gTacticalStatus.Team[ OUR_TEAM ].bFirstID + sCount ] );
+		AddCharacter(s);
 	}
-
 
 	// sort them according to current sorting method
 	SortListOfMercsInTeamPanel( FALSE );
