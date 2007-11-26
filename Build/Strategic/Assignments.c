@@ -8374,122 +8374,111 @@ static BOOLEAN CharacterIsTakingItEasy(SOLDIERTYPE* pSoldier);
 
 static void HandleRestFatigueAndSleepStatus(void)
 {
-	INT32 iCounter = 0, iNumberOnTeam = 0;
-	SOLDIERTYPE * pSoldier;
 	BOOLEAN fReasonAdded = FALSE;
 	BOOLEAN fBoxSetUp = FALSE;
 	BOOLEAN fMeToo = FALSE;
 
-
-	iNumberOnTeam =gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
 	// run through all player characters and handle their rest, fatigue, and going to sleep
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( pSoldier -> bActive )
+		if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(pSoldier))
 		{
-			if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-			{
-				continue;
-			}
+			continue;
+		}
 
-			if( ( pSoldier -> bAssignment == ASSIGNMENT_POW ) || ( pSoldier -> bAssignment == IN_TRANSIT ) )
-			{
-				continue;
-			}
+		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
+		{
+			continue;
+		}
 
-			// if character CAN sleep, he doesn't actually have to be put asleep to get some rest,
-			// many other assignments and conditions allow for automatic recovering from fatigue.
-			if( CharacterIsTakingItEasy( pSoldier ) )
-			{
-				// let them rest some
-				RestCharacter( pSoldier );
-			}
-			else
-			{
-				// wear them down
-				FatigueCharacter( pSoldier );
-			}
+		// if character CAN sleep, he doesn't actually have to be put asleep to get some rest,
+		// many other assignments and conditions allow for automatic recovering from fatigue.
+		if (CharacterIsTakingItEasy(pSoldier))
+		{
+			// let them rest some
+			RestCharacter(pSoldier);
+		}
+		else
+		{
+			// wear them down
+			FatigueCharacter(pSoldier);
+		}
 
+		// CHECK FOR MERCS GOING TO SLEEP
 
-			// CHECK FOR MERCS GOING TO SLEEP
-
-			// if awake
-			if ( !pSoldier->fMercAsleep )
+		// if awake
+		if (!pSoldier->fMercAsleep)
+		{
+			// if dead tired
+			if (pSoldier->bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM)
 			{
-				// if dead tired
-				if( pSoldier -> bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM )
+				// if between sectors, don't put tired mercs to sleep...  will be handled when they arrive at the next sector
+				if (pSoldier->fBetweenSectors)
 				{
-					// if between sectors, don't put tired mercs to sleep...  will be handled when they arrive at the next sector
-					if ( pSoldier->fBetweenSectors )
+					continue;
+				}
+
+				// he goes to sleep, provided it's at all possible (it still won't happen in a hostile sector, etc.)
+				if (SetMercAsleep(pSoldier, FALSE))
+				{
+					if (pSoldier->bAssignment < ON_DUTY || pSoldier->bAssignment == VEHICLE)
 					{
-						continue;
+						// on a squad/vehicle, complain, then drop
+						TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
+						TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_NEED_SLEEP, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+						fMeToo = TRUE;
 					}
 
-					// he goes to sleep, provided it's at all possible (it still won't happen in a hostile sector, etc.)
-					if( SetMercAsleep( pSoldier, FALSE ) )
+					// guy collapses
+					pSoldier->fMercCollapsedFlag = TRUE;
+				}
+			}
+			// if pretty tired, and not forced to stay awake
+			else if (pSoldier->bBreathMax < BREATHMAX_PRETTY_TIRED && pSoldier->fForcedToStayAwake == FALSE)
+			{
+				// if not on squad/ in vehicle
+				if (pSoldier->bAssignment >= ON_DUTY && pSoldier->bAssignment != VEHICLE)
+				{
+					// try to go to sleep on your own
+					if (SetMercAsleep(pSoldier, FALSE))
 					{
-						if( ( pSoldier -> bAssignment < ON_DUTY ) || ( pSoldier -> bAssignment == VEHICLE ) )
+						if (gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION])
 						{
-							// on a squad/vehicle, complain, then drop
-							TacticalCharacterDialogue( pSoldier, QUOTE_NEED_SLEEP );
-							TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_NEED_SLEEP, DIALOGUE_SPECIAL_EVENT_SLEEP, 1,0 );
-							fMeToo = TRUE;
+							// if the first one
+							if (!fReasonAdded)
+							{
+								// tell player about it
+								AddReasonToWaitingListQueue(ASLEEP_GOING_AUTO_FOR_UPDATE);
+								TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+
+								fReasonAdded = TRUE;
+							}
+
+							AddSoldierToWaitingListQueue(pSoldier);
+							fBoxSetUp = TRUE;
 						}
 
-						// guy collapses
-						pSoldier -> fMercCollapsedFlag = TRUE;
+						// seems unnecessary now?  ARM
+						pSoldier->bOldAssignment = pSoldier->bAssignment;
 					}
 				}
-				// if pretty tired, and not forced to stay awake
-				else if( ( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED ) && ( pSoldier -> fForcedToStayAwake == FALSE ) )
+				else	// tired, in a squad / vehicle
 				{
-					// if not on squad/ in vehicle
-					if( ( pSoldier -> bAssignment >= ON_DUTY ) && ( pSoldier -> bAssignment != VEHICLE ) )
+					// if he hasn't complained yet
+					if (!pSoldier->fComplainedThatTired)
 					{
-						// try to go to sleep on your own
-						if( SetMercAsleep( pSoldier, FALSE ) )
+						// say quote
+						if (!fMeToo)
 						{
-							if( gGameSettings.fOptions[ TOPTION_SLEEPWAKE_NOTIFICATION ] )
-							{
-								// if the first one
-								if( fReasonAdded == FALSE )
-								{
-									// tell player about it
-									AddReasonToWaitingListQueue( ASLEEP_GOING_AUTO_FOR_UPDATE );
-									TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0,0 );
-
-									fReasonAdded = TRUE;
-								}
-
-								AddSoldierToWaitingListQueue( pSoldier );
-								fBoxSetUp = TRUE;
-							}
-
-							// seems unnecessary now?  ARM
-							pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+							TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
+							fMeToo = TRUE;
 						}
-					}
-					else	// tired, in a squad / vehicle
-					{
-						// if he hasn't complained yet
-						if ( !pSoldier->fComplainedThatTired )
+						else
 						{
-							// say quote
-							if( fMeToo == FALSE )
-							{
-								TacticalCharacterDialogue( pSoldier, QUOTE_NEED_SLEEP );
-								fMeToo = TRUE;
-							}
-							else
-							{
-								TacticalCharacterDialogue( pSoldier, QUOTE_ME_TOO );
-							}
-
-							pSoldier->fComplainedThatTired = TRUE;
+							TacticalCharacterDialogue(pSoldier, QUOTE_ME_TOO);
 						}
+
+						pSoldier->fComplainedThatTired = TRUE;
 					}
 				}
 			}
@@ -8505,59 +8494,51 @@ static void HandleRestFatigueAndSleepStatus(void)
 
 	fReasonAdded = FALSE;
 
-
 	// now handle waking (needs seperate list queue, that's why it has its own loop)
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( pSoldier -> bActive )
+		if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(pSoldier))
 		{
-			if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
+			continue;
+		}
+
+		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
+		{
+			continue;
+		}
+
+		// guys between sectors CAN wake up while between sectors (sleeping in vehicle)...
+
+		// CHECK FOR MERCS WAKING UP
+
+		if (pSoldier->bBreathMax >= BREATHMAX_CANCEL_COLLAPSE)
+		{
+			// reset the collapsed flag well before reaching the wakeup state
+			pSoldier->fMercCollapsedFlag = FALSE;
+		}
+
+		// if asleep
+		if (pSoldier->fMercAsleep)
+		{
+			// but has had enough rest?
+			if (pSoldier->bBreathMax >= BREATHMAX_FULLY_RESTED)
 			{
-				continue;
-			}
-
-			if( ( pSoldier -> bAssignment == ASSIGNMENT_POW ) || ( pSoldier -> bAssignment == IN_TRANSIT ) )
-			{
-				continue;
-			}
-
-			// guys between sectors CAN wake up while between sectors (sleeping in vehicle)...
-
-
-			// CHECK FOR MERCS WAKING UP
-
-			if ( pSoldier->bBreathMax >= BREATHMAX_CANCEL_COLLAPSE )
-			{
-				// reset the collapsed flag well before reaching the wakeup state
-				pSoldier -> fMercCollapsedFlag = FALSE;
-			}
-
-
-			// if asleep
-			if ( pSoldier -> fMercAsleep )
-			{
-				// but has had enough rest?
-				if( pSoldier -> bBreathMax >= BREATHMAX_FULLY_RESTED )
+				// try to wake merc up
+				if (SetMercAwake(pSoldier, FALSE, FALSE))
 				{
-					// try to wake merc up
-					if( SetMercAwake( pSoldier, FALSE, FALSE ) )
+					// if not on squad/ in vehicle, tell player about it
+					if (pSoldier->bAssignment >= ON_DUTY && pSoldier->bAssignment != VEHICLE)
 					{
-						// if not on squad/ in vehicle, tell player about it
-						if( ( pSoldier -> bAssignment >= ON_DUTY ) && ( pSoldier -> bAssignment != VEHICLE ) )
+						if (gGameSettings.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION])
 						{
-							if( gGameSettings.fOptions[ TOPTION_SLEEPWAKE_NOTIFICATION ] )
+							if (!fReasonAdded)
 							{
-								if( fReasonAdded == FALSE )
-								{
-									AddReasonToWaitingListQueue( ASSIGNMENT_RETURNING_FOR_UPDATE );
-									fReasonAdded = TRUE;
-								}
-
-								AddSoldierToWaitingListQueue( pSoldier );
-								fBoxSetUp = TRUE;
+								AddReasonToWaitingListQueue(ASSIGNMENT_RETURNING_FOR_UPDATE);
+								fReasonAdded = TRUE;
 							}
+
+							AddSoldierToWaitingListQueue(pSoldier);
+							fBoxSetUp = TRUE;
 						}
 					}
 				}
@@ -9410,16 +9391,9 @@ static void HandleShadingOfLinesForAttributeMenus(void)
 
 static void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown(SOLDIERTYPE* pSoldier)
 {
-	INT32 iNumberOnTeam = 0, iCounter = 0;
-	SOLDIERTYPE *pCurSoldier = NULL;
-
-	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(pCurSoldier, OUR_TEAM)
 	{
-		pCurSoldier = &Menptr[ iCounter ];
-
-		if( ( pCurSoldier -> bActive ) && ( pCurSoldier -> bLife >= OKLIFE ) )
+		if (pCurSoldier->bLife >= OKLIFE)
 		{
 			if( pCurSoldier -> bAssignment == TRAIN_TOWN )
 			{
@@ -9821,30 +9795,14 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 	return( fSuccess );
 }
 
+
 BOOLEAN IsAnyOneOnPlayersTeamOnThisAssignment( INT8 bAssignment )
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
-
-	for( iCounter = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		// get the current soldier
-		pSoldier = &Menptr[ iCounter ];
-
-		// active?
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
-
-		if( pSoldier->bAssignment == bAssignment )
-		{
-			return( TRUE );
-		}
+		if (s->bAssignment == bAssignment) return TRUE;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -9864,8 +9822,6 @@ void RebuildAssignmentsBox( void )
 
 void BandageBleedingDyingPatientsBeingTreated( )
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	SOLDIERTYPE *pDoctor = NULL;
 	INT32 iKitSlot;
 	OBJECTTYPE *pKit = NULL;
@@ -9873,18 +9829,8 @@ void BandageBleedingDyingPatientsBeingTreated( )
 	UINT32 uiKitPtsUsed;
 	BOOLEAN fSomeoneStillBleedingDying = FALSE;
 
-
-	for( iCounter = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		// get the soldier
-		pSoldier = &Menptr[ iCounter ];
-
-		// check if the soldier is currently active?
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
-
 		// and he is bleeding or dying
 		if( ( pSoldier->bBleeding ) || ( pSoldier->bLife < OKLIFE ) )
 		{
@@ -9948,77 +9894,66 @@ void BandageBleedingDyingPatientsBeingTreated( )
 
 void ReEvaluateEveryonesNothingToDo()
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fNothingToDo;
 
-
-	for( iCounter = 0; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if( pSoldier->bActive )
+		switch (pSoldier->bAssignment)
 		{
-			switch( pSoldier->bAssignment )
-			{
-				case DOCTOR:
-					fNothingToDo = !CanCharacterDoctor( pSoldier ) || ( GetNumberThatCanBeDoctored( pSoldier, HEALABLE_EVER, FALSE, FALSE ) == 0 );
-					break;
+			case DOCTOR:
+				fNothingToDo = !CanCharacterDoctor(pSoldier) || GetNumberThatCanBeDoctored(pSoldier, HEALABLE_EVER, FALSE, FALSE) == 0;
+				break;
 
-				case PATIENT:
-					fNothingToDo = !CanCharacterPatient( pSoldier ) || ( AnyDoctorWhoCanHealThisPatient( pSoldier, HEALABLE_EVER ) == NULL );
-					break;
+			case PATIENT:
+				fNothingToDo = !CanCharacterPatient(pSoldier) || AnyDoctorWhoCanHealThisPatient(pSoldier, HEALABLE_EVER) == NULL;
+				break;
 
-				case ASSIGNMENT_HOSPITAL:
-					fNothingToDo = !CanCharacterPatient( pSoldier );
-					break;
+			case ASSIGNMENT_HOSPITAL:
+				fNothingToDo = !CanCharacterPatient(pSoldier);
+				break;
 
-				case REPAIR:
-					fNothingToDo = !CanCharacterRepair( pSoldier ) || HasCharacterFinishedRepairing( pSoldier );
-					break;
+			case REPAIR:
+				fNothingToDo = !CanCharacterRepair(pSoldier) || HasCharacterFinishedRepairing(pSoldier);
+				break;
 
-				case TRAIN_TOWN:
-					fNothingToDo = !CanCharacterTrainMilitia( pSoldier );
-					break;
+			case TRAIN_TOWN:
+				fNothingToDo = !CanCharacterTrainMilitia(pSoldier);
+				break;
 
-				case TRAIN_SELF:
-					fNothingToDo = !CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, TRUE, FALSE );
-					break;
+			case TRAIN_SELF:
+				fNothingToDo = !CanCharacterTrainStat(pSoldier, pSoldier->bTrainStat, TRUE, FALSE);
+				break;
 
-				case TRAIN_TEAMMATE:
-					fNothingToDo = !CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, FALSE, TRUE ) ||
-												 !ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat );
-					break;
+			case TRAIN_TEAMMATE:
+				fNothingToDo = !CanCharacterTrainStat(pSoldier, pSoldier->bTrainStat, FALSE, TRUE) ||
+				               !ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_BY_OTHER, pSoldier->bTrainStat);
+				break;
 
-				case TRAIN_BY_OTHER:
-					fNothingToDo = !CanCharacterTrainStat( pSoldier, pSoldier->bTrainStat, TRUE, FALSE ) ||
-												 !ValidTrainingPartnerInSameSectorOnAssignmentFound( pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat );
-					break;
+			case TRAIN_BY_OTHER:
+				fNothingToDo = !CanCharacterTrainStat(pSoldier, pSoldier->bTrainStat, TRUE, FALSE) ||
+				               !ValidTrainingPartnerInSameSectorOnAssignmentFound(pSoldier, TRAIN_TEAMMATE, pSoldier->bTrainStat);
+				break;
 
-				case VEHICLE:
-				default:	// squads
-					fNothingToDo = FALSE;
-					break;
-			}
+			case VEHICLE:
+			default:	// squads
+				fNothingToDo = FALSE;
+				break;
+		}
 
+		// if his flag is wrong
+		if (fNothingToDo != pSoldier->fDoneAssignmentAndNothingToDoFlag)
+		{
+			// update it!
+			pSoldier->fDoneAssignmentAndNothingToDoFlag = fNothingToDo;
 
-			// if his flag is wrong
-			if ( fNothingToDo != pSoldier->fDoneAssignmentAndNothingToDoFlag )
-			{
-				// update it!
-				pSoldier->fDoneAssignmentAndNothingToDoFlag = fNothingToDo;
+			// update mapscreen's character list display
+			fDrawCharacterList = TRUE;
+		}
 
-				// update mapscreen's character list display
-				fDrawCharacterList = TRUE;
-			}
-
-			// if he now has something to do, reset the quote flag
-			if ( !fNothingToDo )
-			{
-				pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
-			}
-
-
+		// if he now has something to do, reset the quote flag
+		if (!fNothingToDo)
+		{
+			pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;
 		}
 	}
 
@@ -10291,59 +10226,51 @@ static BOOLEAN IsCharacterAliveAndConscious(SOLDIERTYPE* pCharacter)
 
 static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pTargetSoldier, INT8 bTargetAssignment, INT8 bTargetStat)
 {
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
 	INT16 sTrainingPts = 0;
 	BOOLEAN fAtGunRange = FALSE;
 	UINT16 usMaxPts;
 
-
 	// this function only makes sense for training teammates or by others, not for self training which doesn't require partners
 	Assert( ( bTargetAssignment == TRAIN_TEAMMATE ) || ( bTargetAssignment == TRAIN_BY_OTHER ) );
 
-	for( iCounter = 0; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = &Menptr[ iCounter ];
-
-		if ( pSoldier->bActive )
+		// if the guy is not the target, has the assignment we want, is training the same stat, and is in our sector, alive
+		// and is training the stat we want
+		if (pSoldier != pTargetSoldier &&
+				pSoldier->bAssignment == bTargetAssignment &&
+				// CJC: this seems incorrect in light of the check for bTargetStat and in any case would
+				// cause a problem if the trainer was assigned and we weren't!
+				//pSoldier->bTrainStat == pTargetSoldier->bTrainStat &&
+				pSoldier->sSectorX == pTargetSoldier->sSectorX &&
+				pSoldier->sSectorY == pTargetSoldier->sSectorY &&
+				pSoldier->bSectorZ == pTargetSoldier->bSectorZ &&
+				pSoldier->bTrainStat == bTargetStat &&
+				pSoldier->bLife > 0)
 		{
-			// if the guy is not the target, has the assignment we want, is training the same stat, and is in our sector, alive
-			// and is training the stat we want
-			if( ( pSoldier != pTargetSoldier ) &&
-					( pSoldier -> bAssignment == bTargetAssignment ) &&
-					// CJC: this seems incorrect in light of the check for bTargetStat and in any case would
-					// cause a problem if the trainer was assigned and we weren't!
-					//( pSoldier -> bTrainStat == pTargetSoldier -> bTrainStat ) &&
-					( pSoldier -> sSectorX == pTargetSoldier -> sSectorX ) &&
-					( pSoldier -> sSectorY == pTargetSoldier -> sSectorY ) &&
-					( pSoldier -> bSectorZ == pTargetSoldier -> bSectorZ ) &&
-					( pSoldier -> bTrainStat == bTargetStat ) &&
-					( pSoldier -> bLife > 0 ) )
+			// so far so good, now let's see if the trainer can really teach the student anything new
+
+			// are we training in the sector with gun range in Alma?
+			if (pSoldier->sSectorX == GUN_RANGE_X && pSoldier->sSectorY == GUN_RANGE_Y && pSoldier->bSectorZ == GUN_RANGE_Z)
 			{
-				// so far so good, now let's see if the trainer can really teach the student anything new
+				fAtGunRange = TRUE;
+			}
 
-				// are we training in the sector with gun range in Alma?
-				if ( ( pSoldier -> sSectorX == GUN_RANGE_X ) && (pSoldier -> sSectorY == GUN_RANGE_Y ) && ( pSoldier -> bSectorZ == GUN_RANGE_Z ) )
-				{
-					fAtGunRange = TRUE;
-				}
+			if (pSoldier->bAssignment == TRAIN_TEAMMATE)
+			{
+				// pSoldier is the instructor, target is the student
+				sTrainingPts = GetBonusTrainingPtsDueToInstructor(pSoldier, pTargetSoldier, bTargetStat, fAtGunRange, &usMaxPts);
+			}
+			else
+			{
+				// target is the instructor, pSoldier is the student
+				sTrainingPts = GetBonusTrainingPtsDueToInstructor(pTargetSoldier, pSoldier, bTargetStat, fAtGunRange, &usMaxPts);
+			}
 
-				if ( pSoldier -> bAssignment == TRAIN_TEAMMATE )
-				{
-					// pSoldier is the instructor, target is the student
-					sTrainingPts = GetBonusTrainingPtsDueToInstructor( pSoldier, pTargetSoldier, bTargetStat, fAtGunRange, &usMaxPts );
-				}
-				else
-				{
-					// target is the instructor, pSoldier is the student
-					sTrainingPts = GetBonusTrainingPtsDueToInstructor( pTargetSoldier, pSoldier, bTargetStat, fAtGunRange, &usMaxPts );
-				}
-
-				if ( sTrainingPts > 0 )
-				{
-					// yes, then he makes a valid training partner for us!
-					return( TRUE );
-				}
+			if (sTrainingPts > 0)
+			{
+				// yes, then he makes a valid training partner for us!
+				return TRUE;
 			}
 		}
 	}
