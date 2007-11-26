@@ -18,7 +18,7 @@ extern INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
 extern INT8 FindEmptySlotWithin( SOLDIERTYPE * pSoldier, INT8 bLower, INT8 bUpper );
 extern INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
-extern INT8 FindObjInObjRange( SOLDIERTYPE * pSoldier, UINT16 usItem1, UINT16 usItem2 );
+INT8 FindObjInObjRange(const SOLDIERTYPE* s, UINT16 usItem1, UINT16 usItem2);
 extern INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
 extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );

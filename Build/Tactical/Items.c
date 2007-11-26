@@ -1095,7 +1095,8 @@ INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUp
 	return( ITEM_NOT_FOUND );
 }
 
-INT8 FindObjInObjRange( SOLDIERTYPE * pSoldier, UINT16 usItem1, UINT16 usItem2 )
+
+INT8 FindObjInObjRange(const SOLDIERTYPE* const pSoldier, UINT16 usItem1, UINT16 usItem2)
 {
 	INT8		bLoop;
 	UINT16	usTemp;
