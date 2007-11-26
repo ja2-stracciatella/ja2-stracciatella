@@ -537,8 +537,8 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOtherSoldier);
-static INT8 FindRepairableItemOnOtherSoldier(SOLDIERTYPE* pSoldier, UINT8 ubPassType);
+static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pOtherSoldier);
+static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* pSoldier, UINT8 ubPassType);
 static BOOLEAN IsItemRepairable(UINT16 usItem, INT8 bStatus);
 
 
@@ -546,8 +546,6 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 {
 	INT8	bPocket;
 	UINT8	ubItemsInPocket, ubObjectInPocketCounter;
-	INT8 bLoop;
-	SOLDIERTYPE * pOtherSoldier;
 	OBJECTTYPE * pObj;
 	UINT8 ubPassType;
 
@@ -586,7 +584,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 		}
 
 		// have to check for attachments...
-		for ( bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++ )
+		for (INT8 bLoop = 0; bLoop < MAX_ATTACHMENTS; ++bLoop)
 		{
 			if ( pObj->usAttachItem[ bLoop ] != NOTHING )
 			{
@@ -604,10 +602,8 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 	if ( bHighestPass != - 1 )
 	{
 		// now look for items to repair on other mercs
-		for( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop < gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+		CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
 		{
-			pOtherSoldier = MercPtrs[ bLoop ];
-
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
 				// okay, seems like a candidate!  Check if he has anything that needs unjamming or repairs
@@ -2569,13 +2565,11 @@ INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEA
 
 
 // does another merc have a repairable item on them?
-static INT8 FindRepairableItemOnOtherSoldier(SOLDIERTYPE* pSoldier, UINT8 ubPassType)
+static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* const pSoldier, const UINT8 ubPassType)
 {
 	INT8 bLoop, bLoop2;
 	REPAIR_PASS_SLOTS_TYPE *pPassList;
 	INT8 bSlotToCheck;
-	OBJECTTYPE * pObj;
-
 
 	Assert( ubPassType < NUM_REPAIR_PASS_TYPES );
 
@@ -2586,7 +2580,7 @@ static INT8 FindRepairableItemOnOtherSoldier(SOLDIERTYPE* pSoldier, UINT8 ubPass
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );
 
-		pObj = &( pSoldier->inv[ bSlotToCheck ] );
+		const OBJECTTYPE* const pObj = &pSoldier->inv[bSlotToCheck];
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
 			if ( IsItemRepairable( pObj->usItem, pObj->bStatus[bLoop2] ) )
@@ -10335,13 +10329,9 @@ static UINT32 GetLastSquadListedInSquadMenu(void)
 }
 
 
-static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOtherSoldier)
+static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pOtherSoldier)
 {
 	if ( pOtherSoldier == pSoldier )
-	{
-		return( FALSE );
-	}
-	if ( !pOtherSoldier->bActive )
 	{
 		return( FALSE );
 	}
@@ -10467,9 +10457,7 @@ void ResumeOldAssignment(SOLDIERTYPE* pSoldier)
 static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 {
 	UINT8 ubPassType;
-	INT8 bLoop;
 	INT8 bPocket;
-	SOLDIERTYPE * pOtherSoldier;
 	SOLDIERTYPE * pBestOtherSoldier;
 	INT8 bPriority, bBestPriority = -1;
 	BOOLEAN fSomethingWasRepairedThisPass;
@@ -10482,10 +10470,8 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 
 
 		// look for jammed guns on other soldiers in sector and unjam them
-		for( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop < gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+		FOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
 		{
-			pOtherSoldier = MercPtrs[ bLoop ];
-
 			// check character is valid, alive, same sector, not between, has inventory, etc.
 			if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 			{
@@ -10503,10 +10489,8 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 			pBestOtherSoldier = NULL;
 
 			// now look for items to repair on other mercs
-			for( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop < gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+			FOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
 			{
-				pOtherSoldier = MercPtrs[ bLoop ];
-
 				// check character is valid, alive, same sector, not between, has inventory, etc.
 				if ( CanCharacterRepairAnotherSoldiersStuff( pSoldier, pOtherSoldier ) )
 				{
