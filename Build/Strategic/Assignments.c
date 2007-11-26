@@ -1872,7 +1872,7 @@ static UINT8 FindNumberInSectorWithAssignment(INT16 sX, INT16 sY, INT8 bAssignme
 }
 
 
-static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);
+static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);
 
 
 static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck)
@@ -2066,7 +2066,7 @@ static UINT16 TotalMedicalKitPoints(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN EnoughTimeOnAssignment(SOLDIERTYPE* pSoldier);
+static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* pSoldier);
 static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ);
 
 
@@ -2271,11 +2271,11 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 }
 
 
-static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE* pPatient);
+static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* pPatient);
 
 
 // can this soldier be healed by this doctor?
-static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck)
+static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pDoctor, const BOOLEAN fIgnoreAssignment, const BOOLEAN fThisHour, const BOOLEAN fSkipKitCheck, const BOOLEAN fSkipSkillCheck)
 {
 	// must be an active guy
 	if (pSoldier -> bActive == FALSE)
@@ -2330,7 +2330,7 @@ static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pD
 
 
 // returns minimum medical skill necessary to treat this patient
-static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE* pPatient)
+static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* const pPatient)
 {
 	// get the minimum skill to handle a character under OKLIFE
 
@@ -9579,7 +9579,7 @@ void SetTimeOfAssignmentChangeForMerc( SOLDIERTYPE *pSoldier )
 
 
 // have we spent enough time on assignment for it to count?
-static BOOLEAN EnoughTimeOnAssignment(SOLDIERTYPE* pSoldier)
+static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* const pSoldier)
 {
 	if( GetWorldTotalMin() - pSoldier->uiLastAssignmentChangeMin >= MINUTES_FOR_ASSIGNMENT_TO_COUNT )
 	{
