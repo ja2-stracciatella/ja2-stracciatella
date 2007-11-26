@@ -157,9 +157,6 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 // MercDailyUpdate() gets called every day at midnight.  If something is to happen to a merc that day, add an event for it.
 void MercDailyUpdate()
 {
-	INT32		cnt;
-	INT8		bLastTeamID;
-	SOLDIERTYPE		*pSoldier;
 	//SOLDIERTYPE *pQuitList[ 21 ];
 	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiChance;
@@ -191,17 +188,10 @@ void MercDailyUpdate()
 	AddSameDayStrategicEvent( EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_2,	0 );
 	AddSameDayStrategicEvent( EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_3,	0 );
 
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-
-
-	//loop though all the mercs
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		//if the merc is active
-		if ( ( pSoldier->bActive )&&( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )
+		if (pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT)
 		{
 			//CJC: Reset dialogue flags for quotes that can be said once/day
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_ANNOYING_MERC );
@@ -325,28 +315,25 @@ void MercDailyUpdate()
 		}
 		else
 		{
-			if( ( pSoldier->bActive ) && ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
+			if (pSoldier->bAssignment == ASSIGNMENT_POW)
 			{
 				pSoldier->iEndofContractTime += 1440;
 			}
 		}
 
 		// if active, here, & alive (POW is ok, don't care)
-		if( ( pSoldier->bActive ) && ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&
-																 ( pSoldier->bAssignment != IN_TRANSIT ) )
+		if (pSoldier->bAssignment != ASSIGNMENT_DEAD &&
+				pSoldier->bAssignment != IN_TRANSIT)
 		{
 			// increment the "man days" played counter for each such merc in the player's employment
 			gStrategicStatus.uiManDaysPlayed++;
 		}
 	}
 
-	//r eset the counter
-	cnt = 0;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		//if the merc is active
-		if ( ( pSoldier->bActive )&&( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )
+		if (pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT)
 		{
 			//if its a MERC merc, determine if the merc should leave ( because player refused to pay for merc )
 			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
@@ -366,7 +353,7 @@ void MercDailyUpdate()
 	}
 
 	//Loop through all the profiles
-	for( cnt = 0; cnt < NUM_PROFILES; cnt++)
+	for (INT32 cnt = 0; cnt < NUM_PROFILES; ++cnt)
 	{
 		pProfile = &(gMercProfiles[ cnt ]);
 
@@ -763,28 +750,19 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 
 void UpdateBuddyAndHatedCounters( void )
 {
-	INT8									bMercID;
 	INT32									iLoop;
-	INT8									bOtherID;
-	INT8									bLastTeamID;
 	UINT8									ubOtherProfileID;
-	SOLDIERTYPE						*pSoldier;
-	SOLDIERTYPE						*pOtherSoldier;
 	MERCPROFILESTRUCT			*pProfile;
 	BOOLEAN								fSameGroupOnly;
 
 	BOOLEAN								fUpdatedTimeTillNextHatedComplaint = FALSE;
 
-	bMercID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-	//loop though all the mercs
-  for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		fSameGroupOnly = FALSE;
 
 		//if the merc is active and on a combat assignment
-		if ( pSoldier->bActive && pSoldier->bAssignment < ON_DUTY )
+		if (pSoldier->bAssignment < ON_DUTY)
 		{
 			pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
 
@@ -796,13 +774,10 @@ void UpdateBuddyAndHatedCounters( void )
 
 			fUpdatedTimeTillNextHatedComplaint = FALSE;
 
-			bOtherID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-			for ( pOtherSoldier = MercPtrs[ bOtherID ]; bOtherID <= bLastTeamID; bOtherID++, pOtherSoldier++)
+			CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
 			{
 				// is this guy in the same sector and on active duty (or in the same moving group)
-
-				if (bOtherID != bMercID && pOtherSoldier->bActive && pOtherSoldier->bAssignment < ON_DUTY )
+				if (pOtherSoldier != pSoldier && pOtherSoldier->bAssignment < ON_DUTY)
 				{
 					if (fSameGroupOnly)
 					{
@@ -1021,56 +996,47 @@ void UpdateBuddyAndHatedCounters( void )
 	}
 }
 
+
 void HourlyCamouflageUpdate( void )
 {
-	INT8 bMercID, bLastTeamID;
-	SOLDIERTYPE * pSoldier;
-
-	bMercID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-	// loop through all mercs
-  for ( pSoldier = MercPtrs[ bMercID ]; bMercID <= bLastTeamID; bMercID++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
-		if ( pSoldier->bActive )
+		// if the merc has non-zero camo, degrade it by 1%
+		if( ( pSoldier->bCamo > 0) && ( !( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED) ) ) )
 		{
-			// if the merc has non-zero camo, degrade it by 1%
-			if( ( pSoldier->bCamo > 0) && ( !( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED) ) ) )
+			pSoldier->bCamo -= 2;
+			if (pSoldier->bCamo <= 0)
 			{
-				pSoldier->bCamo -= 2;
-				if (pSoldier->bCamo <= 0)
+				pSoldier->bCamo = 0;
+				// Reload palettes....
+				if ( pSoldier->bInSector )
 				{
-					pSoldier->bCamo = 0;
-					// Reload palettes....
-					if ( pSoldier->bInSector )
-					{
-						CreateSoldierPalettes( pSoldier );
-					}
-
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
-					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+					CreateSoldierPalettes( pSoldier );
 				}
+
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
+				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
-			// if the merc has non-zero monster smell, degrade it by 1
-			if ( pSoldier->bMonsterSmell > 0 )
+		}
+		// if the merc has non-zero monster smell, degrade it by 1
+		if ( pSoldier->bMonsterSmell > 0 )
+		{
+			pSoldier->bMonsterSmell--;
+
+			/*
+			if (pSoldier->bMonsterSmell == 0)
 			{
-				pSoldier->bMonsterSmell--;
+				// Reload palettes....
 
-				/*
-				if (pSoldier->bMonsterSmell == 0)
+				if ( pSoldier->bInSector )
 				{
-					// Reload palettes....
-
-					if ( pSoldier->bInSector )
-					{
-						CreateSoldierPalettes( pSoldier );
-					}
-
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
-					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+					CreateSoldierPalettes( pSoldier );
 				}
-				*/
+
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
+				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
+			*/
 		}
 	}
 }
