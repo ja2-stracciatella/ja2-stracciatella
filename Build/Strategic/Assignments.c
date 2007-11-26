@@ -283,20 +283,13 @@ void InitSectorsWithSoldiersList( void )
 
 void BuildSectorsWithSoldiersList( void )
 {
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	pSoldier = MercPtrs[ 0 ];
-
 	// fills array with pressence of player controlled characters
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if(pTeamSoldier -> bActive)
-		{
-		  fSectorsWithSoldiers[ pTeamSoldier -> sSectorX + pTeamSoldier -> sSectorY * MAP_WORLD_X ][ pTeamSoldier -> bSectorZ ] = TRUE;
-		}
+		fSectorsWithSoldiers[s->sSectorX + s->sSectorY * MAP_WORLD_X][s->bSectorZ] = TRUE;
 	}
 }
+
 
 void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 {
@@ -990,22 +983,20 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 // only 2 trainers are allowed per sector, so this function counts the # in a guy's sector
 static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* const pSoldier)
 {
-	INT8	bLoop;
-	SOLDIERTYPE * pOtherSoldier;
-	INT8	bCount = 0;
-
-	for ( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+	INT8 bCount = 0;
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		pOtherSoldier = MercPtrs[ bLoop ];
-		if ( pSoldier != pOtherSoldier && pOtherSoldier->bActive && pOtherSoldier->bLife >= OKLIFE && pOtherSoldier->sSectorX == pSoldier->sSectorX && pOtherSoldier->sSectorY == pSoldier->sSectorY && pSoldier->bSectorZ == pOtherSoldier->bSectorZ )
+		if (s != pSoldier &&
+				s->bLife >= OKLIFE &&
+				s->sSectorX == pSoldier->sSectorX &&
+				s->sSectorY == pSoldier->sSectorY &&
+				s->bSectorZ == pSoldier->bSectorZ &&
+				s->bAssignment == TRAIN_TOWN)
 		{
-			if (pOtherSoldier->bAssignment == TRAIN_TOWN )
-			{
-				bCount++;
-			}
+			++bCount;
 		}
 	}
-	return( bCount );
+	return bCount;
 }
 
 
@@ -1845,30 +1836,17 @@ void VerifyTownTrainingIsPaidFor( void )
 // how many people in this secotr have this assignment?
 static UINT8 FindNumberInSectorWithAssignment(INT16 sX, INT16 sY, INT8 bAssignment)
 {
-	// run thought list of characters find number with this assignment
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
+	// run through list of characters and find number with this assignment
 	INT8 bNumberOfPeople = 0;
-
-	// set psoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
-	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
+		if (s->sSectorX == sX && s->sSectorY == sY && s->bAssignment == bAssignment)
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) &&( pTeamSoldier -> bAssignment == bAssignment ) )
-			{
-				// increment number of people who are on this assignment
-				if(pTeamSoldier -> bActive)
-					bNumberOfPeople++;
-			}
+			// increment number of people who are on this assignment
+			++bNumberOfPeople;
 		}
 	}
-
-
-	return( bNumberOfPeople );
+	return bNumberOfPeople;
 }
 
 
@@ -1877,50 +1855,36 @@ static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOL
 
 static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck)
 {
-	int cnt;
-	SOLDIERTYPE *pSoldier = MercPtrs[0], *pTeamSoldier = NULL;
-	UINT8 ubNumberOfPeople = 0;
-
-
 	// go through list of characters, find all who are patients/doctors healable by this doctor
-	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	UINT8 ubNumberOfPeople = 0;
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
+		if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, fThisHour, fSkipKitCheck, fSkipSkillCheck) == TRUE)
 		{
-			if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, fThisHour, fSkipKitCheck, fSkipSkillCheck ) == TRUE )
-			{
-				// increment number of doctorable patients/doctors
-				ubNumberOfPeople++;
-			}
+			// increment number of doctorable patients/doctors
+			++ubNumberOfPeople;
 		}
 	}
-
-	return( ubNumberOfPeople );
+	return ubNumberOfPeople;
 }
 
 
 SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThisHour )
 {
-	int cnt;
-	SOLDIERTYPE *pSoldier = MercPtrs[0], *pTeamSoldier = NULL;
-
-
 	// go through list of characters, find all who are patients/doctors healable by this doctor
-	for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
 		// doctor?
-		if( ( pTeamSoldier -> bActive ) && ( pTeamSoldier->bAssignment == DOCTOR ) )
+		if (s->bAssignment == DOCTOR &&
+				CanSoldierBeHealedByDoctor(pPatient, s, FALSE, fThisHour, FALSE, FALSE) == TRUE)
 		{
-			if( CanSoldierBeHealedByDoctor( pPatient, pTeamSoldier, FALSE, fThisHour, FALSE, FALSE ) == TRUE )
-			{
-				// found one
-				return( pTeamSoldier );
-			}
+			// found one
+			return s;
 		}
 	}
 
 	// there aren't any doctors, or the ones there can't do the job
-	return( NULL );
+	return NULL;
 }
 
 
@@ -2073,42 +2037,22 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ);
 // handle doctor in this sector
 static void HandleDoctorsInSector(INT16 sX, INT16 sY, INT8 bZ)
 {
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	// set psoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
 	// will handle doctor/patient relationship in sector
 
 	// go through list of characters, find all doctors in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if(pTeamSoldier -> bActive)
+		if (s->sSectorX == sX &&
+				s->sSectorY == sY &&
+				s->bSectorZ == bZ &&
+				s->bAssignment == DOCTOR &&
+				!s->fMercAsleep)
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) && ( pTeamSoldier -> bSectorZ == bZ ) )
+			MakeSureMedKitIsInHand(s);
+			// character is in sector, check if can doctor, if so...heal people
+			if (CanCharacterDoctor(s) && EnoughTimeOnAssignment(s))
 			{
-				if ( ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
-				{
-					MakeSureMedKitIsInHand( pTeamSoldier );
-					// character is in sector, check if can doctor, if so...heal people
-					if ( CanCharacterDoctor( pTeamSoldier ) && EnoughTimeOnAssignment( pTeamSoldier ) )
-					{
-						HealCharacters( pTeamSoldier, sX, sY, bZ );
-					}
-				}
-				/*
-				if( ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
-				{
-					MakeSureMedKitIsInHand( pTeamSoldier );
-				}
-
-				// character is in sector, check if can doctor, if so...heal people
-				if( CanCharacterDoctor( pTeamSoldier ) && ( pTeamSoldier -> bAssignment == DOCTOR ) && ( pTeamSoldier->fMercAsleep == FALSE ) && EnoughTimeOnAssignment( pTeamSoldier ) )
-				{
-					HealCharacters( pTeamSoldier, sX, sY, bZ );
-				}
-				*/
+				HealCharacters(s, sX, sY, bZ);
 			}
 		}
 	}
@@ -2120,22 +2064,12 @@ static void HandleDoctorsInSector(INT16 sX, INT16 sY, INT8 bZ)
 // update characters who might done healing but are still patients
 static void UpdatePatientsWhoAreDoneHealing(void)
 {
-	INT32 cnt = 0;
-	SOLDIERTYPE *pSoldier = NULL, *pTeamSoldier = NULL;
-
-	// set as first in list
-	pSoldier = MercPtrs[0];
-
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		// active soldier?
-		if( pTeamSoldier->bActive )
+		// patient who doesn't need healing
+		if (s->bAssignment == PATIENT && s->bLife == s->bLifeMax)
 		{
-			// patient who doesn't need healing
-			if( ( pTeamSoldier->bAssignment == PATIENT ) &&( pTeamSoldier->bLife == pTeamSoldier->bLifeMax ) )
-			{
-				AssignmentDone( pTeamSoldier, TRUE, TRUE );
-			}
+			AssignmentDone(s, TRUE, TRUE);
 		}
 	}
 }
@@ -2155,10 +2089,7 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 	UINT16 usEvenHealingAmount = 0;
 	UINT16 usMax =0;
 	UINT8 ubTotalNumberOfPatients = 0;
-	SOLDIERTYPE *pSoldier = MercPtrs[0], *pTeamSoldier = NULL, *pWorstHurtSoldier = NULL;
-  INT32 cnt = 0;
 	UINT16 usOldLeftOvers = 0;
-
 
 	// now find number of healable mercs in sector that are wounded
 	ubTotalNumberOfPatients = GetNumberThatCanBeDoctored( pDoctor, HEALABLE_THIS_HOUR, FALSE, FALSE );
@@ -2175,15 +2106,12 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 
 
 		// heal each of the healable mercs by this equal amount
-		for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if( pTeamSoldier -> bActive )
+			if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE) == TRUE)
 			{
-				if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE ) == TRUE )
-				{
-					// can heal and is patient, heal them
-					usRemainingHealingPts -= HealPatient( pTeamSoldier, pDoctor, usEvenHealingAmount );
-				}
+				// can heal and is patient, heal them
+				usRemainingHealingPts -= HealPatient(s, pDoctor, usEvenHealingAmount);
 			}
 		}
 
@@ -2192,29 +2120,26 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 		if ( usRemainingHealingPts > 0)
 		{
 			// split those up based on need - lowest life patients get them first
+			SOLDIERTYPE* pWorstHurtSoldier;
 			do
 			{
 				// find the worst hurt patient
 				pWorstHurtSoldier = NULL;
-
-				for ( cnt = 0, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+				FOR_ALL_IN_TEAM(s, OUR_TEAM)
 				{
-					if( pTeamSoldier -> bActive )
+					if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE) == TRUE)
 					{
-						if( CanSoldierBeHealedByDoctor( pTeamSoldier, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE ) == TRUE )
+						if (pWorstHurtSoldier == NULL)
 						{
-							if( pWorstHurtSoldier == NULL )
+							pWorstHurtSoldier = s;
+						}
+						else
+						{
+							// check to see if this guy is hurt worse than anyone previous?
+							if (s->bLife < pWorstHurtSoldier->bLife)
 							{
-								pWorstHurtSoldier = pTeamSoldier;
-							}
-							else
-							{
-								// check to see if this guy is hurt worse than anyone previous?
-								if( pTeamSoldier -> bLife < pWorstHurtSoldier -> bLife )
-								{
-									// he is now the worse hurt guy
-									pWorstHurtSoldier = pTeamSoldier;
-								}
+								// he is now the worse hurt guy
+								pWorstHurtSoldier = s;
 							}
 						}
 					}
@@ -2477,31 +2402,22 @@ static void HealHospitalPatient(SOLDIERTYPE* pPatient, UINT16 usHealingPtsLeft);
 
 static void CheckForAndHandleHospitalPatients(void)
 {
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
 	if( fSectorsWithSoldiers[ HOSPITAL_SECTOR_X + HOSPITAL_SECTOR_Y * MAP_WORLD_X ][ 0 ] == FALSE )
 	{
 		// nobody in the hospital sector... leave
 		return;
 	}
 
-	// set pSoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
 	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
+		if (s->bAssignment == ASSIGNMENT_HOSPITAL &&
+				s->sSectorX == HOSPITAL_SECTOR_X &&
+				s->sSectorY == HOSPITAL_SECTOR_Y &&
+				s->bSectorZ == 0)
 		{
-			if ( pTeamSoldier -> bAssignment == ASSIGNMENT_HOSPITAL )
-			{
-				if ( ( pTeamSoldier -> sSectorX == HOSPITAL_SECTOR_X ) && ( pTeamSoldier -> sSectorY == HOSPITAL_SECTOR_Y ) && ( pTeamSoldier -> bSectorZ == 0 ) )
-				{
-					// heal this character
-					HealHospitalPatient( pTeamSoldier, HOSPITAL_HEALING_RATE );
-				}
-			}
+			// heal this character
+			HealHospitalPatient(s, HOSPITAL_HEALING_RATE);
 		}
 	}
 }
@@ -2575,30 +2491,19 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier);
 // handle any repair man in sector
 static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ)
 {
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	// set psoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
-	// will handle doctor/patient relationship in sector
-
-	// go through list of characters, find all doctors in sector
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
+		if (s->sSectorX == sX &&
+				s->sSectorY == sY &&
+				s->bSectorZ == bZ &&
+				s->bAssignment == REPAIR &&
+				!s->fMercAsleep)
 		{
-			if( ( pTeamSoldier -> sSectorX == sX ) && ( pTeamSoldier -> sSectorY == sY ) && ( pTeamSoldier -> bSectorZ == bZ) )
+			MakeSureToolKitIsInHand(s);
+			// character is in sector, check if can repair
+			if (CanCharacterRepair(s) && EnoughTimeOnAssignment(s))
 			{
-				if ( ( pTeamSoldier -> bAssignment == REPAIR ) && ( pTeamSoldier->fMercAsleep == FALSE ) )
-				{
-					MakeSureToolKitIsInHand( pTeamSoldier );
-					// character is in sector, check if can repair
-					if ( CanCharacterRepair( pTeamSoldier ) && ( EnoughTimeOnAssignment( pTeamSoldier ) ) )
-					{
-						HandleRepairBySoldier( pTeamSoldier );
-					}
-				}
+				HandleRepairBySoldier(s);
 			}
 		}
 	}
@@ -3133,14 +3038,10 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY
 // ONCE PER HOUR, will handle ALL kinds of training (self, teaching, and town) in this sector
 static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 {
-	SOLDIERTYPE *pTrainer;
-	SOLDIERTYPE *pStudent;
 	UINT8 ubStat;
 	BOOLEAN fAtGunRange = FALSE;
-  UINT32 uiCnt=0;
 	INT16 sTotalTrainingPts = 0;
 	INT16 sTrainingPtsDueToInstructor = 0;
-	SOLDIERTYPE *pStatTrainerList[ NUM_TRAINABLE_STATS ];		// can't have more "best" trainers than trainable stats
 	INT16 sBestTrainingPts;
 	INT16 sTownTrainingPts;
 	TOWN_TRAINER_TYPE TownTrainer[ MAX_CHARACTER_COUNT ];
@@ -3174,6 +3075,7 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 	}
 
 	// init trainer list
+	const SOLDIERTYPE* pStatTrainerList[NUM_TRAINABLE_STATS]; // can't have more "best" trainers than trainable stats
 	memset( pStatTrainerList, 0, sizeof( pStatTrainerList ) );
 
 	// build list of teammate trainers in this sector.
@@ -3187,9 +3089,9 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 		sBestTrainingPts = -1;
 
 		// search team for active instructors in this sector
-		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pTrainer++)
+		CFOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
 		{
-			if( pTrainer -> bActive && ( pTrainer -> sSectorX == sMapX ) && ( pTrainer -> sSectorY == sMapY ) && ( pTrainer -> bSectorZ == bZ) )
+			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
 				// if he's training teammates in this stat
 				if( ( pTrainer -> bAssignment == TRAIN_TEAMMATE ) && ( pTrainer -> bTrainStat == ubStat) && ( EnoughTimeOnAssignment( pTrainer ) ) && ( pTrainer->fMercAsleep == FALSE ) )
@@ -3210,10 +3112,10 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 
 
 	// now search team for active self-trainers in this sector
-	for ( uiCnt = 0, pStudent = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pStudent++)
+	FOR_ALL_IN_TEAM(pStudent, OUR_TEAM)
 	{
 		// see if this merc is active and in the same sector
-		if( ( pStudent -> bActive) && ( pStudent -> sSectorX == sMapX ) && ( pStudent -> sSectorY == sMapY ) && ( pStudent -> bSectorZ == bZ ) )
+		if (pStudent->sSectorX == sMapX && pStudent->sSectorY == sMapY && pStudent->bSectorZ == bZ)
 		{
 			// if he's training himself (alone, or by others), then he's a student
 			if ( ( pStudent -> bAssignment == TRAIN_SELF ) || ( pStudent -> bAssignment == TRAIN_BY_OTHER ) )
@@ -3227,7 +3129,7 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 					if ( pStudent -> bAssignment == TRAIN_BY_OTHER )
 					{
 						// grab the pointer to the (potential) trainer for this stat
-						pTrainer = pStatTrainerList[ pStudent -> bTrainStat ];
+						const SOLDIERTYPE* const pTrainer = pStatTrainerList[pStudent->bTrainStat];
 
 						// if this stat HAS a trainer in sector at all
 						if (pTrainer != NULL)
@@ -3265,9 +3167,9 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 		ubTownTrainers = 0;
 
 		// build list of all the town trainers in this sector and their training pts
-		for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++,pTrainer++)
+		FOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
 		{
-			if( pTrainer -> bActive && ( pTrainer -> sSectorX == sMapX ) && ( pTrainer -> sSectorY == sMapY ) && ( pTrainer -> bSectorZ == bZ ) )
+			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
 				if( ( pTrainer -> bAssignment == TRAIN_TOWN ) && ( EnoughTimeOnAssignment( pTrainer ) )  && ( pTrainer->fMercAsleep == FALSE ) )
 				{
@@ -3294,7 +3196,7 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 		}
 
 		// for each trainer, in sorted order from the best to the worst
-		for (uiCnt = 0; uiCnt < ubTownTrainers; uiCnt++)
+		for (UINT32 uiCnt = 0; uiCnt < ubTownTrainers; uiCnt++)
 		{
 			// top trainer has full effect (divide by 1), then divide by 2, 4, 8, etc.
 			//sTownTrainingPts = TownTrainer[ uiCnt ].sTrainingPts / (UINT16) pow(2, uiCnt);
@@ -3590,8 +3492,6 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
 	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
-	UINT32	uiCnt;
-	SOLDIERTYPE * pTrainer;
 
 	// assume training impossible for max pts
 	*pusMaxPts = 0;
@@ -3649,9 +3549,9 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 	sBestTrainingPts = -1;
 
 	// search team for active instructors in this sector
-	for ( uiCnt = 0, pTrainer = MercPtrs[ uiCnt ]; uiCnt <= gTacticalStatus.Team[ MercPtrs[0] -> bTeam ].bLastID; uiCnt++, pTrainer++)
+	CFOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)
 	{
-		if (pTrainer->bActive && pTrainer->sSectorX == s->sSectorX && pTrainer->sSectorY == s->sSectorY && pTrainer->bSectorZ == s->bSectorZ)
+		if (pTrainer->sSectorX == s->sSectorX && pTrainer->sSectorY == s->sSectorY && pTrainer->bSectorZ == s->bSectorZ)
 		{
 			// if he's training teammates in this stat
 			// NB skip the EnoughTime requirement to display what the value should be even if haven't been training long yet...
@@ -3999,22 +3899,12 @@ static void HandleHealingByNaturalCauses(SOLDIERTYPE* pSoldier);
 // handle natural healing for all mercs on players team
 static void HandleNaturalHealing(void)
 {
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	// set psoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
-	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
+		// mechanical members don't regenerate!
+		if (!(s->uiStatusFlags & SOLDIER_VEHICLE) && !(AM_A_ROBOT(s)))
 		{
-			// mechanical members don't regenerate!
-			if( !( pTeamSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pTeamSoldier ) ) )
-			{
-				HandleHealingByNaturalCauses( pTeamSoldier );
-			}
+			HandleHealingByNaturalCauses(s);
 		}
 	}
 }
@@ -8626,25 +8516,11 @@ static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ
 
 static SOLDIERTYPE* GetRobotSoldier(void)
 {
-	SOLDIERTYPE *pSoldier = NULL, *pTeamSoldier = NULL;
-  INT32 cnt=0;
-
-	// set pSoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
-	// go through list of characters, find all who are on this assignment
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier -> bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if( pTeamSoldier -> bActive )
-		{
-			if( AM_A_ROBOT( pTeamSoldier ) )
-			{
-				return (pTeamSoldier);
-			}
-		}
+		if (AM_A_ROBOT(s)) return s;
 	}
-
-	return( NULL );
+	return NULL;
 }
 
 
