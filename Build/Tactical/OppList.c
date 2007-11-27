@@ -2333,7 +2333,7 @@ static void RemoveOneOpponent(SOLDIERTYPE* pSoldier)
 }
 
 
-static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel);
+static void UpdatePublic(UINT8 ubTeam, SOLDIERTYPE* s, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel);
 static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier);
 
 
@@ -2349,7 +2349,7 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
  // clean up the public opponent lists and locations
  for (ubLoop = 0; ubLoop < MAXTEAMS; ubLoop++)
    // never causes any additional looks
-   UpdatePublic(ubLoop,ubTarget,NOT_HEARD_OR_SEEN,NOWHERE,0);
+		UpdatePublic(ubLoop, pSoldier, NOT_HEARD_OR_SEEN, NOWHERE, 0);
 
 /*
 
@@ -2414,15 +2414,13 @@ IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
 }
 
 
-static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGridno, INT8 bLevel)
+static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bNewOpplist, const INT16 sGridno, const INT8 bLevel)
 {
  INT32 cnt;
- INT8 *pbPublOL;
  UINT8 ubTeamMustLookAgain = FALSE;
  SOLDIERTYPE *pSoldier;
 
-
- pbPublOL = &(gbPublicOpplist[ubTeam][ubID]);
+ INT8* const pbPublOL = &gbPublicOpplist[ubTeam][s->ubID];
 
  // if new opplist is more up-to-date, or we are just wiping it for some reason
  if ((gubKnowledgeValue[*pbPublOL - OLDEST_HEARD_VALUE][bNewOpplist - OLDEST_HEARD_VALUE] > 0) ||
@@ -2438,8 +2436,8 @@ static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGrid
 
 
  // always update the gridno, no matter what
- gsPublicLastKnownOppLoc[ubTeam][ubID] = sGridno;
- gbPublicLastKnownOppLevel[ubTeam][ubID] = bLevel;
+ gsPublicLastKnownOppLoc[ubTeam][s->ubID] = sGridno;
+ gbPublicLastKnownOppLevel[ubTeam][s->ubID] = bLevel;
 
  // if team has been told about a guy the team was completely unaware of
  if (ubTeamMustLookAgain)
@@ -2453,9 +2451,9 @@ static void UpdatePublic(UINT8 ubTeam, UINT8 ubID, INT8 bNewOpplist, INT16 sGrid
      if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && !( pSoldier->uiStatusFlags & SOLDIER_GASSED ) )
      {
        // if soldier isn't aware of guynum, give him another chance to see
-       if (pSoldier->bOppList[ubID] == NOT_HEARD_OR_SEEN)
+       if (pSoldier->bOppList[s->ubID] == NOT_HEARD_OR_SEEN)
 			 {
-					if (ManLooksForMan(pSoldier,MercPtrs[ubID],UPDATEPUBLIC))
+					if (ManLooksForMan(pSoldier, s, UPDATEPUBLIC))
 						// then he actually saw guynum because of our new public knowledge
 
 					// whether successful or not, whack newOppCnt.  Since this is a
@@ -3048,9 +3046,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 			 String("...............UPDATE PUBLIC: soldier %d SEEING soldier %d",pSoldier->ubID,pOpponent->ubID) );
 #endif
 
-
-
-   UpdatePublic(ubTeamToRadioTo,pOpponent->ubID,*pPersOL,gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID],gbLastKnownOppLevel[pSoldier->ubID][pOpponent->ubID]);
+		UpdatePublic(ubTeamToRadioTo, pOpponent, *pPersOL, gsLastKnownOppLoc[pSoldier->ubID][pOpponent->ubID], gbLastKnownOppLevel[pSoldier->ubID][pOpponent->ubID]);
   }
 
 
@@ -4784,7 +4780,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 #endif
 
 					// mark noise maker as having been PUBLICLY heard THIS TURN
-					UpdatePublic(bTeam, source->ubID, HEARD_THIS_TURN, sGridNo, bLevel);
+					UpdatePublic(bTeam, source, HEARD_THIS_TURN, sGridNo, bLevel);
 				}
 			}
 		}
@@ -5666,7 +5662,7 @@ void DecayPublicOpplist(INT8 bTeam)
 				// forget about him,
 				// and also forget where he was last seen (it's been too long)
 				// this is mainly so POINT_PATROL guys don't SEEK_OPPONENTs forever
-				UpdatePublic(bTeam,pSoldier->ubID,NOT_HEARD_OR_SEEN,NOWHERE,0);
+				UpdatePublic(bTeam, pSoldier, NOT_HEARD_OR_SEEN, NOWHERE, 0);
 			}
 		}
 	}
@@ -5869,7 +5865,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		if (pDefender->uiStatusFlags & SOLDIER_PC)
 		{
 			// mark attacker as having been PUBLICLY heard THIS TURN & remember where
-			UpdatePublic( pDefender->bTeam, pAttacker->ubID, HEARD_THIS_TURN, pAttacker->sGridNo, pAttacker->bLevel );
+			UpdatePublic(pDefender->bTeam, pAttacker, HEARD_THIS_TURN, pAttacker->sGridNo, pAttacker->bLevel);
 		}
   }
 
