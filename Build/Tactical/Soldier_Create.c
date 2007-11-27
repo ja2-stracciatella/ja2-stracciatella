@@ -1901,26 +1901,15 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 {
-	INT32 i, iStart, iEnd;
 	SOLDIERTYPE *pSoldier;
 	//This code looks for a soldier of specified type that currently exists in tactical and
 	//returns the pointer to that soldier.  This is used when copying the exact status of
 	//all remaining enemy troops (or creatures) to finish the battle in autoresolve.  To
 	//signify that the troop has already been reserved, we simply set their gridno to NOWHERE.
-	if( ubSoldierClass != SOLDIER_CLASS_CREATURE )
-	{ //use the enemy team
-		iStart = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-		iEnd = gTacticalStatus.Team[ ENEMY_TEAM ].bLastID;
-	}
-	else
-	{ //use the creature team
-		iStart = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID;
-		iEnd = gTacticalStatus.Team[ CREATURE_TEAM ].bLastID;
-	}
-	for( i = iStart; i <= iEnd; i++ )
+	const INT8 team = (ubSoldierClass == SOLDIER_CLASS_CREATURE ? CREATURE_TEAM : ENEMY_TEAM);
+	FOR_ALL_IN_TEAM(s, team)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive && s->bInSector && s->bLife != 0 && s->sGridNo != NOWHERE)
+		if (s->bInSector && s->bLife != 0 && s->sGridNo != NOWHERE)
 		{
 			if (s->ubSoldierClass == ubSoldierClass)
 			{
