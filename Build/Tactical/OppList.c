@@ -826,7 +826,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 }
 
 
-static INT16 TeamNoLongerSeesMan(UINT8 ubTeam, SOLDIERTYPE* pOpponent, UINT8 ubExcludeID, INT8 bIteration)
+static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent, const SOLDIERTYPE* const exclude, const INT8 bIteration)
 {
  UINT16 bLoop;
  SOLDIERTYPE *pMate;
@@ -838,7 +838,7 @@ static INT16 TeamNoLongerSeesMan(UINT8 ubTeam, SOLDIERTYPE* pOpponent, UINT8 ubE
  for (pMate = MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ubTeam].bLastID; bLoop++,pMate++)
   {
    // if this "teammate" is me, myself, or I (whom we want to exclude)
-   if (bLoop == ubExcludeID)
+		if (pMate == exclude)
      continue;          // skip to next teammate, I KNOW I don't see him...
 
    // if this merc is not on the same team
@@ -860,12 +860,12 @@ static INT16 TeamNoLongerSeesMan(UINT8 ubTeam, SOLDIERTYPE* pOpponent, UINT8 ubE
 		if ( ubTeam == gbPlayerNum && gTacticalStatus.Team[ MILITIA_TEAM ].bTeamActive )
 		{
 			// check militia team as well
-			return( TeamNoLongerSeesMan( MILITIA_TEAM, pOpponent, ubExcludeID, 1 ) );
+			return TeamNoLongerSeesMan(MILITIA_TEAM, pOpponent, exclude, 1);
 		}
 		else if ( ubTeam == MILITIA_TEAM && gTacticalStatus.Team[ gbPlayerNum ].bTeamActive )
 		{
 			// check player team as well
-			return( TeamNoLongerSeesMan( gbPlayerNum, pOpponent, ubExcludeID, 1 ) );
+			return TeamNoLongerSeesMan(gbPlayerNum, pOpponent, exclude, 1);
 		}
 	}
 #endif
@@ -1379,7 +1379,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 	{
 		// check if I was the only one who was seeing this guy (exlude ourselves)
 		// THIS MUST HAPPEN EVEN FOR ENEMIES, TO MAKE THEIR PUBLIC opplist DECAY!
-		if (TeamNoLongerSeesMan(pSoldier->bTeam,pOpponent,pSoldier->ubID, 0 ))
+		if (TeamNoLongerSeesMan(pSoldier->bTeam, pOpponent, pSoldier, 0))
 		{
 #ifdef TESTOPPLIST
 			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String( "TeamNoLongerSeesMan: ID %d(%ls) to ID %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
@@ -2597,7 +2597,7 @@ void BetweenTurnsVisibilityAdjustments(void)
 #endif
 			{
 				// check if anyone on our team currently sees him (exclude NOBODY)
-				if (TeamNoLongerSeesMan(gbPlayerNum,pSoldier,NOBODY,0))
+				if (TeamNoLongerSeesMan(gbPlayerNum, pSoldier, NULL, 0))
 				{
 					// then our team has lost sight of him
 					pSoldier->bVisible = -1;		// make him fully invisible
