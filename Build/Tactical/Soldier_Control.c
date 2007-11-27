@@ -10448,22 +10448,14 @@ void BeginTyingToFall( SOLDIERTYPE *pSoldier )
 
 void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldierToSet )
 {
-	SOLDIERTYPE *pSoldier=NULL;
-	INT32 cnt;
-
 	if ( pSoldierToSet == NULL )
 	{
 		return;
 	}
 
-	// Loop through ALL teams...
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ LAST_TEAM ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		if( pSoldier->bActive )
-		{
-			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
-		}
+		s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 	}
 
 	pSoldierToSet->uiStatusFlags |= SOLDIER_UNDERAICONTROL;
