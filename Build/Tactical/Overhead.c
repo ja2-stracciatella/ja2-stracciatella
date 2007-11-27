@@ -3025,10 +3025,9 @@ UINT8 CivilianGroupMembersChangeSidesWithinProximity(SOLDIERTYPE* pAttacked)
 	if (pAttacked->ubCivilianGroup == NON_CIV_GROUP) return pAttacked->ubProfile;
 
 	UINT8 ubFirstProfile = NO_PROFILE;
-	for (UINT8 i = gTacticalStatus.Team[CIV_TEAM].bFirstID; i <= gTacticalStatus.Team[CIV_TEAM].bLastID; ++i)
+	FOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
-		SOLDIERTYPE* const s = MercPtrs[i];
-		if (!s->bActive || !s->bInSector || s->bLife == 0 || !s->bNeutral) continue;
+		if (!s->bInSector || s->bLife == 0 || !s->bNeutral) continue;
 		if (s->ubCivilianGroup != pAttacked->ubCivilianGroup || s->ubBodyType == COW) continue;
 
 		// if in LOS of this guy's attacker
@@ -3125,17 +3124,14 @@ SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 {
 	// change civ group side due to external event (wall blowing up)
-	INT32										cnt;
-	SOLDIERTYPE	*						pSoldier;
 	UINT8										ubFirstProfile = NO_PROFILE;
 
 	gTacticalStatus.fCivGroupHostile[ ubCivilianGroup ] = CIV_GROUP_HOSTILE;
 
 	// now change sides for anyone on the civ team
-	cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++ ,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
 	{
-		if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral)
+		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral)
 		{
 			if ( pSoldier->ubCivilianGroup == ubCivilianGroup && pSoldier->ubBodyType != COW )
 			{
@@ -3165,14 +3161,10 @@ void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 
 static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 {
-	INT32										cnt;
-	SOLDIERTYPE *						pSoldier;
-
 	// now change sides for anyone on the civ team
-	cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++ ,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP )
+		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral && pSoldier->ubCivilianGroup == HICKS_CIV_GROUP)
 		{
 			if ( SoldierToSoldierLineOfSightTest( pSoldier, pNastyGuy, (UINT8) MaxDistanceVisible(), TRUE ) )
 			{
@@ -4873,10 +4865,8 @@ static UINT8 NumEnemyInSectorExceptCreatures(void);
 //Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
 BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 {
-	SOLDIERTYPE *pTeamSoldier;
 	BOOLEAN			fBattleWon = TRUE;
 	BOOLEAN			fBattleLost = FALSE;
-	INT32				cnt = 0;
 	UINT16			usAnimState;
 
 	if ( gTacticalStatus.bBoxingState == BOXING )
@@ -5049,7 +5039,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			//if ( gTacticalStatus.bNumEnemiesFoughtInBattle > 0 )
 			{
 				// Loop through all mercs and make go
-				for ( pTeamSoldier = MercPtrs[ gTacticalStatus.Team[ gbPlayerNum ].bFirstID ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
+				INT32 cnt = 0;
+				for (SOLDIERTYPE* pTeamSoldier = MercPtrs[gTacticalStatus.Team[gbPlayerNum].bFirstID]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pTeamSoldier++)
 				{
 					if ( pTeamSoldier->bActive )
 					{
@@ -5138,8 +5129,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			}
 
 			// Loop through all militia and restore them to peaceful status
-			cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++,pTeamSoldier++)
+			INT32 cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID;
+			for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++, pTeamSoldier++)
 			{
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
 				{
@@ -5158,10 +5149,9 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
 
 			// Loop through all civs and restore them to peaceful status
-			cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++,pTeamSoldier++)
+			FOR_ALL_IN_TEAM(pTeamSoldier, CIV_TEAM)
 			{
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+				if (pTeamSoldier->bInSector)
 				{
 					pTeamSoldier->bAlertStatus = STATUS_GREEN;
 					pTeamSoldier->sNoiseGridno = NOWHERE;
@@ -6785,10 +6775,9 @@ BOOLEAN HostileCiviliansPresent( void )
 {
 	if (!gTacticalStatus.Team[CIV_TEAM].bTeamActive) return FALSE;
 
-	for (INT32 i = gTacticalStatus.Team[CIV_TEAM].bFirstID; i <= gTacticalStatus.Team[CIV_TEAM].bLastID; ++i)
+	CFOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
-		const SOLDIERTYPE* const s = MercPtrs[i];
-		if (s->bActive && s->bInSector && s->bLife > 0 && !s->bNeutral)
+		if (s->bInSector && s->bLife > 0 && !s->bNeutral)
 		{
 			return TRUE;
 		}

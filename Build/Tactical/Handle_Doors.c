@@ -394,17 +394,13 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 {
 	UINT8						ubRoom;
-	SOLDIERTYPE *		pGoon;
 	// if player is hacking at a door in the brothel and a kingpin guy can see him
 	if ( (InARoom( pSoldier->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom )) || (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_D && gbWorldSectorZ == 0 && (pSoldier->sGridNo == 11010 || pSoldier->sGridNo == 11177 || pSoldier->sGridNo == 11176 ) ) )
 	{
-		UINT8		ubLoop;
-
 		// see if a kingpin goon can see us
-		for ( ubLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
+		FOR_ALL_IN_TEAM(pGoon, CIV_TEAM)
 		{
-			pGoon = MercPtrs[ ubLoop ];
-			if ( pGoon->ubCivilianGroup == KINGPIN_CIV_GROUP && pGoon->bActive && pGoon->bInSector && pGoon->bLife >= OKLIFE && pGoon->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
+			if (pGoon->ubCivilianGroup == KINGPIN_CIV_GROUP && pGoon->bInSector && pGoon->bLife >= OKLIFE && pGoon->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 			{
 				MakeCivHostile( pGoon, 2 );
 				if ( ! (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -417,7 +413,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
-		pGoon = FindSoldierByProfileID( WARDEN, FALSE );
+		SOLDIERTYPE* const pGoon = FindSoldierByProfileID(WARDEN, FALSE);
 		if ( pGoon && pGoon->bAlertStatus < STATUS_RED && PythSpacesAway( pSoldier->sGridNo, pGoon->sGridNo ) <= 5 )
 		{
 			// alert her if she hasn't been alerted

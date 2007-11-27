@@ -2289,23 +2289,18 @@ static void BillyBlocksDoorCallback(void)
 
 static BOOLEAN HookerInRoom(UINT8 ubRoom)
 {
-	UINT8						ubLoop, ubTempRoom;
-	SOLDIERTYPE *		pSoldier;
-
-	for ( ubLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
+	FOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
-		pSoldier = MercPtrs[ ubLoop ];
-
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && pSoldier->bNeutral && pSoldier->ubBodyType == MINICIV )
+		if (s->bInSector && s->bLife >= OKLIFE && s->bNeutral && s->ubBodyType == MINICIV)
 		{
-			if ( InARoom( pSoldier->sGridNo, &ubTempRoom ) && ubTempRoom == ubRoom )
+			UINT8 ubTempRoom;
+			if (InARoom(s->sGridNo, &ubTempRoom) && ubTempRoom == ubRoom)
 			{
-				return( TRUE );
+				return TRUE;
 			}
 		}
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -2562,14 +2557,11 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_HOSTILE;
 
 			{
-				UINT8		ubID, ubID2;
-
-				for ( ubID = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubID++ )
+				FOR_ALL_IN_TEAM(civ, CIV_TEAM)
 				{
-					SOLDIERTYPE* const civ = GetMan(ubID);
-					if (civ->bActive && civ->bInSector && civ->ubCivilianGroup == KINGPIN_CIV_GROUP)
+					if (civ->bInSector && civ->ubCivilianGroup == KINGPIN_CIV_GROUP)
 					{
-						for ( ubID2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID2++ )
+						for (UINT8 ubID2 = gTacticalStatus.Team[gbPlayerNum].bFirstID; ubID2 <= gTacticalStatus.Team[gbPlayerNum].bLastID; ++ubID2)
 						{
 							if (civ->bOppList[ubID2] == SEEN_CURRENTLY)
 							{
@@ -3273,15 +3265,11 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 // see if they get angry
 static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* const owner)
 {
-	SOLDIERTYPE *		pSoldier;
-	UINT8						cnt;
-
 	if (owner == NULL || owner->bTeam != gbPlayerNum) return;
 
-	cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++ ,pSoldier++ )
+	FOR_ALL_IN_TEAM(pSoldier, CIV_TEAM)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral )
+		if (pSoldier->bInSector && pSoldier->bLife && pSoldier->bNeutral)
 		{
       if ( pSoldier->ubProfile != NO_PROFILE )
       {

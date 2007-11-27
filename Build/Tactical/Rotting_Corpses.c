@@ -1088,19 +1088,14 @@ void HandleRottingCorpses( )
 
 	// ATE: Check for multiple crows.....
 	// Couint how many we have now...
+	CFOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
-		UINT8 bLoop;
-		SOLDIERTYPE * pSoldier;
-
-		for (bLoop=gTacticalStatus.Team[ CIV_TEAM ].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; bLoop++, pSoldier++)
+		if (s->bInSector &&
+				s->bLife >= OKLIFE &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				s->ubBodyType == CROW)
 		{
-			if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && !( pSoldier->uiStatusFlags & SOLDIER_GASSED ) )
-			{
-				if ( pSoldier->ubBodyType == CROW )
-				{
-					bNumCrows++;
-				}
-			}
+			bNumCrows++;
 		}
 	}
 
