@@ -27,11 +27,9 @@ void ResetMilitia()
 
 static void RemoveMilitiaFromTactical(void)
 {
-	INT32 i;
-	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
+	FOR_ALL_IN_TEAM(s, MILITIA_TEAM)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive) TacticalRemoveSoldier(s);
+		TacticalRemoveSoldier(s);
 	}
 	FOR_ALL_SOLDIERINITNODES(curr)
 	{
@@ -72,9 +70,7 @@ void PrepareMilitiaForTactical()
 
 void HandleMilitiaPromotions( void )
 {
-	UINT8						cnt;
 	UINT8						ubMilitiaRank;
-	SOLDIERTYPE *		pTeamSoldier;
 	UINT8						ubPromotions;
 
 	gbGreenToElitePromotions = 0;
@@ -82,11 +78,9 @@ void HandleMilitiaPromotions( void )
 	gbRegToElitePromotions = 0;
 	gbMilitiaPromotions = 0;
 
-	cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
-
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++, pTeamSoldier++)
+	FOR_ALL_IN_TEAM(pTeamSoldier, MILITIA_TEAM)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 )
+		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0)
 		{
 			if ( pTeamSoldier->ubMilitiaKills > 0 )
 			{

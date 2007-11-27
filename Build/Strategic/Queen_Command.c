@@ -310,7 +310,6 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 void EndTacticalBattleForEnemy()
 {
 	GROUP *pGroup;
-	INT32 i;
 
 	//Clear enemies in battle for all stationary groups in the sector.
 	if( gbWorldSectorZ > 0 )
@@ -351,16 +350,14 @@ void EndTacticalBattleForEnemy()
 		pGroup = pGroup->next;
 	}
 
-
 	//Check to see if any of our mercs have abandoned the militia during a battle.  This is cause for a rather
 	//severe loyalty blow.
-	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(militia, MILITIA_TEAM)
 	{
-		const SOLDIERTYPE* const milita = GetMan(i);
-		if (milita->bActive && milita->bInSector && milita->bLife >= OKLIFE)
+		if (militia->bInSector && militia->bLife >= OKLIFE)
 		{ //found one live militia, so look for any enemies/creatures.
 			// NOTE: this is relying on ENEMY_TEAM being immediately followed by CREATURE_TEAM
-			for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
+			for (INT32 i = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; i <= gTacticalStatus.Team[CREATURE_TEAM].bLastID; ++i)
 			{
 				const SOLDIERTYPE* const enemy = GetMan(i);
 				if (enemy->bActive && enemy->bInSector && enemy->bLife >= OKLIFE)

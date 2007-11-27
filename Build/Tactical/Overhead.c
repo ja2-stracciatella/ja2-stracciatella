@@ -3180,23 +3180,18 @@ static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 static void MilitiaChangesSides(void)
 {
 	// make all the militia change sides
-
-	INT32						cnt;
-	SOLDIERTYPE *		pSoldier;
-
 	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bMenInSector == 0 )
 	{
 		return;
 	}
 
 	// remove anyone (rebels) on our team and put them back in the civ team
-	cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++ ,pSoldier++)
+	FOR_ALL_IN_TEAM(s, MILITIA_TEAM)
 	{
-		if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife)
+		if (s->bInSector && s->bLife != 0)
 		{
-			MakeCivHostile( pSoldier, 2 );
-			RecalculateOppCntsDueToNoLongerNeutral( pSoldier );
+			MakeCivHostile(s, 2);
+			RecalculateOppCntsDueToNoLongerNeutral(s);
 		}
 	}
 }
@@ -5129,10 +5124,9 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			}
 
 			// Loop through all militia and restore them to peaceful status
-			INT32 cnt = gTacticalStatus.Team[MILITIA_TEAM].bFirstID;
-			for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[MILITIA_TEAM].bLastID; cnt++, pTeamSoldier++)
+			FOR_ALL_IN_TEAM(pTeamSoldier, MILITIA_TEAM)
 			{
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+				if (pTeamSoldier->bInSector)
 				{
 					pTeamSoldier->bAlertStatus = STATUS_GREEN;
 					CheckForChangingOrders( pTeamSoldier );
@@ -5527,36 +5521,28 @@ static void DeathTimerCallback(void);
 
 static BOOLEAN CheckForLosingEndOfBattle(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	INT8				bNumDead = 0, bNumNotOK = 0, bNumInBattle = 0, bNumNotOKRealMercs = 0;
 	BOOLEAN			fMadeCorpse;
 	BOOLEAN			fDoCapture = FALSE;
 	BOOLEAN     fOnlyEPCsLeft = TRUE;
 	BOOLEAN     fMilitiaInSector = FALSE;
 
-
 	// ATE: Check for MILITIA - we won't lose if we have some.....
-	cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, MILITIA_TEAM)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && pTeamSoldier->bSide == gbPlayerNum )
+		if (s->bInSector && s->bSide == gbPlayerNum && s->bLife >= OKLIFE)
 		{
-			if ( pTeamSoldier->bLife >= OKLIFE )
-			{
-				// We have at least one poor guy who will still fight....
-				// we have not lost ( yet )!
-				fMilitiaInSector = TRUE;
-			}
+			// We have at least one poor guy who will still fight....
+			// we have not lost ( yet )!
+			fMilitiaInSector = TRUE;
 		}
 	}
 
-
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+	INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
 
 	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
+	for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++,pTeamSoldier++)
 	{
 		// Are we active and in sector.....
 		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -5638,9 +5624,9 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 
 			// KIll them now...
 			// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-			cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+			INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
 
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
+			for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pTeamSoldier++)
 			{
 				// Are we active and in sector.....
 				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
