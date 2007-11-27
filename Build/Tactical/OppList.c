@@ -6268,22 +6268,16 @@ static void DecayWatchedLocs(INT8 bTeam)
 
 static void MakeBloodcatsHostile(void)
 {
-	INT32						iLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	iLoop = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID;
-
-	for (pSoldier = MercPtrs[iLoop]; iLoop <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; iLoop++,pSoldier++ )
-  {
-		if ( pSoldier->ubBodyType == BLOODCAT && pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 )
+	FOR_ALL_IN_TEAM(s, CREATURE_TEAM)
+	{
+		if (s->ubBodyType == BLOODCAT && s->bInSector && s->bLife > 0)
 		{
-		  SetSoldierNonNeutral( pSoldier );
-		  RecalculateOppCntsDueToNoLongerNeutral( pSoldier );
-		  if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )
-		  {
-			  CheckForPotentialAddToBattleIncrement( pSoldier );
-		  }
+			SetSoldierNonNeutral(s);
+			RecalculateOppCntsDueToNoLongerNeutral(s);
+			if (gTacticalStatus.uiFlags & INCOMBAT)
+			{
+				CheckForPotentialAddToBattleIncrement(s);
+			}
 		}
 	}
-
 }

@@ -6777,15 +6777,13 @@ BOOLEAN HostileBloodcatsPresent(void)
 {
 	if (!gTacticalStatus.Team[CREATURE_TEAM].bTeamActive) return FALSE;
 
-	for (INT32 i = gTacticalStatus.Team[CREATURE_TEAM].bFirstID; i <= gTacticalStatus.Team[CREATURE_TEAM].bLastID; ++i)
+	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{
-		const SOLDIERTYPE* const s = MercPtrs[i];
-
 		/* KM : Aug 11, 1999 -- Patch fix:  Removed the check for bNeutral.
 		 * Bloodcats automatically become hostile on sight.  Because the check used
 		 * to be there, it was possible to get into a 2nd battle elsewhere which is
 		 * BAD BAD BAD! */
-		if (s->bActive && s->bInSector && s->bLife > 0 && s->ubBodyType == BLOODCAT)
+		if (s->bInSector && s->bLife > 0 && s->ubBodyType == BLOODCAT)
 		{
 			return TRUE;
 		}

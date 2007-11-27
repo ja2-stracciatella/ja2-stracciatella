@@ -87,21 +87,16 @@ void ClearIntList( void )
 
 static BOOLEAN BloodcatsPresent(void)
 {
-	INT32						iLoop;
-	SOLDIERTYPE *		pSoldier;
-
 	if ( gTacticalStatus.Team[ CREATURE_TEAM ].bTeamActive == FALSE )
 	{
 		return( FALSE );
 	}
 
-	for ( iLoop = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; iLoop <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; iLoop++ )
+	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{
-		pSoldier = MercPtrs[ iLoop ];
-
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->ubBodyType == BLOODCAT )
+		if (s->bInSector && s->bLife > 0 && s->ubBodyType == BLOODCAT)
 		{
-			return( TRUE );
+			return TRUE;
 		}
 	}
 

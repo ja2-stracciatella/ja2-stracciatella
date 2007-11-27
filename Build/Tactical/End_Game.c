@@ -400,10 +400,6 @@ static void QueenBitchTimerCallback(void)
 
 void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-
-
 	gpKillerSoldier = pKillerSoldier;
 	gsGridNo = sGridNo;
 	gbLevel  = bLevel;
@@ -419,23 +415,20 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 
 	// Kill all enemies in creature team.....
-	cnt = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{
-		// Are we active and ALIVE and in sector.....
-		if ( pTeamSoldier->bActive && pTeamSoldier->bLife > 0 )
+		// Are we ALIVE.....
+		if (s->bLife > 0)
 		{
 			// For sure for flag thet they are dead is not set
 			// Check for any more badguys
 			// ON THE STRAGETY LAYER KILL BAD GUYS!
 
 			// HELLO!  THESE ARE CREATURES!  THEY CAN'T BE NEUTRAL!
-			//if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
+			//if (!s->bNeutral && s->bSide != gbPlayerNum)
 			{
     		gTacticalStatus.ubAttackBusyCount++;
-				EVENT_SoldierGotHit(pTeamSoldier, 0, 10000, 0, pTeamSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, pTeamSoldier->bAimShotLocation, NOWHERE);
+				EVENT_SoldierGotHit(s, 0, 10000, 0, s->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 			}
 		}
 	}

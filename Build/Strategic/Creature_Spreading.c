@@ -1119,19 +1119,16 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCr
 																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales )
 {
 	SECTORINFO *pSector;
-	INT32 i;
-	SOLDIERTYPE *pSoldier;
 
 	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 	*pubNumCreatures = 0;
 	pSector->ubNumCreatures = 0;
 	pSector->ubCreaturesInBattle = 0;
-	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
+		if (s->bInSector && s->bLife)
 		{
-			switch( pSoldier->ubBodyType )
+			switch (s->ubBodyType)
 			{
 				case ADULTFEMALEMONSTER:
 					(*pubNumCreatures)++;
