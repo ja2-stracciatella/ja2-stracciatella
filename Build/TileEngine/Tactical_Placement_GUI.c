@@ -208,7 +208,6 @@ static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason);
 
 void InitTacticalPlacementGUI()
 {
-	INT32 i, xp, yp;
 	gfTacticalPlacementGUIActive = TRUE;
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = TRUE;
@@ -247,11 +246,9 @@ void InitTacticalPlacementGUI()
 	//First pass:  Count the number of mercs that are going to be placed by the player.
 	//             This determines the size of the array we will allocate.
 	giPlacements = 0;
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		const SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive &&
-				!s->fBetweenSectors &&
+		if (!s->fBetweenSectors &&
 				s->sSectorX == gpBattleGroup->ubSectorX &&
 				s->sSectorY == gpBattleGroup->ubSectorY	&&
 				!(s->uiStatusFlags & SOLDIER_VEHICLE) && // ATE Ignore vehicles
@@ -267,11 +264,9 @@ void InitTacticalPlacementGUI()
 	Assert( gMercPlacement );
 	//Second pass:  Assign the mercs to their respective slots.
 	giPlacements = 0;
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive &&
-				s->bLife != 0 &&
+		if (s->bLife != 0 &&
 				!s->fBetweenSectors &&
 				s->sSectorX == gpBattleGroup->ubSectorX &&
 				s->sSectorY == gpBattleGroup->ubSectorY	&&
@@ -317,7 +312,7 @@ void InitTacticalPlacementGUI()
 		}
 	}
 	//add all the faces now
-	for( i = 0; i < giPlacements; i++ )
+	for (INT32 i = 0; i < giPlacements; ++i)
 	{
 		//Load the faces
 		SGPFILENAME ImageFile;
@@ -328,8 +323,8 @@ void InitTacticalPlacementGUI()
 			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
 			AssertMsg(gMercPlacement[i].uiVObjectID != NO_VOBJECT, String("Failed to load %Faces/65Face/%03d.sti or it's placeholder, speck.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex));
 		}
-		xp = 91 + (i / 2) * 54;
-		yp = (i % 2) ? 412 : 361;
+		const INT32 xp = 91 + i / 2 * 54;
+		const INT32 yp = (i % 2 ? 412 : 361);
 		MSYS_DefineRegion( &gMercPlacement[ i ].region, (UINT16)xp, (UINT16)yp, (UINT16)(xp + 54), (UINT16)(yp + 62), MSYS_PRIORITY_HIGH, 0, MercMoveCallback, MercClickCallback );
 	}
 
@@ -338,7 +333,7 @@ void InitTacticalPlacementGUI()
 	if( gubDefaultButton == GROUP_BUTTON )
 	{
 		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		for( i = 0; i < giPlacements; i++ )
+		for (INT32 i = 0; i < giPlacements; ++i)
 		{ //go from the currently selected soldier to the end
 			if( !gMercPlacement[ i ].fPlaced )
 			{ //Found an unplaced merc.  Select him.

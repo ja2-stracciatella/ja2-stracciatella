@@ -10485,15 +10485,10 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* pSoldier);
 
 static void EnableDisableSoldierLightEffects(BOOLEAN fEnableLights)
 {
-	SOLDIERTYPE *pSoldier=NULL;
-	INT32 cnt;
-
-	// Loop through player teams...
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		//if the soldier is in the sector
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE )
+		if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
 		{
 			//if we are to enable the lights
 			if( fEnableLights )

@@ -228,7 +228,6 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason);
 
 void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 {
-	INT32 i;
 	UINT8 ubGroupID = 0;
 	UINT8 ubNumStationaryEnemies = 0;
 	UINT8 ubNumMobileEnemies = 0;
@@ -420,10 +419,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	//Count the number of players involved or not involved in this battle
 	guiNumUninvolved = 0;
 	guiNumInvolved = 0;
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		const SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+		if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			if (PlayerMercInvolvedInThisCombat(s))
 			{
@@ -905,7 +903,10 @@ static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier);
 
 void RenderPreBattleInterface()
 {
-	INT32 i, x, y, line, width;
+	INT32 x;
+	INT32 y;
+	INT32 line;
+	INT32 width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
 	UINT8 ubJunk;
@@ -955,11 +956,11 @@ void RenderPreBattleInterface()
 
 		RenderPBHeader( &x, &width );
 		//now draw the title bars up to the text.
-		for( i = x - 12; i > 20; i -= 10 )
+		for (INT32 i = x - 12; i > 20; i -= 10)
 		{
 			BltVideoObject( guiSAVEBUFFER, hVObject, TITLE_BAR_PIECE, i, 6);
 		}
-		for( i = x + width + 2; i < 231; i += 10 )
+		for (INT32 i = x + width + 2; i < 231; i += 10)
 		{
 			BltVideoObject( guiSAVEBUFFER, hVObject, TITLE_BAR_PIECE, i, 6);
 		}
@@ -1021,13 +1022,13 @@ void RenderPreBattleInterface()
 		mprintf(224 - width , 38, Milita);
 
 		//Draw the bottom columns
-		for( i = 0; i < (INT32)max( guiNumUninvolved, 1 ); i++ )
+		for (INT32 i = 0; i < (INT32)max(guiNumUninvolved, 1); ++i)
 		{
 			y = BOTTOM_Y - ROW_HEIGHT * (i+1) + 1;
 			BltVideoObject( guiSAVEBUFFER, hVObject, BOTTOM_COLUMN, 161, y);
 		}
 
-		for( i = 0; i < (INT32)(21 - max( guiNumUninvolved, 1 )); i++ )
+		for (INT32 i = 0; i < (INT32)(21 - max( guiNumUninvolved, 1 )); ++i)
 		{
 			y = TOP_Y + ROW_HEIGHT * i;
 			BltVideoObject( guiSAVEBUFFER, hVObject, TOP_COLUMN, 186, y);
@@ -1054,7 +1055,7 @@ void RenderPreBattleInterface()
 		else
 		{
 			// know exactly how many
-			i = NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
+			const INT32 i = NumEnemiesInSector(gubPBSectorX, gubPBSectorY);
 			swprintf( str, lengthof(str), L"%d", i );
 		}
 		x = 57 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
@@ -1077,10 +1078,9 @@ void RenderPreBattleInterface()
 		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
 		line = 0;
 		y = TOP_Y + 1;
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			const SOLDIERTYPE* const s = GetMan(i);
-			if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+			if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				if (PlayerMercInvolvedInThisCombat(s))
 				{ //involved
@@ -1128,10 +1128,9 @@ void RenderPreBattleInterface()
 		else
 		{
 			y = BOTTOM_Y - ROW_HEIGHT * guiNumUninvolved + 2;
-			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+			CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 			{
-				const SOLDIERTYPE* const s = GetMan(i);
-				if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+				if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 				{
 					if (!PlayerMercInvolvedInThisCombat(s))
 					{
@@ -1878,13 +1877,10 @@ static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSect
 
 static void CheckForRobotAndIfItsControlled(void)
 {
-	INT32 i;
-
 	// search for the robot on player's team
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (s->bActive && s->bLife != 0 && AM_A_ROBOT(s))
+		if (s->bLife != 0 && AM_A_ROBOT(s))
 		{
 			// check whether it has a valid controller with it. This sets its ubRobotRemoteHolderID field.
 			UpdateRobotControllerGivenRobot(s);

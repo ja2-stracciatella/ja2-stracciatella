@@ -4569,7 +4569,6 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 {
-	INT32 i;
 	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
 
 	//Don't bother checking this if we don't have a world loaded.
@@ -4589,11 +4588,9 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	{ //The user has decided to let the game autoresolve the current battle.
 		if( gWorldSectorX == sBattleSectorX && gWorldSectorY == sBattleSectorY && gbWorldSectorZ == sBattleSectorZ )
 		{
-			for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+			FOR_ALL_IN_TEAM(s, OUR_TEAM)
 			{ //If we have a live and valid soldier
-				SOLDIERTYPE* const s = GetMan(i);
-				if (s->bActive &&
-						s->bLife != 0 &&
+				if (s->bLife != 0 &&
 						!s->fBetweenSectors &&
 						!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 						!AM_A_ROBOT(s) &&
@@ -4610,11 +4607,9 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	}
 	else
 	{	//Check and see if we have any live mercs in the sector.
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{ //If we have a live and valid soldier
-			SOLDIERTYPE* const s = GetMan(i);
-			if (s->bActive &&
-					s->bLife != 0 &&
+			if (s->bLife != 0 &&
 					!s->fBetweenSectors &&
 					!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 					!AM_A_ROBOT(s) &&

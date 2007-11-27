@@ -1457,8 +1457,6 @@ void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex )
 BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 {
 	CREATURE_DIRECTIVE *curr;
-	SOLDIERTYPE *pSoldier;
-	INT32 i;
 	INT16 sSectorX, sSectorY;
 	INT8 bSectorZ;
 
@@ -1476,10 +1474,9 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 		bSectorZ = (INT8)curr->pLevel->ubSectorZ;
 		//Loop through all the creature directives (mine sectors that are infectible) and
 		//see if players are there.
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 		{
-			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bActive && pSoldier->bLife &&
+			if (pSoldier->bLife    != 0 &&
 					pSoldier->sSectorX == sSectorX &&
 					pSoldier->sSectorY == sSectorY &&
 					pSoldier->bSectorZ == bSectorZ &&

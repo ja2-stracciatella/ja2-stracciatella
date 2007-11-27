@@ -733,23 +733,18 @@ static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 #ifdef JA2BETAVERSION
 void ValidatePlayersAreInOneGroupOnly(void)
 {
-	INT32 i;
 	INT32 iGroups;
 	INT32 iMismatches;
 	INT32 iNumErrors;
 	GROUP *pGroup, *pOtherGroup;
 	PLAYERGROUP *pPlayer;
-	SOLDIERTYPE *pSoldier;
 	wchar_t str[1024];
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
 	iNumErrors = 0;
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{ //check to see if the merc has a group ID
-
-		pSoldier = MercPtrs[ i ];
-
-		if( !pSoldier->bActive || !pSoldier->bLife || !pSoldier->ubGroupID )
+		if (!pSoldier->bLife || !pSoldier->ubGroupID)
 		{ //non-existant, dead, or in no group (don't care, skip to next merc)
 			continue;
 		}

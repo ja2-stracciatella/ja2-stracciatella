@@ -3067,10 +3067,9 @@ SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 
 	// remove anyone (rebels) on our team and put them back in the civ team
 	UINT8 ubFirstProfile = NO_PROFILE;
-	for (UINT8 cnt = gTacticalStatus.Team[OUR_TEAM].bFirstID; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++)
+	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		SOLDIERTYPE* const pSoldier = MercPtrs[cnt];
-		if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife)
+		if (pSoldier->bInSector && pSoldier->bLife != 0)
 		{
 			if (pSoldier->ubCivilianGroup == pAttacked->ubCivilianGroup)
 			{

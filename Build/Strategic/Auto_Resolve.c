@@ -1446,7 +1446,6 @@ static UINT32 AutoBandageMercs(void)
 
 static void RenderAutoResolve(void)
 {
-	INT32 i;
 	INT32 xp, yp;
 	wchar_t str[100];
 	UINT8 ubGood, ubBad;
@@ -1460,7 +1459,7 @@ static void RenderAutoResolve(void)
 	{ //After expanding the window, we now show the interface
 		if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS && !gpAR->fPendingSurrender )
 		{
-			for( i = 0 ; i < DONEWIN_BUTTON; i++ )
+			for (INT32 i = 0 ; i < DONEWIN_BUTTON; ++i)
 				ShowButton( gpAR->iButton[ i ] );
 			HideButton( gpAR->iButton[ BANDAGE_BUTTON ] );
 			HideButton( gpAR->iButton[ YES_BUTTON ] );
@@ -1480,21 +1479,21 @@ static void RenderAutoResolve(void)
 
 	if( !gpAR->fRenderAutoResolve && !gpAR->fDebugInfo )
 	{ //update the dirty cells only
-		for( i = 0; i < gpAR->ubMercs; i++ )
+		for (INT32 i = 0; i < gpAR->ubMercs; ++i)
 		{
 			if( gpMercs[ i ].uiFlags & CELL_DIRTY )
 			{
 				RenderSoldierCell( &gpMercs[ i ] );
 			}
 		}
-		for( i = 0; i < gpAR->ubCivs; i++ )
+		for (INT32 i = 0; i < gpAR->ubCivs; ++i)
 		{
 			if( gpCivs[ i ].uiFlags & CELL_DIRTY )
 			{
 				RenderSoldierCell( &gpCivs[ i ] );
 			}
 		}
-		for( i = 0; i < gpAR->ubEnemies; i++ )
+		for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
 		{
 			if( gpEnemies[ i ].uiFlags & CELL_DIRTY )
 			{
@@ -1507,15 +1506,15 @@ static void RenderAutoResolve(void)
 
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, gpAR->Rect.iLeft, gpAR->Rect.iTop, 0);
 
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	for (INT32 i = 0; i < gpAR->ubMercs; ++i)
 	{
 		RenderSoldierCell( &gpMercs[ i ] );
 	}
-	for( i = 0; i < gpAR->ubCivs; i++ )
+	for (INT32 i = 0; i < gpAR->ubCivs; ++i)
 	{
 		RenderSoldierCell( &gpCivs[ i ] );
 	}
-	for( i = 0; i < gpAR->ubEnemies; i++ )
+	for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
 	{
 		RenderSoldierCell( &gpEnemies[ i ] );
 	}
@@ -1618,11 +1617,10 @@ static void RenderAutoResolve(void)
 
 				case BATTLE_SURRENDERED:
 				case BATTLE_CAPTURED:
-					for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+					FOR_ALL_IN_TEAM(s, OUR_TEAM)
 					{
-						SOLDIERTYPE* const s = GetMan(i);
-						if (s->bActive && s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
-						{ //Merc is active and alive, and not a vehicle or robot
+						if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
+						{ //Merc is alive and not a vehicle or robot
 							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER

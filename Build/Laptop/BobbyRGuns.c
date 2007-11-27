@@ -1549,16 +1549,8 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* const
 	UINT8	ubMercCount;
 	UINT8	ubPocketCount;
 
-	UINT8	ubFirstID = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	UINT8	ubLastID = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-
-	//loop through all the mercs on the team
-	for( ubMercCount = ubFirstID; ubMercCount <= ubLastID; ubMercCount++ )
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		const SOLDIERTYPE* const s = GetMan(ubMercCount);
-		if (!s->bActive) continue;
-
 		//loop through all the pockets on the merc
 		for( ubPocketCount=0; ubPocketCount<NUM_INV_SLOTS; ubPocketCount++)
 		{

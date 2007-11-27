@@ -1169,15 +1169,14 @@ void AddPossiblePendingEnemiesToBattle()
 
 static void NotifyPlayersOfNewEnemies(void)
 {
-	INT32 iSoldiers, iChosenSoldier, i;
-	SOLDIERTYPE *pSoldier;
+	INT32 iSoldiers;
+	INT32 iChosenSoldier;
 	BOOLEAN fIgnoreBreath = FALSE;
 
 	iSoldiers = 0;
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{ //find a merc that is aware.
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
+		if (s->bInSector && s->bLife >= OKLIFE && s->bBreath >= OKBREATH)
 		{
 			iSoldiers++;
 		}
@@ -1186,10 +1185,9 @@ static void NotifyPlayersOfNewEnemies(void)
 	{ // look for an out of breath merc.
 		fIgnoreBreath = TRUE;
 
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{ //find a merc that is aware.
-			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE )
+			if (s->bInSector && s->bLife >= OKLIFE)
 			{
 				iSoldiers++;
 			}
@@ -1198,18 +1196,18 @@ static void NotifyPlayersOfNewEnemies(void)
 	if( iSoldiers )
 	{
 		iChosenSoldier = Random( iSoldiers );
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{ //find a merc that is aware.
-			pSoldier = MercPtrs[ i ];
-			if( pSoldier->bInSector && pSoldier->bActive && pSoldier->bLife >= OKLIFE &&
-				( ( pSoldier->bBreath >= OKBREATH ) || fIgnoreBreath ) )
+			if (s->bInSector &&
+					s->bLife >= OKLIFE &&
+					(s->bBreath >= OKBREATH || fIgnoreBreath))
 			{
 				if( !iChosenSoldier )
 				{
 					// ATE: This is to allow special handling of initial heli drop
 					if ( !DidGameJustStart() )
 					{
-						TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_ENEMY_PRESENCE, 0, 0, 0 );
+						TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, 0, 0, 0);
 					}
 					return;
 				}

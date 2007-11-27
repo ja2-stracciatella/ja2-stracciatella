@@ -145,9 +145,6 @@ void BeginAutoBandage( )
 
 void HandleAutoBandagePending( )
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier = NULL;
-
 	// OK, if we have a pending autobandage....
 	// check some conditions
 	if ( gTacticalStatus.fAutoBandagePending )
@@ -166,19 +163,15 @@ void HandleAutoBandagePending( )
 		}
 
 		// Do any guys have pending actions...?
-		cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			// Are we in sector?
-			if ( pSoldier->bActive  )
+			if (s->sSectorX == gWorldSectorX &&
+					s->sSectorY == gWorldSectorY &&
+					s->bSectorZ == gbWorldSectorZ &&
+					!s->fBetweenSectors &&
+					s->ubPendingAction != NO_PENDING_ACTION)
 			{
-				if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ && !pSoldier->fBetweenSectors )
-				{
-					if ( pSoldier->ubPendingAction != NO_PENDING_ACTION )
-					{
-						return;
-					}
-				}
+				return;
 			}
 		}
 
@@ -298,22 +291,23 @@ BOOLEAN HandleAutoBandage( )
 
 static BOOLEAN CreateAutoBandageString(void)
 {
-	INT32						cnt;
 	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
 	STR16						sTemp;
-	SOLDIERTYPE *		pSoldier;
 
 	UINT8 ubDoctors = 0;
 	const SOLDIERTYPE* doctors[20];
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->bMedical > 0 && FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
+		if (s->bInSector &&
+				s->bLife >= OKLIFE &&
+				!s->bCollapsed &&
+				s->bMedical > 0 &&
+				FindObjClass(s, IC_MEDKIT) != NO_SLOT)
 		{
-			doctors[ubDoctors++] = pSoldier;
+			doctors[ubDoctors++] = s;
 			// increase the length of the string by the size of the name
 			// plus 2, one for the comma and one for the space after that
-			uiDoctorNameStringLength += wcslen( pSoldier->name ) + 2;
+			uiDoctorNameStringLength += wcslen(s->name) + 2;
 		}
 	}
 	if (ubDoctors == 0)
@@ -350,7 +344,7 @@ static BOOLEAN CreateAutoBandageString(void)
 			return( FALSE );
 		}
 		wcscpy( sTemp, L"" );
-		for (cnt = 0; cnt < ubDoctors - 1; cnt++)
+		for (INT32 cnt = 0; cnt < ubDoctors - 1; ++cnt)
 		{
 			wcscat(sTemp, doctors[cnt]->name);
 			if (ubDoctors > 2)
@@ -387,8 +381,6 @@ void AutoBandage( BOOLEAN fStart )
 {
 	SGPRect					aRect;
 	UINT8						ubLoop;
-	INT32						cnt;
-	SOLDIERTYPE *		pSoldier;
 
 	if ( fStart )
 	{
@@ -409,14 +401,10 @@ void AutoBandage( BOOLEAN fStart )
 		// Compress time...
 		//SetGameTimeCompressionLevel( TIME_COMPRESS_5MINS );
 
-		cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if ( pSoldier->bActive  )
-			{
-				pSoldier->bSlotItemTakenFrom = NO_SLOT;
-				pSoldier->ubAutoBandagingMedic = NOBODY;
-			}
+			s->bSlotItemTakenFrom   = NO_SLOT;
+			s->ubAutoBandagingMedic = NOBODY;
 		}
 
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Begin auto bandage." );
@@ -447,31 +435,24 @@ void AutoBandage( BOOLEAN fStart )
 		gTacticalStatus.fAutoBandageMode = FALSE;
 		gTacticalStatus.uiFlags					 &= ( ~OUR_MERCS_AUTO_MOVE );
 
-		// make sure anyone under AI control has their action cancelled
-		cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if ( pSoldier->bActive  )
+			ActionDone(s);
+			if (s->bSlotItemTakenFrom != NO_SLOT)
 			{
-				ActionDone( pSoldier );
-				if ( pSoldier->bSlotItemTakenFrom != NO_SLOT )
-				{
-					// swap our old hand item back to the main hand
-					SwapObjs( &( pSoldier->inv[ HANDPOS ] ), &( pSoldier->inv[ pSoldier->bSlotItemTakenFrom ] ) );
-				}
+				// swap our old hand item back to the main hand
+				SwapObjs(&s->inv[HANDPOS], &s->inv[s->bSlotItemTakenFrom]);
+			}
 
-				// ATE: Mkae everyone stand up!
-				if ( pSoldier->bLife >= OKLIFE && !pSoldier->bCollapsed )
+			// ATE: Mkae everyone stand up!
+			if (s->bLife >= OKLIFE && !s->bCollapsed)
+			{
+				if (gAnimControl[s->usAnimState].ubHeight != ANIM_STAND)
 				{
-					if ( gAnimControl[ pSoldier->usAnimState ].ubHeight != ANIM_STAND )
-					{
-						ChangeSoldierStance( pSoldier, ANIM_STAND );
-					}
+					ChangeSoldierStance(s, ANIM_STAND);
 				}
-
 			}
 		}
-
 
 		ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 		for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)

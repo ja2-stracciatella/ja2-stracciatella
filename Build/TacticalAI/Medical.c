@@ -208,11 +208,9 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate(const SOLDIERTYPE* const pSoldier)
 
 static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 {
-	UINT8						cnt, cnt2;
 	INT16						bBestPriority = 0, sBestAdjGridNo;
 	INT16						sPatientGridNo, sBestPatientGridNo;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
-	SOLDIERTYPE *		pPatient;
 	SOLDIERTYPE *		pBestPatient = NULL;
 	SOLDIERTYPE *		pOtherMedic;
 	INT8						bPatientPriority;
@@ -224,10 +222,9 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 	gubGlobalPathFlags = PATH_THROUGH_PEOPLE;
 
 	// search for someone who needs aid
-	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
-	for ( pPatient = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pPatient++)
+	FOR_ALL_IN_TEAM(pPatient, OUR_TEAM)
 	{
-		if ( !(pPatient->bActive) || !(pPatient->bInSector) )
+		if (!pPatient->bInSector)
 		{
 			continue; // NEXT!!!
 		}
@@ -257,7 +254,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 					if ( sAdjacentGridNo == -1 && gAnimControl[ pPatient->usAnimState ].ubEndHeight == ANIM_PRONE )
 					{
 						// prone; could be the base tile is inaccessible but the rest isn't...
-						for ( cnt2 = 0; cnt2 < NUM_WORLD_DIRECTIONS; cnt2++ )
+						for (UINT8 cnt2 = 0; cnt2 < NUM_WORLD_DIRECTIONS; ++cnt2)
 						{
 							sPatientGridNo = pPatient->sGridNo + DirectionInc( cnt2 );
 							if (WhoIsThere2(sPatientGridNo, pPatient->bLevel) == pPatient)

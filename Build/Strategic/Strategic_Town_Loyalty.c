@@ -481,8 +481,6 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 {
 	// check if valid town
 	INT32 iUnderControl = 0;
-	SOLDIERTYPE *pSoldier;
-	INT32 iCounter = 0;
 	INT32 iSoldierCount = 0;
 	INT32 iLocalNPCBonus = 0;
 	INT32 iMilitiaValue = 0;
@@ -500,11 +498,9 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 	// count how many of player's mercs are active in this town, then factor by number of sectors under control
 
 	// run through list of grunts on team
-  for (iCounter = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; iCounter <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; iCounter++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = MercPtrs[ iCounter ];
-
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->bActive )
+		if (pSoldier->bLife >= OKLIFE)
 		{
 			// if soldier is in this sector
 			if( SectorIsPartOfTown( bTownId, pSoldier->sSectorX, pSoldier->sSectorY ) == TRUE )

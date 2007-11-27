@@ -540,9 +540,7 @@ static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 static BOOLEAN EnterShopKeeperInterface(void)
 {
-	UINT8						ubCnt;
 	CHAR8						zTemp[32];
-	SOLDIERTYPE			*pSoldier;
 
 	// make sure current merc is close enough and eligible to talk to the shopkeeper.
 	AssertMsg(CanMercInteractWithSelectedShopkeeper(GetSelectedMan()), "Selected merc can't interact with shopkeeper.  Send save AM-1");
@@ -602,12 +600,11 @@ static BOOLEAN EnterShopKeeperInterface(void)
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
 	gubNumberMercsInArray = 0;
-	for( ubCnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; ubCnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; ubCnt++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = MercPtrs[ ubCnt ];
-
-		if( pSoldier->bActive && ( pSoldier->ubProfile != NO_PROFILE ) &&
-			!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+		if (pSoldier->ubProfile != NO_PROFILE &&
+				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) &&
+				!AM_A_ROBOT(pSoldier))
 		{
 			// remember whose face is in this slot
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
