@@ -1782,64 +1782,29 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 	return FALSE;
 }
 
+
+static BOOLEAN AnyNonNeutralOfTeamInSector(INT8 team)
+{
+	CFOR_ALL_IN_TEAM(s, team)
+	{
+		if (s->bInSector && s->bLife != 0 && !s->bNeutral)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+
 //Assumes gTacticalStatus.fEnemyInSector
 BOOLEAN OnlyHostileCivsInSector()
 {
-	SOLDIERTYPE *pSoldier;
-	INT32 i;
-	BOOLEAN fHostileCivs = FALSE;
-
 	//Look for any hostile civs.
-	for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
-	{
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
-		{
-			if( !pSoldier->bNeutral )
-			{
-				fHostileCivs = TRUE;
-				break;
-			}
-		}
-	}
-	if( !fHostileCivs )
-	{ //No hostile civs, so return FALSE
-		return FALSE;
-	}
+	if (!AnyNonNeutralOfTeamInSector(CIV_TEAM)) return FALSE;
 	//Look for anybody else hostile.  If found, return FALSE immediately.
-	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
-	{
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
-		{
-			if( !pSoldier->bNeutral )
-			{
-				return FALSE;
-			}
-		}
-	}
-	for( i = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
-	{
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
-		{
-			if( !pSoldier->bNeutral )
-			{
-				return FALSE;
-			}
-		}
-	}
-	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
-	{
-		pSoldier = MercPtrs[ i ];
-		if( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife )
-		{
-			if( !pSoldier->bNeutral )
-			{
-				return FALSE;
-			}
-		}
-	}
+	if (AnyNonNeutralOfTeamInSector(ENEMY_TEAM))    return FALSE;
+	if (AnyNonNeutralOfTeamInSector(CREATURE_TEAM)) return FALSE;
+	if (AnyNonNeutralOfTeamInSector(MILITIA_TEAM))  return FALSE;
 	//We only have hostile civilians, don't allow time compression.
 	return TRUE;
 }
