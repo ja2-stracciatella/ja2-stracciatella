@@ -527,7 +527,6 @@ static void StartViewportOverlays(void);
 
 void RenderTopmostTacticalInterface( )
 {
-	UINT32											 cnt;
 	static UINT32				uiBogTarget = 0;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
@@ -595,40 +594,37 @@ void RenderTopmostTacticalInterface( )
 	if ( InUIPlanMode( ) )
 	{
 		// Zero out any planned soldiers
-		for( cnt = MAX_NUM_SOLDIERS; cnt < TOTAL_SOLDIERS; cnt++ )
+		CFOR_ALL_PLANNING_SOLDIERS(s)
 		{
-			if ( MercPtrs[ cnt ]->bActive )
+			if (s->sPlannedTargetX != -1)
 			{
-				if ( MercPtrs[ cnt ]->sPlannedTargetX != -1 )
+				// Blit bogus target
+				if (uiBogTarget == 0)
 				{
-					// Blit bogus target
-					if ( uiBogTarget == 0 )
-					{
-						//Loadup cursor!
-						uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
-					}
+					//Loadup cursor!
+					uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
+				}
 
-					if ( GridNoOnScreen( (INT16)MAPROWCOLTOPOS( ( MercPtrs[ cnt ]->sPlannedTargetY/CELL_Y_SIZE), ( MercPtrs[ cnt ]->sPlannedTargetX / CELL_X_SIZE ) ) ) )
-					{
-						// GET SCREEN COORDINATES
-						sOffsetX = (MercPtrs[ cnt ]->sPlannedTargetX - gsRenderCenterX);
-						sOffsetY = (MercPtrs[ cnt ]->sPlannedTargetY - gsRenderCenterY);
+				if (GridNoOnScreen((INT16)MAPROWCOLTOPOS(s->sPlannedTargetY / CELL_Y_SIZE, s->sPlannedTargetX / CELL_X_SIZE)))
+				{
+					// GET SCREEN COORDINATES
+					sOffsetX = (s->sPlannedTargetX - gsRenderCenterX);
+					sOffsetY = (s->sPlannedTargetY - gsRenderCenterY);
 
-						FromCellToScreenCoordinates( sOffsetX, sOffsetY, &sTempX_S, &sTempY_S );
+					FromCellToScreenCoordinates(sOffsetX, sOffsetY, &sTempX_S, &sTempY_S);
 
-						sX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + sTempX_S;
-						sY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + sTempY_S;
+					sX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + sTempX_S;
+					sY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + sTempY_S;
 
-						// Adjust for offset position on screen
-						sX -= gsRenderWorldOffsetX;
-						sY -= gsRenderWorldOffsetY;
+					// Adjust for offset position on screen
+					sX -= gsRenderWorldOffsetX;
+					sY -= gsRenderWorldOffsetY;
 
-						sX -= 10;
-						sY -= 10;
+					sX -= 10;
+					sY -= 10;
 
-						BltVideoObjectFromIndex(  FRAME_BUFFER, uiBogTarget, 0, sX, sY);
-						InvalidateRegion( sX, sY, sX + 20, sY + 20 );
-					}
+					BltVideoObjectFromIndex(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
+					InvalidateRegion(sX, sY, sX + 20, sY + 20);
 				}
 			}
 		}
@@ -661,7 +657,7 @@ void RenderTopmostTacticalInterface( )
 	RenderAccumulatedBurstLocations( );
 
 	// Loop through all mercs and make go
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+	for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
 	{
 		SOLDIERTYPE* const pSoldier = MercSlots[cnt];
 		if (pSoldier != NULL )

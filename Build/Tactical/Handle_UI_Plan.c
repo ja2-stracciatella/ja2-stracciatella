@@ -236,24 +236,14 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 
 void EndUIPlan(  )
 {
-	int				cnt;
-	SOLDIERTYPE *pSoldier;
-
 	// Zero out any planned soldiers
-	for( cnt = MAX_NUM_SOLDIERS; cnt < TOTAL_SOLDIERS; cnt++ )
+	FOR_ALL_PLANNING_SOLDIERS(s)
 	{
-		pSoldier = MercPtrs[ cnt ];
-
-		if ( pSoldier->bActive )
+		if (s->sPlannedTargetX != -1)
 		{
-			if ( pSoldier->sPlannedTargetX != -1 )
-			{
-				SetRenderFlags(RENDER_FLAG_FULL );
-			}
-			TacticalRemoveSoldier(pSoldier);
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
-
-
+		TacticalRemoveSoldier(s);
 	}
 	gfInUIPlanMode			 = FALSE;
 	gusSelectedSoldier   = gpUIStartPlannedSoldier->ubID;
