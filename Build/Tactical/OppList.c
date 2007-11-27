@@ -6063,28 +6063,33 @@ INT8 GetWatchedLocPoints( UINT8 ubID, INT16 sGridNo, INT8 bLevel )
 }
 
 
-INT8 GetHighestVisibleWatchedLoc( UINT8 ubID )
+INT8 GetHighestVisibleWatchedLoc(const SOLDIERTYPE* const s)
 {
-	INT8	bLoop;
-	INT8	bHighestLoc = -1;
-	INT8	bHighestPoints = 0;
-	INT16	sDistVisible;
-
-	for ( bLoop = 0; bLoop < NUM_WATCHED_LOCS; bLoop++ )
+	const INT16* const loc_id = gsWatchedLoc[s->ubID];
+	const UINT8* const pts_id = gubWatchedLocPoints[s->ubID];
+	const INT8*  const lvl_id = gbWatchedLocLevel[s->ubID];
+	INT8 bHighestLoc    = -1;
+	INT8 bHighestPoints =  0;
+	for (INT8 bLoop = 0; bLoop < NUM_WATCHED_LOCS; ++bLoop)
 	{
-		if ( gsWatchedLoc[ ubID ][ bLoop ] != NOWHERE && gubWatchedLocPoints[ ubID ][ bLoop ] > bHighestPoints )
+		const INT16 loc = loc_id[bLoop];
+		if (loc == NOWHERE) continue;
+
+		const UINT8 pts = pts_id[bLoop];
+		if (pts <= bHighestPoints) continue;
+
+		const INT8  lvl          = lvl_id[bLoop];
+		const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, loc, lvl);
+		// look at standing height
+		if (SoldierTo3DLocationLineOfSightTest(s, loc, lvl, 3, sDistVisible, TRUE))
 		{
-			sDistVisible =  DistanceVisible( MercPtrs[ ubID ], DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ] );
-			// look at standing height
-			if ( SoldierTo3DLocationLineOfSightTest( MercPtrs[ ubID ], gsWatchedLoc[ ubID ][ bLoop ], gbWatchedLocLevel[ ubID ][ bLoop ], 3, (UINT8) sDistVisible, TRUE ) )
-			{
-				bHighestLoc = bLoop;
-				bHighestPoints = gubWatchedLocPoints[ ubID ][ bLoop ];
-			}
+			bHighestLoc    = bLoop;
+			bHighestPoints = pts;
 		}
 	}
-	return( bHighestLoc );
+	return bHighestLoc;
 }
+
 
 INT8 GetHighestWatchedLocPoints( UINT8 ubID )
 {

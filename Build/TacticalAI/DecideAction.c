@@ -2159,7 +2159,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 				 if ((bWatchPts > -90) && (bWatchPts >= bSeekPts) && (bWatchPts >= bHelpPts) && (bWatchPts >= bHidePts ))
 					{
 						// take a look at our highest watch point... if it's still visible, turn to face it and then wait
-						bHighestWatchLoc = GetHighestVisibleWatchedLoc( pSoldier->ubID );
+						bHighestWatchLoc = GetHighestVisibleWatchedLoc(pSoldier);
 						//sDistVisible =  DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gsWatchedLoc[ pSoldier->ubID ][ bHighestWatchLoc ], gbWatchedLocLevel[ pSoldier->ubID ][ bHighestWatchLoc ] );
 						if ( bHighestWatchLoc != -1 )
 						{
