@@ -1283,6 +1283,15 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 }
 
 
+static void SetTeamStatusGreen(INT8 team)
+{
+	FOR_ALL_IN_TEAM(s, team)
+	{
+		if (s->bInSector) s->bAlertStatus = STATUS_GREEN;
+	}
+	gTacticalStatus.Team[team].bAwareOfOpposition = FALSE;
+}
+
 
 void EndAirRaid( )
 {
@@ -1298,32 +1307,9 @@ void EndAirRaid( )
 
 		if ( !gTacticalStatus.Team[ ENEMY_TEAM ].bTeamActive && !gTacticalStatus.Team[ CREATURE_TEAM ].bTeamActive )
 		{
-			SOLDIERTYPE * pTeamSoldier;
-			INT32	cnt;
-
-			// Loop through all militia and restore them to peaceful status
-			cnt = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID;
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; cnt++,pTeamSoldier++)
-			{
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
-				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
-				}
-			}
-			gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition = FALSE;
-
-			cnt = gTacticalStatus.Team[ CIV_TEAM ].bFirstID;
-			// Loop through all civs and restore them to peaceful status
-			for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; cnt++,pTeamSoldier++)
-			{
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
-				{
-					pTeamSoldier->bAlertStatus = STATUS_GREEN;
-				}
-			}
-			gTacticalStatus.Team[ CIV_TEAM ].bAwareOfOpposition = FALSE;
+			SetTeamStatusGreen(MILITIA_TEAM);
+			SetTeamStatusGreen(CIV_TEAM);
 		}
-
 	}
 
 	// OK, look at flags...
