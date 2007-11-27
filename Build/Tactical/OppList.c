@@ -1641,7 +1641,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 }
 
 
-static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel);
+static void IncrementWatchedLoc(const SOLDIERTYPE* watcher, INT16 sGridNo, INT8 bLevel);
 static void SetWatchedLocAsUsed(UINT8 ubID, INT16 sGridNo, INT8 bLevel);
 static void MakeBloodcatsHostile(void);
 static void AddOneOpponent(SOLDIERTYPE* pSoldier);
@@ -2001,7 +2001,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 			 //ExtMen[ptr->guynum].lastCaller = caller;
        //ExtMen[ptr->guynum].lastCaller2 = caller2;
 
-				IncrementWatchedLoc( pSoldier->ubID, pOpponent->sGridNo, pOpponent->bLevel );
+				IncrementWatchedLoc(pSoldier, pOpponent->sGridNo, pOpponent->bLevel);
 
 				if ( pSoldier->bTeam == OUR_TEAM && pOpponent->bTeam == ENEMY_TEAM )
 				{
@@ -6154,8 +6154,9 @@ static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 
 }
 
 
-static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
+static void IncrementWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 sGridNo, const INT8 bLevel)
 {
+	const SoldierID ubID = watcher->ubID;
 	INT8	bPoint;
 
 	bPoint = FindWatchedLoc( ubID, sGridNo, bLevel );
@@ -6177,7 +6178,7 @@ static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 			gfWatchedLocReset[ ubID ][ bPoint ] = FALSE;
 			gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] = TRUE;
 
-			CommunicateWatchedLoc(GetMan(ubID), sGridNo, bLevel, 1);
+			CommunicateWatchedLoc(watcher, sGridNo, bLevel, 1);
 		}
 		// otherwise abort; no points available
 	}
@@ -6186,7 +6187,7 @@ static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 		if ( !gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] && gubWatchedLocPoints[ ubID ][ bPoint ] < MAX_WATCHED_LOC_POINTS )
 		{
 			gubWatchedLocPoints[ ubID ][ bPoint ]++;
-			CommunicateWatchedLoc(GetMan(ubID), sGridNo, bLevel, gubWatchedLocPoints[ubID][bPoint]);
+			CommunicateWatchedLoc(watcher, sGridNo, bLevel, gubWatchedLocPoints[ubID][bPoint]);
 		}
 		gfWatchedLocReset[ ubID ][ bPoint ] = FALSE;
 		gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] = TRUE;
