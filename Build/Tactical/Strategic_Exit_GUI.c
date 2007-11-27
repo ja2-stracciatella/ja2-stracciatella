@@ -378,19 +378,11 @@ static void DoneFadeInWarp(void)
 
 static void DoneFadeOutWarpCallback(void)
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
   // Warp!
-
-  // Set insertion data...
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
+		if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 		{
 			gfTacticalTraversal = TRUE;
 			SetGroupSectorValue( gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, pSoldier->ubGroupID );

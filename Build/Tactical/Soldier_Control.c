@@ -10115,24 +10115,13 @@ SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
 
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pRobot )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt = 0;
-
 	// Loop through guys and look for a controller!
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pTeamSoldier->bActive )
+		if (ControllingRobot(s))
 		{
-			if ( ControllingRobot( pTeamSoldier ) )
-			{
-			  pRobot->ubRobotRemoteHolderID = pTeamSoldier->ubID;
-				return;
-			}
+			pRobot->ubRobotRemoteHolderID = s->ubID;
+			return;
 		}
 	}
 
@@ -10142,24 +10131,17 @@ void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pRobot )
 
 void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt = 0;
-
 	// First see if are still controlling the robot
 	if ( !ControllingRobot( pSoldier ) )
 	{
 		return;
 	}
 
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// Loop through guys to find the robot....
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pTeamSoldier->bActive && ( pTeamSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
+		if (s->uiStatusFlags & SOLDIER_ROBOT)
 		{
-			pTeamSoldier->ubRobotRemoteHolderID = pSoldier->ubID;
+			s->ubRobotRemoteHolderID = pSoldier->ubID;
 		}
 	}
 }

@@ -1850,21 +1850,21 @@ BOOLEAN DidFirstBattleTakePlaceInThisTown( INT8 bTownId )
 
 static UINT32 PlayerStrength(void)
 {
-	UINT8						ubLoop;
-	SOLDIERTYPE *		pSoldier;
 	UINT32					uiStrength, uiTotal = 0;
 
-	for ( ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		pSoldier = MercPtrs[ ubLoop ];
-		if ( pSoldier->bActive )
+		if (s->bInSector ||
+				(
+					s->fBetweenSectors &&
+					s->ubPrevSectorID % 16 + 1 == gWorldSectorX &&
+					s->ubPrevSectorID / 16 + 1 == gWorldSectorY &&
+					s->bSectorZ == gbWorldSectorZ
+				))
 		{
-			if ( pSoldier->bInSector || ( pSoldier->fBetweenSectors && ((pSoldier->ubPrevSectorID % 16) + 1) == gWorldSectorX && ((pSoldier->ubPrevSectorID / 16) + 1) == gWorldSectorY && ( pSoldier->bSectorZ == gbWorldSectorZ ) ) )
-			{
-				// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
-				uiStrength = pSoldier->bLife * ( pSoldier->bBreathMax + 100 ) / 200;
-				uiTotal += uiStrength;
-			}
+			// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
+			uiStrength = s->bLife * (s->bBreathMax + 100) / 200;
+			uiTotal += uiStrength;
 		}
 	}
 	return( uiTotal );

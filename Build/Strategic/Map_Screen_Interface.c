@@ -5301,23 +5301,15 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	if ( ( pSoldier->sSectorX == 12 ) && ( pSoldier->sSectorY == MAP_ROW_L ) && ( pSoldier->bSectorZ == 0 ) &&
 			 ( !pSoldier->fBetweenSectors ) && gMercProfiles[ ELDIN ].bMercStatus != MERC_IS_DEAD )
 	{
-		UINT8	ubRoom, cnt;
-		SOLDIERTYPE * pSoldier2;
-
+		UINT8	ubRoom;
 		if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom >= 22 && ubRoom <= 41 )
 		{
-
-			cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-			for ( pSoldier2 = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier2++)
+			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if ( pSoldier2->bActive )
+				if (FindObj(s, CHALICE) != ITEM_NOT_FOUND)
 				{
-					if ( FindObj( pSoldier2, CHALICE ) != ITEM_NOT_FOUND )
-					{
-						*pbErrorNumber = 34;
-						return( FALSE );
-					}
+					*pbErrorNumber = 34;
+					return FALSE;
 				}
 			}
 		}

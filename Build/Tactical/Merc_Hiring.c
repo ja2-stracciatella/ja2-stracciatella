@@ -428,33 +428,20 @@ BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 
 UINT8	NumberOfMercsOnPlayerTeam()
 {
-	INT8					cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16					bLastTeamID;
-	UINT8					ubCount=0;
-
-	// Set locator to first merc
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	UINT8 ubCount = 0;
+	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
-		//if the is active, and is not a vehicle
-		if( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			ubCount++;
 		}
 	}
-
-	return( ubCount );
+	return ubCount;
 }
 
 
 void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 {
-	INT8										cnt, bHated, bLastTeamID;
-	SOLDIERTYPE							*pTeamSoldier;
-
 	// If we are approaching with helicopter, don't say any ( yet )
 	if ( pSoldier->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER )
 	{
@@ -468,30 +455,19 @@ void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 		}
 
 		// Check to see if anyone hates this merc and will now complain
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-		//loop though all the mercs
-		for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if ( pTeamSoldier->bActive )
+			if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 			{
-				if ( pTeamSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
+				const INT8 bHated = WhichHated(s->ubProfile, pSoldier->ubProfile);
+				if (bHated != -1)
 				{
-					bHated = WhichHated( pTeamSoldier->ubProfile, pSoldier->ubProfile );
-					if ( bHated != -1 )
+					// hates the merc who has arrived and is going to gripe about it!
+					switch (bHated)
 					{
-						// hates the merc who has arrived and is going to gripe about it!
-						switch( bHated )
-						{
-							case 0:
-								TacticalCharacterDialogue( pTeamSoldier, QUOTE_HATED_1_ARRIVES );
-								break;
-							case 1:
-								TacticalCharacterDialogue( pTeamSoldier, QUOTE_HATED_2_ARRIVES );
-								break;
-							default:
-								break;
-						}
+						case 0:  TacticalCharacterDialogue(s, QUOTE_HATED_1_ARRIVES); break;
+						case 1:  TacticalCharacterDialogue(s, QUOTE_HATED_2_ARRIVES); break;
+						default: break;
 					}
 				}
 			}
@@ -548,25 +524,13 @@ UINT32 GetMercArrivalTimeOfDay( )
 
 void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 {
-	INT32 cnt;
-	SOLDIERTYPE		*pSoldier;
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive )
+		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{
-			if ( pSoldier->bAssignment == IN_TRANSIT )
-			{
-				if ( pSoldier->fUseLandingZoneForArrival )
-				{
-					pSoldier->sSectorX	= gsMercArriveSectorX;
-					pSoldier->sSectorY	= gsMercArriveSectorY;
-					pSoldier->bSectorZ	= 0;
-				}
-			}
+			s->sSectorX = gsMercArriveSectorX;
+			s->sSectorY = gsMercArriveSectorY;
+			s->bSectorZ = 0;
 		}
 	}
 }

@@ -39,10 +39,7 @@ extern UINT8 NumEnemyInSector();
 void HandleRPCDescription(  )
 {
 	UINT8	ubNumMercs = 0;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32		cnt2;
   BOOLEAN fSAMSite = FALSE;
-
 
 	if ( !gTacticalStatus.fCountingDownForGuideDescription )
 	{
@@ -91,28 +88,23 @@ void HandleRPCDescription(  )
 		gTacticalStatus.fCountingDownForGuideDescription = FALSE;
 
 		// OK, count how many rpc guys we have....
-		// set up soldier ptr as first element in mercptrs list
-		cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-		// run through list
 		SOLDIERTYPE* mercs_in_sector[20];
-		for ( pTeamSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt2++,pTeamSoldier++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
 			// Add guy if he's a candidate...
-			if ( RPC_RECRUITED( pTeamSoldier ) )
+			if (RPC_RECRUITED(s) &&
+					s->bLife >= OKLIFE &&
+					s->sSectorX == gTacticalStatus.bGuideDescriptionSectorX &&
+					s->sSectorY == gTacticalStatus.bGuideDescriptionSectorY &&
+					s->bSectorZ == gbWorldSectorZ &&
+					!s->fBetweenSectors)
 			{
-				if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive &&
-						 pTeamSoldier->sSectorX == gTacticalStatus.bGuideDescriptionSectorX && pTeamSoldier->sSectorY == gTacticalStatus.bGuideDescriptionSectorY &&
-						 pTeamSoldier->bSectorZ == gbWorldSectorZ &&
-						 !pTeamSoldier->fBetweenSectors  )
+				if (s->ubProfile == IRA    ||
+						s->ubProfile == MIGUEL ||
+						s->ubProfile == CARLOS ||
+						s->ubProfile == DIMITRI)
 				{
-					if ( pTeamSoldier->ubProfile == IRA ||
-							 pTeamSoldier->ubProfile == MIGUEL ||
-							 pTeamSoldier->ubProfile == CARLOS ||
-							 pTeamSoldier->ubProfile == DIMITRI )
-					{
-						mercs_in_sector[ubNumMercs++] = pTeamSoldier;
-					}
+					mercs_in_sector[ubNumMercs++] = s;
 				}
 			}
 		}
@@ -129,8 +121,6 @@ void HandleRPCDescription(  )
 
 void HandleTacticalEndTurn( )
 {
-	UINT32 cnt;
-	SOLDIERTYPE		*pSoldier;
 	UINT32				uiTime;
   static UINT32 uiTimeSinceLastStrategicUpdate = 0;
 
@@ -171,7 +161,7 @@ void HandleTacticalEndTurn( )
 	// May want this done every few times too
 	NonCombatDecayPublicOpplist( uiTime );
 	/*
-	for( cnt = 0; cnt < MAXTEAMS; cnt++ )
+	for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 	{
 		if ( gTacticalStatus.Team[ cnt ].bMenInSector > 0 )
 		{
@@ -197,24 +187,22 @@ void HandleTacticalEndTurn( )
 	// First exit if we are not in realtime combat or realtime noncombat
 	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-
 		BeginLoggingForBleedMeToos( TRUE );
 
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if ( pSoldier->bActive && pSoldier->bLife > 0 && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !( AM_A_ROBOT( pSoldier ) ) )
+			if (s->bLife > 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
 			{
 				// Handle everything from getting breath back, to bleeding, etc
-				EVENT_BeginMercTurn( pSoldier, TRUE, 0 );
+				EVENT_BeginMercTurn(s, TRUE, 0);
 
 				// Handle Player services
-				HandlePlayerServices( pSoldier );
+				HandlePlayerServices(s);
 
 				// if time is up, turn off xray
-				if ( pSoldier->uiXRayActivatedTime && uiTime > pSoldier->uiXRayActivatedTime + XRAY_TIME )
+				if (s->uiXRayActivatedTime && uiTime > s->uiXRayActivatedTime + XRAY_TIME)
 				{
-					TurnOffXRayEffects( pSoldier );
+					TurnOffXRayEffects(s);
 				}
 			}
 		}
@@ -224,10 +212,9 @@ void HandleTacticalEndTurn( )
 		// OK, loop through the mercs to perform 'end turn' events on each...
 		// We're looping through only mercs in tactical engine, ignoring our mercs
 		// because they were done earilier...
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
 		{
-			pSoldier = MercSlots[ cnt ];
-
+			SOLDIERTYPE* const pSoldier = MercSlots[cnt];
 			if ( pSoldier != NULL )
 			{
 				if ( pSoldier->bTeam != gbPlayerNum )

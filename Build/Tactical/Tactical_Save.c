@@ -845,13 +845,11 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	// find out which items in the list are reachable
-	UINT32 uiCounter = 0;
 	UINT8	ubDir, ubMovementCost;
 	BOOLEAN fReachable = FALSE;
 	INT16 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
 	INT16	sNewLoc;
 
-	SOLDIERTYPE * pSoldier;
 	BOOLEAN	fSecondary = FALSE;
 
 	if ( guiNumWorldItems == 0 )
@@ -893,16 +891,16 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 	{
 		sGridNo2 = gMapInformation.sIsolatedGridNo;
 
-		for( uiCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; uiCounter < gTacticalStatus.Team[ gbPlayerNum ].bLastID; uiCounter++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			pSoldier = MercPtrs[ uiCounter ];
-			if ( pSoldier && pSoldier->bActive && pSoldier->bLife > 0 && pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ )
+			if (s->bLife > 0 &&
+					s->sSectorX == sSectorX &&
+					s->sSectorY == sSectorY &&
+					s->bSectorZ == bSectorZ &&
+					FindBestPath(s, sGridNo2, s->bLevel, WALKING, NO_COPYROUTE, 0))
 			{
-				if ( FindBestPath( pSoldier, sGridNo2, pSoldier->bLevel, WALKING, NO_COPYROUTE, 0 ) )
-				{
-					fSecondary = TRUE;
-					break;
-				}
+				fSecondary = TRUE;
+				break;
 			}
 		}
 
@@ -915,9 +913,8 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 
 	GlobalItemsReachableTest( sGridNo, sGridNo2 );
 
-	for( uiCounter = 0; uiCounter < guiNumWorldItems; uiCounter++ )
+	for (UINT32 uiCounter = 0; uiCounter < guiNumWorldItems; ++uiCounter)
 	{
-
 		// reset reachablity
 		fReachable = FALSE;
 

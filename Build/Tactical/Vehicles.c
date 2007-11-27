@@ -1330,26 +1330,14 @@ BOOLEAN EnterVehicle(const SOLDIERTYPE* pVehicle, SOLDIERTYPE* pSoldier)
 
 static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldier)
 {
-	UINT32									cnt;
-	SOLDIERTYPE             *pSoldier;
-
-	// End the turn of player charactors
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		if (s->uiStatusFlags & SOLDIER_VEHICLE && s->bVehicleID == pSrcSoldier->iVehicleId)
 		{
-			// Check ubID....
-			if ( pSoldier->bVehicleID == pSrcSoldier->iVehicleId )
-			{
-				return( pSoldier );
-			}
+			return s;
 		}
 	}
-
-	return( NULL );
+	return NULL;
 }
 
 

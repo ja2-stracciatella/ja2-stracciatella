@@ -5032,48 +5032,40 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			if ( gTacticalStatus.bNumFoughtInBattle[ ENEMY_TEAM ] + gTacticalStatus.bNumFoughtInBattle[ CREATURE_TEAM ] + gTacticalStatus.bNumFoughtInBattle[ CIV_TEAM ] > 0 )
 			//if ( gTacticalStatus.bNumEnemiesFoughtInBattle > 0 )
 			{
-				// Loop through all mercs and make go
-				INT32 cnt = 0;
-				for (SOLDIERTYPE* pTeamSoldier = MercPtrs[gTacticalStatus.Team[gbPlayerNum].bFirstID]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pTeamSoldier++)
+				FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
 				{
-					if ( pTeamSoldier->bActive )
+					if (pTeamSoldier->bInSector &&
+							pTeamSoldier->bTeam == gbPlayerNum)
 					{
-						if ( pTeamSoldier->bInSector )
+						gMercProfiles[pTeamSoldier->ubProfile].usBattlesFought++;
+
+						// If this guy is OKLIFE & not standing, make stand....
+						if (pTeamSoldier->bLife >= OKLIFE &&
+								!pTeamSoldier->bCollapsed &&
+								pTeamSoldier->bAssignment < ON_DUTY)
 						{
-							if( pTeamSoldier->bTeam == gbPlayerNum )
+							// Reset some quote flags....
+							pTeamSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED;
+							pTeamSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED;
+							pTeamSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED;
+
+							// toggle stealth mode....
+							gfUIStanceDifferent = TRUE;
+							pTeamSoldier->bStealthMode = FALSE;
+							fInterfacePanelDirty = DIRTYLEVEL2;
+
+							if (gAnimControl[pTeamSoldier->usAnimState].ubHeight != ANIM_STAND)
 							{
-								gMercProfiles[pTeamSoldier->ubProfile].usBattlesFought++;
+								ChangeSoldierStance(pTeamSoldier, ANIM_STAND);
+							}
+							else
+							{
+								// If they are aiming, end aim!
+								usAnimState = PickSoldierReadyAnimation(pTeamSoldier, TRUE);
 
-								// If this guy is OKLIFE & not standing, make stand....
-								if ( pTeamSoldier->bLife >= OKLIFE && !pTeamSoldier->bCollapsed )
+								if (usAnimState != INVALID_ANIMATION)
 								{
-									if ( pTeamSoldier->bAssignment < ON_DUTY )
-									{
-										// Reset some quote flags....
-										pTeamSoldier->usQuoteSaidExtFlags &= (~SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED);
-										pTeamSoldier->usQuoteSaidExtFlags &= (~SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED);
-										pTeamSoldier->usQuoteSaidExtFlags &= (~SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED);
-
-										// toggle stealth mode....
-										gfUIStanceDifferent = TRUE;
-										pTeamSoldier->bStealthMode = FALSE;
-										fInterfacePanelDirty = DIRTYLEVEL2;
-
-										if ( gAnimControl[ pTeamSoldier->usAnimState ].ubHeight != ANIM_STAND )
-										{
-											ChangeSoldierStance( pTeamSoldier, ANIM_STAND );
-										}
-										else
-										{
-											// If they are aiming, end aim!
-											usAnimState = PickSoldierReadyAnimation( pTeamSoldier, TRUE );
-
-											if ( usAnimState != INVALID_ANIMATION )
-											{
-												EVENT_InitNewSoldierAnim( pTeamSoldier, usAnimState, 0, FALSE );
-											}
-										}
-									}
+									EVENT_InitNewSoldierAnim(pTeamSoldier, usAnimState, 0, FALSE);
 								}
 							}
 						}
@@ -5311,20 +5303,15 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 
 static INT8 CountNonVehiclesOnPlayerTeam(void)
 {
-	UINT32				cnt;
-	SOLDIERTYPE* pSoldier;
-	INT8					bNumber = 0;
-
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pSoldier = MercPtrs[ cnt ]; cnt <= (UINT32)( gTacticalStatus.Team[ gbPlayerNum ].bLastID ); cnt++, pSoldier++ )
+	INT8 bNumber = 0;
+	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
-		if ( pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			bNumber++;
 		}
 	}
-
-	return( bNumber );
-
+	return bNumber;
 }
 
 
@@ -5537,14 +5524,10 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 		}
 	}
 
-	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-
-	// look for all mercs on the same team,
-	for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
 	{
-		// Are we active and in sector.....
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector && !( pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		// Are we in sector.....
+		if (pTeamSoldier->bInSector && !(pTeamSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			bNumInBattle++;
 
@@ -5621,14 +5604,11 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 
 			gfKillingGuysForLosingBattle = TRUE;
 
-			// KIll them now...
-			// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-			INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-
-			for (SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pTeamSoldier++)
+			// Kill them now...
+			FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
 			{
-				// Are we active and in sector.....
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+				// Are we in sector.....
+				if (pTeamSoldier->bInSector)
 				{
 					if ( pTeamSoldier->bLife != 0 && pTeamSoldier->bLife < OKLIFE || AM_AN_EPC( pTeamSoldier ) || AM_A_ROBOT( pTeamSoldier ) )
 					{
@@ -6368,16 +6348,12 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 	if ( gTacticalStatus.uiFlags & CHECK_SIGHT_AT_END_OF_ATTACK )
 	{
-		UINT8 ubLoop;
-		SOLDIERTYPE * pSightSoldier;
-
 		AllTeamsLookForAll( FALSE );
 
 		// call fov code
-		ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSightSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pSightSoldier++ )
+		FOR_ALL_IN_TEAM(pSightSoldier, gbPlayerNum)
 		{
-			if ( pSightSoldier->bActive && pSightSoldier->bInSector )
+			if (pSightSoldier->bInSector)
 			{
 				RevealRoofsAndItems( pSightSoldier, TRUE, FALSE, pSightSoldier->bLevel, FALSE );
 			}
@@ -6733,10 +6709,9 @@ void DoPOWPathChecks(void)
 {
 	/* loop through all mercs on our team and if they are POWs in sector, do POW
 	 * path check and put on a squad if available */
-	for (INT32 i = gTacticalStatus.Team[gbPlayerNum].bFirstID; i <= gTacticalStatus.Team[gbPlayerNum].bLastID; ++i)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		SOLDIERTYPE* const s = MercPtrs[i];
-		if (!s->bActive || !s->bInSector || s->bAssignment != ASSIGNMENT_POW) continue;
+		if (!s->bInSector || s->bAssignment != ASSIGNMENT_POW) continue;
 
 		// check to see if POW has been freed!
 		// this will be true if a path can be made from the POW to either of 3 gridnos

@@ -427,8 +427,6 @@ BOOLEAN AnotherFightPossible( void )
 	// a player has at least OKLIFE + 5 life
 
 	// and at least one fight HAS occurred
-	UINT8						ubLoop;
-	SOLDIERTYPE *		pSoldier;
 	UINT8						ubAvailable;
 
 	ubAvailable = BoxersAvailable();
@@ -438,14 +436,11 @@ BOOLEAN AnotherFightPossible( void )
 		return( FALSE );
 	}
 
-	// Loop through all mercs on player team
-	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	pSoldier = MercPtrs[ ubLoop ];
-	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++,pSoldier++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > (OKLIFE + 5) && !pSoldier->bCollapsed )
+		if (s->bInSector && s->bLife > OKLIFE + 5 && !s->bCollapsed)
 		{
-			return( TRUE );
+			return TRUE;
 		}
 	}
 

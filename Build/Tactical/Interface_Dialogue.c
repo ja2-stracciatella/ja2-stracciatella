@@ -1685,17 +1685,14 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ApplyMapChangesToMapTempFile( FALSE );
 
 				// For one, loop through our current squad and move them over
-				INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-
 				//ATE:Alrighty, instead of being a dufuss here, let's actually use the current
 				// Squad here to search for...
 
-				// look for all mercs on the same team,
 				INT8 bNumDone = 0;
-				for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
+				FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 				{
 					// Are we in this sector, On the current squad?
-					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad())
 					{
 						gfTacticalTraversal = TRUE;
 						SetGroupSectorValue( 10, 1, 1, pSoldier->ubGroupID );
@@ -1984,14 +1981,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				// OK, we want to goto the basement level!
 				// For one, loop through our current squad and move them over
-				INT32 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-
-				// look for all mercs on the same team,
 				INT8 bNumDone = 0;
-				for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
+				FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 				{
 					// Are we in this sector, On the current squad?
-					if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector )
+					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 					{
 						gfTacticalTraversal = TRUE;
 						SetGroupSectorValue( 10, 1, 0, pSoldier->ubGroupID );
@@ -3466,17 +3460,19 @@ unlock:
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
-					INT32 cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-					for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++,pSoldier++)
+					FOR_ALL_IN_TEAM(s, gbPlayerNum)
 					{
 						// Are we in this sector, On the current squad?
-						if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->bLife < pSoldier->bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < HOSPITAL_PATIENT_DISTANCE )
+						if (s->bInSector &&
+								0 < s->bLife && s->bLife < s->bLifeMax &&
+								s->bAssignment != ASSIGNMENT_HOSPITAL &&
+								PythSpacesAway(s->sGridNo, pSoldier2->sGridNo) < HOSPITAL_PATIENT_DISTANCE)
 						{
-							SetSoldierAssignment( pSoldier, ASSIGNMENT_HOSPITAL, 0, 0, 0 );
-							TriggerNPCRecord( pSoldier->ubProfile, 2 );
-							pSoldier->bHospitalPriceModifier = gbHospitalPriceModifier;
+							SetSoldierAssignment(s, ASSIGNMENT_HOSPITAL, 0, 0, 0);
+							TriggerNPCRecord(s->ubProfile, 2);
+							s->bHospitalPriceModifier = gbHospitalPriceModifier;
 							// make sure this person doesn't have an absolute dest any more
-							pSoldier->sAbsoluteFinalDestination = NOWHERE;
+							s->sAbsoluteFinalDestination = NOWHERE;
 						}
 					}
 
@@ -4236,15 +4232,13 @@ UINT32 CalcPatientMedicalCost(const SOLDIERTYPE* const pSoldier)
 
 UINT32 CalcMedicalCost( UINT8 ubId )
 {
-	INT32		cnt;
 	UINT32	uiCostSoFar;
 	INT16		sGridNo = 0;
-	SOLDIERTYPE * pSoldier, *pNPC;
 
 	uiCostSoFar = 0;
 
 	// find the doctor's soldiertype to get his position
-	pNPC = FindSoldierByProfileID( ubId, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubId, FALSE);
 	if (!pNPC)
 	{
 		return( 0 );
@@ -4252,18 +4246,14 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 
 	sGridNo = pNPC->sGridNo;
 
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		pSoldier = MercPtrs[ cnt ];
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife > 0 && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
+		if (s->bInSector &&
+				0 < s->bLife && s->bLife < s->bLifeMax &&
+				s->bAssignment != ASSIGNMENT_HOSPITAL &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= HOSPITAL_PATIENT_DISTANCE)
 		{
-			if ( pSoldier->bLife < pSoldier->bLifeMax )
-			{
-				if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= HOSPITAL_PATIENT_DISTANCE)
-				{
-					uiCostSoFar += CalcPatientMedicalCost( pSoldier );
-				}
-			}
+			uiCostSoFar += CalcPatientMedicalCost(s);
 		}
 	}
 
@@ -4496,19 +4486,15 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 			{
 				// He tried to lie.....
 				// Find the best conscious merc with a chance....
-				UINT8							cnt;
-				SOLDIERTYPE *			pLier = NULL;
-				SOLDIERTYPE *			pSoldier;
-
-				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-				for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
+				SOLDIERTYPE* pLier = NULL;
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
 				{
-					if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && pSoldier->bBreath >= OKBREATH )
+					if (s->bInSector &&
+							s->bLife >= OKLIFE &&
+							s->bBreath >= OKBREATH &&
+							(!pLier || (EffectiveWisdom(s) + EffectiveLeadership(s) > EffectiveWisdom(pLier) + EffectiveLeadership(s))))
 					{
-						if (!pLier || (EffectiveWisdom( pSoldier ) + EffectiveLeadership( pSoldier ) > EffectiveWisdom( pLier ) + EffectiveLeadership( pSoldier ) ) )
-						{
-							pLier = pSoldier;
-						}
+						pLier = s;
 					}
 				}
 
@@ -4691,34 +4677,26 @@ static void DoneFadeOutActionSex(void)
 static void DoneFadeInActionBasement(void)
 {
 	// Start conversation, etc
-	SOLDIERTYPE *pSoldier, *pNPCSoldier;
-	INT32										cnt;
 
 	// Look for someone to talk to
-	// look for all mercs on the same team,
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())
 		{
 			break;
 		}
-
 	}
 
-	pNPCSoldier = FindSoldierByProfileID(CARLOS, FALSE);
+	const SOLDIERTYPE* const pNPCSoldier = FindSoldierByProfileID(CARLOS, FALSE);
 	if ( !pNPCSoldier )
 	{
 		return;
 	}
 
-
 	// Converse!
-	//InitiateConversation( pNPCSoldier, pSoldier, 0, 1 );
+	//InitiateConversation(pNPCSoldier, s, 0, 1);
 	TriggerNPCRecordImmediately( pNPCSoldier->ubProfile, 1 );
-
-
 }
 
 

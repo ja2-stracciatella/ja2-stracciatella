@@ -175,28 +175,19 @@ static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQu
 
 static void SurrenderMessageBoxCallBack(UINT8 ubExitValue)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
-
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
 		// CJC Dec 1 2002: fix multiple captures
 		BeginCaptureSquence();
 
     // Do capture....
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-		for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
 			// Are we active and in sector.....
-			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+			if (s->bInSector && s->bLife != 0)
 			{
-        if ( pTeamSoldier->bLife != 0 )
-				{
-					EnemyCapturesPlayerSoldier( pTeamSoldier );
-
-					RemoveSoldierFromTacticalSector( pTeamSoldier, TRUE );
-				}
+				EnemyCapturesPlayerSoldier(s);
+				RemoveSoldierFromTacticalSector(s, TRUE);
 			}
     }
 

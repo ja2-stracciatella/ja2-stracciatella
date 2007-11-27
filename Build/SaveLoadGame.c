@@ -581,28 +581,17 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	}
 	else
 	{
-		INT16					sSoldierCnt;
-		SOLDIERTYPE		*pSoldier;
-		INT16					bLastTeamID;
-		INT8					bCount=0;
 		BOOLEAN				fFoundAMerc=FALSE;
 
-		// Set locator to first merc
-		sSoldierCnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-		for ( pSoldier = MercPtrs[ sSoldierCnt ]; sSoldierCnt <= bLastTeamID; sSoldierCnt++,pSoldier++)
+		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if( pSoldier->bActive )
+			if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 			{
-				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->fBetweenSectors)
-				{
-					SaveGameHeader.sSectorX = pSoldier->sSectorX;
-					SaveGameHeader.sSectorY = pSoldier->sSectorY;
-					SaveGameHeader.bSectorZ = pSoldier->bSectorZ;
-					fFoundAMerc = TRUE;
-					break;
-				}
+				SaveGameHeader.sSectorX = s->sSectorX;
+				SaveGameHeader.sSectorY = s->sSectorY;
+				SaveGameHeader.bSectorZ = s->bSectorZ;
+				fFoundAMerc = TRUE;
+				break;
 			}
 		}
 
@@ -4034,51 +4023,34 @@ void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *p
 	}
 	else
 	{
-		INT16					sSoldierCnt;
-		SOLDIERTYPE		*pSoldier;
-		INT16					bLastTeamID;
 		BOOLEAN				fFoundAMerc=FALSE;
 
-		// Set locator to first merc
-		sSoldierCnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
 		//loop through all the mercs on the players team to find the one that is not moving
-		for ( pSoldier = MercPtrs[ sSoldierCnt ]; sSoldierCnt <= bLastTeamID; sSoldierCnt++,pSoldier++)
+		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if( pSoldier->bActive )
+			if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 			{
-				if ( pSoldier->bAssignment != IN_TRANSIT && !pSoldier->fBetweenSectors)
-				{
-					//we found an alive, merc that is not moving
-					*psSectorX = pSoldier->sSectorX;
-					*psSectorY = pSoldier->sSectorY;
-					*pbSectorZ = pSoldier->bSectorZ;
-					fFoundAMerc = TRUE;
-					break;
-				}
+				//we found an alive, merc that is not moving
+				*psSectorX = s->sSectorX;
+				*psSectorY = s->sSectorY;
+				*pbSectorZ = s->bSectorZ;
+				fFoundAMerc = TRUE;
+				break;
 			}
 		}
 
 		//if we didnt find a merc
 		if( !fFoundAMerc )
 		{
-			// Set locator to first merc
-			sSoldierCnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-			bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
 			//loop through all the mercs and find one that is moving
-			for ( pSoldier = MercPtrs[ sSoldierCnt ]; sSoldierCnt <= bLastTeamID; sSoldierCnt++,pSoldier++)
+			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if( pSoldier->bActive )
-				{
-					//we found an alive, merc that is not moving
-					*psSectorX = pSoldier->sSectorX;
-					*psSectorY = pSoldier->sSectorY;
-					*pbSectorZ = pSoldier->bSectorZ;
-					fFoundAMerc = TRUE;
-					break;
-				}
+				//we found an alive, merc that is not moving
+				*psSectorX = s->sSectorX;
+				*psSectorY = s->sSectorY;
+				*pbSectorZ = s->bSectorZ;
+				fFoundAMerc = TRUE;
+				break;
 			}
 
 			//if we STILL havent found a merc, give up and use the -1, -1, -1

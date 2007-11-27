@@ -2686,8 +2686,6 @@ void UpdateEnemyUIBar( )
 
 void InitPlayerUIBar( BOOLEAN fInterrupt )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32				cnt = 0;
 	INT8				bNumOK = 0, bNumNotOK = 0;
 
 	if ( !gGameOptions.fTurnTimeLimit )
@@ -2709,16 +2707,11 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 	{
 		gTacticalStatus.usTactialTurnLimitCounter = 0;
 
-		// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-		// look for all mercs on the same team,
-		for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++)
+		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			// Are we active and in sector.....
-			if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+			if (s->bInSector)
 			{
-				if ( pTeamSoldier->bLife < OKLIFE )
+				if (s->bLife < OKLIFE)
 				{
 					bNumNotOK++;
 				}

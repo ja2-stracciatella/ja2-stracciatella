@@ -2804,20 +2804,16 @@ void HandleExplosionQueue(void)
 
 		if (gfExplosionQueueMayHaveChangedSight)
 		{
-			UINT8 ubLoop;
-			SOLDIERTYPE * pTeamSoldier;
-
 			// set variable so we may at least have someone to resolve interrupts vs
 			gInterruptProvoker = gPersonToSetOffExplosions;
 			AllTeamsLookForAll( TRUE );
 
 			// call fov code
-			ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-			for ( pTeamSoldier = MercPtrs[ ubLoop ]; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++, pTeamSoldier++ )
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+				if (s->bInSector)
 				{
-					RevealRoofsAndItems( pTeamSoldier, TRUE, FALSE, pTeamSoldier->bLevel, FALSE );
+					RevealRoofsAndItems(s, TRUE, FALSE, s->bLevel, FALSE);
 				}
 			}
 

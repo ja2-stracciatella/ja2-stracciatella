@@ -1086,24 +1086,16 @@ static BOOLEAN MapExists(const char* szFilename)
 	return TRUE;
 }
 
+
 void RemoveMercsInSector( )
 {
-	INT32					cnt;
-	SOLDIERTYPE		*pSoldier;
-
-	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
 	// ATE: only for OUR guys.. the rest is taken care of in TrashWorld() when a new sector is added...
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive  )
-		{
-			RemoveSoldierFromGridNo( pSoldier );
-		}
+		RemoveSoldierFromGridNo(s);
 	}
-
 }
+
 
 void PrepareLoadedSector()
 {
@@ -1278,8 +1270,6 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	UINT8		ubRandomMiner[RANDOM_HEAD_MINERS] = { 106, 156, 157, 158 };
 	UINT8		ubMiner, ubMinersPlaced;
 	UINT8		ubMine, ubThisMine;
-	UINT8		cnt;
-	SOLDIERTYPE * pSoldier;
 
 	if ( CheckFact( FACT_ALL_TERRORISTS_KILLED, 0 ) )
 	{
@@ -1368,16 +1358,11 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 
 	// Check to see if any player merc has the Chalice; if so,
 	// note it as stolen
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive )
+		if (FindObj(s, CHALICE) != ITEM_NOT_FOUND)
 		{
-			if ( FindObj( pSoldier, CHALICE ) != ITEM_NOT_FOUND )
-			{
-				SetFactTrue( FACT_CHALICE_STOLEN );
-			}
+			SetFactTrue(FACT_CHALICE_STOLEN);
 		}
 	}
 
@@ -3453,30 +3438,28 @@ INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 BOOLEAN CanGoToTacticalInSector( INT16 sX, INT16 sY, UINT8 ubZ )
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
 	// if not a valid sector
 	if( ( sX < 1 ) || ( sX > 16 ) || ( sY < 1 ) || ( sY > 16 ) || ( ubZ > 3 ) )
 	{
 		return( FALSE );
 	}
 
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
   // look for all living, fighting mercs on player's team.  Robot and EPCs qualify!
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// ARM: now allows loading of sector with all mercs below OKLIFE as long as they're alive
-		if ( ( pSoldier->bActive && pSoldier->bLife ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-				 ( pSoldier->bAssignment != IN_TRANSIT ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
-				 ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) && !SoldierAboardAirborneHeli( pSoldier ) )
+		if (s->bLife != 0 &&
+				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
+				s->bAssignment != IN_TRANSIT &&
+				s->bAssignment != ASSIGNMENT_POW &&
+				s->bAssignment != ASSIGNMENT_DEAD &&
+				!SoldierAboardAirborneHeli(s) &&
+				!s->fBetweenSectors &&
+				s->sSectorX == sX &&
+				s->sSectorY == sY &&
+				s->bSectorZ == ubZ)
 		{
-			if ( !pSoldier->fBetweenSectors && pSoldier->sSectorX == sX && pSoldier->sSectorY == sY && pSoldier->bSectorZ == ubZ )
-			{
-				return( TRUE );
-			}
+			return TRUE;
 		}
 	}
 

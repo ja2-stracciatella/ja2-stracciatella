@@ -517,25 +517,11 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 BOOLEAN AnyMercsHired( )
 {
-	INT32 cnt;
-	SOLDIERTYPE		*pTeamSoldier;
-	INT16				  bLastTeamID;
-
-	// Find first guy availible in team
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-  // look for all mercs on the same team,
-  for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pTeamSoldier->bActive )
-		{
-			return( TRUE );
-		}
+		return TRUE;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 

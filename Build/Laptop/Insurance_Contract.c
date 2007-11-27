@@ -793,34 +793,23 @@ static void HandleAcceptButton(SOLDIERTYPE* s)
 // determines if a merc will run out of their insurance contract
 void DailyUpdateOfInsuredMercs()
 {
-	INT16		cnt;
-	INT16		bLastTeamID;
-	SOLDIERTYPE		*pSoldier;
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		//if the soldier is in the team array
-		if( pSoldier->bActive )
+		//if the merc has life insurance
+		if (s->usLifeInsurance)
 		{
-			//if the merc has life insurance
-			if( pSoldier->usLifeInsurance )
+			//if the merc wasn't just hired
+			if ((INT16)GetWorldDay() != s->iStartOfInsuranceContract)
 			{
-				//if the merc wasn't just hired
-				if( (INT16)GetWorldDay() != pSoldier->iStartOfInsuranceContract )
+				//if the contract has run out of time
+				if (GetTimeRemainingOnSoldiersInsuranceContract(s) <= 0)
 				{
-					//if the contract has run out of time
-					if( GetTimeRemainingOnSoldiersInsuranceContract( pSoldier ) <= 0 )
+					//if the soldier isn't dead
+					if (!IsMercDead(s->ubProfile))
 					{
-						//if the soldier isn't dead
-						if( !IsMercDead( pSoldier->ubProfile ) )
-						{
-							pSoldier->usLifeInsurance = 0;
-							pSoldier->iTotalLengthOfInsuranceContract = 0;
-							pSoldier->iStartOfInsuranceContract = 0;
-						}
+						s->usLifeInsurance = 0;
+						s->iTotalLengthOfInsuranceContract = 0;
+						s->iStartOfInsuranceContract = 0;
 					}
 				}
 			}

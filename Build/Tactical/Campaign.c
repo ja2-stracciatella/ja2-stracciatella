@@ -1465,9 +1465,6 @@ void TestDumpStatChanges(void)
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 {
 	UINT16 usXPs = 0;
-	UINT8 ubGuynum;
-	SOLDIERTYPE *pSoldier;
-
 
 	Assert ( ubExpBonusType < NUM_EXP_BONUS_TYPES );
 
@@ -1481,14 +1478,15 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 	}
 
 	// to do: find guys in sector on the currently active squad, those that are conscious get this amount in XPs
-	for ( ubGuynum = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pSoldier = MercPtrs[ ubGuynum ];
-				ubGuynum <= gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-				ubGuynum++, pSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->bLife >= CONSCIOUSNESS ) &&
-				 !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+		if (s->bInSector &&
+				IsMercOnCurrentSquad(s) &&
+				s->bLife >= CONSCIOUSNESS &&
+				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
+				!AM_A_ROBOT(s))
 		{
-			StatChange( pSoldier, EXPERAMT, usXPs, FALSE );
+			StatChange(s, EXPERAMT, usXPs, FALSE);
 		}
 	}
 }

@@ -4354,8 +4354,6 @@ static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 static void TestMeanWhile(INT32 iID)
 {
 	MEANWHILE_DEFINITION MeanwhileDef;
-	INT32	cnt;
-	SOLDIERTYPE *pSoldier;
 
 	MeanwhileDef.sSectorX = 3;
 	MeanwhileDef.sSectorY = 16;
@@ -4369,23 +4367,15 @@ static void TestMeanWhile(INT32 iID)
 		MeanwhileDef.sSectorY = 14;
 
 		// Loop through our mercs and set gridnos once some found.....
-		// look for all mercs on the same team,
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			// Are we a POW in this sector?
-			if ( pSoldier->bActive && pSoldier->bInSector )
+			if (s->bInSector)
 			{
-
-				ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_POW );
-
-				pSoldier->sSectorX = 7;
-				pSoldier->sSectorY = 14;
+				ChangeSoldiersAssignment(s, ASSIGNMENT_POW);
+				s->sSectorX = 7;
+				s->sSectorY = 14;
 			}
 		}
-
-
 	}
 
 #ifndef JA2DEMO
@@ -4452,23 +4442,13 @@ static void ToggleMercsNeverQuit(void)
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 {
 	// If we have multiple guys selected, make all change stance!
-	SOLDIERTYPE *		pSoldier;
-	INT32						cnt;
-
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
-		// OK, loop through all guys who are 'multi-selected' and
-		// check if our currently selected guy is amoung the
-		// lucky few.. if not, change to a guy who is...
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if ( pSoldier->bActive && pSoldier->bInSector )
+			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
-				{
-					UIHandleSoldierStanceChange(pSoldier, ubAnimHeight);
-				}
+				UIHandleSoldierStanceChange(s, ubAnimHeight);
 			}
 		}
 	}
@@ -4512,23 +4492,15 @@ static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
 static void HandleStealthChangeFromUIKeys(void)
 {
 	// If we have multiple guys selected, make all change stance!
-	SOLDIERTYPE *		pSoldier;
-	INT32						cnt;
-
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
-		// OK, loop through all guys who are 'multi-selected' and
-		// check if our currently selected guy is amoung the
-		// lucky few.. if not, change to a guy who is...
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if ( pSoldier->bActive && !AM_A_ROBOT( pSoldier ) && pSoldier->bInSector )
+			if (!AM_A_ROBOT(s) &&
+					s->bInSector &&
+					s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
-				{
-					ToggleStealthMode( pSoldier );
-				}
+				ToggleStealthMode(s);
 			}
 		}
 	}
@@ -4545,8 +4517,6 @@ static void HandleStealthChangeFromUIKeys(void)
 
 static void TestCapture(void)
 {
-	INT32 cnt;
-	SOLDIERTYPE				*pSoldier;
 	UINT32					uiNumChosen = 0;
 
 	//StartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY );
@@ -4557,19 +4527,16 @@ static void TestCapture(void)
 	gStrategicStatus.uiFlags &= (~STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE );
 
 	// loop through sodliers and pick 3 lucky ones....
-	for ( cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID, pSoldier=MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->bActive && pSoldier->bInSector )
+		if (s->bLife >= OKLIFE && s->bInSector && uiNumChosen < 3)
 		{
-			if ( uiNumChosen < 3 )
-			{
-				EnemyCapturesPlayerSoldier( pSoldier );
+			EnemyCapturesPlayerSoldier(s);
 
-				// Remove them from tectical....
-				RemoveSoldierFromGridNo( pSoldier );
+			// Remove them from tectical....
+			RemoveSoldierFromGridNo(s);
 
-				uiNumChosen++;
-			}
+			uiNumChosen++;
 		}
 	}
 

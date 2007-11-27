@@ -77,11 +77,8 @@ static void BeginAutoBandageCallBack(UINT8 bExitValue);
 
 void BeginAutoBandage( )
 {
-	INT32						cnt;
 	BOOLEAN					fFoundAGuy = FALSE;
-	SOLDIERTYPE *		pSoldier;
 	BOOLEAN					fFoundAMedKit = FALSE;
-
 
 	// If we are in combat, we con't...
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) || (NumEnemyInSector() != 0) )
@@ -90,12 +87,11 @@ void BeginAutoBandage( )
 		return;
 	}
 
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 	// check for anyone needing bandages
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
+	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// if the soldier isn't active or in sector, we have problems..leave
-		if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+		if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_VEHICLE || pSoldier->bAssignment == VEHICLE)
 		{
 			continue;
 		}

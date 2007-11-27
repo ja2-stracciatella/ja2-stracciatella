@@ -406,11 +406,9 @@ void CheckForDisabledForGiveItem(void)
 	if (cur->bLife < OKLIFE && gpItemPointer != NULL)
 	{
 		// Go through each merc and see if there is one closeby....
-		const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
-		for (INT32 i = t->bFirstID, last = t->bLastID; i <= last; ++i)
+		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			const SOLDIERTYPE* const s = GetMan(i);
-			if (s->bActive && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s) && s->bInSector && IsMercOnCurrentSquad(s))
+			if (s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s) && s->bInSector && IsMercOnCurrentSquad(s))
 			{
 				const INT16 sDist        = PythSpacesAway(cur->sGridNo, s->sGridNo);
 				const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, cur->sGridNo, cur->bLevel);
@@ -3245,23 +3243,15 @@ void EndRadioLocator(SOLDIERTYPE* s)
 
 void FinishAnySkullPanelAnimations(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32		cnt2;
-
-	cnt2 = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt2++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bLife == 0 )
+		if (s->bLife == 0 &&
+				(s->fUIdeadMerc || s->fClosePanelToDie))
 		{
-			if ( pTeamSoldier->fUIdeadMerc || pTeamSoldier->fClosePanelToDie )
-			{
-				HandlePlayerTeamMemberDeathAfterSkullAnimation( pTeamSoldier );
+			HandlePlayerTeamMemberDeathAfterSkullAnimation(s);
 
-				pTeamSoldier->fUIdeadMerc = FALSE;
-				pTeamSoldier->fClosePanelToDie = FALSE;
-			}
+			s->fUIdeadMerc      = FALSE;
+			s->fClosePanelToDie = FALSE;
 		}
 	}
 }

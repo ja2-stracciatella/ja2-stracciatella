@@ -1236,22 +1236,16 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 
 BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 {
-	INT32                    cnt, cnt2;
 	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	SOLDIERTYPE							 *pSoldier;
 	INT16										 sDistVisible;
 	INT16											usNewGridNo;
 
 	if (GetDoorStatus(sGridNo) == NULL) return FALSE;
 
-	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++ )
+	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// ATE: Ok, lets check for some basic things here!
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		if (pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bInSector)
 		{
 			// is he close enough to see that gridno if he turns his head?
 			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0 );
@@ -1267,7 +1261,7 @@ BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 			}
 
 			// Now try other adjacent gridnos...
-			for ( cnt2 = 0; cnt2 < 8; cnt2++ )
+			for (INT32 cnt2 = 0; cnt2 < 8; ++cnt2)
 			{
 					usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
 					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, usNewGridNo, 0 );

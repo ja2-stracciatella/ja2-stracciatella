@@ -361,8 +361,6 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 {
 	SOLDIERTYPE *		pNPC;
 	UINT8						ubRoom;
-	INT8		bLoop;
-	SOLDIERTYPE * pSoldier;
 
 	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
 	if ( !pNPC )
@@ -371,15 +369,11 @@ static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 	}
 	ubRoom = gubWorldRoomInfo[ pNPC->sGridNo ];
 
-	for ( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		pSoldier = MercPtrs[ bLoop ];
-		if ( pSoldier && pSoldier->bActive && pSoldier->bInSector )
+		if (s->bInSector && gubWorldRoomInfo[s->sGridNo] == ubRoom)
 		{
-			if ( gubWorldRoomInfo[ pSoldier->sGridNo ] == ubRoom )
-			{
-				return( TRUE );
-			}
+			return TRUE;
 		}
 	}
 
@@ -506,24 +500,14 @@ static BOOLEAN FemalePresent(UINT8 ubProfileID)
 
 static BOOLEAN CheckPlayerHasHead(void)
 {
-	INT8						bLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	for ( bLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; bLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; bLoop++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		pSoldier = MercPtrs[ bLoop ];
-
-		if ( pSoldier->bActive && pSoldier->bLife > 0 )
+		if (s->bLife > 0 && FindObjInObjRange(s, HEAD_2, HEAD_7) != NO_SLOT)
 		{
-			if ( FindObjInObjRange( pSoldier, HEAD_2, HEAD_7 ) != NO_SLOT )
-			{
-				return( TRUE );
-			}
+			return TRUE;
 		}
 	}
-
-	return( FALSE );
-
+	return FALSE;
 }
 
 

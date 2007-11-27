@@ -1741,9 +1741,6 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 {
 	ROTTING_CORPSE *pCorpse;
   INT8            bToleranceThreshold = 0;
-	INT32           cnt;
-	SOLDIERTYPE		  *pTeamSoldier;
-
 
   if ( QuoteExp_HeadShotOnly[ pSoldier->ubProfile ] == 1 )
   {
@@ -1782,16 +1779,12 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
     // 50% chance of adding 1 to other mercs....
     if ( Random( 2 ) == 1 )
     {
-	    // IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	    cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	    // look for all mercs on the same team,
-	    for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	    {
 			  // ATE: Ok, lets check for some basic things here!
-			  if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->sGridNo != NOWHERE && pTeamSoldier->bActive && pTeamSoldier->bInSector )
+			  if (s->bLife >= OKLIFE && s->sGridNo != NOWHERE && s->bInSector)
 			  {
-          pTeamSoldier->bCorpseQuoteTolerance++;
+          ++s->bCorpseQuoteTolerance;
         }
 	    }
     }

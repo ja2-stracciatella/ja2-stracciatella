@@ -318,22 +318,15 @@ void HandleDoneLastKilledQueenQuote( )
 
 void EndQueenDeathEndgameBeginEndCimenatic( )
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
 	// Start end cimimatic....
   gTacticalStatus.uiFlags |= IN_ENDGAME_SEQUENCE;
 
 	// first thing is to loop through team and say end quote...
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) )
+		if (s->bLife >= OKLIFE && !AM_AN_EPC(s))
 		{
-			TacticalCharacterDialogue( pSoldier, QUOTE_END_GAME_COMMENT );
+			TacticalCharacterDialogue(s, QUOTE_END_GAME_COMMENT);
 		}
 	}
 
