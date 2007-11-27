@@ -5296,12 +5296,10 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 			}
 		}
 	}
-
-
 }
 
 
-static INT8 CountNonVehiclesOnPlayerTeam(void)
+UINT NumberOfMercsOnPlayerTeam(void)
 {
 	INT8 bNumber = 0;
 	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
@@ -5318,7 +5316,7 @@ static INT8 CountNonVehiclesOnPlayerTeam(void)
 BOOLEAN PlayerTeamFull( )
 {
 	// last ID for the player team is 19, so long as we have at most 17 non-vehicles...
-	if ( CountNonVehiclesOnPlayerTeam() <= gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2 )
+	if (NumberOfMercsOnPlayerTeam() <= gTacticalStatus.Team[gbPlayerNum].bLastID - 2)
 	{
 		return( FALSE );
 	}

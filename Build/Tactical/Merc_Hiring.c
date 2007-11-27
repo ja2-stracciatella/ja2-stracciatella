@@ -426,19 +426,6 @@ BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 		return(FALSE);
 }
 
-UINT8	NumberOfMercsOnPlayerTeam()
-{
-	UINT8 ubCount = 0;
-	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
-	{
-		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			ubCount++;
-		}
-	}
-	return ubCount;
-}
-
 
 void HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier )
 {

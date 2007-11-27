@@ -2937,15 +2937,7 @@ void PrintNumberOnTeam(void)
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-	// grab number on team
-	const SOLDIERTYPE* const pSoldier = MercPtrs[0];
-
-	INT32 iCounter = 0;
-	for (INT32 i = 0; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
-	{
-		const SOLDIERTYPE* s = MercPtrs[i];
-		if (s->bActive && !(s->uiStatusFlags & SOLDIER_VEHICLE)) ++iCounter;
-	}
+	const INT32 iCounter = NumberOfMercsOnPlayerTeam();
 
 	UINT16 usPosX = 47;
 	UINT16 usPosY = 194 + 30;

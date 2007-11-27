@@ -45,7 +45,6 @@ INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
 void    MercArrivesCallback(SOLDIERTYPE* s);
 BOOLEAN IsMercHireable( UINT8 ubMercID );
 BOOLEAN IsMercDead( UINT8 ubMercID );
-UINT8		NumberOfMercsOnPlayerTeam();
 BOOLEAN IsTheSoldierAliveAndConcious( 	SOLDIERTYPE		*pSoldier );
 void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );
 void		UpdateAnyInTransitMercsWithGlobalArrivalSector( );

@@ -363,4 +363,6 @@ SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* target);
 void HandleEndDemoInCreatureLevel(void);
 #endif
 
+UINT NumberOfMercsOnPlayerTeam(void);
+
 #endif
