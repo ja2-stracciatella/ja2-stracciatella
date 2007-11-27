@@ -358,7 +358,7 @@ extern INT32 giHospitalTempBalance;
 extern INT32 giHospitalRefund;
 extern INT8 gbHospitalPriceModifier;
 
-extern UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier );
+UINT32 CalcPatientMedicalCost(const SOLDIERTYPE* s);
 extern UINT32 CalcMedicalCost( UINT8 ubId );
 
 BOOLEAN							gfInTalkPanel;

@@ -4179,7 +4179,8 @@ unlock:
 	}
 }
 
-UINT32 CalcPatientMedicalCost( SOLDIERTYPE * pSoldier )
+
+UINT32 CalcPatientMedicalCost(const SOLDIERTYPE* const pSoldier)
 {
 	UINT32	uiCost;
 
