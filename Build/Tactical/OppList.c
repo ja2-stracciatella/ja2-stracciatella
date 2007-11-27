@@ -6107,17 +6107,17 @@ INT8 GetHighestWatchedLocPoints(const SOLDIERTYPE* const s)
 }
 
 
-static void CommunicateWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel, UINT8 ubPoints)
+static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubPoints)
 {
 	UINT8		ubLoop;
-	INT8		bTeam, bLoopPoint, bPoint;
+	INT8		bLoopPoint, bPoint;
 
-	bTeam = MercPtrs[ ubID ]->bTeam;
+	const INT8 bTeam = watcher->bTeam;
 
 	for ( ubLoop = gTacticalStatus.Team[ bTeam ].bFirstID; ubLoop < gTacticalStatus.Team[ bTeam ].bLastID; ubLoop++ )
 	{
-		if (ubLoop == ubID) continue;
 		const SOLDIERTYPE* const s = GetMan(ubLoop);
+		if (s == watcher) continue;
 		if (s->bActive == FALSE || s->bInSector == FALSE || s->bLife < OKLIFE)
 		{
 			continue;
@@ -6177,7 +6177,7 @@ static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 			gfWatchedLocReset[ ubID ][ bPoint ] = FALSE;
 			gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] = TRUE;
 
-			CommunicateWatchedLoc( ubID, sGridNo, bLevel, 1 );
+			CommunicateWatchedLoc(GetMan(ubID), sGridNo, bLevel, 1);
 		}
 		// otherwise abort; no points available
 	}
@@ -6186,7 +6186,7 @@ static void IncrementWatchedLoc(UINT8 ubID, INT16 sGridNo, INT8 bLevel)
 		if ( !gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] && gubWatchedLocPoints[ ubID ][ bPoint ] < MAX_WATCHED_LOC_POINTS )
 		{
 			gubWatchedLocPoints[ ubID ][ bPoint ]++;
-			CommunicateWatchedLoc( ubID, sGridNo, bLevel, gubWatchedLocPoints[ ubID ][ bPoint ] );
+			CommunicateWatchedLoc(GetMan(ubID), sGridNo, bLevel, gubWatchedLocPoints[ubID][bPoint]);
 		}
 		gfWatchedLocReset[ ubID ][ bPoint ] = FALSE;
 		gfWatchedLocHasBeenIncremented[ ubID ][ bPoint ] = TRUE;
