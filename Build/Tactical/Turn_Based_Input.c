@@ -2165,18 +2165,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							{
 								if( fAlt )
 								{
-									INT32 cnt;
-									SOLDIERTYPE *pSoldier;
-
 									if ( CHEATER_CHEAT_LEVEL( ) )
 									{
-										for ( pSoldier = MercPtrs[ gbPlayerNum ], cnt = 0; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+										FOR_ALL_IN_TEAM(s, gbPlayerNum)
 										{
-											if ( pSoldier->bActive && pSoldier->bLife > 0 )
+											if (s->bLife > 0)
 											{
 												// Get APs back...
-												CalcNewActionPoints( pSoldier );
-
+												CalcNewActionPoints(s);
 												fInterfacePanelDirty = DIRTYLEVEL2;
 											}
 										}
@@ -2803,9 +2799,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else if( fCtrl )
 					{
-						INT32 cnt;
-						SOLDIERTYPE *pSoldier;
-
 #ifdef GERMAN
 						if ( gubCheatLevel == 2 )
 						{
@@ -2820,16 +2813,15 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 						if ( CHEATER_CHEAT_LEVEL( ) && gusSelectedSoldier != NOBODY )
 						{
-							for ( pSoldier = MercPtrs[ gbPlayerNum ], cnt = 0; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+							FOR_ALL_IN_TEAM(s, gbPlayerNum)
 							{
-								if ( pSoldier->bActive && pSoldier->bLife > 0 )
+								if (s->bLife > 0)
 								{
 									// Get breath back
-									pSoldier->bBreath								= pSoldier->bBreathMax;
-
+									s->bBreath   = s->bBreathMax;
 									// Get life back
-									pSoldier->bLife									= pSoldier->bLifeMax;
-									pSoldier->bBleeding							= 0;
+									s->bLife     = s->bLifeMax;
+									s->bBleeding = 0;
 
 									fInterfacePanelDirty = DIRTYLEVEL2;
 								}
