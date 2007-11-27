@@ -222,11 +222,10 @@ static void DoneFadeInKilledQueen(void)
 
 static void DoneFadeOutKilledQueen(void)
 {
-	INT32 cnt;
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
+	SOLDIERTYPE* pSoldier;
 
 	// For one, loop through our current squad and move them over
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
+	INT32 cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
 	// look for all mercs on the same team,
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
@@ -251,21 +250,14 @@ static void DoneFadeOutKilledQueen(void)
 	}
 
 	// Kill all enemies in world.....
-	cnt = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; cnt++,pTeamSoldier++)
+	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
 	{
-		// Are we active and in sector.....
-		if ( pTeamSoldier->bActive  )
+		// For sure for flag thet they are dead is not set
+		// Check for any more badguys
+		// ON THE STRAGETY LAYER KILL BAD GUYS!
+		if (!s->bNeutral && s->bSide != gbPlayerNum)
 		{
-			// For sure for flag thet they are dead is not set
-			// Check for any more badguys
-			// ON THE STRAGETY LAYER KILL BAD GUYS!
-			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
-			{
-				ProcessQueenCmdImplicationsOfDeath( pSoldier );
-			}
+			ProcessQueenCmdImplicationsOfDeath(pSoldier);
 		}
 	}
 

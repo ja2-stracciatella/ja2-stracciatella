@@ -5954,19 +5954,14 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 
 static BOOLEAN ArmyKnowsOfPlayersPresence(void)
 {
-	UINT8						ubID;
-	SOLDIERTYPE *		pSoldier;
-
 	// if anyone is still left...
 	if (gTacticalStatus.Team[ ENEMY_TEAM ].bTeamActive && gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector > 0 )
 	{
-		for ( ubID = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; ubID++ )
+		CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
 		{
-			pSoldier = MercPtrs[ ubID ];
-
-			if ( pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && (pSoldier->bAlertStatus >= STATUS_RED ) )
+			if (s->bInSector && s->bLife >= OKLIFE && s->bAlertStatus >= STATUS_RED)
 			{
-				return( TRUE );
+				return TRUE;
 			}
 		}
 	}

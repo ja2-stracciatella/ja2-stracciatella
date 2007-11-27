@@ -2444,16 +2444,11 @@ INT32 RangeChangeDesire( SOLDIERTYPE * pSoldier )
 
 BOOLEAN ArmySeesOpponents( void )
 {
-	INT32				cnt;
-	SOLDIERTYPE *		pSoldier;
-
-	for ( cnt = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; cnt <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; cnt++ )
+	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
 	{
-		pSoldier = MercPtrs[ cnt ];
-
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && pSoldier->bOppCnt > 0 )
+		if (s->bInSector && s->bLife >= OKLIFE && s->bOppCnt > 0)
 		{
-			return( TRUE );
+			return TRUE;
 		}
 	}
 

@@ -65,32 +65,22 @@ INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 static void ValidateEnemiesHaveWeapons(void)
 {
-	#ifdef JA2BETAVERSION
-		INT32 i, iErrorDialog;
-		SOLDIERTYPE *pSoldier;
-		INT32 iNumInvalid = 0;
+#ifdef JA2BETAVERSION
+	INT32 iNumInvalid = 0;
+	CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
+	{
+		if (!s->bInSector) continue;
+		if (!s->inv[HANDPOS].usItem) iNumInvalid++;
+	}
 
-		for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID; i++ )
-		{
-			pSoldier = MercPtrs[ i ];
-			if( !pSoldier->bActive || !pSoldier->bInSector )
-			{
-				continue;
-			}
-			if( !pSoldier->inv[ HANDPOS ].usItem )
-			{
-				iNumInvalid++;
-			}
-		}
-
-		// do message box and return
-		if( iNumInvalid )
-		{
-			wchar_t str[100];
-			swprintf(str, lengthof(str), L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid);
-			iErrorDialog = DoMessageBox(MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-		}
-	#endif
+	// do message box and return
+	if (iNumInvalid)
+	{
+		wchar_t str[100];
+		swprintf(str, lengthof(str), L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid);
+		const INT32 iErrorDialog = DoMessageBox(MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+	}
+#endif
 }
 
 //Counts enemies and crepitus, but not bloodcats.
