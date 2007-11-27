@@ -4728,7 +4728,7 @@ void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE
 
 static void TestPotentialOwner(SOLDIERTYPE* pSoldier)
 {
-	if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE )
+	if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
 	{
 		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, (UINT8) DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, 0, gpTempSoldier->sGridNo, gpTempSoldier->bLevel ), TRUE ) )
 		{
@@ -4742,8 +4742,6 @@ static void CheckForPickedOwnership(void)
 {
 	UINT8							ubProfile;
 	UINT8							ubCivGroup;
-	SOLDIERTYPE *			pSoldier;
-	UINT8							ubLoop;
 
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	const ITEM_POOL* pItemPool = GetItemPool(gsTempGridno, gpTempSoldier->bLevel);
@@ -4755,7 +4753,7 @@ static void CheckForPickedOwnership(void)
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile != NO_PROFILE )
 			{
 				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile;
-				pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile, FALSE);
 				if ( pSoldier )
 				{
 					TestPotentialOwner( pSoldier );
@@ -4770,12 +4768,11 @@ static void CheckForPickedOwnership(void)
 					pItemPool = pItemPool->pNext;
 					continue;
 				}
-				for ( ubLoop = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
+				FOR_ALL_IN_TEAM(s, CIV_TEAM)
 				{
-					pSoldier = MercPtrs[ ubLoop ];
-					if ( pSoldier && pSoldier->ubCivilianGroup == ubCivGroup )
+					if (s->ubCivilianGroup == ubCivGroup)
 					{
-						TestPotentialOwner( pSoldier );
+						TestPotentialOwner(s);
 					}
 				}
 			}
