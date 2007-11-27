@@ -116,7 +116,7 @@ BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier );
 
 INT8 GetWatchedLocPoints( UINT8 ubID, INT16 sGridNo, INT8 bLevel );
 INT8 GetHighestVisibleWatchedLoc(const SOLDIERTYPE* s);
-INT8 GetHighestWatchedLocPoints( UINT8 ubID );
+INT8 GetHighestWatchedLocPoints(const SOLDIERTYPE* s);
 
 void TurnOffEveryonesMuzzleFlashes( void );
 void TurnOffTeamsMuzzleFlashes( UINT8 ubTeam );

@@ -2014,7 +2014,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 				 // calculate initial points for watch based on highest watch loc
 
-				 bWatchPts = GetHighestWatchedLocPoints( pSoldier->ubID );
+				bWatchPts = GetHighestWatchedLocPoints(pSoldier);
 				 if ( bWatchPts <= 0 )
 				 {
 					 // no watching

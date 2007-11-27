@@ -6091,19 +6091,19 @@ INT8 GetHighestVisibleWatchedLoc(const SOLDIERTYPE* const s)
 }
 
 
-INT8 GetHighestWatchedLocPoints( UINT8 ubID )
+INT8 GetHighestWatchedLocPoints(const SOLDIERTYPE* const s)
 {
-	INT8	bLoop;
-	INT8	bHighestPoints = 0;
-
-	for ( bLoop = 0; bLoop < NUM_WATCHED_LOCS; bLoop++ )
+	const INT16* const loc_id = gsWatchedLoc[s->ubID];
+	const UINT8* const pts_id = gubWatchedLocPoints[s->ubID];
+	INT8 bHighestPoints = 0;
+	for (INT8 bLoop = 0; bLoop < NUM_WATCHED_LOCS; ++bLoop)
 	{
-		if ( gsWatchedLoc[ ubID ][ bLoop ] != NOWHERE && gubWatchedLocPoints[ ubID ][ bLoop ] > bHighestPoints )
-		{
-			bHighestPoints = gubWatchedLocPoints[ ubID ][ bLoop ];
-		}
+		if (loc_id[bLoop] == NOWHERE) continue;
+
+		const UINT8 pts = pts_id[bLoop];
+		if (pts > bHighestPoints) bHighestPoints = pts;
 	}
-	return( bHighestPoints );
+	return bHighestPoints;
 }
 
 
