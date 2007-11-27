@@ -30,9 +30,6 @@
 #include "EMail.h"
 
 
-extern	UINT8	gbPlayerNum;
-
-
 #ifdef JA2TESTVERSION
 // comment out to get rid of stat change msgs
 //#define STAT_CHANGE_DEBUG
