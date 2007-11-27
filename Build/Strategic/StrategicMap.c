@@ -1464,9 +1464,17 @@ static void HandleQuestCodeOnSectorExit(INT16 sOldSectorX, INT16 sOldSectorY, IN
 }
 
 
+static void SetupProfileInsertionDataForCivilians(void)
+{
+	FOR_ALL_IN_TEAM(s, CIV_TEAM)
+	{
+		if (s->bInSector) SetupProfileInsertionDataForSoldier(s);
+	}
+}
+
+
 static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	INT32 i;
 	UNDERGROUND_SECTORINFO *pNode = NULL;
 	CHAR8 bFilename[ 50 ];
 
@@ -1478,16 +1486,7 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 
 	//Setup the tactical existance of RPCs and CIVs in the last sector before moving on to a new sector.
 	//@@@Evaluate
-	if( gfWorldLoaded )
-	{
-		for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
-		{
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector )
-			{
-				SetupProfileInsertionDataForSoldier( MercPtrs[ i ] );
-			}
-		}
-	}
+	if (gfWorldLoaded) SetupProfileInsertionDataForCivilians();
 
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
@@ -4459,8 +4458,6 @@ BOOLEAN IsSectorDesert( INT16 sSectorX, INT16 sSectorY )
 
 static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
 {
-	INT32 i;
-
 	// clear tactical queue
 	ClearEventQueue();
 
@@ -4507,13 +4504,7 @@ static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
 
 		//Setup the tactical existance of the current soldier.
 		//@@@Evaluate
-		for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
-		{
-			if( MercPtrs[ i ]->bActive && MercPtrs[ i ]->bInSector )
-			{
-				SetupProfileInsertionDataForSoldier( MercPtrs[ i ] );
-			}
-		}
+		SetupProfileInsertionDataForCivilians();
 
 		gfBlitBattleSectorLocator = FALSE;
 	}
