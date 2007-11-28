@@ -4513,12 +4513,9 @@ void StopRubberBandedMercFromMoving( )
 		return;
 	}
 
-	// OK, loop through all guys who are 'multi-selected' and
-	// check if our currently selected guy is amoung the
-	// lucky few.. if not, change to a guy who is...
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED )
+		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 		{
 			s->fDelayedMovement = FALSE;
 			s->sFinalDestination = s->sGridNo;
@@ -4618,8 +4615,6 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 
 void ResetMultiSelection( )
 {
-	// OK, loop through all guys who are 'multi-selected' and
-	// Make them move....
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)

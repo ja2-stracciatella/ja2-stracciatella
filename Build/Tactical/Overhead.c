@@ -5288,12 +5288,9 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 UINT NumberOfMercsOnPlayerTeam(void)
 {
 	INT8 bNumber = 0;
-	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
-		{
-			bNumber++;
-		}
+		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) bNumber++;
 	}
 	return bNumber;
 }
