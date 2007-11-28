@@ -189,7 +189,7 @@ void DecayTacticalMoraleModifiers( void )
 								fHandleNervous = FALSE;
 							}
 						}
-						else if ( pSoldier->bActive && pSoldier->bInSector )
+						else if (pSoldier->bInSector)
 						{
 							if ( DistanceToClosestFriend( pSoldier ) > NERVOUS_RADIUS )
 							{
