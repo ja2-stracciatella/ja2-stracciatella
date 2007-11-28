@@ -828,14 +828,8 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* const about)
 
 static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponent, const SOLDIERTYPE* const exclude, const INT8 bIteration)
 {
- UINT16 bLoop;
- SOLDIERTYPE *pMate;
-
-
- bLoop = gTacticalStatus.Team[ubTeam].bFirstID;
-
  // look for all mercs on the same team, check opplists for this soldier
- for (pMate = MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[ubTeam].bLastID; bLoop++,pMate++)
+	CFOR_ALL_IN_TEAM(pMate, ubTeam)
   {
    // if this "teammate" is me, myself, or I (whom we want to exclude)
 		if (pMate == exclude)
@@ -845,8 +839,8 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
    if (pMate->bTeam != ubTeam)
      continue;  // skip him, he's no teammate at all!
 
-   // if this merc is not active, at base, on assignment, dead, unconscious
-   if (!pMate->bActive || !pMate->bInSector || (pMate->bLife < OKLIFE))
+   // if this merc is at base, on assignment, dead, unconscious
+   if (!pMate->bInSector || pMate->bLife < OKLIFE)
      continue;  // next merc
 
    // if this teammate currently sees this opponent
@@ -2416,9 +2410,7 @@ IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
 
 static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bNewOpplist, const INT16 sGridno, const INT8 bLevel)
 {
- INT32 cnt;
  UINT8 ubTeamMustLookAgain = FALSE;
- SOLDIERTYPE *pSoldier;
 
  INT8* const pbPublOL = &gbPublicOpplist[ubTeam][s->ubID];
 
@@ -2443,12 +2435,10 @@ static void UpdatePublic(const UINT8 ubTeam, SOLDIERTYPE* const s, const INT8 bN
  if (ubTeamMustLookAgain)
   {
    // then everyone on team who's not aware of guynum must look for him
-   cnt = gTacticalStatus.Team[ubTeam].bFirstID;
-
-   for (pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[ubTeam].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(pSoldier, ubTeam)
     {
      // if this soldier is active, in this sector, and well enough to look
-     if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && !( pSoldier->uiStatusFlags & SOLDIER_GASSED ) )
+     if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->uiStatusFlags & SOLDIER_GASSED))
      {
        // if soldier isn't aware of guynum, give him another chance to see
        if (pSoldier->bOppList[s->ubID] == NOT_HEARD_OR_SEEN)
@@ -6104,19 +6094,18 @@ INT8 GetHighestWatchedLocPoints(const SOLDIERTYPE* const s)
 
 static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubPoints)
 {
-	UINT8		ubLoop;
 	INT8		bLoopPoint, bPoint;
 
 	const INT8 bTeam = watcher->bTeam;
 
-	for ( ubLoop = gTacticalStatus.Team[ bTeam ].bFirstID; ubLoop < gTacticalStatus.Team[ bTeam ].bLastID; ubLoop++ )
+	CFOR_ALL_IN_TEAM(s, bTeam)
 	{
-		const SOLDIERTYPE* const s = GetMan(ubLoop);
 		if (s == watcher) continue;
-		if (s->bActive == FALSE || s->bInSector == FALSE || s->bLife < OKLIFE)
+		if (!s->bInSector || s->bLife < OKLIFE)
 		{
 			continue;
 		}
+		const SoldierID ubLoop = s->ubID;
 		bLoopPoint = FindWatchedLoc( ubLoop, sGridNo, bLevel );
 		if ( bLoopPoint == -1 )
 		{

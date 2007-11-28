@@ -3613,21 +3613,17 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 
 BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange)
 {
-	UINT8 bLoop;
-	SOLDIERTYPE * pSoldier;
-
-	for (bLoop=gTacticalStatus.Team[bTeam].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[bTeam].bLastID; bLoop++, pSoldier++)
+	CFOR_ALL_IN_TEAM(s, bTeam)
 	{
-		if (pSoldier->bActive && pSoldier->bInSector && (pSoldier->bLife >= OKLIFE) && !( pSoldier->uiStatusFlags & SOLDIER_GASSED ) )
+		if (s->bInSector &&
+				s->bLife >= OKLIFE &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				PythSpacesAway(s->sGridNo,sGridNo) <= iRange)
 		{
-			if (PythSpacesAway(pSoldier->sGridNo,sGridNo) <= iRange)
-			{
-				return(TRUE);
-			}
+			return TRUE;
 		}
 	}
-
-	return(FALSE);
+	return FALSE;
 }
 
 
@@ -6209,30 +6205,16 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 			if ( pTarget->ubBodyType == CROW )
 			{
 				// Loop through our team, make guys who can see this fly away....
+				const UINT8 ubTeam = pTarget->bTeam;
+				FOR_ALL_IN_TEAM(s, ubTeam)
 				{
-					UINT32				cnt;
-					SOLDIERTYPE		*pTeamSoldier;
-					UINT8					ubTeam;
-
-					ubTeam = pTarget->bTeam;
-
-					for ( cnt = gTacticalStatus.Team[ ubTeam ].bFirstID, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeam ].bLastID; cnt++, pTeamSoldier++ )
+					if (s->bInSector &&
+							s->ubBodyType == CROW &&
+							s->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 					{
-						if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
-						{
-							if ( pTeamSoldier->ubBodyType == CROW )
-							{
-								if ( pTeamSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
-								{
-									//ZEROTIMECOUNTER( pTeamSoldier->AICounter );
-
-									//MakeCivHostile( pTeamSoldier, 2 );
-
-									HandleCrowFlyAway( pTeamSoldier );
-
-								}
-							}
-						}
+						//ZEROTIMECOUNTER(s->AICounter);
+						//MakeCivHostile(s, 2);
+						HandleCrowFlyAway(s);
 					}
 				}
 

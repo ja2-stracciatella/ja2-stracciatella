@@ -10307,20 +10307,16 @@ void PlayStealthySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 }
 
 
-void CrowsFlyAway( UINT8 ubTeam )
+void CrowsFlyAway(const UINT8 ubTeam)
 {
-	UINT32				cnt;
-	SOLDIERTYPE		*pTeamSoldier;
-
-	for ( cnt = gTacticalStatus.Team[ ubTeam ].bFirstID, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeam ].bLastID; cnt++, pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, ubTeam)
 	{
-		if ( pTeamSoldier->bActive && pTeamSoldier->bInSector )
+		if (s->bInSector &&
+				s->ubBodyType  == CROW &&
+				s->usAnimState != CROW_FLY)
 		{
-			if ( pTeamSoldier->ubBodyType == CROW && pTeamSoldier->usAnimState != CROW_FLY )
-			{
-				// fly away even if not seen!
-				HandleCrowFlyAway( pTeamSoldier );
-			}
+			// fly away even if not seen!
+			HandleCrowFlyAway(s);
 		}
 	}
 }

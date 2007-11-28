@@ -1157,11 +1157,6 @@ static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorp
 
 static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
 {
-	INT32                    cnt;
-	SOLDIERTYPE							 *pSoldier;
-	INT16										 sDistVisible;
-	INT16										 sGridNo;
-
 	// If this cump is already visible, return
 	if ( pCorpse->def.bVisible == 1 )
 	{
@@ -1173,31 +1168,26 @@ static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
 		return;
 	}
 
-	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	cnt = gTacticalStatus.Team[ bTeam ].bFirstID;
+	const INT16 sGridNo = pCorpse->def.sGridNo;
 
-	sGridNo = pCorpse->def.sGridNo;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pSoldier++ )
+	CFOR_ALL_IN_TEAM(s, bTeam)
 	{
-			// ATE: Ok, lets check for some basic things here!
-			if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		// ATE: Ok, lets check for some basic things here!
+		if (s->bLife >= OKLIFE && s->sGridNo != NOWHERE && s->bInSector)
+		{
+			// is he close enough to see that gridno if he turns his head?
+			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel);
+			if (PythSpacesAway(s->sGridNo, sGridNo) <= sDistVisible)
 			{
-				// is he close enough to see that gridno if he turns his head?
-				sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel );
-
-				if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
+				// and we can trace a line of sight to his x,y coordinates?
+				// (taking into account we are definitely aware of this guy now)
+				if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, pCorpse->def.bLevel, 3, sDistVisible, TRUE))
 				{
-					// and we can trace a line of sight to his x,y coordinates?
-					// (taking into account we are definitely aware of this guy now)
-					if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-					{
-						 MakeCorpseVisible( pSoldier, pCorpse );
-						 return;
-					}
+					MakeCorpseVisible(s, pCorpse);
+					return;
 				}
 			}
+		}
 	}
 }
 

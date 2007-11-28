@@ -2999,10 +2999,7 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 {
 	UINT8						ubMercsAvailable[ 40 ] = { 0 };
 	UINT8						ubNumMercsAvailable = 0, ubChosenMerc;
-	SOLDIERTYPE *		pTeamSoldier;
 	SOLDIERTYPE *		pSoldier;
-	INT32						cnt;
-	INT8						bTeam;
 
 	// First get pointer to NPC
 	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
@@ -3010,30 +3007,24 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 	{
 		return;
 	}
-	bTeam = pSoldier->bTeam;
+	const INT8 bTeam = pSoldier->bTeam;
 
 	// Loop through all our guys and find one to yell
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ bTeam ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ bTeam ].bLastID; cnt++,pTeamSoldier++ )
+	CFOR_ALL_IN_TEAM(s, bTeam)
 	{
 		// Add guy if he's a candidate...
-		if ( pTeamSoldier->bActive && pSoldier->bInSector && pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bBreath >= OKBREATH && pTeamSoldier->bOppCnt > 0 && pTeamSoldier->ubProfile != NO_PROFILE )
+		if (pSoldier->bInSector && s->bLife >= OKLIFE && s->bBreath >= OKBREATH && s->bOppCnt > 0 && s->ubProfile != NO_PROFILE)
 		{
-			if ( bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && pTeamSoldier->ubCivilianGroup != pSoldier->ubCivilianGroup )
+			if (bTeam == CIV_TEAM && pSoldier->ubCivilianGroup != NON_CIV_GROUP && s->ubCivilianGroup != pSoldier->ubCivilianGroup)
 			{
 				continue;
 			}
 
-			if ( ! ( gMercProfiles[ pTeamSoldier->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG_SAID_HOSTILE_QUOTE ) )
+			if (!(gMercProfiles[s->ubProfile].ubMiscFlags & PROFILE_MISC_FLAG_SAID_HOSTILE_QUOTE))
 			{
-				ubMercsAvailable[ ubNumMercsAvailable ] = pTeamSoldier->ubProfile;
+				ubMercsAvailable[ubNumMercsAvailable] = s->ubProfile;
 				ubNumMercsAvailable++;
 			}
-
 		}
 	}
 

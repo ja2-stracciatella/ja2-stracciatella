@@ -312,9 +312,6 @@ static void EndTurnEvents(void)
 
 void BeginTeamTurn( UINT8 ubTeam )
 {
-	INT32 cnt;
-	SOLDIERTYPE		*pSoldier;
-
 	while( 1 )
 	{
 		if ( ubTeam > LAST_TEAM )
@@ -347,13 +344,12 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// decay team's public opplist
 			DecayPublicOpplist( ubTeam );
 
-			cnt = gTacticalStatus.Team[ ubTeam ].bFirstID;
-			for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ ubTeam ].bLastID; cnt++,pSoldier++)
+			FOR_ALL_IN_TEAM(s, ubTeam)
 			{
-				if ( pSoldier->bActive && pSoldier->bLife > 0)
+				if (s->bLife > 0)
 				{
 					// decay personal opplist, and refresh APs and BPs
-					EVENT_BeginMercTurn( pSoldier, FALSE, 0 );
+					EVENT_BeginMercTurn(s, FALSE, 0);
 				}
 			}
 
@@ -1620,7 +1616,6 @@ void DoneAddingToIntList(void)
 
 void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 {
-	UINT8 ubTeam, ubOpp;
 	UINT8 ubIntCnt;
 	SOLDIERTYPE* IntList[MAXMERCS];
 	UINT8 ubIntDiff[MAXMERCS];
@@ -1628,20 +1623,18 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubSlot, ubSmallestSlot;
 	UINT8 ubLoop;
 	BOOLEAN fIntOccurs;
-	SOLDIERTYPE * pOpponent;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
 		ubIntCnt = 0;
 
-		for (ubTeam = 0; ubTeam < MAXTEAMS; ubTeam++)
+		for (UINT8 ubTeam = 0; ubTeam < MAXTEAMS; ++ubTeam)
 		{
 			if (gTacticalStatus.Team[ubTeam].bTeamActive && (gTacticalStatus.Team[ubTeam].bSide != pSoldier->bSide) && ubTeam != CIV_TEAM)
 			{
-				for ( ubOpp = gTacticalStatus.Team[ ubTeam ].bFirstID; ubOpp <= gTacticalStatus.Team[ ubTeam ].bLastID; ubOpp++)
+				FOR_ALL_IN_TEAM(pOpponent, ubTeam)
 				{
-					pOpponent = MercPtrs[ubOpp];
-					if ( pOpponent->bActive && pOpponent->bInSector && (pOpponent->bLife >= OKLIFE) && !(pOpponent->bCollapsed) )
+					if (pOpponent->bInSector && pOpponent->bLife >= OKLIFE && !pOpponent->bCollapsed)
 					{
 						if ( ubInterruptType == NOISEINTERRUPT )
 						{
