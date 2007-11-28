@@ -2215,8 +2215,6 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 
 void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 sAdditionalData )
 {
-	INT32 cnt;
-	SOLDIERTYPE		*pSoldier;
 	SOLDIERTYPE *pValidSoldier = NULL;
 	GROUP *pGroup;
 	UINT32 uiTraverseTime=0;
@@ -2233,19 +2231,16 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{
 		// TODO: Check flags to see if we can jump!
 		// Move controllable mercs!
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-		// look for all mercs on the same team,
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
 			// If we are controllable
-			if ( OK_CONTROLLABLE_MERC( pSoldier) && pSoldier->bAssignment == CurrentSquad( )  )
+			if (OkControllableMerc(s) && s->bAssignment == CurrentSquad())
 			{
-				pValidSoldier = pSoldier;
+				pValidSoldier = s;
 				//This now gets handled by strategic movement.  It is possible that the
 				//group won't move instantaneously.
-				//pSoldier->sSectorX = sNewX;
-				//pSoldier->sSectorY = sNewY;
+				//s->sSectorX = sNewX;
+				//s->sSectorY = sNewY;
 
 				ubDirection = GetInsertionDataFromAdjacentMoveDirection( ubTacticalDirection, sAdditionalData );
 				break;

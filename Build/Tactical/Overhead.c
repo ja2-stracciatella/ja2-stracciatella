@@ -2263,14 +2263,12 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 }
 
 
-void SelectNextAvailSoldier(const SOLDIERTYPE* s)
+void SelectNextAvailSoldier(const SOLDIERTYPE* const last)
 {
 	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	// look for all mercs on the same team,
-	for (INT32 i = gTacticalStatus.Team[s->bTeam].bFirstID; i <= gTacticalStatus.Team[s->bTeam].bLastID; ++i)
+	FOR_ALL_IN_TEAM(s, last->bTeam)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (OK_CONTROLLABLE_MERC(s))
+		if (OkControllableMerc(s))
 		{
 			SelectSoldier(s, 0);
 			return;
@@ -4383,9 +4381,6 @@ void CommonEnterCombatModeCode( )
 
 void EnterCombatMode( UINT8 ubStartingTeam )
 {
-	UINT32				cnt;
-	SOLDIERTYPE		*pTeamSoldier;
-
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Can't enter combat when already in combat" );
@@ -4418,11 +4413,11 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 		if (gusSelectedSoldier == NO_SOLDIER || GetSelectedMan()->bOppCnt == 0)
 		{
 			// OK, look through and find one....
-			for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++ )
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bOppCnt > 0 )
+				if (OkControllableMerc(s) && s->bOppCnt > 0)
 				{
-					SelectSoldier(pTeamSoldier, SELSOLDIER_FORCE_RESELECT);
+					SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 				}
 			}
 		}

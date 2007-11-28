@@ -4629,8 +4629,6 @@ void ResetMultiSelection( )
 
 static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 {
-	SOLDIERTYPE *		pSoldier;
-	INT32						cnt;
 	INT16						sScreenX, sScreenY;
 	INT32						iTemp;
 	SGPRect					aRect;
@@ -4661,14 +4659,13 @@ static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 	}
 
 	// ATE:Check at least for one guy that's in point!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Check if this guy is OK to control....
-		if ( OK_CONTROLLABLE_MERC( pSoldier ) && !( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER ) ) )
+		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
 		{
 			// Get screen pos of gridno......
-			GetGridNoScreenXY( pSoldier->sGridNo, &sScreenX, &sScreenY );
+			GetGridNoScreenXY(s->sGridNo, &sScreenX, &sScreenY);
 
 			// ATE: If we are in a hiehger interface level, subttrasct....
 			if ( gsInterfaceLevel == 1 )
@@ -4689,20 +4686,18 @@ static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
   }
 
 	// ATE: Now loop through our guys and see if any fit!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-
 		// Check if this guy is OK to control....
-		if ( OK_CONTROLLABLE_MERC( pSoldier ) && !( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER ) ) )
+		if (OkControllableMerc(s) && !(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
 		{
 			if ( !_KeyDown( ALT ) )
 			{
-				pSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
+				s->uiStatusFlags &= ~SOLDIER_MULTI_SELECTED;
 			}
 
 			// Get screen pos of gridno......
-			GetGridNoScreenXY( pSoldier->sGridNo, &sScreenX, &sScreenY );
+			GetGridNoScreenXY(s->sGridNo, &sScreenX, &sScreenY);
 
 			// ATE: If we are in a hiehger interface level, subttrasct....
 			if ( gsInterfaceLevel == 1 )
@@ -4713,7 +4708,7 @@ static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 			if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
 			{
 				// Adjust this guy's flag...
-				pSoldier->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+				s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 			}
 		}
 	}

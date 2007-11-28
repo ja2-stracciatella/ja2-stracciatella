@@ -18,7 +18,16 @@
 #define OK_ENEMY_MERC( p ) ( !p->bNeutral && (p->bSide != gbPlayerNum ) && p->bLife >= OKLIFE )
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
-#define OK_CONTROLLABLE_MERC( p ) ( p->bLife >= OKLIFE && p->bActive && p->bInSector && p->bTeam == gbPlayerNum && p->bAssignment < ON_DUTY  )
+static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
+{
+	Assert(s->bActive);
+	return
+		s->bLife >= OKLIFE &&
+		s->bInSector &&
+		s->bTeam == gbPlayerNum &&
+		s->bAssignment < ON_DUTY;
+}
+#define OK_CONTROLLABLE_MERC(s) ((s)->bActive && OkControllableMerc((s)))
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
 #define OK_INSECTOR_MERC( p ) ( p->bLife >= OKLIFE && p->bActive && p->bInSector && p->bTeam == gbPlayerNum && p->bAssignment < ON_DUTY )

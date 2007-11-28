@@ -2767,24 +2767,20 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						#endif
 
-							  // ATE: This key will select everybody in the sector
-							  if (! (gTacticalStatus.uiFlags & INCOMBAT) )
-							  {
-								  SOLDIERTYPE *		pSoldier;
-								  INT32						cnt;
-
-								  cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-								  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pSoldier++ )
-								  {
-
-									  // Check if this guy is OK to control....
-									  if ( OK_CONTROLLABLE_MERC( pSoldier ) && !( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER ) ) )
-									  {
-        									pSoldier->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
-								  }
+						// ATE: This key will select everybody in the sector
+						if (!(gTacticalStatus.uiFlags & INCOMBAT))
+						{
+							FOR_ALL_IN_TEAM(s, gbPlayerNum)
+							{
+								// Check if this guy is OK to control....
+								if (OkControllableMerc(s) &&
+										!(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
+								{
+									s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 								}
-								EndMultiSoldierSelection( TRUE );
-							  }
+							}
+							EndMultiSoldierSelection(TRUE);
+						}
 					}
 					break;
 
@@ -2929,34 +2925,33 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						// Toggle squad's stealth mode.....
 						// For each guy on squad...
 						{
-							SOLDIERTYPE				*pTeamSoldier;
-							INT8							bLoop;
 							BOOLEAN						fStealthOn = FALSE;
 
 							// Check if at least one guy is on stealth....
-							for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
+							CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 							{
-								if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) )
+								if (OkControllableMerc(s) &&
+										s->bAssignment == CurrentSquad() &&
+										s->bStealthMode)
 								{
-									if ( pTeamSoldier->bStealthMode )
-									{
-										fStealthOn = TRUE;
-									}
+									fStealthOn = TRUE;
 								}
 							}
 
 							fStealthOn = !fStealthOn;
 
-							for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pTeamSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pTeamSoldier++)
+							FOR_ALL_IN_TEAM(s, gbPlayerNum)
 							{
-								if ( OK_CONTROLLABLE_MERC( pTeamSoldier ) && pTeamSoldier->bAssignment == CurrentSquad( ) && !AM_A_ROBOT( pTeamSoldier ) )
+								if (OkControllableMerc(s) &&
+										s->bAssignment == CurrentSquad() &&
+										!AM_A_ROBOT(s))
 								{
-									if ( gpSMCurrentMerc != NULL && bLoop == gpSMCurrentMerc->ubID )
+									if (gpSMCurrentMerc == s)
 									{
 										gfUIStanceDifferent = TRUE;
 									}
 
-									pTeamSoldier->bStealthMode = fStealthOn;
+									s->bStealthMode = fStealthOn;
 								}
 							}
 

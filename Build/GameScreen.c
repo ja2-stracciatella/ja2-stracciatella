@@ -860,9 +860,6 @@ void EnableFPSOverlay(BOOLEAN fEnable)
 
 static void TacticalScreenLocateToSoldier(void)
 {
-	INT32					cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16					bLastTeamID;
 	BOOLEAN				fPreferedGuyUsed = FALSE;
 
 	SOLDIERTYPE* const prefer = gPreferredInitialSelectedGuy;
@@ -881,14 +878,12 @@ static void TacticalScreenLocateToSoldier(void)
 	if ( !fPreferedGuyUsed )
 	{
 		// Set locator to first merc
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if ( OK_CONTROLLABLE_MERC( pSoldier ) && OK_INTERRUPT_MERC( pSoldier ) )
+			if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s))
 			{
-				LocateSoldier(pSoldier, 10);
-				SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
+				LocateSoldier(s, 10);
+				SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 				break;
 			}
 		}
