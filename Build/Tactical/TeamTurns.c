@@ -204,9 +204,6 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred);
 
 void EndTurn( UINT8 ubNextTeam )
 {
-	SOLDIERTYPE * pSoldier;
-	INT32 cnt;
-
 	//Check for enemy pooling (add enemies if there happens to be more than the max in the
 	//current battle.  If one or more slots have freed up, we can add them now.
 
@@ -232,13 +229,9 @@ void EndTurn( UINT8 ubNextTeam )
 		FreezeInterfaceForEnemyTurn();
 
 		// Loop through all mercs and set to moved
-		cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
-			if ( pSoldier->bActive )
-			{
-				pSoldier->bMoved = TRUE;
-			}
+			s->bMoved = TRUE;
 		}
 
 		gTacticalStatus.ubCurrentTeam  = ubNextTeam;
@@ -251,9 +244,6 @@ void EndTurn( UINT8 ubNextTeam )
 
 void EndAITurn( void )
 {
-	SOLDIERTYPE * pSoldier;
-	INT32 cnt;
-
 	// Remove any deadlock message
 	EndDeadlockMsg( );
 	if (INTERRUPT_QUEUED)
@@ -262,16 +252,12 @@ void EndAITurn( void )
 	}
 	else
 	{
-		cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
-			if ( pSoldier->bActive )
-			{
-				pSoldier->bMoved = TRUE;
-				// record old life value... for creature AI; the human AI might
-				// want to use this too at some point
-				pSoldier->bOldLife = pSoldier->bLife;
-			}
+			s->bMoved = TRUE;
+			// record old life value... for creature AI; the human AI might
+			// want to use this too at some point
+			s->bOldLife = s->bLife;
 		}
 
 		gTacticalStatus.ubCurrentTeam++;
@@ -282,8 +268,6 @@ void EndAITurn( void )
 void EndAllAITurns( void )
 {
 	// warp turn to the player's turn
-	SOLDIERTYPE * pSoldier;
-	INT32 cnt;
 
 	// Remove any deadlock message
 	EndDeadlockMsg( );
@@ -294,17 +278,13 @@ void EndAllAITurns( void )
 
 	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 	{
-		cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 		{
-			if ( pSoldier->bActive )
-			{
-				pSoldier->bMoved = TRUE;
-				pSoldier->uiStatusFlags &= (~SOLDIER_UNDERAICONTROL);
-				// record old life value... for creature AI; the human AI might
-				// want to use this too at some point
-				pSoldier->bOldLife = pSoldier->bLife;
-			}
+			s->bMoved = TRUE;
+			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
+			// record old life value... for creature AI; the human AI might
+			// want to use this too at some point
+			s->bOldLife = s->bLife;
 		}
 
 		gTacticalStatus.ubCurrentTeam = gbPlayerNum;
@@ -749,12 +729,10 @@ static void StartInterrupt(void)
 
 static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 {
-	SOLDIERTYPE *		pTempSoldier;
-	INT32						cnt;
 	BOOLEAN					fFound;
 	UINT8						ubMinAPsToAttack;
 
-	for ( cnt = gubOutOfTurnPersons; cnt > 0; cnt-- )
+	for (INT32 cnt = gubOutOfTurnPersons; cnt > 0; --cnt)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("ENDINT:  Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID));
 	}
@@ -772,15 +750,14 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	}
 
 	// Loop through all mercs and see if any passed on this interrupt
-	cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
-	for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pTempSoldier++)
+	FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 	{
-		if ( pTempSoldier->bActive && pTempSoldier->bInSector && !pTempSoldier->bMoved && (pTempSoldier->bActionPoints == pTempSoldier->bIntStartAPs))
+		if (s->bInSector && !s->bMoved && s->bActionPoints == s->bIntStartAPs)
 		{
-			ubMinAPsToAttack = MinAPsToAttack( pTempSoldier, pTempSoldier->sLastTarget, FALSE );
-			if ( (ubMinAPsToAttack <= pTempSoldier->bActionPoints) && (ubMinAPsToAttack > 0) )
+			ubMinAPsToAttack = MinAPsToAttack(s, s->sLastTarget, FALSE);
+			if (0 < ubMinAPsToAttack && ubMinAPsToAttack <= s->bActionPoints)
 			{
-				pTempSoldier->bPassedLastInterrupt = TRUE;
+				s->bPassedLastInterrupt = TRUE;
 			}
 		}
 	}
@@ -822,13 +799,9 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			// set everyone on the team to however they were set moved before the interrupt
 			// must do this before selecting soldier...
 			/*
-			cnt = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID;
-			for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pTempSoldier++)
+			FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 			{
-				if ( pTempSoldier->bActive )
-				{
-					pTempSoldier->bMoved = pTempSoldier->bMovedPriorToInterrupt;
-				}
+				s->bMoved = s->bMovedPriorToInterrupt;
 			}
 			*/
 
@@ -926,8 +899,8 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			fFound = FALSE;
 
 			// rebuild list for this team if anyone on the team is still available
-			cnt = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-			for ( pTempSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; cnt++,pTempSoldier++)
+			INT32 cnt = gTacticalStatus.Team[ENEMY_TEAM].bFirstID;
+			for (SOLDIERTYPE* pTempSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gTacticalStatus.ubCurrentTeam].bLastID; cnt++, pTempSoldier++)
 			{
 				if ( pTempSoldier->bActive && pTempSoldier->bInSector && pTempSoldier->bLife >= OKLIFE )
 				{
@@ -945,7 +918,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 				{
 					// now bubble up everyone left in the interrupt queue, starting
 					// at the front of the array
-					for (cnt = 1; cnt <= gubOutOfTurnPersons; cnt++)
+					for (INT32 cnt = 1; cnt <= gubOutOfTurnPersons; ++cnt)
 					{
 						MoveToFrontOfAIList(gOutOfTurnOrder[cnt]);
 					}
