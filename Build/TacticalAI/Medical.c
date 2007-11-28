@@ -54,9 +54,6 @@ static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 
 static BOOLEAN FullPatientCheck(const SOLDIERTYPE* const pPatient)
 {
-	UINT8						cnt;
-	SOLDIERTYPE *		pSoldier;
-
 	if ( CanCharacterAutoBandageTeammate( pPatient ) )
 	{
 		// can bandage self!
@@ -71,18 +68,16 @@ static BOOLEAN FullPatientCheck(const SOLDIERTYPE* const pPatient)
 	}
 	else
 	{
-		// run though the list of chars on team
-		cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
 			// can this character help out?
-			if ( CanCharacterAutoBandageTeammate( pSoldier ) == TRUE )
+			if (CanCharacterAutoBandageTeammate(s))
 			{
 				// can this guy path to the patient?
-				if ( pSoldier->bLevel == 0 )
+				if (s->bLevel == 0)
 				{
 					// do a regular path check
-					if ( FindBestPath( pSoldier, pPatient->sGridNo, 0, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE ) )
+					if (FindBestPath(s, pPatient->sGridNo, 0, WALKING, NO_COPYROUTE, PATH_THROUGH_PEOPLE))
 					{
 						return( TRUE );
 					}
@@ -105,12 +100,10 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 	// returns false if we should stop being in auto-bandage mode
 	UINT8					ubMedics = 0, ubPatients = 0;
 
-	// run though the list of chars on team
-	UINT8 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
-	for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// can this character help out?
-		if( CanCharacterAutoBandageTeammate( pSoldier ) == TRUE )
+		if (CanCharacterAutoBandageTeammate(s))
 		{
 			// yep, up the number of medics in sector
 			ubMedics++;
@@ -171,7 +164,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 BOOLEAN CanCharacterAutoBandageTeammate(const SOLDIERTYPE* const pSoldier)
 {
 	// if the soldier isn't active or in sector, we have problems..leave
-	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+	if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_VEHICLE || pSoldier->bAssignment == VEHICLE)
 	{
 		return( FALSE );
 	}
