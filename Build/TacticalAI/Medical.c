@@ -52,7 +52,7 @@ static BOOLEAN FindAutobandageClimbPoint(INT16 sDesiredGridNo, BOOLEAN fClimbUp)
 }
 
 
-static BOOLEAN FullPatientCheck(SOLDIERTYPE* pPatient)
+static BOOLEAN FullPatientCheck(const SOLDIERTYPE* const pPatient)
 {
 	UINT8						cnt;
 	SOLDIERTYPE *		pSoldier;
@@ -100,15 +100,14 @@ static BOOLEAN FullPatientCheck(SOLDIERTYPE* pPatient)
 
 BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 {
+	static const SOLDIERTYPE* soldier_for_full_check = NULL;
+
 	// returns false if we should stop being in auto-bandage mode
-	UINT8					cnt;
 	UINT8					ubMedics = 0, ubPatients = 0;
-	SOLDIERTYPE * pSoldier;
-	static UINT8	ubIDForFullCheck = NOBODY;
 
 	// run though the list of chars on team
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	UINT8 cnt = gTacticalStatus.Team[gbPlayerNum].bFirstID;
+	for (SOLDIERTYPE* pSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
 	{
 		// can this character help out?
 		if( CanCharacterAutoBandageTeammate( pSoldier ) == TRUE )
@@ -124,8 +123,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 		return( FALSE );
 	}
 
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// can this character be helped out by a teammate?
 		if ( CanCharacterBeAutoBandagedByTeammate( pSoldier ) == TRUE )
@@ -134,12 +132,12 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 			ubPatients++;
 			if (fDoFullCheck)
 			{
-				if ( ubIDForFullCheck == NOBODY )
+				if (soldier_for_full_check == NULL)
 				{
 					// do this guy NEXT time around
-					ubIDForFullCheck = cnt;
+					soldier_for_full_check = pSoldier;
 				}
-				else if ( cnt == ubIDForFullCheck )
+				else if (pSoldier == soldier_for_full_check)
 				{
 					// test this guy
 					if ( FullPatientCheck( pSoldier ) == FALSE )
@@ -148,9 +146,9 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 						gfAutoBandageFailed = TRUE;
 						return( FALSE );
 					}
-					// set ID for full check to NOBODY; will be set to someone later in loop, or to
+					// set soldier for full check to NULL; will be set to someone later in loop, or to
 					// the first guy on the next pass
-					ubIDForFullCheck = NOBODY;
+					soldier_for_full_check = NULL;
 				}
 			}
 		}
@@ -190,8 +188,8 @@ BOOLEAN CanCharacterAutoBandageTeammate(const SOLDIERTYPE* const pSoldier)
 
 BOOLEAN CanCharacterBeAutoBandagedByTeammate(const SOLDIERTYPE* const pSoldier)
 {
-	// if the soldier isn't active or in sector, we have problems..leave
-	if ( !(pSoldier->bActive) || !(pSoldier->bInSector) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || (pSoldier->bAssignment == VEHICLE ) )
+	// if the soldier isn't in sector, we have problems..leave
+	if (!pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_VEHICLE || pSoldier->bAssignment == VEHICLE)
 	{
 		return( FALSE );
 	}
