@@ -4655,7 +4655,11 @@ static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep )
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				!AM_AN_EPC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(pTeamSoldier) &&
+				!pTeamSoldier->fMercAsleep)
 		{
 			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
 			ubNumMercs++;
@@ -6751,7 +6755,11 @@ static void HandleCreatureTenseQuote(void)
 		{
 			SOLDIERTYPE* const s = MercPtrs[i];
 			// Add guy if he's a candidate...
-			if (OK_INSECTOR_MERC(s) && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
+			if (OK_CONTROLLABLE_MERC(s) &&
+					!AM_AN_EPC(s) &&
+					!(s->uiStatusFlags & SOLDIER_GASSED) &&
+					!AM_A_ROBOT(s) &&
+					!s->fMercAsleep)
 			{
 				mercs_in_sector[ubNumMercs++] = s;
 			}

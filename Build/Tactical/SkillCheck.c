@@ -424,7 +424,7 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 			iLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 			for ( pTeamSoldier = MercPtrs[ iLoop ]; iLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iLoop++,pTeamSoldier++ )
 			{
-				if ( OK_INSECTOR_MERC( pTeamSoldier ) )
+				if (OK_CONTROLLABLE_MERC(pTeamSoldier))
 				{
 					bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
 					if (bBuddyIndex >= 0 && SpacesAway( pSoldier->sGridNo, pTeamSoldier->sGridNo ) < 15)

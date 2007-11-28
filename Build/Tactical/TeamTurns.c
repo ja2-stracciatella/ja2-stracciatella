@@ -630,7 +630,7 @@ static void StartInterrupt(void)
 		// report any close call quotes for us here
 		for ( iCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; iCounter <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iCounter++ )
 		{
-			if ( OK_INSECTOR_MERC( MercPtrs[ iCounter ] ) )
+			if (OK_CONTROLLABLE_MERC(MercPtrs[iCounter]))
 			{
 				if ( MercPtrs[ iCounter ]->fCloseCall )
 				{

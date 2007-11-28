@@ -1557,7 +1557,9 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 			iLoop = 0;
 			for ( pTeamSoldier = MercPtrs[ iLoop ]; iLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iLoop++,pTeamSoldier++ )
 			{
-				if ( (pTeamSoldier->ubProfile != ubCharacterNum) && (OK_INSECTOR_MERC( pTeamSoldier )) && (SpacesAway( pSoldier->sGridNo, pTeamSoldier->sGridNo ) < 5) )
+				if (pTeamSoldier->ubProfile != ubCharacterNum &&
+						OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+						SpacesAway(pSoldier->sGridNo, pTeamSoldier->sGridNo) < 5)
 				{
 					// if this merc disliked the whining character sufficiently and hasn't already retorted
 					if ( gMercProfiles[ pTeamSoldier->ubProfile ].bMercOpinion[ ubCharacterNum ] < -2 && !( pTeamSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ANNOYING_MERC ) )
@@ -2279,7 +2281,11 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum )
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if (OK_INSECTOR_MERC(s) && !AM_AN_EPC(s) && !(s->uiStatusFlags & SOLDIER_GASSED) && !AM_A_ROBOT(s) && !s->fMercAsleep)
+		if (OK_CONTROLLABLE_MERC(s) &&
+				!AM_AN_EPC(s) &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(s) &&
+				!s->fMercAsleep)
 		{
 			if (gTacticalStatus.bNumFoughtInBattle[ENEMY_TEAM] == 0)
 			{
@@ -2338,8 +2344,13 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep &&
-			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				PythSpacesAway(sGridNo, pTeamSoldier->sGridNo) < bDistance &&
+				!AM_AN_EPC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(pTeamSoldier) &&
+				!pTeamSoldier->fMercAsleep &&
+				SoldierTo3DLocationLineOfSightTest(pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE))
 		{
 			if ( usQuoteNum == 66 && (INT8) Random( 100 ) > EffectiveWisdom( pTeamSoldier ) )
 			{
@@ -2377,8 +2388,13 @@ void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQ
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && PythSpacesAway( sGridNo, pTeamSoldier->sGridNo ) < bDistance && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep &&
-			SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE ) )
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				PythSpacesAway(sGridNo, pTeamSoldier->sGridNo) < bDistance &&
+				!AM_AN_EPC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(pTeamSoldier) &&
+				!pTeamSoldier->fMercAsleep &&
+				SoldierTo3DLocationLineOfSightTest(pTeamSoldier, sGridNo, 0, 0, (UINT8)MaxDistanceVisible(), TRUE))
 		{
 			// ATE: This is to check gedner for this quote...
 			if ( QuoteExp_GenderCode[ pTeamSoldier->ubProfile ] == 0 && bSex == FEMALE )

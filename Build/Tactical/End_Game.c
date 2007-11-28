@@ -178,7 +178,9 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 	{
 		if (pTeamSoldier == pKillerSoldier) continue;
 
-		if (OK_INSECTOR_MERC(pTeamSoldier) && !(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) && !AM_AN_EPC(pTeamSoldier))
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_AN_EPC(pTeamSoldier))
 		{
 			if (QuoteExp_WitnessDeidrannaDeath[pTeamSoldier->ubProfile])
 			{
@@ -445,7 +447,9 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 	{
 		if (pTeamSoldier == pKillerSoldier) continue;
 
-		if (OK_INSECTOR_MERC(pTeamSoldier) && !(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) && !AM_AN_EPC(pTeamSoldier))
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_AN_EPC(pTeamSoldier))
 		{
 			if (QuoteExp_WitnessQueenBugDeath[pTeamSoldier->ubProfile])
 			{

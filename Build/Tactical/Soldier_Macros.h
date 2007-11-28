@@ -29,9 +29,6 @@ static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
 }
 #define OK_CONTROLLABLE_MERC(s) ((s)->bActive && OkControllableMerc((s)))
 
-// Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
-#define OK_INSECTOR_MERC( p ) ( p->bLife >= OKLIFE && p->bActive && p->bInSector && p->bTeam == gbPlayerNum && p->bAssignment < ON_DUTY )
-
 // Checkf if our guy can be selected and is not in a position where our team has an interupt and he does not have one...
 #define OK_INTERRUPT_MERC( p ) ( ( INTERRUPT_QUEUED != 0 ) ? ( ( p->bMoved ) ? FALSE : TRUE ) : TRUE )
 

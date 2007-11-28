@@ -2503,7 +2503,8 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && pTeamSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				pTeamSoldier->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 		{
 			mercs_in_sector[ubNumMercs++] = pTeamSoldier;
 		}

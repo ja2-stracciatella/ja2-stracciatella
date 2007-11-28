@@ -2746,7 +2746,12 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
 	{
 		// Add guy if he's a candidate...
-		if ( OK_INSECTOR_MERC( pTeamSoldier ) && !AM_AN_EPC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !(AM_A_ROBOT( pTeamSoldier )) && !pTeamSoldier->fMercAsleep && pTeamSoldier->sGridNo != NOWHERE )
+		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+				!AM_AN_EPC(pTeamSoldier) &&
+				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(pTeamSoldier) &&
+				!pTeamSoldier->fMercAsleep &&
+				pTeamSoldier->sGridNo != NOWHERE)
 		{
       // Are we a buddy of killer?
 			bTempBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pKillerSoldier->ubProfile );
@@ -2905,7 +2910,9 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 				{
 					if ( cnt != pKillerSoldier->ubID )
 					{
-						if ( OK_INSECTOR_MERC( pTeamSoldier ) && !( pTeamSoldier->uiStatusFlags & SOLDIER_GASSED ) && !AM_AN_EPC( pTeamSoldier ) )
+						if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
+								!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
+								!AM_AN_EPC(pTeamSoldier))
 						{
 							// Can we see location?
 							sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );

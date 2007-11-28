@@ -291,7 +291,7 @@ static INT16 PickLocationNearAnyMercInSector(void)
 	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if (OK_INSECTOR_MERC(s)) mercs_in_sector[num_mercs++] = s;
+		if (OK_CONTROLLABLE_MERC(s)) mercs_in_sector[num_mercs++] = s;
 	}
 
 	return num_mercs > 0 ? mercs_in_sector[Random(num_mercs)]->sGridNo : NOWHERE;

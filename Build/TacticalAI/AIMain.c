@@ -641,7 +641,7 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 		// search for any player merc to say close call quote
 		for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
 		{
-			if ( OK_INSECTOR_MERC( MercPtrs[ ubID ] ) )
+			if (OK_CONTROLLABLE_MERC(MercPtrs[ubID]))
 			{
 				if ( MercPtrs[ ubID ]->fCloseCall )
 				{
