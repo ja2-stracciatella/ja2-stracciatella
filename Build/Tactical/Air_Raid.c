@@ -187,9 +187,7 @@ static void ScheduleAirRaid(AIR_RAID_DEFINITION* pAirRaidDef)
 
 BOOLEAN BeginAirRaid( )
 {
-	INT32 cnt;
 	BOOLEAN fOK = FALSE;
-	SOLDIERTYPE *pSoldier;
 
 	// OK, we have been told to start.....
 
@@ -209,16 +207,18 @@ BOOLEAN BeginAirRaid( )
 				gAirRaidDef.sSectorZ == gbWorldSectorZ )
 	*/
 		// Do we have any guys in here...
-		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < 20; cnt++, pSoldier++)
+	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	{
+		if (s->sSectorX == gAirRaidDef.sSectorX &&
+				s->sSectorY == gAirRaidDef.sSectorY &&
+				s->bSectorZ == gAirRaidDef.sSectorZ &&
+				!s->fBetweenSectors &&
+				s->bLife != 0 &&
+				s->bAssignment != IN_TRANSIT)
 		{
-			if ( pSoldier->bActive  )
-			{
-				if( pSoldier->sSectorX == gAirRaidDef.sSectorX && pSoldier->sSectorY == gAirRaidDef.sSectorY && pSoldier->bSectorZ == 	gAirRaidDef.sSectorZ && !pSoldier->fBetweenSectors && pSoldier->bLife && pSoldier->bAssignment != IN_TRANSIT )
-				{
-					fOK = TRUE;
-				}
-			}
+			fOK = TRUE;
 		}
+	}
 
 
 		if ( !fOK )

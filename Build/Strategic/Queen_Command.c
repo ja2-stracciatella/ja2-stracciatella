@@ -1691,11 +1691,9 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 static INT8 KillDyingInTeam(UINT team)
 {
 	INT8 kill_count = 0;
-	const TacticalTeamType* const t = &gTacticalStatus.Team[team];
-	for (INT32 i = t->bFirstID, end = t->bLastID + 1; i != end; ++i)
+	FOR_ALL_IN_TEAM(s, team)
 	{
-		SOLDIERTYPE* const s = MercPtrs[i];
-		if (s->bActive && s->bLife < OKLIFE && s->bLife != 0)
+		if (s->bLife < OKLIFE && s->bLife != 0)
 		{
 			s->bLife = 0;
 			BOOLEAN fMadeCorpse;
