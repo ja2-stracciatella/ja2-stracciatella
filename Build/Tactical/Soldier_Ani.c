@@ -2731,51 +2731,44 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
   INT8  bTempBuddyIndex;
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
 	INT16		sDistVisible = FALSE;
   UINT16  usQuoteNum;
 
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
 	SOLDIERTYPE* mercs_in_sector[20];
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-				!AM_AN_EPC(pTeamSoldier) &&
-				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_A_ROBOT(pTeamSoldier) &&
-				!pTeamSoldier->fMercAsleep &&
-				pTeamSoldier->sGridNo != NOWHERE)
+		if (OkControllableMerc(s) &&
+				!AM_AN_EPC(s) &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(s) &&
+				!s->fMercAsleep &&
+				s->sGridNo != NOWHERE)
 		{
       // Are we a buddy of killer?
-			bTempBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pKillerSoldier->ubProfile );
+			bTempBuddyIndex = WhichBuddy(s->ubProfile, pKillerSoldier->ubProfile);
 
       if ( bTempBuddyIndex != -1 )
       {
         switch( bTempBuddyIndex )
         {
           case 0:
-            if ( pTeamSoldier->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED )
+            if (s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_1_WITNESSED)
             {
               continue;
             }
             break;
 
           case 1:
-            if ( pTeamSoldier->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED )
+            if (s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_2_WITNESSED)
             {
               continue;
             }
             break;
 
           case 2:
-            if ( pTeamSoldier->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED )
+            if (s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED)
             {
               continue;
             }
@@ -2784,23 +2777,23 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 
         // TO LOS check to killed
 	      // Can we see location of killer?
-	      sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pKillerSoldier->sGridNo, pKillerSoldier->bLevel );
-        if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, pKillerSoldier->sGridNo,  pKillerSoldier->bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) == 0 )
+	      sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pKillerSoldier->sGridNo, pKillerSoldier->bLevel);
+        if (SoldierTo3DLocationLineOfSightTest(s, pKillerSoldier->sGridNo, pKillerSoldier->bLevel, 3, sDistVisible, TRUE) == 0)
         {
           continue;
         }
 
 
 	      // Can we see location of killed?
-	      sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
-        if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, (UINT8)3, (UINT8) sDistVisible, TRUE ) == 0 )
+	      sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
+        if (SoldierTo3DLocationLineOfSightTest(s, sGridNo,  bLevel, 3, sDistVisible, TRUE) == 0)
         {
           continue;
         }
 
         // OK, a good candidate...
-				mercs_in_sector[ubNumMercs] = pTeamSoldier;
-			  bBuddyIndex[ ubNumMercs ]     = bTempBuddyIndex;
+				mercs_in_sector[ubNumMercs] = s;
+			  bBuddyIndex[ubNumMercs]     = bTempBuddyIndex;
 			  ubNumMercs++;
       }
 		}
@@ -2839,8 +2832,6 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 
 void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
 	UINT8	ubNumMercs = 0;
 	BOOLEAN fDoSomeoneElse = FALSE;
 	BOOLEAN	fCanWeSeeLocation = FALSE;
@@ -2902,25 +2893,19 @@ void HandleKilledQuote(SOLDIERTYPE* pKilledSoldier, SOLDIERTYPE* pKillerSoldier,
 			if ( fDoSomeoneElse )
 			{
 				// Check if a person is here that has this quote....
-				cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-				// run through list
 				SOLDIERTYPE* mercs_in_sector[20];
-				for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
 				{
-					if ( cnt != pKillerSoldier->ubID )
+					if (s != pKillerSoldier &&
+							OkControllableMerc(s) &&
+							!(s->uiStatusFlags & SOLDIER_GASSED) &&
+							!AM_AN_EPC(s))
 					{
-						if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-								!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
-								!AM_AN_EPC(pTeamSoldier))
+						// Can we see location?
+						sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
+						if (SoldierTo3DLocationLineOfSightTest(s, sGridNo,  bLevel, 3, sDistVisible, TRUE))
 						{
-							// Can we see location?
-							sDistVisible = DistanceVisible( pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel );
-
-							if ( SoldierTo3DLocationLineOfSightTest( pTeamSoldier, sGridNo,  bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-							{
-								mercs_in_sector[ubNumMercs++] = pTeamSoldier;
-							}
+							mercs_in_sector[ubNumMercs++] = s;
 						}
 					}
 				}

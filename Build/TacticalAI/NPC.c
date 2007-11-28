@@ -2487,26 +2487,19 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 {
 	// Loop through all mercs, gather closest mercs who can see and trigger one!
 	UINT8	ubNumMercs = 0;
-	SOLDIERTYPE *pTeamSoldier, *pSoldier;
-	INT32 cnt;
 
 	// First get pointer to NPC
-	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC, FALSE);
 
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
 	SOLDIERTYPE* mercs_in_sector[40];
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-				pTeamSoldier->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
+		if (OkControllableMerc(s) &&
+				s->bOppList[pSoldier->ubID] == SEEN_CURRENTLY)
 		{
-			mercs_in_sector[ubNumMercs++] = pTeamSoldier;
+			mercs_in_sector[ubNumMercs++] = s;
 		}
 	}
 

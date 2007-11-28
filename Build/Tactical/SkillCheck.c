@@ -179,9 +179,6 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 	INT32	iChance;
 	INT32	iRoll, iMadeItBy;
 	INT8	bSlot;
-	INT32	iLoop;
-	SOLDIERTYPE * pTeamSoldier;
-	INT8	bBuddyIndex;
   BOOLEAN fForceDamnSound = FALSE;
 
 	switch (bReason)
@@ -421,31 +418,29 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 		if (iRoll < iChance)
 		{
 			// If a buddy of this merc is standing around nearby, they'll make a positive comment.
-			iLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-			for ( pTeamSoldier = MercPtrs[ iLoop ]; iLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iLoop++,pTeamSoldier++ )
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if (OK_CONTROLLABLE_MERC(pTeamSoldier))
+				if (!OkControllableMerc(s)) continue;
+
+				const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
+				if (bBuddyIndex >= 0 && SpacesAway(pSoldier->sGridNo, s->sGridNo) < 15)
 				{
-					bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
-					if (bBuddyIndex >= 0 && SpacesAway( pSoldier->sGridNo, pTeamSoldier->sGridNo ) < 15)
+					switch (bBuddyIndex)
 					{
-						switch( bBuddyIndex )
-						{
-							case 0:
-								// buddy #1 did something good!
-								TacticalCharacterDialogue( pTeamSoldier, QUOTE_BUDDY_1_GOOD );
-								break;
-							case 1:
-								// buddy #2 did something good!
-								TacticalCharacterDialogue( pTeamSoldier, 	QUOTE_BUDDY_2_GOOD );
-								break;
-							case 2:
-								// learn to like buddy did something good!
-								TacticalCharacterDialogue( pTeamSoldier, QUOTE_LEARNED_TO_LIKE_WITNESSED );
-								break;
-							default:
-								break;
-						}
+						case 0:
+							// buddy #1 did something good!
+							TacticalCharacterDialogue(s, QUOTE_BUDDY_1_GOOD);
+							break;
+						case 1:
+							// buddy #2 did something good!
+							TacticalCharacterDialogue(s, QUOTE_BUDDY_2_GOOD);
+							break;
+						case 2:
+							// learn to like buddy did something good!
+							TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_WITNESSED);
+							break;
+						default:
+							break;
 					}
 				}
 			}

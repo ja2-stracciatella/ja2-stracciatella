@@ -628,8 +628,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 {
-	UINT8					ubID;
-
 	if (gfTurnBasedAI)
 	{
 		if (gTacticalStatus.uiFlags & PLAYER_TEAM_DEAD)
@@ -639,21 +637,20 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 		}
 
 		// search for any player merc to say close call quote
-		for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (OK_CONTROLLABLE_MERC(MercPtrs[ubID]))
+			if (OkControllableMerc(s) &&
+					s->fCloseCall &&
+					!gTacticalStatus.fSomeoneHit &&
+					s->bNumHitsThisTurn == 0 &&
+					!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
+					Random(3) == 0)
 			{
-				if ( MercPtrs[ ubID ]->fCloseCall )
-				{
-					if ( !gTacticalStatus.fSomeoneHit && MercPtrs[ ubID ]->bNumHitsThisTurn == 0 && !(MercPtrs[ ubID ]->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) && Random( 3 ) == 0 )
-					{
-						// say close call quote!
-						TacticalCharacterDialogue( MercPtrs[ ubID ], QUOTE_CLOSE_CALL );
-						MercPtrs[ ubID ]->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
-					}
-					MercPtrs[ ubID ]->fCloseCall = FALSE;
-				}
+				// say close call quote!
+				TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
+				s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
 			}
+			s->fCloseCall = FALSE;
 		}
 		gTacticalStatus.fSomeoneHit = FALSE;
 

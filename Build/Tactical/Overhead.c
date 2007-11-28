@@ -4643,26 +4643,18 @@ static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
 
 	// Loop through all our guys and randomly say one from someone in our sector
-
-	// set up soldier ptr as first element in mercptrs list
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
-		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-				!AM_AN_EPC(pTeamSoldier) &&
-				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_A_ROBOT(pTeamSoldier) &&
-				!pTeamSoldier->fMercAsleep)
+		if (OkControllableMerc(s) &&
+				!AM_AN_EPC(s) &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_A_ROBOT(s) &&
+				!s->fMercAsleep)
 		{
-			ubMercsInSector[ ubNumMercs ] = (UINT8)cnt;
-			ubNumMercs++;
+			ubMercsInSector[ubNumMercs++] = s->ubID;
 		}
 	}
 
@@ -6751,11 +6743,10 @@ static void HandleCreatureTenseQuote(void)
 		// run through list
 		UINT8	ubNumMercs = 0;
 		SOLDIERTYPE* mercs_in_sector[20];
-		for (INT32 i = gTacticalStatus.Team[gbPlayerNum].bFirstID; i <= gTacticalStatus.Team[gbPlayerNum].bLastID; i++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			SOLDIERTYPE* const s = MercPtrs[i];
 			// Add guy if he's a candidate...
-			if (OK_CONTROLLABLE_MERC(s) &&
+			if (OkControllableMerc(s) &&
 					!AM_AN_EPC(s) &&
 					!(s->uiStatusFlags & SOLDIER_GASSED) &&
 					!AM_A_ROBOT(s) &&

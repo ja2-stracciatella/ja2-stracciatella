@@ -181,10 +181,10 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	if ( gTacticalStatus.uiFlags & INCOMBAT )
 	{
-		INT32 i, cnt = 0;
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		INT32 cnt = 0;
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if (OK_CONTROLLABLE_MERC(MercPtrs[i])) ++cnt;
+			if (OkControllableMerc(s)) ++cnt;
 		}
 		if( cnt != 1 )
 		{

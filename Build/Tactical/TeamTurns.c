@@ -548,7 +548,6 @@ static void StartInterrupt(void)
 		// start interrupts for everyone on our side at once
 		wchar_t	sTemp[ 255 ];
 		UINT8		ubInterrupters = 0;
-		INT32		iSquad, iCounter;
 
 		// build string for display of who gets interrupt
 		while( 1 )
@@ -573,9 +572,9 @@ static void StartInterrupt(void)
 		wcscpy( sTemp, Message[ STR_INTERRUPT_FOR ] );
 
 		// build string in separate loop here, want to linearly process squads...
-		for ( iSquad = 0; iSquad < NUMBER_OF_SQUADS; iSquad++ )
+		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
 		{
-			for ( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
+			for (INT32 iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; ++iCounter)
 			{
 				const SOLDIERTYPE* const pTempSoldier = Squad[iSquad][iCounter];
 				if ( pTempSoldier && pTempSoldier->bActive && pTempSoldier->bInSector && !pTempSoldier->bMoved )
@@ -628,21 +627,19 @@ static void StartInterrupt(void)
 		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 
 		// report any close call quotes for us here
-		for ( iCounter = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; iCounter <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; iCounter++ )
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (OK_CONTROLLABLE_MERC(MercPtrs[iCounter]))
+			if (OkControllableMerc(s) &&
+					s->fCloseCall &&
+					s->bNumHitsThisTurn == 0 &&
+					!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
+					Random(3) == 0)
 			{
-				if ( MercPtrs[ iCounter ]->fCloseCall )
-				{
-					if ( MercPtrs[ iCounter ]->bNumHitsThisTurn == 0 && !(MercPtrs[ iCounter ]->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) && Random( 3 ) == 0 )
-					{
-						// say close call quote!
-						TacticalCharacterDialogue( MercPtrs[ iCounter ], QUOTE_CLOSE_CALL );
-						MercPtrs[ iCounter ]->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
-					}
-					MercPtrs[ iCounter ]->fCloseCall = FALSE;
-				}
+				// say close call quote!
+				TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
+				s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
 			}
+			s->fCloseCall = FALSE;
 		}
 
 	}

@@ -156,10 +156,6 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 
 static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 sGridNo, const INT8 bLevel)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-	INT16		sDistVisible = FALSE;
-
 	// Start victory music here...
 	SetMusicMode( MUSIC_TACTICAL_VICTORY );
 
@@ -171,26 +167,19 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (pTeamSoldier == pKillerSoldier) continue;
-
-		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_AN_EPC(pTeamSoldier))
+		if (s != pKillerSoldier &&
+				OkControllableMerc(s) &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_AN_EPC(s) &&
+				QuoteExp_WitnessDeidrannaDeath[s->ubProfile])
 		{
-			if (QuoteExp_WitnessDeidrannaDeath[pTeamSoldier->ubProfile])
+			// Can we see location?
+			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
+			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, TRUE))
 			{
-				// Can we see location?
-				sDistVisible = DistanceVisible(pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
-
-				if (SoldierTo3DLocationLineOfSightTest(pTeamSoldier, sGridNo, bLevel, 3, sDistVisible, TRUE))
-				{
-					TacticalCharacterDialogue(pTeamSoldier, QUOTE_KILLING_DEIDRANNA);
-				}
+				TacticalCharacterDialogue(s, QUOTE_KILLING_DEIDRANNA);
 			}
 		}
 	}
@@ -426,10 +415,6 @@ void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT
 
 static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 sGridNo, const INT8 bLevel)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	INT32 cnt;
-	INT16		sDistVisible = FALSE;
-
 	// Start victory music here...
 	SetMusicMode( MUSIC_TACTICAL_VICTORY );
 
@@ -440,26 +425,19 @@ static void HandleQueenBitchDeath(SOLDIERTYPE* const pKillerSoldier, const INT16
 
 	// STEP 1 ) START ALL QUOTES GOING!
 	// OK - loop through all witnesses and see if they want to say something abou this...
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// run through list
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pTeamSoldier++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (pTeamSoldier == pKillerSoldier) continue;
-
-		if (OK_CONTROLLABLE_MERC(pTeamSoldier) &&
-				!(pTeamSoldier->uiStatusFlags & SOLDIER_GASSED) &&
-				!AM_AN_EPC(pTeamSoldier))
+		if (s != pKillerSoldier &&
+				OkControllableMerc(s) &&
+				!(s->uiStatusFlags & SOLDIER_GASSED) &&
+				!AM_AN_EPC(s) &&
+				QuoteExp_WitnessQueenBugDeath[s->ubProfile])
 		{
-			if (QuoteExp_WitnessQueenBugDeath[pTeamSoldier->ubProfile])
+			// Can we see location?
+			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
+			if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, bLevel, 3, sDistVisible, TRUE))
 			{
-				// Can we see location?
-				sDistVisible = DistanceVisible(pTeamSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, bLevel);
-
-				if (SoldierTo3DLocationLineOfSightTest(pTeamSoldier, sGridNo, bLevel, 3, sDistVisible, TRUE))
-				{
-					TacticalCharacterDialogue(pTeamSoldier, QUOTE_KILLING_QUEEN);
-				}
+				TacticalCharacterDialogue(s, QUOTE_KILLING_QUEEN);
 			}
 		}
 	}
