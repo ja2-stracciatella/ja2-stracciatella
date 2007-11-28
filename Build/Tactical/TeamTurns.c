@@ -652,14 +652,10 @@ static void StartInterrupt(void)
 
 		// what we do is set everyone to moved except for people with interrupts at the moment
 		/*
-		INT32 cnt = gTacticalStatus.Team[first_interrupter->bTeam].bFirstID;
-		for (SOLDIERTYPE* pTempSoldier = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[first_interrupter->bTeam].bLastID; cnt++, pTempSoldier++)
+		FOR_ALL_IN_TEAM(s, first_interrupter->bTeam)
 		{
-			if ( pTempSoldier->bActive )
-			{
-				pTempSoldier->bMovedPriorToInterrupt = pTempSoldier->bMoved;
-				pTempSoldier->bMoved = TRUE;
-			}
+			s->bMovedPriorToInterrupt = s->bMoved;
+			s->bMoved                 = TRUE;
 		}
 		*/
 

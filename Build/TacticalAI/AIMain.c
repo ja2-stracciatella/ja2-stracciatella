@@ -832,22 +832,11 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 static BOOLEAN DestNotSpokenFor(SOLDIERTYPE* pSoldier, INT16 sGridno)
 {
-	INT32 cnt;
-	SOLDIERTYPE *pOurTeam;
-
-	cnt = gTacticalStatus.Team[pSoldier->bTeam].bFirstID;
-
-	// make a list of all of our team's mercs
-	for (pOurTeam = MercPtrs[cnt]; cnt <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; cnt++,pOurTeam++)
+	CFOR_ALL_IN_TEAM(s, pSoldier->bTeam)
 	{
-		if ( pOurTeam->bActive )
-		{
-			if (pOurTeam->sGridNo == sGridno || pOurTeam->usActionData == sGridno)
-				return(FALSE);
-		}
+		if (s->sGridNo == sGridno || s->usActionData == sGridno) return FALSE;
 	}
-
-	return(TRUE);	// dest is free to go to...
+	return TRUE; // dest is free to go to...
 }
 
 

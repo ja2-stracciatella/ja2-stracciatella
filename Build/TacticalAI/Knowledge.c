@@ -11,12 +11,8 @@
 
 void CallAvailableEnemiesTo( INT16 sGridNo )
 {
-	INT32	iLoop;
-	INT32	iLoop2;
-	SOLDIERTYPE * pSoldier;
-
 	// All enemy teams become aware of a very important "noise" coming from here!
-	for (iLoop = 0; iLoop < LAST_TEAM; iLoop++)
+	for (INT32 iLoop = 0; iLoop < LAST_TEAM; ++iLoop)
 	{
 		// if this team is active
 		if (gTacticalStatus.Team[iLoop].bTeamActive)
@@ -29,20 +25,16 @@ void CallAvailableEnemiesTo( INT16 sGridNo )
 				gubPublicNoiseVolume[iLoop] = MAX_MISC_NOISE_DURATION;
 
 				// new situation for everyone;
-				iLoop2 = gTacticalStatus.Team[ iLoop ].bFirstID;
-				for ( pSoldier = MercPtrs[iLoop2]; iLoop2 <= gTacticalStatus.Team[ iLoop ].bLastID; iLoop2++, pSoldier++ )
+				FOR_ALL_IN_TEAM(s, iLoop)
 				{
-					if (pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
+					if (s->bInSector && s->bLife >= OKLIFE)
 					{
-						SetNewSituation( pSoldier );
-						WearGasMaskIfAvailable( pSoldier );
+						SetNewSituation(s);
+						WearGasMaskIfAvailable(s);
 					}
 				}
-
 			}
-
 		}
-
 	}
 }
 

@@ -56,10 +56,8 @@ static const INT8 gbHuntCallPriority[NUM_CREATURE_CALLS] =
 void CreatureCall( SOLDIERTYPE * pCaller )
 {
 	UINT8		ubCallerType=0;
-	UINT8		ubReceiver;
 	INT8		bFullPriority;
 	INT8		bPriority;
-	SOLDIERTYPE * pReceiver;
 	UINT16	usDistToCaller;
 	// communicate call to all creatures on map through ultrasonics
 
@@ -110,29 +108,30 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 			break;
 	}
 
-
-	for (ubReceiver = gTacticalStatus.Team[ pCaller->bTeam ].bFirstID; ubReceiver <= gTacticalStatus.Team[ pCaller->bTeam ].bLastID; ubReceiver++)
+	FOR_ALL_IN_TEAM(pReceiver, pCaller->bTeam)
 	{
-		pReceiver = MercPtrs[ubReceiver];
-		if (pReceiver->bActive && pReceiver->bInSector && (pReceiver->bLife >= OKLIFE) && (pReceiver != pCaller) && (pReceiver->bAlertStatus < STATUS_BLACK))
+		if (pReceiver->bInSector &&
+				pReceiver->bLife >= OKLIFE &&
+				pReceiver != pCaller &&
+				pReceiver->bAlertStatus < STATUS_BLACK &&
+				pReceiver->ubBodyType != LARVAE_MONSTER &&
+				pReceiver->ubBodyType != INFANT_MONSTER &&
+				pReceiver->ubBodyType != QUEENMONSTER)
 		{
-			if (pReceiver->ubBodyType != LARVAE_MONSTER && pReceiver->ubBodyType != INFANT_MONSTER && pReceiver->ubBodyType != QUEENMONSTER)
+			usDistToCaller = PythSpacesAway( pReceiver->sGridNo, pCaller->sGridNo );
+			bPriority = bFullPriority - (INT8) (usDistToCaller / PRIORITY_DECR_DISTANCE);
+			if (bPriority > pReceiver->bCallPriority)
 			{
-				usDistToCaller = PythSpacesAway( pReceiver->sGridNo, pCaller->sGridNo );
-				bPriority = bFullPriority - (INT8) (usDistToCaller / PRIORITY_DECR_DISTANCE);
-				if (bPriority > pReceiver->bCallPriority)
+				pReceiver->bCallPriority = bPriority;
+				pReceiver->bAlertStatus = STATUS_RED; // our status can't be more than red to begin with
+				pReceiver->ubCaller = pCaller->ubID;
+				pReceiver->sCallerGridNo = pCaller->sGridNo;
+				pReceiver->bCallActedUpon = FALSE;
+				CancelAIAction(pReceiver);
+				if ((bPriority > FRENZY_THRESHOLD) && (pReceiver->ubBodyType == ADULTFEMALEMONSTER || pReceiver->ubBodyType == YAF_MONSTER))
 				{
-					pReceiver->bCallPriority = bPriority;
-					pReceiver->bAlertStatus = STATUS_RED; // our status can't be more than red to begin with
-					pReceiver->ubCaller = pCaller->ubID;
-					pReceiver->sCallerGridNo = pCaller->sGridNo;
-					pReceiver->bCallActedUpon = FALSE;
-					CancelAIAction(pReceiver);
-					if ((bPriority > FRENZY_THRESHOLD) && (pReceiver->ubBodyType == ADULTFEMALEMONSTER || pReceiver->ubBodyType == YAF_MONSTER))
-					{
-						// go berzerk!
-						pReceiver->bFrenzied = TRUE;
-					}
+					// go berzerk!
+					pReceiver->bFrenzied = TRUE;
 				}
 			}
 		}

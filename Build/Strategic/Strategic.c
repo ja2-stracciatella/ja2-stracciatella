@@ -87,37 +87,27 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier)
 {
-	INT32 cnt = 0;
-	SOLDIERTYPE *pTeamSoldier;
-	INT8 bBuddyIndex;
-
-	// IF IT'S THE SELECTED GUY, MAKE ANOTHER SELECTED!
-	cnt = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-
-
-	// see if this was the friend of a living merc
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
 	{
-		if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
+		if (s->bLife < OKLIFE) continue;
+
+		const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
+		switch (bBuddyIndex)
 		{
-			bBuddyIndex = WhichBuddy( pTeamSoldier->ubProfile, pSoldier->ubProfile );
-			switch( bBuddyIndex )
-			{
-				case 0:
-					// buddy #1 died!
-					TacticalCharacterDialogue( pTeamSoldier, QUOTE_BUDDY_ONE_KILLED );
-					break;
-				case 1:
-					// buddy #2 died!
-					TacticalCharacterDialogue( pTeamSoldier, QUOTE_BUDDY_TWO_KILLED );
-					break;
-				case 2:
-					// learn to like buddy died!
-					TacticalCharacterDialogue( pTeamSoldier, QUOTE_LEARNED_TO_LIKE_MERC_KILLED );
-					break;
-				default:
-					break;
-				}
-			}
+			case 0:
+				// buddy #1 died!
+				TacticalCharacterDialogue(s, QUOTE_BUDDY_ONE_KILLED);
+				break;
+			case 1:
+				// buddy #2 died!
+				TacticalCharacterDialogue(s, QUOTE_BUDDY_TWO_KILLED);
+				break;
+			case 2:
+				// learn to like buddy died!
+				TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_MERC_KILLED);
+				break;
+			default:
+				break;
 		}
+	}
 }

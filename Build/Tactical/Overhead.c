@@ -2507,10 +2507,9 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 
 	// look for all mercs on the same team,
 	SOLDIERTYPE* new_selected_soldier = NULL;
-	for (INT32 i = gTacticalStatus.Team[pSoldier->bTeam].bFirstID; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
+	FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
 	{
-		SOLDIERTYPE* const s = MercPtrs[i];
-		if (s->bLife >= OKLIFE && s->bActive && s->bInSector)
+		if (s->bLife >= OKLIFE && s->bInSector)
 		{
 			new_selected_soldier = s;
 			break;
@@ -2526,10 +2525,9 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 		}
 
 		// see if this was the friend of a living merc
-		for (INT32 i = gTacticalStatus.Team[pSoldier->bTeam].bFirstID; i <= gTacticalStatus.Team[pSoldier->bTeam].bLastID; ++i)
+		FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
 		{
-			const SOLDIERTYPE* const s = MercPtrs[i];
-			if (s->bActive && s->bInSector && s->bLife >= OKLIFE)
+			if (s->bInSector && s->bLife >= OKLIFE)
 			{
 				const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
 				switch (bBuddyIndex)
@@ -4547,32 +4545,24 @@ void SetEnemyPresence( )
 
 static BOOLEAN SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE* pTeamSoldier)
 {
-	INT32					cnt2;
-	SOLDIERTYPE		*pSoldier;
-	INT32					cnt;
-
-	for ( cnt = 0; cnt < MAXTEAMS; cnt++ )
+	for (INT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 	{
+		if (gTacticalStatus.Team[cnt].bSide == pTeamSoldier->bSide) continue;
 
-		if ( gTacticalStatus.Team[ cnt ].bSide != pTeamSoldier->bSide )
+		// check this team for possible enemies
+		CFOR_ALL_IN_TEAM(s, cnt)
 		{
-
-			// check this team for possible enemies
-			cnt2 = gTacticalStatus.Team[ cnt ].bFirstID;
-			for ( pSoldier = MercPtrs[ cnt2 ]; cnt2 <= gTacticalStatus.Team[ cnt ].bLastID; cnt2++, pSoldier++ )
+			if (s->bInSector &&
+					(s->bTeam == gbPlayerNum || s->bLife >= OKLIFE) &&
+					!CONSIDERED_NEUTRAL(pTeamSoldier, s) &&
+					pTeamSoldier->bSide != s->bSide)
 			{
-				if ( pSoldier->bActive && pSoldier->bInSector && ( pSoldier->bTeam == gbPlayerNum || pSoldier->bLife >= OKLIFE ) )
+				// Have we not seen this guy.....
+				if (pTeamSoldier->bOppList[s->ubID] >= SEEN_CURRENTLY &&
+						pTeamSoldier->bOppList[s->ubID] <= SEEN_THIS_TURN)
 				{
-					if ( !CONSIDERED_NEUTRAL( pTeamSoldier, pSoldier ) && ( pTeamSoldier->bSide != pSoldier->bSide ) )
-					{
-						// Have we not seen this guy.....
-						if (pTeamSoldier->bOppList[cnt2] >= SEEN_CURRENTLY &&
-								pTeamSoldier->bOppList[cnt2] <= SEEN_THIS_TURN)
-						{
-							gTacticalStatus.bConsNumTurnsNotSeen = 0;
-							return TRUE;
-						}
-					}
+					gTacticalStatus.bConsNumTurnsNotSeen = 0;
+					return TRUE;
 				}
 			}
 		}

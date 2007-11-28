@@ -1415,19 +1415,9 @@ void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )
 void MoveTeamOnFoot( void )
 {
 	// run through list of characters on player team, if on foot, move them
-	SOLDIERTYPE *pSoldier, *pTeamSoldier;
-  INT32 cnt=0;
-
-	// set psoldier as first in merc ptrs
-	pSoldier = MercPtrs[0];
-
-	// go through list of characters, move characters
-	for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; cnt++,pTeamSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if ( pTeamSoldier->bActive )
-		{
-			MoveCharacterOnPath( pTeamSoldier );
-		}
+		MoveCharacterOnPath(s);
 	}
 }
 */

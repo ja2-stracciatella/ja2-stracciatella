@@ -5905,17 +5905,12 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 
 void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 {
-	UINT8						ubID;
-	SOLDIERTYPE *		pSoldier;
 	INT8						bDir;
 	INT16						sDistAway, sDistVisible;
 
-	for ( ubID = gTacticalStatus.Team[ pDyingSoldier->bTeam ].bFirstID; ubID <= gTacticalStatus.Team[ pDyingSoldier->bTeam ].bLastID; ubID++ )
+	FOR_ALL_IN_TEAM(pSoldier, pDyingSoldier->bTeam)
 	{
-
-		pSoldier = MercPtrs[ ubID ];
-
-		if ( pSoldier->bActive && pSoldier->bInSector && (pSoldier != pDyingSoldier) && (pSoldier->bLife >= OKLIFE) && (pSoldier->bAlertStatus < STATUS_RED ) )
+		if (pSoldier->bInSector && pSoldier != pDyingSoldier && pSoldier->bLife >= OKLIFE && pSoldier->bAlertStatus < STATUS_RED)
 		{
 			// this guy might have seen the man die
 

@@ -964,16 +964,10 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldie
 
 void HandleAnyStatChangesAfterAttack( void )
 {
-  INT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
 	// must check everyone on player's team, not just the shooter
-	for ( cnt = 0, pSoldier = MercPtrs[ 0 ]; cnt <= gTacticalStatus.Team[ MercPtrs[ 0 ]->bTeam ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (pSoldier -> bActive)
-		{
-			ProcessUpdateStats( &( gMercProfiles[ pSoldier->ubProfile ] ), pSoldier );
-		}
+		ProcessUpdateStats(&gMercProfiles[s->ubProfile], s);
 	}
 }
 
