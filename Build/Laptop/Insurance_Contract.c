@@ -699,24 +699,12 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 static INT8 CountInsurableMercs(void)
 {
-	INT16					cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16					bLastTeamID;
-	INT8					bCount=0;
-
-	// Set locator to first merc
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	INT8 bCount = 0;
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (MercIsInsurable(pSoldier))
-		{
-			bCount++;
-		}
+		if (MercIsInsurable(s)) ++bCount;
 	}
-
-	return( bCount );
+	return bCount;
 }
 
 
@@ -938,21 +926,14 @@ static void InsContractNoMercsPopupCallBack(UINT8 bExitValue)
 
 static void BuildInsuranceArray(void)
 {
-	INT16					cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16					bLastTeamID;
-
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 	gsMaxPlayersOnTeam = 0;
 
 	// store profile #s of all insurable mercs in an array
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if( MercIsInsurable(pSoldier) )
+		if (MercIsInsurable(s))
 		{
-			gubInsuranceMercArray[ gsMaxPlayersOnTeam ] = pSoldier->ubProfile;
-			gsMaxPlayersOnTeam++;
+			gubInsuranceMercArray[gsMaxPlayersOnTeam++] = s->ubProfile;
 		}
 	}
 }
@@ -1143,7 +1124,7 @@ void InsuranceContractEndGameShutDown()
 static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier)
 {
 	// only A.I.M. mercs currently on player's team
-	if( ( pSoldier->bActive ) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
+	if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 	{
 		// with more than one day left on their employment contract are eligible for insurance
 		// the second part is because the insurance doesn't pay for any working day already started at time of death
