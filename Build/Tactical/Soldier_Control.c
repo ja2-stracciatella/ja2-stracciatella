@@ -10325,8 +10325,6 @@ void CrowsFlyAway(const UINT8 ubTeam)
 #ifdef JA2BETAVERSION
 void DebugValidateSoldierData( )
 {
-	UINT32 cnt;
-	SOLDIERTYPE		*pSoldier;
 	CHAR16 sString[ 1024 ];
 	BOOLEAN fProblemDetected = FALSE;
 	static UINT32 uiFrameCount = 0;
@@ -10341,55 +10339,54 @@ void DebugValidateSoldierData( )
 	// reset frame counter
 	uiFrameCount = 0;
 
-
-	// Loop through our team...
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( pSoldier->bActive )
+		// OK, first check for alive people
+		// Don't do this check if we are a vehicle...
+		if (s->bLife > 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			// OK, first check for alive people
-			// Don't do this check if we are a vehicle...
-			if ( pSoldier->bLife > 0  && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			// Alive -- now check for proper group IDs
+			if (s->ubGroupID   == 0 &&
+					s->bAssignment != IN_TRANSIT &&
+					s->bAssignment != ASSIGNMENT_POW &&
+					!(s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER)))
 			{
-				// Alive -- now check for proper group IDs
-				if ( pSoldier->ubGroupID == 0 && pSoldier->bAssignment != IN_TRANSIT && pSoldier->bAssignment != ASSIGNMENT_POW && !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
-				{
-					// This is bad!
-					swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", cnt);
-					fProblemDetected = TRUE;
-				}
-				else if ( ( pSoldier->ubGroupID != 0 ) && ( GetGroup( pSoldier->ubGroupID ) == NULL ) )
-				{
-					// This is bad!
-					swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", cnt, pSoldier->ubGroupID);
-					fProblemDetected = TRUE;
-				}
+				// This is bad!
+				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is alive but has a zero group ID.", s->ubID);
+				fProblemDetected = TRUE;
 			}
-			else
+			else if (s->ubGroupID != 0 && GetGroup(s->ubGroupID) == NULL)
 			{
-				if ( pSoldier->ubGroupID != 0 && ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
-				{
-					// Dead guys should have 0 group IDs
-					//swprintf( sString, L"GroupID Error: Soldier %d is dead but has a non-zero group ID.", cnt );
-					//fProblemDetected = TRUE;
-				}
-			}
-
-			// check for invalid sector data
-			if ( ( pSoldier->bAssignment != IN_TRANSIT ) &&
-					 ( ( pSoldier->sSectorX <= 0 ) || ( pSoldier->sSectorX >= 17 ) ||
-						 ( pSoldier->sSectorY <= 0 ) || ( pSoldier->sSectorY >= 17 ) ||
-						 ( pSoldier->bSectorZ  < 0 ) || ( pSoldier->bSectorZ >   3 ) ) )
-			{
-				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", cnt, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				// This is bad!
+				swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d has an invalid group ID of %d.", s->ubID, s->ubGroupID);
 				fProblemDetected = TRUE;
 			}
 		}
-
-		if ( fProblemDetected )
+		else
 		{
-			SAIReportError( sString );
+			if (s->ubGroupID != 0 && s->uiStatusFlags & SOLDIER_DEAD)
+			{
+				// Dead guys should have 0 group IDs
+				//swprintf(sString, L"GroupID Error: Soldier %d is dead but has a non-zero group ID.", s->ubID);
+				//fProblemDetected = TRUE;
+			}
+		}
+
+		// check for invalid sector data
+		if (s->bAssignment != IN_TRANSIT &&
+				(
+					s->sSectorX <= 0 || 17 <= s->sSectorX ||
+					s->sSectorY <= 0 || 17 <= s->sSectorY ||
+					s->bSectorZ <  0 ||  3 <  s->bSectorZ
+				))
+		{
+			swprintf(sString, lengthof(sString), L"Soldier Data Error: Soldier %d is located at %d/%d/%d.", s->ubID, s->sSectorX, s->sSectorY, s->bSectorZ);
+			fProblemDetected = TRUE;
+		}
+
+		if (fProblemDetected)
+		{
+			SAIReportError(sString);
 /*
 			if ( guiCurrentScreen == MAP_SCREEN )
 				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
