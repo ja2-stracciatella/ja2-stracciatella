@@ -16,10 +16,11 @@ BOOLEAN ExtractLightEffectFromFile(const HWFILE file, LIGHTEFFECT* const l)
 	EXTR_I8(d, l->bAge)
 	EXTR_BOOL(d, l->fAllocated)
 	EXTR_I8(d, l->bType)
-	EXTR_SKIP(d, 1)
-	EXTR_I32(d, l->iLight)
+	EXTR_SKIP(d, 5)
 	EXTR_U32(d, l->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
+
+	l->iLight = -1;
 
 	return TRUE;
 }
@@ -36,8 +37,7 @@ BOOLEAN InjectLightEffectIntoFile(const HWFILE file, const LIGHTEFFECT* const l)
 	INJ_I8(d, l->bAge)
 	INJ_BOOL(d, l->fAllocated)
 	INJ_I8(d, l->bType)
-	INJ_SKIP(d, 1)
-	INJ_I32(d, l->iLight)
+	INJ_SKIP(d, 5)
 	INJ_U32(d, l->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
