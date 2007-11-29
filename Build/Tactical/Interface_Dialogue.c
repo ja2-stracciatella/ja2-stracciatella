@@ -4268,30 +4268,6 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 }
 
 
-static BOOLEAN PlayerTeamHasTwoSpotsLeft(void)
-{
-	UINT32					cnt, uiCount = 0;
-	SOLDIERTYPE		 *pSoldier;
-
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID, pSoldier = MercPtrs[ cnt ]; cnt <= (UINT32)( gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2 ); cnt++, pSoldier++ )
-	{
-		if ( pSoldier->bActive )
-		{
-			uiCount++;
-		}
-	}
-
-	if ( uiCount <= (UINT32) (gTacticalStatus.Team[ gbPlayerNum ].bLastID - 2) - 2 )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
-}
-
-
 static UINT16 gusDialogueMessageBoxType;
 
 
@@ -4394,8 +4370,9 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 					if ( ubProfile == JOHN )
 					{
 						// Mary might be alive, and if so we need to ensure two places
-						pSoldier = FindSoldierByProfileID( MARY, TRUE );
-						if ( pSoldier && !PlayerTeamHasTwoSpotsLeft() )
+						pSoldier = FindSoldierByProfileID(MARY, FALSE);
+						if (pSoldier != NULL &&
+								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[gbPlayerNum].bLastID - 3)
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_RECRUIT_TEAM_FULL ] );
 							break;
