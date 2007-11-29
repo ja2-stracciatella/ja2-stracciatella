@@ -98,15 +98,14 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 }
 
 
-INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
+LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 {
 	LIGHTEFFECT *pLight;
 	INT32				iLightIndex;
 	UINT8				ubDuration=0;
 	UINT8				ubStartRadius=0;
 
-	if( ( iLightIndex = GetFreeLightEffect() )==(-1) )
-		return(-1);
+	if( ( iLightIndex = GetFreeLightEffect() )==(-1) ) return NULL;
 
 	memset( &gLightEffectData[ iLightIndex ], 0, sizeof( LIGHTEFFECT ) );
 
@@ -138,7 +137,7 @@ INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
   // Handle sight here....
 	AllTeamsLookForAll( FALSE );
 
-	return( iLightIndex );
+	return pLight;
 }
 
 

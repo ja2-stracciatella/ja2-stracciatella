@@ -29,7 +29,7 @@ typedef struct
 // Decays all light effects...
 void DecayLightEffects( UINT32 uiTime );
 
-INT32 NewLightEffect( INT16 sGridNo, INT8 bType );
+LIGHTEFFECT* NewLightEffect(INT16 sGridNo, INT8 bType);
 
 
 BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile );
