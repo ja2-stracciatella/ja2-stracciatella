@@ -38,20 +38,17 @@ static UINT32      guiNumLightEffects = 0;
 #define CFOR_ALL_LIGHTEFFECTS(iter) BASE_FOR_ALL_LIGHTEFFECTS(const LIGHTEFFECT, iter)
 
 
-static INT32 GetFreeLightEffect(void)
+static LIGHTEFFECT* GetFreeLightEffect(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
+	for (LIGHTEFFECT* l = gLightEffectData; l != gLightEffectData + guiNumLightEffects; ++l)
 	{
-		if(( gLightEffectData[uiCount].fAllocated==FALSE ) )
-			return( (INT32)uiCount );
+		if (!l->fAllocated) return l;
 	}
-
-	if( guiNumLightEffects < NUM_LIGHT_EFFECT_SLOTS )
-		return( (INT32) guiNumLightEffects++ );
-
-	return( -1 );
+	if (guiNumLightEffects < NUM_LIGHT_EFFECT_SLOTS)
+	{
+		return &gLightEffectData[guiNumLightEffects++];
+	}
+	return NULL;
 }
 
 
@@ -100,22 +97,19 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 
 LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 {
-	LIGHTEFFECT *pLight;
-	INT32				iLightIndex;
 	UINT8				ubDuration=0;
 	UINT8				ubStartRadius=0;
 
-	if( ( iLightIndex = GetFreeLightEffect() )==(-1) ) return NULL;
+	LIGHTEFFECT* const l = GetFreeLightEffect();
+	if (l == NULL) return NULL;
 
-	memset( &gLightEffectData[ iLightIndex ], 0, sizeof( LIGHTEFFECT ) );
-
-	pLight = &gLightEffectData[ iLightIndex ];
+	memset(l, 0, sizeof(*l));
 
 	// Set some values...
-	pLight->sGridNo									= sGridNo;
-	pLight->bType										= bType;
-	pLight->light                   = NULL;
-	pLight->uiTimeOfLastUpdate			= GetWorldTotalSeconds( );
+	l->sGridNo            = sGridNo;
+	l->bType              = bType;
+	l->light              = NULL;
+	l->uiTimeOfLastUpdate = GetWorldTotalSeconds();
 
   switch( bType )
   {
@@ -127,17 +121,17 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 
   }
 
-	pLight->ubDuration	= ubDuration;
-	pLight->bRadius     = ubStartRadius;
-	pLight->bAge				= 0;
-	pLight->fAllocated  = TRUE;
+	l->ubDuration = ubDuration;
+	l->bRadius    = ubStartRadius;
+	l->bAge       = 0;
+	l->fAllocated = TRUE;
 
-	UpdateLightingSprite( pLight );
+	UpdateLightingSprite(l);
 
   // Handle sight here....
 	AllTeamsLookForAll( FALSE );
 
-	return pLight;
+	return l;
 }
 
 
