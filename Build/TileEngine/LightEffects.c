@@ -24,8 +24,18 @@
 
 
 // GLOBAL FOR LIGHT LISTING
-LIGHTEFFECT				gLightEffectData[ NUM_LIGHT_EFFECT_SLOTS ];
-UINT32						guiNumLightEffects = 0;
+static LIGHTEFFECT gLightEffectData[NUM_LIGHT_EFFECT_SLOTS];
+static UINT32      guiNumLightEffects = 0;
+
+
+#define BASE_FOR_ALL_LIGHTEFFECTS(type, iter)                           \
+	for (type*       iter        = gLightEffectData,                      \
+	         * const iter##__end = gLightEffectData + guiNumLightEffects; \
+	     iter != iter##__end;                                             \
+	     ++iter)                                                          \
+		if (!iter->fAllocated) continue; else
+#define FOR_ALL_LIGHTEFFECTS(iter)  BASE_FOR_ALL_LIGHTEFFECTS(      LIGHTEFFECT, iter)
+#define CFOR_ALL_LIGHTEFFECTS(iter) BASE_FOR_ALL_LIGHTEFFECTS(const LIGHTEFFECT, iter)
 
 
 static INT32 GetFreeLightEffect(void)
@@ -134,101 +144,63 @@ INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
 
 static void RemoveLightEffectFromTile(INT16 sGridNo)
 {
-	LIGHTEFFECT *pLight;
-	UINT32 cnt;
-
-	// Set to unallocated....
-  for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
+	FOR_ALL_LIGHTEFFECTS(l)
   {
-		pLight = &gLightEffectData[ cnt ];
-
-		if ( pLight->fAllocated )
+		if (l->sGridNo == sGridNo)
 		{
-			if ( pLight->sGridNo == sGridNo )
-			{
-				pLight->fAllocated = FALSE;
-
-				if (pLight->light != NULL)
-				{
-					LightSpriteDestroy(pLight->light);
-				}
-				break;
-			}
+			l->fAllocated = FALSE;
+			if (l->light != NULL) LightSpriteDestroy(l->light);
+			break;
 		}
 	}
-
 }
 
 
 void DecayLightEffects( UINT32 uiTime )
 {
-	LIGHTEFFECT *pLight;
-	UINT32 cnt, cnt2;
-	BOOLEAN	  fDelete = FALSE;
-  UINT16    usNumUpdates = 1;
-
   // age all active tear gas clouds, deactivate those that are just dispersing
-  for ( cnt = 0; cnt < guiNumLightEffects; cnt++ )
+	FOR_ALL_LIGHTEFFECTS(l)
   {
-		pLight = &gLightEffectData[ cnt ];
+		// ATE: Do this every so ofte, to acheive the effect we want...
+		if (uiTime - l->uiTimeOfLastUpdate <= 350) continue;
 
-		fDelete = FALSE;
+		const UINT16 usNumUpdates = (uiTime - l->uiTimeOfLastUpdate) / 350;
 
-		if ( pLight->fAllocated )
+		l->uiTimeOfLastUpdate = uiTime;
+
+		BOOLEAN fDelete = FALSE;
+		for (UINT32 i = 0; i < usNumUpdates; ++i)
 		{
-			// ATE: Do this every so ofte, to acheive the effect we want...
-			if ( ( uiTime - pLight->uiTimeOfLastUpdate ) > 350 )
+			l->bAge++;
+
+			// if this cloud remains effective (duration not reached)
+			if (l->bAge >= l->ubDuration)
 			{
-        usNumUpdates = ( UINT16 ) ( ( uiTime - pLight->uiTimeOfLastUpdate ) / 350 );
-
-				pLight->uiTimeOfLastUpdate = uiTime;
-
-        for ( cnt2 = 0; cnt2 < usNumUpdates; cnt2++ )
-        {
-				  pLight->bAge++;
-
-				  // if this cloud remains effective (duration not reached)
-				  if ( pLight->bAge < pLight->ubDuration)
-				  {
-					  // calculate the new cloud radius
-					  // cloud expands by 1 every turn outdoors, and every other turn indoors
-					  if ( ( pLight->bAge % 2 ) )
-					  {
-						  pLight->bRadius--;
-					  }
-
-					  if ( pLight->bRadius == 0 )
-					  {
-						  // Delete...
-						  fDelete = TRUE;
-              break;
-					  }
-					  else
-					  {
-						  UpdateLightingSprite( pLight );
-					  }
-				  }
-				  else
-				  {
-					  fDelete = TRUE;
-            break;
-				  }
-        }
-
-				if ( fDelete )
-				{
-					pLight->fAllocated = FALSE;
-
-					if (pLight->light != NULL)
-					{
-						LightSpriteDestroy(pLight->light);
-					}
-				}
-
-        // Handle sight here....
-		    AllTeamsLookForAll( FALSE );
+				fDelete = TRUE;
+				break;
 			}
-    }
+
+			// calculate the new cloud radius
+			// cloud expands by 1 every turn outdoors, and every other turn indoors
+			if (l->bAge % 2) l->bRadius--;
+
+			if (l->bRadius == 0)
+			{
+				fDelete = TRUE;
+				break;
+			}
+
+			UpdateLightingSprite(l);
+		}
+
+		if (fDelete)
+		{
+			l->fAllocated = FALSE;
+			if (l->light != NULL) LightSpriteDestroy(l->light);
+		}
+
+		// Handle sight here....
+		AllTeamsLookForAll(FALSE);
   }
 }
 
@@ -238,15 +210,11 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 {
 	/*
 	UINT32	uiNumberOfLights=0;
-	UINT32	uiCnt;
 
 	//loop through and count the number of active slots
-	for( uiCnt=0; uiCnt<guiNumLightEffects; uiCnt++)
+	CFOR_ALL_LIGHTEFFECTS(l)
 	{
-		if( gLightEffectData[ uiCnt ].fAllocated )
-		{
-			uiNumberOfLights++;
-		}
+		++uiNumberOfLights;
 	}
 
 	//Save the Number of Light Effects
@@ -256,11 +224,8 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 	if( uiNumberOfLights != 0 )
 	{
 		//loop through and save each active slot
-		for( uiCnt=0; uiCnt < guiNumLightEffects; uiCnt++)
+		CFOR_ALL_LIGHTEFFECTS(l)
 		{
-			const LIGHTEFFECT* const l = &gLightEffectData[uiCnt]
-			if (!l->fAllocated) continue;
-
 			if (!InjectLightEffectIntoFile(hFile, l)) return FALSE;
 		}
 	}
@@ -271,8 +236,6 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 {
-	UINT32	uiCount;
-
 	//no longer need to load Light effects.  They are now in temp files
 	if( guiSaveGameVersion < 76 )
 	{
@@ -285,18 +248,16 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 		if( guiNumLightEffects != 0 )
 		{
 			//loop through and apply the light effects to the map
-			for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
+			for (UINT32 uiCount = 0; uiCount < guiNumLightEffects; ++uiCount)
 			{
 				if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount])) return FALSE;
 			}
 		}
 
-
 		//loop through and apply the light effects to the map
-		for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
+		FOR_ALL_LIGHTEFFECTS(l)
 		{
-			if( gLightEffectData[uiCount].fAllocated )
-				UpdateLightingSprite( &( gLightEffectData[uiCount] ) );
+			UpdateLightingSprite(l);
 		}
 	}
 
@@ -310,7 +271,6 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiNumLightEffects=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
-	UINT32	uiCnt;
 
 	//get the name of the map
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
@@ -319,10 +279,9 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	FileDelete( zMapName );
 
 	//loop through and count the number of Light effects
-	for( uiCnt=0; uiCnt<guiNumLightEffects; uiCnt++)
+	CFOR_ALL_LIGHTEFFECTS(l)
 	{
-		if( gLightEffectData[ uiCnt ].fAllocated )
-			uiNumLightEffects++;
+		++uiNumLightEffects;
 	}
 
 	//if there are no Light effects
@@ -352,13 +311,9 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return( FALSE );
 	}
 
-
 	//loop through and save the number of Light effects
-	for( uiCnt=0; uiCnt < guiNumLightEffects; uiCnt++)
+	CFOR_ALL_LIGHTEFFECTS(l)
 	{
-		const LIGHTEFFECT* const l = &gLightEffectData[uiCnt];
-		if (!l->fAllocated) continue;
-
 		if (!InjectLightEffectIntoFile(hFile, l))
 		{
 			FileClose(hFile);
@@ -378,7 +333,6 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
@@ -414,12 +368,10 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		}
 	}
 
-
 	//loop through and apply the light effects to the map
-	for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
+	FOR_ALL_LIGHTEFFECTS(l)
 	{
-		if( gLightEffectData[uiCount].fAllocated )
-			UpdateLightingSprite( &( gLightEffectData[uiCount] ) );
+		UpdateLightingSprite(l);
 	}
 
 	FileClose( hFile );
