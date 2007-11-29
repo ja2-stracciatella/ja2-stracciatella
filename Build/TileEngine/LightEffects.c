@@ -1,3 +1,4 @@
+#include "LoadSaveLightEffect.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
@@ -258,11 +259,10 @@ BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
 		//loop through and save each active slot
 		for( uiCnt=0; uiCnt < guiNumLightEffects; uiCnt++)
 		{
-			if( gLightEffectData[ uiCnt ].fAllocated )
-			{
-				//Save the Light effect Data
-				if (!FileWrite(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT))) return FALSE;
-			}
+			const LIGHTEFFECT* const l = &gLightEffectData[uiCnt]
+			if (!l->fAllocated) continue;
+
+			if (!InjectLightEffectIntoFile(hFile, l)) return FALSE;
 		}
 	}
 */
@@ -288,8 +288,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 			//loop through and apply the light effects to the map
 			for(uiCount=0; uiCount < guiNumLightEffects; uiCount++)
 			{
-				//Load the Light effect Data
-				if (!FileRead(hFile, &gLightEffectData[uiCount], sizeof(LIGHTEFFECT))) return FALSE;
+				if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount])) return FALSE;
 			}
 		}
 
@@ -358,17 +357,13 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	//loop through and save the number of Light effects
 	for( uiCnt=0; uiCnt < guiNumLightEffects; uiCnt++)
 	{
-		//if the Light is active
-		if( gLightEffectData[ uiCnt ].fAllocated )
-		{
-			//Save the Light effect Data
-			if (!FileWrite(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT)))
-			{
-				//Close the file
-				FileClose( hFile );
+		const LIGHTEFFECT* const l = &gLightEffectData[uiCnt];
+		if (!l->fAllocated) continue;
 
-				return( FALSE );
-			}
+		if (!InjectLightEffectIntoFile(hFile, l))
+		{
+			FileClose(hFile);
+			return FALSE;
 		}
 	}
 
@@ -413,8 +408,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)
 	{
-		//Load the Light effect Data
-		if (!FileRead(hFile, &gLightEffectData[uiCnt], sizeof(LIGHTEFFECT)))
+		if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCnt]))
 		{
 			FileClose( hFile );
 			return( FALSE );
