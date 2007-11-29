@@ -68,15 +68,15 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 	sprintf( LightName, "Light%d", pLight->bRadius );
 
 	// Delete old one if one exists...
-	if( pLight->iLight!=(-1) )
+	if (pLight->light != NULL)
 	{
-		LightSpriteDestroy(ID2LIGHT(pLight->iLight));
-		pLight->iLight = -1;
+		LightSpriteDestroy(pLight->light);
+		pLight->light = NULL;
 	}
 
 	// Effect light.....
 	LIGHT_SPRITE* const l = LightSpriteCreate(LightName, 0);
-	pLight->iLight = LIGHT2ID(l);
+	pLight->light = l;
 	if (l == NULL)
 	{
 		// Could not light!
@@ -105,7 +105,7 @@ INT32 NewLightEffect( INT16 sGridNo, INT8 bType )
 	// Set some values...
 	pLight->sGridNo									= sGridNo;
 	pLight->bType										= bType;
-	pLight->iLight									= -1;
+	pLight->light                   = NULL;
 	pLight->uiTimeOfLastUpdate			= GetWorldTotalSeconds( );
 
   switch( bType )
@@ -148,10 +148,9 @@ static void RemoveLightEffectFromTile(INT16 sGridNo)
 			{
 				pLight->fAllocated = FALSE;
 
-				// Remove light....
-				if( pLight->iLight != (-1) )
+				if (pLight->light != NULL)
 				{
-					LightSpriteDestroy(ID2LIGHT(pLight->iLight));
+					LightSpriteDestroy(pLight->light);
 				}
 				break;
 			}
@@ -220,9 +219,9 @@ void DecayLightEffects( UINT32 uiTime )
 				{
 					pLight->fAllocated = FALSE;
 
-					if( pLight->iLight != (-1) )
+					if (pLight->light != NULL)
 					{
-						LightSpriteDestroy(ID2LIGHT(pLight->iLight));
+						LightSpriteDestroy(pLight->light);
 					}
 				}
 

@@ -1,7 +1,7 @@
 #ifndef __LIGHT_EFFECTS
 #define __LIGHT_EFFECTS
 
-#include "Types.h"
+#include "JA2Types.h"
 
 
 // Light effect types
@@ -21,10 +21,9 @@ typedef struct
 	INT8		bAge;				        // the number of turns light has been around
 	BOOLEAN	fAllocated;
 	INT8		bType;
-	INT32		iLight;
+	LIGHT_SPRITE* light;
 	UINT32	uiTimeOfLastUpdate;
 } LIGHTEFFECT;
-CASSERT(sizeof(LIGHTEFFECT) == 16)
 
 
 // Decays all light effects...

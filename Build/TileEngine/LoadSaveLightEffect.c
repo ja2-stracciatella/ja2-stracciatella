@@ -20,7 +20,7 @@ BOOLEAN ExtractLightEffectFromFile(const HWFILE file, LIGHTEFFECT* const l)
 	EXTR_U32(d, l->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
-	l->iLight = -1;
+	l->light = NULL;
 
 	return TRUE;
 }
