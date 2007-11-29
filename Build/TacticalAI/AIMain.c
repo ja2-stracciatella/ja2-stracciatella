@@ -636,23 +636,14 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 			return;
 		}
 
-		// search for any player merc to say close call quote
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		if (gTacticalStatus.fSomeoneHit)
 		{
-			if (OkControllableMerc(s) &&
-					s->fCloseCall &&
-					!gTacticalStatus.fSomeoneHit &&
-					s->bNumHitsThisTurn == 0 &&
-					!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
-					Random(3) == 0)
-			{
-				// say close call quote!
-				TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
-				s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
-			}
-			s->fCloseCall = FALSE;
+			gTacticalStatus.fSomeoneHit = FALSE;
 		}
-		gTacticalStatus.fSomeoneHit = FALSE;
+		else
+		{
+			SayCloseCallQuotes();
+		}
 
 		// if civ in civ group and hostile, try to change nearby guys to hostile
 		if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP && !pSoldier->bNeutral )

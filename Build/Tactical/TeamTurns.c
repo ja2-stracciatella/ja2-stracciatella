@@ -520,6 +520,26 @@ static BOOLEAN EveryoneInInterruptListOnSameTeam(void)
 }
 
 
+void SayCloseCallQuotes(void)
+{
+	// report any close call quotes for us here
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	{
+		if (OkControllableMerc(s) &&
+				s->fCloseCall &&
+				s->bNumHitsThisTurn == 0 &&
+				!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
+				Random(3) == 0)
+		{
+			// say close call quote!
+			TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
+			s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
+		}
+		s->fCloseCall = FALSE;
+	}
+}
+
+
 static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate);
 
 
@@ -626,22 +646,7 @@ static void StartInterrupt(void)
 
 		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 
-		// report any close call quotes for us here
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
-		{
-			if (OkControllableMerc(s) &&
-					s->fCloseCall &&
-					s->bNumHitsThisTurn == 0 &&
-					!(s->usQuoteSaidExtFlags & SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL) &&
-					Random(3) == 0)
-			{
-				// say close call quote!
-				TacticalCharacterDialogue(s, QUOTE_CLOSE_CALL);
-				s->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
-			}
-			s->fCloseCall = FALSE;
-		}
-
+		SayCloseCallQuotes();
 	}
 	else
 	{

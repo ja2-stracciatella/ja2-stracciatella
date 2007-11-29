@@ -27,4 +27,6 @@ void EndAllAITurns( void );
 
 BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier );
 
+void SayCloseCallQuotes(void);
+
 #endif
