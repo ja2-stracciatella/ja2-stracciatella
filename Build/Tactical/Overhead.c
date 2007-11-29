@@ -6771,50 +6771,27 @@ static void HandleCreatureTenseQuote(void)
 static void DoCreatureTensionQuote(SOLDIERTYPE* s)
 {
 	// Check for playing smell quote....
-	INT32   iQuoteToUse;
-	BOOLEAN fCanDoQuote  = TRUE;
-	INT32   iRandomQuote = Random(3);
+	INT32  quote;
+	UINT16 quote_flag;
+	const INT32 iRandomQuote = Random(3);
 	switch (iRandomQuote)
 	{
 		case 0:
-			iQuoteToUse = QUOTE_SMELLED_CREATURE;
-			if (!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_SMELLED_CREATURE))
-			{
-				// set flag
-				s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_SMELLED_CREATURE;
-			}
-			else
-			{
-				fCanDoQuote = FALSE;
-			}
+			quote      = QUOTE_SMELLED_CREATURE;
+			quote_flag = SOLDIER_QUOTE_SAID_SMELLED_CREATURE;
 			break;
 
 		case 1:
-			iQuoteToUse = QUOTE_TRACES_OF_CREATURE_ATTACK;
-			if (!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK))
-			{
-				// set flag
-				s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK;
-			}
-			else
-			{
-				fCanDoQuote = FALSE;
-			}
+			quote      = QUOTE_TRACES_OF_CREATURE_ATTACK;
+			quote_flag = SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK;
 			break;
 
 		case 2:
-			iQuoteToUse = QUOTE_WORRIED_ABOUT_CREATURE_PRESENCE;
-			if (!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES))
-			{
-				// set flag
-				s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES;
-			}
-			else
-			{
-				fCanDoQuote = FALSE;
-			}
+			quote      = QUOTE_WORRIED_ABOUT_CREATURE_PRESENCE;
+			quote_flag = SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES;
 			break;
 	}
-
-	if (fCanDoQuote) TacticalCharacterDialogue(s, iQuoteToUse);
+	if (s->usQuoteSaidFlags & quote_flag) return;
+	s->usQuoteSaidFlags |= quote_flag;
+	TacticalCharacterDialogue(s, quote);
 }
