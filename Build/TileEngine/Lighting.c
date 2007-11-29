@@ -3103,41 +3103,36 @@ INT32 iCount;
 }
 
 
-BOOLEAN LightSpritePosition(LIGHT_SPRITE* const l, INT16 iX, INT16 iY)
+void LightSpritePosition(LIGHT_SPRITE* const l, const INT16 iX, const INT16 iY)
 {
-	if (l->uiFlags & LIGHT_SPR_ACTIVE)
+	Assert(l->uiFlags & LIGHT_SPR_ACTIVE);
+
+	if (l->iX == iX && l->iY == iY) return;
+
+	if (l->uiFlags & LIGHT_SPR_ERASE)
 	{
-		if (l->iX == iX && l->iY == iY) return TRUE;
-
-		if (l->uiFlags & LIGHT_SPR_ERASE)
+		if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 		{
-			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
-			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
-				LightSpriteDirty(l);
-			}
-		}
-
-		//l->iOldX=l->iX;
-		//l->iOldY=l->iY;
-
-		l->iX = iX;
-		l->iY = iY;
-
-		if (l->uiFlags & LIGHT_SPR_ON)
-		{
-			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
-			{
-				LightDraw(l);
-				l->uiFlags |= LIGHT_SPR_ERASE;
-				LightSpriteDirty(l);
-			}
+			LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+			LightSpriteDirty(l);
 		}
 	}
-	else
-		return(FALSE);
 
-	return(TRUE);
+	//l->iOldX=l->iX;
+	//l->iOldY=l->iY;
+
+	l->iX = iX;
+	l->iY = iY;
+
+	if (l->uiFlags & LIGHT_SPR_ON)
+	{
+		if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
+		{
+			LightDraw(l);
+			l->uiFlags |= LIGHT_SPR_ERASE;
+			LightSpriteDirty(l);
+		}
+	}
 }
 
 

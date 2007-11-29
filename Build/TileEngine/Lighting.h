@@ -127,7 +127,7 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName, UINT32 uiLightType);
 // Removes an instance of a light. If it was on, it is erased from the scene.
 BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 // Sets the X,Y position (IN TILES) of a light instance.
-BOOLEAN LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
+void LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
 // Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 // Renders all lights
