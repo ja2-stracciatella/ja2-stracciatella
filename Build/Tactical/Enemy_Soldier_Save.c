@@ -67,6 +67,35 @@ static void RemoveCivilianTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ
 }
 
 
+static UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
+{
+	return
+		s->bLife            *  7 +
+		s->bLifeMax         *  8 -
+		s->bAgility         *  2 +
+		s->bDexterity       *  1 +
+		s->bExpLevel        *  5 -
+		s->bMarksmanship    *  9 +
+		s->bMedical         * 10 +
+		s->bMechanical      *  3 +
+		s->bExplosive       *  4 +
+		s->bLeadership      *  5 +
+		s->bStrength        *  7 +
+		s->bWisdom          * 11 +
+		s->bMorale          *  7 +
+		s->bAIMorale        *  3 -
+		s->bBodyType        *  7 +
+		4                   *  6 +
+		s->sSectorX         *  7 -
+		s->ubSoldierClass   *  4 +
+		s->bTeam            *  7 +
+		s->bDirection       *  5 +
+		s->fOnRoof          * 17 +
+		s->sInsertionGridNo *  1 +
+		3;
+}
+
+
 //OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
 BOOLEAN LoadEnemySoldiersFromTempFile()
 {
@@ -76,7 +105,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
-	UINT16 usCheckSum, usFileCheckSum;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -274,6 +302,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
+						UINT16 usCheckSum;
 						if (!FileRead(hfile, &usCheckSum, 2))
 						{
 							#ifdef JA2TESTVERSION
@@ -282,30 +311,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 							goto FAIL_LOAD;
 						}
 						//verify the checksum equation (anti-hack) -- see save
-						usFileCheckSum =
-							curr->pDetailedPlacement->bLife									* 7		+
-							curr->pDetailedPlacement->bLifeMax  						* 8		-
-							curr->pDetailedPlacement->bAgility							* 2		+
-							curr->pDetailedPlacement->bDexterity						* 1		+
-							curr->pDetailedPlacement->bExpLevel							* 5		-
-							curr->pDetailedPlacement->bMarksmanship					* 9		+
-							curr->pDetailedPlacement->bMedical							* 10	+
-							curr->pDetailedPlacement->bMechanical						* 3		+
-							curr->pDetailedPlacement->bExplosive						* 4		+
-							curr->pDetailedPlacement->bLeadership						* 5		+
-							curr->pDetailedPlacement->bStrength							* 7		+
-							curr->pDetailedPlacement->bWisdom								* 11	+
-							curr->pDetailedPlacement->bMorale								* 7		+
-							curr->pDetailedPlacement->bAIMorale							* 3		-
-							curr->pDetailedPlacement->bBodyType							* 7		+
-							4																								* 6		+
-							curr->pDetailedPlacement->sSectorX							* 7		-
-							curr->pDetailedPlacement->ubSoldierClass				* 4		+
-							curr->pDetailedPlacement->bTeam									* 7		+
-							curr->pDetailedPlacement->bDirection						* 5		+
-							curr->pDetailedPlacement->fOnRoof								* 17	+
-							curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-							3;
+						const UINT16 usFileCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 						if( usCheckSum != usFileCheckSum )
 						{	//Hacker has modified the stats on the enemy placements.
 							#ifdef JA2TESTVERSION
@@ -415,7 +421,6 @@ static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	SCHEDULENODE *pSchedule;
-	UINT16 usCheckSum;
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
 
@@ -630,30 +635,7 @@ static BOOLEAN SaveEnemySoldiersToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 
 			{ //found a match.
 				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
-				usCheckSum =
-					curr->pDetailedPlacement->bLife									* 7		+
-					curr->pDetailedPlacement->bLifeMax  						* 8		-
-					curr->pDetailedPlacement->bAgility							* 2		+
-					curr->pDetailedPlacement->bDexterity						* 1		+
-					curr->pDetailedPlacement->bExpLevel							* 5		-
-					curr->pDetailedPlacement->bMarksmanship					* 9		+
-					curr->pDetailedPlacement->bMedical							* 10	+
-					curr->pDetailedPlacement->bMechanical						* 3		+
-					curr->pDetailedPlacement->bExplosive						* 4		+
-					curr->pDetailedPlacement->bLeadership						* 5		+
-					curr->pDetailedPlacement->bStrength							* 7		+
-					curr->pDetailedPlacement->bWisdom								* 11	+
-					curr->pDetailedPlacement->bMorale								* 7		+
-					curr->pDetailedPlacement->bAIMorale							* 3		-
-					curr->pDetailedPlacement->bBodyType							* 7		+
-					4																								* 6		+
-					curr->pDetailedPlacement->sSectorX							* 7		-
-					curr->pDetailedPlacement->ubSoldierClass				* 4		+
-					curr->pDetailedPlacement->bTeam									* 7		+
-					curr->pDetailedPlacement->bDirection						* 5		+
-					curr->pDetailedPlacement->fOnRoof								* 17	+
-					curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-					3;
+				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 				if (!FileWrite(hfile, &usCheckSum, 2)) goto FAIL_SAVE;
 			}
 		}
@@ -687,7 +669,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
-	UINT16 usCheckSum, usFileCheckSum;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -931,6 +912,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 						sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
+					UINT16 usCheckSum;
 					if (!FileRead(hfile, &usCheckSum, 2))
 					{
 						#ifdef JA2TESTVERSION
@@ -939,30 +921,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 						goto FAIL_LOAD;
 					}
 					//verify the checksum equation (anti-hack) -- see save
-					usFileCheckSum =
-						curr->pDetailedPlacement->bLife									* 7		+
-						curr->pDetailedPlacement->bLifeMax  						* 8		-
-						curr->pDetailedPlacement->bAgility							* 2		+
-						curr->pDetailedPlacement->bDexterity						* 1		+
-						curr->pDetailedPlacement->bExpLevel							* 5		-
-						curr->pDetailedPlacement->bMarksmanship					* 9		+
-						curr->pDetailedPlacement->bMedical							* 10	+
-						curr->pDetailedPlacement->bMechanical						* 3		+
-						curr->pDetailedPlacement->bExplosive						* 4		+
-						curr->pDetailedPlacement->bLeadership						* 5		+
-						curr->pDetailedPlacement->bStrength							* 7		+
-						curr->pDetailedPlacement->bWisdom								* 11	+
-						curr->pDetailedPlacement->bMorale								* 7		+
-						curr->pDetailedPlacement->bAIMorale							* 3		-
-						curr->pDetailedPlacement->bBodyType							* 7		+
-						4																								* 6		+
-						curr->pDetailedPlacement->sSectorX							* 7		-
-						curr->pDetailedPlacement->ubSoldierClass				* 4		+
-						curr->pDetailedPlacement->bTeam									* 7		+
-						curr->pDetailedPlacement->bDirection						* 5		+
-						curr->pDetailedPlacement->fOnRoof								* 17	+
-						curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-						3;
+					const UINT16 usFileCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 					if( usCheckSum != usFileCheckSum )
 					{	//Hacker has modified the stats on the enemy placements.
 						#ifdef JA2TESTVERSION
@@ -1102,7 +1061,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	UINT32 uiTimeSinceLastLoaded;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
-	UINT16 usCheckSum, usFileCheckSum;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
@@ -1272,6 +1230,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
 							sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
 
+						UINT16 usCheckSum;
 						if (!FileRead(hfile, &usCheckSum, 2))
 						{
 							#ifdef JA2TESTVERSION
@@ -1280,30 +1239,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 							goto FAIL_LOAD;
 						}
 						//verify the checksum equation (anti-hack) -- see save
-						usFileCheckSum =
-							curr->pDetailedPlacement->bLife									* 7		+
-							curr->pDetailedPlacement->bLifeMax  						* 8		-
-							curr->pDetailedPlacement->bAgility							* 2		+
-							curr->pDetailedPlacement->bDexterity						* 1		+
-							curr->pDetailedPlacement->bExpLevel							* 5		-
-							curr->pDetailedPlacement->bMarksmanship					* 9		+
-							curr->pDetailedPlacement->bMedical							* 10	+
-							curr->pDetailedPlacement->bMechanical						* 3		+
-							curr->pDetailedPlacement->bExplosive						* 4		+
-							curr->pDetailedPlacement->bLeadership						* 5		+
-							curr->pDetailedPlacement->bStrength							* 7		+
-							curr->pDetailedPlacement->bWisdom								* 11	+
-							curr->pDetailedPlacement->bMorale								* 7		+
-							curr->pDetailedPlacement->bAIMorale							* 3		-
-							curr->pDetailedPlacement->bBodyType							* 7		+
-							4																								* 6		+
-							curr->pDetailedPlacement->sSectorX							* 7		-
-							curr->pDetailedPlacement->ubSoldierClass				* 4		+
-							curr->pDetailedPlacement->bTeam									* 7		+
-							curr->pDetailedPlacement->bDirection						* 5		+
-							curr->pDetailedPlacement->fOnRoof								* 17	+
-							curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-							3;
+						const UINT16 usFileCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 						if( usCheckSum != usFileCheckSum )
 						{
 							//Hacker has modified the stats on the enemy placements.
@@ -1610,30 +1546,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 				//found a match.
 				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
 				//insert a checksum equation (anti-hack)
-				usCheckSum =
-					curr->pDetailedPlacement->bLife									* 7		+
-					curr->pDetailedPlacement->bLifeMax  						* 8		-
-					curr->pDetailedPlacement->bAgility							* 2		+
-					curr->pDetailedPlacement->bDexterity						* 1		+
-					curr->pDetailedPlacement->bExpLevel							* 5		-
-					curr->pDetailedPlacement->bMarksmanship					* 9		+
-					curr->pDetailedPlacement->bMedical							* 10	+
-					curr->pDetailedPlacement->bMechanical						* 3		+
-					curr->pDetailedPlacement->bExplosive						* 4		+
-					curr->pDetailedPlacement->bLeadership						* 5		+
-					curr->pDetailedPlacement->bStrength							* 7		+
-					curr->pDetailedPlacement->bWisdom								* 11	+
-					curr->pDetailedPlacement->bMorale								* 7		+
-					curr->pDetailedPlacement->bAIMorale							* 3		-
-					curr->pDetailedPlacement->bBodyType							* 7		+
-					4																								* 6		+
-					curr->pDetailedPlacement->sSectorX							* 7		-
-					curr->pDetailedPlacement->ubSoldierClass				* 4		+
-					curr->pDetailedPlacement->bTeam									* 7		+
-					curr->pDetailedPlacement->bDirection						* 5		+
-					curr->pDetailedPlacement->fOnRoof								* 17	+
-					curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-					3;
+				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 				if (!FileWrite(hfile, &usCheckSum, 2)) goto FAIL_SAVE;
 			}
 		}
@@ -1894,30 +1807,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 						goto FAIL_LOAD;
 					}
 					//verify the checksum equation (anti-hack) -- see save
-					usFileCheckSum =
-						curr->pDetailedPlacement->bLife									* 7		+
-						curr->pDetailedPlacement->bLifeMax  						* 8		-
-						curr->pDetailedPlacement->bAgility							* 2		+
-						curr->pDetailedPlacement->bDexterity						* 1		+
-						curr->pDetailedPlacement->bExpLevel							* 5		-
-						curr->pDetailedPlacement->bMarksmanship					* 9		+
-						curr->pDetailedPlacement->bMedical							* 10	+
-						curr->pDetailedPlacement->bMechanical						* 3		+
-						curr->pDetailedPlacement->bExplosive						* 4		+
-						curr->pDetailedPlacement->bLeadership						* 5		+
-						curr->pDetailedPlacement->bStrength							* 7		+
-						curr->pDetailedPlacement->bWisdom								* 11	+
-						curr->pDetailedPlacement->bMorale								* 7		+
-						curr->pDetailedPlacement->bAIMorale							* 3		-
-						curr->pDetailedPlacement->bBodyType							* 7		+
-						4																								* 6		+
-						curr->pDetailedPlacement->sSectorX							* 7		-
-						curr->pDetailedPlacement->ubSoldierClass				* 4		+
-						curr->pDetailedPlacement->bTeam									* 7		+
-						curr->pDetailedPlacement->bDirection						* 5		+
-						curr->pDetailedPlacement->fOnRoof								* 17	+
-						curr->pDetailedPlacement->sInsertionGridNo			* 1		+
-						3;
+					const UINT16 usFileCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 					if( usCheckSum != usFileCheckSum )
 					{	//Hacker has modified the stats on the enemy placements.
 						#ifdef JA2TESTVERSION
