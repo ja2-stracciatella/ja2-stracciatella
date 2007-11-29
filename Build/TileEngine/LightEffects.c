@@ -52,21 +52,6 @@ static LIGHTEFFECT* GetFreeLightEffect(void)
 }
 
 
-static void RecountLightEffects(void)
-{
-	INT32 uiCount;
-
-	for(uiCount=guiNumLightEffects-1; (uiCount >=0) ; uiCount--)
-	{
-		if( ( gLightEffectData[uiCount].fAllocated ) )
-		{
-			guiNumLightEffects=(UINT32)(uiCount+1);
-			break;
-		}
-	}
-}
-
-
 static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 {
 	CHAR8 LightName[20];
@@ -132,20 +117,6 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 	AllTeamsLookForAll( FALSE );
 
 	return l;
-}
-
-
-static void RemoveLightEffectFromTile(INT16 sGridNo)
-{
-	FOR_ALL_LIGHTEFFECTS(l)
-  {
-		if (l->sGridNo == sGridNo)
-		{
-			l->fAllocated = FALSE;
-			if (l->light != NULL) LightSpriteDestroy(l->light);
-			break;
-		}
-	}
 }
 
 
