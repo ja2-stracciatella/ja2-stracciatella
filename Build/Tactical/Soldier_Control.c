@@ -2181,12 +2181,6 @@ void EVENT_SetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewY
 }
 
 
-static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest)
-{
-	EVENT_SetSoldierPosition(pSoldier, dNewXPos, dNewYPos, fUpdateFinalDest ? SSP_NONE  : SSP_NO_FINAL_DEST);
-}
-
-
 static void InternalSetSoldierHeight(SOLDIERTYPE* pSoldier, FLOAT dNewHeight, BOOLEAN fUpdateLevel)
 {
 
