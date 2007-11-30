@@ -4225,7 +4225,7 @@ void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDir
 	// Get dest gridno, convert to center coords
 	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( usNewDirection ) );
 
-	ConvertMapPosToWorldTileCenter( usNewGridNo, &sXPos, &sYPos );
+	ConvertGridNoToCenterCellXY(usNewGridNo, &sXPos, &sYPos);
 
 	// Save new dest gridno, x, y
 	pSoldier->sDestination = usNewGridNo;

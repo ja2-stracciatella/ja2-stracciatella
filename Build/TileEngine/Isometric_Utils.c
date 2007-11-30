@@ -299,29 +299,6 @@ BOOLEAN GetMouseMapPos( INT16	*psMapPos )
 			sSameCursorPos = (*psMapPos);
 			return( FALSE );
 	 }
-
-}
-
-
-
-BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos )
-{
-	INT16 sWorldX, sWorldY;
-	INT16 sCellX, sCellY;
-
-	// Get X, Y world GRID Coordinates
-	sWorldY = ( usMapPos / WORLD_COLS );
-	sWorldX = usMapPos - ( sWorldY * WORLD_COLS );
-
-	// Convert into cell coords
-	sCellY = sWorldY * CELL_Y_SIZE;
-	sCellX = sWorldX * CELL_X_SIZE;
-
-	// Add center tile positions
-	*psXPos = sCellX + ( CELL_X_SIZE / 2 );
-	*psYPos = sCellY + ( CELL_Y_SIZE / 2 );
-
-	return( TRUE );
 }
 
 

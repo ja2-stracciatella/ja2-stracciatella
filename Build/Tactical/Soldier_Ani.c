@@ -233,7 +233,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						INT16		sXPos, sYPos;
 
 						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
-						ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
+						ConvertGridNoToCenterCellXY(pSoldier->sTempNewGridNo, &sXPos, &sYPos);
 						EVENT_SetSoldierPosition(pSoldier, sXPos, sYPos, SSP_NONE);
 					}
 					// Move two CC directions
@@ -405,7 +405,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CHANGE DIRECTION AND GET-UP
 					//sGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)(-1 * DirectionInc( pSoldier->bDirection ) ) );
-					//ConvertMapPosToWorldTileCenter( pSoldier->sGridNo, &sXPos, &sYPos );
+					//ConvertGridNoToCenterCellXY(pSoldier->sGridNo, &sXPos, &sYPos);
 					//SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
 
 

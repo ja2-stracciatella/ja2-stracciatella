@@ -68,8 +68,6 @@ void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScre
 BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo );
 BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection );
 
-BOOLEAN ConvertMapPosToWorldTileCenter( UINT16 usMapPos, INT16 *psXPos, INT16 *psYPos );
-
 BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY);
 
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
