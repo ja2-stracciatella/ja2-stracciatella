@@ -590,7 +590,7 @@ void HandleHeliDrop( )
 						s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
 						UpdateMercInSector(s, 9, 1, 0);
-						//EVENT_SetSoldierPosition(s, sWorldX, sWorldY);
+						//EVENT_SetSoldierPosition(s, sWorldX, sWorldY, SSP_NONE);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )

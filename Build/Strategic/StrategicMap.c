@@ -3010,7 +3010,7 @@ static void DoneFadeOutAdjacentSector(void)
 						sOldGridNo = curr->pSoldier->sGridNo;
 						sWorldX = CenterX( sGridNo );
 						sWorldY = CenterY( sGridNo );
-						EVENT_SetSoldierPosition( curr->pSoldier, sWorldX, sWorldY );
+						EVENT_SetSoldierPosition(curr->pSoldier, sWorldX, sWorldY, SSP_NONE);
 						if( sGridNo != sOldGridNo )
 						{
 							EVENT_GetNewSoldierPath( curr->pSoldier, sOldGridNo, WALKING );

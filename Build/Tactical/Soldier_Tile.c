@@ -714,7 +714,7 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 		// TELEPORT TO THIS LOCATION!
 		sX = CenterX( sGridNo );
 		sY = CenterY( sGridNo );
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
+		EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
 
 		pSoldier->sFinalDestination = sGridNo;
 

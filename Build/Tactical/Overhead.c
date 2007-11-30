@@ -921,7 +921,7 @@ BOOLEAN ExecuteOverhead(void)
 									// Update to middle if we're on destination
 									const float dXPos = pSoldier->sDestXPos;
 									const float dYPos = pSoldier->sDestYPos;
-									EVENT_SetSoldierPosition(pSoldier, dXPos, dYPos);
+									EVENT_SetSoldierPosition(pSoldier, dXPos, dYPos, SSP_NONE);
 
 									// Handle New sight
 									//HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );

@@ -1066,7 +1066,7 @@ static void PutDownMercPiece(INT32 iPlacement)
 	if( sGridNo != NOWHERE )
 	{
 		ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+		EVENT_SetSoldierPosition(pSoldier, sCellX, sCellY, SSP_NONE);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;

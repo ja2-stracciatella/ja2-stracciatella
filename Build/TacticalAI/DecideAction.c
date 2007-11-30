@@ -447,7 +447,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 				case 0:
 					sX = CenterX( pSoldier->sOffWorldGridNo );
 					sY = CenterY( pSoldier->sOffWorldGridNo );
-					EVENT_SetSoldierPosition( pSoldier, sX, sY );
+					EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
 					pSoldier->bInSector = TRUE;
 					MoveSoldierFromAwayToMercSlot( pSoldier );
 					pSoldier->usActionData = usGridNo1;

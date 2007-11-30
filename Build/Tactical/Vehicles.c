@@ -570,7 +570,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			if ( pVehicleSoldier )
 			{
 				// Set gridno for vehicle.....
-				EVENT_SetSoldierPosition( pSoldier, pVehicleSoldier->dXPos, pVehicleSoldier->dYPos );
+				EVENT_SetSoldierPosition(pSoldier, pVehicleSoldier->dXPos, pVehicleSoldier->dYPos, SSP_NONE);
 
 				// Stop from any movement.....
 				EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
@@ -1379,7 +1379,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 		pSoldier->bOppList[ pVehicle->ubID ] = 1;
 
 		// Add to sector....
-		EVENT_SetSoldierPosition( pSoldier, CenterX( sGridNo ), CenterY( sGridNo ) );
+		EVENT_SetSoldierPosition(pSoldier, CenterX(sGridNo), CenterY(sGridNo), SSP_NONE);
 
 		// Update visiblity.....
 		HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
@@ -1919,7 +1919,7 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 			pPassenger = pVehicleList[ iId ].pPassengers[ iCounter ];
 
 			// Set gridno.....
-			EVENT_SetSoldierPosition( pPassenger, pSoldier->dXPos, pSoldier->dYPos );
+			EVENT_SetSoldierPosition(pPassenger, pSoldier->dXPos, pSoldier->dYPos, SSP_NONE);
 		}
 	}
 }

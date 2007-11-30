@@ -926,7 +926,17 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* s);
 BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
 
 void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce);
-void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
+
+typedef enum SetSoldierPosFlags
+{
+	SSP_NONE          = 0,
+	SSP_NO_DEST       = 1U << 0,
+	SSP_NO_FINAL_DEST = 1U << 1,
+	SSP_FORCE_DELETE  = 1U << 2
+} SetSoldierPosFlags;
+
+void EVENT_SetSoldierPosition(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
+
 void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
 BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
@@ -1038,16 +1048,6 @@ void EVENT_SoldierEnterVehicle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDi
 void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
 
 BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate );
-
-typedef enum SetSoldierPosFlags
-{
-	SSP_NONE          = 0,
-	SSP_NO_DEST       = 1U << 0,
-	SSP_NO_FINAL_DEST = 1U << 1,
-	SSP_FORCE_DELETE  = 1U << 2
-} SetSoldierPosFlags;
-
-void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
 
 void CalcNewActionPoints( SOLDIERTYPE *pSoldier );
 

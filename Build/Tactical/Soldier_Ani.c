@@ -234,7 +234,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
 						ConvertMapPosToWorldTileCenter( pSoldier->sTempNewGridNo, &sXPos, &sYPos );
-						EVENT_SetSoldierPosition( pSoldier, (FLOAT)sXPos, (FLOAT)sYPos );
+						EVENT_SetSoldierPosition(pSoldier, sXPos, sYPos, SSP_NONE);
 					}
 					// Move two CC directions
 					EVENT_SetSoldierDirection(pSoldier, TwoCCDirection(pSoldier->bDirection));
@@ -523,7 +523,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					sX = CenterX( pSoldier->sForcastGridno );
 					sY = CenterY( pSoldier->sForcastGridno );
 
-					EVENT_InternalSetSoldierPosition(pSoldier, sX, sY, SSP_NO_DEST | SSP_NO_FINAL_DEST);
+					EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 					EVENT_SetSoldierDirection(pSoldier, TwoCDirection(pSoldier->bDirection));
 					pSoldier->sZLevelOverride = -1;
 					EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
@@ -947,7 +947,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						ConvertGridNoToCenterCellXY( sTempGridNo, &sNewX, &sNewY );
 
 						// Set position
-						EVENT_SetSoldierPosition( pSoldier, sNewX, sNewY );
+						EVENT_SetSoldierPosition(pSoldier, sNewX, sNewY, SSP_NONE);
 
 						// Move two CC directions
 						EVENT_SetSoldierDirection(pSoldier, TwoCCDirection(pSoldier->bDirection));

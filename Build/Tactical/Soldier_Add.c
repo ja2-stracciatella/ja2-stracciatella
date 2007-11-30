@@ -1247,7 +1247,7 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	sWorldX = CenterX( sGoodGridNo );
 	sWorldY = CenterY( sGoodGridNo );
 
-	EVENT_SetSoldierPosition( pSoldier, sWorldX, sWorldY );
+	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1282,7 +1282,7 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	sWorldX = CenterX( sGoodGridNo );
 	sWorldY = CenterY( sGoodGridNo );
 
-	EVENT_SetSoldierPosition( pSoldier, sWorldX, sWorldY );
+	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1310,7 +1310,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	sWorldX = CenterX( sGoodGridNo );
 	sWorldY = CenterY( sGoodGridNo );
 
-	EVENT_SetSoldierPosition( pSoldier, sWorldX, sWorldY );
+	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1345,7 +1345,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	sWorldX = CenterX( sGoodGridNo );
 	sWorldY = CenterY( sGoodGridNo );
 
-	EVENT_SetSoldierPosition( pSoldier, sWorldX, sWorldY );
+	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1380,7 +1380,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	sWorldX = CenterX( sGoodGridNo );
 	sWorldY = CenterY( sGoodGridNo );
 
-	EVENT_SetSoldierPosition( pSoldier, sWorldX, sWorldY );
+	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1396,8 +1396,6 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		EVENT_InitNewSoldierAnim( pSoldier, BEING_REPAIRMAN, 1, TRUE );
 	}
 }
-
-extern void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest );
 
 
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode)
@@ -1434,7 +1432,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	// If this is a special insertion location, get path!
 	if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
 	{
-		EVENT_InternalSetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
+		EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 	}
@@ -1444,7 +1442,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	}
 	else
 	{
-		EVENT_InternalSetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
+		EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
 
 		//if we are loading, dont set the direction ( they are already set )
 		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )

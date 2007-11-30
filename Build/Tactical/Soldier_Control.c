@@ -2141,7 +2141,7 @@ void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier )
 static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove);
 
 
-void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags)
+void EVENT_SetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags)
 {
 	INT16 sNewGridNo;
 
@@ -2178,18 +2178,12 @@ void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLO
 
 	// ATE: Mirror calls if we are a vehicle ( for all our passengers )
 	UpdateAllVehiclePassengersGridNo( pSoldier );
-
-}
-
-void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos )
-{
-	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, SSP_NONE);
 }
 
 
 static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest)
 {
-	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, fUpdateFinalDest ? SSP_NONE  : SSP_NO_FINAL_DEST);
+	EVENT_SetSoldierPosition(pSoldier, dNewXPos, dNewYPos, fUpdateFinalDest ? SSP_NONE  : SSP_NO_FINAL_DEST);
 }
 
 
@@ -7139,7 +7133,7 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 	}
 
 	// OK, set new position
-	EVENT_InternalSetSoldierPosition(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
+	EVENT_SetSoldierPosition(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 
 //	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("X: %f Y: %f", dXPos, dYPos ) );
 }
@@ -7494,7 +7488,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier )
 		sX = CenterX( pSoldier->sGridNo );
 		sY = CenterY( pSoldier->sGridNo );
 
-		EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
+		EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
 
 		// Dirty INterface
 		fInterfacePanelDirty = DIRTYLEVEL2;
@@ -8507,7 +8501,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	// Turn off reverse...
 	pSoldier->bReverse = FALSE;
 
-	EVENT_SetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY );
+	EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
 	pSoldier->sDestXPos = (INT16)pSoldier->dXPos;
 	pSoldier->sDestYPos = (INT16)pSoldier->dYPos;
 	EVENT_SetSoldierDirection(pSoldier, bDirection);
