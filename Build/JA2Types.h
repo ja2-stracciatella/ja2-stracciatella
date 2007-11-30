@@ -4,6 +4,8 @@
 #include "Types.h"
 
 
+typedef INT16 GridNo;
+
 typedef struct BULLET       BULLET;
 typedef struct LEVELNODE    LEVELNODE;
 typedef struct LIGHT_SPRITE LIGHT_SPRITE;

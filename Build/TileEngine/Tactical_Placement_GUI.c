@@ -1034,7 +1034,6 @@ static void SetCursorMerc(INT8 bPlacementID)
 
 static void PutDownMercPiece(INT32 iPlacement)
 {
-	INT16 sGridNo, sCellX, sCellY;
 	UINT8 ubDirection;
 
 	SOLDIERTYPE *pSoldier;
@@ -1062,11 +1061,10 @@ static void PutDownMercPiece(INT32 iPlacement)
 	}
 	if( gMercPlacement[ iPlacement ].fPlaced )
 		PickUpMercPiece( iPlacement );
-	sGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sInsertionGridNo, 4, &ubDirection );
+	const INT16 sGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sInsertionGridNo, 4, &ubDirection);
 	if( sGridNo != NOWHERE )
 	{
-		ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-		EVENT_SetSoldierPosition(pSoldier, sCellX, sCellY, SSP_NONE);
+		EVENT_SetSoldierPositionNoCenter(pSoldier, sGridNo, SSP_NONE);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		pSoldier->ubInsertionDirection = pSoldier->bDirection;
 		gMercPlacement[ iPlacement ].fPlaced = TRUE;

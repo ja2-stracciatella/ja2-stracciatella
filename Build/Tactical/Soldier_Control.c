@@ -2141,21 +2141,16 @@ void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier )
 static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove);
 
 
-void EVENT_SetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags)
+static void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, GridNo pos, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags)
 {
-	INT16 sNewGridNo;
-
 	// Not if we're dead!
 	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 	{
 		return;
 	}
 
-	// Set new map index
-	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(dNewYPos, dNewXPos );
-
-	if (!(flags & SSP_NO_DEST))       pSoldier->sDestination      = sNewGridNo;
-	if (!(flags & SSP_NO_FINAL_DEST)) pSoldier->sFinalDestination = sNewGridNo;
+	if (!(flags & SSP_NO_DEST))       pSoldier->sDestination      = pos;
+	if (!(flags & SSP_NO_FINAL_DEST)) pSoldier->sFinalDestination = pos;
 
 	// Set New pos
 	pSoldier->dXPos = dNewXPos;
@@ -2166,7 +2161,7 @@ void EVENT_SetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewY
 
 	HandleCrowShadowNewPosition( pSoldier );
 
-	SetSoldierGridNo(pSoldier, sNewGridNo, (flags & SSP_FORCE_DELETE) != 0);
+	SetSoldierGridNo(pSoldier, pos, (flags & SSP_FORCE_DELETE) != 0);
 
 	if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
 	{
@@ -2178,6 +2173,21 @@ void EVENT_SetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewY
 
 	// ATE: Mirror calls if we are a vehicle ( for all our passengers )
 	UpdateAllVehiclePassengersGridNo( pSoldier );
+}
+
+
+void EVENT_SetSoldierPosition(SOLDIERTYPE* const s, const FLOAT x, const FLOAT y, const SetSoldierPosFlags flags)
+{
+	EVENT_InternalSetSoldierPosition(s, GETWORLDINDEXFROMWORLDCOORDS(y, x), x, y, flags);
+}
+
+
+void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* const s, const GridNo gridno, const SetSoldierPosFlags flags)
+{
+	INT16 x;
+	INT16 y;
+	ConvertGridNoToXY(gridno, &x, &y);
+	EVENT_InternalSetSoldierPosition(s, gridno, x, y, flags);
 }
 
 

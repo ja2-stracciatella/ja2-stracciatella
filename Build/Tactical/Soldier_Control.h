@@ -936,6 +936,7 @@ typedef enum SetSoldierPosFlags
 } SetSoldierPosFlags;
 
 void EVENT_SetSoldierPosition(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
+void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);
 
 void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
