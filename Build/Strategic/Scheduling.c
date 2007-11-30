@@ -621,7 +621,7 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 	}
 
 	ConvertGridNoToCellXY( sNewGridNo, &sCellX, &sCellY );
-	EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+	EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 
 	return( TRUE );
 }
@@ -684,7 +684,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			BumpAnyExistingMerc( pSchedule->usData2[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData2[ index ], &sCellX, &sCellY );
 
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 			if ( GridNoOnEdgeOfMap( pSchedule->usData2[ index ], &bDirection ) )
 			{
 				// civ should go off map; this tells us where the civ will return
@@ -701,7 +701,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 		case SCHEDULE_ACTION_GRIDNO:
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 			// let this person patrol from here from now on
 			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
@@ -713,7 +713,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			}
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 			MoveSoldierFromAwayToMercSlot( pSoldier );
 			pSoldier->bInSector = TRUE;
 			// let this person patrol from here from now on
@@ -722,7 +722,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 		case SCHEDULE_ACTION_WAKE:
 			BumpAnyExistingMerc( pSoldier->sInitialGridNo );
 			ConvertGridNoToCellXY( pSoldier->sInitialGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 			// let this person patrol from here from now on
 			pSoldier->usPatrolGrid[0] = pSoldier->sInitialGridNo;
 			break;
@@ -731,19 +731,19 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 			// check for someone else in the location
 			BumpAnyExistingMerc( pSchedule->usData1[ index ] );
 			ConvertGridNoToCellXY( pSchedule->usData1[ index ], &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 			pSoldier->usPatrolGrid[0] = pSchedule->usData1[ index ];
 			break;
 		case SCHEDULE_ACTION_LEAVESECTOR:
 			sGridNo = FindNearestEdgePoint( pSoldier->sGridNo );
 			BumpAnyExistingMerc( sGridNo );
 			ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 
 			sGridNo = FindNearbyPointOnEdgeOfMap( pSoldier, &bDirection );
 			BumpAnyExistingMerc( sGridNo );
 			ConvertGridNoToCellXY( sGridNo, &sCellX, &sCellY );
-			EVENT_SetSoldierPositionForceDelete( pSoldier, (FLOAT)sCellX, (FLOAT)sCellY );
+			EVENT_InternalSetSoldierPosition(pSoldier, sCellX, sCellY, SSP_FORCE_DELETE);
 
 			// ok, that tells us where the civ will return
 			pSoldier->sOffWorldGridNo = sGridNo;

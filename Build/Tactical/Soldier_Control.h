@@ -1049,8 +1049,6 @@ typedef enum SetSoldierPosFlags
 
 void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
 
-void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
-
 void CalcNewActionPoints( SOLDIERTYPE *pSoldier );
 
 BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8 bNewStance);

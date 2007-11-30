@@ -2186,11 +2186,6 @@ void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNew
 	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, SSP_NONE);
 }
 
-void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos )
-{
-	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, SSP_FORCE_DELETE);
-}
-
 
 static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest)
 {
