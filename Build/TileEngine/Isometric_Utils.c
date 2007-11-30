@@ -520,14 +520,13 @@ void ConvertGridNoToCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 	*sXPos = ( *sXPos * CELL_X_SIZE );
 }
 
-void ConvertGridNoToCenterCellXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
-{
-	*sYPos = ( sGridNo / WORLD_COLS );
-	*sXPos = ( sGridNo - ( *sYPos * WORLD_COLS ) );
 
-	*sYPos = ( *sYPos * CELL_Y_SIZE ) + ( CELL_Y_SIZE / 2 );
-	*sXPos = ( *sXPos * CELL_X_SIZE ) + ( CELL_X_SIZE / 2 );
+void ConvertGridNoToCenterCellXY(const INT16 gridno, INT16* const x, INT16* const y)
+{
+	*x = gridno % WORLD_COLS * CELL_X_SIZE + CELL_X_SIZE / 2;
+	*y = gridno / WORLD_COLS * CELL_Y_SIZE + CELL_Y_SIZE / 2;
 }
+
 
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 {
