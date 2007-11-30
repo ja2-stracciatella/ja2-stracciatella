@@ -526,10 +526,6 @@ static SOLDIERTYPE* IsMercHere(INT32 iMapIndex);
 
 void HandleRightClickOnMerc( INT32 iMapIndex )
 {
-	INT16 sCellX, sCellY;
-
-	ConvertGridNoToCellXY( (INT16)iMapIndex, &sCellX, &sCellY );
-
 	const SOLDIERTYPE* const this_merc = IsMercHere(iMapIndex);
 	if (this_merc != NULL)
 	{
@@ -544,7 +540,10 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 	else if( gsSelectedMercID != -1 && IsLocationSittable( iMapIndex, gfRoofPlacement ) )// We want to move the selected merc to this new location.
 	{
 		RemoveAllObjectsOfTypeRange( gsSelectedMercGridNo, CONFIRMMOVE, CONFIRMMOVE );
-		EVENT_SetSoldierPosition(gpSelected->pSoldier, sCellX + 5, sCellY + 5, SSP_NONE);
+		INT16 x;
+		INT16 y;
+		ConvertGridNoToCenterCellXY(iMapIndex, &x, &y);
+		EVENT_SetSoldierPosition(gpSelected->pSoldier, x, y, SSP_NONE);
 		if( gfRoofPlacement && FlatRoofAboveGridNo( iMapIndex ) )
 		{
 			gpSelected->pBasicPlacement->fOnRoof = TRUE;
@@ -586,10 +585,10 @@ void ResetAllMercPositions()
 			curr->pSoldier = NULL;
 		}
 		//usMapIndex = gpSelected->pBasicPlacement->usStartingGridNo;
-		//ConvertGridNoToCellXY( usMapIndex, &sCellX, &sCellY );
 		//if( gpSelected->pSoldier )
 		//{
-		//	EVENT_SetSoldierPosition(gpSelected->pSoldier, sCellX + 5, sCellY + 5, SSP_NONE);
+		//	ConvertGridNoToCenterCellXY(usMapIndex, &sCellX, &sCellY);
+		//	EVENT_SetSoldierPosition(gpSelected->pSoldier, sCellX, sCellY, SSP_NONE);
 		//	if( gpSelected->pBasicPlacement->fOnRoof )
 		//		SetSoldierHeight( gpSelected->pSoldier, 58.0 );
 		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
