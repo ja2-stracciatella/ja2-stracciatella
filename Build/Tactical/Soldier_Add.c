@@ -1406,8 +1406,6 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	INT16 sNewGridNo;
 	UINT8	ubNewDirection;
 	UINT8	ubInsertionCode;
-	BOOLEAN fUpdateFinalPosition = TRUE;
-
 
 	// Add merc to gridno
 	sWorldX = CenterX( sGridNo );
@@ -1426,17 +1424,17 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 
 	//If we are not loading a saved game
+	SetSoldierPosFlags set_pos_flags = SSP_NONE;
 	if( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		// Set final dest to be the same...
-		fUpdateFinalPosition = FALSE;
+		set_pos_flags = SSP_NO_DEST | SSP_NO_FINAL_DEST;
 	}
-
 
 	// If this is a special insertion location, get path!
 	if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
 	{
-		EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, sWorldX, sWorldY, fUpdateFinalPosition, fUpdateFinalPosition );
+		EVENT_InternalSetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 	}
@@ -1446,7 +1444,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	}
 	else
 	{
-		EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( pSoldier, sWorldX, sWorldY, fUpdateFinalPosition, fUpdateFinalPosition );
+		EVENT_InternalSetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
 
 		//if we are loading, dont set the direction ( they are already set )
 		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )

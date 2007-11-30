@@ -2197,14 +2197,6 @@ static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLO
 	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, fUpdateFinalDest ? SSP_NONE  : SSP_NO_FINAL_DEST);
 }
 
-void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest )
-{
-	SetSoldierPosFlags flags = SSP_NONE;
-	if (!fUpdateDest)      flags |= SSP_NO_DEST;
-	if (!fUpdateFinalDest) flags |= SSP_NO_FINAL_DEST;
-	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, flags);
-}
-
 
 static void InternalSetSoldierHeight(SOLDIERTYPE* pSoldier, FLOAT dNewHeight, BOOLEAN fUpdateLevel)
 {
