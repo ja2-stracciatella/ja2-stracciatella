@@ -1226,7 +1226,6 @@ BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s,
 
 static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
 	UINT16	usAnim = SLEEPING;
@@ -1244,10 +1243,7 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	// OK, look for sutable placement....
 	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, usAnim, sGridNo, 5, &ubNewDirection, FALSE );
 
-	sWorldX = CenterX( sGoodGridNo );
-	sWorldY = CenterY( sGoodGridNo );
-
-	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1267,7 +1263,6 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
 
@@ -1279,10 +1274,7 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	// OK, look for sutable placement....
 	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, STAND_FALLFORWARD_STOP, sGridNo, 5, &ubNewDirection, FALSE );
 
-	sWorldX = CenterX( sGoodGridNo );
-	sWorldY = CenterY( sGoodGridNo );
-
-	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1295,7 +1287,6 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
 
@@ -1307,10 +1298,7 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	// OK, look for sutable placement....
 	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_PATIENT, sGridNo, 5, &ubNewDirection, FALSE );
 
-	sWorldX = CenterX( sGoodGridNo );
-	sWorldY = CenterY( sGoodGridNo );
-
-	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1330,7 +1318,6 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
 
@@ -1342,10 +1329,7 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	// OK, look for sutable placement....
 	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_DOCTOR, sGridNo, 5, &ubNewDirection, FALSE );
 
-	sWorldX = CenterX( sGoodGridNo );
-	sWorldY = CenterY( sGoodGridNo );
-
-	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1365,7 +1349,6 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	INT16 sWorldX, sWorldY;
 	UINT8	ubNewDirection;
 	INT16 sGoodGridNo;
 
@@ -1377,10 +1360,7 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	// OK, look for sutable placement....
 	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_REPAIRMAN, sGridNo, 5, &ubNewDirection, FALSE );
 
-	sWorldX = CenterX( sGoodGridNo );
-	sWorldY = CenterY( sGoodGridNo );
-
-	EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
 
 	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
 	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
@@ -1400,14 +1380,11 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode)
 {
-	INT16 sWorldX, sWorldY;
 	INT16 sNewGridNo;
 	UINT8	ubNewDirection;
 	UINT8	ubInsertionCode;
 
 	// Add merc to gridno
-	sWorldX = CenterX( sGridNo );
-	sWorldY = CenterY( sGridNo );
 
 	// Set reserved location!
 	pSoldier->sReservedMovementGridNo = NOWHERE;
@@ -1432,7 +1409,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	// If this is a special insertion location, get path!
 	if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
 	{
-		EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
+		EVENT_SetSoldierPosition(pSoldier, sGridNo, set_pos_flags);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
 	}
@@ -1442,7 +1419,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 	}
 	else
 	{
-		EVENT_SetSoldierPosition(pSoldier, sWorldX, sWorldY, set_pos_flags);
+		EVENT_SetSoldierPosition(pSoldier, sGridNo, set_pos_flags);
 
 		//if we are loading, dont set the direction ( they are already set )
 		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )

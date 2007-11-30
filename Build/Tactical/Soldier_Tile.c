@@ -706,15 +706,11 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 
 BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 {
-	INT16 sX, sY;
-
 	// Check dest...
 	if ( NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) || fForce )
 	{
 		// TELEPORT TO THIS LOCATION!
-		sX = CenterX( sGridNo );
-		sY = CenterY( sGridNo );
-		EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
+		EVENT_SetSoldierPosition(pSoldier, sGridNo, SSP_NONE);
 
 		pSoldier->sFinalDestination = sGridNo;
 

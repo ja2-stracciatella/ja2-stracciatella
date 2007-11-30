@@ -2985,7 +2985,6 @@ static void DoneFadeOutAdjacentSector(void)
 		UINT32 uiAttempts;
 		INT16				sGridNo, sOldGridNo;
 		UINT8				ubNum = 0;
-		INT16 sWorldX, sWorldY;
 		curr = gpAdjacentGroup->pPlayerList;
 		while( curr )
 		{
@@ -3008,9 +3007,7 @@ static void DoneFadeOutAdjacentSector(void)
 						curr->pSoldier->ubWaitActionToDo = 1;
 						// OK, here we have been given a position, a gridno has been given to use as well....
 						sOldGridNo = curr->pSoldier->sGridNo;
-						sWorldX = CenterX( sGridNo );
-						sWorldY = CenterY( sGridNo );
-						EVENT_SetSoldierPosition(curr->pSoldier, sWorldX, sWorldY, SSP_NONE);
+						EVENT_SetSoldierPosition(curr->pSoldier, sGridNo, SSP_NONE);
 						if( sGridNo != sOldGridNo )
 						{
 							EVENT_GetNewSoldierPath( curr->pSoldier, sOldGridNo, WALKING );

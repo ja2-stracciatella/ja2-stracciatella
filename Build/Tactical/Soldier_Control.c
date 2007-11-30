@@ -2176,18 +2176,27 @@ static void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, GridNo pos, 
 }
 
 
-void EVENT_SetSoldierPosition(SOLDIERTYPE* const s, const FLOAT x, const FLOAT y, const SetSoldierPosFlags flags)
-{
-	EVENT_InternalSetSoldierPosition(s, GETWORLDINDEXFROMWORLDCOORDS(y, x), x, y, flags);
-}
-
-
-void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* const s, const GridNo gridno, const SetSoldierPosFlags flags)
+void EVENT_SetSoldierPosition(SOLDIERTYPE* const s, const GridNo pos, const SetSoldierPosFlags flags)
 {
 	INT16 x;
 	INT16 y;
-	ConvertGridNoToXY(gridno, &x, &y);
-	EVENT_InternalSetSoldierPosition(s, gridno, x, y, flags);
+	ConvertGridNoToCenterCellXY(pos, &x, &y);
+	EVENT_InternalSetSoldierPosition(s, pos, x, y, flags);
+}
+
+
+void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* const s, const GridNo pos, const SetSoldierPosFlags flags)
+{
+	INT16 x;
+	INT16 y;
+	ConvertGridNoToXY(pos, &x, &y);
+	EVENT_InternalSetSoldierPosition(s, pos, x, y, flags);
+}
+
+
+void EVENT_SetSoldierPositionXY(SOLDIERTYPE* const s, const FLOAT x, const FLOAT y, const SetSoldierPosFlags flags)
+{
+	EVENT_InternalSetSoldierPosition(s, GETWORLDINDEXFROMWORLDCOORDS(y, x), x, y, flags);
 }
 
 
@@ -7137,7 +7146,7 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 	}
 
 	// OK, set new position
-	EVENT_SetSoldierPosition(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
+	EVENT_SetSoldierPositionXY(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 
 //	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("X: %f Y: %f", dXPos, dYPos ) );
 }
@@ -7488,17 +7497,11 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier )
 		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 0, TRUE );
 		BeginSoldierGetup( pSoldier );
 
-		// Makesure center of tile
-		sX = CenterX( pSoldier->sGridNo );
-		sY = CenterY( pSoldier->sGridNo );
-
-		EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
+		EVENT_SetSoldierPosition(pSoldier, pSoldier->sGridNo, SSP_NONE);
 
 		// Dirty INterface
 		fInterfacePanelDirty = DIRTYLEVEL2;
-
 	}
-
 }
 
 
@@ -8476,13 +8479,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 // HUALT EVENT IS USED TO STOP A MERC - NETWORKING SHOULD CHECK / ADJUST TO GRIDNO?
 void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 {
-	INT16 sX, sY;
-
 	// MOVE GUY TO GRIDNO--- SHOULD BE THE SAME UNLESS IN MULTIPLAYER
-	// Makesure center of tile
-	sX = CenterX( sGridNo );
-	sY = CenterY( sGridNo );
-
 
 	//Cancel pending events
 	if ( !pSoldier->fDelayedMovement )
@@ -8505,7 +8502,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	// Turn off reverse...
 	pSoldier->bReverse = FALSE;
 
-	EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
+	EVENT_SetSoldierPosition(pSoldier, sGridNo, SSP_NONE);
 	pSoldier->sDestXPos = (INT16)pSoldier->dXPos;
 	pSoldier->sDestYPos = (INT16)pSoldier->dYPos;
 	EVENT_SetSoldierDirection(pSoldier, bDirection);

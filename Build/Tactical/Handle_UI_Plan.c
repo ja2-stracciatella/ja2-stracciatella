@@ -39,7 +39,6 @@ static void SelectPausedFireAnimation(SOLDIERTYPE* pSoldier);
 
 BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 {
-	INT16							sXPos, sYPos;
 	INT16							sAPCost = 0;
 	INT8							bDirection;
 	INT32							iLoop;
@@ -93,10 +92,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 					}
 				}
 
-				// Get XY from Gridno
-				ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
-
-				EVENT_SetSoldierPosition(pPlanSoldier, sXPos, sYPos, SSP_NONE);
+				EVENT_SetSoldierPosition(pPlanSoldier, sGridNo, SSP_NONE);
 				EVENT_SetSoldierDestination( pPlanSoldier, sGridNo );
 				pPlanSoldier->bVisible = 1;
 				pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;
@@ -140,8 +136,9 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
  	  sAPCost = CalcTotalAPsToAttack( gpUIPlannedSoldier, sGridNo, TRUE, (INT8)(gpUIPlannedSoldier->bShownAimTime /2) );
 
 		// Get XY from Gridno
+		INT16 sXPos;
+		INT16 sYPos;
 		ConvertGridNoToCenterCellXY( sGridNo, &sXPos, &sYPos );
-
 
 		// If this is a player guy, show message about no APS
 		if ( EnoughPoints( gpUIPlannedSoldier, sAPCost, 0, FALSE ) )
@@ -173,7 +170,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 						}
 					}
 
-					EVENT_SetSoldierPosition(pPlanSoldier, gpUIPlannedSoldier->dXPos, gpUIPlannedSoldier->dYPos, SSP_NONE);
+					EVENT_SetSoldierPositionXY(pPlanSoldier, gpUIPlannedSoldier->dXPos, gpUIPlannedSoldier->dYPos, SSP_NONE);
 					EVENT_SetSoldierDestination( pPlanSoldier, gpUIPlannedSoldier->sGridNo );
 					pPlanSoldier->bVisible = 1;
 					pPlanSoldier->usUIMovementMode = gpUIPlannedSoldier->usUIMovementMode;

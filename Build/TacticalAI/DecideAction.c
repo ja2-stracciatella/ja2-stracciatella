@@ -56,7 +56,6 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 	INT32							iScheduleIndex;
 	UINT8							ubScheduleAction;
 	UINT16						usGridNo1, usGridNo2;
-	INT16							sX, sY;
 	INT8							bDirection;
 	STRUCTURE *				pStructure;
 	BOOLEAN						fDoUseDoor;
@@ -445,9 +444,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 			switch( pSoldier->bAIScheduleProgress )
 			{
 				case 0:
-					sX = CenterX( pSoldier->sOffWorldGridNo );
-					sY = CenterY( pSoldier->sOffWorldGridNo );
-					EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NONE);
+					EVENT_SetSoldierPosition(pSoldier, pSoldier->sOffWorldGridNo, SSP_NONE);
 					pSoldier->bInSector = TRUE;
 					MoveSoldierFromAwayToMercSlot( pSoldier );
 					pSoldier->usActionData = usGridNo1;

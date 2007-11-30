@@ -95,7 +95,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT16				usOldAnimState;
 	static UINT32 uiJumpAddress = NO_JUMP;
 	INT16					sNewGridNo;
-	INT16					sX, sY;
 	BOOLEAN				fStop;
 	UINT32				cnt;
 	UINT8					ubDiceRoll;						// Percentile dice roll
@@ -230,11 +229,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 		      // re-enable sight
 		      gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
 					{
-						INT16		sXPos, sYPos;
-
 						//usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( pSoldier->bDirection ) );
-						ConvertGridNoToCenterCellXY(pSoldier->sTempNewGridNo, &sXPos, &sYPos);
-						EVENT_SetSoldierPosition(pSoldier, sXPos, sYPos, SSP_NONE);
+						EVENT_SetSoldierPosition(pSoldier, pSoldier->sTempNewGridNo, SSP_NONE);
 					}
 					// Move two CC directions
 					EVENT_SetSoldierDirection(pSoldier, TwoCCDirection(pSoldier->bDirection));
@@ -517,13 +513,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					break;
 
 				case 444:
-
 					// CODE: End Hop Fence
 					// MOVE TO FORCASTED GRIDNO
-					sX = CenterX( pSoldier->sForcastGridno );
-					sY = CenterY( pSoldier->sForcastGridno );
-
-					EVENT_SetSoldierPosition(pSoldier, sX, sY, SSP_NO_DEST | SSP_NO_FINAL_DEST);
+					EVENT_SetSoldierPosition(pSoldier, pSoldier->sForcastGridno, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 					EVENT_SetSoldierDirection(pSoldier, TwoCDirection(pSoldier->bDirection));
 					pSoldier->sZLevelOverride = -1;
 					EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
@@ -938,16 +930,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// Set new gridno
 					{
-						INT16 sTempGridNo, sNewX, sNewY;
-
 						//Get Next GridNo;
-						sTempGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (INT16)( DirectionInc(pSoldier->bDirection ) ) );
-
-						// Get center XY
-						ConvertGridNoToCenterCellXY( sTempGridNo, &sNewX, &sNewY );
+						const GridNo sTempGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->bDirection));
 
 						// Set position
-						EVENT_SetSoldierPosition(pSoldier, sNewX, sNewY, SSP_NONE);
+						EVENT_SetSoldierPosition(pSoldier, sTempGridNo, SSP_NONE);
 
 						// Move two CC directions
 						EVENT_SetSoldierDirection(pSoldier, TwoCCDirection(pSoldier->bDirection));

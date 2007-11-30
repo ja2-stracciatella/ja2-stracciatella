@@ -433,7 +433,6 @@ void HandleHeliDrop( )
 {
 	UINT8 ubScriptCode;
 	UINT32	uiClock;
-	//INT16 sWorldX, sWorldY;
 	INT32 iVol;
 	INT32 cnt;
 	ANITILE_PARAMS	AniParams;
@@ -581,8 +580,6 @@ void HandleHeliDrop( )
 					// OK, Check if we have anybody left to send!
 					if ( gbCurDrop < bEndVal )
 					{
-						//sWorldX = CenterX( gsGridNoSweetSpot );
-						//sWorldY = CenterY( gsGridNoSweetSpot );
 						SOLDIERTYPE* const s = gHeliSeats[gbCurDrop];
 						EVENT_InitNewSoldierAnim(s, HELIDROP, 0 , FALSE);
 
@@ -590,7 +587,7 @@ void HandleHeliDrop( )
 						s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
 						UpdateMercInSector(s, 9, 1, 0);
-						//EVENT_SetSoldierPosition(s, sWorldX, sWorldY, SSP_NONE);
+						//EVENT_SetSoldierPosition(s, gsGridNoSweetSpot, SSP_NONE);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )
