@@ -1039,7 +1039,15 @@ void SetSoldierCowerState( SOLDIERTYPE *pSoldier, BOOLEAN fOn );
 
 BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate );
 
-void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceDelete );
+typedef enum SetSoldierPosFlags
+{
+	SSP_NONE          = 0,
+	SSP_NO_DEST       = 1U << 0,
+	SSP_NO_FINAL_DEST = 1U << 1,
+	SSP_FORCE_DELETE  = 1U << 2
+} SetSoldierPosFlags;
+
+void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
 
 void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos );
 

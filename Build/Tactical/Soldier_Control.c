@@ -2141,7 +2141,7 @@ void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier )
 static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove);
 
 
-void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos ,BOOLEAN fUpdateDest, BOOLEAN fUpdateFinalDest, BOOLEAN fForceRemove )
+void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags)
 {
 	INT16 sNewGridNo;
 
@@ -2154,15 +2154,8 @@ void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FL
 	// Set new map index
 	sNewGridNo = GETWORLDINDEXFROMWORLDCOORDS(dNewYPos, dNewXPos );
 
-	if ( fUpdateDest )
-	{
-		pSoldier->sDestination = sNewGridNo;
-	}
-
-	if ( fUpdateFinalDest )
-	{
-		pSoldier->sFinalDestination = sNewGridNo;
-	}
+	if (!(flags & SSP_NO_DEST))       pSoldier->sDestination      = sNewGridNo;
+	if (!(flags & SSP_NO_FINAL_DEST)) pSoldier->sFinalDestination = sNewGridNo;
 
 	// Set New pos
 	pSoldier->dXPos = dNewXPos;
@@ -2173,7 +2166,7 @@ void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FL
 
 	HandleCrowShadowNewPosition( pSoldier );
 
-	SetSoldierGridNo( pSoldier, sNewGridNo, fForceRemove );
+	SetSoldierGridNo(pSoldier, sNewGridNo, (flags & SSP_FORCE_DELETE) != 0);
 
 	if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
 	{
@@ -2190,23 +2183,26 @@ void EVENT_InternalSetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FL
 
 void EVENT_SetSoldierPosition( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos )
 {
-	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,TRUE, TRUE, FALSE );
+	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, SSP_NONE);
 }
 
 void EVENT_SetSoldierPositionForceDelete( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos )
 {
-	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,TRUE, TRUE, TRUE );
+	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, SSP_FORCE_DELETE);
 }
 
 
 static void EVENT_SetSoldierPositionAndMaybeFinalDest(SOLDIERTYPE* pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateFinalDest)
 {
-	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,TRUE, fUpdateFinalDest, FALSE );
+	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, fUpdateFinalDest ? SSP_NONE  : SSP_NO_FINAL_DEST);
 }
 
 void EVENT_SetSoldierPositionAndMaybeFinalDestAndMaybeNotDestination( SOLDIERTYPE *pSoldier, FLOAT dNewXPos, FLOAT dNewYPos, BOOLEAN fUpdateDest,  BOOLEAN fUpdateFinalDest )
 {
-	EVENT_InternalSetSoldierPosition( pSoldier, dNewXPos, dNewYPos ,fUpdateDest, fUpdateFinalDest, FALSE );
+	SetSoldierPosFlags flags = SSP_NONE;
+	if (!fUpdateDest)      flags |= SSP_NO_DEST;
+	if (!fUpdateFinalDest) flags |= SSP_NO_FINAL_DEST;
+	EVENT_InternalSetSoldierPosition(pSoldier, dNewXPos, dNewYPos, flags);
 }
 
 
@@ -7156,10 +7152,9 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 	}
 
 	// OK, set new position
-	EVENT_InternalSetSoldierPosition( pSoldier, dXPos, dYPos, FALSE, FALSE, FALSE );
+	EVENT_InternalSetSoldierPosition(pSoldier, dXPos, dYPos, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 
 //	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("X: %f Y: %f", dXPos, dYPos ) );
-
 }
 
 

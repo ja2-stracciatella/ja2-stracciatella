@@ -523,7 +523,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					sX = CenterX( pSoldier->sForcastGridno );
 					sY = CenterY( pSoldier->sForcastGridno );
 
-					EVENT_InternalSetSoldierPosition( pSoldier, (FLOAT) sX, (FLOAT) sY, FALSE, FALSE, FALSE );
+					EVENT_InternalSetSoldierPosition(pSoldier, sX, sY, SSP_NO_DEST | SSP_NO_FINAL_DEST);
 					EVENT_SetSoldierDirection(pSoldier, TwoCDirection(pSoldier->bDirection));
 					pSoldier->sZLevelOverride = -1;
 					EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->bDirection );
