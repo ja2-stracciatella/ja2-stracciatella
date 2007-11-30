@@ -2189,7 +2189,7 @@ void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* const s, const GridNo pos, co
 {
 	INT16 x;
 	INT16 y;
-	ConvertGridNoToXY(pos, &x, &y);
+	ConvertGridNoToCellXY(pos, &x, &y);
 	EVENT_InternalSetSoldierPosition(s, pos, x, y, flags);
 }
 
