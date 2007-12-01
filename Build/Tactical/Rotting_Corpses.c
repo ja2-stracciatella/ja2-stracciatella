@@ -1569,8 +1569,6 @@ void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
 	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
 	ROTTING_CORPSE_DEFINITION CorpseDef;
-	UINT16 usHeadIndex = HEAD_1;
-
 
 	pCorpse = GetCorpseAtGridNo( sGridNo, bLevel );
 
@@ -1601,35 +1599,19 @@ void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
 		// Add head item.....
 
 		// Pick the head based on profile type...
-		switch( pCorpse->def.ubProfile )
+		UINT16 head_index;
+		switch (pCorpse->def.ubProfile)
 		{
-			case 83:
-				usHeadIndex = HEAD_2;
-				break;
-
-			case 111:
-				usHeadIndex = HEAD_3;
-				break;
-
-			case 64:
-				usHeadIndex = HEAD_4;
-				break;
-
-			case 112:
-				usHeadIndex = HEAD_5;
-				break;
-
-			case 82:
-				usHeadIndex = HEAD_6;
-				break;
-
-			case 110:
-				usHeadIndex = HEAD_7;
-				break;
-
+			case CHRIS:    head_index = HEAD_2; break;
+			case T_REX:    head_index = HEAD_3; break;
+			case SLAY:     head_index = HEAD_4; break;
+			case DRUGGIST: head_index = HEAD_5; break;
+			case ANNIE:    head_index = HEAD_6; break;
+			case TIFFANY:  head_index = HEAD_7; break;
+			default:       head_index = HEAD_1; break;
 		}
 
-		CreateItem( usHeadIndex, 100, &Object );
+		CreateItem(head_index, 100, &Object);
 		AddItemToPool( sGridNo, &Object, INVISIBLE, 0, 0, 0 );
 
 		// All teams lok for this...
