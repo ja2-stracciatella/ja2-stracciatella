@@ -157,7 +157,7 @@ extern UINT8					gb4DirectionsFrom8[8];
 
 ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo , INT8 bLevel );
 BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse );
-void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel );
+void DecapitateCorpse(INT16 sGridNo, INT8 bLevel);
 
 void GetBloodFromCorpse( SOLDIERTYPE *pSoldier );
 

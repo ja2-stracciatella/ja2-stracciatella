@@ -2338,9 +2338,8 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					break;
 
 				case 752:
-
 					// Code: decapitate
-					DecapitateCorpse( pSoldier, pSoldier->sTargetGridNo, pSoldier->bTargetLevel );
+					DecapitateCorpse(pSoldier->sTargetGridNo, pSoldier->bTargetLevel);
 					break;
 
 				case 753:

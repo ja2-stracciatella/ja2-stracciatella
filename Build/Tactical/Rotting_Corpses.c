@@ -1564,7 +1564,7 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 }
 
 
-void DecapitateCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo,  INT8 bLevel )
+void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 {
 	OBJECTTYPE		Object;
 	ROTTING_CORPSE *pCorpse;
