@@ -10,7 +10,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 	BYTE src[128];
 	const BYTE* s = src;
 
-	if (FileRead(file, src, sizeof(src))) return FALSE;
+	if (!FileRead(file, src, sizeof(src))) return FALSE;
 
 	EXTR_I32(s, b->iBullet)
 	EXTR_SOLDIER(s, b->pFirer)
