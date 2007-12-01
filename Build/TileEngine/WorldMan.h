@@ -19,7 +19,7 @@ BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT3
 // Roof manipulation functions
 BOOLEAN RemoveRoof( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE  *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN AddRoofToHead( UINT32 iMapIndex, UINT16 usIndex );
+LEVELNODE* AddRoofToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex );
 BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );

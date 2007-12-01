@@ -207,10 +207,9 @@ void SetUpInterface( )
 	{
 		if ( gsSelectedLevel > 0 )
 		{
-			AddRoofToHead( gsSelectedGridNo, GOODRING1 );
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-
+			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, GOODRING1);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 		else
 		{
@@ -224,11 +223,10 @@ void SetUpInterface( )
 	{
 		if ( gsSelectedLevel > 0 )
 		{
-			//AddRoofToHead( gsSelectedGridNo, SELRING1 );
-			AddRoofToHead( gsSelectedGridNo, FIRSTPOINTERS2 );
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-
+			//LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, SELRING1);
+			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, FIRSTPOINTERS2);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 		else
 		{
@@ -244,10 +242,9 @@ void SetUpInterface( )
 	{
 		if ( gsSelectedLevel > 0 )
 		{
-			AddRoofToHead( gsSelectedGridNo, FIRSTPOINTERS2 );
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-
+			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, FIRSTPOINTERS2);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 		else
 		{

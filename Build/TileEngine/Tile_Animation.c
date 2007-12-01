@@ -97,9 +97,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 				break;
 
 			case ANI_ROOF_LEVEL:
-
-				AddRoofToHead( sGridNo, usTileIndex );
-				pNode = gpWorldLevelData[ sGridNo ].pRoofHead;
+				pNode = AddRoofToHead(sGridNo, usTileIndex);
 				break;
 
 			case ANI_ONROOF_LEVEL:
