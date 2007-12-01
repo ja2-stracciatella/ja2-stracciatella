@@ -495,11 +495,12 @@ static void DrawSnappingCursor(void)
 			break;
 
 		case NORMAL_SNAPUICURSOR:
-
-			AddTopmostToHead( gusCurMousePos, FIRSTPOINTERS1  );
-			gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+		{
+			LEVELNODE* const n = AddTopmostToHead(gusCurMousePos, FIRSTPOINTERS1);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			break;
+		}
 
 		case ALL_MOVE_RUN_UICURSOR:
 		case CONFIRM_MOVE_RUN_UICURSOR:
@@ -584,9 +585,9 @@ static void DrawSnappingCursor(void)
 
 				if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
 				{
-					AddTopmostToHead( gusCurMousePos, FIRSTPOINTERS13 );
-					gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-					gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+					LEVELNODE* const n = AddTopmostToHead(gusCurMousePos, FIRSTPOINTERS13);
+					n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+					n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 				}
 
 				LEVELNODE* const n = AddOnRoofToHead(gusCurMousePos, FIRSTPOINTERS14);
@@ -595,15 +596,15 @@ static void DrawSnappingCursor(void)
 			}
 			else
 			{
-				AddTopmostToHead( gusCurMousePos, BADMARKER1  );
-				gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-				gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+				LEVELNODE* const n = AddTopmostToHead(gusCurMousePos, BADMARKER1);
+				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 
 				if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
 				{
-					AddTopmostToHead( gusCurMousePos, FIRSTPOINTERS13 );
-					gpWorldLevelData[gusCurMousePos].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-					gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+					LEVELNODE* const n = AddTopmostToHead(gusCurMousePos, FIRSTPOINTERS13);
+					n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+					n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 				}
 			}
 			break;

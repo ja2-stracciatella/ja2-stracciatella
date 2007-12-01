@@ -2017,12 +2017,12 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 }
 
 
-BOOLEAN AddTopmostToHead(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
 
 	LEVELNODE* pNextTopmost = CreateLevelNode();
-	CHECKF(pNextTopmost != NULL);
+	CHECKN(pNextTopmost != NULL);
 	pNextTopmost->pNext = pTopmost;
 	pNextTopmost->usIndex = usIndex;
 
@@ -2030,7 +2030,7 @@ BOOLEAN AddTopmostToHead(UINT32 iMapIndex, UINT16 usIndex)
 	gpWorldLevelData[iMapIndex].pTopmostHead = pNextTopmost;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
-	return TRUE;
+	return pNextTopmost;
 }
 
 

@@ -261,27 +261,22 @@ void SetUpInterface( )
 			const SOLDIERTYPE* const s = GetSelectedMan();
 			if (s->sGridNo != gsUIHandleShowMoveGridLocation)
 			{
-				if ( gfUIHandleShowMoveGrid == 2 )
+				UINT16 idx;
+				if (gfUIHandleShowMoveGrid == 2)
 				{
-					AddTopmostToHead( gsUIHandleShowMoveGridLocation, GetSnapCursorIndex( FIRSTPOINTERS4 ) );
-					gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-					gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+					idx = FIRSTPOINTERS4;
+				}
+				else if (s->bStealthMode)
+				{
+					idx = FIRSTPOINTERS9;
 				}
 				else
 				{
-					if (s->bStealthMode)
-					{
-						AddTopmostToHead( gsUIHandleShowMoveGridLocation, GetSnapCursorIndex( FIRSTPOINTERS9 ) );
-						gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-						gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-					}
-					else
-					{
-						AddTopmostToHead( gsUIHandleShowMoveGridLocation, GetSnapCursorIndex( FIRSTPOINTERS2 ) );
-						gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-						gpWorldLevelData[gsUIHandleShowMoveGridLocation].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-					}
+					idx = FIRSTPOINTERS2;
 				}
+				LEVELNODE* const n = AddTopmostToHead(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
+				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 		}
 	}

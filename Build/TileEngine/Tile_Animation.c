@@ -105,9 +105,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 				break;
 
 			case ANI_TOPMOST_LEVEL:
-
-				AddTopmostToHead( sGridNo, usTileIndex );
-				pNode = gpWorldLevelData[ sGridNo ].pTopmostHead;
+				pNode = AddTopmostToHead(sGridNo, usTileIndex);
 				break;
 
 			default:

@@ -2955,13 +2955,13 @@ static void SetupAimCubeAI(void)
 {
 	if ( gfInAimCubeUI )
 	{
-		AddTopmostToHead( gCubeUIData.sTargetGridNo, FIRSTPOINTERS2 );
-		gpWorldLevelData[ gCubeUIData.sTargetGridNo ].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-		gpWorldLevelData[ gCubeUIData.sTargetGridNo ].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+		LEVELNODE* const n_tgt = AddTopmostToHead(gCubeUIData.sTargetGridNo, FIRSTPOINTERS2);
+		n_tgt->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		n_tgt->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 
-		//AddTopmostToHead( gCubeUIData.sGridNo, FIRSTPOINTERS2 );
-		//gpWorldLevelData[ gCubeUIData.sGridNo ].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-		//gpWorldLevelData[ gCubeUIData.sGridNo ].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+		//LEVELNODE* const n_src = AddTopmostToHead(gCubeUIData.sGridNo, FIRSTPOINTERS2);
+		//n_src->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		//n_src->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 }
 
@@ -3060,16 +3060,10 @@ void SetupPhysicsTrajectoryUI( )
 	{
 		if ( gbPhysicsImpactPointLevel == 0 )
 		{
-			if ( gfBadPhysicsCTGT )
-			{
-				AddTopmostToHead( gsPhysicsImpactPointGridNo, FIRSTPOINTERS12 );
-			}
-			else
-			{
-				AddTopmostToHead( gsPhysicsImpactPointGridNo, FIRSTPOINTERS8 );
-			}
-			gpWorldLevelData[ gsPhysicsImpactPointGridNo ].pTopmostHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[ gsPhysicsImpactPointGridNo ].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+			const UINT16     idx = (gfBadPhysicsCTGT ? FIRSTPOINTERS12 : FIRSTPOINTERS8);
+			LEVELNODE* const n   = AddTopmostToHead(gsPhysicsImpactPointGridNo, idx);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 		else
 		{
