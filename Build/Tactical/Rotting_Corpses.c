@@ -432,9 +432,8 @@ UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN
 static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse);
 
 
-INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
+ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 {
-	INT32							iIndex;
 	ROTTING_CORPSE		*pCorpse;
 	ANITILE_PARAMS		AniParams;
 	UINT8							ubLevelID;
@@ -446,18 +445,11 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	UINT16						usStructIndex;
 	UINT32						uiDirectionUseFlag;
 
-  if ( pCorpseDef->sGridNo == NOWHERE )
-  {
-    return( -1 );
-  }
+	if (pCorpseDef->sGridNo == NOWHERE)   return NULL;
+	if (pCorpseDef->ubType  == NO_CORPSE) return NULL;
 
-  if ( pCorpseDef->ubType == NO_CORPSE )
-  {
-    return( -1 );
-  }
-
-	if( ( iIndex = GetFreeRottingCorpse() )==(-1) )
-		return(-1);
+	const INT32 iIndex = GetFreeRottingCorpse();
+	if (iIndex == -1) return NULL;
 
 	pCorpse = &gRottingCorpse[ iIndex ];
 
@@ -495,8 +487,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
     // If time of death is a few days, now, don't add at all!
 		if ( ( ( GetWorldTotalMin( ) - pCorpse->def.uiTimeOfDeath ) > DELAY_UNTIL_DONE_ROTTING ) )
     {
-
-      return( -1 );
+			return NULL;
     }
 	}
 
@@ -537,7 +528,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
   if ( pCorpse->pAniTile == NULL )
   {
   	pCorpse->fActivated = FALSE;
-    return( -1 );
+		return NULL;
   }
 
 	// Set flag and index values
@@ -559,7 +550,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	{
 		DeleteAniTile( pCorpse->pAniTile );
   	pCorpse->fActivated = FALSE;
-		return( -1 );
+		return NULL;
 	}
 
 	// Get palette and create palettes and do substitutions
@@ -567,7 +558,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	{
 		DeleteAniTile( pCorpse->pAniTile );
   	pCorpse->fActivated = FALSE;
-		return( -1 );
+		return NULL;
 	}
 
 	SetRenderFlags(RENDER_FLAG_FULL);
@@ -612,7 +603,7 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 	}
 
 	// OK, we're done!
-	return( iIndex );
+	return pCorpse;
 }
 
 
@@ -734,7 +725,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	UINT8												ubType;
 	INT32												cnt;
 	UINT16											usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
-	INT32												iCorpseID;
 	INT8												bVisible = -1;
 	OBJECTTYPE									*pObj;
   UINT8                       ubNumGoo;
@@ -897,10 +887,6 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 		// Set type
 		Corpse.ubType	= ubType;
-
-
-		// Add corpse!
-		iCorpseID = AddRottingCorpse( &Corpse );
 	}
 	else
 	{
@@ -911,15 +897,13 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 		// Set type
 		Corpse.ubType	= ubType;
-
-		// Add corpse!
-		iCorpseID = AddRottingCorpse( &Corpse );
 	}
+	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
 	// If this is our guy......make visible...
 	//if ( pSoldier->bTeam == gbPlayerNum )
 	{
-		MakeCorpseVisible( pSoldier, &( gRottingCorpse[ iCorpseID ] ) );
+		MakeCorpseVisible(pSoldier, added_corpse);
 	}
 
 	return( TRUE );

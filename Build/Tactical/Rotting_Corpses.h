@@ -128,8 +128,7 @@ typedef struct
 } ROTTING_CORPSE;
 
 
-
-INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef );
+ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* pCorpseDef);
 
 void RemoveCorpses( );
 

@@ -1585,8 +1585,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 
     if ( !fDontAddCorpse )
     {
-		  //add the rotting corpse info
-		  if( AddRottingCorpse( &def ) == -1 )
+			if (AddRottingCorpse(&def) == NULL)
 		  {
 			  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo ) );
 
