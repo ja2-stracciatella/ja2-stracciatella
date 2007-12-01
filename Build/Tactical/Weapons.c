@@ -856,7 +856,6 @@ static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECT
 static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	UINT32							uiHitChance, uiDiceRoll;
-	INT16								sXMapPos, sYMapPos;
 	INT16								sAPCost;
 	FLOAT								dTargetX;
 	FLOAT								dTargetY;
@@ -984,9 +983,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	#endif
 
 	fGonnaHit = uiDiceRoll <= uiHitChance;
-
-	// GET TARGET XY VALUES
-  ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
 	// ATE; Moved a whole blotch if logic code for finding target positions to a function
 	// so other places can use it
@@ -1229,7 +1225,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	INT32								iHitChance, iDiceRoll;
-	INT16								sXMapPos, sYMapPos;
 	INT16								sAPCost;
 	EV_S_WEAPONHIT			SWeaponHit;
 	INT32								iImpact, iImpactForCrits;
@@ -1242,9 +1237,6 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
  	sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, FALSE, pSoldier->bAimTime );
 
 	DeductPoints( pSoldier, sAPCost, 0 );
-
-	// GET TARGET XY VALUES
-	ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
 	// See if a guy is here!
 	SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
@@ -1400,7 +1392,6 @@ static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, 
 BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing )
 {
 	INT32								iHitChance, iDiceRoll;
-	INT16								sXMapPos, sYMapPos;
 	INT16								sAPCost;
 	EV_S_WEAPONHIT			SWeaponHit;
 	INT32								iImpact;
@@ -1469,9 +1460,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Hit chance was %ld, roll %ld", iHitChance, iDiceRoll );
 		}
 		#endif
-
-		// GET TARGET XY VALUES
-		ConvertGridNoToCenterCellXY( sTargetGridNo, &sXMapPos, &sYMapPos );
 
 		if (fStealing )
 		{
