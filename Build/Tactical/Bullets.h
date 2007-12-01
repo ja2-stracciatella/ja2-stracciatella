@@ -19,7 +19,6 @@
 
 struct BULLET
 {
-	INT32		iBullet;
 	const SOLDIERTYPE* target;
 	INT8		bStartCubesAboveLevelZ;
 	INT8		bEndCubesAboveLevelZ;

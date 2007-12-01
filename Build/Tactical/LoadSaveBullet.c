@@ -12,7 +12,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 
 	if (!FileRead(file, src, sizeof(src))) return FALSE;
 
-	EXTR_I32(s, b->iBullet)
+	EXTR_SKIP(s, 4)
 	EXTR_SOLDIER(s, b->pFirer)
 	EXTR_SOLDIER(s, b->target)
 	EXTR_I8(s, b->bStartCubesAboveLevelZ)
@@ -70,7 +70,7 @@ BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
 	BYTE dst[128];
 	BYTE* d = dst;
 
-	INJ_I32(d, b->iBullet)
+	INJ_SKIP(d, 4)
 	INJ_SOLDIER(d, b->pFirer)
 	INJ_SOLDIER(d, b->target)
 	INJ_I8(d, b->bStartCubesAboveLevelZ)

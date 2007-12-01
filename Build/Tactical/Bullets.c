@@ -66,7 +66,6 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 	BULLET* const b = &gBullets[iBulletIndex];
 	memset(b, 0, sizeof(*b));
 
-	b->iBullet            = iBulletIndex;
 	b->fAllocated         = TRUE;
 	b->fLocated		        = FALSE;
 	b->pFirer             = firer;
@@ -411,7 +410,6 @@ BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 
 		//Set some parameters
 		b->uiLastUpdate = 0;
-		b->iBullet      = i;
 
 		HandleBulletSpecialFlags(b);
 	}
