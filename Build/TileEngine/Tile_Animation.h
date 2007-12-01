@@ -2,6 +2,7 @@
 #define _TILE_ANIMATION_H
 
 #include "Explosion_Control.h"
+#include "JA2Types.h"
 #include "WorldDef.h"
 
 
@@ -46,6 +47,7 @@ typedef union AniUserData
 		UINT32 uiData3;
 	} user;
 	EXPLOSIONTYPE* explosion;
+	BULLET*        bullet;
 } AniUserData;
 
 

@@ -371,7 +371,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 				if ( pAniNode->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE )
 				{
 					// First delete the bullet!
-					RemoveBullet(GetBulletPtr(pAniNode->v.user.uiData3));
+					RemoveBullet(pAniNode->v.bullet);
 
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
 					FreeUpAttacker(GetMan(pAniNode->ubAttackerMissed));

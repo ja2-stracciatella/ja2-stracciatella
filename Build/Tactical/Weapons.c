@@ -2138,13 +2138,12 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 				if (fStopped)
 				{
 					AniParams.uiFlags							= ANITILE_FORWARD | ANITILE_RELEASE_ATTACKER_WHEN_DONE;
+					AniParams.v.bullet = pBullet;
 				}
 				else
 				{
 					AniParams.uiFlags							= ANITILE_FORWARD;
 				}
-				// Save bullet ID!
-				AniParams.v.user.uiData3 = pBullet->iBullet;
 
 				pNode = CreateAnimationTile( &AniParams );
 
