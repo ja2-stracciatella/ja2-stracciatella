@@ -214,11 +214,10 @@ void SetUpInterface( )
 		}
 		else
 		{
-			AddObjectToHead( gsSelectedGridNo, GOODRING1 );
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, GOODRING1);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
-
 	}
 
 	if ( gfUIHandleSelection == SELECTED_GUY_SELECTION )
@@ -233,12 +232,11 @@ void SetUpInterface( )
 		}
 		else
 		{
-			//AddObjectToHead( gsSelectedGridNo, SELRING1 );
-			AddObjectToHead( gsSelectedGridNo, FIRSTPOINTERS2 );
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+			//LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, SELRING1);
+			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, FIRSTPOINTERS2);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
-
 	}
 
 
@@ -253,11 +251,10 @@ void SetUpInterface( )
 		}
 		else
 		{
-			AddObjectToHead( gsSelectedGridNo, FIRSTPOINTERS2 );
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[gsSelectedGridNo].pObjectHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, FIRSTPOINTERS2);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
-
 	}
 
 	if ( gfUIHandleShowMoveGrid )

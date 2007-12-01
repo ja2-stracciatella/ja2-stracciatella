@@ -157,12 +157,12 @@ LEVELNODE* AddObjectToTail(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-BOOLEAN AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead;
 
 	LEVELNODE* pNextObject = CreateLevelNode();
-	CHECKF(pNextObject != NULL);
+	CHECKN(pNextObject != NULL);
 
 	pNextObject->pNext = pObject;
 	pNextObject->usIndex = usIndex;
@@ -176,7 +176,7 @@ BOOLEAN AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex)
 	//Add the object to the map temp file, if we have to
 	AddObjectToMapTempFile(iMapIndex, usIndex);
 
-	return TRUE;
+	return pNextObject;
 }
 
 

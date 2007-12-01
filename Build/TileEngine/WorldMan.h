@@ -10,7 +10,7 @@ void CountLevelNodes( void );
 // Object manipulation functions
 BOOLEAN RemoveObject( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN AddObjectToHead( UINT32 iMapIndex, UINT16 usIndex );
+LEVELNODE* AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN TypeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusObjectIndex );
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusObjectIndex );

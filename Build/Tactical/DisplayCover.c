@@ -503,10 +503,8 @@ static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof
 	}
 	else
 	{
-		AddObjectToHead( sGridNo, usGraphic );
-		pNode = gpWorldLevelData[ sGridNo ].pObjectHead;
+		pNode = AddObjectToHead(sGridNo, usGraphic);
 	}
-
 
 	pNode->uiFlags |= LEVELNODE_REVEAL;
 

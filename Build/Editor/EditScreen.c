@@ -2604,8 +2604,8 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
 	if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
 	{
-		AddObjectToHead( iMapIndex, GOODRING1 );
-		gpWorldLevelData[ iMapIndex ].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
+		LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
+		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 
 	AddLightToUndoList( iMapIndex, 0, 0 );
@@ -2683,8 +2683,8 @@ void ShowLightPositionHandles( void )
 			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
 			if (!TypeExistsInObjectLayer(iMapIndex, GOODRING, &usTmpIndex))
 			{
-				AddObjectToHead(iMapIndex, GOODRING1);
-				gpWorldLevelData[iMapIndex].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
+				LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
+				n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 		}
 	}
