@@ -122,10 +122,7 @@ typedef struct
 
 	SGPPaletteEntry							*p8BPPPalette;
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
-	INT16												sGraphicNum;
 	INT32												iCachedTileID;
-	FLOAT												dXPos;
-	FLOAT												dYPos;
 
 	BOOLEAN											fAttractCrowsOnlyWhenOnScreen;
 	INT32												iID;
