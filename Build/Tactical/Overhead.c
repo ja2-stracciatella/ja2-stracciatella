@@ -5904,7 +5904,6 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 
 BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const pTarget, const INT8 bReason)
 {
-	INT16		sTargetXPos, sTargetYPos;
 	BOOLEAN	fEnterCombat = TRUE;
 
 	if ( pTarget->fAIFlags & AI_ASLEEP )
@@ -6023,11 +6022,9 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 			{
 				// OK, sturn towards the prick
 				// Change to fire ready animation
-				ConvertGridNoToXY( pSoldier->sGridNo, &sTargetXPos, &sTargetYPos );
 
 				pTarget->fDontChargeReadyAPs = TRUE;
-				// Ready weapon
-				SoldierReadyWeapon( pTarget, sTargetXPos, sTargetYPos, FALSE );
+				SoldierReadyWeapon(pTarget, pSoldier->sGridNo, FALSE);
 
 				// ATE: Depending on personality, fire back.....
 

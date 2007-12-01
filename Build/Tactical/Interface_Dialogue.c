@@ -1841,7 +1841,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
 					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
-					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
+					SoldierReadyWeapon(pSoldier, sGridNo, FALSE);
 				}
 				break;
 			}
@@ -2127,7 +2127,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[bItemIn]) );
 					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
-					SoldierReadyWeapon( pSoldier, (INT16) (sGridNo % WORLD_COLS), (INT16) (sGridNo / WORLD_COLS), FALSE );
+					SoldierReadyWeapon(pSoldier, sGridNo, FALSE);
 				}
 				// fall through so that the person faces the nearest merc!
 			}

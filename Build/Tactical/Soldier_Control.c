@@ -1025,8 +1025,6 @@ void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStart
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
 	INT32		cnt, iClosestEnemy = NOBODY;
-	INT16		sTargetXPos, sTargetYPos;
-	BOOLEAN	fReturnVal = FALSE;
 	INT16		sDist, sClosestDist = 10000;
 
 	// make the chosen one not turn to face us
@@ -1074,16 +1072,9 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 					if (iClosestEnemy != NOBODY)
 					{
 						// Change to fire ready animation
-						ConvertGridNoToXY( MercPtrs[ iClosestEnemy ]->sGridNo, &sTargetXPos, &sTargetYPos );
-
 						pSoldier->fDontChargeReadyAPs = TRUE;
-
-						// Ready weapon
-						fReturnVal = SoldierReadyWeapon( pSoldier, sTargetXPos, sTargetYPos, FALSE );
-
-						return( fReturnVal );
+						return SoldierReadyWeapon(pSoldier, MercPtrs[iClosestEnemy]->sGridNo, FALSE);
 					}
-
 				}
 			}
 		}
@@ -2567,7 +2558,6 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight);
 
 void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
-	INT16 sTargetXPos, sTargetYPos;
 	BOOLEAN		fDoFireRightAway = FALSE;
 
 	// CANNOT BE SAME GRIDNO!
@@ -2614,13 +2604,8 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
   }
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack, bullets left %d", pSoldier->bBulletsLeft) );
 
-	// Convert our grid-not into an XY
-	ConvertGridNoToXY( sTargetGridNo, &sTargetXPos, &sTargetYPos );
-
-
 	// Change to fire animation
-	// Ready weapon
-	SoldierReadyWeapon( pSoldier, sTargetXPos, sTargetYPos, FALSE );
+	SoldierReadyWeapon(pSoldier, sTargetGridNo, FALSE);
 
 	// IF WE ARE AN NPC, SLIDE VIEW TO SHOW WHO IS SHOOTING
 	{
@@ -2923,13 +2908,13 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 }
 
 
-BOOLEAN SoldierReadyWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetXPos, INT16 sTargetYPos, BOOLEAN fEndReady )
+BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* const pSoldier, const GridNo tgt_pos, const BOOLEAN fEndReady)
 {
-	INT16								sFacingDir;
-
-	sFacingDir = GetDirectionFromXY( sTargetXPos , sTargetYPos, pSoldier );
-
-	return( InternalSoldierReadyWeapon( pSoldier, (INT8)sFacingDir, fEndReady ) );
+	INT16 tgt_x;
+	INT16 tgt_y;
+	ConvertGridNoToXY(tgt_pos, &tgt_x, &tgt_y);
+	const INT16 sFacingDir = GetDirectionFromXY(tgt_x, tgt_y, pSoldier);
+	return InternalSoldierReadyWeapon(pSoldier, sFacingDir, fEndReady);
 }
 
 

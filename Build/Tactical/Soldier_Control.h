@@ -956,8 +956,7 @@ void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 
 
-
-BOOLEAN SoldierReadyWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetXPos, INT16 sTargetYPos, BOOLEAN fEndReady );
+BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* pSoldier, GridNo tgt_pos, BOOLEAN fEndReady);
 void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight );
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
