@@ -3058,20 +3058,18 @@ void SetupPhysicsTrajectoryUI( )
 {
 	if ( gfDisplayPhysicsUI && gfUIHandlePhysicsTrajectory )
 	{
-		if ( gbPhysicsImpactPointLevel == 0 )
+		const UINT16 idx = (gfBadPhysicsCTGT ? FIRSTPOINTERS12 : FIRSTPOINTERS8);
+		LEVELNODE* n;
+		if (gbPhysicsImpactPointLevel == 0)
 		{
-			const UINT16     idx = (gfBadPhysicsCTGT ? FIRSTPOINTERS12 : FIRSTPOINTERS8);
-			LEVELNODE* const n   = AddTopmostToHead(gsPhysicsImpactPointGridNo, idx);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
+			n = AddTopmostToHead(gsPhysicsImpactPointGridNo, idx);
 		}
 		else
 		{
-			const UINT16     idx = (gfBadPhysicsCTGT ? FIRSTPOINTERS12 : FIRSTPOINTERS8);
-			LEVELNODE* const n   = AddOnRoofToHead(gsPhysicsImpactPointGridNo, idx);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
+			n = AddOnRoofToHead(gsPhysicsImpactPointGridNo, idx);
 		}
+		n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 }
 

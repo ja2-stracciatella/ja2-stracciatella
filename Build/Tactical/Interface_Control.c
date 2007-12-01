@@ -202,56 +202,29 @@ void SetUpInterface( )
 
 	HandleInterfaceBackgrounds( );
 
-
-	if ( gfUIHandleSelection == NONSELECTED_GUY_SELECTION )
+	switch (gfUIHandleSelection)
 	{
-		if ( gsSelectedLevel > 0 )
-		{
-			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, GOODRING1);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
-		else
-		{
-			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, GOODRING1);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
-	}
+		UINT16 idx;
 
-	if ( gfUIHandleSelection == SELECTED_GUY_SELECTION )
-	{
-		if ( gsSelectedLevel > 0 )
-		{
-			//LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, SELRING1);
-			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, FIRSTPOINTERS2);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
-		else
-		{
-			//LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, SELRING1);
-			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, FIRSTPOINTERS2);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
-	}
+		case NONSELECTED_GUY_SELECTION: idx = GOODRING1;      goto add_node;
+		//case SELECTED_GUY_SELECTION:    idx = SELRING1;       goto add_node;
+		case SELECTED_GUY_SELECTION:    idx = FIRSTPOINTERS2; goto add_node;
+		case ENEMY_GUY_SELECTION:       idx = FIRSTPOINTERS2; goto add_node;
+		default:                        break;
 
-
-	if ( gfUIHandleSelection == ENEMY_GUY_SELECTION )
-	{
-		if ( gsSelectedLevel > 0 )
-		{
-			LEVELNODE* const n = AddRoofToHead(gsSelectedGridNo, FIRSTPOINTERS2);
+add_node:;
+			LEVELNODE* n;
+			if (gsSelectedLevel > 0)
+			{
+				n = AddRoofToHead(gsSelectedGridNo, idx);
+			}
+			else
+			{
+				n = AddObjectToHead(gsSelectedGridNo, idx);
+			}
 			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
 			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
-		else
-		{
-			LEVELNODE* const n = AddObjectToHead(gsSelectedGridNo, FIRSTPOINTERS2);
-			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
-		}
+			break;
 	}
 
 	if ( gfUIHandleShowMoveGrid )

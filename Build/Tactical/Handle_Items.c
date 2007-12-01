@@ -1893,16 +1893,15 @@ static LEVELNODE* AddItemGraphicToWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubL
 	// OK, Do stuff differently base on level!
 	if ( ubLevel == 0 )
 	{
-		pNode = AddStructToTail( sGridNo, usTileIndex );
+		pNode = AddStructToTail(sGridNo, usTileIndex);
 		//SET FLAG FOR AN ITEM
-		pNode->uiFlags |= LEVELNODE_ITEM;
 	}
 	else
 	{
-		pNode =  AddOnRoofToHead(sGridNo, usTileIndex);
+		pNode = AddOnRoofToHead(sGridNo, usTileIndex);
 		//SET FLAG FOR AN ITEM
-		pNode->uiFlags |= LEVELNODE_ITEM;
 	}
+	pNode->uiFlags |= LEVELNODE_ITEM;
 
 	// DIRTY INTERFACE
 	fInterfacePanelDirty = DIRTYLEVEL2;
