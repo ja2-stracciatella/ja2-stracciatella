@@ -304,13 +304,6 @@ void UpdateBullets(void)
 }
 
 
-BULLET* GetBulletPtr(INT32 iBullet)
-{
-	CHECKN(0 <= iBullet && iBullet < NUM_BULLET_SLOTS);
-	return &gBullets[iBullet];
-}
-
-
 void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT qCurrZ )
 {
 	ANITILE_PARAMS	AniParams;

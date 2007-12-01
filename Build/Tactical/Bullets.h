@@ -66,7 +66,6 @@ BULLET* CreateBullet(SOLDIERTYPE* firer, BOOLEAN fFake, UINT16 usFlags);
 void    RemoveBullet(BULLET* b);
 void    StopBullet(BULLET* b);
 void    UpdateBullets(void);
-BULLET* GetBulletPtr(INT32 iBullet);
 
 void DeleteAllBullets(void);
 
