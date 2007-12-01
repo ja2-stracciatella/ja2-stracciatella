@@ -16,29 +16,23 @@
 #include "Debug.h"
 
 
-// Defines
 #define		NUM_BULLET_SLOTS					50
 
 
-// GLOBAL FOR FACES LISTING
-BULLET	gBullets[ NUM_BULLET_SLOTS ];
+static BULLET gBullets[NUM_BULLET_SLOTS];
 UINT32  guiNumBullets = 0;
 
 
-static INT32 GetFreeBullet(void)
+static BULLET* GetFreeBullet(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBullets; uiCount++)
+	BULLET* b;
+	for (b = gBullets; b != gBullets + guiNumBullets; ++b)
 	{
-		if((gBullets[uiCount].fAllocated==FALSE) )
-			return((INT32)uiCount);
+		if (!b->fAllocated) return b;
 	}
-
-	if(guiNumBullets < NUM_BULLET_SLOTS )
-		return((INT32)guiNumBullets++);
-
-	return(-1);
+	if (b == endof(gBullets)) return NULL;
+	++guiNumBullets;
+	return b;
 }
 
 
@@ -60,12 +54,10 @@ static void RecountBullets(void)
 
 BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16 usFlags)
 {
-	const INT32 iBulletIndex = GetFreeBullet();
-	if (iBulletIndex == -1) return NULL;
+	BULLET* const b = GetFreeBullet();
+	if (b == NULL) return NULL;
 
-	BULLET* const b = &gBullets[iBulletIndex];
 	memset(b, 0, sizeof(*b));
-
 	b->fAllocated         = TRUE;
 	b->fLocated		        = FALSE;
 	b->pFirer             = firer;
