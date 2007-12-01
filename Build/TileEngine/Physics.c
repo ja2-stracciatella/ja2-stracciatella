@@ -1175,8 +1175,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				  pObject->pNode = pNode;
 
 				  // Add shadow
-				  AddShadowToHead( sNewGridNo, sTileIndex );
-				  pNode = gpWorldLevelData[ sNewGridNo ].pShadowHead;
+					pNode = AddShadowToHead(sNewGridNo, sTileIndex);
 				  pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
 				  pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 				  pNode->uiFlags |= ( LEVELNODE_USEABSOLUTEPOS | LEVELNODE_IGNOREHEIGHT | LEVELNODE_PHYSICSOBJECT | LEVELNODE_DYNAMIC );

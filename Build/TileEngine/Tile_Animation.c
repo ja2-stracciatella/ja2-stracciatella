@@ -89,9 +89,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 				break;
 
 			case ANI_SHADOW_LEVEL:
-
-				AddShadowToHead( sGridNo, usTileIndex );
-				pNode = gpWorldLevelData[ sGridNo ].pShadowHead;
+				pNode = AddShadowToHead( sGridNo, usTileIndex );
 				break;
 
 			case ANI_OBJECT_LEVEL:

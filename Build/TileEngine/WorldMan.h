@@ -76,7 +76,7 @@ BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex );
 
 // Shadow manipulation routines
 BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN AddShadowToHead( UINT32 iMapIndex, UINT16 usIndex );
+LEVELNODE* AddShadowToHead(UINT32 iMapIndex, UINT16 usIndex);
 void AddExclusiveShadow( UINT32 iMapIndex, UINT16 usIndex );
 BOOLEAN RemoveAllShadowsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN	RemoveAllShadows( UINT32 iMapIndex );

@@ -697,8 +697,8 @@ LEVELNODE* AddStructToTailCommon(UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddS
 	{
 		if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
 		{
-			AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
-			gpWorldLevelData[iMapIndex].pShadowHead->uiFlags |= LEVELNODE_BUDDYSHADOW;
+			LEVELNODE* const n = AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
+			n->uiFlags |= LEVELNODE_BUDDYSHADOW;
 		}
 
 		//Check for special flag to stop burn-through on same-tile structs...
@@ -754,8 +754,8 @@ BOOLEAN AddStructToHead(UINT32 iMapIndex, UINT16 usIndex)
 		// Check flags for tiledat and set a shadow if we have a buddy
 		if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
 		{
-			AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum );
-			gpWorldLevelData[iMapIndex].pShadowHead->uiFlags |= LEVELNODE_BUDDYSHADOW;
+			LEVELNODE* const n = AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum );
+			n->uiFlags |= LEVELNODE_BUDDYSHADOW;
 		}
 
 		//Check for special flag to stop burn-through on same-tile structs...
@@ -1193,12 +1193,12 @@ void AddExclusiveShadow(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-BOOLEAN AddShadowToHead(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead;
 
 	LEVELNODE* pNextShadow = CreateLevelNode();
-	CHECKF(pNextShadow != NULL);
+	CHECKN(pNextShadow != NULL);
 	pNextShadow->pNext = pShadow;
 	pNextShadow->usIndex = usIndex;
 
@@ -1206,7 +1206,7 @@ BOOLEAN AddShadowToHead(UINT32 iMapIndex, UINT16 usIndex)
 	gpWorldLevelData[iMapIndex].pShadowHead = pNextShadow;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
-	return TRUE;
+	return pNextShadow;
 }
 
 
