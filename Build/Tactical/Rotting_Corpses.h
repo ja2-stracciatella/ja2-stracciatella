@@ -110,7 +110,6 @@ typedef struct
 
 	UINT8												ubFiller[ 12 ];
 } ROTTING_CORPSE_DEFINITION;
-CASSERT(sizeof(ROTTING_CORPSE_DEFINITION) == 160)
 
 
 typedef struct

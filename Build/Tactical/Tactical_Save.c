@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveRottingCorpse.h"
 #include "Soldier_Init_List.h"
 #include "Types.h"
 #include "MemMan.h"
@@ -1419,12 +1420,12 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 	//Loop through all the carcases in the array and save the active ones
 	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
 	{
-		if( gRottingCorpse[iCount].fActivated == TRUE )
+		const ROTTING_CORPSE* const c = &gRottingCorpse[iCount];
+		if (c->fActivated)
 		{
 			//Save the RottingCorpse info array
-			if (!FileWrite(hFile, &gRottingCorpse[iCount].def, sizeof(ROTTING_CORPSE_DEFINITION)))
+			if (!InjectRottingCorpseIntoFile(hFile, &c->def))
 			{
-				//Error Writing size of array to disk
 				FileClose( hFile );
 				return( FALSE );
 			}
@@ -1475,7 +1476,6 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
 	UINT32		cnt;
-	ROTTING_CORPSE_DEFINITION		def;
   BOOLEAN                     fDontAddCorpse = FALSE;
   INT8                        bTownId;
 
@@ -1522,7 +1522,8 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
     fDontAddCorpse = FALSE;
 
 		// Load the Rotting corpses info
-		if (!FileRead(hFile, &def, sizeof(ROTTING_CORPSE_DEFINITION)))
+		ROTTING_CORPSE_DEFINITION def;
+		if (!ExtractRottingCorpseFromFile(hFile, &def))
 		{
 			//Error Writing size of array to disk
 			FileClose( hFile );
@@ -1995,9 +1996,8 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 	//Append the new rotting corpse def to the end of the file
-	if (!FileWrite(hFile, pRottingCorpseDef, sizeof(ROTTING_CORPSE_DEFINITION)))
+	if (!InjectRottingCorpseIntoFile(hFile, pRottingCorpseDef))
 	{
-		//Error Writing size of array to disk
 		FileClose( hFile );
 		return( FALSE );
 	}
