@@ -25,6 +25,24 @@
 static ANITILE* pAniTileHead = NULL;
 
 
+static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
+{
+	if (a->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME)
+	{
+		// Our start frame is actually a direction indicator
+		const UINT8 ubTempDir = OneCDirection(a->v.user.uiData3);
+		frame = a->usNumFrames * ubTempDir;
+	}
+	else if (a->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME)
+	{
+		// Our start frame is actually a direction indicator
+		const UINT8 ubTempDir = gb4DirectionsFrom8[a->v.user.uiData3];
+		frame = a->usNumFrames * ubTempDir;
+	}
+	return frame;
+}
+
+
 ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 {
 	ANITILE		*pAniNode;
@@ -40,7 +58,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	UINT32		uiFlags;
 	LEVELNODE	*pGivenNode;
 	INT16			sX, sY, sZ;
-	UINT8			ubTempDir;
 
 	// Get some parameters from structure sent in...
 	sGridNo			= pAniParams->sGridNo;
@@ -224,35 +241,23 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 		pNewAniNode->usNumFrames			= gTileDatabase[ usTileIndex ].pAnimData->ubNumFrames;
 	}
 
-	if ( ( uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
-	{
-		// Our start frame is actually a direction indicator
-		ubTempDir   = OneCDirection(pAniParams->v.user.uiData3);
-		sStartFrame = (UINT16)sStartFrame + ( pNewAniNode->usNumFrames * ubTempDir );
-	}
-
-	if ( ( uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
-	{
-		// Our start frame is actually a direction indicator
-		ubTempDir   = gb4DirectionsFrom8[pAniParams->v.user.uiData3];
-		sStartFrame = (UINT16)sStartFrame + ( pNewAniNode->usNumFrames * ubTempDir );
-	}
-
 	pNewAniNode->usTileType				= usTileType;
 	pNewAniNode->pNext						= pAniNode;
 	pNewAniNode->uiFlags					= uiFlags;
 	pNewAniNode->sDelay						= sDelay;
-	pNewAniNode->sCurrentFrame		= sStartFrame;
 	pNewAniNode->uiTimeLastUpdate = GetJA2Clock( );
 	pNewAniNode->sGridNo					= sGridNo;
 
-	pNewAniNode->sStartFrame      = sStartFrame;
 
 	pNewAniNode->ubKeyFrame1			= pAniParams->ubKeyFrame1;
 	pNewAniNode->uiKeyFrame1Code	= pAniParams->uiKeyFrame1Code;
 	pNewAniNode->ubKeyFrame2			= pAniParams->ubKeyFrame2;
 	pNewAniNode->uiKeyFrame2Code	= pAniParams->uiKeyFrame2Code;
 	pNewAniNode->v               = pAniParams->v;
+
+	sStartFrame += SetFrameByDir(0, pNewAniNode);
+	pNewAniNode->sCurrentFrame = sStartFrame;
+	pNewAniNode->sStartFrame   = sStartFrame;
 
 	//Set head
 	pAniTileHead = pNewAniNode;
@@ -430,8 +435,6 @@ void UpdateAniTiles( )
 	ANITILE *pAniNode			= NULL;
 	ANITILE *pNode				= NULL;
 	UINT32	uiClock				= GetJA2Clock( );
-	UINT16	usMaxFrames, usMinFrames;
-	UINT8		ubTempDir;
 
 	// LOOP THROUGH EACH NODE
 	pAniNode = pAniTileHead;
@@ -460,20 +463,7 @@ void UpdateAniTiles( )
 
 			if ( pNode->uiFlags & ANITILE_FORWARD )
 			{
-				usMaxFrames = pNode->usNumFrames;
-
-				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
-				{
-					ubTempDir   = OneCDirection(pNode->v.user.uiData3);
-					usMaxFrames = (UINT16)usMaxFrames + ( pNode->usNumFrames * ubTempDir );
-				}
-
-				if ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME )
-				{
-					ubTempDir   = gb4DirectionsFrom8[pNode->v.user.uiData3];
-					usMaxFrames = (UINT16)usMaxFrames + ( pNode->usNumFrames * ubTempDir );
-				}
-
+				const UINT16 usMaxFrames = pNode->usNumFrames + SetFrameByDir(0, pNode);
 				if ( ( pNode->sCurrentFrame + 1 ) < usMaxFrames )
 				{
 					pNode->sCurrentFrame++;
@@ -542,22 +532,7 @@ void UpdateAniTiles( )
 					// We are done!
 					if ( pNode->uiFlags & ANITILE_LOOPING )
 					{
-						pNode->sCurrentFrame = pNode->sStartFrame;
-
-						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
-						{
-							// Our start frame is actually a direction indicator
-							ubTempDir = OneCDirection(pNode->v.user.uiData3);
-							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
-						}
-
-						if ( ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
-						{
-							// Our start frame is actually a direction indicator
-							ubTempDir = gb4DirectionsFrom8[pNode->v.user.uiData3];
-							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
-						}
-
+						pNode->sCurrentFrame = SetFrameByDir(pNode->sStartFrame, pNode);
 					}
 					else if ( pNode->uiFlags & ANITILE_REVERSE_LOOPING )
 					{
@@ -597,20 +572,7 @@ void UpdateAniTiles( )
 					}
 				}
 
-				usMinFrames = 0;
-
-				if ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME )
-				{
-					ubTempDir   = OneCDirection(pNode->v.user.uiData3);
-					usMinFrames = ( pNode->usNumFrames * ubTempDir );
-				}
-
-				if ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME )
-				{
-					ubTempDir   = gb4DirectionsFrom8[pNode->v.user.uiData3];
-					usMinFrames = ( pNode->usNumFrames * ubTempDir );
-				}
-
+				const UINT16 usMinFrames = SetFrameByDir(0, pNode);
 				if ( ( pNode->sCurrentFrame - 1 ) >= usMinFrames )
 				{
 					pNode->sCurrentFrame--;
@@ -637,21 +599,7 @@ void UpdateAniTiles( )
 					}
 					else if ( pNode->uiFlags & ANITILE_LOOPING )
 					{
-						pNode->sCurrentFrame = pNode->sStartFrame;
-
-						if ( ( pNode->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
-						{
-							// Our start frame is actually a direction indicator
-							ubTempDir = OneCDirection(pNode->v.user.uiData3);
-							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
-						}
-						if ( ( pNode->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
-						{
-							// Our start frame is actually a direction indicator
-							ubTempDir = gb4DirectionsFrom8[pNode->v.user.uiData3];
-							pNode->sCurrentFrame = (UINT16)( pNode->usNumFrames * ubTempDir );
-						}
-
+						pNode->sCurrentFrame = SetFrameByDir(pNode->sStartFrame, pNode);
 					}
 					else if ( pNode->uiFlags & ANITILE_REVERSE_LOOPING )
 					{
