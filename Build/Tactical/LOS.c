@@ -2914,7 +2914,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 }
 
 
-static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ);;
+static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, GridNo end_pos, FLOAT dEndZ);
 
 
 static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const SOLDIERTYPE* const pEndSoldier)
@@ -2937,7 +2937,7 @@ static UINT8 SoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier
 	// set startsoldier's target ID ... need an ID stored in case this
 	// is the AI calculating cover to a location where he might not be any more
 	pStartSoldier->CTGTTarget = pEndSoldier;
-	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
+	return ChanceToGetThrough(pStartSoldier, pEndSoldier->sGridNo, dEndZPos);
 }
 
 
@@ -2979,15 +2979,13 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 	// set startsoldier's target ID ... need an ID stored in case this
 	// is the AI calculating cover to a location where he might not be any more
 	pStartSoldier->CTGTTarget = pEndSoldier;
-	return( ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos ) );
+	return ChanceToGetThrough(pStartSoldier, pEndSoldier->sGridNo, dEndZPos);
 }
 
 
 UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const INT16 sGridNo, const INT8 bLevel, const INT8 bCubeLevel, const SOLDIERTYPE* const target)
 {
 	FLOAT			dEndZPos;
-	INT16			sXPos;
-	INT16			sYPos;
 	INT8			bStructHeight;
 
 	if (pStartSoldier->sGridNo == sGridNo)
@@ -3024,14 +3022,11 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 		}
 
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sGridNo].sHeight );
-		ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-		sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-		sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
 		pStartSoldier->CTGTTarget = target;
-		return( ChanceToGetThrough( pStartSoldier, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos ) );
+		return ChanceToGetThrough(pStartSoldier, sGridNo, dEndZPos);
 	}
 }
 
@@ -3062,7 +3057,7 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 	// is the AI calculating cover to a location where he might not be any more
 	pStartSoldier->CTGTTarget = NULL;
 
-	ubChance = ChanceToGetThrough( pStartSoldier, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos );
+	ubChance = ChanceToGetThrough(pStartSoldier, pEndSoldier->sGridNo, dEndZPos);
 	pStartSoldier->usAnimState = usTrueState;
 	return( ubChance );
 }
@@ -3070,8 +3065,6 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel )
 {
 	FLOAT			dEndZPos;
-	INT16			sXPos;
-	INT16			sYPos;
 	INT8			bStructHeight;
 
 	UINT16		usTrueState;
@@ -3111,9 +3104,6 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		}
 
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[sGridNo].sHeight );
-		ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-		sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-		sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
 
 		// set startsoldier's target ID ... need an ID stored in case this
 		// is the AI calculating cover to a location where he might not be any more
@@ -3122,7 +3112,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		usTrueState = pStartSoldier->usAnimState;
 		pStartSoldier->usAnimState = STANDING;
 
-		ubChance = ChanceToGetThrough( pStartSoldier, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos );
+		ubChance = ChanceToGetThrough(pStartSoldier, sGridNo, dEndZPos);
 
 		pStartSoldier->usAnimState = usTrueState;
 
@@ -3532,28 +3522,29 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 }
 
 
-static INT8 ChanceToGetThrough(SOLDIERTYPE* pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ)
+static INT8 ChanceToGetThrough(SOLDIERTYPE* const pFirer, const GridNo end_pos, const FLOAT dEndZ)
 {
-	if ( Item[pFirer->usAttackingWeapon].usItemClass == IC_GUN || Item[ pFirer->usAttackingWeapon ].usItemClass == IC_THROWING_KNIFE )
+	UINT16  weapon = pFirer->usAttackingWeapon;
+	BOOLEAN buck_shot;
+	if (Item[weapon].usItemClass == IC_GUN ||
+			Item[weapon].usItemClass == IC_THROWING_KNIFE)
 	{
-		BOOLEAN fBuckShot = FALSE;
-
 		// if shotgun, shotgun would have to be in main hand
-		if ( pFirer->inv[ HANDPOS ].usItem == pFirer->usAttackingWeapon )
-		{
-			if ( pFirer->inv[ HANDPOS ].ubGunAmmoType == AMMO_BUCKSHOT )
-			{
-				fBuckShot = TRUE;
-			}
-		}
-
-		return( FireBulletGivenTarget( pFirer, dEndX, dEndY, dEndZ, pFirer->usAttackingWeapon, 0, fBuckShot, TRUE ) );
+		buck_shot =
+			pFirer->inv[HANDPOS].usItem        == weapon &&
+			pFirer->inv[HANDPOS].ubGunAmmoType == AMMO_BUCKSHOT;
 	}
 	else
 	{
 		// fake it
-		return( FireBulletGivenTarget( pFirer, dEndX, dEndY, dEndZ, GLOCK_17, 0, FALSE, TRUE ));
+		weapon    = GLOCK_17;
+		buck_shot = FALSE;
 	}
+
+	INT16 end_x;
+	INT16 end_y;
+	ConvertGridNoToCenterCellXY(end_pos, &end_x, &end_y);
+	return FireBulletGivenTarget(pFirer, end_x, end_y, dEndZ, weapon, 0, buck_shot, TRUE);
 }
 
 
