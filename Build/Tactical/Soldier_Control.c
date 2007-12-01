@@ -7660,7 +7660,6 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 {
 	//UINT32 uiMercFlags;
 	UINT8 ubTDirection;
-	ROTTING_CORPSE *pCorpse;
 
 	// Increment the number of people busy doing stuff because of an attack
 	//if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -7789,24 +7788,9 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 			}
 			else
 			{
-				// Check for corpse!
-				pCorpse = GetCorpseAtGridNo( sGridNo, pSoldier->bLevel );
-
-				if ( pCorpse == NULL )
-				{
-					EVENT_InitNewSoldierAnim( pSoldier, CROUCH_STAB, 0 , FALSE );
-				}
-				else
-				{
-					if ( IsValidDecapitationCorpse( pCorpse ) )
-					{
-						EVENT_InitNewSoldierAnim( pSoldier, DECAPITATE, 0 , FALSE );
-					}
-					else
-					{
-						EVENT_InitNewSoldierAnim( pSoldier, CROUCH_STAB, 0 , FALSE );
-					}
-				}
+				const ROTTING_CORPSE* const c = GetCorpseAtGridNo(sGridNo, pSoldier->bLevel);
+				const UINT16 state = (c != NULL && IsValidDecapitationCorpse(c) ? DECAPITATE : CROUCH_STAB);
+				EVENT_InitNewSoldierAnim(pSoldier, state, 0, FALSE);
 			}
 		}
 	}

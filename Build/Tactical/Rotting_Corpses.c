@@ -1528,14 +1528,10 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 }
 
 
-BOOLEAN IsValidDecapitationCorpse( ROTTING_CORPSE *pCorpse )
+BOOLEAN IsValidDecapitationCorpse(const ROTTING_CORPSE* const c)
 {
-  if ( pCorpse->def.fHeadTaken )
-  {
-    return( FALSE );
-  }
-
-	return( gbCorpseValidForDecapitation[ pCorpse->def.ubType ] );
+	if (c->def.fHeadTaken) return FALSE;
+	return gbCorpseValidForDecapitation[c->def.ubType];
 }
 
 
