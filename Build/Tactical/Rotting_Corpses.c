@@ -622,7 +622,7 @@ static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 }
 
 
-static void RemoveCorpse(INT32 iCorpseID);
+static void RemoveCorpse(ROTTING_CORPSE* c);
 
 
 void RemoveCorpses( )
@@ -631,25 +631,22 @@ void RemoveCorpses( )
 
 	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
 	{
-		if( ( gRottingCorpse[iCount].fActivated ) )
-		{
-			RemoveCorpse( iCount );
-		}
+		ROTTING_CORPSE* const c = &gRottingCorpse[iCount];
+		if (c->fActivated) RemoveCorpse(c);
 	}
 
 	giNumRottingCorpse = 0;
 }
 
 
-static void RemoveCorpse(INT32 iCorpseID)
+static void RemoveCorpse(ROTTING_CORPSE* const c)
 {
-	// Remove!
-	gRottingCorpse[ iCorpseID ].fActivated = FALSE;
+	Assert(gRottingCorpse <= c && c < endof(gRottingCorpse));
+	Assert(c->fActivated);
 
-	DeleteAniTile( gRottingCorpse[ iCorpseID ].pAniTile );
-
-	FreeCorpsePalettes( &( gRottingCorpse[ iCorpseID ] ) );
-
+	c->fActivated = FALSE;
+	DeleteAniTile(c->pAniTile);
+	FreeCorpsePalettes(c);
 }
 
 
@@ -1374,8 +1371,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		AniParams.zCachedFile = "TILECACHE/gen_blow.sti";
 		CreateAnimationTile( &AniParams );
 
-		// Remove....
-		RemoveCorpse( pCorpse->iID );
+		RemoveCorpse(pCorpse);
 		SetRenderFlags( RENDER_FLAG_FULL );
 
 		if ( pCorpse->def.bLevel == 0 )
@@ -1586,9 +1582,7 @@ void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 
 		if ( CorpseDef.ubType != 0 )
 		{
-			// Remove old one...
-			RemoveCorpse( pCorpse->iID );
-
+			RemoveCorpse(pCorpse);
 			AddRottingCorpse( &CorpseDef );
 		}
 
