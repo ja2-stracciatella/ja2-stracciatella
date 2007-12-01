@@ -2148,11 +2148,8 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	// Recompile movement costs...
 	if ( fRecompileMovement )
 	{
-		INT16 sX, sY;
-
 		// DO wireframes as well
-		ConvertGridNoToXY( (INT16)sGridNo, &sX, &sY );
-		SetRecalculateWireFrameFlagRadius( sX, sY, ubRadius );
+		SetRecalculateWireFrameFlagRadius(sGridNo, ubRadius);
 		CalculateWorldWireFrameTiles( FALSE );
 
 		RecompileLocalMovementCostsInAreaWithFlags();

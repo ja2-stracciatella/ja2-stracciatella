@@ -21,7 +21,6 @@ void SetGridNoRevealedFlag( UINT16 sGridNo );
 
 void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo );
 
-void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius);
-
+void SetRecalculateWireFrameFlagRadius(GridNo pos, INT16 sRadius);
 
 #endif

@@ -80,19 +80,19 @@ BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 
 
 // @@ATECLIP TO WORLD!
-void SetRecalculateWireFrameFlagRadius(INT16 sX, INT16 sY, INT16 sRadius)
+void SetRecalculateWireFrameFlagRadius(const GridNo pos, const INT16 sRadius)
 {
-	INT16 sCountX, sCountY;
-	UINT32 uiTile;
-
-	for(sCountY=sY-sRadius; sCountY < (sY+sRadius+2); sCountY++)
+	INT16 pos_x_;
+	INT16 pos_y_;
+	ConvertGridNoToXY(pos, &pos_x_, &pos_y_);
+	const INT16 pos_x = pos_x_;
+	const INT16 pos_y = pos_y_;
+	for (INT16 y = pos_y - sRadius; y < pos_y + sRadius + 2; ++y)
 	{
-		for(sCountX=sX-sRadius; sCountX < (sX+sRadius+2); sCountX++)
+		for (INT16 x = pos_x - sRadius; x < pos_x + sRadius + 2; ++x)
 		{
-			uiTile=MAPROWCOLTOPOS(sCountY, sCountX);
-
+			const UINT32 uiTile = MAPROWCOLTOPOS(y, x);
 			gpWorldLevelData[uiTile].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
-
 		}
 	}
 }
@@ -277,10 +277,7 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			}
 
 			// OK, re-set writeframes ( in a radius )
-			// Get XY
-			ConvertGridNoToXY( (INT16)cnt, &sX, &sY );
-			SetRecalculateWireFrameFlagRadius( sX, sY, 2 );
-
+			SetRecalculateWireFrameFlagRadius(cnt, 2);
 		}
 	}
 
