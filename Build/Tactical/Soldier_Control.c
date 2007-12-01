@@ -2372,7 +2372,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 		// Add merc at new pos
 		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
 		{
-			AddMercToHead( pSoldier->sGridNo, pSoldier, TRUE );
+			LEVELNODE* const n = AddMercToHead(pSoldier->sGridNo, pSoldier, TRUE);
 
 			// If we are in the middle of climbing the roof!
 			if ( pSoldier->usAnimState == CLIMBUPROOF )
@@ -2394,20 +2394,19 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			//if the player wants the merc to cast the fake light AND it is night
 			if( pSoldier->bTeam != OUR_TEAM || gGameSettings.fOptions[ TOPTION_MERC_CASTS_LIGHT ] && NightTime() )
 			{
+				LEVELNODE* other;
 				if ( pSoldier->bLevel > 0 && gpWorldLevelData[pSoldier->sGridNo].pRoofHead != NULL )
 				{
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubShadeLevel;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubSumLights=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubSumLights;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubMaxLights=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubMaxLights;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubNaturalShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubNaturalShadeLevel;
+					other = gpWorldLevelData[pSoldier->sGridNo].pRoofHead;
 				}
 				else
 				{
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubSumLights=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubSumLights;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubMaxLights=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubMaxLights;
-					gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubNaturalShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubNaturalShadeLevel;
+					other = gpWorldLevelData[pSoldier->sGridNo].pLandHead;
 				}
+				n->ubShadeLevel        = other->ubShadeLevel;
+				n->ubSumLights         = other->ubSumLights;
+				n->ubMaxLights         = other->ubMaxLights;
+				n->ubNaturalShadeLevel = other->ubNaturalShadeLevel;
 			}
 
 			///HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, TRUE, FALSE );
@@ -7532,11 +7531,11 @@ static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BO
 				else
 				{
 					// PLace into world
-					AddMercToHead( sGridNo, pSoldier, FALSE );
+					LEVELNODE* const n = AddMercToHead(sGridNo, pSoldier, FALSE);
 					//if ( pProfileTile->bTileY != 0 || pProfileTile->bTileX != 0 )
 					{
-						gpWorldLevelData[sGridNo].pMercHead->uiFlags |= LEVELNODE_MERCPLACEHOLDER;
-						gpWorldLevelData[sGridNo].pMercHead->uiAnimHitLocationFlags = pProfileTile->usTileFlags;
+						n->uiFlags                |= LEVELNODE_MERCPLACEHOLDER;
+						n->uiAnimHitLocationFlags  = pProfileTile->usTileFlags;
 					}
 				}
 			}

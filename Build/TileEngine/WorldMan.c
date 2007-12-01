@@ -1327,12 +1327,12 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 static BOOLEAN AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 
 
-BOOLEAN AddMercToHead(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fAddStructInfo)
+LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, const BOOLEAN fAddStructInfo)
 {
 	LEVELNODE* pMerc = gpWorldLevelData[iMapIndex].pMercHead;
 
 	LEVELNODE* pNextMerc = CreateLevelNode();
-	CHECKF(pNextMerc != NULL);
+	CHECKN(pNextMerc != NULL);
 	pNextMerc->pNext = pMerc;
 	pNextMerc->pSoldier = pSoldier;
 	pNextMerc->uiFlags |= LEVELNODE_SOLDIER;
@@ -1348,7 +1348,7 @@ BOOLEAN AddMercToHead(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fAddStruc
 	gpWorldLevelData[iMapIndex].pMercHead = pNextMerc;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_MERCS | TILES_DYNAMIC_STRUCT_MERCS | TILES_DYNAMIC_HIGHMERCS);
-	return TRUE;
+	return pNextMerc;
 }
 
 
