@@ -76,7 +76,6 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 {
 	EXITGRID								ExitGrid;
 	UINT16									usTileIndex;
-	INT16 sX, sY;
 
 	// Remove old graphic
 	ApplyMapChangesToMapTempFile( TRUE );
@@ -119,11 +118,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 	InvalidateWorldRedundency( );
 	SetRenderFlags(RENDER_FLAG_FULL);
 
-	// Redo movement costs....
-	ConvertGridNoToXY( 13830, &sX, &sY );
-
 	RecompileLocalMovementCostsFromRadius( 13830, 5 );
-
 }
 
 
