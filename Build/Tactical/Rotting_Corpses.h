@@ -124,9 +124,7 @@ typedef struct
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
 	INT32												iCachedTileID;
 
-	BOOLEAN											fAttractCrowsOnlyWhenOnScreen;
 	INT32												iID;
-
 } ROTTING_CORPSE;
 
 

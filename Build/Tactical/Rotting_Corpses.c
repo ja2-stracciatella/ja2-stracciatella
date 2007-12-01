@@ -553,15 +553,6 @@ INT32	AddRottingCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef )
 
 	pCorpse->fActivated = TRUE;
 
-	if ( Random( 100 ) > 50 )
-	{
-		pCorpse->fAttractCrowsOnlyWhenOnScreen = TRUE;
-	}
-	else
-	{
-		pCorpse->fAttractCrowsOnlyWhenOnScreen = FALSE;
-	}
-
 	pCorpse->iCachedTileID = pCorpse->pAniTile->sCachedTileID;
 
 	if ( pCorpse->iCachedTileID == -1 )
