@@ -587,7 +587,7 @@ static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSI
  * - ignores windows
  * - stops at other obstacles
  */
-static INT32 LineOfSightTest(FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16* psWindowGridNo)
+static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FLOAT dEndZ, UINT8 ubTileSightLimit, UINT8 ubTreeSightReduction, INT8 bAware, INT8 bCamouflage, BOOLEAN fSmell, INT16* psWindowGridNo)
 {
 	// Parameters...
 	// the X,Y,Z triplets should be obvious
@@ -687,11 +687,17 @@ static INT32 LineOfSightTest(FLOAT dStartX, FLOAT dStartY, FLOAT dStartZ, FLOAT 
 	// hack end location to the centre of the tile, because there was a problem
 	// seeing a presumably off-centre merc...
 
-	dStartX = (FLOAT) (((INT32)dStartX) / 10) * 10 + 5;
-	dStartY = (FLOAT) (((INT32)dStartY) / 10) * 10 + 5;
+	INT16 start_cell_x;
+	INT16 start_cell_y;
+	ConvertGridNoToCenterCellXY(start_pos, &start_cell_x, &start_cell_y);
+	const float dStartX = start_cell_x;
+	const float dStartY = start_cell_y;
 
-	dEndX = (FLOAT) (((INT32)dEndX) / 10) * 10 + 5;
-	dEndY = (FLOAT) (((INT32)dEndY) / 10) * 10 + 5;
+	INT16 end_cell_x;
+	INT16 end_cell_y;
+	ConvertGridNoToCenterCellXY(end_pos, &end_cell_x, &end_cell_y);
+	const float dEndX = end_cell_x;
+	const float dEndY = end_cell_y;
 
 	dDeltaX = dEndX - dStartX;
 	dDeltaY = dEndY - dStartY;
@@ -1609,15 +1615,13 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 		ubTreeReduction = gubTreeSightReduction[ gAnimControl[pEndSoldier->usAnimState].ubEndHeight ];
 	}
 
-	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) CenterX( pEndSoldier->sGridNo ), (FLOAT) CenterY( pEndSoldier->sGridNo ), dEndZPos, ubTileSightLimit, ubTreeReduction, bAware, bEffectiveCamo, fSmell, NULL ) );
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, pEndSoldier->sGridNo, dEndZPos, ubTileSightLimit, ubTreeReduction, bAware, bEffectiveCamo, fSmell, NULL);
 }
 
 INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGridNo)
 {
 	// figure out if there is a SINGLE window between the looker and target
 	FLOAT			dStartZPos, dEndZPos;
-	INT16			sXPos, sYPos, sWindowGridNo = NOWHERE;
-	INT32			iRet;
 
 	CHECKF( pStartSoldier );
 	dStartZPos = FixedToFloat( ((gqStandardWindowTopHeight + gqStandardWindowBottomHeight) / 2) );
@@ -1628,13 +1632,10 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 	dStartZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pStartSoldier->sGridNo].sHeight );
 	dEndZPos = dStartZPos;
 
-	ConvertGridNoToXY( sEndGridNo, &sXPos, &sYPos );
-	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
 	// We don't want to consider distance limits here so pass in tile sight limit of 255
 	// and consider trees as little as possible
-	iRet = LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo );
+	INT16 sWindowGridNo = NOWHERE;
+	const INT32 iRet = LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sEndGridNo, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo);
 	if (sWindowGridNo == pStartSoldier->sGridNo) sWindowGridNo = NOWHERE; // XXX TODO0012
 	return( sWindowGridNo );
 }
@@ -1669,7 +1670,6 @@ static BOOLEAN SoldierToSoldierLineOfSightTimingTest(SOLDIERTYPE* pStartSoldier,
 INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	FLOAT						dStartZPos, dEndZPos;
-	INT16						sXPos, sYPos;
 	BOOLEAN					fOk;
 
 	CHECKF( pStartSoldier );
@@ -1696,17 +1696,12 @@ INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16
 		dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sGridNo ].sHeight );
 	}
 
-	ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
-	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
 }
 
 INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubAimLocation, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	FLOAT			dStartZPos, dEndZPos;
-	INT16			sXPos, sYPos;
 	BOOLEAN		fOk;
 	UINT8			ubPosType;
 
@@ -1741,18 +1736,13 @@ INT32 SoldierToBodyPartLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGrid
 		return( FALSE );
 	}
 
-	ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
-	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
 }
 
 
 INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bStance, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	FLOAT						dStartZPos, dEndZPos;
-	INT16						sXPos, sYPos;
 	BOOLEAN					fOk;
 
 	CHECKF( pStartSoldier );
@@ -1781,12 +1771,7 @@ INT32 SoldierToVirtualSoldierLineOfSightTest(const SOLDIERTYPE* pStartSoldier, I
 		dEndZPos += WALL_HEIGHT_UNITS;
 	}
 
-
-	ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-	sXPos = sXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sYPos = sYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
-	return( LineOfSightTest( (FLOAT) CenterX( pStartSoldier->sGridNo ), (FLOAT) CenterY( pStartSoldier->sGridNo ), dStartZPos, (FLOAT) sXPos, (FLOAT) sYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
+	return LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
 }
 
 INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware )
@@ -1797,7 +1782,6 @@ INT32 SoldierToLocationLineOfSightTest( SOLDIERTYPE * pStartSoldier, INT16 sGrid
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware )
 {
 	FLOAT						dStartZPos, dEndZPos;
-	INT16						sStartXPos, sStartYPos, sEndXPos, sEndYPos;
 
 	const SOLDIERTYPE* const start_soldier = WhoIsThere2(sStartGridNo, bStartLevel);
 	if (start_soldier != NULL)
@@ -1810,19 +1794,11 @@ INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, I
 	// add in ground height
 	dStartZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sStartGridNo ].sHeight );
 
-	ConvertGridNoToXY( sStartGridNo, &sStartXPos, &sStartYPos );
-	sStartXPos = sStartXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sStartYPos = sStartYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
 	dEndZPos = STANDING_LOS_POS + bEndLevel * HEIGHT_UNITS;
 	// add in ground height
 	dEndZPos += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ sEndGridNo ].sHeight );
 
-	ConvertGridNoToXY( sEndGridNo, &sEndXPos, &sEndYPos );
-	sEndXPos = sEndXPos * CELL_X_SIZE + (CELL_X_SIZE / 2);
-	sEndYPos = sEndYPos * CELL_Y_SIZE + (CELL_Y_SIZE / 2);
-
-	return( LineOfSightTest( (FLOAT)sStartXPos, (FLOAT)sStartYPos, dStartZPos, (FLOAT) sEndXPos, (FLOAT) sEndYPos, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL ) );
+	return LineOfSightTest(sStartGridNo, dStartZPos, sEndGridNo, dEndZPos, ubTileSightLimit, gubTreeSightReduction[ANIM_STAND], bAware, 0, FALSE, NULL);
 }
 
 /*
