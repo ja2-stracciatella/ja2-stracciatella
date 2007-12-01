@@ -7476,8 +7476,6 @@ static void RevivePlayerTeam(void)
 
 void ReviveSoldier( SOLDIERTYPE *pSoldier )
 {
-	INT16					sX, sY;
-
 	if ( pSoldier->bLife < OKLIFE  && pSoldier->bActive )
 	{
 		// If dead or unconscious, revive!
