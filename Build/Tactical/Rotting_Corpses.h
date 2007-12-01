@@ -107,8 +107,6 @@ typedef struct
 	UINT8												ubProfile;
   BOOLEAN                     fHeadTaken;
   	UINT8												ubAIWarningValue;
-
-	UINT8												ubFiller[ 12 ];
 } ROTTING_CORPSE_DEFINITION;
 
 

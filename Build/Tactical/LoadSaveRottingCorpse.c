@@ -30,7 +30,7 @@ BOOLEAN ExtractRottingCorpseFromFile(const HWFILE file, ROTTING_CORPSE_DEFINITIO
 	EXTR_U8(d, c->ubProfile)
 	EXTR_BOOL(d, c->fHeadTaken)
 	EXTR_U8(d, c->ubAIWarningValue)
-	EXTR_U8A(d, c->ubFiller, lengthof(c->ubFiller))
+	EXTR_SKIP(d, 12)
 	Assert(d == endof(data));
 
 	return TRUE;
@@ -62,7 +62,7 @@ BOOLEAN InjectRottingCorpseIntoFile(const HWFILE file, const ROTTING_CORPSE_DEFI
 	INJ_U8(d, c->ubProfile)
 	INJ_BOOL(d, c->fHeadTaken)
 	INJ_U8(d, c->ubAIWarningValue)
-	INJ_U8A(d, c->ubFiller, lengthof(c->ubFiller))
+	INJ_SKIP(d, 12)
 	Assert(d == endof(data));
 
 	return FileWrite(file, data, sizeof(data));
