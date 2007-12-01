@@ -718,30 +718,6 @@ void UpdateAniTiles( )
 }
 
 
-static void SetAniTileFrame(ANITILE* pAniTile, INT16 sFrame)
-{
-	UINT8 ubTempDir;
-	INT16	sStartFrame = 0;
-
-	if ( (pAniTile->uiFlags & ANITILE_USE_DIRECTION_FOR_START_FRAME ) )
-	{
-		// Our start frame is actually a direction indicator
-		ubTempDir   = OneCDirection(pAniTile->v.user.uiData3);
-		sStartFrame = (UINT16)sFrame + ( pAniTile->usNumFrames * ubTempDir );
-	}
-
-	if ( (pAniTile->uiFlags & ANITILE_USE_4DIRECTION_FOR_START_FRAME ) )
-	{
-		// Our start frame is actually a direction indicator
-		ubTempDir   = gb4DirectionsFrom8[pAniTile->v.user.uiData3];
-		sStartFrame = (UINT16)sFrame + ( pAniTile->usNumFrames * ubTempDir );
-	}
-
-	pAniTile->sCurrentFrame = sStartFrame;
-
-}
-
-
 ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
 {
 	LEVELNODE *pNode = NULL;
