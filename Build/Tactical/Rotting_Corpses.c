@@ -54,9 +54,6 @@
 #define		MAX_NUM_CROWS					6
 
 
-static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorpse);
-
-
 // When adding a corpse, add struct data...
 static const char* const zCorpseFilenames[NUM_CORPSES] =
 {
@@ -719,6 +716,9 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 }
 
 
+static void MakeCorpseVisible(ROTTING_CORPSE* c);
+
+
 BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLEAN fCheckForLOS )
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
@@ -903,7 +903,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	// If this is our guy......make visible...
 	//if ( pSoldier->bTeam == gbPlayerNum )
 	{
-		MakeCorpseVisible(pSoldier, added_corpse);
+		MakeCorpseVisible(added_corpse);
 	}
 
 	return( TRUE );
@@ -1123,10 +1123,10 @@ void HandleRottingCorpses( )
 }
 
 
-static void MakeCorpseVisible(const SOLDIERTYPE* pSoldier, ROTTING_CORPSE* pCorpse)
+static void MakeCorpseVisible(ROTTING_CORPSE* const c)
 {
-	pCorpse->def.bVisible = 1;
-	SetRenderFlags( RENDER_FLAG_FULL );
+	c->def.bVisible = 1;
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
@@ -1158,7 +1158,7 @@ static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
 				// (taking into account we are definitely aware of this guy now)
 				if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, pCorpse->def.bLevel, 3, sDistVisible, TRUE))
 				{
-					MakeCorpseVisible(s, pCorpse);
+					MakeCorpseVisible(pCorpse);
 					return;
 				}
 			}
