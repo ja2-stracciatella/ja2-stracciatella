@@ -2910,10 +2910,7 @@ UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
 
 BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* const pSoldier, const GridNo tgt_pos, const BOOLEAN fEndReady)
 {
-	INT16 tgt_x;
-	INT16 tgt_y;
-	ConvertGridNoToXY(tgt_pos, &tgt_x, &tgt_y);
-	const INT16 sFacingDir = GetDirectionFromXY(tgt_x, tgt_y, pSoldier);
+	const INT16 sFacingDir = GetDirectionFromGridNo(tgt_pos, pSoldier);
 	return InternalSoldierReadyWeapon(pSoldier, sFacingDir, fEndReady);
 }
 
@@ -9831,7 +9828,6 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 
 BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate )
 {
-	INT16							sFacingDir, sXPos, sYPos, sAPCost;
 	SOLDIERTYPE				*pTSoldier;
 	UINT32						uiRange;
 
@@ -9861,15 +9857,12 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	}
 
 	// Get APs...
-	sAPCost = AP_TALK;
+	const INT16 sAPCost = AP_TALK;
 
 	// Deduct points from our guy....
 	DeductPoints( pSoldier, sAPCost, 0 );
 
-	ConvertGridNoToXY( pTSoldier->sGridNo, &sXPos, &sYPos );
-
-	// Get direction from mouse pos
-	sFacingDir = GetDirectionFromXY( sXPos, sYPos, pSoldier );
+	const INT16 sFacingDir = GetDirectionFromGridNo(pTSoldier->sGridNo, pSoldier);
 
 	// Set our guy facing
 	SendSoldierSetDesiredDirectionEvent( pSoldier, sFacingDir );
