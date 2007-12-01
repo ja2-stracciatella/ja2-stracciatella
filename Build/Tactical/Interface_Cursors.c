@@ -274,9 +274,9 @@ BOOLEAN DrawUICursor( )
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
 			{
 				// Put one on the roof as well
-				AddOnRoofToHead( gusCurMousePos, GetSnapCursorIndex( gUICursors[ guiCurUICursor ].usAdditionalData ) );
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+				LEVELNODE* const n = AddOnRoofToHead(gusCurMousePos, GetSnapCursorIndex(gUICursors[guiCurUICursor].usAdditionalData));
+				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 		}
 
@@ -337,9 +337,9 @@ BOOLEAN DrawUICursor( )
 			if ( gsInterfaceLevel == I_ROOF_LEVEL )
 			{
 				// Put one on the roof as well
-				AddOnRoofToHead( gusCurMousePos,  GetSnapCursorIndex( usTileCursor ) );
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+				LEVELNODE* const n = AddOnRoofToHead(gusCurMousePos, GetSnapCursorIndex(usTileCursor));
+				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 		}
 
@@ -589,10 +589,9 @@ static void DrawSnappingCursor(void)
 					gpWorldLevelData[gusCurMousePos].pTopmostHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
 				}
 
-				AddOnRoofToHead( gusCurMousePos, FIRSTPOINTERS14 );
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-				gpWorldLevelData[gusCurMousePos].pOnRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-
+				LEVELNODE* const n = AddOnRoofToHead(gusCurMousePos, FIRSTPOINTERS14);
+				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 			}
 			else
 			{

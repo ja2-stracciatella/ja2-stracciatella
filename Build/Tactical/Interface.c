@@ -3073,20 +3073,14 @@ void SetupPhysicsTrajectoryUI( )
 		}
 		else
 		{
-			if ( gfBadPhysicsCTGT )
-			{
-				AddOnRoofToHead( gsPhysicsImpactPointGridNo, FIRSTPOINTERS12 );
-			}
-			else
-			{
-				AddOnRoofToHead( gsPhysicsImpactPointGridNo, FIRSTPOINTERS8 );
-			}
-			gpWorldLevelData[ gsPhysicsImpactPointGridNo ].pOnRoofHead->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-			gpWorldLevelData[ gsPhysicsImpactPointGridNo ].pOnRoofHead->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+			const UINT16     idx = (gfBadPhysicsCTGT ? FIRSTPOINTERS12 : FIRSTPOINTERS8);
+			LEVELNODE* const n   = AddOnRoofToHead(gsPhysicsImpactPointGridNo, idx);
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 	}
-
 }
+
 
 void ResetPhysicsTrajectoryUI( )
 {

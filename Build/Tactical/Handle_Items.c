@@ -1899,9 +1899,8 @@ static LEVELNODE* AddItemGraphicToWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubL
 	}
 	else
 	{
-		AddOnRoofToHead( sGridNo, usTileIndex );
+		pNode =  AddOnRoofToHead(sGridNo, usTileIndex);
 		//SET FLAG FOR AN ITEM
-		pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
 		pNode->uiFlags |= LEVELNODE_ITEM;
 	}
 

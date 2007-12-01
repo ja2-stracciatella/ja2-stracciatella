@@ -1842,12 +1842,12 @@ LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
 }
 
 
-BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE* AddOnRoofToHead(UINT32 iMapIndex, UINT16 usIndex)
 {
 	LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead;
 
 	LEVELNODE* pNextOnRoof = CreateLevelNode();
-	CHECKF(pNextOnRoof != NULL);
+	CHECKN(pNextOnRoof != NULL);
 	if (usIndex < NUMBEROFTILES)
 	{
 		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
@@ -1855,7 +1855,7 @@ BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 			if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof))
 			{
 				MemFree(pNextOnRoof);
-				return FALSE;
+				return NULL;
 			}
 		}
 	}
@@ -1866,7 +1866,7 @@ BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex )
 	gpWorldLevelData[iMapIndex].pOnRoofHead = pNextOnRoof;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
-	return TRUE;
+	return pNextOnRoof;
 }
 
 

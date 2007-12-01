@@ -33,7 +33,7 @@ BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex );
 // OnRoof manipulation functions
 BOOLEAN RemoveOnRoof( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN AddOnRoofToHead( UINT32 iMapIndex, UINT16 usIndex );
+LEVELNODE* AddOnRoofToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 

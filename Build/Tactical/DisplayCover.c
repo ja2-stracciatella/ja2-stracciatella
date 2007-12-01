@@ -498,8 +498,7 @@ static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof
 
 	if( fRoof )
 	{
-		AddOnRoofToHead( sGridNo, usGraphic );
-		pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
+		pNode = AddOnRoofToHead(sGridNo, usGraphic);
 	}
 	else
 	{
