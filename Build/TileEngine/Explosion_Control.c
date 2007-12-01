@@ -315,7 +315,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
 	AniParams.sDelay							= sBlastSpeeds[ ubTypeID ];
 	AniParams.sStartFrame					= pExplosion->sCurrentFrame;
-	AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_EXPLOSION;
+	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_EXPLOSION;
 
 	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
 	{

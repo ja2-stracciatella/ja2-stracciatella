@@ -691,7 +691,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
 			AniParams.sDelay							= (INT16)( 100 );
 			AniParams.sStartFrame					= 0;
-			AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
+			AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
 			AniParams.sX									= sX;
 			AniParams.sY									= sY;
 			AniParams.sZ									= sZ;

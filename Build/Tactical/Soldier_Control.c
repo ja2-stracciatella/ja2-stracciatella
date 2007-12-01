@@ -353,7 +353,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
 				AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
 				AniParams.sDelay							= pSoldier->sAniDelay;
 				AniParams.sStartFrame					= 0;
-				AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
+				AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
 				AniParams.sX									= pSoldier->sX;
 				AniParams.sY									= pSoldier->sY;
 				AniParams.sZ									= 0;

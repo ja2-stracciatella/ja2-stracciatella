@@ -95,7 +95,7 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 			AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 			AniParams.sDelay							= 100;
 			AniParams.sStartFrame					= 3;
-			AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
+			AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
 			AniParams.sX									= FIXEDPT_TO_INT32( pBullet->qCurrX );
 			AniParams.sY									= FIXEDPT_TO_INT32( pBullet->qCurrY );
 			AniParams.sZ									= CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( pBullet->qCurrZ ) );
@@ -339,7 +339,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 	AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 	AniParams.sDelay							= (INT16)( 100 + Random( 100 ) );
 	AniParams.sStartFrame					= 0;
-	AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
+	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
 	AniParams.sX									= FIXEDPT_TO_INT32( qCurrX );
 	AniParams.sY									= FIXEDPT_TO_INT32( qCurrY );
 	AniParams.sZ									= CONVERT_HEIGHTUNITS_TO_PIXELS( FIXEDPT_TO_INT32( qCurrZ ) );

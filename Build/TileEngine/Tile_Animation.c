@@ -68,7 +68,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	}
 	else
 	{
-		if ( ( uiFlags & ANITILE_CACHEDTILE ) )
+		if (pAniParams->zCachedFile != NULL)
 		{
 			iCachedTile = GetCachedTile( pAniParams->zCachedFile );
 
@@ -119,10 +119,9 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 
 		pNewAniNode->pLevelNode								= pNode;
 
-		if ( ( uiFlags & ANITILE_CACHEDTILE ) )
+		if (iCachedTile != -1)
 		{
 			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_CACHEDANITILE );
-			pNewAniNode->sCachedTileID = (INT16)iCachedTile;
 			pNewAniNode->usCachedTileSubIndex = usTileType;
 			pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
 			pNewAniNode->sRelativeX		= sX;
@@ -140,7 +139,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 		}
 
 	}
-
+	pNewAniNode->sCachedTileID = iCachedTile;
 
 	switch( ubLevel )
 	{
@@ -215,7 +214,7 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	pNewAniNode->ubLevelID				= ubLevel;
 	pNewAniNode->usTileIndex			= usTileIndex;
 
-	if ( ( uiFlags & ANITILE_CACHEDTILE ) )
+	if (iCachedTile != -1)
 	{
 		pNewAniNode->usNumFrames			= gpTileCache[ iCachedTile ].ubNumFrames;
 	}
@@ -344,9 +343,9 @@ void DeleteAniTile( ANITILE *pAniTile )
 
 				}
 
-				if ( ( pAniNode->uiFlags & ANITILE_CACHEDTILE ) )
+				if (pAniNode->sCachedTileID != -1)
 				{
-					RemoveCachedTile( pAniNode->sCachedTileID );
+					RemoveCachedTile(pAniNode->sCachedTileID);
 				}
 
 				if ( pAniNode->uiFlags & ANITILE_EXPLOSION )

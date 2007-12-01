@@ -1137,7 +1137,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 					AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 					AniParams.sDelay							= (INT16)( 100 + PreRandom( 100 ) );
 					AniParams.sStartFrame					= 0;
-					AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
+					AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_ALWAYS_TRANSLUCENT;
 					AniParams.sX									= (INT16)pObject->Position.x;
 					AniParams.sY									= (INT16)pObject->Position.y;
 					AniParams.sZ									= (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );

@@ -678,7 +678,7 @@ void HandleHeliDrop( )
 					AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
 					AniParams.sDelay							= 90;
 					AniParams.sStartFrame					= 0;
-					AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD | ANITILE_LOOPING;
+					AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING;
 					AniParams.sX									= gsHeliXPos;
 					AniParams.sY									= gsHeliYPos;
 					AniParams.sZ									= (INT16)gdHeliZPos;

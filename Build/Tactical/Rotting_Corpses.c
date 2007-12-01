@@ -505,7 +505,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	AniParams.ubLevelID						= ubLevelID;
 	AniParams.sDelay							= (INT16)( 150 );
 	AniParams.sStartFrame					= 0;
-	AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_PAUSED | ANITILE_OPTIMIZEFORSLOWMOVING | ANITILE_ANIMATE_Z | ANITILE_ERASEITEMFROMSAVEBUFFFER | uiDirectionUseFlag;
+	AniParams.uiFlags             = ANITILE_PAUSED | ANITILE_OPTIMIZEFORSLOWMOVING | ANITILE_ANIMATE_Z | ANITILE_ERASEITEMFROMSAVEBUFFFER | uiDirectionUseFlag;
 	AniParams.sX									= CenterX( pCorpse->def.sGridNo );
 	AniParams.sY									= CenterY( pCorpse->def.sGridNo );
 	AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
@@ -1364,7 +1364,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 		AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
 		AniParams.sDelay							= (INT16)( 80 );
 		AniParams.sStartFrame					= 0;
-		AniParams.uiFlags							= ANITILE_CACHEDTILE | ANITILE_FORWARD;
+		AniParams.uiFlags             = ANITILE_FORWARD;
 		AniParams.sX									= CenterX( sBaseGridNo );
 		AniParams.sY									= CenterY( sBaseGridNo );
 		AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
