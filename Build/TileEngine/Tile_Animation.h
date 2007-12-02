@@ -64,7 +64,6 @@ typedef struct TAG_anitile
 	INT16												sDelay;
 	UINT16											usNumFrames;
 
-	UINT16											ubAttackerMissed;
 	INT16												sRelativeX;
 	INT16												sRelativeY;
 	INT16												sRelativeZ;

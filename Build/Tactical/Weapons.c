@@ -1931,7 +1931,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 	SOLDIERTYPE* const attacker      = pBullet->pFirer;
 	const UINT16       usWeaponIndex = attacker->usAttackingWeapon;
 	const INT8         bWeaponStatus = pBullet->ubItemStatus;
-	const UINT8        ubAttackerID  = attacker->ubID;
 
 	if (fStopped)
 	{
@@ -2142,8 +2141,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 				pNode = CreateAnimationTile( &AniParams );
 
-				// Set attacker ID
-				pNode->ubAttackerMissed			 = ubAttackerID;
 				// Adjust for absolute positioning
 				pNode->pLevelNode->uiFlags |= LEVELNODE_USEABSOLUTEPOS;
 				pNode->pLevelNode->sRelativeX	= sXPos;

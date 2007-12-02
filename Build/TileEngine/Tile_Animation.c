@@ -371,11 +371,13 @@ void DeleteAniTile( ANITILE *pAniTile )
 
 				if ( pAniNode->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE )
 				{
+					BULLET*      const bullet   = pAniNode->v.bullet;
+					SOLDIERTYPE* const attacker = bullet->pFirer;
 					// First delete the bullet!
-					RemoveBullet(pAniNode->v.bullet);
+					RemoveBullet(bullet);
 
 					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
-					FreeUpAttacker(GetMan(pAniNode->ubAttackerMissed));
+					FreeUpAttacker(attacker);
 				}
 			}
 			else
