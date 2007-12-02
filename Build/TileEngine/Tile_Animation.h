@@ -1,7 +1,6 @@
 #ifndef _TILE_ANIMATION_H
 #define _TILE_ANIMATION_H
 
-#include "Explosion_Control.h"
 #include "JA2Types.h"
 #include "WorldDef.h"
 

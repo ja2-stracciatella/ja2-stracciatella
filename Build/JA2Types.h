@@ -6,11 +6,12 @@
 
 typedef INT16 GridNo;
 
-typedef struct BULLET       BULLET;
-typedef struct LEVELNODE    LEVELNODE;
-typedef struct LIGHT_SPRITE LIGHT_SPRITE;
-typedef struct REAL_OBJECT  REAL_OBJECT;
-typedef struct SMOKEEFFECT  SMOKEEFFECT;
-typedef struct SOLDIERTYPE  SOLDIERTYPE;
+typedef struct BULLET        BULLET;
+typedef struct EXPLOSIONTYPE EXPLOSIONTYPE;
+typedef struct LEVELNODE     LEVELNODE;
+typedef struct LIGHT_SPRITE  LIGHT_SPRITE;
+typedef struct REAL_OBJECT   REAL_OBJECT;
+typedef struct SMOKEEFFECT   SMOKEEFFECT;
+typedef struct SOLDIERTYPE   SOLDIERTYPE;
 
 #endif
