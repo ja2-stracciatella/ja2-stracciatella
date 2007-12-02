@@ -73,7 +73,6 @@ typedef struct TAG_anitile
 
 	INT16												sCachedTileID;					// Index into cached tile ID
 
-	UINT8												ubOwner;
 	UINT8												ubKeyFrame1;
 	UINT32											uiKeyFrame1Code;
 	UINT8												ubKeyFrame2;
@@ -101,7 +100,6 @@ typedef struct TAG_anitile_params
 	LEVELNODE										*pGivenLevelNode;			// Levelnode for existing tile ( optional )
 	const char* zCachedFile; // Filename for cached tile name ( optional )
 
-	UINT8												ubOwner;							// UBID for the owner
 	UINT8												ubKeyFrame1;					// Key frame 1
 	UINT32											uiKeyFrame1Code;			// Key frame code
 	UINT8												ubKeyFrame2;					// Key frame 2
