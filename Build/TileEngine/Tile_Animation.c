@@ -144,15 +144,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 			pNewAniNode->pLevelNode->sRelativeZ		= sZ;
 
 		}
-		// Can't set relative X,Y,Z IF FLAGS ANITILE_CACHEDTILE set!
-		else if ( (uiFlags & ANITILE_USEABSOLUTEPOS  ) )
-		{
-			pNewAniNode->pLevelNode->sRelativeX		= sX;
-			pNewAniNode->pLevelNode->sRelativeY		= sY;
-			pNewAniNode->pLevelNode->sRelativeZ		= sZ;
-			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_USEABSOLUTEPOS );
-		}
-
 	}
 	pNewAniNode->sCachedTileID = iCachedTile;
 

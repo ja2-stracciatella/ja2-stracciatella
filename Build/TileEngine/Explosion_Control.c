@@ -284,8 +284,6 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		AniParams.sX									= sX;
 		AniParams.sY									= sY;
 		AniParams.sZ									= sZ;
-
-		//AniParams.uiFlags							|= ANITILE_USEABSOLUTEPOS;
 	}
 
 	AniParams.ubKeyFrame1					= ubTransKeyFrame[ ubTypeID ];
