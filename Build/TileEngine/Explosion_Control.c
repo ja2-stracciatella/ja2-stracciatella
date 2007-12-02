@@ -62,72 +62,29 @@ extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 extern void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation );
 void FatigueCharacter( SOLDIERTYPE *pSoldier );
 
-UINT8		ubTransKeyFrame[ NUM_EXP_TYPES ] =
+
+typedef struct ExplosionInfo
 {
-	0,
-	17,
-	28,
-	24,
-	1,
-	1,
-	1,
-	1,
-	1,
+	const char* blast_anim;
+	UINT32      sound;
+	UINT8       blast_speed;
+	UINT8       transparent_key_frame;
+	UINT8       damage_key_frame;
+} ExplosionInfo;
+
+static const ExplosionInfo explosion_info[] =
+{
+	{ "",                       EXPLOSION_1,        0,  0,  0 },
+	{ "TILECACHE/zgrav_d.sti",  EXPLOSION_1,       80, 17,  3 },
+	{ "TILECACHE/zgrav_c.sti",  EXPLOSION_BLAST_2, 80, 28,  5 },
+	{ "TILECACHE/zgrav_b.sti",  EXPLOSION_BLAST_2, 80, 24,  5 },
+	{ "TILECACHE/shckwave.sti", EXPLOSION_1,       20,  1,  5 },
+	{ "TILECACHE/wat_exp.sti",  AIR_ESCAPING_1,    80,  1, 18 },
+	{ "TILECACHE/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
+	{ "TILECACHE/tear_exp.sti", AIR_ESCAPING_1,    80,  1, 18 },
+	{ "TILECACHE/must_exp.sti", AIR_ESCAPING_1,    80,  1, 18 }
 };
 
-UINT8		ubDamageKeyFrame[ NUM_EXP_TYPES ] =
-{
-	0,
-	3,
-	5,
-	5,
-	5,
-	18,
-	18,
-	18,
-	18,
-};
-
-
-UINT32	uiExplosionSoundID[ NUM_EXP_TYPES ] =
-{
-	EXPLOSION_1,
-	EXPLOSION_1,
-	EXPLOSION_BLAST_2,  //LARGE
-	EXPLOSION_BLAST_2,
-	EXPLOSION_1,
-	AIR_ESCAPING_1,
-	AIR_ESCAPING_1,
-	AIR_ESCAPING_1,
-	AIR_ESCAPING_1,
-};
-
-
-CHAR8	zBlastFilenames[][70] =
-{
-	"",
-	"TILECACHE/zgrav_d.sti",
-	"TILECACHE/zgrav_c.sti",
-	"TILECACHE/zgrav_b.sti",
-	"TILECACHE/shckwave.sti",
-	"TILECACHE/wat_exp.sti",
-	"TILECACHE/tear_exp.sti",
-	"TILECACHE/tear_exp.sti",
-	"TILECACHE/must_exp.sti",
-};
-
-CHAR8	sBlastSpeeds[] =
-{
-	0,
-	80,
-	80,
-	80,
-	20,
-	80,
-	80,
-	80,
-	80,
-};
 
 #define BOMB_QUEUE_DELAY (1000 + Random( 500 ) )
 
@@ -224,19 +181,16 @@ static void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 {
-	UINT8			ubTypeID;
 	INT16			sX;
 	INT16			sY;
 	INT16			sZ;
 	INT16			sGridNo;
 	UINT8			ubTerrainType;
 	INT8			bLevel;
-  UINT32    uiSoundID;
 
 	ANITILE_PARAMS	AniParams;
 
 	// Assign param values
-	ubTypeID			= pExplosion->Params.ubTypeID;
 	sX						= pExplosion->Params.sX;
 	sY						= pExplosion->Params.sY;
 	sZ						= pExplosion->Params.sZ;
@@ -254,22 +208,23 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	// OK, if we are over water.... use water explosion...
 	ubTerrainType = GetTerrainType( sGridNo );
 
+	const ExplosionInfo* inf = &explosion_info[pExplosion->Params.ubTypeID];
+
 	// Setup explosion!
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 
 	AniParams.sGridNo							= sGridNo;
 	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
-	AniParams.sDelay							= sBlastSpeeds[ ubTypeID ];
+	AniParams.sDelay              = inf->blast_speed;
 	AniParams.sStartFrame					= pExplosion->sCurrentFrame;
 	AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_EXPLOSION;
 
 	if ( ubTerrainType == LOW_WATER || ubTerrainType == MED_WATER || ubTerrainType == DEEP_WATER )
 	{
 		// Change type to water explosion...
-		ubTypeID = WATER_BLAST;
+		inf = &explosion_info[WATER_BLAST];
 		AniParams.uiFlags						|= ANITILE_ALWAYS_TRANSLUCENT;
 	}
-
 
 	if ( sZ < WALL_HEIGHT )
 	{
@@ -280,14 +235,14 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	AniParams.sY = sY;
 	AniParams.sZ = sZ;
 
-	AniParams.ubKeyFrame1					= ubTransKeyFrame[ ubTypeID ];
-	AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
+	AniParams.ubKeyFrame1     = inf->transparent_key_frame;
+	AniParams.uiKeyFrame1Code = ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
 
-	AniParams.ubKeyFrame2     = ubDamageKeyFrame[ubTypeID];
+	AniParams.ubKeyFrame2     = inf->damage_key_frame;
 	AniParams.uiKeyFrame2Code = ANI_KEYFRAME_BEGIN_DAMAGE;
 	AniParams.v.explosion     = pExplosion;
 
-	AniParams.zCachedFile = zBlastFilenames[ubTypeID];
+	AniParams.zCachedFile = inf->blast_anim;
 	CreateAnimationTile( &AniParams );
 
 	//  set light source....
@@ -306,8 +261,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		}
 	}
 
-  uiSoundID = uiExplosionSoundID[ ubTypeID ];
-
+	UINT32 uiSoundID = inf->sound;
   if ( uiSoundID == EXPLOSION_1 )
   {
       // Randomize
