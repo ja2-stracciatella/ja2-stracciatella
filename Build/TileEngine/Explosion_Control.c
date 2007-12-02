@@ -187,7 +187,6 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 
 
 	// OK, go on!
-	ExpParams.uiFlags			= EXPLOSION_FLAG_USEABSPOS;
 	ExpParams.owner       = owner;
 	ExpParams.ubTypeID		= Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
 	ExpParams.sX					= sX;
@@ -225,7 +224,6 @@ static void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 {
-	UINT32		uiFlags;
 	UINT8			ubTypeID;
 	INT16			sX;
 	INT16			sY;
@@ -238,7 +236,6 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	ANITILE_PARAMS	AniParams;
 
 	// Assign param values
-	uiFlags				= pExplosion->Params.uiFlags;
 	ubTypeID			= pExplosion->Params.ubTypeID;
 	sX						= pExplosion->Params.sX;
 	sY						= pExplosion->Params.sY;
@@ -279,12 +276,9 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		AniParams.uiFlags |= ANITILE_NOZBLITTER;
 	}
 
-	if ( uiFlags & EXPLOSION_FLAG_USEABSPOS )
-	{
-		AniParams.sX									= sX;
-		AniParams.sY									= sY;
-		AniParams.sZ									= sZ;
-	}
+	AniParams.sX = sX;
+	AniParams.sY = sY;
+	AniParams.sZ = sZ;
 
 	AniParams.ubKeyFrame1					= ubTransKeyFrame[ ubTypeID ];
 	AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_BEGIN_TRANSLUCENCY;

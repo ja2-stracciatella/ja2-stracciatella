@@ -7,14 +7,9 @@
 #define MAX_DISTANCE_EXPLOSIVE_CAN_DESTROY_STRUCTURES 2
 
 
-#define EXPLOSION_FLAG_USEABSPOS		0x00000001
-
-
 // Explosion Data
 typedef struct
 {
-	UINT32											uiFlags;
-
 	SOLDIERTYPE*                owner;
 	UINT8												ubTypeID;
 
