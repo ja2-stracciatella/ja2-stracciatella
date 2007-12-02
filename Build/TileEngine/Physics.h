@@ -1,14 +1,14 @@
 #ifndef __PHYSICS_H
 #define	__PHYSICS_H
 
+#include "JA2Types.h"
 #include "Phys_Math.h"
 #include "WorldDef.h"
-#include "Soldier_Control.h"
 
 
 extern UINT32 guiNumObjectSlots;
 
-typedef struct
+struct REAL_OBJECT
 {
 	BOOLEAN			fAllocated;
 	BOOLEAN			fAlive;
@@ -63,7 +63,7 @@ typedef struct
   INT16       sLevelNodeGridNo;
   INT32       iSoundID;
   UINT8       ubLastTargetTakenDamage;
-} REAL_OBJECT;
+};
 
 
 // OBJECT LIST STUFF

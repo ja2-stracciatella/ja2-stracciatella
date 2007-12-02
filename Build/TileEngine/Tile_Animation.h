@@ -43,12 +43,12 @@ typedef union AniUserData
 	struct
 	{
 		UINT32 uiData;
-		UINT8  ubData2;
 		UINT32 uiData3;
 	} user;
-	EXPLOSIONTYPE* explosion;
-	BULLET*        bullet;
-	UINT32         sound;
+	EXPLOSIONTYPE*     explosion;
+	BULLET*            bullet;
+	const REAL_OBJECT* object;
+	UINT32             sound;
 } AniUserData;
 
 

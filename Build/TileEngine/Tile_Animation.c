@@ -1,3 +1,4 @@
+#include "Physics.h"
 #include "Soldier_Find.h"
 #include "WorldDef.h"
 #include "WCheck.h"
@@ -484,8 +485,11 @@ void UpdateAniTiles( )
 								break;
 
 							case ANI_KEYFRAME_CHAIN_WATER_EXPLOSION:
-								IgniteExplosion(ID2SOLDIER(pNode->v.user.ubData2), pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, (UINT16)pNode->v.user.uiData, 0);
+							{
+								const REAL_OBJECT* const o = pNode->v.object;
+								IgniteExplosion(o->owner, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, o->Obj.usItem, 0);
 								break;
+							}
 
               case ANI_KEYFRAME_DO_SOUND:
                 PlayLocationJA2Sample(pNode->sGridNo, pNode->v.sound, MIDVOLUME, 1);
