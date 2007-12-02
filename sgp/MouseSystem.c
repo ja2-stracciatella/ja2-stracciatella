@@ -66,11 +66,6 @@ static MOUSE_REGION* MSYS_RegList = NULL;
 MOUSE_REGION *MSYS_PrevRegion = NULL;
 static MOUSE_REGION* MSYS_CurrRegion = NULL;
 
-//When set, the fast help text will be instantaneous, if consecutive regions with help text are
-//hilighted.  It is set, whenever the timer for the first help button expires, and the mode is
-//cleared as soon as the cursor moves into no region or a region with no helptext.
-BOOLEAN gfPersistantFastHelpMode;
-
 static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
 
