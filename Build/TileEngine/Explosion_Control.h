@@ -7,25 +7,19 @@
 #define MAX_DISTANCE_EXPLOSIVE_CAN_DESTROY_STRUCTURES 2
 
 
-// Explosion Data
-typedef struct
-{
-	SOLDIERTYPE*                owner;
-	UINT8												ubTypeID;
-
-	UINT16											usItem;
-
-	INT16												sX;										// World X ( optional )
-	INT16												sY;										// World Y ( optional )
-	INT16												sZ;										// World Z ( optional )
-	INT16												sGridNo;							// World GridNo
-	INT8												bLevel;								// World level
-} EXPLOSION_PARAMS;
-
-
 struct EXPLOSIONTYPE
 {
-	EXPLOSION_PARAMS		Params;
+	SOLDIERTYPE* owner;
+	UINT8        ubTypeID;
+
+	UINT16       usItem;
+
+	INT16        sX;      // World X ( optional )
+	INT16        sY;      // World Y ( optional )
+	INT16        sZ;      // World Z ( optional )
+	INT16        sGridNo; // World GridNo
+	INT8         bLevel;  // World level
+
 	BOOLEAN							fAllocated;
 	INT16								sCurrentFrame;
 	LIGHT_SPRITE* light;

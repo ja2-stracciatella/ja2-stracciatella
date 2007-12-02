@@ -45,7 +45,6 @@ DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
 DrawTownLabels(): complicated coordinates (FindFontCenterCoordinates() necessary at all?)
 ET_ENDENEMYS_TURN: unused
-EXPLOSION_PARAMS: all attributes used?
 EndOfHelicoptersPath(): complicated
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO

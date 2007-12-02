@@ -345,7 +345,7 @@ void DeleteAniTile( ANITILE *pAniTile )
 				{
 					// Talk to the explosion data...
 					EXPLOSIONTYPE* const e     = pAniNode->v.explosion;
-					SOLDIERTYPE*   const owner = e->Params.owner;
+					SOLDIERTYPE*   const owner = e->owner;
 					RemoveExplosionData(e);
 
 					if ( !gfExplosionQueueActive )
@@ -498,7 +498,7 @@ void UpdateAniTiles( )
 							{
                 Assert(pNode->uiFlags & ANITILE_EXPLOSION);
                 const EXPLOSIONTYPE* const e    = pNode->v.explosion;
-                const UINT16               item = e->Params.usItem;
+								const UINT16               item = e->usItem;
                 const UINT8 ubExpType = Explosive[Item[item].ubClassIndex].ubType;
 
                 if ( ubExpType == EXPLOSV_TEARGAS || ubExpType == EXPLOSV_MUSTGAS ||
@@ -506,11 +506,11 @@ void UpdateAniTiles( )
                 {
                   // Do sound....
                   // PlayLocationJA2Sample(pNode->sGridNo, AIR_ESCAPING_1, HIGHVOLUME, 1);
-		              NewSmokeEffect(pNode->sGridNo, item, e->Params.bLevel, e->Params.owner);
+									NewSmokeEffect(pNode->sGridNo, item, e->bLevel, e->owner);
                 }
                 else
                 {
-									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->Params.owner, FALSE, e->Params.bLevel, NULL);
+									SpreadEffect(pNode->sGridNo, Explosive[Item[item].ubClassIndex].ubRadius, item, e->owner, FALSE, e->bLevel, NULL);
                 }
 								// Forfait any other animations this frame....
 								return;

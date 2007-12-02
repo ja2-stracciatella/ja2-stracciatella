@@ -113,15 +113,12 @@ static EXPLOSIONTYPE* GetFreeExplosion(void)
 }
 
 
-static void GenerateExplosion(const EXPLOSION_PARAMS*);
+static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 
 
 // GENERATE EXPLOSION
 void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
-	EXPLOSION_PARAMS	ExpParams ;
-
-
 	// Double check that we are using an explosive!
 	if ( !( Item[ usItem ].usItemClass & IC_EXPLOSV ) )
 	{
@@ -142,17 +139,19 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount ) );
 
+	EXPLOSIONTYPE* const e = GetFreeExplosion();
+	if (e == NULL) return;
 
-	// OK, go on!
-	ExpParams.owner       = owner;
-	ExpParams.ubTypeID		= Explosive[ Item[ usItem ].ubClassIndex ].ubAnimationID;
-	ExpParams.sX					= sX;
-	ExpParams.sY					= sY;
-	ExpParams.sZ					= sZ;
-	ExpParams.sGridNo			= sGridNo;
-	ExpParams.usItem			= usItem;
-	ExpParams.bLevel			= bLevel;
-	GenerateExplosion(&ExpParams);
+	e->owner      = owner;
+	e->ubTypeID   = Explosive[Item[usItem].ubClassIndex].ubAnimationID;
+	e->usItem     = usItem;
+	e->sX         = sX;
+	e->sY         = sY;
+	e->sZ         = sZ;
+	e->sGridNo    = sGridNo;
+	e->bLevel     = bLevel;
+	e->fAllocated = TRUE;
+	GenerateExplosionFromExplosionPointer(e);
 
 	if (fLocate) LocateGridNo(sGridNo);
 }
@@ -164,38 +163,18 @@ void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, c
 }
 
 
-static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
-
-
-static void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
-{
-	EXPLOSIONTYPE* const e = GetFreeExplosion();
-	if (e == NULL) return;
-
-	memset(e, 0, sizeof(*e));
-	e->Params     = *pExpParams;
-	e->fAllocated = TRUE;
-	GenerateExplosionFromExplosionPointer(e);
-}
-
-
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 {
-	INT16			sX;
-	INT16			sY;
-	INT16			sZ;
-	INT16			sGridNo;
 	UINT8			ubTerrainType;
-	INT8			bLevel;
 
 	ANITILE_PARAMS	AniParams;
 
 	// Assign param values
-	sX						= pExplosion->Params.sX;
-	sY						= pExplosion->Params.sY;
-	sZ						= pExplosion->Params.sZ;
-	sGridNo				= pExplosion->Params.sGridNo;
-	bLevel				= pExplosion->Params.bLevel;
+	const INT16 sX      = pExplosion->sX;
+	const INT16 sY      = pExplosion->sY;
+	INT16       sZ      = pExplosion->sZ;
+	const INT16 sGridNo = pExplosion->sGridNo;
+	const INT16 bLevel  = pExplosion->bLevel;
 
   // If Z value given is 0 and bLevel > 0, make z heigher
   if ( sZ == 0 && bLevel > 0 )
@@ -208,7 +187,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	// OK, if we are over water.... use water explosion...
 	ubTerrainType = GetTerrainType( sGridNo );
 
-	const ExplosionInfo* inf = &explosion_info[pExplosion->Params.ubTypeID];
+	const ExplosionInfo* inf = &explosion_info[pExplosion->ubTypeID];
 
 	// Setup explosion!
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
