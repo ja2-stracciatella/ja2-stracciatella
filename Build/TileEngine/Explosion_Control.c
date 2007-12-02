@@ -163,21 +163,6 @@ static EXPLOSIONTYPE* GetFreeExplosion(void)
 }
 
 
-static void RecountExplosions(void)
-{
-	INT32 uiCount;
-
-	for(uiCount=guiNumExplosions-1; (uiCount >=0) ; uiCount--)
-	{
-		if( ( gExplosionData[uiCount].fAllocated ) )
-		{
-			guiNumExplosions=(UINT32)(uiCount+1);
-			break;
-		}
-	}
-}
-
-
 static void GenerateExplosion(const EXPLOSION_PARAMS*);
 
 
