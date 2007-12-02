@@ -25,7 +25,6 @@ typedef struct
 	INT16												sY;										// World Y ( optional )
 	INT16												sZ;										// World Z ( optional )
 	INT16												sGridNo;							// World GridNo
-	BOOLEAN											fLocate;
 	INT8												bLevel;								// World level
 } EXPLOSION_PARAMS;
 

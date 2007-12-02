@@ -221,10 +221,10 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	ExpParams.sZ					= sZ;
 	ExpParams.sGridNo			= sGridNo;
 	ExpParams.usItem			= usItem;
-	ExpParams.fLocate			= fLocate;
 	ExpParams.bLevel			= bLevel;
+	GenerateExplosion(&ExpParams);
 
-	GenerateExplosion( &ExpParams );
+	if (fLocate) LocateGridNo(sGridNo);
 }
 
 
@@ -237,15 +237,10 @@ void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, c
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 
 
-void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
+static void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 {
 	EXPLOSIONTYPE		*pExplosion;
-	INT16			sGridNo;
 	INT32			iIndex;
-
-	// Assign param values
-	sGridNo				= pExpParams->sGridNo;
-
 
 	{
 		// GET AND SETUP EXPLOSION INFO IN TABLE....
@@ -266,12 +261,6 @@ void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 		pExplosion->fAllocated = TRUE;
 
 		GenerateExplosionFromExplosionPointer( pExplosion );
-	}
-
-	// ATE: Locate to explosion....
-	if ( pExpParams->fLocate )
-	{
-		LocateGridNo( sGridNo );
 	}
 }
 
