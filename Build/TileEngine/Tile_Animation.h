@@ -73,7 +73,6 @@ typedef struct TAG_anitile
 	INT16												sGridNo;
 	UINT16											usTileIndex;
 
-	UINT16											usCachedTileSubIndex;		// sub Index
 	INT16												sCachedTileID;					// Index into cached tile ID
 
 	UINT8												ubOwner;

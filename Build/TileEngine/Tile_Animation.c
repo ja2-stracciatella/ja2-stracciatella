@@ -139,7 +139,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 		if (iCachedTile != -1)
 		{
 			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_CACHEDANITILE );
-			pNewAniNode->usCachedTileSubIndex = usTileType;
 			pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
 			pNewAniNode->sRelativeX		= sX;
 			pNewAniNode->sRelativeY		= sY;
