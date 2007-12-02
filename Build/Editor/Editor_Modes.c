@@ -248,13 +248,12 @@ void SetEditorTerrainTaskbarMode( UINT16 usNewMode )
 static void ShowExitGrids(void)
 {
 	UINT16 i;
-	LEVELNODE *pLevelNode;
 	if( gfShowExitGrids )
 		return;
 	gfShowExitGrids = TRUE;
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
-		if( GetExitGridLevelNode( i, &pLevelNode ) )
+		if (ExitGridAtGridNo(i))
 		{
 			AddTopmostToTail( i, FIRSTPOINTERS8 );
 		}
@@ -264,15 +263,14 @@ static void ShowExitGrids(void)
 void HideExitGrids()
 {
 	UINT16 i;
-	LEVELNODE *pLevelNode;
 	if( !gfShowExitGrids )
 		return;
 	gfShowExitGrids = FALSE;
 	for( i = 0; i < WORLD_MAX; i++ )
 	{
-		if( GetExitGridLevelNode( i, &pLevelNode ) )
+		if (ExitGridAtGridNo(i))
 		{
-			pLevelNode = gpWorldLevelData[ i ].pTopmostHead;
+			LEVELNODE* pLevelNode = gpWorldLevelData[i].pTopmostHead;
 			while( pLevelNode )
 			{
 				if( pLevelNode->usIndex == FIRSTPOINTERS8 )
