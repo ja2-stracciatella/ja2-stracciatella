@@ -488,7 +488,7 @@ void UpdateAniTiles( )
 								break;
 
               case ANI_KEYFRAME_DO_SOUND:
-                PlayLocationJA2Sample((INT16)pNode->v.user.uiData3, pNode->v.user.uiData, MIDVOLUME, 1);
+                PlayLocationJA2Sample(pNode->sGridNo, pNode->v.user.uiData, MIDVOLUME, 1);
                 break;
 						}
 
