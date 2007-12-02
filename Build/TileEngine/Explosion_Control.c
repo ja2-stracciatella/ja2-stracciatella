@@ -150,20 +150,16 @@ static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 static UINT32        guiNumExplosions = 0;
 
 
-static INT32 GetFreeExplosion(void)
+static EXPLOSIONTYPE* GetFreeExplosion(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumExplosions; uiCount++)
+	EXPLOSIONTYPE* e;
+	for (e = gExplosionData; e != gExplosionData + guiNumExplosions; ++e)
 	{
-		if(( gExplosionData[uiCount].fAllocated==FALSE ) )
-			return( (INT32)uiCount );
+		if (!e->fAllocated) return e;
 	}
-
-	if( guiNumExplosions < NUM_EXPLOSION_SLOTS )
-		return( (INT32) guiNumExplosions++ );
-
-	return( -1 );
+	if (e == endof(gExplosionData)) return NULL;
+	++guiNumExplosions;
+	return e;
 }
 
 
@@ -239,29 +235,13 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 
 static void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 {
-	EXPLOSIONTYPE		*pExplosion;
-	INT32			iIndex;
+	EXPLOSIONTYPE* const e = GetFreeExplosion();
+	if (e == NULL) return;
 
-	{
-		// GET AND SETUP EXPLOSION INFO IN TABLE....
-		iIndex = GetFreeExplosion( );
-
-		if ( iIndex == -1 )
-		{
-			return;
-		}
-
-		// OK, get pointer...
-		pExplosion = &( gExplosionData[ iIndex ] );
-
-		memset( pExplosion, 0, sizeof( EXPLOSIONTYPE ) );
-
-		// Setup some data...
-		pExplosion->Params = *pExpParams;
-		pExplosion->fAllocated = TRUE;
-
-		GenerateExplosionFromExplosionPointer( pExplosion );
-	}
+	memset(e, 0, sizeof(*e));
+	e->Params     = *pExpParams;
+	e->fAllocated = TRUE;
+	GenerateExplosionFromExplosionPointer(e);
 }
 
 
