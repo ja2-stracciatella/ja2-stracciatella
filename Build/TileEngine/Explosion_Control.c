@@ -142,24 +142,17 @@ static SOLDIERTYPE* gPersonToSetOffExplosions = NULL;
 INT16			gsTempActionGridNo = NOWHERE;
 
 
-#define		NUM_EXPLOSION_SLOTS					100
-
-// GLOBAL FOR SMOKE LISTING
 #define	NUM_EXPLOSION_SLOTS 100
 static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
-static UINT32        guiNumExplosions = 0;
 
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
 {
-	EXPLOSIONTYPE* e;
-	for (e = gExplosionData; e != gExplosionData + guiNumExplosions; ++e)
+	for (EXPLOSIONTYPE* e = gExplosionData; e != endof(gExplosionData); ++e)
 	{
 		if (!e->fAllocated) return e;
 	}
-	if (e == endof(gExplosionData)) return NULL;
-	++guiNumExplosions;
-	return e;
+	return NULL;
 }
 
 
@@ -3046,8 +3039,6 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 {
-	UINT32	uiCnt;
-
 	//
 	//	Explosion Queue
 	//
@@ -3059,7 +3050,7 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 	if (!FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32))) return FALSE;
 
 	//loop through read all the active explosions fro the file
-	for( uiCnt=0; uiCnt<MAX_BOMB_QUEUE; uiCnt++)
+	for (UINT32 uiCnt = 0; uiCnt < MAX_BOMB_QUEUE; ++uiCnt)
 	{
 		if (!FileRead(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement))) return FALSE;
 	}
@@ -3071,12 +3062,13 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 	//
 
 	//Load the number of explosions
-	if (!FileRead(hFile, &guiNumExplosions, sizeof(UINT32))) return FALSE;
+	UINT32 num_explosions;
+	if (!FileRead(hFile, &num_explosions, sizeof(num_explosions))) return FALSE;
 
 	//loop through and load all the active explosions
-	for( uiCnt=0; uiCnt< guiNumExplosions; uiCnt++)
+	const EXPLOSIONTYPE* const end = gExplosionData + num_explosions;
+	for (EXPLOSIONTYPE* e = gExplosionData; e != end; ++e)
 	{
-		EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
 		if (!ExtractExplosionTypeFromFile(hFile, e)) return FALSE;
 
 		GenerateExplosionFromExplosionPointer(e);
