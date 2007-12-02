@@ -48,6 +48,7 @@ typedef union AniUserData
 	} user;
 	EXPLOSIONTYPE* explosion;
 	BULLET*        bullet;
+	UINT32         sound;
 } AniUserData;
 
 
