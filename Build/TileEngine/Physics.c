@@ -921,7 +921,6 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 					AniParams.sGridNo							= sGridNo;
 					AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-					AniParams.usTileType				  = THIRDMISS;
 					AniParams.usTileIndex					= THIRDMISS1;
 					AniParams.sDelay							= 50;
 					AniParams.sStartFrame					= 0;

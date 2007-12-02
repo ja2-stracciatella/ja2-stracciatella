@@ -51,7 +51,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	INT32			iCachedTile=-1;
 	INT16			sGridNo;
 	UINT8			ubLevel;
-	INT16			usTileType;
 	INT16			usTileIndex;
 	INT16			sDelay;
 	INT16			sStartFrame=-1;
@@ -62,7 +61,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	// Get some parameters from structure sent in...
 	sGridNo			= pAniParams->sGridNo;
 	ubLevel			= pAniParams->ubLevelID;
-	usTileType	= pAniParams->usTileType;
 	usTileIndex	= pAniParams->usTileIndex;
 	sDelay			= pAniParams->sDelay;
 	sStartFrame	= pAniParams->sStartFrame;
@@ -240,7 +238,6 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 		pNewAniNode->usNumFrames			= gTileDatabase[ usTileIndex ].pAnimData->ubNumFrames;
 	}
 
-	pNewAniNode->usTileType				= usTileType;
 	pNewAniNode->pNext						= pAniNode;
 	pNewAniNode->uiFlags					= uiFlags;
 	pNewAniNode->sDelay						= sDelay;

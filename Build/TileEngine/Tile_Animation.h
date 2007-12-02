@@ -62,7 +62,6 @@ typedef struct TAG_anitile
 	INT16											  sCurrentFrame;
 	INT16												sStartFrame;
 	INT16												sDelay;
-	UINT16											usTileType;
 	UINT16											usNumFrames;
 
 	UINT16											usMissAnimationPlayed;
@@ -94,7 +93,6 @@ typedef struct TAG_anitile_params
 	UINT8												ubLevelID;						// Level ID for rendering layer
 	INT16											  sStartFrame;					// Start frame
 	INT16												sDelay;								// Delay time
-	UINT16											usTileType;						// Tile databse type ( optional )
 	UINT16											usTileIndex;					// Tile database index ( optional )
 	INT16												sX;										// World X ( optional )
 	INT16												sY;										// World Y ( optional )

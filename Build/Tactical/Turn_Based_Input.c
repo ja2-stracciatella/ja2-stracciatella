@@ -3656,7 +3656,6 @@ static void ObliterateSector(void)
 			//		memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 			//		AniParams.sGridNo							= pTSoldier->sGridNo;
 			//		AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-			//	AniParams.usTileType				  = FIRSTEXPLOSION;
 				//	AniParams.usTileIndex					= FIRSTEXPLOSION1;
 				//	AniParams.sDelay							= 80;
 				//	AniParams.sStartFrame					= 0;

@@ -1063,7 +1063,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
@@ -1077,7 +1076,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
@@ -1206,7 +1204,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			{
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;
@@ -1221,7 +1218,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			{
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = (UINT16)gTileDatabase[ pNode->usIndex ].fType;
 				AniParams.usTileIndex					= pNode->usIndex;
 				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
 				AniParams.sStartFrame					= pNode->sCurrentFrame;

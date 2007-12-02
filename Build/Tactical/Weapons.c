@@ -2112,7 +2112,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 					AniParams.sGridNo							= sGridNo;
 					AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-					AniParams.usTileType				  = THIRDMISS;
 					AniParams.usTileIndex					= THIRDMISS1;
 					AniParams.sDelay							= 50;
 					AniParams.sStartFrame					= 0;
@@ -2131,7 +2130,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 				AniParams.sGridNo							= sGridNo;
 				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileType				  = usMissTileType;
 				AniParams.usTileIndex					= usMissTileIndex;
 				AniParams.sDelay							= 80;
 				AniParams.sStartFrame					= 0;
@@ -2283,7 +2281,6 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
 	AniParams.sGridNo							= sShatterGridNo;
 	AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-	AniParams.usTileType				  = WINDOWSHATTER;
 	AniParams.usTileIndex					= usTileIndex;
 	AniParams.sDelay							= 50;
 	AniParams.sStartFrame					= 0;
