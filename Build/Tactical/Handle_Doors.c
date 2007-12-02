@@ -943,7 +943,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 	LEVELNODE * pNode;
 	INT32				cnt;
 	BOOLEAN					fOpenedGraphic = FALSE;
-	ANITILE_PARAMS	AniParams;
 	BOOLEAN					fDoAnimation = TRUE;
 	STRUCTURE *	pBaseStructure;
 	UINT32			uiSoundID;
@@ -1058,32 +1057,16 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			// Update perceived value
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, TRUE );
 
-			if ( fOpenedGraphic )
-			{
-				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-				AniParams.sGridNo							= sGridNo;
-				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileIndex					= pNode->usIndex;
-				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
-				AniParams.sStartFrame					= pNode->sCurrentFrame;
-				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_FORWARD | ANITILE_EXISTINGTILE;
-				AniParams.pGivenLevelNode			= pNode;
-
-				CreateAnimationTile( &AniParams );
-			}
-			else
-			{
-				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-				AniParams.sGridNo							= sGridNo;
-				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileIndex					= pNode->usIndex;
-				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
-				AniParams.sStartFrame					= pNode->sCurrentFrame;
-				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_BACKWARD | ANITILE_EXISTINGTILE;
-				AniParams.pGivenLevelNode			= pNode;
-
-				CreateAnimationTile( &AniParams );
-			}
+			ANITILE_PARAMS AniParams;
+			memset(&AniParams, 0, sizeof(AniParams));
+			AniParams.uiFlags         = ANITILE_DOOR | ANITILE_EXISTINGTILE | (fOpenedGraphic ? ANITILE_FORWARD : ANITILE_BACKWARD);
+			AniParams.ubLevelID       = ANI_STRUCT_LEVEL;
+			AniParams.sStartFrame     = pNode->sCurrentFrame;
+			AniParams.sDelay          = INTTILE_DOOR_OPENSPEED;
+			AniParams.usTileIndex     = pNode->usIndex;
+			AniParams.sGridNo         = sGridNo;
+			AniParams.pGivenLevelNode = pNode;
+			CreateAnimationTile(&AniParams);
 		}
 
 		// SHADOW STUFF HERE
@@ -1168,8 +1151,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			// Update perceived value
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, FALSE );
 
-			memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-
 			// ATE; Default to normal door...
 			uiSoundID = ( DRCLOSE_1 + Random( 2 ) );
 
@@ -1196,37 +1177,19 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 				uiSoundID = METAL_DOOR_CLOSE;
 			}
 
-	    AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_DO_SOUND;
+			ANITILE_PARAMS AniParams;
+			memset(&AniParams, 0, sizeof(AniParams));
+			AniParams.uiFlags         = ANITILE_DOOR | ANITILE_EXISTINGTILE | (fOpenedGraphic ? ANITILE_BACKWARD : ANITILE_FORWARD);
+			AniParams.ubLevelID       = ANI_STRUCT_LEVEL;
+			AniParams.sStartFrame     = pNode->sCurrentFrame;
+			AniParams.sDelay          = INTTILE_DOOR_OPENSPEED;
+			AniParams.usTileIndex     = pNode->usIndex;
+			AniParams.sGridNo         = sGridNo;
+			AniParams.pGivenLevelNode = pNode;
+			AniParams.ubKeyFrame1     = pNode->sCurrentFrame + (fOpenedGraphic ? -2 : 2);
+	    AniParams.uiKeyFrame1Code = ANI_KEYFRAME_DO_SOUND;
 	    AniParams.v.sound         = uiSoundID;
-
-			if ( fOpenedGraphic )
-			{
-				AniParams.sGridNo							= sGridNo;
-				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileIndex					= pNode->usIndex;
-				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
-				AniParams.sStartFrame					= pNode->sCurrentFrame;
-				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_BACKWARD | ANITILE_EXISTINGTILE;
-				AniParams.pGivenLevelNode			= pNode;
-
-  	    AniParams.ubKeyFrame1					= pNode->sCurrentFrame - 2;
-
-				CreateAnimationTile( &AniParams );
-			}
-			else
-			{
-				AniParams.sGridNo							= sGridNo;
-				AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				AniParams.usTileIndex					= pNode->usIndex;
-				AniParams.sDelay							= INTTILE_DOOR_OPENSPEED;
-				AniParams.sStartFrame					= pNode->sCurrentFrame;
-				AniParams.uiFlags							= ANITILE_DOOR | ANITILE_FORWARD | ANITILE_EXISTINGTILE;
-				AniParams.pGivenLevelNode			= pNode;
-
-	      AniParams.ubKeyFrame1					= pNode->sCurrentFrame + 2;
-
-				CreateAnimationTile( &AniParams );
-			}
+			CreateAnimationTile( &AniParams );
 		}
 
 		//if ( pShadowNode != NULL )
