@@ -59,7 +59,8 @@ CASSERT(sizeof(ExplosionQueueElement) == 12)
 extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
-void IgniteExplosion(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel);
+void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
+void IgniteExplosionXY(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel);
 void InternalIgniteExplosion(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, BOOLEAN fLocate, INT8 bLevel);
 
 

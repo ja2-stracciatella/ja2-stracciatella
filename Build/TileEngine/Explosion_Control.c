@@ -157,7 +157,16 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 }
 
 
-void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel)
+void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 z, const INT16 sGridNo, const UINT16 item, const INT8 level)
+{
+	INT16 x;
+	INT16 y;
+	ConvertGridNoToCenterCellXY(sGridNo, &x, &y);
+	InternalIgniteExplosion(owner, x, y, z, sGridNo, item, TRUE, level);
+}
+
+
+void IgniteExplosionXY(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel)
 {
 	InternalIgniteExplosion(owner, sX, sY, sZ, sGridNo, usItem, TRUE, bLevel);
 }
@@ -1243,7 +1252,6 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
 	EXPLOSIVETYPE *pExplosive;
-	INT16 sX, sY;
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect=FALSE;
 	BOOLEAN fStunEffect = FALSE;
@@ -1251,9 +1259,6 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	BOOLEAN	fBlastEffect = TRUE;
 	INT16		sNewGridNo;
 	UINT32	uiRoll;
-
-	//Init the variables
-	sX = sY = -1;
 
 	if ( sSubsequent == BLOOD_SPREAD_EFFECT )
 	{
@@ -1425,7 +1430,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 					RemoveItemFromPool( sGridNo, iWorldItem, bLevel );
 
 					// OK, Ignite this explosion!
-					IgniteExplosion(NULL, sX, sY, 0, sGridNo, usItem, bLevel);
+					IgniteExplosion(NULL, 0, sGridNo, usItem, bLevel);
 				}
 				else
 				{
@@ -2643,7 +2648,7 @@ void HandleExplosionQueue(void)
 
 				// bomb objects only store the SIDE who placed the bomb! :-(
 				SOLDIERTYPE* const owner = (pObj->ubBombOwner > 1 ? ID2SOLDIER(pObj->ubBombOwner - 2) : NULL);
-				IgniteExplosion(owner, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, pObj->usBombItem, ubLevel);
+				IgniteExplosion(owner, 0, sGridNo, pObj->usBombItem, ubLevel);
 			}
 
 			// Bye bye bomb

@@ -478,7 +478,7 @@ void UpdateAniTiles( )
 							case ANI_KEYFRAME_CHAIN_WATER_EXPLOSION:
 							{
 								const REAL_OBJECT* const o = pNode->v.object;
-								IgniteExplosion(o->owner, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, o->Obj.usItem, 0);
+								IgniteExplosionXY(o->owner, pNode->pLevelNode->sRelativeX, pNode->pLevelNode->sRelativeY, 0, pNode->sGridNo, o->Obj.usItem, 0);
 								break;
 							}
 

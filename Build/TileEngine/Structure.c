@@ -1611,7 +1611,7 @@ BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, const UINT8
 			// ApplyMapChangesToMapTempFile( FALSE );
 
 			// Generate an explosion here!
-			IgniteExplosion(owner, sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0);
+			IgniteExplosionXY(owner, sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0);
 
 			// ATE: Return false here, as we are dealing with deleting the graphic here...
 			return( FALSE );

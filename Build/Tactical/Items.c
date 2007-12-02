@@ -4507,7 +4507,7 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 		{
 			// blow it up!
 			SOLDIERTYPE* const owner = (gTacticalStatus.ubAttackBusyCount ? pSoldier->attacker : pSoldier);
-			IgniteExplosion(owner, CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), 0, pSoldier->sGridNo, pSoldier->inv[bSlot].usItem, pSoldier->bLevel);
+			IgniteExplosion(owner, 0, pSoldier->sGridNo, pSoldier->inv[bSlot].usItem, pSoldier->bLevel);
 
 			// Remove item!
 			DeleteObj( &(pSoldier->inv[ bSlot ]) );
@@ -4561,7 +4561,7 @@ BOOLEAN DamageItemOnGround(OBJECTTYPE* const pObject, const INT16 sGridNo, const
 	if ( fBlowsUp )
 	{
 		// OK, Ignite this explosion!
-		IgniteExplosion(owner, CenterX(sGridNo), CenterY(sGridNo), 0, sGridNo, pObject->usItem, bLevel);
+		IgniteExplosion(owner, 0, sGridNo, pObject->usItem, bLevel);
 
 		// Remove item!
 		return( TRUE );
