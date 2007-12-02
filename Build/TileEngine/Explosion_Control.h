@@ -35,7 +35,6 @@ struct EXPLOSIONTYPE
 	EXPLOSION_PARAMS		Params;
 	BOOLEAN							fAllocated;
 	INT16								sCurrentFrame;
-	INT32								iID;
 	LIGHT_SPRITE* light;
 };
 

@@ -261,7 +261,6 @@ void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
 		// Setup some data...
 		pExplosion->Params = *pExpParams;
 		pExplosion->fAllocated = TRUE;
-		pExplosion->iID = iIndex;
 
 		GenerateExplosionFromExplosionPointer( pExplosion );
 	}
@@ -3122,7 +3121,6 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 	{
 		EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
 		if (!ExtractExplosionTypeFromFile(hFile, e)) return FALSE;
-		e->iID = uiCnt;
 
 		GenerateExplosionFromExplosionPointer(e);
 	}
