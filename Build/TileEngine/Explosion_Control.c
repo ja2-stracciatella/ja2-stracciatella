@@ -291,12 +291,10 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	AniParams.ubKeyFrame1					= ubTransKeyFrame[ ubTypeID ];
 	AniParams.uiKeyFrame1Code			= ANI_KEYFRAME_BEGIN_TRANSLUCENCY;
 
-	if ( !( uiFlags & EXPLOSION_FLAG_DISPLAYONLY ) )
-	{
-		AniParams.ubKeyFrame2					= ubDamageKeyFrame[ ubTypeID ];
-		AniParams.uiKeyFrame2Code			= ANI_KEYFRAME_BEGIN_DAMAGE;
-	}
-	AniParams.v.explosion = pExplosion;
+	AniParams.ubKeyFrame2     = ubDamageKeyFrame[ubTypeID];
+	AniParams.uiKeyFrame2Code = ANI_KEYFRAME_BEGIN_DAMAGE;
+	AniParams.v.explosion     = pExplosion;
+
 	AniParams.zCachedFile = zBlastFilenames[ubTypeID];
 	CreateAnimationTile( &AniParams );
 
