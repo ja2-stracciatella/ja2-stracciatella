@@ -1926,7 +1926,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 	ANITILE						*pNode;
 	INT16							sGridNo;
 	ANITILE_PARAMS	AniParams;
-	UINT16					usMissTileIndex, usMissTileType;
 	UINT32					uiMissVolume = MIDVOLUME;
 
 	SOLDIERTYPE* const attacker      = pBullet->pFirer;
@@ -2099,14 +2098,12 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 				}
 
 				// Default hit is the ground
-				usMissTileIndex = FIRSTMISS1;
-				usMissTileType	= FIRSTMISS;
+				UINT16 usMissTileIndex = FIRSTMISS1;
 
 				// Check if we are in water...
 				if ( gpWorldLevelData[ sGridNo ].ubTerrainID == LOW_WATER ||  gpWorldLevelData[ sGridNo ].ubTerrainID == DEEP_WATER )
 				{
 					usMissTileIndex = SECONDMISS1;
-					usMissTileType	= SECONDMISS;
 
 					// Add ripple
 					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
@@ -2146,7 +2143,6 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 				pNode = CreateAnimationTile( &AniParams );
 
 				// Set attacker ID
-				pNode->usMissAnimationPlayed = usMissTileType;
 				pNode->ubAttackerMissed			 = ubAttackerID;
 				// Adjust for absolute positioning
 				pNode->pLevelNode->uiFlags |= LEVELNODE_USEABSOLUTEPOS;
