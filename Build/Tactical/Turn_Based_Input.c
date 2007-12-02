@@ -3409,24 +3409,6 @@ static void ToggleViewAllItems(void)
 }
 
 
-static void TestExplosion(void)
-{
-	UINT16 usMapPos;
-	if ( GetMouseMapPos( &usMapPos ) )
-	{
-		EXPLOSION_PARAMS	ExpParams ;
-		ExpParams.uiFlags			= 0;
-		ExpParams.owner       = NULL;
-		ExpParams.ubTypeID		= STUN_BLAST;
-		ExpParams.sGridNo			= usMapPos;
-
-		GenerateExplosion( &ExpParams );
-
-		PlayJA2Sample(EXPLOSION_1, MIDVOLUME, 1, MIDDLEPAN);
-	}
-}
-
-
 static void CycleSelectedMercsItem(void)
 {
 	// Cycle selected guy's item...

@@ -182,6 +182,9 @@ static void RecountExplosions(void)
 }
 
 
+static void GenerateExplosion(const EXPLOSION_PARAMS*);
+
+
 // GENERATE EXPLOSION
 void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, const INT16 sZ, const INT16 sGridNo, const UINT16 usItem, const BOOLEAN fLocate, const INT8 bLevel)
 {
@@ -234,7 +237,7 @@ void IgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT16 sY, c
 static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion);
 
 
-void GenerateExplosion( EXPLOSION_PARAMS *pExpParams )
+void GenerateExplosion(const EXPLOSION_PARAMS* const pExpParams)
 {
 	EXPLOSIONTYPE		*pExplosion;
 	INT16			sGridNo;
