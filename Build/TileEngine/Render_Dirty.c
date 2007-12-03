@@ -532,28 +532,11 @@ BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT1
 }
 
 
-BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack )
+BOOLEAN RestoreExternBackgroundRectGivenID(const INT32 iBack)
 {
-	INT16 sLeft, sTop, sWidth, sHeight;
-
-	if( !gBackSaves[iBack].fAllocated )
-	{
-		return( FALSE );
-	}
-
-	sLeft		= gBackSaves[iBack].sLeft;
-	sTop		= gBackSaves[iBack].sTop;
-	sWidth	= gBackSaves[iBack].sWidth;
-	sHeight	= gBackSaves[iBack].sHeight;
-
-	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
-
-	BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, sLeft, sTop, sWidth, sHeight);
-
-	// Add rect to frame buffer queue
-	InvalidateRegionEx(sLeft, sTop, sLeft + sWidth, sTop + sHeight);
-
-	return(TRUE);
+	const BACKGROUND_SAVE* const b = &gBackSaves[iBack];
+	if (!b->fAllocated) return FALSE;
+	return RestoreExternBackgroundRect(b->sLeft, b->sTop, b->sWidth, b->sHeight);
 }
 
 
