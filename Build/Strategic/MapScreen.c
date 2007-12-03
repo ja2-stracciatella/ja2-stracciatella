@@ -2291,9 +2291,6 @@ UINT32 MapScreenInit(void)
 {
 	SetUpBadSectorsList( );
 
-	// setup message box system
-	InitGlobalMessageList( );
-
 	// init palettes for big map
 	InitializePalettesForMap( );
 

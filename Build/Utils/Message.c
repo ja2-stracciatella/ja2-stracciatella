@@ -915,7 +915,7 @@ static void WriteMessageToFile(const wchar_t* pString)
 }
 
 
-void InitGlobalMessageList(void)
+static void InitGlobalMessageList(void)
 {
 	for (INT32 iCounter = 0; iCounter < 256; iCounter++)
 	{

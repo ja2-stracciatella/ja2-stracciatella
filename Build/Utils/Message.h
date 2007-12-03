@@ -36,7 +36,6 @@ void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA
 void ScrollString( void );
 void DisplayStringsInMapScreenMessageList( void );
 
-void InitGlobalMessageList( void );
 void FreeGlobalMessageList( void );
 
 UINT8 GetRangeOfMapScreenMessages( void );
