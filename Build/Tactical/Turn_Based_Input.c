@@ -157,8 +157,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 						}
 
 						case MOVE_MODE:
-
-							if ( giUIMessageOverlay != -1 )
+							if (g_ui_message_overlay != NULL)
 							{
 								EndUIMessage( );
 							}
@@ -395,7 +394,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 						// Switch on UI mode
 						if ( !fClickHoldIntercepted )
 						{
-							if ( giUIMessageOverlay != -1 )
+							if (g_ui_message_overlay != NULL)
 							{
 								EndUIMessage( );
 							}
@@ -1341,7 +1340,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 		if ( (InputEvent.usEvent == KEY_DOWN ) )
 		{
-			if ( giUIMessageOverlay != -1 )
+			if (g_ui_message_overlay != NULL)
 			{
 				EndUIMessage( );
 				continue;

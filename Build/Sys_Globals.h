@@ -15,12 +15,6 @@ BOOLEAN				gfGlobalError;
 
 extern UINT32	guiGameCycleCounter;
 
-
-// VIDEO OVERLAYS
-INT32					giFPSOverlay;
-INT32					giCounterPeriodOverlay;
-
 extern				BOOLEAN  SET_ERROR( const char *String, ...);
-
 
 #endif

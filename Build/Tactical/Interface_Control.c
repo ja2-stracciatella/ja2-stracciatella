@@ -173,8 +173,7 @@ void SetUpInterface( )
 
 	SetupPhysicsTrajectoryUI( );
 
-
-	if ( giUIMessageOverlay != -1 )
+	if (g_ui_message_overlay != NULL)
 	{
 		if ( ( GetJA2Clock( ) - guiUIMessageTime ) > guiUIMessageTimeDelay )
 		{
@@ -911,10 +910,10 @@ void ResetInterfaceAndUI( )
 
 	//ResetMultiSelection( );
 
-	if ( giUIMessageOverlay != -1  )
+	if (g_ui_message_overlay != NULL)
 	{
-		RemoveVideoOverlay( giUIMessageOverlay );
-		giUIMessageOverlay = -1;
+		RemoveVideoOverlay(g_ui_message_overlay);
+		g_ui_message_overlay = NULL;
 	}
 
 	// Set UI back to movement...

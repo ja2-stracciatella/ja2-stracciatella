@@ -1,7 +1,7 @@
 #ifndef _GAMESCREEN_H
 #define _GAMESCREEN_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
@@ -42,5 +42,8 @@ void InitHelicopterEntranceByMercs( void );
 void InternalLeaveTacticalScreen( UINT32 uiNewScreen );
 
 extern BOOLEAN gfBeginEndTurn;
+
+extern VIDEO_OVERLAY* g_fps_overlay;
+extern VIDEO_OVERLAY* g_counter_period_overlay;
 
 #endif

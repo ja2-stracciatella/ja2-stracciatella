@@ -1,6 +1,9 @@
 #ifndef __RENDER_DIRTY_H
 #define __RENDER_DIRTY_H
 
+#include "JA2Types.h"
+
+
 #define NO_BGND_RECT -1
 
 #define BGND_FLAG_PERMANENT		0x80000000
@@ -15,10 +18,8 @@
 #define	VOVERLAY_STARTDISABLED				0x00000002
 
 
-struct _VIDEO_OVERLAY;
-
 // Callback for topmost blitters
-typedef void (*OVERLAY_CALLBACK)(struct _VIDEO_OVERLAY * );
+typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
 
 // Struct for backgrounds
 typedef struct
@@ -42,7 +43,7 @@ typedef struct
 } BACKGROUND_SAVE;
 
 // Struct for topmost blitters
-typedef struct _VIDEO_OVERLAY
+struct VIDEO_OVERLAY
 {
 		UINT32						uiFlags;
 		BOOLEAN						fAllocated;
@@ -60,7 +61,7 @@ typedef struct _VIDEO_OVERLAY
 		wchar_t						zText[ 200 ];
 		UINT32						uiDestBuff;
 		OVERLAY_CALLBACK		BltCallback;
-} VIDEO_OVERLAY;
+};
 
 
 // Struct for init topmost blitter
@@ -110,17 +111,17 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 
 // VIDEO OVERLAY STUFF
-INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
 void ExecuteVideoOverlays( );
 void SaveVideoOverlaysArea( UINT32 uiSrcBuffer );
 void DeleteVideoOverlaysArea( );
 void AllocateVideoOverlaysArea( );
 void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer );
-void RemoveVideoOverlay( INT32 iVideoOverlay );
+void RemoveVideoOverlay(VIDEO_OVERLAY*);
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
-void EnableVideoOverlay( BOOLEAN fEnable, INT32 iOverlayIndex );
-void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...);
-void SetVideoOverlayPos(UINT32 iOverlayIndex, INT16 X, INT16 Y);
+void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
+void SetVideoOverlayTextF(VIDEO_OVERLAY*, const wchar_t* fmt, ...);
+void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
 
 void BlitMFont( VIDEO_OVERLAY *pBlitter );

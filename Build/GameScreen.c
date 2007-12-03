@@ -81,8 +81,8 @@ BOOLEAN		gfPlayAttnAfterMapLoad = FALSE;
 
 
 // VIDEO OVERLAYS
-INT32		giFPSOverlay = 0;
-INT32		giCounterPeriodOverlay = 0;
+VIDEO_OVERLAY* g_fps_overlay            = NULL;
+VIDEO_OVERLAY* g_counter_period_overlay = NULL;
 
 
 BOOLEAN	gfExitToNewSector					= FALSE;
@@ -143,14 +143,14 @@ UINT32 MainGameScreenInit(void)
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
 	wcslcpy(VideoOverlayDesc.pzText, L"90", lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitMFont;
-	giFPSOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
+	g_fps_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 
 	// SECOND, PERIOD COUNTER
 	VideoOverlayDesc.sLeft			 = 30;
 	VideoOverlayDesc.sTop				 = 0;
 	wcslcpy(VideoOverlayDesc.pzText, L"Levelnodes: 100000", lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitMFont;
-	giCounterPeriodOverlay =  RegisterVideoOverlay( ( VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT ), &VideoOverlayDesc );
+	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 
   return TRUE;
 }
@@ -165,9 +165,7 @@ UINT32 MainGameScreenShutdown(void)
 	ShutdownZBuffer(gpZBuffer);
 	ShutdownBackgroundRects();
 
-	// Remove video Overlays
-	RemoveVideoOverlay( giFPSOverlay );
-
+	RemoveVideoOverlay(g_fps_overlay);
 
 	return TRUE;
 }
@@ -853,8 +851,8 @@ void SetRenderHook( RENDER_HOOK pRenderOverride )
 
 void EnableFPSOverlay(BOOLEAN fEnable)
 {
-	EnableVideoOverlay(fEnable, giFPSOverlay);
-	EnableVideoOverlay(fEnable, giCounterPeriodOverlay);
+	EnableVideoOverlay(fEnable, g_fps_overlay);
+	EnableVideoOverlay(fEnable, g_counter_period_overlay);
 }
 
 

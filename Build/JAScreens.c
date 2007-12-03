@@ -122,10 +122,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		SetVideoOverlayTextF(giFPSOverlay, L"%ld", __min(uiFPS, 1000));
+		SetVideoOverlayTextF(g_fps_overlay, L"%ld", __min(uiFPS, 1000));
 
 		// TIMER COUNTER
-		SetVideoOverlayTextF(giCounterPeriodOverlay, L"%ld", __min(giTimerDiag, 1000));
+		SetVideoOverlayTextF(g_counter_period_overlay, L"%ld", __min(giTimerDiag, 1000));
 	}
 
 	if ( ( gTacticalStatus.uiFlags & GODMODE ) )

@@ -4161,7 +4161,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 		return( FALSE );
 	}
 
-	if ( giUIMessageOverlay != -1 )
+	if (g_ui_message_overlay != NULL)
 	{
 		EndUIMessage( );
 		return( FALSE );

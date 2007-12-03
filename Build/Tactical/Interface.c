@@ -102,7 +102,7 @@ extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, 
 static MOUSE_REGION gMenuOverlayRegion;
 
 
-INT32					      giUIMessageOverlay = -1;
+VIDEO_OVERLAY*      g_ui_message_overlay = NULL;
 static UINT16       gusUIMessageWidth;
 static UINT16       gusUIMessageHeight;
 static MercPopUpBox gpUIMessageOverrideMercBox;
@@ -2080,14 +2080,13 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 	// Set it back!
 	ResetOverrideMercPopupBox( );
 
-	if ( giUIMessageOverlay != -1  )
+	if (g_ui_message_overlay != NULL)
 	{
-		RemoveVideoOverlay( giUIMessageOverlay );
-
-		giUIMessageOverlay = -1;
+		RemoveVideoOverlay(g_ui_message_overlay);
+		g_ui_message_overlay = NULL;
 	}
 
-	if ( giUIMessageOverlay == -1  )
+	if (g_ui_message_overlay == NULL)
 	{
 		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
 
@@ -2097,8 +2096,7 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
 		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop + gusUIMessageHeight;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
-
-		giUIMessageOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+		g_ui_message_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 	}
 
 	gfUseSkullIconMessage = fUseSkullIcon;
@@ -2115,7 +2113,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
 	ResetOverrideMercPopupBox();
 
-	if (giUIMessageOverlay == -1)
+	if (g_ui_message_overlay == NULL)
 	{
 		VIDEO_OVERLAY_DESC VideoOverlayDesc;
 		memset(&VideoOverlayDesc, 0, sizeof(VideoOverlayDesc));
@@ -2124,7 +2122,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
 		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop  + gusUIMessageHeight;
 		VideoOverlayDesc.BltCallback = RenderUIMessage;
-		giUIMessageOverlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+		g_ui_message_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 	}
 }
 
@@ -2133,7 +2131,7 @@ void EndUIMessage( )
 {
 	UINT32	uiClock = GetJA2Clock();
 
-	if ( giUIMessageOverlay != -1 )
+	if (g_ui_message_overlay != NULL)
 	{
 		if ( gfUseSkullIconMessage )
 		{
@@ -2145,7 +2143,8 @@ void EndUIMessage( )
 
 //		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Removing Overlay message");
 
-		RemoveVideoOverlay( giUIMessageOverlay );
+		RemoveVideoOverlay(g_ui_message_overlay);
+		g_ui_message_overlay = NULL;
 
     // Remove popup as well....
     if ( iUIMessageBox != -1 )
@@ -2153,9 +2152,6 @@ void EndUIMessage( )
     	RemoveMercPopupBoxFromIndex( iUIMessageBox );
       iUIMessageBox = -1;
     }
-
-		giUIMessageOverlay = -1;
-
 	}
 	//iUIMessageBox = -1;
 }

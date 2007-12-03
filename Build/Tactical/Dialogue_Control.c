@@ -141,7 +141,7 @@ INT16       gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
 BOOLEAN			gfDialogueQueuePaused = FALSE;
 static UINT16 gusSubtitleBoxWidth;
 UINT16			gusSubtitleBoxHeight;
-INT32				giTextBoxOverlay = -1;
+static VIDEO_OVERLAY* g_text_box_overlay = NULL;
 BOOLEAN			gfFacePanelActive = FALSE;
 UINT32			guiScreenIDUsedWhenUICreated;
 wchar_t				gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
@@ -372,15 +372,15 @@ void HandleDialogueUIAdjustments( )
 					{
 						// A change in plans here...
 						// We now talk through the interface panel...
-						if ( gpCurrentTalkingFace->iVideoOverlay != -1 )
+						if (gpCurrentTalkingFace->video_overlay != NULL)
 						{
-							RemoveVideoOverlay( gpCurrentTalkingFace->iVideoOverlay );
-							gpCurrentTalkingFace->iVideoOverlay = -1;
+							RemoveVideoOverlay(gpCurrentTalkingFace->video_overlay);
+							gpCurrentTalkingFace->video_overlay = NULL;
 						}
 						gfFacePanelActive = FALSE;
 
-						RemoveVideoOverlay( giTextBoxOverlay );
-						giTextBoxOverlay = -1;
+						RemoveVideoOverlay(g_text_box_overlay);
+						g_text_box_overlay = NULL;
 
 						if ( fTextBoxMouseRegionCreated )
 						{
@@ -510,10 +510,10 @@ void HandleDialogue( )
 				if ( gfFacePanelActive )
 				{
 					// Set face inactive!
-					if ( gpCurrentTalkingFace->iVideoOverlay != -1 )
+					if (gpCurrentTalkingFace->video_overlay != NULL)
 					{
-						RemoveVideoOverlay( gpCurrentTalkingFace->iVideoOverlay );
-						gpCurrentTalkingFace->iVideoOverlay = -1;
+						RemoveVideoOverlay(gpCurrentTalkingFace->video_overlay);
+						gpCurrentTalkingFace->video_overlay = NULL;
 					}
 
 					if ( fExternFaceBoxRegionCreated )
@@ -1893,8 +1893,7 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString)
 	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusSubtitleBoxWidth;
 	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusSubtitleBoxHeight;
 	VideoOverlayDesc.BltCallback = RenderSubtitleBoxOverlay;
-
-	giTextBoxOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
+	g_text_box_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
 	gsTopPosition = 20;
 
@@ -1914,8 +1913,6 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 {
 	INT32 iFaceIndex;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	INT32									iFaceOverlay;
-
 
 	// grab face index
 	iFaceIndex = iIndex;
@@ -1947,8 +1944,7 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 	}
 
-	iFaceOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
-	gpCurrentTalkingFace->iVideoOverlay = iFaceOverlay;
+	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
 	RenderAutoFace( iFaceIndex );
 
@@ -1969,7 +1965,6 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	INT32									iFaceOverlay;
 	SOLDIERTYPE						*pSoldier;
 	BOOLEAN								fDoExternPanel = FALSE;
 
@@ -2017,8 +2012,7 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
 		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
 
-		iFaceOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
-		gpCurrentTalkingFace->iVideoOverlay = iFaceOverlay;
+		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
 		RenderAutoFace( iFaceIndex );
 
@@ -2108,10 +2102,10 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			case DIALOGUE_TACTICAL_UI:
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				// Remove if created
-				if ( giTextBoxOverlay != -1 )
+				if (g_text_box_overlay != NULL)
 				{
-					RemoveVideoOverlay( giTextBoxOverlay );
-					giTextBoxOverlay = -1;
+					RemoveVideoOverlay(g_text_box_overlay);
+					g_text_box_overlay = NULL;
 
 					if ( fTextBoxMouseRegionCreated )
 					{
@@ -2240,12 +2234,10 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
 static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
-	if ( giTextBoxOverlay != -1 )
-	{
-		RenderMercPopUpBoxFromIndex( iDialogueBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
+	if (g_text_box_overlay == NULL) return;
 
-		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusSubtitleBoxWidth, pBlitter->sY + gusSubtitleBoxHeight );
-	}
+	RenderMercPopUpBoxFromIndex(iDialogueBox, pBlitter->sX, pBlitter->sY, pBlitter->uiDestBuff);
+	InvalidateRegion(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusSubtitleBoxWidth, pBlitter->sY + gusSubtitleBoxHeight);
 }
 
 
@@ -2466,8 +2458,8 @@ void ShutDownLastQuoteTacticalTextBox( void )
 {
 	if( fDialogueBoxDueToLastMessage )
 	{
-		RemoveVideoOverlay( giTextBoxOverlay );
-		giTextBoxOverlay = -1;
+		RemoveVideoOverlay(g_text_box_overlay);
+		g_text_box_overlay = NULL;
 
 		if ( fTextBoxMouseRegionCreated )
 		{
@@ -2645,13 +2637,11 @@ UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID )
 
 void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 {
-
 	if ( ( fExternFaceBoxRegionCreated ) && ( gpCurrentTalkingFace) )
 	{
-		RemoveVideoOverlay( gpCurrentTalkingFace->iVideoOverlay );
-		gpCurrentTalkingFace->iVideoOverlay = -1;
+		RemoveVideoOverlay(gpCurrentTalkingFace->video_overlay);
+		gpCurrentTalkingFace->video_overlay = NULL;
 	}
-
 }
 
 

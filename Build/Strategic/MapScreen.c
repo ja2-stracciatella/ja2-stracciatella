@@ -3930,7 +3930,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						BeginMapUIMessage(0, pBullseyeStrings[3]);
 					}
 					// ESC cancels MAP UI messages, unless we're in confirm map move mode
-					else if( ( giUIMessageOverlay != -1 ) && !gfInConfirmMapMoveMode )
+					else if (g_ui_message_overlay != NULL && !gfInConfirmMapMoveMode)
 					{
 						CancelMapUIMessage( );
 					}
@@ -5257,7 +5257,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 				}
 
 				// left click cancels MAP UI messages, unless we're in confirm map move mode
-				if( ( giUIMessageOverlay != -1 ) && !gfInConfirmMapMoveMode )
+				if (g_ui_message_overlay != NULL && !gfInConfirmMapMoveMode)
 				{
 					CancelMapUIMessage( );
 
@@ -5381,7 +5381,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 				}
 
 				// right click cancels MAP UI messages, unless we're in confirm map move mode
-				if( ( giUIMessageOverlay != -1 ) && !gfInConfirmMapMoveMode )
+				if (g_ui_message_overlay != NULL && !gfInConfirmMapMoveMode)
 				{
 					CancelMapUIMessage( );
 					return;
@@ -5838,7 +5838,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		// if there is a map UI message being displayed
-		if( giUIMessageOverlay != -1 )
+		if (g_ui_message_overlay != NULL)
 		{
 			CancelMapUIMessage( );
 			return;
@@ -8710,7 +8710,7 @@ void CancelMapUIMessage( void )
 static void MonitorMapUIMessage(void)
 {
 	// if there is a map UI message being displayed
-	if( giUIMessageOverlay != -1 )
+	if (g_ui_message_overlay != NULL)
 	{
 		// and if we're not in the middle of the "confirm move" sequence
 //		if( !gfInConfirmMapMoveMode || bSelectedDestChar == -1 )

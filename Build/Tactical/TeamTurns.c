@@ -192,7 +192,7 @@ static void FreezeInterfaceForEnemyTurn(void)
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 
 	// Remove any UI messages!
-	if ( giUIMessageOverlay != -1 )
+	if (g_ui_message_overlay != NULL)
 	{
 		EndUIMessage( );
 	}

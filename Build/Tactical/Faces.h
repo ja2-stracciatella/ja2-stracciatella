@@ -1,11 +1,13 @@
 #ifndef __TALKING_H_
 #define __TALKING_H_
+
+#include "JA2Types.h"
+
+
 #define   NO_EXPRESSION			0
 #define		BLINKING					1
 #define		ANGRY							2
 #define   SURPRISED					3
-
-#include "Soldier_Control.h"
 
 // Defines
 #define		NUM_FACE_SLOTS					50
@@ -67,7 +69,7 @@ typedef struct
 
 	BOOLEAN		fFinishTalking;									// A flag to indicate we want to delay after speech done
 
-	INT32			iVideoOverlay;									// Value for video overlay ( not used too much )
+	VIDEO_OVERLAY* video_overlay;             // Value for video overlay ( not used too much )
 
 	UINT32		uiSoundID;											// Sound ID if one being played
 	SOLDIERTYPE* soldier;                     // Soldier if one specified

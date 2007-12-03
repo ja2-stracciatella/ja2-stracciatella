@@ -25,8 +25,8 @@
 BACKGROUND_SAVE	gBackSaves[BACKGROUND_BUFFERS];
 UINT32 guiNumBackSaves=0;
 
-VIDEO_OVERLAY	gVideoOverlays[ VIDEO_OVERLAYS ];
-UINT32 guiNumVideoOverlays=0;
+static VIDEO_OVERLAY gVideoOverlays[VIDEO_OVERLAYS];
+static UINT32        guiNumVideoOverlays = 0;
 
 
 SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -648,21 +648,16 @@ UINT16 uiStringLength, uiStringHeight;
 }
 
 
-// OVERLAY STUFF
-static INT32 GetFreeVideoOverlay(void)
+static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 {
-  UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	VIDEO_OVERLAY* v;
+	for (v = gVideoOverlays; v != gVideoOverlays + guiNumVideoOverlays; ++v)
 	{
-		if((gVideoOverlays[uiCount].fAllocated==FALSE ) )
-			return((INT32)uiCount);
+		if (!v->fAllocated) return v;
 	}
-
-	if( guiNumVideoOverlays < BACKGROUND_BUFFERS )
-		return((INT32)guiNumVideoOverlays++);
-
-	return(-1);
+	if (v == endof(gVideoOverlays)) return NULL;
+	++guiNumVideoOverlays;
+	return v;
 }
 
 
@@ -681,9 +676,8 @@ static void RecountVideoOverlays(void)
 }
 
 
-INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
 {
-	UINT32 iBlitterIndex;
 	UINT32 iBackIndex;
 	UINT16 uiStringLength, uiStringHeight;
 
@@ -700,14 +694,13 @@ INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDes
 		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
 	}
 
-	if (iBackIndex == NO_BGND_RECT) return -1;
+	if (iBackIndex == NO_BGND_RECT) return NULL;
 
 	// Get next free topmost blitter index
-	if( ( iBlitterIndex = GetFreeVideoOverlay())==(-1))
-		return(-1);
+	VIDEO_OVERLAY* const v = GetFreeVideoOverlay();
+	if (v == NULL) return NULL;
 
 	// Init new blitter
-	VIDEO_OVERLAY* v = &gVideoOverlays[iBlitterIndex];
 	memset(v, 0, sizeof(*v));
 	v->uiFlags      = uiFlags;
 	v->fAllocated   = 2;
@@ -729,7 +722,7 @@ INT32 RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDes
 		DisableBackgroundRect(v->uiBackground, TRUE);
 	}
 
-	return iBlitterIndex;
+	return v;
 }
 
 
@@ -742,40 +735,26 @@ static void SetVideoOverlayPendingDelete(INT32 iVideoOverlay)
 }
 
 
-void RemoveVideoOverlay( INT32 iVideoOverlay )
+void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 {
+	if (v == NULL) return;
+	if (!v->fAllocated) return;
 
-	if ( iVideoOverlay != -1 && gVideoOverlays[ iVideoOverlay ].fAllocated )
+	// Check if we are actively scrolling
+	if (v->fActivelySaving)
 	{
-		// Check if we are actively scrolling
-		if ( gVideoOverlays[ iVideoOverlay ].fActivelySaving )
-		{
+		v->fDeletionPending = TRUE;
+	}
+	else
+	{
+		//RestoreExternBackgroundRectGivenID(v->uiBackground);
 
-	//		DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Overlay Actively saving %d %ls", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
+		FreeBackgroundRect(v->uiBackground);
 
-			gVideoOverlays[ iVideoOverlay ].fDeletionPending = TRUE;
-		}
-		else
-		{
-			//RestoreExternBackgroundRectGivenID( gVideoOverlays[ iVideoOverlay ].uiBackground );
+		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
+		v->pSaveArea = NULL;
 
-			// Remove background
-			FreeBackgroundRect( gVideoOverlays[ iVideoOverlay ].uiBackground );
-
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Delete Overlay %d %ls", iVideoOverlay, gVideoOverlays[ iVideoOverlay ].zText ) );
-
-
-			// Remove save buffer if not done so
-			if ( gVideoOverlays[ iVideoOverlay ].pSaveArea != NULL )
-			{
-				MemFree( gVideoOverlays[ iVideoOverlay ].pSaveArea );
-			}
-			gVideoOverlays[ iVideoOverlay ].pSaveArea = NULL;
-
-
-			// Set as not allocated
-			gVideoOverlays[ iVideoOverlay ].fAllocated   = FALSE;
-		}
+		v->fAllocated = FALSE;
 	}
 }
 
@@ -979,28 +958,15 @@ void DeleteVideoOverlaysArea( )
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
 	{
-		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
+		VIDEO_OVERLAY* const v = &gVideoOverlays[uiCount];
+		if (v->fAllocated && !v->fDisabled)
 		{
-			if ( gVideoOverlays[uiCount].pSaveArea != NULL )
-			{
-				MemFree( gVideoOverlays[uiCount].pSaveArea );
-			}
-
-			gVideoOverlays[uiCount].fActivelySaving = FALSE;
-
-			gVideoOverlays[uiCount].pSaveArea = NULL;
-
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Removing Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
-
-			// Remove if pending
-			if ( gVideoOverlays[uiCount].fDeletionPending )
-			{
-				RemoveVideoOverlay( uiCount );
-			}
-
+			if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
+			v->pSaveArea       = NULL;
+			v->fActivelySaving = FALSE;
+			if (v->fDeletionPending) RemoveVideoOverlay(v);
 		}
 	}
-
 }
 
 
@@ -1008,7 +974,6 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 {
 	UINT32 uiCount, uiDestPitchBYTES;
 	UINT8	 *pDestBuf;
-	UINT32 iBackIndex;
 
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	INT32	uiLeftSkip, uiRightSkip, uiTopSkip, uiBottomSkip;
@@ -1026,14 +991,13 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 
 	for(uiCount=0; uiCount <  guiNumVideoOverlays; uiCount++)
 	{
-		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
+		VIDEO_OVERLAY* const v = &gVideoOverlays[uiCount];
+		if (v->fAllocated && !v->fDisabled)
 		{
-				iBackIndex = gVideoOverlays[uiCount].uiBackground;
-
-
-				if ( gVideoOverlays[uiCount].pSaveArea != NULL )
+				if (v->pSaveArea != NULL)
 				{
 					// Get restore background values
+					const UINT32 iBackIndex = v->uiBackground;
 					sLeft			= gBackSaves[ iBackIndex ].sLeft;
 					sTop		  = gBackSaves[ iBackIndex ].sTop;
 					sRight		= gBackSaves[ iBackIndex ].sRight;
@@ -1069,17 +1033,12 @@ BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
 					usHeight = sBottom - sTop;
 					usWidth  = sRight -  sLeft;
 
-					Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)gVideoOverlays[uiCount].pSaveArea, gBackSaves[iBackIndex].sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
+					Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)v->pSaveArea, gBackSaves[iBackIndex].sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
 
 					// Once done, check for pending deletion
-					if ( gVideoOverlays[uiCount].fDeletionPending )
-					{
-						RemoveVideoOverlay( uiCount );
-					}
-
+					if (v->fDeletionPending) RemoveVideoOverlay(v);
 				}
 		}
-
 	}
 
 	UnLockVideoSurface( BACKBUFFER );
@@ -1112,10 +1071,9 @@ BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrc
 }
 
 
-void EnableVideoOverlay(BOOLEAN fEnable, INT32 iOverlayIndex)
+void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 {
-	if (iOverlayIndex == -1) return;
-	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (v == NULL) return;
 	if (!v->fAllocated) return;
 
 	v->fDisabled = !fEnable;
@@ -1123,10 +1081,9 @@ void EnableVideoOverlay(BOOLEAN fEnable, INT32 iOverlayIndex)
 }
 
 
-void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...)
+void SetVideoOverlayTextF(VIDEO_OVERLAY* const v, const wchar_t* Fmt, ...)
 {
-	if (iOverlayIndex == -1) return;
-	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (v == NULL) return;
 	if (!v->fAllocated) return;
 
 	va_list Arg;
@@ -1136,10 +1093,9 @@ void SetVideoOverlayTextF(UINT32 iOverlayIndex, const wchar_t* Fmt, ...)
 }
 
 
-void SetVideoOverlayPos(UINT32 iOverlayIndex, INT16 X, INT16 Y)
+void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 {
-	if (iOverlayIndex == -1) return;
-	VIDEO_OVERLAY* v = &gVideoOverlays[iOverlayIndex];
+	if (v == NULL) return;
 	if (!v->fAllocated) return;
 
 	// If position has changed and flags are of type that use dirty rects, adjust

@@ -245,7 +245,7 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 
 	//Default to off!
 	pFace->fDisabled			= TRUE;
-	pFace->iVideoOverlay	= -1;
+	pFace->video_overlay  = NULL;
 	//pFace->uiEyeDelay			=	gMercProfiles[ usMercProfileID ].uiEyeDelay;
 	//pFace->uiMouthDelay		= gMercProfiles[ usMercProfileID ].uiMouthDelay;
 	pFace->uiEyeDelay			=	50 + Random( 30 );
@@ -587,10 +587,10 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 		DeleteVideoSurfaceFromIndex( pFace->uiAutoDisplayBuffer );
 	}
 
-	if ( pFace->iVideoOverlay != -1 )
+	if (pFace->video_overlay != NULL)
 	{
-		RemoveVideoOverlay( pFace->iVideoOverlay );
-		pFace->iVideoOverlay = -1;
+		RemoveVideoOverlay(pFace->video_overlay);
+		pFace->video_overlay = NULL;
 	}
 
 	// Turn off some flags
@@ -966,7 +966,7 @@ static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
 	// Set to default
 	SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE );
 
-	if ( pFace->iVideoOverlay == -1 && !fExternBlit )
+	if (pFace->video_overlay == NULL && !fExternBlit)
 	{
 		if (s->bActionPoints == 0 && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT)
 		{

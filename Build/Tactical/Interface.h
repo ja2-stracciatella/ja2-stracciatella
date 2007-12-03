@@ -162,7 +162,7 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text);
 void BeginMapUIMessage(INT16 delta_y, const wchar_t* text);
 
 
-INT32					giUIMessageOverlay;
+extern VIDEO_OVERLAY* g_ui_message_overlay;
 UINT32				guiUIMessageTime;
 
 enum

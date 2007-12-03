@@ -111,7 +111,7 @@ typedef struct
 {
 	BOOLEAN				bActive;
 	MOUSE_REGION	MouseRegion;
-	INT32					iVideoOverlay;
+	VIDEO_OVERLAY* video_overlay;
 	INT32					iDialogueBox;
 	UINT32				uiTimeOfCreation;
 	UINT32				uiDelayTime;
@@ -119,7 +119,7 @@ typedef struct
 } QUOTE_SYSTEM_STRUCT;
 
 
-QUOTE_SYSTEM_STRUCT	gCivQuoteData;
+static QUOTE_SYSTEM_STRUCT gCivQuoteData;
 
 UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
@@ -215,7 +215,7 @@ static void ShutDownQuoteBox(BOOLEAN fForce)
 	// Check for min time....
 	if ( ( GetJA2Clock( ) - gCivQuoteData.uiTimeOfCreation ) > 300 || fForce )
 	{
-		RemoveVideoOverlay( gCivQuoteData.iVideoOverlay );
+		RemoveVideoOverlay(gCivQuoteData.video_overlay);
 
 		// Remove mouse region...
 		MSYS_RemoveRegion( &(gCivQuoteData.MouseRegion) );
@@ -313,12 +313,9 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv)
 
 static void RenderCivQuoteBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
-	if ( gCivQuoteData.iVideoOverlay != -1 )
-	{
-		RenderMercPopUpBoxFromIndex( gCivQuoteData.iDialogueBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
-
-		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusCivQuoteBoxWidth, pBlitter->sY + gusCivQuoteBoxHeight );
-	}
+	if (gCivQuoteData.video_overlay == NULL) return;
+	RenderMercPopUpBoxFromIndex(gCivQuoteData.iDialogueBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff);
+	InvalidateRegion(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusCivQuoteBoxWidth, pBlitter->sY + gusCivQuoteBoxHeight);
 }
 
 
@@ -407,9 +404,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusCivQuoteBoxWidth;
 	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusCivQuoteBoxHeight;
 	VideoOverlayDesc.BltCallback = RenderCivQuoteBoxOverlay;
-
-	gCivQuoteData.iVideoOverlay =  RegisterVideoOverlay( 0, &VideoOverlayDesc );
-
+	gCivQuoteData.video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
 	//Define main region
 	MSYS_DefineRegion( &(gCivQuoteData.MouseRegion), VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
@@ -810,7 +805,7 @@ void InitCivQuoteSystem( )
 
 	memset( &gCivQuoteData, 0, sizeof( gCivQuoteData ) );
 	gCivQuoteData.bActive				= FALSE;
-	gCivQuoteData.iVideoOverlay	= -1;
+	gCivQuoteData.video_overlay = NULL;
 	gCivQuoteData.iDialogueBox	= -1;
 }
 

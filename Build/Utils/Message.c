@@ -28,7 +28,7 @@ typedef struct ScrollStringSt ScrollStringSt;
 struct ScrollStringSt
 {
 	STR16   pString16;
-	INT32   iVideoOverlay;
+	VIDEO_OVERLAY* video_overlay;
 	UINT32  uiFont;
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
@@ -74,7 +74,6 @@ static UINT32  uiStartOfPauseTime = 0;
 
 // test extern functions
 BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack );
-extern VIDEO_OVERLAY gVideoOverlays[];
 
 extern BOOLEAN gfFacePanelActive;
 
@@ -88,7 +87,7 @@ static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, UINT32 
 	ScrollStringSt* i = MemAlloc(sizeof(*i));
 	i->pString16             = MemAlloc(sizeof(*i->pString16) * (wcslen(pString) + 1));
 	wcscpy(i->pString16, pString);
-	i->iVideoOverlay         = -1;
+	i->video_overlay         = NULL;
 	i->uiFont                = uiFont;
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
@@ -110,28 +109,24 @@ static void CreateStringVideoOverlay(ScrollStringSt* pStringSt, UINT16 usX, UINT
 	VideoOverlayDesc.ubFontFore  = pStringSt->usColor;
 	VideoOverlayDesc.BltCallback = BlitString;
 	wcslcpy(VideoOverlayDesc.pzText, pStringSt->pString16, lengthof(VideoOverlayDesc.pzText));
-	pStringSt->iVideoOverlay = RegisterVideoOverlay(VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
+	pStringSt->video_overlay = RegisterVideoOverlay(VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 }
 
 
 static void RemoveStringVideoOverlay(ScrollStringSt* pStringSt)
 {
 	// error check, remove one not there
-	if (pStringSt->iVideoOverlay != -1)
-	{
-		RemoveVideoOverlay(pStringSt->iVideoOverlay);
-		pStringSt->iVideoOverlay = -1;
-	}
+	if (pStringSt->video_overlay == NULL) return;
+	RemoveVideoOverlay(pStringSt->video_overlay);
+	pStringSt->video_overlay = NULL;
 }
 
 
 static void SetStringVideoOverlayPosition(ScrollStringSt* pStringSt, UINT16 usX, UINT16 usY)
 {
 	// Donot update if not allocated!
-	if (pStringSt->iVideoOverlay != -1)
-	{
-		SetVideoOverlayPos(pStringSt->iVideoOverlay, usX, usY);
-	}
+	if (pStringSt->video_overlay == NULL) return;
+	SetVideoOverlayPos(pStringSt->video_overlay, usX, usY);
 }
 
 
@@ -154,8 +149,8 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 
 static void EnableStringVideoOverlay(ScrollStringSt* pStringSt, BOOLEAN fEnable)
 {
-	if (pStringSt->iVideoOverlay == -1) return;
-	EnableVideoOverlay(fEnable, pStringSt->iVideoOverlay);
+	if (pStringSt->video_overlay == NULL) return;
+	EnableVideoOverlay(fEnable, pStringSt->video_overlay);
 }
 
 
@@ -326,10 +321,11 @@ void HideMessagesDuringNPCDialogue(void)
 
 	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
 	{
-		if (gpDisplayList[cnt] != NULL)
+		const ScrollStringSt* const s = gpDisplayList[cnt];
+		if (s != NULL)
 		{
-			RestoreExternBackgroundRectGivenID(gVideoOverlays[gpDisplayList[cnt]->iVideoOverlay].uiBackground);
-			EnableVideoOverlay(FALSE, gpDisplayList[cnt]->iVideoOverlay);
+			RestoreExternBackgroundRectGivenID(s->video_overlay->uiBackground);
+			EnableVideoOverlay(FALSE, s->video_overlay);
 		}
 	}
 }
@@ -341,10 +337,11 @@ void UnHideMessagesDuringNPCDialogue(void)
 
 	for (INT32 cnt = 0; cnt < MAX_LINE_COUNT; cnt++)
 	{
-		if (gpDisplayList[cnt] != NULL)
+		ScrollStringSt* const s = gpDisplayList[cnt];
+		if (s != NULL)
 		{
-			gpDisplayList[cnt]->uiTimeOfLastUpdate += GetJA2Clock() - uiStartOfPauseTime;
-			EnableVideoOverlay(TRUE, gpDisplayList[cnt]->iVideoOverlay);
+			s->uiTimeOfLastUpdate += GetJA2Clock() - uiStartOfPauseTime;
+			EnableVideoOverlay(TRUE, s->video_overlay);
 		}
 	}
 }
@@ -687,9 +684,10 @@ void EnableDisableScrollStringVideoOverlay(BOOLEAN fEnable)
 	 * system, and enable/disable video overlays depending on fEnable */
 	for (INT8 bCounter = 0; bCounter < MAX_LINE_COUNT; bCounter++)
 	{
-		if (gpDisplayList[bCounter] != NULL)
+		const ScrollStringSt* const s = gpDisplayList[bCounter];
+		if (s != NULL)
 		{
-			EnableVideoOverlay(fEnable, gpDisplayList[bCounter]->iVideoOverlay);
+			EnableVideoOverlay(fEnable, s->video_overlay);
 		}
 	}
 }

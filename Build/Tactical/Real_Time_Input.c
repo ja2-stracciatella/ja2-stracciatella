@@ -106,7 +106,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 				gfRTHaveClickedRightWhileLeftDown = FALSE;
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
 
-				if ( giUIMessageOverlay == -1 )
+				if (g_ui_message_overlay == NULL)
 				{
 					if ( gpItemPointer == NULL )
 					{
@@ -229,7 +229,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 
 			if ( gpItemPointer == NULL )
 			{
-				if ( giUIMessageOverlay == -1 && !gfRTHaveClickedRightWhileLeftDown )
+				if (g_ui_message_overlay == NULL && !gfRTHaveClickedRightWhileLeftDown)
 				{
 					// HERE FOR CLICK-DRAG CLICK
 					switch( gCurrentUIMode )
@@ -397,7 +397,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							// Switch on UI mode
 							if ( !gfRTClickLeftHoldIntercepted )
 							{
-								if ( giUIMessageOverlay != -1 )
+								if (g_ui_message_overlay != NULL)
 								{
 									EndUIMessage( );
 								}
