@@ -632,10 +632,11 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 	// always store the new message at the END index
 
 	// check if slot is being used, if so, clear it up
-	if (gMapScreenMessageList[gubEndOfMapScreenMessageList] != NULL)
+	ScrollStringSt* const old = gMapScreenMessageList[gubEndOfMapScreenMessageList];
+	if (old != NULL)
 	{
-		MemFree(gMapScreenMessageList[gubEndOfMapScreenMessageList]->pString16);
-		MemFree(gMapScreenMessageList[gubEndOfMapScreenMessageList]);
+		MemFree(old->pString16);
+		MemFree(old);
 	}
 
 	// store the new message there
@@ -674,17 +675,11 @@ void DisplayStringsInMapScreenMessageList(void)
 			break;
 		}
 
-		// nothing stored there?
-		if (gMapScreenMessageList[ubCurrentStringIndex] == NULL)
-		{
-			break;
-		}
+		const ScrollStringSt* const s = gMapScreenMessageList[ubCurrentStringIndex];
+		if (s == NULL) break;
 
-		// set font color
-		SetFontForeground(gMapScreenMessageList[ubCurrentStringIndex]->usColor);
-
-		// print this line
-		mprintf_coded(20, sY, gMapScreenMessageList[ubCurrentStringIndex]->pString16);
+		SetFontForeground(s->usColor);
+		mprintf_coded(20, sY, s->pString16);
 
 		sY += usSpacing;
 
@@ -737,12 +732,13 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 	if (!FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
 
 	//Loopthrough all the messages
-	for (UINT32 uiCount = 0; uiCount < 256; uiCount++)
+	for (ScrollStringSt*const *i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
+		const ScrollStringSt* const s = *i;
 		UINT32 uiSizeOfString;
-		if (gMapScreenMessageList[uiCount] != NULL)
+		if (s != NULL)
 		{
-			uiSizeOfString = (wcslen(gMapScreenMessageList[uiCount]->pString16) + 1) * sizeof(*gMapScreenMessageList[uiCount]->pString16);
+			uiSizeOfString = (wcslen(s->pString16) + 1) * sizeof(*s->pString16);
 		}
 		else
 		{
@@ -756,14 +752,14 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 		if (uiSizeOfString)
 		{
 			// write the message to the file
-			if (!FileWrite(hFile, gMapScreenMessageList[uiCount]->pString16, uiSizeOfString)) return FALSE;
+			if (!FileWrite(hFile, s->pString16, uiSizeOfString)) return FALSE;
 
 			// Create  the saved string struct
 			StringSaveStruct StringSave;
-			StringSave.uiFont                = gMapScreenMessageList[uiCount]->uiFont;
-			StringSave.usColor               = gMapScreenMessageList[uiCount]->usColor;
-			StringSave.fBeginningOfNewString = gMapScreenMessageList[uiCount]->fBeginningOfNewString;
-			StringSave.uiTimeOfLastUpdate    = gMapScreenMessageList[uiCount]->uiTimeOfLastUpdate;
+			StringSave.uiFont                = s->uiFont;
+			StringSave.usColor               = s->usColor;
+			StringSave.fBeginningOfNewString = s->fBeginningOfNewString;
+			StringSave.uiTimeOfLastUpdate    = s->uiTimeOfLastUpdate;
 			StringSave.uiFlags_UNUSED        = 0; // XXX HACK000B
 
 			//Write the rest of the message information to the saved game file
@@ -794,7 +790,7 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 	if (!FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
 
 	//Loopthrough all the messages
-	for (UINT32 uiCount = 0; uiCount < 256; uiCount++)
+	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
 		// Read to the file the size of the message
 		UINT32 uiSizeOfString;
@@ -808,46 +804,45 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 			if (!FileRead(hFile, SavedString, uiSizeOfString)) return FALSE;
 
 			//if there is an existing string,delete it
-			if (gMapScreenMessageList[uiCount])
+			ScrollStringSt* s = *i;
+			if (s != NULL)
 			{
-				if (gMapScreenMessageList[uiCount]->pString16)
+				if (s->pString16)
 				{
-					MemFree(gMapScreenMessageList[uiCount]->pString16);
-					gMapScreenMessageList[uiCount]->pString16 = NULL;
+					MemFree(s->pString16);
+					s->pString16 = NULL;
 				}
 			}
 			else
 			{
 				// There is now message here, add one
-				ScrollStringSt* sScroll = MemAlloc(sizeof(ScrollStringSt));
-				if (sScroll == NULL) return FALSE;
-				memset(sScroll, 0, sizeof(ScrollStringSt));
-				gMapScreenMessageList[uiCount] = sScroll;
+				s = MemAlloc(sizeof(ScrollStringSt));
+				if (s == NULL) return FALSE;
+				memset(s, 0, sizeof(*s));
+				*i = s;
 			}
 
 			//allocate space for the new string
-			gMapScreenMessageList[uiCount]->pString16 = MemAlloc(uiSizeOfString);
-			if (gMapScreenMessageList[uiCount]->pString16 == NULL)
-				return FALSE;
+			s->pString16 = MemAlloc(uiSizeOfString);
+			if (s->pString16 == NULL) return FALSE;
 
-			memset(gMapScreenMessageList[uiCount]->pString16, 0, uiSizeOfString);
+			memset(s->pString16, 0, uiSizeOfString);
 
 			//copy the string over
-			wcscpy(gMapScreenMessageList[uiCount]->pString16, SavedString);
+			wcscpy(s->pString16, SavedString);
 
 			//Read the rest of the message information to the saved game file
 			StringSaveStruct StringSave;
 			if (!FileRead(hFile, &StringSave, sizeof(StringSave))) return FALSE;
 
-			// Create  the saved string struct
-			gMapScreenMessageList[uiCount]->uiFont                = StringSave.uiFont;
-			gMapScreenMessageList[uiCount]->usColor               = StringSave.usColor;
-			gMapScreenMessageList[uiCount]->fBeginningOfNewString = StringSave.fBeginningOfNewString;
-			gMapScreenMessageList[uiCount]->uiTimeOfLastUpdate    = StringSave.uiTimeOfLastUpdate;
+			s->uiFont                = StringSave.uiFont;
+			s->usColor               = StringSave.usColor;
+			s->fBeginningOfNewString = StringSave.fBeginningOfNewString;
+			s->uiTimeOfLastUpdate    = StringSave.uiTimeOfLastUpdate;
 		}
 		else
 		{
-			gMapScreenMessageList[uiCount] = NULL;
+			*i = NULL;
 		}
 	}
 
