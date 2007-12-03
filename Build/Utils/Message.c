@@ -1,5 +1,7 @@
+#include "Debug.h"
 #include "Local.h"
 #include "Font.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Font_Control.h"
 #include "Message.h"
@@ -33,18 +35,6 @@ struct ScrollStringSt
 	UINT32  uiTimeOfLastUpdate;
 	ScrollStringSt* pNext;
 };
-
-
-typedef struct
-{
-	UINT32  uiFont;
-	UINT32  uiTimeOfLastUpdate;
-	UINT32  uiFlags_UNUSED; // XXX HACK000B
-	UINT32  uiPadding[3];
-	UINT16  usColor;
-	BOOLEAN fBeginningOfNewString;
-} StringSaveStruct;
-CASSERT(sizeof(StringSaveStruct) == 28)
 
 
 #define MAX_LINE_COUNT 6
@@ -721,6 +711,40 @@ static void PlayNewMessageSound(void)
 }
 
 
+static BOOLEAN ExtractScrollStringFromFile(const HWFILE file, ScrollStringSt* const s)
+{
+	BYTE data[28];
+	if (!FileRead(file, data, sizeof(data))) return FALSE;
+
+	const BYTE* d = data;
+	EXTR_U32(d, s->uiFont)
+	EXTR_U32(d, s->uiTimeOfLastUpdate)
+	EXTR_SKIP(d, 16)
+	EXTR_U16(d, s->usColor)
+	EXTR_BOOL(d, s->fBeginningOfNewString)
+	EXTR_SKIP(d, 1)
+	Assert(d == endof(data));
+
+	return TRUE;
+}
+
+
+static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringSt* const s)
+{
+	BYTE data[28];
+	BYTE* d = data;
+	INJ_U32(d, s->uiFont)
+	INJ_U32(d, s->uiTimeOfLastUpdate)
+	INJ_SKIP(d, 16)
+	INJ_U16(d, s->usColor)
+	INJ_BOOL(d, s->fBeginningOfNewString)
+	INJ_SKIP(d, 1)
+	Assert(d == endof(data));
+
+	return FileWrite(file, data, sizeof(data));
+}
+
+
 BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 {
 	// write to the begining of the message list
@@ -754,16 +778,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 			// write the message to the file
 			if (!FileWrite(hFile, s->pString16, uiSizeOfString)) return FALSE;
 
-			// Create  the saved string struct
-			StringSaveStruct StringSave;
-			StringSave.uiFont                = s->uiFont;
-			StringSave.usColor               = s->usColor;
-			StringSave.fBeginningOfNewString = s->fBeginningOfNewString;
-			StringSave.uiTimeOfLastUpdate    = s->uiTimeOfLastUpdate;
-			StringSave.uiFlags_UNUSED        = 0; // XXX HACK000B
-
-			//Write the rest of the message information to the saved game file
-			if (!FileWrite(hFile, &StringSave, sizeof(StringSave))) return FALSE;
+			if (!InjectScrollStringIntoFile(hFile, s)) return FALSE;
 		}
 	}
 
@@ -831,14 +846,7 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 			//copy the string over
 			wcscpy(s->pString16, SavedString);
 
-			//Read the rest of the message information to the saved game file
-			StringSaveStruct StringSave;
-			if (!FileRead(hFile, &StringSave, sizeof(StringSave))) return FALSE;
-
-			s->uiFont                = StringSave.uiFont;
-			s->usColor               = StringSave.usColor;
-			s->fBeginningOfNewString = StringSave.fBeginningOfNewString;
-			s->uiTimeOfLastUpdate    = StringSave.uiTimeOfLastUpdate;
+			if (!ExtractScrollStringFromFile(hFile, s)) return FALSE;
 		}
 		else
 		{
