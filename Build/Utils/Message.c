@@ -915,32 +915,22 @@ static void WriteMessageToFile(const wchar_t* pString)
 }
 
 
-static void InitGlobalMessageList(void)
+void FreeGlobalMessageList(void)
 {
-	for (INT32 iCounter = 0; iCounter < 256; iCounter++)
+	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
-		gMapScreenMessageList[iCounter] = NULL;
+		ScrollStringSt* const s = *i;
+		if (s != NULL)
+		{
+			MemFree(s->pString16);
+			MemFree(s);
+			*i = NULL;
+		}
 	}
 
 	gubEndOfMapScreenMessageList   = 0;
 	gubStartOfMapScreenMessageList = 0;
 	gubCurrentMapMessageString     = 0;
-}
-
-
-void FreeGlobalMessageList(void)
-{
-	for (INT32 iCounter = 0; iCounter < 256; iCounter++)
-	{
-		// check if next unit is empty, if not...clear it up
-		if (gMapScreenMessageList[iCounter] != NULL)
-		{
-			MemFree(gMapScreenMessageList[iCounter]->pString16);
-			MemFree(gMapScreenMessageList[iCounter]);
-		}
-	}
-
-	InitGlobalMessageList();
 }
 
 
