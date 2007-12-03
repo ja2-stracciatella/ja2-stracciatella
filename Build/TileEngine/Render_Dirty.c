@@ -540,16 +540,6 @@ BOOLEAN RestoreExternBackgroundRectGivenID(const INT32 iBack)
 }
 
 
-static BOOLEAN CopyExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight)
-{
-	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
-
-	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, sLeft, sTop, sWidth, sHeight);
-
-	return(TRUE);
-}
-
-
 //*****************************************************************************
 // gprintfdirty
 //
@@ -644,21 +634,6 @@ static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 }
 
 
-static void RecountVideoOverlays(void)
-{
-  INT32 uiCount;
-
-	for(uiCount=guiNumVideoOverlays-1; (uiCount >=0) ; uiCount--)
-	{
-		if((gVideoOverlays[uiCount].fAllocated) )
-		{
-			guiNumVideoOverlays=(UINT32)(uiCount+1);
-			break;
-		}
-	}
-}
-
-
 VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
 {
 	UINT32 iBackIndex;
@@ -706,15 +681,6 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pT
 	}
 
 	return v;
-}
-
-
-static void SetVideoOverlayPendingDelete(INT32 iVideoOverlay)
-{
-	if ( iVideoOverlay != -1 )
-	{
-		gVideoOverlays[ iVideoOverlay ].fDeletionPending = TRUE;
-	}
 }
 
 
@@ -896,42 +862,6 @@ void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 	}
 
 	UnLockVideoSurface( uiSrcBuffer );
-
-}
-
-
-static void SaveVideoOverlayArea(UINT32 uiSrcBuffer, UINT32 uiCount)
-{
-	UINT32 iBackIndex;
-	UINT32 uiSrcPitchBYTES;
-	UINT8	 *pSrcBuf;
-
-	pSrcBuf = LockVideoSurface( uiSrcBuffer, &uiSrcPitchBYTES );
-
-	if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
-	{
-		// OK, if our saved area is null, allocate it here!
-		if ( gVideoOverlays[uiCount].pSaveArea == NULL )
-		{
-			AllocateVideoOverlayArea( uiCount );
-		}
-
-		if ( gVideoOverlays[uiCount].pSaveArea != NULL )
-		{
-
-				iBackIndex = gVideoOverlays[uiCount].uiBackground;
-
-				// Save data from frame buffer!
-				Blt16BPPTo16BPP((UINT16 *)gVideoOverlays[uiCount].pSaveArea, gBackSaves[ iBackIndex ].sWidth*2,
-							(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-							0, 0,
-							gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop,
-							gBackSaves[ iBackIndex ].sWidth, gBackSaves[ iBackIndex ].sHeight );
-		}
-	}
-
-	UnLockVideoSurface( uiSrcBuffer );
-
 }
 
 
