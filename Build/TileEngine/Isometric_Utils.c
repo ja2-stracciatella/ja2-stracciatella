@@ -826,28 +826,6 @@ INT16 CenterY( INT16 sGridNo )
 }
 
 
-static INT16 MapX(INT16 sGridNo)
-{
-	INT16 sYPos, sXPos;
-
-	sYPos = sGridNo / WORLD_COLS;
-	sXPos = ( sGridNo - ( sYPos * WORLD_COLS ) );
-
-	return( sXPos );
-}
-
-
-static INT16 MapY(INT16 sGridNo)
-{
-	INT16 sYPos;
-
-	sYPos = sGridNo / WORLD_COLS;
-
-	return( sYPos );
-}
-
-
-
 BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 {
 	INT16 sWorldX;
@@ -862,31 +840,6 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 
 	if ( sWorldX > 0 && sWorldX < ( gsTRX - gsTLX - 20 ) &&
 			 sWorldY > 20	&& sWorldY < ( gsBLY - gsTLY - 20 ) )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
-
-// This function is used when we care about astetics with the top Y portion of the
-// gma eplay area
-// mostly due to UI bar that comes down....
-static BOOLEAN GridNoOnVisibleWorldTileGivenYLimits(INT16 sGridNo)
-{
-	INT16 sWorldX;
-	INT16 sWorldY;
-	INT16	sXMapPos, sYMapPos;
-
-	// Check for valid gridno...
-	ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( sXMapPos, sYMapPos, &sWorldX, &sWorldY);
-
-	if ( sWorldX > 0 && sWorldX < ( gsTRX - gsTLX - 20 ) &&
-			 sWorldY > 40	&& sWorldY < ( gsBLY - gsTLY - 20 ) )
 	{
 		return( TRUE );
 	}

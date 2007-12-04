@@ -2253,8 +2253,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 	INT8		bDir;
 	INT32		cnt;
 
-	//INT16	sX, sY, sWorldX, sZLevel;
-
 	// Not if we're dead!
 	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 	{
@@ -2362,8 +2360,11 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 
 		if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
 		{
-			 //sX = MapX( sNewGridNo );
-			 //sY = MapY( sNewGridNo );
+			 //INT16 sX;
+			 //INT16 sY;
+			 //ConvertGridNoToXY(sNewGridNo, &sX, &sY);
+			 //INT16 sWorldX;
+			 //INT16 sZLevel;
 			 //GetWorldXYAbsoluteScreenXY( sX, sY, &sWorldX, &sZLevel);
 			 //pSoldier->sZLevelOverride = (sZLevel*Z_SUBLAYERS)+ROOF_Z_LEVEL;
 			 pSoldier->sZLevelOverride = TOPMOST_Z_LEVEL;
