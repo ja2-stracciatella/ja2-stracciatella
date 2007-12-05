@@ -1344,7 +1344,6 @@ static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldi
 BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 {
 	SOLDIERTYPE		*pVehicle;
-	UINT8					ubDirection;
 	INT16					sGridNo;
 
 	// Get vehicle from soldier...
@@ -1358,12 +1357,12 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 	// TEST IF IT'S VALID...
 	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 3, pVehicle );
+		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 3, pVehicle);
 
 		if ( sGridNo == NOWHERE )
 		{
 			// ATE: BUT we need a place, widen the search
-			sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 20, &ubDirection, 3, pVehicle );
+			sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 20, 3, pVehicle);
 		}
 
 		// OK, remove....

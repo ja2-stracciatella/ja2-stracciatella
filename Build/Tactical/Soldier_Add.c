@@ -586,7 +586,7 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 }
 
 
-UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSoldier, UINT16 usAnimState, INT8 ubRadius, UINT8* pubDirection, BOOLEAN fClosestToMerc, const SOLDIERTYPE* pSrcSoldier)
+UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const pSoldier, const UINT16 usAnimState, const INT8 ubRadius, const BOOLEAN fClosestToMerc, const SOLDIERTYPE* const pSrcSoldier)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -598,7 +598,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSold
 	BOOLEAN	fFound = FALSE;
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
-	UINT8	ubBestDirection=0;
 	INT16 sSweetGridNo;
 	SOLDIERTYPE soldier;
 
@@ -716,7 +715,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSold
 
 						if ( uiRange < uiLowestRange || (uiRange == uiLowestRange && PythSpacesAway( pSoldier->sGridNo, sGridNo ) < PythSpacesAway( pSoldier->sGridNo, sLowestGridNo ) ) )
 						{
-							ubBestDirection = (UINT8)cnt3;
 							sLowestGridNo		= sGridNo;
 							uiLowestRange		= uiRange;
 							fFound = TRUE;
@@ -730,9 +728,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSold
 	gubNPCDistLimit = ubSaveNPCDistLimit;
 	if ( fFound )
 	{
-		// Set direction we chose...
-		*pubDirection = ubBestDirection;
-
 		return( sLowestGridNo );
 	}
 	else

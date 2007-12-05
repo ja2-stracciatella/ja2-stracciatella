@@ -3469,11 +3469,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 		SOLDIERTYPE* tgt;
 		if (IsRepairableStructAtGridNo(usMapPos, &tgt) == 2)
 		{
-			INT16 sNewGridNo;
-			UINT8	ubDirection;
-
-		  sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
-
+			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
 			if ( sNewGridNo != NOWHERE )
 			{
 				usMapPos = sNewGridNo;
@@ -3502,8 +3498,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 		const SOLDIERTYPE* const tgt = GetRefuelableStructAtGridNo(usMapPos);
 		if (tgt != NULL)
 		{
-			UINT8	ubDirection;
-			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
+			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
 			if ( sNewGridNo != NOWHERE )
 			{
 				usMapPos = sNewGridNo;

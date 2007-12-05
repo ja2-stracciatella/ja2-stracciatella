@@ -750,11 +750,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		 SOLDIERTYPE* tgt;
 		 if (IsRepairableStructAtGridNo(usGridNo, &tgt) == 2)
 		 {
-				INT16 sNewGridNo;
-				UINT8	ubDirection;
-
-				sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
-
+				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
 				if ( sNewGridNo != NOWHERE )
 				{
 					usGridNo = sNewGridNo;
@@ -828,8 +824,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		const SOLDIERTYPE* const tgt = GetRefuelableStructAtGridNo(usGridNo);
 		if (tgt != NULL)
 		 {
-				UINT8	ubDirection;
-				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, tgt);
+				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
 				if ( sNewGridNo != NOWHERE )
 				{
 					usGridNo = sNewGridNo;

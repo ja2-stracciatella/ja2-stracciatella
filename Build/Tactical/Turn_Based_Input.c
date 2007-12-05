@@ -3880,8 +3880,6 @@ static void CreatePlayerControlledMonster(void)
 static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode)
 {
 	// Look for an item pool
-	INT16							sActionGridNo;
-	UINT8							ubDirection;
 	INT16							sAPCost = 0;
 
 	const SOLDIERTYPE* const pTSoldier = gUIFullTarget;
@@ -3892,8 +3890,7 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 			 if ( ( GetNumberInVehicle( pTSoldier->bVehicleID ) == 0 ) || !fMovementMode )
 			 {
 				 // Find a gridno closest to sweetspot...
-				 sActionGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, pSoldier->usUIMovementMode, 5, &ubDirection, 0, pTSoldier );
-
+				const INT16 sActionGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, pTSoldier);
 				 if ( sActionGridNo != NOWHERE )
 				 {
 						// Calculate AP costs...

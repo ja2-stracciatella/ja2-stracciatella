@@ -595,9 +595,6 @@ BOOLEAN SortSchedule( SCHEDULENODE *pSchedule )
 
 BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 {
-	INT16						sNewGridNo;
-	UINT8						ubDir;
-
 	// this is for autoprocessing schedules...
 	// there could be someone in the destination location, in which case
 	// we want to 'bump' them to the nearest available spot
@@ -611,7 +608,8 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 	if (pSoldier == NULL) return TRUE;
 
 	// what if the existing merc is prone?
-	sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier( pSoldier, STANDING, 5, &ubDir, 1, pSoldier );
+	const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, STANDING, 5, 1, pSoldier);
+	//UINT8 ubDir;
 	//sNewGridNo = FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier, sGridNo, 10, &ubDir );
 
 	if ( sNewGridNo == NOWHERE )
