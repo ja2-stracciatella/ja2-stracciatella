@@ -115,7 +115,7 @@ void MakeClosestEnemyChosenOne()
 
 			// if he can't get to a spot where he could get at the panic trigger
 			/*
-			if ( FindAdjacentGridEx( pSoldier, gTacticalStatus.sPanicTriggerGridno, &ubDirection, &sAdjSpot, FALSE, FALSE ) == -1 )
+			if (FindAdjacentGridEx(pSoldier, gTacticalStatus.sPanicTriggerGridno, NULL, &sAdjSpot, FALSE, FALSE) == -1)
 			{
 				pSoldier->bHasKeys = bOldKeys;
 				continue;          // next merc

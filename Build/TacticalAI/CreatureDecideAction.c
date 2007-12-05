@@ -590,7 +590,6 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  INT16 iChance, sClosestOpponent /*,sClosestOpponent,sClosestFriend*/;
  INT16 sClosestDisturbance;
  INT16 sDistVisible;
- UINT8 ubCanMove,ubOpponentDir;
  //INT8 bInWater;
  INT8 bInGas;
  INT16 sAdjustedGridNo;
@@ -610,7 +609,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 
 
  // can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
- ubCanMove = ((pSoldier->bMobility != CREATURE_IMMOBILE) && (pSoldier->bActionPoints >= MinPtsToMove(pSoldier)));
+	const UINT8 ubCanMove = (pSoldier->bMobility != CREATURE_IMMOBILE && pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
  // determine if we happen to be in water (in which case we're in BIG trouble!)
  //bInWater = MercInWater(pSoldier);
@@ -794,10 +793,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 		 // need smell/visibility check?
 		 if (PythSpacesAway( pSoldier->sGridNo, pSoldier->usActionData) < MAX_EAT_DIST )
 		 {
-			 INT16 sGridNo;
-
-			 sGridNo = FindAdjacentGridEx( pSoldier, pSoldier->usActionData, &ubOpponentDir, &sAdjustedGridNo, FALSE, FALSE );
-
+				const INT16 sGridNo = FindAdjacentGridEx(pSoldier, pSoldier->usActionData, NULL, &sAdjustedGridNo, FALSE, FALSE);
 			 if ( sGridNo != -1 )
 			 {
 					pSoldier->usActionData = sGridNo;
@@ -827,7 +823,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 		 if (sClosestOpponent != NOWHERE)
 			{
 			 // determine direction from this soldier to the closest opponent
-			 ubOpponentDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
+				const UINT8 ubOpponentDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sClosestOpponent), CenterY(sClosestOpponent));
 
 			 // if soldier is not already facing in that direction,
 			 // and the opponent is close enough that he could possibly be seen

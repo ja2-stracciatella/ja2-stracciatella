@@ -892,7 +892,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 
 				if ( sGotLocation == NOWHERE && pSoldier->ubBodyType != BLOODCAT )
 				{
-					sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+					sActionGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
 
 					if ( sActionGridNo == -1 )
 					{
@@ -1639,10 +1639,9 @@ UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot)
 {
 	UINT16						sAPCost = 0;
   INT16             sActionGridNo;
-  UINT8             ubDirection;
   INT16             sAdjustedGridNo;
 
-	sActionGridNo = FindAdjacentGridEx( pSoldier, pRobot->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+	sActionGridNo = FindAdjacentGridEx(pSoldier, pRobot->sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
 
 	sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 

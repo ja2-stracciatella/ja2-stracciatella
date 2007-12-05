@@ -3818,7 +3818,6 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	INT16				sDesiredLevel;
 	INT16				sActionGridNo;
 	BOOLEAN			fStructFound = FALSE;
-	UINT8				ubDirection;
 	INT16				sAdjustedGridNo;
 
 	sActionGridNo = sGridNo;
@@ -3849,7 +3848,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	if (fStructFound || (tgt != NULL && tgt != pSoldier))
 	{
 		// GET ADJACENT GRIDNO
-		sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, FALSE, FALSE );
+		sActionGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, FALSE, FALSE);
 
 		if ( sActionGridNo == -1 )
 		{

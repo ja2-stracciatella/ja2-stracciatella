@@ -888,14 +888,13 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGri
 {
 	INT32 iNumTiles;
 	INT16	sActionGridNo;
-	UINT8	ubDirection;
 
 	if ( pSoldier->bLevel != bLevel )
 	{
 		return( FALSE );
 	}
 
-	sActionGridNo =  FindAdjacentGridEx( pSoldier, sGridNo, &ubDirection, NULL, FALSE, FALSE );
+	sActionGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, NULL, FALSE, FALSE);
 
 	if ( sActionGridNo == -1 )
 	{

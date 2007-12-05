@@ -3856,7 +3856,6 @@ void DrawItemTileCursor( )
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
 	BOOLEAN						fGiveItem = FALSE;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
 	static UINT32			uiOldCursorId = 0;
 	static UINT16			usOldMousePos = 0;
 	INT16							sEndZ = 0;
@@ -3989,7 +3988,7 @@ void DrawItemTileCursor( )
 				if ( !( uiCursorFlags & MOUSE_MOVING ) )
 				{
 					// Find adjacent gridno...
-					sActionGridNo =  FindAdjacentGridEx( gpItemPointerSoldier, gusCurMousePos, &ubDirection, NULL, FALSE, FALSE );
+					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, gusCurMousePos, NULL, NULL, FALSE, FALSE);
 					if ( sActionGridNo == -1 )
 					{
 						sActionGridNo = gusCurMousePos;

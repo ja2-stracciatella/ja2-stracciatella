@@ -3940,7 +3940,6 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
 	INT16							sAPCost;
 	INT16							sAdjustedGridNo;
 	STRUCTURE					*pStructure = NULL;
@@ -3966,7 +3965,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 		{
 			 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 			 {
-				sActionGridNo =  FindAdjacentGridEx(pSoldier, tgt->sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+				sActionGridNo = FindAdjacentGridEx(pSoldier, tgt->sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
 				if ( sActionGridNo == -1 )
 				{
 					sActionGridNo = sAdjustedGridNo;
@@ -4038,7 +4037,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 		{
 			if ( pIntTile != NULL && !( pStructure->fFlags & STRUCTURE_HASITEMONTOP ) )
 			{
-				sActionGridNo =  FindAdjacentGridEx( pSoldier, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE );
+				sActionGridNo = FindAdjacentGridEx(pSoldier, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
 				if ( sActionGridNo == -1 )
 				{
 					sActionGridNo = sIntTileGridNo;
@@ -4109,7 +4108,6 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
 	INT8							bReturnCode = 0;
 	INT8							bZLevel;
 	STRUCTURE					*pStructure = NULL;
@@ -4209,7 +4207,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 			if ( fContinue )
 			{
 				SOLDIERTYPE* const sel = GetSelectedMan();
-				sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE);
+				sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
 				if ( sActionGridNo == -1 )
 				{
 					sActionGridNo = sIntTileGridNo;
