@@ -21,9 +21,6 @@
 #include <stdlib.h>
 
 
-UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc );
-
-
 // SO, STEPS IN CREATING A MERC!
 
 // 1 ) Setup the SOLDIERCREATE_STRUCT
@@ -1110,10 +1107,19 @@ BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s,
 }
 
 
+static void PlaceSoldierNearSweetSpot(SOLDIERTYPE* const s, const UINT16 anim, const GridNo sweet_spot)
+{
+	// OK, look for suitable placement....
+	UINT8	new_direction;
+	const GridNo good_pos = FindGridNoFromSweetSpotWithStructData(s, anim, sweet_spot, 5, &new_direction, FALSE);
+	EVENT_SetSoldierPosition(s, good_pos, SSP_NONE);
+	EVENT_SetSoldierDirection(s, new_direction);
+	EVENT_SetSoldierDesiredDirection(s, new_direction);
+}
+
+
 static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
 	UINT16	usAnim = SLEEPING;
 
 	if ( !pSoldier->bInSector )
@@ -1126,15 +1132,7 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	   usAnim = STANDING;
 	}
 
-	// OK, look for sutable placement....
-	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, usAnim, sGridNo, 5, &ubNewDirection, FALSE );
-
-	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
-
-	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
-
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	PlaceSoldierNearSweetSpot(pSoldier, usAnim, sGridNo);
 
 	if ( AM_AN_EPC( pSoldier ) )
 	{
@@ -1149,23 +1147,12 @@ static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
-
 	if ( !pSoldier->bInSector )
 	{
 		return;
 	}
 
-	// OK, look for sutable placement....
-	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, STAND_FALLFORWARD_STOP, sGridNo, 5, &ubNewDirection, FALSE );
-
-	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
-
-	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
-
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	PlaceSoldierNearSweetSpot(pSoldier, STAND_FALLFORWARD_STOP, sGridNo);
 
 	EVENT_InitNewSoldierAnim( pSoldier, STAND_FALLFORWARD_STOP, 1, TRUE );
 }
@@ -1173,23 +1160,12 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 
 void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
-
 	if ( !pSoldier->bInSector )
 	{
 		return;
 	}
 
-	// OK, look for sutable placement....
-	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_PATIENT, sGridNo, 5, &ubNewDirection, FALSE );
-
-	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
-
-	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
-
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	PlaceSoldierNearSweetSpot(pSoldier, BEING_PATIENT, sGridNo);
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1204,23 +1180,12 @@ void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
-
 	if ( !pSoldier->bInSector )
 	{
 		return;
 	}
 
-	// OK, look for sutable placement....
-	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_DOCTOR, sGridNo, 5, &ubNewDirection, FALSE );
-
-	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
-
-	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
-
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	PlaceSoldierNearSweetSpot(pSoldier, BEING_DOCTOR, sGridNo);
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
@@ -1235,23 +1200,12 @@ void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	UINT8	ubNewDirection;
-	INT16 sGoodGridNo;
-
 	if ( !pSoldier->bInSector )
 	{
 		return;
 	}
 
-	// OK, look for sutable placement....
-	sGoodGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, BEING_REPAIRMAN, sGridNo, 5, &ubNewDirection, FALSE );
-
-	EVENT_SetSoldierPosition(pSoldier, sGoodGridNo, SSP_NONE);
-
-	EVENT_SetSoldierDirection( pSoldier, ubNewDirection );
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubNewDirection );
-
-	//pSoldier->bDesiredDirection = pSoldier->bDirection;
+	PlaceSoldierNearSweetSpot(pSoldier, BEING_REPAIRMAN, sGridNo);
 
 	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
 	{
