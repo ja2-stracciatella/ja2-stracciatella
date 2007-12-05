@@ -779,10 +779,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* co
 	INT16  cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=-1;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
-
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
@@ -798,6 +795,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* co
 
 	uiLowestRange = 999999;
 
+	INT16 sLowestGridNo = NOWHERE;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
@@ -824,22 +822,13 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* co
 						{
 							sLowestGridNo = sGridNo;
 							uiLowestRange = uiRange;
-							fFound = TRUE;
 						}
 					}
 			}
 		}
-
 	}
 
-	if ( fFound )
-	{
-		return( sLowestGridNo );
-	}
-	else
-	{
-		return( NOWHERE );
-	}
+	return sLowestGridNo;
 }
 
 
