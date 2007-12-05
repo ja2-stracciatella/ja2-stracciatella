@@ -1638,10 +1638,8 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot)
 {
 	UINT16						sAPCost = 0;
-  INT16             sActionGridNo;
-  INT16             sAdjustedGridNo;
 
-	sActionGridNo = FindAdjacentGridEx(pSoldier, pRobot->sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
+	const INT16 sActionGridNo = FindAdjacentGridEx(pSoldier, pRobot->sGridNo, NULL, NULL, TRUE, FALSE);
 
 	sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
 

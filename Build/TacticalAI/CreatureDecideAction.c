@@ -592,7 +592,6 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
  INT16 sDistVisible;
  //INT8 bInWater;
  INT8 bInGas;
- INT16 sAdjustedGridNo;
  BOOLEAN fChangeLevel;
 
  // if we have absolutely no action points, we can't do a thing under RED!
@@ -793,7 +792,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 		 // need smell/visibility check?
 		 if (PythSpacesAway( pSoldier->sGridNo, pSoldier->usActionData) < MAX_EAT_DIST )
 		 {
-				const INT16 sGridNo = FindAdjacentGridEx(pSoldier, pSoldier->usActionData, NULL, &sAdjustedGridNo, FALSE, FALSE);
+				const INT16 sGridNo = FindAdjacentGridEx(pSoldier, pSoldier->usActionData, NULL, NULL, FALSE, FALSE);
 			 if ( sGridNo != -1 )
 			 {
 					pSoldier->usActionData = sGridNo;

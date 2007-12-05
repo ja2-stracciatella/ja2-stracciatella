@@ -205,7 +205,6 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 	SOLDIERTYPE *		pBestPatient = NULL;
 	SOLDIERTYPE *		pOtherMedic;
 	INT8						bPatientPriority;
-	INT16						sAdjustedGridNo, sAdjacentGridNo, sOtherAdjacentGridNo;
 	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
 
@@ -240,7 +239,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 				{
 
 					sPatientGridNo = pPatient->sGridNo;
-					sAdjacentGridNo = FindAdjacentGridEx(pSoldier, sPatientGridNo, NULL, &sAdjustedGridNo, FALSE, FALSE);
+					INT16 sAdjacentGridNo = FindAdjacentGridEx(pSoldier, sPatientGridNo, NULL, NULL, FALSE, FALSE);
 					if ( sAdjacentGridNo == -1 && gAnimControl[ pPatient->usAnimState ].ubEndHeight == ANIM_PRONE )
 					{
 						// prone; could be the base tile is inaccessible but the rest isn't...
@@ -250,7 +249,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 							if (WhoIsThere2(sPatientGridNo, pPatient->bLevel) == pPatient)
 							{
 								// patient is also here, try this location
-								sAdjacentGridNo = FindAdjacentGridEx(pSoldier, sPatientGridNo, NULL, &sAdjustedGridNo, FALSE, FALSE);
+								sAdjacentGridNo = FindAdjacentGridEx(pSoldier, sPatientGridNo, NULL, NULL, FALSE, FALSE);
 								if ( sAdjacentGridNo != -1 )
 								{
 									break;
@@ -279,7 +278,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 								// only switch to this patient if our distance is closer than
 								// the other medic's
 								pOtherMedic = MercPtrs[ pPatient->ubAutoBandagingMedic ];
-								sOtherAdjacentGridNo = FindAdjacentGridEx(pOtherMedic, sPatientGridNo, NULL, &sAdjustedGridNo, FALSE, FALSE);
+								const INT16 sOtherAdjacentGridNo = FindAdjacentGridEx(pOtherMedic, sPatientGridNo, NULL, NULL, FALSE, FALSE);
 								if (sOtherAdjacentGridNo != -1)
 								{
 
