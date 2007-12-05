@@ -3919,7 +3919,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 	// CHECK IF IT'S THE SAME ONE AS WE'RE ON, IF SO, RETURN THAT!
 	if (pSoldier->sGridNo == sGridNo)
 	{
-		*pubDirection = pSoldier->bDirection;
+		if (pubDirection != NULL) *pubDirection = pSoldier->bDirection;
 		return sGridNo;
 	}
 

@@ -825,7 +825,6 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 	UINT16						sAPCost = 0;
 	UINT16						usItemNum;
 	INT16							sActionGridNo;
-	UINT8							ubDirection;
 	INT16							sAdjustedGridNo;
 	UINT32						uiItemClass;
 
@@ -878,7 +877,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 				{
 					if ( pSoldier->ubBodyType == BLOODCAT )
 					{
-						sGotLocation = FindNextToAdjacentGridEx( pSoldier, sGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+						sGotLocation = FindNextToAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
 						if ( sGotLocation == -1 )
 						{
 							sGotLocation = NOWHERE;
