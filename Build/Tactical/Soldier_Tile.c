@@ -521,14 +521,13 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 				{
 					if ( pSoldier->fDelayedMovement >= 150 )
 					{
-						UINT8 ubDirection;
 						// OK, look around dest for the first one!
-						sCheckGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sFinalDestination, 6, &ubDirection );
+						sCheckGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sFinalDestination, 6);
 
 						if ( sCheckGridNo == NOWHERE )
 						{
 							// If this is nowhere, try harder!
-							sCheckGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sFinalDestination, 16, &ubDirection );
+							sCheckGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sFinalDestination, 16);
 						}
 					}
 					else

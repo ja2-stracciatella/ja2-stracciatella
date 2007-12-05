@@ -1627,7 +1627,6 @@ static INT8 CrowDecideActionRed(SOLDIERTYPE* pSoldier)
 static INT8 CrowDecideActionGreen(SOLDIERTYPE* pSoldier)
 {
 	INT16 sCorpseGridNo;
-	UINT8 ubDirection;
 	INT16 sFacingDir;
 
 	// Look for a corse!
@@ -1659,7 +1658,7 @@ static INT8 CrowDecideActionGreen(SOLDIERTYPE* pSoldier)
 		 else
 		 {
 			 // Walk to nearest one!
-			 pSoldier->usActionData = FindGridNoFromSweetSpot( pSoldier, sCorpseGridNo, 4, &ubDirection );
+			pSoldier->usActionData = FindGridNoFromSweetSpot(pSoldier, sCorpseGridNo, 4);
 			 if ( pSoldier->usActionData != NOWHERE )
 			 {
 				 return( AI_ACTION_GET_CLOSER );

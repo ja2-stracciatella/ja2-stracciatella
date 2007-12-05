@@ -5,8 +5,7 @@
 
 
 // Finds a gridno given a sweet spot
-// Returns a good direction too!
-UINT16	FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
+UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);
 
 // Ensures a good path.....
 UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);

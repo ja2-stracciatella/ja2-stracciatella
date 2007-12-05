@@ -46,7 +46,7 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 
 //Kris:  modified to actually path from sweetspot to gridno.  Previously, it only checked if the
 //destination was sittable (though it was possible that that location would be trapped.
-UINT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
+UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -138,8 +138,6 @@ UINT16 FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 
 	gubNPCDistLimit = ubSaveNPCDistLimit;
 	if ( fFound )
 	{
-		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 		return( sLowestGridNo );
 	}
 	else
@@ -1042,13 +1040,17 @@ static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const pSoldier, BOOLEAN f
 			}
 			else
 			{
-				sGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sInsertionGridNo, 7, &ubCalculatedDirection );
+				sGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sInsertionGridNo, 7);
 
         // ATE: Error condition - if nowhere use insertion gridno!
         if ( sGridNo == NOWHERE )
         {
           sGridNo = pSoldier->sInsertionGridNo;
         }
+				else
+				{
+					ubCalculatedDirection = GetDirectionToGridNoFromGridNo(sGridNo, CENTER_GRIDNO);
+				}
 			}
 
 			// Override calculated direction if we were told to....
@@ -1273,8 +1275,6 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode)
 {
-	INT16 sNewGridNo;
-	UINT8	ubNewDirection;
 	UINT8	ubInsertionCode;
 
 	// Add merc to gridno
@@ -1346,7 +1346,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 		if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
 		{
 			// Find a sweetspot near...
-			sNewGridNo = FindGridNoFromSweetSpot( pSoldier, gMapInformation.sNorthGridNo, 4, &ubNewDirection );
+			const INT16 sNewGridNo = FindGridNoFromSweetSpot(pSoldier, gMapInformation.sNorthGridNo, 4);
 			EVENT_GetNewSoldierPath( pSoldier, sNewGridNo, WALKING );
 		}
 

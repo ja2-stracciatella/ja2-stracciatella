@@ -18,6 +18,8 @@
 #define CELL_X_SIZE					10
 #define CELL_Y_SIZE					10
 
+#define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
+
 #define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
 
