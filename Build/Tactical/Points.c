@@ -886,7 +886,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 					}
 					else
 					{
-						sGotLocation = FindAdjacentPunchTarget( pSoldier, pTarget, &sAdjustedGridNo, &ubDirection );
+						sGotLocation = FindAdjacentPunchTarget(pSoldier, pTarget, &sAdjustedGridNo);
 					}
 				}
 

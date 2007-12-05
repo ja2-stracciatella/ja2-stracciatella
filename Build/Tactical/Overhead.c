@@ -4131,7 +4131,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 }
 
 
-INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTargetSoldier, INT16* const psAdjustedTargetGridNo, UINT8* const pubDirection)
+INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTargetSoldier, INT16* const psAdjustedTargetGridNo)
 {
 	for (INT16 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
 	{
@@ -4150,7 +4150,6 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 			// We've got a guy here....
 			// Who is the one we want......
 			*psAdjustedTargetGridNo = pTargetSoldier->sGridNo;
-			*pubDirection           = i;
 			return sSpot;
 		}
 	}
