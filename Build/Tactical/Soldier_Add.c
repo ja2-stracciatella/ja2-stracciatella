@@ -593,9 +593,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 	INT16  cnt1, cnt2, cnt3;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=-1;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	INT16 sSweetGridNo;
@@ -645,6 +643,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 
 	uiLowestRange = 999999;
 
+	INT16 sLowestGridNo = NOWHERE;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
@@ -717,7 +716,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 						{
 							sLowestGridNo		= sGridNo;
 							uiLowestRange		= uiRange;
-							fFound = TRUE;
 						}
 					}
 				}
@@ -726,14 +724,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 	}
 	gubNPCAPBudget = ubSaveNPCAPBudget;
 	gubNPCDistLimit = ubSaveNPCDistLimit;
-	if ( fFound )
-	{
-		return( sLowestGridNo );
-	}
-	else
-	{
-		return( NOWHERE );
-	}
+	return sLowestGridNo;
 }
 
 
