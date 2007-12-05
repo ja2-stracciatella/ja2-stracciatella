@@ -325,9 +325,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 	INT16  cnt1, cnt2;
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo=0;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 	EXITGRID	ExitGrid;
 
 
@@ -339,6 +337,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 	//clear the mapelements of potential residue MAPELEMENT_REACHABLE flags
 	uiLowestRange = 999999;
 
+	INT16 sLowestGridNo = NOWHERE;
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSrcGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
@@ -356,19 +355,11 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 					{
 						sLowestGridNo = sGridNo;
 						uiLowestRange = uiRange;
-						fFound = TRUE;
 					}
 				}
 			}
 		}
 	}
 
-	if ( fFound )
-	{
-		return( sLowestGridNo );
-	}
-	else
-	{
-		return( NOWHERE );
-	}
+	return sLowestGridNo;
 }
