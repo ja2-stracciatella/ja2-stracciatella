@@ -867,7 +867,7 @@ BOOLEAN CanSoldierReachGridNoInGivenTileLimit( SOLDIERTYPE *pSoldier, INT16 sGri
 }
 
 
-UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection )
+UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius)
 {
 	INT16		sX, sY;
 	INT16		sGridNo;
@@ -959,9 +959,6 @@ UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo,
 		}
 
 	} while( !fFound );
-
-	// Set direction to center of map!
-	*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
 
 	gubNPCAPBudget = ubSaveNPCAPBudget;
 	gubNPCDistLimit = ubSaveNPCDistLimit;

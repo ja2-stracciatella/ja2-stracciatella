@@ -17,7 +17,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpot(const SOLDIERTYPE* pSoldier, IN
 UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius, INT8 ubQuardentDir);
 
 // Finds a gridno near a sweetspot but a random one!
-UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
+UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);
 
 
 // Adds a soldier ( already created in mercptrs[] array )!

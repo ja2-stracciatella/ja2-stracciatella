@@ -944,8 +944,6 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
-	INT16										sGridNo;
-	UINT8										ubDirection;
 	UINT8										ubRoomNum;
 
 	// No crows inside :(
@@ -969,8 +967,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);
 	if (pSoldier != NULL)
 	{
-		sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 2, &ubDirection );
-
+		const INT16 sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pCorpse->def.sGridNo, 2);
 		if ( sGridNo != NOWHERE )
 		{
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -982,7 +979,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 			AddSoldierToSector(pSoldier);
 
 		  // Change to fly animation
-		  //sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pCorpse->def.sGridNo, 5, &ubDirection );
+		  //sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pCorpse->def.sGridNo, 5);
 		  //pSoldier->usUIMovementMode = CROW_FLY;
 		  //EVENT_GetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode );
 
@@ -1021,14 +1018,11 @@ void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 
 void HandleCrowFlyAway( SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubDirection;
-	INT16	sGridNo;
-
 	// Set desired height
 	pSoldier->sDesiredHeight			= 100;
 
 	// Change to fly animation
-	sGridNo =  FindRandomGridNoFromSweetSpot( pSoldier, pSoldier->sGridNo, 5, &ubDirection );
+	const INT16 sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pSoldier->sGridNo, 5);
 	pSoldier->usUIMovementMode = CROW_FLY;
 	SendGetNewSoldierPathEvent( pSoldier, sGridNo, pSoldier->usUIMovementMode );
 }
