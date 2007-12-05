@@ -1120,28 +1120,14 @@ static void PlaceSoldierNearSweetSpot(SOLDIERTYPE* const s, const UINT16 anim, c
 
 static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	UINT16	usAnim = SLEEPING;
-
 	if ( !pSoldier->bInSector )
 	{
 		return;
 	}
 
-	if ( AM_AN_EPC( pSoldier ) )
-	{
-	   usAnim = STANDING;
-	}
-
-	PlaceSoldierNearSweetSpot(pSoldier, usAnim, sGridNo);
-
-	if ( AM_AN_EPC( pSoldier ) )
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 1, TRUE );
-	}
-	else
-	{
-		EVENT_InitNewSoldierAnim(pSoldier, SLEEPING, 1, TRUE);
-	}
+	const UINT16 anim = (AM_AN_EPC(pSoldier) ? STANDING : SLEEPING);
+	PlaceSoldierNearSweetSpot(pSoldier, anim, sGridNo);
+	EVENT_InitNewSoldierAnim(pSoldier, anim, 1, TRUE);
 }
 
 
