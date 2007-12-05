@@ -101,7 +101,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 	UINT8					ubRandomHandIndex;		// Index value into random animation table to use base don what is in the guys hand...
 	UINT16				usItem;
 	RANDOM_ANI_DEF	*pAnimDef;
-	UINT8					ubNewDirection;
 	UINT8					ubDesiredHeight;
 	BOOLEAN				bOKFireWeapon;
 	BOOLEAN				bWeaponJammed;
@@ -1007,7 +1006,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// OK, now get a sweetspot ( not the place we are now! )
 					//sNewGridNo =  FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier, pSoldier->sGridNo, 5);
 
-					sNewGridNo =  FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( pSoldier, pSoldier->sGridNo, 3, &ubNewDirection, SOUTHEAST );
+					sNewGridNo = FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(pSoldier, pSoldier->sGridNo, 3, SOUTHEAST);
 
 					// Check for merc arrives quotes...
 					HandleMercArrivesQuotes( pSoldier );

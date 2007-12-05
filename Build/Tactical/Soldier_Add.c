@@ -772,7 +772,7 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpot(const SOLDIERTYPE* const pSoldi
 }
 
 
-UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, INT8 ubQuardentDir )
+UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(const SOLDIERTYPE* const pSoldier, const INT16 sSweetGridNo, const INT8 ubRadius, const INT8 ubQuardentDir)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
@@ -834,9 +834,6 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( SOLDIERTYPE *pSoldie
 
 	if ( fFound )
 	{
-		// Set direction to center of map!
-		*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sLowestGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
-
 		return( sLowestGridNo );
 	}
 	else
