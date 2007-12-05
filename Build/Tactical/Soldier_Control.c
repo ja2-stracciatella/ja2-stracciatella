@@ -8065,7 +8065,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 }
 
 
-void EVENT_SoldierEnterVehicle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection )
+void EVENT_SoldierEnterVehicle(SOLDIERTYPE* const pSoldier, const INT16 sGridNo)
 {
 	const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
 	if (tgt != NULL) EnterVehicle(tgt, pSoldier);

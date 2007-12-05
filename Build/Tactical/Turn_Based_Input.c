@@ -3910,7 +3910,6 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 								// SEND PENDING ACTION
 								pSoldier->ubPendingAction = MERC_ENTER_VEHICLE;
 								pSoldier->sPendingActionData2  = pTSoldier->sGridNo;
-								pSoldier->bPendingActionData3  = ubDirection;
 								pSoldier->ubPendingActionAnimCount = 0;
 
 								// WALK UP TO DEST FIRST
@@ -3918,7 +3917,7 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 							}
 							else
 							{
-								EVENT_SoldierEnterVehicle( pSoldier, pTSoldier->sGridNo, ubDirection );
+								EVENT_SoldierEnterVehicle(pSoldier, pTSoldier->sGridNo);
 							}
 
 							// OK, set UI
