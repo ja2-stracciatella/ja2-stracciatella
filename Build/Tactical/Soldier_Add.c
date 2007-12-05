@@ -991,57 +991,6 @@ UINT16 FindRandomGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo,
 	gubNPCDistLimit = ubSaveNPCDistLimit;
 
 	return( sGridNo );
-
-}
-
-
-// Finds a sweetspot but excluding this one!
-static UINT16 FindRandomGridNoFromSweetSpotExcludingSweetSpot(SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8* pubDirection)
-{
-	INT16		sX, sY;
-	INT16		sGridNo;
-	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
-	UINT32		cnt = 0;
-
-	do
-	{
-		sX = (UINT16)Random( ubRadius );
-		sY = (UINT16)Random( ubRadius );
-
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * sY ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		sGridNo = sSweetGridNo + ( WORLD_COLS * sY ) + sX;
-
-		if ( sGridNo == sSweetGridNo )
-		{
-			continue;
-		}
-
-		if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
-				 sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-		{
-			// Go on sweet stop
-			if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
-			{
-				fFound = TRUE;
-			}
-		}
-
-		cnt++;
-
-		if ( cnt > 2000 )
-		{
-			return( NOWHERE );
-		}
-
-	} while( !fFound );
-
-	// Set direction to center of map!
-	*pubDirection =  (UINT8)GetDirectionToGridNoFromGridNo( sGridNo, ( ( ( WORLD_ROWS / 2 ) * WORLD_COLS ) + ( WORLD_COLS / 2 ) ) );
-
-	return( sGridNo );
-
 }
 
 
