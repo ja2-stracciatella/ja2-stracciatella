@@ -461,7 +461,6 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 	INT8		bBlocked, bPathBlocked;
 	INT16		sCost;
 	INT16   sNewGridNo, sCheckGridNo;
-	UINT8		ubDirection, bCauseDirection;
 	UINT8		fFlags = 0;
 
 	if ( pSoldier->fDelayedMovement )
@@ -471,8 +470,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 			RESETTIMECOUNTER( pSoldier->NextTileCounter, NEXT_TILE_CHECK_DELAY );
 
 			// Get direction from gridno...
-			bCauseDirection = (INT8)GetDirectionToGridNoFromGridNo( pSoldier->sGridNo, pSoldier->sDelayedMovementCauseGridNo );
-
+			const UINT8 bCauseDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, pSoldier->sDelayedMovementCauseGridNo);
 			bBlocked = TileIsClear( pSoldier, bCauseDirection, pSoldier->sDelayedMovementCauseGridNo, pSoldier->bLevel );
 
 			// If we are waiting for a temp blockage.... continue to wait
@@ -523,6 +521,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 				{
 					if ( pSoldier->fDelayedMovement >= 150 )
 					{
+						UINT8 ubDirection;
 						// OK, look around dest for the first one!
 						sCheckGridNo = FindGridNoFromSweetSpot( pSoldier, pSoldier->sFinalDestination, 6, &ubDirection );
 
@@ -535,12 +534,12 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 					else
 					{
 						// OK, look around dest for the first one!
-						sCheckGridNo = FindGridNoFromSweetSpotThroughPeople( pSoldier, pSoldier->sFinalDestination, 6, &ubDirection );
+						sCheckGridNo = FindGridNoFromSweetSpotThroughPeople(pSoldier, pSoldier->sFinalDestination, 6);
 
 						if ( sCheckGridNo == NOWHERE )
 						{
 							// If this is nowhere, try harder!
-							sCheckGridNo = FindGridNoFromSweetSpotThroughPeople( pSoldier, pSoldier->sFinalDestination, 16, &ubDirection );
+							sCheckGridNo = FindGridNoFromSweetSpotThroughPeople(pSoldier, pSoldier->sFinalDestination, 16);
 						}
 					}
 				}

@@ -9,7 +9,7 @@
 UINT16	FindGridNoFromSweetSpot( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
 
 // Ensures a good path.....
-UINT16 FindGridNoFromSweetSpotThroughPeople( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
+UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);
 
 // Returns a good sweetspot but not the swetspot!
 UINT16 FindGridNoFromSweetSpotExcludingSweetSpot(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);
