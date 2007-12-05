@@ -28,7 +28,7 @@ extern BOOLEAN gfOverrideInsertionWithExitGrid;
 
 // Finds closest ExitGrid of same type as is at gridno, within a radius.  Checks
 // valid paths, destinations, etc.
-UINT16 FindGridNoFromSweetSpotCloseToExitGrid( SOLDIERTYPE *pSoldier, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection );
+UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* pSoldier, INT16 sSweetGridNo, INT8 ubRadius);
 
 UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 ubRadius );
 

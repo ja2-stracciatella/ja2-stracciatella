@@ -2357,7 +2357,6 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	if( pGroup->fPlayer )
 	{	//For player groups, update the soldier information
 		PLAYERGROUP *curr;
-		INT16				sGridNo;
 		UINT8				ubNum = 0;
 
 		curr = pGroup->pPlayerList;
@@ -2367,7 +2366,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 			{
 				if ( ubTacticalDirection != 255 )
 				{
-					sGridNo = PickGridNoNearestEdge( curr->pSoldier, ubTacticalDirection );
+					const INT16 sGridNo = PickGridNoNearestEdge(curr->pSoldier, ubTacticalDirection);
 
 					curr->pSoldier->sPreTraversalGridNo = curr->pSoldier->sGridNo;
 
@@ -2389,7 +2388,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 				else
 				{
 						// Here, get closest location for exit grid....
-						sGridNo = FindGridNoFromSweetSpotCloseToExitGrid( curr->pSoldier, sAdditionalData, 10, &ubDirection );
+						const INT16 sGridNo = FindGridNoFromSweetSpotCloseToExitGrid(curr->pSoldier, sAdditionalData, 10);
 
 						//curr->pSoldier->
 						if ( sGridNo != NOWHERE )
@@ -3044,8 +3043,6 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 	INT16 sYMapPos;
 	INT16 sWorldX;
 	INT16 sWorldY;
-	UINT8	ubDirection;
-	INT16 sGridNo;
 	INT16	sAPs;
 
 	// if the soldiers gridno is not NOWHERE
@@ -3113,8 +3110,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 				pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
 			}
 
-			sGridNo = FindGridNoFromSweetSpotCloseToExitGrid( pSoldier, usAdditionalData, 10, &ubDirection );
-
+			const INT16 sGridNo = FindGridNoFromSweetSpotCloseToExitGrid(pSoldier, usAdditionalData, 10);
 			if ( sGridNo == NOWHERE )
 			{
 				return( FALSE );
