@@ -3181,8 +3181,6 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {
 	// change destination in Darrel record 10 to go to a gridno adjacent to the
 	// soldier's gridno, and destination in record 11
-	INT16 sAdjustedGridNo;
-	UINT8 ubDummyDirection;
 	SOLDIERTYPE *		pDarrel;
 
 	pDarrel = FindSoldierByProfileID( DARREL, FALSE );
@@ -3192,11 +3190,11 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 	}
 
 	// find a spot to an alternate location nearby
-	sAdjustedGridNo = FindGridNoFromSweetSpotExcludingSweetSpot( pDarrel, pSoldier->sGridNo, 5, &ubDummyDirection );
+	INT16 sAdjustedGridNo = FindGridNoFromSweetSpotExcludingSweetSpot(pDarrel, pSoldier->sGridNo, 5);
 	if (sAdjustedGridNo == NOWHERE)
 	{
 		// yikes! try again with a bigger radius!
-		sAdjustedGridNo = FindGridNoFromSweetSpotExcludingSweetSpot( pDarrel, pSoldier->sGridNo, 10, &ubDummyDirection );
+		sAdjustedGridNo = FindGridNoFromSweetSpotExcludingSweetSpot(pDarrel, pSoldier->sGridNo, 10);
 		if (sAdjustedGridNo == NOWHERE)
 		{
 			// ok, now we're completely foobar

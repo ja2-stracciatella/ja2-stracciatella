@@ -1005,7 +1005,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					gfIngagedInDrop = FALSE;
 
 					// OK, now get a sweetspot ( not the place we are now! )
-				//	sNewGridNo =  FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier, pSoldier->sGridNo, 5, &ubNewDirection );
+					//sNewGridNo =  FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier, pSoldier->sGridNo, 5);
 					//sNewGridNo =  FindRandomGridNoFromSweetSpotExcludingSweetSpot( pSoldier, pSoldier->sGridNo, 3, &ubNewDirection );
 
 					sNewGridNo =  FindGridNoFromSweetSpotExcludingSweetSpotInQuardent( pSoldier, pSoldier->sGridNo, 3, &ubNewDirection, SOUTHEAST );

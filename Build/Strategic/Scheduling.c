@@ -609,8 +609,7 @@ BOOLEAN BumpAnyExistingMerc( INT16 sGridNo )
 
 	// what if the existing merc is prone?
 	const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, STANDING, 5, 1, pSoldier);
-	//UINT8 ubDir;
-	//sNewGridNo = FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier, sGridNo, 10, &ubDir );
+	//const INT16 sNewGridNo = FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier, sGridNo, 10);
 
 	if ( sNewGridNo == NOWHERE )
 	{
@@ -1279,10 +1278,8 @@ static void ReplaceSleepSpot(SCHEDULENODE* pSchedule, UINT16 usNewSpot)
 static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
 {
 	SOLDIERTYPE *			pSoldier2;
-	UINT16						usSleepSpot2, usNewSleepSpot;
 	UINT32						uiLoop;
 	SCHEDULENODE *		pSchedule;
-	UINT8							ubDirection;
 
 	// start after this soldier's ID so we don't duplicate work done in previous passes
 	for ( uiLoop = pSoldier->ubID + 1; uiLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
@@ -1293,12 +1290,13 @@ static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
 			pSchedule = GetSchedule( pSoldier2->ubScheduleID );
 			if ( pSchedule )
 			{
-				usSleepSpot2 = FindSleepSpot( pSchedule );
+				const UINT16 usSleepSpot2 = FindSleepSpot(pSchedule);
 				if ( usSleepSpot2 == usSleepSpot )
 				{
 					// conflict!
-					//usNewSleepSpot = (INT16) FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
-					usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot( pSoldier2, usSleepSpot2, 3, &ubDirection );
+					//UINT8 ubDirection;
+					//const UINT16 usNewSleepSpot = (INT16) FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
+					const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier2, usSleepSpot2, 3);
 					if ( usNewSleepSpot != NOWHERE )
 					{
 						ReplaceSleepSpot( pSchedule, usNewSleepSpot );
