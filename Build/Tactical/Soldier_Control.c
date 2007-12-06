@@ -9420,22 +9420,6 @@ void EVENT_SoldierBeginReloadRobot( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 }
 
 
-static void ResetSoldierChangeStatTimer(SOLDIERTYPE* pSoldier)
-{
-	pSoldier->uiChangeLevelTime = 0;
-	pSoldier->uiChangeHealthTime = 0;
-	pSoldier->uiChangeStrengthTime= 0;
-	pSoldier->uiChangeDexterityTime= 0;
-	pSoldier->uiChangeAgilityTime= 0;
-	pSoldier->uiChangeWisdomTime= 0;
-	pSoldier->uiChangeLeadershipTime= 0;
-	pSoldier->uiChangeMarksmanshipTime= 0;
-	pSoldier->uiChangeExplosivesTime= 0;
-	pSoldier->uiChangeMedicalTime= 0;
-	pSoldier->uiChangeMechanicalTime= 0;
-}
-
-
 static void ChangeToFlybackAnimation(SOLDIERTYPE* pSoldier, INT8 bDirection)
 {
 	UINT16 usNewGridNo;
