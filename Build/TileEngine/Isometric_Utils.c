@@ -176,27 +176,6 @@ BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 }
 
 
-BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCellX, INT16 *psCellY )
-{
-	INT16 sWorldX, sWorldY;
-
-	if ( !GetMouseWorldCoords( &sWorldX, &sWorldY ) )
-	{
-		return( FALSE );
-	}
-
-	// Find start block
-	(*psMouseX) = ( sWorldX / CELL_X_SIZE );
-	(*psMouseY) = ( sWorldY / CELL_Y_SIZE );
-
-	(*psCellX ) = sWorldX - ( (*psMouseX) * CELL_X_SIZE );
-	(*psCellY ) = sWorldY - ( (*psMouseY) * CELL_Y_SIZE );
-
-
-	return( TRUE );
-}
-
-
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 {
 	INT16 sOffsetX, sOffsetY;

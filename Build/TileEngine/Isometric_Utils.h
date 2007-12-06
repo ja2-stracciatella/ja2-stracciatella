@@ -55,7 +55,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
 GridNo GetMouseMapPos(void);
 
 BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY );
-BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCellX, INT16 *psCellY );
 
 
 void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos );

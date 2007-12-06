@@ -864,11 +864,12 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 			// Check if we have a half tile profile
 			if (usFlags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF | TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
 			{
-				INT16	sMouseX;
-				INT16 sMouseY;
 				INT16 sCellX;
 				INT16 sCellY;
-				GetMouseXYWithRemainder(&sMouseX, &sMouseY, &sCellX, &sCellY);
+				GetMouseWorldCoords(&sCellX, &sCellY);
+				// We are only interested in the sub-tile coordinates
+				sCellX %= CELL_X_SIZE;
+				sCellY %= CELL_Y_SIZE;
 
 				if (usFlags & TILE_FLAG_NORTH_HALF && sCellY >  CELL_Y_SIZE / 2) continue;
 				if (usFlags & TILE_FLAG_SOUTH_HALF && sCellY <= CELL_Y_SIZE / 2) continue;
