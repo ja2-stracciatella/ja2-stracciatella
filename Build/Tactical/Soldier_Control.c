@@ -108,20 +108,13 @@ enum
 	EX_NORTHWEST							= 28,
 	EX_NUM_WORLD_DIRECTIONS		= 32,
 	EX_DIRECTION_IRRELEVANT
-} ExtendedWorldDirections;
-
-// LUT for conversion from 8-direction to extended direction
-static const UINT8 ubExtDirection[] =
-{
-	EX_NORTH,
-	EX_NORTHEAST,
-	EX_EAST,
-	EX_SOUTHEAST,
-	EX_SOUTH,
-	EX_SOUTHWEST,
-	EX_WEST,
-	EX_NORTHWEST
 };
+
+
+static UINT8 Dir2ExtDir(const UINT8 dir)
+{
+	return dir * 4;
+}
 
 
 static UINT8 ExtOneCDirection(const UINT8 exdir)
@@ -4393,7 +4386,7 @@ void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNe
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		const UINT8 hires_desired_dir = ubExtDirection[pSoldier->bDesiredDirection];
+		const UINT8 hires_desired_dir = Dir2ExtDir(pSoldier->bDesiredDirection);
 		pSoldier->bTurningIncrement = ExtQuickestDirection(pSoldier->ubHiResDirection, hires_desired_dir);
 	}
 	else
@@ -4428,7 +4421,7 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 	 pSoldier->bDirection = (INT8)usNewDirection;
 
 	 // Updated extended direction.....
-	 pSoldier->ubHiResDirection = ubExtDirection[ pSoldier->bDirection ];
+	pSoldier->ubHiResDirection = Dir2ExtDir(pSoldier->bDirection);
 
 	 // Add new stuff
 	 HandleAnimationProfile( pSoldier, pSoldier->usAnimState, FALSE );
