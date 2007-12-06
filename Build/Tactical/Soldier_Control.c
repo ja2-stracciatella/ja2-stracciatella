@@ -7395,59 +7395,6 @@ LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **p
 //#endif
 
 	return( pNode );
-
-}
-
-
-static BOOLEAN GetProfileFlagsFromGridno(SOLDIERTYPE* pSoldier, UINT16 usAnimState, UINT16 sTestGridNo, UINT16* usFlags)
-{
-	ANIM_PROF					*pProfile;
-	ANIM_PROF_DIR			*pProfileDir;
-	ANIM_PROF_TILE		*pProfileTile;
-	INT8							bProfileID;
-	UINT32						iTileCount;
-	INT16							sGridNo;
-	UINT16						usAnimSurface;
-
-	// Get Surface Index
-	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
-
-	CHECKF( usAnimSurface != INVALID_ANIMATION_SURFACE );
-
-	bProfileID = gAnimSurfaceDatabase[ usAnimSurface ].bProfile;
-
-	*usFlags = 0;
-
-	// Determine if this animation has a profile
-	if ( bProfileID != -1 )
-	{
-		// Getprofile
-		pProfile = &(gpAnimProfiles[ bProfileID ] );
-
-		// Get direction
-		pProfileDir = &( pProfile->Dirs[ pSoldier->bDirection ] );
-
-		// Loop tiles and set accordingly into world
-		for( iTileCount = 0; iTileCount < pProfileDir->ubNumTiles; iTileCount++ )
-		{
-			pProfileTile = &( pProfileDir->pTiles[ iTileCount ] );
-
-			sGridNo = pSoldier->sGridNo + ( ( WORLD_COLS * pProfileTile->bTileY ) + pProfileTile->bTileX );
-
-			// Check if in bounds
-			if ( !OutOfBounds( pSoldier->sGridNo, sGridNo ) )
-			{
-				if ( sGridNo == sTestGridNo )
-				{
-					*usFlags = pProfileTile->usTileFlags;
-					return( TRUE );
-				}
-			}
-
-		}
-	}
-
-	return( FALSE );
 }
 
 
