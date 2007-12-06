@@ -740,7 +740,6 @@ struct SOLDIERTYPE
 	INT8												bCamo;
 	INT16												sAbsoluteFinalDestination;
 	UINT8												ubHiResDirection;
-	UINT8												ubHiResDesiredDirection;
 	UINT8												ubLastFootPrintSound;
 	INT8												bVehicleID;
 	INT8												fPastXDest;

@@ -4420,9 +4420,6 @@ void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNe
 		}
 	}
 
-	// Set desired direction for the extended directions...
-	pSoldier->ubHiResDesiredDirection = ubExtDirection[ pSoldier->bDesiredDirection ];
-
 	if ( pSoldier->bDesiredDirection != pSoldier->bDirection )
 	{
 		if ( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE ) || CREATURE_OR_BLOODCAT( pSoldier ) )
@@ -4434,7 +4431,8 @@ void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNe
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		pSoldier->bTurningIncrement = (INT8) ExtQuickestDirection( pSoldier->ubHiResDirection, pSoldier->ubHiResDesiredDirection );
+		const UINT8 hires_desired_dir = ubExtDirection[pSoldier->bDesiredDirection];
+		pSoldier->bTurningIncrement = ExtQuickestDirection(pSoldier->ubHiResDirection, hires_desired_dir);
 	}
 	else
 	{
@@ -4985,9 +4983,6 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
 		 // Get new direction
-		 /*
-		 sDirection = pSoldier->ubHiResDirection + ExtQuickestDirection( pSoldier->ubHiResDirection, pSoldier->ubHiResDesiredDirection );
-		 */
 		 sDirection = pSoldier->ubHiResDirection + pSoldier->bTurningIncrement;
 		 if (sDirection > 31)
 		 {
