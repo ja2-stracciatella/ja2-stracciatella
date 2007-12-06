@@ -4985,8 +4985,6 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 	// Do something different for vehicles....
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		 fDoDirectionChange = FALSE;
-
 		 // Get new direction
 		 /*
 		 sDirection = pSoldier->ubHiResDirection + ExtQuickestDirection( pSoldier->ubHiResDirection, pSoldier->ubHiResDesiredDirection );
@@ -5005,18 +5003,15 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		 }
 		 pSoldier->ubHiResDirection = (UINT8)sDirection;
 
-		 // Are we at a multiple of a 'cardnal' direction?
-		 for ( cnt = 0; cnt < 8; cnt++ )
-		 {
-			 if ( sDirection == ubExtDirection[ cnt ] )
-			 {
-					fDoDirectionChange = TRUE;
-
-					sDirection = (INT16)cnt;
-
-					break;
-			 }
-		 }
+		// Are we at the multiple of a 'cardinal' direction?
+		if (sDirection % 4 == 0)
+		{
+			sDirection /= 4;
+		}
+		else
+		{
+			fDoDirectionChange = FALSE;
+		}
 
      if ( pSoldier->ubBodyType == TANK_NW || pSoldier->ubBodyType == TANK_NE )
      {
