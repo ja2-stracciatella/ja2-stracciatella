@@ -935,13 +935,6 @@ BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN ReCreateSelectedSoldierLight(void)
-{
-	if (gusSelectedSoldier == NO_SOLDIER) return FALSE;
-	return ReCreateSoldierLight(GetSelectedMan());
-}
-
-
 BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
 {
 	if (pSoldier->light != NULL)
