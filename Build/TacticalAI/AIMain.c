@@ -55,8 +55,6 @@ extern void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
 
 //#define TESTAI
 
-INT8 GameOption[MAXGAMEOPTIONS] = {0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0};
-
 #define AI_LIMIT_PER_UPDATE		1
 
 BOOLEAN gfTurnBasedAI;

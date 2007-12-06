@@ -58,22 +58,6 @@ enum
 #define REALTIME_CIV_AI_DELAY ( 1000 * (gTacticalStatus.Team[ MILITIA_TEAM ].bMenInSector + gTacticalStatus.Team[ CIV_TEAM ].bMenInSector) + 5000 + 2000 * Random( 3 ) )
 #define REALTIME_CREATURE_AI_DELAY ( 10000 + 1000 * Random( 3 ) )
 
-//#define PLAYINGMODE             0
-//#define CAMPAIGNLENGTH          1
-//#define LASTUSABLESLOT          2
-//#define RANDOMMERCS             3
-//#define AVAILABLEMERCS          4
-//#define HIRINGKNOWLEDGE         5
-//#define EQUIPMENTLEVEL          6
-//#define ENEMYTEAMSIZE           7
-#define ENEMYDIFFICULTY         8	// this is being used in this module
-//#define FOG_OF_WAR              9
-//#define TURNLENGTH              10
-//#define INCREASEDAP             11
-//#define BLOODSTAINS             12
-//#define STARTINGBALANCE         13
-#define MAXGAMEOPTIONS          14
-
 #define NOSHOOT_WAITABIT        -1
 #define NOSHOOT_WATER           -2
 #define NOSHOOT_MYSELF          -3
@@ -128,7 +112,6 @@ typedef struct
 extern THREATTYPE Threat[MAXMERCS];
 extern int ThreatPercent[10];
 extern UINT8 SkipCoverCheck;
-extern INT8 GameOption[MAXGAMEOPTIONS];
 
 typedef enum
 {

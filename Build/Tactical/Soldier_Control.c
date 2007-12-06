@@ -420,10 +420,6 @@ INT8 CalcActionPoints(SOLDIERTYPE *pSold)
 										 2 * pSold->bLifeMax   +
 										 2 * EffectiveDexterity( pSold ) ) + 20) / 40);
 
-  //if (GameOption[INCREASEDAP] % 2 == 1)
-    //points += AP_INCREASE;
-
-
 	// Calculate bandage
 	bBandage = pSold->bLifeMax - pSold->bLife - pSold->bBleeding;
 
@@ -449,10 +445,6 @@ INT8 CalcActionPoints(SOLDIERTYPE *pSold)
 
   // make sure action points doesn't exceed the permitted maximum
   ubMaxAPs = gubMaxActionPoints[ pSold->ubBodyType ];
-
-  //if (GameOption[INCREASEDAP] % 2 == 1)
-    // maxAPs += AP_INCREASE;
-
 
   // If resulting APs are below our permitted minimum, raise them to it!
   if (ubPoints > ubMaxAPs)
