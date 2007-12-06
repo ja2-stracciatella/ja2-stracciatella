@@ -4805,7 +4805,6 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
 void TurnSoldier( SOLDIERTYPE *pSoldier)
 {
  INT16		sDirection;
- BOOLEAN	fDoDirectionChange = TRUE;
  INT32		cnt;
 
  // If we are a vehicle... DON'T TURN!
@@ -5003,16 +5002,6 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		 }
 		 pSoldier->ubHiResDirection = (UINT8)sDirection;
 
-		// Are we at the multiple of a 'cardinal' direction?
-		if (sDirection % 4 == 0)
-		{
-			sDirection /= 4;
-		}
-		else
-		{
-			fDoDirectionChange = FALSE;
-		}
-
      if ( pSoldier->ubBodyType == TANK_NW || pSoldier->ubBodyType == TANK_NE )
      {
        if ( pSoldier->iTuringSoundID == NO_SAMPLE )
@@ -5020,6 +5009,14 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 			   pSoldier->iTuringSoundID = PlaySoldierJA2Sample(pSoldier, TURRET_MOVE, HIGHVOLUME, 100, TRUE);
        }
      }
+
+		if (sDirection % 4 != 0)
+		{
+			// We are not at the multiple of a 'cardinal' direction
+			return;
+		}
+
+		sDirection /= 4;
 	}
 	else
 	{
@@ -5040,51 +5037,47 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 	}
 
 
- // CHECK FOR A VALID TURN DIRECTION
- // This is needed for prone animations as well as any multi-tiled structs
- if ( fDoDirectionChange )
- {
-	 if ( OKToAddMercToWorld( pSoldier, (INT8)sDirection ) )
-	 {
-		 // Don't do this if we are walkoing off screen...
-		 if ( gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALKOFF_SCREEN || gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO )
-		 {
+	// CHECK FOR A VALID TURN DIRECTION
+	// This is needed for prone animations as well as any multi-tiled structs
+	if (OKToAddMercToWorld(pSoldier, (INT8)sDirection))
+	{
+		// Don't do this if we are walkoing off screen...
+		if (gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALKOFF_SCREEN || gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO)
+		{
 
-		 }
-		 else
-		 {
-			 // ATE: We should only do this if we are STATIONARY!
-			 if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY ) )
-			 {
-				 pSoldier->uiStatusFlags |= SOLDIER_LOOK_NEXT_TURNSOLDIER;
-			 }
-			 // otherwise, it's handled next tile...
-		 }
+		}
+		else
+		{
+			// ATE: We should only do this if we are STATIONARY!
+			if (gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_STATIONARY)
+			{
+				pSoldier->uiStatusFlags |= SOLDIER_LOOK_NEXT_TURNSOLDIER;
+			}
+			// otherwise, it's handled next tile...
+		}
 
-		 EVENT_SetSoldierDirection( pSoldier, sDirection );
+		EVENT_SetSoldierDirection(pSoldier, sDirection);
 
-     if ( pSoldier->ubBodyType != LARVAE_MONSTER && !MercInWater( pSoldier ) && pSoldier->bOverTerrainType != DIRT_ROAD && pSoldier->bOverTerrainType != PAVED_ROAD )
-     {
-		   PlaySoldierFootstepSound( pSoldier );
-     }
-	 }
-	 else
-	 {
-		 // Are we prone crawling?
-		 if ( pSoldier->usAnimState == CRAWLING )
-		 {
-				// OK, we want to getup, turn and go prone again....
-				ChangeSoldierStance(pSoldier, ANIM_CROUCH);
-				pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
-		 }
-		 // If we are a creature, or multi-tiled, cancel AI action.....?
-		 else if ( pSoldier->uiStatusFlags & SOLDIER_MULTITILE )
-		 {
+		if (pSoldier->ubBodyType != LARVAE_MONSTER && !MercInWater(pSoldier) && pSoldier->bOverTerrainType != DIRT_ROAD && pSoldier->bOverTerrainType != PAVED_ROAD)
+		{
+			PlaySoldierFootstepSound(pSoldier);
+		}
+	}
+	else
+	{
+		// Are we prone crawling?
+		if (pSoldier->usAnimState == CRAWLING)
+		{
+			 // OK, we want to getup, turn and go prone again....
+			 ChangeSoldierStance(pSoldier, ANIM_CROUCH);
+			 pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_ENDING_UP_FROM_MOVE;
+		}
+		// If we are a creature, or multi-tiled, cancel AI action.....?
+		else if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
+		{
 			pSoldier->bDesiredDirection = pSoldier->bDirection;
-		 }
-
-	 }
- }
+		}
+	}
 }
 
 
