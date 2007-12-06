@@ -7272,22 +7272,6 @@ BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier)
 }
 
 
-static void RevivePlayerTeam(void)
-{
-	INT32 cnt;
-	SOLDIERTYPE		*pSoldier;
-
-	// End the turn of player charactors
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
-	{
-		ReviveSoldier( pSoldier );
-	}
-}
-
-
 void ReviveSoldier( SOLDIERTYPE *pSoldier )
 {
 	if ( pSoldier->bLife < OKLIFE  && pSoldier->bActive )
