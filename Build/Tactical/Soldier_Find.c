@@ -139,7 +139,7 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 }
 
 
-static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect);
+static void GetSoldierScreenRect(const SOLDIERTYPE* pSoldier, SGPRect* pRect);
 
 
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
@@ -502,7 +502,7 @@ static BOOLEAN IsGridNoInScreenRect(INT16 sGridNo, SGPRect* pRect)
 }
 
 
-static void GetSoldierScreenRect(SOLDIERTYPE* pSoldier, SGPRect* pRect)
+static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* const pRect)
 {
 		INT16 sMercScreenX, sMercScreenY;
 		UINT16	usAnimSurface;
@@ -800,7 +800,7 @@ BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 }
 
 
-BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT16 sX, INT16 sY )
+UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT16 sX, const INT16 sY)
 {
 	SGPRect				aRect;
 	INT16					sRelX, sRelY;
@@ -818,40 +818,18 @@ BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT
 		switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )
 		{
 			case ANIM_STAND:
-
-				if ( dRelPer < .2 )
-				{
-					(*usFlags )= TILE_FLAG_HEAD;
-				}
-				else if ( dRelPer < .6 )
-				{
-					(*usFlags )= TILE_FLAG_MID;
-				}
-				else
-				{
-					(*usFlags )= TILE_FLAG_FEET;
-				}
-				return TRUE;
+				if (dRelPer < .2) return TILE_FLAG_HEAD;
+				if (dRelPer < .6) return TILE_FLAG_MID;
+				return TILE_FLAG_FEET;
 
 			case ANIM_CROUCH:
-
-				if ( dRelPer < .2 )
-				{
-					(*usFlags )= TILE_FLAG_HEAD;
-				}
-				else if ( dRelPer < .7 )
-				{
-					(*usFlags )= TILE_FLAG_MID;
-				}
-				else
-				{
-					(*usFlags )= TILE_FLAG_FEET;
-				}
-				return( TRUE );
+				if (dRelPer < .2) return TILE_FLAG_HEAD;
+				if (dRelPer < .7) return TILE_FLAG_MID;
+				return TILE_FLAG_FEET;
 		}
 	}
 
-	return( FALSE );
+	return 0;
 }
 
 

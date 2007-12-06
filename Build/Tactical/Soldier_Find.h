@@ -44,7 +44,7 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY);
 void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY);
 BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY );
-BOOLEAN FindRelativeSoldierPosition( SOLDIERTYPE *pSoldier, UINT16 *usFlags, INT16 sX, INT16 sY );
+UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
 
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY );
 

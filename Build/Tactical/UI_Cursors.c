@@ -961,10 +961,8 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 			if (tgt != NULL)
 			{
 				pTargetSoldier = tgt;
-				if (FindRelativeSoldierPosition(tgt, &usFlags, gusMouseXPos, gusMouseYPos))
-				{
-					fOnGuy = TRUE;
-				}
+				usFlags = FindRelativeSoldierPosition(tgt, gusMouseXPos, gusMouseYPos);
+				if (usFlags != 0) fOnGuy = TRUE;
 			}
 		}
 
