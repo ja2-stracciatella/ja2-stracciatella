@@ -76,10 +76,7 @@ static INT8 GetCurrentMercForDisplayCoverStance(void);
 
 void DisplayCoverOfSelectedGridNo( )
 {
-	INT16 sGridNo;
 	INT8	bStance;
-
-	GetMouseMapPos( &sGridNo );
 
 	//Only allowed in if there is someone selected
 	if( gusSelectedSoldier == NOBODY )
@@ -88,7 +85,8 @@ void DisplayCoverOfSelectedGridNo( )
 	}
 
 	//if the cursor is in a the tactical map
-	if( sGridNo != NOWHERE && sGridNo != 0 )
+	const GridNo sGridNo = GetMouseMapPos();
+	if (sGridNo != NOWHERE)
 	{
 		bStance = GetCurrentMercForDisplayCoverStance();
 
@@ -612,10 +610,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 
 void DisplayGridNoVisibleToSoldierGrid( )
 {
-	INT16 sGridNo;
 //	INT8	bStance;
-
-	GetMouseMapPos( &sGridNo );
 
 	//Only allowed in if there is someone selected
 	if( gusSelectedSoldier == NOBODY )
@@ -624,7 +619,8 @@ void DisplayGridNoVisibleToSoldierGrid( )
 	}
 
 	//if the cursor is in a the tactical map
-	if( sGridNo != NOWHERE && sGridNo != 0 )
+	const GridNo sGridNo = GetMouseMapPos();
+	if (sGridNo != NOWHERE)
 	{
 		//if the gridno is different then the last one that was displayed
 		if (sGridNo != gsLastVisibleToSoldierGridNo || GetSelectedMan()->sGridNo != gsLastSoldierGridNo)

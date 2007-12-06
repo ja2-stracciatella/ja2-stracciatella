@@ -3086,7 +3086,6 @@ extern UINT32 guiNumBackSaves;
 
 void DebugSoldierPage1( )
 {
-	UINT16						usMapPos;
 	UINT8							ubLine=0;
 
 	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
@@ -3244,7 +3243,7 @@ void DebugSoldierPage1( )
 		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bHasKeys );
 		ubLine++;
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else if (GetMouseMapPos() != NOWHERE)
 	{
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE ONE" );
@@ -3277,7 +3276,6 @@ void DebugSoldierPage2( )
 		"NORTH"
 	};
 
-	UINT16						usMapPos;
   TILE_ELEMENT							 TileElem;
 	LEVELNODE					*pNode;
 	UINT8							ubLine;
@@ -3411,7 +3409,8 @@ void DebugSoldierPage2( )
 		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", ShortItemNames[pSoldier->inv[SECONDHANDPOS].usItem] );
 		ubLine++;
 
-		if ( GetMouseMapPos( &usMapPos ) )
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos != NOWHERE)
 		{
 			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 			gprintf( 0, LINE_HEIGHT * ubLine, L"CurrGridNo:");
@@ -3421,8 +3420,11 @@ void DebugSoldierPage2( )
 		}
 
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		SetFont( LARGEFONT1 );
 		gprintf( 0,0,L"DEBUG LAND PAGE TWO" );
 		SetFont( LARGEFONT1 );
@@ -3551,7 +3553,6 @@ void DebugSoldierPage3( )
 		"BLACK"
 	};
 
-	UINT16						usMapPos;
 	UINT8							ubLine;
 
 	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
@@ -3758,8 +3759,11 @@ void DebugSoldierPage3( )
 			}
 		}
 	}
-	else if ( GetMouseMapPos( &usMapPos ) )
+	else
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		DOOR_STATUS	*pDoorStatus;
 		STRUCTURE *pStructure;
 

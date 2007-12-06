@@ -841,8 +841,8 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 		// ALWAYS SET AIM LOCATION TO NOTHING
 		pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		UINT16 usMapPos;
-		if (!GetMouseMapPos(&usMapPos)) return;
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
 
 		BOOLEAN	fOnGuy = FALSE;
 		UINT16  usFlags;
@@ -1553,7 +1553,6 @@ void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier)
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
 	UINT8					ubItemCursor;
-	INT16					sGridNo;
 
 	ubItemCursor  =  GetActionModeCursor( pSoldier );
 
@@ -1569,10 +1568,8 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if (!GetMouseMapPos( &sGridNo ) )
-	{
-		return;
-	}
+	const GridNo sGridNo = GetMouseMapPos();
+	if (sGridNo == NOWHERE) return;
 
 	gfUIForceReExamineCursorData = TRUE;
 

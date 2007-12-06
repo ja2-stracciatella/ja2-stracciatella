@@ -221,7 +221,6 @@ static void HandleLooseCursorDraw(void);
 
 BOOLEAN DrawUICursor( )
 {
-	UINT16						usMapPos;
 	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;
@@ -248,7 +247,8 @@ BOOLEAN DrawUICursor( )
 		return( TRUE );
 	}
 
-	if (GetMouseMapPos( &usMapPos) )
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos != NOWHERE)
 	{
 		gusCurMousePos = usMapPos;
 

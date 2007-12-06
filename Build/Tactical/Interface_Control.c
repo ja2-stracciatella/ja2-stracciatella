@@ -491,7 +491,6 @@ void RenderTopmostTacticalInterface( )
 	static UINT32				uiBogTarget = 0;
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
-	UINT16						usMapPos;
 
 	if ( gfRerenderInterfaceFromHelpText == TRUE )
 	{
@@ -692,7 +691,8 @@ void RenderTopmostTacticalInterface( )
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
-	if( GetMouseMapPos( &usMapPos) )
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos != NOWHERE)
 	{
 		if ( gfUIOverItemPool )
 		{

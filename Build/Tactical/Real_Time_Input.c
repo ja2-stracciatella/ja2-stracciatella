@@ -77,7 +77,6 @@ void GetRTMouseButtonInput(UINT32* puiNewEvent)
 static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
 	static	UINT32 uiSingleClickTime;
-	UINT16	usMapPos;
 	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
@@ -88,10 +87,8 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 	// LEFT MOUSE BUTTON
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		if (!GetMouseMapPos( &usMapPos ) && !gfUIShowExitSouth )
-		{
-			return;
-		}
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE && !gfUIShowExitSouth) return;
 
 		if (gusSelectedSoldier != NOBODY && GetSelectedMan()->pTempObject != NULL)
 		{
@@ -893,14 +890,10 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 
-	UINT16	usMapPos;
-
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		if (!GetMouseMapPos( &usMapPos ) )
-		{
-			return;
-		}
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
 
 		// RIGHT MOUSE BUTTON
 		if ( gViewportRegion.ButtonState & MSYS_RIGHT_BUTTON )
@@ -1194,13 +1187,10 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 {
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
 
-	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
 
-	if (!GetMouseMapPos( &usMapPos ) )
-	{
-		return;
-	}
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{

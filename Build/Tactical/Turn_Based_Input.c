@@ -125,7 +125,6 @@ void	GetTBMouseButtonInput( UINT32 *puiNewEvent )
 
 static void QueryTBLeftButton(UINT32* puiNewEvent)
 {
-	UINT16						usMapPos;
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
@@ -134,10 +133,8 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 	// LEFT MOUSE BUTTON
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
-		if (!GetMouseMapPos( &usMapPos ) && !gfUIShowExitSouth )
-		{
-			return;
-		}
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE && !gfUIShowExitSouth) return;
 
 		if ( gViewportRegion.ButtonState & MSYS_LEFT_BUTTON )
 		{
@@ -600,12 +597,11 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
-	UINT16				usMapPos;
+
 	BOOLEAN				fDone = FALSE;
-	if (!GetMouseMapPos( &usMapPos ) )
-	{
-		return;
-	}
+
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -844,15 +840,12 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 {
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
 
-	UINT16						usMapPos;
 	static UINT16			usOldMapPos = 0;
 	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
 
-	if (!GetMouseMapPos( &usMapPos ) )
-	{
-		return;
-	}
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
 
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
@@ -1298,12 +1291,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 	BOOLEAN						fKeyTaken = FALSE;
 	POINT  MousePos;
 	//SOLDIERTYPE				*pSoldier;
-	UINT16						usMapPos;
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
 	GetCursorPos(&MousePos);
 
-	GetMouseMapPos( &usMapPos );
+	const GridNo usMapPos = GetMouseMapPos();
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {
@@ -1839,7 +1831,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if( DEBUG_CHEAT_LEVEL( ) )
 						{
-							GetMouseMapPos( &gsQdsEnteringGridNo );
+							gsQdsEnteringGridNo = GetMouseMapPos();
 							LeaveTacticalScreen( QUEST_DEBUG_SCREEN );
 						}
 					}
@@ -1851,7 +1843,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						UINT8 ubProfile = TONY;
 
-						GetMouseMapPos( &gsQdsEnteringGridNo );
+						gsQdsEnteringGridNo = GetMouseMapPos();
 						AddShopkeeperToGridNo( ubProfile, gsQdsEnteringGridNo );
 						EnterShopKeeperInterfaceScreen( ubProfile );
 					}
@@ -2252,14 +2244,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else
 					{
-						INT16 sGridNo;
-
-						//Get the gridno the cursor is at
-						GetMouseMapPos( &sGridNo );
-
 						//if there is a selected soldier, and the cursor location is valid
-						if( gusSelectedSoldier != NOBODY && sGridNo != NOWHERE )
+						if (gusSelectedSoldier != NOBODY)
 						{
+							GridNo sGridNo = GetMouseMapPos();
 							//if the cursor is over someone
 							if (gUIFullTarget != NULL) sGridNo = gUIFullTarget->sGridNo;
 							DisplayRangeToTarget(GetSelectedMan(), sGridNo);
@@ -3138,8 +3126,6 @@ static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 {
-	INT16 sMapPos;
-
 	// If not in move mode, return!
 	if ( gCurrentUIMode != MOVE_MODE )
 	{
@@ -3225,10 +3211,8 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 			}
 			else
 			{
-				if ( !GetMouseMapPos( &sMapPos ) )
-				{
-					return( FALSE );
-				}
+				const GridNo sMapPos = GetMouseMapPos();
+				if (sMapPos == NOWHERE) return FALSE;
 
 				// Goto next sector
 				//SimulateMouseMovement( gusMouseXPos - 5, gusMouseYPos );
@@ -3316,8 +3300,8 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 static void CreateRandomItem(void)
 {
 	OBJECTTYPE		Object;
-	UINT16 usMapPos;
-	if ( GetMouseMapPos( &usMapPos ) )
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos != NOWHERE)
 	{
 		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
 		AddItemToPool( usMapPos, &Object, -1 , 0, 0, 0 );
@@ -3329,8 +3313,8 @@ static void MakeSelectedSoldierTired(void)
 {
 	// Key to make guy get tired!
 	OBJECTTYPE		Object;
-	UINT16 usMapPos;
-	if ( GetMouseMapPos( &usMapPos ) )
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos != NOWHERE)
 	{
 		CreateItem( (UINT16)TNT, 100, &Object );
 		AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
@@ -3508,12 +3492,12 @@ static void ChangeSoldiersBodyType(UINT8 ubBodyType, BOOLEAN fCreateNewPalette)
 
 static void TeleportSelectedSoldier(void)
 {
-	UINT16 usMapPos;
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
 	if (pSoldier != NULL)
 	{
-		if ( GetMouseMapPos( &usMapPos ) )
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos != NOWHERE)
 		{
 			// Check level first....
 			if ( gsInterfaceLevel == 0 )
@@ -3576,7 +3560,6 @@ static void ToggleZBuffer(void)
 
 static void TogglePlanningMode(void)
 {
-	UINT16 usMapPos;
 	// DO ONLY IN TURNED BASED!
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
@@ -3585,8 +3568,11 @@ static void TogglePlanningMode(void)
 		{
 			EndUIPlan( );
 		}
-		else if ( GetMouseMapPos( &usMapPos ) )
+		else
 		{
+			const GridNo usMapPos = GetMouseMapPos();
+			if (usMapPos == NOWHERE) return;
+
 			switch( gCurrentUIMode )
 			{
 				case MOVE_MODE:
@@ -3683,11 +3669,13 @@ static void CreateNextCivType(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
 	static						INT8 bBodyType = FATCIV;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
+	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3743,10 +3731,12 @@ static void CreateCow(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
+	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3775,10 +3765,12 @@ static void CreatePlayerControlledCow(void)
 {
 	INT16							sWorldX, sWorldY;
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	UINT16 usMapPos;
 	// Get Grid Corrdinates of mouse
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
+	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= 12;
 		MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -3851,9 +3843,11 @@ static void GrenadeTest3(void)
 static void CreatePlayerControlledMonster(void)
 {
 	INT16							sWorldX, sWorldY;
-	UINT16 usMapPos;
-	if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) && GetMouseMapPos( &usMapPos ) )
+	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
 	{
+		const GridNo usMapPos = GetMouseMapPos();
+		if (usMapPos == NOWHERE) return;
+
 		SOLDIERCREATE_STRUCT		MercCreateStruct;
 		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 		MercCreateStruct.ubProfile		= NO_PROFILE;

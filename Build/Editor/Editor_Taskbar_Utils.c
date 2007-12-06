@@ -853,14 +853,14 @@ static void RenderSelectedItemBlownUp(void)
 static void RenderEditorInfo(void)
 {
 	wchar_t					FPSText[ 50 ];
-	INT16						iMapIndex;
 
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
 
 	//Display the mapindex position
-	if( GetMouseMapPos( &iMapIndex ) )
+	const GridNo iMapIndex = GetMouseMapPos();
+	if (iMapIndex != NOWHERE)
 		swprintf(FPSText, lengthof(FPSText), L"   (%d)   ", iMapIndex);
 	else
 		swprintf(FPSText, lengthof(FPSText), L"          ");

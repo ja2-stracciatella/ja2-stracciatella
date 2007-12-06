@@ -3847,7 +3847,6 @@ static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcG
 
 void DrawItemTileCursor( )
 {
-	UINT16						usMapPos;
 	UINT16						usIndex;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
@@ -3862,7 +3861,8 @@ void DrawItemTileCursor( )
 	INT16							sDist;
 	INT8							bLevel;
 
-	if (GetMouseMapPos( &usMapPos) )
+	GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos != NOWHERE)
 	{
 		// Force mouse position to guy...
 		if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;

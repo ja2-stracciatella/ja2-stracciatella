@@ -265,40 +265,33 @@ BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
 }
 
 
-BOOLEAN GetMouseMapPos( INT16	*psMapPos )
+GridNo GetMouseMapPos(void)
 {
-	 INT16				sWorldX, sWorldY;
-	 static				INT16	  sSameCursorPos;
-	 static				UINT32	uiOldFrameNumber = 99999;
+	static GridNo sSameCursorPos   = NOWHERE;
+	static UINT32 uiOldFrameNumber = 99999;
 
-	 // Check if this is the same frame as before, return already calculated value if so!
-	 if ( uiOldFrameNumber == guiGameCycleCounter && !guiForceRefreshMousePositionCalculation )
-	 {
-		 ( *psMapPos ) = sSameCursorPos;
+	// Check if this is the same frame as before, return already calculated value if so!
+	if (uiOldFrameNumber == guiGameCycleCounter && !guiForceRefreshMousePositionCalculation)
+	{
+		return sSameCursorPos;
+	}
 
-		 if ( sSameCursorPos == 0 )
-		 {
-				return( FALSE );
-		 }
-		 return( TRUE );
-	 }
+	uiOldFrameNumber                        = guiGameCycleCounter;
+	guiForceRefreshMousePositionCalculation = FALSE;
 
-	 uiOldFrameNumber = guiGameCycleCounter;
-	 guiForceRefreshMousePositionCalculation = FALSE;
-
-
-	 if ( GetMouseXY( &sWorldX, &sWorldY ) )
-	 {
-			*psMapPos = MAPROWCOLTOPOS( sWorldY, sWorldX );
-			sSameCursorPos = (*psMapPos);
-			return( TRUE );
-	 }
-	 else
-	 {
-		  *psMapPos = 0;
-			sSameCursorPos = (*psMapPos);
-			return( FALSE );
-	 }
+	GridNo pos;
+	INT16  sWorldX;
+	INT16  sWorldY;
+	if (GetMouseXY(&sWorldX, &sWorldY))
+	{
+		pos = MAPROWCOLTOPOS(sWorldY, sWorldX);
+	}
+	else
+	{
+		pos = NOWHERE;
+	}
+	sSameCursorPos = pos;
+	return pos;
 }
 
 

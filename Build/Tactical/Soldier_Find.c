@@ -74,9 +74,9 @@ static BOOLEAN            gfHandleStack = FALSE;
 
 SOLDIERTYPE* FindSoldierFromMouse(void)
 {
-	INT16 sMapPos;
-	if (!GetMouseMapPos(&sMapPos)) return NULL;
-	return FindSoldier(sMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
+	const GridNo pos = GetMouseMapPos();
+	if (pos == NOWHERE) return NULL;
+	return FindSoldier(pos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
 }
 
 

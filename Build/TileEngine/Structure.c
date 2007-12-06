@@ -1660,7 +1660,6 @@ void DebugStructurePage1( void )
 	STRUCTURE *		pStructure;
 	STRUCTURE *		pBase;
 	//LEVELNODE *		pLand;
-	INT16					sGridNo, sDesiredLevel;
 	INT8					bHeight, bDens0, bDens1, bDens2, bDens3;
 	INT8					bStructures;
 
@@ -1675,20 +1674,11 @@ void DebugStructurePage1( void )
 
 	SetFont( LARGEFONT1 );
 	gprintf( 0, 0, L"DEBUG STRUCTURES PAGE 1 OF 1" );
-	if (GetMouseMapPos( &sGridNo ) == FALSE)
-	{
-		return;
-		//gprintf( 0, LINE_HEIGHT * 1, L"No structure selected" );
-	}
 
-	if (gsInterfaceLevel == I_GROUND_LEVEL)
-	{
-		sDesiredLevel = STRUCTURE_ON_GROUND;
-	}
-	else
-	{
-		sDesiredLevel = STRUCTURE_ON_ROOF;
-	}
+	const GridNo sGridNo = GetMouseMapPos();
+	if (sGridNo == NOWHERE) return;
+
+	const INT16 sDesiredLevel = (gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF);
 
 	gprintf( 320, 0, L"Building %d", gubBuildingInfo[ sGridNo ] );
 	/*

@@ -49,7 +49,11 @@ INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 BOOLEAN GetMouseCell( INT32 *piMouseMapPos );
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
-BOOLEAN GetMouseMapPos( INT16	*psMapPos );
+
+/* Returns the GridNo of the tile the mouse cursor is currently over or NOWHERE
+ * if the cursor is not over any tile. */
+GridNo GetMouseMapPos(void);
+
 BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseXYWithRemainder( INT16 *psMouseX, INT16 *psMouseY, INT16 *psCellX, INT16 *psCellY );
 

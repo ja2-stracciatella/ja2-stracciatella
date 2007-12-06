@@ -616,7 +616,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 		else
 		{
-			GetMouseMapPos( &usMapPos );
+			usMapPos = GetMouseMapPos();
 		}
 
 		 // See if we can get there to stab
