@@ -124,48 +124,10 @@ static const UINT8 ubExtDirection[] =
 };
 
 
-static const UINT8 gExtOneCDirection[EX_NUM_WORLD_DIRECTIONS] =
+static UINT8 ExtOneCDirection(const UINT8 exdir)
 {
-	4,
-	5,
-	6,
-	7,
-
-	8,
-	9,
-	10,
-	11,
-
-	12,
-	13,
-	14,
-	15,
-
-	16,
-	17,
-	18,
-	19,
-
-	20,
-	21,
-	22,
-	23,
-
-	24,
-	25,
-	26,
-	27,
-
-	28,
-	29,
-	30,
-	31,
-
-	0,
-	1,
-	2,
-	3,
-};
+	return (exdir + 4) % EX_NUM_WORLD_DIRECTIONS;
+}
 
 
 typedef struct
@@ -4747,7 +4709,7 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
 
 	if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 32 )
 	{
-		ubTempDir = gExtOneCDirection[ pSoldier->ubHiResDirection ];
+		ubTempDir = ExtOneCDirection(pSoldier->ubHiResDirection);
 	}
 	// Check # of directions /surface, adjust if ness.
 	else if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 4 )
