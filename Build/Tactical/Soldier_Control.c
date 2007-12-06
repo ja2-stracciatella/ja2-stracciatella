@@ -182,12 +182,6 @@ static const INT16 gsTerrainTypeSpeedModifiers[] =
 	 30							// DEEP WATER
 };
 
-//Kris:
-//Temporary for testing the speed of the translucency.  Pressing Ctrl+L in turn based
-//input will toggle this flag.  When clear, the translucency checking is turned off to
-//increase the speed of the game.
-BOOLEAN gfCalcTranslucency = FALSE;
-
 
 typedef struct PaletteSubRangeType
 {
