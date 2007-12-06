@@ -827,12 +827,7 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 
 static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLEAN fDisplay, const BOOLEAN fRecalc)
 {
-	UINT16						usMapPos;
 	SOLDIERTYPE* pTargetSoldier = NULL;
-	UINT16	usFlags;
-	INT16	sMouseX, sMouseY, sCellX, sCellY, sScreenX, sScreenY;
-	BOOLEAN	fOnGuy = FALSE;
-	LEVELNODE		*pNode;
 
 	if ( gTacticalStatus.ubAttackBusyCount > 0 )
 	{
@@ -841,120 +836,77 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 		return;
 	}
 
-	if ( fRecalc )
+	if (fRecalc)
 	{
 		// ALWAYS SET AIM LOCATION TO NOTHING
 		pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		if( !GetMouseMapPos( &usMapPos) )
-		{
-			return;
-		}
+		UINT16 usMapPos;
+		if (!GetMouseMapPos(&usMapPos)) return;
+
+		BOOLEAN	fOnGuy = FALSE;
+		UINT16  usFlags;
 
 		// Determine which body part it's on
-		pNode = GetAnimProfileFlags( usMapPos, &usFlags, &pTargetSoldier, NULL );
-
-		while( pNode != NULL )
+		for (LEVELNODE* pNode = NULL;;)
 		{
-			if ( pTargetSoldier != NULL )
+			pNode = GetAnimProfileFlags(usMapPos, &usFlags, &pTargetSoldier, pNode);
+			if (pNode == NULL) break;
+
+			if (pTargetSoldier == NULL) continue;
+
+			// ATE: Check their stance - if prone - return!
+			if (gAnimControl[pTargetSoldier->usAnimState].ubHeight == ANIM_PRONE)
 			{
-				// ATE: Check their stance - if prone - return!
-				if ( gAnimControl[ pTargetSoldier->usAnimState ].ubHeight == ANIM_PRONE )
+				return;
+			}
+
+			// Check if we have a half tile profile
+			if (usFlags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF | TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
+			{
+				INT16	sMouseX;
+				INT16 sMouseY;
+				INT16 sCellX;
+				INT16 sCellY;
+				GetMouseXYWithRemainder(&sMouseX, &sMouseY, &sCellX, &sCellY);
+
+				if (usFlags & TILE_FLAG_NORTH_HALF && sCellY >  CELL_Y_SIZE / 2) continue;
+				if (usFlags & TILE_FLAG_SOUTH_HALF && sCellY <= CELL_Y_SIZE / 2) continue;
+				if (usFlags & TILE_FLAG_WEST_HALF  && sCellX >  CELL_X_SIZE / 2) continue;
+				if (usFlags & TILE_FLAG_EAST_HALF  && sCellX <= CELL_X_SIZE / 2) continue;
+
+				if (usFlags & TILE_FLAG_TOP_HALF)
 				{
-					return;
-				}
-
-				fOnGuy = TRUE;
-
-				// Check if we have a half tile profile
-				if ( usFlags & TILE_FLAG_NORTH_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
-
-					if ( sCellY > (CELL_Y_SIZE / 2) )
-					{
-						fOnGuy = FALSE;
-					}
-				}
-				// Check if we have a half tile profile
-				if ( usFlags & TILE_FLAG_SOUTH_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
-
-					if ( sCellY <= (CELL_Y_SIZE / 2) )
-					{
-						fOnGuy = FALSE;
-					}
-				}
-				// Check if we have a half tile profile
-				if ( usFlags & TILE_FLAG_WEST_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
-
-					if ( sCellX > (CELL_X_SIZE / 2) )
-					{
-						fOnGuy = FALSE;
-					}
-				}
-				if ( usFlags & TILE_FLAG_EAST_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
-
-					if ( sCellX <= (CELL_X_SIZE / 2) )
-					{
-						fOnGuy = FALSE;
-					}
-				}
-				if ( usFlags & TILE_FLAG_TOP_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
-
-					// Convert these to screen corrdinates
-					FromCellToScreenCoordinates( sCellX, sCellY, &sScreenX, &sScreenY );
+					INT16 sScreenX;
+					INT16 sScreenY;
+					FromCellToScreenCoordinates(sCellX, sCellY, &sScreenX, &sScreenY);
 
 					// Check for Below...
-					if ( sScreenX > (WORLD_TILE_Y / 2) )
-					{
-						fOnGuy = FALSE;
-					}
+					if (sScreenX > WORLD_TILE_Y / 2) continue;
 				}
-				if ( usFlags & TILE_FLAG_BOTTOM_HALF )
-				{
-					// Check if we are in north half of tile!
-					GetMouseXYWithRemainder( &sMouseX, &sMouseY, &sCellX, &sCellY );
 
-					// Convert these to screen corrdinates
-					FromCellToScreenCoordinates( sCellX, sCellY, &sScreenX, &sScreenY );
+				if (usFlags & TILE_FLAG_BOTTOM_HALF)
+				{
+					INT16 sScreenX;
+					INT16 sScreenY;
+					FromCellToScreenCoordinates(sCellX, sCellY, &sScreenX, &sScreenY);
 
 					// Check for Below...
-					if ( sScreenX <= (WORLD_TILE_Y / 2) )
-					{
-						fOnGuy = FALSE;
-					}
-				}
-
-
-				// Check if mouse is iin bounding box of soldier
-				if ( !IsPointInSoldierBoundingBox( pTargetSoldier, gusMouseXPos, gusMouseYPos ) )
-				{
-					fOnGuy = FALSE;
+					if (sScreenX <= WORLD_TILE_Y / 2) continue;
 				}
 			}
 
-			if ( fOnGuy )
-				break;
+			// Check if mouse is in bounding box of soldier
+			if (!IsPointInSoldierBoundingBox(pTargetSoldier, gusMouseXPos, gusMouseYPos))
+			{
+				continue;
+			}
 
-			pNode = GetAnimProfileFlags( usMapPos, &usFlags, &pTargetSoldier, pNode );
-
+			fOnGuy = TRUE;
+			break;
 		}
 
-
-		if ( !fOnGuy )
+		if (!fOnGuy)
 		{
 			// Check if we can find a soldier here
 			SOLDIERTYPE* const tgt = gUIFullTarget;
@@ -966,26 +918,12 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 			}
 		}
 
-
-		if ( fOnGuy )
+		if (fOnGuy && IsValidTargetMerc(pTargetSoldier))
 		{
-			if (IsValidTargetMerc(pTargetSoldier))
-			{
-				if ( usFlags & TILE_FLAG_FEET )
-				{
-					pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
-				}
-				if ( usFlags & TILE_FLAG_MID )
-				{
-					pSoldier->bAimShotLocation = AIM_SHOT_TORSO;
-				}
-				if ( usFlags & TILE_FLAG_HEAD )
-				{
-					pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
-				}
-			}
+			if (usFlags & TILE_FLAG_FEET) pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
+			if (usFlags & TILE_FLAG_MID)  pSoldier->bAimShotLocation = AIM_SHOT_TORSO;
+			if (usFlags & TILE_FLAG_HEAD) pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
 		}
-
 	}
 
 	if ( fDisplay && ( !pSoldier->bDoBurst ) )
