@@ -7156,68 +7156,6 @@ UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 )
 }
 
 
-static UINT8 atan8FromAngle(DOUBLE angle)
-{
-	UINT8	  mFacing = WEST;
-
-	if ( angle > PI )
-	{
-		angle = ( angle - PI ) - PI;
-	}
-	if ( angle < -PI )
-	{
-		angle = ( PI - ( fabs( angle ) - PI )  );
-	}
-
-	do
-	{
-		if ( angle >=-PI*.375 && angle <= -PI*.125 )
-		{
-			mFacing = SOUTHWEST;
-			break;
-		}
-
-		if ( angle <= PI*.375 && angle >= PI*.125 )
-		{
-			mFacing = SOUTHEAST;
-			break;
-		}
-
-		if ( angle >=PI*.623 && angle <= PI*.875 )
-		{
-			mFacing = NORTHEAST;
-			break;
-		}
-
-		if ( angle <=-PI*.623 && angle >= -PI*.875 )
-		{
-			mFacing = NORTHWEST;
-			break;
-		}
-
-		if ( angle >-PI*0.125 && angle < PI*0.125 )
-		{
-			mFacing = SOUTH;
-		}
-		if ( angle > PI*0.375 && angle < PI*0.623 )
-		{
-			mFacing = EAST;
-		}
-		if ( ( angle > PI*0.875 && angle <= PI ) || ( angle > -PI && angle < -PI*0.875 ) )
-		{
-			mFacing = NORTH;
-		}
-		if ( angle > -PI*0.623 && angle < -PI*0.375 )
-		{
-			mFacing = WEST;
-		}
-
-	} while( FALSE );
-
-	return( mFacing );
-}
-
-
 static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier)
 {
 
