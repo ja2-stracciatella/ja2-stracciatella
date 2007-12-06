@@ -8992,18 +8992,6 @@ static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier)
 }
 
 
-static FLOAT CalcSoldierNextUnmovingBleed(SOLDIERTYPE* pSoldier)
-{
-	INT8		bBandaged;
-
-	// calculate bleeding rate without the penalty for tiles moved
-
-	// if bandaged, give 1/2 of the bandaged life points back into equation
-	bBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-
-	return( (FLOAT)1 + (FLOAT)( (pSoldier->bLife + bBandaged / 2) / 10 ) );  // min = 1
-}
-
 void HandlePlacingRoofMarker( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fSet, BOOLEAN fForce )
 {
 	LEVELNODE *pRoofNode;
