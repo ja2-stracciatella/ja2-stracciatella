@@ -7175,16 +7175,6 @@ static void AdjustForFastTurnAnimation(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN IsActionInterruptable(SOLDIERTYPE* pSoldier)
-{
-	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_NONINTERRUPT )
-	{
-		return( FALSE );
-	}
-	return( TRUE );
-}
-
-
 void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usDesiredDirection)
 {
 	// Sent event for position update
