@@ -2125,18 +2125,12 @@ void EVENT_SetSoldierPositionXY(SOLDIERTYPE* const s, const FLOAT x, const FLOAT
 }
 
 
-static void InternalSetSoldierHeight(SOLDIERTYPE* pSoldier, FLOAT dNewHeight, BOOLEAN fUpdateLevel)
+void SetSoldierHeight(SOLDIERTYPE* const pSoldier, const FLOAT dNewHeight)
 {
-
 	INT8	bOldLevel = pSoldier->bLevel;
 
 	pSoldier->dHeightAdjustment = dNewHeight;
 	pSoldier->sHeightAdjustment = (INT16)pSoldier->dHeightAdjustment;
-
-	if ( !fUpdateLevel )
-	{
-		return;
-	}
 
 	if ( pSoldier->sHeightAdjustment > 0 )
 	{
@@ -2171,13 +2165,6 @@ static void InternalSetSoldierHeight(SOLDIERTYPE* pSoldier, FLOAT dNewHeight, BO
 		// Show room at new level
 		//HideRoom( pSoldier->sGridNo, pSoldier );
 	}
-}
-
-
-
-void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight )
-{
-	InternalSetSoldierHeight( pSoldier, dNewHeight, TRUE );
 }
 
 
