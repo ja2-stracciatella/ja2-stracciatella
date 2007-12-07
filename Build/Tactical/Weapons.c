@@ -3234,7 +3234,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 				break;
 			case AIM_SHOT_LEGS:
 				// is the damage enough to make us fall over?
-				if ( pubSpecial && IS_MERC_BODY_TYPE( pTarget ) && gAnimControl[ pTarget->usAnimState ].ubEndHeight == ANIM_STAND && pTarget->bOverTerrainType != LOW_WATER && pTarget->bOverTerrainType != MED_WATER && pTarget->bOverTerrainType != DEEP_WATER  )
+				if (pubSpecial && IS_MERC_BODY_TYPE(pTarget) && gAnimControl[pTarget->usAnimState].ubEndHeight == ANIM_STAND && !MercInWater(pTarget))
 				{
 					if (iImpactForCrits > MIN_DAMAGE_FOR_AUTO_FALL_OVER )
 					{
