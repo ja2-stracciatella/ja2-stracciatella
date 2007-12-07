@@ -7104,27 +7104,6 @@ static void TeamListContractRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReas
 }
 
 
-// mouse position test
-static BOOLEAN IsCursorWithInRegion(INT16 sLeft, INT16 sRight, INT16 sTop, INT16 sBottom)
-{
-	POINT MousePos;
-
-	// get cursor position
-	GetCursorPos(&MousePos);
-
-	// is it within region?
-
-	if( ( sLeft < MousePos.x ) && ( sRight > MousePos.x) && (sTop < MousePos.y ) && ( sBottom > MousePos.y ) )
-	{
-		return ( TRUE );
-	}
-	else
-	{
-		return ( FALSE );
-	}
-}
-
-
 static void HandleHighLightingOfLinesInTeamPanel(void)
 {
 	if ( fShowInventoryFlag )
