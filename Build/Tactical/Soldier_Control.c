@@ -1070,7 +1070,6 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 }
 
 
-static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState);
 static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove);
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
@@ -1172,7 +1171,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		{
 			if ( pSoldier->ubPendingDirection != NO_PENDING_DIRECTION )
 			{
-				EVENT_InternalSetSoldierDesiredDirection( pSoldier, pSoldier->ubPendingDirection, FALSE, pSoldier->usAnimState );
+				EVENT_SetSoldierDesiredDirection(pSoldier, pSoldier->ubPendingDirection);
 				pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 				pSoldier->usPendingAnimation = ADJACENT_GET_ITEM;
 				pSoldier->fTurningUntilDone	 = TRUE;
@@ -2835,6 +2834,9 @@ BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* const pSoldier, const GridNo tgt_pos, co
 	const INT16 sFacingDir = GetDirectionFromGridNo(tgt_pos, pSoldier);
 	return InternalSoldierReadyWeapon(pSoldier, sFacingDir, fEndReady);
 }
+
+
+static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState);
 
 
 BOOLEAN InternalSoldierReadyWeapon( SOLDIERTYPE *pSoldier, UINT8 sFacingDir, BOOLEAN fEndReady )
@@ -5790,7 +5792,7 @@ void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
 	{
 		pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
 		pSoldier->fDontChargeTurningAPs = TRUE;
-		EVENT_InternalSetSoldierDesiredDirection( pSoldier, bDirection, FALSE, pSoldier->usAnimState );
+		EVENT_SetSoldierDesiredDirection(pSoldier, bDirection);
 		pSoldier->fTurningUntilDone = TRUE;
 		// ATE: Reset flag to go back to prone...
 		pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
