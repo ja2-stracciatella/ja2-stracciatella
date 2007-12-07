@@ -350,10 +350,8 @@ static void PasteSingleWallCommon(UINT32 iMapIndex)
 			// Add to onroof section!
 			AddOnRoofToTail( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
 
-			if ( gTileDatabase[ (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].sBuddyNum != -1 )
-			{
-				AddOnRoofToTail( iMapIndex, gTileDatabase[ (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].sBuddyNum );
-			}
+			const INT16 buddy_num = gTileDatabase[gTileTypeStartIndex[usUseObjIndex] + usUseIndex].sBuddyNum;
+			if (buddy_num != -1) AddOnRoofToTail(iMapIndex, buddy_num);
 			return;
 		}
 
@@ -509,7 +507,6 @@ static void PasteStructureCommon(UINT32 iMapIndex)
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	INT32					iRandSelIndex;
-	BOOLEAN				fOkayToAdd;
 
 	if ( iMapIndex < 0x8000 )
 	{
@@ -538,8 +535,8 @@ static void PasteStructureCommon(UINT32 iMapIndex)
 			usUseObjIndex = (UINT16)pSelList[ iRandSelIndex ].uiObject;
 
 			// Check with Structure Database (aka ODB) if we can put the object here!
-			fOkayToAdd = OkayToAddStructureToWorld( (INT16)iMapIndex, 0, gTileDatabase[ (gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].pDBStructureRef, INVALID_STRUCTURE_ID );
-			if ( fOkayToAdd || (gTileDatabase[ (gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) ].pDBStructureRef == NULL) )
+			const DB_STRUCTURE_REF* const sr = gTileDatabase[gTileTypeStartIndex[usUseObjIndex] + usUseIndex].pDBStructureRef;
+			if (OkayToAddStructureToWorld(iMapIndex, 0, sr, INVALID_STRUCTURE_ID) || sr == NULL)
 			{
 				// Actual structure info is added by the functions below
 				AddStructToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );

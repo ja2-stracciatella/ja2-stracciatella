@@ -4114,7 +4114,8 @@ void DrawItemTileCursor( )
 		if ( usIndex != gusItemPointer || uiOldCursorId != uiCursorId )
 		{
 			// OK, Tile database gives me subregion and video object to use...
-			SetExternVOData( uiCursorId, gTileDatabase[ usIndex ].hTileSurface, gTileDatabase[ usIndex ].usRegionIndex );
+			const TILE_ELEMENT* const te = &gTileDatabase[usIndex];
+			SetExternVOData(uiCursorId, te->hTileSurface, te->usRegionIndex);
 			gusItemPointer = usIndex;
 			uiOldCursorId = uiCursorId;
 		}
@@ -5711,7 +5712,6 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel )
 void RenderItemPickupMenu( )
 {
 	INT32			cnt;
-	UINT16		usItemTileIndex;
 	INT16			sX, sY, sCenX, sCenY, sFontX, sFontY, sNewX, sNewY;
 	wchar_t			pStr[ 100 ];
 	INVTYPE   *pItem;
@@ -5774,7 +5774,8 @@ void RenderItemPickupMenu( )
 				pObject = &(gWorldItems[ gItemPickupMenu.ItemPoolSlots[ cnt ]->iItemIndex ].o );
 				pItem = &( Item[ pObject->usItem ] );
 
-				usItemTileIndex = GetTileGraphicForItem( pItem );
+				const UINT16 usItemTileIndex = GetTileGraphicForItem(pItem);
+				const TILE_ELEMENT* const te = &gTileDatabase[usItemTileIndex];
 
 				// Render
 				sX = ITEMPICK_GRAPHIC_X + gItemPickupMenu.sX;
@@ -5783,7 +5784,7 @@ void RenderItemPickupMenu( )
 				sCenY = sY;
 
         // ATE: Adjust to basic shade.....
-    		gTileDatabase[ usItemTileIndex ].hTileSurface->pShadeCurrent=gTileDatabase[ usItemTileIndex ].hTileSurface->pShades[4];
+    		te->hTileSurface->pShadeCurrent = te->hTileSurface->pShades[4];
 
 				//else
 				{
@@ -5791,13 +5792,13 @@ void RenderItemPickupMenu( )
 					{
 						//SetFontForeground( FONT_MCOLOR_LTYELLOW );
 						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 255, 0)), TRUE);
+						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 255, 0)), TRUE);
 					}
 					else
 					{
 						//SetFontForeground( FONT_BLACK );
 						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, 0, FALSE);
+						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, 0, FALSE);
 					}
         }
 
@@ -5849,8 +5850,8 @@ void RenderItemPickupMenu( )
 						SetFontForeground( FONT_WHITE );
 						SetFontShadow( DEFAULT_SHADOW );
 					//}
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, gTileDatabase[usItemTileIndex].hTileSurface, sCenX, sCenY, gTileDatabase[usItemTileIndex].usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
 				}
 				else
 				{

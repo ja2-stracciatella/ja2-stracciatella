@@ -1091,9 +1091,6 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 {
 	LEVELNODE *pNode;
 	INT16			sNewGridNo, sTileIndex;
-  ETRLEObject		*pTrav;
-	HVOBJECT			hVObject;
-
 
 	//Determine new gridno
 	sNewGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
@@ -1223,8 +1220,8 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 			if ( pObject->pNode != NULL )
 			{
 				// OK, get offsets
-				hVObject = gTileDatabase[ pObject->pNode->usIndex ].hTileSurface;
-				pTrav = &(hVObject->pETRLEObject[ gTileDatabase[ pObject->pNode->usIndex ].usRegionIndex ] );
+				const TILE_ELEMENT* const te    = &gTileDatabase[pObject->pNode->usIndex];
+				const ETRLEObject*  const pTrav = &te->hTileSurface->pETRLEObject[te->usRegionIndex];
 
 				// Add new object / update position
 				// Update position data

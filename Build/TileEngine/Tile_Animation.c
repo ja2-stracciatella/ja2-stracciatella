@@ -226,8 +226,9 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
 	}
 	else
 	{
-		Assert( gTileDatabase[ usTileIndex ].pAnimData != NULL );
-		pNewAniNode->usNumFrames			= gTileDatabase[ usTileIndex ].pAnimData->ubNumFrames;
+		const TILE_ELEMENT* const te = &gTileDatabase[usTileIndex];
+		Assert(te->pAnimData != NULL);
+		pNewAniNode->usNumFrames = te->pAnimData->ubNumFrames;
 	}
 
 	pNewAniNode->pNext						= pAniNode;
