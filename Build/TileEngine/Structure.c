@@ -533,7 +533,7 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF* pDBStructureRef, UINT8
 }
 
 
-static BOOLEAN OkayToAddStructureToTile(INT16 sBaseGridNo, INT16 sCubeOffset, DB_STRUCTURE_REF* pDBStructureRef, UINT8 ubTileIndex, INT16 sExclusionID, BOOLEAN fIgnorePeople)
+static BOOLEAN OkayToAddStructureToTile(const INT16 sBaseGridNo, const INT16 sCubeOffset, const DB_STRUCTURE_REF* const pDBStructureRef, UINT8 ubTileIndex, const INT16 sExclusionID, const BOOLEAN fIgnorePeople)
 { // Verifies whether a structure is blocked from being added to the map at a particular point
 	DB_STRUCTURE *	pDBStructure;
 	DB_STRUCTURE_TILE	**	ppTile;
@@ -766,7 +766,8 @@ static BOOLEAN OkayToAddStructureToTile(INT16 sBaseGridNo, INT16 sCubeOffset, DB
 	return( TRUE );
 }
 
-BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople )
+
+BOOLEAN InternalOkayToAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, const INT16 sExclusionID, const BOOLEAN fIgnorePeople)
 {
 	UINT8									ubLoop;
 	INT16									sCubeOffset;
@@ -809,9 +810,10 @@ BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_ST
 	return( TRUE );
 }
 
-BOOLEAN OkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID )
+
+BOOLEAN OkayToAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, const INT16 sExclusionID)
 {
-	return( InternalOkayToAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, sExclusionID, (BOOLEAN)(sExclusionID == IGNORE_PEOPLE_STRUCTURE_ID) ) );
+	return InternalOkayToAddStructureToWorld(sBaseGridNo, bLevel, pDBStructureRef, sExclusionID, sExclusionID == IGNORE_PEOPLE_STRUCTURE_ID);
 }
 
 

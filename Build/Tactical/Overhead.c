@@ -3325,9 +3325,6 @@ SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* const s, const BOOLEAN fGoo
 }
 
 
-extern BOOLEAN InternalOkayToAddStructureToWorld( INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF * pDBStructureRef, INT16 sExclusionID, BOOLEAN fIgnorePeople );
-
-
 // NB if making changes don't forget to update NewOKDestinationAndDirection
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel)
 {
