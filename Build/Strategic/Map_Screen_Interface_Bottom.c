@@ -45,7 +45,6 @@
 #include "Debug.h"
 #include "JAScreens.h"
 #include "ScreenIDs.h"
-#include "Stubs.h" // XXX
 
 
 #define MAP_BOTTOM_X 0
@@ -757,8 +756,6 @@ static void DeleteMapScreenBottomMessageScrollRegion(void)
 
 static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	POINT MousePos;
-	UINT8 ubMouseYOffset;
 	UINT8	ubDesiredSliderOffset;
 	UINT8 ubDesiredMessageIndex;
 	UINT8 ubNumMessages;
@@ -771,10 +768,7 @@ static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReas
 		// region is supposed to be disabled if there aren't enough messages to scroll.  Formulas assume this
 		if ( ubNumMessages > MAX_MESSAGES_ON_MAP_BOTTOM )
 		{
-			// where is the mouse?
-			GetCursorPos( &MousePos );
-
-			ubMouseYOffset = MousePos.y - MESSAGE_SCROLL_AREA_START_Y;
+			const UINT8 ubMouseYOffset = pRegion->RelativeYPos;
 
 			// if clicking in the top 5 pixels of the slider bar
 			if ( ubMouseYOffset < ( SLIDER_HEIGHT / 2 ) )

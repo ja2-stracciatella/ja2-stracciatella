@@ -28,7 +28,6 @@
 #include "Font_Control.h"
 #include "EMail.h"
 #include "Soldier_Macros.h"
-#include "Stubs.h" // XXX
 
 
 #define INVENTORY_BOX_X 399
@@ -2485,15 +2484,8 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		const INT32 scroll_count = item_count - NUMBER_OF_INVENTORY_PERSONNEL;
 
-		// find the x, y on the slider bar
-		POINT MousePos;
-		GetCursorPos(&MousePos);
-
-		// get the cursor placement
-		INT16 sYPositionOnBar = MousePos.y - Y_OF_PERSONNEL_SCROLL_REGION;
-
 		// get the actual item position
-		const INT16 new_item_idx = scroll_count * sYPositionOnBar / (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR);
+		const INT16 new_item_idx = scroll_count * pRegion->RelativeYPos / (Y_SIZE_OF_PERSONNEL_SCROLL_REGION - SIZE_OF_PERSONNEL_CURSOR);
 
 		if (uiCurrentInventoryIndex != new_item_idx)
 		{
