@@ -389,6 +389,28 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 }
 
 
+static void InitDisplayGfx(DisplaySpec* const ds, const HVOBJECT vo, const UINT16 start, const UINT16 end, const UINT32 obj_idx)
+{
+	ds->ubType    = DISPLAY_GRAPHIC;
+	ds->hVObject  = vo;
+	ds->usStart   = start;
+	ds->usEnd     = end;
+	ds->uiObjIndx = obj_idx;
+}
+
+
+static void InitDisplayGfxFromTileData(DisplaySpec* const ds, const UINT16 start, const UINT16 end, const UINT32 obj_idx)
+{
+	InitDisplayGfx(ds, gTileDatabase[gTileTypeStartIndex[obj_idx]].hTileSurface, start, end, obj_idx);
+}
+
+
+static void InitDisplayGfxAllFromTileData(DisplaySpec* const ds, const UINT32 obj_idx)
+{
+	InitDisplayGfxFromTileData(ds, DISPLAY_ALL_OBJECTS, 0, obj_idx);
+}
+
+
 //The selection window method is initialized here.  This is where all the graphics for all
 //the categories are organized and loaded.  If you wish to move things around, then this is
 //where the initialization part is done.  I have also changed this from previously being loaded
@@ -413,391 +435,168 @@ void InitJA2SelectionWindow( void )
 		hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTFULLSTRUCT + iCount]].hTileSurface;
 		usETRLEObjects = hVObject->usNumberOfObjects;
 
-
 		for ( iCount2 = 0; iCount2 < usETRLEObjects; iCount2 += 3, iCount3++)
 		{
-			OStructs[ iCount3 ].ubType = DISPLAY_GRAPHIC;
-			OStructs[ iCount3 ].hVObject = hVObject;
-			OStructs[ iCount3 ].usStart = (UINT16)iCount2;
-			OStructs[ iCount3 ].usEnd = (UINT16)iCount2;
-			OStructs[ iCount3 ].uiObjIndx = (FIRSTFULLSTRUCT + iCount);
+			InitDisplayGfx(&OStructs[iCount3], hVObject, iCount2, iCount2, FIRSTFULLSTRUCT + iCount);
 		}
 	}
 
-	OStructs[ iCount3 ].ubType = DISPLAY_GRAPHIC;
-	OStructs[ iCount3 ].hVObject = gTileDatabase[gTileTypeStartIndex[SIXTHOSTRUCT]].hTileSurface;
-	OStructs[ iCount3 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs[ iCount3 ].usEnd = 0;
-	OStructs[ iCount3 ].uiObjIndx = SIXTHOSTRUCT;
+	InitDisplayGfxAllFromTileData(&OStructs[iCount3], SIXTHOSTRUCT);
 
 	gusNumOStructs = (UINT16)iCount3 + 1;
 
 	// Rocks & barrels! (the "1" button in the "terrain" toolbar)
-	OStructs1[ 0 ].ubType = DISPLAY_GRAPHIC;
-	OStructs1[ 0 ].hVObject = gTileDatabase[gTileTypeStartIndex[FOURTHOSTRUCT]].hTileSurface;
-	OStructs1[ 0 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs1[ 0 ].usEnd = 0;
-	OStructs1[ 0 ].uiObjIndx = FOURTHOSTRUCT;
+	InitDisplayGfxAllFromTileData(&OStructs1[0], FOURTHOSTRUCT);
 
 	for ( iCount = 0; iCount < (THIRDOSTRUCT - FIRSTOSTRUCT); iCount++ )
 	{
-		OStructs1[ iCount + 1 ].ubType = DISPLAY_GRAPHIC;
-		OStructs1[ iCount + 1 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTOSTRUCT + iCount]].hTileSurface;
-		OStructs1[ iCount + 1 ].usStart = DISPLAY_ALL_OBJECTS;
-		OStructs1[ iCount + 1 ].usEnd = 0;
-		OStructs1[ iCount + 1 ].uiObjIndx = FIRSTOSTRUCT + iCount;
+		InitDisplayGfxAllFromTileData(&OStructs1[iCount +  1], FIRSTOSTRUCT + iCount);
 	}
 
-
 	// Other junk! (the "2" button in the "terrain" toolbar)
-	OStructs2[ 0 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 0 ].hVObject = gTileDatabase[gTileTypeStartIndex[THIRDOSTRUCT]].hTileSurface;
-	OStructs2[ 0 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 0 ].usEnd = 0;
-	OStructs2[ 0 ].uiObjIndx = THIRDOSTRUCT;
-
-	OStructs2[ 1 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 1 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIFTHOSTRUCT]].hTileSurface;
-	OStructs2[ 1 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 1 ].usEnd = 0;
-	OStructs2[ 1 ].uiObjIndx = FIFTHOSTRUCT;
-
-	OStructs2[ 2 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 2 ].hVObject = gTileDatabase[gTileTypeStartIndex[SEVENTHOSTRUCT]].hTileSurface;
-	OStructs2[ 2 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 2 ].usEnd = 0;
-	OStructs2[ 2 ].uiObjIndx = SEVENTHOSTRUCT;
-
-	OStructs2[ 3 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 3 ].hVObject = gTileDatabase[gTileTypeStartIndex[EIGHTOSTRUCT]].hTileSurface;
-	OStructs2[ 3 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 3 ].usEnd = 0;
-	OStructs2[ 3 ].uiObjIndx = EIGHTOSTRUCT;
-
-	OStructs2[ 4 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 4 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTVEHICLE]].hTileSurface;
-	OStructs2[ 4 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 4 ].usEnd = 0;
-	OStructs2[ 4 ].uiObjIndx = FIRSTVEHICLE;
-
-	OStructs2[ 5 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 5 ].hVObject = gTileDatabase[gTileTypeStartIndex[SECONDVEHICLE]].hTileSurface;
-	OStructs2[ 5 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 5 ].usEnd = 0;
-	OStructs2[ 5 ].uiObjIndx = SECONDVEHICLE;
-
-	OStructs2[ 6 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 6 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDEBRISSTRUCT]].hTileSurface;
-	OStructs2[ 6 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 6 ].usEnd = 0;
-	OStructs2[ 6 ].uiObjIndx = FIRSTDEBRISSTRUCT;
-
-	OStructs2[ 7 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 7 ].hVObject = gTileDatabase[gTileTypeStartIndex[SECONDDEBRISSTRUCT]].hTileSurface;
-	OStructs2[ 7 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 7 ].usEnd = 0;
-	OStructs2[ 7 ].uiObjIndx = SECONDDEBRISSTRUCT;
-
-	OStructs2[ 8 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 8 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTLARGEEXPDEBRIS]].hTileSurface;
-	OStructs2[ 8 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 8 ].usEnd = 0;
-	OStructs2[ 8 ].uiObjIndx = FIRSTLARGEEXPDEBRIS;
-
-	OStructs2[ 9 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 9 ].hVObject = gTileDatabase[gTileTypeStartIndex[SECONDLARGEEXPDEBRIS]].hTileSurface;
-	OStructs2[ 9 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 9 ].usEnd = 0;
-	OStructs2[ 9 ].uiObjIndx = SECONDLARGEEXPDEBRIS;
-
-	OStructs2[ 10 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 10 ].hVObject = gTileDatabase[gTileTypeStartIndex[NINTHOSTRUCT]].hTileSurface;
-	OStructs2[ 10 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 10 ].usEnd = 0;
-	OStructs2[ 10 ].uiObjIndx = NINTHOSTRUCT;
-
-	OStructs2[ 11 ].ubType = DISPLAY_GRAPHIC;
-	OStructs2[ 11 ].hVObject = gTileDatabase[gTileTypeStartIndex[TENTHOSTRUCT]].hTileSurface;
-	OStructs2[ 11 ].usStart = DISPLAY_ALL_OBJECTS;
-	OStructs2[ 11 ].usEnd = 0;
-	OStructs2[ 11 ].uiObjIndx = TENTHOSTRUCT;
+	InitDisplayGfxAllFromTileData(&OStructs2[ 0], THIRDOSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 1], FIFTHOSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 2], SEVENTHOSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 3], EIGHTOSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 4], FIRSTVEHICLE);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 5], SECONDVEHICLE);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 6], FIRSTDEBRISSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 7], SECONDDEBRISSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 8], FIRSTLARGEEXPDEBRIS);
+	InitDisplayGfxAllFromTileData(&OStructs2[ 9], SECONDLARGEEXPDEBRIS);
+	InitDisplayGfxAllFromTileData(&OStructs2[10], NINTHOSTRUCT);
+	InitDisplayGfxAllFromTileData(&OStructs2[11], TENTHOSTRUCT);
 
 	// River banks and cliffs (the "river" button on the "terrain" toolbar)
-	BanksList[0].ubType = DISPLAY_GRAPHIC;
-	BanksList[0].hVObject = gTileDatabase[gTileTypeStartIndex[ANIOSTRUCT]].hTileSurface;
-	BanksList[0].usStart = DISPLAY_ALL_OBJECTS;
-	BanksList[0].usEnd = 0;
-	BanksList[0].uiObjIndx = ANIOSTRUCT;
+	InitDisplayGfxAllFromTileData(&BanksList[0], ANIOSTRUCT);
+	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTCLIFF);
+	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTCLIFFHANG);
+	InitDisplayGfxAllFromTileData(&BanksList[0], FIRSTROAD);
+	InitDisplayGfxAllFromTileData(&BanksList[0], FENCESTRUCT);
 
-	BanksList[1].ubType = DISPLAY_GRAPHIC;
-	BanksList[1].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTCLIFF]].hTileSurface;
-	BanksList[1].usStart = DISPLAY_ALL_OBJECTS;
-	BanksList[1].usEnd = 0;
-	BanksList[1].uiObjIndx = FIRSTCLIFF;
-
-	BanksList[2].ubType = DISPLAY_GRAPHIC;
-	BanksList[2].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTCLIFFHANG]].hTileSurface;
-	BanksList[2].usStart = DISPLAY_ALL_OBJECTS;
-	BanksList[2].usEnd = 0;
-	BanksList[2].uiObjIndx = FIRSTCLIFFHANG;
-
-	BanksList[3].ubType = DISPLAY_GRAPHIC;
-	BanksList[3].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTROAD]].hTileSurface;
-	BanksList[3].usStart = DISPLAY_ALL_OBJECTS;
-	BanksList[3].usEnd = 0;
-	BanksList[3].uiObjIndx = FIRSTROAD;
-
-	BanksList[4].ubType = DISPLAY_GRAPHIC;
-	BanksList[4].hVObject = gTileDatabase[gTileTypeStartIndex[FENCESTRUCT]].hTileSurface;
-	BanksList[4].usStart = DISPLAY_ALL_OBJECTS;
-	BanksList[4].usEnd = 0;
-	BanksList[4].uiObjIndx = FENCESTRUCT;
-
-	RoadsList[0].ubType = DISPLAY_GRAPHIC;
-	RoadsList[0].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTROAD]].hTileSurface;
-	RoadsList[0].usStart = DISPLAY_ALL_OBJECTS;
-	RoadsList[0].usEnd = 0;
-	RoadsList[0].uiObjIndx = FIRSTROAD;
+	InitDisplayGfxAllFromTileData(&RoadsList[0], FIRSTROAD);
 
 	// Debris (the "bent can" button on the "terrain", and "buildings" toolbars)
 	for ( iCount = 0; iCount < (LASTDEBRIS - DEBRISROCKS + 1); iCount++ )
 	{
-		DebrisList[ iCount ].ubType = DISPLAY_GRAPHIC;
-		DebrisList[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[DEBRISROCKS + iCount]].hTileSurface;
-		DebrisList[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		DebrisList[ iCount ].usEnd = 0;
-		DebrisList[ iCount ].uiObjIndx = DEBRISROCKS + iCount;
+		InitDisplayGfxAllFromTileData(&DebrisList[iCount], DEBRISROCKS + iCount);
 	}
 	// Add one more for new misc debris
-	DebrisList[ iCount ].ubType = DISPLAY_GRAPHIC;
-	DebrisList[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[DEBRIS2MISC ] ].hTileSurface;
-	DebrisList[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-	DebrisList[ iCount ].usEnd = 0;
-	DebrisList[ iCount ].uiObjIndx = DEBRIS2MISC;
+	InitDisplayGfxAllFromTileData(&DebrisList[iCount++], DEBRIS2MISC);
 	//Add yet another one...
-	iCount++;
-	DebrisList[ iCount ].ubType = DISPLAY_GRAPHIC;
-	DebrisList[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[ANOTHERDEBRIS ] ].hTileSurface;
-	DebrisList[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-	DebrisList[ iCount ].usEnd = 0;
-	DebrisList[ iCount ].uiObjIndx = ANOTHERDEBRIS;
+	InitDisplayGfxAllFromTileData(&DebrisList[iCount],   ANOTHERDEBRIS);
 
 	// Rooms
 	for ( iCount = 0; iCount < (LASTWALL - FIRSTWALL + 1); iCount++ )
 	{
-		Room[ iCount ].ubType = DISPLAY_GRAPHIC;
-		Room[iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount]].hTileSurface;
-		Room[ iCount ].usStart = 0;
-		Room[ iCount ].usEnd = 0;
-		Room[ iCount ].uiObjIndx = FIRSTWALL + iCount;
+		InitDisplayGfxFromTileData(&Room[iCount], 0, 0, FIRSTWALL + iCount);
 	}
 	for ( iCount2 = 0; iCount2 < (LASTFLOOR - FIRSTFLOOR + 1); iCount2++, iCount++ )
 	{
-		Room[ iCount ].ubType = DISPLAY_GRAPHIC;
-		Room[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTFLOOR + iCount2]].hTileSurface;
-		Room[ iCount ].usStart = 0;
-		Room[ iCount ].usEnd = 0;
-		Room[ iCount ].uiObjIndx = FIRSTFLOOR + iCount2;
+		InitDisplayGfxFromTileData(&Room[iCount], 0, 0, FIRSTFLOOR + iCount2);
 	}
 	for ( iCount2 = 0; iCount2 < (LASTROOF - FIRSTROOF + 1); iCount2++, iCount++ )
 	{
-		Room[ iCount ].ubType = DISPLAY_GRAPHIC;
-		Room[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTROOF + iCount2]].hTileSurface;
-		Room[ iCount ].usStart = 0;
-		Room[ iCount ].usEnd = 0;
-		Room[ iCount ].uiObjIndx = FIRSTROOF + iCount2;
+		InitDisplayGfxFromTileData(&Room[iCount], 0, 0, FIRSTROOF + iCount2);
 	}
 	for ( iCount2 = 0; iCount2 < 2/*(LASTSLANTROOF - FIRSTSLANTROOF + 1)*/; iCount2++, iCount++ )
 	{
-		Room[ iCount ].ubType = DISPLAY_GRAPHIC;
-		Room[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTSLANTROOF + iCount2]].hTileSurface;
-		Room[ iCount ].usStart = 0;
-		Room[ iCount ].usEnd = 0;
-		Room[ iCount ].uiObjIndx = FIRSTSLANTROOF + iCount2;
+		InitDisplayGfxFromTileData(&Room[iCount], 0, 0, FIRSTSLANTROOF + iCount2);
 	}
 
 	//Walls
 	for ( iCount = 0, iCount2 = 0; iCount < (LASTWALL - FIRSTWALL + 1); iCount++, iCount2+=2 )
 	{
-		SingleWall[ iCount2 ].ubType = DISPLAY_GRAPHIC;
-		SingleWall[ iCount2 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount]].hTileSurface;
-		SingleWall[ iCount2 ].usStart = 0;
-		SingleWall[ iCount2 ].usEnd = WALL_LAST_WALL_OFFSET;
-		SingleWall[ iCount2 ].uiObjIndx = FIRSTWALL + iCount;
+		InitDisplayGfxFromTileData(&SingleWall[iCount2],     0,                               WALL_LAST_WALL_OFFSET,          FIRSTWALL + iCount);
 		//New appended walls
-		SingleWall[ iCount2+1 ].ubType = DISPLAY_GRAPHIC;
-		SingleWall[ iCount2+1 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount]].hTileSurface;
-		SingleWall[ iCount2+1 ].usStart = WALL_FIRST_APPENDED_WALL_OFFSET;
-		SingleWall[ iCount2+1 ].usEnd = WALL_LAST_APPENDED_WALL_OFFSET;
-		SingleWall[ iCount2+1 ].uiObjIndx = FIRSTWALL + iCount;
+		InitDisplayGfxFromTileData(&SingleWall[iCount2 + 1], WALL_FIRST_APPENDED_WALL_OFFSET, WALL_LAST_APPENDED_WALL_OFFSET, FIRSTWALL + iCount);
 	}
 
 	//Doors
 	for ( iCount = 0, iCount2 = 0; iCount < (LASTDOOR - FIRSTDOOR + 1); iCount++, iCount2+=5)
 	{
 		//closed
-		SingleDoor[ iCount2 ].ubType = DISPLAY_GRAPHIC;
-		SingleDoor[ iCount2 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDOOR + iCount]].hTileSurface;
-		SingleDoor[ iCount2 ].usStart = 0;
-		SingleDoor[ iCount2 ].usEnd = 0;
-		SingleDoor[ iCount2 ].uiObjIndx = FIRSTDOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleDoor[iCount2],      0,  0, FIRSTDOOR + iCount);
 		//open, closed
-		SingleDoor[ iCount2+1 ].ubType = DISPLAY_GRAPHIC;
-		SingleDoor[ iCount2+1 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDOOR + iCount]].hTileSurface;
-		SingleDoor[ iCount2+1 ].usStart = 4;
-		SingleDoor[ iCount2+1 ].usEnd = 5;
-		SingleDoor[ iCount2+1 ].uiObjIndx = FIRSTDOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleDoor[iCount2 + 1],  4,  5, FIRSTDOOR + iCount);
 		//open, closed
-		SingleDoor[ iCount2+2 ].ubType = DISPLAY_GRAPHIC;
-		SingleDoor[ iCount2+2 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDOOR + iCount]].hTileSurface;
-		SingleDoor[ iCount2+2 ].usStart = 9;
-		SingleDoor[ iCount2+2 ].usEnd = 10;
-		SingleDoor[ iCount2+2 ].uiObjIndx = FIRSTDOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleDoor[iCount2 + 2],  9, 10, FIRSTDOOR + iCount);
 		//open, closed
-		SingleDoor[ iCount2+3 ].ubType = DISPLAY_GRAPHIC;
-		SingleDoor[ iCount2+3 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDOOR + iCount]].hTileSurface;
-		SingleDoor[ iCount2+3 ].usStart = 14;
-		SingleDoor[ iCount2+3 ].usEnd = 15;
-		SingleDoor[ iCount2+3 ].uiObjIndx = FIRSTDOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleDoor[iCount2 + 3], 14, 15, FIRSTDOOR + iCount);
 		//open
-		SingleDoor[ iCount2+4 ].ubType = DISPLAY_GRAPHIC;
-		SingleDoor[ iCount2+4 ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDOOR + iCount]].hTileSurface;
-		SingleDoor[ iCount2+4 ].usStart = 19;
-		SingleDoor[ iCount2+4 ].usEnd = 19;
-		SingleDoor[ iCount2+4 ].uiObjIndx = FIRSTDOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleDoor[iCount2 + 4], 19, 19, FIRSTDOOR + iCount);
 	}
 	//Windows
 	for ( iCount = 0; iCount < (LASTWALL - FIRSTWALL + 1); iCount++ )
 	{
-		SingleWindow[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleWindow[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount]].hTileSurface;
-		SingleWindow[ iCount ].usStart = WALL_FIRST_WINDOW_OFFSET;
-		SingleWindow[ iCount ].usEnd = WALL_LAST_WINDOW_OFFSET;
-		SingleWindow[ iCount ].uiObjIndx = FIRSTWALL + iCount;
+		InitDisplayGfxFromTileData(&SingleWindow[iCount], WALL_FIRST_WINDOW_OFFSET, WALL_LAST_WINDOW_OFFSET, FIRSTWALL + iCount);
 	}
 	//Roofs and slant roofs
 	for ( iCount = 0; iCount < (LASTROOF - FIRSTROOF + 1); iCount++ )
 	{	//Flat roofs
-		SingleRoof[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleRoof[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTROOF + iCount]].hTileSurface;
-		SingleRoof[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleRoof[ iCount ].usEnd = 0;
-		SingleRoof[ iCount ].uiObjIndx = FIRSTROOF + iCount;
+		InitDisplayGfxAllFromTileData(&SingleRoof[iCount], FIRSTROOF + iCount);
 	}
 	for ( iCount2 = 0; iCount2 < (LASTSLANTROOF - FIRSTSLANTROOF + 1); iCount2++, iCount++ )
 	{	//Slanted roofs
-		SingleRoof[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleRoof[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTSLANTROOF + iCount2]].hTileSurface;
-		SingleRoof[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleRoof[ iCount ].usEnd = 0;
-		SingleRoof[ iCount ].uiObjIndx = FIRSTSLANTROOF + iCount2;
+		InitDisplayGfxAllFromTileData(&SingleRoof[iCount], FIRSTSLANTROOF + iCount2);
 	}
 	for( iCount2 = 0; iCount2 < (LASTWALL - FIRSTWALL + 1); iCount2++, iCount++ )
 	{	//A-Frames
-		SingleRoof[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleRoof[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount2]].hTileSurface;
-		SingleRoof[ iCount ].usStart = WALL_FIRST_AFRAME_OFFSET;
-		SingleRoof[ iCount ].usEnd = WALL_LAST_AFRAME_OFFSET;
-		SingleRoof[ iCount ].uiObjIndx = FIRSTWALL + iCount2;
+		InitDisplayGfxFromTileData(&SingleRoof[iCount], WALL_FIRST_AFRAME_OFFSET, WALL_LAST_AFRAME_OFFSET, FIRSTWALL + iCount2);
 	}
 	for( iCount2 = 0; iCount2 < (SECONDONROOF - FIRSTONROOF + 1); iCount2++, iCount++ )
 	{	//On roofs
-		SingleRoof[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleRoof[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTONROOF + iCount2]].hTileSurface;
-		SingleRoof[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleRoof[ iCount ].usEnd = 0;
-		SingleRoof[ iCount ].uiObjIndx = FIRSTONROOF + iCount2;
+		InitDisplayGfxAllFromTileData(&SingleRoof[iCount], FIRSTONROOF + iCount2);
 	}
 
 	//New replacement roofs
 	for ( iCount = 0; iCount < (LASTROOF - FIRSTROOF + 1); iCount++ )
 	{	//Flat roofs
-		SingleNewRoof[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleNewRoof[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTROOF + iCount]].hTileSurface;
-		SingleNewRoof[ iCount ].usStart = 9;
-		SingleNewRoof[ iCount ].usEnd = 9;
-		SingleNewRoof[ iCount ].uiObjIndx = FIRSTROOF + iCount;
+		InitDisplayGfxFromTileData(&SingleNewRoof[iCount], 9, 9, FIRSTROOF + iCount);
 	}
 
 	//Broken walls
 	for ( iCount = 0; iCount < (LASTDECORATIONS - FIRSTDECORATIONS + 1); iCount++ )
 	{	//Old obsolete wall decals, but should be replaced with multitiled decals such as banners, etc.
-		SingleBrokenWall[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleBrokenWall[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTDECORATIONS + iCount]].hTileSurface;
-		SingleBrokenWall[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleBrokenWall[ iCount ].usEnd = 0;
-		SingleBrokenWall[ iCount ].uiObjIndx = FIRSTDECORATIONS + iCount;
+		InitDisplayGfxAllFromTileData(&SingleBrokenWall[iCount], FIRSTDECORATIONS + iCount);
 	}
 	for( iCount2 = 0; iCount2 < (LASTWALL - FIRSTWALL + 1); iCount2++, iCount++ )
 	{	//Broken walls
-		SingleBrokenWall[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleBrokenWall[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount2]].hTileSurface;
-		SingleBrokenWall[ iCount ].usStart = WALL_FIRST_BROKEN_WALL_OFFSET;
-		SingleBrokenWall[ iCount ].usEnd = WALL_LAST_BROKEN_WALL_OFFSET;
-		SingleBrokenWall[ iCount ].uiObjIndx = FIRSTWALL + iCount2;
+		InitDisplayGfxFromTileData(&SingleBrokenWall[iCount], WALL_FIRST_BROKEN_WALL_OFFSET, WALL_LAST_BROKEN_WALL_OFFSET, FIRSTWALL + iCount2);
 	}
 	for( iCount2 = 0; iCount2 < (LASTWALL - FIRSTWALL + 1); iCount2++, iCount++ )
 	{	//Cracked and smudged walls
-		SingleBrokenWall[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleBrokenWall[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALL + iCount2]].hTileSurface;
-		SingleBrokenWall[ iCount ].usStart = WALL_FIRST_WEATHERED_WALL_OFFSET;
-		SingleBrokenWall[ iCount ].usEnd = WALL_LAST_WEATHERED_WALL_OFFSET;
-		SingleBrokenWall[ iCount ].uiObjIndx = FIRSTWALL + iCount2;
+		InitDisplayGfxFromTileData(&SingleBrokenWall[iCount], WALL_FIRST_WEATHERED_WALL_OFFSET, WALL_LAST_WEATHERED_WALL_OFFSET, FIRSTWALL + iCount2);
 	}
 
 	// Decorations
 	for ( iCount = 0; iCount < (LASTISTRUCT - FIRSTISTRUCT + 1); iCount++ )
 	{
-		SingleDecor[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleDecor[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTISTRUCT + iCount]].hTileSurface;
-		SingleDecor[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleDecor[ iCount ].usEnd = 0;
-		SingleDecor[ iCount ].uiObjIndx = FIRSTISTRUCT + iCount;
+		InitDisplayGfxAllFromTileData(&SingleDecor[iCount], FIRSTISTRUCT + iCount);
 	}
 
 	// Wall decals
 	for ( iCount = 0; iCount < (LASTWALLDECAL - FIRSTWALLDECAL + 1); iCount++ )
 	{
-		SingleDecal[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleDecal[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTWALLDECAL + iCount]].hTileSurface;
-		SingleDecal[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleDecal[ iCount ].usEnd = 0;
-		SingleDecal[ iCount ].uiObjIndx = FIRSTWALLDECAL + iCount;
+		InitDisplayGfxAllFromTileData(&SingleDecal[iCount], FIRSTWALLDECAL + iCount);
 	}
 	for ( iCount2 = 0; iCount2 < (EIGTHWALLDECAL - FIFTHWALLDECAL + 1); iCount++, iCount2++ )
 	{
-		SingleDecal[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleDecal[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIFTHWALLDECAL + iCount2]].hTileSurface;
-		SingleDecal[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleDecal[ iCount ].usEnd = 0;
-		SingleDecal[ iCount ].uiObjIndx = FIFTHWALLDECAL + iCount2;
+		InitDisplayGfxAllFromTileData(&SingleDecal[iCount], FIFTHWALLDECAL + iCount2);
 	}
-	SingleDecal[ iCount ].ubType = DISPLAY_GRAPHIC;
-	SingleDecal[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTSWITCHES]].hTileSurface;
-	SingleDecal[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-	SingleDecal[ iCount ].usEnd = 0;
-	SingleDecal[ iCount ].uiObjIndx = FIRSTSWITCHES;
+	InitDisplayGfxAllFromTileData(&SingleDecal[iCount], FIRSTSWITCHES);
 
 	//Floors
 	for ( iCount = 0; iCount < (LASTFLOOR - FIRSTFLOOR + 1); iCount++ )
 	{
-		SingleFloor[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleFloor[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTFLOOR + iCount]].hTileSurface;
-		SingleFloor[ iCount ].usStart = 0;
-		SingleFloor[ iCount ].usEnd = 7;
-		SingleFloor[ iCount ].uiObjIndx = FIRSTFLOOR + iCount;
+		InitDisplayGfxFromTileData(&SingleFloor[iCount], 0, 7, FIRSTFLOOR + iCount);
 	}
 
 	//Toilets
 	for ( iCount = 0; iCount < (EIGHTISTRUCT - FIFTHISTRUCT + 1); iCount++ )
 	{
-		SingleToilet[ iCount ].ubType = DISPLAY_GRAPHIC;
-		SingleToilet[ iCount ].hVObject = gTileDatabase[gTileTypeStartIndex[FIFTHISTRUCT + iCount]].hTileSurface;
-		SingleToilet[ iCount ].usStart = DISPLAY_ALL_OBJECTS;
-		SingleToilet[ iCount ].usEnd = 0;
-		SingleToilet[ iCount ].uiObjIndx = FIFTHISTRUCT + iCount;
+		InitDisplayGfxAllFromTileData(&SingleToilet[iCount], FIFTHISTRUCT + iCount);
 	}
-
 }
 
 
