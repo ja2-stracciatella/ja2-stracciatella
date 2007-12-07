@@ -21,7 +21,6 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "Stubs.h" // XXX
 
 
 BOOLEAN		gfIntroScreenEntry;
@@ -235,15 +234,13 @@ static void HandleIntroScreen(void)
 
 static void GetIntroScreenUserInput(void)
 {
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
+
 	InputAtom Event;
-	POINT  MousePos;
-
-
-	GetCursorPos(&MousePos);
-
 	while( DequeueEvent( &Event ) )
 	{
-		MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
 
 		if( Event.usEvent == KEY_UP )
 		{

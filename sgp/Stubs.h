@@ -1,16 +1,8 @@
 #ifndef STUBS_H
 #define STUBS_H
 
-#include "Types.h"
+#include <stddef.h>
 
-
-typedef struct
-{
-  int x;
-  int y;
-} POINT;
-
-void GetCursorPos(POINT*);
 
 #define FILE_ATTRIBUTE_DIRECTORY 0 /* XXX */
 

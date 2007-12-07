@@ -30,7 +30,6 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Font_Control.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2BETAVERSION
 #	include "PreBattle_Interface.h"
@@ -207,17 +206,17 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 void GameLoop(void)
 {
   InputAtom					InputEvent;
-	POINT  MousePos;
 	UINT32	uiOldScreen=guiCurrentScreen;
 
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
-	MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y);
+	MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
 	MusicPoll();
 
   while (DequeueSpecificEvent(&InputEvent, INPUT_MOUSE))
   {
-		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 	}
 
 

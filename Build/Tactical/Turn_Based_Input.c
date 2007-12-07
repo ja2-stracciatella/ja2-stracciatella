@@ -89,7 +89,6 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Items.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
@@ -1289,17 +1288,17 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
 	BOOLEAN						fKeyTaken = FALSE;
-	POINT  MousePos;
 	//SOLDIERTYPE				*pSoldier;
 	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 
 	const GridNo usMapPos = GetMouseMapPos();
 
   while (DequeueEvent(&InputEvent) == TRUE)
   {
-		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 
 		// handle for fast help text for interface stuff
 		if( IsTheInterfaceFastHelpTextActive() )

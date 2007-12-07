@@ -801,11 +801,11 @@ void DoDemoIntroduction()
 		else
 		{ // Windows hasn't processed any messages, therefore we handle the rest
 			InputAtom InputEvent;
-			POINT  MousePos;
 
-			GetCursorPos(&MousePos);
 			// Hook into mouse stuff for MOVEMENT MESSAGES
-			MouseSystemHook(MOUSE_POS, MousePos.x, MousePos.y);
+			SGPPoint MousePos;
+			GetMousePos(&MousePos);
+			MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
 			MusicPoll();
 			if( uiStartTime != 0xffffffff )
 			{

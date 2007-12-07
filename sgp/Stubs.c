@@ -1,16 +1,5 @@
 #include "Stubs.h"
-#include <SDL.h>
-
-
-void GetCursorPos(POINT* pos)
-{
-	int x;
-	int y;
-
-	SDL_GetMouseState(&x, &y);
-	pos->x = x;
-	pos->y = y;
-}
+#include "Types.h"
 
 
 size_t GetPrivateProfileString(const char* app_name, const char* key_name, const char* default_value, char* out_buf, size_t buf_size, const char* filename)

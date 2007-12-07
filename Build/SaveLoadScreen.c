@@ -40,7 +40,6 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 #include "Campaign_Init.h"
-#include "Stubs.h" // XXX
 
 #if defined JA2BETAVERSION
 #include "Soldier_Init_List.h"
@@ -748,11 +747,11 @@ static void StartFadeOutForSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void)
 {
 	InputAtom Event;
-	POINT  MousePos;
 	INT8		bActiveTextField;
 	static BOOLEAN	fWasCtrlHeldDownLastFrame = FALSE;
 
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 
 	//if we are going to be instantly leaving the screen, dont draw the numbers
 	if( gfLoadGameUponEntry )
@@ -771,7 +770,7 @@ static void GetSaveLoadScreenUserInput(void)
 
 	while( DequeueEvent( &Event ) )
 	{
-		MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
 
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{

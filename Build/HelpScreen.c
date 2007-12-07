@@ -29,7 +29,6 @@
 #include "MapScreen.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "VSurface.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2BETAVERSION
 #	include "Debug.h"
@@ -905,14 +904,13 @@ static void PrepareToExitHelpScreen(void);
 
 static void GetHelpScreenUserInput(void)
 {
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
+
 	InputAtom Event;
-	POINT  MousePos;
-
-	GetCursorPos(&MousePos);
-
 	while( DequeueEvent( &Event ) )
 	{
-		MouseSystemHook(Event.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
 
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_UP )
 		{

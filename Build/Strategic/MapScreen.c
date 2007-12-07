@@ -92,7 +92,6 @@
 #include "Debug.h"
 #include "Button_System.h"
 #include "JAScreens.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Map_Information.h"
@@ -3864,7 +3863,6 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber);
 static void GetMapKeyboardInput(UINT32* puiNewEvent)
 {
   InputAtom					InputEvent;
-	POINT  MousePos;
 	INT8 bSquadNumber;
 	UINT8 ubGroupId = 0;
 	BOOLEAN fCtrl, fAlt;
@@ -3880,8 +3878,9 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
   while( DequeueEvent( &InputEvent ) )
 //		while( DequeueSpecificEvent( &InputEvent, KEY_DOWN ) )		// doesn't work for some reason
   {
-		GetCursorPos(&MousePos);
-		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+		SGPPoint MousePos;
+		GetMousePos(&MousePos);
+		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
@@ -5072,32 +5071,25 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 
 BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 {
-	POINT  MousePos;
-
 	if( IsMapScreenHelpTextUp( ) )
 	{
 		// don't show highlight while global help text is up
 		return( FALSE );
 	}
 
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 
-	GetCursorPos(&MousePos);
-
-  if(fZoomFlag)
+	if (fZoomFlag)
 	{
-   if(MousePos.x >MAP_GRID_X+MAP_VIEW_START_X)
-	  MousePos.x-=MAP_GRID_X;
-	 if(MousePos.x >MAP_VIEW_START_X+MAP_VIEW_WIDTH)
-		MousePos.x=-1;
-	 if(MousePos.y > MAP_GRID_Y+MAP_VIEW_START_Y)
-	  MousePos.y-=MAP_GRID_Y;
-   if(MousePos.y >MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-11)
-		MousePos.y=-11;
-   if(MousePos.y < MAP_VIEW_START_Y)
-		 MousePos.y=-1;
+		if (MousePos.iX > MAP_VIEW_START_X + MAP_GRID_X)           MousePos.iX -= MAP_GRID_X;
+		if (MousePos.iX > MAP_VIEW_START_X + MAP_VIEW_WIDTH)       MousePos.iX  = -1;
+		if (MousePos.iY > MAP_VIEW_START_Y + MAP_GRID_Y)           MousePos.iY -= MAP_GRID_Y;
+		if (MousePos.iY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 11) MousePos.iY  = -11;
+		if (MousePos.iY < MAP_VIEW_START_Y)                        MousePos.iY  = -1;
 	}
 
-	return( GetMapXY( (INT16)MousePos.x, (INT16)MousePos.y, psMapWorldX, psMapWorldY ) );
+	return GetMapXY(MousePos.iX, MousePos.iY, psMapWorldX, psMapWorldY);
 }
 
 

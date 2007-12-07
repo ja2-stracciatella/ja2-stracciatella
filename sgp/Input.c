@@ -6,7 +6,6 @@
 #include "Timer.h"
 #include "Video.h"
 #include "Local.h"
-#include "Stubs.h" // XXX
 
 
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
@@ -279,10 +278,11 @@ void KeyUp(const SDL_keysym* KeySym)
 
 void GetMousePos(SGPPoint* Point)
 {
-	POINT MousePos;
-	GetCursorPos(&MousePos);
-	Point->iX = MousePos.x;
-	Point->iY = MousePos.y;
+	int x;
+	int y;
+	SDL_GetMouseState(&x, &y);
+	Point->iX = x;
+	Point->iY = y;
 }
 
 

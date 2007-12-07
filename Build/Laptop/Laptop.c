@@ -82,7 +82,6 @@
 #include "Debug.h"
 #include "Button_System.h"
 #include "JAScreens.h"
-#include "Stubs.h" // XXX
 
 #ifdef JA2TESTVERSION
 #	include "Arms_Dealer_Init.h"
@@ -349,15 +348,15 @@ void SetLaptopNewGameFlag(void)
 
 static void GetLaptopKeyboardInput(void)
 {
-	POINT MousePos;
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 
 	fTabHandled = FALSE;
 
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
 	{
-		MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
 }

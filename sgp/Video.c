@@ -14,7 +14,6 @@
 #include "Video.h"
 #include <SDL.h>
 #include <stdarg.h>
-#include "Stubs.h" // XXX
 
 
 #define MAX_DIRTY_REGIONS     128
@@ -522,16 +521,16 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-	POINT MousePos;
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 	SDL_Rect src;
 	src.x = 0;
 	src.y = 0;
 	src.w = gusMouseCursorWidth;
 	src.h = gusMouseCursorHeight;
 	SDL_Rect dst;
-	dst.x = MousePos.x - gsMouseCursorXOffset;
-	dst.y = MousePos.y - gsMouseCursorYOffset;
+	dst.x = MousePos.iX - gsMouseCursorXOffset;
+	dst.y = MousePos.iY - gsMouseCursorYOffset;
 	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
 	SDL_UpdateRects(ScreenBuffer, 1, &dst);
 	SDL_UpdateRects(ScreenBuffer, 1, &MouseBackground);

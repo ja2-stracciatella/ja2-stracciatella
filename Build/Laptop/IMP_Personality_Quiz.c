@@ -13,7 +13,6 @@
 #include "IMP_Text_System.h"
 #include "Input.h"
 #include "Button_System.h"
-#include "Stubs.h" // XXX
 #include "Font_Control.h"
 
 
@@ -851,10 +850,10 @@ static void MoveBackAQuestion(void);
 static void HandleIMPQuizKeyBoard(void)
 {
 	InputAtom					InputEvent;
-	POINT  MousePos;
 	BOOLEAN fSkipFrame = FALSE;
 
-	GetCursorPos(&MousePos);
+	SGPPoint MousePos;
+	GetMousePos(&MousePos);
 
   while( ( DequeueEvent(&InputEvent) == TRUE )  )
   {
@@ -927,7 +926,7 @@ static void HandleIMPQuizKeyBoard(void)
 		else
 */
 		{
-			MouseSystemHook(InputEvent.usEvent, MousePos.x, MousePos.y);
+			MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 		}
 	}
