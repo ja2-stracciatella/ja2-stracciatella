@@ -1070,6 +1070,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 }
 
 
+static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState);
 static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove);
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
@@ -4262,7 +4263,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 }
 
 
-void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* pSoldier, UINT16 usNewDirection, BOOLEAN fInitalMove, UINT16 usAnimState)
+static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* const pSoldier, UINT16 usNewDirection, const BOOLEAN fInitalMove, const UINT16 usAnimState)
 {
 	//if ( usAnimState == WALK_BACKWARDS )
 	if ( pSoldier->bReverse && usAnimState != SIDE_STEP )

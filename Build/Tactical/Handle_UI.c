@@ -4693,7 +4693,7 @@ static UINT32 UIHandleJumpOver(UI_EVENT* pUIEvent)
 
 
 	pSoldier->fDontChargeTurningAPs = TRUE;
-	EVENT_InternalSetSoldierDesiredDirection( pSoldier, bDirection, FALSE, pSoldier->usAnimState );
+	EVENT_SetSoldierDesiredDirection(pSoldier, bDirection);
 	pSoldier->fTurningUntilDone = TRUE;
 	// ATE: Reset flag to go back to prone...
 	//pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
