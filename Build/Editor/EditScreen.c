@@ -750,7 +750,6 @@ void ShowCurrentDrawingMode( void )
 	INT32				iPicHeight, iPicWidth;
 	INT16				sTempOffsetX;
 	INT16				sTempOffsetY;
-	ETRLEObject *pETRLEObject;
 	UINT32			uiDestPitchBYTES;
 	UINT8				*pDestBuf;
 	INT32				iIndexToUse;
@@ -958,7 +957,8 @@ void ShowCurrentDrawingMode( void )
 	// If we actually have something to draw, draw it
 	if ( (usUseIndex != 0xffff) && (usObjIndex != 0xffff) )
 	{
-		pETRLEObject = &(gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface->pETRLEObject[usUseIndex]);
+		const HVOBJECT ts = TileElemFromTileType(usObjIndex)->hTileSurface;
+		ETRLEObject* const pETRLEObject = &ts->pETRLEObject[usUseIndex];
 
 		iPicWidth = (INT32)pETRLEObject->usWidth;
 		iPicHeight = (INT32)pETRLEObject->usHeight;
@@ -975,8 +975,8 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetX = 0;
 		pETRLEObject->sOffsetY = 0;
 
-		SetObjectShade( gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, DEFAULT_SHADE_LEVEL );
-		BltVideoObject(FRAME_BUFFER, gTileDatabase[gTileTypeStartIndex[usObjIndex]].hTileSurface, usUseIndex, 0 + iStartX, 400 + iStartY);
+		SetObjectShade(ts, DEFAULT_SHADE_LEVEL);
+		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, 0 + iStartX, 400 + iStartY);
 
 		pETRLEObject->sOffsetX = sTempOffsetX;
 		pETRLEObject->sOffsetY = sTempOffsetY;
@@ -2840,7 +2840,6 @@ static BOOLEAN CheckForFences(void)
 {
 	UINT16 usCheck;
 	BOOLEAN fFence;
-	TILE_ELEMENT *T;
 
 	pSelList = SelOStructs2;
 	pNumSelList = &iNumOStructs2Selected;
@@ -2849,7 +2848,7 @@ static BOOLEAN CheckForFences(void)
 
 	for ( usCheck = 0; usCheck < iNumOStructs2Selected; usCheck++ )
 	{
-		T = &gTileDatabase[gTileTypeStartIndex[pSelList[usCheck].uiObject]];
+		const TILE_ELEMENT* const T = TileElemFromTileType(pSelList[usCheck].uiObject);
 		if ( T->pDBStructureRef == NULL )
 			fFence = FALSE;
 		else if ( !(T->pDBStructureRef->pDBStructure->fFlags & STRUCTURE_ANYFENCE) )

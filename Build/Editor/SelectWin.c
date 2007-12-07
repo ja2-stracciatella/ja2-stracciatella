@@ -401,7 +401,7 @@ static void InitDisplayGfx(DisplaySpec* const ds, const HVOBJECT vo, const UINT1
 
 static void InitDisplayGfxFromTileData(DisplaySpec* const ds, const UINT16 start, const UINT16 end, const UINT32 obj_idx)
 {
-	InitDisplayGfx(ds, gTileDatabase[gTileTypeStartIndex[obj_idx]].hTileSurface, start, end, obj_idx);
+	InitDisplayGfx(ds, TileElemFromTileType(obj_idx)->hTileSurface, start, end, obj_idx);
 }
 
 
@@ -422,8 +422,6 @@ void InitJA2SelectionWindow( void )
 	INT32 iCount3;
 
 	UINT16			usETRLEObjects;
-	HVOBJECT		hVObject;
-
 
 	pDispList = NULL;
 
@@ -432,7 +430,7 @@ void InitJA2SelectionWindow( void )
 	// Trees & bushes (The tree button in the "terrain" toolbar)
 	for ( iCount3 = 0, iCount = 0; iCount < (LASTOSTRUCT - FIRSTFULLSTRUCT + 1); iCount++ )
 	{
-		hVObject = gTileDatabase[gTileTypeStartIndex[FIRSTFULLSTRUCT + iCount]].hTileSurface;
+		const HVOBJECT hVObject = TileElemFromTileType(FIRSTFULLSTRUCT + iCount)->hTileSurface;
 		usETRLEObjects = hVObject->usNumberOfObjects;
 
 		for ( iCount2 = 0; iCount2 < usETRLEObjects; iCount2 += 3, iCount3++)

@@ -133,6 +133,11 @@ TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
 UINT16					gTileDatabaseSize;
 UINT16					gTileTypeStartIndex[ NUMBEROFTILETYPES ];
 
+static inline const TILE_ELEMENT* TileElemFromTileType(const UINT16 tile_type)
+{
+	return &gTileDatabase[gTileTypeStartIndex[tile_type]];
+}
+
 UINT16					gusNumAnimatedTiles;
 UINT16					gusAnimatedTiles[ MAX_ANIMATED_TILES ];
 UINT8					gTileTypeMovementCost[ NUM_TERRAIN_TYPES ];
