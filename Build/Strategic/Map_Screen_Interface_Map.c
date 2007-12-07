@@ -42,7 +42,6 @@
 #include "MemMan.h"
 #include "Button_System.h"
 #include "Debug.h"
-#include "Stubs.h" // XXX
 
 
 // zoom x and y coords for map scrolling
@@ -390,7 +389,8 @@ INT16 sBaseSectorList[]={
 
 // position of town names on the map
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
-POINT pTownPoints[]={
+static const SGPPoint pTownPoints[] =
+{
 	{ 0 ,  0 },
 	{ 90, 10}, // Omerta
 	{125, 40}, // Drassen
@@ -863,9 +863,7 @@ static void ShowTownText(void)
 {
 	wchar_t sStringA[ 32 ];
 	INT8 bTown = 0;
-	UINT16 usX,usY;
 	BOOLEAN fLoyaltyTooLowToTrainMilitia;
-
 
 	// this procedure will display the town names on the screen
 
@@ -895,17 +893,19 @@ static void ShowTownText(void)
 				wcscpy( sStringA, L"");
 			}
 
-			if(!fZoomFlag)
+			UINT16 usX = MAP_VIEW_START_X + MAP_GRID_X;
+			UINT16 usY = MAP_VIEW_START_Y + MAP_GRID_Y;
+			if (!fZoomFlag)
 			{
-				usX = (UINT16) (MAP_VIEW_START_X + MAP_GRID_X +  (pTownPoints[ bTown ].x * MAP_GRID_X) / 10);
-				usY = (UINT16) (MAP_VIEW_START_Y + MAP_GRID_Y + ((pTownPoints[ bTown ].y * MAP_GRID_Y) / 10) + 1);
+				usX += pTownPoints[bTown].iX * MAP_GRID_X / 10;
+				usY += pTownPoints[bTown].iY * MAP_GRID_Y / 10 + 1;
 			}
 			else
 			{
-				usX = (UINT16) (MAP_VIEW_START_X + MAP_GRID_X + MAP_GRID_ZOOM_X - iZoomX +  (pTownPoints[ bTown ].x * MAP_GRID_ZOOM_X) / 10);
-				usY = (UINT16) (MAP_VIEW_START_Y + MAP_GRID_Y + MAP_GRID_ZOOM_Y - iZoomY + ((pTownPoints[ bTown ].y * MAP_GRID_ZOOM_Y) / 10) + 1);
-//			usX = 2 * pTownPoints[ bTown  ].x - iZoomX - MAP_VIEW_START_X + MAP_GRID_X;
-//			usY = 2 * pTownPoints[ bTown  ].y - iZoomY - MAP_VIEW_START_Y + MAP_GRID_Y;
+				usX += MAP_GRID_ZOOM_X - iZoomX + pTownPoints[bTown].iX * MAP_GRID_ZOOM_X / 10;
+				usY += MAP_GRID_ZOOM_Y - iZoomY + pTownPoints[bTown].iY * MAP_GRID_ZOOM_Y / 10 + 1;
+//			usX = 2 * pTownPoints[bTown].iX - iZoomX - MAP_VIEW_START_X + MAP_GRID_X;
+//			usY = 2 * pTownPoints[bTown].iY - iZoomY - MAP_VIEW_START_Y + MAP_GRID_Y;
 			}
 
 			// red for low loyalty, green otherwise
