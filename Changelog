@@ -1,3 +1,4 @@
+(r2359) Fix a vanilla glitch: When looking at the description of an item in tactical mode, the status of the item was erroneously highlighted, too, when the item has low weight (only the weight should be highlighted).
 (r2227) Fix two vanilla bugs: The test, whether there are two free slots to recruit John and Mary, was never triggered, so when only one slot was left, it resulted in a crash.  Further the test was too restrictive and checked for three free slots instead of two.
 (r2217) Fix a vanilla bug which could lead to missing light effects in tactical when loading savegames.
 (r2022) Fix a vanilla out of bounds array access in CalcChanceToHitGun().

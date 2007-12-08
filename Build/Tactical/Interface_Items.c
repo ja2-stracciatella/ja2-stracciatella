@@ -3241,6 +3241,12 @@ void RenderItemDescriptionBox( )
 				mprintf( gWeaponStats[ 8 ].sX + gsInvDescX, gWeaponStats[ 8 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 8 ] );
 			}
 
+			SetFontForeground(5);
+			//Status
+			swprintf( pStr, lengthof(pStr), L"%2d%%", gpItemDescObject->bGunStatus );
+			FindFontRightCoordinates(gWeaponStats[1].sX + gsInvDescX + gWeaponStats[1].sValDx, gWeaponStats[1].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			mprintf(usX, usY, L"%ls", pStr);
+
 			// Values
 			if (fWeight <= (EXCEPTIONAL_WEIGHT / 10))
 			{
@@ -3250,11 +3256,6 @@ void RenderItemDescriptionBox( )
 			{
 				SetFontForeground( 5 );
 			}
-
-			//Status
-			swprintf( pStr, lengthof(pStr), L"%2d%%", gpItemDescObject->bGunStatus );
-			FindFontRightCoordinates(gWeaponStats[1].sX + gsInvDescX + gWeaponStats[1].sValDx, gWeaponStats[1].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
-			mprintf(usX, usY, L"%ls", pStr);
 
 			//Wieght
 			swprintf( pStr, lengthof(pStr), L"%1.1f", fWeight );
