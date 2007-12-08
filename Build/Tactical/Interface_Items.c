@@ -861,7 +861,6 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 {
 	INT32									cnt;
-	static wchar_t					pStr[ 150 ];
 
 	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
 	{
@@ -873,8 +872,8 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 		{
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
+				wchar_t pStr[150];
 				GetHelpTextForItem( pStr, lengthof(pStr), &( pSoldier->inv[ cnt ] ), pSoldier );
-
 				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
 			}
 
@@ -1762,8 +1761,6 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 	INT16									sNewY, sNewX;
 	INT16									sFontX, sFontY;
 
-	static wchar_t pStr[100];
-
 	if ( pObject->usItem == NOTHING )
 	{
 		return;
@@ -1847,7 +1844,7 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 						break;
 				}
 
-
+				wchar_t pStr[100];
 				swprintf( pStr, lengthof(pStr), L"%d", pObject->ubGunShotsLeft );
 				if ( uiBuffer == guiSAVEBUFFER )
 				{
@@ -1888,6 +1885,7 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 						SetFontForeground( FONT_GRAY4 );
 
 						sNewY = sY + sHeight - 10;
+						wchar_t pStr[100];
 						swprintf( pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects );
 
 						// Get length of string
@@ -2594,9 +2592,9 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 void RenderItemDescriptionBox( )
 {
+	wchar_t pStr[100];
 	INT16									sStrX;
 	UINT16								uiStringLength, uiRightLength;
-	static wchar_t				pStr[ 100 ];
 	INT32									cnt;
 	FLOAT									fWeight;
 	UINT16								usX, usY;
@@ -5569,8 +5567,6 @@ static void SetupPickupPage(INT8 bPage)
 	ITEM_POOL				*pTempItemPool;
   INT16           sValue;
 	OBJECTTYPE  *pObject;
-	static wchar_t pStr[ 200 ];
-
 
 	// Zero out page slots
 	memset( gItemPickupMenu.ItemPoolSlots, 0, sizeof( gItemPickupMenu.ItemPoolSlots )  );
@@ -5631,6 +5627,7 @@ static void SetupPickupPage(INT8 bPage)
 		  sValue = pObject->bStatus[ 0 ];
 
 	    // Adjust for ammo, other thingys..
+			wchar_t pStr[200];
 	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
 	    {
         swprintf( pStr, lengthof(pStr), L"" );
