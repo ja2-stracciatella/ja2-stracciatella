@@ -1,3 +1,4 @@
+(r2366) Fix a vanilla display glitch: When adding/removing an attachment in the map screen, the tooltips did not get updated.
 (r2365) Fix a vanilla graphical glitch: A graphic was misplaced by one pixel in the item description box for money in the map screen.
 (r2359) Fix a vanilla glitch: When looking at the description of an item in tactical mode, the status of the item was erroneously highlighted, too, when the item has low weight (only the weight should be highlighted).
 (r2227) Fix two vanilla bugs: The test, whether there are two free slots to recruit John and Mary, was never triggered, so when only one slot was left, it resulted in a crash.  Further the test was too restrictive and checked for three free slots instead of two.

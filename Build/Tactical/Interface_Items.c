@@ -2029,6 +2029,17 @@ BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT1
 }
 
 
+static void SetAttachmentTooltips(void)
+{
+	for (UINT i = 0; i < MAX_ATTACHMENTS; ++i)
+	{
+		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
+		const wchar_t* const tip = (attachment != NOTHING ? ItemNames[attachment] : Message[STR_ATTACHMENTS]);
+		SetRegionFastHelpText(&gItemDescAttachmentRegions[i], tip);
+	}
+}
+
+
 static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void ItemDescAmmoCallback(GUI_BUTTON* btn, INT32 reason);
 static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -2188,16 +2199,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			}
 			MSYS_DefineRegion(&gItemDescAttachmentRegions[cnt], gsInvDescX + xy->sX, gsInvDescY + xy->sY, gsInvDescX + xy->sX + dx + xy->sWidth, gsInvDescY + xy->sY + xy->sHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback);
 			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
-
-			if ( gpItemDescObject->usAttachItem[ cnt ] != NOTHING )
-			{
-				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), ItemNames[ gpItemDescObject->usAttachItem[ cnt ] ] );
-			}
-			else
-			{
-				SetRegionFastHelpText( &(gItemDescAttachmentRegions[ cnt ]), Message[ STR_ATTACHMENTS ] );
-			}
 		}
+		SetAttachmentTooltips();
 	}
 	else
 	{
@@ -2406,6 +2409,10 @@ static void DoAttachment(void)
 			// close desc panel panel
 			DeleteItemDescriptionBox();
 		}
+		else
+		{
+			SetAttachmentTooltips();
+		}
 		//Dirty interface
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
@@ -2503,6 +2510,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					gfReEvaluateEveryonesNothingToDo = TRUE;
 
 					UpdateItemHatches();
+					SetAttachmentTooltips();
 				}
 			}
 		}
@@ -2642,18 +2650,6 @@ void RenderItemDescriptionBox(void)
 				sCenX -= xy[cnt].sBarDx;
 				sCenY += xy[cnt].sBarDy;
 				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), TRUE, guiSAVEBUFFER);
-
-				if (!in_map)
-				{
-			  	SetRegionFastHelpText(&gItemDescAttachmentRegions[cnt], ItemNames[obj->usAttachItem[cnt]]);
-				}
-			}
-			else
-			{
-				if (!in_map)
-				{
-					SetRegionFastHelpText(&gItemDescAttachmentRegions[cnt], Message[STR_ATTACHMENTS]);
-				}
 			}
 
 			if (fHatchOutAttachments)
