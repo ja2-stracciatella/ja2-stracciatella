@@ -108,14 +108,6 @@
 #define		ITEMDESC_WIDTH					320
 #define   MAP_ITEMDESC_HEIGHT     268
 #define   MAP_ITEMDESC_WIDTH      272
-#define		ITEMDESC_NAME_X					(16 + gsInvDescX)
-#define		ITEMDESC_NAME_Y					(67 + gsInvDescY)
-#define		ITEMDESC_CALIBER_X			(162 + gsInvDescX)
-#define		ITEMDESC_CALIBER_Y			(67 + gsInvDescY)
-#define		ITEMDESC_CALIBER_WIDTH	142
-#define		MAP_ITEMDESC_CALIBER_X			(105 + gsInvDescX)
-#define		MAP_ITEMDESC_CALIBER_Y			(66 + gsInvDescY)
-#define		MAP_ITEMDESC_CALIBER_WIDTH	149
 #define		ITEMDESC_ITEM_X					(8 + gsInvDescX)
 #define		ITEMDESC_ITEM_Y					(11 + gsInvDescY)
 
@@ -133,8 +125,6 @@
 #define		MAP_BULLET_BURST_X			(117 + gsInvDescX)
 #define		MAP_BULLET_BURST_Y			(135 + gsInvDescY)
 
-#define		MAP_ITEMDESC_NAME_X					(7 + gsInvDescX)
-#define		MAP_ITEMDESC_NAME_Y					(65 + gsInvDescY)
 #define		MAP_ITEMDESC_ITEM_X					(25 + gsInvDescX)
 #define		MAP_ITEMDESC_ITEM_Y					(6 + gsInvDescY)
 
@@ -323,6 +313,18 @@ typedef struct
 	INT16 sBarDx;
 	INT16 sBarDy;
 } INV_ATTACHXY;
+
+typedef struct Box
+{
+	INT16 x;
+	INT16 y;
+	INT16 w;
+	INT16 h;
+} Box;
+
+
+static const Box gMapDescNameBox = {  7, 65, 247, 8 };
+static const Box gDescNameBox    = { 16, 67, 291, 8 };
 
 
 static const INV_DESC_STATS gWeaponStats[] =
@@ -2697,12 +2699,11 @@ void RenderItemDescriptionBox(void)
 
 	{
 		// Render name
-		const INT32 x = (in_map ? MAP_ITEMDESC_NAME_X : ITEMDESC_NAME_X);
-		const INT32 y = (in_map ? MAP_ITEMDESC_NAME_Y : ITEMDESC_NAME_Y);
+		const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 #ifdef JA2TESTVERSION
-		mprintf(x, y, L"%ls (%d)", gzItemName, obj->usItem);
+		mprintf(dx + xy->x, dy + xy->y, L"%ls (%d)", gzItemName, obj->usItem);
 #else
-		mprintf(x, y, L"%ls", gzItemName);
+		mprintf(dx + xy->x, dy + xy->y, L"%ls", gzItemName);
 #endif
 	}
 
@@ -2731,11 +2732,8 @@ void RenderItemDescriptionBox(void)
 		}
 
 		{
-			const INT16 x = (in_map ? MAP_ITEMDESC_CALIBER_X     : ITEMDESC_CALIBER_X);
-			const INT16 y = (in_map ? MAP_ITEMDESC_CALIBER_Y     : ITEMDESC_CALIBER_Y);
-			const INT16 w = (in_map ? MAP_ITEMDESC_CALIBER_WIDTH : ITEMDESC_CALIBER_WIDTH);
-			const INT16 h = ITEM_STATS_HEIGHT;
-			FindFontRightCoordinates(x, y, w, h, pStr, ITEMDESC_FONT, &usX, &usY);
+			const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, ITEMDESC_FONT, &usX, &usY);
 			mprintf(usX, usY, pStr);
 		}
 
@@ -2867,15 +2865,10 @@ void RenderItemDescriptionBox(void)
 		SetFontForeground(FONT_WHITE);
 
 		// Display the total amount of money
-		SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
-		if (in_map)
 		{
-			const UINT16 uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			mprintf(MAP_ITEMDESC_NAME_X + 245 - uiStringLength, MAP_ITEMDESC_NAME_Y, pStr);
-		}
-		else
-		{
-			FindFontRightCoordinates(ITEMDESC_NAME_X, ITEMDESC_NAME_Y, 295,ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
+			const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
 			mprintf(usX, usY, pStr);
 		}
 
@@ -2943,16 +2936,9 @@ void RenderItemDescriptionBox(void)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
 		SPrintMoney(pStr, obj->uiMoneyAmount);
-		if (in_map)
-		{
-			const UINT16 uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			mprintf(MAP_ITEMDESC_NAME_X + 245 - uiStringLength, MAP_ITEMDESC_NAME_Y, pStr);
-		}
-		else
-		{
-			FindFontRightCoordinates(ITEMDESC_NAME_X, ITEMDESC_NAME_Y, 295, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
-			mprintf(usX, usY, pStr);
-		}
+		const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+		FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
+		mprintf(usX, usY, pStr);
 	}
 	else
 	{
