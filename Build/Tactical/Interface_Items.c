@@ -331,7 +331,6 @@ static const INV_DESC_STATS gWeaponStats[] =
 {
 	{ 202, 25, 83 },
 	{ 202, 15, 83 },
-	{ 202, 15, 83 },
 	{ 265, 40, 20 },
 	{ 202, 40, 32 },
 	{ 202, 50, 32 },
@@ -363,7 +362,6 @@ static const INV_DESC_STATS gMapMoneyStats[] =
 static const INV_DESC_STATS gMapWeaponStats[] =
 {
 	{  72 - 20,      20 + 80 + 8, 80 },
-	{  72 - 20,      20 + 80 - 2, 80 },
 	{  72 - 20,      20 + 80 - 2, 80 },
 	{  72 - 20 + 65, 40 + 80 + 4, 21 },
 	{  72 - 20,      40 + 80 + 4, 30 },
@@ -2805,24 +2803,24 @@ void RenderItemDescriptionBox( )
 			mprintf(gMapWeaponStats[0].sX + gsInvDescX, gMapWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
-				mprintf( gMapWeaponStats[ 3 ].sX + gsInvDescX, gMapWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
+				mprintf(gMapWeaponStats[2].sX + gsInvDescX, gMapWeaponStats[2].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[3]);
 			}
 			if ( !(Item[ gpItemDescObject->usItem ].usItemClass & IC_LAUNCHER) && gpItemDescObject->usItem != ROCKET_LAUNCHER )
 			{
-				mprintf( gMapWeaponStats[ 4 ].sX + gsInvDescX, gMapWeaponStats[ 4 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 4 ] );
+				mprintf(gMapWeaponStats[3].sX + gsInvDescX, gMapWeaponStats[3].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[4]);
 			}
-			mprintf( gMapWeaponStats[ 5 ].sX + gsInvDescX, gMapWeaponStats[ 5 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 5 ] );
+			mprintf(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[5]);
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_GUN )
 			{
 				// equals sign
-				mprintf( gMapWeaponStats[ 7 ].sX + gsInvDescX, gMapWeaponStats[ 7 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 7 ] );
+				mprintf(gMapWeaponStats[6].sX + gsInvDescX, gMapWeaponStats[6].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[7]);
 			}
 			mprintf( gMapWeaponStats[ 1 ].sX + gsInvDescX, gMapWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ] );
 
 
 			if (Weapon[ gpItemDescObject->usItem ].ubShotsPerBurst > 0)
 			{
-				mprintf( gMapWeaponStats[ 8 ].sX + gsInvDescX, gMapWeaponStats[ 8 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 8 ] );
+				mprintf(gMapWeaponStats[7].sX + gsInvDescX, gMapWeaponStats[7].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[7]);
 			}
 
 			SetFontForeground( 5 );
@@ -2859,7 +2857,7 @@ void RenderItemDescriptionBox( )
 
 				//Range
 				 swprintf( pStr, lengthof(pStr), L"%2d", ( GunRange( gpItemDescObject ) ) / 10 );
-				 FindFontRightCoordinates(gMapWeaponStats[3].sX + gsInvDescX + gMapWeaponStats[3].sValDx, gMapWeaponStats[3].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				 FindFontRightCoordinates(gMapWeaponStats[2].sX + gsInvDescX + gMapWeaponStats[2].sValDx, gMapWeaponStats[2].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				 mprintf( usX, usY, pStr );
 			}
 
@@ -2877,7 +2875,7 @@ void RenderItemDescriptionBox( )
 
 				//Damage
 			 swprintf( pStr, lengthof(pStr), L"%2d", Weapon[ gpItemDescObject->usItem ].ubImpact );
-			 FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX + gMapWeaponStats[4].sValDx, gMapWeaponStats[4].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			 FindFontRightCoordinates(gMapWeaponStats[3].sX + gsInvDescX + gMapWeaponStats[3].sValDx, gMapWeaponStats[3].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			 mprintf( usX, usY, pStr );
 		  }
 
@@ -2894,7 +2892,7 @@ void RenderItemDescriptionBox( )
 
 			 //Ap's
 			 swprintf( pStr, lengthof(pStr), L"%2d", ubAttackAPs );
-			 FindFontRightCoordinates(gMapWeaponStats[5].sX + gsInvDescX + gMapWeaponStats[5].sValDx, gMapWeaponStats[5].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			 FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX + gMapWeaponStats[4].sValDx, gMapWeaponStats[4].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			 mprintf( usX, usY, pStr );
 
 			 if (Weapon[ gpItemDescObject->usItem ].ubShotsPerBurst > 0)
@@ -2910,7 +2908,7 @@ void RenderItemDescriptionBox( )
 				}
 
 			  swprintf( pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst( DEFAULT_APS, gpItemDescObject ) );
-			  FindFontRightCoordinates(gMapWeaponStats[6].sX + gsInvDescX + gMapWeaponStats[6].sValDx, gMapWeaponStats[6].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			  FindFontRightCoordinates(gMapWeaponStats[5].sX + gsInvDescX + gMapWeaponStats[5].sValDx, gMapWeaponStats[5].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			  mprintf( usX, usY, pStr );
 			 }
 
@@ -2982,14 +2980,9 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 6 );
 			SetFontShadow( DEFAULT_SHADOW );
 
-			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
-			{
-				mprintf( gMapWeaponStats[ 2 ].sX + gsInvDescX, gMapWeaponStats[ 2 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 2 ] );
-			}
-			else
-			{
-				mprintf( gMapWeaponStats[ 1 ].sX + gsInvDescX, gMapWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ] );
-			}
+			/* amount for ammunition, status otherwise */
+			const wchar_t* const label = (Item[gpItemDescObject->usItem].usItemClass & IC_AMMO ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1]);
+			mprintf(gMapWeaponStats[1].sX + gsInvDescX, gMapWeaponStats[1].sY + gsInvDescY, L"%ls", label);
 			mprintf(gMapWeaponStats[0].sX + gsInvDescX, gMapWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 
 			// Values
@@ -3002,8 +2995,8 @@ void RenderItemDescriptionBox( )
 					swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubShotsLeft[0], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );
 					uiStringLength=StringPixLength(pStr, ITEMDESC_FONT );
 		//			sStrX =  gMapWeaponStats[ 0 ].sX + gsInvDescX + gMapWeaponStats[ 0 ].sValDx + ( uiRightLength - uiStringLength );
-					FindFontRightCoordinates(gMapWeaponStats[2].sX + gsInvDescX + gMapWeaponStats[2].sValDx + 6, gMapWeaponStats[2].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &sStrX, &usY);
-					mprintf( sStrX, gMapWeaponStats[ 2 ].sY + gsInvDescY, pStr );
+					FindFontRightCoordinates(gMapWeaponStats[1].sX + gsInvDescX + gMapWeaponStats[1].sValDx + 6, gMapWeaponStats[1].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &sStrX, &usY);
+					mprintf(sStrX, gMapWeaponStats[1].sY + gsInvDescY, pStr);
 			}
 			else
 			{
@@ -3027,18 +3020,17 @@ void RenderItemDescriptionBox( )
 				SetFontForeground( 6 );
 
 				// build description for keys .. the sector found
-				mprintf(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, sKeyDescriptionStrings[0]);
-				mprintf(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
-
+				mprintf(gMapWeaponStats[3].sX + gsInvDescX, gMapWeaponStats[3].sY + gsInvDescY, sKeyDescriptionStrings[0]);
+				mprintf(gMapWeaponStats[3].sX + gsInvDescX, gMapWeaponStats[3].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
 
 				SetFontForeground( 5 );
 				wchar_t sTempString[128];
 				GetShortSectorString( ( INT16 ) SECTORX( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), ( INT16 ) SECTORY( KeyTable[ gpItemDescObject->ubKeyID ].usSectorFound ), sTempString, lengthof(sTempString));
-				FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gMapWeaponStats[3].sX + gsInvDescX, gMapWeaponStats[3].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 				mprintf(usX, usY, sTempString);
 
 				swprintf( pStr, lengthof(pStr), L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
-				FindFontRightCoordinates(gMapWeaponStats[4].sX + gsInvDescX, gMapWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gMapWeaponStats[3].sX + gsInvDescX, gMapWeaponStats[3].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 
@@ -3223,22 +3215,22 @@ void RenderItemDescriptionBox( )
 			mprintf(gWeaponStats[0].sX + gsInvDescX, gWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & (IC_GUN | IC_LAUNCHER ) )
 			{
-				mprintf( gWeaponStats[ 3 ].sX + gsInvDescX, gWeaponStats[ 3 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 3 ] );
+				mprintf(gWeaponStats[2].sX + gsInvDescX, gWeaponStats[2].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[3]);
 			}
 			if ( !(Item[ gpItemDescObject->usItem ].usItemClass & IC_LAUNCHER) && gpItemDescObject->usItem != ROCKET_LAUNCHER )
 			{
-				mprintf( gWeaponStats[ 4 ].sX + gsInvDescX, gWeaponStats[ 4 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 4 ] );
+				mprintf(gWeaponStats[3].sX + gsInvDescX, gWeaponStats[3].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[4]);
 			}
-			mprintf( gWeaponStats[ 5 ].sX + gsInvDescX, gWeaponStats[ 5 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 5 ] );
+			mprintf(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[5]);
 			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_GUN )
 			{
-				mprintf( gWeaponStats[ 7 ].sX + gsInvDescX, gWeaponStats[ 7 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 7 ] );
+				mprintf(gWeaponStats[6].sX + gsInvDescX, gWeaponStats[6].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[7]);
 			}
 			mprintf( gWeaponStats[ 1 ].sX + gsInvDescX, gWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ] );
 
 			if (Weapon[ gpItemDescObject->usItem ].ubShotsPerBurst > 0)
 			{
-				mprintf( gWeaponStats[ 8 ].sX + gsInvDescX, gWeaponStats[ 8 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 8 ] );
+				mprintf(gWeaponStats[7].sX + gsInvDescX, gWeaponStats[7].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[8]);
 			}
 
 			SetFontForeground(5);
@@ -3274,7 +3266,7 @@ void RenderItemDescriptionBox( )
 				}
 
 				swprintf( pStr, lengthof(pStr), L"%2d", ( GunRange( gpItemDescObject ) ) / 10 );
-				FindFontRightCoordinates(gWeaponStats[3].sX + gsInvDescX + gWeaponStats[3].sValDx, gWeaponStats[3].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[2].sX + gsInvDescX + gWeaponStats[2].sValDx, gWeaponStats[2].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 
@@ -3291,7 +3283,7 @@ void RenderItemDescriptionBox( )
 				}
 
 				swprintf( pStr, lengthof(pStr), L"%2d", Weapon[ gpItemDescObject->usItem ].ubImpact );
-				FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX + gWeaponStats[4].sValDx, gWeaponStats[4].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[3].sX + gsInvDescX + gWeaponStats[3].sValDx, gWeaponStats[3].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 
@@ -3307,7 +3299,7 @@ void RenderItemDescriptionBox( )
 			}
 
 			swprintf( pStr, lengthof(pStr), L"%2d", ubAttackAPs );
-			FindFontRightCoordinates(gWeaponStats[5].sX + gsInvDescX + gWeaponStats[5].sValDx, gWeaponStats[5].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX + gWeaponStats[4].sValDx, gWeaponStats[4].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY, pStr );
 
 			if (Weapon[ gpItemDescObject->usItem ].ubShotsPerBurst > 0)
@@ -3322,7 +3314,7 @@ void RenderItemDescriptionBox( )
 				}
 
 				swprintf( pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst( DEFAULT_APS, gpItemDescObject ) );
-				FindFontRightCoordinates(gWeaponStats[6].sX + gsInvDescX + gWeaponStats[6].sValDx, gWeaponStats[6].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[5].sX + gsInvDescX + gWeaponStats[5].sValDx, gWeaponStats[5].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 
@@ -3415,16 +3407,9 @@ void RenderItemDescriptionBox( )
 			SetFontForeground( 6 );
 			SetFontShadow( DEFAULT_SHADOW );
 
-
-			if ( Item[ gpItemDescObject->usItem ].usItemClass & IC_AMMO )
-			{
-				//Status
-				mprintf( gWeaponStats[ 2 ].sX + gsInvDescX, gWeaponStats[ 2 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 2 ] );
-			}
-			else
-			{
-				mprintf( gWeaponStats[ 1 ].sX + gsInvDescX, gWeaponStats[ 1 ].sY + gsInvDescY, L"%ls", gWeaponStatsDesc[ 1 ] );
-			}
+			/* amount for ammunition, status otherwise */
+			const wchar_t* const label = (Item[gpItemDescObject->usItem].usItemClass & IC_AMMO ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1]);
+			mprintf(gWeaponStats[1].sX + gsInvDescX, gWeaponStats[1].sY + gsInvDescY, L"%ls", label);
 
 			//Weight
 			mprintf(gWeaponStats[0].sX + gsInvDescX, gWeaponStats[0].sY + gsInvDescY, gWeaponStatsDesc[0], GetWeightUnitString());
@@ -3437,7 +3422,7 @@ void RenderItemDescriptionBox( )
 				// Ammo - print amount
 				//Status
 				swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubShotsLeft[0], Magazine[ Item[ gpItemDescObject->usItem ].ubClassIndex ].ubMagSize );
-				FindFontRightCoordinates(gWeaponStats[2].sX + gsInvDescX + gWeaponStats[2].sValDx, gWeaponStats[2].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[1].sX + gsInvDescX + gWeaponStats[1].sValDx, gWeaponStats[1].sY + gsInvDescY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf(usX, usY, L"%ls", pStr);
 			}
 			else
@@ -3453,18 +3438,18 @@ void RenderItemDescriptionBox( )
 				SetFontForeground( 6 );
 
 				// build description for keys .. the sector found
-				mprintf(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, sKeyDescriptionStrings[0]);
-				mprintf(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
+				mprintf(gWeaponStats[3].sX + gsInvDescX, gWeaponStats[3].sY + gsInvDescY, sKeyDescriptionStrings[0]);
+				mprintf(gWeaponStats[3].sX + gsInvDescX, gWeaponStats[3].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2 , sKeyDescriptionStrings[1]);
 
 
 				SetFontForeground( 5 );
 				wchar_t sTempString[128];
 				GetShortSectorString(SECTORX(KeyTable[gpItemDescObject->ubKeyID].usSectorFound), SECTORY(KeyTable[gpItemDescObject->ubKeyID].usSectorFound), sTempString, lengthof(sTempString));
-				FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[3].sX + gsInvDescX, gWeaponStats[3].sY + gsInvDescY, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 				mprintf(usX, usY, sTempString);
 
 				swprintf( pStr, lengthof(pStr), L"%d", KeyTable[ gpItemDescObject->ubKeyID ].usDateFound );
-				FindFontRightCoordinates(gWeaponStats[4].sX + gsInvDescX, gWeaponStats[4].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+				FindFontRightCoordinates(gWeaponStats[3].sX + gsInvDescX, gWeaponStats[3].sY + gsInvDescY + GetFontHeight(BLOCKFONT) + 2, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 				mprintf( usX, usY, pStr );
 			}
 
