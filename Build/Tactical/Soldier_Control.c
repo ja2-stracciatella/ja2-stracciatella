@@ -2172,7 +2172,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 {
 	BOOLEAN	fInWaterValue;
 	INT8		bDir;
-	INT32		cnt;
 
 	// Not if we're dead!
 	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
@@ -4727,7 +4726,6 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
 void TurnSoldier( SOLDIERTYPE *pSoldier)
 {
  INT16		sDirection;
- INT32		cnt;
 
  // If we are a vehicle... DON'T TURN!
  if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )

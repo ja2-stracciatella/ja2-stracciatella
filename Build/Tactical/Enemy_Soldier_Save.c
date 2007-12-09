@@ -1330,7 +1330,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
-	UINT16 usCheckSum;
 
 	UINT8	ubStartID=0;
 	UINT8	ubEndID = 0;

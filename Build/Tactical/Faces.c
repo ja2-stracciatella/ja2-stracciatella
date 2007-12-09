@@ -387,7 +387,6 @@ static void GetFaceRelativeCoordinates(const FACETYPE* pFace, UINT16* pusEyesX, 
 	UINT16						usEyesY;
 	UINT16						usMouthX;
 	UINT16						usMouthY;
-	INT32							cnt;
 
 	usMercProfileID = pFace->ubCharacterNum;
 

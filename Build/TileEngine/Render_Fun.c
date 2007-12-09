@@ -242,7 +242,6 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 {
 	UINT32 cnt;
-	INT16							sX, sY;
 	BOOLEAN						fSaidItemSeenQuote = FALSE;
 
 //	STRUCTURE					*pStructure;//, *pBase;

@@ -712,7 +712,6 @@ UINT16 FindGridNoFromSweetSpotExcludingSweetSpot(const SOLDIERTYPE* const pSoldi
 	INT16		sGridNo;
 	INT32		uiRange, uiLowestRange = 999999;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;

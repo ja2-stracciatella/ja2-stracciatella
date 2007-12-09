@@ -604,7 +604,6 @@ static void RenderMapEntryPointsAndLights(void)
 {
 	INT16 sGridNo;
 	INT16 sScreenX, sScreenY;
-	INT32 i;
 	if( gfSummaryWindowActive )
 		return;
 	SetFont( FONT10ARIAL );

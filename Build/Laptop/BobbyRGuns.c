@@ -1546,7 +1546,6 @@ static void OutOfStockMessageBoxCallBack(UINT8 bExitValue)
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* const ammo)
 {
 	UINT8	ubItemCount=0;
-	UINT8	ubMercCount;
 	UINT8	ubPocketCount;
 
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)

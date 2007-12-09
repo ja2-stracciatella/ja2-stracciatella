@@ -562,8 +562,6 @@ void GoIntoOverheadMap( )
 static void HandleOverheadUI(void)
 {
   InputAtom					InputEvent;
-	INT16							sMousePos=0;
-
   while (DequeueEvent(&InputEvent) == TRUE)
   {
     if( ( InputEvent.usEvent == KEY_DOWN ) )

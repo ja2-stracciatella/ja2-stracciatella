@@ -1292,7 +1292,6 @@ static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText)
 static UINT16 GetAndDisplayHelpScreenText(UINT32 uiRecord, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth)
 {
 	UINT16	usNumVertPixels = 0;
-	UINT32 uiStartLoc;
 
 	SetFontShadow( NO_SHADOW );
 
