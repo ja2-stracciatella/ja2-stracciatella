@@ -2571,18 +2571,9 @@ void RenderItemDescriptionBox(void)
 	if (obj->usItem == MONEY)
 	{
 		//Render the money Boxes
-		INT32 x;
-		INT32 y;
-		if (in_map)
-		{
-			x = gMapMoneyButtonLoc.x + gMoneyButtonOffsets[0].x;
-			y = gMapMoneyButtonLoc.y + gMoneyButtonOffsets[0].y;
-		}
-		else
-		{
-			x = dx + gItemDescAttachmentsXY[0].sX - 1;
-			y = dy + gItemDescAttachmentsXY[0].sY - 2;
-		}
+		const MoneyLoc* const xy = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
+		const INT32           x  = xy->x + gMoneyButtonOffsets[0].x - 1;
+		const INT32           y  = xy->y + gMoneyButtonOffsets[0].y;
 		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
 	}
 
