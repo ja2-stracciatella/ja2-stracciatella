@@ -359,8 +359,8 @@ static const INV_DESC_STATS gMapMoneyStats[] =
 
 static const INV_DESC_STATS gMapWeaponStats[] =
 {
-	{  72 - 20,      20 + 80 + 8, 80 },
-	{  72 - 20,      20 + 80 - 2, 80 },
+	{  72 - 20,      20 + 80 + 8, 86 },
+	{  72 - 20,      20 + 80 - 2, 86 },
 	{  72 - 20 + 65, 40 + 80 + 4, 21 },
 	{  72 - 20,      40 + 80 + 4, 30 },
 	{  72 - 20,      53 + 80 + 2, 30 },
@@ -2818,13 +2818,13 @@ void RenderItemDescriptionBox(void)
 		//Status
 		SetFontForeground(5);
 		swprintf(pStr, lengthof(pStr), L"%2d%%", obj->bGunStatus);
-		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx + (in_map ? 6 : 0), dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		mprintf(usX, usY, L"%ls", pStr);
 
 		//Weight
 		HighlightIf(fWeight <= EXCEPTIONAL_WEIGHT / 10);
 		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
-		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx + (in_map ? 6 : 0), dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		mprintf(usX, usY, L"%ls", pStr);
 
 		if (item->usItemClass & (IC_GUN | IC_LAUNCHER))
@@ -2975,21 +2975,21 @@ void RenderItemDescriptionBox(void)
 		{
 			// Ammo - print amount
 			swprintf(pStr, lengthof(pStr), L"%d/%d", obj->ubShotsLeft[0], Magazine[item->ubClassIndex].ubMagSize);
-			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx + (in_map ? 6 : 0), dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
-			mprintf(usX, in_map ? dy + ids[1].sY : usY, L"%ls", pStr);
+			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			mprintf(usX, usY, L"%ls", pStr);
 		}
 		else
 		{
 			//Status
 			swprintf(pStr, lengthof(pStr), L"%2d%%", obj->bStatus[gubItemDescStatusIndex]);
-			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx + (in_map ? 6 : 0), dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
-			mprintf(usX, in_map ? dy + ids[1].sY : usY, L"%ls", pStr);
+			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			mprintf(usX, usY, L"%ls", pStr);
 		}
 
 		//Weight
 		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
-		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx + (in_map ? 6 : 0), dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
-		mprintf(usX, in_map ? dy + ids[0].sY : usY, pStr);
+		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		mprintf(usX, usY, pStr);
 
 		if (InKeyRingPopup() || item->usItemClass & IC_KEY)
 		{
