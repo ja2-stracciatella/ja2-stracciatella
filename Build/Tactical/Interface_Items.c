@@ -242,8 +242,6 @@ static const wchar_t* gzItemName;
 static wchar_t gzItemDesc[SIZE_ITEM_INFO];
 static wchar_t gzItemPros[SIZE_ITEM_PROS];
 static wchar_t gzItemCons[SIZE_ITEM_CONS];
-static wchar_t gzFullItemPros[SIZE_ITEM_PROS];
-static wchar_t gzFullItemCons[SIZE_ITEM_PROS];
 static INT16 gsInvDescX;
 static INT16 gsInvDescY;
 static UINT8 gubItemDescStatusIndex;
@@ -2041,11 +2039,9 @@ static BOOLEAN ReloadItemDesc(void);
 
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
-	INT32		cnt;
 	wchar_t	pStr[10];
 	UINT16	usX, usY;
 	INT16		sForeColour;
-	INT16 sProsConsIndent;
 
 	//Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -2132,76 +2128,35 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 	if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
 	{
-		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		const INT16 sProsConsIndent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+		const SGPRect* const rects = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? gMapItemDescProsConsRects : gItemDescProsConsRects);
+		for (INT32 cnt = 0; cnt < 2; ++cnt)
 		{
-			sProsConsIndent = __max( StringPixLength( gzProsLabel, ITEMDESC_FONT ), StringPixLength( gzConsLabel, ITEMDESC_FONT ) ) + 10;
-			for ( cnt = 0; cnt < 2; cnt++ )
+			// Add region for pros/cons help text
+			const SGPRect* const rect = &rects[cnt];
+			const UINT16         l    = ITEMDESC_PROS_START_X + sProsConsIndent;
+			const UINT16         t    = gsInvDescY + rect->iTop;
+			const UINT16         r    = gsInvDescX + rect->iRight;
+			const UINT16         b    = gsInvDescY + rect->iBottom;
+			MOUSE_REGION* const  reg  = &gProsAndConsRegions[cnt];
+			MSYS_DefineRegion(reg, l, t, r, b, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+
+			const wchar_t* label;
+			// use temp variable to prevent an initial comma from being displayed
+			wchar_t FullItemTemp[SIZE_ITEM_PROS];
+			if (cnt == 0)
 			{
-				// Add region for pros/cons help text
-				MSYS_DefineRegion( &gProsAndConsRegions[ cnt ],
-					ITEMDESC_PROS_START_X + sProsConsIndent,
-					gsInvDescY + gMapItemDescProsConsRects[cnt].iTop,
-					gsInvDescX + gMapItemDescProsConsRects[cnt].iRight,
-					gsInvDescY + gMapItemDescProsConsRects[cnt].iBottom,
-					MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
-
-				if (cnt == 0)
-				{
-					wcscpy( gzFullItemPros, gzProsLabel );
-					wcscat( gzFullItemPros, L" " );
-					// use temp variable to prevent an initial comma from being displayed
-					wchar_t FullItemTemp[SIZE_ITEM_PROS];
-					GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
-					wcscat(gzFullItemPros, FullItemTemp);
-					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemPros );
-				}
-				else
-				{
-					wcscpy( gzFullItemCons, gzConsLabel );
-					wcscat( gzFullItemCons, L" " );
-					// use temp variable to prevent an initial comma from being displayed
-					wchar_t FullItemTemp[SIZE_ITEM_PROS];
-					GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
-					wcscat(gzFullItemCons, FullItemTemp);
-					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
-				}
+				label = gzProsLabel;
+				GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
 			}
-
-		}
-		else
-		{
-			sProsConsIndent = __max( StringPixLength( gzProsLabel, ITEMDESC_FONT ), StringPixLength( gzConsLabel, ITEMDESC_FONT ) ) + 10;
-			for ( cnt = 0; cnt < 2; cnt++ )
+			else
 			{
-				// Add region for pros/cons help text
-				MSYS_DefineRegion( &gProsAndConsRegions[ cnt ],
-					ITEMDESC_PROS_START_X + sProsConsIndent,
-					gsInvDescY + gItemDescProsConsRects[cnt].iTop,
-					gsInvDescX + gItemDescProsConsRects[cnt].iRight,
-					gsInvDescY + gItemDescProsConsRects[cnt].iBottom,
-					MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback );
-
-				if (cnt == 0)
-				{
-					wcscpy( gzFullItemPros, gzProsLabel );
-					wcscat( gzFullItemPros, L" " );
-					// use temp variable to prevent an initial comma from being displayed
-					wchar_t FullItemTemp[SIZE_ITEM_PROS];
-					GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
-					wcscat(gzFullItemPros, FullItemTemp);
-					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemPros );
-				}
-				else
-				{
-					wcscpy( gzFullItemCons, gzConsLabel );
-					wcscat( gzFullItemCons, L" " );
-					// use temp variable to prevent an initial comma from being displayed
-					wchar_t FullItemTemp[SIZE_ITEM_PROS];
-					GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
-					wcscat(gzFullItemCons, FullItemTemp);
-					SetRegionFastHelpText( &(gProsAndConsRegions[ cnt ]), gzFullItemCons );
-				}
+				label = gzConsLabel;
+				GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
 			}
+			wchar_t text[SIZE_ITEM_PROS];
+			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
+			SetRegionFastHelpText(reg, text);
 		}
 	}
 
@@ -2215,7 +2170,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 	if ( gpItemDescObject->usItem != MONEY  )
 	{
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+		for (INT32 cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
 		{
 			// Build a mouse region here that is over any others.....
 //			if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
@@ -2259,6 +2214,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 //		if (guiCurrentScreen ==  MAP_SCREEN )
 		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
 		const MoneyLoc* Loc = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
+		INT32 cnt;
 		for (cnt = 0; cnt < MAX_ATTACHMENTS - 1; cnt++)
 		{
 			guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
@@ -2303,7 +2259,7 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		gpAttachSoldier = pSoldier;
 	}
 	// store attachments that item originally had
-	for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+	for (INT32 cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
 	{
 		gusOriginalAttachItem[ cnt ] = pObject->usAttachItem[ cnt ];
 		gbOriginalAttachStatus[ cnt ] = pObject->bAttachStatus[ cnt ];
