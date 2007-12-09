@@ -793,8 +793,8 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 	return( sBreathPerAP );
 }
 
-//UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, UINT16 usItem )
-UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj )
+
+UINT8 CalcAPsToBurst(const INT8 bBaseActionPoints, const OBJECTTYPE* const pObj)
 {
 	// base APs is what you'd get from CalcActionPoints();
 	if (pObj->usItem == G11)
@@ -1018,7 +1018,8 @@ static INT8 CalcAimSkill(const SOLDIERTYPE* pSoldier, UINT16 usWeapon)
 	return( bAimSkill );
 }
 
-UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj )
+
+UINT8 BaseAPsToShootOrStab(const INT8 bAPs, const INT8 bAimSkill, const OBJECTTYPE* const pObj)
 {
 	INT16	sTop, sBottom;
 	INT8	bAttachPos;

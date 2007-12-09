@@ -271,7 +271,7 @@
 #define DEFAULT_APS 20
 #define DEFAULT_AIMSKILL 80
 
-UINT8 BaseAPsToShootOrStab( INT8 bAPs, INT8 bAimSkill, OBJECTTYPE * pObj );
+UINT8 BaseAPsToShootOrStab(INT8 bAPs, INT8 bAimSkill, const OBJECTTYPE* pObj);
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* s, INT16 sGridno, INT8 bDir, INT8 bLevel);
 INT16 ActionPointCost(const SOLDIERTYPE* s, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode);
@@ -293,7 +293,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
-UINT8 CalcAPsToBurst( INT8 bBaseActionPoints, OBJECTTYPE * pObj );
+UINT8 CalcAPsToBurst(INT8 bBaseActionPoints, const OBJECTTYPE* pObj);
 UINT16 GetAPsToChangeStance(const SOLDIERTYPE* pSoldier, INT8 bDesiredHeight);
 
 UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier);

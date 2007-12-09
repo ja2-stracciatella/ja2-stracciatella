@@ -495,7 +495,7 @@ static BOOLEAN AttemptToAddSubstring(STR16 zDest, const wchar_t* zTemp, UINT32* 
 }
 
 
-static void GenerateProsString(wchar_t* zItemPros, OBJECTTYPE* pObject, UINT32 uiPixLimit)
+static void GenerateProsString(wchar_t* const zItemPros, const OBJECTTYPE* const pObject, const UINT32 uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;
@@ -602,7 +602,7 @@ static void GenerateProsString(wchar_t* zItemPros, OBJECTTYPE* pObject, UINT32 u
 }
 
 
-static void GenerateConsString(wchar_t* zItemCons, OBJECTTYPE* pObject, UINT32 uiPixLimit)
+static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const pObject, const UINT32 uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;

@@ -1440,10 +1440,8 @@ BOOLEAN ValidAttachment( UINT16 usAttachment, UINT16 usItem )
 	return( TRUE );
 }
 
-//Determine if this item can receive this attachment.  This is different, in that it may
-//be possible to have this attachment on this item, but may already have an attachment on
-//it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
-BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment )
+
+BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachment, const BOOLEAN fAttemptingAttachment)
 {
 	BOOLEAN		fSameItem = FALSE, fSimilarItems = FALSE;
 	UINT16		usSimilarItem = NOTHING;
@@ -1738,7 +1736,8 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 	return( EvaluateValidMerge( usMerge, usItem, &usIgnoreResult, &ubIgnoreType ) );
 }
 
-UINT8 CalculateObjectWeight( OBJECTTYPE *pObject )
+
+UINT8 CalculateObjectWeight(const OBJECTTYPE* const pObject)
 {
 	INT32 cnt;
 	UINT16 usWeight;

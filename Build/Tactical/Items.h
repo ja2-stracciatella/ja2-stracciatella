@@ -35,7 +35,7 @@ extern void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest 
 extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment );
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
-extern UINT8	CalculateObjectWeight( OBJECTTYPE *pObject );
+UINT8	CalculateObjectWeight(const OBJECTTYPE* pObject);
 UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier);
 
 extern UINT16 TotalPoints( OBJECTTYPE * pObj );
@@ -102,7 +102,7 @@ BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj);
 //Determine if this item can receive this attachment.  This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on
 //it which doesn't work simultaneously with the new attachment (like a silencer and duckbill).
-BOOLEAN ValidItemAttachment( OBJECTTYPE * pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment );
+BOOLEAN ValidItemAttachment(const OBJECTTYPE* pObj, UINT16 usAttachment, BOOLEAN fAttemptingAttachment);
 
 //Determines if it is possible to equip this weapon with this ammo.
 BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType );
