@@ -221,85 +221,68 @@ static void RenderItemsForCurrentPageOfInventoryPool(void)
 static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 {
 	// render item in this slot of the list
-	INT16 sX, sY;
-	CHAR16 sString[ 64 ];
-	INT16 sWidth = 0, sHeight = 0;
-	INT16 sOutLine = 0;
-  BOOLEAN fOutLine = FALSE;
+	const WORLDITEM* const item = &pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage];
 
 	// check if anything there
-	if( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.ubNumberOfObjects == 0 )
+	if (item->o.ubNumberOfObjects == 0) return FALSE;
+
+	const INT32 dx = MAP_INVENTORY_POOL_SLOT_START_X + MAP_INVEN_SPACE_BTWN_SLOTS * (iCurrentSlot / MAP_INV_SLOT_COLS);
+	const INT32 dy = MAP_INVENTORY_POOL_SLOT_START_Y + MAP_INVEN_SLOT_HEIGHT      * (iCurrentSlot % MAP_INV_SLOT_COLS);
+
+	const INT16 sX = dx + MAP_INVENTORY_POOL_SLOT_OFFSET_X;
+	const INT16 sY = dy;
+
+	INT16   sOutLine;
+	BOOLEAN fOutLine;
+	if (fMapInventoryItemCompatable[iCurrentSlot])
 	{
-		return ( FALSE );
-	}
-
-	// set sx and sy
-	sX = ( INT16 )( MAP_INVENTORY_POOL_SLOT_OFFSET_X + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) );
-	sY = 	( INT16 )( MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) );
-
-
-	if( fMapInventoryItemCompatable[ iCurrentSlot ] )
-	{
-		sOutLine = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
+		sOutLine = Get16BPPColor(FROMRGB(255, 255, 255));
     fOutLine = TRUE;
 	}
 	else
 	{
 		sOutLine = 0;
-    fOutLine = FALSE;
+		fOutLine = FALSE;
 	}
 
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-  INVRenderItem(guiSAVEBUFFER, NULL, &pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage].o, sX + 7, sY, 60, 25, DIRTYLEVEL2, 0, fOutLine, sOutLine);//67
-
+	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, sX + 7, sY, 60, 25, DIRTYLEVEL2, 0, fOutLine, sOutLine);//67
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// draw bar for condition
+	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
+	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
+	DrawItemUIBarEx(&item->o, 0, dx + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y, ITEMDESC_ITEM_STATUS_WIDTH_INV_POOL, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, col0, col1, TRUE, guiSAVEBUFFER);
 
-	// now draw bar for condition
-	// Display ststus
-	DrawItemUIBarEx( &( pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o ), 0,
-		(INT16)( ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) ),
-		( INT16 )( ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) )
-		, ITEMDESC_ITEM_STATUS_WIDTH_INV_POOL, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, 	Get16BPPColor( DESC_STATUS_BAR ), Get16BPPColor( DESC_STATUS_BAR_SHADOW ), TRUE, guiSAVEBUFFER );
-
-
-	//
 	// if the item is not reachable, or if the selected merc is not in the current sector
-	//
-	if (!(pInventoryPoolList[iCurrentSlot + iFirstSlotOnPage].usFlags & WORLD_ITEM_REACHABLE) ||
+	if (!(item->usFlags & WORLD_ITEM_REACHABLE) ||
 			gCharactersList[bSelectedInfoChar].merc->sSectorX != sSelMapX ||
 			gCharactersList[bSelectedInfoChar].merc->sSectorY != sSelMapY ||
 			gCharactersList[bSelectedInfoChar].merc->bSectorZ != iCurrentMapSectorZ)
 	{
 		//Shade the item
-		DrawHatchOnInventory( guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT );
+		DrawHatchOnInventory(guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT);
 	}
 
-
 	// the name
-
-	wcscpy( sString, ShortItemNames[ pInventoryPoolList[ iCurrentSlot + iFirstSlotOnPage ].o.usItem ] );
+	wchar_t sString[64];
+	wcscpy(sString, ShortItemNames[item->o.usItem]);
 	ReduceStringLength(sString, lengthof(sString), MAP_INVEN_SLOT_WIDTH, MAP_IVEN_FONT);
-
-	FindFontCenterCoordinates( (INT16)( 4 + MAP_INVENTORY_POOL_SLOT_START_X + ( ( MAP_INVEN_SPACE_BTWN_SLOTS ) * ( iCurrentSlot / MAP_INV_SLOT_COLS ) ) ),
-		0, MAP_INVEN_SLOT_WIDTH, 0,
-		sString, MAP_IVEN_FONT,
-		&sWidth, &sHeight );
 
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	SetFont( MAP_IVEN_FONT );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
+	SetFont(MAP_IVEN_FONT);
+	SetFontForeground(FONT_WHITE);
+	SetFontBackground(FONT_BLACK);
 
-	mprintf( sWidth,
-		( INT16 )( 3 + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + MAP_INVENTORY_POOL_SLOT_START_Y + ( ( MAP_INVEN_SLOT_HEIGHT ) * ( iCurrentSlot % ( MAP_INV_SLOT_COLS ) ) ) )
-	, sString );
+	INT16 sWidth  = 0;
+	INT16 sHeight = 0;
+	FindFontCenterCoordinates(dx + 4, 0, MAP_INVEN_SLOT_WIDTH, 0, sString, MAP_IVEN_FONT, &sWidth, &sHeight);
+	mprintf(sWidth, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + 3, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	return( TRUE );
+	return TRUE;
 }
 
 
