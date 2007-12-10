@@ -158,9 +158,6 @@
 #define		ITEMDESC_ITEM_WIDTH			117
 #define		ITEMDESC_ITEM_HEIGHT		54
 
-#define		ITEMDESC_AMMO_X					( 10 + gsInvDescX )
-#define		ITEMDESC_AMMO_Y					( 50 + gsInvDescY )
-
 #define		ITEMDESC_AMMO_TEXT_X	3
 #define		ITEMDESC_AMMO_TEXT_Y	1
 #define		ITEMDESC_AMMO_TEXT_WIDTH 31
@@ -326,6 +323,8 @@ typedef struct Box
 static const Box gMapDescNameBox = {  7, 65, 247, 8 };
 static const Box gDescNameBox    = { 16, 67, 291, 8 };
 
+static const Box g_desc_item_box_map = { 23, 10, 124, 48 };
+static const Box g_desc_item_box     = {  9,  9, 117, 55 };
 
 static const INV_DESC_STATS gWeaponStats[] =
 {
@@ -2110,17 +2109,12 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			 //sForeColour = FONT_MCOLOR_WHITE;
 				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 4, 1, -1, 3, -1);
 			 break;
-
 		}
 
-		INT16 x = ITEMDESC_AMMO_X;
-		INT16 y = ITEMDESC_AMMO_Y;
-		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
-		{
-			// in mapscreen, move over a bit
-			x += 18;
-			y -=  5;
-		}
+		const INT16 h = GetDimensionsOfButtonPic(giItemDescAmmoButtonImages)->h;
+		const Box* const xy = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_desc_item_box_map: &g_desc_item_box);
+		const INT16 x = gsInvDescX + xy->x;
+		const INT16 y = gsInvDescY + xy->y + xy->h - h; // align with bottom
 		giItemDescAmmoButton = CreateIconAndTextButton(giItemDescAmmoButtonImages, pStr, TINYFONT1, sForeColour, FONT_MCOLOR_BLACK, sForeColour, FONT_MCOLOR_BLACK, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 
 		//if we are being init from the shop keeper screen and this is a dealer item we are getting info from
@@ -2587,30 +2581,15 @@ void RenderItemDescriptionBox(void)
 		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
 	}
 
+	/* display item */
 	{
-		// TAKE A LOOK AT THE VIDEO OBJECT SIZE (ONE OF TWO SIZES) AND CENTER!
-		const ETRLEObject* const pTrav    = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
-		const UINT32             usHeight = pTrav->usHeight;
-		const UINT32             usWidth  = pTrav->usWidth;
-
-		// CENTER IN SLOT!
-		// REMOVE OFFSETS!
-		INT16 sCenX = abs(ITEMDESC_ITEM_WIDTH  - usWidth)  / 2 - pTrav->sOffsetX;
-		INT16 sCenY = abs(ITEMDESC_ITEM_HEIGHT - usHeight) / 2 - pTrav->sOffsetY;
-		if (in_map)
-		{
-			sCenX += MAP_ITEMDESC_ITEM_X;
-			sCenY += MAP_ITEMDESC_ITEM_Y;
-		}
-		else
-		{
-			sCenX += ITEMDESC_ITEM_X;
-			sCenY += ITEMDESC_ITEM_Y;
-		}
-
-		// Display item
-		BltVideoObjectOutlineShadowFromIndex(guiSAVEBUFFER, guiItemGraphic, 0, sCenX - 2, sCenY + 2);
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiItemGraphic, 0, sCenX, sCenY);
+		// center in slot, remove offsets
+		const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
+		const Box*         const xy    = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
+		const INT32 x = dx + xy->x + (xy->w - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
+		const INT32 y = dy + xy->y + (xy->h - pTrav->usHeight) / 2 - pTrav->sOffsetY;
+		BltVideoObjectOutlineShadowFromIndex(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+		BltVideoObjectFromIndex(             guiSAVEBUFFER, guiItemGraphic, 0, x,     y);
 	}
 
 	// Display status
