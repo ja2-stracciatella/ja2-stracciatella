@@ -284,12 +284,12 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 		}
 
 		case MSG_BOX_FLAG_OK:
-			x += (usTextBoxWidth - GetWidthOfButtonPic(gMsgBox.iButtonImages)) / 2;
+			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 			break;
 
 		case MSG_BOX_FLAG_CANCEL:
-			x += (usTextBoxWidth - GetWidthOfButtonPic(gMsgBox.iButtonImages)) / 2;
+			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
 			break;
 

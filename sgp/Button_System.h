@@ -252,7 +252,13 @@ void ForceButtonUnDirty(INT32 iButtonIndex); // forces button undirty no matter 
 
 void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on);
 
-extern UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID);
+typedef struct ButtonDimensions
+{
+	UINT32 w;
+	UINT32 h;
+} ButtonDimensions;
+
+const ButtonDimensions* GetDimensionsOfButtonPic(UINT16 btn_pic_id);
 
 UINT16 GetGenericButtonFillColor(void);
 

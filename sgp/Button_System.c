@@ -104,8 +104,7 @@ typedef struct BUTTON_PICS
 	INT32    OffHilite; // Index to use when button is OFF w/ hilite on it
 	INT32    OnNormal;  // Index to use when button is ON
 	INT32    OnHilite;  // Index to use when button is ON w/ hilite on it
-	UINT32   MaxWidth;  // Width of largest image in use
-	UINT32   MaxHeight; // Height of largest image in use
+	ButtonDimensions max; // width/height of largest image in use
 	UINT32   fFlags;    // Special image flags
 } BUTTON_PICS;
 
@@ -116,9 +115,9 @@ UINT32 ButtonDestBuffer = FRAME_BUFFER;
 GUI_BUTTON* ButtonList[MAX_BUTTONS];
 
 
-UINT16 GetWidthOfButtonPic(UINT16 usButtonPicID)
+const ButtonDimensions* GetDimensionsOfButtonPic(UINT16 btn_pic_id)
 {
-	return ButtonPictures[usButtonPicID].MaxWidth;
+	return &ButtonPictures[btn_pic_id].max;
 }
 
 
@@ -218,8 +217,8 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 	}
 
 	// Set the width and height for this image set
-	pics->MaxHeight = MaxHeight;
-	pics->MaxWidth  = MaxWidth;
+	pics->max.w = MaxWidth;
+	pics->max.h = MaxHeight;
 }
 
 
@@ -792,7 +791,7 @@ static INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT
 		return BUTTON_NO_SLOT;
 	}
 
-	GUI_BUTTON* b = AllocateButton(Image, (Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->MaxWidth, BtnPic->MaxHeight, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* const b = AllocateButton(Image, (Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->max.w, BtnPic->max.h, Priority, ClickCallback, MoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;
