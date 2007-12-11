@@ -311,20 +311,12 @@ typedef struct
 	INT16 sBarDy;
 } INV_ATTACHXY;
 
-typedef struct Box
-{
-	INT16 x;
-	INT16 y;
-	INT16 w;
-	INT16 h;
-} Box;
 
+static const SGPBox gMapDescNameBox = {  7, 65, 247, 8 };
+static const SGPBox gDescNameBox    = { 16, 67, 291, 8 };
 
-static const Box gMapDescNameBox = {  7, 65, 247, 8 };
-static const Box gDescNameBox    = { 16, 67, 291, 8 };
-
-static const Box g_desc_item_box_map = { 23, 10, 124, 48 };
-static const Box g_desc_item_box     = {  9,  9, 117, 55 };
+static const SGPBox g_desc_item_box_map = { 23, 10, 124, 48 };
+static const SGPBox g_desc_item_box     = {  9,  9, 117, 55 };
 
 static const INV_DESC_STATS gWeaponStats[] =
 {
@@ -2111,10 +2103,10 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 			 break;
 		}
 
-		const INT16 h = GetDimensionsOfButtonPic(giItemDescAmmoButtonImages)->h;
-		const Box* const xy = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_desc_item_box_map: &g_desc_item_box);
-		const INT16 x = gsInvDescX + xy->x;
-		const INT16 y = gsInvDescY + xy->y + xy->h - h; // align with bottom
+		const INT16         h  = GetDimensionsOfButtonPic(giItemDescAmmoButtonImages)->h;
+		const SGPBox* const xy = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_desc_item_box_map: &g_desc_item_box);
+		const INT16         x  = gsInvDescX + xy->x;
+		const INT16         y  = gsInvDescY + xy->y + xy->h - h; // align with bottom
 		giItemDescAmmoButton = CreateIconAndTextButton(giItemDescAmmoButtonImages, pStr, TINYFONT1, sForeColour, FONT_MCOLOR_BLACK, sForeColour, FONT_MCOLOR_BLACK, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 
 		//if we are being init from the shop keeper screen and this is a dealer item we are getting info from
@@ -2585,7 +2577,7 @@ void RenderItemDescriptionBox(void)
 	{
 		// center in slot, remove offsets
 		const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
-		const Box*         const xy    = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
+		const SGPBox*      const xy    = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
 		const INT32 x = dx + xy->x + (xy->w - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 		const INT32 y = dy + xy->y + (xy->h - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 		BltVideoObjectOutlineShadowFromIndex(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
@@ -2678,7 +2670,7 @@ void RenderItemDescriptionBox(void)
 
 	{
 		// Render name
-		const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 #ifdef JA2TESTVERSION
 		mprintf(dx + xy->x, dy + xy->y, L"%ls (%d)", gzItemName, obj->usItem);
 #else
@@ -2711,7 +2703,7 @@ void RenderItemDescriptionBox(void)
 		}
 
 		{
-			const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+			const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, ITEMDESC_FONT, &usX, &usY);
 			mprintf(usX, usY, pStr);
 		}
@@ -2846,7 +2838,7 @@ void RenderItemDescriptionBox(void)
 		// Display the total amount of money
 		{
 			SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
-			const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+			const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
 			mprintf(usX, usY, pStr);
 		}
@@ -2915,7 +2907,7 @@ void RenderItemDescriptionBox(void)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
 		SPrintMoney(pStr, obj->uiMoneyAmount);
-		const Box* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 		FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
 		mprintf(usX, usY, pStr);
 	}

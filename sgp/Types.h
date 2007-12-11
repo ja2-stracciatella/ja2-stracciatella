@@ -83,6 +83,14 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 #define NULL 0
 #endif
 
+typedef struct SGPBox
+{
+	INT16 x;
+	INT16 y;
+	INT16 w;
+	INT16 h;
+} SGPBox;
+
 typedef struct
 {
   INT32 iLeft;
