@@ -520,8 +520,6 @@ extern BOOLEAN gfMilitiaPopupCreated;
 void CancelMapUIMessage( void );
 
 
-void RenderMapRegionBackground( void );
-
 // Pop Up Boxes
 void CreateMercRemoveAssignBox( void );
 

@@ -125,7 +125,6 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime );
 
 void CheckHostileOrSayQuoteList( void );
 void InitOpplistForDoorOpening( void );
-UINT8 DoorOpeningNoise( SOLDIERTYPE * pSoldier );
 
 void AddToShouldBecomeHostileOrSayQuoteList(SOLDIERTYPE* s);
 

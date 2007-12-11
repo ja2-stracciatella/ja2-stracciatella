@@ -276,7 +276,6 @@ UINT8 BaseAPsToShootOrStab(INT8 bAPs, INT8 bAimSkill, const OBJECTTYPE* pObj);
 INT16 TerrainActionPoints(const SOLDIERTYPE* s, INT16 sGridno, INT8 bDir, INT8 bLevel);
 INT16 ActionPointCost(const SOLDIERTYPE* s, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode);
 INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode, INT8 bPathIndex, INT8 bPathLength );
-BOOLEAN SelectedMercCanAffordMove(  );
 
 BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, BOOLEAN fDisplayMsg);
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );

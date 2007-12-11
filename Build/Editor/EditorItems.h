@@ -49,8 +49,6 @@ void SelectPrevItemInPool();
 void KillItemPoolList();
 void BuildItemPoolList();
 
-void SetEditorItemsTaskbarMode( UINT16 usNewMode );
-
 void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent );
 
 extern INT32 giDefaultExistChance;

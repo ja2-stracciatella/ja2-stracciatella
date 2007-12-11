@@ -90,9 +90,6 @@ NPCQuoteInfo *	gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS] = { NULL };
 
 UINT8 gubTeamPenalty;
 
-void PCsNearNPC( UINT8 ubNPC );
-BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach );
-
 INT8	gbFirstApproachFlags[4] = { 0x01, 0x02, 0x04, 0x08 };
 
 

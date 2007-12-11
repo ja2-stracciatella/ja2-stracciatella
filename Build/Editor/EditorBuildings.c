@@ -501,8 +501,6 @@ enum{
 INT32 iDoorButton[ NUM_DOOR_BUTTONS ];
 MOUSE_REGION DoorRegion;
 
-extern BOOLEAN OpenableAtGridNo( UINT32 iMapIndex );
-
 
 static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoorOkayCallback(GUI_BUTTON* btn, INT32 reason);

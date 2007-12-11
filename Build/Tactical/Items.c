@@ -43,7 +43,6 @@
 
 #define ANY_MAGSIZE 255
 
-void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
 
 // weight units are 100g each
 

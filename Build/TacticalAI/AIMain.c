@@ -44,7 +44,6 @@
 
 extern void UpdateEnemyUIBar( void );
 extern void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier );
-extern void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet );
 
 //
 // Commented out/ to fix:
@@ -69,11 +68,6 @@ INT8 gbDiff[MAX_DIFF_PARMS][5] =
    {   50,   65,    80,    90,     95  },     // DIFF_RADIO_RED_ALERT
    {    4,    6,     8,    10,     13  }      // DIFF_MAX_COVER_RANGE
  };
-
-
-
-
-void EndAIGuysTurn( SOLDIERTYPE *pSoldier );
 
 
 #ifdef JA2BETAVERSION
