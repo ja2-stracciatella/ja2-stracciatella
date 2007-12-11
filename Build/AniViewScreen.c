@@ -372,7 +372,7 @@ static void BuildListFile(void)
 		}
 		else
 		{
-			swprintf( zError, lengthof(zError), L"Animation str %ls is not known: ", currFilename );
+			swprintf(zError, lengthof(zError), L"Animation str %hs is not known: ", currFilename);
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, NULL, NULL );
 			fclose( infoFile );
 			return;
