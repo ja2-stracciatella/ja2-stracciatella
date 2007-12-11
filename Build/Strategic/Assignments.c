@@ -6915,8 +6915,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fTeamPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 	}
-
-};
+}
 
 
 static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier);

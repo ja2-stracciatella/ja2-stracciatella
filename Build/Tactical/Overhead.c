@@ -206,7 +206,7 @@ static const UINT8 DefaultTeamStart[] =
 	MAX_NUM_SOLDIERS, //  8 PLANNING SOLDIERS
 	TOTAL_SOLDIERS
 };
-CASSERT(lengthof(DefaultTeamStart) == MAXTEAMS + 1);
+CASSERT(lengthof(DefaultTeamStart) == MAXTEAMS + 1)
 
 
 static const COLORVAL DefaultTeamColors[] =
@@ -218,7 +218,7 @@ static const COLORVAL DefaultTeamColors[] =
 	FROMRGB(255, 255, 255),
 	FROMRGB(  0,   0, 255)
 };
-CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS);
+CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS)
 
 
 UINT8 NumEnemyInSector( );

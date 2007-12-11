@@ -1282,8 +1282,8 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 		gMercProfiles[ MADAME ].bNPCData = 0;
 		gMercProfiles[ MADAME ].bNPCData2 = 0;
 	}
+}
 
-};
 
 void InitQuestEngine()
 {
