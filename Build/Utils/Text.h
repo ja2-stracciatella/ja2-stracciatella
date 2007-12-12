@@ -108,7 +108,6 @@ extern const wchar_t *pDownloadString[];
 extern const wchar_t *pBookMarkStrings[];
 extern const wchar_t *pLaptopIcons[];
 extern const wchar_t *gsAtmStartButtonText[];
-extern const wchar_t *pDownloadString[];
 extern const wchar_t *pPersonnelTeamStatsStrings[];
 extern const wchar_t *pPersonnelCurrentTeamStatsStrings[];
 extern const wchar_t *pPersonelTeamStrings[];

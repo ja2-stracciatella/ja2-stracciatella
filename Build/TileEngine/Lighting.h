@@ -193,8 +193,6 @@ static inline LightID Light2ID(const LIGHT_SPRITE* const l)
 
 // Lighting system general data
 extern UINT8						ubAmbientLightLevel;
-extern UINT8						gubNumLightColors;
-
 
 // Lighting colors
 extern UINT8						gubNumLightColors;

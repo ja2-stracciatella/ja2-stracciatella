@@ -225,6 +225,7 @@ enum{
 	UPDATE_BOX_REASON_SHOW_BOX,
 };
 
+// the static NPC dialogue faces
 extern UINT32 uiExternalStaticNPCFaces[ ];
 extern UINT32 uiExternalFaceProfileIds[ ];
 

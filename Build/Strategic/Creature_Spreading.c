@@ -35,7 +35,6 @@
 #	include "MessageBoxScreen.h"
 
 	BOOLEAN gfClearCreatureQuest = FALSE;
-	extern UINT32 uiMeanWhileFlags;
 #endif
 
 //GAME BALANCING DEFINITIONS FOR CREATURE SPREADING

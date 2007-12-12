@@ -163,7 +163,7 @@ INT16						gsSelectedMercGridNo;
 SOLDIERINITNODE *gpSelected;
 
 UINT8						gubCurrMercMode									= MERC_TEAMMODE;
-UINT8						gubPrevMercMode									= MERC_NOMODE;
+static UINT8    gubPrevMercMode                 = MERC_NOMODE;
 UINT8						gubLastDetailedMercMode					= MERC_GENERALMODE;
 INT8						gbDefaultOrders									= STATIONARY;
 INT8						gbDefaultAttitude								= DEFENSIVE;

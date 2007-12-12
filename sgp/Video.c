@@ -59,14 +59,6 @@ static BOOLEAN gfPrintFrameBuffer;
 static UINT32  guiPrintFrameBufferIndex;
 
 
-extern UINT16 gusRedMask;
-extern UINT16 gusGreenMask;
-extern UINT16 gusBlueMask;
-extern INT16  gusRedShift;
-extern INT16  gusBlueShift;
-extern INT16  gusGreenShift;
-
-
 static SDL_Surface* MouseCursor;
 static SDL_Surface* FrameBuffer;
 static SDL_Surface* ScreenBuffer;

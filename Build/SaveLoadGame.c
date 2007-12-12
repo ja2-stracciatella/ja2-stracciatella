@@ -122,7 +122,6 @@ extern		INT16					sWorldSectorLocationOfFirstBattle;
 extern		BOOLEAN				gfGamePaused;
 extern		BOOLEAN				gfLockPauseState;
 extern		BOOLEAN				gfLoadedGame;
-extern		HELP_SCREEN_STRUCT gHelpScreen;
 extern		UINT8					gubDesertTemperature;
 extern		UINT8					gubGlobalTemperature;
 extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;

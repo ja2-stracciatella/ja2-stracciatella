@@ -62,9 +62,6 @@ extern UINT8 ubSAMControlledSectors[ MAP_WORLD_X ][ MAP_WORLD_Y ];
 // the seating capacities
 extern INT32 iSeatingCapacities[];
 
-// the static NPC dialogue faces
-extern UINT32 uiExternalStaticNPCFaces[];
-
 
 // whether helicopted variables have been set up
 BOOLEAN fSkyRiderSetUp = FALSE;

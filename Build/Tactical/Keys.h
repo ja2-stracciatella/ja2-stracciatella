@@ -124,7 +124,6 @@ extern BOOLEAN RemoveAllOfKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OB
 BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pubPos);
 BOOLEAN SoldierHasKey(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
 
-extern const wchar_t *sKeyDescriptionStrings[];
 /**********************************
  * Door utils add by Kris Morness *
  **********************************/

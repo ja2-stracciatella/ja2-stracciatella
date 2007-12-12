@@ -27,7 +27,6 @@
 #include "Rotting_Corpses.h"
 
 
-extern BOOLEAN gfHiddenInterrupt;
 extern BOOLEAN gfUseAlternateQueenPosition;
 
 // global status time counters to determine what takes the most time

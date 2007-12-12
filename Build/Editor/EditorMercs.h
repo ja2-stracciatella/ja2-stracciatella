@@ -23,7 +23,7 @@ enum
 	MERC_SCHEDULEMODE,		//specifying a schedule for that particular individual
 };
 
-extern UINT8 gubCurrMercMode, gubPrevMercMode;
+extern UINT8 gubCurrMercMode;
 
 #define EDIT_NUM_COLORS				4
 #define EDIT_COLOR_HEAD				0
@@ -51,7 +51,6 @@ extern UINT8 gubCurrMercMode, gubPrevMercMode;
 
 extern INT16 gsSelectedMercID;
 extern INT16 gsSelectedMercGridNo;
-extern UINT8 gubCurrMercMode;
 
 enum _ForUseWithIndicateSelectedMerc
 {

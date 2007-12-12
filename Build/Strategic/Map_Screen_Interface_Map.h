@@ -231,9 +231,6 @@ extern UINT32 guiMAPCURSORS;
 // has temp path for character path or helicopter been already drawn
 extern BOOLEAN  fTempPathAlreadyDrawn;
 
-// map view region clipping rect
-extern SGPRect MapScreenRect;
-
 // the map border eta pop up
 extern UINT32 guiMapBorderEtaPopUp;
 

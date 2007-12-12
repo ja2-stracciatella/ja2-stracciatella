@@ -45,9 +45,6 @@ extern INT32 iPersonality;
 // attitude
 extern INT32 iAttitude;
 
-// pop up strings
-extern const wchar_t *pImpPopUpStrings[];
-
 enum{
 	IMP_HOME_PAGE,
 	IMP_BEGIN,

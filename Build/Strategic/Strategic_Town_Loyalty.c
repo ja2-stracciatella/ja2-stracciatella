@@ -177,8 +177,6 @@ INT16 sWorldSectorLocationOfFirstBattle = 0;
 // preprocess sector for mercs in it
 extern BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_X ][ 4 ];
 
-extern const wchar_t *pTownNames[];
-
 
 // update town loyalty based on number of friendlies in this town
 void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId );

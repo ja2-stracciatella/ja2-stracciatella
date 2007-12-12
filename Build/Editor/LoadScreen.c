@@ -100,7 +100,7 @@ enum{
 };
 static INT8 gbCurrentFileIOStatus; // 1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 
-extern UINT16 gusLightLevel;
+
 UINT32 LoadSaveScreenInit(void)
 {
 	gfUpdateSummaryInfo = TRUE;

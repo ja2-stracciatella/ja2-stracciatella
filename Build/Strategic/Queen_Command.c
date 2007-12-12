@@ -50,7 +50,6 @@ SECTORINFO SectorInfo[256];
 UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead = NULL;
 extern UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail;
 BOOLEAN gfPendingEnemies = FALSE;
-extern void BuildUndergroundSectorInfoList();
 
 extern void EndCreatureQuest();
 
