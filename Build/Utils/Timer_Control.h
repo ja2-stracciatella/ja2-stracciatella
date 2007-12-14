@@ -86,7 +86,7 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 	#define   TIMECOUNTERDONE( c, d )				( c == 0 ) ? TRUE : FALSE
 #endif
 
-#define		SYNCTIMECOUNTER( )
+#define SYNCTIMECOUNTER() (void)0
 #define		ZEROTIMECOUNTER( c )          ( c = 0 )
 
 #else
