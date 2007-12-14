@@ -3794,7 +3794,6 @@ const wchar_t* gzLateLocalizedString[] =
   L"Interruttore attivato.",
 };
 
-
-
+const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
 #endif //ITALIAN
