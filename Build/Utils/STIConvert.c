@@ -397,7 +397,7 @@ static UINT32 ETRLECompressSubImage(UINT8* pDest, UINT32 uiDestLen, UINT8* p8BPP
 	UINT32		uiOffset;
 	UINT8 *		pCurrent;
 
-	CHECKF( DetermineOffset( &uiOffset, usWidth, usHeight, pSubImage->sOffsetX, pSubImage->sOffsetY ) )
+	CHECKF(DetermineOffset(&uiOffset, usWidth, usHeight, pSubImage->sOffsetX, pSubImage->sOffsetY));
 	pCurrent = p8BPPBuffer + uiOffset;
 
 	for (usLoop = 0; usLoop < pSubImage->usHeight; usLoop++)
@@ -542,7 +542,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 	UINT8 *			pCurrent;
 	BOOLEAN			fFound = TRUE;
 
-	CHECKF( DetermineOffset( &uiOffset, usWidth, usHeight, sCurrX, sCurrY ) )
+	CHECKF(DetermineOffset(&uiOffset, usWidth, usHeight, sCurrX, sCurrY));
 	pCurrent = p8BPPBuffer + uiOffset;
 
 	if (*pCurrent == WI)

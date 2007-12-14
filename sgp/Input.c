@@ -322,7 +322,7 @@ void FreeMouseCursor(void)
 void RestoreCursorClipRect(void)
 {
 #if 1 // XXX TODO0000
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	if (fCursorWasClipped)
 	{

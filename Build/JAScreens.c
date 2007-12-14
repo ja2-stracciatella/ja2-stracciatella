@@ -740,7 +740,7 @@ static void DoneFadeOutForDemoExitScreen(void)
 void DoDemoIntroduction()
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	MSG Message;
 	UINT32 uiTempID;

@@ -85,17 +85,23 @@ short trailStratTreedxB=0;
 #define pathFound (pathQB[ pathQB[QHEADNDX].nextLink ].location == sDestination)
 #define pathNotYetFound (!pathFound)
 
-#define REMQUENODE(ndx)							\
-{	pathQB[ pathQB[ndx].prevLink ].nextLink = pathQB[ndx].nextLink;	\
-	pathQB[ pathQB[ndx].nextLink ].prevLink = pathQB[ndx].prevLink;	\
-}
+#define REMQUENODE(ndx)                                           \
+	do                                                              \
+	{                                                               \
+		pathQB[pathQB[ndx].prevLink].nextLink = pathQB[ndx].nextLink; \
+		pathQB[pathQB[ndx].nextLink].prevLink = pathQB[ndx].prevLink; \
+	}                                                               \
+	while (0)
 
-#define INSQUENODEPREV(newNode,curNode)				\
-{	pathQB[ newNode ].nextLink = curNode;			\
-	pathQB[ newNode ].prevLink = pathQB[ curNode ].prevLink;	\
-	pathQB[ pathQB[curNode].prevLink ].nextLink = newNode;	\
-	pathQB[ curNode ].prevLink = newNode;			\
-}
+#define INSQUENODEPREV(newNode, curNode)                                  \
+	do                                                                      \
+	{                                                                       \
+		pathQB[newNode].nextLink                  = curNode;                  \
+		pathQB[newNode].prevLink                  = pathQB[curNode].prevLink; \
+		pathQB[pathQB[curNode].prevLink].nextLink = newNode;                  \
+		pathQB[curNode].prevLink                  = newNode;                  \
+	}                                                                       \
+	while (0)
 
 #define INSQUENODE(newNode,curNode)				\
 {	pathQB[ newNode ].prevLink = curNode;			\
@@ -104,23 +110,29 @@ short trailStratTreedxB=0;
 	pathQB[ curNode ].nextLink = newNode;			\
 }
 
+#define DELQUENODE(ndx)            \
+	do                               \
+	{                                \
+		REMQUENODE(ndx);               \
+		INSQUENODEPREV(ndx, QPOOLNDX); \
+		pathQB[ndx].location = -1;     \
+	}                                \
+	while (0)
 
-#define DELQUENODE(ndx)                     			\
-{	REMQUENODE(ndx);                        		\
-	INSQUENODEPREV(ndx,QPOOLNDX);           		\
-	pathQB[ndx].location = -1;				\
-}
-
-
-
-#define NEWQUENODE                          			\
-	if (queRequests<QPOOLNDX)               		\
-		qNewNdx = queRequests++;			\
-	else       						\
-	{                                       		\
-		qNewNdx = pathQB[QPOOLNDX].nextLink;		\
-		REMQUENODE(qNewNdx);				\
-	}
+#define NEWQUENODE                         \
+	do                                       \
+	{                                        \
+		if (queRequests < QPOOLNDX)            \
+		{                                      \
+			qNewNdx = queRequests++;             \
+		}                                      \
+		else                                   \
+		{                                      \
+			qNewNdx = pathQB[QPOOLNDX].nextLink; \
+			REMQUENODE(qNewNdx);                 \
+		}                                      \
+	}                                        \
+	while (0)
 
 #define ESTIMATE0	((dx>dy) ?       (dx)      :       (dy))
 #define ESTIMATE1	((dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
@@ -148,15 +160,21 @@ short trailStratTreedxB=0;
 
 #define FLAT_STRATEGIC_TRAVEL_TIME		60
 
-#define QUESEARCH(ndx,NDX)						\
-{									\
-	INT32 k = TOTALCOST(ndx);					\
-	NDX = pathQB[QHEADNDX].nextLink;					\
-	while(NDX && (k > TOTALCOST(NDX)))				\
-		NDX = pathQB[NDX].nextLink;				\
-	while(NDX && (k == TOTALCOST(NDX)) && FARTHER(ndx,NDX) )	\
-		NDX = pathQB[NDX].nextLink;				\
-}
+#define QUESEARCH(ndx,NDX)                                    \
+	do                                                          \
+	{                                                           \
+		INT32 k = TOTALCOST(ndx);                                 \
+		NDX = pathQB[QHEADNDX].nextLink;                          \
+		while(NDX && (k > TOTALCOST(NDX)))                        \
+		{                                                         \
+			NDX = pathQB[NDX].nextLink;                             \
+		}                                                         \
+		while (NDX && (k == TOTALCOST(NDX)) && FARTHER(ndx, NDX)) \
+		{                                                         \
+			NDX = pathQB[NDX].nextLink;                             \
+		}                                                         \
+	}                                                           \
+	while (0)
 
 
 INT32 queRequests;

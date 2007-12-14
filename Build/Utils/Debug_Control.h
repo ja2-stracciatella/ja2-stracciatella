@@ -23,7 +23,7 @@ extern	void		AnimDbgMessage( CHAR8 *Str);
 
 #else
 
-#define AnimDebugMsg(c)
+#define AnimDebugMsg(c) (void)0
 
 #endif
 
@@ -36,7 +36,7 @@ extern	void		PhysicsDbgMessage( CHAR8 *Str);
 
 #else
 
-#define PhysicsDebugMsg(c)
+#define PhysicsDebugMsg(c) (void)0
 
 #endif
 
@@ -50,7 +50,7 @@ extern	void		AiDbgMessage( CHAR8 *Str);
 
 #else
 
-#define AiDebugMsg(c)
+#define AiDebugMsg(c) (void)0
 
 #endif
 

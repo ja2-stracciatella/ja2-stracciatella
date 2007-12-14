@@ -840,7 +840,7 @@ BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
 	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\", %s)\n", __FILE__, __LINE__, __func__, pcDirectory, fRecursive ? "TRUE" : "FALSE");
 #	endif
 	return FALSE;
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
@@ -929,7 +929,7 @@ BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
 BOOLEAN EraseDirectory(const char *pcDirectory)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
@@ -1202,7 +1202,7 @@ BOOLEAN FileClearAttributes(const char *strFilename)
 	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\")\n", __FILE__, __LINE__, __func__, strFilename);
 #	endif
 	return FALSE;
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	return SetFileAttributes( strFilename, FILE_ATTRIBUTE_NORMAL );
 #endif
@@ -1283,7 +1283,7 @@ BOOLEAN	FileCheckEndOfFile( HWFILE hFile )
 BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	HANDLE	hRealFile;
 	INT16 sLibraryID;
@@ -1347,7 +1347,7 @@ BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILET
 INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	return( CompareFileTime( pFirstFileTime, pSecondFileTime ) );
 #endif
@@ -1429,7 +1429,7 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( )
 static UINT32 GetFreeSpaceOnHardDrive(const char* pzDriveLetter)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	UINT32			uiBytesFree=0;
 

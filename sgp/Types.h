@@ -5,7 +5,7 @@
 
 
 #include <stdlib.h> // for abort()
-#define UNIMPLEMENTED() \
+#define UNIMPLEMENTED \
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
 	abort();
 

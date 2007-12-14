@@ -785,7 +785,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 	{
     	AnimDebugMsg( String( "Surface Database: Unloading Surface: %d", usSurfaceIndex ) );
 
-		  CHECKF( gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject != NULL )
+			CHECKF(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject != NULL);
 
 			DeleteVideoObject( gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject );
 			gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject = NULL;

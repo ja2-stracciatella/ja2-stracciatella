@@ -153,7 +153,7 @@ void SuspendVideoManager(void)
 BOOLEAN RestoreVideoManager(void)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	// Make sure the video manager is indeed suspended before moving on
 

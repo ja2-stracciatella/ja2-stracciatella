@@ -20,9 +20,9 @@
 
 
 #ifdef WITH_SOUND_DEBUG
-#	define SNDDBG(fmt, ...) fprintf(stderr, ">>>> SND: " fmt, __VA_ARGS__);
+#	define SNDDBG(fmt, ...) (void)fprintf(stderr, ">>>> SND: " fmt, __VA_ARGS__)
 #else
-#	define SNDDBG(fmt, ...) (void)0;
+#	define SNDDBG(fmt, ...) (void)0
 #endif
 
 

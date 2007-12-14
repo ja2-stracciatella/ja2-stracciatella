@@ -827,7 +827,7 @@ static int CompareDirEntryFileNames(const void* key, const void* member);
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;

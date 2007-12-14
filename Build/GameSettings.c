@@ -321,7 +321,7 @@ BOOLEAN GetCDLocation( )
 static BOOLEAN GetCDromDriveLetter(char* pString)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	UINT32	uiSize=0;
 	UINT8		ubCnt=0;
@@ -391,7 +391,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	UINT32	uiDriveType;
 	CHAR8		zRootName[512];

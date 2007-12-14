@@ -5943,7 +5943,7 @@ static BOOLEAN Zero8BPPDataTo16BPPBufferTransparent(UINT16* pBuffer, UINT32 uiDe
 	const UINT32 LineSkip = uiDestPitchBYTES - usWidth * 2;
 
 #if 1 // XXX TODO
-	UNIMPLEMENTED();
+	UNIMPLEMENTED
 #else
 	__asm {
 
