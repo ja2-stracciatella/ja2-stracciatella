@@ -1685,7 +1685,7 @@ static void SetSelection(UINT8 ubNewSelection)
 		gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 
 		//reset the slots help text
-		SetRegionFastHelpText( &gSelectedSaveRegion[ gbSelectedSaveLocation ], L"\0" );
+		SetRegionFastHelpText(&gSelectedSaveRegion[gbSelectedSaveLocation], L"");
 	}
 
 	gfRedrawSaveLoadScreen = TRUE;

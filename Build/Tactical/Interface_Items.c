@@ -2110,16 +2110,20 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		giItemDescAmmoButton = CreateIconAndTextButton(giItemDescAmmoButtonImages, pStr, TINYFONT1, sForeColour, FONT_MCOLOR_BLACK, sForeColour, FONT_MCOLOR_BLACK, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 
 		//if we are being init from the shop keeper screen and this is a dealer item we are getting info from
+		const wchar_t* help;
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL )
 		{
 			//disable the eject button
 			SpecifyDisabledButtonStyle( giItemDescAmmoButton, DISABLED_STYLE_HATCHED );
 
 			DisableButton( giItemDescAmmoButton );
-			SetButtonFastHelpText( giItemDescAmmoButton, L"\0" );
+			help = L"";
 		}
 		else
-			SetButtonFastHelpText( giItemDescAmmoButton, Message[ STR_EJECT_AMMO ] );
+		{
+			help = Message[STR_EJECT_AMMO];
+		}
+		SetButtonFastHelpText(giItemDescAmmoButton, help);
 
 		FindFontCenterCoordinates(ITEMDESC_AMMO_TEXT_X, ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight(TINYFONT1), pStr, TINYFONT1, &usX, &usY);
 		SpecifyButtonTextOffsets(giItemDescAmmoButton,  usX, usY, TRUE);
