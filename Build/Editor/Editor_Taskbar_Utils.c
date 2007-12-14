@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include "Font.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"

@@ -1,5 +1,6 @@
 #include "Items.h"
 #include "Soldier_Find.h"
+#include "Timer_Control.h"
 #include "Weapons.h"
 #include "Interface_Cursors.h"
 #include "Soldier_Control.h"

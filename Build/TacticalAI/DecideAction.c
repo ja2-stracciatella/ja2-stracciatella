@@ -6,6 +6,7 @@
 #include "Overhead.h"
 #include "OppList.h"
 #include "Items.h"
+#include "Timer_Control.h"
 #include "Weapons.h"
 #include "NPC.h"
 #include "Soldier_Functions.h"

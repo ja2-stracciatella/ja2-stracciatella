@@ -4,6 +4,7 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
+#include "Timer_Control.h"
 #include "Weapons.h"
 #include "Animation_Control.h"
 #include "Sys_Globals.h"

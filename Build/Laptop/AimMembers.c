@@ -6,6 +6,7 @@
 #include "AIMMembers.h"
 #include "AIM.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "SysUtil.h"

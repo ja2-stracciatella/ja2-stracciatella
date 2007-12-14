@@ -9,7 +9,6 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Isometric_Utils.h"
-#include "Timer_Control.h"
 #include "Render_Fun.h"
 #include "Render_Dirty.h"
 #include "MouseSystem.h"

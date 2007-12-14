@@ -2,6 +2,7 @@
 #include "Gameloop.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "ShopKeeper_Interface.h"
 #include "Game_Clock.h"

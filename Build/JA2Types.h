@@ -5,6 +5,7 @@
 
 
 typedef INT16 GridNo;
+typedef INT32 TIMECOUNTER;
 
 typedef struct BULLET        BULLET;
 typedef struct EXPLOSIONTYPE EXPLOSIONTYPE;

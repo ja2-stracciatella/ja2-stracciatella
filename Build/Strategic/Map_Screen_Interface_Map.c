@@ -14,6 +14,7 @@
 #include "StrategicMap.h"
 #include "Strategic_Pathing.h"
 #include "Text.h"
+#include "Timer_Control.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "VObject_Blitters.h"

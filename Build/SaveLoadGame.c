@@ -4,6 +4,7 @@
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "Soldier_Profile.h"
 #include "FileMan.h"

@@ -3,6 +3,7 @@
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "WorldDef.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"

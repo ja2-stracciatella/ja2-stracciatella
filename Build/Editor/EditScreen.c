@@ -7,6 +7,7 @@
 #include "Local.h"
 #include "SGP.h"
 #include "Button_System.h"
+#include "Timer_Control.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"

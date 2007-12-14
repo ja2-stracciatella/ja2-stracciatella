@@ -12,7 +12,6 @@
 #include "Laptop.h"
 #include "MapScreen.h"
 #include "Game_Clock.h"
-#include "Timer_Control.h"
 #include "Overhead.h"
 #include "LibraryDataBase.h"
 #include "Map_Screen_Interface.h"

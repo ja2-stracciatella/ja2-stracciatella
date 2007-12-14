@@ -1,3 +1,4 @@
+#include "Timer_Control.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "Soldier_Control.h"

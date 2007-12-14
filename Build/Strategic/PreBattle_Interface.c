@@ -26,6 +26,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Overhead.h"
 #include "Tactical_Placement_GUI.h"
+#include "Timer_Control.h"
 #include "Town_Militia.h"
 #include "Campaign.h"
 #include "GameSettings.h"

@@ -1,4 +1,5 @@
 #include "LoadSaveSoldierCreate.h"
+#include "Timer_Control.h"
 #include "WorldDef.h"
 #include "WorldDat.h"
 #include "WCheck.h"

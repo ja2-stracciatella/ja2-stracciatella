@@ -1,3 +1,4 @@
+#include "Timer_Control.h"
 #include "WCheck.h"
 #include "AI.h"
 #include "Isometric_Utils.h"

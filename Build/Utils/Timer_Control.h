@@ -8,8 +8,6 @@
 #define		CALLBACKTIMER
 #endif
 
-typedef INT32		TIMECOUNTER;
-
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
 
 // TIMER DEFINES

@@ -5,7 +5,6 @@
 #include "IMPVideoObjects.h"
 #include "Text.h"
 #include "WCheck.h"
-#include "Timer_Control.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"

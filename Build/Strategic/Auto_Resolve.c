@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Timer.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "Auto_Resolve.h"
 #include "Local.h"

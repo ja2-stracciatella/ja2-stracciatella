@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Local.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "SaveLoadScreen.h"
 #include "Video.h"

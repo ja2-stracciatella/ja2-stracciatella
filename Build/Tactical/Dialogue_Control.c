@@ -8,6 +8,7 @@
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"
 #include "Faces.h"
+#include "Timer_Control.h"
 #include "VSurface.h"
 #include "WCheck.h"
 #include "Overhead.h"

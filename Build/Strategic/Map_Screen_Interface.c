@@ -28,6 +28,7 @@
 #include "Dialogue_Control.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Map_Screen_Interface_Bottom.h"
+#include "Timer_Control.h"
 #include "Vehicles.h"
 #include "Line.h"
 #include "Text.h"

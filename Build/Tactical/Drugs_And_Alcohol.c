@@ -9,6 +9,7 @@
 #include "Random.h"
 #include "Text.h"
 #include "Interface.h"
+#include "Timer_Control.h"
 
 
 UINT8 ubDrugTravelRate[]			= { 4,	2 };

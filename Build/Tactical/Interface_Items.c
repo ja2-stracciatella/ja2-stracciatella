@@ -6,6 +6,7 @@
 #include "HImage.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Text_Utils.h"
+#include "Timer_Control.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"

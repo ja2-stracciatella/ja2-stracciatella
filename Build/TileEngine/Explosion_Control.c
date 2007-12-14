@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "LoadSaveExplosionType.h"
 #include "Overhead.h"
+#include "Timer_Control.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"

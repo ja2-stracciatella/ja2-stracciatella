@@ -6,7 +6,6 @@
 #include "WCheck.h"
 #include "WorldMan.h"
 #include "Isometric_Utils.h"
-#include "Timer_Control.h"
 #include "RenderWorld.h"
 #include "FOV.h"
 #include "Fog_Of_War.h"

@@ -3,6 +3,7 @@
 #include "Local.h"
 #include "Gameloop.h"
 #include "Soldier_Ani.h"
+#include "Timer_Control.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "Overhead.h"

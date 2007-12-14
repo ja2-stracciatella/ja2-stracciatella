@@ -29,7 +29,6 @@
 #include "Line.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
-#include "Timer_Control.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
 #include "Sys_Globals.h"

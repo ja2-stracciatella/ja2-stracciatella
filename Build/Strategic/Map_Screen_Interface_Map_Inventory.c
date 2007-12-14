@@ -5,6 +5,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Render_Dirty.h"
+#include "Timer_Control.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "SysUtil.h"

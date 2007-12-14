@@ -2,6 +2,7 @@
 #include "JAScreens.h"
 #include "Laptop.h"
 #include "Merc_Hiring.h"
+#include "Timer_Control.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"

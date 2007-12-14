@@ -6,6 +6,7 @@
 #include "Strategic.h"
 #include "Strategic_Mines.h"
 #include "Timer.h"
+#include "Timer_Control.h"
 #include "Types.h"
 #include "JAScreens.h"
 #include "Soldier_Control.h"

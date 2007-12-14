@@ -7,6 +7,7 @@
 #include "Quests.h"
 #include "Render_Fun.h"
 #include "Soldier_Macros.h"
+#include "Timer_Control.h"
 
 
 void CallAvailableEnemiesTo( INT16 sGridNo )
