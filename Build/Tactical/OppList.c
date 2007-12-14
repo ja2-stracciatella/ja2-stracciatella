@@ -1001,7 +1001,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 			sDistVisible++;
 			if (bLightLevel < NORMAL_LIGHTLEVEL_DAY - 1)
 			{
-				sDistVisible++;;
+				sDistVisible++;
 			}
 		}
 	}

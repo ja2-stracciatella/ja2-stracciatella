@@ -231,7 +231,7 @@ INT32 GetCachedTile(const char* cFilename)
 			// Has our cache size increased?
 			if ( cnt >= guiCurTileCacheSize )
 			{
-				guiCurTileCacheSize = cnt + 1;;
+				guiCurTileCacheSize = cnt + 1;
 			}
 
 			return( cnt );
@@ -263,7 +263,7 @@ BOOLEAN RemoveCachedTile( INT32 iCachedTile )
 						DeleteTileSurface( gpTileCache[ cnt ].pImagery );
 						gpTileCache[ cnt ].pImagery = NULL;
 						gpTileCache[ cnt ].sStructRefID = -1;
-						return( TRUE );;
+						return TRUE;
 				 }
 			}
 		}

@@ -560,8 +560,7 @@ DEF: commented out for Beta.  Nov 30
 						if (zWordString[1] != TEXT_SPACE && zWordString[1] < 256)
 							ubLocalColor = (UINT8) zWordString[1];
 
-
-						ubLocalColor = 184;;
+						ubLocalColor = 184;
 
 						// calc length of what we just wrote
 						usPhraseLengthPixels = StringPixLength(zLineString, uiLocalFont);

@@ -1011,8 +1011,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 			break;
 		}
 		cnt++;
-	};
-
+	}
 
 	if ( !(pStructure->fFlags & STRUCTURE_OPEN) )
 	{

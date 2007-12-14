@@ -622,7 +622,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 		}
 
 		cnt+=3;
-	};
+	}
 
 	// SETUP BUDDYS THAT GO FROM STRUCT TO SHADOW
 	cnt = 0;
@@ -636,9 +636,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 			TileElement->uiFlags |= HAS_SHADOW_BUDDY;
 		}
 		cnt+=3;
-	};
-
-
+	}
 
 	if ( uiDatabaseElem >= FIRSTDOOR1 &&
 			 uiDatabaseElem <= FOURTHDOORSH20 )
@@ -661,7 +659,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 				}
 			}
 			cnt++;
-		};
+		}
 		// Open Shadow
 		cnt = 0;
 		while( gOpenDoorShadowList[ cnt ] != -1 )
@@ -679,7 +677,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 				}
 			}
 			cnt++;
-		};
+		}
 
 		// Closed
 		cnt = 0;
@@ -698,7 +696,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 				}
 			}
 			cnt++;
-		};
+		}
 		// Open Shadow
 		cnt = 0;
 		while( gClosedDoorShadowList[ cnt ] != -1 )
@@ -716,7 +714,7 @@ void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEME
 				}
 			}
 			cnt++;
-		};
+		}
 	}
 
 	if ( uiDatabaseElem == FIRSTMISS1 )

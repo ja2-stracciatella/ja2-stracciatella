@@ -1576,7 +1576,8 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 {
 	OBJECTTYPE *	pObj;
 	INT8					bSlot, bSlot2, bExcludeSlot;
-	INT8					bAPCost = 0, bAPCost2 = 0;;
+	INT8 bAPCost  = 0;
+	INT8 bAPCost2 = 0;
 
 	CHECKF( pSoldier );
 	pObj = &(pSoldier->inv[HANDPOS]);

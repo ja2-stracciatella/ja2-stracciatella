@@ -1481,7 +1481,7 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 			fOpenedGraphic = TRUE;
 			break;
 		}
-	};
+	}
 
 	/* OK, we either have an opened graphic, in which case we want to switch to
 	 * the closed, or a closed in which case we want to switch to opened...

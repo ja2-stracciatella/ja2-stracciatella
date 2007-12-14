@@ -283,7 +283,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 			gExitDialog.fSingleMoveDisabled = TRUE;
 			if( ubNumEPCs > 1 )
 			{
-				gExitDialog.fSquadHasMultipleEPCs = TRUE;;
+				gExitDialog.fSquadHasMultipleEPCs = TRUE;
 			}
 		}
 	}

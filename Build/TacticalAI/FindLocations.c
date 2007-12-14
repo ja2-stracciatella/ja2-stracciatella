@@ -142,7 +142,8 @@ static INT8 CalcAverageCTGTForPosition(SOLDIERTYPE* const pSoldier, const SOLDIE
 	// When considering a gridno for cover, we want to take into account cover if we
 	// lie down, so we return the LOWEST chance to get through for that location.
 	INT8		bCubeLevel;
-	INT32		iTotalCTGT = 0, bValidCubeLevels = 0;;
+	INT32 iTotalCTGT       = 0;
+	INT32 bValidCubeLevels = 0;
 
 	for (bCubeLevel = 1; bCubeLevel <= 3; bCubeLevel++)
 	{

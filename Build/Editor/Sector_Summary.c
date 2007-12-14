@@ -2277,7 +2277,7 @@ static void LoadGlobalSummary(void)
 			SetFileManCurrentDirectory( DevInfoDir );
 			if( hfile )
 			{
-				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;;
+				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;
 				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
 				FileClose( hfile );
 				LoadSummary( szSector, 7, dMajorVersion );

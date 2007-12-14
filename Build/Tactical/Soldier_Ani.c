@@ -624,7 +624,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							// GO FORWARD HERE...
 							pSoldier ->fTryingToFall = FALSE;
-							break;;
+							break;
 						}
 						// IF HERE, RETURN SO WE DONOT INCREMENT DIR
 						return( TRUE );

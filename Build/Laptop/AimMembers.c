@@ -1632,7 +1632,7 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 {
 	static UINT16				usPopUpBoxPosX, usPopUpBoxPosY;
 	static wchar_t				sPopUpString1[400], sPopUpString2[400];
-	static BOOLEAN		fPopUpBoxActive = FALSE;;
+	static BOOLEAN fPopUpBoxActive = FALSE;
 
 	switch( ubFlag )
 	{

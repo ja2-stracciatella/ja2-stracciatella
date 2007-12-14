@@ -1709,8 +1709,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 						case BUBBA:
 							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BUBBA_IS_DEAD );
 							break;
-					};
-
+					}
 				}
 			}
 		}

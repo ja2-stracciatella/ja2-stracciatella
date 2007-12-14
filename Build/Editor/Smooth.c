@@ -219,7 +219,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 			break;
 		}
 		cnt += 6;
-	};
+	}
 	if ( !fFound )
 	{
 		// Check for existance of same tile
@@ -507,7 +507,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 			break;
 		}
 		cnt += 4;
-	};
+	}
 	if ( !fFound )
 	{
 			// Check for existance of same tile

@@ -88,7 +88,7 @@ BOOLEAN DequeAllGameEvents(void)
 		}
 
 		FreeEvent(pEvent);
-	};
+	}
 
 	// NOW CHECK SECONDARY QUEUE FOR ANY EXPRIED EVENTS
 	uiQueueSize = EventQueueSize(SECONDARY_EVENT_QUEUE);
@@ -151,7 +151,7 @@ BOOLEAN DequeueAllDemandGameEvents(void)
 		}
 
 		FreeEvent(pEvent);
-	};
+	}
 
 	return TRUE;
 }
