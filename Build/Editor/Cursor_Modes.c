@@ -29,7 +29,6 @@ UINT16 gusSelectionType = SMALLSELECTION;
 UINT16 gusSelectionDensity = 2;
 UINT16 gusSavedSelectionType = SMALLSELECTION;
 UINT16 gusSavedBuildingSelectionType = AREASELECTION;
-INT16 sGridX, sGridY;
 INT16 sBadMarker = -1;
 
 wchar_t SelTypeWidth[] = L"Width: xx";
@@ -134,8 +133,8 @@ static void RemoveBadMarker(void)
 
 static void DrawBuildingLayout(INT32 iMapIndex);
 static void EnsureSelectionType(void);
-static void ForceAreaSelectionWidth(void);
-static BOOLEAN HandleAreaSelection(void);
+static void ForceAreaSelectionWidth(INT16 sGridX, INT16 sGridY);
+static BOOLEAN HandleAreaSelection(INT16 sGridX, INT16 sGridY);
 static void ValidateSelectionRegionBoundaries(void);
 
 
@@ -148,6 +147,8 @@ void UpdateCursorAreas()
 	EnsureSelectionType();
 
 	//Determine if the mouse is currently in the world.
+	INT16 sGridX;
+	INT16 sGridY;
 	if( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA && GetMouseXY( &sGridX, &sGridY ) )
 	{
 		iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
@@ -177,12 +178,12 @@ void UpdateCursorAreas()
 				fValidCursor = TRUE;
 				break;
 			case LINESELECTION:
-				fValidCursor = HandleAreaSelection();
-				ForceAreaSelectionWidth();
+				fValidCursor = HandleAreaSelection(sGridX, sGridY);
+				ForceAreaSelectionWidth(sGridX, sGridY);
 				ValidateSelectionRegionBoundaries();
 				break;
 			case AREASELECTION:
-				fValidCursor = HandleAreaSelection();
+				fValidCursor = HandleAreaSelection(sGridX, sGridY);
 				break;
 		}
 	}
@@ -239,7 +240,7 @@ void UpdateCursorAreas()
 static SGPPoint gSelectAnchor;
 
 
-static void ForceAreaSelectionWidth(void)
+static void ForceAreaSelectionWidth(const INT16 sGridX, const INT16 sGridY)
 {
 	UINT16 gusDecSelWidth;
 
@@ -280,7 +281,7 @@ static void ForceAreaSelectionWidth(void)
 }
 
 
-static BOOLEAN HandleAreaSelection(void)
+static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 {
 	//When the user releases the left button, then clear and process the area.
 	if( fAnchored )
