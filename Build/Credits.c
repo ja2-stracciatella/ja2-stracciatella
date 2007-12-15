@@ -264,50 +264,50 @@ STR16	gzCreditNameFunny[]=
 */
 
 
-MOUSE_REGION	gCrdtMouseRegions[ NUM_PEOPLE_IN_CREDITS ];
+static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
 
 
-UINT32		guiCreditBackGroundImage;
-UINT32		guiCreditFaces;
-BOOLEAN		gfCreditsScreenEntry = TRUE;
-BOOLEAN		gfCreditsScreenExit = FALSE;
-UINT32		guiCreditsExitScreen;
+static UINT32  guiCreditBackGroundImage;
+static UINT32  guiCreditFaces;
+static BOOLEAN gfCreditsScreenEntry = TRUE;
+static BOOLEAN gfCreditsScreenExit  = FALSE;
+static UINT32  guiCreditsExitScreen;
 
-UINT8			gubCreditScreenRenderFlags = CRDT_RENDER_ALL;
+static UINT8 gubCreditScreenRenderFlags = CRDT_RENDER_ALL;
 
-CRDT_NODE	*gCrdtRootNode=NULL;
-CRDT_NODE	*gCrdtLastAddedNode=NULL;
+static CRDT_NODE* gCrdtRootNode      = NULL;
+static CRDT_NODE* gCrdtLastAddedNode = NULL;
 
-BOOLEAN		gfCrdtHaveRenderedFirstFrameToSaveBuffer;		// need to render background image to save buffer once
+static BOOLEAN gfCrdtHaveRenderedFirstFrameToSaveBuffer; // need to render background image to save buffer once
 
-INT32			giCurrentlySelectedFace = -1;
+static INT32 giCurrentlySelectedFace = -1;
 
 //
 //VAriables needed for processing of the nodes:
 //
 
 
-UINT32		guiCreditScreenActiveFont;				// the font that is used
-UINT32		guiCreditScreenTitleFont;				// the font that is used
-UINT8			gubCreditScreenActiveColor;				// color of the font
-UINT8			gubCreditScreenTitleColor;				// color of a Title node
+static UINT32 guiCreditScreenActiveFont;  // the font that is used
+static UINT32 guiCreditScreenTitleFont;   // the font that is used
+static UINT8  gubCreditScreenActiveColor; // color of the font
+static UINT8  gubCreditScreenTitleColor;  // color of a Title node
 //UINT32		guiCreditScreenActiveDisplayFlags;	//
 
-UINT32		guiCrdtNodeScrollSpeed = CRDT_NODE_DELAY_AMOUNT;	//speed credits go up at
+static UINT32 guiCrdtNodeScrollSpeed      = CRDT_NODE_DELAY_AMOUNT; // speed credits go up at
 //UINT32		guiCrdtTimeTillReadNextCredit = CRDT_DELAY_BN_SECTIONS;		//the delay before reading the next credit ( normall = guiCrdtDelayBetweenCreditSection or guiCrdtDelayBetweenNodes )
 //UINT32		guiCrdtDelayBetweenCreditSection = CRDT_DELAY_BN_SECTIONS;		//delay between major credits sections ( programming and art ) appearing on the screen
 //UINT32		guiCrdtDelayBetweenNodes = CRDT_DELAY_BN_NODES;		//delay between credits appearing on the screen
-UINT32		guiCrdtLastTimeUpdatingNode=0;											// the last time a node was read from the file
-UINT8			gubCrdtJustification = CENTER_JUSTIFIED;					// the current justification
+static UINT32 guiCrdtLastTimeUpdatingNode = 0;                      // the last time a node was read from the file
+static UINT8  gubCrdtJustification        = CENTER_JUSTIFIED;       // the current justification
 
-UINT32		guiGapBetweenCreditSections = CRDT_SPACE_BN_SECTIONS;
-UINT32		guiGapBetweenCreditNodes = CRDT_SPACE_BN_NODES;
-UINT32		guiGapTillReadNextCredit = CRDT_SPACE_BN_NODES;
+static UINT32 guiGapBetweenCreditSections = CRDT_SPACE_BN_SECTIONS;
+static UINT32 guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
+static UINT32 guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 
-UINT32		guiCurrentCreditRecord = 0;
-BOOLEAN		gfPauseCreditScreen = FALSE;
+static UINT32  guiCurrentCreditRecord = 0;
+static BOOLEAN gfPauseCreditScreen    = FALSE;
 
-HWFILE		ghFile;
+static HWFILE ghFile;
 
 
 UINT32	CreditScreenInit( void )
