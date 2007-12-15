@@ -136,8 +136,6 @@ typedef enum
 
 extern INT8	gbFirstApproachFlags[4];
 
-extern UINT8 gubTeamPenalty;
-
 extern void ShutdownNPCQuotes( void );
 
 extern void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord );

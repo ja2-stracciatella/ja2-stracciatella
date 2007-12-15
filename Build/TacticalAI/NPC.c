@@ -88,8 +88,6 @@ NPCQuoteInfo *	gpCivQuoteInfoArray[NUM_CIVQUOTE_SECTORS] = { NULL };
 	BOOLEAN					gfTriedToLoadQuoteInfoArray[NUM_PROFILES] = { FALSE };
 #endif
 
-UINT8 gubTeamPenalty;
-
 INT8	gbFirstApproachFlags[4] = { 0x01, 0x02, 0x04, 0x08 };
 
 
@@ -551,7 +549,7 @@ UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 	{
 		iPersonalVal = iPersonalVal * (100 + (100 - pNPCProfile->bTownAttachment) ) / 100;
 	}
-	iWillingness = (iPersonalVal / 2 + iTownVal / 2) * iApproachVal	/ 100 - gubTeamPenalty;
+	iWillingness = (iPersonalVal / 2 + iTownVal / 2) * iApproachVal	/ 100;
 
 	if (bApproach == NPC_INITIATING_CONV)
 	{
