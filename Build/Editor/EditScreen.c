@@ -689,42 +689,44 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 	if (iCurBankMapIndex >= 0x8000) return FALSE;
 
 	//Hook into the smart methods to override the selection window methods.
-	if (iDrawMode == DRAW_MODE_SMART_WALLS)
+	switch (iDrawMode)
 	{
-		if (!CalcWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
-		{
-			return FALSE;
-		}
-	}
-	else if (iDrawMode == DRAW_MODE_SMART_DOORS)
-	{
-		if (!CalcDoorInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
-		{
-			return FALSE;
-		}
-	}
-	else if (iDrawMode == DRAW_MODE_SMART_WINDOWS)
-	{
-		if (!CalcWindowInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
-		{
-			return FALSE;
-		}
-	}
-	else if (iDrawMode == DRAW_MODE_SMART_BROKEN_WALLS)
-	{
-		if (!CalcBrokenWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
-		{
-			return FALSE;
-		}
-		if (usUseObjIndex == 0xffff || usUseIndex == 0xffff)
-		{
-			return FALSE;
-		}
-	}
-	else
-	{
-		usUseIndex    = pSelList[iCurBank].usIndex;
-		usUseObjIndex = pSelList[iCurBank].uiObject;
+		case DRAW_MODE_SMART_WALLS:
+			if (!CalcWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+			{
+				return FALSE;
+			}
+			break;
+
+		case DRAW_MODE_SMART_DOORS:
+			if (!CalcDoorInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+			{
+				return FALSE;
+			}
+			break;
+
+		case DRAW_MODE_SMART_WINDOWS:
+			if (!CalcWindowInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+			{
+				return FALSE;
+			}
+			break;
+
+		case DRAW_MODE_SMART_BROKEN_WALLS:
+			if (!CalcBrokenWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+			{
+				return FALSE;
+			}
+			if (usUseObjIndex == 0xffff || usUseIndex == 0xffff)
+			{
+				return FALSE;
+			}
+			break;
+
+		default:
+			usUseIndex    = pSelList[iCurBank].usIndex;
+			usUseObjIndex = pSelList[iCurBank].uiObject;
+			break;
 	}
 	gCursorNode = ForceStructToTail(iCurBankMapIndex, (UINT16)(gTileTypeStartIndex[usUseObjIndex] + usUseIndex));
 	// ATE: Set this levelnode as dynamic!
