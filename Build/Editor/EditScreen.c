@@ -148,8 +148,6 @@ BOOLEAN fDontUseRandom = FALSE;
 INT32 TestButtons[10];
 
 LEVELNODE *gCursorNode = NULL;
-//LEVELNODE *gBasicCursorNode = NULL;
-INT16			gsCursorGridNo;
 
 INT32 giMusicID = 0;
 
