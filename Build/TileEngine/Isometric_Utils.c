@@ -225,25 +225,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 }
 
 
-BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY )
-{
-	INT16 sMouseX, sMouseY;
-
-	// Get grid position
-	if ( !GetMouseXY( &sMouseX, &sMouseY ) )
-	{
-		return( FALSE );
-	}
-
-	// Now adjust these cell coords into world coords
-	*psMouseX = ( ( sMouseX  ) * CELL_X_SIZE ) + ( CELL_X_SIZE / 2 );
-	*psMouseY = ( ( sMouseY  ) * CELL_Y_SIZE ) + ( CELL_Y_SIZE / 2 );
-
-
-	return( TRUE );
-}
-
-
 GridNo GetMouseMapPos(void)
 {
 	static GridNo sSameCursorPos   = NOWHERE;

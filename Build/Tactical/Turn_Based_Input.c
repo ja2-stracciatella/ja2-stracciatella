@@ -3666,43 +3666,33 @@ static void JumpFence(void)
 
 static void CreateNextCivType(void)
 {
-	INT16							sWorldX, sWorldY;
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	static						INT8 bBodyType = FATCIV;
-	// Get Grid Corrdinates of mouse
-	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
+	static INT8 bBodyType = FATCIV;
+
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
+
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct.ubProfile  = NO_PROFILE;
+	MercCreateStruct.sSectorX   = gWorldSectorX;
+	MercCreateStruct.sSectorY   = gWorldSectorY;
+	MercCreateStruct.bSectorZ   = gbWorldSectorZ;
+	MercCreateStruct.bBodyType  = bBodyType;
+	MercCreateStruct.bDirection = SOUTH;
+
+	if (++bBodyType > KIDCIV) bBodyType = FATCIV;
+
+	MercCreateStruct.bTeam            = CIV_TEAM;
+	MercCreateStruct.sInsertionGridNo = usMapPos;
+	RandomizeNewSoldierStats(&MercCreateStruct);
+
+	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL)
 	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+		AddSoldierToSector(s);
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-		MercCreateStruct.ubProfile		= NO_PROFILE;
-		MercCreateStruct.sSectorX			= gWorldSectorX;
-		MercCreateStruct.sSectorY			= gWorldSectorY;
-		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-		MercCreateStruct.bBodyType		= bBodyType;
-		MercCreateStruct.bDirection = SOUTH;
-
-		bBodyType++;
-
-		if ( bBodyType > KIDCIV )
-		{
-			bBodyType = FATCIV;
-		}
-
-		MercCreateStruct.bTeam					= CIV_TEAM;
-		MercCreateStruct.sInsertionGridNo		= usMapPos;
-		RandomizeNewSoldierStats( &MercCreateStruct );
-
-		SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-		if (s != NULL)
-		{
-			AddSoldierToSector(s);
-
-			// So we can see them!
-			AllTeamsLookForAll(NO_INTERRUPTS);
-
-		}
+		// So we can see them!
+		AllTeamsLookForAll(NO_INTERRUPTS);
 	}
 }
 
@@ -3728,68 +3718,56 @@ static void ToggleCliffDebug(void)
 
 static void CreateCow(void)
 {
-	INT16							sWorldX, sWorldY;
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	// Get Grid Corrdinates of mouse
-	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
+
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct.ubProfile        = NO_PROFILE;
+	MercCreateStruct.sSectorX         = gWorldSectorX;
+	MercCreateStruct.sSectorY         = gWorldSectorY;
+	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+	MercCreateStruct.bBodyType        = COW;
+	//MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.bTeam            = CIV_TEAM;
+	MercCreateStruct.sInsertionGridNo = usMapPos;
+	RandomizeNewSoldierStats(&MercCreateStruct);
+
+	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL)
 	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+		AddSoldierToSector(s);
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-		MercCreateStruct.ubProfile		= NO_PROFILE;
-		MercCreateStruct.sSectorX			= gWorldSectorX;
-		MercCreateStruct.sSectorY			= gWorldSectorY;
-		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-		MercCreateStruct.bBodyType		= COW;
-		//MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
-		MercCreateStruct.bTeam				= CIV_TEAM;
-		MercCreateStruct.sInsertionGridNo		= usMapPos;
-		RandomizeNewSoldierStats( &MercCreateStruct );
-
-		SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-		if (s != NULL)
-		{
-			AddSoldierToSector(s);
-
-			// So we can see them!
-			AllTeamsLookForAll(NO_INTERRUPTS);
-
-		}
+		// So we can see them!
+		AllTeamsLookForAll(NO_INTERRUPTS);
 	}
 }
 
 
 static void CreatePlayerControlledCow(void)
 {
-	INT16							sWorldX, sWorldY;
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	// Get Grid Corrdinates of mouse
-	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
+
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct.ubProfile        = 12;
+	MercCreateStruct.sSectorX         = gWorldSectorX;
+	MercCreateStruct.sSectorY         = gWorldSectorY;
+	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+	MercCreateStruct.bBodyType        = COW;
+	MercCreateStruct.sInsertionGridNo = usMapPos;
+	MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.fPlayerMerc      = TRUE;
+	RandomizeNewSoldierStats(&MercCreateStruct);
+
+	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL)
 	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+		AddSoldierToSector(s);
 
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-		MercCreateStruct.ubProfile		= 12;
-		MercCreateStruct.sSectorX			= gWorldSectorX;
-		MercCreateStruct.sSectorY			= gWorldSectorY;
-		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-		MercCreateStruct.bBodyType		= COW;
-		MercCreateStruct.sInsertionGridNo		= usMapPos;
-		MercCreateStruct.bTeam					= SOLDIER_CREATE_AUTO_TEAM;
-		MercCreateStruct.fPlayerMerc		= TRUE;
-
-		RandomizeNewSoldierStats( &MercCreateStruct );
-
-		SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-		if (s != NULL)
-		{
-			AddSoldierToSector(s);
-
-			// So we can see them!
-			AllTeamsLookForAll(NO_INTERRUPTS);
-		}
+		// So we can see them!
+		AllTeamsLookForAll(NO_INTERRUPTS);
 	}
 }
 
@@ -3841,32 +3819,23 @@ static void GrenadeTest3(void)
 
 static void CreatePlayerControlledMonster(void)
 {
-	INT16							sWorldX, sWorldY;
-	if (GetMouseWorldCoordsInCenter(&sWorldX, &sWorldY))
-	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+	const GridNo usMapPos = GetMouseMapPos();
+	if (usMapPos == NOWHERE) return;
 
-		SOLDIERCREATE_STRUCT		MercCreateStruct;
-		memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-		MercCreateStruct.ubProfile		= NO_PROFILE;
-		MercCreateStruct.sSectorX			= gWorldSectorX;
-		MercCreateStruct.sSectorY			= gWorldSectorY;
-		MercCreateStruct.bSectorZ			= gbWorldSectorZ;
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct.ubProfile        = NO_PROFILE;
+	MercCreateStruct.sSectorX         = gWorldSectorX;
+	MercCreateStruct.sSectorY         = gWorldSectorY;
+	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
+	MercCreateStruct.bBodyType        = (_KeyDown(SDLK_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
+	MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.sInsertionGridNo = usMapPos;
+	RandomizeNewSoldierStats(&MercCreateStruct);
 
-		//Note:  only gets called if Alt and/or Ctrl isn't pressed!
-		if (_KeyDown(SDLK_INSERT))
-			MercCreateStruct.bBodyType		= QUEENMONSTER;
-			//MercCreateStruct.bBodyType		= LARVAE_MONSTER;
-		else
-			MercCreateStruct.bBodyType		= ADULTFEMALEMONSTER;
-		MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
-		MercCreateStruct.sInsertionGridNo		= usMapPos;
-		RandomizeNewSoldierStats( &MercCreateStruct );
-
-		SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-		if (s != NULL) AddSoldierToSector(s);
-	}
+	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s != NULL) AddSoldierToSector(s);
 }
 
 

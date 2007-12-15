@@ -2177,37 +2177,36 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 {
 	// Create guy # X
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	INT16										sWorldX, sWorldY, sSectorX, sSectorY, sGridX, sGridY;
 	UINT16 usMapPos;
 
+	INT16 sGridX;
+	INT16 sGridY;
 	if ( GetMouseXY( &sGridX, &sGridY ) )
 	{
 		usMapPos = MAPROWCOLTOPOS( sGridY, sGridX );
-		// Get Grid Coordinates of mouse
-		if ( GetMouseWorldCoordsInCenter( &sWorldX, &sWorldY ) )
+
+		INT16 sSectorX;
+		INT16 sSectorY;
+		GetCurrentWorldSector(&sSectorX, &sSectorY);
+
+		SOLDIERCREATE_STRUCT MercCreateStruct;
+		memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+		MercCreateStruct.bTeam            = bTeam;
+		MercCreateStruct.ubProfile        = ubProfileID;
+		MercCreateStruct.sSectorX         = sSectorX;
+		MercCreateStruct.sSectorY         = sSectorY;
+		MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+		MercCreateStruct.sInsertionGridNo = usMapPos;
+
+		RandomizeNewSoldierStats(&MercCreateStruct);
+
+		SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+		if (s != NULL)
 		{
-			GetCurrentWorldSector( &sSectorX, &sSectorY );
+			AddSoldierToSector(s);
 
-
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-			MercCreateStruct.bTeam				= bTeam;
-			MercCreateStruct.ubProfile		= ubProfileID;
-			MercCreateStruct.sSectorX			= sSectorX;
-			MercCreateStruct.sSectorY			= sSectorY;
-			MercCreateStruct.bSectorZ			= gbWorldSectorZ;
-			MercCreateStruct.sInsertionGridNo		= usMapPos;
-
-			RandomizeNewSoldierStats( &MercCreateStruct );
-
-			SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-			if (s != NULL)
-			{
-				AddSoldierToSector(s);
-
-				// So we can see them!
-				AllTeamsLookForAll(NO_INTERRUPTS);
-			}
+			// So we can see them!
+			AllTeamsLookForAll(NO_INTERRUPTS);
 		}
 	}
 }

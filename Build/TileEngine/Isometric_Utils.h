@@ -54,8 +54,6 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
  * if the cursor is not over any tile. */
 GridNo GetMouseMapPos(void);
 
-BOOLEAN GetMouseWorldCoordsInCenter( INT16 *psMouseX, INT16 *psMouseY );
-
 
 void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos );
 void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *psWorldScreenX, INT16 *psWorldScreenY );
