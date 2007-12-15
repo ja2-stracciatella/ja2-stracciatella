@@ -180,7 +180,6 @@ BOOLEAN fSelectionWindow = FALSE;
 BOOLEAN gfRealGunNut = TRUE;
 
 INT16 sGridX, sGridY;
-UINT32 iMapIndex;
 BOOLEAN fNewMap = FALSE;
 
 INT32 iPrevDrawMode = DRAW_MODE_NOTHING;
@@ -912,7 +911,7 @@ void ShowCurrentDrawingMode( void )
 		case DRAW_MODE_SMART_WALLS:
 			if ( GetMouseXY( &sGridX, &sGridY ) )
 			{
-				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 				if( CalcWallInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
 					break;
 			}
@@ -921,7 +920,7 @@ void ShowCurrentDrawingMode( void )
 		case DRAW_MODE_SMART_DOORS:
 			if ( GetMouseXY( &sGridX, &sGridY ) )
 			{
-				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 				if( CalcDoorInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
 					break;
 			}
@@ -930,7 +929,7 @@ void ShowCurrentDrawingMode( void )
 		case DRAW_MODE_SMART_WINDOWS:
 			if ( GetMouseXY( &sGridX, &sGridY ) )
 			{
-				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 				if( CalcWindowInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
 					break;
 			}
@@ -939,7 +938,7 @@ void ShowCurrentDrawingMode( void )
 		case DRAW_MODE_SMART_BROKEN_WALLS:
 			if ( GetMouseXY( &sGridX, &sGridY ) )
 			{
-				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 				if( CalcBrokenWallInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
 					break;
 			}
@@ -1846,9 +1845,11 @@ static UINT32 PerformSelectedAction(void)
 			break;
 
 		case ACTION_SET_WAYPOINT:
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+		{
+			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 			AddMercWaypoint( iMapIndex );
 			break;
+		}
 
 		case ACTION_RAISE_LAND:
 			RaiseWorldLand();
@@ -1863,8 +1864,7 @@ static UINT32 PerformSelectedAction(void)
 		case ACTION_QUICK_ERASE:
 			if ( (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA) && GetMouseXY( &sGridX, &sGridY ) )
 			{
-				iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
-
+				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 				if ( iMapIndex < 0x8000 )
 				{
 					QuickEraseMapTile( iMapIndex );
@@ -2113,15 +2113,20 @@ static UINT32 PerformSelectedAction(void)
 			break;
 
 		case ACTION_COPY_MERC_PLACEMENT:
+		{
 			GetMouseXY( &sGridX, &sGridY );
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 			CopyMercPlacement( iMapIndex );
 			break;
+		}
+
 		case ACTION_PASTE_MERC_PLACEMENT:
+		{
 			GetMouseXY( &sGridX, &sGridY );
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 			PasteMercPlacement( iMapIndex );
 			break;
+		}
 
 		case ACTION_SAVE_MAP:
 			UpdateLastActionBeforeLeaving();
@@ -2183,18 +2188,20 @@ static UINT32 PerformSelectedAction(void)
 			break;
 
 		case ACTION_WALL_PASTE1:	// Doors		//** Changes needed
+		{
 			GetMouseXY( &sGridX, &sGridY );
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
-
+			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 			AddWallToStructLayer( iMapIndex, FIRSTWALL18, TRUE );
 			break;
+		}
 
 		case ACTION_WALL_PASTE2:	// Windows	//** Changes Needed
+		{
 			GetMouseXY( &sGridX, &sGridY );
-			iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
-
+			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 			AddWallToStructLayer( iMapIndex, FIRSTWALL19, TRUE );
 			break;
+		}
 
 		case ACTION_NEXT_STRUCT:
 			CreateJA2SelectionWindow( SELWIN_OSTRUCTS );
@@ -2909,7 +2916,7 @@ static void HandleMouseClicksInGameScreen(void)
 		return;
 	}
 
-	iMapIndex = MAPROWCOLTOPOS( sGridY, sGridX );
+	const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 
 	fPrevState = gfRenderWorld;
 
@@ -3393,7 +3400,6 @@ UINT32  EditScreenHandle( void )
 
 	//Calculate general mouse information
 	GetMouseXY( &sGridX, &sGridY );
-	iMapIndex = sGridY * WORLD_COLS + sGridX;
 
 	DetermineUndoState();
 
