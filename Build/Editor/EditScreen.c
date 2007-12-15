@@ -909,57 +909,45 @@ void ShowCurrentDrawingMode( void )
 			break;
 		case DRAW_MODE_SMART_WALLS:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			if ( GetMouseXY( &sGridX, &sGridY ) )
+			const GridNo pos = GetMouseMapPos();
+			if (pos == NOWHERE ||
+					!CalcWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
 			{
-				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-				if( CalcWallInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
-					break;
+				CalcSmartWallDefault(&usObjIndex, &usUseIndex);
 			}
-			CalcSmartWallDefault( &usObjIndex, &usUseIndex );
 			break;
 		}
 
 		case DRAW_MODE_SMART_DOORS:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			if ( GetMouseXY( &sGridX, &sGridY ) )
+			const GridNo pos = GetMouseMapPos();
+			if (pos == NOWHERE ||
+					!CalcDoorInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
 			{
-				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-				if( CalcDoorInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
-					break;
+				CalcSmartDoorDefault(&usObjIndex, &usUseIndex);
 			}
-			CalcSmartDoorDefault( &usObjIndex, &usUseIndex );
 			break;
 		}
 
 		case DRAW_MODE_SMART_WINDOWS:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			if ( GetMouseXY( &sGridX, &sGridY ) )
+			const GridNo pos = GetMouseMapPos();
+			if (pos == NOWHERE ||
+					!CalcWindowInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
 			{
-				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-				if( CalcWindowInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
-					break;
+				CalcSmartWindowDefault(&usObjIndex, &usUseIndex);
 			}
-			CalcSmartWindowDefault( &usObjIndex, &usUseIndex );
 			break;
 		}
 
 		case DRAW_MODE_SMART_BROKEN_WALLS:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			if ( GetMouseXY( &sGridX, &sGridY ) )
+			const GridNo pos = GetMouseMapPos();
+			if (pos == NOWHERE ||
+					!CalcBrokenWallInfoUsingSmartMethod(pos, &usObjIndex, &usUseIndex))
 			{
-				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-				if( CalcBrokenWallInfoUsingSmartMethod( iMapIndex, &usObjIndex, &usUseIndex ) )
-					break;
+				CalcSmartBrokenWallDefault(&usObjIndex, &usUseIndex);
 			}
-			CalcSmartBrokenWallDefault( &usObjIndex, &usUseIndex );
 			break;
 		}
 
@@ -1864,11 +1852,8 @@ static UINT32 PerformSelectedAction(void)
 
 		case ACTION_SET_WAYPOINT:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			GetMouseXY(&sGridX, &sGridY);
-			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-			AddMercWaypoint( iMapIndex );
+			const GridNo pos = GetMouseMapPos();
+			AddMercWaypoint(pos);
 			break;
 		}
 
@@ -1883,19 +1868,15 @@ static UINT32 PerformSelectedAction(void)
 			break;
 
 		case ACTION_QUICK_ERASE:
-		{
-			INT16 sGridX;
-			INT16 sGridY;
-			if ( (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA) && GetMouseXY( &sGridX, &sGridY ) )
+			if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
 			{
-				const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-				if ( iMapIndex < 0x8000 )
+				const UINT32 pos = GetMouseMapPos();
+				if (pos != NOWHERE && pos < 0x8000)
 				{
-					QuickEraseMapTile( iMapIndex );
+					QuickEraseMapTile(pos);
 				}
 			}
 			break;
-		}
 
 		case ACTION_QUIT_GAME:
 			gfProgramIsRunning = FALSE;
@@ -2139,21 +2120,15 @@ static UINT32 PerformSelectedAction(void)
 
 		case ACTION_COPY_MERC_PLACEMENT:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			GetMouseXY( &sGridX, &sGridY );
-			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-			CopyMercPlacement( iMapIndex );
+			const GridNo pos = GetMouseMapPos();
+			CopyMercPlacement(pos);
 			break;
 		}
 
 		case ACTION_PASTE_MERC_PLACEMENT:
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			GetMouseXY( &sGridX, &sGridY );
-			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-			PasteMercPlacement( iMapIndex );
+			const GridNo pos = GetMouseMapPos();
+			PasteMercPlacement(pos);
 			break;
 		}
 
@@ -2218,21 +2193,15 @@ static UINT32 PerformSelectedAction(void)
 
 		case ACTION_WALL_PASTE1:	// Doors		//** Changes needed
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			GetMouseXY( &sGridX, &sGridY );
-			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-			AddWallToStructLayer( iMapIndex, FIRSTWALL18, TRUE );
+			const GridNo pos = GetMouseMapPos();
+			AddWallToStructLayer(pos, FIRSTWALL18, TRUE);
 			break;
 		}
 
 		case ACTION_WALL_PASTE2:	// Windows	//** Changes Needed
 		{
-			INT16 sGridX;
-			INT16 sGridY;
-			GetMouseXY( &sGridX, &sGridY );
-			const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
-			AddWallToStructLayer( iMapIndex, FIRSTWALL19, TRUE );
+			const GridNo pos = GetMouseMapPos();
+			AddWallToStructLayer(pos, FIRSTWALL19, TRUE);
 			break;
 		}
 
