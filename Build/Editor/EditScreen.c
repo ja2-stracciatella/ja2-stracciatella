@@ -607,7 +607,6 @@ static void RemoveTempMouseCursorObject(void)
 //the mouse cursor, to indicate what is about to be drawn.
 static BOOLEAN DrawTempMouseCursorObject(void)
 {
-	INT16		sMouseX_M, sMouseY_M;
 	UINT16	usUseIndex;
 	UINT16	usUseObjIndex;
 
@@ -683,59 +682,54 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 			break;
 	}
 
-	if ( GetMouseXY( &sMouseX_M, &sMouseY_M ) )
+	const GridNo pos = GetMouseMapPos();
+	if (pos == NOWHERE) return FALSE;
+
+	iCurBankMapIndex = pos;
+	if (iCurBankMapIndex >= 0x8000) return FALSE;
+
+	//Hook into the smart methods to override the selection window methods.
+	if (iDrawMode == DRAW_MODE_SMART_WALLS)
 	{
-		if ( (iCurBankMapIndex = MAPROWCOLTOPOS( sMouseY_M, sMouseX_M )) < 0x8000 )
+		if (!CalcWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
 		{
-
-			//Hook into the smart methods to override the selection window methods.
-			if( iDrawMode == DRAW_MODE_SMART_WALLS )
-			{
-				if( !CalcWallInfoUsingSmartMethod( iCurBankMapIndex, &usUseObjIndex, &usUseIndex ) )
-				{
-					return FALSE;
-				}
-			}
-			else if( iDrawMode == DRAW_MODE_SMART_DOORS )
-			{
-				if( !CalcDoorInfoUsingSmartMethod( iCurBankMapIndex, &usUseObjIndex, &usUseIndex ) )
-				{
-					return FALSE;
-				}
-			}
-			else if( iDrawMode == DRAW_MODE_SMART_WINDOWS )
-			{
-				if( !CalcWindowInfoUsingSmartMethod( iCurBankMapIndex, &usUseObjIndex, &usUseIndex ) )
-				{
-					return FALSE;
-				}
-			}
-			else if( iDrawMode == DRAW_MODE_SMART_BROKEN_WALLS )
-			{
-				if( !CalcBrokenWallInfoUsingSmartMethod( iCurBankMapIndex, &usUseObjIndex, &usUseIndex ) )
-				{
-					return FALSE;
-				}
-				if( usUseObjIndex == 0xffff ||  usUseIndex == 0xffff )
-				{
-					return FALSE;
-				}
-			}
-			else
-			{
-				usUseIndex = pSelList[ iCurBank ].usIndex;
-				usUseObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
-			}
-			gCursorNode = ForceStructToTail( iCurBankMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-			// ATE: Set this levelnode as dynamic!
-			gCursorNode->uiFlags |= LEVELNODE_DYNAMIC;
-			return( TRUE );
+			return FALSE;
 		}
-		else
-			return( FALSE );
 	}
-
-	return( FALSE );
+	else if (iDrawMode == DRAW_MODE_SMART_DOORS)
+	{
+		if (!CalcDoorInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+		{
+			return FALSE;
+		}
+	}
+	else if (iDrawMode == DRAW_MODE_SMART_WINDOWS)
+	{
+		if (!CalcWindowInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+		{
+			return FALSE;
+		}
+	}
+	else if (iDrawMode == DRAW_MODE_SMART_BROKEN_WALLS)
+	{
+		if (!CalcBrokenWallInfoUsingSmartMethod(iCurBankMapIndex, &usUseObjIndex, &usUseIndex))
+		{
+			return FALSE;
+		}
+		if (usUseObjIndex == 0xffff || usUseIndex == 0xffff)
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		usUseIndex    = pSelList[iCurBank].usIndex;
+		usUseObjIndex = pSelList[iCurBank].uiObject;
+	}
+	gCursorNode = ForceStructToTail(iCurBankMapIndex, (UINT16)(gTileTypeStartIndex[usUseObjIndex] + usUseIndex));
+	// ATE: Set this levelnode as dynamic!
+	gCursorNode->uiFlags |= LEVELNODE_DYNAMIC;
+	return TRUE;
 }
 
 
