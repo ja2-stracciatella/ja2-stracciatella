@@ -3645,7 +3645,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 	UINT8							ubItemCursor;
 
 	GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos == NOWHERE) return GAME_SCREEN;
+	if (usMapPos == NOWHERE) return FALSE;
 
 	// LOOK IN GUY'S HAND TO CHECK LOCATION
   usInHand = pSoldier->inv[HANDPOS].usItem;
