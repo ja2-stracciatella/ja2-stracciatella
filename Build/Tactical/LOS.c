@@ -1642,32 +1642,6 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 }
 
 
-static BOOLEAN SoldierToSoldierLineOfSightTimingTest(SOLDIERTYPE* pStartSoldier, SOLDIERTYPE* pEndSoldier, UINT8 ubTileSightLimit, INT8 bAware)
-{
-	UINT32		uiLoopLimit = 100000;
-	UINT32		uiLoop;
-	UINT32		uiStartTime, uiEndTime;
-
-  FILE      *OutFile;
-
-	uiStartTime = GetJA2Clock();
-	for (uiLoop = 0; uiLoop < uiLoopLimit; uiLoop++)
-	{
-		SoldierToSoldierLineOfSightTest( pStartSoldier, pEndSoldier, ubTileSightLimit, bAware );
-	}
-	uiEndTime = GetJA2Clock();
-	if ((OutFile = fopen("Timing.txt", "a+t")) != NULL)
-	{
-	#ifdef _DEBUG
-		fprintf(OutFile, "DEBUG: " );
-	#endif
-		fprintf(OutFile, "Time for %d calls is %d milliseconds\n", uiLoopLimit, uiEndTime - uiStartTime);
-		fclose(OutFile);
-	}
-	return( TRUE );
-}
-
-
 INT32 SoldierTo3DLocationLineOfSightTest(const SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, UINT8 ubTileSightLimit, INT8 bAware)
 {
 	FLOAT						dStartZPos, dEndZPos;
