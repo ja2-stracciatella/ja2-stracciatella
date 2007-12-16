@@ -18,7 +18,6 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "RenderWorld.h"
-#include "Sys_Globals.h"
 #include "Cursors.h"
 #include "Radar_Screen.h"
 #include "WorldMan.h"

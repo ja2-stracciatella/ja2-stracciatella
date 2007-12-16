@@ -4,7 +4,6 @@
 #include "Local.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"
-#include "Sys_Globals.h"
 #include "Fade_Screen.h"
 #include "SysUtil.h"
 #include "MercTextBox.h"

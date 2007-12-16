@@ -10,7 +10,6 @@
 #include "Isometric_Utils.h"
 #include "Animation_Data.h"
 #include "Road_Smoothing.h"
-#include "Sys_Globals.h"
 #include "Weapons.h"
 #include "Environment.h"
 #include "Lighting.h"

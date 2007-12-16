@@ -7,7 +7,6 @@
 #include "Timer_Control.h"
 #include "Weapons.h"
 #include "Animation_Control.h"
-#include "Sys_Globals.h"
 #include "Handle_UI.h"
 #include "Isometric_Utils.h"
 #include "WorldMan.h"

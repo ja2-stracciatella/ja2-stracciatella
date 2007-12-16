@@ -9,7 +9,6 @@
 #include "Animation_Control.h"
 #include "Points.h"
 #include "Sound_Control.h"
-#include "Sys_Globals.h"
 #include "Isometric_Utils.h"
 #include "Animation_Data.h"
 #include "Random.h"

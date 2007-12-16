@@ -6,7 +6,6 @@
 #include "Overhead.h"
 #include "Overhead_Types.h"
 #include "WCheck.h"
-#include "Sys_Globals.h"
 #include "Debug.h"
 #include "VSurface.h"
 

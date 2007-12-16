@@ -16,7 +16,6 @@
 #include "Isometric_Utils.h"
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
-#include "Sys_Globals.h"
 #include "Points.h"
 #include "Lighting.h"
 #include "Weapons.h"

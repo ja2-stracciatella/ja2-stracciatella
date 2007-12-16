@@ -20,7 +20,6 @@
 #include "SaveLoadScreen.h"
 #include "ScreenIDs.h"
 #include "SysUtil.h"
-#include "Sys_Globals.h"
 #include "Text.h"
 #include "Timer_Control.h"
 #include "VSurface.h"

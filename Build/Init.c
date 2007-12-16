@@ -19,7 +19,6 @@
 #include "Cursor_Control.h"
 #include "Music_Control.h"
 #include "Video.h"
-#include "Sys_Globals.h"
 #include "MapScreen.h"
 #include "Interface_Items.h"
 #include "Strategic.h"

@@ -4,7 +4,6 @@
 #include "Isometric_Utils.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
-#include "Sys_Globals.h"
 #include "OppList.h"
 #include "Animation_Control.h"
 #include "Font_Control.h"

@@ -3,7 +3,6 @@
 #include "Interface.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
-#include "Sys_Globals.h"
 #include "SysUtil.h"
 #include "WCheck.h"
 #include "Cursors.h"

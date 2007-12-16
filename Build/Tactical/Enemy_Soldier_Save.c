@@ -11,7 +11,6 @@
 #include "Items.h"
 #include "Map_Information.h"
 #include "Soldier_Profile.h"
-#include "Sys_Globals.h"
 #include "EditorMercs.h"
 #include "Animation_Data.h"
 #include "Tactical_Save.h"

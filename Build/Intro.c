@@ -16,7 +16,6 @@
 #include "ScreenIDs.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
-#include "Sys_Globals.h"
 #include "Text.h"
 #include "Video.h"
 #include "VSurface.h"
