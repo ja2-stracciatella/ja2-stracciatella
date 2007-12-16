@@ -4,9 +4,6 @@
 #ifndef __SMOOTH_H
 #define __SMOOTH_H
 
-#define ONELEVELTYPEONEROOF		1
-#define ONELEVELTYPETWOROOF			2
-
 
 //   Area (pointer to SGP rect) +
 //      Location to check-+--|  |       |---- Check left and right edges -----|    |---- Check top and bottom edges -----|

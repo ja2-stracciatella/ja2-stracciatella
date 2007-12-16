@@ -417,7 +417,7 @@ typedef struct ROOFNODE
 	struct ROOFNODE *next;
 }ROOFNODE;
 
-ROOFNODE *gpRoofList = NULL;
+static ROOFNODE* gpRoofList = NULL;
 
 
 static void ReplaceRoof(INT32 iMapIndex, UINT16 usRoofType)
@@ -490,7 +490,7 @@ void ReplaceBuildingWithNewRoof( INT32 iMapIndex )
 }
 
 //internal door editing vars.
-INT32 iDoorMapIndex = 0;
+static INT32 iDoorMapIndex = 0;
 enum{
 	DOOR_BACKGROUND,
 	DOOR_OKAY,
@@ -498,8 +498,8 @@ enum{
 	DOOR_LOCKED,
 	NUM_DOOR_BUTTONS
 };
-INT32 iDoorButton[ NUM_DOOR_BUTTONS ];
-MOUSE_REGION DoorRegion;
+static INT32        iDoorButton[NUM_DOOR_BUTTONS];
+static MOUSE_REGION DoorRegion;
 
 
 static void DoorCancelCallback(GUI_BUTTON* btn, INT32 reason);

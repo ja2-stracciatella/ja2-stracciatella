@@ -243,9 +243,11 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	return TRUE;
 }
 
-UINT16 usCurrentExitGridNo = 0;
+
 void LocateNextExitGrid()
 {
+	static UINT16 usCurrentExitGridNo = 0;
+
 	EXITGRID ExitGrid;
 	UINT16 i;
 	for( i = usCurrentExitGridNo + 1; i < WORLD_MAX; i++ )

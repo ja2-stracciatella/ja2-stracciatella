@@ -79,9 +79,9 @@
 #include "Stubs.h" // XXX
 
 
-BOOLEAN gfCorruptMap = FALSE;
-BOOLEAN gfCorruptSchedules = FALSE;
-BOOLEAN gfProfileDataLoaded = FALSE;
+static BOOLEAN gfCorruptMap        = FALSE;
+static BOOLEAN gfCorruptSchedules  = FALSE;
+BOOLEAN        gfProfileDataLoaded = FALSE;
 
 extern void RemoveMercsInSector();
 extern void ReverseSchedules();
@@ -92,71 +92,54 @@ extern BOOLEAN HandleSummaryInput( InputAtom *pEvent );
 
 // These are global variables used by the main game loop
 
-UINT32 guiSaveTacticalStatusFlags;  //saves the tactical status flags when entering the editor.
+static UINT32 guiSaveTacticalStatusFlags; // saves the tactical status flags when entering the editor.
 
 BOOLEAN			gfAutoLoadA9 = FALSE;
 //new vars added by Kris
 BOOLEAN			gfRenderWorld = FALSE;
 BOOLEAN			gfRenderTaskbar = FALSE;
 BOOLEAN			gfRenderDrawingMode = FALSE;
-BOOLEAN			gfFirstPlacement = TRUE;
+static BOOLEAN gfFirstPlacement          = TRUE;
 BOOLEAN			gfPendingBasement = FALSE;
 BOOLEAN			gfPendingCaves = FALSE;
-BOOLEAN			gfNeedToInitGame = FALSE;
-BOOLEAN			gfScheduleReversalPending = FALSE;
-BOOLEAN			gfRemoveLightsPending = FALSE;
-BOOLEAN			gfScheduleClearPending = FALSE;
+static BOOLEAN gfNeedToInitGame          = FALSE;
+static BOOLEAN gfScheduleReversalPending = FALSE;
+static BOOLEAN gfRemoveLightsPending     = FALSE;
+static BOOLEAN gfScheduleClearPending    = FALSE;
 BOOLEAN			gfConfirmExitFirst = TRUE;
 BOOLEAN			gfConfirmExitPending = FALSE;
 BOOLEAN			gfIntendOnEnteringEditor = FALSE;
 
 //original
 UINT8				gubFilename[ 200 ];
-INT16				gsBanksSubIndex = 0;
-INT16				gsOldBanksSubIndex = 1;
-INT16				gsCliffsSubIndex = 0;
-INT16				gsOldCliffsSubIndex = 1;
-BOOLEAN			gfSwitchScreen = FALSE;
-BOOLEAN			gDoTest = FALSE;
-BOOLEAN			gDoTest2 = FALSE;
-FLOAT				gShadePercent = (FLOAT)0.65;
-INT16				gusCurrentRoofType = ONELEVELTYPEONEROOF;
+static INT16 gsBanksSubIndex = 0;
+static FLOAT gShadePercent   = 0.65f;
 
 UINT16			gusLightLevel = 0;
-UINT16			gusGameLightLevel = 0;
+static UINT16 gusGameLightLevel  = 0;
 static UINT16 gusSavedLightLevel = 0;
 BOOLEAN			gfFakeLights = FALSE;
 
 INT16				gsLightRadius = 5;
 
-BOOLEAN			gfOldDoVideoScroll;			// Saved for returning to previous settings
-UINT8				gubOldCurScrollSpeedID; // Saved for returning to previous settings
+static BOOLEAN gfOldDoVideoScroll;     // Saved for returning to previous settings
+static UINT8   gubOldCurScrollSpeedID; // Saved for returning to previous settings
 
 INT32 iOldTaskMode = TASK_OPTIONS;
 
 INT32 iTaskMode = TASK_NONE;
 
-INT32 iEditorTBarButton[NUMBER_EDITOR_BUTTONS];	// For Toolbars
-
 BOOLEAN gfMercResetUponEditorEntry;
 
 
-BOOLEAN fHelpScreen = FALSE;
+static BOOLEAN fHelpScreen = FALSE;
 
 BOOLEAN fDontUseRandom = FALSE;
 
-INT32 TestButtons[10];
+static LEVELNODE* gCursorNode = NULL;
 
-LEVELNODE *gCursorNode = NULL;
+static INT32 giMusicID = 0;
 
-INT32 giMusicID = 0;
-
-void EraseWorldData(  );
-
-
-BOOLEAN				gfEditorDirty = TRUE;
-
-BOOLEAN fRaiseHeight = FALSE;
 
 INT32 iDrawMode = DRAW_MODE_NOTHING;
 INT32 iCurrentAction,iActionParam;
@@ -164,34 +147,32 @@ INT32 iEditAction = ACTION_NULL;
 
 INT32 iEditorButton[NUMBER_EDITOR_BUTTONS];
 INT32 iEditorToolbarState;
-INT32 iJA2ToolbarLastWallState;
 
 INT32 iCurrentTaskbar;
 
-UINT16 iCurBankMapIndex;
+static UINT16 iCurBankMapIndex;
 
-InputAtom EditorInputEvent;
-BOOLEAN fBeenWarned = FALSE;
-BOOLEAN fEditModeFirstTime = TRUE;
-BOOLEAN fFirstTimeInEditModeInit = TRUE;
-BOOLEAN fSelectionWindow = FALSE;
-BOOLEAN gfRealGunNut = TRUE;
+static InputAtom EditorInputEvent;
+static BOOLEAN fBeenWarned              = FALSE;
+static BOOLEAN fEditModeFirstTime       = TRUE;
+static BOOLEAN fFirstTimeInEditModeInit = TRUE;
+static BOOLEAN fSelectionWindow         = FALSE;
+static BOOLEAN gfRealGunNut             = TRUE;
 
-BOOLEAN fNewMap = FALSE;
+static BOOLEAN fNewMap = FALSE;
 
-INT32 iPrevDrawMode = DRAW_MODE_NOTHING;
-UINT16 PrevCurrentPaste = FIRSTTEXTURE;
-INT32 gPrevCurrentBackground = FIRSTTEXTURE;
-INT32 iPrevJA2ToolbarState = TBAR_MODE_NONE;
-INT32 PrevTerrainTileDrawMode = TERRAIN_TILES_NODRAW;
+static INT32  iPrevDrawMode          = DRAW_MODE_NOTHING;
+static UINT16 PrevCurrentPaste       = FIRSTTEXTURE;
+static INT32  gPrevCurrentBackground = FIRSTTEXTURE;
+static INT32  iPrevJA2ToolbarState   = TBAR_MODE_NONE;
 
 UINT16 gusEditorTaskbarColor;
 UINT16 gusEditorTaskbarHiColor;
 UINT16 gusEditorTaskbarLoColor;
 
 BOOLEAN gfGotoGridNoUI = FALSE;
-INT32 guiGotoGridNoUIButtonID;
-MOUSE_REGION GotoGridNoUIRegion;
+static INT32        guiGotoGridNoUIButtonID;
+static MOUSE_REGION GotoGridNoUIRegion;
 
 //----------------------------------------------------------------------------------------------
 //	EditScreenInit

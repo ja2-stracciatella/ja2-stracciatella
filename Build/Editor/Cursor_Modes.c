@@ -21,20 +21,20 @@
 SGPRect gSelectRegion;
 
 
-BOOLEAN fValidCursor = FALSE;
-BOOLEAN fAnchored =	FALSE;
-BOOLEAN gfBrushEnabled = TRUE;
+static BOOLEAN fValidCursor   = FALSE;
+static BOOLEAN fAnchored      = FALSE;
+static BOOLEAN gfBrushEnabled = TRUE;
 UINT16 gusSelectionWidth = 1, gusPreserveSelectionWidth = 1;
 UINT16 gusSelectionType = SMALLSELECTION;
 UINT16 gusSelectionDensity = 2;
 UINT16 gusSavedSelectionType = SMALLSELECTION;
 UINT16 gusSavedBuildingSelectionType = AREASELECTION;
-INT16 sBadMarker = -1;
+static INT16 sBadMarker = -1;
 
 wchar_t SelTypeWidth[] = L"Width: xx";
 const wchar_t* const wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", SelTypeWidth, L"Area" };
 
-BOOLEAN gfAllowRightButtonSelections = FALSE;
+static BOOLEAN gfAllowRightButtonSelections = FALSE;
 BOOLEAN gfCurrentSelectionWithRightButton = FALSE;
 
 void RemoveBuildingLayout();
@@ -43,7 +43,7 @@ void RemoveBuildingLayout();
 //This can be conveniently executed by moving the cursor up and right 3 gridnos for a
 //total of -483  -(160*3)-(1*3)
 #define ROOF_OFFSET		(-483)
-BOOLEAN gfUsingOffset;
+static BOOLEAN gfUsingOffset;
 
 //Based on the density level setting and the selection type, this test will
 //randomly choose TRUE or FALSE to reflect the *odds*.

@@ -50,9 +50,9 @@ typedef struct IPListNode
 	struct IPListNode *next;
 }IPListNode;
 
-IPListNode *pIPHead = NULL;
+static IPListNode* pIPHead = NULL;
 
-IPListNode *gpCurrItemPoolNode = NULL;
+static IPListNode* gpCurrItemPoolNode = NULL;
 ITEM_POOL *gpItemPool = NULL;
 
 
