@@ -368,8 +368,6 @@ extern		BOOLEAN fExitDueToMessageBox;
 
 static BOOLEAN gfWaitingForMercToStopTalkingOrUserToClick=FALSE;
 
-static INT32 giIdOfLastHiredMerc = -1;
-
 static BOOLEAN gfAimMemberDisplayFaceHelpText = FALSE;
 
 
@@ -1306,8 +1304,6 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 					SpecifyDisabledButtonStyle( giBuyEquipmentButton[0], DISABLED_STYLE_NONE );
 					SpecifyDisabledButtonStyle( giBuyEquipmentButton[1], DISABLED_STYLE_NONE );
-
-					giIdOfLastHiredMerc = AimMercArray[gbCurrentIndex];
 				}
 			}
 #if 0 // XXX was commented out
@@ -2757,8 +2753,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
 
 			//Display a popup msg box telling the user when and where the merc will arrive
-//			DisplayPopUpBoxExplainingMercArrivalLocationAndTime( giIdOfLastHiredMerc );
-			giIdOfLastHiredMerc = -1;
+//			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 		}
 	}
 
@@ -3018,7 +3013,7 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 			{
 				gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
 
-//				DisplayPopUpBoxExplainingMercArrivalLocationAndTime( giIdOfLastHiredMerc );
+//				DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 			}
 
 
@@ -3122,7 +3117,7 @@ static BOOLEAN HandleCurrentVideoConfMode(void)
 				gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 
 				//display the popup telling the user when the just hired merc is going to land
-				DisplayPopUpBoxExplainingMercArrivalLocationAndTime( giIdOfLastHiredMerc );
+				DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 
 				//render the screen immediately to get rid of the pop down stuff
 				InitDeleteVideoConferencePopUp( );
@@ -3755,7 +3750,7 @@ void DemoHiringOfMercs( )
 static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(UINT8 bExitValue);
 
 
-void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( )
+void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
 {
 	CHAR16	szLocAndTime[512];
 	SOLDIERTYPE *pSoldier = NULL;

@@ -183,7 +183,8 @@ void FadeOutGameScreen( )
 	FadeOutNextFrame( );
 }
 
-void EnterTacticalScreen( )
+
+void EnterTacticalScreen(void)
 {
 	guiTacticalLeaveScreen = FALSE;
 

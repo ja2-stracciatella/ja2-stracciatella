@@ -282,7 +282,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 		ResetCharacterStats();
 
 		//Display a popup msg box telling the user when and where the merc will arrive
-		//DisplayPopUpBoxExplainingMercArrivalLocationAndTime( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId );
+		//DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 
 		//reset the id of the last merc so we dont get the DisplayPopUpBoxExplainingMercArrivalLocationAndTime() pop up box in another screen by accident
 		LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;

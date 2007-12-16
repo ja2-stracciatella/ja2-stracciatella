@@ -276,7 +276,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 //			HandlePlayerHiringMerc(GetMercIDFromMERCArray(gubCurMercIndex));
 
 			gfJustHiredAMercMerc = TRUE;
-			DisplayPopUpBoxExplainingMercArrivalLocationAndTime(GetMercIDFromMERCArray(gubCurMercIndex));
+			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 		}
 	}
 }

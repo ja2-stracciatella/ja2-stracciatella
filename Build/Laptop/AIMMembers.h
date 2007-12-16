@@ -14,7 +14,7 @@ void EnterInitAimMembers();
 BOOLEAN RenderAIMMembersTopLevel();
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
 void DisableNewMailMessage(void);
-void DisplayPopUpBoxExplainingMercArrivalLocationAndTime( );
+void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void);
 
 
 // which mode are we in during video conferencing?..0 means no video conference
