@@ -464,7 +464,7 @@ typedef struct
 // NB hack:  if an item appears in this array with an item class of IC_MISC,
 // it is a slot used for noting the skill check required for a merge or multi-item attachment
 
-AttachmentInfoStruct AttachmentInfo[] =
+static const AttachmentInfoStruct AttachmentInfo[] =
 {
 	{ SILENCER,									IC_GUN,			NO_CHECK,																			0 },
 	{ SNIPERSCOPE,							IC_GUN,			NO_CHECK,																			0 },
@@ -1383,24 +1383,13 @@ static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 }
 
 
-static INT8 GetAttachmentInfoIndex(UINT16 usItem)
+static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 {
-	INT32 iLoop = 0;
-
-	while( 1 )
+	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != 0; ++i)
 	{
-		if ( AttachmentInfo[ iLoop ].usItem == usItem )
-		{
-			return( (INT8) iLoop );
-		}
-		iLoop++;
-		if (AttachmentInfo[iLoop].usItem == 0)
-		{
-			// end of the array
-			break;
-		}
+		if (i->usItem == usItem) return i;
 	}
-	return( -1 );
+	return NULL;
 }
 
 //Determine if it is possible to add this attachment to the item.
@@ -2580,7 +2569,6 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 	INT8		bLoop;
 	UINT8		ubType, ubLimit;
 	INT32		iCheckResult;
-	INT8		bAttachInfoIndex = -1, bAttachComboMerge;
 	BOOLEAN	fValidLaunchable = FALSE;
 
 	fValidLaunchable = ValidLaunchable( pAttachment->usItem, pTargetObj->usItem );
@@ -2624,13 +2612,14 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 		}
 		else
 		{
+			const AttachmentInfoStruct* attach_info = NULL;
 			if ( pSoldier )
 			{
-				bAttachInfoIndex = GetAttachmentInfoIndex( pAttachment->usItem );
+				attach_info = GetAttachmentInfo(pAttachment->usItem);
 				// in-game (not behind the scenes) attachment
-				if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheck != NO_CHECK )
+				if (attach_info != NULL && attach_info->bAttachmentSkillCheck != NO_CHECK)
 				{
-					iCheckResult = SkillCheck( pSoldier, AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheck, AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod );
+					iCheckResult = SkillCheck(pSoldier, attach_info->bAttachmentSkillCheck, attach_info->bAttachmentSkillCheckMod);
 					if (iCheckResult < 0)
 					{
 						// the attach failure damages both items
@@ -2706,13 +2695,13 @@ BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYP
 			}
 
 			// Check for attachment merge combos here
-			bAttachComboMerge = GetAttachmentComboMerge( pTargetObj );
+			const INT8 bAttachComboMerge = GetAttachmentComboMerge(pTargetObj);
 			if ( bAttachComboMerge != -1 )
 			{
 				PerformAttachmentComboMerge( pTargetObj, bAttachComboMerge );
-				if ( bAttachInfoIndex != -1 && AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod < 20 )
+				if (attach_info != NULL && attach_info->bAttachmentSkillCheckMod < 20)
 				{
-					StatChange( pSoldier, MECHANAMT, (INT8) ( 20 - AttachmentInfo[ bAttachInfoIndex ].bAttachmentSkillCheckMod ), FALSE );
+					StatChange(pSoldier, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FALSE);
 				}
 			}
 
