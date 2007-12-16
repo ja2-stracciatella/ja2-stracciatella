@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "GameScreen.h"
 #include "Local.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -35,7 +36,6 @@
 #include "Map_Information.h"
 #include "SmokeEffects.h"
 #include "Button_System.h"
-#include "JAScreens.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
 #include "WorldMan.h"

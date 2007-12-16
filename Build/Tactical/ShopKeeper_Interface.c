@@ -53,7 +53,6 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "JAScreens.h"
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "BuildDefines.h"

@@ -46,4 +46,7 @@ extern BOOLEAN gfBeginEndTurn;
 extern VIDEO_OVERLAY* g_fps_overlay;
 extern VIDEO_OVERLAY* g_counter_period_overlay;
 
+void EnterTacticalScreen(void);
+void LeaveTacticalScreen(UINT32 uiNewScreen);
+
 #endif
