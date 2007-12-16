@@ -180,6 +180,7 @@ typedef struct
 	UINT8		ubPadding[2];					// filler
 
 } SPECIAL_ITEM_INFO;
+CASSERT(sizeof(SPECIAL_ITEM_INFO) == 16)
 
 
 typedef struct

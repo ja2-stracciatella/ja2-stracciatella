@@ -31,6 +31,7 @@ typedef struct
 	INT8     bAwareOfOpposition;
 	INT8     bHuman;
 } TacticalTeamType;
+CASSERT(sizeof(TacticalTeamType) == 16)
 
 
 #define PANIC_BOMBS_HERE    0x01

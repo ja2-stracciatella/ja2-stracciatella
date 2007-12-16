@@ -15,6 +15,7 @@ typedef struct
 	UINT8		filler;
 
 } STORE_INVENTORY;
+CASSERT(sizeof(STORE_INVENTORY) == 8)
 
 
 //Enums used for the access the MAX dealers array

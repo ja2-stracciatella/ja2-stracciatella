@@ -19,6 +19,7 @@ typedef struct TEAMSUMMARY
 	UINT8 ubBadA, ubPoorA, ubAvgA, ubGoodA, ubGreatA; //attributes
 	UINT8 ubBadE, ubPoorE, ubAvgE, ubGoodE, ubGreatE; //equipment
 }TEAMSUMMARY; //15 bytes
+CASSERT(sizeof(TEAMSUMMARY) == 15)
 
 typedef struct SUMMARYFILE
 {

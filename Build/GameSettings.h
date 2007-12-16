@@ -101,6 +101,7 @@ typedef struct
 	UINT8		ubFiller[7];
 
 } GAME_OPTIONS;
+CASSERT(sizeof(GAME_OPTIONS) == 12)
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
 GAME_SETTINGS		gGameSettings;

@@ -34,6 +34,7 @@ typedef struct
 	UINT8		ubSmashDifficulty;										// difficulty to smash such a lock
 	UINT8		ubFiller;
 } LOCK;
+CASSERT(sizeof(LOCK) == 46)
 
 // Defines below for the perceived value of the door
 #define DOOR_PERCEIVED_UNKNOWN		0
