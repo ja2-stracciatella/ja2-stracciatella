@@ -604,7 +604,7 @@ BOOLEAN PauseStateLocked()
 }
 
 
-void PauseGame()
+void PauseGame(void)
 {
 	// always allow pausing, even if "locked".  Locking applies only to trying to compress time, not to pausing it
 	if( !gfGamePaused )
@@ -614,7 +614,8 @@ void PauseGame()
 	}
 }
 
-void UnPauseGame()
+
+void UnPauseGame(void)
 {
 	// if we're paused
 	if( gfGamePaused )

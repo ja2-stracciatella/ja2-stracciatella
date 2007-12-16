@@ -4695,7 +4695,7 @@ void CreateDestroyTheUpdateBox( void )
 		CreateScreenMaskForMoveBox( );
 
 		// lock it paused
-		PauseGame( TRUE );
+		PauseGame();
 		LockPauseState( 5 );
 
 		// display the box
@@ -4709,7 +4709,7 @@ void CreateDestroyTheUpdateBox( void )
 		fCreated = FALSE;
 
 		UnLockPauseState( );
-		UnPauseGame( FALSE );
+		UnPauseGame();
 
 		// dirty screen
 		fMapPanelDirty = TRUE;

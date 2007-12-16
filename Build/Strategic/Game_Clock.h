@@ -24,8 +24,8 @@
 
 //PAUSE FEATURES
 //Pauses and unpauses the game.  It sets and clears a flag which preserves the time rate.
-extern void PauseGame();
-extern void UnPauseGame();
+void PauseGame(void);
+void UnPauseGame(void);
 extern BOOLEAN GamePaused();
 extern void LockPauseState( UINT32 uiUniqueReasonId );
 extern void UnLockPauseState();
