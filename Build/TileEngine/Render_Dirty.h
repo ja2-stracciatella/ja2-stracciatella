@@ -85,7 +85,7 @@ SGPRect		gDirtyClipRect;
 
 // DIRTY QUEUE
 void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom );
-BOOLEAN ExecuteBaseDirtyRectQueue( );
+BOOLEAN ExecuteBaseDirtyRectQueue(void);
 
 
 // BACKGROUND RECT BUFFERING STUFF
@@ -112,10 +112,10 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
-void ExecuteVideoOverlays( );
+void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea( UINT32 uiSrcBuffer );
-void DeleteVideoOverlaysArea( );
-void AllocateVideoOverlaysArea( );
+void DeleteVideoOverlaysArea(void);
+void AllocateVideoOverlaysArea(void);
 void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer );
 void RemoveVideoOverlay(VIDEO_OVERLAY*);
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );

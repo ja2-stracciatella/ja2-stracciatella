@@ -6,11 +6,11 @@
 #include "Soldier_Control.h"
 
 
-void GameInitPersonnel();
-void EnterPersonnel();
-void ExitPersonnel();
-void HandlePersonnel();
-void RenderPersonnel();
+void GameInitPersonnel(void);
+void EnterPersonnel(void);
+void ExitPersonnel(void);
+void HandlePersonnel(void);
+void RenderPersonnel(void);
 
 
 // add character to:

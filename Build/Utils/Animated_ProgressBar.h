@@ -29,8 +29,8 @@ typedef struct PROGRESSBAR
 
 PROGRESSBAR *pBar[ MAX_PROGRESSBARS ];
 
-void CreateLoadingScreenProgressBar();
-void RemoveLoadingScreenProgressBar();
+void CreateLoadingScreenProgressBar(void);
+void RemoveLoadingScreenProgressBar(void);
 
 
 //This creates a single progress bar given the coordinates without a panel (containing a title and background).

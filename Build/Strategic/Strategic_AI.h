@@ -3,8 +3,8 @@
 
 #include "Strategic_Movement.h"
 
-void InitStrategicAI();
-void KillStrategicAI();
+void InitStrategicAI(void);
+void KillStrategicAI(void);
 
 BOOLEAN SaveStrategicAI( HWFILE hFile );
 BOOLEAN LoadStrategicAI( HWFILE hFile );
@@ -22,7 +22,7 @@ enum
 void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSectorY );
 
 void CheckEnemyControlledSector( UINT8 ubSectorID );
-void EvaluateQueenSituation();
+void EvaluateQueenSituation(void);
 
 extern BOOLEAN gfUseAlternateQueenPosition;
 
@@ -38,7 +38,7 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 
 void InvestigateSector( UINT8 ubSectorID );
 
-void WakeUpQueen();
+void WakeUpQueen(void);
 
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID );
 

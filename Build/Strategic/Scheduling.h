@@ -60,8 +60,8 @@ extern SCHEDULENODE *gpScheduleList;
 SCHEDULENODE* GetSchedule( UINT8 ubScheduleID );
 
 //Removes all schedules from the event list, and cleans out the list.
-void DestroyAllSchedules();
-void DestroyAllSchedulesWithoutDestroyingEvents();
+void DestroyAllSchedules(void);
+void DestroyAllSchedulesWithoutDestroyingEvents(void);
 
 //This is the callback whenever a schedule is processed
 void ProcessTacticalSchedule( UINT8 ubScheduleID );
@@ -76,19 +76,19 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier );
 
 //After the world is loaded and the temp modifications have been applied,
 //we then need to post the events and process schedules for the time that we have been gone.
-void PostSchedules();
+void PostSchedules(void);
 
 //Sorts the schedule in chronological order.  Returns TRUE if any sorting took place.
 BOOLEAN SortSchedule( SCHEDULENODE *pSchedule );
 //Adds a schedule to the list.  COPIES THE DATA OVER (ALLOCATES NEW NODE!)
 void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode );
 //Entering the editor automatically removes all events posted.
-void PrepareSchedulesForEditorEntry();
+void PrepareSchedulesForEditorEntry(void);
 //Leaving the editor and entering the game posts the events.
-void PrepareSchedulesForEditorExit();
+void PrepareSchedulesForEditorExit(void);
 //Packs all of the scheduleIDs, and updates the links.  This is done whenever necessary and
 //before saving the map, as this forces the IDs to align with the SOLDIERINITNODE->ubScheduleID's.
-void OptimizeSchedules();
+void OptimizeSchedules(void);
 
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime );
 

@@ -4,14 +4,14 @@
 #ifndef __SECTOR_SUMMARY_H
 #define __SECTOR_SUMMARY_H
 
-void CreateSummaryWindow();
-void DestroySummaryWindow();
-void RenderSummaryWindow();
-void LoadWorldInfo();
+void CreateSummaryWindow(void);
+void DestroySummaryWindow(void);
+void RenderSummaryWindow(void);
+void LoadWorldInfo(void);
 
 void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate);
 
-void SaveGlobalSummary();
+void SaveGlobalSummary(void);
 
 extern BOOLEAN gfGlobalSummaryExists;
 

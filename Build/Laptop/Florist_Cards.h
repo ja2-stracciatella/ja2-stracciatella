@@ -6,10 +6,10 @@
 #define FLOR_CARD_TEXT_TITLE_SIZE 5 * 80
 
 
-BOOLEAN EnterFloristCards();
-void ExitFloristCards();
-void HandleFloristCards();
-void RenderFloristCards();
+BOOLEAN EnterFloristCards(void);
+void ExitFloristCards(void);
+void HandleFloristCards(void);
+void RenderFloristCards(void);
 
 
 extern INT8			gbCurrentlySelectedCard;

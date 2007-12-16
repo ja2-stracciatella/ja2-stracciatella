@@ -244,18 +244,18 @@ extern INT16		gsRecompileAreaLeft;
 extern INT16		gsRecompileAreaRight;
 extern INT16		gsRecompileAreaBottom;
 
-BOOLEAN InitializeWorld( );
-void DeinitializeWorld( );
+BOOLEAN InitializeWorld(void);
+void DeinitializeWorld(void);
 
-void BuildTileShadeTables( );
-void DestroyTileShadeTables( );
+void BuildTileShadeTables(void);
+void DestroyTileShadeTables(void);
 
 
 void TrashWorld(void);
 BOOLEAN NewWorld( void );
 BOOLEAN SaveWorld(const char *puiFilename);
 BOOLEAN LoadWorld(const char *puiFilename);
-void CompileWorldMovementCosts( );
+void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 

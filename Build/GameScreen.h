@@ -8,8 +8,8 @@
 
 
 
-void FadeInGameScreen( );
-void FadeOutGameScreen( );
+void FadeInGameScreen(void);
+void FadeOutGameScreen(void);
 
 typedef void (*MODAL_HOOK)( void );
 
@@ -19,9 +19,9 @@ BOOLEAN	gfEnteringMapScreen;
 extern SOLDIERTYPE* gPreferredInitialSelectedGuy;
 
 
-void EnterMapScreen( );
+void EnterMapScreen(void);
 
-void UpdateTeamPanelAssignments( );
+void UpdateTeamPanelAssignments(void);
 
 
 
@@ -33,7 +33,7 @@ void UpdateTeamPanelAssignments( );
 extern MODAL_HOOK		gModalDoneCallback;
 
 void EnterModalTactical( INT8 bMode );
-void EndModalTactical( );
+void EndModalTactical(void);
 
 
 // handle the entrance of the mercs at the beginning of the game

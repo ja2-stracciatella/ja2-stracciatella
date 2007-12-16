@@ -234,8 +234,8 @@ extern DEALER_ITEM_HEADER		gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ]
 
 
 
-void		InitAllArmsDealers();
-void		ShutDownArmsDealers();
+void InitAllArmsDealers(void);
+void ShutDownArmsDealers(void);
 
 //Count every single item the dealer has in stock
 //UINT32	CountTotalItemsInArmsDealersInventory( UINT8 ubArmsDealer );
@@ -254,7 +254,7 @@ INT8		GetArmsDealerIDFromMercID( UINT8 ubMercID );
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile );
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny );
 
-void		DailyUpdateOfArmsDealersInventory();
+void DailyUpdateOfArmsDealersInventory(void);
 
 UINT8		GetTypeOfArmsDealer( UINT8 ubDealerID );
 

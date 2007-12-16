@@ -25,13 +25,13 @@ UINT32	SaveLoadScreenInit( void );
 
 BOOLEAN		DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
-BOOLEAN		InitSaveGameArray();
+BOOLEAN InitSaveGameArray(void);
 
 
-BOOLEAN DoQuickSave();
-BOOLEAN DoQuickLoad();
+BOOLEAN DoQuickSave(void);
+BOOLEAN DoQuickLoad(void);
 
-BOOLEAN IsThereAnySavedGameFiles();
+BOOLEAN IsThereAnySavedGameFiles(void);
 
 void			DeleteSaveGameNumber( UINT8 ubSaveGameSlotID );
 

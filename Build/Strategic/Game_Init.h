@@ -3,14 +3,14 @@
 
 
 BOOLEAN InitNewGame(  BOOLEAN fReset );
-BOOLEAN AnyMercsHired( );
+BOOLEAN AnyMercsHired(void);
 
-void InitStrategicLayer();
-void ShutdownStrategicLayer();
+void InitStrategicLayer(void);
+void ShutdownStrategicLayer(void);
 
-void ReStartingGame();
+void ReStartingGame(void);
 
-void InitBloodCatSectors();
+void InitBloodCatSectors(void);
 
 
 #endif

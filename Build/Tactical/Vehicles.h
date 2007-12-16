@@ -177,7 +177,7 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile );
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId );
 
-void AddVehicleFuelToSave( );
+void AddVehicleFuelToSave(void);
 
 BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* s, INT32 iVehicleId, BOOLEAN fTryingToTravel);
 

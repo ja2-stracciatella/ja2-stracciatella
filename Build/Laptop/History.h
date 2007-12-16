@@ -1,11 +1,11 @@
 #ifndef __HISTORY_H
 #define __HISTORY_H
 
-void GameInitHistory();
-void EnterHistory();
-void ExitHistory();
-void HandleHistory();
-void RenderHistory();
+void GameInitHistory(void);
+void EnterHistory(void);
+void ExitHistory(void);
+void HandleHistory(void);
+void RenderHistory(void);
 
 
 #define		HISTORY_DATA_FILE						"Temp/History.dat"

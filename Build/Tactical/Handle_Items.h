@@ -57,7 +57,7 @@ typedef struct TAG_ITEM_POOL
 INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
-void HandleFlashingItems( );
+void HandleFlashingItems(void);
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
 
@@ -67,7 +67,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier );
 void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECTTYPE *pObject, INT8 bInvPos );
 
 
-void NotifySoldiersToLookforItems( );
+void NotifySoldiersToLookforItems(void);
 void AllSoldiersLookforItems( BOOLEAN RevealRoofsAndItems );
 
 
@@ -87,7 +87,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 
 void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool);
 
-void RenderTopmostFlashingItems( );
+void RenderTopmostFlashingItems(void);
 
 void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel );
 

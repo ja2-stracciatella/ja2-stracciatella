@@ -108,18 +108,18 @@ UINT8 GetTownSectorsUnderControl( INT8 bTownId );
 
 
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes );
-void SetupNewStrategicGame( );
+void SetupNewStrategicGame(void);
 
 BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile );
 BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile );
 
-void AllMercsHaveWalkedOffSector( );
+void AllMercsHaveWalkedOffSector(void);
 
 void AdjustSoldierPathToGoOffEdge( SOLDIERTYPE *pSoldier, INT16 sEndGridNo, UINT8 ubTacticalDirection );
 
-void AllMercsWalkedToExitGrid();
+void AllMercsWalkedToExitGrid(void);
 
-void PrepareLoadedSector();
+void PrepareLoadedSector(void);
 
 // handle for slay...no better place to really put this stuff
 void HandleSlayDailyEvent( void );
@@ -130,7 +130,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 // handle a soldier leaving thier squad behind, this sets them up for mvt and potential rejoining of group
 void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );
 
-BOOLEAN CheckAndHandleUnloadingOfCurrentWorld();
+BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 
 // number of SAM sites under player control
 INT32 GetNumberOfSAMSitesUnderPlayerControl( void );
@@ -147,7 +147,7 @@ INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 
-BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( );
+BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle(void);
 
 //Used for determining the type of error message that comes up when you can't traverse to
 //an adjacent sector.  THESE VALUES DO NOT NEED TO BE SAVED!

@@ -8,15 +8,15 @@ extern BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 extern UINT8 gubCurrRoomNumber;
 extern UINT8 gubMaxRoomNumber;
 
-void SetupTextInputForBuildings();
-void ExtractAndUpdateBuildingInfo();
+void SetupTextInputForBuildings(void);
+void ExtractAndUpdateBuildingInfo(void);
 
 //Initialization routines
-void GameInitEditorBuildingInfo();
+void GameInitEditorBuildingInfo(void);
 
 //Selection method callbacks
 //Building utility functions
-void UpdateBuildingsInfo();
+void UpdateBuildingsInfo(void);
 void KillBuilding( UINT32 iMapIndex );
 
 
@@ -33,20 +33,20 @@ extern INT16 gsBuildingLayoutAnchorGridNo;
 void CopyBuilding( INT32 iMapIndex );
 void MoveBuilding( INT32 iMapIndex );
 void PasteBuilding( INT32 iMapIndex );
-void DeleteBuildingLayout();
+void DeleteBuildingLayout(void);
 
 void ReplaceBuildingWithNewRoof( INT32 iMapIndex );
-void UpdateWallsView();
-void UpdateRoofsView();
+void UpdateWallsView(void);
+void UpdateRoofsView(void);
 
 void InitDoorEditing( INT32 iMapIndex );
-void ExtractAndUpdateDoorInfo();
-void KillDoorEditing();
-void RenderDoorEditingWindow();
+void ExtractAndUpdateDoorInfo(void);
+void KillDoorEditing(void);
+void RenderDoorEditingWindow(void);
 
-void AddLockedDoorCursors();
-void RemoveLockedDoorCursors();
-void FindNextLockedDoor();
+void AddLockedDoorCursors(void);
+void RemoveLockedDoorCursors(void);
+void FindNextLockedDoor(void);
 
 extern BOOLEAN gfEditingDoor;
 

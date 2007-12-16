@@ -62,8 +62,8 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote );
 void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier );
 void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void );
 
-void BeginContractRenewalSequence( );
-void HandleContractRenewalSequence( );
+void BeginContractRenewalSequence(void);
+void HandleContractRenewalSequence(void);
 void HandleMercIsWillingToRenew( UINT8 ubID );
 void HandleMercIsNotWillingToRenew( UINT8 ubID );
 

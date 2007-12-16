@@ -34,19 +34,19 @@ enum
 
 
 
-void GameInitBobbyRMailOrder();
-BOOLEAN EnterBobbyRMailOrder();
-void ExitBobbyRMailOrder();
-void HandleBobbyRMailOrder();
-void RenderBobbyRMailOrder();
+void GameInitBobbyRMailOrder(void);
+BOOLEAN EnterBobbyRMailOrder(void);
+void ExitBobbyRMailOrder(void);
+void HandleBobbyRMailOrder(void);
+void RenderBobbyRMailOrder(void);
 
-void BobbyRayMailOrderEndGameShutDown();
-void EnterInitBobbyRayOrder();
-void AddJohnsGunShipment();
+void BobbyRayMailOrderEndGameShutDown(void);
+void EnterInitBobbyRayOrder(void);
+void AddJohnsGunShipment(void);
 
-BOOLEAN CreateBobbyRayOrderTitle();
-void DestroyBobbyROrderTitle();
-void DrawBobbyROrderTitle();
+BOOLEAN CreateBobbyRayOrderTitle(void);
+void DestroyBobbyROrderTitle(void);
+void DrawBobbyROrderTitle(void);
 
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum );
 
@@ -72,7 +72,7 @@ CASSERT(sizeof(NewBobbyRayOrderStruct) == 104)
 extern	NewBobbyRayOrderStruct	*gpNewBobbyrShipments;
 extern	INT32			giNumberOfNewBobbyRShipment;
 
-UINT16	CountNumberOfBobbyPurchasesThatAreInTransit();
+UINT16 CountNumberOfBobbyPurchasesThatAreInTransit(void);
 
 BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile );
 BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile );

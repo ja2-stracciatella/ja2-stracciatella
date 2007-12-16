@@ -111,19 +111,19 @@ GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
 
 
-BOOLEAN	SaveGameSettings();
-BOOLEAN LoadGameSettings();
+BOOLEAN SaveGameSettings(void);
+BOOLEAN LoadGameSettings(void);
 
-void InitGameOptions();
+void InitGameOptions(void);
 
-BOOLEAN GetCDLocation( );
+BOOLEAN GetCDLocation(void);
 
-void DisplayGameSettings( );
+void DisplayGameSettings(void);
 
 BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile );
 
 BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile );
 
-BOOLEAN	CanGameBeSaved();
+BOOLEAN CanGameBeSaved(void);
 
 #endif

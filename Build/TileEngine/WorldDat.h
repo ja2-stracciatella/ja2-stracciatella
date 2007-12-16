@@ -22,10 +22,10 @@ typedef struct
 extern TILESET	 gTilesets[ NUM_TILESETS ];
 
 
-void InitEngineTilesets( );
+void InitEngineTilesets(void);
 
 
 // THESE FUNCTIONS WILL SET TERRAIN VALUES - CALL ONE FOR EACH TILESET
-void SetTilesetOneTerrainValues( );
+void SetTilesetOneTerrainValues(void);
 
 #endif

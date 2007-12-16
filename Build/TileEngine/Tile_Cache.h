@@ -22,8 +22,8 @@ TILE_CACHE_ELEMENT		*gpTileCache;
 
 
 
-BOOLEAN InitTileCache( );
-void DeleteTileCache( );
+BOOLEAN InitTileCache(void);
+void DeleteTileCache(void);
 
 INT32 GetCachedTile(const char* cFilename);
 BOOLEAN RemoveCachedTile( INT32 iCachedTile );

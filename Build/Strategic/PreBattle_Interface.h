@@ -5,8 +5,8 @@
 #include "Strategic_Movement.h"
 
 void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI );
-void KillPreBattleInterface();
-void RenderPreBattleInterface();
+void KillPreBattleInterface(void);
+void RenderPreBattleInterface(void);
 
 extern BOOLEAN gfPreBattleInterfaceActive;
 extern BOOLEAN gfDisplayPotentialRetreatPaths;
@@ -44,9 +44,9 @@ enum
 extern BOOLEAN gfAutoAmbush;
 extern BOOLEAN gfHighPotentialForAmbush;
 
-extern void ActivatePreBattleAutoresolveAction();
-extern void ActivatePreBattleEnterSectorAction();
-extern void ActivatePreBattleRetreatAction();
+void ActivatePreBattleAutoresolveAction(void);
+void ActivatePreBattleEnterSectorAction(void);
+void ActivatePreBattleRetreatAction(void);
 
 void CalculateNonPersistantPBIInfo(void);
 

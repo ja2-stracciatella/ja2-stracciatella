@@ -197,12 +197,12 @@ UINT8 GetClosestOpponent( SOLDIERTYPE *pSoldier );
 void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert(INT8 bTeam);
 
-void InitPanicSystem();
+void InitPanicSystem(void);
 INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridno);
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
 BOOLEAN InitAI( void );
 
-void MakeClosestEnemyChosenOne();
+void MakeClosestEnemyChosenOne(void);
 
 void NewDest(SOLDIERTYPE *pSoldier, UINT16 sGridno);
 

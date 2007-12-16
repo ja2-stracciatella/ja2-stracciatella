@@ -66,10 +66,10 @@ extern HELP_SCREEN_STRUCT gHelpScreen;
 
 
 BOOLEAN ShouldTheHelpScreenComeUp( UINT8 ubScreenID, BOOLEAN fForceHelpScreenToComeUp );
-void HelpScreenHandler();
-void InitHelpScreenSystem();
-void NewScreenSoResetHelpScreen( );
-INT8 HelpScreenDetermineWhichMapScreenHelpToShow();
+void HelpScreenHandler(void);
+void InitHelpScreenSystem(void);
+void NewScreenSoResetHelpScreen(void);
+INT8 HelpScreenDetermineWhichMapScreenHelpToShow(void);
 
 
 #endif

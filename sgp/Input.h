@@ -63,7 +63,7 @@ extern void         RestoreCursorClipRect( void );
 
 void SimulateMouseMovement( UINT32 uiNewXPos, UINT32 uiNewYPos );
 
-extern void DequeueAllKeyBoardEvents();
+void DequeueAllKeyBoardEvents(void);
 
 
 extern BOOLEAN gfKeyState[SDLK_LAST]; // TRUE = Pressed, FALSE = Not Pressed

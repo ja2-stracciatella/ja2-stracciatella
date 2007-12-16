@@ -60,7 +60,7 @@ enum
 //flag is set else process your regular input handler.  Note that this doesn't mean you are necessarily typing,
 //just that there are text fields in your screen and may be inactive.  The TAB key cycles through your text fields,
 //and special fields can be defined which will call a void functionName( UINT16 usFieldNum )
-void InitTextInputMode();
+void InitTextInputMode(void);
 
 //A hybrid version of InitTextInput() which uses a specific scheme.  JA2's editor uses scheme 1, so
 //feel free to add new color/font schemes.
@@ -70,18 +70,18 @@ enum{
 void InitTextInputModeWithScheme( UINT8 ubSchemeID );
 
 //Clears any existing fields, and ends text input mode.
-void KillTextInputMode();
+void KillTextInputMode(void);
 //Kills all levels of text input modes.  When you init a second consecutive text input mode, without
 //first removing them, the existing mode will be preserved.  This function removes all of them in one
 //call, though doing so "may" reflect poor coding style, though I haven't thought about any really
 //just uses for it :(
-void KillAllTextInputModes();
+void KillAllTextInputModes(void);
 
 //Saves the current text input mode, then removes it and activates the previous text input mode,
 //if applicable.  The second function restores the settings.  Doesn't currently support nested
 //calls.
-void SaveAndRemoveCurrentTextInputMode();
-void RestoreSavedTextInputMode();
+void SaveAndRemoveCurrentTextInputMode(void);
+void RestoreSavedTextInputMode(void);
 
 void SetTextInputCursor( UINT16 usNewCursor );
 
@@ -127,10 +127,10 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber );
 
 //Sets the active field to the specified ID number.
 void SetActiveField( UINT8 ubField );
-void SelectNextField();
+void SelectNextField(void);
 
 //Returns the active field ID number.  It'll return -1 if no field is active.
-INT16 GetActiveFieldID();
+INT16 GetActiveFieldID(void);
 
 //These allow you to customize the general color scheme of your text input boxes.  I am assuming that
 //under no circumstances would a user want a different color for each field.  It follows the Win95 convention
@@ -162,20 +162,20 @@ void SetCursorColor( UINT16 usCursorColor );
 BOOLEAN HandleTextInput( InputAtom *Event );
 
 void RenderInactiveTextField( UINT8 ubID );
-void RenderAllTextFields();
+void RenderAllTextFields(void);
 
 void DisableTextField( UINT8 ubID );
 void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID );
 void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID );
-void EnableAllTextFields();
-void DisableAllTextFields();
+void EnableAllTextFields(void);
+void DisableAllTextFields(void);
 
 //
-BOOLEAN EditingText();
-BOOLEAN TextInputMode();
+BOOLEAN EditingText(void);
+BOOLEAN TextInputMode(void);
 
-void InitClipboard();
-void KillClipboard();
+void InitClipboard(void);
+void KillClipboard(void);
 
 BOOLEAN gfNoScroll;
 

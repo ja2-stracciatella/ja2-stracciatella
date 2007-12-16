@@ -38,10 +38,10 @@ BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile );
 BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *puiNumberOfItems, BOOLEAN fIfEmptyCreate );
 
 //Saves the Current Sectors, ( world Items, rotting corpses, ... )  to the temporary file used to store the sectors items
-BOOLEAN SaveCurrentSectorsInformationToTempItemFile( );
+BOOLEAN SaveCurrentSectorsInformationToTempItemFile(void);
 
 //Loads the Currents Sectors information ( world Items, rotting corpses, ... ) from the temporary file used to store the sectores items
-BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile();
+BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile(void);
 
 // Loads a World Item array from that sectors temp item file
 BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WORLDITEM *pData );
@@ -105,7 +105,7 @@ BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 
 
 //If hacker's mess with our save/temp files, this is our final line of defence.
-void InitExitGameDialogBecauseFileHackDetected();
+void InitExitGameDialogBecauseFileHackDetected(void);
 
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 

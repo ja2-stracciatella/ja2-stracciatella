@@ -90,7 +90,7 @@ void			AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE	*pItemObject, IN
 
 void			BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerFirst );
 
-void			DeleteShopKeeperItemDescBox();
+void DeleteShopKeeperItemDescBox(void);
 
 BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* s);
 
@@ -99,7 +99,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* s);
 void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
 #endif
 
-void			RestrictSkiMouseCursor();
+void RestrictSkiMouseCursor(void);
 
 BOOLEAN DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void    StartSKIDescriptionBox(void);

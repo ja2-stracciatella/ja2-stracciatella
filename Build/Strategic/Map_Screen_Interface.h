@@ -286,7 +286,7 @@ void SetEntryInSelectedCharacterList( INT8 bEntry );
 void ResetEntryForSelectedList( INT8 bEntry );
 
 // reset selected list
-void ResetSelectedListForMapScreen( );
+void ResetSelectedListForMapScreen(void);
 
 // build a selected list from a to b, inclusive
 void BuildSelectedListFromAToB( INT8 bA, INT8 bB );
@@ -426,7 +426,7 @@ void StopMapScreenHelpText( void );
 void SetUpMapScreenFastHelpText( void );
 
 void TurnOnSectorLocator( UINT8 ubProfileID );
-void TurnOffSectorLocator();
+void TurnOffSectorLocator(void);
 
 extern INT16 gsSectorLocatorX;
 extern INT16 gsSectorLocatorY;
@@ -475,7 +475,7 @@ BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
 void CreateDestroyTheUpdateBox( void );
 void SetSoldierUpdateBoxReason( INT32 iReason );
 void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier );
-void DisplaySoldierUpdateBox( );
+void DisplaySoldierUpdateBox(void);
 
 
 void SetUpdateBoxFlag( BOOLEAN fFlag );

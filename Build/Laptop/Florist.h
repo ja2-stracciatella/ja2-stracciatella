@@ -9,14 +9,14 @@
 #define		FLORIST_BUTTON_TEXT_SHADOW_COLOR	128
 
 
-BOOLEAN EnterFlorist();
-void ExitFlorist();
-void HandleFlorist();
-void RenderFlorist();
+BOOLEAN EnterFlorist(void);
+void ExitFlorist(void);
+void HandleFlorist(void);
+void RenderFlorist(void);
 
-void RemoveFloristDefaults();
-void DisplayFloristDefaults();
-BOOLEAN InitFloristDefaults();
+void RemoveFloristDefaults(void);
+void DisplayFloristDefaults(void);
+BOOLEAN InitFloristDefaults(void);
 
 
 

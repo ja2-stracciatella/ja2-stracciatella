@@ -154,7 +154,7 @@ extern void RemoveDoorInfoFromTable( INT32 iMapIndex );
 //This is the link to see if a door exists at a gridno.
 DOOR * FindDoorInfoAtGridNo( INT32 iMapIndex );
 //Upon world deallocation, the door table needs to be deallocated.
-extern void TrashDoorTable();
+void TrashDoorTable(void);
 
 BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
 BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
@@ -175,7 +175,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor );
 BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 //Load the door table from the temp file
-BOOLEAN		LoadDoorTableFromDoorTableTempFile( );
+BOOLEAN LoadDoorTableFromDoorTableTempFile(void);
 
 
 
@@ -186,13 +186,13 @@ BOOLEAN		LoadDoorTableFromDoorTableTempFile( );
 BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen );
 
 //Deletes the door status array
-void TrashDoorStatusArray( );
+void TrashDoorStatusArray(void);
 
 // Saves the Door Status array to the MapTempfile
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 //Load the door status from the door status temp file
-BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile();
+BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile(void);
 
 
 //Save the key table to the saved game file
@@ -214,7 +214,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 
 BOOLEAN LoadLockTable( void );
 
-void ExamineDoorsOnEnteringSector( );
+void ExamineDoorsOnEnteringSector(void);
 
 void AttachStringToDoor( INT16 sGridNo );
 

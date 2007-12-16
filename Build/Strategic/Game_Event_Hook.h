@@ -144,6 +144,6 @@ BOOLEAN AddPeriodStrategicEventWithOffset( UINT8 ubCallbackID, UINT32 uiOnceEver
 //no events were found.
 BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam );
 void DeleteAllStrategicEventsOfType( UINT8 ubCallbackID );
-void DeleteAllStrategicEvents();
+void DeleteAllStrategicEvents(void);
 
 #endif

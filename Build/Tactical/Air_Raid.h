@@ -42,10 +42,10 @@ enum
 } AIR_RAID_STATES;
 
 
-void HandleAirRaid( );
+void HandleAirRaid(void);
 
-BOOLEAN BeginAirRaid( );
-BOOLEAN InAirRaid( );
+BOOLEAN BeginAirRaid(void);
+BOOLEAN InAirRaid(void);
 
 BOOLEAN HandleAirRaidEndTurn(UINT8 ubTeam);
 
@@ -57,7 +57,7 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile );
 //load the air raid info from the saved game
 BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile );
 
-void EndAirRaid( );
+void EndAirRaid(void);
 
 
 #endif

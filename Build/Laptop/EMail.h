@@ -175,27 +175,27 @@ extern Email* MailToDelete;
 extern UINT32 guiEmailWarning;
 
 
-void GameInitEmail();
-BOOLEAN EnterEmail();
-void ExitEmail();
-void HandleEmail();
-void RenderEmail();
+void GameInitEmail(void);
+BOOLEAN EnterEmail(void);
+void ExitEmail(void);
+void HandleEmail(void);
+void RenderEmail(void);
 
 
 // message manipulation
-void LookForUnread();
+void LookForUnread(void);
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData);
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
-BOOLEAN DisplayNewMailBox();
-void CreateDestroyNewMailButton();
-void CreateDestroyDeleteNoticeMailButton();
+BOOLEAN DisplayNewMailBox(void);
+void CreateDestroyNewMailButton(void);
+void CreateDestroyDeleteNoticeMailButton(void);
 void ReDrawNewMailBox( void );
-void ShutDownEmailList();
+void ShutDownEmailList(void);
 void AddEmailWithSpecialData(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate, INT32 iFirstData, UINT32 uiSecondData );
 
 #ifdef JA2BETAVERSION
-	void AddAllEmails();
+ void AddAllEmails(void);
 #endif
 
 #endif

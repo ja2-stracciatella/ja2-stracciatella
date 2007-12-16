@@ -68,19 +68,19 @@ void AddStructToMapTempFile( UINT32 iMapIndex, UINT16 usIndex );
 void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
 
 
-BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( );
+BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem(void);
 
 
 void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
 
 void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
 
-void SaveBloodSmellAndRevealedStatesFromMapToTempFile();
+void SaveBloodSmellAndRevealedStatesFromMapToTempFile(void);
 
 
 BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile();
+BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile(void);
 
 
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );

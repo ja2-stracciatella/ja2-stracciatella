@@ -9,14 +9,14 @@ void CalcSmartDoorDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartWindowDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 void CalcSmartBrokenWallDefault( UINT16 *pusObjIndex, UINT16 *pusUseIndex );
 
-void IncSmartWallUIValue();
-void DecSmartWallUIValue();
-void IncSmartDoorUIValue();
-void DecSmartDoorUIValue();
-void IncSmartWindowUIValue();
-void DecSmartWindowUIValue();
-void IncSmartBrokenWallUIValue();
-void DecSmartBrokenWallUIValue();
+void IncSmartWallUIValue(void);
+void DecSmartWallUIValue(void);
+void IncSmartDoorUIValue(void);
+void DecSmartDoorUIValue(void);
+void IncSmartWindowUIValue(void);
+void DecSmartWindowUIValue(void);
+void IncSmartBrokenWallUIValue(void);
+void DecSmartBrokenWallUIValue(void);
 
 BOOLEAN CalcWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex );
 BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UINT16 *pusIndex );

@@ -9,6 +9,6 @@ extern UINT32					guiEXTRABUFFER;
 
 extern BOOLEAN gfExtraBuffer;
 
-BOOLEAN	InitializeGameVideoObjects( );
+BOOLEAN InitializeGameVideoObjects(void);
 
 #endif

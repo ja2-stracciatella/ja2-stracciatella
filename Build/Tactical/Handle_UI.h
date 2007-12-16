@@ -226,11 +226,11 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent );
 void GetTBMouseButtonInput( UINT32 *puiNewEvent );
 void GetTBMousePositionInput( UINT32 *puiNewEvent );
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
-void HandleKeyInputOnEnemyTurn(  );
+void HandleKeyInputOnEnemyTurn(void);
 
 
-BOOLEAN SelectedMercCanAffordAttack( );
-BOOLEAN SelectedMercCanAffordMove(  );
+BOOLEAN SelectedMercCanAffordAttack(void);
+BOOLEAN SelectedMercCanAffordMove(void);
 void GetMercClimbDirection(const SOLDIERTYPE* s, BOOLEAN* pfGoDown, BOOLEAN* pfGoUp);
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent );
@@ -248,7 +248,7 @@ BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 SOLDIERTYPE* GetValidTalkableNPCFromMouse(BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed);
 BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* s, BOOLEAN fGive, BOOLEAN fAllowMercs, BOOLEAN fCheckCollapsed);
 
-BOOLEAN HandleTalkInit(  );
+BOOLEAN HandleTalkInit(void);
 
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustForConfirm );
 
@@ -267,12 +267,12 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );
 
 void ChangeInterfaceLevel( INT16 sLevel );
 
-void EndRubberBanding( );
-void ResetMultiSelection( );
+void EndRubberBanding(void);
+void ResetMultiSelection(void);
 void EndMultiSoldierSelection( BOOLEAN fAcknowledge );
-void StopRubberBandedMercFromMoving( );
+void StopRubberBandedMercFromMoving(void);
 
-BOOLEAN SelectedGuyInBusyAnimation( );
+BOOLEAN SelectedGuyInBusyAnimation(void);
 
 void GotoLowerStance( SOLDIERTYPE *pSoldier );
 void GotoHeigherStance( SOLDIERTYPE *pSoldier );

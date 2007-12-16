@@ -12,10 +12,10 @@ typedef struct MAPEDGEPOINTINFO
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode );
 void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints );
-void GenerateMapEdgepoints();
+void GenerateMapEdgepoints(void);
 void SaveMapEdgepoints( HWFILE fp );
 BOOLEAN LoadMapEdgepoints( INT8 **hBuffer );
-void TrashMapEdgepoints();
+void TrashMapEdgepoints(void);
 
 //dynamic arrays that contain the valid gridno's for each edge
 extern INT16 *gps1stNorthEdgepointArray;
@@ -59,8 +59,8 @@ extern UINT16 gus2ndWestEdgepointMiddleIndex;
 //will return NOWHERE if the information is invalid (no edgepoint info for that particular side, or all
 //spots are reserved.  There are only 20 spots that can be reserved (one for each player soldier).  This
 //code shouldn't be used for enemies or anybody else.
-void BeginMapEdgepointSearch();
-void EndMapEdgepointSearch();
+void BeginMapEdgepointSearch(void);
+void EndMapEdgepointSearch(void);
 INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
 INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode );
 
@@ -74,8 +74,8 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo );
 
 #ifdef JA2EDITOR
-void ShowMapEdgepoints();
-void HideMapEdgepoints();
+void ShowMapEdgepoints(void);
+void HideMapEdgepoints(void);
 #endif
 
 

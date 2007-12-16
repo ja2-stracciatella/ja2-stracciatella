@@ -1,10 +1,10 @@
 #ifndef __BOBBYRARMOUR_H
 #define __BOBBYRARMOUR_H
 
-BOOLEAN EnterBobbyRArmour();
-void ExitBobbyRArmour();
-void HandleBobbyRArmour();
-void RenderBobbyRArmour();
+BOOLEAN EnterBobbyRArmour(void);
+void ExitBobbyRArmour(void);
+void HandleBobbyRArmour(void);
+void RenderBobbyRArmour(void);
 
 
 

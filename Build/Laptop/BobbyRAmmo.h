@@ -1,10 +1,10 @@
 #ifndef __BOBBYRAMMO_H
 #define __BOBBYRAMMO_H
 
-BOOLEAN EnterBobbyRAmmo();
-void ExitBobbyRAmmo();
-void HandleBobbyRAmmo();
-void RenderBobbyRAmmo();
+BOOLEAN EnterBobbyRAmmo(void);
+void ExitBobbyRAmmo(void);
+void HandleBobbyRAmmo(void);
+void RenderBobbyRAmmo(void);
 
 
 

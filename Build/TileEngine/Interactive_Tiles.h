@@ -25,14 +25,14 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
 
 void BeginCurInteractiveTileCheck( UINT8 bCheckFlags );
-void EndCurInteractiveTileCheck( );
+void EndCurInteractiveTileCheck(void);
 void LogMouseOverInteractiveTile( INT16 sGridNo );
-BOOLEAN ShouldCheckForMouseDetections( );
+BOOLEAN ShouldCheckForMouseDetections(void);
 
 void CycleIntTileFindStack( UINT16 usMapPos );
-void SetActionModeDoorCursorText( );
+void SetActionModeDoorCursorText(void);
 
-LEVELNODE *GetCurInteractiveTile( );
+LEVELNODE *GetCurInteractiveTile(void);
 LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo );
 LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure );
 LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems );

@@ -11,8 +11,8 @@ void Remove5X5Pit( INT32 iMapIndex );
 
 void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 sRadius );
 
-void AddAllPits();
-void RemoveAllPits();
+void AddAllPits(void);
+void RemoveAllPits(void);
 
 BOOLEAN gfShowPits;
 BOOLEAN gfLoadPitsWithoutArming;

@@ -12,22 +12,22 @@ UINT32		guiTacticalInterfaceFlags;
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags );
 
-void SetUpInterface( );
-void ResetInterface( );
-void RenderTopmostTacticalInterface( );
-void RenderTacticalInterface( );
+void SetUpInterface(void);
+void ResetInterface(void);
+void RenderTopmostTacticalInterface(void);
+void RenderTacticalInterface(void);
 
-void RenderTacticalInterfaceWhileScrolling( );
+void RenderTacticalInterfaceWhileScrolling(void);
 
 void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock );
 
-void ResetInterfaceAndUI( );
+void ResetInterfaceAndUI(void);
 
-BOOLEAN AreWeInAUIMenu( );
+BOOLEAN AreWeInAUIMenu(void);
 
-void HandleTacticalPanelSwitch( );
+void HandleTacticalPanelSwitch(void);
 
-BOOLEAN InterfaceOKForMeanwhilePopup();
+BOOLEAN InterfaceOKForMeanwhilePopup(void);
 
 extern BOOLEAN gfRerenderInterfaceFromHelpText;
 

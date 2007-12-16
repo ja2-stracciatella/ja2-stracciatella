@@ -72,18 +72,18 @@ enum
 
 
 
-void InitCivQuoteSystem( );
+void InitCivQuoteSystem(void);
 
 void StartCivQuote( SOLDIERTYPE *pCiv );
 
 INT8 GetCivType(const SOLDIERTYPE* pCiv);
 
-void HandleCivQuote( );
+void HandleCivQuote(void);
 
 BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile );
 BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile );
 
-BOOLEAN ShutDownQuoteBoxIfActive( );
+BOOLEAN ShutDownQuoteBoxIfActive(void);
 
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY );
 

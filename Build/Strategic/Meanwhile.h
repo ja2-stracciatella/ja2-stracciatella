@@ -43,16 +43,16 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 
 BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID );
 
-void CheckForMeanwhileOKStart( );
-void EndMeanwhile( );
+void CheckForMeanwhileOKStart(void);
+void EndMeanwhile(void);
 
 
 
-BOOLEAN AreInMeanwhile( );
-UINT8		GetMeanwhileID( );
-BOOLEAN AreReloadingFromMeanwhile( );
+BOOLEAN AreInMeanwhile(void);
+UINT8 GetMeanwhileID(void);
+BOOLEAN AreReloadingFromMeanwhile(void);
 
-void LocateToMeanwhileCharacter( );
+void LocateToMeanwhileCharacter(void);
 
 // post meanwhile event for town liberation
 void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId );

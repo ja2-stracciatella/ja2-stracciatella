@@ -140,9 +140,9 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct );
 SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* pCreateStruct);
 
 //Randomly generated enemies used by strategic AI.
-SOLDIERTYPE* TacticalCreateAdministrator();
-SOLDIERTYPE* TacticalCreateEliteEnemy();
-SOLDIERTYPE* TacticalCreateArmyTroop();
+SOLDIERTYPE* TacticalCreateAdministrator(void);
+SOLDIERTYPE* TacticalCreateEliteEnemy(void);
+SOLDIERTYPE* TacticalCreateArmyTroop(void);
 SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass );
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType );
 

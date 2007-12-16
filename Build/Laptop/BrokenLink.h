@@ -3,10 +3,10 @@
 
 #include "Types.h"
 
-extern	void RenderBrokenLink();
-extern	void HandleBrokenLink();
-extern	void ExitBrokenLink();
-extern	BOOLEAN EnterBrokenLink();
+void RenderBrokenLink(void);
+void HandleBrokenLink(void);
+void ExitBrokenLink(void);
+BOOLEAN EnterBrokenLink(void);
 
 
 

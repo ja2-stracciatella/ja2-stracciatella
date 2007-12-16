@@ -1,9 +1,9 @@
 #ifndef __AIMLINKS_H
 #define __AIMLINKS_H
 
-BOOLEAN EnterAimLinks();
-void ExitAimLinks();
-void HandleAimLinks();
-void RenderAimLinks();
+BOOLEAN EnterAimLinks(void);
+void ExitAimLinks(void);
+void HandleAimLinks(void);
+void RenderAimLinks(void);
 
 #endif

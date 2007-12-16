@@ -97,7 +97,7 @@ INT16 CenterY( INT16 sGridno );
 BOOLEAN FindFenceJumpDirection(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8* pbDirection);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
-INT16 RandomGridNo();
+INT16 RandomGridNo(void);
 
 extern UINT32 guiForceRefreshMousePositionCalculation;
 

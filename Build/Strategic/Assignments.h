@@ -113,7 +113,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* s);
 
 // handler for assignments -- called once per hour via event
-void UpdateAssignments();
+void UpdateAssignments(void);
 
 void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier );
 
@@ -210,9 +210,9 @@ BOOLEAN IsAnyOneOnPlayersTeamOnThisAssignment( INT8 bAssignment );
 // rebuild assignments box
 void RebuildAssignmentsBox( void );
 
-void BandageBleedingDyingPatientsBeingTreated( );
+void BandageBleedingDyingPatientsBeingTreated(void);
 
-void ReEvaluateEveryonesNothingToDo();
+void ReEvaluateEveryonesNothingToDo(void);
 
 // set assignment for list of characters
 void SetAssignmentForList( INT8 bAssignment, INT8 bParam );

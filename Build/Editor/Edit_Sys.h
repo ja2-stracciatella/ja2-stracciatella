@@ -59,7 +59,7 @@ void PasteCliffs( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace);
 void PasteTexture( UINT32 iMapIndex );
 void PasteTextureCommon( UINT32 iMapIndex );
 
-void RaiseWorldLand();
+void RaiseWorldLand(void);
 
 #endif
 #endif

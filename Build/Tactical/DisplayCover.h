@@ -4,14 +4,14 @@
 #include "Types.h"
 #include "Soldier_Control.h"
 
-void	DisplayCoverOfSelectedGridNo( );
-void	RemoveCoverOfSelectedGridNo();
+void DisplayCoverOfSelectedGridNo(void);
+void RemoveCoverOfSelectedGridNo(void);
 
 void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 
 
-void RemoveVisibleGridNoAtSelectedGridNo();
-void DisplayGridNoVisibleToSoldierGrid( );
+void RemoveVisibleGridNoAtSelectedGridNo(void);
+void DisplayGridNoVisibleToSoldierGrid(void);
 
 void ChangeSizeOfDisplayCover( INT32 iNewSize );
 

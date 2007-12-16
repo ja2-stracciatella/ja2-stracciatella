@@ -104,7 +104,7 @@ typedef struct STRATEGIC_STATUS
 CASSERT(sizeof(STRATEGIC_STATUS) == 192)
 
 
-void InitStrategicStatus();
+void InitStrategicStatus(void);
 
 extern STRATEGIC_STATUS	gStrategicStatus;
 

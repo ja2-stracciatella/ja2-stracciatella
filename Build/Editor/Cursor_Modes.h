@@ -22,12 +22,12 @@ extern UINT16 gusSelectionDensity;
 extern UINT16 gusSavedSelectionType;
 extern UINT16 gusSavedBuildingSelectionType;
 
-BOOLEAN PerformDensityTest();
+BOOLEAN PerformDensityTest(void);
 void SetDrawingMode( INT32 iMode );
-void UpdateCursorAreas();
-void IncreaseSelectionDensity();
-void DecreaseSelectionDensity();
-void RemoveCursors();
+void UpdateCursorAreas(void);
+void IncreaseSelectionDensity(void);
+void DecreaseSelectionDensity(void);
+void RemoveCursors(void);
 
 extern wchar_t SelTypeWidth[lengthof("Width: xx")];
 extern const wchar_t* const wszSelType[6];

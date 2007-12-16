@@ -12,9 +12,9 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename);
 #define RADAR_WINDOW_WIDTH		88
 #define RADAR_WINDOW_HEIGHT		44
 
-BOOLEAN InitRadarScreen( );
-void RenderRadarScreen( );
-void MoveRadarScreen( );
+BOOLEAN InitRadarScreen(void);
+void RenderRadarScreen(void);
+void MoveRadarScreen(void);
 
 // toggle rendering flag of radar screen
 void ToggleRadarScreenRender( void );

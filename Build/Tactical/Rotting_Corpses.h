@@ -127,7 +127,7 @@ typedef struct
 
 ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* pCorpseDef);
 
-void RemoveCorpses( );
+void RemoveCorpses(void);
 
 
 BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLEAN fCheckForLOS );
@@ -137,7 +137,7 @@ INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier );
 INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pCorpseDef, INT8 ubRadius );
 
 
-void HandleRottingCorpses( );
+void HandleRottingCorpses(void);
 
 void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID );
 void CorpseHit( INT16 sGridNo, UINT16 usStructureID );

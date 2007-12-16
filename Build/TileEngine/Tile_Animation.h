@@ -123,8 +123,8 @@ ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams );
 
 
 void DeleteAniTile( ANITILE *pAniTile );
-void UpdateAniTiles( );
-void DeleteAniTiles( );
+void UpdateAniTiles(void);
+void DeleteAniTiles(void);
 
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide );
 

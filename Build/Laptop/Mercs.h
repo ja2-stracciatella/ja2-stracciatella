@@ -51,25 +51,25 @@ enum
 
 
 
-void GameInitMercs();
-BOOLEAN EnterMercs();
-void ExitMercs();
-void HandleMercs();
-void RenderMercs();
+void GameInitMercs(void);
+BOOLEAN EnterMercs(void);
+void ExitMercs(void);
+void HandleMercs(void);
+void RenderMercs(void);
 
 
-BOOLEAN InitMercBackGround();
-BOOLEAN DrawMecBackGround();
-BOOLEAN RemoveMercBackGround();
+BOOLEAN InitMercBackGround(void);
+BOOLEAN DrawMecBackGround(void);
+BOOLEAN RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
 void DisplayTextForSpeckVideoPopUp(STR16 pString);
 
-void EnterInitMercSite();
+void EnterInitMercSite(void);
 
-void GetMercSiteBackOnline();
+void GetMercSiteBackOnline(void);
 
-void DisableMercSiteButton();
+void DisableMercSiteButton(void);
 
 extern	UINT16			gusMercVideoSpeckSpeech;
 
@@ -84,10 +84,10 @@ extern	UINT8			gubCurMercIndex;
 
 extern	BOOLEAN		gfJustHiredAMercMerc;
 
-void InitializeNumDaysMercArrive();
+void InitializeNumDaysMercArrive(void);
 
-void NewMercsAvailableAtMercSiteCallBack( );
+void NewMercsAvailableAtMercSiteCallBack(void);
 
-void CalcAproximateAmountPaidToSpeck();
+void CalcAproximateAmountPaidToSpeck(void);
 
 #endif

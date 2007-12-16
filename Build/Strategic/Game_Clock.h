@@ -26,17 +26,17 @@
 //Pauses and unpauses the game.  It sets and clears a flag which preserves the time rate.
 void PauseGame(void);
 void UnPauseGame(void);
-extern BOOLEAN GamePaused();
+BOOLEAN GamePaused(void);
 extern void LockPauseState( UINT32 uiUniqueReasonId );
-extern void UnLockPauseState();
-extern BOOLEAN PauseStateLocked();
+void UnLockPauseState(void);
+BOOLEAN PauseStateLocked(void);
 
 //USING HIGH RESOLUTION TIME RATE MANIPULATION/ACCESS
 //Allows external code to change the time rate.
 void SetGameHoursPerSecond( UINT32 uiGameHoursPerSecond );
 void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond );
 //Allows access to the current time rate.
-UINT32 GetGameSecondsPerFrame();
+UINT32 GetGameSecondsPerFrame(void);
 void RenderPausedGameBox( void );
 
 
@@ -52,8 +52,8 @@ BOOLEAN IsTimeCompressionOn( void );		// returns TRUE if the player currently wa
 //per frame.  These functions have their limits, so game time will also be between
 //TIME_COMPRESS_X1 to TIME_COMPRESS_X8 based in the laptop time compression.
 void SetGameTimeCompressionLevel( UINT32 uiCompressionRate );
-void DecreaseGameTimeCompressionRate();
-void IncreaseGameTimeCompressionRate();
+void DecreaseGameTimeCompressionRate(void);
+void IncreaseGameTimeCompressionRate(void);
 
 //time compression defines
 enum
@@ -93,11 +93,11 @@ enum
 void WarpGameTime( UINT32 uiAdjustment, UINT8 ubWarpCode );
 
 
-void AdvanceToNextDay();
+void AdvanceToNextDay(void);
 
 //This function is called once per cycle in the game loop.  This determine how often the clock should be
 //as well as how much to update the clock by.
-void UpdateClock();
+void UpdateClock(void);
 
 
 extern wchar_t gswzWorldTimeStr[ 20 ]; //Day 99, 23:55
@@ -126,20 +126,20 @@ extern BOOLEAN gfResetAllPlayerKnowsEnemiesFlags;
 
 extern UINT32 guiLockPauseStateLastReasonId;
 
-UINT32 GetWorldTotalMin( );
-UINT32 GetWorldTotalSeconds( );
-UINT32 GetWorldHour( );
-UINT32 GetWorldDay( );
-UINT32 GetWorldMinutesInDay( );
-UINT32 GetWorldDayInSeconds( );
-UINT32 GetWorldDayInMinutes( );
+UINT32 GetWorldTotalMin(void);
+UINT32 GetWorldTotalSeconds(void);
+UINT32 GetWorldHour(void);
+UINT32 GetWorldDay(void);
+UINT32 GetWorldMinutesInDay(void);
+UINT32 GetWorldDayInSeconds(void);
+UINT32 GetWorldDayInMinutes(void);
 UINT32 GetFutureDayInMinutes( UINT32 uiDay );
 UINT32 GetMidnightOfFutureDayInMinutes( UINT32 uiDay );
 
-BOOLEAN DayTime();
-BOOLEAN NightTime();
+BOOLEAN DayTime(void);
+BOOLEAN NightTime(void);
 
-void InitNewGameClock( );
+void InitNewGameClock(void);
 
 void GotoNextTimeOfDay( UINT32 uiTOD );
 
@@ -149,12 +149,12 @@ void RenderClock(void);
 //further processing of time in this current time slice!  This can only be used inside of event callback
 //functions -- otherwise, it'll be ignored and automatically reset.  An example of this would be when arriving
 //in a new sector and being prompted to attack or retreat.
-void InterruptTime();
-void PauseTimeForInterupt();
+void InterruptTime(void);
+void PauseTimeForInterupt(void);
 
 extern BOOLEAN gfTimeInterrupt;
 
-BOOLEAN DidGameJustStart();
+BOOLEAN DidGameJustStart(void);
 
 BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseState );
 BOOLEAN LoadGameClock( HWFILE hFile );

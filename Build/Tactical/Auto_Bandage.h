@@ -4,14 +4,14 @@
 //#define VISIBLE_AUTO_BANDAGE
 
 void AutoBandage( BOOLEAN fStart );
-void BeginAutoBandage( );
+void BeginAutoBandage(void);
 
-BOOLEAN HandleAutoBandage( );
+BOOLEAN HandleAutoBandage(void);
 
-void ShouldBeginAutoBandage( );
+void ShouldBeginAutoBandage(void);
 
 void SetAutoBandagePending( BOOLEAN fSet );
-void HandleAutoBandagePending( );
+void HandleAutoBandagePending(void);
 
 // ste the autobandage as complete
 void SetAutoBandageComplete( void );

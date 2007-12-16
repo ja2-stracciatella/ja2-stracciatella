@@ -230,10 +230,10 @@ extern UINT32 uiExternalStaticNPCFaces[ ];
 extern UINT32 uiExternalFaceProfileIds[ ];
 
 // Functions for handling dialogue Q
-BOOLEAN InitalizeDialogueControl();
-void ShutdownDialogueControl();
-void EmptyDialogueQueue( );
-void HandleDialogue( );
+BOOLEAN InitalizeDialogueControl(void);
+void ShutdownDialogueControl(void);
+void EmptyDialogueQueue(void);
+void HandleDialogue(void);
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber );
 
 
@@ -271,13 +271,13 @@ void ShutDownLastQuoteTacticalTextBox( void );
 
 // Called to advance speech
 // Used for option when no speech sound file
-void DialogueAdvanceSpeech( );
+void DialogueAdvanceSpeech(void);
 
-BOOLEAN DialogueQueueIsEmpty( );
-BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( );
+BOOLEAN DialogueQueueIsEmpty(void);
+BOOLEAN DialogueQueueIsEmptyOrSomebodyTalkingNow(void);
 
 // Adjust the face, etc when switching from panel to extern panel...
-void HandleDialogueUIAdjustments( );
+void HandleDialogueUIAdjustments(void);
 
 void UnPauseGameDuringNextQuote( void );
 
@@ -303,7 +303,7 @@ extern UINT32 guiDialogueLastQuoteDelay;
 
 void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack );
 
-BOOLEAN DialogueActive( );
+BOOLEAN DialogueActive(void);
 
 extern INT32 giNPCReferenceCount;
 extern INT32 giNPCSpecialReferenceCount;
@@ -318,7 +318,7 @@ BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet );
 UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID );
 void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void );
 
-void StopAnyCurrentlyTalkingSpeech( );
+void StopAnyCurrentlyTalkingSpeech(void);
 
 // handle pausing of the dialogue queue
 void PauseDialogueQueue( void );

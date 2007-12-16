@@ -18,14 +18,14 @@ extern BOOLEAN  fUseTerrainWeights;
 extern INT32 TerrainTileSelected, TerrainForegroundTile,TerrainBackgroundTile;
 extern INT32 TerrainTileDrawMode;
 
-void EntryInitEditorTerrainInfo();
-void RenderTerrainTileButtons();
+void EntryInitEditorTerrainInfo(void);
+void RenderTerrainTileButtons(void);
 
-void ResetTerrainTileWeights();
-void ShowTerrainTileButtons();
-void HideTerrainTileButtons();
+void ResetTerrainTileWeights(void);
+void ShowTerrainTileButtons(void);
+void HideTerrainTileButtons(void);
 
-void ChooseWeightedTerrainTile();
+void ChooseWeightedTerrainTile(void);
 
 void TerrainFill( UINT32 iMapIndex );
 

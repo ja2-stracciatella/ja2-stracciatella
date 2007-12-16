@@ -1,17 +1,17 @@
 #ifndef __AIMMEMBERS_H_
 #define __AIMMEMBERS_H_
 
-BOOLEAN EnterAIMMembers();
-void ExitAIMMembers();
-void HandleAIMMembers();
-BOOLEAN RenderAIMMembers();
+BOOLEAN EnterAIMMembers(void);
+void ExitAIMMembers(void);
+void HandleAIMMembers(void);
+BOOLEAN RenderAIMMembers(void);
 
 
 BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor);
 
 void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length);
-void EnterInitAimMembers();
-BOOLEAN RenderAIMMembersTopLevel();
+void EnterInitAimMembers(void);
+BOOLEAN RenderAIMMembersTopLevel(void);
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
 void DisableNewMailMessage(void);
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void);
@@ -27,7 +27,7 @@ void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset );
 
 
 #if defined ( JA2TESTVERSION ) || defined ( JA2DEMO )
-	void DemoHiringOfMercs( );
+ void DemoHiringOfMercs(void);
 #endif
 
 

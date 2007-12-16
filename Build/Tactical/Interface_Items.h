@@ -27,22 +27,22 @@ typedef struct
 
 // Itempickup stuff
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
-void RenderItemPickupMenu( );
-void RemoveItemPickupMenu( );
+void RenderItemPickupMenu(void);
+void RemoveItemPickupMenu(void);
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );
-BOOLEAN HandleItemPickupMenu( );
+BOOLEAN HandleItemPickupMenu(void);
 void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
 BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity);
-void ShutdownInvSlotInterface( );
+void ShutdownInvSlotInterface(void);
 void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel);
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
 void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
 void DisableInvRegions( BOOLEAN fDisable );
 
-void DegradeNewlyAddedItems( );
+void DegradeNewlyAddedItems(void);
 void CheckForAnyNewlyAddedItems( SOLDIERTYPE *pSoldier );
 
 
@@ -63,16 +63,16 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 
 BOOLEAN		gfInItemDescBox;
 
-BOOLEAN InItemDescriptionBox( );
+BOOLEAN InItemDescriptionBox(void);
 BOOLEAN InitItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex );
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
 BOOLEAN InitKeyItemDescriptionBox( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex );
 void RenderItemDescriptionBox(void);
 void HandleItemDescriptionBox( BOOLEAN *pfDirty );
-void DeleteItemDescriptionBox( );
+void DeleteItemDescriptionBox(void);
 
 
-BOOLEAN InItemStackPopup( );
+BOOLEAN InItemStackPopup(void);
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight );
 void RenderItemStackPopup( BOOLEAN fFullRender );
 
@@ -82,7 +82,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 void RenderKeyRingPopup( BOOLEAN fFullRender );
 void InitKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );
 void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );
-void DeleteKeyRingPopup( );
+void DeleteKeyRingPopup(void);
 
 
 void ShutdownKeyRingInterface( void );
@@ -98,10 +98,10 @@ BOOLEAN				gfItemPointerDifferentThanDefault;
 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );
 void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 bHandPos );
-void EndItemPointer( );
-void DrawItemFreeCursor( );
-void DrawItemTileCursor( );
-void InitItemInterface( );
+void EndItemPointer(void);
+void DrawItemFreeCursor(void);
+void DrawItemTileCursor(void);
+void InitItemInterface(void);
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
 UINT32 GetInterfaceGraphicForItem(const INVTYPE* pItem);
 UINT16 GetTileGraphicForItem(const INVTYPE* pItem);
@@ -109,7 +109,7 @@ UINT32 LoadTileGraphicForItem(const INVTYPE* pItem);
 
 void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier);
 
-void CancelItemPointer( );
+void CancelItemPointer(void);
 
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile );
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile );
@@ -117,9 +117,9 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile );
 // handle compatable items for merc and map inventory
 BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc);
 BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInvPos, INT32 iStartSlotNumber, BOOLEAN fOn, BOOLEAN fFromMerc  );
-void ResetCompatibleItemArray( );
+void ResetCompatibleItemArray(void);
 
-void CycleItemDescriptionItem( );
+void CycleItemDescriptionItem(void);
 
 void UpdateItemHatches(void);
 

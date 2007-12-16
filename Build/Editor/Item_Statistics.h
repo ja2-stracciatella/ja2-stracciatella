@@ -18,11 +18,11 @@ extern BOOLEAN gfRenderItemStatsPanel;
 
 void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex );
 
-void ShowItemStatsPanel();
-void HideItemStatsPanel();
+void ShowItemStatsPanel(void);
+void HideItemStatsPanel(void);
 
 //called from the taskbar renderer.
-void UpdateItemStatsPanel();
+void UpdateItemStatsPanel(void);
 
 enum
 {

@@ -1,9 +1,9 @@
 #ifndef __AIMARCHIVES_H_
 #define __AIMARCHIVES_H_
 
-BOOLEAN EnterAimArchives();
-void ExitAimArchives();
-void HandleAimArchives();
-void RenderAimArchives();
-void EnterInitAimArchives();
+BOOLEAN EnterAimArchives(void);
+void ExitAimArchives(void);
+void HandleAimArchives(void);
+void RenderAimArchives(void);
+void EnterInitAimArchives(void);
 #endif

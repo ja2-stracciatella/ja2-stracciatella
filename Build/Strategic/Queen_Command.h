@@ -23,10 +23,10 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 //Called when entering a sector so the campaign AI can automatically insert the
 //correct number of troops of each type based on the current number in the sector
 //in global focus (gWorldSectorX/Y)
-BOOLEAN PrepareEnemyForSectorBattle();
+BOOLEAN PrepareEnemyForSectorBattle(void);
 
-void AddPossiblePendingEnemiesToBattle();
-void EndTacticalBattleForEnemy();
+void AddPossiblePendingEnemiesToBattle(void);
+void EndTacticalBattleForEnemy(void);
 
 void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier );
 
@@ -37,12 +37,12 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile );
 UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier );
-void BeginCaptureSquence( );
-void EndCaptureSequence( );
+void BeginCaptureSquence(void);
+void EndCaptureSequence(void);
 
 BOOLEAN PlayerSectorDefended( UINT8 ubSectorID );
 
-BOOLEAN OnlyHostileCivsInSector();
+BOOLEAN OnlyHostileCivsInSector(void);
 
 extern INT16 gsInterrogationGridNo[3];
 

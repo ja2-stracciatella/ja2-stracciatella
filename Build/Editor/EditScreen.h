@@ -21,7 +21,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType );
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY );
 extern BOOLEAN gfMercResetUponEditorEntry;
 
-void ProcessSelectionArea();
+void ProcessSelectionArea(void);
 
 //These go together.  The taskbar has a specific color scheme.
 extern UINT16 gusEditorTaskbarColor;
@@ -34,7 +34,7 @@ extern INT32 iTaskMode;
 
 void ProcessAreaSelection( BOOLEAN fWithLeftButton );
 
-void ShowEntryPoints();
+void ShowEntryPoints(void);
 
 extern BOOLEAN			gfConfirmExitFirst;
 extern BOOLEAN			gfConfirmExitPending;

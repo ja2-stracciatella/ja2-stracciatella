@@ -89,7 +89,7 @@ extern UINT16 *popupMenuStrings[5];
 
 //These are the two main functions that outside users would call.
 void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection );
-BOOLEAN ProcessPopupMenuIfActive();
+BOOLEAN ProcessPopupMenuIfActive(void);
 
 #endif
 #endif

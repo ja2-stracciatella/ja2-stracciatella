@@ -1,10 +1,10 @@
 #ifndef __BOBBYRUSED_H
 #define __BOBBYRUSED_H
 
-BOOLEAN EnterBobbyRUsed();
-void ExitBobbyRUsed();
-void HandleBobbyRUsed();
-void RenderBobbyRUsed();
+BOOLEAN EnterBobbyRUsed(void);
+void ExitBobbyRUsed(void);
+void HandleBobbyRUsed(void);
+void RenderBobbyRUsed(void);
 
 
 

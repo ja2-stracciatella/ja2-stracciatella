@@ -32,26 +32,26 @@ extern UINT8			gubLastGunIndex;
 
 
 
-void GameInitBobbyRGuns();
-BOOLEAN EnterBobbyRGuns();
-void ExitBobbyRGuns();
-void HandleBobbyRGuns();
-void RenderBobbyRGuns();
+void GameInitBobbyRGuns(void);
+BOOLEAN EnterBobbyRGuns(void);
+void ExitBobbyRGuns(void);
+void HandleBobbyRGuns(void);
+void RenderBobbyRGuns(void);
 
 
-BOOLEAN DisplayBobbyRBrTitle();
-BOOLEAN DeleteBobbyBrTitle();
-BOOLEAN InitBobbyBrTitle();
+BOOLEAN DisplayBobbyRBrTitle(void);
+BOOLEAN DeleteBobbyBrTitle(void);
+BOOLEAN InitBobbyBrTitle(void);
 BOOLEAN InitBobbyMenuBar(void);
-BOOLEAN DeleteBobbyMenuBar();
+BOOLEAN DeleteBobbyMenuBar(void);
 
 //BOOLEAN DisplayWeaponInfo();
 BOOLEAN DisplayItemInfo(UINT32 uiItemClass);
-void DeleteMouseRegionForBigImage();
+void DeleteMouseRegionForBigImage(void);
 void UpdateButtonText(UINT32	uiCurPage);
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 //void CalculateFirstAndLastIndexs();
-void SetFirstLastPagesForUsed();
+void SetFirstLastPagesForUsed(void);
 void SetFirstLastPagesForNew( UINT32 uiClass );
 
 #endif

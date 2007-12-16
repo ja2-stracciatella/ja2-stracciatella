@@ -181,7 +181,7 @@ BOOLEAN SetFaceTalking(INT32 iFaceIndex, CHAR8* zSoundFile, STR16 zTextString);
 BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID );
 
 // Once this is done, this function must be called overy gameloop that you want to handle the sprite:
-void HandleAutoFaces( );
+void HandleAutoFaces(void);
 // This will handle all faces set to be auto mamaged by SetAutoFaceActive(). What is does is determines
 // the best mouth and eye graphic to use. It then renders only the rects nessessary into the display buffer.
 
@@ -196,10 +196,10 @@ void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce );
 void SetAutoFaceInActive( INT32 iFaceIndex );
 
 // To set all currently allocated faces to either active or incactive, call these
-void SetAllAutoFacesInactive( );
+void SetAllAutoFacesInactive(void);
 
 // FUnctions usually not needed for most uses, but give a finer control over rendering if needed
-void HandleTalkingAutoFaces( );
+void HandleTalkingAutoFaces(void);
 
 
 

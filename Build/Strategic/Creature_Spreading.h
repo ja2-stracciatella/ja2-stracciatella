@@ -1,17 +1,17 @@
 #ifndef __CREATURE_SPREADING_H
 #define __CREATURE_SPREADING_H
 
-void InitCreatureQuest();
-void SpreadCreatures();
-void DecayCreatures();
-void ClearCreatureQuest();
-void DeleteCreatureDirectives();
+void InitCreatureQuest(void);
+void SpreadCreatures(void);
+void DecayCreatures(void);
+void ClearCreatureQuest(void);
+void DeleteCreatureDirectives(void);
 
 BOOLEAN SaveCreatureDirectives( HWFILE hFile );
 BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion );
 
-BOOLEAN PrepareCreaturesForBattle();
-void CreatureNightPlanning();
+BOOLEAN PrepareCreaturesForBattle(void);
+void CreatureNightPlanning(void);
 void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest );
 
 void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
@@ -51,6 +51,6 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCr
 																			 UINT8 *pubNumAdultMales, UINT8 *pubNumAdultFemales );
 
 
-BOOLEAN PlayerGroupIsInACreatureInfestedMine();
+BOOLEAN PlayerGroupIsInACreatureInfestedMine(void);
 
 #endif

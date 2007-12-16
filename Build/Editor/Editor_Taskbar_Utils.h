@@ -19,11 +19,11 @@ enum
 
 //Taskbar manipulation functions
 void DoTaskbar(void);
-void ProcessEditorRendering();
-void EnableEditorTaskbar();
-void DisableEditorTaskbar();
-void CreateEditorTaskbar();
-void DeleteEditorTaskbar();
+void ProcessEditorRendering(void);
+void EnableEditorTaskbar(void);
+void DisableEditorTaskbar(void);
+void CreateEditorTaskbar(void);
+void DeleteEditorTaskbar(void);
 
 //Button manipulation functions
 void ClickEditorButton( INT32 iEditorButtonID );

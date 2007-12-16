@@ -20,8 +20,8 @@ enum
 BOOLEAN		gfInSectorExitMenu;
 
 BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData );
-void RenderSectorExitMenu( );
-BOOLEAN HandleSectorExitMenu( );
+void RenderSectorExitMenu(void);
+BOOLEAN HandleSectorExitMenu(void);
 void RemoveSectorExitMenu( BOOLEAN fOK );
 
 

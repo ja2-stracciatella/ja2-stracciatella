@@ -3,8 +3,8 @@
 
 #include "Soldier_Control.h"
 
-void InitTacticalPlacementGUI();
-void TacticalPlacementHandle();
+void InitTacticalPlacementGUI(void);
+void TacticalPlacementHandle(void);
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason);
 

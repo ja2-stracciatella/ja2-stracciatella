@@ -109,7 +109,7 @@ typedef enum
 } InterfacePanelDefines;
 
 
-BOOLEAN InitializeTacticalInterface( );
+BOOLEAN InitializeTacticalInterface(void);
 BOOLEAN	fInterfacePanelDirty;
 BOOLEAN gfPausedTacticalRenderFlags;
 BOOLEAN gfPausedTacticalRenderInterfaceFlags;
@@ -118,43 +118,43 @@ BOOLEAN	gfInMovementMenu;
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent );
-void PopDownMovementMenu( );
-void RenderMovementMenu( );
-void CancelMovementMenu( );
+void PopDownMovementMenu(void);
+void RenderMovementMenu(void);
+void CancelMovementMenu(void);
 
 
-void PopDownOpenDoorMenu( );
-void RenderOpenDoorMenu( );
+void PopDownOpenDoorMenu(void);
+void RenderOpenDoorMenu(void);
 BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fClosingDoor );
-BOOLEAN HandleOpenDoorMenu( );
-void CancelOpenDoorMenu( );
+BOOLEAN HandleOpenDoorMenu(void);
+void CancelOpenDoorMenu(void);
 
-void HandleInterfaceBackgrounds( );
+void HandleInterfaceBackgrounds(void);
 
 
 void DrawSelectedUIAboveGuy(SOLDIERTYPE* s);
 
-void CreateCurrentTacticalPanelButtons( );
-void RemoveCurrentTacticalPanelButtons( );
+void CreateCurrentTacticalPanelButtons(void);
+void RemoveCurrentTacticalPanelButtons(void);
 void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s);
 void SetCurrentInterfacePanel( UINT8 ubNewPanel );
 BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s);
 
-BOOLEAN InitializeCurrentPanel( );
-void ShutdownCurrentPanel( );
+BOOLEAN InitializeCurrentPanel(void);
+void ShutdownCurrentPanel(void);
 
-void ClearInterface( );
-void RestoreInterface( );
+void ClearInterface(void);
+void RestoreInterface(void);
 
-void RenderArrows( );
-void EraseRenderArrows( );
+void RenderArrows(void);
+void EraseRenderArrows(void);
 
-void EndDeadlockMsg( );
+void EndDeadlockMsg(void);
 
 void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel );
 
 
-void EndUIMessage( );
+void EndUIMessage(void);
 void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text);
 
 
@@ -177,32 +177,32 @@ enum
 
 } MESSAGE_TYPES;
 
-void HandleTopMessages( );
+void HandleTopMessages(void);
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString );
-BOOLEAN InTopMessageBarAnimation( );
-void EndTopMessage( );
+BOOLEAN InTopMessageBarAnimation(void);
+void EndTopMessage(void);
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 
 const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* s);
 
 
-void RenderAimCubeUI( );
+void RenderAimCubeUI(void);
 
-void ResetPhysicsTrajectoryUI( );
-void SetupPhysicsTrajectoryUI( );
-void EndPhysicsTrajectoryUI( );
+void ResetPhysicsTrajectoryUI(void);
+void SetupPhysicsTrajectoryUI(void);
+void EndPhysicsTrajectoryUI(void);
 void BeginPhysicsTrajectoryUI( INT16 sGridNo, INT8 bLevel, BOOLEAN fBadCTGT );
 
 void InitPlayerUIBar( BOOLEAN fInterrupt );
 
-void ToggleTacticalPanels( );
+void ToggleTacticalPanels(void);
 
-void DirtyTopMessage( );
+void DirtyTopMessage(void);
 
 void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
-void HandleMultiPurposeLocator( );
-void RenderTopmostMultiPurposeLocator( );
+void HandleMultiPurposeLocator(void);
+void RenderTopmostMultiPurposeLocator(void);
 
 void GetSoldierAboveGuyPositions(const SOLDIERTYPE* s, INT16* psX, INT16* psY, BOOLEAN fRadio);
 

@@ -118,9 +118,9 @@ extern	UINT32	CreditScreenShutdown( void );
 
 
 // External functions
-void DisplayFrameRate( );
+void DisplayFrameRate(void);
 
-void HandleTitleScreenAnimation();
+void HandleTitleScreenAnimation(void);
 
 //External Globals
 UINT8					gubFilename[ 200 ];
@@ -134,7 +134,7 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage );
 
 void EnableFPSOverlay(BOOLEAN fEnable);
 
-extern BOOLEAN gfExitDebugScreen;
-extern INT8    gCurDebugPage;
+BOOLEAN gfExitDebugScreen;
+INT8 gCurDebugPage;
 
 #endif

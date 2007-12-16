@@ -95,10 +95,10 @@ void InitSoldierOppList(SOLDIERTYPE *pSoldier);
 void BetweenTurnsVisibilityAdjustments(void);
 void RemoveManAsTarget(SOLDIERTYPE *pSoldier);
 void RadioSightings(SOLDIERTYPE* pSoldier, SOLDIERTYPE* about, UINT8 ubTeamToRadioTo);
-void DebugSoldierPage1( );
-void DebugSoldierPage2( );
-void DebugSoldierPage3( );
-void DebugSoldierPage4( );
+void DebugSoldierPage1(void);
+void DebugSoldierPage2(void);
+void DebugSoldierPage3(void);
+void DebugSoldierPage4(void);
 
 UINT8 MovementNoise( SOLDIERTYPE *pSoldier );
 UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier );

@@ -10,10 +10,10 @@ UINT8			gubCurrentListMode;
 #define		AIM_DESCEND									7
 
 
-void GameInitAimSort();
-BOOLEAN EnterAimSort();
-void ExitAimSort();
-void HandleAimSort();
-void RenderAimSort();
+void GameInitAimSort(void);
+BOOLEAN EnterAimSort(void);
+void ExitAimSort(void);
+void HandleAimSort(void);
+void RenderAimSort(void);
 
 #endif

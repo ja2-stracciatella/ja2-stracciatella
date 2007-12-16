@@ -4,17 +4,17 @@
 #ifndef __EDITORMAPINFO_H
 #define __EDITORMAPINFO_H
 
-void SetupTextInputForMapInfo();
-void UpdateMapInfo();
-void ExtractAndUpdateMapInfo();
-BOOLEAN ApplyNewExitGridValuesToTextFields();
-void UpdateMapInfoFields();
+void SetupTextInputForMapInfo(void);
+void UpdateMapInfo(void);
+void ExtractAndUpdateMapInfo(void);
+BOOLEAN ApplyNewExitGridValuesToTextFields(void);
+void UpdateMapInfoFields(void);
 
 extern SGPPaletteEntry gEditorLightColor;
 
 extern BOOLEAN gfEditorForceShadeTableRebuild;
 
-void LocateNextExitGrid();
+void LocateNextExitGrid(void);
 
 enum
 {

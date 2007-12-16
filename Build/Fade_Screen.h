@@ -23,10 +23,10 @@ BOOLEAN						gfFadeInVideo;
 BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit );
 BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit );
 
-BOOLEAN HandleFadeOutCallback( );
-BOOLEAN HandleFadeInCallback( );
+BOOLEAN HandleFadeOutCallback(void);
+BOOLEAN HandleFadeInCallback(void);
 
-void FadeInNextFrame( );
-void FadeOutNextFrame( );
+void FadeInNextFrame(void);
+void FadeOutNextFrame(void);
 
 #endif

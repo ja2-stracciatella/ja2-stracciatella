@@ -68,7 +68,7 @@ struct REAL_OBJECT
 
 // OBJECT LIST STUFF
 REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, UINT32 uiActionData);
-void RemoveAllPhysicsObjects( );
+void RemoveAllPhysicsObjects(void);
 
 
 FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHeight, real dForce, OBJECTTYPE *pItem, INT16 *psGridNo );
@@ -82,7 +82,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 
 
 // SIMULATE WORLD
-void SimulateWorld(  );
+void SimulateWorld(void);
 
 
 BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile );

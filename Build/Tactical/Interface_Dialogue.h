@@ -56,14 +56,14 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum );
 
 
 // Removes memory allocated for structure, removes face...
-void DeleteTalkingMenu(  );
+void DeleteTalkingMenu(void);
 
 // Dirty menu
 void SetTalkingMenuDirty( BOOLEAN fDirtyLevel );
 
-BOOLEAN HandleTalkingMenu( );
+BOOLEAN HandleTalkingMenu(void);
 
-void RenderTalkingMenu( );
+void RenderTalkingMenu(void);
 
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
@@ -76,12 +76,12 @@ BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum );
 // NPC Do action
 BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 
-BOOLEAN	NPCClosePanel( );
+BOOLEAN NPCClosePanel(void);
 
-void HandleWaitTimerForNPCTrigger( );
+void HandleWaitTimerForNPCTrigger(void);
 
 
-void HandleNPCClosePanel( );
+void HandleNPCClosePanel(void);
 void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
 void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach );
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum );

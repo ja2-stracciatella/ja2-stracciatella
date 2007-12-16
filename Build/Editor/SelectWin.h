@@ -55,7 +55,7 @@ INT32 GetRandomSelection( void );
 void RestoreSelectionList( void );
 BOOLEAN ClearSelectionList( void );
 
-void DisplaySelectionWindowGraphicalInformation();
+void DisplaySelectionWindowGraphicalInformation(void);
 
 
 extern INT32				iCurBank;

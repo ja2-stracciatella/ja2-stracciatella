@@ -978,8 +978,8 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
 BOOLEAN GetPaletteRepIndexFromID(const PaletteRepID aPalRep, UINT8* pubPalIndex);
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
-BOOLEAN LoadPaletteData( );
-BOOLEAN DeletePaletteData( );
+BOOLEAN LoadPaletteData(void);
+BOOLEAN DeletePaletteData(void);
 
 // UTILITY FUNCTUIONS
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );
@@ -1074,7 +1074,7 @@ BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier );
 
 void CrowsFlyAway( UINT8 ubTeam );
 
-void DebugValidateSoldierData( );
+void DebugValidateSoldierData(void);
 
 void BeginTyingToFall( SOLDIERTYPE *pSoldier );
 

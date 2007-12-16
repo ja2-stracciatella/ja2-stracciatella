@@ -3,7 +3,7 @@
 
 
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier );
-void MercDailyUpdate();
+void MercDailyUpdate(void);
 void MercsContractIsFinished(SOLDIERTYPE* s);
 void RPCWhineAboutNoPay(SOLDIERTYPE* s);
 void MercComplainAboutEquipment( UINT8 ubProfileID );

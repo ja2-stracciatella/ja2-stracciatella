@@ -11,9 +11,9 @@ BOOLEAN IsAutoResolveActive( void );
 
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY );
 
-void ConvertTacticalBattleIntoStrategicAutoResolveBattle();
+void ConvertTacticalBattleIntoStrategicAutoResolveBattle(void);
 
-UINT8 GetAutoResolveSectorID();
+UINT8 GetAutoResolveSectorID(void);
 
 BOOLEAN gfTransferTacticalOppositionToAutoResolve;
 

@@ -7,14 +7,14 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion );
 
 void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel );
 
-void HandleDoneLastKilledQueenQuote( );
+void HandleDoneLastKilledQueenQuote(void);
 
-void EndQueenDeathEndgameBeginEndCimenatic( );
-void EndQueenDeathEndgame( );
+void EndQueenDeathEndgameBeginEndCimenatic(void);
+void EndQueenDeathEndgame(void);
 
 void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel );
 
-void HandleDoneLastEndGameQuote( );
+void HandleDoneLastEndGameQuote(void);
 
 
 #endif

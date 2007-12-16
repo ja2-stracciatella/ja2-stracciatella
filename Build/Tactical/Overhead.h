@@ -284,20 +284,20 @@ INT32   MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier);
 INT32   MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* pSoldier);
 
 void EnterCombatMode( UINT8 ubStartingTeam );
-void ExitCombatMode( );
+void ExitCombatMode(void);
 
 void HandleTeamServices( UINT8 ubTeamNum );
 void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier );
 
-void SetEnemyPresence( );
+void SetEnemyPresence(void);
 
-void CycleThroughKnownEnemies( );
+void CycleThroughKnownEnemies(void);
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen );
 
 SOLDIERTYPE* FreeUpAttacker(SOLDIERTYPE* attacker);
 
-BOOLEAN PlayerTeamFull( );
+BOOLEAN PlayerTeamFull(void);
 
 void SetActionToDoOnceMercsGetToLocation(UINT8 ubActionCode, INT8 bNumMercsWaiting);
 
@@ -307,7 +307,7 @@ BOOLEAN HandleGotoNewGridNo( SOLDIERTYPE *pSoldier, BOOLEAN *pfKeepMoving, BOOLE
 
 SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* attacker, BOOLEAN fCalledByAttacker);
 
-void CommonEnterCombatModeCode( );
+void CommonEnterCombatModeCode(void);
 
 void CheckForPotentialAddToBattleIncrement( SOLDIERTYPE *pSoldier );
 

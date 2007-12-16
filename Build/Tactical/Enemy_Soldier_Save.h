@@ -2,13 +2,13 @@
 #define __ENEMY_SOLDIER_SAVE_H
 
 //This funciton load both the enemies AND the civilians, now only used to load old saves
-BOOLEAN LoadEnemySoldiersFromTempFile();
+BOOLEAN LoadEnemySoldiersFromTempFile(void);
 
 //The new way of loading in enemies from the temp file.  ONLY the ENEMIES are stored in the e_* temp file
-BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile();
+BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile(void);
 
 //The new way of loading in CIVILIANS from the temp file.  ONLY the CIVILIEANS are stored in the c_* temp file
-BOOLEAN NewWayOfLoadingCiviliansFromTempFile();
+BOOLEAN NewWayOfLoadingCiviliansFromTempFile(void);
 
 
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly  );

@@ -534,8 +534,8 @@ typedef struct
 AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 
-BOOLEAN InitAnimationSystem( );
-BOOLEAN DeInitAnimationSystem( );
+BOOLEAN InitAnimationSystem(void);
+BOOLEAN DeInitAnimationSystem(void);
 BOOLEAN LoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
 BOOLEAN UnLoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex );
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
@@ -546,6 +546,6 @@ STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfa
 // Profile data
 ANIM_PROF		*gpAnimProfiles;
 
-void ZeroAnimSurfaceCounts( );
+void ZeroAnimSurfaceCounts(void);
 
 #endif

@@ -37,6 +37,6 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile );
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-void ResetLightEffects();
+void ResetLightEffects(void);
 
 #endif

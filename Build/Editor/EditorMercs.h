@@ -66,19 +66,19 @@ enum _ForUseWithIndicateSelectedMerc
 
 void IndicateSelectedMerc( INT16 sID );
 
-void GameInitEditorMercsInfo();
-void GameShutdownEditorMercsInfo();
-void EntryInitEditorMercsInfo();
-void UpdateMercsInfo();
+void GameInitEditorMercsInfo(void);
+void GameShutdownEditorMercsInfo(void);
+void EntryInitEditorMercsInfo(void);
+void UpdateMercsInfo(void);
 
-void ProcessMercEditing();
+void ProcessMercEditing(void);
 void AddMercToWorld( INT32 iMapIndex );
 void HandleRightClickOnMerc( INT32 iMapIndex );
 void SetMercEditingMode( UINT8 ubNewMode );
 
-void ResetAllMercPositions();
+void ResetAllMercPositions(void);
 
-void EraseMercWaypoint();
+void EraseMercWaypoint(void);
 void AddMercWaypoint( UINT32 iMapIndex );
 
 void SetEnemyColorCode( UINT8 ubColorCode );
@@ -92,7 +92,7 @@ void SetMercDirection( INT8 bDirection );
 void SetMercRelativeEquipment( INT8 bLevel );
 void SetMercRelativeAttributes( INT8 bLevel );
 
-void DeleteSelectedMerc();
+void DeleteSelectedMerc(void);
 
 void ExtractCurrentMercModeInfo( BOOLEAN fKillTextInputMode );
 
@@ -111,7 +111,7 @@ extern BOOLEAN					gfRoofPlacement;
 
 extern void SetEnemyDroppableStatus( UINT32 uiSlot, BOOLEAN fDroppable );
 
-void RenderMercStrings();
+void RenderMercStrings(void);
 
 extern BOOLEAN gfShowPlayers;
 extern BOOLEAN gfShowEnemies;
@@ -126,13 +126,13 @@ extern BOOLEAN gfUseScheduleData2;
 
 void UpdateScheduleAction( UINT8 ubNewAction );
 void FindScheduleGridNo( UINT8 ubScheduleData );
-void ClearCurrentSchedule();
-void CancelCurrentScheduleAction();
+void ClearCurrentSchedule(void);
+void CancelCurrentScheduleAction(void);
 void RegisterCurrentScheduleAction( INT32 iMapIndex );
-void StartScheduleAction();
+void StartScheduleAction(void);
 
-void InitDetailedPlacementForMerc();
-void KillDetailedPlacementForMerc();
+void InitDetailedPlacementForMerc(void);
+void KillDetailedPlacementForMerc(void);
 
 void CopyMercPlacement(INT32 iMapIndex);
 void PasteMercPlacement(INT32 iMapIndex);

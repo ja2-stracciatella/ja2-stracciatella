@@ -17,11 +17,11 @@
 #define		AIM_FI_HELP_COLOR									FONT_MCOLOR_WHITE
 
 
-BOOLEAN EnterAimFacialIndex();
-void ExitAimFacialIndex();
-void HandleAimFacialIndex();
-BOOLEAN RenderAimFacialIndex();
+BOOLEAN EnterAimFacialIndex(void);
+void ExitAimFacialIndex(void);
+void HandleAimFacialIndex(void);
+BOOLEAN RenderAimFacialIndex(void);
 
-BOOLEAN DisplayAimFIMugShot();
+BOOLEAN DisplayAimFIMugShot(void);
 
 #endif

@@ -108,7 +108,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 //will display on mapscreen until time is compressed.  When time is compressed, the flag is cleared, and
 //a question mark is displayed to reflect that the player no longer knows.  This is the function that clears that
 //flag.
-void ClearAnySectorsFlashingNumberOfEnemies();
+void ClearAnySectorsFlashingNumberOfEnemies(void);
 
 void InitMapSecrets( void );
 

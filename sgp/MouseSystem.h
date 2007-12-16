@@ -155,12 +155,12 @@ void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow );
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc
-void RefreshMouseRegions( );
+void RefreshMouseRegions(void);
 
 void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
 
 // Now also used by Wizardry -- DB
-void RenderFastHelp();
+void RenderFastHelp(void);
 
 // Hook to the SGP's mouse handler
 void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord);

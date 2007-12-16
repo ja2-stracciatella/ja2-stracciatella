@@ -42,8 +42,8 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile );
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile );
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile );
 
-void InitSoldierInitList();
-void KillSoldierInitList();
+void InitSoldierInitList(void);
+void KillSoldierInitList(void);
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement );
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode );
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID );
@@ -56,15 +56,15 @@ void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNum
 																	UINT8 ubNumAdultFemales );
 void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumReg, UINT8 ubNumElites );
 
-void AddSoldierInitListBloodcats();
+void AddSoldierInitListBloodcats(void);
 
-void UseEditorOriginalList();
-void UseEditorAlternateList();
+void UseEditorOriginalList(void);
+void UseEditorAlternateList(void);
 
 void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier );
 
-void AddProfilesUsingProfileInsertionData();
-void AddProfilesNotUsingProfileInsertionData();
+void AddProfilesUsingProfileInsertionData(void);
+void AddProfilesNotUsingProfileInsertionData(void);
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void);
 

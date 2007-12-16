@@ -1,11 +1,11 @@
 #ifndef __FINANCES_H
 #define __FINANCES_H
 
-void GameInitFinances();
-void EnterFinances();
-void ExitFinances();
-void HandleFinances();
-void RenderFinances();
+void GameInitFinances(void);
+void EnterFinances(void);
+void ExitFinances(void);
+void HandleFinances(void);
+void RenderFinances(void);
 
 #define	FINANCES_DATA_FILE					"Temp/finances.dat"
 

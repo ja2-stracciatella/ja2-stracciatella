@@ -132,7 +132,7 @@ FILE* GetRealFileHandleFromFileManFileHandle(HWFILE hFile);
 
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
-UINT32		GetFreeSpaceOnHardDriveWhereGameIsRunningFrom( );
+UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 const char* GetBinDataPath(void);
 

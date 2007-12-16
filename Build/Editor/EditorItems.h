@@ -29,25 +29,25 @@ typedef struct{
 
 extern EditorItemsInfo eInfo;
 
-void EntryInitEditorItemsInfo();
+void EntryInitEditorItemsInfo(void);
 void InitEditorItemsInfo(UINT32 uiItemType);
-void RenderEditorItemsInfo();
-void ClearEditorItemsInfo();
-void DisplayItemStatistics();
-void DetermineItemsScrolling();
+void RenderEditorItemsInfo(void);
+void ClearEditorItemsInfo(void);
+void DisplayItemStatistics(void);
+void DetermineItemsScrolling(void);
 
 //User actions
 void AddSelectedItemToWorld( INT16 sGridNo );
 void HandleRightClickOnItem( INT16 sGridNo );
-void DeleteSelectedItem();
-void ShowSelectedItem();
-void HideSelectedItem();
-void SelectNextItemPool();
-void SelectNextItemInPool();
-void SelectPrevItemInPool();
+void DeleteSelectedItem(void);
+void ShowSelectedItem(void);
+void HideSelectedItem(void);
+void SelectNextItemPool(void);
+void SelectNextItemInPool(void);
+void SelectPrevItemInPool(void);
 
-void KillItemPoolList();
-void BuildItemPoolList();
+void KillItemPoolList(void);
+void BuildItemPoolList(void);
 
 void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent );
 

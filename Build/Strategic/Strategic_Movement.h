@@ -133,7 +133,7 @@ extern GROUP *gpGroupList;
 
 
 //General utility functions
-void RemoveAllGroups();
+void RemoveAllGroups(void);
 GROUP* GetGroup( UINT8 ubGroupID );
 
 //Remove a group from the list.  This removes all of the waypoints as well as the members of the group.

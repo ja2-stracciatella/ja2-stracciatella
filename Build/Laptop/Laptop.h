@@ -20,12 +20,12 @@ BOOLEAN RenderWWWProgramTitleBar(void);
 void    DisplayProgramBoundingBox(BOOLEAN fMarkButtons);
 BOOLEAN DoLapTopSystemMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 void    CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHelpText);
-BOOLEAN InitLaptopAndLaptopScreens();
+BOOLEAN InitLaptopAndLaptopScreens(void);
 
 // clear out all temp files from laptop
 void ClearOutTempLaptopFiles(void);
 
-void HaventMadeImpMercEmailCallBack();
+void HaventMadeImpMercEmailCallBack(void);
 
 extern UINT32  guiCurrentLaptopMode;
 extern UINT32  guiPreviousLaptopMode;

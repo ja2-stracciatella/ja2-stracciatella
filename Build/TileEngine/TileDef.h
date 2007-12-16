@@ -142,7 +142,7 @@ UINT16					gusNumAnimatedTiles;
 UINT16					gusAnimatedTiles[ MAX_ANIMATED_TILES ];
 UINT8					gTileTypeMovementCost[ NUM_TERRAIN_TYPES ];
 
-void CreateTileDatabase( );
+void CreateTileDatabase(void);
 
 
 
@@ -169,6 +169,6 @@ UINT16 GetWallOrientation(UINT16 usIndex);
 void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType );
 
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames );
-void DeallocateTileDatabase( );
+void DeallocateTileDatabase(void);
 
 #endif

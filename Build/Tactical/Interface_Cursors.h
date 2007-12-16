@@ -202,8 +202,8 @@ const UICursor gUICursors[NUM_UI_CURSORS];
 
 
 BOOLEAN SetUICursor( UINT32 uiNewCursor );
-BOOLEAN DrawUICursor( );
-BOOLEAN HideUICursor( );
+BOOLEAN DrawUICursor(void);
+BOOLEAN HideUICursor(void);
 
 
 UINT16	gusCurMousePos;

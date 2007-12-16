@@ -41,7 +41,7 @@ extern MAPCREATE_STRUCT gMapInformation;
 
 void SaveMapInformation( HWFILE fp );
 void LoadMapInformation( INT8 **hBuffer );
-void ValidateAndUpdateMapVersionIfNecessary();
+void ValidateAndUpdateMapVersionIfNecessary(void);
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo );
 
 extern BOOLEAN gfWorldLoaded;

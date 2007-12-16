@@ -105,7 +105,7 @@ void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSu
 
 extern BOOLEAN gfMustForceUpdateAllMaps;
 extern BOOLEAN gfMajorUpdate;
-void ApologizeOverrideAndForceUpdateEverything();
+void ApologizeOverrideAndForceUpdateEverything(void);
 
 #endif
 #endif

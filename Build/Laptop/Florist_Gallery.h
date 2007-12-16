@@ -9,11 +9,11 @@
 #define FLOR_GALLERY_TEXT_TOTAL_SIZE 80 * 6
 
 
-BOOLEAN EnterFloristGallery();
-void ExitFloristGallery();
-void HandleFloristGallery();
-void RenderFloristGallery();
-void EnterInitFloristGallery();
+BOOLEAN EnterFloristGallery(void);
+void ExitFloristGallery(void);
+void HandleFloristGallery(void);
+void RenderFloristGallery(void);
+void EnterInitFloristGallery(void);
 
 extern	UINT32	guiCurrentlySelectedFlower;
 extern	UINT8		gubCurFlowerIndex;

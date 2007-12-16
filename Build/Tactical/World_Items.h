@@ -45,7 +45,7 @@ INT32 FindWorldItem( UINT16 usItem );
 void LoadWorldItemsFromMap( INT8 **hBuffer );
 void SaveWorldItemsToMap( HWFILE fp );
 
-void TrashWorldItems();
+void TrashWorldItems(void);
 
 typedef struct
 {

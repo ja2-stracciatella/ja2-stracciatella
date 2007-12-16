@@ -47,9 +47,9 @@ BOOLEAN IsMercHireable( UINT8 ubMercID );
 BOOLEAN IsMercDead( UINT8 ubMercID );
 BOOLEAN IsTheSoldierAliveAndConcious( 	SOLDIERTYPE		*pSoldier );
 void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );
-void		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
+void UpdateAnyInTransitMercsWithGlobalArrivalSector(void);
 
 
-UINT32	GetMercArrivalTimeOfDay( );
+UINT32 GetMercArrivalTimeOfDay(void);
 
 #endif

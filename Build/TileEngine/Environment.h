@@ -46,26 +46,26 @@
 #define NORMAL_LIGHTLEVEL_NIGHT 12
 #define NORMAL_LIGHTLEVEL_DAY 3
 
-void ForecastDayEvents( );
+void ForecastDayEvents(void);
 
 void EnvironmentController( BOOLEAN fCheckForLights );
 
-void BuildDayAmbientSounds( );
-void BuildDayLightLevels();
-UINT8 GetTimeOfDayAmbientLightLevel();
+void BuildDayAmbientSounds(void);
+void BuildDayLightLevels(void);
+UINT8 GetTimeOfDayAmbientLightLevel(void);
 
 void	EnvBeginRainStorm( UINT8 ubIntensity );
-void	EnvEndRainStorm( );
+void EnvEndRainStorm(void);
 
 
 extern UINT8			gubEnvLightValue;
 extern BOOLEAN		gfDoLighting;
 extern UINT32			guiEnvWeather;
 
-void TurnOnNightLights();
-void TurnOffNightLights();
-void TurnOnPrimeLights();
-void TurnOffPrimeLights();
+void TurnOnNightLights(void);
+void TurnOffNightLights(void);
+void TurnOnPrimeLights(void);
+void TurnOffPrimeLights(void);
 
 
 

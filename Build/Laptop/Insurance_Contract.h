@@ -4,16 +4,16 @@
 #include "Soldier_Control.h"
 
 
-void GameInitInsuranceContract();
-BOOLEAN EnterInsuranceContract();
-void ExitInsuranceContract();
-void HandleInsuranceContract();
-void RenderInsuranceContract();
+void GameInitInsuranceContract(void);
+BOOLEAN EnterInsuranceContract(void);
+void ExitInsuranceContract(void);
+void HandleInsuranceContract(void);
+void RenderInsuranceContract(void);
 
 extern	INT16		gsCurrentInsuranceMercIndex;
 
 // determines if a merc will run out of there insurance contract
-void DailyUpdateOfInsuredMercs();
+void DailyUpdateOfInsuredMercs(void);
 
 //void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct );
 
@@ -24,7 +24,7 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID );
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID );
 
-void InsuranceContractEndGameShutDown();
+void InsuranceContractEndGameShutDown(void);
 
 void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsuranceLength );
 
