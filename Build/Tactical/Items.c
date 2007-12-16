@@ -480,7 +480,7 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{ XRAY_BULB,								IC_NONE,		ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,		-15 },
 	{ COPPER_WIRE,							IC_NONE,		ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,		+20 },
 	{ CERAMIC_PLATES,						IC_ARMOUR,	NO_CHECK,																			0 },
-	{ 0,												0 }
+	{ NONE,                     0,          0,                                            0 }
 };
 
 UINT16 Attachment[][2] =
@@ -1358,34 +1358,23 @@ BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj)
 // (i.e. to any item in the class)
 static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 {
-	INT32 iLoop = 0;
-	while( 1 )
+	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
 	{
 		// see comment for AttachmentInfo array for why we skip IC_NONE
-		if ( AttachmentInfo[ iLoop ].uiItemClass != IC_NONE )
+		if (i->uiItemClass == IC_NONE) continue;
+
+		if (i->usItem == usAttachment && i->uiItemClass == Item->usItemClass)
 		{
-			if ( AttachmentInfo[ iLoop ].usItem == usAttachment )
-			{
-				if ( AttachmentInfo[ iLoop ].uiItemClass == Item[ usItem ].usItemClass )
-				{
-					return( TRUE );
-				}
-			}
-		}
-		iLoop++;
-		if (AttachmentInfo[iLoop].usItem == 0)
-		{
-			// end of the array
-			break;
+			return TRUE;
 		}
 	}
-	return( FALSE );
+	return FALSE;
 }
 
 
 static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 {
-	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != 0; ++i)
+	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
 	{
 		if (i->usItem == usItem) return i;
 	}
