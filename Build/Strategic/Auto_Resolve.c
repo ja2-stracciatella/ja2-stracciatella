@@ -4057,14 +4057,6 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 }
 
 
-static void Delay(UINT32 uiMilliseconds)
-{
-	INT32 iTime;
-	iTime = GetJA2Clock();
-	while( GetJA2Clock() < iTime + uiMilliseconds );
-}
-
-
 static BOOLEAN IsBattleOver(void)
 {
 	INT32 i;
