@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include "Font.h"
 #include "Local.h"
+#include "Sys_Globals.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "MouseSystem.h"
@@ -872,8 +873,7 @@ static void RenderEditorInfo(void)
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				mprintf( 260, 445, L"No map currently loaded." );
 			else
-				mprintf(260, 445, L"File:  %hs, Current Tileset:  %ls",
-					gubFilename, gTilesets[ giCurrentTilesetID ].zName );
+				mprintf(260, 445, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )

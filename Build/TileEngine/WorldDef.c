@@ -2012,7 +2012,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 
 	FileClose( hfile );
 
-	strlcpy(gubFilename, puiFilename, lengthof(gubFilename));
+	strlcpy(g_filename, puiFilename, lengthof(g_filename));
 #endif //JA2EDITOR
 
 	return( TRUE );
@@ -3049,7 +3049,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 	gfWorldLoaded = TRUE;
 
-	strlcpy(gubFilename, puiFilename, lengthof(gubFilename));
+	strlcpy(g_filename, puiFilename, lengthof(g_filename));
 
 	//Remove this rather large chunk of memory from the system now!
 	MemFree( pBufferHead );
@@ -3267,7 +3267,7 @@ void TrashWorld( void )
 
 	//gfBlitBattleSectorLocator = FALSE;
 	gfWorldLoaded = FALSE;
-	strcpy(gubFilename, "none");
+	strcpy(g_filename, "none");
 }
 
 

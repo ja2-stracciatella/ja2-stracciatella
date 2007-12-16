@@ -4,6 +4,7 @@
 #include "Gameloop.h"
 #include "Screens.h"
 #include "Strategic_Movement_Costs.h"
+#include "Sys_Globals.h"
 #include "WCheck.h"
 #include "RenderWorld.h"
 #include "MouseSystem.h"
@@ -159,7 +160,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			strcpy(gubFilename, "none");
+			strcpy(g_filename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;
@@ -172,7 +173,7 @@ UINT32 InitializeJA2(void)
 		{
 			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
 			//For editor purposes, need to know the default map file.
-			strcpy(gubFilename, "none");
+			strcpy(g_filename, "none");
 			//also set the sector
 			gWorldSectorX = 0;
 			gWorldSectorY = 0;

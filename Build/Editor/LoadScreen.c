@@ -153,7 +153,7 @@ static void LoadSaveScreenEntry(void)
 		GetFileClose(&FileInfo);
 	}
 
-	swprintf(gzFilename, lengthof(gzFilename), L"%hs", gubFilename);
+	swprintf(gzFilename, lengthof(gzFilename), L"%hs", g_filename);
 
 	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? L"Save Map (*.dat)" : L"Load Map (*.dat)");
 

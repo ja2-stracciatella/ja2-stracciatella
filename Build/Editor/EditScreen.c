@@ -111,7 +111,6 @@ BOOLEAN			gfConfirmExitPending = FALSE;
 BOOLEAN			gfIntendOnEnteringEditor = FALSE;
 
 //original
-UINT8				gubFilename[ 200 ];
 static INT16 gsBanksSubIndex = 0;
 static FLOAT gShadePercent   = 0.65f;
 
@@ -3540,7 +3539,7 @@ static void UpdateLastActionBeforeLeaving(void)
 static void ReloadMap(void)
 {
 	wchar_t szFilename[30];
-	swprintf(szFilename, lengthof(szFilename), L"%hs", gubFilename);
+	swprintf(szFilename, lengthof(szFilename), L"%hs", g_filename);
 	ExternalLoadMap( szFilename );
 }
 
