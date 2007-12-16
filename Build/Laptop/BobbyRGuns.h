@@ -42,7 +42,7 @@ void RenderBobbyRGuns();
 BOOLEAN DisplayBobbyRBrTitle();
 BOOLEAN DeleteBobbyBrTitle();
 BOOLEAN InitBobbyBrTitle();
-BOOLEAN InitBobbyMenuBar( );
+BOOLEAN InitBobbyMenuBar(void);
 BOOLEAN DeleteBobbyMenuBar();
 
 //BOOLEAN DisplayWeaponInfo();

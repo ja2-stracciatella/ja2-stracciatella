@@ -235,7 +235,7 @@ BOOLEAN EnterBobbyRGuns()
 		gusCurWeaponIndex = (UINT8)giCurrentSubPage;
 */
 	//Draw menu bar
-	InitBobbyMenuBar( IC_GUN );
+	InitBobbyMenuBar();
 
 	// render once
 	RenderBobbyRGuns( );
@@ -345,7 +345,7 @@ static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CA
 }
 
 
-BOOLEAN InitBobbyMenuBar(  )
+BOOLEAN InitBobbyMenuBar(void)
 {
 	UINT8	i;
 	UINT16	usPosX;
