@@ -118,7 +118,7 @@ void HandleRPCDescription(  )
 }
 
 
-void HandleTacticalEndTurn( )
+void HandleTacticalEndTurn(void)
 {
 	UINT32				uiTime;
   static UINT32 uiTimeSinceLastStrategicUpdate = 0;

@@ -99,5 +99,5 @@ void HandleStrategicTurn(void)
 void HandleStrategicTurnImplicationsOfExitingCombatMode( void )
 {
 	SyncStrategicTurnTimes();
-	HandleTacticalEndTurn( GetWorldTotalSeconds() );
+	HandleTacticalEndTurn();
 }
