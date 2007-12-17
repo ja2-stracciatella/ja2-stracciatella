@@ -6381,7 +6381,6 @@ static void ShowItemsOnMap(void)
 {
 	INT16 sMapX, sMapY;
 	INT16 sXCorner, sYCorner;
-	UINT16 usXPos, usYPos;
 	UINT32 uiItemCnt;
 	CHAR16 sString[ 10 ];
 
@@ -6413,6 +6412,8 @@ static void ShowItemsOnMap(void)
 
 					swprintf( sString, lengthof(sString), L"%d", uiItemCnt );
 
+					INT16 usXPos;
+					INT16 usYPos;
 					FindFontCenterCoordinates( sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos );
 	//				sXPos -= StringPixLength( sString, MAP_FONT ) / 2;
 

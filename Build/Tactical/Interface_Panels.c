@@ -1295,8 +1295,8 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 	UpdateStatColor(change_time, (gpSMCurrentMerc->usValueGoneUp & stat_bit) != 0);
 	wchar_t str[9];
 	swprintf(str, lengthof(str), L"%2d", stat_val);
-	UINT16 usX;
-	UINT16 usY;
+	INT16 usX;
+	INT16 usY;
 	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
 	mprintf(usX, usY, str);
 }
@@ -1304,7 +1304,6 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 
 void RenderSMPanel(BOOLEAN* pfDirty)
 {
-	UINT16	usX, usY;
 	wchar_t sString[9];
 	UINT32	cnt;
 
@@ -1445,6 +1444,9 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 				SetFontForeground(FONT_MCOLOR_DKGRAY);
 			}
 			SetFontBackground(FONT_MCOLOR_BLACK);
+
+			INT16 usX;
+			INT16 usY;
 
 			// Display armour value!
 			swprintf( sString, lengthof(sString), L"%3d", ArmourPercent( gpSMCurrentMerc ) );

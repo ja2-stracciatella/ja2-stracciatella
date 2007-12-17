@@ -1711,7 +1711,8 @@ static void DisplaySelectedNPC(void)
 {
 	UINT16	i;
 	UINT16	usPosX, usPosY;
-	UINT16  usLocationX = 0, usLocationY = 0;
+	INT16   usLocationX;
+	INT16   usLocationY;
 	UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 	CHAR16  sTempString[ 64 ];
 	wchar_t	zButtonName[ 256 ];

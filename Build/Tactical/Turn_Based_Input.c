@@ -1588,11 +1588,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			INT32 i = 0;
 			INT16	sGridNo;
 			INT32 iTime = GetJA2Clock( );
-			UINT8	ubLevel;
 
 			for ( i = 0; i < 1000; i++ )
 			{
 				const SOLDIERTYPE* const sel = GetSelectedMan();
+				INT8 ubLevel;
 				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], usMapPos, 0, 0, &sGridNo, TRUE, &ubLevel, TRUE);
 			}
 

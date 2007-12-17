@@ -473,13 +473,15 @@ static void DrawRecordsBackGround(void)
 static void DrawRecordsColumnHeadersText(void)
 {
   // write the headers text for each column
-  UINT16 usX, usY;
 
 	// font stuff
 	SetFont(FINANCE_TEXT_FONT);
   SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
+
+	INT16 usX;
+	INT16 usY;
 
 	// the date header
   FindFontCenterCoordinates(RECORD_DATE_X,0,RECORD_DATE_WIDTH,0, pFinanceHeaders[0], FINANCE_TEXT_FONT,&usX, &usY);
@@ -512,7 +514,6 @@ static void DrawRecordsText(void)
 {
   // draws the text of the records
 	wchar_t sString[512];
-	UINT16 usX, usY;
 
   // setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
@@ -535,7 +536,8 @@ static void DrawRecordsText(void)
 		// get and write the date
 		swprintf(sString, lengthof(sString), L"%d", pCurFinance->uiDate / ( 24*60 ) );
 
-
+		INT16 usX;
+		INT16 usY;
 
 		FindFontCenterCoordinates(RECORD_DATE_X,0,RECORD_DATE_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
 		mprintf(usX, 12+RECORD_Y + ( iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);

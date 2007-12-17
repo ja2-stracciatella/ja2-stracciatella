@@ -262,7 +262,7 @@ UINT8	 *pDestBuf, *pSrcBuf;
 			{
 				if ( gBackSaves[uiCount].fZBuffer )
 				{
-					Blt16BPPTo16BPP( (UINT16*)gpZBuffer, uiDestPitchBYTES, (UINT16 *)gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2,
+					Blt16BPPTo16BPP(gpZBuffer, uiDestPitchBYTES, gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth * 2,
 								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
 								0, 0,
 								gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);

@@ -1618,7 +1618,6 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 {
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
-  UINT16 usX, usY;
 
 	// font stuff
 	SetFont(MESSAGE_FONT);
@@ -1626,9 +1625,9 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-
-
 	// all headers, but not info are right justified
+	INT16 usX;
+	INT16 usY;
 
   // print from
 	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);

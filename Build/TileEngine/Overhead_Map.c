@@ -1378,7 +1378,6 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 
 static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	UINT32 uiCellX, uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if( gfTacticalPlacementGUIActive )
@@ -1393,6 +1392,8 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		sWorldScreenY = ( gusMouseYPos - gsStartRestrictedY ) * 5;
 
 		// Get new proposed center location.
+		INT32 uiCellX;
+		INT32 uiCellY;
 		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
 
 		SetRenderCenter( (INT16)uiCellX, (INT16)uiCellY );
@@ -1428,7 +1429,8 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 
 BOOLEAN GetOverheadMouseGridNo(INT16* psGridNo)
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX;
+	INT32 uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
@@ -1464,7 +1466,8 @@ BOOLEAN GetOverheadMouseGridNo(INT16* psGridNo)
 
 static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* psGridNo)
 {
-	UINT32 uiCellX, uiCellY;
+	INT32 uiCellX;
+	INT32 uiCellY;
 	INT16  sWorldScreenX, sWorldScreenY;
 
 	if ( ( OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )

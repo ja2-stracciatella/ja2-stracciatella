@@ -2045,7 +2045,6 @@ static BOOLEAN ReloadItemDesc(void);
 BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
 {
 	wchar_t	pStr[10];
-	UINT16	usX, usY;
 	INT16		sForeColour;
 
 	//Set the current screen
@@ -2126,6 +2125,8 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 		}
 		SetButtonFastHelpText(giItemDescAmmoButton, help);
 
+		INT16 usX;
+		INT16 usY;
 		FindFontCenterCoordinates(ITEMDESC_AMMO_TEXT_X, ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight(TINYFONT1), pStr, TINYFONT1, &usX, &usY);
 		SpecifyButtonTextOffsets(giItemDescAmmoButton,  usX, usY, TRUE);
 	}
@@ -2557,8 +2558,8 @@ void RenderItemDescriptionBox(void)
 	if (!gfInItemDescBox) return;
 
 	wchar_t pStr[100];
-	UINT16  usX;
-	UINT16  usY;
+	INT16   usX;
+	INT16   usY;
 
 	const OBJECTTYPE* const obj    = gpItemDescObject;
 	const BOOLEAN           in_map = (guiCurrentItemDescriptionScreen == MAP_SCREEN);

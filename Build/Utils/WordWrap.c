@@ -236,12 +236,13 @@ static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiF
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
 void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags)
 {
-	UINT16	usPosX, usPosY;
 	UINT16	usFontHeight=0;
 	UINT16	usStringWidth=0;
 
 	if (ulFlags & DONT_DISPLAY_TEXT) return;
 
+	INT16 usPosX;
+	INT16 usPosY;
 	if (ulFlags & CENTER_JUSTIFIED)
 	{
 		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);

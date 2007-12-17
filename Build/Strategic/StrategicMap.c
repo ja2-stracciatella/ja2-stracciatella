@@ -2774,7 +2774,6 @@ static void SetupTacticalTraversalInformation(void)
 {
 	SOLDIERTYPE *pSoldier;
 	PLAYERGROUP *pPlayer;
-	UINT32 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY, sNewGridNo;
 
 	Assert( gpAdjacentGroup );
@@ -2804,6 +2803,8 @@ static void SetupTacticalTraversalInformation(void)
 			}
 
 			// Convert into a gridno again.....
+			INT32 sWorldX;
+			INT32 sWorldY;
 			GetFromAbsoluteScreenXYWorldXY( &sWorldX, &sWorldY, sScreenX, sScreenY );
 			sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
 

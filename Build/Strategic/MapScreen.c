@@ -1264,12 +1264,13 @@ static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
 {
 	UINT32 uiHealthPercent = 0;
 	wchar_t sString[9];
-	UINT16 usX, usY;
 
 	if( pSoldier->bAssignment != ASSIGNMENT_POW )
 	{
 		// find starting X coordinate by centering all 3 substrings together, then print them separately (different colors)!
 		swprintf( sString, lengthof(sString), L"%d/%d", pSoldier->bLife, pSoldier->bLifeMax );
+		INT16 usX;
+		INT16 usY;
 		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, sString, CHAR_FONT, &usX, &usY);
 
 
@@ -3286,8 +3287,8 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 ui
 
 static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
 {
-	UINT16 cx;
-	UINT16 cy;
+	INT16 cx;
+	INT16 cy;
 	FindFontCenterCoordinates(x, y, w, h, str, font, &cx, &cy);
 	DrawString(str, cx, cy, font);
 }
@@ -3295,8 +3296,8 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 
 static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
 {
-	UINT16 rx;
-	UINT16 ry;
+	INT16 rx;
+	INT16 ry;
 	FindFontRightCoordinates(x, y, w, h, str, font, &rx, &ry);
 	DrawString(str, rx, ry, font);
 }
@@ -5495,7 +5496,6 @@ static void BltCharInvPanel(void)
 	UINT32 uiDestPitchBYTES;
 	UINT16  *pDestBuf;
 	CHAR16 sString[ 32 ];
-	UINT16 usX, usY;
 
 	// make sure we're here legally
 	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
@@ -5545,6 +5545,9 @@ static void BltCharInvPanel(void)
 
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
+
+	INT16 usX;
+	INT16 usY;
 
 	// Display armor
 	mprintf(MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);

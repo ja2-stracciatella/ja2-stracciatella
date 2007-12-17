@@ -284,7 +284,6 @@ void ExamineSlantRoofFOVSlots( )
 void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLocators, UINT8 ubLevel, BOOLEAN fForce )
 {
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
- INT32 Inc[6],Dir[6];
  INT8 Blocking, markerDir;
 	INT8 nextDir = 0;
  UINT8 dir,range,Path2;
@@ -358,8 +357,9 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 		range = (AdjustMaxSightRangeForEnvEffects(LightTrueLevel(pSoldier->sGridNo, pSoldier->bLevel), range) + range) / 2;
 	}
 
-
+	UINT32 Dir[6];
   BuildSightDir(dir,&Dir[0],&Dir[1],&Dir[2],&Dir[3],&Dir[4]);
+	INT32 Inc[6];
   for (cnt = 0; cnt < 5; cnt++)
      Inc[cnt] = DirectionInc( (INT16)Dir[cnt]);
 

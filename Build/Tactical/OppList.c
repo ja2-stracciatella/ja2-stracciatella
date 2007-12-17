@@ -4401,7 +4401,7 @@ void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bL
 }
 
 
-static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8* ubSeen);
+static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, BOOLEAN* ubSeen);
 static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
 static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
 
@@ -4411,7 +4411,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 //	UINT8 ubPlayVolume;
 	INT8 bCheckTerrain = FALSE;
-	INT8 bTellPlayer = FALSE, bHeard, bSeen;
 	UINT8 ubNoiseDir;
 	UINT8 ubLoudestNoiseDir;
 
@@ -4519,7 +4518,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 		}
 
 		// tell player about noise if enemies are present
-		bTellPlayer = gTacticalStatus.fEnemyInSector && ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.ubCurrentTeam) );
+		BOOLEAN bTellPlayer = gTacticalStatus.fEnemyInSector && ( !(gTacticalStatus.uiFlags & INCOMBAT) || (gTacticalStatus.ubCurrentTeam) );
 
 #ifndef TESTNOISE
 		switch (ubNoiseType)
@@ -4584,8 +4583,8 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 #endif
 
 		// refresh flags for this new team
-		bHeard = FALSE;
-		bSeen = FALSE;
+		BOOLEAN bHeard = FALSE;
+		BOOLEAN bSeen  = FALSE;
 		ubLoudestEffVolume = 0;
 		SOLDIERTYPE* heard_loudest_by = NULL;
 
@@ -4923,7 +4922,7 @@ static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLev
 }
 
 
-static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_maker, const UINT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, UINT8* const ubSeen)
+static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_maker, const UINT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, BOOLEAN* const ubSeen)
 {
 	INT16		sNoiseX, sNoiseY;
 	INT8		bHadToTurn = FALSE, bSourceSeen = FALSE;
