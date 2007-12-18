@@ -282,8 +282,6 @@ extern void InitializeTacticalStatusAtBattleStart();
 
 extern BOOLEAN gfOverrideSector;
 
-extern STR16 pBullseyeStrings[];
-
 extern void HandleRPCDescription( );
 
 

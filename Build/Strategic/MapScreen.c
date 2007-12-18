@@ -493,8 +493,6 @@ extern PathSt* pTempHelicopterPath;
 extern BOOLEAN gfAutoAIAware;
 extern void HandlePreBattleInterfaceStates();
 
-extern STR16 pBullseyeStrings[];
-
 extern OBJECTTYPE	*gpItemDescObject;
 
 

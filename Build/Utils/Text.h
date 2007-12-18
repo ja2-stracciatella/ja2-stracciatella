@@ -86,6 +86,7 @@ extern const wchar_t *pShortVehicleStrings[];
 extern const wchar_t *pTrashItemText[];
 extern const wchar_t *pMapErrorString[];
 extern const wchar_t *pMapPlotStrings[];
+extern const wchar_t* pBullseyeStrings[];
 extern const wchar_t *pMiscMapScreenMouseRegionHelpText[];
 extern const wchar_t *pMercHeLeaveString[];
 extern const wchar_t *pMercSheLeaveString[];
