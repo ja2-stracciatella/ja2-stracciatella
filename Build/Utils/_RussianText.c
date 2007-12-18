@@ -1748,12 +1748,9 @@ const wchar_t* pMoralStrings[] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-
-const wchar_t* pLeftEquipmentString[] =
-{
-	L"%ls оставляет снаряжение в Омерте (A9).",
-	L"%ls оставляет снаряжение в Драссене (B13).",
-};
+const wchar_t str_left_equipment[]   = L"%ls оставляет снаряжение в %ls.";
+const wchar_t str_location_omerta[]  = L"Омерте (A9)";
+const wchar_t str_location_drassen[] = L"Драссене (B13)";
 
 // Status that appears on the Map Screen
 

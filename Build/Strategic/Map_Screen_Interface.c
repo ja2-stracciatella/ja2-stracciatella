@@ -1429,86 +1429,52 @@ void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* const s)
 static void FreeLeaveListSlot(UINT32 uiSlotIndex);
 
 
-void HandleEquipmentLeftInOmerta( UINT32 uiSlotIndex )
+static void HandleEquipmentLeft(const UINT32 uiSlotIndex, const UINT sector, const GridNo grid, const wchar_t* const dest_town_name)
 {
-	MERC_LEAVE_ITEM *pItem;
-	CHAR16 sString[ 128 ];
+	Assert(uiSlotIndex < NUM_LEAVE_LIST_SLOTS);
 
-
-	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
-
-	pItem = gpLeaveListHead[ uiSlotIndex ];
-
-	if( pItem )
+	MERC_LEAVE_ITEM* pItem = gpLeaveListHead[uiSlotIndex];
+	if (pItem != NULL)
 	{
-		if ( guiLeaveListOwnerProfileId[ uiSlotIndex ] != NO_PROFILE )
+		wchar_t sString[128];
+		const ProfileID id = guiLeaveListOwnerProfileId[uiSlotIndex];
+		if (id != NO_PROFILE)
 		{
-			swprintf( sString, lengthof(sString), pLeftEquipmentString[ 0 ], gMercProfiles[ guiLeaveListOwnerProfileId[ uiSlotIndex ] ].zNickname );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
+			swprintf(sString, lengthof(sString), str_left_equipment, gMercProfiles[id].zNickname, dest_town_name);
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"A departing merc has left their equipment in Omerta.");
+			swprintf(sString, lengthof(sString), L"A departing merc has left their equipment in %ls.", dest_town_name);
+		}
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
+
+		for (; pItem != NULL; pItem = pItem->pNext)
+		{
+			if (gWorldSectorX != SECTORX(sector) || gWorldSectorY != SECTORY(sector) || gbWorldSectorZ != 0)
+			{
+				// given this slot value, add to sector item list
+				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &pItem->o, 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE);
+			}
+			else
+			{
+				AddItemToPool(grid, &pItem->o, 1, 0, WORLD_ITEM_REACHABLE, 0);
+			}
 		}
 	}
 
-	while( pItem )
-	{
-		if( gWorldSectorX  != OMERTA_LEAVE_EQUIP_SECTOR_X || gWorldSectorY != OMERTA_LEAVE_EQUIP_SECTOR_Y || gbWorldSectorZ != OMERTA_LEAVE_EQUIP_SECTOR_Z )
-		{
-			// given this slot value, add to sector item list
-			AddItemsToUnLoadedSector( OMERTA_LEAVE_EQUIP_SECTOR_X, OMERTA_LEAVE_EQUIP_SECTOR_Y, OMERTA_LEAVE_EQUIP_SECTOR_Z, OMERTA_LEAVE_EQUIP_GRIDNO, 1, &( pItem -> o ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
-		}
-		else
-		{
-			AddItemToPool( OMERTA_LEAVE_EQUIP_GRIDNO, &( pItem->o ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
-		}
-		pItem = pItem -> pNext;
-	}
-
-	FreeLeaveListSlot( uiSlotIndex );
+	FreeLeaveListSlot(uiSlotIndex);
 }
 
 
-
-void HandleEquipmentLeftInDrassen( UINT32 uiSlotIndex )
+void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 {
-	MERC_LEAVE_ITEM *pItem;
-	CHAR16 sString[ 128 ];
+	HandleEquipmentLeft(uiSlotIndex, OMERTA_LEAVE_EQUIP_SECTOR, OMERTA_LEAVE_EQUIP_GRIDNO, str_location_omerta);
+}
 
 
-	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
-
-	pItem = gpLeaveListHead[ uiSlotIndex ];
-
-	if( pItem )
-	{
-		if ( guiLeaveListOwnerProfileId[ uiSlotIndex ] != NO_PROFILE )
-		{
-			swprintf( sString, lengthof(sString), pLeftEquipmentString[ 1 ], gMercProfiles[ guiLeaveListOwnerProfileId[ uiSlotIndex ] ].zNickname );
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
-		}
-		else
-		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"A departing merc has left their equipment in Drassen.");
-		}
-	}
-
-	while( pItem )
-	{
-		if( gWorldSectorX  != BOBBYR_SHIPPING_DEST_SECTOR_X || gWorldSectorY != BOBBYR_SHIPPING_DEST_SECTOR_Y || gbWorldSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z )
-		{
-			// given this slot value, add to sector item list
-			AddItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 10433, 1, &( pItem -> o ) , 0, WORLD_ITEM_REACHABLE, 0, 1, FALSE );
-		}
-		else
-		{
-			AddItemToPool( 10433, &( pItem->o ), 1, 0, WORLD_ITEM_REACHABLE, 0 );
-		}
-		pItem = pItem->pNext;
-	}
-
-	FreeLeaveListSlot( uiSlotIndex );
+void HandleEquipmentLeftInDrassen(const UINT32 uiSlotIndex)
+{
+	HandleEquipmentLeft(uiSlotIndex, BOBBYR_SHIPPING_DEST_SECTOR, 10433, str_location_drassen);
 }
 
 
