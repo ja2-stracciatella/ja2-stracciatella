@@ -1680,6 +1680,7 @@ const wchar_t *pMoralStrings[] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"%lss Ausrüstung ist in %ls angekommen.";
+
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
 
@@ -1801,25 +1802,10 @@ const wchar_t *pMiscMapScreenMouseRegionHelpText[] =
 	L"Inventar verlassen (|E|n|t|e|r)",
 };
 
-// male version of where equipment is left
-const wchar_t *pMercHeLeaveString[] =
-{
-	L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in Drassen (B13), wenn er Arulco verläßt?",
-	L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in Omerta (A9), wenn er Arulco verläßt?",
-	L"geht bald und läßt seine Ausrüstung in Omerta (A9).",
-	L"geht bald und läßt seine Ausrüstung in Drassen (B13).",
-	L"%ls geht bald und läßt seine Ausrüstung in %ls.",
-};
-
-// female version
-const wchar_t *pMercSheLeaveString[] =
-{
-	L"Soll %ls ihre Ausrüstung hier lassen (%ls) oder in Drassen (B13), bevor sie Arulco verläßt?",
-	L"Soll %ls ihre Ausrüstung hier lassen (%ls) oder in Omerta (A9), bevor sie Arulco verläßt?",
-	L"geht bald und läßt ihre Ausrüstung in Omerta (A9).",
-	L"geht bald und läßt ihre Ausrüstung in Drassen (B13).",
-	L"%ls geht bald und läßt ihre Ausrüstung in %ls.",
-};
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in %ls, bevor er Arulco verläßt?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"Soll %ls ihre Ausrüstung hier lassen (%ls) oder in %ls, bevor sie Arulco verläßt?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls geht bald und läßt seine Ausrüstung in %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls geht bald und läßt ihre Ausrüstung in %ls.";
 
 
 // Text used on IMP Web Pages

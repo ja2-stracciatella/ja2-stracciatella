@@ -1015,16 +1015,11 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 	}
 
 	//if the character is an RPC
+	const INT8 sex = gMercProfiles[pSoldier->ubProfile].bSex;
 	if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
 	{
-		if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-		{
-			swprintf( sString, lengthof(sString), pMercHeLeaveString[ 4 ], pSoldier->name, zShortTownIDString );
-		}
-		else
-		{
-			swprintf( sString, lengthof(sString), pMercSheLeaveString[ 4 ], pSoldier->name, zShortTownIDString );
-		}
+		const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
+		swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString);
 		fInSector = TRUE;
 	}
 
@@ -1034,14 +1029,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 
 		if( ( pSoldier->sSectorX == AIRPORT_X ) && ( pSoldier->sSectorY == AIRPORT_Y ) && ( pSoldier->bSectorZ == 0 ) )
 		{
-			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-			{
-				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 3 ] );
-			}
-			else
-			{
-				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 3 ] );
-			}
+			const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
+			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_drassen);
 			fInSector = TRUE;
 		}
 		else
@@ -1049,29 +1038,16 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 			// Set string for generic button
 			wcslcpy(gzUserDefinedButton2, L"B13", lengthof(gzUserDefinedButton2));
 
-			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-			{
-				swprintf( sString, lengthof(sString), pMercHeLeaveString[ 0 ], pSoldier->name, zShortTownIDString );
-			}
-			else
-			{
-				swprintf( sString, lengthof(sString), pMercSheLeaveString[ 0 ], pSoldier->name, zShortTownIDString );
-			}
-
+			const wchar_t* const text = (sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment);
+			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_drassen);
 		}
 	}
 	else
 	{
 		if( ( pSoldier->sSectorX == OMERTA_LEAVE_EQUIP_SECTOR_X ) && ( pSoldier->sSectorY == OMERTA_LEAVE_EQUIP_SECTOR_Y ) && ( pSoldier->bSectorZ == 0 ) )
 		{
-			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-			{
-				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercHeLeaveString[ 2 ] );
-			}
-			else
-			{
-				swprintf( sString, lengthof(sString), L"%ls %ls", pSoldier->name, pMercSheLeaveString[ 2 ] );
-			}
+			const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
+			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_omerta);
 			fInSector = TRUE;
 		}
 		else
@@ -1079,14 +1055,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 			// Set string for generic button
 			wcslcpy(gzUserDefinedButton2, L"A9", lengthof(gzUserDefinedButton2));
 
-			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-			{
-				swprintf( sString, lengthof(sString), pMercHeLeaveString[ 1 ], pSoldier->name, zShortTownIDString );
-			}
-			else
-			{
-				swprintf( sString, lengthof(sString), pMercSheLeaveString[ 1 ], pSoldier->name, zShortTownIDString );
-			}
+			const wchar_t* const text = (sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment);
+			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_omerta);
 		}
 	}
 

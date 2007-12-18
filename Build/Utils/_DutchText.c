@@ -1748,6 +1748,7 @@ const wchar_t* pMoralStrings[] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"%ls's uitrusting is nu beschikbaar in %ls.";
+
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
 
@@ -1878,27 +1879,10 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-
-// male version of where equipment is left
-const wchar_t* pMercHeLeaveString[] =
-{
-	L"Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
-	L"Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
-	L"gaat binnenkort weg en laat zijn uitrusting achter in Omerta (A9).",
-	L"gaat binnenkort weg en laat zijn uitrusting achter in Drassen (B13).",
-	L"%ls gaat binnenkort weg en laat zijn uitrusting achter in %ls.",
-};
-
-
-// female version
-const wchar_t* pMercSheLeaveString[] =
-{
-	L"Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of in Drassen (B13) bij het nemen van de vlucht uit Arulco?",
-	L"Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of later in Omerta (A9) bij het nemen van de vlucht uit Arulco?",
-	L"gaat binnenkort weg en laat haar uitrusting achter in Omerta (A9).",
-	L"gaat binnenkort weg en laat haar uitrusting achter in Drassen (B13).",
-	L"%ls gaat binnenkort weg en laat haar uitrusting achter in %ls.",
-};
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of later in %ls bij het nemen van de vlucht uit Arulco?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of later in %ls bij het nemen van de vlucht uit Arulco?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls gaat binnenkort weg en laat zijn uitrusting achter in %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls gaat binnenkort weg en laat haar uitrusting achter in %ls.";
 
 
 // Text used on IMP Web Pages

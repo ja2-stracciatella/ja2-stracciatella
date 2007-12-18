@@ -1734,6 +1734,7 @@ const wchar_t *pMoralStrings[] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"%ls's equipment is now available in %ls.";
+
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
 
@@ -1863,27 +1864,10 @@ const wchar_t *pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-
-// male version of where equipment is left
-const wchar_t *pMercHeLeaveString[] =
-{
-	L"Have %ls leave his equipment where he is now (%ls) or later on in Drassen (B13) upon catching flight out of Arulco?",
-	L"Have %ls leave his equipment where he is now (%ls) or later on in Omerta (A9) upon catching flight out of Arulco?",
-	L"is about to leave and will drop off his equipment in Omerta (A9).",
-	L"is about to leave and will drop off his equipment in Drassen (B13).",
-	L"%ls is about to leave and will drop off his equipment in %ls.",
-};
-
-
-// female version
-const wchar_t *pMercSheLeaveString[] =
-{
-	L"Have %ls leave her equipment where she is now (%ls) or later on in Drassen (B13) upon catching flight out of Arulco?",
-	L"Have %ls leave her equipment where she is now (%ls) or later on in Omerta (A9) upon catching flight out of Arulco?",
-	L"is about to leave and will drop off her equipment in Omerta (A9).",
-	L"is about to leave and will drop off her equipment in Drassen (B13).",
-	L"%ls is about to leave and will drop off her equipment in %ls.",
-};
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"Have %ls leave his equipment where he is now (%ls) or later on in %ls upon catching flight out of Arulco?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"Have %ls leave her equipment where she is now (%ls) or later on in %ls upon catching flight out of Arulco?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls is about to leave and will drop off his equipment in %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls is about to leave and will drop off her equipment in %ls.";
 
 
 // Text used on IMP Web Pages

@@ -1734,6 +1734,7 @@ const wchar_t* pMoralStrings[] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"L'équipement de %ls est maintenant disponible à %ls.";
+
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
 
@@ -1863,27 +1864,10 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-
-// male version of where equipment is left
-const wchar_t* pMercHeLeaveString[] =
-{
-	L"%ls doit-il abandonner son équipement sur place (%ls) ou à Drassen (B13) avant de quitter Arulco ?",
-	L"%ls doit-il abandonner son équipement sur place (%ls) ou à Omerta (A9) avant de quitter Arulco ?",
-	L"est sur le point de partir et laissera son équipement à Omerta (A9).",
-	L"est sur le point de partir et laissera son équipement à Drassen (B13).",
-	L"%ls est sur le point de partir et laissera son équipement en %ls.",
-};
-
-
-// female version
-const wchar_t* pMercSheLeaveString[] =
-{
-	L"%ls doit-elle abandonner son équipement sur place (%ls) ou à Drassen (B13) avant de quitter Arulco ?",
-	L"%ls doit-elle abandonner son équipement sur place (%ls) ou à Omerta (A9) avant de quitter Arulco ?",
-	L"est sur le point de partir et laissera son équipement à Omerta (A9).",
-	L"est sur le point de partir et laissera son équipement à Drassen (B13).",
-	L"%ls est sur le point de partir et laissera son équipement en %ls.",
-};
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"%ls doit-il abandonner son équipement sur place (%ls) ou à %ls avant de quitter Arulco?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls doit-elle abandonner son équipement sur place (%ls) ou à %ls avant de quitter Arulco?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls est sur le point de partir et laissera son équipement à %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls est sur le point de partir et laissera son équipement à %ls.";
 
 
 // Text used on IMP Web Pages

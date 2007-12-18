@@ -1734,6 +1734,7 @@ const wchar_t* pMoralStrings[] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"L'equipaggio di %ls è ora disponibile a %ls.";
+
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
 
@@ -1863,27 +1864,10 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-
-// male version of where equipment is left
-const wchar_t* pMercHeLeaveString[] =
-{
-	L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a Drassen (B13) dopo aver preso il volo da Arulco?",
-	L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a Omerta (A9) dopo aver preso il volo da Arulco?",
-	L"sta per partire e spedirà il suo equipaggiamento a Omerta (A9).",
-	L"sta per partire e spedirà il suo equipaggiamento a Drassen (B13).",
-	L"%ls sta per partire e spedirà il suo equipaggiamento a %ls.",
-};
-
-
-// female version
-const wchar_t* pMercSheLeaveString[] =
-{
-	L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a Drassen (B13) dopo aver preso il volo da Arulco?",
-	L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a Omerta (A9) dopo aver preso il volo da Arulco?",
-	L"sta per partire e spedirà il suo equipaggiamento a Omerta (A9).",
-	L"sta per partire e spedirà il suo equipaggiamento a Drassen (B13).",
-	L"%ls sta per partire e spedirà il suo equipaggiamento a %ls.",
-};
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a %ls dopo aver preso il volo da Arulco?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"Volete che %ls lasci il suo equipaggiamento dove si trova ora (%ls) o in seguito a %ls dopo aver preso il volo da Arulco?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls sta per partire e spedirà il suo equipaggiamento a %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls sta per partire e spedirà il suo equipaggiamento a %ls.";
 
 
 // Text used on IMP Web Pages
