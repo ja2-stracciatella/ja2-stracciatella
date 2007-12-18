@@ -373,9 +373,6 @@ void ShutDownLeaveList( void );
 // add item to leave equip index
 BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiIndex );
 
-// remove item from leave index
-//BOOLEAN RemoveItemFromLeaveIndex( MERC_LEAVE_ITEM *pItem, UINT32 uiIndex );
-
 // handle a group about to arrive in a sector
 void HandleGroupAboutToArrive( void );
 

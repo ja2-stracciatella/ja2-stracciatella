@@ -1667,53 +1667,6 @@ static void SetUpMercAboutToLeaveEquipment(UINT32 ubProfileId, UINT32 uiSlotInde
 }
 
 
-/*
-BOOLEAN RemoveItemFromLeaveIndex( MERC_LEAVE_ITEM *pItem, UINT32 uiSlotIndex )
-{
-	MERC_LEAVE_ITEM *pCurrentItem = NULL;
-
-	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
-
-	if( pItem == NULL )
-	{
-		return( FALSE );
-	}
-
-	// item is head of list?
-//ARM: THIS DOESN'T MAKE SENSE, pCurrentItem is always NULL at this stage!
-	if( pItem == pCurrentItem )
-	{
-		gpLeaveListHead[ uiSlotIndex ] = pCurrentItem ->pNext;
-		MemFree( pItem );
-		pItem = NULL;
-		return( TRUE );
-	}
-
-	// in the body
-	while( ( pCurrentItem->pNext != pItem ) && ( pCurrentItem -> pNext != NULL ) )
-	{
-		pCurrentItem = pCurrentItem -> pNext;
-	}
-
-	// item not found
-	if( pCurrentItem->pNext == NULL )
-	{
-		return( FALSE );
-	}
-
-	// set to next after next
-	pCurrentItem->pNext = pCurrentItem->pNext->pNext;
-
-	// free space and null ptr
-	MemFree( pItem );
-	pItem = NULL;
-
-	return( TRUE );
-}
-*/
-
-
-
 void HandleGroupAboutToArrive( void )
 {
 	// reblit map to change the color of the "people in motion" marker
