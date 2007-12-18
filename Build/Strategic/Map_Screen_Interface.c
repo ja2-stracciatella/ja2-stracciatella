@@ -279,8 +279,16 @@ INT32 guiUpdatePanelButtons[ 2 ];
 // the update panel
 UINT32 guiUpdatePanelTactical;
 
+typedef struct MERC_LEAVE_ITEM MERC_LEAVE_ITEM;
+struct MERC_LEAVE_ITEM
+{
+	OBJECTTYPE o;
+	MERC_LEAVE_ITEM* pNext;
+};
+CASSERT(sizeof(MERC_LEAVE_ITEM) == 40)
+
 // the leave item list
-MERC_LEAVE_ITEM *gpLeaveListHead[ NUM_LEAVE_LIST_SLOTS ];
+static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
 
 // holds ids of mercs who left stuff behind
 UINT32 guiLeaveListOwnerProfileId[ NUM_LEAVE_LIST_SLOTS ];
