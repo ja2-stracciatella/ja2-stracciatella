@@ -829,7 +829,7 @@ UINT32  MainGameScreenHandle(void)
 	if ( gfEnteringMapScreen == 2 )
 	{
 		gfEnteringMapScreen = FALSE;
-		EnterMapScreen( );
+		LeaveTacticalScreen(MAP_SCREEN);
 	}
 
 
@@ -881,14 +881,6 @@ static void TacticalScreenLocateToSoldier(void)
 			break;
 		}
 	}
-}
-
-void EnterMapScreen( )
-{
-	// ATE: These flags well get set later on in mapscreen....
-	//SetTacticalInterfaceFlags( INTERFACE_MAPSCREEN );
-	//fInterfacePanelDirty = DIRTYLEVEL2;
-	LeaveTacticalScreen( MAP_SCREEN );
 }
 
 

@@ -2363,7 +2363,7 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 		if ( fForceMapscreen )
 		{
 			// switch to mapscreen so we can flash the mine sector the guy is talking about
-			EnterMapScreen( );
+			LeaveTacticalScreen(MAP_SCREEN);
 			fFromMapscreen = TRUE;
 		}
 	}

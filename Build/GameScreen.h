@@ -19,12 +19,7 @@ BOOLEAN	gfEnteringMapScreen;
 extern SOLDIERTYPE* gPreferredInitialSelectedGuy;
 
 
-void EnterMapScreen(void);
-
 void UpdateTeamPanelAssignments(void);
-
-
-
 
 
 #define TACTICAL_MODAL_NOMOUSE			1
