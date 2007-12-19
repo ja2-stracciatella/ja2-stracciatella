@@ -39,7 +39,7 @@ INT32 giTotalCostOfTraining = 0;
 
 
 //the completed list of sector soldiers for training militia
-INT32 giListOfMercsInSectorsCompletedMilitiaTraining[ SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST ];
+static const SOLDIERTYPE* g_list_of_merc_in_sectors_completed_militia_training[SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST];
 SOLDIERTYPE *pMilitiaTrainerSoldier = NULL;
 
 // note that these sector values are STRATEGIC INDEXES, not 0-255!
@@ -860,15 +860,14 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE*
 {
 	INT32 iCounter = 0;
 	INT16 sSector = 0, sCurrentSector = 0;
-	SOLDIERTYPE *pCurrentSoldier = NULL;
 
 	// get the sector value
 	sSector = pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X;
 
-	while( giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] != -1 )
+	while (g_list_of_merc_in_sectors_completed_militia_training[iCounter] != NULL)
 	{
 		// get the current soldier
-		pCurrentSoldier = &Menptr[ giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] ];
+		const SOLDIERTYPE* const pCurrentSoldier = g_list_of_merc_in_sectors_completed_militia_training[iCounter];
 
 		// get the current sector value
 		sCurrentSector = pCurrentSoldier->sSectorX + pCurrentSoldier->sSectorY * MAP_WORLD_X;
@@ -886,7 +885,7 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE*
 	}
 
 	// add merc to the list
-	giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] = pSoldier->ubID;
+	g_list_of_merc_in_sectors_completed_militia_training[iCounter] = pSoldier;
 }
 
 // clear out the list of training sectors...should be done once the list is posted
@@ -896,22 +895,21 @@ void ClearSectorListForCompletedTrainingOfMilitia( void )
 
 	for( iCounter = 0; iCounter < SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST; iCounter++ )
 	{
-		giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] = -1;
+		g_list_of_merc_in_sectors_completed_militia_training[iCounter] = NULL;
 	}
 }
 
 
 void HandleContinueOfTownTraining( void )
 {
-	SOLDIERTYPE *pSoldier = NULL;
 	INT32 iCounter = 0;
 	BOOLEAN fContinueEventPosted = FALSE;
 
 
-	while( giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] != -1 )
+	while (g_list_of_merc_in_sectors_completed_militia_training[iCounter] != NULL)
 	{
 		// get the soldier
-		pSoldier = &Menptr[ giListOfMercsInSectorsCompletedMilitiaTraining[ iCounter ] ];
+		const SOLDIERTYPE* const pSoldier = g_list_of_merc_in_sectors_completed_militia_training[iCounter];
 
 		if( pSoldier->bActive )
 		{
