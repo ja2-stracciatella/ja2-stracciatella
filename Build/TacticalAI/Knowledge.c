@@ -336,12 +336,6 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 	pbPersOL = &(pSoldier->bOppList[0]);
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
-	// for every opponent
-//	for (iLoop = 0; iLoop < MAXMERCS; iLoop++,pbPersOL++,pbPublOL++)
-//	{
-//	pTemp = &(Menptr[iLoop]);
-
-
 	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
 	{
 		pTemp = MercSlots[ uiLoop ];

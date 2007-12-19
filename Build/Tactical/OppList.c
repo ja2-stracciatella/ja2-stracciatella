@@ -2344,21 +2344,6 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
    // never causes any additional looks
 		UpdatePublic(ubLoop, pSoldier, NOT_HEARD_OR_SEEN, NOWHERE, 0);
 
-/*
-
-
-IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
-
- // make sure this guy is no longer a possible target for anyone
- for (cnt = 0, pOpponent = Menptr; cnt < MAXMERCS; cnt++,pOpponent++)
-  {
-   if (pOpponent->bOppNum == ubTarget)
-       pOpponent->bOppNum = NOBODY;
-  }
-
-	*/
-
-
 	// clean up all opponent's opplists
 	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
 	{
@@ -2376,27 +2361,6 @@ IAN COMMENTED THIS OUT MAY 1997 - DO WE NEED THIS?
 			gbSeenOpponents[ubLoop][ubTarget] = FALSE;
 		}
 	}
-
-/*
-
- for (ubLoop = 0,pOpponent = Menptr; ubLoop < MAXMERCS; ubLoop++,pOpponent++)
-  {
-   // if the target is a true opponent and currently seen by this merc
-   if (!pSoldier->bNeutral && !pSoldier->bNeutral &&
-       (pOpponent->bOppList[ubTarget] == SEEN_CURRENTLY)
-
-			 )
-			 ///*** UNTIL ANDREW GETS THE SIDE PARAMETERS WORKING
-       // && (pSoldier->side != pOpponent->side))
-    {
-     RemoveOneOpponent(pOpponent);
-    }
-
-   UpdatePersonal(pOpponent,ubTarget,NOT_HEARD_OR_SEEN,NOWHERE,0);
-
-   gbSeenOpponents[ubLoop][ubTarget] = FALSE;
-  }
-*/
 
  ResetLastKnownLocs(pSoldier);
 

@@ -523,12 +523,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 			continue;
 		}
 
-		/*
-		// if this soldier is inactive, at base, on assignment, or dead
-		if (!Menptr[ubLoop].bActive || !Menptr[ubLoop].bInSector || !Menptr[ubLoop].bLife)
-			continue;          // next soldier
-		*/
-
 		// if this man is neutral / NOT on the same side, he's not a friend
 		if (pFriend->bNeutral || (pSoldier->bSide != pFriend->bSide))
 		{
