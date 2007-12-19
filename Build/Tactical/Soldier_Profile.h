@@ -12,8 +12,6 @@ extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 
-typedef UINT8 ProfileID;
-
 static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
 {
 	Assert(id < lengthof(gMercProfiles));
