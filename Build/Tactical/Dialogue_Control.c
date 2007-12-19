@@ -103,15 +103,16 @@ typedef struct
 BOOLEAN fExternFacesLoaded = FALSE;
 
 UINT32 uiExternalStaticNPCFaces[ NUMBER_OF_EXTERNAL_NPC_FACES ];
-UINT32 uiExternalFaceProfileIds[ NUMBER_OF_EXTERNAL_NPC_FACES ]=
+const ProfileID g_external_face_profile_ids[] =
 {
-	97,
-	106,
-	148,
-	156,
-	157,
-	158,
+	SKYRIDER,
+	FRED,
+	MATT,
+	OSWALD,
+	CALVIN,
+	CARL
 };
+CASSERT(lengthof(g_external_face_profile_ids) == NUMBER_OF_EXTERNAL_NPC_FACES)
 
 UINT8	gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES ] =
 					{ 80, 81, 82, 83, 86, 87, 88, 95, 97, 99, 100, 101, 102 };
@@ -257,7 +258,7 @@ void InitalizeStaticExternalNPCFaces( void )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_NPC_FACES; iCounter++ )
 	{
-		uiExternalStaticNPCFaces[iCounter] = InitFace(uiExternalFaceProfileIds[iCounter], NULL, FACE_FORCE_SMALL);
+		uiExternalStaticNPCFaces[iCounter] = InitFace(g_external_face_profile_ids[iCounter], NULL, FACE_FORCE_SMALL);
 	}
 }
 

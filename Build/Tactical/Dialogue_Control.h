@@ -227,7 +227,7 @@ enum{
 
 // the static NPC dialogue faces
 extern UINT32 uiExternalStaticNPCFaces[ ];
-extern UINT32 uiExternalFaceProfileIds[ ];
+extern const ProfileID g_external_face_profile_ids[];
 
 // Functions for handling dialogue Q
 BOOLEAN InitalizeDialogueControl(void);

@@ -5,6 +5,7 @@
 
 
 typedef INT16 GridNo;
+typedef UINT8 ProfileID;
 typedef INT32 TIMECOUNTER;
 
 typedef struct BULLET        BULLET;
