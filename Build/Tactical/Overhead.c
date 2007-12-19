@@ -3197,21 +3197,20 @@ static SOLDIERTYPE* FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT
 	for (INT32 i = begin; i <= last; ++i)
 	{
 		SOLDIERTYPE* const s = &Menptr[i];
-		if (fOnlyRegularMercs && s->bActive && (AM_AN_EPC(s) || AM_A_ROBOT(s)))
-		{
-			continue;
-		}
+		if (!s->bActive) continue;
+
+		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
 
 		if (fGoodForLessOKLife)
 		{
-			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			if (s->bLife > 0 && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
 				return s;
 			}
 		}
 		else
 		{
-			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
 				return s;
 			}
@@ -3281,19 +3280,21 @@ static SOLDIERTYPE* FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT
 	for (INT32 i = begin; i >= last; --i)
 	{
 		SOLDIERTYPE* const s = &Menptr[i];
+		if (!s->bActive) continue;
+
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
 
 		if (fGoodForLessOKLife)
 		{
 			// Check for bLife > 0
-			if (s->bLife > 0 && s->bActive && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			if (s->bLife > 0 && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
 				return s;
 			}
 		}
 		else
 		{
-			if (OK_CONTROLLABLE_MERC(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
+			if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
 			{
 				return s;
 			}
