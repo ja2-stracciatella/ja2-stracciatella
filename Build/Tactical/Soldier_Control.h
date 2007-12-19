@@ -350,7 +350,7 @@ struct SOLDIERTYPE
 	BOOLEAN											fPauseAim;
 	INT8												ubInsertionDirection;
 	// skills
-	UINT8												ubOppNum;
+	SOLDIERTYPE*                opponent;
 	INT8												bLastRenderVisibleValue;
 	UINT8												ubAttackingHand;
 	INT8												bScientific;

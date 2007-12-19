@@ -686,7 +686,7 @@ BOOLEAN FireWeapon( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo )
 	}
 
 	// SET ATTACKER TO NOBODY, WILL GET SET EVENTUALLY
-	pSoldier->ubOppNum = NOBODY ;
+	pSoldier->opponent = NULL;
 
 	switch( Item[ pSoldier->usAttackingWeapon ].usItemClass )
 	{
@@ -752,11 +752,10 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 	INT16								sXMapPos, sYMapPos;
 	UINT32							uiRoll;
 
-	const SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
+	SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
 	if ( pTargetSoldier )
 	{
-		// SAVE OPP ID
-		pSoldier->ubOppNum = pTargetSoldier->ubID;
+		pSoldier->opponent = pTargetSoldier;
 		dTargetX = (FLOAT) CenterX( pTargetSoldier->sGridNo );
 		dTargetY = (FLOAT) CenterY( pTargetSoldier->sGridNo );
 		if (pSoldier->bAimShotLocation == AIM_SHOT_RANDOM)
@@ -1246,8 +1245,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		pSoldier->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
 		pTargetSoldier->fIntendedTarget = TRUE;
 
-		// SAVE OPP ID
-		pSoldier->ubOppNum = pTargetSoldier->ubID;
+		pSoldier->opponent = pTargetSoldier;
 
 		// CHECK IF BUDDY KNOWS ABOUT US
 		if ( pTargetSoldier->bOppList[ pSoldier->ubID ] == NOT_HEARD_OR_SEEN || pTargetSoldier->bLife < OKLIFE || pTargetSoldier->bCollapsed )
@@ -1416,8 +1414,7 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 		pSoldier->uiStatusFlags |= SOLDIER_ATTACK_NOTICED;
 		pTargetSoldier->fIntendedTarget = TRUE;
 
-		// SAVE OPP ID
-		pSoldier->ubOppNum = pTargetSoldier->ubID;
+		pSoldier->opponent = pTargetSoldier;
 
 		if (fStealing)
 		{
@@ -1934,19 +1931,14 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 	if (fStopped)
 	{
-		if (attacker->ubOppNum != NOBODY)
+		// if it was another team shooting at someone under our control
+		SOLDIERTYPE* const opp = attacker->opponent;
+		if (opp        != NULL &&
+				opp->bTeam != attacker->bTeam &&
+				opp->bTeam == gbPlayerNum)
 		{
-			SOLDIERTYPE* const opp = GetMan(attacker->ubOppNum);
-			// if it was another team shooting at someone under our control
-			if (attacker->bTeam != opp->bTeam)
-			{
-				// if OPPONENT is under our control
-				if (opp->bTeam == gbPlayerNum)
-				{
-					// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-					StatChange(opp, AGILAMT, 5, FROM_FAILURE);
-				}
-			}
+			// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
+			StatChange(opp, AGILAMT, 5, FROM_FAILURE);
 		}
 	}
 
@@ -3526,16 +3518,14 @@ INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BO
 void ShotMiss(const BULLET* const b)
 {
 	SOLDIERTYPE* const pAttacker = b->pFirer;
-	if (pAttacker->ubOppNum != NOBODY)
+	SOLDIERTYPE* const opponent = pAttacker->opponent;
+	// if it was another team shooting at someone under our control
+	if (opponent        != NULL &&
+			opponent->bTeam != pAttacker->bTeam &&
+			opponent->bTeam == gbPlayerNum)
 	{
-		SOLDIERTYPE* const opponent = &Menptr[pAttacker->ubOppNum];
-		// if it was another team shooting at someone under our control
-		if (opponent->bTeam != pAttacker->bTeam &&
-				opponent->bTeam == gbPlayerNum)
-		{
-			// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-			StatChange(opponent, AGILAMT, 5, FROM_FAILURE);
-		}
+		// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
+		StatChange(opponent, AGILAMT, 5, FROM_FAILURE);
 	}
 
 	switch (Weapon[pAttacker->usAttackingWeapon].ubWeaponClass)
