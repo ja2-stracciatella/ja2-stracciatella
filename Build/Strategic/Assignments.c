@@ -9281,36 +9281,25 @@ static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pT
 
 static void ReportTrainersTraineesWithoutPartners(void)
 {
-	SOLDIERTYPE *pTeamSoldier = NULL;
-	INT32 iCounter = 0, iNumberOnTeam = 0;
-
-	iNumberOnTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
 	// check for each instructor
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		pTeamSoldier = &Menptr[ iCounter ];
-
-		if( ( pTeamSoldier -> bAssignment == TRAIN_TEAMMATE ) && ( pTeamSoldier -> bLife > 0 ) )
+		if (s->bAssignment == TRAIN_TEAMMATE &&
+				s->bLife > 0 &&
+				!ValidTrainingPartnerInSameSectorOnAssignmentFound(s, TRAIN_BY_OTHER, s->bTrainStat))
 		{
-			if ( !ValidTrainingPartnerInSameSectorOnAssignmentFound( pTeamSoldier, TRAIN_BY_OTHER, pTeamSoldier->bTrainStat ) )
-			{
-				AssignmentDone( pTeamSoldier, TRUE, TRUE );
-			}
+			AssignmentDone(s, TRUE, TRUE);
 		}
 	}
 
 	// check each trainee
-	for( iCounter = 0; iCounter < iNumberOnTeam; iCounter++ )
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		pTeamSoldier = &Menptr[ iCounter ];
-
-		if( ( pTeamSoldier -> bAssignment == TRAIN_BY_OTHER ) && ( pTeamSoldier -> bLife > 0 ) )
+		if (s->bAssignment == TRAIN_BY_OTHER &&
+				s->bLife > 0 &&
+				!ValidTrainingPartnerInSameSectorOnAssignmentFound(s, TRAIN_TEAMMATE, s->bTrainStat))
 		{
-			if ( !ValidTrainingPartnerInSameSectorOnAssignmentFound( pTeamSoldier, TRAIN_TEAMMATE, pTeamSoldier->bTrainStat ) )
-			{
-				AssignmentDone( pTeamSoldier, TRUE, TRUE );
-			}
+			AssignmentDone(s, TRUE, TRUE);
 		}
 	}
 }
