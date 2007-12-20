@@ -1221,6 +1221,17 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 }
 
 
+static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLDIERTYPE* const target, const UINT agil_amt)
+{
+	// if it was another team attacking someone under our control
+	if (target->bTeam != attacker->bTeam &&
+			target->bTeam == gbPlayerNum)
+	{
+		StatChange(target, AGILAMT, agil_amt, FALSE);
+	}
+}
+
+
 static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 {
 	INT32								iHitChance, iDiceRoll;
@@ -1318,15 +1329,8 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		}
 		else
 		{
-			// if it was another team shooting at someone under our control
-			if (pSoldier->bTeam != pTargetSoldier->bTeam)
-			{
-				if (pTargetSoldier->bTeam == gbPlayerNum)
-				{
-				 // AGILITY GAIN (10):  Target avoids a knife attack
-					StatChange(pTargetSoldier, AGILAMT, 10, FALSE);
-				}
-			}
+			// AGILITY GAIN (10):  Target avoids a knife attack
+			AgilityForEnemyMissingPlayer(pSoldier, pTargetSoldier, 10);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - missed in knife attack");
 			FreeUpAttacker(pSoldier);
 		}
@@ -1590,13 +1594,10 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 					StatChange( pSoldier, DEXTAMT, ubExpGain, FROM_FAILURE );
 				}
 			}
-			else if ( pSoldier->bTeam != gbPlayerNum && pTargetSoldier->bTeam == gbPlayerNum )
+			else if (iDiceRoll > iHitChance)
 			{
-				// being attacked... if successfully dodged, give experience
-				if ( iDiceRoll > iHitChance )
-				{
-					StatChange( pTargetSoldier, AGILAMT, 8, FALSE );
-				}
+				// being attacked... successfully dodged, give experience
+				AgilityForEnemyMissingPlayer(pSoldier, pTargetSoldier, 8);
 			}
 
 			if ( iDiceRoll <= iHitChance || AreInMeanwhile( ) )
@@ -1931,15 +1932,9 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 	if (fStopped)
 	{
-		// if it was another team shooting at someone under our control
+		// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
 		SOLDIERTYPE* const opp = attacker->opponent;
-		if (opp        != NULL &&
-				opp->bTeam != attacker->bTeam &&
-				opp->bTeam == gbPlayerNum)
-		{
-			// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-			StatChange(opp, AGILAMT, 5, FROM_FAILURE);
-		}
+		if (opp != NULL) AgilityForEnemyMissingPlayer(attacker, opp, 5);
 	}
 
 	const BOOLEAN fHitSameStructureAsBefore = (usStructureID == pBullet->usLastStructureHit);
@@ -3519,14 +3514,8 @@ void ShotMiss(const BULLET* const b)
 {
 	SOLDIERTYPE* const pAttacker = b->pFirer;
 	SOLDIERTYPE* const opponent = pAttacker->opponent;
-	// if it was another team shooting at someone under our control
-	if (opponent        != NULL &&
-			opponent->bTeam != pAttacker->bTeam &&
-			opponent->bTeam == gbPlayerNum)
-	{
-		// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
-		StatChange(opponent, AGILAMT, 5, FROM_FAILURE);
-	}
+	// AGILITY GAIN: Opponent "dodged" a bullet shot at him (it missed)
+	if (opponent != NULL) AgilityForEnemyMissingPlayer(pAttacker, opponent, 5);
 
 	switch (Weapon[pAttacker->usAttackingWeapon].ubWeaponClass)
 	{
