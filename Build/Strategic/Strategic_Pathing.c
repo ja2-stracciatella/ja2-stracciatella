@@ -1897,15 +1897,10 @@ UINT8 GetSoldierGroupId(const SOLDIERTYPE* pSoldier)
 {
 	UINT8 ubGroupId = 0;
 
-	// IN a vehicle?
-	if( pSoldier->bAssignment == VEHICLE )
+	// IN a vehicle or IS a vehicle?
+	if (pSoldier->bAssignment == VEHICLE || pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
-	}
-	// IS a vehicle?
-	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
 	}
 	else	// a person
 	{
