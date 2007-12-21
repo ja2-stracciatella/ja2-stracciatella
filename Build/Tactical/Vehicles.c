@@ -1877,14 +1877,14 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 }
 
 
-void SetVehicleSectorValues( INT32 iVehId, UINT8 ubSectorX, UINT8 ubSectorY )
+void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const UINT8 ubSectorY)
 {
-	pVehicleList[ iVehId ].sSectorX = ubSectorX;
-	pVehicleList[ iVehId ].sSectorY = ubSectorY;
+	v->sSectorX = ubSectorX;
+	v->sSectorY = ubSectorY;
 
-	gMercProfiles[ pVehicleList[ iVehId ].ubProfileID ].sSectorX = ubSectorX;
-	gMercProfiles[ pVehicleList[ iVehId ].ubProfileID ].sSectorY = ubSectorY;
-
+	MERCPROFILESTRUCT* const p = &gMercProfiles[v->ubProfileID];
+	p->sSectorX = ubSectorX;
+	p->sSectorY = ubSectorY;
 }
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )

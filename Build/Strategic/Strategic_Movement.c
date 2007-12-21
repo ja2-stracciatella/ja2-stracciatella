@@ -1789,16 +1789,17 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 		{
 			const INT32 iVehId = GetVehicleIDFromMvtGroup(pGroup);
 			Assert(iVehId != -1 );
+			VEHICLETYPE* const v = &pVehicleList[iVehId];
 
-			if( pVehicleList[ iVehId ].pMercPath  )
+			if (v->pMercPath  )
 			{
 				// remove head from vehicle's mapscreen path list
-				pVehicleList[ iVehId ].pMercPath = RemoveHeadFromStrategicPath( pVehicleList[ iVehId ].pMercPath );
+				v->pMercPath = RemoveHeadFromStrategicPath(v->pMercPath);
 			}
 
 			// update vehicle position
-			SetVehicleSectorValues( iVehId, pGroup->ubSectorX, pGroup->ubSectorY );
-			pVehicleList[ iVehId ].fBetweenSectors = FALSE;
+			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
+			v->fBetweenSectors = FALSE;
 
 			// update passengers position
 			UpdatePositionOfMercsInVehicle( iVehId );
@@ -1856,7 +1857,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			}
 			else
 			{
-				if( HandleHeliEnteringSector( pVehicleList[ iVehId ].sSectorX, pVehicleList[ iVehId ].sSectorY ) == TRUE )
+				if (HandleHeliEnteringSector(v->sSectorX, v->sSectorY) == TRUE)
 				{
 					// helicopter destroyed
 					fGroupDestroyed = TRUE;
@@ -1869,7 +1870,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 				// don't print any messages when arriving underground, there's no delay involved
 				if ( GroupAtFinalDestination( pGroup ) && ( pGroup->ubSectorZ == 0 ) && !fNeverLeft )
 				{
-					ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[ MSG_ARRIVE ], pVehicleStrings[ pVehicleList[ iVehId ].ubVehicleType ], pMapVertIndex[ pGroup->ubSectorY ], pMapHortIndex[ pGroup->ubSectorX ] );
+					ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], pVehicleStrings[v->ubVehicleType], pMapVertIndex[pGroup->ubSectorY], pMapHortIndex[pGroup->ubSectorX]);
 				}
 			}
 		}
