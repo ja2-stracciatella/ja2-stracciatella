@@ -849,6 +849,21 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 }
 
 
+static UINT16 ModifyExpGainByTarget(const UINT16 exp_gain, const SOLDIERTYPE* const tgt)
+{
+	if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
+	{
+		return exp_gain / 2;
+	}
+	else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
+	{
+		// no exp from shooting a vehicle that you can't damage and can't move!
+		return 0;
+	}
+	return exp_gain;
+}
+
+
 static BOOLEAN WillExplosiveWeaponFail(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObj);
 
 
@@ -1054,15 +1069,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					usExpGain = (usExpGain * 2) / 3;
 				}
 
-				if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
-				{
-					usExpGain /= 2;
-				}
-				else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
-				{
-					// no exp from shooting a vehicle that you can't damage and can't move!
-					usExpGain = 0;
-				}
+				usExpGain = ModifyExpGainByTarget(usExpGain, tgt);
 
 				// MARKSMANSHIP GAIN: gun attack
 				StatChange( pSoldier, MARKAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
@@ -1116,16 +1123,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 10;
 
-			const SOLDIERTYPE* const tgt = pSoldier->target;
-			if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
-			{
-				usExpGain /= 2;
-			}
-			else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
-			{
-				// no exp from shooting a vehicle that you can't damage and can't move!
-				usExpGain = 0;
-			}
+			usExpGain = ModifyExpGainByTarget(usExpGain, pSoldier->target);
 
 			// MARKSMANSHIP/DEXTERITY GAIN: throwing knife attack
 			StatChange( pSoldier, MARKAMT, ( UINT16 )( usExpGain / 2 ), ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
@@ -1356,16 +1354,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// add base pts for taking a shot, whether it hits or misses
 			usExpGain += 10;
 
-			const SOLDIERTYPE* const tgt = pSoldier->target;
-			if (tgt->ubBodyType == COW || tgt->ubBodyType == CROW)
-			{
-				usExpGain /= 2;
-			}
-			else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
-			{
-				// no exp from shooting a vehicle that you can't damage and can't move!
-				usExpGain = 0;
-			}
+			usExpGain = ModifyExpGainByTarget(usExpGain, pSoldier->target);
 
 			// DEXTERITY GAIN:  Made a knife attack, successful or not
 			StatChange( pSoldier, DEXTAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
@@ -1398,7 +1387,6 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	EV_S_WEAPONHIT			SWeaponHit;
 	INT32								iImpact;
 	UINT16							usOldItem;
-	UINT8								ubExpGain;
 
 	// Deduct points!
 	// August 13 2002: unless stealing - APs already deducted elsewhere
@@ -1559,40 +1547,23 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 			if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum )
 			{
 				// made an HTH attack; give experience
-				if ( iDiceRoll <= iHitChance )
+				UINT8 ubExpGain;
+				UINT8 reason;
+				if (iDiceRoll <= iHitChance)
 				{
 					ubExpGain = 8;
-
-					if ( pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
-					{
-						ubExpGain = 0;
-					}
-					else if ( pTargetSoldier->ubBodyType == COW || pTargetSoldier->ubBodyType == CROW )
-					{
-						ubExpGain /= 2;
-					}
-
-
-					StatChange( pSoldier, STRAMT, ubExpGain, FALSE );
-					StatChange( pSoldier, DEXTAMT, ubExpGain, FALSE );
+					reason    = FALSE;
 				}
 				else
 				{
 					ubExpGain = 4;
-
-					if ( pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) )
-					{
-						ubExpGain = 0;
-					}
-					else if ( pTargetSoldier->ubBodyType == COW || pTargetSoldier->ubBodyType == CROW )
-					{
-						ubExpGain /= 2;
-					}
-
-
-					StatChange( pSoldier, STRAMT, ubExpGain, FROM_FAILURE );
-					StatChange( pSoldier, DEXTAMT, ubExpGain, FROM_FAILURE );
+					reason    = FROM_FAILURE;
 				}
+
+				ubExpGain = ModifyExpGainByTarget(ubExpGain, pTargetSoldier);
+
+				StatChange(pSoldier, STRAMT,  ubExpGain, reason);
+				StatChange(pSoldier, DEXTAMT, ubExpGain, reason);
 			}
 			else if (iDiceRoll > iHitChance)
 			{
