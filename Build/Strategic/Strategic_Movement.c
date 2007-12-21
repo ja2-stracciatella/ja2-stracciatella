@@ -1802,8 +1802,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			v->fBetweenSectors = FALSE;
 
 			// update passengers position
-			UpdatePositionOfMercsInVehicle( iVehId );
-
+			UpdatePositionOfMercsInVehicle(v);
 
 			if( iVehId != iHelicopterVehicleId )
 			{

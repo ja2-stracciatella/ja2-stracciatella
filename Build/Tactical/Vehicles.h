@@ -113,7 +113,7 @@ BOOLEAN VehicleIdIsValid( INT32 iId );
 BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier );
 
 // update mercs position when vehicle arrives
-void UpdatePositionOfMercsInVehicle( INT32 iId );
+void UpdatePositionOfMercsInVehicle(const VEHICLETYPE*);
 
 // find vehicle id of group with this vehicle
 INT32 GetVehicleIDFromMvtGroup(const GROUP*);

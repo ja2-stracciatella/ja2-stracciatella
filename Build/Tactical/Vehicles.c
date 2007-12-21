@@ -995,26 +995,17 @@ static INT32 GetTravelTimeOfVehicle(INT32 iId)
 }
 
 
-
-void UpdatePositionOfMercsInVehicle( INT32 iId )
+void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 {
-	INT32 iCounter = 0;
-
-	// update the position of all the grunts in the vehicle
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return;
-	}
-
 	// go through list of mercs in vehicle and set all thier states as arrived
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < iSeatingCapacities[v->ubVehicleType]; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
-		{
-			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorY = pVehicleList[ iId ].sSectorY;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorX = pVehicleList[ iId ].sSectorX;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->fBetweenSectors = FALSE;
-		}
+		SOLDIERTYPE* const s = v->pPassengers[iCounter];
+		if (s == NULL) continue;
+
+		s->sSectorY        = v->sSectorY;
+		s->sSectorX        = v->sSectorX;
+		s->fBetweenSectors = FALSE;
 	}
 }
 
