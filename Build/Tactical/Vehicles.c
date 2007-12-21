@@ -1019,30 +1019,20 @@ void UpdatePositionOfMercsInVehicle( INT32 iId )
 }
 
 
-
-INT32 GivenMvtGroupIdFindVehicleId( UINT8 ubGroupId )
+INT32 GetVehicleIDFromMvtGroup(const GROUP* const group)
 {
-	INT32 iCounter = 0;
-
 	// given the id of a mvt group, find a vehicle in this group
-	if( ubGroupId == 0 )
-	{
-		return ( -1 );
-	}
-
-	for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < ubNumberOfVehicles ; ++iCounter)
 	{
 		// might have an empty slot
-		if( pVehicleList[ iCounter ].fValid == TRUE )
+		const VEHICLETYPE* const v = &pVehicleList[iCounter];
+		if (v->fValid == TRUE && v->ubMovementGroup == group->ubGroupID)
 		{
-			if( pVehicleList[ iCounter ].ubMovementGroup == ubGroupId )
-			{
-				return( iCounter );
-			}
+			return iCounter;
 		}
 	}
 
-	return( -1 );
+	return -1;
 }
 
 
@@ -2264,9 +2254,7 @@ static BOOLEAN DoesVehicleHaveAnyPassengers(INT32 iVehicleID)
 
 BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 {
-	INT32 iVehicleID;
-
-	iVehicleID = GivenMvtGroupIdFindVehicleId( pGroup->ubGroupID );
+	const INT32 iVehicleID = GetVehicleIDFromMvtGroup(pGroup);
 	if( iVehicleID == -1 )
 	{
 		#ifdef JA2BETAVERSION

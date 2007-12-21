@@ -1665,8 +1665,6 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 
 static void CancelPathForGroup(GROUP* pGroup)
 {
-	INT32 iVehicleId;
-
 	// if it's the chopper, but player can't redirect it
 	if ( pGroup->fPlayer && IsGroupTheHelicopterGroup( pGroup ) && ( CanHelicopterFly( ) == FALSE ) )
 	{
@@ -1690,7 +1688,7 @@ static void CancelPathForGroup(GROUP* pGroup)
 	// is it a vehicle group?
 	else if( pGroup->fVehicle )
 	{
-		iVehicleId = GivenMvtGroupIdFindVehicleId( pGroup->ubGroupID );
+		const INT32 iVehicleId = GetVehicleIDFromMvtGroup(pGroup);
 
 		// must be valid!
 		Assert( iVehicleId != -1 );
