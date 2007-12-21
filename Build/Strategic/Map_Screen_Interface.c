@@ -18,6 +18,7 @@
 #include "Isometric_Utils.h"
 #include "Interface.h"
 #include "Game_Event_Hook.h"
+#include "Strategic_Pathing.h"
 #include "SysUtil.h"
 #include "Tactical_Placement_GUI.h"
 #include "Tactical_Save.h"
@@ -5331,8 +5332,6 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber )
 {
 	INT32 iCounter = 0;
-	UINT8 ubGroup = 0;
-	UINT8 ubCurrentGroup = 0;
 
 	// first check the requested character himself
 	if( CanCharacterMoveInStrategic( pSoldier, pbErrorNumber ) == FALSE )
@@ -5345,20 +5344,7 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 	// now check anybody who would be travelling with him
 
 	// does character have group?
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		// IS a vehicle - use vehicle's group
-		ubGroup = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
-	}
-	else if( pSoldier->bAssignment == VEHICLE )
-	{
-		// IN a vehicle - use vehicle's group
-		ubGroup = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
-	}
-	else
-	{
-		ubGroup = pSoldier->ubGroupID;
-	}
+	const UINT8 ubGroup = GetSoldierGroupId(pSoldier);
 
 	// even if group is 0 (not that that should happen, should it?) still loop through for other mercs selected to move
 
@@ -5381,20 +5367,7 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 		}
 
 		// does character have group?
-		if( pCurrentSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-		{
-			// IS a vehicle
-			ubCurrentGroup = pVehicleList[ pCurrentSoldier->bVehicleID ].ubMovementGroup;
-		}
-		else if( pCurrentSoldier->bAssignment == VEHICLE )
-		{
-			// IN a vehicle
-			ubCurrentGroup = pVehicleList[ pCurrentSoldier->iVehicleId ].ubMovementGroup;
-		}
-		else
-		{
-			ubCurrentGroup = pCurrentSoldier->ubGroupID;
-		}
+		const UINT8 ubCurrentGroup = GetSoldierGroupId(pCurrentSoldier);
 
 		// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
 		if( ( ubCurrentGroup == ubGroup ) || ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
