@@ -515,10 +515,10 @@ static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY)
 static void SkyriderDestroyed(void)
 {
 	// remove any arrival events for the helicopter's group
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	const VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, v->ubMovementGroup);
 
-	// kill eveyone on board
-	KillAllInVehicle( iHelicopterVehicleId );
+	KillAllInVehicle(v);
 
 	// kill skyrider
 	fSkyRiderAvailable = FALSE;

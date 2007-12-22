@@ -1061,13 +1061,9 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN KillAllInVehicle( INT32 iId )
+BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 {
-	// find if vehicle is valid
-	if (!VehicleIdIsValid(iId)) return FALSE;
-
 	// go through list of occupants and kill them
-	const VEHICLETYPE* const v = &pVehicleList[iId];
 	for (INT32 iCounter = 0; iCounter < iSeatingCapacities[v->ubVehicleType]; ++iCounter)
 	{
 		if (v->pPassengers[iCounter] != NULL)
@@ -1445,9 +1441,10 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 		}
 	}
 
-	if ( pSoldier->bLife == 0 && !pVehicleList[ ubID ].fDestroyed )
+	VEHICLETYPE* const v = &pVehicleList[ubID];
+	if (pSoldier->bLife == 0 && !v->fDestroyed)
 	{
-		pVehicleList[ ubID ].fDestroyed  = TRUE;
+		v->fDestroyed = TRUE;
 
 		// Explode vehicle...
 		IgniteExplosion(att, 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
@@ -1461,9 +1458,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
 		}
 
-    // Kill all in vehicle...
-    KillAllInVehicle( ubID );
-
+    KillAllInVehicle(v);
 	}
 }
 

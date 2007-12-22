@@ -131,7 +131,7 @@ void UpdatePositionOfMercsInVehicle(const VEHICLETYPE*);
 INT32 GetVehicleIDFromMvtGroup(const GROUP*);
 
 // kill everyone in vehicle
-BOOLEAN KillAllInVehicle( INT32 iId );
+BOOLEAN KillAllInVehicle(const VEHICLETYPE*);
 
 // grab number of occupants in vehicles
 INT32 GetNumberInVehicle( INT32 iId );
