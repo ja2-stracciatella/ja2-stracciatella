@@ -959,36 +959,6 @@ BOOLEAN VehicleIdIsValid( INT32 iId )
 }
 
 
-// travel time at the startegic level
-static INT32 GetTravelTimeOfVehicle(INT32 iId)
-{
-	GROUP *pGroup;
-
-
-	// valid vehicle?
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return( 0 );
-	}
-
-	// no mvt group?
-	if( pVehicleList[ iId ].ubMovementGroup == 0 )
-	{
-		return ( 0 );
-	}
-
-	pGroup = GetGroup( pVehicleList[ iId ].ubMovementGroup );
-
-	if( pGroup == NULL )
-	{
-		pVehicleList[ iId ].ubMovementGroup = 0;
-		return( 0 );
-	}
-
-	return( CalculateTravelTimeOfGroupId( pVehicleList[ iId ].ubMovementGroup ) );
-}
-
-
 void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of mercs in vehicle and set all thier states as arrived
@@ -1016,32 +986,6 @@ INT32 GetVehicleIDFromMvtGroup(const GROUP* const group)
 	}
 
 	return -1;
-}
-
-
-// add all people in this vehicle to the mvt group for benifit of prebattle interface
-static BOOLEAN AddVehicleMembersToMvtGroup(INT32 iId)
-{
-	INT32 iCounter = 0;
-
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	// clear the vehicle people list out
-	// RemoveAllPlayersFromGroup( pVehicleList[ iId ].ubMovementGroup );
-
-	// go through list of mercs in vehicle and set all thier states as arrived
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
-	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
-		{
-			AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup , pVehicleList[ iId ].pPassengers[ iCounter ] );
-		}
-	}
-
-	return( TRUE );
 }
 
 
@@ -1162,25 +1106,11 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 }
 
 
-static SOLDIERTYPE* GetDriver(INT32 iID)
-{
-	return( MercPtrs[ pVehicleList[ iID ].ubDriver ] );
-}
-
-
 // set the driver of the vehicle
 static void SetDriver(INT32 iID, UINT8 ubID)
 {
 	pVehicleList[ iID ].ubDriver = ubID;
 }
-
-
-#ifdef JA2TESTVERSION
-static void VehicleTest(void)
-{
-	SetUpHelicopterForPlayer( 9,1 );
-}
-#endif
 
 
 BOOLEAN IsEnoughSpaceInVehicle( INT32 iID )
@@ -1866,15 +1796,6 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 			EVENT_SetSoldierPositionXY(pPassenger, pSoldier->dXPos, pSoldier->dYPos, SSP_NONE);
 		}
 	}
-}
-
-
-static BOOLEAN SaveVehicleMovementInfoToSavedGameFile(HWFILE hFile)
-{
-	//Save all the vehicle movement id's
-	if (!FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5)) return FALSE;
-
-	return( TRUE );
 }
 
 
