@@ -345,22 +345,16 @@ BOOLEAN RemoveVehicleFromList( INT32 iId )
 
 void ClearOutVehicleList( void )
 {
-	INT32	iCounter;
-
 	// empty out the vehicle list
 	if( pVehicleList )
 	{
-		for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
+		FOR_ALL_VEHICLES(v)
 		{
-			// if there is a valid vehicle
-			if( pVehicleList[ iCounter ].fValid )
+			//if the vehicle has a valid path
+			if (v->pMercPath)
 			{
-				//if the vehicle has a valid path
-				if( pVehicleList[ iCounter ].pMercPath )
-				{
-					//toast the vehicle path
-					pVehicleList[ iCounter ].pMercPath = ClearStrategicPathList( pVehicleList[ iCounter ].pMercPath, 0 );
-				}
+				//toast the vehicle path
+				v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
 			}
 		}
 
@@ -1013,13 +1007,11 @@ void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 INT32 GetVehicleIDFromMvtGroup(const GROUP* const group)
 {
 	// given the id of a mvt group, find a vehicle in this group
-	for (INT32 iCounter = 0; iCounter < ubNumberOfVehicles ; ++iCounter)
+	CFOR_ALL_VEHICLES(v)
 	{
-		// might have an empty slot
-		const VEHICLETYPE* const v = &pVehicleList[iCounter];
-		if (v->fValid == TRUE && v->ubMovementGroup == group->ubGroupID)
+		if (v->ubMovementGroup == group->ubGroupID)
 		{
-			return iCounter;
+			return VEHICLE2ID(v);
 		}
 	}
 
@@ -1177,23 +1169,16 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 }
 
 
-
 BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
+	CFOR_ALL_VEHICLES(v)
 	{
-		if ( pVehicleList[ iCounter ].fValid == TRUE )
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 		{
-			if ( IsThisVehicleAccessibleToSoldier( pSoldier, iCounter ) )
-			{
-				return( TRUE );
-			}
+			return TRUE;
 		}
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -2025,25 +2010,17 @@ static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID)
 
 void AddVehicleFuelToSave( )
 {
-  INT32         iCounter;
-	SOLDIERTYPE   *pVehicleSoldier = NULL;
-
-	for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
+	CFOR_ALL_VEHICLES(v)
 	{
-		// might have an empty slot
-		if( pVehicleList[ iCounter ].fValid )
-    {
-	    // get the vehicle soldiertype
-	    pVehicleSoldier = GetSoldierStructureForVehicle( iCounter );
-
-	    if( pVehicleSoldier )
-      {
-        // Init fuel!
-        pVehicleSoldier->sBreathRed = 10000;
-        pVehicleSoldier->bBreath    = 100;
-      }
-    }
-  }
+		// get the vehicle soldiertype
+		SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+		if( pVehicleSoldier )
+		{
+			// Init fuel!
+			pVehicleSoldier->sBreathRed = 10000;
+			pVehicleSoldier->bBreath    = 100;
+		}
+	}
 }
 
 

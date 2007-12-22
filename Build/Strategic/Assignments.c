@@ -468,9 +468,6 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 
 static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE* pSoldier)
 {
-	INT32 iCounter;
-
-
 	// items?
 	if ( DoesCharacterHaveAnyItemsToRepair( pSoldier, FINAL_REPAIR_PASS ) )
 	{
@@ -486,22 +483,15 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE* pSoldier)
 	// vehicles?
 	if ( pSoldier->bSectorZ == 0 )
 	{
-		for ( iCounter = 0; iCounter < ubNumberOfVehicles; iCounter++ )
+		CFOR_ALL_VEHICLES(v)
 		{
-			if ( pVehicleList[ iCounter ].fValid == TRUE )
+			// the helicopter, is NEVER repairable...
+			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
+					IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)) &&
+					CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)) == TRUE)
 			{
-				// the helicopter, is NEVER repairable...
-				if ( iCounter != iHelicopterVehicleId )
-				{
-					if ( IsThisVehicleAccessibleToSoldier( pSoldier, iCounter ) )
-					{
-						if( CanCharacterRepairVehicle( pSoldier, iCounter ) == TRUE )
-						{
-							// there is a repairable vehicle here
-							return( TRUE );
-						}
-					}
-				}
+				// there is a repairable vehicle here
+				return TRUE;
 			}
 		}
 	}
@@ -4162,7 +4152,6 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 	static BOOLEAN fCreated = FALSE;
 
 	UINT32 uiMenuLine = 0;
-	INT32 iVehicleId = 0;
 	INT32 iFontHeight = 0;
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
@@ -4210,21 +4199,23 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
 		// run through list of vehicles in sector
-		for ( iVehicleId = 0; iVehicleId < ubNumberOfVehicles; iVehicleId++ )
+		CFOR_ALL_VEHICLES(v)
 		{
-			if ( pVehicleList[ iVehicleId ].fValid == TRUE )
+			if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 			{
-				if ( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleId ) )
-				{
-					// add mouse region for each accessible vehicle
-					MSYS_DefineRegion(&gVehicleMenuRegion[uiMenuLine], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (uiMenuLine + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
+				// add mouse region for each accessible vehicle
+				MOUSE_REGION* const r =  &gVehicleMenuRegion[uiMenuLine];
+				const UINT16        x = iBoxXPosition;
+				const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine;
+				const UINT16        w = iBoxWidth;
+				const UINT16        h = iFontHeight;
+				MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
 
-					MSYS_SetRegionUserData( &gVehicleMenuRegion[ uiMenuLine ], 0, uiMenuLine );
-					// store vehicle ID in the SECOND user data
-					MSYS_SetRegionUserData( &gVehicleMenuRegion[ uiMenuLine ], 1, iVehicleId );
+				MSYS_SetRegionUserData(r, 0, uiMenuLine);
+				// store vehicle ID in the SECOND user data
+				MSYS_SetRegionUserData(r, 1, VEHICLE2ID(v));
 
-					uiMenuLine++;
-				}
+				uiMenuLine++;
 			}
 		}
 
@@ -4274,9 +4265,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 static void HandleShadingOfLinesForVehicleMenu(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iVehicleId;
 	UINT32 uiMenuLine = 0;
-
 
 	if ( ( fShowVehicleMenu == FALSE ) || ( ghVehicleBox == - 1 ) )
 	{
@@ -4286,27 +4275,24 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
 	// run through list of vehicles
-	for ( iVehicleId = 0; iVehicleId < ubNumberOfVehicles; iVehicleId++ )
+	CFOR_ALL_VEHICLES(v)
   {
-		if ( pVehicleList[ iVehicleId ].fValid == TRUE )
+		// inaccessible vehicles aren't listed at all!
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 		{
-			// inaccessible vehicles aren't listed at all!
-			if ( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleId ) )
+			if (IsEnoughSpaceInVehicle(VEHICLE2ID(v)))
 			{
-				if ( IsEnoughSpaceInVehicle( iVehicleId ) )
-				{
-					// legal vehicle, leave it green
-					UnShadeStringInBox( ghVehicleBox, uiMenuLine );
-					UnSecondaryShadeStringInBox( ghVehicleBox, uiMenuLine );
-				}
-				else
-				{
-					// unjoinable vehicle - yellow
-					SecondaryShadeStringInBox( ghVehicleBox, uiMenuLine );
-				}
-
-				uiMenuLine++;
+				// legal vehicle, leave it green
+				UnShadeStringInBox(ghVehicleBox, uiMenuLine);
+				UnSecondaryShadeStringInBox(ghVehicleBox, uiMenuLine);
 			}
+			else
+			{
+				// unjoinable vehicle - yellow
+				SecondaryShadeStringInBox(ghVehicleBox, uiMenuLine);
+			}
+
+			uiMenuLine++;
 		}
 	}
 }
@@ -4402,8 +4388,6 @@ static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ
 
 static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 {
-	INT32 iVehicleIndex=0;
-
 	// run through list of vehicles in sector and add them to pop up box
 	// first, clear pop up box
 	RemoveBox(ghRepairBox);
@@ -4418,17 +4402,14 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	if( pSoldier->bSectorZ == 0 )
 	{
 		// run through list of vehicles and see if any in sector
-		for ( iVehicleIndex = 0; iVehicleIndex < ubNumberOfVehicles; iVehicleIndex++ )
+		CFOR_ALL_VEHICLES(v)
 		{
-			if ( pVehicleList[ iVehicleIndex ].fValid == TRUE )
+			// don't even list the helicopter, because it's NEVER repairable...
+			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				// don't even list the helicopter, because it's NEVER repairable...
-				if ( iVehicleIndex != iHelicopterVehicleId )
+				if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 				{
-					if ( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleIndex ) )
-					{
-						AddMonoString(pVehicleStrings[pVehicleList[iVehicleIndex].ubVehicleType]);
-					}
+					AddMonoString(pVehicleStrings[v->ubVehicleType]);
 				}
 			}
 		}
@@ -4478,9 +4459,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 static void HandleShadingOfLinesForRepairMenu(void)
 {
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iVehicleIndex = 0;
 	INT32 iCount = 0;
-
 
 	if( ( fShowRepairMenu == FALSE ) || ( ghRepairBox == -1 ) )
 	{
@@ -4495,29 +4474,24 @@ static void HandleShadingOfLinesForRepairMenu(void)
 
 	if ( pSoldier->bSectorZ == 0 )
 	{
-		for ( iVehicleIndex = 0; iVehicleIndex < ubNumberOfVehicles; iVehicleIndex++ )
+		CFOR_ALL_VEHICLES(v)
 		{
-			if ( pVehicleList[ iVehicleIndex ].fValid == TRUE )
+			// don't even list the helicopter, because it's NEVER repairable...
+			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
+					IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 			{
-				// don't even list the helicopter, because it's NEVER repairable...
-				if ( iVehicleIndex != iHelicopterVehicleId )
+				if (CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)) == TRUE)
 				{
-					if ( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleIndex ) )
-					{
-						if( CanCharacterRepairVehicle( pSoldier, iVehicleIndex ) == TRUE )
-						{
-							// unshade vehicle line
-							UnShadeStringInBox( ghRepairBox, iCount );
-						}
-						else
-						{
-							// shade vehicle line
-							ShadeStringInBox( ghRepairBox, iCount );
-						}
-
-						iCount++;
-					}
+					// unshade vehicle line
+					UnShadeStringInBox(ghRepairBox, iCount);
 				}
+				else
+				{
+					// shade vehicle line
+					ShadeStringInBox(ghRepairBox, iCount);
+				}
+
+				iCount++;
 			}
 		}
 	}
@@ -4593,8 +4567,6 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 	INT32 iBoxWidth = 0;
 	SGPRect pDimensions;
 	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iVehicleIndex = 0;
-
 
 	if( ( fShowRepairMenu == TRUE ) && ( fCreated == FALSE ) )
 	{
@@ -4632,24 +4604,26 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		if ( pSoldier->bSectorZ == 0 )
 		{
 			// vehicles
-			for ( iVehicleIndex = 0; iVehicleIndex < ubNumberOfVehicles; iVehicleIndex++ )
+			CFOR_ALL_VEHICLES(v)
 			{
-				if ( pVehicleList[ iVehicleIndex ].fValid == TRUE )
+				// don't even list the helicopter, because it's NEVER repairable...
+				if (VEHICLE2ID(v) != iHelicopterVehicleId)
 				{
-					// don't even list the helicopter, because it's NEVER repairable...
-					if ( iVehicleIndex != iHelicopterVehicleId )
+					// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
+					if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 					{
-						// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
-						if ( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleIndex ) )
-						{
-							// add mouse region for each line of text..and set user data
-							MSYS_DefineRegion(&gRepairMenuRegion[iCount], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCount + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
+						// add mouse region for each line of text..and set user data
+						MOUSE_REGION* const r = &gRepairMenuRegion[iCount];
+						const UINT16        x = iBoxXPosition;
+						const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount;
+						const UINT16        w = iBoxWidth;
+						const UINT16        h = iFontHeight;
+						MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
 
-							MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
-							// 2nd user data is the vehicle index, which can easily be different from the region index!
-							MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, iVehicleIndex );
-							iCount++;
-						}
+						MSYS_SetRegionUserData(r, 0, iCount);
+						// 2nd user data is the vehicle index, which can easily be different from the region index!
+						MSYS_SetRegionUserData(r, 1, VEHICLE2ID(v));
+						iCount++;
 					}
 				}
 			}
@@ -7445,7 +7419,6 @@ static void CreateVehicleBox(void);
 static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 {
 	BOOLEAN fVehiclePresent=FALSE;
-	INT32 iCounter=0;
 
 	// first, clear pop up box
 	RemoveBox(ghVehicleBox);
@@ -7455,15 +7428,12 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	SetCurrentBox(ghVehicleBox);
 
 	// run through list of vehicles in sector and add them to pop up box
-	for ( iCounter = 0; iCounter < ubNumberOfVehicles; iCounter++ )
+	CFOR_ALL_VEHICLES(v)
   {
-		if ( pVehicleList[iCounter].fValid == TRUE )
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 		{
-			if ( IsThisVehicleAccessibleToSoldier( pSoldier, iCounter ) )
-			{
-				AddMonoString(pVehicleStrings[pVehicleList[iCounter].ubVehicleType]);
-				fVehiclePresent = TRUE;
-			}
+			AddMonoString(pVehicleStrings[v->ubVehicleType]);
+			fVehiclePresent = TRUE;
 		}
 	}
 
