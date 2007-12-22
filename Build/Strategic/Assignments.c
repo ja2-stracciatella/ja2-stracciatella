@@ -87,13 +87,6 @@ enum{
 	REPAIR_MENU_CANCEL,
 };
 
-enum{
-	VEHICLE_MENU_VEHICLE1 = 0,
-	VEHICLE_MENU_VEHICLE2,
-	VEHICLE_MENU_VEHICLE3,
-	VEHICLE_MENU_CANCEL,
-};
-
 
 enum {
 	REPAIR_HANDS_AND_ARMOR = 0,
@@ -4145,6 +4138,7 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 static void HandleShadingOfLinesForVehicleMenu(void);
 static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void CreateDestroyMouseRegionForVehicleMenu(void)
@@ -4199,7 +4193,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
 		// run through list of vehicles in sector
-		CFOR_ALL_VEHICLES(v)
+		FOR_ALL_VEHICLES(v)
 		{
 			if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 			{
@@ -4210,19 +4204,19 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 				const UINT16        w = iBoxWidth;
 				const UINT16        h = iFontHeight;
 				MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
-
-				MSYS_SetRegionUserData(r, 0, uiMenuLine);
-				// store vehicle ID in the SECOND user data
-				MSYS_SetRegionUserData(r, 1, VEHICLE2ID(v));
+				MSYS_SetRegionUserPtr(r, v);
 
 				uiMenuLine++;
 			}
 		}
 
-
 		// cancel line
-		MSYS_DefineRegion(&gVehicleMenuRegion[uiMenuLine], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (uiMenuLine + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
-		MSYS_SetRegionUserData( &gVehicleMenuRegion[ uiMenuLine ], 0, VEHICLE_MENU_CANCEL );
+		MOUSE_REGION* const r = &gVehicleMenuRegion[uiMenuLine];
+		const UINT16        x = iBoxXPosition;
+		const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine;
+		const UINT16        w = iBoxWidth;
+		const UINT16        h = iFontHeight;
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuCancelBtnCallback);
 
 		// created
 		fCreated = TRUE;
@@ -4301,49 +4295,45 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
-	INT32 iValue = -1, iVehicleID;
-	SOLDIERTYPE * pSoldier;
-
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( iValue == VEHICLE_MENU_CANCEL )
-		{
-			fShowVehicleMenu = FALSE;
-			UnHighLightBox( ghAssignmentBox );
-			fTeamPanelDirty = TRUE;
-			fMapScreenBottomDirty = TRUE;
-			fCharacterInfoPanelDirty = TRUE;
-			return;
-		}
-
-		pSoldier = GetSelectedAssignSoldier( FALSE );
-		iVehicleID = MSYS_GetRegionUserData( pRegion, 1 );
+		SOLDIERTYPE*       const s = GetSelectedAssignSoldier(FALSE);
+		const VEHICLETYPE* const v = MSYS_GetRegionUserPtr(pRegion);
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert( IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleID ) );
+		Assert(IsThisVehicleAccessibleToSoldier(s, VEHICLE2ID(v)));
 
-		if ( IsEnoughSpaceInVehicle( iVehicleID ) )
+		if (IsEnoughSpaceInVehicle(VEHICLE2ID(v)))
 		{
-			PutSoldierInVehicle( pSoldier, ( INT8 ) iVehicleID );
+			PutSoldierInVehicle(s, VEHICLE2ID(v));
 		}
 		else
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[ 18 ], zVehicleName[ pVehicleList[ iVehicleID ].ubVehicleType ] );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
 		}
 
 		fShowAssignmentMenu = FALSE;
 
 		// update mapscreen
-		fTeamPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		fMapScreenBottomDirty    = TRUE;
+		giAssignHighLine         = -1;
 
-		giAssignHighLine = -1;
+		SetAssignmentForList(VEHICLE, VEHICLE2ID(v));
+	}
+}
 
-		SetAssignmentForList( VEHICLE, ( INT8 ) iVehicleID );
+
+static void VehicleMenuCancelBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+{
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		UnHighLightBox(ghAssignmentBox);
+		fShowVehicleMenu         = FALSE;
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
 	}
 }
 
@@ -4351,26 +4341,10 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// mvt callback handler for assignment region
-	INT32 iValue = -1;
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( iValue != VEHICLE_MENU_CANCEL )
-		{
-			// no shaded(disabled) lines actually appear in vehicle menus
-			if( GetBoxShadeFlag( ghVehicleBox, iValue ) == FALSE )
-			{
-				// highlight vehicle line
-				HighLightBoxLine( ghVehicleBox, iValue );
-			}
-		}
-		else
-		{
-			// highlight cancel line
-		 HighLightBoxLine( ghVehicleBox, GetNumberOfLinesOfTextInBox( ghVehicleBox ) - 1 );
-		}
+		const size_t line = pRegion - gVehicleMenuRegion;
+		HighLightBoxLine(ghVehicleBox, line);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
