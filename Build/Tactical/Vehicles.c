@@ -1046,56 +1046,40 @@ static BOOLEAN AddVehicleMembersToMvtGroup(INT32 iId)
 
 
 // kill this person in the vehicle
-static BOOLEAN KillPersonInVehicle(INT32 iId, SOLDIERTYPE* pSoldier)
+static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 {
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( FALSE );
-	}
-
-	// check if soldier is valid
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-
 	// now check hpts of merc
-	if( pSoldier->bLife == 0 )
+	if (pSoldier->bLife == 0)
 	{
 		// guy is dead, leave
-		return( FALSE );
+		return FALSE;
 	}
 
 	// otherwise hurt them
 	SoldierTakeDamage(pSoldier, 0, 100, 100, TAKE_DAMAGE_BLOODLOSS, NULL, NOWHERE, TRUE);
-
-	return( TRUE );
+	return TRUE;
 }
+
 
 BOOLEAN KillAllInVehicle( INT32 iId )
 {
-	INT32 iCounter = 0;
-
 	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (!VehicleIdIsValid(iId)) return FALSE;
 
 	// go through list of occupants and kill them
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const VEHICLETYPE* const v = &pVehicleList[iId];
+	for (INT32 iCounter = 0; iCounter < iSeatingCapacities[v->ubVehicleType]; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
+		if (v->pPassengers[iCounter] != NULL)
 		{
-			if( KillPersonInVehicle( iId , pVehicleList[ iId ].pPassengers[ iCounter ] ) == FALSE )
+			if (!KillPersonInVehicle(v->pPassengers[iCounter]))
 			{
-				return( FALSE );
+				return FALSE;
 			}
 		}
 	}
 
-	return ( TRUE );
+	return TRUE;
 }
 
 INT32 GetNumberInVehicle( INT32 iId )
