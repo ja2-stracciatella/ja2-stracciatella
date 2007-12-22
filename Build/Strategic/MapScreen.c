@@ -1725,7 +1725,7 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 	{
 		// plotting for a character...
 		SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
-		if (s->bAssignment == VEHICLE || s->uiStatusFlags & SOLDIER_VEHICLE)
+		if (s->bAssignment == VEHICLE)
 		{
 			ubGroupId = pVehicleList[s->iVehicleId].ubMovementGroup;
 			pGroup = GetGroup( ubGroupId );
@@ -1736,6 +1736,20 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 
 				// get vehicle id
 				ubGroupId = pVehicleList[s->iVehicleId].ubMovementGroup;
+				pGroup = GetGroup( ubGroupId );
+			}
+		}
+		else if (s->uiStatusFlags & SOLDIER_VEHICLE)
+		{
+			ubGroupId = pVehicleList[s->bVehicleID].ubMovementGroup;
+			pGroup = GetGroup( ubGroupId );
+
+			if( pGroup == NULL )
+			{
+				SetUpMvtGroupForVehicle(s);
+
+				// get vehicle id
+				ubGroupId = pVehicleList[s->bVehicleID].ubMovementGroup;
 				pGroup = GetGroup( ubGroupId );
 			}
 		}
@@ -10944,10 +10958,15 @@ static void RestorePreviousPaths(void)
 			{
 				SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 
-				if (pSoldier->bAssignment == VEHICLE || pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
+				if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 				{
 					ppMovePath = &( pVehicleList[ pSoldier->bVehicleID ].pMercPath );
 					ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
+				}
+				else if( pSoldier->bAssignment == VEHICLE )
+				{
+					ppMovePath = &( pVehicleList[ pSoldier->iVehicleId ].pMercPath );
+					ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
 				}
 				else if( pSoldier->bAssignment < ON_DUTY )
 				{
