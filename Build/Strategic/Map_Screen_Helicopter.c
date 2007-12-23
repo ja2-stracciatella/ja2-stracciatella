@@ -183,29 +183,6 @@ void InitializeHelicopter( void )
 }
 
 
-static BOOLEAN AddSoldierToHelicopter(SOLDIERTYPE* pSoldier)
-{
-	// attempt to add soldier to helicopter
-	VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
-	if (v == NULL) return FALSE;
-
-	// check if heli is in motion or if on the ground
-	if( ( fHelicopterIsAirBorne == TRUE ) && (fHoveringHelicopter == FALSE ) )
-	{
-		return( FALSE );
-	}
-
-	// is the heli returning to base?..he ain't waiting if so
-	if( fHeliReturnStraightToBase == TRUE )
-	{
-		return( FALSE );
-	}
-
-	// attempt to add to vehicle
-	return PutSoldierInVehicle(pSoldier, v);
-}
-
-
 BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 {
 	// attempt to add soldier to helicopter
