@@ -928,7 +928,6 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ);
 static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY);
-static UINT8 NumberMercsInVehicleGroup(GROUP* pGroup);
 static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup);
 static void TriggerPrebattleInterface(UINT8 ubResult);
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup);
@@ -985,7 +984,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				{
 					if( !GroupHasInTransitDeadOrPOWMercs( curr ) &&
 							(!IsGroupTheHelicopterGroup( curr ) || !fHelicopterIsAirBorne) &&
-							(!curr->fVehicle || NumberMercsInVehicleGroup( curr )) )
+							(!curr->fVehicle || DoesVehicleGroupHaveAnyPassengers(curr)))
 					{
 						//Now, a player group is in this sector.  Determine if the group contains any mercs that can fight.
 						//Vehicles, EPCs and the robot doesn't count.  Mercs below OKLIFE do.
@@ -4937,18 +4936,6 @@ BOOLEAN GroupHasInTransitDeadOrPOWMercs( GROUP *pGroup )
 
 	// nope
 	return( FALSE );
-}
-
-
-static UINT8 NumberMercsInVehicleGroup(GROUP* pGroup)
-{
-	const INT32 iVehicleID = GetVehicleIDFromMvtGroup(pGroup);
-	Assert( iVehicleID != -1 );
-	if( iVehicleID != -1 )
-	{
-		return (UINT8)GetNumberInVehicle( iVehicleID );
-	}
-	return 0;
 }
 
 
