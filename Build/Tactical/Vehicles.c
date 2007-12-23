@@ -1870,15 +1870,6 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN DoesVehicleHaveAnyPassengers(INT32 iVehicleID)
-{
-	if( !GetNumberInVehicle( iVehicleID ) )
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
 BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 {
 	const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
@@ -1887,7 +1878,7 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 #endif
 	if (v == NULL) return FALSE;
 
-	return DoesVehicleHaveAnyPassengers(VEHICLE2ID(v));
+	return GetNumberInVehicle(VEHICLE2ID(v)) != 0;
 }
 
 
