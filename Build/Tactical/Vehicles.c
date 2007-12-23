@@ -988,19 +988,18 @@ BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 }
 
 
-BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
+BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 {
-	VEHICLETYPE* const v = GetVehicle(bVehicleId);
-	Assert(v != NULL);
-
-	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || ( bVehicleId  == iHelicopterVehicleId ) )
+	if (s->sSectorX != gWorldSectorX ||
+			s->sSectorY != gWorldSectorY ||
+			s->bSectorZ != 0             ||
+			VEHICLE2ID(v) == iHelicopterVehicleId)
 	{
-		// add the soldier
-		return AddSoldierToVehicle(pSoldier, v);
+		return AddSoldierToVehicle(s, v);
 	}
 	else
 	{
-		return EnterVehicle(v, pSoldier);
+		return EnterVehicle(v, s);
 	}
 }
 

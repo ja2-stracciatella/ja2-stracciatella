@@ -163,7 +163,7 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier );
 
 // put soldier in vehicle
-BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId );
+BOOLEAN PutSoldierInVehicle(SOLDIERTYPE*, VEHICLETYPE*);
 
 void SetVehicleSectorValues(VEHICLETYPE*, UINT8 ubSectorX, UINT8 ubSectorY);
 

@@ -4269,15 +4269,15 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment region
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SOLDIERTYPE*       const s = GetSelectedAssignSoldier(FALSE);
-		const VEHICLETYPE* const v = MSYS_GetRegionUserPtr(pRegion);
+		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
+		VEHICLETYPE* const v = MSYS_GetRegionUserPtr(pRegion);
 
 		// inaccessible vehicles shouldn't be listed in the menu!
 		Assert(IsThisVehicleAccessibleToSoldier(s, v));
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
-			PutSoldierInVehicle(s, VEHICLE2ID(v));
+			PutSoldierInVehicle(s, v);
 		}
 		else
 		{
@@ -8787,7 +8787,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 		case( VEHICLE ):
 			if (CanCharacterVehicle(pSoldier))
 			{
-				const VEHICLETYPE* const v = GetVehicle(iParam1);
+				VEHICLETYPE* const v = GetVehicle(iParam1);
 				if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
 				{
 					if (IsEnoughSpaceInVehicle(v))
@@ -8808,7 +8808,7 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 						// remove from squad
 						RemoveCharacterFromSquads( pSoldier );
 
-						if( PutSoldierInVehicle( pSoldier, ( INT8 )( iParam1 ) ) == FALSE )
+						if (!PutSoldierInVehicle(pSoldier, v))
 						{
 							AddCharacterToAnySquad( pSoldier );
 						}
@@ -9792,11 +9792,11 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 				case( VEHICLE ):
 					if (CanCharacterVehicle(pSoldier))
 					{
-						const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
+						VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
 						if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
 						{
 							// if the vehicle is FULL, then this will return FALSE!
-							fItWorked = PutSoldierInVehicle(pSoldier, bParam);
+							fItWorked = PutSoldierInVehicle(pSoldier, v);
 							// failure produces its own error popup
 							fNotifiedOfFailure = TRUE;
 						}
