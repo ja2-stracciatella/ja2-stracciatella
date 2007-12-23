@@ -171,9 +171,6 @@ typedef struct SECTORINFO
 	UINT8		ubNumCreatures;			//only set when immediately before ground attack made!
 	UINT8   ubTroopsInBattle, ubElitesInBattle, ubAdminsInBattle, ubCreaturesInBattle;
 
-	INT8 bLastKnownEnemies_UNUSED; // XXX HACK000B // -1 means never been there, no idea, otherwise it's what we'd observed most recently
-															// while this is being maintained (partially, surely buggy), nothing uses it anymore. ARM
-
 	UINT32	ubDayOfLastCreatureAttack;
 	UINT32	uiFacilitiesFlags;	// the flags for various facilities
 
@@ -181,31 +178,20 @@ typedef struct SECTORINFO
 															//The last index represents the traversability if travelling
 															//throught the sector without entering it.
 	INT8  bNameId;
-	INT8 bUSUSED; // XXX HACK000B
 	INT8 bBloodCats;
 	INT8 bBloodCatPlacements;
-	INT8 UNUSEDbSAMCondition; // XXX HACK000B
 
 	UINT8 ubTravelRating;	//Represents how travelled a sector is.  Typically, the higher the travel rating,
 												//the more people go near it.  A travel rating of 0 means there are never people
 												//around.  This value is used for determining how often items would "vanish" from
 												//a sector (nice theory, except it isn't being used that way.  Stealing is only in towns.  ARM)
 	UINT8 ubNumberOfCivsAtLevel[ MAX_MILITIA_LEVELS ]; // town militia per experience class, 0/1/2 is GREEN/REGULAR/ELITE
-	UINT16 usUNUSEDMilitiaLevels; // XXX HACK000B // unused (ARM)
-	UINT8	ubUNUSEDNumberOfJoeBlowCivilians; // XXX HACK000B // unused (ARM)
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
-	UINT8 ubUNUSEDNumberOfEnemiesThoughtToBeHere; // XXX HACK000B // using bLastKnownEnemies instead
 	UINT32 uiTimeLastPlayerLiberated; //in game seconds (used to prevent the queen from attacking for awhile)
 
 	BOOLEAN fSurfaceWasEverPlayerControlled;
 
-	UINT8		bFiller1; // XXX HACK000B
-	UINT8		bFiller2; // XXX HACK000B
-	UINT8		bFiller3; // XXX HACK000B
-
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
-
-	INT8 bPadding[41]; // XXX HACK000B
 } SECTORINFO;
 
 #define NO_ADJACENT_SECTOR		0x00
