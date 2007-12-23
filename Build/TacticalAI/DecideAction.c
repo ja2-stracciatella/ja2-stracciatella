@@ -3601,7 +3601,6 @@ bCanAttack = FALSE;
    if ((pSoldier->bAIMorale == MORALE_HOPELESS) || !bCanAttack)
    {
      // look for best place to RUN AWAY to (farthest from the closest threat)
-		 //pSoldier->usActionData = RunAway( pSoldier );
      pSoldier->usActionData = FindSpotMaxDistFromOpponents(pSoldier);
 
      if (pSoldier->usActionData != NOWHERE)

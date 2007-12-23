@@ -1385,7 +1385,6 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 	 if ( ubCanMove )
 	 {
 		 // look for best place to RUN AWAY to (farthest from the closest threat)
-		 //pSoldier->usActionData = RunAway( pSoldier );
 		 pSoldier->usActionData = FindSpotMaxDistFromOpponents( pSoldier );
 
 		 if (pSoldier->usActionData != NOWHERE)
