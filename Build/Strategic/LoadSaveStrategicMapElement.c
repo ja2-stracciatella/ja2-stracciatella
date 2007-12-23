@@ -10,9 +10,7 @@ BOOLEAN ExtractStrategicMapElementFromFile(const HWFILE file, StrategicMapElemen
 	if (!FileRead(file, data, sizeof(data))) return FALSE;
 
 	const BYTE* d = data;
-	EXTR_SKIP(d, 8)
-	EXTR_U8A(d, e->uiBadFootSector, lengthof(e->uiBadFootSector))
-	EXTR_U8A(d, e->uiBadVehicleSector, lengthof(e->uiBadVehicleSector))
+	EXTR_SKIP(d, 16)
 	EXTR_I8(d, e->bNameId)
 	EXTR_BOOL(d, e->fEnemyControlled)
 	EXTR_BOOL(d, e->fEnemyAirControlled)
@@ -30,9 +28,7 @@ BOOLEAN InjectStrategicMapElementIntoFile(const HWFILE file, const StrategicMapE
 	BYTE data[41];
 
 	BYTE* d = data;
-	INJ_SKIP(d, 8)
-	INJ_U8A(d, e->uiBadFootSector, lengthof(e->uiBadFootSector))
-	INJ_U8A(d, e->uiBadVehicleSector, lengthof(e->uiBadVehicleSector))
+	INJ_SKIP(d, 16)
 	INJ_I8(d, e->bNameId)
 	INJ_BOOL(d, e->fEnemyControlled)
 	INJ_BOOL(d, e->fEnemyAirControlled)

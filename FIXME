@@ -386,10 +386,6 @@ bTimesDrugUsedSinceSleep: write-only
 fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?
 
-StrategicMapElement
-uiBadFootSector: read-only
-uiBadVehicleSector: read-only
-
 TacticalStatusType
 fGoingToEnterDemo_UNUSED
 fNOTDOLASTDEMO_UNUSED

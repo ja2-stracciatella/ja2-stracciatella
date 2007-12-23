@@ -8,8 +8,6 @@
 
 typedef struct StrategicMapElement
 {
-	UINT8 uiBadFootSector[4];    // blocking mvt for foot
-	UINT8 uiBadVehicleSector[4]; // blocking mvt from vehicles
 	INT8  bNameId;
 	BOOLEAN fEnemyControlled;   // enemy controlled or not
 	BOOLEAN fEnemyAirControlled;
