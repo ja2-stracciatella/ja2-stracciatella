@@ -109,6 +109,8 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
 // is this vehicle a valid one?
 BOOLEAN VehicleIdIsValid( INT32 iId );
 
+VEHICLETYPE* GetVehicle(INT32 vehicle_id);
+
 // set up vehicle mvt for this grunt involved
 BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier );
 

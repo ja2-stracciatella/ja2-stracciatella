@@ -337,18 +337,8 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 		return( FALSE );
 	}
 
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return ( FALSE );
-	}
-
-	const VEHICLETYPE* const v = &pVehicleList[iId];
-
-	// now check if vehicle is valid
-	if (!v->fValid)
-	{
-		return( FALSE );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return FALSE;
 
 	// if the soldier or the vehicle is between sectors
 	if (pSoldier->fBetweenSectors || v->fBetweenSectors)
@@ -378,19 +368,11 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
 	SOLDIERTYPE *pVehicleSoldier = NULL;
 
-	// Add Soldierto Vehicle
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return ( FALSE );
-	}
-
 	// ok now check if any free slots in the vehicle
 
 	// now check if vehicle is valid
-	if( pVehicleList[ iId ].fValid == FALSE )
-	{
-		return( FALSE );
-	}
+	VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return FALSE;
 
 	// get the vehicle soldiertype
 	pVehicleSoldier = GetSoldierStructureForVehicle( iId );
@@ -418,22 +400,22 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 
     // I really have vehicles.
     // ONLY add to vehicle group once!
-    if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
+		if (!DoesPlayerExistInPGroup(v->ubMovementGroup, pVehicleSoldier))
     {
 		  //NOW.. add guy to vehicle group....
-		  AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier  );
+			AddPlayerToGroup(v->ubMovementGroup, pVehicleSoldier);
     }
     else
     {
-      pVehicleSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
+			pVehicleSoldier->ubGroupID = v->ubMovementGroup;
     }
 	}
 
 	// check if the grunt is already here
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] == pSoldier )
+		if (v->pPassengers[iCounter] == pSoldier)
 		{
 			// guy found, no need to add
 			return( TRUE );
@@ -454,10 +436,10 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		// check if slot free
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] == NULL )
+		if (v->pPassengers[iCounter] == NULL)
 		{
 			// add person in
-			pVehicleList[ iId ].pPassengers[ iCounter ] = pSoldier;
+			v->pPassengers[iCounter] = pSoldier;
 
 			if( pSoldier->bAssignment == VEHICLE )
 			{
@@ -490,11 +472,10 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			pSoldier -> iVehicleId = iId;
 
 			// if vehicle is part of mvt group, then add character to mvt group
-			if( pVehicleList[ iId ].ubMovementGroup != 0 )
+			if (v->ubMovementGroup != 0)
 			{
 				// add character
-				AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pSoldier );
-
+				AddPlayerToGroup(v->ubMovementGroup, pSoldier);
 			}
 
 			// Are we the first?
@@ -566,31 +547,22 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	BOOLEAN	fSoldierFound = FALSE;
 	SOLDIERTYPE *pVehicleSoldier;
 
-
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return( FALSE );
-	}
-
-	// now check if vehicle is valid
-	if( pVehicleList[ iId ].fValid == FALSE )
-	{
-		return( FALSE );
-	}
+	VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return FALSE;
 
 	// now look for the grunt
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] == pSoldier )
+		if (v->pPassengers[iCounter] == pSoldier)
 		{
 			fSoldierFound = TRUE;
 
-			pVehicleList[ iId ].pPassengers[ iCounter ]->ubGroupID = 0;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorY = pVehicleList[ iId ].sSectorY;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->sSectorX = pVehicleList[ iId ].sSectorX;
-			pVehicleList[ iId ].pPassengers[ iCounter ]->bSectorZ = ( INT8 )pVehicleList[ iId ].sSectorZ;
-			pVehicleList[ iId ].pPassengers[ iCounter ] = NULL;
+			v->pPassengers[iCounter]->ubGroupID = 0;
+			v->pPassengers[iCounter]->sSectorY  = v->sSectorY;
+			v->pPassengers[iCounter]->sSectorX  = v->sSectorX;
+			v->pPassengers[iCounter]->bSectorZ  = v->sSectorZ;
+			v->pPassengers[iCounter]            = NULL;
 
 
 			pSoldier->uiStatusFlags &= ( ~( SOLDIER_DRIVER | SOLDIER_PASSENGER ) );
@@ -599,16 +571,16 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			fSoldierLeft = FALSE;
 			for (iCounter = 0; iCounter < seats; ++iCounter)
 			{
-				if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
+				if (v->pPassengers[iCounter] != NULL)
 				{
 					fSoldierLeft = TRUE;
 				}
 			}
 
 
-			if( pVehicleList[ iId ].ubMovementGroup != 0 )
+			if (v->ubMovementGroup != 0)
 			{
-				RemovePlayerFromGroup( pVehicleList[ iId ].ubMovementGroup, pSoldier );
+				RemovePlayerFromGroup(v->ubMovementGroup, pSoldier);
 			}
 
 			break;
@@ -638,11 +610,11 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 				if ( GetLengthOfMercPath( pVehicleSoldier ) > 0 )
 				{
 					// cancel the entire path (also handles reversing directions)
-					CancelPathForVehicle( &( pVehicleList[ iId ] ), FALSE );
+					CancelPathForVehicle(v, FALSE);
 				}
 
 				// if the vehicle was abandoned between sectors
-				if ( pVehicleList[ iId ].fBetweenSectors )
+				if (v->fBetweenSectors)
 				{
 					// teleport it to the closer of its current and next sectors (it beats having it arrive empty later)
 					TeleportVehicleToItsClosestSector( iId, pVehicleSoldier->ubGroupID );
@@ -651,9 +623,9 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
         // Remove vehicle from squad.....
         RemoveCharacterFromSquads( pVehicleSoldier );
         // ATE: Add him back to vehicle group!
-        if ( !DoesPlayerExistInPGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier ) )
+				if (!DoesPlayerExistInPGroup(v->ubMovementGroup, pVehicleSoldier))
         {
-    		  AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleSoldier  );
+					AddPlayerToGroup(v->ubMovementGroup, pVehicleSoldier);
         }
 				ChangeSoldiersAssignment( pVehicleSoldier, ASSIGNMENT_EMPTY );
 
@@ -732,22 +704,13 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 	if( iId != -1 )
 	{
 		// check if vehicle has mvt group, if not, get one for it
-		if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
+		if (GetVehicle(iId) == NULL)
 		{
 			// now clear soldier's path
 			pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
 			return ( FALSE );
 		}
-
-		// now check if vehicle is valid
-		if( pVehicleList[ iId ].fValid == FALSE )
-		{
-			// now clear soldier's path
-			pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
-			return( FALSE );
-		}
 	}
-
 
 	// valid vehicle
 
@@ -799,15 +762,9 @@ static BOOLEAN CopyVehiclePathToSoldier(SOLDIERTYPE* pSoldier)
 	if( iId != -1 )
 	{
 		// check if vehicle has mvt group, if not, get one for it
-		if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
+		if (GetVehicle(iId) == NULL)
 		{
 			return ( FALSE );
-		}
-
-		// now check if vehicle is valid
-		if( pVehicleList[ iId ].fValid == FALSE )
-		{
-			return( FALSE );
 		}
 	}
 
@@ -907,6 +864,14 @@ BOOLEAN VehicleIdIsValid( INT32 iId )
 	}
 
 	return( TRUE );
+}
+
+
+VEHICLETYPE* GetVehicle(const INT32 vehicle_id)
+{
+	if (vehicle_id < 0 || ubNumberOfVehicles <= vehicle_id) return FALSE;
+	VEHICLETYPE* const v = &pVehicleList[vehicle_id];
+	return v->fValid ? v : NULL;
 }
 
 

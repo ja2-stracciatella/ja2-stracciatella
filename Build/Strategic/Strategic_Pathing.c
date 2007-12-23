@@ -1169,24 +1169,13 @@ INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter)
 // get id of last sector in vehicle path list
 INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 {
-	INT16 sLastSector = -1;
-	PathSt* pNode = NULL;
-
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return ( sLastSector );
-	}
-		// now check if vehicle is valid
-	if( pVehicleList[ iId ].fValid == FALSE )
-	{
-		return( sLastSector );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return -1;
 
 	// get current last sector
-	sLastSector = ( pVehicleList[ iId ].sSectorX ) + ( pVehicleList[ iId ].sSectorY * MAP_WORLD_X );
+	INT16 sLastSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
 
-	pNode = pVehicleList[ iId ].pMercPath;
-
+	const PathSt* pNode = v->pMercPath;
 	while( pNode )
 	{
 		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
