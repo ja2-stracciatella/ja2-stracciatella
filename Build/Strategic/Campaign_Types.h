@@ -154,8 +154,6 @@ typedef struct SECTORINFO
 {
 	//information pertaining to this sector
 	UINT32	uiFlags;						//various special conditions
-	UINT8		ubInvestigativeState;		//When the sector is attacked by the player, the state increases by 1 permanently.
-																	//This value determines how quickly it is investigated by the enemy.
 	UINT8		ubGarrisonID;						//IF the sector has an ID for this (non 255), then the queen values this sector and it
 																	//indexes the garrison group.
 	INT8		ubPendingReinforcements;	//when the enemy owns this sector, this value will keep track of HIGH priority reinforcements -- not regular.

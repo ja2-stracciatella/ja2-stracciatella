@@ -36,8 +36,6 @@ BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID );
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 
-void InvestigateSector( UINT8 ubSectorID );
-
 void WakeUpQueen(void);
 
 void StrategicHandleMineThatRanOut( UINT8 ubSectorID );

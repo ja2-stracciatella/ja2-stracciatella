@@ -11,7 +11,7 @@ BOOLEAN ExtractSectorInfoFromFile(const HWFILE file, SECTORINFO* const s)
 
 	const BYTE* d = data;
 	EXTR_U32(d, s->uiFlags)
-	EXTR_U8(d, s->ubInvestigativeState)
+	EXTR_SKIP(d, 1)
 	EXTR_U8(d, s->ubGarrisonID)
 	EXTR_I8(d, s->ubPendingReinforcements)
 	EXTR_BOOL(d, s->fMilitiaTrainingPaid)
@@ -57,7 +57,7 @@ BOOLEAN InjectSectorInfoIntoFile(const HWFILE file, const SECTORINFO* const s)
 
 	BYTE* d = data;
 	INJ_U32(d, s->uiFlags)
-	INJ_U8(d, s->ubInvestigativeState)
+	INJ_SKIP(d, 1)
 	INJ_U8(d, s->ubGarrisonID)
 	INJ_I8(d, s->ubPendingReinforcements)
 	INJ_BOOL(d, s->fMilitiaTrainingPaid)
