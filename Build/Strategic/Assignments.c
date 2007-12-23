@@ -8397,12 +8397,6 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId
 		return(FALSE);
 	}
 
-	// it's not Skyrider's helicopter (which isn't damagable/repairable)
-	if ( iVehicleId == iHelicopterVehicleId )
-	{
-		return( FALSE );
-	}
-
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
 	if ( !IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleId ) )
 	{

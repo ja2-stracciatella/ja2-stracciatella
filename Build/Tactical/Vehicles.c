@@ -1305,19 +1305,13 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
 	if (v == NULL) return bRepairPtsUsed;
 
-	// Skyrider isn't damagable/repairable
-	if ( iVehicleId == iHelicopterVehicleId )
+	if (!DoesVehicleNeedAnyRepairs(iVehicleId))
 	{
 		return( bRepairPtsUsed );
 	}
 
 	// get the vehicle soldiertype
 	pVehicleSoldier = GetSoldierStructureForVehicle( iVehicleId );
-
-	if ( !DoesVehicleNeedAnyRepairs( iVehicleId ) )
-	{
-		return( bRepairPtsUsed );
-	}
 
 	bOldLife = pVehicleSoldier->bLife;
 
