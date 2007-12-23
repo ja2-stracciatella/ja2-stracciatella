@@ -1793,7 +1793,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
 			// don't retreat empty vehicle groups!
-			if( !pGroup->fVehicle || ( pGroup->fVehicle && DoesVehicleGroupHaveAnyPassengers( pGroup ) ) )
+			if (!pGroup->fVehicle || DoesVehicleGroupHaveAnyPassengers(pGroup))
 			{
 				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
 				RetreatGroupToPreviousSector( pGroup );
