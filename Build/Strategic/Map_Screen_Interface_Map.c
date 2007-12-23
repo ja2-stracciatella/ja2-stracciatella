@@ -1032,48 +1032,32 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 }
 
 
-static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 iCount)
+static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 {
-  UINT8 ubCounter, ubIconPosition;
-	SOLDIERTYPE *pVehicleSoldier;
-
 	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-	ubCounter=0;
 
-	ubIconPosition = (UINT8) iCount;
-
-  // run through list of vehicles
-	while( ubCounter < ubNumberOfVehicles )
+	CFOR_ALL_VEHICLES(v)
 	{
 		// skip the chopper, it has its own icon and displays in airspace mode
-		if ( ubCounter != iHelicopterVehicleId )
-		{
-			if ( (pVehicleList[ ubCounter ].sSectorX == sMapX) && ( pVehicleList[ ubCounter ].sSectorY == sMapY ) )
-			{
-				// don't show vehicles between sectors (in motion - they're counted as "people in motion"
-				if( ( pVehicleList[ ubCounter ].sSectorZ == iCurrentMapSectorZ ) &&
-						!PlayerIDGroupInMotion( pVehicleList[ ubCounter ].ubMovementGroup ) )
-				{
-					// ATE: Check if this vehicle has a soldier and it's on our team.....
-					pVehicleSoldier = GetSoldierStructureForVehicle( ubCounter );
+		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
 
-					// this skips the chopper, which has no soldier
-					if ( pVehicleSoldier )
-					{
-						if ( pVehicleSoldier->bTeam == gbPlayerNum )
-						{
-							DrawMapBoxIcon( hIconHandle, SMALL_WHITE_BOX, sMapX, sMapY, ubIconPosition );
-							ubIconPosition++;
-						}
-					}
-				}
+		if (v->sSectorX == sMapX              &&
+				v->sSectorY == sMapY              &&
+				v->sSectorZ == iCurrentMapSectorZ &&
+				!PlayerIDGroupInMotion(v->ubMovementGroup))
+		{
+			// ATE: Check if this vehicle has a soldier and it's on our team.....
+			const SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+
+			// this skips the chopper, which has no soldier
+			if (pVehicleSoldier != NULL && pVehicleSoldier->bTeam == gbPlayerNum)
+			{
+				DrawMapBoxIcon(hIconHandle, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
 			}
 		}
-
-    ubCounter++;
 	}
 
-	return ubIconPosition;
+	return icon_pos;
 }
 
 
