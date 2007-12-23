@@ -988,22 +988,6 @@ BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 }
 
 
-BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
-{
-	if (s->sSectorX != gWorldSectorX ||
-			s->sSectorY != gWorldSectorY ||
-			s->bSectorZ != 0             ||
-			VEHICLE2ID(v) == iHelicopterVehicleId)
-	{
-		return AddSoldierToVehicle(s, v);
-	}
-	else
-	{
-		return EnterVehicle(v, s);
-	}
-}
-
-
 BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 {
 	// if not in vehicle, don't take out, not much point, now is there?
@@ -1033,11 +1017,15 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN EnterVehicle(VEHICLETYPE* const v, SOLDIERTYPE* const pSoldier)
+BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 {
-	if (!AddSoldierToVehicle(pSoldier, v)) return FALSE;
+	if (!AddSoldierToVehicle(s, v)) return FALSE;
 
-	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
+	if (s->sSectorX   == gWorldSectorX        &&
+			s->sSectorY   == gWorldSectorY        &&
+			s->bSectorZ   == 0                    &&
+			VEHICLE2ID(v) != iHelicopterVehicleId &&
+			!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
