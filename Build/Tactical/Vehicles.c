@@ -1046,9 +1046,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 
 BOOLEAN EnterVehicle(VEHICLETYPE* const v, SOLDIERTYPE* const pSoldier)
 {
-	if (!IsEnoughSpaceInVehicle(v)) return FALSE;
-
-	AddSoldierToVehicle(pSoldier, VEHICLE2ID(v));
+	if (!AddSoldierToVehicle(pSoldier, VEHICLE2ID(v))) return FALSE;
 
 	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
