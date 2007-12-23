@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Interface.h"
+#include "LoadSaveStrategicMapElement.h"
 #include "Local.h"
 #include "Merc_Hiring.h"
 #include "StrategicMap.h"
@@ -3629,13 +3630,14 @@ static BOOLEAN SectorIsPartOfTown(INT8 bTownId, INT16 sSectorX, INT16 sSectorY)
 
 BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 {
-	UINT32		uiSize = sizeof( StrategicMapElement ) * ( MAP_WORLD_X * MAP_WORLD_Y );
-
 	// Save the strategic map information
-	if (!FileWrite(hFile, StrategicMap, uiSize)) return FALSE;
+	for (const StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
+	{
+		if (!InjectStrategicMapElementIntoFile(hFile, i)) return FALSE;
+	}
 
 	// Save the Sector Info
-	uiSize = sizeof( SECTORINFO ) * 256;
+	UINT32 uiSize = sizeof( SECTORINFO ) * 256;
 	if (!FileWrite(hFile, SectorInfo, uiSize)) return FALSE;
 
 	// Save the SAM Controlled Sector Information
@@ -3652,16 +3654,16 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 }
 
 
-
 BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 {
-	UINT32		uiSize = sizeof( StrategicMapElement ) * ( MAP_WORLD_X * MAP_WORLD_Y );
-
 	// Load the strategic map information
-	if (!FileRead(hFile, StrategicMap, uiSize)) return FALSE;
+	for (StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
+	{
+		if (!ExtractStrategicMapElementFromFile(hFile, i)) return FALSE;
+	}
 
 	// Load the Sector Info
-	uiSize = sizeof( SECTORINFO ) * 256;
+	UINT32 uiSize = sizeof( SECTORINFO ) * 256;
 	if (!FileRead(hFile, SectorInfo, uiSize)) return FALSE;
 
 	// Load the SAM Controlled Sector Information
