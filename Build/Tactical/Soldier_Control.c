@@ -7810,7 +7810,12 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 void EVENT_SoldierEnterVehicle(SOLDIERTYPE* const pSoldier, const INT16 sGridNo)
 {
 	const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
-	if (tgt != NULL) EnterVehicle(tgt, pSoldier);
+	if (tgt != NULL && tgt->uiStatusFlags & SOLDIER_VEHICLE)
+	{
+		VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
+		Assert(v != NULL);
+		EnterVehicle(v, pSoldier);
+	}
 
 	UnSetUIBusy( pSoldier->ubID );
 }

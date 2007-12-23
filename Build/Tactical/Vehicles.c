@@ -1001,9 +1001,6 @@ BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 
 BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
 {
-
-	SOLDIERTYPE *pVehicleSoldier = NULL;
-
 	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || ( bVehicleId  == iHelicopterVehicleId ) )
 	{
 		// add the soldier
@@ -1011,11 +1008,9 @@ BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
 	}
 	else
 	{
-		// grab the soldier struct for the vehicle
-		pVehicleSoldier = GetSoldierStructureForVehicle( bVehicleId );
-
-		// enter the vehicle
-		return( EnterVehicle( pVehicleSoldier, pSoldier ) );
+		VEHICLETYPE* const v = GetVehicle(bVehicleId);
+		Assert(v != NULL);
+		return EnterVehicle(v, pSoldier);
 	}
 }
 
@@ -1049,31 +1044,18 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN EnterVehicle(const SOLDIERTYPE* pVehicle, SOLDIERTYPE* pSoldier)
+BOOLEAN EnterVehicle(VEHICLETYPE* const v, SOLDIERTYPE* const pSoldier)
 {
-	// TEST IF IT'S VALID...
-	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
+	if (!IsEnoughSpaceInVehicle(v)) return FALSE;
+
+	AddSoldierToVehicle(pSoldier, VEHICLE2ID(v));
+
+	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
-		const VEHICLETYPE* const v = GetVehicle(pVehicle->bVehicleID);
-		Assert(v != NULL);
-
-		// Is there room...
-		if (IsEnoughSpaceInVehicle(v))
-		{
-			// OK, add....
-			AddSoldierToVehicle( pSoldier, pVehicle->bVehicleID );
-
-			if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-			{
-				// Change to team panel if we are not already...
-				SetCurrentInterfacePanel( TEAM_PANEL );
-			}
-
-			return( TRUE );
-		}
+		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
 
-	return( FALSE );
+	return TRUE;
 }
 
 
