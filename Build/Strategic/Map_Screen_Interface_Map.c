@@ -1688,14 +1688,10 @@ static void CancelPathForGroup(GROUP* pGroup)
 	// is it a vehicle group?
 	else if( pGroup->fVehicle )
 	{
-		const INT32 iVehicleId = GetVehicleIDFromMvtGroup(pGroup);
-
-		// must be valid!
-		Assert( iVehicleId != -1 );
-		if ( iVehicleId == -1 )
-			return;
-
-		CancelPathForVehicle( &( pVehicleList[ iVehicleId ] ), FALSE );
+		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		Assert(v != NULL);
+		if (v == NULL) return;
+		CancelPathForVehicle(v, FALSE);
 	}
 }
 

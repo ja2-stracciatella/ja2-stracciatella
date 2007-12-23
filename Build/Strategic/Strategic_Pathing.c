@@ -1862,10 +1862,9 @@ PathSt* GetGroupMercPathPtr(GROUP* pGroup)
 
 	if( pGroup->fVehicle )
 	{
-		const INT32 iVehicledId = GetVehicleIDFromMvtGroup(pGroup);
-		Assert ( iVehicledId != -1 );
-
-		pMercPath = pVehicleList[ iVehicledId ].pMercPath;
+		const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		Assert(v != NULL);
+		pMercPath = v->pMercPath;
 	}
 	else
 	{
@@ -1928,15 +1927,11 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE *pVehicle = NULL;
-
-		const INT32 iVehicleId = GetVehicleIDFromMvtGroup(pGroup);
-		Assert ( iVehicleId != -1 );
-
-		pVehicle = &( pVehicleList[ iVehicleId ] );
+		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		Assert(v != NULL);
 
 		// clear the path for that vehicle
-		pVehicle->pMercPath = ClearStrategicPathList( pVehicle->pMercPath, pVehicle->ubMovementGroup );
+		v->pMercPath = ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 	}
 
 	// clear the waypoints for this group too - no mercpath = no waypoints!
@@ -2000,15 +1995,11 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE *pVehicle = NULL;
-
-		const INT32 iVehicleId = GetVehicleIDFromMvtGroup(pGroup);
-		Assert ( iVehicleId != -1 );
-
-		pVehicle = &( pVehicleList[ iVehicleId ] );
+		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		Assert(v != NULL);
 
 		// add it to that vehicle's path
-		AddSectorToFrontOfMercPath( &(pVehicle->pMercPath), ubSectorX, ubSectorY );
+		AddSectorToFrontOfMercPath(&v->pMercPath, ubSectorX, ubSectorY);
 	}
 }
 

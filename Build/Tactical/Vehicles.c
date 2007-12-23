@@ -868,18 +868,18 @@ void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 }
 
 
-INT32 GetVehicleIDFromMvtGroup(const GROUP* const group)
+VEHICLETYPE* GetVehicleFromMvtGroup(const GROUP* const group)
 {
 	// given the id of a mvt group, find a vehicle in this group
-	CFOR_ALL_VEHICLES(v)
+	FOR_ALL_VEHICLES(v)
 	{
 		if (v->ubMovementGroup == group->ubGroupID)
 		{
-			return VEHICLE2ID(v);
+			return v;
 		}
 	}
 
-	return -1;
+	return NULL;
 }
 
 
@@ -1881,16 +1881,13 @@ static BOOLEAN DoesVehicleHaveAnyPassengers(INT32 iVehicleID)
 
 BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 {
-	const INT32 iVehicleID = GetVehicleIDFromMvtGroup(pGroup);
-	if( iVehicleID == -1 )
-	{
-		#ifdef JA2BETAVERSION
-			AssertMsg( iVehicleID != -1, "DoesVehicleGroupHaveAnyPassengers() for vehicle group.  Invalid iVehicleID." );
-		#endif
-		return FALSE;
-	}
+	const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+#ifdef JA2BETAVERSION
+		AssertMsg(v != NULL, "DoesVehicleGroupHaveAnyPassengers() for vehicle group.  Invalid vehicle.");
+#endif
+	if (v == NULL) return FALSE;
 
-	return DoesVehicleHaveAnyPassengers( iVehicleID );
+	return DoesVehicleHaveAnyPassengers(VEHICLE2ID(v));
 }
 
 
