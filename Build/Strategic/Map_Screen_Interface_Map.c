@@ -682,9 +682,7 @@ UINT32 DrawMap( void )
 		{
 			for ( cnt2 = 1; cnt2 < MAP_WORLD_Y - 1; cnt2++ )
 			{
-				// LATE DESIGN CHANGE: darken sectors not yet visited, instead of those under known enemy control
 				if( GetSectorFlagStatus( cnt, cnt2, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) == FALSE )
-//				if ( IsTheSectorPerceivedToBeUnderEnemyControl( cnt, cnt2, ( INT8 )( iCurrentMapSectorZ ) ) )
 				{
 					if( fShowAircraftFlag && !iCurrentMapSectorZ )
 					{

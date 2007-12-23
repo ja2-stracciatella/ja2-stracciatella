@@ -1106,11 +1106,7 @@ void PrepareLoadedSector()
 
 	if( AreInMeanwhile( ) == FALSE )
 	{
-		if( gbWorldSectorZ == 0 )
-		{
-//			MakePlayerPerceptionOfSectorControlCorrect( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-		}
-		else
+		if (gbWorldSectorZ != 0)
 		{
 			// we always think we control underground sectors once we've visited them
 			SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ].fPlayer[ gbWorldSectorZ ] = TRUE;

@@ -4333,25 +4333,6 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						}
 					break;
 
-
-				case 'b':
-/*
-					#ifndef JA2DEMO
-						// CTRL-B: make player's perception of all sectors correct!
-						if( ( fCtrl )&&( CHEATER_CHEAT_LEVEL( ) ) )
-						{
-							for ( sMapX = 1; sMapX <= 16; sMapX++ )
-							{
-								for ( sMapY = 1; sMapY <= 16; sMapY++ )
-								{
-									MakePlayerPerceptionOfSectorControlCorrect( sMapX, sMapY, 0 );
-								}
-							}
-						}
-					#endif
-*/
-					break;
-
 				case 'c':
 					RequestContractMenu();
 					break;
