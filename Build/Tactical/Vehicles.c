@@ -286,7 +286,6 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 	pVehicleList[ iCount ].fValid = TRUE;
 	pVehicleList[ iCount ].ubVehicleType = ubType;
 	pVehicleList[ iCount ].pMercPath = NULL;
-	pVehicleList[ iCount ].fFunctional = TRUE;
 	pVehicleList[ iCount ].fDestroyed = FALSE;
 	pVehicleList[ iCount ].iMoveSound			  = iMoveVehicleSndID[ ubType ];
 	pVehicleList[ iCount ].iOutOfSound			= iEnterVehicleSndID[ ubType ];

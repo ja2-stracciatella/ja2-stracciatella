@@ -66,7 +66,6 @@ typedef struct
  INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
  INT32		 iMoveSound;
  INT32		 iOutOfSound;
- BOOLEAN   fFunctional;
  BOOLEAN	 fDestroyed;
  INT32		 iMovementSoundID;
  UINT8		 ubProfileID;
