@@ -79,7 +79,6 @@
 #include "Exit_Grids.h"
 #include "Game_Init.h"
 #include "JAScreens.h"
-#include "Strategic.h"
 #include "Arms_Dealer_Init.h"
 #include "Interface_Utils.h"
 #include "Air_Raid.h"

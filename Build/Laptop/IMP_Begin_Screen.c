@@ -20,7 +20,6 @@
 #include "English.h"
 #include "Line.h"
 #include "Merc_Hiring.h"
-#include "Strategic.h"
 #include "Game_Clock.h"
 #include "Text.h"
 #include "LaptopSave.h"
