@@ -4274,7 +4274,7 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 		// inaccessible vehicles aren't listed at all!
 		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
 		{
-			if (IsEnoughSpaceInVehicle(VEHICLE2ID(v)))
+			if (IsEnoughSpaceInVehicle(v))
 			{
 				// legal vehicle, leave it green
 				UnShadeStringInBox(ghVehicleBox, uiMenuLine);
@@ -4303,7 +4303,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// inaccessible vehicles shouldn't be listed in the menu!
 		Assert(IsThisVehicleAccessibleToSoldier(s, VEHICLE2ID(v)));
 
-		if (IsEnoughSpaceInVehicle(VEHICLE2ID(v)))
+		if (IsEnoughSpaceInVehicle(v))
 		{
 			PutSoldierInVehicle(s, VEHICLE2ID(v));
 		}
@@ -8817,7 +8817,9 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 		case( VEHICLE ):
 			if( CanCharacterVehicle( pSoldier ) && IsThisVehicleAccessibleToSoldier( pSoldier, iParam1 ) )
 			{
-				if ( IsEnoughSpaceInVehicle( (INT8) iParam1 ) )
+				const VEHICLETYPE* const v = GetVehicle(iParam1);
+				Assert(v != NULL);
+				if (IsEnoughSpaceInVehicle(v))
 				{
 					pSoldier -> bOldAssignment = pSoldier -> bAssignment;
 
@@ -9818,13 +9820,10 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 				case( VEHICLE ):
 					if( CanCharacterVehicle( pSoldier ) && IsThisVehicleAccessibleToSoldier( pSoldier, bParam ) )
 					{
-//						if ( IsEnoughSpaceInVehicle( bParam ) )
-						{
-							// if the vehicle is FULL, then this will return FALSE!
-							fItWorked = PutSoldierInVehicle( pSoldier, bParam );
-							// failure produces its own error popup
-							fNotifiedOfFailure = TRUE;
-						}
+						// if the vehicle is FULL, then this will return FALSE!
+						fItWorked = PutSoldierInVehicle(pSoldier, bParam);
+						// failure produces its own error popup
+						fNotifiedOfFailure = TRUE;
 					}
 					break;
 				case( REPAIR ):

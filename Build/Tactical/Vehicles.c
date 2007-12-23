@@ -993,12 +993,9 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN IsEnoughSpaceInVehicle( INT32 iID )
+BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 {
-	const VEHICLETYPE* const v = GetVehicle(iID);
-	return
-		v != NULL &&
-		GetNumberInVehicle(iID) != GetVehicleSeats(v);
+	return GetNumberInVehicle(VEHICLE2ID(v)) != GetVehicleSeats(v);
 }
 
 
@@ -1057,8 +1054,11 @@ BOOLEAN EnterVehicle(const SOLDIERTYPE* pVehicle, SOLDIERTYPE* pSoldier)
 	// TEST IF IT'S VALID...
 	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
 	{
+		const VEHICLETYPE* const v = GetVehicle(pVehicle->bVehicleID);
+		Assert(v != NULL);
+
 		// Is there room...
-		if ( IsEnoughSpaceInVehicle( pVehicle->bVehicleID ) )
+		if (IsEnoughSpaceInVehicle(v))
 		{
 			// OK, add....
 			AddSoldierToVehicle( pSoldier, pVehicle->bVehicleID );
