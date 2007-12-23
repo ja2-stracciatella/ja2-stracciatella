@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveUndergroundSectorInfo.h"
 #include "Queen_Command.h"
 #include "Strategic_Event_Handler.h"
 #include "Overhead_Types.h"
@@ -1372,8 +1373,7 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 	//Go through each node and save it.
 	while( TempNode )
 	{
-		if (!FileWrite(hFile, TempNode, sizeof(UNDERGROUND_SECTORINFO))) return FALSE;
-
+		if (!InjectUndergroundSectorInfoIntoFile(hFile, TempNode)) return FALSE;
 		TempNode = TempNode->next;
 	}
 
@@ -1401,9 +1401,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 		if( TempNode == NULL )
 			return( FALSE );
 
-
-		//read in the new node
-		if (!FileRead(hFile, TempNode, sizeof(UNDERGROUND_SECTORINFO))) return FALSE;
+		if (!ExtractUndergroundSectorInfoFromFile(hFile, TempNode)) return FALSE;
 
 		//If its the first time in, assign the node to the list
 		if( cnt == 0 )

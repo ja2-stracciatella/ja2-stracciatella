@@ -208,6 +208,7 @@ SRCS += Build/Strategic/Game_Init.c
 SRCS += Build/Strategic/Hourly_Update.c
 SRCS += Build/Strategic/LoadSaveSectorInfo.c
 SRCS += Build/Strategic/LoadSaveStrategicMapElement.c
+SRCS += Build/Strategic/LoadSaveUndergroundSectorInfo.c
 SRCS += Build/Strategic/MapScreen.c
 SRCS += Build/Strategic/Map_Screen_Helicopter.c
 SRCS += Build/Strategic/Map_Screen_Interface.c

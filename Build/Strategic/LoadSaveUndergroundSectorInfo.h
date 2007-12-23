@@ -1,0 +1,10 @@
+#ifndef LOADSAVEUNDERGROUNDSECTORINFO_H
+#define LOADSAVEUNDERGROUNDSECTORINFO_H
+
+#include "Campaign_Types.h"
+
+
+BOOLEAN ExtractUndergroundSectorInfoFromFile(HWFILE, UNDERGROUND_SECTORINFO*);
+BOOLEAN InjectUndergroundSectorInfoIntoFile(HWFILE, const UNDERGROUND_SECTORINFO*);
+
+#endif
