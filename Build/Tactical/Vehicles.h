@@ -64,8 +64,6 @@ typedef struct
  INT16		 sArmourType;
  INT16		 sExternalArmorLocationsStatus[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
  INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
- INT32		 iOnSound;
- INT32		 iOffSound;
  INT32		 iMoveSound;
  INT32		 iOutOfSound;
  BOOLEAN   fFunctional;
