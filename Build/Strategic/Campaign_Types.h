@@ -203,10 +203,6 @@ typedef struct UNDERGROUND_SECTORINFO
 	UINT8 ubSectorX, ubSectorY, ubSectorZ;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins, ubNumCreatures;
 	UINT8 fVisited;
-	INT8 ubTravelRating;	//Represents how travelled a sector is.  Typically, the higher the travel rating,
-												//the more people go near it.  A travel rating of 0 means there are never people
-												//around.  This value is used for determining how often items would "vanish" from
-												//a sector.
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
 	struct UNDERGROUND_SECTORINFO *next;
 	UINT8	ubAdjacentSectors;	//mask containing which sectors are adjacent
