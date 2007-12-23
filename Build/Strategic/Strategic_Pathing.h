@@ -1,8 +1,8 @@
 #ifndef __STRATPATH_H
 #define __STRATPATH_H
 
-
 #include "Map_Screen_Interface_Map.h"
+#include "Strategic_Movement.h"
 
 
 // directions of movement for badsector determination ( blocking off of a sector exit from foot or vehicle travel)

@@ -3,6 +3,7 @@
 #include "LoadSaveVehicleType.h"
 #include "LoadSaveData.h"
 #include "Soldier_Profile.h"
+#include "Vehicles.h"
 
 
 BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, const UINT32 savegame_version)

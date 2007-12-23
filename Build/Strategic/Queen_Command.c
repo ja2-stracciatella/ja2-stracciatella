@@ -35,6 +35,7 @@
 #include "Morale.h"
 #include "MemMan.h"
 #include "FileMan.h"
+#include "Vehicles.h"
 
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"

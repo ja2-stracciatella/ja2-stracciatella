@@ -1,8 +1,9 @@
 #ifndef _MAP_SCREEN_INTERFACE_MAP_H
 #define _MAP_SCREEN_INTERFACE_MAP_H
 
+#include "JA2Types.h"
 #include "VObject.h"
-#include "Vehicles.h"
+
 
 // functions
 void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );

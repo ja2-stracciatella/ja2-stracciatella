@@ -48,7 +48,7 @@ enum{
 extern INT16 sVehicleOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE];
 
 // struct for vehicles
-typedef struct
+struct VEHICLETYPE
 {
 	PathSt* pMercPath; // vehicle's stategic path list
  UINT8     ubMovementGroup; // the movement group this vehicle belongs to
@@ -71,7 +71,7 @@ typedef struct
  UINT8		 ubProfileID;
 
  BOOLEAN fValid;
-} VEHICLETYPE;
+};
 
 
 // the list of vehicles

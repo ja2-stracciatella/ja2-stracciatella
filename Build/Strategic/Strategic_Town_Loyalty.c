@@ -16,7 +16,6 @@
 #include "Random.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Pathing.h"
-#include "Vehicles.h"
 #include "Game_Clock.h"
 #include "Game_Event_Hook.h"
 #include "Morale.h"
