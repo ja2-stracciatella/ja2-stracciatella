@@ -88,8 +88,6 @@ extern UINT8 ubNumberOfVehicles;
 #define CFOR_ALL_VEHICLES(iter) BASE_FOR_ALL_VEHICLES(const VEHICLETYPE, iter)
 
 
-extern INT32 iMvtTypes[];
-
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );
 
 // add vehicle to list and return id value

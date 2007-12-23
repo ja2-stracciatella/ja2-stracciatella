@@ -56,18 +56,6 @@ extern INT8 SquadMovementGroups[ ];
 //ATE: These arrays below should all be in a large LUT which contains
 // static info for each vehicle....
 
-// the mvt groups associated with vehcile types
-INT32 iMvtTypes[]={
-	CAR,   // eldorado
-	CAR,   // hummer
-	CAR,   // ice cream truck
-	CAR,   // jeep
-	CAR,   // tank
-
-	AIR,  // helicopter
-
-};
-
 INT32 iSeatingCapacities[]={
 	6, // eldorado
 	6, // hummer
@@ -83,16 +71,17 @@ typedef struct VehicleTypeInfo
 	INT32     enter_sound;
 	INT32     move_sound;
 	ProfileID profile;
+	UINT8     movement_type;
 } VehicleTypeInfo;
 
 static const VehicleTypeInfo g_vehicle_type_info[] =
 {
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO   },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER     },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM   },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164          },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164          },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER }
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR }
 };
 
 
@@ -289,7 +278,7 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 		Assert( 0 );
 	}
 
-	pGroup->ubTransportationMask = (UINT8)iMvtTypes[ ubType ];
+	pGroup->ubTransportationMask = g_vehicle_type_info[ubType].movement_type;
 
 	// ARM: setup group movement defaults
 	pGroup->ubSectorX = ( UINT8 ) sMapX;
