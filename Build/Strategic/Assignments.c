@@ -480,7 +480,7 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE* pSoldier)
 		{
 			// the helicopter, is NEVER repairable...
 			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
-					IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)) &&
+					IsThisVehicleAccessibleToSoldier(pSoldier, v) &&
 					CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)) == TRUE)
 			{
 				// there is a repairable vehicle here
@@ -4167,7 +4167,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		// run through list of vehicles in sector
 		FOR_ALL_VEHICLES(v)
 		{
-			if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+			if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 			{
 				// add mouse region for each accessible vehicle
 				MOUSE_REGION* const r =  &gVehicleMenuRegion[uiMenuLine];
@@ -4244,7 +4244,7 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 	CFOR_ALL_VEHICLES(v)
   {
 		// inaccessible vehicles aren't listed at all!
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
 			if (IsEnoughSpaceInVehicle(v))
 			{
@@ -4273,7 +4273,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		const VEHICLETYPE* const v = MSYS_GetRegionUserPtr(pRegion);
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert(IsThisVehicleAccessibleToSoldier(s, VEHICLE2ID(v)));
+		Assert(IsThisVehicleAccessibleToSoldier(s, v));
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
@@ -4353,7 +4353,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 			// don't even list the helicopter, because it's NEVER repairable...
 			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+				if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 				{
 					AddMonoString(pVehicleStrings[v->ubVehicleType]);
 				}
@@ -4424,7 +4424,7 @@ static void HandleShadingOfLinesForRepairMenu(void)
 		{
 			// don't even list the helicopter, because it's NEVER repairable...
 			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
-					IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+					IsThisVehicleAccessibleToSoldier(pSoldier, v))
 			{
 				if (CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)) == TRUE)
 				{
@@ -4556,7 +4556,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 				if (VEHICLE2ID(v) != iHelicopterVehicleId)
 				{
 					// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
-					if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+					if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 					{
 						// add mouse region for each line of text..and set user data
 						MOUSE_REGION* const r = &gRepairMenuRegion[iCount];
@@ -7376,7 +7376,7 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	// run through list of vehicles in sector and add them to pop up box
 	CFOR_ALL_VEHICLES(v)
   {
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
 			AddMonoString(pVehicleStrings[v->ubVehicleType]);
 			fVehiclePresent = TRUE;
@@ -8370,10 +8370,7 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId
 	}
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
-	if ( !IsThisVehicleAccessibleToSoldier( pSoldier, iVehicleId ) )
-	{
-		return( FALSE );
-	}
+	if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) return FALSE;
 
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 	// if currently loaded sector, are we close enough?
@@ -8786,51 +8783,54 @@ void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam
 				pSoldier -> bVehicleUnderRepairID = ( INT8 )iParam3;
 			}
 			break;
+
 		case( VEHICLE ):
-			if( CanCharacterVehicle( pSoldier ) && IsThisVehicleAccessibleToSoldier( pSoldier, iParam1 ) )
+			if (CanCharacterVehicle(pSoldier))
 			{
 				const VEHICLETYPE* const v = GetVehicle(iParam1);
-				Assert(v != NULL);
-				if (IsEnoughSpaceInVehicle(v))
+				if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
 				{
-					pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-					// set dirty flag
-					fTeamPanelDirty = TRUE;
-					fMapScreenBottomDirty = TRUE;
-					gfRenderPBInterface = TRUE;
-
-
-					if( pSoldier->bOldAssignment == VEHICLE )
+					if (IsEnoughSpaceInVehicle(v))
 					{
-						TakeSoldierOutOfVehicle( pSoldier );
-					}
+						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
 
-					// remove from squad
-					RemoveCharacterFromSquads( pSoldier );
+						// set dirty flag
+						fTeamPanelDirty = TRUE;
+						fMapScreenBottomDirty = TRUE;
+						gfRenderPBInterface = TRUE;
 
-					if( PutSoldierInVehicle( pSoldier, ( INT8 )( iParam1 ) ) == FALSE )
-					{
-						AddCharacterToAnySquad( pSoldier );
+
+						if( pSoldier->bOldAssignment == VEHICLE )
+						{
+							TakeSoldierOutOfVehicle( pSoldier );
+						}
+
+						// remove from squad
+						RemoveCharacterFromSquads( pSoldier );
+
+						if( PutSoldierInVehicle( pSoldier, ( INT8 )( iParam1 ) ) == FALSE )
+						{
+							AddCharacterToAnySquad( pSoldier );
+						}
+						else
+						{
+							if( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier ->iVehicleId != ( UINT8 )iParam1 ) )
+							{
+								SetTimeOfAssignmentChangeForMerc( pSoldier );
+							}
+
+							pSoldier -> iVehicleId = iParam1;
+							ChangeSoldiersAssignment( pSoldier, VEHICLE );
+							AssignMercToAMovementGroup( pSoldier );
+						}
 					}
 					else
 					{
-						if( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier ->iVehicleId != ( UINT8 )iParam1 ) )
-						{
-							SetTimeOfAssignmentChangeForMerc( pSoldier );
-						}
-
-						pSoldier -> iVehicleId = iParam1;
-						ChangeSoldiersAssignment( pSoldier, VEHICLE );
-						AssignMercToAMovementGroup( pSoldier );
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
 					}
 				}
-				else
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 18 ], zVehicleName[ pVehicleList[ iParam1 ].ubVehicleType ] );
-				}
 			}
-		break;
+			break;
 	}
 }
 
@@ -9790,14 +9790,19 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					}
 					break;
 				case( VEHICLE ):
-					if( CanCharacterVehicle( pSoldier ) && IsThisVehicleAccessibleToSoldier( pSoldier, bParam ) )
+					if (CanCharacterVehicle(pSoldier))
 					{
-						// if the vehicle is FULL, then this will return FALSE!
-						fItWorked = PutSoldierInVehicle(pSoldier, bParam);
-						// failure produces its own error popup
-						fNotifiedOfFailure = TRUE;
+						const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
+						if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
+						{
+							// if the vehicle is FULL, then this will return FALSE!
+							fItWorked = PutSoldierInVehicle(pSoldier, bParam);
+							// failure produces its own error popup
+							fNotifiedOfFailure = TRUE;
+						}
 					}
 					break;
+
 				case( REPAIR ):
 					if( CanCharacterRepair( pSoldier ) )
 					{

@@ -100,7 +100,7 @@ void ClearOutVehicleList( void );
 BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier );
 
 // is this vehicle in the same sector (not between sectors), and accesible
-BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId );
+BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE*, const VEHICLETYPE*);
 
 // strategic mvt stuff
 // move character path to the vehicle

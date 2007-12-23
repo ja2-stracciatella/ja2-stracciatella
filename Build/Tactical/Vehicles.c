@@ -326,15 +326,13 @@ void ClearOutVehicleList( void )
 */
 }
 
-BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
+
+BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE* pSoldier, const VEHICLETYPE* v)
 {
 	if( pSoldier == NULL )
 	{
 		return( FALSE );
 	}
-
-	const VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return FALSE;
 
 	// if the soldier or the vehicle is between sectors
 	if (pSoldier->fBetweenSectors || v->fBetweenSectors)
@@ -975,7 +973,7 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 {
 	CFOR_ALL_VEHICLES(v)
 	{
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, VEHICLE2ID(v)))
+		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
 			return TRUE;
 		}
