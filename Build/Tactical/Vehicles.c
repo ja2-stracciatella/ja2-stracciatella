@@ -280,21 +280,17 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 BOOLEAN RemoveVehicleFromList( INT32 iId )
 {
 	// remove this vehicle from the list
-
-	// error check
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return ( FALSE );
-	}
+	VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return FALSE;
 
 	// clear remaining path nodes
-	if( pVehicleList[ iId ].pMercPath != NULL )
+	if (v->pMercPath != NULL )
 	{
-		pVehicleList[ iId ].pMercPath = ClearStrategicPathList( pVehicleList[ iId ].pMercPath, 0 );
+		v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
 	}
 
 	// zero out mem
-	memset( &( pVehicleList[ iId ] ), 0, sizeof( VEHICLETYPE ) );
+	memset(v, 0, sizeof(*v));
 
 	return( TRUE );
 }
@@ -1772,15 +1768,12 @@ BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 i
 {
 	Assert( pSoldier );
 
-	// error check
-	if( ( iVehicleId >= ubNumberOfVehicles ) || ( iVehicleId < 0 ) )
-	{
-		return ( FALSE );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
+	if (v == NULL) return FALSE;
 
 	// if vehicle is not going anywhere, then nobody has to be driving it!
 	// need the path length check in case we're doing a test while actually in a sector even though we're moving!
-	if ( !fTryingToTravel && ( !pVehicleList[ iVehicleId ].fBetweenSectors ) && ( GetLengthOfPath( pVehicleList[ iVehicleId ].pMercPath ) == 0 ) )
+	if (!fTryingToTravel && !v->fBetweenSectors && GetLengthOfPath(v->pMercPath) == 0)
 	{
 		return( FALSE );
 	}
