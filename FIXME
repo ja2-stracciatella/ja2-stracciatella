@@ -387,12 +387,8 @@ fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?
 
 StrategicMapElement
-UNUSEDuiFootEta
-UNUSEDuiVehicleEta
 uiBadFootSector: read-only
 uiBadVehicleSector: read-only
-UNUSEDfLostControlAtSomeTime
-bPadding
 
 TacticalStatusType
 fGoingToEnterDemo_UNUSED

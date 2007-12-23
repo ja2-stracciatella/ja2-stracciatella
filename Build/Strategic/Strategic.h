@@ -6,18 +6,15 @@
 #include "MapScreen.h"
 
 
-struct strategicmapelement{
-	UINT8 UNUSEDuiFootEta[4];          // eta/mvt costs for feet
-	UINT8 UNUSEDuiVehicleEta[4];       // eta/mvt costs for vehicles
+typedef struct StrategicMapElement
+{
 	UINT8 uiBadFootSector[4];    // blocking mvt for foot
 	UINT8 uiBadVehicleSector[4]; // blocking mvt from vehicles
 	INT8  bNameId;
 	BOOLEAN fEnemyControlled;   // enemy controlled or not
 	BOOLEAN fEnemyAirControlled;
-	BOOLEAN UNUSEDfLostControlAtSomeTime;
 	INT8 bSAMCondition; // SAM Condition .. 0 - 100, just like an item's status
-	INT8 bPadding[ 20 ];
-} ;
+} StrategicMapElement;
 
 enum
 {
@@ -37,7 +34,6 @@ enum
 //PLEASE USE CALCULATE_STRATEGIC_INDEX() macro instead (they're identical).
 //#define			GETWORLDMAPNO( x, y )		( x+(MAP_WORLD_X*y) )
 
-typedef struct strategicmapelement StrategicMapElement;
 extern StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
 BOOLEAN InitStrategicEngine(void);
