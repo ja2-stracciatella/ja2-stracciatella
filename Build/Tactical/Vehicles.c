@@ -536,7 +536,7 @@ void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId )
 }
 
 
-static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID);
+static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 
 
 // remove soldier from vehicle
@@ -617,7 +617,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 				if (v->fBetweenSectors)
 				{
 					// teleport it to the closer of its current and next sectors (it beats having it arrive empty later)
-					TeleportVehicleToItsClosestSector( iId, pVehicleSoldier->ubGroupID );
+					TeleportVehicleToItsClosestSector(pVehicleSoldier->ubGroupID);
 				}
 
         // Remove vehicle from squad.....
@@ -1656,7 +1656,7 @@ BOOLEAN OKUseVehicle( UINT8 ubProfile )
 }
 
 
-static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID)
+static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 {
 	GROUP *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
