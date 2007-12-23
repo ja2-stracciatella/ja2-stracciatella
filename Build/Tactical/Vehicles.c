@@ -360,18 +360,14 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 }
 
 
-static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
+static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* const v)
 {
 	SOLDIERTYPE *pVehicleSoldier = NULL;
 
 	// ok now check if any free slots in the vehicle
 
-	// now check if vehicle is valid
-	VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return FALSE;
-
 	// get the vehicle soldiertype
-	pVehicleSoldier = GetSoldierStructureForVehicle( iId );
+	pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
 
 	if( pVehicleSoldier )
 	{
@@ -385,7 +381,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	}
 
 	// If vehicle is empty, add to unique squad now that it has somebody in it!
-	if ( GetNumberInVehicle( iId ) == 0 && pVehicleSoldier )
+	if (GetNumberInVehicle(VEHICLE2ID(v)) == 0 && pVehicleSoldier)
 	{
 		// 2 ) Add to unique squad...
 		AddCharacterToUniqueSquad( pVehicleSoldier );
@@ -456,7 +452,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 				pSoldier->ubGroupID = 0;
 			}
 
-			if( ( pSoldier->bAssignment != VEHICLE ) || ( 	pSoldier -> iVehicleId != iId ) )
+			if (pSoldier->bAssignment != VEHICLE || pSoldier->iVehicleId != VEHICLE2ID(v))
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
@@ -465,7 +461,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			ChangeSoldiersAssignment( pSoldier, VEHICLE );
 
 			// set vehicle id
-			pSoldier -> iVehicleId = iId;
+			pSoldier->iVehicleId = VEHICLE2ID(v);
 
 			// if vehicle is part of mvt group, then add character to mvt group
 			if (v->ubMovementGroup != 0)
@@ -475,7 +471,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			}
 
 			// Are we the first?
-			if ( GetNumberInVehicle(  iId ) == 1 )
+			if (GetNumberInVehicle(VEHICLE2ID(v)) == 1)
 			{
 				// Set as driver...
 				pSoldier->uiStatusFlags |= SOLDIER_DRIVER;
@@ -1001,15 +997,16 @@ BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 
 BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
 {
+	VEHICLETYPE* const v = GetVehicle(bVehicleId);
+	Assert(v != NULL);
+
 	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || ( bVehicleId  == iHelicopterVehicleId ) )
 	{
 		// add the soldier
-		return( AddSoldierToVehicle( pSoldier, bVehicleId ) );
+		return AddSoldierToVehicle(pSoldier, v);
 	}
 	else
 	{
-		VEHICLETYPE* const v = GetVehicle(bVehicleId);
-		Assert(v != NULL);
 		return EnterVehicle(v, pSoldier);
 	}
 }
@@ -1046,7 +1043,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
 
 BOOLEAN EnterVehicle(VEHICLETYPE* const v, SOLDIERTYPE* const pSoldier)
 {
-	if (!AddSoldierToVehicle(pSoldier, VEHICLE2ID(v))) return FALSE;
+	if (!AddSoldierToVehicle(pSoldier, v)) return FALSE;
 
 	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
