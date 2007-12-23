@@ -66,8 +66,6 @@ struct VEHICLETYPE
  INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
  BOOLEAN	 fDestroyed;
  INT32		 iMovementSoundID;
- UINT8		 ubProfileID;
-
  BOOLEAN fValid;
 };
 

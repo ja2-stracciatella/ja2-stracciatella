@@ -40,7 +40,7 @@ BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, cons
 	EXTR_BOOL(d, v->fDestroyed)
 	EXTR_SKIP(d, 2)
 	EXTR_I32(d, v->iMovementSoundID)
-	EXTR_U8(d, v->ubProfileID)
+	EXTR_SKIP(d, 1)
 	EXTR_BOOL(d, v->fValid)
 	EXTR_SKIP(d, 2)
 	Assert(d == endof(data));
@@ -80,7 +80,7 @@ BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)
 	INJ_BOOL(d, v->fDestroyed)
 	INJ_SKIP(d, 2)
 	INJ_I32(d, v->iMovementSoundID)
-	INJ_U8(d, v->ubProfileID)
+	INJ_SKIP(d, 1)
 	INJ_BOOL(d, v->fValid)
 	INJ_SKIP(d, 2)
 	Assert(d == endof(data));

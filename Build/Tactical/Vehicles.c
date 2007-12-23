@@ -80,28 +80,19 @@ INT32 iSeatingCapacities[]={
 
 typedef struct VehicleTypeInfo
 {
-	INT32 enter_sound;
-	INT32 move_sound;
+	INT32     enter_sound;
+	INT32     move_sound;
+	ProfileID profile;
 } VehicleTypeInfo;
 
 static const VehicleTypeInfo g_vehicle_type_info[] =
 {
-	{ S_VECH1_INTO, S_VECH1_MOVE },
-	{ S_VECH1_INTO, S_VECH1_MOVE },
-	{ S_VECH1_INTO, S_VECH1_MOVE },
-	{ S_VECH1_INTO, S_VECH1_MOVE },
-	{ S_VECH1_INTO, S_VECH1_MOVE },
-	{ S_VECH1_INTO, S_VECH1_MOVE }
-};
-
-UINT8 ubVehicleTypeProfileID[ ] = {
-
-	PROF_ELDERODO,
-	PROF_HUMMER,
-	PROF_ICECREAM,
-	NPC164,
-	NPC164,
-	PROF_HELICOPTER
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO   },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER     },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM   },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164          },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164          },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER }
 };
 
 
@@ -183,9 +174,10 @@ void InitVehicles( )
 
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
 {
-	wcscpy( pVehicle->name, zVehicleName[ pVehicleList[ pVehicle->bVehicleID ].ubVehicleType ] );
+	const VEHICLETYPE* const v = &pVehicleList[pVehicle->bVehicleID];
+	wcscpy(pVehicle->name, zVehicleName[v->ubVehicleType]);
 
-	pVehicle->ubProfile = pVehicleList[ pVehicle->bVehicleID ].ubProfileID;
+	pVehicle->ubProfile = g_vehicle_type_info[pVehicleList[pVehicle->bVehicleID].ubVehicleType].profile;
 
   // Init fuel!
   pVehicle->sBreathRed = 10000;
@@ -282,7 +274,6 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 	pVehicleList[ iCount ].ubVehicleType = ubType;
 	pVehicleList[ iCount ].pMercPath = NULL;
 	pVehicleList[ iCount ].fDestroyed = FALSE;
-	pVehicleList[ iCount ].ubProfileID			= ubVehicleTypeProfileID[ ubType ];
 	pVehicleList[ iCount ].ubMovementGroup  = gubVehicleMovementGroups[ iCount ];
 
 	// ATE: Add movement mask to group...
@@ -379,28 +370,30 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 		return ( FALSE );
 	}
 
+	const VEHICLETYPE* const v = &pVehicleList[iId];
+
 	// now check if vehicle is valid
-	if( pVehicleList[ iId ].fValid == FALSE )
+	if (!v->fValid)
 	{
 		return( FALSE );
 	}
 
 	// if the soldier or the vehicle is between sectors
-	if( pSoldier->fBetweenSectors || pVehicleList[ iId ].fBetweenSectors )
+	if (pSoldier->fBetweenSectors || v->fBetweenSectors)
 	{
 		return( FALSE );
 	}
 
 	// any sector values off?
-	if( ( pSoldier->sSectorX != pVehicleList[ iId ].sSectorX ) ||
-			( pSoldier->sSectorY != pVehicleList[ iId ].sSectorY ) ||
-			( pSoldier->bSectorZ != pVehicleList[ iId ].sSectorZ ) )
+	if (pSoldier->sSectorX != v->sSectorX ||
+			pSoldier->sSectorY != v->sSectorY ||
+			pSoldier->bSectorZ != v->sSectorZ)
 	{
 		return( FALSE );
 	}
 
 	// if vehicle is not ok to use then return false
-	if ( !OKUseVehicle( pVehicleList[ iId ].ubProfileID ) )
+	if (!OKUseVehicle(g_vehicle_type_info[v->ubVehicleType].profile))
 	{
 		return( FALSE );
 	}
@@ -1691,7 +1684,7 @@ void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const U
 	v->sSectorX = ubSectorX;
 	v->sSectorY = ubSectorY;
 
-	MERCPROFILESTRUCT* const p = &gMercProfiles[v->ubProfileID];
+	MERCPROFILESTRUCT* const p = GetProfile(g_vehicle_type_info[v->ubVehicleType].profile);
 	p->sSectorX = ubSectorX;
 	p->sSectorY = ubSectorY;
 }
