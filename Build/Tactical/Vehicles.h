@@ -59,7 +59,6 @@ struct VEHICLETYPE
  BOOLEAN fBetweenSectors;  // between sectors?
  INT16		 sGridNo;   // location in tactical
  SOLDIERTYPE *pPassengers[ 10 ];
- UINT8		 ubDriver;
  INT16		 sInternalHitLocations[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
  INT16		 sExternalArmorLocationsStatus[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
  INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];

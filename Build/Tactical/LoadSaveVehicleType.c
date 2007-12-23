@@ -30,8 +30,7 @@ BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, cons
 		EXTR_SKIP(d, 3)
 		*i = (id == noone ? NULL : FindSoldierByProfileID(id, FALSE));
 	}
-	EXTR_U8(d, v->ubDriver)
-	EXTR_SKIP(d, 1)
+	EXTR_SKIP(d, 2)
 	EXTR_I16A(d, v->sInternalHitLocations, lengthof(v->sInternalHitLocations))
 	EXTR_SKIP(d, 2)
 	EXTR_I16A(d, v->sExternalArmorLocationsStatus, lengthof(v->sExternalArmorLocationsStatus))
@@ -70,8 +69,7 @@ BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)
 		INJ_U8(d, id)
 		INJ_SKIP(d, 3)
 	}
-	INJ_U8(d, v->ubDriver)
-	INJ_SKIP(d, 1)
+	INJ_SKIP(d, 2)
 	INJ_I16A(d, v->sInternalHitLocations, lengthof(v->sInternalHitLocations))
 	INJ_SKIP(d, 2)
 	INJ_I16A(d, v->sExternalArmorLocationsStatus, lengthof(v->sExternalArmorLocationsStatus))

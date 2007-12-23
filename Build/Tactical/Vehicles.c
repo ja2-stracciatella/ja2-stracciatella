@@ -374,9 +374,6 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId )
 }
 
 
-static void SetDriver(INT32 iID, UINT8 ubID);
-
-
 static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
 	SOLDIERTYPE *pVehicleSoldier = NULL;
@@ -505,9 +502,6 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			{
 				// Set as driver...
 				pSoldier->uiStatusFlags |= SOLDIER_DRIVER;
-
-				SetDriver( iId , pSoldier->ubID );
-
 			}
 			else
 			{
@@ -1062,13 +1056,6 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 		}
 	}
 	return FALSE;
-}
-
-
-// set the driver of the vehicle
-static void SetDriver(INT32 iID, UINT8 ubID)
-{
-	pVehicleList[ iID ].ubDriver = ubID;
 }
 
 
