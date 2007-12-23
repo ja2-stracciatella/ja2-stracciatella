@@ -1,8 +1,9 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
+#include "Item_Types.h"
+#include "JA2Types.h"
 #include "MessageBoxScreen.h"
-#include "Soldier_Control.h"
 
 
 #define		SKI_NUM_TRADING_INV_SLOTS						12

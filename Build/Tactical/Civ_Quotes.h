@@ -1,8 +1,8 @@
 #ifndef __CIV_QUOTES_H
 #define __CIV_QUOTES_H
 
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 #define			CIV_TYPE_NA									0
 #define			CIV_TYPE_ADULT							1

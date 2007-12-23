@@ -1,8 +1,8 @@
 #ifndef TURN_BASED_INPUT_H
 #define TURN_BASED_INPUT_H
 
-#include "Soldier_Control.h"
-#include "Types.h"
+#include "JA2Types.h"
+
 
 extern const SOLDIERTYPE* gUITargetSoldier;
 

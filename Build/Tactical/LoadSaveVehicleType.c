@@ -2,6 +2,7 @@
 #include "FileMan.h"
 #include "LoadSaveVehicleType.h"
 #include "LoadSaveData.h"
+#include "Soldier_Control.h"
 #include "Soldier_Profile.h"
 #include "Vehicles.h"
 

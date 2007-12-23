@@ -1,7 +1,8 @@
 #ifndef __TACTICAL_PLACEMENT_GUI_H
 #define __TACTICAL_PLACEMENT_GUI_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 void InitTacticalPlacementGUI(void);
 void TacticalPlacementHandle(void);

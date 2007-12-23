@@ -1,9 +1,10 @@
 #ifndef __HANDLE_ITEMS_H
 #define __HANDLE_ITEMS_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 #include "World_Items.h"
 #include "Structure.h"
+
 
 #define ITEM_HANDLE_OK													1
 #define ITEM_HANDLE_RELOADING										-1

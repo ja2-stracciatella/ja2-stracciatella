@@ -1,7 +1,7 @@
 #ifndef __INSURANCE_CONTRACT_H
 #define __INSURANCE_CONTRACT_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 void GameInitInsuranceContract(void);

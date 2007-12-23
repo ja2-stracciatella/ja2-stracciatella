@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "AIMFacialIndex.h"
 #include "Merc_Hiring.h"
+#include "Soldier_Control.h"
 #include "WordWrap.h"
 #include "WCheck.h"
 #include "AIM.h"

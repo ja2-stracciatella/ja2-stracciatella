@@ -1,8 +1,9 @@
 #ifndef __WEAPONS_H
 #define __WEAPONS_H
 
+#include "Item_Types.h"
 #include "JA2Types.h"
-#include "Soldier_Control.h"
+
 
 #define MAXCHANCETOHIT 99
 #define BAD_DODGE_POSITION_PENALTY 20

@@ -1,8 +1,9 @@
 #ifndef __STRATMAP_H
 #define __STRATMAP_H
 // this file is for manipulation of the strategic map structure
-#include "Types.h"
-#include "Soldier_Control.h"
+
+#include "JA2Types.h"
+
 
 //The maximum size for any team strategically speaking.  For example, we can't have more than 20 enemies, militia, or creatures at a time.
 #define MAX_STRATEGIC_TEAM_SIZE	20

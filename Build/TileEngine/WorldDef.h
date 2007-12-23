@@ -4,9 +4,9 @@
 #include "JA2Types.h"
 #include "VObject.h"
 #include "TileDef.h"
-#include "Soldier_Control.h"
 #include "Structure.h"
 #include "Handle_Items.h"
+
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20

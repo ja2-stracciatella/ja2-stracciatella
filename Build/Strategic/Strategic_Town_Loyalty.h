@@ -1,9 +1,8 @@
 #ifndef __STRATEGIC_TOWN_LOYALTY_H
 #define __STRATEGIC_TOWN_LOYALTY_H
 
-#include "Types.h"
+#include "JA2Types.h"
 #include "MapScreen.h"
-#include "Soldier_Control.h"
 
 
 // gain pts per real loyalty pt

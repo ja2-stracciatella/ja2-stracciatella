@@ -3,8 +3,8 @@
 
 #include "Debug.h"
 #include "JA2Types.h"
-#include "Soldier_Control.h"
 #include "VObject.h"
+
 
 /****************************************************************************************
 * JA2 Lighting Module

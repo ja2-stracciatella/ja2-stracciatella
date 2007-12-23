@@ -2,8 +2,8 @@
 #define __ANIMATION_CONTROL_H
 
 // Header file for merc animation control
-#include "Soldier_Control.h"
 #include "Animation_Data.h"
+#include "JA2Types.h"
 
 
 #define MAX_ANIMATIONS									320

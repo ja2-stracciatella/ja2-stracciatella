@@ -3,8 +3,7 @@
 
 // header for town militia strategic control module
 
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 // how many militia of all ranks can be in any one sector at once

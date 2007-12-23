@@ -1,7 +1,8 @@
 #ifndef SOUND_CONTROL_H
 #define SOUND_CONTROL_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 #define FARLEFT         0
 #define LEFTSIDE        48

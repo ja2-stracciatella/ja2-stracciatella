@@ -218,7 +218,6 @@ enum
 #define NO_SLOT -1
 
 // vehicle/human path structure
-typedef struct PathSt PathSt;
 struct PathSt
 {
 	UINT32 uiSectorId;
@@ -889,12 +888,10 @@ typedef struct
 
 }	ANIM_PROF_DIR;
 
-typedef struct ANIM_PROF
+struct ANIM_PROF
 {
-
 	ANIM_PROF_DIR		Dirs[8];
-
-} ANIM_PROF;
+};
 
 
 typedef struct PaletteReplacementType

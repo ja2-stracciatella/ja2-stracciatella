@@ -2,8 +2,8 @@
 #define _HANDLE_UI_
 
 #include "Input.h"
+#include "JA2Types.h"
 #include "MouseSystem.h"
-#include "Soldier_Control.h"
 
 
 #define		UIEVENT_SINGLEEVENT					0x00000002

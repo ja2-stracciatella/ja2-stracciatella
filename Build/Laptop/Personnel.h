@@ -1,9 +1,7 @@
 #ifndef __PERSONNEL_H
 #define __PERSONNEL_H
 
-
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 void GameInitPersonnel(void);

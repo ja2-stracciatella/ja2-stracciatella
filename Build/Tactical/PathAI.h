@@ -9,7 +9,8 @@
 #ifndef _PATHAI_H
 #define _PATHAI_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 BOOLEAN InitPathAI( void );
 void ShutDownPathAI( void );

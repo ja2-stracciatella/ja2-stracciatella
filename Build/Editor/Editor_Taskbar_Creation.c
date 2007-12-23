@@ -14,6 +14,7 @@
 #include "EditorMercs.h"
 #include "EditorMapInfo.h"
 //tactical
+#include "Soldier_Control.h"
 #include "Soldier_Create.h"
 #include "Overhead_Types.h"
 

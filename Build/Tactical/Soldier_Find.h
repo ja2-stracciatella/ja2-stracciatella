@@ -1,7 +1,7 @@
 #ifndef __SOLDIER_FIND_H
 #define __SOLDIER_FIND_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 #define			FIND_SOLDIER_FULL				0x000000002

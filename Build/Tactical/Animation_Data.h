@@ -1,9 +1,8 @@
 #ifndef ANIMATION_DATA_H_
 #define ANIMATION_DATA_H_
 
+#include "JA2Types.h"
 #include "VObject.h"
-
-#include "Soldier_Control.h"
 #include "Structure_Internals.h"
 
 

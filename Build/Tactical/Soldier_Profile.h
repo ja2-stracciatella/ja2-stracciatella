@@ -2,8 +2,9 @@
 #define __SOLDER_PROFILE_H
 
 #include "Debug.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 #include "Soldier_Profile_Type.h"
+
 
 extern INT8 gbSkillTraitBonus[NUM_SKILLTRAITS];
 extern UINT8 gubTerrorists[];

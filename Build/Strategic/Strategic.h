@@ -1,9 +1,9 @@
 #ifndef __STRATEGIC_H
 #define __STRATEGIC_H
 // header for strategic structure
-#include "Types.h"
+
+#include "JA2Types.h"
 #include "MapScreen.h"
-#include "Soldier_Control.h"
 
 
 struct strategicmapelement{

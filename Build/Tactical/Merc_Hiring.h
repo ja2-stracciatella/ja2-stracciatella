@@ -1,7 +1,7 @@
 #ifndef _MERC_HIRING_H_
 #define _MERC_HIRING_H_
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 //

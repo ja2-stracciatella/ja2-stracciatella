@@ -1,8 +1,9 @@
 #ifndef __INTERFACE_PANELS
 #define __INTERFACE_PANELS
 
+#include "JA2Types.h"
 #include "MouseSystem.h"
-#include "Soldier_Control.h"
+
 
 enum
 {

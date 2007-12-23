@@ -1,7 +1,8 @@
 #ifndef TEAMTURNS_H
 #define TEAMTURNS_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 extern UINT8 gubOutOfTurnPersons;
 extern BOOLEAN gfHiddenInterrupt;

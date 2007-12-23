@@ -1,10 +1,9 @@
 #ifndef _VEHICLES_H
 #define _VEHICLES_H
 
-#include "Types.h"
-
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 #include "Strategic_Movement.h"
+
 
 #define	MAX_VEHICLES	10
 

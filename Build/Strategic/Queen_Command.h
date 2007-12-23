@@ -1,9 +1,8 @@
 #ifndef __QUEEN_COMMAND_H
 #define __QUEEN_COMMAND_H
 
-#include "Types.h"
 #include "Campaign_Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 #include "Strategic_Movement.h"
 
 

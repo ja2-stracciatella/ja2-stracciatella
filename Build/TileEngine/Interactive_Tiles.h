@@ -1,9 +1,9 @@
 #ifndef __INTERACTIVE_TILES_H
 #define __INTERACTIVE_TILES_H
 
-#include "Soldier_Control.h"
-#include "Types.h"
+#include "JA2Types.h"
 #include "WorldDef.h"
+
 
 #define INTTILE_DOOR_TILE_ONE			1
 

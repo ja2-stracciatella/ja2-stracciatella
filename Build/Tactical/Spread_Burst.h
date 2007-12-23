@@ -1,7 +1,8 @@
 #ifndef _SPREAD_BURST_H
 #define _SPREAD_BURST_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 void ResetBurstLocations(void);
 void AccumulateBurstLocation( INT16 sGridNo );

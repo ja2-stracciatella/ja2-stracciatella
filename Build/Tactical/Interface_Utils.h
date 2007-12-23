@@ -1,7 +1,9 @@
 #ifndef __INTERFACE_UTILS_H
 #define __INTERFACE_UTILS_H
 
-#include "Soldier_Control.h"
+#include "Item_Types.h"
+#include "JA2Types.h"
+
 
 #define		DRAW_ITEM_STATUS_ATTACHMENT1		200
 #define		DRAW_ITEM_STATUS_ATTACHMENT2		201

@@ -1,8 +1,9 @@
 #ifndef __AUTO_RESOLVE_H
 #define __AUTO_RESOLVE_H
 
-#include "Soldier_Control.h"
-#include "Types.h"
+#include "Item_Types.h"
+#include "JA2Types.h"
+
 
 void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY );
 

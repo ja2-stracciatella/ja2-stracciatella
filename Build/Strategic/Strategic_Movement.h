@@ -1,8 +1,7 @@
 #ifndef __STRATEGIC_MOVEMENT_H
 #define __STRATEGIC_MOVEMENT_H
 
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 enum //enemy intentions,

@@ -1,7 +1,7 @@
 #ifndef LOADSAVESOLDIERTYPE_H
 #define LOADSAVESOLDIERTYPE_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 
 
 void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier);

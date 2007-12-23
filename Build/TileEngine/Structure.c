@@ -1,3 +1,4 @@
+#include "Soldier_Control.h"
 #include "Types.h"
 #include "WCheck.h"
 #include "Debug.h"

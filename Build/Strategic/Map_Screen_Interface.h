@@ -1,9 +1,8 @@
 #ifndef MAP_SCREEN_INTERFACE_H
 #define MAP_SCREEN_INTERFACE_H
 
-
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "Item_Types.h"
+#include "JA2Types.h"
 #include "MessageBoxScreen.h"
 
 

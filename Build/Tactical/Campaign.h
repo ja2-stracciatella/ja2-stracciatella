@@ -1,8 +1,9 @@
 #ifndef __CAMPAIGN_H
 #define __CAMPAIGN_H
 
-#include "Soldier_Control.h"
+#include "JA2Types.h"
 #include "Soldier_Profile_Type.h"
+
 
 #define SALARYAMT               0
 #define HEALTHAMT               1

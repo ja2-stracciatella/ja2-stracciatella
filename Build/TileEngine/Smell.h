@@ -1,4 +1,5 @@
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 #define HUMAN							 0
 #define CREATURE_ON_FLOOR	 0x01

@@ -1,8 +1,8 @@
 #ifndef _DISPLAY_COVER__H_
 #define _DISPLAY_COVER__H_
 
-#include "Types.h"
-#include "Soldier_Control.h"
+#include "JA2Types.h"
+
 
 void DisplayCoverOfSelectedGridNo(void);
 void RemoveCoverOfSelectedGridNo(void);

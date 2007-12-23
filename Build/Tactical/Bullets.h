@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 #include "Types.h"
-#include "Soldier_Control.h"
 #include "LOS.h"
 #include "Tile_Animation.h"
 
