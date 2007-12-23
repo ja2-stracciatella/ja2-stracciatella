@@ -381,7 +381,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 	}
 
 	// If vehicle is empty, add to unique squad now that it has somebody in it!
-	if (GetNumberInVehicle(VEHICLE2ID(v)) == 0 && pVehicleSoldier)
+	if (GetNumberInVehicle(v) == 0 && pVehicleSoldier)
 	{
 		// 2 ) Add to unique squad...
 		AddCharacterToUniqueSquad( pVehicleSoldier );
@@ -471,7 +471,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 			}
 
 			// Are we the first?
-			if (GetNumberInVehicle(VEHICLE2ID(v)) == 1)
+			if (GetNumberInVehicle(v) == 1)
 			{
 				// Set as driver...
 				pSoldier->uiStatusFlags |= SOLDIER_DRIVER;
@@ -585,9 +585,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 		return( FALSE );
 	}
 
-
 	// Are we the last?
-	//if ( GetNumberInVehicle( iId ) == 0 )
 	if( fSoldierLeft == FALSE )
 	{
 		// is the vehicle the helicopter?..it can continue moving when no soldiers aboard (Skyrider remains)
@@ -917,13 +915,10 @@ BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 	return TRUE;
 }
 
-INT32 GetNumberInVehicle( INT32 iId )
+INT32 GetNumberInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of occupants in vehicles and count them
 	INT32 iCount = 0;
-
-	const VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return 0;
 
 	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
@@ -991,7 +986,7 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 
 BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 {
-	return GetNumberInVehicle(VEHICLE2ID(v)) != GetVehicleSeats(v);
+	return GetNumberInVehicle(v) != GetVehicleSeats(v);
 }
 
 
@@ -1878,7 +1873,7 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 #endif
 	if (v == NULL) return FALSE;
 
-	return GetNumberInVehicle(VEHICLE2ID(v)) != 0;
+	return GetNumberInVehicle(v) != 0;
 }
 
 

@@ -836,14 +836,8 @@ static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 
 INT32 GetNumberOfPassengersInHelicopter( void )
 {
-	INT32 iNumber = 0;
-
-	if( iHelicopterVehicleId != -1 )
-	{
-		iNumber = GetNumberInVehicle( iHelicopterVehicleId );
-	}
-
-	return( iNumber );
+	const VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
+	return v == NULL ? 0 : GetNumberInVehicle(v);
 }
 
 

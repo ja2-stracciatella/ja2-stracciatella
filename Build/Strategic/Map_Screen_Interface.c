@@ -3178,9 +3178,11 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		{
 			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
+				const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
+				Assert(v != NULL);
 				// vehicle
 				// if it can move (can't be empty)
-				if ( GetNumberInVehicle( pSoldier->bVehicleID ) > 0 )
+				if (GetNumberInVehicle(v) > 0)
 				{
 					// add vehicle
 					AddVehicleToMovingLists( pSoldier->bVehicleID );
@@ -5144,8 +5146,10 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	// vehicle checks
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
+		const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
+		Assert(v != NULL);
 		// empty (needs a driver!)?
-		if ( GetNumberInVehicle( pSoldier->bVehicleID ) == 0 )
+		if (GetNumberInVehicle(v) == 0)
 		{
 			*pbErrorNumber = 32;
 			return( FALSE );

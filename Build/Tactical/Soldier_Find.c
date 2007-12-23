@@ -82,9 +82,14 @@ SOLDIERTYPE* FindSoldierFromMouse(void)
 BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s)
 {
 	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
-	return
-		t->bFirstID <= s->ubID && s->ubID <= t->bLastID &&
-		(!(s->uiStatusFlags & SOLDIER_VEHICLE) || GetNumberInVehicle(s->bVehicleID) != 0);
+	if (!(t->bFirstID <= s->ubID && s->ubID <= t->bLastID)) return FALSE;
+	if (s->uiStatusFlags & SOLDIER_VEHICLE)
+	{
+		const VEHICLETYPE* const v = GetVehicle(s->bVehicleID);
+		Assert(v != NULL);
+		return GetNumberInVehicle(v) != 0;
+	}
+	return TRUE;
 }
 
 
@@ -97,17 +102,22 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
 	if (s->ubID >= t->bFirstID && s->ubID <= t->bLastID)
  {
-		if (s->uiStatusFlags & SOLDIER_VEHICLE && !GetNumberInVehicle(s->bVehicleID))
-	 {
-		 // Don't do anything!
-	 }
-	 else
-	 {
+		if (s->uiStatusFlags & SOLDIER_VEHICLE)
+		{
+			const VEHICLETYPE* const v = GetVehicle(s->bVehicleID);
+			Assert(v != NULL);
+			if (GetNumberInVehicle(v) != 0)
+			{
+				goto own_merc;
+			}
+		}
+		else
+		{
+own_merc:
 			// It's our own merc
-		 MercFlags  |= OWNED_MERC;
-
+			MercFlags |= OWNED_MERC;
 			if (s->bAssignment < ON_DUTY) MercFlags |= ONDUTY_MERC;
-	 }
+		}
  }
  else
  {

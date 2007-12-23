@@ -1236,20 +1236,6 @@ static BOOLEAN CanCharacterOnDuty(SOLDIERTYPE* pSoldier)
 		return ( FALSE );
 	}
 
-/*
-	if( pSoldier -> fBetweenSectors )
-	{
-		if( pSoldier -> bAssignment == VEHICLE )
-		{
-			if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
-			{
-				// can't change, go away
-				return( FALSE );
-			}
-		}
-	}
-*/
-
 	return( TRUE );
 }
 
@@ -1616,20 +1602,6 @@ static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 		// not allowed to be put on a squad
 		return( CHARACTER_CANT_JOIN_SQUAD );
 	}
-
-/* Driver can't abandon vehicle between sectors - OBSOLETE - nobody is allowed to change squads between sectors now!
-	if( pSoldier -> fBetweenSectors )
-	{
-		if( pSoldier -> bAssignment == VEHICLE )
-		{
-			if( GetNumberInVehicle( pSoldier -> iVehicleId ) == 1 )
-			{
-				// can't change, go away
-				return( CHARACTER_CANT_JOIN_SQUAD );
-			}
-		}
-	}
-*/
 
 	// see if the squad us at the same x,y,z
 	SectorSquadIsIn( bSquadValue, &sX, &sY, &sZ );
