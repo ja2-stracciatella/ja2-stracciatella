@@ -162,8 +162,6 @@ typedef struct SECTORINFO
 	BOOLEAN fMilitiaTrainingPaid;
 	UINT8		ubMilitiaTrainingPercentDone;
 	UINT8		ubMilitiaTrainingHundredths;
-	//enemy military presence
-	BOOLEAN	fPlayer[ 4 ];				//whether the player THINKS the sector is unde his control or not. array is for sublevels
 	//enemy only info
 	UINT8		ubNumTroops;				//the actual number of troops here.
 	UINT8		ubNumElites;				//the actual number of elites here.

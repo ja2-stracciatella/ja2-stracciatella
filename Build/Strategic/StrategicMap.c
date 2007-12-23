@@ -1104,15 +1104,6 @@ void PrepareLoadedSector()
 	BOOLEAN fAddCivs = TRUE;
 	INT8 bMineIndex = -1;
 
-	if( AreInMeanwhile( ) == FALSE )
-	{
-		if (gbWorldSectorZ != 0)
-		{
-			// we always think we control underground sectors once we've visited them
-			SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ].fPlayer[ gbWorldSectorZ ] = TRUE;
-		}
-	}
-
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -1212,12 +1203,6 @@ void PrepareLoadedSector()
 		//{
 		//	SetThisSectorAsPlayerControlled( gWorldSectorX, gWorldSectorY, 0 );
 		//}
-
-		if( gbWorldSectorZ > 0 )
-		{
-			// we always think we control underground sectors once we've visited them
-			SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ].fPlayer[ gbWorldSectorZ ] = TRUE;
-		}
 
 		//@@@Evaluate
 		//Add profiles to world using strategic info, not editor placements.

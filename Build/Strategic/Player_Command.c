@@ -147,7 +147,6 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		fWasEnemyControlled = StrategicMap[ usMapSector ].fEnemyControlled;
 
 		StrategicMap[ usMapSector ].fEnemyControlled = FALSE;
-		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = TRUE;
 
 		bTownId = StrategicMap[ usMapSector ].bNameId;
 
@@ -249,9 +248,6 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		}
 	}
 
-	// also set fact the player knows they own it
-	SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = TRUE;
-
 	if ( bMapZ == 0 )
 	{
 		SectorInfo[ SECTOR( sMapX, sMapY ) ].fSurfaceWasEverPlayerControlled = TRUE;
@@ -305,8 +301,6 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 
 			// check if there's a town in the sector
 			bTownId = StrategicMap[ usMapSector ].bNameId;
-
-			SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = FALSE;
 
 			// and it's a town
 			if ((bTownId >= FIRST_TOWN) && (bTownId < NUM_TOWNS))
@@ -369,11 +363,6 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 		// don't touch fPlayer flag for a surface sector lost to the enemies!
 		// just because player has lost the sector doesn't mean he realizes it - that's up to our caller to decide!
 	}
-	else
-	{
-		// underground sector control is always up to date, because we don't track control down there
-		SectorInfo[ SECTOR( sMapX, sMapY ) ].fPlayer[ bMapZ ] = FALSE;
-	}
 
 	//KM : Aug 11, 1999 -- Patch fix:  Relocated this check so it gets called everytime a sector changes hands,
 	//     even if the sector isn't a SAM site.  There is a bug _somewhere_ that fails to update the airspace,
@@ -401,7 +390,6 @@ void ClearMapControlledFlags( void )
 		{
 			usMapSector = iCounterA + ( iCounterB * MAP_WORLD_X );
 			StrategicMap[ usMapSector ].fEnemyControlled = FALSE;
-			SectorInfo[ SECTOR( iCounterA, iCounterB ) ].fPlayer[ 0 ] = TRUE;
 		}
 	}
 }
