@@ -29,10 +29,6 @@ enum{
 INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal );
 
 /*
-BOOLEAN SectorIsBlockedFromVehicleExit( UINT16 sSectorDest, INT8 bToDirection  );
-BOOLEAN SectorIsBlockedFromFootExit( UINT16 sSector, INT8 bToDirection );
-BOOLEAN TravelBetweenSectorsIsBlockedFromVehicle( UINT16 sSourceSector, UINT16 sDestSector );
-BOOLEAN TravelBetweenSectorsIsBlockedFromFoot( UINT16 sSourceSector, UINT16 sDestSector );
 BOOLEAN CanThisMercMoveToThisSector( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY );
 void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY, UINT8 ubFromDirection);
 */
