@@ -206,8 +206,7 @@ typedef struct SECTORINFO
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
 
 	INT8 bPadding[41]; // XXX HACK000B
-}SECTORINFO;
-CASSERT(sizeof(SECTORINFO) == 116)
+} SECTORINFO;
 
 #define NO_ADJACENT_SECTOR		0x00
 #define NORTH_ADJACENT_SECTOR	0x01

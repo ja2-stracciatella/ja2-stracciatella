@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Interface.h"
+#include "LoadSaveSectorInfo.h"
 #include "LoadSaveStrategicMapElement.h"
 #include "Local.h"
 #include "Merc_Hiring.h"
@@ -3637,11 +3638,13 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 	}
 
 	// Save the Sector Info
-	UINT32 uiSize = sizeof( SECTORINFO ) * 256;
-	if (!FileWrite(hFile, SectorInfo, uiSize)) return FALSE;
+	for (const SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
+	{
+		if (!InjectSectorInfoIntoFile(hFile, i)) return FALSE;
+	}
 
 	// Save the SAM Controlled Sector Information
-	uiSize = MAP_WORLD_X * MAP_WORLD_Y;
+	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
 	if (!FileWrite(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
 */
@@ -3663,11 +3666,13 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 	}
 
 	// Load the Sector Info
-	UINT32 uiSize = sizeof( SECTORINFO ) * 256;
-	if (!FileRead(hFile, SectorInfo, uiSize)) return FALSE;
+	for (SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
+	{
+		if (!ExtractSectorInfoFromFile(hFile, i)) return FALSE;
+	}
 
 	// Load the SAM Controlled Sector Information
-	uiSize = MAP_WORLD_X * MAP_WORLD_Y;
+	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
 	if (!FileRead(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
 */

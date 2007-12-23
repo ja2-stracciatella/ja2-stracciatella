@@ -31,6 +31,7 @@ static inline void ExtractWideString32(wchar_t* Dst, const BYTE* Src, size_t Siz
 #define EXTR_WSTR16(S, D, Size) ExtractWideString16((D), (S), Size); (S) += (Size) * sizeof(UINT16);
 #define EXTR_WSTR32(S, D, Size) ExtractWideString32((D), (S), Size); (S) += (Size) * sizeof(UINT32);
 #define EXTR_STR(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
+#define EXTR_BOOLA(S, D, Size) memcpy((D), (S), Size); (S) += (Size);
 #define EXTR_I8A(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
 #define EXTR_U8A(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
 #define EXTR_I16A(S, D, Size) memcpy((D), (S), sizeof(INT16)  * Size); (S) += sizeof(INT16)  * (Size);
@@ -69,6 +70,7 @@ static inline void InjectWideString32(const wchar_t* Src, BYTE* Dst, size_t Size
 #define INJ_WSTR16(D, S, Size) InjectWideString16((S), (D), (Size)); (D) += (Size) * sizeof(UINT16);
 #define INJ_WSTR32(D, S, Size) InjectWideString32((S), (D), (Size)); (D) += (Size) * sizeof(UINT32);
 #define INJ_STR(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
+#define INJ_BOOLA(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
 #define INJ_I8A(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
 #define INJ_U8A(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
 #define INJ_I16A(D, S, Size) memcpy((D), (S), sizeof(INT16)  * (Size)); (D) += sizeof(INT16)  * (Size);
