@@ -850,21 +850,6 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 
 	return ( TRUE );
 }
-BOOLEAN VehicleIdIsValid( INT32 iId )
-{
-	// check if vehicle has mvt group, if not, get one for it
-	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
-	{
-		return ( FALSE );
-	}
-		// now check if vehicle is valid
-	if( pVehicleList[ iId ].fValid == FALSE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
 
 
 VEHICLETYPE* GetVehicle(const INT32 vehicle_id)
@@ -945,16 +930,13 @@ INT32 GetNumberInVehicle( INT32 iId )
 	// go through list of occupants in vehicles and count them
 	INT32 iCount = 0;
 
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( 0 );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return 0;
 
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
+		if (v->pPassengers[iCounter] != NULL)
 		{
 			iCount++;
 		}
@@ -968,16 +950,13 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 	// go through list of occupants in vehicles and count them
 	INT32 iCount = 0;
 
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( 0 );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return 0;
 
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL && !AM_AN_EPC( pVehicleList[ iId ].pPassengers[ iCounter ] ) )
+		if (v->pPassengers[iCounter] != NULL && !AM_AN_EPC(v->pPassengers[iCounter]))
 		{
 			iCount++;
 		}
@@ -988,19 +967,13 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
-	// go through list of occupants in vehicles and count them
-	SOLDIERTYPE * pSoldier;
+	const VEHICLETYPE* const v = GetVehicle(iId);
+	if (v == NULL) return FALSE;
 
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iId ) == FALSE )
-	{
-		return ( 0 );
-	}
-
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
-		pSoldier = pVehicleList[ iId ].pPassengers[ iCounter ];
+		const SOLDIERTYPE* const pSoldier = v->pPassengers[iCounter];
 		if ( pSoldier != NULL && ControllingRobot( pSoldier ) )
 		{
 			return( TRUE );
@@ -1026,19 +999,12 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
 
 BOOLEAN IsEnoughSpaceInVehicle( INT32 iID )
 {
-	// find if vehicle is valid
-	if( VehicleIdIsValid( iID ) == FALSE )
-	{
-		return ( FALSE );
-	}
-
-	if (GetNumberInVehicle(iID) == GetVehicleSeats(&pVehicleList[iID]))
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	const VEHICLETYPE* const v = GetVehicle(iID);
+	return
+		v != NULL &&
+		GetNumberInVehicle(iID) != GetVehicleSeats(v);
 }
+
 
 BOOLEAN PutSoldierInVehicle( SOLDIERTYPE *pSoldier, INT8 bVehicleId )
 {
@@ -1308,13 +1274,8 @@ BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId )
 {
 	SOLDIERTYPE		*pVehicleSoldier = NULL;
 
-
-	// is the vehicle in fact a valid vehicle
-	if( VehicleIdIsValid( iVehicleId ) == FALSE )
-	{
-		// nope
-		return( FALSE );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
+	if (v == NULL) return FALSE;
 
 	// Skyrider isn't damagable/repairable
 	if ( iVehicleId == iHelicopterVehicleId )
@@ -1341,12 +1302,8 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
-	// is the vehicle in fact a valid vehicle
-	if( VehicleIdIsValid( iVehicleId ) == FALSE )
-	{
-		// nope
-		return( bRepairPtsUsed );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
+	if (v == NULL) return bRepairPtsUsed;
 
 	// Skyrider isn't damagable/repairable
 	if ( iVehicleId == iHelicopterVehicleId )

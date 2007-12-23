@@ -549,10 +549,7 @@ BOOLEAN CanHelicopterFly( void )
 		return( FALSE );
 	}
 
-	if( VehicleIdIsValid( iHelicopterVehicleId ) == FALSE )
-	{
-		return( FALSE );
-	}
+	if (GetVehicle(iHelicopterVehicleId) == NULL) return FALSE;
 
 /*
 	// travelled too far?
@@ -1955,14 +1952,11 @@ BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 
 BOOLEAN IsGroupTheHelicopterGroup( GROUP *pGroup )
 {
-	if( ( iHelicopterVehicleId != -1 ) && VehicleIdIsValid( iHelicopterVehicleId ) &&
-			( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup != 0 ) &&
-			( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup == pGroup->ubGroupID ) )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	const VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
+	return
+		v != NULL &&
+		v->ubMovementGroup != 0 &&
+		v->ubMovementGroup == pGroup->ubGroupID;
 }
 
 

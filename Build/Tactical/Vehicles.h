@@ -106,9 +106,7 @@ BOOLEAN IsThisVehicleAccessibleToSoldier( SOLDIERTYPE *pSoldier, INT32 iId );
 // move character path to the vehicle
 BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
 
-// is this vehicle a valid one?
-BOOLEAN VehicleIdIsValid( INT32 iId );
-
+// Return the vehicle, iff the vehicle ID is valid, NULL otherwise
 VEHICLETYPE* GetVehicle(INT32 vehicle_id);
 
 // set up vehicle mvt for this grunt involved

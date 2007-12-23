@@ -8385,17 +8385,11 @@ static void HandleRestFatigueAndSleepStatus(void)
 // can the character repair this vehicle?
 static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId)
 {
-	// is the vehicle valid?
-	if( VehicleIdIsValid( iVehicleId ) == FALSE )
-	{
-		return( FALSE );
-	}
+	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
+	if (v == NULL) return FALSE;
 
 	// is vehicle destroyed?
-	if( pVehicleList[ iVehicleId ].fDestroyed )
-	{
-		return(FALSE);
-	}
+	if (v->fDestroyed) return FALSE;
 
 	// is it damaged at all?
 	if ( !DoesVehicleNeedAnyRepairs( iVehicleId ) )
@@ -8419,7 +8413,7 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId
 	// if currently loaded sector, are we close enough?
 	if( ( pSoldier->sSectorX == gWorldSectorX ) && ( pSoldier->sSectorY == gWorldSectorY ) && ( pSoldier->bSectorZ == gbWorldSectorZ ) )
 	{
-		if( PythSpacesAway( pSoldier -> sGridNo, pVehicleList[ iVehicleId ].sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
+		if (PythSpacesAway(pSoldier->sGridNo, v->sGridNo) > MAX_DISTANCE_FOR_REPAIR)
 		{
 		  return( FALSE );
 		}

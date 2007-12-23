@@ -1288,7 +1288,7 @@ void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
 		return;
 	}
 
-	if( ( fInVehicle == TRUE ) && ( VehicleIdIsValid( pCharacter -> iVehicleId ) ) )
+	if (fInVehicle == TRUE && GetVehicle(pCharacter->iVehicleId) != NULL)
 	{
 		// valid vehicle, is there a path for it?
 		if( pVehicleList[ iId ].pMercPath == NULL )
