@@ -1,3 +1,4 @@
+#include "LoadSaveVehicleType.h"
 #include "Soldier_Find.h"
 #include "Vehicles.h"
 #include "Strategic_Pathing.h"
@@ -1562,8 +1563,6 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 	PathSt* pTempPathPtr;
 	UINT32		uiNodeCount=0;
 	UINT8		cnt;
-	VEHICLETYPE	TempVehicle;
-	UINT8			ubPassengerCnt=0;
 
 	//Save the number of elements
 	if (!FileWrite(hFile, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
@@ -1576,33 +1575,8 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 
 		if( pVehicleList[cnt].fValid )
 		{
-			// copy the node into the temp vehicle buffer ( need to do this because we cant save the pointers
-			// to the soldier, therefore save the soldier ubProfile
-			TempVehicle = pVehicleList[cnt];
+			if (!InjectVehicleTypeIntoFile(hFile, &pVehicleList[cnt])) return FALSE;
 
-			//loop through the passengers
-			for( ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)
-			{
-        TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * )NO_PROFILE;
-
-				//if there is a passenger here
-				if( pVehicleList[cnt].pPassengers[ ubPassengerCnt ] )
-				{
-					//assign the passengers profile to the struct
-					// ! The pointer to the passenger is converted to a byte so that the Id of the soldier can be saved.
-					// ! This means that the pointer contains a bogus pointer, but a real ID for the soldier.
-					// ! When reloading, this bogus pointer is converted to a byte to contain the id of the soldier so
-					// ! we can get the REAL pointer to the soldier
-					#if 0 /* XXX hä?! */
-					TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * ) pVehicleList[cnt].pPassengers[ ubPassengerCnt ]->ubProfile;
-					#else
-					TempVehicle.pPassengers[ ubPassengerCnt ] = ( SOLDIERTYPE * )(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ]->ubProfile;
-					#endif
-				}
-			}
-
-			//save the vehicle info
-			if (!FileWrite(hFile, &TempVehicle, sizeof(VEHICLETYPE))) return FALSE;
 			//count the number of nodes in the vehicles path
 			uiNodeCount=0;
 			pTempPathPtr = pVehicleList[cnt].pMercPath;
@@ -1637,7 +1611,6 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 	UINT8			cnt;
 	UINT32		uiNodeCount=0;
 	PathSt		*pPath=NULL;
-	UINT8			ubPassengerCnt=0;
 	PathSt		*pTempPath;
 
 	//Clear out th vehicle list
@@ -1663,48 +1636,7 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGam
 
 			if( pVehicleList[cnt].fValid )
 			{
-				//load the vehicle info
-				if (!FileRead(hFile, &pVehicleList[cnt], sizeof(VEHICLETYPE))) return FALSE;
-
-				//
-				// Build the passenger list
-				//
-
-				//loop through all the passengers
-				for(ubPassengerCnt=0; ubPassengerCnt<10; ubPassengerCnt++)
-				{
-          if ( uiSavedGameVersion < 86 )
-          {
-					  if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != 0 )
-					  {
-						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
-						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-							#if 0 /* XXX hä ?! */
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-							#else
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-							#endif
-  					}
-          }
-          else
-          {
-					  if( pVehicleList[cnt].pPassengers[ubPassengerCnt] != ( SOLDIERTYPE * )NO_PROFILE )
-					  {
-						  // ! The id of the soldier was saved in the passenger pointer.  The passenger pointer is converted back
-						  // ! to a UINT8 so we can get the REAL pointer to the soldier.
-							#if 0 /* XXX hä?! */
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-							#else
-						  pVehicleList[cnt].pPassengers[ubPassengerCnt] = FindSoldierByProfileID( (UINT8)(int)pVehicleList[cnt].pPassengers[ ubPassengerCnt ], FALSE );
-							#endif
-  					}
-            else
-            {
-              pVehicleList[cnt].pPassengers[ubPassengerCnt] = NULL;
-            }
-          }
-				}
-
+				if (!ExtractVehicleTypeFromFile(hFile, &pVehicleList[cnt], uiSavedGameVersion)) return FALSE;
 
 				//Load the number of nodes
 				if (!FileRead(hFile, &uiTotalNodeCount, sizeof(UINT32))) return FALSE;

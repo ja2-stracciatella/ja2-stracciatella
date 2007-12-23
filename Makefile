@@ -278,6 +278,7 @@ SRCS += Build/Tactical/LoadSaveObjectType.c
 SRCS += Build/Tactical/LoadSaveRottingCorpse.c
 SRCS += Build/Tactical/LoadSaveSoldierCreate.c
 SRCS += Build/Tactical/LoadSaveSoldierType.c
+SRCS += Build/Tactical/LoadSaveVehicleType.c
 SRCS += Build/Tactical/Map_Information.c
 SRCS += Build/Tactical/Merc_Entering.c
 SRCS += Build/Tactical/Merc_Hiring.c
