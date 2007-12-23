@@ -2976,7 +2976,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocatio
 
 		//bDummyStatus = (INT8) pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ];
 
-		iTotalProtection += ArmourProtection( pTarget, (UINT8) pVehicleList[ pTarget->bVehicleID ].sArmourType, &bDummyStatus, iImpact, ubAmmoType );
+		iTotalProtection += ArmourProtection(pTarget, GetVehicleArmourType(pTarget->bVehicleID), &bDummyStatus, iImpact, ubAmmoType);
 
 		//pVehicleList[ pTarget->bVehicleID ].sExternalArmorLocationsStatus[ ubHitLocation ] = bDummyStatus;
 

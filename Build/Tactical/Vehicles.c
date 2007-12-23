@@ -72,16 +72,17 @@ typedef struct VehicleTypeInfo
 	INT32     move_sound;
 	ProfileID profile;
 	UINT8     movement_type;
+	UINT16    armour_type;
 } VehicleTypeInfo;
 
 static const VehicleTypeInfo g_vehicle_type_info[] =
 {
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR }
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR, KEVLAR_VEST  },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR, SPECTRA_VEST },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR, KEVLAR_VEST  },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, KEVLAR_VEST  },
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, SPECTRA_VEST },
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR, KEVLAR_VEST  }
 };
 
 
@@ -106,16 +107,6 @@ INT8 bInternalCritHitsByLocation[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ][
 	TANK_CAR,
 	HELICOPTER,
 */
-
-INT16 sVehicleArmourType[ NUMBER_OF_TYPES_OF_VEHICLES ] =
-{
-	KEVLAR_VEST,			// El Dorado
-	SPECTRA_VEST,			// Hummer
-	KEVLAR_VEST,			// Ice cream truck
-	KEVLAR_VEST,			// Jeep
-	SPECTRA_VEST,			// Tank - do we want this?
-	KEVLAR_VEST,			// Helicopter
-};
 
 
 /*
@@ -1493,9 +1484,6 @@ static void SetUpArmorForVehicle(UINT8 ubID)
 		pVehicleList[ ubID ].sExternalArmorLocationsStatus[ iCounter ] = 100;
 	}
 	*/
-
-	// for armour type, store the index into the armour table itself
-	pVehicleList[ ubID ].sArmourType = Item[ sVehicleArmourType[ pVehicleList[ ubID ].ubVehicleType ] ].ubClassIndex;
 }
 
 void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
@@ -2059,4 +2047,10 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 			v->iMovementSoundID = NO_SAMPLE;
 		}
 	}
+}
+
+
+UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
+{
+	return Item[g_vehicle_type_info[pVehicleList[vehicle_id].ubVehicleType].armour_type].ubClassIndex;
 }
