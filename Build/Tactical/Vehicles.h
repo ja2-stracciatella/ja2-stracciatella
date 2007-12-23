@@ -196,4 +196,6 @@ void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 
 UINT8 GetVehicleArmourType(UINT8 vehicle_id);
 
+UINT8 GetVehicleSeats(const VEHICLETYPE*);
+
 #endif

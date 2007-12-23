@@ -56,15 +56,6 @@ extern INT8 SquadMovementGroups[ ];
 //ATE: These arrays below should all be in a large LUT which contains
 // static info for each vehicle....
 
-INT32 iSeatingCapacities[]={
-	6, // eldorado
-	6, // hummer
-	6, // ice cream truck
-	6, // jeep
-	6, // tank
-	6, // helicopter
-};
-
 
 typedef struct VehicleTypeInfo
 {
@@ -73,16 +64,17 @@ typedef struct VehicleTypeInfo
 	ProfileID profile;
 	UINT8     movement_type;
 	UINT16    armour_type;
+	UINT8     seats;
 } VehicleTypeInfo;
 
 static const VehicleTypeInfo g_vehicle_type_info[] =
 {
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR, KEVLAR_VEST  },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR, SPECTRA_VEST },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR, KEVLAR_VEST  },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, KEVLAR_VEST  },
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, SPECTRA_VEST },
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR, KEVLAR_VEST  }
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR, KEVLAR_VEST,  6 }, // Eldorado
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR, SPECTRA_VEST, 6 }, // Hummer
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR, KEVLAR_VEST,  6 }, // Ice cream truck
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, KEVLAR_VEST,  6 }, // Jeep
+	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, SPECTRA_VEST, 6 }, // Tank
+	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR, KEVLAR_VEST,  6 }  // Helicopter
 };
 
 
@@ -387,9 +379,7 @@ static void SetDriver(INT32 iID, UINT8 ubID);
 
 static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
-	INT32 iCounter = 0;
 	SOLDIERTYPE *pVehicleSoldier = NULL;
-
 
 	// Add Soldierto Vehicle
 	if( ( iId >= ubNumberOfVehicles ) || ( iId < 0 ) )
@@ -443,7 +433,8 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	}
 
 	// check if the grunt is already here
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] == pSoldier )
 		{
@@ -463,7 +454,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 		PlayLocationJA2Sample(pVehicleSoldier->sGridNo, g_vehicle_type_info[pVehicleList[pVehicleSoldier->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	}
 
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		// check if slot free
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] == NULL )
@@ -577,7 +568,6 @@ static void TeleportVehicleToItsClosestSector(INT32 iVehicleId, UINT8 ubGroupID)
 static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 {
 	// remove soldier from vehicle
-	INT32 iCounter = 0;
 	BOOLEAN fSoldierLeft = FALSE;
 	BOOLEAN	fSoldierFound = FALSE;
 	SOLDIERTYPE *pVehicleSoldier;
@@ -595,7 +585,8 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 	}
 
 	// now look for the grunt
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] == pSoldier )
 		{
@@ -612,7 +603,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 
 			// check if anyone left in vehicle
 			fSoldierLeft = FALSE;
-			for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+			for (iCounter = 0; iCounter < seats; ++iCounter)
 			{
 				if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
 				{
@@ -856,7 +847,6 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 	// given this grunt, find out if asscoiated vehicle has a mvt group, if so, set this grunts mvt group tho the vehicle
 	// for pathing purposes, will be reset to zero in copying of path
 	INT32 iId = 0;
-	INT32 iCounter = 0;
 
 		// check if character is in fact in a vehicle
 	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
@@ -890,7 +880,8 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 
 
 		// add everyone in vehicle to this mvt group
-		//for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+		//const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+		//for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 		//{
 		//	if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
 		//	{
@@ -928,7 +919,8 @@ BOOLEAN VehicleIdIsValid( INT32 iId )
 void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of mercs in vehicle and set all thier states as arrived
-	for (INT32 iCounter = 0; iCounter < iSeatingCapacities[v->ubVehicleType]; ++iCounter)
+	const INT32 seats = GetVehicleSeats(v);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		SOLDIERTYPE* const s = v->pPassengers[iCounter];
 		if (s == NULL) continue;
@@ -974,7 +966,8 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of occupants and kill them
-	for (INT32 iCounter = 0; iCounter < iSeatingCapacities[v->ubVehicleType]; ++iCounter)
+	const INT32 seats = GetVehicleSeats(v);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if (v->pPassengers[iCounter] != NULL)
 		{
@@ -991,7 +984,6 @@ BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 INT32 GetNumberInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	INT32 iCounter = 0;
 	INT32 iCount = 0;
 
 	// find if vehicle is valid
@@ -1000,7 +992,8 @@ INT32 GetNumberInVehicle( INT32 iId )
 		return ( 0 );
 	}
 
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
 		{
@@ -1014,7 +1007,6 @@ INT32 GetNumberInVehicle( INT32 iId )
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	INT32 iCounter = 0;
 	INT32 iCount = 0;
 
 	// find if vehicle is valid
@@ -1023,7 +1015,8 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 		return ( 0 );
 	}
 
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL && !AM_AN_EPC( pVehicleList[ iId ].pPassengers[ iCounter ] ) )
 		{
@@ -1037,7 +1030,6 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	INT32 iCounter = 0;
 	SOLDIERTYPE * pSoldier;
 
 	// find if vehicle is valid
@@ -1046,7 +1038,8 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 		return ( 0 );
 	}
 
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		pSoldier = pVehicleList[ iId ].pPassengers[ iCounter ];
 		if ( pSoldier != NULL && ControllingRobot( pSoldier ) )
@@ -1087,7 +1080,7 @@ BOOLEAN IsEnoughSpaceInVehicle( INT32 iID )
 		return ( FALSE );
 	}
 
-	if ( GetNumberInVehicle( iID ) == iSeatingCapacities[ pVehicleList[ iID ].ubVehicleType ] )
+	if (GetNumberInVehicle(iID) == GetVehicleSeats(&pVehicleList[iID]))
 	{
 		return( FALSE );
 	}
@@ -1245,9 +1238,8 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 
 void AddPassangersToTeamPanel( INT32 iId )
 {
-	INT32 cnt;
-
-	for( cnt = 0; cnt < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; cnt++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 cnt = 0; cnt < seats; ++cnt)
 	{
 		if( pVehicleList[ iId ].pPassengers[ cnt ] != NULL )
 		{
@@ -1668,7 +1660,6 @@ void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const U
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 {
-	INT32 iCounter, iId;
 	SOLDIERTYPE *pPassenger;
 
 	// If not a vehicle, ignore!
@@ -1677,10 +1668,11 @@ void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	iId = pSoldier->bVehicleID;
+	const INT32 iId = pSoldier->bVehicleID;
 
 	// Loop through passengers and update each guy's position
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
 		{
@@ -1973,7 +1965,6 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
-	INT32 iCounter, iId;
 
 	// If not a vehicle, ignore!
 	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -1981,10 +1972,11 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
 		return( NULL );
 	}
 
-	iId = pSoldier->bVehicleID;
+	const INT32 iId = pSoldier->bVehicleID;
 
 	// Loop through passengers and update each guy's position
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
+	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
 		{
@@ -2053,4 +2045,10 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
 {
 	return Item[g_vehicle_type_info[pVehicleList[vehicle_id].ubVehicleType].armour_type].ubClassIndex;
+}
+
+
+UINT8 GetVehicleSeats(const VEHICLETYPE* const v)
+{
+	return g_vehicle_type_info[v->ubVehicleType].seats;
 }

@@ -59,9 +59,6 @@ extern PathSt* pTempHelicopterPath;
 
 extern UINT8 ubSAMControlledSectors[ MAP_WORLD_X ][ MAP_WORLD_Y ];
 
-// the seating capacities
-extern INT32 iSeatingCapacities[];
-
 
 // whether helicopted variables have been set up
 BOOLEAN fSkyRiderSetUp = FALSE;
@@ -809,21 +806,22 @@ static BOOLEAN CheckForArrivalAtRefuelPoint(void)
 void SetUpHelicopterForMovement( void )
 {
 	// check if helicopter vehicle has a mvt group, if not, assign one in this sector
-	INT32 iCounter = 0;
+	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
 
 	// if no group, create one for vehicle
-	if( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup == 0 )
+	if (v->ubMovementGroup == 0)
 	{
 		// get the vehicle a mvt group
-		pVehicleList[ iHelicopterVehicleId ].ubMovementGroup = CreateNewVehicleGroupDepartingFromSector( ( UINT8 )( pVehicleList[ iHelicopterVehicleId ].sSectorX ), ( UINT8 )( pVehicleList[ iHelicopterVehicleId ].sSectorY ), iHelicopterVehicleId );
+		v->ubMovementGroup = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY, iHelicopterVehicleId);
 
 		// add everyone in vehicle to this mvt group
-		for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iHelicopterVehicleId ].ubVehicleType ]; iCounter++ )
+		const INT32 seats = GetVehicleSeats(v);
+		for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 		{
-			if( pVehicleList[ iHelicopterVehicleId ].pPassengers[ iCounter ] != NULL )
+			if (v->pPassengers[iCounter] != NULL)
 			{
 				// add character
-				AddPlayerToGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, pVehicleList[ iHelicopterVehicleId ].pPassengers[ iCounter ] );
+				AddPlayerToGroup(v->ubMovementGroup, v->pPassengers[iCounter]);
 			}
 		}
 	}
@@ -936,8 +934,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 void MoveAllInHelicopterToFootMovementGroup(void)
 {
 	// take everyone out of heli and add to movement group
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier;
 	INT8 bNewSquad;
 	BOOLEAN fSuccess;
   UINT8   ubInsertionCode;
@@ -950,10 +946,12 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	if (bNewSquad == -1) return;
 
 	// go through list of everyone in helicopter
-	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iHelicopterVehicleId ].ubVehicleType ]; iCounter++ )
+	const VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	const INT32 seats = GetVehicleSeats(v);
+	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		// get passenger
-		pSoldier = pVehicleList[ iHelicopterVehicleId ].pPassengers[ iCounter ];
+		SOLDIERTYPE* const pSoldier = v->pPassengers[iCounter];
 
 		if( pSoldier != NULL )
 		{
