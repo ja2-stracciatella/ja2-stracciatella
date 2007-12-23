@@ -64,8 +64,6 @@ struct VEHICLETYPE
  INT16		 sArmourType;
  INT16		 sExternalArmorLocationsStatus[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
  INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
- INT32		 iMoveSound;
- INT32		 iOutOfSound;
  BOOLEAN	 fDestroyed;
  INT32		 iMovementSoundID;
  UINT8		 ubProfileID;
@@ -199,5 +197,6 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup );
 
 void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId );
 
+void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 
 #endif

@@ -78,25 +78,20 @@ INT32 iSeatingCapacities[]={
 };
 
 
-INT32	iEnterVehicleSndID[] = {
+typedef struct VehicleTypeInfo
+{
+	INT32 enter_sound;
+	INT32 move_sound;
+} VehicleTypeInfo;
 
-	S_VECH1_INTO,
-	S_VECH1_INTO,
-	S_VECH1_INTO,
-	S_VECH1_INTO,
-	S_VECH1_INTO,
-	S_VECH1_INTO,
-
-};
-
-INT32	iMoveVehicleSndID[] = {
-
-	S_VECH1_MOVE,
-	S_VECH1_MOVE,
-	S_VECH1_MOVE,
-	S_VECH1_MOVE,
-	S_VECH1_MOVE,
-	S_VECH1_MOVE,
+static const VehicleTypeInfo g_vehicle_type_info[] =
+{
+	{ S_VECH1_INTO, S_VECH1_MOVE },
+	{ S_VECH1_INTO, S_VECH1_MOVE },
+	{ S_VECH1_INTO, S_VECH1_MOVE },
+	{ S_VECH1_INTO, S_VECH1_MOVE },
+	{ S_VECH1_INTO, S_VECH1_MOVE },
+	{ S_VECH1_INTO, S_VECH1_MOVE }
 };
 
 UINT8 ubVehicleTypeProfileID[ ] = {
@@ -287,8 +282,6 @@ INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
 	pVehicleList[ iCount ].ubVehicleType = ubType;
 	pVehicleList[ iCount ].pMercPath = NULL;
 	pVehicleList[ iCount ].fDestroyed = FALSE;
-	pVehicleList[ iCount ].iMoveSound			  = iMoveVehicleSndID[ ubType ];
-	pVehicleList[ iCount ].iOutOfSound			= iEnterVehicleSndID[ ubType ];
 	pVehicleList[ iCount ].ubProfileID			= ubVehicleTypeProfileID[ ubType ];
 	pVehicleList[ iCount ].ubMovementGroup  = gubVehicleMovementGroups[ iCount ];
 
@@ -494,7 +487,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
 			SelectSoldier(pVehicleSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayLocationJA2Sample(pVehicleSoldier->sGridNo, pVehicleList[pVehicleSoldier->bVehicleID].iOutOfSound, HIGHVOLUME, 1);
+		PlayLocationJA2Sample(pVehicleSoldier->sGridNo, g_vehicle_type_info[pVehicleList[pVehicleSoldier->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	}
 
 	for( iCounter = 0; iCounter < iSeatingCapacities[ pVehicleList[ iId ].ubVehicleType ]; iCounter++ )
@@ -1269,7 +1262,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
 			SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayLocationJA2Sample(pVehicle->sGridNo, pVehicleList[pVehicle->bVehicleID].iOutOfSound, HIGHVOLUME, 1);
+		PlayLocationJA2Sample(pVehicle->sGridNo, g_vehicle_type_info[pVehicleList[pVehicle->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
 		return( TRUE );
 	}
 
@@ -2063,4 +2056,25 @@ BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
 	}
 
 	return DoesVehicleHaveAnyPassengers( iVehicleID );
+}
+
+
+void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
+{
+	VEHICLETYPE* const v = &pVehicleList[s->bVehicleID];
+	if (fOn)
+	{
+		if (v->iMovementSoundID == NO_SAMPLE)
+		{
+			v->iMovementSoundID = PlayLocationJA2Sample(s->sGridNo, g_vehicle_type_info[v->ubVehicleType].move_sound, HIGHVOLUME, 1);
+		}
+	}
+	else
+	{
+		if (v->iMovementSoundID != NO_SAMPLE)
+		{
+			SoundStop(v->iMovementSoundID);
+			v->iMovementSoundID = NO_SAMPLE;
+		}
+	}
 }

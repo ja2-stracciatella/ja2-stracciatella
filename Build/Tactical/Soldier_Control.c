@@ -199,28 +199,6 @@ static UINT32 guiNumReplacements;
 BOOLEAN	gfGetNewPathThroughPeople = FALSE;
 
 
-static void HandleVehicleMovementSound(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
-{
-	VEHICLETYPE *pVehicle = &( pVehicleList[ pSoldier->bVehicleID ] );
-
-	if ( fOn )
-	{
-		if ( pVehicle->iMovementSoundID == NO_SAMPLE )
-		{
-			pVehicle->iMovementSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, pVehicle->iMoveSound, HIGHVOLUME, 1);
-		}
-	}
-	else
-	{
-		if ( pVehicle->iMovementSoundID != NO_SAMPLE )
-		{
-			SoundStop( pVehicle->iMovementSoundID );
-			pVehicle->iMovementSoundID = NO_SAMPLE;
-		}
-	}
-}
-
-
 void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 {
   if ( pSoldier->ubBodyType == CROW )
