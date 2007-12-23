@@ -31,7 +31,7 @@ BOOLEAN ExtractUndergroundSectorInfoFromFile(const HWFILE file, UNDERGROUND_SECT
 	EXTR_U8(d, u->ubCreaturesInBattle)
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer)
-	EXTR_I8A(d, u->bPadding, lengthof(u->bPadding))
+	EXTR_SKIP(d, 36)
 	Assert(d == endof(data));
 
 	return TRUE;
@@ -64,7 +64,7 @@ BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND
 	INJ_U8(d, u->ubCreaturesInBattle)
 	INJ_SKIP(d, 2)
 	INJ_U32(d, u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer)
-	INJ_I8A(d, u->bPadding, lengthof(u->bPadding))
+	INJ_SKIP(d, 36)
 	Assert(d == endof(data));
 
 	return FileWrite(file, data, sizeof(data));

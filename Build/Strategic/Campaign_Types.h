@@ -214,8 +214,6 @@ typedef struct UNDERGROUND_SECTORINFO
 	UINT8 ubElitesInBattle, ubTroopsInBattle, ubAdminsInBattle, ubCreaturesInBattle;
 
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
-	INT8 bPadding[36];
-	//no padding left!
 }UNDERGROUND_SECTORINFO;
 
 
