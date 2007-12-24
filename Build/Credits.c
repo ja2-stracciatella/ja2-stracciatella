@@ -56,7 +56,6 @@ typedef struct	_CRDT_NODE
 #define		CRDT_FLAG__END_SECTION				0x00000004
 
 
-//#define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.txt"
 #define		CRDT_NAME_OF_CREDIT_FILE				"BINARYDATA/Credits.edt"
 
 #define CREDITS_LINESIZE 80
@@ -101,8 +100,6 @@ typedef struct	_CRDT_NODE
 
 #define		CRDT_SCROLL_PIXEL_AMOUNT				1
 #define		CRDT_NODE_DELAY_AMOUNT					25
-#define		CRDT_DELAY_BN_NODES							750
-#define		CRDT_DELAY_BN_SECTIONS					2500
 
 #define		CRDT_SPACE_BN_SECTIONS					50
 #define		CRDT_SPACE_BN_NODES							12
@@ -673,34 +670,23 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent);
 
 static void HandleNode_Default(CRDT_NODE* pCurrent)
 {
-	UINT32	uiCurrentTime =GetJA2Clock();
+	//Display the Current Node
+	DisplayCreditNode(pCurrent);
 
-	//if it is time to update the current node
-//	if( ( uiCurrentTime - pCurrent->uiLastTime ) > guiCrdtNodeScrollSpeed )
+	//Save the old position
+	pCurrent->sOldPosY = pCurrent->sPosY;
+
+	//Move the current node up
+	pCurrent->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
+
+	//if the node is entirely off the screen
+	if (pCurrent->sPosY + pCurrent->sHeightOfString < CRDT_LINE_NODE_DISAPPEARS_AT)
 	{
-		//Display the Current Node
-		DisplayCreditNode( pCurrent );
-
-		//Save the old position
-		pCurrent->sOldPosY = pCurrent->sPosY;
-
-		//Move the current node up
-		pCurrent->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
-
-		//if the node is entirely off the screen
-		if( ( pCurrent->sPosY + pCurrent->sHeightOfString ) < CRDT_LINE_NODE_DISAPPEARS_AT )
-		{
-			//mark the node to be deleted this frame
-			pCurrent->fDelete = TRUE;
-		}
-
-		//Update the last time to be the current time
-//		pCurrent->uiLastTime = uiCurrentTime + ( uiCurrentTime - ( pCurrent->uiLastTime + guiCrdtNodeScrollSpeed ) );
-
-//		pCurrent->uiLastTime = ( uiCurrentTime - ( uiCurrentTime - pCurrent->uiLastTime - guiCrdtNodeScrollSpeed) );
-
-		pCurrent->uiLastTime = GetJA2Clock();
+		//mark the node to be deleted this frame
+		pCurrent->fDelete = TRUE;
 	}
+
+	pCurrent->uiLastTime = GetJA2Clock();
 }
 
 
