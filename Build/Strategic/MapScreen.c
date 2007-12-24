@@ -3495,7 +3495,6 @@ static UINT32 HandleMapUI(void)
 {
 	UINT32 uiNewEvent = MAP_EVENT_NONE;
 	INT16 sMapX = 0, sMapY = 0;
-	INT8 bMapZ = 0;
 	INT16 sX, sY;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
@@ -3598,31 +3597,6 @@ static UINT32 HandleMapUI(void)
 		case MAP_EVENT_CANCEL_PATH:
 			CancelOrShortenPlottedPath( );
 			break;
-
-
-/*
-    case MAP_EVENT_SELECT_SECTOR:
-    {
-			// will select the sector the selected merc is in
-
-			const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-			sMapX = s->sSectorX;
-			sMapY = s->sSectorY;
-			bMapZ = s->bSectorZ;
-
-			if( ( sSelMapX != sMapX || sSelMapY != sMapY || iCurrentMapSectorZ != bMapZ ) &&
-					( gTacticalStatus.fDidGameJustStart == FALSE ) && ( gfPreBattleInterfaceActive == FALSE ) )
-			{
-				ChangeSelectedMapSector( sMapX, sMapY, bMapZ );
-
-				fTeamPanelDirty = TRUE;
-
-				fMapScreenBottomDirty = TRUE;
-        bSelectedDestChar=-1;
-			}
-			break;
-		}
-*/
 
 		case MAP_EVENT_CLICK_SECTOR:
 
