@@ -467,12 +467,8 @@ static BOOLEAN ShutDownCreditList(void)
 }
 
 
-static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
+static BOOLEAN DeleteNode(CRDT_NODE* const pNodeToDelete)
 {
-	CRDT_NODE	*pTempNode;
-
-	pTempNode = pNodeToDelete;
-
 	if( gCrdtLastAddedNode == pNodeToDelete )
 	{
 		gCrdtLastAddedNode = NULL;
@@ -495,15 +491,13 @@ static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 		pNodeToDelete->pPrev->pNext = NULL;
 
 	//iof the node that is being deleted is the first node
-	if( pTempNode == gCrdtRootNode )
+	if (pNodeToDelete == gCrdtRootNode)
 		gCrdtRootNode = NULL;
 
-	DeleteVideoSurfaceFromIndex(pTempNode->uiVideoSurfaceImage);
-	pTempNode->uiVideoSurfaceImage = 0;
+	DeleteVideoSurfaceFromIndex(pNodeToDelete->uiVideoSurfaceImage);
+	pNodeToDelete->uiVideoSurfaceImage = 0;
 
-	//Free the node
-	MemFree( pTempNode );
-	pTempNode = NULL;
+	MemFree(pNodeToDelete);
 
 	return( TRUE );
 }
