@@ -35,7 +35,6 @@ typedef struct	_CRDT_NODE
 	CHAR16	*pString;		//string for the node if the node contains a string
 
 	INT16		sPosY;
-	INT16		sOldPosY;
 
 	INT16		sHeightOfString;		//The height of the displayed string
 
@@ -673,9 +672,6 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 	//Display the Current Node
 	DisplayCreditNode(pCurrent);
 
-	//Save the old position
-	pCurrent->sOldPosY = pCurrent->sPosY;
-
 	//Move the current node up
 	pCurrent->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
 
@@ -706,26 +702,24 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 	//else we have to restore were the string was
 	else
 	{
-		//
 		//Restore the background before blitting the text back on
-		//
+		const INT16 old_y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
 
 		//if the surface is at the bottom of the screen
-		if( pCurrent->sOldPosY + pCurrent->sHeightOfString > CRDT_START_POS_Y )
+		if (old_y + pCurrent->sHeightOfString > CRDT_START_POS_Y )
 		{
-			INT16	sHeight = SCREEN_HEIGHT - pCurrent->sOldPosY;
-			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
+			const INT16 sHeight = SCREEN_HEIGHT - old_y;
+			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, old_y, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
 		}
-		else if( pCurrent->sOldPosY > CRDT_LINE_NODE_DISAPPEARS_AT )
+		else if (old_y > CRDT_LINE_NODE_DISAPPEARS_AT)
 		{
-			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString);
+			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, old_y, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString);
 		}
 
 		//if the surface is at the top of the screen
 		else
 		{
-			INT16	sHeight = pCurrent->sOldPosY + pCurrent->sHeightOfString;
-
+			const INT16 sHeight = old_y + pCurrent->sHeightOfString;
 			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, CRDT_LINE_NODE_DISAPPEARS_AT, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
 		}
 	}
