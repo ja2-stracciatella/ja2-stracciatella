@@ -80,9 +80,9 @@ enum
 // Code tokens
 //
 //new codes:
-#define		CRDT_START_CODE									'@'
-#define		CRDT_SEPARATION_CODE						L","
-#define		CRDT_END_CODE										L";"
+#define CRDT_START_CODE      L'@'
+#define CRDT_SEPARATION_CODE L','
+#define CRDT_END_CODE        L';'
 
 #define		CRDT_DELAY_BN_STRINGS_CODE			'D'
 #define		CRDT_DELAY_BN_SECTIONS_CODE			'B'
@@ -670,7 +670,7 @@ static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 }
 
 
-static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, STR16 pString)
+static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, const wchar_t* pString)
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -953,268 +953,76 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 }
 
 
-static UINT32 GetAndHandleCreditCodeFromCodeString(STR16 pzCode);
-static STR16 GetNextCreditCode(STR16 pString, UINT32* pSizeOfCode);
+static UINT32 GetNumber(const wchar_t* const string)
+{
+	unsigned int v = 0;
+	swscanf(string, L"%u", &v);
+	return v;
+}
+
+
 static void HandleCreditFlags(UINT32 uiFlags);
 
 
-//return false from this function when there are no more items in the text file
 static BOOLEAN GetNextCreditFromTextFile(void)
 {
-	CHAR16	zString[512];
-	CHAR16	zCodes[512];
-	STR16		pzNewCode=NULL;
-	UINT32	uiNodeType = 0;
-	UINT32	uiStartLoc = 0;
-	UINT32	uiFlags=0;
-
-
-	//Get the current Credit record
-	wchar_t zOriginalString[CREDITS_LINESIZE];
-	uiStartLoc = CREDITS_LINESIZE * guiCurrentCreditRecord;
-	if( !LoadEncryptedDataFromFile( CRDT_NAME_OF_CREDIT_FILE, zOriginalString, uiStartLoc, CREDITS_LINESIZE ) )
+	wchar_t text[CREDITS_LINESIZE];
+	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
+	if (!LoadEncryptedDataFromFile(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE))
 	{
-		//there are no more credits
-		return( FALSE );
+		return FALSE;
 	}
 
-	//Increment to the next crdit record
-	guiCurrentCreditRecord++;
-
-
-	//if there are no codes in the string
-	if( zOriginalString[0] != CRDT_START_CODE )
+	UINT32         flags = 0;
+	const wchar_t* s     = text;
+	if (*s == CRDT_START_CODE)
 	{
-		//copy the string
-		wcscpy( zString, zOriginalString );
-		uiNodeType = CRDT_NODE_DEFAULT;
-	}
-	else
-	{
-		UINT32	uiSizeOfCodes = 0;
-		UINT32	uiSizeOfSubCode = 0;
-		STR16		pzEndCode = NULL;
-		UINT32	uiDistanceIntoCodes = 0;
-
-		//Retrive all the codes from the string
-		pzEndCode = wcsstr( zOriginalString, CRDT_END_CODE );
-
-
-		//Make a string for the codes
-		wcscpy( zCodes, zOriginalString );
-
-		//end the setence after the codes
-		zCodes[ pzEndCode - zOriginalString + 1 ] = '\0';
-
-		//Get the size of the codes
-		uiSizeOfCodes = pzEndCode - zOriginalString + 1;
-
-		//
-		//check to see if there is a string, or just codes
-		//
-
-		//if the string is the same size as the codes
-		if( wcslen( zOriginalString ) == uiSizeOfCodes )
+		for (;;)
 		{
-			//there is no string, just codes
-			uiNodeType = CRDT_NODE_NONE;
-		}
-
-		//else there is a string aswell
-		else
-		{
-			//copy the main string
-			wcscpy( zString, &zOriginalString[ uiSizeOfCodes ] );
-
-			uiNodeType = CRDT_NODE_DEFAULT;
-		}
-
-		//get rid of the start code delimeter
-		uiDistanceIntoCodes = 1;
-
-		uiFlags = 0;
-
-		//loop through the string of codes to get all the control codes out
-		while( uiDistanceIntoCodes < uiSizeOfCodes )
-		{
-			//Determine what kind of code it is, and handle it
-			uiFlags |= GetAndHandleCreditCodeFromCodeString( &zCodes[ uiDistanceIntoCodes ] );
-
-			//get the next code from the string of codes, returns NULL when done
-			pzNewCode = GetNextCreditCode( &zCodes[ uiDistanceIntoCodes ], &uiSizeOfSubCode );
-
-			//if we are done getting the sub codes
-			if( pzNewCode == NULL )
+			++s;
+			/* process code */
+			switch (*s++)
 			{
-				uiDistanceIntoCodes = uiSizeOfCodes;
+				case CRDT_DELAY_BN_STRINGS_CODE:  guiGapBetweenCreditNodes    = GetNumber(s); break;
+				case CRDT_DELAY_BN_SECTIONS_CODE: guiGapBetweenCreditSections = GetNumber(s); break;
+				case CRDT_SCROLL_SPEED:           guiCrdtNodeScrollSpeed      = GetNumber(s); break;
+				case CRDT_TITLE_FONT_COLOR:       gubCreditScreenTitleColor   = GetNumber(s); break;
+				case CRDT_ACTIVE_FONT_COLOR:      gubCreditScreenActiveColor  = GetNumber(s); break;
+
+				case CRDT_FONT_JUSTIFICATION:
+					switch (GetNumber(s))
+					{
+						case 0:  gubCrdtJustification = LEFT_JUSTIFIED;   break;
+						case 1:  gubCrdtJustification = CENTER_JUSTIFIED; break;
+						case 2:  gubCrdtJustification = RIGHT_JUSTIFIED;  break;
+						default: Assert(0);                               break;
+					}
+					break;
+
+				case CRDT_TITLE:            flags |= CRDT_FLAG__TITLE;         break;
+				case CRDT_START_OF_SECTION: flags |= CRDT_FLAG__START_SECTION; break;
+				case CRDT_END_OF_SECTION:   flags |= CRDT_FLAG__END_SECTION;   break;
+
+				default: Assert(0); break;
 			}
-			else
+
+			/* skip till the next code or end of codes */
+			while (*s != CRDT_SEPARATION_CODE)
 			{
-				//else increment by the size of the code
-				uiDistanceIntoCodes += uiSizeOfSubCode;
+				switch (*s)
+				{
+					case CRDT_END_CODE:  ++s; goto handle_text;
+					case L'\0':               goto handle_text;
+					default:             ++s; break;
+				}
 			}
 		}
 	}
 
-	if( uiNodeType != CRDT_NODE_NONE )
-	{
-		//add the node to the list
-		AddCreditNode( uiNodeType, uiFlags, zString );
-	}
-
-	//if any processing of the flags need to be done
-	HandleCreditFlags( uiFlags );
-
-	return( TRUE );
-}
-
-
-//return any flags that need to be set in the node
-static UINT32 GetAndHandleCreditCodeFromCodeString(STR16 pzCode)
-{
-//new codes:
-
-
-	//if the code is to change the delay between strings
-	if( pzCode[0] == CRDT_DELAY_BN_STRINGS_CODE )
-	{
-		UINT32	uiNewDelay=0;
-
-		//Get the delay from the string
-		swscanf( &pzCode[1], L"%d%*s", &uiNewDelay );
-
-//		guiCrdtDelayBetweenNodes = uiNewDelay;
-		guiGapBetweenCreditNodes  = uiNewDelay;
-
-		return( CRDT_NODE_NONE );
-	}
-
-	//if the code is to change the delay between sections strings
-	else if( pzCode[0] == CRDT_DELAY_BN_SECTIONS_CODE )
-	{
-		UINT32	uiNewDelay=0;
-
-		//Get the delay from the string
-		swscanf( &pzCode[1], L"%d%*s", &uiNewDelay );
-
-//		guiCrdtDelayBetweenCreditSection = uiNewDelay;
-		guiGapBetweenCreditSections = uiNewDelay;
-
-		return( CRDT_NODE_NONE );
-	}
-
-
-	else if( pzCode[0] == CRDT_SCROLL_SPEED )
-	{
-		UINT32	uiScrollSpeed=0;
-
-		//Get the delay from the string
-		swscanf( &pzCode[1], L"%d%*s", &uiScrollSpeed );
-
-		guiCrdtNodeScrollSpeed = uiScrollSpeed;
-
-		return( CRDT_NODE_NONE );
-	}
-
-	else if( pzCode[0] == CRDT_FONT_JUSTIFICATION )
-	{
-		UINT32	uiJustification=0;
-
-		//Get the delay from the string
-		swscanf( &pzCode[1], L"%d%*s", &uiJustification );
-
-		//get the justification
-		switch( uiJustification )
-		{
-			case 0:
-				gubCrdtJustification = LEFT_JUSTIFIED;
-				break;
-			case 1:
-				gubCrdtJustification = CENTER_JUSTIFIED;
-				break;
-			case 2:
-				gubCrdtJustification = RIGHT_JUSTIFIED;
-				break;
-			default:
-				Assert( 0 );
-		}
-
-		return( CRDT_NODE_NONE );
-	}
-
-	else if( pzCode[0] == CRDT_TITLE_FONT_COLOR )
-	{
-		//Get the new color for the title
-		swscanf( &pzCode[1], L"%d%*s", &gubCreditScreenTitleColor );
-
-		return( CRDT_NODE_NONE );
-	}
-
-	else if( pzCode[0] == CRDT_ACTIVE_FONT_COLOR )
-	{
-		//Get the new color for the active text
-		swscanf( &pzCode[1], L"%d%*s", &gubCreditScreenActiveColor );
-
-		return( CRDT_NODE_NONE );
-	}
-
-
-	//else its the title code
-	else if( pzCode[0] == CRDT_TITLE )
-	{
-		return( CRDT_FLAG__TITLE );
-	}
-
-	//else its the title code
-	else if( pzCode[0] == CRDT_START_OF_SECTION )
-	{
-		return( CRDT_FLAG__START_SECTION );
-	}
-
-	//else its the title code
-	else if( pzCode[0] == CRDT_END_OF_SECTION )
-	{
-		return( CRDT_FLAG__END_SECTION );
-	}
-
-	//else its an error
-	else
-	{
-		Assert( 0 );
-	}
-
-	return( CRDT_NODE_NONE );
-}
-
-
-static STR16 GetNextCreditCode(STR16 pString, UINT32* pSizeOfCode)
-{
-	STR16	pzNewCode=NULL;
-	UINT32 uiSizeOfCode = 0;
-
-	//get the new subcode out
-	pzNewCode = wcsstr( pString, CRDT_SEPARATION_CODE );
-
-	//if there is no separation code, then there must be an end code
-	if( pzNewCode == NULL )
-	{
-		//pzNewCode = wcsstr( pString, CRDT_END_CODE );
-
-		//we are done
-		pzNewCode = NULL;
-	}
-	else
-	{
-		//get rid of separeation code
-		pzNewCode++;
-
-
-		//calc size of sub string
-		uiSizeOfCode = pzNewCode - pString;
-	}
-
-	*pSizeOfCode = uiSizeOfCode;
-	return( pzNewCode );
+handle_text:
+	if (*s != L'\0') AddCreditNode(CRDT_NODE_DEFAULT, flags, s);
+	HandleCreditFlags(flags);
+	return TRUE;
 }
 
 

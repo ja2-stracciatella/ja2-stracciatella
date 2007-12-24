@@ -1,3 +1,4 @@
+(r2493) Fix a vanilla bug (mismatch of format specifier and argument of swscanf()), which caused wrong colours (or other undefined behaviour) in the credits screen.
 (r2370) Fix vanilla inconsistencies in placing the item graphics and the "unload ammo" button between tactical and map screen.
 (r2368) Fix vanilla inconsistencies in placing the item name/calibre/amount of money texts in the item description box.
 (r2366) Fix a vanilla display glitch: When adding/removing an attachment in the map screen, the tooltips did not get updated.
