@@ -36,10 +36,7 @@ typedef struct	_CRDT_NODE
 
 	UINT32	uiFlags;		//various flags
 
-	INT16		sPosX;			//position of the node on the screen if the node is displaying stuff
 	INT16		sPosY;
-
-	INT16		sOldPosX;			//position of the node on the screen if the node is displaying stuff
 	INT16		sOldPosY;
 
 	INT16		sHeightOfString;		//The height of the displayed string
@@ -565,9 +562,6 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	//any flags that are added
 	pNodeToAdd->uiFlags = uiFlags;
 
-	//the starting left position for the it
-	pNodeToAdd->sPosX = CRDT_TEXT_START_LOC;
-
 	//Allocate memory for the string
 	pNodeToAdd->pString = MemAlloc(sizeof(*pNodeToAdd->pString) * (wcslen(pString) + 1));
 	if( pNodeToAdd->pString == NULL )
@@ -693,7 +687,6 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 		DisplayCreditNode( pCurrent );
 
 		//Save the old position
-		pCurrent->sOldPosX = pCurrent->sPosX;
 		pCurrent->sOldPosY = pCurrent->sPosY;
 
 		//Move the current node up
@@ -740,11 +733,11 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 		if( pCurrent->sOldPosY + pCurrent->sHeightOfString > CRDT_START_POS_Y )
 		{
 			INT16	sHeight = SCREEN_HEIGHT - pCurrent->sOldPosY;
-			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight );
+			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
 		}
 		else if( pCurrent->sOldPosY > CRDT_LINE_NODE_DISAPPEARS_AT )
 		{
-			RestoreExternBackgroundRect( pCurrent->sOldPosX, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString );
+			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, pCurrent->sOldPosY, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString);
 		}
 
 		//if the surface is at the top of the screen
@@ -752,11 +745,11 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 		{
 			INT16	sHeight = pCurrent->sOldPosY + pCurrent->sHeightOfString;
 
-			RestoreExternBackgroundRect( pCurrent->sOldPosX, CRDT_LINE_NODE_DISAPPEARS_AT, CRDT_WIDTH_OF_TEXT_AREA, sHeight );
+			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, CRDT_LINE_NODE_DISAPPEARS_AT, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
 		}
 	}
 
-	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, pCurrent->sPosX, pCurrent->sPosY, NULL);
+	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, CRDT_TEXT_START_LOC, pCurrent->sPosY, NULL);
 
 	return( TRUE );
 }
