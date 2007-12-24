@@ -179,8 +179,6 @@ SOLDIER_GREEN_RAY: never set
 SOLDIER_QUOTE_SAID_DROWNING: never set
 SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
 SOLDIER_RECHECKLIGHT: never set
-SOLDIER_SHOULD_BE_TACTICALLY_VALID: flag only gets killed and never tested
-SOLDIER_SHOULD_BE_TACTICALLY_VALID: never set or tested
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
 STR_AR_MERC_RETREATING: string too long in German

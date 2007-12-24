@@ -1355,7 +1355,6 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier);
 //aren't at the final destination, they will move to the next sector.
 void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft )
 {
-	PLAYERGROUP *curr;
 	UINT8 ubInsertionDirection, ubStrategicInsertionCode;
 	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fExceptionQueue = FALSE;
@@ -1375,21 +1374,13 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 	if( pGroup->fPlayer )
 	{
 		//Set the fact we have visited the  sector
-		curr = pGroup->pPlayerList;
+		const PLAYERGROUP* curr = pGroup->pPlayerList;
 		if( curr )
 		{
 			if( curr->pSoldier->bAssignment < ON_DUTY )
 			{
 				ResetDeadSquadMemberList( curr->pSoldier->bAssignment );
 			}
-		}
-
-
-
-		while( curr )
-		{
-			curr->pSoldier->uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
-			curr = curr->next;
 		}
 
 		if( pGroup->fVehicle )
@@ -1562,8 +1553,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 		if( pGroup->fVehicle == FALSE )
 		{
 			// non-vehicle player group
-
-			curr = pGroup->pPlayerList;
+			const PLAYERGROUP* curr = pGroup->pPlayerList;
 			while( curr )
 			{
 				curr->pSoldier->fBetweenSectors = FALSE;
@@ -1656,10 +1646,8 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 					UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 				}
 
-
-
 				// set directions of insertion
-				curr = pGroup->pPlayerList;
+				const PLAYERGROUP* curr = pGroup->pPlayerList;
 				while( curr )
 				{
 					curr->pSoldier->fBetweenSectors = FALSE;
@@ -2428,7 +2416,6 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 		pPlayer->pSoldier->sSectorY = sSectorY;
 		pPlayer->pSoldier->bSectorZ = (UINT8)sSectorZ;
 		pPlayer->pSoldier->fBetweenSectors = FALSE;
-		pPlayer->pSoldier->uiStatusFlags &= ~SOLDIER_SHOULD_BE_TACTICALLY_VALID;
 		pPlayer = pPlayer->next;
 	}
 
