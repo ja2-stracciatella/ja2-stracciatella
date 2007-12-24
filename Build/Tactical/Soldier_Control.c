@@ -9088,7 +9088,6 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier )
 {
 		PositionSoldierLight( pSoldier );
-	//pSoldier->uiStatusFlags |= SOLDIER_RECHECKLIGHT;
 }
 
 
