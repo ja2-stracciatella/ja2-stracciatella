@@ -36,8 +36,6 @@ typedef struct	_CRDT_NODE
 
 	INT16		sHeightOfString;		//The height of the displayed string
 
-	BOOLEAN	fDelete;		//Delete this loop
-
 	UINT32	uiVideoSurfaceImage;
 
 	struct _CRDT_NODE	*pPrev;
@@ -630,13 +628,6 @@ static void HandleCreditNodes(void)
 		pCurrent = pCurrent->pNext;
 
 		HandleNode_Default(pTemp);
-
-		//if the node is to be deleted
-		if( pTemp->fDelete )
-		{
-			//delete the node
-			DeleteNode( pTemp );
-		}
 	}
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
@@ -657,8 +648,7 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 	//if the node is entirely off the screen
 	if (pCurrent->sPosY + pCurrent->sHeightOfString < CRDT_LINE_NODE_DISAPPEARS_AT)
 	{
-		//mark the node to be deleted this frame
-		pCurrent->fDelete = TRUE;
+		DeleteNode(pCurrent);
 	}
 }
 
