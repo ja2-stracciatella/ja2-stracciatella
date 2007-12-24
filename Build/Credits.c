@@ -32,8 +32,6 @@ enum
 
 typedef struct	_CRDT_NODE
 {
-	CHAR16	*pString;		//string for the node if the node contains a string
-
 	INT16		sPosY;
 
 	INT16		sHeightOfString;		//The height of the displayed string
@@ -502,13 +500,6 @@ static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 	if( pTempNode == gCrdtRootNode )
 		gCrdtRootNode = NULL;
 
-	//Free the string
-	if( pTempNode->pString != NULL )
-	{
-		MemFree( pTempNode->pString );
-		pTempNode->pString = NULL;
-	}
-
 	DeleteVideoSurfaceFromIndex(pTempNode->uiVideoSurfaceImage);
 	pTempNode->uiVideoSurfaceImage = 0;
 
@@ -551,16 +542,8 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	// Set some default data
 	//
 
-	//Allocate memory for the string
-	pNodeToAdd->pString = MemAlloc(sizeof(*pNodeToAdd->pString) * (wcslen(pString) + 1));
-	if( pNodeToAdd->pString == NULL )
-		return( FALSE );
-
-	//copy the string into the node
-	wcscpy( pNodeToAdd->pString, pString );
-
 	//Calculate the height of the string
-	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, DONT_DISPLAY_TEXT) + 1;
+	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, DONT_DISPLAY_TEXT) + 1;
 
 	//starting y position on the screen
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
@@ -578,7 +561,7 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
 
 	//write the string onto the surface
-	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, gubCrdtJustification);
+	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, gubCrdtJustification);
 
 	//reset the font dest buffer
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -682,10 +665,6 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 
 static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 {
-	//Currently, we have no need to display a node that doesnt have a string
-	if( pCurrent->pString == NULL )
-		return( FALSE );
-
 	//Restore the background before blitting the text back on
 	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
 	INT16 h = pCurrent->sHeightOfString;
