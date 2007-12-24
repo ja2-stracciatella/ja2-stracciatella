@@ -188,7 +188,7 @@ UINT32	CreditScreenInit( void )
 
 
 static BOOLEAN EnterCreditsScreen(void);
-static BOOLEAN ExitCreditScreen(void);
+static void ExitCreditScreen(void);
 static void GetCreditScreenUserInput(void);
 static void HandleCreditScreen(void);
 
@@ -239,7 +239,7 @@ UINT32	CreditScreenShutdown( void )
 
 
 static void InitCreditEyeBlinking(void);
-static BOOLEAN InitCreditNode(void);
+static void InitCreditNode(void);
 static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
@@ -292,10 +292,10 @@ static BOOLEAN EnterCreditsScreen(void)
 }
 
 
-static BOOLEAN ShutDownCreditList(void);
+static void ShutDownCreditList(void);
 
 
-static BOOLEAN ExitCreditScreen(void)
+static void ExitCreditScreen(void)
 {
 	UINT32	uiCnt;
 
@@ -311,15 +311,13 @@ static BOOLEAN ExitCreditScreen(void)
 	{
 		MSYS_RemoveRegion( &gCrdtMouseRegions[uiCnt] );
 	}
-
-	return( TRUE );
 }
 
 
 static BOOLEAN GetNextCreditFromTextFile(void);
 static void HandleCreditEyeBlinking(void);
 static void HandleCreditNodes(void);
-static BOOLEAN RenderCreditScreen(void);
+static void RenderCreditScreen(void);
 static void SetCreditsExitScreen(UINT32 uiScreenToGoTo);
 
 
@@ -362,7 +360,7 @@ static void HandleCreditScreen(void)
 }
 
 
-static BOOLEAN RenderCreditScreen(void)
+static void RenderCreditScreen(void)
 {
   BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
 	if( !gfCrdtHaveRenderedFirstFrameToSaveBuffer )
@@ -376,7 +374,6 @@ static BOOLEAN RenderCreditScreen(void)
 	}
 
 	InvalidateScreen( );
-	return( TRUE );
 }
 
 
@@ -431,21 +428,19 @@ static void SetCreditsExitScreen(UINT32 uiScreenToGoTo)
 }
 
 
-static BOOLEAN InitCreditNode(void)
+static void InitCreditNode(void)
 {
 	if( gCrdtRootNode != NULL )
 		Assert( 0 );
 
 	gCrdtRootNode = NULL;
-
-	return( TRUE );
 }
 
 
-static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete);
+static void DeleteNode(CRDT_NODE* pNodeToDelete);
 
 
-static BOOLEAN ShutDownCreditList(void)
+static void ShutDownCreditList(void)
 {
 	CRDT_NODE	*pNodeToDelete=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -462,12 +457,10 @@ static BOOLEAN ShutDownCreditList(void)
 		//Delete the current node
 		DeleteNode( pTemp );
 	}
-
-	return( TRUE );
 }
 
 
-static BOOLEAN DeleteNode(CRDT_NODE* const pNodeToDelete)
+static void DeleteNode(CRDT_NODE* const pNodeToDelete)
 {
 	if( gCrdtLastAddedNode == pNodeToDelete )
 	{
@@ -498,12 +491,10 @@ static BOOLEAN DeleteNode(CRDT_NODE* const pNodeToDelete)
 	pNodeToDelete->uiVideoSurfaceImage = 0;
 
 	MemFree(pNodeToDelete);
-
-	return( TRUE );
 }
 
 
-static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
+static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
@@ -511,12 +502,8 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	UINT8		uiColorToUse;
 
 	pNodeToAdd = MemAlloc( sizeof( CRDT_NODE) );
-	if( pNodeToAdd == NULL )
-	{
-		return( FALSE );
-	}
+	if (pNodeToAdd == NULL) return;
 	memset( pNodeToAdd, 0, sizeof( CRDT_NODE) );
-
 
 	//Determine the font and the color to use
 	if( uiFlags & CRDT_FLAG__TITLE )
@@ -541,7 +528,7 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
 	pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
-	if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
+	if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return;
 
 	//Set transparency
 	SetVideoSurfaceTransparency(pNodeToAdd->uiVideoSurfaceImage, 0);
@@ -588,8 +575,6 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	}
 
 	gCrdtLastAddedNode = pNodeToAdd;
-
-	return( TRUE );
 }
 
 
@@ -628,7 +613,7 @@ static void HandleCreditNodes(void)
 }
 
 
-static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent);
+static void DisplayCreditNode(CRDT_NODE* pCurrent);
 
 
 static void HandleNode_Default(CRDT_NODE* pCurrent)
@@ -647,7 +632,7 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 }
 
 
-static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
+static void DisplayCreditNode(CRDT_NODE* pCurrent)
 {
 	//Restore the background before blitting the text back on
 	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
@@ -665,8 +650,6 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 
 	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, CRDT_TEXT_START_LOC, pCurrent->sPosY, NULL);
-
-	return( TRUE );
 }
 
 
