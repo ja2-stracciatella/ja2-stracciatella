@@ -178,7 +178,6 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 	Assert( pPlayer );
 	AssertMsg( pGroup->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 	pPlayer->pSoldier = pSoldier;
-	pPlayer->bFlags = 0;
 	pPlayer->next = NULL;
 
 

@@ -45,11 +45,8 @@ typedef struct WAYPOINT
 CASSERT(sizeof(WAYPOINT) == 8)
 
 
-#define PG_INDIVIDUAL_MERGED		0x01
-
 typedef struct PLAYERGROUP
 {
-	UINT8 bFlags;									//flags referring to individual player soldiers
 	SOLDIERTYPE *pSoldier;				//direct access to the soldier pointer
 	struct PLAYERGROUP *next;			//next player in list
 }PLAYERGROUP;
