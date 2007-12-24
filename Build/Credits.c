@@ -1187,22 +1187,6 @@ static UINT32 GetAndHandleCreditCodeFromCodeString(STR16 pzCode)
 }
 
 
-static UINT32 CountNumberOfCreditNodes(void)
-{
-	UINT32	uiNumNodes = 0;
-	CRDT_NODE	*pTempNode = gCrdtRootNode;
-
-	while( pTempNode )
-	{
-		uiNumNodes++;
-
-		pTempNode = pTempNode->pNext;
-	}
-
-	return( uiNumNodes );
-}
-
-
 static STR16 GetNextCreditCode(STR16 pString, UINT32* pSizeOfCode)
 {
 	STR16	pzNewCode=NULL;
