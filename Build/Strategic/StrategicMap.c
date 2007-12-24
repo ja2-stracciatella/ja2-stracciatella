@@ -1676,10 +1676,6 @@ static void GetLoadedSectorString(wchar_t* pString, size_t Length);
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	BOOLEAN fError = FALSE;
-	if( pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID)
-	{
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-	}
 	// OK, determine entrence direction and get sweetspot
 	// Only if we are an OK guy to control....
 	// SOME CHECKS HERE MUST BE FLESHED OUT......
@@ -2940,41 +2936,38 @@ static void DoneFadeOutAdjacentSector(void)
 		curr = gpAdjacentGroup->pPlayerList;
 		while( curr )
 		{
-			if( !(curr->pSoldier->uiStatusFlags & SOLDIER_IS_TACTICALLY_VALID) )
+			if (curr->pSoldier->sGridNo != NOWHERE)
 			{
-				if( curr->pSoldier->sGridNo != NOWHERE )
-				{
-					sGridNo = PickGridNoToWalkIn( curr->pSoldier, ubDirection, &uiAttempts );
+				sGridNo = PickGridNoToWalkIn(curr->pSoldier, ubDirection, &uiAttempts);
 
-					//If the search algorithm failed due to too many attempts, simply reset the
-					//the gridno as the destination is a reserved gridno and we will place the
-					//merc there without walking into the sector.
-					if( sGridNo == NOWHERE && uiAttempts == MAX_ATTEMPTS )
-					{
-						sGridNo = curr->pSoldier->sGridNo;
-					}
-
-					if( sGridNo != NOWHERE )
-					{
-						curr->pSoldier->ubWaitActionToDo = 1;
-						// OK, here we have been given a position, a gridno has been given to use as well....
-						sOldGridNo = curr->pSoldier->sGridNo;
-						EVENT_SetSoldierPosition(curr->pSoldier, sGridNo, SSP_NONE);
-						if( sGridNo != sOldGridNo )
-						{
-							EVENT_GetNewSoldierPath( curr->pSoldier, sOldGridNo, WALKING );
-						}
-						ubNum++;
-					}
-				}
-				else
+				//If the search algorithm failed due to too many attempts, simply reset the
+				//the gridno as the destination is a reserved gridno and we will place the
+				//merc there without walking into the sector.
+				if (sGridNo == NOWHERE && uiAttempts == MAX_ATTEMPTS)
 				{
-					#ifdef JA2BETAVERSION
-					char str[256];
-						sprintf( str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name );
-						DebugMsg( TOPIC_JA2, DBG_LEVEL_3, str );
-					#endif
+					sGridNo = curr->pSoldier->sGridNo;
 				}
+
+				if (sGridNo != NOWHERE)
+				{
+					curr->pSoldier->ubWaitActionToDo = 1;
+					// OK, here we have been given a position, a gridno has been given to use as well....
+					sOldGridNo = curr->pSoldier->sGridNo;
+					EVENT_SetSoldierPosition(curr->pSoldier, sGridNo, SSP_NONE);
+					if (sGridNo != sOldGridNo)
+					{
+						EVENT_GetNewSoldierPath(curr->pSoldier, sOldGridNo, WALKING);
+					}
+					ubNum++;
+				}
+			}
+			else
+			{
+#ifdef JA2BETAVERSION
+				char str[256];
+				sprintf(str, "%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
+#endif
 			}
 			curr = curr->next;
 		}
