@@ -34,8 +34,6 @@ typedef struct	_CRDT_NODE
 {
 	CHAR16	*pString;		//string for the node if the node contains a string
 
-	UINT32	uiFlags;		//various flags
-
 	INT16		sPosY;
 	INT16		sOldPosY;
 
@@ -558,9 +556,6 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	//
 	// Set some default data
 	//
-
-	//any flags that are added
-	pNodeToAdd->uiFlags = uiFlags;
 
 	//Allocate memory for the string
 	pNodeToAdd->pString = MemAlloc(sizeof(*pNodeToAdd->pString) * (wcslen(pString) + 1));
