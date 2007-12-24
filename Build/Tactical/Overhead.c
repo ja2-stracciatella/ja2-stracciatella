@@ -802,7 +802,7 @@ BOOLEAN ExecuteOverhead(void)
 						if (!gGameSettings.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP])
 						{
 							DeleteSoldierLight(pSoldier);
-							SetCheckSoldierLightFlag(pSoldier);
+							PositionSoldierLight(pSoldier);
 						}
 					}
 				}
@@ -2340,8 +2340,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		//CalcTranslucentWalls( s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
 		//LightTranslucentTrees(s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
 	}
-
-	//SetCheckSoldierLightFlag(s);
 
 	// Set interface to reflect new selection!
 	SetCurrentTacticalPanelCurrentMerc(s);

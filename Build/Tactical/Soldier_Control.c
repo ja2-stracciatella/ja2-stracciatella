@@ -216,17 +216,6 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 		}
 	}
 
-	// Turn off sound effects....
-	if ( fSet )
-	{
-		// Position light....
-		// SetCheckSoldierLightFlag( pSoldier );
-	}
-	else
-	{
-		// DeleteSoldierLight( pSoldier );
-	}
-
 	pSoldier->fNoAPToFinishMove = fSet;
 
 	if ( !fSet )
@@ -1959,22 +1948,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	// Setup offset information for UI above guy
 	SetSoldierLocatorOffsets( pSoldier );
 
-	// If our own guy...
-	if ( pSoldier->bTeam == gbPlayerNum )
-	{
-		// Are we stationary?
-		if ( gAnimControl[ usNewState ].uiFlags & ANIM_STATIONARY )
-		{
-			// Position light....
-			// SetCheckSoldierLightFlag( pSoldier );
-		}
-		else
-		{
-			// Hide light.....
-			// DeleteSoldierLight( pSoldier );
-		}
-	}
-
 	// If we are certain animations, reload palette
 	if ( usNewState == VEHICLE_DIE || usNewState == CHARIOTS_OF_FIRE || usNewState == BODYEXPLODING )
 	{
@@ -2070,7 +2043,7 @@ static void EVENT_InternalSetSoldierPosition(SOLDIERTYPE* pSoldier, GridNo pos, 
 	{
 		if ( gGameSettings.fOptions[ TOPTION_MERC_ALWAYS_LIGHT_UP ] )
 		{
-			SetCheckSoldierLightFlag( pSoldier );
+			PositionSoldierLight(pSoldier);
 		}
 	}
 

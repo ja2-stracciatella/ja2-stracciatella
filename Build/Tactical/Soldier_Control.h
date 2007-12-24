@@ -1023,8 +1023,6 @@ void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier );
 
 void PositionSoldierLight( SOLDIERTYPE *pSoldier );
 
-void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier );
-
 void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection, BOOLEAN fFromMove, UINT16 usAnimState );
 
 void ChangeToFallbackAnimation( SOLDIERTYPE *pSoldier, INT8 bDirection );
