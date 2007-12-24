@@ -307,8 +307,6 @@ static UINT32 guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 static UINT32  guiCurrentCreditRecord = 0;
 static BOOLEAN gfPauseCreditScreen    = FALSE;
 
-static HWFILE ghFile;
-
 
 UINT32	CreditScreenInit( void )
 {
@@ -428,21 +426,6 @@ static BOOLEAN EnterCreditsScreen(void)
 		MSYS_SetRegionUserData( &gCrdtMouseRegions[uiCnt], 0, uiCnt );
 	}
 
-
-	//Test Node
-	{
-//		AddCreditNode( CRDT_NODE_DEFAULT, L"This is a test" );
-	}
-
-/*
-	//open the credit text file
-	ghFile = FileOpen( CRDT_NAME_OF_CREDIT_FILE, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
-	if( !ghFile )
-	{
-		return( FALSE );
-	}
-*/
-
 	giCurrentlySelectedFace = -1;
 	gfPauseCreditScreen = FALSE;
 
@@ -474,12 +457,6 @@ static BOOLEAN ExitCreditScreen(void)
 	{
 		MSYS_RemoveRegion( &gCrdtMouseRegions[uiCnt] );
 	}
-
-/*
-	//close the text file
-	FileClose( ghFile );
-	ghFile = 0;
-*/
 
 	return( TRUE );
 }
