@@ -99,20 +99,6 @@ typedef struct	_CRDT_NODE
 
 #define		CRDT_LINE_NODE_DISAPPEARS_AT			0//20
 
-/*
-//new codes:
-enum
-{
-	CRDT_ERROR,
-	CRDT_CODE_DELAY_BN_STRINGS,
-	CRDT_CODE_SCROLL_SPEED,
-	CRDT_CODE_FONT_JUSIFICATION,
-	CRDT_CODE_FONT_COLOR,
-
-	CRDT_NUM_CODES,
-};
-*/
-
 
 #define		CRDT_WIDTH_OF_TEXT_AREA					210
 #define		CRDT_TEXT_START_LOC							10
@@ -172,88 +158,6 @@ static CDRT_FACE gCreditFaces[] =
 	{ 585, 196, 39, 49, 593, 218, 593, 228, 3500, 0, 0 }  // Joey
 };
 
-/*
-enum
-{
-	CRDT_CAMFIELD,
-	CRDT_SHAWN,
-	CRDT_KRIS,
-	CRDT_IAN,
-	CRDT_LINDA,
-	CRDT_ERIC,
-	CRDT_LYNN,
-	CRDT_NORM,
-	CRDT_GEORGE,
-	CRDT_STACEY,
-	CRDT_SCOTT,
-	CRDT_EMMONS,
-	CRDT_DAVE,
-	CRDT_ALEX,
-	CRDT_JOEY,
-
-	NUM_PEOPLE_IN_CREDITS,
-};
-
-STR16	gzCreditNames[]=
-{
-	L"Chris Camfield",
-	L"Shaun Lyng",
-	L"Kris Märnes",
-	L"Ian Currie",
-	L"Linda Currie",
-	L"Eric \"WTF\" Cheng",
-	L"Lynn Holowka",
-	L"Norman \"NRG\" Olsen",
-	L"George Brooks",
-	L"Andrew Stacey",
-	L"Scot Loving",
-	L"Andrew \"Big Cheese\" Emmons",
-	L"Dave \"The Feral\" French",
-	L"Alex Meduna",
-	L"Joey \"Joeker\" Whelan",
-};
-
-
-STR16	gzCreditNameTitle[]=
-{
-	L"Game Internals Programmer", 			// Chris Camfield
-	L"Co-designer/Writer",							// Shaun Lyng
-	L"Strategic Systems & Editor Programmer",					//Kris \"The Cow Rape Man\" Marnes
-	L"Producer/Co-designer",						// Ian Currie
-	L"Co-designer/Map Designer",				// Linda Currie
-	L"Artist",													// Eric \"WTF\" Cheng
-	L"Beta Coordinator, Support",				// Lynn Holowka
-	L"Artist Extraordinaire",						// Norman \"NRG\" Olsen
-	L"Sound Guru",											// George Brooks
-	L"Screen Designer/Artist",					// Andrew Stacey
-	L"Lead Artist/Animator",						// Scot Loving
-	L"Lead Programmer",									// Andrew \"Big Cheese Doddle\" Emmons
-	L"Programmer",											// Dave French
-	L"Strategic Systems & Game Balance Programmer",					// Alex Meduna
-	L"Portraits Artist",								// Joey \"Joeker\" Whelan",
-};
-
-STR16	gzCreditNameFunny[]=
-{
-	L"", 																			// Chris Camfield
-	L"(still learning punctuation)",					// Shaun Lyng
-	L"(\"It's done. I'm just fixing it\")",	//Kris \"The Cow Rape Man\" Marnes
-	L"(getting much too old for this)",				// Ian Currie
-	L"(and working on Wizardry 8)",						// Linda Currie
-	L"(forced at gunpoint to also do QA)",			// Eric \"WTF\" Cheng
-	L"(Left us for the CFSA - go figure...)",	// Lynn Holowka
-	L"",																			// Norman \"NRG\" Olsen
-	L"",																			// George Brooks
-	L"(Dead Head and jazz lover)",						// Andrew Stacey
-	L"(his real name is Robert)",							// Scot Loving
-	L"(the only responsible person)",					// Andrew \"Big Cheese Doddle\" Emmons
-	L"(can now get back to motocrossing)",	// Dave French
-	L"(stolen from Wizardry 8)",							// Alex Meduna
-	L"(did items and loading screens too!)",	// Joey \"Joeker\" Whelan",
-};
-
-*/
-
 
 static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
 
@@ -273,21 +177,13 @@ static BOOLEAN gfCrdtHaveRenderedFirstFrameToSaveBuffer; // need to render backg
 
 static INT32 giCurrentlySelectedFace = -1;
 
-//
-//VAriables needed for processing of the nodes:
-//
-
 
 static UINT32 guiCreditScreenActiveFont;  // the font that is used
 static UINT32 guiCreditScreenTitleFont;   // the font that is used
 static UINT8  gubCreditScreenActiveColor; // color of the font
 static UINT8  gubCreditScreenTitleColor;  // color of a Title node
-//UINT32		guiCreditScreenActiveDisplayFlags;	//
 
 static UINT32 guiCrdtNodeScrollSpeed      = CRDT_NODE_DELAY_AMOUNT; // speed credits go up at
-//UINT32		guiCrdtTimeTillReadNextCredit = CRDT_DELAY_BN_SECTIONS;		//the delay before reading the next credit ( normall = guiCrdtDelayBetweenCreditSection or guiCrdtDelayBetweenNodes )
-//UINT32		guiCrdtDelayBetweenCreditSection = CRDT_DELAY_BN_SECTIONS;		//delay between major credits sections ( programming and art ) appearing on the screen
-//UINT32		guiCrdtDelayBetweenNodes = CRDT_DELAY_BN_NODES;		//delay between credits appearing on the screen
 static UINT32 guiCrdtLastTimeUpdatingNode = 0;                      // the last time a node was read from the file
 static UINT8  gubCrdtJustification        = CENTER_JUSTIFIED;       // the current justification
 
@@ -333,17 +229,7 @@ UINT32	CreditScreenHandle( void )
 
 	GetCreditScreenUserInput();
 
-
 	HandleCreditScreen();
-
-	// render buttons marked dirty
-//	MarkButtonsDirty( );
-//	RenderButtons( );
-
-	// render help
-//	RenderFastHelp( );
-//	RenderButtonsFastHelp( );
-
 
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
@@ -391,14 +277,9 @@ static BOOLEAN EnterCreditsScreen(void)
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;
 	guiCreditScreenTitleFont = FONT14ARIAL;
 	gubCreditScreenTitleColor = FONT_MCOLOR_RED;
-//	guiCreditScreenActiveDisplayFlags = LEFT_JUSTIFIED;
 	guiCrdtNodeScrollSpeed = CRDT_NODE_DELAY_AMOUNT;
 	gubCrdtJustification = CENTER_JUSTIFIED;
 	guiCurrentCreditRecord = 0;
-
-//	guiCrdtTimeTillReadNextCredit = CRDT_DELAY_BN_SECTIONS;
-//	guiCrdtDelayBetweenCreditSection = CRDT_DELAY_BN_SECTIONS;
-//	guiCrdtDelayBetweenNodes = CRDT_DELAY_BN_NODES;
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
 
@@ -433,9 +314,6 @@ static BOOLEAN ExitCreditScreen(void)
 {
 	UINT32	uiCnt;
 
-
-	//Blit the background image
-//	DeleteVideoSurfaceFromIndex( guiCreditBackGroundImage );
 	DeleteVideoObjectFromIndex( guiCreditBackGroundImage );
 
 	DeleteVideoObjectFromIndex( guiCreditFaces );
@@ -462,8 +340,6 @@ static void SetCreditsExitScreen(UINT32 uiScreenToGoTo);
 
 static void HandleCreditScreen(void)
 {
-//	UINT32	uiTime = GetJA2Clock();
-
 	if( gubCreditScreenRenderFlags == CRDT_RENDER_ALL )
 	{
 		RenderCreditScreen();
@@ -676,18 +552,6 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 		uiFontToUse = guiCreditScreenTitleFont;
 		uiColorToUse = gubCreditScreenTitleColor;
 	}
-/*
-	else if ( uiFlags & CRDT_FLAG__START_SECTION )
-	{
-		uiFontToUse = ;
-		uiColorToUse = ;
-	}
-	else if ( uiFlags & CRDT_FLAG__END_SECTION )
-	{
-		uiFontToUse = ;
-		uiColorToUse = ;
-	}
-*/
 	else
 	{
 		uiFontToUse = guiCreditScreenActiveFont;
@@ -810,8 +674,6 @@ static void HandleCreditNodes(void)
 			DeleteNode( pTemp );
 		}
 	}
-
-//	RestoreExternBackgroundRect( CRDT_TEXT_START_LOC, 0, CRDT_WIDTH_OF_TEXT_AREA, CRDT_LINE_NODE_DISAPPEARS_AT );
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
 }
@@ -975,19 +837,13 @@ handle_text:
 
 static void HandleCreditFlags(UINT32 uiFlags)
 {
-	if( uiFlags & CRDT_FLAG__TITLE )
-	{
-	}
-
 	if( uiFlags & CRDT_FLAG__START_SECTION )
 	{
-//		guiCrdtTimeTillReadNextCredit = guiCrdtDelayBetweenNodes;
 		guiGapTillReadNextCredit = guiGapBetweenCreditNodes;
 	}
 
 	if( uiFlags & CRDT_FLAG__END_SECTION )
 	{
-//		guiCrdtTimeTillReadNextCredit = guiCrdtDelayBetweenCreditSection;
 		guiGapTillReadNextCredit = guiGapBetweenCreditSections;
 	}
 }
