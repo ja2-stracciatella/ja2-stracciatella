@@ -40,8 +40,6 @@ typedef struct	_CRDT_NODE
 
 	BOOLEAN	fDelete;		//Delete this loop
 
-	UINT32	uiLastTime;	// The last time the node was udated
-
 	UINT32	uiVideoSurfaceImage;
 
 	struct _CRDT_NODE	*pPrev;
@@ -567,8 +565,6 @@ static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	//starting y position on the screen
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
-//	pNodeToAdd->uiLastTime = GetJA2Clock();
-
 	pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
 	if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
 
@@ -681,8 +677,6 @@ static void HandleNode_Default(CRDT_NODE* pCurrent)
 		//mark the node to be deleted this frame
 		pCurrent->fDelete = TRUE;
 	}
-
-	pCurrent->uiLastTime = GetJA2Clock();
 }
 
 
@@ -692,31 +686,20 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 	if( pCurrent->pString == NULL )
 		return( FALSE );
 
-
-	//if the node is new and we havent displayed it yet
-	if( pCurrent->uiLastTime == 0 )
+	//Restore the background before blitting the text back on
+	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
+	INT16 h = pCurrent->sHeightOfString;
+	/* Clip to the screen area */
+	if (y - CRDT_LINE_NODE_DISAPPEARS_AT < 0)
 	{
-
+		h += y - CRDT_LINE_NODE_DISAPPEARS_AT;
+		y = 0;
 	}
-
-	//else we have to restore were the string was
-	else
+	else if (y + pCurrent->sHeightOfString - SCREEN_HEIGHT > 0)
 	{
-		//Restore the background before blitting the text back on
-		INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
-		INT16 h = pCurrent->sHeightOfString;
-		/* Clip to the screen area */
-		if (y - CRDT_LINE_NODE_DISAPPEARS_AT < 0)
-		{
-			h += y - CRDT_LINE_NODE_DISAPPEARS_AT;
-			y = 0;
-		}
-		else if (y + pCurrent->sHeightOfString - SCREEN_HEIGHT > 0)
-		{
-			h -= y + pCurrent->sHeightOfString - SCREEN_HEIGHT;
-		}
-		RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
+		h -= y + pCurrent->sHeightOfString - SCREEN_HEIGHT;
 	}
+	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 
 	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, CRDT_TEXT_START_LOC, pCurrent->sPosY, NULL);
 
