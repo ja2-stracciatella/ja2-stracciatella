@@ -712,7 +712,7 @@ static void RenderSaveLoadScreen(void)
 
 	DisplaySaveGameList();
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 

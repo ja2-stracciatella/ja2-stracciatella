@@ -204,7 +204,7 @@ UINT32	OptionsScreenHandle()
 
 		//Blit the background to the save buffer
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateScreen();
 	}
 
 	RestoreBackgroundRects();
@@ -647,7 +647,7 @@ static void GetOptionsScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
 					break;
 
 					//Test keys

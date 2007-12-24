@@ -118,7 +118,7 @@ UINT32	IntroScreenHandle( void )
 		gfIntroScreenEntry = FALSE;
 		gfIntroScreenExit = FALSE;
 
-		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateScreen();
 	}
 
 	RestoreBackgroundRects();
@@ -254,7 +254,7 @@ static void GetIntroScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
 					break;
 
 #endif

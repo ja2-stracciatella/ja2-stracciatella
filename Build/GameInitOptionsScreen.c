@@ -208,7 +208,7 @@ UINT32 GameInitOptionsScreenHandle(void)
 		EnterGIOScreen();
 		gfGIOScreenEntry = FALSE;
 		gfGIOScreenExit = FALSE;
-		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateScreen();
 	}
 
 	GetGIOScreenUserInput();
@@ -600,7 +600,7 @@ static void GetGIOScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
 					break;
 #endif
 

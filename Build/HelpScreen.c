@@ -947,7 +947,7 @@ static void GetHelpScreenUserInput(void)
 					break;
 
 				case 'i':
-					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
 					break;
 
 				case 'd':

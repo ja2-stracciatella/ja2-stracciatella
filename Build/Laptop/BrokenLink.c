@@ -1,6 +1,5 @@
 #include "BrokenLink.h"
 #include "Font.h"
-#include "Local.h"
 #include "WordWrap.h"
 #include "Laptop.h"
 #include "Text.h"
@@ -53,7 +52,7 @@ void RenderBrokenLink()
 
 	SetFontShadow( DEFAULT_SHADOW );
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 

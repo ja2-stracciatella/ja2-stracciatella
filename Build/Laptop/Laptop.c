@@ -583,7 +583,7 @@ static INT32 EnterLaptop(void)
 
 	fShowAtmPanelStartButton = TRUE;
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 
 	return TRUE;
 }
@@ -1315,7 +1315,7 @@ UINT32 LaptopScreenHandle()
 	// invalidate screen if redrawn
 	if (fReDrawScreenFlag)
 	{
-		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateScreen();
 		fReDrawScreenFlag = FALSE;
 	}
 

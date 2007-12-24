@@ -499,8 +499,7 @@ void RenderEmail( void )
 	// show which page we are on
 	DisplayWhichPageOfEmailProgramIsDisplayed( );
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	 // invalidate region to force update
+	InvalidateScreen();
 }
 
 
@@ -1502,8 +1501,7 @@ static void DeleteEmail(void)
 
    fReDrawScreenFlag=TRUE;
 
-	 // invalidate
-	 InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 

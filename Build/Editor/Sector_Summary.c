@@ -2612,7 +2612,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	iSummaryButton[SUMMARY_BACKGROUND] = CreateLabel(NULL, 0, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1);
 	//Draw it
 	DrawButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 	SetFont( HUGEFONT );
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );

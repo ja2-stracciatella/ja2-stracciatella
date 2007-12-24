@@ -423,7 +423,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 	RenderMercPopUpBoxFromIndex( iSaveLoadGameMessageBoxID, usPosX, 160, FRAME_BUFFER );
 
-  InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 
 	ExecuteBaseDirtyRectQueue( );
 	EndFrameBufferRender( );

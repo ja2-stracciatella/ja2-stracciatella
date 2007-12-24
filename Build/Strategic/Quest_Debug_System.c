@@ -1064,7 +1064,7 @@ static void RenderQuestDebugSystem(void)
 		DisplayQDSCurrentlyQuoteNum( );
 
   MarkButtonsDirty( );
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 
@@ -1700,7 +1700,7 @@ static void DisplaySelectedListBox(void)
 	//display the scroll rectangle
 	DrawQdsScrollRectangle();
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 
@@ -2713,7 +2713,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 					usPosY += usFontHeight;
 				}
 			}
-			InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			InvalidateScreen();
 		  MarkButtonsDirty( );
 		}
 		break;

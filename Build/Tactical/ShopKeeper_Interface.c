@@ -433,7 +433,7 @@ UINT32	ShopKeeperScreenHandle()
 		}
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 		gfRenderScreenOnNextLoop = TRUE;
-		InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		InvalidateScreen();
 	}
 
 	if( gfRenderScreenOnNextLoop )
@@ -1109,7 +1109,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	//Restore the tactical background that is visble behind the SKI panel
 	RestoreTacticalBackGround();
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 
 	return( TRUE );
 }
@@ -1124,7 +1124,7 @@ static void RestoreTacticalBackGround(void)
 
 	BltVideoSurface(FRAME_BUFFER, guiCornerWhereTacticalIsStillSeenImage, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_Y, NULL);
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 
@@ -1177,7 +1177,7 @@ static void GetShopKeeperInterfaceUserInput(void)
 					gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 					break;
 				case 'i':
-					InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
 					break;
 
 				case 'd':
@@ -5385,7 +5385,7 @@ void StartSKIDescriptionBox(void)
 	else
 		DrawHatchOnInventory(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 
 	// disable almost everything!
 

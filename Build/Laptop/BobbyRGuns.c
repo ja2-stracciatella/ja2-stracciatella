@@ -2,7 +2,6 @@
 #include "Laptop.h"
 #include "BobbyRGuns.h"
 #include "BobbyR.h"
-#include "Local.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"
@@ -275,7 +274,7 @@ void RenderBobbyRGuns()
 	UpdateButtonText(guiCurrentLaptopMode);
   MarkButtonsDirty( );
 	RenderWWWProgramTitleBar( );
-  InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	InvalidateScreen();
 }
 
 
