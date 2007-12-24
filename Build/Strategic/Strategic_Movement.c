@@ -178,7 +178,6 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 	Assert( pPlayer );
 	AssertMsg( pGroup->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 	pPlayer->pSoldier = pSoldier;
-	pPlayer->ubProfileID = pSoldier->ubProfile;
 	pPlayer->bFlags = 0;
 	pPlayer->next = NULL;
 
@@ -205,7 +204,7 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 		pSoldier->ubDesiredSquadAssignment = curr->pSoldier->ubDesiredSquadAssignment;
 		while( curr->next )
 		{
-			AssertMsg(curr->ubProfileID != pSoldier->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", pSoldier->ubProfile));
+			AssertMsg(curr->pSoldier->ubProfile != pSoldier->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", pSoldier->ubProfile));
 			curr = curr->next;
 		}
 		curr->next = pPlayer;
@@ -3498,7 +3497,6 @@ static BOOLEAN SavePlayerGroupList(HWFILE hFile, GROUP* pGroup)
 {
 	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
-	UINT32	uiProfileID;
 
 	pTemp = pGroup->pPlayerList;
 
@@ -3521,7 +3519,7 @@ static BOOLEAN SavePlayerGroupList(HWFILE hFile, GROUP* pGroup)
 	while( pTemp )
 	{
 		// Save the ubProfile ID for this node
-		uiProfileID = pTemp->ubProfileID;
+		const UINT32 uiProfileID = pTemp->pSoldier->ubProfile;
 		if (!FileWrite(hFile, &uiProfileID, sizeof(UINT32)))
 		{
 			//Error Writing size of L.L. to disk
@@ -3541,7 +3539,6 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 	PLAYERGROUP		*pTemp=NULL;
 	PLAYERGROUP		*pHead=NULL;
 	UINT32	uiNumberOfNodes=0;
-	UINT32	uiProfileID=0;
 	UINT32	cnt=0;
 	GROUP		*pTempGroup = *pGroup;
 
@@ -3567,16 +3564,14 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 
 
 		// Load the ubProfile ID for this node
+		UINT32 uiProfileID;
 		if (!FileRead(hFile, &uiProfileID, sizeof(UINT32)))
 		{
 			//Error Writing size of L.L. to disk
 			return( FALSE );
 		}
 
-		//Set up the current node
-		pTemp->ubProfileID = (UINT8)uiProfileID;
-
-		SOLDIERTYPE* const s = GetSoldierFromMercID(pTemp->ubProfileID);
+		SOLDIERTYPE* const s = GetSoldierFromMercID(uiProfileID);
 		//Should never happen
 		//Assert(s != NULL);
 		pTemp->pSoldier = s;

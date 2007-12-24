@@ -394,31 +394,3 @@ void ClearMapControlledFlags( void )
 	}
 }
 #endif
-
-
-void ReplaceSoldierProfileInPlayerGroup( UINT8 ubGroupID, UINT8 ubOldProfile, UINT8 ubNewProfile )
-{
-	GROUP *pGroup;
-	PLAYERGROUP *curr;
-
-	pGroup = GetGroup( ubGroupID );
-
-	if ( !pGroup )
-	{
-		return;
-	}
-
-	curr = pGroup->pPlayerList;
-
-	while( curr )
-	{
-		if( curr->ubProfileID == ubOldProfile )
-		{
-			// replace and return!
-			curr->ubProfileID = ubNewProfile;
-			return;
-		}
-		curr = curr->next;
-	}
-
-}

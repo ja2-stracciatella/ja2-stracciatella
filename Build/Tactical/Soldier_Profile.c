@@ -44,7 +44,6 @@
 #include "History.h"
 #include "Personnel.h"
 #include "Environment.h"
-#include "Player_Command.h"
 #include "Items.h"
 
 #ifdef JA2EDITOR
@@ -1391,9 +1390,6 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
 
 	// create new face
 	InitSoldierFace(pSoldier);
-
-	// replace profile in group
-	ReplaceSoldierProfileInPlayerGroup( pSoldier->ubGroupID, ubSrcProfile, ubDestProfile );
 
 	pSoldier->bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
 	pSoldier->bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
