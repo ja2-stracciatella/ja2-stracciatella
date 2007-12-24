@@ -696,10 +696,6 @@ struct SOLDIERTYPE
 	BOOLEAN											fChangingStanceDueToSuppression;
 	SOLDIERTYPE*                suppressor;
 
-	//Squad merging vars
-	UINT8												ubDesiredSquadAssignment;
-	UINT8												ubNumTraversalsAllowedToMerge;
-
 	UINT16											usPendingAnimation2;
 	UINT8												ubCivilianGroup;
 

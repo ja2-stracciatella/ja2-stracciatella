@@ -6523,10 +6523,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
           SetSoldierExitVehicleInsertionData( pSoldier, pSoldier->iVehicleId );
 				}
 
-				//Clear any desired squad assignments -- seeing the player has physically changed it!
-				pSoldier -> ubNumTraversalsAllowedToMerge = 0;
-				pSoldier -> ubDesiredSquadAssignment = NO_ASSIGNMENT;
-
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 			}
 

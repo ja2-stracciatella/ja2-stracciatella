@@ -2198,12 +2198,9 @@ static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirect
 void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 sAdditionalData )
 {
 	SOLDIERTYPE *pValidSoldier = NULL;
-	GROUP *pGroup;
 	UINT32 uiTraverseTime=0;
 	UINT8 ubDirection;
 	EXITGRID ExitGrid;
-	INT8 bPrevAssignment;
-	UINT8 ubPrevGroupID;
 
 	// Set initial selected
 	// ATE: moved this towards top...
@@ -2239,10 +2236,6 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 			ubDirection = GetInsertionDataFromAdjacentMoveDirection( ubTacticalDirection, sAdditionalData );
 		}
 
-		// save info for desired squad and and time for all single mercs leaving their squad.
-		bPrevAssignment = pValidSoldier->bAssignment;
-		ubPrevGroupID = pValidSoldier->ubGroupID;
-
 		if( ubJumpCode == JUMP_SINGLE_NO_LOAD )
 		{ // handle soldier moving by themselves
 			HandleSoldierLeavingSectorByThemSelf( pValidSoldier );
@@ -2250,26 +2243,6 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		else
 		{ // now add char to a squad all their own
 			AddCharacterToUniqueSquad( pValidSoldier );
-		}
-		if( !pValidSoldier->ubNumTraversalsAllowedToMerge && bPrevAssignment < ON_DUTY )
-		{
-			PLAYERGROUP *pPlayer;
-			pValidSoldier->ubDesiredSquadAssignment = bPrevAssignment;
-			pValidSoldier->ubNumTraversalsAllowedToMerge = 2;
-			pGroup = GetGroup( ubPrevGroupID );
-			Assert( pGroup );
-			Assert( pGroup->fPlayer );
-			//Assert( pGroup->ubGroupSize );
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
-			{
-				if( pPlayer->pSoldier != pValidSoldier )
-				{
-					pPlayer->pSoldier->ubNumTraversalsAllowedToMerge = 100;
-					pPlayer->pSoldier->ubDesiredSquadAssignment = NO_ASSIGNMENT;
-				}
-				pPlayer = pPlayer->next;
-			}
 		}
 	}
 	else
@@ -2280,9 +2253,8 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	Assert( pValidSoldier );
 
-
 	//Now, determine the traversal time.
-	pGroup = GetGroup( pValidSoldier->ubGroupID );
+	GROUP* const pGroup = GetGroup(pValidSoldier->ubGroupID);
 	AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
 
 	// If we are going through an exit grid, don't get traversal direction!
@@ -2496,7 +2468,6 @@ void AllMercsWalkedToExitGrid()
 		}
 
 		SetGroupSectorValue( (UINT8)gsAdjacentSectorX, (UINT8)gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
-		AttemptToMergeSeparatedGroups( gpAdjacentGroup, FALSE );
 
 		SetDefaultSquadOnSectorEntry( TRUE );
 
@@ -2541,7 +2512,6 @@ void AllMercsWalkedToExitGrid()
 			pPlayer = pPlayer->next;
 		}
 		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
-		AttemptToMergeSeparatedGroups( gpAdjacentGroup, FALSE );
 
 		gFadeOutDoneCallback = DoneFadeOutExitGridSector;
 		FadeOutGameScreen( );

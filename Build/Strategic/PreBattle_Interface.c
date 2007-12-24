@@ -1729,10 +1729,6 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVe
 				// it better work...
 				Assert( fSuccess );
 
-				// clear any desired squad assignments
-				pSoldier -> ubNumTraversalsAllowedToMerge = 0;
-				pSoldier -> ubDesiredSquadAssignment = NO_ASSIGNMENT;
-
 				// stand him up
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 			}

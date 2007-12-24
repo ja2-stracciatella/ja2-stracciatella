@@ -216,11 +216,6 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile );
 
 void HandleArrivalOfReinforcements( GROUP *pGroup );
 
-//When groups meet up, then it is possible that they may join up.  This only happens if
-//the groups were separated because of singular tactical/exitgrid traversal, and the timing
-//expires.
-BOOLEAN AttemptToMergeSeparatedGroups( GROUP *pGroup, BOOLEAN fDecrementTraversals );
-
 //Called when all checks have been made for the group (if possible to retreat, etc.)  This function
 //blindly determines where to move the group.
 void RetreatGroupToPreviousSector( GROUP *pGroup );
