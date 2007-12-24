@@ -1749,7 +1749,6 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
 	INT16									sNewY, sNewX;
-	INT16									sFontX, sFontY;
 
 	if ( pObject->usItem == NOTHING )
 	{

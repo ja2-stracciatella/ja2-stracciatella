@@ -459,10 +459,6 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 
 static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 {
-  // run through list, from pCurrentHistory, to NUM_RECORDS_PER_PAGE +1 HistoryUnits
-	HistoryUnit* pTempHistory = pCurrentHistory;
-	BOOLEAN fOkToIncrementPage=FALSE;
-	INT32 iCounter=0;
 	HWFILE hFileHandle;
 	UINT32	uiFileSize=0;
 	UINT32  uiSizeOfRecordsOnEachPage = 0;
@@ -502,26 +498,6 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 		iCurrentHistoryPage++;
 		FileClose( hFileHandle );
 	}
-
-
-	/*
-	// haven't reached end of list and not yet at beginning of next page
-	while( ( pTempHistory )&&( ! fOkToIncrementPage ) )
-	{
-    // found the next page,  first record thereof
-		if(iCounter==NUM_RECORDS_PER_PAGE+1)
-		{
-			fOkToIncrementPage=TRUE;
-		  pCurrentHistory=pTempHistory->Next;
-		}
-
-		//next record
-		pTempHistory=pTempHistory->Next;
-    iCounter++;
-	}
-*/
-	// if ok to increment, increment
-
 
 	return( TRUE );
 }

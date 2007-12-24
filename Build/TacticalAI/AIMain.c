@@ -124,8 +124,6 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier);
 
 void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 {
-	UINT32 uiCurrTime = GetJA2Clock();
-
 	// ATE
 	// Bail if we are engaged in a NPC conversation/ and/or sequence ... or we have a pause because
 	// we just saw someone... or if there are bombs on the bomb queue
@@ -229,7 +227,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		{
 			//Reset counter!
 			RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->uiAIDelay );
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "%s waiting %d from %d", pSoldier->name, pSoldier->AICounter, uiCurrTime ) );
 		}
 		//#endif
 	}

@@ -648,12 +648,6 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	INT16				sHeight;
 	INT16				sX1, sX2, sY1, sY2;
 
-	// Get video object for persons...
-	if ( !fFromMapUtility )
-	{
-		HVOBJECT hVObject = GetVideoObject(uiPERSONS);
-	}
-
 	if ( gfOverheadMapDirty )
 	{
 		// Black out.......

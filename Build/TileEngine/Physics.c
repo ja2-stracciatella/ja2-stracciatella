@@ -1219,19 +1219,15 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 		{
 			if ( pObject->pNode != NULL )
 			{
-				// OK, get offsets
-				const TILE_ELEMENT* const te    = &gTileDatabase[pObject->pNode->usIndex];
-				const ETRLEObject*  const pTrav = &te->hTileSurface->pETRLEObject[te->usRegionIndex];
-
 				// Add new object / update position
 				// Update position data
-				pObject->pNode->sRelativeX	= (INT16)pObject->Position.x; // + pTrav->sOffsetX;
-				pObject->pNode->sRelativeY	= (INT16)pObject->Position.y; // + pTrav->sOffsetY;
+				pObject->pNode->sRelativeX	= (INT16)pObject->Position.x;
+				pObject->pNode->sRelativeY	= (INT16)pObject->Position.y;
 				pObject->pNode->sRelativeZ	= (INT16)CONVERT_HEIGHTUNITS_TO_PIXELS( (INT16)pObject->Position.z );
 
 				// Update position data
-				pObject->pShadow->sRelativeX	= (INT16)pObject->Position.x; // + pTrav->sOffsetX;
-				pObject->pShadow->sRelativeY	= (INT16)pObject->Position.y; // + pTrav->sOffsetY;
+				pObject->pShadow->sRelativeX	= (INT16)pObject->Position.x;
+				pObject->pShadow->sRelativeY	= (INT16)pObject->Position.y;
 				pObject->pShadow->sRelativeZ	= (INT16)gpWorldLevelData[ pObject->sGridNo ].sHeight;
 			}
 		}
