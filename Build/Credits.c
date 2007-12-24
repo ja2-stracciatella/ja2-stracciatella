@@ -32,8 +32,6 @@ enum
 
 typedef struct	_CRDT_NODE
 {
-	UINT32	uiType;			//the type of node
-
 	CHAR16	*pString;		//string for the node if the node contains a string
 
 	UINT32	uiFlags;		//various flags
@@ -55,13 +53,6 @@ typedef struct	_CRDT_NODE
 	struct _CRDT_NODE	*pPrev;
 	struct _CRDT_NODE *pNext;
 } 	CRDT_NODE;
-
-//type of credits
-enum
-{
-	CRDT_NODE_NONE,
-	CRDT_NODE_DEFAULT,		// scrolls up and off the screen
-};
 
 //flags for the credits
 //Flags:
@@ -653,14 +644,8 @@ static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 		pTempNode->pString = NULL;
 	}
 
-
-	//if the node had something to display, delete a surface for it
-	if( pTempNode->uiType == CRDT_NODE_DEFAULT )
-	{
-		DeleteVideoSurfaceFromIndex( pTempNode->uiVideoSurfaceImage );
-		pTempNode->uiVideoSurfaceImage = 0;
-	}
-
+	DeleteVideoSurfaceFromIndex(pTempNode->uiVideoSurfaceImage);
+	pTempNode->uiVideoSurfaceImage = 0;
 
 	//Free the node
 	MemFree( pTempNode );
@@ -670,19 +655,12 @@ static BOOLEAN DeleteNode(CRDT_NODE* pNodeToDelete)
 }
 
 
-static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, const wchar_t* pString)
+static BOOLEAN AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
 	CRDT_NODE	*pNodeToAdd=NULL;
 	CRDT_NODE	*pTemp=NULL;
 	UINT32	uiFontToUse;
 	UINT8		uiColorToUse;
-
-	//if
-	if( uiType == CRDT_NODE_NONE)
-	{
-		//Assert( 0 );
-		return( TRUE );
-	}
 
 	pNodeToAdd = MemAlloc( sizeof( CRDT_NODE) );
 	if( pNodeToAdd == NULL )
@@ -720,9 +698,6 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, const wchar_t* pStri
 	// Set some default data
 	//
 
-	//the type of the node
-	pNodeToAdd->uiType = uiType;
-
 	//any flags that are added
 	pNodeToAdd->uiFlags = uiFlags;
 
@@ -745,30 +720,23 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, const wchar_t* pStri
 
 //	pNodeToAdd->uiLastTime = GetJA2Clock();
 
-	//if the node can have something to display, Create a surface for it
-	if( pNodeToAdd->uiType == CRDT_NODE_DEFAULT )
-	{
-		pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
-		if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
+	pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
+	if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return FALSE;
 
-		//Set transparency
-		SetVideoSurfaceTransparency( pNodeToAdd->uiVideoSurfaceImage, 0 );
+	//Set transparency
+	SetVideoSurfaceTransparency(pNodeToAdd->uiVideoSurfaceImage, 0);
 
-		//fill the surface with a transparent color
-		FillSurface(pNodeToAdd->uiVideoSurfaceImage, 0);
+	//fill the surface with a transparent color
+	FillSurface(pNodeToAdd->uiVideoSurfaceImage, 0);
 
-		//set the font dest buffer to be the surface
-		SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
+	//set the font dest buffer to be the surface
+	SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
 
-		//write the string onto the surface
-		DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, gubCrdtJustification);
+	//write the string onto the surface
+	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pNodeToAdd->pString, 0, gubCrdtJustification);
 
-		//reset the font dest buffer
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	}
-
-
-
+	//reset the font dest buffer
+	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//
 	// Insert the node into the list
@@ -805,7 +773,7 @@ static BOOLEAN AddCreditNode(UINT32 uiType, UINT32 uiFlags, const wchar_t* pStri
 }
 
 
-static void HandleCurrentCreditNode(CRDT_NODE* pCurrent);
+static void HandleNode_Default(CRDT_NODE* pCurrent);
 
 
 static void HandleCreditNodes(void)
@@ -833,8 +801,7 @@ static void HandleCreditNodes(void)
 
 		pCurrent = pCurrent->pNext;
 
-		//Handle the current node
-		HandleCurrentCreditNode( pTemp );
+		HandleNode_Default(pTemp);
 
 		//if the node is to be deleted
 		if( pTemp->fDelete )
@@ -847,26 +814,6 @@ static void HandleCreditNodes(void)
 //	RestoreExternBackgroundRect( CRDT_TEXT_START_LOC, 0, CRDT_WIDTH_OF_TEXT_AREA, CRDT_LINE_NODE_DISAPPEARS_AT );
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
-}
-
-
-static void HandleNode_Default(CRDT_NODE* pCurrent);
-
-
-static void HandleCurrentCreditNode(CRDT_NODE* pCurrent)
-{
-	//switch on the type of node
-	switch( pCurrent->uiType )
-	{
-//new codes:
-		case CRDT_NODE_DEFAULT:
-			HandleNode_Default( pCurrent );
-			break;
-
-		default:
-			Assert( 0 );
-			break;
-	}
 }
 
 
@@ -1020,7 +967,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	}
 
 handle_text:
-	if (*s != L'\0') AddCreditNode(CRDT_NODE_DEFAULT, flags, s);
+	if (*s != L'\0') AddCreditNode(flags, s);
 	HandleCreditFlags(flags);
 	return TRUE;
 }
