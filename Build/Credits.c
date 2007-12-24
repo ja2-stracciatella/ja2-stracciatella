@@ -703,25 +703,19 @@ static BOOLEAN DisplayCreditNode(CRDT_NODE* pCurrent)
 	else
 	{
 		//Restore the background before blitting the text back on
-		const INT16 old_y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
-
-		//if the surface is at the bottom of the screen
-		if (old_y + pCurrent->sHeightOfString > CRDT_START_POS_Y )
+		INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
+		INT16 h = pCurrent->sHeightOfString;
+		/* Clip to the screen area */
+		if (y - CRDT_LINE_NODE_DISAPPEARS_AT < 0)
 		{
-			const INT16 sHeight = SCREEN_HEIGHT - old_y;
-			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, old_y, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
+			h += y - CRDT_LINE_NODE_DISAPPEARS_AT;
+			y = 0;
 		}
-		else if (old_y > CRDT_LINE_NODE_DISAPPEARS_AT)
+		else if (y + pCurrent->sHeightOfString - SCREEN_HEIGHT > 0)
 		{
-			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, old_y, CRDT_WIDTH_OF_TEXT_AREA, pCurrent->sHeightOfString);
+			h -= y + pCurrent->sHeightOfString - SCREEN_HEIGHT;
 		}
-
-		//if the surface is at the top of the screen
-		else
-		{
-			const INT16 sHeight = old_y + pCurrent->sHeightOfString;
-			RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, CRDT_LINE_NODE_DISAPPEARS_AT, CRDT_WIDTH_OF_TEXT_AREA, sHeight);
-		}
+		RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 	}
 
 	BltVideoSurface(FRAME_BUFFER, pCurrent->uiVideoSurfaceImage, CRDT_TEXT_START_LOC, pCurrent->sPosY, NULL);
