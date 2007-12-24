@@ -878,7 +878,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									if (uiRowFlags == TILES_DYNAMIC_MERCS)
 									{
 										// If we are multi-tiled, ignore here
-										if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z)
+										if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -895,7 +895,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									if (uiRowFlags == TILES_DYNAMIC_HIGHMERCS)
 									{
 										// If we are multi-tiled, ignore here
-										if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z)
+										if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
 										{
 											pNode = pNode->pNext;
 											continue;
@@ -912,7 +912,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									if (uiRowFlags == TILES_DYNAMIC_STRUCT_MERCS)
 									{
 										// If we are not multi-tiled, ignore here
-										if (!(pSoldier->uiStatusFlags & SOLDIER_MULTITILE_Z))
+										if (!(pSoldier->uiStatusFlags & SOLDIER_MULTITILE))
 										{
 											// If we are at a low level, no not do anything unless we are at the merc stage
 											if (pSoldier->bLevel == 0)

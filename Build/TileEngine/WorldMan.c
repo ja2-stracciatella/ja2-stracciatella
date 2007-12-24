@@ -1397,7 +1397,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier
 			if (pStructureFileRef->pDBStructureRef[OneCDirection(pSoldier->bDirection)].pDBStructure->ubNumberOfTiles > 1)
 			{
 				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
+				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE;
 			}
 
 			return FALSE;
@@ -1408,7 +1408,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier
 			if (pSoldier->pLevelNode->pStructureData->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1)
 			{
 				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE_Z;
+				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE;
 			}
 		}
 	}
