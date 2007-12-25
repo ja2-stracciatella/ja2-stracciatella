@@ -2593,7 +2593,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
 
-#if defined RUSSIAN && !defined RUSSIAN_GOLD
+#if defined RUSSIAN
 	if (dMajorMapVersion != 6.00)
 	{
 		return FALSE;
@@ -2877,7 +2877,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	fp += offset;
 	offset = 0;
 
-#if defined RUSSIAN && !defined RUSSIAN_GOLD
+#if defined RUSSIAN
 	{
 		UINT32 uiNums[37];
 		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );

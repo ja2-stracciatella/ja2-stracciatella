@@ -25,7 +25,7 @@ BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, U
 		/* "Decrypt" the ROT-1 "encrypted" data */
 		wchar_t c = (*i > 33 ? *i - 1 : *i);
 
-#if defined RUSSIAN
+#if defined RUSSIAN || defined RUSSIAN_GOLD
 		/* The Russian data files are incorrectly encoded. The original texts seem to
 		 * be encoded in CP1251, but then they were converted from CP1252 (!) to
 		 * UTF-16 to store them in the data files. Undo this damage here. */

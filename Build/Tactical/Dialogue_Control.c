@@ -1734,13 +1734,13 @@ const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOO
 	{
 		if ( fWavFile )
 		{
-			#ifdef RUSSIAN
-				if( ubCharacterNum >= FIRST_RPC && gMercProfiles[ ubCharacterNum ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-				{
-					sprintf( zFileName,"SPEECH/r_%03d_%03d.wav",ubCharacterNum,usQuoteNum );
-				}
-				else
-			#endif
+#if defined RUSSIAN || defined RUSSIAN_GOLD
+			if (ubCharacterNum >= FIRST_RPC && gMercProfiles[ubCharacterNum].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
+			{
+				sprintf(zFileName, "SPEECH/r_%03d_%03d.wav", ubCharacterNum, usQuoteNum);
+			}
+			else
+#endif
 			{	// build name of wav file (characternum + quotenum)
 				sprintf( zFileName,"SPEECH/%03d_%03d.wav",ubCharacterNum,usQuoteNum );
 			}

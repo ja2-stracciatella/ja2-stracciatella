@@ -113,7 +113,7 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
   zLanguage = "KOREAN";
 #elif defined(POLISH)
   zLanguage = "POLISH";
-#elif defined(RUSSIAN)
+#elif defined RUSSIAN || defined RUSSIAN_GOLD
   zLanguage = "RUSSIAN";
 #elif defined(SPANISH)
   zLanguage = "SPANISH";

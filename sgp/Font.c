@@ -266,10 +266,10 @@ static INT16 GetIndex(wchar_t c)
 
 	UINT16 Idx = 0;
 	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
-#if !defined RUSSIAN || defined RUSSIAN_GOLD
-	if (Idx == 0 && c != L'A')
-#else
+#if defined RUSSIAN
 	if (Idx == 0 && c != L' ')
+#else
+	if (Idx == 0 && c != L'A')
 #endif
 	{
 		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U%04X", c));

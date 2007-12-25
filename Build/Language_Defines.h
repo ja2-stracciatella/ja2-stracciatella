@@ -5,10 +5,6 @@
 #	error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD must be defined.
 #endif
 
-#if defined RUSSIAN_GOLD
-#	define RUSSIAN
-#endif
-
 #define BLOOD_N_GORE_ENABLED
 
 #endif
