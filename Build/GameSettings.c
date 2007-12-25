@@ -123,10 +123,6 @@ BOOLEAN LoadGameSettings()
 	SetSpeechVolume( gGameSettings.ubSpeechVolume );
 	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );
 
-#ifndef BLOOD_N_GORE_ENABLED
-	gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ]				= FALSE;
-#endif
-
 	//if the user doesnt want the help screens present
 	if( gGameSettings.fHideHelpInAllScreens )
 	{
@@ -209,10 +205,6 @@ static void InitGameSettings(void)
 	gGameSettings.fOptions[ TOPTION_SLEEPWAKE_NOTIFICATION ]		= TRUE;
 
 	gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ]					= FALSE;
-
-	#ifndef BLOOD_N_GORE_ENABLED
-		gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ]						= FALSE;
-	#endif
 
 	gGameSettings.fOptions[ TOPTION_MERC_ALWAYS_LIGHT_UP ]			= FALSE;
 	gGameSettings.fOptions[ TOPTION_SMART_CURSOR ]							= FALSE;

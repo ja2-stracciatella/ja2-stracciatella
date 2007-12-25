@@ -5,6 +5,4 @@
 #	error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD must be defined.
 #endif
 
-#define BLOOD_N_GORE_ENABLED
-
 #endif

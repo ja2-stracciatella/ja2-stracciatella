@@ -143,9 +143,6 @@ static INT32 giOptionsMessageBox = -1; // Options pop up messages index value
 
 INT8			gbHighLightedOptionText = -1;
 
-BOOLEAN		gfHideBloodAndGoreOption=FALSE;		//If a germany build we are to hide the blood and gore option
-UINT8			gubFirstColOfOptions=OPT_FIRST_COLUMN_TOGGLE_CUT_OFF;
-
 
 BOOLEAN		gfSettingOfTreeTopStatusOnEnterOfOptionScreen;
 BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
@@ -278,27 +275,6 @@ static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 static BOOLEAN EnterOptionsScreen(void)
 {
-	//Default this to off
-	gfHideBloodAndGoreOption=FALSE;
-
-#ifndef BLOOD_N_GORE_ENABLED
-	//This will hide blood and gore option
-	gfHideBloodAndGoreOption = TRUE;
-
-/*
-Uncomment this to enable the check for files to activate the blood and gore option for the german build
-	if( !FileExists( "Germany.dat" ) && FileExists( "Lecken.dat" ) )
-	{
-		gfHideBloodAndGoreOption = FALSE;
-	}
-	else
-*/
-	{
-		gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] = FALSE;
-	}
-#endif
-
-
 	//if we are coming from mapscreen
 	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
 	{
@@ -354,17 +330,10 @@ Uncomment this to enable the check for files to activate the blood and gore opti
 	//Create the first column of check boxes
 	UINT32 pos_x = OPT_TOGGLE_BOX_FIRST_COLUMN_X;
 	UINT16 pos_y = OPT_TOGGLE_BOX_START_Y;
-	gubFirstColOfOptions = OPT_FIRST_COLUMN_TOGGLE_CUT_OFF;
 	for (UINT8 cnt = 0; cnt < NUM_GAME_OPTIONS; cnt++)
 	{
 		//if this is the blood and gore option, and we are to hide the option
-		if (cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption)
-		{
-			gubFirstColOfOptions++;
-			//advance to the next
-			continue;
-		}
-		if (cnt == gubFirstColOfOptions)
+		if (cnt == OPT_FIRST_COLUMN_TOGGLE_CUT_OFF)
 		{
 			pos_y = OPT_TOGGLE_BOX_START_Y;
 			pos_x = OPT_TOGGLE_BOX_SECOND_COLUMN_X;
@@ -482,13 +451,6 @@ static void ExitOptionsScreen(void)
 	//Remove the toggle buttons
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
 	{
-		//if this is the blood and gore option, and we are to hide the option
-		if( cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
-		{
-			//advance to the next
-			continue;
-		}
-
 		RemoveButton( guiOptionsToggles[ cnt ] );
 
 	  MSYS_RemoveRegion( &gSelectedOptionTextRegion[cnt]);
@@ -563,13 +525,7 @@ static void RenderOptionsScreen(void)
 	UINT16 pos_y = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
 	for (UINT8 cnt = 0; cnt < NUM_GAME_OPTIONS; cnt++)
 	{
-		//if this is the blood and gore option, and we are to hide the option
-		if( cnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
-		{
-		//advance to the next
-			continue;
-		}
-		if (cnt == gubFirstColOfOptions)
+		if (cnt == OPT_FIRST_COLUMN_TOGGLE_CUT_OFF)
 		{
 			pos_x = OPT_TOGGLE_BOX_SECOND_TEXT_X;
 			pos_y = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y;
@@ -954,12 +910,6 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 	//if the user has the mouse in one of the checkboxes
 	for( ubCnt=0; ubCnt<NUM_GAME_OPTIONS;ubCnt++)
 	{
-		if( ubCnt == TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
-		{
-			//advance to the next
-			continue;
-		}
-
 		if( ButtonList[ guiOptionsToggles[ ubCnt ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
 		{
 			gbHighLightedOptionText = ubCnt;
@@ -983,13 +933,6 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		bLastRegion = -1;
 	}
 
-	//If we are to hide the blood and gore option, and we are to highlight an option past the blood and gore option
-	//reduce the highlight number by 1
-	if( bHighLight >= TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
-	{
-		bHighLight--;
-	}
-
 	if( bHighLight != -1 )
 	{
 		if( bHighLight < OPT_FIRST_COLUMN_TOGGLE_CUT_OFF )
@@ -1002,14 +945,6 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 			usPosX = OPT_TOGGLE_BOX_SECOND_TEXT_X;
 			usPosY = OPT_TOGGLE_BOX_START_Y + OPT_TOGGLE_TEXT_OFFSET_Y + (bHighLight - OPT_FIRST_COLUMN_TOGGLE_CUT_OFF) * OPT_GAP_BETWEEN_TOGGLE_BOXES;
 		}
-
-		//If we are to hide the blood and gore option, and we are to highlight an option past the blood and gore option
-		//reduce the highlight number by 1
-		if( bHighLight >= TOPTION_BLOOD_N_GORE && gfHideBloodAndGoreOption )
-		{
-			bHighLight++;
-		}
-
 
 		usWidth = StringPixLength( zOptionsToggleText[ bHighLight ], OPT_MAIN_FONT );
 
