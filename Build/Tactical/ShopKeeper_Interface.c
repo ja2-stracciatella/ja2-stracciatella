@@ -7,6 +7,7 @@
 #include "ShopKeeper_Interface.h"
 #include "Game_Clock.h"
 #include "Render_Dirty.h"
+#include "VSurface.h"
 #include "WCheck.h"
 #include "Font_Control.h"
 #include "WordWrap.h"

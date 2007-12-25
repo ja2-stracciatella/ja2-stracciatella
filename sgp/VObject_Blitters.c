@@ -5,6 +5,7 @@
 #include "Shading.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
+#include "VSurface.h"
 #include "WCheck.h"
 
 

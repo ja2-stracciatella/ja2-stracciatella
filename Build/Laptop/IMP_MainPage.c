@@ -19,7 +19,6 @@
 #include "IMP_Portraits.h"
 #include "Button_System.h"
 #include "Video.h"
-#include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 

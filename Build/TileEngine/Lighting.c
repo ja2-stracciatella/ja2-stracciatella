@@ -19,7 +19,6 @@
 #include "math.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
-#include "VSurface.h"
 #include "Input.h"
 #include "SysUtil.h"
 #include "Debug.h"

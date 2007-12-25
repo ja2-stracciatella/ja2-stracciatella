@@ -110,4 +110,7 @@ typedef struct
 
 typedef UINT32 COLORVAL;
 
+typedef struct SGPVSurface SGPVSurface;
+typedef SGPVSurface*       HVSURFACE;
+
 #endif

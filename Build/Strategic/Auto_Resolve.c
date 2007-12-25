@@ -16,6 +16,7 @@
 #include "ScreenIDs.h"
 #include "MapScreen.h"
 #include "VObject.h"
+#include "VSurface.h"
 #include "Video.h"
 #include "Input.h"
 #include "GameScreen.h"

@@ -4,6 +4,7 @@
 #include "MemMan.h"
 #include "Font.h"
 #include "Debug.h"
+#include "VSurface.h"
 #include "Video.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"

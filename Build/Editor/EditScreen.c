@@ -9,6 +9,7 @@
 #include "Button_System.h"
 #include "Timer_Control.h"
 #include "VObject.h"
+#include "VSurface.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "Input.h"

@@ -1,6 +1,5 @@
 #include "LoadSaveBullet.h"
 #include "WorldDef.h"
-#include "VSurface.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
 #include "WCheck.h"

@@ -11,6 +11,7 @@
 #include "Timer_Control.h"
 #include "Types.h"
 #include "VObject_Blitters.h"
+#include "VSurface.h"
 #include "Video.h"
 #include <SDL.h>
 #include <stdarg.h>

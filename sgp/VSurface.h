@@ -12,7 +12,7 @@
 #define MOUSE_BUFFER 0xFFFFFFF3
 
 
-typedef struct SGPVSurface
+struct SGPVSurface
 {
 	SDL_Surface* surface;
 	UINT16       usHeight;      // Height of Video Surface
@@ -20,8 +20,7 @@ typedef struct SGPVSurface
 	UINT8        ubBitDepth;    // BPP ALWAYS 16!
 	SDL_Color*   pPalette;
 	UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
-} SGPVSurface;
-typedef SGPVSurface* HVSURFACE;
+};
 
 
 #ifdef __cplusplus
