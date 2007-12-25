@@ -30,7 +30,7 @@ typedef struct
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
-typedef struct TAG_HVOBJECT
+struct SGPVObject
 {
 	UINT32           fFlags;                         // Special flags
 	UINT32           uiSizePixData;                  // ETRLE data size
@@ -45,7 +45,7 @@ typedef struct TAG_HVOBJECT
 
 	UINT16           usNumberOfObjects;              // Total number of objects
 	UINT8            ubBitDepth;                     // BPP
-} SGPVObject, *HVOBJECT;
+};
 
 
 #ifdef __cplusplus

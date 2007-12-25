@@ -2,6 +2,7 @@
 #include "Local.h"
 #include "Mercs.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

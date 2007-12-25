@@ -1,4 +1,5 @@
 #include "Turn_Based_Input.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "WorldDef.h"

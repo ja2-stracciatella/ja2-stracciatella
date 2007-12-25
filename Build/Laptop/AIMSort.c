@@ -3,6 +3,7 @@
 #include "Laptop.h"
 #include "AIMSort.h"
 #include "AIM.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Soldier_Profile.h"

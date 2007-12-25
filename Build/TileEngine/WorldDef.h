@@ -2,7 +2,6 @@
 #define __WORLDDEF_H
 
 #include "JA2Types.h"
-#include "VObject.h"
 #include "TileDef.h"
 #include "Structure.h"
 #include "Handle_Items.h"

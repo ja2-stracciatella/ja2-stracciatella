@@ -4,6 +4,7 @@
 #include "Timer_Control.h"
 #include "Types.h"
 #include "Options_Screen.h"
+#include "VObject.h"
 #include "Video.h"
 #include "Font_Control.h"
 #include "Game_Clock.h"

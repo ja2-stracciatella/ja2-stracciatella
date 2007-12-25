@@ -2,6 +2,7 @@
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Render_Fun.h"
 #include "Debug.h"

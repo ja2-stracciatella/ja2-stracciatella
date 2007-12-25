@@ -1,5 +1,4 @@
 #include "Gameloop.h"
-#include "VObject.h"
 #include "WCheck.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"

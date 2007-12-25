@@ -1,4 +1,5 @@
 #include "TileDef.h"
+#include "VObject.h"
 #include "WorldDef.h"
 #include "WCheck.h"
 #include "Debug.h"

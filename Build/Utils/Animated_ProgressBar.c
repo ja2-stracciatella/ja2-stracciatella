@@ -4,6 +4,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "Font_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "Render_Dirty.h"

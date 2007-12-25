@@ -1,6 +1,5 @@
 #include "Local.h"
 #include "Gameloop.h"
-#include "VObject.h"
 #include "VSurface.h"
 #include "WCheck.h"
 #include "WorldDef.h"

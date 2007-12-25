@@ -17,6 +17,7 @@
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
 #include "Text.h"
+#include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "WCheck.h"

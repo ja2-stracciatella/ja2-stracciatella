@@ -3,6 +3,7 @@
 #include "AIMFacialIndex.h"
 #include "Merc_Hiring.h"
 #include "Soldier_Control.h"
+#include "VObject.h"
 #include "WordWrap.h"
 #include "WCheck.h"
 #include "AIM.h"

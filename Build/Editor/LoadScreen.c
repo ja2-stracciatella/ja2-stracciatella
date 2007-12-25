@@ -45,6 +45,7 @@
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "WorldDef.h"

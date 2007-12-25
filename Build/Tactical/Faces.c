@@ -4,6 +4,7 @@
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "WorldDef.h"
 #include "VSurface.h"
 #include "Render_Dirty.h"

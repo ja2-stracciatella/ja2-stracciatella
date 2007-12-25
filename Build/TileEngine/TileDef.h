@@ -1,7 +1,6 @@
 #ifndef __TILEDEF_H
 #define __TILEDEF_H
 
-#include "VObject.h"
 #include "TileDat.h"
 #include "Structure.h"
 

@@ -1,6 +1,9 @@
 #ifndef __TILEDAT_H
 #define __TILEDAT_H
 
+#include "Types.h"
+
+
 enum TileDefines
 {
 	FIRSTTEXTURE1 = 0,

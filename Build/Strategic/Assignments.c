@@ -27,6 +27,7 @@
 #include "Squads.h"
 #include "Map_Screen_Helicopter.h"
 #include "PopUpBox.h"
+#include "VObject.h"
 #include "Vehicles.h"
 #include "Strategic_Merc_Handler.h"
 #include "Merc_Contract.h"

@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Laptop.h"
 #include "Funeral.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

@@ -2,6 +2,7 @@
 #include "BobbyRUsed.h"
 #include "BobbyR.h"
 #include "BobbyRGuns.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Text.h"
 #include "LaptopSave.h"

@@ -4,6 +4,7 @@
 #include "History.h"
 #include "Game_Clock.h"
 #include "Soldier_Control.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "WordWrap.h"

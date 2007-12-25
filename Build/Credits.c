@@ -4,6 +4,7 @@
 #include "Types.h"
 #include "Credits.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Text.h"
 #include "MouseSystem.h"

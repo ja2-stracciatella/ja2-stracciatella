@@ -17,6 +17,7 @@
 
 #include "Overhead.h"
 #include "math.h"
+#include "VObject.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "Input.h"

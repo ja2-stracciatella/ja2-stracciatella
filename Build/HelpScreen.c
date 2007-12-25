@@ -4,6 +4,7 @@
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "SysUtil.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Cursors.h"
 #include "Font_Control.h"

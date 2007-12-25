@@ -1,4 +1,5 @@
 #include "Overhead.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Animation_Data.h"

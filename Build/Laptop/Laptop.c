@@ -6,6 +6,7 @@
 #include "Local.h"
 #include "Timer.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "WCheck.h"
 #include "Render_Dirty.h"

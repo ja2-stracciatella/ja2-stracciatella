@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "English.h"
 #include "Debug.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "VObject_Blitters.h"

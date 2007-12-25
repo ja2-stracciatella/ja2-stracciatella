@@ -3,7 +3,6 @@
 #ifdef JA2EDITOR
 
 #include "Local.h"
-#include "VObject.h"
 #include "Video.h"
 #include "Font.h"
 #include "Font_Control.h"

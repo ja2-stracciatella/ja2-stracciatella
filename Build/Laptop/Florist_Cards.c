@@ -1,6 +1,7 @@
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Cards.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

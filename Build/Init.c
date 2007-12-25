@@ -5,6 +5,7 @@
 #include "Screens.h"
 #include "Strategic_Movement_Costs.h"
 #include "Sys_Globals.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "RenderWorld.h"
 #include "MouseSystem.h"

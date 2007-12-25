@@ -27,6 +27,7 @@
 #include "Assignments.h"
 #include "Cursors.h"
 #include "English.h"
+#include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
 #include "MemMan.h"

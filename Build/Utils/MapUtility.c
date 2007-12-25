@@ -3,6 +3,7 @@
 #	include "Font.h"
 #	include "Local.h"
 #	include "Screens.h"
+#	include "VObject.h"
 #	include "VSurface.h"
 #	include "WorldDef.h"
 #	include "Overhead.h"

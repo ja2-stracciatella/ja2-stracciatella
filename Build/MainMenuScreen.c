@@ -22,6 +22,7 @@
 #include "SysUtil.h"
 #include "Text.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "WCheck.h"

@@ -1,6 +1,7 @@
 #include "Cursor_Control.h"
 #include "Debug.h"
 #include "Timer.h"
+#include "VObject.h"
 #include "Video.h"
 #include "WCheck.h"
 #include "VSurface.h"

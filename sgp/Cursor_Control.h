@@ -2,7 +2,6 @@
 #define CURSOR_CONTROL_H
 
 #include "Types.h"
-#include "VObject.h"
 
 #ifdef __cplusplus
 extern "C" {

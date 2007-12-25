@@ -3,6 +3,7 @@
 #include "Insurance.h"
 #include "Insurance_Contract.h"
 #include "Local.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

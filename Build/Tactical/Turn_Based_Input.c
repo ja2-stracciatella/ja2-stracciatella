@@ -98,6 +98,10 @@
 #	include "Strategic_AI.h"
 #endif
 
+#ifdef SGP_VIDEO_DEBUGGING
+#	include "VObject.h"
+#endif
+
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 

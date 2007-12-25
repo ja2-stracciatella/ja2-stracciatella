@@ -9,6 +9,7 @@
 #include "Types.h"
 #include "Sector_Summary.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Button_System.h"
 #include "Font_Control.h"

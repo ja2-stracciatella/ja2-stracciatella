@@ -1,3 +1,4 @@
+#include "VObject.h"
 #include "WorldDef.h"
 #include "WorldDat.h"
 #include "WCheck.h"

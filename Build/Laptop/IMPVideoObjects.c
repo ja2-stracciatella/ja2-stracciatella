@@ -1,5 +1,6 @@
 #include "IMPVideoObjects.h"
 #include "Local.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

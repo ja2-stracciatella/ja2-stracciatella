@@ -3,6 +3,7 @@
 #include "BobbyRMailOrder.h"
 #include "BobbyR.h"
 #include "Local.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"

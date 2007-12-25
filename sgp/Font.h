@@ -2,7 +2,6 @@
 #define FONT_H
 
 #include "Types.h"
-#include "VObject.h"
 
 
 #define		DEFAULT_SHADOW			2

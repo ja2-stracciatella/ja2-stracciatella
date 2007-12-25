@@ -13,7 +13,6 @@
 #	include "Input.h"
 #endif
 #include "Timer.h"
-#include "VObject.h"
 #include "Stubs.h" // XXX
 
 

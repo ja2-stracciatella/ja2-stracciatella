@@ -1,7 +1,6 @@
 #ifndef __VOBJECT_BLITTERS
 #define __VOBJECT_BLITTERS
 
-#include "VObject.h"
 
 #ifdef __cplusplus
 extern "C" {

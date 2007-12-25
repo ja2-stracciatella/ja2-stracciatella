@@ -20,6 +20,7 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Line.h"
+#include "VObject.h"
 #include "WorldDat.h"
 #include "SelectWin.h"
 #include "PopupMenu.h"

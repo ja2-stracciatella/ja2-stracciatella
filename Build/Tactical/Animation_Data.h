@@ -2,7 +2,6 @@
 #define ANIMATION_DATA_H_
 
 #include "JA2Types.h"
-#include "VObject.h"
 #include "Structure_Internals.h"
 
 

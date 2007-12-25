@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "Local.h"
 #include "Personnel.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "WordWrap.h"

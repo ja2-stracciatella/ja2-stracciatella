@@ -23,6 +23,7 @@
 #include "Button_System.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
+#include "VObject.h"
 #include "VSurface.h"
 
 

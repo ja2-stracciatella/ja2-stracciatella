@@ -12,6 +12,7 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "Isometric_Utils.h"
+#include "VObject.h"
 #include "WorldDat.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"

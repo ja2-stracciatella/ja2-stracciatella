@@ -3,6 +3,7 @@
 #include "PopUpBox.h"
 #include "SysUtil.h"
 #include "Debug.h"
+#include "VObject.h"
 #include "Video.h"
 #include "MemMan.h"
 #include "VSurface.h"

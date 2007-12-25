@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "Interface.h"
 #include "Types.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "MouseSystem.h"
 #include "Button_System.h"

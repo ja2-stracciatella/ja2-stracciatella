@@ -3,6 +3,7 @@
 #include "Interface.h"
 #include "Local.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "Video.h"
 #include "Soldier_Control.h"
 #include "Faces.h"

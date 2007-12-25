@@ -2,6 +2,7 @@
 #include "Lighting.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"

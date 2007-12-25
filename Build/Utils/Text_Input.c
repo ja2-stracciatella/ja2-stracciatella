@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "Font.h"
 #include "English.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "Debug.h"

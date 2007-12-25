@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "English.h"
 #include "Timer_Control.h"
+#include "VObject.h"
 #include "VSurface.h"
 #include "Button_System.h"
 #include "Font_Control.h"

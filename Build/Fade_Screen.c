@@ -8,6 +8,7 @@
 #include "Music_Control.h"
 #include "Render_Dirty.h"
 #include "Gameloop.h"
+#include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
 

@@ -3,6 +3,7 @@
 #include "Laptop.h"
 #include "AIMArchives.h"
 #include "AIM.h"
+#include "VObject.h"
 #include "WordWrap.h"
 #include "WCheck.h"
 #include "Encrypted_File.h"

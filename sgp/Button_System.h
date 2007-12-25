@@ -3,7 +3,6 @@
 #ifndef BUTTON_SYSTEM_H
 #define BUTTON_SYSTEM_H
 
-#include "VObject.h"
 #include "MouseSystem.h"
 
 #ifdef __cplusplus

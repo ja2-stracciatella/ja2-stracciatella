@@ -1,6 +1,7 @@
 #include "Types.h"
 #include "Lighting.h"
 #include "Shade_Table_Util.h"
+#include "VObject.h"
 #include "Video.h"
 #include "WorldDat.h"
 #include "FileMan.h"

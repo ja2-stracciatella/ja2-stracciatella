@@ -17,6 +17,7 @@
 #include "Input.h"
 #include "MemMan.h"
 #include "Line.h"
+#include "VObject.h"
 #include "Video.h"
 #include "MouseSystem.h"
 #include "Cursor_Control.h"

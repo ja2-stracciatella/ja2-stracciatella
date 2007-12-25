@@ -1,5 +1,6 @@
 #include "Soldier_Control.h"
 #include "Types.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "FileMan.h"

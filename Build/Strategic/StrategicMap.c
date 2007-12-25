@@ -16,6 +16,7 @@
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"
 #include "Ambient_Control.h"
+#include "VObject.h"
 #include "WorldDef.h"
 #include "WorldDat.h"
 #include "Text.h"

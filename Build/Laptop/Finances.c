@@ -3,6 +3,7 @@
 #include "Finances.h"
 #include "Game_Clock.h"
 #include "Map_Screen_Interface_Bottom.h"
+#include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

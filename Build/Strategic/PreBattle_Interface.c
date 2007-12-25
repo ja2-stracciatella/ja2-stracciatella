@@ -45,6 +45,7 @@
 #include "Assignments.h"
 #include "Soldier_Macros.h"
 #include "History.h"
+#include "VObject.h"
 #include "Vehicles.h"
 #include "Video.h"
 #include "Debug.h"

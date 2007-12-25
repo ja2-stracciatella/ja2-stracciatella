@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "Input.h"
 #include "MemMan.h"
+#include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
