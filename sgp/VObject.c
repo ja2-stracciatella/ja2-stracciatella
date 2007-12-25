@@ -147,12 +147,6 @@ static UINT32 AddStandardVideoObject(HVOBJECT hVObject)
 }
 
 
-UINT32 AddStandardVideoObjectFromHImage(HIMAGE hImage)
-{
-	return AddStandardVideoObject(CreateVideoObject(hImage));
-}
-
-
 UINT32 AddStandardVideoObjectFromFile(const char* ImageFile)
 {
 	return AddStandardVideoObject(CreateVideoObjectFromFile(ImageFile));
@@ -693,14 +687,6 @@ static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pS
 	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
 	gpVObjectTail->pCode = MemAlloc(strlen(str) + 1);
 	strcpy(gpVObjectTail->pCode, str);
-}
-
-
-UINT32 AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
-{
-	UINT32 Res = AddStandardVideoObjectFromHImage(hImage);
-	if (Res != NO_VOBJECT) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
-	return Res;
 }
 
 
