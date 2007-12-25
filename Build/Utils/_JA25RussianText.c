@@ -1,5 +1,3 @@
-#include "Language_Defines.h"
-
 #if defined RUSSIAN || defined RUSSIAN_GOLD
 
 #include "_JA25EnglishText.h"

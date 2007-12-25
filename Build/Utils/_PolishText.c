@@ -1,5 +1,3 @@
-#include "Language_Defines.h"
-
 #ifdef POLISH
 
 #include "Text.h"

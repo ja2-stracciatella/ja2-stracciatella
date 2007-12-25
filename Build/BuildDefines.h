@@ -1,7 +1,10 @@
 #ifndef _BUILDDEFINES_H
 #define _BUILDDEFINES_H
 
-#include "Language_Defines.h"
+
+#if defined DUTCH + defined ENGLISH + defined FRENCH + defined GERMAN + defined ITALIAN + defined POLISH + defined RUSSIAN + defined RUSSIAN_GOLD != 1
+#	error Excactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD must be defined.
+#endif
 
 // Beta version
 // #define	JA2BETAVERSION

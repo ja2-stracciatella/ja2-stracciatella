@@ -10,7 +10,6 @@
 #include "GameVersion.h"
 #include "LibraryDataBase.h"
 #include "Debug.h"
-#include "Language_Defines.h"
 #include "HelpScreen.h"
 #include "Shade_Table_Util.h"
 #include "Meanwhile.h"

@@ -1,5 +1,3 @@
-#include "Language_Defines.h"
-
 #ifdef GERMAN
 
 #include "_JA25EnglishText.h"

@@ -56,7 +56,6 @@
 #include "Squads.h"
 #include "LaptopSave.h"
 #include "MessageBoxScreen.h"
-#include "Language_Defines.h"
 #include "GameSettings.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "Quests.h"

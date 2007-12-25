@@ -1,4 +1,3 @@
-#include "Language_Defines.h"
 #include "Text.h"
 #include "Text_Utils.h"
 #include "FileMan.h"

@@ -37,7 +37,6 @@
 #include "Strategic_Status.h"
 #include "Merc_Contract.h"
 #include "Strategic_Merc_Handler.h"
-#include "Language_Defines.h"
 #include "Assignments.h"
 #include "StrategicMap.h"
 #include "Sound_Control.h"

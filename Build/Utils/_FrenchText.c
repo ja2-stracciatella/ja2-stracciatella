@@ -1,5 +1,3 @@
-#include "Language_Defines.h"
-
 #ifdef FRENCH
 
 #include "Text.h"

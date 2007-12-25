@@ -1,7 +1,6 @@
 #include "Encrypted_File.h"
 #include "FileMan.h"
 #include "Debug.h"
-#include "Language_Defines.h"
 
 
 BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, UINT32 read_chars)

@@ -1,4 +1,3 @@
-#include "Language_Defines.h"
 #include "Multi_Language_Graphic_Utils.h"
 
 

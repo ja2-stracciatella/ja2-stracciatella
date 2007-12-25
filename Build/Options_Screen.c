@@ -31,7 +31,6 @@
 #include "Text.h"
 #include "Interface_Control.h"
 #include "Message.h"
-#include "Language_Defines.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Map_Information.h"
 #include "SmokeEffects.h"
