@@ -658,28 +658,25 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 	else
 	{
 		// Load into memory
-		HVOBJECT							hVObject;
-		HIMAGE								hImage;
 		STRUCTURE_FILE_REF		*pStructureFileRef;
 
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
 		const char* Filename = gAnimSurfaceDatabase[usSurfaceIndex].Filename;
-		hImage = CreateImage(Filename, IMAGE_ALLDATA);
-
+		const HIMAGE hImage = CreateImage(Filename, IMAGE_ALLDATA);
 	  if (hImage == NULL)
 	  {
-			 return SET_ERROR("Error: Could not load animation file %s", Filename);
+			SET_ERROR("Error: Could not load animation file %s", Filename);
+			goto fail;
 	  }
 
-		hVObject = CreateVideoObject(hImage);
+		const HVOBJECT hVObject = CreateVideoObject(hImage);
 		if ( hVObject == NULL )
 		{
 			// Report error
 			SET_ERROR( "Could not load animation file: %s", gAnimSurfaceDatabase[ usSurfaceIndex ].Filename );
 			// Video Object will set error conition.]
-			DestroyImage( hImage );
-			return( FALSE );
+			goto fail_image;
 		}
 
 		// Get aux data
@@ -695,8 +692,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 		{
 			// Report error
 			SET_ERROR( "Invalid # of animations given" );
-			DestroyImage( hImage );
-			return( FALSE );
+			goto fail_vobj;
 		}
 
 		// get structure data if any
@@ -717,12 +713,9 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 
 			if (AddZStripInfoToVObject( hVObject, pStructureFileRef, TRUE, sStartFrame ) == FALSE)
 			{
-				DestroyImage( hImage );
-				DeleteVideoObject( hVObject );
 				SET_ERROR("Animation structure ZStrip creation error: %s", Filename);
-				return( FALSE );
+				goto fail_vobj;
 			}
-
 		}
 
 	  // the hImage is no longer needed
@@ -735,6 +728,16 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 		if (  ( gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumDirections * gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumFramesPerDir ) != gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject->usNumberOfObjects )
 		{
 			AnimDebugMsg( String( "Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex ) );
+		}
+
+		if (0) /* error handling */
+		{
+fail_vobj:
+			DeleteVideoObject(hVObject);
+fail_image:
+			DestroyImage(hImage);
+fail:
+			return FALSE;
 		}
 	}
 
