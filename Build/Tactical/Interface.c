@@ -193,6 +193,7 @@ static SGPVObject* guiAIMCUBES;
 static SGPVObject* guiAIMBARS;
 SGPVObject* guiVEHINV;
 SGPVObject* guiBURSTACCUM;
+SGPVObject* guiPORTRAITICONS;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
