@@ -18,37 +18,26 @@ TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 {
 	// Add tile surface
-	PTILE_IMAGERY  pTileSurf = NULL;
-	HVOBJECT		   hVObject;
-	HIMAGE				 hImage;
-	SGPFILENAME						cStructureFilename;
-	STR										cEndOfName;
-	STRUCTURE_FILE_REF *	pStructureFileRef;
-	BOOLEAN								fOk;
-
-
-	hImage = CreateImage( cFilename, IMAGE_ALLDATA );
+	const HIMAGE hImage = CreateImage(cFilename, IMAGE_ALLDATA);
 	if (hImage == NULL)
 	{
-		// Report error
 		SET_ERROR( "Could not load tile file: %s", cFilename );
-		return( NULL );
+		goto fail;
 	}
 
-	hVObject = CreateVideoObject(hImage);
-	if ( hVObject == NULL )
+	const HVOBJECT hVObject = CreateVideoObject(hImage);
+	if (hVObject == NULL)
 	{
-		// Report error
 		SET_ERROR( "Could not load tile file: %s", cFilename );
 		// Video Object will set error conition.]
-		DestroyImage( hImage );
-		return( NULL );
+		goto fail_image;
 	}
 
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
+	SGPFILENAME cStructureFilename;
 	strcpy( cStructureFilename, cFilename );
-	cEndOfName = strchr( cStructureFilename, '.' );
+	char* cEndOfName = strchr( cStructureFilename, '.' );
 	if (cEndOfName != NULL)
 	{
 		cEndOfName++;
@@ -59,35 +48,36 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 		strcat( cStructureFilename, "." );
 	}
 	strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
+	STRUCTURE_FILE_REF* pStructureFileRef;
 	if (FileExists( cStructureFilename ))
 	{
 		pStructureFileRef = LoadStructureFile( cStructureFilename );
-		if (pStructureFileRef == NULL || hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
+		if (pStructureFileRef == NULL)
 		{
-			DestroyImage( hImage );
-			DeleteVideoObject( hVObject );
-			SET_ERROR(  "Structure file error: %s", cStructureFilename );
-			return( NULL );
+			SET_ERROR("Structure file error: %s", cStructureFilename);
+			goto fail_vobj;
+		}
+
+		if (hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
+		{
+			SET_ERROR("Structure file error: %s", cStructureFilename);
+			goto fail_structure;
 		}
 
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
 
-		fOk = AddZStripInfoToVObject( hVObject, pStructureFileRef, FALSE, 0 );
-		if (fOk == FALSE)
+		if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
 		{
-			DestroyImage( hImage );
-			DeleteVideoObject( hVObject );
 			SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
-			return( NULL );
+			goto fail_structure;
 		}
-
 	}
 	else
 	{
 		pStructureFileRef = NULL;
 	}
 
-	pTileSurf = MemAlloc( sizeof( TILE_IMAGERY ) );
+	TILE_IMAGERY* const pTileSurf = MemAlloc(sizeof(*pTileSurf));
 
 	// Set all values to zero
 	memset( pTileSurf, 0, sizeof( TILE_IMAGERY ) );
@@ -104,12 +94,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 	{
 		// Valid auxiliary data, so make a copy of it for TileSurf
 		pTileSurf->pAuxData = MemAlloc( hImage->uiAppDataSize );
-		if ( pTileSurf->pAuxData == NULL)
-		{
-			DestroyImage( hImage );
-			DeleteVideoObject( hVObject );
-			return( NULL );
-		}
+		if (pTileSurf->pAuxData == NULL) goto fail_tile_imagery;
 		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
 	}
 	else
@@ -120,6 +105,17 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 	DestroyImage( hImage );
 
   return( pTileSurf );
+
+fail_tile_imagery:
+	MemFree(pTileSurf);
+fail_structure:
+	FreeStructureFile(pStructureFileRef);
+fail_vobj:
+	DeleteVideoObject(hVObject);
+fail_image:
+	DestroyImage(hImage);
+fail:
+	return NULL;
 }
 
 
