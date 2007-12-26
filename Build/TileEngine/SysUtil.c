@@ -7,8 +7,6 @@
 UINT32					guiSAVEBUFFER = 0;
 UINT32					guiEXTRABUFFER = 0;
 
-BOOLEAN gfExtraBuffer = FALSE;
-
 
 BOOLEAN	InitializeGameVideoObjects( )
 {
@@ -17,7 +15,6 @@ BOOLEAN	InitializeGameVideoObjects( )
 
 	guiEXTRABUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
 	CHECKF(guiEXTRABUFFER != NO_VSURFACE);
-	gfExtraBuffer = TRUE;
 
 	return( TRUE );
 }

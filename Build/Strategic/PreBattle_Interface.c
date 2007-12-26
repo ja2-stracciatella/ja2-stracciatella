@@ -693,8 +693,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	INT32 iLeft, iTop, iWidth, iHeight;
 	BOOLEAN fEnterAutoResolveMode = FALSE;
 
-	if( !gfExtraBuffer )
-		return;
+	if (guiEXTRABUFFER == NO_VSURFACE) return;
 
 	PauseTime( FALSE );
 
