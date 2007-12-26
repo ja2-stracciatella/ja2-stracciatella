@@ -737,6 +737,16 @@ BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const 
 }
 
 
+BOOLEAN BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, const INT32 x, const INT32 y)
+{
+	SGPVSurface* const src = AddVideoSurfaceFromFile(filename);
+	if (src == NO_VSURFACE) return FALSE;
+	BltVideoSurface(dst, src, x, y, NULL);
+	DeleteVideoSurface(src);
+	return TRUE;
+}
+
+
 #ifdef SGP_VIDEO_DEBUGGING
 typedef struct DUMPINFO
 {

@@ -263,13 +263,8 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	}
 	else
 	{
-		SGPVSurface* const uiLoadScreen = AddVideoSurfaceFromFile(ImageFile);
-		if (uiLoadScreen != NO_VSURFACE)
-		{ //Blit the background image
-			BltVideoSurface(FRAME_BUFFER, uiLoadScreen, 0, 0, NULL);
-			DeleteVideoSurface(uiLoadScreen);
-		}
-		else
+		// Blit the background image
+		if (!BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0))
 		{ //Failed to load the file, so use a black screen and print out message.
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );

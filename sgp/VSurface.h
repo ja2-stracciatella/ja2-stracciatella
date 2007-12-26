@@ -86,6 +86,8 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface*, INT32 X1, INT32
  * If the 2 images are not 16 Bpp, it returns false. */
 BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
 
+BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
+
 extern UINT32 guiVSurfaceSize;
 
 #ifdef __cplusplus

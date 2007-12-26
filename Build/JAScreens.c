@@ -917,8 +917,7 @@ UINT32 DemoExitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		//bring up the collage screen
-		uiCollageID = AddVideoSurfaceFromFile("DemoAds/collage.sti");
-		if (uiCollageID == NO_VSURFACE)
+		if (!BltVideoSurfaceOnce(FRAME_BUFFER, "DemoAds/collage.sti", 0, 0))
 		{
 			AssertMsg( 0, "Failed to load DemoAds/collage.sti" );
 			ubCurrentScreen = 8;
@@ -927,11 +926,7 @@ UINT32 DemoExitScreenHandle(void)
 
 		SetMusicMode( MUSIC_NONE );
 
-		BltVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, NULL);
-		DeleteVideoSurface(uiCollageID);
-
 		InvalidateScreen( );
-
 
 		SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 		MSYS_DefineRegion(&BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
