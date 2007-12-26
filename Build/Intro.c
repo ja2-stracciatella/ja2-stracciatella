@@ -122,9 +122,6 @@ UINT32	IntroScreenHandle( void )
 		InvalidateScreen();
 	}
 
-	RestoreBackgroundRects();
-
-
 	GetIntroScreenUserInput();
 
 	HandleIntroScreen();
