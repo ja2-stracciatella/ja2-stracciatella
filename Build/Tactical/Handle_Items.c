@@ -3552,7 +3552,7 @@ void RenderTopmostFlashingItems( )
 					const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 					if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
-					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos);
+					BltVideoObject(FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos);
 
 					DrawItemPoolList(pItemPool, pItemPool->sGridNo, pItemPool->bRenderZHeightAboveLevel, sXPos, sYPos);
 				}

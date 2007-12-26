@@ -228,16 +228,15 @@ UINT16 gShippingSpeedAreas[] = {585, 218 + LAPTOP_SCREEN_WEB_DELTA_Y,
 																585, 258 + LAPTOP_SCREEN_WEB_DELTA_Y};
 
 // Identifier for the images
-UINT32		guiBobbyRayTitle;
-UINT32		guiBobbyROrderGrid;
-UINT32		guiBobbyRLocationGraphic;
-UINT32		guiDeliverySpeedGraphic;
-UINT32		guiConfirmGraphic;
-UINT32		guiTotalSaveArea;		//used as a savebuffer for the subtotal, s&h, and grand total values
-UINT32		guiDropDownBorder;
-UINT32		guiGoldArrowImages;
-UINT32		guiPackageWeightImage;
-
+static SGPVObject* guiBobbyRayTitle;
+static SGPVObject* guiBobbyROrderGrid;
+static SGPVObject* guiBobbyRLocationGraphic;
+static SGPVObject* guiDeliverySpeedGraphic;
+static SGPVObject* guiConfirmGraphic;
+static SGPVObject* guiTotalSaveArea;		//used as a savebuffer for the subtotal, s&h, and grand total values
+static SGPVObject* guiDropDownBorder;
+static SGPVObject* guiGoldArrowImages;
+static SGPVObject* guiPackageWeightImage;
 
 
 BOOLEAN		gfReDrawBobbyOrder=FALSE;
@@ -533,9 +532,8 @@ void HandleBobbyRMailOrder()
 	if(	gfDrawConfirmOrderGrpahic )
 	{
 		// Bobbyray title
-		BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X+3, BOBBYR_CONFIRM_ORDER_Y+3);
-
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X, BOBBYR_CONFIRM_ORDER_Y);
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X + 3, BOBBYR_CONFIRM_ORDER_Y + 3);
+		BltVideoObject(             FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X,     BOBBYR_CONFIRM_ORDER_Y);
 	  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 
 		gfDrawConfirmOrderGrpahic = FALSE;
@@ -577,10 +575,10 @@ void RenderBobbyRMailOrder()
 
 	DrawBobbyROrderTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyROrderGrid,       0, BOBBYR_ORDERGRID_X,       BOBBYR_ORDERGRID_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRLocationGraphic, 0, BOBBYR_LOCATION_BOX_X,    BOBBYR_LOCATION_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDeliverySpeedGraphic,  0, BOBBYR_DELIVERYSPEED_X,   BOBBYR_DELIVERYSPEED_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPackageWeightImage,    0, BOBBYR_PACKAXGE_WEIGHT_X, BOBBYR_PACKAXGE_WEIGHT_Y);
+	BltVideoObject(FRAME_BUFFER, guiBobbyROrderGrid,       0, BOBBYR_ORDERGRID_X,       BOBBYR_ORDERGRID_Y);
+	BltVideoObject(FRAME_BUFFER, guiBobbyRLocationGraphic, 0, BOBBYR_LOCATION_BOX_X,    BOBBYR_LOCATION_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiDeliverySpeedGraphic,  0, BOBBYR_DELIVERYSPEED_X,   BOBBYR_DELIVERYSPEED_Y);
+	BltVideoObject(FRAME_BUFFER, guiPackageWeightImage,    0, BOBBYR_PACKAXGE_WEIGHT_X, BOBBYR_PACKAXGE_WEIGHT_Y);
 
 	//
 	// Display the STATIC text
@@ -967,7 +965,7 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 	// bli the total Saved area onto the grid
 	if( fCalledFromOrderPage )
 	{
-	  BltVideoObjectFromIndex(FRAME_BUFFER, guiTotalSaveArea, 0, BOBBYR_TOTAL_SAVED_AREA_X, BOBBYR_TOTAL_SAVED_AREA_Y);
+	  BltVideoObject(FRAME_BUFFER, guiTotalSaveArea, 0, BOBBYR_TOTAL_SAVED_AREA_X, BOBBYR_TOTAL_SAVED_AREA_Y);
 	}
 
 
@@ -1227,7 +1225,7 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			//
 			usHeight = BOBBYR_SCROLL_AREA_HEIGHT;
 
-			HVOBJECT hImageHandle = GetVideoObject(guiDropDownBorder);
+			const SGPVObject* const hImageHandle = guiDropDownBorder;
 
 			usPosX = usPosY = 0;
 			//blit top & bottom row of images
@@ -1289,13 +1287,12 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			BltVideoObject(FRAME_BUFFER, hImageHandle, 4, BOBBYR_DROP_DOWN_WIDTH-4+BOBBYR_CITY_START_LOCATION_X, BOBBYR_CITY_START_LOCATION_Y+2);
 
 
-			//get and display the up and down arrows
-			HVOBJECT hArrowHandle = GetVideoObject(guiGoldArrowImages);
+			// display the up and down arrows
 			//top arrow
-			BltVideoObject(FRAME_BUFFER, hArrowHandle, 1, BOBBYR_SCROLL_UP_ARROW_X, BOBBYR_SCROLL_UP_ARROW_Y);
+			BltVideoObject(FRAME_BUFFER, guiGoldArrowImages, 1, BOBBYR_SCROLL_UP_ARROW_X, BOBBYR_SCROLL_UP_ARROW_Y);
 
 			//top arrow
-			BltVideoObject(FRAME_BUFFER, hArrowHandle, 0, BOBBYR_SCROLL_DOWN_ARROW_X, BOBBYR_SCROLL_DOWN_ARROW_Y);
+			BltVideoObject(FRAME_BUFFER, guiGoldArrowImages, 0, BOBBYR_SCROLL_DOWN_ARROW_X, BOBBYR_SCROLL_DOWN_ARROW_Y);
 
 			//display the scroll rectangle
 			DrawGoldRectangle( gbSelectedCity );
@@ -2038,7 +2035,7 @@ void DestroyBobbyROrderTitle()
 
 void DrawBobbyROrderTitle()
 {
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyRayTitle, 0, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y);
+	BltVideoObject(FRAME_BUFFER, guiBobbyRayTitle, 0, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y);
 }
 
 

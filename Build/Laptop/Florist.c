@@ -57,10 +57,10 @@
 #define		FLORIST_COMPANY_INFO_LINE_3_Y			LAPTOP_SCREEN_WEB_UL_Y + 107
 #define		FLORIST_COMPANY_INFO_LINE_4_Y			LAPTOP_SCREEN_WEB_UL_Y + 119
 
-UINT32		guiFloristBackground;
-UINT32		guiHandBullet;
-UINT32		guiLargeTitleSymbol;
-UINT32		guiSmallTitleSymbol;
+static SGPVObject* guiFloristBackground;
+static SGPVObject* guiHandBullet;
+static SGPVObject* guiLargeTitleSymbol;
+static SGPVObject* guiSmallTitleSymbol;
 
 
 BOOLEAN		gfHomePageActive=FALSE;		//Specifies whether or not the home page or the sub pages are active
@@ -136,8 +136,6 @@ void RenderFlorist()
 	UINT16 i, usPosY;
 	UINT8 ubTextCounter;
 
-	HVOBJECT hPixHandle = GetVideoObject(guiHandBullet);
-
 	DisplayFloristDefaults();
 
 	//compnay info
@@ -151,7 +149,7 @@ void RenderFlorist()
 	ubTextCounter = FLORIST_ADVERTISEMENT_1;
 	for( i=0; i<FLORIST_NUMBER_OF_BULLETS; i++)
 	{
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0, FLORIST_FIRST_BULLET_X, usPosY);
+		BltVideoObject(FRAME_BUFFER, guiHandBullet, 0, FLORIST_FIRST_BULLET_X, usPosY);
 
 		DisplayWrappedString(FLORIST_FIRST_SENTENCE_COLUMN_TEXT_X, usPosY + 20, FLORIST_FIRST_SENTENCE_COLUMN_TEXT_WIDTH, 2, FLORIST_SENTENCE_FONT, FLORIST_SENTENCE_COLOR, sFloristText[ubTextCounter], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		ubTextCounter++;
@@ -211,12 +209,12 @@ void DisplayFloristDefaults()
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
 		gfHomePageActive = TRUE;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiLargeTitleSymbol, 0, FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y);
+		BltVideoObject(FRAME_BUFFER, guiLargeTitleSymbol, 0, FLORIST_BIG_TITLE_X, FLORIST_BIG_TITLE_Y);
 	}
 	else
 	{
 		gfHomePageActive = FALSE;
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSmallTitleSymbol, 0, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y);
+		BltVideoObject(FRAME_BUFFER, guiSmallTitleSymbol, 0, FLORIST_SMALL_TITLE_X, FLORIST_SMALL_TITLE_Y);
 	}
 }
 

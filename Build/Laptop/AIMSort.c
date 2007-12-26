@@ -137,14 +137,11 @@ MOUSE_REGION    gSelectedAscendBoxRegion;
 MOUSE_REGION    gSelectedDescendBoxRegion;
 
 
-UINT32		guiSortByBox;
-UINT32		guiToAlumni;
-UINT32		guiToMugShots;
-UINT32		guiToStats;
-UINT32		guiSelectLight;
-
-
-
+static SGPVObject* guiSortByBox;
+static SGPVObject* guiToAlumni;
+static SGPVObject* guiToMugShots;
+static SGPVObject* guiToStats;
+static SGPVObject* guiSelectLight;
 
 
 void GameInitAimSort()
@@ -327,10 +324,10 @@ static void DrawSelectLight(UINT8 ubMode, UINT8 ubImage);
 void RenderAimSort()
 {
 	DrawAimDefaults();
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSortByBox, 0, AIM_SORT_SORT_BY_X, AIM_SORT_SORT_BY_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiToMugShots, 0, AIM_SORT_TO_MUGSHOTS_X, AIM_SORT_TO_MUGSHOTS_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiToStats, 0, AIM_SORT_TO_STATS_X, AIM_SORT_TO_STATS_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiToAlumni, 0, AIM_SORT_TO_ALUMNI_X, AIM_SORT_TO_ALUMNI_Y);
+	BltVideoObject(FRAME_BUFFER, guiSortByBox,  0, AIM_SORT_SORT_BY_X,     AIM_SORT_SORT_BY_Y);
+	BltVideoObject(FRAME_BUFFER, guiToMugShots, 0, AIM_SORT_TO_MUGSHOTS_X, AIM_SORT_TO_MUGSHOTS_Y);
+	BltVideoObject(FRAME_BUFFER, guiToStats,    0, AIM_SORT_TO_STATS_X,    AIM_SORT_TO_STATS_Y);
+	BltVideoObject(FRAME_BUFFER, guiToAlumni,   0, AIM_SORT_TO_ALUMNI_X,   AIM_SORT_TO_ALUMNI_Y);
 
 	// Draw the aim slogan under the symbol
 	DisplayAimSlogan();
@@ -521,7 +518,7 @@ static void DrawSelectLight(UINT8 ubMode, UINT8 ubImage)
 {
 	ubMode *= 2;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSelectLight, ubImage, AimSortCheckBoxLoc[ubMode], AimSortCheckBoxLoc[ubMode + 1]);
+	BltVideoObject(FRAME_BUFFER, guiSelectLight, ubImage, AimSortCheckBoxLoc[ubMode], AimSortCheckBoxLoc[ubMode + 1]);
 
 //  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 

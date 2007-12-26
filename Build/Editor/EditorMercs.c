@@ -2330,8 +2330,8 @@ void UpdateMercsInfo()
 			break;
 		case MERC_BASICMODE:
 		case MERC_GENERALMODE:
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiExclamation, 0, 188, 362);
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiKeyImage, 0, 186, 387);
+			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, 362);
+			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, 387);
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
@@ -2690,11 +2690,11 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 
 	//now draw the fullsize item into the temp buffer
 	const INVTYPE* item = &Item[gusMercsNewItemIndex];
-	UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
-	BltVideoObjectOutlineFromIndex( uiSrcID, uiVideoObjectIndex, item->ubGraphicNum, 0, 0, 0, FALSE );
+	const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
+	BltVideoObjectOutline(uiSrcID, vo, item->ubGraphicNum, 0, 0, 0, FALSE);
 
 	//crop the source image
-	const ETRLEObject* pObject = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+	const ETRLEObject* pObject = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
 	INT32 iSrcWidth  = pObject->usWidth;
 	INT32 iSrcHeight = pObject->usHeight;
 	SrcRect.iLeft   +=	pObject->sOffsetX;
@@ -2756,7 +2756,7 @@ static void RenderMercInventoryPanel(void)
 {
 	INT32 x;
 	//Draw the graphical panel
-	BltVideoObjectFromIndex( FRAME_BUFFER, guiMercInventoryPanel, 0, MERCPANEL_X, MERCPANEL_Y);
+	BltVideoObject(FRAME_BUFFER, guiMercInventoryPanel, 0, MERCPANEL_X, MERCPANEL_Y);
 	//Mark the buttons dirty, so they don't disappear.
 	for( x = FIRST_MERCS_INVENTORY_BUTTON; x <= LAST_MERCS_INVENTORY_BUTTON; x++ )
 	{

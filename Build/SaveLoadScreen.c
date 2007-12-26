@@ -166,8 +166,8 @@ INT8			gbHighLightedLocation=-1;
 INT8			gbLastHighLightedLocation=-1;
 INT8			gbSetSlotToBeSelected=-1;
 
-UINT32		guiSlgBackGroundImage;
-UINT32		guiBackGroundAddOns;
+static SGPVObject* guiSlgBackGroundImage;
+static SGPVObject* guiBackGroundAddOns;
 
 
 // The string that will contain the game desc text
@@ -693,21 +693,21 @@ static void RenderSaveLoadScreen(void)
 		return;
 	}
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSlgBackGroundImage, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, guiSlgBackGroundImage, 0, 0, 0);
 
 	if( gfSaveGame )
 	{
 		// If we are saving a game
 
 		//Display the Title
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
+		BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 	else
 	{
 		// If we are Loading a game
 
 		//Display the Title
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
+		BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 	}
 
 	DisplaySaveGameList();
@@ -1085,7 +1085,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		return( TRUE );
 
 	//background
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[bEntryID], usPosX, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[bEntryID], usPosX, usPosY);
 
 
 	//

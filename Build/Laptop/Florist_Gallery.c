@@ -54,7 +54,7 @@
 #define FLOR_GALLERY_FLOWER_DESC_OFFSET_Y			FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y + 15
 
 
-UINT32	guiFlowerImages[ 3 ];
+static SGPVObject* guiFlowerImages[3];
 
 UINT32	guiCurrentlySelectedFlower=0;
 

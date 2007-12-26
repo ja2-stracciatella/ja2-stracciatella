@@ -128,8 +128,8 @@ void RenderAttributeFrameForIndex( INT16 sX, INT16 sY, INT32 iIndex );
 
 // graphical handles
 
-extern UINT32 guiANALYSE;
-extern UINT32 guiATTRIBUTEGRAPH;
-extern UINT32 guiSMALLSILHOUETTE;
+extern SGPVObject* guiANALYSE;
+extern SGPVObject* guiATTRIBUTEGRAPH;
+extern SGPVObject* guiSMALLSILHOUETTE;
 
 #endif

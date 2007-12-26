@@ -24,7 +24,7 @@ void GetBoxPosition( INT32 hBoxHandle, SGPPoint *Position );
 UINT32 GetNumberOfLinesOfTextInBox( INT32 hBoxHandle );
 void SetBoxSize( INT32 hBoxHandle, SGPRect Dimensions );
 void GetBoxSize(  INT32 hBoxHandle, SGPRect *Dimensions );
-void SetBorderType(INT32 hBoxHandle,INT32 BorderObjectIndex);
+void SetBorderType(INT32 hBoxHandle, const SGPVObject* border);
 void SetBackGroundSurface(INT32 hBoxHandle, INT32 BackGroundSurfaceIndex);
 void AddMonoString(const wchar_t* pString);
 void SetBoxFont(INT32 hBoxHandle, UINT32 uiFont);

@@ -270,14 +270,14 @@ enum{
 UINT32 guiBIGMAP;
 
 // orta .sti icon
-UINT32 guiORTAICON;
-UINT32 guiTIXAICON;
+SGPVObject* guiORTAICON;
+SGPVObject* guiTIXAICON;
 
 // boxes for characters on the map
-UINT32 guiCHARICONS;
+SGPVObject* guiCHARICONS;
 
 // the merc arrival sector landing zone icon
-UINT32 guiBULLSEYE;
+SGPVObject* guiBULLSEYE;
 
 
 // the max allowable towns militia in a sector
@@ -336,11 +336,13 @@ INT16 sSelectedMilitiaTown = 0;
 
 
 // sublevel graphics
-UINT32 guiSubLevel1, guiSubLevel2, guiSubLevel3;
+SGPVObject* guiSubLevel1;
+SGPVObject* guiSubLevel2;
+SGPVObject* guiSubLevel3;
 
 // the between sector icons
-UINT32    guiCHARBETWEENSECTORICONS;
-UINT32		guiCHARBETWEENSECTORICONSCLOSE;
+SGPVObject* guiCHARBETWEENSECTORICONS;
+SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
 
 // tixa found
 BOOLEAN fFoundTixa = FALSE;
@@ -364,10 +366,10 @@ UINT16 *pMapDKGreenPalette;
 
 
 // the map border eta pop up
-UINT32 guiMapBorderEtaPopUp;
+SGPVObject* guiMapBorderEtaPopUp;
 
 // heli pop up
-UINT32 guiMapBorderHeliSectors;
+SGPVObject* guiMapBorderHeliSectors;
 
 // list of map sectors that player isn't allowed to even highlight
 BOOLEAN sBadSectorsList[ WORLD_MAP_X ][ WORLD_MAP_X ];
@@ -431,7 +433,7 @@ PathSt* pTempCharacterPath = NULL;
 BOOLEAN fDrawTempHeliPath = FALSE;
 
 // the map arrows graphics
-UINT32 guiMAPCURSORS;
+SGPVObject* guiMAPCURSORS;
 
 // destination plotting character
 INT8 bSelectedDestChar = -1;
@@ -451,13 +453,13 @@ MOUSE_REGION gMapScreenMilitiaBoxRegions[ 9 ];
 MOUSE_REGION gMapScreenMilitiaRegion;
 
 // the mine icon
-UINT32 guiMINEICON;
+SGPVObject* guiMINEICON;
 
 // militia graphics
-UINT32 guiMilitia;
-UINT32 guiMilitiaMaps;
-UINT32 guiMilitiaSectorHighLight;
-UINT32 guiMilitiaSectorOutline;
+static SGPVObject* guiMilitia;
+static SGPVObject* guiMilitiaMaps;
+static SGPVObject* guiMilitiaSectorHighLight;
+static SGPVObject* guiMilitiaSectorOutline;
 
 // the sector that is highlighted on the militia map
 INT16 sSectorMilitiaMapSector = -1;
@@ -973,8 +975,6 @@ static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, 
 // "on duty" includes mercs inside vehicles
 static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 {
-	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-
   // run through list
   UINT8 ubIconPosition = 0;
 	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
@@ -990,7 +990,7 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 				 ( pSoldier->bLife > 0) &&
 				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
 		{
-			DrawMapBoxIcon( hIconHandle, SMALL_YELLOW_BOX, sMapX, sMapY, ubIconPosition );
+			DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, sMapX, sMapY, ubIconPosition);
 			ubIconPosition++;
 		}
 	}
@@ -1000,8 +1000,6 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 
 static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
-	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-
   // run through list
 	UINT8 ubIconPosition = iCount;
 	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
@@ -1024,7 +1022,7 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 			// skip mercs inside the helicopter if we're showing airspace level - they show up inside chopper icon instead
 			if ( !fShowAircraftFlag || ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) )
 			{
-				DrawMapBoxIcon( hIconHandle, SMALL_DULL_YELLOW_BOX, sMapX, sMapY, ubIconPosition );
+				DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sMapX, sMapY, ubIconPosition);
 				ubIconPosition++;
 			}
 		}
@@ -1035,8 +1033,6 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 
 static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 {
-	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-
 	CFOR_ALL_VEHICLES(v)
 	{
 		// skip the chopper, it has its own icon and displays in airspace mode
@@ -1053,7 +1049,7 @@ static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 			// this skips the chopper, which has no soldier
 			if (pVehicleSoldier != NULL && pVehicleSoldier->bTeam == gbPlayerNum)
 			{
-				DrawMapBoxIcon(hIconHandle, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
+				DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
 			}
 		}
 	}
@@ -1066,11 +1062,9 @@ static void ShowEnemiesInSector(INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfE
 {
 	UINT8 ubEnemy = 0;
 
-	HVOBJECT hIconHandle = GetVideoObject(guiCHARICONS);
-
 	for( ubEnemy = 0; ubEnemy < sNumberOfEnemies; ubEnemy++ )
 	{
-		DrawMapBoxIcon( hIconHandle, SMALL_RED_BOX, sSectorX, sSectorY, ubIconPosition );
+		DrawMapBoxIcon(guiCHARICONS, SMALL_RED_BOX, sSectorX, sSectorY, ubIconPosition);
 		ubIconPosition++;
 	}
 }
@@ -1092,7 +1086,7 @@ static void ShowUncertainNumberEnemiesInSector(INT16 sSectorX, INT16 sSectorY)
 		sYPosition -= 2;
 
 		// small question mark
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCHARICONS, SMALL_QUESTION_MARK, sXPosition, sYPosition);
+		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, SMALL_QUESTION_MARK, sXPosition, sYPosition);
 		InvalidateRegion( sXPosition ,sYPosition, sXPosition + DMAP_GRID_X, sYPosition + DMAP_GRID_Y );
 	}
 /*
@@ -1112,7 +1106,7 @@ static void ShowUncertainNumberEnemiesInSector(INT16 sSectorX, INT16 sSectorY)
 		ClipBlitsToMapViewRegion( );
 
 		// large question mark
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCHARICONS, BIG_QUESTION_MARK, sXPosition, sYPosition);
+		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, BIG_QUESTION_MARK, sXPosition, sYPosition);
 
 		// restore clip blits
 		RestoreClipRegionToFullScreen( );
@@ -1918,7 +1912,6 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* 
 	else
 		pPastNode=NULL;
 
-	HVOBJECT hMapHandle = GetVideoObject(guiMAPCURSORS);
 		// go through characters list and display arrows for path
  while(pNode)
 		{
@@ -2565,13 +2558,11 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* 
 			if (!fZoomFlag ||
 					(MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
 			 {
-
-
-				 BltVideoObject(FRAME_BUFFER, hMapHandle, (UINT16)iDirection, iX,iY);
+				BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iDirection, iX, iY);
 
 				 if(!fUTurnFlag)
 				 {
-           BltVideoObject(FRAME_BUFFER, hMapHandle, (UINT16)iArrow, iArrowX, iArrowY);
+					BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowX, iArrowY);
 					 InvalidateRegion( iArrowX, iArrowY, iArrowX + 2 * MAP_GRID_X, iArrowY + 2 * MAP_GRID_Y );
 
 				 }
@@ -2799,8 +2790,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN
 		 return FALSE;
 
  }
-
-	HVOBJECT hMapHandle = GetVideoObject(guiMAPCURSORS);
 
  // Handle drawing of arrow
  pNode=pCurrentNode;
@@ -3488,7 +3477,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN
           //RestoreExternBackgroundRect(((INT16)iArrowX), ((INT16)iArrowY),DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
 				 if( pNode != pPath )
 				 {
-					 BltVideoObject(FRAME_BUFFER, hMapHandle, (UINT16)iArrow, iArrowX, iArrowY);
+					BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowX, iArrowY);
 					 InvalidateRegion( iArrowX, iArrowY, iArrowX + 2 * MAP_GRID_X, iArrowY + 2 * MAP_GRID_Y );
 				 }
 			 }
@@ -3895,18 +3884,8 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 
 				swprintf( sString, lengthof(sString), L"%d", sExiting );
 
-				// about to enter
-				HVOBJECT hIconHandle;
-				if( !fAboutToEnter )
-				{
-					// draw blue arrows
-					hIconHandle = GetVideoObject(guiCHARBETWEENSECTORICONS);
-				}
-				else
-				{
-					// draw yellow arrows
-					hIconHandle = GetVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
-				}
+				// if about to enter, draw yellow arrows, blue otherwise
+				const SGPVObject* const hIconHandle = (fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS);
 
 				// zoomed in or not?
 				if(!fZoomFlag)
@@ -4012,7 +3991,7 @@ void DisplayDistancesForHelicopter( void )
 
 	sOldYPosition = sYPosition;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
+	BltVideoObject(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
 
 //	sTotalCanTravel = ( INT16 )GetTotalDistanceHelicopterCanTravel( );
 	sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
@@ -4221,7 +4200,7 @@ void DisplayPositionOfHelicopter( void )
 			// clip blits to mapscreen region
 			ClipBlitsToMapViewRegion( );
 
-			BltVideoObjectFromIndex(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
+			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			SetFont( MAP_MVT_ICON_FONT );
 			SetFontForeground( FONT_WHITE );
@@ -4274,7 +4253,7 @@ static void DisplayDestinationOfHelicopter(void)
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );
 
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiHelicopterIcon, HELI_SHADOW_ICON, x, y);
+		BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_SHADOW_ICON, x, y);
 		InvalidateRegion( x, y, x + HELI_SHADOW_ICON_WIDTH, y + HELI_SHADOW_ICON_HEIGHT );
 
 		RestoreClipRegionToFullScreen( );
@@ -4353,7 +4332,7 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 }
 
 
-static void DrawSite(INT16 sector_x, INT16 sector_y, UINT32 icon)
+static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObject* const icon)
 {
 	INT16  x;
 	INT16  y;
@@ -4390,7 +4369,7 @@ static void DrawSite(INT16 sector_x, INT16 sector_y, UINT32 icon)
 	/* If the icon is higher than a map cell, align with the bottom of the cell */
 	y += (h > max_h ? max_h - h : (max_h - h) / 2);
 
-	BltVideoObjectFromIndex(guiSAVEBUFFER, icon, vo_idx, x, y);
+	BltVideoObject(guiSAVEBUFFER, icon, vo_idx, x, y);
 }
 
 
@@ -4870,8 +4849,8 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// update states of militia selected sector buttons
 	CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( );
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitia, 0, MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaMaps, sSelectedMilitiaTown - 1, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y);
+	BltVideoObject(FRAME_BUFFER, guiMilitia,     0,                        MAP_MILITIA_BOX_POS_X,                     MAP_MILITIA_BOX_POS_Y);
+	BltVideoObject(FRAME_BUFFER, guiMilitiaMaps, sSelectedMilitiaTown - 1, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y);
 
 	// set font color for labels and "total militia" counts
 	SetFontForeground(FONT_WHITE);
@@ -4981,8 +4960,6 @@ static void RenderIconsPerSectorForSelectedTown(void)
 	// get the sector value for the upper left corner
 	sBaseSectorValue = GetBaseSectorForCurrentTown( );
 
-	HVOBJECT hVObject = GetVideoObject(guiMilitia);
-
 	// render icons for map
 	for( iCounter = 0; iCounter < 9; iCounter++ )
 	{
@@ -5065,7 +5042,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 				}
 			}
 
-			BltVideoObject( FRAME_BUFFER, hVObject, ( UINT16 )( iCurrentIcon ), sX, sY);
+			BltVideoObject(FRAME_BUFFER, guiMilitia, iCurrentIcon, sX, sY);
 		}
 
 	}
@@ -5096,14 +5073,14 @@ static void ShowHighLightedSectorOnMilitiaMap(void)
 	{
 		sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( sSectorMilitiaMapSector % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
 		sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( sSectorMilitiaMapSector / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaSectorHighLight, 0, sX, sY);
+		BltVideoObject(FRAME_BUFFER, guiMilitiaSectorHighLight, 0, sX, sY);
 	}
 
 	if( sSectorMilitiaMapSectorOutline != -1 )
 	{
 		sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( sSectorMilitiaMapSectorOutline % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
 		sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( sSectorMilitiaMapSectorOutline / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiMilitiaSectorOutline, 0, sX, sY);
+		BltVideoObject(FRAME_BUFFER, guiMilitiaSectorOutline, 0, sX, sY);
 	}
 }
 
@@ -5308,8 +5285,6 @@ static void DisplayUnallocatedMilitia(void)
 	// get total
 	iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
 
-	HVOBJECT hVObject = GetVideoObject(guiMilitia);
-
 	// now display
 	for( iCurrentTroopIcon = 0; iCurrentTroopIcon < iTotalNumberOfTroops; iCurrentTroopIcon++ )
 	{
@@ -5330,7 +5305,7 @@ static void DisplayUnallocatedMilitia(void)
 			iCurrentIcon = 10;
 		}
 
-		BltVideoObject( FRAME_BUFFER, hVObject, ( UINT16 )( iCurrentIcon ), sX, sY);
+		BltVideoObject(FRAME_BUFFER, guiMilitia, iCurrentIcon, sX, sY);
 	}
 }
 
@@ -5705,8 +5680,6 @@ static void DrawTownMilitiaForcesOnMap(void)
 	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0,  iNumberOfElites = 0;
 	INT16 sSectorX = 0, sSectorY = 0;
 
-	HVOBJECT hVObject = GetVideoObject(guiMilitia);
-
 	// clip blits to mapscreen region
 	ClipBlitsToMapViewRegion( );
 
@@ -5753,7 +5726,7 @@ static void DrawTownMilitiaForcesOnMap(void)
 					iIconValue += 2;
 				}
 
-				DrawMapBoxIcon( hVObject, ( UINT16 ) iIconValue, sSectorX, sSectorY, (UINT8) iCounterB );
+				DrawMapBoxIcon(guiMilitia, iIconValue, sSectorX, sSectorY, iCounterB);
 			}
 		}
 
@@ -5803,7 +5776,7 @@ static void DrawTownMilitiaForcesOnMap(void)
 					iIconValue += 2;
 				}
 
-				DrawMapBoxIcon( hVObject, ( UINT16 ) iIconValue, sSectorX, sSectorY, (UINT8) iCounterB );
+				DrawMapBoxIcon(guiMilitia, iIconValue, sSectorX, sSectorY, iCounterB);
 			}
 		}
 	}
@@ -5916,16 +5889,16 @@ static void ShadeSubLevelsNotVisited(void)
 static void HandleLowerLevelMapBlit(void)
 {
 	// blits the sub level maps
-	UINT32 VOIdx;
+	const SGPVObject* vo;
 	switch( iCurrentMapSectorZ )
 	{
-		case 1: VOIdx = guiSubLevel1; break;
-		case 2: VOIdx = guiSubLevel2; break;
-		case 3: VOIdx = guiSubLevel3; break;
+		case 1: vo = guiSubLevel1; break;
+		case 2: vo = guiSubLevel2; break;
+		case 3: vo = guiSubLevel3; break;
 	}
 
 	// handle the blt of the sublevel
-	BltVideoObjectFromIndex(guiSAVEBUFFER, VOIdx, 0, MAP_VIEW_START_X + 21, MAP_VIEW_START_Y + 17);
+	BltVideoObject(guiSAVEBUFFER, vo, 0, MAP_VIEW_START_X + 21, MAP_VIEW_START_Y + 17);
 
 	// handle shading of sublevels
 	ShadeSubLevelsNotVisited( );
@@ -5965,11 +5938,9 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 
 BOOLEAN DrawMapForDemo( void )
 {
-	UINT32 uiTempObject;
-
-	uiTempObject = AddVideoObjectFromFile("INTERFACE/map_1.sti");
+	SGPVObject* const uiTempObject = AddVideoObjectFromFile("INTERFACE/map_1.sti");
 	CHECKF(uiTempObject != NO_VOBJECT);
-	BltVideoObjectFromIndex(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
+	BltVideoObject(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
 	DeleteVideoObjectFromIndex( uiTempObject );
 
 	return( TRUE );
@@ -6473,7 +6444,7 @@ static void DrawBullseye(void)
 	GetScreenXYFromMapXY( gsMercArriveSectorX, gsMercArriveSectorY, &sX, &sY );
 	sY -= 2;
 
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
+	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
 }
 
 

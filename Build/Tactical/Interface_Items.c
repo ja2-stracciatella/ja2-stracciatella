@@ -216,11 +216,11 @@ BOOLEAN				gfDontChargeAPsToPickup = FALSE;
 static BOOLEAN gbItemPointerLocateGood = FALSE;
 
 // ITEM DESCRIPTION BOX STUFF
-static UINT32 guiItemDescBox;
-static UINT32 guiMapItemDescBox;
-static UINT32 guiItemGraphic;
-static UINT32 guiMoneyGraphicsForDescBox;
-static UINT32 guiBullet;
+static SGPVObject* guiItemDescBox;
+static SGPVObject* guiMapItemDescBox;
+static SGPVObject* guiItemGraphic;
+static SGPVObject* guiMoneyGraphicsForDescBox;
+static SGPVObject* guiBullet;
 BOOLEAN			gfInItemDescBox = FALSE;
 static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE	*gpItemDescObject = NULL;
@@ -265,7 +265,7 @@ static const MoneyLoc gMapMoneyButtonLoc = { 174, 115 };
 
 // ITEM STACK POPUP STUFF
 static BOOLEAN gfInItemStackPopup = FALSE;
-static UINT32 guiItemPopupBoxes;
+static SGPVObject* guiItemPopupBoxes;
 static OBJECTTYPE* gpItemPopupObject;
 static INT16 gsItemPopupX;
 static INT16 gsItemPopupY;
@@ -451,8 +451,8 @@ static MOUSE_REGION gSMInvCamoRegion;
 static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8						gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
-static UINT32 guiBodyInvVO[4][2];
-static UINT32 guiGoldKeyVO;
+static SGPVObject* guiBodyInvVO[4][2];
+static SGPVObject* guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
 
@@ -840,7 +840,7 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 	// Blit body inv, based on body type
 	INT8 bSubImageIndex = gbCompatibleApplyItem;
 
-	BltVideoObjectFromIndex( guiSAVEBUFFER, guiBodyInvVO[ pSoldier->ubBodyType ][ bSubImageIndex ], 0, sX, sY);
+	BltVideoObject(guiSAVEBUFFER, guiBodyInvVO[pSoldier->ubBodyType][bSubImageIndex], 0, sX, sY);
 }
 
 
@@ -884,7 +884,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 				x = KEYRING_X;
 				y = KEYRING_Y;
 			}
-			BltVideoObjectFromIndex(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
+			BltVideoObject(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
 			RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 		}
 	}
@@ -958,12 +958,12 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 			{
 				const INT32 x = 217;
 				const INT32 y = INV_INTERFACE_START_Y + 108;
-				BltVideoObjectFromIndex(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
+				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
 				RestoreExternBackgroundRect(x, y, 72, 28);
 			}
 			else
 			{
-				BltVideoObjectFromIndex( guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
+				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
 				RestoreExternBackgroundRect( 14, 218, 102, 24 );
 			}
 		}
@@ -1766,7 +1766,7 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 	if ( fDirtyLevel == DIRTYLEVEL2 )
 	{
 		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+		const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
 		const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
 		UINT32 usHeight = pTrav->usHeight;
 		UINT32 usWidth  = pTrav->usWidth;
@@ -1777,8 +1777,8 @@ void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYP
 		INT16 sCenY = sY + abs(sHeight - usHeight) / 2 - pTrav->sOffsetY;
 
 		// Shadow area
-		BltVideoObjectOutlineShadowFromIndex(uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-		BltVideoObjectOutlineFromIndex(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor, fOutline);
+		BltVideoObjectOutlineShadow(uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
+		BltVideoObjectOutline(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor, fOutline);
 
 
 		if ( uiBuffer == FRAME_BUFFER )
@@ -2564,8 +2564,8 @@ void RenderItemDescriptionBox(void)
 	const INT16             dx     = gsInvDescX;
 	const INT16             dy     = gsInvDescY;
 
-	const UINT32 box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
-	BltVideoObjectFromIndex(guiSAVEBUFFER, box_gfx, 0, dx, dy);
+	const const SGPVObject* const box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
+	BltVideoObject(guiSAVEBUFFER, box_gfx, 0, dx, dy);
 
 	//Display the money 'seperating' border
 	if (obj->usItem == MONEY)
@@ -2574,7 +2574,7 @@ void RenderItemDescriptionBox(void)
 		const MoneyLoc* const xy = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
 		const INT32           x  = xy->x + gMoneyButtonOffsets[0].x - 1;
 		const INT32           y  = xy->y + gMoneyButtonOffsets[0].y;
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
+		BltVideoObject(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
 	}
 
 	/* display item */
@@ -2584,8 +2584,8 @@ void RenderItemDescriptionBox(void)
 		const SGPBox*      const xy    = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
 		const INT32 x = dx + xy->x + (xy->w - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 		const INT32 y = dy + xy->y + (xy->h - pTrav->usHeight) / 2 - pTrav->sOffsetY;
-		BltVideoObjectOutlineShadowFromIndex(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
-		BltVideoObjectFromIndex(             guiSAVEBUFFER, guiItemGraphic, 0, x,     y);
+		BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+		BltVideoObject(             guiSAVEBUFFER, guiItemGraphic, 0, x,     y);
 	}
 
 	// Display status
@@ -2644,7 +2644,7 @@ void RenderItemDescriptionBox(void)
 		{
 			const INT32 x = (in_map ? MAP_BULLET_SING_X : BULLET_SING_X);
 			const INT32 y = (in_map ? MAP_BULLET_SING_Y : BULLET_SING_Y);
-			BltVideoObjectFromIndex(guiSAVEBUFFER, guiBullet, 0, x, y);
+			BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 		}
 
 		const WEAPONTYPE* const w = &Weapon[obj->usItem];
@@ -2654,7 +2654,7 @@ void RenderItemDescriptionBox(void)
 			const INT32 y = (in_map ? MAP_BULLET_BURST_Y : BULLET_BURST_Y);
 			for (INT32 i = w->ubShotsPerBurst; i != 0; --i)
 			{
-				BltVideoObjectFromIndex(guiSAVEBUFFER, guiBullet, 0, x, y);
+				BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 				x += BULLET_WIDTH + 1;
 			}
 		}
@@ -4274,7 +4274,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 	for (UINT32 cnt = 0; cnt < gubNumItemPopups; cnt++)
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + ( cnt * usWidth ), gsItemPopupY);
+		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, gsItemPopupX + cnt * usWidth, gsItemPopupY);
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
@@ -4468,7 +4468,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 
 	for ( cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++ )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, (INT16)(gsKeyRingPopupInvX + ( cnt % sKeyRingItemWidth * usWidth ) + sOffSetX ), ( INT16 )( gsKeyRingPopupInvY + sOffSetY + ( cnt / sKeyRingItemWidth * usHeight ) ));
+		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, gsKeyRingPopupInvX + cnt % sKeyRingItemWidth * usWidth + sOffSetX, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight);
 
 		// will want to draw key here.. if there is one
 		if( ( gpItemPopupSoldier->pKeyRing[ cnt ].ubKeyID != INVALID_KEY_NUMBER ) && ( gpItemPopupSoldier->pKeyRing[ cnt ].ubNumber > 0 ) )
@@ -4485,10 +4485,6 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 			// render the item
 			INVRenderItem(FRAME_BUFFER, NULL, &pObject, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 8, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight, usWidth - 8, usHeight - 2, DIRTYLEVEL2, 0, 0, 0);
 		}
-
-		//BltVideoObjectFromIndex( FRAME_BUFFER, guiItemPopupBoxes, 0, (INT16)(gsKeyRingPopupInvX + ( cnt % KEY_RING_ROW_WIDTH * usWidth ) ), ( INT16 )( gsKeyRingPopupInvY + ( cnt / KEY_RING_ROW_WIDTH * usHeight ) ));
-
-
 	}
 
 	//RestoreExternBackgroundRect( gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight );
@@ -4526,7 +4522,7 @@ void DeleteKeyRingPopup(void)
 }
 
 
-UINT32 GetInterfaceGraphicForItem(const INVTYPE* pItem)
+const SGPVObject* GetInterfaceGraphicForItem(const INVTYPE* pItem)
 {
 	// CHECK SUBCLASS
 	switch (pItem->ubGraphicType)
@@ -4553,7 +4549,7 @@ UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 }
 
 
-UINT32 LoadTileGraphicForItem(const INVTYPE* pItem)
+SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
 {
 	const char* Prefix;
 	switch (pItem->ubGraphicType)
@@ -4795,7 +4791,7 @@ typedef struct
 	INT32		  		ubTotalItems;
 	INT32		  		bCurSelect;
 	UINT8					bNumSlotsPerPage;
-	UINT32				uiPanelVo;
+	SGPVObject*   uiPanelVo;
 	INT32					iUpButtonImages;
 	INT32					iDownButtonImages;
 	INT32					iAllButtonImages;
@@ -5233,7 +5229,7 @@ void RenderItemPickupMenu( )
 		{
 			UINT16 usSubRegion = (cnt == 0 ? 0 : 1);
 
-			BltVideoObjectFromIndex( FRAME_BUFFER, gItemPickupMenu.uiPanelVo, usSubRegion, sX, sY);
+			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, usSubRegion, sX, sY);
 
 			// Add height of object
 			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, usSubRegion);
@@ -5243,11 +5239,11 @@ void RenderItemPickupMenu( )
 		// Do end
 		if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
 		{
-			BltVideoObjectFromIndex( FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 2, sX, sY);
+			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 2, sX, sY);
 		}
 		else
 		{
-			BltVideoObjectFromIndex( FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 3, sX, sY);
+			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 3, sX, sY);
 		}
 
 		// Render items....

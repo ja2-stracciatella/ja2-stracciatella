@@ -84,7 +84,7 @@ void EndRadioLocator(SOLDIERTYPE* s);
 extern MOUSE_REGION gSMPanelRegion;
 
 
-extern UINT32 guiSecItemHiddenVO;
+extern SGPVObject* guiSecItemHiddenVO;
 
 extern BOOLEAN gfDisableTacticalPanelButtons;
 
@@ -127,5 +127,6 @@ extern UINT16       gusNewItemIndex;
 extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
 extern SOLDIERTYPE* gNewPanelSoldier;
+extern SGPVObject*  guiBrownBackgroundForTeamPanel; // backgrounds for breath max background
 
 #endif

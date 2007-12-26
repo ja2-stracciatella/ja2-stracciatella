@@ -680,7 +680,7 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	b->bTextYSubOffSet         = 0;
 	b->fShiftText              = TRUE;
 	b->sWrappedWidth           = -1;
-	b->iIconID                 = -1;
+	b->icon                    = NO_VOBJECT;
 	b->usIconIndex             = -1;
 	b->bIconXOffset            = -1;
 	b->bIconYOffset            = -1;
@@ -737,7 +737,7 @@ INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT1
 	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
-	b->iIconID     = Icon;
+	b->icon        = GenericButtonIcons[Icon];
 	b->usIconIndex = IconIndex;
 
 	return b->IDNum;
@@ -979,15 +979,15 @@ void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle)
 }
 
 
-BOOLEAN SpecifyButtonIcon(INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage)
+BOOLEAN SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKF(b != NULL); // XXX HACK000C
 
-	b->iIconID     = iVideoObjectID;
+	b->icon        = icon;
 	b->usIconIndex = usVideoObjectIndex;
 
-	if (b->iIconID == -1) return FALSE;
+	if (icon == NO_VOBJECT) return FALSE;
 
 	b->bIconXOffset = bXOffset;
 	b->bIconYOffset = bYOffset;
@@ -1353,8 +1353,8 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 		case BUTTON_HOT_SPOT:
 			return; // hotspots don't have text, but if you want to, change this to a break!
 	}
-	if (b->iIconID != -1) DrawIconOnButton(b);
-	if (b->string)        DrawTextOnButton(b);
+	if (b->icon != NO_VOBJECT) DrawIconOnButton(b);
+	if (b->string)             DrawTextOnButton(b);
 	/* If the button is disabled, and a style has been calculated, then draw the
 	 * style last.
 	 */
@@ -1536,7 +1536,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 
 static void DrawIconOnButton(const GUI_BUTTON* b)
 {
-	if (b->iIconID < 0) return;
+	if (b->icon == NO_VOBJECT) return;
 
 	// Get width and height of button area
 	INT32 width  = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
@@ -1582,16 +1582,8 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	if (NewClip.iRight <= NewClip.iLeft || NewClip.iBottom <= NewClip.iTop) return;
 
 	// Get the width and height of the icon itself
-	HVOBJECT hvObject;
-	if (b->uiFlags & BUTTON_GENERIC)
-	{
-		hvObject = GenericButtonIcons[b->iIconID];
-	}
-	else
-	{
-		hvObject = GetVideoObject(b->iIconID);
-	}
-	const ETRLEObject* const pTrav = &hvObject->pETRLEObject[b->usIconIndex];
+	const SGPVObject*  const hvObject = b->icon;
+	const ETRLEObject* const pTrav    = &hvObject->pETRLEObject[b->usIconIndex];
 
 	/* Compute coordinates for centering the icon on the button or use the offset
 	 * system.

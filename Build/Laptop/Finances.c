@@ -117,11 +117,11 @@ static FinanceUnit* pFinanceListHead = NULL;
 static INT32 iCurrentPage = 0;
 
 // video object id's
-static UINT32 guiTITLE;
-static UINT32 guiTOP;
-static UINT32 guiLINE;
-static UINT32 guiLONGLINE;
-static UINT32 guiLISTCOLUMNS;
+static SGPVObject* guiTITLE;
+static SGPVObject* guiTOP;
+static SGPVObject* guiLINE;
+static SGPVObject* guiLONGLINE;
+static SGPVObject* guiLISTCOLUMNS;
 
 // are in the financial system right now?
 static BOOLEAN fInFinancialMode = FALSE;
@@ -348,7 +348,7 @@ void RenderFinances(void)
 
   DisplayFinancePageNumberAndDateRange( );
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 
 	BlitTitleBarIcons(  );
 }
@@ -397,8 +397,8 @@ static void RemoveFinances(void)
 static void RenderBackGround(void)
 {
 	// render generic background for Finance system
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
+	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
 
@@ -417,15 +417,13 @@ static void DrawSummary(void)
 static void DrawSummaryLines(void)
 {
 	// draw divider lines on screen
-	HVOBJECT hHandle = GetVideoObject(guiLINE);
-
 	// blit summary LINE object to screen
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
-  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y);
-	BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, MID_DIVLINE_Y2);
-  //BltVideoObject(FRAME_BUFFER, hHandle, 0,DIVLINE_X, BOT_DIVLINE_Y2);
+	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y);
+  BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, TOP_DIVLINE_Y+2);
+  //BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y);
+  BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y);
+	BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, MID_DIVLINE_Y2);
+  //BltVideoObject(FRAME_BUFFER, guiLINE, 0,DIVLINE_X, BOT_DIVLINE_Y2);
 }
 
 
@@ -458,13 +456,13 @@ static void DrawRecordsBackGround(void)
 	// now the columns
 	for (iCounter = 6; iCounter < 35; iCounter++)
 	{
-    BltVideoObjectFromIndex(FRAME_BUFFER, guiLISTCOLUMNS, 0, TOP_X + 10, TOP_Y + 18 + iCounter * BLOCK_HEIGHT + 1);
+    BltVideoObject(FRAME_BUFFER, guiLISTCOLUMNS, 0, TOP_X + 10, TOP_Y + 18 + iCounter * BLOCK_HEIGHT + 1);
 	}
 
 	// the divisorLines
-  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 17 + 6 * BLOCK_HEIGHT);
-  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + 6 * BLOCK_HEIGHT);
-  BltVideoObjectFromIndex(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + iCounter * BLOCK_HEIGHT);
+  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 17 + 6 * BLOCK_HEIGHT);
+  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + 6 * BLOCK_HEIGHT);
+  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0, TOP_X + 10, TOP_Y + 19 + iCounter * BLOCK_HEIGHT);
 
 	// the header text
   DrawRecordsColumnHeadersText( );

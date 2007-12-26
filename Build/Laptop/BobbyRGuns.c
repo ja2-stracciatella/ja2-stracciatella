@@ -141,9 +141,10 @@ BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 
 extern	BOOLEAN fExitingLaptopFlag;
 
-UINT32		guiGunBackground;
-UINT32		guiGunsGrid;
-UINT32		guiBrTitle;
+static SGPVObject* guiGunBackground;
+static SGPVObject* guiGunsGrid;
+static SGPVObject* guiBrTitle;
+
 UINT16		gusCurWeaponIndex;
 UINT8			gubCurPage;
 UINT8			ubCatalogueButtonValues[] = {
@@ -268,7 +269,7 @@ void RenderBobbyRGuns()
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiGunsGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObject(FRAME_BUFFER, guiGunsGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 //	DeleteMouseRegionForBigImage();
 	DisplayItemInfo( IC_BOBBY_GUN );
@@ -282,7 +283,7 @@ void RenderBobbyRGuns()
 
 BOOLEAN DisplayBobbyRBrTitle()
 {
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBrTitle, 0, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y);
+	BltVideoObject(FRAME_BUFFER, guiBrTitle, 0, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y);
 
 	// To Order Text
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_TO_ORDER], BOBBYR_TO_ORDER_TITLE_X, BOBBYR_TO_ORDER_TITLE_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -742,7 +743,7 @@ static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	UINT32 uiImage = LoadTileGraphicForItem(item);
+	SGPVObject* const uiImage = LoadTileGraphicForItem(item);
 
 	//center picture in frame
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiImage, 0);
@@ -751,9 +752,9 @@ static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	INT16  sCenY   = PosY + 8;
 
 	//blt the shadow of the item
-	BltVideoObjectOutlineShadowFromIndex(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
+	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
 	DeleteVideoObjectFromIndex(uiImage);
 
 	return(TRUE);

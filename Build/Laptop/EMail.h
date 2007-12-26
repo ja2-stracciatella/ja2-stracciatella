@@ -172,7 +172,7 @@ extern BOOLEAN fReDrawNewMailFlag;
 extern BOOLEAN fOpenMostRecentUnReadFlag;
 extern Email* pEmailList;
 extern Email* MailToDelete;
-extern UINT32 guiEmailWarning;
+extern SGPVObject* guiEmailWarning;
 
 
 void GameInitEmail(void);

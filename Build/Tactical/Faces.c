@@ -167,7 +167,6 @@ INT32	InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 u
 static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags, INT32 iFaceFileID, const UINT32 uiBlinkFrequency, const UINT32 uiExpressionFrequency)
 {
 	FACETYPE					*pFace;
-	UINT32						uiVideoObject;
 	INT32							iFaceIndex;
 	UINT32						uiCount;
 	SGPPaletteEntry		Pal[256];
@@ -220,14 +219,14 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 	}
 
 	// Load
-	uiVideoObject = AddVideoObjectFromFile(ImageFile);
-	if (uiVideoObject == NO_VOBJECT)
+	SGPVObject* hVObject = AddVideoObjectFromFile(ImageFile);
+	if (hVObject == NO_VOBJECT)
 	{
 		// If we are a big face, use placeholder...
 		if ( uiInitFlags & FACE_BIGFACE )
 		{
-			uiVideoObject = AddVideoObjectFromFile("FACES/placeholder.sti");
-			if (uiVideoObject == NO_VOBJECT) return -1;
+			hVObject = AddVideoObjectFromFile("FACES/placeholder.sti");
+			if (hVObject == NO_VOBJECT) return -1;
 		}
 		else
 		{
@@ -264,37 +263,32 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 
 
 	// Set palette
-	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
-	if (hVObject != NULL)
+	// Build a grayscale palette! ( for testing different looks )
+	for(uiCount=0; uiCount < 256; uiCount++)
 	{
-		// Build a grayscale palette! ( for testing different looks )
-		for(uiCount=0; uiCount < 256; uiCount++)
-		{
-			Pal[uiCount].peRed=255;
-			Pal[uiCount].peGreen=255;
-			Pal[uiCount].peBlue=255;
-		}
-
-		hVObject->pShades[ FLASH_PORTRAIT_NOSHADE ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
-		hVObject->pShades[ FLASH_PORTRAIT_STARTSHADE ]  = Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
-		hVObject->pShades[ FLASH_PORTRAIT_ENDSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
-		hVObject->pShades[ FLASH_PORTRAIT_DARKSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, TRUE );
-		hVObject->pShades[ FLASH_PORTRAIT_LITESHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, FALSE );
-
-		for(uiCount=0; uiCount < 256; uiCount++)
-		{
-			Pal[uiCount].peRed=(UINT8)(uiCount%128)+128;
-			Pal[uiCount].peGreen=(UINT8)(uiCount%128)+128;
-			Pal[uiCount].peBlue=(UINT8)(uiCount%128)+128;
-		}
-		hVObject->pShades[ FLASH_PORTRAIT_GRAYSHADE ]		= Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
-
+		Pal[uiCount].peRed=255;
+		Pal[uiCount].peGreen=255;
+		Pal[uiCount].peBlue=255;
 	}
+
+	hVObject->pShades[ FLASH_PORTRAIT_NOSHADE ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
+	hVObject->pShades[ FLASH_PORTRAIT_STARTSHADE ]  = Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
+	hVObject->pShades[ FLASH_PORTRAIT_ENDSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
+	hVObject->pShades[ FLASH_PORTRAIT_DARKSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, TRUE );
+	hVObject->pShades[ FLASH_PORTRAIT_LITESHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, FALSE );
+
+	for(uiCount=0; uiCount < 256; uiCount++)
+	{
+		Pal[uiCount].peRed=(UINT8)(uiCount%128)+128;
+		Pal[uiCount].peGreen=(UINT8)(uiCount%128)+128;
+		Pal[uiCount].peBlue=(UINT8)(uiCount%128)+128;
+	}
+	hVObject->pShades[ FLASH_PORTRAIT_GRAYSHADE ]		= Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
 
 
 	// Get FACE height, width
 	const ETRLEObject* ETRLEProps;
-	ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 0);
+	ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 0);
 	if (ETRLEProps == NULL) return -1;
 	pFace->usFaceWidth  = ETRLEProps->usWidth;
 	pFace->usFaceHeight = ETRLEProps->usHeight;
@@ -305,13 +299,13 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 		pFace->fInvalidAnim = FALSE;
 
 		// Get EYE height, width
-		ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 1);
+		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 1);
 		if (ETRLEProps == NULL) return -1;
 		pFace->usEyesWidth  = ETRLEProps->usWidth;
 		pFace->usEyesHeight = ETRLEProps->usHeight;
 
 		// Get Mouth height, width
-		ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObject, 5);
+		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 5);
 		if (ETRLEProps == NULL) return -1;
 		pFace->usMouthWidth  = ETRLEProps->usWidth;
 		pFace->usMouthHeight = ETRLEProps->usHeight;
@@ -322,7 +316,7 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 	}
 
 	// Set id
-	pFace->uiVideoObject = uiVideoObject;
+	pFace->uiVideoObject = hVObject;
 
 	return( iFaceIndex );
 
@@ -693,7 +687,7 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 				if ( sFrame > 0 )
 				{
 					// Blit Accordingly!
-					BltVideoObjectFromIndex( pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, (INT16)( sFrame ), pFace->usEyesX, pFace->usEyesY);
+					BltVideoObject(pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, sFrame, pFace->usEyesX, pFace->usEyesY);
 
 					if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
 					{
@@ -863,7 +857,7 @@ static void MouthAutoFace(INT32 iFaceIndex)
 							if ( sFrame > 0 )
 							{
 								// Blit Accordingly!
-								BltVideoObjectFromIndex( pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, (INT16)( sFrame + 4 ), pFace->usMouthX, pFace->usMouthY);
+								BltVideoObject(pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, sFrame + 4, pFace->usMouthX, pFace->usMouthY);
 
 								// Update rects
 								if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
@@ -965,19 +959,19 @@ static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
 	if (s == NULL) return;
 
 	// Set to default
-	SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE );
+	SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE);
 
 	if (pFace->video_overlay == NULL && !fExternBlit)
 	{
 		if (s->bActionPoints == 0 && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT)
 		{
-			SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_LITESHADE );
+			SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_LITESHADE);
 		}
 	}
 
 	if (s->bLife < OKLIFE)
 	{
-		SetObjectHandleShade( pFace->uiVideoObject, FLASH_PORTRAIT_DARKSHADE );
+		SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_DARKSHADE);
 	}
 
 	// ATE: Don't shade for damage if blitting extern face...
@@ -985,7 +979,7 @@ static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
 	{
 		if (s->fFlashPortrait == FLASH_PORTRAIT_START)
 		{
-			SetObjectHandleShade(pFace->uiVideoObject, s->bFlashPortraitFrame);
+			SetObjectShade(pFace->uiVideoObject, s->bFlashPortraitFrame);
 		}
 	}
 }
@@ -1035,7 +1029,7 @@ static void DoRightIcon(UINT32 uiRenderBuffer, FACETYPE* pFace, INT16 sFaceX, IN
 
 	// Find X, y for placement
 	GetXYForRightIconPlacement( pFace, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY, bNumIcons );
-	BltVideoObjectFromIndex( uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
+	BltVideoObject(uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
 }
 
 
@@ -1082,16 +1076,16 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 		if (s->bLife < CONSCIOUSNESS || s->fDeadPanel)
 		{
 			// Blit Closed eyes here!
-			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
 
 			// Blit hatch!
-			BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
+			BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 		}
 
 		if (s->fMercAsleep == TRUE)
 		{
 			// blit eyes closed
-			BltVideoObjectFromIndex( uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
 		}
 
 		if (s->uiStatusFlags & SOLDIER_DEAD)
@@ -1100,10 +1094,10 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 			if (!s->fClosePanel && !s->fDeadPanel && !s->fUIdeadMerc && !s->fUICloseMerc)
 			{
 				// Put close panel there
-				BltVideoObjectFromIndex( uiRenderBuffer, guiDEAD, 5, sFaceX, sFaceY);
+				BltVideoObject(uiRenderBuffer, guiDEAD, 5, sFaceX, sFaceY);
 
 				// Blit hatch!
-				BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
+				BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 			}
 		}
 
@@ -1160,7 +1154,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 					(gfSMDisableForItems && !gfInItemPickupMenu && gpSMCurrentMerc == s && gsCurInterfacePanel == SM_PANEL))
 			{
 				// Blit hatch!
-				BltVideoObjectFromIndex( uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
+				BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 			}
 
 			if ( !pFace->fDisabled && !pFace->fInvalidAnim )
@@ -1327,7 +1321,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 		{
 			// Find X, y for placement
 			GetXYForIconPlacement( pFace, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY );
-			BltVideoObjectFromIndex( uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
+			BltVideoObject(uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
 
       // ATE: Show numbers only in mapscreen
 			if( fShowNumber )
@@ -1381,11 +1375,11 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 	// Blit face to save buffer!
 	if (pFace->uiAutoRestoreBuffer == guiSAVEBUFFER)
 	{
-		BltVideoObjectFromIndex(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, pFace->usFaceX, pFace->usFaceY);
+		BltVideoObject(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, pFace->usFaceX, pFace->usFaceY);
 	}
 	else
 	{
-		BltVideoObjectFromIndex(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
+		BltVideoObject(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
 	}
 
 	HandleRenderFaceAdjustments(pFace, FALSE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
@@ -1438,7 +1432,7 @@ static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT
 	SetFaceShade(pFace, TRUE);
 
 	// Blit face to save buffer!
-	BltVideoObjectFromIndex( uiBuffer, pFace->uiVideoObject, 0, sX, sY);
+	BltVideoObject(uiBuffer, pFace->uiVideoObject, 0, sX, sY);
 
 	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
 

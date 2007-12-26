@@ -74,8 +74,8 @@ MercPopUpBox *gpPopUpBoxList[ MAX_NUMBER_OF_POPUP_BOXES ];
 
 // the flags
 UINT32	guiFlags = 0;
-UINT32	guiBoxIcons;
-UINT32	guiSkullIcons;
+static SGPVObject* guiBoxIcons;
+static SGPVObject* guiSkullIcons;
 
 
 static BOOLEAN SetCurrentPopUpBox(UINT32 uiId)
@@ -398,7 +398,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		BltVideoSurface(pPopUpTextBox->uiSourceBufferIndex, pPopUpTextBox->uiMercTextPopUpBackground, 0, 0, &DestRect);
 	}
 
-	HVOBJECT hImageHandle = GetVideoObject(pPopUpTextBox->uiMercTextPopUpBorder);
+	const SGPVObject* const hImageHandle = pPopUpTextBox->uiMercTextPopUpBorder;
 
 	UINT16 usPosY = 0;
 	//blit top row of images
@@ -431,11 +431,11 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	// Icon if ness....
 	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_STOPICON )
 	{
-		BltVideoObjectFromIndex( pPopUpTextBox->uiSourceBufferIndex, guiBoxIcons, 0, 5, 4);
+		BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, guiBoxIcons, 0, 5, 4);
 	}
 	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_SKULLICON )
 	{
-		BltVideoObjectFromIndex( pPopUpTextBox->uiSourceBufferIndex, guiSkullIcons, 0, 9, 4);
+		BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, guiSkullIcons, 0, 9, 4);
 	}
 
 	//Get the font and shadow colors

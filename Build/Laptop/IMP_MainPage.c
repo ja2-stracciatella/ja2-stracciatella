@@ -35,7 +35,7 @@ extern INT32 iCurrentVoices;
 // mouse regions for not entablable warning
 MOUSE_REGION pIMPMainPageMouseRegions[ 4 ];
 
-UINT32 guiCHARACTERPORTRAITFORMAINPAGE;
+static SGPVObject* guiCHARACTERPORTRAITFORMAINPAGE;
 
 void BtnIMPMainPagePortraitCallback(GUI_BUTTON *btn, INT32 reason);
 void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason);

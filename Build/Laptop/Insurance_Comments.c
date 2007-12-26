@@ -33,8 +33,7 @@
 #define		INS_CMNT_LINK_OFFSET_X					166
 
 
-
-UINT32	guiInsCmntBulletImage;
+static SGPVObject* guiInsCmntBulletImage;
 
 
 //link to the varios pages
@@ -180,7 +179,7 @@ static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 us
 	wchar_t		sText[800];
 	UINT16		sNumPixels=0;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsCmntBulletImage, 0, INS_CMNT_FIRST_BULLET_X, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiInsCmntBulletImage, 0, INS_CMNT_FIRST_BULLET_X, usPosY);
 
 	//Display the commenters comment
 	GetInsuranceText( ubComment, sText );			//+INS_CMNT_COMMENT_OFFSET_Y

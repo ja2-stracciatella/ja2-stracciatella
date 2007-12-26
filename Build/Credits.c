@@ -148,8 +148,8 @@ static CDRT_FACE gCreditFaces[] =
 static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
 
 
-static UINT32  guiCreditBackGroundImage;
-static UINT32  guiCreditFaces;
+static SGPVObject* guiCreditBackGroundImage;
+static SGPVObject* guiCreditFaces;
 static BOOLEAN gfCreditsScreenEntry = TRUE;
 static BOOLEAN gfCreditsScreenExit  = FALSE;
 static UINT32  guiCreditsExitScreen;
@@ -363,7 +363,7 @@ static void HandleCreditScreen(void)
 
 static void RenderCreditScreen(void)
 {
-  BltVideoObjectFromIndex(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
+  BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
 	if( !gfCrdtHaveRenderedFirstFrameToSaveBuffer )
 	{
 		gfCrdtHaveRenderedFirstFrameToSaveBuffer = TRUE;
@@ -769,13 +769,11 @@ static void HandleCreditEyeBlinking(void)
 {
 	UINT8 ubCnt;
 
-	HVOBJECT hPixHandle = GetVideoObject(guiCreditFaces);
-
 	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
 	{
 		if( ( GetJA2Clock() - gCreditFaces[ubCnt].uiLastBlinkTime ) > (UINT32)gCreditFaces[ubCnt].sBlinkFreq )
 		{
-		  BltVideoObject( FRAME_BUFFER, hPixHandle, (UINT8)(ubCnt*3), gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY);
+			BltVideoObject(FRAME_BUFFER, guiCreditFaces, ubCnt * 3, gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY);
 			InvalidateRegion( gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, gCreditFaces[ubCnt].sEyeX + CRDT_EYE_WIDTH, gCreditFaces[ubCnt].sEyeY + CRDT_EYE_HEIGHT );
 
 			gCreditFaces[ubCnt].uiLastBlinkTime = GetJA2Clock();

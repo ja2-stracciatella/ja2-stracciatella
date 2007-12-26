@@ -144,7 +144,7 @@ static UINT8 gubGameOptionScreenHandler = GIO_NOTHING;
 
 static UINT32 gubGIOExitScreen = GAME_INIT_OPTIONS_SCREEN;
 
-static UINT32 guiGIOMainBackGroundImage;
+static SGPVObject* guiGIOMainBackGroundImage;
 
 
 // Done Button
@@ -498,7 +498,7 @@ static BOOLEAN RenderGIOScreen(void)
 {
 	UINT16		usPosY;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, 0, 0);
 
 	//Shade the background
 	ShadowVideoSurfaceRect( FRAME_BUFFER, 48, 55, 592, 378 );	//358

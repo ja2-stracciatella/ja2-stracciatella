@@ -135,15 +135,14 @@
 #define	BOBBYR_UNDER_CONSTRUCTION_TEXT_WIDTH	LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X
 
 
-
-UINT32	guiBobbyName;
-UINT32	guiPlaque;
-UINT32	guiTopHinge;
-UINT32	guiBottomHinge;
-UINT32	guiStorePlaque;
-UINT32	guiHandle;
-UINT32	guiWoodBackground;
-UINT32	guiUnderConstructionImage;
+static SGPVObject* guiBobbyName;
+static SGPVObject* guiPlaque;
+static SGPVObject* guiTopHinge;
+static SGPVObject* guiBottomHinge;
+static SGPVObject* guiStorePlaque;
+static SGPVObject* guiHandle;
+static SGPVObject* guiWoodBackground;
+static SGPVObject* guiUnderConstructionImage;
 
 /*
 UINT16	gusFirstGunIndex;
@@ -290,22 +289,12 @@ void RenderBobbyR()
 {
 	DrawBobbyRWoodBackground();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyName,   0, BOBBY_RAYS_NAME_X,      BOBBY_RAYS_NAME_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPlaque,      0, BOBBYS_PLAQUES_X,       BOBBYS_PLAQUES_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTopHinge,    0, BOBBIES_TOPHINGE_X,     BOBBIES_TOPHINGE_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBottomHinge, 0, BOBBIES_BOTTOMHINGE_X,  BOBBIES_BOTTOMHINGE_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiStorePlaque, 0, BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiHandle,      0, BOBBIES_HANDLE_X,       BOBBIES_HANDLE_Y);
-
-/*
-	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
-	{
-		// The undercontsruction graphic
-		HVOBJECT hPixHandle = GetVideoObject(guiUnderConstructionImage);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_FIRST_SENTENCE_X, BOBBIES_FIRST_SENTENCE_Y);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,BOBBIES_3RD_SENTENCE_X, BOBBIES_3RD_SENTENCE_Y);
-	}
-*/
+	BltVideoObject(FRAME_BUFFER, guiBobbyName,   0, BOBBY_RAYS_NAME_X,      BOBBY_RAYS_NAME_Y);
+	BltVideoObject(FRAME_BUFFER, guiPlaque,      0, BOBBYS_PLAQUES_X,       BOBBYS_PLAQUES_Y);
+	BltVideoObject(FRAME_BUFFER, guiTopHinge,    0, BOBBIES_TOPHINGE_X,     BOBBIES_TOPHINGE_Y);
+	BltVideoObject(FRAME_BUFFER, guiBottomHinge, 0, BOBBIES_BOTTOMHINGE_X,  BOBBIES_BOTTOMHINGE_Y);
+	BltVideoObject(FRAME_BUFFER, guiStorePlaque, 0, BOBBIES_STORE_PLAQUE_X, BOBBIES_STORE_PLAQUE_Y);
+	BltVideoObject(FRAME_BUFFER, guiHandle,      0, BOBBIES_HANDLE_X,       BOBBIES_HANDLE_Y);
 
 	SetFontShadow(BOBBIES_SENTENCE_BACKGROUNDCOLOR);
 
@@ -376,15 +365,13 @@ BOOLEAN DrawBobbyRWoodBackground()
 {
 	UINT16	x,y, uiPosX, uiPosY;
 
-	HVOBJECT hWoodBackGroundHandle = GetVideoObject(guiWoodBackground);
-
 	uiPosY = BOBBY_WOOD_BACKGROUND_Y;
 	for(y=0; y<4; y++)
 	{
 		uiPosX = BOBBY_WOOD_BACKGROUND_X;
 		for(x=0; x<4; x++)
 		{
-		  BltVideoObject(FRAME_BUFFER, hWoodBackGroundHandle, 0,uiPosX, uiPosY);
+			BltVideoObject(FRAME_BUFFER, guiWoodBackground, 0, uiPosX, uiPosY);
 			uiPosX += BOBBY_WOOD_BACKGROUND_WIDTH;
 		}
 		uiPosY += BOBBY_WOOD_BACKGROUND_HEIGHT;
@@ -439,29 +426,6 @@ static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-/*
-BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackground)
-{
-	UINT16	x,y, uiPosX, uiPosY;
-
-	HVOBJECT hBackGroundHandle = GetVideoObject(uiBackground);
-
-	uiPosY = LAPTOP_SCREEN_WEB_UL_Y;
-	for(y=0; y<ubNumY; y++)
-	{
-		uiPosX = LAPTOP_SCREEN_UL_X;
-		for(x=0; x<ubNumX; x++)
-		{
-		  BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 0,uiPosX, uiPosY);
-			uiPosX += usWidth;
-		}
-		uiPosY += usHeight;
-	}
-	return(TRUE);
-}
-*/
-
-
 static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset)
 {
 	static UINT32	uiLastTime=1;
@@ -483,10 +447,8 @@ static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset)
 	if( ( ( uiCurTime - uiLastTime ) > BOBBYR_UNDERCONSTRUCTION_ANI_DELAY )||( fReDrawScreenFlag ) )
 	{
 		// The undercontsruction graphic
-		HVOBJECT hPixHandle = GetVideoObject(guiUnderConstructionImage);
-		BltVideoObject(FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y);
-
-		BltVideoObject( FRAME_BUFFER, hPixHandle, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION1_Y);
+		BltVideoObject(FRAME_BUFFER, guiUnderConstructionImage, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION_Y);
+		BltVideoObject(FRAME_BUFFER, guiUnderConstructionImage, usCount, BOBBYR_UNDERCONSTRUCTION_X, BOBBYR_UNDERCONSTRUCTION1_Y);
 
 		DrawTextToScreen(BobbyRaysFrontText[BOBBYR_UNDER_CONSTRUCTION], BOBBYR_UNDER_CONSTRUCTION_TEXT_X, BOBBYR_UNDER_CONSTRUCTION_TEXT_Y, BOBBYR_UNDER_CONSTRUCTION_TEXT_WIDTH, FONT16ARIAL, BOBBIES_SENTENCE_COLOR, BOBBIES_SIGN_BACKCOLOR, CENTER_JUSTIFIED | INVALIDATE_TEXT);
 

@@ -158,7 +158,7 @@ UINT8			gubCurPageNum;
 BOOLEAN		gfInPolicyToc =  FALSE;
 BOOLEAN		gfInAgreementPage = FALSE;
 BOOLEAN		gfAimPolicyMenuBarLoaded = FALSE;
-UINT32		guiContentButton;
+static SGPVObject* guiContentButton;
 BOOLEAN		gfExitingPolicesAgreeButton;
 BOOLEAN		gfExitingAimPolicy;
 BOOLEAN		AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
@@ -441,12 +441,10 @@ static BOOLEAN DrawAimPolicyMenu(void)
 									EQUIPMENT_AND_INVENTORY,
 									POLICY_MEDICAL};
 
-	HVOBJECT	hContentButtonHandle = GetVideoObject(guiContentButton);
-
 	usPosY = AIM_POLICY_TOC_Y;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
 	{
-	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_POLICY_TOC_X, usPosY);
+		BltVideoObject(FRAME_BUFFER, guiContentButton, 0, AIM_POLICY_TOC_X, usPosY);
 
 		wchar_t sText[AIM_POLICY_LINE_SIZE];
 		LoadAIMPolicyText(sText, ubLocInFile[i]);

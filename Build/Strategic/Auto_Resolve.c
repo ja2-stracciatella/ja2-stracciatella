@@ -94,7 +94,7 @@ typedef struct SOLDIERCELL
 {
 	SOLDIERTYPE *pSoldier;
 	MOUSE_REGION *pRegion; //only used for player mercs.
-	UINT32 uiVObjectID;
+	SGPVObject* uiVObjectID;
 	UINT16 usIndex;
 	UINT32 uiFlags;
 	UINT16 usFrame;
@@ -113,12 +113,12 @@ typedef struct AUTORESOLVE_STRUCT
 	SOLDIERCELL *pRobotCell;
 
 	//IDs into the graphic images
-	INT32 iPanelImages;
+	SGPVObject* iPanelImages;
 	INT32 iButton[ NUM_AR_BUTTONS ];
 	INT32 iButtonImage[ NUM_AR_BUTTONS ];
-	INT32 iFaces; //for generic civs and enemies
+	SGPVObject* iFaces; //for generic civs and enemies
 	INT32 iMercFaces[20]; //for each merc face
-	INT32 iIndent;
+	SGPVObject* iIndent;
 	INT32 iInterfaceBuffer;
 	INT32 iNumMercFaces;
 	INT32 iActualMercFaces; //this represents the real number of merc faces.  Because
@@ -909,22 +909,22 @@ static void RenderSoldierCell(SOLDIERCELL* pCell)
 	if( pCell->uiFlags & CELL_MERC )
 	{
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+36, pCell->yp+2, pCell->xp+44,	pCell->yp+30, 0 );
-		BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iPanelImages, MERC_PANEL, pCell->xp, pCell->yp);
+		BltVideoObject( FRAME_BUFFER, gpAR->iPanelImages, MERC_PANEL, pCell->xp, pCell->yp);
 		RenderSoldierCellBars( pCell );
 		x = 0;
 	}
 	else
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iPanelImages, OTHER_PANEL, pCell->xp, pCell->yp);
+		BltVideoObject( FRAME_BUFFER, gpAR->iPanelImages, OTHER_PANEL, pCell->xp, pCell->yp);
 		x = 6;
 	}
 	if( !pCell->pSoldier->bLife )
 	{
-		SetObjectHandleShade( pCell->uiVObjectID, 0 );
+		SetObjectShade( pCell->uiVObjectID, 0 );
 		if( !(pCell->uiFlags & CELL_CREATURE) )
-			BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iFaces, HUMAN_SKULL, pCell->xp+3+x, pCell->yp+3);
+			BltVideoObject( FRAME_BUFFER, gpAR->iFaces, HUMAN_SKULL, pCell->xp+3+x, pCell->yp+3);
 		else
-			BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iFaces, CREATURE_SKULL, pCell->xp+3 + x, pCell->yp+3);
+			BltVideoObject( FRAME_BUFFER, gpAR->iFaces, CREATURE_SKULL, pCell->xp+3 + x, pCell->yp+3);
 	}
 	else
 	{
@@ -935,13 +935,13 @@ static void RenderSoldierCell(SOLDIERCELL* pCell)
 		else if( pCell->uiFlags & CELL_HITLASTFRAME )
 		{
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+3+x, pCell->yp+3, pCell->xp+33+x,	pCell->yp+29, 0 );
-			SetObjectHandleShade( pCell->uiVObjectID, 1 );
-			BltVideoObjectFromIndex( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
+			SetObjectShade( pCell->uiVObjectID, 1 );
+			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
 		}
 		else
 		{
-			SetObjectHandleShade( pCell->uiVObjectID, 0 );
-			BltVideoObjectFromIndex( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
+			SetObjectShade( pCell->uiVObjectID, 0 );
+			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
 		}
 	}
 
@@ -1039,43 +1039,43 @@ static void BuildInterfaceBuffer(void)
 	{
 		for( x = DestRect.iLeft; x < DestRect.iRight; x += 50 )
 		{
-			BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, C_TEXTURE, x, y);
+			BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, C_TEXTURE, x, y);
 		}
 	}
 	//Blit the left and right edges
 	for( y = DestRect.iTop; y < DestRect.iBottom; y += 40 )
 	{
 		x = DestRect.iLeft;
-		BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, L_BORDER, x, y);
+		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, L_BORDER, x, y);
 		x = DestRect.iRight - 3;
-		BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, R_BORDER, x, y);
+		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, R_BORDER, x, y);
 	}
 	//Blit the top and bottom edges
 	for( x = DestRect.iLeft; x < DestRect.iRight; x += 50 )
 	{
 		y = DestRect.iTop;
-		BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, T_BORDER, x, y);
+		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, T_BORDER, x, y);
 		y = DestRect.iBottom - 3;
-		BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, B_BORDER, x, y);
+		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, B_BORDER, x, y);
 	}
 	//Blit the 4 corners
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TL_BORDER, DestRect.iLeft, DestRect.iTop);
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TR_BORDER, DestRect.iRight-10, DestRect.iTop);
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BL_BORDER, DestRect.iLeft, DestRect.iBottom-9);
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BR_BORDER, DestRect.iRight-10, DestRect.iBottom-9);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TL_BORDER, DestRect.iLeft, DestRect.iTop);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TR_BORDER, DestRect.iRight-10, DestRect.iTop);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BL_BORDER, DestRect.iLeft, DestRect.iBottom-9);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BR_BORDER, DestRect.iRight-10, DestRect.iBottom-9);
 
 	//Blit the center pieces
 	x = gpAR->sCenterStartX - gpAR->Rect.iLeft;
 	y = 0;
 	//Top
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TOP_MIDDLE, x, y);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TOP_MIDDLE, x, y);
 	//Middle
 	for( y = 40; y < gpAR->sHeight - 40; y += 40 )
 	{
-		BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, AUTO_MIDDLE, x, y);
+		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, AUTO_MIDDLE, x, y);
 	}
 	y = gpAR->sHeight - 40;
-	BltVideoObjectFromIndex( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BOT_MIDDLE, x, y);
+	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BOT_MIDDLE, x, y);
 
 	SetClippingRect( &ClipRect );
 }
@@ -1704,7 +1704,7 @@ static void RenderAutoResolve(void)
 			SetFont( BLOCKFONT2 );
 			xp = gpAR->sCenterStartX + 12;
 			yp = 218 + gpAR->bVerticalOffset;
-			BltVideoObjectFromIndex( FRAME_BUFFER, gpAR->iIndent, 0, xp, yp);
+			BltVideoObject( FRAME_BUFFER, gpAR->iIndent, 0, xp, yp);
 			xp = gpAR->sCenterStartX + 70 - StringPixLength(BattleResult, BLOCKFONT2) / 2;
 			yp = 227 + gpAR->bVerticalOffset;
 			mprintf(xp, yp, BattleResult);
@@ -1798,7 +1798,7 @@ static void CreateAutoResolveInterface(void)
 	//Load the generic faces for civs and enemies
 	gpAR->iFaces = AddVideoObjectFromFile("Interface/SmFaces.sti");
 	AssertMsg(gpAR->iFaces != NO_VOBJECT, "Failed to load Interface/SmFaces.sti");
-	HVOBJECT hVObject = GetVideoObject(gpAR->iFaces);
+	SGPVObject* const hVObject = gpAR->iFaces;
 	if (hVObject != NULL)
 	{
 		hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
@@ -1821,7 +1821,7 @@ static void CreateAutoResolveInterface(void)
 			gpMercs[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
 			AssertMsg(gpMercs[i].uiVObjectID != NO_VOBJECT, String("Failed to load %Faces/65Face/%02d.sti or it's placeholder, speck.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex));
 		}
-		HVOBJECT hVObject = GetVideoObject(gpMercs[i].uiVObjectID);
+		SGPVObject* const hVObject = gpMercs[i].uiVObjectID;
 		if (hVObject != NULL)
 		{
 			hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
@@ -2102,9 +2102,9 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 	//Delete all of the faces.
 	for( i = 0; i < gpAR->iNumMercFaces; i++ )
 	{
-		if( gpMercs[ i ].uiVObjectID != -1 )
+		if (gpMercs[i].uiVObjectID != NO_VOBJECT)
 			DeleteVideoObjectFromIndex( gpMercs[ i ].uiVObjectID );
-		gpMercs[ i ].uiVObjectID = -1;
+		gpMercs[i].uiVObjectID = NO_VOBJECT;
 		if( gpMercs[ i ].pRegion )
 		{
 			MSYS_RemoveRegion( gpMercs[ i ].pRegion );

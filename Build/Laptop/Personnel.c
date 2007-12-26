@@ -241,11 +241,11 @@ static const INT16 pers_stat_y[] =
 };
 
 
-static UINT32 guiSCREEN;
-static UINT32 guiTITLE;
-static UINT32 guiDEPARTEDTEAM;
-static UINT32 guiCURRENTTEAM;
-static UINT32 guiPersonnelInventory;
+static SGPVObject* guiSCREEN;
+static SGPVObject* guiTITLE;
+static SGPVObject* guiDEPARTEDTEAM;
+static SGPVObject* guiCURRENTTEAM;
+static SGPVObject* guiPersonnelInventory;
 
 static INT32 giPersonnelButton[6];
 static INT32 giPersonnelInventoryButtons[2];
@@ -437,8 +437,8 @@ void RenderPersonnel(void)
 	// re-renders personnel screen
 	// render main background
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y -  2);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSCREEN, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
+	BltVideoObject(FRAME_BUFFER, guiTITLE,  0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiSCREEN, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y + 22);
 
 	// render personnel screen background
 	RenderPersonnelScreenBackground();
@@ -511,19 +511,17 @@ static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
 	char sTemp[100];
 	sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
 
-	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
+	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKV(guiFACE != NO_VOBJECT);
-
-	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 	if (!alive)
 	{
-		hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
-		SetObjectHandleShade(guiFACE, 0);
+		SetObjectShade(guiFACE, 0);
 	}
 
-	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
 	DeleteVideoObjectFromIndex(guiFACE);
 
 	// Display the merc's name on the portrait
@@ -962,7 +960,7 @@ static void SetPersonnelButtonStates(void)
 static void RenderPersonnelScreenBackground(void)
 {
 	// this fucntion will render the background for the personnel screen
-	BltVideoObjectFromIndex(FRAME_BUFFER, fCurrentTeamMode ? guiCURRENTTEAM : guiDEPARTEDTEAM, 0, DEPARTED_X, DEPARTED_Y);
+	BltVideoObject(FRAME_BUFFER, fCurrentTeamMode ? guiCURRENTTEAM : guiDEPARTEDTEAM, 0, DEPARTED_X, DEPARTED_Y);
 }
 
 
@@ -1054,21 +1052,19 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 		char sTemp[100];
 		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
 
-		UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
+		SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
 		CHECKF(guiFACE != NO_VOBJECT);
-
-		HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 		if (s->bLife <= 0)
 		{
-			hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
-			SetObjectHandleShade(guiFACE, 0);
+			SetObjectShade(guiFACE, 0);
 		}
 
 		const INT32 x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 		const INT32 y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, x, y);
+		BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
 
 		if (s->bLife <= 0)
 		{
@@ -1236,7 +1232,7 @@ static void DisplayInventoryForSelectedChar(void)
 	INT16 sX, sY;
 	CHAR16 sString[128];
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
+	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
 
 	if (!fCurrentTeamMode) return;
 
@@ -1269,13 +1265,13 @@ static void DisplayInventoryForSelectedChar(void)
 			{
 				INT16 sIndex = pSoldier->inv[ubCounter].usItem;
 				const INVTYPE* pItem = &Item[sIndex];
-				UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+				const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
 
 				const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
 				INT16 sCenX = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 				INT16 sCenY = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 
-				BltVideoObjectOutlineFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
+				BltVideoObjectOutline(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
 
 				SetFont(FONT10ARIAL);
 				SetFontForeground(FONT_WHITE);
@@ -2086,21 +2082,19 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 	char sTemp[100];
 	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
 
-	UINT32 guiFACE = AddVideoObjectFromFile(sTemp);
+	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
 	CHECKF(guiFACE != NO_VOBJECT);
-
-	HVOBJECT hFaceHandle = GetVideoObject(guiFACE);
 
 	if (fDead)
 	{
-		hFaceHandle->pShades[0] = Create16BPPPaletteShaded(hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
-		SetObjectHandleShade(guiFACE, 0);
+		SetObjectShade(guiFACE, 0);
 	}
 
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0, x, y);
+	BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
 
 	DeleteVideoObjectFromIndex(guiFACE);
 
@@ -2262,11 +2256,11 @@ static BOOLEAN DisplayHighLightBox(void)
 		return FALSE;
 	}
 
-	UINT32 uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
+	SGPVObject* const uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
 	CHECKF(uiBox != NO_VOBJECT);
 	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, x, y);
+	BltVideoObject(FRAME_BUFFER, uiBox, 0, x, y);
 	DeleteVideoObjectFromIndex(uiBox);
 
 	return TRUE;
@@ -2411,10 +2405,10 @@ static BOOLEAN RenderAtmPanel(void)
 {
 	// just show basic panel
 	// bounding
-	UINT32 uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
+	SGPVObject* const uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
 	CHECKF(uiBox != NO_VOBJECT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
+	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
+	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 	DeleteVideoObjectFromIndex(uiBox);
 
 	// create destroy
@@ -2514,7 +2508,7 @@ static void HandleSliderBarClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void RenderSliderBarForPersonnelInventory(void)
 {
 	// render slider bar for personnel
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPersonnelInventory, 5, X_OF_PERSONNEL_SCROLL_REGION, guiSliderPosition + Y_OF_PERSONNEL_SCROLL_REGION);
+	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 5, X_OF_PERSONNEL_SCROLL_REGION, guiSliderPosition + Y_OF_PERSONNEL_SCROLL_REGION);
 }
 
 

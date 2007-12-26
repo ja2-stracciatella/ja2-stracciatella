@@ -144,7 +144,6 @@ void RenderAccumulatedBurstLocations( )
 	}
 
 	// Loop through each location...
-	HVOBJECT hVObject = GetVideoObject(guiBURSTACCUM);
 
 	// If on screen, render
 
@@ -184,7 +183,7 @@ void RenderAccumulatedBurstLocations( )
 			const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 			if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
-			BltVideoObject(  FRAME_BUFFER, hVObject, 1, sXPos, sYPos);
+			BltVideoObject(FRAME_BUFFER, guiBURSTACCUM, 1, sXPos, sYPos);
 		}
 	}
 }

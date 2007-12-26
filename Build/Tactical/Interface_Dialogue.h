@@ -18,7 +18,7 @@ typedef struct
 	INT16					sPopupY;
 	UINT8					ubPopupOrientation;
 	UINT8					ubCharNum;
-	UINT32				uiPanelVO;
+	SGPVObject*   uiPanelVO;
 	INT32					iButtonImages;
 	UINT32				uiCancelButton;
 	INT8					bCurSelect;

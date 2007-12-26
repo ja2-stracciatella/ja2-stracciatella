@@ -1,3 +1,4 @@
+#include "Interface_Panels.h"
 #include "Local.h"
 #include "HImage.h"
 #include "VObject.h"
@@ -38,9 +39,6 @@
 #define			FACE_HEIGHT									43
 
 
-// backgrounds for breath max background
-extern UINT32 guiBrownBackgroundForTeamPanel;
-
 // car portraits
 enum{
 	ELDORADO_PORTRAIT =0,
@@ -51,7 +49,7 @@ enum{
 };
 
 // the ids for the car portraits
-INT32 giCarPortraits[ 4 ] = { -1, -1, -1, -1 };
+static SGPVObject* giCarPortraits[4];
 
 // the car portrait file names
 const char *pbCarPortraitFileNames[] = {
@@ -67,10 +65,7 @@ BOOLEAN LoadCarPortraitValues( void )
 {
 	INT32 iCounter = 0;
 
-	if( giCarPortraits[ 0 ] != -1 )
-	{
-		return FALSE;
-	}
+	if (giCarPortraits[0] != NO_VOBJECT) return FALSE;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
@@ -85,14 +80,11 @@ void UnLoadCarPortraits( void )
 	INT32 iCounter = 0;
 
 	// car protraits loaded?
-	if( giCarPortraits[ 0 ] == -1 )
-	{
-		return;
-	}
+	if (giCarPortraits[0] == NO_VOBJECT) return;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		DeleteVideoObjectFromIndex( giCarPortraits[ iCounter ] );
-		giCarPortraits[ iCounter ] = -1;
+		giCarPortraits[iCounter] = NULL;
 	}
 }
 
@@ -179,7 +171,6 @@ void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BO
 	{
 		// DO MAX BREATH
 		// brown guy
-		HVOBJECT hHandle = GetVideoObject(guiBrownBackgroundForTeamPanel);
 		UINT16 Region;
 		if (guiCurrentScreen != MAP_SCREEN &&
 				gusSelectedSoldier == pSoldier->ubID &&
@@ -192,7 +183,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BO
 		{
 			Region = 0; // brown, first entry
 		}
-		BltVideoObject(uiBuffer, hHandle, Region, sXPos + BreathOff, sYPos - BarHeight);
+		BltVideoObject(uiBuffer, guiBrownBackgroundForTeamPanel, Region, sXPos + BreathOff, sYPos - BarHeight);
 	}
 
 	UINT32 uiDestPitchBYTES;
@@ -308,7 +299,7 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 			ubVehicleType = pVehicleList[ pSoldier->bVehicleID ].ubVehicleType;
 
 			// just draw the vehicle
-			BltVideoObjectFromIndex( guiSAVEBUFFER, giCarPortraits[ ubVehicleType ], 0, sFaceX, sFaceY);
+			BltVideoObject(guiSAVEBUFFER, giCarPortraits[ubVehicleType], 0, sFaceX, sFaceY);
 			RestoreExternBackgroundRect( sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT );
 
 			return;
@@ -346,7 +337,7 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 	else
 	{
 		// Put close panel there
-		BltVideoObjectFromIndex(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
+		BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
 		RestoreExternBackgroundRect( sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT );
 	}
 

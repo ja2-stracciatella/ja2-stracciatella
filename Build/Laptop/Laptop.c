@@ -231,7 +231,7 @@ static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
 UINT32 guiExitScreen = MAP_SCREEN;
 
 // Laptop screen graphic handle
-static UINT32 guiLAPTOP;
+static SGPVObject* guiLAPTOP;
 
 static BOOLEAN fNewWWW = TRUE;
 
@@ -243,17 +243,17 @@ static INT32 giRainDelayInternetSite = -1;
 
 
 // the laptop icons
-static UINT32 guiBOOKHIGH;
-static UINT32 guiBOOKMARK;
-static UINT32 guiGRAPHWINDOW;
-static UINT32 guiGRAPHBAR;
-UINT32 guiLaptopBACKGROUND;
-static UINT32 guiDOWNLOADTOP;
-static UINT32 guiDOWNLOADMID;
-static UINT32 guiDOWNLOADBOT;
-static UINT32 guiTITLEBARLAPTOP;
-static UINT32 guiLIGHTS;
-UINT32 guiTITLEBARICONS;
+static SGPVObject* guiBOOKHIGH;
+static SGPVObject* guiBOOKMARK;
+static SGPVObject* guiGRAPHWINDOW;
+static SGPVObject* guiGRAPHBAR;
+SGPVObject* guiLaptopBACKGROUND;
+static SGPVObject* guiDOWNLOADTOP;
+static SGPVObject* guiDOWNLOADMID;
+static SGPVObject* guiDOWNLOADBOT;
+static SGPVObject* guiTITLEBARLAPTOP;
+static SGPVObject* guiLIGHTS;
+SGPVObject* guiTITLEBARICONS;
 static UINT32 guiDESKTOP;
 
 // enter new laptop mode due to sliding bars
@@ -695,8 +695,8 @@ static void RenderLapTopImage(void)
 {
 	if (fMaximizingProgram || fMinizingProgram) return;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLAPTOP, 0, LAPTOP_X, LAPTOP_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
+	BltVideoObject(FRAME_BUFFER, guiLAPTOP,           0, LAPTOP_X, LAPTOP_Y);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25,       23);
 
 	MarkButtonsDirty();
 }
@@ -788,7 +788,7 @@ static void RenderLaptop(void)
 }
 
 
-static void InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar_t* pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex);
+static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const wchar_t* pTitle, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex);
 static void SetSubSiteAsVisted(void);
 
 
@@ -1798,8 +1798,8 @@ static void DisplayBookMarks(void)
 	{
 		const INT32 y = BOOK_TOP_Y + i * (BOOK_HEIGHT + 6) + 6;
 
-		const UINT32 vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
-		BltVideoObjectFromIndex(FRAME_BUFFER, vo, 0, BOOK_X, y);
+		const SGPVObject* const vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
+		BltVideoObject(FRAME_BUFFER, vo, 0, BOOK_X, y);
 
 		SetFontForeground(iHighLightBookLine == i - 1 ? FONT_WHITE : FONT_BLACK);
 		INT16 sX;
@@ -1811,8 +1811,8 @@ static void DisplayBookMarks(void)
 	// blit one more
 	const INT32 y = BOOK_TOP_Y + i * (BOOK_HEIGHT + 6) + 6;
 
-	const UINT32 vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
-	BltVideoObjectFromIndex(FRAME_BUFFER, vo, 0, BOOK_X, y);
+	const SGPVObject* const vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
+	BltVideoObject(FRAME_BUFFER, vo, 0, BOOK_X, y);
 
 	SetFontForeground(iHighLightBookLine == i - 1 ? FONT_WHITE : FONT_BLACK);
 	INT16 sX;
@@ -2108,10 +2108,10 @@ static void DisplayLoadPending(void)
 	RenderButtons();
 
 	// display top middle and bottom of box
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADTOP,   0, DOWNLOAD_X,     DOWNLOAD_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADMID,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADBOT,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT * 2);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 1, DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
+	BltVideoObject(FRAME_BUFFER, guiDOWNLOADTOP,   0, DOWNLOAD_X,     DOWNLOAD_Y);
+	BltVideoObject(FRAME_BUFFER, guiDOWNLOADMID,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT);
+	BltVideoObject(FRAME_BUFFER, guiDOWNLOADBOT,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT * 2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 1, DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
 	SetFont(DOWNLOAD_FONT);
 	SetFontForeground(FONT_WHITE);
@@ -2125,14 +2125,14 @@ static void DisplayLoadPending(void)
 	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
 	mprintf(sXPosition, DOWN_STRING_Y, str);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
+	BltVideoObject(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
 
 	// check to see if we are only updating screen, but not passed a new element in the load pending display
 
 	// decide how many time units are to be displayed, based on amount of time passed
 	for (INT32 i = 0, iTempTime = iTotalTime; i <= 30 && iTempTime > 0; ++i, iTempTime -= iUnitTime)
 	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiGRAPHBAR, 0, LAPTOP_BAR_X + UNIT_WIDTH * i, LAPTOP_BAR_Y);
+		BltVideoObject(FRAME_BUFFER, guiGRAPHBAR, 0, LAPTOP_BAR_X + UNIT_WIDTH * i, LAPTOP_BAR_Y);
 	}
 
 	InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);
@@ -2362,17 +2362,15 @@ BOOLEAN DoLapTopSystemMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 u
 
 
 //places a tileable pattern down
-BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, UINT32 uiBackgroundIdentifier)
+BOOLEAN WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT16 usWidth, const UINT16 usHeight, const SGPVObject* const background)
 {
-	HVOBJECT hBackGroundHandle = GetVideoObject(uiBackgroundIdentifier);
-
 	UINT16 uiPosY = LAPTOP_SCREEN_WEB_UL_Y;
 	for (UINT16 y = 0; y < ubNumY; ++y)
 	{
 		UINT16 uiPosX = LAPTOP_SCREEN_UL_X;
 		for (UINT16 x = 0; x < ubNumX; ++x)
 		{
-			BltVideoObject(FRAME_BUFFER, hBackGroundHandle, 0, uiPosX, uiPosY);
+			BltVideoObject(FRAME_BUFFER, background, 0, uiPosX, uiPosY);
 			uiPosX += usWidth;
 		}
 		uiPosY += usHeight;
@@ -2381,7 +2379,7 @@ BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16
 }
 
 
-static void InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar_t* pTitle, UINT32 uiIconGraphic, UINT16 usIconGraphicIndex)
+static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGraphic, const wchar_t* const pTitle, const SGPVObject* const uiIconGraphic, const UINT16 usIconGraphicIndex)
 {
 	Assert(uiBackgroundGraphic);
 
@@ -2389,8 +2387,8 @@ static void InitTitleBarMaximizeGraphics(UINT32 uiBackgroundGraphic, const wchar
 	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 	CHECKV(guiTitleBarSurface != NO_VSURFACE);
 
-	BltVideoObjectFromIndex(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
-	BltVideoObjectFromIndex(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
+	BltVideoObject(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
+	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
 
 	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT);
 	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -2601,8 +2599,8 @@ no_display_min:;
 static void ShowLights(void)
 {
 	// will show lights depending on state
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, 44, 466);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, 88, 466);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, 44, 466);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, 88, 466);
 }
 
 
@@ -2882,7 +2880,7 @@ void BlitTitleBarIcons(void)
 		case LAPTOP_MODE_NONE:      return;           // do nothing
 		default:                    Index = 1; break; // www pages
 	}
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, Index, LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, Index, LAPTOP_TITLE_ICONS_X, LAPTOP_TITLE_ICONS_Y);
 }
 
 
@@ -2971,13 +2969,13 @@ static void DisplayTaskBarIcons(void)
 	// display the files icon, if there is any
 	if (fNewFilesInFileViewer)
 	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 7, LAPTOP__NEW_FILE_ICON_X, LAPTOP__NEW_FILE_ICON_Y);
+		BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 7, LAPTOP__NEW_FILE_ICON_X, LAPTOP__NEW_FILE_ICON_Y);
 	}
 
 	// display the email icon, if there is email
 	if (fUnReadMailFlag)
 	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 6, LAPTOP__NEW_EMAIL_ICON_X, LAPTOP__NEW_EMAIL_ICON_Y);
+		BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 6, LAPTOP__NEW_EMAIL_ICON_X, LAPTOP__NEW_EMAIL_ICON_Y);
 	}
 }
 
@@ -3171,10 +3169,10 @@ BOOLEAN RenderWWWProgramTitleBar(void)
 {
 	// will render the title bar for the www program
 	// title bar - load
-	const UINT32 uiTITLEFORWWW = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
+	SGPVObject* const uiTITLEFORWWW = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
 	CHECKF(uiTITLEFORWWW != NO_VOBJECT);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
+	BltVideoObject(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now delete
 	DeleteVideoObjectFromIndex(uiTITLEFORWWW);
@@ -3282,12 +3280,12 @@ static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReas
 void DisplayProgramBoundingBox(BOOLEAN fMarkButtons)
 {
 	// the border for the program
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, 25, 23);
 
 	// no laptop mode, no border around the program
 	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE)
 	{
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
+		BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 	}
 
 	if (fMarkButtons || fLoadPendingFlag)
@@ -3496,10 +3494,10 @@ static void DisplayWebBookMarkNotify(void)
 		fReDrawBookMarkInfo = FALSE;
 
 		// show background objects
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADTOP,   0,DOWNLOAD_X,     DOWNLOAD_Y);
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADMID,   0,DOWNLOAD_X,     DOWNLOAD_Y +     DOWN_HEIGHT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiDOWNLOADBOT,   0,DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLEBARICONS, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
+		BltVideoObject(FRAME_BUFFER, guiDOWNLOADTOP,   0,DOWNLOAD_X,     DOWNLOAD_Y);
+		BltVideoObject(FRAME_BUFFER, guiDOWNLOADMID,   0,DOWNLOAD_X,     DOWNLOAD_Y +     DOWN_HEIGHT);
+		BltVideoObject(FRAME_BUFFER, guiDOWNLOADBOT,   0,DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
+		BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
 		// font stuff
 		SetFont(DOWNLOAD_FONT);

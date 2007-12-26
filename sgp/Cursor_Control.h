@@ -73,7 +73,7 @@ extern INT16 gsGlobalCursorYOffset;
 extern UINT16 gsCurMouseHeight;
 extern UINT16 gsCurMouseWidth;
 
-extern UINT32 guiExternVo;
+extern const SGPVObject* guiExternVo;
 extern UINT16 gusExternVoSubIndex;
 
 typedef void (*MOUSEBLT_HOOK)(void);

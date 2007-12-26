@@ -61,9 +61,8 @@
 #define		MERC_AC_ROW_SIZE							16
 
 
-
-UINT32		guiMercOrderGrid;
-UINT32		guiAccountNumberGrid;
+static SGPVObject* guiMercOrderGrid;
+static SGPVObject* guiAccountNumberGrid;
 
 
 INT32		giMercTotalContractCharge;
@@ -153,8 +152,8 @@ void RenderMercsAccount()
 
 	DrawMecBackGround();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercOrderGrid,     0, MERC_AC_ORDER_GRID_X,     MERC_AC_ORDER_GRID_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiAccountNumberGrid, 0, MERC_AC_ACCOUNT_NUMBER_X, MERC_AC_ACCOUNT_NUMBER_Y);
+	BltVideoObject(FRAME_BUFFER, guiMercOrderGrid,     0, MERC_AC_ORDER_GRID_X,     MERC_AC_ORDER_GRID_Y);
+	BltVideoObject(FRAME_BUFFER, guiAccountNumberGrid, 0, MERC_AC_ACCOUNT_NUMBER_X, MERC_AC_ACCOUNT_NUMBER_Y);
 
 	//Display Players account number
 	swprintf(sText, lengthof(sText), L"%ls %05d", MercAccountText[MERC_ACCOUNT_ACCOUNT], LaptopSaveInfo.guiPlayersMercAccountNumber);

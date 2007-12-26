@@ -64,7 +64,7 @@ static const SOLDIERTYPE* gdoctor_list[MAX_CHARACTER_COUNT];
 static const SOLDIERTYPE* gpatient_list[MAX_CHARACTER_COUNT];
 
 // faces for update panel
-INT32 giAutoBandagesSoldierFaces[ 2 * MAX_CHARACTER_COUNT ];
+static SGPVObject* giAutoBandagesSoldierFaces[2 * MAX_CHARACTER_COUNT];
 
 // has the button for autobandage end been setup yet
 BOOLEAN fAutoEndBandageButtonCreated = FALSE;
@@ -678,7 +678,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	sXPosition = (SCREEN_WIDTH          - iTotalPixelsWide) / 2;
 	sYPosition = (INV_INTERFACE_START_Y - iTotalPixelsHigh) / 2;
 
-	HVOBJECT hBackGroundHandle = GetVideoObject(guiUpdatePanelTactical);
+	const SGPVObject* const hBackGroundHandle = guiUpdatePanelTactical;
 
 	// first the doctors on top
 	for( iCounterA = 0; iCounterA < iNumberDoctorsHigh; iCounterA++ )
@@ -944,7 +944,7 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 	INT32 iNumberOfDoctors = 0;
 
 	// reset
-	memset( &giAutoBandagesSoldierFaces, -1, 2 * MAX_CHARACTER_COUNT );
+	memset(&giAutoBandagesSoldierFaces, 0, sizeof(giAutoBandagesSoldierFaces));
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
@@ -1012,16 +1012,14 @@ static BOOLEAN RenderSoldierSmallFaceForAutoBandagePanel(INT32 iIndex, INT16 sCu
 	INT32 iStartY = 0;
 	INT32 iCounter = 0, iIndexCount = 0;
 
-	HVOBJECT hHandle = GetVideoObject(giAutoBandagesSoldierFaces[iIndex]);
-
 	// fill the background for the info bars black
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, sCurrentXPosition+36, sCurrentYPosition+2, sCurrentXPosition+44,	sCurrentYPosition+30, 0 );
 
 	// put down the background
-	BltVideoObjectFromIndex( FRAME_BUFFER, giMercPanelImage, 0, sCurrentXPosition, sCurrentYPosition);
+	BltVideoObject(FRAME_BUFFER, giMercPanelImage, 0, sCurrentXPosition, sCurrentYPosition);
 
 	// grab the face
-	BltVideoObject( FRAME_BUFFER , hHandle , 0, sCurrentXPosition+2, sCurrentYPosition+2);
+	BltVideoObject(FRAME_BUFFER, giAutoBandagesSoldierFaces[iIndex], 0, sCurrentXPosition + 2, sCurrentYPosition + 2);
 
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )

@@ -22,8 +22,8 @@ UINT8			gubCurrentListMode;
 extern UINT8			gbCurrentIndex;
 
 
-UINT32		guiMugShotBorder;
-UINT32		guiAimFiFace[ MAX_NUMBER_MERCS ];
+static SGPVObject* guiMugShotBorder;
+static SGPVObject* guiAimFiFace[MAX_NUMBER_MERCS];
 
 
 
@@ -254,23 +254,23 @@ static BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPos
 
 
 	//Blt the portrait background
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMugShotBorder, ubImage,usPosX, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiMugShotBorder, ubImage,usPosX, usPosY);
 
 	//Blt face to screen
-	HVOBJECT hFaceHandle = GetVideoObject(guiAimFiFace[ubMercID]);
-	BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET);
+	SGPVObject* const face = guiAimFiFace[ubMercID];
+	BltVideoObject(FRAME_BUFFER, face, 0,usPosX + AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET);
 
 	if( IsMercDead( AimMercArray[ubMercID] ) )
 	{
 		//if the merc is dead
 		//shade the face red, (to signif that he is dead)
-		hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
+		face->pShades[0] = Create16BPPPaletteShaded(face->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 
 		//set the red pallete to the face
-		SetObjectHandleShade( guiAimFiFace[ubMercID], 0 );
+		SetObjectShade(face, 0);
 
 		//Blt face to screen
-		BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET);
+		BltVideoObject(FRAME_BUFFER, face, 0, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET);
 
 		DrawTextToScreen(AimFiText[AIM_FI_DEAD], usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}

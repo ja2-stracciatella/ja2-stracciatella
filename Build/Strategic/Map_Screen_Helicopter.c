@@ -73,7 +73,7 @@ BOOLEAN fHelicopterAvailable = FALSE;
 INT32 iHelicopterVehicleId = -1;
 
 // helicopter icon
-UINT32 guiHelicopterIcon;
+SGPVObject* guiHelicopterIcon;
 
 // total distance travelled
 //INT32 iTotalHeliDistanceSinceRefuel = 0;

@@ -117,8 +117,8 @@ UINT8 gubFirstMapscreenMessageIndex = 0;
 UINT32 guiCompressionStringBaseTime = 0;
 
 // graphics
-UINT32 guiMAPBOTTOMPANEL;
-UINT32 guiSliderBar;
+static SGPVObject* guiMAPBOTTOMPANEL;
+static SGPVObject* guiSliderBar;
 
 // buttons
 UINT32 guiMapMessageScrollButtons[ 2 ];
@@ -234,7 +234,7 @@ void RenderMapScreenInterfaceBottom( void )
 	// render whole panel
 	if( fMapScreenBottomDirty == TRUE )
 	{
-	  BltVideoObjectFromIndex(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
+	  BltVideoObject(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
 
 		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
 		{
@@ -827,7 +827,7 @@ static void DisplayScrollBarSlider(void)
 		// calculate where slider should be positioned
 		ubSliderOffset = ( SLIDER_BAR_RANGE * gubFirstMapscreenMessageIndex ) / ( ubNumMessages - MAX_MESSAGES_ON_MAP_BOTTOM );
 
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBar, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
+		BltVideoObject(FRAME_BUFFER, guiSliderBar, 8, MESSAGE_SCROLL_AREA_START_X + 2, MESSAGE_SCROLL_AREA_START_Y + ubSliderOffset);
 	}
 }
 

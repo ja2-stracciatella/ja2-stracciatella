@@ -68,18 +68,18 @@ UINT8					gbNewPanel;
 INT16					gsCurInterfacePanel;
 
 
-UINT32					guiCLOSE;
-UINT32					guiDEAD;
-UINT32					guiHATCH;
-UINT32					guiGUNSM;
-UINT32					guiP1ITEMS;
-UINT32					guiP2ITEMS;
-UINT32					guiP3ITEMS;
-UINT32					guiCOMPANEL;
-extern UINT32		guiCOMPANELB;
-UINT32					guiRADIO;
-UINT32					guiPORTRAITICONS;
-UINT32					guiBURSTACCUM;
+extern SGPVObject* guiCLOSE;
+extern SGPVObject* guiDEAD;
+extern SGPVObject* guiHATCH;
+extern SGPVObject* guiGUNSM;
+extern SGPVObject* guiP1ITEMS;
+extern SGPVObject* guiP2ITEMS;
+extern SGPVObject* guiP3ITEMS;
+extern SGPVObject* guiCOMPANEL;
+extern SGPVObject* guiCOMPANELB;
+extern SGPVObject* guiRADIO;
+extern SGPVObject* guiPORTRAITICONS;
+extern SGPVObject* guiBURSTACCUM;
 
 
 MOUSE_REGION		gViewportRegion;
@@ -206,7 +206,7 @@ void RenderTopmostMultiPurposeLocator(void);
 
 void GetSoldierAboveGuyPositions(const SOLDIERTYPE* s, INT16* psX, INT16* psY, BOOLEAN fRadio);
 
-extern UINT32  guiVEHINV;
+extern SGPVObject* guiVEHINV;
 extern BOOLEAN gfInOpenDoorMenu;
 extern UINT32  guiUIMessageTimeDelay;
 extern BOOLEAN gfTopMessageDirty;

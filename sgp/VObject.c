@@ -28,7 +28,6 @@
 typedef struct VOBJECT_NODE
 {
 	HVOBJECT hVObject;
-	UINT32 uiIndex;
   struct VOBJECT_NODE* next;
 #ifdef SGP_VIDEO_DEBUGGING
 	char* pName;
@@ -38,25 +37,7 @@ typedef struct VOBJECT_NODE
 
 static VOBJECT_NODE* gpVObjectHead = NULL;
 static VOBJECT_NODE* gpVObjectTail = NULL;
-static UINT32 guiVObjectIndex = 1;
 UINT32 guiVObjectSize = 0;
-
-#ifdef _DEBUG
-enum
-{
-	DEBUGSTR_NONE,
-	DEBUGSTR_BLTVIDEOOBJECTFROMINDEX,
-	DEBUGSTR_SETOBJECTHANDLESHADE,
-	DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES,
-	DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX,
-	DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX,
-	DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX
-};
-
-static UINT8 gubVODebugCode = 0;
-
-static void CheckValidVObjectIndex(UINT32 uiIndex);
-#endif
 
 
 BOOLEAN InitializeVideoObjectManager(void)
@@ -86,7 +67,6 @@ BOOLEAN ShutdownVideoObjectManager(void)
 	}
 	gpVObjectHead = NULL;
 	gpVObjectTail = NULL;
-	guiVObjectIndex = 1;
 	guiVObjectSize = 0;
 	return TRUE;
 }
@@ -105,20 +85,14 @@ static UINT32 CountVideoObjectNodes(void)
 #endif
 
 
-static UINT32 AddStandardVideoObject(HVOBJECT hVObject)
+static void AddStandardVideoObject(HVOBJECT hVObject)
 {
-	if (hVObject == NULL) return NO_VOBJECT;
+	if (hVObject == NULL) return;
 
 	VOBJECT_NODE* Node = MemAlloc(sizeof(*Node));
 	Assert(Node != NULL); // out of memory?
 	Node->hVObject = hVObject;
 
-	guiVObjectIndex += 2;
-	/* unlikely that we will ever use 2 billion vobjects! We would have to create
-	 * about 70 vobjects per second for 1 year straight to achieve this... */
-	Assert(guiVObjectIndex < 0xFFFFFFF0);
-
-	Node->uiIndex = guiVObjectIndex;
 	Node->next = NULL;
 #ifdef SGP_VIDEO_DEBUGGING
 	Node->pName = NULL;
@@ -142,57 +116,26 @@ static UINT32 AddStandardVideoObject(HVOBJECT hVObject)
 		guiVObjectSize = guiVObjectSize;
 	}
 #endif
-
-	return guiVObjectIndex;
 }
 
 
-UINT32 AddStandardVideoObjectFromFile(const char* ImageFile)
+SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile)
 {
-	return AddStandardVideoObject(CreateVideoObjectFromFile(ImageFile));
+	SGPVObject* const vo = CreateVideoObjectFromFile(ImageFile);
+	AddStandardVideoObject(vo);
+	return vo;
 }
 
 
-HVOBJECT GetVideoObject(UINT32 uiIndex)
+BOOLEAN DeleteVideoObjectFromIndex(SGPVObject* const vo)
 {
-#ifdef _DEBUG
-	CheckValidVObjectIndex(uiIndex);
-#endif
-
-	for (const VOBJECT_NODE* i = gpVObjectHead; i != NULL; i = i->next)
-	{
-		if (i->uiIndex == uiIndex) return i->hVObject;
-	}
-	return NULL;
-}
-
-
-BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
-{
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTFROMINDEX;
-#endif
-	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
-	if (hSrcVObject == NULL) return FALSE;
-	return BltVideoObject(uiDestVSurface, hSrcVObject, usRegionIndex, iDestX, iDestY);
-}
-
-
-BOOLEAN DeleteVideoObjectFromIndex(UINT32 uiVObject)
-{
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX;
-	CheckValidVObjectIndex(uiVObject);
-#endif
-
 	VOBJECT_NODE* prev = NULL;
 	VOBJECT_NODE* curr = gpVObjectHead;
 	while (curr != NULL)
 	{
-		if (curr->uiIndex == uiVObject)
+		if (curr->hVObject == vo)
 		{ //Found the node, so detach it and delete it.
-
-			DeleteVideoObject(curr->hVObject);
+			DeleteVideoObject(vo);
 
 			if (curr == gpVObjectHead) gpVObjectHead = gpVObjectHead->next;
 			if (curr == gpVObjectTail) gpVObjectTail = prev;
@@ -219,17 +162,17 @@ BOOLEAN DeleteVideoObjectFromIndex(UINT32 uiVObject)
 }
 
 
-static BOOLEAN BltVideoObjectToBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
+static BOOLEAN BltVideoObjectToBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 
 /* Given an index to the dest and src vobject contained in ghVideoObjects */
-BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY)
+BOOLEAN BltVideoObject(const UINT32 uiDestVSurface, const SGPVObject* const src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
 {
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(uiDestVSurface, &uiPitch);
 	if (pBuffer == NULL) return FALSE;
 
-	BOOLEAN Ret = BltVideoObjectToBuffer(pBuffer, uiPitch, hSrcVObject, usRegionIndex, iDestX, iDestY);
+	BOOLEAN Ret = BltVideoObjectToBuffer(pBuffer, uiPitch, src, usRegionIndex, iDestX, iDestY);
 
 	UnLockVideoSurface(uiDestVSurface);
 	return Ret;
@@ -345,7 +288,7 @@ BOOLEAN DeleteVideoObject(HVOBJECT hVObject)
 
 
 // High level blit function encapsolates ALL effects and BPP
-static BOOLEAN BltVideoObjectToBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY)
+static BOOLEAN BltVideoObjectToBuffer(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
 	Assert(pBuffer != NULL);
 	Assert(hSrcVObject != NULL);
@@ -414,21 +357,6 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 
 	pObj->pShadeCurrent = pObj->pShades[uiShade];
 	return TRUE;
-}
-
-
-UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade)
-{
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_SETOBJECTHANDLESHADE;
-#endif
-	HVOBJECT hObj = GetVideoObject(uiHandle);
-	if (hObj == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid object handle for setting shade level");
-		return(FALSE);
-	}
-	return SetObjectShade(hObj, uiShade);
 }
 
 
@@ -504,30 +432,14 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 }
 
 
-const ETRLEObject* GetVideoObjectETRLESubregionProperties(UINT32 uiVideoObject, UINT16 usIndex)
+const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject* const vo, const UINT16 usIndex)
 {
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES;
-#endif
-	HVOBJECT hVObject = GetVideoObject(uiVideoObject);
-	CHECKN(hVObject != NULL);
-	CHECKN(usIndex < hVObject->usNumberOfObjects);
-	return &hVObject->pETRLEObject[usIndex];
+	CHECKN(usIndex < vo->usNumberOfObjects);
+	return &vo->pETRLEObject[usIndex];
 }
 
 
-BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline)
-{
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX;
-#endif
-	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
-	CHECKF(hSrcVObject != NULL);
-	return BltVideoObjectOutline(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY, s16BPPColor, fDoOutline);
-}
-
-
-BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline)
+BOOLEAN BltVideoObjectOutline(const UINT32 uiDestVSurface, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY, const INT16 s16BPPColor, const BOOLEAN fDoOutline)
 {
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(uiDestVSurface, &uiPitch);
@@ -547,71 +459,25 @@ BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT1
 }
 
 
-static BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-
-BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY)
-{
-#ifdef _DEBUG
-	gubVODebugCode = DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX;
-#endif
-	HVOBJECT hSrcVObject = GetVideoObject(uiSrcVObject);
-	CHECKF(hSrcVObject != NULL);
-	return BltVideoObjectOutlineShadow(uiDestVSurface, hSrcVObject, usIndex, iDestX, iDestY);
-}
-
-
-static BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY)
+BOOLEAN BltVideoObjectOutlineShadow(const UINT32 uiDestVSurface, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(uiDestVSurface, &uiPitch);
 	if (pBuffer == NULL) return FALSE;
 
-	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
+	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
 	{
-		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
+		Blt8BPPDataTo16BPPBufferOutlineShadowClip(pBuffer, uiPitch, src, iDestX, iDestY, usIndex, &ClippingRect);
 	}
 	else
 	{
-		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex);
+		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
 	}
 
 	UnLockVideoSurface(uiDestVSurface);
 	return TRUE;
 }
 
-
-#ifdef _DEBUG
-static void CheckValidVObjectIndex(UINT32 uiIndex)
-{
-	/* 0xFFFFFFFF -> deleted
-	 * even or >= 0xFFFFFFF0 -> VSurface */
-	if (uiIndex == 0xFFFFFFFF ||
-			((uiIndex % 2) == 0 && uiIndex < 0xfffffff0 || uiIndex >= 0xfffffff0))
-	{
-		const char* str;
-		switch (gubVODebugCode)
-		{
-			default:
-			case DEBUGSTR_NONE:                                   str = "GetVideoObject";                         break;
-			case DEBUGSTR_BLTVIDEOOBJECTFROMINDEX:                str = "BltVideoObjectFromIndex";                break;
-			case DEBUGSTR_SETOBJECTHANDLESHADE:                   str = "SetObjectHandleShade";                   break;
-			case DEBUGSTR_GETVIDEOOBJECTETRLESUBREGIONPROPERTIES: str = "GetVideoObjectETRLESubRegionProperties"; break;
-			case DEBUGSTR_BLTVIDEOOBJECTOUTLINEFROMINDEX:         str = "BltVideoObjectOutlineFromIndex";         break;
-			case DEBUGSTR_BLTVIDEOOBJECTOUTLINESHADOWFROMINDEX:   str = "BltVideoObjectOutlineShadowFromIndex";   break;
-			case DEBUGSTR_DELETEVIDEOOBJECTFROMINDEX:             str = "DeleteVideoObjectFromIndex";             break;
-		}
-		if (uiIndex == 0xFFFFFFFF)
-		{
-			AssertMsg(0, String("Trying to %s with deleted index -1." , str));
-		}
-		else
-		{
-			AssertMsg(0, String("Trying to %s using a VSURFACE ID %d!", str, uiIndex));
-		}
-	}
-}
-#endif
 
 #ifdef SGP_VIDEO_DEBUGGING
 
@@ -690,11 +556,11 @@ static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pS
 }
 
 
-UINT32 AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
+SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
 {
-	UINT32 Res = AddStandardVideoObjectFromFile(ImageFile);
-	if (Res != NO_VOBJECT) RecordVObject(ImageFile, uiLineNum, pSourceFile);
-	return Res;
+	SGPVObject* const vo = AddStandardVideoObjectFromFile(ImageFile);
+	if (vo != NULL) RecordVObject(ImageFile, uiLineNum, pSourceFile);
+	return vo;
 }
 
 

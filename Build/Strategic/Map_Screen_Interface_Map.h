@@ -193,19 +193,19 @@ extern INT16 gsHighlightSectorY;
 extern UINT32 guiBIGMAP;
 
 // the orta icon
-extern UINT32 guiORTAICON;
+extern SGPVObject* guiORTAICON;
 
-extern UINT32 guiTIXAICON;
+extern SGPVObject* guiTIXAICON;
 
 // the character icons
-extern UINT32 guiCHARICONS;
+extern SGPVObject* guiCHARICONS;
 
 // the merc arrival sector landing zone icon
-UINT32 guiBULLSEYE;
+extern SGPVObject* guiBULLSEYE;
 
 // character between sector icons
-extern UINT32 guiCHARBETWEENSECTORICONS;
-extern UINT32 guiCHARBETWEENSECTORICONSCLOSE;
+extern SGPVObject* guiCHARBETWEENSECTORICONS;
+extern SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
 
 // the viewable map bound region
 extern SGPRect MapScreenRect;
@@ -226,16 +226,16 @@ extern INT8 bSelectedInfoChar;
 extern INT8 bSelectedContractChar;
 
 // map arrows graphical index value
-extern UINT32 guiMAPCURSORS;
+extern SGPVObject* guiMAPCURSORS;
 
 // has temp path for character path or helicopter been already drawn
 extern BOOLEAN  fTempPathAlreadyDrawn;
 
 // the map border eta pop up
-extern UINT32 guiMapBorderEtaPopUp;
+extern SGPVObject* guiMapBorderEtaPopUp;
 
 // heli pop up
-extern UINT32 guiMapBorderHeliSectors;
+extern SGPVObject* guiMapBorderHeliSectors;
 
 // the currently selected town militia
 extern INT16 sSelectedMilitiaTown;
@@ -247,9 +247,13 @@ extern UINT16	sSelMapY;
 
 extern BOOLEAN fFoundTixa;
 
-extern UINT32 guiSubLevel1, guiSubLevel2, guiSubLevel3;
+extern SGPVObject* guiSubLevel1;
+extern SGPVObject* guiSubLevel2;
+extern SGPVObject* guiSubLevel3;
 
 void    CreateDestroyMilitiaSectorButtons(void);
 BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
+
+extern SGPVObject* guiMINEICON;
 
 #endif

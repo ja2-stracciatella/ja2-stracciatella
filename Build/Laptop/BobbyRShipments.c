@@ -59,13 +59,8 @@
 #define		BOBBYR_SHIPMENT_NUM_ITEMS_Y								BOBBYR_SHIPMENT_SHIPMENT_ORDER_NUM_Y
 #define		BOBBYR_SHIPMENT_NUM_ITEMS_WIDTH						116
 
-//#define		BOBBYR_SHIPMENT_
 
-
-
-
-
-UINT32		guiBobbyRShipmentGrid;
+static SGPVObject* guiBobbyRShipmentGrid;
 
 BOOLEAN		gfBobbyRShipmentsDirty = FALSE;
 
@@ -225,13 +220,11 @@ static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void DisplayShipmentGrid(void)
 {
-	HVOBJECT hPixHandle = GetVideoObject(guiBobbyRShipmentGrid);
-
 	// Shipment Order Grid
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, BOBBYR_SHIPMENT_DELIVERY_GRID_X, BOBBYR_SHIPMENT_DELIVERY_GRID_Y);
+  BltVideoObject(FRAME_BUFFER, guiBobbyRShipmentGrid, 0, BOBBYR_SHIPMENT_DELIVERY_GRID_X, BOBBYR_SHIPMENT_DELIVERY_GRID_Y);
 
 	// Order Grid
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 1, BOBBYR_SHIPMENT_ORDER_GRID_X, BOBBYR_SHIPMENT_ORDER_GRID_Y);
+  BltVideoObject(FRAME_BUFFER, guiBobbyRShipmentGrid, 1, BOBBYR_SHIPMENT_ORDER_GRID_X,    BOBBYR_SHIPMENT_ORDER_GRID_Y);
 }
 
 

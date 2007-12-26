@@ -126,7 +126,7 @@ typedef struct
 	UINT32		uiLastBlink;
 	UINT32		uiLastExpression;
 
-  UINT32		uiVideoObject;
+  SGPVObject* uiVideoObject;
 
 	UINT32		uiUserData1;
 	UINT32		uiUserData2;

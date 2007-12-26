@@ -488,7 +488,8 @@ static void StartViewportOverlays(void);
 
 void RenderTopmostTacticalInterface( )
 {
-	static UINT32				uiBogTarget = 0;
+	static SGPVObject* uiBogTarget = NO_VOBJECT;
+
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
 
@@ -559,7 +560,7 @@ void RenderTopmostTacticalInterface( )
 			if (s->sPlannedTargetX != -1)
 			{
 				// Blit bogus target
-				if (uiBogTarget == 0)
+				if (uiBogTarget == NO_VOBJECT)
 				{
 					//Loadup cursor!
 					uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
@@ -583,7 +584,7 @@ void RenderTopmostTacticalInterface( )
 					sX -= 10;
 					sY -= 10;
 
-					BltVideoObjectFromIndex(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
+					BltVideoObject(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
 					InvalidateRegion(sX, sY, sX + 20, sY + 20);
 				}
 			}

@@ -116,8 +116,8 @@
 #define		OPT_FIRST_COLUMN_TOGGLE_CUT_OFF			10//8
 
 
-UINT32		guiOptionBackGroundImage;
-UINT32		guiOptionsAddOnImages;
+static SGPVObject* guiOptionBackGroundImage;
+static SGPVObject* guiOptionsAddOnImages;
 
 static SLIDER* guiSoundEffectsSlider;
 static SLIDER* guiSpeechSlider;
@@ -508,14 +508,11 @@ static void HandleOptionsScreen(void)
 
 static void RenderOptionsScreen(void)
 {
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, guiOptionBackGroundImage, 0, 0, 0);
 
 	//Get and display the titla image
-	HVOBJECT hPixHandle = GetVideoObject(guiOptionsAddOnImages);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 0, 0, 0);
-  BltVideoObject(FRAME_BUFFER, hPixHandle, 1, 0, 434);
-
-
+  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 0, 0, 0);
+  BltVideoObject(FRAME_BUFFER, guiOptionsAddOnImages, 1, 0, 434);
 
 	//
 	// Text for the toggle boxes

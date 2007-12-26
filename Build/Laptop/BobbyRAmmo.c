@@ -11,8 +11,8 @@
 #include "VSurface.h"
 
 
-UINT32		guiAmmoBackground;
-UINT32		guiAmmoGrid;
+static SGPVObject* guiAmmoBackground;
+static SGPVObject* guiAmmoGrid;
 
 
 BOOLEAN EnterBobbyRAmmo()
@@ -63,7 +63,7 @@ void RenderBobbyRAmmo()
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiAmmoGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObject(FRAME_BUFFER, guiAmmoGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(IC_AMMO);
 

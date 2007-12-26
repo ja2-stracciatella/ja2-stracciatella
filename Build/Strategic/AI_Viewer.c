@@ -135,8 +135,8 @@ enum
 
 MOUSE_REGION ViewerRegion;
 
-UINT32 guiMapGraphicID;
-UINT32 guiMapIconsID;
+static SGPVObject* guiMapGraphicID;
+static SGPVObject* guiMapIconsID;
 
 BOOLEAN gfViewerEntry;
 BOOLEAN gfExitViewer;
@@ -376,8 +376,6 @@ static void RenderStationaryGroups(void)
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
 
-	HVOBJECT hVObject = GetVideoObject(guiMapIconsID);
-
 	//Render groups that are stationary...
 	for( y = 0; y < 16; y++ )
 	{
@@ -389,10 +387,10 @@ static void RenderStationaryGroups(void)
 			pSector = &SectorInfo[ iSector ];
 
 			if( pSector->uiFlags & SF_MINING_SITE )
-				BltVideoObject( FRAME_BUFFER, hVObject, MINING_ICON, xp + 25, yp - 1);
+				BltVideoObject( FRAME_BUFFER, guiMapIconsID, MINING_ICON, xp + 25, yp - 1);
 
 			if( pSector->uiFlags & SF_SAM_SITE )
-				BltVideoObject( FRAME_BUFFER, hVObject, SAM_ICON, xp + 20, yp + 4);
+				BltVideoObject( FRAME_BUFFER, guiMapIconsID, SAM_ICON, xp + 20, yp + 4);
 
 
 			if( pSector->ubNumberOfCivsAtLevel[0] + pSector->ubNumberOfCivsAtLevel[1] + pSector->ubNumberOfCivsAtLevel[2] )
@@ -433,7 +431,7 @@ static void RenderStationaryGroups(void)
 			if ( ubGroupSize > 0 )
 			{
 				// draw the icon
-				BlitGroupIcon( ICON_TYPE_STOPPED, ubIconColor, xp, yp, hVObject );
+				BlitGroupIcon( ICON_TYPE_STOPPED, ubIconColor, xp, yp, guiMapIconsID );
 
 				mprintf(xp + 2, yp + 2, L"%d", ubGroupSize);
 			}
@@ -458,8 +456,6 @@ static void RenderMovingGroupsAndMercs(void)
 
 	SetFont( FONT10ARIAL );
 	SetFontShadow( FONT_NEARBLACK );
-
-	HVOBJECT hVObject = GetVideoObject(guiMapIconsID);
 
 	//Render groups that are moving...
 	pGroup = gpGroupList;
@@ -497,7 +493,7 @@ static void RenderMovingGroupsAndMercs(void)
 				//influence for enemy patrol groups.
 				if( pGroup->uiTraverseTime )
 				{
-					BltVideoObject( FRAME_BUFFER, hVObject, GROUP_ANCHOR, VIEWER_LEFT + VIEWER_CELLW * (pGroup->ubSectorX - 1), VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY - 1));
+					BltVideoObject( FRAME_BUFFER, guiMapIconsID, GROUP_ANCHOR, VIEWER_LEFT + VIEWER_CELLW * (pGroup->ubSectorX - 1), VIEWER_TOP + VIEWER_CELLH * (pGroup->ubSectorY - 1));
 				}
 
 				ubNumAdmins = pGroup->pEnemyGroup->ubNumAdmins;//+ pGroup->pEnemyGroup->ubAdminsInBattle;
@@ -529,7 +525,7 @@ static void RenderMovingGroupsAndMercs(void)
 			}
 
 			// draw the icon
-			BlitGroupIcon( ubIconType, ubIconColor, x, y, hVObject );
+			BlitGroupIcon(ubIconType, ubIconColor, x, y, guiMapIconsID);
 
 			// set color
 			SetFontForeground( ubFontColor );
@@ -751,7 +747,7 @@ static void RenderViewer(void)
 	if( gfRenderMap )
 	{
 		gfRenderMap = FALSE;
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiMapGraphicID, 0, VIEWER_LEFT, VIEWER_TOP);
+		BltVideoObject(FRAME_BUFFER, guiMapGraphicID, 0, VIEWER_LEFT, VIEWER_TOP);
 		InvalidateRegion( VIEWER_LEFT, VIEWER_TOP, VIEWER_RIGHT, VIEWER_BOTTOM );
 		//Draw the coordinates
 		ClearViewerRegion( 0, 0, VIEWER_RIGHT, 14 );

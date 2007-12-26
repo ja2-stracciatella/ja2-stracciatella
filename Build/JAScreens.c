@@ -623,7 +623,7 @@ UINT32 SexScreenInit(void)
 UINT32 SexScreenHandle(void)
 {
 	static UINT8					ubCurrentScreen = 0;
-	static UINT32					guiSMILY;
+	static SGPVObject* guiSMILY;
 	static INT8						bCurFrame = 0;
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
 
@@ -697,14 +697,7 @@ UINT32 SexScreenHandle(void)
 	INT16 sX = (SCREEN_WIDTH  - pTrav->usWidth)  / 2;
 	INT16 sY = (SCREEN_HEIGHT - pTrav->usHeight) / 2;
 
-	if( bCurFrame < 24 )
-	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, 0, sX, sY);
-	}
-	else
-	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiSMILY, (INT8)(bCurFrame%8 ), sX, sY);
-	}
+	BltVideoObject(FRAME_BUFFER, guiSMILY, bCurFrame < 24 ? 0 : bCurFrame % 8, sX, sY);
 
 	InvalidateRegion( sX, sY, (INT16)( sX + pTrav->usWidth ), (INT16)( sY + pTrav->usHeight ) );
 
@@ -742,7 +735,6 @@ void DoDemoIntroduction()
 	UNIMPLEMENTED
 #else
 	MSG Message;
-	UINT32 uiTempID;
 	UINT16 yp, height;
 	UINT32 uiStartTime = 0xffffffff;
 	UINT16 usFadeLimit = 8;
@@ -755,10 +747,10 @@ void DoDemoIntroduction()
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	uiTempID = AddVideoObjectFromFile("DemoAds/DemoScreen1.sti");
+	SGPVObject* const uiTempID = AddVideoObjectFromFile("DemoAds/DemoScreen1.sti");
 	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/DemoScreen1.sti");
 	if (uiTempID == NO_VOBJECT) return;
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 0, 0);
+	BltVideoObject(FRAME_BUFFER, uiTempID, 0, 0, 0);
 	DeleteVideoObjectFromIndex( uiTempID );
 	InvalidateScreen();
 
@@ -856,21 +848,19 @@ extern INT8 gbFadeSpeed;
 #ifdef GERMAN
 static void DisplayTopwareGermanyAddress(void)
 {
-	UINT32					uiTempID;
-
 	//bring up the Topware address screen
-	uiTempID = AddVideoObjectFromFile("German/topware_germany.sti");
-	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load German/topware_germany.sti");
-	if (uiTempID == NO_VOBJECT) return;
+	SGPVObject* const vo = AddVideoObjectFromFile("German/topware_germany.sti");
+	AssertMsg(vo != NO_VOBJECT, "Failed to load German/topware_germany.sti");
+	if (vo == NO_VOBJECT) return;
 
 	//Shade out a background piece to emphasize the German address.
 	ShadowVideoSurfaceRect(FRAME_BUFFER, 208, 390, 431, 475);
 
 	//Draw the anti-aliased address now.
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400);
-	BltVideoObjectFromIndex( FRAME_BUFFER, uiTempID, 0, 218, 400);
+	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
+	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
 	InvalidateRegion( 208, 390, 431, 475 );
-	DeleteVideoObjectFromIndex( uiTempID );
+	DeleteVideoObjectFromIndex(vo);
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 }
@@ -1072,14 +1062,12 @@ UINT32 DemoExitScreenHandle(void)
 		uiTime = GetJA2Clock();
 		if( ubPreviousScreen == 2 )
 		{
-			UINT32					uiTempID;
-
 			//Create render buffer
 			uiCollageID = AddVideoSurface(263, 210, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			uiTempID = AddVideoObjectFromFile("Interface/ja2logo.sti");
+			SGPVObject* const uiTempID = AddVideoObjectFromFile("Interface/ja2logo.sti");
 			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load Interface/ja2logo.sti");
 			if (uiTempID == NO_VOBJECT)
 			{
@@ -1088,7 +1076,7 @@ UINT32 DemoExitScreenHandle(void)
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
+			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
@@ -1236,14 +1224,12 @@ UINT32 DemoExitScreenHandle(void)
 		uiTime = GetJA2Clock();
 		if( ubPreviousScreen == 4 )
 		{
-			UINT32					uiTempID;
-
 			//Create render buffer
 			uiCollageID = AddVideoSurface(331, 148, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			uiTempID = AddVideoObjectFromFile("DemoAds/available.sti");
+			SGPVObject* const uiTempID = AddVideoObjectFromFile("DemoAds/available.sti");
 			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/available.sti");
 			if (uiTempID == NO_VOBJECT)
 			{
@@ -1252,7 +1238,7 @@ UINT32 DemoExitScreenHandle(void)
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObjectFromIndex( uiCollageID, uiTempID, 0, 0, 0);
+			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
 			DeleteVideoObjectFromIndex( uiTempID );
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);

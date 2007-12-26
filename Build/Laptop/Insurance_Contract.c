@@ -104,8 +104,8 @@
 #define		INS_CTRCT_SURVIVAL_BASE										90
 
 
-UINT32	guiInsOrderGridImage;
-UINT32	guiInsOrderBulletImage;
+static SGPVObject* guiInsOrderGridImage;
+static SGPVObject* guiInsOrderBulletImage;
 
 UINT8		gubNumberofDisplayedInsuranceGrids;
 
@@ -322,13 +322,13 @@ void RenderInsuranceContract()
 	GetInsuranceText( INS_SNGL_ENTERING_REVIEWING_CLAIM, sText );
 	DrawTextToScreen(sText, LAPTOP_SCREEN_UL_X, INS_CTRCT_TITLE_Y, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_FIRST_BULLET_TEXT_Y);
+	BltVideoObject(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_FIRST_BULLET_TEXT_Y);
 
 	//Display the first instruction sentence
 	GetInsuranceText( INS_MLTI_TO_PURCHASE_INSURANCE, sText );
 	DisplayWrappedString(INS_CTRCT_FIRST_BULLET_TEXT_X + INSURANCE_BULLET_TEXT_OFFSET_X, INS_CTRCT_FIRST_BULLET_TEXT_Y, INS_CTRCT_INTSRUCTION_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_SECOND_BULLET_TEXT_Y);
+	BltVideoObject(FRAME_BUFFER, guiInsOrderBulletImage, 0, INS_CTRCT_FIRST_BULLET_TEXT_X, INS_CTRCT_SECOND_BULLET_TEXT_Y);
 
 	//Display the second instruction sentence
 	GetInsuranceText( INS_MLTI_ONCE_SATISFIED_CLICK_ACCEPT, sText );
@@ -409,7 +409,6 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSo
 
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 {
-	UINT32	uiInsMercFaceImage;
 	INT32		iCostOfContract=0;
 	char			sTemp[100];
 	wchar_t		sText[800];
@@ -426,28 +425,26 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	const INT32 dx = INS_CTRCT_ORDER_GRID_X + INS_CTRCT_ORDER_GRID_OFFSET_X * ubGridNumber;
 	const INT32 dy = INS_CTRCT_ORDER_GRID_Y;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
+	BltVideoObject(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
 
 	// load the mercs face graphic and add it
 	sprintf(sTemp, "FACES/%02d.sti", ubMercID);
-	uiInsMercFaceImage = AddVideoObjectFromFile(sTemp);
+	SGPVObject* const uiInsMercFaceImage = AddVideoObjectFromFile(sTemp);
 	CHECKF(uiInsMercFaceImage != NO_VOBJECT);
-
-	HVOBJECT hPixHandle = GetVideoObject(uiInsMercFaceImage);
 
 	//if the merc is dead, shade the face red
 	if( IsMercDead( ubMercID ) )
 	{
 		//if the merc is dead
 		//shade the face red, (to signify that he is dead)
-		hPixHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hPixHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
+		uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 
 		//set the red pallete to the face
-		SetObjectHandleShade( uiInsMercFaceImage, 0 );
+		SetObjectShade(uiInsMercFaceImage, 0);
 	}
 
 	//Get and display the mercs face
-	BltVideoObject(FRAME_BUFFER, hPixHandle, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
+	BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
 
 	// the face images isn't needed anymore so delete it
 	DeleteVideoObjectFromIndex( uiInsMercFaceImage );

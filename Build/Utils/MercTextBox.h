@@ -33,7 +33,7 @@ typedef struct {
  UINT8	ubBackgroundIndex;
  UINT8	ubBorderIndex;
  UINT32	uiMercTextPopUpBackground;
- UINT32 uiMercTextPopUpBorder;
+ SGPVObject* uiMercTextPopUpBorder;
  BOOLEAN	fMercTextPopupInitialized;
  BOOLEAN	fMercTextPopupSurfaceInitialized;
  UINT32		uiFlags;

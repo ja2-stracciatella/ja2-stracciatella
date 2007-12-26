@@ -53,7 +53,7 @@
 
 #define	AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS	8
 
-UINT32		guiContentButton;
+static SGPVObject* guiContentButton;
 
 UINT8			gubCurPageNum;
 BOOLEAN		gfInToc =  FALSE;
@@ -316,8 +316,6 @@ static BOOLEAN InitTocMenu(void)
 								 WORD_FROM_FOUNDER,
 								 INCORPORATION};
 
-	HVOBJECT hContentButtonHandle = GetVideoObject(guiContentButton);
-
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
@@ -333,7 +331,7 @@ static BOOLEAN InitTocMenu(void)
 			MSYS_SetRegionUserData( &gSelectedHistoryTocMenuRegion[i], 0, i+1);
 		}
 
-	  BltVideoObject(FRAME_BUFFER, hContentButtonHandle, 0,AIM_HISTORY_TOC_X, usPosY);
+		BltVideoObject(FRAME_BUFFER, guiContentButton, 0,AIM_HISTORY_TOC_X, usPosY);
 		DrawTextToScreen(sText, AIM_HISTORY_TOC_X, usPosY + AIM_HISTORY_TOC_Y, AIM_CONTENTBUTTON_WIDTH, AIM_HISTORY_TOC_TEXT_FONT, AIM_HISTORY_TOC_TEXT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 

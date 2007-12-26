@@ -10,8 +10,8 @@
 #include "VSurface.h"
 
 
-UINT32		guiArmourBackground;
-UINT32		guiArmourGrid;
+static SGPVObject* guiArmourBackground;
+static SGPVObject* guiArmourGrid;
 
 
 BOOLEAN EnterBobbyRArmour()
@@ -60,7 +60,7 @@ void RenderBobbyRArmour()
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiArmourGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObject(FRAME_BUFFER, guiArmourGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(IC_ARMOUR);
 

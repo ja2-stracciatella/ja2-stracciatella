@@ -57,7 +57,7 @@ static SLIDER* pSliderHead     = NULL;
 static SLIDER* gpCurrentSlider = NULL;
 
 static BOOLEAN gfSliderInited    = FALSE;
-static UINT32  guiSliderBoxImage = 0;
+static SGPVObject* guiSliderBoxImage = 0;
 
 
 void InitSlider(void)
@@ -234,7 +234,7 @@ static void RenderSliderBox(SLIDER* s)
 		//invalidate the old area
 		InvalidateRegion(s->LastRect.iLeft, s->LastRect.iTop, s->LastRect.iRight, s->LastRect.iBottom);
 
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
+		BltVideoObject(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
 
 		//invalidate the area
 		InvalidateRegion(DestRect.iLeft, DestRect.iTop, DestRect.iRight, DestRect.iBottom);
@@ -252,7 +252,7 @@ static void RenderSliderBox(SLIDER* s)
 		//Restore the old rect
 		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, s->LastRect.iLeft, s->LastRect.iTop, 8, 15);
 
-		BltVideoObjectFromIndex(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
+		BltVideoObject(FRAME_BUFFER, guiSliderBoxImage, 0, DestRect.iLeft, DestRect.iTop);
 
 		//invalidate the area
 		InvalidateRegion(DestRect.iLeft, DestRect.iTop, s->usCurrentSliderBoxPosition+9, s->usPosY + DEFUALT_SLIDER_SIZE);

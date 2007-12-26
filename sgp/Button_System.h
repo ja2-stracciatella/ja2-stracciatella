@@ -95,7 +95,7 @@ struct GUI_BUTTON
 	INT16        sWrappedWidth;
 
 	// For buttons with icons (don't confuse this with quickbuttons which have up to 5 states)
-	INT32        iIconID;
+	const SGPVObject* icon;
 	INT16        usIconIndex;
 	INT8         bIconXOffset; // -1 means horizontally centered
 	INT8         bIconYOffset; // -1 means vertically centered
@@ -235,7 +235,7 @@ void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle);
  * If fShiftImage is true, then the image will shift down one pixel and right
  * one pixel just like the text does.
  */
-BOOLEAN SpecifyButtonIcon(INT32 iButtonID, INT32 iVideoObjectID, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+BOOLEAN SpecifyButtonIcon(INT32 iButtonID, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
 
 // will simply set the cursor for the mouse region the button occupies
 BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr);

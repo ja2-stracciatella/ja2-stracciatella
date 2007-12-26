@@ -2181,14 +2181,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
 
 		// a living soldier?..or external NPC?..choose panel based on this
-		if( pSoldier )
-		{
-			BltVideoObjectFromIndex( pBlitter->uiDestBuff, guiCOMPANEL, 0, pBlitter->sX, pBlitter->sY);
-		}
-		else
-		{
-			BltVideoObjectFromIndex( pBlitter->uiDestBuff, guiCOMPANELB, 0, pBlitter->sX, pBlitter->sY);
-		}
+		const SGPVObject* const vo = (pSoldier ? guiCOMPANEL : guiCOMPANELB);
+		BltVideoObject(pBlitter->uiDestBuff, vo, 0, pBlitter->sX, pBlitter->sY);
 
 		// Display name, location ( if not current )
 		SetFont( BLOCKFONT2 );

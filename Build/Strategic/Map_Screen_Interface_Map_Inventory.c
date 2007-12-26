@@ -99,7 +99,7 @@ BOOLEAN fFlashHighLightInventoryItemOnradarMap = FALSE;
 BOOLEAN fShowMapInventoryPool = FALSE;
 
 // the v-object index value for the background
-UINT32 guiMapInventoryPoolBackground;
+static SGPVObject* guiMapInventoryPoolBackground;
 
 // inventory pool list
 WORLDITEM *pInventoryPoolList = NULL;
@@ -173,7 +173,7 @@ static void UpdateHelpTextForInvnentoryStashSlots(void);
 // blit the background panel for the inventory
 void BlitInventoryPoolGraphic( void )
 {
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, INVEN_POOL_X, INVEN_POOL_Y);
+	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, INVEN_POOL_X, INVEN_POOL_Y);
 
 	// resize list
 	CheckAndUnDateSlotAllocation( );

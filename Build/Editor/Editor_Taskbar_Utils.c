@@ -52,13 +52,13 @@ extern ITEM_POOL *gpItemPool;
 
 //editor icon storage vars
 INT32	giEditMercDirectionIcons[2];
-UINT32 guiMercInventoryPanel;
-UINT32 guiOmertaMap;
+SGPVObject* guiMercInventoryPanel;
+SGPVObject* guiOmertaMap;
 UINT32 guiMercInvPanelBuffers[9];
 UINT32 guiMercTempBuffer;
 INT32 giEditMercImage[2];
-UINT32 guiExclamation;
-UINT32 guiKeyImage;
+SGPVObject* guiExclamation;
+SGPVObject* guiKeyImage;
 
 //editor Mouseregion storage vars
 MOUSE_REGION TerrainTileButtonRegion[ NUM_TERRAIN_TILE_REGIONS ];
@@ -780,8 +780,8 @@ static void RenderSelectedItemBlownUp(void)
 		return;
 
 	//Display the enlarged item graphic
-	UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(&Item[gpItem->usItem]);
-	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, Item[gpItem->usItem].ubGraphicNum);
+	const SGPVObject* const vo = GetInterfaceGraphicForItem(&Item[gpItem->usItem]);
+	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, Item[gpItem->usItem].ubGraphicNum);
 	INT16 sWidth   = ETRLEProps->usWidth;
 	INT16 sOffsetX = ETRLEProps->sOffsetX;
 	xp = sScreenX + (40 - sWidth - sOffsetX*2) / 2;
@@ -790,7 +790,7 @@ static void RenderSelectedItemBlownUp(void)
 	INT16 sOffsetY = ETRLEProps->sOffsetY;
 	yp = sScreenY + (20 - sHeight - sOffsetY*2) / 2;
 
-	BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, Item[ gpItem->usItem ].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)), TRUE );
+	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)), TRUE);
 
 	//Display the item name above it
 	SetFont( FONT10ARIAL );

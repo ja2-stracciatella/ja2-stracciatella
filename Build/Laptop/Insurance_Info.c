@@ -47,7 +47,8 @@
 #define		INS_INFO_LINK_TO_CONTRACT_TEXT_Y	355 + LAPTOP_SCREEN_WEB_UL_Y
 
 
-UINT32	guiBulletImage;
+static SGPVObject* guiBulletImage;
+
 
 //The list of Info sub pages
 enum
@@ -326,19 +327,19 @@ static void DisplayPremiumPage(void)
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
+	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
 	GetInsuranceText( INS_MLTI_LENGTH_OF_EMPLOYMENT_CONTRACT, sText );
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
+	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
 	GetInsuranceText( INS_MLTI_EMPLOYEES_AGE_AND_HEALTH, sText );
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
+	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
 	GetInsuranceText( INS_MLTI_EMPLOOYEES_TRAINING_AND_EXP, sText );
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -369,14 +370,6 @@ static void DisplayRenewingPremiumPage(void)
 	GetInsuranceText( INS_SNGL_LOWER_PREMIUMS_4_RENEWING, sText );
 	DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset - 1, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_BIG, INS_INFO_FRAUD_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS + 2;
-
-/*
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
-
-	GetInsuranceText( INS_MLTI_IF_U_EXTEND_THE_CONTRACT, sText );
-	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
-*/
 }
 
 
@@ -475,7 +468,7 @@ static void DisplayInfoTocPage(void)
 	// Premiuns bulleted sentence
 	//
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
+	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
 	GetInsuranceText( INS_MLTI_REASONABLE_AND_FLEXIBLE, sText );
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -487,7 +480,7 @@ static void DisplayInfoTocPage(void)
 	// Quick and efficient claims
 	//
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
+	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
 	GetInsuranceText( INS_MLTI_QUICKLY_AND_EFFICIENT, sText );
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

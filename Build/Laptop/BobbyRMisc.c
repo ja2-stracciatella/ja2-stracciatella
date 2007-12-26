@@ -10,8 +10,8 @@
 #include "VSurface.h"
 
 
-UINT32		guiMiscBackground;
-UINT32		guiMiscGrid;
+static SGPVObject* guiMiscBackground;
+static SGPVObject* guiMiscGrid;
 
 
 BOOLEAN EnterBobbyRMisc()
@@ -58,7 +58,7 @@ void RenderBobbyRMisc()
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMiscGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObject(FRAME_BUFFER, guiMiscGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(IC_BOBBY_MISC);
 

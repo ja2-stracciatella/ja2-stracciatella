@@ -326,14 +326,14 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
+			const SGPVObject* uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
 			//Calculate the center position of the graphic in a 60 pixel wide area.
 			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 
-			BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
+			BltVideoObjectOutline(eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y + 2, 0, FALSE);
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			if( y == 0 )
 			{
@@ -463,16 +463,16 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				}
 				DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-				UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
+				const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
 				//Calculate the center position of the graphic in a 60 pixel wide area.
-				const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+				const ETRLEObject* const ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
 				INT16 sWidth  = ETRLEProps->usWidth;
 				INT16 sOffset = ETRLEProps->sOffsetX;
 				INT16 sStart = x + (60 - sWidth - sOffset*2) / 2;
 
 				if( sWidth )
 				{
-					BltVideoObjectOutlineFromIndex( eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, 0, FALSE );
+					BltVideoObjectOutline(eInfo.uiBuffer, vo, item->ubGraphicNum, sStart, y+2, 0, FALSE);
 				}
 				//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 				if( y == 0 )
@@ -544,14 +544,14 @@ void RenderEditorItemsInfo()
 			INT16 x = (eInfo.sHilitedItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
 			INT16 y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
 			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
-			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
-				BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 250, 0)), TRUE );
+				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 250, 0)), TRUE);
 			}
 		}
 	}
@@ -563,14 +563,14 @@ void RenderEditorItemsInfo()
 			INT16 x = (eInfo.sSelItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
 			INT16 y = 360 + (eInfo.sSelItemIndex % 2) * 40;
 			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
-			UINT32 uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
+			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
-				BltVideoObjectOutlineFromIndex( FRAME_BUFFER, uiVideoObjectIndex, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 0, 0)), TRUE );
+				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 0, 0)), TRUE);
 			}
 		}
 	}

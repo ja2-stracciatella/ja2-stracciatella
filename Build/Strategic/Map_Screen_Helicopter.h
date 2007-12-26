@@ -81,7 +81,7 @@ extern INT32 iHelicopterVehicleId;
 extern BOOLEAN fHoveringHelicopter;
 
 // helicopter icon
-extern UINT32 guiHelicopterIcon;
+extern SGPVObject* guiHelicopterIcon;
 
 // helicopter destroyed
 extern BOOLEAN fHelicopterDestroyed;

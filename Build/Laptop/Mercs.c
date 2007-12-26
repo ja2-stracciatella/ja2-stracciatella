@@ -162,14 +162,14 @@ enum
 
 // Image Indetifiers
 
-UINT32		guiAccountBox;
-UINT32		guiArrow;
-UINT32		guiFilesBox;
-UINT32		guiMercSymbol;
-UINT32		guiSpecPortrait;
-UINT32		guiMercBackGround;
+static SGPVObject* guiAccountBox;
+static SGPVObject* guiArrow;
+static SGPVObject* guiFilesBox;
+static SGPVObject* guiMercSymbol;
+static SGPVObject* guiSpecPortrait;
+static SGPVObject* guiMercBackGround;
 UINT32		guiMercVideoFaceBackground;
-UINT32		guiMercVideoPopupBackground;
+static SGPVObject* guiMercVideoPopupBackground;
 
 UINT8			gubMercArray[ NUMBER_OF_MERCS ];
 UINT8			gubCurMercIndex;
@@ -525,10 +525,10 @@ void RenderMercs()
 {
 	DrawMecBackGround();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercSymbol,   0, MERC_TITLE_X,       MERC_TITLE_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiSpecPortrait, 0, MERC_PORTRAIT_X,    MERC_PORTRAIT_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiAccountBox,   0, MERC_ACCOUNT_BOX_X, MERC_ACCOUNT_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFilesBox,     0, MERC_FILE_BOX_X,    MERC_FILE_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiMercSymbol,   0, MERC_TITLE_X,       MERC_TITLE_Y);
+	BltVideoObject(FRAME_BUFFER, guiSpecPortrait, 0, MERC_PORTRAIT_X,    MERC_PORTRAIT_Y);
+	BltVideoObject(FRAME_BUFFER, guiAccountBox,   0, MERC_ACCOUNT_BOX_X, MERC_ACCOUNT_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiFilesBox,     0, MERC_FILE_BOX_X,    MERC_FILE_BOX_Y);
 
 	//Text on the Speck Portrait
 	DisplayWrappedString(MERC_PORTRAIT_TEXT_X, MERC_PORTRAIT_TEXT_Y, MERC_PORTRAIT_TEXT_WIDTH, 2, MERC_TEXT_FONT, MERC_TEXT_COLOR, MercHomePageText[MERC_SPECK_OWNER], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -2169,7 +2169,7 @@ void GetMercSiteBackOnline()
 
 static void DrawMercVideoBackGround(void)
 {
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMercVideoPopupBackground, 0, MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y);
+	BltVideoObject(FRAME_BUFFER, guiMercVideoPopupBackground, 0, MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y);
 
 	//put the title on the window
 	DrawTextToScreen(MercHomePageText[MERC_SPECK_COM], MERC_X_VIDEO_TITLE_X, MERC_X_VIDEO_TITLE_Y, 0, MERC_VIDEO_TITLE_FONT, MERC_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

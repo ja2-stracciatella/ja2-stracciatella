@@ -35,8 +35,8 @@
 MOUSE_REGION LevelMouseRegions[ 4 ];
 
 // graphics
-UINT32 guiMapBorder;
-//UINT32 guiMapBorderCorner;
+static SGPVObject* guiMapBorder;
+//static SGPVObject* guiMapBorderCorner;
 
 
 // scroll direction
@@ -137,7 +137,7 @@ void RenderMapBorder( void )
 		return;
 	}
 
-	BltVideoObjectFromIndex(guiSAVEBUFFER , guiMapBorder, 0, MAP_BORDER_X, MAP_BORDER_Y);
+	BltVideoObject(guiSAVEBUFFER, guiMapBorder, 0, MAP_BORDER_X, MAP_BORDER_Y);
 
 	// show the level marker
 	DisplayCurrentLevelMarker( );
@@ -158,7 +158,7 @@ void RenderMapBorderCorner( void )
 		return;
 	}
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderCorner, 0, MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y);
+	BltVideoObject(FRAME_BUFFER, guiMapBorderCorner, 0, MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y);
 
 	InvalidateRegion( MAP_BORDER_CORNER_X, MAP_BORDER_CORNER_Y, 635, 315);
 }
@@ -186,7 +186,7 @@ void RenderMapBorderEtaPopUp( void )
 		return;
 	}
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, 291);
+	BltVideoObject(FRAME_BUFFER, guiMapBorderEtaPopUp, 0, MAP_BORDER_X + 215, 291);
 
 	InvalidateRegion( MAP_BORDER_X + 215, 291, MAP_BORDER_X + 215 + 100 , 310);
 }
@@ -920,7 +920,7 @@ static void DisplayCurrentLevelMarker(void)
 */
 
 	// it's actually a white rectangle, not a green arrow!
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiLEVELMARKER, 0, MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + MAP_LEVEL_MARKER_DELTA * iCurrentMapSectorZ);
+	BltVideoObject(guiSAVEBUFFER, guiLEVELMARKER, 0, MAP_LEVEL_MARKER_X + 1, MAP_LEVEL_MARKER_Y + MAP_LEVEL_MARKER_DELTA * iCurrentMapSectorZ);
 }
 
 

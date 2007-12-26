@@ -109,10 +109,10 @@ static BOOLEAN fWaitAFrame = FALSE;
 BOOLEAN fNewFilesInFileViewer = FALSE;
 
 // graphics handles
-static UINT32 guiTITLE;
-static UINT32 guiFileBack;
-static UINT32 guiTOP;
-static UINT32 guiHIGHLIGHT;
+static SGPVObject* guiTITLE;
+static SGPVObject* guiFileBack;
+static SGPVObject* guiTOP;
+static SGPVObject* guiHIGHLIGHT;
 
 
 // currewnt page of multipage files we are on
@@ -312,15 +312,15 @@ void RenderFiles(void)
 	// title bar icon
 	BlitTitleBarIcons(  );
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, 108, 23);
 }
 
 
 static void RenderFilesBackGround(void)
 {
 	// render generic background for file system
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
+	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 }
 
 
@@ -550,7 +550,7 @@ static void DisplayFilesList(void)
 	{
 		if (iCounter==iHighLightFileLine)
 		{
-			BltVideoObjectFromIndex(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 4);
+			BltVideoObject(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 4);
 		}
     mprintf(FILES_SENDER_TEXT_X, ( ( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 2 ,pFilesSenderList[pFilesList->ubCode]);
 		iCounter++;
@@ -667,7 +667,7 @@ static BOOLEAN DisplayFormattedText(void)
   // set file as read
 	pFilesList->fRead = TRUE;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFileBack, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4);
+	BltVideoObject(FRAME_BUFFER, guiFileBack, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4);
 
   // get the offset in the file
   while( iCounter < iMessageCode)
@@ -816,9 +816,6 @@ static BOOLEAN HandleSpecialFiles(void)
 	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
-
-
-	UINT32 uiPicture;
 
 	ClearFileStringList( );
 
@@ -969,27 +966,25 @@ static BOOLEAN HandleSpecialFiles(void)
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		uiPicture = AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti");
+		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 300, 270);
+		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 300, 270);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti");
+		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 225);
+		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 225);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 	else if( giFilesPage == 5 )
 	{
-
-
 			// wedding pic
-		uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_W.sti");
+		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_W.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, 260, 85);
+		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 85);
 		DeleteVideoObjectFromIndex( uiPicture );
 	}
 
@@ -1329,7 +1324,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
 	INT32 iOffset = 0;
-	UINT32 uiPicture;
 
 	iOffset = ubFileOffsets[ iFileNumber ] ;
 
@@ -1432,18 +1426,19 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			// show picture
 			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
 			{
+				SGPVObject* uiPicture;
 				char sTemp[128];
 				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
 				uiPicture = AddVideoObjectFromFile(sTemp);
 				CHECKF(uiPicture != NO_VOBJECT);
 //def: 3/24/99
-//				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
-				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
+//				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
+				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
 				DeleteVideoObjectFromIndex( uiPicture );
 
 				uiPicture = AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti");
 				CHECKF(uiPicture != NO_VOBJECT);
-				BltVideoObjectFromIndex(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
+				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
 				DeleteVideoObjectFromIndex( uiPicture );
 			}
 

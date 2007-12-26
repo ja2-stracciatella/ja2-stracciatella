@@ -82,8 +82,8 @@ BOOLEAN						gfSmTileLoaded = FALSE;
 BOOLEAN						gfInOverheadMap = FALSE;
 MOUSE_REGION			OverheadRegion;
 MOUSE_REGION			OverheadBackgroundRegion;
-UINT32						uiOVERMAP;
-UINT32						uiPERSONS;
+static SGPVObject* uiOVERMAP;
+static SGPVObject* uiPERSONS;
 BOOLEAN						gfOverheadMapDirty = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
 INT16							gsStartRestrictedX, gsStartRestrictedY;
@@ -531,7 +531,7 @@ void GoIntoOverheadMap( )
 	AssertMsg(uiPERSONS != NO_VOBJECT, "Missing INTERFACE/PERSONS.sti");
 
 	// Add shades to persons....
-	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
+	SGPVObject* const hVObject = uiPERSONS;
 	hVObject->pShades[ 0 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 256, 256, 256, FALSE );
 	hVObject->pShades[ 1 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 310, 310, 310, FALSE );
 	hVObject->pShades[ 2 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 0, 0, 0, FALSE );
@@ -698,9 +698,6 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 						pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
 
-						// RENDER!
-						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, gSmallTileDatabase[ gpWorldLevelData[ usTileIndex ].pLandHead->usIndex ], sX, sY);
-						//BltVideoObjectFromIndex(  FRAME_BUFFER, SGR1, 0, sX, sY);
 						Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
 
 						pNode = pNode->pPrevNode;
@@ -1013,7 +1010,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 		if ( !fFromMapUtility )
 		{
 			// Render border!
-			BltVideoObjectFromIndex( FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
+			BltVideoObject(FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
 		}
 
     // Update the save buffer
@@ -1037,7 +1034,7 @@ static void RenderOverheadOverlays(void)
 
 	UINT32 uiDestPitchBYTES;
 	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
+	SGPVObject* const hVObject = uiPERSONS;
 
 	//SOLDIER OVERLAY
 	if( gfTacticalPlacementGUIActive )
@@ -1217,7 +1214,7 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 	fEndRenderRow = FALSE;
 	fEndRenderCol = FALSE;
 
-	HVOBJECT hVObject = GetVideoObject(uiPERSONS);
+	SGPVObject* const hVObject = uiPERSONS;
 	do
 	{
 

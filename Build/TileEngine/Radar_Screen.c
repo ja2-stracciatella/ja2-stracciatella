@@ -46,7 +46,7 @@ extern INT32 iCurrentMapSectorZ;
 
 INT16			gsRadarX;
 INT16			gsRadarY;
-UINT32		gusRadarImage;
+static SGPVObject* gusRadarImage;
 BOOLEAN		fImageLoaded = FALSE;
 BOOLEAN   fRenderRadarScreen = TRUE;
 INT16			sSelectedSquadLine = -1;
@@ -117,13 +117,10 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 
 		 fImageLoaded = TRUE;
 
-		HVOBJECT hVObject = GetVideoObject(gusRadarImage);
-		if (hVObject != NULL)
-		 {
-				// ATE: Add a shade table!
-		 		hVObject->pShades[ 0 ]	= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
-		 		hVObject->pShades[ 1 ]	= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, FALSE );
-		 }
+		SGPVObject* const hVObject = gusRadarImage;
+		// ATE: Add a shade table!
+		hVObject->pShades[0] = Create16BPPPaletteShaded(hVObject->pPaletteEntry, 255, 255, 255, FALSE);
+		hVObject->pShades[1] = Create16BPPPaletteShaded(hVObject->pPaletteEntry, 100, 100, 100, FALSE);
 	 }
 
 	 // Dirty interface
@@ -295,7 +292,7 @@ void RenderRadarScreen( )
 	if ( fInterfacePanelDirty == DIRTYLEVEL2 && fImageLoaded )
 	{
 		// Set to default
-		SetObjectHandleShade( gusRadarImage, 0 );
+		SetObjectShade(gusRadarImage, 0);
 
 		//If night time and on surface, darken the radarmap.
 		if( NightTime() )
@@ -303,11 +300,11 @@ void RenderRadarScreen( )
 			if( guiCurrentScreen == MAP_SCREEN && !iCurrentMapSectorZ ||
 					guiCurrentScreen == GAME_SCREEN && !gbWorldSectorZ )
 			{
-				SetObjectHandleShade( gusRadarImage, 1 );
+				SetObjectShade(gusRadarImage, 1);
 			}
 		}
 
-		BltVideoObjectFromIndex(  guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
+		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
 	}
 
 	// FIRST DELETE WHAT'S THERE
@@ -588,16 +585,15 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
 	INT16 sCounter = 0;
-	UINT32 uiHandle;
 
 	if( ( fRenderRadarScreen == FALSE ) && ( fCreated == FALSE ) )
 	{
 		// create regions
 		// load graphics
-	  uiHandle = AddVideoObjectFromFile("INTERFACE/squadpanel.sti");
+	  SGPVObject* const uiHandle = AddVideoObjectFromFile("INTERFACE/squadpanel.sti");
 	  CHECKF(uiHandle != NO_VOBJECT);
 
-		BltVideoObjectFromIndex(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
+		BltVideoObject(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
 
 		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, SCREEN_WIDTH - 538, SCREEN_HEIGHT - gsVIEWPORT_END_Y);
 

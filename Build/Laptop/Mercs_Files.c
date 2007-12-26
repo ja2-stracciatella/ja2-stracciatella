@@ -95,10 +95,10 @@
 #define		MERC_PORTRAIT_TEXT_OFFSET_Y				110
 
 
-UINT32	guiPortraitBox;
-UINT32	guiStatsBox;
-UINT32	guiBioBox;
-UINT32	guiMercFace;
+static SGPVObject* guiPortraitBox;
+static SGPVObject* guiStatsBox;
+static SGPVObject* guiBioBox;
+static SGPVObject* guiMercFace;
 
 //
 // Buttons
@@ -191,9 +191,9 @@ void RenderMercsFiles()
 {
 	DrawMecBackGround();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
 	//Display the mercs face
 	DisplayMercFace( GetMercIDFromMERCArray( gubCurMercIndex ) );
@@ -290,7 +290,7 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 	MERCPROFILESTRUCT	*pMerc;
 	SOLDIERTYPE			*pSoldier=NULL;
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
 	pMerc = &gMercProfiles[ ubMercID ];
 
@@ -303,7 +303,7 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 	CHECKF(guiMercFace != NO_VOBJECT);
 
 	//Blt face to screen
-	HVOBJECT hFaceHandle = GetVideoObject(guiMercFace);
+	SGPVObject* const hFaceHandle = guiMercFace;
   BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y);
 
 	//if the merc is dead, shadow the face red and put text over top saying the merc is dead
@@ -313,7 +313,7 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 		hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
 
 		//set the red pallete to the face
-		SetObjectHandleShade( guiMercFace, 0 );
+		SetObjectShade(hFaceHandle, 0);
 
 		//Blt face to screen
 	  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y);

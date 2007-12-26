@@ -54,8 +54,8 @@ enum
 static INT32 iMenuImages[NUM_MENU_ITEMS];
 static INT32 iMenuButtons[NUM_MENU_ITEMS];
 
-static UINT32 guiMainMenuBackGroundImage;
-static UINT32 guiJa2LogoImage;
+static SGPVObject* guiMainMenuBackGroundImage;
+static SGPVObject* guiJa2LogoImage;
 
 static INT8    gbHandledMainMenu = 0;
 static BOOLEAN fInitialRender    = FALSE;
@@ -404,8 +404,8 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 static void RenderMainMenu(void)
 {
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
+	BltVideoObject(guiSAVEBUFFER, guiMainMenuBackGroundImage, 0,   0,  0);
+	BltVideoObject(guiSAVEBUFFER, guiJa2LogoImage,            0, 188, 15);
 
 #if defined TESTFOREIGNFONTS
 	DrawTextToScreen(L"LARGEFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 105, 640, LARGEFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

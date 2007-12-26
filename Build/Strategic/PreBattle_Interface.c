@@ -104,7 +104,7 @@ MOUSE_REGION PBInterfaceBlanket;
 BOOLEAN gfPreBattleInterfaceActive = FALSE;
 UINT32 iPBButton[3];
 UINT32 iPBButtonImage[3];
-UINT32 uiInterfaceImages;
+static SGPVObject* uiInterfaceImages;
 BOOLEAN gfRenderPBInterface;
 BOOLEAN	gfPBButtonsHidden;
 BOOLEAN fDisableMapInterfaceDueToBattle = FALSE;
@@ -952,7 +952,7 @@ void RenderPreBattleInterface()
 		}
 
 		gfRenderPBInterface = FALSE;
-		HVOBJECT hVObject = GetVideoObject(uiInterfaceImages);
+		const SGPVObject* const hVObject = uiInterfaceImages;
 		//main panel
 		BltVideoObject( guiSAVEBUFFER, hVObject, MAINPANEL, 0, 0);
 		//main title

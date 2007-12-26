@@ -212,7 +212,7 @@ extern INT32 giDestHighLine;
 extern INT32 giContractHighLine;
 extern INT32 giSleepHighLine;
 
-extern UINT32 guiUpdatePanelTactical;
+extern SGPVObject* guiUpdatePanelTactical;
 extern BOOLEAN fShowUpdateBox;
 
 extern SGPRect ContractDimensions;
@@ -251,16 +251,16 @@ extern INT32 giBoxY;
 
 // pop up box textures
 extern UINT32    guiPOPUPTEX;
-extern UINT32    guiPOPUPBORDERS;
+extern SGPVObject* guiPOPUPBORDERS;
 
 // the level-changing markers on the map border
-extern UINT32		 guiLEVELMARKER;
+extern SGPVObject* guiLEVELMARKER;
 
 // the currently selected character arrow
-extern UINT32		guiSelectedCharArrow;
+extern SGPVObject* guiSelectedCharArrow;
 
 // sam and mine icons
-extern UINT32 guiSAMICON;
+extern SGPVObject* guiSAMICON;
 
 extern BOOLEAN fShowMapScreenMovementList;
 
@@ -429,7 +429,7 @@ enum
 	LOCATOR_COLOR_YELLOW
 };
 
-extern UINT32 guiSectorLocatorGraphicID;
+extern SGPVObject* guiSectorLocatorGraphicID;
 void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID );
 
 

@@ -20,6 +20,6 @@ extern UINT8	gubDefaultButton;
 
 extern BOOLEAN gfTacticalPlacementGUIDirty;
 extern BOOLEAN gfValidLocationsChanged;
-extern INT32   giMercPanelImage;
+extern SGPVObject* giMercPanelImage;
 
 #endif

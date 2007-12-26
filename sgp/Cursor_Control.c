@@ -21,9 +21,9 @@ INT16  gsGlobalCursorYOffset = 0;
 UINT16 gsCurMouseHeight = 0;
 UINT16 gsCurMouseWidth = 0;
 static UINT16 gusNumDataFiles = 0;
-UINT32 guiExternVo;
+const SGPVObject* guiExternVo;
 UINT16 gusExternVoSubIndex;
-static UINT32 guiExtern2Vo;
+static SGPVObject* guiExtern2Vo;
 static UINT16 gusExtern2VoSubIndex;
 static UINT32 guiOldSetCursor = 0;
 static UINT32 guiDelayTimer = 0;
@@ -231,17 +231,17 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			// ATE: Check for extern 2nd...
 			if (uiCursorIndex == EXTERN2_CURSOR)
 			{
-				BltVideoObjectOutlineFromIndex(MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, 0, FALSE);
 
 				// Get ETRLE values
 				const ETRLEObject* pTravTemp = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
 				INT16 sSubX = (pTrav->usWidth  - pTravTemp->usWidth  - pTravTemp->sOffsetX) / 2;
 				INT16 sSubY = (pTrav->usHeight - pTravTemp->usHeight - pTravTemp->sOffsetY) / 2;
-				BltVideoObjectOutlineFromIndex(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, sSubX, sSubY, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, sSubX, sSubY, 0, FALSE);
 			}
 			else
 			{
-				BltVideoObjectOutlineFromIndex(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, 0, FALSE);
 			}
 
 			// Hook into hook function

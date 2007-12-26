@@ -76,14 +76,14 @@ struct HistoryUnit
 #define BTN_Y 53
 
 // graphics handles
-UINT32 guiTITLE;
+static SGPVObject* guiTITLE;
 //UINT32 guiGREYFRAME;
-UINT32 guiTOP;
+static SGPVObject* guiTOP;
 //UINT32 guiMIDDLE;
 //UINT32 guiBOTTOM;
 //UINT32 guiLINE;
-UINT32 guiLONGLINE;
-UINT32 guiSHADELINE;
+static SGPVObject* guiLONGLINE;
+static SGPVObject* guiSHADELINE;
 //UINT32 guiVERTLINE;
 //UINT32 guiBIGBOX;
 
@@ -357,8 +357,8 @@ static void RemoveHistory(void)
 static void RenderHistoryBackGround(void)
 {
 	// render generic background for history system
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
+	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
+	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
 
   // display background for history list
   DisplayHistoryListBackground( );
@@ -722,23 +722,18 @@ static void DisplayHistoryListHeaders(void)
 static void DisplayHistoryListBackground(void)
 {
   // this function will display the History list display background
-  HVOBJECT hHandle;
   INT32 iCounter=0;
 
-
-
 	// get shaded line object
-	hHandle = GetVideoObject(guiSHADELINE);
 	for(iCounter=0; iCounter <11; iCounter++)
 	{
     // blt title bar to screen
-	  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 15, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * iCounter));
+	  BltVideoObject(FRAME_BUFFER, guiSHADELINE, 0, TOP_X + 15, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * iCounter);
 	}
 
 	// the long hortizontal line int he records list display region
-	hHandle = GetVideoObject(guiLONGLINE);
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y ));
-  BltVideoObject(FRAME_BUFFER, hHandle, 0,TOP_X + 9, (TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11  ));
+  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y);
+  BltVideoObject(FRAME_BUFFER, guiLONGLINE, 0,TOP_X + 9, TOP_DIVLINE_Y + BOX_HEIGHT * 2 * 11);
 }
 
 

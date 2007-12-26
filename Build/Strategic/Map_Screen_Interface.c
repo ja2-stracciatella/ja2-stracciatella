@@ -154,7 +154,7 @@ INT32 giSizeOfInterfaceFastHelpTextList = 0;
 INT16 gsSectorLocatorX;
 INT16 gsSectorLocatorY;
 UINT8 gubBlitSectorLocatorCode; //color
-UINT32 guiSectorLocatorGraphicID; //icon graphic ID
+SGPVObject* guiSectorLocatorGraphicID;
 // the animate time per frame in milliseconds
 #define ANIMATED_BATTLEICON_FRAME_TIME 80
 #define MAX_FRAME_COUNT_FOR_ANIMATED_BATTLE_ICON 12
@@ -205,7 +205,7 @@ BOOLEAN fSoldierIsMoving[ MAX_CHARACTER_COUNT ];
 
 static SOLDIERTYPE* pUpdateSoldierBox[SIZE_OF_UPDATE_BOX];
 
-INT32 giUpdateSoldierFaces[ SIZE_OF_UPDATE_BOX ];
+static SGPVObject* giUpdateSoldierFaces[SIZE_OF_UPDATE_BOX];
 
 // the squads thata re moving
 INT32 iSquadMovingList[ NUMBER_OF_SQUADS ];
@@ -235,7 +235,7 @@ BOOLEAN fResetTimerForFirstEntryIntoMapScreen = FALSE;
 static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
 // sam and mine icons
-UINT32 guiSAMICON;
+SGPVObject* guiSAMICON;
 
 
 // disable team info panels due to battle roster
@@ -271,15 +271,15 @@ INT32 giSleepHighLine = -1;
 
 // pop up box textures
 UINT32    guiPOPUPTEX;
-UINT32    guiPOPUPBORDERS;
+SGPVObject* guiPOPUPBORDERS;
 
 // the currently selected character arrow
-UINT32		guiSelectedCharArrow;
+SGPVObject* guiSelectedCharArrow;
 
 INT32 guiUpdatePanelButtons[ 2 ];
 
 // the update panel
-UINT32 guiUpdatePanelTactical;
+SGPVObject* guiUpdatePanelTactical;
 
 typedef struct MERC_LEAVE_ITEM MERC_LEAVE_ITEM;
 struct MERC_LEAVE_ITEM
@@ -1188,7 +1188,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 		sYPosition += 6;
 	}
 
-	BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, sYPosition);
+	BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0,SELECTED_CHAR_ARROW_X, sYPosition);
 
 	// now run through the selected list of guys, an arrow for each
 	for( ubCount = 0; ubCount < MAX_CHARACTER_COUNT; ubCount++ )
@@ -1206,7 +1206,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 				sYPosition += 6;
 			}
 
-			BltVideoObjectFromIndex(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
+			BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
 		}
 	}
 }
@@ -4453,7 +4453,7 @@ void DisplaySoldierUpdateBox( )
 	// Have the bottom of the box ALWAYS a set distance from the bottom of the map ( so user doesnt have to move mouse far )
 	iY = 280 - iUpdatePanelHeight;
 
-	HVOBJECT hBackGroundHandle = GetVideoObject(guiUpdatePanelTactical);
+	const SGPVObject* const hBackGroundHandle = guiUpdatePanelTactical;
 
 	//Display the 2 TOP corner pieces
 	BltVideoObject( guiSAVEBUFFER, hBackGroundHandle, 0, iX-4, iY - 4);
@@ -4688,10 +4688,10 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iY+2, iX+44,	iY+30, 0 );
 
 	// put down the background
-	BltVideoObjectFromIndex( guiSAVEBUFFER, giMercPanelImage, 0, iX, iY);
+	BltVideoObject(guiSAVEBUFFER, giMercPanelImage, 0, iX, iY);
 
 	// grab the face
-	BltVideoObjectFromIndex( guiSAVEBUFFER , giUpdateSoldierFaces[ iIndex ], 0, iX+2, iY+2);
+	BltVideoObject(guiSAVEBUFFER, giUpdateSoldierFaces[iIndex], 0, iX + 2, iY + 2);
 
 	//HEALTH BAR
 	pSoldier = pUpdateSoldierBox[ iIndex ];
@@ -5751,8 +5751,6 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 		return;
 	}
 
-	HVOBJECT hHandle = GetVideoObject(guiSectorLocatorGraphicID);
-
 	switch( ubLocatorID )
 	{
 		// grab zoomed out icon
@@ -5805,7 +5803,7 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 	RestoreExternBackgroundRect(  (INT16)(sScreenX + 1), (INT16)(sScreenY - 1),  MAP_GRID_X , MAP_GRID_Y );
 
 	// blit object to frame buffer
-	BltVideoObject( FRAME_BUFFER, hHandle, ubFrame, sScreenX, sScreenY);
+	BltVideoObject(FRAME_BUFFER, guiSectorLocatorGraphicID, ubFrame, sScreenX, sScreenY);
 
 	// invalidate region on frame buffer
 	InvalidateRegion( sScreenX, sScreenY - 1, sScreenX + MAP_GRID_X , sScreenY + MAP_GRID_Y );

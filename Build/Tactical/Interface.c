@@ -177,22 +177,22 @@ enum
 static INT32 iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
-UINT32					guiCLOSE;
-UINT32					guiDEAD;
-UINT32					guiHATCH;
-UINT32					guiGUNSM;
-UINT32					guiP1ITEMS;
-UINT32					guiP2ITEMS;
-UINT32					guiP3ITEMS;
-static UINT32 guiBUTTONBORDER;
-UINT32					guiRADIO;
-static UINT32 guiRADIO2;
-UINT32					guiCOMPANEL;
-UINT32					guiCOMPANELB;
-static UINT32 guiAIMCUBES;
-static UINT32 guiAIMBARS;
-UINT32					guiVEHINV;
-UINT32					guiBURSTACCUM;
+SGPVObject* guiCLOSE;
+SGPVObject* guiDEAD;
+SGPVObject* guiHATCH;
+SGPVObject* guiGUNSM;
+SGPVObject* guiP1ITEMS;
+SGPVObject* guiP2ITEMS;
+SGPVObject* guiP3ITEMS;
+static SGPVObject* guiBUTTONBORDER;
+SGPVObject* guiRADIO;
+static SGPVObject* guiRADIO2;
+SGPVObject* guiCOMPANEL;
+SGPVObject* guiCOMPANELB;
+static SGPVObject* guiAIMCUBES;
+static SGPVObject* guiAIMBARS;
+SGPVObject* guiVEHINV;
+SGPVObject* guiBURSTACCUM;
 
 // UI Globals
 MOUSE_REGION	gViewportRegion;
@@ -541,9 +541,6 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	const SOLDIERTYPE* const s = ID2Soldier(gusSelectedSoldier);
 
-	// Blit background!
-	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, iMenuAnchorX, iMenuAnchorY);
-
 	iMenuAnchorX = giMenuAnchorX + 9;
 	iMenuAnchorY = giMenuAnchorY + 8;
 
@@ -702,7 +699,7 @@ void RenderMovementMenu( )
 {
 	if ( gfInMovementMenu )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, giMenuAnchorX, giMenuAnchorY);
+		BltVideoObject(FRAME_BUFFER, guiBUTTONBORDER, 0, giMenuAnchorX, giMenuAnchorY);
 
 		// Mark buttons dirty!
 		MarkAButtonDirty( iActionIcons[ WALK_ICON  ] );
@@ -1236,16 +1233,12 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 				if ( ( !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
 				{
-					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO2, pSoldier->sLocatorFrame, sXPos, sYPos);
+					BltVideoObject(FRAME_BUFFER, guiRADIO2, pSoldier->sLocatorFrame, sXPos, sYPos);
 				}
 				else
 				{
-
-					BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, pSoldier->sLocatorFrame, sXPos, sYPos);
-
-				//BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, 0, sXPos, sYPos);
+					BltVideoObject(FRAME_BUFFER, guiRADIO, pSoldier->sLocatorFrame, sXPos, sYPos);
 				}
-
 			}
 		}
 		//return;
@@ -1751,9 +1744,6 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	INT32 dx = gOpenDoorMenu.sX;
 	INT32 dy = gOpenDoorMenu.sY;
 
-	// Blit background!
-	//BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, dx, dy);
-
 	dx += 9;
 	dy += 8;
 
@@ -1829,7 +1819,7 @@ void RenderOpenDoorMenu( )
 {
 	if ( gfInOpenDoorMenu )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, guiBUTTONBORDER, 0, gOpenDoorMenu.sX, gOpenDoorMenu.sY);
+		BltVideoObject(FRAME_BUFFER, guiBUTTONBORDER, 0, gOpenDoorMenu.sX, gOpenDoorMenu.sY);
 
 		// Mark buttons dirty!
 		MarkAButtonDirty( iActionIcons[ USE_KEYRING_ICON  ] );
@@ -2211,31 +2201,27 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 
 static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString)
 {
-	UINT32	uiBAR, uiPLAYERBAR, uiINTBAR;
 	INT16		sX, sY;
 	INT32		cnt2;
 	INT16		sBarX = 0;
-	UINT32	uiBarToUseInUpDate=0;
 	BOOLEAN	fDoLimitBar = FALSE;
 
 	FLOAT		dNumStepsPerEnemy, dLength, dCurSize;
 
-	uiBAR = AddVideoObjectFromFile("INTERFACE/rect.sti");
+	SGPVObject* const uiBAR = AddVideoObjectFromFile("INTERFACE/rect.sti");
 	AssertMsg(uiBAR != NO_VOBJECT, "Missing INTERFACE/rect.sti");
 
-	//if ( gGameOptions.fTurnTimeLimit )
-	{
-		uiPLAYERBAR = AddVideoObjectFromFile("INTERFACE/timebargreen.sti");
-		AssertMsg(uiPLAYERBAR != NO_VOBJECT, "Missing INTERFACE/timebargreen.sti");
-	}
+	SGPVObject* const uiPLAYERBAR = AddVideoObjectFromFile("INTERFACE/timebargreen.sti");
+	AssertMsg(uiPLAYERBAR != NO_VOBJECT, "Missing INTERFACE/timebargreen.sti");
 
-	uiINTBAR = AddVideoObjectFromFile("INTERFACE/timebaryellow.sti");
+	SGPVObject* const uiINTBAR = AddVideoObjectFromFile("INTERFACE/timebaryellow.sti");
 	AssertMsg(uiINTBAR != NO_VOBJECT, "Missing INTERFACE/timebaryellow.sti");
 
 	// Change dest buffer
 	SetFontDestBuffer(uiSurface, 0, 0, SCREEN_WIDTH, 20);
 	SetFont( TINYFONT1 );
 
+	const SGPVObject* uiBarToUseInUpDate = NO_VOBJECT;
 	switch( ubType )
 	{
 		case COMPUTER_TURN_MESSAGE:
@@ -2244,7 +2230,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 		case AIR_RAID_TURN_MESSAGE:
 
 			// Render rect into surface
-			BltVideoObjectFromIndex( uiSurface, uiBAR, 0, 0, 0);
+			BltVideoObject(uiSurface, uiBAR, 0, 0, 0);
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( FONT_MCOLOR_WHITE );
 			uiBarToUseInUpDate = uiBAR;
@@ -2254,7 +2240,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 		case PLAYER_INTERRUPT_MESSAGE:
 
 			// Render rect into surface
-			BltVideoObjectFromIndex( uiSurface, uiINTBAR, 0, 0, 0);
+			BltVideoObject(uiSurface, uiINTBAR, 0, 0, 0);
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( FONT_MCOLOR_BLACK );
 			SetFontShadow( NO_SHADOW );
@@ -2266,11 +2252,11 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 			// Render rect into surface
 			//if ( gGameOptions.fTurnTimeLimit )
 			{
-				BltVideoObjectFromIndex( uiSurface, uiPLAYERBAR, 0, 0, 0);
+				BltVideoObject(uiSurface, uiPLAYERBAR, 0, 0, 0);
 			}
 			//else
 			//{
-			//	BltVideoObjectFromIndex( uiSurface, uiPLAYERBAR, 13, 0, 0);
+			//	BltVideoObject(uiSurface, uiPLAYERBAR, 13, 0, 0);
 			//}
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( FONT_MCOLOR_BLACK );
@@ -2294,7 +2280,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 
 			// Render end peice
 			sBarX = PROG_BAR_START_X;
-			BltVideoObjectFromIndex( uiSurface, uiBAR, 3, sBarX, PROG_BAR_START_Y);
+			BltVideoObject(uiSurface, uiBAR, 3, sBarX, PROG_BAR_START_Y);
 
 			// Determine Length
 		//	iLength   = (gubProgCurEnemy ) * usNumStepsPerEnemy;
@@ -2312,7 +2298,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 					break;
 				}
 
-				BltVideoObjectFromIndex( uiSurface, uiBAR, (INT16)( 4 + cnt2 ), sBarX, PROG_BAR_START_Y);
+				BltVideoObject(uiSurface, uiBAR, 4 + cnt2, sBarX, PROG_BAR_START_Y);
 
 				cnt1++;
 				cnt2++;
@@ -2347,7 +2333,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 
 		// Render end peice
 		sBarX = PROG_BAR_START_X;
-		BltVideoObjectFromIndex( uiSurface, uiBarToUseInUpDate, 1, sBarX, PROG_BAR_START_Y);
+		BltVideoObject(uiSurface, uiBarToUseInUpDate, 1, sBarX, PROG_BAR_START_Y);
 
 		// Determine Length
 		dLength   = ( gTacticalStatus.usTactialTurnLimitCounter ) * dNumStepsPerEnemy;
@@ -2365,7 +2351,7 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 				break;
 			}
 
-			BltVideoObjectFromIndex( uiSurface, uiBarToUseInUpDate, (INT16)( 2 + cnt2 ), sBarX, PROG_BAR_START_Y);
+			BltVideoObject(uiSurface, uiBarToUseInUpDate, 2 + cnt2, sBarX, PROG_BAR_START_Y);
 
 			dCurSize++;
 			cnt2++;
@@ -2380,9 +2366,9 @@ static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psSt
 		if ( gTacticalStatus.usTactialTurnLimitCounter == gTacticalStatus.usTactialTurnLimitMax )
 		{
 			sBarX++;
-			BltVideoObjectFromIndex( uiSurface, uiBarToUseInUpDate, (INT16)( 2 + cnt2 ), sBarX, PROG_BAR_START_Y);
+			BltVideoObject(uiSurface, uiBarToUseInUpDate, 2 + cnt2, sBarX, PROG_BAR_START_Y);
 			sBarX++;
-			BltVideoObjectFromIndex( uiSurface, uiBarToUseInUpDate, (INT16)( 12 ), sBarX, PROG_BAR_START_Y);
+			BltVideoObject(uiSurface, uiBarToUseInUpDate, 12,       sBarX, PROG_BAR_START_Y);
 		}
 	}
 
@@ -3002,21 +2988,21 @@ void RenderAimCubeUI( )
 			}
 
 			// Do first level....
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+			BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 			sBarHeight -= 3;
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+			BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 
 			// Loop through height.....
 			for ( cnt = 1; cnt <= gCubeUIData.bHeight; cnt++ )
 			{
 				sBarHeight -= 3;
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+				BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 				sBarHeight -= 3;
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+				BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 				sBarHeight -= 3;
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+				BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 				sBarHeight -= 3;
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, ( sScreenY + sBarHeight ));
+				BltVideoObject(FRAME_BUFFER, guiAIMCUBES, bGraphicNum, sScreenX, sScreenY + sBarHeight);
 			}
 		}
 
@@ -3024,8 +3010,7 @@ void RenderAimCubeUI( )
 		if ( gCubeUIData.fShowPower )
 		{
 			sBarHeight = -50;
-
-			BltVideoObjectFromIndex( FRAME_BUFFER, guiAIMBARS, gCubeUIData.ubPowerIndex, sScreenX, ( sScreenY + sBarHeight ));
+			BltVideoObject(FRAME_BUFFER, guiAIMBARS, gCubeUIData.ubPowerIndex, sScreenX, sScreenY + sBarHeight);
 		}
 
 	}
@@ -3210,5 +3195,5 @@ void RenderTopmostMultiPurposeLocator( )
 	const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
 	if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
-	BltVideoObjectFromIndex(  FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos);
+	BltVideoObject(FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos);
 }

@@ -41,7 +41,7 @@ INT16 sFaceY = 245;
 UINT32 uiVoiceSound = 0;
 
 // image handle
-UINT32 guiCHARACTERPORTRAIT;
+SGPVObject* guiCHARACTERPORTRAIT;
 extern INT32 iCurrentVoices;
 
 
@@ -333,9 +333,8 @@ static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 
 static BOOLEAN RenderCharProfileFinishFace(void)
 {
-
 // render the portrait of the current picture
-	UINT32 uiGraphicHandle;
+	SGPVObject* uiGraphicHandle;
 
   if( fCharacterIsMale == TRUE )
 	{
@@ -344,19 +343,19 @@ static BOOLEAN RenderCharProfileFinishFace(void)
 		  case( 0 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/00.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/01.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/02.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		}
@@ -369,19 +368,19 @@ static BOOLEAN RenderCharProfileFinishFace(void)
 		  case( 0 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/03.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
       case( 1 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/04.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		  case( 2 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/05.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObjectFromIndex(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
+        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
         DeleteVideoObjectFromIndex( uiGraphicHandle );
 		  break;
 		}

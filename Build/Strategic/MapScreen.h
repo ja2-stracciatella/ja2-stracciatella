@@ -97,7 +97,7 @@ void    MapScreenDefaultOkBoxCallback(UINT8 bExitValue);
 void    SetUpCursorForStrategicMap(void);
 
 extern MOUSE_REGION gMPanelRegion;
-extern UINT32       guiMapInvSecondHandBlockout;
+extern SGPVObject*  guiMapInvSecondHandBlockout;
 extern INT32        giMapInvDoneButton;
 extern BOOLEAN      fInMapMode;
 extern BOOLEAN      fReDrawFace;

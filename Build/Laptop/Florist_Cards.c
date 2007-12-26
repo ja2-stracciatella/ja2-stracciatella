@@ -39,7 +39,7 @@
 #define		FLORIST_CARD_
 #define		FLORIST_CARD_
 
-UINT32		guiCardBackground;
+static SGPVObject* guiCardBackground;
 
 INT8			gbCurrentlySelectedCard;
 
@@ -131,7 +131,6 @@ void RenderFloristCards()
 
 	DrawTextToScreen(sFloristCards[FLORIST_CARDS_CLICK_SELECTION], FLORIST_CARD_TITLE_SENTENCE_X, FLORIST_CARD_TITLE_SENTENCE_Y, FLORIST_CARD_TITLE_SENTENCE_WIDTH, FONT10ARIAL, FLORIST_CARDS_SENTENCE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	HVOBJECT hPixHandle = GetVideoObject(guiCardBackground);
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
 	ubCount = 0;
 	for(j=0; j<3; j++)
@@ -140,7 +139,7 @@ void RenderFloristCards()
 		for(i=0; i<3; i++)
 		{
 			//The flowe account box
-			BltVideoObject(FRAME_BUFFER, hPixHandle, 0, usPosX, usPosY);
+			BltVideoObject(FRAME_BUFFER, guiCardBackground, 0, usPosX, usPosY);
 
 			//Get and display the card saying
 			wchar_t sTemp[FLOR_CARD_TEXT_TITLE_SIZE];

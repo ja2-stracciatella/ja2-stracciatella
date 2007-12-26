@@ -220,7 +220,7 @@
 #define		FLO_DISCOUNT_PERCENTAGE						10
 
 
-static UINT32 guiMainTradeScreenImage;
+static SGPVObject* guiMainTradeScreenImage;
 static UINT32 guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
@@ -286,7 +286,7 @@ static BOOLEAN gfDoneBusinessThisSession = FALSE;
 
 // this is used within SKI exclusively, to handle small faces
 static UINT8  gubArrayOfEmployedMercs[MAX_CHARACTER_COUNT];
-static UINT32 guiSmallSoldiersFace[MAX_CHARACTER_COUNT];
+static SGPVObject* guiSmallSoldiersFace[MAX_CHARACTER_COUNT];
 static UINT8  gubNumberMercsInArray;
 
 static UINT16 gusPositionOfSubTitlesX = 0;
@@ -355,7 +355,7 @@ static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static UINT32 guiSKI_DoneButton;
 static INT32  guiSKI_DoneButtonImage;
 
-static UINT32 guiItemCrossOut;
+static SGPVObject* guiItemCrossOut;
 
 static BOOLEAN gfDisplayNoRoomMsg = FALSE;
 
@@ -1046,7 +1046,7 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	// Render view window
 //	RenderRadarScreen( );
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMainTradeScreenImage, 0, SKI_MAIN_BACKGROUND_X, SKI_MAIN_BACKGROUND_Y);
+	BltVideoObject(FRAME_BUFFER, guiMainTradeScreenImage, 0, SKI_MAIN_BACKGROUND_X, SKI_MAIN_BACKGROUND_Y);
 
 	//Display the Title
 	DrawTextToScreen(SKI_Text[SKI_TEXT_MERCHADISE_IN_STOCK], SKI_MAIN_TITLE_X, SKI_MAIN_TITLE_Y, SKI_MAIN_TITLE_WIDTH, SKI_TITLE_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -2155,7 +2155,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 
 	//Display the item graphic, and price
 	const INVTYPE* pItem = &Item[usItemIndex];
-	UINT32 ItemVOIdx = GetInterfaceGraphicForItem(pItem);
+	const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
 
 	UINT32 usHeight = pTrav->usHeight;
@@ -2168,8 +2168,8 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	//Restore the background region
 	RestoreExternBackgroundRect( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT );
 
-	BltVideoObjectOutlineShadowFromIndex(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-	BltVideoObjectOutlineFromIndex(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, Get16BPPColor(FROMRGB(255, 255, 255)), fHighlighted);
+	BltVideoObjectOutlineShadow(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
+	BltVideoObjectOutline(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, Get16BPPColor(FROMRGB(255, 255, 255)), fHighlighted);
 
 	//Display the status of the item
 	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 2 + 20, 2, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), TRUE, FRAME_BUFFER);//guiSAVEBUFFER
@@ -2278,7 +2278,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 		// if still in player's employ
 		if ( iFaceSlot != -1 )
 		{
-			BltVideoObjectFromIndex(FRAME_BUFFER, guiSmallSoldiersFace[iFaceSlot], 0, usPosX + SKI_SMALL_FACE_OFFSET_X, usPosY);//SKI_SMALL_FACE_OFFSET_Y
+			BltVideoObject(FRAME_BUFFER, guiSmallSoldiersFace[iFaceSlot], 0, usPosX + SKI_SMALL_FACE_OFFSET_X, usPosY);//SKI_SMALL_FACE_OFFSET_Y
 		}
 	}
 
@@ -5213,8 +5213,6 @@ static void CrossOutUnwantedItems(void)
 	INT16 sBoxStartX = 0, sBoxStartY = 0;
 	INT16 sBoxWidth = 0, sBoxHeight = 0;
 
-	HVOBJECT hHandle = GetVideoObject(guiItemCrossOut);
-
 	// get the box height and width
 	sBoxWidth = SKI_INV_SLOT_WIDTH;
 	sBoxHeight = SKI_INV_SLOT_HEIGHT;
@@ -5236,7 +5234,7 @@ static void CrossOutUnwantedItems(void)
 					sBoxStartX = SKI_PLAYERS_TRADING_INV_X + ( bSlotId % SKI_NUM_TRADING_INV_COLS ) * ( SKI_INV_OFFSET_X );
 					sBoxStartY = SKI_PLAYERS_TRADING_INV_Y + ( bSlotId / SKI_NUM_TRADING_INV_COLS ) * ( SKI_INV_OFFSET_Y );
 
-					BltVideoObject(FRAME_BUFFER, hHandle, 0,( sBoxStartX + 22 ), ( sBoxStartY ));
+					BltVideoObject(FRAME_BUFFER, guiItemCrossOut, 0, sBoxStartX + 22, sBoxStartY);
 
 					// invalidate the region
 					InvalidateRegion(sBoxStartX - 1, sBoxStartY - 1, sBoxStartX + sBoxWidth + 1, sBoxStartY + sBoxHeight + 1 );

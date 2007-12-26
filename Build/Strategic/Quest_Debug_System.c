@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Interface_Panels.h"
 #include "Local.h"
 #include "Types.h"
 #include "Quest_Debug_System.h"
@@ -345,7 +346,6 @@ static const wchar_t* const PocketText[] = {
 
 
 extern UINT32 guiGameClock;
-extern UINT32 guiBrownBackgroundForTeamPanel;
 
 
 typedef void (*LISTBOX_DISPLAY_FNCTN)();    // Define Display Callback function
@@ -387,7 +387,7 @@ enum
 };
 
 //image identifiers
-static UINT32 guiQdScrollArrowImage;
+static SGPVObject* guiQdScrollArrowImage;
 
 
 static BOOLEAN gfQuestDebugEntry = TRUE;
@@ -1690,13 +1690,12 @@ static void DisplaySelectedListBox(void)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY-1, usPosX+gpActiveListBox->usScrollBarWidth,	usPosY+ gpActiveListBox->usScrollHeight, Get16BPPColor( FROMRGB(  192,  192,  192 ) ) );
 
 
-	//get and display the up and down arrows
-	HVOBJECT hImageHandle = GetVideoObject(guiQdScrollArrowImage);
+	// display the up and down arrows
 	//top arrow
-	BltVideoObject(FRAME_BUFFER, hImageHandle, 0, usPosX-5, usPosY-1);
+	BltVideoObject(FRAME_BUFFER, guiQdScrollArrowImage, 0, usPosX-5, usPosY-1);
 
 	//Bottom arrow
-	BltVideoObject(FRAME_BUFFER, hImageHandle, 1, usPosX, usPosY + gpActiveListBox->usScrollHeight - gpActiveListBox->usScrollArrowHeight);
+	BltVideoObject(FRAME_BUFFER, guiQdScrollArrowImage, 1, usPosX, usPosY + gpActiveListBox->usScrollHeight - gpActiveListBox->usScrollArrowHeight);
 
 	//display the scroll rectangle
 	DrawQdsScrollRectangle();

@@ -57,10 +57,10 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom );
 void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
 
 extern INT32	giEditMercDirectionIcons[2];
-extern UINT32 guiMercInventoryPanel;
-extern UINT32 guiOmertaMap;
-extern UINT32 guiExclamation;
-extern UINT32 guiKeyImage;
+extern SGPVObject* guiMercInventoryPanel;
+extern SGPVObject* guiOmertaMap;
+extern SGPVObject* guiExclamation;
+extern SGPVObject* guiKeyImage;
 extern UINT32 guiMercInvPanelBuffers[9];
 extern UINT32 guiMercTempBuffer;
 extern INT32  giEditMercImage[2];

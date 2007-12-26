@@ -42,7 +42,7 @@
 typedef struct MERCPLACEMENT
 {
 	SOLDIERTYPE		*pSoldier;
-	UINT32				uiVObjectID;
+	SGPVObject*   uiVObjectID;
 	MOUSE_REGION	region;
 	UINT8					ubStrategicInsertionCode;
 	BOOLEAN				fPlaced;
@@ -65,9 +65,9 @@ BOOLEAN gfTacticalPlacementGUIActive = FALSE;
 BOOLEAN gfTacticalPlacementFirstTime = FALSE;
 BOOLEAN gfEnterTacticalPlacementGUI = FALSE;
 BOOLEAN gfKillTacticalGUI = FALSE;
-INT32 giOverheadPanelImage = 0;
+static SGPVObject* giOverheadPanelImage;
 INT32 giOverheadButtonImages[ NUM_TP_BUTTONS ];
-INT32 giMercPanelImage = 0;
+SGPVObject* giMercPanelImage = 0;
 INT32 giPlacements = 0;
 BOOLEAN gfTacticalPlacementGUIDirty = FALSE;
 BOOLEAN gfValidLocationsChanged = FALSE;
@@ -383,7 +383,7 @@ static void RenderTacticalPlacementGUI(void)
 	//If the display is dirty render the entire panel.
 	if( gfTacticalPlacementGUIDirty )
 	{
-		BltVideoObjectFromIndex( FRAME_BUFFER, giOverheadPanelImage, 0, 0, 320);
+		BltVideoObject(FRAME_BUFFER, giOverheadPanelImage, 0, 0, 320);
 		InvalidateRegion(0, 0, 320, SCREEN_HEIGHT);
 		gfTacticalPlacementGUIDirty = FALSE;
 		MarkButtonsDirty();
@@ -393,8 +393,8 @@ static void RenderTacticalPlacementGUI(void)
 			xp = 95 + (i / 2) * 54;
 			yp = (i % 2) ? 422 : 371;
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+36, yp+2, xp+44,	yp+30, 0 );
-			BltVideoObjectFromIndex( FRAME_BUFFER, giMercPanelImage, 0, xp, yp);
-			BltVideoObjectFromIndex( FRAME_BUFFER, gMercPlacement[ i ].uiVObjectID, 0, xp+2, yp+2);
+			BltVideoObject(FRAME_BUFFER, giMercPanelImage,              0, xp,     yp);
+			BltVideoObject(FRAME_BUFFER, gMercPlacement[i].uiVObjectID, 0, xp + 2, yp + 2);
 			//HEALTH BAR
 			if( !pSoldier->bLife )
 				continue;

@@ -61,24 +61,18 @@ BOOLEAN ShutdownVideoObjectManager(void);
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
-	UINT32 AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
+	SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
 	#define AddVideoObjectFromFile(a) AddAndRecordVObjectFromFile(a, __LINE__, __FILE__)
 #else
+	SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile);
 	#define AddVideoObjectFromFile(a) AddStandardVideoObjectFromFile(a)
 #endif
 
-UINT32 AddStandardVideoObjectFromFile(const char* ImageFile);
-
 // Removes a video object
-BOOLEAN DeleteVideoObjectFromIndex(UINT32 uiVObject);
-
-// Returns a HVOBJECT for the specified index
-HVOBJECT GetVideoObject(UINT32 uiIndex);
+BOOLEAN DeleteVideoObjectFromIndex(SGPVObject*);
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(UINT32 uiDestVSurface, HVOBJECT hVSrcObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
-
-BOOLEAN BltVideoObjectFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+BOOLEAN BltVideoObject(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 
 HVOBJECT CreateVideoObject(HIMAGE hImage);
@@ -93,18 +87,14 @@ BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject);
 // Sets the current object shade table
 UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);
 
-// Sets the current object shade table using a vobject handle
-UINT16 SetObjectHandleShade(UINT32 uiHandle, UINT32 uiShade);
-
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
 
 
-const ETRLEObject* GetVideoObjectETRLESubregionProperties(UINT32 uiVideoObject, UINT16 usIndex);
+const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject*, UINT16 usIndex);
 
-BOOLEAN BltVideoObjectOutlineFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
-BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
-BOOLEAN BltVideoObjectOutlineShadowFromIndex(UINT32 uiDestVSurface, UINT32 uiSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
+BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
+BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 extern UINT32 guiVObjectSize;
 

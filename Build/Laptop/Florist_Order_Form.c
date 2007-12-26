@@ -169,13 +169,13 @@ FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_
 	{	&pDeliveryLocationStrings[16],	40, 30}
 };
 
-UINT32		guiDeliveryLocation;
-UINT32		guiFlowerFrame;
-UINT32		guiCurrentlySelectedFlowerImage;
-UINT32		guiNameBox;
-UINT32		guiPersonalSentiments;
-UINT32		guiFlowerOrderCheckBoxButtonImage;
-UINT32		guiDropDownBorder;
+static SGPVObject* guiDeliveryLocation;
+static SGPVObject* guiFlowerFrame;
+static SGPVObject* guiCurrentlySelectedFlowerImage;
+static SGPVObject* guiNameBox;
+static SGPVObject* guiPersonalSentiments;
+static SGPVObject* guiFlowerOrderCheckBoxButtonImage;
+static SGPVObject* guiDropDownBorder;
 
 
 BOOLEAN		gfFLoristCheckBox0Down = FALSE;			// next day delviery
@@ -467,11 +467,11 @@ void RenderFloristOrderForm()
 
 	DisplayFloristDefaults();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDeliveryLocation,             0, FLOWER_ORDER_DELIVERY_LOCATION_X, FLOWER_ORDER_DELIVERY_LOCATION_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerFrame,                  0, FLOWER_ORDER_FLOWER_BOX_X,        FLOWER_ORDER_FLOWER_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiCurrentlySelectedFlowerImage, 0, FLOWER_ORDER_FLOWER_BOX_X + 5,    FLOWER_ORDER_FLOWER_BOX_Y + 5);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiNameBox,                      0, FLOWER_ORDER_NAME_BOX_X,          FLOWER_ORDER_NAME_BOX_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPersonalSentiments,           0, FLOWER_ORDER_SENTIMENT_BOX_X,     FLOWER_ORDER_SENTIMENT_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiDeliveryLocation,             0, FLOWER_ORDER_DELIVERY_LOCATION_X, FLOWER_ORDER_DELIVERY_LOCATION_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerFrame,                  0, FLOWER_ORDER_FLOWER_BOX_X,        FLOWER_ORDER_FLOWER_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiCurrentlySelectedFlowerImage, 0, FLOWER_ORDER_FLOWER_BOX_X + 5,    FLOWER_ORDER_FLOWER_BOX_Y + 5);
+	BltVideoObject(FRAME_BUFFER, guiNameBox,                      0, FLOWER_ORDER_NAME_BOX_X,          FLOWER_ORDER_NAME_BOX_Y);
+	BltVideoObject(FRAME_BUFFER, guiPersonalSentiments,           0, FLOWER_ORDER_SENTIMENT_BOX_X,     FLOWER_ORDER_SENTIMENT_BOX_Y);
 
 	//Bouquet name, price and order number,text
 	DrawTextToScreen(sOrderFormText[FLORIST_ORDER_NAME_BOUQUET], FLOWER_ORDER_FLOWER_NAME_X,    FLOWER_ORDER_FLOWER_NAME_Y,    0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -670,12 +670,12 @@ static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 static void DisplayFloristCheckBox(void)
 {
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox0Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_0_X, FLOWER_ORDER_CHECK_BOX_0_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox1Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_1_X, FLOWER_ORDER_CHECK_BOX_1_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox2Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_2_X, FLOWER_ORDER_CHECK_BOX_2_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox3Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_3_X, FLOWER_ORDER_CHECK_BOX_3_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox4Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_4_X, FLOWER_ORDER_CHECK_BOX_4_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox5Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_5_X, FLOWER_ORDER_CHECK_BOX_5_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox0Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_0_X, FLOWER_ORDER_CHECK_BOX_0_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox1Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_1_X, FLOWER_ORDER_CHECK_BOX_1_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox2Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_2_X, FLOWER_ORDER_CHECK_BOX_2_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox3Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_3_X, FLOWER_ORDER_CHECK_BOX_3_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox4Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_4_X, FLOWER_ORDER_CHECK_BOX_4_Y);
+	BltVideoObject(FRAME_BUFFER, guiFlowerOrderCheckBoxButtonImage, gfFLoristCheckBox5Down ? 1 : 0, FLOWER_ORDER_CHECK_BOX_5_X, FLOWER_ORDER_CHECK_BOX_5_Y);
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
@@ -906,7 +906,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			// Place the border around the background
 			//
 
-			HVOBJECT hImageHandle = GetVideoObject(guiDropDownBorder);
+			SGPVObject* const hImageHandle = guiDropDownBorder;
 
 			usPosX = usPosY = 0;
 			//blit top row of images

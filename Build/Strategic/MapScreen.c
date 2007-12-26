@@ -428,15 +428,15 @@ INT32 giFlashContractBaseTime = 0;
 UINT32 guiFlashCursorBaseTime = 0;
 INT32 giPotCharPathBaseTime = 0;
 
-static UINT32 guiCHARLIST;
-static UINT32 guiCHARINFO;
-static UINT32 guiSleepIcon;
-static UINT32 guiCROSS;
-static UINT32 guiMAPINV;
-UINT32	guiMapInvSecondHandBlockout;
-static UINT32 guiULICONS;
-static UINT32 guiNewMailIcons;
-UINT32	guiLEVELMARKER;		// the white rectangle highlighting the current level on the map border
+static SGPVObject* guiCHARLIST;
+static SGPVObject* guiCHARINFO;
+static SGPVObject* guiSleepIcon;
+static SGPVObject* guiCROSS;
+static SGPVObject* guiMAPINV;
+SGPVObject* guiMapInvSecondHandBlockout;
+static SGPVObject* guiULICONS;
+static SGPVObject* guiNewMailIcons;
+SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border
 
 
 // misc mouse regions
@@ -476,15 +476,10 @@ extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 extern INT32 iDialogueBox;
 extern INT32 giMapInvDescButton;
 
-extern UINT32 guiBrownBackgroundForTeamPanel;
-
 // the town mine info box
 extern INT32 ghTownMineBox;
 // border and bottom buttons
 extern INT32 giMapBorderButtons[];
-
-// the mine icon
-extern UINT32 guiMINEICON;
 
 
 extern PathSt* pTempCharacterPath;
@@ -947,28 +942,27 @@ static void RenderHandPosItem(void)
 
 static void RenderIconsForUpperLeftCornerPiece(INT8 bCharNumber)
 {
-	HVOBJECT hHandle = GetVideoObject(guiULICONS);
 	const SOLDIERTYPE* const s = gCharactersList[bCharNumber].merc;
 
 	// if merc is an AIM merc
 	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 	{
 		// finite contract length icon
-		BltVideoObject( guiSAVEBUFFER, hHandle, 0, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y);
+		BltVideoObject(guiSAVEBUFFER, guiULICONS, 0, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y);
 	}
 
 	// if merc has life insurance
 	if (s->usLifeInsurance > 0)
 	{
 		// draw life insurance icon
-		BltVideoObject( guiSAVEBUFFER, hHandle, 2, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + CHAR_ICON_SPACING);
+		BltVideoObject(guiSAVEBUFFER, guiULICONS, 2, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + CHAR_ICON_SPACING);
 	}
 
 	// if merc has a medical deposit
 	if (s->usMedicalDeposit > 0)
 	{
 		// draw medical deposit icon
-		BltVideoObject( guiSAVEBUFFER, hHandle, 1, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + ( 2 * CHAR_ICON_SPACING ));
+		BltVideoObject(guiSAVEBUFFER, guiULICONS, 1, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y + 2 * CHAR_ICON_SPACING);
 	}
 }
 
@@ -4990,24 +4984,21 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	UnLockPauseState( );
 	UpdatePausedStatesDueToTimeCompression( );
 
+#ifndef JA2DEMO
 	if( !gfDontStartTransitionFromLaptop )
 	{
-		#ifndef JA2DEMO
-		UINT32 uiLaptopOn;
-
 		//Load a tiny graphic of the on screen and draw it to the buffer.
 		PlayJA2SampleFromFile("SOUNDS/Initial Power Up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-		uiLaptopOn = AddVideoObjectFromFile("INTERFACE/LaptopOn.sti");
+		SGPVObject* const uiLaptopOn = AddVideoObjectFromFile("INTERFACE/LaptopOn.sti");
 		AssertMsg(uiLaptopOn != NO_VOBJECT, "Failed to load data/Interface/LaptopOn.sti");
-		BltVideoObjectFromIndex( FRAME_BUFFER, uiLaptopOn, 0, 465, 417);
+		BltVideoObject(FRAME_BUFFER, uiLaptopOn, 0, 465, 417);
 		InvalidateRegion( 465, 417, 480, 427 );
 		ExecuteBaseDirtyRectQueue( );
 		EndFrameBufferRender( );
 		DeleteVideoObjectFromIndex( uiLaptopOn );
 		RefreshScreen();
-		#endif
 	}
-
+#endif
 
 	//Kris:  Removes the pre battle interface, but only if it exists.
 	//		   It is internally considered.
@@ -5456,8 +5447,7 @@ static void BltCharInvPanel(void)
 	const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
 
   pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-	HVOBJECT hCharListHandle = GetVideoObject(guiMAPINV);
-  Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, hCharListHandle, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
+  Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, guiMAPINV, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
   UnLockVideoSurface( guiSAVEBUFFER );
 
   Assert( pSoldier );
@@ -7236,7 +7226,7 @@ static void RenderTeamRegionBackground(void)
 	// show inventory or the team list?
 	if(fShowInventoryFlag == FALSE )
 	{
-		BltVideoObjectFromIndex(guiSAVEBUFFER , guiCHARLIST, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
+		BltVideoObject(guiSAVEBUFFER, guiCHARLIST, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 	}
 	else
 	{
@@ -7284,9 +7274,8 @@ static void RenderCharacterInfoBackground(void)
 		return;
 	}
 
-
 	// the upleft hand corner character info panel
-	BltVideoObjectFromIndex(guiSAVEBUFFER , guiCHARINFO, 0, TOWN_INFO_X, TOWN_INFO_Y);
+	BltVideoObject(guiSAVEBUFFER, guiCHARINFO, 0, TOWN_INFO_X, TOWN_INFO_Y);
 
 	UpdateHelpTextForMapScreenMercIcons( );
 
@@ -9484,8 +9473,6 @@ static void DisplayIconsForMercsAsleep(void)
 		return;
 	}
 
-	HVOBJECT hHandle = GetVideoObject(guiSleepIcon);
-
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
@@ -9493,7 +9480,7 @@ static void DisplayIconsForMercsAsleep(void)
 
 		if (pSoldier->bActive && pSoldier->fMercAsleep && CanChangeSleepStatusForSoldier(pSoldier))
 		{
-			BltVideoObject(guiSAVEBUFFER, hHandle, 0, 125, Y_START + iCounter * (Y_SIZE + 2));
+			BltVideoObject(guiSAVEBUFFER, guiSleepIcon, 0, 125, Y_START + iCounter * (Y_SIZE + 2));
 		}
 	}
 }
@@ -9545,12 +9532,12 @@ static void CheckForAndRenderNewMailOverlay(void)
 		{
 			if( ButtonList[ guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] ]->uiFlags & BUTTON_CLICKED_ON )
 			{ //button is down, so offset the icon
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiNewMailIcons, 1, 465, 418);
+				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 1, 465, 418);
 				InvalidateRegion( 465, 418, 480, 428 );
 			}
 			else
 			{ //button is up, so draw the icon normally
-				BltVideoObjectFromIndex( FRAME_BUFFER, guiNewMailIcons, 0, 464, 417);
+				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, 464, 417);
 				if( !(ButtonList[ guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] ]->uiFlags & BUTTON_ENABLED ) )
 				{
 					UINT32 uiDestPitchBYTES;

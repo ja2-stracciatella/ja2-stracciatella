@@ -31,8 +31,8 @@
 #define		MERC_NA_SENTENCE_Y								MERC_NO_ACCOUNT_IMAGE_Y + 75
 #define		MERC_NA_SENTENCE_WIDTH						460 - 20
 
-UINT32		guiNoAccountImage;
 
+static SGPVObject* guiNoAccountImage;
 
 
 // The Open Account Box button
@@ -93,7 +93,7 @@ void RenderMercsNoAccount()
 {
 	DrawMecBackGround();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiNoAccountImage, 0,MERC_NO_ACCOUNT_IMAGE_X, MERC_NO_ACCOUNT_IMAGE_Y);
+	BltVideoObject(FRAME_BUFFER, guiNoAccountImage, 0, MERC_NO_ACCOUNT_IMAGE_X, MERC_NO_ACCOUNT_IMAGE_Y);
 
 	//Display the sentence
 	DisplayWrappedString(MERC_NA_SENTENCE_X, MERC_NA_SENTENCE_Y, MERC_NA_SENTENCE_WIDTH, 2, MERC_NA_TEXT_FONT, MERC_NA_TEXT_COLOR, MercNoAccountText[MERC_NO_ACC_NO_ACCOUNT_OPEN_ONE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);

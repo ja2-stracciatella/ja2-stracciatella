@@ -86,18 +86,14 @@
 #define		FUNERAL_RIP_SENTENCE_2_Y					FUNERAL_CLOSED_RIP_SIGN_Y + 162
 
 
-
-
-
 //Image Identifiers
-UINT32		guiClosedSign;
-UINT32		guiLeftColumn;
-UINT32		guiLinkCarving;
-UINT32		guiMarbleBackground;
-UINT32		guiMcGillicuttys;
-UINT32		guiMortuary;
-UINT32		guiRightColumn;
-
+static SGPVObject* guiClosedSign;
+static SGPVObject* guiLeftColumn;
+static SGPVObject* guiLinkCarving;
+static SGPVObject* guiMarbleBackground;
+static SGPVObject* guiMcGillicuttys;
+static SGPVObject* guiMortuary;
+static SGPVObject* guiRightColumn;
 
 
 //Clicking on Funeral link
@@ -201,18 +197,16 @@ void RenderFuneral()
 
 	WebPageTileBackground(4, 4, FUNERAL_MARBLE_WIDTH, FUNERAL_MARBLE_HEIGHT, guiMarbleBackground);
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiLeftColumn,    0, FUNERAL_LEFT_COLUMN_X,       FUNERAL_LEFT_COLUMN_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMcGillicuttys, 0, FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiMortuary,      0, FUNERAL_MORTUARY_SIGN_X,     FUNERAL_MORTUARY_SIGN_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiRightColumn,   0, FUNERAL_RIGHT_COLUMN_X,      FUNERAL_RIGHT_COLUMN_Y);
+	BltVideoObject(FRAME_BUFFER, guiLeftColumn,    0, FUNERAL_LEFT_COLUMN_X,       FUNERAL_LEFT_COLUMN_Y);
+	BltVideoObject(FRAME_BUFFER, guiMcGillicuttys, 0, FUNERAL_MCGILICUTTYS_SIGN_X, FUNERAL_MCGILICUTTYS_SIGN_Y);
+	BltVideoObject(FRAME_BUFFER, guiMortuary,      0, FUNERAL_MORTUARY_SIGN_X,     FUNERAL_MORTUARY_SIGN_Y);
+	BltVideoObject(FRAME_BUFFER, guiRightColumn,   0, FUNERAL_RIGHT_COLUMN_X,      FUNERAL_RIGHT_COLUMN_Y);
 
 		// LinkCarving
-	HVOBJECT hPixHandle = GetVideoObject(guiLinkCarving);
-
 	usPosX = FUNERAL_LINK_1_X;
 	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)
 	{
-		BltVideoObject(FRAME_BUFFER, hPixHandle, 0,usPosX, FUNERAL_LINK_1_Y);
+		BltVideoObject(FRAME_BUFFER, guiLinkCarving, 0,usPosX, FUNERAL_LINK_1_Y);
 
 		//Calculate the height of the string, as it needs to be vertically centered.
 		usStringHeight = IanWrappedStringHeight(FUNERAL_LINK_TEXT_WIDTH, 2, FUNERAL_SENTENCE_FONT, sFuneralString[i + FUNERAL_SEND_FLOWERS]);
@@ -252,8 +246,8 @@ void RenderFuneral()
 static void DisplayFuneralRipTombStone(void)
 {
 	// rip tombstone
-	BltVideoObjectOutlineShadowFromIndex( FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X+5, FUNERAL_CLOSED_RIP_SIGN_Y+5);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y);
+	BltVideoObjectOutlineShadow(FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X + 5, FUNERAL_CLOSED_RIP_SIGN_Y + 5);
+	BltVideoObject(             FRAME_BUFFER, guiClosedSign, 0, FUNERAL_CLOSED_RIP_SIGN_X,     FUNERAL_CLOSED_RIP_SIGN_Y);
 
 	SetFontShadow( FUNERAL_RIP_SHADOW_COLOR );
 

@@ -34,7 +34,7 @@ typedef struct PopUpBox {
 	UINT32 uiBottomMargin;
 	UINT32 uiTopMargin;
 	UINT32 uiLineSpace;
-	INT32 iBorderObjectIndex;
+	const SGPVObject* iBorderObjectIndex;
 	INT32 iBackGroundSurface;
 	UINT32 uiFlags;
 	UINT32 uiBuffer;
@@ -343,7 +343,7 @@ void GetBoxSize( INT32 hBoxHandle, SGPRect *Dimensions )
 }
 
 
-void SetBorderType(INT32 hBoxHandle, INT32 iBorderObjectIndex)
+void SetBorderType(const INT32 hBoxHandle, const SGPVObject* const border)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -351,7 +351,7 @@ void SetBorderType(INT32 hBoxHandle, INT32 iBorderObjectIndex)
 	PopUpBox* Box = PopUpBoxList[hBoxHandle];
 
 	Assert(Box);
-	Box->iBorderObjectIndex = iBorderObjectIndex;
+	Box->iBorderObjectIndex = border;
 }
 
 void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
@@ -1056,7 +1056,7 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 	// blit in texture first, then borders
 	// blit in surface
 	BltVideoSurface(Box->uiBuffer, Box->iBackGroundSurface, usTopX, usTopY, &clip);
-	HVOBJECT hBoxHandle = GetVideoObject(Box->iBorderObjectIndex);
+	const SGPVObject* const hBoxHandle = Box->iBorderObjectIndex;
 
 	// blit in 4 corners (they're 2x2 pixels)
 	BltVideoObject(Box->uiBuffer, hBoxHandle, TOP_LEFT_CORNER,     usTopX,               usTopY);

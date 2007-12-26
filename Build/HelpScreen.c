@@ -277,7 +277,7 @@ BOOLEAN	gfHelpScreenExit = FALSE;
 
 
 
-UINT32	guiHelpScreenBackGround;
+static SGPVObject* guiHelpScreenBackGround;
 UINT32	guiHelpScreenTextBufferSurface;
 
 BOOLEAN	gfScrollBoxIsScrolling = FALSE;
@@ -750,18 +750,16 @@ static BOOLEAN DrawHelpScreenBackGround(void)
 {
 	UINT16 usPosX;
 
-	HVOBJECT hPixHandle = GetVideoObject(guiHelpScreenBackGround);
-
 	usPosX = gHelpScreen.usScreenLocX;
 
 	//if there are buttons, blit the button border
 	if( gHelpScreen.bNumberOfButtons != 0 )
 	{
-	  BltVideoObject(FRAME_BUFFER, hPixHandle, HLP_SCRN_BUTTON_BORDER, usPosX, gHelpScreen.usScreenLocY);
+	  BltVideoObject(FRAME_BUFFER, guiHelpScreenBackGround, HLP_SCRN_BUTTON_BORDER, usPosX, gHelpScreen.usScreenLocY);
 		usPosX += HELP_SCREEN_BUTTON_BORDER_WIDTH;
 	}
 
-  BltVideoObject(FRAME_BUFFER, hPixHandle, HLP_SCRN_DEFAULT_TYPE, usPosX, gHelpScreen.usScreenLocY);
+  BltVideoObject(FRAME_BUFFER, guiHelpScreenBackGround, HLP_SCRN_DEFAULT_TYPE, usPosX, gHelpScreen.usScreenLocY);
 
   InvalidateRegion( gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenLocX+gHelpScreen.usScreenWidth, gHelpScreen.usScreenLocY + gHelpScreen.usScreenHeight );
 

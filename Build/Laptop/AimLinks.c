@@ -42,9 +42,9 @@
 #define		AIM_LINK_LINK_TEXT_1_Y				AIM_LINK_BOBBY_LINK_Y + 71
 
 
-UINT32		guiBobbyLink;
-UINT32		guiFuneralLink;
-UINT32		guiInsuranceLink;
+static SGPVObject* guiBobbyLink;
+static SGPVObject* guiFuneralLink;
+static SGPVObject* guiInsuranceLink;
 UINT8			gubLinkPages[]={
 							BOBBYR_BOOKMARK,
 							FUNERAL_BOOKMARK,
@@ -122,11 +122,9 @@ void RenderAimLinks()
 	DrawAimDefaults();
 	DisableAimButton();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiBobbyLink, 0, AIM_LINK_BOBBY_LINK_X, AIM_LINK_BOBBY_LINK_Y);
-
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiFuneralLink, 0, AIM_LINK_FUNERAL_LINK_X, AIM_LINK_FUNERAL_LINK_Y);
-
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiInsuranceLink, 0, AIM_LINK_INSURANCE_LINK_X, AIM_LINK_INSURANCE_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, guiBobbyLink,     0, AIM_LINK_BOBBY_LINK_X,     AIM_LINK_BOBBY_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, guiFuneralLink,   0, AIM_LINK_FUNERAL_LINK_X,   AIM_LINK_FUNERAL_LINK_Y);
+	BltVideoObject(FRAME_BUFFER, guiInsuranceLink, 0, AIM_LINK_INSURANCE_LINK_X, AIM_LINK_INSURANCE_LINK_Y);
 
 	//Draw Link Title
 	DrawTextToScreen(AimLinkText, AIM_LINK_TITLE_X, AIM_LINK_TITLE_Y, AIM_LINK_TITLE_WIDTH, AIM_LINK_TITLE_FONT, AIM_LINK_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);

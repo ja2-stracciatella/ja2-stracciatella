@@ -100,11 +100,11 @@
 #define AIM_ALUMNI_FILE_RECORD_SIZE 80 * 8
 #define AIM_ALUMNI_FULL_NAME_SIZE   80
 
-UINT32		guiAlumniFrame;
-UINT32		guiOldAim;
-UINT32		guiAlumniPopUp;
-UINT32		guiPopUpPic;
-UINT32		guiDoneButton;
+static SGPVObject* guiAlumniFrame;
+static SGPVObject* guiOldAim;
+static SGPVObject* guiAlumniPopUp;
+static SGPVObject* guiPopUpPic;
+static SGPVObject* guiDoneButton;
 
 UINT8			gubPageNum;
 BOOLEAN		gfExitingAimArchives;
@@ -267,9 +267,6 @@ void RenderAimArchives()
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_ALUMNI], AIM_ALUMNI_TITLE_X, AIM_ALUMNI_TITLE_Y, AIM_ALUMNI_TITLE_WIDTH, AIM_ALUMNI_TITLE_FONT, AIM_ALUMNI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Draw the mug shot border and face
-	HVOBJECT hFrameHandle = GetVideoObject(guiAlumniFrame);
-	HVOBJECT hFaceHandle  = GetVideoObject(guiOldAim);
-
 	UINT start = AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS * gubPageNum;
 	UINT end   = min(start + AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS, 51);
 
@@ -277,8 +274,8 @@ void RenderAimArchives()
 	INT32 usPosY = AIM_ALUMNI_START_GRID_Y;
 	for (UINT i = start; i < end;)
 	{
-		BltVideoObject(FRAME_BUFFER, hFaceHandle,  i, usPosX + 4, usPosY + 4); // Blt face to screen
-		BltVideoObject(FRAME_BUFFER, hFrameHandle, 0, usPosX,     usPosY);     // Blt the alumni frame background
+		BltVideoObject(FRAME_BUFFER, guiOldAim,      i, usPosX + 4, usPosY + 4); // Blt face to screen
+		BltVideoObject(FRAME_BUFFER, guiAlumniFrame, 0, usPosX,     usPosY);     // Blt the alumni frame background
 
 		// Display the merc's name
 		wchar_t sText[AIM_ALUMNI_NAME_SIZE];
@@ -385,8 +382,6 @@ static void DisplayAlumniOldMercPopUp(void)
 	UINT32		uiStartLoc;
 	UINT16	usStringPixLength;
 
-	HVOBJECT hAlumniPopUpHandle = GetVideoObject(guiAlumniPopUp);
-
 	//Load the description
 	wchar_t	sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc + AIM_ALUMNI_FULL_NAME_SIZE;
@@ -401,26 +396,26 @@ static void DisplayAlumniOldMercPopUp(void)
 
 	//draw top line of the popup background
 	ShadowVideoSurfaceRect( FRAME_BUFFER, AIM_POPUP_X+AIM_POPUP_SHADOW_GAP, usPosY+AIM_POPUP_SHADOW_GAP, AIM_POPUP_X + AIM_POPUP_WIDTH+AIM_POPUP_SHADOW_GAP, usPosY + AIM_POPUP_SECTION_HEIGHT+AIM_POPUP_SHADOW_GAP-1);
-	BltVideoObject(FRAME_BUFFER, hAlumniPopUpHandle, 0,AIM_POPUP_X, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiAlumniPopUp, 0, AIM_POPUP_X, usPosY);
 	//draw mid section of the popup background
 	usPosY += AIM_POPUP_SECTION_HEIGHT;
 	for(i=0; i<ubNumLines; i++)
 	{
 		ShadowVideoSurfaceRect( FRAME_BUFFER, AIM_POPUP_X+AIM_POPUP_SHADOW_GAP, usPosY+AIM_POPUP_SHADOW_GAP, AIM_POPUP_X + AIM_POPUP_WIDTH+AIM_POPUP_SHADOW_GAP, usPosY + AIM_POPUP_SECTION_HEIGHT+AIM_POPUP_SHADOW_GAP-1);
-		BltVideoObject(FRAME_BUFFER, hAlumniPopUpHandle, 1,AIM_POPUP_X, usPosY);
+		BltVideoObject(FRAME_BUFFER, guiAlumniPopUp, 1, AIM_POPUP_X, usPosY);
 		usPosY += AIM_POPUP_SECTION_HEIGHT;
 	}
 	//draw the bottom line and done button
 	ShadowVideoSurfaceRect( FRAME_BUFFER, AIM_POPUP_X+AIM_POPUP_SHADOW_GAP, usPosY+AIM_POPUP_SHADOW_GAP, AIM_POPUP_X + AIM_POPUP_WIDTH+AIM_POPUP_SHADOW_GAP, usPosY + AIM_POPUP_SECTION_HEIGHT+AIM_POPUP_SHADOW_GAP-1);
-	BltVideoObject(FRAME_BUFFER, hAlumniPopUpHandle, 2,AIM_POPUP_X, usPosY);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiDoneButton, 0, AIM_ALUMNI_DONE_X, usPosY - AIM_ALUMNI_DONE_HEIGHT);
+	BltVideoObject(FRAME_BUFFER, guiAlumniPopUp, 2, AIM_POPUP_X, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiDoneButton, 0, AIM_ALUMNI_DONE_X, usPosY - AIM_ALUMNI_DONE_HEIGHT);
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_DONE], AIM_ALUMNI_DONE_X + 1, usPosY - AIM_ALUMNI_DONE_HEIGHT + 3, AIM_ALUMNI_DONE_WIDTH, AIM_ALUMNI_POPUP_NAME_FONT, AIM_ALUMNI_POPUP_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	CreateDestroyDoneMouseRegion(usPosY);
 
 	///blt face panale and the mecs fce
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiPopUpPic, 0,AIM_ALUMNI_FACE_PANEL_X, AIM_ALUMNI_FACE_PANEL_Y);
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiOldAim, gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
+	BltVideoObject(FRAME_BUFFER, guiPopUpPic, 0,              AIM_ALUMNI_FACE_PANEL_X,     AIM_ALUMNI_FACE_PANEL_Y);
+	BltVideoObject(FRAME_BUFFER, guiOldAim,   gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
 	wchar_t	sName[AIM_ALUMNI_FULL_NAME_SIZE];

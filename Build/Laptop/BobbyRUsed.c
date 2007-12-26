@@ -11,8 +11,8 @@
 #include "VSurface.h"
 
 
-UINT32		guiUsedBackground;
-UINT32		guiUsedGrid;
+static SGPVObject* guiUsedBackground;
+static SGPVObject* guiUsedGrid;
 
 
 BOOLEAN EnterBobbyRUsed()
@@ -61,7 +61,7 @@ void RenderBobbyRUsed()
 	//Display title at top of page
 	DisplayBobbyRBrTitle();
 
-	BltVideoObjectFromIndex(FRAME_BUFFER, guiUsedGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
+	BltVideoObject(FRAME_BUFFER, guiUsedGrid, 0, BOBBYR_GRIDLOC_X, BOBBYR_GRIDLOC_Y);
 
 	DisplayItemInfo(BOBBYR_USED_ITEMS);
 
