@@ -2870,7 +2870,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 		CHECKF(guiVideoTitleBar != NO_VSURFACE);
 
-		CHECKF(!BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
+		CHECKF(BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
 	}
 
 //	gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
