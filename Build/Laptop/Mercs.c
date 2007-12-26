@@ -169,7 +169,7 @@ static SGPVObject* guiFilesBox;
 static SGPVObject* guiMercSymbol;
 static SGPVObject* guiSpecPortrait;
 static SGPVObject* guiMercBackGround;
-UINT32		guiMercVideoFaceBackground;
+static SGPVSurface* guiMercVideoFaceBackground;
 static SGPVObject* guiMercVideoPopupBackground;
 
 UINT8			gubMercArray[ NUMBER_OF_MERCS ];

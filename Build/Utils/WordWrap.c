@@ -221,7 +221,7 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 }
 
 
-static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY);
+static void ShadowText(SGPVSurface* dst, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY);
 
 
 // DrawTextToScreen	Parameters:
@@ -1042,12 +1042,12 @@ UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const 
 
 
 // Places a shadow the width an height of the string, to PosX, posY
-static void ShadowText(UINT32 uiDestVSurface, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY)
+static void ShadowText(SGPVSurface* const dst, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY)
 {
 	UINT32 uiLength = StringPixLength( pString, uiFont);
 	UINT16 usFontHeight = GetFontHeight(uiFont);
 
-	ShadowVideoSurfaceRect( uiDestVSurface, usPosX, usPosY, usPosX+uiLength+1, usPosY+usFontHeight+1 );
+	ShadowVideoSurfaceRect(dst, usPosX, usPosY, usPosX + uiLength + 1, usPosY + usFontHeight + 1);
 }
 
 

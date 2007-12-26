@@ -46,7 +46,7 @@ typedef struct
 	MSGBOX_CALLBACK ExitCallback;
 	INT16           sX;
 	INT16           sY;
-	UINT32          uiSaveBuffer;
+	SGPVSurface*    uiSaveBuffer;
 	MOUSE_REGION    BackRegion;
 	UINT16          usWidth;
 	UINT16          usHeight;

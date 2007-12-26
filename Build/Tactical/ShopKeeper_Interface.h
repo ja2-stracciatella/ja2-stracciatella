@@ -78,7 +78,7 @@ UINT32	ShopKeeperScreenShutdown( void );
 void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );
 
 
-void			DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight );
+void DrawHatchOnInventory(SGPVSurface* dst, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight);
 BOOLEAN		ShouldSoldierDisplayHatchOnItem( UINT8	ubProfileID, INT16 sSlotNum );
 void			ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue );
 void			ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue );

@@ -196,10 +196,10 @@ void RemoveTextMercPopupImages( )
 }
 
 
-static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer);
+static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 
-BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer )
+BOOLEAN RenderMercPopUpBoxFromIndex(const INT32 iBoxId, const INT16 sDestX, const INT16 sDestY, SGPVSurface* const buffer)
 {
 
 	// set the current box
@@ -209,17 +209,17 @@ BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, U
 	}
 
 	// now attempt to render the box
-	return( RenderMercPopupBox( sDestX,  sDestY,  uiBuffer ) );
+	return RenderMercPopupBox(sDestX,  sDestY, buffer);
 }
 
 
-static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, UINT32 uiBuffer)
+static BOOLEAN RenderMercPopupBox(const INT16 sDestX, const INT16 sDestY, SGPVSurface* const buffer)
 {
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
-	BltVideoSurface(uiBuffer, gPopUpTextBox->uiSourceBufferIndex, sDestX, sDestY, NULL);
+	BltVideoSurface(buffer, gPopUpTextBox->uiSourceBufferIndex, sDestX, sDestY, NULL);
 
 	//Invalidate!
-	if ( uiBuffer == FRAME_BUFFER )
+	if (buffer == FRAME_BUFFER)
 	{
 		InvalidateRegion( sDestX, sDestY, (INT16)( sDestX + gPopUpTextBox->sWidth ), (INT16)( sDestY + gPopUpTextBox->sHeight ) );
 	}

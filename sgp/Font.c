@@ -18,19 +18,19 @@ static HVOBJECT FontObjs[MAX_FONTS];
 
 // Destination printing parameters
 INT32 FontDefault = -1;
-static UINT32  FontDestBuffer   = BACKBUFFER;
-static SGPRect FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-static UINT16  FontForeground16 = 0;
-static UINT16  FontBackground16 = 0;
-static UINT16  FontShadow16     = DEFAULT_SHADOW;
+static SGPVSurface* FontDestBuffer;
+static SGPRect      FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+static UINT16       FontForeground16 = 0;
+static UINT16       FontBackground16 = 0;
+static UINT16       FontShadow16     = DEFAULT_SHADOW;
 
 // Temp, for saving printing parameters
-static INT32   SaveFontDefault      = -1;
-static UINT32  SaveFontDestBuffer   = BACKBUFFER;
-static SGPRect SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-static UINT16  SaveFontForeground16 = 0;
-static UINT16  SaveFontShadow16     = 0;
-static UINT16  SaveFontBackground16 = 0;
+static INT32        SaveFontDefault      = -1;
+static SGPVSurface* SaveFontDestBuffer   = NULL;
+static SGPRect      SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+static UINT16       SaveFontForeground16 = 0;
+static UINT16       SaveFontShadow16     = 0;
+static UINT16       SaveFontBackground16 = 0;
 
 
 /* Sets both the foreground and the background colors of the current font. The
@@ -298,14 +298,12 @@ BOOLEAN SetFont(INT32 iFontIndex)
 }
 
 
-/* Sets the destination buffer for printing to and the clipping rectangle.
- * DestBuffer is a VOBJECT handle, not a pointer. */
-BOOLEAN SetFontDestBuffer(UINT32 DestBuffer, INT32 x1, INT32 y1, INT32 x2, INT32 y2)
+BOOLEAN SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1, const INT32 x2, const INT32 y2)
 {
 	Assert(x2 > x1);
 	Assert(y2 > y1);
 
-	FontDestBuffer         = DestBuffer;
+	FontDestBuffer         = dst;
 	FontDestRegion.iLeft   = x1;
 	FontDestRegion.iTop    = y1;
 	FontDestRegion.iRight  = x2;

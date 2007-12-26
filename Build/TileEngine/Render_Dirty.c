@@ -748,10 +748,9 @@ void ExecuteVideoOverlays( )
 }
 
 
-void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer )
+void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 {
 	UINT32  uiCount;
-	UINT32	uiOldDestBuffer;
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
 	{
@@ -759,14 +758,14 @@ void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer )
 		{
 			if ( gVideoOverlays[uiCount].fActivelySaving )
 			{
-				uiOldDestBuffer =  gVideoOverlays[uiCount].uiDestBuff;
+				SGPVSurface* const old_dst = gVideoOverlays[uiCount].uiDestBuff;
 
-				gVideoOverlays[uiCount].uiDestBuff = uiNewDestBuffer;
+				gVideoOverlays[uiCount].uiDestBuff = buffer;
 
 				// Call Blit Function
 			 (*(gVideoOverlays[uiCount].BltCallback ) ) ( &(gVideoOverlays[uiCount]) );
 
-				gVideoOverlays[uiCount].uiDestBuff = uiOldDestBuffer;
+				gVideoOverlays[uiCount].uiDestBuff = old_dst;
 			}
 		}
 	}
@@ -828,14 +827,14 @@ static void AllocateVideoOverlayArea(UINT32 uiCount)
 }
 
 
-void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
+void SaveVideoOverlaysArea(SGPVSurface* const src)
 {
 	UINT32 uiCount;
 	UINT32 iBackIndex;
 	UINT32 uiSrcPitchBYTES;
 	UINT8	 *pSrcBuf;
 
-	pSrcBuf = LockVideoSurface( uiSrcBuffer, &uiSrcPitchBYTES );
+	pSrcBuf = LockVideoSurface(src, &uiSrcPitchBYTES );
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
 	{
@@ -861,7 +860,7 @@ void SaveVideoOverlaysArea( UINT32 uiSrcBuffer )
 		}
 	}
 
-	UnLockVideoSurface( uiSrcBuffer );
+	UnLockVideoSurface(src);
 }
 
 
@@ -977,10 +976,10 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 }
 
 
-BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight)
+BOOLEAN BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight)
 {
 	const SGPRect r = { usSrcX, usSrcY, usSrcX + usWidth, usSrcY + usHeight };
-	return BltVideoSurface(uiDestBuffer, uiSrcBuffer, usSrcX, usSrcY, &r);
+	return BltVideoSurface(dst, src, usSrcX, usSrcY, &r);
 }
 
 

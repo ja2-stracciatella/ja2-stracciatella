@@ -271,7 +271,7 @@ INT32 giContractHighLine = -1;
 INT32 giSleepHighLine = -1;
 
 // pop up box textures
-UINT32    guiPOPUPTEX;
+SGPVSurface* guiPOPUPTEX;
 SGPVObject* guiPOPUPBORDERS;
 
 // the currently selected character arrow

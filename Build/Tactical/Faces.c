@@ -370,10 +370,10 @@ void DeleteFace( INT32 iFaceIndex )
 }
 
 
-void SetAutoFaceActiveFromSoldier(const UINT32 uiDisplayBuffer, const UINT32 uiRestoreBuffer, const SOLDIERTYPE* const s, const UINT16 usFaceX, const UINT16 usFaceY)
+void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const restore, const SOLDIERTYPE* const s, const UINT16 usFaceX, const UINT16 usFaceY)
 {
 	CHECKV(s != NULL);
-	SetAutoFaceActive(uiDisplayBuffer, uiRestoreBuffer, s->iFaceIndex, usFaceX, usFaceY);
+	SetAutoFaceActive(display, restore, s->iFaceIndex, usFaceX, usFaceY);
 }
 
 
@@ -420,10 +420,10 @@ static void GetFaceRelativeCoordinates(const FACETYPE* pFace, UINT16* pusEyesX, 
 }
 
 
-static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
+static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
 
 
-void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex , UINT16 usFaceX, UINT16 usFaceY )
+void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, const INT32 iFaceIndex, const UINT16 usFaceX, const UINT16 usFaceY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;
@@ -438,12 +438,11 @@ void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iF
 
 	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
 
-	InternalSetAutoFaceActive( uiDisplayBuffer, uiRestoreBuffer, iFaceIndex , usFaceX, usFaceY, usEyesX,  usEyesY, usMouthX, usMouthY );
-
+	InternalSetAutoFaceActive(display, restore, iFaceIndex, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
 }
 
 
-static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY)
+static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, const INT32 iFaceIndex, const UINT16 usFaceX, const UINT16 usFaceY, const UINT16 usEyesX, const UINT16 usEyesY, const UINT16 usMouthX, const UINT16 usMouthY)
 {
 	FACETYPE					*pFace;
 
@@ -466,7 +465,7 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 		SetAutoFaceInActive( iFaceIndex );
 	}
 
-	if ( uiRestoreBuffer == FACE_AUTO_RESTORE_BUFFER )
+	if (restore == FACE_AUTO_RESTORE_BUFFER)
 	{
 		pFace->fAutoRestoreBuffer  = TRUE;
 		pFace->uiAutoRestoreBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
@@ -475,10 +474,10 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 	else
 	{
 		pFace->fAutoRestoreBuffer  = FALSE;
-		pFace->uiAutoRestoreBuffer = uiRestoreBuffer;
+		pFace->uiAutoRestoreBuffer = restore;
 	}
 
-	if ( uiDisplayBuffer == FACE_AUTO_DISPLAY_BUFFER )
+	if (display == FACE_AUTO_DISPLAY_BUFFER)
 	{
 		pFace->fAutoDisplayBuffer  = TRUE;
 		pFace->uiAutoDisplayBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
@@ -487,7 +486,7 @@ static void InternalSetAutoFaceActive(UINT32 uiDisplayBuffer, UINT32 uiRestoreBu
 	else
 	{
 		pFace->fAutoDisplayBuffer  = FALSE;
-		pFace->uiAutoDisplayBuffer = uiDisplayBuffer;
+		pFace->uiAutoDisplayBuffer = display;
 	}
 
 
@@ -613,7 +612,7 @@ void SetAllAutoFacesInactive(  )
 
 
 static void NewEye(FACETYPE* pFace);
-static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
+static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
 static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
@@ -721,7 +720,7 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 }
 
 
-static void HandleFaceHilights( FACETYPE *pFace, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY )
+static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffer, const INT16 sFaceX, const INT16 sFaceY)
 {
 	UINT32					uiDestPitchBYTES;
 	UINT8						*pDestBuf;
@@ -1024,22 +1023,21 @@ static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, IN
 }
 
 
-static void DoRightIcon(UINT32 uiRenderBuffer, FACETYPE* pFace, INT16 sFaceX, INT16 sFaceY, INT8 bNumIcons, INT8 sIconIndex)
+static void DoRightIcon(SGPVSurface* const dst, FACETYPE* const pFace, const INT16 sFaceX, const INT16 sFaceY, const INT8 bNumIcons, const INT8 sIconIndex)
 {
 	INT16						sIconX, sIconY;
 
 	// Find X, y for placement
 	GetXYForRightIconPlacement( pFace, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY, bNumIcons );
-	BltVideoObject(uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
+	BltVideoObject(dst, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
 }
 
 
-static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, UINT32 uiBuffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY)
+static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDisplayBuffer, SGPVSurface* const buffer, const INT16 sFaceX, const INT16 sFaceY, const UINT16 usEyesX, const UINT16 usEyesY)
 {
 	INT16						sIconX, sIconY;
 	INT16						sIconIndex=-1;
 	BOOLEAN					fDoIcon = FALSE;
-	UINT32					uiRenderBuffer;
 	INT16						sPtsAvailable = 0;
 	UINT16 					usMaximumPts = 0;
 	CHAR16					sString[ 32 ];
@@ -1054,11 +1052,8 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
   INT8            bNumRightIcons = 0;
 
 	// If we are using an extern buffer...
-	if (uiBuffer != NO_VSURFACE)
-	{
-		uiRenderBuffer = uiBuffer;
-	}
-	else
+	SGPVSurface* uiRenderBuffer = buffer;
+	if (uiRenderBuffer == NO_VSURFACE)
 	{
 		if ( fDisplayBuffer )
 		{
@@ -1109,7 +1104,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
     }
 
 		// ATE: Only do this, because we can be talking during an interrupt....
-		if (pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE && uiBuffer == NO_VSURFACE)
+		if (pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE && buffer == NO_VSURFACE)
 		{
 			// Don't do this if we are being handled elsewhere and it's not an extern buffer...
 		}
@@ -1399,20 +1394,20 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 }
 
 
-static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY);
+static BOOLEAN ExternRenderFace(SGPVSurface* buffer, INT32 iFaceIndex, INT16 sX, INT16 sY);
 
 
-BOOLEAN ExternRenderFaceFromSoldier(UINT32 uiBuffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY)
+BOOLEAN ExternRenderFaceFromSoldier(SGPVSurface* const buffer, const SOLDIERTYPE* s, const INT16 sX, const INT16 sY)
 {
 	// Check for valid soldier
 	CHECKF(s != NULL);
-	return ExternRenderFace(uiBuffer, s->iFaceIndex, sX, sY);
+	return ExternRenderFace(buffer, s->iFaceIndex, sX, sY);
 }
 
 
 /* To render an allocated face, but one that is independent of its active
  * status and does not require eye blinking or mouth movements, call */
-static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT16 sY)
+static BOOLEAN ExternRenderFace(SGPVSurface* const buffer, const INT32 iFaceIndex, const INT16 sX, const INT16 sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;
@@ -1433,14 +1428,14 @@ static BOOLEAN ExternRenderFace(UINT32 uiBuffer, INT32 iFaceIndex, INT16 sX, INT
 	SetFaceShade(pFace, TRUE);
 
 	// Blit face to save buffer!
-	BltVideoObject(uiBuffer, pFace->uiVideoObject, 0, sX, sY);
+	BltVideoObject(buffer, pFace->uiVideoObject, 0, sX, sY);
 
 	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
 
-	HandleRenderFaceAdjustments(pFace, FALSE, uiBuffer, sX, sY, sX + usEyesX, sY + usEyesY);
+	HandleRenderFaceAdjustments(pFace, FALSE, buffer, sX, sY, sX + usEyesX, sY + usEyesY);
 
 	// Restore extern rect
-	if ( uiBuffer == guiSAVEBUFFER )
+	if (buffer == guiSAVEBUFFER)
 	{
 		RestoreExternBackgroundRect( sX, sY, pFace->usFaceWidth, pFace->usFaceWidth );
 	}

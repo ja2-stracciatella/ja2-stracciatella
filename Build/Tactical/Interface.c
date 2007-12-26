@@ -81,7 +81,7 @@ static UINT8   gubProgCurEnemy   = 0;
 
 typedef struct
 {
-	UINT32			uiSurface;
+	SGPVSurface* uiSurface;
 	INT8				bCurrentMessage;
 	UINT32			uiTimeOfLastUpdate;
 	UINT32			uiTimeSinceLastBeep;
@@ -2159,7 +2159,7 @@ void EndUIMessage( )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
-static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString);
+static void CreateTopMessage(SGPVSurface* surface, UINT8 ubType, const wchar_t* psString);
 
 
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
@@ -2200,7 +2200,7 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 }
 
 
-static void CreateTopMessage(UINT32 uiSurface, UINT8 ubType, const wchar_t* psString)
+static void CreateTopMessage(SGPVSurface* const uiSurface, const UINT8 ubType, const wchar_t* const psString)
 {
 	INT16		sX, sY;
 	INT32		cnt2;

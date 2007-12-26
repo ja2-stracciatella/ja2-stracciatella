@@ -10,9 +10,9 @@
 #define		DRAW_ITEM_STATUS_ATTACHMENT3		202
 #define		DRAW_ITEM_STATUS_ATTACHMENT4		203
 
-void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BOOLEAN fErase, UINT32 uiBuffer);
+void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BOOLEAN fErase, SGPVSurface* buffer);
 
-void DrawItemUIBarEx(const OBJECTTYPE* pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, UINT32 uiBuffer);
+void DrawItemUIBarEx(const OBJECTTYPE* pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, SGPVSurface* buffer);
 
 void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLEAN fAutoFace);
 

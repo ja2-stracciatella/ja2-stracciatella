@@ -112,7 +112,7 @@ typedef struct BUTTON_PICS
 
 static BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
 
-UINT32 ButtonDestBuffer = FRAME_BUFFER;
+SGPVSurface* ButtonDestBuffer;
 
 GUI_BUTTON* ButtonList[MAX_BUTTONS];
 
@@ -541,6 +541,8 @@ BOOLEAN InitButtonSystem(void)
 #if defined BUTTONSYSTEM_DEBUGGING
 	gfIgnoreShutdownAssertions = FALSE;
 #endif
+
+	ButtonDestBuffer = FRAME_BUFFER;
 
 	// Clear out button list
 	for (INT32 x = 0; x < MAX_BUTTONS; ++x)

@@ -35,9 +35,9 @@ typedef struct PopUpBox {
 	UINT32 uiTopMargin;
 	UINT32 uiLineSpace;
 	const SGPVObject* iBorderObjectIndex;
-	INT32 iBackGroundSurface;
+	SGPVSurface* iBackGroundSurface;
 	UINT32 uiFlags;
-	UINT32 uiBuffer;
+	SGPVSurface* uiBuffer;
 	UINT32 uiSecondColumnMinimunOffset;
 	UINT32 uiSecondColumnCurrentOffset;
 	UINT32 uiBoxMinWidth;
@@ -274,7 +274,7 @@ void UnSecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 
 
 
-void SetBoxBuffer(INT32 hBoxHandle, UINT32 uiBuffer)
+void SetBoxBuffer(INT32 hBoxHandle, SGPVSurface* const buffer)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -283,7 +283,7 @@ void SetBoxBuffer(INT32 hBoxHandle, UINT32 uiBuffer)
 
 	Assert(Box);
 
-	Box->uiBuffer = uiBuffer;
+	Box->uiBuffer = buffer;
 	Box->fUpdated = FALSE;
 }
 
@@ -354,7 +354,7 @@ void SetBorderType(const INT32 hBoxHandle, const SGPVObject* const border)
 	Box->iBorderObjectIndex = border;
 }
 
-void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
+void SetBackGroundSurface(const INT32 hBoxHandle, SGPVSurface* const bg)
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
@@ -362,7 +362,7 @@ void SetBackGroundSurface(INT32 hBoxHandle, INT32 iBackGroundSurfaceIndex)
 	PopUpBox* Box = PopUpBoxList[hBoxHandle];
 
 	Assert(Box);
-	Box->iBackGroundSurface = iBackGroundSurfaceIndex;
+	Box->iBackGroundSurface = bg;
 }
 
 
@@ -948,7 +948,7 @@ void SetCurrentBox(INT32 hBoxHandle)
 }
 
 
-void DisplayBoxes(UINT32 uiBuffer)
+void DisplayBoxes(SGPVSurface* const uiBuffer)
 {
 	UINT32 uiCounter;
 
@@ -963,7 +963,7 @@ static BOOLEAN DrawBox(UINT32 uiCounter);
 static BOOLEAN DrawBoxText(UINT32 uiCounter);
 
 
-void DisplayOnePopupBox( UINT32 uiIndex, UINT32 uiBuffer )
+void DisplayOnePopupBox(const UINT32 uiIndex, SGPVSurface* const uiBuffer)
 {
 	if ( ( uiIndex < 0 ) || ( uiIndex >= MAX_POPUP_BOX_COUNT ) )
 		return;

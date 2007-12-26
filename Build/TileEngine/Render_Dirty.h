@@ -59,7 +59,7 @@ struct VIDEO_OVERLAY
 		UINT8							ubFontBack;
 		UINT8							ubFontFore;
 		wchar_t						zText[ 200 ];
-		UINT32						uiDestBuff;
+	SGPVSurface* uiDestBuff;
 		OVERLAY_CALLBACK		BltCallback;
 };
 
@@ -113,10 +113,10 @@ UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
 void ExecuteVideoOverlays(void);
-void SaveVideoOverlaysArea( UINT32 uiSrcBuffer );
+void SaveVideoOverlaysArea(SGPVSurface* src);
 void DeleteVideoOverlaysArea(void);
 void AllocateVideoOverlaysArea(void);
-void ExecuteVideoOverlaysToAlternateBuffer( UINT32 uiNewDestBuffer );
+void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* buffer);
 void RemoveVideoOverlay(VIDEO_OVERLAY*);
 BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
 void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
@@ -126,6 +126,6 @@ void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
 void BlitMFont( VIDEO_OVERLAY *pBlitter );
 
-BOOLEAN BlitBufferToBuffer(UINT32 uiSrcBuffer, UINT32 uiDestBuffer, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);
+BOOLEAN BlitBufferToBuffer(SGPVSurface* src, SGPVSurface* dst, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);
 
 #endif

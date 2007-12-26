@@ -120,7 +120,7 @@ typedef struct AUTORESOLVE_STRUCT
 	SGPVObject* iFaces; //for generic civs and enemies
 	INT32 iMercFaces[20]; //for each merc face
 	SGPVObject* iIndent;
-	INT32 iInterfaceBuffer;
+	SGPVSurface* iInterfaceBuffer;
 	INT32 iNumMercFaces;
 	INT32 iActualMercFaces; //this represents the real number of merc faces.  Because
 													 //my debug mode allows to freely add and subtract mercs, we

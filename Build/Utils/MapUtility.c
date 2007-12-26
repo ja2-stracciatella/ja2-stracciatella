@@ -35,9 +35,8 @@
 
 static float     gdXStep;
 static float     gdYStep;
-static INT32     giMiniMap;
-static INT32     gi8BitMiniMap;
-static HVSURFACE ghvSurface;
+static SGPVSurface* giMiniMap;
+static SGPVSurface* gi8BitMiniMap;
 
 // Utililty file for sub-sampling/creating our radar screen maps
 // Loops though our maps directory and reads all .map files, subsamples an area, color
@@ -121,7 +120,6 @@ UINT32	MapUtilScreenHandle( )
 		//Allocate 8-bit surface
 		gi8BitMiniMap = AddVideoSurface(88, 44, 8);
 		if (gi8BitMiniMap == NO_VSURFACE) return ERROR_SCREEN;
-		ghvSurface = GetVideoSurface(gi8BitMiniMap);
 	}
 
 	//OK, we are here, now loop through files
@@ -256,9 +254,9 @@ UINT32	MapUtilScreenHandle( )
 	pDataPtr = (UINT8*)LockVideoSurface(gi8BitMiniMap, &uiSrcPitchBYTES);
 	pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	QuantizeImage( pDataPtr, p24BitDest, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette );
-	SetVideoSurfacePalette( ghvSurface, pPalette );
+	SetVideoSurfacePalette(gi8BitMiniMap, pPalette);
 	// Blit!
-	Blt8BPPDataTo16BPPBuffer( pDestBuf, uiDestPitchBYTES, ghvSurface, pDataPtr, 300, 360);
+	Blt8BPPDataTo16BPPBuffer(pDestBuf, uiDestPitchBYTES, gi8BitMiniMap, pDataPtr, 300, 360);
 
 	// Write palette!
 	{

@@ -3,9 +3,9 @@
 
 #include "Types.h"
 
-// Global variables for video objects
-extern UINT32					guiSAVEBUFFER;
-extern UINT32					guiEXTRABUFFER;
+
+extern SGPVSurface* guiSAVEBUFFER;
+extern SGPVSurface* guiEXTRABUFFER;
 
 BOOLEAN InitializeGameVideoObjects(void);
 

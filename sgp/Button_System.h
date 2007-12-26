@@ -51,7 +51,7 @@ extern "C" {
 #define BUTTON_SOUND_DISABLED_MOVED_OFF_OF 0x40
 
 
-extern UINT32 ButtonDestBuffer;
+extern SGPVSurface* ButtonDestBuffer;
 
 typedef struct GUI_BUTTON GUI_BUTTON;
 

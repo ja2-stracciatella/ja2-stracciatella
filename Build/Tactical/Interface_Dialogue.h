@@ -33,7 +33,7 @@ typedef struct
 	BOOLEAN				fTextRegionOn;
 	BOOLEAN				fOnName;
 	BOOLEAN				fDirtyLevel;
-	UINT32				uiSaveBuffer;
+	SGPVSurface*  uiSaveBuffer;
 	BOOLEAN				fHandled;
 	BOOLEAN				fHandledTalkingVal;
 	BOOLEAN				fHandledCanDeleteVal;

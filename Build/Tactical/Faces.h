@@ -79,8 +79,8 @@ typedef struct
   UINT16		usFaceY;												// Y location to render face
 	UINT16		usFaceWidth;
 	UINT16		usFaceHeight;
-	UINT32		uiAutoDisplayBuffer;						// Display buffer for face
-	UINT32		uiAutoRestoreBuffer;						// Restore buffer
+	SGPVSurface* uiAutoDisplayBuffer;         // Display buffer for face
+	SGPVSurface* uiAutoRestoreBuffer;         // Restore buffer
 	BOOLEAN		fAutoRestoreBuffer;							// Flag to indicate our own restorebuffer or not
 	BOOLEAN		fAutoDisplayBuffer;							// Flag to indicate our own display buffer or not
 	BOOLEAN		fDisplayTextOver;								// Boolean indicating to display text on face
@@ -158,7 +158,7 @@ INT32 InitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags);
 void DeleteFace( INT32 iFaceIndex );
 
 // IF you want to setup the face for automatic eye blinking, mouth movement, you need to call
-void SetAutoFaceActive( UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, INT32 iFaceIndex , UINT16 usFaceX, UINT16 usFaceY );
+void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY);
 // The first paramter is the display buffer you wish the face to be rendered on. The second is the
 // Internal savebuffer which is used to facilitate the rendering of only things which have changed when
 // blinking. IF the value of FACE_AUTO_RESTORE_BUFFER is given, the system will allocate it's own memory for
@@ -207,9 +207,9 @@ void HandleTalkingAutoFaces(void);
 // Same Functions but taking soldier first to get profile
 void    InitSoldierFace(SOLDIERTYPE* s);
 void		DeleteSoldierFace( SOLDIERTYPE *pSoldier );
-void    SetAutoFaceActiveFromSoldier(UINT32 uiDisplayBuffer, UINT32 uiRestoreBuffer, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
+void    SetAutoFaceActiveFromSoldier(SGPVSurface* display, SGPVSurface* restore, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
 void    SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
 BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s);
-BOOLEAN ExternRenderFaceFromSoldier(UINT32 uiBuffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY);
+BOOLEAN ExternRenderFaceFromSoldier(SGPVSurface* buffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY);
 
 #endif

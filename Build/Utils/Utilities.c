@@ -51,7 +51,8 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 	return( TRUE );
 }
 
-BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, UINT32 uiDestSurface)
+
+BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)
 {
 	UINT16										us16BPPColor;
 	UINT32										cnt1;
@@ -76,8 +77,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos
 		const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
 		us16BPPColor = Get16BPPColor(FROMRGB(Clr->peRed, Clr->peGreen, Clr->peBlue));
 
-		ColorFillVideoSurfaceArea( uiDestSurface, sTLX, sTLY, sBRX, sBRY, us16BPPColor );
-
+		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, us16BPPColor);
 	}
 
 	gprintf(ubXPos + 16 * 20, ubYPos, L"%hs", gpPalRep[ubPaletteRep].ID);

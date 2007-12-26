@@ -75,7 +75,7 @@ BOOLEAN ShutdownVideoObjectManager(void);
 BOOLEAN DeleteVideoObjectFromIndex(SGPVObject*);
 
 // Blits a video object to another video object
-BOOLEAN BltVideoObject(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 // Deletes the 16-bit palette tables
 BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject);
@@ -89,8 +89,8 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex,
 
 const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject*, UINT16 usIndex);
 
-BOOLEAN BltVideoObjectOutline(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
-BOOLEAN BltVideoObjectOutlineShadow(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
+BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
+BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 extern UINT32 guiVObjectSize;
 

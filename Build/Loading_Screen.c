@@ -263,7 +263,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	}
 	else
 	{
-		UINT32 uiLoadScreen = AddVideoSurfaceFromFile(ImageFile);
+		SGPVSurface* const uiLoadScreen = AddVideoSurfaceFromFile(ImageFile);
 		if (uiLoadScreen != NO_VSURFACE)
 		{ //Blit the background image
 			BltVideoSurface(FRAME_BUFFER, uiLoadScreen, 0, 0, NULL);

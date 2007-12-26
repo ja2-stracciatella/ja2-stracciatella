@@ -279,7 +279,7 @@ BOOLEAN	gfHelpScreenExit = FALSE;
 
 
 static SGPVObject* guiHelpScreenBackGround;
-UINT32	guiHelpScreenTextBufferSurface;
+static SGPVSurface* guiHelpScreenTextBufferSurface;
 
 BOOLEAN	gfScrollBoxIsScrolling = FALSE;
 

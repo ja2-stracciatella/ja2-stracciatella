@@ -152,7 +152,7 @@ static void DrawMoraleUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPo
 }
 
 
-void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BOOLEAN fErase, UINT32 uiBuffer)
+void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, const INT16 sYPos, const BOOLEAN fErase, SGPVSurface* const uiBuffer)
 {
 	const UINT32 BarWidth  =  3;
 	const UINT32 BarHeight = 42;
@@ -204,7 +204,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, BO
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* pObject, UINT8 ubStatus, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight, INT16 sColor1, INT16 sColor2, BOOLEAN fErase, UINT32 uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sWidth, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, const BOOLEAN fErase, SGPVSurface* const uiBuffer)
 {
 	FLOAT											 dStart, dEnd, dPercentage;
 	//UINT16										 usLineColor;

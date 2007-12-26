@@ -190,7 +190,7 @@ extern INT16 gsHighlightSectorX;
 extern INT16 gsHighlightSectorY;
 
 // the big map
-extern UINT32 guiBIGMAP;
+extern SGPVSurface* guiBIGMAP;
 
 // the orta icon
 extern SGPVObject* guiORTAICON;

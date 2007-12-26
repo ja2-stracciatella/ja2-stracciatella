@@ -320,14 +320,14 @@ static SGPVObject* guiFace;
 static SGPVObject* guiVideoConfPopup;
 static SGPVObject* guiVideoConfTerminal;
 static SGPVObject* guiPopUpBox;
-static UINT32 guiVideoFaceBackground;
+static SGPVSurface* guiVideoFaceBackground;
 static SGPVObject* guiBWSnow;
 static SGPVObject* guiFuzzLine;
 static SGPVObject* guiStraightLine;
 static SGPVObject* guiTransSnow;
 static SGPVObject* guiVideoContractCharge;
 //UINT32		guiAnsweringMachineImage;
-static UINT32 guiVideoTitleBar;
+static SGPVSurface* guiVideoTitleBar;
 static INT32  iAimMembersBoxId = -1;
 
 static UINT8 gbCurrentSoldier = 0;

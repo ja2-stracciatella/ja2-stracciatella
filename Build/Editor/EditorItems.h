@@ -10,7 +10,7 @@ typedef struct{
 	BOOLEAN fKill;			//flagged for deallocation.
 	BOOLEAN fActive;		//currently active
 	UINT16 *pusItemIndex;		//a dynamic array of Item indices
-	UINT32	uiBuffer;		//index of buffer
+	SGPVSurface* uiBuffer;
 	UINT32	uiItemType; //Weapons, ammo, armour, explosives, equipment
 	INT16		sWidth, sHeight;	//width and height of buffer
 	INT16   sNumItems;	//total number of items in the current class of item.

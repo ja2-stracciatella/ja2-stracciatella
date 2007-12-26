@@ -18,14 +18,14 @@ void SetMargins(INT32 hBoxHandle, UINT32 uiLeft, UINT32 uiTop, UINT32 uiBottom,
 UINT32 GetTopMarginSize( INT32 hBoxHandle );
 void SetLineSpace(INT32 hBoxHandle, UINT32 uiLineSpace);
 UINT32 GetLineSpace( INT32 hBoxHandle );
-void SetBoxBuffer(INT32 hBoxHandle, UINT32 uiBuffer);
+void SetBoxBuffer(INT32 hBoxHandle, SGPVSurface*);
 void SetBoxPosition(INT32 hBoxHandle,SGPPoint Position);
 void GetBoxPosition( INT32 hBoxHandle, SGPPoint *Position );
 UINT32 GetNumberOfLinesOfTextInBox( INT32 hBoxHandle );
 void SetBoxSize( INT32 hBoxHandle, SGPRect Dimensions );
 void GetBoxSize(  INT32 hBoxHandle, SGPRect *Dimensions );
 void SetBorderType(INT32 hBoxHandle, const SGPVObject* border);
-void SetBackGroundSurface(INT32 hBoxHandle, INT32 BackGroundSurfaceIndex);
+void SetBackGroundSurface(INT32 hBoxHandle, SGPVSurface*);
 void AddMonoString(const wchar_t* pString);
 void SetBoxFont(INT32 hBoxHandle, UINT32 uiFont);
 UINT32 GetBoxFont( INT32 hBoxHandle );
@@ -41,8 +41,8 @@ void RemoveAllCurrentBoxStrings( void );
 void RemoveBox(INT32 hBoxHandle);
 void ShowBox(INT32 hBoxHandle);
 void HideBox(INT32 hBoxHandle);
-void DisplayBoxes(UINT32 uiBuffer);
-void DisplayOnePopupBox( UINT32 uiIndex, UINT32 uiBuffer );
+void DisplayBoxes(SGPVSurface* buffer);
+void DisplayOnePopupBox(UINT32 uiIndex, SGPVSurface* buffer);
 void SetCurrentBox(INT32 hBoxHandle);
 
 // resize this box to the text it contains

@@ -268,7 +268,7 @@ enum{
 	MAP_SHADE_DK_RED,
 };
 // the big map .pcx
-UINT32 guiBIGMAP;
+SGPVSurface* guiBIGMAP;
 
 // orta .sti icon
 SGPVObject* guiORTAICON;
@@ -660,18 +660,8 @@ UINT32 DrawMap( void )
 			clip.iBottom=clip.iTop + MapScreenRect.iBottom - MapScreenRect.iTop;
 			*/
 
-			HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
-			CHECKF(hSrcVSurface != NULL);
-
-			if( clip.iBottom > hSrcVSurface->usHeight )
-			{
-				clip.iBottom = hSrcVSurface->usHeight;
-			}
-
-			if( clip.iRight > hSrcVSurface->usWidth )
-			{
-				clip.iRight = hSrcVSurface->usWidth;
-			}
+			if (clip.iBottom > guiBIGMAP->usHeight) clip.iBottom = guiBIGMAP->usHeight;
+			if (clip.iRight  > guiBIGMAP->usWidth)  clip.iRight  = guiBIGMAP->usWidth;
 
 			BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 2, &clip);
 		}
@@ -1173,13 +1163,12 @@ static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
 
 
 	// get original video surface palette
-	HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
-	CHECKF(hSrcVSurface != NULL);
+	SGPVSurface* const hSrcVSurface = guiBIGMAP;
 	// get original video surface palette
-	//HVSURFACE hSAMSurface = GetVideoSurface(guiSAMICON);
+	//HVSURFACE hSAMSurface = guiSAMICON;
 	//CHECKF(hSAMSurface != NULL);
 	// get original video surface palette
-	//HVSURFACE hMineSurface = GetVideoSurface(guiMINEICON);
+	//HVSURFACE hMineSurface = guiMINEICON;
 	//CHECKF(hMineSurface != NULL);
 	// get original video surface palette
 
@@ -1290,8 +1279,7 @@ static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
 	iX=(INT32)sScreenX-MAP_GRID_X;
 
 	// get original video surface palette
-	HVSURFACE hSrcVSurface = GetVideoSurface(guiBIGMAP);
-	CHECKF(hSrcVSurface != NULL );
+	SGPVSurface* const hSrcVSurface = guiBIGMAP;
 	pOriginalPallette = hSrcVSurface->p16BPPPalette;
 
 	if((iX >MapScreenRect.iLeft-MAP_GRID_X*2)&&(iX <MapScreenRect.iRight)&&(iY>MapScreenRect.iTop-MAP_GRID_Y*2)&&(iY < MapScreenRect.iBottom))
@@ -1395,7 +1383,7 @@ BOOLEAN InitializePalettesForMap( void )
 	SGPPaletteEntry pPalette[ 256 ];
 
 	// load image
-	UINT32 uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
+	SGPVSurface* const uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 	CHECKF(uiTempMap != NO_VSURFACE);
 
 	GetVSurfacePaletteEntries(uiTempMap, pPalette);

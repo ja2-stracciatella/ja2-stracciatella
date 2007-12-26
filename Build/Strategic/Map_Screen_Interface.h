@@ -250,7 +250,7 @@ extern INT32 iCurrentMapSectorZ;
 extern INT32 giBoxY;
 
 // pop up box textures
-extern UINT32    guiPOPUPTEX;
+extern SGPVSurface* guiPOPUPTEX;
 extern SGPVObject* guiPOPUPBORDERS;
 
 // the level-changing markers on the map border

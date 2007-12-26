@@ -164,7 +164,7 @@ enum
 // the wait time for closing of laptop animation/delay
 #define EXIT_LAPTOP_DELAY_TIME 100
 
-static UINT32  guiTitleBarSurface;
+static SGPVSurface* guiTitleBarSurface;
 static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 
 #define LAPTOP__NEW_FILE_ICON_X  83
@@ -254,7 +254,7 @@ static SGPVObject* guiDOWNLOADBOT;
 static SGPVObject* guiTITLEBARLAPTOP;
 static SGPVObject* guiLIGHTS;
 SGPVObject* guiTITLEBARICONS;
-static UINT32 guiDESKTOP;
+static SGPVSurface* guiDESKTOP;
 
 // enter new laptop mode due to sliding bars
 static BOOLEAN fEnteredNewLapTopDueToHandleSlidingBars = FALSE;

@@ -2605,7 +2605,6 @@ void DeleteSelectedMercsItem()
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
 static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {
-	UINT32 uiSrcID, uiDstID;
 	SGPRect	SrcRect, DstRect;
 	INT32 iDstWidth, iDstHeight;
 	float rScalar, rWidthScalar, rHeightScalar;
@@ -2666,8 +2665,8 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	//Each slot has it's own smaller version buffer, and this is what gets drawn when the rendering happens.
 
 	//assign the buffers
-	uiSrcID = guiMercTempBuffer;
-	uiDstID = guiMercInvPanelBuffers[ gbCurrSelect ];
+	SGPVSurface* const uiSrcID = guiMercTempBuffer;
+	SGPVSurface* const uiDstID = guiMercInvPanelBuffers[gbCurrSelect];
 
 	//build the rects
 	iDstWidth = gbCurrSelect < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH;

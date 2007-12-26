@@ -61,8 +61,8 @@ extern SGPVObject* guiMercInventoryPanel;
 extern SGPVObject* guiOmertaMap;
 extern SGPVObject* guiExclamation;
 extern SGPVObject* guiKeyImage;
-extern UINT32 guiMercInvPanelBuffers[9];
-extern UINT32 guiMercTempBuffer;
+extern SGPVSurface* guiMercInvPanelBuffers[9];
+extern SGPVSurface* guiMercTempBuffer;
 extern INT32  giEditMercImage[2];
 
 #endif

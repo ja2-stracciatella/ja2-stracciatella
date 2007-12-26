@@ -4,8 +4,9 @@
 #include "Video.h"
 #include "WCheck.h"
 
-UINT32					guiSAVEBUFFER = 0;
-UINT32					guiEXTRABUFFER = 0;
+
+SGPVSurface* guiSAVEBUFFER;
+SGPVSurface* guiEXTRABUFFER;
 
 
 BOOLEAN	InitializeGameVideoObjects( )

@@ -6,9 +6,14 @@
 
 
 #define NO_VSURFACE 0
-#define BACKBUFFER   0xFFFFFFF1
-#define FRAME_BUFFER 0xFFFFFFF2
-#define MOUSE_BUFFER 0xFFFFFFF3
+#define BACKBUFFER   g_back_buffer
+#define FRAME_BUFFER g_frame_buffer
+#define MOUSE_BUFFER g_mouse_buffer
+
+
+extern SGPVSurface* g_back_buffer;
+extern SGPVSurface* g_frame_buffer;
+extern SGPVSurface* g_mouse_buffer;
 
 
 struct SGPVSurface
@@ -32,58 +37,54 @@ BOOLEAN InitializeVideoSurfaceManager(void);
 // Deletes any video Surface placed into list
 BOOLEAN ShutdownVideoSurfaceManager(void);
 
-UINT32 AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
-UINT32 AddVideoSurfaceFromFile(const char* Filename);
+SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
+SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
 
 // Creates and adds a video Surface to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend);
-	extern UINT32 AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32 LineNum, const char* SourceFile);
-	extern UINT32 AddAndRecordVSurfaceFromFile(const char* Filename, UINT32 LineNum, const char* SourceFile);
+	extern SGPVSurface* AddAndRecordVSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth, UINT32 LineNum, const char* SourceFile);
+	extern SGPVSurface* AddAndRecordVSurfaceFromFile(const char* Filename, UINT32 LineNum, const char* SourceFile);
 	#define AddVideoSurface(a, b, c) AddAndRecordVSurface(a, b, c, __LINE__, __FILE__)
 	#define AddVideoSurfaceFromFile(a) AddAndRecordVSurfaceFromFile(a, __LINE__, __FILE__)
 #endif
 
-// Returns a HVSurface for the specified index
-HVSURFACE GetVideoSurface(UINT32 uiIndex);
-
-BYTE* LockVideoSurface(UINT32 uiVSurface, UINT32* uiPitch);
-void UnLockVideoSurface(UINT32 uiVSurface);
+BYTE* LockVideoSurface(SGPVSurface*, UINT32* uiPitch);
+void UnLockVideoSurface(SGPVSurface*);
 
 // Blits a video Surface to another video Surface
-BOOLEAN BltVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
+BOOLEAN BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
 
 /* Blits a video surface in half size to another video surface.
  * If SrcRect is NULL the entire source surface is blitted.
  * Only blitting from 8bbp surfaces to 16bpp surfaces is supported. */
-void BltVideoSurfaceHalf(UINT32 DestVSurfaceIdx, UINT32 SrcVSurfaceIdx, INT32 DestX, INT32 DestY, const SGPRect* SrcRect);
+void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 DestY, const SGPRect* SrcRect);
 
 /* Fill an entire surface with a colour */
-void FillSurface(UINT32 uiDestVSurface, UINT16 Colour);
+void FillSurface(SGPVSurface*, UINT16 Colour);
 
 /* Fills an rectangular area with a specified color value. */
-BOOLEAN ColorFillVideoSurfaceArea(UINT32 uiDestVSurface, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2,	INT32 iDestY2, UINT16 Color16BPP);
+BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
 
 // Sets transparency
-BOOLEAN SetVideoSurfaceTransparency(UINT32 uiIndex, COLORVAL TransColor);
+BOOLEAN SetVideoSurfaceTransparency(SGPVSurface*, COLORVAL TransColor);
 
 // Gets the RGB palette entry values
-BOOLEAN GetVSurfacePaletteEntries(UINT32 VSurface, SGPPaletteEntry* pPalette);
+BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface*, SGPPaletteEntry* pPalette);
 
 // Sets HVSurface palette, creates if nessessary. Also sets 16BPP palette
-BOOLEAN SetVideoSurfacePalette(HVSURFACE hVSurface, const SGPPaletteEntry* pSrcPalette);
+BOOLEAN SetVideoSurfacePalette(SGPVSurface* hVSurface, const SGPPaletteEntry* pSrcPalette);
 
 // Deletes all data, including palettes
-BOOLEAN DeleteVideoSurfaceFromIndex(UINT32 uiIndex);
+BOOLEAN DeleteVideoSurfaceFromIndex(SGPVSurface*);
 
 
-BOOLEAN ShadowVideoSurfaceRect(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
+BOOLEAN ShadowVideoSurfaceRect(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
+BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
 /* This function will stretch the source image to the size of the dest rect.
  * If the 2 images are not 16 Bpp, it returns false. */
-BOOLEAN BltStretchVideoSurface(UINT32 uiDestVSurface, UINT32 uiSrcVSurface, SGPRect* SrcRect, SGPRect* DestRect);
-
-BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(UINT32 uiDestVSurface, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
+BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
 
 extern UINT32 guiVSurfaceSize;
 

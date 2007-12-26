@@ -222,7 +222,7 @@
 
 
 static SGPVObject* guiMainTradeScreenImage;
-static UINT32 guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
+static SGPVSurface* guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
 BOOLEAN		gfSKIScreenExit	= FALSE;
@@ -2587,7 +2587,7 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 }
 
 
-void DrawHatchOnInventory( UINT32 uiSurface, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight )
+void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, const UINT16 usPosY, const UINT16 usWidth, const UINT16 usHeight)
 {
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;

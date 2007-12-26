@@ -5930,7 +5930,7 @@ static void HandleMapInventoryCursor(void)
 
 
 // will place down the upper left hand corner attribute strings
-static void RenderAttributeStringsForUpperLeftHandCorner(UINT32 uiBufferToRenderTo)
+static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBufferToRenderTo)
 {
 	INT32 iCounter = 0;
 	SOLDIERTYPE *pSoldier = NULL;

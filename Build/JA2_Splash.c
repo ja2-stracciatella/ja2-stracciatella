@@ -38,7 +38,7 @@ void InitJA2SplashScreen(void)
 #else
 	SGPFILENAME ImageFile;
 	GetMLGFilename(ImageFile, MLG_SPLASH);
-	UINT32 uiLogoID = AddVideoSurfaceFromFile(ImageFile);
+	SGPVSurface* const uiLogoID = AddVideoSurfaceFromFile(ImageFile);
 	if (uiLogoID == NO_VSURFACE)
 	{
 		AssertMsg(0, String("Failed to load %s", ImageFile));

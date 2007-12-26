@@ -1006,7 +1006,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 
 	if ( fHatchItOut )
 	{
-		UINT32 uiWhichBuffer = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? guiSAVEBUFFER : FRAME_BUFFER);
+		SGPVSurface* const uiWhichBuffer = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? guiSAVEBUFFER : FRAME_BUFFER);
 		DrawHatchOnInventory( uiWhichBuffer, sX, sY, (UINT16)(gSMInvData[ sPocket ].sWidth-1), (UINT16)(gSMInvData[ sPocket ].sHeight-1) );
 	}
 
@@ -1743,7 +1743,7 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(UINT32 uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
+void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;

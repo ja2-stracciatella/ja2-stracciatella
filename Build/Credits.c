@@ -37,7 +37,7 @@ typedef struct	_CRDT_NODE
 
 	INT16		sHeightOfString;		//The height of the displayed string
 
-	UINT32	uiVideoSurfaceImage;
+	SGPVSurface* uiVideoSurfaceImage;
 
 	struct _CRDT_NODE	*pPrev;
 	struct _CRDT_NODE *pNext;

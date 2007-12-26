@@ -20,19 +20,19 @@ INT32 PrepareMercPopupBox(  INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorde
 BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 
 // render pop up box with this index value
-BOOLEAN RenderMercPopUpBoxFromIndex( INT32 iBoxId, INT16 sDestX, INT16 sDestY, UINT32 uiBuffer );
+BOOLEAN RenderMercPopUpBoxFromIndex(INT32 iBoxId, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 
 void RemoveTextMercPopupImages(void);
 
 
 typedef struct {
- UINT32 uiSourceBufferIndex;
+ SGPVSurface* uiSourceBufferIndex;
  UINT16 sWidth;
  UINT16 sHeight;
  UINT8	ubBackgroundIndex;
  UINT8	ubBorderIndex;
- UINT32	uiMercTextPopUpBackground;
+ SGPVSurface* uiMercTextPopUpBackground;
  SGPVObject* uiMercTextPopUpBorder;
  BOOLEAN	fMercTextPopupInitialized;
  BOOLEAN	fMercTextPopupSurfaceInitialized;
