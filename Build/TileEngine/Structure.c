@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "Soldier_Control.h"
 #include "Types.h"
 #include "VObject.h"

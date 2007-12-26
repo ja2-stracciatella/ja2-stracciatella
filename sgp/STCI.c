@@ -15,12 +15,11 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 {
 	HWFILE			hFile;
 	STCIHeader	Header;
-	image_type	TempImage;
 
 	// Check that hImage is valid, and that the file in question exists
 	Assert( hImage != NULL );
 
-	TempImage = *hImage;
+	SGPImage TempImage = *hImage;
 
 	CHECKF( FileExists( TempImage.ImageFile ) );
 

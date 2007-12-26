@@ -31,7 +31,6 @@ static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader
 HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 {
 	const char* const ExtensionSep = ".";
-	HIMAGE			hImage = NULL;
 	STR					StrPtr;
 	UINT32			iFileLoader;
 
@@ -80,11 +79,11 @@ HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 	}
 
 	// Create memory for image structure
-	hImage = (HIMAGE)MemAlloc( sizeof( image_type ) );
+	SGPImage* const hImage = MemAlloc(sizeof(*hImage));
 
 	AssertMsg( hImage, "Failed to allocate memory for hImage in CreateImage");
 	// Initialize some values
-	memset( hImage, 0, sizeof( image_type ) );
+	memset(hImage, 0, sizeof(*hImage));
 
 	//hImage->fFlags = 0;
 	// Set data pointers to NULL

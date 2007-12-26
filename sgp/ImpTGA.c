@@ -10,6 +10,7 @@
 //
 //**************************************************************************
 
+#include "HImage.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "ImpTGA.h"

@@ -1,7 +1,6 @@
 #ifndef VSURFACE_H
 #define VSURFACE_H
 
-#include "HImage.h"
 #include "Types.h"
 #include <SDL.h>
 

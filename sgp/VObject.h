@@ -2,7 +2,6 @@
 #define __VOBJECT_H
 
 #include "Types.h"
-#include "HImage.h"
 
 
 #define NO_VOBJECT 0

@@ -13,6 +13,7 @@
 #ifdef JA2EDITOR
 
 #include "Button_System.h"
+#include "HImage.h"
 #include "Input.h"
 #include "Local.h"
 #include "TileDef.h"

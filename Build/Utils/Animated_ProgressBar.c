@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Types.h"
 #include "Animated_ProgressBar.h"
 #include "MemMan.h"

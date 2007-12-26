@@ -1,6 +1,7 @@
 #include "Cursors.h"
 #include "EMail.h"
 #include "Font.h"
+#include "HImage.h"
 #include "Input.h"
 #include "Laptop.h"
 #include "AIMMembers.h"

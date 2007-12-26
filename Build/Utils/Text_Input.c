@@ -1,4 +1,5 @@
 #include <math.h>
+#include "HImage.h"
 #include "Input.h"
 #include "Font.h"
 #include "English.h"

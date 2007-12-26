@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "HImage.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Timer_Control.h"

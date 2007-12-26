@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Isometric_Utils.h"
 #include "Timer.h"
 #include "Timer_Control.h"

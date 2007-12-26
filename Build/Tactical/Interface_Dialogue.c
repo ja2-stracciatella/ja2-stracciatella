@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Handle_UI.h"
 #include "Interface.h"
 #include "Local.h"

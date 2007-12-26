@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "HImage.h"
 #include "Shading.h"
 #include "VObject.h"
 

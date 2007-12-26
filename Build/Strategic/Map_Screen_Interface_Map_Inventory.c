@@ -1,5 +1,6 @@
 #include "Auto_Resolve.h"
 #include "Font.h"
+#include "HImage.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"

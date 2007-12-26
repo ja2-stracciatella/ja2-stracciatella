@@ -1,4 +1,5 @@
 #include "Event_Manager.h"
+#include "HImage.h"
 #include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"

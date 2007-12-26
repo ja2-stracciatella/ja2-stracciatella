@@ -4,6 +4,7 @@
 
 #include <stdarg.h>
 #include "Font.h"
+#include "HImage.h"
 #include "Local.h"
 #include "Sys_Globals.h"
 #include "Timer_Control.h"

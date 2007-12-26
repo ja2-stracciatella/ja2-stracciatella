@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "Laptop.h"
 #include "Local.h"
 #include "Mercs.h"

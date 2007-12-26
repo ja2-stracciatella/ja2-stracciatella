@@ -110,6 +110,14 @@ typedef struct
 
 typedef UINT32 COLORVAL;
 
+typedef struct AuxObjectData   AuxObjectData;
+typedef struct ETRLEObject     ETRLEObject;
+typedef struct RelTileLoc      RelTileLoc;
+typedef struct SGPPaletteEntry SGPPaletteEntry;
+
+typedef struct SGPImage    SGPImage;
+typedef SGPImage*          HIMAGE;
+
 typedef struct SGPVObject  SGPVObject;
 typedef SGPVObject*        HVOBJECT;
 

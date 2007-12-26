@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include <stdlib.h>
+#include "HImage.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"

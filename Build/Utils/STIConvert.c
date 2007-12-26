@@ -72,7 +72,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 
 	STCIHeader					Header;
 	UINT32							uiLoop;
-	image_type					Image;
+	SGPImage            Image;
 
 	SGPPaletteEntry *		pSGPPaletteEntry;
 	STCIPaletteElement	STCIPaletteEntry;
@@ -84,7 +84,7 @@ void WriteSTIFile( INT8 *pData, SGPPaletteEntry *pPalette, INT16 sWidth, INT16 s
 	//UINT16							usLoop;
 
 	memset(&Header, 0, sizeof(Header));
-	memset( &Image, 0, sizeof( image_type ));
+	memset(&Image, 0, sizeof(Image));
 
 
 	uiOriginalSize = sWidth * sHeight * (8 / 8);

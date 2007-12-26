@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "Local.h"
 #include "MapScreen.h"
 #include "Gameloop.h"

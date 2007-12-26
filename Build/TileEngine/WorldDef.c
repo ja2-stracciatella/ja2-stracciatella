@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"

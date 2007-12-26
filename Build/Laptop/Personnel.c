@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Laptop.h"
 #include "Local.h"
 #include "Personnel.h"

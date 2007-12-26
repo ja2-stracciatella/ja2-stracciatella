@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "Local.h"
 #include "ScreenIDs.h"
 #include "Timer_Control.h"

@@ -4,7 +4,6 @@
 #ifndef __EDITORMAPINFO_H
 #define __EDITORMAPINFO_H
 
-#include "HImage.h"
 
 
 void SetupTextInputForMapInfo(void);

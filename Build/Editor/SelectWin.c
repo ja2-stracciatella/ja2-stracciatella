@@ -4,6 +4,7 @@
 
 #include "Button_System.h"
 #include "Font.h"
+#include "HImage.h"
 #include "Input.h"
 #include "Overhead_Map.h"
 #include "TileDef.h"

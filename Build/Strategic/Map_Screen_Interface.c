@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font.h"
+#include "HImage.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Render_Dirty.h"

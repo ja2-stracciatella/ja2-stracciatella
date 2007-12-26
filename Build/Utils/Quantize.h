@@ -1,7 +1,8 @@
 #ifndef __QUANTIZE_H_
 #define __QUANTIZE_H_
 
-#include "HImage.h"
+#include "Types.h"
+
 
 typedef struct _NODE {
     BOOLEAN bIsLeaf;            // TRUE if node has no children

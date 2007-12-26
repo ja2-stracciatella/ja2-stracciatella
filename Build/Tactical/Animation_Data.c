@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "Overhead.h"
 #include "VObject.h"
 #include "WCheck.h"

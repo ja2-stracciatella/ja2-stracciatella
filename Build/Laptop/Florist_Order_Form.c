@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Laptop.h"
 #include "Florist.h"
 #include "Florist_Order_Form.h"

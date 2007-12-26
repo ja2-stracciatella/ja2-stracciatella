@@ -14,7 +14,6 @@
 #define _impTGA_h
 
 #include "Types.h"
-#include "HImage.h"
 
 
 #ifdef __cplusplus

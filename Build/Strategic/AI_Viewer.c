@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Local.h"
 #include "Types.h"
 #include "English.h"

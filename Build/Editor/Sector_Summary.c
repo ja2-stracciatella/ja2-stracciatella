@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "HImage.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Local.h"
 #include "Font.h"

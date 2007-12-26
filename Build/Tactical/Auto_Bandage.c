@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "HImage.h"
 #include "Local.h"
 #include "Medical.h"
 #include "Overhead.h"

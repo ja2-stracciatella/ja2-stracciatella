@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Interface_Items.h"
 #include "Local.h"
 #include "VObject.h"

@@ -1,5 +1,6 @@
 #include "BrokenLink.h"
 #include "Font.h"
+#include "HImage.h"
 #include "VObject.h"
 #include "WordWrap.h"
 #include "Laptop.h"

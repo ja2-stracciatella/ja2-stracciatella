@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
+#include "HImage.h"
 #include "Handle_UI.h"
 #include "Interactive_Tiles.h"
 #include "Interface_Control.h"

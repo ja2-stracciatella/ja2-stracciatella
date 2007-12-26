@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Types.h"
 #include "VObject.h"
 #include "FileMan.h"

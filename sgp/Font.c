@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include "HImage.h"
 #include "Local.h"
 #include "Types.h"
 #include "MemMan.h"

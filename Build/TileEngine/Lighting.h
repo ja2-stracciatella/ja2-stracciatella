@@ -2,7 +2,6 @@
 #define _LIGHTING_H_
 
 #include "Debug.h"
-#include "HImage.h"
 #include "JA2Types.h"
 
 

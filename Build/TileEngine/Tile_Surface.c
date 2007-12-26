@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "WorldDat.h"

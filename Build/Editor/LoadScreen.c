@@ -5,6 +5,7 @@
 #include "Button_System.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "HImage.h"
 #include "Local.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"

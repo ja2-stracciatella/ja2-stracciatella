@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "HImage.h"
 #include "Laptop.h"
 #include "Merc_Hiring.h"
 #include "Mercs_Files.h"

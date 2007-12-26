@@ -34,14 +34,13 @@
 #define IMAGE_ALLDATA						0x001C
 
 // Palette structure, mimics that of Win32
-typedef struct tagSGPPaletteEntry
+struct SGPPaletteEntry
 {
   UINT8 peRed;
   UINT8 peGreen;
   UINT8 peBlue;
   UINT8 peFlags;
-
-} SGPPaletteEntry;
+};
 
 #define AUX_FULL_TILE					0x01
 #define AUX_ANIMATED_TILE			0x02
@@ -50,7 +49,7 @@ typedef struct tagSGPPaletteEntry
 #define AUX_IGNORES_HEIGHT		0x10
 #define AUX_USES_LAND_Z				0x20
 
-typedef struct
+struct AuxObjectData
 {
 	UINT8		ubWallOrientation;
 	UINT8		ubNumberOfTiles;
@@ -60,16 +59,16 @@ typedef struct
 	UINT8		ubNumberOfFrames;
 	UINT8		fFlags;
 	UINT8		ubUnused[6];
-} AuxObjectData;
+};
 
-typedef struct
+struct RelTileLoc
 {
 	INT8		bTileOffsetX;
 	INT8		bTileOffsetY;
-} RelTileLoc; // relative tile location
+}; // relative tile location
 
 // TRLE subimage structure, mirroring that of ST(C)I
-typedef struct tagETRLEObject
+struct ETRLEObject
 {
 	UINT32			uiDataOffset;
 	UINT32			uiDataLength;
@@ -77,7 +76,7 @@ typedef struct tagETRLEObject
 	INT16				sOffsetY;
 	UINT16			usHeight;
 	UINT16			usWidth;
-} ETRLEObject;
+};
 
 typedef struct tagETRLEData
 {
@@ -88,7 +87,7 @@ typedef struct tagETRLEData
 } ETRLEData;
 
 // Image header structure
-typedef struct
+struct SGPImage
 {
 	UINT16					usWidth;
 	UINT16					usHeight;
@@ -128,8 +127,7 @@ typedef struct
 			UINT16					usNumberOfObjects;
 		};
 	};
-
-} image_type, *HIMAGE;
+};
 
 
 #define SGPGetRValue(rgb)   ((BYTE) (rgb))

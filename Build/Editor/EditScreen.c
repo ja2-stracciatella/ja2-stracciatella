@@ -4,6 +4,7 @@
 
 #include "Font.h"
 #include "Font_Control.h"
+#include "HImage.h"
 #include "Local.h"
 #include "SGP.h"
 #include "Button_System.h"

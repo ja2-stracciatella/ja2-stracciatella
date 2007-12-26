@@ -1,4 +1,5 @@
 #include "Cursors.h"
+#include "HImage.h"
 #include "Laptop.h"
 #include "AIMFacialIndex.h"
 #include "Merc_Hiring.h"

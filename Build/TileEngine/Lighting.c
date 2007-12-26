@@ -15,6 +15,7 @@
 *
 ***************************************************************************************/
 
+#include "HImage.h"
 #include "Overhead.h"
 #include "math.h"
 #include "VObject.h"

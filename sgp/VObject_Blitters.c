@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "Debug.h"
+#include "HImage.h"
 #include "Local.h"
 #include "MemMan.h"
 #include "Shading.h"

@@ -8,7 +8,6 @@
 
 #include "Animation_Cache.h"
 #include "JA2Types.h"
-#include "HImage.h"
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 

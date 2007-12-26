@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Interface.h"
 #include "LoadSaveSectorInfo.h"
 #include "LoadSaveStrategicMapElement.h"

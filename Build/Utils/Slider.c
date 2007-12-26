@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "HImage.h"
 #include "Input.h"
 #include "Line.h"
 #include "Local.h"

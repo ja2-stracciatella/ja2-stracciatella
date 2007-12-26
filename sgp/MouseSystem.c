@@ -12,6 +12,7 @@
 //=================================================================================================
 
 #include "Font.h"
+#include "HImage.h"
 #include "Types.h"
 #include "Debug.h"
 #include "Input.h"

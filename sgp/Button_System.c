@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "Debug.h"
 #include "Font.h"
+#include "HImage.h"
 #include "Input.h"
 #include "MemMan.h"
 #include "VObject.h"

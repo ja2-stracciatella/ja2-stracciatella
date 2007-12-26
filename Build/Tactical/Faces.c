@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Interface_Control.h"
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"

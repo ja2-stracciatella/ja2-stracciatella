@@ -1,3 +1,4 @@
+#include "HImage.h"
 #include "TileDef.h"
 #include "VObject.h"
 #include "WorldDef.h"
