@@ -113,8 +113,6 @@ BOOLEAN InitializeVideoManager(void)
 
 	SDL_ShowCursor(SDL_DISABLE);
 
-	FillSurface(FRAME_BUFFER, 0);
-
 	// Initialize state variables
 	guiFrameBufferState      = BUFFER_DIRTY;
 	guiVideoManagerState     = VIDEO_ON;
