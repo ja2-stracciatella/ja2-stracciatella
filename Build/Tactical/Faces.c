@@ -346,10 +346,7 @@ void DeleteFace( INT32 iFaceIndex )
 
   pFace->fCanHandleInactiveNow = TRUE;
 
-	if ( !pFace->fDisabled )
-	{
-		SetAutoFaceInActive( iFaceIndex );
-	}
+	SetAutoFaceInActive(iFaceIndex);
 
 	// If we are still talking, stop!
 	if ( pFace->fTalking )
@@ -460,10 +457,7 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 	}
 
 	// Check if we are active already, remove if so!
-	if ( pFace->fDisabled )
-	{
-		SetAutoFaceInActive( iFaceIndex );
-	}
+	SetAutoFaceInActive(iFaceIndex);
 
 	if (restore == FACE_AUTO_RESTORE_BUFFER)
 	{
@@ -545,6 +539,7 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 	// Check for a valid slot!
 	CHECKV(pFace->fAllocated);
 
+	if (pFace->fDisabled) return;
 
 	// Turn off some flags
 	if ( pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE )
@@ -570,8 +565,16 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 		}
 	}
 
-	if (pFace->fAutoRestoreBuffer) DeleteVideoSurface(pFace->uiAutoRestoreBuffer);
-	if (pFace->fAutoDisplayBuffer) DeleteVideoSurface(pFace->uiAutoDisplayBuffer);
+	if (pFace->fAutoRestoreBuffer)
+	{
+		DeleteVideoSurface(pFace->uiAutoRestoreBuffer);
+		pFace->uiAutoRestoreBuffer = NULL;
+	}
+	if (pFace->fAutoDisplayBuffer)
+	{
+		DeleteVideoSurface(pFace->uiAutoDisplayBuffer);
+		pFace->uiAutoDisplayBuffer = NULL;
+	}
 
 	if (pFace->video_overlay != NULL)
 	{
