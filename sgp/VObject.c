@@ -122,24 +122,57 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 }
 
 
-static SGPVObject* CreateVideoObject(HIMAGE);
+static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* pSrcPalette);
 
 
 SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
-	SGPVObject* const vo = CreateVideoObject(hImage);
+	if (hImage == NULL)
+	{
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid hImage pointer given");
+		return NULL;
+	}
+
+	if (!(hImage->fFlags & IMAGE_TRLECOMPRESSED))
+	{
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image format given.");
+		return NULL;
+	}
+
+	SGPVObject* const vo = MemAlloc(sizeof(*vo));
+	CHECKF(vo != NULL);
+	memset(vo, 0, sizeof(*vo));
+
+	ETRLEData TempETRLEData;
+	CHECKF(GetETRLEImageData(hImage, &TempETRLEData));
+
+	vo->usNumberOfObjects = TempETRLEData.usNumberOfObjects;
+	vo->pETRLEObject      = TempETRLEData.pETRLEObject;
+	vo->pPixData          = TempETRLEData.pPixData;
+	vo->uiSizePixData     = TempETRLEData.uiSizePixData;
+	vo->ubBitDepth        = hImage->ubBitDepth;
+
+	if (hImage->ubBitDepth == 8)
+	{
+		SetVideoObjectPalette(vo, hImage->pPalette);
+	}
+
 	AddStandardVideoObject(vo);
 	return vo;
 }
 
 
-static SGPVObject* CreateVideoObjectFromFile(const char* filename);
-
-
-SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile)
+SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
-	SGPVObject* const vo = CreateVideoObjectFromFile(ImageFile);
-	AddStandardVideoObject(vo);
+	const HIMAGE hImage = CreateImage(ImageFile, IMAGE_ALLIMAGEDATA);
+	if (hImage == NULL)
+	{
+		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", ImageFile));
+		return NULL;
+	}
+
+	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
+	DestroyImage(hImage);
 	return vo;
 }
 
@@ -193,61 +226,6 @@ BOOLEAN BltVideoObject(const UINT32 uiDestVSurface, const SGPVObject* const src,
 
 	UnLockVideoSurface(uiDestVSurface);
 	return Ret;
-}
-
-
-static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* pSrcPalette);
-
-
-static SGPVObject* CreateVideoObject(HIMAGE hImage)
-{
-	if (hImage == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid hImage pointer given");
-		return NULL;
-	}
-
-	if (!(hImage->fFlags & IMAGE_TRLECOMPRESSED))
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image format given.");
-		return NULL;
-	}
-
-	HVOBJECT hVObject = MemAlloc(sizeof(*hVObject));
-	CHECKF(hVObject != NULL);
-	memset(hVObject, 0, sizeof(*hVObject));
-
-	ETRLEData TempETRLEData;
-	CHECKF(GetETRLEImageData(hImage, &TempETRLEData));
-
-	hVObject->usNumberOfObjects = TempETRLEData.usNumberOfObjects;
-	hVObject->pETRLEObject      = TempETRLEData.pETRLEObject;
-	hVObject->pPixData          = TempETRLEData.pPixData;
-	hVObject->uiSizePixData     = TempETRLEData.uiSizePixData;
-	hVObject->ubBitDepth        = hImage->ubBitDepth;
-
-	if (hImage->ubBitDepth == 8)
-	{
-		SetVideoObjectPalette(hVObject, hImage->pPalette);
-	}
-
-	return hVObject;
-}
-
-
-static SGPVObject* CreateVideoObjectFromFile(const char* const Filename)
-{
-	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
-	if (hImage == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", Filename));
-		return NULL;
-	}
-
-	HVOBJECT vObject = CreateVideoObject(hImage);
-
-	DestroyImage(hImage);
-	return vObject;
 }
 
 
