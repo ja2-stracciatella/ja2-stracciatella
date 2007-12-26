@@ -428,15 +428,7 @@ void SetIntroType( INT8 bIntroType )
 static void DisplaySirtechSplashScreen(void)
 {
 	FillSurface(FRAME_BUFFER, 0);
-
-	const char* const ImageFile = "INTERFACE/SirtechSplash.sti";
-	SGPVObject* uiLogoID = AddVideoObjectFromFile(ImageFile);
-	AssertMsg(uiLogoID != NO_VOBJECT, String("Failed to load %s", ImageFile));
-	if (uiLogoID == NO_VOBJECT) return;
-
-	BltVideoObject(FRAME_BUFFER, uiLogoID, 0, 0, 0);
-	DeleteVideoObject(uiLogoID);
-
+	if (!BltVideoObjectOnce(FRAME_BUFFER, "INTERFACE/SirtechSplash.sti", 0, 0, 0)) return;
 	InvalidateScreen();
 	RefreshScreen();
 }

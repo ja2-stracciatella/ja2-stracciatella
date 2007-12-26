@@ -475,6 +475,17 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* co
 }
 
 
+BOOLEAN BltVideoObjectOnce(SGPVSurface* const dst, const char* const filename, const UINT16 region, const INT32 x, const INT32 y)
+{
+	SGPVObject* const vo = AddVideoObjectFromFile(filename);
+	Assert(vo != NO_VOBJECT);
+	if (vo == NO_VOBJECT) return FALSE;
+	BltVideoObject(dst, vo, region, x, y);
+	DeleteVideoObject(vo);
+	return TRUE;
+}
+
+
 #ifdef SGP_VIDEO_DEBUGGING
 
 typedef struct DUMPINFO

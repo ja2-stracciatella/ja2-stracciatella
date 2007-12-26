@@ -747,11 +747,7 @@ void DoDemoIntroduction()
 	SetCurrentCursorFromDatabase( 0 );
 
 	//Load the background image.
-	SGPVObject* const uiTempID = AddVideoObjectFromFile("DemoAds/DemoScreen1.sti");
-	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/DemoScreen1.sti");
-	if (uiTempID == NO_VOBJECT) return;
-	BltVideoObject(FRAME_BUFFER, uiTempID, 0, 0, 0);
-	DeleteVideoObject(uiTempID);
+	if (!BltVideoObjectOnce(FRAME_BUFFER, "DemoAds/DemoScreen1.sti", 0, 0, 0)) return;
 	InvalidateScreen();
 
 	//print out the information
@@ -1067,17 +1063,13 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			SGPVObject* const uiTempID = AddVideoObjectFromFile("Interface/ja2logo.sti");
-			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load Interface/ja2logo.sti");
-			if (uiTempID == NO_VOBJECT)
+			if (!BltVideoObjectOnce(uiCollageID, "Interface/ja2logo.sti", 0, 0, 0))
 			{
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 3;
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
-			DeleteVideoObject(uiTempID);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
@@ -1229,17 +1221,13 @@ UINT32 DemoExitScreenHandle(void)
 			CHECKF(uiCollageID != NO_VSURFACE);
 
 			//bring up the collage screen
-			SGPVObject* const uiTempID = AddVideoObjectFromFile("DemoAds/available.sti");
-			AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/available.sti");
-			if (uiTempID == NO_VOBJECT)
+			if (!BltVideoObjectOnce(uiCollageID, "DemoAds/available.sti", 0, 0, 0))
 			{
 				ubCurrentScreen = 8;
 				ubPreviousScreen = 4;
 				return DEMO_EXIT_SCREEN;
 			}
 			uiStartTime = uiTime;
-			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
-			DeleteVideoObject(uiTempID);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}

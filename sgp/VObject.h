@@ -92,6 +92,9 @@ const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject*, UIN
 BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
 BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
+/* Loads a video object, blits it once and frees it */
+BOOLEAN BltVideoObjectOnce(SGPVSurface* dst, const char* filename, UINT16 region, INT32 x, INT32 y);
+
 extern UINT32 guiVObjectSize;
 
 #ifdef __cplusplus

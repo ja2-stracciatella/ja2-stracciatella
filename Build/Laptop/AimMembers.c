@@ -2678,18 +2678,14 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		if( gfJustSwitchedVideoConferenceMode )
 		{
 			// load the answering machine graphic and add it
-			SGPVObject* const uiVideoBackgroundGraphic = AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti");
-			CHECKF(uiVideoBackgroundGraphic != NO_VOBJECT);
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 			CHECKF(guiVideoTitleBar != NO_VSURFACE);
 
+			CHECKF(BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
+
 			gfAimMemberCanMercSayOpeningQuote = TRUE;
-
-			BltVideoObject(guiVideoTitleBar, uiVideoBackgroundGraphic, 0, 0, 0);
-
-			DeleteVideoObject(uiVideoBackgroundGraphic);
 		}
 	}
 
@@ -2868,18 +2864,13 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 		gfIsAnsweringMachineActive = FALSE;
 
-
 		// load the Video conference background graphic and add it
-		SGPVObject* const uiVideoBackgroundGraphic = AddVideoObjectFromFile("LAPTOP/VideoTitleBar.sti");
-		CHECKF(uiVideoBackgroundGraphic != NO_VOBJECT);
 
 		// Create a background video surface to blt the face onto
 		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 		CHECKF(guiVideoTitleBar != NO_VSURFACE);
 
-		BltVideoObject(guiVideoTitleBar, uiVideoBackgroundGraphic, 0, 0, 0);
-
-		DeleteVideoObject(uiVideoBackgroundGraphic);
+		CHECKF(!BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
 	}
 
 //	gfWaitingForMercToStopTalkingOrUserToClick = FALSE;

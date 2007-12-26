@@ -98,22 +98,9 @@ void HandleIMPPortraits( void )
 static BOOLEAN RenderPortrait(INT16 sX, INT16 sY)
 {
   // render the portrait of the current picture
-  if( fCharacterIsMale  )
-	{
-	  SGPVObject* const uiGraphicHandle = AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait]);
-	  CHECKF(uiGraphicHandle != NO_VOBJECT);
-    BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-		DeleteVideoObject(uiGraphicHandle);
-	}
-	else
-	{
-		SGPVObject* const uiGraphicHandle = AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait + 8]);
-		CHECKF(uiGraphicHandle != NO_VOBJECT);
-    BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-		DeleteVideoObject(uiGraphicHandle);
-	}
-
-	return ( TRUE );
+	const INT32 portrait = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
+	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, pPlayerSelectedBigFaceFileNames[portrait], 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY));
+	return TRUE;
 }
 
 

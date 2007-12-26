@@ -2257,12 +2257,9 @@ static BOOLEAN DisplayHighLightBox(void)
 		return FALSE;
 	}
 
-	SGPVObject* const uiBox = AddVideoObjectFromFile("LAPTOP/PicBorde.sti");
-	CHECKF(uiBox != NO_VOBJECT);
 	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
-	BltVideoObject(FRAME_BUFFER, uiBox, 0, x, y);
-	DeleteVideoObject(uiBox);
+	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/PicBorde.sti", 0, x, y));
 
 	return TRUE;
 }

@@ -589,15 +589,10 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 
 	if( ( fRenderRadarScreen == FALSE ) && ( fCreated == FALSE ) )
 	{
-		// create regions
-		// load graphics
-	  SGPVObject* const uiHandle = AddVideoObjectFromFile("INTERFACE/squadpanel.sti");
-	  CHECKF(uiHandle != NO_VOBJECT);
-
-		BltVideoObject(guiSAVEBUFFER, uiHandle, 0, 538, 0 + gsVIEWPORT_END_Y);
-
+		CHECKF(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y));
 		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, SCREEN_WIDTH - 538, SCREEN_HEIGHT - gsVIEWPORT_END_Y);
 
+		// create regions
 		for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
 		{
 			// run through list of squads and place appropriatly
@@ -620,8 +615,6 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 			MSYS_SetRegionUserData( &gRadarRegionSquadList[ sCounter ],0,sCounter);
 
 		}
-
-		DeleteVideoObject(uiHandle);
 
 		// reset the highlighted line
 		sSelectedSquadLine = -1;

@@ -3167,14 +3167,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 BOOLEAN RenderWWWProgramTitleBar(void)
 {
 	// will render the title bar for the www program
-	// title bar - load
-	SGPVObject* const uiTITLEFORWWW = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(uiTITLEFORWWW != NO_VOBJECT);
-
-	BltVideoObject(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
-
-	// now delete
-	DeleteVideoObject(uiTITLEFORWWW);
+	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2));
 
 	// now slapdown text
 	SetFont(FONT14ARIAL);

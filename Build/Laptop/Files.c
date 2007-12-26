@@ -966,26 +966,17 @@ static BOOLEAN HandleSpecialFiles(void)
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti");
-		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 300, 270);
-		DeleteVideoObject(uiPicture);
+		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270));
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti");
-		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 225);
-		DeleteVideoObject(uiPicture);
+		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti", 0, 260, 225));
 	}
 	else if( giFilesPage == 5 )
 	{
 			// wedding pic
-		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_W.sti");
-		CHECKF(uiPicture != NO_VOBJECT);
-		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 85);
-		DeleteVideoObject(uiPicture);
+		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti", 0, 260, 85));
 	}
 
 	return ( TRUE );
@@ -1426,20 +1417,10 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			// show picture
 			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
 			{
-				SGPVObject* uiPicture;
 				char sTemp[128];
 				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
-				uiPicture = AddVideoObjectFromFile(sTemp);
-				CHECKF(uiPicture != NO_VOBJECT);
-//def: 3/24/99
-//				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
-				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
-				DeleteVideoObject(uiPicture);
-
-				uiPicture = AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti");
-				CHECKF(uiPicture != NO_VOBJECT);
-				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
-				DeleteVideoObject(uiPicture);
+				CHECKF(BltVideoObjectOnce(FRAME_BUFFER, sTemp,                        0, FILE_VIEWER_X + 30, iYPositionOnPage + 21));
+				CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 16));
 			}
 
 			iCounter++;

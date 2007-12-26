@@ -5925,10 +5925,7 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 
 BOOLEAN DrawMapForDemo( void )
 {
-	SGPVObject* const uiTempObject = AddVideoObjectFromFile("INTERFACE/map_1.sti");
-	CHECKF(uiTempObject != NO_VOBJECT);
-	BltVideoObject(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
-	DeleteVideoObject(uiTempObject);
+	CHECKF(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/map_1.sti", 0, 290, 26));
 	return( TRUE );
 }
 #endif
