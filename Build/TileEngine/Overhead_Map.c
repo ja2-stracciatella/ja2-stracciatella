@@ -97,7 +97,6 @@ static void CopyOverheadDBShadetablesFromTileset(void);
 void InitNewOverheadDB( UINT8 ubTilesetID )
 {
 	UINT32					uiLoop;
-	HVOBJECT		   hVObject;
 	CHAR8	cAdjustedFile[ 128 ];
 	UINT32					cnt1, cnt2;
 	SMALL_TILE_SURF	s;
@@ -110,8 +109,7 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 		// Adjust for tileset position
 		sprintf(cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, gTilesets[ubTilesetID].TileSurfaceFilenames[uiLoop]);
 
-		hVObject = CreateVideoObjectFromFile(cAdjustedFile);
-
+		SGPVObject* hVObject = AddVideoObjectFromFile(cAdjustedFile);
 		if ( hVObject == NULL )
 		{
 			// TRY loading from default directory
@@ -119,12 +117,11 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 			sprintf(cAdjustedFile, "TILESETS/0/T/%s", gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
 
 			// LOAD ONE WE KNOW ABOUT!
-			hVObject = CreateVideoObjectFromFile(cAdjustedFile);
-
+			hVObject = AddVideoObjectFromFile(cAdjustedFile);
 			if ( hVObject == NULL )
 			{
 				// LOAD ONE WE KNOW ABOUT!
-				hVObject = CreateVideoObjectFromFile("TILESETS/0/T/grass.sti");
+				hVObject = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
 			}
 		}
 
@@ -197,9 +194,8 @@ static void DeleteOverheadDB(void)
 
 	for( cnt = 0; cnt < NUMBEROFTILETYPES; cnt++ )
 	{
-		DeleteVideoObject( gSmTileSurf[ cnt ].vo );
+		DeleteVideoObjectFromIndex(gSmTileSurf[cnt].vo);
 	}
-
 }
 
 

@@ -25,7 +25,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 		goto fail;
 	}
 
-	const HVOBJECT hVObject = CreateVideoObject(hImage);
+	const HVOBJECT hVObject = AddVideoObjectFromHImage(hImage);
 	if (hVObject == NULL)
 	{
 		SET_ERROR( "Could not load tile file: %s", cFilename );
@@ -111,7 +111,7 @@ fail_tile_imagery:
 fail_structure:
 	FreeStructureFile(pStructureFileRef);
 fail_vobj:
-	DeleteVideoObject(hVObject);
+	DeleteVideoObjectFromIndex(hVObject);
 fail_image:
 	DestroyImage(hImage);
 fail:
@@ -136,7 +136,7 @@ void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 		}
 	}
 
-	DeleteVideoObject( pTileSurf->vo );
+	DeleteVideoObjectFromIndex(pTileSurf->vo);
 	MemFree( pTileSurf );
 }
 

@@ -52,6 +52,9 @@ BOOLEAN InitializeVideoObjectManager(void)
 }
 
 
+static BOOLEAN DeleteVideoObject(SGPVObject*);
+
+
 BOOLEAN ShutdownVideoObjectManager(void)
 {
 	while (gpVObjectHead != NULL)
@@ -119,6 +122,20 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 }
 
 
+static SGPVObject* CreateVideoObject(HIMAGE);
+
+
+SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
+{
+	SGPVObject* const vo = CreateVideoObject(hImage);
+	AddStandardVideoObject(vo);
+	return vo;
+}
+
+
+static SGPVObject* CreateVideoObjectFromFile(const char* filename);
+
+
 SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile)
 {
 	SGPVObject* const vo = CreateVideoObjectFromFile(ImageFile);
@@ -182,7 +199,7 @@ BOOLEAN BltVideoObject(const UINT32 uiDestVSurface, const SGPVObject* const src,
 static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* pSrcPalette);
 
 
-HVOBJECT CreateVideoObject(HIMAGE hImage)
+static SGPVObject* CreateVideoObject(HIMAGE hImage)
 {
 	if (hImage == NULL)
 	{
@@ -218,7 +235,7 @@ HVOBJECT CreateVideoObject(HIMAGE hImage)
 }
 
 
-HVOBJECT CreateVideoObjectFromFile(const char* Filename)
+static SGPVObject* CreateVideoObjectFromFile(const char* const Filename)
 {
 	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
 	if (hImage == NULL)
@@ -258,7 +275,7 @@ static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* p
 
 
 // Deletes all palettes, surfaces and region data
-BOOLEAN DeleteVideoObject(HVOBJECT hVObject)
+static BOOLEAN DeleteVideoObject(SGPVObject* const hVObject)
 {
 	CHECKF(hVObject != NULL);
 
@@ -553,6 +570,14 @@ static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pS
 	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
 	gpVObjectTail->pCode = MemAlloc(strlen(str) + 1);
 	strcpy(gpVObjectTail->pCode, str);
+}
+
+
+SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
+{
+	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
+	if (vo != NO_VOBJECT) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
+	return vo;
 }
 
 

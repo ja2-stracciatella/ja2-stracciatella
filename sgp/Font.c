@@ -133,7 +133,7 @@ INT32 LoadFontFile(const char *filename)
 		return -1;
 	}
 
-	FontObjs[LoadIndex] = CreateVideoObjectFromFile(filename);
+	FontObjs[LoadIndex] = AddVideoObjectFromFile(filename);
 	if (FontObjs[LoadIndex] == NULL)
 	{
 		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
@@ -157,7 +157,7 @@ void UnloadFont(UINT32 FontIndex)
 	Assert(FontIndex <= MAX_FONTS);
 	Assert(FontObjs[FontIndex] != NULL);
 
-	DeleteVideoObject(FontObjs[FontIndex]);
+	DeleteVideoObjectFromIndex(FontObjs[FontIndex]);
 	FontObjs[FontIndex] = NULL;
 }
 

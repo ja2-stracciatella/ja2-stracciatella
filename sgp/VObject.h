@@ -61,11 +61,15 @@ BOOLEAN ShutdownVideoObjectManager(void);
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
 	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
+	SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile);
 	SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
-	#define AddVideoObjectFromFile(a) AddAndRecordVObjectFromFile(a, __LINE__, __FILE__)
+	#define AddVideoObjectFromHImage(a) AddAndRecordVObjectFromHImage(a, __LINE__, __FILE__)
+	#define AddVideoObjectFromFile(a)   AddAndRecordVObjectFromFile(  a, __LINE__, __FILE__)
 #else
+	SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage);
 	SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile);
-	#define AddVideoObjectFromFile(a) AddStandardVideoObjectFromFile(a)
+	#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
+	#define AddVideoObjectFromFile(a)   AddStandardVideoObjectFromFile(a)
 #endif
 
 // Removes a video object
@@ -73,13 +77,6 @@ BOOLEAN DeleteVideoObjectFromIndex(SGPVObject*);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(UINT32 uiDestVSurface, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
-
-
-HVOBJECT CreateVideoObject(HIMAGE hImage);
-HVOBJECT CreateVideoObjectFromFile(const char* Filename);
-
-// Deletes all data
-BOOLEAN DeleteVideoObject(HVOBJECT hVObject);
 
 // Deletes the 16-bit palette tables
 BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject);

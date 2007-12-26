@@ -244,7 +244,7 @@ INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32
 		return BUTTON_NO_SLOT;
 	}
 
-	HVOBJECT VObj = CreateVideoObjectFromFile(filename);
+	SGPVObject* const VObj = AddVideoObjectFromFile(filename);
 	if (VObj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s", filename));
@@ -325,7 +325,7 @@ void UnloadButtonImage(INT32 Index)
 			goto remove_pic;
 		}
 
-		DeleteVideoObject(pics->vobj);
+		DeleteVideoObjectFromIndex(pics->vobj);
 	}
 
 remove_pic:
@@ -393,14 +393,14 @@ static BOOLEAN InitializeButtonImageManager(void)
 		GenericButtonIcons[x] = NULL;
 
 	// Load the default generic button images
-	GenericButtonOffNormal[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
+	GenericButtonOffNormal[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
 	if (GenericButtonOffNormal[0] == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_OFF);
 		return FALSE;
 	}
 
-	GenericButtonOnNormal[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
+	GenericButtonOnNormal[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
 	if (GenericButtonOnNormal[0] == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_ON);
@@ -412,8 +412,8 @@ static BOOLEAN InitializeButtonImageManager(void)
 	 * These are only here as extra images, they aren't required for operation
 	 * (only OFF Normal and ON Normal are required).
 	 */
-	GenericButtonOffHilite[0] = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
-	GenericButtonOnHilite[0]  = CreateVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
+	GenericButtonOffHilite[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
+	GenericButtonOnHilite[0]  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
 
 	UINT8 Pix = 0;
 	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal[0], 8, 0, 0))
@@ -452,7 +452,7 @@ INT16 LoadGenericButtonIcon(const char* filename)
 	}
 
 	// Load the icon
-	GenericButtonIcons[ImgSlot] = CreateVideoObjectFromFile(filename);
+	GenericButtonIcons[ImgSlot] = AddVideoObjectFromFile(filename);
 	if (GenericButtonIcons[ImgSlot] == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonIcon: Couldn't create VOBJECT for %s", filename));
@@ -477,7 +477,7 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 		AssertMsg(0, "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
 	}
 	// If an icon is present in the slot, remove it.
-	DeleteVideoObject(GenericButtonIcons[GenImg]);
+	DeleteVideoObjectFromIndex(GenericButtonIcons[GenImg]);
 	GenericButtonIcons[GenImg] = NULL;
 	return TRUE;
 }
@@ -501,25 +501,25 @@ static void ShutdownButtonImageManager(void)
 	{
 		if (GenericButtonOffNormal[x] != NULL)
 		{
-			DeleteVideoObject(GenericButtonOffNormal[x]);
+			DeleteVideoObjectFromIndex(GenericButtonOffNormal[x]);
 			GenericButtonOffNormal[x] = NULL;
 		}
 
 		if (GenericButtonOffHilite[x]!=NULL)
 		{
-			DeleteVideoObject(GenericButtonOffHilite[x]);
+			DeleteVideoObjectFromIndex(GenericButtonOffHilite[x]);
 			GenericButtonOffHilite[x] = NULL;
 		}
 
 		if (GenericButtonOnNormal[x] != NULL)
 		{
-			DeleteVideoObject(GenericButtonOnNormal[x]);
+			DeleteVideoObjectFromIndex(GenericButtonOnNormal[x]);
 			GenericButtonOnNormal[x] = NULL;
 		}
 
 		if (GenericButtonOnHilite[x] != NULL)
 		{
-			DeleteVideoObject(GenericButtonOnHilite[x]);
+			DeleteVideoObjectFromIndex(GenericButtonOnHilite[x]);
 			GenericButtonOnHilite[x] = NULL;
 		}
 
