@@ -599,7 +599,7 @@ void ClearEditorItemsInfo()
 {
 	if( eInfo.uiBuffer )
 	{
-		DeleteVideoSurfaceFromIndex( eInfo.uiBuffer );
+		DeleteVideoSurface(eInfo.uiBuffer);
 		eInfo.uiBuffer = 0;
 	}
 	if( eInfo.pusItemIndex )

@@ -1895,7 +1895,7 @@ static BOOLEAN CreateHelpScreenTextBuffer(void)
 
 static void DestroyHelpScreenTextBuffer(void)
 {
-	DeleteVideoSurfaceFromIndex( guiHelpScreenTextBufferSurface );
+	DeleteVideoSurface(guiHelpScreenTextBufferSurface);
 }
 
 

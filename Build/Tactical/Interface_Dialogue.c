@@ -527,8 +527,7 @@ void DeleteTalkingMenu( )
 		gTalkPanel.fTextRegionOn = FALSE;
 	}
 
-	// Delete save buffer
-	DeleteVideoSurfaceFromIndex( gTalkPanel.uiSaveBuffer );
+	DeleteVideoSurface(gTalkPanel.uiSaveBuffer);
 
 	// Remove video object
 	DeleteVideoObject(gTalkPanel.uiPanelVO);

@@ -584,9 +584,7 @@ void ExitAIMMembers()
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	InitDeleteVideoConferencePopUp( );
 
-
-
-	DeleteVideoSurfaceFromIndex(guiVideoFaceBackground);
+	DeleteVideoSurface(guiVideoFaceBackground);
 
 	DeleteVideoObject(guiStats);
 	DeleteVideoObject(guiPrice);
@@ -2908,12 +2906,9 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 			break;
 		}
 
-
 		case AIM_VIDEO_POPUP_MODE:
-		{
-			DeleteVideoSurfaceFromIndex(guiVideoTitleBar);
+			DeleteVideoSurface(guiVideoTitleBar);
 			break;
-		}
 
 		// The opening animation of the vc (fuzzy screen, then goes to black)
 		case AIM_VIDEO_INIT_MODE:
@@ -3006,12 +3001,10 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 //				DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 			}
 
-
 			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
-			DeleteVideoSurfaceFromIndex(guiVideoTitleBar);
+			DeleteVideoSurface(guiVideoTitleBar);
 			break;
 		}
-
 	}
 	return(TRUE);
 }

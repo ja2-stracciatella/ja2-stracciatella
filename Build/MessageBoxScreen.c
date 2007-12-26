@@ -501,12 +501,8 @@ static UINT32 ExitMsgBox(INT8 ubExitCode)
 		RestrictMouseCursor(&MessageBoxRestrictedCursorRegion);
 	}
 
-	// Remove region
 	MSYS_RemoveRegion(&gMsgBox.BackRegion);
-
-	// Remove save buffer!
-	DeleteVideoSurfaceFromIndex(gMsgBox.uiSaveBuffer);
-
+	DeleteVideoSurface(gMsgBox.uiSaveBuffer);
 
 	switch (gMsgBox.uiExitScreen)
 	{

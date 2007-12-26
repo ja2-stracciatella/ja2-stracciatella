@@ -7783,7 +7783,7 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 	else if( ( fShowAssignmentMenu == FALSE ) && ( fCreated == TRUE ) )
 	{
 		DeleteVideoObject(guiPOPUPBORDERS);
-		DeleteVideoSurfaceFromIndex(guiPOPUPTEX);
+		DeleteVideoSurface(guiPOPUPTEX);
 
 		RemoveBox(ghAttributeBox);
 		ghAttributeBox = -1;

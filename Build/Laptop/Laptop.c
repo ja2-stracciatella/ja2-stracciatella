@@ -2525,7 +2525,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 
 static void RemoveTitleBarMaximizeGraphics(void)
 {
-	DeleteVideoSurfaceFromIndex(guiTitleBarSurface);
+	DeleteVideoSurface(guiTitleBarSurface);
 }
 
 
@@ -2901,8 +2901,7 @@ static void LoadDesktopBackground(void)
 
 static void DeleteDesktopBackground(void)
 {
-	// delete desktop
-	DeleteVideoSurfaceFromIndex(guiDESKTOP);
+	DeleteVideoSurface(guiDESKTOP);
 }
 
 

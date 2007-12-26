@@ -76,7 +76,7 @@ BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface*, SGPPaletteEntry* pPalette)
 BOOLEAN SetVideoSurfacePalette(SGPVSurface* hVSurface, const SGPPaletteEntry* pSrcPalette);
 
 // Deletes all data, including palettes
-BOOLEAN DeleteVideoSurfaceFromIndex(SGPVSurface*);
+BOOLEAN DeleteVideoSurface(SGPVSurface*);
 
 
 BOOLEAN ShadowVideoSurfaceRect(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);

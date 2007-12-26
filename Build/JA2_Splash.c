@@ -46,7 +46,7 @@ void InitJA2SplashScreen(void)
 	}
 
 	BltVideoSurface(FRAME_BUFFER, uiLogoID, 0, 0, NULL);
-	DeleteVideoSurfaceFromIndex(uiLogoID);
+	DeleteVideoSurface(uiLogoID);
 #endif
 
 	InvalidateScreen();

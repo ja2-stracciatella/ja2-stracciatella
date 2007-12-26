@@ -567,20 +567,11 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 				// This will dirty the panel next frame...
 				gfRerenderInterfaceFromHelpText = TRUE;
 			}
-
 		}
-
 	}
 
-	if ( pFace->fAutoRestoreBuffer )
-	{
-		DeleteVideoSurfaceFromIndex( pFace->uiAutoRestoreBuffer );
-	}
-
-	if ( pFace->fAutoDisplayBuffer )
-	{
-		DeleteVideoSurfaceFromIndex( pFace->uiAutoDisplayBuffer );
-	}
+	if (pFace->fAutoRestoreBuffer) DeleteVideoSurface(pFace->uiAutoRestoreBuffer);
+	if (pFace->fAutoDisplayBuffer) DeleteVideoSurface(pFace->uiAutoDisplayBuffer);
 
 	if (pFace->video_overlay != NULL)
 	{

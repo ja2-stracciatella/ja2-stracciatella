@@ -4888,8 +4888,8 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteVideoObject(guiCHARICONS);
 		DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
-		DeleteVideoSurfaceFromIndex(guiBIGMAP);
-	//	DeleteVideoSurfaceFromIndex(guiPOPUPTEX);
+		DeleteVideoSurface(guiBIGMAP);
+	//	DeleteVideoSurface(guiPOPUPTEX);
 		DeleteVideoObject(guiSAMICON);
 #endif
 		DeleteVideoObject(guiMAPINV);
@@ -8838,12 +8838,12 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 		DeleteVideoObject(guiCHARICONS);
 		DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
-		DeleteVideoSurfaceFromIndex(guiBIGMAP);
+		DeleteVideoSurface(guiBIGMAP);
 		DeleteVideoObject(guiSubLevel1);
 		DeleteVideoObject(guiSubLevel2);
 		DeleteVideoObject(guiSubLevel3);
 
-	//	DeleteVideoSurfaceFromIndex(guiPOPUPTEX);
+	//	DeleteVideoSurface(guiPOPUPTEX);
 		DeleteVideoObject(guiSAMICON);
 #endif
 		DeleteVideoObject(guiMAPINV);

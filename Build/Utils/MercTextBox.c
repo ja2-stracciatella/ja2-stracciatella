@@ -184,12 +184,8 @@ void RemoveTextMercPopupImages( )
 	{
 		if( gPopUpTextBox->fMercTextPopupInitialized )
 		{
-			// the background
-			DeleteVideoSurfaceFromIndex( gPopUpTextBox->uiMercTextPopUpBackground );
-
-			// the border
+			DeleteVideoSurface(gPopUpTextBox->uiMercTextPopUpBackground);
 			DeleteVideoObject(gPopUpTextBox->uiMercTextPopUpBorder);
-
 			gPopUpTextBox->fMercTextPopupInitialized = FALSE;
 		}
 	}
@@ -501,8 +497,7 @@ static BOOLEAN RemoveMercPopupBox(void)
 				 iCounter = MAX_NUMBER_OF_POPUP_BOXES;
 			}
 		}
-		// yep, get rid of the bloody...
-		DeleteVideoSurfaceFromIndex(gPopUpTextBox->uiSourceBufferIndex);
+		DeleteVideoSurface(gPopUpTextBox->uiSourceBufferIndex);
 
 		//DEF Added 5/26
 		//Delete the background and the border

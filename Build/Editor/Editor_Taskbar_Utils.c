@@ -205,10 +205,10 @@ static void CreateEditorBuffers(void)
 static void DeleteEditorBuffers(void)
 {
 	INT32 i;
-	DeleteVideoSurfaceFromIndex( guiMercTempBuffer );
+	DeleteVideoSurface(guiMercTempBuffer);
 	for( i = 0; i < 9; i++ )
 	{
-		DeleteVideoSurfaceFromIndex( guiMercInvPanelBuffers[ i ] );
+		DeleteVideoSurface(guiMercInvPanelBuffers[i]);
 	}
 }
 

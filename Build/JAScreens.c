@@ -932,7 +932,7 @@ UINT32 DemoExitScreenHandle(void)
 		SetMusicMode( MUSIC_NONE );
 
 		BltVideoSurface(FRAME_BUFFER, uiCollageID, 0, 0, NULL);
-		DeleteVideoSurfaceFromIndex( uiCollageID );
+		DeleteVideoSurface(uiCollageID);
 
 		InvalidateScreen( );
 
@@ -1148,7 +1148,7 @@ UINT32 DemoExitScreenHandle(void)
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_GRAY2 );
 			uiStartTime = GetJA2Clock();
-			DeleteVideoSurfaceFromIndex( uiCollageID );
+			DeleteVideoSurface(uiCollageID);
 			iPrevPercentage = 0;
 		}
 		ubPreviousScreen = 3;
@@ -1304,7 +1304,7 @@ UINT32 DemoExitScreenHandle(void)
 			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 6;
-			DeleteVideoSurfaceFromIndex( uiCollageID );
+			DeleteVideoSurface(uiCollageID);
 			iPrevPercentage = 0;
 		}
 		ubPreviousScreen = 5;

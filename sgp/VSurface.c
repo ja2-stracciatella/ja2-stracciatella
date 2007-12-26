@@ -55,7 +55,7 @@ BOOLEAN InitializeVideoSurfaceManager(void)
 }
 
 
-static BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface);
+static BOOLEAN InternalDeleteVideoSurface(HVSURFACE hVSurface);
 
 
 BOOLEAN ShutdownVideoSurfaceManager(void)
@@ -69,7 +69,7 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 	{
 		VSURFACE_NODE* curr = gpVSurfaceHead;
 		gpVSurfaceHead = gpVSurfaceHead->next;
-		DeleteVideoSurface(curr->hVSurface);
+		InternalDeleteVideoSurface(curr->hVSurface);
 #ifdef SGP_VIDEO_DEBUGGING
 		if (curr->pName != NULL) MemFree(curr->pName);
 		if (curr->pCode != NULL) MemFree(curr->pCode);
@@ -198,19 +198,19 @@ static void DeletePrimaryVideoSurfaces(void)
 {
 	if (g_back_buffer != NULL)
 	{
-		DeleteVideoSurface(g_back_buffer);
+		InternalDeleteVideoSurface(g_back_buffer);
 		g_back_buffer = NULL;
 	}
 
   if (g_frame_buffer != NULL)
 	{
-		DeleteVideoSurface(g_frame_buffer);
+		InternalDeleteVideoSurface(g_frame_buffer);
 		g_frame_buffer = NULL;
 	}
 
 	if (g_mouse_buffer != NULL)
 	{
-		DeleteVideoSurface(g_mouse_buffer);
+		InternalDeleteVideoSurface(g_mouse_buffer);
 		g_mouse_buffer = NULL;
 	}
 }
@@ -518,7 +518,7 @@ BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface* const src, SGPPaletteEntry*
 }
 
 
-BOOLEAN DeleteVideoSurfaceFromIndex(SGPVSurface* const vs)
+BOOLEAN DeleteVideoSurface(SGPVSurface* const vs)
 {
 	VSURFACE_NODE* prev = NULL;
 	VSURFACE_NODE* curr = gpVSurfaceHead;
@@ -526,7 +526,7 @@ BOOLEAN DeleteVideoSurfaceFromIndex(SGPVSurface* const vs)
 	{
 		if (curr->hVSurface == vs)
 		{ //Found the node, so detach it and delete it.
-			DeleteVideoSurface(vs);
+			InternalDeleteVideoSurface(vs);
 
 			if (curr == gpVSurfaceHead) gpVSurfaceHead = gpVSurfaceHead->next;
 			if (curr == gpVSurfaceTail) gpVSurfaceTail = prev;
@@ -549,7 +549,7 @@ BOOLEAN DeleteVideoSurfaceFromIndex(SGPVSurface* const vs)
 
 
 // Deletes all palettes and surfaces
-static BOOLEAN DeleteVideoSurface(HVSURFACE hVSurface)
+static BOOLEAN InternalDeleteVideoSurface(HVSURFACE hVSurface)
 {
 	CHECKF(hVSurface != NULL);
 

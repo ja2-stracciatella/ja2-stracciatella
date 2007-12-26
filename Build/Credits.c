@@ -486,7 +486,7 @@ static void DeleteNode(CRDT_NODE* const pNodeToDelete)
 	if (pNodeToDelete == gCrdtRootNode)
 		gCrdtRootNode = NULL;
 
-	DeleteVideoSurfaceFromIndex(pNodeToDelete->uiVideoSurfaceImage);
+	DeleteVideoSurface(pNodeToDelete->uiVideoSurfaceImage);
 	pNodeToDelete->uiVideoSurfaceImage = 0;
 
 	MemFree(pNodeToDelete);

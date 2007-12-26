@@ -1394,9 +1394,7 @@ BOOLEAN InitializePalettesForMap( void )
 	pMapLTGreenPalette = Create16BPPPaletteShaded( pPalette, 0, 400, 0, TRUE );
 	pMapDKGreenPalette = Create16BPPPaletteShaded( pPalette, 0, 200, 0, TRUE );
 
-	// delete image
-  DeleteVideoSurfaceFromIndex(uiTempMap);
-
+  DeleteVideoSurface(uiTempMap);
 
 	return ( TRUE );
 }

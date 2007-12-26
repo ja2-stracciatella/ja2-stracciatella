@@ -835,7 +835,7 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	//Delete the main shopkeep background
 	DeleteVideoObject(guiMainTradeScreenImage);
 	DeleteVideoObject(guiItemCrossOut);
-	DeleteVideoSurfaceFromIndex( guiCornerWhereTacticalIsStillSeenImage );
+	DeleteVideoSurface(guiCornerWhereTacticalIsStillSeenImage);
 
 	ShutUpShopKeeper();
 

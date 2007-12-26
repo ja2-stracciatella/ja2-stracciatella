@@ -267,7 +267,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		if (uiLoadScreen != NO_VSURFACE)
 		{ //Blit the background image
 			BltVideoSurface(FRAME_BUFFER, uiLoadScreen, 0, 0, NULL);
-			DeleteVideoSurfaceFromIndex( uiLoadScreen );
+			DeleteVideoSurface(uiLoadScreen);
 		}
 		else
 		{ //Failed to load the file, so use a black screen and print out message.
