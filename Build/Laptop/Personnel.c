@@ -412,9 +412,9 @@ static BOOLEAN LoadPersonnelGraphics(void)
 static void RemovePersonnelGraphics(void)
 {
 	// delete graphics needed for personnel screen
-	DeleteVideoObjectFromIndex(guiSCREEN);
-	DeleteVideoObjectFromIndex(guiTITLE);
-	DeleteVideoObjectFromIndex(guiPersonnelInventory);
+	DeleteVideoObject(guiSCREEN);
+	DeleteVideoObject(guiTITLE);
+	DeleteVideoObject(guiPersonnelInventory);
 }
 
 
@@ -523,7 +523,7 @@ static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
 	}
 
 	BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
-	DeleteVideoObjectFromIndex(guiFACE);
+	DeleteVideoObject(guiFACE);
 
 	// Display the merc's name on the portrait
 	const wchar_t* name = p->zName;
@@ -984,8 +984,8 @@ static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void)
 static void DeletePersonnelScreenBackgroundGraphics(void)
 {
 	// delete background V/O's
-	DeleteVideoObjectFromIndex(guiCURRENTTEAM);
-	DeleteVideoObjectFromIndex(guiDEPARTEDTEAM);
+	DeleteVideoObject(guiCURRENTTEAM);
+	DeleteVideoObject(guiDEPARTEDTEAM);
 }
 
 
@@ -1073,7 +1073,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], x, y + SMALL_PORT_HEIGHT / 2, SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
-		DeleteVideoObjectFromIndex(guiFACE);
+		DeleteVideoObject(guiFACE);
 		i++;
 	}
 
@@ -2097,7 +2097,7 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 	BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
 
-	DeleteVideoObjectFromIndex(guiFACE);
+	DeleteVideoObject(guiFACE);
 
 	return TRUE;
 }
@@ -2262,7 +2262,7 @@ static BOOLEAN DisplayHighLightBox(void)
 	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, x, y);
-	DeleteVideoObjectFromIndex(uiBox);
+	DeleteVideoObject(uiBox);
 
 	return TRUE;
 }
@@ -2410,7 +2410,7 @@ static BOOLEAN RenderAtmPanel(void)
 	CHECKF(uiBox != NO_VOBJECT);
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
-	DeleteVideoObjectFromIndex(uiBox);
+	DeleteVideoObject(uiBox);
 
 	// create destroy
 	CreateDestroyStartATMButton();

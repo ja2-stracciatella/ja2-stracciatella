@@ -644,12 +644,12 @@ void ExitLaptop(void)
 	fLoadPendingFlag = FALSE;
 
 
-	DeleteVideoObjectFromIndex(guiLAPTOP);
-	DeleteVideoObjectFromIndex(guiLaptopBACKGROUND);
-	DeleteVideoObjectFromIndex(guiTITLEBARLAPTOP);
-	DeleteVideoObjectFromIndex(guiLIGHTS);
-	DeleteVideoObjectFromIndex(guiTITLEBARICONS);
-	DeleteVideoObjectFromIndex(guiEmailWarning);
+	DeleteVideoObject(guiLAPTOP);
+	DeleteVideoObject(guiLaptopBACKGROUND);
+	DeleteVideoObject(guiTITLEBARLAPTOP);
+	DeleteVideoObject(guiLIGHTS);
+	DeleteVideoObject(guiTITLEBARICONS);
+	DeleteVideoObject(guiEmailWarning);
 
 	// destroy region for new mail icon
 	CreateDestroyMouseRegionForNewMailIcon();
@@ -1831,11 +1831,11 @@ static void DisplayBookMarks(void)
 
 static void DeleteBookmark(void)
 {
-	DeleteVideoObjectFromIndex(guiBOOKHIGH);
-	DeleteVideoObjectFromIndex(guiBOOKMARK);
-	DeleteVideoObjectFromIndex(guiDOWNLOADTOP);
-	DeleteVideoObjectFromIndex(guiDOWNLOADMID);
-	DeleteVideoObjectFromIndex(guiDOWNLOADBOT);
+	DeleteVideoObject(guiBOOKHIGH);
+	DeleteVideoObject(guiBOOKMARK);
+	DeleteVideoObject(guiDOWNLOADTOP);
+	DeleteVideoObject(guiDOWNLOADMID);
+	DeleteVideoObject(guiDOWNLOADBOT);
 }
 
 
@@ -2150,8 +2150,8 @@ static void DeleteLoadPending(void)
 {
 	// this funtion will delete the load pending graphics
 	// reuse bookmark
-	DeleteVideoObjectFromIndex(guiGRAPHBAR);
-	DeleteVideoObjectFromIndex(guiGRAPHWINDOW);
+	DeleteVideoObject(guiGRAPHBAR);
+	DeleteVideoObject(guiGRAPHWINDOW);
 }
 
 
@@ -3175,7 +3175,7 @@ BOOLEAN RenderWWWProgramTitleBar(void)
 	BltVideoObject(FRAME_BUFFER, uiTITLEFORWWW, 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now delete
-	DeleteVideoObjectFromIndex(uiTITLEFORWWW);
+	DeleteVideoObject(uiTITLEFORWWW);
 
 	// now slapdown text
 	SetFont(FONT14ARIAL);

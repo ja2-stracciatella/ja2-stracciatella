@@ -791,7 +791,7 @@ void KillPreBattleInterface()
 	MSYS_RemoveRegion( &PBInterfaceBlanket );
 
 	//The panel
-	DeleteVideoObjectFromIndex( uiInterfaceImages );
+	DeleteVideoObject(uiInterfaceImages);
 
 	//The 3 buttons
 	RemoveButton( iPBButton[0] );

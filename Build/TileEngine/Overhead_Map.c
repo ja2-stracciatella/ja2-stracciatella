@@ -195,7 +195,7 @@ static void DeleteOverheadDB(void)
 
 	for( cnt = 0; cnt < NUMBEROFTILETYPES; cnt++ )
 	{
-		DeleteVideoObjectFromIndex(gSmTileSurf[cnt].vo);
+		DeleteVideoObject(gSmTileSurf[cnt].vo);
 	}
 }
 
@@ -591,8 +591,8 @@ void KillOverheadMap()
 	MSYS_RemoveRegion(&OverheadRegion );
 	MSYS_RemoveRegion(&OverheadBackgroundRegion );
 
-	DeleteVideoObjectFromIndex( uiOVERMAP );
-	DeleteVideoObjectFromIndex( uiPERSONS );
+	DeleteVideoObject(uiOVERMAP);
+	DeleteVideoObject(uiPERSONS);
 
 	HandleTacticalPanelSwitch( );
 	DisableTacticalTeamPanelButtons( FALSE );

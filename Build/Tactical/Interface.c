@@ -2374,12 +2374,12 @@ static void CreateTopMessage(SGPVSurface* const uiSurface, const UINT8 ubType, c
 	}
 
 	// Delete rect
-	DeleteVideoObjectFromIndex( uiBAR );
-	DeleteVideoObjectFromIndex( uiINTBAR );
+	DeleteVideoObject(uiBAR);
+	DeleteVideoObject(uiINTBAR);
 
 	//if ( gGameOptions.fTurnTimeLimit )
 	{
-		DeleteVideoObjectFromIndex( uiPLAYERBAR );
+		DeleteVideoObject(uiPLAYERBAR);
 	}
 
 	// Draw text....

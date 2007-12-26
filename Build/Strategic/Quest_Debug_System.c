@@ -920,17 +920,12 @@ static void ExitQuestDebugSystem(void)
 	RemoveButton( guiQuestDebugAddNpcToTeamToggle );
 	RemoveButton( guiQuestDebugRPCSaySectorDescToggle );
 
-
-
 	RemoveButton( guiQDPgUpButtonButton );
 	RemoveButton( guiQDPgDownButtonButton );
 
+	DeleteVideoObject(guiQdScrollArrowImage);
 
-
-	DeleteVideoObjectFromIndex( guiQdScrollArrowImage );
-
-
-//	DeleteVideoObjectFromIndex( guiBrownBackgroundForTeamPanel );
+//	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 	CreateDestroyDisplaySelectNpcDropDownBox();

@@ -188,7 +188,7 @@ void RemoveTextMercPopupImages( )
 			DeleteVideoSurfaceFromIndex( gPopUpTextBox->uiMercTextPopUpBackground );
 
 			// the border
-			DeleteVideoObjectFromIndex( gPopUpTextBox->uiMercTextPopUpBorder );
+			DeleteVideoObject(gPopUpTextBox->uiMercTextPopUpBorder);
 
 			gPopUpTextBox->fMercTextPopupInitialized = FALSE;
 		}

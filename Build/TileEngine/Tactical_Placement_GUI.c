@@ -672,8 +672,8 @@ static void KillTacticalPlacementGUI(void)
 	gfTacticalPlacementGUIActive = FALSE;
 	gfKillTacticalGUI = FALSE;
 	//Delete video objects
-	DeleteVideoObjectFromIndex( giOverheadPanelImage );
-	DeleteVideoObjectFromIndex( giMercPanelImage );
+	DeleteVideoObject(giOverheadPanelImage);
+	DeleteVideoObject(giMercPanelImage);
 	//Delete buttons
 	for( i = 0; i < NUM_TP_BUTTONS; i++ )
 	{
@@ -683,7 +683,7 @@ static void KillTacticalPlacementGUI(void)
 	//Delete faces and regions
 	for( i = 0; i < giPlacements; i++ )
 	{
-		DeleteVideoObjectFromIndex( gMercPlacement[ i ].uiVObjectID );
+		DeleteVideoObject(gMercPlacement[i].uiVObjectID);
 		MSYS_RemoveRegion( &gMercPlacement[ i ].region );
 	}
 

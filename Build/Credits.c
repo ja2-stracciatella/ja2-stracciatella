@@ -300,10 +300,8 @@ static void ExitCreditScreen(void)
 {
 	UINT32	uiCnt;
 
-	DeleteVideoObjectFromIndex( guiCreditBackGroundImage );
-
-	DeleteVideoObjectFromIndex( guiCreditFaces );
-
+	DeleteVideoObject(guiCreditBackGroundImage);
+	DeleteVideoObject(guiCreditFaces);
 
 	//ShutDown Credit link list
 	ShutDownCreditList();

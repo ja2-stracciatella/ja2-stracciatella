@@ -260,8 +260,8 @@ BOOLEAN InitMainMenu(void)
 static void ExitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(FALSE);
-	DeleteVideoObjectFromIndex(guiMainMenuBackGroundImage);
-	DeleteVideoObjectFromIndex(guiJa2LogoImage);
+	DeleteVideoObject(guiMainMenuBackGroundImage);
+	DeleteVideoObject(guiJa2LogoImage);
 	gMsgBox.uiExitScreen = MAINMENU_SCREEN;
 }
 

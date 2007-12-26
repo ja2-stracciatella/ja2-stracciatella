@@ -158,7 +158,7 @@ void UnloadFont(UINT32 FontIndex)
 	Assert(FontIndex <= MAX_FONTS);
 	Assert(FontObjs[FontIndex] != NULL);
 
-	DeleteVideoObjectFromIndex(FontObjs[FontIndex]);
+	DeleteVideoObject(FontObjs[FontIndex]);
 	FontObjs[FontIndex] = NULL;
 }
 

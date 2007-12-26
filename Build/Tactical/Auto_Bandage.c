@@ -988,7 +988,7 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 	{
 		if (gdoctor_list[iCounter] != NULL)
 		{
-			DeleteVideoObjectFromIndex( giAutoBandagesSoldierFaces[ iCounter ] );
+			DeleteVideoObject(giAutoBandagesSoldierFaces[iCounter]);
 			iNumberOfDoctors++;
 		}
 	}
@@ -998,11 +998,11 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 	{
 		if (gpatient_list[iCounter] != NULL)
 		{
-			DeleteVideoObjectFromIndex( giAutoBandagesSoldierFaces[ iCounter + iNumberOfDoctors ] );
+			DeleteVideoObject(giAutoBandagesSoldierFaces[iCounter + iNumberOfDoctors]);
 		}
 	}
 
-	DeleteVideoObjectFromIndex( giMercPanelImage );
+	DeleteVideoObject(giMercPanelImage);
 
 	return( TRUE );
 }

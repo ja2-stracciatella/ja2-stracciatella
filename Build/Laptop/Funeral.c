@@ -170,13 +170,13 @@ void ExitFuneral()
 {
 	UINT8 i;
 
-	DeleteVideoObjectFromIndex(guiClosedSign);
-	DeleteVideoObjectFromIndex(guiLeftColumn);
-	DeleteVideoObjectFromIndex(guiLinkCarving);
-	DeleteVideoObjectFromIndex(guiMarbleBackground);
-	DeleteVideoObjectFromIndex(guiMcGillicuttys);
-	DeleteVideoObjectFromIndex(guiMortuary);
-	DeleteVideoObjectFromIndex(guiRightColumn);
+	DeleteVideoObject(guiClosedSign);
+	DeleteVideoObject(guiLeftColumn);
+	DeleteVideoObject(guiLinkCarving);
+	DeleteVideoObject(guiMarbleBackground);
+	DeleteVideoObject(guiMcGillicuttys);
+	DeleteVideoObject(guiMortuary);
+	DeleteVideoObject(guiRightColumn);
 
 	for(i=0; i<FUNERAL_NUMBER_OF_LINKS; i++)
 	{

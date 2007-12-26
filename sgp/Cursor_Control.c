@@ -178,7 +178,7 @@ static void UnLoadCursorData(UINT32 uiCursorIndex)
 
 		if (CFData->hVObject != NULL && CFData->Filename != NULL)
 		{
-			DeleteVideoObjectFromIndex(CFData->hVObject);
+			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
 		}
 	}
@@ -192,7 +192,7 @@ void CursorDatabaseClear(void)
 		CursorFileData* CFData = &gpCursorFileDatabase[uiIndex];
 		if (CFData->hVObject != NULL && CFData->Filename != NULL)
 		{
-			DeleteVideoObjectFromIndex(CFData->hVObject);
+			DeleteVideoObject(CFData->hVObject);
 			CFData->hVObject = NULL;
     }
   }

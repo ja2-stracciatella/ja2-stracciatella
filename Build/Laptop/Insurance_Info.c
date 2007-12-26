@@ -152,8 +152,9 @@ void ExitInsuranceInfo()
 	MSYS_RemoveRegion( &gSelectedInsuranceInfoLinkRegion);
 	MSYS_RemoveRegion( &gSelectedInsuranceInfoHomeLinkRegion);
 
-	DeleteVideoObjectFromIndex( guiBulletImage );
+	DeleteVideoObject(guiBulletImage);
 }
+
 
 void HandleInsuranceInfo()
 {

@@ -716,7 +716,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	MakeButton(1, pMapPopUpInventoryText[1], x, y, MapTownMineExitButtonCallBack);
 
 	// delete video object
-	DeleteVideoObjectFromIndex( uiObject );
+	DeleteVideoObject(uiObject);
 
 /*
 	// if below ground disable
@@ -782,6 +782,5 @@ static void MinWidthOfTownMineInfoBox(void)
 	INT16 sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;
 
-	// delete video object
-	DeleteVideoObjectFromIndex( uiObject );
+	DeleteVideoObject(uiObject);
 }

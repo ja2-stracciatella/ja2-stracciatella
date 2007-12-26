@@ -444,9 +444,8 @@ static void ExitOptionsScreen(void)
 
 	UnloadButtonImage(giOptionsButtonImages);
 
-	DeleteVideoObjectFromIndex( guiOptionBackGroundImage );
-	DeleteVideoObjectFromIndex( guiOptionsAddOnImages );
-
+	DeleteVideoObject(guiOptionBackGroundImage);
+	DeleteVideoObject(guiOptionsAddOnImages);
 
 	//Remove the toggle buttons
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)

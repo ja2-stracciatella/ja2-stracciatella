@@ -53,7 +53,7 @@ BOOLEAN InitializeVideoObjectManager(void)
 }
 
 
-static BOOLEAN DeleteVideoObject(SGPVObject*);
+static BOOLEAN InternalDeleteVideoObject(SGPVObject*);
 
 
 BOOLEAN ShutdownVideoObjectManager(void)
@@ -62,7 +62,7 @@ BOOLEAN ShutdownVideoObjectManager(void)
 	{
 		VOBJECT_NODE* curr = gpVObjectHead;
 		gpVObjectHead = gpVObjectHead->next;
-		DeleteVideoObject(curr->hVObject);
+		InternalDeleteVideoObject(curr->hVObject);
 #ifdef SGP_VIDEO_DEBUGGING
 		if (curr->pName != NULL) MemFree(curr->pName);
 		if (curr->pCode != NULL) MemFree(curr->pCode);
@@ -178,7 +178,7 @@ SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 }
 
 
-BOOLEAN DeleteVideoObjectFromIndex(SGPVObject* const vo)
+BOOLEAN DeleteVideoObject(SGPVObject* const vo)
 {
 	VOBJECT_NODE* prev = NULL;
 	VOBJECT_NODE* curr = gpVObjectHead;
@@ -186,7 +186,7 @@ BOOLEAN DeleteVideoObjectFromIndex(SGPVObject* const vo)
 	{
 		if (curr->hVObject == vo)
 		{ //Found the node, so detach it and delete it.
-			DeleteVideoObject(vo);
+			InternalDeleteVideoObject(vo);
 
 			if (curr == gpVObjectHead) gpVObjectHead = gpVObjectHead->next;
 			if (curr == gpVObjectTail) gpVObjectTail = prev;
@@ -254,7 +254,7 @@ static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* p
 
 
 // Deletes all palettes, surfaces and region data
-static BOOLEAN DeleteVideoObject(SGPVObject* const hVObject)
+static BOOLEAN InternalDeleteVideoObject(SGPVObject* const hVObject)
 {
 	CHECKF(hVObject != NULL);
 

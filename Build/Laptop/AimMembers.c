@@ -588,17 +588,17 @@ void ExitAIMMembers()
 
 	DeleteVideoSurfaceFromIndex(guiVideoFaceBackground);
 
-	DeleteVideoObjectFromIndex(guiStats);
-	DeleteVideoObjectFromIndex(guiPrice);
-	DeleteVideoObjectFromIndex(guiPortrait);
-	DeleteVideoObjectFromIndex(guiWeaponBox);
-	DeleteVideoObjectFromIndex(guiVideoConfPopup);
-	DeleteVideoObjectFromIndex(guiVideoConfTerminal);
-	DeleteVideoObjectFromIndex(guiBWSnow);
-	DeleteVideoObjectFromIndex(guiFuzzLine);
-	DeleteVideoObjectFromIndex(guiStraightLine);
-	DeleteVideoObjectFromIndex(guiTransSnow);
-	DeleteVideoObjectFromIndex(guiVideoContractCharge);
+	DeleteVideoObject(guiStats);
+	DeleteVideoObject(guiPrice);
+	DeleteVideoObject(guiPortrait);
+	DeleteVideoObject(guiWeaponBox);
+	DeleteVideoObject(guiVideoConfPopup);
+	DeleteVideoObject(guiVideoConfTerminal);
+	DeleteVideoObject(guiBWSnow);
+	DeleteVideoObject(guiFuzzLine);
+	DeleteVideoObject(guiStraightLine);
+	DeleteVideoObject(guiTransSnow);
+	DeleteVideoObject(guiVideoContractCharge);
 
 	UnloadButtonImage( guiPreviousContactNextButtonImage );
 	UnloadButtonImage( giXToCloseVideoConfButtonImage );
@@ -1098,7 +1098,7 @@ static BOOLEAN DisplayMercsFace(void)
 		DrawTextToScreen(AimPopUpText[AIM_MEMBER_ON_ASSIGNMENT], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	DeleteVideoObjectFromIndex(guiFace);
+	DeleteVideoObject(guiFace);
 
 	return( TRUE );
 }
@@ -1720,7 +1720,7 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 
 			UnloadButtonImage( guiPopUpImage );
 			RemoveButton( guiPopUpOkButton );
-			DeleteVideoObjectFromIndex( guiPopUpBox );
+			DeleteVideoObject(guiPopUpBox);
 
 			fPopUpBoxActive = FALSE;
 			gubPopUpBoxAction = AIM_POPUP_NOTHING;
@@ -2691,7 +2691,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 			BltVideoObject(guiVideoTitleBar, uiVideoBackgroundGraphic, 0, 0, 0);
 
-			DeleteVideoObjectFromIndex(uiVideoBackgroundGraphic);
+			DeleteVideoObject(uiVideoBackgroundGraphic);
 		}
 	}
 
@@ -2881,7 +2881,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 		BltVideoObject(guiVideoTitleBar, uiVideoBackgroundGraphic, 0, 0, 0);
 
-		DeleteVideoObjectFromIndex(uiVideoBackgroundGraphic);
+		DeleteVideoObject(uiVideoBackgroundGraphic);
 	}
 
 //	gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
@@ -2977,7 +2977,7 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 			for(i=0; i<2; i++)
 				RemoveButton(giAnsweringMachineButton[i] );
 
-//			DeleteVideoObjectFromIndex(guiAnsweringMachineImage);
+//			DeleteVideoObject(guiAnsweringMachineImage);
 			break;
 		}
 

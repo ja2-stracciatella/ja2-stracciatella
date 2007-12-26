@@ -4801,10 +4801,10 @@ BOOLEAN LoadMilitiaPopUpBox( void )
 void RemoveMilitiaPopUpBox( void )
 {
 	// delete the militia pop up box graphic
-	DeleteVideoObjectFromIndex( guiMilitia );
-	DeleteVideoObjectFromIndex( guiMilitiaMaps );
-	DeleteVideoObjectFromIndex( guiMilitiaSectorHighLight );
-	DeleteVideoObjectFromIndex( guiMilitiaSectorOutline );
+	DeleteVideoObject(guiMilitia);
+	DeleteVideoObject(guiMilitiaMaps);
+	DeleteVideoObject(guiMilitiaSectorHighLight);
+	DeleteVideoObject(guiMilitiaSectorOutline);
 }
 
 
@@ -5930,8 +5930,7 @@ BOOLEAN DrawMapForDemo( void )
 	SGPVObject* const uiTempObject = AddVideoObjectFromFile("INTERFACE/map_1.sti");
 	CHECKF(uiTempObject != NO_VOBJECT);
 	BltVideoObject(guiSAVEBUFFER, uiTempObject, 0, 290, 26);
-	DeleteVideoObjectFromIndex( uiTempObject );
-
+	DeleteVideoObject(uiTempObject);
 	return( TRUE );
 }
 #endif

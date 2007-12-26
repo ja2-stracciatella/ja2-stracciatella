@@ -130,8 +130,8 @@ void ExitInsurance()
 
 	RemoveInsuranceDefaults();
 
-	DeleteVideoObjectFromIndex( guiInsuranceTitleImage );
-	DeleteVideoObjectFromIndex( guiInsuranceBulletImage );
+	DeleteVideoObject(guiInsuranceTitleImage);
+	DeleteVideoObject(guiInsuranceBulletImage);
 
 	for(i=0; i<3; i++)
 		MSYS_RemoveRegion( &gSelectedInsuranceLinkRegion[i]);
@@ -284,14 +284,14 @@ void DisplayInsuranceDefaults()
 
 void RemoveInsuranceDefaults()
 {
-	DeleteVideoObjectFromIndex( guiInsuranceBackGround );
-	DeleteVideoObjectFromIndex( guiInsuranceRedBarImage );
-	DeleteVideoObjectFromIndex( guiInsuranceBigRedLineImage );
+	DeleteVideoObject(guiInsuranceBackGround);
+	DeleteVideoObject(guiInsuranceRedBarImage);
+	DeleteVideoObject(guiInsuranceBigRedLineImage);
 
 	//if it is not the first page, display the small title
 	if( guiPreviousLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
-		DeleteVideoObjectFromIndex( guiInsuranceSmallTitleImage );
+		DeleteVideoObject(guiInsuranceSmallTitleImage);
 		MSYS_RemoveRegion( &gSelectedInsuranceTitleLinkRegion );
 	}
 }

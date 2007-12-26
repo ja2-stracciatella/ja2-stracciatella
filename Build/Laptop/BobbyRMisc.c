@@ -36,10 +36,11 @@ BOOLEAN EnterBobbyRMisc()
 	return(TRUE);
 }
 
+
 void ExitBobbyRMisc()
 {
-	DeleteVideoObjectFromIndex(guiMiscBackground);
-	DeleteVideoObjectFromIndex(guiMiscGrid);
+	DeleteVideoObject(guiMiscBackground);
+	DeleteVideoObject(guiMiscGrid);
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();
 	DeleteBobbyMenuBar();

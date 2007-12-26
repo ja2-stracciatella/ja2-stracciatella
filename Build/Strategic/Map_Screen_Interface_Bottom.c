@@ -191,8 +191,7 @@ static void DeleteMessageSliderBar(void);
 
 void DeleteMapBottomGraphics( void )
 {
-	DeleteVideoObjectFromIndex( guiMAPBOTTOMPANEL );
-
+	DeleteVideoObject(guiMAPBOTTOMPANEL);
 	// delete slider bar icon
 	DeleteMessageSliderBar( );
 }
@@ -707,7 +706,7 @@ static void LoadMessageSliderBar(void)
 static void DeleteMessageSliderBar(void)
 {
 	// this function will delete message slider bar
-	DeleteVideoObjectFromIndex( guiSliderBar );
+	DeleteVideoObject(guiSliderBar);
 }
 
 

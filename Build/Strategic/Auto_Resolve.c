@@ -2024,9 +2024,9 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 	BOOLEAN fFirstGroup = TRUE;
 
 	MSYS_RemoveRegion( &gpAR->AutoResolveRegion );
-	DeleteVideoObjectFromIndex( gpAR->iPanelImages );
-	DeleteVideoObjectFromIndex( gpAR->iFaces );
-	DeleteVideoObjectFromIndex( gpAR->iIndent );
+	DeleteVideoObject(gpAR->iPanelImages);
+	DeleteVideoObject(gpAR->iFaces);
+	DeleteVideoObject(gpAR->iIndent);
 	DeleteVideoSurfaceFromIndex( gpAR->iInterfaceBuffer );
 
 	if( fDeleteForGood )
@@ -2108,7 +2108,9 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 	for( i = 0; i < gpAR->iNumMercFaces; i++ )
 	{
 		if (gpMercs[i].uiVObjectID != NO_VOBJECT)
-			DeleteVideoObjectFromIndex( gpMercs[ i ].uiVObjectID );
+		{
+			DeleteVideoObject(gpMercs[i].uiVObjectID);
+		}
 		gpMercs[i].uiVObjectID = NO_VOBJECT;
 		if( gpMercs[ i ].pRegion )
 		{

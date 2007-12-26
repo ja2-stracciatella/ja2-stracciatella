@@ -435,7 +435,7 @@ static void DisplaySirtechSplashScreen(void)
 	if (uiLogoID == NO_VOBJECT) return;
 
 	BltVideoObject(FRAME_BUFFER, uiLogoID, 0, 0, 0);
-	DeleteVideoObjectFromIndex(uiLogoID);
+	DeleteVideoObject(uiLogoID);
 
 	InvalidateScreen();
 	RefreshScreen();

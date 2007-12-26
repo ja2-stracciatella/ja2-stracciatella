@@ -231,9 +231,8 @@ void ExitInsuranceContract()
 
 	RemoveInsuranceDefaults();
 
-	DeleteVideoObjectFromIndex( guiInsOrderGridImage );
-
-	DeleteVideoObjectFromIndex( guiInsOrderBulletImage );
+	DeleteVideoObject(guiInsOrderGridImage);
+	DeleteVideoObject(guiInsOrderBulletImage);
 
 	for(i=0; i<2; i++)
 		MSYS_RemoveRegion( &gSelectedInsuranceContractLinkRegion[i]);
@@ -448,7 +447,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
 
 	// the face images isn't needed anymore so delete it
-	DeleteVideoObjectFromIndex( uiInsMercFaceImage );
+	DeleteVideoObject(uiInsMercFaceImage);
 
 	//display the mercs nickname
 	DrawTextToScreen(gMercProfiles[ubMercID].zNickname, dx + INS_CTRCT_OG_NICK_NAME_OFFSET_X, dy + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

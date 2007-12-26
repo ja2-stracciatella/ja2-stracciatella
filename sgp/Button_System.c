@@ -326,7 +326,7 @@ void UnloadButtonImage(INT32 Index)
 			goto remove_pic;
 		}
 
-		DeleteVideoObjectFromIndex(pics->vobj);
+		DeleteVideoObject(pics->vobj);
 	}
 
 remove_pic:
@@ -478,7 +478,7 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 		AssertMsg(0, "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
 	}
 	// If an icon is present in the slot, remove it.
-	DeleteVideoObjectFromIndex(GenericButtonIcons[GenImg]);
+	DeleteVideoObject(GenericButtonIcons[GenImg]);
 	GenericButtonIcons[GenImg] = NULL;
 	return TRUE;
 }
@@ -502,25 +502,25 @@ static void ShutdownButtonImageManager(void)
 	{
 		if (GenericButtonOffNormal[x] != NULL)
 		{
-			DeleteVideoObjectFromIndex(GenericButtonOffNormal[x]);
+			DeleteVideoObject(GenericButtonOffNormal[x]);
 			GenericButtonOffNormal[x] = NULL;
 		}
 
 		if (GenericButtonOffHilite[x]!=NULL)
 		{
-			DeleteVideoObjectFromIndex(GenericButtonOffHilite[x]);
+			DeleteVideoObject(GenericButtonOffHilite[x]);
 			GenericButtonOffHilite[x] = NULL;
 		}
 
 		if (GenericButtonOnNormal[x] != NULL)
 		{
-			DeleteVideoObjectFromIndex(GenericButtonOnNormal[x]);
+			DeleteVideoObject(GenericButtonOnNormal[x]);
 			GenericButtonOnNormal[x] = NULL;
 		}
 
 		if (GenericButtonOnHilite[x] != NULL)
 		{
-			DeleteVideoObjectFromIndex(GenericButtonOnHilite[x]);
+			DeleteVideoObject(GenericButtonOnHilite[x]);
 			GenericButtonOnHilite[x] = NULL;
 		}
 

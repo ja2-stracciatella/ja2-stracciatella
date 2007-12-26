@@ -163,9 +163,9 @@ BOOLEAN EnterMercsFiles()
 
 void ExitMercsFiles()
 {
-	DeleteVideoObjectFromIndex(guiPortraitBox);
-	DeleteVideoObjectFromIndex(guiStatsBox);
-	DeleteVideoObjectFromIndex(guiBioBox);
+	DeleteVideoObject(guiPortraitBox);
+	DeleteVideoObject(guiStatsBox);
+	DeleteVideoObject(guiBioBox);
 
 	UnloadButtonImage( guiButtonImage );
 	RemoveButton( guiPrevButton );
@@ -349,7 +349,7 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_MERC_UNAVAILABLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	DeleteVideoObjectFromIndex(guiMercFace);
+	DeleteVideoObject(guiMercFace);
 
 	return( TRUE );
 }

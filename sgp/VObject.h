@@ -72,7 +72,7 @@ BOOLEAN ShutdownVideoObjectManager(void);
 #endif
 
 // Removes a video object
-BOOLEAN DeleteVideoObjectFromIndex(SGPVObject*);
+BOOLEAN DeleteVideoObject(SGPVObject*);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);

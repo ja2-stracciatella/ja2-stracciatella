@@ -111,9 +111,8 @@ BOOLEAN LoadMapBorderGraphics( void )
 void DeleteMapBorderGraphics( void )
 {
 	// procedure will delete graphics loaded for map border
-
-	DeleteVideoObjectFromIndex( guiMapBorder );
-//	DeleteVideoObjectFromIndex( guiMapBorderCorner );
+	DeleteVideoObject(guiMapBorder);
+//	DeleteVideoObject(guiMapBorderCorner);
 }
 
 

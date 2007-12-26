@@ -112,7 +112,7 @@ fail_tile_imagery:
 fail_structure:
 	FreeStructureFile(pStructureFileRef);
 fail_vobj:
-	DeleteVideoObjectFromIndex(hVObject);
+	DeleteVideoObject(hVObject);
 fail_image:
 	DestroyImage(hImage);
 fail:
@@ -137,7 +137,7 @@ void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
 		}
 	}
 
-	DeleteVideoObjectFromIndex(pTileSurf->vo);
+	DeleteVideoObject(pTileSurf->vo);
 	MemFree( pTileSurf );
 }
 

@@ -248,8 +248,8 @@ BOOLEAN EnterBobbyRGuns()
 
 void ExitBobbyRGuns()
 {
-	DeleteVideoObjectFromIndex(guiGunBackground);
-	DeleteVideoObjectFromIndex(guiGunsGrid);
+	DeleteVideoObject(guiGunBackground);
+	DeleteVideoObject(guiGunsGrid);
 	DeleteBobbyBrTitle();
 	DeleteBobbyMenuBar();
 
@@ -319,12 +319,9 @@ BOOLEAN InitBobbyBrTitle()
 
 BOOLEAN DeleteBobbyBrTitle()
 {
-	DeleteVideoObjectFromIndex(guiBrTitle);
-
-	MSYS_RemoveRegion( &gSelectedTitleImageLinkRegion);
-
+	DeleteVideoObject(guiBrTitle);
+	MSYS_RemoveRegion(&gSelectedTitleImageLinkRegion);
 	DeleteMouseRegionForBigImage();
-
 	return(TRUE);
 }
 
@@ -756,7 +753,7 @@ static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
-	DeleteVideoObjectFromIndex(uiImage);
+	DeleteVideoObject(uiImage);
 
 	return(TRUE);
 }

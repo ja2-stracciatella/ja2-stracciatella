@@ -83,7 +83,7 @@ void UnLoadCarPortraits( void )
 	if (giCarPortraits[0] == NO_VOBJECT) return;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
-		DeleteVideoObjectFromIndex( giCarPortraits[ iCounter ] );
+		DeleteVideoObject(giCarPortraits[iCounter]);
 		giCarPortraits[iCounter] = NULL;
 	}
 }

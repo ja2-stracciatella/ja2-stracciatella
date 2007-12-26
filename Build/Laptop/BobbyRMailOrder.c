@@ -476,18 +476,16 @@ void ExitBobbyRMailOrder()
 		RemovePurchasedItemsFromBobbyRayInventory();
 	}
 
-
 	DestroyBobbyROrderTitle();
 
-	DeleteVideoObjectFromIndex(guiBobbyROrderGrid);
-	DeleteVideoObjectFromIndex(guiBobbyRLocationGraphic);
-	DeleteVideoObjectFromIndex(guiDeliverySpeedGraphic);
-	DeleteVideoObjectFromIndex(guiConfirmGraphic);
-	DeleteVideoObjectFromIndex(guiTotalSaveArea);
-	DeleteVideoObjectFromIndex(guiDropDownBorder);
-	DeleteVideoObjectFromIndex(guiGoldArrowImages);
-	DeleteVideoObjectFromIndex(guiPackageWeightImage);
-
+	DeleteVideoObject(guiBobbyROrderGrid);
+	DeleteVideoObject(guiBobbyRLocationGraphic);
+	DeleteVideoObject(guiDeliverySpeedGraphic);
+	DeleteVideoObject(guiConfirmGraphic);
+	DeleteVideoObject(guiTotalSaveArea);
+	DeleteVideoObject(guiDropDownBorder);
+	DeleteVideoObject(guiGoldArrowImages);
+	DeleteVideoObject(guiPackageWeightImage);
 
 	UnloadButtonImage( guiBobbyRClearOrderImage );
 	RemoveButton( guiBobbyRClearOrder );
@@ -2028,11 +2026,13 @@ BOOLEAN CreateBobbyRayOrderTitle()
 	return( TRUE );
 }
 
+
 void DestroyBobbyROrderTitle()
 {
 	MSYS_RemoveRegion( &gSelectedTitleLinkRegion);
-	DeleteVideoObjectFromIndex(guiBobbyRayTitle);
+	DeleteVideoObject(guiBobbyRayTitle);
 }
+
 
 void DrawBobbyROrderTitle()
 {

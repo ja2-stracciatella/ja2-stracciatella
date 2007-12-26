@@ -422,12 +422,12 @@ void ExitMercs()
 		gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
 	}
 
-	DeleteVideoObjectFromIndex(guiAccountBox);
-	DeleteVideoObjectFromIndex(guiFilesBox);
-	DeleteVideoObjectFromIndex(guiMercSymbol);
-	DeleteVideoObjectFromIndex(guiSpecPortrait);
-	DeleteVideoObjectFromIndex(guiArrow);
-	DeleteVideoObjectFromIndex(guiMercVideoPopupBackground);
+	DeleteVideoObject(guiAccountBox);
+	DeleteVideoObject(guiFilesBox);
+	DeleteVideoObject(guiMercSymbol);
+	DeleteVideoObject(guiSpecPortrait);
+	DeleteVideoObject(guiArrow);
+	DeleteVideoObject(guiMercVideoPopupBackground);
 
 	UnloadButtonImage( guiAccountBoxButtonImage );
 	RemoveButton( guiFileBoxButton );
@@ -582,8 +582,7 @@ BOOLEAN DrawMecBackGround()
 
 BOOLEAN RemoveMercBackGround()
 {
-	DeleteVideoObjectFromIndex(guiMercBackGround);
-
+	DeleteVideoObject(guiMercBackGround);
 	return(TRUE);
 }
 

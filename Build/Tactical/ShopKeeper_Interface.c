@@ -833,8 +833,8 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	FreeMouseCursor();
 
 	//Delete the main shopkeep background
-	DeleteVideoObjectFromIndex( guiMainTradeScreenImage );
-	DeleteVideoObjectFromIndex( guiItemCrossOut );
+	DeleteVideoObject(guiMainTradeScreenImage);
+	DeleteVideoObject(guiItemCrossOut);
 	DeleteVideoSurfaceFromIndex( guiCornerWhereTacticalIsStillSeenImage );
 
 	ShutUpShopKeeper();
@@ -848,7 +848,7 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	//loop through the area and delete small faces
 	for(ubCnt=0; ubCnt<gubNumberMercsInArray; ubCnt++)
 	{
-		DeleteVideoObjectFromIndex( guiSmallSoldiersFace[ ubCnt ] );
+		DeleteVideoObject(guiSmallSoldiersFace[ubCnt]);
 	}
 
 	RemoveButton( guiSKI_InvPageUpButton );

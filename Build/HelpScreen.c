@@ -707,8 +707,7 @@ static void ExitHelpScreen(void)
 	MSYS_RemoveRegion( &gHelpScreenFullScreenMask );
 
 	//remove the hepl graphic
-	DeleteVideoObjectFromIndex( guiHelpScreenBackGround );
-
+	DeleteVideoObject(guiHelpScreenBackGround);
 
 	//remove the exit button
 	RemoveButton( guiHelpScreenExitBtn );

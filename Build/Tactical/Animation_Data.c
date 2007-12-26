@@ -576,7 +576,7 @@ BOOLEAN DeInitAnimationSystem( )
 	 {
 			if ( gAnimSurfaceDatabase[ cnt1 ].hVideoObject != NULL )
 			{
-			DeleteVideoObjectFromIndex(gAnimSurfaceDatabase[cnt1].hVideoObject);
+			DeleteVideoObject(gAnimSurfaceDatabase[cnt1].hVideoObject);
           gAnimSurfaceDatabase[ cnt1 ].hVideoObject = NULL;
 			}
 	 }
@@ -734,7 +734,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 		if (0) /* error handling */
 		{
 fail_vobj:
-			DeleteVideoObjectFromIndex(hVObject);
+			DeleteVideoObject(hVObject);
 fail_image:
 			DestroyImage(hImage);
 fail:
@@ -792,7 +792,7 @@ BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
 
 			CHECKF(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject != NULL);
 
-		DeleteVideoObjectFromIndex(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject);
+		DeleteVideoObject(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject);
 			gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject = NULL;
 	}
 

@@ -91,8 +91,7 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 	 // If we have loaded, remove old one
 	 if ( fImageLoaded )
 	 {
-		 DeleteVideoObjectFromIndex( gusRadarImage );
-
+		 DeleteVideoObject(gusRadarImage);
 		 fImageLoaded = FALSE;
 	 }
 
@@ -130,16 +129,17 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 	return( TRUE );
 }
 
+
 void ClearOutRadarMapImage( void )
 {
 	// If we have loaded, remove old one
   if ( fImageLoaded )
   {
-	  DeleteVideoObjectFromIndex( gusRadarImage );
+	  DeleteVideoObject(gusRadarImage);
 	  fImageLoaded = FALSE;
   }
-
 }
+
 
 void MoveRadarScreen( )
 {
@@ -621,7 +621,7 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 
 		}
 
-		DeleteVideoObjectFromIndex( uiHandle );
+		DeleteVideoObject(uiHandle);
 
 		// reset the highlighted line
 		sSelectedSquadLine = -1;

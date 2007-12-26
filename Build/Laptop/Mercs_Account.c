@@ -121,8 +121,8 @@ BOOLEAN EnterMercsAccount()
 
 void ExitMercsAccount()
 {
-	DeleteVideoObjectFromIndex(guiMercOrderGrid);
-	DeleteVideoObjectFromIndex(guiAccountNumberGrid);
+	DeleteVideoObject(guiMercOrderGrid);
+	DeleteVideoObject(guiAccountNumberGrid);
 
 	UnloadButtonImage( guiMercAuthorizeButtonImage );
 	RemoveButton( guiMercAuthorizeBoxButton );

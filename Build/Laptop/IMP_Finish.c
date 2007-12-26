@@ -344,19 +344,19 @@ static BOOLEAN RenderCharProfileFinishFace(void)
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/00.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+				DeleteVideoObject(uiGraphicHandle);
 		  break;
       case( 1 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/01.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+				DeleteVideoObject(uiGraphicHandle);
 		  break;
 		  case( 2 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/02.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+				DeleteVideoObject(uiGraphicHandle);
 		  break;
 		}
 
@@ -369,19 +369,19 @@ static BOOLEAN RenderCharProfileFinishFace(void)
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/03.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+				DeleteVideoObject(uiGraphicHandle);
 		  break;
       case( 1 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/04.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+				DeleteVideoObject(uiGraphicHandle);
 		  break;
 		  case( 2 ):
 	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/05.sti");
 	      CHECKF(uiGraphicHandle != NO_VOBJECT);
         BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObjectFromIndex( uiGraphicHandle );
+        DeleteVideoObject(uiGraphicHandle);
 		  break;
 		}
 	}
@@ -429,7 +429,7 @@ static BOOLEAN LoadCharacterPortrait(void)
 static void DestroyCharacterPortrait(void)
 {
 	// remove the portrait that was loaded by loadcharacterportrait
-	DeleteVideoObjectFromIndex( guiCHARACTERPORTRAIT );
+	DeleteVideoObject(guiCHARACTERPORTRAIT);
 }
 
 

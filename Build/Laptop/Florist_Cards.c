@@ -105,7 +105,7 @@ void ExitFloristCards()
 	UINT8	i;
 
 	RemoveFloristDefaults();
-	DeleteVideoObjectFromIndex( guiCardBackground );
+	DeleteVideoObject(guiCardBackground);
 
 	//card gallery
 	for(i=0; i<9; i++)

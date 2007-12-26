@@ -324,8 +324,8 @@ static void DestroyAIViewer(void)
 	{
 		RemoveButton( iViewerButton[ i ] );
 	}
-	DeleteVideoObjectFromIndex( guiMapGraphicID );
-	DeleteVideoObjectFromIndex( guiMapIconsID );
+	DeleteVideoObject(guiMapGraphicID);
+	DeleteVideoObject(guiMapIconsID);
 	MSYS_RemoveRegion( &ViewerRegion );
 
 	KillTextInputMode();

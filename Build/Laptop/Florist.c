@@ -117,14 +117,10 @@ BOOLEAN EnterFlorist()
 
 void ExitFlorist()
 {
-
-	DeleteVideoObjectFromIndex(guiHandBullet);
-
+	DeleteVideoObject(guiHandBullet);
 	RemoveFloristDefaults();
-
-	UnloadButtonImage( guiGalleryButtonImage );
-
-	RemoveButton( guiGalleryButton );
+	UnloadButtonImage(guiGalleryButtonImage);
+	RemoveButton(guiGalleryButton);
 }
 
 void HandleFlorist()
@@ -220,20 +216,19 @@ void DisplayFloristDefaults()
 
 void RemoveFloristDefaults()
 {
-	DeleteVideoObjectFromIndex( guiFloristBackground );
+	DeleteVideoObject(guiFloristBackground);
 
 	//if its the first page
 	if( gfHomePageActive )
 	{
 		//delete the big title
-		DeleteVideoObjectFromIndex( guiLargeTitleSymbol );
+		DeleteVideoObject(guiLargeTitleSymbol);
 	}
 	else
 	{
 		//delete the little title
-		DeleteVideoObjectFromIndex( guiSmallTitleSymbol );
-
-		MSYS_RemoveRegion( &gSelectedFloristTitleHomeLinkRegion );
+		DeleteVideoObject(guiSmallTitleSymbol);
+		MSYS_RemoveRegion(&gSelectedFloristTitleHomeLinkRegion);
 	}
 }
 

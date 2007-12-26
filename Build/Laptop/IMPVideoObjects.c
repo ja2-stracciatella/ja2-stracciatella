@@ -59,11 +59,11 @@ BOOLEAN LoadProfileBackGround( void )
 	return (TRUE) ;
 }
 
+
 void RemoveProfileBackGround( void )
 {
-
   // remove background
-	DeleteVideoObjectFromIndex( guiBACKGROUND );
+	DeleteVideoObject(guiBACKGROUND);
 }
 
 
@@ -108,10 +108,10 @@ BOOLEAN LoadIMPSymbol( void )
 
 void DeleteIMPSymbol( void )
 {
-
   // remove IMP symbol
-	DeleteVideoObjectFromIndex( guiIMPSYMBOL );
+	DeleteVideoObject(guiIMPSYMBOL);
 }
+
 
 void RenderIMPSymbol(INT16 sX, INT16 sY)
 {
@@ -133,11 +133,10 @@ BOOLEAN LoadBeginIndent( void )
 
 void DeleteBeginIndent( void )
 {
-
   // remove indent symbol
-
-	DeleteVideoObjectFromIndex( guiBEGININDENT );
+	DeleteVideoObject(guiBEGININDENT);
 }
+
 
 void RenderBeginIndent(INT16 sX, INT16 sY)
 {
@@ -161,10 +160,10 @@ BOOLEAN LoadActivationIndent( void )
 
 void DeleteActivationIndent( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiACTIVATIONINDENT );
+	DeleteVideoObject(guiACTIVATIONINDENT);
 }
+
 
 void RenderActivationIndent(INT16 sX, INT16 sY)
 {
@@ -184,10 +183,10 @@ BOOLEAN LoadFrontPageIndent( void )
 
 void DeleteFrontPageIndent( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiFRONTPAGEINDENT );
+	DeleteVideoObject(guiFRONTPAGEINDENT);
 }
+
 
 void RenderFrontPageIndent(INT16 sX, INT16 sY)
 {
@@ -209,9 +208,8 @@ BOOLEAN LoadAnalyse( void )
 
 void DeleteAnalyse( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiANALYSE );
+	DeleteVideoObject(guiANALYSE);
 }
 
 
@@ -226,9 +224,8 @@ BOOLEAN LoadAttributeGraph( void )
 
 void DeleteAttributeGraph( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiATTRIBUTEGRAPH );
+	DeleteVideoObject(guiATTRIBUTEGRAPH);
 }
 
 
@@ -243,10 +240,10 @@ BOOLEAN LoadNickNameIndent( void )
 
 void DeleteNickNameIndent( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiNICKNAMEINDENT );
+	DeleteVideoObject(guiNICKNAMEINDENT);
 }
+
 
 void RenderNickNameIndent(INT16 sX, INT16 sY)
 {
@@ -264,10 +261,10 @@ BOOLEAN LoadNameIndent( void )
 
 void DeleteNameIndent( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiNAMEINDENT );
+	DeleteVideoObject(guiNAMEINDENT);
 }
+
 
 void RenderNameIndent(INT16 sX, INT16 sY)
 {
@@ -288,10 +285,10 @@ BOOLEAN LoadGenderIndent( void )
 
 void DeleteGenderIndent( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiGENDERINDENT );
+	DeleteVideoObject(guiGENDERINDENT);
 }
+
 
 void RenderGenderIndent(INT16 sX, INT16 sY)
 {
@@ -310,9 +307,8 @@ BOOLEAN LoadSmallSilhouette( void )
 
 void DeleteSmallSilhouette( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSMALLSILHOUETTE );
+	DeleteVideoObject(guiSMALLSILHOUETTE);
 }
 
 
@@ -327,10 +323,10 @@ BOOLEAN LoadLargeSilhouette( void )
 
 void DeleteLargeSilhouette( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiLARGESILHOUETTE );
+	DeleteVideoObject(guiLARGESILHOUETTE);
 }
+
 
 void RenderLargeSilhouette(INT16 sX, INT16 sY)
 {
@@ -349,10 +345,10 @@ BOOLEAN LoadAttributeFrame( void )
 
 void DeleteAttributeFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiATTRIBUTEFRAME );
+	DeleteVideoObject(guiATTRIBUTEFRAME);
 }
+
 
 void RenderAttributeFrame(INT16 sX, INT16 sY)
 {
@@ -415,10 +411,10 @@ BOOLEAN LoadSliderBar( void )
 
 void DeleteSliderBar( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSLIDERBAR );
+	DeleteVideoObject(guiSLIDERBAR);
 }
+
 
 void RenderSliderBar(INT16 sX, INT16 sY)
 {
@@ -439,10 +435,10 @@ BOOLEAN LoadButton2Image( void )
 
 void DeleteButton2Image( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiBUTTON2IMAGE );
+	DeleteVideoObject(guiBUTTON2IMAGE);
 }
+
 
 void RenderButton2Image(INT16 sX, INT16 sY)
 {
@@ -460,10 +456,10 @@ BOOLEAN LoadButton4Image( void )
 
 void DeleteButton4Image( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiBUTTON4IMAGE );
+	DeleteVideoObject(guiBUTTON4IMAGE);
 }
+
 
 void RenderButton4Image(INT16 sX, INT16 sY)
 {
@@ -482,10 +478,10 @@ BOOLEAN LoadPortraitFrame( void )
 
 void DeletePortraitFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiPORTRAITFRAME );
+	DeleteVideoObject(guiPORTRAITFRAME);
 }
+
 
 void RenderPortraitFrame(INT16 sX, INT16 sY)
 {
@@ -505,10 +501,10 @@ BOOLEAN LoadMainIndentFrame( void )
 
 void DeleteMainIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiMAININDENT );
+	DeleteVideoObject(guiMAININDENT);
 }
+
 
 void RenderMainIndentFrame(INT16 sX, INT16 sY)
 {
@@ -527,10 +523,10 @@ BOOLEAN LoadQtnLongIndentFrame( void )
 
 void DeleteQtnLongIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiLONGINDENT );
+	DeleteVideoObject(guiLONGINDENT);
 }
+
 
 void RenderQtnLongIndentFrame(INT16 sX, INT16 sY)
 {
@@ -548,10 +544,10 @@ BOOLEAN LoadQtnShortIndentFrame( void )
 
 void DeleteQtnShortIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSHORTINDENT );
+	DeleteVideoObject(guiSHORTINDENT);
 }
+
 
 void RenderQtnShortIndentFrame(INT16 sX, INT16 sY)
 {
@@ -569,10 +565,10 @@ BOOLEAN LoadQtnLongIndentHighFrame( void )
 
 void DeleteQtnLongIndentHighFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiLONGHINDENT );
+	DeleteVideoObject(guiLONGHINDENT);
 }
+
 
 void RenderQtnLongIndentHighFrame(INT16 sX, INT16 sY)
 {
@@ -590,10 +586,10 @@ BOOLEAN LoadQtnShortIndentHighFrame( void )
 
 void DeleteQtnShortIndentHighFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSHORTHINDENT );
+	DeleteVideoObject(guiSHORTHINDENT);
 }
+
 
 void RenderQtnShortIndentHighFrame(INT16 sX, INT16 sY)
 {
@@ -612,10 +608,10 @@ BOOLEAN LoadQtnIndentFrame( void )
 
 void DeleteQtnIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiQINDENT );
+	DeleteVideoObject(guiQINDENT);
 }
+
 
 void RenderQtnIndentFrame(INT16 sX, INT16 sY)
 {
@@ -634,10 +630,10 @@ BOOLEAN LoadAttrib1IndentFrame( void )
 
 void DeleteAttrib1IndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiA1INDENT );
+	DeleteVideoObject(guiA1INDENT);
 }
+
 
 void RenderAttrib1IndentFrame(INT16 sX, INT16 sY)
 {
@@ -655,10 +651,10 @@ BOOLEAN LoadAttrib2IndentFrame( void )
 
 void DeleteAttrib2IndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiA2INDENT );
+	DeleteVideoObject(guiA2INDENT);
 }
+
 
 void RenderAttrib2IndentFrame(INT16 sX, INT16 sY)
 {
@@ -676,10 +672,10 @@ BOOLEAN LoadAvgMercIndentFrame( void )
 
 void DeleteAvgMercIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiAVGMERCINDENT );
+	DeleteVideoObject(guiAVGMERCINDENT);
 }
+
 
 void RenderAvgMercIndentFrame(INT16 sX, INT16 sY)
 {
@@ -699,10 +695,10 @@ BOOLEAN LoadAboutUsIndentFrame( void )
 
 void DeleteAboutUsIndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiABOUTUSINDENT );
+	DeleteVideoObject(guiABOUTUSINDENT);
 }
+
 
 void RenderAboutUsIndentFrame(INT16 sX, INT16 sY)
 {
@@ -721,10 +717,10 @@ BOOLEAN LoadQtnShort2IndentFrame( void )
 
 void DeleteQtnShort2IndentFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSHORT2INDENT );
+	DeleteVideoObject(guiSHORT2INDENT);
 }
+
 
 void RenderQtnShort2IndentFrame(INT16 sX, INT16 sY)
 {
@@ -742,10 +738,10 @@ BOOLEAN LoadQtnShort2IndentHighFrame( void )
 
 void DeleteQtnShort2IndentHighFrame( void )
 {
-
   // remove activation indent symbol
-	DeleteVideoObjectFromIndex( guiSHORT2HINDENT );
+	DeleteVideoObject(guiSHORT2HINDENT);
 }
+
 
 void RenderQtnShort2IndentHighFrame(INT16 sX, INT16 sY)
 {

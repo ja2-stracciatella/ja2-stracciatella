@@ -654,8 +654,8 @@ static void ExitSaveLoadScreen(void)
 	  MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
 	}
 
-	DeleteVideoObjectFromIndex( guiSlgBackGroundImage );
-	DeleteVideoObjectFromIndex( guiBackGroundAddOns );
+	DeleteVideoObject(guiSlgBackGroundImage);
+	DeleteVideoObject(guiBackGroundAddOns);
 
 	//Destroy the text fields ( if created )
 	DestroySaveLoadTextInputBoxes();

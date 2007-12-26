@@ -531,7 +531,7 @@ void DeleteTalkingMenu( )
 	DeleteVideoSurfaceFromIndex( gTalkPanel.uiSaveBuffer );
 
 	// Remove video object
-	DeleteVideoObjectFromIndex( gTalkPanel.uiPanelVO );
+	DeleteVideoObject(gTalkPanel.uiPanelVO);
 
 	// Remove face....
 	DeleteFace( gTalkPanel.iFaceIndex );

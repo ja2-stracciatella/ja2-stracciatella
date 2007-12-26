@@ -384,13 +384,12 @@ static BOOLEAN LoadFinances(void)
 
 static void RemoveFinances(void)
 {
-
 	// delete Finance video objects from memory
-  DeleteVideoObjectFromIndex(guiLONGLINE);
-	DeleteVideoObjectFromIndex(guiLINE);
-  DeleteVideoObjectFromIndex(guiLISTCOLUMNS);
-	DeleteVideoObjectFromIndex(guiTOP);
-	DeleteVideoObjectFromIndex(guiTITLE);
+  DeleteVideoObject(guiLONGLINE);
+	DeleteVideoObject(guiLINE);
+  DeleteVideoObject(guiLISTCOLUMNS);
+	DeleteVideoObject(guiTOP);
+	DeleteVideoObject(guiTITLE);
 }
 
 

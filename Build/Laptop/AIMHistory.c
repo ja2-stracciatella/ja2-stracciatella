@@ -134,7 +134,7 @@ void ExitAimHistory()
 	RemoveAimDefaults();
 	ExitAimHistoryMenuBar();
 
-	DeleteVideoObjectFromIndex(guiContentButton);
+	DeleteVideoObject(guiContentButton);
 	giCurrentSubPage = gubCurPageNum;
 
 	if(gfInToc)
@@ -254,7 +254,6 @@ static BOOLEAN ExitAimHistoryMenuBar(void)
 {
 	int i;
 
-//	DeleteVideoObjectFromIndex(guiHistoryMenuButtonImage);
 	UnloadButtonImage( guiHistoryMenuButtonImage );
 
 

@@ -41,8 +41,8 @@ BOOLEAN EnterBobbyRAmmo()
 
 void ExitBobbyRAmmo()
 {
-	DeleteVideoObjectFromIndex(guiAmmoBackground);
-	DeleteVideoObjectFromIndex(guiAmmoGrid);
+	DeleteVideoObject(guiAmmoBackground);
+	DeleteVideoObject(guiAmmoGrid);
 	DeleteBobbyMenuBar();
 
 	DeleteBobbyBrTitle();

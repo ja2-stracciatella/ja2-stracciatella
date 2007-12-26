@@ -213,12 +213,11 @@ void ExitAimArchives()
 
 	gfExitingAimArchives = TRUE;
 
-	DeleteVideoObjectFromIndex(guiAlumniFrame);
-	DeleteVideoObjectFromIndex(guiOldAim);
-	DeleteVideoObjectFromIndex(guiAlumniPopUp);
-	DeleteVideoObjectFromIndex(guiPopUpPic);
-	DeleteVideoObjectFromIndex(guiDoneButton);
-
+	DeleteVideoObject(guiAlumniFrame);
+	DeleteVideoObject(guiOldAim);
+	DeleteVideoObject(guiAlumniPopUp);
+	DeleteVideoObject(guiPopUpPic);
+	DeleteVideoObject(guiDoneButton);
 
 	RemoveAimAlumniFaceRegion();
 

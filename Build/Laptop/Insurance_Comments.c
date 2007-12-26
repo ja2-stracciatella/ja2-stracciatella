@@ -76,7 +76,7 @@ void ExitInsuranceComments()
 {
 	UINT8 i;
 	RemoveInsuranceDefaults();
-	DeleteVideoObjectFromIndex( guiInsCmntBulletImage );
+	DeleteVideoObject(guiInsCmntBulletImage);
 
 	for(i=0; i<3; i++)
 		MSYS_RemoveRegion( &gSelectedInsuranceCommentLinkRegion[i]);

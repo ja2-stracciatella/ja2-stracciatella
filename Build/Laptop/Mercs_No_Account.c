@@ -75,7 +75,7 @@ BOOLEAN EnterMercsNoAccount()
 
 void ExitMercsNoAccount()
 {
-	DeleteVideoObjectFromIndex(guiNoAccountImage);
+	DeleteVideoObject(guiNoAccountImage);
 
 	UnloadButtonImage( guiOpenAccountBoxButtonImage );
 	RemoveButton( guiOpenAccountBoxButton );

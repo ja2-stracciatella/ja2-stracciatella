@@ -2309,7 +2309,7 @@ UINT32 MapScreenShutdown(void)
 	// free memory for leave list arrays for dismissed mercs
 	ShutDownLeaveList( );
 
-	DeleteVideoObjectFromIndex(guiUpdatePanelTactical);
+	DeleteVideoObject(guiUpdatePanelTactical);
 
 	return TRUE;
 }
@@ -4877,39 +4877,39 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteMapBottomGraphics( );
 
 #ifndef JA2DEMO
-		DeleteVideoObjectFromIndex(guiSubLevel1);
-		DeleteVideoObjectFromIndex(guiSubLevel2);
-		DeleteVideoObjectFromIndex(guiSubLevel3);
+		DeleteVideoObject(guiSubLevel1);
+		DeleteVideoObject(guiSubLevel2);
+		DeleteVideoObject(guiSubLevel3);
 #endif
-		DeleteVideoObjectFromIndex( guiSleepIcon );
-		DeleteVideoObjectFromIndex(guiMAPCURSORS);
-		DeleteVideoObjectFromIndex(guiCHARLIST);
-		DeleteVideoObjectFromIndex(guiCHARINFO);
-		DeleteVideoObjectFromIndex(guiCHARICONS);
-		DeleteVideoObjectFromIndex(guiCROSS);
+		DeleteVideoObject(guiSleepIcon);
+		DeleteVideoObject(guiMAPCURSORS);
+		DeleteVideoObject(guiCHARLIST);
+		DeleteVideoObject(guiCHARINFO);
+		DeleteVideoObject(guiCHARICONS);
+		DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
 		DeleteVideoSurfaceFromIndex(guiBIGMAP);
 	//	DeleteVideoSurfaceFromIndex(guiPOPUPTEX);
-		DeleteVideoObjectFromIndex(guiSAMICON);
+		DeleteVideoObject(guiSAMICON);
 #endif
-		DeleteVideoObjectFromIndex(guiMAPINV);
-		DeleteVideoObjectFromIndex(guiMapInvSecondHandBlockout);
-		DeleteVideoObjectFromIndex(guiULICONS);
-		DeleteVideoObjectFromIndex(guiORTAICON);
-		DeleteVideoObjectFromIndex(guiTIXAICON);
-		DeleteVideoObjectFromIndex( guiCHARBETWEENSECTORICONS );
-		DeleteVideoObjectFromIndex( guiCHARBETWEENSECTORICONSCLOSE );
-		DeleteVideoObjectFromIndex( guiLEVELMARKER );
-		DeleteVideoObjectFromIndex( guiMapBorderEtaPopUp );
+		DeleteVideoObject(guiMAPINV);
+		DeleteVideoObject(guiMapInvSecondHandBlockout);
+		DeleteVideoObject(guiULICONS);
+		DeleteVideoObject(guiORTAICON);
+		DeleteVideoObject(guiTIXAICON);
+		DeleteVideoObject(guiCHARBETWEENSECTORICONS);
+		DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
+		DeleteVideoObject(guiLEVELMARKER);
+		DeleteVideoObject(guiMapBorderEtaPopUp);
 
-		DeleteVideoObjectFromIndex( guiSecItemHiddenVO );
-		DeleteVideoObjectFromIndex( guiSelectedCharArrow );
-		DeleteVideoObjectFromIndex( guiMapBorderHeliSectors );
-		DeleteVideoObjectFromIndex( guiHelicopterIcon );
-		DeleteVideoObjectFromIndex( guiMINEICON );
-		DeleteVideoObjectFromIndex( guiSectorLocatorGraphicID );
+		DeleteVideoObject(guiSecItemHiddenVO);
+		DeleteVideoObject(guiSelectedCharArrow);
+		DeleteVideoObject(guiMapBorderHeliSectors);
+		DeleteVideoObject(guiHelicopterIcon);
+		DeleteVideoObject(guiMINEICON);
+		DeleteVideoObject(guiSectorLocatorGraphicID);
 
-		DeleteVideoObjectFromIndex( guiBULLSEYE );
+		DeleteVideoObject(guiBULLSEYE);
 
 		// remove the militia pop up box
 		RemoveMilitiaPopUpBox( );
@@ -4921,10 +4921,10 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		DeleteMapBorderGraphics( );
 
 		//Kris:  Remove the email icons.
-		DeleteVideoObjectFromIndex( guiNewMailIcons );
+		DeleteVideoObject(guiNewMailIcons);
 	}
 
-	DeleteVideoObjectFromIndex( guiBrownBackgroundForTeamPanel );
+	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	RemoveMapStatusBarsRegion( );
 
@@ -4996,7 +4996,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 		InvalidateRegion( 465, 417, 480, 427 );
 		ExecuteBaseDirtyRectQueue( );
 		EndFrameBufferRender( );
-		DeleteVideoObjectFromIndex( uiLaptopOn );
+		DeleteVideoObject(uiLaptopOn);
 		RefreshScreen();
 	}
 #endif
@@ -8830,42 +8830,42 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	if( fPreLoadedMapGraphics == TRUE )
 	{
 		DeleteMapBottomGraphics( );
-		DeleteVideoObjectFromIndex( guiMAPCURSORS );
-		DeleteVideoObjectFromIndex( guiSleepIcon );
+		DeleteVideoObject(guiMAPCURSORS);
+		DeleteVideoObject(guiSleepIcon);
 
-		DeleteVideoObjectFromIndex(guiCHARLIST);
-		DeleteVideoObjectFromIndex(guiCHARINFO);
-		DeleteVideoObjectFromIndex(guiCHARICONS);
-		DeleteVideoObjectFromIndex(guiCROSS);
+		DeleteVideoObject(guiCHARLIST);
+		DeleteVideoObject(guiCHARINFO);
+		DeleteVideoObject(guiCHARICONS);
+		DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
 		DeleteVideoSurfaceFromIndex(guiBIGMAP);
-		DeleteVideoObjectFromIndex(guiSubLevel1);
-		DeleteVideoObjectFromIndex(guiSubLevel2);
-		DeleteVideoObjectFromIndex(guiSubLevel3);
+		DeleteVideoObject(guiSubLevel1);
+		DeleteVideoObject(guiSubLevel2);
+		DeleteVideoObject(guiSubLevel3);
 
 	//	DeleteVideoSurfaceFromIndex(guiPOPUPTEX);
-		DeleteVideoObjectFromIndex(guiSAMICON);
+		DeleteVideoObject(guiSAMICON);
 #endif
-		DeleteVideoObjectFromIndex(guiMAPINV);
-		DeleteVideoObjectFromIndex(guiMapInvSecondHandBlockout);
-		DeleteVideoObjectFromIndex(guiULICONS);
-		DeleteVideoObjectFromIndex(guiORTAICON);
-		DeleteVideoObjectFromIndex(guiTIXAICON);
-		DeleteVideoObjectFromIndex( guiCHARBETWEENSECTORICONS );
-		DeleteVideoObjectFromIndex( guiCHARBETWEENSECTORICONSCLOSE );
-		DeleteVideoObjectFromIndex( guiLEVELMARKER );
-		DeleteVideoObjectFromIndex( guiMapBorderEtaPopUp );
-		DeleteVideoObjectFromIndex( guiSecItemHiddenVO );
-		DeleteVideoObjectFromIndex( guiSelectedCharArrow );
-		DeleteVideoObjectFromIndex( guiMapBorderHeliSectors );
-		DeleteVideoObjectFromIndex( guiHelicopterIcon );
-		DeleteVideoObjectFromIndex( guiMINEICON );
-		DeleteVideoObjectFromIndex( guiSectorLocatorGraphicID );
+		DeleteVideoObject(guiMAPINV);
+		DeleteVideoObject(guiMapInvSecondHandBlockout);
+		DeleteVideoObject(guiULICONS);
+		DeleteVideoObject(guiORTAICON);
+		DeleteVideoObject(guiTIXAICON);
+		DeleteVideoObject(guiCHARBETWEENSECTORICONS);
+		DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
+		DeleteVideoObject(guiLEVELMARKER);
+		DeleteVideoObject(guiMapBorderEtaPopUp);
+		DeleteVideoObject(guiSecItemHiddenVO);
+		DeleteVideoObject(guiSelectedCharArrow);
+		DeleteVideoObject(guiMapBorderHeliSectors);
+		DeleteVideoObject(guiHelicopterIcon);
+		DeleteVideoObject(guiMINEICON);
+		DeleteVideoObject(guiSectorLocatorGraphicID);
 
 		//Kris:  Remove the email icons.
-		DeleteVideoObjectFromIndex( guiNewMailIcons );
+		DeleteVideoObject(guiNewMailIcons);
 
-		DeleteVideoObjectFromIndex( guiBULLSEYE );
+		DeleteVideoObject(guiBULLSEYE);
 
 
 		// remove the graphic for the militia pop up box

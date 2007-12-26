@@ -397,13 +397,13 @@ void ExitFloristOrderForm()
 	UINT8	i;
 	RemoveFloristDefaults();
 
-	DeleteVideoObjectFromIndex( guiDeliveryLocation );
-	DeleteVideoObjectFromIndex( guiFlowerFrame );
-	DeleteVideoObjectFromIndex( guiNameBox );
-	DeleteVideoObjectFromIndex( guiPersonalSentiments );
-	DeleteVideoObjectFromIndex( guiFlowerOrderCheckBoxButtonImage );
-	DeleteVideoObjectFromIndex( guiCurrentlySelectedFlowerImage );
-	DeleteVideoObjectFromIndex(guiDropDownBorder);
+	DeleteVideoObject(guiDeliveryLocation);
+	DeleteVideoObject(guiFlowerFrame);
+	DeleteVideoObject(guiNameBox);
+	DeleteVideoObject(guiPersonalSentiments);
+	DeleteVideoObject(guiFlowerOrderCheckBoxButtonImage);
+	DeleteVideoObject(guiCurrentlySelectedFlowerImage);
+	DeleteVideoObject(guiDropDownBorder);
 
 	for(i=0; i<6; i++)
 		MSYS_RemoveRegion( &gSelectedFloristCheckBoxRegion[i]);

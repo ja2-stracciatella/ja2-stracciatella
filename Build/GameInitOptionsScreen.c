@@ -411,7 +411,7 @@ static BOOLEAN ExitGIOScreen(void)
 	if (!gfGIOButtonsAllocated) return TRUE;
 
 	//Delete the main options screen background
-	DeleteVideoObjectFromIndex(guiGIOMainBackGroundImage);
+	DeleteVideoObject(guiGIOMainBackGroundImage);
 
 	RemoveButton(guiGIOCancelButton);
 	RemoveButton(guiGIODoneButton);

@@ -347,10 +347,10 @@ Not being used???  DF commented out
 static void RemoveHistory(void)
 {
 	// delete history video objects from memory
-  DeleteVideoObjectFromIndex(guiLONGLINE);
-	DeleteVideoObjectFromIndex(guiTOP);
-	DeleteVideoObjectFromIndex(guiTITLE);
-	DeleteVideoObjectFromIndex(guiSHADELINE);
+  DeleteVideoObject(guiLONGLINE);
+	DeleteVideoObject(guiTOP);
+	DeleteVideoObject(guiTITLE);
+	DeleteVideoObject(guiSHADELINE);
 }
 
 

@@ -366,10 +366,10 @@ static BOOLEAN LoadFiles(void)
 static void RemoveFiles(void)
 {
 	// delete files video objects from memory
-	DeleteVideoObjectFromIndex(guiTOP);
-	DeleteVideoObjectFromIndex(guiTITLE);
-  DeleteVideoObjectFromIndex(guiHIGHLIGHT);
-  DeleteVideoObjectFromIndex(guiFileBack);
+	DeleteVideoObject(guiTOP);
+	DeleteVideoObject(guiTITLE);
+  DeleteVideoObject(guiHIGHLIGHT);
+  DeleteVideoObject(guiFileBack);
 }
 
 
@@ -969,7 +969,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/ArucoFilesMap.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 300, 270);
-		DeleteVideoObjectFromIndex( uiPicture );
+		DeleteVideoObject(uiPicture);
 	}
 	else if( giFilesPage == 4 )
 	{
@@ -977,7 +977,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_Y.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 225);
-		DeleteVideoObjectFromIndex( uiPicture );
+		DeleteVideoObject(uiPicture);
 	}
 	else if( giFilesPage == 5 )
 	{
@@ -985,7 +985,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		SGPVObject* const uiPicture = AddVideoObjectFromFile("LAPTOP/Enrico_W.sti");
 		CHECKF(uiPicture != NO_VOBJECT);
 		BltVideoObject(FRAME_BUFFER, uiPicture, 0, 260, 85);
-		DeleteVideoObjectFromIndex( uiPicture );
+		DeleteVideoObject(uiPicture);
 	}
 
 	return ( TRUE );
@@ -1434,12 +1434,12 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 //def: 3/24/99
 //				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 5);
 				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
-				DeleteVideoObjectFromIndex( uiPicture );
+				DeleteVideoObject(uiPicture);
 
 				uiPicture = AddVideoObjectFromFile("LAPTOP/InterceptBorder.sti");
 				CHECKF(uiPicture != NO_VOBJECT);
 				BltVideoObject(FRAME_BUFFER, uiPicture, 0, FILE_VIEWER_X +  25, iYPositionOnPage + 16);
-				DeleteVideoObjectFromIndex( uiPicture );
+				DeleteVideoObject(uiPicture);
 			}
 
 			iCounter++;

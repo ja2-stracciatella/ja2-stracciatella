@@ -103,14 +103,14 @@ static BOOLEAN RenderPortrait(INT16 sX, INT16 sY)
 	  SGPVObject* const uiGraphicHandle = AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait]);
 	  CHECKF(uiGraphicHandle != NO_VOBJECT);
     BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-    DeleteVideoObjectFromIndex( uiGraphicHandle );
+		DeleteVideoObject(uiGraphicHandle);
 	}
 	else
 	{
 		SGPVObject* const uiGraphicHandle = AddVideoObjectFromFile(pPlayerSelectedBigFaceFileNames[iCurrentPortrait + 8]);
 		CHECKF(uiGraphicHandle != NO_VOBJECT);
     BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-    DeleteVideoObjectFromIndex( uiGraphicHandle );
+		DeleteVideoObject(uiGraphicHandle);
 	}
 
 	return ( TRUE );

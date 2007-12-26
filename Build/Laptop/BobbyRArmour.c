@@ -38,8 +38,8 @@ BOOLEAN EnterBobbyRArmour()
 
 void ExitBobbyRArmour()
 {
-	DeleteVideoObjectFromIndex(guiArmourBackground);
-	DeleteVideoObjectFromIndex(guiArmourGrid);
+	DeleteVideoObject(guiArmourBackground);
+	DeleteVideoObject(guiArmourGrid);
 	DeleteBobbyMenuBar();
 
 	DeleteBobbyBrTitle();

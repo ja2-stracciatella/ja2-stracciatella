@@ -377,12 +377,11 @@ void ExitEmail()
   DeleteEmailMouseRegions();
 
 	// remove video objects being used by email screen
-	DeleteVideoObjectFromIndex(guiEmailTitle);
-  DeleteVideoObjectFromIndex(guiEmailBackground);
-  DeleteVideoObjectFromIndex(guiMAILDIVIDER);
-  DeleteVideoObjectFromIndex(guiEmailIndicator);
-  DeleteVideoObjectFromIndex(guiEmailMessage);
-
+	DeleteVideoObject(guiEmailTitle);
+  DeleteVideoObject(guiEmailBackground);
+  DeleteVideoObject(guiMAILDIVIDER);
+  DeleteVideoObject(guiEmailIndicator);
+  DeleteVideoObject(guiEmailMessage);
 
 	// remove buttons
   DestroyMailScreenButtons( );

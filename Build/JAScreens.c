@@ -680,7 +680,7 @@ UINT32 SexScreenHandle(void)
 			ubCurrentScreen = 0;
 
 			// Remove video object...
-			DeleteVideoObjectFromIndex( guiSMILY );
+			DeleteVideoObject(guiSMILY);
 
 			FadeInGameScreen( );
 
@@ -751,7 +751,7 @@ void DoDemoIntroduction()
 	AssertMsg(uiTempID != NO_VOBJECT, "Failed to load DemoAds/DemoScreen1.sti");
 	if (uiTempID == NO_VOBJECT) return;
 	BltVideoObject(FRAME_BUFFER, uiTempID, 0, 0, 0);
-	DeleteVideoObjectFromIndex( uiTempID );
+	DeleteVideoObject(uiTempID);
 	InvalidateScreen();
 
 	//print out the information
@@ -860,7 +860,7 @@ static void DisplayTopwareGermanyAddress(void)
 	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
 	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
 	InvalidateRegion( 208, 390, 431, 475 );
-	DeleteVideoObjectFromIndex(vo);
+	DeleteVideoObject(vo);
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 }
@@ -1077,7 +1077,7 @@ UINT32 DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
-			DeleteVideoObjectFromIndex( uiTempID );
+			DeleteVideoObject(uiTempID);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", HIGHVOLUME, 1, MIDDLEPAN);
 		}
@@ -1239,7 +1239,7 @@ UINT32 DemoExitScreenHandle(void)
 			}
 			uiStartTime = uiTime;
 			BltVideoObject(uiCollageID, uiTempID, 0, 0, 0);
-			DeleteVideoObjectFromIndex( uiTempID );
+			DeleteVideoObject(uiTempID);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			PlayJA2SampleFromFile("DemoAds/Swoosh.wav", MIDVOLUME, 1, MIDDLEPAN);
 		}

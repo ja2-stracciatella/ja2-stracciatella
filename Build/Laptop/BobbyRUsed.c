@@ -38,10 +38,11 @@ BOOLEAN EnterBobbyRUsed()
 	return(TRUE);
 }
 
+
 void ExitBobbyRUsed()
 {
-	DeleteVideoObjectFromIndex(guiUsedBackground);
-	DeleteVideoObjectFromIndex(guiUsedGrid);
+	DeleteVideoObject(guiUsedBackground);
+	DeleteVideoObject(guiUsedGrid);
 	DeleteBobbyMenuBar();
 	DeleteBobbyBrTitle();
 	DeleteMouseRegionForBigImage();

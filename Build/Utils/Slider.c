@@ -86,7 +86,7 @@ void ShutDownSlider(void)
 
 	//if so report an errror
 	gfSliderInited = FALSE;
-	DeleteVideoObjectFromIndex(guiSliderBoxImage);
+	DeleteVideoObject(guiSliderBoxImage);
 }
 
 

@@ -1182,11 +1182,11 @@ BOOLEAN ShutdownSMPanel(void)
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
-	DeleteVideoObjectFromIndex(guiSMPanel);
-	DeleteVideoObjectFromIndex(guiSMObjects);
-	DeleteVideoObjectFromIndex(guiSMObjects2);
-	DeleteVideoObjectFromIndex(guiSecItemHiddenVO);
-	DeleteVideoObjectFromIndex(guiBrownBackgroundForTeamPanel);
+	DeleteVideoObject(guiSMPanel);
+	DeleteVideoObject(guiSMObjects);
+	DeleteVideoObject(guiSMObjects2);
+	DeleteVideoObject(guiSecItemHiddenVO);
+	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	gSelectSMPanelToMerc = NULL;
 
@@ -2613,9 +2613,9 @@ BOOLEAN ShutdownTEAMPanel(void)
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
-	DeleteVideoObjectFromIndex(guiTEAMPanel);
-	DeleteVideoObjectFromIndex(guiTEAMObjects);
-	DeleteVideoObjectFromIndex(guiBrownBackgroundForTeamPanel);
+	DeleteVideoObject(guiTEAMPanel);
+	DeleteVideoObject(guiTEAMObjects);
+	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);

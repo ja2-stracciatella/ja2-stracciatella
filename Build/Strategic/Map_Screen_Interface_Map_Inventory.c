@@ -156,7 +156,7 @@ void RemoveInventoryPoolGraphic( void )
 	// remove from v-object index
 	if( guiMapInventoryPoolBackground )
 	{
-		DeleteVideoObjectFromIndex( guiMapInventoryPoolBackground );
+		DeleteVideoObject(guiMapInventoryPoolBackground);
 		guiMapInventoryPoolBackground = 0;
 	}
 }

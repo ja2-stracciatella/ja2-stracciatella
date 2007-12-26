@@ -361,7 +361,7 @@ void DeleteFace( INT32 iFaceIndex )
 	}
 
 	// Delete vo
-	DeleteVideoObjectFromIndex( pFace->uiVideoObject );
+	DeleteVideoObject(pFace->uiVideoObject);
 
 	// Set uncallocated
 	pFace->fAllocated = FALSE;

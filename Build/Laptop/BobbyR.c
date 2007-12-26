@@ -260,16 +260,16 @@ static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mou
 void ExitBobbyR()
 {
 
-	DeleteVideoObjectFromIndex(guiBobbyName);
-	DeleteVideoObjectFromIndex(guiPlaque);
-	DeleteVideoObjectFromIndex(guiTopHinge);
-	DeleteVideoObjectFromIndex(guiBottomHinge);
-	DeleteVideoObjectFromIndex(guiStorePlaque);
-	DeleteVideoObjectFromIndex(guiHandle);
+	DeleteVideoObject(guiBobbyName);
+	DeleteVideoObject(guiPlaque);
+	DeleteVideoObject(guiTopHinge);
+	DeleteVideoObject(guiBottomHinge);
+	DeleteVideoObject(guiStorePlaque);
+	DeleteVideoObject(guiHandle);
 
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
-		DeleteVideoObjectFromIndex(guiUnderConstructionImage);
+		DeleteVideoObject(guiUnderConstructionImage);
 	}
 
 
@@ -356,7 +356,7 @@ BOOLEAN InitBobbyRWoodBackground()
 
 BOOLEAN DeleteBobbyRWoodBackground()
 {
-	DeleteVideoObjectFromIndex(guiWoodBackground);
+	DeleteVideoObject(guiWoodBackground);
 	return(TRUE);
 }
 

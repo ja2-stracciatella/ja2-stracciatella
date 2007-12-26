@@ -810,16 +810,16 @@ void ShutdownInvSlotInterface( )
 	UINT32		cnt;
 
 	// Remove all body type panels
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 0 ][ 0 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 2 ][ 0 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 1 ][ 0 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 3 ][ 0 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 0 ][ 1 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 2 ][ 1 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 1 ][ 1 ] );
-	DeleteVideoObjectFromIndex( guiBodyInvVO[ 3 ][ 1 ] );
+	DeleteVideoObject(guiBodyInvVO[0][0]);
+	DeleteVideoObject(guiBodyInvVO[2][0]);
+	DeleteVideoObject(guiBodyInvVO[1][0]);
+	DeleteVideoObject(guiBodyInvVO[3][0]);
+	DeleteVideoObject(guiBodyInvVO[0][1]);
+	DeleteVideoObject(guiBodyInvVO[2][1]);
+	DeleteVideoObject(guiBodyInvVO[1][1]);
+	DeleteVideoObject(guiBodyInvVO[3][1]);
 
-	DeleteVideoObjectFromIndex( guiGoldKeyVO );
+	DeleteVideoObject(guiGoldKeyVO);
 
 	// Remove regions
 	// Add regions for inventory slots
@@ -3070,12 +3070,10 @@ void DeleteItemDescriptionBox( )
 		}
 	}
 
-	//Remove
-	DeleteVideoObjectFromIndex( guiItemDescBox );
-  DeleteVideoObjectFromIndex( guiMapItemDescBox );
-	DeleteVideoObjectFromIndex( guiBullet );
-	// Delete item graphic
-	DeleteVideoObjectFromIndex( guiItemGraphic );
+	DeleteVideoObject(guiItemDescBox);
+  DeleteVideoObject(guiMapItemDescBox);
+	DeleteVideoObject(guiBullet);
+	DeleteVideoObject(guiItemGraphic);
 
 	gfInItemDescBox = FALSE;
 
@@ -4300,8 +4298,7 @@ static void DeleteItemStackPopup(void)
 {
 	INT32			cnt;
 
-	//Remove
-	DeleteVideoObjectFromIndex( guiItemPopupBoxes );
+	DeleteVideoObject(guiItemPopupBoxes);
 
 	MSYS_RemoveRegion( &gItemPopupRegion);
 
@@ -4497,7 +4494,7 @@ void DeleteKeyRingPopup(void)
 {
 	if (!gfInKeyRingPopup) return;
 
-	DeleteVideoObjectFromIndex(guiItemPopupBoxes);
+	DeleteVideoObject(guiItemPopupBoxes);
 
 	MSYS_RemoveRegion(&gItemPopupRegion);
 
@@ -5403,8 +5400,7 @@ void RemoveItemPickupMenu( )
 		// Unfreese guy!
 		gItemPickupMenu.pSoldier->fPauseAllAnimation = FALSE;
 
-		// Remove graphics!
-		DeleteVideoObjectFromIndex( gItemPickupMenu.uiPanelVo );
+		DeleteVideoObject(gItemPickupMenu.uiPanelVo);
 
 		// Remove buttons
 		if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )

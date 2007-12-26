@@ -4221,13 +4221,13 @@ static void ResetSoldierUpdateBox(void)
 	{
 		if( pUpdateSoldierBox[ iCounter ] != NULL )
 		{
-			DeleteVideoObjectFromIndex( giUpdateSoldierFaces[ iCounter ] );
+			DeleteVideoObject(giUpdateSoldierFaces[iCounter]);
 		}
 	}
 
 	if( giMercPanelImage != 0 )
 	{
-		DeleteVideoObjectFromIndex( giMercPanelImage );
+		DeleteVideoObject(giMercPanelImage);
 	}
 
 	// reset the soldier ptrs in the update box

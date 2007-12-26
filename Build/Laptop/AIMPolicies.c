@@ -205,7 +205,7 @@ void ExitAimPolicies()
 {
 	gfExitingAimPolicy = TRUE;
 
-	DeleteVideoObjectFromIndex(guiContentButton);
+	DeleteVideoObject(guiContentButton);
 
 	if( gfAimPolicyMenuBarLoaded )
 		ExitAimPolicyMenuBar();
