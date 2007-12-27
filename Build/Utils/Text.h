@@ -1347,6 +1347,8 @@ extern const wchar_t* pUpdatePanelButtons[];
 
 extern const wchar_t* sRepairsDoneString[];
 
+extern const wchar_t str_ceramic_plates_smashed[];
+
 extern const wchar_t str_arrival_rerouted[];
 
 #endif

@@ -3018,13 +3018,11 @@ INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocatio
 						pArmour->usAttachItem[ bPlatePos ] = NOTHING;
 						pArmour->bAttachStatus[ bPlatePos ] = 0;
 						DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
-#ifdef ENGLISH
-						if ( pTarget->bTeam == gbPlayerNum )
+						if (pTarget->bTeam == gbPlayerNum)
 						{
 							// report plates destroyed!
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[61], pTarget->name );
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_ceramic_plates_smashed, pTarget->name);
 						}
-#endif
 					}
 				}
 			}

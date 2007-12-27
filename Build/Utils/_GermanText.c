@@ -3587,8 +3587,9 @@ const wchar_t *gzLateLocalizedString[] =
 	L"John und Mary eskortieren?",
 
   L"Switch Activated.",
-
 };
+
+const wchar_t str_ceramic_plates_smashed[] = L"%lss Keramikplatten wurden zertrümmert!";
 
 const wchar_t str_arrival_rerouted[] = L"Die Ankunft neuer Rekruten wurde nach Sektor %ls umgeleitet, da der geplante Ankunftsort in Sektor %ls vom Feind besetzt ist.";
 

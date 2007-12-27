@@ -3773,6 +3773,8 @@ const wchar_t* gzLateLocalizedString[] =
   L"Interruttore attivato.",
 };
 
+const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!"; // TODO translate
+
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
 #endif //ITALIAN
