@@ -213,20 +213,26 @@ BOOLEAN DeleteVideoObject(SGPVObject* const vo)
 }
 
 
-static BOOLEAN BltVideoObjectToBuffer(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-
-/* Given an index to the dest and src vobject contained in ghVideoObjects */
 BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
 {
+	Assert(src->ubBitDepth ==  8);
+	Assert(dst->ubBitDepth == 16);
+
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
 	if (pBuffer == NULL) return FALSE;
 
-	BOOLEAN Ret = BltVideoObjectToBuffer(pBuffer, uiPitch, src, usRegionIndex, iDestX, iDestY);
+	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
+	{
+		Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex, &ClippingRect);
+	}
+	else
+	{
+		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
+	}
 
 	UnLockVideoSurface(dst);
-	return Ret;
+	return TRUE;
 }
 
 
@@ -278,29 +284,6 @@ static BOOLEAN InternalDeleteVideoObject(SGPVObject* const hVObject)
 	}
 
 	MemFree(hVObject);
-
-	return TRUE;
-}
-
-
-// High level blit function encapsolates ALL effects and BPP
-static BOOLEAN BltVideoObjectToBuffer(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
-{
-	Assert(pBuffer != NULL);
-	Assert(hSrcVObject != NULL);
-
-	switch (hSrcVObject->ubBitDepth)
-	{
-			case 16:
-				break;
-
-			case 8:
-				if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
-					Blt8BPPDataTo16BPPBufferTransparentClip(pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect);
-				else
-					Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiDestPitchBYTES, hSrcVObject, iDestX, iDestY, usIndex);
-				break;
-	}
 
 	return TRUE;
 }
