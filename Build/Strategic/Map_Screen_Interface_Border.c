@@ -926,34 +926,31 @@ static void DisplayCurrentLevelMarker(void)
 static void LevelMarkerBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void CreateMouseRegionsForLevelMarkers( void )
+void CreateMouseRegionsForLevelMarkers(void)
 {
-	INT16 sCounter = 0;
-	CHAR16 sString[ 64 ];
-
-	for( sCounter = 0; sCounter  < 4 ; sCounter++ )
+	for (UINT sCounter = 0; sCounter < 4 ; ++sCounter)
 	{
-		MSYS_DefineRegion(&LevelMouseRegions[ sCounter ], MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * sCounter ) ),  MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( sCounter + 1 ) ) ), MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
-			MSYS_NO_CALLBACK, LevelMarkerBtnCallback );
+		MOUSE_REGION* const r = &LevelMouseRegions[sCounter];
+		const UINT16        x = MAP_LEVEL_MARKER_X;
+		const UINT16        y = MAP_LEVEL_MARKER_Y + MAP_LEVEL_MARKER_DELTA * sCounter;
+		const UINT16        w = MAP_LEVEL_MARKER_WIDTH;
+		const UINT16        h = MAP_LEVEL_MARKER_DELTA;
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, LevelMarkerBtnCallback);
 
-		MSYS_SetRegionUserData(&LevelMouseRegions[sCounter],0,sCounter);
+		MSYS_SetRegionUserData(r, 0, sCounter);
 
-		swprintf( sString, lengthof(sString), L"%ls %d", zMarksMapScreenText[ 0 ], sCounter + 1 );
-		SetRegionFastHelpText( &LevelMouseRegions[ sCounter ], sString );
+		wchar_t sString[64];
+		swprintf(sString, lengthof(sString), L"%ls %d", zMarksMapScreenText[0], sCounter + 1);
+		SetRegionFastHelpText(r, sString);
   }
-
-
 }
 
 
 void DeleteMouseRegionsForLevelMarkers( void )
 {
-	INT16 sCounter = 0;
-
-
-	for( sCounter = 0; sCounter < 4; sCounter++ )
+	for (UINT sCounter = 0; sCounter < 4; ++sCounter)
 	{
-		MSYS_RemoveRegion(  &LevelMouseRegions[ sCounter ] );
+		MSYS_RemoveRegion(&LevelMouseRegions[sCounter]);
 	}
 }
 
