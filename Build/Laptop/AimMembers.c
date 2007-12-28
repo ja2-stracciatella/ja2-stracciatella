@@ -3578,12 +3578,13 @@ BOOLEAN DisplayShadedStretchedMercFace( UINT8 ubMercID, UINT16 usPosX, UINT16 us
 
 void DemoHiringOfMercs( )
 {
+#ifdef GERMAN
+	const ProfileID MercID[] = { IVAN, SHADOW, VICKY, FOX, BUBBA };
+#else
+	const ProfileID MercID[] = { IVAN, SHADOW, VICKY, GASKET, DR_Q };
+#endif
+
 	INT16	i;
-	#ifdef GERMAN
-		UINT8	MercID[]={ 7, 10, 4, 14, 50 };
-	#else
-		UINT8	MercID[]={ 7, 10, 4, 42, 33 };
-	#endif
 	MERC_HIRE_STRUCT HireMercStruct;
 	#ifndef JA2DEMO
 		static BOOLEAN	fHaveCalledBefore=FALSE;

@@ -24,9 +24,13 @@ static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
 //enums for the mercs
 enum
 {
-	RED   = 11,
-	DR_Q  = 33,
-	NAILS = 34,
+	VICKY  =  4,
+	IVAN   =  7,
+	SHADOW = 10,
+	RED    = 11,
+	FOX    = 14,
+	DR_Q   = 33,
+	NAILS  = 34,
 
 	BIFF = 40,
 	HAYWIRE,
