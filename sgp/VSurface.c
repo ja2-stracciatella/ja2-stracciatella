@@ -126,12 +126,35 @@ SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 }
 
 
-static HVSURFACE CreateVideoSurfaceFromFile(const char* Filename);
+static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
 
 
 SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
-	SGPVSurface* const vs = CreateVideoSurfaceFromFile(Filename);
+	const HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
+	if (hImage == NULL)
+	{
+		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
+		return NULL;
+	}
+
+	SGPVSurface* const vs = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
+	if (vs != NULL)
+	{
+		SGPRect tempRect;
+		tempRect.iLeft   = 0;
+		tempRect.iTop    = 0;
+		tempRect.iRight  = hImage->usWidth  - 1;
+		tempRect.iBottom = hImage->usHeight - 1;
+		SetVideoSurfaceDataFromHImage(vs, hImage, 0, 0, &tempRect);
+
+		if (hImage->ubBitDepth == 8)
+		{
+			SetVideoSurfacePalette(vs, hImage->pPalette);
+		}
+	}
+
+	DestroyImage(hImage);
 	AddStandardVideoSurface(vs);
 	return vs;
 }
@@ -329,39 +352,6 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Success in Creating Video Surface");
 
-	return hVSurface;
-}
-
-
-static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
-
-
-static HVSURFACE CreateVideoSurfaceFromFile(const char* Filename)
-{
-	HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
-	if (hImage == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
-		return NULL;
-	}
-
-	HVSURFACE hVSurface = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
-	if (hVSurface != NULL)
-	{
-		SGPRect tempRect;
-		tempRect.iLeft   = 0;
-		tempRect.iTop    = 0;
-		tempRect.iRight  = hImage->usWidth  - 1;
-		tempRect.iBottom = hImage->usHeight - 1;
-		SetVideoSurfaceDataFromHImage(hVSurface, hImage, 0, 0, &tempRect);
-
-		if (hImage->ubBitDepth == 8)
-		{
-			SetVideoSurfacePalette(hVSurface, hImage->pPalette);
-		}
-	}
-
-	DestroyImage(hImage);
 	return hVSurface;
 }
 
