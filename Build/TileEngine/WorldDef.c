@@ -2547,7 +2547,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	INT8						*pBuffer;
 	INT8						*pBufferHead;
 	BOOLEAN					fGenerateEdgePoints = FALSE;
-	UINT8						ubMinorMapVersion;
 #ifdef JA2TESTVERSION
 	uiLoadWorldStartTime = GetJA2Clock();
 #endif
@@ -2601,7 +2600,15 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	}
 #endif
 
-	LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
+	UINT8 ubMinorMapVersion;
+	if (dMajorMapVersion >= 4.00)
+	{
+		LOADDATA(&ubMinorMapVersion, pBuffer, sizeof(UINT8));
+	}
+	else
+	{
+		ubMinorMapVersion = 0;
+	}
 
 	// CHECK FOR NON-COMPATIBLE VERSIONS!
 	// CHECK FOR MAJOR MAP VERSION INCOMPATIBLITIES
@@ -2707,7 +2714,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	SetRelativeStartAndEndPercentage( 0, 43, 46, L"Loading object layer...");
 	RenderProgressBar( 0, 100 );
 
-	if( 0 )
+	if (ubMinorMapVersion < 15)
 	{ //Old loads
 		for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 		{

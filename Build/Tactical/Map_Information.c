@@ -436,10 +436,6 @@ static void UpdateOldVersionMap(void)
 		//layer only.
 	}
 #endif //end of MAJOR VERSION 3.0 obsolete code
-	if( gMapInformation.ubMapVersion < 15 )
-	{
-		AssertMsg( 0, "Map is less than minimum supported version." );
-	}
 	if( gMapInformation.ubMapVersion < 16 )
 	{
 		gMapInformation.ubMapVersion = 16;
