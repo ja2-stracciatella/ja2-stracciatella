@@ -108,12 +108,20 @@ typedef struct
 } SGPPoint;
 
 
+typedef struct SGPPaletteEntry
+{
+	UINT8 peRed;
+	UINT8 peGreen;
+	UINT8 peBlue;
+	UINT8 peFlags;
+} SGPPaletteEntry;
+
+
 typedef UINT32 COLORVAL;
 
 typedef struct AuxObjectData   AuxObjectData;
 typedef struct ETRLEObject     ETRLEObject;
 typedef struct RelTileLoc      RelTileLoc;
-typedef struct SGPPaletteEntry SGPPaletteEntry;
 
 typedef struct SGPImage    SGPImage;
 typedef SGPImage*          HIMAGE;

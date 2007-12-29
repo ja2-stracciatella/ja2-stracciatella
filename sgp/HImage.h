@@ -33,15 +33,6 @@
 #define IMAGE_ALLIMAGEDATA			0x000C
 #define IMAGE_ALLDATA						0x001C
 
-// Palette structure, mimics that of Win32
-struct SGPPaletteEntry
-{
-  UINT8 peRed;
-  UINT8 peGreen;
-  UINT8 peBlue;
-  UINT8 peFlags;
-};
-
 #define AUX_FULL_TILE					0x01
 #define AUX_ANIMATED_TILE			0x02
 #define AUX_DYNAMIC_TILE			0x04
