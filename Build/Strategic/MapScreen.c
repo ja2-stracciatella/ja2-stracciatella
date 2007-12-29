@@ -6056,6 +6056,14 @@ static void BlitBackgroundToSaveBuffer(void)
 }
 
 
+static void MakeRegion(MOUSE_REGION* const r, const UINT idx, const UINT16 x, const UINT16 y, const UINT16 w, const INT8 prio, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click, const wchar_t* const help)
+{
+	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, prio, MSYS_NO_CURSOR, move, click);
+	MSYS_SetRegionUserData(r, 0, idx);
+	SetRegionFastHelpText(r, help);
+}
+
+
 static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void TeamListContractRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -6071,68 +6079,27 @@ static void TeamListSleepRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void CreateMouseRegionsForTeamList(void)
 {
 	// will create mouse regions for assignments, path plotting, character info selection
-	INT16 sCounter = 0;
-	INT16 sYAdd = 0;
 
 	// the info region...is the background for the list itself
-
-	for( sCounter = 0; sCounter < MAX_CHARACTER_COUNT; sCounter++ )
+	for (UINT i = 0; i < MAX_CHARACTER_COUNT; ++i)
 	{
-		if( sCounter >= FIRST_VEHICLE )
-		{
-			sYAdd = 6;
-		}
-		else
-		{
-			sYAdd = 0;
-		}
+		const UINT16 y = Y_START + i * (Y_SIZE + 2) + (i >= FIRST_VEHICLE ? 6 : 0);
 
 #ifdef JA2DEMO
-			// name region across the whole width of the team panel at HIGHEST priority, thus overriding the others
-		MSYS_DefineRegion( &gTeamListNameRegion[ sCounter ] , NAME_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), 236, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_HIGHEST,
-							 MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
+		// name region across the whole width of the team panel at HIGHEST priority, thus overriding the others
+		const UINT16 w    = 225;
+		const INT8   prio = MSYS_PRIORITY_HIGHEST;
 #else
-		// name region
-		MSYS_DefineRegion( &gTeamListNameRegion[ sCounter ] , NAME_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), NAME_X + NAME_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL,
-							 MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
+		const UINT16 w    = NAME_WIDTH;
+		const INT8   prio = MSYS_PRIORITY_NORMAL;
 #endif
-
-		// assignment region
-		MSYS_DefineRegion( &gTeamListAssignmentRegion[ sCounter ] ,ASSIGN_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), ASSIGN_X + ASSIGN_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-							 MSYS_NO_CURSOR, TeamListAssignmentRegionMvtCallBack, TeamListAssignmentRegionBtnCallBack );
-
-		// location region (same function as name regions, so uses the same callbacks)
-		MSYS_DefineRegion( &gTeamListLocationRegion[ sCounter ] , LOC_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), LOC_X + LOC_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-							 MSYS_NO_CURSOR, TeamListInfoRegionMvtCallBack, TeamListInfoRegionBtnCallBack );
-
-		// destination region
-		MSYS_DefineRegion( &gTeamListDestinationRegion[ sCounter ] ,DEST_ETA_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd ), DEST_ETA_X + DEST_ETA_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-							 MSYS_NO_CURSOR, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack );
-
-		// contract region
-		MSYS_DefineRegion( &gTeamListContractRegion[ sCounter ] ,TIME_REMAINING_X , ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), TIME_REMAINING_X + TIME_REMAINING_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-							 MSYS_NO_CURSOR, TeamListContractRegionMvtCallBack, TeamListContractRegionBtnCallBack );
-
-		// contract region
-		MSYS_DefineRegion( &gTeamListSleepRegion[ sCounter ] ,SLEEP_X, ( INT16 )( Y_START + ( sCounter ) * ( Y_SIZE + 2 ) + sYAdd), SLEEP_X + SLEEP_WIDTH, ( INT16 )( 145 + ( sCounter + 1 ) * ( Y_SIZE + 2 ) + sYAdd ), MSYS_PRIORITY_NORMAL + 1,
-							 MSYS_NO_CURSOR, TeamListSleepRegionMvtCallBack, TeamListSleepRegionBtnCallBack );
-
-
-		MSYS_SetRegionUserData(&gTeamListNameRegion[sCounter],0,sCounter);
-		MSYS_SetRegionUserData(&gTeamListAssignmentRegion[sCounter],0,sCounter);
-		MSYS_SetRegionUserData(&gTeamListSleepRegion[sCounter],0,sCounter);
-		MSYS_SetRegionUserData(&gTeamListLocationRegion[sCounter],0,sCounter);
-		MSYS_SetRegionUserData(&gTeamListDestinationRegion[sCounter],0,sCounter);
-		MSYS_SetRegionUserData(&gTeamListContractRegion[sCounter],0,sCounter);
-
-
-		// set up help boxes
-		SetRegionFastHelpText( &gTeamListNameRegion[sCounter], pMapScreenMouseRegionHelpText[ 0 ] );
-		SetRegionFastHelpText( &gTeamListAssignmentRegion[sCounter], pMapScreenMouseRegionHelpText[ 1 ] );
-		SetRegionFastHelpText( &gTeamListSleepRegion[sCounter], pMapScreenMouseRegionHelpText[ 5 ] );
-		SetRegionFastHelpText( &gTeamListLocationRegion[sCounter], pMapScreenMouseRegionHelpText[ 0 ] );
-		SetRegionFastHelpText( &gTeamListDestinationRegion[sCounter], pMapScreenMouseRegionHelpText[ 2 ] );
-		SetRegionFastHelpText( &gTeamListContractRegion[sCounter], pMapScreenMouseRegionHelpText[ 3 ] );
+		MakeRegion(&gTeamListNameRegion[i],        i, NAME_X,           y, w,                    prio,                     TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
+		MakeRegion(&gTeamListAssignmentRegion[i],  i, ASSIGN_X,         y, ASSIGN_WIDTH,         MSYS_PRIORITY_NORMAL + 1, TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
+		// same function as name regions, so uses the same callbacks
+		MakeRegion(&gTeamListLocationRegion[i],    i, LOC_X,            y, LOC_WIDTH,            MSYS_PRIORITY_NORMAL + 1, TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
+		MakeRegion(&gTeamListDestinationRegion[i], i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       MSYS_PRIORITY_NORMAL + 1, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
+		MakeRegion(&gTeamListContractRegion[i],    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, MSYS_PRIORITY_NORMAL + 1, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
+		MakeRegion(&gTeamListSleepRegion[i],       i, SLEEP_X,          y, SLEEP_WIDTH,          MSYS_PRIORITY_NORMAL + 1, TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
 	}
 }
 
@@ -6140,16 +6107,14 @@ static void CreateMouseRegionsForTeamList(void)
 static void DestroyMouseRegionsForTeamList(void)
 {
 	// will destroy mouse regions overlaying the team list area
-	INT32 sCounter = 0;
-
-	for( sCounter = 0; sCounter < MAX_CHARACTER_COUNT; sCounter++ )
+	for (UINT i = 0; i < MAX_CHARACTER_COUNT; ++i)
 	{
-	  MSYS_RemoveRegion( &gTeamListNameRegion[ sCounter ]);
-		MSYS_RemoveRegion( &gTeamListAssignmentRegion[ sCounter ]);
-		MSYS_RemoveRegion( &gTeamListSleepRegion[ sCounter ]);
-		MSYS_RemoveRegion( &gTeamListDestinationRegion[ sCounter ]);
-		MSYS_RemoveRegion( &gTeamListLocationRegion[ sCounter ]);
-		MSYS_RemoveRegion( &gTeamListContractRegion[ sCounter ]);
+	  MSYS_RemoveRegion(&gTeamListNameRegion[i]);
+		MSYS_RemoveRegion(&gTeamListAssignmentRegion[i]);
+		MSYS_RemoveRegion(&gTeamListSleepRegion[i]);
+		MSYS_RemoveRegion(&gTeamListDestinationRegion[i]);
+		MSYS_RemoveRegion(&gTeamListLocationRegion[i]);
+		MSYS_RemoveRegion(&gTeamListContractRegion[i]);
 	}
 }
 
