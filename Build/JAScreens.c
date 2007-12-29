@@ -41,7 +41,9 @@
 #include "Debug.h"
 
 #ifdef JA2DEMO
+#	include "Fade_Screen.h"
 #	include "Local.h"
+#	include "Music_Control.h"
 #	include "WordWrap.h"
 #endif
 
@@ -881,7 +883,7 @@ UINT32 DemoExitScreenHandle(void)
 	static BOOLEAN				fSetMusicToFade = FALSE;
 	wchar_t str[150];
 	static UINT16  usCenter;
-	static UINT32					uiCollageID = 0;
+	static SGPVSurface* uiCollageID = 0;
 	static BOOLEAN gfFastAnim = FALSE;
 	static BOOLEAN gfPrevFastAnim = FALSE;
 

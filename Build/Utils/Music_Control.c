@@ -9,6 +9,11 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 
+#ifdef JA2DEMO
+#	include "Fade_Screen.h"
+#	include "Overhead.h"
+#endif
+
 
 static UINT32  uiMusicHandle   = NO_SAMPLE;
 static UINT32  uiMusicVolume   = 50;

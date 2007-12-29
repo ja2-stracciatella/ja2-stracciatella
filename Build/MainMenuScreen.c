@@ -28,6 +28,10 @@
 #include "WCheck.h"
 #include "WordWrap.h"
 
+#ifdef JA2DEMO
+#	include "Fade_Screen.h"
+#endif
+
 
 //#define TESTFOREIGNFONTS
 

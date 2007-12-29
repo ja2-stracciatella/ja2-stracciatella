@@ -93,6 +93,10 @@
 #include "Strategic_Status.h"
 #include "PreBattle_Interface.h"
 
+#ifdef JA2DEMO
+#	include "Fade_Screen.h"
+#endif
+
 
 #define RT_DELAY_BETWEEN_AI_HANDLING 50
 #define RT_AI_TIMESLICE 10

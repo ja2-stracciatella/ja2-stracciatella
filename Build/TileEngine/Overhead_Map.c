@@ -40,6 +40,7 @@
 #include "Debug.h"
 
 #ifdef JA2DEMO
+#	include "Message.h"
 #	include "Text.h"
 #endif
 

@@ -34,6 +34,10 @@
 #	include "PreBattle_Interface.h"
 #endif
 
+#ifdef JA2DEMOADS
+#	include "Fade_Screen.h"
+#endif
+
 
 UINT32 guiCurrentScreen;
 UINT32 guiPendingScreen = NO_PENDING_SCREEN;
