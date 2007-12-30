@@ -417,18 +417,13 @@ void AddMonoString(const wchar_t* pString)
 static void RemoveBoxSecondaryText(PopUpBox*, INT32 hStringHandle);
 
 
-// adds a SECOND column string to the CURRENT popup box
-void AddSecondColumnMonoString(const wchar_t* pString)
+void AddSecondColumnMonoString(const INT32 box_handle, const wchar_t* const pString)
 {
 	STR16 pLocalString=NULL;
 	INT32 iCounter=0;
 
-
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
+	if (box_handle < 0 || box_handle >= MAX_POPUP_BOX_COUNT) return;
+	PopUpBox* const Box = PopUpBoxList[box_handle];
 	Assert(Box != NULL );
 
 	// find the LAST USED text string index

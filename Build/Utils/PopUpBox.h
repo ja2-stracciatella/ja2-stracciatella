@@ -68,8 +68,8 @@ void SetBoxLineForeground( INT32 iBox, INT32 iStringValue, UINT8 ubColor );
 // hide all visible boxes
 void HideAllBoxes( void );
 
-// add the second column monocrome string
-void AddSecondColumnMonoString(const wchar_t* pString);
+// add a second column monochrome string
+void AddSecondColumnMonoString(INT32 box_handle, const wchar_t* pString);
 
 // set the 2nd column font for this box
 void SetBoxSecondColumnFont(INT32 hBoxHandle, UINT32 uiFont);
