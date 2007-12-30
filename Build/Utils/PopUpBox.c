@@ -842,10 +842,10 @@ void UnHighLightBox(INT32 hBoxHandle)
 }
 
 
-void RemoveAllCurrentBoxStrings(void)
+void RemoveAllBoxStrings(const INT32 box_handle)
 {
-	if (guiCurrentBox < 0 || guiCurrentBox >= MAX_POPUP_BOX_COUNT) return;
-	PopUpBox* const Box = PopUpBoxList[guiCurrentBox];
+	if (box_handle < 0 || box_handle >= MAX_POPUP_BOX_COUNT) return;
+	PopUpBox* const Box = PopUpBoxList[box_handle];
 	Assert(Box != NULL);
 
 	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
@@ -862,16 +862,11 @@ void RemoveBox(INT32 hBoxHandle)
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
 
-	INT32 hOldBoxHandle = guiCurrentBox;
-	SetCurrentBox(hBoxHandle);
+	if (guiCurrentBox == hBoxHandle) guiCurrentBox = NO_POPUP_BOX;
 
-	RemoveAllCurrentBoxStrings();
-
+	RemoveAllBoxStrings(hBoxHandle);
 	MemFree(PopUpBoxList[hBoxHandle]);
 	PopUpBoxList[hBoxHandle] = NULL;
-
-	if (hOldBoxHandle != hBoxHandle)
-		SetCurrentBox(hOldBoxHandle);
 }
 
 

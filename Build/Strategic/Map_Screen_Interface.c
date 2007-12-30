@@ -3310,8 +3310,7 @@ static void AddStringsToMoveBox(void)
 	SetCurrentBox( ghMoveBox );
 
 	// clear all the strings out of the box
-	RemoveAllCurrentBoxStrings();
-
+	RemoveAllBoxStrings(ghMoveBox);
 
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
