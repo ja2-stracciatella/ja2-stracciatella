@@ -866,8 +866,8 @@ void DisplayBoxes(SGPVSurface* const uiBuffer)
 }
 
 
-static BOOLEAN DrawBox(UINT32 uiCounter);
-static BOOLEAN DrawBoxText(const PopUpBox*);
+static void DrawBox(UINT32 uiCounter);
+static void DrawBoxText(const PopUpBox*);
 
 
 void DisplayOnePopupBox(const UINT32 uiIndex, SGPVSurface* const uiBuffer)
@@ -904,116 +904,91 @@ void ForceUpDateOfBox( UINT32 uiIndex )
 }
 
 
-static BOOLEAN DrawBox(UINT32 uiCounter)
+static void DrawBox(UINT32 uiCounter)
 {
-	// will build pop up box in usTopX, usTopY with dimensions usWidth and usHeight
-	UINT32 uiNumTilesWide;
-	UINT32 uiNumTilesHigh;
-	UINT32 uiCount=0;
-	SGPRect clip;
-	UINT16 usTopX, usTopY;
-	UINT16 usWidth, usHeight;
-
-
-	if ( ( uiCounter < 0 ) || ( uiCounter >= MAX_POPUP_BOX_COUNT ) )
-		return(FALSE);
-
-	PopUpBox* Box = PopUpBoxList[uiCounter];
-
-	Assert(Box != NULL);
+	PopUpBox* const box = PopUpBoxList[uiCounter];
 
 	// only update if we need to
+	if (box->fUpdated) return;
+	box->fUpdated = TRUE;
 
-	if (Box->fUpdated == TRUE)
-	{
-		return( FALSE );
-	}
+	if (box->uiFlags & POPUP_BOX_FLAG_RESIZE) ResizeBoxToText(uiCounter);
 
-	Box->fUpdated = TRUE;
-
-	if (Box->uiFlags & POPUP_BOX_FLAG_RESIZE)
-	{
-		ResizeBoxToText(uiCounter);
-	}
-
-	usTopX   = (UINT16)Box->Position.iX;
-	usTopY   = (UINT16)Box->Position.iY;
-	usWidth  = (UINT16)(Box->Dimensions.iRight  - Box->Dimensions.iLeft);
-	usHeight = (UINT16)(Box->Dimensions.iBottom - Box->Dimensions.iTop);
+	const UINT16 x = box->Position.iX;
+	const UINT16 y = box->Position.iY;
+	UINT16       w = box->Dimensions.iRight  - box->Dimensions.iLeft;
+	const UINT16 h = box->Dimensions.iBottom - box->Dimensions.iTop;
 
 	// check if we have a min width, if so then update box for such
-	if (Box->uiBoxMinWidth && usWidth < Box->uiBoxMinWidth)
-	{
-		usWidth = (INT16)Box->uiBoxMinWidth;
-	}
+	if (w < box->uiBoxMinWidth) w = box->uiBoxMinWidth;
 
 	// make sure it will fit on screen!
-	Assert(usTopX + usWidth  < SCREEN_WIDTH);
-	Assert(usTopY + usHeight < SCREEN_HEIGHT);
+	Assert(x + w  < SCREEN_WIDTH);
+	Assert(y + h < SCREEN_HEIGHT);
 
 	// subtract 4 because the 2 2-pixel corners are handled separately
-	uiNumTilesWide=((usWidth-4)/BORDER_WIDTH);
-	uiNumTilesHigh=((usHeight-4)/BORDER_HEIGHT);
+	const UINT32 uiNumTilesWide = (w - 4) / BORDER_WIDTH;
+	const UINT32 uiNumTilesHigh = (h - 4) / BORDER_HEIGHT;
 
-	clip.iLeft=0;
-	clip.iRight = clip.iLeft + usWidth;
-	clip.iTop=0;
-	clip.iBottom=clip.iTop+usHeight;
+	SGPVSurface* const dst = box->uiBuffer;
 
 	// blit in texture first, then borders
-	// blit in surface
-	BltVideoSurface(Box->uiBuffer, Box->iBackGroundSurface, usTopX, usTopY, &clip);
-	const SGPVObject* const hBoxHandle = Box->iBorderObjectIndex;
+	const SGPRect clip = { 0, 0, w, h };
+	BltVideoSurface(dst, box->iBackGroundSurface, x, y, &clip);
+
+	const SGPVObject* const border = box->iBorderObjectIndex;
 
 	// blit in 4 corners (they're 2x2 pixels)
-	BltVideoObject(Box->uiBuffer, hBoxHandle, TOP_LEFT_CORNER,     usTopX,               usTopY);
-	BltVideoObject(Box->uiBuffer, hBoxHandle, TOP_RIGHT_CORNER,    usTopX + usWidth - 2, usTopY);
-	BltVideoObject(Box->uiBuffer, hBoxHandle, BOTTOM_RIGHT_CORNER, usTopX + usWidth - 2, usTopY + usHeight - 2);
-	BltVideoObject(Box->uiBuffer, hBoxHandle, BOTTOM_LEFT_CORNER,  usTopX,               usTopY + usHeight - 2);
+	BltVideoObject(dst, border, TOP_LEFT_CORNER,     x,         y);
+	BltVideoObject(dst, border, TOP_RIGHT_CORNER,    x + w - 2, y);
+	BltVideoObject(dst, border, BOTTOM_RIGHT_CORNER, x + w - 2, y + h - 2);
+	BltVideoObject(dst, border, BOTTOM_LEFT_CORNER,  x,         y + h - 2);
 
 	// blit in edges
 	if (uiNumTilesWide > 0)
 	{
 		// full pieces
-		for (uiCount = 0; uiCount < uiNumTilesWide; uiCount++)
+		for (UINT32 i = 0; i < uiNumTilesWide; ++i)
 		{
-			BltVideoObject(Box->uiBuffer, hBoxHandle, TOP_EDGE,    usTopX + 2 + uiCount * BORDER_WIDTH, usTopY);
-			BltVideoObject(Box->uiBuffer, hBoxHandle, BOTTOM_EDGE, usTopX + 2 + uiCount * BORDER_WIDTH, usTopY + usHeight - 2);
+			const INT32 lx = x + 2 + i * BORDER_WIDTH;
+			BltVideoObject(dst, border, TOP_EDGE,    lx, y);
+			BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - 2);
 		}
 
 		// partial pieces
-		BltVideoObject(Box->uiBuffer, hBoxHandle, TOP_EDGE,    usTopX + usWidth - 2 - BORDER_WIDTH, usTopY);
-		BltVideoObject(Box->uiBuffer, hBoxHandle, BOTTOM_EDGE, usTopX + usWidth - 2 - BORDER_WIDTH, usTopY + usHeight - 2);
+		const INT32 lx = x + w - 2 - BORDER_WIDTH;
+		BltVideoObject(dst, border, TOP_EDGE,    lx, y);
+		BltVideoObject(dst, border, BOTTOM_EDGE, lx, y + h - 2);
 	}
 	if (uiNumTilesHigh > 0)
 	{
 		// full pieces
-		for (uiCount = 0; uiCount < uiNumTilesHigh; uiCount++)
+		for (UINT32 i = 0; i < uiNumTilesHigh; ++i)
 		{
-			BltVideoObject(Box->uiBuffer, hBoxHandle, SIDE_EDGE, usTopX,               usTopY + 2 + uiCount * BORDER_HEIGHT);
-			BltVideoObject(Box->uiBuffer, hBoxHandle, SIDE_EDGE, usTopX + usWidth - 2, usTopY + 2 + uiCount * BORDER_HEIGHT);
+			const INT32 ly = y + 2 + i * BORDER_HEIGHT;
+			BltVideoObject(dst, border, SIDE_EDGE, x,         ly);
+			BltVideoObject(dst, border, SIDE_EDGE, x + w - 2, ly);
 		}
 
 		// partial pieces
-		BltVideoObject(Box->uiBuffer, hBoxHandle, SIDE_EDGE, usTopX,               usTopY + usHeight - 2 - BORDER_HEIGHT);
-		BltVideoObject(Box->uiBuffer, hBoxHandle, SIDE_EDGE, usTopX + usWidth - 2, usTopY + usHeight - 2 - BORDER_HEIGHT);
+		const INT32 ly = y + h - 2 - BORDER_HEIGHT;
+		BltVideoObject(dst, border, SIDE_EDGE, x,         ly);
+		BltVideoObject(dst, border, SIDE_EDGE, x + w - 2, ly);
 	}
 
-	InvalidateRegion( usTopX, usTopY, usTopX + usWidth, usTopY + usHeight );
-	return TRUE;
+	InvalidateRegion(x, y, x + w, y + h);
 }
 
 
-static BOOLEAN DrawBoxText(const PopUpBox* const box)
+static void DrawBoxText(const PopUpBox* const box)
 {
-	SetFontDestBuffer
-	(
-		box->uiBuffer,
-		box->Position.iX + box->uiLeftMargin - 1,
-		box->Position.iY + box->uiTopMargin,
-		box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin,
-		box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin
-	);
+	const INT32 tlx = box->Position.iX + box->uiLeftMargin;
+	const INT32 tly = box->Position.iY + box->uiTopMargin;
+	const INT32 brx = box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin;
+	const INT32 bry = box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin;
+	const INT32 w   = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+
+	SetFontDestBuffer(box->uiBuffer, tlx - 1, tly, brx, bry);
 
 	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
 	{
@@ -1043,22 +1018,19 @@ static BOOLEAN DrawBoxText(const PopUpBox* const box)
 
 			SetFontBackground(text->ubBackgroundColor);
 
-			const INT16 x = box->Position.iX + box->uiLeftMargin;
-			const INT16 h = GetFontHeight(text->uiFont);
-			const INT16 y = box->Position.iY + box->uiTopMargin + i * (h + box->uiLineSpace);
+			const INT32 h = GetFontHeight(text->uiFont);
+			const INT32 y = tly + i * (h + box->uiLineSpace);
 			INT16 uX;
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				const INT16 w = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
-				FindFontCenterCoordinates(x, y, w, h, text->pString, text->uiFont, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, text->pString, text->uiFont, &uX, &uY);
 			}
 			else
 			{
-				uX = x;
+				uX = tlx;
 				uY = y;
 			}
-
 			mprintf(uX, uY, L"%ls", text->pString);
 		}
 
@@ -1084,40 +1056,29 @@ static BOOLEAN DrawBoxText(const PopUpBox* const box)
 
 			SetFontBackground(second->ubBackgroundColor);
 
-			const INT16 x = box->Position.iX + box->uiLeftMargin;
-			const INT16 h = GetFontHeight(second->uiFont);
-			const INT16 y = box->Position.iY + box->uiTopMargin + i * (h + box->uiLineSpace);
+			const INT32 h = GetFontHeight(second->uiFont);
+			const INT32 y = tly + i * (h + box->uiLineSpace);
 			INT16 uX;
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				const INT16 w = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
-				FindFontCenterCoordinates(x, y, w, h, second->pString, second->uiFont, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, second->pString, second->uiFont, &uX, &uY);
 			}
 			else
 			{
-				uX = x + box->uiSecondColumnCurrentOffset;
+				uX = tlx + box->uiSecondColumnCurrentOffset;
 				uY = y;
 			}
-
 			mprintf(uX, uY, L"%ls", second->pString);
 		}
 	}
 
 	if (box->uiBuffer != guiSAVEBUFFER)
 	{
-		InvalidateRegion
-		(
-			box->Position.iX + box->uiLeftMargin - 1,
-			box->Position.iY + box->uiTopMargin,
-			box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin,
-			box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin
-		);
+		InvalidateRegion(tlx - 1, tly, brx, bry);
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	return TRUE;
 }
 
 
