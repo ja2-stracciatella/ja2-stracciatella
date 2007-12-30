@@ -867,7 +867,7 @@ void DisplayBoxes(SGPVSurface* const uiBuffer)
 
 
 static BOOLEAN DrawBox(UINT32 uiCounter);
-static BOOLEAN DrawBoxText(UINT32 uiCounter);
+static BOOLEAN DrawBoxText(const PopUpBox*);
 
 
 void DisplayOnePopupBox(const UINT32 uiIndex, SGPVSurface* const uiBuffer)
@@ -882,7 +882,7 @@ void DisplayOnePopupBox(const UINT32 uiIndex, SGPVSurface* const uiBuffer)
 		if (Box->uiBuffer == uiBuffer && Box->fShowBox)
 		{
 			DrawBox(uiIndex);
-			DrawBoxText(uiIndex);
+			DrawBoxText(Box);
 		}
 	}
 }
@@ -1004,17 +1004,10 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 }
 
 
-static BOOLEAN DrawBoxText(UINT32 uiCounter)
+static BOOLEAN DrawBoxText(const PopUpBox* const Box)
 {
 	UINT32 uiCount = 0;
 	INT16 uX, uY;
-
-	if ( ( uiCounter < 0 ) || ( uiCounter >= MAX_POPUP_BOX_COUNT ) )
-		return(FALSE);
-
-	const PopUpBox* Box = PopUpBoxList[uiCounter];
-
-	Assert(Box != NULL);
 
 	SetFontDestBuffer
 	(
