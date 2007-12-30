@@ -842,45 +842,18 @@ void UnHighLightBox(INT32 hBoxHandle)
 }
 
 
-static void RemoveOneCurrentBoxString(INT32 hStringHandle, BOOLEAN fFillGaps)
+void RemoveAllCurrentBoxStrings(void)
 {
-	UINT32 uiCounter=0;
-
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
+	if (guiCurrentBox < 0 || guiCurrentBox >= MAX_POPUP_BOX_COUNT) return;
+	PopUpBox* const Box = PopUpBoxList[guiCurrentBox];
 	Assert(Box != NULL);
-	Assert( hStringHandle < MAX_POPUP_BOX_STRING_COUNT );
 
-	RemoveBoxPrimaryText(Box, hStringHandle);
-	RemoveCurrentBoxSecondaryText( hStringHandle );
-
-	if ( fFillGaps )
+	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
 	{
-		// shuffle all strings down a slot to fill in the gap
-		for ( uiCounter = hStringHandle; uiCounter < ( MAX_POPUP_BOX_STRING_COUNT - 1 ); uiCounter++ )
-		{
-			Box->Text[uiCounter]                = Box->Text[uiCounter + 1];
-			Box->pSecondColumnString[uiCounter] = Box->pSecondColumnString[uiCounter + 1];
-		}
+		RemoveBoxPrimaryText(Box, i);
+		RemoveCurrentBoxSecondaryText(i);
 	}
-
 	Box->fUpdated = FALSE;
-}
-
-
-
-void RemoveAllCurrentBoxStrings( void )
-{
-	UINT32 uiCounter;
-
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	for(uiCounter=0; uiCounter <MAX_POPUP_BOX_STRING_COUNT; uiCounter++)
-		RemoveOneCurrentBoxString( uiCounter, FALSE );
 }
 
 
