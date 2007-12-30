@@ -3302,6 +3302,7 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void);
 
 static void AddStringsToMoveBox(void)
 {
+	const INT32 box = ghMoveBox;
 	INT32 iCount = 0, iCountB = 0;
 	CHAR16 sString[ 128 ], sStringB[ 128 ];
 	BOOLEAN fFirstOne = TRUE;
@@ -3315,11 +3316,11 @@ static void AddStringsToMoveBox(void)
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
 	swprintf( sString, lengthof(sString), L"%ls %ls", pMovementMenuStrings[ 0 ], sStringB );
-	AddMonoString(sString);
+	AddMonoString(box, sString);
 
 
 	// blank line
-	AddMonoString(L"");
+	AddMonoString(box, L"");
 
 
 	// add squads
@@ -3327,7 +3328,7 @@ static void AddStringsToMoveBox(void)
 	{
 		// add this squad, now add all the grunts in it
 		swprintf(sString, lengthof(sString), fSquadIsMoving[iCount] ? L"*%ls*" : L"%ls", pSquadMenuStrings[iSquadMovingList[iCount]]);
-		AddMonoString(sString);
+		AddMonoString(box, sString);
 
 		// now add all the grunts in it
 		for( iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; iCountB++ )
@@ -3343,7 +3344,7 @@ static void AddStringsToMoveBox(void)
 				{
 					swprintf( sString, lengthof(sString), L"   %ls", pSoldierMovingList[ iCountB ]->name );
 				}
-				AddMonoString(sString);
+				AddMonoString(box, sString);
 			}
 		}
 	}
@@ -3354,7 +3355,7 @@ static void AddStringsToMoveBox(void)
 	{
 		// add this vehicle
 		swprintf(sString, lengthof(sString), fVehicleIsMoving[iCount] ? L"*%ls*" : L"%ls", pVehicleStrings[pVehicleList[iVehicleMovingList[iCount]].ubVehicleType]);
-		AddMonoString(sString);
+		AddMonoString(box, sString);
 
 		// now add all the grunts in it
 		for( iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; iCountB++ )
@@ -3370,7 +3371,7 @@ static void AddStringsToMoveBox(void)
 				{
 					swprintf( sString, lengthof(sString), L"   %ls", pSoldierMovingList[ iCountB ]->name );
 				}
-				AddMonoString(sString);
+				AddMonoString(box, sString);
 			}
 		}
 	}
@@ -3388,35 +3389,35 @@ static void AddStringsToMoveBox(void)
 			{
 				// add OTHER header line
 				swprintf(sString, lengthof(sString), AllOtherSoldiersInListAreSelected() ? L"*%ls*" : L"%ls", pMovementMenuStrings[3]);
-				AddMonoString(sString);
+				AddMonoString(box, sString);
 
 				fFirstOne = FALSE;
 			}
 
 			// add OTHER soldiers (not on duty nor in a vehicle)
 			swprintf(sString, lengthof(sString), IsSoldierSelectedForMovement(pSoldierMovingList[iCount]) ? L"  *%ls ( %ls )*" : L"  %ls ( %ls )", pSoldierMovingList[iCount]->name, pAssignmentStrings[pSoldierMovingList[iCount]->bAssignment]);
-			AddMonoString(sString);
+			AddMonoString(box, sString);
 		}
 	}
 
 
 	// blank line
-	AddMonoString(L"");
+	AddMonoString(box, L"");
 
 
 	if ( IsAnythingSelectedForMoving() )
 	{
 		// add PLOT MOVE line
-		AddMonoString(pMovementMenuStrings[1]);
+		AddMonoString(box, pMovementMenuStrings[1]);
 	}
 	else
 	{
 		// blank line
-		AddMonoString(L"");
+		AddMonoString(box, L"");
 	}
 
 	// add cancel line
-	AddMonoString(pMovementMenuStrings[2]);
+	AddMonoString(box, pMovementMenuStrings[2]);
 }
 
 

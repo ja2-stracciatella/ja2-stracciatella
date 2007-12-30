@@ -370,16 +370,13 @@ static void RemoveBoxPrimaryText(PopUpBox*, INT32 hStringHandle);
 
 
 // adds a FIRST column string to the CURRENT popup box
-void AddMonoString(const wchar_t* pString)
+void AddMonoString(const INT32 box_handle, const wchar_t* pString)
 {
 	STR16 pLocalString = NULL;
 	INT32 iCounter = 0;
 
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
+	if (box_handle < 0 || box_handle >= MAX_POPUP_BOX_COUNT) return;
+	PopUpBox* const Box = PopUpBoxList[box_handle];
 	Assert(Box != NULL);
 
 	// find first free slot in list

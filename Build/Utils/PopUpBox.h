@@ -26,7 +26,7 @@ void SetBoxSize( INT32 hBoxHandle, SGPRect Dimensions );
 void GetBoxSize(  INT32 hBoxHandle, SGPRect *Dimensions );
 void SetBorderType(INT32 hBoxHandle, const SGPVObject* border);
 void SetBackGroundSurface(INT32 hBoxHandle, SGPVSurface*);
-void AddMonoString(const wchar_t* pString);
+void AddMonoString(INT32 box_handle, const wchar_t* pString);
 void SetBoxFont(INT32 hBoxHandle, UINT32 uiFont);
 UINT32 GetBoxFont( INT32 hBoxHandle );
 void SetBoxForeground(INT32 hBoxHandle, UINT8 ubColor);

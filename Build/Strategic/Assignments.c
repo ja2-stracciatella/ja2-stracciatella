@@ -4339,7 +4339,7 @@ static void SetBoxTextAttrs(const INT32 box)
 }
 
 
-static void CreateRepairBox(void);
+static INT32 CreateRepairBox(void);
 static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
@@ -4350,7 +4350,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	RemoveBox(ghRepairBox);
 	ghRepairBox = -1;
 
-  CreateRepairBox();
+  const INT32 box = CreateRepairBox();
 	SetCurrentBox(ghRepairBox);
 
 	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
@@ -4366,7 +4366,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 			{
 				if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 				{
-					AddMonoString(pVehicleStrings[v->ubVehicleType]);
+					AddMonoString(box, pVehicleStrings[v->ubVehicleType]);
 				}
 			}
 		}
@@ -4378,7 +4378,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	if( ( IsThisSectorASAMSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) ) )
 	{
 		// SAM site
-		AddMonoString(pRepairStrings[1]);
+		AddMonoString(box, pRepairStrings[1]);
 	}
 */
 
@@ -4387,16 +4387,16 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	if( IsRobotInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
 	{
 		// robot
-		AddMonoString(pRepairStrings[3]);
+		AddMonoString(box, pRepairStrings[3]);
 	}
 
 
 	// items
-	AddMonoString(pRepairStrings[0]);
+	AddMonoString(box, pRepairStrings[0]);
 
 
 	// cancel
-	AddMonoString(pRepairStrings[2]);
+	AddMonoString(box, pRepairStrings[2]);
 
   SetBoxTextAttrs(ghRepairBox);
 
@@ -7191,7 +7191,8 @@ static void CreateSquadBox(void)
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
-	ghSquadBox = MakeBox(SquadDimensions, SquadPosition, 0);
+	const INT32 box = MakeBox(SquadDimensions, SquadPosition, 0);
+	ghSquadBox = box;
 
  // set current box to this one
  SetCurrentBox( ghSquadBox );
@@ -7204,11 +7205,11 @@ static void CreateSquadBox(void)
  {
 	 // get info about current squad and put in  string
 	 swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
-		AddMonoString(sString);
+		AddMonoString(box, sString);
  }
 
  // add cancel line
-	AddMonoString(pSquadMenuStrings[NUMBER_OF_SQUADS]);
+	AddMonoString(box, pSquadMenuStrings[NUMBER_OF_SQUADS]);
 
 	SetBoxTextAttrs(ghSquadBox);
 
@@ -7236,14 +7237,15 @@ static void CreateEPCBox(void)
 	SGPRect pDimensions;
   INT32 iCount;
 
-	ghEpcBox = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	const INT32 box = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghEpcBox = box;
 
 	 // set current box to this one
 	 SetCurrentBox( ghEpcBox );
 
 	 for(iCount=0; iCount < MAX_EPC_MENU_STRING_COUNT; iCount++)
 	 {
-		 AddMonoString(pEpcMenuStrings[iCount]);
+		AddMonoString(box, pEpcMenuStrings[iCount]);
 	 }
 
 	SetBoxTextAttrs(ghEpcBox);
@@ -7314,7 +7316,7 @@ static void HandleShadingOfLinesForSquadMenu(void)
 }
 
 
-static void CreateVehicleBox(void);
+static INT32 CreateVehicleBox(void);
 
 
 static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
@@ -7325,7 +7327,7 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	RemoveBox(ghVehicleBox);
 	ghVehicleBox = -1;
 
-  CreateVehicleBox();
+  const INT32 box = CreateVehicleBox();
 	SetCurrentBox(ghVehicleBox);
 
 	// run through list of vehicles in sector and add them to pop up box
@@ -7333,13 +7335,13 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
   {
 		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
-			AddMonoString(pVehicleStrings[v->ubVehicleType]);
+			AddMonoString(box, pVehicleStrings[v->ubVehicleType]);
 			fVehiclePresent = TRUE;
 		}
 	}
 
 	// cancel string (borrow the one in the squad menu)
-	AddMonoString(pSquadMenuStrings[SQUAD_MENU_CANCEL]);
+	AddMonoString(box, pSquadMenuStrings[SQUAD_MENU_CANCEL]);
 
   SetBoxTextAttrs(ghVehicleBox);
 
@@ -7347,15 +7349,17 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 }
 
 
-static void CreateVehicleBox(void)
+static INT32 CreateVehicleBox(void)
 {
 	ghVehicleBox = MakeBox(VehicleDimensions, VehiclePosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	return ghVehicleBox;
 }
 
 
-static void CreateRepairBox(void)
+static INT32 CreateRepairBox(void)
 {
 	ghRepairBox = MakeBox(RepairDimensions, RepairPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	return ghRepairBox;
 }
 
 
@@ -7372,7 +7376,8 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 	 ContractPosition.iX = giBoxY;
  }
 
-	ghContractBox = MakeBox(ContractDimensions, ContractPosition, 0);
+	const INT32 box = MakeBox(ContractDimensions, ContractPosition, 0);
+	ghVehicleBox = box;
 
  // set current box to this one
  SetCurrentBox( ghContractBox );
@@ -7389,27 +7394,27 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 				// add current balance after title string
 					SPrintMoney(sDollarString, LaptopSaveInfo.iCurrentBalance);
 				 swprintf(sString, L"%ls %ls",  pContractStrings[uiCounter], sDollarString);
-					AddMonoString(sString);
+					AddMonoString(box, sString);
 */
-					AddMonoString(pContractStrings[uiCounter]);
+					AddMonoString(box, pContractStrings[uiCounter]);
 			 break;
 			 case( CONTRACT_MENU_DAY ):
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].sSalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
-					AddMonoString(sString);
+					AddMonoString(box, sString);
 			 break;
 			 case( CONTRACT_MENU_WEEK ):
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiWeeklySalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString );
-					AddMonoString(sString);
+					AddMonoString(box, sString);
 			 break;
 			 case( CONTRACT_MENU_TWO_WEEKS ):
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiBiWeeklySalary : 0);
 				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
-					AddMonoString(sString);
+					AddMonoString(box, sString);
 			 break;
 			 default:
-					AddMonoString(pContractStrings[uiCounter]);
+					AddMonoString(box, pContractStrings[uiCounter]);
 				 break;
 		 }
 	 }
@@ -7446,7 +7451,8 @@ static void CreateAttributeBox(void)
  // update screen assignment positions
  UpdateMapScreenAssignmentPositions( );
 
-	ghAttributeBox = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	const INT32 box = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghAttributeBox = box;
 
  // set current box to this one
  SetCurrentBox( ghAttributeBox );
@@ -7456,7 +7462,7 @@ static void CreateAttributeBox(void)
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; uiCounter++)
  {
-		AddMonoString(pAttributeMenuStrings[uiCounter]);
+		AddMonoString(box, pAttributeMenuStrings[uiCounter]);
  }
 
 	SetBoxTextAttrs(ghAttributeBox);
@@ -7481,7 +7487,8 @@ static void CreateTrainingBox(void)
 	 TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
  }
 
-	ghTrainingBox = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	const INT32 box = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghTrainingBox = box;
 
  // set current box to this one
  SetCurrentBox( ghTrainingBox );
@@ -7490,7 +7497,7 @@ static void CreateTrainingBox(void)
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_TRAIN_STRING_COUNT; uiCounter++)
  {
-		AddMonoString(pTrainingMenuStrings[uiCounter]);
+		AddMonoString(box, pTrainingMenuStrings[uiCounter]);
  }
 
 	SetBoxTextAttrs(ghTrainingBox);
@@ -7523,7 +7530,8 @@ static void CreateAssignmentsBox(void)
 	pSoldier = GetSelectedAssignSoldier( TRUE );
 	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 
-	ghAssignmentBox = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghAssignmentBox = box;
 
 	// set current box to this one
 	SetCurrentBox( ghAssignmentBox );
@@ -7542,7 +7550,7 @@ static void CreateAssignmentsBox(void)
 			wcslcpy(sString, pAssignMenuStrings[uiCounter], lengthof(sString));
 		}
 
-		AddMonoString(sString);
+		AddMonoString(box, sString);
 	}
 
 	SetBoxTextAttrs(ghAssignmentBox);
@@ -7559,7 +7567,8 @@ void CreateMercRemoveAssignBox( void )
 		// will create remove mercbox to be placed in assignment area
  UINT32 uiCounter;
 
-	ghRemoveMercAssignBox = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghRemoveMercAssignBox = box;
 
  // set current box to this one
  SetCurrentBox( ghRemoveMercAssignBox );
@@ -7567,7 +7576,7 @@ void CreateMercRemoveAssignBox( void )
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_REMOVE_MERC_COUNT; uiCounter++)
  {
-		AddMonoString(pRemoveMercStrings[uiCounter]);
+		AddMonoString(box, pRemoveMercStrings[uiCounter]);
  }
 
 	SetBoxTextAttrs(ghRemoveMercAssignBox);
