@@ -14,6 +14,7 @@ typedef struct EXPLOSIONTYPE EXPLOSIONTYPE;
 typedef struct LEVELNODE     LEVELNODE;
 typedef struct LIGHT_SPRITE  LIGHT_SPRITE;
 typedef struct PathSt        PathSt;
+typedef struct PopUpBox      PopUpBox;
 typedef struct REAL_OBJECT   REAL_OBJECT;
 typedef struct SMOKEEFFECT   SMOKEEFFECT;
 typedef struct SOLDIERTYPE   SOLDIERTYPE;

@@ -3145,7 +3145,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		// destroy the box and mouse regions
 		ClearMouseRegionsForMoveBox( );
 		RemoveBox( ghMoveBox );
-		ghMoveBox = -1;
+		ghMoveBox = NO_POPUP_BOX;
 		RemoveScreenMaskForMoveBox( );
   	fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;		// really long move boxes can overlap bottom panel
@@ -3299,7 +3299,7 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void);
 
 static void AddStringsToMoveBox(void)
 {
-	const INT32 box = ghMoveBox;
+	PopUpBox* const box = ghMoveBox;
 	INT32 iCount = 0, iCountB = 0;
 	CHAR16 sString[ 128 ], sStringB[ 128 ];
 	BOOLEAN fFirstOne = TRUE;

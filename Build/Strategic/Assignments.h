@@ -156,16 +156,16 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 // Handle assignment done
 void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo );
 
-extern INT32 ghAssignmentBox;
-extern INT32 ghEpcBox;
-extern INT32 ghSquadBox;
-extern INT32 ghVehicleBox;
-extern INT32 ghRepairBox;
-extern INT32 ghTrainingBox;
-extern INT32 ghAttributeBox;
-extern INT32 ghRemoveMercAssignBox;
-extern INT32 ghContractBox;
-extern INT32 ghMoveBox;
+extern PopUpBox* ghAssignmentBox;
+extern PopUpBox* ghEpcBox;
+extern PopUpBox* ghSquadBox;
+extern PopUpBox* ghVehicleBox;
+extern PopUpBox* ghRepairBox;
+extern PopUpBox* ghTrainingBox;
+extern PopUpBox* ghAttributeBox;
+extern PopUpBox* ghRemoveMercAssignBox;
+extern PopUpBox* ghContractBox;
+extern PopUpBox* ghMoveBox;
 
 
 extern BOOLEAN fShownContractMenu;

@@ -474,8 +474,6 @@ extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 extern INT32 iDialogueBox;
 extern INT32 giMapInvDescButton;
 
-// the town mine info box
-extern INT32 ghTownMineBox;
 // border and bottom buttons
 extern INT32 giMapBorderButtons[];
 
@@ -4722,7 +4720,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	DetermineIfContractMenuCanBeShown( );
 	// remove contract pop up box (always created upon mapscreen entry)
 	RemoveBox(ghContractBox);
-	ghContractBox = -1;
+	ghContractBox = NO_POPUP_BOX;
 
   CreateDestroyAssignmentPopUpBoxes( );
 
@@ -4735,7 +4733,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 
 	// the remove merc from team box
 	RemoveBox( ghRemoveMercAssignBox );
-	ghRemoveMercAssignBox = -1;
+	ghRemoveMercAssignBox = NO_POPUP_BOX;
 
 	// clear screen mask if needed
 	ClearScreenMaskForMapScreenExit( );
@@ -6989,17 +6987,8 @@ void RenderMapRegionBackground( void )
 	// blit in border
 	RenderMapBorder( );
 
-	if ( ghAttributeBox != - 1 )
-	{
-		ForceUpDateOfBox( ghAttributeBox );
-	}
-
-	if ( ghTownMineBox != - 1 )
-	{
-		// force update of town mine info boxes
-		ForceUpDateOfBox( ghTownMineBox );
-	}
-
+	if (ghAttributeBox != NO_POPUP_BOX) ForceUpDateOfBox(ghAttributeBox);
+	if (ghTownMineBox  != NO_POPUP_BOX) ForceUpDateOfBox(ghTownMineBox);
 
 	MapscreenMarkButtonsDirty();
 
@@ -7294,10 +7283,7 @@ static void HandleShadingOfLinesForContractMenu(void)
 {
 	MERCPROFILESTRUCT *pProfile;
 
-	if( ( fShowContractMenu == FALSE ) || ( ghContractBox == - 1 ) )
-	{
-		return;
-	}
+	if (!fShowContractMenu || ghContractBox == NO_POPUP_BOX) return;
 
 	// error check, return if not a valid character
 	if( bSelectedContractChar == -1 )
@@ -7440,7 +7426,7 @@ void RebuildContractBoxForMerc(const SOLDIERTYPE* const pCharacter)
 {
 	// rebuild contractbox for this merc
 	RemoveBox( ghContractBox );
-	ghContractBox = -1;
+	ghContractBox = NO_POPUP_BOX;
 
 	// recreate
 	CreateContractBox( pCharacter );
@@ -10823,11 +10809,11 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber)
 BOOLEAN CanDrawSectorCursor(void)
 {
 	if( /*( fCursorIsOnMapScrollButtons == FALSE ) && */
-			( fShowTownInfo == FALSE ) && ( ghTownMineBox == -1 ) &&
+			!fShowTownInfo && ghTownMineBox == NO_POPUP_BOX &&
 			( fShowUpdateBox == FALSE ) && ( GetNumberOfMercsInUpdateList() == 0 ) &&
 			( sSelectedMilitiaTown == 0 ) && ( gfMilitiaPopupCreated == FALSE ) &&
 			( gfStartedFromMapScreen == FALSE ) &&
-			( fShowMapScreenMovementList == FALSE ) && ( ghMoveBox == - 1 ) &&
+			!fShowMapScreenMovementList && ghMoveBox == NO_POPUP_BOX &&
 			( fMapInventoryItem == FALSE )
 		)
 	{

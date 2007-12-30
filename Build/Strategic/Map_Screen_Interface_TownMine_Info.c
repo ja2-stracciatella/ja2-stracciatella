@@ -35,7 +35,7 @@
 // flag to say if we are showing town/mine box at all
 BOOLEAN fShowTownInfo = FALSE;
 
-INT32 ghTownMineBox = -1;
+PopUpBox* ghTownMineBox;
 SGPPoint TownMinePosition ={ 300, 150 };
 SGPRect TownMineDimensions ={ 0, 0, 240, 60 };
 
@@ -205,7 +205,7 @@ void CreateDestroyTownInfoBox( void )
 
 		// destroy pop up box
 		RemoveBox( ghTownMineBox );
-		ghTownMineBox = -1;
+		ghTownMineBox = NO_POPUP_BOX;
 
 		// remove inventory button
 		RemoveInventoryButtonForMapPopUpBox( );
@@ -242,7 +242,7 @@ static void CreateTownInfoBox(void)
 // adds text to town info box
 static void AddTextToTownBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	UINT8 ubTownId = 0;
 	UINT16 usTownSectorIndex;
@@ -329,7 +329,7 @@ static void AddTextToTownBox(void)
 // adds text to mine info box
 static void AddTextToMineBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
 	CHAR16 wString[ 64 ];
@@ -453,7 +453,7 @@ static void AddTextToMineBox(void)
 // add text to non-town/non-mine the other boxes
 static void AddTextToBlankSectorBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	UINT16 usSectorValue = 0;
 
 	// get the sector value
@@ -482,7 +482,7 @@ static void AddTextToBlankSectorBox(void)
 
 static void AddSectorToBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
 
@@ -503,7 +503,7 @@ static void AddSectorToBox(void)
 
 static void AddCommonInfoToBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	BOOLEAN fUnknownSAMSite = FALSE;
 	UINT8 ubMilitiaTotal = 0;
@@ -609,7 +609,7 @@ static void AddCommonInfoToBox(void)
 
 static void AddItemsInSectorToBox(void)
 {
-	const INT32 box = ghTownMineBox;
+	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 
 	// items in sector (this works even for underground)
