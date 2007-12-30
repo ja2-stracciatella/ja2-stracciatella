@@ -1785,23 +1785,6 @@ void VerifyTownTrainingIsPaidFor( void )
 #endif
 
 
-// how many people in this secotr have this assignment?
-static UINT8 FindNumberInSectorWithAssignment(INT16 sX, INT16 sY, INT8 bAssignment)
-{
-	// run through list of characters and find number with this assignment
-	INT8 bNumberOfPeople = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
-	{
-		if (s->sSectorX == sX && s->sSectorY == sY && s->bAssignment == bAssignment)
-		{
-			// increment number of people who are on this assignment
-			++bNumberOfPeople;
-		}
-	}
-	return bNumberOfPeople;
-}
-
-
 static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);
 
 
@@ -5349,94 +5332,9 @@ void ClearScreenMaskForMapScreenExit( void )
 }
 
 
-static void RestorePopUpBoxes(void);
-
-
-static void CreateDestroyMouseRegions(void)
-{
-	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
-	INT32 iBoxXPosition = 0;
-	INT32 iBoxYPosition = 0;
-	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
-
-	// will create/destroy mouse regions for the map screen assignment main menu
-
-
-	// do we show the remove menu
-	if( fShowRemoveMenu )
-	{
-		CreateDestroyMouseRegionsForRemoveMenu( );
-		return;
-	}
-
-	if( ( fShowAssignmentMenu == TRUE ) && ( fCreated == FALSE ) )
-	{
-
-		// grab height of font
-		iFontHeight = GetLineSpace( ghAssignmentBox ) + GetFontHeight( GetBoxFont( ghAssignmentBox ) );
-
-		// get x.y position of box
-		GetBoxPosition( ghAssignmentBox, &pPosition);
-
-		// grab box x and y position
-		iBoxXPosition = pPosition.iX;
-		iBoxYPosition = pPosition.iY;
-
-		// get dimensions..mostly for width
-		GetBoxSize( ghAssignmentBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
-
-		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
-		{
-			// add mouse region for each line of text..and set user data
-
-
-			MSYS_DefineRegion(&gAssignmentMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gAssignmentMenuRegion[ iCounter ], 0, iCounter );
-		}
-
-		// created
-		fCreated = TRUE;
-
-		// pause game
-		PauseGame( );
-
-		fMapPanelDirty = TRUE;
-		fCharacterInfoPanelDirty= TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghAssignmentBox );
-
-	}
-	else if( ( fShowAssignmentMenu == FALSE ) && ( fCreated == TRUE ) )
-	{
-		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
-		{
-			MSYS_RemoveRegion( &gAssignmentMenuRegion[ iCounter ] );
-		}
-
-		RestorePopUpBoxes();
-
-		// not created
-		fCreated = FALSE;
-	}
-}
-
-
 static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void RestorePopUpBoxes(void);
 
 
 void CreateDestroyMouseRegionsForContractMenu( void )
@@ -8904,24 +8802,6 @@ static void HandleShadingOfLinesForAttributeMenus(void)
 }
 
 
-static void ResetAssignmentsForAllSoldiersInSectorWhoAreTrainingTown(SOLDIERTYPE* pSoldier)
-{
-	FOR_ALL_IN_TEAM(pCurSoldier, OUR_TEAM)
-	{
-		if (pCurSoldier->bLife >= OKLIFE)
-		{
-			if( pCurSoldier -> bAssignment == TRAIN_TOWN )
-			{
-				if( ( pCurSoldier -> sSectorX == pSoldier -> sSectorX ) && ( pCurSoldier -> sSectorY == pSoldier -> sSectorY ) && ( pSoldier -> bSectorZ == 0 ) )
-				{
-					AddCharacterToAnySquad( pCurSoldier );
-				}
-			}
-		}
-	}
-}
-
-
 static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pTargetSoldier, INT8 bTargetAssignment, INT8 bTargetStat);
 
 
@@ -9715,18 +9595,6 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 
 	// check if we should start/stop flashing any mercs' assignment strings after these changes
 	gfReEvaluateEveryonesNothingToDo = TRUE;
-}
-
-
-static BOOLEAN IsCharacterAliveAndConscious(SOLDIERTYPE* pCharacter)
-{
-	// is the character alive and conscious?
-	if( pCharacter -> bLife < CONSCIOUSNESS )
-	{
-		return( FALSE );
-	}
-
-	return ( TRUE );
 }
 
 
