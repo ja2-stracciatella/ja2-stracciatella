@@ -1760,7 +1760,7 @@ void VerifyTownTrainingIsPaidFor( void )
 {
 	INT32 iCounter = 0;
 
- 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	for (iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++)
 	{
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 		if (pSoldier == NULL) continue;
@@ -1954,9 +1954,9 @@ static UINT16 ToolKitPoints(SOLDIERTYPE* pSoldier)
 	for (ubPocket=HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
 		if( pSoldier -> inv[ ubPocket ].usItem == TOOLKIT )
-    {
+		{
 			usKitpts += TotalPoints( &( pSoldier -> inv[ ubPocket ] ) );
-    }
+		}
 	}
 
 	return( usKitpts );
@@ -1972,10 +1972,10 @@ static UINT16 TotalMedicalKitPoints(SOLDIERTYPE* pSoldier)
 	// add up kit points of all medkits
 	for (ubPocket = HANDPOS; ubPocket <= SMALLPOCK8POS; ubPocket++)
 	{
-    if ( IsMedicalKitItem( &( pSoldier -> inv[ ubPocket ] ) ) )
-    {
+		if (IsMedicalKitItem(&pSoldier->inv[ubPocket]))
+		{
 			usKitpts += TotalPoints( &( pSoldier -> inv[ ubPocket ] ) );
-    }
+		}
 	}
 
 	return( usKitpts );
@@ -2260,7 +2260,7 @@ static UINT16 HealPatient(SOLDIERTYPE* pPatient, SOLDIERTYPE* pDoctor, UINT16 us
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
 		{
-		  bPointsToUse = ( INT8 )usHealingPtsLeft;
+			bPointsToUse = usHealingPtsLeft;
 		}
 
 		// go through doctor's pockets and heal, starting at with his in-hand item
@@ -2402,7 +2402,7 @@ static void HealHospitalPatient(SOLDIERTYPE* pPatient, UINT16 usHealingPtsLeft)
 		// if he needs more than we have, reduce to that
 		if( bPointsToUse > usHealingPtsLeft )
 		{
-		  bPointsToUse = ( INT8 )usHealingPtsLeft;
+			bPointsToUse = usHealingPtsLeft;
 		}
 
 		usHealingPtsLeft -= bPointsToUse;
@@ -2719,13 +2719,13 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 
 
 	// grab max number of repair pts open to this soldier
-  ubRepairPtsLeft = CalculateRepairPointsForRepairman( pSoldier, &usMax, TRUE );
+	ubRepairPtsLeft = CalculateRepairPointsForRepairman(pSoldier, &usMax, TRUE);
 
 	// no points
-  if ( ubRepairPtsLeft == 0 )
+	if (ubRepairPtsLeft == 0)
 	{
 		AssignmentDone( pSoldier, TRUE, TRUE );
-    return;
+		return;
 	}
 
 	// remember what we've started off with
@@ -2808,7 +2808,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 	}
 
 	// what are the total amount of pts used by character?
-  ubRepairPtsUsed = ubInitialRepairPts - ubRepairPtsLeft;
+	ubRepairPtsUsed = ubInitialRepairPts - ubRepairPtsLeft;
 	if( ubRepairPtsUsed > 0 )
 	{
 		// improve stats
@@ -3087,7 +3087,8 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 							// if this sector either ISN'T currently loaded, or it is but the trainer is close enough to the student
 							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent -> bSectorZ != gbWorldSectorZ ) ||
-									 ( PythSpacesAway( pStudent -> sGridNo, pTrainer -> sGridNo ) < MAX_DISTANCE_FOR_TRAINING ) && ( EnoughTimeOnAssignment( pTrainer ) ) )
+									PythSpacesAway(pStudent->sGridNo, pTrainer->sGridNo) < MAX_DISTANCE_FOR_TRAINING &&
+									EnoughTimeOnAssignment(pTrainer))
 */
 							// NB this EnoughTimeOnAssignment() call is redundent since it is called up above
 							//if ( EnoughTimeOnAssignment( pTrainer ) )
@@ -3170,19 +3171,9 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 
 static int TownTrainerQsortCompare(const void* pArg1, const void* pArg2)
 {
-  if (((TOWN_TRAINER_TYPE *)pArg1) -> sTrainingPts > ((TOWN_TRAINER_TYPE *)pArg2) -> sTrainingPts)
-  {
-    return(-1);
-  }
-  else
-  if (((TOWN_TRAINER_TYPE *)pArg1) -> sTrainingPts < ((TOWN_TRAINER_TYPE *)pArg2) -> sTrainingPts)
-  {
-    return(1);
-  }
-  else
-  {
-    return(0);
-  }
+	const TOWN_TRAINER_TYPE* const t1 = pArg1;
+	const TOWN_TRAINER_TYPE* const t2 = pArg2;
+	return (t1->sTrainingPts < t2->sTrainingPts) - (t1->sTrainingPts > t2->sTrainingPts);
 }
 
 
@@ -3260,10 +3251,10 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 	if( pStudent == NULL )
 	{
 		// assume these default values
-	  bTraineeEffWisdom = 100;
-	  bTraineeNatWisdom = 100;
-	  bTraineeSkill = 0;
-		bOpinionFactor = 0;
+		bTraineeEffWisdom = 100;
+		bTraineeNatWisdom = 100;
+		bTraineeSkill     =   0;
+		bOpinionFactor    =   0;
 	}
 	else
 	{
@@ -3461,10 +3452,10 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
-			#ifdef JA2BETAVERSION
-	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
-			#endif
-      return(0);
+#ifdef JA2BETAVERSION
+			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
+#endif
+			return 0;
 	}
 
 	// if skill 0 or at/beyond the training cap, can't train
@@ -3574,15 +3565,14 @@ static void TrainSoldierWithPts(SOLDIERTYPE* pSoldier, INT16 sTrainPts)
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
-			#ifdef JA2BETAVERSION
-	      ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier -> bTrainStat);
-			#endif
-      return;
+#ifdef JA2BETAVERSION
+			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier->bTrainStat);
+#endif
+			return;
 	}
 
 	// give this merc a few chances to increase a stat (TRUE means it's training, reverse evolution doesn't apply)
 	StatChange( pSoldier, ubChangeStat, sTrainPts, FROM_TRAINING );
-
 }
 
 
@@ -3714,11 +3704,11 @@ void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier )
 		}
 		else
 		{
-      if ( pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY ) )
-      {
+			if (pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY))
+			{
 				// default: standing
 				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
-      }
+			}
 		}
 	}
 }
@@ -3807,7 +3797,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 		if ( fSayQuote )
 		{
 			if ( pSoldier->bAssignment == DOCTOR || pSoldier->bAssignment == REPAIR ||
-					 pSoldier->bAssignment == PATIENT || pSoldier->bAssignment == ASSIGNMENT_HOSPITAL )
+					pSoldier->bAssignment == PATIENT || pSoldier->bAssignment == ASSIGNMENT_HOSPITAL)
 			{
 				TacticalCharacterDialogue( pSoldier, QUOTE_ASSIGNMENT_COMPLETE );
 			}
@@ -4025,7 +4015,7 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghAssignmentBox, AssignmentPosition );
+			SetBoxPosition(ghAssignmentBox, AssignmentPosition);
 		}
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
@@ -4236,7 +4226,7 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 
 	// run through list of vehicles
 	CFOR_ALL_VEHICLES(v)
-  {
+	{
 		// inaccessible vehicles aren't listed at all!
 		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
@@ -4344,7 +4334,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	RemoveBox(ghRepairBox);
 	ghRepairBox = -1;
 
-  const INT32 box = CreateRepairBox();
+	const INT32 box = CreateRepairBox();
 
 	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
 	// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
@@ -4391,7 +4381,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	// cancel
 	AddMonoString(box, pRepairStrings[2]);
 
-  SetBoxTextAttrs(ghRepairBox);
+	SetBoxTextAttrs(ghRepairBox);
 
 	// resize box to text
 	ResizeBoxToText( ghRepairBox );
@@ -4520,7 +4510,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 
 		if( ( fShowRepairMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-	    //SetBoxPosition( ghRepairBox ,RepairPosition);
+			//SetBoxPosition(ghRepairBox, RepairPosition);
 		}
 
 		// grab height of font
@@ -5136,11 +5126,11 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		if( fShowContractMenu == FALSE )
 		{
 			if ( IsBoxShown( ghRemoveMercAssignBox ) )
-      {
-			  HideBox( ghRemoveMercAssignBox );
+			{
+				HideBox(ghRemoveMercAssignBox);
 				fTeamPanelDirty = TRUE;
 				gfRenderPBInterface = TRUE;
-      }
+			}
 		}
 		//HideBox( ghSquadBox );
 
@@ -5236,9 +5226,9 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		if( IsBoxShown( ghAttributeBox ) )
 		{
 			HideBox( ghAttributeBox );
-			fTeamPanelDirty = TRUE;
-		  fMapPanelDirty = TRUE;
-		  gfRenderPBInterface = TRUE;
+			fTeamPanelDirty     = TRUE;
+			fMapPanelDirty      = TRUE;
+			gfRenderPBInterface = TRUE;
 		//	SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
@@ -5254,9 +5244,9 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		if( IsBoxShown( ghVehicleBox ) )
 		{
 			HideBox( ghVehicleBox );
-			fTeamPanelDirty = TRUE;
-		  fMapPanelDirty = TRUE;
-		  gfRenderPBInterface = TRUE;
+			fTeamPanelDirty     = TRUE;
+			fMapPanelDirty      = TRUE;
+			gfRenderPBInterface = TRUE;
 		//	SetRenderFlags(RENDER_FLAG_FULL);
 		}
 	}
@@ -5326,15 +5316,12 @@ static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason
 		bSelectedContractChar = -1;
 		fGlowContractRegion = FALSE;
 
-
 		// update mapscreen
-	  fTeamPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-
-	  gfRenderPBInterface = TRUE;
-		SetRenderFlags( RENDER_FLAG_FULL );
-
+		fMapScreenBottomDirty    = TRUE;
+		gfRenderPBInterface      = TRUE;
+		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 }
 
@@ -5474,9 +5461,9 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 			// dead guy handle menu stuff
 			fShowRemoveMenu =  fShowContractMenu;
 
-      // ATE: Added this setting of global variable 'cause
-      // it will cause an assert failure in GetSelectedAssignSoldier()
-      bSelectedAssignChar = bSelectedContractChar;
+			// ATE: Added this setting of global variable 'cause
+			// it will cause an assert failure in GetSelectedAssignSoldier()
+			bSelectedAssignChar = bSelectedContractChar;
 
 			CreateDestroyMouseRegionsForRemoveMenu( );
 
@@ -5487,9 +5474,9 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 			// dead guy handle menu stuff
 			fShowRemoveMenu =  fShowContractMenu;
 
-      // ATE: Added this setting of global variable 'cause
-      // it will cause an assert failure in GetSelectedAssignSoldier()
-      bSelectedAssignChar = bSelectedContractChar;
+			// ATE: Added this setting of global variable 'cause
+			// it will cause an assert failure in GetSelectedAssignSoldier()
+			bSelectedAssignChar = bSelectedContractChar;
 
 			CreateDestroyMouseRegionsForRemoveMenu( );
 
@@ -5507,7 +5494,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 
 		if( fShowContractMenu )
 		{
-		  SetBoxPosition( ghContractBox , ContractPosition );
+			SetBoxPosition(ghContractBox, ContractPosition);
 		}
 		// grab height of font
 		iFontHeight = GetLineSpace( ghContractBox ) + GetFontHeight( GetBoxFont( ghContractBox ) );
@@ -5594,11 +5581,10 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 
 		if( ( fShowTrainingMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghTrainingBox, TrainPosition );
+			SetBoxPosition(ghTrainingBox, TrainPosition);
 		}
 
 		HandleShadingOfLinesForTrainingMenu( );
-
 		CheckAndUpdateTacticalAssignmentPopUpPositions( );
 
 		// grab height of font
@@ -5695,7 +5681,7 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-		  SetBoxPosition( ghAssignmentBox, AssignmentPosition );
+			SetBoxPosition(ghAssignmentBox, AssignmentPosition);
 		}
 
 		HandleShadingOfLinesForAttributeMenus( );
@@ -5794,7 +5780,7 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 
 		if( fShowContractMenu )
 		{
-		  SetBoxPosition( ghContractBox , ContractPosition );
+			SetBoxPosition(ghContractBox, ContractPosition);
 		}
 		else
 		{
@@ -5865,7 +5851,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 			fShowAttributeMenu = FALSE;
 			fMapPanelDirty = TRUE;
 			gfRenderPBInterface = TRUE;
-
 		}
 
 
@@ -6124,7 +6109,7 @@ static void SquadMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		else
 		{
 			// highlight cancel line
-		 HighLightBoxLine( ghSquadBox, GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1 );
+			HighLightBoxLine(ghSquadBox, GetNumberOfLinesOfTextInBox(ghSquadBox) - 1);
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -6153,8 +6138,7 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		switch( iValue )
 		{
-		  case( REMOVE_MERC_CANCEL ):
-
+			case REMOVE_MERC_CANCEL:
 				// stop showing menus
 				fShowAssignmentMenu = FALSE;
 				fShowContractMenu = FALSE;
@@ -6282,13 +6266,12 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* pSoldier)
 
 static void MercDismissConfirmCallBack(UINT8 bExitValue)
 {
-  if ( bExitValue == MSG_BOX_RETURN_YES )
-  {
-	  // Setup history code
-	  gpDismissSoldier->ubLeaveHistoryCode = HISTORY_MERC_FIRED;
-
-	  BeginRemoveMercFromContract( gpDismissSoldier );
-  }
+	if (bExitValue == MSG_BOX_RETURN_YES)
+	{
+		// Setup history code
+		gpDismissSoldier->ubLeaveHistoryCode = HISTORY_MERC_FIRED;
+		BeginRemoveMercFromContract(gpDismissSoldier);
+	}
 }
 
 
@@ -6345,7 +6328,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		switch( iValue )
 		{
-		  case( CONTRACT_MENU_DAY ):
+			case CONTRACT_MENU_DAY:
 				MercContractHandling( pSoldier, CONTRACT_EXTEND_1_DAY );
 				fOkToClose = TRUE;
 			break;
@@ -6359,22 +6342,21 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			break;
 
 			case( CONTRACT_MENU_TERMINATE ):
-        gpDismissSoldier = pSoldier;
+				gpDismissSoldier = pSoldier;
 
-        // If in the renewal sequence.. do right away...
-        // else put up requester.
-	  		if ( gfInContractMenuFromRenewSequence )
-        {
-          MercDismissConfirmCallBack( MSG_BOX_RETURN_YES );
-        }
-        else
-        {
-  			  DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 48 ], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack );
-        }
+				// If in the renewal sequence.. do right away...
+				// else put up requester.
+				if (gfInContractMenuFromRenewSequence)
+				{
+					MercDismissConfirmCallBack(MSG_BOX_RETURN_YES);
+				}
+				else
+				{
+					DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[48], MAP_SCREEN, MSG_BOX_FLAG_YESNO, MercDismissConfirmCallBack);
+				}
 
-        fOkToClose = TRUE;
-
-			break;
+				fOkToClose = TRUE;
+				break;
 		}
 	}
 
@@ -6387,11 +6369,11 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fGlowContractRegion = FALSE;
 		fShowContractMenu = FALSE;
 
-	  // dirty region
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		// dirty region
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
-	  gfRenderPBInterface = TRUE;
+		gfRenderPBInterface      = TRUE;
 	}
 }
 
@@ -6418,8 +6400,8 @@ static void TrainingMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		// do not highlight current balance
 		if( GetBoxShadeFlag( ghTrainingBox, iValue ) == FALSE )
 		{
-		  // get the string line handle
-		  HighLightBoxLine( ghTrainingBox, iValue );
+			// get the string line handle
+			HighLightBoxLine(ghTrainingBox, iValue);
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -6487,8 +6469,8 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		bCanJoinSquad =  CanCharacterSquad( pSoldier, ( INT8 )iValue );
 		// can the character join this squad?  (If already in it, accept that as a legal choice and exit menu)
-		if ( ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ) ||
-				 ( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
+		if (bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ||
+				bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT)
 		{
 			if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 			{
@@ -6502,9 +6484,9 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 				AddCharacterToSquad( pSoldier, ( INT8 )iValue );
 
-        if( pSoldier->bOldAssignment == VEHICLE )
+				if (pSoldier->bOldAssignment == VEHICLE)
 				{
-          SetSoldierExitVehicleInsertionData( pSoldier, pSoldier->iVehicleId );
+					SetSoldierExitVehicleInsertionData(pSoldier, pSoldier->iVehicleId);
 				}
 
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
@@ -6665,7 +6647,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 
 					// stop showing menu
-				  fShowAssignmentMenu = FALSE;
+					fShowAssignmentMenu = FALSE;
 					giAssignHighLine = -1;
 
 					// remove from squad
@@ -6720,15 +6702,14 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			break;
 			case( TRAIN_MENU_CANCEL ):
 				// stop showing menu
-			 fShowTrainingMenu = FALSE;
+				fShowTrainingMenu = FALSE;
 
-			 // unhighlight the assignment box
-			 UnHighLightBox( ghAssignmentBox );
+				// unhighlight the assignment box
+				UnHighLightBox(ghAssignmentBox);
 
-			 // reset list
-			 ResetSelectedListForMapScreen( );
-			 gfRenderPBInterface = TRUE;
-
+				// reset list
+				ResetSelectedListForMapScreen();
+				gfRenderPBInterface = TRUE;
 			break;
 		}
 
@@ -6913,9 +6894,8 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				break;
 
 				case( EPC_MENU_REMOVE ):
-
 					fShowAssignmentMenu = FALSE;
-          UnEscortEPC( pSoldier );
+					UnEscortEPC(pSoldier);
 				break;
 
 				case( EPC_MENU_CANCEL ):
@@ -7127,7 +7107,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			gfRenderPBInterface = TRUE;
 
 			// set dirty flag
-	    fTeamPanelDirty = TRUE;
+			fTeamPanelDirty       = TRUE;
 			fMapScreenBottomDirty = TRUE;
 		}
 	}
@@ -7136,12 +7116,12 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void RestorePopUpBoxes(void)
 {
-	ContractPosition.iX = OrigContractPosition.iX;
-  AttributePosition.iX = OrigAttributePosition.iX;
-  SquadPosition.iX = OrigSquadPosition.iX ;
-  AssignmentPosition.iX = OrigAssignmentPosition.iX ;
-  TrainPosition.iX = OrigTrainPosition.iX;
-  VehiclePosition.iX = OrigVehiclePosition.iX;
+	ContractPosition.iX   = OrigContractPosition.iX;
+	AttributePosition.iX  = OrigAttributePosition.iX;
+	SquadPosition.iX      = OrigSquadPosition.iX;
+	AssignmentPosition.iX = OrigAssignmentPosition.iX;
+	TrainPosition.iX      = OrigTrainPosition.iX;
+	VehiclePosition.iX    = OrigVehiclePosition.iX;
 }
 
 
@@ -7165,35 +7145,34 @@ static void CreateSquadBox(void)
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
 	SGPRect pDimensions;
-  UINT32 uiCounter;
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
 	const INT32 box = MakeBox(SquadDimensions, SquadPosition, 0);
 	ghSquadBox = box;
 
- uiMaxSquad = GetLastSquadListedInSquadMenu();
+	uiMaxSquad = GetLastSquadListedInSquadMenu();
 
- // add strings for box
- for(uiCounter=0; uiCounter <= uiMaxSquad; uiCounter++)
- {
-	 // get info about current squad and put in  string
-	 swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
+	// add strings for box
+	for (UINT32 uiCounter=0; uiCounter <= uiMaxSquad; ++uiCounter)
+	{
+		// get info about current squad and put in  string
+		swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
 		AddMonoString(box, sString);
- }
+	}
 
- // add cancel line
+	// add cancel line
 	AddMonoString(box, pSquadMenuStrings[NUMBER_OF_SQUADS]);
 
 	SetBoxTextAttrs(ghSquadBox);
 
- // resize box to text
- ResizeBoxToText( ghSquadBox );
+	// resize box to text
+	ResizeBoxToText(ghSquadBox);
 
- DetermineBoxPositions( );
+	DetermineBoxPositions();
 
- GetBoxPosition( ghSquadBox, &pPoint);
- GetBoxSize( ghSquadBox, &pDimensions );
+	GetBoxPosition(ghSquadBox, &pPoint);
+	GetBoxSize(ghSquadBox, &pDimensions);
 
 	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
 	{
@@ -7209,31 +7188,30 @@ static void CreateEPCBox(void)
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
 	SGPRect pDimensions;
-  INT32 iCount;
 
 	const INT32 box = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
 
-	 for(iCount=0; iCount < MAX_EPC_MENU_STRING_COUNT; iCount++)
-	 {
+	for (INT32 iCount = 0; iCount < MAX_EPC_MENU_STRING_COUNT; ++iCount)
+	{
 		AddMonoString(box, pEpcMenuStrings[iCount]);
-	 }
+	}
 
 	SetBoxTextAttrs(ghEpcBox);
 
-	 // resize box to text
-	 ResizeBoxToText( ghEpcBox );
+	// resize box to text
+	ResizeBoxToText(ghEpcBox);
 
-	 GetBoxPosition( ghEpcBox, &pPoint);
+	GetBoxPosition(ghEpcBox, &pPoint);
 
-	 GetBoxSize( ghEpcBox, &pDimensions );
+	GetBoxSize(ghEpcBox, &pDimensions);
 
 	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
 	{
 		pPoint.iY = AssignmentPosition.iY = SCREEN_HEIGHT - 1 - pDimensions.iBottom;
 	}
 
-		SetBoxPosition( ghEpcBox, pPoint );
+	SetBoxPosition(ghEpcBox, pPoint);
 }
 
 
@@ -7298,11 +7276,11 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	RemoveBox(ghVehicleBox);
 	ghVehicleBox = -1;
 
-  const INT32 box = CreateVehicleBox();
+	const INT32 box = CreateVehicleBox();
 
 	// run through list of vehicles in sector and add them to pop up box
 	CFOR_ALL_VEHICLES(v)
-  {
+	{
 		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 		{
 			AddMonoString(box, pVehicleStrings[v->ubVehicleType]);
@@ -7313,9 +7291,9 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	// cancel string (borrow the one in the squad menu)
 	AddMonoString(box, pSquadMenuStrings[SQUAD_MENU_CANCEL]);
 
-  SetBoxTextAttrs(ghVehicleBox);
+	SetBoxTextAttrs(ghVehicleBox);
 
-  return fVehiclePresent;
+	return fVehiclePresent;
 }
 
 
@@ -7335,148 +7313,134 @@ static INT32 CreateRepairBox(void)
 
 void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 {
- UINT32 uiCounter;
- wchar_t sString[ 50 ];
- wchar_t sDollarString[ 50 ];
+	wchar_t sString[ 50 ];
+	wchar_t sDollarString[ 50 ];
 
- ContractPosition.iX = OrigContractPosition.iX;
+	ContractPosition.iX = OrigContractPosition.iX;
 
- if( giBoxY != 0 )
- {
-	 ContractPosition.iX = giBoxY;
- }
+	if( giBoxY != 0 )
+	{
+		ContractPosition.iX = giBoxY;
+	}
 
 	const INT32 box = MakeBox(ContractDimensions, ContractPosition, 0);
 	ghContractBox = box;
 
- // not null character?
- if( pCharacter != NULL )
- {
-	 for(uiCounter=0; uiCounter < MAX_CONTRACT_MENU_STRING_COUNT; uiCounter++)
-	 {
-		 switch( uiCounter )
-		 {
-			 case( CONTRACT_MENU_CURRENT_FUNDS ):
+	// not null character?
+	if( pCharacter != NULL )
+	{
+		for (UINT32 uiCounter = 0; uiCounter < MAX_CONTRACT_MENU_STRING_COUNT; ++uiCounter)
+		{
+			switch (uiCounter)
+			{
+				case CONTRACT_MENU_CURRENT_FUNDS:
 /*
-				// add current balance after title string
+					// add current balance after title string
 					SPrintMoney(sDollarString, LaptopSaveInfo.iCurrentBalance);
-				 swprintf(sString, L"%ls %ls",  pContractStrings[uiCounter], sDollarString);
+					swprintf(sString, L"%ls %ls", pContractStrings[uiCounter], sDollarString);
 					AddMonoString(box, sString);
 */
 					AddMonoString(box, pContractStrings[uiCounter]);
-			 break;
-			 case( CONTRACT_MENU_DAY ):
+					break;
+
+				case CONTRACT_MENU_DAY:
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].sSalary : 0);
-				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
+					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
 					AddMonoString(box, sString);
-			 break;
-			 case( CONTRACT_MENU_WEEK ):
+					break;
+
+				case CONTRACT_MENU_WEEK:
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiWeeklySalary : 0);
-				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString );
+					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
 					AddMonoString(box, sString);
-			 break;
-			 case( CONTRACT_MENU_TWO_WEEKS ):
+					break;
+
+				case CONTRACT_MENU_TWO_WEEKS:
 					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiBiWeeklySalary : 0);
-				 swprintf( sString, lengthof(sString), L"%ls ( %ls )",  pContractStrings[uiCounter], sDollarString);
+					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
 					AddMonoString(box, sString);
-			 break;
-			 default:
+					break;
+
+				default:
 					AddMonoString(box, pContractStrings[uiCounter]);
-				 break;
-		 }
-	 }
- }
+					break;
+			}
+		}
+	}
 
 	SetBoxTextAttrs(ghContractBox);
 
- if( pCharacter != NULL )
- {
-	 // now set the color for the current balance value
-	 SetBoxLineForeground( ghContractBox, 0, FONT_YELLOW );
- }
+	if (pCharacter != NULL)
+	{
+		// now set the color for the current balance value
+		SetBoxLineForeground(ghContractBox, 0, FONT_YELLOW);
+	}
 
- // resize box to text
- ResizeBoxToText( ghContractBox );
-
+	// resize box to text
+	ResizeBoxToText(ghContractBox);
 }
 
 
 static void CreateAttributeBox(void)
 {
- UINT32 uiCounter;
+	// will create attribute pop up menu for mapscreen assignments
+	AttributePosition.iX = OrigAttributePosition.iX;
 
- // will create attribute pop up menu for mapscreen assignments
+	if (giBoxY != 0)
+	{
+		AttributePosition.iY = giBoxY;
+	}
 
-
- AttributePosition.iX = OrigAttributePosition.iX;
-
- if( giBoxY != 0 )
- {
-	 AttributePosition.iY = giBoxY;
- }
-
- // update screen assignment positions
- UpdateMapScreenAssignmentPositions( );
+	// update screen assignment positions
+	UpdateMapScreenAssignmentPositions();
 
 	const INT32 box = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAttributeBox = box;
 
- // add strings for box
- for(uiCounter=0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; uiCounter++)
- {
+	// add strings for box
+	for (UINT32 uiCounter = 0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; ++uiCounter)
+	{
 		AddMonoString(box, pAttributeMenuStrings[uiCounter]);
- }
+	}
 
 	SetBoxTextAttrs(ghAttributeBox);
 
- // resize box to text
- ResizeBoxToText( ghAttributeBox );
-
-
+	// resize box to text
+	ResizeBoxToText(ghAttributeBox);
 }
 
 
 static void CreateTrainingBox(void)
 {
- UINT32 uiCounter;
+	// will create attribute pop up menu for mapscreen assignments
+	TrainPosition.iX = OrigTrainPosition.iX;
 
- // will create attribute pop up menu for mapscreen assignments
-
- TrainPosition.iX = OrigTrainPosition.iX;
-
- if( giBoxY != 0 )
- {
-	 TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
- }
+	if (giBoxY != 0)
+	{
+		TrainPosition.iY = giBoxY + ASSIGN_MENU_TRAIN * GetFontHeight(MAP_SCREEN_FONT);
+	}
 
 	const INT32 box = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghTrainingBox = box;
 
- // add strings for box
- for(uiCounter=0; uiCounter < MAX_TRAIN_STRING_COUNT; uiCounter++)
- {
+	// add strings for box
+	for (UINT32 uiCounter = 0; uiCounter < MAX_TRAIN_STRING_COUNT; ++uiCounter)
+	{
 		AddMonoString(box, pTrainingMenuStrings[uiCounter]);
- }
+	}
 
 	SetBoxTextAttrs(ghTrainingBox);
 
- // resize box to text
- ResizeBoxToText( ghTrainingBox );
+	// resize box to text
+	ResizeBoxToText(ghTrainingBox);
 
- DetermineBoxPositions( );
-
+	DetermineBoxPositions();
 }
 
 
 static void CreateAssignmentsBox(void)
 {
- UINT32 uiCounter;
- CHAR16 sString[ 128 ];
- SOLDIERTYPE *pSoldier = NULL;
-
-
- // will create attribute pop up menu for mapscreen assignments
-
+	// will create attribute pop up menu for mapscreen assignments
 	AssignmentPosition.iX = OrigAssignmentPosition.iX;
 
 	if( giBoxY != 0 )
@@ -7484,16 +7448,16 @@ static void CreateAssignmentsBox(void)
 		AssignmentPosition.iY = giBoxY;
 	}
 
-
-	pSoldier = GetSelectedAssignSoldier( TRUE );
+	SOLDIERTYPE* const pSoldier = GetSelectedAssignSoldier(TRUE);
 	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 
 	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAssignmentBox = box;
 
 	// add strings for box
-	for(uiCounter=0; uiCounter < MAX_ASSIGN_STRING_COUNT; uiCounter++)
+	for (UINT32 uiCounter = 0; uiCounter < MAX_ASSIGN_STRING_COUNT; ++uiCounter)
 	{
+		wchar_t sString[128];
 		// if we have a soldier, and this is the squad line
 		if( ( uiCounter == ASSIGN_MENU_ON_DUTY ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment < ON_DUTY ) )
 		{
@@ -7510,7 +7474,7 @@ static void CreateAssignmentsBox(void)
 
 	SetBoxTextAttrs(ghAssignmentBox);
 
-	 // resize box to text
+	// resize box to text
 	ResizeBoxToText( ghAssignmentBox );
 
 	DetermineBoxPositions( );
@@ -7519,22 +7483,20 @@ static void CreateAssignmentsBox(void)
 
 void CreateMercRemoveAssignBox( void )
 {
-		// will create remove mercbox to be placed in assignment area
- UINT32 uiCounter;
-
+	// will create remove mercbox to be placed in assignment area
 	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghRemoveMercAssignBox = box;
 
- // add strings for box
- for(uiCounter=0; uiCounter < MAX_REMOVE_MERC_COUNT; uiCounter++)
- {
+	// add strings for box
+	for (UINT32 uiCounter = 0; uiCounter < MAX_REMOVE_MERC_COUNT; ++uiCounter)
+	{
 		AddMonoString(box, pRemoveMercStrings[uiCounter]);
- }
+	}
 
 	SetBoxTextAttrs(ghRemoveMercAssignBox);
 
- // resize box to text
- ResizeBoxToText( ghRemoveMercAssignBox );
+	// resize box to text
+	ResizeBoxToText(ghRemoveMercAssignBox);
 }
 
 
@@ -8156,7 +8118,7 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId
 	{
 		if (PythSpacesAway(pSoldier->sGridNo, v->sGridNo) > MAX_DISTANCE_FOR_REPAIR)
 		{
-		  return( FALSE );
+			return FALSE;
 		}
 	}
 */
@@ -8226,7 +8188,7 @@ static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE* pSoldier)
 	{
 		if( PythSpacesAway( pSoldier -> sGridNo, pRobot -> sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
 		{
-		  return( FALSE );
+			return FALSE;
 		}
 	}
 */
@@ -8733,7 +8695,7 @@ static BOOLEAN HandleAssignmentExpansionAndHighLightForAssignMenu(SOLDIERTYPE* p
 		// squad menu up?..if so, highlight squad line the previous menu
 		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
-			 HighLightBoxLine( ghEpcBox, EPC_MENU_ON_DUTY );
+			HighLightBoxLine(ghEpcBox, EPC_MENU_ON_DUTY);
 		}
 		else
 		{
@@ -9669,8 +9631,8 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					bCanJoinSquad = CanCharacterSquad( pSoldier, ( INT8 )bAssignment );
 
 					// if already in it, don't repor that as an error...
-					if ( ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ) ||
-							 ( bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT ) )
+					if (bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ||
+							bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT)
 					{
 						if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 						{
@@ -9825,37 +9787,32 @@ static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pT
 
 void UnEscortEPC( SOLDIERTYPE *pSoldier )
 {
-  if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-  {
-	  BOOLEAN fGotInfo;
-	  UINT16 usQuoteNum;
-	  UINT16 usFactToSetToTrue;
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	{
+		UINT16 usQuoteNum;
+		UINT16 usFactToSetToTrue;
 
-	  SetupProfileInsertionDataForSoldier( pSoldier );
+		SetupProfileInsertionDataForSoldier(pSoldier);
 
-	  fGotInfo = GetInfoForAbandoningEPC( pSoldier->ubProfile, &usQuoteNum, &usFactToSetToTrue );
-	  if ( fGotInfo )
-	  {
-		  // say quote usQuoteNum
-		  gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		  TacticalCharacterDialogue( pSoldier, usQuoteNum );
+		if (GetInfoForAbandoningEPC(pSoldier->ubProfile, &usQuoteNum, &usFactToSetToTrue))
+		{
+			// say quote usQuoteNum
+			gMercProfiles[pSoldier->ubProfile].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
+			TacticalCharacterDialogue(pSoldier, usQuoteNum);
 			// the flag will be turned off in the remove-epc event
-		  //gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		  SetFactTrue( usFactToSetToTrue );
-	  }
-	  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0 );
+			//gMercProfiles[pSoldier->ubProfile].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
+			SetFactTrue(usFactToSetToTrue);
+		}
+		SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0);
 
-	  if ( pSoldier->ubProfile == JOHN )
-	  {
-		  SOLDIERTYPE * pSoldier2;
-
-		  // unrecruit Mary as well
-		  pSoldier2 = FindSoldierByProfileID( MARY, TRUE );
-		  if ( pSoldier2 )
-		  {
-			  SetupProfileInsertionDataForSoldier( pSoldier2 );
-				fGotInfo = GetInfoForAbandoningEPC( MARY, &usQuoteNum, &usFactToSetToTrue );
-				if ( fGotInfo )
+		if (pSoldier->ubProfile == JOHN)
+		{
+			// unrecruit Mary as well
+			SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(MARY, TRUE);
+			if (pSoldier2)
+			{
+				SetupProfileInsertionDataForSoldier(pSoldier2);
+				if (GetInfoForAbandoningEPC(MARY, &usQuoteNum, &usFactToSetToTrue))
 				{
 					// say quote usQuoteNum
 					gMercProfiles[ MARY ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
@@ -9865,20 +9822,17 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 					SetFactTrue( usFactToSetToTrue );
 				}
 
-			  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, MARY, 0, 0, 0, 0 );
-		  }
-	  }
-	  else if ( pSoldier->ubProfile == MARY )
-	  {
-		  SOLDIERTYPE * pSoldier2;
-
-		  // unrecruit John as well
-		  pSoldier2 = FindSoldierByProfileID( JOHN, TRUE );
-		  if ( pSoldier2 )
-		  {
-			  SetupProfileInsertionDataForSoldier( pSoldier2 );
-				fGotInfo = GetInfoForAbandoningEPC( JOHN, &usQuoteNum, &usFactToSetToTrue );
-				if ( fGotInfo )
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, MARY, 0, 0, 0, 0);
+			}
+		}
+		else if (pSoldier->ubProfile == MARY)
+		{
+			// unrecruit John as well
+			SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(JOHN, TRUE);
+			if (pSoldier2)
+			{
+				SetupProfileInsertionDataForSoldier(pSoldier2);
+				if (GetInfoForAbandoningEPC(JOHN, &usQuoteNum, &usFactToSetToTrue))
 				{
 					// say quote usQuoteNum
 					gMercProfiles[ JOHN ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
@@ -9887,22 +9841,22 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 					//gMercProfiles[ JOHN ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
 					SetFactTrue( usFactToSetToTrue );
 				}
-			  SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, JOHN, 0, 0, 0, 0 );
-		  }
-	  }
-	  // stop showing menu
-	  giAssignHighLine = -1;
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, JOHN, 0, 0, 0, 0);
+			}
+		}
+		// stop showing menu
+		giAssignHighLine = -1;
 
-	  // set dirty flag
-	  fTeamPanelDirty = TRUE;
-	  fMapScreenBottomDirty = TRUE;
-	  fCharacterInfoPanelDirty = TRUE;
-  }
-  else
-  {
-	  // how do we handle this if it's the right sector?
-	  TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE );
-  }
+		// set dirty flag
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
+	}
+	else
+	{
+		// how do we handle this if it's the right sector?
+		TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE);
+	}
 }
 
 
@@ -10013,9 +9967,9 @@ static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* const p
 	{
 		return( FALSE );
 	}
-	if ( pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-			 pOtherSoldier->sSectorY != pSoldier->sSectorY ||
-			 pOtherSoldier->bSectorZ != pSoldier->bSectorZ )
+	if (pOtherSoldier->sSectorX != pSoldier->sSectorX ||
+			pOtherSoldier->sSectorY != pSoldier->sSectorY ||
+			pOtherSoldier->bSectorZ != pSoldier->bSectorZ )
 	{
 		return( FALSE );
 	}
@@ -10025,12 +9979,12 @@ static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* const p
 		return( FALSE );
 	}
 
-	if ( ( pOtherSoldier->bAssignment == IN_TRANSIT ) ||
-			 ( pOtherSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			 ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||
-			 ( AM_A_ROBOT( pSoldier ) ) ||
-			 ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
-			 ( pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ) )
+	if (pOtherSoldier->bAssignment == IN_TRANSIT ||
+			pOtherSoldier->bAssignment == ASSIGNMENT_POW ||
+			pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ||
+			pSoldier->uiStatusFlags & SOLDIER_VEHICLE ||
+			AM_A_ROBOT(pSoldier) ||
+			pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 	{
 		return( FALSE );
 	}
