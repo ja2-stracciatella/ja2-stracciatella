@@ -366,7 +366,7 @@ void SetBackGroundSurface(const INT32 hBoxHandle, SGPVSurface* const bg)
 }
 
 
-static void RemoveCurrentBoxPrimaryText(INT32 hStringHandle);
+static void RemoveBoxPrimaryText(PopUpBox*, INT32 hStringHandle);
 
 
 // adds a FIRST column string to the CURRENT popup box
@@ -402,7 +402,7 @@ void AddMonoString(const wchar_t* pString)
 
 	wcscpy(pLocalString, pString);
 
-	RemoveCurrentBoxPrimaryText( iCounter );
+	RemoveBoxPrimaryText(Box, iCounter);
 
 	Box->Text[iCounter]                      = pStringSt;
 	Box->Text[iCounter]->pString             = pLocalString;
@@ -854,7 +854,7 @@ static void RemoveOneCurrentBoxString(INT32 hStringHandle, BOOLEAN fFillGaps)
 	Assert(Box != NULL);
 	Assert( hStringHandle < MAX_POPUP_BOX_STRING_COUNT );
 
-	RemoveCurrentBoxPrimaryText( hStringHandle );
+	RemoveBoxPrimaryText(Box, hStringHandle);
 	RemoveCurrentBoxSecondaryText( hStringHandle );
 
 	if ( fFillGaps )
@@ -1338,13 +1338,8 @@ void HideAllBoxes( void )
 }
 
 
-static void RemoveCurrentBoxPrimaryText(INT32 hStringHandle)
+static void RemoveBoxPrimaryText(PopUpBox* const Box, const INT32 hStringHandle)
 {
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
 	Assert(Box != NULL);
 	Assert( hStringHandle < MAX_POPUP_BOX_STRING_COUNT );
 
