@@ -414,7 +414,7 @@ void AddMonoString(const wchar_t* pString)
 }
 
 
-static void RemoveCurrentBoxSecondaryText(INT32 hStringHandle);
+static void RemoveBoxSecondaryText(PopUpBox*, INT32 hStringHandle);
 
 
 // adds a SECOND column string to the CURRENT popup box
@@ -451,7 +451,7 @@ void AddSecondColumnMonoString(const wchar_t* pString)
 
 	wcscpy(pLocalString, pString);
 
-	RemoveCurrentBoxSecondaryText( iCounter );
+	RemoveBoxSecondaryText(Box, iCounter);
 
 	Box->pSecondColumnString[iCounter]                 = pStringSt;
 	Box->pSecondColumnString[iCounter]->pString        = pLocalString;
@@ -851,7 +851,7 @@ void RemoveAllCurrentBoxStrings(void)
 	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
 	{
 		RemoveBoxPrimaryText(Box, i);
-		RemoveCurrentBoxSecondaryText(i);
+		RemoveBoxSecondaryText(Box, i);
 	}
 	Box->fUpdated = FALSE;
 }
@@ -1330,13 +1330,8 @@ static void RemoveBoxPrimaryText(PopUpBox* const Box, const INT32 hStringHandle)
 }
 
 
-static void RemoveCurrentBoxSecondaryText(INT32 hStringHandle)
+static void RemoveBoxSecondaryText(PopUpBox* const Box, const INT32 hStringHandle)
 {
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
 	Assert(Box != NULL);
 	Assert( hStringHandle < MAX_POPUP_BOX_STRING_COUNT );
 
