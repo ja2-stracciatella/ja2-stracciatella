@@ -3,6 +3,7 @@
 #include "Font.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
+#include "Map_Screen_Interface_TownMine_Info.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"
 #include "Strategic.h"
@@ -158,9 +159,6 @@ extern SOLDIERTYPE *pMilitiaTrainerSoldier;
 
 // we are in fact training?..then who temmates, or self?
 INT8 gbTrainingMode = -1;
-
-// showing town info?
-extern BOOLEAN fShowTownInfo;
 
 extern INT32 giMapBorderButtons[];
 
