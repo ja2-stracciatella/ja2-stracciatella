@@ -236,9 +236,6 @@ static void CreateTownInfoBox(void)
 
  // space between lines
  SetLineSpace(ghTownMineBox, 2);
-
- // set current box to this one
- SetCurrentBox( ghTownMineBox );
 }
 
 

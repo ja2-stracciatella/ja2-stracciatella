@@ -43,7 +43,6 @@ void ShowBox(INT32 hBoxHandle);
 void HideBox(INT32 hBoxHandle);
 void DisplayBoxes(SGPVSurface* buffer);
 void DisplayOnePopupBox(UINT32 uiIndex, SGPVSurface* buffer);
-void SetCurrentBox(INT32 hBoxHandle);
 
 // resize this box to the text it contains
 void ResizeBoxToText(INT32 hBoxHandle);

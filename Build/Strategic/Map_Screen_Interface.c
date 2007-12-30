@@ -3242,9 +3242,6 @@ static void CreatePopUpBoxForMovementBox(void)
  // space between lines
  SetLineSpace(ghMoveBox, 2);
 
- // set current box to this one
- SetCurrentBox( ghMoveBox );
-
  // add strings
  AddStringsToMoveBox( );
 
@@ -3306,9 +3303,6 @@ static void AddStringsToMoveBox(void)
 	INT32 iCount = 0, iCountB = 0;
 	CHAR16 sString[ 128 ], sStringB[ 128 ];
 	BOOLEAN fFirstOne = TRUE;
-
-	// set the current box
-	SetCurrentBox( ghMoveBox );
 
 	// clear all the strings out of the box
 	RemoveAllBoxStrings(ghMoveBox);
@@ -3453,9 +3447,6 @@ static void BuildMouseRegionsForMoveBox(void)
 
 	// get width
 	iBoxWidth = Dimensions.iRight;
-
-	SetCurrentBox( ghMoveBox );
-
 
 	// box heading
 	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

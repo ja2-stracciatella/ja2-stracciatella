@@ -49,7 +49,6 @@ typedef struct PopUpBox {
 } PopUpBox;
 
 static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
-static UINT32 guiCurrentBox;
 
 
 #define BORDER_WIDTH  16
@@ -143,7 +142,6 @@ INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
 		pBox->pSecondColumnString[iCounter] = NULL;
 	}
 
-	SetCurrentBox(iCount);
 	SpecifyBoxMinWidth( iCount, 0 );
 	SetBoxSecondColumnMinimumOffset( iCount, 0 );
 	pBox->uiSecondColumnCurrentOffset = 0;
@@ -200,9 +198,6 @@ void ShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 
 	if (Box->Text[iLineNumber] != NULL)
 	{
-		// set current box
-		SetCurrentBox( hBoxHandle );
-
 		// shade line
 		Box->Text[iLineNumber]->fShadeFlag = TRUE;
 	}
@@ -221,9 +216,6 @@ void UnShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 
 	if (Box->Text[iLineNumber] != NULL)
 	{
-		// set current box
-		SetCurrentBox( hBoxHandle );
-
 		// shade line
 		Box->Text[iLineNumber]->fShadeFlag = FALSE;
 	}
@@ -243,9 +235,6 @@ void SecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 
 	if (Box->Text[iLineNumber] != NULL)
 	{
-		// set current box
-		SetCurrentBox( hBoxHandle );
-
 		// shade line
 		Box->Text[iLineNumber]->fSecondaryShadeFlag = TRUE;
 	}
@@ -264,9 +253,6 @@ void UnSecondaryShadeStringInBox( INT32 hBoxHandle, INT32 iLineNumber )
 
 	if (Box->Text[iLineNumber] != NULL)
 	{
-		// set current box
-		SetCurrentBox( hBoxHandle );
-
 		// shade line
 		Box->Text[iLineNumber]->fSecondaryShadeFlag = FALSE;
 	}
@@ -778,7 +764,6 @@ void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber )
 	PopUpString* const line = PopUpBoxList[hBoxHandle]->Text[iLineNumber];
 	if (line != NULL)
 	{
-		SetCurrentBox(hBoxHandle);
 		line->fHighLightFlag = TRUE;
 	}
 }
@@ -838,8 +823,6 @@ void RemoveBox(INT32 hBoxHandle)
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
 		return;
 
-	if (guiCurrentBox == hBoxHandle) guiCurrentBox = NO_POPUP_BOX;
-
 	RemoveAllBoxStrings(hBoxHandle);
 	MemFree(PopUpBoxList[hBoxHandle]);
 	PopUpBoxList[hBoxHandle] = NULL;
@@ -879,16 +862,6 @@ void HideBox(INT32 hBoxHandle)
 			Box->fUpdated = FALSE;
 		}
 	}
-}
-
-
-
-void SetCurrentBox(INT32 hBoxHandle)
-{
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	guiCurrentBox = hBoxHandle;
 }
 
 

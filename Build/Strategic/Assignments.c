@@ -4047,8 +4047,6 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 			// get width
 			iBoxWidth = pDimensions.iRight;
-
-			SetCurrentBox( ghEpcBox );
 		}
 		else
 		{
@@ -4067,8 +4065,6 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 			// get width
 			iBoxWidth = pDimensions.iRight;
-
-			SetCurrentBox( ghAssignmentBox );
 		}
 
 
@@ -4159,8 +4155,6 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
-
-		SetCurrentBox( ghVehicleBox );
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
@@ -4351,7 +4345,6 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	ghRepairBox = -1;
 
   const INT32 box = CreateRepairBox();
-	SetCurrentBox(ghRepairBox);
 
 	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
 	// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
@@ -4545,9 +4538,6 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
-
-		SetCurrentBox( ghRepairBox );
-
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
@@ -5415,8 +5405,6 @@ static void CreateDestroyMouseRegions(void)
 		// get width
 		iBoxWidth = pDimensions.iRight;
 
-		SetCurrentBox( ghAssignmentBox );
-
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
 		{
@@ -5537,8 +5525,6 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 		// get width
 		iBoxWidth = pDimensions.iRight;
 
-		SetCurrentBox( ghContractBox );
-
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghContractBox ); iCounter++ )
 		{
@@ -5630,8 +5616,6 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
-
-		SetCurrentBox( ghTrainingBox );
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghTrainingBox ); iCounter++ )
@@ -5732,8 +5716,6 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
-
-		SetCurrentBox( ghAttributeBox );
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAttributeBox ); iCounter++ )
@@ -5848,8 +5830,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 		// get width
 		iBoxWidth = pDimensions.iRight;
 
-		SetCurrentBox( ghRemoveMercAssignBox );
-
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghRemoveMercAssignBox ); iCounter++ )
 		{
@@ -5952,8 +5932,6 @@ static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
-
-		SetCurrentBox( ghSquadBox );
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1; iCounter++ )
@@ -7194,10 +7172,6 @@ static void CreateSquadBox(void)
 	const INT32 box = MakeBox(SquadDimensions, SquadPosition, 0);
 	ghSquadBox = box;
 
- // set current box to this one
- SetCurrentBox( ghSquadBox );
-
-
  uiMaxSquad = GetLastSquadListedInSquadMenu();
 
  // add strings for box
@@ -7239,9 +7213,6 @@ static void CreateEPCBox(void)
 
 	const INT32 box = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
-
-	 // set current box to this one
-	 SetCurrentBox( ghEpcBox );
 
 	 for(iCount=0; iCount < MAX_EPC_MENU_STRING_COUNT; iCount++)
 	 {
@@ -7328,7 +7299,6 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	ghVehicleBox = -1;
 
   const INT32 box = CreateVehicleBox();
-	SetCurrentBox(ghVehicleBox);
 
 	// run through list of vehicles in sector and add them to pop up box
 	CFOR_ALL_VEHICLES(v)
@@ -7378,9 +7348,6 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 
 	const INT32 box = MakeBox(ContractDimensions, ContractPosition, 0);
 	ghVehicleBox = box;
-
- // set current box to this one
- SetCurrentBox( ghContractBox );
 
  // not null character?
  if( pCharacter != NULL )
@@ -7454,11 +7421,6 @@ static void CreateAttributeBox(void)
 	const INT32 box = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAttributeBox = box;
 
- // set current box to this one
- SetCurrentBox( ghAttributeBox );
-
-
-
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; uiCounter++)
  {
@@ -7489,10 +7451,6 @@ static void CreateTrainingBox(void)
 
 	const INT32 box = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghTrainingBox = box;
-
- // set current box to this one
- SetCurrentBox( ghTrainingBox );
-
 
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_TRAIN_STRING_COUNT; uiCounter++)
@@ -7533,9 +7491,6 @@ static void CreateAssignmentsBox(void)
 	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAssignmentBox = box;
 
-	// set current box to this one
-	SetCurrentBox( ghAssignmentBox );
-
 	// add strings for box
 	for(uiCounter=0; uiCounter < MAX_ASSIGN_STRING_COUNT; uiCounter++)
 	{
@@ -7569,9 +7524,6 @@ void CreateMercRemoveAssignBox( void )
 
 	const INT32 box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghRemoveMercAssignBox = box;
-
- // set current box to this one
- SetCurrentBox( ghRemoveMercAssignBox );
 
  // add strings for box
  for(uiCounter=0; uiCounter < MAX_REMOVE_MERC_COUNT; uiCounter++)
