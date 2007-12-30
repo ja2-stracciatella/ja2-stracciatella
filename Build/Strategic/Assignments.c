@@ -7347,7 +7347,7 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
  }
 
 	const INT32 box = MakeBox(ContractDimensions, ContractPosition, 0);
-	ghVehicleBox = box;
+	ghContractBox = box;
 
  // not null character?
  if( pCharacter != NULL )
