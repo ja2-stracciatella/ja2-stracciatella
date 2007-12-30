@@ -1004,139 +1004,114 @@ static BOOLEAN DrawBox(UINT32 uiCounter)
 }
 
 
-static BOOLEAN DrawBoxText(const PopUpBox* const Box)
+static BOOLEAN DrawBoxText(const PopUpBox* const box)
 {
-	UINT32 uiCount = 0;
-	INT16 uX, uY;
-
 	SetFontDestBuffer
 	(
-		Box->uiBuffer,
-		Box->Position.iX + Box->uiLeftMargin - 1,
-		Box->Position.iY + Box->uiTopMargin,
-		Box->Position.iX + Box->Dimensions.iRight  - Box->uiRightMargin,
-		Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin
+		box->uiBuffer,
+		box->Position.iX + box->uiLeftMargin - 1,
+		box->Position.iY + box->uiTopMargin,
+		box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin,
+		box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin
 	);
 
-	for (uiCount = 0; uiCount < MAX_POPUP_BOX_STRING_COUNT; uiCount++)
+	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
 	{
 		// there is text in this line?
-		if (Box->Text[uiCount])
+		const PopUpString* const text = box->Text[i];
+		if (text)
 		{
-			// set font
-			SetFont(Box->Text[uiCount]->uiFont);
+			SetFont(text->uiFont);
 
 			// are we highlighting?...shading?..or neither
-			if (Box->Text[uiCount]->fHighLightFlag == FALSE && Box->Text[uiCount]->fShadeFlag == FALSE && Box->Text[uiCount]->fSecondaryShadeFlag == FALSE)
+			if (text->fHighLightFlag)
 			{
-				// neither
-				SetFontForeground(Box->Text[uiCount]->ubForegroundColor);
+				SetFontForeground(text->ubHighLight);
 			}
-			else if (Box->Text[uiCount]->fHighLightFlag == TRUE)
+			else if (text->fSecondaryShadeFlag)
 			{
-				// highlight
-				SetFontForeground(Box->Text[uiCount]->ubHighLight);
+				SetFontForeground(text->ubSecondaryShade);
 			}
-			else if (Box->Text[uiCount]->fSecondaryShadeFlag == TRUE)
+			else if (text->fShadeFlag)
 			{
-				SetFontForeground(Box->Text[uiCount]->ubSecondaryShade);
+				SetFontForeground(text->ubShade);
 			}
 			else
 			{
-				//shading
-				SetFontForeground(Box->Text[uiCount]->ubShade);
+				SetFontForeground(text->ubForegroundColor);
 			}
 
-			// set background
-			SetFontBackground(Box->Text[uiCount]->ubBackgroundColor);
+			SetFontBackground(text->ubBackgroundColor);
 
-			// cnetering?
-			if (Box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
+			const INT16 x = box->Position.iX + box->uiLeftMargin;
+			const INT16 h = GetFontHeight(text->uiFont);
+			const INT16 y = box->Position.iY + box->uiTopMargin + i * (h + box->uiLineSpace);
+			INT16 uX;
+			INT16 uY;
+			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates
-				(
-					Box->Position.iX + Box->uiLeftMargin,
-					Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
-					Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2),
-					GetFontHeight(Box->Text[uiCount]->uiFont),
-					Box->Text[uiCount]->pString,
-					Box->Text[uiCount]->uiFont,
-					&uX, &uY
-				);
+				const INT16 w = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+				FindFontCenterCoordinates(x, y, w, h, text->pString, text->uiFont, &uX, &uY);
 			}
 			else
 			{
-				uX = Box->Position.iX + Box->uiLeftMargin;
-				uY = Box->Position.iY + uiCount * GetFontHeight(Box->Text[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace;
+				uX = x;
+				uY = y;
 			}
 
-			// print
-			//gprintfdirty(uX, uY, L"%ls", Box->Text[uiCount]->pString);
-			mprintf(uX, uY, L"%ls", Box->Text[uiCount]->pString);
+			mprintf(uX, uY, L"%ls", text->pString);
 		}
 
-
 		// there is secondary text in this line?
-		if (Box->pSecondColumnString[uiCount])
+		const PopUpString* const second = box->pSecondColumnString[i];
+		if (second)
 		{
-			// set font
-			SetFont(Box->pSecondColumnString[uiCount]->uiFont);
+			SetFont(second->uiFont);
 
 			// are we highlighting?...shading?..or neither
-			if (Box->pSecondColumnString[uiCount]->fHighLightFlag == FALSE && Box->pSecondColumnString[uiCount]->fShadeFlag == FALSE)
+			if (second->fHighLightFlag)
 			{
-				// neither
-				SetFontForeground(Box->pSecondColumnString[uiCount]->ubForegroundColor);
+				SetFontForeground(second->ubHighLight);
 			}
-			else if (Box->pSecondColumnString[uiCount]->fHighLightFlag == TRUE)
+			else if (second->fShadeFlag)
 			{
-				// highlight
-				SetFontForeground(Box->pSecondColumnString[uiCount]->ubHighLight);
+				SetFontForeground(second->ubShade);
 			}
 			else
 			{
-				//shading
-				SetFontForeground(Box->pSecondColumnString[uiCount]->ubShade);
+				SetFontForeground(second->ubForegroundColor);
 			}
 
-			// set background
-			SetFontBackground(Box->pSecondColumnString[uiCount]->ubBackgroundColor);
+			SetFontBackground(second->ubBackgroundColor);
 
-			// cnetering?
-			if (Box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
+			const INT16 x = box->Position.iX + box->uiLeftMargin;
+			const INT16 h = GetFontHeight(second->uiFont);
+			const INT16 y = box->Position.iY + box->uiTopMargin + i * (h + box->uiLineSpace);
+			INT16 uX;
+			INT16 uY;
+			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates
-				(
-					Box->Position.iX + Box->uiLeftMargin,
-					Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace,
-					Box->Dimensions.iRight - (Box->uiRightMargin + Box->uiLeftMargin + 2),
-					GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont),
-					Box->pSecondColumnString[uiCount]->pString,
-					Box->pSecondColumnString[uiCount]->uiFont,
-					&uX, &uY
-				);
+				const INT16 w = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+				FindFontCenterCoordinates(x, y, w, h, second->pString, second->uiFont, &uX, &uY);
 			}
 			else
 			{
-				uX = Box->Position.iX + Box->uiLeftMargin + Box->uiSecondColumnCurrentOffset;
-				uY = Box->Position.iY + uiCount * GetFontHeight(Box->pSecondColumnString[uiCount]->uiFont) + Box->uiTopMargin + uiCount * Box->uiLineSpace;
+				uX = x + box->uiSecondColumnCurrentOffset;
+				uY = y;
 			}
 
-			// print
-			//gprintfdirty(uX, uY, L"%ls", Box->Text[uiCount]->pString);
-			mprintf(uX, uY, L"%ls", Box->pSecondColumnString[uiCount]->pString);
+			mprintf(uX, uY, L"%ls", second->pString);
 		}
 	}
 
-
-	if (Box->uiBuffer != guiSAVEBUFFER)
+	if (box->uiBuffer != guiSAVEBUFFER)
 	{
 		InvalidateRegion
 		(
-			Box->Position.iX + Box->uiLeftMargin - 1,
-			Box->Position.iY + Box->uiTopMargin,
-			Box->Position.iX + Box->Dimensions.iRight  - Box->uiRightMargin,
-			Box->Position.iY + Box->Dimensions.iBottom - Box->uiBottomMargin
+			box->Position.iX + box->uiLeftMargin - 1,
+			box->Position.iY + box->uiTopMargin,
+			box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin,
+			box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin
 		);
 	}
 
