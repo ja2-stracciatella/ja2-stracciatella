@@ -4156,7 +4156,6 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 		// get dimensions..mostly for width
 		GetBoxSize( ghVehicleBox, &pDimensions );
-		SetBoxSecondaryShade( ghVehicleBox, FONT_YELLOW );
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
@@ -4329,6 +4328,17 @@ static void VehicleMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+static void SetBoxTextAttrs(const INT32 box)
+{
+	SetBoxFont(box, MAP_SCREEN_FONT);
+	SetBoxHighLight(box, FONT_WHITE);
+	SetBoxForeground(box, FONT_LTGREEN);
+	SetBoxBackground(box, FONT_BLACK);
+	SetBoxShade(box, FONT_GRAY7);
+	SetBoxSecondaryShade(box, FONT_YELLOW);
+}
+
+
 static void CreateRepairBox(void);
 static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
@@ -4388,11 +4398,7 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	// cancel
 	AddMonoString(pRepairStrings[2]);
 
-  SetBoxFont(ghRepairBox, MAP_SCREEN_FONT);
-  SetBoxHighLight(ghRepairBox, FONT_WHITE);
-	SetBoxShade(ghRepairBox, FONT_GRAY7);
-  SetBoxForeground(ghRepairBox, FONT_LTGREEN);
-  SetBoxBackground(ghRepairBox, FONT_BLACK);
+  SetBoxTextAttrs(ghRepairBox);
 
 	// resize box to text
 	ResizeBoxToText( ghRepairBox );
@@ -5621,7 +5627,6 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 
 		// get dimensions..mostly for width
 		GetBoxSize( ghTrainingBox, &pDimensions );
-		SetBoxSecondaryShade( ghTrainingBox, FONT_YELLOW );
 
 		// get width
 		iBoxWidth = pDimensions.iRight;
@@ -7162,6 +7167,18 @@ static void RestorePopUpBoxes(void)
 }
 
 
+static INT32 MakeBox(const SGPRect dim, const SGPPoint pos, const UINT32 flags)
+{
+	const INT32 box = CreatePopUpBox(dim, pos, flags | POPUP_BOX_FLAG_RESIZE);
+	SetBoxBuffer(box, FRAME_BUFFER);
+	SetBorderType(box, guiPOPUPBORDERS);
+	SetBackGroundSurface(box, guiPOPUPTEX);
+	SetMargins(box, 6, 6, 4, 4);
+	SetLineSpace(box, 2);
+	return box;
+}
+
+
 static UINT32 GetLastSquadListedInSquadMenu(void);
 
 
@@ -7174,22 +7191,7 @@ static void CreateSquadBox(void)
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
-	ghSquadBox = CreatePopUpBox(SquadDimensions, SquadPosition, POPUP_BOX_FLAG_RESIZE);
-
- // which buffer will box render to
- SetBoxBuffer(ghSquadBox, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghSquadBox,guiPOPUPBORDERS);
-
- // background texture
- SetBackGroundSurface(ghSquadBox, guiPOPUPTEX);
-
- // margin sizes
- SetMargins( ghSquadBox, 6, 6, 4, 4 );
-
- // space between lines
- SetLineSpace(ghSquadBox, 2);
+	ghSquadBox = MakeBox(SquadDimensions, SquadPosition, 0);
 
  // set current box to this one
  SetCurrentBox( ghSquadBox );
@@ -7208,23 +7210,7 @@ static void CreateSquadBox(void)
  // add cancel line
 	AddMonoString(pSquadMenuStrings[NUMBER_OF_SQUADS]);
 
- // set font type
- SetBoxFont(ghSquadBox, MAP_SCREEN_FONT);
-
- // set highlight color
- SetBoxHighLight(ghSquadBox, FONT_WHITE);
-
- // unhighlighted color
- SetBoxForeground(ghSquadBox, FONT_LTGREEN);
-
- // the secondary shade color
- SetBoxSecondaryShade( ghSquadBox, FONT_YELLOW );
-
- // background color
- SetBoxBackground(ghSquadBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghSquadBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghSquadBox);
 
  // resize box to text
  ResizeBoxToText( ghSquadBox );
@@ -7250,22 +7236,7 @@ static void CreateEPCBox(void)
 	SGPRect pDimensions;
   INT32 iCount;
 
-	ghEpcBox = CreatePopUpBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_RESIZE | POPUP_BOX_FLAG_CENTER_TEXT);
-
-	 // which buffer will box render to
-	 SetBoxBuffer(ghEpcBox, FRAME_BUFFER);
-
-	 // border type?
-	 SetBorderType(ghEpcBox,guiPOPUPBORDERS);
-
-	 // background texture
-	 SetBackGroundSurface(ghEpcBox, guiPOPUPTEX);
-
-	 // margin sizes
-	 SetMargins( ghEpcBox, 6, 6, 4, 4 );
-
-	 // space between lines
-	 SetLineSpace(ghEpcBox, 2);
+	ghEpcBox = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 
 	 // set current box to this one
 	 SetCurrentBox( ghEpcBox );
@@ -7275,20 +7246,7 @@ static void CreateEPCBox(void)
 		 AddMonoString(pEpcMenuStrings[iCount]);
 	 }
 
-	 // set font type
-	 SetBoxFont(ghEpcBox, MAP_SCREEN_FONT);
-
-	 // set highlight color
-	 SetBoxHighLight(ghEpcBox, FONT_WHITE);
-
-	 // unhighlighted color
-	 SetBoxForeground(ghEpcBox, FONT_LTGREEN);
-
-	 // background color
-	 SetBoxBackground(ghEpcBox, FONT_BLACK);
-
-	 // shaded color..for darkened text
-	 SetBoxShade( ghEpcBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghEpcBox);
 
 	 // resize box to text
 	 ResizeBoxToText( ghEpcBox );
@@ -7383,10 +7341,7 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	// cancel string (borrow the one in the squad menu)
 	AddMonoString(pSquadMenuStrings[SQUAD_MENU_CANCEL]);
 
-  SetBoxFont(ghVehicleBox, MAP_SCREEN_FONT);
-  SetBoxHighLight(ghVehicleBox, FONT_WHITE);
-  SetBoxForeground(ghVehicleBox, FONT_LTGREEN);
-  SetBoxBackground(ghVehicleBox, FONT_BLACK);
+  SetBoxTextAttrs(ghVehicleBox);
 
   return fVehiclePresent;
 }
@@ -7394,23 +7349,13 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 
 static void CreateVehicleBox(void)
 {
-	ghVehicleBox = CreatePopUpBox(VehicleDimensions, VehiclePosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
- SetBoxBuffer(ghVehicleBox, FRAME_BUFFER);
- SetBorderType(ghVehicleBox,guiPOPUPBORDERS);
- SetBackGroundSurface(ghVehicleBox, guiPOPUPTEX);
- SetMargins( ghVehicleBox, 6, 6, 4, 4 );
- SetLineSpace(ghVehicleBox, 2);
+	ghVehicleBox = MakeBox(VehicleDimensions, VehiclePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 }
 
 
 static void CreateRepairBox(void)
 {
-	ghRepairBox = CreatePopUpBox(RepairDimensions, RepairPosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
- SetBoxBuffer(ghRepairBox, FRAME_BUFFER);
- SetBorderType(ghRepairBox,guiPOPUPBORDERS);
- SetBackGroundSurface(ghRepairBox, guiPOPUPTEX);
- SetMargins( ghRepairBox, 6, 6, 4, 4 );
- SetLineSpace(ghRepairBox, 2);
+	ghRepairBox = MakeBox(RepairDimensions, RepairPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 }
 
 
@@ -7427,12 +7372,7 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 	 ContractPosition.iX = giBoxY;
  }
 
-	ghContractBox = CreatePopUpBox(ContractDimensions, ContractPosition, POPUP_BOX_FLAG_RESIZE);
- SetBoxBuffer(ghContractBox, FRAME_BUFFER);
- SetBorderType(ghContractBox,guiPOPUPBORDERS);
- SetBackGroundSurface(ghContractBox, guiPOPUPTEX);
- SetMargins( ghContractBox, 6, 6, 4, 4 );
- SetLineSpace(ghContractBox, 2);
+	ghContractBox = MakeBox(ContractDimensions, ContractPosition, 0);
 
  // set current box to this one
  SetCurrentBox( ghContractBox );
@@ -7475,14 +7415,7 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 	 }
  }
 
-
- SetBoxFont(ghContractBox, MAP_SCREEN_FONT);
- SetBoxHighLight(ghContractBox, FONT_WHITE);
- SetBoxForeground(ghContractBox, FONT_LTGREEN);
- SetBoxBackground(ghContractBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghContractBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghContractBox);
 
  if( pCharacter != NULL )
  {
@@ -7513,22 +7446,7 @@ static void CreateAttributeBox(void)
  // update screen assignment positions
  UpdateMapScreenAssignmentPositions( );
 
-	ghAttributeBox = CreatePopUpBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
-
- // which buffer will box render to
- SetBoxBuffer(ghAttributeBox, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghAttributeBox,guiPOPUPBORDERS);
-
- // background texture
- SetBackGroundSurface(ghAttributeBox, guiPOPUPTEX);
-
- // margin sizes
- SetMargins( ghAttributeBox, 6, 6, 4, 4 );
-
- // space between lines
- SetLineSpace(ghAttributeBox, 2);
+	ghAttributeBox = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 
  // set current box to this one
  SetCurrentBox( ghAttributeBox );
@@ -7541,20 +7459,7 @@ static void CreateAttributeBox(void)
 		AddMonoString(pAttributeMenuStrings[uiCounter]);
  }
 
- // set font type
- SetBoxFont(ghAttributeBox, MAP_SCREEN_FONT);
-
- // set highlight color
- SetBoxHighLight(ghAttributeBox, FONT_WHITE);
-
- // unhighlighted color
- SetBoxForeground(ghAttributeBox, FONT_LTGREEN);
-
- // background color
- SetBoxBackground(ghAttributeBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghAttributeBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghAttributeBox);
 
  // resize box to text
  ResizeBoxToText( ghAttributeBox );
@@ -7576,22 +7481,7 @@ static void CreateTrainingBox(void)
 	 TrainPosition.iY = giBoxY + ( ASSIGN_MENU_TRAIN * GetFontHeight( MAP_SCREEN_FONT ) );
  }
 
-	ghTrainingBox = CreatePopUpBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
-
- // which buffer will box render to
- SetBoxBuffer(ghTrainingBox, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghTrainingBox,guiPOPUPBORDERS);
-
- // background texture
- SetBackGroundSurface(ghTrainingBox, guiPOPUPTEX);
-
- // margin sizes
- SetMargins(ghTrainingBox, 6, 6, 4, 4 );
-
- // space between lines
- SetLineSpace(ghTrainingBox, 2);
+	ghTrainingBox = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 
  // set current box to this one
  SetCurrentBox( ghTrainingBox );
@@ -7603,20 +7493,7 @@ static void CreateTrainingBox(void)
 		AddMonoString(pTrainingMenuStrings[uiCounter]);
  }
 
- // set font type
- SetBoxFont(ghTrainingBox, MAP_SCREEN_FONT);
-
- // set highlight color
- SetBoxHighLight(ghTrainingBox, FONT_WHITE);
-
- // unhighlighted color
- SetBoxForeground(ghTrainingBox, FONT_LTGREEN);
-
- // background color
- SetBoxBackground(ghTrainingBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghTrainingBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghTrainingBox);
 
  // resize box to text
  ResizeBoxToText( ghTrainingBox );
@@ -7646,22 +7523,7 @@ static void CreateAssignmentsBox(void)
 	pSoldier = GetSelectedAssignSoldier( TRUE );
 	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 
-	ghAssignmentBox = CreatePopUpBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
-
-	// which buffer will box render to
-	SetBoxBuffer(ghAssignmentBox, FRAME_BUFFER);
-
-	// border type?
-	SetBorderType(ghAssignmentBox,guiPOPUPBORDERS);
-
-	// background texture
-	SetBackGroundSurface(ghAssignmentBox, guiPOPUPTEX);
-
-	// margin sizes
-	SetMargins(ghAssignmentBox, 6, 6, 4, 4 );
-
-	// space between lines
-	SetLineSpace(ghAssignmentBox, 2);
+	ghAssignmentBox = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 
 	// set current box to this one
 	SetCurrentBox( ghAssignmentBox );
@@ -7683,21 +7545,7 @@ static void CreateAssignmentsBox(void)
 		AddMonoString(sString);
 	}
 
-	// set font type
-	SetBoxFont(ghAssignmentBox, MAP_SCREEN_FONT);
-
-	// set highlight color
-	SetBoxHighLight(ghAssignmentBox, FONT_WHITE);
-
-	// unhighlighted color
-	SetBoxForeground(ghAssignmentBox, FONT_LTGREEN);
-
-	// background color
-	SetBoxBackground(ghAssignmentBox, FONT_BLACK);
-
-	// shaded color..for darkened text
-	SetBoxShade( ghAssignmentBox, FONT_GRAY7 );
-	SetBoxSecondaryShade( ghAssignmentBox, FONT_YELLOW );
+	SetBoxTextAttrs(ghAssignmentBox);
 
 	 // resize box to text
 	ResizeBoxToText( ghAssignmentBox );
@@ -7711,22 +7559,7 @@ void CreateMercRemoveAssignBox( void )
 		// will create remove mercbox to be placed in assignment area
  UINT32 uiCounter;
 
-	ghRemoveMercAssignBox = CreatePopUpBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT | POPUP_BOX_FLAG_RESIZE);
-
- // which buffer will box render to
- SetBoxBuffer(ghRemoveMercAssignBox, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghRemoveMercAssignBox,guiPOPUPBORDERS);
-
- // background texture
- SetBackGroundSurface(ghRemoveMercAssignBox, guiPOPUPTEX);
-
- // margin sizes
- SetMargins( ghRemoveMercAssignBox, 6, 6, 4, 4 );
-
- // space between lines
- SetLineSpace(ghRemoveMercAssignBox, 2);
+	ghRemoveMercAssignBox = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 
  // set current box to this one
  SetCurrentBox( ghRemoveMercAssignBox );
@@ -7737,20 +7570,7 @@ void CreateMercRemoveAssignBox( void )
 		AddMonoString(pRemoveMercStrings[uiCounter]);
  }
 
- // set font type
- SetBoxFont(ghRemoveMercAssignBox, MAP_SCREEN_FONT);
-
- // set highlight color
- SetBoxHighLight(ghRemoveMercAssignBox, FONT_WHITE);
-
- // unhighlighted color
- SetBoxForeground(ghRemoveMercAssignBox, FONT_LTGREEN);
-
- // background color
- SetBoxBackground(ghRemoveMercAssignBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghRemoveMercAssignBox, FONT_GRAY7 );
+	SetBoxTextAttrs(ghRemoveMercAssignBox);
 
  // resize box to text
  ResizeBoxToText( ghRemoveMercAssignBox );
