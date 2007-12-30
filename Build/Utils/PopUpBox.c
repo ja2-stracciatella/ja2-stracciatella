@@ -107,48 +107,29 @@ void SpecifyBoxMinWidth( INT32 hBoxHandle, INT32 iMinWidth )
 }
 
 
-INT32 CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags)
+INT32 CreatePopUpBox(const SGPRect Dimensions, const SGPPoint Position, const UINT32 uiFlags)
 {
-	INT32 iCounter=0;
-	INT32 iCount=0;
-
 	// find first free box
-	for(iCounter=0; ( iCounter < MAX_POPUP_BOX_COUNT ) && ( PopUpBoxList[iCounter] != NULL ); iCounter++);
-
-	if( iCounter >= MAX_POPUP_BOX_COUNT )
+	for (INT32 i = 0; i < lengthof(PopUpBoxList); ++i)
 	{
-		// ran out of available popup boxes - probably not freeing them up right!
-		Assert(0);
-		return NO_POPUP_BOX;
+		if (PopUpBoxList[i] == NULL)
+		{
+			PopUpBox* const box = MemAlloc(sizeof(*box));
+			if (box == NULL) return NO_POPUP_BOX;
+			memset(box, 0, sizeof(*box));
+
+			SetBoxPosition(i, Position);
+			SetBoxSize(i, Dimensions);
+			box->uiFlags = uiFlags;
+
+			PopUpBoxList[i] = box;
+			return i;
+		}
 	}
 
-	iCount=iCounter;
-
-	PopUpBox* pBox = MemAlloc(sizeof(*pBox));
-	if (pBox == NULL)
-	{
-		return NO_POPUP_BOX;
-	}
-	PopUpBoxList[iCount]=pBox;
-
-	memset(pBox, 0, sizeof(*pBox));
-	SetBoxPosition(iCount, Position);
-	SetBoxSize(iCount, Dimensions);
-	pBox->uiFlags = uiFlags;
-
-	for(iCounter=0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
-	{
-		pBox->Text[iCounter] = NULL;
-		pBox->pSecondColumnString[iCounter] = NULL;
-	}
-
-	SpecifyBoxMinWidth( iCount, 0 );
-	SetBoxSecondColumnMinimumOffset( iCount, 0 );
-	pBox->uiSecondColumnCurrentOffset = 0;
-
-	pBox->fUpdated = FALSE;
-
-	return iCount;
+	// ran out of available popup boxes - probably not freeing them up right!
+	Assert(0);
+	return NO_POPUP_BOX;
 }
 
 
