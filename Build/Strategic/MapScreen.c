@@ -2355,7 +2355,6 @@ static void UpdateCursorIfInLastSector(void);
 static void UpdatePausedStatesDueToTimeCompression(void);
 static void UpdateStatusOfMapSortButtons(void);
 static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void);
-static void UpdateTownMinePopUpDisplay(void);
 
 
 UINT32 MapScreenHandle(void)
@@ -2904,9 +2903,6 @@ UINT32 MapScreenHandle(void)
 		ForceUpDateOfBox( ghTownMineBox );
 		MapscreenMarkButtonsDirty();
 	}
-
-	// update town mine pop up display
-	UpdateTownMinePopUpDisplay( );
 
 	if( fShowAttributeMenu )
 	{
@@ -8009,17 +8005,6 @@ static void HandleChangeOfHighLightedLine(void)
 		}
 
 		fDrawCharacterList = TRUE;
-	}
-}
-
-
-// update town mine pop up
-static void UpdateTownMinePopUpDisplay(void)
-{
-	if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
-	{
-		ForceUpDateOfBox( ghTownMineBox );
-		MapscreenMarkButtonsDirty();
 	}
 }
 
