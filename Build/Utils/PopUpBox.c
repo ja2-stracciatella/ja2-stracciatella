@@ -438,30 +438,20 @@ void AddSecondColumnMonoString(const INT32 box_handle, const wchar_t* const pStr
 }
 
 
-static void ResizeBoxForSecondStrings(INT32 hBoxHandle)
+static void ResizeBoxForSecondStrings(PopUpBox* const box)
 {
-	INT32 iCounter = 0;
-	UINT32 uiBaseWidth, uiThisWidth;
-
-
-	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	PopUpBox* pBox = PopUpBoxList[hBoxHandle];
-	Assert( pBox );
-
-	uiBaseWidth = pBox->uiLeftMargin + pBox->uiSecondColumnMinimunOffset;
+	const UINT32 uiBaseWidth = box->uiLeftMargin + box->uiSecondColumnMinimunOffset;
 
 	// check string sizes
-	for( iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; ++iCounter)
 	{
-		if( pBox->Text[ iCounter ] )
+		const PopUpString* const line = box->Text[iCounter];
+		if (line)
 		{
-			uiThisWidth = uiBaseWidth + StringPixLength( pBox->Text[ iCounter ]->pString, pBox->Text[ iCounter ]->uiFont );
-
-			if( uiThisWidth > pBox->uiSecondColumnCurrentOffset )
+			const UINT32 uiThisWidth = uiBaseWidth + StringPixLength(line->pString, line->uiFont);
+			if (uiThisWidth > box->uiSecondColumnCurrentOffset)
 			{
-				pBox->uiSecondColumnCurrentOffset = uiThisWidth;
+				box->uiSecondColumnCurrentOffset = uiThisWidth;
 			}
 		}
 	}
@@ -1181,7 +1171,7 @@ void ResizeBoxToText(INT32 hBoxHandle)
 	if (!Box)
 		return;
 
-	ResizeBoxForSecondStrings( hBoxHandle );
+	ResizeBoxForSecondStrings(Box);
 
 	iHeight = Box->uiTopMargin + Box->uiBottomMargin;
 
