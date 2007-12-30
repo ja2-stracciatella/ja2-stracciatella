@@ -776,21 +776,6 @@ void SetBoxSecondColumnShade(INT32 hBoxHandle, UINT8 ubColor)
 }
 
 
-static void HighLightLine(INT32 hStringHandle)
-{
-	if ( ( guiCurrentBox < 0 ) || ( guiCurrentBox >= MAX_POPUP_BOX_COUNT ) )
-		return;
-
-	const PopUpBox* Box = PopUpBoxList[guiCurrentBox];
-
-	Assert(Box != NULL);
-
-	if (!Box->Text[hStringHandle])
-		return;
-	Box->Text[hStringHandle]->fHighLightFlag = TRUE;
-}
-
-
 void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber )
 {
 	if ( ( hBoxHandle < 0 ) || ( hBoxHandle >= MAX_POPUP_BOX_COUNT ) )
@@ -798,15 +783,14 @@ void HighLightBoxLine( INT32 hBoxHandle, INT32 iLineNumber )
 
 	// highlight iLineNumber Line in box indexed by hBoxHandle
 
-	if (PopUpBoxList[hBoxHandle]->Text[iLineNumber] != NULL)
+	PopUpString* const line = PopUpBoxList[hBoxHandle]->Text[iLineNumber];
+	if (line != NULL)
 	{
-		// set current box
-		SetCurrentBox( hBoxHandle );
-
-		// highlight line
-		HighLightLine( iLineNumber );
+		SetCurrentBox(hBoxHandle);
+		line->fHighLightFlag = TRUE;
 	}
 }
+
 
 BOOLEAN GetBoxShadeFlag( INT32 hBoxHandle, INT32 iLineNumber )
 {
