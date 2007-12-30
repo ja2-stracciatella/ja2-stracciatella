@@ -866,7 +866,7 @@ void DisplayBoxes(SGPVSurface* const uiBuffer)
 }
 
 
-static void DrawBox(UINT32 uiCounter);
+static void DrawBox(const PopUpBox*);
 static void DrawBoxText(const PopUpBox*);
 
 
@@ -880,7 +880,7 @@ void DisplayOnePopupBox(const UINT32 uiIndex, SGPVSurface* const uiBuffer)
 	{
 		box->fUpdated = TRUE;
 		if (box->uiFlags & POPUP_BOX_FLAG_RESIZE) ResizeBoxToText(uiIndex);
-		DrawBox(uiIndex);
+		DrawBox(box);
 		DrawBoxText(box);
 	}
 }
@@ -902,10 +902,8 @@ void ForceUpDateOfBox( UINT32 uiIndex )
 }
 
 
-static void DrawBox(UINT32 uiCounter)
+static void DrawBox(const PopUpBox* const box)
 {
-	const PopUpBox* const box = PopUpBoxList[uiCounter];
-
 	const UINT16 x = box->Position.iX;
 	const UINT16 y = box->Position.iY;
 	UINT16       w = box->Dimensions.iRight  - box->Dimensions.iLeft;
