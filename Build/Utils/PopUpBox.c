@@ -104,8 +104,8 @@ PopUpBox* CreatePopUpBox(const SGPRect Dimensions, const SGPPoint Position, cons
 			memset(box, 0, sizeof(*box));
 
 			SetBoxPosition(box, Position);
-			SetBoxSize(box, Dimensions);
-			box->uiFlags = uiFlags;
+			box->Dimensions = Dimensions;
+			box->uiFlags    = uiFlags;
 
 			*i = box;
 			return box;
@@ -198,13 +198,6 @@ void GetBoxPosition(const PopUpBox* const box, SGPPoint* const Position)
 {
 	Position->iX = box->Position.iX;
 	Position->iY = box->Position.iY;
-}
-
-
-void SetBoxSize(PopUpBox* const box, const SGPRect Dimensions)
-{
-	box->Dimensions = Dimensions;
-	box->fUpdated   = FALSE;
 }
 
 
@@ -576,9 +569,6 @@ static void DrawBox(const PopUpBox* const box)
 	UINT16       w = box->Dimensions.iRight  - box->Dimensions.iLeft;
 	const UINT16 h = box->Dimensions.iBottom - box->Dimensions.iTop;
 
-	// check if we have a min width, if so then update box for such
-	if (w < box->uiBoxMinWidth) w = box->uiBoxMinWidth;
-
 	// make sure it will fit on screen!
 	Assert(x + w  < SCREEN_WIDTH);
 	Assert(y + h < SCREEN_HEIGHT);
@@ -760,8 +750,12 @@ void ResizeBoxToText(PopUpBox* const box)
 
 	const UINT32 r_off = max_lw + box->uiSecondColumnMinimunOffset;
 	box->uiSecondColumnCurrentOffset = r_off;
-	box->Dimensions.iRight           = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;
-	box->Dimensions.iBottom          = box->uiTopMargin + i * (GetFontHeight(font) + box->uiLineSpace) + box->uiBottomMargin;
+
+	UINT32 w = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;;
+	if (w < box->uiBoxMinWidth) w = box->uiBoxMinWidth;
+	box->Dimensions.iRight = w;
+
+	box->Dimensions.iBottom = box->uiTopMargin + i * (GetFontHeight(font) + box->uiLineSpace) + box->uiBottomMargin;
 }
 
 

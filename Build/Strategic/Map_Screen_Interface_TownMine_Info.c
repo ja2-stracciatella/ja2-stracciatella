@@ -28,7 +28,6 @@
 #include "VSurface.h"
 
 
-#define BOX_BUTTON_WIDTH 100
 #define BOX_BUTTON_HEIGHT 20
 
 
@@ -92,7 +91,6 @@ void CreateDestroyTownInfoBox( void )
 {
 	// create destroy pop up box for town/mine info
 	static BOOLEAN fCreated = FALSE;
-	SGPRect pDimensions;
 	SGPPoint pPosition;
 	INT8 bTownId = 0;
 
@@ -164,23 +162,13 @@ void CreateDestroyTownInfoBox( void )
 		SetBoxLineForeground( ghTownMineBox, 0, FONT_LTGREEN );
 
 		// ressize box to text
+		MinWidthOfTownMineInfoBox();
+		SpecifyBoxMinWidth(ghTownMineBox, sTotalButtonWidth + 30);
 		ResizeBoxToText( ghTownMineBox );
-
-		// make box bigger to this size
-		GetBoxSize( ghTownMineBox , &pDimensions );
-
-		if( pDimensions.iRight < BOX_BUTTON_WIDTH )
-		{
-			// resize box to fit button
-			pDimensions.iRight += BOX_BUTTON_WIDTH;
-		}
-
-		SetBoxSize( ghTownMineBox, pDimensions );
 
 		ShowBox( ghTownMineBox );
 
 		// now position box
-		MinWidthOfTownMineInfoBox( );
 		PositionTownMineInfoBox( );
 
 		// now add the button
@@ -193,8 +181,8 @@ void CreateDestroyTownInfoBox( void )
 	}
 	else if( ( fCreated == TRUE ) && ( fShowTownInfo == FALSE ) )
 	{
-
 		// get box size
+		SGPRect pDimensions;
 		GetBoxSize( ghTownMineBox, &pDimensions );
 
 		// get position
@@ -643,12 +631,6 @@ static void PositionTownMineInfoBox(void)
 
 	// get position
 	GetBoxPosition( ghTownMineBox, &pPosition);
-
-	if( pDimensions.iRight < ( sTotalButtonWidth + 30 ) )
-	{
-		SpecifyBoxMinWidth( ghTownMineBox, ( sTotalButtonWidth + 30 )  );
-		pDimensions.iRight = sTotalButtonWidth + 30;
-	}
 
 	// now position box - the x axis
 	if( pPosition.iX < MapScreenRect.iLeft )
