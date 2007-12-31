@@ -175,8 +175,6 @@ void CreateDestroyTownInfoBox( void )
 			pDimensions.iRight += BOX_BUTTON_WIDTH;
 		}
 
-		pDimensions.iBottom += BOX_BUTTON_HEIGHT;
-
 		SetBoxSize( ghTownMineBox, pDimensions );
 
 		ShowBox( ghTownMineBox );
@@ -231,7 +229,7 @@ static void CreateTownInfoBox(void)
  SetBackGroundSurface(ghTownMineBox, guiPOPUPTEX);
 
  // margin sizes
- SetMargins(ghTownMineBox, 6,6,8,6);
+	SetMargins(ghTownMineBox, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6);
 
  // space between lines
  SetLineSpace(ghTownMineBox, 2);
