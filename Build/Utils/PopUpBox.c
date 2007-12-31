@@ -226,9 +226,6 @@ void SetBackGroundSurface(PopUpBox* const box, SGPVSurface* const bg)
 }
 
 
-static void RemoveBoxPrimaryText(PopUpBox*, INT32 hStringHandle);
-
-
 // adds a FIRST column string to the CURRENT popup box
 void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 {
@@ -254,8 +251,6 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 		return;
 
 	wcscpy(pLocalString, pString);
-
-	RemoveBoxPrimaryText(box, iCounter);
 
 	box->Text[iCounter]                      = pStringSt;
 	box->Text[iCounter]->pString             = pLocalString;
@@ -538,6 +533,9 @@ void UnHighLightBox(PopUpBox* const box)
 		if (box->Text[iCounter]) box->Text[iCounter]->fHighLightFlag = FALSE;
 	}
 }
+
+
+static void RemoveBoxPrimaryText(PopUpBox*, INT32 hStringHandle);
 
 
 void RemoveAllBoxStrings(PopUpBox* const box)
