@@ -665,35 +665,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																								if ( gfUIAllMoveOn )
 																								{
 																									// ATE: Select everybody in squad and make move!
-																									{
-#if 0
-																										SOLDIERTYPE *		pTeamSoldier;
-																										INT32						cnt;
-																										SOLDIERTYPE			*pFirstSoldier = NULL;
-
-																										// OK, loop through all guys who are 'multi-selected' and
-																										// check if our currently selected guy is amoung the
-																										// lucky few.. if not, change to a guy who is...
-																										cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-																										for ( pTeamSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++, pTeamSoldier++ )
-																										{
-																											// Default turn off
-																											pTeamSoldier->uiStatusFlags &= (~SOLDIER_MULTI_SELECTED );
-
-																											// If controllable
-																											if (OK_CONTROLLABLE_MERC(pTeamSoldier) && pTeamSoldier->bAssignment == GetSelectedMan()->bAssignment)
-																											{
-																												pTeamSoldier->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
-																											}
-																										}
-																										EndMultiSoldierSelection( FALSE );
-#endif
-
-																										// Make move!
-																										*puiNewEvent = C_MOVE_MERC;
-
-																										fValidDoubleClickPossible = TRUE;
-																									}
+																									// Make move!
+																									*puiNewEvent = C_MOVE_MERC;
+																									fValidDoubleClickPossible = TRUE;
 																								}
 																								else
 																								{

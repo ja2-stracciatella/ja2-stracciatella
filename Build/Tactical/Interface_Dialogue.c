@@ -3120,16 +3120,13 @@ unlock:
 					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
 					{
 						sGridNo = gsInterrogationGridNo[ 0 ];
-						//pTarget = MercPtrs[ 0 ];
 					}
 					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_1 )
 					{
-						//pTarget = MercPtrs[ 1 ];
 						sGridNo = gsInterrogationGridNo[ 1 ];
 					}
 					else //if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_2 )
 					{
-						//pTarget = MercPtrs[ 2 ];
 						sGridNo = gsInterrogationGridNo[ 2 ];
 					}
 

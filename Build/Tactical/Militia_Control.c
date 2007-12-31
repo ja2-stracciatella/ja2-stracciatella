@@ -57,16 +57,8 @@ void PrepareMilitiaForTactical()
 	ubRegs = pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
 	ubElites = pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
 	AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
-	/*
-	for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
-	{
-		if( MercPtrs[ i ]->bInSector )
-		{
-			MercPtrs[ i ]->bAttitude = AGGRESSIVE;
-		}
-	}
-	*/
 }
+
 
 void HandleMilitiaPromotions( void )
 {

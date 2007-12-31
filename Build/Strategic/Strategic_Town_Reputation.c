@@ -178,33 +178,3 @@ static void HandleOpinionOfTownsAboutSoldier(INT8 bTownA, INT8 bTownB, INT32 iDi
 {
 	// ARM: System has been scrapped
 }
-
-
-/*
-void HandleSpreadOfTownOpinionForMercForSoldier( SOLDIERTYPE *pSoldier )
-{
-	// error check
-	if( pSoldier == NULL )
-	{
-		return;
-	}
-
-	// let the profile based one do the handling
-	HandleSpreadOfTownOpinionForMerc( pSoldier->ubProfile );
-}
-
-
-void HandleSpreadOfTownsOpinionForCurrentMercs( void )
-{
-	INT32 iCounter = 0, iNumberOnPlayersTeam = 0;
-
-	// get the number on players team
-	iNumberOnPlayersTeam = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-
-	// run through all mercs on players current team
-	for(iCounter = 0; iCounter < iNumberOnPlayersTeam; iCounter++ )
-	{
-		HandleSpreadOfTownOpinionForMercForSoldier( MercPtrs[ iCounter ] );
-	}
-}
-*/
