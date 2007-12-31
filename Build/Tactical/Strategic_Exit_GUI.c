@@ -121,8 +121,6 @@ static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalData)
 {
 	UINT32 uiTraverseTimeInMinutes;
-	SOLDIERTYPE *pSoldier;
-	INT32 i;
 	SGPRect	aRect;
 	UINT16	usTextBoxWidth, usTextBoxHeight;
 	UINT16	usMapPos = 0;
@@ -212,13 +210,9 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 	gExitDialog.ubNumPeopleOnSquad = NumberOfPlayerControllableMercsInSquad(sel->bAssignment);
 
 	//Determine
-	for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		pSoldier = MercPtrs[ i ];
-		if( i == gusSelectedSoldier )
-		{
-			continue;
-		}
+		if (pSoldier->ubID == gusSelectedSoldier) continue;
 		if( !pSoldier->fBetweenSectors &&
 				pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ &&
 				pSoldier->bLife >= OKLIFE &&
@@ -251,21 +245,18 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 		//Assuming that the matching squad assignment is in the same sector.
 		UINT8 ubNumMercs = 1; //selected soldier is a merc
 		UINT8 ubNumEPCs = 0;
-		for( i = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; i <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; i++ )
+		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if( i == gusSelectedSoldier )
+			if (s->ubID == gusSelectedSoldier) continue;
+			if (s->bAssignment == sel->bAssignment)
 			{
-				continue;
-			}
-			if (MercPtrs[i]->bAssignment == sel->bAssignment)
-			{
-				if( AM_AN_EPC( MercPtrs[ i ] ) )
+				if (AM_AN_EPC(s))
 				{
 					ubNumEPCs++;
 					//record the slot of the epc.  If there are more than one EPCs, then
 					//it doesn't matter.  This is used in building the text message explaining
 					//why the selected merc can't leave.  This is how we extract the EPC's name.
-					gExitDialog.bSingleMoveWillIsolateEPC = (INT8)i;
+					gExitDialog.bSingleMoveWillIsolateEPC = s->ubID;
 				}
 				else
 				{ //We have more than one merc, so we will allow the selected merc to leave alone if

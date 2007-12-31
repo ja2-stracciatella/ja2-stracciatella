@@ -1126,17 +1126,9 @@ void TurnOffEveryonesMuzzleFlashes( void )
 
 void TurnOffTeamsMuzzleFlashes( UINT8 ubTeam )
 {
-	UINT8						ubLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	for (ubLoop = gTacticalStatus.Team[ ubTeam ].bFirstID; ubLoop <= gTacticalStatus.Team[ ubTeam ].bLastID; ubLoop++)
+	FOR_ALL_IN_TEAM(s, ubTeam)
 	{
-		pSoldier = MercPtrs[ ubLoop ];
-
-		if ( pSoldier->fMuzzleFlash )
-		{
-			EndMuzzleFlash( pSoldier );
-		}
+		if (s->fMuzzleFlash) EndMuzzleFlash(s);
 	}
 }
 
@@ -1248,9 +1240,9 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
   }
 
 	// the player team now radios about all sightings
-	for ( uiLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; uiLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; uiLoop++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		HandleSight( MercPtrs[ uiLoop ], SIGHT_RADIO );      // looking was done above
+		HandleSight(s, SIGHT_RADIO); // looking was done above
 	}
 
 	if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
@@ -5400,7 +5392,6 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 
 void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 {
-	UINT32 uiLoop;
 	INT8 *pPersOL;           // pointer into soldier's opponent list
 	SOLDIERTYPE *pOpponent;
 
@@ -5410,14 +5401,13 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	if (pSoldier->bLife < OKLIFE)
 	{
 		// must make sure that public opplist is kept to match...
-		for ( uiLoop = 0; uiLoop < TOTAL_SOLDIERS; uiLoop++ )
+		FOR_ALL_SOLDIERS(tgt)
 		{
-			if ( pSoldier->bOppList[ uiLoop ] == SEEN_CURRENTLY )
+			if (pSoldier->bOppList[tgt->ubID] == SEEN_CURRENTLY)
 			{
-				HandleManNoLongerSeen( pSoldier, MercPtrs[ uiLoop ], &(pSoldier->bOppList[ uiLoop ]), &(gbPublicOpplist[ pSoldier->bTeam ][ uiLoop ]) );
+				HandleManNoLongerSeen(pSoldier, tgt, &pSoldier->bOppList[tgt->ubID], &gbPublicOpplist[pSoldier->bTeam][tgt->ubID]);
 			}
 		}
-	//void HandleManNoLongerSeen( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent, INT8 * pPersOL, INT8 * pbPublOL )
 
 		memset(pSoldier->bOppList,NOT_HEARD_OR_SEEN,sizeof(pSoldier->bOppList));
 		pSoldier->bOppCnt = 0;
@@ -5425,7 +5415,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	}
 
 	// man looks for each of his opponents WHO IS CURRENTLY SEEN
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; ++uiLoop)
 	{
 		pOpponent = MercSlots[ uiLoop ];
 
@@ -5921,15 +5911,13 @@ static BOOLEAN ArmyKnowsOfPlayersPresence(void)
 
 BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
 {
-	UINT8						ubID;
-
 	if (pSoldier->bOppCnt > 0)
 	{
-		for ( ubID = gTacticalStatus.Team[ CREATURE_TEAM ].bFirstID; ubID <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; ubID++ )
+		CFOR_ALL_IN_TEAM(tgt, CREATURE_TEAM)
 		{
-			if ( (pSoldier->bOppList[ ubID ] == SEEN_CURRENTLY) && (MercPtrs[ ubID ]->uiStatusFlags & SOLDIER_MONSTER) )
+			if (tgt->uiStatusFlags & SOLDIER_MONSTER && pSoldier->bOppList[tgt->ubID])
 			{
-				return( TRUE );
+				return TRUE;
 			}
 		}
 	}

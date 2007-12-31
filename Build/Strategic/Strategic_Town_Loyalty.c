@@ -639,8 +639,6 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	INT8 bTownId = 0;
 	INT32 iLoyaltyChange = 0;
 	INT8 bSeenState = 0;
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pCivSoldier = NULL;
 	UINT32 uiChanceFalseAccusal = 0;
 	INT8 bKillerTeam = 0;
 	BOOLEAN fIncrement = FALSE;
@@ -729,11 +727,8 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	// check if LOS between any civ, killer and killed
 	// if so, then do not adjust
 
-	for( iCounter = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; iCounter <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; iCounter++ )
+	FOR_ALL_IN_TEAM(pCivSoldier, CIV_TEAM)
 	{
-		// set current civ soldier
-		pCivSoldier = MercPtrs[ iCounter ];
-
 		if ( pCivSoldier == pSoldier )
 		{
 			continue;

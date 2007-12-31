@@ -801,18 +801,12 @@ void ExamineCurrentSquadLights( void )
 {
 	// rebuilds current squad to reset faces in tactical
 	INT32 iCounter = 0;
-	UINT8	ubLoop;
 
 	// OK, we should add lights for any guy currently bInSector who is not bad OKLIFE...
-	ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( MercPtrs[ ubLoop ]->bInSector && MercPtrs[ ubLoop ]->bLife >= OKLIFE )
-		{
-			PositionSoldierLight( MercPtrs[ ubLoop ] );
-		}
+		if (s->bInSector && s->bLife >= OKLIFE) PositionSoldierLight(s);
 	}
-
 
 	// check if valid value passed
 	//if( ( iCurrentTacticalSquad >= NUMBER_OF_SQUADS ) || ( iCurrentTacticalSquad < 0 ) )

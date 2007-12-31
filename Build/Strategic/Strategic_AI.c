@@ -3316,13 +3316,12 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		}
 		else
 		{ //We are in the basement sector, relocate queen to proper position.
-			INT32 i;
-			for( i = gTacticalStatus.Team[ CIV_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; i++ )
+			FOR_ALL_IN_TEAM(s, CIV_TEAM)
 			{
-				if( MercPtrs[ i ]->ubProfile == QUEEN )
+				if (s->ubProfile == QUEEN)
 				{ //Found queen, relocate her to 16866
 					BumpAnyExistingMerc( 16866 );
-					TeleportSoldier( MercPtrs[ i ], 16866, TRUE );
+					TeleportSoldier(s, 16866, TRUE);
 					break;
 				}
 			}

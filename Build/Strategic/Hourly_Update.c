@@ -87,16 +87,12 @@ void HandleHourlyUpdate()
 
 static void UpdateRegenCounters(void)
 {
-	UINT8	ubID;
-
-	for ( ubID = gTacticalStatus.Team[ gbPlayerNum ].bFirstID; ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubID++ )
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if ( MercPtrs[ ubID ]->bRegenBoostersUsedToday > 0 )
-		{
-			MercPtrs[ ubID ]->bRegenBoostersUsedToday--;
-		}
+		if (s->bRegenBoostersUsedToday > 0) --s->bRegenBoostersUsedToday;
 	}
 }
+
 
 void HandleQuarterHourUpdate()
 {

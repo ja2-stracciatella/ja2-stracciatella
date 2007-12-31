@@ -6569,17 +6569,16 @@ void InitializeTacticalStatusAtBattleStart(void)
 	ClearIntList();
 
 	// make sure none of our guys have leftover shock values etc
-	for (INT32 i = gTacticalStatus.Team[0].bFirstID; i <= gTacticalStatus.Team[0].bLastID; ++i)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		SOLDIERTYPE* const s = MercPtrs[i];
 		s->bShock      = 0;
 		s->bTilesMoved = 0;
 	}
 
 	// loop through everyone; clear misc flags
-	for (INT32 i = 0; i <= gTacticalStatus.Team[CIV_TEAM].bLastID; ++i)
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		MercPtrs[i]->ubMiscSoldierFlags = 0;
+		s->ubMiscSoldierFlags = 0;
 	}
 }
 

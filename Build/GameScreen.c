@@ -886,22 +886,14 @@ static void TacticalScreenLocateToSoldier(void)
 
 void UpdateTeamPanelAssignments( )
 {
-	INT32					cnt;
-	SOLDIERTYPE		*pSoldier;
-	INT16					bLastTeamID;
-
 	// Remove all players
 	RemoveAllPlayersFromSlot( );
 
-	// Set locator to first merc
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-	bLastTeamID = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= bLastTeamID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Setup team interface
-		CheckForAndAddMercToTeamPanel( pSoldier );
+		CheckForAndAddMercToTeamPanel(s);
 	}
-
 }
 
 

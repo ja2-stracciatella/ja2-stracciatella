@@ -378,7 +378,6 @@ static void SetUpAutoBandageUpdatePanel(void);
 void AutoBandage( BOOLEAN fStart )
 {
 	SGPRect					aRect;
-	UINT8						ubLoop;
 
 	if ( fStart )
 	{
@@ -452,16 +451,12 @@ void AutoBandage( BOOLEAN fStart )
 			}
 		}
 
-		ubLoop = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-		for ( ; ubLoop <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; ubLoop++)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			ActionDone( MercPtrs[ ubLoop ] );
+			ActionDone(s);
 
 			// If anyone is still doing aid animation, stop!
-			if ( MercPtrs[ ubLoop ]->usAnimState == GIVING_AID )
-			{
-				SoldierGotoStationaryStance( MercPtrs[ ubLoop ] );
-			}
+			if (s->usAnimState == GIVING_AID) SoldierGotoStationaryStance(s);
 		}
 
 		// UnLock UI!
