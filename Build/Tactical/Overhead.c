@@ -4632,11 +4632,10 @@ static BOOLEAN WeSawSomeoneThisTurn(void)
 
 static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
 	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
 
 	// Loop through all our guys and randomly say one from someone in our sector
+	SOLDIERTYPE* mercs_in_sector[20];
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Add guy if he's a candidate...
@@ -4646,18 +4645,15 @@ static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
 				!AM_A_ROBOT(s) &&
 				!s->fMercAsleep)
 		{
-			ubMercsInSector[ubNumMercs++] = s->ubID;
+			mercs_in_sector[ubNumMercs++] = s;
 		}
 	}
 
-	// If we are > 0
 	if ( ubNumMercs > 0 )
 	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		DoMercBattleSound(MercPtrs[ubChosenMerc], iBattleSnd); // XXX TODO000E
+		SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
+		DoMercBattleSound(chosen, iBattleSnd);
 	}
-
 }
 
 
