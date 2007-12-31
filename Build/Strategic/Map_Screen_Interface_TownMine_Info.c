@@ -36,7 +36,6 @@ BOOLEAN fShowTownInfo = FALSE;
 
 PopUpBox* ghTownMineBox;
 SGPPoint TownMinePosition ={ 300, 150 };
-SGPRect TownMineDimensions ={ 0, 0, 240, 60 };
 
 INT8 bCurrentTownMineSectorX = 0;
 INT8 bCurrentTownMineSectorY = 0;
@@ -205,7 +204,7 @@ void CreateDestroyTownInfoBox( void )
 
 static void CreateTownInfoBox(void)
 {
-	ghTownMineBox = CreatePopUpBox(TownMineDimensions, TownMinePosition, 0);
+	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0);
 
  // which buffer will box render to
  SetBoxBuffer(ghTownMineBox, FRAME_BUFFER);

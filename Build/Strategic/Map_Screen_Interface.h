@@ -215,21 +215,14 @@ extern INT32 giSleepHighLine;
 extern SGPVObject* guiUpdatePanelTactical;
 extern BOOLEAN fShowUpdateBox;
 
-extern SGPRect ContractDimensions;
 extern SGPPoint ContractPosition;
-extern SGPRect AttributeDimensions;
 extern SGPPoint AttributePosition;
-extern SGPRect TrainDimensions;
 extern SGPPoint TrainPosition;
-extern SGPRect VehicleDimensions;
 extern SGPPoint VehiclePosition;
-extern SGPRect AssignmentDimensions ;
 extern SGPPoint AssignmentPosition ;
 extern SGPPoint SquadPosition ;
-extern SGPRect SquadDimensions ;
 
 extern SGPPoint RepairPosition;
-extern SGPRect RepairDimensions;
 
 extern SGPPoint OrigContractPosition;
 extern SGPPoint OrigAttributePosition;

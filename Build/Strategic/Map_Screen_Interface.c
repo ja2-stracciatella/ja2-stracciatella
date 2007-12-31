@@ -317,22 +317,15 @@ BOOLEAN fShowRemoveMenu =  FALSE;
 BOOLEAN fRebuildMoveBox = FALSE;
 
 // positions for all the pop up boxes
-SGPRect ContractDimensions={0,0,140,60};
 SGPPoint ContractPosition={120,50};
-SGPRect AttributeDimensions={0,0,100,95};
 SGPPoint AttributePosition={220,150};
-SGPRect TrainDimensions={0,0,100,95};
 SGPPoint TrainPosition={160,150};
-SGPRect VehicleDimensions={0,0,80,60};
 SGPPoint VehiclePosition={160,150};
 
 SGPPoint RepairPosition={160,150};
-SGPRect RepairDimensions={0,0,80,80};
 
-SGPRect AssignmentDimensions = { 0,0, 100, 95};
 SGPPoint AssignmentPosition = { 120, 150 };
 SGPPoint SquadPosition ={ 160, 150 };
-SGPRect SquadDimensions ={ 0, 0, 140, 60 };
 
 SGPPoint OrigContractPosition={120,50};
 SGPPoint OrigAttributePosition={220,150};
@@ -3225,7 +3218,7 @@ static void CreatePopUpBoxForMovementBox(void)
 
 	// create the pop up box and mouse regions for movement list
 
-	ghMoveBox = CreatePopUpBox(AssignmentDimensions, MovePosition, POPUP_BOX_FLAG_RESIZE);
+	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE);
 
  // which buffer will box render to
  SetBoxBuffer(ghMoveBox, FRAME_BUFFER);

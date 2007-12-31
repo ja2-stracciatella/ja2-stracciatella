@@ -7010,9 +7010,9 @@ static void RestorePopUpBoxes(void)
 }
 
 
-static PopUpBox* MakeBox(const SGPRect dim, const SGPPoint pos, const UINT32 flags)
+static PopUpBox* MakeBox(const SGPPoint pos, const UINT32 flags)
 {
-	PopUpBox* const box = CreatePopUpBox(dim, pos, flags | POPUP_BOX_FLAG_RESIZE);
+	PopUpBox* const box = CreatePopUpBox(pos, flags | POPUP_BOX_FLAG_RESIZE);
 	SetBoxBuffer(box, FRAME_BUFFER);
 	SetBorderType(box, guiPOPUPBORDERS);
 	SetBackGroundSurface(box, guiPOPUPTEX);
@@ -7033,7 +7033,7 @@ static void CreateSquadBox(void)
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
-	PopUpBox* const box = MakeBox(SquadDimensions, SquadPosition, 0);
+	PopUpBox* const box = MakeBox(SquadPosition, 0);
 	ghSquadBox = box;
 
 	uiMaxSquad = GetLastSquadListedInSquadMenu();
@@ -7074,7 +7074,7 @@ static void CreateEPCBox(void)
 	SGPPoint pPoint;
 	SGPRect pDimensions;
 
-	PopUpBox* const box = MakeBox(SquadDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
 
 	for (INT32 iCount = 0; iCount < MAX_EPC_MENU_STRING_COUNT; ++iCount)
@@ -7179,14 +7179,14 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 
 static PopUpBox* CreateVehicleBox(void)
 {
-	ghVehicleBox = MakeBox(VehicleDimensions, VehiclePosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghVehicleBox = MakeBox(VehiclePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	return ghVehicleBox;
 }
 
 
 static PopUpBox* CreateRepairBox(void)
 {
-	ghRepairBox = MakeBox(RepairDimensions, RepairPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	ghRepairBox = MakeBox(RepairPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	return ghRepairBox;
 }
 
@@ -7203,7 +7203,7 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 		ContractPosition.iX = giBoxY;
 	}
 
-	PopUpBox* const box = MakeBox(ContractDimensions, ContractPosition, 0);
+	PopUpBox* const box = MakeBox(ContractPosition, 0);
 	ghContractBox = box;
 
 	// not null character?
@@ -7274,7 +7274,7 @@ static void CreateAttributeBox(void)
 	// update screen assignment positions
 	UpdateMapScreenAssignmentPositions();
 
-	PopUpBox* const box = MakeBox(AttributeDimensions, AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	PopUpBox* const box = MakeBox(AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAttributeBox = box;
 
 	// add strings for box
@@ -7300,7 +7300,7 @@ static void CreateTrainingBox(void)
 		TrainPosition.iY = giBoxY + ASSIGN_MENU_TRAIN * GetFontHeight(MAP_SCREEN_FONT);
 	}
 
-	PopUpBox* const box = MakeBox(TrainDimensions, TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	PopUpBox* const box = MakeBox(TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghTrainingBox = box;
 
 	// add strings for box
@@ -7331,7 +7331,7 @@ static void CreateAssignmentsBox(void)
 	SOLDIERTYPE* const pSoldier = GetSelectedAssignSoldier(TRUE);
 	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
 
-	PopUpBox* const box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAssignmentBox = box;
 
 	// add strings for box
@@ -7364,7 +7364,7 @@ static void CreateAssignmentsBox(void)
 void CreateMercRemoveAssignBox( void )
 {
 	// will create remove mercbox to be placed in assignment area
-	PopUpBox* const box = MakeBox(AssignmentDimensions, AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
+	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghRemoveMercAssignBox = box;
 
 	// add strings for box

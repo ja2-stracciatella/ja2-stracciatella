@@ -88,7 +88,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPRect Dimensions, const SGPPoint Position, const UINT32 uiFlags)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -100,8 +100,6 @@ PopUpBox* CreatePopUpBox(const SGPRect Dimensions, const SGPPoint Position, cons
 			memset(box, 0, sizeof(*box));
 
 			SetBoxPosition(box, Position);
-			box->pos.w   = Dimensions.iRight;
-			box->pos.h   = Dimensions.iBottom;
 			box->uiFlags = uiFlags;
 
 			*i = box;

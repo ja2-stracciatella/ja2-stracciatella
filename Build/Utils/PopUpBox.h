@@ -11,7 +11,7 @@
 
 #define NO_POPUP_BOX NULL
 
-PopUpBox* CreatePopUpBox(SGPRect Dimensions, SGPPoint Position, UINT32 uiFlags);
+PopUpBox* CreatePopUpBox(SGPPoint Position, UINT32 uiFlags);
 
 void SetMargins(PopUpBox*, UINT32 uiLeft, UINT32 uiTop, UINT32 uiBottom, UINT32 uiRight);
 UINT32 GetTopMarginSize(const PopUpBox*);
