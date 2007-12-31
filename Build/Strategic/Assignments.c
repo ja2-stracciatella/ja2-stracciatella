@@ -4135,7 +4135,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 			if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
 			{
 				// add mouse region for each accessible vehicle
-				MOUSE_REGION* const r =  &gVehicleMenuRegion[uiMenuLine];
+				MOUSE_REGION* const r = &gVehicleMenuRegion[uiMenuLine];
 				const UINT16        x = iBoxXPosition;
 				const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine;
 				const UINT16        w = iBoxWidth;
@@ -7172,6 +7172,7 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	AddMonoString(box, pSquadMenuStrings[SQUAD_MENU_CANCEL]);
 
 	SetBoxTextAttrs(ghVehicleBox);
+	ResizeBoxToText(box);
 
 	return fVehiclePresent;
 }
