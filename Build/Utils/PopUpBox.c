@@ -27,8 +27,7 @@ typedef struct PopUpString {
 
 struct PopUpBox
 {
-	SGPRect  Dimensions;
-	SGPPoint Position;
+	SGPBox pos;
 	UINT32 uiLeftMargin;
 	UINT32 uiRightMargin;
 	UINT32 uiBottomMargin;
@@ -85,10 +84,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 	box->uiBoxMinWidth = iMinWidth;
 
 	// check if the box is currently too small
-	if (box->Dimensions.iRight < iMinWidth)
-	{
-		box->Dimensions.iRight = iMinWidth;
-	}
+	if (box->pos.w < iMinWidth) box->pos.w = iMinWidth;
 }
 
 
@@ -104,8 +100,9 @@ PopUpBox* CreatePopUpBox(const SGPRect Dimensions, const SGPPoint Position, cons
 			memset(box, 0, sizeof(*box));
 
 			SetBoxPosition(box, Position);
-			box->Dimensions = Dimensions;
-			box->uiFlags    = uiFlags;
+			box->pos.w   = Dimensions.iRight;
+			box->pos.h   = Dimensions.iBottom;
+			box->uiFlags = uiFlags;
 
 			*i = box;
 			return box;
@@ -188,22 +185,25 @@ void SetBoxBuffer(PopUpBox* const box, SGPVSurface* const buffer)
 
 void SetBoxPosition(PopUpBox* const box, const SGPPoint Position)
 {
-	box->Position.iX = Position.iX;
-	box->Position.iY = Position.iY;
-	box->fUpdated    = FALSE;
+	box->pos.x    = Position.iX;
+	box->pos.y    = Position.iY;
+	box->fUpdated = FALSE;
 }
 
 
 void GetBoxPosition(const PopUpBox* const box, SGPPoint* const Position)
 {
-	Position->iX = box->Position.iX;
-	Position->iY = box->Position.iY;
+	Position->iX = box->pos.x;
+	Position->iY = box->pos.y;
 }
 
 
 void GetBoxSize(const PopUpBox* const box, SGPRect* const dimensions)
 {
-	*dimensions = box->Dimensions;
+	dimensions->iLeft   = 0;
+	dimensions->iTop    = 0;
+	dimensions->iRight  = box->pos.w;
+	dimensions->iBottom = box->pos.h;
 }
 
 
@@ -564,13 +564,13 @@ void ForceUpDateOfBox(PopUpBox* const box)
 
 static void DrawBox(const PopUpBox* const box)
 {
-	const UINT16 x = box->Position.iX;
-	const UINT16 y = box->Position.iY;
-	UINT16       w = box->Dimensions.iRight  - box->Dimensions.iLeft;
-	const UINT16 h = box->Dimensions.iBottom - box->Dimensions.iTop;
+	const UINT16 x = box->pos.x;
+	const UINT16 y = box->pos.y;
+	UINT16       w = box->pos.w;
+	const UINT16 h = box->pos.h;
 
 	// make sure it will fit on screen!
-	Assert(x + w  < SCREEN_WIDTH);
+	Assert(x + w < SCREEN_WIDTH);
 	Assert(y + h < SCREEN_HEIGHT);
 
 	// subtract 4 because the 2 2-pixel corners are handled separately
@@ -630,11 +630,11 @@ static void DrawBox(const PopUpBox* const box)
 static void DrawBoxText(const PopUpBox* const box)
 {
 	const UINT32 font = box->font;
-	const INT32  tlx  = box->Position.iX + box->uiLeftMargin;
-	const INT32  tly  = box->Position.iY + box->uiTopMargin;
-	const INT32  brx  = box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin;
-	const INT32  bry  = box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin;
-	const INT32  w    = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+	const INT32  tlx  = box->pos.x + box->uiLeftMargin;
+	const INT32  tly  = box->pos.y + box->uiTopMargin;
+	const INT32  brx  = box->pos.x + box->pos.w - box->uiRightMargin;
+	const INT32  bry  = box->pos.y + box->pos.h - box->uiBottomMargin;
+	const INT32  w    = box->pos.w - (box->uiRightMargin + box->uiLeftMargin + 2);
 	const INT32  h    = GetFontHeight(font);
 
 	SetFont(font);
@@ -753,9 +753,9 @@ void ResizeBoxToText(PopUpBox* const box)
 
 	UINT32 w = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;;
 	if (w < box->uiBoxMinWidth) w = box->uiBoxMinWidth;
-	box->Dimensions.iRight = w;
+	box->pos.w = w;
 
-	box->Dimensions.iBottom = box->uiTopMargin + i * (GetFontHeight(font) + box->uiLineSpace) + box->uiBottomMargin;
+	box->pos.h = box->uiTopMargin + i * (GetFontHeight(font) + box->uiLineSpace) + box->uiBottomMargin;
 }
 
 
