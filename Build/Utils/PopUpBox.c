@@ -299,27 +299,6 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 }
 
 
-static void ResizeBoxForSecondStrings(PopUpBox* const box)
-{
-	const UINT32 uiBaseWidth = box->uiLeftMargin + box->uiSecondColumnMinimunOffset;
-	const UINT32 font        = box->font;
-
-	// check string sizes
-	for (INT32 iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; ++iCounter)
-	{
-		const PopUpString* const line = box->Text[iCounter];
-		if (line)
-		{
-			const UINT32 uiThisWidth = uiBaseWidth + StringPixLength(line->pString, font);
-			if (uiThisWidth > box->uiSecondColumnCurrentOffset)
-			{
-				box->uiSecondColumnCurrentOffset = uiThisWidth;
-			}
-		}
-	}
-}
-
-
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox* const box)
 {
 	INT32 iCounter = 0;
@@ -759,45 +738,30 @@ static void DrawBoxText(const PopUpBox* const box)
 
 void ResizeBoxToText(PopUpBox* const box)
 {
-	// run through lines of text in box and size box width to longest line plus margins
-	// height is sum of getfontheight of each line+ spacing
 	const UINT32 font = box->font;
-	INT32 iWidth=0;
-	INT32 iHeight=0;
-	INT32 iCurrString=0;
-	INT32 iSecondColumnLength = 0;
-
-	ResizeBoxForSecondStrings(box);
-
-	iHeight = box->uiTopMargin + box->uiBottomMargin;
-
-	for ( iCurrString = 0; iCurrString < MAX_POPUP_BOX_STRING_COUNT; iCurrString++ )
+	UINT32 max_lw = 0; // width of left  column
+	UINT32 max_rw = 0; // width of right column
+	UINT i;
+	for (i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
 	{
-		if (box->Text[iCurrString] != NULL)
-		{
-			if (box->pSecondColumnString[iCurrString] != NULL)
-			{
-				iSecondColumnLength = StringPixLength(box->pSecondColumnString[iCurrString]->pString, font);
-				if (box->uiSecondColumnCurrentOffset + iSecondColumnLength + box->uiLeftMargin + box->uiRightMargin > (UINT32)iWidth)
-				{
-					iWidth = box->uiSecondColumnCurrentOffset + iSecondColumnLength + box->uiLeftMargin + box->uiRightMargin;
-				}
-			}
+		const PopUpString* const l = box->Text[i];
+		if (l == NULL) break;
 
-			if (StringPixLength(box->Text[iCurrString]->pString, font) + box->uiLeftMargin + box->uiRightMargin > (UINT32)iWidth)
-				iWidth = StringPixLength(box->Text[iCurrString]->pString, font) + box->uiLeftMargin + box->uiRightMargin;
+		const UINT32 lw = StringPixLength(l->pString, font);
+		if (lw > max_lw) max_lw = lw;
 
-			//vertical
-			iHeight += GetFontHeight(font) + box->uiLineSpace;
-		}
-		else
+		const PopUpString* const r = box->pSecondColumnString[i];
+		if (r != NULL)
 		{
-			// doesn't support gaps in text array...
-			break;
+			const UINT32 rw = StringPixLength(r->pString, font);
+			if (rw > max_rw) max_rw = rw;
 		}
 	}
-	box->Dimensions.iBottom = iHeight;
-	box->Dimensions.iRight  = iWidth;
+
+	const UINT32 r_off = max_lw + box->uiSecondColumnMinimunOffset;
+	box->uiSecondColumnCurrentOffset = r_off;
+	box->Dimensions.iRight           = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;
+	box->Dimensions.iBottom          = box->uiTopMargin + i * (GetFontHeight(font) + box->uiLineSpace) + box->uiBottomMargin;
 }
 
 
