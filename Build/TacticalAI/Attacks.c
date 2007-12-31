@@ -171,12 +171,10 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 
 	 if ( (pSoldier->uiStatusFlags & SOLDIER_MONSTER) && (pSoldier->ubBodyType != QUEENMONSTER ) )
 	 {
-			STRUCTURE_FILE_REF *	pStructureFileRef;
 			UINT16								usAnimSurface;
 
 			usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, pSoldier->usUIMovementMode );
-			pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface,pSoldier->usUIMovementMode  );
-
+			const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface,pSoldier->usUIMovementMode);
 			if ( pStructureFileRef )
 			{
 				UINT16		usStructureID;

@@ -303,7 +303,6 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 				{
 					BOOLEAN fDirectionFound = FALSE;
 					UINT16	usOKToAddStructID;
-					STRUCTURE_FILE_REF * pStructureFileRef;
 					UINT16							 usAnimSurface;
 
 					if ( pSoldier->pLevelNode != NULL )
@@ -325,12 +324,8 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 					// Get animation surface...
 			 		usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
 					// Get structure ref...
-					pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usAnimState );
-
-					if( !pStructureFileRef )
-					{
-						Assert( 0 );
-					}
+					const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
+					Assert(pStructureFileRef);
 
 					// Check each struct in each direction
 					for( cnt3 = 0; cnt3 < 8; cnt3++ )
@@ -467,7 +462,6 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 				{
 					BOOLEAN fDirectionFound = FALSE;
 					UINT16	usOKToAddStructID;
-					STRUCTURE_FILE_REF * pStructureFileRef;
 					UINT16							 usAnimSurface;
 
 					if ( pSoldier->pLevelNode != NULL )
@@ -489,12 +483,8 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 					// Get animation surface...
 			 		usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
 					// Get structure ref...
-					pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usAnimState );
-
-					if( !pStructureFileRef )
-					{
-						Assert( 0 );
-					}
+					const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
+					Assert(pStructureFileRef);
 
           // OK, check the perfered given direction first
 					if (OkayToAddStructureToWorld(sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(bGivenDirection)], usOKToAddStructID))
@@ -635,7 +625,6 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 				{
 					BOOLEAN fDirectionFound = FALSE;
 					UINT16	usOKToAddStructID;
-					STRUCTURE_FILE_REF * pStructureFileRef;
 					UINT16							 usAnimSurface;
 
 					if ( fClosestToMerc != 3 )
@@ -652,7 +641,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 						// Get animation surface...
 			 			usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
 						// Get structure ref...
-						pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usAnimState );
+						const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
 
 						// Check each struct in each direction
 						for( cnt3 = 0; cnt3 < 8; cnt3++ )

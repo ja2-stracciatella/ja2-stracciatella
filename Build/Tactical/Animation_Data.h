@@ -539,7 +539,7 @@ BOOLEAN UnLoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex );
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
 
 
-STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
+STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* s, UINT16 usSurfaceIndex, UINT16 usAnimState);
 
 // Profile data
 ANIM_PROF		*gpAnimProfiles;

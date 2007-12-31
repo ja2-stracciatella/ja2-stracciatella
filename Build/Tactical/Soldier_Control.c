@@ -4146,7 +4146,6 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 	INT8										bCurrentDirection;
 	INT8										bLoop;
 	UINT16									usStructureID, usAnimSurface;
-	STRUCTURE_FILE_REF *		pStructureFileRef;
 	BOOLEAN									fOk = FALSE;
 
 	// start by trying to turn in quickest direction
@@ -4154,7 +4153,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, pSoldier->usUIMovementMode );
 
-	pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, pSoldier->usUIMovementMode );
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, pSoldier->usUIMovementMode);
 	if ( !pStructureFileRef )
 	{
 		// without structure data, well, assume quickest direction
@@ -8437,7 +8436,6 @@ BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier )
 BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8 bNewStance)
 {
 	UINT16								usOKToAddStructID=0;
-	STRUCTURE_FILE_REF		*pStructureFileRef;
 	UINT16								usAnimSurface=0;
 	UINT16								usAnimState;
 
@@ -8523,8 +8521,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier,  usAnimState );
 
 	// Get structure ref........
-	pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usAnimState );
-
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
 	if ( pStructureFileRef != NULL )
 	{
 		// Can we add structure data for this stance...?

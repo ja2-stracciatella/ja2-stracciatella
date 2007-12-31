@@ -601,7 +601,7 @@ BOOLEAN DeInitAnimationSystem( )
 }
 
 
-static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState, BOOLEAN fUseAbsolute)
+static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(const SOLDIERTYPE* const s, const UINT16 usSurfaceIndex, const UINT16 usAnimState, const BOOLEAN fUseAbsolute)
 {
 	INT8	bStructDataType;
 
@@ -620,19 +620,25 @@ static STRUCTURE_FILE_REF* InternalGetAnimationStructureRef(UINT16 usSoldierID, 
 	// ATE: Alright - we all hate exception coding but ness here...
 	// return STANDING struct for these - which start standing but end prone
 	// CJC August 14 2002: added standing burst hit to this list
-	if ( ( usAnimState == FALLFORWARD_FROMHIT_STAND || usAnimState == GENERIC_HIT_STAND ||
-			 usAnimState == FALLFORWARD_FROMHIT_CROUCH || usAnimState == STANDING_BURST_HIT ) && !fUseAbsolute )
+	if (!fUseAbsolute)
 	{
-		return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ S_STRUCT ].pStructureFileRef );
+		switch (usAnimState)
+		{
+			case FALLFORWARD_FROMHIT_STAND:
+			case GENERIC_HIT_STAND:
+			case FALLFORWARD_FROMHIT_CROUCH:
+			case STANDING_BURST_HIT:
+				bStructDataType = S_STRUCT;
+		}
 	}
 
-	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ bStructDataType ].pStructureFileRef );
+	return gAnimStructureDatabase[s->ubBodyType][bStructDataType].pStructureFileRef;
 }
 
 
-STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
+STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* const s, const UINT16 usSurfaceIndex, const UINT16 usAnimState)
 {
-	return( InternalGetAnimationStructureRef( usSoldierID, usSurfaceIndex, usAnimState, FALSE ) );
+	return InternalGetAnimationStructureRef(s, usSurfaceIndex, usAnimState, FALSE);
 }
 
 
@@ -654,8 +660,6 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 	else
 	{
 		// Load into memory
-		STRUCTURE_FILE_REF		*pStructureFileRef;
-
 		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
 
 		const char* Filename = gAnimSurfaceDatabase[usSurfaceIndex].Filename;
@@ -692,8 +696,7 @@ BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 
 		}
 
 		// get structure data if any
-		pStructureFileRef = InternalGetAnimationStructureRef( usSoldierID, usSurfaceIndex, usAnimState, TRUE );
-
+		STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
 		if ( pStructureFileRef != NULL )
 		{
 			INT16 sStartFrame = 0;

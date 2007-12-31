@@ -1375,7 +1375,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier
 	pSoldier->pLevelNode->pStructureData = NULL;
 
 	// Now check if we are multi-tiled!
-	const STRUCTURE_FILE_REF* pStructureFileRef = GetAnimationStructureRef(pSoldier->ubID, usAnimSurface, usAnimState);
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
 	if (pStructureFileRef != NULL)
 	{
 		BOOLEAN fReturn;
@@ -1428,7 +1428,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 		}
 
 		// Now check if we have multi-tile info!
-		const STRUCTURE_FILE_REF* pStructFileRef = GetAnimationStructureRef(pSoldier->ubID, usAnimSurface, pSoldier->usAnimState);
+		const STRUCTURE_FILE_REF* const pStructFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, pSoldier->usAnimState);
 		if (pStructFileRef != NULL)
 		{
 			//Try adding struct to this location, if we can it's good!

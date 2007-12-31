@@ -695,7 +695,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		// Chris_C... change this to use parameter.....
 		usAnimSurface = DetermineSoldierAnimationSurface( s, usMovementMode );
 		// Get structure ref...
-		pStructureFileRef = GetAnimationStructureRef( s->ubID, usAnimSurface, usMovementMode );
+		pStructureFileRef = GetAnimationStructureRef(s, usAnimSurface, usMovementMode);
 
 		if ( pStructureFileRef )
 		{

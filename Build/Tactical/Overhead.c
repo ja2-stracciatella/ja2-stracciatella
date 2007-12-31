@@ -3353,7 +3353,7 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 		// Get animation surface...
 		const UINT16 usAnimSurface = DetermineSoldierAnimationSurface(pCurrSoldier, pCurrSoldier->usUIMovementMode);
 		// Get structure ref...
-		const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pCurrSoldier->ubID, usAnimSurface, pCurrSoldier->usUIMovementMode);
+		const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pCurrSoldier, usAnimSurface, pCurrSoldier->usUIMovementMode);
 
 		// opposite directions should be mirrors, so only check 4
 		if (pStructureFileRef)
@@ -3457,7 +3457,7 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 		// Get animation surface...
 		const UINT16 usAnimSurface = DetermineSoldierAnimationSurface(pCurrSoldier, pCurrSoldier->usUIMovementMode);
 		// Get structure ref...
-		const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pCurrSoldier->ubID, usAnimSurface, pCurrSoldier->usUIMovementMode);
+		const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pCurrSoldier, usAnimSurface, pCurrSoldier->usUIMovementMode);
 		if (pStructureFileRef)
 		{
 			// use the specified direction for checks

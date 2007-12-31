@@ -3592,7 +3592,6 @@ static BOOLEAN HandleUnjamAnimation(SOLDIERTYPE* pSoldier)
 
 BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bTestDirection, UINT16 usAnimState )
 {
-	STRUCTURE_FILE_REF *	pStructureFileRef;
 	UINT16								usAnimSurface;
 
 	// How are the movement costs?
@@ -3614,8 +3613,7 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 	}
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
-	pStructureFileRef = GetAnimationStructureRef( pSoldier->ubID, usAnimSurface, usAnimState );
-
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
 	if ( pStructureFileRef )
 	{
 		UINT16		usStructureID;
