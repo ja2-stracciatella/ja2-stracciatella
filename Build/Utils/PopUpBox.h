@@ -26,7 +26,7 @@ void GetBoxSize(const PopUpBox*, SGPRect* dimensions);
 void SetBorderType(PopUpBox*, const SGPVObject* border);
 void SetBackGroundSurface(PopUpBox*, SGPVSurface*);
 void AddMonoString(PopUpBox*, const wchar_t* pString);
-void SetBoxFont(PopUpBox*, UINT32 uiFont);
+void SetBoxFont(PopUpBox*, UINT32 font);
 UINT32 GetBoxFont(const PopUpBox*);
 void SetBoxForeground(PopUpBox*, UINT8 ubColor);
 void SetBoxBackground(PopUpBox*, UINT8 ubColor);
@@ -66,9 +66,6 @@ void HideAllBoxes( void );
 
 // add a second column monochrome string
 void AddSecondColumnMonoString(PopUpBox*, const wchar_t* pString);
-
-// set the 2nd column font for this box
-void SetBoxSecondColumnFont(PopUpBox*, UINT32 uiFont);
 
 // set the minimum offset
 void SetBoxSecondColumnMinimumOffset(PopUpBox*, UINT32 uiWidth);

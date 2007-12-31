@@ -149,7 +149,6 @@ void CreateDestroyTownInfoBox( void )
 		SetBoxSecondColumnBackground( ghTownMineBox, FONT_BLACK );
 		SetBoxSecondColumnHighLight( ghTownMineBox, FONT_WHITE );
 		SetBoxSecondColumnShade( ghTownMineBox, FONT_BLACK );
-		SetBoxSecondColumnFont( ghTownMineBox, BLOCKFONT2 );
 		SetBoxSecondColumnMinimumOffset( ghTownMineBox, 20 );
 
 		// unhighlighted color

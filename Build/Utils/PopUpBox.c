@@ -20,7 +20,6 @@ typedef struct PopUpString {
 	UINT8 ubHighLight;
 	UINT8 ubShade;
 	UINT8 ubSecondaryShade;
-	UINT32 uiFont;
 	BOOLEAN fHighLightFlag;
 	BOOLEAN fShadeFlag;
 	BOOLEAN fSecondaryShadeFlag;
@@ -44,6 +43,7 @@ struct PopUpBox
 	UINT32 uiBoxMinWidth;
 	BOOLEAN fUpdated;
 	BOOLEAN fShowBox;
+	UINT32  font;
 
 	PopUpString* Text[MAX_POPUP_BOX_STRING_COUNT];
 	PopUpString* pSecondColumnString[MAX_POPUP_BOX_STRING_COUNT];
@@ -302,6 +302,7 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 static void ResizeBoxForSecondStrings(PopUpBox* const box)
 {
 	const UINT32 uiBaseWidth = box->uiLeftMargin + box->uiSecondColumnMinimunOffset;
+	const UINT32 font        = box->font;
 
 	// check string sizes
 	for (INT32 iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; ++iCounter)
@@ -309,7 +310,7 @@ static void ResizeBoxForSecondStrings(PopUpBox* const box)
 		const PopUpString* const line = box->Text[iCounter];
 		if (line)
 		{
-			const UINT32 uiThisWidth = uiBaseWidth + StringPixLength(line->pString, line->uiFont);
+			const UINT32 uiThisWidth = uiBaseWidth + StringPixLength(line->pString, font);
 			if (uiThisWidth > box->uiSecondColumnCurrentOffset)
 			{
 				box->uiSecondColumnCurrentOffset = uiThisWidth;
@@ -334,20 +335,9 @@ UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox* const box)
 }
 
 
-
-void SetBoxFont(PopUpBox* const box, const UINT32 uiFont)
+void SetBoxFont(PopUpBox* const box, const UINT32 font)
 {
-	UINT32 uiCounter;
-	for ( uiCounter = 0; uiCounter < MAX_POPUP_BOX_STRING_COUNT; uiCounter++ )
-	{
-		if (box->Text[uiCounter] != NULL)
-		{
-			box->Text[uiCounter]->uiFont = uiFont;
-		}
-	}
-
-	// set up the 2nd column font
-	SetBoxSecondColumnFont(box, uiFont);
+	box->font     = font;
 	box->fUpdated = FALSE;
 }
 
@@ -358,25 +348,9 @@ void SetBoxSecondColumnMinimumOffset(PopUpBox* const box, const UINT32 uiWidth)
 }
 
 
-void SetBoxSecondColumnFont(PopUpBox* const box, const UINT32 uiFont)
-{
-	UINT32 iCounter = 0;
-	for (iCounter = 0; iCounter < MAX_POPUP_BOX_STRING_COUNT; iCounter++)
-	{
-		if (box->pSecondColumnString[iCounter])
-		{
-			box->pSecondColumnString[iCounter]->uiFont = uiFont;
-		}
-	}
-
-	box->fUpdated = FALSE;
-}
-
-
 UINT32 GetBoxFont(const PopUpBox* const box)
 {
-	// return font id of first line of text of box
-	return box->Text[0]->uiFont;
+	return box->font;
 }
 
 
@@ -686,12 +660,15 @@ static void DrawBox(const PopUpBox* const box)
 
 static void DrawBoxText(const PopUpBox* const box)
 {
-	const INT32 tlx = box->Position.iX + box->uiLeftMargin;
-	const INT32 tly = box->Position.iY + box->uiTopMargin;
-	const INT32 brx = box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin;
-	const INT32 bry = box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin;
-	const INT32 w   = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+	const UINT32 font = box->font;
+	const INT32  tlx  = box->Position.iX + box->uiLeftMargin;
+	const INT32  tly  = box->Position.iY + box->uiTopMargin;
+	const INT32  brx  = box->Position.iX + box->Dimensions.iRight  - box->uiRightMargin;
+	const INT32  bry  = box->Position.iY + box->Dimensions.iBottom - box->uiBottomMargin;
+	const INT32  w    = box->Dimensions.iRight - (box->uiRightMargin + box->uiLeftMargin + 2);
+	const INT32  h    = GetFontHeight(font);
 
+	SetFont(font);
 	SetFontDestBuffer(box->uiBuffer, tlx - 1, tly, brx, bry);
 
 	for (UINT32 i = 0; i < MAX_POPUP_BOX_STRING_COUNT; ++i)
@@ -700,8 +677,6 @@ static void DrawBoxText(const PopUpBox* const box)
 		const PopUpString* const text = box->Text[i];
 		if (text)
 		{
-			SetFont(text->uiFont);
-
 			// are we highlighting?...shading?..or neither
 			if (text->fHighLightFlag)
 			{
@@ -722,13 +697,12 @@ static void DrawBoxText(const PopUpBox* const box)
 
 			SetFontBackground(text->ubBackgroundColor);
 
-			const INT32 h = GetFontHeight(text->uiFont);
 			const INT32 y = tly + i * (h + box->uiLineSpace);
 			INT16 uX;
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates(tlx, y, w, h, text->pString, text->uiFont, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, text->pString, font, &uX, &uY);
 			}
 			else
 			{
@@ -742,8 +716,6 @@ static void DrawBoxText(const PopUpBox* const box)
 		const PopUpString* const second = box->pSecondColumnString[i];
 		if (second)
 		{
-			SetFont(second->uiFont);
-
 			// are we highlighting?...shading?..or neither
 			if (second->fHighLightFlag)
 			{
@@ -760,13 +732,12 @@ static void DrawBoxText(const PopUpBox* const box)
 
 			SetFontBackground(second->ubBackgroundColor);
 
-			const INT32 h = GetFontHeight(second->uiFont);
 			const INT32 y = tly + i * (h + box->uiLineSpace);
 			INT16 uX;
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates(tlx, y, w, h, second->pString, second->uiFont, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, second->pString, font, &uX, &uY);
 			}
 			else
 			{
@@ -790,6 +761,7 @@ void ResizeBoxToText(PopUpBox* const box)
 {
 	// run through lines of text in box and size box width to longest line plus margins
 	// height is sum of getfontheight of each line+ spacing
+	const UINT32 font = box->font;
 	INT32 iWidth=0;
 	INT32 iHeight=0;
 	INT32 iCurrString=0;
@@ -805,18 +777,18 @@ void ResizeBoxToText(PopUpBox* const box)
 		{
 			if (box->pSecondColumnString[iCurrString] != NULL)
 			{
-				iSecondColumnLength = StringPixLength(box->pSecondColumnString[iCurrString]->pString, box->pSecondColumnString[iCurrString]->uiFont);
+				iSecondColumnLength = StringPixLength(box->pSecondColumnString[iCurrString]->pString, font);
 				if (box->uiSecondColumnCurrentOffset + iSecondColumnLength + box->uiLeftMargin + box->uiRightMargin > (UINT32)iWidth)
 				{
 					iWidth = box->uiSecondColumnCurrentOffset + iSecondColumnLength + box->uiLeftMargin + box->uiRightMargin;
 				}
 			}
 
-			if (StringPixLength(box->Text[iCurrString]->pString, box->Text[iCurrString]->uiFont) + box->uiLeftMargin + box->uiRightMargin > (UINT32)iWidth)
-				iWidth = StringPixLength(box->Text[iCurrString]->pString, box->Text[iCurrString]->uiFont) + box->uiLeftMargin + box->uiRightMargin;
+			if (StringPixLength(box->Text[iCurrString]->pString, font) + box->uiLeftMargin + box->uiRightMargin > (UINT32)iWidth)
+				iWidth = StringPixLength(box->Text[iCurrString]->pString, font) + box->uiLeftMargin + box->uiRightMargin;
 
 			//vertical
-			iHeight += GetFontHeight(box->Text[iCurrString]->uiFont) + box->uiLineSpace;
+			iHeight += GetFontHeight(font) + box->uiLineSpace;
 		}
 		else
 		{
