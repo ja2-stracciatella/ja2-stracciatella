@@ -60,7 +60,7 @@ typedef struct
 	UINT8							ubLeaveSectorCode;
 	UINT8							ubDirection;
 	UINT8							ubNumPeopleOnSquad;
-	INT8							bSingleMoveWillIsolateEPC; //if not -1, then that means the slot number is an EPC
+	const SOLDIERTYPE* single_move_will_isolate_epc; //if not NULL, then that means it is an EPC
 	INT8							bHandled;
 	BOOLEAN						fRender;
 	BOOLEAN						fGotoSector;
@@ -129,7 +129,6 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	//STEP 1:  Calculate the information for the exit gui
 	memset( &gExitDialog, 0, sizeof( EXIT_DIALOG_STRUCT ) );
-	gExitDialog.bSingleMoveWillIsolateEPC = -1;
 
 	// OK, bring up dialogue... first determine some logic here...
 	switch( ubDirection )
@@ -253,10 +252,11 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 				if (AM_AN_EPC(s))
 				{
 					ubNumEPCs++;
-					//record the slot of the epc.  If there are more than one EPCs, then
-					//it doesn't matter.  This is used in building the text message explaining
-					//why the selected merc can't leave.  This is how we extract the EPC's name.
-					gExitDialog.bSingleMoveWillIsolateEPC = s->ubID;
+					/* record the epc.  If there are more than one EPCs, then it doesn't
+					 * matter.  This is used in building the text message explaining why
+					 * the selected merc can't leave.  This is how we extract the EPC's
+					 * name. */
+					gExitDialog.single_move_will_isolate_epc = s;
 				}
 				else
 				{ //We have more than one merc, so we will allow the selected merc to leave alone if
@@ -518,7 +518,7 @@ static void UpdateSectorExitMenu(void)
 			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
 			SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
 		}
-		else if( gExitDialog.bSingleMoveWillIsolateEPC != -1 )
+		else if (gExitDialog.single_move_will_isolate_epc != NULL)
 		{ //It has been previously determined that there are only two mercs in the squad, the selected merc
 			//isn't an EPC, but the other merc is.  That means that this merc cannot leave the sector alone
 			//as he would isolate the EPC.
@@ -527,11 +527,11 @@ static void UpdateSectorExitMenu(void)
 			{
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
 				{ //male singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, MercPtrs[gExitDialog.bSingleMoveWillIsolateEPC]->name);
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 				else
 				{ //female singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, MercPtrs[gExitDialog.bSingleMoveWillIsolateEPC]->name);
+					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 			}
 			else
