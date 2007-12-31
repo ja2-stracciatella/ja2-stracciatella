@@ -39,8 +39,7 @@ BOOLEAN ExtractUndergroundSectorInfoFromFile(const HWFILE file, UNDERGROUND_SECT
 
 BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND_SECTORINFO* const u)
 {
-	BYTE data[116];
-
+	BYTE data[72];
 	BYTE* d = data;
 	INJ_U32(d, u->uiFlags)
 	INJ_U8(d, u->ubSectorX)
