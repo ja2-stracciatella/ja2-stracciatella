@@ -636,11 +636,6 @@ STRUCTURE_FILE_REF	*GetAnimationStructureRef( UINT16 usSoldierID, UINT16 usSurfa
 }
 
 
-static STRUCTURE_FILE_REF* GetDefaultStructureRef(UINT16 usSoldierID)
-{
-	return( gAnimStructureDatabase[ MercPtrs[ usSoldierID ]->ubBodyType ][ DEFAULT_STRUCT ].pStructureFileRef );
-}
-
 // Surface mamagement functions
 BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
 {
