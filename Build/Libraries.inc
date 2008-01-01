@@ -1,7 +1,9 @@
 static const char* gGameLibaries[] =
 {
 	"data.slf",
+#ifndef JA2DEMO
 	"ambient.slf",
+#endif
 	"anims.slf",
 	"battlesnds.slf",
 	"bigitems.slf",
@@ -10,7 +12,9 @@ static const char* gGameLibaries[] =
 	"faces.slf",
 	"fonts.slf",
 	"interface.slf",
+#ifndef JA2DEMO
 	"laptop.slf",
+#endif
 	"maps.slf",
 	"mercedt.slf",
 	"music.slf",
@@ -20,32 +24,24 @@ static const char* gGameLibaries[] =
 	"sounds.slf",
 	"speech.slf",
 	"tilesets.slf",
+#ifndef JA2DEMO
 	"loadscreens.slf",
+#endif
 #if 0 // XXX the intro videos are not needed right now, because there is no way to play them
 	"intro.slf",
 #endif
 
-#ifdef JA2DEMO
+#if defined JA2DEMO
 	"demoads.slf",
-#endif
-
-#ifdef GERMAN
-	"german.slf",
-#endif
-
-#ifdef POLISH
-	"polish.slf",
-#endif
-
-#ifdef DUTCH
+#elif defined DUTCH
 	"dutch.slf",
-#endif
-
-#ifdef ITALIAN
+#elif defined GERMAN
+	"german.slf",
+#elif defined ITALIAN
 	"italian.slf",
-#endif
-
-#if defined RUSSIAN
+#elif defined POLISH
+	"polish.slf",
+#elif defined RUSSIAN
 	"russian.slf",
 #endif
 
