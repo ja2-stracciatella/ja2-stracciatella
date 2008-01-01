@@ -9620,65 +9620,39 @@ static BOOLEAN ValidTrainingPartnerInSameSectorOnAssignmentFound(SOLDIERTYPE* pT
 	return( FALSE );
 }
 
-void UnEscortEPC( SOLDIERTYPE *pSoldier )
+
+static void InternalUnescortEPC(SOLDIERTYPE* const s)
+{
+	SetupProfileInsertionDataForSoldier(s);
+
+	const ProfileID profile = s->ubProfile;
+	UINT16 quote_num;
+	UINT16 fact_to_set_to_true;
+	if (GetInfoForAbandoningEPC(profile, &quote_num, &fact_to_set_to_true))
+	{
+		gMercProfiles[profile].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
+		TacticalCharacterDialogue(s, quote_num);
+		SetFactTrue(fact_to_set_to_true);
+	}
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, profile, 0, 0, 0, 0);
+}
+
+
+void UnEscortEPC(SOLDIERTYPE* const s)
 {
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		UINT16 usQuoteNum;
-		UINT16 usFactToSetToTrue;
+		InternalUnescortEPC(s);
 
-		SetupProfileInsertionDataForSoldier(pSoldier);
-
-		if (GetInfoForAbandoningEPC(pSoldier->ubProfile, &usQuoteNum, &usFactToSetToTrue))
+		SOLDIERTYPE* other;
+		switch (s->ubProfile)
 		{
-			// say quote usQuoteNum
-			gMercProfiles[pSoldier->ubProfile].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
-			TacticalCharacterDialogue(pSoldier, usQuoteNum);
-			// the flag will be turned off in the remove-epc event
-			//gMercProfiles[pSoldier->ubProfile].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-			SetFactTrue(usFactToSetToTrue);
+			case JOHN: other = FindSoldierByProfileID(MARY, TRUE); break;
+			case MARY: other = FindSoldierByProfileID(JOHN, TRUE); break;
+			default:   other = NULL;                               break;
 		}
-		SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, pSoldier->ubProfile, 0, 0, 0, 0);
+		if (other != NULL) InternalUnescortEPC(other);
 
-		if (pSoldier->ubProfile == JOHN)
-		{
-			// unrecruit Mary as well
-			SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(MARY, TRUE);
-			if (pSoldier2)
-			{
-				SetupProfileInsertionDataForSoldier(pSoldier2);
-				if (GetInfoForAbandoningEPC(MARY, &usQuoteNum, &usFactToSetToTrue))
-				{
-					// say quote usQuoteNum
-					gMercProfiles[ MARY ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
-					TacticalCharacterDialogue( pSoldier2, usQuoteNum );
-					// the flag will be turned off in the remove-epc event
-					//gMercProfiles[ MARY ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-					SetFactTrue( usFactToSetToTrue );
-				}
-
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, MARY, 0, 0, 0, 0);
-			}
-		}
-		else if (pSoldier->ubProfile == MARY)
-		{
-			// unrecruit John as well
-			SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(JOHN, TRUE);
-			if (pSoldier2)
-			{
-				SetupProfileInsertionDataForSoldier(pSoldier2);
-				if (GetInfoForAbandoningEPC(JOHN, &usQuoteNum, &usFactToSetToTrue))
-				{
-					// say quote usQuoteNum
-					gMercProfiles[ JOHN ].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;
-					TacticalCharacterDialogue( pSoldier2, usQuoteNum );
-					// the flag will be turned off in the remove-epc event
-					//gMercProfiles[ JOHN ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-					SetFactTrue( usFactToSetToTrue );
-				}
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, JOHN, 0, 0, 0, 0);
-			}
-		}
 		// stop showing menu
 		giAssignHighLine = -1;
 
@@ -9690,7 +9664,7 @@ void UnEscortEPC( SOLDIERTYPE *pSoldier )
 	else
 	{
 		// how do we handle this if it's the right sector?
-		TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE);
+		TriggerNPCWithGivenApproach(s->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE);
 	}
 }
 
