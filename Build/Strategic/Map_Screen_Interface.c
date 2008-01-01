@@ -235,8 +235,10 @@ BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 BOOLEAN fResetTimerForFirstEntryIntoMapScreen = FALSE;
 static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
+#ifndef JA2DEMO
 // sam and mine icons
 SGPVObject* guiSAMICON;
+#endif
 
 
 // disable team info panels due to battle roster

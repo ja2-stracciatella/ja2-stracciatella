@@ -452,7 +452,9 @@ static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8						gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
 static UINT16 us16BPPItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
+#ifndef JA2DEMO
 static SGPVObject* guiGoldKeyVO;
+#endif
 INT8						gbCompatibleApplyItem = FALSE;
 
 
@@ -716,9 +718,11 @@ BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGIO
 	guiBodyInvVO[3][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti");
 	CHECKF(guiBodyInvVO[3][1] != NO_VOBJECT);
 
+#ifndef JA2DEMO
 	// add gold key graphic
 	guiGoldKeyVO = AddVideoObjectFromFile("INTERFACE/gold_key_button.sti");
 	CHECKF(guiGoldKeyVO != NO_VOBJECT);
+#endif
 
 	// Add cammo region
 	MSYS_DefineRegion(&gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, pCamoRegion->sX + CAMO_REGION_WIDTH, pCamoRegion->sY + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCammoCallback, INVClickCammoCallback);
@@ -819,7 +823,9 @@ void ShutdownInvSlotInterface( )
 	DeleteVideoObject(guiBodyInvVO[1][1]);
 	DeleteVideoObject(guiBodyInvVO[3][1]);
 
+#ifndef JA2DEMO
 	DeleteVideoObject(guiGoldKeyVO);
+#endif
 
 	// Remove regions
 	// Add regions for inventory slots
@@ -869,6 +875,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			INVRenderINVPanelItem( pSoldier, (INT16)cnt, fDirtyLevel );
 		}
 
+#ifndef JA2DEMO
 		if ( KeyExistsInKeyRing( pSoldier, ANYKEY, NULL ) )
 		{
 			// blit gold key here?
@@ -887,6 +894,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			BltVideoObject(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
 			RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 		}
+#endif
 	}
 }
 
@@ -961,11 +969,13 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
 				RestoreExternBackgroundRect(x, y, 72, 28);
 			}
+#ifndef JA2DEMO
 			else
 			{
 				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
 				RestoreExternBackgroundRect( 14, 218, 102, 24 );
 			}
+#endif
 		}
 	}
 

@@ -189,8 +189,10 @@ extern INT16 sElitesOnCursor;
 extern INT16 gsHighlightSectorX;
 extern INT16 gsHighlightSectorY;
 
+#ifndef JA2DEMO
 // the big map
 extern SGPVSurface* guiBIGMAP;
+#endif
 
 // the orta icon
 extern SGPVObject* guiORTAICON;
@@ -200,8 +202,10 @@ extern SGPVObject* guiTIXAICON;
 // the character icons
 extern SGPVObject* guiCHARICONS;
 
+#ifndef JA2DEMO
 // the merc arrival sector landing zone icon
 extern SGPVObject* guiBULLSEYE;
+#endif
 
 // character between sector icons
 extern SGPVObject* guiCHARBETWEENSECTORICONS;

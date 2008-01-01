@@ -252,8 +252,10 @@ extern SGPVObject* guiLEVELMARKER;
 // the currently selected character arrow
 extern SGPVObject* guiSelectedCharArrow;
 
+#ifndef JA2DEMO
 // sam and mine icons
 extern SGPVObject* guiSAMICON;
+#endif
 
 extern BOOLEAN fShowMapScreenMovementList;
 

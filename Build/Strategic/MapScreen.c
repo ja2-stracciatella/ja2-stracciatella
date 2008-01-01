@@ -431,9 +431,13 @@ static SGPVObject* guiCHARINFO;
 static SGPVObject* guiSleepIcon;
 static SGPVObject* guiCROSS;
 static SGPVObject* guiMAPINV;
+#ifndef JA2DEMO
 SGPVObject* guiMapInvSecondHandBlockout;
+#endif
 static SGPVObject* guiULICONS;
+#ifndef JA2DEMO
 static SGPVObject* guiNewMailIcons;
+#endif
 SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border
 
 
@@ -8518,12 +8522,16 @@ static BOOLEAN AnyMercsLeavingRealSoon(void)
 
 BOOLEAN HandlePreloadOfMapGraphics( void )
 {
+#ifndef JA2DEMO
 	guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
 	CHECKF(guiBIGMAP != NO_VSURFACE);
+#endif
 	guiMAPCURSORS = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
 	CHECKF(guiMAPCURSORS != NO_VOBJECT);
+#ifndef JA2DEMO
 	guiSAMICON = AddVideoObjectFromFile("INTERFACE/SAM.sti");
 	CHECKF(guiSAMICON != NO_VOBJECT);
+#endif
 	guiSleepIcon = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
 	CHECKF(guiSleepIcon != NO_VOBJECT);
 	guiCHARINFO = AddVideoObjectFromFile("INTERFACE/charinfo.sti");
@@ -8544,8 +8552,10 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(guiCROSS != NO_VOBJECT);
 	guiMAPINV = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
 	CHECKF(guiMAPINV != NO_VOBJECT);
+#ifndef JA2DEMO
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
 	CHECKF(guiMapInvSecondHandBlockout != NO_VOBJECT);
+#endif
 
 	// the upper left corner piece icons
 	guiULICONS = AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti");
@@ -8578,11 +8588,13 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 	CHECKF(guiMINEICON != NO_VOBJECT);
 	guiSectorLocatorGraphicID = AddVideoObjectFromFile("INTERFACE/hilite.sti");
 
+#ifndef JA2DEMO
 	//Kris:  Added this because I need to blink the icons button.
 	guiNewMailIcons = AddVideoObjectFromFile("INTERFACE/newemail.sti");
 
 	guiBULLSEYE = AddVideoObjectFromFile("INTERFACE/BullsEye.sti");
 	CHECKF(guiBULLSEYE != NO_VOBJECT);
+#endif
 
 	// graphic for pool inventory
 	LoadInventoryPoolGraphic( );
@@ -8616,7 +8628,9 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiSAMICON);
 #endif
 	DeleteVideoObject(guiMAPINV);
+#ifndef JA2DEMO
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
+#endif
 	DeleteVideoObject(guiULICONS);
 	DeleteVideoObject(guiORTAICON);
 	DeleteVideoObject(guiTIXAICON);
@@ -8631,10 +8645,12 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiMINEICON);
 	DeleteVideoObject(guiSectorLocatorGraphicID);
 
+#ifndef JA2DEMO
 	//Kris:  Remove the email icons.
 	DeleteVideoObject(guiNewMailIcons);
 
 	DeleteVideoObject(guiBULLSEYE);
+#endif
 
 	// remove the graphic for the militia pop up box
 	RemoveMilitiaPopUpBox();
@@ -9294,6 +9310,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 //       mapscreen and we have new email to read.
 static void CheckForAndRenderNewMailOverlay(void)
 {
+#ifndef JA2DEMO
 	if( fNewMailFlag )
 	{
 		if( GetJA2Clock() % 1000 < 667 )
@@ -9325,6 +9342,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 			MarkAButtonDirty( guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] );
 		}
 	}
+#endif
 }
 
 

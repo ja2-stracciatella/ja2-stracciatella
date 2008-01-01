@@ -260,6 +260,7 @@ INT32 iZoomY = 0;
 
 // map shading colors
 
+#ifndef JA2DEMO
 enum{
 	MAP_SHADE_BLACK =0,
 	MAP_SHADE_LT_GREEN,
@@ -269,6 +270,7 @@ enum{
 };
 // the big map .pcx
 SGPVSurface* guiBIGMAP;
+#endif
 
 // orta .sti icon
 SGPVObject* guiORTAICON;
@@ -277,8 +279,10 @@ SGPVObject* guiTIXAICON;
 // boxes for characters on the map
 SGPVObject* guiCHARICONS;
 
+#ifndef JA2DEMO
 // the merc arrival sector landing zone icon
 SGPVObject* guiBULLSEYE;
+#endif
 
 
 // the max allowable towns militia in a sector
@@ -1152,6 +1156,7 @@ static void ShowTeamAndVehicles(INT32 fShowFlags)
 }
 
 
+#ifndef JA2DEMO
 static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
 
 
@@ -1375,6 +1380,7 @@ static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
 
 	return ( TRUE );
 }
+#endif
 
 
 BOOLEAN InitializePalettesForMap( void )
@@ -6145,7 +6151,9 @@ static void ShowSAMSitesOnStrategicMap(void)
 		const INT16 sSectorX = gpSamSectorX[iCounter];
 		const INT16 sSectorY = gpSamSectorY[iCounter];
 
+#ifndef JA2DEMO
 		DrawSite(sSectorX, sSectorY, guiSAMICON);
+#endif
 
 		if( fShowAircraftFlag )
 		{
@@ -6422,12 +6430,14 @@ static void DrawTixa(void)
 
 static void DrawBullseye(void)
 {
+#ifndef JA2DEMO
 	INT16 sX, sY;
 
 	GetScreenXYFromMapXY( gsMercArriveSectorX, gsMercArriveSectorY, &sX, &sY );
 	sY -= 2;
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
+#endif
 }
 
 
