@@ -201,8 +201,13 @@ BOOLEAN LoadMercProfiles(void)
 
 	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
 	{
+#ifdef JA2DEMO
+		BYTE Data[696];
+		if (!FileRead(fptr, &Data, sizeof(Data)))
+#else
 		BYTE Data[716];
 		if (!JA2EncryptedFileRead(fptr, &Data, sizeof(Data)))
+#endif
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
 			FileClose( fptr );
