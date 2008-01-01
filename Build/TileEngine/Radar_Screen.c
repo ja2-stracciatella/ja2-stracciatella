@@ -48,7 +48,6 @@ extern INT32 iCurrentMapSectorZ;
 INT16			gsRadarX;
 INT16			gsRadarY;
 static SGPVObject* gusRadarImage;
-BOOLEAN		fImageLoaded = FALSE;
 BOOLEAN   fRenderRadarScreen = TRUE;
 INT16			sSelectedSquadLine = -1;
 
@@ -88,12 +87,7 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 
 	strcpy( zFilename, aFilename );
 
-	 // If we have loaded, remove old one
-	 if ( fImageLoaded )
-	 {
-		 DeleteVideoObject(gusRadarImage);
-		 fImageLoaded = FALSE;
-	 }
+	ClearOutRadarMapImage();
 
 /* ARM - Restriction removed Nov.29/98.  Must be able to view different radar maps from map screen while underground!
 	 // If we are in a cave or basement..... dont get a new one...
@@ -115,8 +109,6 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 		 gusRadarImage = AddVideoObjectFromFile(ImageFile);
 		 CHECKF(gusRadarImage != NO_VOBJECT);
 
-		 fImageLoaded = TRUE;
-
 		SGPVObject* const hVObject = gusRadarImage;
 		// ATE: Add a shade table!
 		hVObject->pShades[0] = Create16BPPPaletteShaded(hVObject->pPaletteEntry, 255, 255, 255, FALSE);
@@ -133,10 +125,10 @@ BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
 void ClearOutRadarMapImage( void )
 {
 	// If we have loaded, remove old one
-  if ( fImageLoaded )
+	if (gusRadarImage != NO_VOBJECT)
   {
 	  DeleteVideoObject(gusRadarImage);
-	  fImageLoaded = FALSE;
+		gusRadarImage = NO_VOBJECT;
   }
 }
 
@@ -290,7 +282,7 @@ void RenderRadarScreen( )
 		ClearOutRadarMapImage();
 	}
 
-	if ( fInterfacePanelDirty == DIRTYLEVEL2 && fImageLoaded )
+	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage != NO_VOBJECT)
 	{
 		// Set to default
 		SetObjectShade(gusRadarImage, 0);
