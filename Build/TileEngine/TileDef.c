@@ -633,51 +633,6 @@ static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 us
 }
 
 
-//Kris:  This function returns two special types if there are two walls
-//sharing the same tile.  This case only happens with the exterior and
-//interior bottom corners.  Otherwise, it returns the orientation of the
-//first wall encountered -- not that there should be duplicate walls...
-static UINT8 CalculateWallOrientationsAtGridNo(INT32 iMapIndex)
-{
-	LEVELNODE *pStruct = NULL;
-	UINT8 ubFinalWallOrientation = NO_ORIENTATION;
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-	//Traverse all of the pStructs
-	while( pStruct != NULL )
-	{
-		UINT16 usCheckWallOrientation = GetWallOrientation(pStruct->usIndex);
-		if( ubFinalWallOrientation == NO_ORIENTATION )
-		{	//Get the first valid orientation.
-			ubFinalWallOrientation = (UINT8)usCheckWallOrientation;
-		}
-		else switch( ubFinalWallOrientation )
-		{	//If the first valid orientation has the key counterpart orientation,
-			//return the special corner orientations.
-			case INSIDE_TOP_LEFT:
-				if( usCheckWallOrientation == INSIDE_TOP_RIGHT )
-					return INSIDE_BOTTOM_CORNER;
-				break;
-			case INSIDE_TOP_RIGHT:
-				if( usCheckWallOrientation == INSIDE_TOP_LEFT )
-					return INSIDE_BOTTOM_CORNER;
-				break;
-			case OUTSIDE_TOP_LEFT:
-				if( usCheckWallOrientation == OUTSIDE_TOP_RIGHT )
-					return OUTSIDE_BOTTOM_CORNER;
-				break;
-			case OUTSIDE_TOP_RIGHT:
-				if( usCheckWallOrientation == OUTSIDE_TOP_LEFT )
-					return OUTSIDE_BOTTOM_CORNER;
-				break;
-		}
-		// Advance to next
-		pStruct = pStruct->pNext;
-	}
-	// Only one wall, so return it's orienation.
-	return ubFinalWallOrientation;
-}
-
-
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 {
 	pTileElem->pAnimData = MemAlloc( sizeof( TILE_ANIMATION_DATA ) );

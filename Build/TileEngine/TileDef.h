@@ -32,15 +32,10 @@
 #define	WALL_HEIGHT		50
 
 
-//Kris:  Added the last two bottom corner orientation values.  This won't effect
-//current code, but there is new code that makes use of this.  A function called
-//UINT8 CalculateWallOrientationsAtGridNo( INT32 iMapIndex ) that will look at all
-//of the walls and return the last two wall orientations for tiles with two proper
-//wall pieces.
 enum WallOrientationDefines
 {
 	NO_ORIENTATION, INSIDE_TOP_LEFT, INSIDE_TOP_RIGHT, OUTSIDE_TOP_LEFT,
-	OUTSIDE_TOP_RIGHT, INSIDE_BOTTOM_CORNER, OUTSIDE_BOTTOM_CORNER
+	OUTSIDE_TOP_RIGHT
 };
 
 // TERRAIN ID VALUES.
