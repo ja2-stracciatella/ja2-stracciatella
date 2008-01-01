@@ -15,9 +15,6 @@ const wchar_t* const zNewTacticalMessages[] =
 };
 
 //@@@:  New string as of March 3, 2000.
-const wchar_t* const gzIronManModeWarningText[] =
-{
-	L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?",
-};
+const wchar_t str_iron_man_mode_warning[] = L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
 
 #endif

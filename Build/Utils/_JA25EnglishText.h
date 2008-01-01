@@ -14,10 +14,6 @@ enum
 };
 extern const wchar_t* const zNewTacticalMessages[];
 
-enum
-{
-	IMM__IRON_MAN_MODE_WARNING_TEXT,
-};
-extern const wchar_t* const gzIronManModeWarningText[];
+extern const wchar_t str_iron_man_mode_warning[];
 
 #endif

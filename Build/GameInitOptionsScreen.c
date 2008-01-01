@@ -912,7 +912,7 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 	//if the user has selected IRON MAN mode
 	if (ubIronManMode)
 	{
-		DoGioMessageBox(gzIronManModeWarningText[IMM__IRON_MAN_MODE_WARNING_TEXT], ConfirmGioIronManMessageBoxCallBack);
+		DoGioMessageBox(str_iron_man_mode_warning, ConfirmGioIronManMessageBoxCallBack);
 		return  TRUE;
 	}
 	return FALSE;
