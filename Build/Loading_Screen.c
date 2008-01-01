@@ -159,7 +159,9 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 					}
 					return LOADINGSCREEN_DAYTROPICAL;
 				default:
+#ifndef JA2DEMO
 					Assert( 0 );
+#endif
 					if( fNight )
 					{
 						return LOADINGSCREEN_NIGHTGENERIC;
@@ -175,6 +177,9 @@ UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 				case SEC_J9:	//Tixa prison dungeon
 				case SEC_K4:	//Orta weapons plant
 				case SEC_O3:  //Meduna
+#ifdef JA2DEMO
+				case SEC_P1:  // Demoville dungeon
+#endif
 				case SEC_P3:  //Meduna
 					return LOADINGSCREEN_BASEMENT;
 				default:			//rest are mines
@@ -207,6 +212,14 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 
 	switch (ubLoadScreenID)
 	{
+#ifdef JA2DEMO
+		case LOADINGSCREEN_NOTHING:       ImageFile = "interface/loadscreen1.sti";        break;
+		case LOADINGSCREEN_NIGHTGENERIC:  ImageFile = "interface/loadscreen2.sti";        break;
+		case LOADINGSCREEN_HELI:          ImageFile = "interface/loadscreen1.sti";        break;
+		case LOADINGSCREEN_BASEMENT:      ImageFile = "interface/loadscreen4.sti";        break;
+		case LOADINGSCREEN_CAVE:          ImageFile = "interface/loadscreen5.sti";        break;
+		default:                          ImageFile = "interface/loadscreen1.sti";        break;
+#else
 		case LOADINGSCREEN_NOTHING:       ImageFile = "LOADSCREENS/LS_Heli.sti";          break;
 		case LOADINGSCREEN_DAYGENERIC:    ImageFile = "LOADSCREENS/LS_DayGeneric.sti";    break;
 		case LOADINGSCREEN_DAYTOWN1:      ImageFile = "LOADSCREENS/LS_DayTown1.sti";      break;
@@ -251,6 +264,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		case LOADINGSCREEN_DAYBALIME:     ImageFile = "LOADSCREENS/LS_DayBalime.sti" ;    break;
 		case LOADINGSCREEN_NIGHTBALIME:   ImageFile = "LOADSCREENS/LS_NightBalime.sti";   break;
 		default:                          ImageFile = "LOADSCREENS/LS_Heli.sti";          break;
+#endif
 	}
 
 	if( gfSchedulesHosed )
