@@ -5278,8 +5278,6 @@ void CreateDestroyMapInvButton()
 
 static void BltCharInvPanel(void)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT16  *pDestBuf;
 	CHAR16 sString[ 32 ];
 
 	// make sure we're here legally
@@ -5287,9 +5285,7 @@ static void BltCharInvPanel(void)
 
 	const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
 
-  pDestBuf = (UINT16*)LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES);
-  Blt8BPPDataTo16BPPBufferTransparent( pDestBuf, uiDestPitchBYTES, guiMAPINV, PLAYER_INFO_X, PLAYER_INFO_Y, 0);
-  UnLockVideoSurface( guiSAVEBUFFER );
+	BltVideoObject(guiSAVEBUFFER, guiMAPINV, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 
   Assert( pSoldier );
   CreateDestroyMapInvButton();
