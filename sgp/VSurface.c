@@ -700,27 +700,51 @@ BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const 
 	//if the 2 images are not both 16bpp, return FALSE
 	if (dst->ubBitDepth != 16 || src->ubBitDepth != 16) return FALSE;
 
-	const UINT16* os = (const UINT16*)src->surface->pixels + (src->surface->pitch >> 1) * SrcRect->iTop  + SrcRect->iLeft;
-	UINT16*       d  =       (UINT16*)dst->surface->pixels + (dst->surface->pitch >> 1) * DestRect->iTop + DestRect->iLeft;
+	const UINT32  s_pitch = src->surface->pitch >> 1;
+	const UINT32  d_pitch = dst->surface->pitch >> 1;
+	const UINT16* os      = (const UINT16*)src->surface->pixels + s_pitch * SrcRect->iTop  + SrcRect->iLeft;
+	UINT16*       d       =       (UINT16*)dst->surface->pixels + d_pitch * DestRect->iTop + DestRect->iLeft;
 
 	const UINT width  = DestRect->iRight  - DestRect->iLeft;
 	const UINT height = DestRect->iBottom - DestRect->iTop;
 	const UINT dx = SrcRect->iRight  - SrcRect->iLeft;
 	const UINT dy = SrcRect->iBottom - SrcRect->iTop;
 	UINT py = 0;
-	for (UINT iy = 0; iy < height; ++iy)
+	if (src->surface->flags & SDL_SRCCOLORKEY)
 	{
-		const UINT16* s = os;
-		UINT px = 0;
-		for (UINT ix = 0; ix < width; ++ix)
+		const UINT16 key = src->surface->format->colorkey;
+		for (UINT iy = 0; iy < height; ++iy)
 		{
-			*d++ = *s;
-			px += dx;
-			for (; px >= width; px -= width) ++s;
+			const UINT16* s = os;
+			UINT px = 0;
+			for (UINT ix = 0; ix < width; ++ix)
+			{
+				if (*s != key) *d = *s;
+				++d;
+				px += dx;
+				for (; px >= width; px -= width) ++s;
+			}
+			d += d_pitch - width;
+			py += dy;
+			for (; py >= height; py -= height) os += s_pitch;
 		}
-		d += (dst->surface->pitch >> 1) - width;
-		py += dy;
-		for (; py >= height; py -= height) os += src->surface->pitch >> 1;
+	}
+	else
+	{
+		for (UINT iy = 0; iy < height; ++iy)
+		{
+			const UINT16* s = os;
+			UINT px = 0;
+			for (UINT ix = 0; ix < width; ++ix)
+			{
+				*d++ = *s;
+				px += dx;
+				for (; px >= width; px -= width) ++s;
+			}
+			d += d_pitch - width;
+			py += dy;
+			for (; py >= height; py -= height) os += s_pitch;
+		}
 	}
 
 	return TRUE;
