@@ -33,10 +33,6 @@ INT32 giIMPFinishButtonImage[ 6 ];
 // we are in fact done
 BOOLEAN fFinishedCharGeneration = FALSE;
 
-// portrait position
-INT16 sFaceX = 253;
-INT16 sFaceY = 245;
-
 // what voice are we playing?
 UINT32 uiVoiceSound = 0;
 
@@ -293,17 +289,6 @@ static void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn, INT32 reason)
 		btn->uiFlags &= ~BUTTON_CLICKED_ON;
 		return;
 	}
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		 sFaceX = 253;
-		 sFaceY = 247;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		sFaceX = 253;
-		sFaceY = 245;
-	}
 }
 
 
@@ -328,73 +313,6 @@ static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 		}
 		fButtonPendingFlag = TRUE;
 	}
-}
-
-
-static BOOLEAN RenderCharProfileFinishFace(void)
-{
-// render the portrait of the current picture
-	SGPVObject* uiGraphicHandle;
-
-  if( fCharacterIsMale == TRUE )
-	{
-	  switch( LaptopSaveInfo.iVoiceId )
-		{
-		  case( 0 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/00.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-				DeleteVideoObject(uiGraphicHandle);
-		  break;
-      case( 1 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/01.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-				DeleteVideoObject(uiGraphicHandle);
-		  break;
-		  case( 2 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/02.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-				DeleteVideoObject(uiGraphicHandle);
-		  break;
-		}
-
-	}
-	else
-	{
-    switch( LaptopSaveInfo.iVoiceId )
-		{
-		  case( 0 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/03.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-				DeleteVideoObject(uiGraphicHandle);
-		  break;
-      case( 1 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/04.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-				DeleteVideoObject(uiGraphicHandle);
-		  break;
-		  case( 2 ):
-	      uiGraphicHandle = AddVideoObjectFromFile("Faces/SmallFaces/05.sti");
-	      CHECKF(uiGraphicHandle != NO_VOBJECT);
-        BltVideoObject(FRAME_BUFFER, uiGraphicHandle, 0, LAPTOP_SCREEN_UL_X + sFaceX, LAPTOP_SCREEN_WEB_UL_Y + sFaceY);
-        DeleteVideoObject(uiGraphicHandle);
-		  break;
-		}
-	}
-
-  // render the nickname
-  SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-  SetFont( FONT12ARIAL );
-
-	mprintf( 253, 350, pNickName );
-
-	return( TRUE );
-
 }
 
 
