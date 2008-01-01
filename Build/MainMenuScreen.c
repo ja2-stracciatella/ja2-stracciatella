@@ -233,11 +233,11 @@ BOOLEAN InitMainMenu(void)
 	CreateDestroyMainMenuButtons(TRUE);
 
 	// Load background graphic and add it
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile("LOADSCREENS/MainMenuBackGround.sti");
+	guiMainMenuBackGroundImage = AddVideoObjectFromFile("INTERFACE/MainMenuBackGround.sti");
 	CHECKF(guiMainMenuBackGroundImage != NO_VOBJECT);
 
 	// Load ja2 logo graphic and add it
-	guiJa2LogoImage = AddVideoObjectFromFile("LOADSCREENS/Ja2Logo.sti");
+	guiJa2LogoImage = AddVideoObjectFromFile("INTERFACE/Ja2Logo.sti");
 	CHECKF(guiJa2LogoImage != NO_VOBJECT);
 
 	// If there are no saved games, disable the button

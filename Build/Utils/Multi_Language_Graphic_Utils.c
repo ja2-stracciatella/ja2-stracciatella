@@ -30,7 +30,7 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 		case MLG_SMALLTITLE:         s = "LAPTOP/SmallTitle.sti";            break;
 		case MLG_STATSBOX:           s = "LAPTOP/StatsBox.sti";              break;
 		case MLG_STOREPLAQUE:        s = "LAPTOP/BobbyStorePlaque.sti";      break;
-		case MLG_TITLETEXT:          s = "LOADSCREENS/titletext.sti";        break;
+		case MLG_TITLETEXT:          s = "INTERFACE/titletext.sti";          break;
 		case MLG_TOALUMNI:           s = "LAPTOP/ToAlumni.sti";              break;
 		case MLG_TOMUGSHOTS:         s = "LAPTOP/ToMugShots.sti";            break;
 		case MLG_TOSTATS:            s = "LAPTOP/ToStats.sti";               break;
