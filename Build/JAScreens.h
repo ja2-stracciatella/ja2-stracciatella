@@ -136,4 +136,8 @@ void EnableFPSOverlay(BOOLEAN fEnable);
 BOOLEAN gfExitDebugScreen;
 INT8 gCurDebugPage;
 
+#ifdef JA2DEMOADS
+void DoDemoIntroduction(void);
+#endif
+
 #endif

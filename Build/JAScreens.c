@@ -724,15 +724,12 @@ static void DoneFadeOutForDemoExitScreen(void)
 	gfProgramIsRunning = FALSE;
 }
 
-#ifdef JA2DEMOADS
-	extern STR16 gpDemoString[];
-	extern STR16 gpDemoIntroString[];
-	BOOLEAN gfDemoIntro = FALSE;
-#endif
 
 #ifdef JA2DEMOADS
-void DoDemoIntroduction()
+void DoDemoIntroduction(void)
 {
+	static BOOLEAN gfDemoIntro = FALSE;
+
 	UINT16 yp, height;
 	UINT32 uiStartTime = 0xffffffff;
 	UINT16 usFadeLimit = 8;
@@ -741,6 +738,8 @@ void DoDemoIntroduction()
 	if( gfDemoIntro )
 		return;
 	gfDemoIntro = TRUE;
+
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 
 	SetCurrentCursorFromDatabase( 0 );
 
@@ -844,10 +843,9 @@ void DoDemoIntroduction()
 		}
 	}
 }
-#endif
 
 
-#ifdef GERMAN
+#	ifdef GERMAN
 static void DisplayTopwareGermanyAddress(void)
 {
 	//bring up the Topware address screen
@@ -866,7 +864,9 @@ static void DisplayTopwareGermanyAddress(void)
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 }
+#	endif
 #endif
+
 
 UINT32 DemoExitScreenHandle(void)
 {

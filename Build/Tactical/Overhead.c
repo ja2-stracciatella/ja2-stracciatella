@@ -6579,20 +6579,18 @@ void InitializeTacticalStatusAtBattleStart(void)
 }
 
 
+#ifdef JA2DEMO
 static void DemoEndOKCallback(UINT8 bExitCode)
 {
-	#ifdef JA2DEMO
 	// Check if gabby is alive...
 	if ( gMercProfiles[ GABBY ].bLife == 0 )
 	{
 		// Bring up dialogue box...
 		DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_TOO_BAD_YOU_KILLED_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, NULL, NULL );
 	}
-	#endif
 }
 
 
-#ifdef JA2DEMO
 void HandleEndDemoInCreatureLevel(void)
 {
 	if ( gbWorldSectorZ == 1 )
