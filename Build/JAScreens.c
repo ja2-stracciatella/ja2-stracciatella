@@ -1062,6 +1062,7 @@ UINT32 DemoExitScreenHandle(void)
 			//Create render buffer
 			uiCollageID = AddVideoSurface(263, 210, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
+			SetVideoSurfaceTransparency(uiCollageID, 0);
 
 			//bring up the collage screen
 			if (!BltVideoObjectOnce(uiCollageID, "Interface/ja2logo.sti", 0, 0, 0))
@@ -1220,6 +1221,7 @@ UINT32 DemoExitScreenHandle(void)
 			//Create render buffer
 			uiCollageID = AddVideoSurface(331, 148, PIXEL_DEPTH);
 			CHECKF(uiCollageID != NO_VSURFACE);
+			SetVideoSurfaceTransparency(uiCollageID, 0);
 
 			//bring up the collage screen
 			if (!BltVideoObjectOnce(uiCollageID, "DemoAds/available.sti", 0, 0, 0))
