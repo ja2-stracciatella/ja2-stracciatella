@@ -44,13 +44,6 @@ ret_only:
 }
 
 
-static void GetAmbientDataPtr(AMBIENTDATA_STRUCT** ppAmbData, UINT16* pusNumData)
-{
-	*ppAmbData		= gAmbData;
-	*pusNumData		= gsNumAmbData;
-}
-
-
 void StopAmbients( )
 {
 	SoundStopAllRandom( );
