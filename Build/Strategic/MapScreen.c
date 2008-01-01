@@ -8621,10 +8621,12 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
 	DeleteVideoSurface(guiBIGMAP);
+#endif
 	DeleteVideoObject(guiSubLevel1);
 	DeleteVideoObject(guiSubLevel2);
 	DeleteVideoObject(guiSubLevel3);
 
+#ifndef JA2DEMO
 	DeleteVideoObject(guiSAMICON);
 #endif
 	DeleteVideoObject(guiMAPINV);
