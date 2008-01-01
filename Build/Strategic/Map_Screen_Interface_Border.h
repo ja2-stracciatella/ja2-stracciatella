@@ -41,7 +41,11 @@ enum{
 */
 
 
-#define MAP_LEVEL_MARKER_X     565
+#ifdef JA2DEMO
+#	define MAP_LEVEL_MARKER_X    485
+#else
+#	define MAP_LEVEL_MARKER_X    565
+#endif
 #define MAP_LEVEL_MARKER_Y     323
 #define MAP_LEVEL_MARKER_DELTA   8
 #define MAP_LEVEL_MARKER_WIDTH  55

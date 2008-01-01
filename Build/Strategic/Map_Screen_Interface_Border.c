@@ -24,6 +24,25 @@
 #include "Video.h"
 
 
+#ifdef JA2DEMO
+#	define MAP_BORDER_FILE "INTERFACE/MAPBORDER0225.sti"
+#	define BTN_TOWN_X      272
+#	define BTN_MINE_X      315
+#	define BTN_TEAMS_X     358
+#	define BTN_MILITIA_X   401
+#	define BTN_AIR_X       444
+#	define BTN_ITEM_X      546
+#else
+#	define MAP_BORDER_FILE "INTERFACE/MBS.sti"
+#	define BTN_TOWN_X      299
+#	define BTN_MINE_X      342
+#	define BTN_TEAMS_X     385
+#	define BTN_MILITIA_X   428
+#	define BTN_AIR_X       471
+#	define BTN_ITEM_X      514
+#endif
+
+
 #define MAP_BORDER_X 261
 #define MAP_BORDER_Y 0
 
@@ -92,7 +111,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 BOOLEAN LoadMapBorderGraphics( void )
 {
   // this procedure will load the graphics needed for the map border
-	guiMapBorder = AddVideoObjectFromFile("INTERFACE/MBS.sti");
+	guiMapBorder = AddVideoObjectFromFile(MAP_BORDER_FILE);
 	CHECKF(guiMapBorder != NO_VOBJECT);
 
 /* corner was removed along with the Zoom feature
@@ -231,12 +250,12 @@ BOOLEAN CreateButtonsForMapBorder( void )
 	MakeButtonScroll(ZOOM_MAP_SCROLL_RIGHT, 10, 1, 619, 322, BtnScrollEastMapScreenCallback,  pMapScreenBorderButtonHelpText[8]);
 #endif
 
-  MakeButton(MAP_BORDER_TOWN_BTN,     5, 299, BtnTownCallback,     pMapScreenBorderButtonHelpText[0]); // towns
-  MakeButton(MAP_BORDER_MINE_BTN,     4, 342, BtnMineCallback,     pMapScreenBorderButtonHelpText[1]); // mines
-  MakeButton(MAP_BORDER_TEAMS_BTN,    3, 385, BtnTeamCallback,     pMapScreenBorderButtonHelpText[2]); // people
-  MakeButton(MAP_BORDER_MILITIA_BTN,  8, 428, BtnMilitiaCallback,  pMapScreenBorderButtonHelpText[5]); // militia
-  MakeButton(MAP_BORDER_AIRSPACE_BTN, 2, 471, BtnAircraftCallback, pMapScreenBorderButtonHelpText[3]); // airspace
-  MakeButton(MAP_BORDER_ITEM_BTN,     1, 514, BtnItemCallback,     pMapScreenBorderButtonHelpText[4]); // items
+	MakeButton(MAP_BORDER_TOWN_BTN,     5, BTN_TOWN_X,    BtnTownCallback,     pMapScreenBorderButtonHelpText[0]); // towns
+	MakeButton(MAP_BORDER_MINE_BTN,     4, BTN_MINE_X,    BtnMineCallback,     pMapScreenBorderButtonHelpText[1]); // mines
+	MakeButton(MAP_BORDER_TEAMS_BTN,    3, BTN_TEAMS_X,   BtnTeamCallback,     pMapScreenBorderButtonHelpText[2]); // people
+	MakeButton(MAP_BORDER_MILITIA_BTN,  8, BTN_MILITIA_X, BtnMilitiaCallback,  pMapScreenBorderButtonHelpText[5]); // militia
+	MakeButton(MAP_BORDER_AIRSPACE_BTN, 2, BTN_AIR_X,     BtnAircraftCallback, pMapScreenBorderButtonHelpText[3]); // airspace
+	MakeButton(MAP_BORDER_ITEM_BTN,     1, BTN_ITEM_X,    BtnItemCallback,     pMapScreenBorderButtonHelpText[4]); // items
 
 	// raise and lower view level
 
