@@ -849,18 +849,14 @@ void DoDemoIntroduction(void)
 static void DisplayTopwareGermanyAddress(void)
 {
 	//bring up the Topware address screen
-	SGPVObject* const vo = AddVideoObjectFromFile("German/topware_germany.sti");
-	AssertMsg(vo != NO_VOBJECT, "Failed to load German/topware_germany.sti");
-	if (vo == NO_VOBJECT) return;
 
 	//Shade out a background piece to emphasize the German address.
 	ShadowVideoSurfaceRect(FRAME_BUFFER, 208, 390, 431, 475);
 
 	//Draw the anti-aliased address now.
-	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
-	BltVideoObject(FRAME_BUFFER, vo, 0, 218, 400);
+	if (!BltVideoObjectOnce(FRAME_BUFFER, "German/topware_germany.sti", 0, 218, 400)) return;
+
 	InvalidateRegion( 208, 390, 431, 475 );
-	DeleteVideoObject(vo);
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 }
