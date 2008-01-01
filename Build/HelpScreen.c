@@ -335,7 +335,9 @@ void InitHelpScreenSystem()
 
 BOOLEAN ShouldTheHelpScreenComeUp( UINT8 ubScreenID, BOOLEAN fForceHelpScreenToComeUp )
 {
-
+#ifdef JA2DEMO
+	return FALSE; // disabled due to missing data files
+#else
 	//if the screen is being forsced to come up ( user pressed 'h' )
 	if( fForceHelpScreenToComeUp )
 	{
@@ -406,6 +408,7 @@ HELP_SCREEN_SHOULD_COME_UP:
 	gHelpScreen.bDelayEnteringHelpScreenBy1FrameCount = 0;
 
 	return( TRUE );
+#endif
 }
 
 
