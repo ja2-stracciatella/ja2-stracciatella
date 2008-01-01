@@ -846,8 +846,6 @@ void DoDemoIntroduction()
 }
 #endif
 
-extern INT8 gbFadeSpeed;
-
 
 #ifdef GERMAN
 static void DisplayTopwareGermanyAddress(void)
@@ -1136,7 +1134,7 @@ UINT32 DemoExitScreenHandle(void)
 		{
 			SetMusicMode( MUSIC_MAIN_MENU );
 			PlayJA2SampleFromFile("DemoAds/Hit.wav", HIGHVOLUME, 1, MIDDLEPAN);
-			gbFadeSpeed = (INT8)50;
+			SetMusicFadeSpeed(50);
 			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 			ubCurrentScreen = 4;
 			SetFontDestBuffer(FRAME_BUFFER, 0, 230, SCREEN_WIDTH, SCREEN_HEIGHT);

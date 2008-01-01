@@ -33,7 +33,7 @@ static INT8 bNothingModeSong;
 static INT8 bEnemyModeSong;
 static INT8 bBattleModeSong;
 
-INT8		gbFadeSpeed = 1;
+static INT8 gbFadeSpeed = 1;
 
 
 const char* const szMusicList[]=
