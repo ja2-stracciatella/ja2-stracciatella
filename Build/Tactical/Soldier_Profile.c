@@ -54,11 +54,6 @@
 BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 
 
-#define		MIN_BLINK_FREQ					3000
-#define		MIN_EXPRESSION_FREQ			2000
-
-#define		SET_PROFILE_GAINS2			500, 500, 500, 500, 500, 500, 500, 500, 500
-
 MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
 
 INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
@@ -81,17 +76,6 @@ INT8 gbSkillTraitBonus[NUM_SKILLTRAITS] =
 	 0,	 //CAMOUFLAGED
 };
 
-
-static const UINT8 gubBasicInventoryPositions[] = {
-							HELMETPOS,
-							VESTPOS,
-							LEGPOS,
-							HANDPOS,
-							BIGPOCK1POS,
-							BIGPOCK2POS,
-							BIGPOCK3POS,
-							BIGPOCK4POS
-};
 
 #define NUM_TERRORISTS 6
 
