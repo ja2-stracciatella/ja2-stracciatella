@@ -1,3 +1,4 @@
+(r2580) Fix a vanilla memory leak of the radar image when a meanwhile sequence is playing.
 (r2576) Fix a vanilla glitch: After a battle against bloodcats probably a wrong soldier (e.g. a soldier not in the battle sector) tried to say his "cool"-line.
 (r2569, r2575) Fix a vanilla glitch: The clickable area of the vehicle selection box did not have the same width as the graphics of the box.
 (r2564) Fix a vanilla graphical glitch: The gap between the left and right column of popup boxes was displayed wider than specified.
