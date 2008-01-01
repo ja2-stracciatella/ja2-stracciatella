@@ -45,7 +45,7 @@ static const char* gGameLibaries[] =
 	"italian.slf",
 #endif
 
-#if defined RUSSIAN && !defined RUSSIAN_GOLD
+#if defined RUSSIAN
 	"russian.slf",
 #endif
 
