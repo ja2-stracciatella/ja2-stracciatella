@@ -733,10 +733,6 @@ static void DoneFadeOutForDemoExitScreen(void)
 #ifdef JA2DEMOADS
 void DoDemoIntroduction()
 {
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	MSG Message;
 	UINT16 yp, height;
 	UINT32 uiStartTime = 0xffffffff;
 	UINT16 usFadeLimit = 8;
@@ -777,15 +773,26 @@ void DoDemoIntroduction()
 	RefreshScreen();
 	while (gfProgramIsRunning)
 	{
-		if (PeekMessage(&Message, NULL, 0, 0, PM_NOREMOVE))
-		{ // We have a message on the WIN95 queue, let's get it
-			if (!GetMessage(&Message, NULL, 0, 0))
-			{ // It's quitting time
-				continue;
+		SDL_Event event;
+		if (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
+				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
+				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
+
+				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
+				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
+
+				case SDL_MOUSEMOTION:
+					gusMouseXPos = event.motion.x;
+					gusMouseYPos = event.motion.y;
+					break;
+
+				case SDL_QUIT:
+					gfProgramIsRunning = FALSE;
+					break;
 			}
-			// Ok, now that we have the message, let's handle it
-			TranslateMessage(&Message);
-			DispatchMessage(&Message);
 		}
 		else
 		{ // Windows hasn't processed any messages, therefore we handle the rest
@@ -836,7 +843,6 @@ void DoDemoIntroduction()
 			RefreshScreen();
 		}
 	}
-#endif
 }
 #endif
 
