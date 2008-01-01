@@ -9301,7 +9301,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 	UINT16 usColor = GlowColor(iColorNum);
   pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  RectangleDraw( TRUE, 496, 409, 528, 442, usColor, pDestBuf );
+	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, pDestBuf);
 	InvalidateRegion(495, 408, 529+1, 442+1);
 	UnLockVideoSurface( FRAME_BUFFER );
 }
