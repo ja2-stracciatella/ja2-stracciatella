@@ -1877,7 +1877,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				if ( gOpenDoorMenu.fClosingDoor )
 				{
@@ -1901,7 +1901,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_BOOT_DOOR, BP_BOOT_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_FORCE );
 			}
@@ -1918,7 +1918,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_UNLOCK );
 			}
@@ -1935,7 +1935,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_PICKLOCK, BP_PICKLOCK, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_LOCKPICK );
 			}
@@ -1952,7 +1952,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_EXAMINE );
 			}
@@ -1969,7 +1969,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_EXPLODE );
 			}
@@ -1986,7 +1986,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_UNTRAP );
 			}
@@ -2003,7 +2003,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_USE_CROWBAR, BP_USE_CROWBAR, FALSE ) )
 			{
 				// Set UI
-				SetUIBusy( (UINT8)gOpenDoorMenu.pSoldier->ubID );
+				SetUIBusy(gOpenDoorMenu.pSoldier);
 
 				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_CROWBAR );
 			}

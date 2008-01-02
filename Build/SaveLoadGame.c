@@ -2257,7 +2257,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if( gTacticalStatus.ubAttackBusyCount > 1 )
 	{
 		//Lock the ui
-		SetUIBusy( (UINT8)gusSelectedSoldier );
+		SetUIBusy(ID2SOLDIER(gusSelectedSoldier));
 	}
 
 	//Reset the shadow

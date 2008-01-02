@@ -1747,7 +1747,7 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					sActionGridNo =  FindAdjacentGridEx( pSoldier, sIntTileGridNo, &ubDirection, NULL, FALSE, TRUE );
 					if ( sActionGridNo != -1 )
 					{
-						SetUIBusy( pSoldier->ubID );
+						SetUIBusy(pSoldier);
 
 						// Set dest gridno
 						sDestGridNo = sActionGridNo;
@@ -1767,7 +1767,7 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					}
 				}
 
-				SetUIBusy( pSoldier->ubID );
+				SetUIBusy(pSoldier);
 
 				if ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) )
 				{
@@ -4122,7 +4122,7 @@ static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 
     if ( MakeSoldierTurn( pSoldier, sXPos, sYPos ) )
     {
-		  SetUIBusy( pSoldier->ubID );
+			SetUIBusy(pSoldier);
 	  }
   }
 	return( GAME_SCREEN );
@@ -4676,7 +4676,7 @@ static UINT32 UIHandleJumpOver(UI_EVENT* pUIEvent)
 		return( GAME_SCREEN );
 	}
 
-	SetUIBusy( pSoldier->ubID );
+	SetUIBusy(pSoldier);
 
 	// OK, Start jumping!
 	// Remove any previous actions
@@ -5072,12 +5072,11 @@ BOOLEAN HandleTalkInit(  )
 }
 
 
-
-void SetUIBusy( UINT8 ubID )
+void SetUIBusy(const SOLDIERTYPE* const s)
 {
 	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
 	{
-		if ( gusSelectedSoldier == ubID )
+		if (s == ID2SOLDIER(gusSelectedSoldier))
 		{
 			guiPendingOverrideEvent	= LA_BEGINUIOURTURNLOCK;
 			HandleTacticalUI( );

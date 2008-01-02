@@ -3810,7 +3810,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							}
 
 							// OK, set UI
-							SetUIBusy( gpItemPointerSoldier->ubID );
+							SetUIBusy(gpItemPointerSoldier);
 					 }
 
 				}

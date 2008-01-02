@@ -512,7 +512,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			}
 
 			// OK, set UI
-			SetUIBusy( pSoldier->ubID );
+			SetUIBusy(pSoldier);
 		}
 		else
 		{
@@ -592,7 +592,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				}
 
 				// OK, set UI
-				SetUIBusy( pSoldier->ubID );
+				SetUIBusy(pSoldier);
 
 				gfResetUIMovementOptimization = TRUE;
 
@@ -645,7 +645,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
 			{
 				// OK, set UI
-				SetUIBusy( pSoldier->ubID );
+				SetUIBusy(pSoldier);
 
 				// CHECK IF WE ARE AT THIS GRIDNO NOW
 				if ( pSoldier->sGridNo != sActionGridNo )
@@ -722,7 +722,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 
 					// OK, set UI
-					SetUIBusy( pSoldier->ubID );
+					SetUIBusy(pSoldier);
 
 					if ( fFromUI )
 					{
@@ -797,7 +797,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 
 					// OK, set UI
-					SetUIBusy( pSoldier->ubID );
+					SetUIBusy(pSoldier);
 
 					if ( fFromUI )
 					{
@@ -864,7 +864,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 
 					// OK, set UI
-					SetUIBusy( pSoldier->ubID );
+					SetUIBusy(pSoldier);
 
 					if ( fFromUI )
 					{
@@ -915,7 +915,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 					}
 
 					// OK, set UI
-					SetUIBusy( pSoldier->ubID );
+					SetUIBusy(pSoldier);
 
 					if ( fFromUI )
 					{
@@ -974,7 +974,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 						}
 
 						// OK, set UI
-						SetUIBusy( pSoldier->ubID );
+						SetUIBusy(pSoldier);
 
 						if ( fFromUI )
 						{
@@ -1073,7 +1073,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 		}
 
 		// OK, set UI
-		SetUIBusy( pSoldier->ubID );
+		SetUIBusy(pSoldier);
 
 		if ( fFromUI )
 		{
@@ -1128,7 +1128,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 				}
 
 				// OK, set UI
-				SetUIBusy( pSoldier->ubID );
+				SetUIBusy(pSoldier);
 
 				if ( fFromUI )
 				{
@@ -1253,7 +1253,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			}
 
 			// OK, set UI
-			SetUIBusy( pSoldier->ubID );
+			SetUIBusy(pSoldier);
 
 			return( ITEM_HANDLE_OK );
 
@@ -1486,7 +1486,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 	// Deduct points!
 	//sAPCost = GetAPsToPickupItem( pSoldier, sGridNo );
 	//DeductPoints( pSoldier, sAPCost, 0 );
-	SetUIBusy( pSoldier->ubID );
+	SetUIBusy(pSoldier);
 
 	// CHECK IF NOT AT SAME GRIDNO
 	if ( pSoldier->sGridNo != sActionGridNo )

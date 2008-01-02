@@ -3880,7 +3880,7 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 								// WALK UP TO DEST FIRST
 								EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, 3 , pSoldier->fNoAPToFinishMove );
 
-								SetUIBusy(pSoldier->ubID);
+								SetUIBusy(pSoldier);
 							}
 							else
 							{
@@ -4149,7 +4149,7 @@ INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 					{
 						fContinue = FALSE;
 
-						SetUIBusy( pSoldier->ubID );
+						SetUIBusy(pSoldier);
 
 						if ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) )
 						{
