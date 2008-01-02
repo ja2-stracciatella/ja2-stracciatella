@@ -1362,7 +1362,7 @@ const wchar_t *sFacilitiesStrings[] =
 	L"Gefängnis",
 	L"Militär",
 	L"Flughafen",
-	L"Reichweite",		// a field for soldiers to practise their shooting skills
+	L"Schießstand", // a field for soldiers to practise their shooting skills
 };
 
 // text for inventory pop up button

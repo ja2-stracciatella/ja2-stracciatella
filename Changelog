@@ -1,3 +1,4 @@
+(r2609) Fix a gross vanilla mistranslation in the German translation for the term "shooting range".
 (r2580) Fix a vanilla memory leak of the radar image when a meanwhile sequence is playing.
 (r2576) Fix a vanilla glitch: After a battle against bloodcats probably a wrong soldier (e.g. a soldier not in the battle sector) tried to say his "cool"-line.
 (r2569, r2575) Fix a vanilla glitch: The clickable area of the vehicle selection box did not have the same width as the graphics of the box.
@@ -13,6 +14,7 @@
 (r2217) Fix a vanilla bug which could lead to missing light effects in tactical when loading savegames.
 (r2022) Fix a vanilla out of bounds array access in CalcChanceToHitGun().
 (r2021) Fix a vanilla bug: The Russian versions did not play NPC speeches, because they incorrectly used different filenames than all other languages, but the filenames in the data files are the same.
+(r2006, r2414) Improve Russian translation, especially fix one gross vanilla mistranslation, which mixed up Carmen and Slay.
 (r1944) Fix a vanilla glitch: Do not show a balance in the personnel screen when looking at past mercs.
 (r1798) Fix vanilla display bug: No path was plotted and no APs for walking were calculated for refueling when the cursor was on a vehicle.
 (r1650) Fix vanilla rounding errors: The scrollbar in the inventory view of the personnel screen was not positioned correctly and could be moved one beyond the last item.
