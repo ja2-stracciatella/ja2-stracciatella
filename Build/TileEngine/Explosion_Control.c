@@ -2696,8 +2696,6 @@ void HandleExplosionQueue(void)
 			gPersonToSetOffExplosions = NULL;
 		}
 
-		// unlock UI
-		//UnSetUIBusy( (UINT8)gusSelectedSoldier );
 		if ( !(gTacticalStatus.uiFlags & INCOMBAT) || gTacticalStatus.ubCurrentTeam == gbPlayerNum )
 		{
 			// don't end UI lock when it's a computer turn

@@ -1673,7 +1673,7 @@ BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ub
 	gOpenDoorMenu.sY = sScreenY - ( ( BUTTON_PANEL_HEIGHT - sHeight ) / 2 );
 
 	// Alrighty, cancel lock UI if we havn't done so already
-	UnSetUIBusy( pSoldier->ubID );
+	UnSetUIBusy(pSoldier);
 
 
 	// OK, CHECK FOR BOUNDARIES!

@@ -405,7 +405,7 @@ UINT32  HandleTacticalUI( void )
 				gfUIInterfaceSetBusy = FALSE;
 
 				//UNLOCK UI
-				UnSetUIBusy( (UINT8)gusSelectedSoldier );
+				UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
 
 				// Decrease global busy  counter...
 				gTacticalStatus.ubAttackBusyCount = 0;
@@ -5085,13 +5085,14 @@ void SetUIBusy( UINT8 ubID )
 	}
 }
 
-void UnSetUIBusy( UINT8 ubID )
+
+void UnSetUIBusy(const SOLDIERTYPE* const s)
 {
 	if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.ubCurrentTeam == gbPlayerNum ) )
 	{
 		if ( !gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 		{
-			if ( gusSelectedSoldier == ubID )
+			if (s == ID2SOLDIER(gusSelectedSoldier))
 			{
 				guiPendingOverrideEvent	= LA_ENDUIOUTURNLOCK;
 				HandleTacticalUI( );

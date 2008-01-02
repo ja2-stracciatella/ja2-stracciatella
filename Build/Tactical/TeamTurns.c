@@ -830,18 +830,18 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 					}
 					else
 					{
-						UnSetUIBusy(interrupted->ubID);
+						UnSetUIBusy(interrupted);
 					}
 				}
 				else
 				{
-					UnSetUIBusy(interrupted->ubID);
+					UnSetUIBusy(interrupted);
 				}
 
 				if ( gTacticalStatus.fUnLockUIAfterHiddenInterrupt )
 				{
 					gTacticalStatus.fUnLockUIAfterHiddenInterrupt = FALSE;
-					UnSetUIBusy(interrupted->ubID);
+					UnSetUIBusy(interrupted);
 				}
 			}
 			else

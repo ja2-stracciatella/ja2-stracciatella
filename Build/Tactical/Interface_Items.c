@@ -4899,7 +4899,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 
 
 	// Alrighty, cancel lock UI if we havn't done so already
-	UnSetUIBusy( pSoldier->ubID );
+	UnSetUIBusy(pSoldier);
 
 	// Change to INV panel if not there already...
 	gfSwitchPanel = TRUE;

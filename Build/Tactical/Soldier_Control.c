@@ -1283,7 +1283,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		// Alrighty, check if we should free buddy up!
 		if ( usNewState == GIVING_AID )
 		{
-			UnSetUIBusy( pSoldier->ubID );
+			UnSetUIBusy(pSoldier);
 		}
 
 
@@ -1374,7 +1374,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		  if ( CheckForBreathCollapse( pSoldier ) || pSoldier->bCollapsed )
 		  {
 				// UNset UI
-				UnSetUIBusy( pSoldier->ubID );
+				UnSetUIBusy(pSoldier);
 
 				SoldierCollapse( pSoldier );
 
@@ -1456,7 +1456,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		          if ( pSoldier->bBreathCollapsed )
 		          {
 					      // UNset UI
-					      UnSetUIBusy( pSoldier->ubID );
+								UnSetUIBusy(pSoldier);
 
 					      SoldierCollapse( pSoldier );
 
@@ -4779,7 +4779,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		// Unset ui busy if from ui
 		if ( pSoldier->bTurningFromUI && ( pSoldier->fTurningFromPronePosition != 3 ) && ( pSoldier->fTurningFromPronePosition != 1 ) )
 		{
-			UnSetUIBusy( pSoldier->ubID );
+			UnSetUIBusy(pSoldier);
 			pSoldier->bTurningFromUI = FALSE;
 		}
 
@@ -7738,7 +7738,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 
 		if ( fRefused )
 		{
-			UnSetUIBusy( pSoldier->ubID );
+			UnSetUIBusy(pSoldier);
 			return;
 		}
 
@@ -7791,7 +7791,7 @@ void EVENT_SoldierEnterVehicle(SOLDIERTYPE* const s, const INT16 sGridNo)
 		PutSoldierInVehicle(s, v);
 	}
 
-	UnSetUIBusy(s->ubID);
+	UnSetUIBusy(s);
 }
 
 
@@ -8152,7 +8152,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	// Unset UI!
 	if ( fFromSightingEnemy || ( pSoldier->pTempObject == NULL && !pSoldier->fTurningToShoot ) )
 	{
-		UnSetUIBusy( pSoldier->ubID );
+		UnSetUIBusy(pSoldier);
 	}
 
 	pSoldier->bTurningFromUI = FALSE;
@@ -8213,7 +8213,7 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	}
 
 	// Unset UI!
-	UnSetUIBusy( pSoldier->ubID );
+	UnSetUIBusy(pSoldier);
 
 	UnMarkMovementReserved( pSoldier );
 
@@ -9092,7 +9092,7 @@ void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo
 		// If in water....
 		if ( MercInWater( pSoldier ) )
 		{
-			UnSetUIBusy( pSoldier->ubID );
+			UnSetUIBusy(pSoldier);
 			HandleSoldierPickupItem( pSoldier, iItemIndex, sGridNo, bZLevel );
 			SoldierGotoStationaryStance( pSoldier );
 			if (!(pSoldier->uiStatusFlags & SOLDIER_PC))
@@ -9165,8 +9165,7 @@ void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo
 
 				case ANIM_CROUCH:
 				case ANIM_PRONE:
-
-					UnSetUIBusy( pSoldier->ubID );
+					UnSetUIBusy(pSoldier);
 					HandleSoldierPickupItem( pSoldier, iItemIndex, sGridNo, bZLevel );
 					SoldierGotoStationaryStance( pSoldier );
 					if (!(pSoldier->uiStatusFlags & SOLDIER_PC))

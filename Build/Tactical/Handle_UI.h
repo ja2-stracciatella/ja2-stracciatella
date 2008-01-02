@@ -253,7 +253,7 @@ BOOLEAN HandleTalkInit(void);
 BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustForConfirm );
 
 void SetUIBusy( UINT8 ubID );
-void UnSetUIBusy( UINT8 ubID );
+void UnSetUIBusy(const SOLDIERTYPE* s);
 
 UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent );
 

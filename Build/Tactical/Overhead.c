@@ -1138,7 +1138,7 @@ BOOLEAN ExecuteOverhead(void)
 											}
 											else
 											{
-												UnSetUIBusy(pSoldier->ubID);
+												UnSetUIBusy(pSoldier);
 												SoldierGotoStationaryStance(pSoldier);
 											}
 										}
@@ -1419,7 +1419,7 @@ static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE* pSoldier)
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[GUY_HAS_RUN_OUT_OF_APS_STR], pSoldier->name);
 	}
 
-	UnSetUIBusy(pSoldier->ubID);
+	UnSetUIBusy(pSoldier);
 
 	// OK, Unset engaged in CONV, something changed...
 	UnSetEngagedInConvFromPCAction(pSoldier);
@@ -1541,7 +1541,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 			pSoldier->bBreathCollapsed = TRUE;
 			pSoldier->bEndDoorOpenCode = FALSE;
 
-			if (fInitialMove) UnSetUIBusy(pSoldier->ubID);
+			if (fInitialMove) UnSetUIBusy(pSoldier);
 
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "HandleGotoNewGridNo() Failed: Out of Breath");
 			return FALSE;
@@ -1843,7 +1843,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						}
 
 						fDontContinue = TRUE;
-						UnSetUIBusy(pSoldier->ubID);
+						UnSetUIBusy(pSoldier);
 					}
 				}
 			}
@@ -4901,7 +4901,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		gTacticalStatus.fEnemyInSector = FALSE;
 
 		// If here, the battle has been lost!
-		UnSetUIBusy( (UINT8)gusSelectedSoldier );
+		UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
 
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{
@@ -4965,7 +4965,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// battle for us
 		EndAllAITurns( );
 
-		UnSetUIBusy( (UINT8)gusSelectedSoldier );
+		UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
 
 		// ATE:
 		// If we ended battle in any team other than the player's
@@ -6233,7 +6233,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)
 		{
-			UnSetUIBusy(pSoldier->ubID);
+			UnSetUIBusy(pSoldier);
 		}
 		else
 		{

@@ -2750,7 +2750,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 			}
 
 			// Unset User's turn UI
-			UnSetUIBusy( pSoldier->ubID );
+			UnSetUIBusy(pSoldier);
 		}
 	}
 

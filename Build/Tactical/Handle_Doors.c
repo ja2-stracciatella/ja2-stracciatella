@@ -377,7 +377,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
       }
       else
       {
-			  UnSetUIBusy( pSoldier->ubID );
+				UnSetUIBusy(pSoldier);
       }
 		}
 		else

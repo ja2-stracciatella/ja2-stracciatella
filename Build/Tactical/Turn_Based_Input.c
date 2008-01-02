@@ -4322,7 +4322,7 @@ static void TestMeanWhile(INT32 iID)
 static void EscapeUILock(void)
 {
 	//UNLOCK UI
-	UnSetUIBusy( (UINT8)gusSelectedSoldier );
+	UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
 
 	// Decrease global busy  counter...
 	gTacticalStatus.ubAttackBusyCount = 0;

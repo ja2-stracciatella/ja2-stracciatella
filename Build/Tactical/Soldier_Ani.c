@@ -156,7 +156,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 				if ( !pSoldier->fInNonintAnim )
 				{
 					// UNset UI
-					UnSetUIBusy( pSoldier->ubID );
+					UnSetUIBusy(pSoldier);
 
 					SoldierCollapse( pSoldier );
 
@@ -256,7 +256,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						else
 						{
 							// OK, UNSET INTERFACE FIRST
-							UnSetUIBusy( pSoldier->ubID );
+							UnSetUIBusy(pSoldier);
 
 							if ( pSoldier->ubID == gusSelectedSoldier )
 							{
@@ -489,7 +489,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // be from player changin stance
           if ( pSoldier->usAnimState == START_COWER )
           {
-            UnSetUIBusy( pSoldier->ubID );
+						UnSetUIBusy(pSoldier);
           }
 					break;
 
@@ -549,7 +549,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							SoldierGotoStationaryStance( pSoldier );
 
 							// Set UI Busy
-							UnSetUIBusy( pSoldier->ubID );
+							UnSetUIBusy(pSoldier);
 							return( TRUE );
 						}
 					}
@@ -1190,7 +1190,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							ChangeInterfaceLevel( 0 );
 						}
 						// OK, UNSET INTERFACE FIRST
-						UnSetUIBusy( pSoldier->ubID );
+						UnSetUIBusy(pSoldier);
 					}
 					else
 					{
@@ -1864,7 +1864,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
               if ( gTacticalStatus.ubAttackBusyCount == 0 )
               {
 							  // OK, UNSET INTERFACE FIRST
-							  UnSetUIBusy( pSoldier->ubID );
+								UnSetUIBusy(pSoldier);
 							  // ( before we could get interrupted potentially by an interrupt )
               }
 						}
