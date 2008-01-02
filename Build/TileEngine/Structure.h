@@ -69,11 +69,10 @@ BOOLEAN FindAndSwapStructure( INT16 sGridNo );
 //
 // functions to work with the editor undo code
 //
-struct MAP_ELEMENT;
 
 void DebugStructurePage1( void );
 
-BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructureFileRef, BOOLEAN fFromAnimation, INT16 sSTIStartIndex );
+BOOLEAN AddZStripInfoToVObject(HVOBJECT hVObject, const STRUCTURE_FILE_REF* pStructureFileRef, BOOLEAN fFromAnimation, INT16 sSTIStartIndex);
 
 // FUNCTIONS FOR DETERMINING STUFF THAT BLOCKS VIEW FOR TILE_bASED LOS
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock );

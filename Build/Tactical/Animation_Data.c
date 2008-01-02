@@ -643,90 +643,82 @@ STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* const s, const U
 
 
 // Surface mamagement functions
-BOOLEAN LoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState )
+BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceIndex, const UINT16 usAnimState)
 {
-	AuxObjectData *pAuxData;
-
 	// Check for valid surface
-	CHECKF( usSurfaceIndex < NUMANIMATIONSURFACETYPES );
+	CHECKF(usSurfaceIndex < NUMANIMATIONSURFACETYPES);
+	AnimationSurfaceType* const a = &gAnimSurfaceDatabase[usSurfaceIndex];
 
 	// Check if surface is loaded
-	if ( gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject != NULL )
+	if (a->hVideoObject != NULL)
 	{
 		// just increment usage counter ( below )
-		AnimDebugMsg( String( "Surface Database: Hit %d", usSurfaceIndex ) );
-
+		AnimDebugMsg(String("Surface Database: Hit %d", usSurfaceIndex));
 	}
 	else
 	{
 		// Load into memory
-		AnimDebugMsg( String( "Surface Database: Loading %d", usSurfaceIndex ) );
+		AnimDebugMsg(String("Surface Database: Loading %d", usSurfaceIndex));
 
-		const char* Filename = gAnimSurfaceDatabase[usSurfaceIndex].Filename;
-		const HIMAGE hImage = CreateImage(Filename, IMAGE_ALLDATA);
+		const HIMAGE hImage = CreateImage(a->Filename, IMAGE_ALLDATA);
 	  if (hImage == NULL)
 	  {
-			SET_ERROR("Error: Could not load animation file %s", Filename);
+			SET_ERROR("Error: Could not load animation file %s", a->Filename);
 			goto fail;
 	  }
 
 		SGPVObject* const hVObject = AddVideoObjectFromHImage(hImage);
-		if ( hVObject == NULL )
+		if (hVObject == NULL)
 		{
 			// Report error
-			SET_ERROR( "Could not load animation file: %s", gAnimSurfaceDatabase[ usSurfaceIndex ].Filename );
+			SET_ERROR("Could not load animation file: %s", a->Filename);
 			// Video Object will set error conition.]
 			goto fail_image;
 		}
 
 		// Get aux data
-		if (hImage->uiAppDataSize == hVObject->usNumberOfObjects * sizeof( AuxObjectData ))
-		{
-			// Valid auxiliary data, so get # od frames from data
-			pAuxData = ( AuxObjectData* ) hImage->pAppData;
-
-			gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
-
-		}
-		else
+		if (hImage->uiAppDataSize != hVObject->usNumberOfObjects * sizeof(AuxObjectData))
 		{
 			// Report error
-			SET_ERROR( "Invalid # of animations given" );
+			SET_ERROR("Invalid # of animations given");
 			goto fail_vobj;
 		}
 
+		// Valid auxiliary data, so get # of frames from data
+		const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
+		a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
+
 		// get structure data if any
-		STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
-		if ( pStructureFileRef != NULL )
+		const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
+		if (pStructureFileRef != NULL)
 		{
 			INT16 sStartFrame = 0;
-
-			if ( usSurfaceIndex == RGMPRONE )
+			if (usSurfaceIndex == RGMPRONE)
 			{
 				sStartFrame = 5;
 			}
-			else if ( usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE )
+			else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
 			{
 				sStartFrame = -1;
 			}
 
-			if (AddZStripInfoToVObject( hVObject, pStructureFileRef, TRUE, sStartFrame ) == FALSE)
+			if (AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame) == FALSE)
 			{
-				SET_ERROR("Animation structure ZStrip creation error: %s", Filename);
+				SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
 				goto fail_vobj;
 			}
 		}
 
 	  // the hImage is no longer needed
-	  DestroyImage( hImage );
+	  DestroyImage(hImage);
 
 		// Set video object index
-		gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject = hVObject;
+		a->hVideoObject = hVObject;
 
 		// Determine if we have a problem with #frames + directions ( ie mismatch )
-		if (  ( gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumDirections * gAnimSurfaceDatabase[ usSurfaceIndex ].uiNumFramesPerDir ) != gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject->usNumberOfObjects )
+		if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->usNumberOfObjects)
 		{
-			AnimDebugMsg( String( "Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex ) );
+			AnimDebugMsg(String("Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex));
 		}
 
 		if (0) /* error handling */
@@ -741,17 +733,16 @@ fail:
 	}
 
 	// Increment usage count only if history for soldier is not yet set
-	if ( gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ] == 0 )
+	if (gbAnimUsageHistory[usSurfaceIndex][usSoldierID] == 0)
 	{
-		AnimDebugMsg( String( "Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
+		AnimDebugMsg(String("Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID));
 		// Increment usage count
-		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount++;
+		++a->bUsageCount;
 		// Set history for particular sodlier
-		gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ]++;
-
+		++gbAnimUsageHistory[usSurfaceIndex][usSoldierID];
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 
 

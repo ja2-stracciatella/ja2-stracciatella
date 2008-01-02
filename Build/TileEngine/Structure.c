@@ -1832,42 +1832,21 @@ void DebugStructurePage1( void )
 	#endif
 }
 
-BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructureFileRef, BOOLEAN fFromAnimation, INT16 sSTIStartIndex )
+
+BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF* const pStructureFileRef, const BOOLEAN fFromAnimation, INT16 sSTIStartIndex)
 {
-	UINT32					uiLoop;
-	UINT8						ubLoop2;
-	UINT8						ubNumIncreasing = 0;
-	UINT8						ubNumStable = 0;
-	UINT8						ubNumDecreasing = 0;
-	BOOLEAN					fFound = FALSE;
-	ZStripInfo *		pCurr;
-	INT16						sLeftHalfWidth;
-	INT16						sRightHalfWidth;
-	INT16						sOffsetX;
-	INT16						sOffsetY;
-	UINT16					usWidth;
-	DB_STRUCTURE_REF *	pDBStructureRef;
-	DB_STRUCTURE *	pDBStructure = NULL;
-	INT16						sSTIStep = 0;
-	INT16						sStructIndex = 0;
-	INT16						sNext;
-	UINT32					uiDestVoIndex;
-	BOOLEAN					fCopyIntoVo;
-	BOOLEAN					fFirstTime;
+	if (pStructureFileRef->usNumberOfStructuresStored == 0) return TRUE;
 
-
-	if (pStructureFileRef->usNumberOfStructuresStored == 0)
+	BOOLEAN             fFound       = FALSE;
+	const DB_STRUCTURE* pDBStructure = NULL;
+	for (UINT32 uiLoop = 0; uiLoop < pStructureFileRef->usNumberOfStructures; ++uiLoop)
 	{
-		return( TRUE );
-	}
-	for (uiLoop = 0; uiLoop < pStructureFileRef->usNumberOfStructures; uiLoop++)
-	{
-		pDBStructureRef = &(pStructureFileRef->pDBStructureRef[uiLoop]);
+		const DB_STRUCTURE_REF* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[uiLoop];
 		pDBStructure = pDBStructureRef->pDBStructure;
 		//if (pDBStructure != NULL && pDBStructure->ubNumberOfTiles > 1 && !(pDBStructure->fFlags & STRUCTURE_WALLSTUFF) )
-		if (pDBStructure != NULL && pDBStructure->ubNumberOfTiles > 1 )
+		if (pDBStructure != NULL && pDBStructure->ubNumberOfTiles > 1)
 		{
-			for (ubLoop2 = 1; ubLoop2 < pDBStructure->ubNumberOfTiles; ubLoop2++)
+			for (UINT8 ubLoop2 = 1; ubLoop2 < pDBStructure->ubNumberOfTiles; ++ubLoop2)
 			{
 				if (pDBStructureRef->ppTile[ubLoop2]->sPosRelToBase != 0)
 				{
@@ -1880,36 +1859,32 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 	}
 
 	// ATE: Make all corpses use z-strip info..
-	if ( pDBStructure != NULL && pDBStructure->fFlags & STRUCTURE_CORPSE )
+	if (pDBStructure != NULL && pDBStructure->fFlags & STRUCTURE_CORPSE)
 	{
 		fFound = TRUE;
 	}
 
-	if (!fFound)
-	{
-		// no multi-tile images in this vobject; that's okay... return!
-		return( TRUE );
-	}
-	hVObject->ppZStripInfo = MemAlloc( sizeof( ZStripInfo * ) * hVObject->usNumberOfObjects );
-	if (hVObject->ppZStripInfo == NULL)
-	{
-		return( FALSE );
-	}
-	memset( hVObject->ppZStripInfo, 0, sizeof( ZStripInfo * ) * hVObject->usNumberOfObjects );
+	// if no multi-tile images in this vobject, that's okay... return!
+	if (!fFound) return TRUE;
 
+	const UINT         zcount = hVObject->usNumberOfObjects;
+	ZStripInfo** const zinfo  = MemAlloc(sizeof(*zinfo) * zcount);
+	if (zinfo == NULL) return FALSE;
+	memset(zinfo, 0, sizeof(*zinfo) * zcount);
 
-	if ( fFromAnimation )
+	INT16 sSTIStep;
+	if (fFromAnimation)
 	{
 		// Determine step index for STI
-		if ( sSTIStartIndex == -1 )
+		if (sSTIStartIndex == -1)
 		{
 			// one-direction only for this anim structure
-			sSTIStep = hVObject->usNumberOfObjects;
+			sSTIStep = zcount;
 			sSTIStartIndex = 0;
 		}
 		else
 		{
-			sSTIStep = ( hVObject->usNumberOfObjects / pStructureFileRef->usNumberOfStructures );
+			sSTIStep = zcount / pStructureFileRef->usNumberOfStructures;
 		}
 	}
 	else
@@ -1917,24 +1892,25 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 		sSTIStep = 1;
 	}
 
-	sStructIndex = 0;
-	sNext				 = sSTIStartIndex + sSTIStep;
-	fFirstTime	 = TRUE;
-
-	for (uiLoop = (UINT8)sSTIStartIndex; uiLoop < hVObject->usNumberOfObjects; uiLoop++ )
+	INT16   sLeftHalfWidth;
+	INT16   sRightHalfWidth;
+	INT16   sStructIndex    = 0;
+	INT16   sNext           = sSTIStartIndex + sSTIStep;
+	BOOLEAN fFirstTime      = TRUE;
+	for (UINT32 uiLoop = sSTIStartIndex; uiLoop < zcount; ++uiLoop)
 	{
 		// Defualt to true
-		fCopyIntoVo = TRUE;
+		BOOLEAN fCopyIntoVo = TRUE;
 
 		// Increment struct index....
-		if ( uiLoop == (UINT32)sNext )
+		if (uiLoop == (UINT32)sNext)
 		{
-			sNext					= (UINT16)( uiLoop + sSTIStep );
+			sNext					= uiLoop + sSTIStep;
 			sStructIndex++;
 		}
 		else
 		{
-			if ( fFirstTime )
+			if (fFirstTime)
 			{
 				fFirstTime = FALSE;
 			}
@@ -1944,205 +1920,184 @@ BOOLEAN AddZStripInfoToVObject( HVOBJECT hVObject, STRUCTURE_FILE_REF * pStructu
 			}
 		}
 
-		if ( fFromAnimation )
-		{
-			uiDestVoIndex = sStructIndex;
-		}
-		else
-		{
-			uiDestVoIndex = uiLoop;
-		}
+		const UINT32 uiDestVoIndex = (fFromAnimation ? sStructIndex : uiLoop);
 
-
-		if ( fCopyIntoVo && sStructIndex < pStructureFileRef->usNumberOfStructures )
+		if (fCopyIntoVo && sStructIndex < pStructureFileRef->usNumberOfStructures)
 		{
-			pDBStructure = pStructureFileRef->pDBStructureRef[ sStructIndex ].pDBStructure;
-			if (pDBStructure != NULL && ( pDBStructure->ubNumberOfTiles > 1 || ( pDBStructure->fFlags & STRUCTURE_CORPSE ) ) )
+			const DB_STRUCTURE* const pDBStructure = pStructureFileRef->pDBStructureRef[sStructIndex].pDBStructure;
+			if (pDBStructure != NULL && (pDBStructure->ubNumberOfTiles > 1 || pDBStructure->fFlags & STRUCTURE_CORPSE))
 			//if (pDBStructure != NULL && pDBStructure->ubNumberOfTiles > 1 )
 			{
 				// ATE: We allow SLIDING DOORS of 2 tile sizes...
-				if ( !(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || ( (pDBStructure->fFlags & ( STRUCTURE_ANYDOOR ) ) && ( pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR ) ) )
+				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR)
 				{
-					hVObject->ppZStripInfo[ uiDestVoIndex ] = MemAlloc( sizeof( ZStripInfo ) );
-					if (hVObject->ppZStripInfo[ uiDestVoIndex ] == NULL)
+					ZStripInfo* const pCurr = MemAlloc(sizeof(*pCurr));
+					if (pCurr == NULL) goto fail_loop;
+					Assert(uiDestVoIndex < zcount);
+					zinfo[uiDestVoIndex] = pCurr;
+
+					UINT8 ubNumIncreasing = 0;
+					UINT8 ubNumStable     = 0;
+					UINT8 ubNumDecreasing = 0;
+
+					// time to do our calculations!
+					INT16        sOffsetX = hVObject->pETRLEObject[uiLoop].sOffsetX;
+					INT16        sOffsetY = hVObject->pETRLEObject[uiLoop].sOffsetY;
+					const UINT16 usWidth  = hVObject->pETRLEObject[uiLoop].usWidth;
+					if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE))
 					{
-						// augh!! out of memory!  free everything allocated and abort
-						for (ubLoop2 = 0; ubLoop2 < uiLoop; ubLoop2++)
+						// adjust for the difference between the animation and structure base tile
+
+						//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )
 						{
-							if (hVObject->ppZStripInfo[ubLoop2] != NULL)
-							{
-								MemFree(hVObject->ppZStripInfo[uiLoop]);
-							}
+							sOffsetX += WORLD_TILE_X / 2;
+							sOffsetY += WORLD_TILE_Y / 2;
 						}
-						MemFree( hVObject->ppZStripInfo );
-						hVObject->ppZStripInfo = NULL;
-						return( FALSE );
+						// adjust for the tile offset
+						sOffsetX = sOffsetX - pDBStructure->bZTileOffsetX * (WORLD_TILE_X / 2) + pDBStructure->bZTileOffsetY * (WORLD_TILE_X / 2);
+						sOffsetY = sOffsetY - pDBStructure->bZTileOffsetY * (WORLD_TILE_Y / 2);
+					}
+
+					// figure out how much of the image is on each side of
+					// the bottom corner of the base tile
+					if (sOffsetX <= 0)
+					{
+						// note that the adjustments here by (WORLD_TILE_X / 2) are to account for the X difference
+						// between the blit position and the bottom corner of the base tile
+						sRightHalfWidth = usWidth + sOffsetX - (WORLD_TILE_X / 2);
+
+						if (sRightHalfWidth >= 0)
+						{
+							// Case 1: negative image offset, image straddles bottom corner
+
+							// negative of a negative is positive
+							sLeftHalfWidth = -sOffsetX + (WORLD_TILE_X / 2);
+						}
+						else
+						{
+							// Case 2: negative image offset, image all on left side
+
+							// bump up the LeftHalfWidth to the right edge of the last tile-half,
+							// so we can calculate the size of the leftmost portion accurately
+							// NB subtracting a negative to add the absolute value
+							sLeftHalfWidth = usWidth - (sRightHalfWidth % (WORLD_TILE_X / 2));
+							sRightHalfWidth = 0;
+						}
+					}
+					else if (sOffsetX < (WORLD_TILE_X / 2))
+					{
+						sLeftHalfWidth = (WORLD_TILE_X / 2) - sOffsetX;
+						sRightHalfWidth = usWidth - sLeftHalfWidth;
+						if (sRightHalfWidth <= 0)
+						{
+							// Case 3: positive offset < 20, image all on left side
+							// should never happen because these images are multi-tile!
+							sRightHalfWidth = 0;
+							// fake the left width to one half-tile
+							sLeftHalfWidth = (WORLD_TILE_X / 2);
+						}
+						else
+						{
+							// Case 4: positive offset < 20, image straddles bottom corner
+
+							// all okay?
+						}
 					}
 					else
 					{
-						pCurr = hVObject->ppZStripInfo[ uiDestVoIndex ];
+						// Case 5: positive offset, image all on right side
+						// should never happen either
+						sLeftHalfWidth = 0;
+						sRightHalfWidth = usWidth;
+					}
 
-						ubNumIncreasing = 0;
-						ubNumStable = 0;
-						ubNumDecreasing = 0;
-
-						// time to do our calculations!
-						sOffsetX = hVObject->pETRLEObject[uiLoop].sOffsetX;
-						sOffsetY = hVObject->pETRLEObject[uiLoop].sOffsetY;
-						usWidth = hVObject->pETRLEObject[uiLoop].usWidth;
-						if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE) )
+					if (sLeftHalfWidth > 0)
+					{
+						ubNumIncreasing = sLeftHalfWidth / (WORLD_TILE_X / 2);
+					}
+					if (sRightHalfWidth > 0)
+					{
+						ubNumStable = 1;
+						if (sRightHalfWidth > (WORLD_TILE_X / 2))
 						{
-							// adjust for the difference between the animation and structure base tile
-
-							//if (pDBStructure->fFlags & (STRUCTURE_MOBILE ) )
-							{
-								sOffsetX = sOffsetX + (WORLD_TILE_X / 2);
-								sOffsetY = sOffsetY + (WORLD_TILE_Y / 2);
-							}
-							// adjust for the tile offset
-							sOffsetX = sOffsetX - pDBStructure->bZTileOffsetX * (WORLD_TILE_X / 2) + pDBStructure->bZTileOffsetY * (WORLD_TILE_X / 2);
-							sOffsetY = sOffsetY - pDBStructure->bZTileOffsetY * (WORLD_TILE_Y / 2);
+							ubNumDecreasing = sRightHalfWidth / (WORLD_TILE_X / 2);
 						}
-
-						// figure out how much of the image is on each side of
-						// the bottom corner of the base tile
-						if (sOffsetX <= 0)
+					}
+					if (sLeftHalfWidth > 0)
+					{
+						pCurr->ubFirstZStripWidth = sLeftHalfWidth % (WORLD_TILE_X / 2);
+						if (pCurr->ubFirstZStripWidth == 0)
 						{
-							// note that the adjustments here by (WORLD_TILE_X / 2) are to account for the X difference
-							// between the blit position and the bottom corner of the base tile
-							sRightHalfWidth = usWidth + sOffsetX - (WORLD_TILE_X / 2);
-
-							if (sRightHalfWidth >= 0)
-							{
-								// Case 1: negative image offset, image straddles bottom corner
-
-								// negative of a negative is positive
-								sLeftHalfWidth = -sOffsetX + (WORLD_TILE_X / 2);
-							}
-							else
-							{
-								// Case 2: negative image offset, image all on left side
-
-								// bump up the LeftHalfWidth to the right edge of the last tile-half,
-								// so we can calculate the size of the leftmost portion accurately
-								// NB subtracting a negative to add the absolute value
-								sLeftHalfWidth = usWidth - (sRightHalfWidth % (WORLD_TILE_X / 2));
-								sRightHalfWidth = 0;
-							}
+							ubNumIncreasing--;
+							pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2);
 						}
-						else if (sOffsetX < (WORLD_TILE_X / 2))
+					}
+					else // right side only; offset is at least 20 (= WORLD_TILE_X / 2)
+					{
+						if (sOffsetX > WORLD_TILE_X)
 						{
-							sLeftHalfWidth = (WORLD_TILE_X / 2) - sOffsetX;
-							sRightHalfWidth = usWidth - sLeftHalfWidth;
-							if (sRightHalfWidth <= 0)
-							{
-								// Case 3: positive offset < 20, image all on left side
-								// should never happen because these images are multi-tile!
-								sRightHalfWidth = 0;
-								// fake the left width to one half-tile
-								sLeftHalfWidth = (WORLD_TILE_X / 2);
-							}
-							else
-							{
-								// Case 4: positive offset < 20, image straddles bottom corner
-
-								// all okay?
-							}
+							pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2) - (sOffsetX - WORLD_TILE_X) % (WORLD_TILE_X / 2);
 						}
 						else
 						{
-							// Case 5: positive offset, image all on right side
-							// should never happen either
-							sLeftHalfWidth = 0;
-							sRightHalfWidth = usWidth;
+							pCurr->ubFirstZStripWidth = WORLD_TILE_X - sOffsetX;
 						}
+						if (pCurr->ubFirstZStripWidth == 0)
+						{
+							ubNumDecreasing--;
+							pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2);
+						}
+					}
 
-						if (sLeftHalfWidth > 0)
-						{
-							ubNumIncreasing = sLeftHalfWidth / (WORLD_TILE_X / 2);
-						}
-						if (sRightHalfWidth > 0)
-						{
-							ubNumStable = 1;
-							if (sRightHalfWidth > (WORLD_TILE_X / 2))
-							{
-								ubNumDecreasing = sRightHalfWidth / (WORLD_TILE_X / 2);
-							}
-						}
-						if (sLeftHalfWidth > 0)
-						{
-							pCurr->ubFirstZStripWidth = sLeftHalfWidth % (WORLD_TILE_X / 2);
-							if (pCurr->ubFirstZStripWidth == 0)
-							{
-								ubNumIncreasing--;
-								pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2);
-							}
-						}
-						else // right side only; offset is at least 20 (= WORLD_TILE_X / 2)
-						{
-							if (sOffsetX > WORLD_TILE_X)
-							{
-								pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2) - (sOffsetX - WORLD_TILE_X) % (WORLD_TILE_X / 2);
-							}
-							else
-							{
-								pCurr->ubFirstZStripWidth = WORLD_TILE_X - sOffsetX;
-							}
-							if (pCurr->ubFirstZStripWidth == 0)
-							{
-								ubNumDecreasing--;
-								pCurr->ubFirstZStripWidth = (WORLD_TILE_X / 2);
-							}
+					// now create the array!
+					pCurr->ubNumberOfZChanges = ubNumIncreasing + ubNumStable + ubNumDecreasing;
+					pCurr->pbZChange = MemAlloc(pCurr->ubNumberOfZChanges);
+					if (pCurr->pbZChange == NULL) goto fail_loop;
 
-						}
-
-						// now create the array!
-						pCurr->ubNumberOfZChanges = ubNumIncreasing + ubNumStable + ubNumDecreasing;
-						pCurr->pbZChange = MemAlloc( pCurr->ubNumberOfZChanges );
-						if ( pCurr->pbZChange == NULL)
-						{
-							// augh!
-							for (ubLoop2 = 0; ubLoop2 < uiLoop; ubLoop2++)
-							{
-								if (hVObject->ppZStripInfo[ubLoop2] != NULL)
-								{
-									MemFree(hVObject->ppZStripInfo[uiLoop]);
-								}
-							}
-							MemFree( hVObject->ppZStripInfo );
-							hVObject->ppZStripInfo = NULL;
-							return( FALSE );
-						}
-						for (ubLoop2 = 0; ubLoop2 < ubNumIncreasing; ubLoop2++)
-						{
-							pCurr->pbZChange[ubLoop2] = 1;
-						}
-						for (; ubLoop2 < ubNumIncreasing + ubNumStable; ubLoop2++)
-						{
-							pCurr->pbZChange[ubLoop2] = 0;
-						}
-						for (; ubLoop2 < pCurr->ubNumberOfZChanges; ubLoop2++)
-						{
-							pCurr->pbZChange[ubLoop2] = -1;
-						}
-						if (ubNumIncreasing > 0)
-						{
-							pCurr->bInitialZChange = -(ubNumIncreasing);
-						}
-						else if (ubNumStable > 0)
-						{
-							pCurr->bInitialZChange = 0;
-						}
-						else
-						{
-							pCurr->bInitialZChange = -(ubNumDecreasing);
-						}
+					UINT8 ubLoop2;
+					for (ubLoop2 = 0; ubLoop2 < ubNumIncreasing; ubLoop2++)
+					{
+						pCurr->pbZChange[ubLoop2] = 1;
+					}
+					for (; ubLoop2 < ubNumIncreasing + ubNumStable; ubLoop2++)
+					{
+						pCurr->pbZChange[ubLoop2] = 0;
+					}
+					for (; ubLoop2 < pCurr->ubNumberOfZChanges; ubLoop2++)
+					{
+						pCurr->pbZChange[ubLoop2] = -1;
+					}
+					if (ubNumIncreasing > 0)
+					{
+						pCurr->bInitialZChange = -ubNumIncreasing;
+					}
+					else if (ubNumStable > 0)
+					{
+						pCurr->bInitialZChange = 0;
+					}
+					else
+					{
+						pCurr->bInitialZChange = -ubNumDecreasing;
 					}
 				}
 			}
 		}
+
+		continue;
+fail_loop:
+		for (UINT ubLoop2 = 0; ubLoop2 < uiLoop; ++ubLoop2)
+		{
+			if (zinfo[ubLoop2] != NULL)
+			{
+				MemFree(zinfo[uiLoop]);
+			}
+		}
+		MemFree(zinfo);
+		return FALSE;
 	}
-	return( TRUE );
+
+	hVObject->ppZStripInfo = zinfo;
+	return TRUE;
 }
 
 
