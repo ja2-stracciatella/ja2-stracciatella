@@ -2257,7 +2257,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if( gTacticalStatus.ubAttackBusyCount > 1 )
 	{
 		//Lock the ui
-		SetUIBusy(ID2SOLDIER(gusSelectedSoldier));
+		SetUIBusy(GetSelectedMan());
 	}
 
 	//Reset the shadow
@@ -3404,7 +3404,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	sGeneralInfo.uiCurrentUniqueSoldierId = guiCurrentUniqueSoldierId;
 	sGeneralInfo.uiCurrentScreen = guiPreviousOptionScreen;
 
-	sGeneralInfo.usSelectedSoldier = gusSelectedSoldier;
+	sGeneralInfo.usSelectedSoldier = Soldier2ID(GetSelectedMan());
 	sGeneralInfo.sRenderCenterX = gsRenderCenterX;
 	sGeneralInfo.sRenderCenterY = gsRenderCenterY;
 	sGeneralInfo.fAtLeastOneMercWasHired = gfAtLeastOneMercWasHired;
@@ -3624,8 +3624,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	guiScreenToGotoAfterLoadingSavedGame = sGeneralInfo.uiCurrentScreen;
 
-//	gusSelectedSoldier = NOBODY;
-	gusSelectedSoldier = sGeneralInfo.usSelectedSoldier;
+	SetSelectedMan(ID2Soldier(sGeneralInfo.usSelectedSoldier));
 
 	gsRenderCenterX = sGeneralInfo.sRenderCenterX;
 	gsRenderCenterY = sGeneralInfo.sRenderCenterY;

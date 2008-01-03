@@ -152,20 +152,6 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		}
 
 	}
-	/*
-	else
-	{
-		// AI is run on all PCs except the one who is selected
-		if (pSoldier->uiStatusFlags & SOLDIER_PC )
-		{
-			// if this soldier is "selected" then only let user give orders!
-			if (pSoldier->ubID == gusSelectedSoldier)
-			{
-				return;
-			}
-		}
-	}
-	*/
 
 	// determine what sort of AI to use
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )

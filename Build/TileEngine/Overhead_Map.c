@@ -468,11 +468,11 @@ void HandleOverheadMap( )
 		}
 	}
 
-
 	RenderOverheadOverlays();
-	if( !gfEditMode && !gfTacticalPlacementGUIActive && gusSelectedSoldier != NOBODY )
+	if (!gfEditMode && !gfTacticalPlacementGUIActive)
 	{
-		DisplayMercNameInOverhead(GetSelectedMan());
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel != NULL) DisplayMercNameInOverhead(sel);
 	}
 
 	RenderButtons( );
@@ -1084,12 +1084,11 @@ static void RenderOverheadOverlays(void)
 			SetObjectShade( hVObject, 1 );
 		}
 
-		if ( pSoldier->ubID == gusSelectedSoldier )
+		if (pSoldier == GetSelectedMan() &&
+				gfRadarCurrentGuyFlash       &&
+				!gfTacticalPlacementGUIActive)
 		{
-			if( gfRadarCurrentGuyFlash && !gfTacticalPlacementGUIActive )
-			{
-				SetObjectShade( hVObject, 2 );
-			}
+			SetObjectShade(hVObject, 2);
 		}
 		#ifdef JA2EDITOR
 		if( gfEditMode && gpSelected && gpSelected->pSoldier == pSoldier )
@@ -1297,12 +1296,11 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 								SetObjectShade( hVObject, 1 );
 							}
 
-							if ( pSoldier->ubID == gusSelectedSoldier )
+							if (pSoldier == GetSelectedMan() &&
+									gfRadarCurrentGuyFlash       &&
+									!gfTacticalPlacementGUIActive)
 							{
-								if( gfRadarCurrentGuyFlash && !gfTacticalPlacementGUIActive )
-								{
-									SetObjectShade( hVObject, 2 );
-								}
+								SetObjectShade(hVObject, 2);
 							}
 							#ifdef JA2EDITOR
 							if( gfEditMode && gpSelected && gpSelected->pSoldier == pSoldier )

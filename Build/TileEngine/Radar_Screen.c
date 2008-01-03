@@ -448,7 +448,7 @@ void RenderRadarScreen( )
 				sYSoldRadar += gsRadarY;
 
 				// Are we a selected guy?
-				if (pSoldier->ubID == gusSelectedSoldier)
+				if (pSoldier == GetSelectedMan())
 				{
 					if (gfRadarCurrentGuyFlash)
 					{

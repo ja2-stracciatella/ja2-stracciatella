@@ -1007,8 +1007,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										// ATE: Todo: setup flag for 'bad-guy' - can releive some checks in renderer
 										if (!pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
 										{
-											const SOLDIERTYPE* const sel = ID2SOLDIER(gusSelectedSoldier);
-
 											INT8 bGlowShadeOffset = 0;
 
 											if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
@@ -1019,15 +1017,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 													bGlowShadeOffset = 10;
 												}
 
-												if (sel != NULL)
+												const SOLDIERTYPE* const sel = GetSelectedMan();
+												if (sel != NULL                                       &&
+														sel->bOppList[pSoldier->ubID] != SEEN_CURRENTLY   &&
+														pSoldier->usAnimState         != CHARIOTS_OF_FIRE &&
+														pSoldier->usAnimState         != BODYEXPLODING)
 												{
-													if (sel->bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
-													{
-														if (pSoldier->usAnimState != CHARIOTS_OF_FIRE && pSoldier->usAnimState != BODYEXPLODING)
-														{
-															bGlowShadeOffset = 10;
-														}
-													}
+													bGlowShadeOffset = 10;
 												}
 											}
 

@@ -258,7 +258,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							// OK, UNSET INTERFACE FIRST
 							UnSetUIBusy(pSoldier);
 
-							if ( pSoldier->ubID == gusSelectedSoldier )
+							if (pSoldier == GetSelectedMan())
 							{
 								ChangeInterfaceLevel( 1 );
 							}
@@ -1185,7 +1185,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CJC: only if we are a player merc
 					if ( (pSoldier->bTeam == gbPlayerNum) && !gTacticalStatus.fAutoBandageMode)
 					{
-						if ( pSoldier->ubID == gusSelectedSoldier )
+						if (pSoldier == GetSelectedMan())
 						{
 							ChangeInterfaceLevel( 0 );
 						}

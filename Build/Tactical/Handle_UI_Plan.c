@@ -113,7 +113,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 				ChangeSoldierState( pPlanSoldier, pPlanSoldier->usUIMovementMode, 0, FALSE );
 
 				// Change selected soldier
-				gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
+				SetSelectedMan(pPlanSoldier);
 
 				// Change global planned mode to this guy!
 				gpUIPlannedSoldier = pPlanSoldier;
@@ -191,7 +191,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 					ChangeSoldierState( pPlanSoldier, pPlanSoldier->usUIMovementMode, 0, FALSE );
 
 					// Change selected soldier
-					gusSelectedSoldier = (UINT16)pPlanSoldier->ubID;
+					SetSelectedMan(pPlanSoldier);
 
 					// Change global planned mode to this guy!
 					gpUIPlannedSoldier = pPlanSoldier;
@@ -243,7 +243,7 @@ void EndUIPlan(  )
 		TacticalRemoveSoldier(s);
 	}
 	gfInUIPlanMode			 = FALSE;
-	gusSelectedSoldier   = gpUIStartPlannedSoldier->ubID;
+	SetSelectedMan(gpUIStartPlannedSoldier);
 
 	gfPlotNewMovement    = TRUE;
 

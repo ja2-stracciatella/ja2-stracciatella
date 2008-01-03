@@ -301,7 +301,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				CheckForAndAddMercToTeamPanel( Squad[ iCurrentTacticalSquad ][ bCounter ] );
 			}
 
-			if ( pCharacter->ubID == gusSelectedSoldier )
+			if (pCharacter == GetSelectedMan())
 			{
 				SetCurrentSquad( bSquadValue, TRUE );
 			}
@@ -735,8 +735,8 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	}
 
 	// check if the currently selected guy is on this squad, if not, get the first one on the new squad
-	if (gusSelectedSoldier == NO_SOLDIER ||
-			GetSelectedMan()->bAssignment != iCurrentTacticalSquad)
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel == NULL || sel->bAssignment != iCurrentTacticalSquad)
 	{
 		// ATE: Changed this to FALSE for acknowledgement sounds.. sounds bad if just starting/entering sector..
 		SelectSoldier(Squad[iCurrentTacticalSquad][0], SELSOLDIER_FORCE_RESELECT);
@@ -1047,7 +1047,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 	}
 
 	// Are we the selected guy?
-	if( gusSelectedSoldier == pSoldier->ubID )
+	if (GetSelectedMan() == pSoldier)
 	{
 		SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 		if (next != pSoldier)
@@ -1056,7 +1056,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 		}
 		else
 		{
-			gusSelectedSoldier = NOBODY;
+			SetSelectedMan(NULL);
 
       // ATE: Make sure we are in TEAM panel at this point!
 			SetCurrentInterfacePanel( TEAM_PANEL );

@@ -427,19 +427,15 @@ void CheckForDisabledForGiveItem(void)
 	}
 	else
 	{
-		const SOLDIERTYPE* src;
-		if (gpItemPointerSoldier != NULL)
-		{
-			src = gpItemPointerSoldier;
-		}
-		else if (gusSelectedSoldier != NOBODY)
+		const SOLDIERTYPE* src = gpItemPointerSoldier;
+		if (src == NULL)
 		{
 			src = GetSelectedMan();
-		}
-		else
-		{
-			gfSMDisableForItems = FALSE;
-			return;
+			if (src == NULL)
+			{
+				gfSMDisableForItems = FALSE;
+				return;
+			}
 		}
 
 		// OK buddy, check our currently selected merc and disable/enable if not close enough...
@@ -741,7 +737,10 @@ static void UpdateSMPanel(void)
 	SetButtonState(LOOK_BUTTON,       gCurrentUIMode == LOOKCURSOR_MODE);
 
 	// If not selected ( or dead ), disable/gray some buttons
-	if ( gusSelectedSoldier != gpSMCurrentMerc->ubID || ( gpSMCurrentMerc->bLife < OKLIFE ) || (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || gfSMDisableForItems )
+	if (gpSMCurrentMerc               != GetSelectedMan() ||
+			gpSMCurrentMerc->bLife        <  OKLIFE           ||
+			gTacticalStatus.ubCurrentTeam != gbPlayerNum      ||
+			gfSMDisableForItems)
 	{
 		DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 		DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
@@ -1355,7 +1354,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			}
 			else
 			{
-				if ( gusSelectedSoldier == gpSMCurrentMerc->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(  gpSMCurrentMerc ) )
+				if (GetSelectedMan() == gpSMCurrentMerc && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(gpSMCurrentMerc))
 				{
 					const INT32 x = SM_SELMERC_PLATE_X;
 					const INT32 y = dy + SM_SELMERC_PLATE_Y;
@@ -1383,7 +1382,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			}
 			else
 			{
-				if ( gusSelectedSoldier == gpSMCurrentMerc->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(  gpSMCurrentMerc ) )
+				if (GetSelectedMan() == gpSMCurrentMerc && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(gpSMCurrentMerc))
 				{
 					const INT32 x = SM_SELMERC_PLATE_X;
 					const INT32 y = dy + SM_SELMERC_PLATE_Y;
@@ -2719,7 +2718,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 
 				// Render Selected guy if selected
-				if (gusSelectedSoldier == s->ubID && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(s))
+				if (GetSelectedMan() == s && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(s))
 				{
 					const INT32 x = dx + TM_FACEHIGHTL_X;
 					const INT32 y = dy + TM_FACEHIGHTL_Y;
@@ -3139,7 +3138,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 		if (s->fFlashLocator == FALSE)
 		{
 			// If we are currently selected, slide to location
-			if (s->ubID == gusSelectedSoldier)
+			if (s == GetSelectedMan())
 			{
 				SlideTo(NOWHERE, s, NOBODY, SETLOCATOR);
 			}
@@ -3160,7 +3159,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 			if (gGameSettings.fOptions[TOPTION_OLD_SELECTION_METHOD])
 			{
 				// If we are currently selected, slide to location
-				if (s->ubID == gusSelectedSoldier)
+				if (s == GetSelectedMan())
 				{
 					SlideTo(NOWHERE, s, NOBODY, DONTSETLOCATOR);
 				}
@@ -3173,7 +3172,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 			}
 			else
 			{
-				if (s->ubID == gusSelectedSoldier)
+				if (s == GetSelectedMan())
 				{
 					LocateSoldier(s, DONTSETLOCATOR);
 				}

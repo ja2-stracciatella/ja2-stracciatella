@@ -539,8 +539,7 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 		giMenuAnchorY = ( gsVIEWPORT_WINDOW_END_Y - BUTTON_PANEL_HEIGHT );
 	}
 
-
-	const SOLDIERTYPE* const s = ID2Soldier(gusSelectedSoldier);
+	const SOLDIERTYPE* const s = GetSelectedMan();
 
 	iMenuAnchorX = giMenuAnchorX + 9;
 	iMenuAnchorY = giMenuAnchorY + 8;
@@ -953,100 +952,97 @@ static void GetArrowsBackground(void)
 		return;
 	}
 
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel == NULL) return;
+
+	// Get screen position of our guy
+	GetSoldierTRUEScreenPos(sel, &sMercScreenX, &sMercScreenY);
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE)
 	{
-		const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-
-		// Get screen position of our guy
-		GetSoldierTRUEScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_BESIDE )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX + ARROWS_X_OFFSET;
-			gsUpArrowY = sMercScreenY + UPARROW_Y_OFFSET;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_G || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX - 10;
-			gsUpArrowY = sMercScreenY - 50;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_GG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX - 10;
-			gsUpArrowY = sMercScreenY - 70;
-			sArrowHeight = 3 * ARROWS_HEIGHT;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX - 10;
-			gsUpArrowY = sMercScreenY - 70;
-			sArrowHeight = 2 * ARROWS_HEIGHT;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB2 )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX - 10;
-			gsUpArrowY = sMercScreenY - 80;
-			sArrowHeight = 3 * ARROWS_HEIGHT;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB3 )
-		{
-			// Setup blt rect
-			gsUpArrowX = sMercScreenX - 10;
-			gsUpArrowY = sMercScreenY - 900;
-			sArrowHeight = 5 * ARROWS_HEIGHT;
-		}
-
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE )
-		{
-			gsDownArrowX = sMercScreenX + ARROWS_X_OFFSET;
-			gsDownArrowY = sMercScreenY + DOWNARROW_Y_OFFSET;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_G )
-		{
-			gsDownArrowX = sMercScreenX -10;
-			gsDownArrowY = sMercScreenY + 10;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_CLIMB )
-		{
-			gsDownArrowX = sMercScreenX - 10;
-			gsDownArrowY = sMercScreenY + 10;
-			sArrowHeight = 3 * ARROWS_HEIGHT;
-		}
-
-		if ( guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YG || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_GG || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YY )
-		{
-			gsDownArrowX = sMercScreenX -10;
-			gsDownArrowY = sMercScreenY + 10;
-			sArrowHeight = 3 * ARROWS_HEIGHT;
-		}
-
-		// Adjust arrows based on level
-		if ( gsInterfaceLevel == I_ROOF_LEVEL )
-		{
-		//	gsDownArrowY -= ROOF_LEVEL_HEIGHT;
-		//	gsUpArrowY	 -= ROOF_LEVEL_HEIGHT;
-		}
-
-		//Erase prevois ones...
-		EraseRenderArrows( );
-
-		// Register dirty rects
-		giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, gsDownArrowX + sArrowWidth, gsDownArrowY + sArrowHeight);
-		giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   gsUpArrowX   + sArrowWidth, gsUpArrowY   + sArrowHeight);
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX + ARROWS_X_OFFSET;
+		gsUpArrowY = sMercScreenY + UPARROW_Y_OFFSET;
 	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_G || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_Y)
+	{
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX - 10;
+		gsUpArrowY = sMercScreenY - 50;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_GG || guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_YY)
+	{
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX - 10;
+		gsUpArrowY = sMercScreenY - 70;
+		sArrowHeight = 3 * ARROWS_HEIGHT;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB)
+	{
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX - 10;
+		gsUpArrowY = sMercScreenY - 70;
+		sArrowHeight = 2 * ARROWS_HEIGHT;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB2)
+	{
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX - 10;
+		gsUpArrowY = sMercScreenY - 80;
+		sArrowHeight = 3 * ARROWS_HEIGHT;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_UP_ABOVE_CLIMB3)
+	{
+		// Setup blt rect
+		gsUpArrowX = sMercScreenX - 10;
+		gsUpArrowY = sMercScreenY - 900;
+		sArrowHeight = 5 * ARROWS_HEIGHT;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BESIDE)
+	{
+		gsDownArrowX = sMercScreenX + ARROWS_X_OFFSET;
+		gsDownArrowY = sMercScreenY + DOWNARROW_Y_OFFSET;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_Y || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_G)
+	{
+		gsDownArrowX = sMercScreenX -10;
+		gsDownArrowY = sMercScreenY + 10;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_CLIMB)
+	{
+		gsDownArrowX = sMercScreenX - 10;
+		gsDownArrowY = sMercScreenY + 10;
+		sArrowHeight = 3 * ARROWS_HEIGHT;
+	}
+
+	if (guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YG || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_GG || guiShowUPDownArrows & ARROWS_SHOW_DOWN_BELOW_YY)
+	{
+		gsDownArrowX = sMercScreenX -10;
+		gsDownArrowY = sMercScreenY + 10;
+		sArrowHeight = 3 * ARROWS_HEIGHT;
+	}
+
+	// Adjust arrows based on level
+	if (gsInterfaceLevel == I_ROOF_LEVEL)
+	{
+	//	gsDownArrowY -= ROOF_LEVEL_HEIGHT;
+	//	gsUpArrowY	 -= ROOF_LEVEL_HEIGHT;
+	}
+
+	//Erase prevois ones...
+	EraseRenderArrows();
+
+	// Register dirty rects
+	giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, gsDownArrowX + sArrowWidth, gsDownArrowY + sArrowHeight);
+	giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   gsUpArrowX   + sArrowWidth, gsUpArrowY   + sArrowHeight);
 }
 
 
@@ -1245,15 +1241,15 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		//return;
 	}
 
-
+	const SOLDIERTYPE* const sel = GetSelectedMan();
 	if ( !pSoldier->fShowLocator )
 	{
 		// RETURN IF MERC IS NOT SELECTED
-		if (pSoldier == gSelectedGuy && pSoldier->ubID != gusSelectedSoldier && !gfIgnoreOnSelectedGuy)
+		if (pSoldier == gSelectedGuy && pSoldier != sel && !gfIgnoreOnSelectedGuy)
 		{
 
 		}
-		else if ( pSoldier->ubID == gusSelectedSoldier && !gRubberBandActive )
+		else if (pSoldier == sel && !gRubberBandActive)
 		{
 			usGraphicToUse = THIRDPOINTERS2;
 		}
@@ -1273,7 +1269,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 	}
 	else
 	{
-		if ( pSoldier->ubID == gusSelectedSoldier && !gRubberBandActive )
+		if (pSoldier == sel && !gRubberBandActive)
 		{
 			usGraphicToUse = THIRDPOINTERS2;
 		}
@@ -1375,8 +1371,8 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		if ( pSoldier->ubProfile < FIRST_RPC || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
 			// Adjust for bars!
-
-			if ( pSoldier->ubID == gusSelectedSoldier )
+			const SOLDIERTYPE* const sel = GetSelectedMan();
+			if (pSoldier == sel)
 			{
 				sXPos += 28;
 				sYPos += 5;
@@ -1395,7 +1391,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 			// Draw life, breath
 			// Only do this when we are a vehicle but on our team
-			if ( pSoldier->ubID == gusSelectedSoldier )
+			if (pSoldier == sel)
 			{
 				DrawBarsInUIBox( pSoldier,  (INT16)(sXPos + 1), (INT16)(sYPos + 2), 16, 1 );
 			}

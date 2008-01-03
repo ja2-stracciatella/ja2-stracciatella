@@ -1312,7 +1312,8 @@ INT8 MinPtsToMove(const SOLDIERTYPE* const pSoldier)
   return( (INT8)sLowest);
 }
 
-INT8  PtsToMoveDirection(SOLDIERTYPE *pSoldier, INT8 bDirection )
+
+INT8 PtsToMoveDirection(const SOLDIERTYPE* const pSoldier, const INT8 bDirection)
 {
 	INT16	sGridno,sCost;
 	INT8	bOverTerrainType;
@@ -1779,7 +1780,7 @@ BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
 		if( pSoldier->sGridNo != pSoldier->sFinalDestination || pSoldier->bGoodContPath  )
 		{
 			// OK< check if we are the selected guy!
-			if ( pSoldier->ubID == gusSelectedSoldier )
+			if (pSoldier == GetSelectedMan())
 			{
 				if (SoldierOnScreen(pSoldier))
 				{

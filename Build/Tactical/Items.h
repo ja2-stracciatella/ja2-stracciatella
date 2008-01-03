@@ -9,7 +9,7 @@ void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
 
 extern UINT8 SlotToPocket[7];
 
-extern BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier );
+BOOLEAN WeaponInHand(const SOLDIERTYPE* pSoldier);
 
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );

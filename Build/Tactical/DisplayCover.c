@@ -78,11 +78,9 @@ void DisplayCoverOfSelectedGridNo( )
 {
 	INT8	bStance;
 
+	const SOLDIERTYPE* const sel = GetSelectedMan();
 	//Only allowed in if there is someone selected
-	if( gusSelectedSoldier == NOBODY )
-	{
-		return;
-	}
+	if (sel == NULL) return;
 
 	//if the cursor is in a the tactical map
 	const GridNo sGridNo = GetMouseMapPos();
@@ -93,7 +91,7 @@ void DisplayCoverOfSelectedGridNo( )
 		//if the gridno is different then the last one that was displayed
 		if( sGridNo != gsLastCoverGridNo ||
 				gbLastStance != bStance ||
-				GetSelectedMan()->sGridNo != gsLastSoldierGridNo)
+				sel->sGridNo != gsLastSoldierGridNo)
 		{
 			//if the cover is currently being displayed
 			if( gsLastCoverGridNo != NOWHERE || gbLastStance != -1 || gsLastSoldierGridNo != NOWHERE )
@@ -118,7 +116,7 @@ void DisplayCoverOfSelectedGridNo( )
 
 			gbLastStance = bStance;
 			gsLastCoverGridNo = sGridNo;
-			gsLastSoldierGridNo = GetSelectedMan()->sGridNo;
+			gsLastSoldierGridNo = sel->sGridNo;
 
 			//Fill the array of gridno and cover values
 			CalculateCoverInRadiusAroundGridno( sGridNo, gGameSettings.ubSizeOfDisplayCover );
@@ -528,7 +526,7 @@ static void RemoveCoverObjectFromWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN 
 
 static SOLDIERTYPE* GetCurrentMercForDisplayCover(void)
 {
-	return GetSoldier(gusSelectedSoldier);
+	return GetSelectedMan();
 }
 
 
@@ -565,7 +563,7 @@ static INT8 GetCurrentMercForDisplayCoverStance(void)
 }
 
 
-void DisplayRangeToTarget( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
+void DisplayRangeToTarget(const SOLDIERTYPE* const pSoldier, const INT16 sTargetGridNo)
 {
 	UINT16 usRange=0;
 
@@ -612,18 +610,16 @@ void DisplayGridNoVisibleToSoldierGrid( )
 {
 //	INT8	bStance;
 
+	const SOLDIERTYPE* const sel = GetSelectedMan();
 	//Only allowed in if there is someone selected
-	if( gusSelectedSoldier == NOBODY )
-	{
-		return;
-	}
+	if (sel == NULL) return;
 
 	//if the cursor is in a the tactical map
 	const GridNo sGridNo = GetMouseMapPos();
 	if (sGridNo != NOWHERE)
 	{
 		//if the gridno is different then the last one that was displayed
-		if (sGridNo != gsLastVisibleToSoldierGridNo || GetSelectedMan()->sGridNo != gsLastSoldierGridNo)
+		if (sGridNo != gsLastVisibleToSoldierGridNo || sel->sGridNo != gsLastSoldierGridNo)
 		{
 			//if the cover is currently being displayed
 			if( gsLastVisibleToSoldierGridNo != NOWHERE || gsLastSoldierGridNo != NOWHERE )
@@ -644,7 +640,7 @@ void DisplayGridNoVisibleToSoldierGrid( )
 			}
 
 			gsLastVisibleToSoldierGridNo = sGridNo;
-			gsLastSoldierGridNo = GetSelectedMan()->sGridNo;
+			gsLastSoldierGridNo = sel->sGridNo;
 
 
 			//Fill the array of gridno and cover values

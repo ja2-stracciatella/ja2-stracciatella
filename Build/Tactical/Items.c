@@ -952,7 +952,8 @@ UINT16 StandardGunListAmmoReplacement( UINT16 usAmmo )
 	}
 }
 
-BOOLEAN WeaponInHand( SOLDIERTYPE * pSoldier )
+
+BOOLEAN WeaponInHand(const SOLDIERTYPE* const pSoldier)
 {
 	if ( Item[pSoldier->inv[HANDPOS].usItem].usItemClass & (IC_WEAPON | IC_THROWN) )
 	{

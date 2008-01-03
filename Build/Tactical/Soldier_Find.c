@@ -99,7 +99,7 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 	UINT32 MercFlags = 0;
 
  // FInd out and set flags
-	if (s->ubID == gusSelectedSoldier) MercFlags |= SELECTED_MERC;
+	if (s == GetSelectedMan()) MercFlags |= SELECTED_MERC;
 	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
 	if (s->ubID >= t->bFirstID && s->ubID <= t->bLastID)
  {
@@ -272,7 +272,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 
 					// ATE: Refine this further....
 					// Check if this is the selected guy....
-					if ( pSoldier->ubID == gusSelectedSoldier )
+					if (pSoldier == GetSelectedMan())
 					{
 						// Are we in action mode...
 						if ( gCurrentUIMode == ACTION_MODE || gCurrentUIMode == CONFIRM_ACTION_MODE )

@@ -2173,7 +2173,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 		}
 
 		// Alrighty, update UI for this guy, if he's the selected guy...
-		if ( gusSelectedSoldier == pSoldier->ubID )
+		if (GetSelectedMan() == pSoldier)
 		{
 			if ( guiCurrentEvent == C_WAIT_FOR_CONFIRM )
 			{
@@ -8920,16 +8920,6 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 			EndAIGuysTurn( pSoldier );
 		}
 	}
-
-	// DON'T DE-SELECT GUY.....
-	//else
-	//{
-		// Check if this is our selected guy...
-	//	if ( pSoldier->ubID == gusSelectedSoldier )
-	//	{
-	//		SelectNextAvailSoldier( pSoldier );
-	//		}
-	//}
 }
 
 
@@ -9048,13 +9038,10 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 
 	if (pSoldier->light == NULL) CreateSoldierLight(pSoldier);
 
-	//if ( pSoldier->ubID == gusSelectedSoldier )
-	{
-		LIGHT_SPRITE* const l = pSoldier->light;
-		LightSpritePower(l, TRUE);
-		LightSpriteFake(l);
-		LightSpritePosition(l, pSoldier->sX / CELL_X_SIZE, pSoldier->sY / CELL_Y_SIZE);
-	}
+	LIGHT_SPRITE* const l = pSoldier->light;
+	LightSpritePower(l, TRUE);
+	LightSpriteFake(l);
+	LightSpritePosition(l, pSoldier->sX / CELL_X_SIZE, pSoldier->sY / CELL_Y_SIZE);
 }
 
 void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier )
@@ -9905,7 +9892,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 
 			// OK, if in realtime, don't play at full volume, because too many people walking around
 			// sounds don't sound good - ( unless we are the selected guy, then always play at reg volume )
-			if ( ! ( gTacticalStatus.uiFlags & INCOMBAT ) && ( pSoldier->ubID != gusSelectedSoldier ) )
+			if (!(gTacticalStatus.uiFlags & INCOMBAT) && pSoldier != GetSelectedMan())
 			{
 				bVolume = LOWVOLUME;
 			}

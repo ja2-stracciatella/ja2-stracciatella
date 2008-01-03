@@ -302,23 +302,29 @@ BOOLEAN DrawUICursor( )
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SHOWTILEAPDEPENDENT )
 		{
-			// Add depending on AP status
-			usTileCursor = gUICursors[ guiCurUICursor ].usAdditionalData;
-
-			// ATE; Is the current guy in steath mode?
-			if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bStealthMode)
+			const SOLDIERTYPE* const sel = GetSelectedMan();
+			if (gfUIDisplayActionPointsInvalid || gsCurrentActionPoints == 0)
 			{
-				usTileCursor = FIRSTPOINTERS9;
-			}
-
-			if ( gfUIDisplayActionPointsInvalid || gsCurrentActionPoints == 0 )
-			{
-				usTileCursor = FIRSTPOINTERS6;
-
 				// ATE; Is the current guy in steath mode?
-				if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bStealthMode)
+				if (sel != NULL && sel->bStealthMode)
 				{
 					usTileCursor = FIRSTPOINTERS10;
+				}
+				else
+				{
+					usTileCursor = FIRSTPOINTERS6;
+				}
+			}
+			else
+			{
+				if (sel != NULL && sel->bStealthMode)
+				{
+					usTileCursor = FIRSTPOINTERS9;
+				}
+				else
+				{
+					// Add depending on AP status
+					usTileCursor = gUICursors[guiCurUICursor].usAdditionalData;
 				}
 			}
 

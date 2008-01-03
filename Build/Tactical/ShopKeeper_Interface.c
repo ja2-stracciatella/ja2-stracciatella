@@ -574,9 +574,9 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 	//Reinitialize the team panel to be the SM panel
 	SetCurrentInterfacePanel( SM_PANEL );
-	SOLDIERTYPE* const s = GetMan(gusSelectedSoldier);
-	SetCurrentTacticalPanelCurrentMerc(s);
-	SetSMPanelCurrentMerc(s);
+	SOLDIERTYPE* const sel = GetSelectedMan();
+	SetCurrentTacticalPanelCurrentMerc(sel);
+	SetSMPanelCurrentMerc(sel);
 
 	// load the Main trade screen backgroiund image
 	guiMainTradeScreenImage = AddVideoObjectFromFile("InterFace/TradeScreen.sti");

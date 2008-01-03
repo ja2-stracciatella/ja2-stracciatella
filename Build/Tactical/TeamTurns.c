@@ -132,16 +132,19 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 		// Are we in combat already?
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{
-			if ( gusSelectedSoldier != NO_SOLDIER )
+			SOLDIERTYPE* sel = GetSelectedMan();
+			if (sel != NULL)
 			{
 				// Check if this guy is able to be selected....
-				const SOLDIERTYPE* const sel = GetSelectedMan();
-				if (sel->bLife < OKLIFE) SelectNextAvailSoldier(sel);
+				if (sel->bLife < OKLIFE)
+				{
+					SelectNextAvailSoldier(sel);
+					sel = GetSelectedMan();
+				}
 
 				// Slide to selected guy...
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				if (sel != NULL)
 				{
-					SOLDIERTYPE* const sel = GetSelectedMan();
 					SlideTo(NOWHERE, sel, NOBODY, SETLOCATOR);
 
 					// Say ATTENTION SOUND...
@@ -853,9 +856,9 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 				guiPendingOverrideEvent = LU_ENDUILOCK;
 				HandleTacticalUI( );
 
-				if ( gusSelectedSoldier != NO_SOLDIER )
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel != NULL)
 				{
-					SOLDIERTYPE* const sel = GetSelectedMan();
 					SlideTo(NOWHERE, sel, NOBODY, SETLOCATOR);
 
 					// Say ATTENTION SOUND...
@@ -1128,7 +1131,8 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		// the selected character, ie. his friends...
 		if ( pOpponent->bTeam == gbPlayerNum )
 		{
-			if (pOpponent->ubID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
+			const SOLDIERTYPE* const sel = GetSelectedMan();
+			if (pOpponent != sel && pSoldier->bSide != sel->bSide)
 			{
 				return( FALSE );
 			}
@@ -1140,13 +1144,6 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 				return( FALSE );
 			}
 		}
-		/* old DG code for same:
-
-		if (pOpponent->ubID != gusSelectedSoldier && pSoldier->bSide != GetSelectedMan()->bSide)
-		{
-			return(FALSE);
-		}
-		*/
 
 		// an non-active soldier can't interrupt a soldier who is also non-active!
 		if ((pOpponent->bTeam != gTacticalStatus.ubCurrentTeam) && (pSoldier->bTeam != gTacticalStatus.ubCurrentTeam))

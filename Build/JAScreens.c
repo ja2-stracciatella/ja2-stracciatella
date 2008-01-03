@@ -409,14 +409,14 @@ UINT32 PalEditScreenShutdown(void)
 
 static void PalEditRenderHook(void)
 {
-	if ( gusSelectedSoldier != NO_SOLDIER )
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel != NULL)
 	{
 		// Set to current
-		const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-		DisplayPaletteRep( pSoldier->HeadPal, 50, 10, FRAME_BUFFER );
-		DisplayPaletteRep( pSoldier->PantsPal, 50, 50, FRAME_BUFFER );
-		DisplayPaletteRep( pSoldier->VestPal, 50, 90, FRAME_BUFFER );
-		DisplayPaletteRep( pSoldier->SkinPal, 50, 130, FRAME_BUFFER );
+		DisplayPaletteRep(sel->HeadPal,  50,  10, FRAME_BUFFER);
+		DisplayPaletteRep(sel->PantsPal, 50,  50, FRAME_BUFFER);
+		DisplayPaletteRep(sel->VestPal,  50,  90, FRAME_BUFFER);
+		DisplayPaletteRep(sel->SkinPal,  50, 130, FRAME_BUFFER);
 	}
 }
 
@@ -448,10 +448,11 @@ static BOOLEAN CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
 
 static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 {
-	if (gusSelectedSoldier == NO_SOLDIER) return FALSE;
 	if (pInputEvent->usEvent != KEY_DOWN) return FALSE;
 
-  SOLDIERTYPE* const sel = GetSoldier(gusSelectedSoldier);
+	SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel == NULL) return FALSE;
+
   switch (pInputEvent->usParam)
   {
   	case SDLK_ESCAPE:

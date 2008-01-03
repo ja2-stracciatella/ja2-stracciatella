@@ -173,7 +173,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 		// brown guy
 		UINT16 Region;
 		if (guiCurrentScreen != MAP_SCREEN &&
-				gusSelectedSoldier == pSoldier->ubID &&
+				GetSelectedMan() == pSoldier &&
 				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
 				OK_INTERRUPT_MERC(pSoldier))
 		{

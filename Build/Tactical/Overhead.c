@@ -135,7 +135,7 @@ static UINT32       guiNumAwaySlots = 0;
 UINT8 gbPlayerNum = 0;
 
 // Global for current selected soldier
-UINT16 gusSelectedSoldier = NO_SOLDIER;
+SOLDIERTYPE* g_selected_man;
 
 
 const char* const gzActionStr[] =
@@ -602,10 +602,10 @@ BOOLEAN ExecuteOverhead(void)
 
 	BOOLEAN fKeepMoving;
 
-	const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-	if (pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_GREEN_RAY)
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel != NULL && sel->uiStatusFlags & SOLDIER_GREEN_RAY)
 	{
-		LightShowRays(pSoldier->dXPos / CELL_X_SIZE, pSoldier->dYPos / CELL_Y_SIZE, FALSE);
+		LightShowRays(sel->dXPos / CELL_X_SIZE, sel->dYPos / CELL_Y_SIZE, FALSE);
 	}
 
 	if (COUNTERDONE(TOVERHEAD))
@@ -898,10 +898,7 @@ BOOLEAN ExecuteOverhead(void)
 									pSoldier->bReverse = FALSE;
 
 									// OK, if we are the selected soldier, refresh some UI stuff
-									if (pSoldier->ubID == (UINT8)gusSelectedSoldier)
-									{
-										gfUIRefreshArrows = TRUE;
-									}
+									if (pSoldier == GetSelectedMan()) gfUIRefreshArrows = TRUE;
 
 									// ATE: Play landing sound.....
 									if (pSoldier->usAnimState == JUMP_OVER_BLOCKING_PERSON)
@@ -2272,7 +2269,7 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* const last)
 		}
 	}
 
-	gusSelectedSoldier = NO_SOLDIER;
+	SetSelectedMan(NULL);
 	// Change UI mode to reflact that we are selected
 	guiPendingOverrideEvent = I_ON_TERRAIN;
 }
@@ -2305,37 +2302,36 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		return;
 	}
 
-	if (s->ubID == gusSelectedSoldier && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
+	SOLDIERTYPE* const old_sel = GetSelectedMan();
+	if (s == old_sel && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
 
 	// CANCEL FROM PLANNING MODE!
 	if (InUIPlanMode()) EndUIPlan();
 
 	// Unselect old selected guy
-	if (gusSelectedSoldier != NO_SOLDIER)
+	if (old_sel != NULL)
 	{
-		// Get guy
-		SOLDIERTYPE* const pOldSoldier = GetSelectedMan();
-		pOldSoldier->fShowLocator  = FALSE;
-		pOldSoldier->fFlashLocator = FALSE;
+		old_sel->fShowLocator  = FALSE;
+		old_sel->fFlashLocator = FALSE;
 
 		// DB This used to say "s"... I fixed it
-		if (pOldSoldier->bLevel == 0)
+		if (old_sel->bLevel == 0)
 		{
-		//	ApplyTranslucencyToWalls((INT16)(pOldSoldier->dXPos/CELL_X_SIZE), (INT16)(pOldSoldier->dYPos/CELL_Y_SIZE));
-			//LightHideTrees((INT16)(pOldSoldier->dXPos/CELL_X_SIZE), (INT16)(pOldSoldier->dYPos/CELL_Y_SIZE));
+		//	ApplyTranslucencyToWalls((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
+			//LightHideTrees((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
 		}
-		//DeleteSoldierLight( pOldSoldier );
+		//DeleteSoldierLight(old_sel);
 
-		if (pOldSoldier->uiStatusFlags & SOLDIER_GREEN_RAY)
+		if (old_sel->uiStatusFlags & SOLDIER_GREEN_RAY)
 		{
-			LightHideRays((INT16)(pOldSoldier->dXPos / CELL_X_SIZE), (INT16)(pOldSoldier->dYPos / CELL_Y_SIZE));
-			pOldSoldier->uiStatusFlags &= ~SOLDIER_GREEN_RAY;
+			LightHideRays((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
+			old_sel->uiStatusFlags &= ~SOLDIER_GREEN_RAY;
 		}
 
-		UpdateForContOverPortrait(pOldSoldier, FALSE);
+		UpdateForContOverPortrait(old_sel, FALSE);
 	}
 
-	gusSelectedSoldier = s->ubID;
+	SetSelectedMan(s);
 
 	// find which squad this guy is, then set selected squad to this guy
 	SetCurrentSquad(s->bAssignment, FALSE);
@@ -2567,7 +2563,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	CheckForEndOfBattle(FALSE);
 
 
-	if (gusSelectedSoldier == pSoldier->ubID)
+	if (GetSelectedMan() == pSoldier)
 	{
 		if (new_selected_soldier)
 		{
@@ -2575,7 +2571,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 		}
 		else
 		{
-			gusSelectedSoldier = NO_SOLDIER;
+			SetSelectedMan(NULL);
 			// Change UI mode to reflact that we are selected
 			guiPendingOverrideEvent = I_ON_TERRAIN;
 		}
@@ -4402,7 +4398,8 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 	if (ubStartingTeam == gbPlayerNum)
 	{
 		// OK, make sure we have a selected guy
-		if (gusSelectedSoldier == NO_SOLDIER || GetSelectedMan()->bOppCnt == 0)
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel == NULL || sel->bOppCnt == 0)
 		{
 			// OK, look through and find one....
 			FOR_ALL_IN_TEAM(s, gbPlayerNum)
@@ -4901,7 +4898,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		gTacticalStatus.fEnemyInSector = FALSE;
 
 		// If here, the battle has been lost!
-		UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
+		UnSetUIBusy(GetSelectedMan());
 
 		if ( gTacticalStatus.uiFlags & INCOMBAT )
 		{
@@ -4965,7 +4962,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		// battle for us
 		EndAllAITurns( );
 
-		UnSetUIBusy(ID2SOLDIER(gusSelectedSoldier));
+		UnSetUIBusy(GetSelectedMan());
 
 		// ATE:
 		// If we ended battle in any team other than the player's
@@ -6479,7 +6476,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 	{
 		if (guiCurrentScreen == GAME_SCREEN)
 		{
-			if (gusSelectedSoldier == pSoldier->ubID )
+			if (GetSelectedMan() == pSoldier)
 			{
 				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 				if (next != pSoldier)
@@ -6498,7 +6495,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 					else
 					{
 						// if here, make nobody
-						gusSelectedSoldier = NOBODY;
+						SetSelectedMan(NULL);
 					}
 				}
 			}
@@ -6506,7 +6503,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 		}
 		else
 		{
-			gusSelectedSoldier = NOBODY;
+			SetSelectedMan(NULL);
 			if (guiCurrentScreen == GAME_SCREEN)
 			{
 				// otherwise, make sure interface is team panel...

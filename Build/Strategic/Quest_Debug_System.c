@@ -3335,7 +3335,7 @@ static void SetTalkingMercPauseState(BOOLEAN fState)
 static void SetQDSMercProfile(void)
 {
 	// Get selected soldier
-	gTalkingMercSoldier = GetSoldier(gusSelectedSoldier);
+	gTalkingMercSoldier = GetSelectedMan();
 	if (gTalkingMercSoldier == NULL) return;
 
 	// Change guy!

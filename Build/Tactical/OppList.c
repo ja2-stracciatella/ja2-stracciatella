@@ -2720,10 +2720,6 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 	}
 	else
 	{
-		// if this merc is selected and he's actually moving
-		//if (pSoldier->ubID == gusSelectedSoldier)
-		// ATE: Change this to if the guy is ours....
-		// How will this feel?
 		if ( pSoldier->bTeam == gbPlayerNum )
 		{
 			// STOP IF WE WERE MOVING....
@@ -3701,15 +3697,15 @@ void DebugSoldierPage3( )
 		ubLine++;
 
 		// OPIONION OF SELECTED MERC
-		if (gusSelectedSoldier != NOBODY)
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel != NULL)
 		{
-			const SOLDIERTYPE* const s = GetSelectedMan();
-			if (s->ubProfile < FIRST_NPC && pSoldier->ubProfile != NO_PROFILE)
+			if (sel->ubProfile < FIRST_NPC && pSoldier->ubProfile != NO_PROFILE)
 			{
 				SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
 				gprintf( 0, LINE_HEIGHT * ubLine, L"NPC Opinion:");
 				SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-				gprintf(150, LINE_HEIGHT * ubLine, L"%d", gMercProfiles[pSoldier->ubProfile].bMercOpinion[s->ubProfile]);
+				gprintf(150, LINE_HEIGHT * ubLine, L"%d", gMercProfiles[pSoldier->ubProfile].bMercOpinion[sel->ubProfile]);
 				ubLine++;
 			}
 		}

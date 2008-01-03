@@ -202,16 +202,16 @@ void EnterTacticalScreen(void)
 	SetAllAutoFacesInactive( );
 
 	// CHECK IF OURGUY IS NOW OFF DUTY
-	if ( gusSelectedSoldier != NOBODY )
+	const SOLDIERTYPE* sel = GetSelectedMan();
+	if (sel != NULL)
 	{
-		const SOLDIERTYPE* const s = GetSelectedMan();
-		if (!OK_CONTROLLABLE_MERC(s)) SelectNextAvailSoldier(s);
-		// ATE: If the current guy is sleeping, change....
-		if (gusSelectedSoldier != NO_SOLDIER)
+		if (!OK_CONTROLLABLE_MERC(sel))
 		{
-			const SOLDIERTYPE* const s = GetSelectedMan();
-			if (s->fMercAsleep) SelectNextAvailSoldier(s);
+			SelectNextAvailSoldier(sel);
+			sel = GetSelectedMan();
 		}
+		// ATE: If the current guy is sleeping, change....
+		if (sel != NULL && sel->fMercAsleep) SelectNextAvailSoldier(sel);
 	}
 	else
 	{
@@ -545,9 +545,10 @@ UINT32  MainGameScreenHandle(void)
 		// Select a guy if he hasn;'
 		if( !gfTacticalPlacementGUIActive )
 		{
-			if (gusSelectedSoldier != NOBODY && OK_INTERRUPT_MERC(GetSelectedMan()))
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel != NULL && OK_INTERRUPT_MERC(sel))
 			{
-				SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
+				SelectSoldier(sel, SELSOLDIER_FORCE_RESELECT);
 			}
 		}
 	}
@@ -773,12 +774,10 @@ UINT32  MainGameScreenHandle(void)
 		{
 			gfPlayAttnAfterMapLoad = FALSE;
 
-			if ( gusSelectedSoldier != NOBODY )
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel != NULL && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
 			{
-				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-				{
-					DoMercBattleSound(GetSelectedMan(), BATTLE_SOUND_ATTN1);
-				}
+				DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
 			}
 		}
 

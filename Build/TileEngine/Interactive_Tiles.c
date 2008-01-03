@@ -480,10 +480,8 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 	}
 
 	// Also, don't allow for mercs who are on upper level...
-	if (gusSelectedSoldier != NOBODY && GetSelectedMan()->bLevel == 1)
-	{
-		return;
-	}
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel != NULL && sel->bLevel == 1) return;
 
 	// Get World XY From gridno
 	ConvertGridNoToCellXY( sGridNo, &sXMapPos, &sYMapPos );
@@ -764,10 +762,8 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 			return( FALSE );
 		}
 
-		if (gusSelectedSoldier != NOBODY && GetSelectedMan()->ubBodyType == ROBOTNOWEAPON)
-		{
-			return( FALSE );
-		}
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel != NULL && sel->ubBodyType == ROBOTNOWEAPON) return FALSE;
 
 		// If we are a door, we need a different definition of being visible than other structs
 		if ( pStructure->fFlags & STRUCTURE_ANYDOOR )

@@ -211,7 +211,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 	//Determine
 	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		if (pSoldier->ubID == gusSelectedSoldier) continue;
+		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
 				pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ &&
 				pSoldier->bLife >= OKLIFE &&
@@ -246,7 +246,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 		UINT8 ubNumEPCs = 0;
 		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if (s->ubID == gusSelectedSoldier) continue;
+			if (s == sel) continue;
 			if (s->bAssignment == sel->bAssignment)
 			{
 				if (AM_AN_EPC(s))

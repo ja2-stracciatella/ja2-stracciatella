@@ -83,17 +83,15 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
 	static INT16		sMoveClickGridNo					= 0;
 
+	SOLDIERTYPE* const sel = GetSelectedMan();
 
 	// LEFT MOUSE BUTTON
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
 	{
+		if (sel != NULL && sel->pTempObject != NULL) return;
+
 		const GridNo usMapPos = GetMouseMapPos();
 		if (usMapPos == NOWHERE && !gfUIShowExitSouth) return;
-
-		if (gusSelectedSoldier != NOBODY && GetSelectedMan()->pTempObject != NULL)
-		{
-			return;
-		}
 
 		if ( gViewportRegion.ButtonState & MSYS_LEFT_BUTTON )
 		{
@@ -110,37 +108,32 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 						switch( gCurrentUIMode )
 						{
 							case ACTION_MODE:
-
-								if ( gusSelectedSoldier != NOBODY )
+								if (sel != NULL && gpItemPointer == NULL)
 								{
-									SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-									if (pSoldier != NULL && gpItemPointer == NULL)
+									// OK, check for needing ammo
+									if (HandleUIReloading(sel))
 									{
-										// OK, check for needing ammo
-										if ( HandleUIReloading( pSoldier ) )
+										gfRTClickLeftHoldIntercepted = TRUE;
+										//fLeftButtonDown              = FALSE;
+									}
+									else
+									{
+										if (sel->bDoBurst)
 										{
-											gfRTClickLeftHoldIntercepted = TRUE;
-											//fLeftButtonDown				= FALSE;
+											sel->sStartGridNo = usMapPos;
+											ResetBurstLocations();
+											*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
 										}
 										else
 										{
-											if ( pSoldier->bDoBurst )
-											{
-												pSoldier->sStartGridNo = usMapPos;
-												ResetBurstLocations( );
-												*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
-											}
-											else
-											{
-												gfRTClickLeftHoldIntercepted = TRUE;
+											gfRTClickLeftHoldIntercepted = TRUE;
 
-												if ( UIMouseOnValidAttackLocation( pSoldier )  )
-												{
-													// OK< going into confirm will call a function that will automatically move
-													// us to shoot in most vases ( grenades need a confirm mode regardless )
-													*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
-													//*puiNewEvent = CA_MERC_SHOOT;
-												}
+											if (UIMouseOnValidAttackLocation(sel))
+											{
+												// OK< going into confirm will call a function that will automatically move
+												// us to shoot in most vases ( grenades need a confirm mode regardless )
+												*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
+												//*puiNewEvent = CA_MERC_SHOOT;
 											}
 										}
 									}
@@ -157,7 +150,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 									if (gUIFullTarget != NULL && guiUIFullTargetFlags & OWNED_MERC)
 									{
 										// Reset , if this guy is selected merc, reset any multi selections...
-										if (gUIFullTarget->ubID == gusSelectedSoldier)
+										if (gUIFullTarget == sel)
 										{
 											ResetMultiSelection( );
 										}
@@ -187,9 +180,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 										}
 										else if ( bReturnCode == 0 )
 										{
-											if ( gusSelectedSoldier != NOBODY )
+											if (sel != NULL)
 											{
-												if (UIOKMoveDestination(GetSelectedMan(), usMapPos) == 1)
+												if (UIOKMoveDestination(sel, usMapPos) == 1)
 												{
 													if ( gsCurrentActionPoints != 0 )
 													{
@@ -239,7 +232,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							if (s != NULL)
 							{
 								 // Select guy
-								if (s->ubID == gusSelectedSoldier && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
+								if (s == sel && s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 								{
 									*puiNewEvent = M_CHANGE_TO_ADJPOS_MODE;
 								}
@@ -316,15 +309,14 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 									fDoubleClickIntercepted = TRUE;
 
 									// First check if we clicked on a guy, if so, make selected if it's ours
-									if( gusSelectedSoldier != NO_SOLDIER )
+									if (sel != NULL)
 									{
 										// Set movement mode
 										// OK, only change this if we are stationary!
-										SOLDIERTYPE* const s = GetSelectedMan();
 										//if (gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY)
-										//if (s->usAnimState == WALKING)
+										//if (sel->usAnimState == WALKING)
 										{
-											s->fUIMovementFast = TRUE;
+											sel->fUIMovementFast = TRUE;
 											*puiNewEvent = C_MOVE_MERC;
 										}
 									}
@@ -359,33 +351,25 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 							{
 								case CONFIRM_ACTION_MODE:
 								case ACTION_MODE:
-								{
-									SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-									if (pSoldier != NULL)
+									if (sel != NULL && sel->bDoBurst)
 									{
-										if ( pSoldier->bDoBurst )
+										sel->sEndGridNo = usMapPos;
+
+										gfBeginBurstSpreadTracking = FALSE;
+
+										if (sel->sEndGridNo != sel->sStartGridNo )
 										{
-											pSoldier->sEndGridNo = usMapPos;
-
-											gfBeginBurstSpreadTracking = FALSE;
-
-											if ( pSoldier->sEndGridNo != pSoldier->sStartGridNo )
-											{
-												pSoldier->fDoSpread = TRUE;
-
-												PickBurstLocations( pSoldier );
-
-													*puiNewEvent = CA_MERC_SHOOT;
-											}
-											else
-											{
-												pSoldier->fDoSpread = FALSE;
-											}
-											gfRTClickLeftHoldIntercepted = TRUE;
+											sel->fDoSpread = TRUE;
+											PickBurstLocations(sel);
+											*puiNewEvent = CA_MERC_SHOOT;
 										}
+										else
+										{
+											sel->fDoSpread = FALSE;
+										}
+										gfRTClickLeftHoldIntercepted = TRUE;
 									}
 									break;
-								}
 							}
 						}
 						//else
@@ -449,30 +433,17 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															break;
 
 														case ACTION_MODE:
-
-															//*puiNewEvent = A_CHANGE_TO_CONFIM_ACTION;
-															//if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
-															//{
-															//	pSoldier->sStartGridNo = usMapPos;
-															//	ResetBurstLocations( );
-															//}
 															*puiNewEvent = CA_MERC_SHOOT;
 															break;
 
 														case CONFIRM_MOVE_MODE:
-
-															if ( gusSelectedSoldier != NO_SOLDIER )
+															if (sel != NULL)
 															{
-																SOLDIERTYPE* const s = GetSelectedMan();
-																if (s->usAnimState != RUNNING)
+																if (sel->usAnimState == RUNNING)
 																{
-																	*puiNewEvent = C_MOVE_MERC;
+																	sel->fUIMovementFast = 2;
 																}
-																else
-																{
-																	s->fUIMovementFast = 2;
-																	*puiNewEvent = C_MOVE_MERC;
-																}
+																*puiNewEvent = C_MOVE_MERC;
 															}
 
 															//*puiNewEvent = C_MOVE_MERC;
@@ -484,24 +455,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 															break;
 
 														case CONFIRM_ACTION_MODE:
-
-															// Check if we are stationary
-															//if ( AimCubeUIClick( ) )
-															//{
-															//	if ( gusSelectedSoldier != NO_SOLDIER )
-															//	{
-															//		if (!(gAnimControl[GetSelectedMan()->usAnimState].uiFlags & ANIM_STATIONARY))
-															//		{
-
-																		//gUITargetShotWaiting  = TRUE;
-															//		}
-															//		else
-															//		{
-																	//	*puiNewEvent = CA_MERC_SHOOT;
-															//		}
-																	*puiNewEvent = CA_MERC_SHOOT;
-															//	}
-															//}
+															*puiNewEvent = CA_MERC_SHOOT;
 															break;
 
 														case MOVE_MODE:
@@ -542,9 +496,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																									DoMercBattleSound( pSoldier, BATTLE_SOUND_ATTN1 );
 
 																								// OK, if we have a selected guy.. make him part too....
-																								if ( gusSelectedSoldier != NOBODY )
+																								if (sel != NULL)
 																								{
-																									GetSelectedMan()->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+																									sel->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																								}
 																							}
 
@@ -577,9 +531,9 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																						}
 
 																						// OK, if we have a selected guy.. make him part too....
-																						if ( gusSelectedSoldier != NOBODY )
+																						if (sel != NULL)
 																						{
-																							GetSelectedMan()->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+																							sel->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 																						}
 
 																						gfIgnoreOnSelectedGuy = TRUE;
@@ -611,12 +565,11 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			{
 																			  INT16							sIntTileGridNo;
 
-																				SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-																				if (pSoldier != NULL)
+																				if (sel != NULL)
 																				{
 																					BeginDisplayTimedCursor( GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300 );
 
-																					if ( pSoldier->usAnimState != RUNNING )
+																					if (sel->usAnimState != RUNNING)
 																					{
 																						*puiNewEvent = C_MOVE_MERC;
 																					}
@@ -624,7 +577,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																					{
 																						if ( GetCurInteractiveTileGridNo( &sIntTileGridNo ) != NULL )
 																						{
-																							pSoldier->fUIMovementFast = TRUE;
+																							sel->fUIMovementFast = TRUE;
 																							*puiNewEvent = C_MOVE_MERC;
 																						}
 																					}
@@ -634,8 +587,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																		}
 																		else if ( bReturnCode == 0 )
 																		{
-																			const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-																			if (pSoldier != NULL)
+																			if (sel != NULL)
 																			{
 																				// First check if we clicked on a guy, if so, make selected if it's ours
 																				const SOLDIERTYPE* const s = FindSoldierFromMouse();
@@ -647,7 +599,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																				}
 																				else
 																				{
-																					//if ( FindBestPath( pSoldier, usMapPos, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) == 0 )
 																					if ( gsCurrentActionPoints == 0 && !gfUIAllMoveOn && !gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 																					{
 																						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
@@ -655,67 +606,39 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																					}
 																					else
 																					{
-																						BOOLEAN fResult;
-
-																						if ( gusSelectedSoldier != NOBODY )
+																						const BOOLEAN fResult = UIOKMoveDestination(sel, usMapPos);
+																						if (fResult == 1)
 																						{
-																							fResult = UIOKMoveDestination(GetSelectedMan(), usMapPos);
-																							if (fResult == 1)
+																							if (gfUIAllMoveOn)
 																							{
-																								if ( gfUIAllMoveOn )
-																								{
-																									// ATE: Select everybody in squad and make move!
-																									// Make move!
-																									*puiNewEvent = C_MOVE_MERC;
-																									fValidDoubleClickPossible = TRUE;
-																								}
-																								else
-																								{
-																									// We're on terrain in which we can walk, walk
-																									// If we're on terrain,
-																									if ( gGameSettings.fOptions[ TOPTION_RTCONFIRM ]  )
-																									{
-																										*puiNewEvent = C_WAIT_FOR_CONFIRM;
-																										gfPlotNewMovement = TRUE;
-																									}
-																									else
-																									{
-																										*puiNewEvent = C_MOVE_MERC;
-																										fValidDoubleClickPossible = TRUE;
-																									}
-																								}
+																								// ATE: Select everybody in squad and make move!
+																								// Make move!
+																								*puiNewEvent = C_MOVE_MERC;
+																								fValidDoubleClickPossible = TRUE;
 																							}
 																							else
 																							{
-																								if ( fResult == 2 )
+																								// We're on terrain in which we can walk, walk
+																								// If we're on terrain,
+																								if (gGameSettings.fOptions[TOPTION_RTCONFIRM])
 																								{
-																									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NOBODY_USING_REMOTE_STR ] );
+																									*puiNewEvent = C_WAIT_FOR_CONFIRM;
+																									gfPlotNewMovement = TRUE;
 																								}
 																								else
 																								{
-																									//if ( usMapPos != sMoveClickGridNo || pSoldier->uiStatusFlags & SOLDIER_ROBOT )
-																									//{
-																								//		sMoveClickGridNo					= usMapPos;
-
-																										//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_MOVE_THERE_STR ] );
-
-																								//		*puiNewEvent					  = M_CHANGE_TO_HANDMODE;
-																								//		gsOverItemsGridNo				= usMapPos;
-																								//		gsOverItemsLevel				= gsInterfaceLevel;
-																								//	}
-																								//	else
-																								//	{
-																								//		sMoveClickGridNo = 0;
-																								//		*puiNewEvent = M_CHANGE_TO_HANDMODE;
-																								//	}
+																									*puiNewEvent = C_MOVE_MERC;
+																									fValidDoubleClickPossible = TRUE;
 																								}
-																								//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Invalid move destination." );
-
-																								// Goto hand cursor mode...
-																								//*puiNewEvent = M_CHANGE_TO_HANDMODE;
-
-																								gfRTClickLeftHoldIntercepted = TRUE;
 																							}
+																						}
+																						else
+																						{
+																							if (fResult == 2)
+																							{
+																								ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
+																							}
+																							gfRTClickLeftHoldIntercepted = TRUE;
 																						}
 																					}
 																				}
@@ -848,8 +771,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 		// release mouse over another mouse region
 		if ( gfBeginBurstSpreadTracking )
 		{
-			SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-			if (pSoldier != NULL) pSoldier->fDoSpread = FALSE;
+			if (sel != NULL) sel->fDoSpread = FALSE;
 			gfBeginBurstSpreadTracking = FALSE;
 		}
 	}
@@ -886,9 +808,9 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 
 				if ( gpItemPointer == NULL )
 				{
-
 					// ATE:
-					if ( gusSelectedSoldier != NOBODY )
+					SOLDIERTYPE* const sel = GetSelectedMan();
+					if (sel != NULL)
 					{
 						switch( gCurrentUIMode )
 						{
@@ -903,7 +825,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 									if ( gfUICanBeginAllMoveCycle )
 									{
 										// ATE: Here, check if we can do this....
-										if (!UIOKMoveDestination(GetSelectedMan(), usMapPos))
+										if (!UIOKMoveDestination(sel, usMapPos))
 										{
 											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_MOVE_THERE_STR ] );
 											gfRTClickLeftHoldIntercepted = TRUE;
@@ -927,7 +849,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 						{
 							gfBeginBurstSpreadTracking = FALSE;
 							gfRTClickLeftHoldIntercepted = TRUE;
-							GetSelectedMan()->fDoSpread = FALSE;
+							sel->fDoSpread = FALSE;
 							fClickHoldIntercepted = TRUE;
 							*puiNewEvent = A_END_ACTION;
 							gCurrentUIMode = MOVE_MODE;
@@ -953,16 +875,16 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 								case TALKCURSOR_MODE:
 								case MOVE_MODE:
 								{
-									const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-									if (pSoldier != NULL)
+									const SOLDIERTYPE* const sel = GetSelectedMan();
+									if (sel != NULL)
                   {
-									  if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC )&&!( pSoldier ?  pSoldier->uiStatusFlags & SOLDIER_VEHICLE : 0 ) )
+									  if (guiUIFullTargetFlags & OWNED_MERC   &&
+									  		guiUIFullTargetFlags & VISIBLE_MERC &&
+									  		!(guiUIFullTargetFlags & DEAD_MERC) &&
+									  		!(sel->uiStatusFlags & SOLDIER_VEHICLE))
 									  {
-										  //if( pSoldier->bAssignment >= ON_DUTY )
-										  {
-												PopupAssignmentMenuInTactical();
-    										fClickHoldIntercepted = TRUE;
-                      }
+											PopupAssignmentMenuInTactical();
+											fClickHoldIntercepted = TRUE;
 										  break;
 									  }
 									  else
@@ -1009,7 +931,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 									if ( !fClickIntercepted && !fClickHoldIntercepted )
 									{
 										// ATE:
-										if ( gusSelectedSoldier != NOBODY )
+										if (GetSelectedMan() != NULL)
 										{
 											//fIgnoreLeftUp = TRUE;
 											switch( gCurrentUIMode )
@@ -1046,7 +968,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 							if ( !fClickHoldIntercepted && !fClickIntercepted )
 							{
 								// ATE:
-								if ( gusSelectedSoldier != NOBODY )
+								if (GetSelectedMan() != NULL)
 								{
 									//fIgnoreLeftUp = TRUE;
 									switch( gCurrentUIMode )
@@ -1072,7 +994,8 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 							if ( gpItemPointer == NULL )
 							{
 								// ATE:
-								if ( gusSelectedSoldier != NOBODY )
+								SOLDIERTYPE* const sel = GetSelectedMan();
+								if (sel != NULL)
 								{
 									// Switch on UI mode
 									switch( gCurrentUIMode )
@@ -1100,15 +1023,9 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 											break;
 
 										case CONFIRM_ACTION_MODE:
-										{
-											SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-											if (pSoldier != NULL)
-											{
-												HandleRightClickAdjustCursor( pSoldier, usMapPos );
-											}
+											HandleRightClickAdjustCursor(sel, usMapPos);
 											fClickIntercepted = TRUE;
 											break;
-										}
 
 										case MENU_MODE:
 
@@ -1273,16 +1190,13 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				MoveTargetSoldier = NULL;
 
 				// Check for being on terrain
-				const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-				if (pSoldier != NULL)
+				const SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel != NULL)
 				{
-						UINT8					ubItemCursor;
-
 						 // get cursor for item
-						 ubItemCursor  =  GetActionModeCursor( pSoldier );
+					const UINT8 ubItemCursor = GetActionModeCursor(sel);
 
-						 //
-						 if ( IsValidJumpLocation( pSoldier, usMapPos, TRUE ) )
+					if (IsValidJumpLocation(sel, usMapPos, TRUE))
 						 {
 								*puiNewEvent = JP_ON_TERRAIN;
 								gsJumpOverGridNo = usMapPos;
@@ -1293,7 +1207,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 							const SOLDIERTYPE* const tgt = gUIFullTarget;
 							if (tgt != NULL)
 							 {
-								if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(pSoldier) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
+								if (IsValidTalkableNPC(tgt, FALSE, FALSE, FALSE) && !_KeyDown(SHIFT) && !AM_AN_EPC(sel) && tgt->bTeam != ENEMY_TEAM && !ValidQuickExchangePosition())
 									{
 										MoveTargetSoldier = gUIFullTarget;
 										*puiNewEvent = T_CHANGE_TO_TALKING;
@@ -1372,28 +1286,23 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 			case CONFIRM_ACTION_MODE:
 			{
 				// DONOT CANCEL IF BURST
-				SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-				if (pSoldier != NULL)
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel != NULL && sel->bDoBurst)
 				{
-					if ( pSoldier->bDoBurst )
+					sel->sEndGridNo = usMapPos;
+
+					if (sel->sEndGridNo != sel->sStartGridNo && fLeftButtonDown)
 					{
-						pSoldier->sEndGridNo = usMapPos;
+						sel->fDoSpread             = TRUE;
+						gfBeginBurstSpreadTracking = TRUE;
+					}
 
-
-						if ( pSoldier->sEndGridNo != pSoldier->sStartGridNo && fLeftButtonDown )
-						{
-							pSoldier->fDoSpread = TRUE;
-							gfBeginBurstSpreadTracking = TRUE;
-						}
-
-						if ( pSoldier->fDoSpread )
-						{
-							// Accumulate gridno
-							AccumulateBurstLocation( usMapPos );
-
-							*puiNewEvent = CA_ON_TERRAIN;
-							break;
-						}
+					if (sel->fDoSpread)
+					{
+						// Accumulate gridno
+						AccumulateBurstLocation(usMapPos);
+						*puiNewEvent = CA_ON_TERRAIN;
+						break;
 					}
 				}
 
@@ -1426,15 +1335,6 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				break;
 			}
 		}
-
-		//if ( gCurrentUIMode != CONFIRM_ACTION_MODE )
-		//{
-		//	if(	GetSoldier( &pSoldier, gusSelectedSoldier ) )
-		//	{
-				// Change refine value back to 1
-		///		pSoldier->bShownAimTime = REFINE_AIM_1;
-		//	}
-		//}
 
 		usOldMapPos = usMapPos;
 

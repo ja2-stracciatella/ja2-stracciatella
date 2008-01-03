@@ -147,7 +147,7 @@ CASSERT(sizeof(TacticalStatusType) == 360)
 
 extern UINT8 gbPlayerNum;
 
-extern UINT16 gusSelectedSoldier;
+extern SOLDIERTYPE* g_selected_man;
 
 extern const char* const gzActionStr[];
 
@@ -179,7 +179,15 @@ static inline SOLDIERTYPE* ID2Soldier(const SoldierID id)
 
 static inline SOLDIERTYPE* GetSelectedMan(void)
 {
-	return GetMan(gusSelectedSoldier);
+	SOLDIERTYPE* const sel = g_selected_man;
+	Assert(sel == NULL || sel->bActive);
+	return sel;
+}
+
+static inline void SetSelectedMan(SOLDIERTYPE* const s)
+{
+	Assert(s == NULL || s->bActive);
+	g_selected_man = s;
 }
 
 // MERC SLOTS - A LIST OF ALL ACTIVE MERCS

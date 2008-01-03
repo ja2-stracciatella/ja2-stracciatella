@@ -3042,9 +3042,9 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	RenderProgressBar( 0, 40 );
 
 	// CHECK IF OUR SELECTED GUY IS GONE!
-	if (gusSelectedSoldier != NO_SOLDIER && !GetSelectedMan()->bActive)
+	if (g_selected_man != NULL && !g_selected_man->bActive)
 	{
-		gusSelectedSoldier = NO_SOLDIER;
+		SetSelectedMan(NULL);
 	}
 
 	RenderProgressBar( 0, 60 );
@@ -3096,7 +3096,7 @@ BOOLEAN NewWorld( void )
 	UINT16				NewIndex;
 	INT32					cnt;
 
-	gusSelectedSoldier = NO_SOLDIER;
+	SetSelectedMan(NULL);
 
 	TrashWorld();
 

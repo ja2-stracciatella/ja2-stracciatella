@@ -353,7 +353,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	uiMeanWhileFlags = 0;
 
 	// Reset the selected soldier
-	gusSelectedSoldier = NOBODY;
+	SetSelectedMan(NULL);
 
 	if( gubScreenCount == 0 )
 	{

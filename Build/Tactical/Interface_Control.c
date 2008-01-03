@@ -228,28 +228,25 @@ add_node:;
 
 	if ( gfUIHandleShowMoveGrid )
 	{
-		if ( gusSelectedSoldier != NOBODY )
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel != NULL && sel->sGridNo != gsUIHandleShowMoveGridLocation)
 		{
-			const SOLDIERTYPE* const s = GetSelectedMan();
-			if (s->sGridNo != gsUIHandleShowMoveGridLocation)
+			UINT16 idx;
+			if (gfUIHandleShowMoveGrid == 2)
 			{
-				UINT16 idx;
-				if (gfUIHandleShowMoveGrid == 2)
-				{
-					idx = FIRSTPOINTERS4;
-				}
-				else if (s->bStealthMode)
-				{
-					idx = FIRSTPOINTERS9;
-				}
-				else
-				{
-					idx = FIRSTPOINTERS2;
-				}
-				LEVELNODE* const n = AddTopmostToHead(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
-				n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
-				n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
+				idx = FIRSTPOINTERS4;
 			}
+			else if (sel->bStealthMode)
+			{
+				idx = FIRSTPOINTERS9;
+			}
+			else
+			{
+				idx = FIRSTPOINTERS2;
+			}
+			LEVELNODE* const n = AddTopmostToHead(gsUIHandleShowMoveGridLocation, GetSnapCursorIndex(idx));
+			n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+			n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 		}
 	}
 
@@ -671,8 +668,9 @@ void RenderTopmostTacticalInterface( )
 
 	}
 
-	if (gusSelectedSoldier != NOBODY) DrawSelectedUIAboveGuy(GetSelectedMan());
-	if (gSelectedGuy       != NULL)   DrawSelectedUIAboveGuy(gSelectedGuy);
+	SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel          != NULL) DrawSelectedUIAboveGuy(sel);
+	if (gSelectedGuy != NULL) DrawSelectedUIAboveGuy(gSelectedGuy);
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
 	if ( gTacticalStatus.ubCurrentTeam == gbPlayerNum )
@@ -697,16 +695,14 @@ void RenderTopmostTacticalInterface( )
 	{
 		if ( gfUIOverItemPool )
 		{
-			const SOLDIERTYPE* pSoldier = GetSoldier(gusSelectedSoldier);
-			if (pSoldier != NULL)
+			if (sel != NULL)
 			{
 				// Check if we are over an item pool
-				const ITEM_POOL* pItemPool = GetItemPool(gfUIOverItemPoolGridNo, pSoldier->bLevel);
+				const ITEM_POOL* const pItemPool = GetItemPool(gfUIOverItemPoolGridNo, sel->bLevel);
 				if (pItemPool != NULL)
 				{
 					STRUCTURE					*pStructure = NULL;
 					INT16							sIntTileGridNo;
-					INT8							bZLevel = 0;
 					INT16							sActionGridNo = usMapPos;
 
 					// Get interactive tile...
@@ -715,8 +711,7 @@ void RenderTopmostTacticalInterface( )
 						sActionGridNo = sIntTileGridNo;
 					}
 
-					bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
-
+					const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, sel->bLevel, pStructure);
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
 						DrawItemPoolList(pItemPool, gfUIOverItemPoolGridNo, bZLevel, gusMouseXPos, gusMouseYPos);
@@ -728,17 +723,8 @@ void RenderTopmostTacticalInterface( )
 				}
         else
         {
-          INT8 bCheckLevel;
-
           // ATE: Allow to see list if a different level....
-          if ( pSoldier->bLevel == 0 )
-          {
-            bCheckLevel = 1;
-          }
-          else
-          {
-            bCheckLevel = 0;
-          }
+					const INT8 bCheckLevel = (sel->bLevel == 0 ? 1 : 0);
 
 				  // Check if we are over an item pool
 					const ITEM_POOL* pItemPool = GetItemPool(gfUIOverItemPoolGridNo, bCheckLevel);

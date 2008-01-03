@@ -1551,7 +1551,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		//DONT set these values
-		gusSelectedSoldier = NO_SOLDIER;
+		SetSelectedMan(NULL);
 		gfGameScreenLocateToSoldier = TRUE;
 	}
 
@@ -2191,7 +2191,8 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	// Set initial selected
 	// ATE: moved this towards top...
-	gPreferredInitialSelectedGuy = ID2SOLDIER(gusSelectedSoldier);
+	SOLDIERTYPE* const sel = GetSelectedMan();
+	gPreferredInitialSelectedGuy = sel;
 
 	if ( ubJumpCode == JUMP_ALL_LOAD_NEW || ubJumpCode == JUMP_ALL_NO_LOAD )
 	{
@@ -2217,9 +2218,9 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{
 		// Use selected soldier...
 		// This guy should always be 1 ) selected and 2 ) close enough to exit sector to leave
-		if ( gusSelectedSoldier != NOBODY )
+		if (sel != NULL)
 		{
-			pValidSoldier = GetSelectedMan();
+			pValidSoldier = sel;
 			ubDirection = GetInsertionDataFromAdjacentMoveDirection( ubTacticalDirection, sAdditionalData );
 		}
 
@@ -3083,10 +3084,9 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	UINT8		  ubNumMercs = 0, ubNumEPCs = 0;
 	UINT8     ubPlayerControllableMercsInSquad = 0;
 
-	if( gusSelectedSoldier == NOBODY )
-	{ //must have a selected soldier to be allowed to tactically traverse.
-		return FALSE;
-	}
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	// must have a selected soldier to be allowed to tactically traverse.
+	if (sel == NULL) return FALSE;
 
 	/*
 	//Exception code for the two sectors in San Mona that are separated by a cliff.  We want to allow strategic
@@ -3148,10 +3148,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			{
 				fAtLeastOneMercControllable++;
 
-				if ( cnt == gusSelectedSoldier )
-				{
-					fOnlySelectedGuy = TRUE;
-				}
+				if (pSoldier == sel) fOnlySelectedGuy = TRUE;
 			}
 			else
 			{
@@ -3189,13 +3186,12 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	// If we are here, at least one guy is controllable in this sector, at least he can go!
 	if( fAtLeastOneMercControllable )
 	{
-		const SOLDIERTYPE* const s = GetSelectedMan();
-		ubPlayerControllableMercsInSquad = (UINT8)NumberOfPlayerControllableMercsInSquad(s->bAssignment);
+		ubPlayerControllableMercsInSquad = (UINT8)NumberOfPlayerControllableMercsInSquad(sel->bAssignment);
 		if( fAtLeastOneMercControllable <= ubPlayerControllableMercsInSquad )
 		{ //if the selected merc is an EPC and we can only leave with that merc, then prevent it
 			//as EPCs aren't allowed to leave by themselves.  Instead of restricting this in the
 			//exiting sector gui, we restrict it by explaining it with a message box.
-			if (AM_AN_EPC(s))
+			if (AM_AN_EPC(sel))
 			{
 				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
 				{
