@@ -1762,7 +1762,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						SOLDIERTYPE* const sel = GetSelectedMan();
 						if (sel != NULL)
 						{
-							if (sel->ubID == LARRY_NORMAL)
+							if (sel->ubProfile == LARRY_NORMAL)
 							{
 								// Change guy to drunk larry
 								ForceSoldierProfileID(sel, LARRY_DRUNK);
