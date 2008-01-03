@@ -23,12 +23,6 @@
 #define SNAPCURSOR_AP_Y_STARTVAL					9
 
 
-#define LOOSE_CURSOR_DELAY 300
-static BOOLEAN gfLooseCursorOn		 = FALSE;
-static INT16	 gsLooseCursorGridNo = NOWHERE;
-static UINT32	 guiLooseCursorTimeOfLastUpdate = 0;
-
-
 const UICursor gUICursors[NUM_UI_CURSORS] =
 {
 	{ NO_UICURSOR,                        0,                                                                                                    0,                         0                },
@@ -216,7 +210,6 @@ BOOLEAN SetUICursor( UINT32 uiNewCursor )
 
 
 static void DrawSnappingCursor(void);
-static void HandleLooseCursorDraw(void);
 
 
 BOOLEAN DrawUICursor( )
@@ -226,9 +219,6 @@ BOOLEAN DrawUICursor( )
 	UINT16						usTileCursor;
 
 		//RaiseMouseToLevel( (INT8)gsInterfaceLevel );
-
-	HandleLooseCursorDraw( );
-
 
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
@@ -426,13 +416,10 @@ BOOLEAN DrawUICursor( )
 
 
 static void EraseSnappingCursor(void);
-static void HandleLooseCursorHide(void);
 
 
 BOOLEAN HideUICursor( )
 {
-	HandleLooseCursorHide( );
-
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
 	{
@@ -663,41 +650,6 @@ static void EraseSnappingCursor(void)
 	RemoveAllObjectsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllOnRoofsOfTypeRange( gusCurMousePos, FIRSTPOINTERS, LASTPOINTERS );
 	RemoveAllOnRoofsOfTypeRange( gusCurMousePos, MOCKFLOOR, MOCKFLOOR );
-}
-
-
-static void StartLooseCursor(INT16 sGridNo, UINT32 uiCursorID)
-{
-	gfLooseCursorOn		= TRUE;
-
-	guiLooseCursorTimeOfLastUpdate = GetJA2Clock( );
-
-	gsLooseCursorGridNo = sGridNo;
-}
-
-
-static void HandleLooseCursorDraw(void)
-{
-	if ( ( GetJA2Clock( ) - guiLooseCursorTimeOfLastUpdate ) > LOOSE_CURSOR_DELAY )
-	{
-		gfLooseCursorOn = FALSE;
-	}
-
-	if ( gfLooseCursorOn )
-	{
-		LEVELNODE* pNewUIElem = AddUIElem(gsLooseCursorGridNo, FIRSTPOINTERS4, 0, 0);
-		pNewUIElem->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-		pNewUIElem->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
-	}
-}
-
-
-static void HandleLooseCursorHide(void)
-{
-	if ( gfLooseCursorOn )
-	{
-		RemoveTopmost( gsLooseCursorGridNo, FIRSTPOINTERS4 );
-	}
 }
 
 
