@@ -1040,9 +1040,6 @@ static BOOLEAN RenderShopKeeperInterface(void)
 		return( TRUE );
 	}
 
-
-//	RenderSMPanel( &fDirty );
-
 //	RenderTacticalInterface( );
 	// Render view window
 //	RenderRadarScreen( );
@@ -1107,7 +1104,6 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	RenderTownIDString( );
 
 //	RenderTacticalInterface( );
-//	RenderSMPanel( &fDirty );
 
 	//Restore the tactical background that is visble behind the SKI panel
 	RestoreTacticalBackGround();

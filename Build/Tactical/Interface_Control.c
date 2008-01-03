@@ -82,6 +82,16 @@ void HandleTacticalPanelSwitch( )
 }
 
 
+static void RenderPanel(void)
+{
+	switch (gsCurInterfacePanel)
+	{
+		case SM_PANEL:   RenderSMPanel(&fInterfacePanelDirty);  break;
+		case TEAM_PANEL: RenderTEAMPanel(fInterfacePanelDirty); break;
+	}
+}
+
+
 static void HandlePausedTacticalRender(void);
 
 
@@ -102,16 +112,7 @@ void RenderTacticalInterface( )
 	// Handle degrading new items...
 	DegradeNewlyAddedItems( );
 
-	switch( gsCurInterfacePanel )
-	{
-		case SM_PANEL:
-			RenderSMPanel( &fInterfacePanelDirty );
-			break;
-
-		case TEAM_PANEL:
-			RenderTEAMPanel( fInterfacePanelDirty );
-			break;
-	}
+	RenderPanel();
 
 	// Handle faces
 	if( !(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
@@ -142,22 +143,9 @@ static void HandlePausedTacticalRender(void)
 
 void RenderTacticalInterfaceWhileScrolling( )
 {
-	RenderButtons( );
-
-	switch( gsCurInterfacePanel )
-	{
-		case SM_PANEL:
-			RenderSMPanel( &fInterfacePanelDirty );
-			break;
-
-		case TEAM_PANEL:
-			RenderTEAMPanel( fInterfacePanelDirty );
-			break;
-	}
-
-	// Handle faces
-	HandleAutoFaces( );
-
+	RenderButtons();
+	RenderPanel();
+	HandleAutoFaces();
 }
 
 void SetUpInterface( )
@@ -493,17 +481,7 @@ void RenderTopmostTacticalInterface( )
 	if ( gfRerenderInterfaceFromHelpText == TRUE )
 	{
 		fInterfacePanelDirty = DIRTYLEVEL2;
-
-		switch( gsCurInterfacePanel )
-		{
-			case SM_PANEL:
-				RenderSMPanel( &fInterfacePanelDirty );
-				break;
-
-			case TEAM_PANEL:
-				RenderTEAMPanel( fInterfacePanelDirty );
-				break;
-		}
+		RenderPanel();
 		gfRerenderInterfaceFromHelpText = FALSE;
 	}
 
