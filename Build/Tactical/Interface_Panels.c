@@ -1339,61 +1339,36 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 	if ( *pfDirty == DIRTYLEVEL2 )
 	{
-		if ( InItemDescriptionBox( ) )
+		BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, dy);
+
+		if (gfSMDisableForItems)
 		{
-			BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, dy);
-			RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
+			const INT32 x = SM_SELMERC_PLATE_X;
+			const INT32 y = dy + SM_SELMERC_PLATE_Y;
+			BltVideoObject(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
+			RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
+		}
+		else if (gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+				gpSMCurrentMerc == GetSelectedMan()            &&
+				OK_INTERRUPT_MERC(gpSMCurrentMerc))
+		{
+			const INT32 x = SM_SELMERC_PLATE_X;
+			const INT32 y = dy + SM_SELMERC_PLATE_Y;
+			BltVideoObject(guiSAVEBUFFER, guiSMObjects, 0, x, y);
+			RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
+		}
 
-			// ATE: Need these lines here to fix flash bug with face selection box
-			if ( gfSMDisableForItems )
-			{
-				const INT32 x = SM_SELMERC_PLATE_X;
-				const INT32 y = dy + SM_SELMERC_PLATE_Y;
-				BltVideoObject(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
-				RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
-			}
-			else
-			{
-				if (GetSelectedMan() == gpSMCurrentMerc && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(gpSMCurrentMerc))
-				{
-					const INT32 x = SM_SELMERC_PLATE_X;
-					const INT32 y = dy + SM_SELMERC_PLATE_Y;
-					BltVideoObject(guiSAVEBUFFER, guiSMObjects, 0, x, y);
-					RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
-				}
-			}
+		RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
 
-			RenderItemDescriptionBox( );
+		if (InItemDescriptionBox())
+		{
+			RenderItemDescriptionBox();
 		}
 		else
 		{
-			BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, INV_INTERFACE_START_Y);
-
-			RenderInvBodyPanel( gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y );
-
-			// Hitlight
-
-			if ( gfSMDisableForItems )
-			{
-				const INT32 x = SM_SELMERC_PLATE_X;
-				const INT32 y = dy + SM_SELMERC_PLATE_Y;
-				BltVideoObject(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
-				RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
-			}
-			else
-			{
-				if (GetSelectedMan() == gpSMCurrentMerc && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(gpSMCurrentMerc))
-				{
-					const INT32 x = SM_SELMERC_PLATE_X;
-					const INT32 y = dy + SM_SELMERC_PLATE_Y;
-					BltVideoObject(guiSAVEBUFFER, guiSMObjects, 0, x, y);
-					RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
-				}
-			}
-
+			RenderInvBodyPanel(gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y);
 
 			SetFont( BLOCKFONT2 );
-
 
 			// Render Values for stats!
 			// Set font drawing to saved buffer
@@ -1462,8 +1437,6 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
-
-			RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
 		}
 
 		// Render Name!
