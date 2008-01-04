@@ -2502,9 +2502,6 @@ UINT32 MapScreenHandle(void)
 		// init character list - set all values in the list to 0
 		InitalizeVehicleAndCharacterList( );
 
-		// deselect all entries
-		ResetSelectedListForMapScreen( );
-
 		LoadCharacters();
 
 
