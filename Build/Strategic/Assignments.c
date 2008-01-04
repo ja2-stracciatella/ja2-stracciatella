@@ -5123,7 +5123,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
 	CreateDestroyMouseRegionForRepairMenu(  );
 
-	const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if ((s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW) &&
 			guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
@@ -6167,7 +6167,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// can't renew contracts from tactical!
 	Assert(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN);
 
-	SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
+	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 	Assert( pSoldier && pSoldier->bActive );
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
@@ -9090,13 +9090,14 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarn
 	INT32 iCounter = 0;
 	UINT8 ubNumberOfSelectedSoldiers = 0;
 
+	const SOLDIERTYPE* const sel_char = GetSelectedInfoChar();
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
 		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
 		if (pSoldier == NULL) continue;
 		if (!pSoldier->bActive) continue;
-		if (iCounter == bSelectedInfoChar) continue;
+		if (pSoldier == sel_char) continue;
 		if (!IsEntryInSelectedListSet(iCounter)) continue;
 
 		// don't try to put vehicles, robots, to sleep if they're also selected

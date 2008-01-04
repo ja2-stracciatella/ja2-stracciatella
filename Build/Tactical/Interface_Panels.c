@@ -3747,12 +3747,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
-		if( bSelectedInfoChar == -1 )
-		{
-			return;
-		}
-
-		pSoldier = gCharactersList[bSelectedInfoChar].merc;
+		pSoldier = GetSelectedInfoChar();
 		if (pSoldier == NULL) return;
 
 		sStartYPosition = MAP_START_KEYRING_Y;
@@ -3881,7 +3876,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 
 			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
 			if (gpItemPointerSoldier == NULL ||
-					gpItemPointerSoldier == gCharactersList[bSelectedInfoChar].merc)
+					gpItemPointerSoldier == GetSelectedInfoChar())
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;

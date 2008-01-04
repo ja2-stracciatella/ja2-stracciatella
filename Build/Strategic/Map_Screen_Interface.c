@@ -373,7 +373,7 @@ void ResetSelectedListForMapScreen( void )
 	}
 
 	// if we still have a valid dude selected
-	if (bSelectedInfoChar != -1 && gCharactersList[bSelectedInfoChar].merc != NULL)
+	if (GetSelectedInfoChar() != NULL)
 	{
 		// then keep him selected
 		SetEntryInSelectedCharacterList( bSelectedInfoChar );
@@ -1135,13 +1135,8 @@ void HandleDisplayOfSelectedMercArrows( void )
 	INT16 sYPosition = 0;
 	UINT8 ubCount = 0;
 	// blit an arrow by the name of each merc in a selected list
-	if( bSelectedInfoChar == -1 )
-	{
-		return;
-	}
 
-	// is the character valid?
-	if (gCharactersList[bSelectedInfoChar].merc == NULL) return;
+	if (GetSelectedInfoChar() == NULL) return;
 
 	if( fShowInventoryFlag == TRUE )
 	{
@@ -1191,17 +1186,12 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 	ITEM_POOL		*pItemPool = NULL;
 	static BOOLEAN fWasInited = FALSE;
 
-	if( bSelectedInfoChar == -1 )
-	{
-		return;
-	}
-
+	SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s == NULL) return;
 
 	if( ( fWasInited == FALSE ) && ( fMapInventoryPoolInited ) )
 	{
-		SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-		if (s != NULL &&
-				s->sSectorX == sMapX &&
+		if (s->sSectorX == sMapX &&
 				s->sSectorY == sMapY &&
 				s->bSectorZ == sMapZ &&
 				s->bActive &&
@@ -1744,85 +1734,82 @@ void UpdateCharRegionHelpText( void )
 {
 	CHAR16 sString[ 128 ];
 
-	if (bSelectedInfoChar != -1)
+	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	if (pSoldier != NULL)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedInfoChar].merc;
-		if (pSoldier != NULL)
+		// health/energy/morale
+		if( pSoldier->bAssignment != ASSIGNMENT_POW )
 		{
-			// health/energy/morale
-			if( pSoldier->bAssignment != ASSIGNMENT_POW )
+			if ( pSoldier->bLife != 0 )
 			{
-				if ( pSoldier->bLife != 0 )
+				if (AM_A_ROBOT(pSoldier))
 				{
-					if (AM_A_ROBOT(pSoldier))
-					{
-						// robot (condition only)
-						swprintf( sString, lengthof(sString), L"%ls: %d/%d",
-														pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
-					}
-					else if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
-					{
-						// vehicle (condition/fuel)
-						swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d",
-														pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
-														pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
-					}
-					else
-					{
-						// person (health/energy/morale)
-						const wchar_t* Morale = GetMoraleString(pSoldier);
-						swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
-														pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
-														pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
-														pMapScreenStatusStrings[ 2 ], Morale);
-					}
+					// robot (condition only)
+					swprintf( sString, lengthof(sString), L"%ls: %d/%d",
+													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
+				}
+				else if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
+				{
+					// vehicle (condition/fuel)
+					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d",
+													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
+													pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
 				}
 				else
 				{
-					wcscpy( sString, L"" );
+					// person (health/energy/morale)
+					const wchar_t* Morale = GetMoraleString(pSoldier);
+					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
+													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
+													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
+													pMapScreenStatusStrings[ 2 ], Morale);
 				}
 			}
 			else
 			{
-				// POW - stats unknown
-				swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
+				wcscpy( sString, L"" );
 			}
-
-			SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
-
-
-			// update CONTRACT button help text
-			if (CanExtendContractForSoldier(pSoldier))
-			{
-				SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
-				EnableButton( giMapContractButton );
-			}
-			else
-			{
-				SetButtonFastHelpText( giMapContractButton, L"" );
-				DisableButton( giMapContractButton );
-			}
-
-
-			if ( CanToggleSelectedCharInventory( ) )
-			{
-				// inventory
-				if( fShowInventoryFlag )
-				{
-					SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
-				}
-				else
-				{
-					SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
-				}
-			}
-			else	// can't toggle it, don't show any inventory help text
-			{
-				SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
-			}
-
-			return;
 		}
+		else
+		{
+			// POW - stats unknown
+			swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
+		}
+
+		SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
+
+
+		// update CONTRACT button help text
+		if (CanExtendContractForSoldier(pSoldier))
+		{
+			SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
+			EnableButton( giMapContractButton );
+		}
+		else
+		{
+			SetButtonFastHelpText( giMapContractButton, L"" );
+			DisableButton( giMapContractButton );
+		}
+
+
+		if ( CanToggleSelectedCharInventory( ) )
+		{
+			// inventory
+			if( fShowInventoryFlag )
+			{
+				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
+			}
+			else
+			{
+				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+			}
+		}
+		else	// can't toggle it, don't show any inventory help text
+		{
+			SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
+		}
+
+		return;
 	}
 
 	// invalid soldier
@@ -2096,13 +2083,13 @@ BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot )
 	else
 	{
 		// it came from either the currently selected merc, or the sector inventory
-		if ( fMapInventoryItem || ( bSelectedInfoChar == -1 ) )
+		if (fMapInventoryItem)
 		{
 			pOldSoldier = NULL;
 		}
 		else
 		{
-			pOldSoldier = gCharactersList[bSelectedInfoChar].merc;
+			pOldSoldier = GetSelectedInfoChar();
 		}
 	}
 
@@ -4765,43 +4752,40 @@ void InitTimersForMoveMenuMouseRegions( void )
 
 void UpdateHelpTextForMapScreenMercIcons( void )
 {
-	if (bSelectedInfoChar != -1)
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s != NULL)
 	{
-		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-		if (s != NULL)
+		// if merc is an AIM merc
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 		{
-			// if merc is an AIM merc
-			if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-			{
-				SetRegionFastHelpText( &(gContractIconRegion), zMarksMapScreenText[ 22 ] );
-			}
-			else
-			{
-				SetRegionFastHelpText( &(gContractIconRegion), L"" );
-			}
-
-			// if merc has life insurance
-			if (s->usLifeInsurance > 0)
-			{
-				SetRegionFastHelpText( &(gInsuranceIconRegion), zMarksMapScreenText[ 3 ] );
-			}
-			else
-			{
-				SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
-			}
-
-			// if merc has a medical deposit
-			if (s->usMedicalDeposit > 0)
-			{
-				SetRegionFastHelpText( &(gDepositIconRegion), zMarksMapScreenText[ 12 ] );
-			}
-			else
-			{
-				SetRegionFastHelpText( &(gDepositIconRegion), L"" );
-			}
-
-			return;
+			SetRegionFastHelpText( &(gContractIconRegion), zMarksMapScreenText[ 22 ] );
 		}
+		else
+		{
+			SetRegionFastHelpText( &(gContractIconRegion), L"" );
+		}
+
+		// if merc has life insurance
+		if (s->usLifeInsurance > 0)
+		{
+			SetRegionFastHelpText( &(gInsuranceIconRegion), zMarksMapScreenText[ 3 ] );
+		}
+		else
+		{
+			SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
+		}
+
+		// if merc has a medical deposit
+		if (s->usMedicalDeposit > 0)
+		{
+			SetRegionFastHelpText( &(gDepositIconRegion), zMarksMapScreenText[ 12 ] );
+		}
+		else
+		{
+			SetRegionFastHelpText( &(gDepositIconRegion), L"" );
+		}
+
+		return;
 	}
 
 	SetRegionFastHelpText(&gContractIconRegion,  L"");

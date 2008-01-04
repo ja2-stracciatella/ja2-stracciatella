@@ -6088,10 +6088,7 @@ void UpdateItemHatches(void)
 
   if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
   {
-		if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
-		{
-			pSoldier = gCharactersList[bSelectedInfoChar].merc;
-		}
+		if (fShowInventoryFlag) pSoldier = GetSelectedInfoChar();
 	}
 	else
 	{

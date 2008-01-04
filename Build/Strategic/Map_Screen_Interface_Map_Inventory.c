@@ -257,10 +257,11 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	DrawItemUIBarEx(&item->o, 0, dx + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y, ITEMDESC_ITEM_STATUS_WIDTH_INV_POOL, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, col0, col1, TRUE, guiSAVEBUFFER);
 
 	// if the item is not reachable, or if the selected merc is not in the current sector
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (!(item->usFlags & WORLD_ITEM_REACHABLE) ||
-			gCharactersList[bSelectedInfoChar].merc->sSectorX != sSelMapX ||
-			gCharactersList[bSelectedInfoChar].merc->sSectorY != sSelMapY ||
-			gCharactersList[bSelectedInfoChar].merc->bSectorZ != iCurrentMapSectorZ)
+			s->sSectorX != sSelMapX ||
+			s->sSectorY != sSelMapY ||
+			s->bSectorZ != iCurrentMapSectorZ)
 	{
 		//Shade the item
 		DrawHatchOnInventory(guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT);
@@ -677,7 +678,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 		// check if selected merc is in this sector, if not, warn them and leave
 
 		// valid character?
-		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+		const SOLDIERTYPE* const s = GetSelectedInfoChar();
 		if (s == NULL)
 		{
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
@@ -783,13 +784,6 @@ static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
 					MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
 					SetCurrentCursorFromDatabase( EXTERN_CURSOR );
 				}
-
-/*
-				if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
-				{
-					ReevaluateItemHatches(s, FALSE);
-				}
-				*/
 			}
 		}
 
@@ -1240,10 +1234,14 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 		MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
 		SetCurrentCursorFromDatabase( EXTERN_CURSOR );
 
-		if ( fShowInventoryFlag && bSelectedInfoChar >= 0 )
+		if (fShowInventoryFlag)
 		{
-			ReevaluateItemHatches(gCharactersList[bSelectedInfoChar].merc, FALSE);
-			fTeamPanelDirty = TRUE;
+			SOLDIERTYPE* const s = GetSelectedInfoChar();
+			if (s != NULL)
+			{
+				ReevaluateItemHatches(s, FALSE);
+				fTeamPanelDirty = TRUE;
+			}
 		}
 	}
 }
@@ -1779,7 +1777,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		// check if any compatable items in the soldier inventory matches with this item
 		if( gfCheckForCursorOverMapSectorInventoryItem )
 		{
-			pSoldier = gCharactersList[bSelectedInfoChar].merc;
+			const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 			if( pSoldier )
 			{
 				if( HandleCompatibleAmmoUIForMapScreen( pSoldier, iCurrentSlot + ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), TRUE, FALSE ) )
