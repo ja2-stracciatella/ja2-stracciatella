@@ -6,7 +6,7 @@
 #ifdef JA2EDITOR
 extern UINT32 EditScreenInit(void);
 extern UINT32 EditScreenHandle(void);
-extern UINT32 EditScreenShutdown(void);
+void EditScreenShutdown(void);
 
 extern UINT32 LoadSaveScreenInit(void);
 extern UINT32 LoadSaveScreenHandle(void);
@@ -18,7 +18,7 @@ extern UINT32 InitScreenHandle(void);
 
 extern UINT32 MainGameScreenInit(void);
 extern UINT32 MainGameScreenHandle(void);
-extern UINT32 MainGameScreenShutdown(void);
+void MainGameScreenShutdown(void);
 
 #ifdef JA2BETAVERSION
 extern UINT32 AIViewerScreenInit(void);
@@ -37,11 +37,11 @@ UINT32 DebugScreenHandle(void);
 
 UINT32 MapScreenInit(void);
 UINT32 MapScreenHandle(void);
-UINT32 MapScreenShutdown(void);
+void MapScreenShutdown(void);
 
 UINT32 LaptopScreenInit(void);
 UINT32 LaptopScreenHandle(void);
-UINT32 LaptopScreenShutdown(void);
+void LaptopScreenShutdown(void);
 
 
 #ifdef JA2EDITOR
@@ -56,7 +56,7 @@ UINT32	MainMenuScreenInit( void );
 UINT32	MainMenuScreenHandle( void );
 
 UINT32	AutoResolveScreenHandle( void );
-UINT32	AutoResolveScreenShutdown( void );
+void AutoResolveScreenShutdown(void);
 
 
 UINT32	SaveLoadScreenHandle( void );
@@ -67,7 +67,7 @@ UINT32	OptionsScreenInit( void );
 
 UINT32	ShopKeeperScreenInit( void );
 UINT32	ShopKeeperScreenHandle( void );
-UINT32	ShopKeeperScreenShutdown( void );
+void ShopKeeperScreenShutdown(void);
 
 UINT32	SexScreenHandle( void );
 

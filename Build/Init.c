@@ -213,7 +213,7 @@ void ShutdownJA2(void)
   // Shutdown Screens
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
   {
-		UINT32 (*shutdown)(void) = GameScreens[uiIndex].ShutdownScreen;
+		void (*const shutdown)(void) = GameScreens[uiIndex].ShutdownScreen;
 		if (shutdown != NULL) shutdown();
   }
 

@@ -580,10 +580,9 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 }
 
 
-UINT32 AutoResolveScreenShutdown()
+void AutoResolveScreenShutdown(void)
 {
 	gpBattleGroup = NULL;
-	return TRUE;
 }
 
 

@@ -71,8 +71,7 @@ extern	OBJECTTYPE	*pShopKeeperItemDescObject;
 
 UINT32	ShopKeeperScreenInit( void );
 UINT32	ShopKeeperScreenHandle( void );
-UINT32	ShopKeeperScreenShutdown( void );
-
+void ShopKeeperScreenShutdown(void);
 
 
 void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );

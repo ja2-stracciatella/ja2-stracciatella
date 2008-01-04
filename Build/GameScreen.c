@@ -156,18 +156,13 @@ UINT32 MainGameScreenInit(void)
 }
 
 
-
 // The ShutdownGame function will free up/undo all things that were started in InitializeGame()
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
-
-UINT32 MainGameScreenShutdown(void)
+void MainGameScreenShutdown(void)
 {
 	ShutdownZBuffer(gpZBuffer);
 	ShutdownBackgroundRects();
-
 	RemoveVideoOverlay(g_fps_overlay);
-
-	return TRUE;
 }
 
 

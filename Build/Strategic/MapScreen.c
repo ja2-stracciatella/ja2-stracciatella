@@ -2297,8 +2297,7 @@ UINT32 MapScreenInit(void)
 }
 
 
-
-UINT32 MapScreenShutdown(void)
+void MapScreenShutdown(void)
 {
 	// free up alloced mapscreen messages
 	FreeGlobalMessageList( );
@@ -2309,8 +2308,6 @@ UINT32 MapScreenShutdown(void)
 	ShutDownLeaveList( );
 
 	DeleteVideoObject(guiUpdatePanelTactical);
-
-	return TRUE;
 }
 
 

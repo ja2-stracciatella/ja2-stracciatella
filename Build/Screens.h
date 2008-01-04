@@ -12,8 +12,7 @@ typedef struct Screens
 {
   UINT32         (*InitializeScreen)(void);
   UINT32         (*HandleScreen)(void);
-  UINT32         (*ShutdownScreen)(void);
-
+	void (*ShutdownScreen)(void);
 } Screens;
 
 // These defines are used as flags for each screen state. The only legal transition of states is

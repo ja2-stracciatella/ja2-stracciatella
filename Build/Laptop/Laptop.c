@@ -428,13 +428,12 @@ BOOLEAN InitLaptopAndLaptopScreens(void)
 
 
 //This is only called once at game shutdown.
-UINT32 LaptopScreenShutdown(void)
+void LaptopScreenShutdown(void)
 {
 	InsuranceContractEndGameShutDown();
 	BobbyRayMailOrderEndGameShutDown();
 	ShutDownEmailList();
 	ClearHistoryList();
-	return TRUE;
 }
 
 

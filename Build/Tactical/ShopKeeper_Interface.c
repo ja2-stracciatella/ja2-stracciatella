@@ -508,12 +508,9 @@ UINT32	ShopKeeperScreenHandle()
 }
 
 
-
-UINT32	ShopKeeperScreenShutdown()
+void ShopKeeperScreenShutdown(void)
 {
 	ShutDownArmsDealers();
-
-	return( TRUE );
 }
 
 

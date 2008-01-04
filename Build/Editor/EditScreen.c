@@ -208,17 +208,12 @@ UINT32 EditScreenInit(void)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	EditScreenShutdown
-//
 //	This function is called once at shutdown of the game
-//
-UINT32 EditScreenShutdown(void)
+void EditScreenShutdown(void)
 {
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
 	KillClipboard();
-	return TRUE;
 }
 
 
