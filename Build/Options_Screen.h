@@ -12,7 +12,6 @@
 UINT32		guiPreviousOptionScreen;
 
 
-UINT32	OptionsScreenShutdown( void );
 UINT32	OptionsScreenHandle( void );
 UINT32	OptionsScreenInit( void );
 

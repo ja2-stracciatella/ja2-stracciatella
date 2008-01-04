@@ -100,7 +100,8 @@ BOOLEAN InitializeGame(void)
 	// Initialize Game Screens.
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
   {
-    if ((*(GameScreens[uiIndex].InitializeScreen))() == FALSE)
+		UINT32 (*init)(void) = GameScreens[uiIndex].InitializeScreen;
+		if (init != NULL && !init())
     { // Failed to initialize one of the screens.
       return FALSE;
     }

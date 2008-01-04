@@ -194,12 +194,6 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue);
 
 
-UINT32 GameInitOptionsScreenInit(void)
-{
-	return 1;
-}
-
-
 UINT32 GameInitOptionsScreenHandle(void)
 {
 	StartFrameBufferRender();
@@ -254,12 +248,6 @@ UINT32 GameInitOptionsScreenHandle(void)
 	HandleBeginFadeIn(gubGIOExitScreen);
 
 	return gubGIOExitScreen;
-}
-
-
-UINT32 GameInitOptionsScreenShutdown(void)
-{
-	return 1;
 }
 
 

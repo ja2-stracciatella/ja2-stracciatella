@@ -247,13 +247,6 @@ UINT32	OptionsScreenHandle()
 }
 
 
-
-UINT32	OptionsScreenShutdown()
-{
-	return( TRUE );
-}
-
-
 static INT32 MakeButton(INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
 	return CreateIconAndTextButton(giOptionsButtonImages, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, OPT_BTN_Y, MSYS_PRIORITY_HIGH, click);

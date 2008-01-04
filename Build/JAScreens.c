@@ -161,38 +161,17 @@ void DisplayFrameRate( )
 
 
 //USELESS!!!!!!!!!!!!!!!!!!
-UINT32 SavingScreenInitialize(void)
-{
-	return( TRUE );
-}
 UINT32 SavingScreenHandle( void )
 {
 	return SAVING_SCREEN;
 }
-UINT32 SavingScreenShutdown( void )
-{
-	return TRUE;
-}
 
-UINT32 LoadingScreenInitialize(void)
-{
-	return( TRUE );
-}
+
 UINT32 LoadingScreenHandle(void)
 {
 	return LOADING_SCREEN;
 }
-UINT32 LoadingScreenShutdown(void)
-{
-	return( TRUE );
-}
 
-
-
-UINT32 ErrorScreenInitialize(void)
-{
-	return( TRUE );
-}
 
 UINT32 ErrorScreenHandle(void)
 {
@@ -244,17 +223,6 @@ UINT32 ErrorScreenHandle(void)
 	return( ERROR_SCREEN );
 }
 
-UINT32 ErrorScreenShutdown(void)
-{
-	return( TRUE );
-}
-
-
-
-UINT32 InitScreenInitialize(void)
-{
-	return( TRUE );
-}
 
 UINT32 InitScreenHandle(void)
 {
@@ -347,20 +315,6 @@ UINT32 InitScreenHandle(void)
 }
 
 
-UINT32 InitScreenShutdown(void)
-{
-
-	return( TRUE );
-}
-
-
-
-UINT32 PalEditScreenInit(void)
-{
-	return( TRUE );
-}
-
-
 static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent);
 static void PalEditRenderHook(void);
 
@@ -397,13 +351,6 @@ UINT32 PalEditScreenHandle(void)
 	}
 
 	return( PALEDIT_SCREEN );
-
-}
-
-UINT32 PalEditScreenShutdown(void)
-{
-
-	return( TRUE );
 }
 
 
@@ -468,11 +415,6 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
   }
 }
 
-UINT32 DebugScreenInit(void)
-{
-	return( TRUE );
-}
-
 
 static BOOLEAN CheckForAndExitTacticalDebug(void)
 {
@@ -535,13 +477,6 @@ UINT32 DebugScreenHandle(void)
 	}
 
 	return( DEBUG_SCREEN );
-
-}
-
-UINT32 DebugScreenShutdown(void)
-{
-
-	return( TRUE );
 }
 
 
@@ -614,11 +549,6 @@ static void DefaultDebugPage4(void)
 	gprintf( 0,0,L"DEBUG PAGE FOUR" );
 }
 
-
-UINT32 SexScreenInit(void)
-{
-	return( TRUE );
-}
 
 #define SMILY_DELAY						100
 #define SMILY_END_DELAY				1000
@@ -705,18 +635,6 @@ UINT32 SexScreenHandle(void)
 	InvalidateRegion( sX, sY, (INT16)( sX + pTrav->usWidth ), (INT16)( sY + pTrav->usHeight ) );
 
 	return( SEX_SCREEN );
-}
-
-UINT32 SexScreenShutdown(void)
-{
-	return( TRUE );
-}
-
-
-
-UINT32 DemoExitScreenInit(void)
-{
-	return( TRUE );
 }
 
 
@@ -1409,44 +1327,3 @@ UINT32 DemoExitScreenHandle(void)
 	return( DEMO_EXIT_SCREEN );
 #endif
 }
-
-
-UINT32 DemoExitScreenShutdown(void)
-{
-	return( TRUE );
-}
-
-#ifndef JA2EDITOR
-
-UINT32 LoadSaveScreenInit()
-{
-	return TRUE;
-}
-
-UINT32 LoadSaveScreenHandle()
-{
-	return TRUE;
-}
-
-UINT32 LoadSaveScreenShutdown()
-{
-	return TRUE;
-}
-
-UINT32 EditScreenInit()
-{
-	return TRUE;
-}
-
-UINT32 EditScreenHandle()
-{
-	return TRUE;
-}
-
-UINT32 EditScreenShutdown()
-{
-	return TRUE;
-}
-
-
-#endif

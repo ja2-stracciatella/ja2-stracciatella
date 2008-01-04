@@ -2,8 +2,6 @@
 #define _INTRO__C_
 
 
-
-UINT32	IntroScreenShutdown( void );
 UINT32	IntroScreenHandle( void );
 UINT32	IntroScreenInit( void );
 

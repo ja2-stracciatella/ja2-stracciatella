@@ -19,7 +19,6 @@ extern	BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
 
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
-UINT32	SaveLoadScreenShutdown( void );
 UINT32	SaveLoadScreenHandle( void );
 UINT32	SaveLoadScreenInit( void );
 

@@ -54,22 +54,6 @@ static void CycleAnimations(void)
 }
 
 
-UINT32 AniEditScreenInit(void)
-{
-
-  return TRUE;
-}
-
-// The ShutdownGame function will free up/undo all things that were started in InitializeGame()
-// It will also be responsible to making sure that all Gaming Engine tasks exit properly
-
-UINT32 AniEditScreenShutdown(void)
-{
-
-	return TRUE;
-}
-
-
 static void BuildListFile(void);
 
 

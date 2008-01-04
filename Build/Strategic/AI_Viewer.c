@@ -1092,11 +1092,6 @@ UINT32  AIViewerScreenHandle()
 	return AIVIEWER_SCREEN;
 }
 
-UINT32  AIViewerScreenShutdown()
-{
-	return TRUE;
-}
-
 
 static void Compression0Callback(GUI_BUTTON* btn, INT32 reason)
 {

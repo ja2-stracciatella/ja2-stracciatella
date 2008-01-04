@@ -340,14 +340,6 @@ UINT32	SaveLoadScreenHandle()
 }
 
 
-
-UINT32	SaveLoadScreenShutdown()
-{
-
-	return( TRUE );
-}
-
-
 static void DestroySaveLoadTextInputBoxes(void);
 
 

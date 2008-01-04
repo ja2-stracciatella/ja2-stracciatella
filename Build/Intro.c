@@ -99,12 +99,6 @@ UINT32	IntroScreenInit( void )
 }
 
 
-UINT32	IntroScreenShutdown( void )
-{
-	return( 1 );
-}
-
-
 static BOOLEAN EnterIntroScreen(void);
 static void ExitIntroScreen(void);
 static void GetIntroScreenUserInput(void);

@@ -168,13 +168,6 @@ static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 u
 	gbFadeType						= bType;
 
 	SetPendingNewScreen(FADE_SCREEN);
-
-}
-
-
-UINT32	FadeScreenInit( )
-{
-	return( TRUE );
 }
 
 
@@ -240,12 +233,6 @@ UINT32	FadeScreenHandle( )
 	}
 
 	return( FADE_SCREEN );
-}
-
-UINT32	FadeScreenShutdown(  )
-{
-
-	return( FALSE );
 }
 
 

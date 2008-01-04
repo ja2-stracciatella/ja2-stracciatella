@@ -579,10 +579,6 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 	}
 }
 
-UINT32 AutoResolveScreenInit()
-{
-	return TRUE;
-}
 
 UINT32 AutoResolveScreenShutdown()
 {

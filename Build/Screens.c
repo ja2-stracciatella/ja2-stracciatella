@@ -2,38 +2,44 @@
 #include "JAScreens.h"
 
 
-Screens GameScreens[MAX_SCREENS] =
+const Screens GameScreens[MAX_SCREENS] =
 {
-  { EditScreenInit,							EditScreenHandle,							EditScreenShutdown					},
-  { SavingScreenInitialize,     SavingScreenHandle,						SavingScreenShutdown				}, // Title Screen
-  { LoadingScreenInitialize,    LoadingScreenHandle,					LoadingScreenShutdown				}, // Title Screen
-  { ErrorScreenInitialize,      ErrorScreenHandle,						ErrorScreenShutdown					}, // Title Screen
-  { InitScreenInitialize,       InitScreenHandle,							InitScreenShutdown					}, // Title Screen
-  { MainGameScreenInit,					MainGameScreenHandle,					MainGameScreenShutdown			},
-	{ AniEditScreenInit,					AniEditScreenHandle,					AniEditScreenShutdown				},
-	{ PalEditScreenInit,					PalEditScreenHandle,					PalEditScreenShutdown				},
-	{ DebugScreenInit,						DebugScreenHandle,						DebugScreenShutdown					},
-	{ MapScreenInit,							MapScreenHandle,							MapScreenShutdown						},
-	{ LaptopScreenInit,						LaptopScreenHandle,						LaptopScreenShutdown				},
-	{ LoadSaveScreenInit,					LoadSaveScreenHandle,					LoadSaveScreenShutdown			},
-	{ MapUtilScreenInit,					MapUtilScreenHandle,					MapUtilScreenShutdown				},
-	{ FadeScreenInit,							FadeScreenHandle,							FadeScreenShutdown					},
-	{ MessageBoxScreenInit,				MessageBoxScreenHandle,				MessageBoxScreenShutdown		},
-	{ MainMenuScreenInit,					MainMenuScreenHandle,					MainMenuScreenShutdown			},
-	{ AutoResolveScreenInit,			AutoResolveScreenHandle,			AutoResolveScreenShutdown		},
-	{ SaveLoadScreenInit,					SaveLoadScreenHandle,					SaveLoadScreenShutdown			},
-	{ OptionsScreenInit,					OptionsScreenHandle,					OptionsScreenShutdown				},
-	{ ShopKeeperScreenInit,				ShopKeeperScreenHandle,				ShopKeeperScreenShutdown		},
-	{ SexScreenInit,							SexScreenHandle,							SexScreenShutdown						},
-	{ GameInitOptionsScreenInit,	GameInitOptionsScreenHandle,	GameInitOptionsScreenShutdown		},
-	{ DemoExitScreenInit,					DemoExitScreenHandle,					DemoExitScreenShutdown			},
-	{ IntroScreenInit,						IntroScreenHandle,						IntroScreenShutdown					},
-	{ CreditScreenInit,						CreditScreenHandle,						CreditScreenShutdown				},
-
-
-#ifdef JA2BETAVERSION
-	{ AIViewerScreenInit,					AIViewerScreenHandle,			AIViewerScreenShutdown			},
+#ifdef JA2EDITOR
+	{ EditScreenInit,       EditScreenHandle,            EditScreenShutdown        },
+#else
+	{ NULL,                 NULL,                        NULL                      },
 #endif
-
-	{ QuestDebugScreenInit,				QuestDebugScreenHandle,		QuestDebugScreenShutdown		}
+	{ NULL,                 SavingScreenHandle,          NULL                      }, // Title Screen
+	{ NULL,                 LoadingScreenHandle,         NULL                      }, // Title Screen
+	{ NULL,                 ErrorScreenHandle,           NULL                      }, // Title Screen
+	{ NULL,                 InitScreenHandle,            NULL                      }, // Title Screen
+	{ MainGameScreenInit,   MainGameScreenHandle,        MainGameScreenShutdown    },
+	{ NULL,                 AniEditScreenHandle,         NULL                      },
+	{ NULL,                 PalEditScreenHandle,         NULL                      },
+	{ NULL,                 DebugScreenHandle,           NULL                      },
+	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown         },
+	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown      },
+#ifdef JA2EDITOR
+	{ LoadSaveScreenInit,   LoadSaveScreenHandle,        NULL                      },
+	{ NULL,                 MapUtilScreenHandle,         NULL                      },
+#else
+	{ NULL,                 NULL,                        NULL                      },
+	{ NULL,                 NULL,                        NULL                      },
+#endif
+	{ NULL,                 FadeScreenHandle,            NULL                      },
+	{ NULL,                 MessageBoxScreenHandle,      NULL                      },
+	{ MainMenuScreenInit,   MainMenuScreenHandle,        NULL                      },
+	{ NULL,                 AutoResolveScreenHandle,     AutoResolveScreenShutdown },
+	{ SaveLoadScreenInit,   SaveLoadScreenHandle,        NULL                      },
+	{ OptionsScreenInit,    OptionsScreenHandle,         NULL                      },
+	{ ShopKeeperScreenInit, ShopKeeperScreenHandle,      ShopKeeperScreenShutdown  },
+	{ NULL,                 SexScreenHandle,             NULL                      },
+	{ NULL,                 GameInitOptionsScreenHandle, NULL                      },
+	{ NULL,                 DemoExitScreenHandle,        NULL                      },
+	{ IntroScreenInit,      IntroScreenHandle,           NULL                      },
+	{ CreditScreenInit,     CreditScreenHandle,          NULL                      },
+#ifdef JA2BETAVERSION
+	{ AIViewerScreenInit,   AIViewerScreenHandle,        NULL                      },
+#endif
+	{ QuestDebugScreenInit, QuestDebugScreenHandle,      NULL                      }
 };

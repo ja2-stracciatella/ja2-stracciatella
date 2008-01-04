@@ -3545,25 +3545,4 @@ static void ReloadMap(void)
 	ExternalLoadMap( szFilename );
 }
 
-#else //non-editor version
-
-#include "Types.h"
-#include "ScreenIDs.h"
-
-UINT32 EditScreenInit()
-{
-	return TRUE ;
-}
-
-UINT32	EditScreenHandle( )
-{
-	//If this screen ever gets set, then this is a bad thing -- endless loop
-	return ERROR_SCREEN ;
-}
-
-UINT32 EditScreenShutdown( )
-{
-	return TRUE ;
-}
-
 #endif

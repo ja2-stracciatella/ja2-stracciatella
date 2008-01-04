@@ -532,12 +532,6 @@ static UINT32 ExitMsgBox(INT8 ubExitCode)
 }
 
 
-UINT32 MessageBoxScreenInit(void)
-{
-	return TRUE;
-}
-
-
 UINT32	MessageBoxScreenHandle(void)
 {
 	if (gfNewMessageBox)
@@ -661,12 +655,6 @@ UINT32	MessageBoxScreenHandle(void)
 	}
 
 	return MSG_BOX_SCREEN;
-}
-
-
-UINT32 MessageBoxScreenShutdown(void)
-{
-	return FALSE;
 }
 
 

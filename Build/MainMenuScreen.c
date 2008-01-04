@@ -171,12 +171,6 @@ UINT32 MainMenuScreenHandle(void)
 }
 
 
-UINT32 MainMenuScreenShutdown(void)
-{
-	return FALSE;
-}
-
-
 static void HandleMainMenuScreen(void)
 {
 	if (gbHandledMainMenu == 0) return;

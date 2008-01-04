@@ -111,11 +111,6 @@ UINT32 LoadSaveScreenInit(void)
 	return TRUE;
 }
 
-UINT32 LoadSaveScreenShutdown(void)
-{
- return TRUE;
-}
-
 
 static void CreateFileDialog(const wchar_t* zTitle);
 static void TrashFDlgList(FDLG_LIST* pList);
@@ -1156,27 +1151,6 @@ BOOLEAN ExternalSaveMap(const wchar_t* szFilename)
 	if( ProcessFileIO() == EDIT_SCREEN )
 		return TRUE;
 	return FALSE;
-}
-
-#else //non-editor version
-
-#include "Types.h"
-#include "ScreenIDs.h"
-
-UINT32 LoadSaveScreenInit()
-{
-	return TRUE ;
-}
-
-UINT32	LoadSaveScreenHandle( )
-{
-	//If this screen ever gets set, then this is a bad thing -- endless loop
-	return ERROR_SCREEN ;
-}
-
-UINT32 LoadSaveScreenShutdown( )
-{
-	return TRUE ;
 }
 
 #endif

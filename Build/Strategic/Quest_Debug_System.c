@@ -682,12 +682,6 @@ UINT32	QuestDebugScreenHandle()
 	return( QUEST_DEBUG_SCREEN );
 }
 
-UINT32	QuestDebugScreenShutdown()
-{
-
-	return( TRUE );
-}
-
 
 static INT32 MakeButton(const wchar_t* text, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority, GUI_CALLBACK click)
 {

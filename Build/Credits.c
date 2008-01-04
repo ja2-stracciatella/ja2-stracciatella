@@ -233,12 +233,6 @@ UINT32	CreditScreenHandle( void )
 }
 
 
-UINT32	CreditScreenShutdown( void )
-{
-	return( 1 );
-}
-
-
 static void InitCreditEyeBlinking(void);
 static void InitCreditNode(void);
 static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);

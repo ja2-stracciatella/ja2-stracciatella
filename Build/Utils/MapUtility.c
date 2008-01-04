@@ -51,10 +51,6 @@ typedef struct
 
 } RGBValues;
 
-UINT32	MapUtilScreenInit( )
-{
-	return( TRUE );
-}
 
 UINT32	MapUtilScreenHandle( )
 {
@@ -315,36 +311,6 @@ UINT32	MapUtilScreenHandle( )
 	sCurFile++;
 
 	return( MAPUTILITY_SCREEN );
-}
-
-
-UINT32 MapUtilScreenShutdown( )
-{
-	return( TRUE );
-}
-
-#else //non-editor version
-
-#include "Types.h"
-#include "ScreenIDs.h"
-
-
-UINT32 MapUtilScreenInit(void)
-{
-	return( TRUE );
-}
-
-
-UINT32 MapUtilScreenHandle(void)
-{
-	//If this screen ever gets set, then this is a bad thing -- endless loop
-	return( ERROR_SCREEN );
-}
-
-
-UINT32 MapUtilScreenShutdown(void)
-{
-	return( TRUE );
 }
 
 #endif

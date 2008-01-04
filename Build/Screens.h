@@ -27,6 +27,6 @@ typedef struct Screens
 
 // This extern is made available to make sure that external modules will have access to the screen information
 
-extern Screens GameScreens[MAX_SCREENS];
+extern const Screens GameScreens[MAX_SCREENS];
 
 #endif
