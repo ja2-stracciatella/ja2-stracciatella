@@ -125,7 +125,7 @@ void CancelMovementMenu(void);
 
 void PopDownOpenDoorMenu(void);
 void RenderOpenDoorMenu(void);
-BOOLEAN InitDoorOpenMenu( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fClosingDoor );
+BOOLEAN InitDoorOpenMenu(SOLDIERTYPE* pSoldier, BOOLEAN fClosingDoor);
 BOOLEAN HandleOpenDoorMenu(void);
 void CancelOpenDoorMenu(void);
 

@@ -330,7 +330,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			// Pull Up Menu
       if ( !fTrapsFound )
       {
-			  InitDoorOpenMenu( pSoldier, pStructure, ubDirection, TRUE );
+				InitDoorOpenMenu(pSoldier, TRUE);
       }
 		}
 		else
@@ -373,7 +373,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			// Pull Up Menu
       if ( !fTrapsFound )
       {
-			  InitDoorOpenMenu( pSoldier, pStructure, ubDirection, FALSE );
+				InitDoorOpenMenu(pSoldier, FALSE);
       }
       else
       {
