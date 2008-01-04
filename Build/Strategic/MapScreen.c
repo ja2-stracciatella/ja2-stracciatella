@@ -8931,39 +8931,12 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 	INT32 iCounter = 0, iCounterA = 0;
 	INT16 sEndSectorA, sEndSectorB;
 	INT32 iExpiryTime, iExpiryTimeA;
-	const SOLDIERTYPE* pSelectedSoldier[MAX_CHARACTER_COUNT];
-	SOLDIERTYPE *pPreviousSelectedInfoChar = NULL;
 
-	if ( fRetainSelectedMercs )
+	SOLDIERTYPE* prev_selected_char = NULL;
+	if (fRetainSelectedMercs && bSelectedInfoChar != -1)
 	{
-		// if we have anyone valid selected
-		if (bSelectedInfoChar != -1)
-		{
-			pPreviousSelectedInfoChar = gCharactersList[bSelectedInfoChar].merc;
-		}
-
-
-		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-		{
-			// set current entry to null
-			pSelectedSoldier[ iCounter ] = NULL;
-
-			const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-			if (!c->selected) continue;
-
-			const SOLDIERTYPE* const pCurrentSoldier = c->merc;
-			if (pCurrentSoldier == NULL) continue;
-
-			// check if soldier is active
-			if( pCurrentSoldier->bActive == FALSE )
-			{
-				continue;
-			}
-
-			pSelectedSoldier[iCounter] = pCurrentSoldier;
-		}
+		prev_selected_char = gCharactersList[bSelectedInfoChar].merc;
 	}
-
 
 	// do the sort
 	for( iCounter = 1; iCounter < FIRST_VEHICLE ; iCounter++ )
@@ -9107,39 +9080,12 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 
 	if ( fRetainSelectedMercs )
 	{
-		// select nobody & reset the selected list
-		ChangeSelectedInfoChar( -1, TRUE );
-
-
-		// now select all the soldiers that were selected before
-		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+		for (size_t i = 0; i < MAX_CHARACTER_COUNT; ++i)
 		{
-			if( pSelectedSoldier[ iCounter ] )
-			{
-				for( iCounterA = 0; iCounterA < MAX_CHARACTER_COUNT; iCounterA++ )
-				{
-					const SOLDIERTYPE* const pCurrentSoldier = gCharactersList[iCounterA].merc;
-					if (pCurrentSoldier == NULL) continue;
+			const SOLDIERTYPE* const s = gCharactersList[i].merc;
+			if (s == NULL || !s->bActive) continue;
 
-					// check if soldier is active
-					if( pCurrentSoldier->bActive == FALSE )
-					{
-						continue;
-					}
-
-					// this guy is selected
-					if( pSelectedSoldier[ iCounter ] == pCurrentSoldier )
-					{
-						SetEntryInSelectedCharacterList( ( INT8 ) iCounterA );
-					}
-
-					// update who the currently selected info guy is
-					if( pPreviousSelectedInfoChar == pCurrentSoldier )
-					{
-						ChangeSelectedInfoChar( ( INT8 ) iCounterA, FALSE );
-					}
-				}
-			}
+			if (prev_selected_char == s) ChangeSelectedInfoChar(i, FALSE);
 		}
 	}
 	else
@@ -9160,9 +9106,9 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 
 static void SwapCharactersInList(INT32 iCharA, INT32 iCharB)
 {
-	SOLDIERTYPE* const temp      = gCharactersList[iCharA].merc;
-	gCharactersList[iCharA].merc = gCharactersList[iCharB].merc;
-	gCharactersList[iCharB].merc = temp;
+	const MapScreenCharacterSt temp = gCharactersList[iCharA];
+	gCharactersList[iCharA]         = gCharactersList[iCharB];
+	gCharactersList[iCharB]         = temp;
 }
 
 
