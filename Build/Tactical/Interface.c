@@ -1846,42 +1846,54 @@ void CancelOpenDoorMenu( )
 }
 
 
+static void DoorAction(const INT16 ap, const INT16 bp, const UINT8 action)
+{
+	SOLDIERTYPE* const s = gOpenDoorMenu.pSoldier;
+	if (EnoughPoints(s, ap, bp, FALSE))
+	{
+		SetUIBusy(s);
+		InteractWithClosedDoor(s, action);
+	}
+	else
+	{
+		// set cancel code
+		gOpenDoorMenu.fMenuHandled = 2;
+	}
+}
+
+
 static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT32		uiBtnID;
-
-	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
-		uiBtnID = btn->IDNum;
+		const INT32 uiBtnID = btn->IDNum;
 
 		// Popdown menu
 		gOpenDoorMenu.fMenuHandled = TRUE;
 
-		if ( uiBtnID == iActionIcons[ CANCEL_ICON ] )
+		if (uiBtnID == iActionIcons[CANCEL_ICON])
 		{
 			// OK, set cancle code!
 			gOpenDoorMenu.fMenuHandled = 2;
 		}
-
-		// Switch on command....
-		if ( uiBtnID == iActionIcons[ OPEN_DOOR_ICON ] )
+		else if (uiBtnID == iActionIcons[OPEN_DOOR_ICON])
 		{
 			// Open door normally...
 			// Check APs
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE ) )
+			if (EnoughPoints(gOpenDoorMenu.pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE))
 			{
 				// Set UI
 				SetUIBusy(gOpenDoorMenu.pSoldier);
 
-				if ( gOpenDoorMenu.fClosingDoor )
+				if (gOpenDoorMenu.fClosingDoor)
 				{
-					ChangeSoldierState( gOpenDoorMenu.pSoldier, GetAnimStateForInteraction( gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR ), 0 , FALSE );
+					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
 				}
 				else
 				{
-					InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN );
+					InteractWithClosedDoor(gOpenDoorMenu.pSoldier, HANDLE_DOOR_OPEN);
 				}
 			}
 			else
@@ -1890,128 +1902,36 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 				gOpenDoorMenu.fMenuHandled = 2;
 			}
 		}
-
-		if ( uiBtnID == iActionIcons[ BOOT_DOOR_ICON ] )
+		else if (uiBtnID == iActionIcons[BOOT_DOOR_ICON])
 		{
-			// Boot door
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_BOOT_DOOR, BP_BOOT_DOOR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_FORCE );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
+			DoorAction(AP_BOOT_DOOR, BP_BOOT_DOOR, HANDLE_DOOR_FORCE);
+		}
+		else if (uiBtnID == iActionIcons[USE_KEYRING_ICON])
+		{
+			DoorAction(AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, HANDLE_DOOR_UNLOCK);
+		}
+		else if (uiBtnID == iActionIcons[LOCKPICK_DOOR_ICON])
+		{
+			DoorAction(AP_PICKLOCK, BP_PICKLOCK, HANDLE_DOOR_LOCKPICK);
+		}
+		else if (uiBtnID == iActionIcons[EXAMINE_DOOR_ICON])
+		{
+			DoorAction(AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, HANDLE_DOOR_EXAMINE);
+		}
+		else if (uiBtnID == iActionIcons[EXPLOSIVE_DOOR_ICON])
+		{
+			DoorAction(AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, HANDLE_DOOR_EXPLODE);
+		}
+		else if (uiBtnID == iActionIcons[UNTRAP_DOOR_ICON])
+		{
+			DoorAction(AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, HANDLE_DOOR_UNTRAP);
+		}
+		else if (uiBtnID == iActionIcons[USE_CROWBAR_ICON])
+		{
+			DoorAction(AP_USE_CROWBAR, BP_USE_CROWBAR, HANDLE_DOOR_CROWBAR);
 		}
 
-		if ( uiBtnID == iActionIcons[ USE_KEYRING_ICON ] )
-		{
-			// Unlock door
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_UNLOCK );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		if ( uiBtnID == iActionIcons[ LOCKPICK_DOOR_ICON ] )
-		{
-			// Lockpick
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_PICKLOCK, BP_PICKLOCK, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_LOCKPICK );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		if ( uiBtnID == iActionIcons[ EXAMINE_DOOR_ICON ] )
-		{
-			// Lockpick
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_EXAMINE );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		if ( uiBtnID == iActionIcons[ EXPLOSIVE_DOOR_ICON ] )
-		{
-			// Explode
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_EXPLODE );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		if ( uiBtnID == iActionIcons[ UNTRAP_DOOR_ICON ] )
-		{
-			// Explode
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_UNTRAP );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		if ( uiBtnID == iActionIcons[ USE_CROWBAR_ICON ] )
-		{
-			// Explode
-			if ( EnoughPoints(  gOpenDoorMenu.pSoldier, AP_USE_CROWBAR, BP_USE_CROWBAR, FALSE ) )
-			{
-				// Set UI
-				SetUIBusy(gOpenDoorMenu.pSoldier);
-
-				InteractWithClosedDoor( gOpenDoorMenu.pSoldier, HANDLE_DOOR_CROWBAR );
-			}
-			else
-			{
-				// OK, set cancle code!
-				gOpenDoorMenu.fMenuHandled = 2;
-			}
-		}
-
-		HandleOpenDoorMenu( );
-
+		HandleOpenDoorMenu();
 	}
 }
 
