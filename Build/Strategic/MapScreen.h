@@ -95,6 +95,7 @@ BOOLEAN CanDrawSectorCursor(void);
 void    RememberPreviousPathForAllSelectedChars(void);
 void    MapScreenDefaultOkBoxCallback(UINT8 bExitValue);
 void    SetUpCursorForStrategicMap(void);
+void    DrawFace(void);
 
 extern MOUSE_REGION gMPanelRegion;
 #ifndef JA2DEMO

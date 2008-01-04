@@ -864,8 +864,7 @@ static void GlowTrashCan(void)
 }
 
 
-
-void DrawFace( INT16 sCharNumber )
+void DrawFace(void)
 {
 	static const SOLDIERTYPE* old_merc = NULL;
 
@@ -2867,7 +2866,7 @@ UINT32 MapScreenHandle(void)
 	if( fDisableDueToBattleRoster == FALSE )
 	{
 		// render face of current info char, for animation
-		DrawFace( bSelectedInfoChar );
+		DrawFace();
 
 		// handle autofaces
 		HandleAutoFaces( );

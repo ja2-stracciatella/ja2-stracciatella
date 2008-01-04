@@ -160,7 +160,6 @@ INT32 iDialogueBox = -1;
 
 
 extern void HandlePendingInitConv( );
-extern void DrawFace( INT16 sCharNumber );
 
 // the next said quote will pause time
 BOOLEAN fPausedTimeDuringQuote = FALSE;
@@ -532,7 +531,7 @@ void HandleDialogue( )
 
           // ATE: Force mapscreen to set face active again.....
         	fReDrawFace = TRUE;
-      		DrawFace( bSelectedInfoChar );
+					DrawFace();
 
 					gfFacePanelActive = FALSE;
 				}
