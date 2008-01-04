@@ -6103,33 +6103,6 @@ static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, I
 }
 
 
-/*
-UINT8 NumActiveCharactersInSector( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ )
-{
-	INT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-	UINT8 ubNumberOnTeam = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		if( gCharactersList[ iCounter ].fValid )
-		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-			if( pSoldier->bActive && ( pSoldier->bLife > 0 ) &&
-					( pSoldier->bAssignment != ASSIGNMENT_POW ) && ( pSoldier->bAssignment != IN_TRANSIT ) )
-			{
-				if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == bSectorZ ) )
-					ubNumberOnTeam++;
-			}
-		}
-	}
-
-	return( ubNumberOnTeam );
-}
-*/
-
-
 static void BlitSAMGridMarkers(void);
 
 
