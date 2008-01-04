@@ -8102,53 +8102,6 @@ static void UpdateStatusOfMapSortButtons(void)
 }
 
 
-static INT8 GetLastValidCharacterInTeamPanelList(void)
-{
-	INT8 iCounter = 0, iValue = 0;
-
-	// run through the list and find the last valid guy in the list
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		const SOLDIERTYPE* const s = gCharactersList[iCounter].merc;
-		if (s == NULL) continue;
-
-		if (s->bLife >= OKLIFE)
-		{
-			if( fShowMapInventoryPool )
-			{
-				if (s->sSectorX == sSelMapX &&
-						s->sSectorY == sSelMapY &&
-						s->bSectorZ == (INT8)iCurrentMapSectorZ)
-				{
-					iValue = iCounter;
-				}
-			}
-			else
-			{
-				if( fShowInventoryFlag && ( gMPanelRegion.Cursor == EXTERN_CURSOR ) )
-				{
-					const SOLDIERTYPE* const sel = GetSelectedInfoChar();
-					if (sel != NULL &&
-							s->sSectorX == sel->sSectorX &&
-							s->sSectorY == sel->sSectorY &&
-							s->bSectorZ == sel->bSectorZ)
-					{
-						iValue = iCounter;
-					}
-				}
-				else
-				{
-					iValue = iCounter;
-				}
-			}
-		}
-	}
-
-	// return the character
-	return( iValue );
-}
-
-
 static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, INT32 reason);
 
 
