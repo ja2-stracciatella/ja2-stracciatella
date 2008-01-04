@@ -49,13 +49,12 @@ static BOOLEAN gfDisplayFullCountRing = FALSE;
 
 BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs )
 {
-	UINT32						uiCursorFlags;
 	static					BOOLEAN						fDoNewTile = FALSE;
 	BOOLEAN						fRecalc = FALSE;
 	BOOLEAN						fShowAPs = FALSE;
 
 	// SET FLAGS FOR CERTAIN MOUSE MOVEMENTS
-	GetCursorMovementFlags( &uiCursorFlags );
+	const UINT32 uiCursorFlags = GetCursorMovementFlags();
 
 	// Force if we are currently cycling guys...
 	if ( gfUIForceReExamineCursorData )

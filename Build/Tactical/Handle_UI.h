@@ -238,7 +238,7 @@ void ToggleTalkCursorMode( UINT32 *puiNewEvent );
 void ToggleLookCursorMode( UINT32 *puiNewEvent );
 
 void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
-void GetCursorMovementFlags( UINT32 *puiCursorFlags );
+UINT32 GetCursorMovementFlags(void);
 
 BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags);
 BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );

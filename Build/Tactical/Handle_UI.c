@@ -620,7 +620,6 @@ UINT32  HandleTacticalUI( void )
 
 static void SetUIMouseCursor(void)
 {
-	UINT32 uiCursorFlags;
 	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
 	BOOLEAN	fUpdateNewCursor = TRUE;
@@ -634,9 +633,7 @@ static void SetUIMouseCursor(void)
 	{
 		if ( gfUIConfirmExitArrows )
 		{
-			GetCursorMovementFlags( &uiCursorFlags );
-
-			if ( uiCursorFlags & MOUSE_MOVING )
+			if (GetCursorMovementFlags() & MOUSE_MOVING)
 			{
 				gfUIConfirmExitArrows = FALSE;
 			}
@@ -1174,7 +1171,6 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 {
 	BOOLEAN						fSetCursor = FALSE;
-	UINT32						uiCursorFlags;
 	LEVELNODE					*pIntNode;
 	EXITGRID					ExitGrid;
 	INT16							sIntTileGridNo;
@@ -1272,7 +1268,7 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 		 }
 
 		 // DO SOME CURSOR POSITION FLAGS SETTING
-		 GetCursorMovementFlags( &uiCursorFlags );
+		const UINT32 uiCursorFlags = GetCursorMovementFlags();
 
 		if (sel != NULL)
 		 {
@@ -1537,7 +1533,6 @@ static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMov
 static UINT32 UIHandleCWait(UI_EVENT* pUIEvent)
 {
 	BOOLEAN						fSetCursor;
-	UINT32						uiCursorFlags;
 	LEVELNODE					*pInvTile;
 
 	const GridNo usMapPos = GetMouseMapPos();
@@ -1555,7 +1550,7 @@ static UINT32 UIHandleCWait(UI_EVENT* pUIEvent)
 				return( GAME_SCREEN );
 			}
 
-			GetCursorMovementFlags( &uiCursorFlags );
+			const UINT32 uiCursorFlags = GetCursorMovementFlags();
 
 			if ( pInvTile != NULL )
 			{
@@ -2916,7 +2911,7 @@ static UINT32 UIHandleIETEndTurn(UI_EVENT* pUIEvent)
 }
 
 
-void GetCursorMovementFlags( UINT32 *puiCursorFlags )
+UINT32 GetCursorMovementFlags(void)
 {
 	static  BOOLEAN fStationary = FALSE;
 	static	UINT16	usOldMouseXPos  = 32000;
@@ -2929,33 +2924,31 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 	// Check if this is the same frame as before, return already calculated value if so!
 	if ( uiOldFrameNumber == guiGameCycleCounter )
 	{
-		( *puiCursorFlags ) = uiSameFrameCursorFlags;
-		return;
+		return uiSameFrameCursorFlags;
 	}
 
 	const GridNo usMapPos = GetMouseMapPos();
 
-	*puiCursorFlags = 0;
-
+	UINT32 cursor_flags = 0;
 	if ( gusMouseXPos != usOldMouseXPos || gusMouseYPos != usOldMouseYPos )
 	{
-		(*puiCursorFlags ) |= MOUSE_MOVING;
+		cursor_flags |= MOUSE_MOVING;
 
 		// IF CURSOR WAS PREVIOUSLY STATIONARY, MAKE THE ADDITIONAL CHECK OF GRID POS CHANGE
 		if ( fStationary && usOldMapPos == usMapPos )
 		{
-			(*puiCursorFlags) |= MOUSE_MOVING_IN_TILE;
+			cursor_flags |= MOUSE_MOVING_IN_TILE;
 		}
 		else
 		{
 			fStationary = FALSE;
-			(*puiCursorFlags) |= MOUSE_MOVING_NEW_TILE;
+			cursor_flags |= MOUSE_MOVING_NEW_TILE;
 		}
 
 	}
 	else
 	{
-		(*puiCursorFlags) |= MOUSE_STATIONARY;
+		cursor_flags |= MOUSE_STATIONARY;
 		fStationary = TRUE;
 	}
 
@@ -2964,7 +2957,8 @@ void GetCursorMovementFlags( UINT32 *puiCursorFlags )
 	usOldMouseYPos = gusMouseYPos;
 
 	uiOldFrameNumber				= guiGameCycleCounter;
-	uiSameFrameCursorFlags	= (*puiCursorFlags);
+	uiSameFrameCursorFlags = cursor_flags;
+	return cursor_flags;
 }
 
 
@@ -4947,7 +4941,6 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles)
 {
 	BOOLEAN						fSetCursor;
-	UINT32						uiCursorFlags;
 	LEVELNODE					*pIntTile;
 	static BOOLEAN		fOverPool = FALSE;
 	static BOOLEAN		fOverEnemy = FALSE;
@@ -4957,7 +4950,7 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 	STRUCTURE					*pStructure = NULL;
 	BOOLEAN						fPoolContainsHiddenItems = FALSE;
 
-	GetCursorMovementFlags( &uiCursorFlags );
+	const UINT32 uiCursorFlags = GetCursorMovementFlags();
 
 	// Default gridno to mouse pos
 	sActionGridNo = usMapPos;
