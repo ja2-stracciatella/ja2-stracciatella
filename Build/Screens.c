@@ -9,8 +9,8 @@ const Screens GameScreens[MAX_SCREENS] =
 #else
 	{ NULL,                 NULL,                        NULL                      },
 #endif
-	{ NULL,                 SavingScreenHandle,          NULL                      }, // Title Screen
-	{ NULL,                 LoadingScreenHandle,         NULL                      }, // Title Screen
+	{ NULL,                 NULL,                        NULL                      },
+	{ NULL,                 NULL,                        NULL                      },
 	{ NULL,                 ErrorScreenHandle,           NULL                      }, // Title Screen
 	{ NULL,                 InitScreenHandle,            NULL                      }, // Title Screen
 	{ MainGameScreenInit,   MainGameScreenHandle,        MainGameScreenShutdown    },

@@ -12,10 +12,6 @@ extern UINT32 LoadSaveScreenInit(void);
 extern UINT32 LoadSaveScreenHandle(void);
 #endif
 
-extern UINT32 SavingScreenHandle(void);
-
-extern UINT32 LoadingScreenHandle(void);
-
 extern UINT32 ErrorScreenHandle(void);
 
 extern UINT32 InitScreenHandle(void);

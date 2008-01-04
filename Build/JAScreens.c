@@ -156,20 +156,6 @@ void DisplayFrameRate( )
 
 	}
 #endif
-
-}
-
-
-//USELESS!!!!!!!!!!!!!!!!!!
-UINT32 SavingScreenHandle( void )
-{
-	return SAVING_SCREEN;
-}
-
-
-UINT32 LoadingScreenHandle(void)
-{
-	return LOADING_SCREEN;
 }
 
 

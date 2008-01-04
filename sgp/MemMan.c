@@ -26,8 +26,8 @@
 static const wchar_t* const gzJA2ScreenNames[] =
 {
 	L"EDIT_SCREEN",
-	L"SAVING_SCREEN",
-	L"LOADING_SCREEN",
+	L"?",
+	L"?",
 	L"ERROR_SCREEN",
 	L"INIT_SCREEN",
 	L"GAME_SCREEN",
