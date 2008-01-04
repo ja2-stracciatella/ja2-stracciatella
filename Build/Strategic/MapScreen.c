@@ -472,9 +472,6 @@ extern BOOLEAN gfRenderPBInterface;
 extern BOOLEAN fResetTimerForFirstEntryIntoMapScreen;
 extern BOOLEAN gfStartedFromMapScreen;
 
-// the selected list of mercs
-extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
-
 extern INT32 iDialogueBox;
 extern INT32 giMapInvDescButton;
 
@@ -7786,44 +7783,44 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		const SOLDIERTYPE* const pSoldier = c->merc;
+
+		// if he's IN a vehicle or IS a vehicle
+		if( ( pSoldier->bAssignment == VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-			// if he's IN a vehicle or IS a vehicle
-			if( ( pSoldier->bAssignment == VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+			if( pSoldier->bAssignment == VEHICLE )
 			{
-				if( pSoldier->bAssignment == VEHICLE )
-				{
-					// IN a vehicle
-					iVehicleId = pSoldier->iVehicleId;
-				}
-				else
-				{
-					// IS a vehicle
-					iVehicleId = pSoldier->bVehicleID;
-				}
-
-				// vehicles
-				ppMovePath = &( pVehicleList[ iVehicleId ].pMercPath );
-				ubGroupId = pVehicleList[ iVehicleId ].ubMovementGroup;
+				// IN a vehicle
+				iVehicleId = pSoldier->iVehicleId;
 			}
 			else
 			{
-				// mercs on foot
-				ppMovePath = &gCharactersList[bSelectedDestChar].merc->pMercPath;
-				ubGroupId = pSoldier->ubGroupID;
+				// IS a vehicle
+				iVehicleId = pSoldier->bVehicleID;
 			}
 
-			// if we haven't already rebuilt this group
-			if ( !fGroupIDRebuilt[ ubGroupId ] )
-			{
-				// rebuild it now
-				RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
+			// vehicles
+			ppMovePath = &( pVehicleList[ iVehicleId ].pMercPath );
+			ubGroupId = pVehicleList[ iVehicleId ].ubMovementGroup;
+		}
+		else
+		{
+			// mercs on foot
+			ppMovePath = &gCharactersList[bSelectedDestChar].merc->pMercPath;
+			ubGroupId = pSoldier->ubGroupID;
+		}
 
-				// mark it as rebuilt
-				fGroupIDRebuilt[ ubGroupId ] = TRUE;
-			}
+		// if we haven't already rebuilt this group
+		if ( !fGroupIDRebuilt[ ubGroupId ] )
+		{
+			// rebuild it now
+			RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
+
+			// mark it as rebuilt
+			fGroupIDRebuilt[ ubGroupId ] = TRUE;
 		}
 	}
 }
@@ -8951,7 +8948,10 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 			// set current entry to null
 			pSelectedSoldier[ iCounter ] = NULL;
 
-			const SOLDIERTYPE* const pCurrentSoldier = gCharactersList[iCounter].merc;
+			const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+			if (!c->selected) continue;
+
+			const SOLDIERTYPE* const pCurrentSoldier = c->merc;
 			if (pCurrentSoldier == NULL) continue;
 
 			// check if soldier is active
@@ -8960,12 +8960,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 				continue;
 			}
 
-			// are they selected?...
-			if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
-			{
-				// yes, store pointer to them
-				pSelectedSoldier[ iCounter ] = pCurrentSoldier;
-			}
+			pSelectedSoldier[iCounter] = pCurrentSoldier;
 		}
 	}
 
@@ -9793,28 +9788,27 @@ void CopyPathToAllSelectedCharacters(PathSt* pPath)
 	// run through list and copy paths for each selected character
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		SOLDIERTYPE* const pSoldier = c->merc;
+		// skip itself!
+		if ( GetSoldierMercPathPtr( pSoldier ) != pPath )
 		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-			// skip itself!
-			if ( GetSoldierMercPathPtr( pSoldier ) != pPath )
+			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-				{
-					pVehicleList[ pSoldier->bVehicleID ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->bVehicleID ].pMercPath );
-				}
-				else if( pSoldier->bAssignment == VEHICLE )
-				{
-					pVehicleList[ pSoldier->iVehicleId ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->iVehicleId ].pMercPath );
-				}
-				else
-				{
-					pSoldier->pMercPath = CopyPaths( pPath, pSoldier->pMercPath );
-				}
-
-				// don't use CopyPathToCharactersSquadIfInOne(), it will whack the original pPath by replacing that merc's path!
+				pVehicleList[ pSoldier->bVehicleID ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->bVehicleID ].pMercPath );
 			}
+			else if( pSoldier->bAssignment == VEHICLE )
+			{
+				pVehicleList[ pSoldier->iVehicleId ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->iVehicleId ].pMercPath );
+			}
+			else
+			{
+				pSoldier->pMercPath = CopyPaths( pPath, pSoldier->pMercPath );
+			}
+
+			// don't use CopyPathToCharactersSquadIfInOne(), it will whack the original pPath by replacing that merc's path!
 		}
 	}
 }
@@ -10178,17 +10172,17 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
-		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-			if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-						!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
-			{
-				selected_merc[ubNumMercs] = pSoldier;
-				ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
 
-				ubNumMercs++;
-			}
+		SOLDIERTYPE* const pSoldier = c->merc;
+		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
+		{
+			selected_merc[ubNumMercs] = pSoldier;
+			ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;
+
+			ubNumMercs++;
 		}
 	}
 
@@ -10378,21 +10372,20 @@ static void WakeUpAnySleepingSelectedMercsOnFootOrDriving(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
-		{
-			SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
 
-			// if asleep
-			if ( pSoldier->fMercAsleep )
+		SOLDIERTYPE* const pSoldier = c->merc;
+		// if asleep
+		if ( pSoldier->fMercAsleep )
+		{
+			// and on foot or driving
+			if ( ( pSoldier->bAssignment < ON_DUTY ) ||
+					 ( ( pSoldier->bAssignment == VEHICLE ) && SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, FALSE ) ) )
 			{
-				// and on foot or driving
-				if ( ( pSoldier->bAssignment < ON_DUTY ) ||
-						 ( ( pSoldier->bAssignment == VEHICLE ) && SoldierMustDriveVehicle( pSoldier, pSoldier->iVehicleId, FALSE ) ) )
-				{
-					// we should be guaranteed that he CAN wake up to get this far, so report errors, but don't force it
-					fSuccess = SetMercAwake( pSoldier, TRUE, FALSE );
-					Assert( fSuccess );
-				}
+				// we should be guaranteed that he CAN wake up to get this far, so report errors, but don't force it
+				fSuccess = SetMercAwake( pSoldier, TRUE, FALSE );
+				Assert( fSuccess );
 			}
 		}
 	}
@@ -10617,11 +10610,11 @@ void RememberPreviousPathForAllSelectedChars(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
-		{
-			// remember his previous path by copying it to his slot in the array kept for that purpose
-			gpCharacterPreviousMercPath[iCounter] = CopyPaths(GetSoldierMercPathPtr(gCharactersList[iCounter].merc), gpCharacterPreviousMercPath[iCounter]);
-		}
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		// remember his previous path by copying it to his slot in the array kept for that purpose
+		gpCharacterPreviousMercPath[iCounter] = CopyPaths(GetSoldierMercPathPtr(c->merc), gpCharacterPreviousMercPath[iCounter]);
 	}
 }
 
@@ -10680,67 +10673,66 @@ static void RestorePreviousPaths(void)
 	{
 		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 		{
-			// if selected
-			if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
+			const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+			if (!c->selected) continue;
+
+			SOLDIERTYPE* const pSoldier = c->merc;
+
+			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-
-				if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-				{
-					ppMovePath = &( pVehicleList[ pSoldier->bVehicleID ].pMercPath );
-					ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
-				}
-				else if( pSoldier->bAssignment == VEHICLE )
-				{
-					ppMovePath = &( pVehicleList[ pSoldier->iVehicleId ].pMercPath );
-					ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
-				}
-				else if( pSoldier->bAssignment < ON_DUTY )
-				{
-					ppMovePath = &( pSoldier->pMercPath );
-					ubGroupId = pSoldier->ubGroupID;
-				}
-				else
-				{
-					// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-					Assert( 0 );
-					continue;
-				}
+				ppMovePath = &( pVehicleList[ pSoldier->bVehicleID ].pMercPath );
+				ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
+			}
+			else if( pSoldier->bAssignment == VEHICLE )
+			{
+				ppMovePath = &( pVehicleList[ pSoldier->iVehicleId ].pMercPath );
+				ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
+			}
+			else if( pSoldier->bAssignment < ON_DUTY )
+			{
+				ppMovePath = &( pSoldier->pMercPath );
+				ubGroupId = pSoldier->ubGroupID;
+			}
+			else
+			{
+				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
+				Assert( 0 );
+				continue;
+			}
 
 
-				fPathChanged = FALSE;
+			fPathChanged = FALSE;
 
-				// if we have the previous path stored for the dest char
-				if( gpCharacterPreviousMercPath[ iCounter ] )
+			// if we have the previous path stored for the dest char
+			if( gpCharacterPreviousMercPath[ iCounter ] )
+			{
+				gpCharacterPreviousMercPath[ iCounter ] = MoveToBeginningOfPathList( gpCharacterPreviousMercPath[ iCounter ] );
+
+				// clear current path
+				*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
+				// replace it with the previous one
+				*ppMovePath = CopyPaths( gpCharacterPreviousMercPath[ iCounter ], *ppMovePath );
+				// will need to rebuild waypoints
+				fPathChanged = TRUE;
+			}
+			else	// no previous path stored
+			{
+				// if he has one now, wipe it out
+				if( *ppMovePath )
 				{
-					gpCharacterPreviousMercPath[ iCounter ] = MoveToBeginningOfPathList( gpCharacterPreviousMercPath[ iCounter ] );
-
-					// clear current path
+					// wipe it out!
+					*ppMovePath = MoveToBeginningOfPathList( *ppMovePath );
 					*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-					// replace it with the previous one
-					*ppMovePath = CopyPaths( gpCharacterPreviousMercPath[ iCounter ], *ppMovePath );
 					// will need to rebuild waypoints
 					fPathChanged = TRUE;
 				}
-				else	// no previous path stored
-				{
-					// if he has one now, wipe it out
-					if( *ppMovePath )
-					{
-						// wipe it out!
-						*ppMovePath = MoveToBeginningOfPathList( *ppMovePath );
-						*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-						// will need to rebuild waypoints
-						fPathChanged = TRUE;
-					}
-				}
+			}
 
 
-				if ( fPathChanged )
-				{
-					// rebuild waypoints
-					RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
-				}
+			if ( fPathChanged )
+			{
+				// rebuild waypoints
+				RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
 			}
 		}
 	}
@@ -10753,10 +10745,10 @@ static void ClearPreviousPaths(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
-		{
-			gpCharacterPreviousMercPath[ iCounter ] = ClearStrategicPathList( gpCharacterPreviousMercPath[ iCounter ], 0 );
-		}
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		gpCharacterPreviousMercPath[iCounter] = ClearStrategicPathList(gpCharacterPreviousMercPath[iCounter], 0 );
 	}
 	gpHelicopterPreviousMercPath = ClearStrategicPathList( gpHelicopterPreviousMercPath, 0 );
 }

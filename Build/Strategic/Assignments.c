@@ -167,8 +167,6 @@ BOOLEAN gfAddDisplayBoxToWaitingQueue = FALSE;
 // redraw character list
 extern BOOLEAN fDrawCharacterList;
 
-extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
-
 SOLDIERTYPE *gpDismissSoldier = NULL;
 
 BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
@@ -9345,9 +9343,10 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 	// sets assignment for the list
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c        = &gCharactersList[iCounter];
+		SOLDIERTYPE* const                pSoldier = c->merc;
 		if (pSoldier != NULL &&
-				( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) &&
+				c->selected &&
 				( iCounter != bSelectedAssignChar ) &&
 				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{

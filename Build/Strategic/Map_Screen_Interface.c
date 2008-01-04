@@ -230,8 +230,6 @@ MOUSE_REGION	gMapStatusBarsRegion;
 
 SGPPoint MovePosition={450, 100 };
 
-// which lines are selected? .. for assigning groups of mercs to the same thing
-BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
 BOOLEAN fResetTimerForFirstEntryIntoMapScreen = FALSE;
 static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
@@ -355,23 +353,24 @@ void InitalizeVehicleAndCharacterList( void )
 void SetEntryInSelectedCharacterList( INT8 bEntry )
 {
 	Assert( ( bEntry >= 0 ) && ( bEntry < MAX_CHARACTER_COUNT ) );
-
-	// set this entry to selected
-	fSelectedListOfMercsForMapScreen[ bEntry ] = TRUE ;
+	gCharactersList[bEntry].selected = TRUE;
 }
+
 
 void ResetEntryForSelectedList( INT8 bEntry )
 {
 	Assert( ( bEntry >= 0 ) && ( bEntry < MAX_CHARACTER_COUNT ) );
-
-	// set this entry to selected
-	fSelectedListOfMercsForMapScreen[ bEntry ] = FALSE;
+	gCharactersList[bEntry].selected = FALSE;
 }
+
 
 void ResetSelectedListForMapScreen( void )
 {
 	// set all the entries int he selected list to false
-	memset( &fSelectedListOfMercsForMapScreen, FALSE, MAX_CHARACTER_COUNT * sizeof( BOOLEAN ) );
+	for (size_t i = 0; i != MAX_CHARACTER_COUNT; ++i)
+	{
+		gCharactersList[i].selected = FALSE;
+	}
 
 	// if we still have a valid dude selected
 	if (bSelectedInfoChar != -1 && gCharactersList[bSelectedInfoChar].merc != NULL)
@@ -385,21 +384,17 @@ void ResetSelectedListForMapScreen( void )
 BOOLEAN IsEntryInSelectedListSet( INT8 bEntry )
 {
 	Assert( ( bEntry >= 0 ) && ( bEntry < MAX_CHARACTER_COUNT ) );
-
-	// is this entry in the selected list set?
-
-	return( fSelectedListOfMercsForMapScreen[ bEntry ] );
-
+	return gCharactersList[bEntry].selected;
 }
 
 
 void ToggleEntryInSelectedList( INT8 bEntry )
 {
 	Assert( ( bEntry >= 0 ) && ( bEntry < MAX_CHARACTER_COUNT ) );
-
-	// toggle the value in the selected list
-	fSelectedListOfMercsForMapScreen[ bEntry ] = !( fSelectedListOfMercsForMapScreen[ bEntry ] );
+	MapScreenCharacterSt* const c = &gCharactersList[bEntry];
+	c->selected = !c->selected;
 }
+
 
 void BuildSelectedListFromAToB( INT8 bA, INT8 bB )
 {
@@ -435,10 +430,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void )
 	// check if more than one person is selected in the selected list
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++  )
 	{
-		if( fSelectedListOfMercsForMapScreen[iCounter] == TRUE )
-		{
-			ubSelectedCnt++;
-		}
+		if (gCharactersList[iCounter].selected) ++ubSelectedCnt;
 	}
 
 	if( ubSelectedCnt > 1 )
@@ -503,24 +495,6 @@ void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, 
 }
 
 
-
-/*
-void PlotPathForSelectedCharacterList( INT16 sX, INT16 sY )
-{
-	INT32 iCounter = 0;
-	// run through list and build paths for each character
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		if( ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )&&( bSelectedDestChar != iCounter ) )
-		{
-			// character is valid.. do this for every one not the bSelectedDestChar
-			PlotPathForCharacter(gCharactersList[iCounter].merc, sX, sY, FALSE);
-		}
-	}
-}
-*/
-
-
 static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* s, INT32 iVehicle1Id);
 
 
@@ -532,80 +506,80 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* const pS
 	// deselect any other selected mercs that can't travel together with pSoldier
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		const SOLDIERTYPE* const pSoldier2 = c->merc;
 		if (pSoldier2 == NULL) continue;
 
-		if (fSelectedListOfMercsForMapScreen[iCounter] == TRUE)
+		// skip the guy we are
+		if (pSoldier == pSoldier2) continue;
+
+		// NOTE ABOUT THE VEHICLE TESTS BELOW:
+		// Vehicles and foot squads can't plot movement together!
+		// The ETAs are different, and unlike squads, vehicles can't travel everywhere!
+		// However, different vehicles CAN plot together, since they all travel at the same rates now
+
+		// if anchor guy is IN a vehicle
+		if( pSoldier->bAssignment == VEHICLE )
 		{
-			// skip the guy we are
-			if (pSoldier == pSoldier2) continue;
-
-			// NOTE ABOUT THE VEHICLE TESTS BELOW:
-			// Vehicles and foot squads can't plot movement together!
-			// The ETAs are different, and unlike squads, vehicles can't travel everywhere!
-			// However, different vehicles CAN plot together, since they all travel at the same rates now
-
-			// if anchor guy is IN a vehicle
-			if( pSoldier->bAssignment == VEHICLE )
+			if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->iVehicleId ) )
 			{
-				if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->iVehicleId ) )
-				{
-					// reset entry for selected list
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
+				// reset entry for selected list
+				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-			// if anchor guy IS a vehicle
-			else if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		}
+		// if anchor guy IS a vehicle
+		else if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		{
+			if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->bVehicleID ) )
 			{
-				if ( !CanSoldierMoveWithVehicleId( pSoldier2, pSoldier->bVehicleID ) )
-				{
-					// reset entry for selected list
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
+				// reset entry for selected list
+				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-			// if this guy is IN a vehicle
-			else if( pSoldier2->bAssignment == VEHICLE )
+		}
+		// if this guy is IN a vehicle
+		else if( pSoldier2->bAssignment == VEHICLE )
+		{
+			if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->iVehicleId ) )
 			{
-				if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->iVehicleId ) )
-				{
-					// reset entry for selected list
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
+				// reset entry for selected list
+				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-			// if this guy IS a vehicle
-			else if ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE )
+		}
+		// if this guy IS a vehicle
+		else if ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE )
+		{
+			if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->bVehicleID ) )
 			{
-				if ( !CanSoldierMoveWithVehicleId( pSoldier, pSoldier2->bVehicleID ) )
-				{
-					// reset entry for selected list
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
+				// reset entry for selected list
+				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-			// reject those not a squad (vehicle handled above)
-			else if( pSoldier2->bAssignment >= ON_DUTY )
+		}
+		// reject those not a squad (vehicle handled above)
+		else if( pSoldier2->bAssignment >= ON_DUTY )
+		{
+			ResetEntryForSelectedList( ( INT8 )iCounter );
+		}
+		else
+		{
+			// reject those not in the same sector
+			if( ( pSoldier->sSectorX != pSoldier2->sSectorX ) ||
+					( pSoldier->sSectorY != pSoldier2->sSectorY ) ||
+					( pSoldier->bSectorZ != pSoldier2->bSectorZ ) )
 			{
 				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-			else
+
+			// if either is between sectors, they must be in the same movement group
+			if ( ( pSoldier->fBetweenSectors || pSoldier2->fBetweenSectors ) &&
+					 ( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
 			{
-				// reject those not in the same sector
-				if( ( pSoldier->sSectorX != pSoldier2->sSectorX ) ||
-						( pSoldier->sSectorY != pSoldier2->sSectorY ) ||
-						( pSoldier->bSectorZ != pSoldier2->bSectorZ ) )
-				{
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
-
-				// if either is between sectors, they must be in the same movement group
-				if ( ( pSoldier->fBetweenSectors || pSoldier2->fBetweenSectors ) &&
-						 ( pSoldier->ubGroupID != pSoldier2->ubGroupID ) )
-				{
-					ResetEntryForSelectedList( ( INT8 )iCounter );
-				}
+				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
-
-			// different movement groups in same sector is OK, even if they're not travelling together
 		}
+
+		// different movement groups in same sector is OK, even if they're not travelling together
 	}
 }
 
@@ -619,21 +593,20 @@ void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (c->selected) continue;
+
+		const SOLDIERTYPE* const pSoldier = c->merc;
 		if (pSoldier == NULL) continue;
 
-		// if not already selected
-		if( fSelectedListOfMercsForMapScreen[ iCounter ] == FALSE )
+		// if on a squad or in a vehicle
+		if ( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
 		{
-			// if on a squad or in a vehicle
-			if ( ( pSoldier->bAssignment < ON_DUTY ) || ( pSoldier->bAssignment == VEHICLE ) )
+			// and a member of that squad or vehicle is selected
+			if ( AnyMercInSameSquadOrVehicleIsSelected( pSoldier ) )
 			{
-				// and a member of that squad or vehicle is selected
-				if ( AnyMercInSameSquadOrVehicleIsSelected( pSoldier ) )
-				{
-					// then also select this guy
-					SetEntryInSelectedCharacterList( ( INT8 ) iCounter );
-				}
+				// then also select this guy
+				SetEntryInSelectedCharacterList( ( INT8 ) iCounter );
 			}
 		}
 	}
@@ -646,41 +619,40 @@ static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* const pS
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		const SOLDIERTYPE* const pSoldier2 = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		if (!c->selected) continue;
+
+		const SOLDIERTYPE* const pSoldier2 = c->merc;
 		if (pSoldier2 == NULL) continue;
 
-		// if selected
-		if( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE )
+		// if they have the same assignment
+		if( pSoldier->bAssignment == pSoldier2->bAssignment )
 		{
-			// if they have the same assignment
-			if( pSoldier->bAssignment == pSoldier2->bAssignment )
-			{
-				// same squad?
-				if ( pSoldier->bAssignment < ON_DUTY )
-				{
-					return ( TRUE );
-				}
-
-				// same vehicle?
-				if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == pSoldier2->iVehicleId ) )
-				{
-					return ( TRUE );
-				}
-			}
-
-			// target guy is in a vehicle, and this guy IS that vehicle
-			if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					( pSoldier->iVehicleId == pSoldier2->bVehicleID ) )
+			// same squad?
+			if ( pSoldier->bAssignment < ON_DUTY )
 			{
 				return ( TRUE );
 			}
 
-			// this guy is in a vehicle, and the target guy IS that vehicle
-			if( ( pSoldier2->bAssignment == VEHICLE ) && ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					( pSoldier2->iVehicleId == pSoldier->bVehicleID ) )
+			// same vehicle?
+			if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == pSoldier2->iVehicleId ) )
 			{
 				return ( TRUE );
 			}
+		}
+
+		// target guy is in a vehicle, and this guy IS that vehicle
+		if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier2->uiStatusFlags & SOLDIER_VEHICLE ) &&
+				( pSoldier->iVehicleId == pSoldier2->bVehicleID ) )
+		{
+			return ( TRUE );
+		}
+
+		// this guy is in a vehicle, and the target guy IS that vehicle
+		if( ( pSoldier2->bAssignment == VEHICLE ) && ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
+				( pSoldier2->iVehicleId == pSoldier->bVehicleID ) )
+		{
+			return ( TRUE );
 		}
 	}
 
@@ -5343,7 +5315,8 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 	// if anyone in the merc's group or also selected cannot move for whatever reason return false
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		SOLDIERTYPE* const pCurrentSoldier = gCharactersList[iCounter].merc;
+		const MapScreenCharacterSt* const c               = &gCharactersList[iCounter];
+		SOLDIERTYPE* const                pCurrentSoldier = c->merc;
 		if (pCurrentSoldier == NULL) continue;
 
 		// skip inactive grunts
@@ -5362,7 +5335,7 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 		const UINT8 ubCurrentGroup = GetSoldierGroupId(pCurrentSoldier);
 
 		// if he is in the same movement group (i.e. squad), or he is still selected to go with us (legal?)
-		if( ( ubCurrentGroup == ubGroup ) || ( fSelectedListOfMercsForMapScreen[ iCounter ] == TRUE ) )
+		if (ubCurrentGroup == ubGroup || c->selected)
 		{
 			// can this character also move strategically?
 			if( CanCharacterMoveInStrategic( pCurrentSoldier, pbErrorNumber ) == FALSE )

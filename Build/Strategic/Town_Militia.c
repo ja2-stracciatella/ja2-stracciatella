@@ -45,9 +45,6 @@ SOLDIERTYPE *pMilitiaTrainerSoldier = NULL;
 // note that these sector values are STRATEGIC INDEXES, not 0-255!
 INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
 
-// the selected list of mercs
-extern BOOLEAN fSelectedListOfMercsForMapScreen[ MAX_CHARACTER_COUNT ];
-
 
 #ifdef JA2BETAVERSION
 void VerifyTownTrainingIsPaidFor( void );
@@ -954,11 +951,11 @@ static void BuildListOfUnpaidTrainableSectors(void)
 	{
 		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
+			const MapScreenCharacterSt* const c        = &gCharactersList[iCounter];
+			const SOLDIERTYPE* const          pSoldier = c->merc;
 			if (pSoldier == NULL) continue;
 
-			// selected?
-			if ((fSelectedListOfMercsForMapScreen[iCounter] == TRUE || iCounter == bSelectedAssignChar) &&
+			if ((c->selected || iCounter == bSelectedAssignChar) &&
 					CanCharacterTrainMilitia(pSoldier) == TRUE &&
 					!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 			{

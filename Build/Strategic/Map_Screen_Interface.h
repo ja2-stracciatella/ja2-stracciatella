@@ -193,6 +193,7 @@ extern BOOLEAN fLockOutMapScreenInterface;
 typedef struct MapScreenCharacterSt
 {
 	SOLDIERTYPE* merc;
+	BOOLEAN      selected;
 } MapScreenCharacterSt;
 
 
@@ -290,11 +291,6 @@ void ToggleEntryInSelectedList( INT8 bEntry );
 
 // reset assignments for mercs on selected list who have this assignment
 void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList(INT8 bAssignment);
-
-/*
-// plot path for selected character list
-void PlotPathForSelectedCharacterList( INT16 sX, INT16 sY );
-*/
 
 void RestoreBackgroundForAssignmentGlowRegionList( void );
 void RestoreBackgroundForDestinationGlowRegionList( void );
