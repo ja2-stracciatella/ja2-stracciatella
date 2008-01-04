@@ -9316,6 +9316,9 @@ static void ChangeMapScreenMaskCursor(UINT16 usCursor)
 }
 
 
+static void ExplainWhySkyriderCantFly(void);
+
+
 static void CancelOrShortenPlottedPath(void)
 {
 	INT16 sMapX, sMapY;
@@ -9772,8 +9775,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 }
 
 
-
-void ExplainWhySkyriderCantFly( void )
+static void ExplainWhySkyriderCantFly(void)
 {
 	// do we owe him money?
 	if( gMercProfiles[ SKYRIDER ].iBalance < 0 )

@@ -70,8 +70,6 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath);
 
 void AbortMovementPlottingMode( void );
 
-void ExplainWhySkyriderCantFly( void );
-
 BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* s);
 
 BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber );

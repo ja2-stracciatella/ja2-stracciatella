@@ -1633,39 +1633,6 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 }
 
 
-static void CancelPathForGroup(GROUP* pGroup)
-{
-	// if it's the chopper, but player can't redirect it
-	if ( pGroup->fPlayer && IsGroupTheHelicopterGroup( pGroup ) && ( CanHelicopterFly( ) == FALSE ) )
-	{
-		// explain & ignore
-		ExplainWhySkyriderCantFly();
-		return;
-	}
-
-	// is it a non-vehicle group?
-	if( ( pGroup->fPlayer ) && ( pGroup->fVehicle == FALSE ) )
-	{
-		if( pGroup->pPlayerList )
-		{
-			if( pGroup->pPlayerList->pSoldier )
-			{
-				// clearing one merc should be enough, it copies changes to his squad on its own
-				CancelPathForCharacter( pGroup->pPlayerList->pSoldier );
-			}
-		}
-	}
-	// is it a vehicle group?
-	else if( pGroup->fVehicle )
-	{
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		Assert(v != NULL);
-		if (v == NULL) return;
-		CancelPathForVehicle(v, FALSE);
-	}
-}
-
-
 static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
 {
 	INT8 bSquad = 0;
