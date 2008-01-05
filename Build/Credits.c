@@ -39,7 +39,6 @@ typedef struct	_CRDT_NODE
 
 	SGPVSurface* uiVideoSurfaceImage;
 
-	struct _CRDT_NODE	*pPrev;
 	struct _CRDT_NODE *pNext;
 } 	CRDT_NODE;
 
@@ -285,7 +284,7 @@ static BOOLEAN EnterCreditsScreen(void)
 }
 
 
-static void ShutDownCreditList(void);
+static void DeleteFirstNode(void);
 
 
 static void ExitCreditScreen(void)
@@ -295,8 +294,7 @@ static void ExitCreditScreen(void)
 	DeleteVideoObject(guiCreditBackGroundImage);
 	DeleteVideoObject(guiCreditFaces);
 
-	//ShutDown Credit link list
-	ShutDownCreditList();
+	while (gCrdtRootNode != NULL) DeleteFirstNode();
 
 	for( uiCnt=0; uiCnt < NUM_PEOPLE_IN_CREDITS; uiCnt++)
 	{
@@ -428,60 +426,16 @@ static void InitCreditNode(void)
 }
 
 
-static void DeleteNode(CRDT_NODE* pNodeToDelete);
-
-
-static void ShutDownCreditList(void)
+static void DeleteFirstNode(void)
 {
-	CRDT_NODE	*pNodeToDelete=NULL;
-	CRDT_NODE	*pTemp=NULL;
+	CRDT_NODE* const del = gCrdtRootNode;
 
-	pNodeToDelete = gCrdtRootNode;
+	gCrdtRootNode = del->pNext;
 
+	if (gCrdtLastAddedNode == del) gCrdtLastAddedNode = NULL;
 
-	while( pNodeToDelete!= NULL )
-	{
-		pTemp = pNodeToDelete;
-
-		pNodeToDelete = pNodeToDelete->pNext;
-
-		//Delete the current node
-		DeleteNode( pTemp );
-	}
-}
-
-
-static void DeleteNode(CRDT_NODE* const pNodeToDelete)
-{
-	if( gCrdtLastAddedNode == pNodeToDelete )
-	{
-		gCrdtLastAddedNode = NULL;
-	}
-
-	//if its Not the first node
-	if( pNodeToDelete->pPrev != NULL )
-		pNodeToDelete->pPrev = pNodeToDelete->pNext;
-	else
-	{
-		if( gCrdtRootNode->pNext != NULL )
-		{
-			gCrdtRootNode = gCrdtRootNode->pNext;
-			gCrdtRootNode->pPrev = NULL;
-		}
-	}
-
-	//if its the last node in the list
-	if( pNodeToDelete->pNext == NULL && pNodeToDelete->pPrev != NULL )
-		pNodeToDelete->pPrev->pNext = NULL;
-
-	//iof the node that is being deleted is the first node
-	if (pNodeToDelete == gCrdtRootNode)
-		gCrdtRootNode = NULL;
-
-	DeleteVideoSurface(pNodeToDelete->uiVideoSurfaceImage);
-	pNodeToDelete->uiVideoSurfaceImage = 0;
-
-	MemFree(pNodeToDelete);
+	DeleteVideoSurface(del->uiVideoSurfaceImage);
+	MemFree(del);
 }
 
 
@@ -547,7 +501,6 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 		gCrdtRootNode = pNodeToAdd;
 
 		gCrdtRootNode->pNext = NULL;
-		gCrdtRootNode->pPrev = NULL;
 	}
 	else
 	{
@@ -560,23 +513,17 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 
 		//Add the new node to the list
 		pTemp->pNext = pNodeToAdd;
-
-		//Assign the prev node
-		pNodeToAdd->pPrev = pTemp;
 	}
 
 	gCrdtLastAddedNode = pNodeToAdd;
 }
 
 
-static void HandleNode_Default(CRDT_NODE* pCurrent);
+static void DisplayCreditNode(const CRDT_NODE*);
 
 
 static void HandleCreditNodes(void)
 {
-	CRDT_NODE	*pCurrent=NULL;
-	CRDT_NODE	*pTemp=NULL;
-
 	if( gCrdtRootNode == NULL )
 		return;
 
@@ -584,46 +531,26 @@ static void HandleCreditNodes(void)
 	if( gfPauseCreditScreen )
 		return;
 
-
-	pCurrent = gCrdtRootNode;
-
 	if( !( GetJA2Clock() - guiCrdtLastTimeUpdatingNode > guiCrdtNodeScrollSpeed ) )
 		return;
 
-	//loop through all the nodes
-	while( pCurrent != NULL )
+	for (CRDT_NODE* i = gCrdtRootNode; i != NULL; i = i->pNext)
 	{
-		pTemp = pCurrent;
+		DisplayCreditNode(i);
+		i->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
+	}
 
-		pCurrent = pCurrent->pNext;
-
-		HandleNode_Default(pTemp);
+	const CRDT_NODE* const root = gCrdtRootNode;
+	if (root->sPosY + root->sHeightOfString < CRDT_LINE_NODE_DISAPPEARS_AT)
+	{
+		DeleteFirstNode();
 	}
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
 }
 
 
-static void DisplayCreditNode(CRDT_NODE* pCurrent);
-
-
-static void HandleNode_Default(CRDT_NODE* pCurrent)
-{
-	//Display the Current Node
-	DisplayCreditNode(pCurrent);
-
-	//Move the current node up
-	pCurrent->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
-
-	//if the node is entirely off the screen
-	if (pCurrent->sPosY + pCurrent->sHeightOfString < CRDT_LINE_NODE_DISAPPEARS_AT)
-	{
-		DeleteNode(pCurrent);
-	}
-}
-
-
-static void DisplayCreditNode(CRDT_NODE* pCurrent)
+static void DisplayCreditNode(const CRDT_NODE* const pCurrent)
 {
 	//Restore the background before blitting the text back on
 	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
