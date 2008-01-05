@@ -29,7 +29,6 @@
 #define MSYS_STARTING_CURSORVAL 0
 
 
-#define MAX_GENERIC_PICS 40
 #define MAX_BUTTON_ICONS 40
 
 
@@ -120,11 +119,11 @@ const ButtonDimensions* GetDimensionsOfButtonPic(UINT16 btn_pic_id)
 }
 
 
-static HVOBJECT GenericButtonOffNormal[MAX_GENERIC_PICS];
-static HVOBJECT GenericButtonOffHilite[MAX_GENERIC_PICS];
-static HVOBJECT GenericButtonOnNormal[MAX_GENERIC_PICS];
-static HVOBJECT GenericButtonOnHilite[MAX_GENERIC_PICS];
-static UINT16   GenericButtonFillColors[MAX_GENERIC_PICS];
+static HVOBJECT GenericButtonOffNormal;
+static HVOBJECT GenericButtonOffHilite;
+static HVOBJECT GenericButtonOnNormal;
+static HVOBJECT GenericButtonOnHilite;
+static UINT16   GenericButtonFillColors;
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
@@ -373,29 +372,26 @@ static BOOLEAN InitializeButtonImageManager(void)
 	}
 
 	// Blank out all Generic button data
-	for (int x = 0; x < MAX_GENERIC_PICS; ++x)
-	{
-		GenericButtonOffNormal[x]  = NULL;
-		GenericButtonOffHilite[x]  = NULL;
-		GenericButtonOnNormal[x]   = NULL;
-		GenericButtonOnHilite[x]   = NULL;
-		GenericButtonFillColors[x] = 0;
-	}
+	GenericButtonOffNormal  = NULL;
+	GenericButtonOffHilite  = NULL;
+	GenericButtonOnNormal   = NULL;
+	GenericButtonOnHilite   = NULL;
+	GenericButtonFillColors = 0;
 
 	// Blank out all icon images
 	for (int x = 0; x < MAX_BUTTON_ICONS; ++x)
 		GenericButtonIcons[x] = NULL;
 
 	// Load the default generic button images
-	GenericButtonOffNormal[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
-	if (GenericButtonOffNormal[0] == NULL)
+	GenericButtonOffNormal = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
+	if (GenericButtonOffNormal == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_OFF);
 		return FALSE;
 	}
 
-	GenericButtonOnNormal[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
-	if (GenericButtonOnNormal[0] == NULL)
+	GenericButtonOnNormal = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
+	if (GenericButtonOnNormal == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_ON);
 		return FALSE;
@@ -406,17 +402,17 @@ static BOOLEAN InitializeButtonImageManager(void)
 	 * These are only here as extra images, they aren't required for operation
 	 * (only OFF Normal and ON Normal are required).
 	 */
-	GenericButtonOffHilite[0] = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
-	GenericButtonOnHilite[0]  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
+	GenericButtonOffHilite = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
+	GenericButtonOnHilite  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
 
 	UINT8 Pix = 0;
-	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal[0], 8, 0, 0))
+	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal, 8, 0, 0))
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't get generic button's background pixel value");
 		return FALSE;
 	}
 
-	GenericButtonFillColors[0] = GenericButtonOffNormal[0]->p16BPPPalette[Pix];
+	GenericButtonFillColors = GenericButtonOffNormal->p16BPPPalette[Pix];
 
 	return TRUE;
 }
@@ -482,34 +478,31 @@ static void ShutdownButtonImageManager(void)
 	}
 
 	// Remove all GenericButton images
-	for (int x = 0; x <MAX_GENERIC_PICS; ++x)
+	if (GenericButtonOffNormal != NULL)
 	{
-		if (GenericButtonOffNormal[x] != NULL)
-		{
-			DeleteVideoObject(GenericButtonOffNormal[x]);
-			GenericButtonOffNormal[x] = NULL;
-		}
-
-		if (GenericButtonOffHilite[x]!=NULL)
-		{
-			DeleteVideoObject(GenericButtonOffHilite[x]);
-			GenericButtonOffHilite[x] = NULL;
-		}
-
-		if (GenericButtonOnNormal[x] != NULL)
-		{
-			DeleteVideoObject(GenericButtonOnNormal[x]);
-			GenericButtonOnNormal[x] = NULL;
-		}
-
-		if (GenericButtonOnHilite[x] != NULL)
-		{
-			DeleteVideoObject(GenericButtonOnHilite[x]);
-			GenericButtonOnHilite[x] = NULL;
-		}
-
-		GenericButtonFillColors[x] = 0;
+		DeleteVideoObject(GenericButtonOffNormal);
+		GenericButtonOffNormal = NULL;
 	}
+
+	if (GenericButtonOffHilite != NULL)
+	{
+		DeleteVideoObject(GenericButtonOffHilite);
+		GenericButtonOffHilite = NULL;
+	}
+
+	if (GenericButtonOnNormal != NULL)
+	{
+		DeleteVideoObject(GenericButtonOnNormal);
+		GenericButtonOnNormal = NULL;
+	}
+
+	if (GenericButtonOnHilite != NULL)
+	{
+		DeleteVideoObject(GenericButtonOnHilite);
+		GenericButtonOnHilite = NULL;
+	}
+
+	GenericButtonFillColors = 0;
 
 	// Remove all button icons
 	for (int x = 0; x < MAX_BUTTON_ICONS; ++x)
@@ -716,7 +709,7 @@ INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT1
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* b = AllocateButton(-1, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	b->icon        = GenericButtonIcons[Icon];
@@ -732,7 +725,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(0, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* b = AllocateButton(-1, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
@@ -1798,7 +1791,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	HVOBJECT BPic;
 	if (!(b->uiFlags & BUTTON_ENABLED))
 	{
-		BPic = GenericButtonOffNormal[b->ImageNum];
+		BPic = GenericButtonOffNormal;
 		switch (b->bDisabledStyle)
 		{
 			case DISABLED_STYLE_DEFAULT:
@@ -1813,24 +1806,24 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	}
 	else if (b->uiFlags & BUTTON_CLICKED_ON)
 	{
-		if  (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOnHilite[b->ImageNum] != NULL && gfRenderHilights)
+		if  (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOnHilite != NULL && gfRenderHilights)
 		{
-			BPic = GenericButtonOnHilite[b->ImageNum];
+			BPic = GenericButtonOnHilite;
 		}
 		else
 		{
-			BPic = GenericButtonOnNormal[b->ImageNum];
+			BPic = GenericButtonOnNormal;
 		}
 	}
 	else
 	{
-		if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOffHilite[b->ImageNum] != NULL && gfRenderHilights)
+		if (b->Area.uiFlags & MSYS_MOUSE_IN_AREA && GenericButtonOffHilite != NULL && gfRenderHilights)
 		{
-			BPic = GenericButtonOffHilite[b->ImageNum];
+			BPic = GenericButtonOffHilite;
 		}
 		else
 		{
-			BPic = GenericButtonOffNormal[b->ImageNum];
+			BPic = GenericButtonOffNormal;
 		}
 	}
 
@@ -1858,7 +1851,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	INT32 cy = b->YLoc + (NumChunksHigh - 1) * iBorderHeight + hremain;
 
 	// Fill the button's area with the button's background color
-	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors[b->ImageNum]);
+	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
 
 	UINT32  uiDestPitchBYTES;
 	UINT16* pDestBuf = (UINT16*)LockVideoSurface(ButtonDestBuffer, &uiDestPitchBYTES);
@@ -2027,5 +2020,5 @@ void ShowButton(INT32 iButtonNum)
 
 UINT16 GetGenericButtonFillColor(void)
 {
-	return GenericButtonFillColors[0];
+	return GenericButtonFillColors;
 }
