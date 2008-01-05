@@ -2336,15 +2336,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_TRIGGER_LAYLA_13_14_OR_15:
 				if (CheckFact( FACT_CARLA_AVAILABLE, 0 ))
 				{
-					TriggerNPCRecord( 107, 13 );
+					TriggerNPCRecord(MADAME, 13);
 				}
 				else if (CheckFact( FACT_CINDY_AVAILABLE, 0))
 				{
-					TriggerNPCRecord( 107, 14 );
+					TriggerNPCRecord(MADAME, 14);
 				}
 				else if (CheckFact( FACT_BAMBI_AVAILABLE, 0))
 				{
-					TriggerNPCRecord( 107, 15 );
+					TriggerNPCRecord(MADAME, 15);
 				}
 				break;
 
@@ -2760,11 +2760,11 @@ unlock:
 
 				if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 				{
-					TriggerNPCRecord( 78, 20 );
+					TriggerNPCRecord(CARMEN, 20);
 				}
 				else
 				{
-					TriggerNPCRecord( 78, 21 );
+					TriggerNPCRecord(CARMEN, 21);
 				}
 				// CJC Nov 28 2002 - fixed history record which didn't have location specified
 				AddHistoryToPlayersLog( HISTORY_GAVE_CARMEN_HEAD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
@@ -4804,15 +4804,15 @@ static void CarmenLeavesSectorCallback(void)
 {
 	if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 	{
-		TriggerNPCRecord( 78, 34 );
+		TriggerNPCRecord(CARMEN, 34);
 	}
 	else if (gWorldSectorX == 9 && gWorldSectorY == MAP_ROW_G && gbWorldSectorZ == 0)
 	{
-		TriggerNPCRecord( 78, 35 );
+		TriggerNPCRecord(CARMEN, 35);
 	}
 	else if (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 	{
-		TriggerNPCRecord( 78, 36 );
+		TriggerNPCRecord(CARMEN, 36);
 	}
 
 }

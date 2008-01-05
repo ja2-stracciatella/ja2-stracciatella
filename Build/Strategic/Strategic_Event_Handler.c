@@ -693,7 +693,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 				break;
 			case NPC_ACTION_DELAYED_MAKE_BRENDA_LEAVE:
 				//IC:
-				//TriggerNPCRecord( 85, 9 );
+				//TriggerNPCRecord(BRENDA, 9);
 				SetFactTrue( FACT_BRENDA_PATIENCE_TIMER_EXPIRED );
 				break;
 			case NPC_ACTION_SET_DELAY_TILL_GIRLS_AVAILABLE:

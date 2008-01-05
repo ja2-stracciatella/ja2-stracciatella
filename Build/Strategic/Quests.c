@@ -743,7 +743,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
 			}
 			// ensure in a building and nearby
-			else if ( !(NPCInRoom( 85, 47 ) )	)
+			else if (!(NPCInRoom(BRENDA, 47)))
 			{
 				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
 			}
