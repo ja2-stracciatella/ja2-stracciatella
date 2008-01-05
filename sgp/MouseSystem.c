@@ -92,10 +92,6 @@ static BOOLEAN gfRefreshUpdate = FALSE;
 #	define MOUSESYSTEM_DEBUGGING
 #endif
 
-#ifdef MOUSESYSTEM_DEBUGGING
-BOOLEAN gfIgnoreShutdownAssertions;
-#endif
-
 
 static void MSYS_TrashRegList(void);
 static void MSYS_AddRegionToList(MOUSE_REGION* region);
@@ -108,9 +104,6 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region);
 //
 INT32 MSYS_Init(void)
 {
-	#ifdef MOUSESYSTEM_DEBUGGING
-		gfIgnoreShutdownAssertions = FALSE;
-	#endif
 	if(MSYS_RegList!=NULL)
 		MSYS_TrashRegList();
 
@@ -168,9 +161,6 @@ INT32 MSYS_Init(void)
 //
 void MSYS_Shutdown(void)
 {
-	#ifdef MOUSESYSTEM_DEBUGGING
-		gfIgnoreShutdownAssertions = TRUE;
-	#endif
 	MSYS_SystemInitialized = FALSE;
 	MSYS_TrashRegList();
 }
@@ -806,14 +796,10 @@ void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr)
 //
 void MSYS_RemoveRegion(MOUSE_REGION *region)
 {
-	if( !region )
-	{
-		#ifdef MOUSESYSTEM_DEBUGGING
-		if( gfIgnoreShutdownAssertions )
-		#endif
-			return;
-		AssertMsg( 0, "Attempting to remove a NULL region.");
-	}
+#ifdef MOUSESYSTEM_DEBUGGING
+	AssertMsg(region, "Attempting to remove a NULL region.");
+#endif
+	if (!region) return;
 	#ifdef MOUSESYSTEM_DEBUGGING
 	if( !(region->uiFlags & MSYS_REGION_EXISTS) )
 		AssertMsg( 0, "Attempting to remove an already removed region." );
@@ -905,16 +891,10 @@ void MSYS_SetCurrentCursor(UINT16 Cursor)
 //
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata)
 {
-	if(index < 0 || index > 3)
-	{
-		#ifdef MOUSESYSTEM_DEBUGGING
-		if( gfIgnoreShutdownAssertions )
-		#endif
-			return;
-		char str[80];
-		sprintf( str, "Attempting MSYS_SetRegionUserData() with out of range index %d.", index );
-		AssertMsg( 0, str );
-	}
+#ifdef MOUSESYSTEM_DEBUGGING
+	AssertMsg(0 <= index && index < 4, String("Attempting MSYS_SetRegionUserData() with out of range index %d.", index));
+#endif
+	if (index < 0 || 4 <= index) return;
 	region->user.data[index] = userdata;
 }
 
@@ -927,16 +907,10 @@ void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata)
 //
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 {
-	if(index < 0 || index > 3)
-	{
-		#ifdef MOUSESYSTEM_DEBUGGING
-		if( gfIgnoreShutdownAssertions )
-		#endif
-			return 0;
-		char str[80];
-		sprintf( str, "Attempting MSYS_GetRegionUserData() with out of range index %d", index );
-		AssertMsg( 0, str );
-	}
+#ifdef MOUSESYSTEM_DEBUGGING
+	AssertMsg(0 <= index && index < 4, String("Attempting MSYS_GetRegionUserData() with out of range index %d", index));
+#endif
+	if (index < 0 || 4 <= index) return 0;
 	return region->user.data[index];
 }
 
