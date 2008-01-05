@@ -3577,7 +3577,7 @@ unlock:
 				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(STEVE, FALSE); // Steve Willis, 80
 				if (pSoldier)
 				{
-					if ( !pSoldier->bActive || !pSoldier->bInSector || !(pSoldier->bTeam == CIV_TEAM) || !(pSoldier->bNeutral) || (pSoldier->bLife < OKLIFE) )
+					if (!pSoldier->bInSector || pSoldier->bTeam != CIV_TEAM || !pSoldier->bNeutral || pSoldier->bLife < OKLIFE)
 					{
 						pSoldier = NULL;
 					}
@@ -3586,7 +3586,7 @@ unlock:
 				SOLDIERTYPE* pSoldier2 = FindSoldierByProfileID(VINCE, FALSE); // Vince, 69
 				if (pSoldier2)
 				{
-					if ( !pSoldier2->bActive || !pSoldier2->bInSector || !(pSoldier2->bTeam == CIV_TEAM) || !(pSoldier2->bNeutral) || (pSoldier2->bLife < OKLIFE) )
+					if (!pSoldier2->bInSector || pSoldier2->bTeam != CIV_TEAM || !pSoldier2->bNeutral || pSoldier2->bLife < OKLIFE)
 					{
 						pSoldier2 = NULL;
 					}

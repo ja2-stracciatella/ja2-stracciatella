@@ -203,7 +203,7 @@ static void HourlyLarryUpdate(void)
 		{
 			return;
 		}
-		if ( pSoldier->bActive && pSoldier->bInSector && (gTacticalStatus.fEnemyInSector || guiCurrentScreen == GAME_SCREEN ) )
+		if (pSoldier->bInSector && (gTacticalStatus.fEnemyInSector || guiCurrentScreen == GAME_SCREEN))
 		{
 			return;
 		}
@@ -326,10 +326,7 @@ static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 	{
 		return;
 	}
-	if( !pSoldier->bActive || !pSoldier->bLife )
-	{
-		return;
-	}
+	if (pSoldier->bLife == 0) return;
 	if( PlayerMercsInSector( (UINT8)pSoldier->sSectorX, (UINT8)pSoldier->sSectorY, pSoldier->bSectorZ ) == 1 )
 	{
 		if( Chance( 15 ) )

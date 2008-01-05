@@ -100,7 +100,7 @@ void CallEldinTo( INT16 sGridNo )
 	{
 		// new situation for Eldin
 		pSoldier = FindSoldierByProfileID( ELDIN, FALSE );
-		if ( pSoldier && pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && (pSoldier->bAlertStatus == STATUS_GREEN || pSoldier->ubNoiseVolume < (MAX_MISC_NOISE_DURATION / 2) ) )
+		if (pSoldier && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && (pSoldier->bAlertStatus == STATUS_GREEN || pSoldier->ubNoiseVolume < MAX_MISC_NOISE_DURATION / 2))
 		{
 			if ( SoldierToLocationLineOfSightTest( pSoldier, sGridNo, (UINT8) MaxDistanceVisible(), TRUE ) )
 			{

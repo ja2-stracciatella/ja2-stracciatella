@@ -2653,7 +2653,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				if (pSoldierOld->ubProfile == DRUGGIST)
 				{
 					SOLDIERTYPE* const pOther = FindSoldierByProfileID(MANNY, 0);
-					if (pOther && pOther->bActive && pOther->bInSector && pOther->bLife >= OKLIFE)
+					if (pOther && pOther->bInSector && pOther->bLife >= OKLIFE)
 					{
 						// try to make sure he isn't cowering etc
 						pOther->sNoiseGridno = NOWHERE;
@@ -2984,7 +2984,7 @@ void MakeCivHostile(SOLDIERTYPE* pSoldier, INT8 bNewSide)
 			if (gubQuest[QUEST_RESCUE_MARIA] == QUESTINPROGRESS && gTacticalStatus.bBoxingState == NOT_BOXING)
 			{
 				SOLDIERTYPE* pMaria = FindSoldierByProfileID(MARIA, FALSE);
-				if (pMaria && pMaria->bActive && pMaria->bInSector)
+				if (pMaria && pMaria->bInSector)
 				{
 					SetFactTrue(FACT_MARIA_ESCAPE_NOTICED);
 				}

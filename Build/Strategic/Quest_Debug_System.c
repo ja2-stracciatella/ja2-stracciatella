@@ -3506,7 +3506,7 @@ static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Leng
 	pSoldier = FindSoldierByProfileID( (UINT8)usProfileID, FALSE );
 
 	//if their is a soldier, the soldier is alive and the soldier is off the map
-	if( pSoldier != NULL && pSoldier->bActive && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP )
+	if (pSoldier != NULL && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP)
 	{
 		//the soldier is on schedule
 		wcslcpy(pzText, L"On Schdl.", Length);

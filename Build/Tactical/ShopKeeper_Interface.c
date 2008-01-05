@@ -5988,7 +5988,6 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 
 	pShopkeeper = FindSoldierByProfileID( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID, FALSE );
 	Assert( pShopkeeper != NULL );
-	Assert( pShopkeeper->bActive );
 	Assert( pShopkeeper->bInSector );
 
 	if ( pShopkeeper->bLife < OKLIFE )

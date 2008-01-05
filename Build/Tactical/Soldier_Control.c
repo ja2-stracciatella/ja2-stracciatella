@@ -5984,7 +5984,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 			if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP && gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS && gTacticalStatus.bBoxingState == NOT_BOXING )
 			{
 				SOLDIERTYPE * pMaria = FindSoldierByProfileID( MARIA, FALSE );
-				if ( pMaria && pMaria->bActive && pMaria->bInSector )
+				if (pMaria && pMaria->bInSector)
 				{
 					SetFactTrue( FACT_MARIA_ESCAPE_NOTICED );
 				}
@@ -9680,33 +9680,30 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 		return( FALSE );
 	}
 
-	if ( pRobot->bActive )
+	// Are we in the same sector....?
+	// ARM: CHANGED TO WORK IN MAPSCREEN, DON'T USE WorldSector HERE
+	if (pRobot->sSectorX == s->sSectorX &&
+			pRobot->sSectorY == s->sSectorY &&
+			pRobot->bSectorZ == s->bSectorZ)
 	{
-		// Are we in the same sector....?
-		// ARM: CHANGED TO WORK IN MAPSCREEN, DON'T USE WorldSector HERE
-		if (pRobot->sSectorX == s->sSectorX &&
-				pRobot->sSectorY == s->sSectorY &&
-				pRobot->bSectorZ == s->bSectorZ)
+		// they have to be either both in sector, or both on the road
+		if (pRobot->fBetweenSectors == s->fBetweenSectors)
 		{
-			// they have to be either both in sector, or both on the road
-			if (pRobot->fBetweenSectors == s->fBetweenSectors)
+			// if they're on the road...
+			if ( pRobot->fBetweenSectors )
 			{
-				// if they're on the road...
-				if ( pRobot->fBetweenSectors )
+				// they have to be in the same squad or vehicle
+				if (pRobot->bAssignment != s->bAssignment) return FALSE;
+
+				// if in a vehicle, must be the same vehicle
+				if (pRobot->bAssignment == VEHICLE && pRobot->iVehicleId != s->iVehicleId)
 				{
-					// they have to be in the same squad or vehicle
-					if (pRobot->bAssignment != s->bAssignment) return FALSE;
-
-					// if in a vehicle, must be the same vehicle
-					if (pRobot->bAssignment == VEHICLE && pRobot->iVehicleId != s->iVehicleId)
-					{
-						return( FALSE );
-					}
+					return( FALSE );
 				}
-
-				// all OK!
-				return( TRUE );
 			}
+
+			// all OK!
+			return( TRUE );
 		}
 	}
 
