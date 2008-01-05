@@ -1,49 +1,38 @@
+#include "Credits.h"
+#include "Cursors.h"
+#include "Debug.h"
+#include "Encrypted_File.h"
+#include "English.h"
 #include "Font.h"
+#include "Font_Control.h"
 #include "Input.h"
 #include "Local.h"
-#include "Types.h"
-#include "Credits.h"
+#include "MemMan.h"
+#include "MouseSystem.h"
+#include "Random.h"
+#include "Render_Dirty.h"
+#include "ScreenIDs.h"
+#include "SysUtil.h"
+#include "Text.h"
 #include "Timer_Control.h"
+#include "Types.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "Text.h"
-#include "MouseSystem.h"
-#include "WordWrap.h"
 #include "Video.h"
-#include "Render_Dirty.h"
 #include "WCheck.h"
-#include "Font_Control.h"
-#include "Cursors.h"
-#include "SysUtil.h"
-#include "English.h"
-#include "Encrypted_File.h"
-#include "Random.h"
-#include "MemMan.h"
-#include "Button_System.h"
-#include "Debug.h"
-#include "ScreenIDs.h"
+#include "WordWrap.h"
 
 
-enum
+typedef struct CRDT_NODE CRDT_NODE;
+struct CRDT_NODE
 {
-	CRDT_RENDER_NONE,
-	CRDT_RENDER_ALL,
+	INT16        sPosY;
+	INT16        sHeightOfString;     // The height of the displayed string
+	SGPVSurface* uiVideoSurfaceImage;
+	CRDT_NODE*   pNext;
 };
 
-
-typedef struct	_CRDT_NODE
-{
-	INT16		sPosY;
-
-	INT16		sHeightOfString;		//The height of the displayed string
-
-	SGPVSurface* uiVideoSurfaceImage;
-
-	struct _CRDT_NODE *pNext;
-} 	CRDT_NODE;
-
 //flags for the credits
-//Flags:
 #define		CRDT_FLAG__TITLE							0x00000001
 #define		CRDT_FLAG__START_SECTION			0x00000002
 #define		CRDT_FLAG__END_SECTION				0x00000004
@@ -84,8 +73,6 @@ typedef struct	_CRDT_NODE
 
 #define		CRDT_NAME_FONT										FONT12ARIAL
 
-#define		CRDT_LINE_NODE_DISAPPEARS_AT			0//20
-
 
 #define		CRDT_WIDTH_OF_TEXT_AREA					210
 #define		CRDT_TEXT_START_LOC							10
@@ -107,60 +94,56 @@ typedef struct	_CRDT_NODE
 
 typedef struct
 {
-	INT16		sX;
-	INT16		sY;
-	INT16		sWidth;
-	INT16		sHeight;
+	const INT16  sX;
+	const INT16  sY;
+	const INT16  sWidth;
+	const INT16  sHeight;
 
-	INT16		sEyeX;
-	INT16		sEyeY;
+	const INT16  sEyeX;
+	const INT16  sEyeY;
 
-	INT16		sMouthX;
-	INT16		sMouthY;
+	const INT16  sMouthX;
+	const INT16  sMouthY;
 
-	INT16		sBlinkFreq;
-	UINT32	uiLastBlinkTime;
-	UINT32	uiEyesClosedTime;
-
+	const UINT16 sBlinkFreq;
+	UINT32       uiLastBlinkTime;
+	UINT32       uiEyesClosedTime;
 } CDRT_FACE;
 
 static CDRT_FACE gCreditFaces[] =
 {
-	{ 298, 137, 37, 49, 310, 157, 304, 170, 2500, 0, 0 }, // Camfield
-	{ 348, 137, 43, 47, 354, 153, 354, 153, 3700, 0, 0 }, // Shawn
-	{ 407, 132, 30, 50, 408, 151, 410, 164, 3000, 0, 0 }, // Kris
-	{ 443, 131, 30, 50, 447, 151, 446, 161, 4000, 0, 0 }, // Ian
-	{ 487, 136, 43, 50, 493, 155, 493, 155, 3500, 0, 0 }, // Linda
-	{ 529, 145, 43, 50, 536, 164, 536, 164, 4000, 0, 0 }, // Eric
-	{ 581, 132, 43, 48, 584, 150, 583, 161, 3500, 0, 0 }, // Lynn
-	{ 278, 211, 36, 51, 283, 232, 283, 241, 3700, 0, 0 }, // Norm
-	{ 319, 210, 34, 49, 323, 227, 320, 339, 4000, 0, 0 }, // George
-	{ 358, 211, 38, 49, 364, 226, 361, 239, 3600, 0, 0 }, // Andrew Stacey
-	{ 396, 200, 42, 50, 406, 220, 403, 230, 4600, 0, 0 }, // Scott
-	{ 444, 202, 43, 51, 452, 220, 452, 231, 2800, 0, 0 }, // Emmons
-	{ 493, 188, 36, 51, 501, 207, 499, 217, 4500, 0, 0 }, // Dave
-	{ 531, 199, 47, 56, 541, 221, 540, 232, 4000, 0, 0 }, // Alex
-	{ 585, 196, 39, 49, 593, 218, 593, 228, 3500, 0, 0 }  // Joey
+#define M(x, y, w, h, ex, ey, mx, my, f) { x, y, w, h, ex, ey, mx, my, f, 0, 0 }
+	M(298, 137, 37, 49, 310, 157, 304, 170, 2500), // Camfield
+	M(348, 137, 43, 47, 354, 153, 354, 153, 3700), // Shawn
+	M(407, 132, 30, 50, 408, 151, 410, 164, 3000), // Kris
+	M(443, 131, 30, 50, 447, 151, 446, 161, 4000), // Ian
+	M(487, 136, 43, 50, 493, 155, 493, 155, 3500), // Linda
+	M(529, 145, 43, 50, 536, 164, 536, 164, 4000), // Eric
+	M(581, 132, 43, 48, 584, 150, 583, 161, 3500), // Lynn
+	M(278, 211, 36, 51, 283, 232, 283, 241, 3700), // Norm
+	M(319, 210, 34, 49, 323, 227, 320, 339, 4000), // George
+	M(358, 211, 38, 49, 364, 226, 361, 239, 3600), // Andrew Stacey
+	M(396, 200, 42, 50, 406, 220, 403, 230, 4600), // Scott
+	M(444, 202, 43, 51, 452, 220, 452, 231, 2800), // Emmons
+	M(493, 188, 36, 51, 501, 207, 499, 217, 4500), // Dave
+	M(531, 199, 47, 56, 541, 221, 540, 232, 4000), // Alex
+	M(585, 196, 39, 49, 593, 218, 593, 228, 3500)  // Joey
+#undef M
 };
+CASSERT(lengthof(gCreditFaces) == NUM_PEOPLE_IN_CREDITS);
 
 
 static MOUSE_REGION gCrdtMouseRegions[NUM_PEOPLE_IN_CREDITS];
 
+static BOOLEAN g_credits_active;
 
 static SGPVObject* guiCreditBackGroundImage;
 static SGPVObject* guiCreditFaces;
-static BOOLEAN gfCreditsScreenEntry = TRUE;
-static BOOLEAN gfCreditsScreenExit  = FALSE;
-static UINT32  guiCreditsExitScreen;
-
-static UINT8 gubCreditScreenRenderFlags = CRDT_RENDER_ALL;
 
 static CRDT_NODE* gCrdtRootNode      = NULL;
 static CRDT_NODE* gCrdtLastAddedNode = NULL;
 
-static BOOLEAN gfCrdtHaveRenderedFirstFrameToSaveBuffer; // need to render background image to save buffer once
-
-static INT32 giCurrentlySelectedFace = -1;
+static INT32 giCurrentlySelectedFace;
 
 
 static UINT32 guiCreditScreenActiveFont;  // the font that is used
@@ -168,23 +151,16 @@ static UINT32 guiCreditScreenTitleFont;   // the font that is used
 static UINT8  gubCreditScreenActiveColor; // color of the font
 static UINT8  gubCreditScreenTitleColor;  // color of a Title node
 
-static UINT32 guiCrdtNodeScrollSpeed      = CRDT_NODE_DELAY_AMOUNT; // speed credits go up at
-static UINT32 guiCrdtLastTimeUpdatingNode = 0;                      // the last time a node was read from the file
-static UINT8  gubCrdtJustification        = CENTER_JUSTIFIED;       // the current justification
+static UINT32 guiCrdtNodeScrollSpeed;      // speed credits go up at
+static UINT32 guiCrdtLastTimeUpdatingNode; // the last time a node was read from the file
+static UINT8  gubCrdtJustification;        // the current justification
 
-static UINT32 guiGapBetweenCreditSections = CRDT_SPACE_BN_SECTIONS;
-static UINT32 guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
-static UINT32 guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
+static UINT32 guiGapBetweenCreditSections;
+static UINT32 guiGapBetweenCreditNodes;
+static UINT32 guiGapTillReadNextCredit;
 
-static UINT32  guiCurrentCreditRecord = 0;
-static BOOLEAN gfPauseCreditScreen    = FALSE;
-
-
-UINT32	CreditScreenInit( void )
-{
-	gfCreditsScreenEntry = TRUE;
-	return( 1 );
-}
+static UINT32  guiCurrentCreditRecord;
+static BOOLEAN gfPauseCreditScreen;
 
 
 static BOOLEAN EnterCreditsScreen(void);
@@ -193,94 +169,82 @@ static void GetCreditScreenUserInput(void);
 static void HandleCreditScreen(void);
 
 
-UINT32	CreditScreenHandle( void )
+UINT32 CreditScreenHandle(void)
 {
-	if( gfCreditsScreenEntry )
+	if (!g_credits_active)
 	{
-		if( !EnterCreditsScreen() )
-		{
-			gfCreditsScreenEntry = FALSE;
-			gfCreditsScreenExit = TRUE;
-		}
-		else
-		{
-			gfCreditsScreenEntry = FALSE;
-			gfCreditsScreenExit = FALSE;
-		}
-		gubCreditScreenRenderFlags = CRDT_RENDER_ALL;
+		if (!EnterCreditsScreen()) return MAINMENU_SCREEN;
 	}
 
 	GetCreditScreenUserInput();
-
 	HandleCreditScreen();
-
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 
-
-	if( gfCreditsScreenExit )
+	if (!g_credits_active)
 	{
 		ExitCreditScreen();
-		gfCreditsScreenEntry = TRUE;
-		gfCreditsScreenExit = FALSE;
+		return MAINMENU_SCREEN;
 	}
 
-
-	return( guiCreditsExitScreen );
+	return CREDIT_SCREEN;
 }
 
 
 static void InitCreditEyeBlinking(void);
-static void InitCreditNode(void);
+static void RenderCreditScreen(void);
 static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static BOOLEAN EnterCreditsScreen(void)
 {
-	UINT32 uiCnt;
-
 	guiCreditBackGroundImage = AddVideoObjectFromFile("INTERFACE/Credits.sti");
 	CHECKF(guiCreditBackGroundImage != NO_VOBJECT);
 	guiCreditFaces = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
 	CHECKF(guiCreditFaces != NO_VOBJECT);
 
 	//Initialize the root credit node
-	InitCreditNode( );
+	Assert(gCrdtRootNode == NULL);
+	gCrdtRootNode = NULL;
 
-	guiCreditsExitScreen = CREDIT_SCREEN;
-	gfCrdtHaveRenderedFirstFrameToSaveBuffer = FALSE;
-
-	guiCreditScreenActiveFont = FONT12ARIAL;
+	guiCreditScreenActiveFont  = FONT12ARIAL;
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;
-	guiCreditScreenTitleFont = FONT14ARIAL;
-	gubCreditScreenTitleColor = FONT_MCOLOR_RED;
-	guiCrdtNodeScrollSpeed = CRDT_NODE_DELAY_AMOUNT;
-	gubCrdtJustification = CENTER_JUSTIFIED;
-	guiCurrentCreditRecord = 0;
+	guiCreditScreenTitleFont   = FONT14ARIAL;
+	gubCreditScreenTitleColor  = FONT_MCOLOR_RED;
+	guiCrdtNodeScrollSpeed     = CRDT_NODE_DELAY_AMOUNT;
+	gubCrdtJustification       = CENTER_JUSTIFIED;
+	guiCurrentCreditRecord     = 0;
 
 	guiCrdtLastTimeUpdatingNode = GetJA2Clock();
 
-
 	guiGapBetweenCreditSections = CRDT_SPACE_BN_SECTIONS;
-	guiGapBetweenCreditNodes = CRDT_SPACE_BN_NODES;
-	guiGapTillReadNextCredit = CRDT_SPACE_BN_NODES;
+	guiGapBetweenCreditNodes    = CRDT_SPACE_BN_NODES;
+	guiGapTillReadNextCredit    = CRDT_SPACE_BN_NODES;
 
-
-	for( uiCnt=0; uiCnt < NUM_PEOPLE_IN_CREDITS; uiCnt++)
+	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
 		// Make a mouse region
-		MSYS_DefineRegion( &gCrdtMouseRegions[uiCnt], gCreditFaces[uiCnt].sX, gCreditFaces[uiCnt].sY, (INT16)(gCreditFaces[uiCnt].sX + gCreditFaces[uiCnt].sWidth), (INT16)(gCreditFaces[uiCnt].sY + gCreditFaces[uiCnt].sHeight), MSYS_PRIORITY_NORMAL,
-							 CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
-
-		MSYS_SetRegionUserData( &gCrdtMouseRegions[uiCnt], 0, uiCnt );
+		MOUSE_REGION*    const r = &gCrdtMouseRegions[i];
+		const CDRT_FACE* const f = &gCreditFaces[i];
+		const UINT16           x = f->sX;
+		const UINT16           y = f->sY;
+		const UINT16           w = f->sWidth;
+		const UINT16           h = f->sHeight;
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, CURSOR_WWW, SelectCreditFaceMovementRegionCallBack, NULL);
+		MSYS_SetRegionUserData(r, 0, i);
 	}
 
 	giCurrentlySelectedFace = -1;
-	gfPauseCreditScreen = FALSE;
+	gfPauseCreditScreen     = FALSE;
 
 	InitCreditEyeBlinking();
 
-	return( TRUE );
+	RenderCreditScreen();
+	// blit everything to the save buffer (cause the save buffer can bleed through)
+	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
+
+	g_credits_active = TRUE;
+	return TRUE;
 }
 
 
@@ -289,16 +253,14 @@ static void DeleteFirstNode(void);
 
 static void ExitCreditScreen(void)
 {
-	UINT32	uiCnt;
-
 	DeleteVideoObject(guiCreditBackGroundImage);
 	DeleteVideoObject(guiCreditFaces);
 
 	while (gCrdtRootNode != NULL) DeleteFirstNode();
 
-	for( uiCnt=0; uiCnt < NUM_PEOPLE_IN_CREDITS; uiCnt++)
+	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
-		MSYS_RemoveRegion( &gCrdtMouseRegions[uiCnt] );
+		MSYS_RemoveRegion(&gCrdtMouseRegions[i]);
 	}
 }
 
@@ -306,41 +268,26 @@ static void ExitCreditScreen(void)
 static BOOLEAN GetNextCreditFromTextFile(void);
 static void HandleCreditEyeBlinking(void);
 static void HandleCreditNodes(void);
-static void RenderCreditScreen(void);
-static void SetCreditsExitScreen(UINT32 uiScreenToGoTo);
 
 
 static void HandleCreditScreen(void)
 {
-	if( gubCreditScreenRenderFlags == CRDT_RENDER_ALL )
-	{
-		RenderCreditScreen();
-		gubCreditScreenRenderFlags = CRDT_RENDER_NONE;
-	}
-
-
-	//Handle the Credit linked list
 	HandleCreditNodes();
-
-	//Handle the blinkng eyes
 	HandleCreditEyeBlinking();
 
-
 	//is it time to get a new node
-	if( gCrdtLastAddedNode == NULL || ( CRDT_START_POS_Y - ( gCrdtLastAddedNode->sPosY + gCrdtLastAddedNode->sHeightOfString - 16 ) ) >= (INT16)guiGapTillReadNextCredit )
+	if (gCrdtLastAddedNode == NULL || (CRDT_START_POS_Y - (gCrdtLastAddedNode->sPosY + gCrdtLastAddedNode->sHeightOfString - 16)) >= (INT16)guiGapTillReadNextCredit)
 	{
 		//if there are no more credits in the file
-		if( !GetNextCreditFromTextFile() && gCrdtLastAddedNode == NULL )
+		if (!GetNextCreditFromTextFile() && gCrdtLastAddedNode == NULL)
 		{
-			SetCreditsExitScreen( MAINMENU_SCREEN );
+			g_credits_active = FALSE;
 		}
 	}
 
+	RestoreExternBackgroundRect(CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_LOC_HEIGHT);
 
-
-	RestoreExternBackgroundRect( CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y, CRDT_NAME_LOC_WIDTH, (INT16)CRDT_NAME_LOC_HEIGHT );
-
-	if( giCurrentlySelectedFace != -1 )
+	if (giCurrentlySelectedFace != -1)
 	{
 		DrawTextToScreen(gzCreditNames[giCurrentlySelectedFace],     CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y,       CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
 		DrawTextToScreen(gzCreditNameTitle[giCurrentlySelectedFace], CRDT_NAME_LOC_X, CRDT_NAME_TITLE_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
@@ -352,77 +299,34 @@ static void HandleCreditScreen(void)
 static void RenderCreditScreen(void)
 {
   BltVideoObject(FRAME_BUFFER, guiCreditBackGroundImage, 0, 0, 0);
-	if( !gfCrdtHaveRenderedFirstFrameToSaveBuffer )
-	{
-		gfCrdtHaveRenderedFirstFrameToSaveBuffer = TRUE;
-
-		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-
-		UnmarkButtonsDirty( );
-	}
-
-	InvalidateScreen( );
+	InvalidateScreen();
 }
 
 
 static void GetCreditScreenUserInput(void)
 {
 	InputAtom Event;
-
-	while( DequeueEvent( &Event ) )
+	while (DequeueEvent(&Event))
 	{
-		if( Event.usEvent == KEY_DOWN )
+		if (Event.usEvent == KEY_DOWN)
 		{
-			switch( Event.usParam )
+			switch (Event.usParam)
 			{
-				case SDLK_ESCAPE: SetCreditsExitScreen(MAINMENU_SCREEN); break;
+				case SDLK_ESCAPE: g_credits_active = FALSE; break;
 
 #ifdef JA2TESTVERSION
-				case 'r':
-					gubCreditScreenRenderFlags = CRDT_RENDER_ALL;
-					break;
+				case 'r': RenderCreditScreen(); break;
+				case 'i': InvalidateScreen();   break;
 
-				case 'i':
-					InvalidateScreen();
-					break;
-
-				case SDLK_UP:
-					guiCrdtNodeScrollSpeed+=5;
-					break;
-				case SDLK_DOWN:
-					if( guiCrdtNodeScrollSpeed > 5 )
-						guiCrdtNodeScrollSpeed-=5;
-					break;
+				case SDLK_UP:                                   guiCrdtNodeScrollSpeed += 5; break;
+				case SDLK_DOWN: if (guiCrdtNodeScrollSpeed > 5) guiCrdtNodeScrollSpeed -= 5; break;
 
 				case SDLK_PAUSE:
-				case SDLK_SPACE:
-					if( gfPauseCreditScreen )
-						gfPauseCreditScreen = FALSE;
-					else
-						gfPauseCreditScreen = TRUE;
-					break;
+				case SDLK_SPACE: gfPauseCreditScreen = !gfPauseCreditScreen; break;
 #endif
 			}
 		}
 	}
-}
-
-
-static void SetCreditsExitScreen(UINT32 uiScreenToGoTo)
-{
-	gfCreditsScreenExit = TRUE;
-
-	guiCreditsExitScreen = uiScreenToGoTo;
-}
-
-
-static void InitCreditNode(void)
-{
-	if( gCrdtRootNode != NULL )
-		Assert( 0 );
-
-	gCrdtRootNode = NULL;
 }
 
 
@@ -441,30 +345,23 @@ static void DeleteFirstNode(void)
 
 static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
-	CRDT_NODE	*pNodeToAdd=NULL;
-	CRDT_NODE	*pTemp=NULL;
-	UINT32	uiFontToUse;
-	UINT8		uiColorToUse;
-
-	pNodeToAdd = MemAlloc( sizeof( CRDT_NODE) );
+	CRDT_NODE* const pNodeToAdd = MemAlloc(sizeof(*pNodeToAdd));
 	if (pNodeToAdd == NULL) return;
-	memset( pNodeToAdd, 0, sizeof( CRDT_NODE) );
+	memset(pNodeToAdd, 0, sizeof(*pNodeToAdd));
 
 	//Determine the font and the color to use
-	if( uiFlags & CRDT_FLAG__TITLE )
+	UINT32 uiFontToUse;
+	UINT8  uiColorToUse;
+	if (uiFlags & CRDT_FLAG__TITLE)
 	{
-		uiFontToUse = guiCreditScreenTitleFont;
+		uiFontToUse  = guiCreditScreenTitleFont;
 		uiColorToUse = gubCreditScreenTitleColor;
 	}
 	else
 	{
-		uiFontToUse = guiCreditScreenActiveFont;
+		uiFontToUse  = guiCreditScreenActiveFont;
 		uiColorToUse = gubCreditScreenActiveColor;
 	}
-
-	//
-	// Set some default data
-	//
 
 	//Calculate the height of the string
 	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, DONT_DISPLAY_TEXT) + 1;
@@ -472,30 +369,20 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	//starting y position on the screen
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
-	pNodeToAdd->uiVideoSurfaceImage = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
-	if (pNodeToAdd->uiVideoSurfaceImage == NO_VSURFACE) return;
+	SGPVSurface* const vs = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
+	if (vs == NO_VSURFACE) return;
+	pNodeToAdd->uiVideoSurfaceImage = vs;
 
-	//Set transparency
-	SetVideoSurfaceTransparency(pNodeToAdd->uiVideoSurfaceImage, 0);
-
-	//fill the surface with a transparent color
-	FillSurface(pNodeToAdd->uiVideoSurfaceImage, 0);
-
-	//set the font dest buffer to be the surface
-	SetFontDestBuffer(pNodeToAdd->uiVideoSurfaceImage, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
+	SetVideoSurfaceTransparency(vs, 0);
+	FillSurface(vs, 0);
 
 	//write the string onto the surface
+	SetFontDestBuffer(vs, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
 	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, gubCrdtJustification);
-
-	//reset the font dest buffer
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	//
-	// Insert the node into the list
-	//
-
 	//if its the first node to add
-	if( gCrdtRootNode == NULL )
+	if (gCrdtRootNode == NULL)
 	{
 		//make the new node the root node
 		gCrdtRootNode = pNodeToAdd;
@@ -504,12 +391,8 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	}
 	else
 	{
-		pTemp = gCrdtRootNode;
-
-		while( pTemp->pNext != NULL )
-		{
-			pTemp = pTemp->pNext;
-		}
+		CRDT_NODE* pTemp = gCrdtRootNode;
+		while (pTemp->pNext != NULL) pTemp = pTemp->pNext;
 
 		//Add the new node to the list
 		pTemp->pNext = pNodeToAdd;
@@ -524,15 +407,11 @@ static void DisplayCreditNode(const CRDT_NODE*);
 
 static void HandleCreditNodes(void)
 {
-	if( gCrdtRootNode == NULL )
-		return;
+	if (gCrdtRootNode == NULL) return;
 
-	//if the screen is paused, exit
-	if( gfPauseCreditScreen )
-		return;
+	if (gfPauseCreditScreen) return;
 
-	if( !( GetJA2Clock() - guiCrdtLastTimeUpdatingNode > guiCrdtNodeScrollSpeed ) )
-		return;
+	if (!(GetJA2Clock() - guiCrdtLastTimeUpdatingNode > guiCrdtNodeScrollSpeed)) return;
 
 	for (CRDT_NODE* i = gCrdtRootNode; i != NULL; i = i->pNext)
 	{
@@ -541,7 +420,7 @@ static void HandleCreditNodes(void)
 	}
 
 	const CRDT_NODE* const root = gCrdtRootNode;
-	if (root->sPosY + root->sHeightOfString < CRDT_LINE_NODE_DISAPPEARS_AT)
+	if (root->sPosY + root->sHeightOfString < 0)
 	{
 		DeleteFirstNode();
 	}
@@ -556,14 +435,14 @@ static void DisplayCreditNode(const CRDT_NODE* const pCurrent)
 	INT16 y = pCurrent->sPosY + CRDT_SCROLL_PIXEL_AMOUNT;
 	INT16 h = pCurrent->sHeightOfString;
 	/* Clip to the screen area */
-	if (y - CRDT_LINE_NODE_DISAPPEARS_AT < 0)
+	if (y < 0)
 	{
-		h += y - CRDT_LINE_NODE_DISAPPEARS_AT;
+		h += y;
 		y = 0;
 	}
-	else if (y + pCurrent->sHeightOfString - SCREEN_HEIGHT > 0)
+	else if (y + h > SCREEN_HEIGHT)
 	{
-		h -= y + pCurrent->sHeightOfString - SCREEN_HEIGHT;
+		h = SCREEN_HEIGHT - y;
 	}
 	RestoreExternBackgroundRect(CRDT_TEXT_START_LOC, y, CRDT_WIDTH_OF_TEXT_AREA, h);
 
@@ -646,12 +525,12 @@ handle_text:
 
 static void HandleCreditFlags(UINT32 uiFlags)
 {
-	if( uiFlags & CRDT_FLAG__START_SECTION )
+	if (uiFlags & CRDT_FLAG__START_SECTION)
 	{
 		guiGapTillReadNextCredit = guiGapBetweenCreditNodes;
 	}
 
-	if( uiFlags & CRDT_FLAG__END_SECTION )
+	if (uiFlags & CRDT_FLAG__END_SECTION)
 	{
 		guiGapTillReadNextCredit = guiGapBetweenCreditSections;
 	}
@@ -660,48 +539,48 @@ static void HandleCreditFlags(UINT32 uiFlags)
 
 static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		giCurrentlySelectedFace = -1;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-		giCurrentlySelectedFace = MSYS_GetRegionUserData( pRegion,0 );
+		giCurrentlySelectedFace = MSYS_GetRegionUserData(pRegion, 0);
 	}
 }
 
 
 static void InitCreditEyeBlinking(void)
 {
-	UINT8 ubCnt;
-
-	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
+	const UINT32 now = GetJA2Clock();
+	for (CDRT_FACE* f = gCreditFaces; f != endof(gCreditFaces); ++f)
 	{
-		gCreditFaces[ubCnt].uiLastBlinkTime = GetJA2Clock() + Random( gCreditFaces[ubCnt].sBlinkFreq * 2 );
+		f->uiLastBlinkTime = now + Random(f->sBlinkFreq * 2);
 	}
 }
 
 
 static void HandleCreditEyeBlinking(void)
 {
-	UINT8 ubCnt;
-
-	for( ubCnt=0; ubCnt<NUM_PEOPLE_IN_CREDITS; ubCnt++ )
+	for (size_t i = 0; i != NUM_PEOPLE_IN_CREDITS; ++i)
 	{
-		if( ( GetJA2Clock() - gCreditFaces[ubCnt].uiLastBlinkTime ) > (UINT32)gCreditFaces[ubCnt].sBlinkFreq )
+		CDRT_FACE* const f   = &gCreditFaces[i];
+		const UINT32     now = GetJA2Clock();
+		if (now - f->uiLastBlinkTime > f->sBlinkFreq)
 		{
-			BltVideoObject(FRAME_BUFFER, guiCreditFaces, ubCnt * 3, gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY);
-			InvalidateRegion( gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, gCreditFaces[ubCnt].sEyeX + CRDT_EYE_WIDTH, gCreditFaces[ubCnt].sEyeY + CRDT_EYE_HEIGHT );
+			const INT32 x = f->sEyeX;
+			const INT32 y = f->sEyeY;
+			BltVideoObject(FRAME_BUFFER, guiCreditFaces, i * 3, x, y);
+			InvalidateRegion(x, y, x + CRDT_EYE_WIDTH, y + CRDT_EYE_HEIGHT);
 
-			gCreditFaces[ubCnt].uiLastBlinkTime = GetJA2Clock();
-
-			gCreditFaces[ubCnt].uiEyesClosedTime = GetJA2Clock() + CRDT_EYES_CLOSED_TIME + Random( CRDT_EYES_CLOSED_TIME );
+			f->uiLastBlinkTime  = now;
+			f->uiEyesClosedTime = now + CRDT_EYES_CLOSED_TIME + Random(CRDT_EYES_CLOSED_TIME);
 		}
-		else if( GetJA2Clock() > gCreditFaces[ubCnt].uiEyesClosedTime )
+		else if (now > f->uiEyesClosedTime)
 		{
-			gCreditFaces[ubCnt].uiEyesClosedTime = 0;
+			f->uiEyesClosedTime = 0;
 
-			RestoreExternBackgroundRect( gCreditFaces[ubCnt].sEyeX, gCreditFaces[ubCnt].sEyeY, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT );
+			RestoreExternBackgroundRect(f->sEyeX, f->sEyeY, CRDT_EYE_WIDTH, CRDT_EYE_HEIGHT);
 		}
 	}
 }

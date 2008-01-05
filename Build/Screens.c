@@ -1,3 +1,4 @@
+#include "Credits.h"
 #include "Screens.h"
 #include "JAScreens.h"
 
@@ -37,7 +38,7 @@ const Screens GameScreens[MAX_SCREENS] =
 	{ NULL,                 GameInitOptionsScreenHandle, NULL                      },
 	{ NULL,                 DemoExitScreenHandle,        NULL                      },
 	{ IntroScreenInit,      IntroScreenHandle,           NULL                      },
-	{ CreditScreenInit,     CreditScreenHandle,          NULL                      },
+	{ NULL,                 CreditScreenHandle,          NULL                      },
 #ifdef JA2BETAVERSION
 	{ AIViewerScreenInit,   AIViewerScreenHandle,        NULL                      },
 #endif

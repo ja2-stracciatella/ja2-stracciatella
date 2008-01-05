@@ -78,9 +78,6 @@ UINT32	DemoExitScreenHandle( void );
 extern	UINT32	IntroScreenHandle( void );
 extern	UINT32	IntroScreenInit( void );
 
-extern	UINT32	CreditScreenInit( void );
-extern	UINT32	CreditScreenHandle( void );
-
 
 // External functions
 void DisplayFrameRate(void);

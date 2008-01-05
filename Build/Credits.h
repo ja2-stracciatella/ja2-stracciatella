@@ -1,8 +1,9 @@
-#ifndef _CREDITS__H_
-#define _CREDITS__H_
+#ifndef CREDITS_H
+#define CREDITS_H
+
+#include "Types.h"
 
 
-UINT32	CreditScreenInit( void );
-UINT32	CreditScreenHandle( void );
+UINT32 CreditScreenHandle(void);
 
 #endif
