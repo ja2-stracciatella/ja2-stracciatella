@@ -164,9 +164,6 @@ UINT32 ErrorScreenHandle(void)
   InputAtom  InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
 
-	// For quick setting of new video stuff / to be changed
-	StartFrameBufferRender( );
-
 	// Create string
 	SetFont( LARGEFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );

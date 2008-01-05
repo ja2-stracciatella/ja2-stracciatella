@@ -188,8 +188,6 @@ static void RenderOptionsScreen(void);
 
 UINT32	OptionsScreenHandle()
 {
-	StartFrameBufferRender();
-
 	if( gfOptionsScreenEntry )
 	{
 		PauseGame();

@@ -88,19 +88,9 @@ UINT32  AniEditScreenHandle(void)
 
 	}
 
-
-
-	/////////////////////////////////////////////////////
-	StartFrameBufferRender( );
-
 	RenderWorld( );
-
 	ExecuteBaseDirtyRectQueue( );
-
-
-	/////////////////////////////////////////////////////
 	EndFrameBufferRender( );
-
 
 	SetFont( LARGEFONT1 );
 	mprintf( 0,0,L"SOLDIER ANIMATION VIEWER" );

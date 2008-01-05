@@ -649,10 +649,6 @@ UINT32  MainGameScreenHandle(void)
 	}
 
 
-
-	/////////////////////////////////////////////////////
-	StartFrameBufferRender( );
-
 	HandleTopMessages( );
 
 	if ( gfScrollPending || gfScrollInertia )
@@ -935,10 +931,7 @@ void EndModalTactical( )
 
 static void HandleModalTactical(void)
 {
-	StartFrameBufferRender( );
-
 	RestoreBackgroundRects();
-
 
   RenderWorld( );
 	RenderRadarScreen( );

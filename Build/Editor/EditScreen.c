@@ -3347,7 +3347,6 @@ UINT32  EditScreenHandle( void )
 {
 	UINT32 uiRetVal;
 	BOOLEAN fShowingCursor;
-	StartFrameBufferRender();
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{

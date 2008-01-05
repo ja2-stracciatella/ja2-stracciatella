@@ -487,8 +487,6 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 			 gubFOVDebugInfoInfo[ marker ] = (UINT8)markercnt;
 
-			 StartFrameBufferRender();
-
 			 RenderFOVDebug( );
 
 			 SetFont( LARGEFONT1 );

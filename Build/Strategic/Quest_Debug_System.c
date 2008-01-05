@@ -597,8 +597,6 @@ static UINT8 WhichPanelShouldTalkingMercUse(void);
 
 UINT32	QuestDebugScreenHandle()
 {
-	StartFrameBufferRender();
-
 	if( gfQuestDebugEntry )
 	{
 		PauseGame();

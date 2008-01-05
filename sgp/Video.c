@@ -653,11 +653,6 @@ void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHei
 }
 
 
-void StartFrameBufferRender(void)
-{
-}
-
-
 void EndFrameBufferRender(void)
 {
 	guiFrameBufferState = BUFFER_DIRTY;

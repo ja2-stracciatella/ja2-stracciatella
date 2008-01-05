@@ -242,8 +242,6 @@ static void SaveLoadGameNumber(INT8 bSaveGameID);
 
 UINT32	SaveLoadScreenHandle()
 {
-	StartFrameBufferRender();
-
 	if( gfSaveLoadScreenEntry )
 	{
 		EnterSaveLoadScreen();

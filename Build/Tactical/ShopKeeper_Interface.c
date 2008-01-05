@@ -416,8 +416,6 @@ static BOOLEAN RenderShopKeeperInterface(void);
 
 UINT32	ShopKeeperScreenHandle()
 {
-	StartFrameBufferRender();
-
 	if( gfSKIScreenEntry )
 	{
 		PauseGame();

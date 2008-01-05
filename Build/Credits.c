@@ -196,8 +196,6 @@ static void HandleCreditScreen(void);
 
 UINT32	CreditScreenHandle( void )
 {
-	StartFrameBufferRender();
-
 	if( gfCreditsScreenEntry )
 	{
 		if( !EnterCreditsScreen() )

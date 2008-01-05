@@ -196,8 +196,6 @@ static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue);
 
 UINT32 GameInitOptionsScreenHandle(void)
 {
-	StartFrameBufferRender();
-
 	if (gfGIOScreenEntry)
 	{
 		EnterGIOScreen();

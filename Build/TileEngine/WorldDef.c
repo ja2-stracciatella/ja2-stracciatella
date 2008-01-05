@@ -307,7 +307,6 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 	}
 
 	//uiFillColor = Get16BPPColor(FROMRGB(223, 223, 223));
-	//StartFrameBufferRender( );
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 20, 399, 622, 420, uiFillColor );
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 21, 400, 621, 419, 0 );
 	//EndFrameBufferRender( );
