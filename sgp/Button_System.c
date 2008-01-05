@@ -458,18 +458,17 @@ INT16 LoadGenericButtonIcon(const char* filename)
 }
 
 
-BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
+void UnloadGenericButtonIcon(INT16 GenImg)
 {
 	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, String("Attempting to UnloadGenericButtonIcon with out of range index %d.", GenImg));
 
 #if defined BUTTONSYSTEM_DEBUGGING
 	AssertMsg(GenericButtonIcons[GenImg], "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
 #endif
-	if (!GenericButtonIcons[GenImg]) return FALSE;
+	if (!GenericButtonIcons[GenImg]) return;
 	// If an icon is present in the slot, remove it.
 	DeleteVideoObject(GenericButtonIcons[GenImg]);
 	GenericButtonIcons[GenImg] = NULL;
-	return TRUE;
 }
 
 
@@ -755,12 +754,11 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Pri
 }
 
 
-BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr)
+void SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
 	GUI_BUTTON* b = GetButton(iBtnId);
-	CHECKF(b != NULL); // XXX HACK000C
+	CHECKV(b != NULL); // XXX HACK000C
   b->Area.Cursor = crsr;
-	return TRUE;
 }
 
 
@@ -963,23 +961,21 @@ void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle)
 }
 
 
-BOOLEAN SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
+void SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKF(b != NULL); // XXX HACK000C
+	CHECKV(b != NULL); // XXX HACK000C
 
 	b->icon        = icon;
 	b->usIconIndex = usVideoObjectIndex;
 
-	if (icon == NO_VOBJECT) return FALSE;
+	if (icon == NO_VOBJECT) return;
 
 	b->bIconXOffset = bXOffset;
 	b->bIconYOffset = bYOffset;
 	b->fShiftImage  = TRUE;
 
 	b->uiFlags |= BUTTON_DIRTY;
-
-	return TRUE;
 }
 
 
@@ -1303,14 +1299,13 @@ void ForceButtonUnDirty(INT32 iButtonIndex)
 }
 
 
-BOOLEAN DrawButton(INT32 iButtonID)
+void DrawButton(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKF(b != NULL); // XXX HACK000C
+	CHECKV(b != NULL); // XXX HACK000C
 	if (b->string != NULL) SaveFontSettings();
 	if (b->Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(b);
 	if (b->string != NULL) RestoreFontSettings();
-	return TRUE;
 }
 
 

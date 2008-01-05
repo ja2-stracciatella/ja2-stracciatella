@@ -135,7 +135,7 @@ void RenderButtonsFastHelp(void);
 INT16 LoadGenericButtonIcon(const char* filename);
 
 // Removes a button icon graphic from the system
-BOOLEAN UnloadGenericButtonIcon(INT16 GenImg);
+void UnloadGenericButtonIcon(INT16 GenImg);
 
 // Load images for use with QuickButtons.
 INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
@@ -168,7 +168,7 @@ void ShowButton(INT32 iButton);
 void RenderButtons(void);
 
 // Draws a single button on the screen.
-BOOLEAN DrawButton(INT32 iButtonID);
+void DrawButton(INT32 iButtonID);
 
 extern BOOLEAN gfRenderHilights;
 
@@ -235,10 +235,10 @@ void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle);
  * If fShiftImage is true, then the image will shift down one pixel and right
  * one pixel just like the text does.
  */
-BOOLEAN SpecifyButtonIcon(INT32 iButtonID, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+void SpecifyButtonIcon(INT32 iButtonID, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
 
 // will simply set the cursor for the mouse region the button occupies
-BOOLEAN SetButtonCursor(INT32 iBtnId, UINT16 crsr);
+void SetButtonCursor(INT32 iBtnId, UINT16 crsr);
 
 void MSYS_SetBtnUserData(INT32 iButtonNum, INT32 userdata);
 INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b);
