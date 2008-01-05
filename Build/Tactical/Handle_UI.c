@@ -4212,49 +4212,34 @@ static void GetGridNoScreenXY(INT16 sGridNo, INT16* pScreenX, INT16* pScreenY)
 }
 
 
-void EndMultiSoldierSelection( BOOLEAN fAcknowledge )
+void EndMultiSoldierSelection(BOOLEAN acknowledge)
 {
-	SOLDIERTYPE			*pFirstSoldier = NULL;
-	BOOLEAN					fSelectedSoldierInBatch = FALSE;
-
 	gTacticalStatus.fAtLeastOneGuyOnMultiSelect = FALSE;
 
-	// OK, loop through all guys who are 'multi-selected' and
-	// check if our currently selected guy is amoung the
-	// lucky few.. if not, change to a guy who is...
-	const SOLDIERTYPE* const sel = GetSelectedMan();
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	if (gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS]) acknowledge = FALSE;
+
+	/* loop through all guys who are 'multi-selected' and check if our currently
+	 * selected guy is among them - if not, change to a guy who is */
+	SOLDIERTYPE*             first = NULL;
+	const SOLDIERTYPE* const sel   = GetSelectedMan();
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (pSoldier->bInSector)
-		{
-			if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
-			{
-				gTacticalStatus.fAtLeastOneGuyOnMultiSelect = TRUE;
+		if (!s->bInSector)                                continue;
+		if (!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED)) continue;
 
-				if (pSoldier == sel)
-				{
-					fSelectedSoldierInBatch = TRUE;
-				}
-				else if (pFirstSoldier == NULL)
-				{
-					pFirstSoldier = pSoldier;
-				}
+		gTacticalStatus.fAtLeastOneGuyOnMultiSelect = TRUE;
 
-				if( !gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] && fAcknowledge )
-					InternalDoMercBattleSound( pSoldier, BATTLE_SOUND_ATTN1, BATTLE_SND_LOWER_VOLUME );
+		if (s == sel || first == NULL) first = s;
 
-				if ( pSoldier->fMercAsleep )
-				{
-					PutMercInAwakeState( pSoldier );
-				}
-			}
-		}
+		if (acknowledge) InternalDoMercBattleSound(s, BATTLE_SOUND_ATTN1, BATTLE_SND_LOWER_VOLUME);
+
+		if (s->fMercAsleep) PutMercInAwakeState(s);
 	}
 
 	// If here, select the first guy...
-	if ( pFirstSoldier != NULL && !fSelectedSoldierInBatch )
+	if (first != NULL && first != sel)
 	{
-		SelectSoldier(pFirstSoldier, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
+		SelectSoldier(first, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
 	}
 }
 
