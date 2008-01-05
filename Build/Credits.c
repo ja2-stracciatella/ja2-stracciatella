@@ -29,7 +29,7 @@ struct CRDT_NODE
 	INT16        sPosY;
 	INT16        sHeightOfString;     // The height of the displayed string
 	SGPVSurface* uiVideoSurfaceImage;
-	CRDT_NODE*   pNext;
+	CRDT_NODE*   next;
 };
 
 //flags for the credits
@@ -140,8 +140,8 @@ static BOOLEAN g_credits_active;
 static SGPVObject* guiCreditBackGroundImage;
 static SGPVObject* guiCreditFaces;
 
-static CRDT_NODE* gCrdtRootNode      = NULL;
-static CRDT_NODE* gCrdtLastAddedNode = NULL;
+static CRDT_NODE* g_credits_head;
+static CRDT_NODE* g_credits_tail;
 
 static INT32 giCurrentlySelectedFace;
 
@@ -203,10 +203,6 @@ static BOOLEAN EnterCreditsScreen(void)
 	guiCreditFaces = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
 	CHECKF(guiCreditFaces != NO_VOBJECT);
 
-	//Initialize the root credit node
-	Assert(gCrdtRootNode == NULL);
-	gCrdtRootNode = NULL;
-
 	guiCreditScreenActiveFont  = FONT12ARIAL;
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;
 	guiCreditScreenTitleFont   = FONT14ARIAL;
@@ -256,7 +252,7 @@ static void ExitCreditScreen(void)
 	DeleteVideoObject(guiCreditBackGroundImage);
 	DeleteVideoObject(guiCreditFaces);
 
-	while (gCrdtRootNode != NULL) DeleteFirstNode();
+	while (g_credits_head != NULL) DeleteFirstNode();
 
 	for (size_t i = 0; i != lengthof(gCrdtMouseRegions); ++i)
 	{
@@ -276,10 +272,10 @@ static void HandleCreditScreen(void)
 	HandleCreditEyeBlinking();
 
 	//is it time to get a new node
-	if (gCrdtLastAddedNode == NULL || (CRDT_START_POS_Y - (gCrdtLastAddedNode->sPosY + gCrdtLastAddedNode->sHeightOfString - 16)) >= (INT16)guiGapTillReadNextCredit)
+	if (g_credits_tail == NULL || (CRDT_START_POS_Y - (g_credits_tail->sPosY + g_credits_tail->sHeightOfString - 16)) >= (INT16)guiGapTillReadNextCredit)
 	{
 		//if there are no more credits in the file
-		if (!GetNextCreditFromTextFile() && gCrdtLastAddedNode == NULL)
+		if (!GetNextCreditFromTextFile() && g_credits_tail == NULL)
 		{
 			g_credits_active = FALSE;
 		}
@@ -332,11 +328,11 @@ static void GetCreditScreenUserInput(void)
 
 static void DeleteFirstNode(void)
 {
-	CRDT_NODE* const del = gCrdtRootNode;
+	CRDT_NODE* const del = g_credits_head;
 
-	gCrdtRootNode = del->pNext;
+	g_credits_head = del->next;
 
-	if (gCrdtLastAddedNode == del) gCrdtLastAddedNode = NULL;
+	if (g_credits_tail == del) g_credits_tail = NULL;
 
 	DeleteVideoSurface(del->uiVideoSurfaceImage);
 	MemFree(del);
@@ -381,24 +377,16 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, gubCrdtJustification);
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	//if its the first node to add
-	if (gCrdtRootNode == NULL)
+	if (g_credits_tail == NULL)
 	{
-		//make the new node the root node
-		gCrdtRootNode = pNodeToAdd;
-
-		gCrdtRootNode->pNext = NULL;
+		Assert(g_credits_head == NULL);
+		g_credits_head = pNodeToAdd;
 	}
 	else
 	{
-		CRDT_NODE* pTemp = gCrdtRootNode;
-		while (pTemp->pNext != NULL) pTemp = pTemp->pNext;
-
-		//Add the new node to the list
-		pTemp->pNext = pNodeToAdd;
+		g_credits_tail->next = pNodeToAdd;
 	}
-
-	gCrdtLastAddedNode = pNodeToAdd;
+	g_credits_tail = pNodeToAdd;
 }
 
 
@@ -407,20 +395,20 @@ static void DisplayCreditNode(const CRDT_NODE*);
 
 static void HandleCreditNodes(void)
 {
-	if (gCrdtRootNode == NULL) return;
+	if (g_credits_head == NULL) return;
 
 	if (gfPauseCreditScreen) return;
 
 	if (!(GetJA2Clock() - guiCrdtLastTimeUpdatingNode > guiCrdtNodeScrollSpeed)) return;
 
-	for (CRDT_NODE* i = gCrdtRootNode; i != NULL; i = i->pNext)
+	for (CRDT_NODE* i = g_credits_head; i != NULL; i = i->next)
 	{
 		DisplayCreditNode(i);
 		i->sPosY -= CRDT_SCROLL_PIXEL_AMOUNT;
 	}
 
-	const CRDT_NODE* const root = gCrdtRootNode;
-	if (root->sPosY + root->sHeightOfString < 0)
+	const CRDT_NODE* const head = g_credits_head;
+	if (head->sPosY + head->sHeightOfString < 0)
 	{
 		DeleteFirstNode();
 	}
