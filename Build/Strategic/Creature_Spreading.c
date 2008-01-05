@@ -1210,6 +1210,15 @@ BOOLEAN PrepareCreaturesForBattle()
 		ubNumCreatures = gubNumCreaturesAttackingTown;
 	}
 
+#ifdef JA2DEMO
+	fQueen                  = FALSE;
+	ubLarvaePercentage      =   0;
+	ubInfantPercentage      =   0;
+	ubYoungMalePercentage   =   0;
+	ubYoungFemalePercentage =   0;
+	ubAdultMalePercentage   =   0;
+	ubAdultFemalePercentage = 100;
+#else
 	switch( ubCreatureHabitat )
 	{
 		case QUEEN_LAIR:
@@ -1264,6 +1273,7 @@ BOOLEAN PrepareCreaturesForBattle()
 			#endif
 			return FALSE;
 	}
+#endif
 
 	//First step is to convert the percentages into the numbers we will use.
 	if( fQueen )
