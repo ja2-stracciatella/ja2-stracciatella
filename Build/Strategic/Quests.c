@@ -738,7 +738,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 
 		case FACT_BRENDA_IN_STORE_AND_ALIVE:
 			// ensure alive
-			if ( gMercProfiles[ 85 ].bMercStatus == MERC_IS_DEAD)
+			if (GetProfile(BRENDA)->bMercStatus == MERC_IS_DEAD)
 			{
 				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
 			}
@@ -753,7 +753,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			}
 			break;
 		case FACT_BRENDA_DEAD:
-			gubFact[FACT_BRENDA_DEAD] = (gMercProfiles[ 85 ].bMercStatus == MERC_IS_DEAD);
+			gubFact[FACT_BRENDA_DEAD] = (GetProfile(BRENDA)->bMercStatus == MERC_IS_DEAD);
 			break;
 		case FACT_NPC_IS_ENEMY:
 			gubFact[FACT_NPC_IS_ENEMY] = CheckNPCIsEnemy( ubProfileID ) || gMercProfiles[ ubProfileID ].ubMiscFlags2 & PROFILE_MISC_FLAG2_NEEDS_TO_SAY_HOSTILE_QUOTE;
@@ -833,7 +833,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[usFact] = ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 );
 			break;
 		case FACT_CARMEN_HAS_TEN_THOUSAND:
-			gubFact[usFact] = ( gMercProfiles[ 78 ].uiMoney >= 10000 );
+			gubFact[usFact] = (GetProfile(CARMEN)->uiMoney >= 10000);
 			break;
 		case FACT_SLAY_IN_SECTOR:
 			gubFact[usFact] = (gMercProfiles[ SLAY ].sSectorX == gWorldSectorX && gMercProfiles[ SLAY ].sSectorY == gWorldSectorY && gMercProfiles[ SLAY ].bSectorZ == gbWorldSectorZ );

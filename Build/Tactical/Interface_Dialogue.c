@@ -1716,19 +1716,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				// Fatima
-/*				gMercProfiles[ 101 ].sSectorX = 10;
-				gMercProfiles[ 101 ].sSectorY = 1;
-				gMercProfiles[ 101 ].bSectorZ = 1;
-*/
-				ChangeNpcToDifferentSector( FATIMA, 10, 1, 1 );
-
-				// Dimitri
-/*				gMercProfiles[ 60 ].sSectorX = 10;
-				gMercProfiles[ 60 ].sSectorY = 1;
-				gMercProfiles[ 60 ].bSectorZ = 1;
-*/
-				ChangeNpcToDifferentSector( DIMITRI, 10, 1, 1 );
+				ChangeNpcToDifferentSector(FATIMA,  10, 1, 1);
+				ChangeNpcToDifferentSector(DIMITRI, 10, 1, 1);
 
 				gFadeOutDoneCallback = DoneFadeOutActionBasement;
 
@@ -2341,7 +2330,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_MARK_KINGPIN_QUOTE_0_USED:
 				// set Kingpin's quote 0 as used so he doesn't introduce himself
-				gMercProfiles[86].ubLastDateSpokenTo = (UINT8) GetWorldDay();
+				GetProfile(KINGPIN)->ubLastDateSpokenTo = GetWorldDay();
 				break;
 
 			case NPC_ACTION_TRIGGER_LAYLA_13_14_OR_15:
@@ -2758,16 +2747,16 @@ unlock:
 					}
 
 					// Carmen has received 0 terrorist heads recently
-					gMercProfiles[ 78 ].bNPCData2 = 0;
+					GetProfile(CARMEN)->bNPCData2 = 0;
 				}
 				break;
 
 
 			case NPC_ACTION_CHECK_LAST_TERRORIST_HEAD:
-				// decrement head count
-				gMercProfiles[ 78 ].bNPCData--;
-				// increment number of heads on hand
-				gMercProfiles[ 78 ].bNPCData2++;
+			{
+				MERCPROFILESTRUCT* const carmen = GetProfile(CARMEN);
+				--carmen->bNPCData;  // decrement head count
+				++carmen->bNPCData2; // increment number of heads on hand
 
 				if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 				{
@@ -2780,6 +2769,7 @@ unlock:
 				// CJC Nov 28 2002 - fixed history record which didn't have location specified
 				AddHistoryToPlayersLog( HISTORY_GAVE_CARMEN_HEAD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
+			}
 
 			case NPC_ACTION_CARMEN_LEAVES_FOR_GOOD:
 				gMercProfiles[ ubTargetNPC ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_LEFT_COUNTRY;

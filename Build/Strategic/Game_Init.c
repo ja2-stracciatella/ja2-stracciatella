@@ -614,8 +614,7 @@ static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex)
 
 		// TEMP!
 		// make carman's opinion of us high!
-		gMercProfiles[ 78 ].bMercOpinion[ ubProfileIndex ] = 25;
-
+		GetProfile(CARMEN)->bMercOpinion[ubProfileIndex] = 25;
 	}
 	else if ( uiCount == 1 )
 	{
@@ -686,10 +685,10 @@ static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex)
 	gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK4POS ] = 4;
 
 	// Give special items to some NPCs
-	//gMercProfiles[ 78 ].inv[ SMALLPOCK4POS ] = TERRORIST_INFO;
-	//gMercProfiles[ 78 ].bInvStatus[ SMALLPOCK4POS ] = 100;
-	//gMercProfiles[ 78 ].bInvNumber[ SMALLPOCK4POS ] = 1;
-
+	//MERCPROFILESTRUCT* const carmen = GetProfile(CARMEN);
+	//carmen->inv[SMALLPOCK4POS]        = TERRORIST_INFO;
+	//carmen->bInvStatus[SMALLPOCK4POS] = 100;
+	//carmen->bInvNumber[SMALLPOCK4POS] =   1;
 }
 
 

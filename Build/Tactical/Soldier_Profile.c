@@ -455,7 +455,7 @@ static void DecideActiveTerrorists(void)
 	}
 
 	// set total terrorists outstanding in Carmen's info byte
-	gMercProfiles[ 78 ].bNPCData = 1 + ubNumAdditionalTerrorists;
+	GetProfile(CARMEN)->bNPCData = 1 + ubNumAdditionalTerrorists;
 
 	// store total terrorists
 	gubNumTerrorists = 1 + ubNumAdditionalTerrorists;

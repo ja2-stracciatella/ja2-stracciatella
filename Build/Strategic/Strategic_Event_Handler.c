@@ -486,16 +486,16 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 			AddWorldItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 0, uiNumWorldItems, pTemp, TRUE );
 		}
 	}
-
-
 }
+
 
 void AddSecondAirportAttendant( void )
 {
 	// add the second airport attendant to the Drassen airport...
-	gMercProfiles[99].sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
-	gMercProfiles[99].sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
-	gMercProfiles[99].bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
+	MERCPROFILESTRUCT* const sal = GetProfile(SAL);
+	sal->sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
+	sal->sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
+	sal->bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
 }
 
 

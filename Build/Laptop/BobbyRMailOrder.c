@@ -753,7 +753,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 						//uiResetTimeSec = 0;
 					}
 
-					if (gMercProfiles[99].bLife == 0)
+					if (GetProfile(SAL)->bLife == 0)
 					{
 						// Sal is dead, so Pablo is dead, so the airport is badly run
 						bDaysAhead += (UINT8) Random( 5 ) + 1;

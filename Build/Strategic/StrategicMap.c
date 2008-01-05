@@ -1270,10 +1270,11 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 				if (ubThisMine != MINE_ALMA)
 				{
 					// Fred Morris is always in the first mine sector we enter, unless that's Alma (then he's randomized, too)
-					gMercProfiles[ 106 ].sSectorX = sNewSectorX;
-					gMercProfiles[ 106 ].sSectorY = sNewSectorY;
-					gMercProfiles[ 106 ].bSectorZ = 0;
-					gMercProfiles[ 106 ].bTown = gMineLocation[ ubThisMine ].bAssociatedTown;
+					MERCPROFILESTRUCT* const fred = GetProfile(FRED);
+					fred->sSectorX = sNewSectorX;
+					fred->sSectorY = sNewSectorY;
+					fred->bSectorZ = 0;
+					fred->bTown    = gMineLocation[ubThisMine].bAssociatedTown;
 
 					// mark miner as placed
 					ubRandomMiner[ 0 ] = 0;
