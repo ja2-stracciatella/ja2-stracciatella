@@ -514,8 +514,7 @@ static void ShutdownButtonImageManager(void)
 	// Remove all button icons
 	for (int x = 0; x < MAX_BUTTON_ICONS; ++x)
 	{
-		if (GenericButtonIcons[x] != NULL)
-			GenericButtonIcons[x] = NULL;
+		if (GenericButtonIcons[x] != NULL) UnloadGenericButtonIcon(x);
 	}
 }
 
