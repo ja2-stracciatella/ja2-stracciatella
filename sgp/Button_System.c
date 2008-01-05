@@ -51,9 +51,6 @@
 
 #ifdef BUTTONSYSTEM_DEBUGGING
 
-BOOLEAN gfIgnoreShutdownAssertions;
-
-
 // Called immediately before assigning the button to the button list.
 static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 {
@@ -295,14 +292,10 @@ void UnloadButtonImage(INT32 Index)
 
 	BUTTON_PICS* const pics = &ButtonPictures[Index];
 
-	if (pics->vobj == NULL)
-	{
 #if defined BUTTONSYSTEM_DEBUGGING
-		if (gfIgnoreShutdownAssertions)
+	AssertMsg(pics->vobj != NULL, "Attempting to UnloadButtonImage that has a null vobj (already deleted).");
 #endif
-			return;
-		AssertMsg(0, "Attempting to UnloadButtonImage that has a null vobj (already deleted).");
-	}
+	if (pics->vobj == NULL) return;
 
 	// If this is a duplicated button image, then don't trash the vobject
 	if (!(pics->fFlags & GUI_BTN_DUPLICATE_VOBJ))
@@ -469,14 +462,10 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 {
 	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, String("Attempting to UnloadGenericButtonIcon with out of range index %d.", GenImg));
 
-	if (!GenericButtonIcons[GenImg])
-	{
 #if defined BUTTONSYSTEM_DEBUGGING
-		if (gfIgnoreShutdownAssertions)
+	AssertMsg(GenericButtonIcons[GenImg], "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
 #endif
-			return FALSE;
-		AssertMsg(0, "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
-	}
+	if (!GenericButtonIcons[GenImg]) return FALSE;
 	// If an icon is present in the slot, remove it.
 	DeleteVideoObject(GenericButtonIcons[GenImg]);
 	GenericButtonIcons[GenImg] = NULL;
@@ -487,14 +476,10 @@ BOOLEAN UnloadGenericButtonIcon(INT16 GenImg)
 // Cleans up, and shuts down the button image manager sub-system.
 static void ShutdownButtonImageManager(void)
 {
-#if defined BUTTONSYSTEM_DEBUGGING
-	gfIgnoreShutdownAssertions = TRUE;
-#endif
-
 	// Remove all QuickButton images
 	for (int x = 0; x < MAX_BUTTON_PICS; ++x)
 	{
-		UnloadButtonImage(x);
+		if (ButtonPictures[x].vobj != NULL) UnloadButtonImage(x);
 	}
 
 	// Remove all GenericButton images
@@ -538,10 +523,6 @@ static void ShutdownButtonImageManager(void)
 
 BOOLEAN InitButtonSystem(void)
 {
-#if defined BUTTONSYSTEM_DEBUGGING
-	gfIgnoreShutdownAssertions = FALSE;
-#endif
-
 	ButtonDestBuffer = FRAME_BUFFER;
 
 	// Clear out button list
