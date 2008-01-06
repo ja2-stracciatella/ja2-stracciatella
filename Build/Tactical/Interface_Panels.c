@@ -1119,7 +1119,9 @@ BOOLEAN CreateSMPanelButtons(void)
 
 	iBurstButtonImages[WM_NORMAL]     = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], -1,  7, -1,  7, -1);
 	iBurstButtonImages[WM_BURST]      = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], -1, 17, -1, 17, -1);
+#ifndef JA2DEMO
 	iBurstButtonImages[WM_ATTACHED]   = UseLoadedButtonImage(iSMPanelImages[STANCEUP_IMAGES], -1, 26, -1, 26, -1);
+#endif
 
 	iSMPanelImages[STANCE_IMAGES]     = LoadButtonImage("INTERFACE/invadd-ons.sti",            0,  0, -1,  2, -1);
 
