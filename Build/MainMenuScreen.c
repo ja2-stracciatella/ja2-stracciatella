@@ -28,7 +28,7 @@
 #include "WCheck.h"
 #include "WordWrap.h"
 
-#ifdef JA2DEMO
+#ifdef JA2DEMOADS
 #	include "Fade_Screen.h"
 #endif
 
@@ -181,7 +181,7 @@ static void HandleMainMenuScreen(void)
 		case QUIT:
 			gfMainMenuScreenExit = TRUE;
 
-#if defined JA2DEMO
+#if defined JA2DEMOADS
 			// Goto ad pages
 			SetPendingNewScreen(DEMO_EXIT_SCREEN);
 			SetMusicMode(MUSIC_MAIN_MENU);

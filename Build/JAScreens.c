@@ -40,7 +40,7 @@
 #include "Video.h"
 #include "Debug.h"
 
-#ifdef JA2DEMO
+#ifdef JA2DEMOADS
 #	include "Fade_Screen.h"
 #	include "Local.h"
 #	include "Music_Control.h"

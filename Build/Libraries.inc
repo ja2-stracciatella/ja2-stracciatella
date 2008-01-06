@@ -32,7 +32,9 @@ static const char* gGameLibaries[] =
 #endif
 
 #if defined JA2DEMO
+#	if defined JA2DEMOADS
 	"demoads.slf",
+#	endif
 #elif defined DUTCH
 	"dutch.slf",
 #elif defined GERMAN
