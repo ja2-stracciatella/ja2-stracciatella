@@ -451,11 +451,13 @@ static MOUSE_REGION gTrashCanRegion;
 
 // mouse regions for team info panel
 static MOUSE_REGION gTeamListNameRegion[MAX_CHARACTER_COUNT];
+#ifndef JA2DEMO
 static MOUSE_REGION gTeamListAssignmentRegion[MAX_CHARACTER_COUNT];
 static MOUSE_REGION gTeamListSleepRegion[MAX_CHARACTER_COUNT];
 static MOUSE_REGION gTeamListLocationRegion[MAX_CHARACTER_COUNT];
 static MOUSE_REGION gTeamListDestinationRegion[MAX_CHARACTER_COUNT];
 static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
+#endif
 
 
 SOLDIERTYPE		*gpItemPointerSoldier;
@@ -6009,8 +6011,13 @@ static void BlitBackgroundToSaveBuffer(void)
 }
 
 
-static void MakeRegion(MOUSE_REGION* const r, const UINT idx, const UINT16 x, const UINT16 y, const UINT16 w, const INT8 prio, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click, const wchar_t* const help)
+static void MakeRegion(MOUSE_REGION* const r, const UINT idx, const UINT16 x, const UINT16 y, const UINT16 w, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click, const wchar_t* const help)
 {
+#ifdef JA2DEMO
+		const INT8 prio = MSYS_PRIORITY_HIGHEST;
+#else
+		const INT8 prio = MSYS_PRIORITY_NORMAL + 1;
+#endif
 	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, prio, MSYS_NO_CURSOR, move, click);
 	MSYS_SetRegionUserData(r, 0, idx);
 	SetRegionFastHelpText(r, help);
@@ -6039,20 +6046,20 @@ static void CreateMouseRegionsForTeamList(void)
 		const UINT16 y = Y_START + i * (Y_SIZE + 2) + (i >= FIRST_VEHICLE ? 6 : 0);
 
 #ifdef JA2DEMO
-		// name region across the whole width of the team panel at HIGHEST priority, thus overriding the others
-		const UINT16 w    = 225;
-		const INT8   prio = MSYS_PRIORITY_HIGHEST;
+		// name region across the whole width of the team panel
+		const UINT16 w = 240;
 #else
-		const UINT16 w    = NAME_WIDTH;
-		const INT8   prio = MSYS_PRIORITY_NORMAL;
+		const UINT16 w = NAME_WIDTH;
 #endif
-		MakeRegion(&gTeamListNameRegion[i],        i, NAME_X,           y, w,                    prio,                     TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
-		MakeRegion(&gTeamListAssignmentRegion[i],  i, ASSIGN_X,         y, ASSIGN_WIDTH,         MSYS_PRIORITY_NORMAL + 1, TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
+		MakeRegion(&gTeamListNameRegion[i],        i, NAME_X,           y, w,                    TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // name region
+#ifndef JA2DEMO
+		MakeRegion(&gTeamListAssignmentRegion[i],  i, ASSIGN_X,         y, ASSIGN_WIDTH,         TeamListAssignmentRegionMvtCallBack,  TeamListAssignmentRegionBtnCallBack,  pMapScreenMouseRegionHelpText[1]); // assignment region
 		// same function as name regions, so uses the same callbacks
-		MakeRegion(&gTeamListLocationRegion[i],    i, LOC_X,            y, LOC_WIDTH,            MSYS_PRIORITY_NORMAL + 1, TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
-		MakeRegion(&gTeamListDestinationRegion[i], i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       MSYS_PRIORITY_NORMAL + 1, TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
-		MakeRegion(&gTeamListContractRegion[i],    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, MSYS_PRIORITY_NORMAL + 1, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
-		MakeRegion(&gTeamListSleepRegion[i],       i, SLEEP_X,          y, SLEEP_WIDTH,          MSYS_PRIORITY_NORMAL + 1, TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
+		MakeRegion(&gTeamListLocationRegion[i],    i, LOC_X,            y, LOC_WIDTH,            TeamListInfoRegionMvtCallBack,        TeamListInfoRegionBtnCallBack,        pMapScreenMouseRegionHelpText[0]); // location region
+		MakeRegion(&gTeamListDestinationRegion[i], i, DEST_ETA_X,       y, DEST_ETA_WIDTH,       TeamListDestinationRegionMvtCallBack, TeamListDestinationRegionBtnCallBack, pMapScreenMouseRegionHelpText[2]); // destination region
+		MakeRegion(&gTeamListContractRegion[i],    i, TIME_REMAINING_X, y, TIME_REMAINING_WIDTH, TeamListContractRegionMvtCallBack,    TeamListContractRegionBtnCallBack,    pMapScreenMouseRegionHelpText[3]); // contract region
+		MakeRegion(&gTeamListSleepRegion[i],       i, SLEEP_X,          y, SLEEP_WIDTH,          TeamListSleepRegionMvtCallBack,       TeamListSleepRegionBtnCallBack,       pMapScreenMouseRegionHelpText[5]); // sleep region
+#endif
 	}
 }
 
@@ -6063,11 +6070,13 @@ static void DestroyMouseRegionsForTeamList(void)
 	for (UINT i = 0; i < MAX_CHARACTER_COUNT; ++i)
 	{
 	  MSYS_RemoveRegion(&gTeamListNameRegion[i]);
+#ifndef JA2DEMO
 		MSYS_RemoveRegion(&gTeamListAssignmentRegion[i]);
 		MSYS_RemoveRegion(&gTeamListSleepRegion[i]);
 		MSYS_RemoveRegion(&gTeamListDestinationRegion[i]);
 		MSYS_RemoveRegion(&gTeamListLocationRegion[i]);
 		MSYS_RemoveRegion(&gTeamListContractRegion[i]);
+#endif
 	}
 }
 
@@ -7398,16 +7407,19 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 		{
 			// disable regions in all team list columns
 			MSYS_DisableRegion( &gTeamListNameRegion[ bCharNum ] );
+#ifndef JA2DEMO
 			MSYS_DisableRegion( &gTeamListAssignmentRegion[ bCharNum ] );
 			MSYS_DisableRegion( &gTeamListLocationRegion[ bCharNum ] );
 			MSYS_DisableRegion( &gTeamListSleepRegion[ bCharNum ] );
 			MSYS_DisableRegion( &gTeamListDestinationRegion[ bCharNum ] );
 			MSYS_DisableRegion( &gTeamListContractRegion[ bCharNum ] );
+#endif
 		}
 		else
 		{
 			// always enable Name and Location regions
 			MSYS_EnableRegion( &gTeamListNameRegion[ bCharNum ] );
+#ifndef JA2DEMO
 			MSYS_EnableRegion( &gTeamListLocationRegion[ bCharNum ] );
 
 			// valid character.  If it's a vehicle, however
@@ -7458,6 +7470,7 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 			// destination region is always enabled for all valid character slots.
 			// if the character can't move at this time, then the region handler must be able to tell the player why not
 			MSYS_EnableRegion( &gTeamListDestinationRegion[ bCharNum ] );
+#endif
 		}
 	}
 }
