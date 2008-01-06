@@ -392,6 +392,41 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 }
 
 
+static void WriteTGAHeader(FILE* const f)
+{
+	/*
+	 *  0 byte ID length
+	 *  1 byte colour map type
+	 *  2 byte targa type
+	 *  3 word colour map origin
+	 *  5 word colour map length
+	 *  7 byte colour map entry size
+	 *  8 word origin x
+	 * 10 word origin y
+	 * 12 word image width
+	 * 14 word image height
+	 * 16 byte bits per pixel
+	 * 17 byte image descriptor
+	 */
+	static const BYTE data[] =
+	{
+		0,
+		0,
+		2,
+		0, 0,
+		0, 0,
+		0,
+		0, 0,
+		0, 0,
+		SCREEN_WIDTH  % 256, SCREEN_WIDTH  / 256,
+		SCREEN_HEIGHT % 256, SCREEN_HEIGHT / 256,
+		PIXEL_DEPTH,
+		0
+	};
+	fwrite(data, sizeof(data), 1, f);
+}
+
+
 static void TakeScreenshot(void)
 {
 	const char* ExecDir = GetExecutableDirectory();
@@ -400,7 +435,7 @@ static void TakeScreenshot(void)
 	FILE* OutputFile = fopen(FileName, "wb");
 	if (OutputFile == NULL) return;
 
-	fprintf(OutputFile, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80, 0x02, 0xe0, 0x01, 0x10, 0);
+	WriteTGAHeader(OutputFile);
 
 	// Copy 16 bit buffer to file
 
@@ -690,25 +725,6 @@ void FatalError(const char *pError, ...)
  *
  ******************************************************************************/
 
-#pragma pack (push, 1)
-
-typedef struct {
-	UINT8  ubIDLength;
-	UINT8  ubColorMapType;
-	UINT8  ubTargaType;
-	UINT16 usColorMapOrigin;
-	UINT16 usColorMapLength;
-	UINT8  ubColorMapEntrySize;
-	UINT16 usOriginX;
-	UINT16 usOriginY;
-	UINT16 usImageWidth;
-	UINT16 usImageHeight;
-	UINT8  ubBitsPerPixel;
-	UINT8  ubImageDescriptor;
-} TARGA_HEADER;
-
-#pragma pack (pop)
-
 
 static void RefreshMovieCache(void);
 
@@ -776,14 +792,7 @@ static void RefreshMovieCache(void)
 		FILE* disk = fopen(cFilename, "wb");
 		if (disk == NULL) return;
 
-		TARGA_HEADER Header;
-		memset(&Header, 0, sizeof(TARGA_HEADER));
-		Header.ubTargaType    = 2; // Uncompressed 16/24/32 bit
-		Header.usImageWidth   = SCREEN_WIDTH;
-		Header.usImageHeight  = SCREEN_HEIGHT;
-		Header.ubBitsPerPixel = 16;
-
-		fwrite(&Header, sizeof(TARGA_HEADER), 1, disk);
+		WriteTGAHeader(disk);
 
 		UINT16* pDest = gpFrameData[cnt];
 
