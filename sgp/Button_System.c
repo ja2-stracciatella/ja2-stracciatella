@@ -1026,53 +1026,58 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	 * that are already down, and anchored never change state, unless you release
 	 * the mouse in the button area.
 	 */
-	if (b->MoveCallback == DefaultMoveCallback && b->uiFlags & BUTTON_ENABLED)
+	if (b->uiFlags & BUTTON_ENABLED)
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		if (b->MoveCallback == DefaultMoveCallback)
 		{
-			gpAnchoredButton = b;
-			gfAnchoredState = StateBefore;
-			b->uiFlags |= BUTTON_CLICKED_ON;
+			if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+			{
+				gpAnchoredButton = b;
+				gfAnchoredState = StateBefore;
+				b->uiFlags |= BUTTON_CLICKED_ON;
+			}
+			else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+			{
+				b->uiFlags &= ~BUTTON_CLICKED_ON;
+			}
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		else if (b->uiFlags & BUTTON_CHECKBOX)
 		{
-			b->uiFlags &= ~BUTTON_CLICKED_ON;
+			if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+			{
+				/* The check box button gets anchored, though it doesn't actually use the
+				 * anchoring move callback.  The effect is different, we don't want to
+				 * toggle the button state, but we do want to anchor this button so that
+				 * we don't effect any other buttons while we move the mouse around in
+				 * anchor mode.
+				 */
+				gpAnchoredButton = b;
+				gfAnchoredState = StateBefore;
+
+				/* Trick the before state of the button to be different so the sound will
+				 * play properly as checkbox buttons are processed differently.
+				 */
+				StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+				StateAfter = !StateBefore;
+			}
+			else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+			{
+				b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
+				/* Trick the before state of the button to be different so the sound will
+				 * play properly as checkbox buttons are processed differently.
+				 */
+				StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+				StateAfter = !StateBefore;
+			}
 		}
 	}
-	else if (b->uiFlags & BUTTON_CHECKBOX)
+	else
 	{
-		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+		// Should we play a sound if clicked on while disabled?
+		if (b->ubSoundSchemeID && MouseBtnDown)
 		{
-			/* The check box button gets anchored, though it doesn't actually use the
-			 * anchoring move callback.  The effect is different, we don't want to
-			 * toggle the button state, but we do want to anchor this button so that
-			 * we don't effect any other buttons while we move the mouse around in
-			 * anchor mode.
-			 */
-			gpAnchoredButton = b;
-			gfAnchoredState = StateBefore;
-
-			/* Trick the before state of the button to be different so the sound will
-			 * play properly as checkbox buttons are processed differently.
-			 */
-			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
-			StateAfter = !StateBefore;
+			PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
 		}
-		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-		{
-			b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
-			/* Trick the before state of the button to be different so the sound will
-			 * play properly as checkbox buttons are processed differently.
-			 */
-			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
-			StateAfter = !StateBefore;
-		}
-	}
-
-	// Should we play a sound if clicked on while disabled?
-	if (b->ubSoundSchemeID && !(b->uiFlags & BUTTON_ENABLED) && MouseBtnDown)
-	{
-		PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
 	}
 
 	// If this button is disabled, and no callbacks allowed when disabled callback
