@@ -80,7 +80,7 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 
 static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
 {
-	if (fContents & IMAGE_PALETTE && !(fContents & IMAGE_ALLIMAGEDATA))
+	if (fContents & IMAGE_PALETTE && (fContents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
 		return( FALSE );
 	}
