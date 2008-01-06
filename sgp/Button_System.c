@@ -800,12 +800,6 @@ INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT3
 }
 
 
-INT32 CreateEasyButton(INT32 x, INT32 y, const char* filename, GUI_CALLBACK ClickCallback)
-{
-	return CreateSimpleButton(x, y, filename, MSYS_PRIORITY_NORMAL, ClickCallback);
-}
-
-
 INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	AssertMsg(filename != NULL, "Attempting to CreateSimpleButton with null filename.");
