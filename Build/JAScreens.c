@@ -763,12 +763,10 @@ static void DisplayTopwareGermanyAddress(void)
 	EndFrameBufferRender();
 }
 #	endif
-#endif
 
 
 UINT32 DemoExitScreenHandle(void)
 {
-	#ifdef JA2DEMOADS
 	static UINT8					ubCurrentScreen = 0;
 	static UINT8					ubPreviousScreen = 0;
 	static INT8						bCurFrame = 0;
@@ -1305,8 +1303,5 @@ UINT32 DemoExitScreenHandle(void)
 	}
 
 	return( DEMO_EXIT_SCREEN );
-#else
-	gfProgramIsRunning = FALSE;
-	return( DEMO_EXIT_SCREEN );
-#endif
 }
+#endif

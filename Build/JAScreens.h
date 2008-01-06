@@ -73,8 +73,6 @@ UINT32	SexScreenHandle( void );
 
 UINT32	GameInitOptionsScreenHandle( void );
 
-UINT32	DemoExitScreenHandle( void );
-
 extern	UINT32	IntroScreenHandle( void );
 extern	UINT32	IntroScreenInit( void );
 
@@ -100,6 +98,7 @@ INT8 gCurDebugPage;
 
 #ifdef JA2DEMOADS
 void DoDemoIntroduction(void);
+UINT32 DemoExitScreenHandle(void);
 #endif
 
 #endif
