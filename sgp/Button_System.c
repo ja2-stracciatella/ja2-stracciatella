@@ -146,6 +146,17 @@ static INT32 FindFreeButtonSlot(void)
 }
 
 
+static void SetMaxSize(BUTTON_PICS* const pics, const INT32 img_idx)
+{
+	if (img_idx == BUTTON_NO_IMAGE) return;
+	const ETRLEObject* const e = GetVideoObjectETRLESubregionProperties(pics->vobj, img_idx);
+	const UINT32             w = e->sOffsetX + e->usWidth;
+	const UINT32             h = e->sOffsetY + e->usHeight;
+	if (pics->max.w < w) pics->max.w = w;
+	if (pics->max.h < h) pics->max.h = h;
+}
+
+
 static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	BUTTON_PICS* const pics = &ButtonPictures[UseSlot];
@@ -161,62 +172,13 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 	pics->fFlags    = Flags;
 
 	// Fit the button size to the largest image in the set
-	UINT32 MaxWidth  = 0;
-	UINT32 MaxHeight = 0;
-	const ETRLEObject* const Travs = pics->vobj->pETRLEObject;
-	if (Grayed != BUTTON_NO_IMAGE)
-	{
-		const ETRLEObject* pTrav = &Travs[Grayed];
-		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
-		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
-		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
-	}
-
-	if (OffNormal != BUTTON_NO_IMAGE)
-	{
-		const ETRLEObject* pTrav = &Travs[OffNormal];
-		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
-		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
-		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
-	}
-
-	if (OffHilite != BUTTON_NO_IMAGE)
-	{
-		const ETRLEObject* pTrav = &Travs[OffHilite];
-		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
-		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
-		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
-	}
-
-	if (OnNormal != BUTTON_NO_IMAGE)
-	{
-		const ETRLEObject* pTrav = &Travs[OnNormal];
-		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
-		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
-		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
-	}
-
-	if (OnHilite != BUTTON_NO_IMAGE)
-	{
-		const ETRLEObject* pTrav = &Travs[OnHilite];
-		UINT32 ThisHeight = pTrav->usHeight + pTrav->sOffsetY;
-		UINT32 ThisWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-		if (MaxWidth  < ThisWidth)  MaxWidth  = ThisWidth;
-		if (MaxHeight < ThisHeight) MaxHeight = ThisHeight;
-	}
-
-	// Set the width and height for this image set
-	pics->max.w = MaxWidth;
-	pics->max.h = MaxHeight;
+	pics->max.w = 0;
+	pics->max.h = 0;
+	SetMaxSize(pics, Grayed);
+	SetMaxSize(pics, OffNormal);
+	SetMaxSize(pics, OffHilite);
+	SetMaxSize(pics, OnNormal);
+	SetMaxSize(pics, OnHilite);
 }
 
 
