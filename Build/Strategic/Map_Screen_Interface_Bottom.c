@@ -1383,20 +1383,6 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 		return( FALSE );
 	}
 
-	#ifdef JA2DEMO
-		if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
-		{
-			// always permitted in demo
-			return( TRUE );
-		}
-		else
-		{
-			// always disallowed in demo
-			return( FALSE );
-		}
-	#endif
-
-
 	// if holding an inventory item
 	if ( fMapInventoryItem || ( gMPanelRegion.Cursor == EXTERN_CURSOR ) )
 	{
@@ -1453,6 +1439,10 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 		//dont allow it
 		return( FALSE );
 	}
+
+#ifdef JA2DEMO
+	if (bExitToWhere == MAP_EXIT_TO_LAPTOP) return FALSE;
+#endif
 
 	// OK to go there, passed all the checks
 	return( TRUE );
