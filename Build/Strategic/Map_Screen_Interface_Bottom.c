@@ -167,14 +167,14 @@ void HandleLoadOfMapBottomGraphics( void )
 }
 
 
-static BOOLEAN CreateButtonsForMapScreenInterfaceBottom(void);
+static void CreateButtonsForMapScreenInterfaceBottom(void);
 static void CreateCompressModePause(void);
 static void CreateMapScreenBottomMessageScrollBarRegion(void);
 
 
 BOOLEAN LoadMapScreenInterfaceBottom( void )
 {
-	CreateButtonsForMapScreenInterfaceBottom( );
+	CreateButtonsForMapScreenInterfaceBottom();
 	CreateMapScreenBottomMessageScrollBarRegion( );
 
 	// create pause region
@@ -284,64 +284,49 @@ void RenderMapScreenInterfaceBottom( void )
 }
 
 
-static BOOLEAN CreateButtonsForMapScreenInterfaceBottom(void)
+static INT32 MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const INT8 prio, const GUI_CALLBACK click, const wchar_t* const help)
+{
+	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, prio, click);
+	SetButtonFastHelpText(btn, help);
+	SetButtonCursor(btn, MSYS_NO_CURSOR);
+	return btn;
+}
+
+
+static INT32 MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const INT8 prio, const GUI_CALLBACK click, const wchar_t* const help)
+{
+	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, prio, click);
+	SetButtonFastHelpText(btn, help);
+	SetButtonCursor(btn, MSYS_NO_CURSOR);
+	return btn;
+}
+
+
+static void CreateButtonsForMapScreenInterfaceBottom(void)
 {
 #ifdef JA2DEMO
 	MSYS_DefineRegion(&MapScreenmaskForDemo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-#endif
-
-	// laptop
-  guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP] = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, 6, -1, 15, -1, 456, 410, MSYS_PRIORITY_HIGHEST - 1, BtnLaptopCallback);
-
-#if defined JA2DEMO
 	const INT16 prio = MSYS_PRIORITY_HIGHEST;
 #else
 	const INT16 prio = MSYS_PRIORITY_HIGHEST - 1;
 #endif
 
-	// tactical
-  guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, 7, -1, 16, -1, 496, 410, prio, BtnTacticalCallback);
-
-	// options
-  guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS] = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, 18, -1, 19, -1, 458, 372, prio, BtnOptionsFromMapScreenCallback);
-
-	SetButtonFastHelpText( guiMapBottomExitButtons[ 0 ], pMapScreenBottomFastHelp[ 0 ] );
-	SetButtonFastHelpText( guiMapBottomExitButtons[ 1 ], pMapScreenBottomFastHelp[ 1 ] );
-	SetButtonFastHelpText( guiMapBottomExitButtons[ 2 ], pMapScreenBottomFastHelp[ 2 ] );
-
-	SetButtonCursor(guiMapBottomExitButtons[ 0 ], MSYS_NO_CURSOR );
-	SetButtonCursor(guiMapBottomExitButtons[ 1 ], MSYS_NO_CURSOR );
-	SetButtonCursor(guiMapBottomExitButtons[ 2 ], MSYS_NO_CURSOR );
-
+	guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]   = MakeExitButton( 6, 15, 456, 410, MSYS_PRIORITY_HIGHEST - 1, BtnLaptopCallback,               pMapScreenBottomFastHelp[0]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = MakeExitButton( 7, 16, 496, 410, prio,                      BtnTacticalCallback,             pMapScreenBottomFastHelp[1]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS]  = MakeExitButton(18, 19, 458, 372, prio,                      BtnOptionsFromMapScreenCallback, pMapScreenBottomFastHelp[2]);
 
 	// time compression buttons
-  guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 10, 1, -1, 3, -1, 528, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressMoreMapScreenCallback);
-  guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti",  9, 0, -1, 2, -1, 466, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressLessMapScreenCallback);
-
-	SetButtonFastHelpText( guiMapBottomTimeButtons[ 0 ], pMapScreenBottomFastHelp[ 3 ] );
-  SetButtonFastHelpText( guiMapBottomTimeButtons[ 1 ], pMapScreenBottomFastHelp[ 4 ] );
-
-	SetButtonCursor(guiMapBottomTimeButtons[ 0 ], MSYS_NO_CURSOR );
-	SetButtonCursor(guiMapBottomTimeButtons[ 1 ], MSYS_NO_CURSOR );
-
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = MakeArrowButton(10, 1, 3, 528, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressMoreMapScreenCallback, pMapScreenBottomFastHelp[3]);
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = MakeArrowButton( 9, 0, 2, 466, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressLessMapScreenCallback, pMapScreenBottomFastHelp[4]);
 
 	// scroll buttons
-  guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 331, 371, prio, BtnMessageUpMapScreenCallback);
-  guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 331, 452, prio, BtnMessageDownMapScreenCallback);
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = MakeArrowButton(11, 4, 6, 331, 371, prio, BtnMessageUpMapScreenCallback,   pMapScreenBottomFastHelp[5]);
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = MakeArrowButton(12, 5, 7, 331, 452, prio, BtnMessageDownMapScreenCallback, pMapScreenBottomFastHelp[6]);
 
 #if defined JA2DEMO
 	// build demo mouse regions
-  BuildDemoMouseRegionsForHelpText( );
+	BuildDemoMouseRegionsForHelpText();
 #endif
-
-	SetButtonFastHelpText( guiMapMessageScrollButtons[ 0 ], pMapScreenBottomFastHelp[ 5 ] );
-  SetButtonFastHelpText( guiMapMessageScrollButtons[ 1 ], pMapScreenBottomFastHelp[ 6 ] );
-	SetButtonCursor(guiMapMessageScrollButtons[ 0 ], MSYS_NO_CURSOR );
-	SetButtonCursor(guiMapMessageScrollButtons[ 1 ], MSYS_NO_CURSOR );
-
-
-
-	return( TRUE );
 }
 
 
