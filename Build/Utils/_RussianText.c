@@ -3058,7 +3058,6 @@ const wchar_t* zMarksMapScreenText[] =
 	L"Пациенты", // people who are being bandaged by a medic
 	L"Готово", // Continue on with the game after autobandage is complete
 	L"Стоп", // Stop autobandaging of patients by medics now
-	L"Извините. В демо версии это отключено.", // informs player this option/button has been disabled in the demo
 	L"%ls не может этого сделать, нет инструментов для ремонта.",
 	L"%ls не может этого сделать, нет медицинских принадлежностей.",
 	L"Недостаточно желающих пройти подготовку.",
@@ -3789,5 +3788,9 @@ const wchar_t* gzLateLocalizedString[] =
 const wchar_t str_ceramic_plates_smashed[] = L"%ls: в бронежилете разбились пластины!";
 
 const wchar_t str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
+
+#ifdef JA2DEMO
+const wchar_t str_disabled_in_demo[] = L"Извините. В демо версии это отключено."; // informs player this option/button has been disabled in the demo
+#endif
 
 #endif

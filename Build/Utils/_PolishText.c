@@ -3043,7 +3043,6 @@ const wchar_t* zMarksMapScreenText[] =
 	L"Pacjenci", // people who are being bandaged by a medic // ****************************************************NEW******** as of July 10, 1998
 	L"Gotowe", // Continue on with the game after autobandage is complete
 	L"Przerwij", // Stop autobandaging of patients by medics now
-	L"Przykro nam, ale ta opcja jest wyłączona w wersji demo.", // informs player this option/button has been disabled in the demo
 	L"%ls nie ma zestawu narzędzi.",
 	L"%ls nie ma apteczki.",
 	L"Brak chętnych ludzi do szkolenia, w tej chwili.",
@@ -3772,5 +3771,9 @@ const wchar_t* gzLateLocalizedString[] =
 const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!"; // TODO translate
 
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
+
+#ifdef JA2DEMO
+const wchar_t str_disabled_in_demo[] = L"Przykro nam, ale ta opcja jest wyłączona w wersji demo."; // informs player this option/button has been disabled in the demo
+#endif
 
 #endif //POLISH

@@ -3043,7 +3043,6 @@ const wchar_t *zMarksMapScreenText[] =
 	L"Patients", // people who are being bandaged by a medic
 	L"Done", // Continue on with the game after autobandage is complete
 	L"Stop", // Stop autobandaging of patients by medics now
-	L"Sorry. This option has been disabled in this demo.", // informs player this option/button has been disabled in the demo
 	L"%ls doesn't have a repair kit.",
 	L"%ls doesn't have a medical kit.",
 	L"There aren't enough people willing to be trained right now.",
@@ -3770,5 +3769,9 @@ const wchar_t *gzLateLocalizedString[] =
 const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!";
 
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied.";
+
+#ifdef JA2DEMO
+const wchar_t str_disabled_in_demo[] = L"Sorry. This option has been disabled in this demo."; // informs player this option/button has been disabled in the demo
+#endif
 
 #endif //ENGLISH

@@ -6487,7 +6487,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// is the current loyalty high enough to train some?
 						if( DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( pSoldier ) == FALSE )
 						{
-							DoScreenIndependantMessageBox( zMarksMapScreenText[ 20 ], MSG_BOX_FLAG_OK, NULL );
+							DoScreenIndependantMessageBox(zMarksMapScreenText[19], MSG_BOX_FLAG_OK, NULL);
 							break;
 						}
 					}
@@ -6498,12 +6498,12 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						{
 							// SAM site
 							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA, lengthof(sStringA));
-							swprintf( sString, lengthof(sString), zMarksMapScreenText[ 21 ], sStringA );
+							swprintf(sString, lengthof(sString), zMarksMapScreenText[20], sStringA);
 						}
 						else
 						{
 							// town
-							swprintf( sString, lengthof(sString), zMarksMapScreenText[ 21 ], pTownNames[ bTownId ] );
+							swprintf(sString, lengthof(sString), zMarksMapScreenText[20], pTownNames[bTownId]);
 						}
 
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
@@ -6854,7 +6854,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf( sString, lengthof(sString), zMarksMapScreenText[ 19 ], pSoldier->name );
+						swprintf(sString, lengthof(sString), zMarksMapScreenText[18], pSoldier->name);
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}
@@ -6942,7 +6942,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf( sString, lengthof(sString), zMarksMapScreenText[ 18 ], pSoldier->name );
+						swprintf(sString, lengthof(sString), zMarksMapScreenText[17], pSoldier->name);
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}

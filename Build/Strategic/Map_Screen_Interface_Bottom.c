@@ -1313,7 +1313,7 @@ void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
   // inventory screen mask btn callback
   if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-	  DoMapMessageBox( MSG_BOX_BASIC_STYLE, zMarksMapScreenText[ 17 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MSYS_NO_CALLBACK );
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, str_disabled_in_demo, MAP_SCREEN, MSG_BOX_FLAG_OK, MSYS_NO_CALLBACK);
   }
 }
 

@@ -2875,7 +2875,6 @@ const wchar_t *zMarksMapScreenText[] =
 	L"Patienten", // people who are being bandaged by a medic
 	L"Fertig", // Continue on with the game after autobandage is complete
 	L"Stop", // Stop autobandaging of patients by medics now
-	L"Sorry. Diese Option gibt es in der Demo nicht.", // informs player this option/button has been disabled in the demo
 
 	L"%ls hat kein Werkzeug.",
 	L"%ls hat kein Verbandszeug.",
@@ -3592,5 +3591,9 @@ const wchar_t *gzLateLocalizedString[] =
 const wchar_t str_ceramic_plates_smashed[] = L"%lss Keramikplatten wurden zertrümmert!";
 
 const wchar_t str_arrival_rerouted[] = L"Die Ankunft neuer Rekruten wurde nach Sektor %ls umgeleitet, da der geplante Ankunftsort in Sektor %ls vom Feind besetzt ist.";
+
+#ifdef JA2DEMO
+const wchar_t str_disabled_in_demo[] = L"Sorry. Diese Option gibt es in der Demo nicht."; // informs player this option/button has been disabled in the demo
+#endif
 
 #endif //GERMAN

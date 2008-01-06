@@ -1351,6 +1351,10 @@ extern const wchar_t str_ceramic_plates_smashed[];
 
 extern const wchar_t str_arrival_rerouted[];
 
+#ifdef JA2DEMO
+extern const wchar_t str_disabled_in_demo[];
+#endif
+
 #ifdef JA2DEMOADS
 extern const wchar_t* gpDemoString[];
 extern const wchar_t* gpDemoIntroString[];

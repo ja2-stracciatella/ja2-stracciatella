@@ -4758,7 +4758,7 @@ void UpdateHelpTextForMapScreenMercIcons( void )
 		// if merc is an AIM merc
 		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 		{
-			SetRegionFastHelpText( &(gContractIconRegion), zMarksMapScreenText[ 22 ] );
+			SetRegionFastHelpText(&gContractIconRegion, zMarksMapScreenText[21]);
 		}
 		else
 		{
