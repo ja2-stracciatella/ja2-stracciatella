@@ -57,13 +57,11 @@
 #define MESSAGE_BOX_W 301
 #define MESSAGE_BOX_H  86
 
-#define MESSAGE_SCROLL_AREA_START_X	330
-#define MESSAGE_SCROLL_AREA_END_X		344
-#define MESSAGE_SCROLL_AREA_WIDTH		( MESSAGE_SCROLL_AREA_END_X - MESSAGE_SCROLL_AREA_START_X + 1 )
+#define MESSAGE_SCROLL_AREA_START_X 330
+#define MESSAGE_SCROLL_AREA_WIDTH    15
 
-#define MESSAGE_SCROLL_AREA_START_Y	390
-#define MESSAGE_SCROLL_AREA_END_Y		448
-#define MESSAGE_SCROLL_AREA_HEIGHT	( MESSAGE_SCROLL_AREA_END_Y - MESSAGE_SCROLL_AREA_START_Y + 1 )
+#define MESSAGE_SCROLL_AREA_START_Y 390
+#define MESSAGE_SCROLL_AREA_HEIGHT   59
 
 #define SLIDER_HEIGHT		11
 #define SLIDER_WIDTH		11
@@ -731,20 +729,25 @@ static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void CreateMapScreenBottomMessageScrollBarRegion(void)
 {
-	#ifdef JA2DEMO
-		MSYS_DefineRegion( &gMapMessageScrollBarRegion, MESSAGE_SCROLL_AREA_START_X, MESSAGE_SCROLL_AREA_START_Y,
-								MESSAGE_SCROLL_AREA_END_X, MESSAGE_SCROLL_AREA_END_Y,
-								MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageScrollBarCallBack );
-	#else
-		MSYS_DefineRegion( &gMapMessageScrollBarRegion, MESSAGE_SCROLL_AREA_START_X, MESSAGE_SCROLL_AREA_START_Y,
-								MESSAGE_SCROLL_AREA_END_X, MESSAGE_SCROLL_AREA_END_Y,
-								MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageScrollBarCallBack );
-	#endif
-	const UINT16 x = MESSAGE_BOX_X;
-	const UINT16 y = MESSAGE_BOX_Y;
-	const UINT16 w = MESSAGE_BOX_W;
-	const UINT16 h = MESSAGE_BOX_H;
-	MSYS_DefineRegion(&MapMessageBoxRegion, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageBoxCallBack);
+#ifdef JA2DEMO
+	const INT8 prio = MSYS_PRIORITY_HIGHEST;
+#else
+	const INT8 prio = MSYS_PRIORITY_NORMAL;
+#endif
+	{
+		const UINT16 x = MESSAGE_SCROLL_AREA_START_X;
+		const UINT16 y = MESSAGE_SCROLL_AREA_START_Y;
+		const UINT16 w = MESSAGE_SCROLL_AREA_WIDTH;
+		const UINT16 h = MESSAGE_SCROLL_AREA_HEIGHT;
+		MSYS_DefineRegion(&gMapMessageScrollBarRegion, x, y, x + w, y + h, prio, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageScrollBarCallBack);
+	}
+	{
+		const UINT16 x = MESSAGE_BOX_X;
+		const UINT16 y = MESSAGE_BOX_Y;
+		const UINT16 w = MESSAGE_BOX_W;
+		const UINT16 h = MESSAGE_BOX_H;
+		MSYS_DefineRegion(&MapMessageBoxRegion, x, y, x + w, y + h, prio, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenMessageBoxCallBack);
+	}
 }
 
 
