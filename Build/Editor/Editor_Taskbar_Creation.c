@@ -30,8 +30,9 @@ static void InitEditorItemStatsButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
-	const INT32 btn = CreateSimpleButton(x, y, gfx, MSYS_PRIORITY_NORMAL, click);
+	const INT32 btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, y, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
+	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
 	SetButtonFastHelpText(btn, help);
 }
 

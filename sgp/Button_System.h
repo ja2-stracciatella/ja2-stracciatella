@@ -182,13 +182,6 @@ INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GU
 
 INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
-/* A hybrid of QuickCreateButton.  Takes a lot less parameters, but makes more
- * assumptions.  It self manages the loading, and deleting of the image.  The
- * size of the image determines the size of the button.  It also uses the
- * default move callback which emulates Win95.
- */
-INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
-
 INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates an Iconic type button.

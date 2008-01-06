@@ -800,28 +800,6 @@ INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT3
 }
 
 
-INT32 CreateSimpleButton(INT32 x, INT32 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
-{
-	AssertMsg(filename != NULL, "Attempting to CreateSimpleButton with null filename.");
-
-	INT32 ButPic = LoadButtonImage(filename, -1, 1, 2, 3, 4);
-	if (ButPic == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Can't load button image");
-		return BUTTON_NO_SLOT;
-	}
-
-	INT32 ButNum = QuickCreateButton(ButPic, x, y, Priority, ClickCallback);
-	AssertMsg(ButNum != BUTTON_NO_SLOT, "Failed to CreateSimpleButton.");
-
-	ButtonList[ButNum]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
-
-	SpecifyDisabledButtonStyle(ButNum, DISABLED_STYLE_SHADED);
-
-	return ButNum;
-}
-
-
 INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
