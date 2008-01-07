@@ -6583,7 +6583,7 @@ static void DemoEndOKCallback(UINT8 bExitCode)
 	if ( gMercProfiles[ GABBY ].bLife == 0 )
 	{
 		// Bring up dialogue box...
-		DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_TOO_BAD_YOU_KILLED_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, NULL, NULL );
+		DoMessageBox(MSG_BOX_BASIC_STYLE, str_too_bad_you_killed_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 	}
 }
 
@@ -6596,7 +6596,7 @@ void HandleEndDemoInCreatureLevel(void)
 		if ( FindSoldierByProfileID( DYNAMO, TRUE ) && NumCapableEnemyInSector( ) == 0 )
 		{
 			// Bring up dialogue box...
-			DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_GO_SEE_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, str_go_see_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL);
 		}
 	}
 	else if ( gbWorldSectorZ == 2 )
@@ -6604,7 +6604,7 @@ void HandleEndDemoInCreatureLevel(void)
 		if ( NumCapableEnemyInSector( ) == 0 )
 		{
 			// Bring up dialogue box...
-			DoMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_GO_SEE_GABBY ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL );
+			DoMessageBox(MSG_BOX_BASIC_STYLE, str_go_see_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL);
 		}
 	}
 }

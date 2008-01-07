@@ -331,7 +331,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 
 #ifdef JA2DEMO
-	SetRegionFastHelpText( &(gExitDialog.SingleRegion), pMessageStrings[ MSG_STRATEGIC_EXIT_GUI_DEMO ] );
+	SetRegionFastHelpText(&gExitDialog.SingleRegion, str_strategic_exit_gui_demo);
 #endif
 
 	MSYS_DefineRegion( &(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12), MSYS_PRIORITY_HIGHEST,

@@ -185,10 +185,6 @@ enum
 	MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL,
 	MSG_OPENED,
 	MSG_CLOSED,
-	#ifdef JA2DEMO
-	MSG_GO_SEE_GABBY,
-	MSG_TOO_BAD_YOU_KILLED_GABBY,
-	#endif
 	MSG_LOWDISKSPACE_WARNING,
 	MSG_HIRED_MERC,
 	MSG_MERC_CAUGHT_ITEM,
@@ -216,10 +212,6 @@ enum
 	MSG_CANT_GO_DOWN,
 	MSG_ENTERING_LEVEL,
 	MSG_LEAVING_BASEMENT,
-	#ifdef JA2DEMO
-		MSG_STRATEGIC_EXIT_GUI_DEMO,
-		MSG_OVERHEAD_MAP_DISABLED,
-	#endif
 	MSG_DASH_S,				// the old 's
 	MSG_TACKING_MODE_OFF,
 	MSG_TACKING_MODE_ON,
@@ -1350,6 +1342,10 @@ extern const wchar_t str_arrival_rerouted[];
 
 #ifdef JA2DEMO
 extern const wchar_t str_disabled_in_demo[];
+extern const wchar_t str_go_see_gabby[];
+extern const wchar_t str_too_bad_you_killed_gabby[];
+extern const wchar_t str_strategic_exit_gui_demo[];
+extern const wchar_t str_overhead_map_disabled[];
 #endif
 
 #ifdef JA2DEMOADS

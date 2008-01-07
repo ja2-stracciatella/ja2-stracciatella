@@ -502,13 +502,11 @@ static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
 void GoIntoOverheadMap( )
 {
 #ifdef JA2DEMO
-
-	if ( gfCaves )
+	if (gfCaves)
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_OVERHEAD_MAP_DISABLED ] );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_overhead_map_disabled);
 		return;
 	}
-
 #endif
 
 	gfInOverheadMap = TRUE;

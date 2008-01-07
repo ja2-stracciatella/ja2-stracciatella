@@ -3335,10 +3335,6 @@ const wchar_t* pMessageStrings[] =
 	L"Ta pozycja zarezerwowana jest na szybkie zapisy wykonywane podczas gry kombinacją klawiszy ALT+S.",
 	L"Otw.",
 	L"Zamkn.",
-#ifdef JA2DEMO
-	L"Tu już wszystko załatwione. Może czas spotkać się z Gabby'm.",
-	L"Nie trzeba było go zabijać.",
-#endif
 	L"Brak miejsca na dysku twardym.  Na dysku wolne jest %ls MB, a wymagane jest przynajmniej %ls MB.",
 	L"Najęto - %ls z A.I.M.",
 	L"%ls złapał(a) %ls",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
@@ -3388,17 +3384,6 @@ const wchar_t* pMessageStrings[] =
 	L"Nie ma już niższych poziomów...",
 	L"Wejście na %d poziom pod ziemią...",
 	L"Wyjście z podziemii...",
-
-	#ifdef JA2DEMO
-
-	//For the demo, the sector exit interface, you'll be able to split your teams up, but the demo
-	//has this feature disabled.  This string is fast help text that appears over "single" button.
-	L"W pełnej wersji gry będzie można dzielić oddziały,\nale w wersji demo jest to niemożliwe.",
-
-	//The overhead map is a map of the entire sector, which you can go into anytime, except in the demo.
-	L"Ogólna mapa sektora jest niedostępna w wersji demo.",
-
-	#endif
 
 	L" - ",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
 	L"Automatyczne centrowanie ekranu wyłączone.",
@@ -3770,7 +3755,17 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been sm
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
 #ifdef JA2DEMO
-const wchar_t str_disabled_in_demo[] = L"Przykro nam, ale ta opcja jest wyłączona w wersji demo."; // informs player this option/button has been disabled in the demo
+/* informs player this option/button has been disabled in the demo */
+const wchar_t str_disabled_in_demo[]         = L"Przykro nam, ale ta opcja jest wyłączona w wersji demo.";
+const wchar_t str_go_see_gabby[]             = L"Tu już wszystko załatwione. Może czas spotkać się z Gabby'm.";
+const wchar_t str_too_bad_you_killed_gabby[] = L"Nie trzeba było go zabijać.";
+/* For the demo, the sector exit interface, you'll be able to split your teams
+ * up, but the demo has this feature disabled.  This string is fast help text
+ * that appears over "single" button. */
+const wchar_t str_strategic_exit_gui_demo[]  = L"W pełnej wersji gry będzie można dzielić oddziały,\nale w wersji demo jest to niemożliwe.";
+/* The overhead map is a map of the entire sector, which you can go into
+ * anytime, except in the demo. */
+const wchar_t str_overhead_map_disabled[]    = L"Ogólna mapa sektora jest niedostępna w wersji demo.";
 #endif
 
-#endif //POLISH
+#endif

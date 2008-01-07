@@ -3354,10 +3354,6 @@ const wchar_t* pMessageStrings[] =
 	L"Эта ячейка предназначена для быстрого сохранения игры (с помощью ALT+S).",
 	L"Открытая", //doors definitions
 	L"Закрытая", //doors definitions
-#ifdef JA2DEMO
-	L"С этим покончено. Может, стоит повидаться с Габби?",
-	L"Жаль правда, что вы убили его.",
-#endif
 	L"У вас кончается дисковое пространство. У вас осталось %lsМБ свободных, а для игры требуется %lsMБ.",
 	L"%ls нанят(а) в AIM",
 	L"%ls ловит %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
@@ -3407,17 +3403,6 @@ const wchar_t* pMessageStrings[] =
 	L"Ниже уровней нет...",
 	L"Входим в подвальный уровень %d...",
 	L"Уходим из подвала...",
-
-	#ifdef JA2DEMO
-
-	//For the demo, the sector exit interface, you'll be able to split your teams up, but the demo
-	//has this feature disabled.  This string is fast help text that appears over "single" button.
-	L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.",
-
-	//The overhead map is a map of the entire sector, which you can go into anytime, except in the demo.
-	L"Общая карта в демо-версии отсутствует.",
-
-	#endif
 
 	L".",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
 	L"Режим слежения выключен.",
@@ -3787,7 +3772,17 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls: в бронежилете р
 const wchar_t str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
 
 #ifdef JA2DEMO
-const wchar_t str_disabled_in_demo[] = L"Извините. В демо версии это отключено."; // informs player this option/button has been disabled in the demo
+/* informs player this option/button has been disabled in the demo */
+const wchar_t str_disabled_in_demo[]         = L"Извините. В демо версии это отключено.";
+const wchar_t str_go_see_gabby[]             = L"С этим покончено. Может, стоит повидаться с Габби?";
+const wchar_t str_too_bad_you_killed_gabby[] = L"Жаль правда, что вы убили его.";
+/* For the demo, the sector exit interface, you'll be able to split your teams
+ * up, but the demo has this feature disabled.  This string is fast help text
+ * that appears over "single" button. */
+const wchar_t str_strategic_exit_gui_demo[]  = L"В полной игре вы сможете разделять\nкоманду, но не в демо версии.";
+/* The overhead map is a map of the entire sector, which you can go into
+ * anytime, except in the demo. */
+const wchar_t str_overhead_map_disabled[]    = L"Общая карта в демо-версии отсутствует.";
 #endif
 
 #endif

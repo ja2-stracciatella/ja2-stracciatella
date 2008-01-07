@@ -3335,10 +3335,6 @@ const wchar_t *pMessageStrings[] =
 	L"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
 	L"Opened",
 	L"Closed",
-#ifdef JA2DEMO
-	L"You're all done down here. Maybe you should go see Gabby.",
-	L"Too bad you killed him.",
-#endif
 	L"You are running low on disk space.  You only have %lsMB free and Jagged Alliance 2 requires %lsMB.",
 	L"Hired %ls from AIM",
 	L"%ls has caught %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
@@ -3388,17 +3384,6 @@ const wchar_t *pMessageStrings[] =
 	L"There are no lower levels...",
 	L"Entering basement level %d...",
 	L"Leaving basement...",
-
-	#ifdef JA2DEMO
-
-	//For the demo, the sector exit interface, you'll be able to split your teams up, but the demo
-	//has this feature disabled.  This string is fast help text that appears over "single" button.
-	L"In the full game, you'll be able to separate\nyour team, but not in the demo.",
-
-	//The overhead map is a map of the entire sector, which you can go into anytime, except in the demo.
-	L"Overhead map disabled for Demo.",
-
-	#endif
 
 	L"'s",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
 	L"Follow mode OFF.",
@@ -3768,7 +3753,17 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been sm
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied.";
 
 #ifdef JA2DEMO
-const wchar_t str_disabled_in_demo[] = L"Sorry. This option has been disabled in this demo."; // informs player this option/button has been disabled in the demo
+/* informs player this option/button has been disabled in the demo */
+const wchar_t str_disabled_in_demo[]         = L"Sorry. This option has been disabled in this demo.";
+const wchar_t str_go_see_gabby[]             = L"You're all done down here. Maybe you should go see Gabby.";
+const wchar_t str_too_bad_you_killed_gabby[] = L"Too bad you killed him.";
+/* For the demo, the sector exit interface, you'll be able to split your teams
+ * up, but the demo has this feature disabled.  This string is fast help text
+ * that appears over "single" button. */
+const wchar_t str_strategic_exit_gui_demo[]  = L"In the full game, you'll be able to separate\nyour team, but not in the demo.";
+/* The overhead map is a map of the entire sector, which you can go into
+ * anytime, except in the demo. */
+const wchar_t str_overhead_map_disabled[]    = L"Overhead map disabled for Demo.";
 #endif
 
-#endif //ENGLISH
+#endif
