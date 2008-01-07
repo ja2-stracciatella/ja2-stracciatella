@@ -3318,9 +3318,6 @@ const wchar_t* pMessageStrings[] =
 	L"Jour",
 	L"Mercs",
 	L"Vide", //An empty save game slot
-	L"Démo",				//Demo of JA2
-	L"Debug",				//State of development of a project (JA2) that is a debug build
-	L"Version",			//Release build for JA2
 	L"bpm",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
 	L"min",					//Abbreviation for minute.
 	L"m",						//One character abbreviation for meter (metric distance measurement unit).

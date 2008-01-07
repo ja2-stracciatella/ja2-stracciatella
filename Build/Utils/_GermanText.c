@@ -3148,9 +3148,6 @@ const wchar_t *pMessageStrings[] =
 	L"Tag",
 	L"Söldner",
 	L"Leerer Slot", //An empty save game slot
-	L"Demo",				//Demo of JA2
-	L"Debug",				//State of development of a project (JA2) that is a debug build
-	L"Veröffentlichung",			//Release build for JA2
 	L"KpM",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
 	L"min",					//Abbreviation for minute.
 	L"m",						//One character abbreviation for meter (metric distance measurement unit).
