@@ -3853,13 +3853,6 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						fShowTownInfo = FALSE;
 						CreateDestroyScreenMaskForAssignmentAndContractMenus( );
 					}
-					else if(  fShowDescriptionFlag )
-					{
-						if( gMPanelRegion.Cursor != EXTERN_CURSOR )
-						{
-							DeleteItemDescriptionBox( );
-						}
-					}
 					else if( InKeyRingPopup( ) == TRUE )
 					{
 						DeleteKeyRingPopup( );
