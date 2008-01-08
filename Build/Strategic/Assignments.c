@@ -4997,6 +4997,27 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 }
 
 
+static void HideBoxIfShown(PopUpBox* const box)
+{
+	if (!IsBoxShown(box)) return;
+
+	HideBox(box);
+	fTeamPanelDirty     = TRUE;
+	gfRenderPBInterface = TRUE;
+}
+
+
+static void HideBoxIfShownMap(PopUpBox* const box)
+{
+	if (!IsBoxShown(box)) return;
+
+	HideBox(box);
+	fTeamPanelDirty     = TRUE;
+	fMapPanelDirty      = TRUE;
+	gfRenderPBInterface = TRUE;
+}
+
+
 static void CreateDestroyMouseRegionsForTrainingMenu(void);
 static void CreateDestroyMouseRegionsForAttributeMenu(void);
 static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox);
@@ -5053,53 +5074,15 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		CreateDestroyMouseRegionForRepairMenu( );
 
 		// hide all boxes being shown
-		if ( IsBoxShown( ghEpcBox ) )
-		{
-			HideBox( ghEpcBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		if ( IsBoxShown( ghAssignmentBox ) )
-		{
-			HideBox( ghAssignmentBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		if ( IsBoxShown( ghTrainingBox ) )
-		{
-			HideBox( ghTrainingBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		if ( IsBoxShown( ghRepairBox ) )
-		{
-			HideBox( ghRepairBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		if ( IsBoxShown( ghAttributeBox ) )
-		{
-			HideBox( ghAttributeBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		if ( IsBoxShown( ghVehicleBox ) )
-		{
-			HideBox( ghVehicleBox );
-			fTeamPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
+		HideBoxIfShown(ghEpcBox);
+		HideBoxIfShown(ghAssignmentBox);
+		HideBoxIfShown(ghTrainingBox);
+		HideBoxIfShown(ghRepairBox);
+		HideBoxIfShown(ghAttributeBox);
+		HideBoxIfShown(ghVehicleBox);
 
 		// do we really want ot hide this box?
-		if( fShowContractMenu == FALSE )
-		{
-			if ( IsBoxShown( ghRemoveMercAssignBox ) )
-			{
-				HideBox(ghRemoveMercAssignBox);
-				fTeamPanelDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-			}
-		}
+		if (!fShowContractMenu) HideBoxIfShown(ghRemoveMercAssignBox);
 		//HideBox( ghSquadBox );
 
 
@@ -5154,14 +5137,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	}
 	else
 	{
-		if( IsBoxShown( ghTrainingBox ) )
-		{
-			HideBox( ghTrainingBox );
-			fTeamPanelDirty = TRUE;
-			fMapPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		//	SetRenderFlags(RENDER_FLAG_FULL);
-		}
+		HideBoxIfShownMap(ghTrainingBox);
 	}
 
 	// REPAIR menu
@@ -5172,15 +5148,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	}
 	else
 	{
-		// hide box
-		if( IsBoxShown( ghRepairBox ) )
-		{
-			HideBox( ghRepairBox );
-			fTeamPanelDirty = TRUE;
-			fMapPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		//	SetRenderFlags(RENDER_FLAG_FULL);
-		}
+		HideBoxIfShownMap(ghRepairBox);
 	}
 
 	// ATTRIBUTE menu
@@ -5191,15 +5159,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	}
 	else
 	{
-		if( IsBoxShown( ghAttributeBox ) )
-		{
-			HideBox( ghAttributeBox );
-			fTeamPanelDirty     = TRUE;
-			fMapPanelDirty      = TRUE;
-			gfRenderPBInterface = TRUE;
-		//	SetRenderFlags(RENDER_FLAG_FULL);
-		}
-
+		HideBoxIfShownMap(ghAttributeBox);
 	}
 
 	// VEHICLE menu
@@ -5209,14 +5169,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	}
 	else
 	{
-		if( IsBoxShown( ghVehicleBox ) )
-		{
-			HideBox( ghVehicleBox );
-			fTeamPanelDirty     = TRUE;
-			fMapPanelDirty      = TRUE;
-			gfRenderPBInterface = TRUE;
-		//	SetRenderFlags(RENDER_FLAG_FULL);
-		}
+		HideBoxIfShownMap(ghVehicleBox);
 	}
 
 	CreateDestroyMouseRegionForVehicleMenu( );
