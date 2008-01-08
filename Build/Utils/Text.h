@@ -1213,8 +1213,7 @@ enum
 
 	GIO_GAME_SAVE_STYLE_TEXT,
 	GIO_SAVE_ANYWHERE_TEXT,
-	GIO_IRON_MAN_TEXT,
-	GIO_DISABLED_FOR_THE_DEMO_TEXT,
+	GIO_IRON_MAN_TEXT
 };
 extern const wchar_t *gzGIOScreenText[];
 
@@ -1341,6 +1340,7 @@ extern const wchar_t str_ceramic_plates_smashed[];
 extern const wchar_t str_arrival_rerouted[];
 
 #ifdef JA2DEMO
+extern const wchar_t str_disabled_for_the_demo[];
 extern const wchar_t str_disabled_in_demo[];
 extern const wchar_t str_go_see_gabby[];
 extern const wchar_t str_too_bad_you_killed_gabby[];

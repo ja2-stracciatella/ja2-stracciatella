@@ -3253,8 +3253,7 @@ const wchar_t *gzGIOScreenText[] =
 	L"Cancel",
 	L"Extra Difficulty",
 	L"Save Anytime",
-	L"Iron Man",
-	L"Disabled for Demo",
+	L"Iron Man"
 };
 
 const wchar_t *pDeliveryLocationStrings[] =
@@ -3753,6 +3752,7 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been sm
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied.";
 
 #ifdef JA2DEMO
+const wchar_t str_disabled_for_the_demo[]    = L"Disabled for Demo";
 /* informs player this option/button has been disabled in the demo */
 const wchar_t str_disabled_in_demo[]         = L"Sorry. This option has been disabled in this demo.";
 const wchar_t str_go_see_gabby[]             = L"You're all done down here. Maybe you should go see Gabby.";

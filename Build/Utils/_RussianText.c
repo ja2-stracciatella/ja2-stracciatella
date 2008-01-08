@@ -3272,8 +3272,7 @@ const wchar_t* gzGIOScreenText[] =
 	L"Отмена",
 	L"Дополнительная сложность",
 	L"Сохранение где угодно",
-	L"СТАЛЬНАЯ ВОЛЯ",
-	L"Отключено в демо-версии",
+	L"СТАЛЬНАЯ ВОЛЯ"
 };
 
 const wchar_t* pDeliveryLocationStrings[] =
@@ -3772,6 +3771,7 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls: в бронежилете р
 const wchar_t str_arrival_rerouted[] = L"Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
 
 #ifdef JA2DEMO
+const wchar_t str_disabled_for_the_demo[]    = L"Отключено в демо-версии";
 /* informs player this option/button has been disabled in the demo */
 const wchar_t str_disabled_in_demo[]         = L"Извините. В демо версии это отключено.";
 const wchar_t str_go_see_gabby[]             = L"С этим покончено. Может, стоит повидаться с Габби?";

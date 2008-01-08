@@ -3253,8 +3253,7 @@ const wchar_t* gzGIOScreenText[] =
 	L"Anuluj",
 	L"Dodatkowe opcje",
 	L"Nielimitowany czas",
-	L"Tury limitowane czasowo",
-	L"Nie działa w wersji demo",
+	L"Tury limitowane czasowo"
 };
 
 const wchar_t* pDeliveryLocationStrings[] =
@@ -3755,6 +3754,7 @@ const wchar_t str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been sm
 const wchar_t str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
 
 #ifdef JA2DEMO
+const wchar_t str_disabled_for_the_demo[]    = L"Nie działa w wersji demo";
 /* informs player this option/button has been disabled in the demo */
 const wchar_t str_disabled_in_demo[]         = L"Przykro nam, ale ta opcja jest wyłączona w wersji demo.";
 const wchar_t str_go_see_gabby[]             = L"Tu już wszystko załatwione. Może czas spotkać się z Gabby'm.";

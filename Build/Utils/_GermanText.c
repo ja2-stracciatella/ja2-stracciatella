@@ -3084,8 +3084,7 @@ const wchar_t *gzGIOScreenText[] =
 	L"Abbrechen",
 	L"Extraschwer",
 	L"Speichern jederzeit möglich",
-	L"Iron Man",
-	L"Option nicht verfügbar",
+	L"Iron Man"
 };
 
 const wchar_t *pDeliveryLocationStrings[] =
@@ -3575,6 +3574,7 @@ const wchar_t str_ceramic_plates_smashed[] = L"%lss Keramikplatten wurden zertr�
 const wchar_t str_arrival_rerouted[] = L"Die Ankunft neuer Rekruten wurde nach Sektor %ls umgeleitet, da der geplante Ankunftsort in Sektor %ls vom Feind besetzt ist.";
 
 #ifdef JA2DEMO
+const wchar_t str_disabled_for_the_demo[]    = L"Option nicht verfügbar";
 /* informs player this option/button has been disabled in the demo */
 const wchar_t str_disabled_in_demo[]         = L"Sorry. Diese Option gibt es in der Demo nicht.";
 const wchar_t str_go_see_gabby[]             = L"Hier unten sind Sie fertig. Vielleicht sollten Sie mit Gabby reden.";
