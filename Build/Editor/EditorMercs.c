@@ -287,133 +287,71 @@ void EntryInitEditorMercsInfo()
 	gfCanEditMercs = TRUE;
 }
 
-enum
+
+void ProcessMercEditing(void)
 {
-	HAIR_PAL,
-	SKIN_PAL,
-	VEST_PAL,
-	PANTS_PAL
-};
+	if (iEditMercMode != EDIT_MERC_NEXT_COLOR) return;
 
-void ProcessMercEditing()
-{
-	UINT8 ubType, ubPaletteRep;
-	if ( iEditMercMode == EDIT_MERC_NONE )
+	// Handle changes to the merc colors
+	SOLDIERTYPE* const s = GetSoldier(gsSelectedMercID);
+	char* soldier_pal;
+	char* placement_pal;
+	UINT8 ubType;
+	switch (iEditWhichStat)
 	{
-		return;
-	}
-	SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
-
-	switch ( iEditMercMode )
-	{
-		case EDIT_MERC_NEXT_COLOR:
-			// Handle changes to the merc colors
-			switch ( iEditWhichStat )
-			{
-				case 0:
-					ubType = EDIT_COLOR_HEAD;
-					GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep );
-
-					ubPaletteRep--;
-					if ( (ubPaletteRep < (UINT8)iEditColorStart[ubType]) || (ubPaletteRep > ((UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType])) )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType] - 1;
-
-					SET_PALETTEREP_ID( pSoldier->HeadPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->HeadPal, pSoldier->HeadPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-				case 1:
-					ubType = EDIT_COLOR_HEAD;
-					GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep );
-
-					ubPaletteRep++;
-					if ( ubPaletteRep >= ((UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType]) )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType];
-
-					SET_PALETTEREP_ID( pSoldier->HeadPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->HeadPal, pSoldier->HeadPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-
-				case 2:
-					ubType = EDIT_COLOR_SKIN;
-					GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep );
-
-					ubPaletteRep--;
-					if ( ubPaletteRep < (UINT8)iEditColorStart[ubType] )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType] - 1;
-
-					SET_PALETTEREP_ID( pSoldier->SkinPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->SkinPal, pSoldier->SkinPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-				case 3:
-					ubType = EDIT_COLOR_SKIN;
-					GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep );
-
-					ubPaletteRep++;
-					if ( ubPaletteRep >= ((UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType]) )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType];
-
-					SET_PALETTEREP_ID( pSoldier->SkinPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->SkinPal, pSoldier->SkinPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-
-				case 4:
-					ubType = EDIT_COLOR_VEST;
-					GetPaletteRepIndexFromID( pSoldier->VestPal, &ubPaletteRep );
-
-					ubPaletteRep--;
-					if ( ubPaletteRep < (UINT8)iEditColorStart[ubType] )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType] - 1;
-
-					SET_PALETTEREP_ID( pSoldier->VestPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->VestPal, pSoldier->VestPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-				case 5:
-					ubType = EDIT_COLOR_VEST;
-					GetPaletteRepIndexFromID( pSoldier->VestPal, &ubPaletteRep );
-
-					ubPaletteRep++;
-					if ( ubPaletteRep >= ((UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType]) )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType];
-
-					SET_PALETTEREP_ID( pSoldier->VestPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->VestPal, pSoldier->VestPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-
-				case 6:
-					ubType = EDIT_COLOR_PANTS;
-					GetPaletteRepIndexFromID( pSoldier->PantsPal, &ubPaletteRep );
-
-					ubPaletteRep--;
-					if ( ubPaletteRep < (UINT8)iEditColorStart[ubType] )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType] - 1;
-
-					SET_PALETTEREP_ID( pSoldier->PantsPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-				case 7:
-					ubType = EDIT_COLOR_PANTS;
-					GetPaletteRepIndexFromID( pSoldier->PantsPal, &ubPaletteRep );
-
-					ubPaletteRep++;
-					if ( ubPaletteRep >= ((UINT8)iEditColorStart[ubType] + gubpNumReplacementsPerRange[ubType]) )
-						ubPaletteRep = (UINT8)iEditColorStart[ubType];
-
-					SET_PALETTEREP_ID( pSoldier->PantsPal, gpPalRep[ ubPaletteRep ].ID );
-					strcpy(gpSelected->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
-					CreateSoldierPalettes( pSoldier );
-					break;
-			}
-			iEditMercMode = EDIT_MERC_NONE;
+		case 0:
+		case 1:
+			ubType        = EDIT_COLOR_HEAD;
+			soldier_pal   = s->HeadPal;
+			placement_pal = gpSelected->pDetailedPlacement->HeadPal;
 			break;
+
+		case 2:
+		case 3:
+			ubType        = EDIT_COLOR_SKIN;
+			soldier_pal   = s->SkinPal;
+			placement_pal = gpSelected->pDetailedPlacement->SkinPal;
+			break;
+
+		case 4:
+		case 5:
+			ubType        = EDIT_COLOR_VEST;
+			soldier_pal   = s->VestPal;
+			placement_pal = gpSelected->pDetailedPlacement->VestPal;
+			break;
+
+		case 6:
+		case 7:
+			ubType        = EDIT_COLOR_PANTS;
+			soldier_pal   = s->PantsPal;
+			placement_pal = gpSelected->pDetailedPlacement->PantsPal;
+			break;
+
+		default:
+			iEditMercMode = EDIT_MERC_NONE;
+			return;
 	}
+
+	UINT8 ubPaletteRep;
+	GetPaletteRepIndexFromID(soldier_pal, &ubPaletteRep);
+	const INT32 start = iEditColorStart[ubType];
+	const UINT8 range = gubpNumReplacementsPerRange[ubType];
+	if (iEditWhichStat & 1)
+	{
+		ubPaletteRep = (ubPaletteRep < start + range - 1 ? ubPaletteRep + 1 : start);
+	}
+	else
+	{
+		ubPaletteRep = (ubPaletteRep > start ? ubPaletteRep - 1 : start + range - 1);
+	}
+
+	SET_PALETTEREP_ID(soldier_pal, gpPalRep[ubPaletteRep].ID);
+	strcpy(placement_pal, soldier_pal);
+	CreateSoldierPalettes(s);
+
+	iEditMercMode = EDIT_MERC_NONE;
 }
+
 
 void AddMercToWorld( INT32 iMapIndex )
 {
