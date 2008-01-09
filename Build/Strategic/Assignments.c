@@ -308,24 +308,6 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 }
 
 
-static BOOLEAN BasicCanCharacterAssignment(const SOLDIERTYPE* const pSoldier, const BOOLEAN fNotInCombat)
-{
-	// global conditions restricting all assignment changes
-	if ( SectorIsImpassable( (INT16) SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ) )
-	{
-		return( FALSE );
-	}
-
-	if ( fNotInCombat && pSoldier->bActive && pSoldier->bInSector && gTacticalStatus.fEnemyInSector )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-
-
 /*
 BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 {
@@ -373,56 +355,42 @@ static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN CharacterIsBetweenSectors(const SOLDIERTYPE* s);
-
-
-static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(SOLDIERTYPE* pSoldier)
+typedef enum AssignmentConditions
 {
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
+	AC_CONSCIOUS                     = 1U << 0,
+	AC_NOT_COMBAT                    = 1U << 1,
+	AC_NOT_EPC                       = 1U << 2,
+	AC_NOT_IN_HELI_IN_HOSTILE_SECTOR = 1U << 3,
+	AC_NOT_MECHANICAL                = 1U << 4,
+	AC_NOT_MOVING                    = 1U << 5,
+	AC_NOT_UNDERGROUND               = 1U << 6
+} AssignmentConditions;
 
+
+static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, AssignmentConditions c)
+{
+	if (SectorIsImpassable(SECTOR(s->sSectorX, s->sSectorY)))                            return FALSE;
+	if (c & AC_CONSCIOUS && s->bLife < OKLIFE)                                           return FALSE;
+	if (c & AC_NOT_COMBAT && s->bInSector && gTacticalStatus.fEnemyInSector)             return FALSE;
+	if (c & AC_NOT_EPC && s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)                      return FALSE;
+	if (c & AC_NOT_IN_HELI_IN_HOSTILE_SECTOR && IsSoldierInHelicopterInHostileSector(s)) return FALSE;
+	if (c & AC_NOT_MECHANICAL && (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)))  return FALSE;
+	if (c & AC_NOT_MOVING && (IsCharacterInTransit(s) || s->fBetweenSectors))            return FALSE;
+	if (c & AC_NOT_UNDERGROUND && s->bSectorZ != 0)                                      return FALSE;
+	return TRUE;
+}
+
+
+static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(const SOLDIERTYPE* const s)
+{
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	// make sure character is alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	// has medical skill?
-	if( pSoldier -> bMedical <= 0 )
-	{
-		// no skill whatsoever
-		return ( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		// epcs can't do this
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	return( TRUE );
+	return FALSE;
+#else
+	return
+		s->bMedical > 0 &&
+		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
+#endif
 }
 
 
@@ -613,48 +581,11 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 }
 
 
-static BOOLEAN BasicCanCharacterRepair(SOLDIERTYPE* pSoldier)
+static BOOLEAN BasicCanCharacterRepair(const SOLDIERTYPE* const s)
 {
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// make sure character is alive and oklife
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	// has repair skill?
-	if( pSoldier -> bMechanical <= 0 )
-	{
-		// no skill whatsoever
-		return ( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		// epcs can't do this
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	return( TRUE );
+	return
+		s->bMechanical > 0 &&
+		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
 }
 
 
@@ -679,11 +610,6 @@ static BOOLEAN CanCharacterRepairButDoesntHaveARepairkit(SOLDIERTYPE* pSoldier)
 // check that character is alive, oklife, has repair skill, and equipment, etc.
 static BOOLEAN CanCharacterRepair(SOLDIERTYPE* pSoldier)
 {
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
 	// this assignment is no go in the demo
 	#ifdef JA2DEMO
 		return FALSE;
@@ -715,138 +641,40 @@ static BOOLEAN CanCharacterRepair(SOLDIERTYPE* pSoldier)
 
 
 // can character be set to patient?
-static BOOLEAN CanCharacterPatient(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 {
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// Robot must be REPAIRED to be "healed", not doctored
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-	{
-		return ( FALSE );
-	}
-
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
-	{
-		return ( FALSE );
-	}
-
-	// is character alive and not in perfect health?
-	if( ( pSoldier -> bLife <= 0 ) || ( pSoldier -> bLife == pSoldier -> bLifeMax ) )
-	{
-		// dead or in perfect health
-		return ( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	// alive and can be healed
-	return ( TRUE );
+	return FALSE;
+#else
+	return
+		s->bLife > 0 &&
+		s->bLife != s->bLifeMax &&
+		s->bAssignment != ASSIGNMENT_POW &&
+		AreAssignmentConditionsMet(s, AC_NOT_COMBAT | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING);
+#endif
 }
 
 
 // can this character EVER train militia?
-static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
+static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 {
 	// is the character capable of training a town?
 	// they must be alive/conscious and in the sector with the town
-	BOOLEAN fSamSitePresent = FALSE;
-
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// make sure character is alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
-
-	// is there a town in the character's current sector?
-	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY ) ].bNameId == BLANK_SECTOR )
-	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
-
-		// check if sam site
-		if( fSamSitePresent == FALSE )
-		{
-			// nope
-			return ( FALSE );
-		}
-	}
-
-	if( NumEnemiesInAnySector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) )
-	{
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		// epcs can't do this
-		return( FALSE );
-	}
-
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	// has leadership skill?
-	if( pSoldier -> bLeadership <= 0 )
-	{
-		// no skill whatsoever
-		return ( FALSE );
-	}
-
-
-	// can train militia
-	return( TRUE );
+	return FALSE;
+#else
+	return
+		s->bLeadership > 0 &&
+		(
+			StrategicMap[CALCULATE_STRATEGIC_INDEX(s->sSectorX, s->sSectorY)].bNameId != BLANK_SECTOR || // is there a town?
+			IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ)
+		) &&
+		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
+		/* underground training is not allowed (code doesn't support and it's a reasonable enough limitation) */
+		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+#endif
 }
 
 
@@ -1008,151 +836,43 @@ static INT8 GetTrainingStatValue(const SOLDIERTYPE* const s, const INT8 stat)
 
 
 // can character train stat?..as train self or as trainer?
-static BOOLEAN CanCharacterTrainStat(SOLDIERTYPE* pSoldier, INT8 bStat, BOOLEAN fTrainSelf, BOOLEAN fTrainTeammate)
+static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, const BOOLEAN fTrainSelf, const BOOLEAN fTrainTeammate)
 {
 	// is the character capable of training this stat? either self or as trainer
-
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
+	return FALSE;
+#else
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
+	if (!AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND)) return FALSE;
 
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		// epcs can't do this
-		return( FALSE );
-	}
-
-	const INT8 stat_val = GetTrainingStatValue(pSoldier, bStat);
-	if (stat_val == 0)                                     return FALSE;
-	if (fTrainTeammate && stat_val <  MIN_RATING_TO_TEACH) return FALSE;
-	if (fTrainSelf     && stat_val >= TRAINING_RATING_CAP) return FALSE;
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	// stat is ok and character alive and conscious
-	return( TRUE );
+	const INT8 stat_val = GetTrainingStatValue(s, bStat);
+	return
+		stat_val != 0 &&
+		(!fTrainTeammate || stat_val >= MIN_RATING_TO_TEACH) &&
+		(!fTrainSelf     || stat_val <  TRAINING_RATING_CAP);
+#endif
 }
 
 
 // put character on duty?
-static BOOLEAN CanCharacterOnDuty(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterOnDuty(const SOLDIERTYPE* const s)
 {
 	// can character commit themselves to on duty?
-
-	// only need to be alive and well to do so right now
-	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	if ( !BasicCanCharacterAssignment( pSoldier, FALSE ) )
-	{
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-		// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-
-	// ARM: New rule: can't change squads or exit vehicles between sectors!
-	if( pSoldier -> fBetweenSectors )
-	{
-		return ( FALSE );
-	}
-
-	return( TRUE );
+	return AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
 }
 
 
 // is character capable of practising at all?
-static BOOLEAN CanCharacterPractise(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterPractise(const SOLDIERTYPE* const s)
 {
 	// can character practise right now?
-
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// only need to be alive and well to do so right now
-	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	if( pSoldier -> bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		// epcs can't do this
-		return( FALSE );
-	}
-
-
-	// can practise
-	return( TRUE );
+	return FALSE;
+#else
+	return AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+#endif
 }
 
 
@@ -1343,70 +1063,19 @@ static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhy
 
 
 // put character in vehicle?
-static BOOLEAN CanCharacterVehicle(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
 {
 	// can character enter/leave vehicle?
-
+#ifdef JA2DEMO
 	// this assignment is no go in the demo
-	#ifdef JA2DEMO
-		return FALSE;
-	#endif
-
-	if ( !BasicCanCharacterAssignment( pSoldier, TRUE ) )
-	{
-		return( FALSE );
-	}
-
-	// only need to be alive and well to do so right now
-	// alive and conscious
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return ( FALSE );
-	}
-
-	// character on the move?
-	if( CharacterIsBetweenSectors( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	// underground?
-	if( pSoldier->bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
-
-	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
-
-	// any accessible vehicles in soldier's sector (excludes those between sectors, etc.)
-	if( AnyAccessibleVehiclesInSoldiersSector( pSoldier ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	// have to be in mapscreen (strictly for visual reasons - we don't want them just vanishing if in tactical)
-	if( fInMapMode == FALSE )
-	{
-		return( FALSE );
-	}
-
-	// if we're in BATTLE in the current sector, disallow
-	if ( gTacticalStatus.fEnemyInSector )
-	{
-		if ( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> sSectorY == gWorldSectorY ) && ( pSoldier -> bSectorZ == gbWorldSectorZ) )
-		{
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
+	return FALSE;
+#else
+	return
+		fInMapMode && // strictly for visual reasons - we don't want them just vanishing if in tactical
+		AnyAccessibleVehiclesInSoldiersSector(s) &&
+		(!gTacticalStatus.fEnemyInSector || s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ) && // if we're in BATTLE in the current sector, disallow
+		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+#endif
 }
 
 
@@ -3563,21 +3232,6 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 	fCharacterInfoPanelDirty = TRUE;
 	fTeamPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
-}
-
-
-// is the character between secotrs in mvt
-static BOOLEAN CharacterIsBetweenSectors(const SOLDIERTYPE* const pSoldier)
-{
-	// is the character on the move
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-	else
-	{
-		return( pSoldier -> fBetweenSectors );
-	}
 }
 
 
