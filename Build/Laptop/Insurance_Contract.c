@@ -120,17 +120,17 @@ INT16		gsMaxPlayersOnTeam;
 //link to the varios pages
 MOUSE_REGION    gSelectedInsuranceContractLinkRegion[2];
 
-INT32		guiInsContractPrevButtonImage;
+static BUTTON_PICS* guiInsContractPrevButtonImage;
 static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsContractPrevBackButton;
 
-INT32		guiInsContractNextButtonImage;
+static BUTTON_PICS* guiInsContractNextButtonImage;
 static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiInsContractNextBackButton;
 
 
 //Graphic for Accept, Clear button for form 1
-static INT32 guiInsuranceAcceptClearFormButtonImage;
+static BUTTON_PICS* guiInsuranceAcceptClearFormButtonImage;
 
 
 typedef struct InsuranceInfo
@@ -158,11 +158,11 @@ static void EnterLaptopInitInsuranceContract(void)
 }
 
 
-static INT32 MakeButtonBig(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
+static INT32 MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
 	const INT16 shadow_col = INS_FONT_SHADOW;
-	const INT32 btn  = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	const INT32 btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
 	SpecifyButtonTextOffsets(btn, offset_x, 16, FALSE);
 	return btn;

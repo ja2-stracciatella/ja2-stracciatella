@@ -150,12 +150,12 @@ static SGPVObject* guiGIOMainBackGroundImage;
 // Done Button
 static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason);
 static UINT32 guiGIODoneButton;
-static INT32 giGIODoneBtnImage;
+static BUTTON_PICS* giGIODoneBtnImage;
 
 // Cancel Button
 static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason);
 static UINT32 guiGIOCancelButton;
-static INT32 giGIOCancelBtnImage;
+static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
@@ -249,7 +249,7 @@ UINT32 GameInitOptionsScreenHandle(void)
 }
 
 
-static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
 {
 	INT32 btn = CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH, click);
 	SpecifyButtonSoundScheme(btn, BUTTON_SOUND_SCHEME_BIGSWITCH3);

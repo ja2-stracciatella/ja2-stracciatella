@@ -57,7 +57,7 @@ SGPVObject* guiMercInventoryPanel;
 SGPVObject* guiOmertaMap;
 SGPVSurface* guiMercInvPanelBuffers[9];
 SGPVSurface* guiMercTempBuffer;
-INT32 giEditMercImage[2];
+BUTTON_PICS* giEditMercImage[2];
 SGPVObject* guiExclamation;
 SGPVObject* guiKeyImage;
 

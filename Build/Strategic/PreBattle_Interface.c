@@ -103,7 +103,7 @@ GROUP *gpBattleGroup = NULL;
 MOUSE_REGION PBInterfaceBlanket;
 BOOLEAN gfPreBattleInterfaceActive = FALSE;
 UINT32 iPBButton[3];
-UINT32 iPBButtonImage[3];
+static BUTTON_PICS* iPBButtonImage[3];
 static SGPVObject* uiInterfaceImages;
 BOOLEAN gfRenderPBInterface;
 BOOLEAN	gfPBButtonsHidden;
@@ -400,7 +400,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 	//Create the 3 buttons
 	iPBButtonImage[0] = LoadButtonImage( "INTERFACE/PreBattleButton.sti", -1, 0, -1, 1, -1 );
-	AssertMsg(iPBButtonImage[0] != -1, "Failed to load interface/PreBattleButton.sti");
+	AssertMsg(iPBButtonImage[0] != NULL, "Failed to load interface/PreBattleButton.sti");
 	iPBButtonImage[1] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 	iPBButtonImage[2] = UseLoadedButtonImage( iPBButtonImage[ 0 ], -1, 0, -1, 1, -1 );
 

@@ -270,11 +270,11 @@ enum
 };
 
 
-static INT32 iSMPanelImages[NUM_SM_BUTTON_IMAGES];
-static INT32 iBurstButtonImages[NUM_WEAPON_MODES];
-static INT32 iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
+static BUTTON_PICS* iSMPanelImages[NUM_SM_BUTTON_IMAGES];
+static BUTTON_PICS* iBurstButtonImages[NUM_WEAPON_MODES];
+static BUTTON_PICS* iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 
-static INT32 giSMStealthImages = -1;
+static BUTTON_PICS* giSMStealthImages;
 INT32										giSMStealthButton = -1;
 
 BOOLEAN									gfSwitchPanel = FALSE;
@@ -644,8 +644,8 @@ static void UpdateSMPanel(void)
 	if ( gfUIStanceDifferent )
 	{
 		//Remove old
-		if (giSMStealthButton != -1) RemoveButton(giSMStealthButton);
-		if (giSMStealthImages != -1) UnloadButtonImage(giSMStealthImages);
+		if (giSMStealthButton != -1)   RemoveButton(giSMStealthButton);
+		if (giSMStealthImages != NULL) UnloadButtonImage(giSMStealthImages);
 
 		// Make new
 		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
@@ -676,13 +676,12 @@ static void UpdateSMPanel(void)
 		gpSMCurrentMerc->fCheckForNewlyAddedItems = FALSE;
 	}
 
-
-
 	// Set Disable /Enable UI based on buddy's stats
-	if (ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum != (UINT32) iBurstButtonImages[ gpSMCurrentMerc->bWeaponMode ] )
+	GUI_BUTTON* const burst = ButtonList[iSMPanelButtons[BURSTMODE_BUTTON]];
+	if (burst->image != iBurstButtonImages[gpSMCurrentMerc->bWeaponMode])
 	{
-		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->ImageNum = iBurstButtonImages[ gpSMCurrentMerc->bWeaponMode ];
-		ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags |= BUTTON_DIRTY;
+		burst->image    = iBurstButtonImages[gpSMCurrentMerc->bWeaponMode];
+		burst->uiFlags |= BUTTON_DIRTY;
 	}
 
 	/*
@@ -1049,7 +1048,7 @@ BOOLEAN InitializeSMPanel(void)
 }
 
 
-static BOOLEAN MakeButtonN(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
+static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
 	INT32 btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
@@ -1063,7 +1062,7 @@ static BOOLEAN MakeButtonN(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK
 }
 
 
-static BOOLEAN MakeButtonT(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
+static BOOLEAN MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
 	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
@@ -1095,7 +1094,7 @@ static void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason);
 
 BOOLEAN CreateSMPanelButtons(void)
 {
-	giSMStealthImages = -1;
+	giSMStealthImages = NULL;
 	giSMStealthButton = -1;
 	gfUIStanceDifferent = TRUE;
 	gfAllDisabled	= FALSE;
@@ -1170,8 +1169,8 @@ void RemoveSMPanelButtons(void)
 		UnloadButtonImage(iSMPanelImages[cnt]);
 	}
 
-	if (giSMStealthButton != -1) RemoveButton(giSMStealthButton);
-	if (giSMStealthImages != -1) UnloadButtonImage(giSMStealthImages);
+	if (giSMStealthButton != -1)   RemoveButton(giSMStealthButton);
+	if (giSMStealthImages != NULL) UnloadButtonImage(giSMStealthImages);
 
 	UnloadButtonImage(iBurstButtonImages[WM_NORMAL]);
 	UnloadButtonImage(iBurstButtonImages[WM_BURST]);
@@ -2795,7 +2794,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 }
 
 
-static BOOLEAN MakeButtonTeam(UINT idx, INT32 image, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
+static BOOLEAN MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
 	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;

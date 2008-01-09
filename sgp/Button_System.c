@@ -94,7 +94,7 @@ static INT8 gbDisabledButtonStyle;
 BOOLEAN gfRenderHilights = TRUE;
 
 // Struct definition for the QuickButton pictures.
-typedef struct BUTTON_PICS
+struct BUTTON_PICS
 {
 	HVOBJECT vobj;      // The Image itself
 	INT32    Grayed;    // Index to use for a "Grayed-out" button
@@ -104,7 +104,7 @@ typedef struct BUTTON_PICS
 	INT32    OnHilite;  // Index to use when button is ON w/ hilite on it
 	ButtonDimensions max; // width/height of largest image in use
 	UINT32   fFlags;    // Special image flags
-} BUTTON_PICS;
+};
 
 static BUTTON_PICS ButtonPictures[MAX_BUTTON_PICS];
 
@@ -113,9 +113,9 @@ SGPVSurface* ButtonDestBuffer;
 GUI_BUTTON* ButtonList[MAX_BUTTONS];
 
 
-const ButtonDimensions* GetDimensionsOfButtonPic(UINT16 btn_pic_id)
+const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS* const pics)
 {
-	return &ButtonPictures[btn_pic_id].max;
+	return &pics->max;
 }
 
 
@@ -134,15 +134,14 @@ extern MOUSE_REGION* MSYS_PrevRegion;
 
 
 // Finds an available slot for loading button pictures
-static INT32 FindFreeButtonSlot(void)
+static BUTTON_PICS* FindFreeButtonSlot(void)
 {
 	// Search for a slot
-	for (int slot = 0; slot < MAX_BUTTON_PICS; slot++)
+	for (BUTTON_PICS* i = ButtonPictures; i != endof(ButtonPictures); ++i)
 	{
-		if (ButtonPictures[slot].vobj == NULL) return slot;
+		if (i->vobj == NULL) return i;
 	}
-
-	return BUTTON_NO_SLOT;
+	return NULL;
 }
 
 
@@ -157,10 +156,8 @@ static void SetMaxSize(BUTTON_PICS* const pics, const INT32 img_idx)
 }
 
 
-static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+static void InitButtonImage(BUTTON_PICS* const pics, const HVOBJECT VObj, const UINT32 Flags, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
 {
-	BUTTON_PICS* const pics = &ButtonPictures[UseSlot];
-
 	pics->vobj = VObj;
 
 	// Init the QuickButton image structure with indexes to use
@@ -182,7 +179,7 @@ static void InitButtonImage(UINT32 UseSlot, HVOBJECT VObj, UINT32 Flags, INT32 G
 }
 
 
-INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
 {
 	AssertMsg(filename != NULL, "Attempting to LoadButtonImage() with null filename.");
 
@@ -193,21 +190,21 @@ INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32
 			OnHilite  == BUTTON_NO_IMAGE)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for %s", filename));
-		return BUTTON_NO_SLOT;
+		return NULL;
 	}
 
-	UINT32 UseSlot = FindFreeButtonSlot();
-	if (UseSlot == BUTTON_NO_SLOT)
+	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
+	if (UseSlot == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for %s", filename));
-		return BUTTON_NO_SLOT;
+		return NULL;
 	}
 
 	SGPVObject* const VObj = AddVideoObjectFromFile(filename);
 	if (VObj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s", filename));
-		return BUTTON_NO_SLOT;
+		return NULL;
 	}
 
 	InitButtonImage(UseSlot, VObj, GUI_BTN_NONE, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
@@ -215,7 +212,7 @@ INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32
 }
 
 
-INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
 {
 	if (Grayed    == BUTTON_NO_IMAGE &&
 			OffNormal == BUTTON_NO_IMAGE &&
@@ -223,23 +220,23 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 			OnNormal  == BUTTON_NO_IMAGE &&
 			OnHilite  == BUTTON_NO_IMAGE)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for pre-loaded button image %d", LoadedImg));
-		return -1;
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for pre-loaded button image %p", LoadedImg));
+		return NULL;
 	}
 
-	UINT32 UseSlot = FindFreeButtonSlot();
-	if (UseSlot == BUTTON_NO_SLOT)
+	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
+	if (UseSlot == NULL)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for pre-loaded button image %d", LoadedImg));
-		return -1;
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for pre-loaded button image %p", LoadedImg));
+		return NULL;
 	}
 
 	// Is button image index given valid?
-	const HVOBJECT vobj = ButtonPictures[LoadedImg].vobj;
+	const HVOBJECT vobj = LoadedImg->vobj;
 	if (vobj == NULL)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %d", LoadedImg));
-		return -1;
+		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %p", LoadedImg));
+		return NULL;
 	}
 
 	InitButtonImage(UseSlot, vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
@@ -247,12 +244,8 @@ INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32
 }
 
 
-void UnloadButtonImage(INT32 Index)
+void UnloadButtonImage(BUTTON_PICS* const pics)
 {
-	AssertMsg(0 <= Index && Index < MAX_BUTTON_PICS, String("Attempting to UnloadButtonImage with out of range index %d.", Index));
-
-	BUTTON_PICS* const pics = &ButtonPictures[Index];
-
 #if defined BUTTONSYSTEM_DEBUGGING
 	AssertMsg(pics->vobj != NULL, "Attempting to UnloadButtonImage that has a null vobj (already deleted).");
 #endif
@@ -264,10 +257,9 @@ void UnloadButtonImage(INT32 Index)
 		/* Deleting a non-duplicate, so see if any dups present. if so, then convert
 		 * one of them to an original!
 		 */
-		for (INT32 x = 0; x < MAX_BUTTON_PICS; ++x)
+		for (BUTTON_PICS* other = ButtonPictures; other != endof(ButtonPictures); ++other)
 		{
-			if (x == Index) continue;
-			BUTTON_PICS* const other = &ButtonPictures[x];
+			if (other == pics) continue;
 			if (other->vobj != pics->vobj) continue;
 			if (!(other->fFlags & GUI_BTN_DUPLICATE_VOBJ)) continue;
 
@@ -434,9 +426,9 @@ void UnloadGenericButtonIcon(INT16 GenImg)
 static void ShutdownButtonImageManager(void)
 {
 	// Remove all QuickButton images
-	for (int x = 0; x < MAX_BUTTON_PICS; ++x)
+	for (BUTTON_PICS* i = ButtonPictures; i != endof(ButtonPictures); ++i)
 	{
-		if (ButtonPictures[x].vobj != NULL) UnloadButtonImage(x);
+		if (i->vobj != NULL) UnloadButtonImage(i);
 	}
 
 	// Remove all GenericButton images
@@ -543,7 +535,7 @@ void RemoveButton(INT32 iButtonID)
 		 * disadvantage of wasting more memory if you have lots of buttons using the
 		 * same graphics.
 		 */
-		UnloadButtonImage(b->ImageNum);
+		UnloadButtonImage(b->image);
 	}
 
 	MSYS_RemoveRegion(&b->Area);
@@ -574,7 +566,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason);
 static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
 
 
-static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT16 Top, INT16 Width, INT16 Height, INT8 Priority, GUI_CALLBACK Click, GUI_CALLBACK Move)
+static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const INT16 Top, const INT16 Width, const INT16 Height, const INT8 Priority, const GUI_CALLBACK Click, const GUI_CALLBACK Move)
 {
 	AssertMsg(Left >= 0 && Top >= 0 && Width >= 0 && Height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", Left, Top, Width, Height));
 
@@ -593,7 +585,7 @@ static GUI_BUTTON* AllocateButton(UINT32 ImageNum, UINT32 Flags, INT16 Left, INT
 	}
 
 	b->IDNum                   = BtnID;
-	b->ImageNum                = ImageNum;
+	b->image                   = NULL;
 	b->ClickCallback           = Click;
 	b->MoveCallback            = Move;
 	b->uiFlags                 = BUTTON_DIRTY | BUTTON_ENABLED | Flags;
@@ -671,7 +663,7 @@ INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT1
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(-1, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	b->icon        = GenericButtonIcons[Icon];
@@ -687,7 +679,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* b = AllocateButton(-1, BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
@@ -701,7 +693,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 
 INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	GUI_BUTTON* b = AllocateButton(0xFFFFFFFF, BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* const b = AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	return b->IDNum;
@@ -716,38 +708,37 @@ void SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 }
 
 
-static INT32 QuickCreateButtonInternal(UINT32 Image, INT16 xloc, INT16 yloc, INT32 Type, INT16 Priority, GUI_CALLBACK MoveCallback, GUI_CALLBACK ClickCallback)
+static INT32 QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
 {
-	AssertMsg(0 <= Image && Image < MAX_BUTTON_PICS, String("Attempting to QuickCreateButton with out of range ImageID %d.", Image));
-
 	// Is there a QuickButton image in the given image slot?
-	const BUTTON_PICS* const BtnPic = &ButtonPictures[Image];
-	if (BtnPic->vobj == NULL)
+	if (pics->vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "QuickCreateButton: Invalid button image number");
 		return BUTTON_NO_SLOT;
 	}
 
-	GUI_BUTTON* const b = AllocateButton(Image, (Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, BtnPic->max.w, BtnPic->max.h, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* const b = AllocateButton((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
 	if (b == NULL) return BUTTON_NO_SLOT;
+
+	b->image = pics;
 
 	return b->IDNum;
 }
 
 
-INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+INT32 QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, DefaultMoveCallback, click);
 }
 
 
-INT32 QuickCreateButtonNoMove(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+INT32 QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
 
 
-INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+INT32 QuickCreateButtonToggle(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_NEWTOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
@@ -755,14 +746,14 @@ INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GU
 
 INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
 {
-	INT32 img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
+	BUTTON_PICS* const img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
 	INT32 btn = QuickCreateButton(img, x, y, priority, click);
 	ButtonList[btn]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
 	return btn;
 }
 
 
-INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
+INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, const UINT32 uiFont, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
 	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
@@ -1279,7 +1270,7 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 // Draws a QuickButton type button on the screen.
 static void DrawQuickButton(const GUI_BUTTON* b)
 {
-	const BUTTON_PICS* const pics = &ButtonPictures[b->ImageNum];
+	const BUTTON_PICS* const pics = b->image;
 
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
@@ -1376,7 +1367,7 @@ void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on)
 
 static void DrawCheckBoxButton(const GUI_BUTTON *b)
 {
-	const BUTTON_PICS* const pics = &ButtonPictures[b->ImageNum];
+	const BUTTON_PICS* const pics = b->image;
 
 	INT32 UseImage = 0;
 	if (b->uiFlags & BUTTON_ENABLED)
@@ -1833,8 +1824,8 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	Assert(filename != NULL);
-	INT32 ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
-	if (ButPic == BUTTON_NO_SLOT)
+	BUTTON_PICS* const ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
+	if (ButPic == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't load button image");
 		return BUTTON_NO_SLOT;

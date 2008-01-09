@@ -17,18 +17,18 @@
 
 
 static UINT32 giIMPPersonalityQuizButton[2];
-static UINT32 giIMPPersonalityQuizButtonImage[2];
+static BUTTON_PICS* giIMPPersonalityQuizButtonImage[2];
 
 
 // these are the buttons for the current question
 static INT32 giIMPPersonalityQuizAnswerButton[8];
-static INT32 giIMPPersonalityQuizAnswerButtonImage[8];
+static BUTTON_PICS* giIMPPersonalityQuizAnswerButtonImage[8];
 
 static INT32 giPreviousQuestionButton;
 static INT32 giNextQuestionButton;
 
-static INT32 giPreviousQuestionButtonImage;
-static INT32 giNextQuestionButtonImage;
+static BUTTON_PICS* giPreviousQuestionButtonImage;
+static BUTTON_PICS* giNextQuestionButtonImage;
 
 // this the currently highlighted answer
 INT32 iCurrentAnswer = -1;
@@ -150,7 +150,7 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
-static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
@@ -322,7 +322,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 	{
 		INT32 XLoc = LAPTOP_SCREEN_UL_X + (i < 4 ? BTN_FIRST_COLUMN_X : BTN_SECOND_COLUMN_X);
 		INT32 YLoc = LAPTOP_SCREEN_WEB_UL_Y + 97 + i % 4 * 50;
-		INT32 Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
+		BUTTON_PICS* const Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
 		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
 		Assert(i < lengthof(Callback));
 		INT32 Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);

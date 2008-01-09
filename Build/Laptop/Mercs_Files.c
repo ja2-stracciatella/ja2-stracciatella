@@ -108,7 +108,7 @@ static SGPVObject* guiMercFace;
 // The Prev button
 static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiPrevButton;
-INT32		guiButtonImage;
+static BUTTON_PICS* guiButtonImage;
 
 // The Next button
 static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason);

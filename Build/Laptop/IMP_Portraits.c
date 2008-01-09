@@ -25,7 +25,7 @@ INT32 iLastPicture = 7;
 
 // buttons needed for the IMP portrait screen
 INT32 giIMPPortraitButton[ 3 ];
-INT32 giIMPPortraitButtonImage[ 3 ];
+static BUTTON_PICS* giIMPPortraitButtonImage[3];
 
 // redraw protrait screen
 BOOLEAN fReDrawPortraitScreenFlag = FALSE;
@@ -134,7 +134,7 @@ static void DecrementPicture(void)
 
 static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 on_normal, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage(img_file, -1, off_normal, -1, on_normal, -1);
+	BUTTON_PICS* const img = LoadButtonImage(img_file, -1, off_normal, -1, on_normal, -1);
 	giIMPPortraitButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

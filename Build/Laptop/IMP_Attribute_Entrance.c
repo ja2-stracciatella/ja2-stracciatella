@@ -13,7 +13,7 @@
 
 
 // the buttons
-static UINT32 giIMPAttributeEntranceButtonImage[1];
+static BUTTON_PICS* giIMPAttributeEntranceButtonImage[1];
 static UINT32 giIMPAttributeEntranceButton[1];
 
 

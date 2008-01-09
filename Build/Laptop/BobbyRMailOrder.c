@@ -270,27 +270,27 @@ INT32			giNumberOfNewBobbyRShipment;
 //Clear Order Button
 static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRClearOrder;
-INT32		guiBobbyRClearOrderImage;
+static BUTTON_PICS* guiBobbyRClearOrderImage;
 
 //Accept Order Button
 static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason);
 static UINT32 guiBobbyRAcceptOrder;
-INT32		guiBobbyRAcceptOrderImage;
+static BUTTON_PICS* guiBobbyRAcceptOrderImage;
 
 //Back Button
 static void BtnBobbyRBackCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRBack;
-INT32		guiBobbyRBackImage;
+static BUTTON_PICS* guiBobbyRBackImage;
 
 //Home Button
 static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRHome;
-INT32		guiBobbyRHomeImage;
+static BUTTON_PICS* guiBobbyRHomeImage;
 
 //Goto Shipment Page Button
 static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRGotoShipmentPage;
-INT32		giBobbyRGotoShipmentPageImage;
+static BUTTON_PICS* giBobbyRGotoShipmentPageImage;
 
 
 //mouse region for the shipping speed selection area
@@ -328,7 +328,7 @@ void GameInitBobbyRMailOrder()
 }
 
 
-static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
 	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_ORDER_TITLE_TEXT_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);

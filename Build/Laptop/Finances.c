@@ -132,7 +132,7 @@ static UINT32 guiLastPageInRecordsList = 0;
 
 // finance screen buttons
 static INT32 giFinanceButton[4];
-static INT32 giFinanceButtonImage[4];
+static BUTTON_PICS* giFinanceButtonImage[4];
 
 // internal functions
 static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);

@@ -32,7 +32,7 @@ static BOOLEAN fCreateFinishOkButton       = FALSE;
 
 // buttons
 static UINT32 giIMPPersonalityFinishButton[2];
-static UINT32 giIMPPersonalityFinishButtonImage[2];
+static BUTTON_PICS* giIMPPersonalityFinishButtonImage[2];
 
 
 static void BtnIMPPersonalityFinishYesCallback(GUI_BUTTON *btn, INT32 reason);
@@ -154,7 +154,7 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage("LAPTOP/button_5.sti", -1, 0, -1, 1, -1);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/button_5.sti", -1, 0, -1, 1, -1);
 	giIMPPersonalityFinishButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

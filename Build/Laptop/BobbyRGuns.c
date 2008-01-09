@@ -171,15 +171,15 @@ UINT16		gusOldItemNumOnTopOfPage=65535;
 //The menu bar at the bottom that changes to different pages
 static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRPageMenu[ NUM_CATALOGUE_BUTTONS ];
-INT32		guiBobbyRPageMenuImage;
+static BUTTON_PICS* guiBobbyRPageMenuImage;
 
 //The next and previous buttons
 static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRPreviousPage;
-INT32		guiBobbyRPreviousPageImage;
+static BUTTON_PICS* guiBobbyRPreviousPageImage;
 
 UINT32	guiBobbyRNextPage;
-INT32		guiBobbyRNextPageImage;
+static BUTTON_PICS* guiBobbyRNextPageImage;
 
 
 // Big Image Mouse region
@@ -188,12 +188,12 @@ MOUSE_REGION    gSelectedBigImageRegion[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
 // The order form button
 static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyROrderForm;
-INT32		guiBobbyROrderFormImage;
+static BUTTON_PICS* guiBobbyROrderFormImage;
 
 // The Home button
 static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason);
 UINT32	guiBobbyRHome;
-INT32		guiBobbyRHomeImage;
+static BUTTON_PICS* guiBobbyRHomeImage;
 
 
 // Link from the title
@@ -335,7 +335,7 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 }
 
 
-static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
 	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);

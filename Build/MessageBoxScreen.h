@@ -50,7 +50,7 @@ typedef struct
 	MOUSE_REGION    BackRegion;
 	UINT16          usWidth;
 	UINT16          usHeight;
-	INT32           iButtonImages;
+	BUTTON_PICS*    iButtonImages;
 	union
 	{
 		struct

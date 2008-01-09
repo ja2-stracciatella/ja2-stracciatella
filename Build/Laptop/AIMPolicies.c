@@ -147,11 +147,11 @@ MOUSE_REGION    gSelectedPolicyTocMenuRegion[ NUM_AIM_POLICY_TOC_BUTTONS ];
 //Agree/Disagree menu Buttons regions
 static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiPoliciesAgreeButton[ 2 ];
-INT32		guiPoliciesButtonImage;
+static BUTTON_PICS* guiPoliciesButtonImage;
 
 //Bottom Menu Buttons
 UINT32	guiPoliciesMenuButton[ AIM_POLICY_MENU_BUTTON_AMOUNT ];
-INT32		guiPoliciesMenuButtonImage;
+static BUTTON_PICS* guiPoliciesMenuButtonImage;
 
 
 UINT8			gubCurPageNum;

@@ -253,7 +253,7 @@ static INT32 giPersonnelInventoryButtons[2];
 
 // buttons for ATM
 static INT32 giPersonnelATMStartButton[3];
-static INT32 giPersonnelATMStartButtonImage[3];
+static BUTTON_PICS* giPersonnelATMStartButtonImage[3];
 
 // the id of currently displayed merc in right half of screen
 static INT32 iCurrentPersonSelectedId = -1;
@@ -2417,7 +2417,7 @@ static BOOLEAN RenderAtmPanel(void)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
 {
-	INT32 img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
 	giPersonnelATMStartButtonImage[idx] = img;
 	INT32 btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;

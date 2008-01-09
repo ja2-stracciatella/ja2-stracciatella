@@ -66,11 +66,11 @@ BOOLEAN gfRedrawFloristGallery=FALSE;
 BOOLEAN		FloristGallerySubPagesVisitedFlag[ 4 ];
 
 //Floral buttons
-INT32		guiGalleryButtonImage;
+static BUTTON_PICS* guiGalleryButtonImage;
 UINT32	guiGalleryButton[ FLOR_GALLERY_NUMBER_FLORAL_BUTTONS ];
 
 //Next Previous buttons
-INT32		guiFloralGalleryButtonImage;
+static BUTTON_PICS* guiFloralGalleryButtonImage;
 static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiFloralGalleryButton[2];

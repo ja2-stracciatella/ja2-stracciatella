@@ -32,7 +32,7 @@
 #define IMP_MERC_FILE "IMP.dat"
 
 UINT32 giIMPConfirmButton[ 2 ];
-UINT32 giIMPConfirmButtonImage[ 2 ];
+static BUTTON_PICS* giIMPConfirmButtonImage[2];
 BOOLEAN fNoAlreadySelected = FALSE;
 UINT16 uiEyeXPositions[ ]={
 	8,
@@ -158,7 +158,7 @@ void HandleIMPConfirm( void )
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/button_2.sti", -1, 0, -1, 1, -1);
 	giIMPConfirmButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

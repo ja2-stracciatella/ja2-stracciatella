@@ -148,7 +148,7 @@ BOOLEAN		gfSettingOfTreeTopStatusOnEnterOfOptionScreen;
 BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
 BOOLEAN   gfSettingOfDontAnimateSmoke;
 
-static INT32  giOptionsButtonImages;
+static BUTTON_PICS* giOptionsButtonImages;
 static UINT32 guiOptGotoSaveGameBtn;
 static UINT32 guiOptGotoLoadGameBtn;
 static UINT32 guiQuitButton;

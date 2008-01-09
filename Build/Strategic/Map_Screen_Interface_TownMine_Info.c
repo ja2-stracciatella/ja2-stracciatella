@@ -42,7 +42,7 @@ INT8 bCurrentTownMineSectorY = 0;
 INT8 bCurrentTownMineSectorZ = 0;
 
 // inventory button
-UINT32 guiMapButtonInventoryImage[2];
+static BUTTON_PICS* guiMapButtonInventoryImage[2];
 static UINT32 guiMapButtonInventory[2];
 
 static UINT16 sTotalButtonWidth = 0;
@@ -663,7 +663,7 @@ static void PositionTownMineInfoBox(void)
 
 static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage("INTERFACE/mapinvbtns.sti", -1, idx, -1, idx + 2, -1);
+	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/mapinvbtns.sti", -1, idx, -1, idx + 2, -1);
 	guiMapButtonInventoryImage[idx] = img;
 	const INT32 btn = CreateIconAndTextButton(img, text, BLOCKFONT2, FONT_WHITE, FONT_BLACK, FONT_WHITE, FONT_BLACK, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	guiMapButtonInventory[idx] = btn;

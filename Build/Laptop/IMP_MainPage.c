@@ -28,7 +28,7 @@
 
 // main page buttons
 INT32 giIMPMainPageButton[6];
-INT32 giIMPMainPageButtonImage[6];
+static BUTTON_PICS* giIMPMainPageButtonImage[6];
 
 extern INT32 iCurrentVoices;
 
@@ -127,7 +127,7 @@ void HandleIMPMainPage( void )
 
 static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage(img_file, -1, 0, -1, 1, -1);
+	BUTTON_PICS* const img = LoadButtonImage(img_file, -1, 0, -1, 1, -1);
 	giIMPMainPageButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

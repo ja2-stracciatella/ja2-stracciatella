@@ -38,7 +38,7 @@ static SGPVObject* guiNoAccountImage;
 // The Open Account Box button
 static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiOpenAccountBoxButton;
-INT32		guiOpenAccountBoxButtonImage;
+static BUTTON_PICS* guiOpenAccountBoxButtonImage;
 
 // The Cancel Account Box button
 static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);

@@ -62,7 +62,7 @@ typedef void (*GUI_CALLBACK)(struct GUI_BUTTON*, INT32);
 struct GUI_BUTTON
 {
 	INT32        IDNum;         // ID Number, contains it's own button number
-	UINT32       ImageNum;      // Image number to use (see DOCs for details)
+	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
 	GUI_CALLBACK ClickCallback; // Button Callback when button is clicked
 	GUI_CALLBACK MoveCallback;  // Button Callback when mouse moved on this region
@@ -138,15 +138,15 @@ INT16 LoadGenericButtonIcon(const char* filename);
 void UnloadGenericButtonIcon(INT16 GenImg);
 
 // Load images for use with QuickButtons.
-INT32 LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
+BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 
 /* Uses a previously loaded quick button image for use with QuickButtons.  The
  * function simply duplicates the vobj!
  */
-INT32 UseLoadedButtonImage(INT32 LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
+BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* LoadedImg, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite);
 
 // Removes a QuickButton image from the system.
-void UnloadButtonImage(INT32 Index);
+void UnloadButtonImage(BUTTON_PICS*);
 
 // Enables an already created button.
 void EnableButton(INT32 iButtonID);
@@ -176,9 +176,9 @@ extern BOOLEAN gfRenderHilights;
  * They cannot be re-sized, nor can the graphic be changed.  Providing you have
  * allocated your own image, this is a somewhat simplified function.
  */
-INT32 QuickCreateButton(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
-INT32 QuickCreateButtonNoMove(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
-INT32 QuickCreateButtonToggle(UINT32 image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+INT32 QuickCreateButton(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+INT32 QuickCreateButtonNoMove(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+INT32 QuickCreateButtonToggle(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
 INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
@@ -195,7 +195,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Pri
 // Creates a generic button with text on it.
 INT32 CreateTextButton(const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
-INT32 CreateIconAndTextButton(INT32 Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
+INT32 CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* This is technically not a clickable button, but just a label with text. It is
  * implemented as button */
@@ -247,7 +247,7 @@ typedef struct ButtonDimensions
 	UINT32 h;
 } ButtonDimensions;
 
-const ButtonDimensions* GetDimensionsOfButtonPic(UINT16 btn_pic_id);
+const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 
 UINT16 GetGenericButtonFillColor(void);
 

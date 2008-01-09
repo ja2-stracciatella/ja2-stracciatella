@@ -47,7 +47,7 @@ INT8			gbCurrentlySelectedCard;
 MOUSE_REGION    gSelectedFloristCardsRegion[9];
 
 
-INT32		guiFlowerCardsButtonImage;
+static BUTTON_PICS* guiFlowerCardsButtonImage;
 UINT32	guiFlowerCardsBackButton;
 
 

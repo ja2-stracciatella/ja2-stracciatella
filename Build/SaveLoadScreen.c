@@ -196,7 +196,7 @@ BOOLEAN		gfGettingNameFromSaveLoadScreen = FALSE;
 //
 //Buttons
 //
-INT32		guiSlgButtonImage;
+static BUTTON_PICS* guiSlgButtonImage;
 
 
 // Cancel Button
@@ -204,7 +204,7 @@ UINT32	guiSlgCancelBtn;
 
 // Save game Button
 UINT32	guiSlgSaveLoadBtn;
-INT32		guiSaveLoadImage;
+static BUTTON_PICS* guiSaveLoadImage;
 
 //Mouse regions for the currently selected save game
 MOUSE_REGION    gSelectedSaveRegion[ NUM_SAVE_GAMES ];
@@ -371,7 +371,7 @@ static void SetSaveLoadExitScreen(UINT32 uiScreen)
 }
 
 
-static INT32 MakeButton(INT32 img, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
 {
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }

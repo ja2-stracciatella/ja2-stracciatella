@@ -67,7 +67,7 @@ INT32 iAttitude = 0;
 
 // IMP global buttons
 static INT32 giIMPButton[1];
-static INT32 giIMPButtonImage[1];
+static BUTTON_PICS* giIMPButtonImage[1];
 
 // visted subpages
 static BOOLEAN fVisitedIMPSubPages[IMP_NUM_PAGES];

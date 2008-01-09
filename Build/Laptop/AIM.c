@@ -170,7 +170,7 @@ static MOUSE_REGION gSelectedLinksRegion;
 
 //Bottom Buttons
 static UINT32 guiBottomButtons[NUM_AIM_SCREENS];
-static INT32  guiBottomButtonImage;
+static BUTTON_PICS* guiBottomButtonImage;
 
 //Banner Area
 static MOUSE_REGION gSelectedBannerRegion;

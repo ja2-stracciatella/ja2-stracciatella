@@ -206,7 +206,7 @@ wchar_t		gsNameTextField[ FLOWER_ORDER_NAME_FIELD_NUM_CHARS ] = {0};
 
 
 //buttons
-INT32		guiFlowerOrderButtonImage;
+static BUTTON_PICS* guiFlowerOrderButtonImage;
 
 UINT8		gubFlowerOrder_AdditioanalServicePrices[] = {10, 20, 10, 10};
 

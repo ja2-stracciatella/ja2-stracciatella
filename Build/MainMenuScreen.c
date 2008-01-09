@@ -55,7 +55,7 @@ enum
 #endif
 
 
-static INT32 iMenuImages[NUM_MENU_ITEMS];
+static BUTTON_PICS* iMenuImages[NUM_MENU_ITEMS];
 static INT32 iMenuButtons[NUM_MENU_ITEMS];
 
 static SGPVObject* guiMainMenuBackGroundImage;
@@ -372,10 +372,10 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 		{
-			const INT32  img = iMenuImages[cnt];
-			const UINT16 w   = GetDimensionsOfButtonPic(img)->w;
-			const INT16  x   = (SCREEN_WIDTH - w) / 2;
-			const INT16  y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
+			BUTTON_PICS* const img = iMenuImages[cnt];
+			const UINT16       w   = GetDimensionsOfButtonPic(img)->w;
+			const INT16        x   = (SCREEN_WIDTH - w) / 2;
+			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			iMenuButtons[cnt] = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			if (iMenuButtons[cnt] == BUTTON_NO_SLOT) return FALSE;
 			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);

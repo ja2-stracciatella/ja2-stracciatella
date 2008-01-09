@@ -308,15 +308,15 @@ void SelectHelpScrollAreaArrowsCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 UINT32	gHelpScreenDontShowHelpAgainToggle;
 
 
-INT32		giHelpScreenButtonsImage[ HELP_SCREEN_NUM_BTNS ];
+static BUTTON_PICS* giHelpScreenButtonsImage[HELP_SCREEN_NUM_BTNS];
 UINT32	guiHelpScreenBtns[ HELP_SCREEN_NUM_BTNS ];
 
-INT32		giExitBtnImage;
+static BUTTON_PICS* giExitBtnImage;
 UINT32	guiHelpScreenExitBtn;
 
 
 INT32		giHelpScreenScrollArrows[2];
-UINT32	guiHelpScreenScrollArrowImage[2];
+static BUTTON_PICS* guiHelpScreenScrollArrowImage[2];
 
 
 void InitHelpScreenSystem()

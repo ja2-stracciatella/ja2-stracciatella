@@ -132,4 +132,6 @@ typedef SGPVObject*        HVOBJECT;
 typedef struct SGPVSurface SGPVSurface;
 typedef SGPVSurface*       HVSURFACE;
 
+typedef struct BUTTON_PICS BUTTON_PICS;
+
 #endif

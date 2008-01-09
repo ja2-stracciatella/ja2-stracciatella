@@ -374,13 +374,13 @@ static BOOLEAN gfAimMemberDisplayFaceHelpText = FALSE;
 static BOOLEAN gfAimMemberCanMercSayOpeningQuote = TRUE;
 
 
-static INT32 guiPreviousContactNextButtonImage;
+static BUTTON_PICS* guiPreviousContactNextButtonImage;
 static INT32 giPreviousButton;
 static INT32 giContactButton;
 static INT32 giNextButton;
 
 //Video conference buttons
-static INT32 guiVideoConferenceButtonImage[3];
+static BUTTON_PICS* guiVideoConferenceButtonImage[3];
 
 //Contract Length Button
 static INT32 giContractLengthButton[3];
@@ -396,13 +396,13 @@ static INT32 giHangUpButton;
 
 // PopupBox button
 static UINT32 guiPopUpOkButton;
-static INT32  guiPopUpImage;
+static BUTTON_PICS* guiPopUpImage;
 
 //Leave Message merc Button
 static INT32 giAnsweringMachineButton[2];
 
 //X to Close the video conference Button
-static INT32 giXToCloseVideoConfButtonImage;
+static BUTTON_PICS* giXToCloseVideoConfButtonImage;
 static INT32 giXToCloseVideoConfButton;
 
 
@@ -2576,7 +2576,7 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static INT32 MakeButtonVideo(INT32 img, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static INT32 MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
 	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;

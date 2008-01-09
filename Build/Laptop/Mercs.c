@@ -246,7 +246,7 @@ NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES 
 // The Account Box button
 static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiAccountBoxButton;
-INT32		guiAccountBoxButtonImage;
+static BUTTON_PICS* guiAccountBoxButtonImage;
 
 //File Box
 UINT32	guiFileBoxButton;

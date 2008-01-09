@@ -232,7 +232,7 @@ static wchar_t gzItemCons[SIZE_ITEM_CONS];
 static INT16 gsInvDescX;
 static INT16 gsInvDescY;
 static UINT8 gubItemDescStatusIndex;
-static INT32 giItemDescAmmoButtonImages;
+static BUTTON_PICS* giItemDescAmmoButtonImages;
 static INT32 giItemDescAmmoButton;
 static SOLDIERTYPE* gpItemDescSoldier;
 static BOOLEAN fItemDescDelete = FALSE;
@@ -240,8 +240,8 @@ MOUSE_REGION		gItemDescAttachmentRegions[4];
 static MOUSE_REGION gProsAndConsRegions[2];
 
 static UINT32 guiMoneyButtonBtn[MAX_ATTACHMENTS];
-static INT32 guiMoneyButtonImage;
-static INT32 guiMoneyDoneButtonImage;
+static BUTTON_PICS* guiMoneyButtonImage;
+static BUTTON_PICS* guiMoneyDoneButtonImage;
 
 static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
@@ -4799,11 +4799,11 @@ typedef struct
 	INT32		  		bCurSelect;
 	UINT8					bNumSlotsPerPage;
 	SGPVObject*   uiPanelVo;
-	INT32					iUpButtonImages;
-	INT32					iDownButtonImages;
-	INT32					iAllButtonImages;
-	INT32					iCancelButtonImages;
-	INT32					iOKButtonImages;
+	BUTTON_PICS*  iUpButtonImages;
+	BUTTON_PICS*  iDownButtonImages;
+	BUTTON_PICS*  iAllButtonImages;
+	BUTTON_PICS*  iCancelButtonImages;
+	BUTTON_PICS*  iOKButtonImages;
 	INT32					iUpButton;
 	INT32					iDownButton;
 	INT32					iAllButton;

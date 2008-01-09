@@ -125,7 +125,7 @@ MOUSE_REGION		gDoneRegion;
 
 //Previous Button
 UINT32	guiAlumniPageButton[3];
-INT32		guiAlumniPageButtonImage;
+static BUTTON_PICS* guiAlumniPageButtonImage;
 
 
 void EnterInitAimArchives()

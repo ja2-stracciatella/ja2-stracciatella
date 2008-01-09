@@ -71,7 +71,7 @@ BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
 
 // The Authorize button
 UINT32	guiMercAuthorizeBoxButton;
-INT32		guiMercAuthorizeButtonImage;
+static BUTTON_PICS* guiMercAuthorizeButtonImage;
 
 
 // The Back button

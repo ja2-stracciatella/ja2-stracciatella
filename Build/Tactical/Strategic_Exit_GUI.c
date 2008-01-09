@@ -49,7 +49,7 @@ typedef struct
 	UINT32						uiOKButton;
 	UINT32						uiCancelButton;
 	INT32							iBoxId;
-	INT32							iButtonImages;
+	BUTTON_PICS*      iButtonImages;
 	UINT16						usWidth;
 	UINT16						usHeight;
 	INT16							sX;

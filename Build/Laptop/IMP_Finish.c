@@ -28,7 +28,7 @@
 
 // buttons
 INT32 giIMPFinishButton[ 6 ];
-INT32 giIMPFinishButtonImage[ 6 ];
+static BUTTON_PICS* giIMPFinishButtonImage[6];
 
 // we are in fact done
 BOOLEAN fFinishedCharGeneration = FALSE;
@@ -106,7 +106,7 @@ void HandleIMPFinish( void )
 
 static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	const INT32 img = LoadButtonImage(img_file, -1, 0, -1, 1, -1);
+	BUTTON_PICS* const img = LoadButtonImage(img_file, -1, 0, -1, 1, -1);
 	giIMPFinishButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;

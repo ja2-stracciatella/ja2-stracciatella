@@ -67,7 +67,7 @@ BOOLEAN gfTacticalPlacementFirstTime = FALSE;
 BOOLEAN gfEnterTacticalPlacementGUI = FALSE;
 BOOLEAN gfKillTacticalGUI = FALSE;
 static SGPVObject* giOverheadPanelImage;
-INT32 giOverheadButtonImages[ NUM_TP_BUTTONS ];
+static BUTTON_PICS* giOverheadButtonImages[NUM_TP_BUTTONS];
 SGPVObject* giMercPanelImage = 0;
 INT32 giPlacements = 0;
 BOOLEAN gfTacticalPlacementGUIDirty = FALSE;
@@ -230,10 +230,7 @@ void InitTacticalPlacementGUI()
 	AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
 
 	giOverheadButtonImages[ DONE_BUTTON ] = LoadButtonImage( "Interface/OverheadUIButtons.sti", -1, 0, -1, 1, -1 );
-	if( giOverheadButtonImages[ DONE_BUTTON ] == -1 )
-	{
-		AssertMsg( 0, "Failed to load Interface/OverheadUIButtons.sti" );
-	}
+	AssertMsg(giOverheadButtonImages[DONE_BUTTON] != NULL, "Failed to load Interface/OverheadUIButtons.sti");
 	giOverheadButtonImages[ SPREAD_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );
 	giOverheadButtonImages[ GROUP_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );
 	giOverheadButtonImages[ CLEAR_BUTTON ]		= UseLoadedButtonImage( giOverheadButtonImages[ DONE_BUTTON ], -1, 0, -1, 1, -1 );

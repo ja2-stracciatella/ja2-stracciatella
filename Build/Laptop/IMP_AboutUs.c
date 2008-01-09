@@ -14,7 +14,7 @@
 
 // IMP AboutUs buttons
 static INT32 giIMPAboutUsButton[1];
-static INT32 giIMPAboutUsButtonImage[1];
+static BUTTON_PICS* giIMPAboutUsButtonImage[1];
 
 static void BtnIMPBackCallback(GUI_BUTTON *btn, INT32 reason);
 

@@ -116,7 +116,7 @@ typedef struct AUTORESOLVE_STRUCT
 	//IDs into the graphic images
 	SGPVObject* iPanelImages;
 	INT32 iButton[ NUM_AR_BUTTONS ];
-	INT32 iButtonImage[ NUM_AR_BUTTONS ];
+	BUTTON_PICS* iButtonImage[NUM_AR_BUTTONS];
 	SGPVObject* iFaces; //for generic civs and enemies
 	INT32 iMercFaces[20]; //for each merc face
 	SGPVObject* iIndent;
@@ -1779,7 +1779,7 @@ static void CreateAutoResolveInterface(void)
 	gpAR->iButtonImage[ DONE_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 14, -1, 15, -1 );
 	*/
 	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface/AutoBtns.sti", -1, 0, -1, 7, -1 );
-	if( gpAR->iButtonImage[ PAUSE_BUTTON ] == -1 )
+	if (gpAR->iButtonImage[PAUSE_BUTTON] == NULL)
 	{
 		AssertMsg( 0, "Failed to load Interface/AutoBtns.sti" );
 	}

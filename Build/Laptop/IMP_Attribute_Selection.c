@@ -73,11 +73,11 @@ BOOLEAN fReviewStats = FALSE;
 
 // buttons
 static UINT32 giIMPAttributeSelectionButton[1];
-static UINT32 giIMPAttributeSelectionButtonImage[1];
+static BUTTON_PICS* giIMPAttributeSelectionButtonImage[1];
 
 // slider buttons
 static UINT32 giIMPAttributeSelectionSliderButton[20];
-static UINT32 giIMPAttributeSelectionSliderButtonImage[20];
+static BUTTON_PICS* giIMPAttributeSelectionSliderButtonImage[20];
 
 // mouse regions
 static MOUSE_REGION pSliderRegions[10];

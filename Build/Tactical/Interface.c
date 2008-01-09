@@ -146,7 +146,7 @@ enum
 	NUM_ICON_IMAGES
 };
 
-static INT32 iIconImages[NUM_ICON_IMAGES];
+static BUTTON_PICS* iIconImages[NUM_ICON_IMAGES];
 
 enum
 {

@@ -68,7 +68,7 @@ BOOLEAN		gfHomePageActive=FALSE;		//Specifies whether or not the home page or th
 //Buttons
 
 //Graphic for button
-INT32		guiGalleryButtonImage;
+static BUTTON_PICS* guiGalleryButtonImage;
 static void BtnGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
 UINT32	guiGalleryButton;
 
