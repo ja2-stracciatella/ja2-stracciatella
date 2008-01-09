@@ -211,20 +211,6 @@ BOOLEAN gfShowRebels = TRUE;
 BOOLEAN gfShowCivilians = TRUE;
 
 
-static const wchar_t* EditMercStat[12] = { L"Max Health",L"Cur Health",L"Strength",
-														 L"Agility",L"Dexterity",L"Charisma",
-														 L"Wisdom",L"Marksmanship",L"Explosives",
-														 L"Medical",L"Scientific",L"Exp Level" };
-
-#define NUM_MERC_ORDERS 8
-static const wchar_t* EditMercOrders[8] = { L"Stationary",L"On Guard",L"Close Patrol",
-															L"Far Patrol",L"Point Patrol",L"On Call",
-															L"Seek Enemy", L"Random Point Patrol"};
-
-static const wchar_t* EditMercAttitudes[6] = { L"Defensive",L"Brave Loner",L"Brave Buddy",
-																	L"Cunning Loner",L"Cunning Buddy",
-																	L"Aggressive" };
-
 //information for bodytypes.
 #ifdef RANDOM
   #undef RANDOM
@@ -588,101 +574,6 @@ void EraseMercWaypoint()
 		gpSelected->pDetailedPlacement->bPatrolCnt--;
 	gpSelected->pSoldier->bPatrolCnt--;
 	gfRenderWorld = TRUE;
-}
-
-
-//----------------------------------------------------------------------------------------------
-//	DisplayEditMercWindow
-//
-//	Displays the edit merc stat page while editing mercs. If the merc color editing page is
-//	to be displayed, this function will dispatch it instead.
-//
-static void DisplayEditMercWindow(void)
-{
-	INT32 iXPos, iYPos, iHeight, iWidth;
-	UINT16 usFillColorBack, usFillColorDark, usFillColorLight, usFillColorTextBk;
-	INT32 x, iXOff;
-	wchar_t TempString[30];
-	INT8 iEditStat[12];
-
-	usFillColorBack = 0;
-
-	if ( gsSelectedMercID == -1 )
-	{
-//		DestroyEditMercWindow();
-		return;
-	}
-
-	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
-
-	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
-	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
-	usFillColorTextBk = Get16BPPColor(FROMRGB(250, 240, 188));
-
-	iWidth = 266;
-	iHeight = 360;
-	iYPos = 0;
-	iXPos = 0;
-
-
-	// Main window
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos, iYPos, iXPos + iWidth, iYPos + iHeight, usFillColorLight );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 1, iYPos + 1, iXPos + iWidth, iYPos + iHeight, usFillColorDark );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 1, iYPos + 1, iXPos + iWidth - 1, iYPos + iHeight - 1, usFillColorBack );
-
-	SetFont( FONT12POINT1 );
-
-	// Name window
-	gprintf( iXPos + 128, iYPos + 3, L"Merc Name:" );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 16, iXPos + 128 + 104, iYPos + 16 + 19, usFillColorDark );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 17, iXPos + 128 + 104, iYPos + 17 + 19, usFillColorLight );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 17, iXPos + 128 + 103, iYPos + 17 + 18, usFillColorTextBk );
-	iXOff = (105 - StringPixLength( pSoldier->name, FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 20, L"%ls", pSoldier->name);
-
-	// Orders window
-	gprintf( iXPos + 128, iYPos + 38, L"Orders:" );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 51, iXPos + 128 + 104, iYPos + 51 + 19, usFillColorDark );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 104, iYPos + 52 + 19, usFillColorLight );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 52, iXPos + 128 + 103, iYPos + 52 + 18, usFillColorTextBk );
-	iXOff = (105 - StringPixLength( EditMercOrders[pSoldier->bOrders], FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 55, L"%ls", EditMercOrders[pSoldier->bOrders]);
-
-	// Combat window
-	gprintf( iXPos + 128, iYPos + 73, L"Combat Attitude:" );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 128, iYPos + 86, iXPos + 128 + 104, iYPos + 86 + 19, usFillColorDark );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 104, iYPos + 87 + 19, usFillColorLight );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 129, iYPos + 87, iXPos + 128 + 103, iYPos + 87 + 18, usFillColorTextBk );
-	iXOff = (105 - StringPixLength( EditMercAttitudes[pSoldier->bAttitude], FONT12POINT1 )) / 2;
-	gprintf(iXPos + 130 + iXOff, iYPos + 90, L"%ls", EditMercAttitudes[pSoldier->bAttitude]);
-
-	// Get stats
-	iEditStat[0] = pSoldier->bLifeMax;			  // 12 13
-	iEditStat[1] = pSoldier->bLife;						// 14 15
-	iEditStat[2] = pSoldier->bStrength;       // 16 17
-	iEditStat[3] = pSoldier->bAgility;        // 18 19
-	iEditStat[4] = pSoldier->bDexterity;      // 20 21
-	iEditStat[5] = pSoldier->bLeadership;     // 22 23
-	iEditStat[6] = pSoldier->bWisdom;         // 24 25
-	iEditStat[7] = pSoldier->bMarksmanship;   // 26 27
-	iEditStat[8] = pSoldier->bExplosive;      // 28 29
-	iEditStat[9] = pSoldier->bMedical;        // 30 31
-	iEditStat[10] = pSoldier->bScientific;    // 32 33
-	iEditStat[11] = pSoldier->bExpLevel;      // 34 35
-
-	// Stat value windows
-	for ( x = 0; x < 12; x++ )
-	{
-		gprintf(iXPos + 6, iYPos + 114 + (20 * x), L"%ls", EditMercStat[x]);
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 116, iYPos + 110 + (20 * x), iXPos + 116 + 30, iYPos + 110 + (20 * x) + 19, usFillColorDark );
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 30, iYPos + 111 + (20 * x) + 19, usFillColorLight );
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, iXPos + 117, iYPos + 111 + (20 * x), iXPos + 116 + 29, iYPos + 111 + (20 * x) + 18, usFillColorTextBk );
-
-		swprintf(TempString, lengthof(TempString), L"%d", iEditStat[x]);
-		iXOff = (30 - StringPixLength( TempString, FONT12POINT1 )) / 2;
-		gprintf(iXPos + 118 + iXOff, iYPos + 114 + (20 * x), L"%ls", TempString);
-	}
-
 }
 
 
