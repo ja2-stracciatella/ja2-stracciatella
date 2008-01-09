@@ -470,15 +470,11 @@ static PathSt* gpHelicopterPreviousMercPath = NULL;
 
 
 extern BOOLEAN fDeletedNode;
-extern BOOLEAN gfRenderPBInterface;
 extern BOOLEAN fResetTimerForFirstEntryIntoMapScreen;
 extern BOOLEAN gfStartedFromMapScreen;
 
 extern INT32 iDialogueBox;
 extern INT32 giMapInvDescButton;
-
-// border and bottom buttons
-extern INT32 giMapBorderButtons[];
 
 
 extern PathSt* pTempCharacterPath;

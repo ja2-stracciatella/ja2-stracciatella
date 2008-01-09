@@ -107,6 +107,7 @@ extern BOOLEAN      fShowDescriptionFlag;
 extern INT32        giMapContractButton;
 extern INT32        giCharInfoButton[2];
 extern MOUSE_REGION gCharInfoHandRegion;
+extern BOOLEAN      fDrawCharacterList;
 
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);

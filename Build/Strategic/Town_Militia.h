@@ -66,4 +66,6 @@ BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId );
 
 void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE* pSoldier);
 
+extern SOLDIERTYPE* pMilitiaTrainerSoldier;
+
 #endif

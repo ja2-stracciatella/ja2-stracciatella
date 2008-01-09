@@ -46,11 +46,6 @@ SOLDIERTYPE *pMilitiaTrainerSoldier = NULL;
 INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
 
 
-#ifdef JA2BETAVERSION
-void VerifyTownTrainingIsPaidFor( void );
-#endif
-
-
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
 static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
 static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbourY);

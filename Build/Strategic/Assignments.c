@@ -4,6 +4,7 @@
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_TownMine_Info.h"
+#include "PreBattle_Interface.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"
 #include "Strategic.h"
@@ -146,28 +147,19 @@ static MOUSE_REGION gVehicleMenuRegion[20];
 
 static MOUSE_REGION gAssignmentScreenMaskRegion;
 
-BOOLEAN fShownAssignmentMenu = FALSE;
-BOOLEAN fShowVehicleMenu = FALSE;
-BOOLEAN fShowRepairMenu = FALSE;
-BOOLEAN fShownContractMenu = FALSE;
+BOOLEAN fShownAssignmentMenu    = FALSE;
+static BOOLEAN fShowVehicleMenu = FALSE;
+BOOLEAN fShowRepairMenu         = FALSE;
+BOOLEAN fShownContractMenu      = FALSE;
 
 BOOLEAN fFirstClickInAssignmentScreenMask = FALSE;
 
-// render pre battle interface?
-extern BOOLEAN gfRenderPBInterface;
-extern SOLDIERTYPE *pMilitiaTrainerSoldier;
-
 // we are in fact training?..then who temmates, or self?
-INT8 gbTrainingMode = -1;
+static INT8 gbTrainingMode = -1;
 
-extern INT32 giMapBorderButtons[];
+static BOOLEAN gfAddDisplayBoxToWaitingQueue = FALSE;
 
-BOOLEAN gfAddDisplayBoxToWaitingQueue = FALSE;
-
-// redraw character list
-extern BOOLEAN fDrawCharacterList;
-
-SOLDIERTYPE *gpDismissSoldier = NULL;
+static SOLDIERTYPE* gpDismissSoldier = NULL;
 
 BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 
@@ -244,7 +236,7 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 
 
 // a list of which sectors have characters
-BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_Y ][ 4 ];
+static BOOLEAN fSectorsWithSoldiers[MAP_WORLD_X * MAP_WORLD_Y][4];
 
 // glow area for contract region?
 BOOLEAN fGlowContractRegion = FALSE;
@@ -256,12 +248,6 @@ BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier );
 BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints );
 BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier );
 */
-
-#ifdef JA2BETAVERSION
-void VerifyTownTrainingIsPaidFor( void );
-#endif
-
-
 
 
 void InitSectorsWithSoldiersList( void )

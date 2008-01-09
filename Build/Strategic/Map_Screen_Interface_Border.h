@@ -105,4 +105,6 @@ void DeleteMouseRegionsForLevelMarkers( void );
 
 void InitMapScreenFlags( void );
 
+extern INT32 giMapBorderButtons[];
+
 #endif

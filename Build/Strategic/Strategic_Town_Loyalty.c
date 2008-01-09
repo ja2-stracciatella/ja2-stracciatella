@@ -173,9 +173,6 @@ BOOLEAN gfTownUsesLoyalty[ NUM_TOWNS ] =
 // location of first enocunter with enemy
 INT16 sWorldSectorLocationOfFirstBattle = 0;
 
-// preprocess sector for mercs in it
-extern BOOLEAN fSectorsWithSoldiers[ MAP_WORLD_X * MAP_WORLD_X ][ 4 ];
-
 
 // update town loyalty based on number of friendlies in this town
 void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId );

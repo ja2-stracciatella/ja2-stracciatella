@@ -94,5 +94,6 @@ enum
 void LogBattleResults( UINT8 ubVictoryCode);
 
 extern BOOLEAN gfUsePersistantPBI;
+extern BOOLEAN gfRenderPBInterface;
 
 #endif

@@ -226,4 +226,8 @@ BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier);
 
 void CreateContractBox(const SOLDIERTYPE* s);
 
+#ifdef JA2BETAVERSION
+void VerifyTownTrainingIsPaidFor(void);
+#endif
+
 #endif
