@@ -363,6 +363,16 @@ BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 */
 
 
+static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
+{
+	return
+		s->bAssignment       == VEHICLE       &&
+		iHelicopterVehicleId != -1            &&
+		iHelicopterVehicleId == s->iVehicleId &&
+		NumEnemiesInSector(s->sSectorX, s->sSectorY) > 0;
+}
+
+
 static BOOLEAN CharacterIsBetweenSectors(const SOLDIERTYPE* s);
 
 
@@ -410,18 +420,7 @@ static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	return( TRUE );
 }
@@ -653,18 +652,7 @@ static BOOLEAN BasicCanCharacterRepair(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	return( TRUE );
 }
@@ -769,18 +757,7 @@ static BOOLEAN CanCharacterPatient(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	// alive and can be healed
 	return ( TRUE );
@@ -835,19 +812,7 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
 		return( FALSE );
 	}
 
-
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	// in transit?
 	if( IsCharacterInTransit( pSoldier ) == TRUE )
@@ -1046,18 +1011,7 @@ static BOOLEAN CanCharacterTrainStat(SOLDIERTYPE* pSoldier, INT8 bStat, BOOLEAN 
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
@@ -1208,18 +1162,8 @@ static BOOLEAN CanCharacterOnDuty(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
+
 		// in transit?
 	if( IsCharacterInTransit( pSoldier ) == TRUE )
 	{
@@ -1277,18 +1221,7 @@ static BOOLEAN CanCharacterPractise(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
@@ -1529,18 +1462,7 @@ static BOOLEAN CanCharacterVehicle(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// check in helicopter in hostile sector
-	if( pSoldier -> bAssignment == VEHICLE )
-	{
-		if( ( iHelicopterVehicleId != -1 ) && ( pSoldier -> iVehicleId == iHelicopterVehicleId ) )
-		{
-			// enemies in sector
-			if( NumEnemiesInSector( pSoldier -> sSectorX, pSoldier -> sSectorY ) > 0 )
-			{
-				return( FALSE );
-			}
-		}
-	}
+	if (IsSoldierInHelicopterInHostileSector(pSoldier)) return FALSE;
 
 	// any accessible vehicles in soldier's sector (excludes those between sectors, etc.)
 	if( AnyAccessibleVehiclesInSoldiersSector( pSoldier ) == FALSE )
