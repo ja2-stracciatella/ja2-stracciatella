@@ -983,6 +983,30 @@ BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed(const SOLDIERTYPE* const pSold
 }
 
 
+static INT8 GetTrainingStatValue(const SOLDIERTYPE* const s, const INT8 stat)
+{
+	switch (stat)
+	{
+		case STRENGTH:         return s->bStrength;     break;
+		case DEXTERITY:        return s->bDexterity;    break;
+		case AGILITY:          return s->bAgility;      break;
+		case HEALTH:           return s->bLifeMax;      break;
+		case MARKSMANSHIP:     return s->bMarksmanship; break;
+		case MEDICAL:          return s->bMedical;      break;
+		case MECHANICAL:       return s->bMechanical;   break;
+		case LEADERSHIP:       return s->bLeadership;   break;
+		case EXPLOSIVE_ASSIGN: return s->bExplosive;    break;
+		// NOTE: Wisdom can't be trained!
+
+		default:
+#ifdef JA2BETAVERSION
+			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"ERROR - Unknown training stat %d", stat);
+#endif
+			return 0;
+	}
+}
+
+
 // can character train stat?..as train self or as trainer?
 static BOOLEAN CanCharacterTrainStat(SOLDIERTYPE* pSoldier, INT8 bStat, BOOLEAN fTrainSelf, BOOLEAN fTrainTeammate)
 {
@@ -1019,20 +1043,7 @@ static BOOLEAN CanCharacterTrainStat(SOLDIERTYPE* pSoldier, INT8 bStat, BOOLEAN 
 		return( FALSE );
 	}
 
-	INT8 stat_val;
-	switch (bStat)
-	{
-		case STRENGTH:         stat_val = pSoldier->bStrength;     break;
-		case DEXTERITY:        stat_val = pSoldier->bDexterity;    break;
-		case AGILITY:          stat_val = pSoldier->bAgility;      break;
-		case HEALTH:           stat_val = pSoldier->bLifeMax;      break;
-		case MARKSMANSHIP:     stat_val = pSoldier->bMarksmanship; break;
-		case MEDICAL:          stat_val = pSoldier->bMedical;      break;
-		case MECHANICAL:       stat_val = pSoldier->bMechanical;   break;
-		case LEADERSHIP:       stat_val = pSoldier->bLeadership;   break;
-		case EXPLOSIVE_ASSIGN: stat_val = pSoldier->bExplosive;    break;
-		default:               stat_val = 0;                       break;
-	}
+	const INT8 stat_val = GetTrainingStatValue(pSoldier, bStat);
 	if (stat_val == 0)                                     return FALSE;
 	if (fTrainTeammate && stat_val <  MIN_RATING_TO_TEACH) return FALSE;
 	if (fTrainSelf     && stat_val >= TRAINING_RATING_CAP) return FALSE;
@@ -3074,43 +3085,7 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 		bTraineeNatWisdom = pStudent->bWisdom;
 
 		// for trainee's stat skill, must use the natural value, not the effective one, to avoid drunks training beyond cap
-		switch( bTrainStat )
-		{
-			case( STRENGTH ):
-				bTraineeSkill = pStudent -> bStrength;
-			break;
-			case( DEXTERITY ):
-				bTraineeSkill = pStudent -> bDexterity;
-			break;
-			case( AGILITY ):
-				bTraineeSkill = pStudent -> bAgility;
-			break;
-			case( HEALTH ):
-				bTraineeSkill = pStudent -> bLifeMax;
-			break;
-			case( LEADERSHIP ):
-				bTraineeSkill = pStudent -> bLeadership;
-			break;
-			case( MARKSMANSHIP ):
-				bTraineeSkill = pStudent -> bMarksmanship;
-			break;
-			case( EXPLOSIVE_ASSIGN ):
-				bTraineeSkill = pStudent -> bExplosive;
-			break;
-			case( MEDICAL ):
-				bTraineeSkill = pStudent -> bMedical;
-			break;
-			case( MECHANICAL ):
-				bTraineeSkill = pStudent -> bMechanical;
-			break;
-			// NOTE: Wisdom can't be trained!
-			default:
-				// BETA message
-				#ifdef JA2BETAVERSION
-					ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"GetBonusTrainingPtsDueToInstructor: ERROR - Unknown bTrainStat %d", bTrainStat);
-				#endif
-				return(0);
-		}
+		bTraineeSkill = GetTrainingStatValue(pStudent, bTrainStat);
 
 		// if trainee skill 0 or at/beyond the training cap, can't train
 		if ( ( bTraineeSkill == 0 ) || ( bTraineeSkill >= TRAINING_RATING_CAP ) )
@@ -3181,31 +3156,12 @@ INT16 GetSoldierTrainingPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGu
 {
 	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
-	INT8	bSkill = 0;
 
 	// assume training impossible for max pts
 	*pusMaxPts = 0;
 
 	// use NATURAL not EFFECTIVE values here
-	switch( bTrainStat )
-	{
-		case STRENGTH:         bSkill = s->bStrength;     break;
-		case DEXTERITY:        bSkill = s->bDexterity;    break;
-		case AGILITY:          bSkill = s->bAgility;      break;
-		case HEALTH:           bSkill = s->bLifeMax;      break;
-		case LEADERSHIP:       bSkill = s->bLeadership;   break;
-		case MARKSMANSHIP:     bSkill = s->bMarksmanship; break;
-		case EXPLOSIVE_ASSIGN: bSkill = s->bExplosive;    break;
-		case MEDICAL:          bSkill = s->bMedical;      break;
-		case MECHANICAL:       bSkill = s->bMechanical;   break;
-		// NOTE: Wisdom can't be trained!
-		default:
-			// BETA message
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
-			#endif
-				return(0);
-	}
+	const INT8 bSkill = GetTrainingStatValue(s, bTrainStat);
 
 	// if skill 0 or at/beyond the training cap, can't train
 	if ( ( bSkill == 0 ) || ( bSkill >= TRAINING_RATING_CAP ) )
@@ -3240,7 +3196,6 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 {
 	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
-	INT8	bSkill = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
 	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
@@ -3249,25 +3204,7 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 	*pusMaxPts = 0;
 
 	// use NATURAL not EFFECTIVE values here
-	switch( bTrainStat )
-	{
-		case STRENGTH:         bSkill = s->bStrength;     break;
-		case DEXTERITY:        bSkill = s->bDexterity;    break;
-		case AGILITY:          bSkill = s->bAgility;      break;
-		case HEALTH:           bSkill = s->bLifeMax;      break;
-		case LEADERSHIP:       bSkill = s->bLeadership;   break;
-		case MARKSMANSHIP:     bSkill = s->bMarksmanship; break;
-		case EXPLOSIVE_ASSIGN: bSkill = s->bExplosive;    break;
-		case MEDICAL:          bSkill = s->bMedical;      break;
-		case MECHANICAL:       bSkill = s->bMechanical;   break;
-		// NOTE: Wisdom can't be trained!
-		default:
-			// BETA message
-#ifdef JA2BETAVERSION
-			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"GetSoldierTrainingPts: ERROR - Unknown bTrainStat %d", bTrainStat);
-#endif
-			return 0;
-	}
+	const INT8 bSkill = GetTrainingStatValue(s, bTrainStat);
 
 	// if skill 0 or at/beyond the training cap, can't train
 	if ( ( bSkill == 0 ) || ( bSkill >= TRAINING_RATING_CAP ) )
