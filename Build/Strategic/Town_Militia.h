@@ -52,11 +52,8 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 // is there a town with militia here or nearby?
 BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY );
 
-// is the town militia full?
-BOOLEAN IsTownFullMilitia( INT8 bTownId );
-// is the SAM site full of militia?
-BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY );
-
+// Is the town or SAM site here full of milita?
+BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const INT8 sector_z);
 
 // now that town training is complete, handle the continue boxes
 void HandleContinueOfTownTraining( void );

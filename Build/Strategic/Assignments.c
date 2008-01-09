@@ -686,7 +686,7 @@ BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
 	if( BasicCanCharacterTrainMilitia( pSoldier ) &&
 			MilitiaTrainingAllowedInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) &&
 			DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( pSoldier ) &&
-			( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier ) == FALSE ) &&
+			!IsAreaFullOfMilitia(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) &&
 			( CountMilitiaTrainersInSoldiersSector( pSoldier ) < MAX_MILITIA_TRAINERS_PER_SECTOR ) )
 	{
 		return( TRUE );
@@ -766,48 +766,6 @@ static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* const pSoldi
 		}
 	}
 	return bCount;
-}
-
-
-BOOLEAN IsMilitiaTrainableFromSoldiersSectorMaxed(const SOLDIERTYPE* const pSoldier)
-{
-	INT8 bTownId = 0;
-	BOOLEAN fSamSitePresent = FALSE;
-
-
-	if( pSoldier->bSectorZ != 0 )
-	{
-		return( TRUE );
-	}
-
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
-
-	// is there a town really here
-	if( bTownId == BLANK_SECTOR )
-	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
-
-		// if there is a sam site here
-		if( fSamSitePresent )
-		{
-			if( IsSAMSiteFullOfMilitia( pSoldier->sSectorX, pSoldier->sSectorY ) )
-			{
-				return( TRUE );
-			}
-			return( FALSE );
-		}
-
-		return( FALSE );
-	}
-
-	// this considers *ALL* safe sectors of the town, not just the one soldier is in
-	if( IsTownFullMilitia( bTownId ) )
-	{
-		// town is full of militia
-		return( TRUE );
-	}
-
-	return( FALSE );
 }
 
 
@@ -5868,7 +5826,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						}
 					}
 
-					if( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier ) )
+					if (IsAreaFullOfMilitia(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
 					{
 						if( bTownId == BLANK_SECTOR )
 						{

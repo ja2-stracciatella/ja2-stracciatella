@@ -580,7 +580,7 @@ void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if ( IsMilitiaTrainableFromSoldiersSectorMaxed( pSoldier ) )
+	if (IsAreaFullOfMilitia(sSectorX, sSectorY, pSoldier->bSectorZ))
 	{
 		// we're full!!! go home!
 		bTownId = GetTownIdForSector( sSectorX, sSectorY );
@@ -755,73 +755,40 @@ BOOLEAN CanNearbyMilitiaScoutThisSector( INT16 sSectorX, INT16 sSectorY )
 	return( FALSE );
 }
 
-BOOLEAN IsTownFullMilitia( INT8 bTownId )
+
+BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const INT8 sector_z)
 {
-	INT32 iCounter = 0;
-	INT16 sSectorX = 0, sSectorY = 0;
-	INT32 iNumberOfMilitia = 0;
-	INT32 iMaxNumber = 0;
+	if (sector_z != 0) return TRUE;
 
-	while( pTownNamesList[ iCounter ] != 0 )
+	UINT32 count_milita = 0;
+	UINT32 max_milita   = 0;
+
+	const INT8 town_id = GetTownIdForSector(sector_x, sector_y);
+	if (town_id != BLANK_SECTOR)
 	{
-		if( pTownNamesList[ iCounter ] == bTownId )
+		for (INT32 i = 0; pTownNamesList[i] != BLANK_SECTOR; ++i)
 		{
-			// get the sector x and y
-			sSectorX = pTownLocationsList[ iCounter ] % MAP_WORLD_X;
-			sSectorY = pTownLocationsList[ iCounter ] / MAP_WORLD_X;
-
-			// if sector is ours get number of militia here
-			if( SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
+			if (pTownNamesList[i] != town_id) continue;
+			const INT16 town_x = pTownLocationsList[i] % MAP_WORLD_X;
+			const INT16 town_y = pTownLocationsList[i] / MAP_WORLD_X;
+			if (SectorOursAndPeaceful(town_x, town_y, 0))
 			{
 				// don't count GREEN militia, they can be trained into regulars first
-				iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
-				iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
-				iMaxNumber += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
+				count_milita += MilitiaInSectorOfRank(town_x, town_y, REGULAR_MILITIA);
+				count_milita += MilitiaInSectorOfRank(town_x, town_y, ELITE_MILITIA);
+				max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 			}
 		}
-
-		iCounter++;
 	}
-
-	// now check the number of militia
-	if ( iMaxNumber > iNumberOfMilitia )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-BOOLEAN IsSAMSiteFullOfMilitia( INT16 sSectorX, INT16 sSectorY )
-{
-	BOOLEAN fSamSitePresent = FALSE;
-	INT32 iNumberOfMilitia = 0;
-	INT32 iMaxNumber = 0;
-
-
-	// check if SAM site is ours?
-	fSamSitePresent = IsThisSectorASAMSector(  sSectorX, sSectorY, 0 );
-
-	if( fSamSitePresent == FALSE )
-	{
-		return( FALSE );
-	}
-
-	if( SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
+	else if (IsThisSectorASAMSector(sector_x, sector_y, 0))
 	{
 		// don't count GREEN militia, they can be trained into regulars first
-		iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, REGULAR_MILITIA );
-		iNumberOfMilitia += MilitiaInSectorOfRank( sSectorX, sSectorY, ELITE_MILITIA );
-		iMaxNumber += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
+		count_milita += MilitiaInSectorOfRank(sector_x, sector_y, REGULAR_MILITIA);
+		count_milita += MilitiaInSectorOfRank(sector_x, sector_y, ELITE_MILITIA);
+		max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 	}
 
-	// now check the number of militia
-	if ( iMaxNumber > iNumberOfMilitia )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return count_milita >= max_milita;
 }
 
 
