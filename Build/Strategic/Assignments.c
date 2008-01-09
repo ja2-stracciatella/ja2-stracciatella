@@ -656,6 +656,14 @@ static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 }
 
 
+static BOOLEAN CanSectorContainMilita(const INT16 x, const INT16 y, const INT16 z)
+{
+	return
+		(z == 0 && StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) || // is there a town?
+		IsThisSectorASAMSector(x, y, z);
+}
+
+
 // can this character EVER train militia?
 static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 {
@@ -667,13 +675,9 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 #else
 	return
 		s->bLeadership > 0 &&
-		(
-			StrategicMap[CALCULATE_STRATEGIC_INDEX(s->sSectorX, s->sSectorY)].bNameId != BLANK_SECTOR || // is there a town?
-			IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ)
-		) &&
+		CanSectorContainMilita(s->sSectorX, s->sSectorY, s->bSectorZ) &&
 		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
-		/* underground training is not allowed (code doesn't support and it's a reasonable enough limitation) */
-		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING);
 #endif
 }
 
@@ -2435,7 +2439,7 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY
 
 
 // ONCE PER HOUR, will handle ALL kinds of training (self, teaching, and town) in this sector
-static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
+static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const INT8 bZ)
 {
 	UINT8 ubStat;
 	BOOLEAN fAtGunRange = FALSE;
@@ -2446,12 +2450,7 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 	TOWN_TRAINER_TYPE TownTrainer[ MAX_CHARACTER_COUNT ];
 	UINT8 ubTownTrainers;
 	UINT16 usMaxPts;
-	BOOLEAN fSamSiteInSector = FALSE;
 	BOOLEAN fTrainingCompleted = FALSE;
-
-
-	// find out if a sam site here
-	fSamSiteInSector = IsThisSectorASAMSector( sMapX, sMapY, 0 );
 
 	// Training in underground sectors is disallowed by the interface code, so there should never be any
 	if (bZ != 0)
@@ -2558,9 +2557,8 @@ static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ)
 		}
 	}
 
-
 	// check if we're doing a sector where militia can be trained
-	if( ( (StrategicMap[ sMapX + ( sMapY * MAP_WORLD_X ) ].bNameId != BLANK_SECTOR ) || ( fSamSiteInSector == TRUE ) ) && (bZ == 0) )
+	if (CanSectorContainMilita(sMapX, sMapY, bZ))
 	{
 		// init town trainer list
 		memset( TownTrainer, 0, sizeof( TownTrainer ) );
@@ -2954,20 +2952,9 @@ static void TrainSoldierWithPts(SOLDIERTYPE* pSoldier, INT16 sTrainPts)
 // train militia in this sector with this soldier
 static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY, INT16 sTrainingPts)
 {
+	Assert(CanSectorContainMilita(pTrainer->sSectorX, pTrainer->sSectorY, pTrainer->bSectorZ));
+
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
-	UINT8 ubTownId = 0;
-	BOOLEAN fSamSiteInSector = FALSE;
-
-
-	// find out if a sam site here
-	fSamSiteInSector = IsThisSectorASAMSector( sMapX, sMapY, 0 );
-
-	// get town index
-	ubTownId = StrategicMap[ pTrainer -> sSectorX + pTrainer -> sSectorY * MAP_WORLD_X ].bNameId;
-	if( fSamSiteInSector == FALSE )
-	{
-		Assert(ubTownId != BLANK_SECTOR);
-	}
 
 	// trainer gains leadership - training argument is FALSE, because the trainer is not the one training!
 	StatChange( pTrainer, LDRAMT,		 (UINT16) ( 1 + ( sTrainingPts / 200 ) ), FALSE );
