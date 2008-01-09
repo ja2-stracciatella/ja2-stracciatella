@@ -200,21 +200,8 @@ BOOLEAN					gfMercGetItem										= FALSE;
 //mode.
 UINT16 gusMercsNewItemIndex												= 0xffff;
 
-//old and probably obsolete
-//BOOLEAN	fMercEdUseLeftSide = FALSE;
-//BOOLEAN fEditingMerc = FALSE;
-//BOOLEAN fKeepWindowHidden = FALSE;
-INT32 iEditMercPage = 1;
-INT32 iEditMercEnd = -1;
-INT32 iEditMercBkgrndArea = -1;
-INT32 iEditMercLocation;
-INT32 iEditStatTimer = 0;
 INT32 iEditWhichStat = -1;
 INT32 iEditMercMode = EDIT_MERC_NONE;
-INT32 iEditMercColorPage = -1;
-INT32 iEditMercStatPage = -1;
-INT32 iEditMercFindButton = -1;
-INT32 iEditMercSlotNumber;
 INT32	iEditColorStart[EDIT_NUM_COLORS];
 
 BOOLEAN gfShowPlayers = TRUE;
@@ -319,7 +306,6 @@ void ProcessMercEditing()
 
 	switch ( iEditMercMode )
 	{
-		case EDIT_MERC_PREV_COLOR:
 		case EDIT_MERC_NEXT_COLOR:
 			// Handle changes to the merc colors
 			switch ( iEditWhichStat )
@@ -685,7 +671,6 @@ static void DisplayEditMercWindow(void)
 
 	if ( gsSelectedMercID == -1 )
 	{
-//		fEditingMerc = FALSE;
 //		DestroyEditMercWindow();
 		return;
 	}
@@ -781,208 +766,6 @@ static SOLDIERTYPE* IsMercHere(INT32 iMapIndex)
 //----------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------
 
-static void EditMercChangeToStatsPageCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_TO_STATS;
-	}
-}
-
-
-static void EditMercChangeToColorPageCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_TO_COLOR;
-	}
-}
-
-
-static void EditMercDoneEditCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_DONE;
-	}
-}
-
-
-static void EditMercBkgrndCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_DONE;
-	}
-}
-
-
-static void EditMercPrevOrderCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_PREV_ORDER;
-	}
-}
-
-
-static void EditMercNextOrderCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_NEXT_ORDER;
-	}
-}
-
-
-static void EditMercPrevAttCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_PREV_ATT;
-	}
-}
-
-
-static void EditMercNextAttCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_NEXT_ATT;
-	}
-}
-
-
-static void EditMercStatUpCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	INT32 iBtn;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditWhichStat = -1;
-		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
-		{
-			if ( btn->IDNum == iEditorButton[iBtn] )
-				iEditWhichStat = iBtn;
-		}
-
-		if ( iEditWhichStat != -1 )
-		{
-			iEditStatTimer = 0;
-			iEditMercMode = EDIT_MERC_INC_STAT;
-		}
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_NONE;
-		btn->uiFlags &= (~BUTTON_CLICKED_ON);
-	}
-}
-
-
-static void EditMercStatDwnCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	INT32 iBtn;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditWhichStat = -1;
-		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
-		{
-			if ( btn->IDNum == iEditorButton[iBtn] )
-				iEditWhichStat = iBtn;
-		}
-
-		if ( iEditWhichStat != -1 )
-		{
-			iEditStatTimer = 0;
-			iEditMercMode = EDIT_MERC_DEC_STAT;
-		}
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_NONE;
-		btn->uiFlags &= (~BUTTON_CLICKED_ON);
-	}
-}
-
-
-static void EditMercSetDirCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	INT32 iBtn;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditWhichStat = -1;
-		for ( iBtn = 0; iBtn < 36 && iEditWhichStat == -1; iBtn++ )
-		{
-			if ( btn->IDNum == iEditorButton[iBtn] )
-				iEditWhichStat = iBtn;
-		}
-
-		if ( iEditWhichStat != -1 )
-		{
-			iEditStatTimer = 0;
-			iEditMercMode = EDIT_MERC_SET_DIR;
-		}
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-}
-
-
-static void EditMercCenterCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditStatTimer = 0;
-		iEditMercMode = EDIT_MERC_FIND;
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-}
-
-
-static void EditMercColorDwnCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	INT32 iBtn;
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		iEditWhichStat = -1;
-		for ( iBtn = 0; iBtn < 8 && iEditWhichStat == -1; iBtn++ )
-		{
-			if ( btn->IDNum == iEditorButton[iBtn] )
-				iEditWhichStat = iBtn;
-		}
-
-		if ( iEditWhichStat != -1 )
-		{
-			iEditStatTimer = 0;
-			iEditMercMode = EDIT_MERC_PREV_COLOR;
-		}
-
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-	}
-}
 
 void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 {
@@ -1018,7 +801,6 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 			if ( btn->IDNum == iEditorButton[iBtn] )
 			{
 				iEditWhichStat = iBtn - FIRST_MERCS_COLOR_BUTTON;
-				iEditStatTimer = 0;
 				iEditMercMode = EDIT_MERC_NEXT_COLOR;
 				gfRenderMercInfo = TRUE;
 				return;
@@ -1216,81 +998,6 @@ void DisplayWayPoints(void)
 }
 
 
-static void CreateEditMercWindow(void)
-{
-	INT32 iXPos, iYPos, iHeight, iWidth;
-	INT32 x;
-
-	iWidth = 266;
-	iHeight = 360;
-	iYPos = 0;
-	iXPos = 0;
-
-	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
-	iEditMercLocation = (INT32)pSoldier->sGridNo;
-	gpWorldLevelData[ iEditMercLocation ].pObjectHead->ubShadeLevel = DEFAULT_SHADE_LEVEL;
-
-	iEditMercBkgrndArea = CreateHotSpot(iXPos, iYPos, iWidth, iHeight, MSYS_PRIORITY_NORMAL, EditMercBkgrndCallback);
-
-	iEditMercColorPage = CreateTextButton(L"Merc Colors", FONT12POINT1, FONT_BLACK,        FONT_BLACK, iXPos + 183, iYPos + 315, 80, 20, MSYS_PRIORITY_NORMAL + 1, EditMercChangeToColorPageCallback);
-	iEditMercEnd       = CreateTextButton(L"Done",        FONT12POINT1, FONT_MCOLOR_BLACK, FONT_BLACK, iXPos + 183, iYPos + 337, 80, 20, MSYS_PRIORITY_NORMAL + 1, EditMercDoneEditCallback);
-
-	// Disable color editing for PC Mercs
-	if ( (UINT16)gsSelectedMercID >= gTacticalStatus.Team[ OUR_TEAM ].bFirstID && (UINT16)gsSelectedMercID <=  gTacticalStatus.Team[ OUR_TEAM ].bLastID )
-		DisableButton( iEditMercColorPage );
-
-	iEditorButton[8]  = QuickCreateButton(giEditMercImage[0], iXPos +  98, iYPos +  51, MSYS_PRIORITY_NORMAL + 1, EditMercPrevOrderCallback);
-	iEditorButton[9]  = QuickCreateButton(giEditMercImage[1], iXPos + 233, iYPos +  51, MSYS_PRIORITY_NORMAL + 1, EditMercNextOrderCallback);
-	SetButtonFastHelpText( iEditorButton[8], L"Previous merc standing orders" );
-	SetButtonFastHelpText( iEditorButton[9], L"Next merc standing orders" );
-
-	iEditorButton[10] = QuickCreateButton(giEditMercImage[0], iXPos +  98, iYPos +  86, MSYS_PRIORITY_NORMAL + 1, EditMercPrevAttCallback);
-	iEditorButton[11] = QuickCreateButton(giEditMercImage[1], iXPos + 233, iYPos +  86, MSYS_PRIORITY_NORMAL + 1, EditMercNextAttCallback);
-	SetButtonFastHelpText( iEditorButton[10], L"Previous merc combat attitude" );
-	SetButtonFastHelpText( iEditorButton[11], L"Next merc combat attitude" );
-
-	iEditorButton[12] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 110, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[13] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 110, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[14] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 130, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[15] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 130, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[16] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 150, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[17] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 150, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[18] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 170, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[19] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 170, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[20] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 190, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[21] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 190, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[22] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 210, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[23] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 210, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[24] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 230, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[25] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 230, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[26] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 250, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[27] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 250, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[28] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 270, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[29] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 270, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[30] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 290, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[31] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 290, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[32] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 310, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[33] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 310, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	iEditorButton[34] = QuickCreateButton(giEditMercImage[0], iXPos +  86, iYPos + 330, MSYS_PRIORITY_NORMAL + 1, EditMercStatDwnCallback);
-	iEditorButton[35] = QuickCreateButton(giEditMercImage[1], iXPos + 146, iYPos + 330, MSYS_PRIORITY_NORMAL + 1, EditMercStatUpCallback);
-
-	for ( x = 12; x < 36; x += 2 )
-	{
-		SetButtonFastHelpText( iEditorButton[x], L"Decrease merc stat" );
-		SetButtonFastHelpText( iEditorButton[x + 1], L"Increase merc stat" );
-	}
-}
 void SetMercOrders( INT8 bOrders )
 {
 	gpSelected->pSoldier->bOrders = bOrders;

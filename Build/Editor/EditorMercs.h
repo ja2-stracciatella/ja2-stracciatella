@@ -31,23 +31,7 @@ extern UINT8 gubCurrMercMode;
 #define EDIT_COLOR_SKIN				2
 #define EDIT_COLOR_VEST				3
 #define EDIT_MERC_NONE				0
-#define EDIT_MERC_DEC_STAT		1
-#define EDIT_MERC_INC_STAT		2
-#define EDIT_MERC_PREV_ORDER	3
-#define EDIT_MERC_NEXT_ORDER	4
-#define EDIT_MERC_PREV_ATT		5
-#define EDIT_MERC_NEXT_ATT		6
-#define EDIT_MERC_SET_DIR			7
-#define EDIT_MERC_FIND				8
-#define EDIT_MERC_DONE				9
-#define EDIT_MERC_TO_COLOR		10
-#define EDIT_MERC_TO_STATS		11
-#define EDIT_MERC_PREV_COLOR	12
 #define EDIT_MERC_NEXT_COLOR	13
-
-#define NUM_MERC_BUTTONS			40
-
-#define NUM_DIFF_LVLS						5
 
 extern INT16 gsSelectedMercID;
 extern INT16 gsSelectedMercGridNo;
