@@ -90,9 +90,6 @@ typedef struct TOWN_TRAINER_TYPE
 } TOWN_TRAINER_TYPE;
 
 
-// can character do this assignment?
-//BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment );
-
 // can character train militia?
 BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* s);
 

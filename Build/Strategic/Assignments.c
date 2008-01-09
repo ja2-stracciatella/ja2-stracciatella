@@ -308,43 +308,6 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 }
 
 
-/*
-BOOLEAN CanSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
-{
-	switch( bAssignment )
-	{
-		case( DOCTOR ):
-			return( CanCharacterDoctor( pSoldier ) );
-			break;
-		case( PATIENT ):
-			return( CanCharacterPatient( pSoldier ) );
-			break;
-		case( REPAIR ):
-			return( CanCharacterRepair( pSoldier ) );
-			break;
-		case( TRAIN_TOWN ):
-			return( CanCharacterTrainMilitia( pSoldier ) );
-			break;
-		case( TRAIN_SELF ):
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, TRUE, FALSE ) );
-			break;
-		case( TRAIN_TEAMMATE ):
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, FALSE, TRUE ) );
-			break;
-		case TRAIN_BY_OTHER:
-			return( CanCharacterTrainStat( pSoldier, pSoldier -> bTrainStat, TRUE, FALSE ) );
-			break;
-		case( VEHICLE ):
-			return( CanCharacterVehicle( pSoldier ) );
-			break;
-		default:
-			return( (CanCharacterSquad( pSoldier, bAssignment ) == CHARACTER_CAN_JOIN_SQUAD ) );
-			break;
-	}
-}
-*/
-
-
 static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 {
 	return
