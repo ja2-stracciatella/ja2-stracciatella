@@ -969,14 +969,11 @@ BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 }
 
 
-BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier )
+BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE* const s)
 {
 	CFOR_ALL_VEHICLES(v)
 	{
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-		{
-			return TRUE;
-		}
+		if (IsThisVehicleAccessibleToSoldier(s, v)) return TRUE;
 	}
 	return FALSE;
 }

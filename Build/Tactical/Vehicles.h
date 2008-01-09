@@ -96,7 +96,7 @@ BOOLEAN RemoveVehicleFromList( INT32 iId );
 // clear out the vehicle list
 void ClearOutVehicleList( void );
 
-BOOLEAN AnyAccessibleVehiclesInSoldiersSector( SOLDIERTYPE *pSoldier );
+BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE*);
 
 // is this vehicle in the same sector (not between sectors), and accesible
 BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE*, const VEHICLETYPE*);
