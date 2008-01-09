@@ -57,7 +57,6 @@ SGPVObject* guiMercInventoryPanel;
 SGPVObject* guiOmertaMap;
 SGPVSurface* guiMercInvPanelBuffers[9];
 SGPVSurface* guiMercTempBuffer;
-BUTTON_PICS* giEditMercImage[2];
 SGPVObject* guiExclamation;
 SGPVObject* guiKeyImage;
 
@@ -158,9 +157,6 @@ static void LoadEditorImages(void)
 	giEditMercDirectionIcons[0] = LoadGenericButtonIcon("EDITOR/arrowsoff.sti");
 	giEditMercDirectionIcons[1] = LoadGenericButtonIcon("EDITOR/arrowson.sti");
 
-	giEditMercImage[0] = LoadButtonImage("EDITOR/leftarrow.sti",0,1,2,3,4);
-	giEditMercImage[1] = LoadButtonImage("EDITOR/rightarrow.sti",0,1,2,3,4);
-
 	guiExclamation = AddVideoObjectFromFile("EDITOR/Exclamation.sti");
 	AssertMsg(guiExclamation != NO_VOBJECT, "Failed to load data/editor/Exclamation.sti");
 	guiKeyImage = AddVideoObjectFromFile("EDITOR/KeyImage.sti");
@@ -176,9 +172,6 @@ static void DeleteEditorImages(void)
 	//The merc directional buttons
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[0] );
 	UnloadGenericButtonIcon( (INT16)giEditMercDirectionIcons[1] );
-
-	UnloadButtonImage( giEditMercImage[0] );
-	UnloadButtonImage( giEditMercImage[1] );
 }
 
 

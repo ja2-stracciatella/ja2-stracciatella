@@ -63,7 +63,6 @@ extern SGPVObject* guiExclamation;
 extern SGPVObject* guiKeyImage;
 extern SGPVSurface* guiMercInvPanelBuffers[9];
 extern SGPVSurface* guiMercTempBuffer;
-extern BUTTON_PICS* giEditMercImage[2];
 
 #endif
 #endif
