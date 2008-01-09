@@ -152,8 +152,6 @@ BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
 
 BOOLEAN		gfDoingQuickLoad = FALSE;
 
-BOOLEAN		gfFailedToSaveGameWhenInsideAMessageBox = FALSE;
-
 //This flag is used to diferentiate between loading a game and saveing a game.
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
@@ -235,7 +233,6 @@ UINT32	SaveLoadScreenInit()
 static BOOLEAN EnterSaveLoadScreen(void);
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
-static void HandleSaveLoadScreen(void);
 static void RenderSaveLoadScreen(void);
 static void SaveLoadGameNumber(INT8 bSaveGameID);
 
@@ -269,8 +266,6 @@ UINT32	SaveLoadScreenHandle()
 		return( guiSaveLoadExitScreen );
 
 	RenderAllTextFields();
-
-	HandleSaveLoadScreen();
 
 	if( gfRedrawSaveLoadScreen )
 	{
@@ -704,28 +699,6 @@ static void RenderSaveLoadScreen(void)
 	DisplaySaveGameList();
 
 	InvalidateScreen();
-}
-
-
-static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue);
-
-
-static void HandleSaveLoadScreen(void)
-{
-	//If the game failed when in a message box, pop up a message box stating this
-	if( gfFailedToSaveGameWhenInsideAMessageBox )
-	{
-		gfFailedToSaveGameWhenInsideAMessageBox = FALSE;
-
-		DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox );
-
-//		gbSelectedSaveLocation = -1;
-		gbHighLightedLocation=-1;
-
-//		for( i=0; i<NUM_SAVE_GAMES; i++)
-//			gbSaveGameSelectedLocation[i] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-		ClearSelectedSaveSlot();
-	}
 }
 
 
@@ -1403,6 +1376,7 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void DisableSelectedSlot(void);
 static void InitSaveLoadScreenTextInputBoxes(void);
+static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue);
 
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
@@ -2131,40 +2105,6 @@ BOOLEAN IsThereAnySavedGameFiles()
 	}
 
 	return( FALSE );
-}
-
-
-static void NotEnoughHardDriveSpaceForQuickSaveMessageBoxCallBack(UINT8 bExitValue)
-{
-	if( !SaveGame( 0, gzGameDescTextField ) )
-	{
-		//Unset the fact that we are saving a game
-		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
-
-		//Set a flag indicating that the save failed ( cant initiate a message box from within a mb callback )
-		gfFailedToSaveGameWhenInsideAMessageBox = TRUE;
-	}
-}
-
-
-static void NotEnoughHardDriveSpaceForNormalSaveMessageBoxCallBack(UINT8 bExitValue)
-{
-	if( bExitValue == MSG_BOX_RETURN_OK )
-	{
-		//If the game failed to save
-		if( !SaveGame( gbSelectedSaveLocation, gzGameDescTextField ) )
-		{
-			//Unset the fact that we are saving a game
-			gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
-
-			//Set a flag indicating that the save failed ( cant initiate a message box from within a mb callback )
-			gfFailedToSaveGameWhenInsideAMessageBox = TRUE;
-		}
-		else
-		{
-			SetSaveLoadExitScreen( guiPreviousOptionScreen );
-		}
-	}
 }
 
 

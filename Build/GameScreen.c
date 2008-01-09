@@ -99,7 +99,6 @@ BOOLEAN				gfTacticalDisableRegionActive = FALSE;
 INT8					gbTacticalDisableMode	= FALSE;
 MODAL_HOOK		gModalDoneCallback;
 BOOLEAN				gfBeginEndTurn = FALSE;
-extern				BOOLEAN		gfFailedToSaveGameWhenInsideAMessageBox;
 extern				BOOLEAN		gfFirstHeliRun;
 extern				BOOLEAN		gfRenderFullThisFrame;
 
@@ -422,20 +421,6 @@ UINT32  MainGameScreenHandle(void)
 		}
 	}
 */
-
-
-	// The gfFailedToSaveGameWhenInsideAMessageBox flag will only be set at this point if the game fails to save during
-	// a quick save and when the game was already in a message box.
-	//If the game failed to save when in a message box, pop up a message box stating an error occured
-	if( gfFailedToSaveGameWhenInsideAMessageBox )
-	{
-		gfFailedToSaveGameWhenInsideAMessageBox = FALSE;
-
-		DoMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );
-
-		return( GAME_SCREEN );
-	}
-
 
 	// Check if we are in bar animation...
 	if ( InTopMessageBarAnimation( ) )
