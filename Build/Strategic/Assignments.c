@@ -1019,113 +1019,23 @@ static BOOLEAN CanCharacterTrainStat(SOLDIERTYPE* pSoldier, INT8 bStat, BOOLEAN 
 		return( FALSE );
 	}
 
-	// check stat values, 0 means no chance in hell
-	switch( bStat )
+	INT8 stat_val;
+	switch (bStat)
 	{
-		case ( STRENGTH ):
-			// strength
-			if( ( pSoldier -> bStrength == 0 )||( ( pSoldier -> bStrength < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bStrength >=  TRAINING_RATING_CAP ) && ( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-		break;
-		case( DEXTERITY ):
-			// dexterity
-			if( ( pSoldier -> bDexterity == 0 )||( ( pSoldier -> bDexterity < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bDexterity >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-		break;
-		case( AGILITY ):
-			// agility
-			if( ( pSoldier -> bAgility == 0 )||( ( pSoldier -> bAgility < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bAgility >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-
-		break;
-		case( HEALTH ):
-			// wisdom
-			if( ( pSoldier -> bLifeMax == 0 )||( ( pSoldier -> bLifeMax < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bLifeMax >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-
-		break;
-		case( MARKSMANSHIP ):
-			// marksmanship
-			if( ( pSoldier -> bMarksmanship == 0 )||( ( pSoldier -> bMarksmanship < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bMarksmanship >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-
-		break;
-		case( MEDICAL ):
-			// medical
-			if( ( pSoldier -> bMedical == 0 )||( ( pSoldier -> bMedical < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bMedical >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-
-		break;
-		case( MECHANICAL ):
-			// mechanical
-			if( ( pSoldier -> bMechanical == 0 )||( ( pSoldier -> bMechanical < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bMechanical >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-		break;
-		case( LEADERSHIP ):
-			// leadership
-			if( ( pSoldier -> bLeadership == 0 )||( ( pSoldier -> bLeadership < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bLeadership >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-		break;
-		case( EXPLOSIVE_ASSIGN ):
-			// explosives
-			if( ( pSoldier -> bExplosive == 0 )||( ( pSoldier -> bExplosive < MIN_RATING_TO_TEACH ) && ( fTrainTeammate ) ) )
-			{
-				return ( FALSE );
-			}
-			else if( ( pSoldier -> bExplosive >= TRAINING_RATING_CAP )&&( fTrainSelf ) )
-			{
-				return ( FALSE );
-			}
-		break;
+		case STRENGTH:         stat_val = pSoldier->bStrength;     break;
+		case DEXTERITY:        stat_val = pSoldier->bDexterity;    break;
+		case AGILITY:          stat_val = pSoldier->bAgility;      break;
+		case HEALTH:           stat_val = pSoldier->bLifeMax;      break;
+		case MARKSMANSHIP:     stat_val = pSoldier->bMarksmanship; break;
+		case MEDICAL:          stat_val = pSoldier->bMedical;      break;
+		case MECHANICAL:       stat_val = pSoldier->bMechanical;   break;
+		case LEADERSHIP:       stat_val = pSoldier->bLeadership;   break;
+		case EXPLOSIVE_ASSIGN: stat_val = pSoldier->bExplosive;    break;
+		default:               stat_val = 0;                       break;
 	}
+	if (stat_val == 0)                                     return FALSE;
+	if (fTrainTeammate && stat_val <  MIN_RATING_TO_TEACH) return FALSE;
+	if (fTrainSelf     && stat_val >= TRAINING_RATING_CAP) return FALSE;
 
 	// in transit?
 	if( IsCharacterInTransit( pSoldier ) == TRUE )
