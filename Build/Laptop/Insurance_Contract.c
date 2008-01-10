@@ -1350,18 +1350,9 @@ static INT32 CalcStartDayOfInsurance(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN AreAnyAimMercsOnTeam(void)
 {
-	INT16	sNextMercID = 0;
-	BOOLEAN fIsThereAnyAimMercs = FALSE;
-
-	for( sNextMercID = 0; sNextMercID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; sNextMercID++ )
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		//check to see if any of the mercs are AIM mercs
-		const SOLDIERTYPE* const s = GetSoldierFromMercID(sNextMercID);
-		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-		{
-			fIsThereAnyAimMercs = TRUE;
-		}
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC) return TRUE;
 	}
-
-	return( fIsThereAnyAimMercs );
+	return FALSE;
 }

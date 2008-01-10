@@ -1,3 +1,4 @@
+(r2678) Fix a crash, which is caused by a vanilla mixup of SoldierID and ProfileID, in the insurance contract screen when there are no insurable mercs.
 (r2609) Fix a gross vanilla mistranslation in the German translation for the term "shooting range".
 (r2580) Fix a vanilla memory leak of the radar image when a meanwhile sequence is playing.
 (r2576) Fix a vanilla glitch: After a battle against bloodcats probably a wrong soldier (e.g. a soldier not in the battle sector) tried to say his "cool"-line.
