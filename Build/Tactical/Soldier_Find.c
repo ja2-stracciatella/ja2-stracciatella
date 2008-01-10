@@ -161,7 +161,6 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 	BOOLEAN				fSoldierFound = FALSE;
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16					sMaxScreenMercY, sHeighestMercScreenY = -32000;
-	BOOLEAN				fDoFull;
 	SOLDIERTYPE* best_merc = NULL;
 	UINT16				usAnimSurface;
 	INT32					iMercScreenX, iMercScreenY;
@@ -208,30 +207,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 					}
 				}
 
-
-				// If we are selective.... do our own guys FULL and other with gridno!
-				// First look for owned soldiers, by way of the full method
-				if ( uiFlags & FIND_SOLDIER_GRIDNO )
-				{
-					fDoFull = FALSE;
-				}
-				else if ( uiFlags & FIND_SOLDIER_SELECTIVE )
-				{
-					if ( pSoldier->ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
-					{
-						fDoFull = TRUE;
-					}
-					else
-					{
-						fDoFull = FALSE;
-					}
-				}
-				else
-				{
-					fDoFull = TRUE;
-				}
-
-				if ( fDoFull )
+				if (!(uiFlags & FIND_SOLDIER_GRIDNO))
 				{
 					// Get Rect contained in the soldier
 					GetSoldierScreenRect( pSoldier, &aRect );
@@ -387,7 +363,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 	else
 	{
 		// If we were handling a stack, and we have not found anybody, end
-		if ( gfHandleStack && !( uiFlags & ( FIND_SOLDIER_BEGINSTACK | FIND_SOLDIER_SELECTIVE ) ) )
+		if (gfHandleStack && !(uiFlags & FIND_SOLDIER_BEGINSTACK))
 		{
 			if ( gSoldierStack.fUseGridNo )
 			{
