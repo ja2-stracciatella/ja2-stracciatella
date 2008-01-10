@@ -4482,8 +4482,7 @@ void ExitCombatMode( )
 	// zap interrupt list
 	ClearIntList();
 
-	// dirty interface
-	DirtyMercPanelInterface( MercPtrs[ 0 ], DIRTYLEVEL2 );
+	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	// ATE: If we are IN_CONV - DONT'T DO THIS!
 	if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
