@@ -209,30 +209,25 @@ static void DoneFadeInKilledQueen(void)
 
 static void DoneFadeOutKilledQueen(void)
 {
-	SOLDIERTYPE* pSoldier;
-
 	// For one, loop through our current squad and move them over
-	INT32 cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-	// look for all mercs on the same team,
-	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		// Are we in this sector, On the current squad?
-		if ( pSoldier->bActive && pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad( ) )
+		if (s->bLife >= OKLIFE && s->bInSector && s->bAssignment == CurrentSquad())
 		{
 			gfTacticalTraversal = TRUE;
-			SetGroupSectorValue( 3, MAP_ROW_P, 0, pSoldier->ubGroupID );
+			SetGroupSectorValue(3, MAP_ROW_P, 0, s->ubGroupID);
 
 			// Set next sectore
-			pSoldier->sSectorX = 3;
-			pSoldier->sSectorY = MAP_ROW_P;
-			pSoldier->bSectorZ = 0;
+			s->sSectorX = 3;
+			s->sSectorY = MAP_ROW_P;
+			s->bSectorZ = 0;
 
 			// Set gridno
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			pSoldier->usStrategicInsertionData = 5687;
+			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+			s->usStrategicInsertionData = 5687;
 			// Set direction to face....
-			pSoldier->ubInsertionDirection		 = 100 + NORTHWEST;
+			s->ubInsertionDirection     = 100 + NORTHWEST;
 		}
 	}
 
