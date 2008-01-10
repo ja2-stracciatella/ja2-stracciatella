@@ -1601,27 +1601,16 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 {
 	// find the distance to the closest person on the same team
-	UINT8					ubLoop;
-	SOLDIERTYPE		*pTargetSoldier;
 	INT16					sMinDist = 1000;
 	INT16					sDist;
 
-	// Loop through all mercs on player team
-	ubLoop = gTacticalStatus.Team[ pSoldier->bTeam ].bFirstID;
-
-	for ( ; ubLoop <= gTacticalStatus.Team[ pSoldier->bTeam ].bLastID; ubLoop++ )
+	CFOR_ALL_IN_TEAM(pTargetSoldier, pSoldier->bTeam)
 	{
-		if (ubLoop == pSoldier->ubID)
-		{
-			// same guy - continue!
-			continue;
-		}
-
-		pTargetSoldier = Menptr + ubLoop;
+		if (pTargetSoldier == pSoldier) continue;
 
 		if ( pSoldier->bActive && pSoldier->bInSector )
 		{
-			if (!pTargetSoldier->bActive || !pTargetSoldier->bInSector)
+			if (!pTargetSoldier->bInSector)
 			{
 				continue;
 			}
