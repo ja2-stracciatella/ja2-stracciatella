@@ -446,12 +446,6 @@ BOOLEAN InitOverhead(void)
 		gTacticalStatus.Team[i].ubLastMercToRadio  = NOBODY;
 		gTacticalStatus.Team[i].bTeamActive        = FALSE;
 		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
-
-		// set team values in soldier structures for all who are on this team
-		for (UINT8 j = gTacticalStatus.Team[i].bFirstID; j <= gTacticalStatus.Team[i].bLastID; ++j)
-		{
-			MercPtrs[j]->bTeam = i;
-		}
 	}
 
 	// Zero out merc slots!
