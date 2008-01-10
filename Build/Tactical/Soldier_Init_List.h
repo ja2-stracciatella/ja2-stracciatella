@@ -61,7 +61,7 @@ void AddSoldierInitListBloodcats(void);
 void UseEditorOriginalList(void);
 void UseEditorAlternateList(void);
 
-void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier );
+void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE*);
 
 void AddProfilesUsingProfileInsertionData(void);
 void AddProfilesNotUsingProfileInsertionData(void);

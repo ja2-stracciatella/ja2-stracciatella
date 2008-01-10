@@ -1592,7 +1592,7 @@ void UseEditorAlternateList()
 //Any killed people that used detailed placement information must prevent that from occurring
 //again in the future.  Otherwise, the sniper guy with 99 marksmanship could appear again
 //if the map was loaded again!
-void EvaluateDeathEffectsToSoldierInitList( SOLDIERTYPE *pSoldier )
+void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE* const pSoldier)
 {
 	if( pSoldier->bTeam == MILITIA_TEAM )
 		return;

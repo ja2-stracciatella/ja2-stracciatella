@@ -683,7 +683,7 @@ static BOOLEAN PrepareEnemyForUndergroundBattle(void)
 }
 
 //The queen AI layer must process the event by subtracting forces, etc.
-void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier )
+void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 {
 	wchar_t str[128];
 	EvaluateDeathEffectsToSoldierInitList( pSoldier );

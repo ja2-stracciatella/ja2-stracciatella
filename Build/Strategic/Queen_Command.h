@@ -27,7 +27,7 @@ BOOLEAN PrepareEnemyForSectorBattle(void);
 void AddPossiblePendingEnemiesToBattle(void);
 void EndTacticalBattleForEnemy(void);
 
-void ProcessQueenCmdImplicationsOfDeath( SOLDIERTYPE *pSoldier );
+void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE*);
 
 BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile );
 BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile );
