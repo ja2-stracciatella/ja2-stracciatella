@@ -105,11 +105,10 @@ static UINT32 TimeProc(UINT32 interval, void* params)
       if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
       {
         // IN Mapscreen, loop through player's team.....
-				for (UINT32 gCNT = gTacticalStatus.Team[gbPlayerNum].bFirstID; gCNT <= gTacticalStatus.Team[gbPlayerNum].bLastID; gCNT++)
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
 			  {
-					SOLDIERTYPE* gPSOLDIER = MercPtrs[gCNT];
-					UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
-					UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
+					UPDATETIMECOUNTER(s->PortraitFlashCounter);
+					UPDATETIMECOUNTER(s->PanelAnimateCounter);
         }
       }
       else

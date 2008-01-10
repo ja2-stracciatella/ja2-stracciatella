@@ -1617,7 +1617,6 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 	UINT8 ubIntDiff[MAXMERCS];
 	UINT8 ubSmallestDiff;
 	UINT8 ubSlot, ubSmallestSlot;
-	UINT8 ubLoop;
 	BOOLEAN fIntOccurs;
 
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -1740,9 +1739,8 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			{
 				// if anyone on this team is under AI control, remove
 				// their AI control flag and put them on the queue instead of this guy
-				for ( ubLoop = gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bFirstID; ubLoop <= gTacticalStatus.Team[ gTacticalStatus.ubCurrentTeam ].bLastID; ubLoop++ )
+				FOR_ALL_IN_TEAM(s, gTacticalStatus.ubCurrentTeam)
 				{
-					SOLDIERTYPE* const s = GetMan(ubLoop);
 					if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 					{
 						// this guy lost control
@@ -1760,7 +1758,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 			}
 
 			// loop once for each opponent who interrupted
-			for (ubLoop = 0; ubLoop < ubIntCnt; ubLoop++)
+			for (UINT8 ubLoop = 0; ubLoop < ubIntCnt; ++ubLoop)
 			{
 				// find the smallest intDiff still remaining in the list
 				ubSmallestDiff = NO_INTERRUPT;
