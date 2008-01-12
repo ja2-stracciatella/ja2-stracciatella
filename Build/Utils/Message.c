@@ -29,7 +29,6 @@ struct ScrollStringSt
 {
 	STR16   pString16;
 	VIDEO_OVERLAY* video_overlay;
-	UINT32  uiFont;
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
@@ -82,13 +81,12 @@ extern BOOLEAN fTextBoxMouseRegionCreated;
 extern BOOLEAN fDialogueBoxDueToLastMessage;
 
 
-static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
+static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* i = MemAlloc(sizeof(*i));
 	i->pString16             = MemAlloc(sizeof(*i->pString16) * (wcslen(pString) + 1));
 	wcscpy(i->pString16, pString);
 	i->video_overlay         = NULL;
-	i->uiFont                = uiFont;
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
 	i->pNext                 = NULL;
@@ -104,7 +102,7 @@ static void CreateStringVideoOverlay(ScrollStringSt* pStringSt, UINT16 usX, UINT
 	VIDEO_OVERLAY_DESC VideoOverlayDesc;
 	VideoOverlayDesc.sLeft       = usX;
 	VideoOverlayDesc.sTop        = usY;
-	VideoOverlayDesc.uiFontID    = pStringSt->uiFont;
+	VideoOverlayDesc.uiFontID    = TINYFONT1;
 	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK;
 	VideoOverlayDesc.ubFontFore  = pStringSt->usColor;
 	VideoOverlayDesc.BltCallback = BlitString;
@@ -479,9 +477,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 		case MSG_INTERFACE: usColor = INTERFACE_COLOR; break;
 	}
 
-	const UINT32 uiFont = TINYFONT1;
-
-	WRAPPED_STRING* pStringWrapperHead = LineWrap(uiFont, LINE_WIDTH, NULL, DestString);
+	WRAPPED_STRING* pStringWrapperHead = LineWrap(TINYFONT1, LINE_WIDTH, NULL, DestString);
 	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
 	if (pStringWrapper == NULL) return;
 
@@ -494,7 +490,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 	BOOLEAN fNewString = TRUE;
 	do
 	{
-		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, uiFont, fNewString);
+		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, fNewString);
 		if (tail == NULL)
 		{
 			pStringS = pTempStringSt;
@@ -513,7 +509,7 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 }
 
 
-static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString);
+static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString);
 
 
 // this function sets up the string into several single line structures
@@ -586,16 +582,14 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 		case MSG_INTERFACE: usColor = INTERFACE_COLOR; break;
 	}
 
-	const UINT32 uiFont = MAP_SCREEN_MESSAGE_FONT;
-
-	WRAPPED_STRING* pStringWrapperHead = LineWrap(uiFont, MAP_LINE_WIDTH, NULL, DestString);
+	WRAPPED_STRING* pStringWrapperHead = LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, NULL, DestString);
 	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
 	if (!pStringWrapper) return;
 
 	BOOLEAN fNewString = TRUE;
 	do
 	{
-		AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, uiFont, fNewString);
+		AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, fNewString);
 		fNewString = FALSE;
 		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}
@@ -608,9 +602,9 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 
 // add string to the map screen message list
-static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, UINT32 uiFont, BOOLEAN fStartOfNewString)
+static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
-	ScrollStringSt* pStringSt = AddString(pString, usColor, uiFont, fStartOfNewString);
+	ScrollStringSt* const pStringSt = AddString(pString, usColor, fStartOfNewString);
 
 	// Figure out which queue slot index we're going to use to store this
 	// If queue isn't full, this is easy, if is is full, we'll re-use the oldest slot
@@ -715,7 +709,7 @@ static BOOLEAN ExtractScrollStringFromFile(const HWFILE file, ScrollStringSt* co
 	if (!FileRead(file, data, sizeof(data))) return FALSE;
 
 	const BYTE* d = data;
-	EXTR_U32(d, s->uiFont)
+	EXTR_SKIP(d, 4)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
 	EXTR_SKIP(d, 16)
 	EXTR_U16(d, s->usColor)
@@ -731,7 +725,7 @@ static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringS
 {
 	BYTE data[28];
 	BYTE* d = data;
-	INJ_U32(d, s->uiFont)
+	INJ_SKIP(d, 4)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
 	INJ_SKIP(d, 16)
 	INJ_U16(d, s->usColor)
