@@ -776,8 +776,7 @@ void DisplayWayPoints(void)
 		return;
 
 	const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
-	if ( pSoldier == NULL || !pSoldier->bActive)
-		return;
+	if (pSoldier == NULL) return;
 
 	// point 0 is not used!
 	for ( bPoint = 1; bPoint <= pSoldier->bPatrolCnt; bPoint++ )
