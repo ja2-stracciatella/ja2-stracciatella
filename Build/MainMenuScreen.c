@@ -410,7 +410,7 @@ static void RenderMainMenu(void)
 #if defined TESTFOREIGNFONTS
 	UINT16 y = 105;
 #	define TEST_FONT(font) \
-		DrawTextToScreen(#font L": ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî", 0, y, 640, font, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED); \
+		DrawTextToScreen(#font L": ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌì", 0, y, 640, font, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED); \
 		y += 20;
 	TEST_FONT(LARGEFONT1);
 	TEST_FONT(SMALLFONT1);
