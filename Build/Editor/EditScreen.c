@@ -1316,7 +1316,7 @@ static void HandleKeyboardShortcuts(void)
 						ExtractAndUpdateDoorInfo();
 						KillDoorEditing();
 					}
-					else if( iCurrentTaskbar == TASK_MERCS && gsSelectedMercID != -1 )
+					else if (iCurrentTaskbar == TASK_MERCS && g_selected_merc != NULL)
 						ExtractCurrentMercModeInfo( FALSE );
 					else if( iCurrentTaskbar == TASK_MAPINFO )
 						ExtractAndUpdateMapInfo();
@@ -1331,7 +1331,7 @@ static void HandleKeyboardShortcuts(void)
 				case SDLK_DELETE:
 					if( iCurrentTaskbar == TASK_ITEMS )
 						DeleteSelectedItem();
-					else if( gsSelectedMercID != -1 )
+					else if (g_selected_merc != NULL)
 					{
 						if( gubCurrMercMode == MERC_INVENTORYMODE && gbCurrSelect != -1 )
 						{

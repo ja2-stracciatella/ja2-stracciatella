@@ -1250,12 +1250,9 @@ void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		if( gsSelectedMercID == -1 )
-			return;
-		const SOLDIERTYPE* pSoldier = GetSoldier(gsSelectedMercID);
-		if( !pSoldier )
-			return;
-		CenterScreenAtMapIndex( pSoldier->sGridNo );
+		const SOLDIERTYPE* const s = g_selected_merc;
+		if (s == NULL) return;
+		CenterScreenAtMapIndex(s->sGridNo);
 	}
 }
 

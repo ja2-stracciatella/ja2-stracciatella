@@ -5,6 +5,9 @@
 #ifndef __EDITORMERCS_H
 #define __EDITORMERCS_H
 
+#include "JA2Types.h"
+
+
 //Merc editing modes.  These are used to determine which buttons to show and hide.
 enum
 {
@@ -33,7 +36,7 @@ extern UINT8 gubCurrMercMode;
 #define EDIT_MERC_NONE				0
 #define EDIT_MERC_NEXT_COLOR	13
 
-extern INT16 gsSelectedMercID;
+extern SOLDIERTYPE* g_selected_merc;
 extern INT16 gsSelectedMercGridNo;
 
 enum _ForUseWithIndicateSelectedMerc
