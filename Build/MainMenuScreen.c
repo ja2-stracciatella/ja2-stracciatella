@@ -408,23 +408,28 @@ static void RenderMainMenu(void)
 	RestoreExternBackgroundRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 #if defined TESTFOREIGNFONTS
-	DrawTextToScreen(L"LARGEFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 105, 640, LARGEFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"SMALLFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 125, 640, SMALLFONT1,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"TINYFONT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",             0, 145, 640, TINYFONT1,             FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT12POINT1: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",          0, 165, 640, FONT12POINT1,          FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"COMPFONT: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",              0, 185, 640, COMPFONT,              FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"SMALLCOMPFONT: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",         0, 205, 640, SMALLCOMPFONT,         FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"MILITARYFONT: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",          0, 265, 640, MILITARYFONT1,         FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT10ARIAL: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",           0, 285, 640, FONT10ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT14ARIAL: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",           0, 305, 640, FONT14ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT12ARIAL: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",           0, 325, 640, FONT12ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT10ARIALBOLD: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",       0, 345, 640, FONT10ARIALBOLD,       FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"BLOCKFONT: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",             0, 365, 640, BLOCKFONT,             FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"BLOCKFONT2: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",            0, 385, 640, BLOCKFONT2,            FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT12ARIALFIXEDWIDTH: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî", 0, 405, 640, FONT12ARIALFIXEDWIDTH, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT16ARIAL: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",           0, 425, 640, FONT16ARIAL,           FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"BLOCKFONTNARROW: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",       0, 445, 640, BLOCKFONTNARROW,       FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(L"FONT14HUMANIST: ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî",        0, 465, 640, FONT14HUMANIST,        FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	UINT16 y = 105;
+#	define TEST_FONT(font) \
+		DrawTextToScreen(#font L": ÄÀÁÂÇËÈÉÊÏÖÒÓÔÜÙÚÛäàáâçëèéêïöòóôüùúûÌÎìî", 0, y, 640, font, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED); \
+		y += 20;
+	TEST_FONT(LARGEFONT1);
+	TEST_FONT(SMALLFONT1);
+	TEST_FONT(TINYFONT1);
+	TEST_FONT(FONT12POINT1);
+	TEST_FONT(COMPFONT);
+	TEST_FONT(SMALLCOMPFONT);
+	TEST_FONT(MILITARYFONT1);
+	TEST_FONT(FONT10ARIAL);
+	TEST_FONT(FONT14ARIAL);
+	TEST_FONT(FONT12ARIAL);
+	TEST_FONT(FONT10ARIALBOLD);
+	TEST_FONT(BLOCKFONT);
+	TEST_FONT(BLOCKFONT2);
+	TEST_FONT(FONT12ARIALFIXEDWIDTH);
+	TEST_FONT(FONT16ARIAL);
+	TEST_FONT(BLOCKFONTNARROW);
+	TEST_FONT(FONT14HUMANIST);
+#	undef TEST_FONT
 #else
 	DrawTextToScreen(gzCopyrightText, 0, SCREEN_HEIGHT - 15, SCREEN_WIDTH, FONT10ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 #endif
