@@ -137,7 +137,7 @@ BOOLEAN InitializeFileManager(void)
 BOOLEAN FileExists(const char* const filename)
 {
 	BOOLEAN fExists = FileExistsNoDB(filename);
-	if (!fExists && gFileDataBase.fInitialized)
+	if (!fExists)
 	{
 		fExists = CheckIfFileExistInLibrary(filename);
 	}
@@ -263,7 +263,7 @@ void FileClose(const HWFILE hFile)
 			--gFileDataBase.RealFiles.iNumFilesOpen;
 		}
 	}
-	else if (gFileDataBase.fInitialized)
+	else
 	{
 		CloseLibraryFile(sLibraryID, uiFileNum);
 	}
@@ -354,10 +354,7 @@ BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const INT how)
 	}
 	else
 	{
-		if (gFileDataBase.fInitialized)
-		{
-			LibraryFileSeek(sLibraryID, uiFileNum, distance, how);
-		}
+		LibraryFileSeek(sLibraryID, uiFileNum, distance, how);
 	}
 
 	return TRUE;
