@@ -246,26 +246,7 @@ HWFILE FileOpen(const char* const filename, const UINT32 uiOptions)
 
 void FileClose(const HWFILE hFile)
 {
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-		// if its not already closed
-		if (rfh->pRealFilesOpen[uiFileNum] != NULL)
-		{
-			fclose(rfh->pRealFilesOpen[uiFileNum]);
-			rfh->pRealFilesOpen[uiFileNum] = NULL;
-			Assert(gFileDataBase.RealFiles.iNumFilesOpen > 0);
-			--gFileDataBase.RealFiles.iNumFilesOpen;
-		}
-	}
-	else
-	{
-		CloseLibraryFile(hFile);
-	}
+	CloseLibraryFile(hFile);
 }
 
 

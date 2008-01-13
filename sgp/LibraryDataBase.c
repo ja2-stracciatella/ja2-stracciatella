@@ -628,33 +628,44 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 }
 
 
-BOOLEAN CloseLibraryFile(HWFILE file)
+void CloseLibraryFile(const HWFILE file)
 {
-	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
-	const UINT32 uiFileID   = DB_EXTRACT_FILE_ID(file);
-	if( IsLibraryOpened( sLibraryID ) )
+	const INT16  lib_id  = DB_EXTRACT_LIBRARY(file);
+	const UINT32 file_id = DB_EXTRACT_FILE_ID(file);
+
+	if (lib_id == REAL_FILE_LIBRARY_ID)
 	{
-		//if the uiFileID is invalid
-		if( (uiFileID >= (UINT32)gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ) )
-			return( FALSE );
-
-		//if the file is not opened, dont close it
-		if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileID].pFileHeader != NULL)
+		RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
+		// if its not already closed
+		if (rfh->pRealFilesOpen[file_id] != NULL)
 		{
-			//reset the variables
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
-
-			//decrement the number of files that are open
-			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen--;
-
-			// Reset the fact that a file is accessing the library
-//			gFileDataBase.pLibraries[ sLibraryID ].fAnotherFileAlreadyOpenedLibrary = FALSE;
-			gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary = 0;
+			fclose(rfh->pRealFilesOpen[file_id]);
+			rfh->pRealFilesOpen[file_id] = NULL;
+			Assert(gFileDataBase.RealFiles.iNumFilesOpen > 0);
+			--gFileDataBase.RealFiles.iNumFilesOpen;
 		}
 	}
+	else
+	{
+		if (!IsLibraryOpened(lib_id)) return;
+		LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[lib_id];
 
-	return( TRUE );
+		// if the file_id is invalid
+		if (file_id >= (UINT32)lib->iSizeOfOpenFileArray) return;
+
+		// if the file is not opened, dont close it
+		if (lib->pOpenFiles[file_id].pFileHeader == NULL) return;
+
+		// reset the variables
+		lib->pOpenFiles[file_id].uiFilePosInFile = 0;
+		lib->pOpenFiles[file_id].pFileHeader     = NULL;
+
+		// decrement the number of files that are open
+		lib->iNumFilesOpen--;
+
+		// Reset the fact that a file is accessing the library
+		lib->uiIdOfOtherFileAlreadyOpenedLibrary = 0;
+	}
 }
 
 

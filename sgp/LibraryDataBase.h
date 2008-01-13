@@ -126,7 +126,7 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 HWFILE OpenFileFromLibrary(const char *pName);
 HWFILE CreateRealFileHandle(FILE* hFile);
 /* Close an individual file that is contained in the library */
-BOOLEAN CloseLibraryFile(HWFILE);
+void    CloseLibraryFile(HWFILE);
 BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );
 BOOLEAN LoadDataFromLibrary(HWFILE, void* pData, UINT32 uiBytesToRead);
 BOOLEAN LibraryFileSeek(HWFILE, UINT32 uiDistance, UINT8 uiHowToSeek);
