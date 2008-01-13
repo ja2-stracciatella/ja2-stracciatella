@@ -373,7 +373,7 @@ INT32 FileGetPos(const HWFILE hFile)
 		if (IsLibraryOpened(sLibraryID))
 		{
 			const FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
-			if (fo->uiFileID != 0) // if the file is open
+			if (fo->pFileHeader != NULL) // if the file is open
 			{
 				const UINT32 uiPositionInFile = fo->uiFilePosInFile;
 				return uiPositionInFile;
@@ -793,7 +793,7 @@ BOOLEAN	FileCheckEndOfFile(const HWFILE hFile)
 		if (IsLibraryOpened(sLibraryID))
 		{
 			const FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
-			if (fo->uiFileID != 0) // if the file is opened
+			if (fo->pFileHeader != NULL) // if the file is opened
 			{
 				const UINT32 uiLength = fo->pFileHeader->uiFileLength;
 				const UINT32 uiCurPos = fo->uiFilePosInFile;
@@ -883,7 +883,7 @@ FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE hFile)
 	else
 	{
 		const LibraryHeaderStruct* const lh = &gFileDataBase.pLibraries[sLibraryID];
-		if (lh->pOpenFiles[uiFileNum].uiFileID != 0) return lh->hLibraryHandle;
+		if (lh->pOpenFiles[uiFileNum].pFileHeader != NULL) return lh->hLibraryHandle;
 	}
 	return NULL;
 }

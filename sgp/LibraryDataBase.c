@@ -310,7 +310,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 BOOLEAN LoadDataFromLibrary(INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead)
 {
 	if (!IsLibraryOpened(sLibraryID)) return FALSE;
-	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
+	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader == NULL) return FALSE;
 
 	UINT32	uiOffsetInLibrary, uiLength;
 	FILE* hLibraryFile;
@@ -516,7 +516,7 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			uiFileNum = 0;
 			for( uiLoop1=1; uiLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray; uiLoop1++)
 			{
-				if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiLoop1 ].uiFileID == 0 )
+				if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiLoop1].pFileHeader == NULL)
 				{
 					uiFileNum = uiLoop1;
 					break;
@@ -531,7 +531,6 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			hLibFile = CreateLibraryFileHandle( sLibraryID, uiFileNum );
 
 			//Set the current file data into the array of open files
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFileID = hLibFile;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
 
@@ -647,10 +646,9 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			return( FALSE );
 
 		//if the file is not opened, dont close it
-		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFileID != 0 )
+		if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileID].pFileHeader != NULL)
 		{
 			//reset the variables
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFileID = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
 
@@ -810,7 +808,7 @@ static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
 	{
 		//check if the file is open
-		if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ usLoop1].uiFileID != 0 )
+		if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader != NULL)
 		{
 			//Check if the file already exists
 			if (strcasecmp(sName, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader->pFileName) == 0)
