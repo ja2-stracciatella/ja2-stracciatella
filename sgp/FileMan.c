@@ -349,7 +349,7 @@ BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const INT how)
 	}
 	else
 	{
-		LibraryFileSeek(sLibraryID, uiFileNum, distance, how);
+		LibraryFileSeek(hFile, distance, how);
 	}
 
 	return TRUE;

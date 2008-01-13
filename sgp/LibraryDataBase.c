@@ -658,8 +658,10 @@ BOOLEAN CloseLibraryFile(HWFILE file)
 }
 
 
-BOOLEAN LibraryFileSeek( INT16 sLibraryID, UINT32 uiFileNum, UINT32 uiDistance, UINT8 uiHowToSeek )
+BOOLEAN LibraryFileSeek(const HWFILE file, const UINT32 uiDistance, const UINT8 uiHowToSeek)
 {
+	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
+	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
 	UINT32	uiCurPos, uiSize;
 
 	//if the library is not open, return an error
