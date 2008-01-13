@@ -626,16 +626,10 @@ BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibra
 }
 
 
-//************************************************************************
-//
-//	Close an individual file that is contained in the library
-//
-//************************************************************************
-
-
-
-BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
+BOOLEAN CloseLibraryFile(HWFILE file)
 {
+	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
+	const UINT32 uiFileID   = DB_EXTRACT_FILE_ID(file);
 	if( IsLibraryOpened( sLibraryID ) )
 	{
 		//if the uiFileID is invalid
@@ -726,7 +720,7 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 			if( CheckIfFileIsAlreadyOpen( gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName, sLibraryID ) )
 			{
 				FastDebugMsg( String("CloseLibrary():  ERROR:  %s library file id still exists, wasnt closed, closing now.", gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName ) );
-				CloseLibraryFile( sLibraryID, uiLoop1 );
+				CloseLibraryFile(DB_ADD_LIBRARY_ID(sLibraryID) | uiLoop1);
 
 				//	Removed because the memory gets freed in the next for loop.  Would only enter here if files were still open
 				//	gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName = NULL;

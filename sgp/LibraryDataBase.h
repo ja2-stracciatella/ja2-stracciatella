@@ -125,7 +125,8 @@ BOOLEAN ShutDownFileDatabase(void);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 HWFILE OpenFileFromLibrary(const char *pName);
 HWFILE CreateRealFileHandle(FILE* hFile);
-BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID );
+/* Close an individual file that is contained in the library */
+BOOLEAN CloseLibraryFile(HWFILE);
 BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );
 BOOLEAN LoadDataFromLibrary(INT16 sLibraryID, UINT32 uiFileIndex, PTR pData, UINT32 uiBytesToRead);
 BOOLEAN LibraryFileSeek( INT16 sLibraryID, UINT32 uiFileNum, UINT32 uiDistance, UINT8 uiHowToSeek );

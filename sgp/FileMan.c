@@ -264,7 +264,7 @@ void FileClose(const HWFILE hFile)
 	}
 	else
 	{
-		CloseLibraryFile(sLibraryID, uiFileNum);
+		CloseLibraryFile(hFile);
 	}
 }
 
