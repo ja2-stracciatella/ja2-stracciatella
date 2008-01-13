@@ -22,7 +22,6 @@
 #define FILE_ACCESS_WRITE	      0x02
 #define FILE_ACCESS_READWRITE		0x03
 
-#define FILE_CREATE_NEW				0x0010	// create new file. fail if exists
 #define FILE_CREATE_ALWAYS			0x0020	// create new file. overwrite existing
 #define FILE_OPEN_EXISTING			0x0040	// open a file. fail if doesn't exist
 #define FILE_OPEN_ALWAYS			0x0080	// open a file, create if doesn't exist
