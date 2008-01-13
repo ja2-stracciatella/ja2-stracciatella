@@ -346,7 +346,7 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 		if( uiOptions & FILE_ACCESS_WRITE )
 		{
 			//if the files is to be written to
-			if( ( uiOptions & FILE_CREATE_NEW ) || ( uiOptions & FILE_OPEN_ALWAYS ) || ( uiOptions & FILE_CREATE_ALWAYS ) || ( uiOptions & FILE_TRUNCATE_EXISTING ) )
+			if (uiOptions & FILE_CREATE_NEW || uiOptions & FILE_OPEN_ALWAYS || uiOptions & FILE_CREATE_ALWAYS)
 			{
 				hFile = 0;
 			}
@@ -393,10 +393,6 @@ HWFILE FileOpen(const char* strFilename, UINT32 uiOptions)
 		else if ( uiOptions & FILE_OPEN_ALWAYS )
 		{
 			dwCreationFlags = OPEN_ALWAYS;
-		}
-		else if ( uiOptions & FILE_TRUNCATE_EXISTING )
-		{
-			dwCreationFlags = TRUNCATE_EXISTING;
 		}
 		else
 		{
