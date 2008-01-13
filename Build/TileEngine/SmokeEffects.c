@@ -735,7 +735,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	//Open the file for reading, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file

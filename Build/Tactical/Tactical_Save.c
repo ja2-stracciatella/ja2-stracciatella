@@ -503,7 +503,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 	}
 
 	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -590,7 +590,7 @@ BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bM
 
 
 	//Open the file for reading, if it exists
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1499,7 +1499,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 	}
 
 	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -1951,7 +1951,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 	if( FileExists( zMapName ) )
 	{
 		//Open the file for reading
-		hFile = FileOpen(zMapName, FILE_ACCESS_READWRITE | FILE_OPEN_EXISTING);
+		hFile = FileOpen(zMapName, FILE_ACCESS_READWRITE);
 		if( hFile == 0 )
 		{
 			//Error opening map modification file,

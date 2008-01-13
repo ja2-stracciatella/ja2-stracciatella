@@ -283,7 +283,7 @@ static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFi
 
 	CHECKF( szFileName );
 	CHECKF( pFileRef );
-	hInput = FileOpen(szFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hInput = FileOpen(szFileName, FILE_ACCESS_READ);
 	if (hInput == 0)
 	{
 		return( FALSE );

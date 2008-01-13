@@ -1332,7 +1332,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	CreateSavedGameFileNameFromNumber( ubSavedGameID, zSaveGameName );
 
 	// open the save game file
-	hFile = FileOpen(zSaveGameName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zSaveGameName, FILE_ACCESS_READ);
 	if (!hFile) goto load_failed_no_close;
 
 	#ifdef JA2BETAVERSION
@@ -2870,7 +2870,7 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	BOOLEAN Ret = FALSE;
 
-	HWFILE hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	HWFILE hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ);
 	if (!hSrcFile) goto ret_only;
 
 	#ifdef JA2BETAVERSION
@@ -4289,7 +4289,7 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName1 ) )
 	{
-		hFile = FileOpen(zFileName1, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+		hFile = FileOpen(zFileName1, FILE_ACCESS_READ);
 
 		GetFileManFileTime( hFile, &CreationTime1, &LastAccessedTime1, &LastWriteTime1 );
 
@@ -4300,7 +4300,7 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 	if( FileExists( zFileName2 ) )
 	{
-		hFile = FileOpen(zFileName2, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+		hFile = FileOpen(zFileName2, FILE_ACCESS_READ);
 
 		GetFileManFileTime( hFile, &CreationTime2, &LastAccessedTime2, &LastWriteTime2 );
 

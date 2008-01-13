@@ -221,17 +221,13 @@ HWFILE FileOpen(const char* const filename, const UINT32 uiOptions)
 	{
 		dwCreationFlags = CREATE_ALWAYS;
 	}
-	else if (uiOptions & FILE_OPEN_EXISTING || uiOptions & FILE_ACCESS_READ)
-	{
-		dwCreationFlags = OPEN_EXISTING;
-	}
 	else if (uiOptions & FILE_OPEN_ALWAYS)
 	{
 		dwCreationFlags = OPEN_ALWAYS;
 	}
 	else
 	{
-		dwCreationFlags = OPEN_ALWAYS;
+		dwCreationFlags = OPEN_EXISTING;
 	}
 
 	hRealFile = CreateFile(filename, dwAccess, 0, NULL, dwCreationFlags, dwFlagsAndAttributes, NULL);
@@ -878,7 +874,7 @@ INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FI
 
 UINT32 FileSize(const char* const filename)
 {
-	const HWFILE hFile = FileOpen(filename, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	const HWFILE hFile = FileOpen(filename, FILE_ACCESS_READ);
 	if (hFile == 0) return 0;
 
 	const UINT32 uiSize = FileGetSize(hFile);

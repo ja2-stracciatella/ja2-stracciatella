@@ -972,7 +972,7 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	TrashDoorTable();
 
 	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,
@@ -1656,7 +1656,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	TrashDoorStatusArray( );
 
 	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,

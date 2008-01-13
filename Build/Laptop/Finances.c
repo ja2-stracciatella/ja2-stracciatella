@@ -1046,7 +1046,7 @@ static void GetBalanceFromDisk(void)
   // this procedure will open and read in data to the finance list
   HWFILE hFileHandle;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -1108,7 +1108,7 @@ static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void)
   HWFILE hFileHandle;
   INT32 iFileSize = 0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1138,7 +1138,7 @@ static void SetLastPageInRecords(void)
 	// grabs the size of the file and interprets number of pages it will take up
    HWFILE hFileHandle;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -1230,7 +1230,7 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 		return ( FALSE );
 	}
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return FALSE;
@@ -1359,7 +1359,7 @@ static INT32 GetPreviousDaysBalance(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( ) - ( 60 * 24 );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1439,7 +1439,7 @@ static INT32 GetTodaysBalance(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1506,7 +1506,7 @@ static INT32 GetPreviousDaysIncome(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1593,7 +1593,7 @@ static INT32 GetTodaysDaysIncome(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1711,7 +1711,7 @@ static INT32 GetTodaysOtherDeposits(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;
@@ -1794,7 +1794,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	// what day is it?
   iDateInMinutes = GetWorldTotalMin( );
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!hFileHandle)
 	{
 		return 0;

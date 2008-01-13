@@ -468,7 +468,7 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 		return( FALSE );
 
 	// open file
-	hFileHandle = FileOpen( HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -575,7 +575,7 @@ static void OpenAndReadHistoryFile(void)
 		return;
 
 	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1161,7 +1161,7 @@ static BOOLEAN LoadInHistoryRecords(UINT32 uiPage)
 		return( FALSE );
 
 	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1300,7 +1300,7 @@ static void SetLastPageInHistoryRecords(void)
 		return;
 
 	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1338,7 +1338,7 @@ static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 		return 0;
 
 	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
@@ -1538,7 +1538,7 @@ static INT32 GetNumberOfHistoryPages(void)
 		return( 0 );
 
 	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)

@@ -126,7 +126,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -736,7 +736,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 
 	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -1081,7 +1081,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -1612,7 +1612,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;

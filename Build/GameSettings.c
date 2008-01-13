@@ -59,7 +59,7 @@ BOOLEAN LoadGameSettings()
 	}
 	else
 	{
-		hFile = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+		hFile = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ);
 		if( !hFile )
 		{
 			InitGameSettings();

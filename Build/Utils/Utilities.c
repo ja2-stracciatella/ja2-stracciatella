@@ -108,7 +108,7 @@ BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation )
 		// OK, build filename
 		sprintf( zCdFile, "%s%s", zCdLocation, gCheckFilenames[ cnt ] );
 
-		hFile = FileOpen(zCdFile, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+		hFile = FileOpen(zCdFile, FILE_ACCESS_READ);
 
 		// Check if it exists...
 		if ( !hFile )

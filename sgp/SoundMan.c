@@ -221,7 +221,7 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 	if (channel == NULL) return SOUND_ERROR;
 
 	//Open the file
-	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ | FILE_OPEN_EXISTING);
+	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
 	if (!hFile)
 	{
 		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt open '%s' in SoundPlayStreamedFile()\n", pFilename ) );

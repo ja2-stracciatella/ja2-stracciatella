@@ -436,7 +436,7 @@ static void OpenAndReadFilesFile(void)
 		return;
 
 	// open file
-	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_OPEN_EXISTING | FILE_ACCESS_READ);
+	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
 
 	// failed to get file, return
 	if(!hFileHandle)
