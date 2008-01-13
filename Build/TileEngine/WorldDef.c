@@ -3419,37 +3419,6 @@ BOOLEAN LoadMapTileset( INT32 iTilesetID )
 }
 
 
-static BOOLEAN SaveMapTileset(INT32 iTilesetID)
-{
-//	FILE *hTSet;
-	HWFILE hTSet;
-	char zTilesetName[65];
-	int	cnt;
-
-	// Are we trying to save the default tileset?
-	if ( iTilesetID == 0 )
-		return( TRUE );
-
-	sprintf( zTilesetName, "TSET%04d.SET", iTilesetID );
-
-	// Open file
-	hTSet = FileOpen(zTilesetName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-
-
-	if ( !hTSet )
-	{
-		return( FALSE );
-	}
-
-	// Save current tile set in map file.
-	for ( cnt = 0; cnt < NUMBEROFTILETYPES; cnt++ )
-		FileWrite(hTSet, TileSurfaceFilenames[cnt], 65);
-	FileClose( hTSet );
-
-	return( TRUE );
-}
-
-
 static void AddWireFrame(INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced)
 {
 	LEVELNODE			*pTopmost, *pTopmostTail;
