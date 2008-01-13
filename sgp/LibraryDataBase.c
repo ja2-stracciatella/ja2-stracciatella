@@ -309,6 +309,9 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 BOOLEAN LoadDataFromLibrary(INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead)
 {
+	if (!IsLibraryOpened(sLibraryID)) return FALSE;
+	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
+
 	UINT32	uiOffsetInLibrary, uiLength;
 	FILE* hLibraryFile;
 	UINT32	uiCurPos;
@@ -826,6 +829,9 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	if (!IsLibraryOpened(sLibraryID)) return FALSE;
+	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
+
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
 	LIBHEADER	LibFileHeader;

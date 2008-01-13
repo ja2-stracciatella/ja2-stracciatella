@@ -296,11 +296,7 @@ BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRe
 	}
 	else
 	{
-		if (IsLibraryOpened(sLibraryID) &&
-				gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID != 0) // if the file is opened
-		{
-			fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, uiBytesToRead);
-		}
+		fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, uiBytesToRead);
 	}
 
 #ifdef JA2TESTVERSION
@@ -846,10 +842,7 @@ BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime
 	}
 	else
 	{
-		return
-			IsLibraryOpened(sLibraryID)                                              &&
-			gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID != 0 && // if the file is opened
-			GetLibraryFileTime(sLibraryID, uiFileNum, pLastWriteTime);
+		return GetLibraryFileTime(sLibraryID, uiFileNum, pLastWriteTime);
 	}
 #endif
 }
