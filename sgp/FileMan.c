@@ -296,7 +296,7 @@ BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRe
 	}
 	else
 	{
-		fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, uiBytesToRead);
+		fRet = LoadDataFromLibrary(hFile, pDest, uiBytesToRead);
 	}
 
 #ifdef JA2TESTVERSION

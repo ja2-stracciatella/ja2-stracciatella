@@ -307,8 +307,10 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 }
 
 
-BOOLEAN LoadDataFromLibrary(INT16 sLibraryID, UINT32 uiFileNum, PTR pData, UINT32 uiBytesToRead)
+BOOLEAN LoadDataFromLibrary(const HWFILE file, void* const pData, const UINT32 uiBytesToRead)
 {
+	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
+	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
 	if (!IsLibraryOpened(sLibraryID)) return FALSE;
 	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader == NULL) return FALSE;
 
