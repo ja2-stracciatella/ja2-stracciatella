@@ -534,9 +534,6 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
 
-			//Save the current file position in the library
-			gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiActualPositionInLibrary = ftell(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle);
-
 			//Set the file position in the library to the begining of the 'file' in the library
 			fseek(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileOffset, SEEK_SET);
 		}
@@ -651,9 +648,6 @@ BOOLEAN CloseLibraryFile( INT16 sLibraryID, UINT32 uiFileID )
 			//reset the variables
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].uiFilePosInFile = 0;
 			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileID ].pFileHeader = NULL;
-
-			//reset the libraries file pointer to the positon it was in prior to opening the current file
-			fseek(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileID].uiActualPositionInLibrary, SEEK_CUR); // XXX is SEEK_CUR correct here?
 
 			//decrement the number of files that are open
 			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen--;

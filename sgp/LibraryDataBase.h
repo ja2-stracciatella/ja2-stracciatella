@@ -37,7 +37,6 @@ typedef struct
 typedef struct
 {
 	UINT32	uiFilePosInFile;							// current position in the file
-	UINT32	uiActualPositionInLibrary;		// Current File pointer position in actuall library
 	const FileHeaderStruct* pFileHeader;
 } FileOpenStruct;
 
