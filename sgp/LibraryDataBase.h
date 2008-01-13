@@ -28,13 +28,6 @@ extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 typedef struct
 {
-	UINT32	uiFileID;						// id of the file ( they start at 1 )
-	FILE* hRealFileHandle;		// if the file is a Real File, this its handle
-} RealFileOpenStruct;
-
-
-typedef struct
-{
 	STR			pFileName;
 	UINT32	uiFileLength;
 	UINT32	uiFileOffset;
@@ -79,8 +72,7 @@ typedef struct
 {
 	INT32		iNumFilesOpen;
 	INT32		iSizeOfOpenFileArray;
-	RealFileOpenStruct *pRealFilesOpen;
-
+	FILE** pRealFilesOpen;
 } RealFileHeaderStruct;
 
 

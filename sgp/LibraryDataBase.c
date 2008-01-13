@@ -85,7 +85,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 
 	//allocate memory for the handles of the 'real files' that will be open
 	//This is needed because the the code wouldnt be able to tell the difference between a 'real' handle and a made up one
-	uiSize = INITIAL_NUM_HANDLES * sizeof( RealFileOpenStruct );
+	uiSize = INITIAL_NUM_HANDLES * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen);
 	gFileDataBase.RealFiles.pRealFilesOpen = MemAlloc( uiSize );
 	CHECKF( gFileDataBase.RealFiles.pRealFilesOpen );
 
@@ -130,7 +130,7 @@ BOOLEAN ShutDownFileDatabase( )
 	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg("ShutDownFileDatabase():  ERROR:  real file id still exists, wasnt closed");
-		fclose(gFileDataBase.RealFiles.pRealFilesOpen[sLoop1].hRealFileHandle);
+		fclose(gFileDataBase.RealFiles.pRealFilesOpen[sLoop1]);
 	}
 
 	//Free up the memory used for the real files array for the opened files
@@ -575,18 +575,16 @@ HWFILE CreateRealFileHandle(FILE* hFile)
 	HWFILE hLibFile;
 	INT32	iLoop1;
 	UINT32	uiFileNum=0;
-	UINT32 uiSize;
 
 	//if there isnt enough space to put the file, realloc more space
 	if( gFileDataBase.RealFiles.iNumFilesOpen >= ( gFileDataBase.RealFiles.iSizeOfOpenFileArray -1 ) )
 	{
-		uiSize = ( gFileDataBase.RealFiles.iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME ) * sizeof( RealFileOpenStruct );
-
+		const UINT32 uiSize = (gFileDataBase.RealFiles.iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME) * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen);
 		gFileDataBase.RealFiles.pRealFilesOpen = MemRealloc( gFileDataBase.RealFiles.pRealFilesOpen, uiSize );
 		CHECKF( gFileDataBase.RealFiles.pRealFilesOpen );
 
 		//Clear out the new part of the array
-		memset( &gFileDataBase.RealFiles.pRealFilesOpen[ gFileDataBase.RealFiles.iSizeOfOpenFileArray ], 0, ( NUM_FILES_TO_ADD_AT_A_TIME * sizeof( RealFileOpenStruct ) ) );
+		memset(&gFileDataBase.RealFiles.pRealFilesOpen[gFileDataBase.RealFiles.iSizeOfOpenFileArray], 0, NUM_FILES_TO_ADD_AT_A_TIME * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen));
 
 		gFileDataBase.RealFiles.iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
 	}
@@ -596,7 +594,7 @@ HWFILE CreateRealFileHandle(FILE* hFile)
 	uiFileNum = 0;
 	for( iLoop1=1; iLoop1 < gFileDataBase.RealFiles.iSizeOfOpenFileArray; iLoop1++)
 	{
-		if( gFileDataBase.RealFiles.pRealFilesOpen[ iLoop1 ].uiFileID == 0 )
+		if (gFileDataBase.RealFiles.pRealFilesOpen[iLoop1] == NULL)
 		{
 			uiFileNum = iLoop1;
 			break;
@@ -610,8 +608,7 @@ HWFILE CreateRealFileHandle(FILE* hFile)
 	hLibFile = uiFileNum;
 	hLibFile |= DB_ADD_LIBRARY_ID( REAL_FILE_LIBRARY_ID );
 
-	gFileDataBase.RealFiles.pRealFilesOpen[ iLoop1 ].uiFileID = hLibFile;
-	gFileDataBase.RealFiles.pRealFilesOpen[ iLoop1 ].hRealFileHandle = hFile;
+	gFileDataBase.RealFiles.pRealFilesOpen[iLoop1] = hFile;
 
 	gFileDataBase.RealFiles.iNumFilesOpen++;
 

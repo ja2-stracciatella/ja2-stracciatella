@@ -252,13 +252,12 @@ void FileClose(const HWFILE hFile)
 
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		RealFileOpenStruct* const rf = &gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
+		RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
 		// if its not already closed
-		if (rf->uiFileID != 0)
+		if (rfh->pRealFilesOpen[uiFileNum] != NULL)
 		{
-			fclose(rf->hRealFileHandle);
-			rf->uiFileID = 0;
-			rf->hRealFileHandle= 0;
+			fclose(rfh->pRealFilesOpen[uiFileNum]);
+			rfh->pRealFilesOpen[uiFileNum] = NULL;
 			Assert(gFileDataBase.RealFiles.iNumFilesOpen > 0);
 			--gFileDataBase.RealFiles.iNumFilesOpen;
 		}
@@ -291,7 +290,7 @@ BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRe
 	{
 		if (uiFileNum != 0) // if the file is opened
 		{
-			FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+			FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 			fRet = (fread(pDest, uiBytesToRead, 1, hRealFile) == 1);
 		}
 	}
@@ -323,7 +322,7 @@ BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite)
 	// we cannot write to a library file
 	if (sLibraryID != REAL_FILE_LIBRARY_ID) return FALSE;
 
-	FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+	FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 	return fwrite(pDest, uiBytesToWrite, 1, hRealFile) == 1;
 }
 
@@ -349,7 +348,7 @@ BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const INT how)
 			default: whence = SEEK_CUR; break;
 		}
 
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 		return fseek(hRealFile, distance, whence) == 0;
 	}
 	else
@@ -369,7 +368,7 @@ INT32 FileGetPos(const HWFILE hFile)
 
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 		return ftell(hRealFile);
 	}
 	else
@@ -399,7 +398,7 @@ UINT32 FileGetSize(const HWFILE hFile)
 	UINT32 uiFileSize = 0xFFFFFFFF;
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		FILE* const hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+		FILE* const hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 		const long here = ftell(hRealHandle);
 		fseek(hRealHandle, 0, SEEK_END);
 		uiFileSize = ftell(hRealHandle);
@@ -778,7 +777,7 @@ BOOLEAN	FileCheckEndOfFile(const HWFILE hFile)
 
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 
 		//Get the current position of the file pointer
 		const UINT32 uiOldFilePtrLoc = ftell(hRealFile);
@@ -886,8 +885,7 @@ FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE hFile)
 
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		const RealFileOpenStruct* const rf = &gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		if (rf->uiFileID != 0) return rf->hRealFileHandle;
+		return gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 	}
 	else
 	{
