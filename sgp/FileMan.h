@@ -1,57 +1,49 @@
-//**************************************************************************
-//
-// Filename :	FileMan.h
-//
-//	Purpose :	prototypes for the file manager
-//
-// Modification history :
-//
-//		24sep96:HJH				- Creation
-//
-//**************************************************************************
-
-#ifndef _FILEMAN_H
-#define _FILEMAN_H
+#ifndef FILEMAN_H
+#define FILEMAN_H
 
 #include "Types.h"
 
 
-#define MAX_FILENAME_LEN        48
+enum
+{
+	FILE_ACCESS_READ      = 1U << 0,
+	FILE_ACCESS_WRITE     = 1U << 1,
+	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
+	FILE_CREATE_ALWAYS    = 1U << 2, // create new file. overwrite existing
+	FILE_OPEN_EXISTING    = 1U << 3, // open a file. fail if doesn't exist
+	FILE_OPEN_ALWAYS      = 1U << 4, // open a file, create if doesn't exist
+};
 
-#define FILE_ACCESS_READ	      0x01
-#define FILE_ACCESS_WRITE	      0x02
-#define FILE_ACCESS_READWRITE		0x03
-
-#define FILE_CREATE_ALWAYS			0x0020	// create new file. overwrite existing
-#define FILE_OPEN_EXISTING			0x0040	// open a file. fail if doesn't exist
-#define FILE_OPEN_ALWAYS			0x0080	// open a file, create if doesn't exist
-
-#define FILE_SEEK_FROM_START		0x01	// keep in sync with dbman.h
-#define FILE_SEEK_FROM_END			0x02	// keep in sync with dbman.h
-#define FILE_SEEK_FROM_CURRENT	0x04	// keep in sync with dbman.h
+enum
+{
+	FILE_SEEK_FROM_START,
+	FILE_SEEK_FROM_END,
+	FILE_SEEK_FROM_CURRENT
+};
 
 // GetFile file attributes
-#define FILE_IS_READONLY				1
-#define FILE_IS_DIRECTORY				2
-#define FILE_IS_HIDDEN					4
-#define FILE_IS_NORMAL					8
-#define FILE_IS_ARCHIVE					16
-#define FILE_IS_SYSTEM					32
-#define FILE_IS_TEMPORARY				64
-#define FILE_IS_COMPRESSED			128
-#define FILE_IS_OFFLINE					256
-
-
+enum
+{
+	FILE_IS_READONLY   = 1U << 0,
+	FILE_IS_DIRECTORY  = 1U << 1,
+	FILE_IS_HIDDEN     = 1U << 2,
+	FILE_IS_NORMAL     = 1U << 3,
+	FILE_IS_ARCHIVE    = 1U << 4,
+	FILE_IS_SYSTEM     = 1U << 5,
+	FILE_IS_TEMPORARY  = 1U << 6,
+	FILE_IS_COMPRESSED = 1U << 7,
+	FILE_IS_OFFLINE    = 1U << 8,
+};
 
 //File Attributes settings
-#define FILE_ATTRIBUTES_ARCHIVE				FILE_ATTRIBUTE_ARCHIVE
-#define FILE_ATTRIBUTES_HIDDEN				FILE_ATTRIBUTE_HIDDEN
-#define FILE_ATTRIBUTES_NORMAL				FILE_ATTRIBUTE_NORMAL
-#define FILE_ATTRIBUTES_OFFLINE				FILE_ATTRIBUTE_OFFLINE
-#define FILE_ATTRIBUTES_READONLY			FILE_ATTRIBUTE_READONLY
-#define FILE_ATTRIBUTES_SYSTEM				FILE_ATTRIBUTE_SYSTEM
-#define FILE_ATTRIBUTES_TEMPORARY			FILE_ATTRIBUTE_TEMPORARY
-#define FILE_ATTRIBUTES_DIRECTORY			FILE_ATTRIBUTE_DIRECTORY
+#define FILE_ATTRIBUTES_ARCHIVE   FILE_ATTRIBUTE_ARCHIVE
+#define FILE_ATTRIBUTES_HIDDEN    FILE_ATTRIBUTE_HIDDEN
+#define FILE_ATTRIBUTES_NORMAL    FILE_ATTRIBUTE_NORMAL
+#define FILE_ATTRIBUTES_OFFLINE   FILE_ATTRIBUTE_OFFLINE
+#define FILE_ATTRIBUTES_READONLY  FILE_ATTRIBUTE_READONLY
+#define FILE_ATTRIBUTES_SYSTEM    FILE_ATTRIBUTE_SYSTEM
+#define FILE_ATTRIBUTES_TEMPORARY FILE_ATTRIBUTE_TEMPORARY
+#define FILE_ATTRIBUTES_DIRECTORY FILE_ATTRIBUTE_DIRECTORY
 
 typedef struct SGP_FILETIME
 {
@@ -67,67 +59,66 @@ extern "C" {
 
 BOOLEAN InitializeFileManager(void);
 
-extern BOOLEAN	FileExists( const char *strFilename );
-extern BOOLEAN	FileExistsNoDB(const char *strFilename);
+/* Checks if a file exists. */
+BOOLEAN FileExists(const char* filename);
+/* Checks if a file exists, but doesn't check the database files. */
+BOOLEAN FileExistsNoDB(const char* filename);
 
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
 BOOLEAN FileDelete(const char* path);
 
-extern HWFILE	FileOpen(const char* strFilename, UINT32 uiOptions);
-extern void		FileClose( HWFILE );
+HWFILE FileOpen(const char* filename, UINT32 uiOptions);
+void   FileClose(HWFILE);
 
-extern BOOLEAN FileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead);
+BOOLEAN FileRead(HWFILE hFile, void* pDest, UINT32 uiBytesToRead);
 BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite);
 
-extern BOOLEAN	FileSeek( HWFILE, UINT32 uiDistance, UINT8 uiHow );
-extern INT32	FileGetPos( HWFILE );
+BOOLEAN FileSeek(HWFILE, INT32 distance, INT how);
+INT32   FileGetPos(HWFILE);
 
-extern UINT32	FileGetSize( HWFILE );
-extern UINT32 FileSize(const char *strFilename);
+UINT32 FileGetSize(HWFILE);
+UINT32 FileSize(const char* filename);
 
-BOOLEAN SetFileManCurrentDirectory(const char *pcDirectory);
-BOOLEAN GetFileManCurrentDirectory( STRING512 pcDirectory );
+BOOLEAN     SetFileManCurrentDirectory(const char* pcDirectory);
+BOOLEAN     GetFileManCurrentDirectory(STRING512 pcDirectory);
 const char* GetExecutableDirectory(void);
 
-BOOLEAN MakeFileManDirectory(const char *pcDirectory);
+BOOLEAN MakeFileManDirectory(const char* pcDirectory);
 
-// WARNING: THESE DELETE ALL FILES IN THE DIRECTORY ( and all subdirectories if fRecursive is TRUE!! )
-BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive);
-BOOLEAN EraseDirectory(const char *pcDirectory);
+// WARNING: THESE DELETE ALL FILES IN THE DIRECTORY (and all subdirectories if fRecursive is TRUE!!)
+BOOLEAN RemoveFileManDirectory(const char* pcDirectory, BOOLEAN fRecursive);
+BOOLEAN EraseDirectory(const char* pcDirectory);
 
-typedef struct _GETFILESTRUCT_TAG {
-	INT32 iFindHandle;
-	CHAR8 zFileName[ 260 ];			// changed from UINT16, Alex Meduna, Mar-20'98
+typedef struct GETFILESTRUCT
+{
+	INT32  iFindHandle;
+	char   zFileName[260];
 	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
 
-BOOLEAN GetFileFirst(const char *pSpec, GETFILESTRUCT *pGFStruct );
-BOOLEAN GetFileNext( GETFILESTRUCT *pGFStruct );
-void GetFileClose( GETFILESTRUCT *pGFStruct );
+BOOLEAN GetFileFirst(const char* pSpec, GETFILESTRUCT* pGFStruct);
+BOOLEAN GetFileNext(GETFILESTRUCT* pGFStruct);
+void    GetFileClose(GETFILESTRUCT* pGFStruct);
 
-//Added by Kris Morness
-UINT32	FileGetAttributes(const char *filename);
-BOOLEAN FileClearAttributes( const char *filename );
+UINT32  FileGetAttributes(const char* filename);
+BOOLEAN FileClearAttributes(const char* filename);
 
-//returns true if at end of file, else false
-BOOLEAN	FileCheckEndOfFile( HWFILE hFile );
+// returns true if at end of file, else false
+BOOLEAN FileCheckEndOfFile(HWFILE hFile);
 
+BOOLEAN GetFileManFileTime(HWFILE hFile, SGP_FILETIME* pCreationTime, SGP_FILETIME* pLastAccessedTime, SGP_FILETIME* pLastWriteTime);
 
-BOOLEAN GetFileManFileTime( HWFILE hFile, SGP_FILETIME	*pCreationTime, SGP_FILETIME *pLastAccessedTime, SGP_FILETIME *pLastWriteTime );
+/* returns
+ * - -1 if the First file time is less than second file time. (first file is older)
+ * -  0 First file time is equal to second file time.
+ * - +1 First file time is greater than second file time (first file is newer). */
+INT32 CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FILETIME* const pSecondFileTime);
 
-
-// CompareSGPFileTimes() returns...
-// -1 if the First file time is less than second file time. ( first file is older )
-// 0 First file time is equal to second file time.
-// +1 First file time is greater than second file time ( first file is newer ).
-INT32	CompareSGPFileTimes( SGP_FILETIME	*pFirstFileTime, SGP_FILETIME *pSecondFileTime );
-
-//	Pass in the Fileman file handle of an OPEN file and it will return..
-//		if its a Real File, the return will be the handle of the REAL file
-//		if its a LIBRARY file, the return will be the handle of the LIBRARY
+/* Pass in the Fileman file handle of an OPEN file and it will return..
+ * - if its a Real File, the return will be the handle of the REAL file
+ * - if its a LIBRARY file, the return will be the handle of the LIBRARY */
 FILE* GetRealFileHandleFromFileManFileHandle(HWFILE hFile);
-
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
@@ -137,6 +128,5 @@ const char* GetBinDataPath(void);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif
