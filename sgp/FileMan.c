@@ -297,8 +297,7 @@ BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRe
 	}
 	else
 	{
-		if (gFileDataBase.fInitialized  &&
-				IsLibraryOpened(sLibraryID) &&
+		if (IsLibraryOpened(sLibraryID) &&
 				gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID != 0) // if the file is opened
 		{
 			fRet = LoadDataFromLibrary(sLibraryID, uiFileNum, pDest, uiBytesToRead);
@@ -799,8 +798,7 @@ BOOLEAN	FileCheckEndOfFile(const HWFILE hFile)
 	}
 	else
 	{
-		if (gFileDataBase.fInitialized &&
-				IsLibraryOpened(sLibraryID))
+		if (IsLibraryOpened(sLibraryID))
 		{
 			const FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
 			if (fo->uiFileID != 0) // if the file is opened
@@ -853,7 +851,6 @@ BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime
 	else
 	{
 		return
-			gFileDataBase.fInitialized                                               &&
 			IsLibraryOpened(sLibraryID)                                              &&
 			gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID != 0 && // if the file is opened
 			GetLibraryFileTime(sLibraryID, uiFileNum, pLastWriteTime);
