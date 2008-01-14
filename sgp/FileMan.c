@@ -259,34 +259,15 @@ extern UINT32 uiTotalFileReadCalls;
 BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
-	UINT32 uiStartTime = GetJA2Clock();
+	const UINT32 uiStartTime = GetJA2Clock();
 #endif
-
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	BOOLEAN	fRet = FALSE;
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		if (uiFileNum != 0) // if the file is opened
-		{
-			FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-			fRet = (fread(pDest, uiBytesToRead, 1, hRealFile) == 1);
-		}
-	}
-	else
-	{
-		fRet = LoadDataFromLibrary(hFile, pDest, uiBytesToRead);
-	}
-
+	const BOOLEAN ret = LoadDataFromLibrary(hFile, pDest, uiBytesToRead);
 #ifdef JA2TESTVERSION
 	//Add the time that we spent in this function to the total.
 	uiTotalFileReadTime += GetJA2Clock() - uiStartTime;
 	uiTotalFileReadCalls++;
 #endif
-
-	return fRet;
+	return ret;
 }
 
 

@@ -311,37 +311,37 @@ BOOLEAN LoadDataFromLibrary(const HWFILE file, void* const pData, const UINT32 u
 {
 	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
 	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
-	if (!IsLibraryOpened(sLibraryID)) return FALSE;
-	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader == NULL) return FALSE;
 
-	UINT32	uiOffsetInLibrary, uiLength;
-	FILE* hLibraryFile;
-	UINT32	uiCurPos;
-
-
-	//get the offset into the library, the length and current position of the file pointer.
-	uiOffsetInLibrary = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileOffset;
-	uiLength = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
-	hLibraryFile = gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle;
-	uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
-
-
-	//set the file pointer to the right location
-	fseek(hLibraryFile, uiOffsetInLibrary + uiCurPos, SEEK_SET);
-
-	//if we are trying to read more data then the size of the file, return an error
-	if( uiBytesToRead + uiCurPos > uiLength )
+	BOOLEAN fRet = FALSE;
+	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		return( FALSE );
+		if (uiFileNum == 0) return FALSE;
+
+		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
+		return (fread(pData, uiBytesToRead, 1, hRealFile) == 1);
 	}
+	else
+	{
+		if (!IsLibraryOpened(sLibraryID)) return FALSE;
+		const LibraryHeaderStruct* const lh = &gFileDataBase.pLibraries[sLibraryID];
+		FileOpenStruct*            const fo = &lh->pOpenFiles[uiFileNum];
+		if (fo->pFileHeader == NULL) return FALSE;
 
-	//get the data
-	if (fread(pData, uiBytesToRead, 1, hLibraryFile) != 1)
-		return( FALSE );
+		const UINT32 uiOffsetInLibrary = fo->pFileHeader->uiFileOffset;
+		const UINT32 uiLength          = fo->pFileHeader->uiFileLength;
+		FILE* const  hLibraryFile      = lh->hLibraryHandle;
+		const UINT32 uiCurPos          = fo->uiFilePosInFile;
 
-	gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFilePosInFile += uiBytesToRead;
+		fseek(hLibraryFile, uiOffsetInLibrary + uiCurPos, SEEK_SET);
 
-	return( TRUE );
+		// if we are trying to read more data than the size of the file, return an error
+		if (uiBytesToRead + uiCurPos > uiLength) return FALSE;
+
+		if (fread(pData, uiBytesToRead, 1, hLibraryFile) != 1) return FALSE;
+
+		fo->uiFilePosInFile += uiBytesToRead;
+		return TRUE;
+	}
 }
 
 
