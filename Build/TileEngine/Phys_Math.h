@@ -1,6 +1,9 @@
 #ifndef __PHYS_MATH_H
 #define __PHYS_MATH_H
 
+#include "Types.h"
+
+
 typedef float real;
 
 typedef struct
@@ -22,6 +25,12 @@ real			VDotProduct( vector_3 *a, vector_3 *b );
 real			VGetLength( vector_3 *a );
 vector_3	VGetNormal( vector_3 *a );
 vector_3	VCrossProduct( vector_3 *a, vector_3 *b );
+
+
+static inline BOOLEAN VIsNull(const vector_3* const a)
+{
+	return a->x == 0 && a->y == 0 && a->z == 0;
+}
 
 #ifdef __cplusplus
 }

@@ -4819,7 +4819,7 @@ static BOOLEAN CalculateLOSNormal(STRUCTURE* pStructure, INT8 bLOSX, INT8 bLOSY,
 					//2) Calculate Normal from cross product
 					vNormal =	VCrossProduct( &vTemp2, &vZ );
 
-					if ( VGetLength( &vNormal ) > 0 )
+					if (!VIsNull(&vNormal))
 					{
 						// Nomralize
 						vNormal = VGetNormal( &vNormal );
@@ -4854,7 +4854,7 @@ static BOOLEAN CalculateLOSNormal(STRUCTURE* pStructure, INT8 bLOSX, INT8 bLOSY,
 
 
 	// Average angle
-	if ( VGetLength( &vAveNormal ) > 0 )
+	if (!VIsNull(&vAveNormal))
 	{
 		*pdNormalX	= vAveNormal.x;
 		*pdNormalY	= vAveNormal.y;
