@@ -2,17 +2,6 @@
 #include "Phys_Math.h"
 
 
-vector_3 VSubtract( vector_3 *a, vector_3 *b )
-{
-	vector_3 c;
-
-	c.x = a->x - b->x;
-	c.y = a->y - b->y;
-	c.z = a->z - b->z;
-
-	return( c );
-}
-
 vector_3 VAdd( vector_3 *a, vector_3 *b )
 {
 	vector_3 c;
