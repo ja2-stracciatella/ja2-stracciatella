@@ -35,16 +35,6 @@ vector_3 VMultScalar( vector_3 *a, real b )
 	return( c );
 }
 
-vector_3 VDivScalar( vector_3 *a, real b )
-{
-	vector_3 c;
-
-	c.x = a->x / b;
-	c.y = a->y / b;
-	c.z = a->z / b;
-
-	return( c );
-}
 
 real VDotProduct( vector_3 *a, vector_3 *b )
 {
