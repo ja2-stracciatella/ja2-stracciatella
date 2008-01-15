@@ -21,7 +21,6 @@
 #include "Timer_Control.h"
 #include "WCheck.h"
 #include "Interface_Items.h"
-#include "Physics.h"
 #include "Soldier_Profile.h"
 #include "Interface_Dialogue.h"
 #include "Quests.h"

@@ -27,7 +27,6 @@
 #include "World_Items.h"
 #include "Game_Clock.h"
 #include "Interface_Items.h"
-#include "Physics.h"
 #include "UI_Cursors.h"
 #include "StrategicMap.h"
 #include "Soldier_Profile.h"

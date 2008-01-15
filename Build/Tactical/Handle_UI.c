@@ -36,7 +36,6 @@
 #include "Message.h"
 #include "Render_Fun.h"
 #include "Interface_Items.h"
-#include "Physics.h"
 #include "StrategicMap.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Create.h"
