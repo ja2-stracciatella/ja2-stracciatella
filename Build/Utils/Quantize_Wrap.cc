@@ -6,7 +6,6 @@
 #include "Types.h"
 #include "Quantize.h"
 #include "Quantize_Wrap.h"
-#include "Phys_Math.h"
 
 
 typedef struct
@@ -18,7 +17,7 @@ typedef struct
 } RGBValues;
 
 
-static void MapPalette(UINT8* pDest, UINT8* pSrc, INT16 sWidth, INT16 sHeight, INT16 sNumColors, SGPPaletteEntry* pTable);
+static void MapPalette(UINT8* const pDest, const UINT8* const pSrc, const INT16 sWidth, const INT16 sHeight, const INT16 sNumColors, const SGPPaletteEntry* pTable);
 
 
 BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, SGPPaletteEntry *pPalette )
@@ -44,56 +43,32 @@ BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, S
 }
 
 
-static void MapPalette(UINT8* pDest, UINT8* pSrc, INT16 sWidth, INT16 sHeight, INT16 sNumColors, SGPPaletteEntry* pTable)
+static void MapPalette(UINT8* const pDest, const UINT8* const pSrc, const INT16 sWidth, const INT16 sHeight, const INT16 sNumColors, const SGPPaletteEntry* pTable)
 {
-	INT32 cX, cY, cnt, bBest;
-	real					dLowestDist;
-	real					dCubeDist;
-	vector_3			vTableVal, vSrcVal, vDiffVal;
-	UINT8					*pData;
-	RGBValues			*pRGBData;
-
-	pRGBData = (RGBValues*)pSrc;
-
-	for ( cX = 0; cX < sWidth; cX++ )
+	const RGBValues* const pRGBData = (const RGBValues*)pSrc;
+	for (INT32 cX = 0; cX < sWidth; ++cX)
 	{
-		for ( cY = 0; cY < sHeight; cY++ )
+		for (INT32 cY = 0; cY < sHeight; ++cY)
 		{
-				// OK, FOR EACH PALETTE ENTRY, FIND CLOSEST
-				bBest					= 0;
-				dLowestDist		= (float)9999999;
-				pData					= &(pSrc[ ( cY * sWidth ) + cX ]);
-
-				for ( cnt = 0; cnt < sNumColors; cnt++ )
+			// OK, FOR EACH PALETTE ENTRY, FIND CLOSEST
+			INT32  best        = 0;
+			UINT32 lowest_dist = 9999999;
+			for (INT32 cnt = 0; cnt < sNumColors; ++cnt)
+			{
+				const INT32  dr   = pRGBData[cY * sWidth + cX].r - pTable[cnt].peRed;
+				const INT32  dg   = pRGBData[cY * sWidth + cX].g - pTable[cnt].peGreen;
+				const INT32  db   = pRGBData[cY * sWidth + cX].b - pTable[cnt].peBlue;
+				const UINT32 dist = dr * dr + dg * dg + db * db;
+				if (dist < lowest_dist)
 				{
-					vSrcVal.x		= pRGBData[ ( cY * sWidth ) + cX ].r;
-					vSrcVal.y		= pRGBData[ ( cY * sWidth ) + cX ].g;
-					vSrcVal.z		= pRGBData[ ( cY * sWidth ) + cX ].b;
-
-					vTableVal.x = pTable[ cnt ].peRed;
-					vTableVal.y = pTable[ cnt ].peGreen;
-					vTableVal.z = pTable[ cnt ].peBlue;
-
-					// Get Dist
-					vDiffVal = VSubtract( &vSrcVal, &vTableVal );
-
-					// Get mag dist
-					dCubeDist = VGetLength( &(vDiffVal) );
-
-					if ( dCubeDist < dLowestDist )
-					{
-						dLowestDist = dCubeDist;
-						bBest = cnt;
-					}
+					lowest_dist = dist;
+					best        = cnt;
 				}
+			}
 
-				// Now we have the lowest value
-				// Set into dest
-				pData = &(pDest[ ( cY * sWidth ) + cX ]);
-
-				//Set!
-				*pData = (UINT8)bBest;
+			// Now we have the lowest value
+			// Set into dest
+			pDest[cY * sWidth + cX] = best;
 		}
 	}
-
 }
