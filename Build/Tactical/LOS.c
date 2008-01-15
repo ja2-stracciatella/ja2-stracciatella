@@ -4696,9 +4696,7 @@ static BOOLEAN CalculateLOSNormal(STRUCTURE* pStructure, INT8 bLOSX, INT8 bLOSY,
 {
 	INT32		cntx, cnty;
 	INT8		bX, bY, tX, tY;
-	INT8		bNumNormals = 0;
 	BOOLEAN fParimeter;
-
 
 	vector_3		vZ, vTemp2, vNormal, vAveNormal, vIncident;
 
@@ -4829,11 +4827,8 @@ static BOOLEAN CalculateLOSNormal(STRUCTURE* pStructure, INT8 bLOSX, INT8 bLOSY,
 						// CHECK ANGLE BRTWEEN INCIDENNCE AND NORMAL
 						//if ( VDotProduct( &vNormal, &vIncident ) > 0 )
 						{
-							bNumNormals++;
-
 							//Average normal!
 							vAveNormal = VAdd(&vNormal, &vAveNormal);
-							vAveNormal = VDivScalar( &vAveNormal, bNumNormals );
 							// Nomralize
 							vAveNormal = VGetNormal( &vAveNormal );
 
