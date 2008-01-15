@@ -54,20 +54,11 @@ vector_3 VCrossProduct( vector_3 *a, vector_3 *b )
 }
 
 
-real VGetLength( vector_3 *a )
-{
-	return( (real) sqrt( ( a->x * a->x ) + ( a->y * a->y ) + ( a->z * a->z ) ) );
-}
-
-
 vector_3 VGetNormal( vector_3 *a )
 {
-	vector_3	c;
-	real OneOverLength, Length;
-
-	Length = VGetLength( a );
-
-	if ( Length == 0 )
+	vector_3 c;
+	const float length = VDotProduct(a, a);
+	if (length == 0)
 	{
 		c.x = 0;
 		c.y = 0;
@@ -75,8 +66,7 @@ vector_3 VGetNormal( vector_3 *a )
 	}
 	else
 	{
-		OneOverLength = 1/Length;
-
+		const float OneOverLength = 1 / sqrt(length);
 		c.x = OneOverLength * a->x;
 		c.y = OneOverLength * a->y;
 		c.z = OneOverLength * a->z;
