@@ -52,12 +52,6 @@ real VDotProduct( vector_3 *a, vector_3 *b )
 }
 
 
-static real VPerpDotProduct(vector_3* a, vector_3* b)
-{
-	return ( ( a->x * b->x ) - ( a->y * b->y ) - ( a->z * b->z ) );
-}
-
-
 vector_3 VCrossProduct( vector_3 *a, vector_3 *b )
 {
 	vector_3 c;
@@ -69,17 +63,6 @@ vector_3 VCrossProduct( vector_3 *a, vector_3 *b )
 	return( c );
 }
 
-
-static vector_3 VGetPerpendicular(vector_3* a)
-{
-	vector_3 c;
-
-	c.x = -a->y;
-	c.y =  a->x;
-	c.z =  a->z;
-
-	return( c );
-}
 
 real VGetLength( vector_3 *a )
 {
