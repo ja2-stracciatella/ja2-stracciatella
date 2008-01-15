@@ -173,8 +173,7 @@ REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLe
 	pObject->InitialForce.y	= SCALE_VERT_VAL_TO_HORZ( yForce );
 	pObject->InitialForce.z	= zForce ;
 
-	pObject->InitialForce = VDivScalar( &(pObject->InitialForce), (float)TIME_MULTI );
-	pObject->InitialForce = VMultScalar( &(pObject->InitialForce), 1.5 );
+	pObject->InitialForce = VMultScalar(&pObject->InitialForce, 1.5 / TIME_MULTI);
 
 
 	// Calculate gridNo
