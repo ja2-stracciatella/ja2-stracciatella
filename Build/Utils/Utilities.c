@@ -17,14 +17,6 @@ BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColF
 	BYTE			 bColHeader[ 8 ];
 	UINT32		 cnt;
 
-	//See if files exists, if not, return error
-	if ( !FileExists( ColFile ) )
-	{
-		// Return FALSE w/ debug
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot find COL file");
-		return( FALSE );
-	}
-
 	// Open and read in the file
 	hFileHandle = FileOpen(ColFile, FILE_ACCESS_READ);
 	if (hFileHandle == 0)

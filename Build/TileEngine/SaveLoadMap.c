@@ -892,14 +892,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, ubSectorZ );
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists,
-		return( FALSE );
-	}
-
-
 	//Open the file for writing, Create it if it doesnt exist
 	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hFile == 0 )

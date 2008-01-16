@@ -34,8 +34,6 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 
 	Assert( hImage != NULL );
 
-	CHECKF( FileExists( hImage->ImageFile ) );
-
 	hFile = FileOpen(hImage->ImageFile, FILE_ACCESS_READ);
 	CHECKF( hFile );
 

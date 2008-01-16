@@ -21,8 +21,6 @@ BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
 
 	SGPImage TempImage = *hImage;
 
-	CHECKF( FileExists( TempImage.ImageFile ) );
-
 	// Open the file and read the header
 	hFile = FileOpen(TempImage.ImageFile, FILE_ACCESS_READ);
 	CHECKF( hFile );

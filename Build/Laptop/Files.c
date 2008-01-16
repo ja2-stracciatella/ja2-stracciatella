@@ -431,10 +431,6 @@ static void OpenAndReadFilesFile(void)
 	// clear out the old list
 	ClearFilesList( );
 
-	// no file, return
-	if ( ! (FileExists( FILES_DAT_FILE ) ) )
-		return;
-
 	// open file
 	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
 

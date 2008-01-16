@@ -141,8 +141,6 @@ static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 
 	}
 
-	CHECKN( FileExists( zFileName ) );
-
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );
 
@@ -335,8 +333,6 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
   {
 	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
   }
-
-	CHECKN( FileExists( zFileName ) );
 
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );

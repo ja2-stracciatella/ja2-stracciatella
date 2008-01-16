@@ -26,7 +26,6 @@ CorpseHit(): empty
 CountNumberOfItemsInStoreInventory(): commented out
 Create16BPPPaletteShaded(): callers
 CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
-CreateSGPPaletteFromCOLFile(): FileExists() + FileOpen() == complicated
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused

@@ -464,9 +464,6 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 	UINT32	uiFileSize=0;
 	UINT32  uiSizeOfRecordsOnEachPage = 0;
 
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return( FALSE );
-
 	// open file
 	hFileHandle = FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
@@ -569,10 +566,6 @@ static void OpenAndReadHistoryFile(void)
 
 	// clear out the old list
 	ClearHistoryList( );
-
-	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return;
 
 	// open file
 	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
@@ -1156,10 +1149,6 @@ static BOOLEAN LoadInHistoryRecords(UINT32 uiPage)
 		return ( FALSE );
 	}
 
-
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return( FALSE );
-
 	// open file
 	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
 
@@ -1332,10 +1321,6 @@ static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 
   HWFILE hFileHandle;
   INT32 iFileSize = 0;
-
-	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return 0;
 
 	// open file
 	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
@@ -1533,9 +1518,6 @@ static INT32 GetNumberOfHistoryPages(void)
 	UINT32	uiFileSize=0;
 	UINT32  uiSizeOfRecordsOnEachPage = 0;
 	INT32		iNumberOfHistoryPages = 0;
-
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return( 0 );
 
 	// open file
 	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
