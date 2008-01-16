@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "Config.h"
@@ -67,6 +68,8 @@ static void TellAboutDataDir(const char* ConfigFile)
 BOOLEAN InitializeFileManager(void)
 {
 #ifdef _WIN32
+	_fmode = O_BINARY;
+
 	for (UINT i = 0; i < lengthof(hFindInfoHandle); ++i)
 	{
 		hFindInfoHandle[i] = INVALID_HANDLE_VALUE;
@@ -167,80 +170,57 @@ BOOLEAN FileDelete(const char* const path)
 }
 
 
-HWFILE FileOpen(const char* const filename, const UINT32 uiOptions)
+HWFILE FileOpen(const char* const filename, const UINT32 flags)
 {
-	const char* dwAccess = 0;
-	if (uiOptions & FILE_ACCESS_READ && uiOptions & FILE_ACCESS_WRITE) {
-		dwAccess = "r+b";
-	} else if (uiOptions & FILE_ACCESS_READ) {
-		dwAccess = "rb";
-	} else if (uiOptions & FILE_ACCESS_WRITE) {
-		dwAccess = "r+b"; // XXX HACK do not truncate the file
-	} else {
-		dwAccess = "";
-		abort(); // XXX something is fishy
+	const char* fmode;
+	int         mode;
+	switch (flags & FILE_ACCESS_READWRITE)
+	{
+		case FILE_ACCESS_READ:      fmode = "rb";  mode = O_RDONLY; break;
+		case FILE_ACCESS_WRITE:     fmode = "wb";  mode = O_WRONLY; break;
+		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode = O_RDWR;   break;
+
+		default: abort();
 	}
 
-	HWFILE hFile = 0;
-	/* check if the file exists - note that we use the function FileExistsNoDB
-	 * because it doesn't check the databases, and we don't want to do that here
-	 */
-	if (FileExistsNoDB(filename))
+	int d;
+	if (flags & FILE_CREATE_ALWAYS)
 	{
-		FILE* hRealFile = fopen(filename, dwAccess);
-		if (hRealFile == NULL)
-		{
-			char Path[512];
-			snprintf(Path, lengthof(Path), "%s/Data/%s", GetBinDataPath(), filename);
-			hRealFile = fopen(Path, dwAccess);
-			if (hRealFile == NULL) return 0;
-		}
-
-		//create a file handle for the 'real file'
-		hFile = CreateRealFileHandle(hRealFile);
+		d = open(filename, mode | O_CREAT | O_TRUNC, 0600);
+		if (d < 0) return 0;
 	}
-	else if (gFileDataBase.fInitialized) // if the file did not exist, try to open it from the database
+	else if (flags & FILE_ACCESS_WRITE)
 	{
-		//if the file doesnt exist on the harddrive, but it is to be created, dont try to load it from the file database
-		if (!(uiOptions & FILE_ACCESS_WRITE))
-		{
-			//If the file is in the library, get a handle to it.
-			return OpenFileFromLibrary(filename);
-		}
-	}
-
-	if (hFile) return hFile;
-
-#if 1
-	FIXME
-	FILE* const hRealFile = fopen(filename, "wb");
-	if (hRealFile == NULL) return 0;
-#else
-	DWORD dwCreationFlags;
-	if (uiOptions & FILE_CREATE_ALWAYS)
-	{
-		dwCreationFlags = CREATE_ALWAYS;
-	}
-	else if (uiOptions & FILE_OPEN_ALWAYS)
-	{
-		dwCreationFlags = OPEN_ALWAYS;
+		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
+		d = open(filename, mode, 0600);
+		if (d < 0) return 0;
 	}
 	else
 	{
-		dwCreationFlags = OPEN_EXISTING;
+		d = open(filename, mode);
+		if (d < 0)
+		{
+			char path[512];
+			snprintf(path, lengthof(path), "%s/Data/%s", GetBinDataPath(), filename);
+			d = open(path, mode);
+			if (d < 0)
+			{
+				const HWFILE h = OpenFileFromLibrary(filename);
+				if (h != 0 || !(flags & FILE_OPEN_ALWAYS)) return h;
+
+				d = open(filename, mode | O_CREAT, 0600);
+				if (d < 0) return 0;
+			}
+		}
 	}
 
-	hRealFile = CreateFile(filename, dwAccess, 0, NULL, dwCreationFlags, dwFlagsAndAttributes, NULL);
-	if (hRealFile == INVALID_HANDLE_VALUE)
+	FILE* const f = fdopen(d, fmode);
+	if (f == NULL)
 	{
-		UINT32 uiLastError = GetLastError();
-		char zString[1024];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, uiLastError, 0, zString, 1024, NULL);
+		close(d);
 		return 0;
 	}
-#endif
-
-	return CreateRealFileHandle(hRealFile);
+	return CreateRealFileHandle(f);
 }
 
 
