@@ -58,12 +58,12 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	UINT32 uiSize = LibCount * sizeof(LibraryHeaderStruct);
 	if( uiSize )
 	{
-		gFileDataBase.pLibraries = MemAlloc( uiSize );
-		CHECKF( gFileDataBase.pLibraries );
+		LibraryHeaderStruct* const libs = MemAlloc(uiSize);
+		gFileDataBase.pLibraries = libs;
+		CHECKF(libs);
 
 		//set all the memrory to 0
-		memset( gFileDataBase.pLibraries, 0, uiSize );
-
+		memset(libs, 0, uiSize);
 
 		//Load up each library
 		for (i = 0; i < LibCount; i++)
@@ -76,7 +76,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 			else
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
-				gFileDataBase.pLibraries[i].fLibraryOpen = FALSE;
+				libs[i].fLibraryOpen = FALSE;
 			}
 		}
 		//signify that the database has been initialized ( only if there was a library loaded )
@@ -85,15 +85,16 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 
 	//allocate memory for the handles of the 'real files' that will be open
 	//This is needed because the the code wouldnt be able to tell the difference between a 'real' handle and a made up one
-	uiSize = INITIAL_NUM_HANDLES * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen);
-	gFileDataBase.RealFiles.pRealFilesOpen = MemAlloc( uiSize );
-	CHECKF( gFileDataBase.RealFiles.pRealFilesOpen );
+	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
+	uiSize = INITIAL_NUM_HANDLES * sizeof(*rfh->pRealFilesOpen);
+	rfh->pRealFilesOpen = MemAlloc(uiSize);
+	CHECKF(rfh->pRealFilesOpen);
 
 	//clear the memory
-	memset( gFileDataBase.RealFiles.pRealFilesOpen, 0, uiSize);
+	memset(rfh->pRealFilesOpen, 0, uiSize);
 
 	//set the initial number how many files can be opened at the one time
-	gFileDataBase.RealFiles.iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
+	rfh->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 
 
 	return(TRUE);
@@ -125,19 +126,20 @@ BOOLEAN ShutDownFileDatabase( )
 		gFileDataBase.pLibraries = NULL;
 	}
 
+	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
 
 	//loop through all the 'opened files' ( there should be no files open )
-	for( sLoop1=0; sLoop1< gFileDataBase.RealFiles.iNumFilesOpen; sLoop1++)
+	for (sLoop1 = 0; sLoop1 < rfh->iNumFilesOpen; sLoop1++)
 	{
 		FastDebugMsg("ShutDownFileDatabase():  ERROR:  real file id still exists, wasnt closed");
-		fclose(gFileDataBase.RealFiles.pRealFilesOpen[sLoop1]);
+		fclose(rfh->pRealFilesOpen[sLoop1]);
 	}
 
 	//Free up the memory used for the real files array for the opened files
-	if( gFileDataBase.RealFiles.pRealFilesOpen )
+	if (rfh->pRealFilesOpen)
 	{
-		MemFree( gFileDataBase.RealFiles.pRealFilesOpen );
-		gFileDataBase.RealFiles.pRealFilesOpen = NULL;
+		MemFree(rfh->pRealFilesOpen);
+		rfh->pRealFilesOpen = NULL;
 	}
 
 	return( TRUE );
@@ -388,8 +390,9 @@ INT16 sLoop1, sBestMatch=-1;
 		//if the library is not loaded, dont try to access the array
 		if( IsLibraryOpened( sLoop1 ) )
 		{
+			const char* const lib_path = gFileDataBase.pLibraries[sLoop1].sLibraryPath;
 			//if the library path name is of size zero, ( the library is for the default path )
-			if( strlen( gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath ) == 0 )
+			if (strlen(lib_path) == 0)
 			{
 				//determine if there is a directory in the file name
 				if (strchr(pFileName, '/') == NULL)
@@ -403,10 +406,10 @@ INT16 sLoop1, sBestMatch=-1;
 			else
 			{
 				// if the directory paths are the same, to the length of the lib's path
-				if(strncasecmp(gFileDataBase.pLibraries[sLoop1].sLibraryPath, pFileName, strlen(gFileDataBase.pLibraries[sLoop1].sLibraryPath)) == 0)
+				if (strncasecmp(lib_path, pFileName, strlen(lib_path)) == 0)
 				{
 					// if we've never matched, or this match's path is longer than the previous match (meaning it's more exact)
-					if((sBestMatch==(-1)) || (strlen(gFileDataBase.pLibraries[ sLoop1 ].sLibraryPath) > strlen(gFileDataBase.pLibraries[ sBestMatch ].sLibraryPath)))
+					if (sBestMatch == -1 || strlen(lib_path) > strlen(gFileDataBase.pLibraries[sBestMatch].sLibraryPath))
 						sBestMatch = sLoop1;
 				}
 			}
@@ -428,13 +431,8 @@ static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const 
 {
 	gsCurrentLibrary = sLibraryID;
 
-	return bsearch(
-		pstrFileName,
-		gFileDataBase.pLibraries[sLibraryID].pFileHeader,
-		gFileDataBase.pLibraries[sLibraryID].usNumberOfEntries,
-		sizeof(*gFileDataBase.pLibraries[sLibraryID].pFileHeader),
-		CompareFileNames
-	);
+	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+	return bsearch(pstrFileName, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
 }
 
 
@@ -474,18 +472,19 @@ HWFILE OpenFileFromLibrary(const char *pName)
 
 	if( sLibraryID != -1 )
 	{
+		LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 		//Check if another file is already open in the library ( report a warning if so )
 
-//		if( gFileDataBase.pLibraries[ sLibraryID ].fAnotherFileAlreadyOpenedLibrary )
-		if( gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary != 0 )
+//		if (lib->fAnotherFileAlreadyOpenedLibrary)
+		if (lib->uiIdOfOtherFileAlreadyOpenedLibrary != 0)
 		{
 			// Temp removed
 //			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open\n", pName, gGameLibaries[ sLibraryID ].sLibraryName ) );
-//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open ( file open is '%s')\n", pName, gGameLibaries[ sLibraryID ].sLibraryName, gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary ].pFileHeader->pFileName ) );
+//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open ( file open is '%s')\n", pName, gGameLibaries[sLibraryID].sLibraryName, lib->pOpenFiles[lib->uiIdOfOtherFileAlreadyOpenedLibrary].pFileHeader->pFileName));
 		}
 
 		//check if the file is already open
-		if( CheckIfFileIsAlreadyOpen( pName, sLibraryID ) )
+		if (CheckIfFileIsAlreadyOpen(pName, sLibraryID))
 			return( 0 );
 
 		//if the file is in a library, get the file
@@ -493,32 +492,31 @@ HWFILE OpenFileFromLibrary(const char *pName)
 		if (pFileHeader != NULL)
 		{
 			//increment the number of open files
-			gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen ++;
+			lib->iNumFilesOpen++;
 
 			//if there isnt enough space to put the file, realloc more space
-			if( gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen >= gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray )
+			if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
 			{
 				FileOpenStruct	*pOpenFiles;
 
 				//reallocate more space for the array
-				pOpenFiles = MemRealloc( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles,
-								 gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME );
+				pOpenFiles = MemRealloc(lib->pOpenFiles, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
 
 				if( !pOpenFiles )
 					return( 0 );
 
 				//increment the number of open files that we can have open
-				gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
+				lib->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
 
 
-				gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles = pOpenFiles;
+				lib->pOpenFiles = pOpenFiles;
 			}
 
 			//loop through to find a new spot in the array
 			uiFileNum = 0;
-			for( uiLoop1=1; uiLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray; uiLoop1++)
+			for (uiLoop1 = 1; uiLoop1 < lib->iSizeOfOpenFileArray; uiLoop1++)
 			{
-				if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiLoop1].pFileHeader == NULL)
+				if (lib->pOpenFiles[uiLoop1].pFileHeader == NULL)
 				{
 					uiFileNum = uiLoop1;
 					break;
@@ -533,11 +531,11 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			hLibFile = CreateLibraryFileHandle( sLibraryID, uiFileNum );
 
 			//Set the current file data into the array of open files
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = 0;
-			gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader = pFileHeader;
+			lib->pOpenFiles[uiFileNum].uiFilePosInFile = 0;
+			lib->pOpenFiles[uiFileNum].pFileHeader = pFileHeader;
 
 			//Set the file position in the library to the begining of the 'file' in the library
-			fseek(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileOffset, SEEK_SET);
+			fseek(lib->hLibraryHandle, lib->pOpenFiles[uiFileNum].pFileHeader->uiFileOffset, SEEK_SET);
 		}
 		else
 		{
@@ -573,29 +571,30 @@ static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum)
 
 HWFILE CreateRealFileHandle(FILE* hFile)
 {
+	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
 	HWFILE hLibFile;
 	INT32	iLoop1;
 	UINT32	uiFileNum=0;
 
 	//if there isnt enough space to put the file, realloc more space
-	if( gFileDataBase.RealFiles.iNumFilesOpen >= ( gFileDataBase.RealFiles.iSizeOfOpenFileArray -1 ) )
+	if (rfh->iNumFilesOpen >= rfh->iSizeOfOpenFileArray - 1)
 	{
-		const UINT32 uiSize = (gFileDataBase.RealFiles.iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME) * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen);
-		gFileDataBase.RealFiles.pRealFilesOpen = MemRealloc( gFileDataBase.RealFiles.pRealFilesOpen, uiSize );
-		CHECKF( gFileDataBase.RealFiles.pRealFilesOpen );
+		const UINT32 uiSize = (rfh->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME) * sizeof(*rfh->pRealFilesOpen);
+		rfh->pRealFilesOpen = MemRealloc(rfh->pRealFilesOpen, uiSize);
+		CHECKF(rfh->pRealFilesOpen);
 
 		//Clear out the new part of the array
-		memset(&gFileDataBase.RealFiles.pRealFilesOpen[gFileDataBase.RealFiles.iSizeOfOpenFileArray], 0, NUM_FILES_TO_ADD_AT_A_TIME * sizeof(*gFileDataBase.RealFiles.pRealFilesOpen));
+		memset(&rfh->pRealFilesOpen[rfh->iSizeOfOpenFileArray], 0, NUM_FILES_TO_ADD_AT_A_TIME * sizeof(*rfh->pRealFilesOpen));
 
-		gFileDataBase.RealFiles.iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
+		rfh->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
 	}
 
 
 	//loop through to find a new spot in the array
 	uiFileNum = 0;
-	for( iLoop1=1; iLoop1 < gFileDataBase.RealFiles.iSizeOfOpenFileArray; iLoop1++)
+	for (iLoop1 = 1; iLoop1 < rfh->iSizeOfOpenFileArray; iLoop1++)
 	{
-		if (gFileDataBase.RealFiles.pRealFilesOpen[iLoop1] == NULL)
+		if (rfh->pRealFilesOpen[iLoop1] == NULL)
 		{
 			uiFileNum = iLoop1;
 			break;
@@ -609,9 +608,8 @@ HWFILE CreateRealFileHandle(FILE* hFile)
 	hLibFile = uiFileNum;
 	hLibFile |= DB_ADD_LIBRARY_ID( REAL_FILE_LIBRARY_ID );
 
-	gFileDataBase.RealFiles.pRealFilesOpen[iLoop1] = hFile;
-
-	gFileDataBase.RealFiles.iNumFilesOpen++;
+	rfh->pRealFilesOpen[iLoop1] = hFile;
+	rfh->iNumFilesOpen++;
 
 	return( hLibFile );
 }
@@ -641,8 +639,8 @@ void CloseLibraryFile(const HWFILE file)
 		{
 			fclose(rfh->pRealFilesOpen[file_id]);
 			rfh->pRealFilesOpen[file_id] = NULL;
-			Assert(gFileDataBase.RealFiles.iNumFilesOpen > 0);
-			--gFileDataBase.RealFiles.iNumFilesOpen;
+			Assert(rfh->iNumFilesOpen > 0);
+			--rfh->iNumFilesOpen;
 		}
 	}
 	else
@@ -673,14 +671,14 @@ BOOLEAN LibraryFileSeek(const HWFILE file, const UINT32 uiDistance, const UINT8 
 {
 	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
 	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
-	UINT32	uiCurPos, uiSize;
 
 	//if the library is not open, return an error
 	if( !IsLibraryOpened( sLibraryID ) )
 		return( FALSE );
+	FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
 
-	uiCurPos = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile;
-	uiSize = gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].pFileHeader->uiFileLength;
+	UINT32       uiCurPos = fo->uiFilePosInFile;
+	const UINT32 uiSize   = fo->pFileHeader->uiFileLength;
 
 
 	if ( uiHowToSeek == FILE_SEEK_FROM_START )
@@ -692,7 +690,7 @@ BOOLEAN LibraryFileSeek(const HWFILE file, const UINT32 uiDistance, const UINT8 
 	else
 		return(FALSE);
 
-	gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles[ uiFileNum ].uiFilePosInFile = uiCurPos;
+	fo->uiFilePosInFile = uiCurPos;
 	return( TRUE );
 }
 
@@ -720,64 +718,64 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 	//if the library isnt loaded, dont close it
 	if( !IsLibraryOpened( sLibraryID ) )
 		return( FALSE );
+	LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 
-	#ifdef JA2TESTVERSION
-		FastDebugMsg( String("ShutDownFileDatabase( ): %d bytes of ram used for the Library #%3d, path '%s',  in the File Database System\n", gFileDataBase.pLibraries[ sLibraryID ].uiTotalMemoryAllocatedForLibrary, sLibraryID, gFileDataBase.pLibraries[ sLibraryID ].sLibraryPath ));
-		gFileDataBase.pLibraries[ sLibraryID ].uiTotalMemoryAllocatedForLibrary = 0;
-	#endif
+#ifdef JA2TESTVERSION
+	FastDebugMsg(String("ShutDownFileDatabase( ): %d bytes of ram used for the Library #%3d, path '%s',  in the File Database System\n", lib->uiTotalMemoryAllocatedForLibrary, sLibraryID, lib->sLibraryPath));
+	lib->uiTotalMemoryAllocatedForLibrary = 0;
+#endif
 
 	//if there are any open files, loop through the library and close down whatever file is still open
-	if( gFileDataBase.pLibraries[ sLibraryID ].iNumFilesOpen )
+	if (lib->iNumFilesOpen)
 	{
 		//loop though the array of open files to see if any are still open
-		for( uiLoop1=0; uiLoop1<( UINT32 )gFileDataBase.pLibraries[ sLibraryID ].usNumberOfEntries; uiLoop1++)
+		for (uiLoop1 = 0; uiLoop1 < (UINT32)lib->usNumberOfEntries; uiLoop1++)
 		{
-			if( CheckIfFileIsAlreadyOpen( gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName, sLibraryID ) )
+			const char* const filename = lib->pFileHeader[uiLoop1].pFileName;
+			if (CheckIfFileIsAlreadyOpen(filename, sLibraryID))
 			{
-				FastDebugMsg( String("CloseLibrary():  ERROR:  %s library file id still exists, wasnt closed, closing now.", gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName ) );
+				FastDebugMsg(String("CloseLibrary():  ERROR:  %s library file id still exists, wasnt closed, closing now.", filename));
 				CloseLibraryFile(DB_ADD_LIBRARY_ID(sLibraryID) | uiLoop1);
 
 				//	Removed because the memory gets freed in the next for loop.  Would only enter here if files were still open
-				//	gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName = NULL;
+				//	lib->pFileHeader[uiLoop1].pFileName = NULL;
 			}
 		}
 	}
 
 	//Free up the memory used for each file name
-	for( uiLoop1=0; uiLoop1<gFileDataBase.pLibraries[ sLibraryID ].usNumberOfEntries; uiLoop1++)
+	for (uiLoop1 = 0; uiLoop1 < lib->usNumberOfEntries; uiLoop1++)
 	{
-		MemFree( gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName );
-		gFileDataBase.pLibraries[ sLibraryID ].pFileHeader[ uiLoop1 ].pFileName = NULL;
+		MemFree(lib->pFileHeader[uiLoop1].pFileName);
+		lib->pFileHeader[uiLoop1].pFileName = NULL;
 	}
 
 	//Free up the memory needed for the Library File Headers
-	if( gFileDataBase.pLibraries[ sLibraryID ].pFileHeader )
+	if (lib->pFileHeader)
 	{
-		MemFree( gFileDataBase.pLibraries[ sLibraryID ].pFileHeader );
-		gFileDataBase.pLibraries[ sLibraryID ].pFileHeader = NULL;
+		MemFree(lib->pFileHeader);
+		lib->pFileHeader = NULL;
 	}
 
 	//Free up the memory used for the library name
-	if( gFileDataBase.pLibraries[ sLibraryID ].sLibraryPath )
+	if (lib->sLibraryPath)
 	{
-		MemFree( gFileDataBase.pLibraries[ sLibraryID ].sLibraryPath );
-		gFileDataBase.pLibraries[ sLibraryID ].sLibraryPath = NULL;
+		MemFree(lib->sLibraryPath);
+		lib->sLibraryPath = NULL;
 	}
 
 	//Free up the space requiered for the open files array
-	if( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles )
+	if (lib->pOpenFiles)
 	{
-		MemFree( gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles );
-		gFileDataBase.pLibraries[ sLibraryID ].pOpenFiles = NULL;
+		MemFree(lib->pOpenFiles);
+		lib->pOpenFiles = NULL;
 	}
 
 	//set that the library isnt open
-	gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen = FALSE;
+	lib->fLibraryOpen = FALSE;
 
 	//close the file ( note libraries are to be closed by the Windows close function )
-	fclose(gFileDataBase.pLibraries[sLibraryID].hLibraryHandle);
-
-
+	fclose(lib->hLibraryHandle);
 
 	return( TRUE );
 }
@@ -807,16 +805,13 @@ static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
 	const char* sTempName = strrchr(pFileName, '/');
 	const char* sName = sTempName == NULL ? pFileName : sTempName + 1;
 
+	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 	//loop through all the open files to see if 'new' file to open is already open
-	for( usLoop1=1; usLoop1 < gFileDataBase.pLibraries[ sLibraryID ].iSizeOfOpenFileArray ; usLoop1++ )
+	for (usLoop1 = 1; usLoop1 < lib->iSizeOfOpenFileArray ; usLoop1++)
 	{
+		const FileHeaderStruct* const fh = lib->pOpenFiles[usLoop1].pFileHeader;
 		//check if the file is open
-		if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader != NULL)
-		{
-			//Check if the file already exists
-			if (strcasecmp(sName, gFileDataBase.pLibraries[sLibraryID].pOpenFiles[usLoop1].pFileHeader->pFileName) == 0)
-				return( TRUE );
-		}
+		if (fh != NULL && strcasecmp(sName, fh->pFileName) == 0) return TRUE;
 	}
 	return( FALSE );
 }
@@ -831,7 +826,8 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	UNIMPLEMENTED
 #else
 	if (!IsLibraryOpened(sLibraryID)) return FALSE;
-	if (gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
+	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+	if (lib->pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
 
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
@@ -845,10 +841,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
 
-	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, 0, NULL, FILE_BEGIN );
+	SetFilePointer(lib->hLibraryHandle, 0, NULL, FILE_BEGIN);
 
 	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, &LibFileHeader, sizeof( LIBHEADER ), &uiNumBytesRead, NULL ) )
+	if (!ReadFile(lib->hLibraryHandle, &LibFileHeader, sizeof(LIBHEADER), &uiNumBytesRead, NULL))
 		return( FALSE );
 	if( uiNumBytesRead != sizeof( LIBHEADER ) )
 	{
@@ -871,10 +867,10 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	iFilePos = -( LibFileHeader.iEntries * (INT32)sizeof(DIRENTRY) );
 
 	//set the file pointer to the right location
-	SetFilePointer( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, iFilePos, NULL, FILE_END );
+	SetFilePointer(lib->hLibraryHandle, iFilePos, NULL, FILE_END);
 
 	// Read in the library header ( at the begining of the library )
-	if( !ReadFile( gFileDataBase.pLibraries[ sLibraryID ].hLibraryHandle, pAllEntries, ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ), &uiNumBytesRead, NULL ) )
+	if (!ReadFile(lib->hLibraryHandle, pAllEntries, sizeof(DIRENTRY) * LibFileHeader.iEntries, &uiNumBytesRead, NULL))
 		return( FALSE );
 	if( uiNumBytesRead != ( sizeof( DIRENTRY ) * LibFileHeader.iEntries ) )
 	{
@@ -883,7 +879,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	}
 
 	DIRENTRY* pDirEntry = bsearch(
-		gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->pFileName,
+		lib->pOpenFiles[uiFileNum].pFileHeader->pFileName,
 		pAllEntries,
 		LibFileHeader.iEntries,
 		sizeof(*pAllEntries),
