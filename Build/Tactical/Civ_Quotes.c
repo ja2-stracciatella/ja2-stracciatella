@@ -160,17 +160,9 @@ static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQu
 		sprintf( zFileName,"NPCDATA/CIV%02d.edt",ubCivQuoteID );
 	}
 
-	CHECKF( FileExists( zFileName ) );
-
-	// Get data...
-	LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
-
-	if( zQuote[0] == 0 )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE) &&
+		zQuote[0] != L'\0';
 }
 
 
