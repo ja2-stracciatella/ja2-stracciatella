@@ -508,8 +508,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );
 
-	if (!FileDelete(zSaveGameName)) goto FAILED_TO_SAVE_NO_CLOSE;
-
 	// create the save game file
 	hFile = FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( !hFile )
@@ -2916,12 +2914,6 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 	UINT32	uiFileSize;
 	HWFILE	hSrcFile;
 	UINT8		*pData;
-
-	if (!FileDelete(pSrcFileName))
-	{
-		// unable to delete the original file
-		return FALSE;
-	}
 
 	#ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing

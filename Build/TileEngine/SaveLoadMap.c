@@ -1120,9 +1120,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	//Close the file
 	FileClose( hFile );
 
-	//Delete the file
-	FileDelete( zMapName );
-
 	uiNumberOfElements = uiFileSize / sizeof( MODIFY_MAP );
 
 	//loop through all the array elements to
@@ -1145,7 +1142,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Open the file for writing
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file,

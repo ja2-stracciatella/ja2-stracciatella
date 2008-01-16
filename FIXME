@@ -181,7 +181,6 @@ SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
 STR_AR_MERC_RETREATING: string too long in German
-SaveDoorTableToDoorTableTempFile(): FileExists() + FileDelete() + FileOpen() == complicated
 SaveEnemySoldiersToTempFile(), NewWayOfSavingEnemyAndCivliansToTempFile(): code duplication
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
