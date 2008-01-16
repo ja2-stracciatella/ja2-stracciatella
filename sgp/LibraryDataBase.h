@@ -79,7 +79,6 @@ typedef struct
 	STR			sManagerName;
 	LibraryHeaderStruct	*pLibraries;
 	UINT16	usNumberOfLibraries;
-	BOOLEAN	fInitialized;
 	RealFileHeaderStruct RealFiles;
 } DatabaseManagerHeaderStruct;
 

@@ -43,7 +43,6 @@ static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename);
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 {
 	INT16			i;
-	BOOLEAN		fLibraryInited = FALSE;
 
 #ifdef JA2
 	GetCDLocation( );
@@ -69,18 +68,12 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 		for (i = 0; i < LibCount; i++)
 		{
 			//if the library exists
-			if (OpenLibrary(i, LibFilenames[i]))
-				fLibraryInited = TRUE;
-
-			//else the library doesnt exist
-			else
+			if (!OpenLibrary(i, LibFilenames[i]))
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
 				libs[i].fLibraryOpen = FALSE;
 			}
 		}
-		//signify that the database has been initialized ( only if there was a library loaded )
-		gFileDataBase.fInitialized = fLibraryInited;
 	}
 
 	//allocate memory for the handles of the 'real files' that will be open
@@ -782,10 +775,6 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 
 BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 {
-	//if the database is not initialized
-	if( !gFileDataBase.fInitialized )
-		return( FALSE );
-
 	//if we are trying to do something with an invalid library id
 	if( sLibraryID >= gFileDataBase.usNumberOfLibraries )
 		return( FALSE );
