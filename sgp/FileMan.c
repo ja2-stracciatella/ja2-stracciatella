@@ -267,34 +267,7 @@ BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite)
 
 BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const INT how)
 {
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		int whence;
-		switch (how)
-		{
-			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
-
-			case FILE_SEEK_FROM_END:
-				whence = SEEK_END;
-				if (distance > 0) distance = -distance;
-				break;
-
-			default: whence = SEEK_CUR; break;
-		}
-
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		return fseek(hRealFile, distance, whence) == 0;
-	}
-	else
-	{
-		LibraryFileSeek(hFile, distance, how);
-	}
-
-	return TRUE;
+	return LibraryFileSeek(hFile, distance, how);
 }
 
 

@@ -660,31 +660,48 @@ void CloseLibraryFile(const HWFILE file)
 }
 
 
-BOOLEAN LibraryFileSeek(const HWFILE file, const UINT32 uiDistance, const UINT8 uiHowToSeek)
+BOOLEAN LibraryFileSeek(const HWFILE file, INT32 distance, const INT how)
 {
 	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
 	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
 
-	//if the library is not open, return an error
-	if( !IsLibraryOpened( sLibraryID ) )
-		return( FALSE );
-	FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
+	if (sLibraryID == REAL_FILE_LIBRARY_ID)
+	{
+		int whence;
+		switch (how)
+		{
+			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
 
-	UINT32       uiCurPos = fo->uiFilePosInFile;
-	const UINT32 uiSize   = fo->pFileHeader->uiFileLength;
+			case FILE_SEEK_FROM_END:
+				whence = SEEK_END;
+				if (distance > 0) distance = -distance;
+				break;
 
+			default: whence = SEEK_CUR; break;
+		}
 
-	if ( uiHowToSeek == FILE_SEEK_FROM_START )
-		uiCurPos = uiDistance;
-	else if ( uiHowToSeek == FILE_SEEK_FROM_END )
-		uiCurPos = uiSize - uiDistance;
-	else if ( uiHowToSeek == FILE_SEEK_FROM_CURRENT )
-		uiCurPos += uiDistance;
+		FILE* const f = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
+		return fseek(f, distance, whence) == 0;
+	}
 	else
-		return(FALSE);
+	{
+		if (!IsLibraryOpened(sLibraryID)) return FALSE;
+		FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
 
-	fo->uiFilePosInFile = uiCurPos;
-	return( TRUE );
+		UINT32       uiCurPos = fo->uiFilePosInFile;
+		const UINT32 uiSize   = fo->pFileHeader->uiFileLength;
+
+		switch (how)
+		{
+			case FILE_SEEK_FROM_START:   uiCurPos  = distance;          break;
+			case FILE_SEEK_FROM_END:     uiCurPos  = uiSize - distance; break;
+			case FILE_SEEK_FROM_CURRENT: uiCurPos += distance;          break;
+			default:                     return FALSE;
+		}
+
+		fo->uiFilePosInFile = uiCurPos;
+		return TRUE;
+	}
 }
 
 
