@@ -116,8 +116,6 @@ BOOLEAN LoadGameSettings(void);
 
 void InitGameOptions(void);
 
-BOOLEAN GetCDLocation(void);
-
 void DisplayGameSettings(void);
 
 BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile );

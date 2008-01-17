@@ -27,14 +27,8 @@
 
 #define				GAME_SETTINGS_FILE		"../Ja2.set"
 
-#define				GAME_INI_FILE					"../Ja2.ini"
-
-#define				CD_ROOT_DIR						"DATA/"
-
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
-
-extern BOOLEAN DoJA2FilesExistsOnDrive( CHAR8 *zCdLocation );
 
 
 //Change this number when we want any who gets the new build to reset the options
@@ -237,130 +231,6 @@ void InitGameOptions()
 }
 
 
-static BOOLEAN GetCDromDriveLetter(char* pString);
-static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter);
-
-
-BOOLEAN GetCDLocation( )
-{
-#if 1 // XXX TODO
-	FIXME
-	snprintf(gzCdDirectory, lengthof(gzCdDirectory), "%s/Data/", GetBinDataPath());
-	return TRUE;
-#else
-	UINT32	uiStrngLength = 0;
-	CHAR8		zCdLocation[ SGPFILENAME_LEN ];
-	UINT32	uiDriveType=0;
-	UINT32	uiRetVal=0;
-
-	//Do a crude check to make sure the Ja2.ini file is the right on
-
-	uiRetVal = GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
-	if( uiRetVal == 0 || !IsDriveLetterACDromDrive( zCdLocation ) )
-	{
-		// the user most likely doesnt have the file, or the user has messed with the file
-		// build a new one
-
-		//First delete the old file
-		FileDelete( GAME_INI_FILE );
-
-		//Get the location of the cdrom drive
-		if( GetCDromDriveLetter( zCdLocation ) )
-		{
-			CHAR8		*pTemp;
-
-			//if it succeeded
-			pTemp = strrchr( zCdLocation, ':' );
-			pTemp[0] = '\0';
-		}
-		else
-		{
-			//put in a default location
-			strcpy(zCdLocation, "c");
-		}
-
-		//Now create a new file
-		 WritePrivateProfileString( "Ja2 Settings", "CD", zCdLocation, GAME_INI_FILE );
-
-		 GetPrivateProfileString( "Ja2 Settings","CD", "", zCdLocation, SGPFILENAME_LEN, GAME_INI_FILE );
-	}
-
-	uiStrngLength = strlen( zCdLocation );
-
-	//if the string length is less the 1 character, it is a drive letter
-	if( uiStrngLength == 1 )
-	{
-		sprintf( gzCdDirectory, "%s:\\%s", zCdLocation, CD_ROOT_DIR );
-	}
-
-	//else it is most likely a network location
-	else if( uiStrngLength > 1 )
-	{
-		sprintf( gzCdDirectory, "%s\\%s", zCdLocation, CD_ROOT_DIR );
-	}
-	else
-	{
-		//no path was entered
-		gzCdDirectory[ 0 ] = '.';
-	}
-
-	return( TRUE );
-#endif
-}
-
-
-static BOOLEAN GetCDromDriveLetter(char* pString)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	UINT32	uiSize=0;
-	UINT8		ubCnt=0;
-	CHAR8		zDriveLetters[512];
-	CHAR8		zDriveLetter[16];
-	UINT32	uiDriveType;
-
-	uiSize = GetLogicalDriveStrings( 512, zDriveLetters );
-
-	for( ubCnt=0;ubCnt<uiSize;ubCnt++ )
-	{
-		//if the current char is not null
-		if( zDriveLetters[ ubCnt ] != '\0' )
-		{
-			//get the string
-			zDriveLetter[ 0 ] = zDriveLetters[ ubCnt ];
-			ubCnt++;
-			zDriveLetter[ 1 ] = zDriveLetters[ ubCnt ];
-			ubCnt++;
-			zDriveLetter[ 2 ] = zDriveLetters[ ubCnt ];
-
-			zDriveLetter[ 3 ] = '\0';
-
-			//Get the drive type
-			uiDriveType = GetDriveType( zDriveLetter );
-			switch( uiDriveType )
-			{
-				// The drive is a CD-ROM drive.
-				case DRIVE_CDROM:
-					strcpy( pString, zDriveLetter );
-
-					if ( DoJA2FilesExistsOnDrive( pString ) )
-					{
-						return( TRUE );
-					}
-					break;
-
-				default:
-					break;
-			}
-		}
-	}
-
-	return( FALSE );
-#endif
-}
-
-
 void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 {
 	if( bExitValue == MSG_BOX_RETURN_OK )
@@ -378,34 +248,6 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 	}
 }
 
-
-static BOOLEAN IsDriveLetterACDromDrive(STR pDriveLetter)
-{
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	UINT32	uiDriveType;
-	CHAR8		zRootName[512];
-
-	sprintf( zRootName, "%s:\\", pDriveLetter );
-
-	//Get the drive type
-	uiDriveType = GetDriveType( zRootName );
-	switch( uiDriveType )
-	{
-		// The drive is a CD-ROM drive.
-#ifdef JA2BETAVERSION
-		case DRIVE_NO_ROOT_DIR:
-		case DRIVE_REMOTE:
-#endif
-		case DRIVE_CDROM:
-			return( TRUE );
-			break;
-	}
-
-	return( FALSE );
-#endif
-}
 
 void DisplayGameSettings( )
 {

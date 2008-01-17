@@ -23,9 +23,6 @@
 #define DB_ADD_FILE_ID( exp )						( exp & 0xC00000 )
 
 
-extern	CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
-
-
 typedef struct
 {
 	STR			pFileName;

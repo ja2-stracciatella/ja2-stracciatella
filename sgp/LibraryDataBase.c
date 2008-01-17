@@ -7,11 +7,6 @@
 #include "Debug.h"
 
 
-#ifdef JA2
-#	include "GameSettings.h"
-#endif
-
-
 typedef struct
 {
 	CHAR8        sFileName[FILENAME_SIZE];
@@ -25,22 +20,12 @@ typedef struct
 CASSERT(sizeof(DIRENTRY) == 280)
 
 
-//The location of the cdrom drive
-CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
-
-
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 {
 	INT16			i;
-
-#ifdef JA2
-	GetCDLocation( );
-#else
-	gzCdDirectory[ 0 ] = '.';
-#endif
 
 	//if all the libraries exist, set them up
 	gFileDataBase.usNumberOfLibraries = LibCount;
@@ -156,8 +141,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 	if (hFile == NULL)
 	{
 		char zTempPath[SGPFILENAME_LEN];
-		sprintf(zTempPath, "%s%s", gzCdDirectory, lib_name);
-
+		snprintf(zTempPath, lengthof(zTempPath), "%s/Data/%s", GetBinDataPath(), lib_name);
 		hFile = fopen(zTempPath, "rb");
 		if (hFile == NULL)
 		{
