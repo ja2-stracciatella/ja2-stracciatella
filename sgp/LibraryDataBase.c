@@ -336,7 +336,7 @@ BOOLEAN LoadDataFromLibrary(const HWFILE file, void* const pData, const UINT32 u
 }
 
 
-static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName);
+static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruct* lib, const char* filename);
 static INT16 GetLibraryIDFromFileName(const char* pFileName);
 
 
@@ -358,7 +358,7 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 		return( FALSE );
 	}
 
-	return GetFileHeaderFromLibrary(sLibraryID, pFileName) != NULL;
+	return GetFileHeaderFromLibrary(&gFileDataBase.pLibraries[sLibraryID], pFileName) != NULL;
 }
 
 
@@ -419,11 +419,10 @@ static const char* g_current_lib_path;
 /* Performsperforms a binary search of the library.  It adds the libraries path
  * to the file in the library and then string compared that to the name that we
  * are searching for. */
-static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName)
+static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruct* const lib, const char* const filename)
 {
-	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 	g_current_lib_path = lib->sLibraryPath;
-	return bsearch(pstrFileName, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
+	return bsearch(filename, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
 }
 
 
@@ -479,7 +478,7 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			return( 0 );
 
 		//if the file is in a library, get the file
-		const FileHeaderStruct* pFileHeader = GetFileHeaderFromLibrary(sLibraryID, pName);
+		const FileHeaderStruct* pFileHeader = GetFileHeaderFromLibrary(lib, pName);
 		if (pFileHeader != NULL)
 		{
 			//increment the number of open files
