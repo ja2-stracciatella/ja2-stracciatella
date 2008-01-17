@@ -25,10 +25,6 @@ typedef struct
 CASSERT(sizeof(DIRENTRY) == 280)
 
 
-//used when doing the binary search of the libraries
-INT16	gsCurrentLibrary = -1;
-
-
 //The location of the cdrom drive
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
@@ -417,14 +413,16 @@ INT16 sLoop1, sBestMatch=-1;
 static int CompareFileNames(const void* key, const void* member);
 
 
+static const char* g_current_lib_path;
+
+
 /* Performsperforms a binary search of the library.  It adds the libraries path
  * to the file in the library and then string compared that to the name that we
  * are searching for. */
 static const FileHeaderStruct* GetFileHeaderFromLibrary(INT16 sLibraryID, const char* pstrFileName)
 {
-	gsCurrentLibrary = sLibraryID;
-
 	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+	g_current_lib_path = lib->sLibraryPath;
 	return bsearch(pstrFileName, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
 }
 
@@ -440,7 +438,7 @@ static int CompareFileNames(const void* key, const void* member)
 	const FileHeaderStruct* TempFileHeader = member;
 	char sFileNameWithPath[FILENAME_SIZE];
 
-	sprintf(sFileNameWithPath, "%s%s", gFileDataBase.pLibraries[gsCurrentLibrary].sLibraryPath, TempFileHeader->pFileName);
+	sprintf(sFileNameWithPath, "%s%s", g_current_lib_path, TempFileHeader->pFileName);
 
 	return strcasecmp(sSearchKey, sFileNameWithPath);
 }
