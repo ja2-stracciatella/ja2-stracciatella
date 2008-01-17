@@ -53,7 +53,6 @@
 #include "MemMan.h"
 #include "JAScreens.h"
 #include "Tile_Cache.h"
-#include "Stubs.h" // XXX
 
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
@@ -281,24 +280,11 @@ static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTiles
 
 static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID)
 {
-  SGPFILENAME			cTemp;
 	UINT32					uiLoop;
 
 	UINT32					uiPercentage;
 	//UINT32					uiLength;
 	//UINT16					uiFillColor;
-	STRING512				INIFile;
-
-	const char* ExeDir = GetExecutableDirectory();
-
-	// Adjust Current Dir
-	// CHECK IF DEFAULT INI OVERRIDE FILE EXISTS
-	sprintf( INIFile, "%s/engine.ini", ExeDir );
-	if ( !FileExists( INIFile )	)
-	{
-		// USE PER TILESET BASIS
-		sprintf( INIFile, "%s/engine%d.ini", ExeDir, ubTilesetID );
-	}
 
 	// If no Tileset filenames are given, return error
 	if (ppTileSurfaceFilenames == NULL)
@@ -325,41 +311,24 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		//InvalidateRegion(0, 399, SCREEN_WIDTH, 420);
 		//EndFrameBufferRender( );
 
+		const char* filename       = ppTileSurfaceFilenames[uiLoop];
+		UINT8       tileset_to_add = ubTilesetID;
+		if (filename[0] == '\0')
+		{
+			// USE FIRST TILESET VALUE!
+
+			// ATE: If here, don't load default surface if already loaded...
+			if (gbDefaultSurfaceUsed[uiLoop]) continue;
+
+			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
+			tileset_to_add = GENERIC_1;
+		}
+		strcpy(TileSurfaceFilenames[uiLoop], filename);
+
+		// Adjust for tileset position
 		char AdjustedFilename[128];
-		const char* Filename;
-		UINT8 TilesetToAdd;
-		GetPrivateProfileString( "TileSurface Filenames", gTileSurfaceName[uiLoop], "", cTemp, SGPFILENAME_LEN, INIFile );
-		if (*cTemp != '\0')
-		{
-			strcpy(TileSurfaceFilenames[uiLoop], cTemp);
-			Filename = cTemp;
-			TilesetToAdd = ubTilesetID;
-		}
-		else
-		{
-			if (ppTileSurfaceFilenames[uiLoop][0] != '\0')
-			{
-				Filename = ppTileSurfaceFilenames[uiLoop];
-				TilesetToAdd = ubTilesetID;
-			}
-			else
-			{
-				// USE FIRST TILESET VALUE!
-
-				// ATE: If here, don't load default surface if already loaded...
-				if (gbDefaultSurfaceUsed[uiLoop]) continue;
-
-				Filename = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
-				TilesetToAdd = GENERIC_1;
-			}
-			strcpy(TileSurfaceFilenames[uiLoop], Filename);
-
-			// Adjust for tileset position
-			sprintf(AdjustedFilename, "TILESETS/%d/%s", TilesetToAdd, Filename);
-			Filename = AdjustedFilename;
-		}
-
-		if (!AddTileSurface(Filename, uiLoop, TilesetToAdd))
+		sprintf(AdjustedFilename, "TILESETS/%d/%s", tileset_to_add, filename);
+		if (!AddTileSurface(AdjustedFilename, uiLoop, tileset_to_add))
 		{
 			DestroyTileSurfaces();
 			return FALSE;
