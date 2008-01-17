@@ -7,9 +7,37 @@
 #include "Debug.h"
 
 
+#define NUM_FILES_TO_ADD_AT_A_TIME 20
+#define INITIAL_NUM_HANDLES        20
+
+
+#define	FILENAME_SIZE 256
+
+
+#define FILE_OK           0x00
+#define FILE_DELETED      0xFF
+#define FILE_OLD          0x01
+#define FILE_DOESNT_EXIST 0xFE
+
+
+// NOTE:  The following structs are also used by the datalib98 utility
+typedef struct LIBHEADER
+{
+	char    sLibName[FILENAME_SIZE];
+	char    sPathToLibrary[FILENAME_SIZE];
+	INT32   iEntries;
+	INT32   iUsed;
+	UINT16  iSort;
+	UINT16  iVersion;
+	BOOLEAN	fContainsSubDirectories;
+	INT32   iReserved;
+} LIBHEADER;
+CASSERT(sizeof(LIBHEADER) == 532)
+
+
 typedef struct
 {
-	CHAR8        sFileName[FILENAME_SIZE];
+	char         sFileName[FILENAME_SIZE];
 	UINT32       uiOffset;
 	UINT32       uiLength;
 	UINT8        ubState;

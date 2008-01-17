@@ -4,12 +4,6 @@
 #include "Types.h"
 #include "FileMan.h"
 
-#define	FILENAME_SIZE									256
-
-
-#define NUM_FILES_TO_ADD_AT_A_TIME		20
-#define INITIAL_NUM_HANDLES						20
-
 
 #define	REAL_FILE_LIBRARY_ID					1022
 
@@ -75,33 +69,6 @@ typedef struct
 	UINT16	usNumberOfLibraries;
 	RealFileHeaderStruct RealFiles;
 } DatabaseManagerHeaderStruct;
-
-
-//*************************************************************************
-//
-//  NOTE!  The following structs are also used by the datalib98 utility
-//
-//*************************************************************************
-
-
-#define FILE_OK							0
-#define FILE_DELETED				0xff
-#define FILE_OLD						1
-#define FILE_DOESNT_EXIST		0xfe
-
-
-typedef struct
-{
-	CHAR8		sLibName[ FILENAME_SIZE ];
-	CHAR8		sPathToLibrary[ FILENAME_SIZE ];
-	INT32		iEntries;
-	INT32		iUsed;
-	UINT16	iSort;
-	UINT16	iVersion;
-	BOOLEAN	fContainsSubDirectories;
-	INT32		iReserved;
-} LIBHEADER;
-CASSERT(sizeof(LIBHEADER) == 532)
 
 
 #ifdef __cplusplus
