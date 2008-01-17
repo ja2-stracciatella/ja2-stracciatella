@@ -462,15 +462,6 @@ HWFILE OpenFileFromLibrary(const char *pName)
 	if( sLibraryID != -1 )
 	{
 		LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
-		//Check if another file is already open in the library ( report a warning if so )
-
-//		if (lib->fAnotherFileAlreadyOpenedLibrary)
-		if (lib->uiIdOfOtherFileAlreadyOpenedLibrary != 0)
-		{
-			// Temp removed
-//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open\n", pName, gGameLibaries[ sLibraryID ].sLibraryName ) );
-//			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open ( file open is '%s')\n", pName, gGameLibaries[sLibraryID].sLibraryName, lib->pOpenFiles[lib->uiIdOfOtherFileAlreadyOpenedLibrary].pFileHeader->pFileName));
-		}
 
 		if (CheckIfFileIsAlreadyOpen(pName, lib)) return 0;
 
@@ -532,10 +523,6 @@ HWFILE OpenFileFromLibrary(const char *pName)
 		// Library is not open, or doesnt exist
 		return( 0 );
 	}
-
-	//Set the fact the a file is currently open in the library
-//	gFileDataBase.pLibraries[ sLibraryID ].fAnotherFileAlreadyOpenedLibrary = TRUE;
-	gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary = uiFileNum;
 
 	return DB_ADD_LIBRARY_ID(sLibraryID) | uiFileNum;
 }
@@ -632,9 +619,6 @@ void CloseLibraryFile(const HWFILE file)
 
 		// decrement the number of files that are open
 		lib->iNumFilesOpen--;
-
-		// Reset the fact that a file is accessing the library
-		lib->uiIdOfOtherFileAlreadyOpenedLibrary = 0;
 	}
 }
 

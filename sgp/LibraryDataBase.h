@@ -49,8 +49,6 @@ typedef struct
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	BOOLEAN	fLibraryOpen;
-//	BOOLEAN	fAnotherFileAlreadyOpenedLibrary;				//this variable is set when a file is opened from the library and reset when the file is close.  No 2 files can have access to the library at 1 time.
-	UINT32	uiIdOfOtherFileAlreadyOpenedLibrary;				//this variable is set when a file is opened from the library and reset when the file is close.  No 2 files can have access to the library at 1 time.
 	INT32		iNumFilesOpen;
 	INT32		iSizeOfOpenFileArray;
 	FileHeaderStruct *pFileHeader;
