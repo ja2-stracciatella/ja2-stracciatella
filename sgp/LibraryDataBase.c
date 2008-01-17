@@ -29,9 +29,6 @@ CASSERT(sizeof(DIRENTRY) == 280)
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
-static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
-
-
 static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename);
 
 
@@ -517,9 +514,6 @@ HWFILE OpenFileFromLibrary(const char *pName)
 			if( uiFileNum == 0 )
 				return( 0 );
 
-			//Create a library handle for the new file
-			hLibFile = CreateLibraryFileHandle( sLibraryID, uiFileNum );
-
 			//Set the current file data into the array of open files
 			lib->pOpenFiles[uiFileNum].uiFilePosInFile = 0;
 			lib->pOpenFiles[uiFileNum].pFileHeader = pFileHeader;
@@ -543,19 +537,7 @@ HWFILE OpenFileFromLibrary(const char *pName)
 //	gFileDataBase.pLibraries[ sLibraryID ].fAnotherFileAlreadyOpenedLibrary = TRUE;
 	gFileDataBase.pLibraries[ sLibraryID ].uiIdOfOtherFileAlreadyOpenedLibrary = uiFileNum;
 
-	return( hLibFile );
-}
-
-
-static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum)
-{
-	HWFILE hLibFile;
-
-
-	hLibFile = uiFileNum;
-	hLibFile |= DB_ADD_LIBRARY_ID( sLibraryID );
-
-	return( hLibFile );
+	return DB_ADD_LIBRARY_ID(sLibraryID) | uiFileNum;
 }
 
 
