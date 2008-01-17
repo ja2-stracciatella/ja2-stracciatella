@@ -442,87 +442,47 @@ static int CompareFileNames(const void* key, const void* member)
 static BOOLEAN CheckIfFileIsAlreadyOpen(const char* pFileName, const LibraryHeaderStruct* lib);
 
 
-//************************************************************************
-//
-// This function will see if a file is in a library.  If it is, the file will be opened and a file
-// handle will be created for it.
-//
-//************************************************************************
-
-HWFILE OpenFileFromLibrary(const char *pName)
+/* This function will see if a file is in a library.  If it is, the file will be
+ * opened and a file handle will be created for it. */
+HWFILE OpenFileFromLibrary(const char* const pName)
 {
-	HWFILE					hLibFile;
-	INT16							sLibraryID;
-	UINT16						uiLoop1;
-	UINT32						uiFileNum=0;
-
 	//Check if the file can be contained from an open library ( the path to the file a library path )
-	sLibraryID = GetLibraryIDFromFileName( pName );
+	const INT16 sLibraryID = GetLibraryIDFromFileName(pName);
+	if (sLibraryID == -1) return 0;
 
-	if( sLibraryID != -1 )
+	LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+
+	if (CheckIfFileIsAlreadyOpen(pName, lib)) return 0;
+
+	//if the file is in a library, get the file
+	const FileHeaderStruct* const pFileHeader = GetFileHeaderFromLibrary(lib, pName);
+	if (pFileHeader == NULL) return 0;
+
+	//increment the number of open files
+	lib->iNumFilesOpen++;
+
+	//if there isnt enough space to put the file, realloc more space
+	if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
 	{
-		LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+		//reallocate more space for the array
+		FileOpenStruct* const pOpenFiles = MemRealloc(lib->pOpenFiles, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
+		if (!pOpenFiles) return 0;
 
-		if (CheckIfFileIsAlreadyOpen(pName, lib)) return 0;
-
-		//if the file is in a library, get the file
-		const FileHeaderStruct* pFileHeader = GetFileHeaderFromLibrary(lib, pName);
-		if (pFileHeader != NULL)
-		{
-			//increment the number of open files
-			lib->iNumFilesOpen++;
-
-			//if there isnt enough space to put the file, realloc more space
-			if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
-			{
-				FileOpenStruct	*pOpenFiles;
-
-				//reallocate more space for the array
-				pOpenFiles = MemRealloc(lib->pOpenFiles, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
-
-				if( !pOpenFiles )
-					return( 0 );
-
-				//increment the number of open files that we can have open
-				lib->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
-
-
-				lib->pOpenFiles = pOpenFiles;
-			}
-
-			//loop through to find a new spot in the array
-			uiFileNum = 0;
-			for (uiLoop1 = 1; uiLoop1 < lib->iSizeOfOpenFileArray; uiLoop1++)
-			{
-				if (lib->pOpenFiles[uiLoop1].pFileHeader == NULL)
-				{
-					uiFileNum = uiLoop1;
-					break;
-				}
-			}
-
-			//if for some reason we couldnt find a spot, return an error
-			if( uiFileNum == 0 )
-				return( 0 );
-
-			//Set the current file data into the array of open files
-			lib->pOpenFiles[uiFileNum].uiFilePosInFile = 0;
-			lib->pOpenFiles[uiFileNum].pFileHeader = pFileHeader;
-
-			//Set the file position in the library to the begining of the 'file' in the library
-			fseek(lib->hLibraryHandle, lib->pOpenFiles[uiFileNum].pFileHeader->uiFileOffset, SEEK_SET);
-		}
-		else
-		{
-			// Failed to find the file in a library
-			return( 0 );
-		}
+		//increment the number of open files that we can have open
+		lib->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
+		lib->pOpenFiles            = pOpenFiles;
 	}
-	else
+
+	UINT32 uiFileNum;
+	for (uiFileNum = 1;; ++uiFileNum)
 	{
-		// Library is not open, or doesnt exist
-		return( 0 );
+		if (uiFileNum >= lib->iSizeOfOpenFileArray)         return 0;
+		if (lib->pOpenFiles[uiFileNum].pFileHeader == NULL) break;
 	}
+
+	//Set the current file data into the array of open files
+	lib->pOpenFiles[uiFileNum].uiFilePosInFile = 0;
+	lib->pOpenFiles[uiFileNum].pFileHeader     = pFileHeader;
 
 	return DB_ADD_LIBRARY_ID(sLibraryID) | uiFileNum;
 }
