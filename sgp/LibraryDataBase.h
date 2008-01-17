@@ -48,7 +48,6 @@ typedef struct
 	STR			sLibraryPath;
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
-	BOOLEAN	fLibraryOpen;
 	INT32		iNumFilesOpen;
 	INT32		iSizeOfOpenFileArray;
 	FileHeaderStruct *pFileHeader;

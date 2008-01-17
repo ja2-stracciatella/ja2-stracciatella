@@ -62,7 +62,6 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
-				libs[i].fLibraryOpen = FALSE;
 			}
 		}
 	}
@@ -285,7 +284,6 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 	pLibHeader->hLibraryHandle = hFile;
 	pLibHeader->usNumberOfEntries = usNumEntries;
-	pLibHeader->fLibraryOpen = TRUE;
 	pLibHeader->iNumFilesOpen = 0;
 	pLibHeader->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 
@@ -687,26 +685,18 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 		lib->pOpenFiles = NULL;
 	}
 
-	//set that the library isnt open
-	lib->fLibraryOpen = FALSE;
-
-	//close the file ( note libraries are to be closed by the Windows close function )
 	fclose(lib->hLibraryHandle);
+	lib->hLibraryHandle = NULL;
 
 	return( TRUE );
 }
 
-BOOLEAN IsLibraryOpened( INT16 sLibraryID )
-{
-	//if we are trying to do something with an invalid library id
-	if( sLibraryID >= gFileDataBase.usNumberOfLibraries )
-		return( FALSE );
 
-	//if the library is opened
-	if( gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen )
-		return( TRUE );
-	else
-		return( FALSE );
+BOOLEAN IsLibraryOpened(const INT16 sLibraryID)
+{
+	return
+		sLibraryID < gFileDataBase.usNumberOfLibraries &&
+		gFileDataBase.pLibraries[sLibraryID].hLibraryHandle != NULL;
 }
 
 
