@@ -62,6 +62,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
+				return FALSE;
 			}
 		}
 	}
@@ -167,7 +168,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 		if (hFile == NULL)
 		{
 			fprintf(stderr, "ERROR: Failed to open \"%s\"\n", zTempPath);
-			abort();
+			return FALSE;
 		}
 		FastDebugMsg(String("CD Library %s opened.", zTempPath));
 	}

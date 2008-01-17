@@ -19,7 +19,7 @@ UINT32 guiSplashStartTime = 0;
 
 
 //Simply create videosurface, load image, and draw it to the screen.
-void InitJA2SplashScreen(void)
+BOOLEAN InitJA2SplashScreen(void)
 {
 	InitializeJA2Clock();
 
@@ -28,10 +28,10 @@ void InitJA2SplashScreen(void)
 	if (!SetFileManCurrentDirectory(DataDir))
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
-		return;
+		return FALSE;
 	}
 
-	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
+	if (!InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries))) return FALSE;
 
 #ifdef ENGLISH
 	ClearMainMenu();
@@ -41,7 +41,7 @@ void InitJA2SplashScreen(void)
 	if (!BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0))
 	{
 		AssertMsg(0, String("Failed to load %s", ImageFile));
-		return;
+		return FALSE;
 	}
 #endif
 
@@ -49,4 +49,5 @@ void InitJA2SplashScreen(void)
 	RefreshScreen();
 
 	guiSplashStartTime = GetJA2Clock();
+	return TRUE;
 }

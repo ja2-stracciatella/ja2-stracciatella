@@ -158,9 +158,9 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 		return FALSE;
 	}
 
-	#ifdef JA2
-		InitJA2SplashScreen();
-	#endif
+#ifdef JA2
+	if (!InitJA2SplashScreen()) return FALSE;
+#endif
 
 	// Initialize Font Manager
 	FastDebugMsg("Initializing the Font Manager");
