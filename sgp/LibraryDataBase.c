@@ -140,30 +140,24 @@ static int CompareFileHeader(const void* a, const void* b)
 
 
 // Replace all \ in a string by /
-static void Slashify(char* s)
+static char* Slashify(const char* s)
 {
-	for (; *s != '\0'; s++) if (*s == '\\') *s = '/';
+	char* const res = MemAlloc(strlen(s) + 1);
+	if (res == NULL) return NULL;
+	char* d = res;
+	do { *d++ = (*s == '\\' ? '/' : *s); } while (*s++ != '\0');
+	return res;
 }
 
 
-static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader)
+static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
 {
-	FILE*	hFile;
-	UINT16	usNumEntries=0;
-	UINT32	uiLoop;
-	DIRENTRY DirEntry;
-	LIBHEADER	LibFileHeader;
-	UINT32	uiCount=0;
-	CHAR8		zTempPath[ SGPFILENAME_LEN ];
-
-	//open the library for reading ( if it exists )
-	hFile = fopen(pLibraryName, "rb");
+	FILE* hFile = fopen(lib_name, "rb");
 	if (hFile == NULL)
 	{
-		// Add the path of the cdrom to the path of the library file
-		sprintf(zTempPath, "%s%s", gzCdDirectory, pLibraryName);
+		char zTempPath[SGPFILENAME_LEN];
+		sprintf(zTempPath, "%s%s", gzCdDirectory, lib_name);
 
-		//look on the cdrom
 		hFile = fopen(zTempPath, "rb");
 		if (hFile == NULL)
 		{
@@ -173,122 +167,87 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 		FastDebugMsg(String("CD Library %s opened.", zTempPath));
 	}
 
-	// Read in the library header ( at the begining of the library )
-	if (fread(&LibFileHeader, sizeof(LibFileHeader), 1, hFile) != 1)
-		return( FALSE );
+	// read in the library header (at the begining of the library)
+	LIBHEADER	LibFileHeader;
+	if (fread(&LibFileHeader, sizeof(LibFileHeader), 1, hFile) != 1) return FALSE;
 
-	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	fseek(hFile, -(LibFileHeader.iEntries * (ssize_t)sizeof(DIRENTRY)), SEEK_END);
+	const UINT32 count_entries = LibFileHeader.iEntries;
 
-	//loop through the library and determine the number of files that are FILE_OK
-	//ie.  so we dont load the old or deleted files
-	usNumEntries = 0;
-	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
+	/* place the file pointer at the begining of the file headers (they are at the
+	 * end of the file) */
+	fseek(hFile, -(ssize_t)(count_entries * sizeof(DIRENTRY)), SEEK_END);
+
+	/* loop through the library and determine the number of files that are FILE_OK
+	 * i.e. so we dont load the old or deleted files */
+	UINT16 usNumEntries = 0;
+	for (UINT32 uiLoop = 0; uiLoop < count_entries; ++uiLoop)
 	{
-		//read in the file header
-		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1)
-			return( FALSE );
+		DIRENTRY DirEntry;
+		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1) return FALSE;
 
-		if( DirEntry.ubState == FILE_OK )
-			usNumEntries++;
+		if (DirEntry.ubState == FILE_OK) usNumEntries++;
 	}
 
+	FileHeaderStruct* const fhs = MemAlloc(sizeof(*fhs) * usNumEntries);
+#ifdef JA2TESTVERSION
+	lib->uiTotalMemoryAllocatedForLibrary = sizeof(*fhs) * usNumEntries;
+#endif
 
-	//Allocate enough memory for the library header
-	pLibHeader->pFileHeader = MemAlloc( sizeof( FileHeaderStruct ) * usNumEntries );
+	/* place the file pointer at the begining of the file headers (they are at the
+	 * end of the file) */
+	fseek(hFile, -(ssize_t)(count_entries * sizeof(DIRENTRY)), SEEK_END);
 
-	#ifdef JA2TESTVERSION
-		pLibHeader->uiTotalMemoryAllocatedForLibrary = sizeof( FileHeaderStruct ) * usNumEntries;
-	#endif
-
-
-	//place the file pointer at the begining of the file headers ( they are at the end of the file )
-	fseek(hFile, -(LibFileHeader.iEntries * (ssize_t)sizeof(DIRENTRY)), SEEK_END);
-
-	//loop through all the entries
-	uiCount=0;
-	for( uiLoop=0; uiLoop<(UINT32)LibFileHeader.iEntries; uiLoop++ )
+	UINT32 uiCount = 0;
+	for (UINT32 uiLoop = 0; uiLoop < count_entries; ++uiLoop)
 	{
-		//read in the file header
-		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1)
-			return( FALSE );
+		DIRENTRY DirEntry;
+		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1) return FALSE;
 
+		if (DirEntry.ubState != FILE_OK) continue;
 
-		if( DirEntry.ubState == FILE_OK )
-		{
-			//Check to see if the file is not longer then it should be
-			if( ( strlen( DirEntry.sFileName ) + 1 ) >= FILENAME_SIZE )
-				FastDebugMsg(String("\n*******InitializeLibrary():  Warning!:  '%s' from the library '%s' has name whose size (%d) is bigger then it should be (%s)", DirEntry.sFileName, pLibHeader->sLibraryPath, ( strlen( DirEntry.sFileName ) + 1 ), FILENAME_SIZE ) );
+		// check to see if the file is not longer than it should be
+		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
+			FastDebugMsg(String("\n*******InitializeLibrary():  Warning!:  '%s' from the library '%s' has name whose size (%d) is bigger then it should be (%s)", DirEntry.sFileName, lib->sLibraryPath, strlen(DirEntry.sFileName) + 1, FILENAME_SIZE));
 
+		FileHeaderStruct* const fh = &fhs[uiCount];
 
-			//allocate memory for the files name
-			pLibHeader->pFileHeader[ uiCount ].pFileName = MemAlloc( strlen( DirEntry.sFileName ) + 1 );
+		fh->pFileName = Slashify(DirEntry.sFileName);
+		if (fh->pFileName == NULL) return FALSE;
+#ifdef JA2TESTVERSION
+		lib->uiTotalMemoryAllocatedForLibrary += strlen(fh->pFileName) + 1;
+#endif
 
-			//if we couldnt allocate memory
-			if( !pLibHeader->pFileHeader[ uiCount ].pFileName )
-			{
-				//report an error
-				return(FALSE);
-			}
+		fh->uiFileOffset = DirEntry.uiOffset;
+		fh->uiFileLength = DirEntry.uiLength;
 
-
-			#ifdef JA2TESTVERSION
-				pLibHeader->uiTotalMemoryAllocatedForLibrary += strlen( DirEntry.sFileName ) + 1;
-			#endif
-
-
-			//copy the file name, offset and length into the header
-			strcpy( pLibHeader->pFileHeader[ uiCount ].pFileName, DirEntry.sFileName);
-			Slashify(pLibHeader->pFileHeader[uiCount].pFileName);
-			pLibHeader->pFileHeader[ uiCount ].uiFileOffset = DirEntry.uiOffset;
-			pLibHeader->pFileHeader[ uiCount ].uiFileLength = DirEntry.uiLength;
-
-			uiCount++;
-		}
+		uiCount++;
 	}
 
-	qsort(pLibHeader->pFileHeader, usNumEntries, sizeof(*pLibHeader->pFileHeader), CompareFileHeader);
+	qsort(fhs, usNumEntries, sizeof(*fhs), CompareFileHeader);
 
-	pLibHeader->usNumberOfEntries = usNumEntries;
+	lib->pFileHeader       = fhs;
+	lib->usNumberOfEntries = usNumEntries;
 
-	//allocate memory for the library path
-//	if( strlen( LibFileHeader.sPathToLibrary ) == 0 )
-	{
-//		FastDebugMsg( String("The %s library file does not contain a path.  Use 'n' argument to name the library when you create it\n", LibFileHeader.sLibName ) );
-//		Assert( 0 );
-	}
-
-	pLibHeader->sLibraryPath = MemAlloc(strlen(LibFileHeader.sPathToLibrary) + 1);
-	strcpy(pLibHeader->sLibraryPath, LibFileHeader.sPathToLibrary);
-	Slashify(pLibHeader->sLibraryPath);
-
-	#ifdef JA2TESTVERSION
-		pLibHeader->uiTotalMemoryAllocatedForLibrary += strlen( LibFileHeader.sPathToLibrary ) + 1;
-	#endif
-
+	lib->sLibraryPath = Slashify(LibFileHeader.sPathToLibrary);
+	if (lib->sLibraryPath == NULL) return FALSE;
+#ifdef JA2TESTVERSION
+	lib->uiTotalMemoryAllocatedForLibrary += strlen(lib->sLibraryPath) + 1;
+#endif
 
 	//allocate space for the open files array
-	pLibHeader->pOpenFiles = MemAlloc( INITIAL_NUM_HANDLES * sizeof( FileOpenStruct ) );
-	if( !pLibHeader->pOpenFiles )
-	{
-			//report an error
-			return(FALSE);
-	}
+	FileOpenStruct* const fo = MemAlloc(INITIAL_NUM_HANDLES * sizeof(*fo));
+	lib->pOpenFiles = fo;
+	if (!fo) return FALSE;
+	memset(fo, 0, INITIAL_NUM_HANDLES * sizeof(*fo));
+#ifdef JA2TESTVERSION
+	lib->uiTotalMemoryAllocatedForLibrary += INITIAL_NUM_HANDLES * sizeof(*fo);
+#endif
 
-	memset( pLibHeader->pOpenFiles, 0, INITIAL_NUM_HANDLES * sizeof( FileOpenStruct ) );
-
-	#ifdef JA2TESTVERSION
-		pLibHeader->uiTotalMemoryAllocatedForLibrary += INITIAL_NUM_HANDLES * sizeof( FileOpenStruct );
-	#endif
-
-
-
-	pLibHeader->hLibraryHandle = hFile;
-	pLibHeader->usNumberOfEntries = usNumEntries;
-	pLibHeader->iNumFilesOpen = 0;
-	pLibHeader->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
-
-	return( TRUE );
+	lib->hLibraryHandle       = hFile;
+	lib->usNumberOfEntries    = usNumEntries;
+	lib->iNumFilesOpen        = 0;
+	lib->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
+	return TRUE;
 }
 
 
