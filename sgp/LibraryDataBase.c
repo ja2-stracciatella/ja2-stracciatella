@@ -30,7 +30,6 @@ CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
 static HWFILE	CreateLibraryFileHandle(INT16 sLibraryID, UINT32 uiFileNum);
-static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID);
 
 
 static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename);
@@ -443,6 +442,9 @@ static int CompareFileNames(const void* key, const void* member)
 }
 
 
+static BOOLEAN CheckIfFileIsAlreadyOpen(const char* pFileName, const LibraryHeaderStruct* lib);
+
+
 //************************************************************************
 //
 // This function will see if a file is in a library.  If it is, the file will be opened and a file
@@ -473,9 +475,7 @@ HWFILE OpenFileFromLibrary(const char *pName)
 //			FastDebugMsg(String("\n*******\nOpenFileFromLibrary():  Warning!:  Trying to load file '%s' from the library '%s' which already has a file open ( file open is '%s')\n", pName, gGameLibaries[sLibraryID].sLibraryName, lib->pOpenFiles[lib->uiIdOfOtherFileAlreadyOpenedLibrary].pFileHeader->pFileName));
 		}
 
-		//check if the file is already open
-		if (CheckIfFileIsAlreadyOpen(pName, sLibraryID))
-			return( 0 );
+		if (CheckIfFileIsAlreadyOpen(pName, lib)) return 0;
 
 		//if the file is in a library, get the file
 		const FileHeaderStruct* pFileHeader = GetFileHeaderFromLibrary(lib, pName);
@@ -739,7 +739,7 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 		for (uiLoop1 = 0; uiLoop1 < (UINT32)lib->usNumberOfEntries; uiLoop1++)
 		{
 			const char* const filename = lib->pFileHeader[uiLoop1].pFileName;
-			if (CheckIfFileIsAlreadyOpen(filename, sLibraryID))
+			if (CheckIfFileIsAlreadyOpen(filename, lib))
 			{
 				FastDebugMsg(String("CloseLibrary():  ERROR:  %s library file id still exists, wasnt closed, closing now.", filename));
 				CloseLibraryFile(DB_ADD_LIBRARY_ID(sLibraryID) | uiLoop1);
@@ -801,14 +801,13 @@ BOOLEAN IsLibraryOpened( INT16 sLibraryID )
 }
 
 
-static BOOLEAN CheckIfFileIsAlreadyOpen(const char *pFileName, INT16 sLibraryID)
+static BOOLEAN CheckIfFileIsAlreadyOpen(const char* const pFileName, const LibraryHeaderStruct* const lib)
 {
 	UINT16 usLoop1=0;
 
 	const char* sTempName = strrchr(pFileName, '/');
 	const char* sName = sTempName == NULL ? pFileName : sTempName + 1;
 
-	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 	//loop through all the open files to see if 'new' file to open is already open
 	for (usLoop1 = 1; usLoop1 < lib->iSizeOfOpenFileArray ; usLoop1++)
 	{
