@@ -68,7 +68,7 @@ INT16					LightMapLeft[MAX_LIGHT_TEMPLATES];
 INT16					LightMapTop[MAX_LIGHT_TEMPLATES];
 INT16					LightMapRight[MAX_LIGHT_TEMPLATES];
 INT16					LightMapBottom[MAX_LIGHT_TEMPLATES];
-STR						pLightNames[MAX_LIGHT_TEMPLATES];
+char*      pLightNames[MAX_LIGHT_TEMPLATES];
 
 // Sprite data
 LIGHT_SPRITE	LightSprites[MAX_LIGHT_SPRITES];
@@ -2780,20 +2780,15 @@ LIGHT_NODE *pLight;
 	filename forces the system to save the light with the internal filename (recommended).
 
 ***************************************************************************************/
-BOOLEAN LightSave(INT32 iLight, STR pFilename)
+BOOLEAN LightSave(const INT32 iLight, const char* const pFilename)
 {
 	HWFILE hFile;
-	STR pName;
 
 	if(pLightList[iLight]==NULL)
 		return(FALSE);
 	else
 	{
-		if(pFilename==NULL)
-			pName=pLightNames[iLight];
-		else
-			pName=pFilename;
-
+		const char* const pName = (pFilename != NULL ? pFilename : pLightNames[iLight]);
 		hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 		if (hFile != 0)
 		{

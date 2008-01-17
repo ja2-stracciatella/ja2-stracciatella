@@ -212,7 +212,7 @@ static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 //#define DEBUGLOS
 
 #if defined( JA2BETAVERSION ) && defined( DEBUGLOS )
-void DebugLOS( STR szOutput )
+static void DebugLOS(const char* const szOutput)
 {
 	FILE *		DebugFile;
 

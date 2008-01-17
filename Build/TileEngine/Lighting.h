@@ -109,7 +109,7 @@ INT32			LightCreateOmni( UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
 BOOLEAN LightDraw(const LIGHT_SPRITE* l);
 // Save a light list into a file
-BOOLEAN		LightSave(INT32 uiLight, STR pFilename);
+BOOLEAN LightSave(INT32 iLight, const char* pFilename);
 
 // Sets the RGB values and number of light colors (1/2)
 BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors);
@@ -161,7 +161,7 @@ extern INT16						LightMapLeft[MAX_LIGHT_TEMPLATES];
 extern INT16						LightMapTop[MAX_LIGHT_TEMPLATES];
 extern INT16						LightMapRight[MAX_LIGHT_TEMPLATES];
 extern INT16						LightMapBottom[MAX_LIGHT_TEMPLATES];
-extern STR							pLightNames[MAX_LIGHT_TEMPLATES];
+extern char*      pLightNames[MAX_LIGHT_TEMPLATES];
 
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];

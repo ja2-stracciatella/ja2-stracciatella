@@ -2579,10 +2579,10 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	MemFree( pMemBlock );
 
 	return( fRet );
-
 }
 
-void GetMapTempFileName( UINT32 uiType, STR pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+
+void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ)
 {
 	//Convert the current sector location into a file name
 	char zTempName[512];

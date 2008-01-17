@@ -52,9 +52,7 @@ CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 extern	UINT32		guiScreenToGotoAfterLoadingSavedGame;
 extern UINT32 guiSaveGameVersion;
 
-void			CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName );
-
-
+void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );

@@ -31,12 +31,11 @@ static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader
 HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
 {
 	const char* const ExtensionSep = ".";
-	STR					StrPtr;
 	UINT32			iFileLoader;
 
 	// Depending on extension of filename, use different image readers
 	// Get extension
-	StrPtr = strstr( ImageFile, ExtensionSep );
+	const char* const StrPtr = strstr(ImageFile, ExtensionSep);
 	if (StrPtr == NULL) return NULL;
 	const char* Extension = StrPtr + 1;
 

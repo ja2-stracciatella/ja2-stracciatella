@@ -19,7 +19,7 @@
 
 typedef struct
 {
-	STR			pFileName;
+	char*  pFileName;
 	UINT32	uiFileLength;
 	UINT32	uiFileOffset;
 } FileHeaderStruct;
@@ -36,7 +36,7 @@ typedef struct
 
 typedef struct
 {
-	STR			sLibraryPath;
+	char* sLibraryPath;
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	INT32		iNumFilesOpen;
@@ -64,7 +64,7 @@ typedef struct
 
 typedef struct
 {
-	STR			sManagerName;
+	char* sManagerName;
 	LibraryHeaderStruct	*pLibraries;
 	UINT16	usNumberOfLibraries;
 	RealFileHeaderStruct RealFiles;

@@ -3158,7 +3158,8 @@ static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
 	return( TRUE );
 }
 
-void CreateSavedGameFileNameFromNumber( UINT8 ubSaveGameID, STR pzNewFileName )
+
+void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
 	//if we are creating the QuickSave file
 	if( ubSaveGameID == 0 )
