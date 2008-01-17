@@ -3161,42 +3161,36 @@ static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
+	const wchar_t* const dir = pMessageStrings[MSG_SAVEDIRECTORY];
+	const wchar_t* const ext = pMessageStrings[MSG_SAVEEXTENSION];
+
 	//if we are creating the QuickSave file
-	if( ubSaveGameID == 0 )
+	if (ubSaveGameID == 0)
 	{
+		const wchar_t* const quick = pMessageStrings[MSG_QUICKSAVE_NAME];
 #ifdef JA2BETAVERSION
-		//if the user wants to have consecutive quick saves
-		if( gfUseConsecutiveQuickSaveSlots )
+		if (gfUseConsecutiveQuickSaveSlots &&
+				guiCurrentQuickSaveNumber != 0)
 		{
-			//if we are loading a game, and the user hasnt saved any consecutinve saves, load the defualt save
-			if( guiCurrentQuickSaveNumber == 0 )
-				sprintf( pzNewFileName , "%ls/%ls.%ls", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
-			else
-				sprintf( pzNewFileName , "%ls/%ls%02d.%ls", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], guiCurrentQuickSaveNumber, pMessageStrings[ MSG_SAVEEXTENSION ] );
+			sprintf(pzNewFileName, "%ls/%ls%02d.%ls", dir, quick, guiCurrentQuickSaveNumber, ext);
 		}
 		else
 #endif
-			sprintf( pzNewFileName , "%ls/%ls.%ls", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_QUICKSAVE_NAME ], pMessageStrings[ MSG_SAVEEXTENSION ] );
-	}
-//#ifdef JA2BETAVERSION
-	else if( ubSaveGameID == SAVE__END_TURN_NUM )
-	{
-		//The name of the file
-		sprintf( pzNewFileName , "%ls/Auto%02d.%ls", pMessageStrings[ MSG_SAVEDIRECTORY ], guiLastSaveGameNum, pMessageStrings[ MSG_SAVEEXTENSION ] );
-
-		//increment end turn number
-		guiLastSaveGameNum++;
-
-		//just have 2 saves
-		if( guiLastSaveGameNum == 2 )
 		{
-			guiLastSaveGameNum = 0;
+			sprintf(pzNewFileName, "%ls/%ls.%ls", dir, quick, ext);
 		}
 	}
-//#endif
+	else if (ubSaveGameID == SAVE__END_TURN_NUM)
+	{
+		//The name of the file
+		sprintf(pzNewFileName, "%ls/Auto%02d.%ls", dir, guiLastSaveGameNum, ext);
 
+		guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
+	}
 	else
-		sprintf( pzNewFileName , "%ls/%ls%02d.%ls", pMessageStrings[ MSG_SAVEDIRECTORY ], pMessageStrings[ MSG_SAVE_NAME ], ubSaveGameID, pMessageStrings[ MSG_SAVEEXTENSION ] );
+	{
+		sprintf(pzNewFileName, "%ls/%ls%02d.%ls", dir, pMessageStrings[MSG_SAVE_NAME], ubSaveGameID, ext);
+	}
 }
 
 
