@@ -29,7 +29,7 @@ CASSERT(sizeof(DIRENTRY) == 280)
 CHAR8	gzCdDirectory[ SGPFILENAME_LEN ];
 
 
-static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename);
+static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
@@ -59,8 +59,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 		//Load up each library
 		for (i = 0; i < LibCount; i++)
 		{
-			//if the library exists
-			if (!OpenLibrary(i, LibFilenames[i]))
+			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
 				libs[i].fLibraryOpen = FALSE;
@@ -625,22 +624,6 @@ BOOLEAN LibraryFileSeek(const HWFILE file, INT32 distance, const INT how)
 		fo->uiFilePosInFile = uiCurPos;
 		return TRUE;
 	}
-}
-
-
-static BOOLEAN OpenLibrary(INT16 sLibraryID, const char* LibFilename)
-{
-	//if the library is already opened, report an error
-	if( gFileDataBase.pLibraries[ sLibraryID ].fLibraryOpen )
-		return( FALSE );
-
-	//if we are trying to do something with an invalid library id
-	if( sLibraryID >= gFileDataBase.usNumberOfLibraries )
-		return( FALSE );
-
-
-	//if we cant open the library
-	return InitializeLibrary(LibFilename, &gFileDataBase.pLibraries[sLibraryID]);
 }
 
 
