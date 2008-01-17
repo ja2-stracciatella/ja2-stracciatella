@@ -173,31 +173,16 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 
 	const UINT32 count_entries = LibFileHeader.iEntries;
 
-	/* place the file pointer at the begining of the file headers (they are at the
-	 * end of the file) */
-	fseek(hFile, -(ssize_t)(count_entries * sizeof(DIRENTRY)), SEEK_END);
-
-	/* loop through the library and determine the number of files that are FILE_OK
-	 * i.e. so we dont load the old or deleted files */
-	UINT16 usNumEntries = 0;
-	for (UINT32 uiLoop = 0; uiLoop < count_entries; ++uiLoop)
-	{
-		DIRENTRY DirEntry;
-		if (fread(&DirEntry, sizeof(DirEntry), 1, hFile) != 1) return FALSE;
-
-		if (DirEntry.ubState == FILE_OK) usNumEntries++;
-	}
-
-	FileHeaderStruct* const fhs = MemAlloc(sizeof(*fhs) * usNumEntries);
+	FileHeaderStruct* fhs = MemAlloc(sizeof(*fhs) * count_entries);
 #ifdef JA2TESTVERSION
-	lib->uiTotalMemoryAllocatedForLibrary = sizeof(*fhs) * usNumEntries;
+	lib->uiTotalMemoryAllocatedForLibrary = sizeof(*fhs) * count_entries;
 #endif
 
 	/* place the file pointer at the begining of the file headers (they are at the
 	 * end of the file) */
 	fseek(hFile, -(ssize_t)(count_entries * sizeof(DIRENTRY)), SEEK_END);
 
-	UINT32 uiCount = 0;
+	UINT32 used_entries = 0;
 	for (UINT32 uiLoop = 0; uiLoop < count_entries; ++uiLoop)
 	{
 		DIRENTRY DirEntry;
@@ -209,7 +194,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 		if (strlen(DirEntry.sFileName) + 1 >= FILENAME_SIZE)
 			FastDebugMsg(String("\n*******InitializeLibrary():  Warning!:  '%s' from the library '%s' has name whose size (%d) is bigger then it should be (%s)", DirEntry.sFileName, lib->sLibraryPath, strlen(DirEntry.sFileName) + 1, FILENAME_SIZE));
 
-		FileHeaderStruct* const fh = &fhs[uiCount];
+		FileHeaderStruct* const fh = &fhs[used_entries++];
 
 		fh->pFileName = Slashify(DirEntry.sFileName);
 		if (fh->pFileName == NULL) return FALSE;
@@ -219,14 +204,17 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 
 		fh->uiFileOffset = DirEntry.uiOffset;
 		fh->uiFileLength = DirEntry.uiLength;
-
-		uiCount++;
 	}
 
-	qsort(fhs, usNumEntries, sizeof(*fhs), CompareFileHeader);
+	if (used_entries != count_entries)
+	{
+		fhs = MemRealloc(fhs, sizeof(*fhs) * used_entries);
+	}
+
+	qsort(fhs, used_entries, sizeof(*fhs), CompareFileHeader);
 
 	lib->pFileHeader       = fhs;
-	lib->usNumberOfEntries = usNumEntries;
+	lib->usNumberOfEntries = used_entries;
 
 	lib->sLibraryPath = Slashify(LibFileHeader.sPathToLibrary);
 	if (lib->sLibraryPath == NULL) return FALSE;
@@ -244,7 +232,6 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 #endif
 
 	lib->hLibraryHandle       = hFile;
-	lib->usNumberOfEntries    = usNumEntries;
 	lib->iNumFilesOpen        = 0;
 	lib->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
 	return TRUE;
