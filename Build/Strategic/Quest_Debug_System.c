@@ -1692,7 +1692,7 @@ static void DisplaySelectedListBox(void)
 }
 
 
-static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Length);
+static void GetDebugLocationString(UINT16 usProfileID, wchar_t* pzText, size_t Length);
 
 
 static void DisplaySelectedNPC(void)
@@ -3498,7 +3498,7 @@ static INT32 GetMaxNumberOfQuotesToPlay(void)
 }
 
 
-static void GetDebugLocationString(UINT16 usProfileID, STR16 pzText, size_t Length)
+static void GetDebugLocationString(const UINT16 usProfileID, wchar_t* const pzText, const size_t Length)
 {
 	SOLDIERTYPE *pSoldier;
 

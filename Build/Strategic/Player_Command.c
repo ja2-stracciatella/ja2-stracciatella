@@ -23,7 +23,7 @@
 #include "Tactical_Save.h"
 
 
-void GetSectorFacilitiesFlags( INT16 sMapX, INT16 sMapY, STR16 sFacilitiesString, size_t Length)
+void GetSectorFacilitiesFlags(const INT16 sMapX, const INT16 sMapY, wchar_t* const sFacilitiesString, const size_t Length)
 {
 	// will build a string stating current facilities present in sector
 

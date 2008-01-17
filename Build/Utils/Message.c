@@ -27,7 +27,7 @@
 typedef struct ScrollStringSt ScrollStringSt;
 struct ScrollStringSt
 {
-	STR16   pString16;
+	wchar_t*        pString16;
 	VIDEO_OVERLAY* video_overlay;
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;

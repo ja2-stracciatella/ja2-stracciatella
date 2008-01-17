@@ -173,7 +173,7 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex );
 
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
-BOOLEAN SetFaceTalking(INT32 iFaceIndex, CHAR8* zSoundFile, STR16 zTextString);
+BOOLEAN SetFaceTalking(INT32 iFaceIndex, const char* zSoundFile, const wchar_t* zTextString);
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 

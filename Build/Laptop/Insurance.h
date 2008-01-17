@@ -29,8 +29,6 @@ BOOLEAN InitInsuranceDefaults(void);
 void DisplayInsuranceDefaults(void);
 void RemoveInsuranceDefaults(void);
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY);
-void GetInsuranceText( UINT8 ubNumber, STR16 pString );
-
-
+void GetInsuranceText(UINT8 ubNumber, wchar_t* pString);
 
 #endif

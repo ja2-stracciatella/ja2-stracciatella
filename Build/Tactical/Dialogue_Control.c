@@ -1615,7 +1615,7 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 }
 
 
-static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, STR16 zQuoteStr);
+static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleExternNPCSpeechFace(INT32 iIndex);
 static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr);
 static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
@@ -1798,11 +1798,11 @@ static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr)
 }
 
 
-static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString);
+static void ExecuteTacticalTextBox(INT16 sLeftPosition, const wchar_t* pString);
 
 
 // Handlers for tactical UI stuff
-static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, STR16 zQuoteStr)
+static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
@@ -1856,7 +1856,7 @@ static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_
 }
 
 
-static void ExecuteTacticalTextBoxForLastQuote(INT16 sLeftPosition, STR16 pString)
+static void ExecuteTacticalTextBoxForLastQuote(const INT16 sLeftPosition, const wchar_t* const pString)
 {
 	UINT32 uiDelay = FindDelayForString( pString );
 
@@ -1875,7 +1875,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
 static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void ExecuteTacticalTextBox(INT16 sLeftPosition, STR16 pString)
+static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* const pString)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -2467,7 +2467,8 @@ void ShutDownLastQuoteTacticalTextBox( void )
 	}
 }
 
-UINT32 FindDelayForString( STR16 sString )
+
+UINT32 FindDelayForString(const wchar_t* const sString)
 {
 	return( wcslen( sString ) * TEXT_DELAY_MODIFIER );
 }

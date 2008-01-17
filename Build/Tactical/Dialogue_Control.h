@@ -291,7 +291,7 @@ void SayQuoteFromAnyBodyInSector( UINT16 usQuoteNum );
 void SayQuoteFromAnyBodyInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT16 usQuoteNum );
 void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum );
 void SayQuote58FromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuoteNum, INT8 bSex );
-UINT32 FindDelayForString( STR16 sString );
+UINT32 FindDelayForString(const wchar_t* sString);
 void BeginLoggingForBleedMeToos( BOOLEAN fStart );
 
 void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier );

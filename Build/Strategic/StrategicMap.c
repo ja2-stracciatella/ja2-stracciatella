@@ -683,7 +683,7 @@ void InitializeSAMSites( void )
 
 
 // get short sector name without town name
-void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length)
+void GetShortSectorString(const INT16 sMapX, const INT16 sMapY, wchar_t* const sString, const size_t Length)
 {
 	// OK, build string id like J11
 	swprintf(sString, Length, L"%hs%hs", pVertStrings[sMapY], pHortStrings[sMapX]);

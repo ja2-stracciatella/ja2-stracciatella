@@ -795,7 +795,7 @@ static FileString* GetFirstStringOnThisPage(FileString* RecordList, UINT32 uiFon
 }
 
 
-static void AddStringToFilesList(STR16 pString);
+static void AddStringToFilesList(const wchar_t* pString);
 static void ClearFileStringList(void);
 static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList);
 static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
@@ -979,7 +979,7 @@ static BOOLEAN HandleSpecialFiles(void)
 }
 
 
-static void AddStringToFilesList(STR16 pString)
+static void AddStringToFilesList(const wchar_t* const pString)
 {
 	FileString* pFileString;
 	FileString* pTempString = pFileStringList;

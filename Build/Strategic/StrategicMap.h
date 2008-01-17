@@ -80,7 +80,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 // get short sector name without town name
-void GetShortSectorString( INT16 sMapX,INT16 sMapY, STR16 sString, size_t Length);
+void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Length);
 
 // This will get an ID string like A9- OMERTA...
 void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed );

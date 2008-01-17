@@ -1401,7 +1401,7 @@ static void HandleTalkingSpeck(void)
 static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void DisplayTextForSpeckVideoPopUp( STR16 pString )
+void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 {
 	UINT16	usActualHeight;
 	INT32		iOldMercPopUpBoxId = iMercPopUpBox;

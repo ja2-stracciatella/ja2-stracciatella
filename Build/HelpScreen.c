@@ -853,7 +853,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void)
 
 
 static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason);
-static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText);
+static void GetHelpScreenText(UINT32 uiRecordToGet, wchar_t* pText);
 
 
 static void CreateHelpScreenButtons(void)
@@ -1283,7 +1283,7 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 }
 
 
-static void GetHelpScreenText(UINT32 uiRecordToGet, STR16 pText)
+static void GetHelpScreenText(const UINT32 uiRecordToGet, wchar_t* const pText)
 {
 	LoadEncryptedDataFromFile(HELPSCREEN_FILE, pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
 }

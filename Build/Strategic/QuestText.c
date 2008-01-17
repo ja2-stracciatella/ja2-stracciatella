@@ -2,7 +2,7 @@
 #include "Quests.h"
 
 
-const wchar_t *QuestDescText[] =
+const const wchar_t* const QuestDescText[] =
 {
 	L"Deliver Letter",
 	L"Food Route",
@@ -41,7 +41,7 @@ const wchar_t *QuestDescText[] =
 };
 
 
-const wchar_t *FactDescText[] =
+const const wchar_t* const FactDescText[] =
 {
 	L"Omerta Liberated",
 	L"Drassen Liberated",

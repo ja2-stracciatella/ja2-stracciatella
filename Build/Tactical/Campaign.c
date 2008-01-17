@@ -1484,8 +1484,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 }
 
 
-
-void BuildStatChangeString( STR16 wString, size_t Length, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat )
+void BuildStatChangeString(wchar_t* const wString, size_t Length, const wchar_t* const wName, const BOOLEAN fIncrease, const INT16 sPtsChanged, const UINT8 ubStat)
 {
 	UINT8 ubStringIndex;
 

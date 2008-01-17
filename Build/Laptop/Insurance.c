@@ -316,7 +316,8 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 	UnLockVideoSurface( FRAME_BUFFER );
 }
 
-void GetInsuranceText( UINT8 ubNumber, STR16 pString )
+
+void GetInsuranceText(const UINT8 ubNumber, wchar_t* const pString)
 {
 	UINT32	uiStartLoc=0;
 

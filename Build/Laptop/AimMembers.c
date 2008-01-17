@@ -870,7 +870,7 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo);
+static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, wchar_t* pInfoString, wchar_t* pAddInfo);
 
 
 static BOOLEAN UpdateMercInfo(void)
@@ -915,7 +915,7 @@ static BOOLEAN UpdateMercInfo(void)
 }
 
 
-static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, STR16 pInfoString, STR16 pAddInfo)
+static BOOLEAN LoadMercBioInfo(const UINT8 ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
 	return
@@ -1969,7 +1969,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
 	return(fIsTheMercTalking);
 }
 
-void DisplayTextForMercFaceVideoPopUp(STR16 pString, size_t Length)
+void DisplayTextForMercFaceVideoPopUp(const wchar_t* const pString, const size_t Length)
 {
 	swprintf( gsTalkingMercText, Length, L"\"%ls\"", pString );
 

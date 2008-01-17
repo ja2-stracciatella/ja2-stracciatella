@@ -72,9 +72,8 @@ void HandleAnyStatChangesAfterAttack( void );
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType );
 
-void BuildStatChangeString( STR16 wString, size_t Length, STR16 wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat );
+void BuildStatChangeString(wchar_t* wString, size_t Length, const wchar_t* wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat);
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue );
-
 
 #endif

@@ -730,7 +730,7 @@ static void DisplayHistoryListBackground(void)
 }
 
 
-static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnit* pHistory);
+static void ProcessHistoryTransactionString(wchar_t* pString, size_t Length, const HistoryUnit* pHistory);
 
 
 static void DrawHistoryRecordsText(void)
@@ -918,11 +918,11 @@ static void DisplayPageNumberAndDateRange(void)
 }
 
 
-static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString);
-static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString);
+static void GetQuestEndedString(UINT8 ubQuestValue, wchar_t* sQuestString);
+static void GetQuestStartedString(UINT8 ubQuestValue, wchar_t* sQuestString);
 
 
-static void ProcessHistoryTransactionString(STR16 pString, size_t Length, HistoryUnit* pHistory)
+static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t Length, const HistoryUnit* const pHistory)
 {
 	switch( pHistory->ubCode)
 	{
@@ -1485,14 +1485,14 @@ UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
 }
 
 
-static void GetQuestStartedString(UINT8 ubQuestValue, STR16 sQuestString)
+static void GetQuestStartedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
 }
 
 
-static void GetQuestEndedString(UINT8 ubQuestValue, STR16 sQuestString)
+static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
 	LoadEncryptedDataFromFile("BINARYDATA/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);

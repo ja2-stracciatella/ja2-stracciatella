@@ -458,7 +458,7 @@ static SGPVObject* guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
 
-static BOOLEAN AttemptToAddSubstring(STR16 zDest, const wchar_t* zTemp, UINT32* puiStringLength, UINT32 uiPixLimit)
+static BOOLEAN AttemptToAddSubstring(wchar_t* const zDest, const wchar_t* const zTemp, UINT32* const puiStringLength, const UINT32 uiPixLimit)
 {
 	UINT32 uiRequiredStringLength, uiTempStringLength;
 

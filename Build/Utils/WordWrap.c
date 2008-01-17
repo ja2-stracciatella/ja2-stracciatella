@@ -744,7 +744,7 @@ void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDest
 	BOOLEAN fRemoveCurrentChar;
 	BOOLEAN fRemoveCurrentCharAndNextChar;
 
-	// this procedure will run through a STR16 and strip out all control characters. This is a nessacary as wcscmp and the like tend not to like control chars in thier strings
+	// this procedure will run through a string and strip out all control characters. This is a nessacary as wcscmp and the like tend not to like control chars in thier strings
 
 	fRemoveCurrentChar = FALSE;
 	fRemoveCurrentCharAndNextChar = FALSE;

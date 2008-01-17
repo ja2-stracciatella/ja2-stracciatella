@@ -63,7 +63,7 @@ BOOLEAN DrawMecBackGround(void);
 BOOLEAN RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
-void DisplayTextForSpeckVideoPopUp(STR16 pString);
+void DisplayTextForSpeckVideoPopUp(const wchar_t* pString);
 
 void EnterInitMercSite(void);
 

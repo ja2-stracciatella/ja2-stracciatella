@@ -1321,7 +1321,7 @@ static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sString, size_t Length);
+static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, wchar_t* sString, size_t Length);
 
 
 // "character" refers to hired people AND vehicles
@@ -9595,7 +9595,7 @@ void CancelPathsOfAllSelectedCharacters()
 }
 
 
-static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, STR16 sString, size_t Length)
+static void ConvertMinTimeToETADayHourMinString(const UINT32 uiTimeInMin, wchar_t* const sString, const size_t Length)
 {
 	UINT32 uiDay, uiHour, uiMin;
 

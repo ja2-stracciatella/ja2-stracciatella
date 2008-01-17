@@ -40,7 +40,7 @@
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
 
 
-STR16		sAutoBandageString      = NULL;
+static wchar_t* sAutoBandageString = NULL;
 INT32		giBoxId						      = -1;
 UINT16	gusTextBoxWidth					= 0;
 UINT16	gusTextBoxHeight			  = 0;
@@ -290,7 +290,6 @@ BOOLEAN HandleAutoBandage( )
 static BOOLEAN CreateAutoBandageString(void)
 {
 	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
-	STR16						sTemp;
 
 	UINT8 ubDoctors = 0;
 	const SOLDIERTYPE* doctors[20];
@@ -335,7 +334,7 @@ static BOOLEAN CreateAutoBandageString(void)
 	else
 	{
 		// make a temporary string to hold most of the doctors names joined by commas
-		sTemp = MemAlloc( uiDoctorNameStringLength * sizeof( CHAR16 ) );
+		wchar_t* const sTemp = MemAlloc(uiDoctorNameStringLength * sizeof(*sTemp));
 	//	sTemp = MemAlloc( 1000 );
 		if (!sTemp)
 		{

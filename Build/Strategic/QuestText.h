@@ -2,8 +2,7 @@
 #define	_QUEST_TEXT_H_
 
 
-extern STR16 QuestDescText[];
-extern STR16 FactDescText[];
-
+extern const wchar_t* const QuestDescText[];
+extern const wchar_t* const FactDescText[];
 
 #endif

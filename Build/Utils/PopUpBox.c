@@ -14,7 +14,7 @@
 
 
 typedef struct PopUpString {
-	STR16 pString;
+	wchar_t* pString;
 	UINT8 ubForegroundColor;
 	UINT8 ubBackgroundColor;
 	UINT8 ubHighLight;
@@ -220,7 +220,6 @@ void SetBackGroundSurface(PopUpBox* const box, SGPVSurface* const bg)
 // adds a FIRST column string to the CURRENT popup box
 void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 {
-	STR16 pLocalString = NULL;
 	INT32 iCounter = 0;
 
 	// find first free slot in list
@@ -237,7 +236,7 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 	if (pStringSt == NULL)
 		return;
 
-	pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
+	wchar_t* const pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
 	if (pLocalString == NULL)
 		return;
 
@@ -258,7 +257,6 @@ static void RemoveBoxSecondaryText(PopUpBox*, INT32 hStringHandle);
 
 void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString)
 {
-	STR16 pLocalString=NULL;
 	INT32 iCounter=0;
 
 	// find the LAST USED text string index
@@ -275,7 +273,7 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 	if (pStringSt == NULL)
 		return;
 
-	pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
+	wchar_t* const pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
 	if (pLocalString == NULL)
 		return;
 

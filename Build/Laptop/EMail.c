@@ -1705,7 +1705,7 @@ static void ClearOutEmailMessageRecordsList(void)
 }
 
 
-static void AddEmailRecordToList(STR16 pString)
+static void AddEmailRecordToList(const wchar_t* const pString)
 {
 	Record* pTempRecord;
 
