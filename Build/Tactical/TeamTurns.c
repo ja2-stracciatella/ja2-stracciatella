@@ -314,6 +314,13 @@ static void EndTurnEvents(void)
 	DecayRottingCorpseAIWarnings();
 }
 
+
+static void SetTeamTurnMessage(const UINT8 team)
+{
+	AddTopMessage(COMPUTER_TURN_MESSAGE, team == CREATURE_TEAM && BloodcatsPresent() ? Message[STR_BLOODCATS_TURN] : TeamTurnString[team]);
+}
+
+
 void BeginTeamTurn( UINT8 ubTeam )
 {
 	while( 1 )
@@ -387,14 +394,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 				{
 					// Dirty panel interface!
 					fInterfacePanelDirty = DIRTYLEVEL2;
-					if ( ubTeam == CREATURE_TEAM && BloodcatsPresent() )
-					{
-						AddTopMessage( COMPUTER_TURN_MESSAGE, Message[ STR_BLOODCATS_TURN ] );
-					}
-					else
-					{
-						AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ ubTeam ] );
-					}
+					SetTeamTurnMessage(ubTeam);
 					StartNPCAI(s);
 					return;
 				}
@@ -484,17 +484,8 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	{
 		// Dirty panel interface!
 		fInterfacePanelDirty = DIRTYLEVEL2;
-		if ( gTacticalStatus.ubCurrentTeam == CREATURE_TEAM && BloodcatsPresent() )
-		{
-			AddTopMessage( COMPUTER_TURN_MESSAGE, Message[ STR_BLOODCATS_TURN ] );
-		}
-		else
-		{
-			AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ gTacticalStatus.ubCurrentTeam ] );
-		}
-
+		SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
 	}
-
 
 	// freeze the user's interface
 	FreezeInterfaceForEnemyTurn();
@@ -934,14 +925,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			if (fFound)
 			{
 				// back to the computer!
-				if ( gTacticalStatus.ubCurrentTeam == CREATURE_TEAM && BloodcatsPresent() )
-				{
-					AddTopMessage( COMPUTER_TURN_MESSAGE, Message[ STR_BLOODCATS_TURN ] );
-				}
-				else
-				{
-					AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ gTacticalStatus.ubCurrentTeam ] );
-				}
+				SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
 
 				// Signal UI done enemy's turn
 				guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -951,14 +935,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			else
 			{
 				// back to the computer!
-				if ( gTacticalStatus.ubCurrentTeam == CREATURE_TEAM && BloodcatsPresent() )
-				{
-					AddTopMessage( COMPUTER_TURN_MESSAGE, Message[ STR_BLOODCATS_TURN ] );
-				}
-				else
-				{
-					AddTopMessage( COMPUTER_TURN_MESSAGE, TeamTurnString[ gTacticalStatus.ubCurrentTeam ] );
-				}
+				SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
 
 				// Signal UI done enemy's turn
 				guiPendingOverrideEvent = LU_BEGINUILOCK;
