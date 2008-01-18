@@ -349,7 +349,7 @@ void StopAnyCurrentlyTalkingSpeech( )
 }
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, const SOLDIERTYPE* pSoldier, const wchar_t* zQuoteStr);
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 
 
 // ATE: Handle changes like when face goes from
@@ -392,7 +392,7 @@ void HandleDialogueUIAdjustments( )
 
 
 						// Setup UI again!
-						CreateTalkingUI(gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, pSoldier, gzQuoteStr);
+						CreateTalkingUI(gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, gzQuoteStr);
 					}
 				}
 			}
@@ -1603,8 +1603,7 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 		// start "talking" system (portrait animation and start wav sample)
 		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
 	}
-	// pSoldier can be null here... ( if NOT from an alive soldier )
-	CreateTalkingUI(bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr);
+	CreateTalkingUI(bUIHandlerID, iFaceIndex, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
 	gbUIHandlerID = bUIHandlerID;
@@ -1618,20 +1617,18 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleExternNPCSpeechFace(INT32 iIndex);
 static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static void HandleTacticalTextUI(INT32 iFaceIndex, const SOLDIERTYPE* pSoldier, const wchar_t* zQuoteStr);
+static void HandleTacticalTextUI(INT32 iFaceIndex, ProfileID profile_id, const wchar_t* zQuoteStr);
 
 
-static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const SOLDIERTYPE* const pSoldier, const wchar_t* const zQuoteStr)
+static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
-
 	// Show text, if on
   if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !gFacesData[ iFaceIndex ].fValidSpeech )
 	{
 		switch( bUIHandlerID )
 		{
 			case DIALOGUE_TACTICAL_UI:
-
-				HandleTacticalTextUI( iFaceIndex, pSoldier, zQuoteStr );
+				HandleTacticalTextUI(iFaceIndex, ubCharacterNum, zQuoteStr);
 				break;
 
 			case DIALOGUE_NPC_UI:
@@ -1834,7 +1831,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 }
 
 
-static void HandleTacticalTextUI(const INT32 iFaceIndex, const SOLDIERTYPE* const pSoldier, const wchar_t* const zQuoteStr)
+static void HandleTacticalTextUI(const INT32 iFaceIndex, const ProfileID profile_id, const wchar_t* const zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
@@ -1851,7 +1848,7 @@ static void HandleTacticalTextUI(const INT32 iFaceIndex, const SOLDIERTYPE* cons
 
 	ExecuteTacticalTextBox( sLeft, zText );
 
-	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ pSoldier->ubProfile ].zNickname, zQuoteStr );
+	swprintf(zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[profile_id].zNickname, zQuoteStr);
 	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
 }
 
