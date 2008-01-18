@@ -349,7 +349,7 @@ void StopAnyCurrentlyTalkingSpeech( )
 }
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, const SOLDIERTYPE* pSoldier, const wchar_t* zQuoteStr);
 
 
 // ATE: Handle changes like when face goes from
@@ -1617,11 +1617,11 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 
 static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleExternNPCSpeechFace(INT32 iIndex);
-static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr);
-static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
+static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
+static void HandleTacticalTextUI(INT32 iFaceIndex, const SOLDIERTYPE* pSoldier, const wchar_t* zQuoteStr);
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr)
+static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const SOLDIERTYPE* const pSoldier, const wchar_t* const zQuoteStr)
 {
 
 	// Show text, if on
@@ -1780,7 +1780,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 
 // Handlers for tactical UI stuff
-static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr)
+static void HandleTacticalNPCTextUI(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
 	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
 
@@ -1834,7 +1834,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 }
 
 
-static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr)
+static void HandleTacticalTextUI(const INT32 iFaceIndex, const SOLDIERTYPE* const pSoldier, const wchar_t* const zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
