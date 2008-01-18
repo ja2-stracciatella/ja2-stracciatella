@@ -791,47 +791,6 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 		// Remove deadlock message
 		EndDeadlockMsg( );
 		DecideAlertStatus( pSoldier );
-
-}
-
-
-static BOOLEAN DestNotSpokenFor(SOLDIERTYPE* pSoldier, INT16 sGridno)
-{
-	CFOR_ALL_IN_TEAM(s, pSoldier->bTeam)
-	{
-		if (s->sGridNo == sGridno || s->usActionData == sGridno) return FALSE;
-	}
-	return TRUE; // dest is free to go to...
-}
-
-
-static INT16 FindAdjacentSpotBeside(SOLDIERTYPE* pSoldier, INT16 sGridno)
-{
-	INT32 cnt;
-	INT16 mods[4] = {-1,-MAPWIDTH,1,MAPWIDTH};
-	INT16 sTempGridno,sCheapestCost=500,sMovementCost,sCheapestDest=NOWHERE;
-
-
-	for (cnt=0; cnt < 4; cnt++)
-	{
-		sTempGridno = sGridno + mods[cnt];
-		if (!OutOfBounds(sGridno,sTempGridno))
-		{
-			if (NewOKDestination(pSoldier,sTempGridno,PEOPLETOO, pSoldier->bLevel ) && DestNotSpokenFor(pSoldier,sTempGridno))
-			{
-				sMovementCost = PlotPath(pSoldier,sTempGridno,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0);
-				if (sMovementCost < sCheapestCost)
-				{
-					sCheapestCost	= sMovementCost;
-					sCheapestDest = sTempGridno;
-				}
-
-			}
-		}
-
-	}
-
-	return(sCheapestDest);
 }
 
 
