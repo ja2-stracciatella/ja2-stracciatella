@@ -969,13 +969,15 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
 				RestoreExternBackgroundRect(x, y, 72, 28);
 			}
-#ifndef JA2DEMO
 			else
 			{
+#ifdef JA2DEMO
+				fHatchItOut = TRUE;
+#else
 				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
 				RestoreExternBackgroundRect( 14, 218, 102, 24 );
-			}
 #endif
+			}
 		}
 	}
 
