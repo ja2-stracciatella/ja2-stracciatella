@@ -1617,7 +1617,7 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleExternNPCSpeechFace(INT32 iIndex);
 static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static void HandleTacticalTextUI(INT32 iFaceIndex, ProfileID profile_id, const wchar_t* zQuoteStr);
+static void HandleTacticalTextUI(ProfileID profile_id, const wchar_t* zQuoteStr);
 
 
 static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
@@ -1628,7 +1628,7 @@ static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, con
 		switch( bUIHandlerID )
 		{
 			case DIALOGUE_TACTICAL_UI:
-				HandleTacticalTextUI(iFaceIndex, ubCharacterNum, zQuoteStr);
+				HandleTacticalTextUI(ubCharacterNum, zQuoteStr);
 				break;
 
 			case DIALOGUE_NPC_UI:
@@ -1831,7 +1831,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 }
 
 
-static void HandleTacticalTextUI(const INT32 iFaceIndex, const ProfileID profile_id, const wchar_t* const zQuoteStr)
+static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* const zQuoteStr)
 {
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
