@@ -1969,9 +1969,10 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
 	return(fIsTheMercTalking);
 }
 
-void DisplayTextForMercFaceVideoPopUp(const wchar_t* const pString, const size_t Length)
+
+void DisplayTextForMercFaceVideoPopUp(const wchar_t* const pString)
 {
-	swprintf( gsTalkingMercText, Length, L"\"%ls\"", pString );
+	swprintf(gsTalkingMercText, lengthof(gsTalkingMercText), L"\"%ls\"", pString);
 
 	//Set the minimum time for the dialogue text to be present
 	usAimMercSpeechDuration =  wcslen( gsTalkingMercText ) * AIM_TEXT_SPEECH_MODIFIER;

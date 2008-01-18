@@ -349,7 +349,7 @@ void StopAnyCurrentlyTalkingSpeech( )
 }
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr, size_t Length);
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
 
 
 // ATE: Handle changes like when face goes from
@@ -392,7 +392,7 @@ void HandleDialogueUIAdjustments( )
 
 
 						// Setup UI again!
-						CreateTalkingUI( gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, pSoldier, gzQuoteStr, lengthof(gzQuoteStr));
+						CreateTalkingUI(gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, pSoldier, gzQuoteStr);
 					}
 				}
 			}
@@ -1604,7 +1604,7 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
 	}
 	// pSoldier can be null here... ( if NOT from an alive soldier )
-	CreateTalkingUI( bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr, lengthof(gzQuoteStr));
+	CreateTalkingUI(bUIHandlerID, iFaceIndex, ubCharacterNum, pSoldier, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
 	gbUIHandlerID = bUIHandlerID;
@@ -1621,7 +1621,7 @@ static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, wchar_t* zQuoteStr);
 static void HandleTacticalTextUI(INT32 iFaceIndex, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr);
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr, size_t Length)
+static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, SOLDIERTYPE* pSoldier, wchar_t* zQuoteStr)
 {
 
 	// Show text, if on
@@ -1640,7 +1640,7 @@ static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharact
 				break;
 
 			case DIALOGUE_CONTACTPAGE_UI:
-				DisplayTextForMercFaceVideoPopUp( zQuoteStr, Length);
+				DisplayTextForMercFaceVideoPopUp(zQuoteStr);
 				break;
 
 			case DIALOGUE_SPECK_CONTACT_PAGE_UI:

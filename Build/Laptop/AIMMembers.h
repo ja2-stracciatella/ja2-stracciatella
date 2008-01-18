@@ -9,7 +9,7 @@ BOOLEAN RenderAIMMembers(void);
 
 BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor);
 
-void DisplayTextForMercFaceVideoPopUp(const wchar_t* pString, size_t Length);
+void DisplayTextForMercFaceVideoPopUp(const wchar_t* pString);
 void EnterInitAimMembers(void);
 BOOLEAN RenderAIMMembersTopLevel(void);
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
