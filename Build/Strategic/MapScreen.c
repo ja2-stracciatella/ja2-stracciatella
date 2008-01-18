@@ -4949,9 +4949,9 @@ static void DestinationPlottingCompleted(void);
 
 static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 {
+#ifndef JA2DEMO
 	static BOOLEAN	fLBBeenPressedInMapView = FALSE;
   INT16 sMapX, sMapY;
-
 
 	// if the mouse is currently over the MAP area
   if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -5060,6 +5060,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 	}
 
 	fJustFinishedPlotting = FALSE;
+#endif
 }
 
 
@@ -5068,9 +5069,9 @@ static void HandleMilitiaRedistributionClick(void);
 
 static void PollRightButtonInMapView(UINT32* puiNewEvent)
 {
+#ifndef JA2DEMO
 	static BOOLEAN	fRBBeenPressedInMapView = FALSE;
   INT16 sMapX, sMapY;
-
 
 	// if the mouse is currently over the MAP area
   if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -5188,6 +5189,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 			}
 		}
 	}
+#endif
 }
 
 
@@ -6002,12 +6004,7 @@ static void BlitBackgroundToSaveBuffer(void)
 
 static void MakeRegion(MOUSE_REGION* const r, const UINT idx, const UINT16 x, const UINT16 y, const UINT16 w, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click, const wchar_t* const help)
 {
-#ifdef JA2DEMO
-		const INT8 prio = MSYS_PRIORITY_HIGHEST;
-#else
-		const INT8 prio = MSYS_PRIORITY_NORMAL + 1;
-#endif
-	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, prio, MSYS_NO_CURSOR, move, click);
+	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, MSYS_PRIORITY_NORMAL + 1, MSYS_NO_CURSOR, move, click);
 	MSYS_SetRegionUserData(r, 0, idx);
 	SetRegionFastHelpText(r, help);
 }
@@ -6091,6 +6088,9 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
+#ifdef JA2DEMO
+		DisabledInDemo();
+#else
 		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 
 #if 0 // XXX was commented out
@@ -6112,6 +6112,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText( );
+#endif
 	}
 }
 
@@ -6184,8 +6185,6 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 	}
 
-#ifndef JA2DEMO
-
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		if( IsMapScreenHelpTextUp() )
@@ -6233,7 +6232,6 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			gfRenderPBInterface = TRUE;
 		}
 	}
-#endif
 }
 
 
@@ -8563,11 +8561,7 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 
 	if( ( fInMapMode == TRUE ) && ( fCreated == FALSE ) )
 	{
-#if defined JA2DEMO
-		const INT16 prio = MSYS_PRIORITY_HIGHEST;
-#else
 		const INT16 prio = MSYS_PRIORITY_HIGHEST - 5;
-#endif
 
 		giCharInfoButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 67, 69, prio, PrevInventoryMapBtnCallback);
 		giCharInfoButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 67, 87, prio, NextInventoryMapBtnCallback);
@@ -10571,6 +10565,9 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 static void RequestToggleMercInventoryPanel(void)
 {
+#ifdef JA2DEMO
+	DisabledInDemo();
+#else
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -10611,6 +10608,7 @@ static void RequestToggleMercInventoryPanel(void)
 	}
 
 	fTeamPanelDirty = TRUE;
+#endif
 }
 
 
@@ -10713,3 +10711,11 @@ static void MapscreenMarkButtonsDirty(void)
 		}
 	}
 }
+
+
+#ifdef JA2DEMO
+void DisabledInDemo(void)
+{
+	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str_disabled_in_demo, MAP_SCREEN, MSG_BOX_FLAG_OK, MSYS_NO_CALLBACK);
+}
+#endif

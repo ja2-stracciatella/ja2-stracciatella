@@ -113,4 +113,8 @@ extern BOOLEAN      fDrawCharacterList;
 void DumpSectorDifficultyInfo(void);
 #endif
 
+#ifdef JA2DEMO
+void DisabledInDemo(void);
+#endif
+
 #endif

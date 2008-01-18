@@ -129,11 +129,6 @@ MOUSE_REGION gMapPauseRegion;
 
 MOUSE_REGION gTimeCompressionMask[ 3 ];
 
-#ifdef JA2DEMO
-	MOUSE_REGION MapButtonScreenMasks[ 14 ];
-	MOUSE_REGION MapScreenmaskForDemo;
-#endif
-
 
 static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason);
@@ -144,12 +139,6 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
 
 static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason);
-
-#ifdef JA2DEMO
-void BuildDemoMouseRegionsForHelpText( void );
-void RemoveDemoMouseRegionsForHelpText( void );
-void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason );
-#endif
 
 
 static void LoadMessageSliderBar(void);
@@ -284,18 +273,18 @@ void RenderMapScreenInterfaceBottom( void )
 }
 
 
-static INT32 MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const INT8 prio, const GUI_CALLBACK click, const wchar_t* const help)
+static INT32 MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, prio, click);
+	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
 	return btn;
 }
 
 
-static INT32 MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const INT8 prio, const GUI_CALLBACK click, const wchar_t* const help)
+static INT32 MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, prio, click);
+	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
 	return btn;
@@ -304,29 +293,17 @@ static INT32 MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on
 
 static void CreateButtonsForMapScreenInterfaceBottom(void)
 {
-#ifdef JA2DEMO
-	MSYS_DefineRegion(&MapScreenmaskForDemo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	const INT16 prio = MSYS_PRIORITY_HIGHEST;
-#else
-	const INT16 prio = MSYS_PRIORITY_HIGHEST - 1;
-#endif
-
-	guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]   = MakeExitButton( 6, 15, 456, 410, MSYS_PRIORITY_HIGHEST - 1, BtnLaptopCallback,               pMapScreenBottomFastHelp[0]);
-	guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = MakeExitButton( 7, 16, 496, 410, prio,                      BtnTacticalCallback,             pMapScreenBottomFastHelp[1]);
-	guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS]  = MakeExitButton(18, 19, 458, 372, prio,                      BtnOptionsFromMapScreenCallback, pMapScreenBottomFastHelp[2]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]   = MakeExitButton( 6, 15, 456, 410, BtnLaptopCallback,               pMapScreenBottomFastHelp[0]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_TACTICAL] = MakeExitButton( 7, 16, 496, 410, BtnTacticalCallback,             pMapScreenBottomFastHelp[1]);
+	guiMapBottomExitButtons[MAP_EXIT_TO_OPTIONS]  = MakeExitButton(18, 19, 458, 372, BtnOptionsFromMapScreenCallback, pMapScreenBottomFastHelp[2]);
 
 	// time compression buttons
-	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = MakeArrowButton(10, 1, 3, 528, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressMoreMapScreenCallback, pMapScreenBottomFastHelp[3]);
-	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = MakeArrowButton( 9, 0, 2, 466, 456, MSYS_PRIORITY_HIGHEST - 2, BtnTimeCompressLessMapScreenCallback, pMapScreenBottomFastHelp[4]);
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_MORE] = MakeArrowButton(10, 1, 3, 528, 456, BtnTimeCompressMoreMapScreenCallback, pMapScreenBottomFastHelp[3]);
+	guiMapBottomTimeButtons[MAP_TIME_COMPRESS_LESS] = MakeArrowButton( 9, 0, 2, 466, 456, BtnTimeCompressLessMapScreenCallback, pMapScreenBottomFastHelp[4]);
 
 	// scroll buttons
-	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = MakeArrowButton(11, 4, 6, 331, 371, prio, BtnMessageUpMapScreenCallback,   pMapScreenBottomFastHelp[5]);
-	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = MakeArrowButton(12, 5, 7, 331, 452, prio, BtnMessageDownMapScreenCallback, pMapScreenBottomFastHelp[6]);
-
-#if defined JA2DEMO
-	// build demo mouse regions
-	BuildDemoMouseRegionsForHelpText();
-#endif
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]   = MakeArrowButton(11, 4, 6, 331, 371, BtnMessageUpMapScreenCallback,   pMapScreenBottomFastHelp[5]);
+	guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN] = MakeArrowButton(12, 5, 7, 331, 452, BtnMessageDownMapScreenCallback, pMapScreenBottomFastHelp[6]);
 }
 
 
@@ -342,12 +319,6 @@ static void DestroyButtonsForMapScreenInterfaceBottom(void)
 	RemoveButton( guiMapBottomTimeButtons[ 0 ] );
 	RemoveButton( guiMapBottomTimeButtons[ 1 ] );
 
-
-	#ifdef JA2DEMO
-	MSYS_RemoveRegion( &MapScreenmaskForDemo );
-	RemoveDemoMouseRegionsForHelpText(  );
-	#endif
-
 	// reset dirty flag
 	fMapScreenBottomDirty = TRUE;
 }
@@ -357,6 +328,9 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
+#ifdef JA2DEMO
+		DisabledInDemo();
+#else
 		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
@@ -369,6 +343,7 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
+#endif
 	}
 }
 
@@ -436,10 +411,14 @@ static void CompressModeClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if( iReason & ( MSYS_CALLBACK_REASON_RBUTTON_UP | MSYS_CALLBACK_REASON_LBUTTON_UP ) )
   {
+#ifdef JA2DEMO
+		DisabledInDemo();
+#else
 		if ( CommonTimeCompressionChecks() == TRUE )
 			return;
 
 		RequestToggleTimeCompression();
+#endif
 	}
 }
 
@@ -448,6 +427,9 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
+#ifdef JA2DEMO
+		DisabledInDemo();
+#else
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
@@ -460,6 +442,7 @@ static void BtnTimeCompressMoreMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		CommonTimeCompressionChecks();
+#endif
 	}
 }
 
@@ -468,6 +451,9 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
   if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
+#ifdef JA2DEMO
+		DisabledInDemo();
+#else
 		if (CommonTimeCompressionChecks()) return;
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
@@ -480,6 +466,7 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		CommonTimeCompressionChecks();
+#endif
 	}
 }
 
@@ -714,11 +701,7 @@ static void MapScreenMessageScrollBarCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void CreateMapScreenBottomMessageScrollBarRegion(void)
 {
-#ifdef JA2DEMO
-	const INT8 prio = MSYS_PRIORITY_HIGHEST;
-#else
 	const INT8 prio = MSYS_PRIORITY_NORMAL;
-#endif
 	{
 		const UINT16 x = MESSAGE_SCROLL_AREA_START_X;
 		const UINT16 y = MESSAGE_SCROLL_AREA_START_Y;
@@ -1219,106 +1202,7 @@ void HandleLeavingOfMapScreenDuringDemo( void )
 	//fFirstTimeInMapScreen = TRUE;
 	SetPendingNewScreen( GAME_SCREEN );
 }
-
-
-void BuildDemoMouseRegionsForHelpText( void )
-{
-	INT32 iCounter = 0;
-	CHAR16 sString[ 128 ];
-
-	// for the laptop button
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 0 ], 456,410,487, 441, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 0 ], pMapScreenBottomFastHelp[ 0 ] );
-
-	// for the time compress more
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 1 ], 465,455,481, 470, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// for the time compress less
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 2 ], 526,455,544, 470, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 2 ], pMapScreenBottomFastHelp[ 3 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 1 ], pMapScreenBottomFastHelp[ 4 ] );
-
-	// the contract button
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 3 ], 191,48,250, 59, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 3 ], pMapScreenMouseRegionHelpText[ 3 ] );
-
-	// the map border buttons
-
-	// town
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 4 ], 272,323,307, 355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// mine
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 5 ], 315,323,350, 355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// team
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 6 ], 358,323,( 358 + 35 ), 355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// air
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 7 ], 444,323,( 444 + 35 ),355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// zoom
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 8 ], 547,323,( 547 + 35 ), 355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-	// militia
-	MSYS_DefineRegion( &MapButtonScreenMasks[ 9 ], 402,323,( 402 + 35 ), 355, MSYS_PRIORITY_HIGHEST,
-							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-
-	// set up fast help text
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 4 ], pMapScreenBorderButtonHelpText[ 0 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 5 ], pMapScreenBorderButtonHelpText[ 1 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 6 ], pMapScreenBorderButtonHelpText[ 2 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 7 ], pMapScreenBorderButtonHelpText[ 3 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 8 ], pMapScreenBorderButtonHelpText[ 4 ] );
-	SetRegionFastHelpText( &MapButtonScreenMasks[ 9 ], pMapScreenBorderButtonHelpText[ 5 ] );
-
-
-	// map mine levels
-	for( iCounter = 0; iCounter  < 4 ; iCounter++ )
-	{
-		MSYS_DefineRegion(&MapButtonScreenMasks[ iCounter + 10 ] , MAP_LEVEL_MARKER_X, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * iCounter ) ),  MAP_LEVEL_MARKER_X + MAP_LEVEL_MARKER_WIDTH, ( INT16 )( MAP_LEVEL_MARKER_Y + ( MAP_LEVEL_MARKER_DELTA * ( iCounter + 1 ) ) ), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR,
-			MSYS_NO_CALLBACK, MapButtonMaskBtnCallback );
-
-		swprintf(sString, lengthof(sString), L"%ls %d", zMarksMapScreenText[0], iCounter + 1);
-		SetRegionFastHelpText( &MapButtonScreenMasks[ iCounter + 10 ], sString );
-  }
-}
-
-
-void RemoveDemoMouseRegionsForHelpText( void )
-{
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < 14; iCounter++ )
-	{
-		MSYS_RemoveRegion( &MapButtonScreenMasks[ iCounter ] );
-	}
-}
-
-// invnetory screen mask btn callback
-void MapButtonMaskBtnCallback(MOUSE_REGION * pRegion, INT32 iReason )
-{
-  // inventory screen mask btn callback
-  if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, str_disabled_in_demo, MAP_SCREEN, MSG_BOX_FLAG_OK, MSYS_NO_CALLBACK);
-  }
-}
-
-#endif // JA2DEMO
-
+#endif
 
 
 void RequestTriggerExitFromMapscreen( INT8 bExitToWhere )
@@ -1439,10 +1323,6 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 		//dont allow it
 		return( FALSE );
 	}
-
-#ifdef JA2DEMO
-	if (bExitToWhere == MAP_EXIT_TO_LAPTOP) return FALSE;
-#endif
 
 	// OK to go there, passed all the checks
 	return( TRUE );
