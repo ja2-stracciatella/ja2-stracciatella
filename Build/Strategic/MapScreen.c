@@ -10565,9 +10565,6 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 static void RequestToggleMercInventoryPanel(void)
 {
-#ifdef JA2DEMO
-	DisabledInDemo();
-#else
 	if( IsMapScreenHelpTextUp() )
 	{
 		// stop mapscreen text
@@ -10608,7 +10605,6 @@ static void RequestToggleMercInventoryPanel(void)
 	}
 
 	fTeamPanelDirty = TRUE;
-#endif
 }
 
 
