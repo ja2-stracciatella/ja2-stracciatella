@@ -4,7 +4,6 @@
 #include "IMPVideoObjects.h"
 #include "WCheck.h"
 #include "Input.h"
-#include "Isometric_Utils.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"

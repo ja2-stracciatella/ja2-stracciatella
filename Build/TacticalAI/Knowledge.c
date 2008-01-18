@@ -1,5 +1,6 @@
 #include "AI.h"
 #include "AIInternals.h"
+#include "Isometric_Utils.h"
 #include "OppList.h"
 #include "Soldier_Profile.h"
 #include "LOS.h"

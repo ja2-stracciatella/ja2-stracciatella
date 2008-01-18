@@ -7,7 +7,6 @@
 #include "Soldier_Create.h"
 #include "Soldier_Add.h"
 #include "Strategic_Turns.h"
-#include "Isometric_Utils.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "Tactical_Turns.h"

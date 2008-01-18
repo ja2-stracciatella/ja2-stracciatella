@@ -2,6 +2,7 @@
 #include "HImage.h"
 #include "Handle_UI.h"
 #include "Interface.h"
+#include "Isometric_Utils.h"
 #include "Local.h"
 #include "Timer_Control.h"
 #include "VObject.h"

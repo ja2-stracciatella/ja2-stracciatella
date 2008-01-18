@@ -28,7 +28,6 @@
 #include "Environment.h"
 #include "Lighting.h"
 #include "Strategic_Movement.h"
-#include "Isometric_Utils.h"
 #include "Quests.h"
 #include "OppList.h"
 #include "Message.h"

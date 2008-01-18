@@ -2,7 +2,6 @@
 #include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
-#include "Isometric_Utils.h"
 #include "Soldier_Add.h"
 #include "Soldier_Create.h"
 #include "Soldier_Init_List.h"

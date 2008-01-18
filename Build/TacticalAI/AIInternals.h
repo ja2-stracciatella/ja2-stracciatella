@@ -1,5 +1,4 @@
 #include "Types.h"
-#include "Isometric_Utils.h"
 #include "Animation_Control.h"
 #include "Overhead.h"
 #include "Random.h"

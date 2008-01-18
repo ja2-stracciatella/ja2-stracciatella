@@ -6,7 +6,6 @@
 #include "Font.h"
 #include "ScreenIDs.h"
 #include "Overhead.h"
-#include "Isometric_Utils.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
 #include "Radar_Screen.h"
