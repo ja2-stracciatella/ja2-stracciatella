@@ -1623,54 +1623,27 @@ static void HandleTacticalTextUI(ProfileID profile_id, const wchar_t* zQuoteStr)
 static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
 	// Show text, if on
-  if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !gFacesData[ iFaceIndex ].fValidSpeech )
+	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !gFacesData[iFaceIndex].fValidSpeech)
 	{
-		switch( bUIHandlerID )
+		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:
-				HandleTacticalTextUI(ubCharacterNum, zQuoteStr);
-				break;
-
-			case DIALOGUE_NPC_UI:
-
-				HandleTacticalNPCTextUI( ubCharacterNum, zQuoteStr );
-				break;
-
-			case DIALOGUE_CONTACTPAGE_UI:
-				DisplayTextForMercFaceVideoPopUp(zQuoteStr);
-				break;
-
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
-				DisplayTextForSpeckVideoPopUp( zQuoteStr );
-				break;
-			case DIALOGUE_EXTERNAL_NPC_UI:
-
-				DisplayTextForExternalNPC( ubCharacterNum, zQuoteStr );
-				break;
-
-			case DIALOGUE_SHOPKEEPER_UI:
-				InitShopKeeperSubTitledText( zQuoteStr );
-				break;
+			case DIALOGUE_TACTICAL_UI:           HandleTacticalTextUI(            ubCharacterNum, zQuoteStr); break;
+			case DIALOGUE_NPC_UI:                HandleTacticalNPCTextUI(         ubCharacterNum, zQuoteStr); break;
+			case DIALOGUE_CONTACTPAGE_UI:        DisplayTextForMercFaceVideoPopUp(                zQuoteStr); break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI: DisplayTextForSpeckVideoPopUp(                   zQuoteStr); break;
+			case DIALOGUE_EXTERNAL_NPC_UI:       DisplayTextForExternalNPC(       ubCharacterNum, zQuoteStr); break;
+			case DIALOGUE_SHOPKEEPER_UI:         InitShopKeeperSubTitledText(                     zQuoteStr); break;
 		}
 	}
 
-	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
+	if (gGameSettings.fOptions[TOPTION_SPEECH])
 	{
-		switch( bUIHandlerID )
+		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:
-
-				HandleTacticalSpeechUI( ubCharacterNum, iFaceIndex );
-				break;
-
-			case DIALOGUE_CONTACTPAGE_UI:
-				break;
-
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI:
-				break;
-			case DIALOGUE_EXTERNAL_NPC_UI:
-				HandleExternNPCSpeechFace( iFaceIndex );
-				break;
+			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, iFaceIndex); break;
+			case DIALOGUE_CONTACTPAGE_UI:                                                            break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI:                                                     break;
+			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(iFaceIndex);              break;
 		}
 	}
 }
