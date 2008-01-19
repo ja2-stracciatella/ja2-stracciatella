@@ -505,10 +505,11 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	n->ubMaxLights          = land->ubMaxLights;
 	n->ubNaturalShadeLevel  = land->ubNaturalShadeLevel;
 
-	ani->v.user.uiData = CORPSE2ID(c);
-
 	// Get palette and create palettes and do substitutions
 	if (!CreateCorpsePalette(c)) goto fail_ani;
+
+	c->fActivated = TRUE;
+	ani->v.user.uiData = CORPSE2ID(c);
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 
@@ -543,7 +544,6 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 		}
 	}
 
-	c->fActivated = TRUE;
 	return c;
 
 fail_ani:
