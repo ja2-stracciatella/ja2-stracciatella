@@ -46,7 +46,6 @@
 #define		LIGHT_OMNI_R7				"LTO7.LHT"
 #define		LIGHT_OMNI_R8				"LTO8.LHT"
 
-#define		MAX_LIGHT_TEMPLATES	32				// maximum number of light types
 #define		MAX_LIGHT_SPRITES		256				// maximum number of light types
 #define		SHADE_MIN						15				// DARKEST shade value
 #define		SHADE_MAX						1					// LIGHTEST shade value
@@ -148,21 +147,6 @@ void CreateSoldierPaletteTables(SOLDIERTYPE* pSoldier);
 // returns the true light value at a tile (ignoring fake/merc lights)
 UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel );
 
-// system variables
-extern LIGHT_NODE				*pLightList[MAX_LIGHT_TEMPLATES];
-extern UINT16						usTemplateSize[MAX_LIGHT_TEMPLATES];
-extern UINT16						*pLightRayList[MAX_LIGHT_TEMPLATES];
-extern UINT16						usRaySize[MAX_LIGHT_TEMPLATES];
-extern INT16						LightHeight[MAX_LIGHT_TEMPLATES];
-extern INT16						LightWidth[MAX_LIGHT_TEMPLATES];
-extern INT16						LightXOffset[MAX_LIGHT_TEMPLATES];
-extern INT16						LightYOffset[MAX_LIGHT_TEMPLATES];
-extern INT16						LightMapLeft[MAX_LIGHT_TEMPLATES];
-extern INT16						LightMapTop[MAX_LIGHT_TEMPLATES];
-extern INT16						LightMapRight[MAX_LIGHT_TEMPLATES];
-extern INT16						LightMapBottom[MAX_LIGHT_TEMPLATES];
-extern char*      pLightNames[MAX_LIGHT_TEMPLATES];
-
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 
@@ -201,10 +185,7 @@ extern SGPPaletteEntry	gpLightColors[3];
 // macros
 #define LightGetAmbient()						(ubAmbientLightLevel)
 
-static inline const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
-{
-	return pLightNames[l->iTemplate];
-}
+const char* LightSpriteGetTypeName(const LIGHT_SPRITE*);
 
 void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256], const SGPPaletteEntry* Bias);
 

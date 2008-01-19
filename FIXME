@@ -73,7 +73,6 @@ GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
 Handle.*TextEvent(): code duplication
 HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FALSE;
 HandleDefiniteUnloadingOfWorld(): use enum
-HandleEquipmentLeftInOmerta(), HandleEquipmentLeftInDrassen(): very similar
 HandleFaceHilights(): LockVideoSurface() called unnecessarily often
 HandleHighLightedText(): MARK_DIRTY necessary?
 HandleLeftClickCursor(): if ()s without decision

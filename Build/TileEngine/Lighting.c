@@ -45,6 +45,9 @@
 #include "MemMan.h"
 
 
+#define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
+
+
 #define LVL1_L1_PER			(50)
 #define LVL1_L2_PER			(50)
 
@@ -55,20 +58,26 @@
 #define LIGHT_TREE_REVEAL		5						// width of rect
 
 
-// Top node of linked lists, NULL = FREE
-LIGHT_NODE	 *pLightList[MAX_LIGHT_TEMPLATES];
-UINT16				usTemplateSize[MAX_LIGHT_TEMPLATES];
-UINT16			 *pLightRayList[MAX_LIGHT_TEMPLATES];
-UINT16				usRaySize[MAX_LIGHT_TEMPLATES];
-INT16					LightHeight[MAX_LIGHT_TEMPLATES];
-INT16					LightWidth[MAX_LIGHT_TEMPLATES];
-INT16					LightXOffset[MAX_LIGHT_TEMPLATES];
-INT16					LightYOffset[MAX_LIGHT_TEMPLATES];
-INT16					LightMapLeft[MAX_LIGHT_TEMPLATES];
-INT16					LightMapTop[MAX_LIGHT_TEMPLATES];
-INT16					LightMapRight[MAX_LIGHT_TEMPLATES];
-INT16					LightMapBottom[MAX_LIGHT_TEMPLATES];
-char*      pLightNames[MAX_LIGHT_TEMPLATES];
+typedef struct LightTemplate LightTemplate;
+struct LightTemplate
+{
+	LIGHT_NODE* lights;
+	UINT16*     rays;
+	UINT16      n_lights;
+	UINT16      n_rays;
+	INT16       height;
+	INT16       width;
+	INT16       x_off;
+	INT16       y_off;
+	INT16       map_left;
+	INT16       map_top;
+	INT16       map_right;
+	INT16       map_bottom;
+	char*       name;
+};
+
+static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
+
 
 // Sprite data
 LIGHT_SPRITE	LightSprites[MAX_LIGHT_SPRITES];
@@ -214,14 +223,7 @@ BOOLEAN InitLightingSystem(void)
 	LoadShadeTablesFromTextFile();
 
 	// init all light lists
-	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
-	{
-		pLightList[uiCount]=NULL;
-		pLightNames[uiCount]=NULL;
-		pLightRayList[uiCount]=NULL;
-		usTemplateSize[uiCount]=0;
-		usRaySize[uiCount]=0;
-	}
+	memset(g_light_templates, 0, sizeof(g_light_templates));
 
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
@@ -269,8 +271,9 @@ UINT32 uiCount;
 
 	// free up all allocated light nodes
 	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
-		if(pLightList[uiCount]!=NULL)
-			LightDelete(uiCount);
+	{
+		if (g_light_templates[uiCount].lights != NULL) LightDelete(uiCount);
+	}
 
 	return(TRUE);
 }
@@ -285,8 +288,9 @@ BOOLEAN LightReset(void)
 {
 	// reset all light lists
 	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
-		if(pLightList[uiCount]!=NULL)
-			LightDelete(uiCount);
+	{
+		if (g_light_templates[uiCount].lights != NULL) LightDelete(uiCount);
+	}
 
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
@@ -308,35 +312,21 @@ BOOLEAN LightReset(void)
  * list is returned. */
 static UINT16 LightCreateTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
 {
-UINT16 usNumNodes;
+	LightTemplate* const t        = &g_light_templates[iLight];
+	const UINT16         n_lights = t->n_lights;
+	Assert((t->lights == NULL) == (n_lights == 0));
 
+	t->lights = MemRealloc(t->lights, (n_lights + 1) * sizeof(*t->lights));
+	if (t->lights == NULL) return 65535;
 
-	// create a new list
-	if(pLightList[iLight]==NULL)
-	{
-		if((pLightList[iLight]=MemAlloc(sizeof(LIGHT_NODE)))==NULL)
-			return(65535);
+	LIGHT_NODE* const l = &t->lights[n_lights];
+	l->iDX     = iX;
+	l->iDY     = iY;
+	l->ubLight = ubLight;
+	l->uiFlags = 0;
 
-		pLightList[iLight]->iDX=iX;
-		pLightList[iLight]->iDY=iY;
-		pLightList[iLight]->ubLight=ubLight;
-		pLightList[iLight]->uiFlags=0;
-
-		usTemplateSize[iLight]=1;
-		return(0);
-	}
-	else
-	{
-		usNumNodes=usTemplateSize[iLight];
-		pLightList[iLight]=MemRealloc(pLightList[iLight], (usNumNodes+1)*sizeof(LIGHT_NODE));
-		(pLightList[iLight]+usNumNodes)->iDX=iX;
-		(pLightList[iLight]+usNumNodes)->iDY=iY;
-		(pLightList[iLight]+usNumNodes)->ubLight=ubLight;
-		(pLightList[iLight]+usNumNodes)->uiFlags=0;
-		usTemplateSize[iLight]=usNumNodes+1;
-		return(usNumNodes);
-	}
-
+	t->n_lights = n_lights + 1;
+	return n_lights;
 }
 
 
@@ -344,81 +334,47 @@ UINT16 usNumNodes;
  * new one.  Returns the index into the list. */
 static UINT16 LightAddTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
 {
-UINT16 usCount;
-
-		for(usCount=0; usCount < usTemplateSize[iLight]; usCount++)
-		{
-			if(((pLightList[iLight]+usCount)->iDX==iX) &&
-				((pLightList[iLight]+usCount)->iDY==iY))
-			{
-				return(usCount);
-			}
-		}
-
-		return(LightCreateTemplateNode(iLight, iX, iY, ubLight));
+	const LightTemplate* const t = &g_light_templates[iLight];
+	for (UINT16 i = 0; i < t->n_lights; ++i)
+	{
+		if (t->lights[i].iDX == iX && t->lights[i].iDY == iY) return i;
+	}
+	return LightCreateTemplateNode(iLight, iX, iY, ubLight);
 }
 
 
 // Adds a node to the ray casting list.
 static UINT16 LightAddRayNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight, UINT16 usFlags)
 {
-UINT16 usNumNodes;
+	LightTemplate* const t      = &g_light_templates[iLight];
+	const UINT16         n_rays = t->n_rays;
+	Assert((t->rays == NULL) == (n_rays == 0));
 
+	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
+	if (t->rays == NULL) return 65535;
 
-	// create a new list
-	if(pLightRayList[iLight]==NULL)
-	{
-		if((pLightRayList[iLight]=MemAlloc(sizeof(UINT16)))==NULL)
-			return(65535);
-
-		*pLightRayList[iLight]=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
-
-		usRaySize[iLight]=1;
-		return(0);
-	}
-	else
-	{
-		usNumNodes=usRaySize[iLight];
-		pLightRayList[iLight]=MemRealloc(pLightRayList[iLight], (usNumNodes+1)*sizeof(UINT16));
-		*(pLightRayList[iLight]+usNumNodes)=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
-		usRaySize[iLight]=usNumNodes+1;
-		return(usNumNodes);
-	}
+	t->rays[n_rays] = LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags;
+	t->n_rays       = n_rays + 1;
+	return n_rays;
 }
 
 
 // Adds a node to the ray casting list.
 static UINT16 LightInsertRayNode(INT32 iLight, UINT16 usIndex, INT16 iX, INT16 iY, UINT8 ubLight, UINT16 usFlags)
 {
-UINT16 usNumNodes;
+	LightTemplate* const t      = &g_light_templates[iLight];
+	const UINT16         n_rays = t->n_rays;
+	Assert((t->rays == NULL) == (n_rays == 0));
+	Assert(usIndex <= n_rays);
 
-	// create a new list
-	if(pLightRayList[iLight]==NULL)
-	{
-		if((pLightRayList[iLight]=MemAlloc(sizeof(UINT16)))==NULL)
-			return(65535);
+	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
+	if (t->rays == NULL) return 65535;
 
-		*pLightRayList[iLight]=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
+	memmove(t->rays + usIndex + 1, t->rays + usIndex, (n_rays - usIndex) * sizeof(*t->rays));
 
-		usRaySize[iLight]=1;
-		return(0);
-	}
-	else
-	{
-		usNumNodes=usRaySize[iLight];
-		pLightRayList[iLight]=MemRealloc(pLightRayList[iLight], (usNumNodes+1)*sizeof(UINT16));
-
-		if(usIndex < usRaySize[iLight])
-		{
-			memmove(pLightRayList[iLight]+usIndex+1,
-							pLightRayList[iLight]+usIndex,
-							(usRaySize[iLight]-usIndex)*sizeof(UINT16));
-		}
-
-		*(pLightRayList[iLight]+usIndex)=(LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags);
-		usRaySize[iLight]=usNumNodes+1;
-		return(usNumNodes);
-	}
+	t->rays[usIndex] = LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags;
+	t->n_rays        = n_rays + 1;
+	return n_rays;
 }
 
 
@@ -577,33 +533,28 @@ UINT8		ubTravelCost;
 // Removes a light template from the list, and frees up the associated node memory.
 static BOOLEAN LightDelete(INT32 iLight)
 {
-		if(pLightList[iLight]!=NULL)
-		{
-			if(pLightList[iLight]!=NULL)
-			{
-				MemFree(pLightList[iLight]);
-				pLightList[iLight]=NULL;
-			}
+	LightTemplate* const t = &g_light_templates[iLight];
 
-			if(pLightRayList[iLight]!=NULL)
-			{
-				MemFree(pLightRayList[iLight]);
-				pLightRayList[iLight]=NULL;
-			}
+	if (t->lights == NULL) return FALSE;
 
-			if(pLightNames[iLight]!=NULL)
-			{
-				MemFree(pLightNames[iLight]);
-				pLightNames[iLight]=NULL;
-			}
+	MemFree(t->lights);
+	t->lights = NULL;
 
-			usTemplateSize[iLight]=0;
-			usRaySize[iLight]=0;
+	if (t->rays != NULL)
+	{
+		MemFree(t->rays);
+		t->rays = NULL;
+	}
 
-			return(TRUE);
-		}
-		else
-			return(FALSE);
+	if (t->name != NULL)
+	{
+		MemFree(t->name);
+		t->name = NULL;
+	}
+
+	t->n_lights = 0;
+	t->n_rays   = 0;
+	return TRUE;
 }
 
 
@@ -611,13 +562,11 @@ static BOOLEAN LightDelete(INT32 iLight)
  * (-1) is returned. */
 static INT32 LightGetFree(void)
 {
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
-		if(pLightList[uiCount]==NULL)
-			return(uiCount);
-
-	return(-1);
+	for (UINT32 i = 0; i != lengthof(g_light_templates); ++i)
+	{
+		if (g_light_templates[i].lights == NULL) return i;
+	}
+	return -1;
 }
 
 
@@ -1272,7 +1221,7 @@ UINT32 uiIndex;
  * NULL is returned. */
 static UINT16 LightGetLastNode(INT32 iLight)
 {
-		return(usRaySize[iLight]);
+	return g_light_templates[iLight].n_rays;
 }
 
 
@@ -1331,10 +1280,9 @@ INT32 iLightDecay;
  * returns the pointer. If the end of list is reached, NULL is returned. */
 static UINT16 LightFindNextRay(INT32 iLight, UINT16 usIndex)
 {
-UINT16 usNodeIndex;
-
-	usNodeIndex=usIndex;
-	while((usNodeIndex < usRaySize[iLight]) && !(*(pLightRayList[iLight]+usNodeIndex)&LIGHT_NEW_RAY))
+	const LightTemplate* const t = &g_light_templates[iLight];
+	UINT16 usNodeIndex = usIndex;
+	while ((usNodeIndex < t->n_rays) && !(t->rays[usNodeIndex] & LIGHT_NEW_RAY))
 		usNodeIndex++;
 
 	return(usNodeIndex);
@@ -1924,8 +1872,9 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
-	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
-	strcpy(pLightNames[iLight], usName);
+	LightTemplate* const t = &g_light_templates[iLight];
+	t->name = MemAlloc(strlen(usName) + 1);
+	strcpy(t->name, usName);
 
 	return(iLight);
 }
@@ -1944,8 +1893,9 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
-	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
-	strcpy(pLightNames[iLight], usName);
+	LightTemplate* const t = &g_light_templates[iLight];
+	t->name = MemAlloc(strlen(usName) + 1);
+	strcpy(t->name, usName);
 
 	return(iLight);
 }
@@ -1962,8 +1912,9 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
-	pLightNames[iLight]=MemAlloc(strlen(usName)+1);
-	strcpy(pLightNames[iLight], usName);
+	LightTemplate* const t = &g_light_templates[iLight];
+	t->name = MemAlloc(strlen(usName) + 1);
+	strcpy(t->name, usName);
 
 	return(iLight);
 }
@@ -2000,9 +1951,6 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 
 BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 {
-LIGHT_NODE *pLight;
-UINT16 uiCount;
-UINT16 usNodeIndex;
 UINT32 uiFlags;
 INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
@@ -2011,14 +1959,13 @@ BOOLEAN fOnlyWalls;
 //MAP_ELEMENT * pMapElement;
 
 	const INT32 iLight = l->iTemplate;
-	if(pLightList[iLight]==NULL)
-		return(FALSE);
+	const LightTemplate* const t = &g_light_templates[iLight];
+	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
-	for(uiCount=0; uiCount < usTemplateSize[iLight]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_lights; ++uiCount)
 	{
-		pLight=pLightList[iLight]+uiCount;
-		pLight->uiFlags&=(~LIGHT_NODE_DRAWN);
+		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
 /*
@@ -2052,16 +1999,15 @@ BOOLEAN fOnlyWalls;
 	iOldY = iY;
 
 	const UINT32 light_type = l->uiLightType;
-	for(uiCount=0; uiCount < usRaySize[iLight]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
-		usNodeIndex=*(pLightRayList[iLight]+uiCount);
-
+		const UINT16 usNodeIndex = t->rays[uiCount];
 		if(!(usNodeIndex&LIGHT_NEW_RAY))
 		{
 			fBlocked = FALSE;
       fOnlyWalls = FALSE;
 
-			pLight=pLightList[iLight]+(usNodeIndex&(~LIGHT_BACKLIGHT));
+			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
 			if (!(l->uiFlags & LIGHT_SPR_ONROOF))
 			{
@@ -2271,18 +2217,15 @@ TILE_ELEMENT *TileElem;
 // Tags walls as being translucent using a light template.
 static BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 {
-	LIGHT_NODE *pLight;
-	UINT16 uiCount;
-	UINT16 usNodeIndex;
-	if(pLightList[0]==NULL)
-		return(FALSE);
-	for(uiCount=0; uiCount < usRaySize[0]; uiCount++)
-	{
-		usNodeIndex=*(pLightRayList[0]+uiCount);
+	LightTemplate* const t = &g_light_templates[0];
+	if (t->lights == NULL) return FALSE;
 
-		if(!(usNodeIndex&LIGHT_NEW_RAY))
+	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
+	{
+		const UINT16 usNodeIndex = t->rays[uiCount];
+		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			pLight=pLightList[0]+(usNodeIndex&(~LIGHT_BACKLIGHT));
+			const LIGHT_NODE* const pLight= &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
 			//Kris:  added map boundary checking!!!
 			if(LightRevealWall(
@@ -2370,24 +2313,19 @@ each tile drawn to facilitate animating the drawing process for debugging.
 ***************************************************************************************/
 BOOLEAN LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset)
 {
-LIGHT_NODE *pLight;
-static UINT16 uiCount=0;
-UINT16 usNodeIndex;
+	static UINT16 uiCount = 0;
 
-	if(fReset)
-		uiCount=0;
+	if (fReset) uiCount = 0;
 
-	if(pLightList[0]==NULL)
-		return(FALSE);
+	LightTemplate* const t = &g_light_templates[0];
+	if (t->lights == NULL) return FALSE;
 
-	if(uiCount < usRaySize[0])
+	if (uiCount < t->n_rays)
 	{
-		usNodeIndex=*(pLightRayList[0]+uiCount);
-
-		if(!(usNodeIndex&LIGHT_NEW_RAY))
+		const UINT16 usNodeIndex = t->rays[uiCount];
+		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			pLight=pLightList[0]+(usNodeIndex&(~LIGHT_BACKLIGHT));
-
+			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			if(LightGreenTile((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
 			{
 				uiCount=LightFindNextRay(0, uiCount);
@@ -2471,21 +2409,15 @@ TILE_ELEMENT *TileElem;
 ***************************************************************************************/
 BOOLEAN LightHideRays(INT16 iX, INT16 iY)
 {
-LIGHT_NODE *pLight;
-UINT16 uiCount;
-UINT16 usNodeIndex;
+	const LightTemplate* const t = &g_light_templates[0];
+	if (t->lights == NULL) return FALSE;
 
-	if(pLightList[0]==NULL)
-		return(FALSE);
-
-	for(uiCount=0; uiCount < usRaySize[0]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
-		usNodeIndex=*(pLightRayList[0]+uiCount);
-
-		if(!(usNodeIndex&LIGHT_NEW_RAY))
+		const UINT16 usNodeIndex = t->rays[uiCount];
+		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			pLight=pLightList[0]+(usNodeIndex&(~LIGHT_BACKLIGHT));
-
+			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			if(LightHideWall((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
 			{
 				uiCount=LightFindNextRay(0, uiCount);
@@ -2505,20 +2437,15 @@ UINT16 usNodeIndex;
 ***************************************************************************************/
 BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 {
-LIGHT_NODE *pLight;
-UINT16 uiCount;
-UINT16 usNodeIndex;
+	LightTemplate* const t = &g_light_templates[0];
+	if (t->lights == NULL) return FALSE;
 
-	if(pLightList[0]==NULL)
-		return(FALSE);
-
-	for(uiCount=0; uiCount < usRaySize[0]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
-		usNodeIndex=*(pLightRayList[0]+uiCount);
-
-		if(!(usNodeIndex&LIGHT_NEW_RAY))
+		const UINT16 usNodeIndex = t->rays[uiCount];
+		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
-			pLight=pLightList[0]+(usNodeIndex&(~LIGHT_BACKLIGHT));
+			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
 				 (INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
@@ -2540,37 +2467,32 @@ UINT16 usNodeIndex;
 // Reverts all tiles a given light affects to their natural light levels.
 static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, const LIGHT_SPRITE* const l)
 {
-LIGHT_NODE *pLight;
-UINT16 uiCount;
-UINT16 usNodeIndex;
 UINT32 uiFlags;
 INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
 BOOLEAN fOnlyWalls;
 
-
-	if(pLightList[iLight]==NULL)
-		return(FALSE);
+	LightTemplate* const t = &g_light_templates[iLight];
+	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
-	for(uiCount=0; uiCount < usTemplateSize[iLight]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_lights; ++uiCount)
 	{
-		pLight=pLightList[iLight]+uiCount;
-		pLight->uiFlags&=(~LIGHT_NODE_DRAWN);
+		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
 	iOldX = iX;
 	iOldY = iY;
 
-	for(uiCount=0; uiCount < usRaySize[iLight]; uiCount++)
+	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
-		usNodeIndex=*(pLightRayList[iLight]+uiCount);
-		if(!(usNodeIndex&LIGHT_NEW_RAY))
+		const UINT16 usNodeIndex = t->rays[uiCount];
+		if (!(usNodeIndex & LIGHT_NEW_RAY))
 		{
 			fBlocked = FALSE;
       fOnlyWalls = FALSE;
 
-			pLight=pLightList[iLight]+(usNodeIndex&(~LIGHT_BACKLIGHT));
+			LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 
 			if (!(l->uiFlags&LIGHT_SPR_ONROOF))
 			{
@@ -2621,22 +2543,18 @@ static BOOLEAN LightCalcRect(INT32 iLight)
 {
 SGPRect MaxRect;
 INT16 sXValue, sYValue, sDummy;
-UINT32 uiCount;
-LIGHT_NODE *pLight;
 
-	if(pLightList[iLight]==NULL)
-		return(FALSE);
-
-	pLight=pLightList[iLight];
+	LightTemplate* const t = &g_light_templates[iLight];
+	if (t->lights == NULL) return FALSE;
 
 	MaxRect.iLeft=99999;
 	MaxRect.iRight=-99999;
 	MaxRect.iTop=99999;
 	MaxRect.iBottom=-99999;
 
-	for(uiCount=0; uiCount < usTemplateSize[iLight]; uiCount++)
+	for (UINT32 uiCount = 0; uiCount < t->n_lights; ++uiCount)
 	{
-		pLight=pLightList[iLight]+uiCount;
+		const LIGHT_NODE* const pLight = &t->lights[uiCount];
 		if(pLight->ubLight)
 		{
 			MaxRect.iLeft=__min(MaxRect.iLeft, pLight->iDX);
@@ -2650,34 +2568,34 @@ LIGHT_NODE *pLight;
 																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
 																	&sDummy, &sYValue);
 
-	LightMapLeft[iLight]=(INT16)MaxRect.iLeft;
-	LightMapTop[iLight]=(INT16)MaxRect.iTop;
-	LightMapRight[iLight]=(INT16)MaxRect.iRight;
-	LightMapBottom[iLight]=(INT16)MaxRect.iBottom;
+	t->map_left   = MaxRect.iLeft;
+	t->map_top    = MaxRect.iTop;
+	t->map_right  = MaxRect.iRight;
+	t->map_bottom = MaxRect.iBottom;
 
-	LightHeight[iLight]=-sYValue;
-	LightYOffset[iLight]=sYValue;
+	t->height = -sYValue;
+	t->y_off  = sYValue;
 
 	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
 																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
 																	&sDummy, &sYValue);
-	LightHeight[iLight]+=sYValue;
+	t->height += sYValue;
 
 	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE),
 																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
 																	&sXValue, &sDummy);
-	LightWidth[iLight]=-sXValue;
-	LightXOffset[iLight]=sXValue;
+	t->width = -sXValue;
+	t->x_off = sXValue;
 
 	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
 																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
 																	&sXValue, &sDummy);
-	LightWidth[iLight]+=sXValue;
+	t->width += sXValue;
 
-	LightHeight[iLight]+=WORLD_TILE_X*2;
-	LightWidth[iLight]+=WORLD_TILE_Y*3;
-	LightXOffset[iLight]-=WORLD_TILE_X*2;
-	LightYOffset[iLight]-=WORLD_TILE_Y*2;
+	t->height += WORLD_TILE_X * 2;
+	t->width  += WORLD_TILE_Y * 3;
+	t->x_off  -= WORLD_TILE_X * 2;
+	t->y_off  -= WORLD_TILE_Y * 2;
 
 	return(TRUE);
 }
@@ -2692,27 +2610,20 @@ LIGHT_NODE *pLight;
 ***************************************************************************************/
 BOOLEAN LightSave(const INT32 iLight, const char* const pFilename)
 {
-	HWFILE hFile;
+	LightTemplate* const t = &g_light_templates[iLight];
+	if (t->lights == NULL) return FALSE;
 
-	if(pLightList[iLight]==NULL)
-		return(FALSE);
-	else
-	{
-		const char* const pName = (pFilename != NULL ? pFilename : pLightNames[iLight]);
-		hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-		if (hFile != 0)
-		{
-			FileWrite(hFile, &usTemplateSize[iLight], sizeof(UINT16));
-			FileWrite(hFile, pLightList[iLight],      sizeof(LIGHT_NODE) * usTemplateSize[iLight]);
-			FileWrite(hFile, &usRaySize[iLight],      sizeof(UINT16));
-			FileWrite(hFile, pLightRayList[iLight],  sizeof(UINT16) * usRaySize[iLight]);
+	const char* const pName = (pFilename != NULL ? pFilename : t->name);
+	const HWFILE      hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	if (hFile == 0) return FALSE;
 
-			FileClose(hFile);
-		}
-		else
-			return(FALSE);
-	}
-	return(TRUE);
+	FileWrite(hFile, &t->n_lights, sizeof(t->n_lights));
+	FileWrite(hFile, t->lights,    sizeof(*t->lights) * t->n_lights);
+	FileWrite(hFile, &t->n_rays,   sizeof(t->n_rays));
+	FileWrite(hFile, t->rays,      sizeof(*t->rays)   * t->n_rays);
+
+	FileClose(hFile);
+	return TRUE;
 }
 
 
@@ -2720,44 +2631,41 @@ BOOLEAN LightSave(const INT32 iLight, const char* const pFilename)
  * (-1) if the file wasn't loaded. */
 static INT32 LightLoad(const char* pFilename)
 {
-HWFILE hFile;
-INT32 iLight;
+	INT32 iLight = LightGetFree();
+	if (iLight == -1) return -1;
 
-	if((iLight=LightGetFree())==(-1))
-		return(-1);
-	else
+	const HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
+	if (hFile == 0) return -1;
+
+	LightTemplate* const t = &g_light_templates[iLight];
+
+	FileRead(hFile, &t->n_lights, sizeof(t->n_lights));
+	t->lights = MemAlloc(t->n_lights * sizeof(*t->lights));
+	if (t->lights == NULL)
 	{
-		hFile = FileOpen(pFilename, FILE_ACCESS_READ);
-		if (hFile != 0)
-		{
-			FileRead(hFile, &usTemplateSize[iLight], sizeof(UINT16));
-			if((pLightList[iLight]=MemAlloc(usTemplateSize[iLight]*sizeof(LIGHT_NODE)))==NULL)
-			{
-				usTemplateSize[iLight]=0;
-				return(-1);
-			}
-			FileRead(hFile, pLightList[iLight], sizeof(LIGHT_NODE) * usTemplateSize[iLight]);
-
-			FileRead(hFile, &usRaySize[iLight], sizeof(UINT16));
-			if((pLightRayList[iLight]=MemAlloc(usRaySize[iLight]*sizeof(UINT16)))==NULL)
-			{
-				usTemplateSize[iLight]=0;
-				usRaySize[iLight]=0;
-				MemFree(pLightList[iLight]);
-				return(-1);
-			}
-			FileRead(hFile, pLightRayList[iLight], sizeof(UINT16) * usRaySize[iLight]);
-
-			FileClose(hFile);
-
-			pLightNames[iLight]=MemAlloc(strlen(pFilename)+1);
-			strcpy(pLightNames[iLight], pFilename);
-		}
-		else
-			return(-1);
+		t->n_lights = 0;
+		return(-1);
 	}
+	FileRead(hFile, t->lights, sizeof(*t->lights) * t->n_lights);
+
+	FileRead(hFile, &t->n_rays, sizeof(t->n_rays));
+	t->rays = MemAlloc(t->n_rays * sizeof(*t->rays));
+	if (t->rays ==NULL)
+	{
+		t->n_lights = 0;
+		t->n_rays   = 0;
+		MemFree(t->lights);
+		return -1;
+	}
+	FileRead(hFile, t->rays, sizeof(*t->rays) * t->n_rays);
+
+	FileClose(hFile);
+
+	t->name = MemAlloc(strlen(pFilename) + 1);
+	strcpy(t->name, pFilename);
+
 	LightCalcRect(iLight);
-	return(iLight);
+	return iLight;
 }
 
 
@@ -2770,8 +2678,8 @@ INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_TEMPLATES; iCount++)
 	{
-		if (pLightNames[iCount] != NULL && strcasecmp(pFilename, pLightNames[iCount]) == 0)
-			return(iCount);
+		const char* const name = g_light_templates[iCount].name;
+		if (name != NULL && strcasecmp(pFilename, name) == 0) return iCount;
 	}
 
 	return(LightLoad(pFilename));
@@ -3098,21 +3006,25 @@ void LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 // Sets the flag for the renderer to draw all marked tiles.
 static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* const l)
 {
-//INT16 iLeft_s, iTop_s;
+#if 0 // XXX was commented out
+	INT16 iLeft_s;
+	INT16 iTop_s;
+	CellXYToScreenXY(l->iX * CELL_X_SIZE, l->iY * CELL_Y_SIZE, &iLeft_s, &iTop_s);
 
-	//CellXYToScreenXY(l->iX * CELL_X_SIZE, l->iY * CELL_Y_SIZE, &iLeft_s, &iTop_s);
+	const LightTemplate* const t = &g_light_templates[l->iTemplate];
 
-	//iLeft_s += LightXOffset[l->iTemplate];
-	//iTop_s  += LightYOffset[l->iTemplate];
+	iLeft_s += t->x_off;
+	iTop_s  += t->y_off;
 
-	//const INT16 iMapLeft   = l->iX + LightMapLeft[  l->iTemplate];
-	//const INT16 iMapTop    = l->iY + LightMapTop[   l->iTemplate];
-	//const INT16 iMapRight  = l->iX + LightMapRight[ l->iTemplate];
-	//const INT16 iMapBottom = l->iY + LightMapBottom[l->iTemplate];
+	const INT16 iMapLeft   = l->iX + t->map_left;
+	const INT16 iMapTop    = l->iY + t->map_top;
+	const INT16 iMapRight  = l->iX + t->map_right;
+	const INT16 iMapBottom = l->iY + t->map_bottom;
 
-	//UpdateSaveBuffer();
-	//AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y );
-	//AddBaseDirtyRect(iLeft_s, iTop_s, (INT16)(iLeft_s + LightWidth[l->iTemplate]), (INT16)(iTop_s + LightHeight[l->iTemplate]));
+	UpdateSaveBuffer();
+	AddBaseDirtyRect(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
+	AddBaseDirtyRect(iLeft_s, iTop_s, (INT16)(iLeft_s + t->width), (INT16)(iTop_s + t->height));
+#endif
 
 	SetRenderFlags(RENDER_FLAG_MARKED);
 
@@ -3243,4 +3155,10 @@ void CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 		// build a table that is a mix of the first two
 		CreateSoldierShadedPalette(pSoldier, 32, &gpLightColors[2]);
 	}
+}
+
+
+const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
+{
+	return g_light_templates[l->iTemplate].name;
 }
