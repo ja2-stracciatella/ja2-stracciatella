@@ -119,7 +119,6 @@ typedef struct
 
 	ANITILE											*pAniTile;
 
-	SGPPaletteEntry							*p8BPPPalette;
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
 } ROTTING_CORPSE;
 

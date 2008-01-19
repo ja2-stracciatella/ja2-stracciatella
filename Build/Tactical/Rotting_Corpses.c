@@ -538,9 +538,6 @@ static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 {
 	INT32 cnt;
 
-	// Free palettes
-	MemFree( pCorpse->p8BPPPalette );
-
 	for ( cnt = 0; cnt < NUM_CORPSE_SHADES; cnt++ )
 	{
 		if ( pCorpse->pShades[ cnt ] != NULL )
@@ -573,18 +570,11 @@ static void RemoveCorpse(ROTTING_CORPSE* const c)
 }
 
 
-static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse);
-
-
 static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 {
 	CHAR8	zColFilename[ 100 ];
 	INT8	bBodyTypePalette;
 	SGPPaletteEntry							Temp8BPPPalette[ 256 ];
-
-	pCorpse->p8BPPPalette = MemAlloc( sizeof( SGPPaletteEntry ) * 256 );
-
-	CHECKF( pCorpse->p8BPPPalette != NULL );
 
 	bBodyTypePalette = GetBodyTypePaletteSubstitutionCode( NULL, pCorpse->def.ubBodyType, zColFilename );
 
@@ -599,21 +589,22 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 		bBodyTypePalette = 1;
 	}
 
+	SGPPaletteEntry pal[256];
 	if ( bBodyTypePalette == -1  )
 	{
 		// Use palette from HVOBJECT, then use substitution for pants, etc
-		memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
+		memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
 
 		// Substitute based on head, etc
-		SetPaletteReplacement( pCorpse->p8BPPPalette, pCorpse->def.HeadPal );
-		SetPaletteReplacement( pCorpse->p8BPPPalette, pCorpse->def.VestPal );
-		SetPaletteReplacement( pCorpse->p8BPPPalette, pCorpse->def.PantsPal );
-		SetPaletteReplacement( pCorpse->p8BPPPalette, pCorpse->def.SkinPal );
+		SetPaletteReplacement(pal, pCorpse->def.HeadPal);
+		SetPaletteReplacement(pal, pCorpse->def.VestPal);
+		SetPaletteReplacement(pal, pCorpse->def.PantsPal);
+		SetPaletteReplacement(pal, pCorpse->def.SkinPal);
 	}
 	else if ( bBodyTypePalette == 0 )
 	{
 		// Use palette from hvobject
-		memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
+		memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
 	}
 	else
 	{
@@ -621,16 +612,17 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 		if ( CreateSGPPaletteFromCOLFile( Temp8BPPPalette, zColFilename ) )
 		{
 			// Copy into palette
-			memcpy( pCorpse->p8BPPPalette,		Temp8BPPPalette, sizeof( pCorpse->p8BPPPalette ) * 256 );
+			memcpy(pal, Temp8BPPPalette, sizeof(pal) * 256);
 		}
 		else
 		{
 			// Use palette from hvobject
-			memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
+			memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
 		}
 	}
 
-	CreateCorpsePaletteTables( pCorpse );
+	// create the basic shade table
+	CreateBiasedShadedPalettes(pCorpse->pShades, pal, &gpLightColors[0]);
 
 	return( TRUE );
 }
@@ -1131,19 +1123,6 @@ static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 		  }
     }
 	}
-}
-
-
-static UINT16 CreateCorpsePaletteTables(ROTTING_CORPSE* pCorpse)
-{
-	// create the basic shade table
-	CreateBiasedShadedPalettes(pCorpse->pShades, pCorpse->p8BPPPalette, &gpLightColors[0]);
-
-	// build neutral palette as well!
-	// Set current shade table to neutral color
-
-	return(TRUE);
-
 }
 
 
