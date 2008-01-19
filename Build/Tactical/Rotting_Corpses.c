@@ -616,9 +616,6 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 }
 
 
-static void MakeCorpseVisible(ROTTING_CORPSE* c);
-
-
 BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLEAN fCheckForLOS )
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
@@ -803,7 +800,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 	// If this is our guy......make visible...
 	//if ( pSoldier->bTeam == gbPlayerNum )
 	{
-		MakeCorpseVisible(added_corpse);
+		added_corpse->def.bVisible = 1;
 	}
 
 	return( TRUE );
@@ -1003,13 +1000,6 @@ void HandleRottingCorpses( )
       }
     }
   }
-}
-
-
-static void MakeCorpseVisible(ROTTING_CORPSE* const c)
-{
-	c->def.bVisible = 1;
-	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
