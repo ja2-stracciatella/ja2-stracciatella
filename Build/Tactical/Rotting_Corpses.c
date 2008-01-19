@@ -429,8 +429,8 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 		case MMERC_FALL:
 		case MMERC_FALLF:
 		case FMERC_FALL:
-		case FMERC_FALLF: uiDirectionUseFlag = ANITILE_USE_4DIRECTION_FOR_START_FRAME;
-		default:          uiDirectionUseFlag = ANITILE_USE_DIRECTION_FOR_START_FRAME;
+		case FMERC_FALLF: uiDirectionUseFlag = ANITILE_USE_4DIRECTION_FOR_START_FRAME; break;
+		default:          uiDirectionUseFlag = ANITILE_USE_DIRECTION_FOR_START_FRAME;  break;
 	}
 
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
