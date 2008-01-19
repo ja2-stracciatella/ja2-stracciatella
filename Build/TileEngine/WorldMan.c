@@ -2243,15 +2243,12 @@ BOOLEAN WaterTooDeepForAttacks(INT16 sGridNo)
 
 void SetStructAframeFlags(UINT32 iMapIndex, UINT32 uiFlags)
 {
-	UINT32 uiTileFlags;
-
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pRoofHead; pStruct != NULL;)
 	{
 		if ( pStruct->usIndex != NO_TILE )
 		{
-			GetTileFlags(pStruct->usIndex, &uiTileFlags);
-			if (uiTileFlags & AFRAME_TILE)
+			if (GetTileFlags(pStruct->usIndex) & AFRAME_TILE)
 			{
 				pStruct->uiFlags |= uiFlags;
 			}
@@ -2326,15 +2323,12 @@ LEVELNODE* FindShadow(INT16 sGridNo, UINT16 usStructIndex)
 
 void WorldHideTrees(void)
 {
-	UINT32 fTileFlags;
-
 	for (UINT32 cnt = 0; cnt < WORLD_MAX; cnt++)
 	{
 		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			if (pNode->uiFlags & LEVELNODE_ANIMATION) continue;
-			GetTileFlags(pNode->usIndex, &fTileFlags);
-			if (fTileFlags & FULL3D_TILE)
+			if (GetTileFlags(pNode->usIndex) & FULL3D_TILE)
 			{
 				pNode->uiFlags |= LEVELNODE_REVEALTREES;
 			}
@@ -2347,15 +2341,12 @@ void WorldHideTrees(void)
 
 void WorldShowTrees(void)
 {
-	UINT32	fTileFlags;
-
 	for (UINT32 cnt = 0; cnt < WORLD_MAX; cnt++)
 	{
 		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			if (pNode->uiFlags & LEVELNODE_ANIMATION) continue;
-			GetTileFlags(pNode->usIndex, &fTileFlags);
-			if (fTileFlags & FULL3D_TILE)
+			if (GetTileFlags(pNode->usIndex) & FULL3D_TILE)
 			{
 				pNode->uiFlags &= ~LEVELNODE_REVEALTREES;
 			}

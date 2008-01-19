@@ -154,7 +154,7 @@ BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16
 BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pusSubIndex );
 UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex);
 BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType );
-BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags );
+UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 fType);
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );

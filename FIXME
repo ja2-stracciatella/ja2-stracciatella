@@ -65,7 +65,6 @@ GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
-GetTileFlags(): interface complicated
 GetTileType(): interface complicated
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers

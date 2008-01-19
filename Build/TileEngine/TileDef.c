@@ -467,19 +467,11 @@ BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 	return( TRUE );
 }
 
-BOOLEAN	GetTileFlags( UINT16 usIndex, UINT32 *puiFlags )
+
+UINT32 GetTileFlags(const UINT16 usIndex)
 {
-  TILE_ELEMENT		TileElem;
-
-	CHECKF( usIndex != NO_TILE );
-	CHECKF( usIndex < NUMBEROFTILES );
-
-	// Get tile element
-	TileElem = gTileDatabase[ usIndex ];
-
-	*puiFlags = TileElem.uiFlags;
-
-	return( TRUE );
+	Assert(usIndex < lengthof(gTileDatabase));
+	return gTileDatabase[usIndex].uiFlags;
 }
 
 
