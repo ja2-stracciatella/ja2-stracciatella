@@ -141,12 +141,6 @@ struct LEVELNODE
 			INT16											sRelativeY;							// Relative position values
 		};
 
-		// Some can contains index values into dead corpses
-		struct
-		{
-			INT32											iCorpseID;							// Index into corpse ID
-		};
-
 		struct
 		{
 			UINT32										uiAnimHitLocationFlags;	// Animation profile flags for soldier placeholders ( prone merc hit location values )
