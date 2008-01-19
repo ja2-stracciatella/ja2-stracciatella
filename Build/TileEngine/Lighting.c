@@ -1711,11 +1711,9 @@ DOUBLE Temp;
 
 
 // Creates an square light, taking two radii.
-static BOOLEAN LightGenerateSquare(INT32 iLight, UINT8 iIntensity, INT16 iA, INT16 iB)
+static BOOLEAN LightGenerateSquare(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
 {
 INT16 iX, iY;
-
-	LightTemplate* const t = &g_light_templates[iLight];
 
 	for(iX=0-iA; iX <= 0+iA; iX++)
 		LightCastRay(t, 0, 0, iX, (INT16)(0-iB), iIntensity, 1);
@@ -1873,14 +1871,14 @@ static INT32 LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2
 INT32 iLight;
 
 	iLight=LightGetFree();
+	LightTemplate* const t = &g_light_templates[iLight];
 	if(iLight!=(-1))
 	{
-		LightGenerateSquare(iLight, ubIntensity, (INT16)(iRadius1*DISTANCE_SCALE), (INT16)(iRadius2*DISTANCE_SCALE));
+		LightGenerateSquare(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 	}
 
 	char usName[14];
 	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
-	LightTemplate* const t = &g_light_templates[iLight];
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
