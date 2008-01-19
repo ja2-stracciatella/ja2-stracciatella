@@ -333,9 +333,8 @@ static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, co
 
 /* Adds a node to the template list. If the node does not exist, it creates a
  * new one.  Returns the index into the list. */
-static UINT16 LightAddTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
+static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
-	LightTemplate* const t = &g_light_templates[iLight];
 	for (UINT16 i = 0; i < t->n_lights; ++i)
 	{
 		if (t->lights[i].iDX == iX && t->lights[i].iDY == iY) return i;
@@ -354,7 +353,7 @@ static UINT16 LightAddRayNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight, U
 	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
 	if (t->rays == NULL) return 65535;
 
-	t->rays[n_rays] = LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags;
+	t->rays[n_rays] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
 	t->n_rays       = n_rays + 1;
 	return n_rays;
 }
@@ -373,7 +372,7 @@ static UINT16 LightInsertRayNode(INT32 iLight, UINT16 usIndex, INT16 iX, INT16 i
 
 	memmove(t->rays + usIndex + 1, t->rays + usIndex, (n_rays - usIndex) * sizeof(*t->rays));
 
-	t->rays[usIndex] = LightAddTemplateNode(iLight, iX, iY, ubLight) | usFlags;
+	t->rays[usIndex] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
 	t->n_rays        = n_rays + 1;
 	return n_rays;
 }
