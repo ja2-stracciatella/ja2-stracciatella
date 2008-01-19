@@ -63,6 +63,9 @@
 #define		LIGHT_NIGHTTIME			0x0100		// light stays on when dark outside
 
 
+typedef struct LightTemplate LightTemplate;
+
+
 // stucture of node in linked list for lights
 typedef struct light_p {
 					INT16		iDX, iDY;
@@ -104,11 +107,11 @@ BOOLEAN		LightAddBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 // Subtracts a light value from all tiles
 BOOLEAN		LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 // Creates an omni (circular) light
-INT32			LightCreateOmni( UINT8 ubIntensity, INT16 iRadius);
+LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
 BOOLEAN LightDraw(const LIGHT_SPRITE* l);
 // Save a light list into a file
-BOOLEAN LightSave(INT32 iLight, const char* pFilename);
+BOOLEAN LightSave(const LightTemplate*, const char* pFilename);
 
 // Sets the RGB values and number of light colors (1/2)
 BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors);

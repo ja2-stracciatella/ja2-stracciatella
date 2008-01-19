@@ -58,7 +58,6 @@
 #define LIGHT_TREE_REVEAL		5						// width of rect
 
 
-typedef struct LightTemplate LightTemplate;
 struct LightTemplate
 {
 	LIGHT_NODE* lights;
@@ -1839,29 +1838,23 @@ INT16 iCountY, iCountX;
 	return(TRUE);
 }
 
-/****************************************************************************************
-	LightCreateOmni
 
-		Creates a circular light.
-
-***************************************************************************************/
-INT32 LightCreateOmni(UINT8 ubIntensity, INT16 iRadius)
+LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 {
 INT32 iLight;
 
 	iLight=LightGetFree();
+	if (iLight == -1) return NULL;
 	LightTemplate* const t = &g_light_templates[iLight];
-	if(iLight!=(-1))
-	{
-		LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
-	}
+
+	LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
 
 	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
-	return(iLight);
+	return t;
 }
 
 
@@ -2592,9 +2585,8 @@ INT16 sXValue, sYValue, sDummy;
 	filename forces the system to save the light with the internal filename (recommended).
 
 ***************************************************************************************/
-BOOLEAN LightSave(const INT32 iLight, const char* const pFilename)
+BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
 {
-	LightTemplate* const t = &g_light_templates[iLight];
 	if (t->lights == NULL) return FALSE;
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);

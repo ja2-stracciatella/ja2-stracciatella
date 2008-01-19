@@ -2549,15 +2549,15 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	{
 		// Couldn't load file because it doesn't exist. So let's make the file
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
-		const INT32 iLightHandle = LightCreateOmni(ubIntensity, sRadius);
-		if (iLightHandle == -1)
+		LightTemplate* const t = LightCreateOmni(ubIntensity, sRadius);
+		if (t == NULL)
 		{
 			// Can't create light template
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light template for radius %d",sRadius) );
 			return( FALSE );
 		}
 
-		if ( !LightSave( iLightHandle, Filename ) )
+		if (!LightSave(t, Filename))
 		{
 			// Can't save light template
 			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't save light template for radius %d",sRadius) );
