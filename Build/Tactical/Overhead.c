@@ -2312,7 +2312,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		if (old_sel->bLevel == 0)
 		{
 		//	ApplyTranslucencyToWalls((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
-			//LightHideTrees((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
 		}
 		//DeleteSoldierLight(old_sel);
 

@@ -2090,7 +2090,6 @@ void SetSoldierHeight(SOLDIERTYPE* const pSoldier, const FLOAT dNewHeight)
 		pSoldier->bLevel = SECOND_LEVEL;
 
 		ApplyTranslucencyToWalls((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE));
-		//LightHideTrees((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE));
 
 		//pSoldier->pLevelNode->ubShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubShadeLevel;
 		//pSoldier->pLevelNode->ubSumLights=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubSumLights;

@@ -2537,52 +2537,6 @@ UINT16 usNodeIndex;
 }
 
 
-// Removes the translucency from any trees in the area.
-static BOOLEAN LightHideTrees(INT16 iX, INT16 iY)
-{
-INT32 iCountX, iCountY;
-UINT32 uiTile;
-LEVELNODE *pNode;
-BOOLEAN fRerender=FALSE;
-UINT32	fTileFlags;
-
-	//Kris:  added map boundary checking!!!
-	for(iCountY=(INT16)__max(iY-LIGHT_TREE_REVEAL,0); iCountY < (INT16)__min(iY+LIGHT_TREE_REVEAL,WORLD_ROWS-1); iCountY++)
-		for(iCountX=(INT16)__max(iX-LIGHT_TREE_REVEAL,0); iCountX < (INT16)__min(iX+LIGHT_TREE_REVEAL,WORLD_COLS-1); iCountX++)
-		{
-			uiTile=MAPROWCOLTOPOS(iCountY, iCountX);
-			pNode=gpWorldLevelData[uiTile].pStructHead;
-			while(pNode!=NULL)
-			{
-				GetTileFlags( pNode->usIndex, &fTileFlags );
-
-				if ( fTileFlags & FULL3D_TILE )
-				{
-
-					if ( ( pNode->uiFlags & LEVELNODE_REVEALTREES ) )
-					{
-						//pNode->uiFlags  &=(~( LEVELNODE_REVEALTREES | LEVELNODE_ERASEZ ) );
-						pNode->uiFlags  &=(~( LEVELNODE_REVEALTREES ) );
-						gpWorldLevelData[uiTile].uiFlags |= MAPELEMENT_REDRAW;
-					}
-
-					fRerender=TRUE;
-				}
-				pNode=pNode->pNext;
-			}
-		}
-
-		if(fRerender)
-		{
-			//SetRenderFlags(RENDER_FLAG_MARKED);
-			SetRenderFlags(RENDER_FLAG_FULL );
-			return(TRUE);
-		}
-		else
-			return(FALSE);
-}
-
-
 // Reverts all tiles a given light affects to their natural light levels.
 static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, const LIGHT_SPRITE* const l)
 {
