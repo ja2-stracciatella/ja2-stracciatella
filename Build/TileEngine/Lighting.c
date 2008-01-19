@@ -1859,42 +1859,42 @@ INT32 iLight;
 
 
 // Creates a square light
-static INT32 LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
+static LightTemplate* LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
 INT32 iLight;
 
 	iLight=LightGetFree();
+	if (iLight == -1) return NULL;
 	LightTemplate* const t = &g_light_templates[iLight];
-	if(iLight!=(-1))
-	{
-		LightGenerateSquare(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
-	}
+
+	LightGenerateSquare(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 
 	char usName[14];
 	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
-	return(iLight);
+	return t;
 }
 
 
 // Creates an elliptical light (two separate radii)
-static INT32 LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
+static LightTemplate* LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
 INT32 iLight;
 
 	iLight=LightGetFree();
+	if (iLight == -1) return NULL;
 	LightTemplate* const t = &g_light_templates[iLight];
-	if(iLight!=(-1))
-		LightGenerateElliptical(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
+
+	LightGenerateElliptical(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 
 	char usName[14];
 	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
-	return(iLight);
+	return t;
 }
 
 
