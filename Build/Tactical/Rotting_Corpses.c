@@ -343,20 +343,17 @@ ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 INT32						giNumRottingCorpse = 0;
 
 
-static INT32 GetFreeRottingCorpse(void)
+static ROTTING_CORPSE* GetFreeRottingCorpse(void)
 {
-	INT32 iCount;
-
-	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
+	for (ROTTING_CORPSE* c = gRottingCorpse; c != gRottingCorpse + giNumRottingCorpse; ++c)
 	{
-		if(( gRottingCorpse[iCount].fActivated == FALSE ) )
-			return((INT32)iCount);
+		if (!c->fActivated) return c;
 	}
-
-	if(giNumRottingCorpse < MAX_ROTTING_CORPSES )
-		return((INT32)giNumRottingCorpse++);
-
-	return(-1);
+	if (giNumRottingCorpse < MAX_ROTTING_CORPSES)
+	{
+		return &gRottingCorpse[giNumRottingCorpse++];
+	}
+	return NULL;
 }
 
 
@@ -435,10 +432,8 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	if (pCorpseDef->sGridNo == NOWHERE)   goto fail;
 	if (pCorpseDef->ubType  == NO_CORPSE) goto fail;
 
-	const INT32 idx = GetFreeRottingCorpse();
-	if (idx == -1) goto fail;
-
-	ROTTING_CORPSE* const c = &gRottingCorpse[idx];
+	ROTTING_CORPSE* const c = GetFreeRottingCorpse();
+	if (c == NULL) goto fail;
 
 	// Copy elements in
 	c->def = *pCorpseDef;
@@ -509,7 +504,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	n->ubMaxLights          = land->ubMaxLights;
 	n->ubNaturalShadeLevel  = land->ubNaturalShadeLevel;
 
-	ani->v.user.uiData = idx;
+	ani->v.user.uiData = CORPSE2ID(c);
 
 	c->iCachedTileID = ani->sCachedTileID;
 	if (c->iCachedTileID == -1) goto fail_ani;
