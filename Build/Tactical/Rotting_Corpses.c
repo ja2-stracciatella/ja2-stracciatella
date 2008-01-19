@@ -492,7 +492,8 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 
 	ANITILE* const ani = CreateAnimationTile(&AniParams);
   if (ani == NULL) goto fail;
-  c->pAniTile = ani;
+	c->pAniTile      = ani;
+	c->iCachedTileID = ani->sCachedTileID;
 
   LEVELNODE*       const n    = ani->pLevelNode;
   const LEVELNODE* const land = gpWorldLevelData[c->def.sGridNo].pLandHead;
@@ -505,9 +506,6 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	n->ubNaturalShadeLevel  = land->ubNaturalShadeLevel;
 
 	ani->v.user.uiData = CORPSE2ID(c);
-
-	c->iCachedTileID = ani->sCachedTileID;
-	if (c->iCachedTileID == -1) goto fail_ani;
 
 	// Get palette and create palettes and do substitutions
 	if (!CreateCorpsePalette(c)) goto fail_ani;
