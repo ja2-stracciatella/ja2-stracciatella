@@ -574,7 +574,6 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 {
 	CHAR8	zColFilename[ 100 ];
 	INT8	bBodyTypePalette;
-	SGPPaletteEntry							Temp8BPPPalette[ 256 ];
 
 	bBodyTypePalette = GetBodyTypePaletteSubstitutionCode( NULL, pCorpse->def.ubBodyType, zColFilename );
 
@@ -589,36 +588,26 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 		bBodyTypePalette = 1;
 	}
 
-	SGPPaletteEntry pal[256];
-	if ( bBodyTypePalette == -1  )
+	const SGPPaletteEntry* pal;
+	SGPPaletteEntry        tmp_pal[256];
+	if (bBodyTypePalette == -1)
 	{
 		// Use palette from HVOBJECT, then use substitution for pants, etc
-		memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
-
-		// Substitute based on head, etc
-		SetPaletteReplacement(pal, pCorpse->def.HeadPal);
-		SetPaletteReplacement(pal, pCorpse->def.VestPal);
-		SetPaletteReplacement(pal, pCorpse->def.PantsPal);
-		SetPaletteReplacement(pal, pCorpse->def.SkinPal);
+		memcpy(tmp_pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(tmp_pal));
+		SetPaletteReplacement(tmp_pal, pCorpse->def.HeadPal);
+		SetPaletteReplacement(tmp_pal, pCorpse->def.VestPal);
+		SetPaletteReplacement(tmp_pal, pCorpse->def.PantsPal);
+		SetPaletteReplacement(tmp_pal, pCorpse->def.SkinPal);
+		pal = tmp_pal;
 	}
-	else if ( bBodyTypePalette == 0 )
+	else if (bBodyTypePalette != 0 && CreateSGPPaletteFromCOLFile(tmp_pal, zColFilename))
 	{
-		// Use palette from hvobject
-		memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
+		pal = tmp_pal;
 	}
 	else
 	{
-		// Use col file
-		if ( CreateSGPPaletteFromCOLFile( Temp8BPPPalette, zColFilename ) )
-		{
-			// Copy into palette
-			memcpy(pal, Temp8BPPPalette, sizeof(pal) * 256);
-		}
-		else
-		{
-			// Use palette from hvobject
-			memcpy(pal, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pal));
-		}
+		// Use palette from hvobject
+		pal = gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry;
 	}
 
 	// create the basic shade table
