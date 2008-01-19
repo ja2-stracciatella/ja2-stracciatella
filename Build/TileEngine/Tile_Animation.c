@@ -44,216 +44,106 @@ static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
 }
 
 
-ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams )
+ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 {
-	ANITILE		*pAniNode;
-	ANITILE		*pNewAniNode;
-	LEVELNODE	*pNode;
-	INT32			iCachedTile=-1;
-	INT16			sGridNo;
-	UINT8			ubLevel;
-	INT16			usTileIndex;
-	INT16			sDelay;
-	INT16			sStartFrame=-1;
-	UINT32		uiFlags;
-	LEVELNODE	*pGivenNode;
-	INT16			sX, sY, sZ;
+	ANITILE* const a = MemAlloc(sizeof(*a));
 
-	// Get some parameters from structure sent in...
-	sGridNo			= pAniParams->sGridNo;
-	ubLevel			= pAniParams->ubLevelID;
-	usTileIndex	= pAniParams->usTileIndex;
-	sDelay			= pAniParams->sDelay;
-	sStartFrame	= pAniParams->sStartFrame;
-	uiFlags			= pAniParams->uiFlags;
-	pGivenNode	= pAniParams->pGivenLevelNode;
-	sX					= pAniParams->sX;
-	sY					= pAniParams->sY;
-	sZ					= pAniParams->sZ;
-
-
-	pAniNode = pAniTileHead;
-
-	// Allocate head
-	pNewAniNode = MemAlloc( sizeof( ANITILE ) );
-
-	if ( (uiFlags & ANITILE_EXISTINGTILE  ) )
+	INT32        cached_tile = -1;
+	const INT16  gridno      = parms->sGridNo;
+	const UINT8  ubLevel     = parms->ubLevelID;
+	INT16        tile_index  = parms->usTileIndex;
+	const UINT32 flags       = parms->uiFlags;
+	LEVELNODE*   l           = parms->pGivenLevelNode;
+	if (flags & ANITILE_EXISTINGTILE)
 	{
-		pNewAniNode->pLevelNode						= pGivenNode;
-		pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
+		Assert(parms->zCachedFile == NULL);
+		l->pAniTile = a;
 	}
 	else
 	{
-		if (pAniParams->zCachedFile != NULL)
+		if (parms->zCachedFile != NULL)
 		{
-			iCachedTile = GetCachedTile( pAniParams->zCachedFile );
-
-			if ( iCachedTile == -1 )
-			{
-				return( NULL );
-			}
-
-			usTileIndex = iCachedTile + TILE_CACHE_START_INDEX;
+			cached_tile = GetCachedTile(parms->zCachedFile);
+			if (cached_tile == -1) return NULL;
+			tile_index = cached_tile + TILE_CACHE_START_INDEX;
 		}
 
-		// ALLOCATE NEW TILE
-		switch( ubLevel )
+		// allocate new tile
+		switch (ubLevel)
 		{
-			case ANI_STRUCT_LEVEL:
-
-				pNode = ForceStructToTail( sGridNo, usTileIndex );
-				break;
-
-			case ANI_SHADOW_LEVEL:
-				pNode = AddShadowToHead( sGridNo, usTileIndex );
-				break;
-
-			case ANI_OBJECT_LEVEL:
-				pNode = AddObjectToHead(sGridNo, usTileIndex);
-				break;
-
-			case ANI_ROOF_LEVEL:
-				pNode = AddRoofToHead(sGridNo, usTileIndex);
-				break;
-
-			case ANI_ONROOF_LEVEL:
-				pNode = AddOnRoofToHead(sGridNo, usTileIndex);
-				break;
-
-			case ANI_TOPMOST_LEVEL:
-				pNode = AddTopmostToHead(sGridNo, usTileIndex);
-				break;
-
-			default:
-
-				return( NULL );
+			case ANI_STRUCT_LEVEL:  l = ForceStructToTail(gridno, tile_index); break;
+			case ANI_SHADOW_LEVEL:  l = AddShadowToHead(  gridno, tile_index); break;
+			case ANI_OBJECT_LEVEL:  l = AddObjectToHead(  gridno, tile_index); break;
+			case ANI_ROOF_LEVEL:    l = AddRoofToHead(    gridno, tile_index); break;
+			case ANI_ONROOF_LEVEL:  l = AddOnRoofToHead(  gridno, tile_index); break;
+			case ANI_TOPMOST_LEVEL: l = AddTopmostToHead( gridno, tile_index); break;
+			default:                return NULL;
 		}
 
-		// SET NEW TILE VALUES
-		pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-		pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+		// set new tile values
+		l->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		l->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 
-		pNewAniNode->pLevelNode								= pNode;
-
-		if (iCachedTile != -1)
+		if (cached_tile != -1)
 		{
-			pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_CACHEDANITILE );
-			pNewAniNode->pLevelNode->pAniTile = pNewAniNode;
-			pNewAniNode->sRelativeX		= sX;
-			pNewAniNode->sRelativeY		= sY;
-			pNewAniNode->pLevelNode->sRelativeZ		= sZ;
-
+			l->uiFlags    |= LEVELNODE_CACHEDANITILE;
+			l->pAniTile    = a;
+			a->sRelativeX  = parms->sX;
+			a->sRelativeY  = parms->sY;
+			l->sRelativeZ  = parms->sZ;
 		}
 	}
-	pNewAniNode->sCachedTileID = iCachedTile;
+	a->pLevelNode    = l;
+	a->sCachedTileID = cached_tile;
 
-	switch( ubLevel )
+	switch (ubLevel)
 	{
-		case ANI_STRUCT_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_STRUCTURES );
-			break;
-
-		case ANI_SHADOW_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_SHADOWS );
-			break;
-
-		case ANI_OBJECT_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_OBJECTS );
-			break;
-
-		case ANI_ROOF_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_ROOF );
-			break;
-
-		case ANI_ONROOF_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_ONROOF );
-			break;
-
-		case ANI_TOPMOST_LEVEL:
-
-			ResetSpecificLayerOptimizing( TILES_DYNAMIC_TOPMOST );
-			break;
-
+		case ANI_STRUCT_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES); break;
+		case ANI_SHADOW_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);    break;
+		case ANI_OBJECT_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_OBJECTS);    break;
+		case ANI_ROOF_LEVEL:    ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);       break;
+		case ANI_ONROOF_LEVEL:  ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);     break;
+		case ANI_TOPMOST_LEVEL: ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);    break;
 	}
 
-	// SET FLAGS FOR LEVELNODE
-	pNewAniNode->pLevelNode->uiFlags |=	( LEVELNODE_ANIMATION | LEVELNODE_USEZ | LEVELNODE_DYNAMIC );
+	// set flags for levelnode
+	UINT32 lflags = l->uiFlags | LEVELNODE_ANIMATION | LEVELNODE_USEZ;
+	lflags |= (flags & ANITILE_PAUSED ? LEVELNODE_LASTDYNAMIC | LEVELNODE_UPDATESAVEBUFFERONCE : LEVELNODE_DYNAMIC);
+	if (flags & ANITILE_NOZBLITTER)             lflags |= LEVELNODE_NOZBLITTER;
+	if (flags & ANITILE_ALWAYS_TRANSLUCENT)     lflags |= LEVELNODE_REVEAL;
+	if (flags & ANITILE_USEBEST_TRANSLUCENT)    lflags |= LEVELNODE_USEBESTTRANSTYPE;
+	if (flags & ANITILE_ANIMATE_Z)              lflags |= LEVELNODE_DYNAMICZ;
+	if (flags & ANITILE_OPTIMIZEFORSMOKEEFFECT) lflags |= LEVELNODE_NOWRITEZ;
+	l->uiFlags = lflags;
 
-	if ( ( uiFlags & ANITILE_NOZBLITTER ) )
+	// set anitile values
+	if (cached_tile != -1)
 	{
-		pNewAniNode->pLevelNode->uiFlags |= LEVELNODE_NOZBLITTER;
-	}
-
-	if ( ( uiFlags & ANITILE_ALWAYS_TRANSLUCENT ) )
-	{
-		pNewAniNode->pLevelNode->uiFlags |= LEVELNODE_REVEAL;
-	}
-
-	if ( ( uiFlags & ANITILE_USEBEST_TRANSLUCENT ) )
-	{
-		pNewAniNode->pLevelNode->uiFlags |= LEVELNODE_USEBESTTRANSTYPE;
-	}
-
-	if ( ( uiFlags & ANITILE_ANIMATE_Z ) )
-	{
-		pNewAniNode->pLevelNode->uiFlags |= LEVELNODE_DYNAMICZ;
-	}
-
-	if ( ( uiFlags & ANITILE_PAUSED ) )
-	{
-		pNewAniNode->pLevelNode->uiFlags |= ( LEVELNODE_LASTDYNAMIC | LEVELNODE_UPDATESAVEBUFFERONCE );
-		pNewAniNode->pLevelNode->uiFlags &= (~LEVELNODE_DYNAMIC );
-	}
-
-	if ( ( uiFlags & ANITILE_OPTIMIZEFORSMOKEEFFECT ) )
-	{
-		pNewAniNode->pLevelNode->uiFlags |= LEVELNODE_NOWRITEZ;
-	}
-
-
-	// SET ANITILE VALUES
-	pNewAniNode->ubLevelID				= ubLevel;
-	pNewAniNode->usTileIndex			= usTileIndex;
-
-	if (iCachedTile != -1)
-	{
-		pNewAniNode->usNumFrames			= gpTileCache[ iCachedTile ].ubNumFrames;
+		a->usNumFrames = gpTileCache[cached_tile].ubNumFrames;
 	}
 	else
 	{
-		const TILE_ELEMENT* const te = &gTileDatabase[usTileIndex];
-		Assert(te->pAnimData != NULL);
-		pNewAniNode->usNumFrames = te->pAnimData->ubNumFrames;
+		a->usNumFrames = gTileDatabase[tile_index].pAnimData->ubNumFrames;
 	}
-
-	pNewAniNode->pNext						= pAniNode;
-	pNewAniNode->uiFlags					= uiFlags;
-	pNewAniNode->sDelay						= sDelay;
-	pNewAniNode->uiTimeLastUpdate = GetJA2Clock( );
-	pNewAniNode->sGridNo					= sGridNo;
-
-
-	pNewAniNode->ubKeyFrame1			= pAniParams->ubKeyFrame1;
-	pNewAniNode->uiKeyFrame1Code	= pAniParams->uiKeyFrame1Code;
-	pNewAniNode->ubKeyFrame2			= pAniParams->ubKeyFrame2;
-	pNewAniNode->uiKeyFrame2Code	= pAniParams->uiKeyFrame2Code;
-	pNewAniNode->v               = pAniParams->v;
-
-	sStartFrame += SetFrameByDir(0, pNewAniNode);
-	pNewAniNode->sCurrentFrame = sStartFrame;
-	pNewAniNode->sStartFrame   = sStartFrame;
-
-	//Set head
-	pAniTileHead = pNewAniNode;
-
-	// Set some special stuff
-	return( pNewAniNode );
+	a->ubLevelID        = ubLevel;
+	a->usTileIndex      = tile_index;
+	a->uiFlags          = flags;
+	a->sDelay           = parms->sDelay;
+	a->uiTimeLastUpdate = GetJA2Clock();
+	a->sGridNo          = gridno;
+	a->ubKeyFrame1      = parms->ubKeyFrame1;
+	a->uiKeyFrame1Code  = parms->uiKeyFrame1Code;
+	a->ubKeyFrame2      = parms->ubKeyFrame2;
+	a->uiKeyFrame2Code  = parms->uiKeyFrame2Code;
+	a->v                = parms->v;
+	const INT16 start_frame = parms->sStartFrame + SetFrameByDir(0, a);
+	a->sCurrentFrame    = start_frame;
+	a->sStartFrame      = start_frame;
+	a->pNext            = pAniTileHead;
+	pAniTileHead = a;
+	return a;
 }
+
 
 // Loop throug all ani tiles and remove...
 void DeleteAniTiles( )

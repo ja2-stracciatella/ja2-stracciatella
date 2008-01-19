@@ -119,7 +119,7 @@ enum
 } KeyFrameEnums;
 
 
-ANITILE *CreateAnimationTile( ANITILE_PARAMS *pAniParams );
+ANITILE* CreateAnimationTile(const ANITILE_PARAMS*);
 
 
 void DeleteAniTile( ANITILE *pAniTile );
