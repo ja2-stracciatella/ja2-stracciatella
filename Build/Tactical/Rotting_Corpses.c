@@ -20,7 +20,6 @@
 #include "Soldier_Add.h"
 #include "StrategicMap.h"
 #include "LOS.h"
-#include "OppList.h"
 #include "Structure.h"
 #include "Message.h"
 #include "Sound_Control.h"
@@ -1011,70 +1010,6 @@ static void MakeCorpseVisible(ROTTING_CORPSE* const c)
 {
 	c->def.bVisible = 1;
 	SetRenderFlags(RENDER_FLAG_FULL);
-}
-
-
-static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
-{
-	INT16										 sDistVisible;
-	INT16										 sGridNo;
-
-	// Should we say disgust quote?
-	if ( ( pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ROTTINGCORPSE ) )
-	{
-     return;
-  }
-
-  if ( pSoldier->ubProfile == NO_PROFILE )
-  {
-    return;
-  }
-
-  if ( AM_AN_EPC( pSoldier ) )
-  {
-    return;
-  }
-
-  if ( QuoteExp_HeadShotOnly[ pSoldier->ubProfile ] == 1 )
-  {
-    return;
-  }
-
-  // Every so often... do a corpse quote...
-  if ( Random( 400 ) <= 2 )
-  {
-	  // Loop through all corpses....
-	  CFOR_ALL_ROTTING_CORPSES(pCorpse)
-	  {
-      // Has this corpse rotted enough?
-	    if ( pCorpse->def.ubType == ROTTING_STAGE2 )
-	    {
-		    sGridNo = pCorpse->def.sGridNo;
-
-		    // is he close enough to see that gridno if he turns his head?
-		    sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel );
-
-		    if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-		    {
-			    // and we can trace a line of sight to his x,y coordinates?
-			    // (taking into account we are definitely aware of this guy now)
-			    if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, pCorpse->def.bLevel, 3, (UINT8) sDistVisible, TRUE ) )
-			    {
-				    TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );
-
-				    pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_ROTTINGCORPSE;
-
-            BeginMultiPurposeLocator( sGridNo, pCorpse->def.bLevel, FALSE );
-
-            // Slide to...
-            SlideToLocation( 0, sGridNo );
-
-            return;
-			    }
-        }
-		  }
-    }
-	}
 }
 
 

@@ -176,7 +176,6 @@ SLOW_ANIMATION: never set or cleared
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t
 SOLDIER_GREEN_RAY: never set
 SOLDIER_QUOTE_SAID_DROWNING: never set
-SOLDIER_QUOTE_SAID_ROTTINGCORPSE: never set, only in unused function
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
 STR_AR_MERC_RETREATING: string too long in German

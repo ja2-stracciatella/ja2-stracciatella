@@ -197,8 +197,6 @@ void MercDailyUpdate()
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_ANNOYING_MERC );
 			// ATE: Reset likes gun flag
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_LIKESGUN );
-			// ATE: Reset seen corpse flag
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_ROTTINGCORPSE );
 			// ATE; Reset found something nice flag...
 			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE );
 
