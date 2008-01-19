@@ -312,10 +312,9 @@ BOOLEAN LightReset(void)
 
 /* Creates a new node, and appends it to the template list. The index into the
  * list is returned. */
-static UINT16 LightCreateTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
+static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
-	LightTemplate* const t        = &g_light_templates[iLight];
-	const UINT16         n_lights = t->n_lights;
+	const UINT16 n_lights = t->n_lights;
 	Assert((t->lights == NULL) == (n_lights == 0));
 
 	t->lights = MemRealloc(t->lights, (n_lights + 1) * sizeof(*t->lights));
@@ -336,12 +335,12 @@ static UINT16 LightCreateTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ub
  * new one.  Returns the index into the list. */
 static UINT16 LightAddTemplateNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight)
 {
-	const LightTemplate* const t = &g_light_templates[iLight];
+	LightTemplate* const t = &g_light_templates[iLight];
 	for (UINT16 i = 0; i < t->n_lights; ++i)
 	{
 		if (t->lights[i].iDX == iX && t->lights[i].iDY == iY) return i;
 	}
-	return LightCreateTemplateNode(iLight, iX, iY, ubLight);
+	return LightCreateTemplateNode(t, iX, iY, ubLight);
 }
 
 
