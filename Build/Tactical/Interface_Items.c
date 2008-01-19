@@ -5872,82 +5872,67 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier)
+void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYPE* const obj, const SOLDIERTYPE* const s)
 {
-	wchar_t								pStr[ 250 ];
-	UINT16								usItem = pObject->usItem;
-	INT32									cnt = 0;
-	INT32									iNumAttachments = 0;
-
-	if( pSoldier != NULL )
+	if (s != NULL && s->uiStatusFlags & SOLDIER_DEAD)
 	{
-		if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
-		{
-			wcslcpy(pzStr, L"", Length);
-			return;
-		}
+		wcslcpy(dst, L"", Length);
+		return;
 	}
 
-	if ( usItem == MONEY )
+	const UINT16 usItem = obj->usItem;
+	if (usItem == MONEY)
 	{
-		SPrintMoney(pStr, pObject->uiMoneyAmount);
+		SPrintMoney(dst, obj->uiMoneyAmount);
 	}
-	else if ( Item[ usItem ].usItemClass == IC_MONEY )
+	else if (Item[usItem].usItemClass == IC_MONEY)
 	{ // alternate money like silver or gold
 		wchar_t pStr2[20];
-		SPrintMoney(pStr2, pObject->uiMoneyAmount);
-		swprintf( pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[ usItem ], pStr2 );
+		SPrintMoney(pStr2, obj->uiMoneyAmount);
+		swprintf(dst, Length, L"%ls (%ls)", ItemNames[usItem], pStr2);
 	}
-	else if ( usItem != NOTHING )
+	else if (usItem == NOTHING)
 	{
-		if ( !gGameOptions.fGunNut && Item[ usItem ].usItemClass == IC_GUN && usItem != ROCKET_LAUNCHER && usItem != ROCKET_RIFLE )
+		wcslcpy(dst, L"", Length);
+	}
+	else
+	{
+		wchar_t pStr[250];
+		if (!gGameOptions.fGunNut && Item[usItem].usItemClass == IC_GUN && usItem != ROCKET_LAUNCHER && usItem != ROCKET_RIFLE)
 		{
-			swprintf( pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[ usItem ], AmmoCaliber[ Weapon[ usItem ].ubCalibre ] );
+			swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[usItem], AmmoCaliber[Weapon[usItem].ubCalibre]);
 		}
 		else
 		{
 			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
 		}
 
-		if ( ( pObject->usItem == ROCKET_RIFLE || pObject->usItem == AUTO_ROCKET_RIFLE ) && pObject->ubImprintID < NO_PROFILE )
+		if ((usItem == ROCKET_RIFLE || usItem == AUTO_ROCKET_RIFLE) && obj->ubImprintID < NO_PROFILE)
 		{
 			wchar_t pStr2[20];
-			swprintf( pStr2, lengthof(pStr2), L" [%ls]", gMercProfiles[ pObject->ubImprintID ].zNickname );
-			wcscat( pStr, pStr2 );
+			swprintf(pStr2, lengthof(pStr2), L" [%ls]", gMercProfiles[obj->ubImprintID].zNickname);
+			wcscat(pStr, pStr2);
 		}
 
 		// Add attachment string....
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+		const wchar_t* const first_prefix = L" ( ";
+		const wchar_t*       prefix       = first_prefix;
+		for (const UINT16* i = obj->usAttachItem; i != endof(obj->usAttachItem); ++i)
 		{
-			if ( pObject->usAttachItem[ cnt ] != NOTHING )
-			{
-				iNumAttachments++;
+			const UINT16 attachment = *i;
+			if (attachment == NOTHING) continue;
 
-				if ( iNumAttachments == 1 )
-				{
-					wcscat( pStr, L" ( " );
-				}
-				else
-				{
-					wcscat( pStr, L", \n" );
-				}
-
-				wcscat( pStr, ItemNames[ pObject->usAttachItem[ cnt ] ] );
-			}
+			wcscat(pStr, prefix);
+			wcscat(pStr, ItemNames[attachment]);
+			prefix = L", \n";
+		}
+		if (prefix != first_prefix)
+		{
+			wcscat(pStr, pMessageStrings[MSG_END_ATTACHMENT_LIST]);
 		}
 
-		if ( iNumAttachments > 0 )
-		{
-			wcscat( pStr, pMessageStrings[ MSG_END_ATTACHMENT_LIST ] );
-		}
+		wcslcpy(dst, pStr, Length);
 	}
-	else
-	{
-		wcslcpy(pStr, L"", lengthof(pStr));
-	}
-
-	// Copy over...
-	wcslcpy(pzStr, pStr, Length);
 }
 
 
