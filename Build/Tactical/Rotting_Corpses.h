@@ -121,7 +121,6 @@ typedef struct
 
 	SGPPaletteEntry							*p8BPPPalette;
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
-	INT32												iCachedTileID;
 } ROTTING_CORPSE;
 
 

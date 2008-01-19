@@ -492,8 +492,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 
 	ANITILE* const ani = CreateAnimationTile(&AniParams);
   if (ani == NULL) goto fail;
-	c->pAniTile      = ani;
-	c->iCachedTileID = ani->sCachedTileID;
+	c->pAniTile = ani;
 
   LEVELNODE*       const n    = ani->pLevelNode;
   const LEVELNODE* const land = gpWorldLevelData[c->def.sGridNo].pLandHead;
@@ -529,7 +528,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	GetRootName(zFilename, AniParams.zCachedFile);
 
 	// Add structure data.....
-	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, c->iCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
+	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
 
 	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
 	if (pStructureFileRef != NULL)
@@ -621,7 +620,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 	if ( bBodyTypePalette == -1  )
 	{
 		// Use palette from HVOBJECT, then use substitution for pants, etc
-		memcpy( pCorpse->p8BPPPalette, gpTileCache[ pCorpse->iCachedTileID ].pImagery->vo->pPaletteEntry, sizeof( pCorpse->p8BPPPalette ) * 256 );
+		memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
 
 		// Substitute based on head, etc
 		SetPaletteReplacement( pCorpse->p8BPPPalette, pCorpse->def.HeadPal );
@@ -632,7 +631,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 	else if ( bBodyTypePalette == 0 )
 	{
 		// Use palette from hvobject
-		memcpy( pCorpse->p8BPPPalette, gpTileCache[ pCorpse->iCachedTileID ].pImagery->vo->pPaletteEntry, sizeof( pCorpse->p8BPPPalette ) * 256 );
+		memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
 	}
 	else
 	{
@@ -645,7 +644,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 		else
 		{
 			// Use palette from hvobject
-			memcpy( pCorpse->p8BPPPalette, gpTileCache[ pCorpse->iCachedTileID ].pImagery->vo->pPaletteEntry, sizeof( pCorpse->p8BPPPalette ) * 256 );
+			memcpy(pCorpse->p8BPPPalette, gpTileCache[pCorpse->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(pCorpse->p8BPPPalette) * 256);
 		}
 	}
 
