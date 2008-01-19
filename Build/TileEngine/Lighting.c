@@ -1276,9 +1276,8 @@ INT32 iLightDecay;
 
 /* Traverses the linked list until a node with the LIGHT_NEW_RAY marker, and
  * returns the pointer. If the end of list is reached, NULL is returned. */
-static UINT16 LightFindNextRay(INT32 iLight, UINT16 usIndex)
+static UINT16 LightFindNextRay(const LightTemplate* const t, const UINT16 usIndex)
 {
-	const LightTemplate* const t = &g_light_templates[iLight];
 	UINT16 usNodeIndex = usIndex;
 	while ((usNodeIndex < t->n_rays) && !(t->rays[usNodeIndex] & LIGHT_NEW_RAY))
 		usNodeIndex++;
@@ -2011,7 +2010,7 @@ BOOLEAN fOnlyWalls;
 			{
 				if(LightTileBlocked( (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY)))
 				{
-					uiCount=LightFindNextRay(iLight, uiCount);
+					uiCount = LightFindNextRay(t, uiCount);
 
           fOnlyWalls = TRUE;
 					fBlocked = TRUE;
@@ -2233,7 +2232,7 @@ static BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 				 (INT16)min(max(iY,0),WORLD_ROWS-1)
 				))
 			{
-				uiCount=LightFindNextRay(0, uiCount);
+				uiCount = LightFindNextRay(t, uiCount);
 				SetRenderFlags(RENDER_FLAG_FULL);
 			}
 		}
@@ -2326,7 +2325,7 @@ BOOLEAN LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset)
 			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			if(LightGreenTile((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
 			{
-				uiCount=LightFindNextRay(0, uiCount);
+				uiCount = LightFindNextRay(t, uiCount);
 				SetRenderFlags(RENDER_FLAG_MARKED);
 			}
 		}
@@ -2418,7 +2417,7 @@ BOOLEAN LightHideRays(INT16 iX, INT16 iY)
 			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			if(LightHideWall((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
 			{
-				uiCount=LightFindNextRay(0, uiCount);
+				uiCount = LightFindNextRay(t, uiCount);
 				SetRenderFlags(RENDER_FLAG_MARKED);
 			}
 		}
@@ -2452,7 +2451,7 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 				 (INT16)min(max(iY,0),WORLD_ROWS-1)
 				))
 			{
-				uiCount=LightFindNextRay(0, uiCount);
+				uiCount = LightFindNextRay(t, uiCount);
 				SetRenderFlags(RENDER_FLAG_FULL);
 			}
 		}
@@ -2496,7 +2495,7 @@ BOOLEAN fOnlyWalls;
 			{
 				if(LightTileBlocked( (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY)))
 				{
-					uiCount=LightFindNextRay(iLight, uiCount);
+					uiCount = LightFindNextRay(t, uiCount);
 
           fOnlyWalls = TRUE;
 					fBlocked = TRUE;
