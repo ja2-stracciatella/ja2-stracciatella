@@ -273,7 +273,6 @@ void AddSmokeEffectToTile(const SMOKEEFFECT* const smoke, const INT8 bType, cons
 
 
 	// Bare bones flags are...
-	//AniParams.uiFlags = ANITILE_FORWARD | ANITILE_OPTIMIZEFORSMOKEEFFECT | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
 	//AniParams.uiFlags = ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
 
 
