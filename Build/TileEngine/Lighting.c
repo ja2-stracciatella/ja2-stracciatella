@@ -2536,12 +2536,11 @@ BOOLEAN fOnlyWalls;
 
 /* Calculates the rect size of a given light, used in dirtying the screen after
  * updating a light. */
-static BOOLEAN LightCalcRect(INT32 iLight)
+static BOOLEAN LightCalcRect(LightTemplate* const t)
 {
 SGPRect MaxRect;
 INT16 sXValue, sYValue, sDummy;
 
-	LightTemplate* const t = &g_light_templates[iLight];
 	if (t->lights == NULL) return FALSE;
 
 	MaxRect.iLeft=99999;
@@ -2661,7 +2660,7 @@ static INT32 LightLoad(const char* pFilename)
 	t->name = MemAlloc(strlen(pFilename) + 1);
 	strcpy(t->name, pFilename);
 
-	LightCalcRect(iLight);
+	LightCalcRect(t);
 	return iLight;
 }
 
