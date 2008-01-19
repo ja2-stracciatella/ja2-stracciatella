@@ -2537,50 +2537,6 @@ UINT16 usNodeIndex;
 }
 
 
-// Makes all the near-side trees around a given coordinate translucent.
-static BOOLEAN LightTranslucentTrees(INT16 iX, INT16 iY)
-{
-INT32 iCountX, iCountY;
-UINT32 uiTile;
-LEVELNODE *pNode;
-BOOLEAN fRerender=FALSE;
-UINT32	fTileFlags;
-
-	for(iCountY=iY; iCountY < (INT16)(iY+LIGHT_TREE_REVEAL); iCountY++)
-		for(iCountX=iX; iCountX < (INT16)(iX+LIGHT_TREE_REVEAL); iCountX++)
-		{
-			uiTile=MAPROWCOLTOPOS(iCountY, iCountX);
-			pNode=gpWorldLevelData[uiTile].pStructHead;
-			while(pNode!=NULL)
-			{
-				GetTileFlags( pNode->usIndex, &fTileFlags );
-
-				if ( fTileFlags & FULL3D_TILE )
-				{
-					if ( !( pNode->uiFlags & LEVELNODE_REVEALTREES ) )
-					{
-						//pNode->uiFlags |= ( LEVELNODE_REVEALTREES | LEVELNODE_ERASEZ );
-						pNode->uiFlags |= ( LEVELNODE_REVEALTREES  );
-						gpWorldLevelData[uiTile].uiFlags |= MAPELEMENT_REDRAW;
-					}
-
-					fRerender=TRUE;
-				}
-				pNode=pNode->pNext;
-			}
-		}
-
-		if(fRerender)
-		{
-			//SetRenderFlags(RENDER_FLAG_MARKED);
-			SetRenderFlags(RENDER_FLAG_FULL);
-			return(TRUE);
-		}
-		else
-			return(FALSE);
-}
-
-
 // Removes the translucency from any trees in the area.
 static BOOLEAN LightHideTrees(INT16 iX, INT16 iY)
 {

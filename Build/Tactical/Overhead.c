@@ -2333,7 +2333,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 	if (s->bLevel == 0)
 	{
 		//CalcTranslucentWalls( s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
-		//LightTranslucentTrees(s->dXPos / CELL_X_SIZE, s->dYPos / CELL_Y_SIZE);
 	}
 
 	// Set interface to reflect new selection!
