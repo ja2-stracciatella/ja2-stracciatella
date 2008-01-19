@@ -432,176 +432,133 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse);
 
 ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 {
-	ROTTING_CORPSE		*pCorpse;
-	ANITILE_PARAMS		AniParams;
-	UINT8							ubLevelID;
-	STRUCTURE_FILE_REF * pStructureFileRef = NULL;
-	DB_STRUCTURE_REF	 *pDBStructureRef;
-	UINT8									ubLoop;
-	INT16							sTileGridNo;
-	DB_STRUCTURE_TILE	**	ppTile;
-	UINT16						usStructIndex;
-	UINT32						uiDirectionUseFlag;
+	if (pCorpseDef->sGridNo == NOWHERE)   goto fail;
+	if (pCorpseDef->ubType  == NO_CORPSE) goto fail;
 
-	if (pCorpseDef->sGridNo == NOWHERE)   return NULL;
-	if (pCorpseDef->ubType  == NO_CORPSE) return NULL;
+	const INT32 idx = GetFreeRottingCorpse();
+	if (idx == -1) goto fail;
 
-	const INT32 iIndex = GetFreeRottingCorpse();
-	if (iIndex == -1) return NULL;
-
-	pCorpse = &gRottingCorpse[ iIndex ];
+	ROTTING_CORPSE* const c = &gRottingCorpse[idx];
 
 	// Copy elements in
-	pCorpse->def = *pCorpseDef;
-
-	uiDirectionUseFlag = ANITILE_USE_DIRECTION_FOR_START_FRAME;
+	c->def = *pCorpseDef;
 
 	// If we are a soecial type...
-	switch( pCorpseDef->ubType )
+	UINT32 uiDirectionUseFlag;
+	switch (pCorpseDef->ubType)
 	{
 		case SMERC_FALL:
 		case SMERC_FALLF:
 		case MMERC_FALL:
 		case MMERC_FALLF:
 		case FMERC_FALL:
-		case FMERC_FALLF:
-
-			uiDirectionUseFlag = ANITILE_USE_4DIRECTION_FOR_START_FRAME;
+		case FMERC_FALLF: uiDirectionUseFlag = ANITILE_USE_4DIRECTION_FOR_START_FRAME;
+		default:          uiDirectionUseFlag = ANITILE_USE_DIRECTION_FOR_START_FRAME;
 	}
 
-
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// OK, AS WE ADD, CHECK FOR TOD AND DECAY APPROPRIATELY
-		if ( ( ( GetWorldTotalMin( ) - pCorpse->def.uiTimeOfDeath ) > DELAY_UNTIL_ROTTING ) && ( pCorpse->def.ubType < ROTTING_STAGE2 ) )
+		if (GetWorldTotalMin() - c->def.uiTimeOfDeath > DELAY_UNTIL_ROTTING &&
+				c->def.ubType < ROTTING_STAGE2 &&
+				c->def.ubType <= FMERC_FALLF)
 		{
-      if ( pCorpse->def.ubType <= FMERC_FALLF )
-      {
-			  // Rott!
-			  pCorpse->def.ubType = ROTTING_STAGE2;
-      }
+			// Rott!
+			c->def.ubType = ROTTING_STAGE2;
 		}
 
     // If time of death is a few days, now, don't add at all!
-		if ( ( ( GetWorldTotalMin( ) - pCorpse->def.uiTimeOfDeath ) > DELAY_UNTIL_DONE_ROTTING ) )
-    {
-			return NULL;
-    }
+		if (GetWorldTotalMin() - c->def.uiTimeOfDeath > DELAY_UNTIL_DONE_ROTTING) goto fail;
 	}
 
 	// Check if on roof or not...
-	if ( pCorpse->def.bLevel == 0 )
+	const UINT8 ubLevelID = (c->def.bLevel == 0 ? ANI_STRUCT_LEVEL : ANI_ONROOF_LEVEL);
+
+	ANITILE_PARAMS AniParams;
+	memset(&AniParams, 0, sizeof(AniParams));
+	AniParams.sGridNo        = c->def.sGridNo;
+	AniParams.ubLevelID      = ubLevelID;
+	AniParams.sDelay         = 150;
+	AniParams.sStartFrame    = 0;
+	AniParams.uiFlags        = ANITILE_PAUSED | ANITILE_OPTIMIZEFORSLOWMOVING | ANITILE_ANIMATE_Z | ANITILE_ERASEITEMFROMSAVEBUFFFER | uiDirectionUseFlag;
+	AniParams.sX             = CenterX(c->def.sGridNo);
+	AniParams.sY             = CenterY(c->def.sGridNo);
+	AniParams.sZ             = c->def.sHeightAdjustment;
+	AniParams.v.user.uiData3 = c->def.bDirection;
+
+	if (!gGameSettings.fOptions[TOPTION_BLOOD_N_GORE])
 	{
-		//ubLevelID = ANI_OBJECT_LEVEL;
-		ubLevelID = ANI_STRUCT_LEVEL;
+		AniParams.zCachedFile = zNoBloodCorpseFilenames[c->def.ubType];
 	}
 	else
 	{
-		ubLevelID = ANI_ONROOF_LEVEL;
+		AniParams.zCachedFile = zCorpseFilenames[c->def.ubType];
 	}
 
+	ANITILE* const ani = CreateAnimationTile(&AniParams);
+  if (ani == NULL) goto fail;
+  c->pAniTile = ani;
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-	AniParams.sGridNo							= pCorpse->def.sGridNo;
-	AniParams.ubLevelID						= ubLevelID;
-	AniParams.sDelay							= (INT16)( 150 );
-	AniParams.sStartFrame					= 0;
-	AniParams.uiFlags             = ANITILE_PAUSED | ANITILE_OPTIMIZEFORSLOWMOVING | ANITILE_ANIMATE_Z | ANITILE_ERASEITEMFROMSAVEBUFFFER | uiDirectionUseFlag;
-	AniParams.sX									= CenterX( pCorpse->def.sGridNo );
-	AniParams.sY									= CenterY( pCorpse->def.sGridNo );
-	AniParams.sZ									= (INT16)pCorpse->def.sHeightAdjustment;
-	AniParams.v.user.uiData3 = pCorpse->def.bDirection;
-
-	if ( !gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
-	{
-		AniParams.zCachedFile = zNoBloodCorpseFilenames[pCorpse->def.ubType];
-	}
-	else
-	{
-		AniParams.zCachedFile = zCorpseFilenames[pCorpse->def.ubType];
-	}
-
-	pCorpse->pAniTile = CreateAnimationTile( &AniParams );
-
-  if ( pCorpse->pAniTile == NULL )
-  {
-  	pCorpse->fActivated = FALSE;
-		return NULL;
-  }
+  LEVELNODE*       const n    = ani->pLevelNode;
+  const LEVELNODE* const land = gpWorldLevelData[c->def.sGridNo].pLandHead;
 
 	// Set flag and index values
-	pCorpse->pAniTile->pLevelNode->uiFlags		 |= ( LEVELNODE_ROTTINGCORPSE );
+	n->uiFlags             |= LEVELNODE_ROTTINGCORPSE;
+	n->ubShadeLevel         = land->ubShadeLevel;
+	n->ubSumLights          = land->ubSumLights;
+	n->ubMaxLights          = land->ubMaxLights;
+	n->ubNaturalShadeLevel  = land->ubNaturalShadeLevel;
 
-	pCorpse->pAniTile->pLevelNode->ubShadeLevel					=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubShadeLevel;
-	pCorpse->pAniTile->pLevelNode->ubSumLights					=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubSumLights;
-	pCorpse->pAniTile->pLevelNode->ubMaxLights					=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubMaxLights;
-	pCorpse->pAniTile->pLevelNode->ubNaturalShadeLevel	=	gpWorldLevelData[ pCorpse->def.sGridNo ].pLandHead->ubNaturalShadeLevel;
+	ani->v.user.uiData = idx;
 
-	pCorpse->pAniTile->v.user.uiData = iIndex;
-	pCorpse->iID																= iIndex;
+	c->iID = idx;
 
-	pCorpse->fActivated = TRUE;
-
-	pCorpse->iCachedTileID = pCorpse->pAniTile->sCachedTileID;
-
-	if ( pCorpse->iCachedTileID == -1 )
-	{
-		DeleteAniTile( pCorpse->pAniTile );
-  	pCorpse->fActivated = FALSE;
-		return NULL;
-	}
+	c->iCachedTileID = ani->sCachedTileID;
+	if (c->iCachedTileID == -1) goto fail_ani;
 
 	// Get palette and create palettes and do substitutions
-	if ( !CreateCorpsePalette( pCorpse ) )
-	{
-		DeleteAniTile( pCorpse->pAniTile );
-  	pCorpse->fActivated = FALSE;
-		return NULL;
-	}
+	if (!CreateCorpsePalette(c)) goto fail_ani;
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 
-	if ( pCorpse->def.usFlags & ROTTING_CORPSE_VEHICLE )
+	if (c->def.usFlags & ROTTING_CORPSE_VEHICLE)
 	{
-		pCorpse->pAniTile->uiFlags |= ( ANITILE_FORWARD | ANITILE_LOOPING );
-
-		// Turn off pause...
-		pCorpse->pAniTile->uiFlags &= (~ANITILE_PAUSED);
+		ani->uiFlags |= ANITILE_FORWARD | ANITILE_LOOPING;
+		ani->uiFlags &= ~ANITILE_PAUSED;
 	}
 
-	InvalidateWorldRedundency( );
+	InvalidateWorldRedundency();
 
 	// OK, loop through gridnos for corpse and remove blood.....
 
 	// Get root filename... this removes path and extension
-	// USed to find struct data fo rthis corpse...
+	// Used to find struct data for this corpse...
 	char zFilename[150];
-	GetRootName( zFilename, AniParams.zCachedFile );
+	GetRootName(zFilename, AniParams.zCachedFile);
 
 	// Add structure data.....
-	CheckForAndAddTileCacheStructInfo( pCorpse->pAniTile->pLevelNode, pCorpse->def.sGridNo, ( UINT16 ) ( pCorpse->iCachedTileID ), GetCorpseStructIndex( pCorpseDef, TRUE ) );
+	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, c->iCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
 
-	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename );
-
-	if ( pStructureFileRef != NULL )
+	const STRUCTURE_FILE_REF* const pStructureFileRef = GetCachedTileStructureRefFromFilename(zFilename);
+	if (pStructureFileRef != NULL)
 	{
-		usStructIndex = GetCorpseStructIndex( pCorpseDef, TRUE );
-
-		pDBStructureRef = &(pStructureFileRef->pDBStructureRef[ usStructIndex ] );
-
-		for (ubLoop = 0; ubLoop < pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++)
+		const UINT16                  usStructIndex   = GetCorpseStructIndex(pCorpseDef, TRUE);
+		const DB_STRUCTURE_REF* const pDBStructureRef = &pStructureFileRef->pDBStructureRef[usStructIndex];
+		for (UINT8 ubLoop = 0; ubLoop < pDBStructureRef->pDBStructure->ubNumberOfTiles; ++ubLoop)
 		{
-			ppTile = pDBStructureRef->ppTile;
-
-			sTileGridNo = pCorpseDef->sGridNo + ppTile[ ubLoop ]->sPosRelToBase;
-
-			//Remove blood
-			RemoveBlood( sTileGridNo, pCorpseDef->bLevel );
+			DB_STRUCTURE_TILE* const* const ppTile      = pDBStructureRef->ppTile;
+			const INT16                     sTileGridNo = pCorpseDef->sGridNo + ppTile[ubLoop]->sPosRelToBase;
+			RemoveBlood(sTileGridNo, pCorpseDef->bLevel);
 		}
 	}
 
-	// OK, we're done!
-	return pCorpse;
+	c->fActivated = TRUE;
+	return c;
+
+fail_ani:
+	DeleteAniTile(ani);
+fail:
+	return NULL;
 }
 
 
