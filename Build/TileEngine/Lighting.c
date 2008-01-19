@@ -344,10 +344,9 @@ static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const
 
 
 // Adds a node to the ray casting list.
-static UINT16 LightAddRayNode(INT32 iLight, INT16 iX, INT16 iY, UINT8 ubLight, UINT16 usFlags)
+static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
 {
-	LightTemplate* const t      = &g_light_templates[iLight];
-	const UINT16         n_rays = t->n_rays;
+	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
 
 	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
@@ -1243,7 +1242,7 @@ INT32 iLightDecay;
 	iX/=DISTANCE_SCALE;
 	iY/=DISTANCE_SCALE;
 
-	LightAddRayNode(iLight, iX, iY, ubShade, uiFlags);
+	LightAddRayNode(&g_light_templates[iLight], iX, iY, ubShade, uiFlags);
 	return(TRUE);
 }
 
