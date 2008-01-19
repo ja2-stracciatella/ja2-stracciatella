@@ -1214,14 +1214,6 @@ UINT32 uiIndex;
 }
 
 
-/* Returns a pointer to the last node in a light list. If the list is empty,
- * NULL is returned. */
-static UINT16 LightGetLastNode(INT32 iLight)
-{
-	return g_light_templates[iLight].n_rays;
-}
-
-
 // Creates a new node, and adds it to the end of a light list.
 static BOOLEAN LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
@@ -1338,9 +1330,7 @@ BOOLEAN fInsertNodes=FALSE;
 
 	//DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY));
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
-		if(fInsertNodes)
-			usCurNode=LightGetLastNode(iLight);
-
+	if (fInsertNodes) usCurNode = t->n_rays;
 
 		/* Special-case horizontal, vertical, and diagonal lines, for speed
       and to avoid nasty boundary conditions and division by 0 */
