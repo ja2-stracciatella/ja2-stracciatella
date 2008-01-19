@@ -511,8 +511,6 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 
 	ani->v.user.uiData = idx;
 
-	c->iID = idx;
-
 	c->iCachedTileID = ani->sCachedTileID;
 	if (c->iCachedTileID == -1) goto fail_ani;
 
@@ -926,7 +924,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 		  //EVENT_GetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode );
 
 		  // Setup action data to point back to corpse....
-		  pSoldier->uiPendingActionData1	=  pCorpse->iID;
+		  pSoldier->uiPendingActionData1 = CORPSE2ID(pCorpse);
 		  pSoldier->sPendingActionData2		=	 pCorpse->def.sGridNo;
 
 		  pCorpse->def.bNumServicingCrows++;
@@ -938,10 +936,8 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 
 void HandleCrowLeave( SOLDIERTYPE *pSoldier )
 {
-	ROTTING_CORPSE		*pCorpse;
-
 	// Check if this crow is still referencing the same corpse...
-	pCorpse = &(gRottingCorpse[ pSoldier->uiPendingActionData1 ] );
+	ROTTING_CORPSE* const pCorpse = ID2CORPSE(pSoldier->uiPendingActionData1);
 
 	// Double check grindo...
 	if ( pSoldier->sPendingActionData2 == pCorpse->def.sGridNo )
@@ -1195,7 +1191,7 @@ static ROTTING_CORPSE* FindCorpseBasedOnStructure(INT16 sGridNo, STRUCTURE* pStr
 	if ( pLevelNode != NULL )
 	{
 		// Get our corpse....
-		pCorpse = &gRottingCorpse[pLevelNode->pAniTile->v.user.uiData];
+		pCorpse = ID2CORPSE(pLevelNode->pAniTile->v.user.uiData);
 	}
 
 	return( pCorpse );
@@ -1540,12 +1536,9 @@ void DecapitateCorpse(const INT16 sGridNo, const INT8 bLevel)
 
 void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 {
-	ROTTING_CORPSE *pCorpse;
+	const ROTTING_CORPSE* const pCorpse = ID2CORPSE(pSoldier->uiPendingActionData4);
 	INT8						bObjSlot;
 	OBJECTTYPE			Object;
-
-	// OK, get corpse
-	pCorpse = &( gRottingCorpse[ pSoldier->uiPendingActionData4 ] );
 
 	bObjSlot = FindObj( pSoldier, JAR );
 

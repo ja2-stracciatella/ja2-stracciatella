@@ -9272,7 +9272,7 @@ void EVENT_SoldierBeginTakeBlood( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ub
 
 	if ( pCorpse != NULL )
 	{
-		pSoldier->uiPendingActionData4 = pCorpse->iID;
+		pSoldier->uiPendingActionData4 = CORPSE2ID(pCorpse);
 
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
 		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );

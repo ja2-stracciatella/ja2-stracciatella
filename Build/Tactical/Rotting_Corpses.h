@@ -1,7 +1,9 @@
 #ifndef _ROTTING_CORPSES_H
 #define _ROTTING_CORPSES_H
 
+#include "Debug.h"
 #include "Tile_Animation.h"
+
 
 #define	NUM_CORPSE_SHADES		17
 
@@ -120,8 +122,6 @@ typedef struct
 	SGPPaletteEntry							*p8BPPPalette;
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
 	INT32												iCachedTileID;
-
-	INT32												iID;
 } ROTTING_CORPSE;
 
 
@@ -151,6 +151,24 @@ void HandleCrowFlyAway( SOLDIERTYPE *pSoldier );
 extern ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 extern INT32					giNumRottingCorpse;
 extern UINT8					gb4DirectionsFrom8[8];
+
+static inline UINT32 Corpse2ID(const ROTTING_CORPSE* const c)
+{
+	Assert(c <= gRottingCorpse && c < endof(gRottingCorpse));
+	Assert(c->fActivated);
+	return c - gRottingCorpse;
+}
+
+static inline ROTTING_CORPSE* ID2Corpse(const UINT32 id)
+{
+	Assert(id < lengthof(gRottingCorpse));
+	ROTTING_CORPSE* const c = &gRottingCorpse[id];
+	Assert(c->fActivated);
+	return c;
+}
+
+#define CORPSE2ID(c) (Corpse2ID((c)))
+#define ID2CORPSE(i) (ID2Corpse((i)))
 
 #define BASE_FOR_ALL_ROTTING_CORPSES(type, iter)                      \
 	for (type*       iter        = gRottingCorpse,                      \
