@@ -154,7 +154,7 @@ extern UINT8					gb4DirectionsFrom8[8];
 
 static inline UINT32 Corpse2ID(const ROTTING_CORPSE* const c)
 {
-	Assert(c <= gRottingCorpse && c < endof(gRottingCorpse));
+	Assert(gRottingCorpse <= c && c < endof(gRottingCorpse));
 	Assert(c->fActivated);
 	return c - gRottingCorpse;
 }
