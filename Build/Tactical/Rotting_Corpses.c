@@ -628,14 +628,7 @@ static void RemoveCorpse(ROTTING_CORPSE* c);
 
 void RemoveCorpses( )
 {
-	INT32 iCount;
-
-	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
-	{
-		ROTTING_CORPSE* const c = &gRottingCorpse[iCount];
-		if (c->fActivated) RemoveCorpse(c);
-	}
-
+	FOR_ALL_ROTTING_CORPSES(c) RemoveCorpse(c);
 	giNumRottingCorpse = 0;
 }
 
@@ -910,31 +903,22 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier )
 {
-	INT32		uiRange, uiLowestRange = 999999;
-	INT16		sLowestGridNo = NOWHERE;
-	INT32		cnt;
-	ROTTING_CORPSE		*pCorpse;
+	INT32 uiLowestRange = 999999;
+	INT16 sLowestGridNo = NOWHERE;
 
 	// OK, loop through our current listing of bodies
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
+	CFOR_ALL_ROTTING_CORPSES(c)
 	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
-
-		if ( pCorpse->fActivated )
+		// Check rotting state
+		if (c->def.ubType == ROTTING_STAGE2)
 		{
-				// Check rotting state
-				if ( pCorpse->def.ubType == ROTTING_STAGE2 )
-				{
-					uiRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, pCorpse->def.sGridNo );
-
-					if ( uiRange < uiLowestRange )
-					{
-						sLowestGridNo = pCorpse->def.sGridNo;
-						uiLowestRange = uiRange;
-					}
-				}
+			const INT32 uiRange = GetRangeInCellCoordsFromGridNoDiff(pSoldier->sGridNo, c->def.sGridNo);
+			if (uiRange < uiLowestRange)
+			{
+				sLowestGridNo = c->def.sGridNo;
+				uiLowestRange = uiRange;
+			}
 		}
-
 	}
 
 	return( sLowestGridNo );
@@ -1161,10 +1145,8 @@ static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
 
 static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 {
-	INT32                    cnt;
 	INT16										 sDistVisible;
 	INT16										 sGridNo;
-	ROTTING_CORPSE					 *pCorpse;
 
 	// Should we say disgust quote?
 	if ( ( pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_ROTTINGCORPSE ) )
@@ -1191,15 +1173,8 @@ static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
   if ( Random( 400 ) <= 2 )
   {
 	  // Loop through all corpses....
-	  for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
+	  CFOR_ALL_ROTTING_CORPSES(pCorpse)
 	  {
-		  pCorpse = &(gRottingCorpse[ cnt ] );
-
-		  if ( !pCorpse->fActivated )
-		  {
-			  continue;
-		  }
-
       // Has this corpse rotted enough?
 	    if ( pCorpse->def.ubType == ROTTING_STAGE2 )
 	    {
@@ -1724,66 +1699,37 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 }
 
 
-INT16 GetGridNoOfCorpseGivenProfileID( UINT8 ubProfileID )
+INT16 GetGridNoOfCorpseGivenProfileID(const UINT8 ubProfileID)
 {
-	INT32                    cnt;
-	ROTTING_CORPSE					 *pCorpse;
-
 	// Loop through all corpses....
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
+	CFOR_ALL_ROTTING_CORPSES(c)
 	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
-
-		if ( pCorpse->fActivated )
-		{
-      if ( pCorpse->def.ubProfile == ubProfileID )
-      {
-        return( pCorpse->def.sGridNo );
-      }
-    }
+		if (c->def.ubProfile == ubProfileID) return c->def.sGridNo;
   }
-
-  return( NOWHERE );
+  return NOWHERE;
 }
 
-void DecayRottingCorpseAIWarnings( void )
+
+void DecayRottingCorpseAIWarnings(void)
 {
-	INT32				cnt;
-	ROTTING_CORPSE *	pCorpse;
-
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
+	FOR_ALL_ROTTING_CORPSES(c)
 	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
-
-		if ( pCorpse->fActivated && pCorpse->def.ubAIWarningValue > 0 )
-		{
-			pCorpse->def.ubAIWarningValue--;
-		}
+		if (c->def.ubAIWarningValue > 0) --c->def.ubAIWarningValue;
 	}
-
 }
 
-UINT8 GetNearestRottingCorpseAIWarning( INT16 sGridNo )
+
+UINT8 GetNearestRottingCorpseAIWarning(const INT16 sGridNo)
 {
-	INT32				cnt;
-	ROTTING_CORPSE *	pCorpse;
-	UINT8				ubHighestWarning = 0;
-
-	for ( cnt = 0; cnt < giNumRottingCorpse; cnt++ )
+	UINT8 ubHighestWarning = 0;
+	CFOR_ALL_ROTTING_CORPSES(c)
 	{
-		pCorpse = &(gRottingCorpse[ cnt ] );
-
-		if ( pCorpse->fActivated && pCorpse->def.ubAIWarningValue > 0 )
+		if (c->def.ubAIWarningValue > 0                                    &&
+				PythSpacesAway(sGridNo, c->def.sGridNo) <= CORPSE_WARNING_DIST &&
+				c->def.ubAIWarningValue > ubHighestWarning)
 		{
-			if ( PythSpacesAway( sGridNo, pCorpse->def.sGridNo ) <= CORPSE_WARNING_DIST )
-			{
-				if ( pCorpse->def.ubAIWarningValue > ubHighestWarning )
-				{
-					ubHighestWarning = pCorpse->def.ubAIWarningValue;
-				}
-			}
+			ubHighestWarning = c->def.ubAIWarningValue;
 		}
 	}
-
-	return( ubHighestWarning );
+	return ubHighestWarning;
 }

@@ -1378,8 +1378,6 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 	HWFILE	hFile;
 //	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumberOfCorpses=0;
-	INT32		iCount;
 
 /*
 	//Convert the current sector location into a file name
@@ -1400,14 +1398,9 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 		return( FALSE );
 	}
 
-
 	//Determine how many rotting corpses there are
-	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
-	{
-		if( gRottingCorpse[iCount].fActivated == TRUE )
-			uiNumberOfCorpses++;
-	}
-
+	UINT32 uiNumberOfCorpses = 0;
+	CFOR_ALL_ROTTING_CORPSES(c) ++uiNumberOfCorpses;
 
 	//Save the number of the Rotting Corpses array table
 	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
@@ -1418,17 +1411,13 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 	}
 
 	//Loop through all the carcases in the array and save the active ones
-	for(iCount=0; iCount < giNumRottingCorpse; iCount++)
+	CFOR_ALL_ROTTING_CORPSES(c)
 	{
-		const ROTTING_CORPSE* const c = &gRottingCorpse[iCount];
-		if (c->fActivated)
+		//Save the RottingCorpse info array
+		if (!InjectRottingCorpseIntoFile(hFile, &c->def))
 		{
-			//Save the RottingCorpse info array
-			if (!InjectRottingCorpseIntoFile(hFile, &c->def))
-			{
-				FileClose( hFile );
-				return( FALSE );
-			}
+			FileClose(hFile);
+			return FALSE;
 		}
 	}
 

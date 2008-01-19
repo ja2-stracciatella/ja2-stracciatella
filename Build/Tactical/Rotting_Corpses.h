@@ -152,6 +152,15 @@ extern ROTTING_CORPSE	gRottingCorpse[ MAX_ROTTING_CORPSES ];
 extern INT32					giNumRottingCorpse;
 extern UINT8					gb4DirectionsFrom8[8];
 
+#define BASE_FOR_ALL_ROTTING_CORPSES(type, iter)                      \
+	for (type*       iter        = gRottingCorpse,                      \
+	         * const end__##iter = gRottingCorpse + giNumRottingCorpse; \
+	     iter != end__##iter;                                           \
+	     ++iter)                                                        \
+	  if (!iter->fActivated) continue; else
+#define  FOR_ALL_ROTTING_CORPSES(iter) BASE_FOR_ALL_ROTTING_CORPSES(      ROTTING_CORPSE, iter)
+#define CFOR_ALL_ROTTING_CORPSES(iter) BASE_FOR_ALL_ROTTING_CORPSES(const ROTTING_CORPSE, iter)
+
 ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo , INT8 bLevel );
 BOOLEAN IsValidDecapitationCorpse(const ROTTING_CORPSE* c);
 void DecapitateCorpse(INT16 sGridNo, INT8 bLevel);
