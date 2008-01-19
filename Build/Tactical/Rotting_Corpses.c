@@ -357,24 +357,6 @@ static ROTTING_CORPSE* GetFreeRottingCorpse(void)
 }
 
 
-static void RecountRottingCorpses(void)
-{
-INT32 uiCount;
-
-	if ( giNumRottingCorpse > 0 )
-	{
-		for(uiCount=giNumRottingCorpse-1; (uiCount >=0) ; uiCount--)
-		{
-			if( ( gRottingCorpse[uiCount].fActivated == FALSE ) )
-			{
-				giNumRottingCorpse=(UINT32)(uiCount+1);
-				break;
-			}
-		}
-	}
-}
-
-
 UINT16 GetCorpseStructIndex(const ROTTING_CORPSE_DEFINITION* pCorpseDef, BOOLEAN fForImage)
 {
 	INT8		bDirection;
