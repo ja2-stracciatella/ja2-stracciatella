@@ -1625,7 +1625,7 @@ BOOLEAN fInsertNodes=FALSE;
 
 
 // Creates an elliptical light, taking two radii.
-static BOOLEAN LightGenerateElliptical(INT32 iLight, UINT8 iIntensity, INT16 iA, INT16 iB)
+static BOOLEAN LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
 {
 INT16 iX, iY;
 INT32 WorkingX, WorkingY;
@@ -1637,8 +1637,6 @@ DOUBLE Temp;
 	iY=0;
 	ASquared = (DOUBLE) iA * iA;
 	BSquared = (DOUBLE) iB * iB;
-
-	LightTemplate* const t = &g_light_templates[iLight];
 
    /* Draw the four symmetric arcs for which X advances faster (that is,
       for which X is the major axis) */
@@ -1854,14 +1852,14 @@ INT32 LightCreateOmni(UINT8 ubIntensity, INT16 iRadius)
 INT32 iLight;
 
 	iLight=LightGetFree();
+	LightTemplate* const t = &g_light_templates[iLight];
 	if(iLight!=(-1))
 	{
-		LightGenerateElliptical(iLight, ubIntensity, (INT16)(iRadius*DISTANCE_SCALE), (INT16)(iRadius*DISTANCE_SCALE));
+		LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
 	}
 
 	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
-	LightTemplate* const t = &g_light_templates[iLight];
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
@@ -1896,12 +1894,12 @@ static INT32 LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRad
 INT32 iLight;
 
 	iLight=LightGetFree();
+	LightTemplate* const t = &g_light_templates[iLight];
 	if(iLight!=(-1))
-		LightGenerateElliptical(iLight, ubIntensity, (INT16)(iRadius1*DISTANCE_SCALE), (INT16)(iRadius2*DISTANCE_SCALE));
+		LightGenerateElliptical(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 
 	char usName[14];
 	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
-	LightTemplate* const t = &g_light_templates[iLight];
 	t->name = MemAlloc(strlen(usName) + 1);
 	strcpy(t->name, usName);
 
