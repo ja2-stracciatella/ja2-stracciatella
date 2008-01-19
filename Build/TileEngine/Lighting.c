@@ -1239,7 +1239,7 @@ INT32 iLightDecay;
 
 
 // Creates a new node, and inserts it after the specified node.
-static BOOLEAN LightInsertNode(INT32 iLight, UINT16 usLightIns, INT16 iHotSpotX, INT16 iHotSpotY, INT16 iX, INT16 iY, UINT8 ubIntensity, UINT16 uiFlags)
+static BOOLEAN LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
 DOUBLE dDistance;
 UINT8 ubShade;
@@ -1258,7 +1258,7 @@ INT32 iLightDecay;
 	iX/=DISTANCE_SCALE;
 	iY/=DISTANCE_SCALE;
 
-	LightInsertRayNode(&g_light_templates[iLight], usLightIns, iX, iY, ubShade, uiFlags);
+	LightInsertRayNode(t, usLightIns, iX, iY, ubShade, uiFlags);
 
 	return(TRUE);
 }
@@ -1340,7 +1340,7 @@ BOOLEAN fInsertNodes=FALSE;
 		 {
 				for (i=0; i<=YDelta; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iYPos++;
 				}
 		 }
@@ -1361,7 +1361,7 @@ BOOLEAN fInsertNodes=FALSE;
 		 {
 				for (i=0; i<=XDelta; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
 			  }
 		 }
@@ -1382,7 +1382,7 @@ BOOLEAN fInsertNodes=FALSE;
 		 {
 	      for (i=0; i<=XDelta; i++)
 		    {
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
 					iYPos++;
 				}
@@ -1446,7 +1446,7 @@ BOOLEAN fInsertNodes=FALSE;
 			{
 				for (i=0; i<InitialPixelCount; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
 				}
 			}
@@ -1477,7 +1477,7 @@ BOOLEAN fInsertNodes=FALSE;
 				 {
 						for (i=0; i<RunLength; i++)
 						{
-							LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+							LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 							iXPos+=XAdvance;
 						}
 				 }
@@ -1497,7 +1497,7 @@ BOOLEAN fInsertNodes=FALSE;
 			{
 				for (i=0; i<FinalPixelCount; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iXPos+=XAdvance;
 				}
 			}
@@ -1556,7 +1556,7 @@ BOOLEAN fInsertNodes=FALSE;
 			{
 				for (i=0; i<InitialPixelCount; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iYPos++;
 				}
 			}
@@ -1588,7 +1588,7 @@ BOOLEAN fInsertNodes=FALSE;
 				{
 					for (i=0; i<RunLength; i++)
 					{
-						LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+						LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 						iYPos++;
 					}
 				}
@@ -1608,7 +1608,7 @@ BOOLEAN fInsertNodes=FALSE;
 			{
 				for (i=0; i<FinalPixelCount; i++)
 				{
-					LightInsertNode(iLight, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
+					LightInsertNode(t, usCurNode, iStartX, iStartY, iXPos, iYPos, ubStartIntens, usFlags);
 					iYPos++;
 				}
 			}
