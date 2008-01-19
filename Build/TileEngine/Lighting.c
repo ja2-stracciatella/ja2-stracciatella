@@ -255,7 +255,7 @@ BOOLEAN SetDefaultWorldLightingColors(void)
 }
 
 
-static BOOLEAN LightDelete(INT32 iLight);
+static BOOLEAN LightDelete(LightTemplate*);
 
 
 /****************************************************************************************
@@ -272,7 +272,8 @@ UINT32 uiCount;
 	// free up all allocated light nodes
 	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
 	{
-		if (g_light_templates[uiCount].lights != NULL) LightDelete(uiCount);
+		LightTemplate* const t = &g_light_templates[uiCount];
+		if (t->lights != NULL) LightDelete(t);
 	}
 
 	return(TRUE);
@@ -289,7 +290,8 @@ BOOLEAN LightReset(void)
 	// reset all light lists
 	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
 	{
-		if (g_light_templates[uiCount].lights != NULL) LightDelete(uiCount);
+		LightTemplate* const t = &g_light_templates[uiCount];
+		if (t->lights != NULL) LightDelete(t);
 	}
 
 	// init all light sprites
@@ -531,10 +533,8 @@ UINT8		ubTravelCost;
 
 
 // Removes a light template from the list, and frees up the associated node memory.
-static BOOLEAN LightDelete(INT32 iLight)
+static BOOLEAN LightDelete(LightTemplate* const t)
 {
-	LightTemplate* const t = &g_light_templates[iLight];
-
 	if (t->lights == NULL) return FALSE;
 
 	MemFree(t->lights);
