@@ -2,7 +2,6 @@
 #include "Font.h"
 #include "IMP_Attribute_Selection.h"
 #include "IMPVideoObjects.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

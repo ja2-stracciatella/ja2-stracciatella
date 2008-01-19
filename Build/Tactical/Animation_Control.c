@@ -1,6 +1,5 @@
 #include "Font_Control.h"
 #include "Soldier_Control.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"

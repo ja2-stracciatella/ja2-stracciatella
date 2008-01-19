@@ -1,5 +1,4 @@
 #include "HImage.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "TileDef.h"
 #include "Animation_Cache.h"

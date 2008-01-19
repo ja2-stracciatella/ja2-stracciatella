@@ -20,7 +20,6 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "WCheck.h"
 
 
 BOOLEAN		gfIntroScreenEntry;

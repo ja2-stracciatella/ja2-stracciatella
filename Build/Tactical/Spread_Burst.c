@@ -1,6 +1,5 @@
 #include "Real_Time_Input.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
 #include "Weapons.h"

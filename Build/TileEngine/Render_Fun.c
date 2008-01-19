@@ -3,7 +3,6 @@
 #include "Input.h"
 #include "SysUtil.h"
 #include "Debug.h"
-#include "WCheck.h"
 #include "WorldMan.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

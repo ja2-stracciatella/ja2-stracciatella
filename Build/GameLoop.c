@@ -4,7 +4,6 @@
 #include "Screens.h"
 #include "ShopKeeper_Interface.h"
 #include "Tactical_Placement_GUI.h"
-#include "WCheck.h"
 #include "Cursors.h"
 #include "Init.h"
 #include "Music_Control.h"

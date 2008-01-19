@@ -1,7 +1,6 @@
 #include "Local.h"
 #include "Gameloop.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "WorldDef.h"
 #include "Input.h"
 #include "Font.h"

@@ -2,7 +2,6 @@
 #include "Soldier_Find.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"

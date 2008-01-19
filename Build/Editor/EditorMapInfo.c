@@ -5,7 +5,6 @@
 #include "TileDef.h"
 #include "Edit_Sys.h"
 #include "MouseSystem.h"
-#include "WCheck.h"
 #include "Line.h"
 #include "Input.h"
 #include "SysUtil.h"

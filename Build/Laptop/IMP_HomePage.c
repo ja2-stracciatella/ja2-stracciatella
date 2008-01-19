@@ -6,7 +6,6 @@
 #include "Local.h"
 #include "Text.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"

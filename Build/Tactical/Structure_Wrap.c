@@ -1,5 +1,4 @@
 #include "Debug.h"
-#include "WCheck.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Structure_Wrap.h"

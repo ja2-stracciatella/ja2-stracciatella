@@ -3,7 +3,6 @@
 #include "HImage.h"
 #include "Isometric_Utils.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "SysUtil.h"
 #include "RenderWorld.h"
 #include "Interface.h"

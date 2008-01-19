@@ -7,7 +7,6 @@
 #include "WorldMan.h"
 #include "AIInternals.h"
 #include "Items.h"
-#include "WCheck.h"
 #include "LOS.h"
 #include "Assignments.h"
 #include "Soldier_Functions.h"

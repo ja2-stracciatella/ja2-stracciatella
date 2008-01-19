@@ -5,7 +5,6 @@
 #include "Soldier_Find.h"
 #include "StrategicMap.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "Encrypted_File.h"
 #include "MessageBoxScreen.h"
 #include "Queen_Command.h"

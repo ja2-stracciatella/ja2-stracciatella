@@ -5,7 +5,6 @@
 #include "VObject.h"
 #include "TileDef.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "WorldDef.h"
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"

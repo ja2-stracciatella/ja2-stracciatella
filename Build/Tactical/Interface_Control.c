@@ -12,7 +12,6 @@
 #include "Interface.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Handle_UI.h"
 #include "Animation_Control.h"

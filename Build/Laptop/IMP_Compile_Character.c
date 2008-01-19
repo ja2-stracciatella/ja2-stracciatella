@@ -1,6 +1,5 @@
 #include "Laptop.h"
 #include "CharProfile.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "IMP_Portraits.h"

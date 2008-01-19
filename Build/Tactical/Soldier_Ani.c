@@ -2,7 +2,6 @@
 #include "Merc_Hiring.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "MemMan.h"
 #include "Overhead_Types.h"

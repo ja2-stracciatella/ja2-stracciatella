@@ -3,7 +3,6 @@
 #include "IMP_Voices.h"
 #include "IMP_MainPage.h"
 #include "IMPVideoObjects.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

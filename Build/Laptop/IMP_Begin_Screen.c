@@ -6,7 +6,6 @@
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
 #include "Local.h"
-#include "WCheck.h"
 #include "Timer_Control.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

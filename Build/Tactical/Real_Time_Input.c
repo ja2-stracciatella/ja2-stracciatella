@@ -2,7 +2,6 @@
 #include "Real_Time_Input.h"
 #include "Soldier_Find.h"
 #include "Turn_Based_Input.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "PathAI.h"
 #include "Soldier_Control.h"

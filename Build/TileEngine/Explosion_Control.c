@@ -2,7 +2,6 @@
 #include "LoadSaveExplosionType.h"
 #include "Overhead.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
 #include "Handle_Items.h"

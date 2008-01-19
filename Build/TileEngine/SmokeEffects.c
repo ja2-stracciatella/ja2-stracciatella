@@ -1,6 +1,5 @@
 #include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
 #include "Weapons.h"

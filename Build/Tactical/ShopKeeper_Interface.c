@@ -10,7 +10,6 @@
 #include "Render_Dirty.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Font_Control.h"
 #include "WordWrap.h"
 #include "Text_Input.h"

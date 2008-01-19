@@ -8,7 +8,6 @@
 #include "SysUtil.h"
 #include "MercTextBox.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Cursors.h"
 #include "MessageBoxScreen.h"
 #include "Font_Control.h"

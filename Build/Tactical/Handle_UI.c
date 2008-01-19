@@ -4,7 +4,6 @@
 #include "Merc_Hiring.h"
 #include "Real_Time_Input.h"
 #include "Soldier_Find.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "JAScreens.h"
 #include "PathAI.h"

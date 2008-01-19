@@ -22,7 +22,6 @@
 #include "Structure.h"
 #include "RenderWorld.h"
 #include "WorldMan.h"
-#include "WCheck.h"
 #include "Random.h"
 #include "WorldDef.h"
 #include "Campaign.h"
