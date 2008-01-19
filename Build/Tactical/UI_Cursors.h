@@ -17,9 +17,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier);
 
 void HandleUICursorRTFeedback( SOLDIERTYPE *pSoldier );
-void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier);
 
 BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs );
-
 
 #endif

@@ -2311,10 +2311,7 @@ static UINT32 UIHandleAEndAction(UI_EVENT* pUIEvent)
 
 static UINT32 UIHandleCAEndConfirmAction(UI_EVENT* pUIEvent)
 {
-	const SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL) HandleEndConfirmCursor(sel);
-
-	return( GAME_SCREEN );
+	return GAME_SCREEN;
 }
 
 

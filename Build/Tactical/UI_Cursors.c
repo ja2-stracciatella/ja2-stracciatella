@@ -1539,18 +1539,6 @@ static UINT8 HandleBombCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAc
 }
 
 
-void HandleEndConfirmCursor(const SOLDIERTYPE* pSoldier)
-{
-	UINT8					ubItemCursor;
-
-	ubItemCursor  =  GetActionModeCursor( pSoldier );
-
-	if ( ubItemCursor == TOSSCURS )
-	{
-	//	EndAimCubeUI( );
-	}
-}
-
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
 	UINT8					ubItemCursor;
