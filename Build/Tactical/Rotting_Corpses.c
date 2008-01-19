@@ -1014,43 +1014,6 @@ static void MakeCorpseVisible(ROTTING_CORPSE* const c)
 }
 
 
-static void AllMercsOnTeamLookForCorpse(ROTTING_CORPSE* pCorpse, INT8 bTeam)
-{
-	// If this cump is already visible, return
-	if ( pCorpse->def.bVisible == 1 )
-	{
-		return;
-	}
-
-	if ( !pCorpse->fActivated )
-	{
-		return;
-	}
-
-	const INT16 sGridNo = pCorpse->def.sGridNo;
-
-	CFOR_ALL_IN_TEAM(s, bTeam)
-	{
-		// ATE: Ok, lets check for some basic things here!
-		if (s->bLife >= OKLIFE && s->sGridNo != NOWHERE && s->bInSector)
-		{
-			// is he close enough to see that gridno if he turns his head?
-			const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, pCorpse->def.bLevel);
-			if (PythSpacesAway(s->sGridNo, sGridNo) <= sDistVisible)
-			{
-				// and we can trace a line of sight to his x,y coordinates?
-				// (taking into account we are definitely aware of this guy now)
-				if (SoldierTo3DLocationLineOfSightTest(s, sGridNo, pCorpse->def.bLevel, 3, sDistVisible, TRUE))
-				{
-					MakeCorpseVisible(pCorpse);
-					return;
-				}
-			}
-		}
-	}
-}
-
-
 static void MercLooksForCorpses(SOLDIERTYPE* pSoldier)
 {
 	INT16										 sDistVisible;
