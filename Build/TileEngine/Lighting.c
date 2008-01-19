@@ -1278,7 +1278,7 @@ static UINT16 LightFindNextRay(const LightTemplate* const t, const UINT16 usInde
 
 /* Casts a ray from an origin to an end point, creating nodes and adding them
  * to the light list. */
-static BOOLEAN LightCastRay(INT32 iLight, INT16 iStartX, INT16 iStartY, INT16 iEndPointX, INT16 iEndPointY, UINT8 ubStartIntens, UINT8 ubEndIntens)
+static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const INT16 iStartY, const INT16 iEndPointX, const INT16 iEndPointY, const UINT8 ubStartIntens, const UINT8 ubEndIntens)
 {
 INT16 AdjUp, AdjDown, ErrorTerm, XAdvance, XDelta, YDelta;
 INT32 WholeStep, InitialPixelCount, FinalPixelCount, i, j, RunLength;
@@ -1324,8 +1324,6 @@ BOOLEAN fInsertNodes=FALSE;
 	 // Check for 0 length ray
 	 if((XDelta==0) && (YDelta==0))
 		 return(FALSE);
-
-	LightTemplate* const t = &g_light_templates[iLight];
 
 	//DebugMsg(TOPIC_GAME, DBG_LEVEL_0, String("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY));
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
@@ -1640,11 +1638,13 @@ DOUBLE Temp;
 	ASquared = (DOUBLE) iA * iA;
 	BSquared = (DOUBLE) iB * iB;
 
+	LightTemplate* const t = &g_light_templates[iLight];
+
    /* Draw the four symmetric arcs for which X advances faster (that is,
       for which X is the major axis) */
    /* Draw the initial top & bottom points */
-   LightCastRay(iLight, iX, iY, (INT16)iX, (INT16)(iY+iB), iIntensity, 1);
-   LightCastRay(iLight, iX, iY, (INT16)iX, (INT16)(iY-iB), iIntensity, 1);
+	LightCastRay(t, iX, iY, (INT16)iX, (INT16)(iY+iB), iIntensity, 1);
+	LightCastRay(t, iX, iY, (INT16)iX, (INT16)(iY-iB), iIntensity, 1);
 
    /* Draw the four arcs */
    for (WorkingX = 0; ; )
@@ -1668,17 +1668,17 @@ DOUBLE Temp;
          break;
 
       /* Draw the 4 symmetries of the current point */
-			LightCastRay(iLight, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
    }
 
    /* Draw the four symmetric arcs for which Y advances faster (that is,
       for which Y is the major axis) */
    /* Draw the initial left & right points */
-   LightCastRay(iLight, iX, iY, (INT16)(iX+iA), iY, iIntensity, 1);
-   LightCastRay(iLight, iX, iY, (INT16)(iX-iA), iY, iIntensity, 1);
+	LightCastRay(t, iX, iY, (INT16)(iX+iA), iY, iIntensity, 1);
+	LightCastRay(t, iX, iY, (INT16)(iX-iA), iY, iIntensity, 1);
 
    /* Draw the four arcs */
    for (WorkingY = 0; ; )
@@ -1702,10 +1702,10 @@ DOUBLE Temp;
          break;
 
       /* Draw the 4 symmetries of the current point */
-      LightCastRay(iLight, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
-      LightCastRay(iLight, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY-WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
+			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
    }
 
 	return(TRUE);
@@ -1717,30 +1717,32 @@ static BOOLEAN LightGenerateSquare(INT32 iLight, UINT8 iIntensity, INT16 iA, INT
 {
 INT16 iX, iY;
 
-	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(iLight, 0, 0, iX, (INT16)(0-iB), iIntensity, 1);
+	LightTemplate* const t = &g_light_templates[iLight];
 
 	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(iLight, 0, 0, iX, (INT16)(0+iB), iIntensity, 1);
+		LightCastRay(t, 0, 0, iX, (INT16)(0-iB), iIntensity, 1);
+
+	for(iX=0-iA; iX <= 0+iA; iX++)
+		LightCastRay(t, 0, 0, iX, (INT16)(0+iB), iIntensity, 1);
 
 	for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(iLight, 0, 0, (INT16)(0-iA), iY, iIntensity, 1);
+		LightCastRay(t, 0, 0, (INT16)(0-iA), iY, iIntensity, 1);
 
 	for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(iLight, 0, 0, (INT16)(0+iA), iY, iIntensity, 1);
+		LightCastRay(t, 0, 0, (INT16)(0+iA), iY, iIntensity, 1);
 
 
 	/*for(iY=0-iB; iY <= 0+iB; iY++)
-		LightCastRay(iLight, 0, iY, (INT16)(0+iA), iY, iIntensity, 1);
+		LightCastRay(t, 0, iY, (INT16)(0+iA), iY, iIntensity, 1);
 
 	for(iY=0+iB; iY >= 0-iB; iY--)
-		LightCastRay(iLight, 0, iY, (INT16)(0-iA), iY, iIntensity, 1);
+		LightCastRay(t, 0, iY, (INT16)(0-iA), iY, iIntensity, 1);
 
 	for(iX=0-iA; iX <= 0+iA; iX++)
-		LightCastRay(iLight, iX, 0, iX, (INT16)(0+iB), iIntensity, 1);
+		LightCastRay(t, iX, 0, iX, (INT16)(0+iB), iIntensity, 1);
 
 	for(iX=0+iA; iX >= 0-iA; iX--)
-		LightCastRay(iLight, iX, 0, iX, (INT16)(0-iB), iIntensity, 1); */
+		LightCastRay(t, iX, 0, iX, (INT16)(0-iB), iIntensity, 1); */
 
 	return(TRUE);
 }
