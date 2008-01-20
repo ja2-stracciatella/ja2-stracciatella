@@ -23,8 +23,6 @@ UINT16 gsCurMouseWidth = 0;
 static UINT16 gusNumDataFiles = 0;
 const SGPVObject* guiExternVo;
 UINT16 gusExternVoSubIndex;
-static SGPVObject* guiExtern2Vo;
-static UINT16 gusExtern2VoSubIndex;
 static UINT32 guiOldSetCursor = 0;
 static UINT32 guiDelayTimer = 0;
 
@@ -208,47 +206,19 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 	else if (gfCursorDatabaseInit)
 	{
 		// CHECK FOR EXTERN CURSOR
-		if (uiCursorIndex == EXTERN_CURSOR || uiCursorIndex == EXTERN2_CURSOR)
+		if (uiCursorIndex == EXTERN_CURSOR)
 		{
 			// Erase old cursor
 			EraseMouseCursor();
 
-			const ETRLEObject* pTrav;
-			if (uiCursorIndex == EXTERN2_CURSOR)
-			{
-				// Get ETRLE values
-				pTrav = GetVideoObjectETRLESubregionProperties(guiExtern2Vo, gusExtern2VoSubIndex);
-			}
-			else
-			{
-				// Get ETRLE values
-				pTrav = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
-			}
+			const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
+			const UINT16 usEffHeight = pTrav->usHeight + pTrav->sOffsetY;
+			const UINT16 usEffWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 
-			UINT16 usEffHeight = pTrav->usHeight + pTrav->sOffsetY;
-			UINT16 usEffWidth  = pTrav->usWidth  + pTrav->sOffsetX;
-
-			// ATE: Check for extern 2nd...
-			if (uiCursorIndex == EXTERN2_CURSOR)
-			{
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, TRANSPARENT);
-
-				// Get ETRLE values
-				const ETRLEObject* pTravTemp = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
-				INT16 sSubX = (pTrav->usWidth  - pTravTemp->usWidth  - pTravTemp->sOffsetX) / 2;
-				INT16 sSubY = (pTrav->usHeight - pTravTemp->usHeight - pTravTemp->sOffsetY) / 2;
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, sSubX, sSubY, TRANSPARENT);
-			}
-			else
-			{
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, TRANSPARENT);
-			}
+			BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, TRANSPARENT);
 
 			// Hook into hook function
-			if (gMouseBltOverride != NULL)
-			{
-				gMouseBltOverride();
-			}
+			if (gMouseBltOverride != NULL) gMouseBltOverride();
 
 			SetMouseCursorProperties(usEffWidth / 2, usEffHeight / 2, usEffHeight, usEffWidth);
 		}

@@ -14,7 +14,6 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 #define USE_OUTLINE_BLITTER  0x08
 
 #define	EXTERN_CURSOR    0xFFF0
-#define	EXTERN2_CURSOR   0xFFE0
 #define	MAX_COMPOSITES   5
 #define	CENTER_SUBCURSOR 31000
 #define	HIDE_SUBCURSOR   32000
