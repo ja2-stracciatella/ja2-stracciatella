@@ -99,8 +99,8 @@ BOOLEAN SetDefaultWorldLightingColors(void);
 
 // Sets the normal light level for all tiles in the world
 BOOLEAN		LightSetBaseLevel(UINT8 iIntensity);
-// Adds a light value to all tiles
-BOOLEAN		LightAddBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
+// Adds a light value to all tiles in the world
+BOOLEAN LightAddBaseLevel(UINT8 iIntensity);
 // Subtracts a light value from all tiles
 BOOLEAN		LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
 // Creates an omni (circular) light

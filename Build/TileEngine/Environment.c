@@ -466,7 +466,7 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 		  {
 			  if(ubLevel > ubLastLevel)
 			  {
-				  LightAddBaseLevel(0, (UINT8)(ubLevel-ubLastLevel));
+					LightAddBaseLevel(ubLevel - ubLastLevel);
 				  if(ubLevel > 0)
 					  RenderSetShadows(TRUE);
 			  }

@@ -1789,13 +1789,8 @@ BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 	return(TRUE);
 }
 
-/****************************************************************************************
-	LightAddBaseLevel
 
-		Adds a light value to all the tiles in the world
-
-***************************************************************************************/
-BOOLEAN LightAddBaseLevel(UINT32 uiLightType, UINT8 iIntensity)
+BOOLEAN LightAddBaseLevel(const UINT8 iIntensity)
 {
 INT16 iCountY, iCountX;
 
