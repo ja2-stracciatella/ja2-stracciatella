@@ -629,7 +629,7 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 
 
 // Does the addition of light values to individual LEVELNODEs in the world tile list.
-static void LightAddTileNode(LEVELNODE* pNode, UINT32 uiLightType, UINT8 ubShadeAdd, BOOLEAN fFake)
+static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, const BOOLEAN fFake)
 {
 INT16 sSum;
 
@@ -737,7 +737,7 @@ BOOLEAN fFake;
 				if((gTileDatabase[ pStruct->usIndex ].fType != FIRSTCLIFFHANG) || (uiFlags&LIGHT_EVERYTHING))
 				{
 					if( (uiFlags&LIGHT_IGNORE_WALLS ) || gfCaves )
-						LightAddTileNode(pStruct, uiLightType, ubShadeAdd, FALSE);
+						LightAddTileNode(pStruct, ubShadeAdd, FALSE);
 					else if(LightIlluminateWall(iSrcX, iSrcY, iX, iY, pStruct))
 					{
 						if(LightTileHasWall(iSrcX, iSrcY, iX, iY))
@@ -746,22 +746,22 @@ BOOLEAN fFake;
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightAddTileNode(pStruct, uiLightType, ( UINT8 ) __min( ubShadeAdd, ( SHADE_MAX + 5 ) ), FALSE);
+							LightAddTileNode(pStruct, __min(ubShadeAdd, SHADE_MAX + 5), FALSE);
 						}
 						else if ( fLitWall )
 						{
-							LightAddTileNode(pStruct, uiLightType, ubShadeAdd, FALSE);
+							LightAddTileNode(pStruct, ubShadeAdd, FALSE);
 						}
 						else if ( !fOnlyWalls )
 						{
-							LightAddTileNode(pStruct, uiLightType, ubShadeAdd, FALSE);
+							LightAddTileNode(pStruct, ubShadeAdd, FALSE);
 						}
 					}
 				}
 			}
 			else
 			{
-				LightAddTileNode(pStruct, uiLightType, ubShadeAdd, FALSE);
+				LightAddTileNode(pStruct, ubShadeAdd, FALSE);
 			}
 			pStruct=pStruct->pNext;
 		}
@@ -776,7 +776,7 @@ BOOLEAN fFake;
 		  {
 			  if( gfCaves || !fLitWall )
 			  {
-				  LightAddTileNode(pLand, uiLightType, ubShadeAdd, fFake);
+				  LightAddTileNode(pLand, ubShadeAdd, fFake);
 			  }
 			  pLand=pLand->pNext;
 		  }
@@ -786,7 +786,7 @@ BOOLEAN fFake;
 		  {
 			  if ( pObject->usIndex < NUMBEROFTILES )
 			  {
-				  LightAddTileNode(pObject, uiLightType, ubShadeAdd, FALSE);
+				  LightAddTileNode(pObject, ubShadeAdd, FALSE);
 			  }
 			  pObject=pObject->pNext;
 		  }
@@ -797,7 +797,7 @@ BOOLEAN fFake;
 		  pMerc = gpWorldLevelData[uiTile].pMercHead;
 		  while(pMerc!=NULL)
 		  {
-			  LightAddTileNode(pMerc, uiLightType, ubShadeAdd, FALSE);
+			  LightAddTileNode(pMerc, ubShadeAdd, FALSE);
 			  pMerc=pMerc->pNext;
 		  }
 	  }
@@ -810,7 +810,7 @@ BOOLEAN fFake;
 		{
 			if ( pRoof->usIndex < NUMBEROFTILES )
 			{
-				LightAddTileNode(pRoof, uiLightType, ubShadeAdd, fFake);
+				LightAddTileNode(pRoof, ubShadeAdd, fFake);
 			}
 			pRoof=pRoof->pNext;
 		}
@@ -818,7 +818,7 @@ BOOLEAN fFake;
 		pOnRoof = gpWorldLevelData[uiTile].pOnRoofHead;
 		while(pOnRoof!=NULL)
 		{
-			LightAddTileNode(pOnRoof, uiLightType, ubShadeAdd, FALSE);
+			LightAddTileNode(pOnRoof, ubShadeAdd, FALSE);
 
 			pOnRoof=pOnRoof->pNext;
 		}
@@ -974,7 +974,6 @@ static void LightSetNaturalTileNode(LEVELNODE* pNode, UINT8 ubShade)
 		pNode->ubMaxLights=0;
 		pNode->ubNaturalShadeLevel = ubShade;
 		pNode->ubShadeLevel = ubShade;
-		//LightAddTileNode(pNode, 0, (INT16)(SHADE_MIN-ubShade));
 }
 
 
