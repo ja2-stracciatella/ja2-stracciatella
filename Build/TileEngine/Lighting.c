@@ -55,23 +55,12 @@
 #define LVL2_L2_PER			(70)
 
 
-#define LIGHT_TREE_REVEAL		5						// width of rect
-
-
 struct LightTemplate
 {
 	LIGHT_NODE* lights;
 	UINT16*     rays;
 	UINT16      n_lights;
 	UINT16      n_rays;
-	INT16       height;
-	INT16       width;
-	INT16       x_off;
-	INT16       y_off;
-	INT16       map_left;
-	INT16       map_top;
-	INT16       map_right;
-	INT16       map_bottom;
 	char*       name;
 };
 
@@ -2433,69 +2422,6 @@ BOOLEAN fOnlyWalls;
 }
 
 
-/* Calculates the rect size of a given light, used in dirtying the screen after
- * updating a light. */
-static BOOLEAN LightCalcRect(LightTemplate* const t)
-{
-SGPRect MaxRect;
-INT16 sXValue, sYValue, sDummy;
-
-	if (t->lights == NULL) return FALSE;
-
-	MaxRect.iLeft=99999;
-	MaxRect.iRight=-99999;
-	MaxRect.iTop=99999;
-	MaxRect.iBottom=-99999;
-
-	for (UINT32 uiCount = 0; uiCount < t->n_lights; ++uiCount)
-	{
-		const LIGHT_NODE* const pLight = &t->lights[uiCount];
-		if(pLight->ubLight)
-		{
-			MaxRect.iLeft=__min(MaxRect.iLeft, pLight->iDX);
-			MaxRect.iRight=__max(MaxRect.iRight, pLight->iDX);
-			MaxRect.iTop=__min(MaxRect.iTop, pLight->iDY);
-			MaxRect.iBottom=__max(MaxRect.iBottom, pLight->iDY);
-		}
-	}
-
-	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE),
-																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
-																	&sDummy, &sYValue);
-
-	t->map_left   = MaxRect.iLeft;
-	t->map_top    = MaxRect.iTop;
-	t->map_right  = MaxRect.iRight;
-	t->map_bottom = MaxRect.iBottom;
-
-	t->height = -sYValue;
-	t->y_off  = sYValue;
-
-	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
-																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
-																	&sDummy, &sYValue);
-	t->height += sYValue;
-
-	FromCellToScreenCoordinates((INT16)(MaxRect.iLeft*CELL_X_SIZE),
-																	(INT16)(MaxRect.iBottom*CELL_Y_SIZE),
-																	&sXValue, &sDummy);
-	t->width = -sXValue;
-	t->x_off = sXValue;
-
-	FromCellToScreenCoordinates((INT16)(MaxRect.iRight*CELL_X_SIZE),
-																	(INT16)(MaxRect.iTop*CELL_Y_SIZE),
-																	&sXValue, &sDummy);
-	t->width += sXValue;
-
-	t->height += WORLD_TILE_X * 2;
-	t->width  += WORLD_TILE_Y * 3;
-	t->x_off  -= WORLD_TILE_X * 2;
-	t->y_off  -= WORLD_TILE_Y * 2;
-
-	return(TRUE);
-}
-
-
 /****************************************************************************************
 	LightSave
 
@@ -2557,8 +2483,6 @@ static LightTemplate* LightLoad(const char* pFilename)
 
 	t->name = MemAlloc(strlen(pFilename) + 1);
 	strcpy(t->name, pFilename);
-
-	LightCalcRect(t);
 	return t;
 }
 
