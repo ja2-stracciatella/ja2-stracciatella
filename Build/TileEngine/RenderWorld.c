@@ -313,7 +313,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 
 
-static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT32 iStartPointX_S, INT32 iStartPointY_S, INT32 iEndXS, INT32 iEndYS, UINT8 ubNumLevels, UINT32* puiLevels, UINT16* psLevelIDs)
+static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const INT32 iStartPointY_M, const INT32 iStartPointX_S, const INT32 iStartPointY_S, const INT32 iEndXS, const INT32 iEndYS, const UINT8 ubNumLevels, const UINT32* const puiLevels, const UINT16* const psLevelIDs)
 {
 	static UINT8        ubLevelNodeStartIndex[NUM_RENDER_FX_TYPES];
 	static RenderFXType RenderFXList[NUM_RENDER_FX_TYPES];
@@ -323,7 +323,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 	BOOLEAN fPixelate = FALSE;
 	INT16 sMultiTransShadowZBlitterIndex = -1;
 
-	BOOLEAN fCheckForMouseDetections = FALSE;
 	INT16 sZOffsetX = -1;
 	INT16 sZOffsetY = -1;
 	const ROTTING_CORPSE* pCorpse = NULL;
@@ -346,16 +345,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 		pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	}
 
-	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)
+	BOOLEAN fCheckForMouseDetections = FALSE;
+	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
+			ShouldCheckForMouseDetections())
 	{
-		if (ShouldCheckForMouseDetections())
-		{
-			BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
-			fCheckForMouseDetections = TRUE;
-
-			// If we are in edit mode, don't do this...
-			if (gfEditMode) fCheckForMouseDetections = FALSE;
-		}
+		BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
+		// If we are in edit mode, don't do this...
+		fCheckForMouseDetections = !gfEditMode;
 	}
 
 	for (UINT32 i = 0; i < ubNumLevels; i++)
@@ -389,10 +385,9 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 			while (iTempPosX_S < iEndXS);
 		}
 
-
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 		{
-			UINT32 uiRowFlags = puiLevels[cnt];
+			const UINT32 uiRowFlags = puiLevels[cnt];
 
 			if (!(uiRowFlags & TILES_ALL_DYNAMICS) || uiLayerUsedFlags & uiRowFlags || uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)
 			{
@@ -406,7 +401,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 				do
 				{
-					UINT32 uiTileIndex = iTileMapPos[uiMapPosIndex];
+					const UINT32 uiTileIndex = iTileMapPos[uiMapPosIndex];
 					uiMapPosIndex++;
 
 					if (uiTileIndex < GRIDSIZE)
@@ -461,17 +456,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 
 							const UINT32 uiLevelNodeFlags = pNode->uiFlags;
 
-							if (fCheckForRedundency)
+							if (fCheckForRedundency &&
+									gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REDUNDENT &&
+									!(gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY) && // IF WE DONOT WANT TO RE-EVALUATE FIRST
+									!(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
 							{
-								if (gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REDUNDENT)
-								{
-									// IF WE DONOT WANT TO RE-EVALUATE FIRST
-									if (!(gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY) && !(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
-									{
-										pNode = NULL;
-										break;
-									}
-								}
+								pNode = NULL;
+								break;
 							}
 
 							// Force z-buffer blitting for marked tiles (even ground!)
@@ -507,246 +498,246 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							// setup for any tile type except mercs
 							if (!fMerc)
 							{
-									if (!(uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE)))
+								if (!(uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE)))
+								{
+									if (uiLevelNodeFlags & LEVELNODE_REVEALTREES)
 									{
-										if (uiLevelNodeFlags & LEVELNODE_REVEALTREES)
-										{
-											TileElem = &gTileDatabase[pNode->usIndex + 2];
-										}
-										else
-										{
-											TileElem = &gTileDatabase[pNode->usIndex];
-										}
-
-										// HANDLE INDEPENDANT-PER-TILE ANIMATIONS (IE: DOORS, EXPLODING THINGS, ETC)
-										if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
-										{
-											Assert(TileElem->pAnimData != NULL);
-											TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
-										}
+										TileElem = &gTileDatabase[pNode->usIndex + 2];
+									}
+									else
+									{
+										TileElem = &gTileDatabase[pNode->usIndex];
 									}
 
-									if (uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE))
+									// HANDLE INDEPENDANT-PER-TILE ANIMATIONS (IE: DOORS, EXPLODING THINGS, ETC)
+									if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
 									{
-										if (fDynamic)
+										Assert(TileElem->pAnimData != NULL);
+										TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
+									}
+								}
+
+								if (uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE))
+								{
+									if (fDynamic)
+									{
+										if (!(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
 										{
-											if (!(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
+											fRenderTile = FALSE;
+										}
+									}
+									else if (uiLevelNodeFlags & LEVELNODE_DYNAMIC)
+									{
+										fRenderTile = FALSE;
+									}
+								}
+								else
+								{
+									// Set Tile elem flags here!
+									uiTileElemFlags = TileElem->uiFlags;
+									// Set valid tile elem!
+									fUseTileElem = TRUE;
+
+									if (fDynamic || fPixelate)
+									{
+										if (!fPixelate && !(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC) && !(uiTileElemFlags & DYNAMIC_TILE))
+										{
+											if (!(uiTileElemFlags & ANIMATED_TILE))
 											{
 												fRenderTile = FALSE;
 											}
+											else
+											{
+												Assert(TileElem->pAnimData != NULL);
+												TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
+												uiTileElemFlags = TileElem->uiFlags;
+											}
 										}
-										else if (uiLevelNodeFlags & LEVELNODE_DYNAMIC)
+									}
+									else if (uiTileElemFlags & ANIMATED_TILE || uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC)
+									{
+										if (!(uiFlags & TILES_OBSCURED) || uiTileElemFlags & ANIMATED_TILE)
 										{
+											fRenderTile = FALSE;
+										}
+									}
+								}
+
+								// OK, ATE, CHECK FOR AN OBSCURED TILE AND MAKE SURE IF LEVELNODE IS SET
+								// WE DON'T RENDER UNLESS WE HAVE THE RENDER FLAG SET!
+								if (fObscured)
+								{
+									if (uiFlags & TILES_OBSCURED)
+									{
+										if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
+										{
+											fObscuredBlitter = TRUE;
+										}
+										else
+										{
+											// Do not render if we are not on this render loop!
 											fRenderTile = FALSE;
 										}
 									}
 									else
 									{
-										// Set Tile elem flags here!
-										uiTileElemFlags = TileElem->uiFlags;
-										// Set valid tile elem!
-										fUseTileElem = TRUE;
-
-										if (fDynamic || fPixelate)
+										if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
 										{
-											if (!fPixelate)
-											{
-												if (!(uiTileElemFlags & ANIMATED_TILE) && !(uiTileElemFlags & DYNAMIC_TILE) && !(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
-												{
-													fRenderTile = FALSE;
-												}
-												else if (!(uiTileElemFlags & DYNAMIC_TILE) && !(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
-												{
-													Assert(TileElem->pAnimData != NULL);
-													TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
-													uiTileElemFlags = TileElem->uiFlags;
-												}
-											}
-										}
-										else if (uiTileElemFlags & ANIMATED_TILE || uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC)
-										{
-											if (!(uiFlags & TILES_OBSCURED) || uiTileElemFlags & ANIMATED_TILE)
-											{
-												fRenderTile = FALSE;
-											}
+											fRenderTile = FALSE;
 										}
 									}
+								}
 
-									// OK, ATE, CHECK FOR AN OBSCURED TILE AND MAKE SURE IF LEVELNODE IS SET
-									// WE DON'T RENDER UNLESS WE HAVE THE RENDER FLAG SET!
-									if (fObscured)
+								if (fRenderTile)
+								{
+									// Set flag to set layer as used
+									if (fDynamic || fPixelate)
 									{
-										if (uiFlags & TILES_OBSCURED)
+										uiAdditiveLayerUsedFlags |= uiRowFlags;
+									}
+
+									if (uiLevelNodeFlags & LEVELNODE_DYNAMICZ)
+									{
+										fSaveZ  = TRUE;
+										fZWrite = TRUE;
+									}
+
+									if (uiLevelNodeFlags & LEVELNODE_CACHEDANITILE)
+									{
+										hVObject       = gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo;
+										usImageIndex   = pNode->pAniTile->sCurrentFrame;
+										uiAniTileFlags = pNode->pAniTile->uiFlags;
+
+										float dOffsetX;
+										float dOffsetY;
+										// Position corpse based on it's float position
+										if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 										{
-											if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
-											{
-												fObscuredBlitter = TRUE;
-											}
-											else
-											{
-												// Do not render if we are not on this render loop!
-												fRenderTile = FALSE;
-											}
+											pCorpse     = ID2CORPSE(pNode->pAniTile->v.user.uiData);
+											pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
+
+											dOffsetX = pCorpse->def.dXPos - gsRenderCenterX;
+											dOffsetY = pCorpse->def.dYPos - gsRenderCenterY;
+
+											// OK, if this is a corpse.... stop if not visible
+											if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
 										}
 										else
 										{
-											if (uiLevelNodeFlags & LEVELNODE_SHOW_THROUGH)
-											{
-												fRenderTile = FALSE;
-											}
+											dOffsetX = pNode->pAniTile->sRelativeX - gsRenderCenterX;
+											dOffsetY = pNode->pAniTile->sRelativeY - gsRenderCenterY;
 										}
-									}
 
-									if (fRenderTile)
+										// Calculate guy's position
+										float dTempX_S;
+										float dTempY_S;
+										FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
+
+										sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
+										sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight;
+
+										// Adjust for offset position on screen
+										sXPos -= gsRenderWorldOffsetX;
+										sYPos -= gsRenderWorldOffsetY;
+									}
+									else
 									{
-										// Set flag to set layer as used
-										if (fDynamic || fPixelate)
+										hVObject     = TileElem->hTileSurface;
+										usImageIndex = TileElem->usRegionIndex;
+
+										// ADJUST FOR WORLD MAPELEM HIEGHT
+										sYPos -= TileElem->sOffsetHeight;
+
+										if (TileElem->uiFlags & IGNORE_WORLD_HEIGHT)
 										{
-											uiAdditiveLayerUsedFlags |= uiRowFlags;
+											sYPos -= sModifiedTileHeight;
 										}
 
-										if (uiLevelNodeFlags & LEVELNODE_DYNAMICZ)
+										if (!(uiLevelNodeFlags & LEVELNODE_IGNOREHEIGHT) && !(TileElem->uiFlags & IGNORE_WORLD_HEIGHT))
 										{
-											fSaveZ  = TRUE;
-											fZWrite = TRUE;
+											sYPos -= sTileHeight;
 										}
 
-										if (uiLevelNodeFlags & LEVELNODE_CACHEDANITILE)
+										if (!(uiFlags & TILES_DIRTY))
 										{
-											hVObject       = gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo;
-											usImageIndex   = pNode->pAniTile->sCurrentFrame;
-											uiAniTileFlags = pNode->pAniTile->uiFlags;
-
-											float dOffsetX;
-											float dOffsetY;
-											// Position corpse based on it's float position
-											if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
-											{
-												pCorpse     = ID2CORPSE(pNode->pAniTile->v.user.uiData);
-												pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
-
-												dOffsetX = pCorpse->def.dXPos - gsRenderCenterX;
-												dOffsetY = pCorpse->def.dYPos - gsRenderCenterY;
-
-												// OK, if this is a corpse.... stop if not visible
-												if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
-											}
-											else
-											{
-												dOffsetX = pNode->pAniTile->sRelativeX - gsRenderCenterX;
-												dOffsetY = pNode->pAniTile->sRelativeY - gsRenderCenterY;
-											}
-
-											// Calculate guy's position
-											float dTempX_S;
-											float dTempY_S;
-											FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
-
-											sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-											sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - sTileHeight;
-
-											// Adjust for offset position on screen
-											sXPos -= gsRenderWorldOffsetX;
-											sYPos -= gsRenderWorldOffsetY;
-										}
-										else
-										{
-											hVObject     = TileElem->hTileSurface;
-											usImageIndex = TileElem->usRegionIndex;
-
-											// ADJUST FOR WORLD MAPELEM HIEGHT
-											sYPos -= TileElem->sOffsetHeight;
-
-											if (TileElem->uiFlags & IGNORE_WORLD_HEIGHT)
-											{
-												sYPos = sYPos - sModifiedTileHeight;
-											}
-
-											if (!(uiLevelNodeFlags & LEVELNODE_IGNOREHEIGHT) && !(TileElem->uiFlags & IGNORE_WORLD_HEIGHT))
-											{
-												sYPos -= sTileHeight;
-											}
-
-											if (!(uiFlags & TILES_DIRTY))
-											{
-												hVObject->pShadeCurrent = hVObject->pShades[pNode->ubShadeLevel];
-											}
-										}
-
-
-										//ADJUST FOR RELATIVE OFFSETS
-										if (uiLevelNodeFlags & LEVELNODE_USERELPOS)
-										{
-											sXPos += pNode->sRelativeX;
-											sYPos += pNode->sRelativeY;
-										}
-
-										if (uiLevelNodeFlags & LEVELNODE_USEZ)
-										{
-											sYPos -= pNode->sRelativeZ;
-										}
-
-										//ADJUST FOR ABSOLUTE POSITIONING
-										if (uiLevelNodeFlags & LEVELNODE_USEABSOLUTEPOS)
-										{
-											float dOffsetX = pNode->sRelativeX - gsRenderCenterX;
-											float dOffsetY = pNode->sRelativeY - gsRenderCenterY;
-
-											// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
-											dOffsetX -= CELL_Y_SIZE;
-
-											float dTempX_S;
-											float dTempY_S;
-											FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
-
-											sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-											sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
-
-											// Adjust for offset position on screen
-											sXPos -= gsRenderWorldOffsetX;
-											sYPos -= gsRenderWorldOffsetY;
-
-											sYPos -= pNode->sRelativeZ;
+											hVObject->pShadeCurrent = hVObject->pShades[pNode->ubShadeLevel];
 										}
 									}
 
-									// COUNT # OF ITEMS AT THIS LOCATION
-									if (uiLevelNodeFlags & LEVELNODE_ITEM)
+
+									//ADJUST FOR RELATIVE OFFSETS
+									if (uiLevelNodeFlags & LEVELNODE_USERELPOS)
 									{
-										// OK set item pool for this location....
-										if (bItemCount == 0)
-										{
-											pItemPool = pNode->pItemPool;
-										}
-										else
-										{
-											pItemPool = pItemPool->pNext;
-										}
+										sXPos += pNode->sRelativeX;
+										sYPos += pNode->sRelativeY;
+									}
 
-										if (bItemCount < MAX_RENDERED_ITEMS)
-										{
-											bItemCount++;
+									if (uiLevelNodeFlags & LEVELNODE_USEZ)
+									{
+										sYPos -= pNode->sRelativeZ;
+									}
 
-											if (gWorldItems[pItemPool->iItemIndex].bVisible == VISIBLE)
-											{
-												bVisibleItemCount++;
-											}
-										}
+									//ADJUST FOR ABSOLUTE POSITIONING
+									if (uiLevelNodeFlags & LEVELNODE_USEABSOLUTEPOS)
+									{
+										float dOffsetX = pNode->sRelativeX - gsRenderCenterX;
+										float dOffsetY = pNode->sRelativeY - gsRenderCenterY;
 
-										// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
-										if (bVisibleItemCount == MAX_RENDERED_ITEMS || gWorldItems[pItemPool->iItemIndex].bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
-										{
-											if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
-										}
+										// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
+										dOffsetX -= CELL_Y_SIZE;
 
-										if (pItemPool->bRenderZHeightAboveLevel > 0)
+										float dTempX_S;
+										float dTempY_S;
+										FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
+
+										sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
+										sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
+
+										// Adjust for offset position on screen
+										sXPos -= gsRenderWorldOffsetX;
+										sYPos -= gsRenderWorldOffsetY;
+
+										sYPos -= pNode->sRelativeZ;
+									}
+								}
+
+								// COUNT # OF ITEMS AT THIS LOCATION
+								if (uiLevelNodeFlags & LEVELNODE_ITEM)
+								{
+									// OK set item pool for this location....
+									if (bItemCount == 0)
+									{
+										pItemPool = pNode->pItemPool;
+									}
+									else
+									{
+										pItemPool = pItemPool->pNext;
+									}
+
+									if (bItemCount < MAX_RENDERED_ITEMS)
+									{
+										bItemCount++;
+
+										if (gWorldItems[pItemPool->iItemIndex].bVisible == VISIBLE)
 										{
-											sYPos -= pItemPool->bRenderZHeightAboveLevel;
+											bVisibleItemCount++;
 										}
 									}
 
-									// If render tile is false...
-									if (!fRenderTile) goto next_node;
+									// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
+									if (bVisibleItemCount == MAX_RENDERED_ITEMS || gWorldItems[pItemPool->iItemIndex].bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
+									{
+										if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
+									}
+
+									if (pItemPool->bRenderZHeightAboveLevel > 0)
+									{
+										sYPos -= pItemPool->bRenderZHeightAboveLevel;
+									}
+								}
+
+								// If render tile is false...
+								if (!fRenderTile) goto next_node;
 							}
 
 							// specific code for node types on a per-tile basis
@@ -944,19 +935,17 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									// Shade guy always lighter than sceane default!
 									{
 										UINT8 ubShadeLevel;
-
-										ubShadeLevel = pNode->ubShadeLevel & 0x0f;
-										ubShadeLevel = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
-										ubShadeLevel |= pNode->ubShadeLevel & 0x30;
-
 										if (pSoldier->fBeginFade)
 										{
-											pShadeTable = pSoldier->pShades[pSoldier->ubFadeLevel];
+											ubShadeLevel = pSoldier->ubFadeLevel;
 										}
 										else
 										{
-											pShadeTable = pSoldier->pShades[ubShadeLevel];
+											ubShadeLevel  = pNode->ubShadeLevel & 0x0f;
+											ubShadeLevel  = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
+											ubShadeLevel |= pNode->ubShadeLevel & 0x30;
 										}
+										pShadeTable = pSoldier->pShades[ubShadeLevel];
 									}
 
 									// Position guy based on guy's position
@@ -1164,15 +1153,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								else if (uiLevelNodeFlags & LEVELNODE_ITEM && !(uiFlags & TILES_DIRTY))
 								{
 									UINT16 usOutlineColor;
-									if (uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF)
-									{
-										usOutlineColor = gusYellowItemOutlineColor;
-									}
-									else
-									{
-										usOutlineColor = gusNormalItemOutlineColor;
-									}
-
 									if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
 									{
 										if (uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF)
@@ -1189,6 +1169,17 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											{
 												usOutlineColor = us16BPPItemCycleWhiteColors[gsCurrentItemGlowFrame];
 											}
+										}
+									}
+									else
+									{
+										if (uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF)
+										{
+											usOutlineColor = gusYellowItemOutlineColor;
+										}
+										else
+										{
+											usOutlineColor = gusNormalItemOutlineColor;
 										}
 									}
 
