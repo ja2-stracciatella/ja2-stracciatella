@@ -55,6 +55,17 @@
 #define LVL2_L2_PER			(70)
 
 
+// stucture of node in linked list for lights
+typedef struct LIGHT_NODE
+{
+	INT16 iDX;
+	INT16 iDY;
+	UINT8 uiFlags;
+	UINT8 ubLight;
+} LIGHT_NODE;
+CASSERT(sizeof(LIGHT_NODE) == 6)
+
+
 struct LightTemplate
 {
 	LIGHT_NODE* lights;

@@ -63,15 +63,6 @@
 typedef struct LightTemplate LightTemplate;
 
 
-// stucture of node in linked list for lights
-typedef struct light_p {
-					INT16		iDX, iDY;
-					UINT8		uiFlags;
-					UINT8		ubLight;
-			} LIGHT_NODE;
-CASSERT(sizeof(LIGHT_NODE) == 6)
-
-
 // structure of light instance, or sprite (a copy of the template)
 struct LIGHT_SPRITE
 {
