@@ -103,7 +103,6 @@ LightIlluminateWall(): empty
 LightLoad(): complicated
 LightSave(): complicated
 LightSetColors(): second parameter always 1
-LightSpriteRender(): empty
 LoadAllMapChangesFromMapTempFileAndApplyThem(): Double FileClose()?
 LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
 LoadAmbientControlFile(): complicated, pointless strcpy()

@@ -2814,51 +2814,6 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 }
 
 
-// Updates any change in position in lights
-static BOOLEAN LightSpriteRender(void)
-{
-//BOOLEAN fRenderLights=FALSE;
-
-	return(FALSE);
-
-/*	FOR_ALL_LIGHT_SPRITES(l)
-	{
-		if ((l->iX != l->iOldX) ||
-				(l->iY != l->iOldY) ||
-				(l->uiFlags & LIGHT_SPR_REDRAW))
-		{
-			if (l->iOldX < WORLD_COLS)
-			{
-				fRenderLights=TRUE;
-				LightSpriteDirty(l);
-			}
-
-			l->iOldX = l->iX;
-			l->iOldY = l->iY;
-
-			if (l->uiFlags & LIGHT_SPR_ON)
-			{
-				LightSpriteDirty(l);
-				fRenderLights = TRUE;
-			}
-
-			l->uiFlags &= ~LIGHT_SPR_REDRAW;
-		}
-	}
-
-	if(fRenderLights)
-	{
-		LightResetAllTiles();
-		CFOR_ALL_LIGHT_SPRITES(l)
-		{
-			if (l->uiFlags & LIGHT_SPR_ON) LightDraw(l);
-		}
-		return(TRUE);
-	}
-
-	return(FALSE); */
-}
-
 /********************************************************************************
 * LightSpriteRenderAll
 *
