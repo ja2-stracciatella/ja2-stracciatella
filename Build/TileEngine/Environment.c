@@ -472,7 +472,7 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 			  }
 			  else
 			  {
-				  LightSubtractBaseLevel(0, (UINT8)(ubLastLevel-ubLevel));
+				  LightSubtractBaseLevel(ubLastLevel - ubLevel);
 				  if(ubLevel > 0)
 					  RenderSetShadows(TRUE);
 			  }

@@ -102,7 +102,7 @@ BOOLEAN		LightSetBaseLevel(UINT8 iIntensity);
 // Adds a light value to all tiles in the world
 BOOLEAN LightAddBaseLevel(UINT8 iIntensity);
 // Subtracts a light value from all tiles
-BOOLEAN		LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity);
+BOOLEAN LightSubtractBaseLevel(UINT8 iIntensity);
 // Creates an omni (circular) light
 LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y

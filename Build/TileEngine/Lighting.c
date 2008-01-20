@@ -1808,13 +1808,8 @@ INT16 iCountY, iCountX;
 	return(TRUE);
 }
 
-/****************************************************************************************
-	LightSubtractBaseLevel
 
-		Sets the current and natural light settings for all tiles in the world.
-
-***************************************************************************************/
-BOOLEAN LightSubtractBaseLevel(UINT32 uiLightType, UINT8 iIntensity)
+BOOLEAN LightSubtractBaseLevel(const UINT8 iIntensity)
 {
 INT16 iCountY, iCountX;
 
