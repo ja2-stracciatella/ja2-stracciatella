@@ -9123,7 +9123,7 @@ BlitDone:
 
 
 // This is the same as above, but DONOT WRITE to Z!
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline )
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, UINT16* const pZBuffer, const UINT16 usZValue, const HVOBJECT hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
@@ -9180,11 +9180,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB( UINT16 *pBuffer, UINT32 uiDestPitchB
 					if (*(UINT16*)ZPtr < usZValue)
 					{
 						UINT8 px = *SrcPtr;
-						if (px == 254)
-						{
-							if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
-						}
-						else
+						if (px != 254)
 						{
 							*(UINT16*)DestPtr = p16BPPPalette[px];
 						}

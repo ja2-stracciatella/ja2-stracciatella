@@ -1227,7 +1227,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									{
 										if (bBlitClipVal == FALSE)
 										{
-											Blt8BPPDataTo16BPPBufferOutlineZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, 0, FALSE);
+											Blt8BPPDataTo16BPPBufferOutlineZNB(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 										}
 										else if (bBlitClipVal == TRUE)
 										{
