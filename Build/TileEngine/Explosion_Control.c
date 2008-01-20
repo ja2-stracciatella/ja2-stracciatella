@@ -239,7 +239,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		// DO ONLY IF WE'RE AT A GOOD LEVEL
 		if ( ubAmbientLightLevel >= MIN_AMB_LEVEL_FOR_MERC_LIGHTS )
 		{
-			LIGHT_SPRITE* const l = LightSpriteCreate("L-R04.LHT", 0);
+			LIGHT_SPRITE* const l = LightSpriteCreate("L-R04.LHT");
 			pExplosion->light = l;
 			if (l != NULL)
 			{

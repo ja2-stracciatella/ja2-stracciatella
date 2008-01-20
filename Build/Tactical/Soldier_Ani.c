@@ -460,7 +460,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						break;
 					}
 
-					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT", 0);
+					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT");
 					pSoldier->muzzle_flash = l;
 					if (l == NULL) return TRUE;
 

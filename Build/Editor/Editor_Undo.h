@@ -5,7 +5,7 @@
 #define __EDITOR_UNDO_H
 
 BOOLEAN AddToUndoList( INT32 iMapIndex );
-void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID );
+void AddLightToUndoList(INT32 iMapIndex, INT32 iLightRadius);
 
 BOOLEAN RemoveAllFromUndoList(void);
 BOOLEAN ExecuteUndoList(void);

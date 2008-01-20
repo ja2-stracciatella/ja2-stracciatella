@@ -72,7 +72,6 @@ typedef struct
 	MAP_ELEMENT		*pMapTile;
 	BOOLEAN				fLightSaved;	 //determines that a light has been saved
 	UINT8					ubLightRadius; //the radius of the light to build if undo is called
-	UINT8					ubLightID;		 //only applies if a light was saved.
 	UINT8					ubRoomNum;
 } undo_struct;
 
@@ -347,7 +346,7 @@ static void CropStackToMaxLength(INT32 iMaxCmds)
 //this will handle the way the undo command is handled.  If there is no lightradius in
 //our saved light, then we intend on erasing the light upon undo execution, otherwise, we
 //save the light radius and light ID, so that we place it during undo execution.
-void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
+void AddLightToUndoList(const INT32 iMapIndex, const INT32 iLightRadius)
 {
 	undo_stack		*pNode;
 	undo_struct		*pUndoInfo;
@@ -377,7 +376,6 @@ void AddLightToUndoList( INT32 iMapIndex, INT32 iLightRadius, UINT8 ubLightID )
 	//if ubLightRadius is 0, then we don't need to save the light information because we
 	//will erase it when it comes time to execute the undo command.
 	pUndoInfo->ubLightRadius = (UINT8)iLightRadius;
-	pUndoInfo->ubLightID = ubLightID;
 	pUndoInfo->iMapIndex = iMapIndex;
 	pUndoInfo->pMapTile = NULL;
 
@@ -477,7 +475,6 @@ static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 
 	pUndoInfo->fLightSaved = FALSE;
 	pUndoInfo->ubLightRadius = 0;
-	pUndoInfo->ubLightID = 0;
 	pUndoInfo->pMapTile = pData;
 	pUndoInfo->iMapIndex = iMapIndex;
 
@@ -597,7 +594,7 @@ BOOLEAN ExecuteUndoList( void )
 			if( !gpTileUndoStack->pData->ubLightRadius )
 				RemoveLight( sX, sY );
 			else
-				PlaceLight( gpTileUndoStack->pData->ubLightRadius, sX, sY, gpTileUndoStack->pData->ubLightID );
+				PlaceLight(gpTileUndoStack->pData->ubLightRadius, sX, sY);
 			//Turn off the flag so lights can again be added to the undo list.
 			gfIgnoreUndoCmdsForLights = FALSE;
 		}

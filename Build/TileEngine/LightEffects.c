@@ -66,7 +66,7 @@ static void UpdateLightingSprite(LIGHTEFFECT* pLight)
 	}
 
 	// Effect light.....
-	LIGHT_SPRITE* const l = LightSpriteCreate(LightName, 0);
+	LIGHT_SPRITE* const l = LightSpriteCreate(LightName);
 	pLight->light = l;
 	if (l == NULL)
 	{

@@ -2671,7 +2671,7 @@ static LIGHT_SPRITE* LightSpriteGetFree(void)
 }
 
 
-LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightType)
+LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
 {
 	LIGHT_SPRITE* const l = LightSpriteGetFree();
 	if (l == NULL) return NULL;
@@ -2679,7 +2679,6 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightTyp
 	memset(l, 0, sizeof(LIGHT_SPRITE));
 	l->iX          = WORLD_COLS + 1;
 	l->iY          = WORLD_ROWS + 1;
-	l->uiLightType = uiLightType;
 
 	l->template = LightLoadCachedTemplate(pName);
 	if (l->template == NULL) return NULL;

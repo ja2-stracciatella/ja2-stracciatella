@@ -81,7 +81,6 @@ struct LIGHT_SPRITE
 					INT16		iX, iY;
 	LightTemplate* template;
 					UINT32	uiFlags;
-					UINT32	uiLightType;
 };
 
 
@@ -119,9 +118,9 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal);
 // High-Level Sprite Interface
 
 /* Creates an instance of a light. The template is loaded if it isn't already.
- * If this function fails (out of sprites, or bad template name) it returns -1.
- */
-LIGHT_SPRITE* LightSpriteCreate(const char* const pName, UINT32 uiLightType);
+ * If this function fails (out of sprites, or bad template name) it returns
+ * NULL. */
+LIGHT_SPRITE* LightSpriteCreate(const char* const pName);
 // Removes an instance of a light. If it was on, it is erased from the scene.
 BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* l);
 // Sets the X,Y position (IN TILES) of a light instance.

@@ -862,7 +862,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 			light_file = "Light2";
 		}
 
-		LIGHT_SPRITE* const l = LightSpriteCreate(light_file, 0);
+		LIGHT_SPRITE* const l = LightSpriteCreate(light_file);
 		pSoldier->light = l;
 		if (l == NULL)
 		{

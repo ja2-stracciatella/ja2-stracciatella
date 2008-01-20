@@ -13,14 +13,13 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 	INT16  x;
 	INT16  y;
 	UINT32 flags;
-	UINT32 light_type;
 
 	const BYTE* d = *data;
 	EXTR_I16(d, x)
 	EXTR_I16(d, y)
 	EXTR_SKIP(d, 12)
 	EXTR_U32(d, flags)
-	EXTR_U32(d, light_type)
+	EXTR_SKIP(d, 4)
 	Assert(d == *data + 24);
 
 	UINT8 str_len;
@@ -29,7 +28,7 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 	EXTR_STR(d, template_name, str_len)
 	template_name[str_len] = '\0';
 
-	LIGHT_SPRITE* const l = LightSpriteCreate(template_name, light_type);
+	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
 	// if this fails, then we will ignore the light.
 	// ATE: Don't add ANY lights of mapscreen util is on
 	if (l != NULL && guiCurrentScreen != MAPUTILITY_SCREEN)
@@ -67,7 +66,7 @@ BOOLEAN InjectLightSpriteIntoFile(const HWFILE file, const LIGHT_SPRITE* const l
 	INJ_I16(d, l->iY)
 	INJ_SKIP(d, 12)
 	INJ_U32(d, l->uiFlags)
-	INJ_U32(d, l->uiLightType)
+	INJ_SKIP(d, 4)
 	Assert(d == endof(data));
 
 	if (!FileWrite(file, data, sizeof(data))) return FALSE;

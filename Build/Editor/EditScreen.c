@@ -2534,7 +2534,7 @@ static void ShowCurrentSlotImage(HVOBJECT hVObj, INT32 iWindow)
 //
 //	Creates and places a light of selected radius and color into the world.
 //
-BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
+BOOLEAN PlaceLight(const INT16 sRadius, const INT16 iMapX, const INT16 iMapY)
 {
 	UINT8 ubIntensity;
 	STRING512 Filename;
@@ -2544,7 +2544,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 	sprintf( Filename, "L-R%02d.LHT", sRadius );
 
 	// Attempt to create light
-	LIGHT_SPRITE* l = LightSpriteCreate(Filename, sType);
+	LIGHT_SPRITE* l = LightSpriteCreate(Filename);
 	if (l == NULL)
 	{
 		// Couldn't load file because it doesn't exist. So let's make the file
@@ -2564,7 +2564,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 			return( FALSE );
 		}
 
-		l = LightSpriteCreate(Filename, sType);
+		l = LightSpriteCreate(Filename);
 		if (l == NULL)
 		{
 			// Can't create sprite
@@ -2589,7 +2589,7 @@ BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType )
 		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 
-	AddLightToUndoList( iMapIndex, 0, 0 );
+	AddLightToUndoList(iMapIndex, 0);
 
 	return( TRUE );
 }
@@ -2608,7 +2608,6 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 {
 	BOOLEAN fRemovedLight;
 	INT32 iMapIndex;
-	UINT32 uiLastLightType;
 	const char* pLastLightName;
 
 	fRemovedLight = FALSE;
@@ -2622,7 +2621,6 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 			{
 				// Ok, it's not a merc's light so kill it!
 				pLastLightName = LightSpriteGetTypeName(l);
-				uiLastLightType = l->uiLightType;
 				LightSpritePower(l, FALSE);
 				LightSpriteDestroy(l);
 				fRemovedLight = TRUE;
@@ -2638,7 +2636,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 		//should work.  Basically, the radius values aren't stored in the lights, so I have pull
 		//the radius out of the filename.  Ex:  L-RO5.LHT
 		usRadius = pLastLightName[4] - 0x30;
-		AddLightToUndoList( iMapIndex, usRadius, (UINT8)uiLastLightType );
+		AddLightToUndoList(iMapIndex, usRadius);
 	}
 
 	return( fRemovedLight );
@@ -2958,7 +2956,7 @@ static void HandleMouseClicksInGameScreen(void)
 				// Add a normal light to the world
 				if( gfFirstPlacement )
 				{
-					PlaceLight( gsLightRadius, sGridX, sGridY, 0 );
+					PlaceLight(gsLightRadius, sGridX, sGridY);
 					gfFirstPlacement = FALSE;
 				}
 				break;

@@ -17,7 +17,7 @@ extern void ShowCurrentDrawingMode( void );
 
 void DisplayTilesetPage(void);
 
-BOOLEAN PlaceLight( INT16 sRadius, INT16 iMapX, INT16 iMapY, INT16 sType );
+BOOLEAN PlaceLight(INT16 sRadius, INT16 iMapX, INT16 iMapY);
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY );
 extern BOOLEAN gfMercResetUponEditorEntry;
 
