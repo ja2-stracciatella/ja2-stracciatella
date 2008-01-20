@@ -54,7 +54,6 @@
 // light sprite flags
 #define		LIGHT_SPR_ACTIVE		0x0001
 #define		LIGHT_SPR_ON				0x0002
-#define		LIGHT_SPR_ANIMATE		0x0004
 #define		LIGHT_SPR_ERASE			0x0008
 #define		LIGHT_SPR_ONROOF		0x0020
 #define   MERC_LIGHT		      0x0040
