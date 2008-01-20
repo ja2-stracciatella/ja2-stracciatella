@@ -81,7 +81,7 @@ struct LIGHT_SPRITE
 					INT16		iX, iY;
 					INT16		iOldX, iOldY;
 					INT16		iAnimSpeed;
-					INT32		iTemplate;
+	LightTemplate* template;
 					UINT32	uiFlags;
 					UINT32	uiLightType;
 };

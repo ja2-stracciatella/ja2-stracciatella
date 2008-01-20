@@ -208,7 +208,7 @@ void LoadShadeTablesFromTextFile()
 UINT32	gNodesAdded=0;
 
 
-static INT32 LightLoad(const char* pFilename);
+static LightTemplate* LightLoad(const char* pFilename);
 
 
 /****************************************************************************************
@@ -227,7 +227,7 @@ BOOLEAN InitLightingSystem(void)
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
 
-	if(LightLoad("TRANSLUC.LHT")!=0)
+	if (LightLoad("TRANSLUC.LHT") != g_light_templates)
 	{
 		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
 		return(FALSE);
@@ -296,7 +296,7 @@ BOOLEAN LightReset(void)
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
 
-	if(LightLoad("TRANSLUC.LHT")!=0)
+	if (LightLoad("TRANSLUC.LHT") != g_light_templates)
 	{
 		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
 		return(FALSE);
@@ -1936,8 +1936,7 @@ BOOLEAN fOnlyWalls;
 
 //MAP_ELEMENT * pMapElement;
 
-	const INT32 iLight = l->iTemplate;
-	const LightTemplate* const t = &g_light_templates[iLight];
+	const LightTemplate* const t = l->template;
 	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
@@ -2450,7 +2449,7 @@ INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
 BOOLEAN fOnlyWalls;
 
-	LightTemplate* const t = &g_light_templates[l->iTemplate];
+	LightTemplate* const t = l->template;
 	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
@@ -2606,15 +2605,15 @@ BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
 }
 
 
-/* Loads a light template from disk. The light template number is returned, or
- * (-1) if the file wasn't loaded. */
-static INT32 LightLoad(const char* pFilename)
+/* Loads a light template from disk. The light template is returned, or NULL if
+ * the file wasn't loaded. */
+static LightTemplate* LightLoad(const char* pFilename)
 {
 	INT32 iLight = LightGetFree();
-	if (iLight == -1) return -1;
+	if (iLight == -1) return NULL;
 
 	const HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
-	if (hFile == 0) return -1;
+	if (hFile == 0) return NULL;
 
 	LightTemplate* const t = &g_light_templates[iLight];
 
@@ -2623,7 +2622,7 @@ static INT32 LightLoad(const char* pFilename)
 	if (t->lights == NULL)
 	{
 		t->n_lights = 0;
-		return(-1);
+		return NULL;
 	}
 	FileRead(hFile, t->lights, sizeof(*t->lights) * t->n_lights);
 
@@ -2634,7 +2633,7 @@ static INT32 LightLoad(const char* pFilename)
 		t->n_lights = 0;
 		t->n_rays   = 0;
 		MemFree(t->lights);
-		return -1;
+		return NULL;
 	}
 	FileRead(hFile, t->rays, sizeof(*t->rays) * t->n_rays);
 
@@ -2644,21 +2643,21 @@ static INT32 LightLoad(const char* pFilename)
 	strcpy(t->name, pFilename);
 
 	LightCalcRect(t);
-	return iLight;
+	return t;
 }
 
 
 /* Figures out whether a light template is already in memory, or needs to be
- * loaded from disk. Returns the index of the template, or (-1) if it couldn't
- * be loaded. */
-static INT32 LightLoadCachedTemplate(const char* pFilename)
+ * loaded from disk. Returns the template, or NULL if it couldn't be loaded. */
+static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
 {
 INT32 iCount;
 
 	for(iCount=0; iCount < MAX_LIGHT_TEMPLATES; iCount++)
 	{
-		const char* const name = g_light_templates[iCount].name;
-		if (name != NULL && strcasecmp(pFilename, name) == 0) return iCount;
+		LightTemplate* const t = &g_light_templates[iCount];
+		const char* const name = t->name;
+		if (name != NULL && strcasecmp(pFilename, name) == 0) return t;
 	}
 
 	return(LightLoad(pFilename));
@@ -2768,8 +2767,8 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightTyp
 	l->iOldY       = WORLD_ROWS + 1;
 	l->uiLightType = uiLightType;
 
-	l->iTemplate = LightLoadCachedTemplate(pName);
-	if (l->iTemplate == -1) return NULL;
+	l->template = LightLoadCachedTemplate(pName);
+	if (l->template == NULL) return NULL;
 
 	l->uiFlags |= LIGHT_SPR_ACTIVE;
 	return l;
@@ -3139,5 +3138,5 @@ void CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
-	return g_light_templates[l->iTemplate].name;
+	return l->template->name;
 }
