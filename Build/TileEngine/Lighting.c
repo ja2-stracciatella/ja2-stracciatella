@@ -693,7 +693,7 @@ static BOOLEAN LightIlluminateWall(INT16 iSourceX, INT16 iSourceY, INT16 iTileX,
 
 
 // Adds a specified amount of light to all objects on a given tile.
-static BOOLEAN LightAddTile(UINT32 uiLightType, INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY, UINT8 ubShade, UINT32 uiFlags, BOOLEAN fOnlyWalls)
+static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX, const INT16 iY, const UINT8 ubShade, const UINT32 uiFlags, const BOOLEAN fOnlyWalls)
 {
 LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 UINT8 ubShadeAdd;
@@ -1803,7 +1803,7 @@ INT16 iCountY, iCountX;
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightAddTile(uiLightType, iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE );
+			LightAddTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE);
 
 	if(ubAmbientLightLevel >= LIGHT_DUSK_CUTOFF)
 		RenderSetShadows(FALSE);
@@ -1974,7 +1974,6 @@ BOOLEAN fOnlyWalls;
 	iOldX = iX;
 	iOldY = iY;
 
-	const UINT32 light_type = l->uiLightType;
 	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
 		const UINT16 usNodeIndex = t->rays[uiCount];
@@ -2002,7 +2001,7 @@ BOOLEAN fOnlyWalls;
 				if (l->uiFlags & MERC_LIGHT)       uiFlags |= LIGHT_FAKE;
 				if (l->uiFlags & LIGHT_SPR_ONROOF) uiFlags |= LIGHT_ROOF_ONLY;
 
-				LightAddTile(light_type, iOldX, iOldY, iX + pLight->iDX, iY + pLight->iDY, pLight->ubLight, uiFlags, fOnlyWalls);
+				LightAddTile(iOldX, iOldY, iX + pLight->iDX, iY + pLight->iDY, pLight->ubLight, uiFlags, fOnlyWalls);
 
 				pLight->uiFlags|=LIGHT_NODE_DRAWN;
 			}
