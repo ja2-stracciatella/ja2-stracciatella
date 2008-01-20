@@ -630,12 +630,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 												dOffsetY = pCorpse->def.dYPos - gsRenderCenterY;
 
 												// OK, if this is a corpse.... stop if not visible
-												if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
-												{
-													//CONTINUE, DONOT RENDER
-													pNode = (fLinkedListDirection ? pNode->pNext : pNode->pPrevNode);
-													continue;
-												}
+												if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
 											}
 											else
 											{
@@ -742,12 +737,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
 										if (bVisibleItemCount == MAX_RENDERED_ITEMS || gWorldItems[pItemPool->iItemIndex].bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
 										{
-											if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS))
-											{
-												//CONTINUE, DONOT RENDER
-												pNode = (fLinkedListDirection ? pNode->pNext : pNode->pPrevNode);
-												continue;
-											}
+											if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
 										}
 
 										if (pItemPool->bRenderZHeightAboveLevel > 0)
@@ -757,11 +747,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									}
 
 									// If render tile is false...
-									if (!fRenderTile)
-									{
-										pNode = (fLinkedListDirection ? pNode->pNext : pNode->pPrevNode);
-										continue;
-									}
+									if (!fRenderTile) goto next_node;
 							}
 
 							// specific code for node types on a per-tile basis
@@ -1585,6 +1571,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 								}
 							}
 
+next_node:
 							pNode = (fLinkedListDirection ? pNode->pNext : pNode->pPrevNode);
 						}
 					}
