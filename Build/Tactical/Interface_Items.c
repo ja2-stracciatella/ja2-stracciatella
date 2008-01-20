@@ -5265,6 +5265,7 @@ void RenderItemPickupMenu( )
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontShadow( ITEMDESC_FONTSHADOW2 );
 
+		const UINT16 outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
 		for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
 		{
 			if ( gItemPickupMenu.ItemPoolSlots[ cnt ] != NULL )
@@ -5285,21 +5286,8 @@ void RenderItemPickupMenu( )
         // ATE: Adjust to basic shade.....
     		te->hTileSurface->pShadeCurrent = te->hTileSurface->pShades[4];
 
-				//else
-				{
-					if ( gItemPickupMenu.pfSelectedArray[  cnt + gItemPickupMenu.ubScrollAnchor ] )
-					{
-						//SetFontForeground( FONT_MCOLOR_LTYELLOW );
-						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 255, 0)), TRUE);
-					}
-					else
-					{
-						//SetFontForeground( FONT_BLACK );
-						//SetFontShadow( ITEMDESC_FONTSHADOW2 );
-						Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, 0, FALSE);
-					}
-        }
+				const BOOLEAN do_outline = gItemPickupMenu.pfSelectedArray[cnt + gItemPickupMenu.ubScrollAnchor];
+				Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, outline_col, do_outline);
 
         // Draw text.....
       	SetFont( ITEM_FONT );
