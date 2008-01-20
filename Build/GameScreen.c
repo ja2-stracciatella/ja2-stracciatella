@@ -18,7 +18,6 @@
 #include "Cursors.h"
 #include "VObject_Blitters.h"
 #include "Button_System.h"
-#include "Lighting.h"
 #include "RenderWorld.h"
 #include "Sys_Globals.h"
 #include "Environment.h"

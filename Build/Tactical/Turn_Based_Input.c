@@ -20,7 +20,6 @@
 #include "Interactive_Tiles.h"
 #include "Interface_Cursors.h"
 #include "Weapons.h"
-#include "Lighting.h"
 #include "Sound_Control.h"
 #include "Environment.h"
 #include "Music_Control.h"

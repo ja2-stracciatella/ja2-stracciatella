@@ -23,7 +23,6 @@
 #include "Font_Control.h"
 #include "Render_Dirty.h"
 #include "Interface_Cursors.h"
-#include "Lighting.h"
 #include "Interface_Panels.h"
 #include "PathAI.h"
 #include "VObject_Blitters.h"

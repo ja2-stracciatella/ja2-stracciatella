@@ -26,7 +26,6 @@
 #include "Render_Dirty.h"
 #include "Interface_Cursors.h"
 #include "Sound_Control.h"
-#include "Lighting.h"
 #include "Interface_Panels.h"
 #include "PathAI.h"
 #include "Faces.h"

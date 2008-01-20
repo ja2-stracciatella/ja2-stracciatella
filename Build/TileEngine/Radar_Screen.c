@@ -8,7 +8,6 @@
 #include "Interface.h"
 #include "Overhead.h"
 #include "Soldier_Control.h"
-#include "Lighting.h"
 #include "Timer_Control.h"
 #include "WCheck.h"
 #include "SysUtil.h"

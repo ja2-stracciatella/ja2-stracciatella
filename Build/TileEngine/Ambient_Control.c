@@ -4,7 +4,6 @@
 #include "Sound_Control.h"
 #include "Game_Events.h"
 #include "Ambient_Control.h"
-#include "Lighting.h"
 #include "SoundMan.h"
 #include "Debug.h"
 

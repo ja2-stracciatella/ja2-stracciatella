@@ -19,7 +19,6 @@
 #include "Handle_UI.h"
 #include "Interface_Items.h"
 #include "Interface_Utils.h"
-#include "Lighting.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"
 #include "Interface_Cursors.h"

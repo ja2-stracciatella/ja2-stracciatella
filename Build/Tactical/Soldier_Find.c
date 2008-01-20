@@ -22,7 +22,6 @@
 #include "English.h"
 #include "Overhead.h"
 #include "OppList.h"
-#include "Lighting.h"
 #include "PathAI.h"
 #include "ScreenIDs.h"
 #include "Interface_Cursors.h"

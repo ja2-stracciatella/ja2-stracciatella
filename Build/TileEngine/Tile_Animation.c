@@ -5,7 +5,6 @@
 #include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"
-#include "Lighting.h"
 #include "RenderWorld.h"
 #include "Overhead.h"
 #include "AI.h"

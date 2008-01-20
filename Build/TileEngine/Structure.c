@@ -15,7 +15,6 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "LOS.h"
-#include "Lighting.h"
 #include "Smell.h"
 #include "SaveLoadMap.h"
 #include "StrategicMap.h"

@@ -25,7 +25,6 @@
 #include "Soldier_Control.h"
 #include "PathAI.h"
 #include "Weapons.h"
-#include "Lighting.h"
 #include "Faces.h"
 #include "MapScreen.h"
 #include "Message.h"
