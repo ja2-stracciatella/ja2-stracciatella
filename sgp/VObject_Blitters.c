@@ -7571,7 +7571,7 @@ BlitDone:
 }
 
 
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline, SGPRect *clipregion )
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, UINT16* const pZBuffer, const UINT16 usZValue, const HVOBJECT hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const INT16 s16BPPColor, const SGPRect* const clipregion)
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
@@ -7718,7 +7718,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 							*(UINT16*)ZPtr = usZValue;
 							*(UINT16*)DestPtr = p16BPPPalette[src];
 						}
-						else if (fDoOutline)
+						else
 						{
 							*(UINT16*)DestPtr = s16BPPColor;
 						}
@@ -7936,7 +7936,7 @@ BlitDone:
 }
 
 
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline, SGPRect *clipregion )
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, UINT16* const pZBuffer, const UINT16 usZValue, const HVOBJECT hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const INT16 s16BPPColor, const SGPRect* const clipregion)
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth, Unblitted;
@@ -8092,7 +8092,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 					UINT8 px = *SrcPtr;
 					if (px == 254)
 					{
-						if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+						*(UINT16*)DestPtr = s16BPPColor;
 					}
 					else
 					{
@@ -8749,7 +8749,7 @@ BlitDone:
 }
 
 
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline )
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, UINT16* const pZBuffer, const UINT16 usZValue, const HVOBJECT hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const INT16 s16BPPColor)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
@@ -8809,7 +8809,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 
 						if (px == 254)
 						{
-							if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+							*(UINT16*)DestPtr = s16BPPColor;
 						}
 						else
 						{
@@ -8922,7 +8922,7 @@ BlitDone:
 }
 
 
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline )
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, UINT16* const pZBuffer, const UINT16 usZValue, const HVOBJECT hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const INT16 s16BPPColor)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
@@ -8991,7 +8991,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured( UINT16 *pBuffer, UINT3
 					UINT8 px = *SrcPtr;
 					if (px == 254)
 					{
-						if (fDoOutline) *(UINT16*)DestPtr = s16BPPColor;
+						*(UINT16*)DestPtr = s16BPPColor;
 					}
 					else
 					{
