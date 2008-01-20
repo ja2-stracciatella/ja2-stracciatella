@@ -957,8 +957,7 @@ static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 			//blt the shadow of the item
 			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
 			//blt the item
-			BltVideoObjectOutline(FRAME_BUFFER,       item_vo, pItem->ubGraphicNum, sCenX,     sCenY, 0, FALSE);
-
+			BltVideoObjectOutline(      FRAME_BUFFER, item_vo, pItem->ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
 
 			//if there are more then 1 piece of equipment in the current slot, display how many there are
 			if( gMercProfiles[ubMercID].bInvNumber[ i ] > 1 )

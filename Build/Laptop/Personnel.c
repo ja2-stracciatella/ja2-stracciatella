@@ -1272,7 +1272,7 @@ static void DisplayInventoryForSelectedChar(void)
 				INT16 sCenX = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 				INT16 sCenY = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 
-				BltVideoObjectOutline(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, 0, FALSE);
+				BltVideoObjectOutline(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, TRANSPARENT);
 
 				SetFont(FONT10ARIAL);
 				SetFontForeground(FONT_WHITE);

@@ -784,7 +784,7 @@ static void RenderSelectedItemBlownUp(void)
 	INT16 sOffsetY = ETRLEProps->sOffsetY;
 	yp = sScreenY + (20 - sHeight - sOffsetY*2) / 2;
 
-	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)), TRUE);
+	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)));
 
 	//Display the item name above it
 	SetFont( FONT10ARIAL );

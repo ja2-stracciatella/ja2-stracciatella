@@ -132,4 +132,7 @@ typedef SGPVSurface*       HVSURFACE;
 
 typedef struct BUTTON_PICS BUTTON_PICS;
 
+
+#define TRANSPARENT ((UINT16)0)
+
 #endif

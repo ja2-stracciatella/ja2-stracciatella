@@ -76,8 +76,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 
 
 // ATE: New blitters for showing an outline at color 254
-BOOLEAN Blt8BPPDataTo16BPPBufferOutline(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline);
-BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, BOOLEAN fDoOutline, const SGPRect* clipregion);
+BOOLEAN Blt8BPPDataTo16BPPBufferOutline(    UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor);
+BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor, const SGPRect* clipregion);
 BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ(                    UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, INT16 s16BPPColor);
 BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow(UINT16* pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, const SGPRect* clipregion);

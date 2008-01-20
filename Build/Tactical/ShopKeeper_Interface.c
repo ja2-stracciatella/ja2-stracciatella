@@ -2129,20 +2129,25 @@ static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject);
 static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX, UINT16 usPosY, const OBJECTTYPE* pItemObject, BOOLEAN fHatchedOut, UINT8 ubItemArea)
 {
 	CHAR16			zTemp[64];
-	BOOLEAN			fHighlighted = IsGunOrAmmoOfSameTypeSelected( pItemObject );
 	BOOLEAN			fDisplayMercFace=FALSE;
 	UINT8				ubMercID=0;
 	UINT32			uiItemCost=0;
 	BOOLEAN			fPrintRepaired = FALSE;
 
-	//if the item is not highlighted, and we are not rerendering the screen
-	if( !( fHighlighted || gubSkiDirtyLevel != SKI_DIRTY_LEVEL0 ) )
-		return( 0 );
-
-	//
-//	if( fHighlighted )
-//		gubSkiDirtyLevel = SKI_DIRTY_LEVEL1;
-
+	UINT16 outline;
+	if (IsGunOrAmmoOfSameTypeSelected(pItemObject))
+	{
+		outline = Get16BPPColor(FROMRGB(255, 255, 255));
+	}
+	else if (gubSkiDirtyLevel != SKI_DIRTY_LEVEL0)
+	{
+		outline = TRANSPARENT;
+	}
+	else
+	{
+		// if the item is not highlighted, and we are not rerendering the screen
+		return 0;
+	}
 
 	//Display the item graphic, and price
 	const INVTYPE* pItem = &Item[usItemIndex];
@@ -2160,7 +2165,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	RestoreExternBackgroundRect( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT );
 
 	BltVideoObjectOutlineShadow(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-	BltVideoObjectOutline(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, Get16BPPColor(FROMRGB(255, 255, 255)), fHighlighted);
+	BltVideoObjectOutline(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, outline);
 
 	//Display the status of the item
 	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 2 + 20, 2, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), TRUE, FRAME_BUFFER);//guiSAVEBUFFER

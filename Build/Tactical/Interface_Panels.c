@@ -3397,7 +3397,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 		else
 		{
 			// Look in primary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, FALSE, 0);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[HANDPOS], sX, sY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, TRANSPARENT);
 		}
 
 		if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
@@ -3408,7 +3408,7 @@ static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT
 		else
 		{
 			// Do secondary hand
-			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, FALSE, 0);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[SECONDHANDPOS], sX, sY + TM_INV_HAND_SEPY, TM_INV_WIDTH, TM_INV_HEIGHT, fDirty, 0, TRANSPARENT);
 		}
 	}
 }

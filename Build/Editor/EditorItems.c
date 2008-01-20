@@ -333,7 +333,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 
-			BltVideoObjectOutline(eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y + 2, 0, FALSE);
+			BltVideoObjectOutline(eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y + 2, TRANSPARENT);
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			if( y == 0 )
 			{
@@ -472,7 +472,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 				if( sWidth )
 				{
-					BltVideoObjectOutline(eInfo.uiBuffer, vo, item->ubGraphicNum, sStart, y+2, 0, FALSE);
+					BltVideoObjectOutline(eInfo.uiBuffer, vo, item->ubGraphicNum, sStart, y + 2, TRANSPARENT);
 				}
 				//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 				if( y == 0 )
@@ -551,7 +551,7 @@ void RenderEditorItemsInfo()
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
-				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 250, 0)), TRUE);
+				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y + 2, Get16BPPColor(FROMRGB(250, 250, 0)));
 			}
 		}
 	}
@@ -570,7 +570,7 @@ void RenderEditorItemsInfo()
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
 			if( sWidth )
 			{
-				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y+2, Get16BPPColor(FROMRGB(250, 0, 0)), TRUE);
+				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y + 2, Get16BPPColor(FROMRGB(250, 0, 0)));
 			}
 		}
 	}

@@ -234,21 +234,9 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const INT16 sX = dx + MAP_INVENTORY_POOL_SLOT_OFFSET_X;
 	const INT16 sY = dy;
 
-	INT16   sOutLine;
-	BOOLEAN fOutLine;
-	if (fMapInventoryItemCompatable[iCurrentSlot])
-	{
-		sOutLine = Get16BPPColor(FROMRGB(255, 255, 255));
-    fOutLine = TRUE;
-	}
-	else
-	{
-		sOutLine = 0;
-		fOutLine = FALSE;
-	}
-
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, sX + 7, sY, 60, 25, DIRTYLEVEL2, 0, fOutLine, sOutLine);//67
+	const UINT16 outline = (fMapInventoryItemCompatable[iCurrentSlot] ? Get16BPPColor(FROMRGB(255, 255, 255)) : TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, sX + 7, sY, 60, 25, DIRTYLEVEL2, 0, outline);
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw bar for condition

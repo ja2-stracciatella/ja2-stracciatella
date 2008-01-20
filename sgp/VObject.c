@@ -418,7 +418,7 @@ const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject* cons
 }
 
 
-BOOLEAN BltVideoObjectOutline(SGPVSurface* const dst, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY, const INT16 s16BPPColor, const BOOLEAN fDoOutline)
+BOOLEAN BltVideoObjectOutline(SGPVSurface* const dst, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY, const INT16 s16BPPColor)
 {
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
@@ -426,11 +426,11 @@ BOOLEAN BltVideoObjectOutline(SGPVSurface* const dst, const SGPVObject* const hS
 
 	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 	{
-		Blt8BPPDataTo16BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline, &ClippingRect);
+		Blt8BPPDataTo16BPPBufferOutlineClip(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, &ClippingRect);
 	}
 	else
 	{
-		Blt8BPPDataTo16BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor, fDoOutline);
+		Blt8BPPDataTo16BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor);
 	}
 
 	UnLockVideoSurface(dst);

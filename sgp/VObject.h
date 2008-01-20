@@ -89,7 +89,7 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex,
 
 const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject*, UINT16 usIndex);
 
-BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor, BOOLEAN fDoOutline);
+BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
 BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 /* Loads a video object, blits it once and frees it */

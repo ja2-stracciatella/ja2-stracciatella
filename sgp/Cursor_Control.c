@@ -49,7 +49,7 @@ static BOOLEAN BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 
 	const ETRLEObject* pTrav = &hVObject->pETRLEObject[usVideoObjectSubIndex];
 	INT16 sXPos = (gsCurMouseWidth  - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 	INT16 sYPos = (gsCurMouseHeight - pTrav->usHeight) / 2 - pTrav->sOffsetY;
-	return BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)), TRUE);
+	return BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)));
 }
 
 
@@ -231,17 +231,17 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			// ATE: Check for extern 2nd...
 			if (uiCursorIndex == EXTERN2_CURSOR)
 			{
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExtern2Vo, gusExtern2VoSubIndex, 0, 0, TRANSPARENT);
 
 				// Get ETRLE values
 				const ETRLEObject* pTravTemp = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
 				INT16 sSubX = (pTrav->usWidth  - pTravTemp->usWidth  - pTravTemp->sOffsetX) / 2;
 				INT16 sSubY = (pTrav->usHeight - pTravTemp->usHeight - pTravTemp->sOffsetY) / 2;
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, sSubX, sSubY, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, sSubX, sSubY, TRANSPARENT);
 			}
 			else
 			{
-				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, 0, FALSE);
+				BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, TRANSPARENT);
 			}
 
 			// Hook into hook function

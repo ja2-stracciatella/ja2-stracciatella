@@ -902,8 +902,6 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 {
 	INT16 sX, sY;
 	INT16	sBarX, sBarY;
-	BOOLEAN	fOutline = FALSE;
-	INT16		sOutlineColor = 0;
 	UINT8		fRenderDirtyLevel;
 	BOOLEAN fHatchItOut = FALSE;
 
@@ -916,6 +914,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	sX = gSMInvData[ sPocket ].sX;
 	sY = gSMInvData[ sPocket ].sY;
 
+	UINT16 outline = TRANSPARENT;
 	if ( fDirtyLevel == DIRTYLEVEL2 )
 	{
 		// CHECK FOR COMPATIBILITY WITH MAGAZINES
@@ -932,9 +931,8 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 			{
 				// IT's an OK calibre ammo, do something!
 				// Render Item with specific color
-				//fOutline = TRUE;
-				//sOutlineColor = Get16BPPColor( FROMRGB( 96, 104, 128 ) );
-				//sOutlineColor = Get16BPPColor( FROMRGB( 20, 20, 120 ) );
+				//outline = Get16BPPColor(FROMRGB(96, 104, 128));
+				//outline = Get16BPPColor(FROMRGB(20,  20, 120));
 
 				// Draw rectangle!
 				pDestBuf = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
@@ -951,11 +949,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 		}
 */
 
-		if ( gbCompatibleAmmo[ sPocket ] )
-		{
-			fOutline = TRUE;
-			sOutlineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
-		}
+		if (gbCompatibleAmmo[sPocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
 
 		// IF it's the second hand and this hand cannot contain anything, remove the second hand position graphic
 		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
@@ -992,7 +986,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	}
 
 	//Now render as normal
-	INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, fOutline, sOutlineColor);
+	INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
 
 	if ( gbInvalidPlacementSlot[ sPocket ] )
 	{
@@ -1678,7 +1672,7 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 				continue;
 			}
 
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, TRUE, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
 		}
 	}
 }
@@ -1754,7 +1748,7 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, BOOLEAN fOutline, INT16 sOutlineColor)
+void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* const pSoldier, const OBJECTTYPE* pObject, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 sOutlineColor)
 {
 	UINT16								uiStringLength;
 	INVTYPE								*pItem;
@@ -1789,7 +1783,7 @@ void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* pSoldier, con
 
 		// Shadow area
 		BltVideoObjectOutlineShadow(uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-		BltVideoObjectOutline(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor, fOutline);
+		BltVideoObjectOutline(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor);
 
 
 		if ( uiBuffer == FRAME_BUFFER )
@@ -2633,7 +2627,7 @@ void RenderItemDescriptionBox(void)
 				INT16 sCenX = dx + xy[cnt].sX + 5;
 				INT16 sCenY = dy + xy[cnt].sY - 1;
 
-				INVRenderItem(guiSAVEBUFFER, NULL, obj, sCenX, sCenY, xy[cnt].sWidth, xy[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, FALSE, 0);
+				INVRenderItem(guiSAVEBUFFER, NULL, obj, sCenX, sCenY, xy[cnt].sWidth, xy[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, TRANSPARENT);
 
 				sCenX -= xy[cnt].sBarDx;
 				sCenY += xy[cnt].sBarDy;
@@ -4290,7 +4284,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
 			INT16 sY = gsItemPopupY + 3;
 
-			INVRenderItem(FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, FALSE, 0);
+			INVRenderItem(FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, TRANSPARENT);
 
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
@@ -4491,7 +4485,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 			pObject.usItem = FIRST_KEY + LockTable[ gpItemPopupSoldier->pKeyRing[ cnt].ubKeyID ].usKeyItem;
 
 			// render the item
-			INVRenderItem(FRAME_BUFFER, NULL, &pObject, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 8, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight, usWidth - 8, usHeight - 2, DIRTYLEVEL2, 0, 0, 0);
+			INVRenderItem(FRAME_BUFFER, NULL, &pObject, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 8, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight, usWidth - 8, usHeight - 2, DIRTYLEVEL2, 0, TRANSPARENT);
 		}
 	}
 
@@ -5286,8 +5280,8 @@ void RenderItemPickupMenu( )
         // ATE: Adjust to basic shade.....
     		te->hTileSurface->pShadeCurrent = te->hTileSurface->pShades[4];
 
-				const BOOLEAN do_outline = gItemPickupMenu.pfSelectedArray[cnt + gItemPickupMenu.ubScrollAnchor];
-				Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, outline_col, do_outline);
+				const UINT16 outline = (gItemPickupMenu.pfSelectedArray[cnt + gItemPickupMenu.ubScrollAnchor] ? outline_col : TRANSPARENT);
+				Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, outline);
 
         // Draw text.....
       	SetFont( ITEM_FONT );
@@ -5337,8 +5331,8 @@ void RenderItemPickupMenu( )
 						SetFontForeground( FONT_WHITE );
 						SetFontShadow( DEFAULT_SHADOW );
 					//}
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)), TRUE);
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)));
+					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)));
 				}
 				else
 				{
