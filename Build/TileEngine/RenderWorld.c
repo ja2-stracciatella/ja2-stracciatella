@@ -311,7 +311,6 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion);
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
-static BOOLEAN Zero8BPPDataTo16BPPBufferTransparent(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex);
 
 
 static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY_M, INT32 iStartPointX_S, INT32 iStartPointY_S, INT32 iEndXS, INT32 iEndYS, UINT8 ubNumLevels, UINT32* puiLevels, UINT16* psLevelIDs)
@@ -1161,10 +1160,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									VarFindFontCenterCoordinates(sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pNode->uiAPCost);
 									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
 									SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-								}
-								else if (uiLevelNodeFlags & LEVELNODE_ERASEZ && !(uiFlags & TILES_DIRTY))
-								{
-									Zero8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex);
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_ITEM && !(uiFlags & TILES_DIRTY))
 								{
@@ -5869,120 +5864,6 @@ static void ResetRenderParameters(void)
 {
 	// Restore clipping rect
 	gClippingRect = gOldClipRect;
-}
-
-
-static BOOLEAN Zero8BPPDataTo16BPPBufferTransparent(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
-{
-	Assert(hSrcVObject != NULL);
-	Assert(pBuffer     != NULL);
-
-	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
-	UINT32       usHeight = pTrav->usHeight;
-	const UINT32 usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
-
-	// Add to start position of dest buffer
-	const INT32 iTempX = iX + pTrav->sOffsetX;
-	const INT32 iTempY = iY + pTrav->sOffsetY;
-
-	CHECKF(iTempX >= 0);
-	CHECKF(iTempY >= 0);
-
-
-	const UINT8* SrcPtr   = (const UINT8*)hSrcVObject->pPixData + uiOffset;
-	UINT8*       DestPtr  = (UINT8*)pBuffer + uiDestPitchBYTES * iTempY + iTempX * 2;
-	const UINT32 LineSkip = uiDestPitchBYTES - usWidth * 2;
-
-#if 1 // XXX TODO
-	UNIMPLEMENTED
-#else
-	__asm {
-
-		mov		esi, SrcPtr
-		mov		edi, DestPtr
-		xor		eax, eax
-		xor		ebx, ebx
-		xor		ecx, ecx
-
-BlitDispatch:
-
-		mov		cl, [esi]
-		inc		esi
-		or		cl, cl
-		js		BlitTransparent
-		jz		BlitDoneLine
-
-//BlitNonTransLoop:
-
-		clc
-		rcr		cl, 1
-		jnc		BlitNTL2
-
-		mov		[edi], ax
-
-		inc		esi
-		add		edi, 2
-
-BlitNTL2:
-		clc
-		rcr		cl, 1
-		jnc		BlitNTL3
-
-		mov		[edi], ax
-
-		mov		[edi+2], ax
-
-		add		esi, 2
-		add		edi, 4
-
-BlitNTL3:
-
-		or		cl, cl
-		jz		BlitDispatch
-
-		xor		ebx, ebx
-
-BlitNTL4:
-
-		mov		[edi], ax
-
-		mov		[edi+2], ax
-
-		mov		[edi+4], ax
-
-		mov		[edi+6], ax
-
-		add		esi, 4
-		add		edi, 8
-		dec		cl
-		jnz		BlitNTL4
-
-		jmp		BlitDispatch
-
-BlitTransparent:
-
-		and		ecx, 07fH
-//		shl		ecx, 1
-		add   ecx, ecx
-		add		edi, ecx
-		jmp		BlitDispatch
-
-
-BlitDoneLine:
-
-		dec		usHeight
-		jz		BlitDone
-		add		edi, LineSkip
-		jmp		BlitDispatch
-
-
-BlitDone:
-	}
-#endif
-
-	return TRUE;
 }
 
 
