@@ -85,7 +85,6 @@ struct LIGHT_SPRITE
 					UINT32	uiFlags;
 					UINT32	uiLightType;
 };
-CASSERT(sizeof(LIGHT_SPRITE) == 24)
 
 
 // Initializes the lighting system

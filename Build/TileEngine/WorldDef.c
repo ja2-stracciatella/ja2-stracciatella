@@ -1,4 +1,5 @@
 #include "HImage.h"
+#include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
@@ -3814,15 +3815,7 @@ static void SaveMapLights(HWFILE hfile)
 
 	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		if (!IsSoldierLight(l))
-		{ //save the light
-			FileWrite(hfile, l, sizeof(LIGHT_SPRITE));
-
-			const char* const light_name = LightSpriteGetTypeName(l);
-			const UINT8 ubStrLen = strlen(light_name) + 1;
-			FileWrite(hfile, &ubStrLen, 1);
-			FileWrite(hfile, light_name, ubStrLen);
-		}
+		if (!IsSoldierLight(l)) InjectLightSpriteIntoFile(hfile, l);
 	}
 }
 
@@ -3832,11 +3825,6 @@ static void LoadMapLights(INT8** hBuffer)
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
 	UINT16 usNumLights;
-	INT32 cnt;
-	UINT8 ubStrLen;
-	LIGHT_SPRITE	TmpLight;
-	UINT32 uiHour;
-	BOOLEAN fPrimeTime = FALSE, fNightTime = FALSE;
 
 	//reset the lighting system, so that any current lights are toasted.
 	LightReset();
@@ -3858,57 +3846,23 @@ static void LoadMapLights(INT8** hBuffer)
 	}
 
 	//Determine which lights are valid for the current time.
+	UINT32 light_time = 0;
 	if( !gfEditMode )
 	{
-		uiHour = GetWorldHour();
+		const UINT32 uiHour = GetWorldHour();
 		if( uiHour >= NIGHT_TIME_LIGHT_START_HOUR || uiHour < NIGHT_TIME_LIGHT_END_HOUR )
 		{
-			fNightTime = TRUE;
+			light_time |= LIGHT_NIGHTTIME;
 		}
 		if( uiHour >= PRIME_TIME_LIGHT_START_HOUR )
 		{
-			fPrimeTime = TRUE;
+			light_time |= LIGHT_PRIMETIME;
 		}
 	}
 
-	for( cnt = 0; cnt < usNumLights; cnt++ )
+	for (INT32 cnt = 0; cnt < usNumLights; ++cnt)
 	{
-		LOADDATA( &TmpLight, *hBuffer, sizeof( LIGHT_SPRITE ) );
-		LOADDATA( &ubStrLen, *hBuffer, 1 );
-
-		char str[30];
-		if( ubStrLen )
-		{
-			LOADDATA( str, *hBuffer, ubStrLen );
-		}
-
-		str[ ubStrLen ] = 0;
-
-		LIGHT_SPRITE* const l = LightSpriteCreate(str, TmpLight.uiLightType);
-		//if this fails, then we will ignore the light.
-		// ATE: Don't add ANY lights of mapscreen util is on
-		if (l != NULL && guiCurrentScreen != MAPUTILITY_SCREEN)
-		{
-			if( !gfCaves || gfEditMode )
-			{
-				if( gfEditMode ||
-						TmpLight.uiFlags & LIGHT_PRIMETIME && fPrimeTime ||
-					  TmpLight.uiFlags & LIGHT_NIGHTTIME && fNightTime ||
-						!(TmpLight.uiFlags & (LIGHT_PRIMETIME | LIGHT_NIGHTTIME)) )
-				{ //power only valid lights.
-					LightSpritePower(l, TRUE);
-				}
-			}
-			LightSpritePosition(l, TmpLight.iX, TmpLight.iY );
-			if( TmpLight.uiFlags & LIGHT_PRIMETIME )
-			{
-				l->uiFlags |= LIGHT_PRIMETIME;
-			}
-			else if( TmpLight.uiFlags & LIGHT_NIGHTTIME )
-			{
-				l->uiFlags |= LIGHT_NIGHTTIME;
-			}
-		}
+		ExtractLightSprite((const BYTE**)hBuffer, light_time);
 	}
 }
 

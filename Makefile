@@ -341,6 +341,7 @@ SRCS += Build/TileEngine/LightEffects.c
 SRCS += Build/TileEngine/Lighting.c
 SRCS += Build/TileEngine/LoadSaveExplosionType.c
 SRCS += Build/TileEngine/LoadSaveLightEffect.c
+SRCS += Build/TileEngine/LoadSaveLightSprite.c
 SRCS += Build/TileEngine/LoadSaveRealObject.c
 SRCS += Build/TileEngine/LoadSaveSmokeEffect.c
 SRCS += Build/TileEngine/Map_Edgepoints.c
