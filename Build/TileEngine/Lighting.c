@@ -652,7 +652,7 @@ INT16 sSum;
 
 
 // Does the subtraction of light values to individual LEVELNODEs in the world tile list.
-static void LightSubtractTileNode(LEVELNODE* pNode, UINT32 uiLightType, UINT8 ubShadeSubtract, BOOLEAN fFake)
+static void LightSubtractTileNode(LEVELNODE* const pNode, const UINT8 ubShadeSubtract, const BOOLEAN fFake)
 {
 INT16 sSum;
 
@@ -872,7 +872,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 				if((gTileDatabase[ pStruct->usIndex ].fType != FIRSTCLIFFHANG) || (uiFlags&LIGHT_EVERYTHING))
 				{
 					if( (uiFlags&LIGHT_IGNORE_WALLS ) || gfCaves )
-						LightSubtractTileNode(pStruct, uiLightType, ubShadeSubtract, FALSE);
+						LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
 					else if(LightIlluminateWall(iSrcX, iSrcY, iX, iY, pStruct))
 					{
 						if(LightTileHasWall( iSrcX, iSrcY, iX, iY))
@@ -881,22 +881,22 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightSubtractTileNode(pStruct, uiLightType, ( UINT8 ) __max( ( ubShadeSubtract - 5 ), 0 ), FALSE);
+							LightSubtractTileNode(pStruct, __max(ubShadeSubtract - 5, 0), FALSE);
 						}
 						else if ( fLitWall )
 						{
-							LightSubtractTileNode(pStruct, uiLightType, ubShadeSubtract, FALSE);
+							LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
 						}
             else if ( !fOnlyWalls )
             {
-						  LightSubtractTileNode(pStruct, uiLightType, ubShadeSubtract, FALSE);
+						  LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
             }
 					}
 				}
 			}
       else
       {
-				LightSubtractTileNode(pStruct, uiLightType, ubShadeSubtract, FALSE);
+				LightSubtractTileNode(pStruct, ubShadeSubtract, FALSE);
       }
 			pStruct=pStruct->pNext;
 		}
@@ -911,7 +911,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		  {
 			  if( gfCaves || !fLitWall )
 			  {
-				  LightSubtractTileNode(pLand, uiLightType, ubShadeSubtract, fFake);
+				  LightSubtractTileNode(pLand, ubShadeSubtract, fFake);
 			  }
 			  pLand=pLand->pNext;
 		  }
@@ -921,7 +921,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		  {
 			  if ( pObject->usIndex < NUMBEROFTILES )
 			  {
-				  LightSubtractTileNode(pObject, uiLightType, ubShadeSubtract, FALSE);
+				  LightSubtractTileNode(pObject, ubShadeSubtract, FALSE);
 			  }
 			  pObject=pObject->pNext;
 		  }
@@ -932,7 +932,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		  pMerc = gpWorldLevelData[uiTile].pMercHead;
 		  while(pMerc!=NULL)
 		  {
-			  LightSubtractTileNode(pMerc, uiLightType, ubShadeSubtract, FALSE);
+			  LightSubtractTileNode(pMerc, ubShadeSubtract, FALSE);
 			  pMerc=pMerc->pNext;
 		  }
 	  }
@@ -945,7 +945,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		{
 			if ( pRoof->usIndex < NUMBEROFTILES )
 			{
-				LightSubtractTileNode(pRoof, uiLightType, ubShadeSubtract, fFake);
+				LightSubtractTileNode(pRoof, ubShadeSubtract, fFake);
 			}
 			pRoof=pRoof->pNext;
 		}
@@ -955,7 +955,7 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 		{
 			if ( pOnRoof->usIndex < NUMBEROFTILES )
 			{
-				LightSubtractTileNode(pOnRoof, uiLightType, ubShadeSubtract, FALSE);
+				LightSubtractTileNode(pOnRoof, ubShadeSubtract, FALSE);
 			}
 			pOnRoof=pOnRoof->pNext;
 		}
