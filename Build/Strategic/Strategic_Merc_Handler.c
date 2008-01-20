@@ -903,7 +903,7 @@ void HourlyCamouflageUpdate( void )
 					CreateSoldierPalettes( pSoldier );
 				}
 
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], pSoldier->name);
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 		}
@@ -922,7 +922,7 @@ void HourlyCamouflageUpdate( void )
 					CreateSoldierPalettes( pSoldier );
 				}
 
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WORN_OFF], pSoldier->name );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], pSoldier->name);
 				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 			}
 			*/

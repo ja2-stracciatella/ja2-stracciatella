@@ -2597,7 +2597,7 @@ INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType
 					return( 0 );
 				}
 
-				// Check for cammo...
+				// Check for camo...
 				if ( pSoldier->bCamo != 0 )
 				{
 					strcpy( zColFilename, "ANIMS/camo.COL" );

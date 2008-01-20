@@ -575,12 +575,12 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 
 	bBodyTypePalette = GetBodyTypePaletteSubstitutionCode( NULL, pCorpse->def.ubBodyType, zColFilename );
 
-	// If this corpse has cammo,
+	// If this corpse has camo,
   if ( pCorpse->def.ubType == ROTTING_STAGE2 )
   {
 		bBodyTypePalette = 0;
   }
-  else if ( pCorpse->def.usFlags & ROTTING_CORPSE_USE_CAMMO_PALETTE )
+	else if (pCorpse->def.usFlags & ROTTING_CORPSE_USE_CAMO_PALETTE)
 	{
 		strcpy( zColFilename, "ANIMS/camo.COL" );
 		bBodyTypePalette = 1;
@@ -660,7 +660,7 @@ BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLE
 
 	if ( pSoldier->bCamo != 0 )
 	{
-		Corpse.usFlags |= ROTTING_CORPSE_USE_CAMMO_PALETTE;
+		Corpse.usFlags |= ROTTING_CORPSE_USE_CAMO_PALETTE;
 	}
 
 	// Determine corpse type!

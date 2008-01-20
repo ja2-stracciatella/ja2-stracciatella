@@ -134,7 +134,7 @@ void WaterDamage( SOLDIERTYPE *pSoldier );
 
 INT8 FindObjWithin( SOLDIERTYPE * pSoldier, UINT16 usItem, INT8 bLower, INT8 bUpper );
 
-BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
+BOOLEAN ApplyCamo(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN* pfGoodAPs);
 
 BOOLEAN ItemIsLegal( UINT16 usItemIndex );
 BOOLEAN ExtendedGunListGun( UINT16 usGun );

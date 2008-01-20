@@ -4668,9 +4668,8 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 			{
 				CreateSoldierPalettes( pSoldier );
 			}
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMMO_WASHED_OFF], pSoldier->name );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WASHED_OFF], pSoldier->name);
 		}
-
 	}
 	if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bMonsterSmell > 0 )
 	{
@@ -4691,7 +4690,8 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 }
 
-BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
+
+BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* const pfGoodAPs)
 {
 	INT8		bPointsToUse;
 	UINT16	usTotalKitPoints;
@@ -4722,7 +4722,7 @@ BOOLEAN ApplyCammo( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAP
 		return( FALSE );
 	}
 
-	// points are used up at a rate of 50% kit = 100% cammo on guy
+	// points are used up at a rate of 50% kit = 100% camo on guy
 	// add 1 to round off
 	bPointsToUse = (100 - pSoldier->bCamo + 1 ) / 2;
 	bPointsToUse = __min( bPointsToUse, usTotalKitPoints );

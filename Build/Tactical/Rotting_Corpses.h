@@ -80,7 +80,7 @@ enum
 #define		ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT					0x04		//Find the spot closest to the south entry grid
 #define		ROTTING_CORPSE_USE_EAST_ENTRY_POINT						0x08		//Find the spot closest to the east entry grid
 #define		ROTTING_CORPSE_USE_WEST_ENTRY_POINT						0x10		//Find the spot closest to the west entry grid
-#define		ROTTING_CORPSE_USE_CAMMO_PALETTE							0x20		//We use cammo palette here....
+#define   ROTTING_CORPSE_USE_CAMO_PALETTE               0x20    //We use camo palette here....
 #define		ROTTING_CORPSE_VEHICLE												0x40		//Vehicle Corpse
 
 typedef struct

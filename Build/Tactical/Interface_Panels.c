@@ -157,12 +157,12 @@
 #define SM_WEIGHT_X         428
 #define SM_WEIGHT_Y         106
 
-#define SM_CAMMO_LABEL_X    430
-#define SM_CAMMO_LABEL_Y    122
-#define SM_CAMMO_PERCENT_X  449
-#define SM_CAMMO_PERCENT_Y  121
-#define SM_CAMMO_X          428
-#define SM_CAMMO_Y          121
+#define SM_CAMO_LABEL_X   430
+#define SM_CAMO_LABEL_Y   122
+#define SM_CAMO_PERCENT_X 449
+#define SM_CAMO_PERCENT_Y 121
+#define SM_CAMO_X         428
+#define SM_CAMO_Y         121
 
 
 #define SM_STATS_WIDTH   30
@@ -328,7 +328,7 @@ static const INV_REGION_DESC gSMInvPocketXY[] =
 
 static const INV_REGION_DESC gSMCamoXY =
 {
-	SM_BODYINV_X, SM_BODYINV_Y		// X, Y Location of cammo region
+	SM_BODYINV_X, SM_BODYINV_Y // X, Y location of camo region
 };
 
 
@@ -966,7 +966,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void SMInvMoveCammoCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void SMInvMoveCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -1027,7 +1027,7 @@ BOOLEAN InitializeSMPanel(void)
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, 342, 85, 391, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
 
-	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCammoCallback, SMInvClickCamoCallback, FALSE);
+	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback, FALSE);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
 	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be disabled - the previous
@@ -1389,8 +1389,8 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			mprintf(SM_WEIGHT_LABEL_X - StringPixLength(pInvPanelTitleStrings[1], BLOCKFONT2), dy + SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
 			mprintf(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, L"%%");
 
-			mprintf(SM_CAMMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMMO_LABEL_Y, pInvPanelTitleStrings[2]);
-			mprintf(SM_CAMMO_PERCENT_X, dy + SM_CAMMO_PERCENT_Y, L"%%");
+			mprintf(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
+			mprintf(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%%");
 
 			const SOLDIERTYPE* const s = gpSMCurrentMerc;
 			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
@@ -1427,9 +1427,9 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			FindFontRightCoordinates(SM_WEIGHT_X, dy + SM_WEIGHT_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString );
 
-			// Display cammo value!
+			// Display camo value!
 			swprintf( sString, lengthof(sString), L"%3d", gpSMCurrentMerc->bCamo );
-			FindFontRightCoordinates(SM_CAMMO_X, dy + SM_CAMMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(SM_CAMO_X, dy + SM_CAMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			mprintf( usX, usY , sString );
 
 
@@ -1567,7 +1567,7 @@ static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SMInvMoveCammoCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SMInvMoveCamoCallback(MOUSE_REGION* const pRegion, const INT32 iReason)
 {
 	if (iReason == MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
@@ -1608,7 +1608,7 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					//usNewItemIndex = gpItemPointer->usItem;
 
 					// Try to apply camo....
-					if ( ApplyCammo( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
+					if (ApplyCamo(gpSMCurrentMerc, gpItemPointer, &fGoodAPs))
 					{
             if ( fGoodAPs )
             {

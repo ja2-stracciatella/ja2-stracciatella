@@ -692,7 +692,7 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 }
 
 
-BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCammoCallback, MOUSE_CALLBACK INVClickCammoCallback, BOOLEAN fSetHighestPrioity)
+BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback, const BOOLEAN fSetHighestPrioity)
 {
 	INT32 cnt;
 
@@ -723,8 +723,8 @@ BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGIO
 	CHECKF(guiGoldKeyVO != NO_VOBJECT);
 #endif
 
-	// Add cammo region
-	MSYS_DefineRegion(&gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, pCamoRegion->sX + CAMO_REGION_WIDTH, pCamoRegion->sY + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCammoCallback, INVClickCammoCallback);
+	// Add camo region
+	MSYS_DefineRegion(&gSMInvCamoRegion, pCamoRegion->sX, pCamoRegion->sY, pCamoRegion->sX + CAMO_REGION_WIDTH, pCamoRegion->sY + CAMO_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCamoCallback, INVClickCamoCallback);
 
 	// Add regions for inventory slots
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
@@ -834,9 +834,8 @@ void ShutdownInvSlotInterface( )
 		MSYS_RemoveRegion( &gSMInvRegion[ cnt ] );
 	}
 
-	// Remove cammo
+	// Remove camo
 	MSYS_RemoveRegion( &gSMInvCamoRegion );
-
 }
 
 
