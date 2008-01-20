@@ -2763,8 +2763,6 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName, const UINT32 uiLightTyp
 	memset(l, 0, sizeof(LIGHT_SPRITE));
 	l->iX          = WORLD_COLS + 1;
 	l->iY          = WORLD_ROWS + 1;
-	l->iOldX       = WORLD_COLS + 1;
-	l->iOldY       = WORLD_ROWS + 1;
 	l->uiLightType = uiLightType;
 
 	l->template = LightLoadCachedTemplate(pName);
@@ -2837,9 +2835,6 @@ INT32 iCount;
 			l->uiFlags |= LIGHT_SPR_ERASE;
 			LightSpriteDirty(l);
 		}
-
-		l->iOldX = l->iX;
-		l->iOldY = l->iY;
 	}
 
 	return(TRUE);
@@ -2860,9 +2855,6 @@ void LightSpritePosition(LIGHT_SPRITE* const l, const INT16 iX, const INT16 iY)
 			LightSpriteDirty(l);
 		}
 	}
-
-	//l->iOldX=l->iX;
-	//l->iOldY=l->iY;
 
 	l->iX = iX;
 	l->iY = iY;
@@ -2927,7 +2919,6 @@ void LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 	if(fOn)
 	{
 		l->uiFlags |= LIGHT_SPR_ON | LIGHT_SPR_REDRAW;
-		l->iOldX    = WORLD_COLS;
 	}
 	else
 	{
