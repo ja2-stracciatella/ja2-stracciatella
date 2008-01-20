@@ -8968,28 +8968,6 @@ void HandlePlacingRoofMarker( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fSet
 		{
 			if ( fSet )
 			{
-				if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
-				{
-					// Set some flags on this poor thing
-					//pRoofNode->uiFlags |= ( LEVELNODE_USEBESTTRANSTYPE | LEVELNODE_REVEAL | LEVELNODE_DYNAMIC  );
-					//pRoofNode->uiFlags |= ( LEVELNODE_DYNAMIC );
-					//pRoofNode->uiFlags &= ( ~LEVELNODE_HIDDEN );
-					//ResetSpecificLayerOptimizing( TILES_DYNAMIC_ROOF );
-				}
-			}
-			else
-			{
-				if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
-				{
-					// Remove some flags on this poor thing
-					//pRoofNode->uiFlags &= ~( LEVELNODE_USEBESTTRANSTYPE | LEVELNODE_REVEAL | LEVELNODE_DYNAMIC );
-
-					//pRoofNode->uiFlags |= LEVELNODE_HIDDEN;
-				}
-			}
-
-			if ( fSet )
-			{
 				// If it does not exist already....
 				if ( !IndexExistsInRoofLayer( sGridNo, FIRSTPOINTERS11 ) )
 				{

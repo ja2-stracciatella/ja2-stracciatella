@@ -199,7 +199,6 @@ TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
 TurnSoldierIntoCorpse(): one caller
 TwoHandedItem(): complicated
-UIHandleMOnTerrain(): Redundant GetSoldier() calls?
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
 ValidateGameEvents(): questionable

@@ -108,10 +108,9 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	// set flags for levelnode
 	UINT32 lflags = l->uiFlags | LEVELNODE_ANIMATION | LEVELNODE_USEZ;
 	lflags |= (flags & ANITILE_PAUSED ? LEVELNODE_LASTDYNAMIC | LEVELNODE_UPDATESAVEBUFFERONCE : LEVELNODE_DYNAMIC);
-	if (flags & ANITILE_NOZBLITTER)          lflags |= LEVELNODE_NOZBLITTER;
-	if (flags & ANITILE_ALWAYS_TRANSLUCENT)  lflags |= LEVELNODE_REVEAL;
-	if (flags & ANITILE_USEBEST_TRANSLUCENT) lflags |= LEVELNODE_USEBESTTRANSTYPE;
-	if (flags & ANITILE_ANIMATE_Z)           lflags |= LEVELNODE_DYNAMICZ;
+	if (flags & ANITILE_NOZBLITTER)         lflags |= LEVELNODE_NOZBLITTER;
+	if (flags & ANITILE_ALWAYS_TRANSLUCENT) lflags |= LEVELNODE_REVEAL;
+	if (flags & ANITILE_ANIMATE_Z)          lflags |= LEVELNODE_DYNAMICZ;
 	l->uiFlags = lflags;
 
 	// set anitile values

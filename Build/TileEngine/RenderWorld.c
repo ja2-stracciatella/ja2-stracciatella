@@ -456,7 +456,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 							BOOLEAN fUseTileElem              = FALSE;
 							BOOLEAN fMultiTransShadowZBlitter = FALSE;
 							BOOLEAN fObscuredBlitter          = FALSE;
-							BOOLEAN fTranslucencyType         = TRUE;
 							UINT32 uiAniTileFlags = 0;
 							INT16 gsForceSoldierZLevel = 0;
 							const SOLDIERTYPE* pSoldier = NULL;
@@ -526,12 +525,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 											Assert(TileElem->pAnimData != NULL);
 											TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
 										}
-									}
-
-									// Check for best translucency
-									if (uiLevelNodeFlags & LEVELNODE_USEBESTTRANSTYPE)
-									{
-										fTranslucencyType = FALSE;
 									}
 
 									if (uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE))
@@ -1341,14 +1334,7 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										{
 											if (fPixelate)
 											{
-												if (fTranslucencyType)
-												{
-													Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-												}
-												else
-												{
-													Blt8BPPDataTo16BPPBufferTransZNBClipPixelate(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-												}
+												Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 											}
 											else if (fMerc)
 											{
@@ -1466,27 +1452,13 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 										{
 											if (fPixelate)
 											{
-												if (fTranslucencyType)
+												if (fZWrite)
 												{
-													if (fZWrite)
-													{
-														Blt8BPPDataTo16BPPBufferTransZTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-													}
-													else
-													{
-														Blt8BPPDataTo16BPPBufferTransZNBTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-													}
+													Blt8BPPDataTo16BPPBufferTransZTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 												}
 												else
 												{
-													if (fZWrite)
-													{
-														Blt8BPPDataTo16BPPBufferTransZPixelate(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-													}
-													else
-													{
-														Blt8BPPDataTo16BPPBufferTransZNBPixelate(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-													}
+													Blt8BPPDataTo16BPPBufferTransZNBTranslucent(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 												}
 											}
 											else if (fMerc)
