@@ -828,7 +828,7 @@ BOOLEAN fFake;
 
 
 // Subtracts a specified amount of light to a given tile.
-static BOOLEAN LightSubtractTile(UINT32 uiLightType, INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY, UINT8 ubShade, UINT32 uiFlags, BOOLEAN fOnlyWalls)
+static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX, const INT16 iY, const UINT8 ubShade, const UINT32 uiFlags, const BOOLEAN fOnlyWalls)
 {
 LEVELNODE *pLand, *pStruct, *pObject, *pMerc, *pRoof, *pOnRoof;
 UINT8 ubShadeSubtract;
@@ -1827,7 +1827,7 @@ INT16 iCountY, iCountX;
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightSubtractTile(uiLightType, iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE );
+			LightSubtractTile(iCountX, iCountY, iCountX, iCountY, iIntensity, LIGHT_IGNORE_WALLS|LIGHT_EVERYTHING, FALSE);
 
 	if(ubAmbientLightLevel >= LIGHT_DUSK_CUTOFF)
 		RenderSetShadows(FALSE);
@@ -2456,9 +2456,8 @@ BOOLEAN fOnlyWalls;
 		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
-	const UINT32 uiLightType = l->uiLightType;
-	const INT16  iX          = l->iX;
-	const INT16  iY          = l->iY;
+	const INT16 iX = l->iX;
+	const INT16 iY = l->iY;
 	iOldX = iX;
 	iOldY = iY;
 
@@ -2489,7 +2488,7 @@ BOOLEAN fOnlyWalls;
 				if (l->uiFlags & MERC_LIGHT)       uiFlags |= LIGHT_FAKE;
 				if (l->uiFlags & LIGHT_SPR_ONROOF) uiFlags |= LIGHT_ROOF_ONLY;
 
-				LightSubtractTile(uiLightType, (INT16)iOldX, (INT16)iOldY, (INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), pLight->ubLight, uiFlags, fOnlyWalls );
+				LightSubtractTile(iOldX, iOldY, iX + pLight->iDX, iY + pLight->iDY, pLight->ubLight, uiFlags, fOnlyWalls);
 				pLight->uiFlags|=LIGHT_NODE_DRAWN;
 			}
 
