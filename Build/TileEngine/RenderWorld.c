@@ -1154,11 +1154,6 @@ static void RenderTiles(UINT32 uiFlags, INT32 iStartPointX_M, INT32 iStartPointY
 									fZWrite = TRUE;
 								}
 
-								if (uiLevelNodeFlags & LEVELNODE_NOWRITEZ)
-								{
-									fZWrite = FALSE;
-								}
-
 								// RENDER
 								if (uiLevelNodeFlags & LEVELNODE_WIREFRAME &&
 										!gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME])
