@@ -2443,14 +2443,14 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 
 
 // Reverts all tiles a given light affects to their natural light levels.
-static BOOLEAN LightErase(UINT32 uiLightType, INT32 iLight, INT16 iX, INT16 iY, const LIGHT_SPRITE* const l)
+static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 {
 UINT32 uiFlags;
 INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
 BOOLEAN fOnlyWalls;
 
-	LightTemplate* const t = &g_light_templates[iLight];
+	LightTemplate* const t = &g_light_templates[l->iTemplate];
 	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
@@ -2459,6 +2459,9 @@ BOOLEAN fOnlyWalls;
 		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
+	const UINT32 uiLightType = l->uiLightType;
+	const INT16  iX          = l->iX;
+	const INT16  iY          = l->iY;
 	iOldX = iX;
 	iOldY = iY;
 
@@ -2798,7 +2801,7 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+				LightErase(l);
 				LightSpriteDirty(l);
 			}
 			l->uiFlags &= ~LIGHT_SPR_ERASE;
@@ -2899,7 +2902,7 @@ void LightSpritePosition(LIGHT_SPRITE* const l, const INT16 iX, const INT16 iY)
 	{
 		if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 		{
-			LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+			LightErase(l);
 			LightSpriteDirty(l);
 		}
 	}
@@ -2933,7 +2936,7 @@ BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* const l, BOOLEAN fOnRoof)
 		{
 			if (l->iX < WORLD_COLS && l->iY < WORLD_ROWS)
 			{
-				LightErase(l->uiLightType, l->iTemplate, l->iX, l->iY, l);
+				LightErase(l);
 				LightSpriteDirty(l);
 			}
 		}
