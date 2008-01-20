@@ -2755,14 +2755,7 @@ BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* const l, BOOLEAN fOnRoof)
 
 void LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 {
-	if(fOn)
-	{
-		l->uiFlags |= LIGHT_SPR_ON | LIGHT_SPR_REDRAW;
-	}
-	else
-	{
-		l->uiFlags &= ~LIGHT_SPR_ON;
-	}
+	l->uiFlags = l->uiFlags & ~LIGHT_SPR_ON | (fOn ? LIGHT_SPR_ON : 0);
 }
 
 

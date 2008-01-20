@@ -56,7 +56,6 @@
 #define		LIGHT_SPR_ON				0x0002
 #define		LIGHT_SPR_ANIMATE		0x0004
 #define		LIGHT_SPR_ERASE			0x0008
-#define		LIGHT_SPR_REDRAW		0x0010
 #define		LIGHT_SPR_ONROOF		0x0020
 #define   MERC_LIGHT		      0x0040
 #define		LIGHT_PRIMETIME			0x0080		// light turns goes on in evening, turns off at bedtime.
