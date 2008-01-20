@@ -149,23 +149,6 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel );
 // Sprite data
 extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 
-typedef UINT32 LightID;
-
-static inline LIGHT_SPRITE* ID2Light(LightID idx)
-{
-	Assert(idx < lengthof(LightSprites));
-	return &LightSprites[idx];
-}
-
-static inline LightID Light2ID(const LIGHT_SPRITE* const l)
-{
-	Assert(l == NULL || (LightSprites <= l && l < endof(LightSprites)));
-	return l == NULL ? -1 : l - LightSprites;
-}
-
-#define ID2LIGHT(i) (ID2Light(i))
-#define LIGHT2ID(l) (Light2ID(l))
-
 #define BASE_FOR_ALL_LIGHT_SPRITES(type, iter)                         \
 	for (type* iter = LightSprites; iter != endof(LightSprites); ++iter) \
 		if (!(iter->uiFlags & LIGHT_SPR_ACTIVE)) continue; else
