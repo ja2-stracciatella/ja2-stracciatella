@@ -57,22 +57,19 @@ struct SLIDER
 static SLIDER* pSliderHead     = NULL;
 static SLIDER* gpCurrentSlider = NULL;
 
-static BOOLEAN gfSliderInited    = FALSE;
-static SGPVObject* guiSliderBoxImage = 0;
+static SGPVObject* guiSliderBoxImage;
 
 
 void InitSlider(void)
 {
 	// load Slider Box Graphic graphic and add it
 	guiSliderBoxImage = AddVideoObjectFromFile("INTERFACE/SliderBox.sti");
-	CHECKV(guiSliderBoxImage != NO_VOBJECT);
-	gfSliderInited = TRUE;
 }
 
 
 void ShutDownSlider(void)
 {
-	AssertMsg(gfSliderInited, "Trying to ShutDown the Slider System when it was never inited");
+	AssertMsg(guiSliderBoxImage != NULL, "Trying to ShutDown the Slider System when it was never inited");
 
 	//Do a cehck to see if there are still active nodes
 	for (SLIDER* i = pSliderHead; i != NULL;)
@@ -85,8 +82,8 @@ void ShutDownSlider(void)
 	}
 
 	//if so report an errror
-	gfSliderInited = FALSE;
 	DeleteVideoObject(guiSliderBoxImage);
+	guiSliderBoxImage = NULL;
 }
 
 
@@ -97,7 +94,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason);
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
 {
-	AssertMsg(gfSliderInited, "Trying to Add a Slider Bar when the Slider System was never inited");
+	AssertMsg(guiSliderBoxImage != NULL, "Trying to Add a Slider Bar when the Slider System was never inited");
 
 	if (ubStyle >= NUM_SLIDER_STYLES) return NULL;
 
