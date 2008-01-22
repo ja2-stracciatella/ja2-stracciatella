@@ -120,7 +120,7 @@ REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
 PopUpBox* ghAssignmentBox;
 PopUpBox* ghEpcBox;
 PopUpBox* ghSquadBox;
-PopUpBox* ghVehicleBox;
+static PopUpBox* ghVehicleBox;
 PopUpBox* ghRepairBox;
 PopUpBox* ghTrainingBox;
 PopUpBox* ghAttributeBox;

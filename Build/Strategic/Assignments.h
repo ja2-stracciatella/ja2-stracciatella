@@ -156,7 +156,6 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo );
 extern PopUpBox* ghAssignmentBox;
 extern PopUpBox* ghEpcBox;
 extern PopUpBox* ghSquadBox;
-extern PopUpBox* ghVehicleBox;
 extern PopUpBox* ghRepairBox;
 extern PopUpBox* ghTrainingBox;
 extern PopUpBox* ghAttributeBox;

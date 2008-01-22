@@ -192,8 +192,6 @@
 #define     TIME_REMAINING_X      222
 #define     TIME_REMAINING_WIDTH  250 - TIME_REMAINING_X
 #define     CLOCK_Y_START         298
-#define     DEST_PLOT_X						463
-#define     DEST_PLOT_Y						345
 #define     CLOCK_ETA_X           463 - 15 + 6 + 30
 #define     CLOCK_HOUR_X_START    463 + 25 + 30
 #define     CLOCK_MIN_X_START     463 + 45 + 30
@@ -545,27 +543,6 @@ BOOLEAN SetInfoChar(const SOLDIERTYPE* const s)
 	}
 
 	return ( FALSE );
-}
-
-
-static void DisplayDestinationOfCurrentDestMerc(void)
-{
-	// will display the dest of the current dest merc
-	CHAR16 sString[ 32 ];
-	INT16 sX, sY;
-
-	SetFont( MAP_SCREEN_FONT );
-
-	const INT16 sSector = GetLastSectorIdInCharactersPath(gCharactersList[bSelectedDestChar].merc);
-
-	SetBoxForeground(ghVehicleBox, FONT_LTGREEN);
-	SetBoxBackground(ghVehicleBox, FONT_BLACK);
-
-	swprintf( sString, lengthof(sString), L"%ls%ls", pMapVertIndex[ sSector / MAP_WORLD_X ], pMapHortIndex[ sSector % MAP_WORLD_X ] );
-	FindFontCenterCoordinates(DEST_PLOT_X, DEST_PLOT_Y ,70 ,GetFontHeight( MAP_SCREEN_FONT ) ,sString , MAP_SCREEN_FONT, &sX, &sY);
-
-	RestoreExternBackgroundRect( DEST_PLOT_X, DEST_PLOT_Y ,70 ,GetFontHeight( MAP_SCREEN_FONT ) );
-	mprintf( sX, sY, sString );
 }
 
 
@@ -2899,10 +2876,7 @@ UINT32 MapScreenHandle(void)
 		// show ETA
 		RenderMapBorderEtaPopUp( );
 		DisplayGroundEta();
-
-		//DisplayDestinationOfCurrentDestMerc( );
 	}
-
 
 	HandleContractRenewalSequence( );
 
