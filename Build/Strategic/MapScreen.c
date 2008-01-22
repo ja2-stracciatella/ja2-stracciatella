@@ -7162,44 +7162,6 @@ static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ContractRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	// mvt callback handler for contract region
-	if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		if( fGlowContractRegion == TRUE )
-		{
-			// not showing box and lost mouse?..stop glowing
-			if( fShowContractMenu == FALSE )
-			{
-		    fGlowContractRegion = FALSE;
-			  fCharacterInfoPanelDirty = TRUE;
-			  giContractHighLine = -1;
-
-			  // reset glow
-			  fResetContractGlow = TRUE;
-			}
-		}
-
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
-	{
-		if (GetSelectedInfoChar() != NULL)
-		{
-			if( fShowContractMenu == FALSE )
-			{
-				// glow region
-				fGlowContractRegion = TRUE;
-
-				giContractHighLine = bSelectedInfoChar;
-
-				PlayGlowRegionSound( );
-			}
-		}
-	}
-}
-
-
 static void HandleShadingOfLinesForContractMenu(void)
 {
 	MERCPROFILESTRUCT *pProfile;

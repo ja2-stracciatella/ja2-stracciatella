@@ -239,7 +239,7 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 static BOOLEAN fSectorsWithSoldiers[MAP_WORLD_X * MAP_WORLD_Y][4];
 
 // glow area for contract region?
-BOOLEAN fGlowContractRegion = FALSE;
+static BOOLEAN fGlowContractRegion = FALSE;
 
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM

@@ -170,8 +170,6 @@ extern BOOLEAN fShowRepairMenu;
 
 extern BOOLEAN fFirstClickInAssignmentScreenMask;
 
-extern BOOLEAN fGlowContractRegion;
-
 extern BOOLEAN gfReEvaluateEveryonesNothingToDo;
 
 
