@@ -1173,7 +1173,9 @@ void RemoveSMPanelButtons(void)
 
 	UnloadButtonImage(iBurstButtonImages[WM_NORMAL]);
 	UnloadButtonImage(iBurstButtonImages[WM_BURST]);
+#ifndef JA2DEMO
 	UnloadButtonImage(iBurstButtonImages[WM_ATTACHED]);
+#endif
 }
 
 
