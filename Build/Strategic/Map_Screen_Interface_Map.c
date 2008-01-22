@@ -364,10 +364,10 @@ INT16 gsHighlightSectorY=-1;
 INT32 iCurrentMapSectorZ = 0;
 
 // the palettes
-UINT16 *pMapLTRedPalette;
-UINT16 *pMapDKRedPalette;
-UINT16 *pMapLTGreenPalette;
-UINT16 *pMapDKGreenPalette;
+static UINT16* pMapLTRedPalette;
+static UINT16* pMapDKRedPalette;
+static UINT16* pMapLTGreenPalette;
+static UINT16* pMapDKGreenPalette;
 
 
 // the map border eta pop up
@@ -483,11 +483,6 @@ INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
 
 
-#ifdef JA2DEMO
-BOOLEAN DrawMapForDemo( void );
-#endif
-
-
 void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 {
 	// this procedure will draw the coord indexes on the zoomed out map
@@ -591,19 +586,11 @@ static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, I
 
 static void HandleShowingOfEnemiesWithMilitiaOn(void)
 {
-	INT16 sX = 0, sY = 0;
-
-	// if show militia flag is false, leave
-	if( !fShowMilitia )
+	for (INT16 sX = 1; sX < MAP_WORLD_X - 1; ++sX)
 	{
-		return;
-	}
-
-	for( sX = 1; sX < ( MAP_WORLD_X - 1 ); sX++ )
-	{
-		for( sY = 1; sY < ( MAP_WORLD_Y - 1); sY++ )
+		for (INT16 sY = 1; sY < MAP_WORLD_Y - 1; ++sY)
 		{
-			HandleShowingOfEnemyForcesInSector( sX, sY, ( INT8 )iCurrentMapSectorZ, CountAllMilitiaInSector( sX, sY ) );
+			HandleShowingOfEnemyForcesInSector(sX, sY, iCurrentMapSectorZ, CountAllMilitiaInSector(sX, sY));
 		}
 	}
 }
@@ -619,50 +606,32 @@ static void DrawOrta(void);
 static void DrawTixa(void);
 static void DrawTownMilitiaForcesOnMap(void);
 static void HandleLowerLevelMapBlit(void);
-static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
+static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
 static void ShowItemsOnMap(void);
 static void ShowSAMSitesOnStrategicMap(void);
 static void ShowTeamAndVehicles(INT32 fShowFlags);
 static void ShowTownText(void);
 
 
-UINT32 DrawMap( void )
+void DrawMap(void)
 {
 #ifdef JA2DEMO
-	DrawMapForDemo( );
+	BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/map_1.sti", 0, 290, 26);
 #else
-	SGPRect clip;
-  INT16 cnt, cnt2;
-	INT32 iCounter = 0;
-
-	if( !iCurrentMapSectorZ )
+	if (!iCurrentMapSectorZ)
 	{
-		// clip blits to mapscreen region
-		//ClipBlitsToMapViewRegion( );
-
 		if (fZoomFlag)
 		{
-			// set up bounds
-			if(iZoomX < WEST_ZOOM_BOUND)
-				iZoomX=WEST_ZOOM_BOUND;
-			if(iZoomX > EAST_ZOOM_BOUND)
-				iZoomX=EAST_ZOOM_BOUND;
-			if(iZoomY < NORTH_ZOOM_BOUND+1)
-				iZoomY=NORTH_ZOOM_BOUND;
-			if(iZoomY > SOUTH_ZOOM_BOUND)
-				iZoomY=SOUTH_ZOOM_BOUND;
+			if (iZoomX < WEST_ZOOM_BOUND)      iZoomX = WEST_ZOOM_BOUND;
+			if (iZoomX > EAST_ZOOM_BOUND)      iZoomX = EAST_ZOOM_BOUND;
+			if (iZoomY < NORTH_ZOOM_BOUND + 1) iZoomY = NORTH_ZOOM_BOUND;
+			if (iZoomY > SOUTH_ZOOM_BOUND)     iZoomY = SOUTH_ZOOM_BOUND;
 
-			clip.iLeft=iZoomX - 2;
-			clip.iRight=clip.iLeft + MAP_VIEW_WIDTH + 2;
-			clip.iTop=iZoomY - 3;
-			clip.iBottom=clip.iTop + MAP_VIEW_HEIGHT - 1;
-
-			/*
-			clip.iLeft=clip.iLeft - 1;
-			clip.iRight=clip.iLeft + MapScreenRect.iRight - MapScreenRect.iLeft;
-			clip.iTop=iZoomY - 1;
-			clip.iBottom=clip.iTop + MapScreenRect.iBottom - MapScreenRect.iTop;
-			*/
+			SGPRect clip;
+			clip.iLeft   = iZoomX - 2;
+			clip.iTop    = iZoomY - 3;
+			clip.iRight  = clip.iLeft + MAP_VIEW_WIDTH  + 2;
+			clip.iBottom = clip.iTop  + MAP_VIEW_HEIGHT - 1;
 
 			if (clip.iBottom > guiBIGMAP->usHeight) clip.iBottom = guiBIGMAP->usHeight;
 			if (clip.iRight  > guiBIGMAP->usWidth)  clip.iRight  = guiBIGMAP->usWidth;
@@ -674,154 +643,109 @@ UINT32 DrawMap( void )
 			BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + 1, MAP_VIEW_START_Y, NULL);
 		}
 
-
 		// shade map sectors (must be done after Tixa/Orta/Mine icons have been blitted, but before icons!)
-		for ( cnt = 1; cnt < MAP_WORLD_X - 1; cnt++ )
+		for (INT16 cnt = 1; cnt < MAP_WORLD_X - 1; ++cnt)
 		{
-			for ( cnt2 = 1; cnt2 < MAP_WORLD_Y - 1; cnt2++ )
+			for (INT16 cnt2 = 1; cnt2 < MAP_WORLD_Y - 1; ++cnt2)
 			{
-				if( GetSectorFlagStatus( cnt, cnt2, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) == FALSE )
+				if (!GetSectorFlagStatus(cnt, cnt2, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 				{
-					if( fShowAircraftFlag && !iCurrentMapSectorZ )
+					INT32 color;
+					if (fShowAircraftFlag)
 					{
-						if( !StrategicMap[ cnt + cnt2 * WORLD_MAP_X ].fEnemyAirControlled )
+						if (!StrategicMap[cnt + cnt2 * WORLD_MAP_X].fEnemyAirControlled)
 						{
 							// sector not visited, not air controlled
-							ShadeMapElem( cnt, cnt2, MAP_SHADE_DK_GREEN );
+							color = MAP_SHADE_DK_GREEN;
 						}
 						else
 						{
 							// sector not visited, controlled and air not
-							ShadeMapElem( cnt, cnt2, MAP_SHADE_DK_RED );
+							color = MAP_SHADE_DK_RED;
 						}
 					}
 					else
 					{
 						// not visited
-						ShadeMapElem( cnt, cnt2, MAP_SHADE_BLACK );
+						color = MAP_SHADE_BLACK;
 					}
+					ShadeMapElem(cnt, cnt2, color);
 				}
 				else
 				{
-					if( fShowAircraftFlag && !iCurrentMapSectorZ )
+					if (fShowAircraftFlag)
 					{
-						if( !StrategicMap[ cnt + cnt2 * WORLD_MAP_X ].fEnemyAirControlled )
+						INT32 color;
+						if (!StrategicMap[cnt + cnt2 * WORLD_MAP_X].fEnemyAirControlled)
 						{
 							// sector visited and air controlled
-							ShadeMapElem( cnt, cnt2, MAP_SHADE_LT_GREEN);
+							color = MAP_SHADE_LT_GREEN;
 						}
 						else
 						{
 							// sector visited but not air controlled
-							ShadeMapElem( cnt, cnt2, MAP_SHADE_LT_RED );
+							color = MAP_SHADE_LT_RED;
 						}
+						ShadeMapElem(cnt, cnt2, color);
 					}
 				}
 			}
 		}
 
+		/* unfortunately, we can't shade these icons as part of shading the map,
+		 * because for airspace, the shade function doesn't merely shade the
+		 * existing map surface, but instead grabs the original graphics from
+		 * bigmap, and changes their palette.  blitting icons prior to shading would
+		 * mean they don't show up in airspace view at all. */
 
-		// UNFORTUNATELY, WE CAN'T SHADE THESE ICONS AS PART OF SHADING THE MAP, BECAUSE FOR AIRSPACE, THE SHADE FUNCTION
-		// DOESN'T MERELY SHADE THE EXISTING MAP SURFACE, BUT INSTEAD GRABS THE ORIGINAL GRAPHICS FROM BIGMAP, AND CHANGES
-		// THEIR PALETTE.  BLITTING ICONS PRIOR TO SHADING WOULD MEAN THEY DON'T SHOW UP IN AIRSPACE VIEW AT ALL.
+		if (fFoundOrta) DrawOrta();
+		if (fFoundTixa) DrawTixa();
 
-		// if Orta found
-		if( fFoundOrta )
+		ShowSAMSitesOnStrategicMap();
+
+		// draw mine icons and descriptive text
+		for (INT32 i = 0; i < MAX_NUMBER_OF_MINES; ++i)
 		{
-			DrawOrta();
-		}
-
-		// if Tixa found
-		if( fFoundTixa )
-		{
-			DrawTixa();
-		}
-
-		// draw SAM sites
-		ShowSAMSitesOnStrategicMap( );
-
-		// draw mine icons
-		for( iCounter = 0; iCounter < MAX_NUMBER_OF_MINES; iCounter++ )
-		{
-			BlitMineIcon( gMineLocation[ iCounter ].sSectorX, gMineLocation[ iCounter ].sSectorY );
-		}
-
-
-		// if mine details filter is set
-		if( fShowMineFlag )
-		{
+			const INT16 x = gMineLocation[i].sSectorX;
+			const INT16 y = gMineLocation[i].sSectorY;
+			BlitMineIcon(x, y);
 			// show mine name/production text
-			for( iCounter = 0; iCounter < MAX_NUMBER_OF_MINES; iCounter++ )
-			{
-				BlitMineText( gMineLocation[ iCounter ].sSectorX, gMineLocation[ iCounter ].sSectorY );
-			}
+			if (fShowMineFlag) BlitMineText(x, y);
 		}
 
 		// draw towns names & loyalty ratings, and grey town limit borders
-		if( fShowTownFlag )
+		if (fShowTownFlag)
 		{
-			BlitTownGridMarkers( );
-	 	  ShowTownText( );
+			BlitTownGridMarkers();
+	 	  ShowTownText();
 		}
 
-		// draw militia icons
-		if( fShowMilitia )
-		{
-			DrawTownMilitiaForcesOnMap( );
-		}
+		if (fShowMilitia) DrawTownMilitiaForcesOnMap();
 
-		if ( fShowAircraftFlag && !gfInChangeArrivalSectorMode )
-		{
-			DrawBullseye();
-		}
+		if (fShowAircraftFlag && !gfInChangeArrivalSectorMode) DrawBullseye();
 	}
 	else
 	{
-		HandleLowerLevelMapBlit( );
+		HandleLowerLevelMapBlit();
 	}
 
+	/* show mine outlines even when viewing underground sublevels - they indicate
+	 * where the mine entrances are */
+	if (fShowMineFlag) BlitMineGridMarkers();
 
-	// show mine outlines even when viewing underground sublevels - they indicate where the mine entrances are
-	if( fShowMineFlag )
-		// draw grey mine sector borders
-		BlitMineGridMarkers( );
-
-
-	// do not show mercs/vehicles when airspace is ON
-// commented out on a trial basis!
-//	if( !fShowAircraftFlag )
+	if (fShowTeamFlag)
 	{
-		if( fShowTeamFlag )
-			ShowTeamAndVehicles( SHOW_TEAMMATES | SHOW_VEHICLES );
-		else
-			HandleShowingOfEnemiesWithMilitiaOn( );
-
-/*
-		if((fShowTeamFlag)&&(fShowVehicleFlag))
-		 ShowTeamAndVehicles(SHOW_TEAMMATES | SHOW_VEHICLES);
-		else if(fShowTeamFlag)
-			ShowTeamAndVehicles(SHOW_TEAMMATES);
-		else if(fShowVehicleFlag)
-			ShowTeamAndVehicles(SHOW_VEHICLES);
-		else
-		{
-			HandleShowingOfEnemiesWithMilitiaOn( );
-		}
-*/
+		ShowTeamAndVehicles(SHOW_TEAMMATES | SHOW_VEHICLES);
 	}
-
-	if ( fShowItemsFlag )
+	else if (fShowMilitia)
 	{
-		ShowItemsOnMap();
+		HandleShowingOfEnemiesWithMilitiaOn();
 	}
 
-	DisplayLevelString( );
+	if (fShowItemsFlag) ShowItemsOnMap();
 
-	//RestoreClipRegionToFullScreen( );
-
-#endif	// !JA2DEMO
-
-	return( TRUE );
+	DisplayLevelString();
+#endif
 }
 
 
@@ -1118,38 +1042,34 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY);
 static void ShowTeamAndVehicles(INT32 fShowFlags)
 {
 	// go through each sector, display the on duty, assigned, and vehicles
-  INT16 sMapX = 0;
-	INT16 sMapY = 0;
-	INT32 iIconOffset = 0;
-	BOOLEAN fContemplatingRetreating = FALSE;
-
-
-	if( gfDisplayPotentialRetreatPaths && gpBattleGroup )
+	INT32         iIconOffset              = 0;
+	const BOOLEAN fContemplatingRetreating = gfDisplayPotentialRetreatPaths && gpBattleGroup;
+	for (INT16 sMapX = 1; sMapX < MAP_WORLD_X - 1; ++sMapX)
 	{
-		fContemplatingRetreating = TRUE;
-	}
-
-	for(sMapX=1; sMapX <MAP_WORLD_X-1; sMapX++)
-	{
-		for(sMapY=1; sMapY <MAP_WORLD_Y-1; sMapY++)
+		for (INT16 sMapY = 1; sMapY < MAP_WORLD_Y - 1; ++sMapY)
 		{
-			// don't show mercs/vehicles currently in this sector if player is contemplating retreating from THIS sector
-			if ( !fContemplatingRetreating || ( sMapX != gpBattleGroup->ubSectorX ) || ( sMapY != gpBattleGroup->ubSectorY ) )
+			/* don't show mercs/vehicles currently in this sector if player is
+			 * contemplating retreating from THIS sector */
+			if (!fContemplatingRetreating         ||
+					sMapX != gpBattleGroup->ubSectorX ||
+					sMapY != gpBattleGroup->ubSectorY)
 			{
-				if(fShowFlags & SHOW_TEAMMATES)
+				if (fShowFlags & SHOW_TEAMMATES)
 				{
-					iIconOffset = ShowOnDutyTeam( sMapX, sMapY );
-					iIconOffset = ShowAssignedTeam( sMapX, sMapY, iIconOffset );
+					iIconOffset = ShowOnDutyTeam(sMapX, sMapY);
+					iIconOffset = ShowAssignedTeam(sMapX, sMapY, iIconOffset);
 				}
 
-				if(fShowFlags & SHOW_VEHICLES)
-					iIconOffset = ShowVehicles( sMapX, sMapY, iIconOffset );
+				if (fShowFlags & SHOW_VEHICLES)
+				{
+					iIconOffset = ShowVehicles(sMapX, sMapY, iIconOffset);
+				}
 			}
 
-			if(fShowFlags & SHOW_TEAMMATES)
+			if (fShowFlags & SHOW_TEAMMATES)
 			{
-				HandleShowingOfEnemyForcesInSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ, ( UINT8 ) iIconOffset );
-				ShowPeopleInMotion( sMapX, sMapY );
+				HandleShowingOfEnemyForcesInSector(sMapX, sMapY, iCurrentMapSectorZ, iIconOffset);
+				ShowPeopleInMotion(sMapX, sMapY);
 			}
 		}
 	}
@@ -1157,265 +1077,173 @@ static void ShowTeamAndVehicles(INT32 fShowFlags)
 
 
 #ifndef JA2DEMO
-static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
+static void ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor);
 
 
-static BOOLEAN ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor)
+static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColor)
 {
-	INT16	sScreenX, sScreenY;
-	SGPRect clip;
-  UINT16 *pOriginalPallette;
-
-
-	// get original video surface palette
-	SGPVSurface* const hSrcVSurface = guiBIGMAP;
-	// get original video surface palette
-	//HVSURFACE hSAMSurface = guiSAMICON;
-	//CHECKF(hSAMSurface != NULL);
-	// get original video surface palette
-	//HVSURFACE hMineSurface = guiMINEICON;
-	//CHECKF(hMineSurface != NULL);
-	// get original video surface palette
-
-	pOriginalPallette = hSrcVSurface->p16BPPPalette;
-
-
-	if(fZoomFlag)
-		ShadeMapElemZoomIn( sMapX, sMapY, iColor );
+	if (fZoomFlag)
+	{
+		ShadeMapElemZoomIn(sMapX, sMapY, iColor);
+	}
 	else
 	{
-		GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
+		INT16 sScreenX;
+		INT16 sScreenY;
+		GetScreenXYFromMapXY(sMapX, sMapY, &sScreenX, &sScreenY);
 
 		// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
 		sScreenX += 1;
 
-		// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
-	  clip.iLeft = 2 * ( sScreenX - ( MAP_VIEW_START_X + 1 ) );
-		clip.iTop  = 2 * ( sScreenY - MAP_VIEW_START_Y );
-		clip.iRight  = clip.iLeft + ( 2 * MAP_GRID_X );
-		clip.iBottom = clip.iTop  + ( 2 * MAP_GRID_Y );
+		SGPRect clip;
+	  clip.iLeft   = 2 * (sScreenX - (MAP_VIEW_START_X + 1));
+		clip.iTop    = 2 * (sScreenY -  MAP_VIEW_START_Y     );
+		clip.iRight  = clip.iLeft + 2 * MAP_GRID_X;
+		clip.iBottom = clip.iTop  + 2 * MAP_GRID_Y;
 
-		if( iColor != MAP_SHADE_BLACK )
-		{
-			// airspace
-/*
-			if( sMapX == 1 )
-			{
-				clip.iLeft -= 4;
-				clip.iRight += 4;
-				sScreenX -= 2;
-			}
-			else
-			{
-				sScreenX += 1;
-			}
-*/
-		}
-		else
-		{
-			// non-airspace
-			sScreenY -= 1;
-		}
+		// non-airspace
+		if (iColor == MAP_SHADE_BLACK) sScreenY -= 1;
 
-		switch( iColor )
+		UINT16* pal;
+		switch (iColor)
 		{
-		  case( MAP_SHADE_BLACK ):
+		  case MAP_SHADE_BLACK:
 				// simply shade darker
-				ShadowVideoSurfaceRect( guiSAVEBUFFER, sScreenX, sScreenY, sScreenX + MAP_GRID_X - 1, sScreenY + MAP_GRID_Y - 1 );
-			break;
+				ShadowVideoSurfaceRect(guiSAVEBUFFER, sScreenX, sScreenY, sScreenX + MAP_GRID_X - 1, sScreenY + MAP_GRID_Y - 1);
+				return;
 
+			case MAP_SHADE_LT_GREEN: pal = pMapLTGreenPalette; break;
+			case MAP_SHADE_DK_GREEN: pal = pMapDKGreenPalette; break;
+			case MAP_SHADE_LT_RED:   pal = pMapLTRedPalette;   break;
+			case MAP_SHADE_DK_RED:   pal = pMapDKRedPalette;   break;
 
-			case( MAP_SHADE_LT_GREEN ):
-				hSrcVSurface->p16BPPPalette = pMapLTGreenPalette;
-				//hMineSurface->p16BPPPalette = pMapLTGreenPalette;
-				//hSAMSurface->p16BPPPalette = pMapLTGreenPalette;
-				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_DK_GREEN ):
-				hSrcVSurface->p16BPPPalette = pMapDKGreenPalette;
-				//hMineSurface->p16BPPPalette = pMapDKGreenPalette;
-				//hSAMSurface->p16BPPPalette = pMapDKGreenPalette;
-				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_LT_RED ):
-				hSrcVSurface->p16BPPPalette = pMapLTRedPalette;
-				//hMineSurface->p16BPPPalette = pMapLTRedPalette;
-				//hSAMSurface->p16BPPPalette = pMapLTRedPalette;
-				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_DK_RED ):
-				hSrcVSurface->p16BPPPalette = pMapDKRedPalette;
-				//hMineSurface->p16BPPPalette = pMapDKRedPalette;
-				//hSAMSurface->p16BPPPalette = pMapDKRedPalette;
-				BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
+			default: return;
 		}
 
-		// restore original palette
-		hSrcVSurface->p16BPPPalette = pOriginalPallette;
-		//hMineSurface->p16BPPPalette = pOriginalPallette;
-		//hSAMSurface->p16BPPPalette = pOriginalPallette;
+		// get original video surface palette
+		SGPVSurface* const map = guiBIGMAP;
+		//SGPVSurface* const mine = guiMINEICON;
+		//SGPVSurface* const sam  = guiSAMICON;
+
+		UINT16* const org_pal = map->p16BPPPalette;
+		map->p16BPPPalette = pal;
+		//mine->p16BPPPalette = pal;
+		//sam->p16BPPPalette  = pal;
+		BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+		map->p16BPPPalette = org_pal;
+		//mine->p16BPPPalette = org_pal;
+		//sam->p16BPPPalette  = org_pal;
 	}
-
-
-	return ( TRUE );
 }
 
 
-static BOOLEAN ShadeMapElemZoomIn(INT16 sMapX, INT16 sMapY, INT32 iColor)
+static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColor)
 {
-	INT16 sScreenX, sScreenY;
-  INT32 iX, iY;
-	SGPRect clip;
-	UINT16 *pOriginalPallette;
-
-	// get sX and sY
-	iX=(INT32)sMapX;
-	iY=(INT32)sMapY;
-
 	// trabslate to screen co-ords for zoomed
-	GetScreenXYFromMapXYStationary( ((UINT16)(iX)),((UINT16)(iY)) , &sScreenX, &sScreenY );
+	INT16 sScreenX;
+	INT16 sScreenY;
+	GetScreenXYFromMapXYStationary(sMapX, sMapY, &sScreenX, &sScreenY);
 
 	// shift left by one sector
-	iY=(INT32)sScreenY-MAP_GRID_Y;
-	iX=(INT32)sScreenX-MAP_GRID_X;
+	const INT32 iX = sScreenX - MAP_GRID_X;
+	const INT32 iY = sScreenY - MAP_GRID_Y;
 
-	// get original video surface palette
-	SGPVSurface* const hSrcVSurface = guiBIGMAP;
-	pOriginalPallette = hSrcVSurface->p16BPPPalette;
+	if (MapScreenRect.iLeft - MAP_GRID_X * 2 < iX && iX < MapScreenRect.iRight &&
+			MapScreenRect.iTop  - MAP_GRID_Y * 2 < iY && iY < MapScreenRect.iBottom)
+	{
+		sScreenX = iX;
+		sScreenY = iY;
 
-	if((iX >MapScreenRect.iLeft-MAP_GRID_X*2)&&(iX <MapScreenRect.iRight)&&(iY>MapScreenRect.iTop-MAP_GRID_Y*2)&&(iY < MapScreenRect.iBottom))
-  {
-   sScreenX=(INT16)iX;
-	 sScreenY=(INT16)iY;
+		SGPRect clip;
+		if (iColor == MAP_SHADE_BLACK)
+		{
+			clip.iLeft   = sScreenX + 1;
+			clip.iTop    = sScreenY;
+			clip.iRight  = sScreenX + MAP_GRID_X * 2 - 1;
+			clip.iBottom = sScreenY + MAP_GRID_Y * 2 - 1;
+		}
+		else
+		{
+			clip.iLeft   = iZoomX + sScreenX - MAP_VIEW_START_X - MAP_GRID_X;
+			clip.iTop    = iZoomY + sScreenY - MAP_VIEW_START_Y - MAP_GRID_Y;
+			clip.iRight  = clip.iLeft + MAP_GRID_X * 2;
+			clip.iBottom = clip.iTop  + MAP_GRID_Y * 2;
 
-	 if( iColor == MAP_SHADE_BLACK )
-	 {
-		 clip.iLeft = sScreenX + 1;
-		 clip.iRight = sScreenX + MAP_GRID_X*2 - 1;
-		 clip.iTop = sScreenY;
-		 clip.iBottom = sScreenY + MAP_GRID_Y*2 - 1;
-	 }
-	 else
-	 {
-		  clip.iLeft=iZoomX + sScreenX - MAP_VIEW_START_X - MAP_GRID_X ;
-		  clip.iRight=clip.iLeft + MAP_GRID_X*2;
-		  clip.iTop=iZoomY + sScreenY - MAP_VIEW_START_Y - MAP_GRID_Y;
-		  clip.iBottom=clip.iTop + MAP_GRID_Y*2;
-
-			if( sScreenY <= MapScreenRect.iTop + 10 )
+			if (sScreenY <= MapScreenRect.iTop + 10)
 			{
 				clip.iTop -= 5;
-				sScreenY -= 5;
+				sScreenY  -= 5;
 			}
 
 
-			if( sMapX == 1 )
+			sScreenX += 1;
+			if (sMapX == 1)
 			{
 				clip.iLeft -= 5;
-				sScreenX -= 4;
+				sScreenX   -= 5;
 			}
-			else
-			{
-				sScreenX +=1;
-			}
-	 }
-
-	 if( sScreenX >= MapScreenRect.iRight - 2 * MAP_GRID_X )
-	 {
-		 clip.iRight++;
-	 }
-
-	 if( sScreenY >= MapScreenRect.iBottom - 2 * MAP_GRID_X )
-	 {
-		 clip.iBottom++;
-	 }
-
-	 sScreenX += 1;
-	 sScreenY += 1;
-
-	 if( ( sScreenX > MapScreenRect.iRight ) || ( sScreenY > MapScreenRect.iBottom ) )
-	 {
-		 return( FALSE );
-	 }
-
-	 switch( iColor )
-	 {
-		  case( MAP_SHADE_BLACK ):
-				// simply shade darker
-				if( iCurrentMapSectorZ > 0 )
-				{
-					ShadowVideoSurfaceRect( guiSAVEBUFFER, clip.iLeft, clip.iTop,  clip.iRight, clip.iBottom  );
-				}
-				ShadowVideoSurfaceRect( guiSAVEBUFFER, clip.iLeft, clip.iTop,  clip.iRight, clip.iBottom  );
-			break;
-
-			case( MAP_SHADE_LT_GREEN ):
-				hSrcVSurface->p16BPPPalette = pMapLTGreenPalette;
-				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_DK_GREEN ):
-				hSrcVSurface->p16BPPPalette = pMapDKGreenPalette;
-				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_LT_RED ):
-				hSrcVSurface->p16BPPPalette = pMapLTRedPalette;
-				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
-
-			case( MAP_SHADE_DK_RED ):
-				hSrcVSurface->p16BPPPalette = pMapDKRedPalette;
-				BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
-				break;
 		}
+
+		if (sScreenX >= MapScreenRect.iRight -  2 * MAP_GRID_X) ++clip.iRight;
+		if (sScreenY >= MapScreenRect.iBottom - 2 * MAP_GRID_X) ++clip.iBottom;
+
+		sScreenX += 1;
+		sScreenY += 1;
+
+		if (sScreenX > MapScreenRect.iRight || sScreenY > MapScreenRect.iBottom) return;
+
+		UINT16* pal;
+		switch (iColor)
+		{
+			case MAP_SHADE_BLACK:
+			// simply shade darker
+			ShadowVideoSurfaceRect(guiSAVEBUFFER, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom);
+			return;
+
+			case MAP_SHADE_LT_GREEN: pal = pMapLTGreenPalette; break;
+			case MAP_SHADE_DK_GREEN: pal = pMapDKGreenPalette; break;
+			case MAP_SHADE_LT_RED:   pal = pMapLTRedPalette;   break;
+			case MAP_SHADE_DK_RED:   pal = pMapDKRedPalette;   break;
+
+			default: return;
+		}
+
+		SGPVSurface* const map     = guiBIGMAP;
+		UINT16*      const org_pal = map->p16BPPPalette;
+		map->p16BPPPalette = pal;
+		BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+		map->p16BPPPalette = org_pal;
 	}
-
-	// restore original palette
-	hSrcVSurface->p16BPPPalette = pOriginalPallette;
-
-	return ( TRUE );
 }
 #endif
 
 
-BOOLEAN InitializePalettesForMap( void )
+void InitializePalettesForMap(void)
 {
-	// init palettes
-	SGPPaletteEntry pPalette[ 256 ];
-
-	// load image
 	SGPVSurface* const uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
-	CHECKF(uiTempMap != NO_VSURFACE);
+	CHECKV(uiTempMap != NO_VSURFACE);
 
-	GetVSurfacePaletteEntries(uiTempMap, pPalette);
+	SGPPaletteEntry pal[256];
+	GetVSurfacePaletteEntries(uiTempMap, pal);
 
-	// set up various palettes
-	pMapLTRedPalette = Create16BPPPaletteShaded( pPalette, 400, 0, 0, TRUE );
-	pMapDKRedPalette = Create16BPPPaletteShaded( pPalette, 200, 0, 0, TRUE );
-	pMapLTGreenPalette = Create16BPPPaletteShaded( pPalette, 0, 400, 0, TRUE );
-	pMapDKGreenPalette = Create16BPPPaletteShaded( pPalette, 0, 200, 0, TRUE );
+	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
+	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
+	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
+	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
 
   DeleteVideoSurface(uiTempMap);
-
-	return ( TRUE );
 }
 
 
-void ShutDownPalettesForMap( void )
+void ShutDownPalettesForMap(void)
 {
+	MemFree(pMapLTRedPalette);
+	MemFree(pMapDKRedPalette);
+	MemFree(pMapLTGreenPalette);
+	MemFree(pMapDKGreenPalette);
 
-	MemFree( pMapLTRedPalette );
-	MemFree( pMapDKRedPalette );
-	MemFree( pMapLTGreenPalette );
-	MemFree( pMapDKGreenPalette );
-
-	pMapLTRedPalette = NULL;
-	pMapDKRedPalette = NULL;
+	pMapLTRedPalette   = NULL;
+	pMapDKRedPalette   = NULL;
 	pMapLTGreenPalette = NULL;
 	pMapDKGreenPalette = NULL;
 }
@@ -5892,16 +5720,6 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 
 	return( iNumberInSector );
 }
-
-
-#ifdef JA2DEMO
-
-BOOLEAN DrawMapForDemo( void )
-{
-	CHECKF(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/map_1.sti", 0, 290, 26));
-	return( TRUE );
-}
-#endif
 
 
 //There is a special case flag used when players encounter enemies in a sector, then retreat.  The number of enemies

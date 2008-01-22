@@ -10,11 +10,11 @@
 void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 //void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow );
 
-UINT32 DrawMap( void );
+void DrawMap(void);
 
 void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
 
-BOOLEAN InitializePalettesForMap( void );
+void InitializePalettesForMap(void);
 void ShutDownPalettesForMap( void );
 
 // plot path for helicopter
