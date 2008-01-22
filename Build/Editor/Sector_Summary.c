@@ -2930,14 +2930,4 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	FileClose( hfile );
 }
 
-
-static UINT8 GetCurrentSummaryVersion()
-{
-	if( gpCurrentSectorSummary )
-	{
-		return gpCurrentSectorSummary->MapInfo.ubMapVersion;
-	}
-	return 0;
-}
-
 #endif
