@@ -79,45 +79,27 @@ BOOLEAN InitRadarScreen( )
 		return( TRUE );
 }
 
-BOOLEAN LoadRadarScreenBitmap(const char *aFilename)
+
+void LoadRadarScreenBitmap(const char* const filename)
 {
-	CHAR8						zFilename[ 260 ];
-	INT32						cnt;
-
-	strcpy( zFilename, aFilename );
-
 	ClearOutRadarMapImage();
 
-/* ARM - Restriction removed Nov.29/98.  Must be able to view different radar maps from map screen while underground!
-	 // If we are in a cave or basement..... dont get a new one...
-	 if( !gfBasement && !gfCaves )
-*/
-	 {
-		 // Remove extension
-		 for ( cnt = strlen( zFilename )-1; cnt >=0; cnt-- )
-		 {
-			 if ( zFilename[ cnt ] == '.' )
-			 {
-				 zFilename[ cnt ] = '\0';
-			 }
-		 }
+	// get the length of the filename without the extension
+	const size_t base_len = strcspn(filename, ".");
 
-		 // Grab the Map image
-		 SGPFILENAME ImageFile;
-		 sprintf(ImageFile, "RADARMAPS/%s.STI", zFilename);
-		 gusRadarImage = AddVideoObjectFromFile(ImageFile);
-		 CHECKF(gusRadarImage != NO_VOBJECT);
+	// Grab the Map image
+	SGPFILENAME image_filename;
+	sprintf(image_filename, "RADARMAPS/%.*s.STI", (int)base_len, filename);
+	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
+	CHECKV(radar != NO_VOBJECT);
+	gusRadarImage = radar;
 
-		SGPVObject* const hVObject = gusRadarImage;
-		// ATE: Add a shade table!
-		hVObject->pShades[0] = Create16BPPPaletteShaded(hVObject->pPaletteEntry, 255, 255, 255, FALSE);
-		hVObject->pShades[1] = Create16BPPPaletteShaded(hVObject->pPaletteEntry, 100, 100, 100, FALSE);
-	 }
+	// ATE: Add a shade table!
+	radar->pShades[0] = Create16BPPPaletteShaded(radar->pPaletteEntry, 255, 255, 255, FALSE);
+	radar->pShades[1] = Create16BPPPaletteShaded(radar->pPaletteEntry, 100, 100, 100, FALSE);
 
-	 // Dirty interface
-	 fInterfacePanelDirty = TRUE;
-
-	return( TRUE );
+	// Dirty interface
+	fInterfacePanelDirty = TRUE;
 }
 
 

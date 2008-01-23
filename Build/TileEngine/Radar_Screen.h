@@ -3,7 +3,8 @@
 
 #include "Interface.h"
 
-BOOLEAN LoadRadarScreenBitmap(const char *aFilename);
+
+void LoadRadarScreenBitmap(const char* filename);
 
 // RADAR WINDOW DEFINES
 #define	RADAR_WINDOW_X				543
