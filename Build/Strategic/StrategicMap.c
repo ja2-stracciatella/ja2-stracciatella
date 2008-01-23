@@ -1066,19 +1066,6 @@ BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-static BOOLEAN MapExists(const char* szFilename)
-{
-	char str[50];
-	HWFILE fp;
-	sprintf( str, "MAPS/%s", szFilename );
-	fp = FileOpen(str, FILE_ACCESS_READ);
-	if( !fp )
-		return FALSE;
-	FileClose( fp );
-	return TRUE;
-}
-
-
 void RemoveMercsInSector( )
 {
 	// ATE: only for OUR guys.. the rest is taken care of in TrashWorld() when a new sector is added...
@@ -1466,13 +1453,6 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 
 
 	GetMapFileName( sSectorX, sSectorY, bSectorZ,  bFilename, TRUE, TRUE );
-
-	//Load the placeholder map if the real map doesn't exist.
-	if( !MapExists( bFilename ) )
-	{
-		if( !MapExists( "Placeholder1.dat" ) )
-			AssertMsg( 0, "Failed to find Placeholder1.dat (placeholder map)." );
-	}
 
 	CreateLoadingScreenProgressBar();
 	#ifdef JA2BETAVERSION
