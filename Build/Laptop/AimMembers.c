@@ -314,7 +314,6 @@ static SGPVObject* guiStats;
 static SGPVObject* guiPrice;
 static SGPVObject* guiPortrait;
 static SGPVObject* guiWeaponBox;
-static SGPVObject* guiFace;
 //UINT32		guiVideoFace;
 //UINT32		guiContactButton;
 static SGPVObject* guiVideoConfPopup;
@@ -1051,10 +1050,9 @@ static BOOLEAN DisplayMercsFace(void)
 
 	// load the Face graphic and add it
   sprintf(sTemp, "%s%02d.sti", sFaceLoc, gbCurrentSoldier);
-	guiFace = AddVideoObjectFromFile(sTemp);
-	CHECKF(guiFace != NO_VOBJECT);
+	SGPVObject* const face = AddVideoObjectFromFile(sTemp);
+	CHECKF(face != NO_VOBJECT);
 
-	SGPVObject* const face = guiFace;
   BltVideoObject(FRAME_BUFFER, face, 0,FACE_X, FACE_Y);
 
 	//if the merc is dead
@@ -1095,7 +1093,7 @@ static BOOLEAN DisplayMercsFace(void)
 		DrawTextToScreen(AimPopUpText[AIM_MEMBER_ON_ASSIGNMENT], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	DeleteVideoObject(guiFace);
+	DeleteVideoObject(face);
 
 	return( TRUE );
 }
