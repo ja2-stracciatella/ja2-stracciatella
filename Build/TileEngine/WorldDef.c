@@ -482,26 +482,22 @@ void BuildTileShadeTables(  )
 	#endif
 }
 
-void DestroyTileShadeTables( )
-{
-	UINT32					uiLoop;
 
-	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+void DestroyTileShadeTables(void)
+{
+	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		if ( gTileSurfaceArray[ uiLoop ] != NULL )
+		const TILE_IMAGERY* const ti = gTileSurfaceArray[i];
+		if (ti == NULL) continue;
+
+		// Don't delete shade tables if default are still being used...
+#ifdef JA2EDITOR
+		if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
+#else
+		if (gbNewTileSurfaceLoaded[i])
+#endif
 		{
-			// Don't Delete shade tables if default are still being used...
-			#ifdef JA2EDITOR
-				if( gbNewTileSurfaceLoaded[ uiLoop ] || gfEditorForceShadeTableRebuild )
-				{
-					DestroyObjectPaletteTables( gTileSurfaceArray[ uiLoop ]->vo );
-				}
-			#else
-				if( gbNewTileSurfaceLoaded[ uiLoop ] )
-				{
-					DestroyObjectPaletteTables( gTileSurfaceArray[ uiLoop ]->vo );
-				}
-			#endif
+			DestroyObjectPaletteTables(ti->vo);
 		}
 	}
 }
