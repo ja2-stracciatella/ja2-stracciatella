@@ -138,7 +138,7 @@ void HandleAimFacialIndex()
 }
 
 
-static BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
+static void DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
 
 
 BOOLEAN RenderAimFacialIndex()
@@ -246,57 +246,59 @@ static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason
 }
 
 
-static BOOLEAN DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage)
+static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, const UINT16 usPosY, const UINT8 ubImage)
 {
-	SOLDIERTYPE	*pSoldier=NULL;
-
-	pSoldier = FindSoldierByProfileID( AimMercArray[ubMercID], TRUE );
-
+	const ProfileID          id = AimMercArray[ubMercID];
+	const SOLDIERTYPE* const s  = FindSoldierByProfileID(id, TRUE);
 
 	//Blt the portrait background
-	BltVideoObject(FRAME_BUFFER, guiMugShotBorder, ubImage,usPosX, usPosY);
+	BltVideoObject(FRAME_BUFFER, guiMugShotBorder, ubImage, usPosX, usPosY);
 
-	//Blt face to screen
 	SGPVObject* const face = guiAimFiFace[ubMercID];
-	BltVideoObject(FRAME_BUFFER, face, 0,usPosX + AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET);
 
-	if( IsMercDead( AimMercArray[ubMercID] ) )
+	BOOLEAN        shaded;
+	const wchar_t* text;
+	if (IsMercDead(id))
 	{
-		//if the merc is dead
-		//shade the face red, (to signif that he is dead)
+		// the merc is dead, so shade the face red
 		face->pShades[0] = Create16BPPPaletteShaded(face->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-
-		//set the red pallete to the face
 		SetObjectShade(face, 0);
-
-		//Blt face to screen
-		BltVideoObject(FRAME_BUFFER, face, 0, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET);
-
-		DrawTextToScreen(AimFiText[AIM_FI_DEAD], usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		shaded = FALSE;
+		text   = AimFiText[AIM_FI_DEAD];
 	}
-
-	//else if the merc is currently a POW or, the merc was fired as a pow
-	else if( gMercProfiles[ AimMercArray[ubMercID] ].bMercStatus == MERC_FIRED_AS_A_POW  || ( pSoldier &&  pSoldier->bAssignment == ASSIGNMENT_POW ) )
+	else if (gMercProfiles[id].bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET, usPosX + 48+AIM_FI_FACE_OFFSET, usPosY + 43+AIM_FI_FACE_OFFSET);
-		DrawTextToScreen(pPOWStrings[0], usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// the merc is currently a POW or, the merc was fired as a pow
+		shaded = TRUE;
+		text   = pPOWStrings[0];
 	}
-
-	//if the merc is on our team
-	else if( pSoldier != NULL )
+	else if (s != NULL)
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET, usPosX + 48+AIM_FI_FACE_OFFSET, usPosY + 43+AIM_FI_FACE_OFFSET);
-		DrawTextToScreen(MercInfo[MERC_FILES_ALREADY_HIRED], usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// the merc is on our team
+		shaded = TRUE;
+		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
-
-	//if the merc is away, shadow his/her face and blit 'away' over top
-	else if( !IsMercHireable( AimMercArray[ubMercID] ) )
+	else if (!IsMercHireable(id))
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX+AIM_FI_FACE_OFFSET, usPosY+AIM_FI_FACE_OFFSET, usPosX + 48+AIM_FI_FACE_OFFSET, usPosY + 43+AIM_FI_FACE_OFFSET);
-		DrawTextToScreen(AimFiText[AIM_FI_DEAD + 1], usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-		//if not enough room use this..
-		//AimFiText[AIM_FI_AWAY]
+		// the merc is away, shadow his/her face and blit 'away' over top
+		shaded = TRUE;
+		text   = AimFiText[AIM_FI_DEAD + 1]; // if not enough room use AimFiText[AIM_FI_AWAY]
+	}
+	else
+	{
+		shaded = FALSE;
+		text   = NULL;
 	}
 
-	return(TRUE);
+	BltVideoObject(FRAME_BUFFER, face, 0, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET);
+
+	if (shaded)
+	{
+		ShadowVideoSurfaceRect(FRAME_BUFFER, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET, usPosX + 48 + AIM_FI_FACE_OFFSET, usPosY + 43 + AIM_FI_FACE_OFFSET);
+	}
+
+	if (text != NULL)
+	{
+		DrawTextToScreen(text, usPosX + AIM_FI_AWAY_TEXT_OFFSET_X, usPosY + AIM_FI_AWAY_TEXT_OFFSET_Y, AIM_FI_AWAY_TEXT_OFFSET_WIDTH, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	}
 }

@@ -725,7 +725,7 @@ BOOLEAN RenderAIMMembersTopLevel()
 
 static void DisplayAimMemberClickOnFaceHelpText(void);
 static void DisplayMercStats(void);
-static BOOLEAN DisplayMercsFace(void);
+static void DisplayMercsFace(void);
 static BOOLEAN DisplayMercsInventory(UINT8 ubMercID);
 static BOOLEAN DisplayVideoConferencingDisplay(void);
 static BOOLEAN UpdateMercInfo(void);
@@ -1036,66 +1036,67 @@ static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static BOOLEAN DisplayMercsFace(void)
+static void DisplayMercsFace(void)
 {
-	const char *sFaceLoc = "FACES/BIGFACES/";
-	char						sTemp[100];
-	SOLDIERTYPE			*pSoldier=NULL;
-
-	//See if the merc is currently hired
-	pSoldier = FindSoldierByProfileID( gbCurrentSoldier, TRUE );
+	// see if the merc is currently hired
+	const ProfileID          id = gbCurrentSoldier;
+	const SOLDIERTYPE* const s  = FindSoldierByProfileID(id, TRUE);
 
 	// Portrait Frame
 	BltVideoObject(FRAME_BUFFER, guiPortrait, 0, PORTRAIT_X, PORTRAIT_Y);
 
-	// load the Face graphic and add it
-  sprintf(sTemp, "%s%02d.sti", sFaceLoc, gbCurrentSoldier);
+	// load the face graphic
+	char sTemp[100];
+  sprintf(sTemp, "FACES/BIGFACES/%02d.sti", id);
 	SGPVObject* const face = AddVideoObjectFromFile(sTemp);
-	CHECKF(face != NO_VOBJECT);
+	CHECKV(face != NO_VOBJECT);
 
-  BltVideoObject(FRAME_BUFFER, face, 0,FACE_X, FACE_Y);
-
-	//if the merc is dead
-	if( IsMercDead( gbCurrentSoldier ) )
+	BOOLEAN        shaded;
+	const wchar_t* text;
+	if (IsMercDead(id))
 	{
-		//shade the face red, (to signif that he is dead)
+		// the merc is dead, so shade the face red
 		face->pShades[0] = Create16BPPPaletteShaded(face->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-
-		//set the red pallete to the face
 		SetObjectShade(face, 0);
-
-		//Blt face to screen
-		BltVideoObject(FRAME_BUFFER, face, 0, FACE_X, FACE_Y);
-
-		//if the merc is dead, display it
-		DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		shaded = FALSE;
+		text   = AimPopUpText[AIM_MEMBER_DEAD];
 	}
-
-	//else if the merc is currently a POW or, the merc was fired as a pow
-	else if( gMercProfiles[ gbCurrentSoldier ].bMercStatus == MERC_FIRED_AS_A_POW || ( pSoldier &&  pSoldier->bAssignment == ASSIGNMENT_POW ) )
+	else if (gMercProfiles[id].bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
-		DrawTextToScreen(pPOWStrings[0], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// the merc is currently a POW or, the merc was fired as a pow
+		shaded = TRUE;
+		text   = pPOWStrings[0];
 	}
-
-
-	//else if the merc has already been hired
-	else if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) )
+	else if (s != NULL)
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
-		DrawTextToScreen(MercInfo[MERC_FILES_ALREADY_HIRED], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// the merc has already been hired
+		shaded = TRUE;
+		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
-
-	else if( !IsMercHireable( gbCurrentSoldier ) )
+	else if (!IsMercHireable(id))
 	{
-		//else if the merc has a text file and the merc is not away
-		ShadowVideoSurfaceRect( FRAME_BUFFER, FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
-		DrawTextToScreen(AimPopUpText[AIM_MEMBER_ON_ASSIGNMENT], FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// the merc has a text file and the merc is not away
+		shaded = TRUE;
+		text   = AimPopUpText[AIM_MEMBER_ON_ASSIGNMENT];
+	}
+	else
+	{
+		shaded = FALSE;
+		text   = NULL;
 	}
 
+	BltVideoObject(FRAME_BUFFER, face, 0, FACE_X, FACE_Y);
 	DeleteVideoObject(face);
 
-	return( TRUE );
+	if (shaded)
+	{
+		ShadowVideoSurfaceRect(FRAME_BUFFER, FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
+	}
+
+	if (text != NULL)
+	{
+		DrawTextToScreen(text, FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	}
 }
 
 
