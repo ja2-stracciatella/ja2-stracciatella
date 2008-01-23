@@ -2263,7 +2263,7 @@ const wchar_t *MercInfo[] =
 	L"Weiter",
 	L"Zusatzinfo",
 	L"Home",
-	L"Abwesend",
+	L"Angestellt",
 	L"Sold:",
 	L"Pro Tag",
 	L"Verstorben",
