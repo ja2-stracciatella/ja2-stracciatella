@@ -40,8 +40,6 @@ extern void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier );
 void ExitBoxing( void )
 {
 	UINT8						ubRoom;
-	SOLDIERTYPE *		pSoldier;
-	UINT32					uiLoop;
 	UINT8						ubPass;
 
 	// find boxers and turn them neutral again
@@ -51,48 +49,43 @@ void ExitBoxing( void )
 	for( ubPass = 0; ubPass < 2; ubPass++ )
 	{
 		// because boxer could die, loop through all soldier ptrs
-		for ( uiLoop = 0; uiLoop < gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
+		FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
 		{
-			pSoldier = MercPtrs[ uiLoop ];
-
-			if ( pSoldier != NULL )
+			if ( ( pSoldier->uiStatusFlags & SOLDIER_BOXER ) && InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING )
 			{
-				if ( ( pSoldier->uiStatusFlags & SOLDIER_BOXER ) && InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING )
+				if ( pSoldier->uiStatusFlags & SOLDIER_PC )
 				{
-					if ( pSoldier->uiStatusFlags & SOLDIER_PC )
+					if ( ubPass == 0 ) // pass 0, only handle AI
 					{
-						if ( ubPass == 0 ) // pass 0, only handle AI
-						{
-							continue;
-						}
-						// put guy under AI control temporarily
-						pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+						continue;
 					}
-					else
+					// put guy under AI control temporarily
+					pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+				}
+				else
+				{
+					if ( ubPass == 1 ) // pass 1, only handle PCs
 					{
-						if ( ubPass == 1 ) // pass 1, only handle PCs
-						{
-							continue;
-						}
-						// reset AI boxer to neutral
-						SetSoldierNeutral( pSoldier );
-						RecalculateOppCntsDueToBecomingNeutral( pSoldier );
+						continue;
 					}
-					CancelAIAction(pSoldier);
-					pSoldier->bAlertStatus = STATUS_GREEN;
-					pSoldier->bUnderFire = 0;
+					// reset AI boxer to neutral
+					SetSoldierNeutral( pSoldier );
+					RecalculateOppCntsDueToBecomingNeutral( pSoldier );
+				}
+				CancelAIAction(pSoldier);
+				pSoldier->bAlertStatus = STATUS_GREEN;
+				pSoldier->bUnderFire = 0;
 
-					// if necessary, revive boxer so he can leave ring
-					if (pSoldier->bLife > 0 && (pSoldier->bLife < OKLIFE || pSoldier->bBreath < OKBREATH ) )
+				// if necessary, revive boxer so he can leave ring
+				if (pSoldier->bLife > 0 && (pSoldier->bLife < OKLIFE || pSoldier->bBreath < OKBREATH ) )
+				{
+					pSoldier->bLife = __max( OKLIFE * 2, pSoldier->bLife );
+					if (pSoldier->bBreath < 100)
 					{
-						pSoldier->bLife = __max( OKLIFE * 2, pSoldier->bLife );
-						if (pSoldier->bBreath < 100)
-						{
-							// deduct -ve BPs to grant some BPs back (properly)
-							DeductPoints( pSoldier, 0, (INT16) - ( (100 - pSoldier->bBreath) * 100 ) );
-						}
-						BeginSoldierGetup( pSoldier );
+						// deduct -ve BPs to grant some BPs back (properly)
+						DeductPoints( pSoldier, 0, (INT16) - ( (100 - pSoldier->bBreath) * 100 ) );
 					}
+					BeginSoldierGetup( pSoldier );
 				}
 			}
 		}
