@@ -85,25 +85,25 @@
 
 typedef struct
 {
-	UINT16	usQuoteNum;
-	UINT8		ubCharacterNum;
-	INT8		bUIHandlerID;
-	INT32		iFaceIndex;
-	INT32		iTimeStamp;
-	UINT32	uiSpecialEventFlag;
-	UINT32	uiSpecialEventData;
-	UINT32	uiSpecialEventData2;
-	UINT32	uiSpecialEventData3;
-	UINT32	uiSpecialEventData4;
-	BOOLEAN	fFromSoldier;
-	BOOLEAN	fDelayed;
-	BOOLEAN fPauseTime;
+	UINT16    usQuoteNum;
+	UINT8     ubCharacterNum;
+	INT8      bUIHandlerID;
+	FACETYPE* face;
+	INT32     iTimeStamp;
+	UINT32    uiSpecialEventFlag;
+	UINT32    uiSpecialEventData;
+	UINT32    uiSpecialEventData2;
+	UINT32    uiSpecialEventData3;
+	UINT32    uiSpecialEventData4;
+	BOOLEAN   fFromSoldier;
+	BOOLEAN   fDelayed;
+	BOOLEAN   fPauseTime;
 } DIALOGUE_Q_STRUCT, *DIALOGUE_Q_STRUCT_PTR;
 
 
 BOOLEAN fExternFacesLoaded = FALSE;
 
-UINT32 uiExternalStaticNPCFaces[ NUMBER_OF_EXTERNAL_NPC_FACES ];
+FACETYPE* uiExternalStaticNPCFaces[NUMBER_OF_EXTERNAL_NPC_FACES];
 const ProfileID g_external_face_profile_ids[] =
 {
 	SKYRIDER,
@@ -335,7 +335,7 @@ BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
 void DialogueAdvanceSpeech( )
 {
 	// Shut them up!
-	InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
+	InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
 }
 
 
@@ -344,12 +344,12 @@ void StopAnyCurrentlyTalkingSpeech( )
 	// ATE; Make sure guys stop talking....
 	if ( gpCurrentTalkingFace != NULL )
 	{
-		InternalShutupaYoFace( gpCurrentTalkingFace->iID, TRUE );
+		InternalShutupaYoFace(gpCurrentTalkingFace, TRUE);
 	}
 }
 
 
-static void CreateTalkingUI(INT8 bUIHandlerID, INT32 iFaceIndex, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
+static void CreateTalkingUI(INT8 bUIHandlerID, FACETYPE* face, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 
 
 // ATE: Handle changes like when face goes from
@@ -390,9 +390,8 @@ void HandleDialogueUIAdjustments( )
 							fTextBoxMouseRegionCreated = FALSE;
 						}
 
-
 						// Setup UI again!
-						CreateTalkingUI(gbUIHandlerID, pSoldier->iFaceIndex, pSoldier->ubProfile, gzQuoteStr);
+						CreateTalkingUI(gbUIHandlerID, pSoldier->face, pSoldier->ubProfile, gzQuoteStr);
 					}
 				}
 			}
@@ -402,8 +401,8 @@ void HandleDialogueUIAdjustments( )
 
 
 static void CheckForStopTimeQuotes(UINT16 usQuoteNum);
-static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier);
-static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex);
+static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier);
+static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE* face);
 
 
 void HandleDialogue( )
@@ -526,8 +525,8 @@ void HandleDialogue( )
 
 					// Set face inactive....
 					gpCurrentTalkingFace->fCanHandleInactiveNow = TRUE;
-					SetAutoFaceInActive( gpCurrentTalkingFace->iID );
-					HandleTacticalSpeechUI( gubCurrentTalkingID, gpCurrentTalkingFace->iID );
+					SetAutoFaceInActive(gpCurrentTalkingFace);
+					HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
 
           // ATE: Force mapscreen to set face active again.....
         	fReDrawFace = TRUE;
@@ -540,7 +539,7 @@ void HandleDialogue( )
 			}
 			else if ( guiScreenIDUsedWhenUICreated == MAP_SCREEN && guiCurrentScreen == GAME_SCREEN )
 			{
-				HandleTacticalSpeechUI( gubCurrentTalkingID, gpCurrentTalkingFace->iID );
+				HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 			}
 			return;
@@ -733,11 +732,10 @@ void HandleDialogue( )
 		gTacticalStatus.ubLastQuoteProfileNUm = (UINT8)QItem->ubCharacterNum;
 
 		// Setup face pointer
-		gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+		gpCurrentTalkingFace = QItem->face;
 		gubCurrentTalkingID   = QItem->ubCharacterNum;
 
-		ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
-
+		ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
 	}
 	else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME )
 	{
@@ -786,10 +784,10 @@ void HandleDialogue( )
 			gfUseAlternateDialogueFile = TRUE;
 
 			// Setup face pointer
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
-			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
+			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
 
 			gfUseAlternateDialogueFile = FALSE;
 
@@ -798,10 +796,10 @@ void HandleDialogue( )
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC )
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
-			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
+			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
 
 			// Setup face with data!
 			gpCurrentTalkingFace->uiFlags				|= FACE_PCTRIGGER_NPC;
@@ -840,11 +838,10 @@ void HandleDialogue( )
 			// Slide to location!
 			SlideToLocation( 0,  (UINT16)QItem->uiSpecialEventData );
 
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
-			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
-
+			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
 		}
 
 		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI )
@@ -885,10 +882,10 @@ void HandleDialogue( )
 		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE )
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
-			ExecuteCharacterDialogue( QItem->ubCharacterNum, QItem->usQuoteNum, QItem->iFaceIndex, QItem->bUIHandlerID, QItem->fFromSoldier );
+			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
 
 			// Setup face with data!
 			gpCurrentTalkingFace->uiFlags				|= FACE_TRIGGER_PREBATTLE_INT;
@@ -990,7 +987,7 @@ void HandleDialogue( )
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT )
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
 			// handle the monologue event
@@ -1000,7 +997,7 @@ void HandleDialogue( )
 		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT )
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = &gFacesData[ QItem->iFaceIndex ];
+			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
 
 			// set up the mine highlgith events
@@ -1169,7 +1166,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-	return( CharacterDialogue( pSoldier->ubProfile, usQuoteNum, pSoldier->iFaceIndex, DIALOGUE_TACTICAL_UI, TRUE, TRUE ) );
+	return CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
 }
 
 
@@ -1190,11 +1187,11 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(const SOLDIERTYPE* pSoldier, U
 
 	}
 
-	return( CharacterDialogueWithSpecialEvent( pSoldier->ubProfile, usQuoteNum, pSoldier->iFaceIndex, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2 ) );
+	return CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
 }
 
 
-static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
+static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
 
 
 BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
@@ -1227,7 +1224,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 	}
 
-	return( CharacterDialogueWithSpecialEventEx( pSoldier->ubProfile, usQuoteNum, pSoldier->iFaceIndex, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2, uiData3 ) );
+	return CharacterDialogueWithSpecialEventEx(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2, uiData3);
 }
 
 
@@ -1301,7 +1298,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 	}
 
-	return( CharacterDialogue( pSoldier->ubProfile, usQuoteNum, pSoldier->iFaceIndex, DIALOGUE_TACTICAL_UI, TRUE, FALSE ) );
+	return CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE);
 }
 
 // This function takes a profile num, quote num, faceindex and a UI hander ID.
@@ -1319,7 +1316,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2 )
+BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2)
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1329,7 +1326,7 @@ BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteN
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
-	QItem->iFaceIndex			= iFaceIndex;
+	QItem->face           = face;
 	QItem->bUIHandlerID		= bUIHandlerID;
 	QItem->iTimeStamp			= GetJA2Clock( );
 	QItem->fFromSoldier		= fFromSoldier;
@@ -1354,7 +1351,7 @@ BOOLEAN CharacterDialogueWithSpecialEvent( UINT8 ubCharacterNum, UINT16 usQuoteN
 
 
 // Do special event as well as dialogue!
-static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3)
+static BOOLEAN CharacterDialogueWithSpecialEventEx(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2, const UINT32 uiData3)
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1364,7 +1361,7 @@ static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
-	QItem->iFaceIndex			= iFaceIndex;
+	QItem->face           = face;
 	QItem->bUIHandlerID		= bUIHandlerID;
 	QItem->iTimeStamp			= GetJA2Clock( );
 	QItem->fFromSoldier		= fFromSoldier;
@@ -1389,7 +1386,7 @@ static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 
 }
 
 
-BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed )
+BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed)
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1399,7 +1396,7 @@ BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceI
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
-	QItem->iFaceIndex			= iFaceIndex;
+	QItem->face           = face;
 	QItem->bUIHandlerID		= bUIHandlerID;
 	QItem->iTimeStamp			= GetJA2Clock( );
 	QItem->fFromSoldier		= fFromSoldier;
@@ -1420,7 +1417,7 @@ BOOLEAN CharacterDialogue( UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceI
 }
 
 
-BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, INT32 iFaceIndex, UINT8 bUIHandlerID )
+BOOLEAN SpecialCharacterDialogueEvent(const UINT32 uiSpecialEventFlag, const UINT32 uiSpecialEventData1, const UINT32 uiSpecialEventData2, const UINT32 uiSpecialEventData3, FACETYPE* const face, const UINT8 bUIHandlerID)
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1432,7 +1429,7 @@ BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpeci
 	QItem->uiSpecialEventData		= uiSpecialEventData1;
 	QItem->uiSpecialEventData2	= uiSpecialEventData2;
 	QItem->uiSpecialEventData3	= uiSpecialEventData3;
-	QItem->iFaceIndex			= iFaceIndex;
+	QItem->face                = face;
 	QItem->bUIHandlerID		= bUIHandlerID;
 	QItem->iTimeStamp			= GetJA2Clock( );
 
@@ -1451,7 +1448,8 @@ BOOLEAN SpecialCharacterDialogueEvent( UINT32 uiSpecialEventFlag, UINT32 uiSpeci
 	return( TRUE );
 }
 
-BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, INT32 iFaceIndex, UINT8 bUIHandlerID )
+
+BOOLEAN SpecialCharacterDialogueEventWithExtraParam(const UINT32 uiSpecialEventFlag, const UINT32 uiSpecialEventData1, const UINT32 uiSpecialEventData2, const UINT32 uiSpecialEventData3, const UINT32 uiSpecialEventData4, FACETYPE* const face, const UINT8 bUIHandlerID )
 {
 	DIALOGUE_Q_STRUCT				*QItem;
 
@@ -1464,7 +1462,7 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam( UINT32 uiSpecialEventFlag, 
 	QItem->uiSpecialEventData2	= uiSpecialEventData2;
 	QItem->uiSpecialEventData3	= uiSpecialEventData3;
 	QItem->uiSpecialEventData4	= uiSpecialEventData4;
-	QItem->iFaceIndex			= iFaceIndex;
+	QItem->face                = face;
 	QItem->bUIHandlerID		= bUIHandlerID;
 	QItem->iTimeStamp			= GetJA2Clock( );
 
@@ -1488,7 +1486,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 
 // execute specific character dialogue
-static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, INT32 iFaceIndex, UINT8 bUIHandlerID, BOOLEAN fFromSoldier)
+static BOOLEAN ExecuteCharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier)
 {
 	CHAR8		zSoundString[ 164 ];
 	SOLDIERTYPE *pSoldier;
@@ -1586,7 +1584,7 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 	}
 
 	// Check face index
-	CHECKF( iFaceIndex != -1 );
+	CHECKF(face != NULL);
 
   if (!GetDialogue(ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
   {
@@ -1596,14 +1594,14 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 	if( bUIHandlerID == DIALOGUE_EXTERNAL_NPC_UI )
 	{
 		// external NPC
-		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
+		SetFaceTalking(face, zSoundString, gzQuoteStr);
 	}
 	else
 	{
 		// start "talking" system (portrait animation and start wav sample)
-		SetFaceTalking(iFaceIndex, zSoundString, gzQuoteStr);
+		SetFaceTalking(face, zSoundString, gzQuoteStr);
 	}
-	CreateTalkingUI(bUIHandlerID, iFaceIndex, ubCharacterNum, gzQuoteStr);
+	CreateTalkingUI(bUIHandlerID, face, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
 	gbUIHandlerID = bUIHandlerID;
@@ -1615,15 +1613,15 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 
 
 static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static void HandleExternNPCSpeechFace(INT32 iIndex);
+static void HandleExternNPCSpeechFace(FACETYPE* face);
 static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleTacticalTextUI(ProfileID profile_id, const wchar_t* zQuoteStr);
 
 
-static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
+static void CreateTalkingUI(const INT8 bUIHandlerID, FACETYPE* const face, const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
 	// Show text, if on
-	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !gFacesData[iFaceIndex].fValidSpeech)
+	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !face->fValidSpeech)
 	{
 		switch (bUIHandlerID)
 		{
@@ -1640,10 +1638,10 @@ static void CreateTalkingUI(const INT8 bUIHandlerID, const INT32 iFaceIndex, con
 	{
 		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, iFaceIndex); break;
-			case DIALOGUE_CONTACTPAGE_UI:                                                            break;
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI:                                                     break;
-			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(iFaceIndex);              break;
+			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, face); break;
+			case DIALOGUE_CONTACTPAGE_UI:                                                      break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI:                                               break;
+			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(face);              break;
 		}
 	}
 }
@@ -1881,19 +1879,15 @@ static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
 
 
-static void HandleExternNPCSpeechFace(INT32 iIndex)
+static void HandleExternNPCSpeechFace(FACETYPE* const face)
 {
-	INT32 iFaceIndex;
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
-	// grab face index
-	iFaceIndex = iIndex;
-
 	// Enable it!
-	SetAutoFaceActive( FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );
+	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, face, 0, 0);
 
 	// Set flag to say WE control when to set inactive!
-	gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	face->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
@@ -1918,7 +1912,7 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 
 	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
-	RenderAutoFace( iFaceIndex );
+	RenderAutoFace(face);
 
 	// ATE: Create mouse region.......
 	if ( !fExternFaceBoxRegionCreated )
@@ -1934,7 +1928,7 @@ static void HandleExternNPCSpeechFace(INT32 iIndex)
 }
 
 
-static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
+static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const face)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	SOLDIERTYPE						*pSoldier;
@@ -1964,10 +1958,10 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 	if ( fDoExternPanel )
 	{
 		// Enable it!
-		SetAutoFaceActive( FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );
+		SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, face, 0, 0);
 
 		// Set flag to say WE control when to set inactive!
-		gFacesData[ iFaceIndex ].uiFlags |= ( FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE );
+		face->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE;
 
 		// IF we are in tactical and this soldier is on the current squad
 		if ( ( guiCurrentScreen == GAME_SCREEN ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment == iCurrentTacticalSquad ) )
@@ -1986,7 +1980,7 @@ static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, INT32 iFaceIndex)
 
 		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
 
-		RenderAutoFace( iFaceIndex );
+		RenderAutoFace(face);
 
 		// ATE: Create mouse region.......
 		if ( !fExternFaceBoxRegionCreated )
@@ -2039,7 +2033,7 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			{
 				// Set face inactive!
 				pFace->fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive( pFace->iID );
+				SetAutoFaceInActive(pFace);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
@@ -2053,7 +2047,7 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			break;
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				pFace->fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive( pFace->iID );
+				SetAutoFaceInActive(pFace);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
@@ -2380,7 +2374,7 @@ static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		if(  gpCurrentTalkingFace != NULL )
 		{
-			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
+			InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
 
 			// Did we succeed in shutting them up?
 			if ( !gpCurrentTalkingFace->fTalking )
@@ -2410,7 +2404,7 @@ static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	{
 		if(  gpCurrentTalkingFace != NULL )
 		{
-			InternalShutupaYoFace( gpCurrentTalkingFace->iID, FALSE );
+			InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
 		}
 
 	}

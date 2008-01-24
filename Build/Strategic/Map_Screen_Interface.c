@@ -2268,14 +2268,15 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 
 		// post dialogue events for miners to say this quote and flash the sector where his mine is
 		const ProfileID profile = g_external_face_profile_ids[bMinerNumber];
-		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, bMinerNumber,                                  DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, START_RED_SECTOR_LOCATOR, 1);
-		CharacterDialogue(                profile, sQuoteNumber, (UINT8)uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
-		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, bMinerNumber,                                  DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, STOP_RED_SECTOR_LOCATOR,  1);
+		FACETYPE* const face    = uiExternalStaticNPCFaces[bMinerNumber];
+		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, NULL, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, START_RED_SECTOR_LOCATOR, 1);
+		CharacterDialogue(                profile, sQuoteNumber, face, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, NULL, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, STOP_RED_SECTOR_LOCATOR,  1);
 	}
 	else	// stay in tactical
 	{
 		// no need to to highlight mine sector
-		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, (UINT8)uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
 	}
 }
 

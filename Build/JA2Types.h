@@ -11,6 +11,7 @@ typedef INT32 TIMECOUNTER;
 typedef struct ANIM_PROF     ANIM_PROF;
 typedef struct BULLET        BULLET;
 typedef struct EXPLOSIONTYPE EXPLOSIONTYPE;
+typedef struct FACETYPE      FACETYPE;
 typedef struct LEVELNODE     LEVELNODE;
 typedef struct LIGHT_SPRITE  LIGHT_SPRITE;
 typedef struct PathSt        PathSt;

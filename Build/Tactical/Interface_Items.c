@@ -1133,12 +1133,12 @@ void HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, 
 				if ( SoldierContainsAnyCompatibleStuff( Squad[ iCurrentTacticalSquad ][ iCounter ], pObject )	)
 				{
 					// Get face and set value....
-					gFacesData[ Squad[ iCurrentTacticalSquad ][ iCounter ]->iFaceIndex ].fCompatibleItems = TRUE;
+					Squad[iCurrentTacticalSquad][iCounter]->face->fCompatibleItems = TRUE;
 				}
 			}
 			else
 			{
-				gFacesData[ Squad[ iCurrentTacticalSquad ][ iCounter ]->iFaceIndex ].fCompatibleItems = FALSE;
+				Squad[iCurrentTacticalSquad][iCounter]->face->fCompatibleItems = FALSE;
 			}
 		}
 	}

@@ -1069,6 +1069,12 @@ static void DisplayCurrentGridNo(void)
 }
 
 
+static FACETYPE* GetQDSFace(const UINT8 panel_merc_should_use)
+{
+	return panel_merc_should_use == QDS_REGULAR_PANEL ? gTalkingMercSoldier->face : gTalkPanel.face;
+}
+
+
 static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 static void IncrementActiveDropDownBox(INT16 sIncrementValue);
 static void SetTalkingMercPauseState(BOOLEAN fState);
@@ -1107,11 +1113,7 @@ static void GetUserInput(void)
 				case SDLK_LEFT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
-						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
-							ShutupaYoFace( gTalkingMercSoldier->iFaceIndex );
-						else
-							ShutupaYoFace( gTalkPanel.iFaceIndex );
-
+						ShutupaYoFace(GetQDSFace(ubPanelMercShouldUse));
 
 						if( giSelectedMercCurrentQuote > 1 )
 						{
@@ -1129,10 +1131,7 @@ static void GetUserInput(void)
 				case SDLK_RIGHT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
-						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
-							ShutupaYoFace( gTalkingMercSoldier->iFaceIndex );
-						else
-							ShutupaYoFace( gTalkPanel.iFaceIndex );
+						ShutupaYoFace(GetQDSFace(ubPanelMercShouldUse));
 
 						//if( giSelectedMercCurrentQuote < GetMaxNumberOfQuotesToPlay( ) )
 						//{
@@ -1240,10 +1239,7 @@ static void GetUserInput(void)
 				case SDLK_LEFT:
 					if( giSelectedMercCurrentQuote != -1 )
 					{
-						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
-							ShutupaYoFace( gTalkingMercSoldier->iFaceIndex );
-						else
-							ShutupaYoFace( gTalkPanel.iFaceIndex );
+						ShutupaYoFace(GetQDSFace(ubPanelMercShouldUse));
 
 						if( giSelectedMercCurrentQuote > 1 )
 						{
@@ -1263,11 +1259,7 @@ static void GetUserInput(void)
 					{
 						DisplayQDSCurrentlyQuoteNum( );
 
-						if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
-							ShutupaYoFace( gTalkingMercSoldier->iFaceIndex );
-						else
-							ShutupaYoFace( gTalkPanel.iFaceIndex );
-
+						ShutupaYoFace(GetQDSFace(ubPanelMercShouldUse));
 					}
 					break;
 			}
@@ -3233,7 +3225,6 @@ static void EndMercTalking(void)
 static void HandleQDSTalkingMerc(void)
 {
 //	static BOOLEAN	fWas
-	BOOLEAN fIsTheMercTalking=FALSE;
 	UINT8		ubPanelMercShouldUse;
 
 	if( giSelectedMercCurrentQuote != -1 )
@@ -3246,14 +3237,8 @@ static void HandleQDSTalkingMerc(void)
 
 		ubPanelMercShouldUse = WhichPanelShouldTalkingMercUse();
 
-		//find out if the merc is talking
-		if( ubPanelMercShouldUse == QDS_REGULAR_PANEL )
-			fIsTheMercTalking = gFacesData[ gTalkingMercSoldier->iFaceIndex ].fTalking;
-		else
-			fIsTheMercTalking = gFacesData[ gTalkPanel.iFaceIndex ].fTalking;
-
 		//if the merc is not talking
-		if( !fIsTheMercTalking )
+		if (!GetQDSFace(ubPanelMercShouldUse)->fTalking)
 		{
 			//if we still have more quotes to say
 			if( giSelectedMercCurrentQuote < GetMaxNumberOfQuotesToPlay( ) )
@@ -3271,10 +3256,12 @@ static void HandleQDSTalkingMerc(void)
 				else if (gfRpcToSaySectorDesc && MIGUEL <= gTalkingMercSoldier->ubProfile && gTalkingMercSoldier->ubProfile <= DIMITRI)
 				{
 					//ATE: Trigger the sector desc here
-					CharacterDialogueWithSpecialEvent( gTalkingMercSoldier->ubProfile, (UINT16)giSelectedMercCurrentQuote, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, TRUE, FALSE, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, FALSE, FALSE );
+					CharacterDialogueWithSpecialEvent(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, TRUE, FALSE, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, FALSE, FALSE);
 				}
 				else
-					CharacterDialogue( gTalkingMercSoldier->ubProfile, (UINT16)giSelectedMercCurrentQuote, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, FALSE, FALSE );
+				{
+					CharacterDialogue(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE);
+				}
 
 				//Incremenet the current quote number
 				giSelectedMercCurrentQuote++;
@@ -3310,16 +3297,12 @@ static void SetTalkingMercPauseState(BOOLEAN fState)
 	if( fState )
 	{
 		gfPauseTalkingMercPopup = TRUE;
-
-		if( gTalkingMercSoldier )
-			gFacesData[ gTalkingMercSoldier->iFaceIndex ].uiFlags |= FACE_POTENTIAL_KEYWAIT;
+		if (gTalkingMercSoldier) gTalkingMercSoldier->face->uiFlags |= FACE_POTENTIAL_KEYWAIT;
 	}
 	else
 	{
 		gfPauseTalkingMercPopup = FALSE;
-
-		if( gTalkingMercSoldier )
-			gFacesData[ gTalkingMercSoldier->iFaceIndex ].uiFlags &= ~FACE_POTENTIAL_KEYWAIT;
+		if (gTalkingMercSoldier) gTalkingMercSoldier->face->uiFlags &= ~FACE_POTENTIAL_KEYWAIT;
 	}
 }
 

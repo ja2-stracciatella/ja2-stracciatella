@@ -43,8 +43,8 @@
 
 
 // GLOBAL FOR FACES LISTING
-FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
-static UINT32 guiNumFaces = 0;
+static FACETYPE gFacesData[NUM_FACE_SLOTS];
+static UINT32   guiNumFaces = 0;
 
 
 typedef struct RPC_SMALL_FACE_VALUES
@@ -95,20 +95,14 @@ static const RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[] =
 };
 
 
-static INT32 GetFreeFace(void)
+static FACETYPE* GetFreeFace(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumFaces; uiCount++)
+	for (FACETYPE* i = gFacesData; i != gFacesData + guiNumFaces; ++i)
 	{
-		if((gFacesData[uiCount].fAllocated==FALSE) )
-			return((INT32)uiCount);
+		if (!i->fAllocated) return i;
 	}
-
-	if(guiNumFaces < NUM_FACE_SLOTS )
-		return((INT32)guiNumFaces++);
-
-	return(-1);
+	if (guiNumFaces < NUM_FACE_SLOTS) return &gFacesData[guiNumFaces++];
+	return NULL;
 }
 
 
@@ -130,24 +124,20 @@ INT32 uiCount;
 void InitSoldierFace(SOLDIERTYPE* const s)
 {
 	// Check if we have a face init already
-	if (s->iFaceIndex != -1) return;
-
-	s->iFaceIndex = InitFace(s->ubProfile, s, 0);
+	if (s->face != NULL) return;
+	s->face = InitFace(s->ubProfile, s, 0);
 }
 
 
-static INT32 InternalInitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency);
+static FACETYPE* InternalInitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency);
 
 
-INT32	InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
+FACETYPE* InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
 {
 	UINT32	uiBlinkFrequency;
 	UINT32	uiExpressionFrequency;
 
-	if ( usMercProfileID == NO_PROFILE )
-	{
-		return( -1 );
-	}
+	if (usMercProfileID == NO_PROFILE) return NULL;
 
 	uiBlinkFrequency			= gMercProfiles[ usMercProfileID ].uiBlinkFrequency;
 	uiExpressionFrequency	= gMercProfiles[ usMercProfileID ].uiExpressionFrequency;
@@ -165,15 +155,13 @@ INT32	InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 u
 }
 
 
-static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags, INT32 iFaceFileID, const UINT32 uiBlinkFrequency, const UINT32 uiExpressionFrequency)
+static FACETYPE* InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags, INT32 iFaceFileID, const UINT32 uiBlinkFrequency, const UINT32 uiExpressionFrequency)
 {
-	FACETYPE					*pFace;
-	INT32							iFaceIndex;
 	UINT32						uiCount;
 	SGPPaletteEntry		Pal[256];
 
-	if( ( iFaceIndex = GetFreeFace() )==(-1) )
-		return(-1);
+	FACETYPE* const pFace = GetFreeFace();
+	if (pFace == NULL) return NULL;
 
 	// ATE: If we are merc profile ID #151-154, all use 151's protrait....
 	if ( usMercProfileID >= 151 && usMercProfileID <= 154 )
@@ -227,22 +215,19 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 		if ( uiInitFlags & FACE_BIGFACE )
 		{
 			hVObject = AddVideoObjectFromFile("FACES/placeholder.sti");
-			if (hVObject == NO_VOBJECT) return -1;
+			if (hVObject == NO_VOBJECT) return NULL;
 		}
 		else
 		{
-			return( -1 );
+			return NULL;
 		}
 	}
 
-	memset(&gFacesData[ iFaceIndex ], 0, sizeof( FACETYPE ) );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	memset(pFace, 0, sizeof(*pFace));
 
 	// Get profile data and set into face data
 	pFace->soldier = s;
 
-	pFace->iID						= iFaceIndex;
 	pFace->fAllocated			= TRUE;
 
 	//Default to off!
@@ -290,7 +275,7 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 	// Get FACE height, width
 	const ETRLEObject* ETRLEProps;
 	ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 0);
-	if (ETRLEProps == NULL) return -1;
+	if (ETRLEProps == NULL) return NULL;
 	pFace->usFaceWidth  = ETRLEProps->usWidth;
 	pFace->usFaceHeight = ETRLEProps->usHeight;
 
@@ -301,13 +286,13 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 
 		// Get EYE height, width
 		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 1);
-		if (ETRLEProps == NULL) return -1;
+		if (ETRLEProps == NULL) return NULL;
 		pFace->usEyesWidth  = ETRLEProps->usWidth;
 		pFace->usEyesHeight = ETRLEProps->usHeight;
 
 		// Get Mouth height, width
 		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 5);
-		if (ETRLEProps == NULL) return -1;
+		if (ETRLEProps == NULL) return NULL;
 		pFace->usMouthWidth  = ETRLEProps->usWidth;
 		pFace->usMouthHeight = ETRLEProps->usHeight;
 	}
@@ -319,34 +304,27 @@ static INT32 InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s,
 	// Set id
 	pFace->uiVideoObject = hVObject;
 
-	return( iFaceIndex );
-
+	return pFace;
 }
 
 
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier )
 {
-	DeleteFace( pSoldier->iFaceIndex );
-
-	pSoldier->iFaceIndex = -1;
+	DeleteFace(pSoldier->face);
+	pSoldier->face = NULL;
 }
 
 
-void DeleteFace( INT32 iFaceIndex )
+void DeleteFace(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
-
-	// Check face index
-	CHECKV( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKV(pFace != NULL);
 
 	// Check for a valid slot!
 	CHECKV(pFace->fAllocated);
 
   pFace->fCanHandleInactiveNow = TRUE;
 
-	SetAutoFaceInActive(iFaceIndex);
+	SetAutoFaceInActive(pFace);
 
 	// If we are still talking, stop!
 	if ( pFace->fTalking )
@@ -370,7 +348,7 @@ void DeleteFace( INT32 iFaceIndex )
 void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const restore, const SOLDIERTYPE* const s, const UINT16 usFaceX, const UINT16 usFaceY)
 {
 	CHECKV(s != NULL);
-	SetAutoFaceActive(display, restore, s->iFaceIndex, usFaceX, usFaceY);
+	SetAutoFaceActive(display, restore, s->face, usFaceX, usFaceY);
 }
 
 
@@ -417,37 +395,23 @@ static void GetFaceRelativeCoordinates(const FACETYPE* pFace, UINT16* pusEyesX, 
 }
 
 
-static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
+static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE*, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
 
 
-void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, const INT32 iFaceIndex, const UINT16 usFaceX, const UINT16 usFaceY)
+void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE* const face, const UINT16 usFaceX, const UINT16 usFaceY)
 {
-	UINT16						usEyesX;
-	UINT16						usEyesY;
-	UINT16						usMouthX;
-	UINT16						usMouthY;
-	FACETYPE					*pFace;
-
-	// Check face index
-	CHECKV( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
-
-	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
-
-	InternalSetAutoFaceActive(display, restore, iFaceIndex, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
+	CHECKV(face != NULL);
+	UINT16 usEyesX;
+	UINT16 usEyesY;
+	UINT16 usMouthX;
+	UINT16 usMouthY;
+	GetFaceRelativeCoordinates(face, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
+	InternalSetAutoFaceActive(display, restore, face, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
 }
 
 
-static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, const INT32 iFaceIndex, const UINT16 usFaceX, const UINT16 usFaceY, const UINT16 usEyesX, const UINT16 usEyesY, const UINT16 usMouthX, const UINT16 usMouthY)
+static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE* const pFace, const UINT16 usFaceX, const UINT16 usFaceY, const UINT16 usEyesX, const UINT16 usEyesY, const UINT16 usMouthX, const UINT16 usMouthY)
 {
-	FACETYPE					*pFace;
-
-	// Check face index
-	CHECKV( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
-
 	// IF we are already being contained elsewhere, return without doing anything!
 
 	// ATE: Don't allow another activity from setting active....
@@ -457,7 +421,7 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 	}
 
 	// Check if we are active already, remove if so!
-	SetAutoFaceInActive(iFaceIndex);
+	SetAutoFaceInActive(pFace);
 
 	if (restore == FACE_AUTO_RESTORE_BUFFER)
 	{
@@ -523,18 +487,13 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* const s)
 {
 	CHECKV(s != NULL);
-	SetAutoFaceInActive(s->iFaceIndex);
+	SetAutoFaceInActive(s->face);
 }
 
 
-void SetAutoFaceInActive(INT32 iFaceIndex )
+void SetAutoFaceInActive(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
-
-	// Check face index
-	CHECKV( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKV(pFace != NULL);
 
 	// Check for a valid slot!
 	CHECKV(pFace->fAllocated);
@@ -593,32 +552,24 @@ void SetAutoFaceInActive(INT32 iFaceIndex )
 
 void SetAllAutoFacesInactive(  )
 {
-	UINT32 uiCount;
-
-	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
+	for (FACETYPE* i = gFacesData; i != gFacesData + guiNumFaces; ++i)
 	{
-		if ( gFacesData[ uiCount ].fAllocated )
-		{
-			SetAutoFaceInActive( uiCount );
-		}
+		if (i->fAllocated) SetAutoFaceInActive(i);
 	}
 }
 
 
 static void NewEye(FACETYPE* pFace);
 static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
-static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
+static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE*, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
-static void BlinkAutoFace(INT32 iFaceIndex)
+static void BlinkAutoFace(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
 	INT16						sFrame;
 
-	if ( gFacesData[ iFaceIndex ].fAllocated && !gFacesData[ iFaceIndex ].fDisabled && !gFacesData[ iFaceIndex ].fInvalidAnim )
+	if (pFace->fAllocated && !pFace->fDisabled && !pFace->fInvalidAnim)
 	{
-		pFace = &gFacesData[ iFaceIndex ];
-
 		// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
 		const SOLDIERTYPE* const s = pFace->soldier;
 		if (s != NULL)
@@ -696,13 +647,12 @@ static void BlinkAutoFace(INT32 iFaceIndex)
 
 					if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 					{
-						FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usEyesX, pFace->usEyesY, pFace->usEyesX, pFace->usEyesY, pFace->usEyesWidth, pFace->usEyesHeight );
+						FaceRestoreSavedBackgroundRect(pFace, pFace->usEyesX, pFace->usEyesY, pFace->usEyesX, pFace->usEyesY, pFace->usEyesWidth, pFace->usEyesHeight);
 					}
 					else
 					{
-						FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usEyesX, pFace->usEyesY, pFace->usEyesOffsetX, pFace->usEyesOffsetY, pFace->usEyesWidth, pFace->usEyesHeight );
+						FaceRestoreSavedBackgroundRect(pFace, pFace->usEyesX, pFace->usEyesY, pFace->usEyesOffsetX, pFace->usEyesOffsetY, pFace->usEyesWidth, pFace->usEyesHeight);
 					}
-
 				}
 
 				HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
@@ -719,11 +669,8 @@ static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffe
 	UINT32					uiDestPitchBYTES;
 	UINT8						*pDestBuf;
 	UINT16					usLineColor;
-	INT32						iFaceIndex;
 
-	iFaceIndex = pFace->iID;
-
-  if ( !gFacesData[ iFaceIndex ].fDisabled )
+	if (!pFace->fDisabled)
   {
 		if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER && guiCurrentScreen == GAME_SCREEN )
     {
@@ -785,8 +732,7 @@ static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffe
     }
   }
 
-
-	if ( ( pFace->fCompatibleItems && !gFacesData[ iFaceIndex ].fDisabled ) )
+	if (pFace->fCompatibleItems && !pFace->fDisabled)
 	{
 		// Lock buffer
 		pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
@@ -806,18 +752,15 @@ static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffe
 static void NewMouth(FACETYPE* pFace);
 
 
-static void MouthAutoFace(INT32 iFaceIndex)
+static void MouthAutoFace(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
 	INT16						sFrame;
 
-	if ( gFacesData[ iFaceIndex ].fAllocated  )
+	if (pFace->fAllocated)
 	{
-		pFace = &gFacesData[ iFaceIndex ];
-
 		if ( pFace->fTalking )
 		{
-			if ( !gFacesData[ iFaceIndex ].fDisabled && !gFacesData[ iFaceIndex ].fInvalidAnim )
+			if (!pFace->fDisabled && !pFace->fInvalidAnim )
 			{
 				if ( pFace->fAnimatingTalking )
 				{
@@ -828,13 +771,12 @@ static void MouthAutoFace(INT32 iFaceIndex)
 
 						if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 						{
-							FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight );
+							FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
 						}
 						else
 						{
-							FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight );
+							FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
 						}
-
 					}
 					else
 					{
@@ -866,13 +808,12 @@ static void MouthAutoFace(INT32 iFaceIndex)
 								// Update rects just for Mouth
 								if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 								{
-									FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight );
+									FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
 								}
 								else
 								{
-									FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight );
+									FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
 								}
-
 							}
 
 							HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
@@ -893,14 +834,10 @@ static void MouthAutoFace(INT32 iFaceIndex)
 static void SetupFinalTalkingDelay(FACETYPE* pFace);
 
 
-static void HandleTalkingAutoFace(INT32 iFaceIndex)
+static void HandleTalkingAutoFace(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
-
-	if ( gFacesData[ iFaceIndex ].fAllocated  )
+	if (pFace->fAllocated)
 	{
-		pFace = &gFacesData[ iFaceIndex ];
-
 		if ( pFace->fTalking )
 		{
 			// Check if we are done!	( Check this first! )
@@ -983,7 +920,7 @@ BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s)
 {
 	// Check for valid soldier
 	CHECKF(s != NULL);
-	return RenderAutoFace(s->iFaceIndex);
+	return RenderAutoFace(s->face);
 }
 
 
@@ -1345,14 +1282,9 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 }
 
 
-BOOLEAN RenderAutoFace( INT32 iFaceIndex )
+BOOLEAN RenderAutoFace(FACETYPE* const pFace)
 {
-	FACETYPE				*pFace;
-
-	// Check face index
-	CHECKF( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKF(pFace != NULL);
 
 	// Check for a valid slot!
 	CHECKF(pFace->fAllocated);
@@ -1377,42 +1309,38 @@ BOOLEAN RenderAutoFace( INT32 iFaceIndex )
 	// Restore extern rect
 	if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 	{
-		FaceRestoreSavedBackgroundRect( iFaceIndex, (INT16)( pFace->usFaceX ), (INT16)( pFace->usFaceY ), (INT16)( pFace->usFaceX ), (INT16)( pFace->usFaceY ), ( INT16)( pFace->usFaceWidth ), (INT16)( pFace->usFaceHeight ) );
+		FaceRestoreSavedBackgroundRect(pFace, pFace->usFaceX, pFace->usFaceY, pFace->usFaceX, pFace->usFaceY, pFace->usFaceWidth, pFace->usFaceHeight);
 	}
 	else
 	{
-		FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usFaceX, pFace->usFaceY, 0, 0, pFace->usFaceWidth, pFace->usFaceHeight );
+		FaceRestoreSavedBackgroundRect(pFace, pFace->usFaceX, pFace->usFaceY, 0, 0, pFace->usFaceWidth, pFace->usFaceHeight);
 	}
 
 	return( TRUE );
 }
 
 
-static BOOLEAN ExternRenderFace(SGPVSurface* buffer, INT32 iFaceIndex, INT16 sX, INT16 sY);
+static BOOLEAN ExternRenderFace(SGPVSurface* buffer, FACETYPE*, INT16 sX, INT16 sY);
 
 
 BOOLEAN ExternRenderFaceFromSoldier(SGPVSurface* const buffer, const SOLDIERTYPE* s, const INT16 sX, const INT16 sY)
 {
 	// Check for valid soldier
 	CHECKF(s != NULL);
-	return ExternRenderFace(buffer, s->iFaceIndex, sX, sY);
+	return ExternRenderFace(buffer, s->face, sX, sY);
 }
 
 
 /* To render an allocated face, but one that is independent of its active
  * status and does not require eye blinking or mouth movements, call */
-static BOOLEAN ExternRenderFace(SGPVSurface* const buffer, const INT32 iFaceIndex, const INT16 sX, const INT16 sY)
+static BOOLEAN ExternRenderFace(SGPVSurface* const buffer, FACETYPE* const pFace, const INT16 sX, const INT16 sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
 	UINT16						usMouthY;
-	FACETYPE				*pFace;
 
-	// Check face index
-	CHECKF( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKF(pFace != NULL);
 
 	// Check for a valid slot!
 	CHECKF(pFace->fAllocated);
@@ -1746,10 +1674,7 @@ void HandleAutoFaces( )
 					 fRerender = TRUE;
          }
 
-				 if ( fRerender )
-				 {
-						RenderAutoFace( uiCount );
-				 }
+				 if (fRerender) RenderAutoFace(pFace);
 
 				 if ( bLife < CONSCIOUSNESS )
 				 {
@@ -1757,43 +1682,26 @@ void HandleAutoFaces( )
 				 }
 			}
 
-			if ( fHandleFace )
-			{
-				BlinkAutoFace( uiCount );
-			}
-
-			MouthAutoFace( uiCount );
-
+			if (fHandleFace) BlinkAutoFace(pFace);
+			MouthAutoFace(pFace);
 		}
-
 	}
-
 }
+
 
 void HandleTalkingAutoFaces( )
 {
-	UINT32 uiCount;
-
-	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
+	for (FACETYPE* f = gFacesData; f != gFacesData + guiNumFaces; ++f)
 	{
 		// OK, NOW, check if our bLife status has changed, re-render if so!
-		if ( gFacesData[ uiCount ].fAllocated  )
-		{
-			HandleTalkingAutoFace( uiCount );
-
-		}
+		if (f->fAllocated) HandleTalkingAutoFace(f);
 	}
 }
 
 
-static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight)
+static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE* const pFace, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight)
 {
-	FACETYPE					*pFace;
-
-	// Check face index
-	CHECKF( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKF(pFace != NULL);
 
 	const SGPRect r = { sSrcLeft, sSrcTop, sSrcLeft + sWidth, sSrcTop + sHeight };
 	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
@@ -1807,12 +1715,8 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(INT32 iFaceIndex, INT16 sDestLeft,
 }
 
 
-BOOLEAN SetFaceTalking(const INT32 iFaceIndex, const char* const zSoundFile, const wchar_t* const zTextString)
+BOOLEAN SetFaceTalking(FACETYPE* const pFace, const char* const zSoundFile, const wchar_t* const zTextString)
 {
-	FACETYPE			*pFace;
-
-	pFace = &gFacesData[ iFaceIndex ];
-
 	// Set face to talking
 	pFace->fTalking = TRUE;
 	pFace->fAnimatingTalking = TRUE;
@@ -1849,12 +1753,8 @@ BOOLEAN SetFaceTalking(const INT32 iFaceIndex, const char* const zSoundFile, con
 }
 
 
-BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID )
+BOOLEAN ExternSetFaceTalking(FACETYPE* const pFace, const UINT32 uiSoundID)
 {
-	FACETYPE			*pFace;
-
-	pFace = &gFacesData[ iFaceIndex ];
-
 	// Set face to talki	ng
 	pFace->fTalking = TRUE;
 	pFace->fAnimatingTalking = TRUE;
@@ -1867,15 +1767,9 @@ BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID )
 }
 
 
-
-void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce )
+void InternalShutupaYoFace(FACETYPE* const pFace, const BOOLEAN fForce)
 {
-	FACETYPE			*pFace;
-
-	// Check face index
-	CHECKV( iFaceIndex != -1 );
-
-	pFace = &gFacesData[ iFaceIndex ];
+	CHECKV(pFace != NULL);
 
 	if ( pFace->fTalking )
 	{
@@ -1901,11 +1795,11 @@ void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce )
 		{
 			if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 			{
-				FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight );
+				FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
 			}
 			else
 			{
-				FaceRestoreSavedBackgroundRect( iFaceIndex, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY,  pFace->usMouthWidth, pFace->usMouthHeight );
+				FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY,  pFace->usMouthWidth, pFace->usMouthHeight);
 			}
 		}
 		// OK, smart guy, make sure this guy has finished talking,
@@ -1919,14 +1813,13 @@ void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce )
 		pFace->fAnimatingTalking = FALSE;
 
 		gfUIWaitingForUserSpeechAdvance = FALSE;
-
 	}
-
 }
 
-void ShutupaYoFace( INT32 iFaceIndex )
+
+void ShutupaYoFace(FACETYPE* const face)
 {
-	InternalShutupaYoFace( iFaceIndex, TRUE );
+	InternalShutupaYoFace(face, TRUE);
 }
 
 
@@ -1955,11 +1848,11 @@ static void SetupFinalTalkingDelay(FACETYPE* pFace)
 	{
 		if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 		{
-			FaceRestoreSavedBackgroundRect( pFace->iID, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight );
+			FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
 		}
 		else
 		{
-			FaceRestoreSavedBackgroundRect( pFace->iID, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight );
+			FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
 		}
 	}
 

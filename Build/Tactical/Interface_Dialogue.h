@@ -11,7 +11,7 @@ extern UINT8 gubSrcSoldierProfile;
 // Structure used in Tactical display of NPC dialogue
 typedef struct
 {
-	INT32					iFaceIndex;
+	FACETYPE*     face;
 	INT16					sX;
 	INT16					sY;
 	INT16					sPopupX;

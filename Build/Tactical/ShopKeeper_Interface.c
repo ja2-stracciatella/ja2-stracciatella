@@ -272,7 +272,7 @@ static BOOLEAN gfAlreadySaidTooMuchToRepair                   = FALSE;
 static UINT32  guiRandomQuoteDelayTime                        = SKI_DEALERS_RANDOM_QUOTE_DELAY;
 
 //Index for the shopkeepers face
-static INT32 giShopKeeperFaceIndex;
+static FACETYPE* giShopKeeperFaceIndex;
 
 //Id for the popup box
 static INT32 giPopUpBoxId = -1;
@@ -794,8 +794,7 @@ static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 	SetAutoFaceActive( FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, giShopKeeperFaceIndex, SKI_FACE_X, SKI_FACE_Y );
 
 	//Set it so the face cannot be set InActive
-	gFacesData[ giShopKeeperFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
-
+	giShopKeeperFaceIndex->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	RenderAutoFace( giShopKeeperFaceIndex );
 
@@ -4027,7 +4026,7 @@ static void DisplayTalkingArmsDealer(void)
 
 
 	//Make sure the Dealers doesn't get disabled
-	gFacesData[ giShopKeeperFaceIndex ].fDisabled = FALSE;
+	giShopKeeperFaceIndex->fDisabled = FALSE;
 
 	HandleDialogue();
 
@@ -4037,8 +4036,7 @@ static void DisplayTalkingArmsDealer(void)
 	HandleTalkingAutoFaces( );
 	HandleShopKeeperDialog( 0 );
 
-
- 	gfIsTheShopKeeperTalking = gFacesData[ giShopKeeperFaceIndex ].fTalking;
+	gfIsTheShopKeeperTalking = giShopKeeperFaceIndex->fTalking;
 
 	//if the merc just started talking
 //	if( gfIsTheShopKeeperTalking && !fWasTheMercTalking )
@@ -4120,7 +4118,7 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 	else if( gfUserHasRequestedToLeave && ( giShopKeepDialogueEventinProgress == -1 ) )
 	{
 		// to see if the player has finished talking
-		if( !gFacesData[ giShopKeeperFaceIndex ].fTalking )
+		if(!giShopKeeperFaceIndex->fTalking)
 		{
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 5, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
 		}
@@ -5421,8 +5419,7 @@ void DeleteShopKeeperItemDescBox()
 	gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 
 	//Redraw the face
-	gFacesData[ giShopKeeperFaceIndex ].uiFlags |= FACE_REDRAW_WHOLE_FACE_NEXT_FRAME;
-
+	giShopKeeperFaceIndex->uiFlags |= FACE_REDRAW_WHOLE_FACE_NEXT_FRAME;
 
 	// enable almost everything!
 

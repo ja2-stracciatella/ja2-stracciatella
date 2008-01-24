@@ -562,8 +562,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		s = GetMan(pCreateStruct->pExistingSoldier->ubID);
 		*s = *pCreateStruct->pExistingSoldier;
 
-		//Reset the face index
-		s->iFaceIndex = -1;
+		Assert(s->face == NULL);
 		InitSoldierFace(s);
 
     Assert(s->light == NULL);
@@ -1069,7 +1068,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 
 	// Set default values
 	pSoldier->bVisible							= -1;
-	pSoldier->iFaceIndex						= -1;
+	pSoldier->face = NULL;
 
 	// Set morale default
 	pSoldier->bMorale								= DEFAULT_MORALE;

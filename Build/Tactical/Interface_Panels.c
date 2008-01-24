@@ -2154,7 +2154,6 @@ static void MergeMessageBoxCallBack(UINT8 ubExitValue)
 
 static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN fOn)
 {
-	FACETYPE *pFace;
 	INT16			sGridNo;
 
 	if ( pSoldier == NULL )
@@ -2169,7 +2168,7 @@ static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN
 		{
 			// Display 'cont' on face....
 			// Get face
-			pFace = &gFacesData[ pSoldier->iFaceIndex ];
+			FACETYPE* const pFace = pSoldier->face;
 
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
 			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
@@ -2189,7 +2188,7 @@ static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN
 	{
 		// Remove 'cont' on face....
 		// Get face
-		pFace = &gFacesData[ pSoldier->iFaceIndex ];
+		FACETYPE* const pFace = pSoldier->face;
 
 		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 
@@ -2752,8 +2751,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 		// Update animations....
 		if (s->fClosePanel || s->fClosePanelToDie)
 		{
-			s->sPanelFaceX = gFacesData[s->iFaceIndex].usFaceX;
-			s->sPanelFaceY = gFacesData[s->iFaceIndex].usFaceY;
+			s->sPanelFaceX = s->face->usFaceX;
+			s->sPanelFaceY = s->face->usFaceY;
 		}
 
 		const INT32 dx = TM_INV_HAND_SEP * i;
@@ -2948,7 +2947,7 @@ static void HandleMouseOverTeamFaceForContMove(BOOLEAN fOn)
 		{
 			// Display 'cont' on face....
 			// Get face
-			FACETYPE* const pFace = &gFacesData[gpSMCurrentMerc->iFaceIndex];
+			FACETYPE* const pFace = gpSMCurrentMerc->face;
 
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
 			wcscpy(pFace->zDisplayText, TacticalStr[CONTINUE_OVER_FACE_STR]);
@@ -2961,7 +2960,7 @@ static void HandleMouseOverTeamFaceForContMove(BOOLEAN fOn)
 	{
 		// Remove 'cont' on face....
 		// Get face
-		FACETYPE* const pFace = &gFacesData[gpSMCurrentMerc->iFaceIndex];
+		FACETYPE* const pFace = gpSMCurrentMerc->face;
 
 		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 
@@ -3257,8 +3256,8 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fUIdeadMerc  )
 	{
-		pSoldier->sPanelFaceX = gFacesData[ pSoldier->iFaceIndex ].usFaceX;
-		pSoldier->sPanelFaceY = gFacesData[ pSoldier->iFaceIndex ].usFaceY;
+		pSoldier->sPanelFaceX = pSoldier->face->usFaceX;
+		pSoldier->sPanelFaceY = pSoldier->face->usFaceY;
 
 		pSoldier->fUIdeadMerc = FALSE;
 		pSoldier->fClosePanel		= TRUE;
@@ -3286,7 +3285,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 					}
 					else
 					{
-						if ( !gFacesData[ pSoldier->iFaceIndex ].fDisabled )
+						if (!pSoldier->face->fDisabled)
 						{
 							RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 						}
@@ -3298,7 +3297,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fClosePanel )
 	{
-		if (!gFacesData[pSoldier->iFaceIndex].fDisabled)
+		if (!pSoldier->face->fDisabled)
 		{
 			RestoreExternBackgroundRect(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT);
 			BltVideoObject(FRAME_BUFFER, guiCLOSE, pSoldier->ubClosePanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
@@ -3328,7 +3327,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 					pSoldier->fClosePanelToDie = FALSE;
 
 					// Finish!
-					if ( !gFacesData[ pSoldier->iFaceIndex ].fDisabled )
+					if (!pSoldier->face->fDisabled)
 					{
 						BltVideoObject(guiSAVEBUFFER, guiDEAD, pSoldier->ubDeadPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
 
@@ -3347,7 +3346,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 	if ( pSoldier->fDeadPanel )
 	{
 		// Render panel!
-		if (!gFacesData[pSoldier->iFaceIndex].fDisabled)
+		if (!pSoldier->face->fDisabled)
 		{
 			BltVideoObject(FRAME_BUFFER, guiDEAD, pSoldier->ubDeadPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
 
@@ -3370,7 +3369,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 					pSoldier->fOpenPanel = FALSE;
 					pSoldier->bOpenPanelFrame = 0;
 
-					if ( !gFacesData[ pSoldier->iFaceIndex ].fDisabled )
+					if (!pSoldier->face->fDisabled)
 					{
 						RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
 					}
@@ -3381,7 +3380,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fOpenPanel )
 	{
-		if (!gFacesData[pSoldier->iFaceIndex].fDisabled)
+		if (!pSoldier->face->fDisabled)
 		{
 			RestoreExternBackgroundRect(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT);
 			BltVideoObject(FRAME_BUFFER, guiCLOSE, pSoldier->bOpenPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
@@ -3588,7 +3587,7 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 	}
 
 	// Set face to inactive...
-	SetAutoFaceInActive(s->iFaceIndex);
+	SetAutoFaceInActive(s->face);
 
 	gTeamPanel[ubPanelSlot].merc = NULL;
 

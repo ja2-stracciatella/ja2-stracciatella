@@ -52,10 +52,9 @@ typedef struct AudioGapList
 } AudioGapList;
 
 
-typedef struct
+struct FACETYPE
 {
 	UINT32		uiFlags;												// Basic flags
-	INT32			iID;
 	BOOLEAN		fAllocated;											//Allocated or not
 	BOOLEAN		fTalking;												//Set to true if face is talking ( can be sitting for user input to esc )
 	BOOLEAN		fAnimatingTalking;							// Set if the face is animating right now
@@ -137,16 +136,12 @@ typedef struct
 	INT8			bOldOppCnt;
 
 	AudioGapList		GapList;
-
-} FACETYPE;
-
-// GLOBAL FOR FACES LISTING
-FACETYPE	gFacesData[ NUM_FACE_SLOTS ];
+};
 
 // FACE HANDLING
 //
 // Faces are done like this: Call
-INT32 InitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags);
+FACETYPE* InitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags);
 /* The first parameter is the profile ID and the second is the soldier (which
  * for most cases will be NULL if the face is not created from a SOLDIERTYPE).
  * This function allocates a slot in the table for the face, loads its STI file,
@@ -155,10 +150,10 @@ INT32 InitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags);
 
 
 // Removes the face from the internal table, deletes any memory allocated if any.
-void DeleteFace( INT32 iFaceIndex );
+void DeleteFace(FACETYPE*);
 
 // IF you want to setup the face for automatic eye blinking, mouth movement, you need to call
-void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, INT32 iFaceIndex, UINT16 usFaceX, UINT16 usFaceY);
+void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE*, UINT16 usFaceX, UINT16 usFaceY);
 // The first paramter is the display buffer you wish the face to be rendered on. The second is the
 // Internal savebuffer which is used to facilitate the rendering of only things which have changed when
 // blinking. IF the value of FACE_AUTO_RESTORE_BUFFER is given, the system will allocate it's own memory for
@@ -166,19 +161,19 @@ void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, INT32 iFaceIn
 
 
 // To begin rendering of the face sprite, call this function once:
-BOOLEAN RenderAutoFace( INT32 iFaceIndex );
+BOOLEAN RenderAutoFace(FACETYPE*);
 // This will draw the face into it's saved buffer and then display it on the display buffer. If the display
 // buffer given is FRAME_BUFFER, the regions will automatically be dirtied, so no calls to InvalidateRegion()
 // should be nessesary.
 
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
-BOOLEAN SetFaceTalking(INT32 iFaceIndex, const char* zSoundFile, const wchar_t* zTextString);
+BOOLEAN SetFaceTalking(FACETYPE*, const char* zSoundFile, const wchar_t* zTextString);
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 
 // Set some face talking flags without need to play sound
-BOOLEAN ExternSetFaceTalking( INT32 iFaceIndex, UINT32 uiSoundID );
+BOOLEAN ExternSetFaceTalking(FACETYPE*, UINT32 uiSoundID);
 
 // Once this is done, this function must be called overy gameloop that you want to handle the sprite:
 void HandleAutoFaces(void);
@@ -186,14 +181,14 @@ void HandleAutoFaces(void);
 // the best mouth and eye graphic to use. It then renders only the rects nessessary into the display buffer.
 
 // If you need to shutoff the face from talking, use the function
-void ShutupaYoFace( INT32 iFaceIndex );
-void InternalShutupaYoFace( INT32 iFaceIndex, BOOLEAN fForce );
+void ShutupaYoFace(FACETYPE*);
+void InternalShutupaYoFace(FACETYPE*, BOOLEAN fForce);
 
 // This can be used to times when you need process the user hitting <ESC> to cancel the speech, etc. It will
 // shutoff any playing sound sample
 
 // If you still want the face in moemory but want to stop if from being displayed, or handled call
-void SetAutoFaceInActive( INT32 iFaceIndex );
+void SetAutoFaceInActive(FACETYPE*);
 
 // To set all currently allocated faces to either active or incactive, call these
 void SetAllAutoFacesInactive(void);

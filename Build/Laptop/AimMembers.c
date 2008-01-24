@@ -339,16 +339,16 @@ static BOOLEAN gfJustSwitchedVideoConferenceMode;
 static BOOLEAN gfMercIsTalking=FALSE;
 static BOOLEAN gfVideoFaceActive=FALSE;
 
-static UINT8   gubPopUpBoxAction = AIM_POPUP_NOTHING;
-static BOOLEAN gfRedrawScreen = FALSE;
-UINT8          gubContractLength;
-static BOOLEAN gfBuyEquipment;
-static INT32   giContractAmount=0;
-static INT32   giMercFaceIndex;
-static wchar_t gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
-static UINT32  guiTimeThatMercStartedTalking;
-static UINT32  guiLastHandleMercTime;
-static BOOLEAN gfFirstTimeInContactScreen;
+static UINT8     gubPopUpBoxAction = AIM_POPUP_NOTHING;
+static BOOLEAN   gfRedrawScreen    = FALSE;
+UINT8            gubContractLength;
+static BOOLEAN   gfBuyEquipment;
+static INT32     giContractAmount  = 0;
+static FACETYPE* giMercFaceIndex;
+static wchar_t   gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
+static UINT32    guiTimeThatMercStartedTalking;
+static UINT32    guiLastHandleMercTime;
+static BOOLEAN   gfFirstTimeInContactScreen;
 
 static UINT8   gubCurrentCount;
 static UINT8   gubCurrentStaticMode;
@@ -422,7 +422,7 @@ void EnterInitAimMembers()
 	gubPopUpBoxAction = AIM_POPUP_NOTHING;
 	gfRedrawScreen = FALSE;
 	giContractAmount = 0;
-	giMercFaceIndex = 0;
+	giMercFaceIndex = NULL;
 	guiLastHandleMercTime = GetJA2Clock();
 	gubCurrentCount = 0;
 	gfFirstTimeInContactScreen = TRUE;
@@ -617,7 +617,7 @@ void ExitAIMMembers()
 
 
 static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset);
-static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex);
+static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE*);
 static BOOLEAN HandleCurrentVideoConfMode(void);
 static void HandleMercAttitude(void);
 static void HandleVideoDistortion(void);
@@ -1882,7 +1882,7 @@ static BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 }
 
 
-static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
+static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 {
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
@@ -1901,13 +1901,8 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
 	DestRect.iRight = DestRect.iLeft + AIM_MEMBER_VIDEO_FACE_WIDTH;
 	DestRect.iBottom = DestRect.iTop + AIM_MEMBER_VIDEO_FACE_HEIGHT;
 
-
-
 	//If the answering machine graphics is up, dont handle the faces
-	if( gfIsAnsweringMachineActive )
-	{
-		gFacesData[ giMercFaceIndex ].fInvalidAnim = TRUE;
-	}
+	if (gfIsAnsweringMachineActive) giMercFaceIndex->fInvalidAnim = TRUE;
 
 	HandleDialogue();
 	HandleAutoFaces( );
@@ -1936,7 +1931,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(INT32 iFaceIndex)
 		InvalidateRegion(AIM_MEMBER_VIDEO_FACE_X,AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH,AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT);
 	}
 
- 	fIsTheMercTalking = gFacesData[iFaceIndex].fTalking;
+	fIsTheMercTalking = face->fTalking;
 
 	//if the merc is talking, reset their attitude time
 	if( fIsTheMercTalking )

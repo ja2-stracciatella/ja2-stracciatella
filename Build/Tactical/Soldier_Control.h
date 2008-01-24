@@ -469,7 +469,7 @@ struct SOLDIERTYPE
 	INT8												bMechanical;
 	INT8												bLifeMax;			// maximum life for this merc
 
-	INT32												iFaceIndex;
+	FACETYPE*                   face;
 
 
 	// PALETTE MANAGEMENT STUFF

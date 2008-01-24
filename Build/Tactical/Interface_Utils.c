@@ -308,7 +308,7 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 		if ( fAutoFace )
 		{
 			// OK, check if this face actually went active...
-			if ( gFacesData[ pSoldier->iFaceIndex ].uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE )
+			if (pSoldier->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
 			{
 				// Render as an extern face...
 				fAutoFace = FALSE;

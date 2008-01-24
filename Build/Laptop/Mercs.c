@@ -195,7 +195,7 @@ enum
 
 UINT8			gubCurrentMercVideoMode;
 BOOLEAN		gfMercVideoIsBeingDisplayed;
-INT32			giVideoSpeckFaceIndex;
+static FACETYPE* g_video_speck_face;
 UINT16		gusMercVideoSpeckSpeech;
 
 BOOLEAN		gfDisplaySpeckTextBox=FALSE;
@@ -417,7 +417,7 @@ void ExitMercs()
 	if( gfMercVideoIsBeingDisplayed )
 	{
 		gfMercVideoIsBeingDisplayed = FALSE;
-		DeleteFace( giVideoSpeckFaceIndex  );
+		DeleteFace(g_video_speck_face);
 		InitDestroyXToCloseVideoWindow( FALSE );
 		gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
 	}
@@ -893,10 +893,10 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 	if( fVideoConfModeCreated && gubCurrentMercVideoMode == MERC_VIDEO_EXIT_VIDEO_MODE )
 	{
 		//If merc is talking, stop him from talking
-		ShutupaYoFace( giVideoSpeckFaceIndex );
+		ShutupaYoFace(g_video_speck_face);
 
 		//Delete the face
-		DeleteFace( giVideoSpeckFaceIndex  );
+		DeleteFace(g_video_speck_face);
 
 		gfMercVideoIsBeingDisplayed = FALSE;
 	}
@@ -910,14 +910,14 @@ BOOLEAN InitDeleteMercVideoConferenceMode()
 static void InitMercVideoFace(void)
 {
 	// Allocates space, and loads the sti for SPECK
-	giVideoSpeckFaceIndex = InitFace(SPECK, NULL, 0);
+	g_video_speck_face = InitFace(SPECK, NULL, 0);
 
 	// Sets up the eyes blinking and the mouth moving
-		SetAutoFaceActive( guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giVideoSpeckFaceIndex, 0, 0);
+	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, g_video_speck_face, 0, 0);
 
 
 	//Renders the face to the background
-	RenderAutoFace( giVideoSpeckFaceIndex );
+	RenderAutoFace(g_video_speck_face);
 
 	//enables the global flag indicating the the video is being displayed
 	gfMercVideoIsBeingDisplayed = TRUE;
@@ -934,7 +934,7 @@ static BOOLEAN StartSpeckTalking(UINT16 usQuoteNum)
 	HandleSpeckIdleConversation( TRUE );
 
 	//Start Speck talking
-	if (!CharacterDialogue(SPECK, usQuoteNum, giVideoSpeckFaceIndex, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE, FALSE))
+	if (!CharacterDialogue(SPECK, usQuoteNum, g_video_speck_face, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE, FALSE))
 	{
 		Assert(0);
 		return(FALSE);
@@ -983,7 +983,7 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 	InvalidateRegion(MERC_VIDEO_BACKGROUND_X, MERC_VIDEO_BACKGROUND_Y, (MERC_VIDEO_BACKGROUND_X + MERC_VIDEO_BACKGROUND_WIDTH), (MERC_VIDEO_BACKGROUND_Y + MERC_VIDEO_BACKGROUND_HEIGHT) );
 
 	//find out if the merc just stopped talking
-	fIsTheMercTalking = gFacesData[ giVideoSpeckFaceIndex ].fTalking;
+	fIsTheMercTalking = g_video_speck_face->fTalking;
 
 	//if the merc just stopped talking
 	if(fWasTheMercTalking && !fIsTheMercTalking)
@@ -1246,7 +1246,7 @@ static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//Stop speck from talking
-//		ShutupaYoFace(giVideoSpeckFaceIndex);
+//		ShutupaYoFace(g_video_speck_face);
 		StopSpeckFromTalking();
 
 		//make sure we are done the intro speech
@@ -1376,7 +1376,7 @@ static void HandleTalkingSpeck(void)
 				StopSpeckFromTalking( );
 
 				//Delete the face
-				DeleteFace( giVideoSpeckFaceIndex  );
+				DeleteFace(g_video_speck_face);
 				InitDestroyXToCloseVideoWindow( FALSE );
 
 				gfRedrawMercSite = TRUE;
@@ -2108,11 +2108,10 @@ static void IncreaseMercRandomQuoteValue(UINT8 ubQuoteID, UINT8 ubValue)
 
 static void StopSpeckFromTalking(void)
 {
-	if( giVideoSpeckFaceIndex == -1 )
-		return;
+	if (g_video_speck_face == NULL) return;
 
 	//Stop speck from talking
-	ShutupaYoFace( giVideoSpeckFaceIndex );
+	ShutupaYoFace(g_video_speck_face);
 
 	RemoveSpeckPopupTextBox();
 

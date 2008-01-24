@@ -564,8 +564,6 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 
 	if (pSoldier->ubProfile == DR_Q)
 	{
-		INT32		iFaceIndex;
-
 		// Play sound!
 
 		UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
@@ -602,14 +600,8 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
-				// Get soldier's face ID
-				iFaceIndex = pSoldier->iFaceIndex;
-
-				// Check face index
-				if ( iFaceIndex != -1 )
-				{
-					ExternSetFaceTalking( iFaceIndex, uiSoundID );
-				}
+				FACETYPE* const face = pSoldier->face;
+				if (face != NULL) ExternSetFaceTalking(face, uiSoundID);
 			}
 		}
 	}
@@ -6384,10 +6376,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 	HandleTakeDamageDeath( pSoldier, bOldLife, ubReason );
 
 	// Check if we are < unconscious, and shutup if so! also wipe sight
-	if ( pSoldier->bLife < CONSCIOUSNESS )
-	{
-		ShutupaYoFace( pSoldier->iFaceIndex );
-	}
+	if (pSoldier->bLife < CONSCIOUSNESS) ShutupaYoFace(pSoldier->face);
 
 	if ( pSoldier->bLife < OKLIFE )
 	{
@@ -6403,7 +6392,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 {
 	SGPFILENAME		zFilename;
 	UINT8					ubSoundID;
-	UINT32				iFaceIndex;
 	BOOLEAN				fDoSub = FALSE;
 	INT32					uiSubSoundID = 0;
 
@@ -6726,14 +6714,8 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-			// Get soldier's face ID
-			iFaceIndex = pSoldier->iFaceIndex;
-
-			// Check face index
-			if ( iFaceIndex != -1 )
-			{
-				ExternSetFaceTalking( iFaceIndex, uiSoundID );
-			}
+			FACETYPE* const face = pSoldier->face;
+			if (face != NULL) ExternSetFaceTalking(face, uiSoundID);
 		}
 
 		return( TRUE );
@@ -8371,10 +8353,8 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 				DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
 
 				// If we have a face, tell text in it to go away!
-				if ( pSoldier->iFaceIndex != -1 )
-				{
-					gFacesData[ pSoldier->iFaceIndex ].fDisplayTextOver = FACE_ERASE_TEXT_OVER;
-				}
+				FACETYPE* const face = pSoldier->face;
+				if (face != NULL) face->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 			}
 
 			AdjustNoAPToFinishMove( pSoldier, FALSE );

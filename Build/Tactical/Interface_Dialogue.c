@@ -343,8 +343,6 @@ static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason);
 
 BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 {
-	INT32	iFaceIndex, cnt;
-	FACETYPE				*pFace;
 	INT16							sCenterYVal, sCenterXVal;
 
 	// disable scroll messages
@@ -409,16 +407,9 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	CalculatePopupTextOrientation( TALK_PANEL_CALC_SUBTITLE_WIDTH, TALK_PANEL_CALC_SUBTITLE_HEIGHT );
 
 	// Create face ( a big face! )....
-	iFaceIndex = InitFace(ubCharacterNum, NULL, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
-
-	CHECKF( iFaceIndex != -1 );
-
-	// Set face
-	gTalkPanel.iFaceIndex	= iFaceIndex;
-
-	// Init face to auto..., create video overlay....
-	pFace = &gFacesData[ iFaceIndex ];
-
+	FACETYPE* const pFace = InitFace(ubCharacterNum, NULL, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
+	CHECKF(pFace != NULL);
+	gTalkPanel.face = pFace;
 
 	// Create mouse regions...
 	sX = gTalkPanel.sX + TALK_PANEL_REGION_STARTX;
@@ -436,7 +427,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	MSYS_DefineRegion( &(gTalkPanel.NameRegion), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_X ), (INT16)(gTalkPanel.sY + TALK_PANEL_NAME_Y), (INT16)(gTalkPanel.sX + TALK_PANEL_NAME_WIDTH + TALK_PANEL_NAME_X ),(INT16)( gTalkPanel.sY + TALK_PANEL_NAME_HEIGHT + TALK_PANEL_NAME_Y ), MSYS_PRIORITY_HIGHEST,
 						 CURSOR_NORMAL, TalkPanelNameRegionMoveCallback, TalkPanelNameRegionClickCallback );
 
-	for ( cnt = 0; cnt < 6; cnt++ )
+	for (INT32 cnt = 0; cnt < 6; ++cnt)
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion( &(gTalkPanel.Regions[cnt]), (INT16)(sX), (INT16)(sY), (INT16)(sX + TALK_PANEL_REGION_WIDTH ),(INT16)( sY + TALK_PANEL_REGION_HEIGHT ), MSYS_PRIORITY_HIGHEST,
@@ -453,8 +444,8 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	CHECKF(gTalkPanel.uiSaveBuffer != NO_VSURFACE);
 
 	// Set face to auto
-	SetAutoFaceActive( gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, iFaceIndex , 0, 0 );
-  gFacesData[ iFaceIndex ].uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	SetAutoFaceActive(gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, pFace , 0, 0);
+	pFace->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
 	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", -1, 3, -1, 4, -1);
@@ -471,7 +462,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	ButtonList[ gTalkPanel.uiCancelButton ]->uiFlags &= (~BUTTON_DIRTY);
 
 	// Render once!
-	RenderAutoFace( gTalkPanel.iFaceIndex );
+	RenderAutoFace(pFace);
 
 	gfInTalkPanel = TRUE;
 
@@ -490,7 +481,7 @@ static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		// OK, pickup item....
 		gTalkPanel.fHandled = TRUE;
-		gTalkPanel.fHandledTalkingVal = gFacesData[ gTalkPanel.iFaceIndex ].fTalking;
+		gTalkPanel.fHandledTalkingVal = gTalkPanel.face->fTalking;
 		gTalkPanel.fHandledCanDeleteVal = TRUE;
 	}
 }
@@ -504,7 +495,7 @@ void DeleteTalkingMenu( )
 		return;
 
 	// Delete sound if playing....
-	ShutupaYoFace( gTalkPanel.iFaceIndex );
+	ShutupaYoFace(gTalkPanel.face);
 
 	// Delete screen region
 	MSYS_RemoveRegion( &(gTalkPanel.ScreenRegion));
@@ -534,7 +525,7 @@ void DeleteTalkingMenu( )
 	DeleteVideoObject(gTalkPanel.uiPanelVO);
 
 	// Remove face....
-	DeleteFace( gTalkPanel.iFaceIndex );
+	DeleteFace(gTalkPanel.face);
 
 	// Remove button
 	RemoveButton( gTalkPanel.uiCancelButton );
@@ -619,7 +610,6 @@ static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 void RenderTalkingMenu( )
 {
 	INT32	cnt;
-	FACETYPE			*pFace;
 	INT16					sFontX, sFontY, sX, sY;
 	UINT8					ubCharacterNum = gTalkPanel.ubCharNum;
 	UINT16				usTextBoxWidth, usTextBoxHeight;
@@ -629,7 +619,7 @@ void RenderTalkingMenu( )
 		return;
 	}
 
-	pFace = &gFacesData[ gTalkPanel.iFaceIndex ];
+	const FACETYPE* const pFace = gTalkPanel.face;
 
 	if ( gTalkPanel.fDirtyLevel == DIRTYLEVEL2 )
 	{
@@ -865,7 +855,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// Donot do this if we are talking already
-		if ( !gFacesData[ gTalkPanel.iFaceIndex ].fTalking )
+		if (!gTalkPanel.face->fTalking)
 		{
 			if ( ubTalkMenuApproachIDs[ uiItemPos ] == APPROACH_BUYSELL )
 			{
@@ -899,7 +889,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// Do something different if we selected the 'give' approach
 					// Close panel, set UI guy to wait a sec, open inv if not done so yet
 					gTalkPanel.fHandled = TRUE;
-					gTalkPanel.fHandledTalkingVal = gFacesData[ gTalkPanel.iFaceIndex ].fTalking;
+					gTalkPanel.fHandledTalkingVal = gTalkPanel.face->fTalking;
 					gTalkPanel.fHandledCanDeleteVal = TRUE;
 
 					// open inv panel...
@@ -944,10 +934,10 @@ static void TalkPanelBaseRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
 		// Only do this if we are talking already
-		if ( gFacesData[ gTalkPanel.iFaceIndex ].fTalking )
+		if (gTalkPanel.face->fTalking)
 		{
 			// Stop speech, cancel
-			InternalShutupaYoFace( gTalkPanel.iFaceIndex, FALSE );
+			InternalShutupaYoFace(gTalkPanel.face, FALSE);
 
 			fLButtonDown = FALSE;
 		}
@@ -964,7 +954,7 @@ static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// Donot do this if we are talking already
-		if ( !gFacesData[ gTalkPanel.iFaceIndex ].fTalking )
+		if (!gTalkPanel.face->fTalking)
 		{
 			// Say who are you?
 			Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, NPC_WHOAREYOU, 0 );
@@ -976,10 +966,7 @@ static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// Donot do this if we are talking already
-	if ( gFacesData[ gTalkPanel.iFaceIndex ].fTalking )
-	{
-		return;
-	}
+	if (gTalkPanel.face->fTalking) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -1023,7 +1010,7 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 	gTalkPanel.fOnName		= FALSE;
 	//gTalkPanel.fHandled		= FALSE;
 
-	CHECKF(CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI, FALSE, FALSE));
+	CHECKF(CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE));
 	return( TRUE );
 }
 
@@ -1046,15 +1033,12 @@ BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile )
 
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 {
-	FACETYPE				*pFace;
 	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
 	{
 		return( FALSE );
 	}
-
-	pFace = &gFacesData[ gTalkPanel.iFaceIndex ];
 
 	// If we are in the process of speaking, stop this quote an move on...
 	// If we have been 'handled' by an outside source, check what was our talking value at the time
@@ -1064,9 +1048,8 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 	}
 	else
 	{
-		fTalking = pFace->fTalking;
+		fTalking = gTalkPanel.face->fTalking;
 	}
-
 
 	// Set to false
 	gTalkPanel.fHandled = FALSE;
@@ -1075,7 +1058,7 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 	{
 		if ( fTalking )
 		{
-			ShutupaYoFace( gTalkPanel.iFaceIndex );
+			ShutupaYoFace(gTalkPanel.face);
 		}
 		// Else if our queue is empty, delete emnu
 		else
@@ -1107,7 +1090,6 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 
 void HandleTalkingMenuBackspace(void)
 {
-	FACETYPE				*pFace;
 	BOOLEAN					fTalking = FALSE;
 
 	if ( !gfInTalkPanel )
@@ -1115,7 +1097,7 @@ void HandleTalkingMenuBackspace(void)
 		return;
 	}
 
-	pFace = &gFacesData[ gTalkPanel.iFaceIndex ];
+	const FACETYPE* const pFace = gTalkPanel.face;
 
 	// If we are in the process of speaking, stop this quote an move on...
 	// If we have been 'handled' by an outside source, check what was our talking value at the time
@@ -1135,10 +1117,7 @@ void HandleTalkingMenuBackspace(void)
 
 	if ( fTalking )
 	*/
-	if ( pFace->fTalking )
-	{
-		ShutupaYoFace( gTalkPanel.iFaceIndex );
-	}
+	if (pFace->fTalking) ShutupaYoFace(gTalkPanel.face);
 }
 
 
@@ -1256,29 +1235,29 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 
 BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, (UINT32)pObject, bInvPos, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, (UINT32)pObject, bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
 
 BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu )
 {
-	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
-	CHECKF(SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
+	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.face, DIALOGUE_NPC_UI));
+	CHECKF(SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.face, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
 
 BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum )
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.face, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
 
 BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.iFaceIndex, DIALOGUE_NPC_UI));
+	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI));
 	return( TRUE );
 }
 
@@ -4792,7 +4771,7 @@ static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLButtonDown )
 	{
-		InternalShutupaYoFace( gTalkPanel.iFaceIndex, FALSE );
+		InternalShutupaYoFace(gTalkPanel.face, FALSE);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{

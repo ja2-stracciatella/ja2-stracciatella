@@ -153,8 +153,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_BOOL(S, Soldier->fFlashPortrait)
 	EXTR_I8(S, Soldier->bMechanical)
 	EXTR_I8(S, Soldier->bLifeMax)
-	EXTR_SKIP(S, 2)
-	EXTR_I32(S, Soldier->iFaceIndex)
+	EXTR_SKIP(S, 6)
 	EXTR_STR(S, Soldier->HeadPal, lengthof(Soldier->HeadPal))
 	EXTR_STR(S, Soldier->PantsPal, lengthof(Soldier->PantsPal))
 	EXTR_STR(S, Soldier->VestPal, lengthof(Soldier->VestPal))
@@ -521,6 +520,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_SOLDIER(S, Soldier->next_to_previous_attacker)
 	EXTR_SKIP(S, 39)
 
+	Soldier->face         = NULL;
 	Soldier->light        = NULL;
 	Soldier->muzzle_flash = NULL;
 
@@ -680,8 +680,7 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_BOOL(D, Soldier->fFlashPortrait)
 	INJ_I8(D, Soldier->bMechanical)
 	INJ_I8(D, Soldier->bLifeMax)
-	INJ_SKIP(D, 2)
-	INJ_I32(D, Soldier->iFaceIndex)
+	INJ_SKIP(D, 6)
 	INJ_STR(D, Soldier->HeadPal, lengthof(Soldier->HeadPal))
 	INJ_STR(D, Soldier->PantsPal, lengthof(Soldier->PantsPal))
 	INJ_STR(D, Soldier->VestPal, lengthof(Soldier->VestPal))

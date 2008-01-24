@@ -1025,7 +1025,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 uiSpecialCode)
 	switch( uiSpecialCode )
 	{
 		case( 0 ):
-			//gpCurrentTalkingFace = &gFacesData[ uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] ];
+			//gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
 			//gubCurrentTalkingID = SKYRIDER;
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
@@ -1067,7 +1067,7 @@ static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 uiSpecialCode)
 	switch( uiSpecialCode )
 	{
 		case( 0 ):
-			//gpCurrentTalkingFace = &gFacesData[ uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] ];
+			//gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
 			//gubCurrentTalkingID = SKYRIDER;
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
@@ -1093,7 +1093,7 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 uiSpecialCode)
 	{
 		case( 0 ):
 			// do quote 21
-			gpCurrentTalkingFace = &gFacesData[ uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] ];
+			gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
 			gubCurrentTalkingID = SKYRIDER;
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
