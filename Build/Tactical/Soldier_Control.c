@@ -927,9 +927,6 @@ void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStart
 // This function reevaluates the stance if the guy sees us!
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
-	INT32		cnt, iClosestEnemy = NOBODY;
-	INT16		sDist, sClosestDist = 10000;
-
 	// make the chosen one not turn to face us
 	if ( OK_ENEMY_MERC( pSoldier ) && pSoldier->ubID != gTacticalStatus.ubTheChosenOne && gAnimControl[ usAnimState ].ubEndHeight == ANIM_STAND && !( pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
 	{
@@ -956,27 +953,30 @@ BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 
 			if ( gAnimControl[ usAnimState ].uiFlags & ( ANIM_MERCIDLE | ANIM_BREATH ) )
 			{
-				if ( pSoldier->bOppCnt > 0 )
+				GridNo closest = NOWHERE;
+				if (pSoldier->bOppCnt > 0)
 				{
 					// Pick a guy this buddy sees and turn towards them!
-					for ( cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++ )
+					INT16 sClosestDist = 10000;
+					CFOR_ALL_IN_TEAM(opp, OUR_TEAM)
 					{
-						if ( pSoldier->bOppList[ cnt ] == SEEN_CURRENTLY )
+						if (pSoldier->bOppList[opp->ubID] == SEEN_CURRENTLY)
 						{
-							sDist = PythSpacesAway( pSoldier->sGridNo, MercPtrs[ cnt ]->sGridNo );
+							const GridNo gridno = opp->sGridNo;
+							const INT16 sDist   = PythSpacesAway(pSoldier->sGridNo, gridno);
 							if (sDist < sClosestDist)
 							{
 								sClosestDist = sDist;
-								iClosestEnemy = cnt;
+								closest      = gridno;
 							}
 						}
 					}
 
-					if (iClosestEnemy != NOBODY)
+					if (closest != NOWHERE)
 					{
 						// Change to fire ready animation
 						pSoldier->fDontChargeReadyAPs = TRUE;
-						return SoldierReadyWeapon(pSoldier, MercPtrs[iClosestEnemy]->sGridNo, FALSE);
+						return SoldierReadyWeapon(pSoldier, closest, FALSE);
 					}
 				}
 			}
