@@ -109,7 +109,7 @@ const SGPVObject* GetInterfaceGraphicForItem(const INVTYPE* pItem);
 UINT16 GetTileGraphicForItem(const INVTYPE* pItem);
 SGPVObject* LoadTileGraphicForItem(const INVTYPE* pItem);
 
-void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject, const SOLDIERTYPE* pSoldier);
+void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject);
 
 void CancelItemPointer(void);
 

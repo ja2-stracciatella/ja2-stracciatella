@@ -2657,40 +2657,43 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			}
 			else
 			{
+				const wchar_t* help;
+				wchar_t        help_buf[200];
+
+				// Add text for first hand popup
 				if (s->uiStatusFlags & SOLDIER_DRIVER)
 				{
 					// Get soldier pointer for vehicle.....
 					const SOLDIERTYPE* const v = GetSoldierStructureForVehicle(s->iVehicleId);
-
-					//OK, for each item, set dirty text if applicable!
-					wchar_t pStr[200];
-					swprintf(pStr, lengthof(pStr), TacticalStr[DRIVER_POPUPTEXT], v->bLife, v->bLifeMax, v->bBreath, v->bBreathMax);
-					SetRegionFastHelpText(&gTEAM_FirstHandInv[i], pStr);
+					swprintf(help_buf, lengthof(help_buf), TacticalStr[DRIVER_POPUPTEXT], v->bLife, v->bLifeMax, v->bBreath, v->bBreathMax);
+					help = help_buf;
 				}
-				// Add text for first hand popup
+				else if (s->uiStatusFlags & SOLDIER_DEAD)
+				{
+					help = L"";
+				}
 				else
 				{
-					wchar_t pStr[200];
-					GetHelpTextForItem(pStr, lengthof(pStr), &s->inv[HANDPOS], s);
-
-					//OK, for each item, set dirty text if applicable!
-					SetRegionFastHelpText(&gTEAM_FirstHandInv[i], pStr);
+					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[HANDPOS]);
+					help = help_buf;
 				}
+				SetRegionFastHelpText(&gTEAM_FirstHandInv[i], help);
 
 				// Add text for seonc hand popup
 				if (s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER))
 				{
-					//OK, for each item, set dirty text if applicable!
-					SetRegionFastHelpText(&gTEAM_SecondHandInv[i], TacticalStr[EXIT_VEHICLE_POPUPTEXT]);
+					help = TacticalStr[EXIT_VEHICLE_POPUPTEXT];
+				}
+				else if (s->uiStatusFlags & SOLDIER_DEAD)
+				{
+					help = L"";
 				}
 				else
 				{
-					wchar_t pStr[200];
-					GetHelpTextForItem(pStr, lengthof(pStr), &s->inv[SECONDHANDPOS], s);
-
-					//OK, for each item, set dirty text if applicable!
-					SetRegionFastHelpText(&gTEAM_SecondHandInv[i], pStr);
+					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[SECONDHANDPOS]);
+					help = help_buf;
 				}
+				SetRegionFastHelpText(&gTEAM_SecondHandInv[i], help);
 
 				// Render Selected guy if selected
 				if (GetSelectedMan() == s && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(s))

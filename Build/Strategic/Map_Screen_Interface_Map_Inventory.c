@@ -289,7 +289,7 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 	{
 			if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.ubNumberOfObjects > 0 )
 			{
-				GetHelpTextForItem( pStr , lengthof(pStr), &( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o ), NULL );
+				GetHelpTextForItem(pStr, lengthof(pStr), &pInventoryPoolList[iCounter + iFirstSlotOnPage].o);
 				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
 			}
 			else

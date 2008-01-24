@@ -866,7 +866,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
 				wchar_t pStr[150];
-				GetHelpTextForItem( pStr, lengthof(pStr), &( pSoldier->inv[ cnt ] ), pSoldier );
+				GetHelpTextForItem(pStr, lengthof(pStr), &pSoldier->inv[cnt]);
 				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
 			}
 
@@ -5852,14 +5852,8 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYPE* const obj, const SOLDIERTYPE* const s)
+void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYPE* const obj)
 {
-	if (s != NULL && s->uiStatusFlags & SOLDIER_DEAD)
-	{
-		wcslcpy(dst, L"", Length);
-		return;
-	}
-
 	const UINT16 usItem = obj->usItem;
 	if (usItem == MONEY)
 	{
