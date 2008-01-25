@@ -13,13 +13,6 @@
 //   image header.
 
 
-// Defines for type of file readers
-#define PCX_FILE_READER					0x1
-#define TGA_FILE_READER					0x2
-#define STCI_FILE_READER				0x4
-#define TRLE_FILE_READER				0x8
-#define UNKNOWN_FILE_READER			0x200
-
 // Defines for buffer bit depth
 #define BUFFER_8BPP							0x1
 #define BUFFER_16BPP						0x2
@@ -132,7 +125,7 @@ extern "C" {
 
 // This function will return NULL if it fails, and call SetLastError() to set
 // error information
-HIMAGE CreateImage(const char* ImageFile, UINT16 fContents);
+SGPImage* CreateImage(const char* ImageFile, UINT16 fContents);
 
 // This function destroys the HIMAGE structure as well as its contents
 BOOLEAN DestroyImage( HIMAGE hImage );

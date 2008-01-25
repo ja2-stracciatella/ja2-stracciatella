@@ -25,82 +25,50 @@ INT16  gusBlueShift = 0;
 INT16  gusGreenShift = 0;
 
 
-static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader);
-
-
-HIMAGE CreateImage(const char* ImageFile, UINT16 fContents)
+SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 {
-	const char* const ExtensionSep = ".";
-	UINT32			iFileLoader;
+	// depending on extension of filename, use different image readers
+	const char* const dot = strstr(filename, ".");
+	if (dot == NULL) goto fail;
+	const char* const ext = dot + 1;
 
-	// Depending on extension of filename, use different image readers
-	// Get extension
-	const char* const StrPtr = strstr(ImageFile, ExtensionSep);
-	if (StrPtr == NULL) return NULL;
-	const char* Extension = StrPtr + 1;
+	SGPImage* const img = MemAlloc(sizeof(*img));
+	if (img == NULL) goto fail;
+	memset(img, 0, sizeof(*img));
+	strcpy(img->ImageFile, filename);
 
-	// Determine type from Extension
-	do
+	// determine type from extension
+	BOOLEAN ret;
+	if (strcasecmp(ext, "STI") == 0)
 	{
-		iFileLoader = UNKNOWN_FILE_READER;
-
-		if (strcasecmp( Extension, "PCX" ) == 0)
-		{
-			iFileLoader = PCX_FILE_READER;
-			break;
-		}
-
-		if (strcasecmp( Extension, "TGA" ) == 0)
-		{
-			iFileLoader = TGA_FILE_READER;
-			break;
-		}
-
-		if (strcasecmp( Extension, "STI" ) == 0)
-		{
-			iFileLoader = STCI_FILE_READER;
-			break;
-		}
-
-	} while ( FALSE );
-
-	// Determine if resource exists before creating image structure
-	if ( !FileExists( ImageFile ) )
+		ret = LoadSTCIFileToImage(img, fContents);
+	}
+	else if (strcasecmp(ext, "PCX") == 0)
 	{
-		//If in debig, make fatal!
-#ifdef JA2
-#ifdef _DEBUG
-		//FatalError( "Resource file %s does not exist.", ImageFile );
-#endif
-#endif
-		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, String("Resource file %s does not exist.", ImageFile) );
-		return( NULL );
+		ret = LoadPCXFileToImage(img, fContents);
+	}
+	else if (strcasecmp(ext, "TGA") == 0)
+	{
+		ret = LoadTGAFileToImage(img, fContents);
+	}
+	else
+	{
+		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, String("Resource file \"%s\" has unknown extension", filename));
+		goto fail_img;
 	}
 
-	// Create memory for image structure
-	SGPImage* const hImage = MemAlloc(sizeof(*hImage));
-
-	AssertMsg( hImage, "Failed to allocate memory for hImage in CreateImage");
-	// Initialize some values
-	memset(hImage, 0, sizeof(*hImage));
-
-	//hImage->fFlags = 0;
-	// Set data pointers to NULL
-	//hImage->pImageData = NULL;
-	//hImage->pPalette   = NULL;
-	//hImage->pui16BPPPalette = NULL;
-
-	// Set filename and loader
-	strcpy( hImage->ImageFile, ImageFile );
-
-	if (!LoadImageData(hImage, fContents, iFileLoader))
+	if (!ret)
 	{
-		return( NULL );
+		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Error occured while reading image data.");
+		goto fail_img;
 	}
 
-	// All is fine, image is loaded and allocated, return pointer
-	return( hImage );
+	return img;
 
+fail_img:
+	MemFree(img);
+fail:
+	return NULL;
 }
 
 
@@ -172,44 +140,6 @@ static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents)
 	return( TRUE );
 }
 
-
-static BOOLEAN LoadImageData(HIMAGE hImage, UINT16 fContents, UINT32 iFileLoader)
-{
-	BOOLEAN fReturnVal = FALSE;
-
-	Assert( hImage != NULL );
-
-	// Switch on file loader
-	switch (iFileLoader)
-	{
-		case TGA_FILE_READER:
-
-			fReturnVal = LoadTGAFileToImage( hImage, fContents );
-			break;
-
-		case PCX_FILE_READER:
-
-			fReturnVal = LoadPCXFileToImage( hImage, fContents );
-			break;
-
-		case STCI_FILE_READER:
-			fReturnVal = LoadSTCIFileToImage( hImage, fContents );
-			break;
-
-		default:
-
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Unknown image loader was specified." );
-
-	}
-
-	if ( !fReturnVal )
-	{
-		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Error occured while reading image data." );
-	}
-
-	return( fReturnVal );
-
-}
 
 
 #if defined WITH_ZLIB
