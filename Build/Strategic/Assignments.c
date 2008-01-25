@@ -435,7 +435,7 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 
 static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pOtherSoldier);
 static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* pSoldier, UINT8 ubPassType);
-static BOOLEAN IsItemRepairable(UINT16 usItem, INT8 bStatus);
+static BOOLEAN IsItemRepairable(UINT16 item_id, INT8 status);
 
 
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHighestPass)
@@ -2254,17 +2254,9 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 
 
 // can item be repaired?
-static BOOLEAN IsItemRepairable(UINT16 usItem, INT8 bStatus)
+static BOOLEAN IsItemRepairable(const UINT16 item_id, const INT8 status)
 {
-	// check to see if item can/needs to be repaired
-	if ( ( bStatus < 100) && ( Item[ usItem ].fFlags & ITEM_REPAIRABLE ) )
-	{
-		// yep
-		return ( TRUE );
-	}
-
-	// nope
-	return ( FALSE );
+	return status < 100 && Item[item_id].fFlags & ITEM_REPAIRABLE;
 }
 
 
