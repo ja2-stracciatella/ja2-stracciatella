@@ -123,9 +123,6 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 }
 
 
-static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* pSrcPalette);
-
-
 SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
 	if (hImage == NULL)
@@ -155,7 +152,16 @@ SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 
 	if (hImage->ubBitDepth == 8)
 	{
-		SetVideoObjectPalette(vo, hImage->pPalette);
+		// create palette
+		const SGPPaletteEntry* const src_pal = hImage->pPalette;
+		Assert(src_pal != NULL);
+
+		SGPPaletteEntry* const pal = MemAlloc(sizeof(*pal) * 256);
+		memcpy(pal, src_pal, sizeof(*pal) * 256);
+
+		vo->pPaletteEntry = pal;
+		vo->p16BPPPalette = Create16BPPPalette(pal);
+		vo->pShadeCurrent = vo->p16BPPPalette;
 	}
 
 	AddStandardVideoObject(vo);
@@ -232,29 +238,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	}
 
 	UnLockVideoSurface(dst);
-	return TRUE;
-}
-
-
-// Palette setting is expensive, need to set both DDPalette and create 16BPP palette
-static BOOLEAN SetVideoObjectPalette(HVOBJECT hVObject, const SGPPaletteEntry* pSrcPalette)
-{
-	Assert(hVObject != NULL);
-	Assert(pSrcPalette != NULL);
-
-	// Create palette object if not already done so
-	if (hVObject->pPaletteEntry == NULL)
-	{
-		// Create palette
-		hVObject->pPaletteEntry = MemAlloc(sizeof(SGPPaletteEntry) * 256);
-		CHECKF(hVObject->pPaletteEntry != NULL);
-	}
-	memcpy(hVObject->pPaletteEntry, pSrcPalette, sizeof(SGPPaletteEntry) * 256);
-
-	if (hVObject->p16BPPPalette != NULL) MemFree(hVObject->p16BPPPalette);
-	hVObject->p16BPPPalette = Create16BPPPalette(pSrcPalette);
-	hVObject->pShadeCurrent = hVObject->p16BPPPalette;
-
 	return TRUE;
 }
 
