@@ -129,182 +129,122 @@ void InitSoldierFace(SOLDIERTYPE* const s)
 }
 
 
-static FACETYPE* InternalInitFace(UINT8 usMercProfileID, SOLDIERTYPE* s, UINT32 uiInitFlags, INT32 iFaceFileID, UINT32 uiBlinkFrequency, UINT32 uiExpressionFrequency);
-
-
-FACETYPE* InitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
+FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
 {
-	UINT32	uiBlinkFrequency;
-	UINT32	uiExpressionFrequency;
+	if (id == NO_PROFILE) return NULL;
+	const MERCPROFILESTRUCT* const p = GetProfile(id);
 
-	if (usMercProfileID == NO_PROFILE) return NULL;
+	FACETYPE* const face = GetFreeFace();
+	if (face == NULL) return NULL;
 
-	uiBlinkFrequency			= gMercProfiles[ usMercProfileID ].uiBlinkFrequency;
-	uiExpressionFrequency	= gMercProfiles[ usMercProfileID ].uiExpressionFrequency;
-
-	if ( Random( 2 ) )
-	{
-		uiBlinkFrequency		+= Random( 2000 );
-	}
-	else
-	{
-		uiBlinkFrequency		-= Random( 2000 );
-	}
-
-	return InternalInitFace(usMercProfileID, s, uiInitFlags, gMercProfiles[usMercProfileID].ubFaceIndex, uiBlinkFrequency, uiExpressionFrequency);
-}
-
-
-static FACETYPE* InternalInitFace(const UINT8 usMercProfileID, SOLDIERTYPE* const s, const UINT32 uiInitFlags, INT32 iFaceFileID, const UINT32 uiBlinkFrequency, const UINT32 uiExpressionFrequency)
-{
-	UINT32						uiCount;
-	SGPPaletteEntry		Pal[256];
-
-	FACETYPE* const pFace = GetFreeFace();
-	if (pFace == NULL) return NULL;
-
-	// ATE: If we are merc profile ID #151-154, all use 151's protrait....
-	if ( usMercProfileID >= 151 && usMercProfileID <= 154 )
-	{
-		iFaceFileID = 151;
-	}
-
-
+	const char* face_file;
 	// Check if we are a big-face....
-	SGPFILENAME ImageFile;
-	if ( uiInitFlags & FACE_BIGFACE )
+	if (uiInitFlags & FACE_BIGFACE)
 	{
-		// The filename is the profile ID!
-		sprintf(ImageFile, "FACES/b%02d.sti", iFaceFileID);
-
-    // ATE: Check for profile - if elliot , use special face :)
-    if ( usMercProfileID == ELLIOT )
-    {
-      if ( gMercProfiles[ ELLIOT ].bNPCData > 3 && gMercProfiles[ ELLIOT ].bNPCData < 7 )
-      {
-			  sprintf(ImageFile, "FACES/b%02da.sti", iFaceFileID);
-      }
-      else if ( gMercProfiles[ ELLIOT ].bNPCData > 6 && gMercProfiles[ ELLIOT ].bNPCData < 10 )
-      {
-			  sprintf(ImageFile, "FACES/b%02db.sti", iFaceFileID);
-      }
-      else if ( gMercProfiles[ ELLIOT ].bNPCData > 9 && gMercProfiles[ ELLIOT ].bNPCData < 13 )
-      {
-			  sprintf(ImageFile, "FACES/b%02dc.sti", iFaceFileID);
-      }
-      else if ( gMercProfiles[ ELLIOT ].bNPCData > 12 && gMercProfiles[ ELLIOT ].bNPCData < 16 )
-      {
-			  sprintf(ImageFile, "FACES/b%02dd.sti", iFaceFileID);
-      }
-      else if ( gMercProfiles[ ELLIOT ].bNPCData == 17 )
-      {
-			  sprintf(ImageFile, "FACES/b%02de.sti", iFaceFileID);
-      }
-    }
+		face_file = "FACES/b%02d.sti";
+    // ATE: Check for profile - if elliot, use special face :)
+		if (id == ELLIOT && p->bNPCData > 3)
+		{
+			if      (p->bNPCData <   7) face_file = "FACES/b%02da.sti";
+			else if (p->bNPCData <  10) face_file = "FACES/b%02db.sti";
+			else if (p->bNPCData <  13) face_file = "FACES/b%02dc.sti";
+			else if (p->bNPCData <  16) face_file = "FACES/b%02dd.sti";
+			else if (p->bNPCData == 17) face_file = "FACES/b%02de.sti";
+		}
 	}
 	else
 	{
-		sprintf(ImageFile, "FACES/%02d.sti", iFaceFileID);
+		face_file = "FACES/%02d.sti";
 	}
 
-	// Load
-	SGPVObject* hVObject = AddVideoObjectFromFile(ImageFile);
-	if (hVObject == NO_VOBJECT)
+	// HERVE, PETER, ALBERTO and CARLO all use HERVE's portrait
+	const INT32 face_id = (HERVE <= id && id <= CARLO ? HERVE : p->ubFaceIndex);
+
+	SGPFILENAME ImageFile;
+	sprintf(ImageFile, face_file, face_id);
+	SGPVObject* vo = AddVideoObjectFromFile(ImageFile);
+	if (vo == NO_VOBJECT)
 	{
+		if (!(uiInitFlags & FACE_BIGFACE)) return NULL;
+
 		// If we are a big face, use placeholder...
-		if ( uiInitFlags & FACE_BIGFACE )
-		{
-			hVObject = AddVideoObjectFromFile("FACES/placeholder.sti");
-			if (hVObject == NO_VOBJECT) return NULL;
-		}
-		else
-		{
-			return NULL;
-		}
+		vo = AddVideoObjectFromFile("FACES/placeholder.sti");
+		if (vo == NO_VOBJECT) return NULL;
 	}
 
-	memset(pFace, 0, sizeof(*pFace));
+	memset(face, 0, sizeof(*face));
+	face->uiFlags               = uiInitFlags;
+	face->fAllocated            = TRUE;
+	face->fDisabled             = TRUE; // default to off!
+	face->video_overlay         = NULL;
+	face->soldier               = s;
+	face->ubCharacterNum        = id;
+	face->sEyeFrame             = 0;
+	face->uiEyeDelay            = 50 + Random(30); // p->uiEyeDelay;
 
-	// Get profile data and set into face data
-	pFace->soldier = s;
+	UINT32 blink_freq = p->uiBlinkFrequency;
+	blink_freq = (Random(2) ? blink_freq + Random(2000) : blink_freq - Random(2000));
+	face->uiBlinkFrequency      = blink_freq;
 
-	pFace->fAllocated			= TRUE;
-
-	//Default to off!
-	pFace->fDisabled			= TRUE;
-	pFace->video_overlay  = NULL;
-	//pFace->uiEyeDelay			=	gMercProfiles[ usMercProfileID ].uiEyeDelay;
-	//pFace->uiMouthDelay		= gMercProfiles[ usMercProfileID ].uiMouthDelay;
-	pFace->uiEyeDelay			=	50 + Random( 30 );
-	pFace->uiMouthDelay		= 120;
-	pFace->ubCharacterNum = usMercProfileID;
-
-
-	pFace->uiBlinkFrequency			 = uiBlinkFrequency;
-	pFace->uiExpressionFrequency = uiExpressionFrequency;
-
-	pFace->sEyeFrame		=		0;
-	pFace->sMouthFrame	=		0;
-	pFace->uiFlags			=  uiInitFlags;
-
+	face->uiExpressionFrequency = p->uiExpressionFrequency;
+	face->sMouthFrame           = 0;
+	face->uiMouthDelay          = 120; // p->uiMouthDelay;
+	face->uiVideoObject         = vo;
 
 	// Set palette
-	// Build a grayscale palette! ( for testing different looks )
-	for(uiCount=0; uiCount < 256; uiCount++)
+	SGPPaletteEntry pal[256];
+	// Build a grayscale palette! (for testing different looks)
+	for (UINT32 i = 0; i < 256; ++i)
 	{
-		Pal[uiCount].peRed=255;
-		Pal[uiCount].peGreen=255;
-		Pal[uiCount].peBlue=255;
+		pal[i].peRed   = 255;
+		pal[i].peGreen = 255;
+		pal[i].peBlue  = 255;
 	}
 
-	hVObject->pShades[ FLASH_PORTRAIT_NOSHADE ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
-	hVObject->pShades[ FLASH_PORTRAIT_STARTSHADE ]  = Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
-	hVObject->pShades[ FLASH_PORTRAIT_ENDSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
-	hVObject->pShades[ FLASH_PORTRAIT_DARKSHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, TRUE );
-	hVObject->pShades[ FLASH_PORTRAIT_LITESHADE ]		= Create16BPPPaletteShaded( hVObject->pPaletteEntry, 100, 100, 100, FALSE );
+	const SGPPaletteEntry* const vo_pal = vo->pPaletteEntry;
+	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = Create16BPPPaletteShaded(vo_pal, 255, 255, 255, FALSE);
+	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = Create16BPPPaletteShaded(pal,    255, 255, 255, FALSE);
+	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = Create16BPPPaletteShaded(vo_pal, 250,  25,  25, TRUE );
+	vo->pShades[FLASH_PORTRAIT_DARKSHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, TRUE );
+	vo->pShades[FLASH_PORTRAIT_LITESHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, FALSE);
 
-	for(uiCount=0; uiCount < 256; uiCount++)
+	for (UINT32 i = 0; i < 256; ++i)
 	{
-		Pal[uiCount].peRed=(UINT8)(uiCount%128)+128;
-		Pal[uiCount].peGreen=(UINT8)(uiCount%128)+128;
-		Pal[uiCount].peBlue=(UINT8)(uiCount%128)+128;
+		pal[i].peRed   = i % 128 + 128;
+		pal[i].peGreen = i % 128 + 128;
+		pal[i].peBlue  = i % 128 + 128;
 	}
-	hVObject->pShades[ FLASH_PORTRAIT_GRAYSHADE ]		= Create16BPPPaletteShaded( Pal, 255, 255, 255, FALSE );
-
+	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 
 	// Get FACE height, width
-	const ETRLEObject* ETRLEProps;
-	ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 0);
-	if (ETRLEProps == NULL) return NULL;
-	pFace->usFaceWidth  = ETRLEProps->usWidth;
-	pFace->usFaceHeight = ETRLEProps->usHeight;
+	const ETRLEObject* const face_gfx = GetVideoObjectETRLESubregionProperties(vo, 0);
+	if (face_gfx == NULL) return NULL;
+	face->usFaceWidth  = face_gfx->usWidth;
+	face->usFaceHeight = face_gfx->usHeight;
 
 	// OK, check # of items
-	if ( hVObject->usNumberOfObjects == 8 )
+	if (vo->usNumberOfObjects == 8)
 	{
-		pFace->fInvalidAnim = FALSE;
-
 		// Get EYE height, width
-		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 1);
-		if (ETRLEProps == NULL) return NULL;
-		pFace->usEyesWidth  = ETRLEProps->usWidth;
-		pFace->usEyesHeight = ETRLEProps->usHeight;
+		const ETRLEObject* const eyes_gfx = GetVideoObjectETRLESubregionProperties(vo, 1);
+		if (eyes_gfx == NULL) return NULL;
+		face->usEyesWidth  = eyes_gfx->usWidth;
+		face->usEyesHeight = eyes_gfx->usHeight;
 
 		// Get Mouth height, width
-		ETRLEProps = GetVideoObjectETRLESubregionProperties(hVObject, 5);
-		if (ETRLEProps == NULL) return NULL;
-		pFace->usMouthWidth  = ETRLEProps->usWidth;
-		pFace->usMouthHeight = ETRLEProps->usHeight;
+		const ETRLEObject* const mouth_gfx = GetVideoObjectETRLESubregionProperties(vo, 5);
+		if (mouth_gfx == NULL) return NULL;
+		face->usMouthWidth  = mouth_gfx->usWidth;
+		face->usMouthHeight = mouth_gfx->usHeight;
+
+		face->fInvalidAnim = FALSE;
 	}
 	else
 	{
-		pFace->fInvalidAnim = TRUE;
+		face->fInvalidAnim = TRUE;
 	}
 
-	// Set id
-	pFace->uiVideoObject = hVObject;
-
-	return pFace;
+	return face;
 }
 
 
