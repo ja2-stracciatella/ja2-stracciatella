@@ -29,6 +29,10 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#if defined _DEBUG
+#	include "Strategic.h"
+#endif
+
 
 #define FULL_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 138
 #define NICK_NAME_CURSOR_Y LAPTOP_SCREEN_WEB_UL_Y + 195

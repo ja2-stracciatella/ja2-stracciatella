@@ -463,12 +463,14 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 
 		case MSG_DEBUG:
 #if defined _DEBUG && !defined JA2DEMO
+		{
 			wchar_t DestStringA[512];
 			wcscpy(DestStringA, DestString);
 			swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
 			WriteMessageToFile(DestStringA);
 			usColor = DEBUG_COLOR;
 			break;
+		}
 #else
 			return;
 #endif
