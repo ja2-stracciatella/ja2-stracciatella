@@ -69,9 +69,8 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 		if ( EnoughPoints( gpUIPlannedSoldier, sAPCost, 0, FALSE ) )
 		{
 			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-			MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
+			MercCreateStruct.bTeam				= PLAYER_PLAN;
 			MercCreateStruct.ubProfile		= NO_PROFILE;
-			MercCreateStruct.fPlayerPlan	= TRUE;
 			MercCreateStruct.bBodyType		= gpUIPlannedSoldier->ubBodyType;
 			MercCreateStruct.sInsertionGridNo		= sGridNo;
 
@@ -147,9 +146,8 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 			if ( gpUIPlannedSoldier->ubID < MAX_NUM_SOLDIERS )
 			{
 				memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-				MercCreateStruct.bTeam				= SOLDIER_CREATE_AUTO_TEAM;
+				MercCreateStruct.bTeam				= PLAYER_PLAN;
 				MercCreateStruct.ubProfile		= NO_PROFILE;
-				MercCreateStruct.fPlayerPlan	= TRUE;
 				MercCreateStruct.bBodyType		= gpUIPlannedSoldier->ubBodyType;
 				MercCreateStruct.sInsertionGridNo		= sGridNo;
 

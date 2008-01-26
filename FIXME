@@ -323,7 +323,6 @@ uiActionData: probably always a SoldierID
 SOLDIERCREATESTRUCT
 fStatic: strange
 fPlayerMerc: strange
-fPlayerPlan: strange
 fCopyProfileItemsOver: strange
 MiscPal
 pExistingSoldier: load/save?

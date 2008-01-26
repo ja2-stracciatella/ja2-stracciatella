@@ -159,7 +159,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			Soldier.bTeam = gbPlayerNum;
 			Soldier.bVisible = 1;
 		}
-		else if ( pCreateStruct->fPlayerPlan )
+		else if (pCreateStruct->bTeam == PLAYER_PLAN)
 		{
 			Soldier.uiStatusFlags |= SOLDIER_PC;
 			Soldier.bVisible = 1;
@@ -179,10 +179,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			{
 				Soldier.bTeam = OUR_TEAM;
 				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-			}
-			else if ( pCreateStruct->fPlayerPlan )
-			{
-				Soldier.bTeam = PLAYER_PLAN;
 			}
 			else
 			{
@@ -1316,7 +1312,6 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->ubProfile							= NO_PROFILE;
 	pp->sInsertionGridNo			= bp->usStartingGridNo;
 	pp->fPlayerMerc						= FALSE;
-	pp->fPlayerPlan						= FALSE;
 	pp->fCopyProfileItemsOver = FALSE;
 	pp->bTeam									= bp->bTeam;
 	pp->ubSoldierClass				= bp->ubSoldierClass;
@@ -1576,7 +1571,6 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->ubProfile							= NO_PROFILE;
 	spp->sInsertionGridNo				= bp->usStartingGridNo;
 	spp->fPlayerMerc						= FALSE;
-	spp->fPlayerPlan						= FALSE;
 	spp->fCopyProfileItemsOver	= FALSE;
 	spp->bTeam									= bp->bTeam;
 	spp->ubSoldierClass					= bp->ubSoldierClass;
