@@ -576,7 +576,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 
 	// go through each soldier, looking for "friends" (soldiers on same side)
 	UINT8 ubFriendCount = 0;
-	UINT8 ubFriendIDs[MAXMERCS];
+	const SOLDIERTYPE* friends[MAXMERCS];
 	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; ++uiLoop)
 	{
 		const SOLDIERTYPE* const friend = MercSlots[uiLoop];
@@ -589,15 +589,15 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 				SpacesAway(s->sGridNo, friend->sGridNo) > 1) // if we're not already neighbors
 		{
 			// remember his guynum, increment friend counter
-			ubFriendIDs[ubFriendCount++] = friend->ubID;
+			friends[ubFriendCount++] = friend;
 		}
 	}
 
 	while (ubFriendCount != 0)
 	{
 		// randomly select one of the remaining friends in the list
-		const UINT8 ubFriendID = ubFriendIDs[PreRandom(ubFriendCount)];
-		const SOLDIERTYPE* const friend = GetMan(ubFriendID);
+		const UINT               friend_idx = PreRandom(ubFriendCount);
+		const SOLDIERTYPE* const friend     = friends[friend_idx];
 
 		/* if our movement range is NOT restricted, or this friend's within range
 		 * use distance - 1, because there must be at least 1 tile 1 space closer */
@@ -612,7 +612,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 				fDirChecked[usDirection] = FALSE;
 			}
 
-			// examine all 8 spots around 'ubFriendID'
+			// examine all 8 spots around friend
 			// keep looking while directions remain and a satisfactory one not found
 			for (UINT8 ubDirsLeft = 8; ubDirsLeft--;)
 			{
@@ -643,13 +643,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 			}
 		}
 
-		ubFriendCount--;
-
-		// if we hadn't already picked the last friend currently in the list
-		if (ubFriendCount != ubFriendID)
-		{
-			ubFriendIDs[ubFriendID] = ubFriendIDs[ubFriendCount];
-		}
+		friends[friend_idx] = friends[--ubFriendCount];
 	}
 
 	return FALSE;
