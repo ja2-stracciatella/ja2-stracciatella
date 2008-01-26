@@ -913,7 +913,6 @@ enum
 	AIM_FI_TO_SELECT,
 	AIM_FI_RIGHT_CLICK,
 	AIM_FI_TO_ENTER_SORT_PAGE,
-	AIM_FI_AWAY,
 	AIM_FI_DEAD,
 };
 extern		const wchar_t *AimFiText[];

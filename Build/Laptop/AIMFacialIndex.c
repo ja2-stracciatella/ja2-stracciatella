@@ -282,7 +282,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 	{
 		// the merc is away, shadow his/her face and blit 'away' over top
 		shaded = TRUE;
-		text   = AimFiText[AIM_FI_DEAD + 1]; // if not enough room use AimFiText[AIM_FI_AWAY]
+		text   = AimFiText[AIM_FI_DEAD + 1];
 	}
 	else
 	{

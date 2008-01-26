@@ -2859,7 +2859,6 @@ const wchar_t* 		AimFiText[] =
 
 	// Gets displayed on top of the merc's portrait if they are...
 
-	L"Afwezig",
 	L"Overleden",						//14
 	L"Op missie",
 };

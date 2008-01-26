@@ -2696,7 +2696,6 @@ const wchar_t *AimFiText[] =
 	// Gets displayed on top of the merc's portrait if they are...
 
 	//Please be careful not to increase the size of strings for following three
-	L"Abwesend",
 	L"Verstorben",						//14
 	L"Im Dienst",
 };
