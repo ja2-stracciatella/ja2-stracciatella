@@ -3625,62 +3625,6 @@ static void ToggleCliffDebug(void)
 }
 
 
-static void CreateCow(void)
-{
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos == NOWHERE) return;
-
-	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
-	MercCreateStruct.ubProfile        = NO_PROFILE;
-	MercCreateStruct.sSectorX         = gWorldSectorX;
-	MercCreateStruct.sSectorY         = gWorldSectorY;
-	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
-	MercCreateStruct.bBodyType        = COW;
-	//MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
-	MercCreateStruct.bTeam            = CIV_TEAM;
-	MercCreateStruct.sInsertionGridNo = usMapPos;
-	RandomizeNewSoldierStats(&MercCreateStruct);
-
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-	if (s != NULL)
-	{
-		AddSoldierToSector(s);
-
-		// So we can see them!
-		AllTeamsLookForAll(NO_INTERRUPTS);
-	}
-}
-
-
-static void CreatePlayerControlledCow(void)
-{
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos == NOWHERE) return;
-
-	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
-	MercCreateStruct.ubProfile        = 12;
-	MercCreateStruct.sSectorX         = gWorldSectorX;
-	MercCreateStruct.sSectorY         = gWorldSectorY;
-	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
-	MercCreateStruct.bBodyType        = COW;
-	MercCreateStruct.sInsertionGridNo = usMapPos;
-	MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
-	MercCreateStruct.fPlayerMerc      = TRUE;
-	RandomizeNewSoldierStats(&MercCreateStruct);
-
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
-	if (s != NULL)
-	{
-		AddSoldierToSector(s);
-
-		// So we can see them!
-		AllTeamsLookForAll(NO_INTERRUPTS);
-	}
-}
-
-
 static void GrenadeTest1(void)
 {
 	// Get mousexy
