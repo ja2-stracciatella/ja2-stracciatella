@@ -1122,8 +1122,9 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 
 BOOLEAN InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, const BOOLEAN fRemoveVehicle)
 {
-	// ATE: If this guy is our global selected dude, take selection off...
-	if (gUIFullTarget == s) gUIFullTarget = NULL;
+	if (GetSelectedMan() == s) SetSelectedMan(NULL);
+	if (gUIFullTarget    == s) gUIFullTarget   = NULL;
+	if (gpSMCurrentMerc  == s) gpSMCurrentMerc = NULL;
 
 	return TacticalRemoveSoldierPointer(s, fRemoveVehicle);
 }
