@@ -167,54 +167,12 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 
 	// Check for auto team
-	if ( pCreateStruct->bTeam == SOLDIER_CREATE_AUTO_TEAM )
+	if (pCreateStruct->bTeam == SOLDIER_CREATE_AUTO_TEAM)
 	{
-		// Auto determine!
-		// OK, if this is our guy, set team as ours!
-		if ( pCreateStruct->fPlayerMerc )
-		{
-			Soldier.bTeam = OUR_TEAM;
-			Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-		}
-		else
-		{
-			// LOOK AT BODY TYPE!
-			switch ( pCreateStruct->bBodyType )
-			{
-				case REGMALE:
-				case BIGMALE:
-				case STOCKYMALE:
-				case REGFEMALE:
+		Assert(pCreateStruct->fPlayerMerc);
 
-					Soldier.bTeam = ENEMY_TEAM;
-					break;
-
-				case ADULTFEMALEMONSTER:
-				case AM_MONSTER:
-				case YAF_MONSTER:
-				case YAM_MONSTER:
-				case LARVAE_MONSTER:
-				case INFANT_MONSTER:
-				case QUEENMONSTER:
-
-					Soldier.bTeam = CREATURE_TEAM;
-					break;
-
-				case FATCIV:
-				case MANCIV:
-				case MINICIV:
-				case DRESSCIV:
-				case HATKIDCIV:
-				case KIDCIV:
-				case COW:
-				case CROW:
-				case ROBOTNOWEAPON:
-
-					Soldier.bTeam = CIV_TEAM;
-					break;
-
-			}
-		}
+		Soldier.bTeam = OUR_TEAM;
+		Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
 	}
 	else
 	{

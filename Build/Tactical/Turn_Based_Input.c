@@ -3683,7 +3683,7 @@ static void CreatePlayerControlledMonster(void)
 	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
 	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
 	MercCreateStruct.bBodyType        = (_KeyDown(SDLK_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
-	MercCreateStruct.bTeam            = SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.bTeam            = CREATURE_TEAM;
 	MercCreateStruct.sInsertionGridNo = usMapPos;
 	RandomizeNewSoldierStats(&MercCreateStruct);
 
