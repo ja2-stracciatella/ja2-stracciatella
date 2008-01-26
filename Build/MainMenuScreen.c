@@ -77,7 +77,6 @@ UINT32 MainMenuScreenInit(void)
 {
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %ls", zVersionLabel));
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s",  czVersionNumber));
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Tracking #:    %ls", zTrackingNumber));
 	return TRUE;
 }
 

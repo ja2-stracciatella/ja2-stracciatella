@@ -13,7 +13,6 @@ extern "C" {
 
 extern	wchar_t		zVersionLabel[16];
 extern	char		czVersionNumber[16];
-extern	wchar_t		zTrackingNumber[16];
 
 
 //
