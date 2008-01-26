@@ -129,445 +129,422 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	//Simply returning won't help.
 	Assert(!pCreateStruct->fStatic);
 
-	// If we are NOT creating an existing soldier ( ie, this is not from a save game ), create soldier normally
-	SOLDIERTYPE* s;
-	if (pCreateStruct->pExistingSoldier == NULL)
+	// Some values initialized here but could be changed before going to the common one
+	SOLDIERTYPE Soldier;
+	InitSoldierStruct(&Soldier);
+
+	Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
+
+	// OK, CHECK IF WE HAVE A VALID PROFILE ID!
+	if (pCreateStruct->ubProfile != NO_PROFILE)
 	{
-		// Some values initialized here but could be changed before going to the common one
-		SOLDIERTYPE Soldier;
-		InitSoldierStruct(&Soldier);
-
-		Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
-
-		// OK, CHECK IF WE HAVE A VALID PROFILE ID!
-		if (pCreateStruct->ubProfile != NO_PROFILE)
-		{
-			// We have a merc created by profile, do this!
-			TacticalCopySoldierFromProfile(&Soldier, pCreateStruct);
-		}
-		else
-		{
-			TacticalCopySoldierFromCreateStruct(&Soldier, pCreateStruct);
-		}
-
-		// We want to determine what team to place these guys in...
-
-		// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
-		if ( pCreateStruct->fPlayerMerc )
-		{
-			Soldier.uiStatusFlags |= SOLDIER_PC;
-			Soldier.bTeam = gbPlayerNum;
-			Soldier.bVisible = 1;
-		}
-		else if (pCreateStruct->bTeam == PLAYER_PLAN)
-		{
-			Soldier.uiStatusFlags |= SOLDIER_PC;
-			Soldier.bVisible = 1;
-		}
-		else
-		{
-			Soldier.uiStatusFlags |= SOLDIER_ENEMY;
-		}
-
-
-		// Check for auto team
-		if ( pCreateStruct->bTeam == SOLDIER_CREATE_AUTO_TEAM )
-		{
-			// Auto determine!
-			// OK, if this is our guy, set team as ours!
-			if ( pCreateStruct->fPlayerMerc )
-			{
-				Soldier.bTeam = OUR_TEAM;
-				Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-			}
-			else
-			{
-				// LOOK AT BODY TYPE!
-				switch ( pCreateStruct->bBodyType )
-				{
-					case REGMALE:
-					case BIGMALE:
-					case STOCKYMALE:
-					case REGFEMALE:
-
-						Soldier.bTeam = ENEMY_TEAM;
-						break;
-
-					case ADULTFEMALEMONSTER:
-					case AM_MONSTER:
-					case YAF_MONSTER:
-					case YAM_MONSTER:
-					case LARVAE_MONSTER:
-					case INFANT_MONSTER:
-					case QUEENMONSTER:
-
-						Soldier.bTeam = CREATURE_TEAM;
-						break;
-
-					case FATCIV:
-					case MANCIV:
-					case MINICIV:
-					case DRESSCIV:
-					case HATKIDCIV:
-					case KIDCIV:
-					case COW:
-					case CROW:
-					case ROBOTNOWEAPON:
-
-						Soldier.bTeam = CIV_TEAM;
-						break;
-
-				}
-			}
-		}
-		else
-		{
-			Soldier.bTeam = pCreateStruct->bTeam;
-			// if WE_SEE_WHAT_MILITIA_SEES
-			if ( Soldier.bTeam == MILITIA_TEAM )
-			{
-				Soldier.bVisible = 1;
-			}
-		}
-
-		// Copy the items over for thew soldier, only if we have a valid profile id!
-		if ( pCreateStruct->ubProfile != NO_PROFILE )
-			CopyProfileItems( &Soldier, pCreateStruct );
-
-		// Given team, get an ID for this guy!
-
-		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
-		{
-			// We are creating a dynamically allocated soldier for autoresolve.
-			Soldier.ubID = 255;
-
-			s = MemAlloc(sizeof(*s));
-			if (!s) return NULL;
-		}
-		else
-		{
-			INT32 cnt = gTacticalStatus.Team[Soldier.bTeam].bFirstID;
-
-			// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
-			if( Soldier.ubBodyType == HUMVEE ||
-					Soldier.ubBodyType == ELDORADO ||
-					Soldier.ubBodyType == ICECREAMTRUCK ||
-					Soldier.ubBodyType == JEEP )
-			{
-				if( Soldier.bTeam == gbPlayerNum )
-				{
-					cnt = gTacticalStatus.Team[ Soldier.bTeam ].bLastID - 1;
-				}
-			}
-
-			const UINT8 bLastTeamID = gTacticalStatus.Team[Soldier.bTeam].bLastID;
-
-			// look for all mercs on the same team,
-			BOOLEAN fGuyAvail = FALSE;
-			for (const SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= bLastTeamID; cnt++, pTeamSoldier++)
-			{
-				if ( !pTeamSoldier->bActive )
-				{
-					fGuyAvail = TRUE;
-					break;
-				}
-			}
-
-			// Check if there was space!
-			if ( !fGuyAvail )
-			{ //No space, so can't create the soldier.
-				return NULL;
-			}
-
-			// OK, set ID
-			Soldier.ubID = (UINT8)cnt;
-
-			s = GetMan(cnt);
-		}
-		*s = Soldier;
-
-		// LOAD MERC's FACE!
-		if (pCreateStruct->ubProfile != NO_PROFILE && s->bTeam == OUR_TEAM)
-		{
-			InitSoldierFace(s);
-		}
-
-		s->bActionPoints        = CalcActionPoints(s);
-		s->bInitialActionPoints = s->bActionPoints;
-		s->bSide                = gTacticalStatus.Team[s->bTeam].bSide;
-		s->bActive              = TRUE;
-		s->sSectorX             = pCreateStruct->sSectorX;
-		s->sSectorY             = pCreateStruct->sSectorY;
-		s->bSectorZ             = pCreateStruct->bSectorZ;
-		s->ubInsertionDirection = pCreateStruct->bDirection;
-		s->bDesiredDirection    = pCreateStruct->bDirection;
-		s->bDominantDir         = pCreateStruct->bDirection;
-		s->bDirection           = pCreateStruct->bDirection;
-
-		s->sInsertionGridNo     = pCreateStruct->sInsertionGridNo;
-		s->bOldLife             = s->bLifeMax;
-
-		// If a civvy, set neutral
-		if (s->bTeam == CIV_TEAM)
-		{
-			if (s->ubProfile == WARDEN)
-			{
-				s->bNeutral = FALSE;
-			}
-			else if (s->ubCivilianGroup != NON_CIV_GROUP)
-			{
-				s->bNeutral = (gTacticalStatus.fCivGroupHostile[s->ubCivilianGroup] != CIV_GROUP_HOSTILE);
-			}
-			else
-			{
-				s->bNeutral = TRUE;
-			}
-
-			//Weaken stats based on the bodytype of the civilian.
-			if (s->ubProfile == NO_PROFILE)
-			{
-				switch (s->ubBodyType)
-				{
-					case REGMALE:
-					case BIGMALE:
-					case STOCKYMALE:
-					case REGFEMALE:
-						//no adjustments necessary for these "healthy" bodytypes.
-						break;
-					case FATCIV:
-						//fat, so slower
-						s->bAgility = 30 + Random(26); //30 - 55
-						break;
-					case MANCIV:
-						s->bLife = s->bLifeMax = 35 + Random(26); //35 - 60
-						break;
-					case MINICIV:
-					case DRESSCIV:
-						s->bLife = s->bLifeMax = 30 + Random(16); //30 - 45
-						break;
-					case HATKIDCIV:
-					case KIDCIV:
-						s->bLife = s->bLifeMax = 20 + Random(16); //20 - 35
-						break;
-					case CRIPPLECIV:
-						s->bLife = s->bLifeMax = 20 + Random(26); //20 - 45
-						s->bAgility = 30 + Random(16); // 30 - 45
-						break;
-				}
-			}
-		}
-		else if (s->bTeam == CREATURE_TEAM)
-		{
-			// bloodcats are neutral to start out
-			if (s->ubBodyType == BLOODCAT)
-			{
-				s->bNeutral = TRUE;
-			} // otherwise (creatures) false
-		}
-
-		// OK, If not given a profile num, set a randomized defualt battle sound set
-		// and then adjust it according to body type!
-		if (s->ubProfile == NO_PROFILE)
-		{
-			s->ubBattleSoundID = Random(3);
-		}
-
-		// ATE: TEMP : No enemy women mercs (unless elite)!
-		if (s->ubProfile == NO_PROFILE &&
-				s->bTeam == ENEMY_TEAM &&
-				s->ubBodyType == REGFEMALE &&
-				s->ubSoldierClass != SOLDIER_CLASS_ELITE)
-		{
-			s->ubBodyType = REGMALE + Random(3);
-		}
-
-		// ATE
-		// Set some values for variation in anims...
-		if (s->ubBodyType == BIGMALE)
-		{
-			s->uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
-		}
-
-		//For inventory, look for any face class items that may be located in the big pockets and if found, move
-		//that item to a face slot and clear the pocket!
-		if (s->bTeam != OUR_TEAM)
-		{
-			INT32 i;
-			BOOLEAN fSecondFaceItem = FALSE;
-			for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
-			{
-				if (Item[s->inv[i].usItem].usItemClass & IC_FACE)
-				{
-					if( !fSecondFaceItem )
-					{ //Don't check for compatibility...  automatically assume there are no head positions filled.
-						fSecondFaceItem = TRUE;
-						s->inv[HEAD1POS] = s->inv[i];
-						memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
-					}
-					else
-					{ //if there is a second item, compare it to the first one we already added.
-						if (CompatibleFaceItem(s->inv[HEAD1POS].usItem, s->inv[i].usItem))
-						{
-							s->inv[HEAD2POS] = s->inv[i];
-							memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
-							break;
-						}
-					}
-				}
-			}
-
-			if (guiCurrentScreen != AUTORESOLVE_SCREEN)
-			{
-				// also, if an army guy has camouflage, roll to determine whether they start camouflaged
-				if (s->bTeam == ENEMY_TEAM)
-				{
-					i = FindObj(s, CAMOUFLAGEKIT);
-					if (i != NO_SLOT && Random(5) < SoldierDifficultyLevel(s))
-					{
-						// start camouflaged
-						s->bCamo = 100;
-					}
-				}
-			}
-		}
-
-		//Set some flags, actions based on what body type we are
-		//NOTE:  BE VERY CAREFUL WHAT YOU DO IN THIS SECTION!
-		//  It is very possible to override editor settings, especially orders and attitude.
-		//  In those cases, you can check for !gfEditMode (not in editor).
-		switch (s->ubBodyType)
-		{
-			case HATKIDCIV:
-			case KIDCIV:
-				s->ubBattleSoundID = Random(2);
-				break;
-
-			case REGFEMALE:
-			case MINICIV:
-			case DRESSCIV:
-				s->ubBattleSoundID = 7 + Random(2);
-				s->bNormalSmell    = NORMAL_HUMAN_SMELL_STRENGTH;
-				break;
-
-			case BLOODCAT:
-				AssignCreatureInventory(s);
-				s->bNormalSmell   = NORMAL_HUMAN_SMELL_STRENGTH;
-				s->uiStatusFlags |= SOLDIER_ANIMAL;
-				break;
-
-			case ADULTFEMALEMONSTER:
-			case AM_MONSTER:
-			case YAF_MONSTER:
-			case YAM_MONSTER:
-			case LARVAE_MONSTER:
-			case INFANT_MONSTER:
-			case QUEENMONSTER:
-				AssignCreatureInventory(s);
-				s->ubCaller = NOBODY;
-				if( !gfEditMode )
-				{
-					s->bOrders = FARPATROL;
-					s->bAttitude = AGGRESSIVE;
-				}
-				s->uiStatusFlags |= SOLDIER_MONSTER;
-				s->bMonsterSmell  = NORMAL_CREATURE_SMELL_STRENGTH;
-				break;
-
-			case COW:
-				s->uiStatusFlags |= SOLDIER_ANIMAL;
-				s->bNormalSmell   = COW_SMELL_STRENGTH;
-				break;
-
-			case CROW:
-				s->uiStatusFlags |= SOLDIER_ANIMAL;
-				break;
-
-			case ROBOTNOWEAPON:
-				s->uiStatusFlags |= SOLDIER_ROBOT;
-				break;
-
-			case HUMVEE:
-			case ELDORADO:
-			case ICECREAMTRUCK:
-			case JEEP:
-			case TANK_NW:
-			case TANK_NE:
-				s->uiStatusFlags |= SOLDIER_VEHICLE;
-
-				UINT8 ubVehicleID = 0;
-				switch (s->ubBodyType)
-				{
-					case HUMVEE:
-						ubVehicleID = HUMMER;
-            s->bNeutral = TRUE;
-						break;
-
-					case ELDORADO:
-						ubVehicleID = ELDORADO_CAR;
-            s->bNeutral = TRUE;
-						break;
-
-					case ICECREAMTRUCK:
-						ubVehicleID = ICE_CREAM_TRUCK;
-            s->bNeutral = TRUE;
-						break;
-
-					case JEEP:
-						ubVehicleID = JEEP_CAR;
-						break;
-
-					case TANK_NW:
-					case TANK_NE:
-						ubVehicleID = TANK_CAR;
-						break;
-				}
-
-				if ( pCreateStruct->fUseGivenVehicle )
-				{
-					s->bVehicleID = pCreateStruct->bUseGivenVehicleID;
-				}
-				else
-				{
-					// Add vehicle to list....
-					s->bVehicleID = (INT8)AddVehicleToList(s->sSectorX, s->sSectorY, s->bSectorZ, ubVehicleID);
-				}
-				SetVehicleValuesIntoSoldierType(s);
-				break;
-
-			default:
-				s->bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-				break;
-		}
-
-		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
-		{
-			const UINT8 ubSectorID = GetAutoResolveSectorID();
-			s->sSectorX = SECTORX(ubSectorID);
-			s->sSectorY = SECTORY(ubSectorID);
-			s->bSectorZ = 0;
-			return s;
-		}
-
-		Assert(s->usAnimState == STANDING);
+		// We have a merc created by profile, do this!
+		TacticalCopySoldierFromProfile(&Soldier, pCreateStruct);
 	}
 	else
 	{
-		Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
-
-		//Copy the data from the existing soldier struct to the new soldier struct
-		s = GetMan(pCreateStruct->pExistingSoldier->ubID);
-		*s = *pCreateStruct->pExistingSoldier;
-
-		Assert(s->face == NULL);
-		InitSoldierFace(s);
-
-    Assert(s->light == NULL);
-
-		if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
-    {
-      s->bNeutral = TRUE;
-    }
+		TacticalCopySoldierFromCreateStruct(&Soldier, pCreateStruct);
 	}
+
+	// We want to determine what team to place these guys in...
+
+	// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
+	if ( pCreateStruct->fPlayerMerc )
+	{
+		Soldier.uiStatusFlags |= SOLDIER_PC;
+		Soldier.bTeam = gbPlayerNum;
+		Soldier.bVisible = 1;
+	}
+	else if (pCreateStruct->bTeam == PLAYER_PLAN)
+	{
+		Soldier.uiStatusFlags |= SOLDIER_PC;
+		Soldier.bVisible = 1;
+	}
+	else
+	{
+		Soldier.uiStatusFlags |= SOLDIER_ENEMY;
+	}
+
+
+	// Check for auto team
+	if ( pCreateStruct->bTeam == SOLDIER_CREATE_AUTO_TEAM )
+	{
+		// Auto determine!
+		// OK, if this is our guy, set team as ours!
+		if ( pCreateStruct->fPlayerMerc )
+		{
+			Soldier.bTeam = OUR_TEAM;
+			Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+		}
+		else
+		{
+			// LOOK AT BODY TYPE!
+			switch ( pCreateStruct->bBodyType )
+			{
+				case REGMALE:
+				case BIGMALE:
+				case STOCKYMALE:
+				case REGFEMALE:
+
+					Soldier.bTeam = ENEMY_TEAM;
+					break;
+
+				case ADULTFEMALEMONSTER:
+				case AM_MONSTER:
+				case YAF_MONSTER:
+				case YAM_MONSTER:
+				case LARVAE_MONSTER:
+				case INFANT_MONSTER:
+				case QUEENMONSTER:
+
+					Soldier.bTeam = CREATURE_TEAM;
+					break;
+
+				case FATCIV:
+				case MANCIV:
+				case MINICIV:
+				case DRESSCIV:
+				case HATKIDCIV:
+				case KIDCIV:
+				case COW:
+				case CROW:
+				case ROBOTNOWEAPON:
+
+					Soldier.bTeam = CIV_TEAM;
+					break;
+
+			}
+		}
+	}
+	else
+	{
+		Soldier.bTeam = pCreateStruct->bTeam;
+		// if WE_SEE_WHAT_MILITIA_SEES
+		if ( Soldier.bTeam == MILITIA_TEAM )
+		{
+			Soldier.bVisible = 1;
+		}
+	}
+
+	// Copy the items over for thew soldier, only if we have a valid profile id!
+	if ( pCreateStruct->ubProfile != NO_PROFILE )
+		CopyProfileItems( &Soldier, pCreateStruct );
+
+	// Given team, get an ID for this guy!
+	SOLDIERTYPE* s;
+	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
+	{
+		// We are creating a dynamically allocated soldier for autoresolve.
+		Soldier.ubID = 255;
+
+		s = MemAlloc(sizeof(*s));
+		if (!s) return NULL;
+	}
+	else
+	{
+		INT32 cnt = gTacticalStatus.Team[Soldier.bTeam].bFirstID;
+
+		// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
+		if( Soldier.ubBodyType == HUMVEE ||
+				Soldier.ubBodyType == ELDORADO ||
+				Soldier.ubBodyType == ICECREAMTRUCK ||
+				Soldier.ubBodyType == JEEP )
+		{
+			if( Soldier.bTeam == gbPlayerNum )
+			{
+				cnt = gTacticalStatus.Team[ Soldier.bTeam ].bLastID - 1;
+			}
+		}
+
+		const UINT8 bLastTeamID = gTacticalStatus.Team[Soldier.bTeam].bLastID;
+
+		// look for all mercs on the same team,
+		BOOLEAN fGuyAvail = FALSE;
+		for (const SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= bLastTeamID; cnt++, pTeamSoldier++)
+		{
+			if ( !pTeamSoldier->bActive )
+			{
+				fGuyAvail = TRUE;
+				break;
+			}
+		}
+
+		// Check if there was space!
+		if ( !fGuyAvail )
+		{ //No space, so can't create the soldier.
+			return NULL;
+		}
+
+		// OK, set ID
+		Soldier.ubID = (UINT8)cnt;
+
+		s = GetMan(cnt);
+	}
+	*s = Soldier;
+
+	// LOAD MERC's FACE!
+	if (pCreateStruct->ubProfile != NO_PROFILE && s->bTeam == OUR_TEAM)
+	{
+		InitSoldierFace(s);
+	}
+
+	s->bActionPoints        = CalcActionPoints(s);
+	s->bInitialActionPoints = s->bActionPoints;
+	s->bSide                = gTacticalStatus.Team[s->bTeam].bSide;
+	s->bActive              = TRUE;
+	s->sSectorX             = pCreateStruct->sSectorX;
+	s->sSectorY             = pCreateStruct->sSectorY;
+	s->bSectorZ             = pCreateStruct->bSectorZ;
+	s->ubInsertionDirection = pCreateStruct->bDirection;
+	s->bDesiredDirection    = pCreateStruct->bDirection;
+	s->bDominantDir         = pCreateStruct->bDirection;
+	s->bDirection           = pCreateStruct->bDirection;
+
+	s->sInsertionGridNo     = pCreateStruct->sInsertionGridNo;
+	s->bOldLife             = s->bLifeMax;
+
+	// If a civvy, set neutral
+	if (s->bTeam == CIV_TEAM)
+	{
+		if (s->ubProfile == WARDEN)
+		{
+			s->bNeutral = FALSE;
+		}
+		else if (s->ubCivilianGroup != NON_CIV_GROUP)
+		{
+			s->bNeutral = (gTacticalStatus.fCivGroupHostile[s->ubCivilianGroup] != CIV_GROUP_HOSTILE);
+		}
+		else
+		{
+			s->bNeutral = TRUE;
+		}
+
+		//Weaken stats based on the bodytype of the civilian.
+		if (s->ubProfile == NO_PROFILE)
+		{
+			switch (s->ubBodyType)
+			{
+				case REGMALE:
+				case BIGMALE:
+				case STOCKYMALE:
+				case REGFEMALE:
+					//no adjustments necessary for these "healthy" bodytypes.
+					break;
+				case FATCIV:
+					//fat, so slower
+					s->bAgility = 30 + Random(26); //30 - 55
+					break;
+				case MANCIV:
+					s->bLife = s->bLifeMax = 35 + Random(26); //35 - 60
+					break;
+				case MINICIV:
+				case DRESSCIV:
+					s->bLife = s->bLifeMax = 30 + Random(16); //30 - 45
+					break;
+				case HATKIDCIV:
+				case KIDCIV:
+					s->bLife = s->bLifeMax = 20 + Random(16); //20 - 35
+					break;
+				case CRIPPLECIV:
+					s->bLife = s->bLifeMax = 20 + Random(26); //20 - 45
+					s->bAgility = 30 + Random(16); // 30 - 45
+					break;
+			}
+		}
+	}
+	else if (s->bTeam == CREATURE_TEAM)
+	{
+		// bloodcats are neutral to start out
+		if (s->ubBodyType == BLOODCAT)
+		{
+			s->bNeutral = TRUE;
+		} // otherwise (creatures) false
+	}
+
+	// OK, If not given a profile num, set a randomized defualt battle sound set
+	// and then adjust it according to body type!
+	if (s->ubProfile == NO_PROFILE)
+	{
+		s->ubBattleSoundID = Random(3);
+	}
+
+	// ATE: TEMP : No enemy women mercs (unless elite)!
+	if (s->ubProfile == NO_PROFILE &&
+			s->bTeam == ENEMY_TEAM &&
+			s->ubBodyType == REGFEMALE &&
+			s->ubSoldierClass != SOLDIER_CLASS_ELITE)
+	{
+		s->ubBodyType = REGMALE + Random(3);
+	}
+
+	// ATE
+	// Set some values for variation in anims...
+	if (s->ubBodyType == BIGMALE)
+	{
+		s->uiAnimSubFlags |= SUB_ANIM_BIGGUYTHREATENSTANCE;
+	}
+
+	//For inventory, look for any face class items that may be located in the big pockets and if found, move
+	//that item to a face slot and clear the pocket!
+	if (s->bTeam != OUR_TEAM)
+	{
+		INT32 i;
+		BOOLEAN fSecondFaceItem = FALSE;
+		for( i = BIGPOCK1POS; i <= BIGPOCK4POS; i++ )
+		{
+			if (Item[s->inv[i].usItem].usItemClass & IC_FACE)
+			{
+				if( !fSecondFaceItem )
+				{ //Don't check for compatibility...  automatically assume there are no head positions filled.
+					fSecondFaceItem = TRUE;
+					s->inv[HEAD1POS] = s->inv[i];
+					memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
+				}
+				else
+				{ //if there is a second item, compare it to the first one we already added.
+					if (CompatibleFaceItem(s->inv[HEAD1POS].usItem, s->inv[i].usItem))
+					{
+						s->inv[HEAD2POS] = s->inv[i];
+						memset(&s->inv[i], 0, sizeof(OBJECTTYPE));
+						break;
+					}
+				}
+			}
+		}
+
+		if (guiCurrentScreen != AUTORESOLVE_SCREEN)
+		{
+			// also, if an army guy has camouflage, roll to determine whether they start camouflaged
+			if (s->bTeam == ENEMY_TEAM)
+			{
+				i = FindObj(s, CAMOUFLAGEKIT);
+				if (i != NO_SLOT && Random(5) < SoldierDifficultyLevel(s))
+				{
+					// start camouflaged
+					s->bCamo = 100;
+				}
+			}
+		}
+	}
+
+	//Set some flags, actions based on what body type we are
+	//NOTE:  BE VERY CAREFUL WHAT YOU DO IN THIS SECTION!
+	//  It is very possible to override editor settings, especially orders and attitude.
+	//  In those cases, you can check for !gfEditMode (not in editor).
+	switch (s->ubBodyType)
+	{
+		case HATKIDCIV:
+		case KIDCIV:
+			s->ubBattleSoundID = Random(2);
+			break;
+
+		case REGFEMALE:
+		case MINICIV:
+		case DRESSCIV:
+			s->ubBattleSoundID = 7 + Random(2);
+			s->bNormalSmell    = NORMAL_HUMAN_SMELL_STRENGTH;
+			break;
+
+		case BLOODCAT:
+			AssignCreatureInventory(s);
+			s->bNormalSmell   = NORMAL_HUMAN_SMELL_STRENGTH;
+			s->uiStatusFlags |= SOLDIER_ANIMAL;
+			break;
+
+		case ADULTFEMALEMONSTER:
+		case AM_MONSTER:
+		case YAF_MONSTER:
+		case YAM_MONSTER:
+		case LARVAE_MONSTER:
+		case INFANT_MONSTER:
+		case QUEENMONSTER:
+			AssignCreatureInventory(s);
+			s->ubCaller = NOBODY;
+			if( !gfEditMode )
+			{
+				s->bOrders = FARPATROL;
+				s->bAttitude = AGGRESSIVE;
+			}
+			s->uiStatusFlags |= SOLDIER_MONSTER;
+			s->bMonsterSmell  = NORMAL_CREATURE_SMELL_STRENGTH;
+			break;
+
+		case COW:
+			s->uiStatusFlags |= SOLDIER_ANIMAL;
+			s->bNormalSmell   = COW_SMELL_STRENGTH;
+			break;
+
+		case CROW:
+			s->uiStatusFlags |= SOLDIER_ANIMAL;
+			break;
+
+		case ROBOTNOWEAPON:
+			s->uiStatusFlags |= SOLDIER_ROBOT;
+			break;
+
+		case HUMVEE:
+		case ELDORADO:
+		case ICECREAMTRUCK:
+		case JEEP:
+		case TANK_NW:
+		case TANK_NE:
+			s->uiStatusFlags |= SOLDIER_VEHICLE;
+
+			UINT8 ubVehicleID = 0;
+			switch (s->ubBodyType)
+			{
+				case HUMVEE:
+					ubVehicleID = HUMMER;
+					s->bNeutral = TRUE;
+					break;
+
+				case ELDORADO:
+					ubVehicleID = ELDORADO_CAR;
+					s->bNeutral = TRUE;
+					break;
+
+				case ICECREAMTRUCK:
+					ubVehicleID = ICE_CREAM_TRUCK;
+					s->bNeutral = TRUE;
+					break;
+
+				case JEEP:
+					ubVehicleID = JEEP_CAR;
+					break;
+
+				case TANK_NW:
+				case TANK_NE:
+					ubVehicleID = TANK_CAR;
+					break;
+			}
+
+			if ( pCreateStruct->fUseGivenVehicle )
+			{
+				s->bVehicleID = pCreateStruct->bUseGivenVehicleID;
+			}
+			else
+			{
+				// Add vehicle to list....
+				s->bVehicleID = (INT8)AddVehicleToList(s->sSectorX, s->sSectorY, s->bSectorZ, ubVehicleID);
+			}
+			SetVehicleValuesIntoSoldierType(s);
+			break;
+
+		default:
+			s->bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
+			break;
+	}
+
+	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
+	{
+		const UINT8 ubSectorID = GetAutoResolveSectorID();
+		s->sSectorX = SECTORX(ubSectorID);
+		s->sSectorY = SECTORY(ubSectorID);
+		s->bSectorZ = 0;
+		return s;
+	}
+
+	Assert(s->usAnimState == STANDING);
 
 	// Alrighty then, we are set to create the merc, stuff after here can fail!
 	CHECKF(CreateSoldierCommon(s));
@@ -584,6 +561,27 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		AddManToTeam(s->bTeam);
 	}
 
+	return s;
+}
+
+
+SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing)
+{
+	Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
+	Assert(existing->face  == NULL);
+	Assert(existing->light == NULL);
+
+	SOLDIERTYPE* const s = GetMan(existing->ubID);
+	*s = *existing;
+
+	InitSoldierFace(s);
+
+	if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
+	{
+		s->bNeutral = TRUE;
+	}
+
+	CHECKF(CreateSoldierCommon(s));
 	return s;
 }
 

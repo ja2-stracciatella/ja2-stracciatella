@@ -116,7 +116,6 @@ typedef struct
 
 	INT8							bSectorZ;
 
-	SOLDIERTYPE				*pExistingSoldier;
 	UINT8							ubCivilianGroup;
 
 	BOOLEAN						fKillSlotIfOwnerDies;
@@ -139,6 +138,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct );
 //Kris:
 //Modified return type from BOOLEAN to SOLDIERTYPE*
 SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* pCreateStruct);
+SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE*);
 
 //Randomly generated enemies used by strategic AI.
 SOLDIERTYPE* TacticalCreateAdministrator(void);

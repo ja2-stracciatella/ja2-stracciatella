@@ -2607,8 +2607,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 	UINT8		ubActive = 1;
 	UINT32	uiPercentage;
 
-	SOLDIERCREATE_STRUCT CreateStruct;
-
 	//Loop through all the soldier and delete them all
 	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 
@@ -2669,19 +2667,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			SavedSoldierInfo.pMercPath	 = NULL;
 			memset( SavedSoldierInfo.pEffectShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_EFFECTSHADES );
 
-
-			//if the soldier wasnt active, dont add them now.  Advance to the next merc
-	//if( !SavedSoldierInfo.bActive )
-	//	continue;
-
-
-			//Create the new merc
-			memset( &CreateStruct, 0, sizeof( SOLDIERCREATE_STRUCT ) );
-			CreateStruct.bTeam								= SavedSoldierInfo.bTeam;
-			CreateStruct.ubProfile						= SavedSoldierInfo.ubProfile;
-			CreateStruct.pExistingSoldier			= &SavedSoldierInfo;
-
-			SOLDIERTYPE* const s = TacticalCreateSoldier(&CreateStruct);
+			SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
 			if (s == NULL) return FALSE;
 			Assert(s->ubID == cnt);
 

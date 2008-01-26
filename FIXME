@@ -325,7 +325,6 @@ fStatic: strange
 fPlayerMerc: strange
 fCopyProfileItemsOver: strange
 MiscPal
-pExistingSoldier: load/save?
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange
