@@ -556,149 +556,103 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 	}
 }
 
-INT16 RandomFriendWithin(SOLDIERTYPE *pSoldier)
+
+INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 {
-	UINT32				uiLoop;
-	UINT16				usMaxDist;
-	UINT8					ubFriendCount, ubFriendIDs[MAXMERCS], ubFriendID;
-	UINT16				usDirection;
-	UINT8					ubDirsLeft;
-	BOOLEAN				fDirChecked[8];
-	BOOLEAN				fRangeRestricted = FALSE, fFound = FALSE;
-	UINT16				usDest, usOrigin;
-	SOLDIERTYPE *	pFriend;
-
-
 	// obtain maximum roaming distance from soldier's origin
-	usMaxDist = RoamingRange(pSoldier,&usOrigin);
+	UINT16 usOrigin;
+	const UINT16 usMaxDist = RoamingRange(s, &usOrigin);
 
-	// if our movement range is restricted
-
-	// CJC: since RandomFriendWithin is only used in non-combat, ALWAYS restrict range.
-	fRangeRestricted = TRUE;
-	/*
-	if (usMaxDist < MAX_ROAMING_RANGE)
-	{
-		fRangeRestricted = TRUE;
-	}
-	*/
-
-	// if range is restricted, make sure origin is a legal gridno!
-	#if 0 /* XXX unsigned < 0 ? */
-	if (fRangeRestricted && ((usOrigin < 0) || (usOrigin >= GRIDSIZE)))
-	#else
-	if (fRangeRestricted && usOrigin >= GRIDSIZE)
-	#endif
+	// make sure origin is a legal gridno!
+	if (usOrigin >= GRIDSIZE)
 	{
 #ifdef BETAVERSION
-		NameMessage(pSoldier,"has illegal origin, but his roaming range is restricted!",1000);
+		NameMessage(s, "has illegal origin, but his roaming range is restricted!", 1000);
 #endif
-		return(FALSE);
+		return FALSE;
 	}
-
-	ubFriendCount = 0;
 
 	// build a list of the guynums of all active, eligible friendly mercs
 
 	// go through each soldier, looking for "friends" (soldiers on same side)
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	UINT8 ubFriendCount = 0;
+	UINT8 ubFriendIDs[MAXMERCS];
+	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; ++uiLoop)
 	{
-		pFriend = MercSlots[ uiLoop ];
+		const SOLDIERTYPE* const friend = MercSlots[uiLoop];
+		if (!friend)     continue; // if this merc is inactive, not in sector, or dead
+		if (friend == s) continue; // skip ourselves
 
-		// if this merc is inactive, not in sector, or dead
-		if (!pFriend)
+		/* if this man not neutral, but is on my side, OR if he is neutral, but so
+		 * am I, then he's a "friend" for the purposes of random visitations */
+		if ((friend->bNeutral ? s->bNeutral : s->bSide == friend->bSide) &&
+				SpacesAway(s->sGridNo, friend->sGridNo) > 1) // if we're not already neighbors
 		{
-			continue;
-		}
-
-		// skip ourselves
-		if (pFriend->ubID == pSoldier->ubID)
-		{
-			continue;
-		}
-
-		// if this man not neutral, but is on my side, OR if he is neutral, but
-		// so am I, then he's a "friend" for the purposes of random visitations
-		if ((!pFriend->bNeutral && (pSoldier->bSide == pFriend->bSide)) ||
-			(pFriend->bNeutral && pSoldier->bNeutral))
-		{
-			// if we're not already neighbors
-			if (SpacesAway(pSoldier->sGridNo,pFriend->sGridNo) > 1)
-			{
-       // remember his guynum, increment friend counter
-			 ubFriendIDs[ubFriendCount++] = pFriend->ubID;
-			}
+			// remember his guynum, increment friend counter
+			ubFriendIDs[ubFriendCount++] = friend->ubID;
 		}
 	}
 
-
-	while (ubFriendCount && !fFound)
+	while (ubFriendCount != 0)
 	{
 		// randomly select one of the remaining friends in the list
-		ubFriendID = ubFriendIDs[PreRandom(ubFriendCount)];
+		const UINT8 ubFriendID = ubFriendIDs[PreRandom(ubFriendCount)];
 		const SOLDIERTYPE* const friend = GetMan(ubFriendID);
 
-		// if our movement range is NOT restricted, or this friend's within range
-		// use distance - 1, because there must be at least 1 tile 1 space closer
-		if (!fRangeRestricted ||
-				(SpacesAway(usOrigin, friend->sGridNo) - 1) <= usMaxDist)
+		/* if our movement range is NOT restricted, or this friend's within range
+		 * use distance - 1, because there must be at least 1 tile 1 space closer */
+		if (SpacesAway(usOrigin, friend->sGridNo) - 1 <= usMaxDist)
 		{
 			// should be close enough, try to find a legal ->sDestination within 1 tile
 
+			BOOLEAN fDirChecked[8];
 			// clear dirChecked flag for all 8 directions
-			for (usDirection = 0; usDirection < 8; usDirection++)
+			for (UINT16 usDirection = 0; usDirection < 8; ++usDirection)
 			{
 				fDirChecked[usDirection] = FALSE;
 			}
 
-			ubDirsLeft = 8;
-
 			// examine all 8 spots around 'ubFriendID'
 			// keep looking while directions remain and a satisfactory one not found
-			while ((ubDirsLeft--) && !fFound)
+			for (UINT8 ubDirsLeft = 8; ubDirsLeft--;)
 			{
 				// randomly select a direction which hasn't been 'checked' yet
+				UINT16 usDirection;
 				do
 				{
-					usDirection = (UINT16) Random(8);
+					usDirection = Random(8);
 				}
 				while (fDirChecked[usDirection]);
 
 				fDirChecked[usDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				usDest = NewGridNo(friend->sGridNo, DirectionInc((INT16)(usDirection + 1)));
+				const UINT16 usDest = NewGridNo(friend->sGridNo, DirectionInc((INT16)(usDirection + 1)));
 
 				// if that's out of bounds, ignore it & check next direction
 				if (usDest == friend->sGridNo) continue;
 
 				// if our movement range is NOT restricted
-				if (!fRangeRestricted || (SpacesAway(usOrigin,usDest) <= usMaxDist))
+				if (SpacesAway(usOrigin,usDest) <= usMaxDist &&
+						LegalNPCDestination(s, usDest, ENSURE_PATH, NOWATER, 0))
 				{
-					if (LegalNPCDestination(pSoldier,usDest,ENSURE_PATH,NOWATER, 0))
-					{
-						fFound = TRUE;            // found a spot
-						pSoldier->usActionData = usDest;  // store this ->sDestination
-						pSoldier->bPathStored = TRUE;  // optimization - Ian
-						break;                   // stop checking in other directions
-					}
+					s->usActionData = usDest; // store this ->sDestination
+					s->bPathStored  = TRUE;   // optimization - Ian
+					return TRUE;
 				}
 			}
 		}
 
-		if (!fFound)
-		{
-			ubFriendCount--;
+		ubFriendCount--;
 
-			// if we hadn't already picked the last friend currently in the list
-			if (ubFriendCount != ubFriendID)
-			{
-				ubFriendIDs[ubFriendID] = ubFriendIDs[ubFriendCount];
-			}
+		// if we hadn't already picked the last friend currently in the list
+		if (ubFriendCount != ubFriendID)
+		{
+			ubFriendIDs[ubFriendID] = ubFriendIDs[ubFriendCount];
 		}
 	}
 
-	return(fFound);
+	return FALSE;
 }
 
 
