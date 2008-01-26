@@ -22,7 +22,6 @@ ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
 CorpseHit(): empty
-CountNumberOfItemsInStoreInventory(): commented out
 Create16BPPPaletteShaded(): callers
 CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 DONT_DISPLAY_TEXT: what is this good for?

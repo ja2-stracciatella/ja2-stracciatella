@@ -32,6 +32,5 @@ extern	INT16 WeaponROF[ MAX_WEAPONS ];
 
 
 void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed );
-//INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID );
 
 #endif

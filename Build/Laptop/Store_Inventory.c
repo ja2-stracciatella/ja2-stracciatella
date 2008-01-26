@@ -584,28 +584,3 @@ static STORE_INVENTORY *GetPtrToStoreInventory(UINT8 ubDealerID)
 
 	return( NULL );
 }
-
-
-
-/*
-INT16	CountNumberOfItemsInStoreInventory( UINT8 ubArmsDealerID )
-{
-	UINT16	cnt;
-	INT16		ubNumItems=0;
-
-	STORE_INVENTORY *pInventoryArray;
-
-	pInventoryArray = GetPtrToStoreInventory( ubArmsDealerID );
-	if( pInventoryArray == NULL )
-		return( -1 );
-
-
-	for( cnt=0; cnt<MAXITEMS; cnt++ )
-	{
-		if( pInventoryArray[cnt].ubQtyOnHand > 0 )
-			ubNumItems++;
-	}
-
-	return( ubNumItems );
-}
-*/
