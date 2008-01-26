@@ -1,3 +1,4 @@
+#include "GameVersion.h"
 #include "Local.h"
 #include "SGP.h"
 #include "Gameloop.h"
@@ -95,6 +96,9 @@ BOOLEAN InitializeGame(void)
 
 	//Deletes all the Temp files in the Maps\Temp directory
 	InitTacticalSave( TRUE );
+
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %ls", zVersionLabel));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s",  czVersionNumber));
 
 	// Initialize Game Screens.
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)

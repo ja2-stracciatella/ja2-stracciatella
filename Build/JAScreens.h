@@ -52,7 +52,6 @@ UINT32	FadeScreenHandle( void );
 
 UINT32	MessageBoxScreenHandle( void );
 
-UINT32	MainMenuScreenInit( void );
 UINT32	MainMenuScreenHandle( void );
 
 UINT32	AutoResolveScreenHandle( void );

@@ -29,7 +29,7 @@ const Screens GameScreens[MAX_SCREENS] =
 #endif
 	{ NULL,                 FadeScreenHandle,            NULL                      },
 	{ NULL,                 MessageBoxScreenHandle,      NULL                      },
-	{ MainMenuScreenInit,   MainMenuScreenHandle,        NULL                      },
+	{ NULL,                 MainMenuScreenHandle,        NULL                      },
 	{ NULL,                 AutoResolveScreenHandle,     AutoResolveScreenShutdown },
 	{ SaveLoadScreenInit,   SaveLoadScreenHandle,        NULL                      },
 	{ OptionsScreenInit,    OptionsScreenHandle,         NULL                      },

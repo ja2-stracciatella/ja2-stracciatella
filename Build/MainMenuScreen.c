@@ -5,7 +5,6 @@
 #include "English.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
-#include "GameVersion.h"
 #include "Gameloop.h"
 #include "Input.h"
 #include "JA2_Splash.h"
@@ -71,14 +70,6 @@ static UINT32 guiMainMenuExitScreen = MAINMENU_SCREEN;
 
 
 extern BOOLEAN gfLoadGameUponEntry;
-
-
-UINT32 MainMenuScreenInit(void)
-{
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version Label: %ls", zVersionLabel));
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Version #:     %s",  czVersionNumber));
-	return TRUE;
-}
 
 
 static void ExitMainMenu(void);
