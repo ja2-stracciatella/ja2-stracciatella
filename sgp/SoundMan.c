@@ -54,7 +54,8 @@ enum
 {
 	SAMPLE_ALLOCATED = 1U << 0,
 	SAMPLE_LOCKED    = 1U << 1,
-	SAMPLE_RANDOM    = 1U << 2
+	SAMPLE_RANDOM    = 1U << 2,
+	SAMPLE_STEREO    = 1U << 3
 };
 
 
@@ -80,7 +81,6 @@ typedef struct
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
 	UINT32  uiSpeed;     // Playback frequency
-	BOOLEAN fStereo;     // Stereo/Mono
 	UINT8   ubBits;      // 8/16 bits
 	PTR     pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
@@ -570,7 +570,7 @@ static size_t GetSampleSize(const SAMPLETAG* const s)
 {
 	return
 		(s->ubBits / 8) *
-		(s->fStereo ? 2 : 1);
+		(s->uiFlags & SAMPLE_STEREO ? 2 : 1);
 }
 
 
@@ -818,8 +818,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				}
 
 				s->uiSpeed = Rate;
-				s->fStereo = (Channels != 1);
 				s->ubBits  = BitsPerSample;
+				if (Channels != 1) s->uiFlags |= SAMPLE_STEREO;
 				break;
 			}
 
@@ -863,8 +863,8 @@ sound_loaded:
 		return NULL;
 	}
 	guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
-	s->uiFlags     = SAMPLE_ALLOCATED;
-	s->uiInstances = 0;
+	s->uiFlags     |= SAMPLE_ALLOCATED;
+	s->uiInstances  = 0;
 	return s;
 
 error_out:
@@ -989,7 +989,7 @@ mixing:
 				switch (s->ubBits)
 				{
 					case 8:
-						if (s->fStereo)
+						if (s->uiFlags & SAMPLE_STEREO)
 						{
 							const UINT8* const src = (const UINT8*)s->pData + Sound->pos * 2;
 							for (UINT32 i = 0; i < amount; ++i)
@@ -1011,7 +1011,7 @@ mixing:
 						break;
 
 					case 16:
-						if (s->fStereo)
+						if (s->uiFlags & SAMPLE_STEREO)
 						{
 							const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
 							for (UINT32 i = 0; i < amount; ++i)
