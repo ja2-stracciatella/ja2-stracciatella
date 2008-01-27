@@ -95,7 +95,7 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	MercCreateStruct.sSectorX							= pHireMerc->sSectorX;
 	MercCreateStruct.sSectorY							= pHireMerc->sSectorY;
 	MercCreateStruct.bSectorZ							= pHireMerc->bSectorZ;
-	MercCreateStruct.bTeam								= SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.bTeam								= OUR_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver= pHireMerc->fCopyProfileItemsOver;
 
 	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);

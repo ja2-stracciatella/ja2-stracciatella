@@ -3158,7 +3158,7 @@ static void CreateTempPlayerMerc(void)
 
 	//Init the merc create structure with basic information
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-	MercCreateStruct.bTeam									= SOLDIER_CREATE_AUTO_TEAM;
+	MercCreateStruct.bTeam									= OUR_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
 	MercCreateStruct.sSectorX								= gpAR->ubSectorX;
 	MercCreateStruct.sSectorY								= gpAR->ubSectorY;

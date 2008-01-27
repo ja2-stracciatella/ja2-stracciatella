@@ -7,8 +7,6 @@
 #include "Soldier_Control.h"
 
 
-#define		SOLDIER_CREATE_AUTO_TEAM			-1
-
 //Kris:
 //This value is the total maximum number of slots in a map.
 //Players		20

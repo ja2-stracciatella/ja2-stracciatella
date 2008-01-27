@@ -149,13 +149,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	// We want to determine what team to place these guys in...
 
 	// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
-	if ( pCreateStruct->fPlayerMerc )
-	{
-		Soldier.uiStatusFlags |= SOLDIER_PC;
-		Soldier.bTeam = gbPlayerNum;
-		Soldier.bVisible = 1;
-	}
-	else if (pCreateStruct->bTeam == PLAYER_PLAN)
+	if (pCreateStruct->fPlayerMerc || pCreateStruct->bTeam == PLAYER_PLAN)
 	{
 		Soldier.uiStatusFlags |= SOLDIER_PC;
 		Soldier.bVisible = 1;
@@ -165,24 +159,10 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		Soldier.uiStatusFlags |= SOLDIER_ENEMY;
 	}
 
-
 	// Check for auto team
-	if (pCreateStruct->bTeam == SOLDIER_CREATE_AUTO_TEAM)
-	{
-		Assert(pCreateStruct->fPlayerMerc);
-
-		Soldier.bTeam = OUR_TEAM;
-		Soldier.bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;
-	}
-	else
-	{
-		Soldier.bTeam = pCreateStruct->bTeam;
-		// if WE_SEE_WHAT_MILITIA_SEES
-		if ( Soldier.bTeam == MILITIA_TEAM )
-		{
-			Soldier.bVisible = 1;
-		}
-	}
+	Soldier.bTeam = pCreateStruct->bTeam;
+	// if WE_SEE_WHAT_MILITIA_SEES
+	if (Soldier.bTeam == MILITIA_TEAM) Soldier.bVisible = 1;
 
 	// Copy the items over for thew soldier, only if we have a valid profile id!
 	if ( pCreateStruct->ubProfile != NO_PROFILE )
