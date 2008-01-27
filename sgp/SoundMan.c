@@ -472,45 +472,10 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 	if (!fSoundSystemInit) return 0;
 
 	const SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
-#if 0
-	UINT32 uiPosition = 0;
-	UINT32 uiFreq = 0;
-	UINT32 uiFormat = 0;
-	if (channel != NULL)
-	{
-		if (channel->hMSSStream != NULL)
-		{
-			uiPosition = (UINT32)AIL_stream_position(channel->hMSSStream);
-			uiFreq     = (UINT32)channel->hMSSStream->samp->playback_rate;
-			uiFormat   = (UINT32)channel->hMSSStream->samp->format;
-
-		}
-		else if (channel->hMSS != NULL)
-		{
-			uiPosition = (UINT32)AIL_sample_position(channel->hMSS);
-			uiFreq     = (UINT32)channel->hMSS->playback_rate;
-			uiFormat   = (UINT32)channel->hMSS->format;
-		}
-	}
-
-	UINT32 uiBytesPerSample = 0;
-	switch (uiFormat)
-	{
-		case DIG_F_MONO_8:		uiBytesPerSample = 1; break;
-		case DIG_F_MONO_16:		uiBytesPerSample = 2; break;
-		case DIG_F_STEREO_8:	uiBytesPerSample = 2; break;
-		case DIG_F_STEREO_16:	uiBytesPerSample = 4; break;
-	}
-
-	if (uiFreq == 0) return 0;
-
-	return uiPosition / uiBytesPerSample / (uiFreq / 1000);
-#else
 	if (channel == NULL) return 0;
 
 	const UINT32 now = GetClock();
 	return now - channel->uiTimeStamp;
-#endif
 }
 
 
