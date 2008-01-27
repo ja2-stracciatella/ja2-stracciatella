@@ -3356,36 +3356,6 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 			InvalidateRegion(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, pSoldier->sPanelFaceX + TM_FACE_WIDTH, pSoldier->sPanelFaceY + TM_FACE_HEIGHT);
 		}
 	}
-
-
-	if ( pSoldier->fOpenPanel )
-	{
-		 if ( TIMECOUNTERDONE( pSoldier->PanelAnimateCounter, 160 ) )
-		 {
-				pSoldier->bOpenPanelFrame--;
-
-				if ( pSoldier->bOpenPanelFrame < 0 )
-				{
-					pSoldier->fOpenPanel = FALSE;
-					pSoldier->bOpenPanelFrame = 0;
-
-					if (!pSoldier->face->fDisabled)
-					{
-						RestoreExternBackgroundRect( pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT );
-					}
-				}
-				RESETTIMECOUNTER( pSoldier->PanelAnimateCounter, 160 );
-		 }
-	}
-
-	if ( pSoldier->fOpenPanel )
-	{
-		if (!pSoldier->face->fDisabled)
-		{
-			RestoreExternBackgroundRect(pSoldier->sPanelFaceX, pSoldier->sPanelFaceY, TM_FACE_WIDTH, TM_FACE_HEIGHT);
-			BltVideoObject(FRAME_BUFFER, guiCLOSE, pSoldier->bOpenPanelFrame, pSoldier->sPanelFaceX, pSoldier->sPanelFaceY);
-		}
-	}
 }
 
 

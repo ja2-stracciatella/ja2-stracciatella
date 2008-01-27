@@ -360,8 +360,6 @@ sLocatorOffX: read-only
 sLocatorOffY
 fForceShade: pForceShade != NULL?
 bUIInterfaceLevel: write-only
-fOpenPanel: always FALSE
-bOpenPanelFrame: probably unused, see fOpenPanel
 bVocalVolume: always MIDVOLUME
 usPendingAnimation2: always NO_PENDING_ANIMATION
 bTimesDrugUsedSinceSleep: write-only

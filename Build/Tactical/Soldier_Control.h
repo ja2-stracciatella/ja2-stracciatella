@@ -625,8 +625,6 @@ struct SOLDIERTYPE
 	UINT8												ubClosePanelFrame;
 	BOOLEAN											fDeadPanel;
 	UINT8												ubDeadPanelFrame;
-	BOOLEAN											fOpenPanel;
-	INT8												bOpenPanelFrame;
 
 	INT16												sPanelFaceX;
 	INT16												sPanelFaceY;
