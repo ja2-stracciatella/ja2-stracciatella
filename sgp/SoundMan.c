@@ -55,7 +55,8 @@ enum
 	SAMPLE_ALLOCATED = 1U << 0,
 	SAMPLE_LOCKED    = 1U << 1,
 	SAMPLE_RANDOM    = 1U << 2,
-	SAMPLE_STEREO    = 1U << 3
+	SAMPLE_STEREO    = 1U << 3,
+	SAMPLE_16BIT     = 1U << 4
 };
 
 
@@ -81,7 +82,6 @@ typedef struct
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
 	UINT32  uiSpeed;     // Playback frequency
-	UINT8   ubBits;      // 8/16 bits
 	PTR     pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
 
@@ -569,7 +569,7 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 static size_t GetSampleSize(const SAMPLETAG* const s)
 {
 	return
-		(s->ubBits / 8) *
+		(s->uiFlags & SAMPLE_16BIT  ? 2 : 1) *
 		(s->uiFlags & SAMPLE_STEREO ? 2 : 1);
 }
 
@@ -582,31 +582,23 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
 	if (ndata == NULL) return FALSE;
 	void*  const odata     = s->pData;
-	switch (s->ubBits)
+	if (s->uiFlags & SAMPLE_16BIT)
 	{
-		case 8:
+		INT16*       const dst = ndata;
+		const INT16* const src = odata;
+		for (size_t i = 0; i < n_samples; ++i)
 		{
-			UINT8*       const dst = ndata;
-			const UINT8* const src = odata;
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
-			}
-			break;
+			dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
 		}
-
-		case 16:
+	}
+	else
+	{
+		UINT8*       const dst = ndata;
+		const UINT8* const src = odata;
+		for (size_t i = 0; i < n_samples; ++i)
 		{
-			INT16*       const dst = ndata;
-			const INT16* const src = odata;
-			for (size_t i = 0; i < n_samples; ++i)
-			{
-				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
-			}
-			break;
+			dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
 		}
-
-		default: abort();
 	}
 	s->pData = ndata;
 	free(odata);
@@ -818,8 +810,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				}
 
 				s->uiSpeed = Rate;
-				s->ubBits  = BitsPerSample;
-				if (Channels != 1) s->uiFlags |= SAMPLE_STEREO;
+				if (Channels      !=  1) s->uiFlags |= SAMPLE_STEREO;
+				if (BitsPerSample == 16) s->uiFlags |= SAMPLE_16BIT;
 				break;
 			}
 
@@ -827,8 +819,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			{
 				UINT32 Samples;
 				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-				s->ubBits    = 16;
-				s->n_samples = Samples;
+				s->uiFlags   |= SAMPLE_16BIT;
+				s->n_samples  = Samples;
 				break;
 			}
 
@@ -986,52 +978,51 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 mixing:
 				amount = min(samples, s->n_samples - Sound->pos);
-				switch (s->ubBits)
+				if (s->uiFlags & SAMPLE_16BIT)
 				{
-					case 8:
-						if (s->uiFlags & SAMPLE_STEREO)
+					if (s->uiFlags & SAMPLE_STEREO)
+					{
+						const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
+						for (UINT32 i = 0; i < amount; ++i)
 						{
-							const UINT8* const src = (const UINT8*)s->pData + Sound->pos * 2;
-							for (UINT32 i = 0; i < amount; ++i)
-							{
-								Stream[2 * i + 0] += (src[2 * i + 0] - 128) * vol_l << 1;
-								Stream[2 * i + 1] += (src[2 * i + 1] - 128) * vol_r << 1;
-							}
+							Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+							Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 						}
-						else
+					}
+					else
+					{
+						const INT16* const src = (const INT16*)s->pData + Sound->pos;
+						for (UINT32 i = 0; i < amount; i++)
 						{
-							const UINT8* const src = (const UINT8*)s->pData + Sound->pos;
-							for (UINT32 i = 0; i < amount; ++i)
-							{
-								const INT data = (src[i] - 128) << 1;
-								Stream[2 * i + 0] += data * vol_l;
-								Stream[2 * i + 1] += data * vol_r;
-							}
+							const INT data = src[i];
+							Stream[2 * i + 0] += data * vol_l >> 7;
+							Stream[2 * i + 1] += data * vol_r >> 7;
 						}
-						break;
-
-					case 16:
-						if (s->uiFlags & SAMPLE_STEREO)
-						{
-							const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
-							for (UINT32 i = 0; i < amount; ++i)
-							{
-								Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-								Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
-							}
-						}
-						else
-						{
-							const INT16* const src = (const INT16*)s->pData + Sound->pos;
-							for (UINT32 i = 0; i < amount; i++)
-							{
-								const INT data = src[i];
-								Stream[2 * i + 0] += data * vol_l >> 7;
-								Stream[2 * i + 1] += data * vol_r >> 7;
-							}
-						}
-						break;
+					}
 				}
+				else
+				{
+					if (s->uiFlags & SAMPLE_STEREO)
+					{
+						const UINT8* const src = (const UINT8*)s->pData + Sound->pos * 2;
+						for (UINT32 i = 0; i < amount; ++i)
+						{
+							Stream[2 * i + 0] += (src[2 * i + 0] - 128) * vol_l << 1;
+							Stream[2 * i + 1] += (src[2 * i + 1] - 128) * vol_r << 1;
+						}
+					}
+					else
+					{
+						const UINT8* const src = (const UINT8*)s->pData + Sound->pos;
+						for (UINT32 i = 0; i < amount; ++i)
+						{
+							const INT data = (src[i] - 128) << 1;
+							Stream[2 * i + 0] += data * vol_l;
+							Stream[2 * i + 1] += data * vol_r;
+						}
+					}
+				}
+
 				Sound->pos += amount;
 				if (Sound->pos == s->n_samples)
 				{
