@@ -77,7 +77,7 @@ enum
 typedef struct
 {
 	CHAR8   pName[128];  // Path to sample data
-	UINT32  uiSoundSize; // Playable sound size
+	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
 	UINT32  uiSpeed;     // Playback frequency
 	BOOLEAN fStereo;     // Stereo/Mono
@@ -112,7 +112,7 @@ typedef struct
 	UINT32        uiFadeVolume;
 	UINT32        uiFadeRate;
 	UINT32        uiFadeTime;
-	UINT32        Pos;
+	UINT32        pos;
 	UINT32        Loops;
 	UINT32        Pan;
 } SOUNDTAG;
@@ -578,17 +578,17 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 {
 	SNDDBG("SMPL \"%s\" from %uHz to %uHz\n", s->pName, s->uiSpeed, s->uiSpeed / 2);
 
-	size_t const size  = s->uiSoundSize / 2;
-	void*  const ndata = malloc(size);
+	size_t const n_samples = s->n_samples / 2;
+	void*  const ndata     = malloc(n_samples * GetSampleSize(s));
 	if (ndata == NULL) return FALSE;
-	void*  const odata = s->pData;
+	void*  const odata     = s->pData;
 	switch (s->ubBits)
 	{
 		case 8:
 		{
 			UINT8*       const dst = ndata;
 			const UINT8* const src = odata;
-			for (size_t i = 0; i < size; ++i)
+			for (size_t i = 0; i < n_samples; ++i)
 			{
 				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
 			}
@@ -599,7 +599,7 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 		{
 			INT16*       const dst = ndata;
 			const INT16* const src = odata;
-			for (size_t i = 0; i < size / 2; ++i)
+			for (size_t i = 0; i < n_samples; ++i)
 			{
 				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
 			}
@@ -611,8 +611,8 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	s->pData = ndata;
 	free(odata);
 
-	s->uiSoundSize /= 2;
-	s->uiSpeed     /= 2;
+	s->n_samples  = n_samples;
+	s->uiSpeed   /= 2;
 	return TRUE;
 }
 
@@ -638,8 +638,8 @@ static BOOLEAN LoadPCM(SAMPLETAG* s, HWFILE file, UINT32 size)
 		return FALSE;
 	}
 
-	s->uiSoundSize = size;
-	s->pData       = Data;
+	s->n_samples = size / GetSampleSize(s);
+	s->pData     = Data;
 	return TRUE;
 }
 
@@ -654,10 +654,9 @@ static inline int Clamp(int min, int x, int max)
 
 static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 {
-	INT16* const Data = malloc(s->uiSoundSize);
-
-	UINT CountSamples = s->uiSoundSize / GetSampleSize(s);
-	INT16* D = Data;
+	size_t       CountSamples = s->n_samples;
+	INT16* const Data         = malloc(CountSamples * GetSampleSize(s));
+	INT16*       D            = Data;
 
 	for (;;)
 	{
@@ -828,8 +827,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			{
 				UINT32 Samples;
 				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-				s->ubBits = 16;
-				s->uiSoundSize = Samples * GetSampleSize(s);
+				s->ubBits    = 16;
+				s->n_samples = Samples;
 				break;
 			}
 
@@ -863,7 +862,7 @@ sound_loaded:
 		free(s->pData);
 		return NULL;
 	}
-	guiSoundMemoryUsed += s->uiSoundSize;
+	guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
 	s->uiFlags     = SAMPLE_ALLOCATED;
 	s->uiInstances = 0;
 	return s;
@@ -936,7 +935,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 
 	assert(s->uiInstances == 0);
 
-	guiSoundMemoryUsed -= s->uiSoundSize;
+	guiSoundMemoryUsed -= s->n_samples * GetSampleSize(s);
 	free(s->pData);
 	memset(s, 0, sizeof(*s));
 }
@@ -979,71 +978,69 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 			case CHANNEL_PLAY:
 			{
-				SAMPLETAG* Sample = Sound->pSample;
-				UINT32 Samples = len / 4;
-				INT32 VolLeft  = Sound->uiFadeVolume * (127 - Sound->Pan) / MAXVOLUME;
-				INT32 VolRight = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
-				UINT32 Amount;
+				const SAMPLETAG* const s = Sound->pSample;
+				const INT vol_l   = Sound->uiFadeVolume * (127 - Sound->Pan) / MAXVOLUME;
+				const INT vol_r   = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
+				size_t    samples = len / 4;
+				size_t    amount;
 
 mixing:
-				switch (Sample->ubBits)
+				amount = min(samples, s->n_samples - Sound->pos);
+				switch (s->ubBits)
 				{
 					case 8:
-						if (Sample->fStereo)
+						if (s->fStereo)
 						{
-							Amount = min(Samples, (Sample->uiSoundSize - Sound->Pos) / 2);
-							for (UINT32 i = 0; i < Amount * 2; i += 2)
+							const UINT8* const src = (const UINT8*)s->pData + Sound->pos * 2;
+							for (UINT32 i = 0; i < amount; ++i)
 							{
-								Stream[i + 0] += (((UINT8*)Sample->pData + Sound->Pos)[i + 0] - 128) * VolLeft  << 1;
-								Stream[i + 1] += (((UINT8*)Sample->pData + Sound->Pos)[i + 1] - 128) * VolRight << 1;
+								Stream[2 * i + 0] += (src[2 * i + 0] - 128) * vol_l << 1;
+								Stream[2 * i + 1] += (src[2 * i + 1] - 128) * vol_r << 1;
 							}
-							Sound->Pos += Amount * 2;
 						}
 						else
 						{
-							Amount = min(Samples, Sample->uiSoundSize - Sound->Pos);
-							for (UINT32 i = 0; i < Amount; i++)
+							const UINT8* const src = (const UINT8*)s->pData + Sound->pos;
+							for (UINT32 i = 0; i < amount; ++i)
 							{
-								UINT32 Data = (((UINT8*)Sample->pData + Sound->Pos)[i] - 128) << 1;
-								Stream[i * 2 + 0] += Data * VolLeft;
-								Stream[i * 2 + 1] += Data * VolRight;
+								const INT data = (src[i] - 128) << 1;
+								Stream[2 * i + 0] += data * vol_l;
+								Stream[2 * i + 1] += data * vol_r;
 							}
-							Sound->Pos += Amount;
 						}
 						break;
 
 					case 16:
-						if (Sample->fStereo)
+						if (s->fStereo)
 						{
-							Amount = min(Samples, (Sample->uiSoundSize - Sound->Pos) / 4);
-							for (UINT32 i = 0; i < Amount * 2; i += 2)
+							const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
+							for (UINT32 i = 0; i < amount; ++i)
 							{
-								Stream[i + 0] += ((INT16*)((UINT8*)Sample->pData + Sound->Pos))[i + 0] * VolLeft  >> 7;
-								Stream[i + 1] += ((INT16*)((UINT8*)Sample->pData + Sound->Pos))[i + 1] * VolRight >> 7;
+								Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+								Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 							}
-							Sound->Pos += Amount * 4;
 						}
 						else
 						{
-							Amount = min(Samples, (Sample->uiSoundSize - Sound->Pos) / 2);
-							for (UINT32 i = 0; i < Amount; i++)
+							const INT16* const src = (const INT16*)s->pData + Sound->pos;
+							for (UINT32 i = 0; i < amount; i++)
 							{
-								UINT32 Data = ((INT16*)((UINT8*)Sample->pData + Sound->Pos))[i];
-								Stream[i * 2 + 0] += Data * VolLeft  >> 7;
-								Stream[i * 2 + 1] += Data * VolRight >> 7;
+								const INT data = src[i];
+								Stream[2 * i + 0] += data * vol_l >> 7;
+								Stream[2 * i + 1] += data * vol_r >> 7;
 							}
-							Sound->Pos += Amount * 2;
 						}
 						break;
 				}
-				if (Sound->Pos == Sample->uiSoundSize)
+				Sound->pos += amount;
+				if (Sound->pos == s->n_samples)
 				{
 					if (Sound->Loops != 1)
 					{
 						if (Sound->Loops != 0) --Sound->Loops;
-						Sound->Pos = 0;
-						Samples -= Amount;
-						if (Samples != 0) goto mixing;
+						Sound->pos = 0;
+						samples -= amount;
+						if (samples != 0) goto mixing;
 					}
 					else
 					{
@@ -1120,7 +1117,7 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->uiSoundID    = uiSoundID;
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
-	channel->Pos          = 0;
+	channel->pos          = 0;
 	channel->State        = CHANNEL_PLAY;
 
 	sample->uiInstances++;
