@@ -566,6 +566,14 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 }
 
 
+static size_t GetSampleSize(const SAMPLETAG* const s)
+{
+	return
+		(s->ubBits / 8) *
+		(s->fStereo ? 2 : 1);
+}
+
+
 static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 {
 	SNDDBG("SMPL \"%s\" from %uHz to %uHz\n", s->pName, s->uiSpeed, s->uiSpeed / 2);
@@ -648,7 +656,7 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 {
 	INT16* const Data = malloc(s->uiSoundSize);
 
-	UINT CountSamples = s->uiSoundSize >> (1 + (s->fStereo ? 1 : 0));
+	UINT CountSamples = s->uiSoundSize / GetSampleSize(s);
 	INT16* D = Data;
 
 	for (;;)
@@ -667,7 +675,6 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 		*D++ = CurSample;
 		if (--CountSamples == 0)
 		{
-			s->ubBits = 16;
 			s->pData  = Data;
 			return TRUE;
 		}
@@ -717,7 +724,6 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 				*D++ = CurSample;
 				if (--CountSamples == 0)
 				{
-					s->ubBits = 16;
 					s->pData  = Data;
 					return TRUE;
 				}
@@ -822,7 +828,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			{
 				UINT32 Samples;
 				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-				s->uiSoundSize = Samples * (s->fStereo ? 2 : 1) * 2;
+				s->ubBits = 16;
+				s->uiSoundSize = Samples * GetSampleSize(s);
 				break;
 			}
 
