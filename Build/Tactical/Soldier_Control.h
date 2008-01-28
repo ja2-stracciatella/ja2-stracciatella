@@ -591,9 +591,6 @@ struct SOLDIERTYPE
 	INT16												sWalkToAttackGridNo;
 	INT16												sWalkToAttackWalkToCost;
 
-	INT16												sLocatorOffX;
-	INT16												sLocatorOffY;
-
 	BOOLEAN											fForceShade;
 	UINT16											*pForcedShade;
 

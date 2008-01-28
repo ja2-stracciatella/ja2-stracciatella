@@ -351,8 +351,6 @@ pThrowParams: load/save?
 pLevelNode: load/save?
 sBlackList: strange
 bHasKeys: strange
-sLocatorOffX: read-only
-sLocatorOffY
 fForceShade: pForceShade != NULL?
 usPendingAnimation2: always NO_PENDING_ANIMATION
 bTimesDrugUsedSinceSleep: write-only

@@ -8632,9 +8632,6 @@ static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier)
 	GetActualSoldierAnimDims( pSoldier, &sHeight, &sWidth );
 	GetActualSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 
-	// OK, here, use the difference between center of animation ( sWidth/2 ) and our offset!
-	//pSoldier->sLocatorOffX = ( abs( sOffsetX ) ) - ( sWidth / 2 );
-
 	pSoldier->sBoundingBoxWidth		= sWidth;
 	pSoldier->sBoundingBoxHeight  = sHeight;
 	pSoldier->sBoundingBoxOffsetX	= sOffsetX;

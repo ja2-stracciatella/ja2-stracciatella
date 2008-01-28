@@ -1117,12 +1117,12 @@ void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const
 	{
 		if ( fRadio )
 		{
-			*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
+			*psX = sMercScreenX - 80 / 2;
 			*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
 		}
 		else
 		{
-			*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
+			*psX = sMercScreenX - 80 / 2;
 			*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
 
 			// OK, Check if we need to go below....
@@ -1132,7 +1132,7 @@ void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const
 			// If we are getting hit, lower them!
 			if ( pSoldier->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
 			{
-				*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
+				*psX = sMercScreenX - 80 / 2;
 				*psY = sMercScreenY;
 			}
 		}
@@ -1141,7 +1141,7 @@ void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const
 	else
 	{
 		//Display Text!
-		*psX = sMercScreenX - ( 80 / 2 ) - pSoldier->sLocatorOffX;
+		*psX = sMercScreenX - 80 / 2;
 		*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
 	}
 }
