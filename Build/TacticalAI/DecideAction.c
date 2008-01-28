@@ -2812,7 +2812,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 
 	// NPCs in water/tear gas without masks are not permitted to shoot/stab/throw
-	if ((pSoldier->bActionPoints < 2) || bInDeepWater || bInGas || pSoldier->bRTPCombat == RTP_COMBAT_REFRAIN)
+	if (pSoldier->bActionPoints < 2 || bInDeepWater || bInGas)
 	{
 		bCanAttack = FALSE;
 	}
@@ -2963,13 +2963,10 @@ bCanAttack = FALSE;
 				// look around for a worthy target (which sets BestShot.ubPossible)
 				CalcBestShot(pSoldier,&BestShot);
 
-				if (pSoldier->bTeam == gbPlayerNum && pSoldier->bRTPCombat == RTP_COMBAT_CONSERVE)
+				if (pSoldier->bTeam == gbPlayerNum && BestShot.ubChanceToReallyHit < 30)
 				{
-					if (BestShot.ubChanceToReallyHit < 30)
-					{
-						// skip firing, our chance isn't good enough
-						BestShot.ubPossible = FALSE;
-					}
+					// skip firing, our chance isn't good enough
+					BestShot.ubPossible = FALSE;
 				}
 
 				if (BestShot.ubPossible)
@@ -3415,8 +3412,8 @@ bCanAttack = FALSE;
 
 			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
 					BestShot.opponent->bLife >= OKLIFE && // don't burst at downed targets
-				pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
-				(pSoldier->bTeam != gbPlayerNum || pSoldier->bRTPCombat == RTP_COMBAT_AGGRESSIVE) )
+					pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
+					pSoldier->bTeam != gbPlayerNum)
 			{
 
 				ubBurstAPs = CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[BestAttack.bWeaponIn]) );

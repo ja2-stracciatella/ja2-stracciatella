@@ -351,7 +351,6 @@ pThrowParams: load/save?
 pLevelNode: load/save?
 sBlackList: strange
 bHasKeys: strange
-bRTPCombat: read-only
 sLocatorOffX: read-only
 sLocatorOffY
 fForceShade: pForceShade != NULL?

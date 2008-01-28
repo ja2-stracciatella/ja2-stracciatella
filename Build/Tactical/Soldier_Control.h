@@ -580,7 +580,6 @@ struct SOLDIERTYPE
 	INT8												bNormalSmell;
 	INT8												bMonsterSmell;
 	INT8												bMobility;
-	INT8												bRTPCombat;
 	INT8												fAIFlags;
 
 	BOOLEAN											fDontChargeReadyAPs;
