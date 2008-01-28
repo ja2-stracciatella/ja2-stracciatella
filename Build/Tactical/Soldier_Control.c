@@ -4580,7 +4580,6 @@ void EVENT_BeginMercTurn( SOLDIERTYPE *pSoldier, BOOLEAN fFromRealTime, INT32 iR
 		// If soldier has new APs, reset flags!
 		if ( pSoldier->bActionPoints > 0 )
 		{
-			pSoldier->fUIFirstTimeNOAP = FALSE;
 			pSoldier->bMoved = FALSE;
 			pSoldier->bPassedLastInterrupt = FALSE;
 		}

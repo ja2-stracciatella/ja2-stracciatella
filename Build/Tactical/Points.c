@@ -460,7 +460,6 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 	// If this is the first time with no action points, set UI flag
 	if ( sNewAP <= 0 && pSoldier->bActionPoints > 0 )
 	{
-		pSoldier->fUIFirstTimeNOAP = TRUE;
 		fInterfacePanelDirty = TRUE;
 	}
 
