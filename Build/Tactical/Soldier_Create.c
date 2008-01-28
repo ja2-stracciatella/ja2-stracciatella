@@ -1019,7 +1019,6 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	pSoldier->sGridNo								= NO_MAP_POS;
 	pSoldier->muzzle_flash          = NULL;
 	pSoldier->usPendingAnimation		= NO_PENDING_ANIMATION;
-	pSoldier->usPendingAnimation2		= NO_PENDING_ANIMATION;
 	pSoldier->ubPendingStanceChange	= NO_PENDING_STANCE;
 	pSoldier->ubPendingDirection		= NO_PENDING_DIRECTION;
 	pSoldier->ubPendingAction				= NO_PENDING_ACTION;

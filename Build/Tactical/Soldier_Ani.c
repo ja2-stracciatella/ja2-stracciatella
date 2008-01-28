@@ -3640,14 +3640,6 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 
 BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 {
-	// Do we have a primary pending animation?
-	if ( pSoldier->usPendingAnimation2 != NO_PENDING_ANIMATION )
-	{
-		ChangeSoldierState( pSoldier, pSoldier->usPendingAnimation2, 0, FALSE );
-		pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
-		return( TRUE );
-	}
-
 	// CHECK IF WE HAVE A PENDING ANIMATION HERE
 	if ( pSoldier->usPendingAnimation != NO_PENDING_ANIMATION )
 	{

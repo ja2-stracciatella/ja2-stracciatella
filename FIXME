@@ -351,7 +351,6 @@ pLevelNode: load/save?
 sBlackList: strange
 bHasKeys: strange
 fForceShade: pForceShade != NULL?
-usPendingAnimation2: always NO_PENDING_ANIMATION
 bTimesDrugUsedSinceSleep: write-only
 fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?

@@ -1206,7 +1206,6 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 
 	// Remove any pending animations
 	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-	pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 	pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 

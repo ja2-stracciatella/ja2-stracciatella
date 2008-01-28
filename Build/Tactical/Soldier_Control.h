@@ -675,7 +675,6 @@ struct SOLDIERTYPE
 	BOOLEAN											fChangingStanceDueToSuppression;
 	SOLDIERTYPE*                suppressor;
 
-	UINT16											usPendingAnimation2;
 	UINT8												ubCivilianGroup;
 
 	// time changes...when a stat was changed according to GetJA2Clock();

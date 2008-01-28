@@ -1259,19 +1259,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			return( TRUE );
 		}
 
-		// OK.......
-		if ( pSoldier->ubBodyType > REGFEMALE )
-		{
-			if ( pSoldier->bLife < INJURED_CHANGE_THREASHOLD )
-			{
-				if ( usNewState == READY_RIFLE_STAND )
-				{
-				//	pSoldier->usPendingAnimation2 = usNewState;
-				//	usNewState = FROM_INJURED_TRANSITION;
-				}
-			}
-		}
-
 		// Alrighty, check if we should free buddy up!
 		if ( usNewState == GIVING_AID )
 		{
@@ -8066,9 +8053,8 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
 		MemFree( pSoldier->pTempObject );
-		pSoldier->pTempObject					= NULL;
-		pSoldier->usPendingAnimation  = NO_PENDING_ANIMATION;
-		pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
+		pSoldier->pTempObject        = NULL;
+		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 		// Decrement attack counter...
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something");
@@ -8117,7 +8103,6 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 
 			// Stop pending animation....
 			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-			pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 		}
 
     if ( !pSoldier->fTurningToShoot )
@@ -8147,7 +8132,6 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	if ( !pSoldier->fDelayedMovement )
 	{
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-		pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 		pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 		pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
 	}
@@ -9737,7 +9721,6 @@ void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 		{
 			// Cancel what they were doing....
 			pSoldier->usPendingAnimation	= NO_PENDING_ANIMATION;
-			pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
 			pSoldier->fTurningFromPronePosition = FALSE;
 			pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -9763,9 +9746,8 @@ void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 		      // Place it back into inv....
 		      AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
 		      MemFree( pSoldier->pTempObject );
-		      pSoldier->pTempObject					= NULL;
-		      pSoldier->usPendingAnimation  = NO_PENDING_ANIMATION;
-		      pSoldier->usPendingAnimation2 = NO_PENDING_ANIMATION;
+		      pSoldier->pTempObject        = NULL;
+		      pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 		      // Decrement attack counter...
 		      DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
