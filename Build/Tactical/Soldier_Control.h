@@ -339,7 +339,6 @@ struct SOLDIERTYPE
 
 	BOOLEAN											fReloading;
 	UINT8												ubWaitActionToDo;
-	BOOLEAN											fPauseAim;
 	INT8												ubInsertionDirection;
 	// skills
 	SOLDIERTYPE*                opponent;

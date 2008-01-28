@@ -680,7 +680,6 @@ BOOLEAN ExecuteOverhead(void)
 					if (TIMECOUNTERDONE(pSoldier->ReloadCounter, pSoldier->sReloadDelay))
 					{
 						pSoldier->fReloading = FALSE;
-						pSoldier->fPauseAim  = FALSE;
 						/*
 						DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - realtime reloading");
 						FreeUpAttacker(pSoldier);

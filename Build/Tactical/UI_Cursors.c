@@ -302,7 +302,7 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 			// Check if we are reloading
 			if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 			{
-				if ( pSoldier->fReloading || pSoldier->fPauseAim )
+				if (pSoldier->fReloading)
 				{
 					return( ACTION_TARGET_RELOADING );
 				}
@@ -351,31 +351,28 @@ static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos,
 
 		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 		{
-			if ( !pSoldier->fPauseAim )
+			if (COUNTERDONE(TARGETREFINE))
 			{
-				if ( COUNTERDONE( TARGETREFINE )  )
-				{
-					// Reset counter
-					RESETCOUNTER( TARGETREFINE );
+				// Reset counter
+				RESETCOUNTER(TARGETREFINE);
 
-					if ( pSoldier->bDoBurst )
+				if (pSoldier->bDoBurst)
+				{
+					pSoldier->bShownAimTime = REFINE_AIM_BURST;
+				}
+				else
+				{
+					pSoldier->bShownAimTime++;
+
+					if (pSoldier->bShownAimTime > REFINE_AIM_5)
 					{
-						pSoldier->bShownAimTime = REFINE_AIM_BURST;
+						pSoldier->bShownAimTime = REFINE_AIM_5;
 					}
 					else
 					{
-						pSoldier->bShownAimTime++;
-
-						if ( pSoldier->bShownAimTime > REFINE_AIM_5 )
+						if (pSoldier->bShownAimTime % 2)
 						{
-							pSoldier->bShownAimTime = REFINE_AIM_5;
-						}
-						else
-						{
-							if ( pSoldier->bShownAimTime % 2 )
-							{
-								PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
-							}
+							PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 						}
 					}
 				}
@@ -691,10 +688,7 @@ static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 			//DetermineCursorBodyLocation(GetSelectedMan(), FALSE, fRecalc);
 			DetermineCursorBodyLocation(GetSelectedMan(), fShowAPs, fRecalc);
 
-			if ( pSoldier->fReloading || pSoldier->fPauseAim )
-			{
-				return( ACTION_TARGET_RELOADING );
-			}
+			if (pSoldier->fReloading) return ACTION_TARGET_RELOADING;
 		}
 
 		// Check for enough ammo...
@@ -1024,21 +1018,17 @@ static UINT8 HandleKnifeCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 		{
-			if ( !pSoldier->fPauseAim )
+			if (COUNTERDONE(NONGUNTARGETREFINE))
 			{
-				if ( COUNTERDONE( NONGUNTARGETREFINE )  )
+				// Reset counter
+				RESETCOUNTER(NONGUNTARGETREFINE);
+
+				if (pSoldier->bShownAimTime == REFINE_KNIFE_1)
 				{
-					// Reset counter
-					RESETCOUNTER( NONGUNTARGETREFINE );
-
-					if ( pSoldier->bShownAimTime == REFINE_KNIFE_1 )
-					{
-						PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
-					}
-
-					pSoldier->bShownAimTime = REFINE_KNIFE_2;
-
+					PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 				}
+
+				pSoldier->bShownAimTime = REFINE_KNIFE_2;
 			}
 		}
 
@@ -1149,21 +1139,17 @@ static UINT8 HandlePunchCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fA
 
 		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
 		{
-			if ( !pSoldier->fPauseAim )
+			if (COUNTERDONE(NONGUNTARGETREFINE))
 			{
-				if ( COUNTERDONE( NONGUNTARGETREFINE )  )
+				// Reset counter
+				RESETCOUNTER(NONGUNTARGETREFINE);
+
+				if (pSoldier->bShownAimTime == REFINE_PUNCH_1)
 				{
-					// Reset counter
-					RESETCOUNTER( NONGUNTARGETREFINE );
-
-					if ( pSoldier->bShownAimTime == REFINE_PUNCH_1 )
-					{
-						PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
-					}
-
-					pSoldier->bShownAimTime = REFINE_PUNCH_2;
-
+					PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 				}
+
+				pSoldier->bShownAimTime = REFINE_PUNCH_2;
 			}
 		}
 
@@ -1571,12 +1557,10 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				pSoldier->bShownAimTime				= REFINE_AIM_1;
-				pSoldier->fPauseAim = FALSE;
 			}
 			else
 			{
 				pSoldier->bShownAimTime				= REFINE_AIM_1;
-				pSoldier->fPauseAim = FALSE;
 			}
 			// Reset counter
 			RESETCOUNTER( TARGETREFINE );
@@ -1587,13 +1571,10 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				pSoldier->bShownAimTime				= REFINE_PUNCH_1;
-				pSoldier->fPauseAim = FALSE;
 			}
 			else
 			{
 				pSoldier->bShownAimTime				= REFINE_PUNCH_1;
-				pSoldier->fPauseAim = FALSE;
-
 			}
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );
@@ -1605,13 +1586,10 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
 				pSoldier->bShownAimTime				= REFINE_KNIFE_1;
-				pSoldier->fPauseAim = FALSE;
 			}
 			else
 			{
 				pSoldier->bShownAimTime				= REFINE_KNIFE_1;
-				pSoldier->fPauseAim = FALSE;
-
 			}
 			// Reset counter
 			RESETCOUNTER( NONGUNTARGETREFINE );

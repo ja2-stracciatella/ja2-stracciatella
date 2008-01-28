@@ -331,7 +331,6 @@ fHasKeys: strange
 
 SOLDIERTYPE
 fReloading: always FALSE
-fPauseAim: always FALSE
 bScientific: just copied around a bit
 sHeightAdjustment: seems to be always 0
 sDesiredHeight: strange

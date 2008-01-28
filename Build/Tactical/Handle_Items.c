@@ -486,17 +486,6 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 
 			if (fFromUI)
 			{
-				// Descrease aim by two if in real time
-				if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT) )
-				{
-					 //pSoldier->bShownAimTime -= 2;
-					 //if ( pSoldier->bShownAimTime < REFINE_AIM_1 )
-					 //{
-					//		pSoldier->bShownAimTime = REFINE_AIM_1;
-					 //}
-					 //pSoldier->fPauseAim = TRUE;
-				}
-
 				// If in turn based - refresh aim to first level
 				if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
 				{
