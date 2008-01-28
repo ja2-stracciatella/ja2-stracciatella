@@ -359,7 +359,6 @@ bRTPCombat: read-only
 sLocatorOffX: read-only
 sLocatorOffY
 fForceShade: pForceShade != NULL?
-bUIInterfaceLevel: write-only
 usPendingAnimation2: always NO_PENDING_ANIMATION
 bTimesDrugUsedSinceSleep: write-only
 fDoingExternalDeath: always TRUE?

@@ -482,14 +482,6 @@ void SetSMPanelCurrentMerc(SOLDIERTYPE* s)
 
 	gpSMCurrentMerc = s;
 
-	// Set to current guy's interface level
-	//if (gsInterfaceLevel != s->bUIInterfaceLevel)
-	//{
-	//	SetRenderFlags(RENDER_FLAG_FULL);
-	//	ErasePath(FALSE);
-	//	gsInterfaceLevel = s->bUIInterfaceLevel;
-	//}
-
 	// Disable all faces
 	SetAllAutoFacesInactive( );
 
@@ -727,7 +719,6 @@ static void UpdateSMPanel(void)
 		EnableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
 	}
 
-//	if ( gpSMCurrentMerc->bUIInterfaceLevel > 0 )
 	SetButtonState(UPDOWN_BUTTON, gsInterfaceLevel > 0);
 
 	SetButtonState(HANDCURSOR_BUTTON, gCurrentUIMode == HANDCURSOR_MODE);
@@ -2331,9 +2322,6 @@ void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		// Change interface level via HandleUI handler
 		UIHandleChangeLevel(NULL);
-
-		// Remember soldier's new value
-		gpSMCurrentMerc->bUIInterfaceLevel = gsInterfaceLevel;
 	}
 }
 

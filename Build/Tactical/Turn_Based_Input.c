@@ -1618,12 +1618,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
 					{
 						UIHandleChangeLevel( NULL );
-
-						if ( gsCurInterfacePanel == SM_PANEL )
-						{
-							// Remember soldier's new value
-							gpSMCurrentMerc->bUIInterfaceLevel = (INT8)gsInterfaceLevel;
-						}
 					}
 					break;
 

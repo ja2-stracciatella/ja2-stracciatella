@@ -609,7 +609,6 @@ struct SOLDIERTYPE
 	INT16												sDamageY;
 	INT8												bDoBurst;
 	INT16												usUIMovementMode;
-	INT8												bUIInterfaceLevel;
 	BOOLEAN											fUIMovementFast;
 
 	TIMECOUNTER									BlinkSelCounter;
