@@ -6301,7 +6301,6 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 	{
 		if ( pSoldier->bLife < OKLIFE && pSoldier->bLife > 0 && bOldLife >= OKLIFE )
 		{
-			pSoldier->fUIFirstTimeUNCON = TRUE;
 			fInterfacePanelDirty = DIRTYLEVEL2;
 		}
 	}

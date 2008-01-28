@@ -339,7 +339,6 @@ sTempNewGridNo: strange
 fPausedMove: strange
 fUIdeadMerc: strange
 fUICloseMerc: strange
-fUIFirstTimeUNCON: write-only
 ReloadCounter: never gets reset, probably unnecessary, see fReloading
 FlashSelCounter: never gets tested
 uiAIDelay: always 100
