@@ -428,7 +428,6 @@ struct SOLDIERTYPE
 	UINT8												bSide;
 	UINT8												bViewRange;
 	INT8 												bNewOppCnt;
-	INT8												bService;		// first aid, or other time consuming process
 
 	UINT16											usAniCode;
 	UINT16											usAniFrame;

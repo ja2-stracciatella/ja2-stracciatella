@@ -345,7 +345,6 @@ sReloadDelay: seems to be always 0, probably unnecessary, see fReloading
 fTurnInProgress: only gets printed for debug
 bViewRange: always NORMAL_VIEW_RANGE
 bNewOppCnt: strange
-bService: always FALSE
 fShowLocator: maybe unnecessary
 MiscPal
 pThrowParams: load/save?
