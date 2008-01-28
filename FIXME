@@ -339,7 +339,6 @@ fPausedMove: strange
 fUIdeadMerc: strange
 fUICloseMerc: strange
 ReloadCounter: never gets reset, probably unnecessary, see fReloading
-uiAIDelay: always 100
 sReloadDelay: seems to be always 0, probably unnecessary, see fReloading
 fTurnInProgress: only gets printed for debug
 bViewRange: always NORMAL_VIEW_RANGE

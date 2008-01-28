@@ -403,7 +403,6 @@ struct SOLDIERTYPE
 	UINT8												ubSkillTrait1;
 	UINT8												ubSkillTrait2;
 
-	UINT32											uiAIDelay;
 	INT8												bDexterity;		// dexterity (hand coord) value
 	INT8												bWisdom;
 	INT16												sReloadDelay;

@@ -1007,9 +1007,6 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	pSoldier->previous_attacker         = NULL;
 	pSoldier->next_to_previous_attacker = NULL;
 
-	//Set AI Delay!
-	pSoldier->uiAIDelay							= 100;
-
 	pSoldier->light = NULL;
 
 	// Set update time to new speed

@@ -808,9 +808,6 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[3], pSoldier2->name );
         }
 		  }
-
-		  // ATE: OK, reduce this guy's next ai counter....
-		  pSoldier2->uiAIDelay = 100;
 	  }
   }
 	return FALSE;

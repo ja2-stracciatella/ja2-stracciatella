@@ -41,6 +41,9 @@
 #include "Debug.h"
 
 
+#define AI_DELAY 100
+
+
 extern void UpdateEnemyUIBar( void );
 extern void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier );
 
@@ -203,7 +206,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 	{
 	//#ifndef AI_PROFILING
 		//Time to handle guys in realtime (either combat or not )
-		if ( !TIMECOUNTERDONE( pSoldier->AICounter, pSoldier->uiAIDelay ) )
+		if (!TIMECOUNTERDONE(pSoldier->AICounter, AI_DELAY))
 		{
 			// CAMFIELD, LOOK HERE!
 			return;
@@ -211,7 +214,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		else
 		{
 			//Reset counter!
-			RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->uiAIDelay );
+			RESETTIMECOUNTER(pSoldier->AICounter, AI_DELAY);
 		}
 		//#endif
 	}
