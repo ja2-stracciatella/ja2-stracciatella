@@ -636,8 +636,6 @@ struct SOLDIERTYPE
 	INT8												bLastSkillCheck;
 	INT8												ubSkillCheckAttempts;
 
-	INT8												bVocalVolume;	// verbal sounds need to differ in volume
-
 	INT8												bStartFallDir;
 	INT8												fTryingToFall;
 

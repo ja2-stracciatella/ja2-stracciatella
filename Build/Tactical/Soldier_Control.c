@@ -6685,8 +6685,6 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	}
 
 	// Play sound!
-
-	//UINT32 volume = CalculateSpeechVolume(pSoldier->bVocalVolume);
 	UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
 
 	// ATE: Reduce volume for OK sounds...

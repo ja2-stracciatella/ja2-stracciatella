@@ -558,7 +558,6 @@ static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const
 	pSoldier->bExplosive								= pProfile->bExplosive;
 	pSoldier->bScientific								= pProfile->bScientific;
 
-	pSoldier->bVocalVolume							= MIDVOLUME;
 	pSoldier->uiAnimSubFlags						= pProfile->uiBodyTypeSubFlags;
 	pSoldier->ubBodyType								= pProfile->ubBodyType;
 	pSoldier->ubCivilianGroup						= pProfile->ubCivilianGroup;
@@ -869,7 +868,6 @@ static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, 
 	pSoldier->bOrders								= pCreateStruct->bOrders;
 	pSoldier->bMorale								= pCreateStruct->bMorale;
 	pSoldier->bAIMorale							= pCreateStruct->bAIMorale;
-	pSoldier->bVocalVolume					= MIDVOLUME;
 	pSoldier->ubBodyType						= pCreateStruct->bBodyType;
 	pSoldier->ubCivilianGroup				= pCreateStruct->ubCivilianGroup;
 
