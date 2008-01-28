@@ -142,15 +142,16 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 	EXPLOSIONTYPE* const e = GetFreeExplosion();
 	if (e == NULL) return;
 
-	e->owner      = owner;
-	e->ubTypeID   = Explosive[Item[usItem].ubClassIndex].ubAnimationID;
-	e->usItem     = usItem;
-	e->sX         = sX;
-	e->sY         = sY;
-	e->sZ         = sZ;
-	e->sGridNo    = sGridNo;
-	e->bLevel     = bLevel;
-	e->fAllocated = TRUE;
+	e->owner         = owner;
+	e->ubTypeID      = Explosive[Item[usItem].ubClassIndex].ubAnimationID;
+	e->usItem        = usItem;
+	e->sX            = sX;
+	e->sY            = sY;
+	e->sZ            = sZ;
+	e->sGridNo       = sGridNo;
+	e->bLevel        = bLevel;
+	e->fAllocated    = TRUE;
+	e->sCurrentFrame = 0;
 	GenerateExplosionFromExplosionPointer(e);
 
 	if (fLocate) LocateGridNo(sGridNo);
