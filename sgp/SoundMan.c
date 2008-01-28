@@ -611,6 +611,8 @@ static inline int Clamp(int min, int x, int max)
 
 static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 {
+	s->uiFlags |= SAMPLE_16BIT;
+
 	size_t       CountSamples = s->n_samples;
 	INT16* const Data         = malloc(CountSamples * GetSampleSize(s));
 	INT16*       D            = Data;
@@ -784,8 +786,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 			{
 				UINT32 Samples;
 				if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-				s->uiFlags   |= SAMPLE_16BIT;
-				s->n_samples  = Samples;
+				s->n_samples = Samples;
 				break;
 			}
 
