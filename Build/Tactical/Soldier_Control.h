@@ -397,7 +397,6 @@ struct SOLDIERTYPE
 	TIMECOUNTER									UpdateCounter;
 	TIMECOUNTER									DamageCounter;
 	TIMECOUNTER									ReloadCounter;
-	TIMECOUNTER									FlashSelCounter;
 	TIMECOUNTER									AICounter;
 	TIMECOUNTER									FadeCounter;
 

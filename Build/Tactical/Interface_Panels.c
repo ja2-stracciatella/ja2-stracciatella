@@ -3169,8 +3169,6 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 
 void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 {
-	RESETTIMECOUNTER(s->FlashSelCounter, FLASH_SELECTOR_DELAY);
-
 	//LocateSoldier(s, FALSE); // IC - this is already being done outside of this function :)
 	s->fFlashLocator = TRUE;
 	//gbPanelSelectedGuy = ubID;	IC - had to move this outside to make this function versatile

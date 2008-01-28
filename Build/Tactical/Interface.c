@@ -1198,14 +1198,6 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 				}
 			}
 
-			//if ( TIMECOUNTERDONE( pSoldier->FlashSelCounter, 5000 ) )
-			//{
-			//	RESETTIMECOUNTER( pSoldier->FlashSelCounter, 5000 );
-
-			//	pSoldier->fFlashLocator = FALSE;
-			//	pSoldier->fShowLocator = FALSE;
-
-			//}
 			if ( pSoldier->fFlashLocator == pSoldier->ubNumLocateCycles )
 			{
 					pSoldier->fFlashLocator = FALSE;

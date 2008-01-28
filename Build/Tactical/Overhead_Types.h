@@ -82,7 +82,6 @@
 
 // TIMER DELAYS
 #define	DAMAGE_DISPLAY_DELAY		250
-#define	FLASH_SELECTOR_DELAY		4000
 
 #define PTR_OURTEAM     (pSoldier->bTeam == gbPlayerNum)
 

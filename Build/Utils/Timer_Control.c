@@ -123,7 +123,6 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 					  UPDATETIMECOUNTER( gPSOLDIER->UpdateCounter );
 					  UPDATETIMECOUNTER( gPSOLDIER->DamageCounter );
 					  UPDATETIMECOUNTER( gPSOLDIER->ReloadCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FlashSelCounter );
 					  UPDATETIMECOUNTER( gPSOLDIER->BlinkSelCounter );
 					  UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
 					  UPDATETIMECOUNTER( gPSOLDIER->AICounter );
