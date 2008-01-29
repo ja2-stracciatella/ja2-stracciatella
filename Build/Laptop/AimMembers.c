@@ -115,8 +115,8 @@
 #define		SPACE_BN_LINES		15//13
 #define		STATS_FIRST_COL		STATS_X + 9
 #define		STATS_SECOND_COL	STATS_FIRST_COL + 129
-#define		STATS_FIRST_NUM		STATS_X + 111//91
-#define		STATS_SECOND_NUM	STATS_X + 235
+#define   STAT_NAME_WIDTH    87
+#define   STAT_VALUE_DX     102
 
 #define		HEALTH_Y					STATS_Y + 34
 #define		AGILITY_Y					HEALTH_Y	+ SPACE_BN_LINES
@@ -263,9 +263,6 @@
 
 #define		TEXT_POPUP_WINDOW_Y								255 + LAPTOP_SCREEN_WEB_DELTA_Y
 #define		TEXT_POPUP_STRING_SIZE						512
-
-#define		FIRST_COLUMN_DOT									328	//308
-#define		SECOND_COLUMN_DOT									451
 
 #define		MINIMUM_TALKING_TIME_FOR_MERC			1500
 
@@ -1101,108 +1098,46 @@ static void DisplayMercsFace(void)
 
 
 static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString);
-static UINT8 GetStatColor(INT8 bStat);
+
+
+static void DrawStatColoured(const UINT16 x, const UINT16 y, const wchar_t* const stat, const INT32 val, const UINT8 colour)
+{
+	DrawTextToScreen(stat, x, y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DisplayDots(x, y, x + STAT_NAME_WIDTH, stat);
+	DrawNumeralsToScreen(val, 3, x + STAT_VALUE_DX, y, AIM_M_NUMBER_FONT, colour);
+}
+
+
+static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, const INT32 val)
+{
+	const UINT8 colour = (val >= 80 ? HIGH_STAT_COLOR : (val >= 50 ? MED_STAT_COLOR : LOW_STAT_COLOR));
+	DrawStatColoured(x, y, stat, val, colour);
+}
 
 
 static void DisplayMercStats(void)
 {
-	UINT8	ubColor;
-
-	//
-	// Display all the static text
-	//
-
-	//First column in stats box.  Health, Agility, dexterity, strength, leadership, wisdom
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_HEALTH], STATS_FIRST_COL, HEALTH_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, HEALTH_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_HEALTH]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_AGILITY], STATS_FIRST_COL, AGILITY_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, AGILITY_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_AGILITY]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_DEXTERITY], STATS_FIRST_COL, DEXTERITY_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, DEXTERITY_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_DEXTERITY]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_STRENGTH], STATS_FIRST_COL, STRENGTH_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, STRENGTH_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_STRENGTH]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_LEADERSHIP], STATS_FIRST_COL, LEADERSHIP_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, LEADERSHIP_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_LEADERSHIP]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_WISDOM], STATS_FIRST_COL, WISDOM_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_FIRST_COL, WISDOM_Y, FIRST_COLUMN_DOT, CharacterInfo[AIM_MEMBER_WISDOM]);
-
-
-	//Second column in stats box.  Exp.Level, Markmanship, mechanical, explosive, medical
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_EXP_LEVEL], STATS_SECOND_COL, EXPLEVEL_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_SECOND_COL, EXPLEVEL_Y, SECOND_COLUMN_DOT, CharacterInfo[AIM_MEMBER_EXP_LEVEL]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_MARKSMANSHIP], STATS_SECOND_COL, MARKSMAN_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_SECOND_COL, MARKSMAN_Y, SECOND_COLUMN_DOT, CharacterInfo[AIM_MEMBER_MARKSMANSHIP]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_MECHANICAL], STATS_SECOND_COL, MECHANAICAL_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_SECOND_COL, MECHANAICAL_Y, SECOND_COLUMN_DOT, CharacterInfo[AIM_MEMBER_MECHANICAL]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_EXPLOSIVE], STATS_SECOND_COL, EXPLOSIVE_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_SECOND_COL, EXPLOSIVE_Y, SECOND_COLUMN_DOT, CharacterInfo[AIM_MEMBER_EXPLOSIVE]);
-
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_MEDICAL], STATS_SECOND_COL, MEDICAL_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DisplayDots(STATS_SECOND_COL, MEDICAL_Y, SECOND_COLUMN_DOT, CharacterInfo[AIM_MEMBER_MEDICAL]);
-
-
-	//
-	// Display all the Merc dynamic stat info
-	//
+	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
 
 	//Name
-	DrawTextToScreen(gMercProfiles[gbCurrentSoldier].zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(p->zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	// Numbers for above.   Health, Agility, dexterity, strength, leadership, wisdom
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bLife );
-	DrawNumeralsToScreen( gMercProfiles[gbCurrentSoldier].bLife, 3, STATS_FIRST_NUM, HEALTH_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bAgility );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bAgility, 3, STATS_FIRST_NUM, AGILITY_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bDexterity );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bDexterity, 3, STATS_FIRST_NUM, DEXTERITY_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bStrength );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bStrength, 3, STATS_FIRST_NUM, STRENGTH_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bLeadership );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bLeadership, 3, STATS_FIRST_NUM, LEADERSHIP_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bWisdom );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bWisdom, 3, STATS_FIRST_NUM, WISDOM_Y, AIM_M_NUMBER_FONT, ubColor	);
+	//First column in stats box.  Health, Agility, dexterity, strength, leadership, wisdom
+	const UINT16 x1 = STATS_FIRST_COL;
+	DrawStat(x1, HEALTH_Y,     CharacterInfo[AIM_MEMBER_HEALTH    ], p->bLife      );
+	DrawStat(x1, AGILITY_Y,    CharacterInfo[AIM_MEMBER_AGILITY   ], p->bAgility   );
+	DrawStat(x1, DEXTERITY_Y,  CharacterInfo[AIM_MEMBER_DEXTERITY ], p->bDexterity );
+	DrawStat(x1, STRENGTH_Y,   CharacterInfo[AIM_MEMBER_STRENGTH  ], p->bStrength  );
+	DrawStat(x1, LEADERSHIP_Y, CharacterInfo[AIM_MEMBER_LEADERSHIP], p->bLeadership);
+	DrawStat(x1, WISDOM_Y,     CharacterInfo[AIM_MEMBER_WISDOM    ], p->bWisdom    );
 
 	//Second column in stats box.  Exp.Level, Markmanship, mechanical, explosive, medical
-
-//	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bExpLevel );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bExpLevel, 3, STATS_SECOND_NUM, EXPLEVEL_Y, AIM_M_NUMBER_FONT, FONT_MCOLOR_WHITE	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bMarksmanship );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bMarksmanship, 3, STATS_SECOND_NUM, MARKSMAN_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bMechanical );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bMechanical, 3, STATS_SECOND_NUM, MECHANAICAL_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bExplosive );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bExplosive, 3, STATS_SECOND_NUM, EXPLOSIVE_Y, AIM_M_NUMBER_FONT, ubColor	);
-
-	ubColor = GetStatColor( gMercProfiles[gbCurrentSoldier].bMedical );
-	DrawNumeralsToScreen(gMercProfiles[gbCurrentSoldier].bMedical, 3, STATS_SECOND_NUM, MEDICAL_Y, AIM_M_NUMBER_FONT, ubColor	);
-}
-
-
-static UINT8 GetStatColor(INT8 bStat)
-{
-	if( bStat >= 80 )
-		return( HIGH_STAT_COLOR );
-	else if( bStat >= 50 )
-		return( MED_STAT_COLOR );
-	else
-		return( LOW_STAT_COLOR );
+	const UINT16 x2 = STATS_SECOND_COL;
+	DrawStatColoured(x2, EXPLEVEL_Y,    CharacterInfo[AIM_MEMBER_EXP_LEVEL],    p->bExpLevel, FONT_MCOLOR_WHITE);
+	DrawStat(        x2, MARKSMAN_Y,    CharacterInfo[AIM_MEMBER_MARKSMANSHIP], p->bMarksmanship);
+	DrawStat(        x2, MECHANAICAL_Y, CharacterInfo[AIM_MEMBER_MECHANICAL  ], p->bMechanical  );
+	DrawStat(        x2, EXPLOSIVE_Y,   CharacterInfo[AIM_MEMBER_EXPLOSIVE   ], p->bExplosive   );
+	DrawStat(        x2, MEDICAL_Y,     CharacterInfo[AIM_MEMBER_MEDICAL     ], p->bMedical     );
 }
 
 
