@@ -551,18 +551,40 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	{
 		INT16*       const dst = ndata;
 		const INT16* const src = odata;
-		for (size_t i = 0; i < n_samples; ++i)
+		if (s->uiFlags & SAMPLE_STEREO)
 		{
-			dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
+			for (size_t i = 0; i < n_samples; ++i)
+			{
+				dst[2 * i + 0] = (src[4 * i + 0] + src[4 * i + 2]) / 2;
+				dst[2 * i + 1] = (src[4 * i + 1] + src[4 * i + 3]) / 2;
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < n_samples; ++i)
+			{
+				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
+			}
 		}
 	}
 	else
 	{
 		UINT8*       const dst = ndata;
 		const UINT8* const src = odata;
-		for (size_t i = 0; i < n_samples; ++i)
+		if (s->uiFlags & SAMPLE_STEREO)
 		{
-			dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
+			for (size_t i = 0; i < n_samples; ++i)
+			{
+				dst[2 * i + 0] = (src[4 * i + 0] + src[4 * i + 2]) / 2;
+				dst[2 * i + 1] = (src[4 * i + 1] + src[4 * i + 3]) / 2;
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < n_samples; ++i)
+			{
+				dst[i] = (src[2 * i] + src[2 * i + 1]) / 2;
+			}
 		}
 	}
 	s->pData = ndata;
