@@ -2560,7 +2560,7 @@ const wchar_t *CharacterInfo[] =
 {
 	// The various attributes of the merc
 
-	L"Gesundh.",
+	L"Gesundheit",
 	L"Beweglichkeit",
 	L"Geschicklichkeit",
 	L"Kraft",
