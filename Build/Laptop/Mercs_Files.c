@@ -381,75 +381,46 @@ static void LoadAndDisplayMercBio(UINT8 ubMercID)
 }
 
 
+static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, const UINT16 x_val, const INT32 val)
+{
+	DrawTextToScreen(stat, x, y, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawNumeralsToScreen(val, 3, x_val, y, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
+}
+
+
 static void DisplayMercsStats(UINT8 ubMercID)
 {
-	UINT16 usPosY, usPosX;
-	wchar_t sString[128];
+	const MERCPROFILESTRUCT* const p = GetProfile(ubMercID);
 
-	usPosY = MERC_HEALTH_Y;
+	const UINT16 x1     = MERC_STATS_FIRST_COL_X;
+	const UINT16 x1_val = MERC_STATS_FIRST_NUM_COL_X;
+	UINT16       y1     = MERC_HEALTH_Y;
+	const UINT16 dy     = MERC_SPACE_BN_LINES;
+	DrawStat(x1, y1,       MercInfo[MERC_FILES_HEALTH],     x1_val, p->bLife);
+	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_AGILITY],    x1_val, p->bAgility);
+	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_DEXTERITY],  x1_val, p->bDexterity);
+	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_STRENGTH],   x1_val, p->bStrength);
+	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_LEADERSHIP], x1_val, p->bLeadership);
+	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_WISDOM],     x1_val, p->bWisdom);
 
-	//Health
-	DrawTextToScreen(MercInfo[MERC_FILES_HEALTH], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bLife, 3, MERC_STATS_FIRST_NUM_COL_X, MERC_HEALTH_Y, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Agility
-	DrawTextToScreen(MercInfo[MERC_FILES_AGILITY], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bAgility, 3, MERC_STATS_FIRST_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Dexterity
-	DrawTextToScreen(MercInfo[MERC_FILES_DEXTERITY], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bDexterity, 3, MERC_STATS_FIRST_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Strenght
-	DrawTextToScreen(MercInfo[MERC_FILES_STRENGTH], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bStrength, 3, MERC_STATS_FIRST_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Leadership
-	DrawTextToScreen(MercInfo[MERC_FILES_LEADERSHIP], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bLeadership, 3, MERC_STATS_FIRST_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Wisdom
-	DrawTextToScreen(MercInfo[MERC_FILES_WISDOM], MERC_STATS_FIRST_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bWisdom, 3, MERC_STATS_FIRST_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-
-	usPosY = MERC_HEALTH_Y;
-
-	//Experience Level
-	DrawTextToScreen(MercInfo[MERC_FILES_EXPLEVEL], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bExpLevel, 3, MERC_STATS_SECOND_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Marksmanship
-	DrawTextToScreen(MercInfo[MERC_FILES_MARKSMANSHIP], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bMarksmanship, 3, MERC_STATS_SECOND_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Mechanical
-	DrawTextToScreen(MercInfo[MERC_FILES_MECHANICAL], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bMechanical, 3, MERC_STATS_SECOND_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Explosive
-	DrawTextToScreen(MercInfo[MERC_FILES_EXPLOSIVE], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bExplosive, 3, MERC_STATS_SECOND_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
-
-	//Medical
-	DrawTextToScreen(MercInfo[MERC_FILES_MEDICAL], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawNumeralsToScreen(gMercProfiles[ ubMercID ].bMedical, 3, MERC_STATS_SECOND_NUM_COL_X, usPosY, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
-	usPosY += MERC_SPACE_BN_LINES;
+	const UINT16 x2     = MERC_STATS_SECOND_COL_X;
+	const UINT16 x2_val = MERC_STATS_SECOND_NUM_COL_X;
+	UINT16       y2     = MERC_HEALTH_Y;
+	DrawStat(x2, y2,       MercInfo[MERC_FILES_EXPLEVEL],     x2_val, p->bExpLevel);
+	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MARKSMANSHIP], x2_val, p->bMarksmanship);
+	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MECHANICAL],   x2_val, p->bMechanical);
+	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_EXPLOSIVE],    x2_val, p->bExplosive);
+	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MEDICAL],      x2_val, p->bMedical);
 
 	//Daily Salary
-	DrawTextToScreen( MercInfo[MERC_FILES_SALARY], MERC_STATS_SECOND_COL_X, usPosY, 0, MERC_NAME_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	y2 += dy;
+	const wchar_t* const salary = MercInfo[MERC_FILES_SALARY];
+	DrawTextToScreen(salary, MERC_STATS_SECOND_COL_X, y2, 0, MERC_NAME_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	usPosX = MERC_STATS_SECOND_COL_X + StringPixLength(MercInfo[MERC_FILES_SALARY], MERC_NAME_FONT) + 1;
-	swprintf(sString, lengthof(sString), L"%d %ls", gMercProfiles[ ubMercID ].sSalary, MercInfo[MERC_FILES_PER_DAY]);
-	DrawTextToScreen(sString, usPosX, usPosY, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	const UINT16 x = MERC_STATS_SECOND_COL_X + StringPixLength(salary, MERC_NAME_FONT) + 1;
+	wchar_t sString[128];
+	swprintf(sString, lengthof(sString), L"%d %ls", p->sSalary, MercInfo[MERC_FILES_PER_DAY]);
+	DrawTextToScreen(sString, x, y2, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 
 
