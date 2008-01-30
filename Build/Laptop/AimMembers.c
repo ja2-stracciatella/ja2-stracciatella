@@ -3210,8 +3210,9 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 //TEMP:
 void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset )
 {
+	static const ProfileID MercID[] = { RED, GUS, MAGIC, SCOPE, LYNX, SHADOW, BUNS, GRUNTY, IVAN, REAPER, BARRY, BLOOD, GRIZZLY, VICKY, TREVOR, STEROID, IGOR, FIDEL, FOX, SIDNEY, ICE, SPIDER };
+
 	INT16	i;
-	UINT8	MercID[]={11,16,29,36,2,10,17,6,7,12,0,1,3,4,5,8,9,13,14,15,18,19 };
 	MERC_HIRE_STRUCT HireMercStruct;
 	static BOOLEAN	fHaveCalledBefore=FALSE;
 
