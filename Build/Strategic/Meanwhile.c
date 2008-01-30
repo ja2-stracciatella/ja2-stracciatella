@@ -265,37 +265,18 @@ static BOOLEAN GetMeanWhileFlag(UINT8 ubMeanwhileID)
 }
 
 
-static INT32 GetFreeNPCSave(void)
+static NPC_SAVE_INFO* GetFreeNPCSave(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumNPCSaves; uiCount++)
+	for (NPC_SAVE_INFO* si = gNPCSaveData; si != gNPCSaveData + guiNumNPCSaves; ++si)
 	{
-		if(( gNPCSaveData[uiCount].ubProfile == NO_PROFILE ) )
-			return( (INT32)uiCount );
+		if (si->ubProfile == NO_PROFILE) return si;
 	}
-
-	if( guiNumNPCSaves < MAX_MEANWHILE_PROFILES )
-		return( (INT32) guiNumNPCSaves++ );
-
-	return( -1 );
-}
-
-
-static void RecountNPCSaves(void)
-{
-	INT32 uiCount;
-
-	for(uiCount=guiNumNPCSaves-1; (uiCount >=0) ; uiCount--)
+	if (guiNumNPCSaves < MAX_MEANWHILE_PROFILES)
 	{
-		if( ( gNPCSaveData[uiCount].ubProfile != NO_PROFILE ) )
-		{
-			guiNumNPCSaves=(UINT32)(uiCount+1);
-			break;
-		}
+		return &gNPCSaveData[guiNumNPCSaves++];
 	}
+	return NULL;
 }
-
 
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime )
@@ -417,13 +398,28 @@ void CheckForMeanwhileOKStart( )
 }
 
 
+static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT16 sector_y)
+{
+	NPC_SAVE_INFO* const si = GetFreeNPCSave();
+	if (si == NULL) return;
+
+	const MERCPROFILESTRUCT* const p  = GetProfile(pid);
+	si->ubProfile = pid;
+	si->sX        = p->sSectorX;
+	si->sY        = p->sSectorY;
+	si->sZ        = p->bSectorZ;
+	si->sGridNo   = p->sGridNo;
+
+	ReloadQuoteFile(pid);
+	ChangeNpcToDifferentSector(pid, sector_x, sector_y, 0);
+}
+
+
 static void DoneFadeOutMeanwhile(void);
 
 
 static void StartMeanwhile(void)
 {
-	INT32 iIndex;
-
 	// OK, save old position...
 	if ( gfWorldLoaded )
 	{
@@ -466,114 +462,19 @@ static void StartMeanwhile(void)
 		case	KILL_CHOPPER:
 		case	AWOL_SCIENTIST:
 		case	OUTSKIRTS_MEDUNA:
-
-				// SAVE QUEEN!
-				iIndex = GetFreeNPCSave( );
-				if ( iIndex != -1 )
-				{
-					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
-
-					// Force reload of NPC files...
-					ReloadQuoteFile( QUEEN );
-
-					ChangeNpcToDifferentSector( QUEEN, 3, 16, 0 );
-				}
-
-				// SAVE MESSANGER!
-				iIndex = GetFreeNPCSave( );
-				if ( iIndex != -1 )
-				{
-					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
-
-					// Force reload of NPC files...
-					ReloadQuoteFile( ELLIOT );
-
-					ChangeNpcToDifferentSector( ELLIOT, 3, 16, 0 );
-				}
-
-				if ( gCurrentMeanwhileDef.ubMeanwhileID == OUTSKIRTS_MEDUNA )
-				{
-					// SAVE JOE!
-					iIndex = GetFreeNPCSave( );
-					if ( iIndex != -1 )
-					{
-						gNPCSaveData[ iIndex ].ubProfile = JOE;
-						gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-						gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-						gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-						gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
-
-						// Force reload of NPC files...
-						ReloadQuoteFile( JOE );
-
-						ChangeNpcToDifferentSector( JOE, 3, 16, 0 );
-					}
-				}
-
+			SetNPCMeanwhile(QUEEN,  3, 16);
+			SetNPCMeanwhile(ELLIOT, 3, 16);
+			if (gCurrentMeanwhileDef.ubMeanwhileID == OUTSKIRTS_MEDUNA)
+			{
+				SetNPCMeanwhile(JOE, 3, 16);
+			}
 			break;
-
 
 		case	INTERROGATION:
-
-				// SAVE QUEEN!
-				iIndex = GetFreeNPCSave( );
-				if ( iIndex != -1 )
-				{
-					gNPCSaveData[ iIndex ].ubProfile = QUEEN;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ QUEEN ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ QUEEN ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ QUEEN ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ QUEEN ].sGridNo;
-
-					// Force reload of NPC files...
-					ReloadQuoteFile( QUEEN );
-
-					ChangeNpcToDifferentSector( QUEEN, 7, 14, 0 );
-				}
-
-				// SAVE MESSANGER!
-				iIndex = GetFreeNPCSave( );
-				if ( iIndex != -1 )
-				{
-					gNPCSaveData[ iIndex ].ubProfile = ELLIOT;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ ELLIOT ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ ELLIOT ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ ELLIOT ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ ELLIOT ].sGridNo;
-
-					// Force reload of NPC files...
-					ReloadQuoteFile( ELLIOT );
-
-					ChangeNpcToDifferentSector( ELLIOT, 7, 14, 0 );
-				}
-
-				// SAVE JOE!
-				iIndex = GetFreeNPCSave( );
-				if ( iIndex != -1 )
-				{
-					gNPCSaveData[ iIndex ].ubProfile = JOE;
-					gNPCSaveData[ iIndex ].sX				 = gMercProfiles[ JOE ].sSectorX;
-					gNPCSaveData[ iIndex ].sY				 = gMercProfiles[ JOE ].sSectorY;
-					gNPCSaveData[ iIndex ].sZ				 = gMercProfiles[ JOE ].bSectorZ;
-					gNPCSaveData[ iIndex ].sGridNo	 = gMercProfiles[ JOE ].sGridNo;
-
-					// Force reload of NPC files...
-					ReloadQuoteFile( JOE );
-
-					ChangeNpcToDifferentSector( JOE, 7, 14, 0 );
-				}
-
+			SetNPCMeanwhile(QUEEN,  7, 14);
+			SetNPCMeanwhile(ELLIOT, 7, 14);
+			SetNPCMeanwhile(JOE,    7, 14);
 			break;
-
-
 	}
 
 	// fade out old screen....
@@ -766,14 +667,32 @@ static void ProcessImplicationsOfMeanwhile(void)
 }
 
 
+static void RestoreNPCMeanwhile(void)
+{
+	// ATE: Restore people to saved positions...
+	// OK, restore NPC save info...
+	for (const NPC_SAVE_INFO* si = gNPCSaveData, *const end = gNPCSaveData + guiNumNPCSaves; si != end; ++si)
+	{
+		const ProfileID pid = si->ubProfile;
+		if (pid == NO_PROFILE) continue;
+
+		MERCPROFILESTRUCT* const p = GetProfile(pid);
+		p->sSectorX = si->sX;
+		p->sSectorY = si->sY;
+		p->bSectorZ = (INT8)si->sZ;
+		p->sGridNo  = (INT8)si->sGridNo;
+
+		// Ensure NPC files loaded...
+		ReloadQuoteFile(pid);
+	}
+}
+
+
 static void DoneFadeOutMeanwhileOnceDone(void);
 
 
 void EndMeanwhile( )
 {
-	UINT32		cnt;
-	UINT8		ubProfile;
-
 	EmptyDialogueQueue();
 	ProcessImplicationsOfMeanwhile();
 	SetMeanwhileSceneSeen( gCurrentMeanwhileDef.ubMeanwhileID );
@@ -805,26 +724,8 @@ void EndMeanwhile( )
 		// Set music mode to enemy present!
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );
 
-    // ATE: Restore people to saved positions...
-	  // OK, restore NPC save info...
-	  for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
-	  {
-		  ubProfile = gNPCSaveData[ cnt ].ubProfile;
-
-		  if ( ubProfile != NO_PROFILE )
-		  {
-			  gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
-			  gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
-			  gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			  gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
-
-			  // Ensure NPC files loaded...
-			  ReloadQuoteFile( ubProfile );
-		  }
-	  }
-
+		RestoreNPCMeanwhile();
 	}
-
 }
 
 
@@ -833,9 +734,6 @@ static void DoneFadeInMeanwhileOnceDone(void);
 
 static void DoneFadeOutMeanwhileOnceDone(void)
 {
-	UINT32		cnt;
-	UINT8		ubProfile;
-
 	// OK, insertion data found, enter sector!
 	gfReloadingScreenFromMeanwhile = TRUE;
 
@@ -859,22 +757,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 
 	gfReloadingScreenFromMeanwhile = FALSE;
 
-	// OK, restore NPC save info...
-	for ( cnt = 0; cnt < guiNumNPCSaves; cnt++ )
-	{
-		ubProfile = gNPCSaveData[ cnt ].ubProfile;
-
-		if ( ubProfile != NO_PROFILE )
-		{
-			gMercProfiles[ ubProfile ].sSectorX = gNPCSaveData[ cnt ].sX;
-			gMercProfiles[ ubProfile ].sSectorY = gNPCSaveData[ cnt ].sY;
-			gMercProfiles[ ubProfile ].bSectorZ = (INT8)gNPCSaveData[ cnt ].sZ;
-			gMercProfiles[ ubProfile ].sGridNo  = (INT8)gNPCSaveData[ cnt ].sGridNo;
-
-			// Ensure NPC files loaded...
-			ReloadQuoteFile( ubProfile );
-		}
-	}
+	RestoreNPCMeanwhile();
 
 	gFadeInDoneCallback = DoneFadeInMeanwhileOnceDone;
 
