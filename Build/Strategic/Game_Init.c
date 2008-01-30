@@ -574,121 +574,71 @@ static void QuickStartGame(void)
 }
 
 
-// TEMP FUNCTION!
-static void QuickSetupOfMercProfileItems(UINT32 uiCount, UINT8 ubProfileIndex)
+static void GiveItemN(MERCPROFILESTRUCT* const p, const UINT pos, const UINT16 item_id, const UINT8 status, const UINT8 count)
 {
+	p->inv[pos]        = item_id;
+	p->bInvStatus[pos] = status;
+	p->bInvNumber[pos] = count;
+}
+
+
+static void GiveItem(MERCPROFILESTRUCT* const p, const UINT pos, const UINT16 item_id)
+{
+	GiveItemN(p, pos, item_id, 100, 1);
+}
+
+
+// TEMP FUNCTION!
+static void QuickSetupOfMercProfileItems(const UINT32 uiCount, const UINT8 ubProfileIndex)
+{
+	MERCPROFILESTRUCT* const p = GetProfile(ubProfileIndex);
 	// Quickly give some guys we hire some items
-
-	if ( uiCount == 0 )
+	switch (uiCount)
 	{
-		//CreateGun( GLOCK_17, &(pSoldier->inv[ HANDPOS ] ) );
-		//gMercProfiles[ ubProfileIndex ].inv[ HANDPOS ] = HAND_GRENADE;
-		//gMercProfiles[ ubProfileIndex ].bInvStatus[ HANDPOS ] = 100;
-		//gMercProfiles[ ubProfileIndex ].bInvNumber[ HANDPOS ] = 3;
-		gMercProfiles[ ubProfileIndex ].inv[ HANDPOS ] = C7;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ HANDPOS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ HANDPOS ] = 1;
+		case 0:
+			p->bSkillTrait = MARTIALARTS;
 
-		gMercProfiles[ ubProfileIndex ].inv[ BIGPOCK1POS ] = CAWS;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ BIGPOCK1POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ BIGPOCK1POS ] = 1;
+			//GiveItemN(p, HANDPOS, HAND_GRENADE, 100, 3);
+			GiveItem(p, HANDPOS,       C7);
+			GiveItem(p, BIGPOCK1POS,   CAWS);
+			GiveItem(p, BIGPOCK3POS,   MEDICKIT);
+			GiveItem(p, BIGPOCK4POS,   SHAPED_CHARGE);
+			GiveItem(p, SMALLPOCK3POS, KEY_2);
+			GiveItem(p, SMALLPOCK5POS, LOCKSMITHKIT);
 
-		gMercProfiles[ ubProfileIndex ].bSkillTrait = MARTIALARTS;
+			// TEMP!
+			// make carman's opinion of us high!
+			GetProfile(CARMEN)->bMercOpinion[ubProfileIndex] = 25;
+			break;
 
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK3POS ] = KEY_2;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK3POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK3POS ] = 1;
+		case 1:
+			GiveItem(p, HANDPOS,       CAWS);
+			GiveItem(p, SMALLPOCK3POS, KEY_1);
+			break;
 
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK5POS ] = LOCKSMITHKIT;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK5POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK5POS ] = 1;
+		case 2:
+			GiveItem(p, HANDPOS,       GLOCK_17);
+			GiveItem(p, SECONDHANDPOS, SW38);
+			GiveItem(p, SMALLPOCK1POS, SILENCER);
+			GiveItem(p, SMALLPOCK2POS, SNIPERSCOPE);
+			GiveItem(p, SMALLPOCK3POS, LASERSCOPE);
+			GiveItem(p, SMALLPOCK5POS, BIPOD);
+			GiveItem(p, SMALLPOCK6POS, LOCKSMITHKIT);
+			break;
 
-		gMercProfiles[ ubProfileIndex ].inv[ BIGPOCK3POS ] = MEDICKIT;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ BIGPOCK3POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ BIGPOCK3POS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ BIGPOCK4POS ] = SHAPED_CHARGE;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ BIGPOCK4POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ BIGPOCK4POS ] = 1;
-
-
-		// TEMP!
-		// make carman's opinion of us high!
-		GetProfile(CARMEN)->bMercOpinion[ubProfileIndex] = 25;
-	}
-	else if ( uiCount == 1 )
-	{
-		gMercProfiles[ ubProfileIndex ].inv[ HANDPOS ] = CAWS;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ HANDPOS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ HANDPOS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK3POS ] = KEY_1;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK3POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK3POS ] = 1;
-
-
-	}
-	else if ( uiCount == 2 )
-	{
-		gMercProfiles[ ubProfileIndex ].inv[ HANDPOS ] = GLOCK_17;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ HANDPOS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ HANDPOS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SECONDHANDPOS ] = 5;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SECONDHANDPOS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SECONDHANDPOS ] = 1;
-
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK1POS ] = SILENCER;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK1POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK1POS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK2POS ] = SNIPERSCOPE;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK2POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK2POS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK3POS ] = LASERSCOPE;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK3POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK3POS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK5POS ] = BIPOD;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK5POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK5POS ] = 1;
-
-		gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK6POS ] = LOCKSMITHKIT;
-		gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK6POS ] = 100;
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK6POS ] = 1;
-
-	}
-	else
-	{
-		gMercProfiles[ ubProfileIndex ].inv[ HANDPOS ] = (UINT8)Random(30);
-		gMercProfiles[ ubProfileIndex ].bInvNumber[ HANDPOS ] = 1;
-
-
+		default:
+			p->inv[HANDPOS]        = Random(30);
+			p->bInvNumber[HANDPOS] = 1;
+			break;
 	}
 
-	gMercProfiles[ ubProfileIndex ].inv[ HELMETPOS ] = KEVLAR_HELMET;
-	gMercProfiles[ ubProfileIndex ].bInvStatus[ HELMETPOS ] = 100;
-	gMercProfiles[ ubProfileIndex ].bInvNumber[ HELMETPOS ] = 1;
-
-	gMercProfiles[ ubProfileIndex ].inv[ VESTPOS ] = KEVLAR_VEST;
-	gMercProfiles[ ubProfileIndex ].bInvStatus[ VESTPOS ] = 100;
-	gMercProfiles[ ubProfileIndex ].bInvNumber[ VESTPOS ] = 1;
-
-	gMercProfiles[ ubProfileIndex ].inv[ BIGPOCK2POS ] = RDX;
-	gMercProfiles[ ubProfileIndex ].bInvStatus[ BIGPOCK2POS ] = 10;
-	gMercProfiles[ ubProfileIndex ].bInvNumber[ BIGPOCK2POS ] = 1;
-
-	gMercProfiles[ ubProfileIndex ].inv[ SMALLPOCK4POS ] = HAND_GRENADE;
-	gMercProfiles[ ubProfileIndex ].bInvStatus[ SMALLPOCK4POS ] = 100;
-	gMercProfiles[ ubProfileIndex ].bInvNumber[ SMALLPOCK4POS ] = 4;
+	GiveItem( p, HELMETPOS,     KEVLAR_HELMET);
+	GiveItem( p, VESTPOS,       KEVLAR_VEST);
+	GiveItemN(p, BIGPOCK2POS,   RDX,           10, 1);
+	GiveItemN(p, SMALLPOCK4POS, HAND_GRENADE, 100, 4);
 
 	// Give special items to some NPCs
-	//MERCPROFILESTRUCT* const carmen = GetProfile(CARMEN);
-	//carmen->inv[SMALLPOCK4POS]        = TERRORIST_INFO;
-	//carmen->bInvStatus[SMALLPOCK4POS] = 100;
-	//carmen->bInvNumber[SMALLPOCK4POS] =   1;
+	//GiveItem(GetProfile(CARMEN), SMALLPOCK4POS, TERRORIST_INFO);
 }
 
 
