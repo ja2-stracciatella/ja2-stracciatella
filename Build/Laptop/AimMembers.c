@@ -1124,20 +1124,20 @@ static void DisplayMercStats(void)
 
 	//First column in stats box.  Health, Agility, dexterity, strength, leadership, wisdom
 	const UINT16 x1 = STATS_FIRST_COL;
-	DrawStat(x1, HEALTH_Y,     CharacterInfo[AIM_MEMBER_HEALTH    ], p->bLife      );
-	DrawStat(x1, AGILITY_Y,    CharacterInfo[AIM_MEMBER_AGILITY   ], p->bAgility   );
-	DrawStat(x1, DEXTERITY_Y,  CharacterInfo[AIM_MEMBER_DEXTERITY ], p->bDexterity );
-	DrawStat(x1, STRENGTH_Y,   CharacterInfo[AIM_MEMBER_STRENGTH  ], p->bStrength  );
-	DrawStat(x1, LEADERSHIP_Y, CharacterInfo[AIM_MEMBER_LEADERSHIP], p->bLeadership);
-	DrawStat(x1, WISDOM_Y,     CharacterInfo[AIM_MEMBER_WISDOM    ], p->bWisdom    );
+	DrawStat(x1, HEALTH_Y,     str_stat_health,     p->bLife      );
+	DrawStat(x1, AGILITY_Y,    str_stat_agility,    p->bAgility   );
+	DrawStat(x1, DEXTERITY_Y,  str_stat_dexterity,  p->bDexterity );
+	DrawStat(x1, STRENGTH_Y,   str_stat_strength,   p->bStrength  );
+	DrawStat(x1, LEADERSHIP_Y, str_stat_leadership, p->bLeadership);
+	DrawStat(x1, WISDOM_Y,     str_stat_wisdom,     p->bWisdom    );
 
 	//Second column in stats box.  Exp.Level, Markmanship, mechanical, explosive, medical
 	const UINT16 x2 = STATS_SECOND_COL;
-	DrawStatColoured(x2, EXPLEVEL_Y,    CharacterInfo[AIM_MEMBER_EXP_LEVEL],    p->bExpLevel, FONT_MCOLOR_WHITE);
-	DrawStat(        x2, MARKSMAN_Y,    CharacterInfo[AIM_MEMBER_MARKSMANSHIP], p->bMarksmanship);
-	DrawStat(        x2, MECHANAICAL_Y, CharacterInfo[AIM_MEMBER_MECHANICAL  ], p->bMechanical  );
-	DrawStat(        x2, EXPLOSIVE_Y,   CharacterInfo[AIM_MEMBER_EXPLOSIVE   ], p->bExplosive   );
-	DrawStat(        x2, MEDICAL_Y,     CharacterInfo[AIM_MEMBER_MEDICAL     ], p->bMedical     );
+	DrawStatColoured(x2, EXPLEVEL_Y,    str_stat_exp_level,    p->bExpLevel, FONT_MCOLOR_WHITE);
+	DrawStat(        x2, MARKSMAN_Y,    str_stat_marksmanship, p->bMarksmanship);
+	DrawStat(        x2, MECHANAICAL_Y, str_stat_mechanical,   p->bMechanical  );
+	DrawStat(        x2, EXPLOSIVE_Y,   str_stat_explosive,    p->bExplosive   );
+	DrawStat(        x2, MEDICAL_Y,     str_stat_medical,      p->bMedical     );
 }
 
 

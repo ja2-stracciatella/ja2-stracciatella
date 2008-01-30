@@ -594,29 +594,18 @@ const wchar_t *pSquadMenuStrings[] =
 
 const wchar_t *pPersonnelScreenStrings[] =
 {
-	L"Gesundheit: ", // health of merc
-	L"Beweglichkeit: ",
-	L"Geschicklichkeit: ",
-	L"Kraft: ",
-	L"Führungsqualität: ",
-	L"Weisheit: ",
-	L"Erf. Stufe: ", // experience level
-	L"Treffsicherheit: ",
-	L"Technik: ",
-	L"Sprengstoffe: ",
-	L"Medizin: ",
 	L"Med. Versorgung: ", // amount of medical deposit put down on the merc
 	L"Laufzeit: ", // time remaining on current contract
-	L"Getötet: ", // number of kills by merc
-	L"Mithilfe: ", // number of assists on kills by merc
+	L"Getötet", // number of kills by merc
+	L"Mithilfe", // number of assists on kills by merc
 	L"Tgl. Kosten:", // daily cost of merc
 	L"Gesamtkosten:", // total cost of merc
 	L"Vertrag:", // cost of current contract
 	L"Diensttage:", // total service rendered by merc
 	L"Schulden:", // amount left on MERC merc to be paid
 	L"Prozentzahl Treffer:", // percentage of shots that hit target
-	L"Einsätze:", // number of battles fought
-	L"Verwundungen:", // number of times merc has been wounded
+	L"Einsätze", // number of battles fought
+	L"Verwundungen", // number of times merc has been wounded
 	L"Fähigkeiten:",
 	L"Keine Fähigkeiten:",
 };
@@ -2246,18 +2235,6 @@ const wchar_t *MercAccountText[] =
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
 const wchar_t *MercInfo[] =
 {
-	L"Gesundheit",
-	L"Beweglichkeit",
-	L"Geschicklichkeit",
-	L"Kraft",
-	L"Führungsqualität",
-	L"Weisheit",
-	L"Erfahrungsstufe",
-	L"Treffsicherheit",
-	L"Technik",
-	L"Sprengstoffe",
-	L"Medizin",
-
 	L"Zurück",
 	L"Anheuern",
 	L"Weiter",
@@ -2558,21 +2535,6 @@ const wchar_t *AimMemberText[] =
 //The page in which the players hires AIM mercenaries
 const wchar_t *CharacterInfo[] =
 {
-	// The various attributes of the merc
-
-	L"Gesundheit",
-	L"Beweglichkeit",
-	L"Geschicklichkeit",
-	L"Kraft",
-	L"Führungsqualität",
-	L"Weisheit",
-	L"Erfahrungsstufe",
-	L"Treffsicherheit",
-	L"Technik",
-	L"Sprengstoff",
-	L"Medizin",				//10
-
-
 	// the contract expenses' area
 
 	L"Preis",
@@ -2588,7 +2550,7 @@ const wchar_t *CharacterInfo[] =
 	L"Kontakt",
 	L"Weiter",
 	L"Zusatzinfo",				// Title for the additional info for the merc's bio
-	L"Aktive Mitglieder",		//20		// Title of the page
+	L"Aktive Mitglieder", // Title of the page
 	L"Zusätzl. Ausrüst:",				// Displays the optional gear cost
 	L"VERSICHERUNG erforderlich",			// If the merc required a medical deposit, this is displayed
 };
@@ -3586,5 +3548,17 @@ const wchar_t str_strategic_exit_gui_demo[]  = L"In der Vollversion können Sie 
  * anytime, except in the demo. */
 const wchar_t str_overhead_map_disabled[]    = L"Overhead-Karte steht in der Demo nicht zur Verfügung.";
 #endif
+
+const wchar_t str_stat_health[]       = L"Gesundheit";
+const wchar_t str_stat_agility[]      = L"Beweglichkeit";
+const wchar_t str_stat_dexterity[]    = L"Geschicklichkeit";
+const wchar_t str_stat_strength[]     = L"Kraft";
+const wchar_t str_stat_leadership[]   = L"Führungsqualität";
+const wchar_t str_stat_wisdom[]       = L"Weisheit";
+const wchar_t str_stat_exp_level[]    = L"Erfahrungsstufe";
+const wchar_t str_stat_marksmanship[] = L"Treffsicherheit";
+const wchar_t str_stat_mechanical[]   = L"Technik";
+const wchar_t str_stat_explosive[]    = L"Sprengstoffe";
+const wchar_t str_stat_medical[]      = L"Medizin";
 
 #endif

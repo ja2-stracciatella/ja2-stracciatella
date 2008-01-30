@@ -538,18 +538,6 @@ extern		const wchar_t *MercAccountText[];
 //MercFile.c
 enum
 {
-	MERC_FILES_HEALTH,
-	MERC_FILES_AGILITY,
-	MERC_FILES_DEXTERITY,
-	MERC_FILES_STRENGTH,
-	MERC_FILES_LEADERSHIP,
-	MERC_FILES_WISDOM,
-	MERC_FILES_EXPLEVEL,
-	MERC_FILES_MARKSMANSHIP,
-	MERC_FILES_MECHANICAL,
-	MERC_FILES_EXPLOSIVE,
-	MERC_FILES_MEDICAL,
-
 	MERC_FILES_PREVIOUS,
 	MERC_FILES_HIRE,
 	MERC_FILES_NEXT,
@@ -813,27 +801,16 @@ extern		const wchar_t *AimMemberText[];
 //Aim Member.c
 enum
 {
-	AIM_MEMBER_HEALTH,
-	AIM_MEMBER_AGILITY,
-	AIM_MEMBER_DEXTERITY,
-	AIM_MEMBER_STRENGTH,
-	AIM_MEMBER_LEADERSHIP,
-	AIM_MEMBER_WISDOM,				//5
-	AIM_MEMBER_EXP_LEVEL,
-	AIM_MEMBER_MARKSMANSHIP,
-	AIM_MEMBER_MECHANICAL,
-	AIM_MEMBER_EXPLOSIVE,
-	AIM_MEMBER_MEDICAL,				//10
 	AIM_MEMBER_FEE,
 	AIM_MEMBER_CONTRACT,
 	AIM_MEMBER_1_DAY,
 	AIM_MEMBER_1_WEEK,
-	AIM_MEMBER_2_WEEKS,				//15
+	AIM_MEMBER_2_WEEKS,
 	AIM_MEMBER_PREVIOUS,
 	AIM_MEMBER_CONTACT,
 	AIM_MEMBER_NEXT,
 	AIM_MEMBER_ADDTNL_INFO,
-	AIM_MEMBER_ACTIVE_MEMBERS,	//20
+	AIM_MEMBER_ACTIVE_MEMBERS,
 	AIM_MEMBER_OPTIONAL_GEAR,
 	AIM_MEMBER_MEDICAL_DEPOSIT_REQ,
 };
@@ -1351,5 +1328,17 @@ extern const wchar_t str_overhead_map_disabled[];
 extern const wchar_t* gpDemoString[];
 extern const wchar_t* gpDemoIntroString[];
 #endif
+
+extern const wchar_t str_stat_health[];
+extern const wchar_t str_stat_agility[];
+extern const wchar_t str_stat_dexterity[];
+extern const wchar_t str_stat_strength[];
+extern const wchar_t str_stat_leadership[];
+extern const wchar_t str_stat_wisdom[];
+extern const wchar_t str_stat_exp_level[];
+extern const wchar_t str_stat_marksmanship[];
+extern const wchar_t str_stat_mechanical[];
+extern const wchar_t str_stat_explosive[];
+extern const wchar_t str_stat_medical[];
 
 #endif

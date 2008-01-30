@@ -612,29 +612,18 @@ const wchar_t* pSquadMenuStrings[] =
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Здоровье: ", // health of merc
-	L"Проворность: ",
-	L"Ловкость: ",
-	L"Сила: ",
-	L"Лидерство: ",
-	L"Мудрость: ",
-	L"Уровень опыта: ", // experience level
-	L"Меткость: ",
-	L"Механика: ",
-	L"Взрывник: ",
-	L"Медицина: ",
 	L"Медицинский депозит: ", // amount of medical deposit put down on the merc
 	L"Срок контракта: ", // time of remaining contract
-	L"Убийства: ", // number of kills by merc
-	L"Помощь в бою: ", // number of assists on kills by merc
+	L"Убийства", // number of kills by merc
+	L"Помощь в бою", // number of assists on kills by merc
 	L"Стоимость в день:", // daily cost of merc
 	L"Гонорар:", // total cost of merc
 	L"Контракт:", // cost of current contract
 	L"На службе:", // total service rendered by merc
 	L"Долг по оплате:", // amount left on MERC merc to be paid
 	L"Процент попаданий:", // percentage of shots that hit target
-	L"Битвы:", // number of battles fought
-	L"Ранения:", // number of times merc has been wounded
+	L"Битвы", // number of battles fought
+	L"Ранения", // number of times merc has been wounded
 	L"Навыки:",
 	L"Нет навыков",
 };
@@ -2354,18 +2343,6 @@ const wchar_t* MercAccountText[] =
 
 const wchar_t* MercInfo[] =
 {
-	L"Здоровье",
-	L"Проворность",
-	L"Ловкость",
-	L"Сила",
-	L"Лидерство",
-	L"Мудрость",
-	L"Опытность",
-	L"Меткость",
-	L"Механика",
-	L"Взрывник",
-	L"Медицина",
-
 	L"Назад",
 	L"Нанять",
 	L"Дальше",
@@ -2706,20 +2683,6 @@ const wchar_t* AimMemberText[] =
 
 const wchar_t* CharacterInfo[] =
 {
-	// The various attributes of the merc
-
-	L"Здоровье",
-	L"Проворность",
-	L"Ловкость",
-	L"Сила",
-	L"Лидерство",
-	L"Мудрость",
-	L"Опытность",
-	L"Меткость",
-	L"Механика",
-	L"Взрывник",
-	L"Медицина",				//10
-
 	// the contract expenses' area
 
 	L"Плата",
@@ -2736,7 +2699,7 @@ const wchar_t* CharacterInfo[] =
 	L">>>>",
 
 	L"Дополнительная информация",				// Title for the additional info for the merc's bio
-	L"Действующие наемники A.I.M.",		//20		// Title of the page
+	L"Действующие наемники A.I.M.", // Title of the page
 	L"Цена снаряжения:",				// Displays the optional gear cost
 	L"медицинский депозит",			// If the merc required a medical deposit, this is displayed
 };
@@ -3783,5 +3746,17 @@ const wchar_t str_strategic_exit_gui_demo[]  = L"В полной игре вы �
  * anytime, except in the demo. */
 const wchar_t str_overhead_map_disabled[]    = L"Общая карта в демо-версии отсутствует.";
 #endif
+
+const wchar_t str_stat_health[]       = L"Здоровье";
+const wchar_t str_stat_agility[]      = L"Проворность";
+const wchar_t str_stat_dexterity[]    = L"Ловкость";
+const wchar_t str_stat_strength[]     = L"Сила";
+const wchar_t str_stat_leadership[]   = L"Лидерство";
+const wchar_t str_stat_wisdom[]       = L"Мудрость";
+const wchar_t str_stat_exp_level[]    = L"Опытность"; // Уровень опыта
+const wchar_t str_stat_marksmanship[] = L"Меткость";
+const wchar_t str_stat_mechanical[]   = L"Механика";
+const wchar_t str_stat_explosive[]    = L"Взрывник";
+const wchar_t str_stat_medical[]      = L"Медицина";
 
 #endif

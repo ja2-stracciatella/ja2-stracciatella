@@ -613,29 +613,18 @@ const wchar_t* pSquadMenuStrings[] =
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Santé : ", // health of merc
-	L"Agilité : ",
-	L"Dextérité : ",
-	L"Force : ",
-	L"Commandement : ",
-	L"Sagesse : ",
-	L"Niv. Exp. : ", // experience level
-	L"Tir : ",
-	L"Technique : ",
-	L"Explosifs : ",
-	L"Médecine : ",
 	L"Acompte méd. : ", // amount of medical deposit put down on the merc
 	L"Contrat : ", // cost of current contract
-	L"Tués : ", // number of kills by merc
-	L"Participation : ", // number of assists on kills by merc
+	L"Tués", // number of kills by merc
+	L"Participation", // number of assists on kills by merc
 	L"Coût/jour :", // daily cost of merc
 	L"Coût total :", // total cost of merc
 	L"Contrat :", // cost of current contract
 	L"Services rendus :", // total service rendered by merc
 	L"Salaires dus :", // amount left on MERC merc to be paid
 	L"Précision :", // percentage of shots that hit target
-	L"Combats :", // number of battles fought
-	L"Blessures :", // number of times merc has been wounded
+	L"Combats", // number of battles fought
+	L"Blessures", // number of times merc has been wounded
 	L"Spécialités :",
 	L"Aucune spécialité",
 };
@@ -2339,18 +2328,6 @@ const wchar_t* MercAccountText[] =
 
 const wchar_t* MercInfo[] =
 {
-	L"Santé",
-	L"Agilité",
-	L"Dextérité",
-	L"Force",
-	L"Commandement",
-	L"Sagesse",
-	L"Niveau",
-	L"Tir",
-	L"Technique",
-	L"Explosifs",
-	L"Médecine",
-
 	L"Précédent",
 	L"Engager",
 	L"Suivant",
@@ -2691,20 +2668,6 @@ const wchar_t* AimMemberText[] =
 
 const wchar_t* CharacterInfo[] =
 {
-	// The various attributes of the merc
-
-	L"Santé",
-	L"Agilité",
-	L"Dextérité",
-	L"Force",
-	L"Commandement",
-	L"Sagesse",
-	L"Niveau",
-	L"Tir",
-	L"Technique",
-	L"Explosifs",
-	L"Médecine",				//10
-
 	// the contract expenses' area
 
 	L"Paie",
@@ -2721,7 +2684,7 @@ const wchar_t* CharacterInfo[] =
 	L"Suivant",
 
 	L"Info. complémentaires",				// Title for the additional info for the merc's bio
-	L"Membres actifs",		//20		// Title of the page
+	L"Membres actifs", // Title of the page
 	L"Matériel optionnel :",				// Displays the optional gear cost
 	L"Dépôt Médical",			// If the merc required a medical deposit, this is displayed
 };
@@ -3764,5 +3727,17 @@ const wchar_t str_strategic_exit_gui_demo[]  = L"Impossible de séparer l'équip
  * anytime, except in the demo. */
 const wchar_t str_overhead_map_disabled[]    = L"Carte désactivée dans la démo.";
 #endif
+
+const wchar_t str_stat_health[]       = L"Santé";
+const wchar_t str_stat_agility[]      = L"Agilité";
+const wchar_t str_stat_dexterity[]    = L"Dextérité";
+const wchar_t str_stat_strength[]     = L"Force";
+const wchar_t str_stat_leadership[]   = L"Commandement";
+const wchar_t str_stat_wisdom[]       = L"Sagesse";
+const wchar_t str_stat_exp_level[]    = L"Niveau"; // Niveau Expérience
+const wchar_t str_stat_marksmanship[] = L"Tir";
+const wchar_t str_stat_mechanical[]   = L"Technique";
+const wchar_t str_stat_explosive[]    = L"Explosifs";
+const wchar_t str_stat_medical[]      = L"Médecine";
 
 #endif

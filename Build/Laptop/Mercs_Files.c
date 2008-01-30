@@ -396,21 +396,21 @@ static void DisplayMercsStats(UINT8 ubMercID)
 	const UINT16 x1_val = MERC_STATS_FIRST_NUM_COL_X;
 	UINT16       y1     = MERC_HEALTH_Y;
 	const UINT16 dy     = MERC_SPACE_BN_LINES;
-	DrawStat(x1, y1,       MercInfo[MERC_FILES_HEALTH],     x1_val, p->bLife);
-	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_AGILITY],    x1_val, p->bAgility);
-	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_DEXTERITY],  x1_val, p->bDexterity);
-	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_STRENGTH],   x1_val, p->bStrength);
-	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_LEADERSHIP], x1_val, p->bLeadership);
-	DrawStat(x1, y1 += dy, MercInfo[MERC_FILES_WISDOM],     x1_val, p->bWisdom);
+	DrawStat(x1, y1,       str_stat_health,     x1_val, p->bLife);
+	DrawStat(x1, y1 += dy, str_stat_agility,    x1_val, p->bAgility);
+	DrawStat(x1, y1 += dy, str_stat_dexterity,  x1_val, p->bDexterity);
+	DrawStat(x1, y1 += dy, str_stat_strength,   x1_val, p->bStrength);
+	DrawStat(x1, y1 += dy, str_stat_leadership, x1_val, p->bLeadership);
+	DrawStat(x1, y1 += dy, str_stat_wisdom,     x1_val, p->bWisdom);
 
 	const UINT16 x2     = MERC_STATS_SECOND_COL_X;
 	const UINT16 x2_val = MERC_STATS_SECOND_NUM_COL_X;
 	UINT16       y2     = MERC_HEALTH_Y;
-	DrawStat(x2, y2,       MercInfo[MERC_FILES_EXPLEVEL],     x2_val, p->bExpLevel);
-	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MARKSMANSHIP], x2_val, p->bMarksmanship);
-	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MECHANICAL],   x2_val, p->bMechanical);
-	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_EXPLOSIVE],    x2_val, p->bExplosive);
-	DrawStat(x2, y2 += dy, MercInfo[MERC_FILES_MEDICAL],      x2_val, p->bMedical);
+	DrawStat(x2, y2,       str_stat_exp_level,    x2_val, p->bExpLevel);
+	DrawStat(x2, y2 += dy, str_stat_marksmanship, x2_val, p->bMarksmanship);
+	DrawStat(x2, y2 += dy, str_stat_mechanical,   x2_val, p->bMechanical);
+	DrawStat(x2, y2 += dy, str_stat_explosive,    x2_val, p->bExplosive);
+	DrawStat(x2, y2 += dy, str_stat_medical,      x2_val, p->bMedical);
 
 	//Daily Salary
 	y2 += dy;

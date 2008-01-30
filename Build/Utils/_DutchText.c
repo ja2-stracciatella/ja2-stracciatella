@@ -628,28 +628,17 @@ const wchar_t* pSquadMenuStrings[] =
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Gezondheid: ", // health of merc
-	L"Beweeglijkheid: ",
-	L"Handigheid: ",
-	L"Kracht: ",
-	L"Leiderschap; ",
-	L"Wijsheid: ",
-	L"Erv. Niv.: ", // experience level
-	L"Trefzekerheid: ",
-	L"Techniek: ",
-	L"Explosieven: ",
-	L"Medisch: ",
 	L"Med. Kosten: ", // amount of medical deposit put down on the merc
 	L"Rest Contract: ", // cost of current contract
-	L"Doden: ", // number of kills by merc
-	L"Hulp: ", // number of assists on kills by merc
+	L"Doden", // number of kills by merc
+	L"Hulp", // number of assists on kills by merc
 	L"Dag. Kosten:", // daily cost of merc
 	L"Huidige Tot. Kosten:", // total cost of merc
 	L"Huidige Tot. Service:", // total service rendered by merc
 	L"Salaris Tegoed:", // amount left on MERC merc to be paid
 	L"Trefzekerheid:", // percentage of shots that hit target
-	L"Gevechten:", // number of battles fought
-	L"Keren Gewond:", // number of times merc has been wounded
+	L"Gevechten", // number of battles fought
+	L"Keren Gewond", // number of times merc has been wounded
 	L"Vaardigheden:",
 	L"Vaardigheden:",
 };
@@ -2354,18 +2343,6 @@ const wchar_t* 		MercAccountText[] =
 
 const wchar_t* 		MercInfo[] =
 {
-	L"Gezondheid",
-	L"Beweeglijkheid",
-	L"Handigheid",
-	L"Kracht",
-	L"Leiderschap",
-	L"Wijsheid",
-	L"Ervaringsniveau",
-	L"Trefzekerheid",
-	L"Technisch",
-	L"Explosieven",
-	L"Medisch",
-
 	L"Vorige",
 	L"Huur",
 	L"Volgende",
@@ -2706,20 +2683,6 @@ const wchar_t* 		AimMemberText[] =
 
 const wchar_t* 		CharacterInfo[] =
 {
-	// The various attributes of the merc
-
-	L"Gezondheid",
-	L"Beweeglijkheid",
-	L"Handigheid",
-	L"Kracht",
-	L"Leiderschap",
-	L"Wijsheid",
-	L"Ervaringsniveau",
-	L"Trefzekerheid",
-	L"Technisch",
-	L"Explosieven",
-	L"Medisch",				//10
-
 	// the contract expenses' area
 
 	L"Tarief",
@@ -2736,7 +2699,7 @@ const wchar_t* 		CharacterInfo[] =
 	L"Next",
 
 	L"Extra Info",				// Title for the additional info for the merc's bio
-	L"Actieve Leden",		//20		// Title of the page
+	L"Actieve Leden", // Title of the page
 	L"Aanv. Uitrusting:",				// Displays the optional gear cost
 	L"MEDISCHE aanbetaling nodig",			// If the merc required a medical deposit, this is displayed
 };
@@ -3779,5 +3742,17 @@ const wchar_t str_strategic_exit_gui_demo[]  = L"In het volledige spel is het mo
  * anytime, except in the demo. */
 const wchar_t str_overhead_map_disabled[]    = L"Overzichtkaart niet mogelijk in demo.";
 #endif
+
+const wchar_t str_stat_health[]       = L"Gezondheid";
+const wchar_t str_stat_agility[]      = L"Beweeglijkheid";
+const wchar_t str_stat_dexterity[]    = L"Handigheid";
+const wchar_t str_stat_strength[]     = L"Kracht";
+const wchar_t str_stat_leadership[]   = L"Leiderschap";
+const wchar_t str_stat_wisdom[]       = L"Wijsheid";
+const wchar_t str_stat_exp_level[]    = L"Ervaringsniveau";
+const wchar_t str_stat_marksmanship[] = L"Trefzekerheid";
+const wchar_t str_stat_mechanical[]   = L"Technisch";
+const wchar_t str_stat_explosive[]    = L"Explosieven";
+const wchar_t str_stat_medical[]      = L"Medisch";
 
 #endif

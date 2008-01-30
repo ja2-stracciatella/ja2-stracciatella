@@ -612,29 +612,18 @@ const wchar_t* pSquadMenuStrings[] =
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Zdrowie: ", // health of merc
-	L"Zwinność: ",
-	L"Zręczność: ",
- 	L"Siła: ",
- 	L"Um. dowodzenia: ",
- 	L"Inteligencja: ",
- 	L"Poziom dośw.: ", // experience level
- 	L"Um. strzeleckie: ",
- 	L"Zn. mechaniki: ",
- 	L"Zn. mat. wybuchowych: ",
- 	L"Wiedza medyczna: ",
  	L"Zastaw na życie: ", // amount of medical deposit put down on the merc
  	L"Bieżący kontrakt: ", // cost of current contract
- 	L"Liczba zabójstw: ", // number of kills by merc
- 	L"Liczba asyst: ", // number of assists on kills by merc
+ 	L"Liczba zabójstw", // number of kills by merc
+ 	L"Liczba asyst", // number of assists on kills by merc
  	L"Dzienny koszt:", // daily cost of merc
  	L"Ogólny koszt:", // total cost of merc
  	L"Wartość kontraktu:", // cost of current contract
  	L"Usługi ogółem", // total service rendered by merc
  	L"Zaległa kwota", // amount left on MERC merc to be paid
  	L"Celność:", // percentage of shots that hit target
- 	L"Ilość walk:", // number of battles fought
- 	L"Ranny(a):", // number of times merc has been wounded
+ 	L"Ilość walk", // number of battles fought
+ 	L"Ranny(a)", // number of times merc has been wounded
  	L"Umiejętności:",
  	L"Brak umięjętności",
 };
@@ -2339,18 +2328,6 @@ const wchar_t* MercAccountText[] =
 
 const wchar_t* MercInfo[] =
 {
-	L"Zdrowie",
-	L"Zwinność",
-	L"Sprawność",
-	L"Siła",
-	L"Um. dowodz.",
-	L"Inteligencja",
-	L"Poz. doświadczenia",
-	L"Um. strzeleckie",
-	L"Zn. mechaniki",
-	L"Mat. wybuchowe",
-	L"Wiedza medyczna",
-
 	L"Poprzedni",
 	L"Najmij",
 	L"Następny",
@@ -2691,20 +2668,6 @@ const wchar_t* AimMemberText[] =
 
 const wchar_t* CharacterInfo[] =
 {
-	// The various attributes of the merc
-
-	L"Zdrowie",
-	L"Zwinność",
-	L"Sprawność",
-	L"Siła",
-	L"Um. dowodzenia",
-	L"Inteligencja",
-	L"Poziom dośw.",
-	L"Um. strzeleckie",
-	L"Zn. mechaniki",
-	L"Zn. mat. wyb.",
-	L"Wiedza med.",				//10
-
 	// the contract expenses' area
 
 	L"Zapłata",
@@ -2721,7 +2684,7 @@ const wchar_t* CharacterInfo[] =
 	L"Następny",
 
 	L"Dodatkowe informacje",				// Title for the additional info for the merc's bio
-	L"Aktywni członkowie",		//20		// Title of the page
+	L"Aktywni członkowie", // Title of the page
 	L"Opcjonalne wyposażenie:",				// Displays the optional gear cost
 	L"Wymagany jest zastaw na życie",			// If the merc required a medical deposit, this is displayed
 };
@@ -3766,5 +3729,17 @@ const wchar_t str_strategic_exit_gui_demo[]  = L"W pełnej wersji gry będzie mo
  * anytime, except in the demo. */
 const wchar_t str_overhead_map_disabled[]    = L"Ogólna mapa sektora jest niedostępna w wersji demo.";
 #endif
+
+const wchar_t str_stat_health[]       = L"Zdrowie";
+const wchar_t str_stat_agility[]      = L"Zwinność";
+const wchar_t str_stat_dexterity[]    = L"Sprawność";
+const wchar_t str_stat_strength[]     = L"Siła";
+const wchar_t str_stat_leadership[]   = L"Um. dowodzenia";
+const wchar_t str_stat_wisdom[]       = L"Inteligencja";
+const wchar_t str_stat_exp_level[]    = L"Poziom dośw."; // Poziom doświadczenia
+const wchar_t str_stat_marksmanship[] = L"Um. strzeleckie";
+const wchar_t str_stat_mechanical[]   = L"Zn. mechaniki";
+const wchar_t str_stat_explosive[]    = L"Zn. mat. wyb."; // Zn. materiałów wybuchowych
+const wchar_t str_stat_medical[]      = L"Wiedza medyczna";
 
 #endif

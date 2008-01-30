@@ -176,29 +176,18 @@ static UINT8 gubPersonnelInfoState = PRSNL_STATS;
 //enums for the pPersonnelScreenStrings[]
 enum
 {
-	PRSNL_TXT_HEALTH,           //    HEALTH OF MERC
-	PRSNL_TXT_AGILITY,
-	PRSNL_TXT_DEXTERITY,
-	PRSNL_TXT_STRENGTH,
-	PRSNL_TXT_LEADERSHIP,
-	PRSNL_TXT_WISDOM,           //  5
-	PRSNL_TXT_EXP_LVL,          //    EXPERIENCE LEVEL
-	PRSNL_TXT_MARKSMANSHIP,
-	PRSNL_TXT_MECHANICAL,
-	PRSNL_TXT_EXPLOSIVES,
-	PRSNL_TXT_MEDICAL,          // 10
-	PRSNL_TXT_MED_DEPOSIT,      //    AMOUNT OF MEDICAL DEPOSIT PUT DOWN ON THE MERC
-	PRSNL_TXT_CURRENT_CONTRACT, //    COST OF CURRENT CONTRACT
-	PRSNL_TXT_KILLS,            //    NUMBER OF KILLS BY MERC
-	PRSNL_TXT_ASSISTS,          //    NUMBER OF ASSISTS ON KILLS BY MERC
-	PRSNL_TXT_DAILY_COST,       // 15 DAILY COST OF MERC
-	PRSNL_TXT_TOTAL_COST,       //    TOTAL COST OF MERC
-	PRSNL_TXT_CONTRACT,         //    COST OF CURRENT CONTRACT
-	PRSNL_TXT_TOTAL_SERVICE,    //    TOTAL SERVICE RENDERED BY MERC
-	PRSNL_TXT_UNPAID_AMOUNT,    //    AMOUNT LEFT ON MERC MERC TO BE PAID
-	PRSNL_TXT_HIT_PERCENTAGE,   // 20 PERCENTAGE OF SHOTS THAT HIT TARGET
-	PRSNL_TXT_BATTLES,          //    NUMBER OF BATTLES FOUGHT
-	PRSNL_TXT_TIMES_WOUNDED,    //    NUMBER OF TIMES MERC HAS BEEN WOUNDED
+	PRSNL_TXT_MED_DEPOSIT,      // AMOUNT OF MEDICAL DEPOSIT PUT DOWN ON THE MERC
+	PRSNL_TXT_CURRENT_CONTRACT, // COST OF CURRENT CONTRACT
+	PRSNL_TXT_KILLS,            // NUMBER OF KILLS BY MERC
+	PRSNL_TXT_ASSISTS,          // NUMBER OF ASSISTS ON KILLS BY MERC
+	PRSNL_TXT_DAILY_COST,       // DAILY COST OF MERC
+	PRSNL_TXT_TOTAL_COST,       // TOTAL COST OF MERC
+	PRSNL_TXT_CONTRACT,         // COST OF CURRENT CONTRACT
+	PRSNL_TXT_TOTAL_SERVICE,    // TOTAL SERVICE RENDERED BY MERC
+	PRSNL_TXT_UNPAID_AMOUNT,    // AMOUNT LEFT ON MERC MERC TO BE PAID
+	PRSNL_TXT_HIT_PERCENTAGE,   // PERCENTAGE OF SHOTS THAT HIT TARGET
+	PRSNL_TXT_BATTLES,          // NUMBER OF BATTLES FOUGHT
+	PRSNL_TXT_TIMES_WOUNDED,    // NUMBER OF TIMES MERC HAS BEEN WOUNDED
 	PRSNL_TXT_SKILLS,
 	PRSNL_TXT_NOSKILLS,
 };
@@ -755,6 +744,22 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 }
 
 
+static const wchar_t* const str_stat[] =
+{
+	str_stat_health,
+	str_stat_agility,
+	str_stat_dexterity,
+	str_stat_strength,
+	str_stat_leadership,
+	str_stat_wisdom,
+	str_stat_exp_level,
+	str_stat_marksmanship,
+	str_stat_mechanical,
+	str_stat_explosive,
+	str_stat_medical
+};
+
+
 static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 {
 	wchar_t sString[50];
@@ -769,7 +774,7 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 		mprintf(sX, y, sString);
 	}
 	swprintf(sString, lengthof(sString), L"%d", stat);
-	mprintf(pers_stat_x, y, pPersonnelScreenStrings[idx]);
+	mprintf(pers_stat_x, y, L"%ls:", str_stat[idx]);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	mprintf(sX, y, sString);
 }
@@ -781,7 +786,7 @@ static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
 	INT16 sX;
 	INT16 sY;
 
-	mprintf(pers_stat_x, y, text);
+	mprintf(pers_stat_x, y, L"%ls:", text);
 	swprintf(sString, lengthof(sString), L"%d", stat);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	mprintf(sX, y, sString);
@@ -814,7 +819,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	{
 		wcslcpy(sString, pPOWStrings[1], lengthof(sString));
 	}
-	mprintf(pers_stat_x, pers_stat_y[0], pPersonnelScreenStrings[PRSNL_TXT_HEALTH]);
+	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	mprintf(sX, pers_stat_y[0], sString);
 
@@ -823,7 +828,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 		for (INT32 i = 1; i < 11; ++i)
 		{
 			const INT32 y = pers_stat_y[i];
-			mprintf(pers_stat_x, y, pPersonnelScreenStrings[i]);
+			mprintf(pers_stat_x, y, str_stat[i]);
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
 			mprintf(sX, y, na);
@@ -2118,20 +2123,20 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
 	const INT8 life = p->bLife;
 	const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
 	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
-	mprintf(pers_stat_x, pers_stat_y[0], pPersonnelScreenStrings[0]);
+	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	mprintf(sX, pers_stat_y[0], sString);
 
-	PrintStat(p->bAgility,     pers_stat_y[ 1], pPersonnelScreenStrings[1]);
-	PrintStat(p->bDexterity,   pers_stat_y[ 2], pPersonnelScreenStrings[2]);
-	PrintStat(p->bStrength,    pers_stat_y[ 3], pPersonnelScreenStrings[3]);
-	PrintStat(p->bLeadership,  pers_stat_y[ 4], pPersonnelScreenStrings[4]);
-	PrintStat(p->bWisdom,      pers_stat_y[ 5], pPersonnelScreenStrings[5]);
-	PrintStat(p->bExpLevel,    pers_stat_y[ 6], pPersonnelScreenStrings[6]);
-	PrintStat(p->bMarksmanship,pers_stat_y[ 7], pPersonnelScreenStrings[7]);
-	PrintStat(p->bMechanical,  pers_stat_y[ 8], pPersonnelScreenStrings[8]);
-	PrintStat(p->bExplosive,   pers_stat_y[ 9], pPersonnelScreenStrings[9]);
-	PrintStat(p->bMedical,     pers_stat_y[10], pPersonnelScreenStrings[10]);
+	PrintStat(p->bAgility,     pers_stat_y[ 1], str_stat_agility);
+	PrintStat(p->bDexterity,   pers_stat_y[ 2], str_stat_dexterity);
+	PrintStat(p->bStrength,    pers_stat_y[ 3], str_stat_strength);
+	PrintStat(p->bLeadership,  pers_stat_y[ 4], str_stat_leadership);
+	PrintStat(p->bWisdom,      pers_stat_y[ 5], str_stat_wisdom);
+	PrintStat(p->bExpLevel,    pers_stat_y[ 6], str_stat_exp_level);
+	PrintStat(p->bMarksmanship,pers_stat_y[ 7], str_stat_marksmanship);
+	PrintStat(p->bMechanical,  pers_stat_y[ 8], str_stat_mechanical);
+	PrintStat(p->bExplosive,   pers_stat_y[ 9], str_stat_explosive);
+	PrintStat(p->bMedical,     pers_stat_y[10], str_stat_medical);
 	PrintStat(p->usKills,      pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
 	PrintStat(p->usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
