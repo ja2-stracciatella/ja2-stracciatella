@@ -849,12 +849,9 @@ static BOOLEAN EnterQuestDebugSystem(void)
 
 	if( giHaveSelectedNPC != -1 )
 	{
-		wchar_t	zItemDesc[ SIZE_ITEM_INFO ];
-
-		if( gfUseLocalNPCs )
-			swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", gubCurrentNpcInSector[giHaveSelectedNPC], gMercProfiles[gubCurrentNpcInSector[giHaveSelectedNPC]].zNickname);
-		else
-			swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", giHaveSelectedNPC, gMercProfiles[giHaveSelectedNPC].zNickname);
+		const ProfileID pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[giHaveSelectedNPC] : giHaveSelectedNPC);
+		wchar_t	zItemDesc[SIZE_ITEM_INFO];
+		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", pid, GetProfile(pid)->zNickname);
 		SpecifyButtonText( guiQuestDebugCurNPCButton, zItemDesc );
 
 		gNpcListBox.sCurSelectedItem = (INT16)giHaveSelectedNPC;
@@ -1705,22 +1702,11 @@ static void DisplaySelectedNPC(void)
 	// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-		if( gfUseLocalNPCs )
-		{
-			DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[i]].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			GetDebugLocationString( gubCurrentNpcInSector[ i ], sTempString, lengthof(sTempString));
-
-			//GetShortSectorString( gMercProfiles[ gubCurrentNpcInSector[ i ] ].sSectorX, gMercProfiles[ gubCurrentNpcInSector[ i ] ].sSectorY, sTempString );
-		}
-		else
-		{
-			DrawTextToScreen(gMercProfiles[i].zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			GetDebugLocationString( i, sTempString, lengthof(sTempString));
-
-//			GetShortSectorString( gMercProfiles[ i ].sSectorX, gMercProfiles[ i ].sSectorY, sTempString );
-		}
+		const ProfileID                pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[i] : i);
+		const MERCPROFILESTRUCT* const p   = GetProfile(pid);
+		DrawTextToScreen(p->zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
+		//GetShortSectorString(p->sSectorX, p->sSectorY, sTempString);
 
 		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
@@ -1743,22 +1729,13 @@ static void DisplaySelectedNPC(void)
 
 		SetFontShadow(NO_SHADOW);
 
+		const ProfileID                pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem] : gpActiveListBox->sCurSelectedItem);
+		const MERCPROFILESTRUCT* const p   = GetProfile(pid);
 
 		// the highlighted name
-		if( gfUseLocalNPCs )
-		{
-			DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem]].zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-			GetDebugLocationString( gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ], sTempString, lengthof(sTempString));
-
-//			GetShortSectorString( gMercProfiles[ gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ] ].sSectorX, gMercProfiles[ gubCurrentNpcInSector[ gpActiveListBox->sCurSelectedItem ] ].sSectorY, sTempString );
-		}
-		else
-		{
-			DrawTextToScreen(gMercProfiles[gpActiveListBox->sCurSelectedItem].zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			GetDebugLocationString( gpActiveListBox->sCurSelectedItem, sTempString, lengthof(sTempString));
-//			GetShortSectorString( gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorX, gMercProfiles[ gpActiveListBox->sCurSelectedItem ].sSectorY, sTempString );
-		}
+		DrawTextToScreen(p->zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
+		//GetShortSectorString(pid->sSectorX, pid->sSectorY, sTempString);
 
 		FindFontRightCoordinates(gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY);
 
@@ -1767,10 +1744,7 @@ static void DisplaySelectedNPC(void)
 
 		SetFontShadow(DEFAULT_SHADOW);
 
-		if( gfUseLocalNPCs )
-			swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem],  gMercProfiles[gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem]].zNickname);
-		else
-			swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", gpActiveListBox->sCurSelectedItem, gMercProfiles[gpActiveListBox->sCurSelectedItem].zNickname);
+		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", pid, p->zNickname);
 
 		SpecifyButtonText( guiQuestDebugCurNPCButton, zButtonName );
 	}
@@ -2147,25 +2121,21 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reas
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SOLDIERTYPE *pSoldier;
 		OBJECTTYPE		Object;
 
 		CreateItem( gItemListBox.sCurSelectedItem, 100, &Object );
 
 		//if the selected merc is created
-		if( gfUseLocalNPCs )
-			pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
-		else
-			pSoldier = FindSoldierByProfileID( (UINT8) gNpcListBox.sCurSelectedItem, FALSE );
-
-		if( !pSoldier )
+		const ProfileID    pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
+		SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+		if (!s)
 		{
 			//Failed to get npc, put error message
 			return;
 		}
 
 		//Give the selected item to the selected merc
-		if( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
+		if (!AutoPlaceObject(s, &Object, TRUE))
 		{
 			//failed to add item, put error message to screen
 		}
@@ -2601,8 +2571,6 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 {
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	UINT16	usPosY, i;
-	SOLDIERTYPE *pSoldier;
-
 
 	switch( ubAction )
 	{
@@ -2610,14 +2578,11 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 			break;
 
 		case QD_DROP_DOWN_CREATE:
-
+		{
 			//if the soldier is active
-			if( gfUseLocalNPCs )
-				pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
-			else
-				pSoldier = FindSoldierByProfileID( (UINT8)gNpcListBox.sCurSelectedItem, FALSE );
-
-			if( !pSoldier )
+			const ProfileID          pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
+			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+			if (!s)
 			{
 				//qq Display error box
 
@@ -2640,8 +2605,8 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 			//create the ok button
 			guiQuestDebugNPCInventOkBtn = MakeButton(L"OK", QUEST_DBS_NPC_INV_POPUP_X + QUEST_DBS_NPC_INV_POPUP_WIDTH / 2 - 12, QUEST_DBS_NPC_INV_POPUP_Y + QUEST_DBS_NPC_INV_POPUP_HEIGHT - 30, 30, 25, MSYS_PRIORITY_HIGH + 50, BtnQuestDebugNPCInventOkBtnButtonCallback);
 			SetButtonCursor( guiQuestDebugNPCInventOkBtn, CURSOR_WWW );
-
 			break;
+		}
 
 		case QD_DROP_DOWN_DESTROY:
 			RemoveButton( guiQuestDebugNPCInventOkBtn );
@@ -2660,15 +2625,10 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 		{
 			UINT16	usFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
-
 			//if the soldier is active
-			//if the soldier is active
-			if( gfUseLocalNPCs )
-				pSoldier = FindSoldierByProfileID( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ], FALSE );
-			else
-				pSoldier = FindSoldierByProfileID( (UINT8)gNpcListBox.sCurSelectedItem, FALSE );
-
-			if( pSoldier )
+			const ProfileID          pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
+			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+			if (s)
 			{
 				//color the background of the popup
 				ColorFillVideoSurfaceArea( FRAME_BUFFER, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y, QUEST_DBS_NPC_INV_POPUP_X+QUEST_DBS_NPC_INV_POPUP_WIDTH,	QUEST_DBS_NPC_INV_POPUP_Y+QUEST_DBS_NPC_INV_POPUP_HEIGHT, Get16BPPColor( FROMRGB(  45,  59,  74 ) ) );
@@ -2677,10 +2637,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 				DrawTextToScreen(QuestDebugText[QUEST_DBS_NPC_INVENTORY], QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+5, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				//Dispaly the current npc name
-			if( gfUseLocalNPCs )
-				DrawTextToScreen(gMercProfiles[gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem]].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-			else
-				DrawTextToScreen(gMercProfiles[gNpcListBox.sCurSelectedItem].zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+				DrawTextToScreen(GetProfile(pid)->zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
 				for( i=0; i<NUM_INV_SLOTS; i++)
@@ -2689,7 +2646,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 					DrawTextToScreen(PocketText[i], QUEST_DBS_NPC_INV_POPUP_X+10, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 					//Display the contents of the pocket
-					DrawTextToScreen(ShortItemNames[pSoldier->inv[i].usItem], QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+					DrawTextToScreen(ShortItemNames[s->inv[i].usItem], QUEST_DBS_NPC_INV_POPUP_X + 140, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 					usPosY += usFontHeight;
 				}
 			}
