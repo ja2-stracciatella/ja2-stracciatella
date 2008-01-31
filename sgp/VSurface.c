@@ -239,15 +239,6 @@ static void DeletePrimaryVideoSurfaces(void)
 }
 
 
-static BOOLEAN BltVideoSurfaceToVideoSurface(SGPVSurface* hDestVSurface, SGPVSurface* hSrcVSurface, INT32 iDestX, INT32 iDestY, const SGPRect* SRect);
-
-
-BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SrcRect)
-{
-	return BltVideoSurfaceToVideoSurface(dst, src, iDestX, iDestY, SrcRect);
-}
-
-
 void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const INT32 DestX, const INT32 DestY, const SGPRect* const SrcRect)
 {
 	UINT32 SrcPitchBYTES;
@@ -564,13 +555,13 @@ static BOOLEAN InternalDeleteVideoSurface(HVSURFACE hVSurface)
 
 
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
-static BOOLEAN BltVideoSurfaceToVideoSurface(SGPVSurface* const hDestVSurface, SGPVSurface* const hSrcVSurface, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
+BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
 {
-	Assert(hDestVSurface != NULL);
-	Assert(hSrcVSurface != NULL);
+	Assert(dst != NULL);
+	Assert(src != NULL);
 
 	// First check BPP values for compatibility
-	if (hDestVSurface->ubBitDepth < hSrcVSurface->ubBitDepth)
+	if (dst->ubBitDepth < src->ubBitDepth)
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 		return FALSE;
@@ -589,12 +580,12 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(SGPVSurface* const hDestVSurface, S
 	{
 		// Here, use default, which is entire Video Surface
 		// Check Sizes, SRC size MUST be <= DEST size
-		if (hDestVSurface->usHeight < hSrcVSurface->usHeight)
+		if (dst->usHeight < src->usHeight)
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 			return FALSE;
 		}
-		if (hDestVSurface->usWidth < hSrcVSurface->usWidth)
+		if (dst->usWidth < src->usWidth)
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 			return FALSE;
@@ -602,16 +593,16 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(SGPVSurface* const hDestVSurface, S
 
 		src_rect.x = 0;
 		src_rect.y = 0;
-		src_rect.w = hSrcVSurface->usWidth;
-		src_rect.h = hSrcVSurface->usHeight;
+		src_rect.w = src->usWidth;
+		src_rect.h = src->usHeight;
 	}
 
-	if (hDestVSurface->ubBitDepth == hSrcVSurface->ubBitDepth)
+	if (dst->ubBitDepth == src->ubBitDepth)
 	{
 		SDL_Rect dstrect;
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
-		SDL_BlitSurface(hSrcVSurface->surface, &src_rect, hDestVSurface->surface, &dstrect);
+		SDL_BlitSurface(src->surface, &src_rect, dst->surface, &dstrect);
 	}
 	else
 	{
@@ -621,12 +612,12 @@ static BOOLEAN BltVideoSurfaceToVideoSurface(SGPVSurface* const hDestVSurface, S
 		r.iRight  = src_rect.x + src_rect.w;
 		r.iBottom = src_rect.y + src_rect.h;
 		UINT32  spitch;
-		UINT8*  src = LockVideoSurfaceBuffer(hSrcVSurface, &spitch);
+		UINT8*  s_buf = LockVideoSurfaceBuffer(src, &spitch);
 		UINT32  dpitch;
-		UINT16* dst = (UINT16*)LockVideoSurfaceBuffer(hDestVSurface, &dpitch);
-		Blt8BPPDataSubTo16BPPBuffer(dst, dpitch, hSrcVSurface, src, spitch, iDestX, iDestY, &r);
-		UnLockVideoSurfaceBuffer(hDestVSurface);
-		UnLockVideoSurfaceBuffer(hSrcVSurface);
+		UINT16* d_buf = (UINT16*)LockVideoSurfaceBuffer(dst, &dpitch);
+		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &r);
+		UnLockVideoSurfaceBuffer(dst);
+		UnLockVideoSurfaceBuffer(src);
 	}
 
 	return TRUE;
