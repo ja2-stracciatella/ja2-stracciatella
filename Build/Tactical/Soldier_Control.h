@@ -730,7 +730,7 @@ struct SOLDIERTYPE
 	BOOLEAN											fFixingRobot;
 	INT8												bSlotItemTakenFrom;
 	BOOLEAN											fSignedAnotherContract;
-	UINT8												ubAutoBandagingMedic;
+	SOLDIERTYPE*                auto_bandaging_medic;
 	BOOLEAN											fDontChargeTurningAPs;
 	UINT8												ubRobotRemoteHolderID;
 	UINT32											uiTimeOfLastContractUpdate;

@@ -2499,9 +2499,9 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	if (new_selected_soldier != NULL)
 	{
 		if (gTacticalStatus.fAutoBandageMode &&
-				pSoldier->ubAutoBandagingMedic != NOBODY)
+				pSoldier->auto_bandaging_medic != NULL)
 		{
-			CancelAIAction(MercPtrs[pSoldier->ubAutoBandagingMedic]);
+			CancelAIAction(pSoldier->auto_bandaging_medic);
 		}
 
 		// see if this was the friend of a living merc

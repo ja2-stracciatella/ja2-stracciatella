@@ -203,7 +203,6 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 	INT16						sPatientGridNo, sBestPatientGridNo;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
 	SOLDIERTYPE *		pBestPatient = NULL;
-	SOLDIERTYPE *		pOtherMedic;
 	INT8						bPatientPriority;
 	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
@@ -272,12 +271,11 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 						if ( sPathCost != 0 )
 						{
 							// we can get there... can anyone else?
-
-							if ( pPatient->ubAutoBandagingMedic != NOBODY && pPatient->ubAutoBandagingMedic != pSoldier->ubID )
+							SOLDIERTYPE* const pOtherMedic = pPatient->auto_bandaging_medic;
+							if (pOtherMedic != NULL && pOtherMedic != pSoldier)
 							{
 								// only switch to this patient if our distance is closer than
 								// the other medic's
-								pOtherMedic = MercPtrs[ pPatient->ubAutoBandagingMedic ];
 								const INT16 sOtherAdjacentGridNo = FindAdjacentGridEx(pOtherMedic, sPatientGridNo, NULL, NULL, FALSE, FALSE);
 								if (sOtherAdjacentGridNo != -1)
 								{
@@ -342,12 +340,12 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 
 	if (pBestPatient)
 	{
-		if (pBestPatient->ubAutoBandagingMedic != NOBODY)
+		if (pBestPatient->auto_bandaging_medic != NULL)
 		{
 			// cancel that medic
-			CancelAIAction(MercPtrs[pBestPatient->ubAutoBandagingMedic]);
+			CancelAIAction(pBestPatient->auto_bandaging_medic);
 		}
-		pBestPatient->ubAutoBandagingMedic = pSoldier->ubID;
+		pBestPatient->auto_bandaging_medic = pSoldier;
 		*pfDoClimb = FALSE;
 		if ( CardinalSpacesAway( pSoldier->sGridNo, sBestPatientGridNo ) == 1 )
 		{

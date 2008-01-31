@@ -7979,7 +7979,7 @@ static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEA
 
 			if (gTacticalStatus.fAutoBandageMode)
 			{
-				pSoldier->ubAutoBandagingMedic = NOBODY;
+				pSoldier->auto_bandaging_medic = NULL;
 				ActionDone(pTSoldier);
 			}
 			else
@@ -8017,7 +8017,7 @@ void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEn
 
 		if ( gTacticalStatus.fAutoBandageMode )
 		{
-			pTSoldier->ubAutoBandagingMedic = NOBODY;
+			pTSoldier->auto_bandaging_medic = NULL;
 
 			ActionDone( pSoldier );
 		}

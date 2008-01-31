@@ -400,7 +400,7 @@ void AutoBandage( BOOLEAN fStart )
 		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
 			s->bSlotItemTakenFrom   = NO_SLOT;
-			s->ubAutoBandagingMedic = NOBODY;
+			s->auto_bandaging_medic = NULL;
 		}
 
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Begin auto bandage." );
