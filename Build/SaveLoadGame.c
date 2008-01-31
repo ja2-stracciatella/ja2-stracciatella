@@ -2366,11 +2366,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	if ( SaveGameHeader.uiSavedGameVersion < 68 )
 	{
 		// correct bVehicleUnderRepairID for all mercs
-		UINT8	ubID;
-		for( ubID = 0; ubID < MAXMERCS; ubID++ )
-		{
-			Menptr[ ubID ].bVehicleUnderRepairID = -1;
-		}
+		FOR_ALL_NON_PLANNING_SOLDIERS(s) s->bVehicleUnderRepairID = -1;
 	}
 
 	if ( SaveGameHeader.uiSavedGameVersion < 73 )
