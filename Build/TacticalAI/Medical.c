@@ -376,7 +376,7 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 	BOOLEAN				fDoClimb;
 
 
-	if (pSoldier->bMedical == 0 || pSoldier->ubServicePartner != NOBODY)
+	if (pSoldier->bMedical == 0 || pSoldier->service_partner != NULL)
 	{
 		// don't/can't make decision
 		return( AI_ACTION_NONE );

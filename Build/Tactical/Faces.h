@@ -115,7 +115,7 @@ struct FACETYPE
 	BOOLEAN		fOldShowHighlight;
 	INT8			bOldAssignment;
 	INT8			ubOldServiceCount;
-	UINT8			ubOldServicePartner;
+	const SOLDIERTYPE* old_service_partner;
 	BOOLEAN		fOldShowMoveHilight;
 
 	UINT16		sMouthFrame;

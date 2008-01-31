@@ -1027,7 +1027,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	pSoldier->sLastTarget							= NOWHERE;
 	pSoldier->sAbsoluteFinalDestination = NOWHERE;
 	pSoldier->sZLevelOverride					= -1;
-	pSoldier->ubServicePartner				= NOBODY;
+	pSoldier->service_partner 				= NULL;
 	pSoldier->ubAttackingHand					= HANDPOS;
 	pSoldier->usAnimState							= STANDING;
 	pSoldier->bInterruptDuelPts				= NO_INTERRUPT;

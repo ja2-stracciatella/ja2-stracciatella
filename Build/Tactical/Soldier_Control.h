@@ -480,7 +480,7 @@ struct SOLDIERTYPE
 	BOOLEAN											fBeginFade;
 	UINT8												ubFadeLevel;
 	UINT8												ubServiceCount;
-	UINT8												ubServicePartner;
+	SOLDIERTYPE*                service_partner;
 	INT8												bMarksmanship;
 	INT8												bExplosive;
 	THROW_PARAMS								*pThrowParams;

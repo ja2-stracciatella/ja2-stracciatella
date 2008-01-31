@@ -1288,7 +1288,7 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 		bPoints -= 2;
 	}
 
-	if (pSoldier->ubServicePartner != NOBODY)
+	if (pSoldier->service_partner != NULL)
 	{
 		// distracted by being bandaged/doing bandaging
 		bPoints -= 2;

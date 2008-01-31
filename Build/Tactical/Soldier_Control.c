@@ -3985,7 +3985,7 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier )
 		// IN deep water, tred!
 		EVENT_InitNewSoldierAnim( pSoldier, DEEP_WATER_TRED, 0 , FALSE );
 	}
-	else if ( pSoldier->ubServicePartner != NOBODY && pSoldier->bLife >= OKLIFE && pSoldier->bBreath > 0  )
+	else if (pSoldier->service_partner != NULL && pSoldier->bLife >= OKLIFE && pSoldier->bBreath > 0)
 	{
 		EVENT_InitNewSoldierAnim( pSoldier, GIVING_AID, 0 , FALSE );
 	}
@@ -7731,7 +7731,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		pSoldier->sTargetGridNo = sGridNo;
 
 		// SET PARTNER ID
-		pSoldier->ubServicePartner = pTSoldier->ubID;
+		pSoldier->service_partner = pTSoldier;
 
 		// SET PARTNER'S COUNT REFERENCE
 		pTSoldier->ubServiceCount++;
@@ -7970,12 +7970,12 @@ static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEA
 	// Loop through guys who have us as servicing
 	FOR_ALL_NON_PLANNING_SOLDIERS(pTSoldier)
 	{
-		if (pTSoldier->ubServicePartner == pSoldier->ubID)
+		if (pTSoldier->service_partner == pSoldier)
 		{
 			// END SERVICE!
 			pSoldier->ubServiceCount--;
 
-			pTSoldier->ubServicePartner = NOBODY;
+			pTSoldier->service_partner = NULL;
 
 			if (gTacticalStatus.fAutoBandageMode)
 			{
@@ -8003,17 +8003,14 @@ void ReceivingSoldierCancelServices( SOLDIERTYPE *pSoldier )
 
 void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEndAnim )
 {
-	SOLDIERTYPE	*pTSoldier;
-
 	// GET TARGET SOLDIER
-	if ( pSoldier->ubServicePartner != NOBODY )
+	SOLDIERTYPE* const pTSoldier = pSoldier->service_partner;
+	if (pTSoldier != NULL)
 	{
-		pTSoldier = MercPtrs[ pSoldier->ubServicePartner ];
-
 		// END SERVICE!
 		pTSoldier->ubServiceCount--;
 
-		pSoldier->ubServicePartner = NOBODY;
+		pSoldier->service_partner = NULL;
 
 		if ( gTacticalStatus.fAutoBandageMode )
 		{

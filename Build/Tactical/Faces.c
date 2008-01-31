@@ -1169,7 +1169,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 		}
 
 		// Check for being serviced...
-		if (s->ubServicePartner != NOBODY)
+		if (s->service_partner != NULL)
 		{
 			// Doctor...
 			sIconIndex = 1;
@@ -1527,10 +1527,10 @@ void HandleAutoFaces( )
 				 }
 
 
-				 if ( pFace->ubOldServicePartner != pSoldier->ubServicePartner )
+				 if (pFace->old_service_partner != pSoldier->service_partner)
 				 {
 					 fRerender = TRUE;
-					 pFace->ubOldServicePartner = pSoldier->ubServicePartner;
+					 pFace->old_service_partner = pSoldier->service_partner;
 				 }
 
 				 pFace->bOldSoldierLife		= bLife;
