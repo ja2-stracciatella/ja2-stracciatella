@@ -4327,6 +4327,30 @@ static void HideBoxIfShownMap(PopUpBox* const box)
 }
 
 
+static void ShowAssignmentBox(void)
+{
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+	{
+		const SOLDIERTYPE* const s = GetSelectedInfoChar();
+		if (s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW)
+		{
+			ShowBox(ghRemoveMercAssignBox);
+			return;
+		}
+	}
+
+	const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
+	if (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
+	{
+		ShowBox(ghEpcBox);
+	}
+	else
+	{
+		ShowBox(ghAssignmentBox);
+	}
+}
+
+
 static void CreateDestroyMouseRegionsForTrainingMenu(void);
 static void CreateDestroyMouseRegionsForAttributeMenu(void);
 static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox);
@@ -4415,28 +4439,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	CreateDestroyMouseRegionsForSquadMenu( TRUE );
 	CreateDestroyMouseRegionForRepairMenu(  );
 
-	const SOLDIERTYPE* const s = GetSelectedInfoChar();
-	if ((s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW) &&
-			guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-	{
-		// show basic assignment menu
-		ShowBox( ghRemoveMercAssignBox );
-	}
-	else
-	{
-		pSoldier = GetSelectedAssignSoldier( FALSE );
-
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-		{
-			ShowBox( ghEpcBox );
-		}
-		else
-		{
-			// show basic assignment menu
-
-			ShowBox( ghAssignmentBox );
-		}
-	}
+	ShowAssignmentBox();
 
 	// TRAINING menu
 	if( fShowTrainingMenu == TRUE )
