@@ -1062,31 +1062,6 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 }
 
 
-// is any merc on squad asleep?
-static BOOLEAN IsAnyMercOnSquadAsleep(UINT8 ubSquadValue)
-{
-	INT32 iCounter = 0;
-
-	if( SquadIsEmpty( ubSquadValue ) == TRUE )
-	{
-		return( FALSE );
-	}
-
-	for( iCounter = 0 ;iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD - 1; iCounter++ )
-	{
-		if( Squad[ ubSquadValue ][ iCounter ] != NULL )
-		{
-			if( Squad[ ubSquadValue ][ iCounter ]-> fMercAsleep )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
-}
-
-
 static BOOLEAN IsDeadGuyOnSquad(const ProfileID pid, const INT8 squad)
 {
 	for (INT32 i = 0; i < NUMBER_OF_SOLDIERS_PER_SQUAD; ++i)
