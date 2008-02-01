@@ -388,12 +388,8 @@ static BOOLEAN PrepareEnemyForUndergroundBattle(void);
 BOOLEAN PrepareEnemyForSectorBattle()
 {
 	SECTORINFO *pSector;
-	GROUP *pGroup;
-	SOLDIERTYPE *pSoldier;
-	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT8 ubTotalAdmins, ubTotalElites, ubTotalTroops;
 	UINT8 ubStationaryEnemies;
-	INT32 i, num;
 	INT16 sNumSlots;
 
 	gfPendingEnemies = FALSE;
@@ -406,8 +402,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 		//The player was actually in the sector first, and the enemy doesn't use reinforced placements
 		HandleArrivalOfReinforcements( gpBattleGroup );
 		//It is possible that other enemy groups have also arrived.  Add them in the same manner.
-		pGroup = gpGroupList;
-		while( pGroup )
+		for (GROUP* pGroup = gpGroupList; pGroup; pGroup = pGroup->next)
 		{
 			if( pGroup != gpBattleGroup && !pGroup->fPlayer && !pGroup->fVehicle &&
 				  pGroup->ubSectorX == gpBattleGroup->ubSectorX &&
@@ -418,7 +413,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			{
 				HandleArrivalOfReinforcements( pGroup );
 			}
-			pGroup = pGroup->next;
 		}
 		ValidateEnemiesHaveWeapons();
 		return ( ( BOOLEAN) ( gpBattleGroup->ubGroupSize > 0 ) );
@@ -509,15 +503,14 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	//Now, process all of the groups and search for both enemy and player groups in the sector.
 	//For enemy groups, we fill up the slots until we have none left or all of the groups have been
 	//processed.
-	pGroup = gpGroupList;
-	while( pGroup && sNumSlots )
+	for (GROUP* pGroup = gpGroupList; pGroup && sNumSlots; pGroup = pGroup->next)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle &&
 				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //Process enemy group in sector.
 			if( sNumSlots > 0 )
 			{
-				ubNumAdmins = (UINT8)(pGroup->pEnemyGroup->ubNumAdmins - pGroup->pEnemyGroup->ubAdminsInBattle);
+				UINT8 ubNumAdmins = (UINT8)(pGroup->pEnemyGroup->ubNumAdmins - pGroup->pEnemyGroup->ubAdminsInBattle);
 				sNumSlots -= ubNumAdmins;
 				if( sNumSlots < 0 )
 				{ //adjust the value to zero
@@ -530,7 +523,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			}
 			if( sNumSlots > 0 )
 			{ //Add regular army forces.
-				ubNumTroops = (UINT8)(pGroup->pEnemyGroup->ubNumTroops - pGroup->pEnemyGroup->ubTroopsInBattle);
+				UINT8 ubNumTroops = (UINT8)(pGroup->pEnemyGroup->ubNumTroops - pGroup->pEnemyGroup->ubTroopsInBattle);
 				sNumSlots -= ubNumTroops;
 				if( sNumSlots < 0 )
 				{ //adjust the value to zero
@@ -543,7 +536,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			}
 			if( sNumSlots > 0 )
 			{ //Add elite troops
-				ubNumElites = (UINT8)(pGroup->pEnemyGroup->ubNumElites - pGroup->pEnemyGroup->ubElitesInBattle);
+				UINT8 ubNumElites = (UINT8)(pGroup->pEnemyGroup->ubNumElites - pGroup->pEnemyGroup->ubElitesInBattle);
 				sNumSlots -= ubNumElites;
 				if( sNumSlots < 0 )
 				{ //adjust the value to zero
@@ -563,16 +556,11 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			//			 group after the battle is resolved.
 
 			// no one in the group any more continue loop
-			if( pGroup->pPlayerList == NULL )
-			{
-				pGroup = pGroup->next;
-				continue;
-			}
+			if (pGroup->pPlayerList == NULL) continue;
 
 			// clear the movt for this grunt and his buddies
 			RemoveGroupWaypoints( pGroup->ubGroupID );
 		}
-		pGroup = pGroup->next;
 	}
 
 	//if there are no troops in the current groups, then we're done.
@@ -587,61 +575,46 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	//in a mobile group, but only for the ones that were assigned from the
 	sNumSlots = 32 - ubStationaryEnemies;
 
-	pGroup = gpGroupList;
-	while( pGroup && sNumSlots )
+	for (const GROUP* g = gpGroupList; g && sNumSlots; g = g->next)
 	{
-		i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-		pSoldier = &Menptr[ i ];
-		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
+		if (g->fPlayer)  continue;
+		if (g->fVehicle) continue;
+		if (g->ubSectorX != gWorldSectorX || g->ubSectorY != gWorldSectorY || gbWorldSectorZ) continue;
+
+		INT32 num        = g->ubGroupSize;
+		UINT8 num_admins = g->pEnemyGroup->ubAdminsInBattle;
+		UINT8 num_troops = g->pEnemyGroup->ubTroopsInBattle;
+		UINT8 num_elites = g->pEnemyGroup->ubElitesInBattle;
+		FOR_ALL_IN_TEAM(s, ENEMY_TEAM)
 		{
-			num = pGroup->ubGroupSize;
-			ubNumAdmins = pGroup->pEnemyGroup->ubAdminsInBattle;
-			ubNumTroops = pGroup->pEnemyGroup->ubTroopsInBattle;
-			ubNumElites = pGroup->pEnemyGroup->ubElitesInBattle;
-			while( num && sNumSlots && i <= gTacticalStatus.Team[ ENEMY_TEAM ].bLastID )
+			if (num == 0 || sNumSlots == 0) break;
+			if (s->ubGroupID != 0) continue;
+
+			switch (s->ubSoldierClass)
 			{
-				while( !pSoldier->bActive || pSoldier->ubGroupID )
-				{
-					pSoldier = &Menptr[ ++i ];
-					if( i > gTacticalStatus.Team[ ENEMY_TEAM ].bLastID )
-					{
-						AssertMsg( 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0." );
-					}
-				}
-				switch( pSoldier->ubSoldierClass )
-				{
-					case SOLDIER_CLASS_ADMINISTRATOR:
-						if( ubNumAdmins )
-						{
-							num--;
-							sNumSlots--;
-							ubNumAdmins--;
-							pSoldier->ubGroupID = pGroup->ubGroupID;
-						}
-						break;
-					case SOLDIER_CLASS_ARMY:
-						if( ubNumTroops )
-						{
-							num--;
-							sNumSlots--;
-							ubNumTroops--;
-							pSoldier->ubGroupID = pGroup->ubGroupID;
-						}
-						break;
-					case SOLDIER_CLASS_ELITE:
-						if( ubNumElites )
-						{
-							num--;
-							sNumSlots--;
-							ubNumElites--;
-							pSoldier->ubGroupID = pGroup->ubGroupID;
-						}
-						break;
-				}
-				pSoldier = &Menptr[ ++i ];
+				case SOLDIER_CLASS_ADMINISTRATOR:
+					if (num_admins == 0) continue;
+					--num_admins;
+					break;
+
+				case SOLDIER_CLASS_ARMY:
+					if (num_troops == 0) continue;
+					--num_troops;
+					break;
+
+				case SOLDIER_CLASS_ELITE:
+					if (num_elites == 0) continue;
+					--num_elites;
+					break;
+
+				default: continue;
 			}
+
+			--num;
+			--sNumSlots;
+			s->ubGroupID = g->ubGroupID;
 		}
-		pGroup = pGroup->next;
+		AssertMsg(num == 0 || sNumSlots == 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0.");
 	}
 
 	ValidateEnemiesHaveWeapons();
