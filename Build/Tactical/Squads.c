@@ -749,7 +749,6 @@ void RebuildCurrentSquad( void )
 {
 	// rebuilds current squad to reset faces in tactical
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pDeadSoldier = NULL;
 
 	// check if valid value passed
 	if( ( iCurrentTacticalSquad >= NUMBER_OF_SQUADS ) || ( iCurrentTacticalSquad < 0 ) )
@@ -782,16 +781,14 @@ void RebuildCurrentSquad( void )
 
 		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 		{
-			if(  sDeadMercs[ iCurrentTacticalSquad ][ iCounter ] != -1 )
-			{
-				pDeadSoldier = FindSoldierByProfileID( ( UINT8 )( sDeadMercs[ iCurrentTacticalSquad ][ iCounter ] ), TRUE );
+			const INT16 dead_id = sDeadMercs[iCurrentTacticalSquad][iCounter];
+			if (dead_id == -1) continue;
 
-				if( pDeadSoldier )
-				{
-					// squad set, now add soldiers in
-					CheckForAndAddMercToTeamPanel( pDeadSoldier );
-				}
-			}
+			SOLDIERTYPE* const dead_soldier = FindSoldierByProfileID(dead_id, TRUE);
+			if (!dead_soldier) continue;
+
+			// squad set, now add soldiers in
+			CheckForAndAddMercToTeamPanel(dead_soldier);
 		}
 	}
 }
@@ -1134,6 +1131,16 @@ static BOOLEAN IsAnyMercOnSquadAsleep(UINT8 ubSquadValue)
 }
 
 
+static BOOLEAN IsDeadGuyOnSquad(const ProfileID pid, const INT8 squad)
+{
+	for (INT32 i = 0; i < NUMBER_OF_SOLDIERS_PER_SQUAD; ++i)
+	{
+		if (sDeadMercs[squad][i] == pid) return TRUE;
+	}
+	return FALSE;
+}
+
+
 static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier);
 
 
@@ -1150,44 +1157,15 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 		return( TRUE );
 	}
 
-	// first find out if the guy is in the list
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	{
-		// valid soldier?
-		if( sDeadMercs[ iSquadValue ][ iCounter ] != -1 )
-		{
-			pTempSoldier = FindSoldierByProfileID( ( UINT8 )( sDeadMercs[ iSquadValue ][ iCounter ] ), TRUE );
-
-			if( pSoldier == pTempSoldier )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
+	if (IsDeadGuyOnSquad(pSoldier->ubProfile, iSquadValue)) return TRUE;
 
 	// now insert the guy
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		// valid soldier?
-		if( sDeadMercs[ iSquadValue ][ iCounter ] != -1 )
+		const INT16 dead_id = sDeadMercs[iSquadValue][iCounter];
+		if (dead_id == -1 || FindSoldierByProfileID(dead_id, TRUE) == NULL)
 		{
-			// yep
-			pTempSoldier = FindSoldierByProfileID( ( UINT8 )( sDeadMercs[ iSquadValue ][ iCounter ] ), TRUE );
-
-			// valid soldier?
-			if( pTempSoldier == NULL )
-			{
-				// nope
-				sDeadMercs[ iSquadValue ][ iCounter ] = pSoldier->ubProfile;
-				return( TRUE );
-			}
-		}
-		else
-		{
-			// nope
-			sDeadMercs[ iSquadValue ][ iCounter ] = pSoldier->ubProfile;
-			return( TRUE );
+			sDeadMercs[iSquadValue][iCounter] = pSoldier->ubProfile;
 		}
 	}
 
@@ -1203,14 +1181,7 @@ static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier)
 	// squad?
 	for( iCounterA = 0; iCounterA < NUMBER_OF_SQUADS; iCounterA++ )
 	{
-		// slot?
-		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-		{
-			if( sDeadMercs[ iCounterA ][ iCounter ] == pSoldier->ubProfile )
-			{
-				return( TRUE );
-			}
-		}
+		if (IsDeadGuyOnSquad(pSoldier->ubProfile, iCounterA)) return TRUE;
 	}
 
 	return ( FALSE );
@@ -1219,24 +1190,11 @@ static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier)
 
 BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 {
-	INT32 iCounter = 0;
-
-	if( bSquadValue == NO_CURRENT_SQUAD )
-	{
-		return( FALSE );
-	}
-
-	// check if guy is on squad
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	{
-		if( pSoldier->ubProfile == sDeadMercs[ bSquadValue ][ iCounter ] )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
+	return
+		bSquadValue != NO_CURRENT_SQUAD &&
+		IsDeadGuyOnSquad(pSoldier->ubProfile, bSquadValue);
 }
+
 
 BOOLEAN ResetDeadSquadMemberList( INT32 iSquadValue )
 {
