@@ -6263,9 +6263,10 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.fItemsSeenOnAttack = FALSE;
 
 		// Display quote!
-		if ( !AM_AN_EPC( MercPtrs[ gTacticalStatus.ubItemsSeenOnAttackSoldier ] ) )
+		SOLDIERTYPE* const s = MercPtrs[gTacticalStatus.ubItemsSeenOnAttackSoldier];
+		if (!AM_AN_EPC(s))
 		{
-			TacticalCharacterDialogueWithSpecialEvent( MercPtrs[ gTacticalStatus.ubItemsSeenOnAttackSoldier ], (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo, 0 );
+			TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo, 0);
 		}
 		else
 		{

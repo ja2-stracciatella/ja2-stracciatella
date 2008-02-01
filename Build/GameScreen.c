@@ -450,11 +450,12 @@ UINT32  MainGameScreenHandle(void)
 		{
 			if ( ( GetJA2Clock( ) - gTacticalStatus.uiTimeSinceDemoOn ) > 3000 )
 			{
+				SOLDIERTYPE* const s = MercPtrs[gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID];
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{
-					AdjustNoAPToFinishMove( MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ], FALSE );
+					AdjustNoAPToFinishMove(s, FALSE);
 				}
-				MercPtrs[ gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID ]->fPauseAllAnimation = FALSE;
+				s->fPauseAllAnimation = FALSE;
 
 				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
 			}

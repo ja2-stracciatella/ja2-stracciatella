@@ -2218,10 +2218,11 @@ static UINT8 NPCTryToInitiateConv(SOLDIERTYPE* pNPC)
 	{
 		return( AI_ACTION_NONE );
 	}
-	if (PythSpacesAway( pNPC->sGridNo, MercPtrs[pNPC->usActionData]->sGridNo ) < CONVO_DIST)
+	const SOLDIERTYPE* const tgt = MercPtrs[pNPC->usActionData];
+	if (PythSpacesAway(pNPC->sGridNo, tgt->sGridNo) < CONVO_DIST)
 	{
 		// initiate conversation!
-		Converse( pNPC->ubProfile, MercPtrs[pNPC->usActionData]->ubProfile, NPC_INITIATING_CONV, 0 );
+		Converse(pNPC->ubProfile, tgt->ubProfile, NPC_INITIATING_CONV, 0);
 		// after talking, wait a while before moving anywhere else
 		return( AI_ACTION_WAIT );
 	}
