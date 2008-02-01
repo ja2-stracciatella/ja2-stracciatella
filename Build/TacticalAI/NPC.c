@@ -2212,28 +2212,6 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 }
 
 
-static UINT8 NPCTryToInitiateConv(SOLDIERTYPE* pNPC)
-{ // assumes current action is ACTION_APPROACH_MERC
-	if (pNPC->bAction != AI_ACTION_APPROACH_MERC)
-	{
-		return( AI_ACTION_NONE );
-	}
-	const SOLDIERTYPE* const tgt = GetMan(pNPC->usActionData);
-	if (PythSpacesAway(pNPC->sGridNo, tgt->sGridNo) < CONVO_DIST)
-	{
-		// initiate conversation!
-		Converse(pNPC->ubProfile, tgt->ubProfile, NPC_INITIATING_CONV, 0);
-		// after talking, wait a while before moving anywhere else
-		return( AI_ACTION_WAIT );
-	}
-	else
-	{
-		// try to move towards that merc
-		return( AI_ACTION_APPROACH_MERC );
-	}
-}
-
-
 void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 {
 	// perform action or whatever after reaching our destination
