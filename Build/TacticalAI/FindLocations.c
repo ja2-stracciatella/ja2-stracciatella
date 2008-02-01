@@ -2198,24 +2198,6 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 }
 
 
-static INT16 FindRouteBackOntoMap(SOLDIERTYPE* pSoldier, INT16 sDestGridNo)
-{
-	// the first thing to do is restore the soldier's gridno from the X and Y
-	// values
-
-	// well, let's TRY just taking a path to the place we're supposed to go...
-	if ( FindBestPath( pSoldier, sDestGridNo, pSoldier->bLevel, WALKING, COPYROUTE, 0 ) )
-	{
-		pSoldier->bPathStored = TRUE;
-		return( sDestGridNo );
-	}
-	else
-	{
-		return( NOWHERE );
-	}
-
-}
-
 INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 {
 	INT32		iSearchRange;
