@@ -2074,7 +2074,7 @@ static void AddCharacter(SOLDIERTYPE* pCharacter)
 		while( usVehicleLoop < MAX_CHARACTER_COUNT )
 		{
 			if (gCharactersList[usVehicleLoop].merc != NULL &&
-					Menptr[usVehicleLoop].uiStatusFlags & SOLDIER_VEHICLE)
+					GetMan(usVehicleLoop)->uiStatusFlags & SOLDIER_VEHICLE)
 			{
 				usVehicleCount++;
 			}

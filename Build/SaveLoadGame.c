@@ -3658,7 +3658,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	if( sGeneralInfo.sContractRehireSoldierID == -1 )
 		pContractReHireSoldier = NULL;
 	else
-		pContractReHireSoldier = &Menptr[ sGeneralInfo.sContractRehireSoldierID ];
+		pContractReHireSoldier = GetMan(sGeneralInfo.sContractRehireSoldierID);
 
 	gGameOptions = sGeneralInfo.GameOptions;
 
@@ -3678,7 +3678,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	if( sGeneralInfo.ubSMCurrentMercID == 255 )
 		gpSMCurrentMerc = NULL;
 	else
-		gpSMCurrentMerc = &Menptr[ sGeneralInfo.ubSMCurrentMercID ];
+		gpSMCurrentMerc = GetMan(sGeneralInfo.ubSMCurrentMercID);
 
 	//Set the interface panel to the team panel
 	ShutdownCurrentPanel( );

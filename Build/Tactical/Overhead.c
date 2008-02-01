@@ -3170,7 +3170,7 @@ static SOLDIERTYPE* FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT
 {
 	for (INT32 i = begin; i <= last; ++i)
 	{
-		SOLDIERTYPE* const s = &Menptr[i];
+		SOLDIERTYPE* const s = GetMan(i);
 		if (!s->bActive) continue;
 
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
@@ -3253,7 +3253,7 @@ static SOLDIERTYPE* FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT
 {
 	for (INT32 i = begin; i >= last; --i)
 	{
-		SOLDIERTYPE* const s = &Menptr[i];
+		SOLDIERTYPE* const s = GetMan(i);
 		if (!s->bActive) continue;
 
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;

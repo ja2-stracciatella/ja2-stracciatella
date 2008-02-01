@@ -1261,7 +1261,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 
 	if( sAirRaidSaveStruct.sRaidSoldierID != -1 )
 	{
-		gpRaidSoldier = &Menptr[ sAirRaidSaveStruct.sRaidSoldierID ];
+		gpRaidSoldier = GetMan(sAirRaidSaveStruct.sRaidSoldierID);
 
 		gpRaidSoldier->bLevel = sAirRaidSaveStruct.bLevel;
 		gpRaidSoldier->bTeam = sAirRaidSaveStruct.bTeam;

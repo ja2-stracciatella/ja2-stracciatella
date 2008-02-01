@@ -968,7 +968,7 @@ BOOLEAN LoadSquadInfoFromSavedGameFile( HWFILE hFile )
 		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
 		{
 			if( sSquadSaveStruct[ iCounter ][ iCounterB ].uiID != -1 )
-				Squad[ iCounter ][ iCounterB ]	= &Menptr[ sSquadSaveStruct[ iCounter ][ iCounterB ].uiID ];
+				Squad[iCounter][iCounterB] = GetMan(sSquadSaveStruct[iCounter][iCounterB].uiID);
 			else
 				Squad[ iCounter ][ iCounterB ] = NULL;
 		}

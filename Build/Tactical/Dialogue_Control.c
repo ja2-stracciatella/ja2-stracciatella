@@ -858,19 +858,21 @@ void HandleDialogue( )
 		if( QItem->uiSpecialEventFlag & DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX )
 		{
 			INT32 iReason = 0;
-			SOLDIERTYPE *pUpdateSoldier = NULL;
 
 			iReason = QItem->uiSpecialEventData;
 
 			switch( iReason )
 			{
 				case( UPDATE_BOX_REASON_ADDSOLDIER ):
-					pUpdateSoldier = &Menptr[ QItem->uiSpecialEventData2 ];
+				{
+					SOLDIERTYPE* const pUpdateSoldier = GetMan(QItem->uiSpecialEventData2);
 					if( pUpdateSoldier->bActive == TRUE )
 					{
 						AddSoldierToUpdateBox( pUpdateSoldier );
 					}
-				break;
+					break;
+				}
+
 				case( UPDATE_BOX_REASON_SET_REASON ):
 					SetSoldierUpdateBoxReason( QItem->uiSpecialEventData2 );
 				break;
