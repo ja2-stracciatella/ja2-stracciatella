@@ -1062,50 +1062,6 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 }
 
 
-// is this squad in the same sector as soldier?
-static BOOLEAN IsSquadInSector(SOLDIERTYPE* pSoldier, UINT8 ubSquad)
-{
-
-	if( pSoldier == NULL )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->fBetweenSectors == TRUE )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->bAssignment == IN_TRANSIT )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->bAssignment == ASSIGNMENT_POW )
-	{
-		return( FALSE );
-	}
-
-	if( SquadIsEmpty( ubSquad ) == TRUE )
-	{
-		return( TRUE );
-	}
-
-	if( ( pSoldier->sSectorX != Squad[ ubSquad ][ 0 ]->sSectorX ) ||( pSoldier->sSectorY != Squad[ ubSquad ][ 0 ]->sSectorY ) || ( pSoldier->bSectorZ != Squad[ ubSquad ][ 0 ]->bSectorZ ) )
-	{
-		return( FALSE );
-	}
-
-	if( Squad[ ubSquad ][ 0 ]->fBetweenSectors == TRUE )
-	{
-		return( FALSE );
-	}
-
-
-	return( TRUE );
-}
-
-
 // is any merc on squad asleep?
 static BOOLEAN IsAnyMercOnSquadAsleep(UINT8 ubSquadValue)
 {
