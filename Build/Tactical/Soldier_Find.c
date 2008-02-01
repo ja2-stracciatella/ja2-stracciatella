@@ -453,39 +453,6 @@ BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN IsGridNoInScreenRect(INT16 sGridNo, SGPRect* pRect)
-{
-	INT32 iXTrav, iYTrav;
-	INT16	sMapPos;
-
-	// Start with top left corner
-	iXTrav = pRect->iLeft;
-	iYTrav = pRect->iTop;
-
-	do
-	{
-		do
-		{
-			GetScreenXYGridNo( (INT16)iXTrav, (INT16)iYTrav, &sMapPos );
-
-			if ( sMapPos == sGridNo )
-			{
-				return( TRUE );
-			}
-
-			iXTrav += WORLD_TILE_X;
-
-		} while( iXTrav < pRect->iRight );
-
-		iYTrav += WORLD_TILE_Y;
-		iXTrav = pRect->iLeft;
-
-	} while( iYTrav < pRect->iBottom );
-
-	return( FALSE );
-}
-
-
 static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* const pRect)
 {
 		INT16 sMercScreenX, sMercScreenY;

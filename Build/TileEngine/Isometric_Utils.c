@@ -254,54 +254,6 @@ GridNo GetMouseMapPos(void)
 }
 
 
-static void GetScreenXYWorldCoords(INT16 sScreenX, INT16 sScreenY, INT16* psWorldX, INT16* psWorldY)
-{
-	INT16 sOffsetX, sOffsetY;
-	INT16	sTempPosX_W, sTempPosY_W;
-	INT16 sStartPointX_W, sStartPointY_W;
-
-	// Convert mouse screen coords into offset from center
-	sOffsetX = sScreenX - ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2;
-	sOffsetY = sScreenY - ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2;
-
-	FromScreenToCellCoordinates( sOffsetX, sOffsetY, &sTempPosX_W, &sTempPosY_W );
-
-	// World start point is Render center plus this distance
-	sStartPointX_W = gsRenderCenterX + sTempPosX_W;
-	sStartPointY_W = gsRenderCenterY + sTempPosY_W;
-
-	// Determine Start block and render offsets
-	// Find start block
-	// Add adjustment for render origin as well
-	(*psWorldX) = sStartPointX_W;
-	(*psWorldY) = sStartPointY_W;
-
-}
-
-
-static void GetScreenXYWorldCell(INT16 sScreenX, INT16 sScreenY, INT16* psWorldCellX, INT16* psWorldCellY)
-{
-	INT16 sWorldX, sWorldY;
-
-	GetScreenXYWorldCoords( sScreenX, sScreenY, &sWorldX, &sWorldY );
-
-	// Find start block
-	(*psWorldCellX) = ( sWorldX / CELL_X_SIZE );
-	(*psWorldCellY) = ( sWorldY / CELL_Y_SIZE );
-
-}
-
-
-void GetScreenXYGridNo( INT16 sScreenX, INT16 sScreenY, INT16	*psMapPos )
-{
-	INT16				sWorldX, sWorldY;
-
-	GetScreenXYWorldCell( sScreenX, sScreenY, &sWorldX, &sWorldY );
-
-	*psMapPos = MAPROWCOLTOPOS( sWorldY, sWorldX );
-
-}
-
 void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *psWorldScreenX, INT16 *psWorldScreenY )
 {
 	INT16 sScreenCenterX, sScreenCenterY;
