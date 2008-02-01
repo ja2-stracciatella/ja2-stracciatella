@@ -2234,36 +2234,6 @@ static UINT8 NPCTryToInitiateConv(SOLDIERTYPE* pNPC)
 }
 
 
-/*
-BOOLEAN NPCOkToGiveItem( UINT8 ubNPC, UINT8 ubMerc, UINT16 usItem )
-{
-	// This function seems to be unused...
-
-	NPCQuoteInfo					QuoteInfo;
-	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
-	NPCQuoteInfo *				pNPCQuoteInfoArray;
-	UINT8									ubOpinionVal;
-	UINT8									ubQuoteNum;
-
-	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
-	{
-		// error!!!
-		return( FALSE );
-	}
-	pNPCQuoteInfoArray = gpNPCQuoteInfoArray[ubNPC];
-
-	ubOpinionVal =  NPCConsiderReceivingItemFromMerc( ubNPC, ubMerc, usItem, pNPCQuoteInfoArray, &pQuotePtr, &ubQuoteNum );
-
-	if ( ubOpinionVal )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
-}
-*/
 void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 {
 	// perform action or whatever after reaching our destination

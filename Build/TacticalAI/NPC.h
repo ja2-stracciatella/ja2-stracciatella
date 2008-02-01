@@ -144,7 +144,6 @@ extern void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord );
 extern UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach );
 extern void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData );
 
-extern BOOLEAN NPCOkToGiveItem( UINT8 ubNPC, UINT8 ubMerc, UINT16 usItem );
 extern void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere );
 extern void PCsNearNPC( UINT8 ubNPC );
 extern BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC );
