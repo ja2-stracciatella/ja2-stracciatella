@@ -1814,7 +1814,7 @@ BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s)
 			s->bAssignment != ASSIGNMENT_DEAD &&
 			!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 			// Robot is involved if it has a valid controller with it, uninvolved otherwise
-			(!AM_A_ROBOT(s) || s->ubRobotRemoteHolderID != NOBODY) &&
+			(!AM_A_ROBOT(s) || s->robot_remote_holder != NULL) &&
 			!SoldierAboardAirborneHeli(s))
 	{
 		if (CurrentBattleSectorIs(s->sSectorX, s->sSectorY, s->bSectorZ))
@@ -1880,13 +1880,13 @@ static void CheckForRobotAndIfItsControlled(void)
 	{
 		if (s->bLife != 0 && AM_A_ROBOT(s))
 		{
-			// check whether it has a valid controller with it. This sets its ubRobotRemoteHolderID field.
+			// check whether it has a valid controller with it. This sets its robot_remote_holder field.
 			UpdateRobotControllerGivenRobot(s);
 
 			// if he has a controller, set controllers
-			if (s->ubRobotRemoteHolderID != NOBODY)
+			if (s->robot_remote_holder != NULL)
 			{
-				UpdateRobotControllerGivenController(GetMan(s->ubRobotRemoteHolderID));
+				UpdateRobotControllerGivenController(s->robot_remote_holder);
 			}
 
 			break;

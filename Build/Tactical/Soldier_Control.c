@@ -9546,19 +9546,13 @@ BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier )
 
 BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier)
 {
-	SOLDIERTYPE *pController;
-
 	if ( !( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
 	{
 		return( FALSE );
 	}
 
-	if ( pSoldier->ubRobotRemoteHolderID == NOBODY )
-	{
-		return( FALSE );
-	}
-
-	pController = MercPtrs[ pSoldier->ubRobotRemoteHolderID ];
+	const SOLDIERTYPE* const pController = pSoldier->robot_remote_holder;
+	if (pController == NULL) return FALSE;
 
 	if ( pController->bActive )
 	{
@@ -9644,29 +9638,23 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 
 SOLDIERTYPE *GetRobotController( SOLDIERTYPE *pSoldier )
 {
-	if ( pSoldier->ubRobotRemoteHolderID == NOBODY )
-	{
-		return( NULL );
-	}
-	else
-	{
-		return( MercPtrs[ pSoldier->ubRobotRemoteHolderID ] );
-	}
+	return pSoldier->robot_remote_holder;
 }
+
 
 void UpdateRobotControllerGivenRobot( SOLDIERTYPE *pRobot )
 {
 	// Loop through guys and look for a controller!
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		if (ControllingRobot(s))
 		{
-			pRobot->ubRobotRemoteHolderID = s->ubID;
+			pRobot->robot_remote_holder = s;
 			return;
 		}
 	}
 
-	pRobot->ubRobotRemoteHolderID = NOBODY;
+	pRobot->robot_remote_holder = NULL;
 }
 
 
@@ -9682,7 +9670,7 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 	{
 		if (s->uiStatusFlags & SOLDIER_ROBOT)
 		{
-			s->ubRobotRemoteHolderID = pSoldier->ubID;
+			s->robot_remote_holder = pSoldier;
 		}
 	}
 }

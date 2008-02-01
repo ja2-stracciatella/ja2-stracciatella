@@ -1032,7 +1032,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	pSoldier->usAnimState							= STANDING;
 	pSoldier->bInterruptDuelPts				= NO_INTERRUPT;
 	pSoldier->bMoved									= FALSE;
-	pSoldier->ubRobotRemoteHolderID		= NOBODY;
+	pSoldier->robot_remote_holder  		= NULL;
 	pSoldier->sNoiseGridno						= NOWHERE;
 	pSoldier->ubPrevSectorID					= 255;
 	pSoldier->bNextPatrolPnt					= 1;

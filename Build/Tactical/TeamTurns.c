@@ -1211,7 +1211,7 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 	// Controller's interrupt points are reduced by 2 for being distracted...
 	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT && CanRobotBeControlled( pSoldier ) )
 	{
-		bPoints = EffectiveExpLevel( MercPtrs[ pSoldier->ubRobotRemoteHolderID ] ) - 2;
+		bPoints = EffectiveExpLevel(pSoldier->robot_remote_holder) - 2;
 	}
 	else
 	{
