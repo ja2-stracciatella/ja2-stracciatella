@@ -1723,9 +1723,7 @@ BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile )
 
 void ExamineDoorsOnEnteringSector( )
 {
-	INT32                    cnt;
 	DOOR_STATUS							 *pDoorStatus;
-	SOLDIERTYPE              *pSoldier;
 	BOOLEAN									 fOK = FALSE;
 	INT8										 bTownId;
 
@@ -1746,24 +1744,19 @@ void ExamineDoorsOnEnteringSector( )
 
 	// there is at least one human being in that sector.
 	// check for civ
-	cnt = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID;
-  // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ LAST_TEAM ].bLastID; cnt++ ,pSoldier++ )
+	CFOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
-		if ( pSoldier->bActive )
+		if (s->bInSector)
 		{
-			if ( pSoldier->bInSector )
-			{
-				fOK = TRUE;
-				break;
-			}
+			fOK = TRUE;
+			break;
 		}
 	}
 
 	// Let's do it!
 	if ( fOK )
 	{
-		for ( cnt = 0; cnt < gubNumDoorStatus; cnt++ )
+		for (INT32 cnt = 0; cnt < gubNumDoorStatus; ++cnt)
 		{
 			pDoorStatus = &( gpDoorStatus[ cnt ] );
 

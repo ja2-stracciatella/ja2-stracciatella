@@ -1862,23 +1862,17 @@ static UINT32 PlayerStrength(void)
 
 static UINT32 EnemyStrength(void)
 {
-	UINT8						ubLoop;
-	SOLDIERTYPE *		pSoldier;
-	UINT32					uiStrength, uiTotal = 0;
-
-		for ( ubLoop = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; ubLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; ubLoop++ )
-		{
-			pSoldier = MercPtrs[ ubLoop ];
-			if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->bNeutral )
-			{
-				// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
-				uiStrength = pSoldier->bLife * ( pSoldier->bBreathMax + 100 ) / 200;
-				uiTotal += uiStrength;
-			}
-		}
-
-	return( uiTotal );
+	UINT32 strength;
+	CFOR_ALL_NON_PLAYER_SOLDIERS(s)
+	{
+		if (!s->bInSector || s->bNeutral) continue;
+		/* count this person's strength (condition), calculated as life reduced up
+		 * to half according to maxbreath */
+		strength += s->bLife * (s->bBreathMax + 100) / 200;
+	}
+	return strength;
 }
+
 
 //Function assumes that mercs have retreated already.  Handles two cases, one for general merc retreat
 //which slightly demoralizes the mercs, the other handles abandonment of militia forces which poses
