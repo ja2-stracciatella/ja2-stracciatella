@@ -2429,7 +2429,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 761:
 					// Dish out damage!
-					EVENT_SoldierGotHit(MercPtrs[pSoldier->uiPendingActionData4], TAKE_DAMAGE_BLADE, 25, 25, OppositeDirection(pSoldier->bDirection), 50, pSoldier, 0, ANIM_PRONE, 0);
+					EVENT_SoldierGotHit(GetMan(pSoldier->uiPendingActionData4), TAKE_DAMAGE_BLADE, 25, 25, OppositeDirection(pSoldier->bDirection), 50, pSoldier, 0, ANIM_PRONE, 0);
 					break;
 
 				case 762:

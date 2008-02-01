@@ -450,7 +450,7 @@ UINT32  MainGameScreenHandle(void)
 		{
 			if ( ( GetJA2Clock( ) - gTacticalStatus.uiTimeSinceDemoOn ) > 3000 )
 			{
-				SOLDIERTYPE* const s = MercPtrs[gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID];
+				SOLDIERTYPE* const s = GetMan(gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID);
 				if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
 				{
 					AdjustNoAPToFinishMove(s, FALSE);

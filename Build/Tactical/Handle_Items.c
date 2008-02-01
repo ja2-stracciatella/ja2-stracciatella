@@ -3585,7 +3585,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 
 			if ( ubTargetMercID != NOBODY )
 			{
-				MercPtrs[ ubTargetMercID ]->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
+				GetMan(ubTargetMercID)->uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 			}
 
 			MemFree( pSoldier->pTempObject );

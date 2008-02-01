@@ -2765,7 +2765,6 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 
 void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8 ubTeamToRadioTo)
 {
- SOLDIERTYPE *pOpponent;
  INT32 	iLoop;
  UINT8 	start,end,revealedEnemies = 0,unknownEnemies = 0;
  //UINT8 	oppIsCivilian;
@@ -2798,7 +2797,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
  // hang a pointer to the start of this guy's opponents in the public opplist
  pbPublOL = &(gbPublicOpplist[ubTeamToRadioTo][start]);
 
- pOpponent = MercPtrs[start];
+	SOLDIERTYPE* pOpponent = GetMan(start);
 
  // loop through every one of this guy's opponents
  for (iLoop = start; iLoop < end; iLoop++,pOpponent++,pPersOL++,pbPublOL++)
@@ -2927,7 +2926,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 							{
 								// this has already come up so turn OFF the pause-all-anims flag for the previous
 								// person and set it for this next person
-								MercPtrs[gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID]->fPauseAllAnimation = FALSE;
+								GetMan(gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID)->fPauseAllAnimation = FALSE;
 							}
 							else
 							{

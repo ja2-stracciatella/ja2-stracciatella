@@ -263,7 +263,7 @@ BOOLEAN BeginAirRaid( )
 		gbNumDives				= 0;
 		gfAirRaidHasHadTurn = FALSE;
 
-		gpRaidSoldier = MercPtrs[ MAX_NUM_SOLDIERS - 1 ];
+		gpRaidSoldier = GetMan(MAX_NUM_SOLDIERS - 1);
 		memset( gpRaidSoldier, 0, sizeof( SOLDIERTYPE ) );
 		gpRaidSoldier->bLevel = 0;
 		gpRaidSoldier->bTeam = 1;

@@ -1865,9 +1865,8 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			switch( pSoldier->ubPendingAction )
 			{
 				case MERC_GIVEITEM:
-
 					// Unset target as enaged
-					MercPtrs[ pSoldier->uiPendingActionData4 ]->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION);
+					GetMan(pSoldier->uiPendingActionData4)->uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 					break;
 			}
 			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -5400,7 +5399,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fUseMoverrideMoveSpeed )
 	{
-		pStatsSoldier = MercPtrs[ pSoldier->bOverrideMoveSpeed ];
+		pStatsSoldier = GetMan(pSoldier->bOverrideMoveSpeed);
 	}
 
 	// Only calculate if set to zero
@@ -9419,7 +9418,6 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 
 BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOLEAN fValidate )
 {
-	SOLDIERTYPE				*pTSoldier;
 	UINT32						uiRange;
 
 	if ( ubTargetID == NOBODY )
@@ -9427,7 +9425,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 		return( FALSE );
 	}
 
-	pTSoldier = MercPtrs[ ubTargetID ];
+	SOLDIERTYPE* const pTSoldier = GetMan(ubTargetID);
 
 	// Check distance again, to be sure
 	if ( fValidate )

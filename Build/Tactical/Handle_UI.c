@@ -1618,7 +1618,7 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 			// Loop through all mercs and make go!
 			// TODO: Only our squad!
 			SOLDIERTYPE* pSoldier;
-			for (bLoop=gTacticalStatus.Team[gbPlayerNum].bFirstID, pSoldier=MercPtrs[bLoop]; bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pSoldier++)
+			for (bLoop = gTacticalStatus.Team[gbPlayerNum].bFirstID, pSoldier = GetMan(bLoop); bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pSoldier++)
 			{
 				if ( OK_CONTROLLABLE_MERC( pSoldier ) && pSoldier->bAssignment == CurrentSquad( ) && !pSoldier->fMercAsleep )
 				{

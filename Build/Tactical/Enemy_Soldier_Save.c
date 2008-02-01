@@ -1073,7 +1073,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 //soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
 {
-	SOLDIERTYPE *pSoldier;
 	INT32 i;
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
@@ -1108,7 +1107,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	//modify the map's soldier init list to reflect the changes to the member's still alive...
 	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
 	{
-		pSoldier = MercPtrs[ i ];
+		const SOLDIERTYPE* const pSoldier = GetMan(i);
 
 		//make sure the person is active, alive, in the sector, and is not a profiled person
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife && pSoldier->ubProfile == NO_PROFILE )
@@ -1285,7 +1284,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
 	{
-		pSoldier = MercPtrs[ i ];
+		const SOLDIERTYPE* const pSoldier = GetMan(i);
 		// CJC: note that bInSector is not required; the civ could be offmap!
 		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
 		{

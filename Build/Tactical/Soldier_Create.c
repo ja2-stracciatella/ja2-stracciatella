@@ -198,7 +198,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 		// look for all mercs on the same team,
 		BOOLEAN fGuyAvail = FALSE;
-		for (const SOLDIERTYPE* pTeamSoldier = MercPtrs[cnt]; cnt <= bLastTeamID; cnt++, pTeamSoldier++)
+		for (const SOLDIERTYPE* pTeamSoldier = GetMan(cnt); cnt <= bLastTeamID; cnt++, pTeamSoldier++)
 		{
 			if ( !pTeamSoldier->bActive )
 			{

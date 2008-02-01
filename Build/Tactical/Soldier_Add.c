@@ -29,7 +29,7 @@
 //			This GridNo will be determined by a prevouis function that will examine the sector
 //			Infomration regarding placement positions and pick one
 // 2 ) Call TacticalCreateSoldier() which will create our soldier
-//			What it does is:	Creates a soldier in the MercPtrs[] array.
+//			What it does is:	Creates a soldier in the Menptr[] array.
 //												Allocates the Animation cache for this merc
 //												Loads up the intial aniamtion file
 //												Creates initial palettes, etc

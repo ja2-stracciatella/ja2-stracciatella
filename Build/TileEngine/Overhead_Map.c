@@ -1020,7 +1020,6 @@ static void RenderOverheadOverlays(void)
 {
 	WORLDITEM		*pWorldItem;
 	UINT32				i;
-	SOLDIERTYPE	*pSoldier;
 	INT16				sX, sY;
 	UINT16			end;
 	UINT16			usLineColor=0;
@@ -1042,7 +1041,7 @@ static void RenderOverheadOverlays(void)
 	for( i = 0; i < end; i++ )
 	{
 		//First, check to see if the soldier exists and is in the sector.
-		pSoldier = MercPtrs[ i ];
+		const SOLDIERTYPE* const pSoldier = GetMan(i);
 		if( !pSoldier->bActive || !pSoldier->bInSector )
 			continue;
 		//Soldier is here.  Calculate his screen position based on his current gridno.

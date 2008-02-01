@@ -152,8 +152,7 @@ extern SOLDIERTYPE* g_selected_man;
 extern const char* const gzActionStr[];
 
 // Soldier List used for all soldier overhead interaction
-extern SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];
-extern SOLDIERTYPE* MercPtrs[TOTAL_SOLDIERS];
+extern SOLDIERTYPE Menptr[TOTAL_SOLDIERS];
 
 static inline SOLDIERTYPE* GetMan(UINT idx)
 {

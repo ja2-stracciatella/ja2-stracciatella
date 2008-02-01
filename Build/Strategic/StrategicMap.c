@@ -1546,7 +1546,7 @@ void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 	//if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
-		for ( cnt = 0, pSoldier = MercPtrs[ cnt ]; cnt < MAX_NUM_SOLDIERS; cnt++, pSoldier++)
+		for (cnt = 0, pSoldier = GetMan(cnt); cnt < MAX_NUM_SOLDIERS; cnt++, pSoldier++)
 		{
 			if ( gfRestoringEnemySoldiersFromTempFile &&
 					cnt >= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID &&
@@ -3094,7 +3094,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
   // look for all mercs on the same team,
-  for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ gbPlayerNum ].bLastID; cnt++,pSoldier++)
+	for (pSoldier = GetMan(cnt); cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
 	{
 		// If we are controllable
 		if ( OK_CONTROLLABLE_MERC( pSoldier) && pSoldier->bAssignment == CurrentSquad( ) )
@@ -4557,13 +4557,17 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN )
 	{
 		if( gWorldSectorX == sBattleSectorX && gWorldSectorY == sBattleSectorY && gbWorldSectorZ == sBattleSectorZ )
-		{	//Yes, this is and looks like a hack.  The conditions of this if statement doesn't work inside
-			//TrashWorld() or more specifically, TacticalRemoveSoldier() from within TrashWorld().  Because
-			//we are in the autoresolve screen, soldiers are internally created different (from pointers instead of
-			//the MercPtrs[]).  It keys on the fact that we are in the autoresolve screen.  So, by switching the
-			//screen, it'll delete the soldiers in the loaded world properly, then later on, once autoresolve is
-			//complete, it'll delete the autoresolve soldiers properly.  As you can now see, the above if conditions
-			//don't change throughout this whole process which makes it necessary to do it this way.
+		{
+			/* Yes, this is and looks like a hack.  The conditions of this if
+			 * statement doesn't work inside TrashWorld() or more specifically,
+			 * TacticalRemoveSoldier() from within TrashWorld().  Because we are in
+			 * the autoresolve screen, soldiers are internally created different (from
+			 * pointers instead of Menptr[]).  It keys on the fact that we are in the
+			 * autoresolve screen.  So, by switching the screen, it'll delete the
+			 * soldiers in the loaded world properly, then later on, once autoresolve
+			 * is complete, it'll delete the autoresolve soldiers properly.  As you
+			 * can now see, the above if conditions don't change throughout this whole
+			 * process which makes it necessary to do it this way. */
 			guiCurrentScreen = MAP_SCREEN;
 			TrashWorld();
 			guiCurrentScreen = AUTORESOLVE_SCREEN;

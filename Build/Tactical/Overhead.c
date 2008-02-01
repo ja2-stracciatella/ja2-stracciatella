@@ -121,7 +121,6 @@ BOOLEAN gfSurrendered = FALSE;
 
 // Soldier List used for all soldier overhead interaction
 SOLDIERTYPE  Menptr[TOTAL_SOLDIERS];
-SOLDIERTYPE* MercPtrs[TOTAL_SOLDIERS];
 
 SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 UINT32       guiNumMercSlots = 0;
@@ -403,13 +402,7 @@ BOOLEAN InitOverhead(void)
 {
 	memset(MercSlots, 0, sizeof(MercSlots));
 	memset(AwaySlots, 0, sizeof(AwaySlots));
-
-	// Set pointers list
-	for (UINT32 i = 0; i < TOTAL_SOLDIERS; ++i)
-	{
-		MercPtrs[i] = &Menptr[i];
-		MercPtrs[i]->bActive = FALSE;
-	}
+	memset(Menptr,    0, sizeof(Menptr));
 
 	memset(&gTacticalStatus, 0, sizeof(TacticalStatusType));
 
@@ -494,7 +487,7 @@ BOOLEAN ShutdownOverhead(void)
 SOLDIERTYPE* GetSoldier(UINT16 usSoldierIndex)
 {
 	if (usSoldierIndex >= TOTAL_SOLDIERS) return NULL; // XXX assert?
-	SOLDIERTYPE* Soldier = MercPtrs[usSoldierIndex];
+	SOLDIERTYPE* Soldier = GetMan(usSoldierIndex);
 	return Soldier->bActive ? Soldier : NULL;
 }
 
@@ -1462,10 +1455,9 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* pSoldier, UINT16 GridNo, 
 			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
 				INT32 cnt2 = gTacticalStatus.Team[gbPlayerNum].bLastID;
-				SOLDIERTYPE* pSoldier2;
 
 				// look for all mercs on the same team,
-				for (pSoldier2 = MercPtrs[cnt2]; cnt2 >= gTacticalStatus.Team[gbPlayerNum].bFirstID; cnt2--, pSoldier2--)
+				for (SOLDIERTYPE* pSoldier2 = GetMan(cnt2); cnt2 >= gTacticalStatus.Team[gbPlayerNum].bFirstID; cnt2--, pSoldier2--)
 				{
 					if (pSoldier2->bActive)
 					{
@@ -6228,7 +6220,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	if ( gTacticalStatus.fKilledEnemyOnAttack )
 	{
 		// Check for death quote...
-		HandleKilledQuote( MercPtrs[ gTacticalStatus.ubEnemyKilledOnAttack ], MercPtrs[ gTacticalStatus.ubEnemyKilledOnAttackKiller ], gTacticalStatus.ubEnemyKilledOnAttackLocation, gTacticalStatus.bEnemyKilledOnAttackLevel );
+		HandleKilledQuote(GetMan(gTacticalStatus.ubEnemyKilledOnAttack), GetMan(gTacticalStatus.ubEnemyKilledOnAttackKiller), gTacticalStatus.ubEnemyKilledOnAttackLocation, gTacticalStatus.bEnemyKilledOnAttackLevel);
 		gTacticalStatus.fKilledEnemyOnAttack = FALSE;
 	}
 
@@ -6241,7 +6233,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.fItemsSeenOnAttack = FALSE;
 
 		// Display quote!
-		SOLDIERTYPE* const s = MercPtrs[gTacticalStatus.ubItemsSeenOnAttackSoldier];
+		SOLDIERTYPE* const s = GetMan(gTacticalStatus.ubItemsSeenOnAttackSoldier);
 		if (!AM_AN_EPC(s))
 		{
 			TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo, 0);

@@ -1658,7 +1658,7 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 							ubSoldierID >= gTacticalStatus.Team[ CIV_TEAM ].bFirstID &&
 							ubSoldierID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID )
 					{ //only enemies and creatures.
-						curr->pSoldier = MercPtrs[ ubSoldierID ];
+						curr->pSoldier = GetMan(ubSoldierID);
 					}
 				}
 			}
@@ -1989,7 +1989,7 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 					if( ubSoldierID >= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID &&
 							ubSoldierID <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID )
 					{ //only enemies and creatures.
-						curr->pSoldier = MercPtrs[ ubSoldierID ];
+						curr->pSoldier = GetMan(ubSoldierID);
 					}
 				}
 			}
@@ -2019,7 +2019,7 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 					if( ubSoldierID >= gTacticalStatus.Team[ CIV_TEAM ].bFirstID &&
 							ubSoldierID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID )
 					{ //only enemies and creatures.
-						curr->pSoldier = MercPtrs[ ubSoldierID ];
+						curr->pSoldier = GetMan(ubSoldierID);
 					}
 				}
 			}

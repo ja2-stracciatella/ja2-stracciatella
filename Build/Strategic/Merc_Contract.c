@@ -234,7 +234,7 @@ static void EndCurrentContractRenewal(void)
 
 void HandleMercIsWillingToRenew( UINT8 ubID )
 {
-	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
+	SOLDIERTYPE* const pSoldier = GetMan(ubID);
 
 	// We wish to lock interface
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
@@ -254,7 +254,7 @@ void HandleMercIsWillingToRenew( UINT8 ubID )
 
 void HandleMercIsNotWillingToRenew( UINT8 ubID )
 {
-	SOLDIERTYPE *pSoldier = MercPtrs[ ubID ];
+	SOLDIERTYPE* const pSoldier = GetMan(ubID);
 
 	// We wish to lock interface
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );

@@ -2052,7 +2052,6 @@ static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID)
 
 static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID)
 {
-	SOLDIERTYPE *pSoldier;
   INT16       sDamage, sBreath;
 
 	// Do we want to catch?
@@ -2063,7 +2062,7 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID
 		{
       if ( pObject->ubLastTargetTakenDamage != (UINT8)usStructureID )
       {
-			  pSoldier = MercPtrs[ usStructureID ];
+			  SOLDIERTYPE* const pSoldier = GetMan(usStructureID);
 
         sDamage = 1;
         sBreath = 0;

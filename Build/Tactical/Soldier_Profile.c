@@ -775,7 +775,7 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 		ubLoopLimit = MAX_NUM_SOLDIERS;
 	}
 
-	for (ubLoop = 0, pSoldier = MercPtrs[0]; ubLoop < ubLoopLimit; ubLoop++, pSoldier++)
+	for (ubLoop = 0, pSoldier = GetMan(0); ubLoop < ubLoopLimit; ubLoop++, pSoldier++)
 	{
 		if (pSoldier->bActive && pSoldier->ubProfile == ubProfileID)
 		{

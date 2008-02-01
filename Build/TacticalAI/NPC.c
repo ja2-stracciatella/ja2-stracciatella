@@ -2183,12 +2183,12 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 				{
 					ubHighestTalkDesire = ubTalkDesire;
 					ubDesiredMerc = ubMerc;
-					pDesiredMerc = MercPtrs[ubMerc];
+					pDesiredMerc = GetMan(ubMerc);
 					sDesiredMercDist = PythSpacesAway( sMyGridNo, pDesiredMerc->sGridNo );
 				}
 				else if (ubTalkDesire == ubHighestTalkDesire)
 				{
-					sDist = PythSpacesAway( sMyGridNo, MercPtrs[ubMerc]->sGridNo );
+					sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc)->sGridNo);
 					if (sDist < sDesiredMercDist)
 					{
 						// we can say the same thing to this merc, and they're closer!
@@ -2218,7 +2218,7 @@ static UINT8 NPCTryToInitiateConv(SOLDIERTYPE* pNPC)
 	{
 		return( AI_ACTION_NONE );
 	}
-	const SOLDIERTYPE* const tgt = MercPtrs[pNPC->usActionData];
+	const SOLDIERTYPE* const tgt = GetMan(pNPC->usActionData);
 	if (PythSpacesAway(pNPC->sGridNo, tgt->sGridNo) < CONVO_DIST)
 	{
 		// initiate conversation!

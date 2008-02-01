@@ -1809,7 +1809,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
   INT8                bSpewBloodLevel;
 
 	// structure IDs for mercs match their merc IDs
-	SOLDIERTYPE* const pTarget = MercPtrs[pStructure->usStructureID];
+	SOLDIERTYPE* const pTarget = GetMan(pStructure->usStructureID);
 
 	if (pBullet->usFlags & BULLET_FLAG_KNIFE)
 	{

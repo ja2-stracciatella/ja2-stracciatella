@@ -1276,14 +1276,13 @@ static void ReplaceSleepSpot(SCHEDULENODE* pSchedule, UINT16 usNewSpot)
 
 static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
 {
-	SOLDIERTYPE *			pSoldier2;
 	UINT32						uiLoop;
 	SCHEDULENODE *		pSchedule;
 
 	// start after this soldier's ID so we don't duplicate work done in previous passes
 	for ( uiLoop = pSoldier->ubID + 1; uiLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
 	{
-		pSoldier2 = MercPtrs[ uiLoop ];
+		const SOLDIERTYPE* const pSoldier2 = GetMan(uiLoop);
 		if ( pSoldier2->bActive && pSoldier2->bInSector && pSoldier2->ubScheduleID != 0 )
 		{
 			pSchedule = GetSchedule( pSoldier2->ubScheduleID );
