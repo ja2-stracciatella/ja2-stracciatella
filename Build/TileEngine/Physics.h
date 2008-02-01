@@ -49,7 +49,7 @@ struct REAL_OBJECT
 	INT16				sFirstGridNo;
 	BOOLEAN			fFirstTimeMoved;
 	UINT8				ubActionCode;
-	UINT32			uiActionData;
+	SOLDIERTYPE* target;
 	BOOLEAN			fDropItem;
 	UINT32			uiNumTilesMoved;
 	BOOLEAN			fCatchGood;
@@ -67,7 +67,7 @@ struct REAL_OBJECT
 
 
 // OBJECT LIST STUFF
-REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, UINT32 uiActionData);
+REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, real xPos, real yPos, real zPos, real xForce, real yForce, real zForce, SOLDIERTYPE* owner, UINT8 ubActionCode, SOLDIERTYPE* target);
 void RemoveAllPhysicsObjects(void);
 
 
@@ -75,10 +75,7 @@ FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHe
 
 BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, INT16* psFinalGridNo, BOOLEAN fArmed, INT8* pbLevel, BOOLEAN fFromUI);
 
-void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sZPos, OBJECTTYPE *pItem, INT8 bMissBy, UINT8 ubActionCode, UINT32 uiActionData );
-
-
-
+void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sZPos, OBJECTTYPE* pItem, INT8 bMissBy, UINT8 ubActionCode, SOLDIERTYPE* target);
 
 
 // SIMULATE WORLD

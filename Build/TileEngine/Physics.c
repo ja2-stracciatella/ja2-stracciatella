@@ -121,7 +121,7 @@ static void RecountObjectSlots(void)
 }
 
 
-REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, const UINT32 uiActionData)
+REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* const pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, SOLDIERTYPE* const target)
 {
 	FLOAT			mass;
 
@@ -163,7 +163,7 @@ REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, const real dLifeLe
 	pObject->fVisible		= TRUE;
 	pObject->owner      = owner;
 	pObject->ubActionCode = ubActionCode;
-	pObject->uiActionData = uiActionData;
+	pObject->target = target;
 	pObject->fDropItem		= TRUE;
   pObject->ubLastTargetTakenDamage = NOBODY;
 
@@ -435,12 +435,10 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 			// ATE: Handle end of animation...
 			if ( pObject->fCatchAnimOn )
 			{
-				SOLDIERTYPE *pSoldier;
-
 				pObject->fCatchAnimOn = FALSE;
 
 				// Get intended target
-				pSoldier = MercPtrs[ pObject->uiActionData ];
+				SOLDIERTYPE* const pSoldier = pObject->target;
 
 				// Catch anim.....
 				switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )
@@ -1883,7 +1881,7 @@ static FLOAT CalculateSoldierMaxForce(const SOLDIERTYPE* pSoldier, FLOAT dDegree
 static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius);
 
 
-void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, OBJECTTYPE *pItem, INT8 bMissBy, UINT8 ubActionCode, UINT32 uiActionData )
+void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubLevel, const INT16 sEndZ, OBJECTTYPE* const pItem, INT8 bMissBy, const UINT8 ubActionCode, SOLDIERTYPE* const target)
 {
 	FLOAT				dForce, dDegrees;
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
@@ -2015,7 +2013,7 @@ void CalculateLaunchItemParamsForThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UI
 	pSoldier->pThrowParams->dForceZ = vForce.z;
 	pSoldier->pThrowParams->dLifeSpan = -1;
 	pSoldier->pThrowParams->ubActionCode = ubActionCode;
-	pSoldier->pThrowParams->uiActionData = uiActionData;
+	pSoldier->pThrowParams->target       = target;
 
 	// Dirty interface
 	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
@@ -2037,7 +2035,7 @@ static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID)
 			if ( usStructureID < INVALID_STRUCTURE_ID )
 			{
 				//Is it the same guy?
-				if ( usStructureID == pObject->uiActionData )
+				if (GetMan(usStructureID) == pObject->target)
 				{
 					if ( DoCatchObject( pObject ) )
 					{
@@ -2084,7 +2082,6 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject);
 
 static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject)
 {
-	SOLDIERTYPE *pSoldier;
 	UINT32			uiSpacesAway;
 
 	// Do we want to catch?
@@ -2092,7 +2089,7 @@ static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject)
 	{
 		if ( pObject->ubActionCode == THROW_TARGET_MERC_CATCH )
 		{
-			pSoldier = MercPtrs[ pObject->uiActionData ];
+			SOLDIERTYPE* const pSoldier = pObject->target;
 
 			// Is it a guy?
 			// Are we close to this guy?
@@ -2134,15 +2131,11 @@ static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject)
 
 static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 {
-	SOLDIERTYPE *pSoldier;
 	UINT8				ubChanceToCatch;
-
-	// Get intended target
-	pSoldier = MercPtrs[ pObject->uiActionData ];
 
 	// OK, get chance to catch
 	// base it on...? CC? Dexterity?
-	ubChanceToCatch = 50 + EffectiveDexterity( pSoldier ) / 2;
+	ubChanceToCatch = 50 + EffectiveDexterity(pObject->target) / 2;
 
 #ifdef JA2TESTVERSION
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Chance To Catch: %d", ubChanceToCatch );
@@ -2163,12 +2156,11 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 
 static BOOLEAN DoCatchObject(REAL_OBJECT* pObject)
 {
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN			fGoodCatch = FALSE;
 	UINT16			usItem;
 
 	// Get intended target
-	pSoldier = MercPtrs[ pObject->uiActionData ];
+	SOLDIERTYPE* const pSoldier = pObject->target;
 
 	// Catch anim.....
 	switch( gAnimControl[ pSoldier->usAnimState ].ubHeight )

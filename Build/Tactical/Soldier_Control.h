@@ -286,8 +286,7 @@ typedef struct
 	float				dForceZ;
 	float				dLifeSpan;
 	UINT8				ubActionCode;
-	UINT32			uiActionData;
-
+	SOLDIERTYPE* target;
 } THROW_PARAMS;
 
 #define DELAYED_MOVEMENT_FLAG_PATH_THROUGH_PEOPLE 0x01

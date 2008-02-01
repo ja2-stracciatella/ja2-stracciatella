@@ -318,7 +318,6 @@ ubOwnershipUnused
 
 REAL_OBJECT
 OneOverMass: always 1/60.f
-uiActionData: probably always a SoldierID
 
 SOLDIERCREATESTRUCT
 fStatic: strange

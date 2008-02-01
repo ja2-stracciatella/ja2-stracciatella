@@ -1774,7 +1774,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	CalculateLaunchItemParamsForThrow( pSoldier, pSoldier->sTargetGridNo, pSoldier->bTargetLevel, 0, &Launchable, (INT8)(uiDiceRoll - uiHitChance), THROW_ARM_ITEM, 0 );
 
 	const THROW_PARAMS* const t = pSoldier->pThrowParams;
-	CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->uiActionData);
+	CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->target);
 
 	MemFree( pSoldier->pTempObject );
 	pSoldier->pTempObject = NULL;

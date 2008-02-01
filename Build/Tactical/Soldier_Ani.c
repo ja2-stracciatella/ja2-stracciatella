@@ -888,7 +888,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						}
 
 						const THROW_PARAMS* const t = pSoldier->pThrowParams;
-						CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->uiActionData);
+						CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->target);
 
 						// Remove object
 						//RemoveObjFrom( &(pSoldier->inv[ HANDPOS ] ), 0 );

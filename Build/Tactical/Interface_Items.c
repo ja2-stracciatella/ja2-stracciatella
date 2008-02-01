@@ -3646,7 +3646,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	UINT16	  usItem;
 	INT16			sAPCost;
 	UINT8			ubThrowActionCode=0;
-	UINT32		uiThrowActionData=0;
 	INT16			sEndZ = 0;
 	OBJECTTYPE TempObject;
 	INT16			sGridNo;
@@ -4016,6 +4015,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// OK, CHECK FOR VALID THROW/CATCH
 			// IF OVER OUR GUY...
+			SOLDIERTYPE* target = NULL;
 			if (pSoldier != NULL)
 			{
 				if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE && !AM_AN_EPC( pSoldier ) && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -4027,7 +4027,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					{
 						// Setup as being the catch target
 						ubThrowActionCode = THROW_TARGET_MERC_CATCH;
-						uiThrowActionData = pSoldier->ubID;
+						target            = pSoldier;
 
 						sGridNo = pSoldier->sGridNo;
 
@@ -4077,9 +4077,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			gTacticalStatus.ubAttackBusyCount++;
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount) );
 
-
 			// Given our gridno, throw grenate!
-			CalculateLaunchItemParamsForThrow( gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, (INT16)( ( gsInterfaceLevel * 256 ) + sEndZ ), gpItemPointer, 0, ubThrowActionCode, uiThrowActionData );
+			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);
 
 			// OK, goto throw animation
 			HandleSoldierThrowItem( gpItemPointerSoldier, usMapPos );
