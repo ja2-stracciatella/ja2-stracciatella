@@ -5135,10 +5135,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 void CycleThroughKnownEnemies( )
 {
 	// static to indicate last position we were at:
-	SOLDIERTYPE*   pSoldier;
 	static BOOLEAN fFirstTime = TRUE;
 	static UINT16	usStartToLook;
-	UINT32				cnt;
 	BOOLEAN				fEnemyBehindStartLook = FALSE;
 	BOOLEAN				fEnemiesFound = FALSE;
 
@@ -5149,31 +5147,27 @@ void CycleThroughKnownEnemies( )
 		usStartToLook = gTacticalStatus.Team[ gbPlayerNum ].bLastID;
 	}
 
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID, pSoldier = MercPtrs[ cnt ]; cnt < TOTAL_SOLDIERS; cnt++, pSoldier++ )
+	FOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
 		// try to find first active, OK enemy
-		if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum) && (pSoldier->bLife > 0) )
+		if (s->bInSector            &&
+				!s->bNeutral            &&
+				s->bSide != gbPlayerNum &&
+				s->bLife > 0            &&
+				s->bVisible != -1)
 		{
-			if ( pSoldier->bVisible != -1 )
+			fEnemiesFound = TRUE;
+
+			// If we are > ok start, this is the one!
+			if (s->ubID > usStartToLook)
 			{
-				fEnemiesFound = TRUE;
-
-				// If we are > ok start, this is the one!
-				if ( cnt > usStartToLook )
-				{
-					usStartToLook = (UINT16)cnt;
-
-					// Locate to!
-					//LocateSoldier(pSoldier, 1);
-
-					//ATE: Change to Slide To...
-					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
-					return;
-				}
-				else
-				{
-					fEnemyBehindStartLook = TRUE;
-				}
+				usStartToLook = s->ubID;
+				SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+				return;
+			}
+			else
+			{
+				fEnemyBehindStartLook = TRUE;
 			}
 		}
 	}
@@ -5196,56 +5190,40 @@ void CycleThroughKnownEnemies( )
 
 void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 {
-	// static to indicate last position we were at:
-	SOLDIERTYPE* pSoldier;
-	UINT32				cnt;
-
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID, pSoldier = MercPtrs[ cnt ]; cnt < TOTAL_SOLDIERS; cnt++, pSoldier++ )
+	FOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
 		// try to find first active, OK enemy
-		if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum) && (pSoldier->bLife > 0) )
+		if (s->bInSector                                     &&
+				!s->bNeutral                                     &&
+				s->bSide != gbPlayerNum                          &&
+				s->bLife > 0                                     &&
+				pSrcSoldier->bOppList[s->ubID] == SEEN_CURRENTLY &&
+				s->ubID > pSrcSoldier->ubLastEnemyCycledID)
 		{
-			if ( pSrcSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY  )
-			{
-				// If we are > ok start, this is the one!
-				if ( cnt > pSrcSoldier->ubLastEnemyCycledID )
-				{
-					pSrcSoldier->ubLastEnemyCycledID = (UINT8)cnt;
-
-					//ATE: Change to Slide To...
-					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
-
-					ChangeInterfaceLevel( pSoldier->bLevel );
-					return;
-				}
-			}
+			pSrcSoldier->ubLastEnemyCycledID = s->ubID;
+			SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+			ChangeInterfaceLevel(s->bLevel);
+			return;
 		}
 	}
 
 	// If here.. reset to zero...
 	pSrcSoldier->ubLastEnemyCycledID = 0;
 
-
-	for ( cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID, pSoldier = MercPtrs[ cnt ]; cnt < TOTAL_SOLDIERS; cnt++, pSoldier++ )
+	FOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
 		// try to find first active, OK enemy
-		if ( pSoldier->bActive && pSoldier->bInSector && !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum) && (pSoldier->bLife > 0) )
+		if (s->bInSector                                     &&
+				!s->bNeutral                                     &&
+				s->bSide != gbPlayerNum                          &&
+				s->bLife > 0                                     &&
+				pSrcSoldier->bOppList[s->ubID] == SEEN_CURRENTLY &&
+				s->ubID > pSrcSoldier->ubLastEnemyCycledID)
 		{
-			if ( pSrcSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY  )
-			{
-
-				// If we are > ok start, this is the one!
-				if ( cnt > pSrcSoldier->ubLastEnemyCycledID )
-				{
-					pSrcSoldier->ubLastEnemyCycledID = (UINT8)cnt;
-
-					//ATE: Change to Slide To...
-					SlideTo(0, pSoldier, 0, SETANDREMOVEPREVIOUSLOCATOR);
-
-					ChangeInterfaceLevel( pSoldier->bLevel );
-					return;
-				}
-			}
+			pSrcSoldier->ubLastEnemyCycledID = s->ubID;
+			SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+			ChangeInterfaceLevel(s->bLevel);
+			return;
 		}
 	}
 }
