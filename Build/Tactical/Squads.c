@@ -1217,41 +1217,6 @@ static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier)
 }
 
 
-// is there a dead guy here
-static BOOLEAN IsDeadGuyInThisSquadSlot(INT8 bSlotId, INT8 bSquadValue, INT8* bNumberOfDeadGuysSoFar)
-{
-	INT32 iCounter = 0, iCount = 0;
-
-	// see if we have gone too far?
-	if( bSlotId < *bNumberOfDeadGuysSoFar )
-	{
-		// reset
-		*bNumberOfDeadGuysSoFar = 0;
-	}
-
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	{
-		if( sDeadMercs[ bSquadValue ][ iCounter ] != -1 )
-		{
-			// not gone far enough yet
-			if( *bNumberOfDeadGuysSoFar > iCounter )
-			{
-				iCount++;
-			}
-			else
-			{
-				// far enough, start checking
-				bNumberOfDeadGuysSoFar++;
-
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
-}
-
-
 BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 {
 	INT32 iCounter = 0;
