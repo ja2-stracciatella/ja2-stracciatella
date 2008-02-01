@@ -3126,23 +3126,11 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 
 static UINT8 GetUnusedMercProfileID(void)
 {
-	UINT8 ubRandom=0;
-	INT32 i;
-	BOOLEAN fUnique = FALSE;
-	while( !fUnique )
+	for (;;)
 	{
-		ubRandom = (UINT8)PreRandom( 40 );
-		for( i = 0; i < 19; i++ )
-		{
-			fUnique = TRUE;
-			if( Menptr[ i ].ubProfile == ubRandom )
-			{
-				fUnique = FALSE;
-				break;
-			}
-		}
+		const ProfileID pid = PreRandom(40);
+		if (FindSoldierByProfileID(pid, TRUE) == NULL) return pid;
 	}
-	return ubRandom;
 }
 
 
