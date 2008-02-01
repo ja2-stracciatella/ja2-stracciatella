@@ -173,39 +173,6 @@ BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 }
 
 
-static void DOIT(void)
-{
-//	LEVELNODE *			pLand;
-	//LEVELNODE *			pObject;
-	LEVELNODE	*			pStruct, *pNewStruct;
-	//LEVELNODE	*			pShadow;
-	UINT32 uiLoop;
-
-	// first level
- 	for( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
-	{
-		pStruct = gpWorldLevelData[ uiLoop ].pStructHead;
-
-		while ( pStruct != NULL )
-		{
-			pNewStruct = pStruct->pNext;
-
-			if ( pStruct->usIndex >= DEBRISWOOD1 && pStruct->usIndex <= DEBRISWEEDS10 )
-			{
-				 AddObjectToHead( uiLoop, pStruct->usIndex );
-
-				 RemoveStruct( uiLoop, pStruct->usIndex );
-			}
-
-			pStruct = pNewStruct;
-		}
-
-
-	}
-
-}
-
-
 static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 
