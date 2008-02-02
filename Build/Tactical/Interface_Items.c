@@ -1106,29 +1106,26 @@ static BOOLEAN SoldierContainsAnyCompatibleStuff(const SOLDIERTYPE* const s, con
 
 void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const o)
 {
-	INT32 iCounter = 0;
-
 	const INT32 squad = CurrentSquad();
 	if (squad == NUMBER_OF_SQUADS) return;
 
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
+	for (INT32 i = 0; i < NUMBER_OF_SOLDIERS_PER_SQUAD; ++i)
 	{
-		const SOLDIERTYPE* const s = Squad[squad][iCounter];
+		const SOLDIERTYPE* const s = Squad[squad][i];
 		if (s == NULL) continue;
-		Assert(s->face || s->uiStatusFlags & SOLDIER_VEHICLE);
-		if (s->face == NULL) continue;
+		FACETYPE* const f = s->face;
+		Assert(f || s->uiStatusFlags & SOLDIER_VEHICLE);
+		if (f == NULL) continue;
 
 		if (o == NULL)
 		{
-			s->face->fCompatibleItems = FALSE;
+			f->fCompatibleItems = FALSE;
 		}
 		else if (SoldierContainsAnyCompatibleStuff(s, o))
 		{
-			// Get face and set value....
-			s->face->fCompatibleItems = TRUE;
+			f->fCompatibleItems = TRUE;
 		}
 	}
-
 }
 
 
