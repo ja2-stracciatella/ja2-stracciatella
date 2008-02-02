@@ -1078,9 +1078,6 @@ static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier);
 static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSquadValue)
 {
 	INT32 iCounter = 0;
-	SOLDIERTYPE *pTempSoldier = NULL;
-
-
 
 	// is dead guy in any squad
 	if( IsDeadGuyOnAnySquad( pSoldier ) == TRUE )
@@ -1107,10 +1104,8 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 
 static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier)
 {
-	INT32 iCounterA = 0, iCounter = 0;
-
 	// squad?
-	for( iCounterA = 0; iCounterA < NUMBER_OF_SQUADS; iCounterA++ )
+	for (INT32 iCounterA = 0; iCounterA < NUMBER_OF_SQUADS; ++iCounterA)
 	{
 		if (IsDeadGuyOnSquad(pSoldier->ubProfile, iCounterA)) return TRUE;
 	}
