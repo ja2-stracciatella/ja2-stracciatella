@@ -3540,20 +3540,6 @@ static void ObliterateSector(void)
 }
 
 
-static void RandomizeMercProfile(void)
-{
-	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL)
-	{
-		// Change guy!
-		ForceSoldierProfileID(sel, Random(30));
-
-		// Dirty interface
-		DirtyMercPanelInterface(sel, DIRTYLEVEL2);
-	}
-}
-
-
 static void JumpFence(void)
 {
 	INT8 bDirection;
