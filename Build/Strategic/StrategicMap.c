@@ -3055,7 +3055,6 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 //ATE: Returns FALSE if NOBODY is close enough, 1 if ONLY selected guy is and 2 if all on squad are...
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes )
 {
-	INT32 cnt;
 	BOOLEAN		fAtLeastOneMercControllable = FALSE;
 	BOOLEAN		fOnlySelectedGuy = FALSE;
 	SOLDIERTYPE *pValidSoldier = NULL;
@@ -3090,13 +3089,10 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	gPotentiallyAbandonedEPC = NULL;
 
 	// Look through all mercs and check if they are within range of east end....
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-
-  // look for all mercs on the same team,
-	for (SOLDIERTYPE* pSoldier = GetMan(cnt); cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
+	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// If we are controllable
-		if ( OK_CONTROLLABLE_MERC( pSoldier) && pSoldier->bAssignment == CurrentSquad( ) )
+		if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad())
 		{
 			//Need to keep a copy of a good soldier, so we can access it later, and
 			//not more than once.
