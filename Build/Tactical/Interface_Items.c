@@ -1126,20 +1126,22 @@ void HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, 
 
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		if(  Squad[ iCurrentTacticalSquad ][ iCounter ] != NULL )
+		SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][iCounter];
+		if (s == NULL) continue;
+		Assert(s->face || s->uiStatusFlags & SOLDIER_VEHICLE);
+		if (s->face == NULL) continue;
+
+		if (!fReset)
 		{
-			if ( !fReset )
+			if (SoldierContainsAnyCompatibleStuff(s, pObject))
 			{
-				if ( SoldierContainsAnyCompatibleStuff( Squad[ iCurrentTacticalSquad ][ iCounter ], pObject )	)
-				{
-					// Get face and set value....
-					Squad[iCurrentTacticalSquad][iCounter]->face->fCompatibleItems = TRUE;
-				}
+				// Get face and set value....
+				s->face->fCompatibleItems = TRUE;
 			}
-			else
-			{
-				Squad[iCurrentTacticalSquad][iCounter]->face->fCompatibleItems = FALSE;
-			}
+		}
+		else
+		{
+			s->face->fCompatibleItems = FALSE;
 		}
 	}
 

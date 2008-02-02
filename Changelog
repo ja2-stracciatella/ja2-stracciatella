@@ -1,3 +1,5 @@
+(r2930) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when clicking on a vehicle in the tactical screen.
+(r2896) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when loading a savegame, which starts in tacical, and opening the assignment menu of a merc.
 (r2832) Fix a bug in the sound system: Some sounds are sampled at 44kHz, but the sound system uses 22kHz as playback rate, so resample these sounds before playing.
 (r2678) Fix a crash, which is caused by a vanilla mixup of SoldierID and ProfileID, in the insurance contract screen when there are no insurable mercs.
 (r2609, r2840, r2886) Improve the German translation, especially fix gross vanilla mistranslations for the terms "shooting range" and "hired".
