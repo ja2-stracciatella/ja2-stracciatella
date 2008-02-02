@@ -1078,40 +1078,27 @@ static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* pTestObject)
 }
 
 
-static BOOLEAN SoldierContainsAnyCompatibleStuff(SOLDIERTYPE* pSoldier, OBJECTTYPE* pTestObject)
+static BOOLEAN SoldierContainsAnyCompatibleStuff(const SOLDIERTYPE* const s, const OBJECTTYPE* const test)
 {
-	INT32				cnt;
-	OBJECTTYPE  *pObject;
-
-	if( ( Item [ pTestObject->usItem ].usItemClass & IC_GUN ) )
+	const UINT16 item_class = Item[test->usItem].usItemClass;
+	if (item_class & IC_GUN)
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for (INT32 i = 0; i < NUM_INV_SLOTS; ++i)
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
-			if ( CompatibleAmmoForGun( pObject, pTestObject ) )
-			{
-				return( TRUE );
-			}
+			if (CompatibleAmmoForGun(&s->inv[i], test)) return TRUE;
 		}
 	}
-
-	if( ( Item [ pTestObject->usItem ].usItemClass & IC_AMMO ) )
+	else if (item_class & IC_AMMO)
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for (INT32 i = 0; i < NUM_INV_SLOTS; ++i)
 		{
-			pObject = &(pSoldier->inv[ cnt ]);
-
-			if ( CompatibleGunForAmmo( pObject, pTestObject ) )
-			{
-				return( TRUE );
-			}
+			if (CompatibleGunForAmmo(&s->inv[i], test)) return TRUE;
 		}
 	}
 
 	// ATE: Put attachment checking here.....
 
-	return( FALSE );
+	return FALSE;
 }
 
 
