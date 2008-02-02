@@ -1104,18 +1104,16 @@ static BOOLEAN SoldierContainsAnyCompatibleStuff(const SOLDIERTYPE* const s, con
 }
 
 
-void HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, BOOLEAN fReset)
+void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const pObject, BOOLEAN fReset)
 {
 	INT32 iCounter = 0;
 
-	if ( ubSquad == NUMBER_OF_SQUADS )
-	{
-		return;
-	}
+	const INT32 squad = CurrentSquad();
+	if (squad == NUMBER_OF_SQUADS) return;
 
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][iCounter];
+		const SOLDIERTYPE* const s = Squad[squad][iCounter];
 		if (s == NULL) continue;
 		Assert(s->face || s->uiStatusFlags & SOLDIER_VEHICLE);
 		if (s->face == NULL) continue;
@@ -5036,7 +5034,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
 
-	HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+	HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
 	gSelectSMPanelToMerc = pSoldier;
 	ReEvaluateDisabledINVPanelButtons( );
 	DisableTacticalTeamPanelButtons( TRUE );
@@ -5372,7 +5370,7 @@ void RemoveItemPickupMenu( )
 	{
 		gfSMDisableForItems = FALSE;
 
-		HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+		HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
 
 		UnLockPauseState();
 		UnPauseGame();
@@ -5537,10 +5535,10 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				gItemPickupMenu.CompAmmoObject = gWorldItems[pTempItemPool->iItemIndex].o;
 
 				// Turn off first...
-				HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+				HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
 				InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, &( gItemPickupMenu.CompAmmoObject ), TRUE );
 
-				HandleAnyMercInSquadHasCompatibleStuff( (INT8)CurrentSquad( ), &(gWorldItems[ pTempItemPool->iItemIndex ].o ), FALSE );
+				HandleAnyMercInSquadHasCompatibleStuff(&gWorldItems[pTempItemPool->iItemIndex].o, FALSE);
 
 				SetItemPickupMenuDirty( DIRTYLEVEL2 );
 
@@ -5553,7 +5551,7 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		gItemPickupMenu.bCurSelect = 255;
 
 		InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, &( gItemPickupMenu.CompAmmoObject ), FALSE );
-		HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+		HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
 
 		SetItemPickupMenuDirty( DIRTYLEVEL2 );
 

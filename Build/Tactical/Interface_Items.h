@@ -136,7 +136,7 @@ extern MOUSE_REGION gItemDescAttachmentRegions[MAX_ATTACHMENTS];
 extern INT8         gbItemPointerSrcSlot;
 extern BOOLEAN      gfDontChargeAPsToPickup;
 
-void    HandleAnyMercInSquadHasCompatibleStuff(UINT8 ubSquad, OBJECTTYPE* pObject, BOOLEAN fReset);
+void    HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const pObject, BOOLEAN fReset);
 BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn);
 
 #endif

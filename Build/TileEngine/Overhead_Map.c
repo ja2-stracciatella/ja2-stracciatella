@@ -408,7 +408,7 @@ void HandleOverheadMap( )
 
 		gSelectedGuy = NULL;
 
-		HandleAnyMercInSquadHasCompatibleStuff( (INT8) CurrentSquad( ), NULL, TRUE );
+		HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
 
 		if ( GetOverheadMouseGridNo( &usMapPos ) )
 		{
