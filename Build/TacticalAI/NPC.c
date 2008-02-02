@@ -476,13 +476,11 @@ void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord )
 
 static INT32 CalcThreateningEffectiveness(UINT8 ubMerc)
 {
-	SOLDIERTYPE * pSoldier;
 	INT32					iStrength, iDeadliness;
 
 	// effective threat is 1/3 strength, 1/3 weapon deadliness, 1/3 leadership
 
-	pSoldier = FindSoldierByProfileID( ubMerc, TRUE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMerc);
 	if ( !pSoldier )
 	{
 		return( 0 );

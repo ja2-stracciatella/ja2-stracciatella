@@ -9553,7 +9553,6 @@ BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* const robot)
 
 BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 {
-	SOLDIERTYPE *pRobot;
 	INT8				bPos;
 
 	if (!s->bActive) return FALSE;
@@ -9583,7 +9582,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 	}
 
 	// Find the robot
-	pRobot = FindSoldierByProfileID( ROBOT, TRUE );
+	const SOLDIERTYPE* const pRobot = FindSoldierByProfileIDOnPlayerTeam(ROBOT);
 	if ( !pRobot )
 	{
 		return( FALSE );

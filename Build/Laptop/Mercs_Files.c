@@ -289,14 +289,13 @@ static BOOLEAN DisplayMercFace(UINT8 ubMercID)
 	const char *sFaceLoc = "FACES/BIGFACES/";
 	char						sTemp[100];
 	MERCPROFILESTRUCT	*pMerc;
-	SOLDIERTYPE			*pSoldier=NULL;
 
 	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
 	pMerc = &gMercProfiles[ ubMercID ];
 
 	//See if the merc is currently hired
-	pSoldier = FindSoldierByProfileID( ubMercID, TRUE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 	// load the Face graphic and add it
   sprintf(sTemp, "%s%02d.sti", sFaceLoc, ubMercID);

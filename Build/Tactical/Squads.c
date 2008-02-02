@@ -784,7 +784,7 @@ void RebuildCurrentSquad( void )
 			const INT16 dead_id = sDeadMercs[iCurrentTacticalSquad][iCounter];
 			if (dead_id == -1) continue;
 
-			SOLDIERTYPE* const dead_soldier = FindSoldierByProfileID(dead_id, TRUE);
+			SOLDIERTYPE* const dead_soldier = FindSoldierByProfileIDOnPlayerTeam(dead_id);
 			if (!dead_soldier) continue;
 
 			// squad set, now add soldiers in
@@ -1091,7 +1091,7 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
 		const INT16 dead_id = sDeadMercs[iSquadValue][iCounter];
-		if (dead_id == -1 || FindSoldierByProfileID(dead_id, TRUE) == NULL)
+		if (dead_id == -1 || FindSoldierByProfileIDOnPlayerTeam(dead_id) == NULL)
 		{
 			sDeadMercs[iSquadValue][iCounter] = pSoldier->ubProfile;
 		}

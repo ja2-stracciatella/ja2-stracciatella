@@ -315,14 +315,12 @@ static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
 
 static BOOLEAN CheckNPCIsEPC(UINT8 ubProfileID)
 {
-	SOLDIERTYPE *		pNPC;
-
 	if ( gMercProfiles[ ubProfileID ].bMercStatus == MERC_IS_DEAD )
 	{
 		return( FALSE );
 	}
 
-	pNPC = FindSoldierByProfileID( ubProfileID, TRUE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileIDOnPlayerTeam(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -513,10 +511,7 @@ static BOOLEAN CheckPlayerHasHead(void)
 
 static BOOLEAN CheckNPCSector(UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	SOLDIERTYPE * pSoldier;
-
-	pSoldier = FindSoldierByProfileID( ubProfileID, TRUE );
-
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubProfileID);
 	if( pSoldier )
 	{
 		if (pSoldier->sSectorX == sSectorX &&
@@ -841,9 +836,14 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 		case FACT_SLAY_HIRED_AND_WORKED_FOR_48_HOURS:
 			gubFact[usFact] = ( ( gMercProfiles[ SLAY ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) && ( gMercProfiles[ SLAY ].usTotalDaysServed > 1 ) );
 			break;
+
 		case FACT_SHANK_IN_SQUAD_BUT_NOT_SPEAKING:
-			gubFact[usFact] = ( ( FindSoldierByProfileID( SHANK, TRUE ) != NULL) && ( gMercProfiles[ SHANK ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) && ( gpSrcSoldier == NULL || gpSrcSoldier->ubProfile != SHANK ) );
+			gubFact[usFact] =
+				FindSoldierByProfileIDOnPlayerTeam(SHANK) != NULL              &&
+				gMercProfiles[SHANK].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED &&
+				(gpSrcSoldier == NULL || gpSrcSoldier->ubProfile != SHANK);
 			break;
+
 		case FACT_SHANK_NOT_IN_SECTOR:
 			gubFact[usFact] = ( FindSoldierByProfileID( SHANK, FALSE ) == NULL );
 			break;
@@ -1210,7 +1210,12 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 
 		case FACT_VEHICLE_PRESENT:
-			gubFact[usFact] = CheckFact( FACT_OK_USE_HUMMER, ubProfileID ) && ( (FindSoldierByProfileID( PROF_HUMMER, TRUE ) != NULL) || (FindSoldierByProfileID( PROF_ICECREAM, TRUE ) != NULL) );
+			gubFact[usFact] =
+				CheckFact(FACT_OK_USE_HUMMER, ubProfileID) &&
+				(
+					FindSoldierByProfileIDOnPlayerTeam(PROF_HUMMER)   != NULL ||
+					FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM) != NULL
+				);
 			break;
 
 		case FACT_PLAYER_KILLED_BOXERS:
@@ -1218,7 +1223,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 
 		case 245: // Can dimitri be recruited? should be true if already true, OR if Miguel has been recruited already
-			gubFact[usFact] = ( gubFact[usFact] || FindSoldierByProfileID( MIGUEL, TRUE ) );
+			gubFact[usFact] = gubFact[usFact] || FindSoldierByProfileIDOnPlayerTeam(MIGUEL);
 /*
 		case FACT_:
 			gubFact[usFact] = ;

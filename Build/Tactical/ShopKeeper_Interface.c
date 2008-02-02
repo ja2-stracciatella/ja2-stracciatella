@@ -3643,7 +3643,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			if (gMoveingItem.ubIdOfMercWhoOwnsTheItem != (UINT8)-1)
 			#endif
 			{
-				gpItemPointerSoldier = FindSoldierByProfileID( gMoveingItem.ubIdOfMercWhoOwnsTheItem, TRUE );
+				gpItemPointerSoldier = FindSoldierByProfileIDOnPlayerTeam(gMoveingItem.ubIdOfMercWhoOwnsTheItem);
 				//make sure the soldier is not null
 				if( gpItemPointerSoldier == NULL )
 				{
@@ -3696,7 +3696,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			if (gMoveingItem.ubIdOfMercWhoOwnsTheItem != (UINT8)-1)
 			#endif
 			{
-				gpItemPointerSoldier = FindSoldierByProfileID( gMoveingItem.ubIdOfMercWhoOwnsTheItem, TRUE );
+				gpItemPointerSoldier = FindSoldierByProfileIDOnPlayerTeam(gMoveingItem.ubIdOfMercWhoOwnsTheItem);
 				//make sure the soldier is not null
 				if( gpItemPointerSoldier == NULL )
 				{

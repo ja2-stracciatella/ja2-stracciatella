@@ -434,7 +434,6 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 	UINT16 usBuddyQuote=0;
 	UINT16 usReasonQuote=0;
 	BOOLEAN fSayPrecedent = FALSE;
-	SOLDIERTYPE * pHated;
 
 	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 		return( FALSE );
@@ -502,7 +501,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 			}
 			else 			// else tolerance is > 0, only gripe if in same sector
 			{
-				pHated = FindSoldierByProfileID( bMercID, TRUE );
+				const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
 				if ( pHated && pHated->sSectorX == pSoldier->sSectorX &&
 									pHated->sSectorY == pSoldier->sSectorY &&
 									pHated->bSectorZ == pSoldier->bSectorZ )
@@ -543,7 +542,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
         }
 				else if ( gMercProfiles[ pSoldier->ubProfile ].bLearnToHateCount <= gMercProfiles[ pSoldier->ubProfile ].bLearnToHateTime / 2 )
 				{
-					pHated = FindSoldierByProfileID( bMercID, TRUE );
+					const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
 					if ( pHated && pHated->sSectorX == pSoldier->sSectorX &&
 										pHated->sSectorY == pSoldier->sSectorY &&
 										pHated->bSectorZ == pSoldier->bSectorZ )

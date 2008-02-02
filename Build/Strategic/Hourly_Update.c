@@ -181,17 +181,16 @@ UINT16	LarryItems[ NUM_LARRY_ITEMS ][ 3 ] =
 
 static void HourlyLarryUpdate(void)
 {
-	SOLDIERTYPE *			pSoldier;
 	INT8							bSlot, bBoozeSlot;
 	INT8							bLarryItemLoop;
 	UINT16						usTemptation = 0;
 	UINT16						usCashAmount;
 	BOOLEAN						fBar = FALSE;
 
-	pSoldier = FindSoldierByProfileID( LARRY_NORMAL, TRUE );
+	SOLDIERTYPE* pSoldier = FindSoldierByProfileIDOnPlayerTeam(LARRY_NORMAL);
 	if ( !pSoldier )
 	{
-		pSoldier = FindSoldierByProfileID( LARRY_DRUNK, TRUE );
+		pSoldier = FindSoldierByProfileIDOnPlayerTeam(LARRY_DRUNK);
 	}
 	if ( pSoldier )
 	{
@@ -316,8 +315,7 @@ static void HourlyLarryUpdate(void)
 
 static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 {
-	SOLDIERTYPE *pSoldier;
-	pSoldier = FindSoldierByProfileID( SLAY, TRUE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(SLAY);
 	if( !pSoldier )
 	{
 		return;

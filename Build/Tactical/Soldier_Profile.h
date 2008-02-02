@@ -193,6 +193,7 @@ BOOLEAN LoadMercProfiles(void);
 // This function will overload the default for the face index ( which is the ubCharNum )
 void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY );
 SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly );
+SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(ProfileID);
 
 BOOLEAN RecruitRPC( UINT8 ubCharNum );
 

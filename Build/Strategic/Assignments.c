@@ -8912,9 +8912,9 @@ void UnEscortEPC(SOLDIERTYPE* const s)
 		SOLDIERTYPE* other;
 		switch (s->ubProfile)
 		{
-			case JOHN: other = FindSoldierByProfileID(MARY, TRUE); break;
-			case MARY: other = FindSoldierByProfileID(JOHN, TRUE); break;
-			default:   other = NULL;                               break;
+			case JOHN: other = FindSoldierByProfileIDOnPlayerTeam(MARY); break;
+			case MARY: other = FindSoldierByProfileIDOnPlayerTeam(JOHN); break;
+			default:   other = NULL;                                     break;
 		}
 		if (other != NULL) InternalUnescortEPC(other);
 

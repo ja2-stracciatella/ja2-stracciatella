@@ -4222,11 +4222,10 @@ static void TruncateStrategicGroupSizes(void)
 static void UpdateMercMercContractInfo(void)
 {
 	UINT8	ubCnt;
-	SOLDIERTYPE				*pSoldier;
 
 	for( ubCnt=BIFF; ubCnt<= BUBBA; ubCnt++ )
 	{
-		pSoldier = FindSoldierByProfileID( ubCnt, TRUE );
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubCnt);
 
 		//if the merc is on the team
 		if( pSoldier == NULL )

@@ -411,7 +411,6 @@ void HandleDialogue( )
 	DIALOGUE_Q_STRUCT				*QItem;
 	static BOOLEAN					fOldEngagedInConvFlagOn = FALSE;
 	BOOLEAN fDoneTalking = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
 	CHAR16	zText[ 512 ];
 	CHAR16	zMoney[128];
 
@@ -679,7 +678,7 @@ void HandleDialogue( )
 	}
 
 	// Try to find soldier...
-	pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, TRUE );
+	SOLDIERTYPE* pSoldier = FindSoldierByProfileIDOnPlayerTeam(QItem->ubCharacterNum);
 
 	if ( pSoldier != NULL )
 	{
@@ -1491,13 +1490,11 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 static BOOLEAN ExecuteCharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier)
 {
 	CHAR8		zSoundString[ 164 ];
-	SOLDIERTYPE *pSoldier;
 
 	// Check if we are dead now or not....( if from a soldier... )
 
 	// Try to find soldier...
-	pSoldier = FindSoldierByProfileID( ubCharacterNum, TRUE );
-
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubCharacterNum);
 	if ( pSoldier != NULL )
 	{
 		// Check vital stats

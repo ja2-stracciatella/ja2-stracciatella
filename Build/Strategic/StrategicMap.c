@@ -1306,8 +1306,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 
 	if ( CheckFact( FACT_ROBOT_RECRUITED_AND_MOVED, 0 ) == FALSE )
 	{
-		SOLDIERTYPE * pRobot;
-		pRobot = FindSoldierByProfileID( ROBOT, TRUE );
+		const SOLDIERTYPE* const pRobot = FindSoldierByProfileIDOnPlayerTeam(ROBOT);
 		if (pRobot)
 		{
 			// robot is on our team and we have changed sectors, so we can
@@ -4296,8 +4295,7 @@ static void GetLoadedSectorString(wchar_t* pString, size_t Length)
 
 void HandleSlayDailyEvent( void )
 {
-	SOLDIERTYPE* pSoldier = FindSoldierByProfileID(SLAY, TRUE);
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(SLAY);
 	if( pSoldier == NULL )
 	{
 		return;

@@ -249,7 +249,7 @@ static void SelectMercFaceMoveRegionCallBack(MOUSE_REGION* pRegion, INT32 reason
 static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, const UINT16 usPosY, const UINT8 ubImage)
 {
 	const ProfileID          id = AimMercArray[ubMercID];
-	const SOLDIERTYPE* const s  = FindSoldierByProfileID(id, TRUE);
+	const SOLDIERTYPE* const s  = FindSoldierByProfileIDOnPlayerTeam(id);
 
 	//Blt the portrait background
 	BltVideoObject(FRAME_BUFFER, guiMugShotBorder, ubImage, usPosX, usPosY);

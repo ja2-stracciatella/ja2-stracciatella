@@ -1037,7 +1037,7 @@ static void DisplayMercsFace(void)
 {
 	// see if the merc is currently hired
 	const ProfileID          id = gbCurrentSoldier;
-	const SOLDIERTYPE* const s  = FindSoldierByProfileID(id, TRUE);
+	const SOLDIERTYPE* const s  = FindSoldierByProfileIDOnPlayerTeam(id);
 
 	// Portrait Frame
 	BltVideoObject(FRAME_BUFFER, guiPortrait, 0, PORTRAIT_X, PORTRAIT_Y);
@@ -1501,7 +1501,7 @@ static UINT32 DisplayMercChargeAmount(void)
 	// Display the 'black hole'for the contract charge  in the video conference terminal
 	BltVideoObject(FRAME_BUFFER, guiVideoContractCharge, 0, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y);
 
-	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
+	if (FindSoldierByProfileIDOnPlayerTeam(gbCurrentSoldier) == NULL)
 	{
 		giContractAmount = 0;
 
@@ -1533,7 +1533,7 @@ static UINT32 DisplayMercChargeAmount(void)
 	SPrintMoney(wDollarTemp, giContractAmount);
 
 	//if the merc hasnt just been hired
-//	if( FindSoldierByProfileID( gbCurrentSoldier, TRUE ) == NULL )
+//	if (FindSoldierByProfileIDOnPlayerTeam(gbCurrentSoldier) == NULL)
 	{
 		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
 			swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
@@ -3358,8 +3358,7 @@ static BOOLEAN QuickHireMerc(void)
 
 //	if( !IsMercHireable( ubCurrentSoldier ) )
 //		return( FALSE );
-	if( FindSoldierByProfileID( ubCurrentSoldier, TRUE ) != NULL )
-		return( FALSE );
+	if (FindSoldierByProfileIDOnPlayerTeam(ubCurrentSoldier) != NULL) return FALSE;
 
 	HireMercStruct.ubProfileID = ubCurrentSoldier;
 
@@ -3577,7 +3576,6 @@ static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(UINT8 bE
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
 {
 	CHAR16	szLocAndTime[512];
-	SOLDIERTYPE *pSoldier = NULL;
 	CHAR16		zTimeString[128];
 	CHAR16		zSectorIDString[512];
 	UINT32		uiHour;
@@ -3590,8 +3588,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
 	if( LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop )
 		return;
 
-	pSoldier = FindSoldierByProfileID( (UINT8)LaptopSaveInfo.sLastHiredMerc.iIdOfMerc, TRUE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(LaptopSaveInfo.sLastHiredMerc.iIdOfMerc);
 	if( pSoldier == NULL )
 		return;
 

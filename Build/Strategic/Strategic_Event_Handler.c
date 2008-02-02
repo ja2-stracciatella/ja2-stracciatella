@@ -863,7 +863,10 @@ void HandleEarlyMorningEvents( void )
 
 	// stop moving the truck if Hamous is dead!!
 	// stop moving them if the player has the truck or Hamous is hired!
-	if ( gMercProfiles[ HAMOUS ].bLife > 0 && FindSoldierByProfileID( HAMOUS, TRUE ) == NULL && FindSoldierByProfileID( PROF_ICECREAM, TRUE ) == NULL && (! ( (gWorldSectorX == gMercProfiles[ HAMOUS ].sSectorX) && (gWorldSectorY == gMercProfiles[HAMOUS].sSectorY) && (gbWorldSectorZ == 0) )) )
+	if (gMercProfiles[HAMOUS].bLife > 0 &&
+			FindSoldierByProfileIDOnPlayerTeam(HAMOUS)        == NULL &&
+			FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM) == NULL &&
+			(gWorldSectorX != gMercProfiles[HAMOUS].sSectorX || gWorldSectorY != gMercProfiles[HAMOUS].sSectorY || gbWorldSectorZ != 0))
 	{
 		// ok, HAMOUS's sector not loaded, so time to move!
 		// might be same sector as before, if so, oh well!

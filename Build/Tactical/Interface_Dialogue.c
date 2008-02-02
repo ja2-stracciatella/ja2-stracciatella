@@ -1567,8 +1567,6 @@ void HandleNPCClosePanel(  )
 
 static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 {
-	SOLDIERTYPE * pSoldier;
-
 	switch( ubNPC )
 	{
 		case MARIA:
@@ -1583,10 +1581,11 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 			}
 			break;
 		case JOHN:
+		{
 			// recruit Mary as well
 			RecruitEPC( MARY );
 
-			pSoldier = FindSoldierByProfileID( MARY, TRUE );
+			SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(MARY);
 			if ( pSoldier )
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ MARY ].zNickname, ( pSoldier->bAssignment + 1 ) );
@@ -1597,11 +1596,14 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 				StartQuest( QUEST_ESCORT_TOURISTS, gWorldSectorX, gWorldSectorY );
 			}
 			break;
+		}
+
 		case MARY:
+		{
 			// recruit John as well
 			RecruitEPC( JOHN );
 
-			pSoldier = FindSoldierByProfileID( JOHN, TRUE );
+			SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(JOHN);
 			if ( pSoldier )
 			{
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ JOHN ].zNickname, ( pSoldier->bAssignment + 1 ) );
@@ -1612,6 +1614,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 				StartQuest( QUEST_ESCORT_TOURISTS, gWorldSectorX, gWorldSectorY );
 			}
 			break;
+		}
 	}
 }
 
@@ -4092,15 +4095,15 @@ unlock:
 
 			case NPC_ACTION_FILL_UP_CAR:
 			{
-				SOLDIERTYPE* pSoldier = FindSoldierByProfileID( PROF_HUMMER, TRUE );
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileIDOnPlayerTeam(PROF_HUMMER);
 				if ( !pSoldier )
 				{
 					// ice cream truck?
-					pSoldier = FindSoldierByProfileID( PROF_ICECREAM, TRUE );
+					pSoldier = FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM);
 				}
 				else if ( pSoldier->sBreathRed == 10000 )
 				{
-					SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(PROF_ICECREAM, TRUE);
+					SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM);
 					if ( pSoldier2 )
 					{
 						// try refueling this vehicle instead

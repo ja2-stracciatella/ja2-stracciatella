@@ -1910,7 +1910,7 @@ static void HandleMaryArrival(SOLDIERTYPE* pSoldier)
 {
 	if (!pSoldier)
 	{
-		pSoldier = FindSoldierByProfileID(MARY, TRUE);
+		pSoldier = FindSoldierByProfileIDOnPlayerTeam(MARY);
 		if (!pSoldier) return;
 	}
 
@@ -1938,7 +1938,7 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 {
 	if (!pSoldier)
 	{
-		pSoldier = FindSoldierByProfileID(JOHN, TRUE);
+		pSoldier = FindSoldierByProfileIDOnPlayerTeam(JOHN);
 		if (!pSoldier) return;
 	}
 
@@ -6554,7 +6554,7 @@ void HandleEndDemoInCreatureLevel(void)
 	if ( gbWorldSectorZ == 1 )
 	{
 		// Is dynamo recruited?
-		if ( FindSoldierByProfileID( DYNAMO, TRUE ) && NumCapableEnemyInSector( ) == 0 )
+		if (FindSoldierByProfileIDOnPlayerTeam(DYNAMO) && NumCapableEnemyInSector() == 0)
 		{
 			// Bring up dialogue box...
 			DoMessageBox(MSG_BOX_BASIC_STYLE, str_go_see_gabby, GAME_SCREEN, MSG_BOX_FLAG_OK, DemoEndOKCallback, NULL);

@@ -472,7 +472,7 @@ void MakeRemainingTerroristsTougher( void )
 		{
 			if ( gubTerrorists[ ubLoop ] == SLAY )
 			{
-				if ( FindSoldierByProfileID( SLAY, TRUE ) != NULL )
+				if (FindSoldierByProfileIDOnPlayerTeam(SLAY) != NULL)
 				{
 					// Slay on player's team, doesn't count towards remaining terrorists
 					continue;
@@ -542,7 +542,7 @@ void MakeRemainingTerroristsTougher( void )
 		{
 			if ( gubTerrorists[ ubLoop ] == SLAY )
 			{
-				if ( FindSoldierByProfileID( SLAY, TRUE ) != NULL )
+				if (FindSoldierByProfileIDOnPlayerTeam(SLAY) != NULL)
 				{
 					// Slay on player's team, doesn't count towards remaining terrorists
 					continue;
@@ -785,6 +785,15 @@ SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnl
 	return( NULL );
 }
 
+
+SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(const ProfileID pid)
+{
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	{
+		if (s->ubProfile == pid) return s;
+	}
+	return NULL;
+}
 
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )

@@ -494,7 +494,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 		if( !gfEditMode )
 		{
 			// CJC, August 18, 1999: don't do this code unless the ice cream truck is on our team
-			if ( FindSoldierByProfileID( ICECREAMTRUCK, TRUE ) != NULL )
+			if (FindSoldierByProfileIDOnPlayerTeam(ICECREAMTRUCK) != NULL)
 			{
 				if( curr->pDetailedPlacement->bBodyType == ICECREAMTRUCK )
 				{ //Check to see if Hamous is here and not recruited.  If so, add truck

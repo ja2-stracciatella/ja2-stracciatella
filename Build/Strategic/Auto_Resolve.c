@@ -3129,7 +3129,7 @@ static UINT8 GetUnusedMercProfileID(void)
 	for (;;)
 	{
 		const ProfileID pid = PreRandom(40);
-		if (FindSoldierByProfileID(pid, TRUE) == NULL) return pid;
+		if (FindSoldierByProfileIDOnPlayerTeam(pid) == NULL) return pid;
 	}
 }
 

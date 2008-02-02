@@ -349,7 +349,6 @@ static void SettleMercAccounts(void)
 	{
 		INT32	iPartialPayment=0;
 		INT32	iContractCharge=0;
-		SOLDIERTYPE *pSoldier;
 
 		//try to make a partial payment by looping through all the mercs and settling them 1 at a time
 		for(i=0; i<NUMBER_OF_MERCS; i++)
@@ -359,8 +358,7 @@ static void SettleMercAccounts(void)
 			//if the merc is on the team
 			if( IsMercOnTeam( ubMercID ) )
 			{
-
-				pSoldier = FindSoldierByProfileID( ubMercID, TRUE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 				//if we can get the soldier pointer
 				if( pSoldier == NULL )
