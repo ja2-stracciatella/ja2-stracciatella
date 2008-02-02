@@ -1947,16 +1947,14 @@ static void RemoveItemGraphicFromWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLe
 
 INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel)
 {
-	INT32 item_index;
-	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, &item_index);
-	return item_index;
+	return InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel);
 }
 
 
 static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool);
 
 
-OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
+INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel)
 {
 	ITEM_POOL		*pItemPool;
 	ITEM_POOL		*pItemPoolTemp;
@@ -1979,7 +1977,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 
     (*psGridNo) = sNewGridNo = gMapInformation.sCenterGridNo;
 
-		//return( NULL );
+		//return -1;
 	}
 
 	// CHECK IF THIS ITEM IS IN DEEP WATER....
@@ -1991,7 +1989,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
   {
 		if ( Item[ pObject->usItem ].fFlags & ITEM_SINKS )
 		{
-			return( NULL );
+			return -1;
 		}
 	}
 
@@ -2233,8 +2231,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 		AdjustItemPoolVisibility( pItemPool );
 	}
 
-	*piItemIndex = iWorldItem;
-	return( &(gWorldItems[ iWorldItem ].o ) );
+	return iWorldItem;
 }
 
 

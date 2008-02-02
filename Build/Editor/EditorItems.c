@@ -761,9 +761,7 @@ static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 void AddSelectedItemToWorld( INT16 sGridNo )
 {
 	OBJECTTYPE	tempObject;
-	OBJECTTYPE *pObject;
 	INVTYPE		*pItem;
-	INT32 iItemIndex;
 	INT8 bVisibility = INVISIBLE;
 	BOOLEAN fFound = FALSE;
 	IPListNode *pIPCurr, *pIPPrev;
@@ -850,7 +848,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 			break;
 	}
 
-	pObject = InternalAddItemToPool( &sGridNo, &tempObject, bVisibility, 0, usFlags, 0, &iItemIndex );
+	const INT32 iItemIndex = InternalAddItemToPool(&sGridNo, &tempObject, bVisibility, 0, usFlags, 0);
 	if( tempObject.usItem != OWNERSHIP )
 	{
 		gWorldItems[ iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance);
@@ -860,6 +858,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 		gWorldItems[ iItemIndex ].ubNonExistChance = 0;
 	}
 
+	OBJECTTYPE* const pObject = &gWorldItems[iItemIndex].o;
 	pItem = &( Item[ pObject->usItem ] );
 	if( pItem->usItemClass == IC_AMMO )
 	{
