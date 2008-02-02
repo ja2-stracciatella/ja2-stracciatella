@@ -1284,121 +1284,109 @@ static BOOLEAN MercIsHot(SOLDIERTYPE* pSoldier)
 	return( FALSE );
 }
 
-SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier )
+
+SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 {
-	UINT8	ubSrcProfile;
-	UINT8	ubDestProfile;
-	MERCPROFILESTRUCT * pNewProfile;
-
-	ubSrcProfile = pSoldier->ubProfile;
-	if ( ubSrcProfile == LARRY_NORMAL)
+	const ProfileID src_id = s->ubProfile;
+	ProfileID       dst_id;
+	switch (src_id)
 	{
-		ubDestProfile = LARRY_DRUNK;
-	}
-	else if ( ubSrcProfile == LARRY_DRUNK )
-	{
-		ubDestProfile = LARRY_NORMAL;
-	}
-	else
-	{
-		// I don't think so!
-		return( pSoldier );
+		case LARRY_NORMAL: dst_id = LARRY_DRUNK;  break;
+		case LARRY_DRUNK:  dst_id = LARRY_NORMAL; break;
+		default:           return s; // I don't think so!
 	}
 
-	pNewProfile = &gMercProfiles[ ubDestProfile ];
-	pNewProfile->ubMiscFlags2 = gMercProfiles[ ubSrcProfile ].ubMiscFlags2;
-	pNewProfile->ubMiscFlags = gMercProfiles[ ubSrcProfile ].ubMiscFlags;
-	pNewProfile->sSectorX = gMercProfiles[ ubSrcProfile ].sSectorX;
-	pNewProfile->sSectorY = gMercProfiles[ ubSrcProfile ].sSectorY;
-	pNewProfile->uiDayBecomesAvailable = gMercProfiles[ ubSrcProfile ].uiDayBecomesAvailable;
-	pNewProfile->usKills = gMercProfiles[ ubSrcProfile ].usKills;
-	pNewProfile->usAssists = gMercProfiles[ ubSrcProfile ].usAssists;
-	pNewProfile->usShotsFired = gMercProfiles[ ubSrcProfile ].usShotsFired;
-	pNewProfile->usShotsHit = gMercProfiles[ ubSrcProfile ].usShotsHit;
-	pNewProfile->usBattlesFought = gMercProfiles[ ubSrcProfile ].usBattlesFought;
-	pNewProfile->usTimesWounded = gMercProfiles[ ubSrcProfile ].usTimesWounded;
-	pNewProfile->usTotalDaysServed = gMercProfiles[ ubSrcProfile ].usTotalDaysServed;
-	pNewProfile->bResigned = gMercProfiles[ ubSrcProfile ].bResigned;
-	pNewProfile->bActive = gMercProfiles[ ubSrcProfile ].bActive;
-	pNewProfile->fUseProfileInsertionInfo = gMercProfiles[ ubSrcProfile ].fUseProfileInsertionInfo;
-	pNewProfile->sGridNo = gMercProfiles[ ubSrcProfile ].sGridNo;
-	pNewProfile->ubQuoteActionID = gMercProfiles[ ubSrcProfile ].ubQuoteActionID;
-	pNewProfile->ubLastQuoteSaid = gMercProfiles[ ubSrcProfile ].ubLastQuoteSaid;
-	pNewProfile->ubStrategicInsertionCode = gMercProfiles[ ubSrcProfile ].ubStrategicInsertionCode;
-	pNewProfile->bMercStatus = gMercProfiles[ ubSrcProfile ].bMercStatus;
-	pNewProfile->bSectorZ = gMercProfiles[ ubSrcProfile ].bSectorZ;
-	pNewProfile->usStrategicInsertionData = gMercProfiles[ ubSrcProfile ].usStrategicInsertionData;
-	pNewProfile->sTrueSalary = gMercProfiles[ ubSrcProfile ].sTrueSalary;
-	pNewProfile->ubMiscFlags3 = gMercProfiles[ ubSrcProfile ].ubMiscFlags3;
-	pNewProfile->ubDaysOfMoraleHangover = gMercProfiles[ ubSrcProfile ].ubDaysOfMoraleHangover;
-	pNewProfile->ubNumTimesDrugUseInLifetime = gMercProfiles[ ubSrcProfile ].ubNumTimesDrugUseInLifetime;
-	pNewProfile->uiPrecedentQuoteSaid = gMercProfiles[ ubSrcProfile ].uiPrecedentQuoteSaid;
-	pNewProfile->sPreCombatGridNo = gMercProfiles[ ubSrcProfile ].sPreCombatGridNo;
+	const MERCPROFILESTRUCT* const src = GetProfile(src_id);
+	MERCPROFILESTRUCT*       const dst = GetProfile(dst_id);
+
+	dst->ubMiscFlags2                = src->ubMiscFlags2;
+	dst->ubMiscFlags                 = src->ubMiscFlags;
+	dst->sSectorX                    = src->sSectorX;
+	dst->sSectorY                    = src->sSectorY;
+	dst->uiDayBecomesAvailable       = src->uiDayBecomesAvailable;
+	dst->usKills                     = src->usKills;
+	dst->usAssists                   = src->usAssists;
+	dst->usShotsFired                = src->usShotsFired;
+	dst->usShotsHit                  = src->usShotsHit;
+	dst->usBattlesFought             = src->usBattlesFought;
+	dst->usTimesWounded              = src->usTimesWounded;
+	dst->usTotalDaysServed           = src->usTotalDaysServed;
+	dst->bResigned                   = src->bResigned;
+	dst->bActive                     = src->bActive;
+	dst->fUseProfileInsertionInfo    = src->fUseProfileInsertionInfo;
+	dst->sGridNo                     = src->sGridNo;
+	dst->ubQuoteActionID             = src->ubQuoteActionID;
+	dst->ubLastQuoteSaid             = src->ubLastQuoteSaid;
+	dst->ubStrategicInsertionCode    = src->ubStrategicInsertionCode;
+	dst->bMercStatus                 = src->bMercStatus;
+	dst->bSectorZ                    = src->bSectorZ;
+	dst->usStrategicInsertionData    = src->usStrategicInsertionData;
+	dst->sTrueSalary                 = src->sTrueSalary;
+	dst->ubMiscFlags3                = src->ubMiscFlags3;
+	dst->ubDaysOfMoraleHangover      = src->ubDaysOfMoraleHangover;
+	dst->ubNumTimesDrugUseInLifetime = src->ubNumTimesDrugUseInLifetime;
+	dst->uiPrecedentQuoteSaid        = src->uiPrecedentQuoteSaid;
+	dst->sPreCombatGridNo            = src->sPreCombatGridNo;
 
 // CJC: this is causing problems so just skip the transfer of exp...
 /*
-	pNewProfile->sLifeGain = gMercProfiles[ ubSrcProfile ].sLifeGain;
-	pNewProfile->sAgilityGain = gMercProfiles[ ubSrcProfile ].sAgilityGain;
-	pNewProfile->sDexterityGain = gMercProfiles[ ubSrcProfile ].sDexterityGain;
-	pNewProfile->sStrengthGain = gMercProfiles[ ubSrcProfile ].sStrengthGain;
-	pNewProfile->sLeadershipGain = gMercProfiles[ ubSrcProfile ].sLeadershipGain;
-	pNewProfile->sWisdomGain = gMercProfiles[ ubSrcProfile ].sWisdomGain;
-	pNewProfile->sExpLevelGain = gMercProfiles[ ubSrcProfile ].sExpLevelGain;
-	pNewProfile->sMarksmanshipGain = gMercProfiles[ ubSrcProfile ].sMarksmanshipGain;
-	pNewProfile->sMedicalGain = gMercProfiles[ ubSrcProfile ].sMedicalGain;
-	pNewProfile->sMechanicGain = gMercProfiles[ ubSrcProfile ].sMechanicGain;
-	pNewProfile->sExplosivesGain = gMercProfiles[ ubSrcProfile ].sExplosivesGain;
+	dst->sLifeGain         = src->sLifeGain;
+	dst->sAgilityGain      = src->sAgilityGain;
+	dst->sDexterityGain    = src->sDexterityGain;
+	dst->sStrengthGain     = src->sStrengthGain;
+	dst->sLeadershipGain   = src->sLeadershipGain;
+	dst->sWisdomGain       = src->sWisdomGain;
+	dst->sExpLevelGain     = src->sExpLevelGain;
+	dst->sMarksmanshipGain = src->sMarksmanshipGain;
+	dst->sMedicalGain      = src->sMedicalGain;
+	dst->sMechanicGain     = src->sMechanicGain;
+	dst->sExplosivesGain   = src->sExplosivesGain;
 
-	pNewProfile->bLifeDelta = gMercProfiles[ ubSrcProfile ].bLifeDelta;
-	pNewProfile->bAgilityDelta = gMercProfiles[ ubSrcProfile ].bAgilityDelta;
-	pNewProfile->bDexterityDelta = gMercProfiles[ ubSrcProfile ].bDexterityDelta;
-	pNewProfile->bStrengthDelta = gMercProfiles[ ubSrcProfile ].bStrengthDelta;
-	pNewProfile->bLeadershipDelta = gMercProfiles[ ubSrcProfile ].bLeadershipDelta;
-	pNewProfile->bWisdomDelta = gMercProfiles[ ubSrcProfile ].bWisdomDelta;
-	pNewProfile->bExpLevelDelta = gMercProfiles[ ubSrcProfile ].bExpLevelDelta;
-	pNewProfile->bMarksmanshipDelta = gMercProfiles[ ubSrcProfile ].bMarksmanshipDelta;
-	pNewProfile->bMedicalDelta = gMercProfiles[ ubSrcProfile ].bMedicalDelta;
-	pNewProfile->bMechanicDelta = gMercProfiles[ ubSrcProfile ].bMechanicDelta;
-	pNewProfile->bExplosivesDelta = gMercProfiles[ ubSrcProfile ].bExplosivesDelta;
-	*/
+	dst->bLifeDelta         = src->bLifeDelta;
+	dst->bAgilityDelta      = src->bAgilityDelta;
+	dst->bDexterityDelta    = src->bDexterityDelta;
+	dst->bStrengthDelta     = src->bStrengthDelta;
+	dst->bLeadershipDelta   = src->bLeadershipDelta;
+	dst->bWisdomDelta       = src->bWisdomDelta;
+	dst->bExpLevelDelta     = src->bExpLevelDelta;
+	dst->bMarksmanshipDelta = src->bMarksmanshipDelta;
+	dst->bMedicalDelta      = src->bMedicalDelta;
+	dst->bMechanicDelta     = src->bMechanicDelta;
+	dst->bExplosivesDelta   = src->bExplosivesDelta;
+*/
 
-	memcpy( pNewProfile->bInvStatus, gMercProfiles[ ubSrcProfile ].bInvStatus , sizeof( UINT8) * 19 );
-	memcpy(pNewProfile->bInvNumber, gMercProfiles[ubSrcProfile].bInvStatus, sizeof(pNewProfile->bInvNumber));
-	memcpy( pNewProfile->inv , gMercProfiles[ ubSrcProfile ].inv , sizeof( UINT16 ) * 19 );
-	memcpy( pNewProfile->bMercTownReputation , gMercProfiles[ ubSrcProfile ].bMercTownReputation , sizeof( UINT8 ) * 20 );
+	memcpy(dst->bInvStatus,          src->bInvStatus,          sizeof(dst->bInvStatus));
+	memcpy(dst->bInvNumber,          src->bInvStatus,          sizeof(dst->bInvNumber));
+	memcpy(dst->inv,                 src->inv,                 sizeof(dst->inv));
+	memcpy(dst->bMercTownReputation, src->bMercTownReputation, sizeof(dst->bMercTownReputation));
 
-	// remove face
-	DeleteSoldierFace( pSoldier );
+	DeleteSoldierFace(s);
+	s->ubProfile = dst_id;
+	InitSoldierFace(s);
 
-	pSoldier->ubProfile = ubDestProfile;
+	s->bStrength     = dst->bStrength     + dst->bStrengthDelta;
+	s->bDexterity    = dst->bDexterity    + dst->bDexterityDelta;
+	s->bAgility      = dst->bAgility      + dst->bAgilityDelta;
+	s->bWisdom       = dst->bWisdom       + dst->bWisdomDelta;
+	s->bExpLevel     = dst->bExpLevel     + dst->bExpLevelDelta;
+	s->bLeadership   = dst->bLeadership   + dst->bLeadershipDelta;
+	s->bMarksmanship = dst->bMarksmanship + dst->bMarksmanshipDelta;
+	s->bMechanical   = dst->bMechanical   + dst->bMechanicDelta;
+	s->bMedical      = dst->bMedical      + dst->bMedicalDelta;
+	s->bExplosive    = dst->bExplosive    + dst->bExplosivesDelta;
 
-	// create new face
-	InitSoldierFace(pSoldier);
-
-	pSoldier->bStrength =			pNewProfile->bStrength + pNewProfile->bStrengthDelta;
-	pSoldier->bDexterity =		pNewProfile->bDexterity + pNewProfile->bDexterityDelta;
-	pSoldier->bAgility =			pNewProfile->bAgility + pNewProfile->bAgilityDelta;
-	pSoldier->bWisdom =				pNewProfile->bWisdom + pNewProfile->bWisdomDelta;
-	pSoldier->bExpLevel =			pNewProfile->bExpLevel + pNewProfile->bExpLevelDelta;
-	pSoldier->bLeadership =		pNewProfile->bLeadership + pNewProfile->bLeadershipDelta;
-
-	pSoldier->bMarksmanship =	pNewProfile->bMarksmanship + pNewProfile->bMarksmanshipDelta;
-	pSoldier->bMechanical =		pNewProfile->bMechanical + pNewProfile->bMechanicDelta;
-	pSoldier->bMedical =			pNewProfile->bMedical + pNewProfile->bMedicalDelta;
-	pSoldier->bExplosive =		pNewProfile->bExplosive + pNewProfile->bExplosivesDelta;
-
-	if ( pSoldier->ubProfile == LARRY_DRUNK )
+	if (s->ubProfile == LARRY_DRUNK)
 	{
-		SetFactTrue( FACT_LARRY_CHANGED );
+		SetFactTrue(FACT_LARRY_CHANGED);
 	}
 	else
 	{
-		SetFactFalse( FACT_LARRY_CHANGED );
+		SetFactFalse(FACT_LARRY_CHANGED);
 	}
 
-	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 
-	return( pSoldier );
+	return s;
 }
 
 
