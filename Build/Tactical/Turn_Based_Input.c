@@ -3622,21 +3622,6 @@ static void GrenadeTest2(void)
 }
 
 
-static void GrenadeTest3(void)
-{
-	// Get mousexy
-	INT16 sX, sY;
-	if ( GetMouseXY( &sX, &sY ) )
-	{
-		OBJECTTYPE		Object;
-		Object.usItem = HAND_GRENADE;
-		Object.bStatus[ 0 ] = 100;
-		Object.ubNumberOfObjects = 1;
-		CreatePhysicalObject(&Object, 60, sX * CELL_X_SIZE, sY * CELL_Y_SIZE, 256, -10, 10, 158, NULL, THROW_ARM_ITEM, 0);
-	}
-}
-
-
 static void CreatePlayerControlledMonster(void)
 {
 	const GridNo usMapPos = GetMouseMapPos();
