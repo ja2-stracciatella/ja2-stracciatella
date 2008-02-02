@@ -2996,7 +2996,7 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 		// ATE: Put some conditions on this....
 		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
 		{
-			HandleAnyMercInSquadHasCompatibleStuff(&gWorldItems[pTempItemPool->iItemIndex].o, FALSE);
+			HandleAnyMercInSquadHasCompatibleStuff(&gWorldItems[pTempItemPool->iItemIndex].o);
 		}
 
 		pTempItemPool = pTempItemPool->pNext;

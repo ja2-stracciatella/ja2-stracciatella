@@ -854,7 +854,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 				gfCheckForMouseOverItem = FALSE;
 
 				// Highlight guys ....
-				HandleAnyMercInSquadHasCompatibleStuff(gpItemPointer, FALSE);
+				HandleAnyMercInSquadHasCompatibleStuff(gpItemPointer);
 
 			}
 			else
@@ -862,7 +862,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 				//InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, gpItemPointer, FALSE );
 				gfCheckForMouseOverItem = FALSE;
 
-				HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
+				HandleAnyMercInSquadHasCompatibleStuff(NULL);
 			}
 
 			if ( fEnable )

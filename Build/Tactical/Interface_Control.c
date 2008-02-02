@@ -662,7 +662,7 @@ void RenderTopmostTacticalInterface( )
 
 	if ( !gfInItemPickupMenu && gpItemPointer == NULL )
 	{
-		HandleAnyMercInSquadHasCompatibleStuff(NULL, TRUE);
+		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
