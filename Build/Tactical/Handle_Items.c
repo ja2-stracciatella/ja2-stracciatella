@@ -1951,9 +1951,9 @@ void AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible
 }
 
 
-OBJECTTYPE * AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
+void AddItemToPoolAndGetIndex(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, INT32* const piItemIndex)
 {
-	return( InternalAddItemToPool( &sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, piItemIndex ) );
+	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, piItemIndex);
 }
 
 
