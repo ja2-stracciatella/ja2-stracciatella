@@ -3056,7 +3056,6 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes )
 {
 	INT32 cnt;
-	SOLDIERTYPE		*pSoldier;
 	BOOLEAN		fAtLeastOneMercControllable = FALSE;
 	BOOLEAN		fOnlySelectedGuy = FALSE;
 	SOLDIERTYPE *pValidSoldier = NULL;
@@ -3094,7 +3093,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 	cnt = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
 
   // look for all mercs on the same team,
-	for (pSoldier = GetMan(cnt); cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
+	for (SOLDIERTYPE* pSoldier = GetMan(cnt); cnt <= gTacticalStatus.Team[gbPlayerNum].bLastID; cnt++, pSoldier++)
 	{
 		// If we are controllable
 		if ( OK_CONTROLLABLE_MERC( pSoldier) && pSoldier->bAssignment == CurrentSquad( ) )
@@ -3174,12 +3173,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			//exiting sector gui, we restrict it by explaining it with a message box.
 			if (AM_AN_EPC(sel))
 			{
-				if( AM_A_ROBOT( pSoldier ) && !CanRobotBeControlled( pSoldier ) )
-				{
-					//gfRobotWithoutControllerAttemptingTraversal = TRUE;
-					return FALSE;
-				}
-				else if( fAtLeastOneMercControllable < ubPlayerControllableMercsInSquad || fAtLeastOneMercControllable == 1 )
+				if (fAtLeastOneMercControllable < ubPlayerControllableMercsInSquad || fAtLeastOneMercControllable == 1)
 				{
 					gfLoneEPCAttemptingTraversal = TRUE;
 					return FALSE;
