@@ -1944,11 +1944,12 @@ static void RemoveItemGraphicFromWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLe
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-// INVENTORY POOL STUFF
-OBJECTTYPE* AddItemToPool( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel )
+
+void AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel)
 {
-	return InternalAddItemToPool( &sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, NULL );
+	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, NULL);
 }
+
 
 OBJECTTYPE * AddItemToPoolAndGetIndex( INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT32 * piItemIndex )
 {
