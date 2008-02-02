@@ -194,7 +194,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 static void DoneFadeInKilledQueen(void)
 {
 	// Run NPC script
-	const SOLDIERTYPE* pNPCSoldier = FindSoldierByProfileID(DEREK, FALSE);
+	const SOLDIERTYPE* const pNPCSoldier = FindSoldierByProfileID(DEREK);
 	if ( !pNPCSoldier )
 	{
 		return;

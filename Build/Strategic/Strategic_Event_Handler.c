@@ -731,9 +731,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 					gMercProfiles[ JOEY ].sSectorY == MAP_ROW_D &&
 					gMercProfiles[ JOEY ].bSectorZ == 1 )
 				{
-					SOLDIERTYPE * pJoey;
-
-					pJoey = FindSoldierByProfileID( JOEY, FALSE );
+					const SOLDIERTYPE* const pJoey = FindSoldierByProfileID(JOEY);
 					if (pJoey )
 					{
 						// he's in the currently loaded sector...delay this an hour!

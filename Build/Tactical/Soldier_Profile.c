@@ -761,28 +761,14 @@ static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile)
 	return(usDeposit);
 }
 
-SOLDIERTYPE * FindSoldierByProfileID( UINT8 ubProfileID, BOOLEAN fPlayerMercsOnly )
+
+SOLDIERTYPE* FindSoldierByProfileID(const ProfileID pid)
 {
-	UINT8 ubLoop, ubLoopLimit;
-	SOLDIERTYPE * pSoldier;
-
-	if (fPlayerMercsOnly)
+	FOR_ALL_NON_PLANNING_SOLDIERS(s)
 	{
-		ubLoopLimit = gTacticalStatus.Team[0].bLastID;
+		if (s->ubProfile == pid) return s;
 	}
-	else
-	{
-		ubLoopLimit = MAX_NUM_SOLDIERS;
-	}
-
-	for (ubLoop = 0, pSoldier = GetMan(0); ubLoop < ubLoopLimit; ubLoop++, pSoldier++)
-	{
-		if (pSoldier->bActive && pSoldier->ubProfile == ubProfileID)
-		{
-			return( pSoldier );
-		}
-	}
-	return( NULL );
+	return NULL;
 }
 
 
@@ -929,11 +915,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {
-	SOLDIERTYPE *pSoldier, *pNewSoldier;
-
-	// Get soldier pointer
-	pSoldier = FindSoldierByProfileID( ubCharNum, FALSE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
 	if (!pSoldier)
 	{
 		return( FALSE );
@@ -943,7 +925,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
 
 	// Add this guy to our team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
+	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam(pSoldier, gbPlayerNum);
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )
@@ -1020,11 +1002,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum )
 {
-	SOLDIERTYPE *pSoldier, *pNewSoldier;
-
-	// Get soldier pointer
-	pSoldier = FindSoldierByProfileID( ubCharNum, FALSE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
 	if (!pSoldier)
 	{
 		return( FALSE );
@@ -1036,7 +1014,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 
 	// Add this guy to our team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
+	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam( pSoldier, gbPlayerNum );
 	pNewSoldier->ubWhatKindOfMercAmI = MERC_TYPE__EPC;
 
 	// Try putting them into the current squad
@@ -1070,11 +1048,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 
 BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 {
-	SOLDIERTYPE *pSoldier, *pNewSoldier;
-
-	// Get soldier pointer
-	pSoldier = FindSoldierByProfileID( ubCharNum, FALSE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
 	if (!pSoldier)
 	{
 		return( FALSE );
@@ -1120,7 +1094,7 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 	gMercProfiles[ ubCharNum ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 
 	// Add this guy to CIV team!
-	pNewSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );
+	ChangeSoldierTeam(pSoldier, CIV_TEAM);
 
   UpdateTeamPanelAssignments( );
 

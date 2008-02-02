@@ -5623,11 +5623,9 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 
 void TurnOnSectorLocator( UINT8 ubProfileID )
 {
-	SOLDIERTYPE *pSoldier;
-
 	Assert( ubProfileID != NO_PROFILE );
 
-	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if( pSoldier )
 	{
 		gsSectorLocatorX = pSoldier->sSectorX;

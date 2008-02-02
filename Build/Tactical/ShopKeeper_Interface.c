@@ -784,7 +784,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 {
-	SOLDIERTYPE *pSoldier = FindSoldierByProfileID( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID);
 #if !defined JA2TESTVERSION
 	if (pSoldier == NULL) return FALSE;
 #endif
@@ -5977,7 +5977,6 @@ static BOOLEAN SKITryToAddInvToMercsInventory(INVENTORY_IN_SLOT* pInv, SOLDIERTY
 
 BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 {
-	SOLDIERTYPE *pShopkeeper;
 	INT16			sDestGridNo;
 	INT8			bDestLevel;
 	INT16			sDistVisible;
@@ -5987,7 +5986,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 	Assert( pSoldier!= NULL );
 	Assert( gbSelectedArmsDealerID != -1 );
 
-	pShopkeeper = FindSoldierByProfileID( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID, FALSE );
+	const SOLDIERTYPE* const pShopkeeper = FindSoldierByProfileID(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID);
 	Assert( pShopkeeper != NULL );
 	Assert( pShopkeeper->bInSector );
 

@@ -93,14 +93,12 @@ void CallAvailableKingpinMenTo( INT16 sGridNo )
 void CallEldinTo( INT16 sGridNo )
 {
 	// like call all enemies, but only affects Eldin
-	SOLDIERTYPE * pSoldier;
-
 	// Eldin becomes aware of a very important "noise" coming from here!
 	// So long as he hasn't already heard a noise a sec ago...
 	if (gTacticalStatus.Team[CIV_TEAM].bTeamActive)
 	{
 		// new situation for Eldin
-		pSoldier = FindSoldierByProfileID( ELDIN, FALSE );
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELDIN);
 		if (pSoldier && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && (pSoldier->bAlertStatus == STATUS_GREEN || pSoldier->ubNoiseVolume < MAX_MISC_NOISE_DURATION / 2))
 		{
 			if ( SoldierToLocationLineOfSightTest( pSoldier, sGridNo, (UINT8) MaxDistanceVisible(), TRUE ) )

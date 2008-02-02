@@ -4651,7 +4651,7 @@ static void CheckForPickedOwnership(void)
 			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile != NO_PROFILE )
 			{
 				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile;
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
 				if ( pSoldier )
 				{
 					TestPotentialOwner( pSoldier );

@@ -2325,14 +2325,12 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// ATE: if we are within this window where skyridder was foobared, fix!
 	if ( SaveGameHeader.uiSavedGameVersion >= 61 && SaveGameHeader.uiSavedGameVersion <= 65 )
 	{
-		SOLDIERTYPE				*pSoldier;
 		MERCPROFILESTRUCT *pProfile;
 
 		if ( !fSkyRiderSetUp )
 		{
 			// see if we can find him and remove him if so....
-			pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
-
+			SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SKYRIDER);
 			if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
 			// add the pilot at a random location!
@@ -2743,7 +2741,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			robot_p->inv[HELMETPOS] = SPECTRA_HELMET_18;
 			robot_p->inv[LEGPOS]    = SPECTRA_LEGGINGS_18;
 			robot_p->bAgility = 50;
-			SOLDIERTYPE* const robot_s = FindSoldierByProfileID(ROBOT, FALSE);
+			SOLDIERTYPE* const robot_s = FindSoldierByProfileID(ROBOT);
 			if (robot_s)
 			{
 				robot_s->inv[VESTPOS].usItem   = SPECTRA_VEST_18;

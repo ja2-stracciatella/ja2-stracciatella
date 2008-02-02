@@ -2401,10 +2401,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// Getting hit by slap
 					{
-						SOLDIERTYPE *pTarget;
-
-						pTarget = FindSoldierByProfileID( ELLIOT, FALSE );
-
+						SOLDIERTYPE* const pTarget = FindSoldierByProfileID(ELLIOT);
 						if ( pTarget )
 						{
 							EVENT_InitNewSoldierAnim( pTarget, SLAP_HIT, 0 , FALSE );
@@ -3239,10 +3236,7 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 		// OK, if we are in a meanwhile and this is elliot...
 		if ( AreInMeanwhile( ) )
 		{
-			SOLDIERTYPE *pQueen;
-
-			pQueen = FindSoldierByProfileID( QUEEN, FALSE );
-
+			const SOLDIERTYPE* const pQueen = FindSoldierByProfileID(QUEEN);
 			if ( pQueen )
 			{
 				TriggerNPCWithGivenApproach( QUEEN, APPROACH_DONE_SLAPPED, FALSE );

@@ -2814,7 +2814,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							RecruitEPC( MARIA );
 						}
 
-						SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT, FALSE);
+						SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT);
 						if (robot != NULL)
 						{
 							OBJECTTYPE Object;

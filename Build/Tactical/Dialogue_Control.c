@@ -356,8 +356,6 @@ static void CreateTalkingUI(INT8 bUIHandlerID, FACETYPE* face, UINT8 ubCharacter
 // 'external' to on the team panel...
 void HandleDialogueUIAdjustments( )
 {
-	SOLDIERTYPE							*pSoldier;
-
 	// OK, check if we are still taking
 	if ( gpCurrentTalkingFace != NULL )
 	{
@@ -366,8 +364,7 @@ void HandleDialogueUIAdjustments( )
 			// ATE: Check for change in state for the guy currently talking on 'external' panel....
 			if ( gfFacePanelActive )
 			{
-				pSoldier = FindSoldierByProfileID( gubCurrentTalkingID, FALSE );
-
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gubCurrentTalkingID);
 				if ( pSoldier )
 				{
 					if ( 0 )
@@ -597,10 +594,9 @@ void HandleDialogue( )
 
 		if ( gfMikeShouldSayHi == TRUE )
 		{
-			SOLDIERTYPE * pMike;
 			INT16	sPlayerGridNo;
 
-			pMike = FindSoldierByProfileID( MIKE, FALSE );
+			SOLDIERTYPE* const pMike = FindSoldierByProfileID(MIKE);
 			if ( pMike )
 			{
 				sPlayerGridNo = ClosestPC( pMike, NULL );
@@ -820,7 +816,7 @@ void HandleDialogue( )
 		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND )
 		{
 			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, FALSE );
+			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
 
 			// Do battle snounds......
 			if ( pSoldier )
@@ -963,7 +959,7 @@ void HandleDialogue( )
 		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE )
 		{
 			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, FALSE );
+			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
 
 			if ( pSoldier )
 			{
@@ -1048,7 +1044,7 @@ void HandleDialogue( )
 		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA )
 		{
 			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID( ( UINT8 )( QItem->uiSpecialEventData ), FALSE );
+			pSoldier = FindSoldierByProfileID((UINT8)QItem->uiSpecialEventData);
 
 			// if soldier valid...
 			if( pSoldier != NULL )
@@ -1067,7 +1063,7 @@ void HandleDialogue( )
 		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING )
 		{
 			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, FALSE );
+			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
 
 			// if soldier valid...
 			if( pSoldier != NULL )
@@ -1079,7 +1075,7 @@ void HandleDialogue( )
 		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP )
 		{
 			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, FALSE );
+			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
 
 			// if soldier valid...
 			if( pSoldier != NULL )
@@ -1124,7 +1120,7 @@ void HandleDialogue( )
 	}
 
 	// grab soldier ptr from profile ID
-	pSoldier = FindSoldierByProfileID( QItem->ubCharacterNum, FALSE );
+	pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
 
 	if ( pSoldier && pSoldier->bTeam == gbPlayerNum )
 	{
@@ -1930,14 +1926,12 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const face)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-	SOLDIERTYPE						*pSoldier;
 	BOOLEAN								fDoExternPanel = FALSE;
 
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Get soldier pointer, if there is one...
-	// Try to find soldier...
-	pSoldier = FindSoldierByProfileID( ubCharacterNum, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharacterNum);
 
 	// PLEASE NOTE:  pSoldier may legally be NULL (e.g. Skyrider) !!!
 
@@ -2128,7 +2122,6 @@ void HandleDialogueEnd( FACETYPE *pFace )
 static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	INT16 sFontX, sFontY;
-	SOLDIERTYPE *pSoldier;
 	wchar_t					zTownIDString[50];
 
 
@@ -2139,8 +2132,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
 	if ( gfFacePanelActive )
 	{
-		pSoldier = FindSoldierByProfileID( gpCurrentTalkingFace->ubCharacterNum, FALSE );
-
+		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gpCurrentTalkingFace->ubCharacterNum);
 
 		// a living soldier?..or external NPC?..choose panel based on this
 		const SGPVObject* const vo = (pSoldier ? guiCOMPANEL : guiCOMPANELB);

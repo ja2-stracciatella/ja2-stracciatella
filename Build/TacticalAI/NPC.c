@@ -589,11 +589,10 @@ static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8
 	UINT8									ubTalkDesire, ubLoop, ubQuote, ubHighestOpinionRequired = 0;
 	BOOLEAN								fQuoteFound = FALSE;
 	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
-	SOLDIERTYPE						*pSoldier=NULL;
 
 	ubTalkDesire = ubQuote = 0;
 
-	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 	if (pSoldier == NULL)
 	{
 		return( 0 );
@@ -842,12 +841,10 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 								// accept - record 17
 								/*
 								{
-
-									SOLDIERTYPE *					pSoldier;
 									INT8									bMoney;
 									INT8									bEmptySlot;
 
-									pSoldier = FindSoldierByProfileID( DARREN, FALSE );
+									SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(DARREN);
 									bMoney = FindObjWithin( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
 									bEmptySlot = FindObjWithin( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
 								}
@@ -868,10 +865,9 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 								else
 								{
 									// find Kingpin, if he's in his house, invoke the script to move him to the bar
-									SOLDIERTYPE *		pKingpin;
 									UINT8						ubKingpinRoom;
 
-									pKingpin = FindSoldierByProfileID( KINGPIN, FALSE );
+									const SOLDIERTYPE* const pKingpin = FindSoldierByProfileID(KINGPIN);
 									if ( pKingpin && InARoom( pKingpin->sGridNo, &ubKingpinRoom ) )
 									{
 										if ( IN_KINGPIN_HOUSE( ubKingpinRoom ) )
@@ -1489,7 +1485,6 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo* pQuotePtr)
 {
 	OBJECTTYPE  *		pObj;
-	SOLDIERTYPE *		pSoldier;
 
 	// if the approach was changed, always return the item
 	// otherwise check to see if the record in question specified refusal
@@ -1497,8 +1492,7 @@ static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 u
 	{
 		pObj = (OBJECTTYPE *) uiApproachData;
 
-		// Find the merc
-		pSoldier = FindSoldierByProfileID( ubMerc, FALSE );
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 		// Try to auto place object and then if it fails, put into cursor
 		if ( !AutoPlaceObject( pSoldier, pObj, FALSE ) )
@@ -1520,10 +1514,8 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 	NPCQuoteInfo *				pNPCQuoteInfoArray=NULL;
 	MERCPROFILESTRUCT *		pProfile=NULL;
 	UINT8									ubLoop, ubQuoteNum, ubRecordNum;
-	SOLDIERTYPE *					pSoldier=NULL;
 	UINT32								uiDay;
 	OBJECTTYPE *					pObj=NULL;
-	SOLDIERTYPE *					pNPC;
 	BOOLEAN								fAttemptingToGiveItem;
 
 	// we have to record whether an item is being given in order to determine whether,
@@ -1531,7 +1523,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 	// player
 	fAttemptingToGiveItem = (bApproach == APPROACH_GIVINGITEM);
 
-	pNPC = FindSoldierByProfileID( ubNPC, FALSE );
+	SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 	if ( pNPC )
 	{
 		// set delay for civ AI movement
@@ -1840,7 +1832,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				// turn before speech?
 				if ( pQuotePtr->sActionData <= -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
-					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 					ZEROTIMECOUNTER( pSoldier->AICounter );
 					if (pSoldier->bNextAction == AI_ACTION_WAIT)
 					{
@@ -1875,7 +1867,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 						PlaceObjectInSoldierProfile( ubNPC, pObj );
 
 						// Find the GIVER....
-						pSoldier = FindSoldierByProfileID( ubMerc, FALSE );
+						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 						// Is this one of us?
 						if ( pSoldier->bTeam == gbPlayerNum )
@@ -1900,8 +1892,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					{
 						// ATE: Here, put back into inventory or place on ground....
 						{
-							// Find the merc
-							pSoldier = FindSoldierByProfileID( ubMerc, FALSE );
+							SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 							// Try to auto place object and then if it fails, put into cursor
 							if ( !AutoPlaceObject( pSoldier, pObj, FALSE ) )
@@ -1993,8 +1984,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					{
 						INT8 bInvPos;
 
-						// Get soldier
-						pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 
 						// Look for item....
 						bInvPos = FindObj( pSoldier, pQuotePtr->usGiftItem );
@@ -2007,7 +1997,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				// Action before movement?
 				if ( pQuotePtr->sActionData < 0 && pQuotePtr->sActionData > -NPC_ACTION_TURN_TO_FACE_NEAREST_MERC )
 				{
-					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 					ZEROTIMECOUNTER( pSoldier->AICounter );
 					if (pSoldier->bNextAction == AI_ACTION_WAIT)
 					{
@@ -2018,7 +2008,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				}
 				else if ( pQuotePtr->usGoToGridno == NO_MOVE && pQuotePtr->sActionData > 0 )
 				{
-					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 					ZEROTIMECOUNTER( pSoldier->AICounter );
 					if (pSoldier->bNextAction == AI_ACTION_WAIT)
 					{
@@ -2031,7 +2021,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				// Movement?
 				if ( pQuotePtr->usGoToGridno != NO_MOVE )
 				{
-					pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 
 					// stupid hack CC
 					if (pSoldier && ubNPC == KYLE)
@@ -2345,7 +2335,6 @@ void PCsNearNPC( UINT8 ubNPC )
 {
 	UINT8									ubLoop;
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
-	SOLDIERTYPE *pSoldier;
 	NPCQuoteInfo *				pQuotePtr;
 
 
@@ -2361,7 +2350,7 @@ void PCsNearNPC( UINT8 ubNPC )
 
 	// Clear values!
 	// Get value for NPC
-	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 	pSoldier->ubQuoteRecord = 0;
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
@@ -2386,7 +2375,6 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 {
 	UINT8									ubLoop;
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
-	SOLDIERTYPE *pSoldier;
 	NPCQuoteInfo *				pQuotePtr;
 
 	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
@@ -2396,8 +2384,7 @@ BOOLEAN PCDoesFirstAidOnNPC( UINT8 ubNPC )
 	}
 	pNPCQuoteInfoArray = gpNPCQuoteInfoArray[ubNPC];
 
-	// Get ptr to NPC
-	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 	// Clear values!
 	pSoldier->ubQuoteRecord = 0;
 
@@ -2426,8 +2413,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 	// Loop through all mercs, gather closest mercs who can see and trigger one!
 	UINT8	ubNumMercs = 0;
 
-	// First get pointer to NPC
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC, FALSE);
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[40];
@@ -2931,10 +2917,8 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 {
 	UINT8						ubMercsAvailable[ 40 ] = { 0 };
 	UINT8						ubNumMercsAvailable = 0, ubChosenMerc;
-	SOLDIERTYPE *		pSoldier;
 
-	// First get pointer to NPC
-	pSoldier = FindSoldierByProfileID( ubNPC, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
 	if (!pSoldier)
 	{
 		return;
@@ -3119,9 +3103,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier )
 {
 	// change destination in Darrel record 10 to go to a gridno adjacent to the
 	// soldier's gridno, and destination in record 11
-	SOLDIERTYPE *		pDarrel;
-
-	pDarrel = FindSoldierByProfileID( DARREL, FALSE );
+	const SOLDIERTYPE* const pDarrel = FindSoldierByProfileID(DARREL);
 	if ( !pDarrel )
 	{
 		return;

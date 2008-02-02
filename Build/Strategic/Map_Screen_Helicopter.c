@@ -1466,7 +1466,6 @@ static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite);
 void HandleHelicopterOnGroundGraphic( void )
 {
 	UINT8					ubSite = 0;
-	SOLDIERTYPE		*pSoldier;
 
 	// no worries if underground
 	if (gbWorldSectorZ != 0 )
@@ -1502,7 +1501,7 @@ void HandleHelicopterOnGroundGraphic( void )
 					gMercProfiles[ SKYRIDER ].sSectorY = 0;
 
 					// see if we can find him and remove him if so....
-					pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SKYRIDER);
 
           // ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
@@ -1525,7 +1524,6 @@ void HandleHelicopterOnGroundGraphic( void )
 void HandleHelicopterOnGroundSkyriderProfile( void )
 {
 	UINT8					ubSite = 0;
-	SOLDIERTYPE		*pSoldier;
 
 	// no worries if underground
 	if (gbWorldSectorZ != 0 )
@@ -1558,7 +1556,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 					gMercProfiles[ SKYRIDER ].sSectorY = 0;
 
 					// see if we can find him and remove him if so....
-					pSoldier = FindSoldierByProfileID( SKYRIDER, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SKYRIDER);
 
           // ATE: Don't do this if buddy is on our team!
 					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )

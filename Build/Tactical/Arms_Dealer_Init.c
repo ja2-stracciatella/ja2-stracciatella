@@ -1819,7 +1819,6 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT
 BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 {
 	INT8	bArmsDealer;
-	SOLDIERTYPE	*pSoldier;
 	UINT16	usItemIndex;
 	UINT8 ubElement;
 	UINT8 ubHowManyMaxAtATime;
@@ -1844,7 +1843,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 
 
 	//Get a pointer to the dealer
-	pSoldier = FindSoldierByProfileID( ubMercID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMercID);
 	if( pSoldier == NULL )
 	{
 		// This should never happen, a dealer getting knocked off without the sector being loaded, should it?
@@ -2640,9 +2639,7 @@ BOOLEAN ItemIsARocketRifle(INT16 sItemIndex)
 
 static BOOLEAN GetArmsDealerShopHours(UINT8 ubArmsDealer, UINT32* puiOpeningTime, UINT32* puiClosingTime)
 {
-	SOLDIERTYPE *pSoldier;
-
-	pSoldier = FindSoldierByProfileID( ArmsDealerInfo[ ubArmsDealer ].ubShopKeeperID, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ArmsDealerInfo[ubArmsDealer].ubShopKeeperID);
 	if ( pSoldier == NULL )
 	{
 		return( FALSE );

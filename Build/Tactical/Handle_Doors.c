@@ -416,7 +416,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
-		SOLDIERTYPE* const pGoon = FindSoldierByProfileID(WARDEN, FALSE);
+		SOLDIERTYPE* const pGoon = FindSoldierByProfileID(WARDEN);
 		if ( pGoon && pGoon->bAlertStatus < STATUS_RED && PythSpacesAway( pSoldier->sGridNo, pGoon->sGridNo ) <= 5 )
 		{
 			// alert her if she hasn't been alerted

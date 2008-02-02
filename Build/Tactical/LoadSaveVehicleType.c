@@ -29,7 +29,7 @@ BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, cons
 		ProfileID id;
 		EXTR_U8(d, id)
 		EXTR_SKIP(d, 3)
-		*i = (id == noone ? NULL : FindSoldierByProfileID(id, FALSE));
+		*i = (id == noone ? NULL : FindSoldierByProfileID(id));
 	}
 	EXTR_SKIP(d, 2)
 	EXTR_I16A(d, v->sInternalHitLocations, lengthof(v->sInternalHitLocations))

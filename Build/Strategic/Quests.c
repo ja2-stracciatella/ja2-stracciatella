@@ -79,10 +79,8 @@ static BOOLEAN CheckForNewShipment(void)
 
 static BOOLEAN CheckNPCWounded(UINT8 ubProfileID, BOOLEAN fByPlayerOnly)
 {
-	SOLDIERTYPE * pSoldier;
-
 	// is the NPC is wounded at all?
-	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if (pSoldier && pSoldier->bLife < pSoldier->bLifeMax)
 	{
 		if (fByPlayerOnly)
@@ -111,10 +109,8 @@ static BOOLEAN CheckNPCWounded(UINT8 ubProfileID, BOOLEAN fByPlayerOnly)
 
 static BOOLEAN CheckNPCInOkayHealth(UINT8 ubProfileID)
 {
-	SOLDIERTYPE * pSoldier;
-
 	// is the NPC at better than half health?
-	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if (pSoldier && pSoldier->bLife > (pSoldier->bLifeMax / 2) && pSoldier->bLife > 30)
 	{
 		return( TRUE );
@@ -128,10 +124,8 @@ static BOOLEAN CheckNPCInOkayHealth(UINT8 ubProfileID)
 
 static BOOLEAN CheckNPCBleeding(UINT8 ubProfileID)
 {
-	SOLDIERTYPE * pSoldier;
-
 	// the NPC is wounded...
-	pSoldier = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if (pSoldier && pSoldier->bLife > 0 && pSoldier->bBleeding > 0)
 	{
 		return( TRUE );
@@ -146,10 +140,8 @@ static BOOLEAN CheckNPCBleeding(UINT8 ubProfileID)
 
 static BOOLEAN CheckNPCWithin(UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDistance)
 {
-	SOLDIERTYPE * pFirstNPC, * pSecondNPC;
-
-	pFirstNPC = FindSoldierByProfileID( ubFirstNPC, FALSE );
-	pSecondNPC = FindSoldierByProfileID( ubSecondNPC, FALSE );
+	const SOLDIERTYPE* const pFirstNPC  = FindSoldierByProfileID(ubFirstNPC);
+	const SOLDIERTYPE* const pSecondNPC = FindSoldierByProfileID(ubSecondNPC);
 	if (!pFirstNPC || !pSecondNPC)
 	{
 		return( FALSE );
@@ -161,10 +153,8 @@ static BOOLEAN CheckNPCWithin(UINT8 ubFirstNPC, UINT8 ubSecondNPC, UINT8 ubMaxDi
 static BOOLEAN CheckGuyVisible(UINT8 ubNPC, UINT8 ubGuy)
 {
 	// NB ONLY WORKS IF ON DIFFERENT TEAMS
-	SOLDIERTYPE * pNPC, * pGuy;
-
-	pNPC = FindSoldierByProfileID( ubNPC, FALSE );
-	pGuy = FindSoldierByProfileID( ubGuy, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
+	const SOLDIERTYPE* const pGuy = FindSoldierByProfileID(ubGuy);
 	if (!pNPC || !pGuy)
 	{
 		return( FALSE );
@@ -182,9 +172,7 @@ static BOOLEAN CheckGuyVisible(UINT8 ubNPC, UINT8 ubGuy)
 
 static BOOLEAN CheckNPCAt(UINT8 ubNPC, INT16 sGridNo)
 {
-	SOLDIERTYPE * pNPC;
-
-	pNPC = FindSoldierByProfileID( ubNPC, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -195,9 +183,7 @@ static BOOLEAN CheckNPCAt(UINT8 ubNPC, INT16 sGridNo)
 
 static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 {
-	SOLDIERTYPE * pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -223,7 +209,6 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 
 static BOOLEAN CheckIfMercIsNearNPC(SOLDIERTYPE* pMerc, UINT8 ubProfileId)
 {
-	SOLDIERTYPE *		pNPC;
 	INT16						sGridNo;
 
 	// no merc nearby?
@@ -232,7 +217,7 @@ static BOOLEAN CheckIfMercIsNearNPC(SOLDIERTYPE* pMerc, UINT8 ubProfileId)
 		return( FALSE );
 	}
 
-	pNPC = FindSoldierByProfileID( ubProfileId, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileId);
 	if ( pNPC == NULL )
 	{
 		return( FALSE );
@@ -253,11 +238,10 @@ static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
-	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -285,11 +269,10 @@ static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
-	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -331,9 +314,7 @@ static BOOLEAN CheckNPCIsEPC(UINT8 ubProfileID)
 
 BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID)
 {
-	SOLDIERTYPE *		pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC || (gubWorldRoomInfo[ pNPC->sGridNo ] != ubRoomID) )
 	{
 		return( FALSE );
@@ -344,9 +325,7 @@ BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID)
 
 static BOOLEAN NPCInRoomRange(UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID2)
 {
-	SOLDIERTYPE *		pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC || (gubWorldRoomInfo[ pNPC->sGridNo ] < ubRoomID1) || (gubWorldRoomInfo[ pNPC->sGridNo ] > ubRoomID2) )
 	{
 		return( FALSE );
@@ -357,10 +336,9 @@ static BOOLEAN NPCInRoomRange(UINT8 ubProfileID, UINT8 ubRoomID1, UINT8 ubRoomID
 
 static BOOLEAN PCInSameRoom(UINT8 ubProfileID)
 {
-	SOLDIERTYPE *		pNPC;
 	UINT8						ubRoom;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
 		return( FALSE );
@@ -431,11 +409,10 @@ static INT8 NumMalesPresent(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
 	UINT32					uiLoop;
-	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -465,11 +442,10 @@ static INT8 NumMalesPresent(UINT8 ubProfileID)
 static BOOLEAN FemalePresent(UINT8 ubProfileID)
 {
 	UINT32					uiLoop;
-	SOLDIERTYPE *		pNPC;
 	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if (!pNPC)
 	{
 		return( FALSE );
@@ -557,9 +533,7 @@ static BOOLEAN AIMMercWithin(INT16 sGridNo, INT16 sDistance)
 
 static BOOLEAN CheckNPCCowering(UINT8 ubProfileID)
 {
-	SOLDIERTYPE *		pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
 		return( FALSE );
@@ -586,9 +560,7 @@ static UINT8 CountBartenders(void)
 
 static BOOLEAN CheckNPCIsUnderFire(UINT8 ubProfileID)
 {
-	SOLDIERTYPE *		pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
 		return( FALSE );
@@ -599,9 +571,7 @@ static BOOLEAN CheckNPCIsUnderFire(UINT8 ubProfileID)
 
 static BOOLEAN NPCHeardShot(UINT8 ubProfileID)
 {
-	SOLDIERTYPE *		pNPC;
-
-	pNPC = FindSoldierByProfileID( ubProfileID, FALSE );
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
 	if ( !pNPC )
 	{
 		return( FALSE );
@@ -845,7 +815,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 
 		case FACT_SHANK_NOT_IN_SECTOR:
-			gubFact[usFact] = ( FindSoldierByProfileID( SHANK, FALSE ) == NULL );
+			gubFact[usFact] = FindSoldierByProfileID(SHANK) == NULL;
 			break;
 		case FACT_QUEEN_DEAD:
 			gubFact[usFact] = (gMercProfiles[ QUEEN ].bMercStatus == MERC_IS_DEAD);

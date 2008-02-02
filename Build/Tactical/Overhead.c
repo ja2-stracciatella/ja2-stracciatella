@@ -1954,7 +1954,7 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 		SOLDIERTYPE* pSoldier2 = NULL;
 		if (CheckFact(FACT_MARY_ALIVE, 0))
 		{
-			pSoldier2 = FindSoldierByProfileID(MARY, FALSE);
+			pSoldier2 = FindSoldierByProfileID(MARY);
 			if (pSoldier2)
 			{
 				if (PythSpacesAway(pSoldier->sGridNo, pSoldier2->sGridNo) > 8)
@@ -2517,7 +2517,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 			case SLAY:
 			{
 				// handle stuff for Carmen if Slay is killed
-				const SOLDIERTYPE* const s = FindSoldierByProfileID(CARMEN, FALSE);
+				const SOLDIERTYPE* const s = FindSoldierByProfileID(CARMEN);
 				if (s && s->bAttitude == ATTACKSLAYONLY && ClosestPC(s, NULL) != NOWHERE)
 				{
 					// Carmen now becomes friendly again
@@ -2603,7 +2603,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 			case BRENDA:
 				SetFactTrue(FACT_BRENDA_DEAD);
 				{
-					const SOLDIERTYPE* const pOther = FindSoldierByProfileID(HANS, FALSE);
+					const SOLDIERTYPE* const pOther = FindSoldierByProfileID(HANS);
 					if (pOther && pOther->bLife >= OKLIFE && pOther->bNeutral && SpacesAway(pSoldierOld->sGridNo, pOther->sGridNo) <= 12)
 					{
 						TriggerNPCRecord(HANS, 10);
@@ -2635,7 +2635,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				MakeRemainingTerroristsTougher();
 				if (pSoldierOld->ubProfile == DRUGGIST)
 				{
-					SOLDIERTYPE* const pOther = FindSoldierByProfileID(MANNY, 0);
+					SOLDIERTYPE* const pOther = FindSoldierByProfileID(MANNY);
 					if (pOther && pOther->bInSector && pOther->bLife >= OKLIFE)
 					{
 						// try to make sure he isn't cowering etc
@@ -2670,7 +2670,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 			case JOEY:
 			{
 				// check to see if Martha can see this
-				const SOLDIERTYPE* const pOther = FindSoldierByProfileID(MARTHA, FALSE);
+				const SOLDIERTYPE* const pOther = FindSoldierByProfileID(MARTHA);
 				if (pOther && (
 							PythSpacesAway(pOther->sGridNo, pSoldierOld->sGridNo ) < 10 ||
 							SoldierToSoldierLineOfSightTest(pOther, pSoldierOld, MaxDistanceVisible(), TRUE) != 0
@@ -2966,7 +2966,7 @@ void MakeCivHostile(SOLDIERTYPE* pSoldier, INT8 bNewSide)
 			 * been noticed */
 			if (gubQuest[QUEST_RESCUE_MARIA] == QUESTINPROGRESS && gTacticalStatus.bBoxingState == NOT_BOXING)
 			{
-				SOLDIERTYPE* pMaria = FindSoldierByProfileID(MARIA, FALSE);
+				const SOLDIERTYPE* const pMaria = FindSoldierByProfileID(MARIA);
 				if (pMaria && pMaria->bInSector)
 				{
 					SetFactTrue(FACT_MARIA_ESCAPE_NOTICED);

@@ -602,8 +602,6 @@ BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 
 void MercComplainAboutEquipment( UINT8 ubProfile )
 {
-	SOLDIERTYPE *pSoldier;
-
 	if ( ubProfile == LARRY_NORMAL  )
 	{
 		if ( CheckFact( FACT_LARRY_CHANGED, 0 ) )
@@ -619,8 +617,7 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 		}
 	}
 	// Are we dead/ does merc still exist?
-	pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
 	if ( pSoldier != NULL )
 	{
 		if ( pSoldier->bLife >= OKLIFE && pSoldier->fMercAsleep != TRUE && pSoldier->bAssignment < ON_DUTY )

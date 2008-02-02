@@ -1824,7 +1824,6 @@ static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 void AddProfilesUsingProfileInsertionData()
 {
 	INT32 i;
-	SOLDIERTYPE *pSoldier;
 	SOLDIERINITNODE * curr;
 
 	for( i = FIRST_RPC; i < ( PROF_HUMMER ); i++ )
@@ -1843,7 +1842,7 @@ void AddProfilesUsingProfileInsertionData()
 		{ //Don't add, so skip to the next soldier.
 			continue;
 		}
-		pSoldier = FindSoldierByProfileID( (UINT8)i, FALSE );
+		SOLDIERTYPE* pSoldier = FindSoldierByProfileID((UINT8)i);
 		if( !pSoldier )
 		{ //Create a new soldier, as this one doesn't exist
 			SOLDIERCREATE_STRUCT		MercCreateStruct;

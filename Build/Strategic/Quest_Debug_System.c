@@ -2127,7 +2127,7 @@ static void BtnQuestDebugGiveItemToNPCButtonCallback(GUI_BUTTON* btn, INT32 reas
 
 		//if the selected merc is created
 		const ProfileID    pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
-		SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+		SOLDIERTYPE* const s   = FindSoldierByProfileID(pid);
 		if (!s)
 		{
 			//Failed to get npc, put error message
@@ -2581,7 +2581,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 		{
 			//if the soldier is active
 			const ProfileID          pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
-			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid);
 			if (!s)
 			{
 				//qq Display error box
@@ -2627,7 +2627,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 
 			//if the soldier is active
 			const ProfileID          pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem] : gNpcListBox.sCurSelectedItem);
-			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid, FALSE);
+			const SOLDIERTYPE* const s   = FindSoldierByProfileID(pid);
 			if (s)
 			{
 				//color the background of the popup
@@ -3440,10 +3440,7 @@ static INT32 GetMaxNumberOfQuotesToPlay(void)
 
 static void GetDebugLocationString(const UINT16 usProfileID, wchar_t* const pzText, const size_t Length)
 {
-	SOLDIERTYPE *pSoldier;
-
-		//Get a soldier pointer
-	pSoldier = FindSoldierByProfileID( (UINT8)usProfileID, FALSE );
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(usProfileID);
 
 	//if their is a soldier, the soldier is alive and the soldier is off the map
 	if (pSoldier != NULL && pSoldier->uiStatusFlags & SOLDIER_OFF_MAP)

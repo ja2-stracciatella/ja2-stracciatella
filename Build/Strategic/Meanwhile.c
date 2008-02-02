@@ -798,11 +798,9 @@ static void LocateMeanWhileGrid(void)
 
 void LocateToMeanwhileCharacter( )
 {
-	SOLDIERTYPE *pSoldier;
-
 	if ( gfInMeanwhile )
 	{
-		pSoldier = FindSoldierByProfileID( gCurrentMeanwhileDef.ubNPCNumber, FALSE );
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gCurrentMeanwhileDef.ubNPCNumber);
 		if (pSoldier != NULL) LocateSoldier(pSoldier, FALSE);
 	}
 }

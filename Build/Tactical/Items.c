@@ -4133,14 +4133,13 @@ void SetNewItem(SOLDIERTYPE* pSoldier, UINT8 ubInvPos, BOOLEAN fNewItem)
 BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 {
 	INT8				bLoop, bLoop2;
-	SOLDIERTYPE *pSoldier;
 	UINT16			usItem;
 	INT8				bStatus;
 	BOOLEAN			fReturnVal = FALSE;
 
 	usItem	= pObject->usItem;
 	bStatus = pObject->bStatus[0];
-	pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
 
 	if ( Item[ usItem ].usItemClass == IC_MONEY && gMercProfiles[ ubProfile ].uiMoney > 0 )
 	{
@@ -4177,7 +4176,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 	if ( fReturnVal )
 	{
 		// ATE: Manage soldier pointer as well....
-		//pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
+		//pSoldier = FindSoldierByProfileID(ubProfile);
 
 		// Do we have a valid profile?
 		if ( pSoldier != NULL )
@@ -4220,7 +4219,6 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem);
 BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 {
 	INT8 bLoop;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN	fReturnVal = FALSE;
 
 	if ( usItem == NOTHING )
@@ -4242,7 +4240,7 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 	}
 
 	// ATE: Manage soldier pointer as well....
-	pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
 
 	// Do we have a valid profile?
 	if ( pSoldier != NULL )

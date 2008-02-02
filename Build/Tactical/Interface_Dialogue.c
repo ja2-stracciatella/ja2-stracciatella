@@ -561,7 +561,6 @@ void DeleteTalkingMenu( )
 		{
 			UINT8	ubNPC;
 			BOOLEAN fNice = FALSE;
-			SOLDIERTYPE * pNPC;
 
 			if ( gubNiceNPCProfile != NO_PROFILE )
 			{
@@ -575,7 +574,7 @@ void DeleteTalkingMenu( )
 
 			if ( ubNPC != NO_PROFILE )
 			{
-				pNPC = FindSoldierByProfileID( ubNPC, FALSE );
+				const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 				if (pNPC)
 				{
 					// find someone to say their "nice guy" line
@@ -1319,10 +1318,7 @@ void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 		// just drop it
 
 		// have to walk up to the merc closest to ubNPC
-
-		SOLDIERTYPE *		pNPC;
-
-		pNPC = FindSoldierByProfileID( ubNPC, FALSE );
+		SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 		if ( pNPC )
 		{
 			AddItemToPool( pNPC->sGridNo, &(pNPC->inv[bInvPos]), TRUE, 0, 0, 0 );
@@ -1346,10 +1342,7 @@ static void HandleNPCTrigger(void);
 
 void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach )
 {
-	SOLDIERTYPE *pSoldier;
-
-	pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
-
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 	if ( pSoldier == NULL )
 	{
 		return;
@@ -1419,10 +1412,9 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 
 static void HandleNPCTrigger(void)
 {
-	SOLDIERTYPE *pSoldier;
 	INT16				sPlayerGridNo;
 
-	pSoldier = FindSoldierByProfileID( gubTargetNPC, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gubTargetNPC);
 	if (!pSoldier)
 	{
 		return;
@@ -1506,14 +1498,13 @@ void HandleWaitTimerForNPCTrigger( )
 
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 {
-	SOLDIERTYPE             *pSoldier;
 	// OK, Move to gridNo!
 
 	// Shotdown any panel we had up...
 	DeleteTalkingMenu( );
 
 	// Get merc id for NPC
-	pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 	if ( !pSoldier )
 	{
 		return;
@@ -1633,8 +1624,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 	// Switch on action code!
 	if (usActionCode > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && usActionCode < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE)
 	{
-		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
-		SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID((UINT8)(usActionCode - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC), FALSE);
+		SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(ubTargetNPC);
+		SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID((UINT8)(usActionCode - NPC_ACTION_TURN_TO_FACE_NEAREST_MERC));
 		if (pSoldier && pSoldier2)
 		{
 			// see if we are facing this person
@@ -1713,8 +1704,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Delete menu, give item to megual
 				DeleteTalkingMenu( );
 
-				SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(FATIMA, FALSE);
-				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(MIGUEL, FALSE);
+				SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(FATIMA);
+				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(MIGUEL);
 
 				// Give item!
 				if ( !pSoldier || !pSoldier2 )
@@ -1736,7 +1727,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_FACE_CLOSEST_PLAYER:
 			{
 				// Get pointer for player
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -1756,7 +1747,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				DeleteTalkingMenu( );
 
 				// Get pointer to NPC
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -1772,7 +1763,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_LOWER_GUN:
 			{
 				// Get pointer for player
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -1811,7 +1802,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_READY_GUN:
 			{
 				// Get pointer for player
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier && pSoldier->inv[HANDPOS].usItem != NOTHING)
 				{
 					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
@@ -1822,7 +1813,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_START_RUNNING:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					pSoldier->fUIMovementFast = TRUE;
@@ -1832,7 +1823,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_STOP_RUNNING:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					pSoldier->fUIMovementFast = FALSE;
@@ -1849,7 +1840,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_STOP_PLAYER_GIVING_FIRST_AID:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					ReceivingSoldierCancelServices( pSoldier );
@@ -1860,7 +1851,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_FACE_NORTH:
 			{
 				// handle this separately to keep the code clean...
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					SendSoldierSetDesiredDirectionEvent( pSoldier, NORTHWEST );
@@ -1876,7 +1867,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_FACE_WEST:
 			case NPC_ACTION_FACE_NORTH_WEST:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					// screen NORTHEAST corresponds to in-game NORTH
@@ -1911,7 +1902,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_BECOME_ENEMY:
 			{
 				// CJC: disable because of new system?
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -1993,7 +1984,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_TRAVERSE_MAP_EAST:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2005,7 +1996,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_TRAVERSE_MAP_SOUTH:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2017,7 +2008,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_TRAVERSE_MAP_WEST:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2029,7 +2020,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_TRAVERSE_MAP_NORTH:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2068,7 +2059,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			{
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 480 + Random( 60 ), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS, 1 );
 				// also make Pablo neutral again and exit combat if we're in combat
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2090,7 +2081,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_THREATENINGLY_RAISE_GUN:
 			{
 				// Get pointer for NPC
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -2108,7 +2099,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_TURN_TO_FACE_NEAREST_MERC:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					const INT16 sGridNo = ClosestPC(pSoldier, NULL);
@@ -2128,7 +2119,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_SEND_PACOS_INTO_HIDING:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
 				const INT16 sGridNo = 16028;
 				if (pSoldier)
 				{
@@ -2151,7 +2142,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_HAVE_PACOS_FOLLOW:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
 				const INT16 sGridNo = 18193;
 				if (pSoldier)
 				{
@@ -2254,7 +2245,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					OBJECTTYPE	Object;
 					INT16				sGridNo = 14952;
 
-					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &Object );
@@ -2280,7 +2271,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_MARTHA_DIES:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARTHA, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARTHA);
 				if (pSoldier)
 				{
 					DeleteTalkingMenu();
@@ -2451,17 +2442,17 @@ unlock:
 			case NPC_ACTION_REMOVE_JOE_QUEEN:
 			{
 				// Find queen and joe and remove from sector...
-				SOLDIERTYPE* const queen = FindSoldierByProfileID(QUEEN, FALSE);
+				SOLDIERTYPE* const queen = FindSoldierByProfileID(QUEEN);
 				if (queen != NULL) TacticalRemoveSoldier(queen);
 
-				SOLDIERTYPE* const joe = FindSoldierByProfileID(JOE, FALSE);
+				SOLDIERTYPE* const joe = FindSoldierByProfileID(JOE);
 				if (joe != NULL) TacticalRemoveSoldier(joe);
 				break;
 			}
 
 			case NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELLIOT, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELLIOT);
 				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
 
 				// End meanwhile....
@@ -2493,7 +2484,7 @@ unlock:
 			case NPC_ACTION_HAVE_MARRIED_NPC_LEAVE_TEAM:
 			{
 				// get the soldier
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gMercProfiles[DARYL].bNPCData, FALSE);
+				SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(gMercProfiles[DARYL].bNPCData);
 				SOLDIERTYPE* const pSoldier2 = gpDestSoldier;
 
 				if ( !pSoldier || !pSoldier2 )
@@ -2575,7 +2566,7 @@ unlock:
 
 			case NPC_ACTION_ANGEL_LEAVES_DEED:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					const INT8 bItemIn = FindObj(pSoldier, DEED);
@@ -2689,7 +2680,7 @@ unlock:
 
 			case NPC_ACTION_ENTER_COMBAT:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier )
 				{
 					if ( pSoldier->ubCivilianGroup != NON_CIV_GROUP )
@@ -2781,7 +2772,7 @@ unlock:
 
 			case NPC_ACTION_BECOME_FRIENDLY_END_COMBAT:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier )
 				{
 					DeleteTalkingMenu();
@@ -2818,7 +2809,7 @@ unlock:
 				// copy new nickname into soldier structure
 				{
 					wcslcpy(gMercProfiles[ubTargetNPC].zNickname, gMercProfiles[ubTargetNPC].zName, lengthof(gMercProfiles[ubTargetNPC].zNickname));
-					SOLDIERTYPE* const  pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if ( pSoldier )
 					{
 						wcslcpy(pSoldier->name, gMercProfiles[ubTargetNPC].zNickname, lengthof(pSoldier->name));
@@ -2912,8 +2903,8 @@ unlock:
 			case NPC_ACTION_MADLAB_ATTACHES_GOOD_CAMERA:
 			{
 				SetFactFalse( FACT_MADLAB_HAS_GOOD_CAMERA );
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MADLAB, FALSE);
-				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ROBOT, FALSE);
+				SOLDIERTYPE* const pSoldier  = FindSoldierByProfileID(MADLAB);
+				SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ROBOT);
 				if ( pSoldier && pSoldier2 )
 				{
 					// Give weapon to robot
@@ -2955,7 +2946,7 @@ unlock:
 			case NPC_ACTION_DARREN_PAYS_PLAYER:
 			{
 				// should change to split up cash
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier )
 				{
 					INT16		sNearestPC;
@@ -2994,7 +2985,7 @@ unlock:
 
 			case NPC_ACTION_TRIGGER_SPIKE_OR_DARREN:
 			{
-				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(KINGPIN, FALSE);
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(KINGPIN);
 				if (pSoldier)
 				{
 					UINT8 ubRoom;
@@ -3016,8 +3007,7 @@ unlock:
 				DeleteTalkingMenu( );
 
 				// Get pointer to NPC
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
-
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( !pSoldier )
 				{
 					return;
@@ -3030,7 +3020,7 @@ unlock:
 
 			case NPC_ACTION_GET_ITEMS_FROM_CLOSEST_CABINET:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					// shouldn't have any current action but make sure everything
@@ -3070,7 +3060,7 @@ unlock:
 			case NPC_ACTION_SLAP:
 			{
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(QUEEN, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(QUEEN);
 				if (pSoldier)
 				{
 					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_SLAP, 0 , FALSE );
@@ -3084,7 +3074,7 @@ unlock:
 			{
 				DeleteTalkingMenu( );
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					// Target a different merc....
@@ -3147,13 +3137,10 @@ unlock:
 			{
 				DeleteTalkingMenu( );
 
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
-					SOLDIERTYPE *pTarget;
-
-					pTarget = FindSoldierByProfileID( ELLIOT, FALSE );
-
+					SOLDIERTYPE* const pTarget = FindSoldierByProfileID(ELLIOT);
 					if ( pTarget )
 					{
 						// Set special flag....
@@ -3192,7 +3179,7 @@ unlock:
 			{
 				// Punch first living pc....
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					INT32				cnt;
@@ -3252,7 +3239,7 @@ unlock:
 			case NPC_ACTION_FRUSTRATED_SLAP:
 			{
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					EVENT_InitNewSoldierAnim( pSoldier, QUEEN_FRUSTRATED_SLAP, 0 , FALSE );
@@ -3427,7 +3414,7 @@ unlock:
 			case NPC_ACTION_DOCTOR_ESCORT_PATIENTS:
 			{
 				// find anyone in sector who is wounded; set to hospital patient
-				const SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				const SOLDIERTYPE* const pSoldier2 = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier2 )
 				{
 					//HOSPITAL_PATIENT_DISTANCE
@@ -3546,7 +3533,7 @@ unlock:
 			case NPC_ACTION_CHOOSE_DOCTOR:
 			{
 				// find doctors available and trigger record 12 or 13
-				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(STEVE, FALSE); // Steve Willis, 80
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(STEVE); // Steve Willis, 80
 				if (pSoldier)
 				{
 					if (!pSoldier->bInSector || pSoldier->bTeam != CIV_TEAM || !pSoldier->bNeutral || pSoldier->bLife < OKLIFE)
@@ -3555,7 +3542,7 @@ unlock:
 					}
 				}
 
-				SOLDIERTYPE* pSoldier2 = FindSoldierByProfileID(VINCE, FALSE); // Vince, 69
+				SOLDIERTYPE* pSoldier2 = FindSoldierByProfileID(VINCE); // Vince, 69
 				if (pSoldier2)
 				{
 					if (!pSoldier2->bInSector || pSoldier2->bTeam != CIV_TEAM || !pSoldier2->bNeutral || pSoldier2->bLife < OKLIFE)
@@ -3613,7 +3600,7 @@ unlock:
 				{
 					INT16		sNearestPC;
 
-					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID( ubTargetNPC, FALSE );
+					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if ( pSoldier )
 					{
 						SOLDIERTYPE* pSoldier2 = NULL;
@@ -3699,7 +3686,7 @@ unlock:
 				break;
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_9:
 			{
-				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY, FALSE);
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY);
 				if ( pSoldier && pSoldier->bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 9 );
@@ -3713,7 +3700,7 @@ unlock:
 
 			case NPC_ACTION_TRIGGER_MARY_OR_JOHN_RECORD_10:
 			{
-				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY, FALSE);
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MARY);
 				if ( pSoldier && pSoldier->bLife >= OKLIFE )
 				{
 					TriggerNPCRecord( MARY, 10 );
@@ -3727,7 +3714,7 @@ unlock:
 
 			case NPC_ACTION_GET_OUT_OF_WHEELCHAIR:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
@@ -3738,7 +3725,7 @@ unlock:
 
 			case NPC_ACTION_GET_OUT_OF_WHEELCHAIR_AND_BECOME_HOSTILE:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier && pSoldier->ubBodyType == CRIPPLECIV )
 				{
 					DeleteTalkingMenu();
@@ -3760,7 +3747,7 @@ unlock:
 
 			case NPC_ACTION_CANCEL_WAYPOINTS:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier )
 				{
 					pSoldier->bOrders = ONGUARD;
@@ -3800,7 +3787,7 @@ unlock:
 				gMercProfiles[ MANNY ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 				gMercProfiles[ MANNY ].usStrategicInsertionData = 19904;
 				gMercProfiles[ MANNY ].fUseProfileInsertionInfo = TRUE;
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MANNY, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MANNY);
 				if ( pSoldier )
 				{
 					pSoldier->bOrders = STATIONARY;
@@ -3812,7 +3799,7 @@ unlock:
 
 			case NPC_ACTION_MAKE_BRENDA_STATIONARY:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BRENDA, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BRENDA);
 				if ( pSoldier )
 				{
 					gMercProfiles[ BRENDA ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
@@ -3826,7 +3813,7 @@ unlock:
 
 			case NPC_ACTION_MAKE_MIGUEL_STATIONARY:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MIGUEL, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MIGUEL);
 				if ( pSoldier )
 				{
 					gMercProfiles[ MIGUEL ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
@@ -3898,7 +3885,7 @@ unlock:
 
 			case NPC_ACTION_REMOVE_MERC_FOR_MARRIAGE:
 			{
-				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier )
 				{
 					pSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );
@@ -3931,7 +3918,7 @@ unlock:
 				break;
 			case NPC_ACTION_REMOVE_NPC:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if ( pSoldier )
 				{
 					EndAIGuysTurn( pSoldier );
@@ -4077,7 +4064,7 @@ unlock:
 				break;
 			case NPC_ACTION_TRIGGER_BREWSTER_BY_WARDEN_PROXIMITY:
 			{
-				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BREWSTER, FALSE);
+				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(BREWSTER);
 				if ( pSoldier )
 				{
 					const INT16 sGridNo = GetGridNoOfCorpseGivenProfileID(WARDEN);
@@ -4209,7 +4196,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 	uiCostSoFar = 0;
 
 	// find the doctor's soldiertype to get his position
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubId, FALSE);
+	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubId);
 	if (!pNPC)
 	{
 		return( 0 );
@@ -4341,7 +4328,7 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 					if ( ubProfile == JOHN )
 					{
 						// Mary might be alive, and if so we need to ensure two places
-						pSoldier = FindSoldierByProfileID(MARY, FALSE);
+						pSoldier = FindSoldierByProfileID(MARY);
 						if (pSoldier != NULL &&
 								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[gbPlayerNum].bLastID - 3)
 						{
@@ -4353,7 +4340,7 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 					RecruitEPC( ubProfile );
 
 					// Get soldier pointer
-					pSoldier = FindSoldierByProfileID( ubProfile, FALSE );
+					pSoldier = FindSoldierByProfileID(ubProfile);
 					if ( !pSoldier )
 					{
 						return;
@@ -4566,7 +4553,7 @@ static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
 				gMercProfiles[ DARYL ].bNPCData = (INT8) gpSrcSoldier->ubProfile;
 
 				// create key for Daryl to give to player
-				pSoldier = FindSoldierByProfileID( DARYL, FALSE );
+				pSoldier = FindSoldierByProfileID(DARYL);
 				if ( pSoldier )
 				{
 					OBJECTTYPE Key;
@@ -4636,7 +4623,7 @@ static void DoneFadeInActionBasement(void)
 		}
 	}
 
-	const SOLDIERTYPE* const pNPCSoldier = FindSoldierByProfileID(CARLOS, FALSE);
+	const SOLDIERTYPE* const pNPCSoldier = FindSoldierByProfileID(CARLOS);
 	if ( !pNPCSoldier )
 	{
 		return;

@@ -5959,7 +5959,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 		case CIV_TEAM:
 			if ( pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP && gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS && gTacticalStatus.bBoxingState == NOT_BOXING )
 			{
-				SOLDIERTYPE * pMaria = FindSoldierByProfileID( MARIA, FALSE );
+				const SOLDIERTYPE* const pMaria = FindSoldierByProfileID(MARIA);
 				if (pMaria && pMaria->bInSector)
 				{
 					SetFactTrue( FACT_MARIA_ESCAPE_NOTICED );

@@ -92,7 +92,6 @@ static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier);
 void BeginContractRenewalSequence( )
 {
 	INT32 cnt;
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN			fFoundAtLeastOne = FALSE;
 
 	if ( ubNumContractRenewals > 0)
@@ -100,8 +99,7 @@ void BeginContractRenewalSequence( )
 		for ( cnt = 0; cnt < ubNumContractRenewals; cnt++ )
 		{
 			// Get soldier - if there is none, adavance to next
-			pSoldier = FindSoldierByProfileID( ContractRenewalList[ cnt ].ubProfileID, FALSE ); // Steve Willis, 80
-
+			SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ContractRenewalList[cnt].ubProfileID); // Steve Willis, 80
 			if ( pSoldier )
 			{
 				if (pSoldier->bLife == 0 || pSoldier->bAssignment == IN_TRANSIT || pSoldier->bAssignment == ASSIGNMENT_POW)
@@ -144,8 +142,6 @@ static void EndCurrentContractRenewal(void);
 
 void HandleContractRenewalSequence( )
 {
-	SOLDIERTYPE *pSoldier;
-
 	if ( gfContractRenewalSquenceOn )
 	{
 		// Should we stop now?
@@ -157,7 +153,7 @@ void HandleContractRenewalSequence( )
 		}
 
 		// Get soldier - if there is none, adavance to next
-		pSoldier = FindSoldierByProfileID( ContractRenewalList[ ubCurrentContractRenewal ].ubProfileID, FALSE ); // Steve Willis, 80
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ContractRenewalList[ubCurrentContractRenewal].ubProfileID); // Steve Willis, 80
 
 		if ( pSoldier == NULL )
 		{

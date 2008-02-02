@@ -465,8 +465,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
-		SOLDIERTYPE * pSoldier;
-		pSoldier = FindSoldierByProfileID( WARDEN, FALSE );
+		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(WARDEN);
 		if ( !pSoldier || pSoldier->ubID == gTacticalStatus.ubTheChosenOne )
 		{
 			return( FALSE );
