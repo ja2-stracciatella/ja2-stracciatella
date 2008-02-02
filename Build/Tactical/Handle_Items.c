@@ -1945,15 +1945,11 @@ static void RemoveItemGraphicFromWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLe
 }
 
 
-void AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel)
+INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel)
 {
-	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, NULL);
-}
-
-
-void AddItemToPoolAndGetIndex(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, INT32* const piItemIndex)
-{
-	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, piItemIndex);
+	INT32 item_index;
+	InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel, &item_index);
+	return item_index;
 }
 
 
@@ -2237,11 +2233,7 @@ OBJECTTYPE* InternalAddItemToPool( INT16 *psGridNo, OBJECTTYPE *pObject, INT8 bV
 		AdjustItemPoolVisibility( pItemPool );
 	}
 
-	if (piItemIndex)
-	{
-		*piItemIndex = iWorldItem;
-	}
-
+	*piItemIndex = iWorldItem;
 	return( &(gWorldItems[ iWorldItem ].o ) );
 }
 

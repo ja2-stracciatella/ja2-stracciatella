@@ -385,7 +385,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 
 	UINT32			i;
 	WORLDITEM		dummyItem;
-	INT32				iItemIndex;
 	UINT32			uiNumWorldItems;
 
 	//If any world items exist, we must delete them now.
@@ -485,7 +484,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 			{ //all armed bombs are buried
 				dummyItem.bVisible = BURIED;
 			}
-			AddItemToPoolAndGetIndex( dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel, &iItemIndex );
+			const INT32 iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
 			gWorldItems[ iItemIndex ].ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}

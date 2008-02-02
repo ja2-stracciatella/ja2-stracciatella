@@ -2250,14 +2250,13 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					OBJECTTYPE	Object;
 					INT16				sGridNo = 14952;
-					INT32				iWorldItem;
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC, FALSE);
 					if (pSoldier)
 					{
 						CreateItem( MONEY, 1, &Object );
 						Object.uiMoneyAmount = 10000;
-						AddItemToPoolAndGetIndex( sGridNo, &Object, -1, pSoldier->bLevel, 0, 0, &iWorldItem );
+						const INT32 iWorldItem = AddItemToPool(sGridNo, &Object, -1, pSoldier->bLevel, 0, 0);
 
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move
