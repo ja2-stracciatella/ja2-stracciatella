@@ -1054,26 +1054,28 @@ static BOOLEAN CompatibleGunForAmmo(const OBJECTTYPE* pTryObject, const OBJECTTY
 }
 
 
-static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* pTestObject)
+static BOOLEAN CompatibleItemForApplyingOnMerc(const OBJECTTYPE* const test)
 {
-	UINT16 usItem = pTestObject->usItem;
-
   // ATE: If in mapscreen, return false always....
-	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-  {
-     return( FALSE );
-  }
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return FALSE;
 
-	// ATE: Would be nice to have flag here to check for these types....
-	if ( usItem == CAMOUFLAGEKIT || usItem == ADRENALINE_BOOSTER || usItem == REGEN_BOOSTER ||
-			 usItem == SYRINGE_3		 || usItem == SYRINGE_4 || usItem == SYRINGE_5 ||
-			 usItem == ALCOHOL			 || usItem == WINE			|| usItem == BEER			 || usItem == CANTEEN || usItem == JAR_ELIXIR )
+	switch (test->usItem)
 	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
+		// ATE: Would be nice to have flag here to check for these types....
+		case CAMOUFLAGEKIT:
+		case ADRENALINE_BOOSTER:
+		case REGEN_BOOSTER:
+		case SYRINGE_3:
+		case SYRINGE_4:
+		case SYRINGE_5:
+		case ALCOHOL:
+		case WINE:
+		case BEER:
+		case CANTEEN:
+		case JAR_ELIXIR:
+			return TRUE;
+
+		default: return FALSE;
 	}
 }
 
