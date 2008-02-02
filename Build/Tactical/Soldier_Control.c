@@ -9542,26 +9542,12 @@ BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* pSoldier)
+BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* const robot)
 {
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
-	{
-		return( FALSE );
-	}
-
-	const SOLDIERTYPE* const pController = pSoldier->robot_remote_holder;
-	if (pController == NULL) return FALSE;
-
-	if ( pController->bActive )
-	{
-		if ( ControllingRobot( pController ) )
-		{
-			// ALL'S OK!
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
+	Assert(robot->uiStatusFlags & SOLDIER_ROBOT);
+	const SOLDIERTYPE* const controller = robot->robot_remote_holder;
+	if (controller == NULL) return FALSE;
+	return ControllingRobot(controller);
 }
 
 
