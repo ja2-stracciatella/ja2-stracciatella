@@ -3237,32 +3237,6 @@ static void CreateRandomItem(void)
 }
 
 
-static void ToggleRealTime(UINT32* puiNewEvent)
-{
-	if ( gTacticalStatus.uiFlags & TURNBASED )
-	{
-		// Change to real-time
-		gTacticalStatus.uiFlags &= (~TURNBASED);
-		gTacticalStatus.uiFlags |= REALTIME;
-
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Switching to Realtime." );
-	}
-	else if ( gTacticalStatus.uiFlags & REALTIME )
-	{
-		// Change to turn-based
-		gTacticalStatus.uiFlags |= TURNBASED;
-		gTacticalStatus.uiFlags &=( ~REALTIME );
-
-		*puiNewEvent = M_ON_TERRAIN;
-
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Switching to Turnbased." );
-	}
-
-	// Plot new path!
-	gfPlotNewMovement = TRUE;
-}
-
-
 static void ToggleViewAllMercs(void)
 {
 	// Set option to show all mercs
