@@ -1594,7 +1594,6 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 	STRUCTURE					*pStructure;
 	UINT8							ubDirection;
 	BOOLEAN						fAllMove;
-	INT8							bLoop;
 	LEVELNODE					*pIntTile;
 	INT16							sIntTileGridNo;
 	BOOLEAN						fOldFastMove;
@@ -1617,10 +1616,9 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 
 			// Loop through all mercs and make go!
 			// TODO: Only our squad!
-			SOLDIERTYPE* pSoldier;
-			for (bLoop = gTacticalStatus.Team[gbPlayerNum].bFirstID, pSoldier = GetMan(bLoop); bLoop <= gTacticalStatus.Team[gbPlayerNum].bLastID; bLoop++, pSoldier++)
+			FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 			{
-				if ( OK_CONTROLLABLE_MERC( pSoldier ) && pSoldier->bAssignment == CurrentSquad( ) && !pSoldier->fMercAsleep )
+				if (OkControllableMerc(pSoldier) && pSoldier->bAssignment == CurrentSquad() && !pSoldier->fMercAsleep)
 				{
 	        // If we can't be controlled, returninvalid...
 	        if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
