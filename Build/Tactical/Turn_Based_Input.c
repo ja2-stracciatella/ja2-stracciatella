@@ -3540,18 +3540,6 @@ static void ObliterateSector(void)
 }
 
 
-static void JumpFence(void)
-{
-	INT8 bDirection;
-	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL &&
-			FindFenceJumpDirection(sel, sel->sGridNo, sel->bDirection, &bDirection))
-	{
-		BeginSoldierClimbFence(sel);
-	}
-}
-
-
 static void CreateNextCivType(void)
 {
 	static INT8 bBodyType = FATCIV;
