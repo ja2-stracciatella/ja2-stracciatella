@@ -3237,27 +3237,6 @@ static void CreateRandomItem(void)
 }
 
 
-static void MakeSelectedSoldierTired(void)
-{
-	// Key to make guy get tired!
-	OBJECTTYPE		Object;
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos != NOWHERE)
-	{
-		CreateItem( (UINT16)TNT, 100, &Object );
-		AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
-	}
-
-	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
-	const SOLDIERTYPE* const tgt = gUIFullTarget;
-	if (tgt != NULL)
-	{
-		//FatigueCharacter(tgt);
-		fInterfacePanelDirty = DIRTYLEVEL2;
-	}
-}
-
-
 static void ToggleRealTime(UINT32* puiNewEvent)
 {
 	if ( gTacticalStatus.uiFlags & TURNBASED )
