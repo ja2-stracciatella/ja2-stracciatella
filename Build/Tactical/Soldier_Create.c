@@ -195,28 +195,15 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		}
 
 		const UINT8 bLastTeamID = gTacticalStatus.Team[Soldier.bTeam].bLastID;
-
-		// look for all mercs on the same team,
-		BOOLEAN fGuyAvail = FALSE;
-		for (const SOLDIERTYPE* pTeamSoldier = GetMan(cnt); cnt <= bLastTeamID; cnt++, pTeamSoldier++)
+		for (;;)
 		{
-			if ( !pTeamSoldier->bActive )
-			{
-				fGuyAvail = TRUE;
-				break;
-			}
-		}
-
-		// Check if there was space!
-		if ( !fGuyAvail )
-		{ //No space, so can't create the soldier.
-			return NULL;
+			s = GetMan(cnt);
+			if (!s->bActive) break;
+			if (++cnt > bLastTeamID) return NULL;
 		}
 
 		// OK, set ID
 		Soldier.ubID = (UINT8)cnt;
-
-		s = GetMan(cnt);
 	}
 	*s = Soldier;
 
