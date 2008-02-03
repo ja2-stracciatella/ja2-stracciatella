@@ -127,7 +127,7 @@ typedef struct
 
 //Original functions currently used throughout the game.
 void TacticalRemoveSoldier(SOLDIERTYPE* s);
-BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle );
+void TacticalRemoveSoldierPointer(SOLDIERTYPE* s, BOOLEAN fRemoveVehicle);
 
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass );
 

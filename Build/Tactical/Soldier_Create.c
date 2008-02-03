@@ -1042,10 +1042,10 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, const BOOLEAN fRemoveVe
 	TacticalRemoveSoldierPointer(s, fRemoveVehicle);
 }
 
-BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle )
+
+void TacticalRemoveSoldierPointer(SOLDIERTYPE* const pSoldier, const BOOLEAN fRemoveVehicle)
 {
-	if( !pSoldier->bActive )
-		return FALSE;
+	if (!pSoldier->bActive) return;
 
 	if( pSoldier->ubScheduleID )
 	{
@@ -1101,8 +1101,6 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		}
 		MemFree( pSoldier );
 	}
-
-	return( TRUE );
 }
 
 
