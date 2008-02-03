@@ -298,6 +298,17 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 	*pubNumElites += ubNumElites;
 }
 
+
+static BOOLEAN IsAnyOfTeamOKInSector(const INT8 team)
+{
+	CFOR_ALL_IN_TEAM(s, team)
+	{
+		if (s->bInSector && s->bLife >= OKLIFE) return TRUE;
+	}
+	return FALSE;
+}
+
+
 void EndTacticalBattleForEnemy()
 {
 	GROUP *pGroup;
@@ -341,24 +352,12 @@ void EndTacticalBattleForEnemy()
 		pGroup = pGroup->next;
 	}
 
-	//Check to see if any of our mercs have abandoned the militia during a battle.  This is cause for a rather
-	//severe loyalty blow.
-	CFOR_ALL_IN_TEAM(militia, MILITIA_TEAM)
+	/* Check to see if any of our mercs have abandoned the militia during a
+	 * battle.  This is cause for a rather severe loyalty blow. */
+	if (IsAnyOfTeamOKInSector(MILITIA_TEAM) &&
+			(IsAnyOfTeamOKInSector(ENEMY_TEAM) || IsAnyOfTeamOKInSector(CREATURE_TEAM)))
 	{
-		if (militia->bInSector && militia->bLife >= OKLIFE)
-		{ //found one live militia, so look for any enemies/creatures.
-			// NOTE: this is relying on ENEMY_TEAM being immediately followed by CREATURE_TEAM
-			for (INT32 i = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; i <= gTacticalStatus.Team[CREATURE_TEAM].bLastID; ++i)
-			{
-				const SOLDIERTYPE* const enemy = GetMan(i);
-				if (enemy->bActive && enemy->bInSector && enemy->bLife >= OKLIFE)
-				{ //confirmed at least one enemy here, so do the loyalty penalty.
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSectorX, gWorldSectorY, 0 );
-					break;
-				}
-			}
-			break;
-		}
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSectorX, gWorldSectorY, 0);
 	}
 }
 
