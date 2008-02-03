@@ -4351,7 +4351,7 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 static INT32 CheckBleeding(SOLDIERTYPE* pSoldier);
 
 
-void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier, const BOOLEAN fFromRealTime)
+void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 {
 	// NB realtimecounter is not used, always passed in as 0 now!
 
@@ -4365,14 +4365,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier, const BOOLEAN fFromRealTim
 	}
 
 	// ATE: Add decay effect sfor drugs...
-	if (fFromRealTime)
-	{
-		HandleEndTurnDrugAdjustments( pSoldier );
-	}
-	else
-	{
-		HandleEndTurnDrugAdjustments( pSoldier );
-	}
+	HandleEndTurnDrugAdjustments(pSoldier);
 
 	// ATE: Don't bleed if in AUTO BANDAGE!
 	if ( !gTacticalStatus.fAutoBandageMode )

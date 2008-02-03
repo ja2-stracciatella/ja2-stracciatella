@@ -192,7 +192,7 @@ void HandleTacticalEndTurn(void)
 			if (s->bLife > 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
 			{
 				// Handle everything from getting breath back, to bleeding, etc
-				EVENT_BeginMercTurn(s, TRUE);
+				EVENT_BeginMercTurn(s);
 
 				// Handle Player services
 				HandlePlayerServices(s);
@@ -218,7 +218,7 @@ void HandleTacticalEndTurn(void)
 				if ( pSoldier->bTeam != gbPlayerNum )
 				{
 					// Handle everything from getting breath back, to bleeding, etc
-					EVENT_BeginMercTurn(pSoldier, TRUE);
+					EVENT_BeginMercTurn(pSoldier);
 
 					// Handle Player services
 					HandlePlayerServices( pSoldier );
