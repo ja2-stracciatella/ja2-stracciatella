@@ -1556,12 +1556,6 @@ static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* pPatient);
 // can this soldier be healed by this doctor?
 static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pDoctor, const BOOLEAN fIgnoreAssignment, const BOOLEAN fThisHour, const BOOLEAN fSkipKitCheck, const BOOLEAN fSkipSkillCheck)
 {
-	// must be an active guy
-	if (pSoldier -> bActive == FALSE)
-	{
-		return(FALSE);
-	}
-
 	// must be a patient or a doctor
 	if( ( pSoldier -> bAssignment != PATIENT ) && ( pSoldier -> bAssignment != DOCTOR ) && ( fIgnoreAssignment == FALSE ) )
 	{

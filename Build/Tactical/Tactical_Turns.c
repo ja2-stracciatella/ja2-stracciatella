@@ -213,7 +213,7 @@ void HandleTacticalEndTurn(void)
 		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
 		{
 			SOLDIERTYPE* const pSoldier = MercSlots[cnt];
-			if ( pSoldier != NULL )
+			if (pSoldier != NULL && pSoldier->bActive)
 			{
 				if ( pSoldier->bTeam != gbPlayerNum )
 				{
