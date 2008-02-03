@@ -2430,7 +2430,7 @@ void AllMercsWalkedToExitGrid()
 		{
 			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
 
-			RemoveSoldierFromTacticalSector( pPlayer->pSoldier, TRUE );
+			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
 
 			pPlayer = pPlayer->next;
 		}
@@ -2522,7 +2522,7 @@ void AllMercsHaveWalkedOffSector( )
 		while( pPlayer )
 		{
 			// NOTE: This line is different from case 2 and 3...
-			RemoveSoldierFromTacticalSector( pPlayer->pSoldier, TRUE );
+			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
 
 			// pass flag that this is a tactical traversal, the path built MUST go in the traversed direction even if longer!
 			PlotPathForCharacter( pPlayer->pSoldier, gsAdjacentSectorX, gsAdjacentSectorY, TRUE );
@@ -2794,7 +2794,7 @@ void AllMercsHaveWalkedOffSector( )
 		pPlayer = gpAdjacentGroup->pPlayerList;
 		while( pPlayer )
 		{
-			RemoveSoldierFromTacticalSector( pPlayer->pSoldier, TRUE );
+			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
 			pPlayer = pPlayer->next;
 		}
 		SetDefaultSquadOnSectorEntry( TRUE );

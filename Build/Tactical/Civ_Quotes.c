@@ -179,7 +179,7 @@ static void SurrenderMessageBoxCallBack(UINT8 ubExitValue)
 			if (s->bInSector && s->bLife != 0)
 			{
 				EnemyCapturesPlayerSoldier(s);
-				RemoveSoldierFromTacticalSector(s, TRUE);
+				RemoveSoldierFromTacticalSector(s);
 			}
     }
 

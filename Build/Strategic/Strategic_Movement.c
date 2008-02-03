@@ -2220,8 +2220,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 				pSoldier->fBetweenSectors = TRUE;
 
 				// OK, Remove the guy from tactical engine!
-				RemoveSoldierFromTacticalSector( pSoldier, TRUE );
-
+				RemoveSoldierFromTacticalSector(pSoldier);
 			}
 		}
 	}
@@ -2246,7 +2245,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 			curr->pSoldier->fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
-			RemoveSoldierFromTacticalSector( curr->pSoldier, TRUE );
+			RemoveSoldierFromTacticalSector(curr->pSoldier);
 
 			curr = curr->next;
 		}
@@ -3747,7 +3746,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 			curr->pSoldier->fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
-			RemoveSoldierFromTacticalSector( curr->pSoldier, TRUE );
+			RemoveSoldierFromTacticalSector(curr->pSoldier);
 
 			curr = curr->next;
 		}

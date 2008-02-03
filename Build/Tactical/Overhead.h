@@ -335,7 +335,7 @@ void AddManToTeam( INT8 bTeam );
 
 void RemoveManFromTeam( INT8 bTeam );
 
-void RemoveSoldierFromTacticalSector( SOLDIERTYPE *pSoldier, BOOLEAN fAdjustSelected );
+void RemoveSoldierFromTacticalSector(SOLDIERTYPE*);
 
 void MakeCivHostile( SOLDIERTYPE *pSoldier, INT8 bNewSide );
 

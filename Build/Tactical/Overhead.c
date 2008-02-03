@@ -946,8 +946,7 @@ BOOLEAN ExecuteOverhead(void)
 											// If we are at an exit-grid, make disappear.....
 											if (gubWaitingForAllMercsToExitCode == WAIT_FOR_MERCS_TO_WALK_TO_GRIDNO)
 											{
-												// Remove!
-												RemoveSoldierFromTacticalSector(pSoldier, TRUE);
+												RemoveSoldierFromTacticalSector(pSoldier);
 											}
 										}
 									}
@@ -5547,8 +5546,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 					if (pTeamSoldier->bLife != 0 && fDoCapture)
 					{
 						EnemyCapturesPlayerSoldier( pTeamSoldier );
-
-						RemoveSoldierFromTacticalSector( pTeamSoldier, TRUE );
+						RemoveSoldierFromTacticalSector(pTeamSoldier);
 					}
 
 				}
@@ -6420,7 +6418,7 @@ void RemoveManFromTeam( INT8 bTeam )
 }
 
 
-void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelected)
+void RemoveSoldierFromTacticalSector(SOLDIERTYPE* const pSoldier)
 {
 	// reset merc's opplist
 	InitSoldierOppList(pSoldier);
@@ -6433,44 +6431,41 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* pSoldier, BOOLEAN fAdjustSelec
 	pSoldier->bInSector = FALSE;
 
 	// Select next avialiable guy....
-	if (fAdjustSelected)
+	if (guiCurrentScreen == GAME_SCREEN)
 	{
-		if (guiCurrentScreen == GAME_SCREEN)
+		if (GetSelectedMan() == pSoldier)
 		{
-			if (GetSelectedMan() == pSoldier)
+			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
+			if (next != pSoldier)
 			{
-				SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
-				if (next != pSoldier)
+				SelectSoldier(next, 0);
+			}
+			else
+			{
+				// OK - let's look for another squad...
+				SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(pSoldier);
+				if (pNewSoldier != pSoldier)
 				{
-					SelectSoldier(next, 0);
+					// Good squad found!
+					SelectSoldier(pNewSoldier, 0);
 				}
 				else
 				{
-					// OK - let's look for another squad...
-					SOLDIERTYPE* const pNewSoldier = FindNextActiveSquad(pSoldier);
-					if (pNewSoldier != pSoldier)
-					{
-						// Good squad found!
-						SelectSoldier(pNewSoldier, 0);
-					}
-					else
-					{
-						// if here, make nobody
-						SetSelectedMan(NULL);
-					}
+					// if here, make nobody
+					SetSelectedMan(NULL);
 				}
 			}
-			UpdateTeamPanelAssignments();
 		}
-		else
+		UpdateTeamPanelAssignments();
+	}
+	else
+	{
+		SetSelectedMan(NULL);
+		if (guiCurrentScreen == GAME_SCREEN)
 		{
-			SetSelectedMan(NULL);
-			if (guiCurrentScreen == GAME_SCREEN)
-			{
-				// otherwise, make sure interface is team panel...
-				UpdateTeamPanelAssignments();
-				SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
-			}
+			// otherwise, make sure interface is team panel...
+			UpdateTeamPanelAssignments();
+			SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
 		}
 	}
 }

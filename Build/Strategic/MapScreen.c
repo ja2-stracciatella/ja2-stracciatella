@@ -4323,7 +4323,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 
 								if (pSoldier->bInSector)
 								{
-									RemoveSoldierFromTacticalSector(pSoldier, TRUE);
+									RemoveSoldierFromTacticalSector(pSoldier);
 								}
 
 								fTeamPanelDirty = TRUE;
