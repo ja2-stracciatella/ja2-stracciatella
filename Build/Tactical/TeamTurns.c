@@ -360,7 +360,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 				if (s->bLife > 0)
 				{
 					// decay personal opplist, and refresh APs and BPs
-					EVENT_BeginMercTurn(s, FALSE, 0);
+					EVENT_BeginMercTurn(s, FALSE);
 				}
 			}
 
