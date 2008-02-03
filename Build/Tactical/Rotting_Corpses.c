@@ -615,7 +615,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 }
 
 
-BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier, const BOOLEAN fRemoveMerc)
+BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
 	UINT8												ubType;
@@ -760,40 +760,26 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier, const BOOLEAN fRemove
 	// Make team look for items
 	AllSoldiersLookforItems( TRUE );
 
-	//if we are to call TacticalRemoveSoldier after adding the corpse
-	if( fRemoveMerc )
+	// If not a player, you can completely remove soldiertype
+	// otherwise, just remove their graphic
+	if (pSoldier->bTeam != gbPlayerNum)
 	{
-		// If not a player, you can completely remove soldiertype
-		// otherwise, just remove their graphic
-		if ( pSoldier->bTeam != gbPlayerNum )
-		{
-			// Remove merc!
-			// ATE: Remove merc slot first - will disappear if no corpse data found!
-			TacticalRemoveSoldier(pSoldier);
-		}
-		else
-		{
-			RemoveSoldierFromGridNo( pSoldier );
-		}
-
-		if ( ubType == NO_CORPSE )
-		{
-			return( TRUE );
-		}
-
-		// Set type
-		Corpse.ubType	= ubType;
+		// Remove merc!
+		// ATE: Remove merc slot first - will disappear if no corpse data found!
+		TacticalRemoveSoldier(pSoldier);
 	}
 	else
 	{
-		if ( ubType == NO_CORPSE )
-		{
-			return( TRUE );
-		}
-
-		// Set type
-		Corpse.ubType	= ubType;
+		RemoveSoldierFromGridNo(pSoldier);
 	}
+
+	if (ubType == NO_CORPSE)
+	{
+		return( TRUE );
+	}
+
+	// Set type
+	Corpse.ubType	= ubType;
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
 	// If this is our guy......make visible...
