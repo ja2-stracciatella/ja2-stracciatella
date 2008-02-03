@@ -43,7 +43,6 @@ static SOLDIERTYPE* pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
 extern BOOLEAN fPausedTimeDuringQuote;
-UINT8 ubQuitType = 0;
 
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
@@ -1104,12 +1103,6 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
-
-		// aim merc will say goodbye when leaving
-		if( ( pLeaveSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( ubQuitType != HISTORY_MERC_FIRED ) )
-		{
-		//	TacticalCharacterDialogue( pLeaveSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
-		}
 	}
 	else if( bExitValue == MSG_BOX_RETURN_CONTRACT )
 	{
@@ -1119,12 +1112,6 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
   else if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
-
-		// aim merc will say goodbye when leaving
-		if( ( pLeaveSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( ubQuitType != HISTORY_MERC_FIRED ) )
-		{
-		//	TacticalCharacterDialogue( pLeaveSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
-		}
 	}
 	else
 	{

@@ -216,7 +216,7 @@ typedef struct
 	BOOLEAN	fSkyriderEmptyHelpGiven;
 	BOOLEAN	fEnterMapDueToContract;
 	UINT8		ubHelicopterHitsTaken;
-	UINT8		ubQuitType;
+	UINT8		ubQuitType; // XXX HACK000B
 	BOOLEAN fSkyriderSaidCongratsOnTakingSAM;
 	INT16		sContractRehireSoldierID;
 
@@ -3428,7 +3428,7 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	sGeneralInfo.ubPlayerProgressSkyriderLastCommentedOn = gubPlayerProgressSkyriderLastCommentedOn;
 
 	sGeneralInfo.fEnterMapDueToContract = fEnterMapDueToContract;
-	sGeneralInfo.ubQuitType = ubQuitType;
+	sGeneralInfo.ubQuitType = 0;
 
 	if( pContractReHireSoldier != NULL )
 		sGeneralInfo.sContractRehireSoldierID = pContractReHireSoldier->ubID;
@@ -3650,7 +3650,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	gubPlayerProgressSkyriderLastCommentedOn = sGeneralInfo.ubPlayerProgressSkyriderLastCommentedOn;
 
 	fEnterMapDueToContract = sGeneralInfo.fEnterMapDueToContract;
-	ubQuitType = sGeneralInfo.ubQuitType;
 
 	//if the soldier id is valid
 	if( sGeneralInfo.sContractRehireSoldierID == -1 )
