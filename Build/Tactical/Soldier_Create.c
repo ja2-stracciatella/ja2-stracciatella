@@ -1088,9 +1088,6 @@ void TacticalRemoveSoldierPointer(SOLDIERTYPE* const pSoldier, const BOOLEAN fRe
 			RemoveManFromTeam(pSoldier->bTeam);
 		} // people specified off-map have already been removed from their team count
 
-		pSoldier->bActive = FALSE;
-
-		// Delete!
 		DeleteSoldier(pSoldier);
 	}
 	else
