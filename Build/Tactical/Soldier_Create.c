@@ -1073,30 +1073,25 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 		//remove the soldier from the interface panel
 		RemovePlayerFromTeamSlot(pSoldier);
 
-		// Check if a guy exists here
-		// Does another soldier exist here?
-		if ( pSoldier->bActive  )
+		RemoveSoldierFromGridNo(pSoldier);
+
+		// Delete shadow of crow....
+		if (pSoldier->pAniTile != NULL)
 		{
-			RemoveSoldierFromGridNo( pSoldier );
-
-      // Delete shadow of crow....
-			if ( pSoldier->pAniTile != NULL )
-			{
-				DeleteAniTile( pSoldier->pAniTile );
-				pSoldier->pAniTile = NULL;
-			}
-
-			if ( ! (pSoldier->uiStatusFlags & SOLDIER_OFF_MAP) )
-			{
-				// Decrement men in sector number!
-				RemoveManFromTeam( pSoldier->bTeam );
-			} // people specified off-map have already been removed from their team count
-
-			pSoldier->bActive = FALSE;
-
-			// Delete!
-			DeleteSoldier( pSoldier );
+			DeleteAniTile(pSoldier->pAniTile);
+			pSoldier->pAniTile = NULL;
 		}
+
+		if (!(pSoldier->uiStatusFlags & SOLDIER_OFF_MAP))
+		{
+			// Decrement men in sector number!
+			RemoveManFromTeam(pSoldier->bTeam);
+		} // people specified off-map have already been removed from their team count
+
+		pSoldier->bActive = FALSE;
+
+		// Delete!
+		DeleteSoldier(pSoldier);
 	}
 	else
 	{
