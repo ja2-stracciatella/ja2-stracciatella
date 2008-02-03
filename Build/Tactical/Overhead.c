@@ -5538,7 +5538,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 
 							//HandlePlayerTeamMemberDeath( pTeamSoldier );
 							// Make corpse..
-							//TurnSoldierIntoCorpse( pTeamSoldier, TRUE, TRUE );
+							//TurnSoldierIntoCorpse(pTeamSoldier, TRUE);
 						}
 					}
 

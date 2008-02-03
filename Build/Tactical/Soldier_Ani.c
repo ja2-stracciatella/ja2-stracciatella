@@ -3083,7 +3083,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			}
 		}
 
-		if ( TurnSoldierIntoCorpse( pSoldier, TRUE, TRUE ) )
+		if (TurnSoldierIntoCorpse(pSoldier, TRUE))
 		{
 			*pfMadeCorpse = TRUE;
 		}

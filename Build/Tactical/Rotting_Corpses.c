@@ -615,7 +615,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 }
 
 
-BOOLEAN TurnSoldierIntoCorpse( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveMerc, BOOLEAN fCheckForLOS )
+BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier, const BOOLEAN fRemoveMerc)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
 	UINT8												ubType;
