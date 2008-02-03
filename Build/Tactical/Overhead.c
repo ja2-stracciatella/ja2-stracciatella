@@ -6461,12 +6461,6 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* const pSoldier)
 	else
 	{
 		SetSelectedMan(NULL);
-		if (guiCurrentScreen == GAME_SCREEN)
-		{
-			// otherwise, make sure interface is team panel...
-			UpdateTeamPanelAssignments();
-			SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
-		}
 	}
 }
 
