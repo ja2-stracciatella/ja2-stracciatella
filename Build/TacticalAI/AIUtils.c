@@ -1557,7 +1557,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 	{
 		if (pTargetSoldier == pSoldier) continue;
 
-		if ( pSoldier->bActive && pSoldier->bInSector )
+		if (pSoldier->bInSector)
 		{
 			if (!pTargetSoldier->bInSector)
 			{
