@@ -76,7 +76,6 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile );
 // rehiring of mercs from leave equipment pop up
 extern BOOLEAN	fEnterMapDueToContract;
 extern SOLDIERTYPE *pContractReHireSoldier;
-extern SOLDIERTYPE *pLeaveSoldier;
 extern UINT8 ubQuitType;
 extern BOOLEAN gfFirstMercSayQuote;
 

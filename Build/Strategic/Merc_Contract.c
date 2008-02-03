@@ -39,7 +39,7 @@
 
 UINT32 uiContractTimeMode = 0;
 
-SOLDIERTYPE *pLeaveSoldier = NULL;
+static SOLDIERTYPE* pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
 extern BOOLEAN fPausedTimeDuringQuote;
