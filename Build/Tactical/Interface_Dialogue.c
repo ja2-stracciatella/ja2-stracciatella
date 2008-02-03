@@ -3194,22 +3194,18 @@ unlock:
 
 						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
 
-						// If we are elliot, we can't do unconocious guys....
-						if ( pSoldier->ubProfile == ELLIOT )
+						if (pTarget->bActive && pTarget->bInSector)
 						{
-							if ( pTarget->bActive && pTarget->bInSector && pTarget->bLife >= OKLIFE )
+							// If we are elliot, we can't do unconocious guys....
+							if (pSoldier->ubProfile == ELLIOT)
 							{
-								fGoodTarget = TRUE;
+								if (pTarget->bLife >= OKLIFE) fGoodTarget = TRUE;
+							}
+							else
+							{
+								if (pTarget->bLife != 0) fGoodTarget = TRUE;
 							}
 						}
-						else
-						{
-							if ( pTarget->bActive && pTarget->bInSector && pTarget->bLife != 0 )
-							{
-								fGoodTarget = TRUE;
-							}
-						}
-
 
 						if ( fGoodTarget )
 						{
