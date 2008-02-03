@@ -3069,7 +3069,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			SOLDIERTYPE* assister = pSoldier->previous_attacker;
 			if (assister == attacker) assister = pSoldier->next_to_previous_attacker;
 
-			if (assister != NULL && assister != attacker)
+			if (assister != NULL && assister->bActive && assister != attacker)
 			{
 				if (assister->bTeam == gbPlayerNum )
 				{

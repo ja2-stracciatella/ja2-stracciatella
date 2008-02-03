@@ -2823,7 +2823,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		if (assister == killer) assister = pSoldierOld->next_to_previous_attacker;
 
 		// if it was assisted by a player's merc
-		if (assister != NULL && assister->bTeam == gbPlayerNum)
+		if (assister != NULL && assister->bActive && assister->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE CLASS GAIN:  Earned an assist
 			StatChange(assister, EXPERAMT, 5 * pSoldierOld->bExpLevel, FALSE);
