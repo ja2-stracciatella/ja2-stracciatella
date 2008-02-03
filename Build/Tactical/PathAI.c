@@ -2120,7 +2120,6 @@ void ErasePath(char bEraseOldOne)
 
  //for (cnt=0; cnt < GRIDSIZE; cnt++)
  //    Grid[cnt].fstep = 0;
- //RemoveAllStructsOfTypeRange( gusEndPlotGridNo, GOODRING, GOODRING );
 
  giPlotCnt = 0;
  memset(guiPlottedPath,0,256*sizeof(UINT32));
