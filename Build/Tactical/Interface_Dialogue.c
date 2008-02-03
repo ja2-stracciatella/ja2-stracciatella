@@ -1,3 +1,4 @@
+#include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Font.h"
 #include "HImage.h"

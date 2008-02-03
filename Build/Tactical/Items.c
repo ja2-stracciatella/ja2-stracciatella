@@ -6,7 +6,6 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Handle_UI.h"
-#include "Animation_Control.h"
 #include "Points.h"
 #include "Sound_Control.h"
 #include "Isometric_Utils.h"

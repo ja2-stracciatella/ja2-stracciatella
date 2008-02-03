@@ -23,7 +23,6 @@
 #include "Text.h"
 #include "Explosion_Control.h"
 #include "Soldier_Create.h"
-#include "Animation_Control.h"
 #include "StrategicMap.h"
 #include "Interface_Control.h"
 #include "Campaign_Types.h"

@@ -22,7 +22,6 @@
 #include "Points.h"
 #include "Handle_UI.h"
 #include "OppList.h"
-#include "Animation_Control.h"
 #include "World_Items.h"
 #include "RenderWorld.h"
 #include "Radar_Screen.h"

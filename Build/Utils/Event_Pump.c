@@ -5,7 +5,6 @@
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Weapons.h"
-#include "Animation_Control.h"
 #include "OppList.h"
 #include "Debug.h"
 

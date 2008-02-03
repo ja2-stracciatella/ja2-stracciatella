@@ -6,7 +6,6 @@
 #include "math.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"
-#include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Render_Fun.h"
 #include "Render_Dirty.h"

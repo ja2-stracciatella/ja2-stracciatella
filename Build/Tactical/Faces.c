@@ -28,7 +28,6 @@
 #include "Squads.h"
 #include "Interface.h"
 #include "Quests.h"
-#include "Animation_Control.h"
 #include "Drugs_And_Alcohol.h"
 #include "Interface_Items.h"
 #include "Meanwhile.h"

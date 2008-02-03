@@ -9,7 +9,6 @@
 #include "Soldier_Add.h"
 #include "Strategic_Turns.h"
 #include "Animation_Data.h"
-#include "Animation_Control.h"
 #include "Tactical_Turns.h"
 #include "RT_Time_Defines.h"
 #include "Assignments.h"

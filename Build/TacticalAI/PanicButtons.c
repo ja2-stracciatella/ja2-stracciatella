@@ -1,5 +1,6 @@
 #include "AIInternals.h"
 #include "AI.h"
+#include "Animation_Control.h"
 #include "Isometric_Utils.h"
 #include "PathAI.h"
 #include "Items.h"

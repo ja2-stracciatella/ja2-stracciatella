@@ -14,7 +14,6 @@
 #include "VSurface.h"
 #include "Input.h"
 #include "Handle_UI.h"
-#include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "RenderWorld.h"
 #include "Cursors.h"

@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "Animation_Control.h"
 #include "OppList.h"
 #include "AIInternals.h"
 #include "LOS.h"

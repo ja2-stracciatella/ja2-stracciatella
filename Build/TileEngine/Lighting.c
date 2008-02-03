@@ -28,7 +28,6 @@
 #include "Edit_Sys.h"
 #include "Isometric_Utils.h"
 #include "Line.h"
-#include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"

@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "Animation_Control.h"
 #include "Isometric_Utils.h"
 #include "Weapons.h"
 #include "OppList.h"

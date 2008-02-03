@@ -1,5 +1,6 @@
 #include "AI.h"
 #include "AIInternals.h"
+#include "Animation_Control.h"
 #include "Isometric_Utils.h"
 #include "Overhead.h"
 #include "WorldMan.h"

@@ -15,7 +15,6 @@
 #include "Interface_Items.h"
 #include "World_Items.h"
 #include "Animation_Data.h"
-#include "Animation_Control.h"
 #include "Lighting.h"
 #include "EditorDefines.h"
 #include "EditorMercs.h"
