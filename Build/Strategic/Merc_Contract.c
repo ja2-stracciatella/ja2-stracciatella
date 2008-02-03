@@ -1132,51 +1132,6 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 }
 
 
-static BOOLEAN HandleFiredDeadMerc(SOLDIERTYPE* pSoldier)
-{
-	AddCharacterToDeadList( pSoldier );
-
-#if 0
-	//if the dead merc is in the current sector
-	if( pSoldier->sSectorX == gWorldSectorX &&
-			pSoldier->sSectorY == gWorldSectorY &&
-			pSoldier->bSectorZ == gbWorldSectorZ )
-	{
-		TurnSoldierIntoCorpse( pSoldier, FALSE, FALSE );
-	}
-	else
-	{
-		ROTTING_CORPSE_DEFINITION		Corpse;
-
-		// Setup some values!
-		Corpse.ubBodyType							= pSoldier->ubBodyType;
-		Corpse.sGridNo								= pSoldier->sInsertionGridNo;
-		Corpse.dXPos									= pSoldier->dXPos;
-		Corpse.dYPos									= pSoldier->dYPos;
-		Corpse.sHeightAdjustment			= pSoldier->sHeightAdjustment;
-
-		SET_PALETTEREP_ID ( Corpse.HeadPal,		pSoldier->HeadPal );
-		SET_PALETTEREP_ID ( Corpse.VestPal,		pSoldier->VestPal );
-		SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
-		SET_PALETTEREP_ID ( Corpse.PantsPal,   pSoldier->PantsPal );
-
-		Corpse.bDirection	= pSoldier->bDirection;
-
-		// Set time of death
-		Corpse.uiTimeOfDeath = GetWorldTotalMin( );
-
-		// Set type
-		Corpse.ubType	= (UINT8)gubAnimSurfaceCorpseID[ pSoldier->ubBodyType][ pSoldier->usAnimState ];
-
-		//Add the rotting corpse info to the sectors unloaded rotting corpse file
-		AddRottingCorpseToUnloadedSectorsRottingCorpseFile( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, &Corpse);
-	}
-#endif
-
-	return( TRUE );
-}
-
-
 static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 {
 	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
