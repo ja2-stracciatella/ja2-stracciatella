@@ -34,14 +34,6 @@ BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 //UINT16 gusEndPlotGridNo;
 
 
-UINT8		ubFromMapDirToInsertionCode[ ] =
-{
-	INSERTION_CODE_SOUTH,			//NORTH_STRATEGIC_MOVE
-	INSERTION_CODE_WEST,			//EAST_STRATEGIC_MOVE
-	INSERTION_CODE_NORTH,			//SOUTH_STRATEGIC_MOVE
-	INSERTION_CODE_EAST				//WEST_STRATEGIC_MOVE
-};
-
 // Globals
 struct path_s
 {
@@ -648,49 +640,6 @@ static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNum)
 	 pPath = pHeadOfList;
 	 return TRUE;
 }
-
-
-
-/*
-BOOLEAN CanThisMercMoveToThisSector( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY )
-{
-	// this fucntion will return if this merc ( pSoldier ), can move to sector sX, sY
-  BOOLEAN fOkToMoveFlag = FALSE;
-
-
-	return fOkToMoveFlag;
-}
-
-
-
-void SetThisMercsSectorXYToTheseValues( SOLDIERTYPE *pSoldier ,INT16 sX, INT16 sY, UINT8 ubFromDirection )
-{
-  // will move a merc ( pSoldier )to a sector sX, sY
-
-	// Ok, update soldier control pointer values
-	pSoldier->sSectorX = sX;
-	pSoldier->sSectorY = sY;
-
-	// Set insertion code....
-	pSoldier->ubStrategicInsertionCode = ubFromMapDirToInsertionCode[ ubFromDirection ];
-
-	// Are we the same as our current sector
-	if ( gWorldSectorX == sX && gWorldSectorY == sY && !gbWorldSectorZ )
-	{
-		// Add this poor bastard!
-		UpdateMercInSector( pSoldier, sX, sY, 0 );
-	}
-	// Were we in sector?
-	else if ( pSoldier->bInSector )
-	{
-		RemoveSoldierFromTacticalSector( pSoldier, TRUE );
-
-		// Remove from tactical team UI
-		RemovePlayerFromTeamSlot(pSoldier);
-	}
-}
-*/
-
 
 
 PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList)
