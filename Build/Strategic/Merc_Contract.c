@@ -44,7 +44,6 @@ static SOLDIERTYPE* pLeaveSoldier = NULL;
 BOOLEAN	fEnterMapDueToContract = FALSE;
 extern BOOLEAN fPausedTimeDuringQuote;
 UINT8 ubQuitType = 0;
-BOOLEAN gfFirstMercSayQuote  = FALSE;
 
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
@@ -1228,8 +1227,6 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 {
 	// find out is something was said
 	UINT8				ubNumMercs = 0;
-
-	gfFirstMercSayQuote = FALSE;
 
 	// run through list of grunts whoose contract are up in the next 2 hours
 	// ATE: AND - build list THEN choose one!

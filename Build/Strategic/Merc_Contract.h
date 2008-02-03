@@ -77,6 +77,5 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile );
 extern BOOLEAN	fEnterMapDueToContract;
 extern SOLDIERTYPE *pContractReHireSoldier;
 extern UINT8 ubQuitType;
-extern BOOLEAN gfFirstMercSayQuote;
 
 #endif
