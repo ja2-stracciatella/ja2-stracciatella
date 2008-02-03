@@ -216,7 +216,6 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	s->bActionPoints        = CalcActionPoints(s);
 	s->bInitialActionPoints = s->bActionPoints;
 	s->bSide                = gTacticalStatus.Team[s->bTeam].bSide;
-	s->bActive              = TRUE;
 	s->sSectorX             = pCreateStruct->sSectorX;
 	s->sSectorY             = pCreateStruct->sSectorY;
 	s->bSectorZ             = pCreateStruct->bSectorZ;
