@@ -1,3 +1,4 @@
+#include "Animation_Data.h"
 #include "HImage.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"

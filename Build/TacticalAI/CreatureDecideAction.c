@@ -1,3 +1,4 @@
+#include "Animation_Data.h"
 #include "Isometric_Utils.h"
 #include "Types.h"
 #include "Soldier_Control.h"

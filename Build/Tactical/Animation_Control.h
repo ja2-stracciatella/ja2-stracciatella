@@ -2,7 +2,6 @@
 #define __ANIMATION_CONTROL_H
 
 // Header file for merc animation control
-#include "Animation_Data.h"
 #include "JA2Types.h"
 
 
@@ -530,17 +529,17 @@ enum
 UINT16						gusAnimInst[ MAX_ANIMATIONS ][ MAX_FRAMES_PER_ANIM ];
 const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES];
 
-const ANI_SPEED_DEF gubAnimWalkSpeeds[TOTALBODYTYPES];
-const ANI_SPEED_DEF gubAnimRunSpeeds[TOTALBODYTYPES];
-const ANI_SPEED_DEF gubAnimSwatSpeeds[TOTALBODYTYPES];
-ANI_SPEED_DEF gubAnimCrawlSpeeds[TOTALBODYTYPES]; // XXX TODO0011 only declared
+extern const ANI_SPEED_DEF gubAnimWalkSpeeds[];
+extern const ANI_SPEED_DEF gubAnimRunSpeeds[];
+extern const ANI_SPEED_DEF gubAnimSwatSpeeds[];
+extern const ANI_SPEED_DEF gubAnimCrawlSpeeds[];
 
 
 // OK, this array contains definitions for random animations based on bodytype, total # allowed, and what is in their hand....
-RANDOM_ANI_DEF	gRandomAnimDefs[ TOTALBODYTYPES ][ MAX_RANDOM_ANIMS_PER_BODYTYPE ];
+extern RANDOM_ANI_DEF gRandomAnimDefs[][MAX_RANDOM_ANIMS_PER_BODYTYPE];
 
 // Corpse Defines
-extern UINT16 gubAnimSurfaceCorpseID[ TOTALBODYTYPES ][ NUMANIMATIONSTATES ];
+extern UINT16 gubAnimSurfaceCorpseID[][NUMANIMATIONSTATES];
 
 
 BOOLEAN LoadAnimationStateInstructions(void);

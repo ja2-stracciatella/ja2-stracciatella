@@ -11,6 +11,7 @@
  */
 
 #include "AIList.h"
+#include "Animation_Data.h"
 #include "Overhead.h"
 #include "Debug.h"
 #include "AIInternals.h"

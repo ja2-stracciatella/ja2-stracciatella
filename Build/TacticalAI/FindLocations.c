@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "Animation_Data.h"
 #include "Isometric_Utils.h"
 #include "AI.h"
 #include "AIInternals.h"

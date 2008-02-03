@@ -1,3 +1,4 @@
+#include "Animation_Data.h"
 #include "Cursors.h"
 #include "Font_Control.h"
 #include "HImage.h"
