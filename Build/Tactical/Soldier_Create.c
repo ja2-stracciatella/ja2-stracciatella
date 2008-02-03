@@ -1106,9 +1106,9 @@ BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehi
 }
 
 
-BOOLEAN TacticalRemoveSoldier(SOLDIERTYPE* const s)
+void TacticalRemoveSoldier(SOLDIERTYPE* const s)
 {
-	return InternalTacticalRemoveSoldier(s, TRUE);
+	InternalTacticalRemoveSoldier(s, TRUE);
 }
 
 
