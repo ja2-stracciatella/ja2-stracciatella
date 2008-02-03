@@ -4187,7 +4187,7 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 	INT8										bSlot;
 	BOOLEAN									fDone = FALSE;
 
-	if ( pTeamSoldier->bLife >= OKLIFE && pTeamSoldier->bActive )
+	if (pTeamSoldier->bLife >= OKLIFE)
 	{
 		// Check for different events!
 		// FOR DOING AID
