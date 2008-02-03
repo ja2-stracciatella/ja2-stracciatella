@@ -1033,13 +1033,13 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, const BOOLEAN fRemoveVehicle)
+void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, const BOOLEAN fRemoveVehicle)
 {
 	if (GetSelectedMan() == s) SetSelectedMan(NULL);
 	if (gUIFullTarget    == s) gUIFullTarget   = NULL;
 	if (gpSMCurrentMerc  == s) gpSMCurrentMerc = NULL;
 
-	return TacticalRemoveSoldierPointer(s, fRemoveVehicle);
+	TacticalRemoveSoldierPointer(s, fRemoveVehicle);
 }
 
 BOOLEAN TacticalRemoveSoldierPointer( SOLDIERTYPE *pSoldier, BOOLEAN fRemoveVehicle )
