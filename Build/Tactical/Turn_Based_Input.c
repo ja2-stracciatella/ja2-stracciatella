@@ -3462,18 +3462,13 @@ static void SetBurstMode(void)
 
 static void ObliterateSector(void)
 {
-	INT32 cnt;
-
-	// Kill everybody!
-	cnt = gTacticalStatus.Team[ gbPlayerNum ].bLastID + 1;
-
 	#ifdef JA2BETAVERSION
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!" );
 	#endif
 
-	for (SOLDIERTYPE* pTSoldier = GetMan(cnt); cnt < MAX_NUM_SOLDIERS; pTSoldier++, cnt++)
+	FOR_ALL_NON_PLAYER_SOLDIERS(pTSoldier)
 	{
-		if ( pTSoldier->bActive && !pTSoldier->bNeutral && (pTSoldier->bSide != gbPlayerNum ) )
+		if (!pTSoldier->bNeutral && pTSoldier->bSide != gbPlayerNum)
 		{
 				//	ANITILE_PARAMS	AniParams;
 			//		memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
