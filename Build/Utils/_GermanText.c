@@ -607,7 +607,7 @@ const wchar_t *pPersonnelScreenStrings[] =
 	L"Einsätze", // number of battles fought
 	L"Verwundungen", // number of times merc has been wounded
 	L"Fähigkeiten:",
-	L"Keine Fähigkeiten:",
+	L"Keine Fähigkeiten"
 };
 
 
