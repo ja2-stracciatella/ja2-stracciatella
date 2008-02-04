@@ -29,7 +29,8 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
-#if defined _DEBUG
+#if defined JA2BETAVERSION && defined _DEBUG
+#	include "Soldier_Profile.h"
 #	include "Strategic.h"
 #endif
 
@@ -843,300 +844,260 @@ static void Print8CharacterOnlyString(void)
 
 static BOOLEAN CheckCharacterInputForEgg(void)
 {
-#ifndef JA2BETAVERSION
-	return( FALSE );
-#else
-#ifndef _DEBUG
-	return( FALSE );
-#else
-	if( ( wcscmp( pFullNameString, L"retraC kraM") == 0 ) && ( wcscmp( pNickNameString, L"BdyCnt") ) )
+#if defined JA2BETAVERSION && defined _DEBUG
+	if (wcscmp(pFullNameString, L"retraC kraM") == 0 && wcscmp(pNickNameString, L"BdyCnt"))
 	{
-		wcscpy( pFullNameString, L"Mark Carter");
-		wcscpy( pNickNameString, L"BodyCount");
-    bGenderFlag = IMP_MALE;
-		iHealth = 99;
-		iAgility = 99;
-		iStrength = 99;
-		iDexterity = 99;
-		iWisdom = 35;
-		iLeadership = 35;
-    iMarksmanship = 99;
-    iMechanical = 0;
-		iExplosives = 99;
-		iMedical = 0;
-		iSkillA = AMBIDEXT;
-		iSkillB = AUTO_WEAPS;
-    iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_ASSHOLE;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Mark Carter");
+		wcscpy(pNickNameString, L"BodyCount");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 99;
+		iAgility                = 99;
+		iStrength               = 99;
+		iDexterity              = 99;
+		iWisdom                 = 35;
+		iLeadership             = 35;
+		iMarksmanship           = 99;
+		iMechanical             =  0;
+		iExplosives             = 99;
+		iMedical                =  0;
+		iSkillA                 = AMBIDEXT;
+		iSkillB                 = AUTO_WEAPS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_ASSHOLE;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 2;
-	  return TRUE;
+		iPortraitNumber         = 2;
 	}
-	else if ( ( wcscmp( pFullNameString, L"hcnerF evaD") == 0)&&( wcscmp( pNickNameString, L"Feral") == 0))
+	else if (wcscmp(pFullNameString, L"hcnerF evaD") == 0 && wcscmp(pNickNameString, L"Feral") == 0)
 	{
-    wcscpy( pFullNameString, L"Dave French");
-		wcscpy( pNickNameString, L"Feral");
-    bGenderFlag = IMP_MALE;
-		iHealth = 90;
-		iAgility = 95;
-		iStrength = 90;
-		iDexterity = 95;
-		iWisdom = 60;
-		iLeadership = 60;
-    iMarksmanship = 89;
-    iMechanical = 40;
-		iExplosives = 25;
-		iMedical = 60;
-		iSkillA = MARTIALARTS;
-		iSkillB = AUTO_WEAPS;
-    iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_FRIENDLY;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Dave French");
+		wcscpy(pNickNameString, L"Feral");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 90;
+		iAgility                = 95;
+		iStrength               = 90;
+		iDexterity              = 95;
+		iWisdom                 = 60;
+		iLeadership             = 60;
+		iMarksmanship           = 89;
+		iMechanical             = 40;
+		iExplosives             = 25;
+		iMedical                = 60;
+		iSkillA                 = MARTIALARTS;
+		iSkillB                 = AUTO_WEAPS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_FRIENDLY;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 1;
-	  return TRUE;
+		iPortraitNumber         = 1;
 	}
-	else if ( ( wcscmp( pFullNameString, L"Marnes") == 0)&&( wcscmp( pNickNameString, L"Marnes") == 0))
+	else if (wcscmp(pFullNameString, L"Marnes") == 0 && wcscmp(pNickNameString, L"Marnes") == 0)
 	{
-    wcscpy( pFullNameString, L"Kris Marnes");
-		wcscpy( pNickNameString, L"Marnes");
-    bGenderFlag = IMP_MALE;
-		iHealth = 100;
-		iAgility = 100;
-		iStrength = 100;
-		iDexterity = 100;
-		iWisdom = 100;
-		iLeadership = 100;
-    iMarksmanship = 100;
-    iMechanical = 100;
-		iExplosives = 100;
-		iMedical = 100;
-		iSkillA = MARTIALARTS;
-		iSkillB = AUTO_WEAPS;
-    iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_FRIENDLY;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Kris Marnes");
+		wcscpy(pNickNameString, L"Marnes");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 100;
+		iAgility                = 100;
+		iStrength               = 100;
+		iDexterity              = 100;
+		iWisdom                 = 100;
+		iLeadership             = 100;
+		iMarksmanship           = 100;
+		iMechanical             = 100;
+		iExplosives             = 100;
+		iMedical                = 100;
+		iSkillA                 = MARTIALARTS;
+		iSkillB                 = AUTO_WEAPS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_FRIENDLY;
 		LaptopSaveInfo.iVoiceId = 2;
-		iPortraitNumber = 1;
-	  return TRUE;
+		iPortraitNumber         = 1;
 	}
-	else if( ( wcscmp( pFullNameString, L"neslO namroN") == 0 ) && ( wcscmp( pNickNameString, L"N.R.G") == 0) )
+	else if (wcscmp(pFullNameString, L"neslO namroN") == 0 && wcscmp(pNickNameString, L"N.R.G") == 0)
 	{
-		wcscpy( pFullNameString, L"Norman Olsen");
-		wcscpy( pNickNameString, L"N.R.G");
-    bGenderFlag = IMP_MALE;
-		iHealth = 99;
-		iAgility = 99;
-		iStrength = 99;
-		iDexterity = 90;
-		iWisdom = 70;
-		iLeadership = 35;
-
-		iMarksmanship = 70;
-    iMechanical = 65;
-		iExplosives = 99;
-		iMedical = 75;
-
-		iSkillA = STEALTHY;
-		iSkillB = MARTIALARTS;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_AGGRESSIVE;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Norman Olsen");
+		wcscpy(pNickNameString, L"N.R.G");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 99;
+		iAgility                = 99;
+		iStrength               = 99;
+		iDexterity              = 90;
+		iWisdom                 = 70;
+		iLeadership             = 35;
+		iMarksmanship           = 70;
+		iMechanical             = 65;
+		iExplosives             = 99;
+		iMedical                = 75;
+		iSkillA                 = STEALTHY;
+		iSkillB                 = MARTIALARTS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_AGGRESSIVE;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 4;
-	  return TRUE;
+		iPortraitNumber         = 4;
 	}
-		else if( ( wcscmp( pFullNameString, L"snommE werdnA") == 0 ) && ( wcscmp( pNickNameString, L"Bubba") == 0) )
+	else if (wcscmp(pFullNameString, L"snommE werdnA") == 0 && wcscmp(pNickNameString, L"Bubba") == 0)
 	{
-		wcscpy( pFullNameString, L"Andrew Emmons");
-		wcscpy( pNickNameString, L"Bubba");
-    bGenderFlag =IMP_MALE;
-		iHealth = 97;
-		iAgility = 98;
-		iStrength = 80;
-		iDexterity = 80;
-		iWisdom = 99;
-		iLeadership = 99;
-
-		iMarksmanship = 99;
-    iMechanical = 0;
-		iExplosives = 0;
-		iMedical = 99;
-
-		iSkillA = AUTO_WEAPS;
-		iSkillB = AMBIDEXT;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_ARROGANT;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Andrew Emmons");
+		wcscpy(pNickNameString, L"Bubba");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 97;
+		iAgility                = 98;
+		iStrength               = 80;
+		iDexterity              = 80;
+		iWisdom                 = 99;
+		iLeadership             = 99;
+		iMarksmanship           = 99;
+		iMechanical             =  0;
+		iExplosives             =  0;
+		iMedical                = 99;
+		iSkillA                 = AUTO_WEAPS;
+		iSkillB                 = AMBIDEXT;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_ARROGANT;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 2;
-	  return TRUE;
+		iPortraitNumber         = 2;
 	}
-	else if( ( wcscmp( pFullNameString, L"nalehW yeoJ") == 0 ) && ( wcscmp( pNickNameString, L"Joeker") == 0) )
+	else if (wcscmp(pFullNameString, L"nalehW yeoJ") == 0 && wcscmp(pNickNameString, L"Joeker") == 0)
 	{
-		wcscpy( pFullNameString, L"Joey Whelan");
-		wcscpy( pNickNameString, L"Joeker");
-    bGenderFlag = 0;
-		iHealth = 99;
-		iAgility = 99;
-		iStrength = 99;
-		iDexterity = 99;
-		iWisdom = 70;
-		iLeadership = 80;
-
-		iMarksmanship = 99;
-    iMechanical = 35;
-		iExplosives = 99;
-		iMedical = 35;
-
-		iSkillA = AUTO_WEAPS;
-		iSkillB = MARTIALARTS;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_AGGRESSIVE;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Joey Whelan");
+		wcscpy(pNickNameString, L"Joeker");
+		bGenderFlag             =  0;
+		iHealth                 = 99;
+		iAgility                = 99;
+		iStrength               = 99;
+		iDexterity              = 99;
+		iWisdom                 = 70;
+		iLeadership             = 80;
+		iMarksmanship           = 99;
+		iMechanical             = 35;
+		iExplosives             = 99;
+		iMedical                = 35;
+		iSkillA                 = AUTO_WEAPS;
+		iSkillB                 = MARTIALARTS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_AGGRESSIVE;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 4;
-	  return TRUE;
+		iPortraitNumber         = 4;
 	}
-	else if( ( wcscmp( pFullNameString, L"gnehC cirE") == 0 ) && ( wcscmp( pNickNameString, L"BlakAddr") == 0) )
+	else if (wcscmp(pFullNameString, L"gnehC cirE") == 0 && wcscmp(pNickNameString, L"BlakAddr") == 0)
 	{
-		wcscpy( pFullNameString, L"Eric Cheng");
-		wcscpy( pNickNameString, L"BlakAddr");
-    bGenderFlag = IMP_MALE;
-		iHealth = 99;
-		iAgility = 99;
-		iStrength = 99;
-		iDexterity = 99;
-		iWisdom = 99;
-		iLeadership = 70;
-
-		iMarksmanship = 99;
-    iMechanical = 50;
-		iExplosives = 99;
-		iMedical = 0;
-
-		iSkillA = AUTO_WEAPS;
-		iSkillB = MARTIALARTS;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_LONER;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Eric Cheng");
+		wcscpy(pNickNameString, L"BlakAddr");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 99;
+		iAgility                = 99;
+		iStrength               = 99;
+		iDexterity              = 99;
+		iWisdom                 = 99;
+		iLeadership             = 70;
+		iMarksmanship           = 99;
+		iMechanical             = 50;
+		iExplosives             = 99;
+		iMedical                =  0;
+		iSkillA                 = AUTO_WEAPS;
+		iSkillB                 = MARTIALARTS;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_LONER;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 3;
-	  return TRUE;
+		iPortraitNumber         = 3;
 	}
-	else if( ( wcscmp( pFullNameString, L"Karters Killer Kru") == 0 ) && ( wcscmp( pNickNameString, L"Bitchin") == 0) )
+	else if (wcscmp(pFullNameString, L"Karters Killer Kru") == 0 && wcscmp(pNickNameString, L"Bitchin") == 0)
 	{
-		wcscpy( pFullNameString, L"Mark Carter");
-		wcscpy( pNickNameString, L"BodyCount");
-    bGenderFlag = IMP_MALE;
-		iHealth = 99;
-		iAgility = 99;
-		iStrength = 99;
-		iDexterity = 99;
-		iWisdom = 35;
-		iLeadership = 35;
-    iMarksmanship = 99;
-    iMechanical = 0;
-		iExplosives = 99;
-		iMedical = 0;
-		iSkillA = AMBIDEXT;
-		iSkillB = AUTO_WEAPS;
-    iPersonality = PSYCHO;
-		iAttitude = ATT_ASSHOLE;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Mark Carter");
+		wcscpy(pNickNameString, L"BodyCount");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 99;
+		iAgility                = 99;
+		iStrength               = 99;
+		iDexterity              = 99;
+		iWisdom                 = 35;
+		iLeadership             = 35;
+		iMarksmanship           = 99;
+		iMechanical             =  0;
+		iExplosives             = 99;
+		iMedical                =  0;
+		iSkillA                 = AMBIDEXT;
+		iSkillB                 = AUTO_WEAPS;
+		iPersonality            = PSYCHO;
+		iAttitude               = ATT_ASSHOLE;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 2;
+		iPortraitNumber         = 2;
 
-		//DEF: temp
 		MERC_HIRE_STRUCT HireMercStruct;
-		HireMercStruct.sSectorX = gsMercArriveSectorX;
-		HireMercStruct.sSectorY = gsMercArriveSectorY;
-		HireMercStruct.bSectorZ = 0;
+		HireMercStruct.sSectorX                  = gsMercArriveSectorX;
+		HireMercStruct.sSectorY                  = gsMercArriveSectorY;
+		HireMercStruct.bSectorZ                  = 0;
 		HireMercStruct.fUseLandingZoneForArrival = TRUE;
-		HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
-		HireMercStruct.fCopyProfileItemsOver = TRUE;
-		HireMercStruct.iTotalContractLength = 365;
-		//specify when the merc should arrive
-		HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );
+		HireMercStruct.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
+		HireMercStruct.fCopyProfileItemsOver     = TRUE;
+		HireMercStruct.iTotalContractLength      = 365;
+		HireMercStruct.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 
-		HireMercStruct.ubProfileID = 12;
-		HireMerc( &HireMercStruct );
+		HireMercStruct.ubProfileID = REAPER;
+		HireMerc(&HireMercStruct);
 
-		HireMercStruct.ubProfileID = 10;
-		HireMerc( &HireMercStruct );
+		HireMercStruct.ubProfileID = SHADOW;
+		HireMerc(&HireMercStruct);
 
-		HireMercStruct.ubProfileID = 25;
-		HireMerc( &HireMercStruct );
+		HireMercStruct.ubProfileID = RAVEN;
+		HireMerc(&HireMercStruct);
 
-		HireMercStruct.ubProfileID = 2;
-		HireMerc( &HireMercStruct );
+		HireMercStruct.ubProfileID = LYNX;
+		HireMerc(&HireMercStruct);
 
-		HireMercStruct.ubProfileID = 20;
-		HireMerc( &HireMercStruct );
-
-	  return TRUE;
+		HireMercStruct.ubProfileID = CLIFF;
+		HireMerc(&HireMercStruct);
 	}
-	else if( ( wcscmp( pFullNameString, L"dleifmaC sirhC") == 0 ) && ( wcscmp( pNickNameString, L"SSR") == 0) )
+	else if (wcscmp(pFullNameString, L"dleifmaC sirhC") == 0 && wcscmp(pNickNameString, L"SSR") == 0)
 	{
-		wcscpy( pFullNameString, L"James Bolivar DiGriz");
-		wcscpy( pNickNameString, L"DiGriz");
-    bGenderFlag = IMP_MALE;
-		iHealth = 99;
-		iAgility = 80;
-		iStrength = 80;
-		iDexterity = 99;
-		iWisdom = 70;
-		iLeadership = 70;
-
-		iMarksmanship = 99;
-    iMechanical = 99;
-		iExplosives = 99;
-		iMedical = 60;
-
-		iSkillA = ELECTRONICS;
-		iSkillB = LOCKPICKING;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_LONER;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"James Bolivar DiGriz");
+		wcscpy(pNickNameString, L"DiGriz");
+		bGenderFlag             = IMP_MALE;
+		iHealth                 = 99;
+		iAgility                = 80;
+		iStrength               = 80;
+		iDexterity              = 99;
+		iWisdom                 = 70;
+		iLeadership             = 70;
+		iMarksmanship           = 99;
+		iMechanical             = 99;
+		iExplosives             = 99;
+		iMedical                = 60;
+		iSkillA                 = ELECTRONICS;
+		iSkillB                 = LOCKPICKING;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_LONER;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 3;
-	  return TRUE;
+		iPortraitNumber         = 3;
 	}
-	#endif
-	#endif
-	if( ( wcscmp( pFullNameString, L"Test Female") == 0 ) && ( wcscmp( pNickNameString, L"Test") == 0) )
+	else if (wcscmp(pFullNameString, L"Test Female") == 0 && wcscmp(pNickNameString, L"Test") == 0)
 	{
-		wcscpy( pFullNameString, L"Test Female");
-		wcscpy( pNickNameString, L"Test");
-    bGenderFlag = IMP_FEMALE;
-		iHealth = 55;
-		iAgility = 55;
-		iStrength = 55;
-		iDexterity = 55;
-		iWisdom = 55;
-		iLeadership = 55;
-
-		iMarksmanship = 55;
-    iMechanical = 55;
-		iExplosives = 55;
-		iMedical = 55;
-
-		iSkillA = 0;
-		iSkillB = 0;
-
-		iPersonality = NO_PERSONALITYTRAIT;
-		iAttitude = ATT_LONER;
-		iCurrentImpPage = IMP_FINISH;
+		wcscpy(pFullNameString, L"Test Female");
+		wcscpy(pNickNameString, L"Test");
+		bGenderFlag             = IMP_FEMALE;
+		iHealth                 = 55;
+		iAgility                = 55;
+		iStrength               = 55;
+		iDexterity              = 55;
+		iWisdom                 = 55;
+		iLeadership             = 55;
+		iMarksmanship           = 55;
+		iMechanical             = 55;
+		iExplosives             = 55;
+		iMedical                = 55;
+		iSkillA                 = NO_SKILLTRAIT;
+		iSkillB                 = NO_SKILLTRAIT;
+		iPersonality            = NO_PERSONALITYTRAIT;
+		iAttitude               = ATT_LONER;
 		LaptopSaveInfo.iVoiceId = 1;
-		iPortraitNumber = 5;
-		return (TRUE );
+		iPortraitNumber         = 5;
 	}
+	else
+	{
+		return FALSE;
+	}
+
+	iCurrentImpPage = IMP_FINISH;
+	return TRUE;
+#else
 	return FALSE;
-
+#endif
 }

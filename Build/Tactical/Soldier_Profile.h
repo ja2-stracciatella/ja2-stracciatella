@@ -44,6 +44,8 @@ enum
 	BUNS    = 17,
 	ICE     = 18,
 	SPIDER  = 19,
+	CLIFF   = 20,
+	RAVEN   = 25,
 	MAGIC   = 29,
 	DR_Q    = 33,
 	NAILS   = 34,
