@@ -961,7 +961,6 @@ const wchar_t gWeaponStatsDesc[][ 14 ] =
 	L"Afst:",		// Range
 	L"Sch:",		// Damage
 	L"AP:",			// abbreviation for Action Points
-	L"",
 	L"=",
 	L"=",
 };

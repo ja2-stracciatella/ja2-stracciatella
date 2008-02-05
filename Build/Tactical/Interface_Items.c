@@ -2765,14 +2765,14 @@ void RenderItemDescriptionBox(void)
 		mprintf(dx + ids[4].sX, dy + ids[4].sY, L"%ls", gWeaponStatsDesc[5]); // APs
 		if (item->usItemClass & IC_GUN)
 		{
-			mprintf(dx + ids[6].sX, dy + ids[6].sY, L"%ls", gWeaponStatsDesc[7]); // = (sic)
+			mprintf(dx + ids[6].sX, dy + ids[6].sY, L"%ls", gWeaponStatsDesc[6]); // = (sic)
 		}
 		mprintf(dx + ids[1].sX, dy + ids[1].sY, L"%ls", gWeaponStatsDesc[1]); // status
 
 		const WEAPONTYPE* const w = &Weapon[obj->usItem];
 		if (w->ubShotsPerBurst > 0)
 		{
-			mprintf(dx + ids[7].sX, dy + ids[7].sY, L"%ls", gWeaponStatsDesc[8]); // = (sic)
+			mprintf(dx + ids[7].sX, dy + ids[7].sY, L"%ls", gWeaponStatsDesc[7]); // = (sic)
 		}
 
 		//Status
