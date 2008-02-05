@@ -3027,7 +3027,6 @@ const wchar_t* pMilitiaConfirmStrings[] =
 	L"Doorgaan met militie trainen %ls (%ls %d)?", // continue training this town?
 	L"Kosten $", // the cost in dollars to train militia
 	L"( J/N )",   // abbreviated yes/no
-	L"",	// unused
 	L"Stadsmilities trainen in %d sectors kost $ %d. %ls", // cost to train sveral sectors at once
 	L"Je kunt de $%d niet betalen om de stadsmilitie hier te trainen.",
 	L"%ls heeft een loyaliteit nodig van %d procent om door te gaan met milities trainen.",

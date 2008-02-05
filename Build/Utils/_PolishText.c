@@ -3012,7 +3012,6 @@ const wchar_t* pMilitiaConfirmStrings[] =
 	L"Kontynuować szkolenie samoobrony w - %ls (%ls %d)?", // continue training this town?
 	L"Koszt $", // the cost in dollars to train militia
 	L"( T/N )",   // abbreviated yes/no
-	L"",	// unused
 	L"Szkolenie samoobrony w %d sektorach będzie kosztowało $ %d. %ls", // cost to train sveral sectors at once
 	L"Nie masz %d$, aby wyszkolić samoobronę w tym mieście.",
 	L"%ls musi mieć %d% lojalności, aby można było kontynuować szkolenie samoobrony.",
