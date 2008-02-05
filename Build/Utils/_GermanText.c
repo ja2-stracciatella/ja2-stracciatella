@@ -176,8 +176,6 @@ const wchar_t* const TeamTurnString[] =
 
 const wchar_t* const Message[] =
 {
-	L"",
-
 	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
 
 	L"%ls am Kopf getroffen, verliert einen Weisheitspunkt!",
@@ -190,10 +188,6 @@ const wchar_t* const Message[] =
 	L"%ls an den Beinen getroffen, verliert %d Beweglichkeitspunkte!",
 	L"Unterbrechung!",
 
-	// The first %s is a merc's name, the second is a string from pNoiseVolStr,
-	// the third is a string from pNoiseTypeStr, and the last is a string from pDirectionStr
-
-	L"", //obsolete
 	L"Verstärkung ist angekommen!",
 
 	// In the following four lines, all %s's are merc names
