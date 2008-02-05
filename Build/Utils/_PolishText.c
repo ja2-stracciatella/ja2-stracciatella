@@ -1278,8 +1278,6 @@ const wchar_t* pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Wszyscy twoi najemnicy muszą być w pobliżu,\naby oddział mógł się przemieszczać.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Jeśli zaznaczysz tę opcję, %ls będzie podróżować w pojedynkę\ni automatycznie znajdzie się w osobnym oddziale.",
 

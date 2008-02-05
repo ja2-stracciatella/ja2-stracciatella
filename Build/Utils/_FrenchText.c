@@ -1279,8 +1279,6 @@ const wchar_t* pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Tous vos mercenaires doivent être dans les environs\npour que l'escouade avance.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Si vous cochez ce bouton, %ls voyagera seul et sera\nautomatiquement assigné à une nouvelle escouade.",
 

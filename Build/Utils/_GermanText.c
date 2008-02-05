@@ -1250,8 +1250,6 @@ const wchar_t *pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Alle Söldner müssen in der Nähe sein\ndamit der Trupp weiterreisen kann.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement. Explains what will happen (splitting the squad)
 	L"Bei aktiviertem Kästchen reist %ls alleine und\nbildet automatisch wieder einen Trupp.",
 

@@ -1278,8 +1278,6 @@ const wchar_t* pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Для перемещения отряда\nвсе ваши наемники дожны быть рядом.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Если выбрана эта опция, %ls пойдет в одиночку и\nавтоматически попадет в отдельный отряд.",
 

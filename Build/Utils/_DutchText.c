@@ -1293,8 +1293,6 @@ const wchar_t* pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Al je huurlingen moeten in de buurt zijn om het team te laten reizen.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Als aangekruist, dan zal %ls alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
 

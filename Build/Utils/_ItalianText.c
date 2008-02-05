@@ -1279,8 +1279,6 @@ const wchar_t* pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"Tutti i vostri personaggi devono trovarsi nei paraggi\nin modo da permettere alla squadra di attraversare.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"Se selezionato, %ls viaggerà da solo, e\nautomaticamente verrà riassegnato a un'unica squadra.",
 

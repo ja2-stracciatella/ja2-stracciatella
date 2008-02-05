@@ -1279,8 +1279,6 @@ const wchar_t *pExitingSectorHelpText[] =
 	//and this helptext explains why.
 	L"All of your mercs must be in the vicinity\nin order to allow the squad to traverse.",
 
-	L"", //UNUSED
-
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
 	L"If checked, %ls will travel alone, and\nautomatically get reassigned to a unique squad.",
 
