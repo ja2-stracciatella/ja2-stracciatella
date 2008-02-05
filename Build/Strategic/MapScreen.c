@@ -9674,7 +9674,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 			 ( GetNumberOfPassengersInHelicopter() == 0 ) &&
 			 ( PlayerMercsInHelicopterSector() > 0 ) )
 		{
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, pSkyriderText[ 6 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pSkyriderText[4], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 			gfSkyriderEmptyHelpGiven = TRUE;
 			return( FALSE );
 		}
@@ -9728,7 +9728,6 @@ static void ExplainWhySkyriderCantFly(void)
 	if ( CanHelicopterTakeOff() == FALSE )
 	{
 		SkyRiderTalk( CHOPPER_NOT_ACCESSIBLE );
-//		DoMapMessageBox( MSG_BOX_BASIC_STYLE, pSkyriderText[ 4 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 		return;
 	}
 

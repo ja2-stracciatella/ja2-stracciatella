@@ -859,7 +859,7 @@ void UpdateRefuelSiteAvailability( void )
 					  ( pVehicleList[ iHelicopterVehicleId ].sSectorY == ubRefuelList[ iCounter ][ 1 ]) )
 				{
 					// no longer grounded
-					DoScreenIndependantMessageBox( pSkyriderText[ 5 ], MSG_BOX_FLAG_OK, NULL );
+					DoScreenIndependantMessageBox(pSkyriderText[3], MSG_BOX_FLAG_OK, NULL);
 				}
 			}
 		}
