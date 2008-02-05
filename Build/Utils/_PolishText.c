@@ -946,8 +946,7 @@ const wchar_t gWeaponStatsDesc[][ 14 ] =
 	L"Zas.:",		// Range
 	L"Siła:",		// Damage
     L"PA:",                 // abbreviation for Action Points
-	L"=",
-	L"=",
+	L"="
 };
 
 //The headers used for the merc's money.

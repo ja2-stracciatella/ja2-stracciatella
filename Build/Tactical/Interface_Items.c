@@ -2772,7 +2772,7 @@ void RenderItemDescriptionBox(void)
 		const WEAPONTYPE* const w = &Weapon[obj->usItem];
 		if (w->ubShotsPerBurst > 0)
 		{
-			mprintf(dx + ids[7].sX, dy + ids[7].sY, L"%ls", gWeaponStatsDesc[7]); // = (sic)
+			mprintf(dx + ids[7].sX, dy + ids[7].sY, L"%ls", gWeaponStatsDesc[6]); // = (sic)
 		}
 
 		//Status
