@@ -790,7 +790,6 @@ const wchar_t* pLandTypeStrings[] =
 
 const wchar_t* gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls sono stati individuati nel settore %c%d e un'altra squadra sta per arrivare.",	//STR_DETECTED_SINGULAR
 	L"%ls sono stati individuati nel settore %c%d e un'altra squadra sta per arrivare.",	//STR_DETECTED_PLURAL
 	L"Volete coordinare un attacco simultaneo?",													//STR_COORDINATE

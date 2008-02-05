@@ -791,7 +791,6 @@ const wchar_t *pLandTypeStrings[] =
 
 const wchar_t *gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls have been detected in sector %c%d and another squad is about to arrive.",	//STR_DETECTED_SINGULAR
 	L"%ls have been detected in sector %c%d and other squads are about to arrive.",	//STR_DETECTED_PLURAL
 	L"Do you want to coordinate a simultaneous arrival?",													//STR_COORDINATE

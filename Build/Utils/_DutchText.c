@@ -805,7 +805,6 @@ const wchar_t* pLandTypeStrings[] =
 
 const wchar_t* gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
 	L"%ls zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
 	L"Wil je een gezamenlijke aankomst coördineren?",					//STR_COORDINATE

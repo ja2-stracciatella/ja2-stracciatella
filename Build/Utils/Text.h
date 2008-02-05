@@ -965,7 +965,6 @@ extern void LoadAllExternalText( void );
 enum
 {
 	//Coordinating simultaneous arrival dialog strings
-	STR_DETECTED_SIMULTANEOUS_ARRIVAL,
 	STR_DETECTED_SINGULAR,
 	STR_DETECTED_PLURAL,
 	STR_COORDINATE,

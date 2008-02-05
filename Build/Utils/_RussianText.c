@@ -790,7 +790,6 @@ const wchar_t* pLandTypeStrings[] =
 
 const wchar_t* gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
 	L"%ls обнаружены в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
 	L"Хотите координировать одновременное прибытие?",													//STR_COORDINATE

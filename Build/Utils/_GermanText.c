@@ -767,8 +767,6 @@ const wchar_t *pLandTypeStrings[] =
 
 const wchar_t *gpStrategicString[] =
 {
-	//     The first %s can either be bloodcats or enemies.
-	L"",	//Unused
 	L"%ls wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
 	L"%ls wurden entdeckt in Sektor %c%d und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
 	L"Gleichzeitige Ankunft koordinieren?",													//STR_COORDINATE

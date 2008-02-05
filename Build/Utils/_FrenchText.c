@@ -791,7 +791,6 @@ const wchar_t* pLandTypeStrings[] =
 
 const wchar_t* gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls détecté dans le secteur %c%d et une autre escouade est en route.",	//STR_DETECTED_SINGULAR
 	L"%ls détecté dans le secteur %c%d et d'autres escouades sont en route.",	//STR_DETECTED_PLURAL
 	L"Voulez-vous coordonner vos mouvements de troupe ?",													//STR_COORDINATE

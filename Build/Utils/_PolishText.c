@@ -790,7 +790,6 @@ const wchar_t* pLandTypeStrings[] =
 
 const wchar_t* gpStrategicString[] =
 {
-	L"",	//Unused
 	L"%ls wykryto w sektorze %c%d, a inny oddział jest w drodze.",	//STR_DETECTED_SINGULAR
 	L"%ls wykryto w sektorze %c%d, a inne oddziały są w drodze.",	//STR_DETECTED_PLURAL
 	L"Chcesz skoordynować jednoczesne przybycie?",			//STR_COORDINATE
