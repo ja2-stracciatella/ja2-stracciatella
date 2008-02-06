@@ -7479,7 +7479,6 @@ static void UpdatePausedStatesDueToTimeCompression(void)
 BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone)
 {
 	// continue this grunts dialogue, restore when done
-	static INT8 bOldSelectedInfoChar = -1;
 	static BOOLEAN fTalkingingGuy = FALSE;
 
 	INT8 bCounter = 0;
@@ -7511,7 +7510,6 @@ BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone)
 		{
 			if (bSelectedInfoChar != bCounter)
 			{
-				bOldSelectedInfoChar = bSelectedInfoChar;
 				ChangeSelectedInfoChar(bCounter, TRUE);
 			}
 			fTalkingingGuy = TRUE;
