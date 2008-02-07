@@ -1695,37 +1695,12 @@ BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 
 	WORLDITEM *pWorldItems;
 	UINT32	cnt;
 	UINT32	uiNumberOfActive=0;
-	BOOLEAN	fFileLoaded = FALSE;
-	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
-
 
 	//
 	// Load in the sectors ITems
 	//
 
-	//If there is a file, load in the Items array
-	if( bMapZ  == 0 )
-	{
-		if( SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags & SF_ITEM_TEMP_FILE_EXISTS )
-			fFileLoaded = TRUE;
-	}
-	else
-	{
-		while( TempNode )
-		{
-			if( TempNode->ubSectorX == sMapX && TempNode->ubSectorY == sMapY && TempNode->ubSectorZ == bMapZ )
-			{
-				if( TempNode->uiFlags & SF_ITEM_TEMP_FILE_EXISTS )
-					fFileLoaded = TRUE;
-
-				break;
-			}
-
-			TempNode = TempNode->next;
-		}
-	}
-
-	if( fFileLoaded )
+	if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ))
 	{
 		//Get the number of items from the file
 		if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
