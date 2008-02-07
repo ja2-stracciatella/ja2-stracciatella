@@ -2079,30 +2079,6 @@ static void AddCharacter(SOLDIERTYPE* const s)
 }
 
 
-/*
-void MoveCharacter(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
-{
-	if (gCharactersList[uiInitialPosition].merc != NULL)
-		gCharactersList[uiFinalPosition] = gCharactersList[uiInitialPosition];
-}
-
-
-void SwapCharacters(UINT16 uiInitialPosition, UINT16 uiFinalPosition)
-{
-	MapScreenCharacterSt pTempChar;
-	pTempChar = gCharactersList[uiInitialPosition];
-	gCharactersList[uiInitialPosition] = gCharactersList[uiFinalPosition];
-	gCharactersList[uiFinalPosition] = pTempChar;
-}
-
-
-void RemoveCharacter(UINT16 uiCharPosition)
-{
- memset(&gCharactersList[uiCharPosition], 0, sizeof( MapScreenCharacterSt ));
-}
-*/
-
-
 static void LoadCharacters(void)
 {
 	UINT16 uiCount=0;
