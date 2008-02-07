@@ -484,14 +484,6 @@ BOOLEAN ShutdownOverhead(void)
 }
 
 
-SOLDIERTYPE* GetSoldier(UINT16 usSoldierIndex)
-{
-	if (usSoldierIndex >= TOTAL_SOLDIERS) return NULL; // XXX assert?
-	SOLDIERTYPE* Soldier = GetMan(usSoldierIndex);
-	return Soldier->bActive ? Soldier : NULL;
-}
-
-
 static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 {
 	UINT32 cnt;

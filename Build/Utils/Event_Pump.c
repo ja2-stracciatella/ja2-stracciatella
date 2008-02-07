@@ -157,6 +157,14 @@ BOOLEAN DequeueAllDemandGameEvents(void)
 }
 
 
+static SOLDIERTYPE* GetSoldier(const UINT16 soldier_idx)
+{
+	if (soldier_idx >= TOTAL_SOLDIERS) return NULL; // XXX assert?
+	SOLDIERTYPE* const s = GetMan(soldier_idx);
+	return s->bActive ? s : NULL;
+}
+
+
 static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 {
 	// Switch on event type
