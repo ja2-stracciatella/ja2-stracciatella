@@ -485,6 +485,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 			}
 			AddWorldItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 0, uiNumWorldItems, pTemp, TRUE );
 		}
+		MemFree(pTemp);
 	}
 }
 

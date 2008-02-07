@@ -1,3 +1,4 @@
+(r2984) Fix a vanilla memory leak when handling delayed/stolen items from Bobby Ray's.
 (r2930) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when clicking on a vehicle in the tactical screen.
 (r2896) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when loading a savegame, which starts in tacical, and opening the assignment menu of a merc.
 (r2832) Fix a bug in the sound system: Some sounds are sampled at 44kHz, but the sound system uses 22kHz as playback rate, so resample these sounds before playing.
