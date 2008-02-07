@@ -48,7 +48,6 @@ EnvBeginRainStorm(), EnvEndRainStorm(): TODO
 EvaluateWorld(): complicated
 ExecuteGameEvent(): code duplication
 FaceRegionMvtCallback(): unused
-FileCheckEndOfFile(): complicated
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?

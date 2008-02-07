@@ -679,48 +679,6 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-//returns true if at end of file, else false
-BOOLEAN	FileCheckEndOfFile(const HWFILE hFile)
-{
-	INT16  sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-
-		//Get the current position of the file pointer
-		const UINT32 uiOldFilePtrLoc = ftell(hRealFile);
-
-		//Get the end of file ptr location
-		fseek(hRealFile, 0, SEEK_END);
-		UINT32 uiEndOfFilePtrLoc = ftell(hRealFile);
-
-		//reset back to the original location
-		fseek(hRealFile, uiOldFilePtrLoc, SEEK_SET);
-
-		//if the 2 pointers are the same, we are at the end of a file
-		return uiOldFilePtrLoc >= uiEndOfFilePtrLoc;
-	}
-	else
-	{
-		if (IsLibraryOpened(sLibraryID))
-		{
-			const FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
-			if (fo->pFileHeader != NULL) // if the file is opened
-			{
-				const UINT32 uiLength = fo->pFileHeader->uiFileLength;
-				const UINT32 uiCurPos = fo->uiFilePosInFile;
-				return uiCurPos >= uiLength;
-			}
-		}
-	}
-
-	return FALSE;
-}
-
-
 BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
 {
 #if 1 // XXX TODO

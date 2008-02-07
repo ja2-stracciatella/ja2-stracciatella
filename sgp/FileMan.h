@@ -103,9 +103,6 @@ void    GetFileClose(GETFILESTRUCT* pGFStruct);
 UINT32  FileGetAttributes(const char* filename);
 BOOLEAN FileClearAttributes(const char* filename);
 
-// returns true if at end of file, else false
-BOOLEAN FileCheckEndOfFile(HWFILE hFile);
-
 BOOLEAN GetFileManFileTime(HWFILE hFile, SGP_FILETIME* pCreationTime, SGP_FILETIME* pLastAccessedTime, SGP_FILETIME* pLastWriteTime);
 
 /* returns
