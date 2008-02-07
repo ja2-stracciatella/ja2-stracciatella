@@ -2060,46 +2060,22 @@ static void HighLightSleepLine(void)
 }
 
 
-static void AddCharacter(SOLDIERTYPE* pCharacter)
+static void AddCharacter(SOLDIERTYPE* const s)
 {
-	Assert(pCharacter != NULL);
-	Assert(pCharacter->bActive);
+	Assert(s != NULL);
+	Assert(s->bActive);
 
-	UINT16 usCount=0;
-	UINT16 usVehicleCount = 0, usVehicleLoop = 0;
-
-	// adding a vehicle?
-	if( pCharacter->uiStatusFlags & SOLDIER_VEHICLE )
+	const size_t start = (s->uiStatusFlags & SOLDIER_VEHICLE ? FIRST_VEHICLE : 0);
+	for (MapScreenCharacterSt* i = gCharactersList + start;; ++i)
 	{
-		while( usVehicleLoop < MAX_CHARACTER_COUNT )
+		Assert(i != gCharactersList + MAX_CHARACTER_COUNT);
+		if (i == gCharactersList + MAX_CHARACTER_COUNT) return;
+		if (i->merc == NULL)
 		{
-			if (gCharactersList[usVehicleLoop].merc != NULL &&
-					GetMan(usVehicleLoop)->uiStatusFlags & SOLDIER_VEHICLE)
-			{
-				usVehicleCount++;
-			}
-			usVehicleLoop++;
-		}
-
-		usCount = FIRST_VEHICLE + usVehicleCount;
-	}
-	else
-	{
-		// go through character list until a blank is reached
-		while (gCharactersList[usCount].merc != NULL && usCount < MAX_CHARACTER_COUNT)
-		{
-			usCount++;
+			i->merc = s;
+			return;
 		}
 	}
-
-
-	Assert( usCount < MAX_CHARACTER_COUNT );
-	if (usCount >= MAX_CHARACTER_COUNT )
-	{
-		return;
-	}
-
-	gCharactersList[usCount].merc = pCharacter;
 }
 
 
