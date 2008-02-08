@@ -4354,7 +4354,6 @@ static BOOLEAN HandleShowingOfMovementBox(void);
 void DetermineWhichAssignmentMenusCanBeShown(void)
 {
 	BOOLEAN fCharacterNoLongerValid = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
 
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
