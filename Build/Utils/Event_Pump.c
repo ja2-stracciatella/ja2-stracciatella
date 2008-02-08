@@ -9,16 +9,6 @@
 #include "Debug.h"
 
 
-// GLobals used here, for each event structure used,
-// Used as globals for stack reasons
-static EV_S_GETNEWPATH          SGetNewPath;
-static EV_S_SETDESIREDDIRECTION SSetDesiredDirection;
-static EV_S_BEGINFIREWEAPON     SBeginFireWeapon;
-static EV_S_FIREWEAPON          SFireWeapon;
-static EV_S_WEAPONHIT           SWeaponHit;
-static EV_S_NOISE               SNoise;
-
-
 static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID);
 
 
@@ -172,6 +162,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 	{
 		case S_GETNEWPATH:
 		{
+			EV_S_GETNEWPATH SGetNewPath;
 			memcpy(&SGetNewPath, pEvent->Data, pEvent->uiDataSize);
 
 			SOLDIERTYPE* pSoldier = GetSoldier(SGetNewPath.usSoldierID);
@@ -195,6 +186,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 		case S_SETDESIREDDIRECTION:
 		{
+			EV_S_SETDESIREDDIRECTION SSetDesiredDirection;
 			memcpy(&SSetDesiredDirection, pEvent->Data, pEvent->uiDataSize);
 
 			SOLDIERTYPE* pSoldier = GetSoldier(SSetDesiredDirection.usSoldierID);
@@ -219,6 +211,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 		case S_BEGINFIREWEAPON:
 		{
+			EV_S_BEGINFIREWEAPON SBeginFireWeapon;
 			memcpy(&SBeginFireWeapon, pEvent->Data, pEvent->uiDataSize);
 
 			SOLDIERTYPE* pSoldier = GetSoldier(SBeginFireWeapon.usSoldierID);
@@ -247,6 +240,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 		case S_FIREWEAPON:
 		{
+			EV_S_FIREWEAPON SFireWeapon;
 			memcpy(&SFireWeapon, pEvent->Data, pEvent->uiDataSize);
 
 			SOLDIERTYPE* pSoldier = GetSoldier(SFireWeapon.usSoldierID);
@@ -274,16 +268,22 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		}
 
 		case S_WEAPONHIT:
+		{
+			EV_S_WEAPONHIT SWeaponHit;
 			memcpy(&SWeaponHit, pEvent->Data, pEvent->uiDataSize);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: WeaponHit %d Damage", SWeaponHit.sDamage));
 			WeaponHit(GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 			break;
+		}
 
 		case S_NOISE:
+		{
+			EV_S_NOISE SNoise;
 			memcpy(&SNoise, pEvent->Data, pEvent->uiDataSize);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Noise from %d at %d/%d, type %d volume %d", SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubNoiseType, SNoise.ubVolume));
 			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubTerrType, SNoise.ubVolume, SNoise.ubNoiseType);
 			break;
+		}
 
 		default:
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Invalid Event Received");
