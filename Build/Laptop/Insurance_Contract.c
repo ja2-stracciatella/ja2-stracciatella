@@ -648,39 +648,6 @@ static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID)
 }
 
 
-/*
-INT32 CalculateInsuranceCost( SOLDIERTYPE *pSoldier, BOOLEAN fHaveInsurance )
-{
-	INT32			iAmount=0;
-	UINT32		uiInsuranceContractLength = 0;
-
-	uiInsuranceContractLength = CalculateSoldiersInsuranceContractLength( pSoldier );
-
-	//If the soldier already has life insurance, then the user is changing the length of the contract
-	if( pSoldier->usLifeInsurance )
-	{
-		//if the user is changing the contract length
-		if( uiInsuranceContractLength != 0 )
-		{
-			iAmount = CalculateInsuranceContractCost( uiInsuranceContractLength, pSoldier->ubProfile);
-		}
-		//else we are just calculating the new figure
-		else
-		{
-			iAmount = 0;
-		}
-	}
-	//else the merc doesn't have life insurance
-	else
-	{
-		iAmount = CalculateInsuranceContractCost( uiInsuranceContractLength, pSoldier->ubProfile);
-	}
-
-	return( iAmount );
-}
-*/
-
-
 static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
