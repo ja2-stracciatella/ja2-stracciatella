@@ -880,33 +880,6 @@ UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 }
 
 
-/*
-BOOLEAN InitDeleteMercVideoConferenceMode()
-{
-	static BOOLEAN	fVideoConfModeCreated = FALSE;
-
-	if( !fVideoConfModeCreated && gubCurrentMercVideoMode == MERC_VIDEO_INIT_VIDEO_MODE )
-	{
-//		InitMercVideoFace();
-	}
-
-	if( fVideoConfModeCreated && gubCurrentMercVideoMode == MERC_VIDEO_EXIT_VIDEO_MODE )
-	{
-		//If merc is talking, stop him from talking
-		ShutupaYoFace(g_video_speck_face);
-
-		//Delete the face
-		DeleteFace(g_video_speck_face);
-
-		gfMercVideoIsBeingDisplayed = FALSE;
-	}
-
-
-	return(TRUE);
-}
-*/
-
-
 static void InitMercVideoFace(void)
 {
 	// Allocates space, and loads the sti for SPECK
