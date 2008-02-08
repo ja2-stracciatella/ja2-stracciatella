@@ -1313,7 +1313,6 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// Send event for getting hit
 			memset( &(SWeaponHit), 0, sizeof( SWeaponHit ) );
 			SWeaponHit.usSoldierID			= pTargetSoldier->ubID;
-			SWeaponHit.uiUniqueId       = pTargetSoldier->uiUniqueSoldierIdValue;
 			SWeaponHit.usWeaponIndex		= pSoldier->usAttackingWeapon;
 			SWeaponHit.sDamage					= (INT16) iImpact;
 			SWeaponHit.usDirection			= GetDirectionFromGridNo( pSoldier->sGridNo, pTargetSoldier );

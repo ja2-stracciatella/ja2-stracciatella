@@ -58,7 +58,6 @@ typedef struct
 typedef struct
 {
 	UINT16  usSoldierID;
-	UINT32  uiUniqueId;
 	UINT16	usWeaponIndex;
 	INT16		sDamage;
 	INT16		sBreathLoss;
