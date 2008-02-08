@@ -3472,37 +3472,6 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 }
 
 
-
-
-/*
-BOOLEAN DisplayShadedStretchedMercFace( UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY )
-{
-	SGPRect		SrcRect;
-	SGPRect		DestRect;
-
-
-	//Test
-	SrcRect.iLeft = 0;
-	SrcRect.iTop = 0;
-	SrcRect.iRight = 48;
-	SrcRect.iBottom = 43;
-
-	DestRect.iLeft = AIM_MEMBER_VIDEO_FACE_X;
-	DestRect.iTop = AIM_MEMBER_VIDEO_FACE_Y;
-	DestRect.iRight = DestRect.iLeft + AIM_MEMBER_VIDEO_FACE_WIDTH;
-	DestRect.iBottom = DestRect.iTop + AIM_MEMBER_VIDEO_FACE_HEIGHT;
-
-
-	if (!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, &SrcRect, &DestRect))
-		return(FALSE);
-
-
-	return( TRUE );
-}
-*/
-
-
-
 #if defined ( JA2TESTVERSION ) || defined ( JA2DEMO )
 
 void DemoHiringOfMercs( )
