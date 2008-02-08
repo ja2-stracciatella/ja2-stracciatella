@@ -28,7 +28,6 @@ BOOLEAN EnterBobbyRUsed()
 	InitBobbyBrTitle();
 
 	SetFirstLastPagesForUsed();
-//	CalculateFirstAndLastIndexs();
 
 	//Draw menu bar
 	InitBobbyMenuBar( );

@@ -29,7 +29,6 @@ BOOLEAN EnterBobbyRArmour()
 	InitBobbyMenuBar( );
 
 	SetFirstLastPagesForNew( IC_ARMOUR );
-//	CalculateFirstAndLastIndexs();
 
 	RenderBobbyRArmour( );
 

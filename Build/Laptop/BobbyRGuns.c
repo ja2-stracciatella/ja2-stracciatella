@@ -229,13 +229,6 @@ BOOLEAN EnterBobbyRGuns()
 
 
 	SetFirstLastPagesForNew( IC_BOBBY_GUN );
-//	CalculateFirstAndLastIndexs();
-/*
-	if(giCurrentSubPage == 0)
-		gusCurWeaponIndex = gusFirstGunIndex;
-	else
-		gusCurWeaponIndex = (UINT8)giCurrentSubPage;
-*/
 	//Draw menu bar
 	InitBobbyMenuBar();
 
@@ -475,8 +468,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 
 	PosY = BOBBYR_GRID_PIC_Y;
 	usTextPosY = BOBBYR_ITEM_DESC_START_Y;
-
-//	InitFirstAndLastGlobalIndex( uiItemClass );
 
 	//if there are no items then return
 	if( gusFirstItemIndex == BOBBYR_NO_ITEMS )
@@ -977,61 +968,6 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		DisplayWrappedString(BOBBYR_ITEM_DESC_START_X, usPosY, BOBBYR_ITEM_DESC_START_WIDTH, 2, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
-
-/*
-void InitFirstAndLastGlobalIndex(UINT32 uiItemClass)
-{
-	switch(uiItemClass)
-	{
-		case IC_BOBBY_GUN:
-			gusLastItemIndex = gusLastGunIndex ;
-			gusFirstItemIndex = gusFirstGunIndex;
-			gubNumPages = gubNumGunPages;
-			break;
-		case IC_BOBBY_MISC:
-			gusLastItemIndex = gusLastMiscIndex ;
-			gusFirstItemIndex = gusFirstMiscIndex;
-			gubNumPages = gubNumMiscPages;
-			break;
-		case IC_AMMO:
-			gusLastItemIndex = gusLastAmmoIndex ;
-			gusFirstItemIndex = gusFirstAmmoIndex;
-			gubNumPages = gubNumAmmoPages;
-			break;
-		case IC_ARMOUR:
-			gusLastItemIndex = gusLastArmourIndex;
-			gusFirstItemIndex = gusFirstArmourIndex;
-			gubNumPages = gubNumArmourPages;
-			break;
-		case BOBBYR_USED_ITEMS:
-			gusLastItemIndex = gusLastUsedIndex;
-			gusFirstItemIndex = gusFirstUsedIndex;
-			gubNumPages = gubNumUsedPages;
-			break;
-		default:
-			Assert(0);
-			break;
-	}
-}
-
-void CalculateFirstAndLastIndexs()
-{
-	//Get the first and last gun index
-	SetFirstLastPagesForNew( IC_BOBBY_GUN, &gusFirstGunIndex, &gusLastGunIndex, &gubNumGunPages );
-
-	//Get the first and last misc index
-	SetFirstLastPagesForNew( IC_BOBBY_MISC, &gusFirstMiscIndex, &gusLastMiscIndex, &gubNumMiscPages );
-
-	//Get the first and last Ammo index
-	SetFirstLastPagesForNew( IC_AMMO, &gusFirstAmmoIndex, &gusLastAmmoIndex, &gubNumAmmoPages );
-
-	//Get the first and last Armour index
-	SetFirstLastPagesForNew( IC_ARMOUR, &gusFirstArmourIndex, &gusLastArmourIndex, &gubNumArmourPages );
-
-	//Get the first and last Used index
-	SetFirstLastPagesForUsed( &gusFirstUsedIndex, &gusLastUsedIndex, &gubNumUsedPages );
-}
-*/
 
 
 //Loops through Bobby Rays Inventory to find the first and last index

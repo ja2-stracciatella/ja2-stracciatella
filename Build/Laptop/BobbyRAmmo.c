@@ -29,7 +29,6 @@ BOOLEAN EnterBobbyRAmmo()
 
 
 	SetFirstLastPagesForNew( IC_AMMO );
-//	CalculateFirstAndLastIndexs();
 
 	//Draw menu bar
 	InitBobbyMenuBar( );

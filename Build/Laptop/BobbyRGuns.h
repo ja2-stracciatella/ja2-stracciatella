@@ -50,7 +50,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass);
 void DeleteMouseRegionForBigImage(void);
 void UpdateButtonText(UINT32	uiCurPage);
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
-//void CalculateFirstAndLastIndexs();
 void SetFirstLastPagesForUsed(void);
 void SetFirstLastPagesForNew( UINT32 uiClass );
 

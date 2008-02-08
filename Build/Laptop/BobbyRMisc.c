@@ -29,7 +29,6 @@ BOOLEAN EnterBobbyRMisc()
 	InitBobbyMenuBar( );
 
 	SetFirstLastPagesForNew( IC_BOBBY_MISC );
-//	CalculateFirstAndLastIndexs();
 
 	RenderBobbyRMisc( );
 

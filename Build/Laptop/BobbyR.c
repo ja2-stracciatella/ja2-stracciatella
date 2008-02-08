@@ -144,27 +144,6 @@ static SGPVObject* guiHandle;
 static SGPVObject* guiWoodBackground;
 static SGPVObject* guiUnderConstructionImage;
 
-/*
-UINT16	gusFirstGunIndex;
-UINT16	gusLastGunIndex;
-UINT8		gubNumGunPages;
-
-UINT16	gusFirstAmmoIndex;
-UINT16	gusLastAmmoIndex;
-UINT8		gubNumAmmoPages;
-
-UINT16	gusFirstMiscIndex;
-UINT16	gusLastMiscIndex;
-UINT8		gubNumMiscPages;
-
-UINT16  gusFirstArmourIndex;
-UINT16  gusLastArmourIndex;
-UINT8		gubNumArmourPages;
-
-UINT16  gusFirstUsedIndex;
-UINT16  gusLastUsedIndex;
-UINT8		gubNumUsedPages;
-*/
 
 UINT32	guiLastBobbyRayPage;
 
