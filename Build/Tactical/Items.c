@@ -1070,10 +1070,7 @@ INT8 FindExactObj( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 
 	for (bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
-		if ( (pObj == &(pSoldier->inv[bLoop])) && (memcmp( &(pSoldier->inv[bLoop]), pObj, sizeof( OBJECTTYPE ) ) == 0) )
-		{
-			return( bLoop );
-		}
+		if (pObj == &pSoldier->inv[bLoop]) return bLoop;
 	}
 	return( NO_SLOT );
 }
