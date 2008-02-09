@@ -89,7 +89,6 @@ void HandleKillChopperMeanwhileScene( void );
 
 extern	MEANWHILE_DEFINITION	gCurrentMeanwhileDef;
 extern	MEANWHILE_DEFINITION	gMeanwhileDef[NUM_MEANWHILES];
-extern	BOOLEAN								gfMeanwhileScheduled;
 extern	BOOLEAN								gfMeanwhileTryingToStart;
 extern	BOOLEAN								gfInMeanwhile;
 extern	UINT32								uiMeanWhileFlags;

@@ -3404,7 +3404,6 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 
 	//Meanwhile stuff
 	sGeneralInfo.gCurrentMeanwhileDef = gCurrentMeanwhileDef;
-	//sGeneralInfo.gfMeanwhileScheduled = gfMeanwhileScheduled;
 	sGeneralInfo.gfMeanwhileTryingToStart = gfMeanwhileTryingToStart;
 	sGeneralInfo.gfInMeanwhile = gfInMeanwhile;
 
@@ -3643,7 +3642,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	//Meanwhile stuff
 	gCurrentMeanwhileDef = sGeneralInfo.gCurrentMeanwhileDef;
-//	gfMeanwhileScheduled = sGeneralInfo.gfMeanwhileScheduled;
 	gfMeanwhileTryingToStart = sGeneralInfo.gfMeanwhileTryingToStart;
 	gfInMeanwhile = sGeneralInfo.gfInMeanwhile;
 
