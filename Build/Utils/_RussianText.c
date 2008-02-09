@@ -2541,13 +2541,6 @@ const wchar_t* BobbyRText[] =
 	L"ЗАКАЗАТЬ",
 	L"Главная",			//10
 
-	//The following 2 lines are used on the Ammunition page.
-	//They are used for help text to display how many items the player's merc has
-	//that can use this type of ammo
-
-	L"Количество единиц оружия у вашей команды, использующих этот боеприпас:",//11
-	L"", //12
-
 	//The following lines provide information on the items
 
 	L"Вес:",		// Weight of all the items of the same type
@@ -2575,8 +2568,13 @@ const wchar_t* BobbyRText[] =
 	//A popup that tells the user that the store is temporarily sold out
 
 	L"Извините, но все товары этого типа закончились на складе.",
-
 };
+
+
+/* The following line is used on the Ammunition page.  It is used for help text
+ * to display how many items the player's merc has that can use this type of
+ * ammo. */
+const wchar_t str_bobbyr_guns_num_guns_that_use_ammo[] = L"Количество единиц оружия у вашей команды, использующих этот боеприпас: %d";
 
 
 // Text for Bobby Ray's Home Page

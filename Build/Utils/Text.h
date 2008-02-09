@@ -711,8 +711,6 @@ enum
 	BOBBYR_GUNS_MORE_ITEMS,
 	BOBBYR_GUNS_ORDER_FORM,
 	BOBBYR_GUNS_HOME,					//10
-	BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1,
-	BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2,
 
 	BOBBYR_GUNS_WGHT,
 	BOBBYR_GUNS_CALIBRE,
@@ -735,6 +733,8 @@ enum
 };
 
 extern		const wchar_t *BobbyRText[];
+
+extern const wchar_t str_bobbyr_guns_num_guns_that_use_ammo[];
 
 
 //BobbyR.c

@@ -2526,13 +2526,6 @@ const wchar_t *BobbyRText[] =
 	L"ORDER FORM",
 	L"Home",			//10
 
-	//The following 2 lines are used on the Ammunition page.
-	//They are used for help text to display how many items the player's merc has
-	//that can use this type of ammo
-
-	L"Your team has",//11
-	L"weapon(s) that use this type of ammo", //12
-
 	//The following lines provide information on the items
 
 	L"Weight:",		// Weight of all the items of the same type
@@ -2562,6 +2555,12 @@ const wchar_t *BobbyRText[] =
 	L"Sorry, but we are currently out of stock on all items of that type.",
 
 };
+
+
+/* The following line is used on the Ammunition page.  It is used for help text
+ * to display how many items the player's merc has that can use this type of
+ * ammo. */
+const wchar_t str_bobbyr_guns_num_guns_that_use_ammo[] = L"Your team has %d weapon(s) that use this type of ammo";
 
 
 // Text for Bobby Ray's Home Page

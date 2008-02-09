@@ -1079,7 +1079,7 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, const UINT8 ubCount, con
 			ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
 			if( ubItemCount != 0 )
 			{
-				swprintf( zItemName, lengthof(zItemName), L"%ls %d %ls",BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_1], ubItemCount, BobbyRText[BOBBYR_GUNS_NUM_GUNS_THAT_USE_AMMO_2] );
+				swprintf(zItemName, lengthof(zItemName), str_bobbyr_guns_num_guns_that_use_ammo, ubItemCount);
 			}
 			else
 				zItemName[0] = '\0';
