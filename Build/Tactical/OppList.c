@@ -5882,27 +5882,9 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 				}
 			}
 		}
-
 	}
-
 }
 
-
-static BOOLEAN ArmyKnowsOfPlayersPresence(void)
-{
-	// if anyone is still left...
-	if (gTacticalStatus.Team[ ENEMY_TEAM ].bTeamActive && gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector > 0 )
-	{
-		CFOR_ALL_IN_TEAM(s, ENEMY_TEAM)
-		{
-			if (s->bInSector && s->bLife >= OKLIFE && s->bAlertStatus >= STATUS_RED)
-			{
-				return TRUE;
-			}
-		}
-	}
-	return( FALSE );
-}
 
 BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
 {
