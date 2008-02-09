@@ -3241,24 +3241,6 @@ static INT8 FireBullet(BULLET* pBullet, BOOLEAN fFake)
 	}
 }
 
-/*
-DOUBLE CalculateVerticalAngle( SOLDIERTYPE * pFirer, SOLDIERTYPE * pTarget )
-{
-	DOUBLE dStartZ, dEndZ;
-
-	CalculateSoldierZPos( pFirer, FIRING_POS, &dStartZ );
-	CalculateSoldierZPos( pTarget, TARGET_POS, &dEndZ );
-
-	dDeltaX = (FLOAT) CenterX( pTarget->sGridNo ) - (FLOAT) CenterX( pFirer->sGridNo );
-	dDeltaY = (FLOAT) CenterY( pTarget->sGridNo ) - (FLOAT) CenterY( pFirer->sGridNo );
-	dDeltaZ = dEndZ - dStartZ;
-
-	d2DDistance = Distance2D( dDeltaX, dDeltaY );
-
-	ddOrigHorizAngle = atan2( dDeltaY, dDeltaX );
-}
-*/
-
 
 INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const FLOAT dEndY, const FLOAT dEndZ, const UINT16 usHandItem, INT16 sHitBy, const BOOLEAN fBuckshot, const BOOLEAN fFake)
 {
