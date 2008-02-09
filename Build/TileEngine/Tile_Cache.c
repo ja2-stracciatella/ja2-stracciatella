@@ -272,22 +272,6 @@ BOOLEAN RemoveCachedTile( INT32 iCachedTile )
 }
 
 
-static HVOBJECT GetCachedTileVideoObject(INT32 iIndex)
-{
-	if ( iIndex == -1 )
-	{
-		return( NULL );
-	}
-
-	if ( gpTileCache[ iIndex ].pImagery == NULL )
-	{
-		return( NULL );
-	}
-
-	return( gpTileCache[ iIndex ].pImagery->vo );
-}
-
-
 static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 iIndex)
 {
 	if ( iIndex == -1 )
