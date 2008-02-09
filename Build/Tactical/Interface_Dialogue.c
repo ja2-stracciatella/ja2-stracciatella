@@ -3929,87 +3929,40 @@ unlock:
 				break;
 			}
 
-			case NPC_ACTION_HISTORY_GOT_ROCKET_RIFLES:
-				AddHistoryToPlayersLog( HISTORY_GOT_ROCKET_RIFLES, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
+			{
+				UINT8 code;
+				case NPC_ACTION_HISTORY_GOT_ROCKET_RIFLES:     code = HISTORY_GOT_ROCKET_RIFLES;     goto add_log;
+				case NPC_ACTION_HISTORY_DEIDRANNA_DEAD_BODIES: code = HISTORY_DEIDRANNA_DEAD_BODIES; goto add_log;
+				case NPC_ACTION_HISTORY_BOXING_MATCHES:        code = HISTORY_BOXING_MATCHES;        goto add_log;
+				case NPC_ACTION_HISTORY_SOMETHING_IN_MINES:    code = HISTORY_SOMETHING_IN_MINES;    goto add_log;
+				case NPC_ACTION_HISTORY_DEVIN:                 code = HISTORY_DEVIN;                 goto add_log;
+				case NPC_ACTION_HISTORY_MIKE:                  code = HISTORY_MIKE;                  goto add_log;
+				case NPC_ACTION_HISTORY_TONY:                  code = HISTORY_TONY;                  goto add_log;
+				case NPC_ACTION_HISTORY_KROTT:                 code = HISTORY_KROTT;                 goto add_log;
+				case NPC_ACTION_HISTORY_KYLE:                  code = HISTORY_KYLE;                  goto add_log;
+				case NPC_ACTION_HISTORY_MADLAB:                code = HISTORY_MADLAB;                goto add_log;
+				case NPC_ACTION_HISTORY_GABBY:                 code = HISTORY_GABBY;                 goto add_log;
+				case NPC_ACTION_HISTORY_KEITH_OUT_OF_BUSINESS: code = HISTORY_KEITH_OUT_OF_BUSINESS; goto add_log;
+				case NPC_ACTION_HISTORY_HOWARD_CYANIDE:        code = HISTORY_HOWARD_CYANIDE;        goto add_log;
+				case NPC_ACTION_HISTORY_KEITH:                 code = HISTORY_KEITH;                 goto add_log;
+				case NPC_ACTION_HISTORY_HOWARD:                code = HISTORY_HOWARD;                goto add_log;
+				case NPC_ACTION_HISTORY_PERKO:                 code = HISTORY_PERKO;                 goto add_log;
+				case NPC_ACTION_HISTORY_SAM:                   code = HISTORY_SAM;                   goto add_log;
+				case NPC_ACTION_HISTORY_FRANZ:                 code = HISTORY_FRANZ;                 goto add_log;
+				case NPC_ACTION_HISTORY_ARNOLD:                code = HISTORY_ARNOLD;                goto add_log;
+				case NPC_ACTION_HISTORY_FREDO:                 code = HISTORY_FREDO;                 goto add_log;
+				case NPC_ACTION_HISTORY_RICHGUY_BALIME:        code = HISTORY_RICHGUY_BALIME;        goto add_log;
+				case NPC_ACTION_HISTORY_JAKE:                  code = HISTORY_JAKE;                  goto add_log;
+				case NPC_ACTION_HISTORY_BUM_KEYCARD:           code = HISTORY_BUM_KEYCARD;           goto add_log;
+				case NPC_ACTION_HISTORY_WALTER:                code = HISTORY_WALTER;                goto add_log;
+				case NPC_ACTION_HISTORY_DAVE:                  code = HISTORY_DAVE;                  goto add_log;
+				case NPC_ACTION_HISTORY_PABLO:                 code = HISTORY_PABLO;                 goto add_log;
+				case NPC_ACTION_HISTORY_KINGPIN_MONEY:         code = HISTORY_KINGPIN_MONEY;         goto add_log;
+add_log:
+				AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY);
 				break;
-			case NPC_ACTION_HISTORY_DEIDRANNA_DEAD_BODIES:
-				AddHistoryToPlayersLog( HISTORY_DEIDRANNA_DEAD_BODIES, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_BOXING_MATCHES:
-				AddHistoryToPlayersLog( HISTORY_BOXING_MATCHES, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_SOMETHING_IN_MINES:
-				AddHistoryToPlayersLog( HISTORY_SOMETHING_IN_MINES, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_DEVIN:
-				AddHistoryToPlayersLog( HISTORY_DEVIN, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_MIKE:
-				AddHistoryToPlayersLog( HISTORY_MIKE, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_TONY:
-				AddHistoryToPlayersLog( HISTORY_TONY, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_KROTT:
-				AddHistoryToPlayersLog( HISTORY_KROTT, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_KYLE:
-				AddHistoryToPlayersLog( HISTORY_KYLE, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_MADLAB:
-				AddHistoryToPlayersLog( HISTORY_MADLAB, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_GABBY:
-				AddHistoryToPlayersLog( HISTORY_GABBY, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_KEITH_OUT_OF_BUSINESS:
-				AddHistoryToPlayersLog( HISTORY_KEITH_OUT_OF_BUSINESS, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_HOWARD_CYANIDE:
-				AddHistoryToPlayersLog( HISTORY_HOWARD_CYANIDE, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_KEITH:
-				AddHistoryToPlayersLog( HISTORY_KEITH, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_HOWARD:
-				AddHistoryToPlayersLog( HISTORY_HOWARD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_PERKO:
-				AddHistoryToPlayersLog( HISTORY_PERKO, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_SAM:
-				AddHistoryToPlayersLog( HISTORY_SAM, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_FRANZ:
-				AddHistoryToPlayersLog( HISTORY_FRANZ, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_ARNOLD:
-				AddHistoryToPlayersLog( HISTORY_ARNOLD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_FREDO:
-				AddHistoryToPlayersLog( HISTORY_FREDO, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_RICHGUY_BALIME:
-				AddHistoryToPlayersLog( HISTORY_RICHGUY_BALIME, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_JAKE:
-				AddHistoryToPlayersLog( HISTORY_JAKE, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_BUM_KEYCARD:
-				AddHistoryToPlayersLog( HISTORY_BUM_KEYCARD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_WALTER:
-				AddHistoryToPlayersLog( HISTORY_WALTER, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_DAVE:
-				AddHistoryToPlayersLog( HISTORY_DAVE, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_PABLO:
-				AddHistoryToPlayersLog( HISTORY_PABLO, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
-			case NPC_ACTION_HISTORY_KINGPIN_MONEY:
-				AddHistoryToPlayersLog( HISTORY_KINGPIN_MONEY, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
-				break;
+			}
+
 			case NPC_ACTION_SEND_TROOPS_TO_SAM:
 				break;
 			case NPC_ACTION_PUT_PACOS_IN_BASEMENT:

@@ -2570,14 +2570,8 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 
 		if (!(pSoldierOld->uiStatusFlags & SOLDIER_VEHICLE) && !TANK(pSoldierOld))
 		{
-			if (killer && killer->bTeam == OUR_TEAM)
-			{
-				AddHistoryToPlayersLog(HISTORY_MERC_KILLED_CHARACTER, pSoldierOld->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY);
-			}
-			else
-			{
-				AddHistoryToPlayersLog(HISTORY_NPC_KILLED, pSoldierOld->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY);
-			}
+			const UINT8 code = (killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_NPC_KILLED);
+			AddHistoryToPlayersLog(code, pSoldierOld->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY);
 		}
 	}
 

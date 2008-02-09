@@ -69,14 +69,8 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 		}
 
 		const SOLDIERTYPE* const killer = pSoldier->attacker;
-		if (killer && killer->bTeam == OUR_TEAM)
-		{
-			AddHistoryToPlayersLog( HISTORY_MERC_KILLED_CHARACTER, pSoldier->ubProfile, GetWorldTotalMin(), sSectorX, sSectorY );
-		}
-		else
-		{
-			AddHistoryToPlayersLog( HISTORY_MERC_KILLED, pSoldier->ubProfile, GetWorldTotalMin(), sSectorX, sSectorY );
-		}
+		const UINT8              code   = (killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_MERC_KILLED);
+		AddHistoryToPlayersLog(code, pSoldier->ubProfile, GetWorldTotalMin(), sSectorX, sSectorY);
 	}
 
 	if ( guiCurrentScreen != GAME_SCREEN )

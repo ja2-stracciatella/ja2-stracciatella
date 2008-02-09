@@ -1894,61 +1894,45 @@ static void CheckForRobotAndIfItsControlled(void)
 	}
 }
 
-void LogBattleResults( UINT8 ubVictoryCode)
+
+void LogBattleResults(const UINT8 ubVictoryCode)
 {
-	INT16 sSectorX, sSectorY, sSectorZ;
-	GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
-	if( ubVictoryCode == LOG_VICTORY )
+	INT16 sSectorX;
+	INT16 sSectorY;
+	INT16 sSectorZ;
+	GetCurrentBattleSectorXYZ(&sSectorX, &sSectorY, &sSectorZ);
+	UINT8 code;
+	if (ubVictoryCode == LOG_VICTORY)
 	{
-		switch( gubEnemyEncounterCode )
+		switch (gubEnemyEncounterCode)
 		{
-			case ENEMY_INVASION_CODE:
-				AddHistoryToPlayersLog( HISTORY_DEFENDEDTOWNSECTOR, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENEMY_ENCOUNTER_CODE:
-				AddHistoryToPlayersLog( HISTORY_WONBATTLE, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENEMY_AMBUSH_CODE:
-				AddHistoryToPlayersLog( HISTORY_WIPEDOUTENEMYAMBUSH, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENTERING_ENEMY_SECTOR_CODE:
-				AddHistoryToPlayersLog( HISTORY_SUCCESSFULATTACK, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case CREATURE_ATTACK_CODE:
-				AddHistoryToPlayersLog( HISTORY_CREATURESATTACKED, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
+			case ENEMY_INVASION_CODE:         code = HISTORY_DEFENDEDTOWNSECTOR;   break;
+			case ENEMY_ENCOUNTER_CODE:        code = HISTORY_WONBATTLE;            break;
+			case ENEMY_AMBUSH_CODE:           code = HISTORY_WIPEDOUTENEMYAMBUSH;  break;
+			case ENTERING_ENEMY_SECTOR_CODE:  code = HISTORY_SUCCESSFULATTACK;     break;
+			case CREATURE_ATTACK_CODE:        code = HISTORY_CREATURESATTACKED;    break;
 			case BLOODCAT_AMBUSH_CODE:
-			case ENTERING_BLOODCAT_LAIR_CODE:
-				AddHistoryToPlayersLog( HISTORY_SLAUGHTEREDBLOODCATS, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
+			case ENTERING_BLOODCAT_LAIR_CODE: code = HISTORY_SLAUGHTEREDBLOODCATS; break;
+			default:                          return;
 		}
 	}
 	else
 	{
-		switch( gubEnemyEncounterCode )
+		switch (gubEnemyEncounterCode)
 		{
-			case ENEMY_INVASION_CODE:
-				AddHistoryToPlayersLog( HISTORY_LOSTTOWNSECTOR, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENEMY_ENCOUNTER_CODE:
-				AddHistoryToPlayersLog( HISTORY_LOSTBATTLE, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENEMY_AMBUSH_CODE:
-				AddHistoryToPlayersLog( HISTORY_FATALAMBUSH, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case ENTERING_ENEMY_SECTOR_CODE:
-				AddHistoryToPlayersLog( HISTORY_UNSUCCESSFULATTACK, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
-			case CREATURE_ATTACK_CODE:
-				AddHistoryToPlayersLog( HISTORY_CREATURESATTACKED, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
+			case ENEMY_INVASION_CODE:         code = HISTORY_LOSTTOWNSECTOR;       break;
+			case ENEMY_ENCOUNTER_CODE:        code = HISTORY_LOSTBATTLE;           break;
+			case ENEMY_AMBUSH_CODE:           code = HISTORY_FATALAMBUSH;          break;
+			case ENTERING_ENEMY_SECTOR_CODE:  code = HISTORY_UNSUCCESSFULATTACK;   break;
+			case CREATURE_ATTACK_CODE:        code = HISTORY_CREATURESATTACKED;    break;
 			case BLOODCAT_AMBUSH_CODE:
-			case ENTERING_BLOODCAT_LAIR_CODE:
-				AddHistoryToPlayersLog( HISTORY_KILLEDBYBLOODCATS, 0, GetWorldTotalMin(), sSectorX, sSectorY );
-				break;
+			case ENTERING_BLOODCAT_LAIR_CODE: code = HISTORY_KILLEDBYBLOODCATS;    break;
+			default:                          return;
 		}
 	}
+	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSectorX, sSectorY);
 }
+
 
 void HandlePreBattleInterfaceStates()
 {
