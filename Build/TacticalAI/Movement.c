@@ -94,7 +94,7 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
         												return(FALSE);
 															}
 															// *** NOTE: movement mode hardcoded to WALKING !!!!!
-			case ENSURE_PATH_COST:	return(PlotPath(pSoldier,sGridno,FALSE,FALSE,FALSE,WALKING,FALSE,FALSE,0));
+			case ENSURE_PATH_COST:	return PlotPath(pSoldier, sGridno, FALSE, FALSE, FALSE, WALKING, 0);
 
       default              :
 #ifdef BETAVERSION

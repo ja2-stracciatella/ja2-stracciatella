@@ -3612,7 +3612,7 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 				 {
 						// Calculate AP costs...
 						//sAPCost = GetAPsToBeginFirstAid( pSoldier );
-						sAPCost += PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints);
+						sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 						if ( EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
 						{

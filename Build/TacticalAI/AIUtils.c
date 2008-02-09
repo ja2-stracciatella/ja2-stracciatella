@@ -1344,7 +1344,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 		if ( (pSoldier->bLevel == 0) || ( gubBuildingInfo[ pSoldier->sGridNo ] == gubBuildingInfo[ sDestGridNo ] ) )
 		{
 			// on ground or same building... normal!
-			sPathCost = EstimatePlotPath( pSoldier, sDestGridNo, FALSE, FALSE, FALSE, WALKING, FALSE, FALSE, 0);
+			sPathCost = EstimatePlotPath(pSoldier, sDestGridNo, FALSE, FALSE, FALSE, WALKING, 0);
 			*pfClimbingNecessary = FALSE;
 			*psClimbGridNo = NOWHERE;
 		}
@@ -1359,7 +1359,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 			}
 			else
 			{
-				sPathCost = PlotPath( pSoldier, sClimbGridNo, FALSE, FALSE, FALSE, WALKING, FALSE, FALSE, 0 );
+				sPathCost = PlotPath(pSoldier, sClimbGridNo, FALSE, FALSE, FALSE, WALKING, 0);
 				if (sPathCost != 0)
 				{
 					// add in cost of climbing down
@@ -1402,7 +1402,7 @@ INT16 EstimatePathCostToLocation( SOLDIERTYPE * pSoldier, INT16 sDestGridNo, INT
 		}
 		else
 		{
-			sPathCost = PlotPath( pSoldier, sClimbGridNo, FALSE, FALSE, FALSE, WALKING, FALSE, FALSE, 0);
+			sPathCost = PlotPath(pSoldier, sClimbGridNo, FALSE, FALSE, FALSE, WALKING, 0);
 			if (sPathCost != 0)
 			{
 				// add in the cost of climbing up or down

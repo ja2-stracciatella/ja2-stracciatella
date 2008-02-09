@@ -3714,7 +3714,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 
 		if ( fCheckGivenGridNo )
 		{
-			sDistance = PlotPath( pSoldier, sGridNo,  NO_COPYROUTE, NO_PLOT, TEMPORARY, (INT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+			sDistance = PlotPath(pSoldier, sGridNo,  NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 			if (sDistance > 0 && sDistance < sClosest)
 			{
 				sClosest     = sDistance;
@@ -3798,7 +3798,7 @@ INT16 FindAdjacentGridEx(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8* pubDirecti
 		ubDir = (UINT8)GetDirectionToGridNoFromGridNo( sSpot, sGridNo );
 
 		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, TRUE, pSoldier->bLevel) > 0 &&
-				(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints)) > 0)
+				(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints)) > 0)
 		{
 			if (sDistance < sClosest)
 			{
@@ -3915,7 +3915,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 		if ( fCheckGivenGridNo )
 		{
-			sDistance = PlotPath( pSoldier, sGridNo,  NO_COPYROUTE, NO_PLOT, TEMPORARY, (INT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+			sDistance = PlotPath(pSoldier, sGridNo,  NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 			if (sDistance > 0 && sDistance < sClosest)
 			{
 				sClosest     = sDistance;
@@ -4004,7 +4004,7 @@ INT16 FindNextToAdjacentGridEx( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 *pub
 
 		// don't store path, just measure it
 		if (NewOKDestinationAndDirection(pSoldier, sSpot, ubDir, TRUE, pSoldier->bLevel) > 0 &&
-				(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints)) > 0)
+				(sDistance = PlotPath(pSoldier, sSpot, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints)) > 0)
 		{
 			if (sDistance < sClosest)
 			{

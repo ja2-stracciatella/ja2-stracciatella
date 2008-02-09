@@ -217,7 +217,7 @@ static INT8 TileIsClear(SOLDIERTYPE* pSoldier, INT8 bDirection, INT16 sGridNo, I
 						sTempDestGridNo = tgt->sFinalDestination;
 						tgt->sFinalDestination = tgt->sGridNo;
 
-						if ( PlotPath( pSoldier, pSoldier->sFinalDestination, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints ) )
+						if (PlotPath(pSoldier, pSoldier->sFinalDestination, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints))
 						{
 							pSoldier->bPathStored = FALSE;
 							// OK, make guy go here...

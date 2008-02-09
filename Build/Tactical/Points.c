@@ -912,7 +912,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 					else
 					{
 						// Save for next time...
-						pSoldier->sWalkToAttackWalkToCost = PlotPath( pSoldier, sGotLocation, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+						pSoldier->sWalkToAttackWalkToCost = PlotPath(pSoldier, sGotLocation, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 						if (pSoldier->sWalkToAttackWalkToCost == 0)
 						{
@@ -1517,7 +1517,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 
 		if ( pSoldier->sGridNo != sActionGridNo )
 		{
-			sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+			sAPCost = PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 			// If point cost is zero, return 0
 			if ( sAPCost != 0 )
@@ -1538,9 +1538,7 @@ UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 
 UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
 {
-	UINT16						sAPCost = 0;
-
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 || pSoldier->sGridNo == usMapPos )
@@ -1638,11 +1636,9 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot)
 {
-	UINT16						sAPCost = 0;
-
 	const INT16 sActionGridNo = FindAdjacentGridEx(pSoldier, pRobot->sGridNo, NULL, NULL, TRUE, FALSE);
 
-	sAPCost = PlotPath( pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	UINT16 sAPCost = PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 || sActionGridNo == pSoldier->sGridNo )
@@ -2001,9 +1997,7 @@ UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier )
 
 UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	INT16 sAPs = 0;
-
-	sAPs = PlotPath( pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	INT16 sAPs = PlotPath(pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	if ( sAPs > 0 )
 	{
@@ -2023,9 +2017,7 @@ UINT16 GetAPsToUseRemote( SOLDIERTYPE *pSoldier )
 
 INT8 GetAPsToStealItem( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
-	UINT16						sAPCost = 0;
-
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	// ADD APS TO PICKUP
 	sAPCost += AP_STEAL_ITEM;
@@ -2049,9 +2041,7 @@ static INT8 GetBPsToStealItem(SOLDIERTYPE* pSoldier)
 
 INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
-	UINT16						sAPCost = 0;
-
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )
@@ -2067,9 +2057,7 @@ INT8 GetAPsToUseJar( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 static INT8 GetAPsToUseCan(SOLDIERTYPE* pSoldier, INT16 usMapPos)
 {
-	UINT16						sAPCost = 0;
-
-	sAPCost = PlotPath( pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
+	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 	// If point cost is zero, return 0
 	if ( sAPCost != 0 )

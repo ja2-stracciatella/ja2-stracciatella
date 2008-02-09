@@ -2961,7 +2961,6 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 	INT16 sYMapPos;
 	INT16 sWorldX;
 	INT16 sWorldY;
-	INT16	sAPs;
 
 	// if the soldiers gridno is not NOWHERE
 	if( pSoldier->sGridNo == NOWHERE )
@@ -3038,8 +3037,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 			if ( gTacticalStatus.uiFlags & INCOMBAT )
 			{
 				// Turn off at end of function...
-				sAPs = PlotPath( pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, (UINT16)pSoldier->usUIMovementMode, NOT_STEALTH, FORWARD, pSoldier->bActionPoints );
-
+				const INT16 sAPs = PlotPath(pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 				if ( !EnoughPoints( pSoldier, sAPs, 0, FALSE ) )
 				{
 					return( FALSE );
