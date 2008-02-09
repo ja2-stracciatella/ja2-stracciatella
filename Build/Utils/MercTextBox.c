@@ -567,17 +567,3 @@ BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags )
 	guiFlags |= uiFlags;
 	return( TRUE );
 }
-
-
-static BOOLEAN SetPrepareMercPopUpFlagsFromIndex(UINT32 uiFlags, UINT32 uiId)
-{
-	// find this box, set it to current, and delete it
-	if( SetCurrentPopUpBox( uiId ) == FALSE )
-	{
-		// failed
-		return( FALSE );
-	}
-
-	// now try to remove it
-	return( SetPrepareMercPopupFlags( uiFlags ) );
-}
