@@ -102,9 +102,6 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 			}
 		}
 
-		// Reset once we sleep...
-		pSoldier->bTimesDrugUsedSinceSleep[ ubDrugType ]++;
-
 		// Increment side effects..
 		if ( ( pSoldier->bDrugSideEffect[ ubDrugType ] + ubDrugSideEffect[ ubDrugType ] ) < 127 )
 		{

@@ -344,7 +344,6 @@ pLevelNode: load/save?
 sBlackList: strange
 bHasKeys: strange
 fForceShade: pForceShade != NULL?
-bTimesDrugUsedSinceSleep: write-only
 fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?
 

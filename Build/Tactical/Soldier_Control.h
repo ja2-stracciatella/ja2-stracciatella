@@ -743,7 +743,6 @@ struct SOLDIERTYPE
   INT8												bDrugEffect[2];									// value that affects AP & morale calc ( -ve is poorly )
   INT8												bDrugSideEffectRate[2];					// duration of negative AP and morale effect
   INT8												bDrugSideEffect[2];							// duration of negative AP and morale effect
-  INT8												bTimesDrugUsedSinceSleep[2];
 
 	INT8												bBlindedCounter;
 	BOOLEAN											fMercCollapsedFlag;
