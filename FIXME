@@ -51,7 +51,6 @@ Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
 GetCostOfPassageForHelicopter(): callers
-GetDialogue(): code duplication
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetHelpTextForItem(): complicated
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
@@ -80,7 +79,6 @@ HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HeliCharacterDialogue(): callers
 IMPVideoObjects.h(): many needlessly called functions?
 I_CHANGELEVEL: unused
-InitStrategicRow[A-P](): complicated?
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
 InternalDoMercBattleSound(): Sound file selection complicated
@@ -187,7 +185,6 @@ SoldierCarriesTwoHandedWeapon(): complicated
 StandardGunListAmmoReplacement(): declaration in .c
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
-StructureHit(): interface complicated (pointer -> index -> pointer)
 TacticalScreenMsg(): no need for format string
 TrashMapTile(), MapOptimize(): investigate if useful
 TurnBasedHandleNPCAI(): lots of commented out stuff
