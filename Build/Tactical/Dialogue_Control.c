@@ -2497,37 +2497,6 @@ BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID)
 }
 
 
-static BOOLEAN IsQuoteInPrecedentArray(UINT32 uiQuoteID);
-
-
-static BOOLEAN ShouldMercSayPrecedentToRepeatOneSelf(UINT8 ubMercID, UINT32 uiQuoteID)
-{
-	UINT8	ubQuoteBit=0;
-
-	//If the quote is not in the array
-	if( !IsQuoteInPrecedentArray( uiQuoteID ) )
-	{
-		return( FALSE );
-	}
-
-	ubQuoteBit = GetQuoteBitNumberFromQuoteID( uiQuoteID );
-	if( ubQuoteBit == 0 )
-		return( FALSE );
-
-	if( GetMercPrecedentQuoteBitStatus( ubMercID, ubQuoteBit ) )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		SetMercPrecedentQuoteBitStatus( ubMercID, ubQuoteBit );
-	}
-
-	return( FALSE );
-}
-
-
-
 BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
 {
 	if( gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid & ( 1 << ( ubQuoteBit - 1 ) ) )
@@ -2543,32 +2512,6 @@ BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
 
 	return( TRUE );
 }
-
-
-static BOOLEAN IsQuoteInPrecedentArray(UINT32 uiQuoteID)
-{
-	UINT8	ubCnt;
-
-	//If the quote id is above or below the ones in the array
-	if( uiQuoteID < gubMercValidPrecedentQuoteID[ 0 ] ||
-			uiQuoteID > gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES-1 ] )
-	{
-		return( FALSE );
-	}
-
-
-	//loop through all the quotes
-	for( ubCnt=0; ubCnt<NUMBER_VALID_MERC_PRECEDENT_QUOTES;ubCnt++)
-	{
-		if( gubMercValidPrecedentQuoteID[ ubCnt ] == uiQuoteID )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
-}
-
 
 
 UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID )

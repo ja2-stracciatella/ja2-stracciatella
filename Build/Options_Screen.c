@@ -602,10 +602,6 @@ static void GetOptionsScreenUserInput(void)
 						uiTest2 = PlayJA2SampleFromFile("Sounds/RAID Dive.wav", HIGHVOLUME, 1, MIDDLEPAN);
 					}
 					break;
-
-				case 'q':
-//					ShouldMercSayPrecedentToRepeatOneSelf( 11, 99 );
-					break;
 #endif
 			}
 		}
