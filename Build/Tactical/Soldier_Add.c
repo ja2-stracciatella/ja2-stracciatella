@@ -112,7 +112,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 				if ( NewOKDestination( pSoldier, sGridNo, TRUE, pSoldier->bLevel ) )
 				{
 					// ATE: INstead of using absolute range, use the path cost!
-				  //uiRange = PlotPath(&soldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, WALKING, 50);
+				  //uiRange = PlotPath(&soldier, sGridNo, NO_COPYROUTE, NO_PLOT, WALKING, 50);
 					uiRange = CardinalSpacesAway( sSweetGridNo, sGridNo );
 
 				//	if ( uiRange == 0 )

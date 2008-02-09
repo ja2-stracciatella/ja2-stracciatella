@@ -265,7 +265,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 						}
 						else
 						{
-							sPathCost = PlotPath(pSoldier, sAdjacentGridNo, FALSE, FALSE, FALSE, RUNNING, 0);
+							sPathCost = PlotPath(pSoldier, sAdjacentGridNo, FALSE, FALSE, RUNNING, 0);
 						}
 
 						if ( sPathCost != 0 )
@@ -286,7 +286,7 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 									}
 									else
 									{
-										sOtherMedicPathCost = PlotPath(pOtherMedic, sOtherAdjacentGridNo, FALSE, FALSE, FALSE, RUNNING, 0);
+										sOtherMedicPathCost = PlotPath(pOtherMedic, sOtherAdjacentGridNo, FALSE, FALSE, RUNNING, 0);
 									}
 
 									if (sPathCost >= sOtherMedicPathCost)

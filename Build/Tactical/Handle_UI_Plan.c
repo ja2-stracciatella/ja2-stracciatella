@@ -59,7 +59,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 	if ( ubPlanID == UIPLAN_ACTION_MOVETO )
 	{
 		// Calculate cost to move here
-		sAPCost = PlotPath(gpUIPlannedSoldier, sGridNo, COPYROUTE, NO_PLOT, TEMPORARY, gpUIPlannedSoldier->usUIMovementMode, gpUIPlannedSoldier->bActionPoints);
+		sAPCost = PlotPath(gpUIPlannedSoldier, sGridNo, COPYROUTE, NO_PLOT, gpUIPlannedSoldier->usUIMovementMode, gpUIPlannedSoldier->bActionPoints);
 		// Adjust for running if we are not already running
 		if (  gpUIPlannedSoldier->usUIMovementMode == RUNNING )
 		{

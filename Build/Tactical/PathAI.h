@@ -14,9 +14,9 @@
 
 BOOLEAN InitPathAI( void );
 void ShutDownPathAI( void );
-INT16 PlotPath(        SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT16 sAPBudget);
-INT16 UIPlotPath(      SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT16 sAPBudget);
-INT16 EstimatePlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, INT8 bStayOn, UINT16 usMovementMode, INT16 sAPBudget);
+INT16 PlotPath(        SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, UINT16 usMovementMode, INT16 sAPBudget);
+INT16 UIPlotPath(      SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, UINT16 usMovementMode, INT16 sAPBudget);
+INT16 EstimatePlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, UINT16 usMovementMode, INT16 sAPBudget);
 
 void ErasePath(char bEraseOldOne);
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags);
@@ -99,9 +99,6 @@ extern UINT8 gubGlobalPathFlags;
 // PLOT PATH defines
 #define NO_PLOT									0
 #define PLOT										1
-
-#define TEMPORARY								0
-#define PERMANENT								1
 
 #define NO_COPYROUTE						0
 #define COPYROUTE								1

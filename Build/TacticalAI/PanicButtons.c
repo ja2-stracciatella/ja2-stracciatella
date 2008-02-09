@@ -131,7 +131,7 @@ void MakeClosestEnemyChosenOne()
 		if (pSoldier->sGridNo != sPanicTriggerGridNo)
 		{
 			// get the AP cost for this enemy to go to target position
-			sPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, FALSE, WALKING, 0);
+			sPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, WALKING, 0);
 		}
 		else
 		{
@@ -220,7 +220,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 	iAPCost = AP_PULL_TRIGGER;
 	if (pSoldier->sGridNo != sPanicTriggerGridNo)
 	{
-		iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, FALSE, RUNNING, 0);
+		iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, RUNNING, 0);
 		if (iPathCost == 0)
 		{
 			//pSoldier->bHasKeys = bOldKeys;
@@ -300,7 +300,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			if (pSoldier->sGridNo != sPanicTriggerGridNo)
 			{
 				// determine whether we can still get there
-				iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, FALSE, RUNNING, 0);
+				iPathCost = PlotPath(pSoldier, sPanicTriggerGridNo, FALSE, FALSE, RUNNING, 0);
 				if (iPathCost != 0)
 				{
 					fFoundRoute = TRUE;

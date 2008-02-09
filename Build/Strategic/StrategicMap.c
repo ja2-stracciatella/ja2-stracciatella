@@ -3037,7 +3037,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 			if ( gTacticalStatus.uiFlags & INCOMBAT )
 			{
 				// Turn off at end of function...
-				const INT16 sAPs = PlotPath(pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, TEMPORARY, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
+				const INT16 sAPs = PlotPath(pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 				if ( !EnoughPoints( pSoldier, sAPs, 0, FALSE ) )
 				{
 					return( FALSE );

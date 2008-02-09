@@ -2126,12 +2126,11 @@ void ErasePath(char bEraseOldOne)
 }
 
 
-INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, const INT8 bPlot, const INT8 bStayOn, const UINT16 usMovementMode, const INT16 sAPBudget)
+INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, const INT8 bPlot, const UINT16 usMovementMode, const INT16 sAPBudget)
 {
  INT16 sTileCost,sPoints=0,sTempGrid,sAnimCost=0;
  INT16 sPointsWalk=0,sPointsCrawl=0,sPointsRun=0,sPointsSwat=0;
  INT16 sExtraCostStand,sExtraCostSwat,sExtraCostCrawl;
- INT32 iLastGrid;
  INT32 iCnt;
  INT16 sFootOrderIndex;
  INT16 sSwitchValue;
@@ -2204,20 +2203,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 		sPoints				+= sAnimCost;
 		gusAPtsToMove += sAnimCost;
 
-
-
-
-
-	  if (bStayOn)
-		{
-			iLastGrid = giPathDataSize+1;
-		}
-		else
-		{
-			iLastGrid = giPathDataSize;
-		}
-
-
+		const INT32 iLastGrid = giPathDataSize;
 		for ( iCnt=0; iCnt < iLastGrid; iCnt++ )
 		{
 			sExtraCostStand = 0;
@@ -2351,7 +2337,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 
 			//if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) ) // OR USER OPTION "show paths" ON... ***
 			{
-				if (bPlot && ((iCnt < (iLastGrid-1)) || (iCnt < iLastGrid && bStayOn)))
+				if (bPlot && iCnt < iLastGrid - 1)
 				{
 					guiPlottedPath[giPlotCnt++] = sTempGrid;
 
@@ -2508,7 +2494,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 }
 
 
-INT16 UIPlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, INT8 bPlot, const INT8 bStayOn, const UINT16 usMovementMode, const INT16 sAPBudget)
+INT16 UIPlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, INT8 bPlot, const UINT16 usMovementMode, const INT16 sAPBudget)
 {
 	// This function is specifically for UI calls to the pathing routine, to
 	// check whether the shift key is pressed, etc.
@@ -2529,7 +2515,7 @@ INT16 UIPlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 b
 		bPlot = TRUE;
 	}
 
-	const INT16 sRet = PlotPath(pSold, sDestGridno, bCopyRoute, bPlot, bStayOn, usMovementMode, sAPBudget);
+	const INT16 sRet = PlotPath(pSold, sDestGridno, bCopyRoute, bPlot, usMovementMode, sAPBudget);
 	gfPlotDirectPath = FALSE;
 	return( sRet );
 }
@@ -2544,20 +2530,20 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode )
 	}
 
 	gfRecalculatingExistingPathCost = TRUE;
-	const INT16 sRet = PlotPath(pSoldier, pSoldier->sFinalDestination, NO_COPYROUTE, FALSE, FALSE, usMovementMode, 0);
+	const INT16 sRet = PlotPath(pSoldier, pSoldier->sFinalDestination, NO_COPYROUTE, FALSE, usMovementMode, 0);
 	gfRecalculatingExistingPathCost = FALSE;
 	return( sRet );
 }
 
 
-INT16 EstimatePlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, const INT8 bPlot, const INT8 bStayOn, const UINT16 usMovementMode, const INT16 sAPBudget)
+INT16 EstimatePlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCopyRoute, const INT8 bPlot, const UINT16 usMovementMode, const INT16 sAPBudget)
 {
 	// This function is specifically for AI calls to estimate path cost to a location
 	// It sets stuff up to ignore all people
 
 	gfEstimatePath = TRUE;
 
-	const INT16 sRet = PlotPath(pSold, sDestGridno, bCopyRoute, bPlot, bStayOn, usMovementMode, sAPBudget);
+	const INT16 sRet = PlotPath(pSold, sDestGridno, bCopyRoute, bPlot, usMovementMode, sAPBudget);
 
 	gfEstimatePath = FALSE;
 
