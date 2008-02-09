@@ -330,13 +330,6 @@ BOOLEAN InitializeTacticalInterface(  )
 }
 
 
-static BOOLEAN ShutdownTacticalInterface(void)
-{
-	ShutdownCurrentPanel( );
-	return( TRUE );
-}
-
-
 BOOLEAN InitializeCurrentPanel( )
 {
 	BOOLEAN		fOK = FALSE;
