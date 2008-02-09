@@ -69,28 +69,6 @@ static INT32 GetFreeWorldBombIndex(void)
 }
 
 
-static UINT32 GetNumUsedWorldBombs(void)
-{
-	UINT32 uiCount, uiNumItems;
-	uiNumItems = 0;
-
-	if ( guiNumWorldBombs == 0 )
-	{
-		return( 0 );
-	}
-
-	for( uiCount = 0; uiCount < guiNumWorldBombs; uiCount++ )
-	{
-		if( gWorldBombs[ uiCount ].fExists )
-		{
-			uiNumItems++;
-		}
-	}
-
-	return( uiNumItems );
-}
-
-
 static INT32 AddBombToWorld(INT32 iItemIndex)
 {
 	UINT32	iBombIndex;
