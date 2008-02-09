@@ -84,7 +84,6 @@ InitializeStrategicMapSectorTownNames(): complicated?
 InternalDoMercBattleSound(): Sound file selection complicated
 InternalIsPerceivedDifferentThanReality(): complicated
 InvPanelButtonClickCallback(): pointless
-IsDoorOpen(): sGridNo is INT16, but used as %s
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapInventory(): complicated

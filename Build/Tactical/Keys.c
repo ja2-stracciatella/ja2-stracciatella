@@ -1139,56 +1139,6 @@ void TrashDoorStatusArray( )
 }
 
 
-// Returns true if the door is open, otherwise false
-static BOOLEAN IsDoorOpen(INT16 sGridNo)
-{
-	UINT8	ubCnt;
-	STRUCTURE * pStructure;
-	STRUCTURE * pBaseStructure;
-
-	// Find the base tile for the door structure and use that gridno
-	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-	if (pStructure)
-	{
-		pBaseStructure = FindBaseStructure( pStructure );
-	}
-	else
-	{
-		pBaseStructure = NULL;
-	}
-
-	if ( pBaseStructure == NULL )
-	{
-#if 0
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", sGridNo );
-#endif
-		return( FALSE );
-	}
-
-	//if there is an array
-	if( gpDoorStatus )
-	{
-		//Check to see if the user is adding an existing door
-		for( ubCnt=0; ubCnt<gubNumDoorStatus; ubCnt++)
-		{
-			//if this is the door
-			if( gpDoorStatus[ ubCnt ].sGridNo == pBaseStructure->sGridNo )
-			{
-				if( gpDoorStatus[ ubCnt ].ubFlags & DOOR_OPEN )
-					return( TRUE );
-				else
-					return( FALSE );
-			}
-		}
-	}
-
-	#ifdef JA2TESTVERSION
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"WARNING! Failed to find the Door Open Status on Gridno %s", sGridNo );
-	#endif
-
-	return( FALSE );
-}
-
 // Returns a doors status value, NULL if not found
 DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
 {
