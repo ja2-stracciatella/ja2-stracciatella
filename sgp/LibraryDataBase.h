@@ -83,6 +83,7 @@ extern DatabaseManagerHeaderStruct gFileDataBase;
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount);
 BOOLEAN ShutDownFileDatabase(void);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
+
 HWFILE OpenFileFromLibrary(const char *pName);
 HWFILE CreateRealFileHandle(FILE* hFile);
 /* Close an individual file that is contained in the library */

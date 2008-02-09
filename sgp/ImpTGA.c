@@ -1,15 +1,3 @@
-//**************************************************************************
-//
-// Filename :	impTGA.c
-//
-//	Purpose :	.tga file importer
-//
-// Modification history :
-//
-//		20nov96:HJH				- Creation
-//
-//**************************************************************************
-
 #include "HImage.h"
 #include "Types.h"
 #include "FileMan.h"
@@ -66,37 +54,13 @@ end:
 	return( fReturnVal );
 }
 
-//**************************************************************************
-//
-// ReadUncompColMapImage
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		20nov96:HJH		-> creation
-//
-//**************************************************************************
+
 static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );
 }
 
-//**************************************************************************
-//
-// ReadUncompRGBImage
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		20nov96:HJH		-> creation
-//
-//**************************************************************************
+
 static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	UINT8		*pBMData;
@@ -247,37 +211,13 @@ freeEnd:
 	return( FALSE );
 }
 
-//**************************************************************************
-//
-// ReadRLEColMapImage
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		20nov96:HJH		-> creation
-//
-//**************************************************************************
+
 static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );
 }
 
-//**************************************************************************
-//
-// ReadRLERGBImage
-//
-//
-//
-// Parameter List :
-// Return Value :
-// Modification history :
-//
-//		20nov96:HJH		-> creation
-//
-//**************************************************************************
+
 static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
 	return( FALSE );

@@ -3018,11 +3018,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 }
 
 
-//****************************************************************************************
-//
-//	Deletes everything then re-creates the world with simple ground tiles
-//
-//****************************************************************************************
 BOOLEAN NewWorld( void )
 {
 	UINT16				NewIndex;

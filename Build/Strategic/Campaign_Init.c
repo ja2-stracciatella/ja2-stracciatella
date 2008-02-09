@@ -135,10 +135,6 @@ void BuildUndergroundSectorInfoList()
 
 	TrashUndergroundSectorInfo();
 
-	//********************
-	//* BASEMENT LEVEL 1 *
-	//********************
-
 	//Miguel's basement.  Nothing here.
 	curr = NewUndergroundNode( 10, 1, 1 );
 

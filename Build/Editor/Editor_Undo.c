@@ -161,11 +161,6 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 		parent->right = curr;
 	return TRUE;
 }
-//*************************************************************************
-//
-//	Start of Undo code
-//
-//*************************************************************************
 
 
 static BOOLEAN DeleteStackNodeContents(undo_stack* pCurrent);

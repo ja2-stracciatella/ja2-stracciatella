@@ -539,15 +539,6 @@ BOOLEAN RestoreExternBackgroundRectGivenID(const INT32 iBack)
 }
 
 
-//*****************************************************************************
-// gprintfdirty
-//
-//		Dirties a single-frame rect exactly the size needed to save the
-// background for a given call to gprintf. Note that this must be called before
-// the backgrounds are saved, and before the actual call to gprintf that writes
-// to the video buffer.
-//
-//*****************************************************************************
 UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...)
 {
 va_list argptr;

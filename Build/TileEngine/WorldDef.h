@@ -241,7 +241,10 @@ void DestroyTileShadeTables(void);
 
 
 void TrashWorld(void);
+
+/* Deletes everything then re-creates the world with simple ground tiles */
 BOOLEAN NewWorld( void );
+
 BOOLEAN SaveWorld(const char *puiFilename);
 BOOLEAN LoadWorld(const char *puiFilename);
 void CompileWorldMovementCosts(void);

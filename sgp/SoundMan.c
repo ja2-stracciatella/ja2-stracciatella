@@ -883,9 +883,6 @@ static BOOLEAN SoundCleanCache(void)
 	return FALSE;
 }
 
-//*******************************************************************************
-// Low Level Interface (Local use only)
-//*******************************************************************************
 
 // Returns TRUE/FALSE that a sample is currently in use for playing a sound.
 static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s)

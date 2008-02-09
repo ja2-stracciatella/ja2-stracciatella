@@ -3,18 +3,15 @@
 
 #include "Types.h"
 
-//**************************************************************************
-//
-//				Example Usage
-//
-//**************************************************************************
 
-//	// don't send pitch, send width in pixels
-//	SetClippingRegionAndImageWidth( uiPitch, 15, 15, 30, 30 );
-//
-//	LineDraw( TRUE, 10, 10, 200, 200, colour, pImageData);
-//    OR
-//	RectangleDraw( TRUE, 10, 10, 200, 200, colour, pImageData);
+/* Example Usage:
+ * // don't send pitch, send width in pixels
+ * SetClippingRegionAndImageWidth(uiPitch, 15, 15, 30, 30);
+ *
+ * LineDraw( TRUE, 10, 10, 200, 200, colour, pImageData);
+ *    OR
+ * RectangleDraw( TRUE, 10, 10, 200, 200, colour, pImageData);
+ */
 
 
 #ifdef __cplusplus

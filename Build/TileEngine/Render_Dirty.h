@@ -104,8 +104,12 @@ void SetBackgroundRectFilled( UINT32 uiBackgroundID );
 BOOLEAN EmptyBackgroundRects( void );
 
 
-// GPRINTF DIRTY STUFF
+/* Dirties a single-frame rect exactly the size needed to save the background
+ * for a given call to gprintf. Note that this must be called before the
+ * backgrounds are saved, and before the actual call to gprintf that writes to
+ * the video buffer. */
 UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...);
+
 UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
 UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 

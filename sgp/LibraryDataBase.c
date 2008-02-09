@@ -101,13 +101,6 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 static BOOLEAN CloseLibrary(INT16 sLibraryID);
 
 
-//************************************************************************
-//
-//	 ShutDownFileDatabase():  Call this function to close down the file
-//	database.
-//
-//************************************************************************
-
 BOOLEAN ShutDownFileDatabase( )
 {
 	UINT16 sLoop1;
@@ -292,12 +285,6 @@ static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruc
 static INT16 GetLibraryIDFromFileName(const char* pFileName);
 
 
-//************************************************************************
-//
-// CheckIfFileExistInLibrary() determines if a file exists in a library.
-//
-//************************************************************************
-
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 {
 	INT16 sLibraryID;
@@ -314,13 +301,9 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 }
 
 
-//************************************************************************
-//
-//	This function finds out if the file CAN be in a library.  It determines
-//	if the library that the file MAY be in is open.
-//	( eg. File is  Laptop\Test.sti, if the Laptop\ library is open, it returns true
-//
-//************************************************************************
+/* This function finds out if the file CAN be in a library.  It determines if
+ * the library that the file MAY be in is open.  Eg. file is  Laptop/Test.sti,
+ * if the Laptop/ library is open, it returns true */
 static INT16 GetLibraryIDFromFileName(const char* pFileName)
 {
 INT16 sLoop1, sBestMatch=-1;
@@ -378,11 +361,6 @@ static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruc
 }
 
 
-//************************************************************************
-//
-//	CompareFileNames() gets called by the binary search function.
-//
-//************************************************************************
 static int CompareFileNames(const void* key, const void* member)
 {
 	const char* sSearchKey = key;

@@ -1,15 +1,3 @@
-//**************************************************************************
-//
-// Filename :	impTGA.h
-//
-//	Purpose :	.tga file importer function prototypes
-//
-// Modification history :
-//
-//		20nov96:HJH				- Creation
-//
-//**************************************************************************
-
 #ifndef _impTGA_h
 #define _impTGA_h
 
