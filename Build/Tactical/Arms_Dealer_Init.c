@@ -1020,26 +1020,6 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 }
 
 
-static UINT32 GetTimeToFixItemBeingRepaired(UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement)
-{
-	//dealer must be a repair dealer
-	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
-	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	// that item must be active
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
-	// that item must be in repair
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info.bItemCondition < 0 );
-
-	//if the item has already been repaired
-	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
-		return( 0 );
-
-	//Return how many more minutes it will take to fix the item
-	return( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime - GetWorldTotalMin() );
-}
-
-
 static BOOLEAN DoesItemAppearInDealerInventoryList(UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
 
 
@@ -2203,30 +2183,6 @@ static UINT32 CalculateSimpleItemRepairTime(UINT8 ubArmsDealer, UINT16 usItemInd
 	}
 
 	return( uiTimeToRepair );
-}
-
-
-static UINT32 CalculateSpecialItemRepairCost(UINT8 ubArmsDealer, UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo)
-{
-	UINT32 uiRepairCost;
-	UINT8 ubCnt;
-
-	uiRepairCost = CalculateSimpleItemRepairCost( ubArmsDealer, usItemIndex, pSpclItemInfo->bItemCondition );
-
-	// add cost of repairing any attachments on it
-	for ( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++ )
-	{
-		if ( pSpclItemInfo->usAttachment[ ubCnt ] != NONE )
-		{
-			// if damaged and repairable
-			if ( ( pSpclItemInfo->bAttachmentStatus[ ubCnt ] < 100 ) && CanDealerRepairItem( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ] ) )
-			{
-				uiRepairCost += CalculateSimpleItemRepairCost( ubArmsDealer, pSpclItemInfo->usAttachment[ ubCnt ], pSpclItemInfo->bAttachmentStatus[ ubCnt ] );
-			}
-		}
-	}
-
-	return( uiRepairCost );
 }
 
 
