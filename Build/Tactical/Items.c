@@ -1132,20 +1132,6 @@ INT8 FindObjClass(const SOLDIERTYPE* const pSoldier, const UINT32 usItemClass)
 }
 
 
-static INT8 FindObjClassAfterSlot(SOLDIERTYPE* pSoldier, INT8 bStartAfter, UINT32 usItemClass)
-{
-	INT8 bLoop;
-
-	for (bLoop = bStartAfter + 1; bLoop < NUM_INV_SLOTS; bLoop++)
-	{
-		if (Item[pSoldier->inv[bLoop].usItem].usItemClass == usItemClass)
-		{
-			return( bLoop );
-		}
-	}
-	return( NO_SLOT );
-}
-
 INT8 FindAIUsableObjClass( SOLDIERTYPE * pSoldier, 	UINT32 usItemClass )
 {
 	// finds the first object of the specified class which does NOT have
@@ -1619,21 +1605,6 @@ BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 }
 
 
-static BOOLEAN ValidItemLaunchable(OBJECTTYPE* pObj, UINT16 usAttachment)
-{
-	if ( !ValidLaunchable( usAttachment, pObj->usItem ) )
-	{
-		return( FALSE );
-	}
-	// if we can find another of the same class as the attachment, it's not possible
-	if ( FindAttachmentByClass( pObj, Item[ usAttachment ].usItemClass ) != NO_SLOT )
-	{
-		return( FALSE );
-	}
-	return( TRUE );
-}
-
-
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
 	INT32 iLoop = 0;
@@ -1882,20 +1853,6 @@ void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest )
 	}
 }
 
-
-static void SwapWithinObj(OBJECTTYPE* pObj, UINT8 ubIndex1, UINT8 ubIndex2)
-{
-	INT8 bTemp;
-
-	if (pObj->ubNumberOfObjects >= ubIndex1 || pObj->ubNumberOfObjects >= ubIndex1)
-	{
-		return;
-	}
-
-	bTemp = pObj->bStatus[ubIndex1];
-	pObj->bStatus[ubIndex1] = pObj->bStatus[ubIndex2];
-	pObj->bStatus[ubIndex2] = bTemp;
-}
 
 void DamageObj( OBJECTTYPE * pObj, INT8 bAmount )
 {
@@ -4582,35 +4539,6 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 }
 
 
-static void SwapOutHandItem(SOLDIERTYPE* pSoldier)
-{
-	BOOLEAN			fOk;
-
-	CHECKV( pSoldier );
-
-	// puts away the item in the main hand
-	if (pSoldier->inv[HANDPOS].usItem != NOTHING )
-	{
-		if (pSoldier->inv[SECONDHANDPOS].usItem == NOTHING)
-		{
-			// just swap the hand item to the second hand
-			SwapObjs( &(pSoldier->inv[HANDPOS]), &(pSoldier->inv[SECONDHANDPOS]) );
-			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
-			return;
-		}
-		else
-		{
-			// try placing it somewhere else in our inventory
-			fOk = AutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE );
-			if (fOk)
-			{
-				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
-			}
-			// otherwise there's no room for the item anywhere!
-		}
-	}
-}
-
 void WaterDamage( SOLDIERTYPE *pSoldier )
 {
 	// damage guy's equipment and camouflage due to water
@@ -4819,18 +4747,6 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 	pSoldier->bMonsterSmell += sPointsToUse / 2;
 
 	return( TRUE );
-}
-
-
-static UINT32 ConvertProfileMoneyValueToObjectTypeMoneyValue(UINT8 ubStatus)
-{
-	return( ubStatus * 50 );
-}
-
-
-static UINT8 ConvertObjectTypeMoneyValueToProfileMoneyValue(UINT32 uiMoneyAmount)
-{
-	return( (UINT8)( uiMoneyAmount / 50 ) );
 }
 
 

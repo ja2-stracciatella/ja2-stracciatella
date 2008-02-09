@@ -3391,7 +3391,6 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if (!AM_A_ROBOT(s))
 		{
 			const UINT16 usOldHandItem = s->inv[HANDPOS].usItem;
-			//SwapOutHandItem(s);
 			SwapHandItems(s);
 			ReLoadSoldierAnimationDueToHandItemChange(s, usOldHandItem, s->inv[HANDPOS].usItem);
 			fInterfacePanelDirty = DIRTYLEVEL2;
