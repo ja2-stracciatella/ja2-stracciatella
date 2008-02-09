@@ -60,13 +60,10 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* pStartSoldier, con
 UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* pStartSoldier, const SOLDIERTYPE* pEndSoldier);
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel );
 UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel, const SOLDIERTYPE* target);
-INT32 SoldierToLocationVisibleDistance( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, UINT8 ubTileSightLimit, INT8 bAware );
 INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGridNo);
 INT32 LocationToLocationLineOfSightTest( INT16 sStartGridNo, INT8 bStartLevel, INT16 sEndGridNo, INT8 bEndLevel, UINT8 ubTileSightLimit, INT8 bAware );
 
 BOOLEAN CalculateSoldierZPos(const SOLDIERTYPE* pSoldier, UINT8 ubPosType, FLOAT* pdZPos);
-
-BOOLEAN TestFireBullet( SOLDIERTYPE * pStartSoldier, SOLDIERTYPE * pEndSoldier );
 
 
 #define HEIGHT_UNITS 256
@@ -164,6 +161,5 @@ extern LOSResults gLOSTestResults;
 #endif
 
 void MoveBullet(BULLET* b);
-//BOOLEAN FireBullet2( SOLDIERTYPE * pFirer, FLOAT dEndX, FLOAT dEndY, FLOAT dEndZ, INT16 sHitBy );
 
 #endif
