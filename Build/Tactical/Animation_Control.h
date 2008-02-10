@@ -545,7 +545,7 @@ extern UINT16 gubAnimSurfaceCorpseID[][NUMANIMATIONSTATES];
 BOOLEAN LoadAnimationStateInstructions(void);
 void InitAnimationSurfacesPerBodytype(void);
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );
-BOOLEAN SubstituteBodyTypeAnimation(const SOLDIERTYPE* pSoldier, UINT16 usTestState, UINT16* pusSubState);
+UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* s, UINT16 anim_state);
 INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename );
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );

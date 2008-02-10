@@ -1041,7 +1041,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	INT16		sBPCost = 0;
 	UINT32	uiOldAnimFlags;
 	UINT32  uiNewAnimFlags;
-	UINT16	usSubState;
 	UINT16	usItem;
 	BOOLEAN	fTryingToRestart = FALSE;
 
@@ -1265,12 +1264,8 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 			UnSetUIBusy(pSoldier);
 		}
 
-
 		// SUBSTITUDE VARIOUS REG ANIMATIONS WITH ODD BODY TYPES
-		if ( SubstituteBodyTypeAnimation( pSoldier, usNewState, &usSubState ) )
-		{
-			usNewState = usSubState;
-		}
+		usNewState = SubstituteBodyTypeAnimation(pSoldier, usNewState);
 
 		// CHECK IF WE CAN DO THIS ANIMATION!
 		if ( IsAnimationValidForBodyType( pSoldier, usNewState ) == FALSE )

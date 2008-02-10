@@ -2437,148 +2437,82 @@ BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
 }
 
 
-BOOLEAN SubstituteBodyTypeAnimation(const SOLDIERTYPE* pSoldier, UINT16 usTestState, UINT16* pusSubState)
+UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* const s, const UINT16 anim_state)
 {
-	BOOLEAN fSubFound = FALSE;
-
-	*pusSubState = usTestState;
-
-
-	if ( pSoldier->ubBodyType == QUEENMONSTER )
+	switch (s->ubBodyType)
 	{
-		 switch( usTestState )
-		 {
+		case QUEENMONSTER:
+			switch (anim_state)
+			{
 				case STANDING:
 				case WALKING:
-				case RUNNING:
+				case RUNNING:  return QUEEN_MONSTER_BREATHING;
+			}
+			break;
 
-					*pusSubState = QUEEN_MONSTER_BREATHING;
-					fSubFound = TRUE;
-					break;
-		 }
-	}
+		case LARVAE_MONSTER:
+			switch (anim_state)
+			{
+				case STANDING: return LARVAE_BREATH;
+				case WALKING:
+				case RUNNING:  return LARVAE_WALK;
+			}
+			break;
 
-	if ( pSoldier->ubBodyType == LARVAE_MONSTER )
-	{
-		 switch( usTestState )
-		 {
+		case CROW:
+			switch (anim_state)
+			{
+				case WALKING:  return CROW_WALK;
+				case STANDING: return CROW_EAT;
+			}
+			break;
+
+		case BLOODCAT:
+			switch (anim_state)
+			{
+				case RUNNING: return BLOODCAT_RUN;
+			}
+			break;
+
+		case ADULTFEMALEMONSTER:
+		case AM_MONSTER:
+		case YAF_MONSTER:
+		case YAM_MONSTER:
+			switch (anim_state)
+			{
+				case WALKING:
+				case RUNNING: return ADULTMONSTER_WALKING;
+			}
+			break;
+
+		case ROBOTNOWEAPON:
+			switch (anim_state)
+			{
 				case STANDING:
-
-					*pusSubState = LARVAE_BREATH;
-					fSubFound = TRUE;
+					// OK, if they are on the CIV_TEAM, sub for no camera moving
+					if (s->bTeam == CIV_TEAM) return ROBOT_CAMERA_NOT_MOVING;
 					break;
 
 				case WALKING:
-				case RUNNING:
+				case RUNNING: return ROBOT_WALK;
+			}
+			break;
 
-					*pusSubState = LARVAE_WALK;
-					fSubFound = TRUE;
-					break;
-
-		 }
+		default:
+			if (IS_CIV_BODY_TYPE(s))
+			{
+				switch (anim_state)
+				{
+					case KNEEL_UP:          return END_COWER;
+					case KNEEL_DOWN:        return START_COWER;
+					case WKAEUP_FROM_SLEEP:
+					case GOTO_SLEEP:
+					case SLEEPING:          return STANDING;
+				}
+			}
+			break;
 	}
-
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		 switch( usTestState )
-		 {
-				case WALKING:
-
-					*pusSubState = CROW_WALK;
-					fSubFound = TRUE;
-					break;
-
-				case STANDING:
-
-					*pusSubState = CROW_EAT;
-					fSubFound = TRUE;
-					break;
-
-		 }
-	}
-
-	if ( pSoldier->ubBodyType == BLOODCAT )
-	{
-		 switch( usTestState )
-		 {
-				case RUNNING:
-					*pusSubState = BLOODCAT_RUN;
-					fSubFound = TRUE;
-					break;
-
-		 }
-
-	}
-
-
-	if ( pSoldier->ubBodyType == ADULTFEMALEMONSTER || pSoldier->ubBodyType == AM_MONSTER ||
-			 pSoldier->ubBodyType == YAF_MONSTER || pSoldier->ubBodyType == YAM_MONSTER )
-	{
-		 switch( usTestState )
-		 {
-				case WALKING:
-					*pusSubState = ADULTMONSTER_WALKING;
-					fSubFound = TRUE;
-					break;
-
-				case RUNNING:
-					*pusSubState = ADULTMONSTER_WALKING;
-					fSubFound = TRUE;
-					break;
-
-		 }
-	}
-
-	if ( pSoldier->ubBodyType == ROBOTNOWEAPON )
-	{
-		 switch( usTestState )
-		 {
-        case STANDING:
-
-          // OK, if they are on the CIV_TEAM, sub for no camera moving
-          if ( pSoldier->bTeam == CIV_TEAM )
-          {
-					  *pusSubState = ROBOT_CAMERA_NOT_MOVING;
-					  fSubFound = TRUE;
-          }
-          break;
-
-				case WALKING:
-					*pusSubState = ROBOT_WALK;
-					fSubFound = TRUE;
-					break;
-
-				case RUNNING:
-					*pusSubState = ROBOT_WALK;
-					fSubFound = TRUE;
-					break;
-
-		 }
-	}
-
-	if ( IS_CIV_BODY_TYPE( pSoldier ) )
-	{
-		switch( usTestState )
-		{
-			case KNEEL_UP:
-				*pusSubState = END_COWER;
-				fSubFound = TRUE;
-				break;
-			case KNEEL_DOWN:
-				*pusSubState = START_COWER;
-				fSubFound = TRUE;
-				break;
-
-      case WKAEUP_FROM_SLEEP:
-      case GOTO_SLEEP:
-      case SLEEPING:
-				*pusSubState = STANDING;
-				fSubFound = TRUE;
-				break;
-		}
-	}
-
-	return( fSubFound );
+	return anim_state;
 }
 
 
@@ -2722,12 +2656,8 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	UINT16	usItem;
 	UINT8		ubWaterHandIndex = 1;
 	BOOLEAN	fAdjustedForItem	= FALSE;
-	UINT16		usNewAnimState;
 
-	if ( SubstituteBodyTypeAnimation( pSoldier, usAnimState, &usNewAnimState ) )
-	{
-		usAnimState = usNewAnimState;
-	}
+	usAnimState = SubstituteBodyTypeAnimation(pSoldier, usAnimState);
 
 	usAnimSurface	=	gubAnimSurfaceIndex[pSoldier->ubBodyType][usAnimState];
 
