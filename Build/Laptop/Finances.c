@@ -1518,14 +1518,10 @@ static INT32 GetPreviousDaysIncome(void)
   // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	while( ( iByteCount < FileGetSize( hFileHandle ) ) && ( ! fOkToContinue ) &&( !fGoneTooFar ) )
 	{
-    FileGetPos( hFileHandle );
-
 		FileSeek( hFileHandle,  RECORD_SIZE * iCounter , FILE_SEEK_FROM_END );
 
     // incrment byte count
     iByteCount += RECORD_SIZE;
-
-    FileGetPos( hFileHandle );
 
 		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
 		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
