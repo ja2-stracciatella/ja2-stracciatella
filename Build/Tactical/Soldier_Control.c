@@ -1544,14 +1544,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		AdjustNoAPToFinishMove( pSoldier, FALSE );
 	}
 
-	if ( gAnimControl[ usNewState ].uiFlags & ANIM_UPDATEMOVEMENTMODE )
-	{
-		if ( pSoldier->bTeam == gbPlayerNum )
-		{
-			// pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ usNewState ].ubEndHeight );
-		}
-	}
-
 	// ATE: If not a moving animation - turn off reverse....
 	if ( !( gAnimControl[ usNewState ].uiFlags & ANIM_MOVING ) )
 	{
