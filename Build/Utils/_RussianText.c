@@ -3275,10 +3275,6 @@ const wchar_t* pMessageStrings[] =
 	L"Нет описания", //Save slots that don't have a description.
 	L"Игра сохранена",
 	L"Игра сохранена",
-	L"QuickSave", //The name of the quicksave file (filename, text reference)
-	L"SaveGame",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
-	L"sav",				//The 3 character dos extension (represents sav)
-	L"../SavedGames", //The name of the directory where games are saved.
 	L"День",
 	L"Наемников",
 	L"Пустая ячейка сохранения", 		//An empty save game slot

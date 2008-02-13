@@ -3271,10 +3271,6 @@ const wchar_t* pMessageStrings[] =
 	L"Geen beschrijving", //Save slots that don't have a description.
 	L"Spel opgeslagen.",
 	L"Spel opgeslagen.",
-	L"QuickSave", //The name of the quicksave file (filename, text reference)
-	L"SaveGame",	//The name of the normal savegame file, such as SaveGame01, SaveGame02, etc.
-	L"sav",				//The 3 character dos extension (represents sav)
-	L"../SavedGames", //The name of the directory where games are saved.
 	L"Dag",
 	L"Huurl",
 	L"Leeg Slot",		//An empty save game slot
