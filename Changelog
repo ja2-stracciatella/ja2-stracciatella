@@ -1,3 +1,4 @@
+(r3023) Fix a vanilla glitch: When a random soldier in a vehicle should say a battle sound maybe none was said though there were soldiers in the vehicle.
 (r2984) Fix a vanilla memory leak when handling delayed/stolen items from Bobby Ray's.
 (r2930) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when clicking on a vehicle in the tactical screen.
 (r2896) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when loading a savegame, which starts in tacical, and opening the assignment menu of a merc.

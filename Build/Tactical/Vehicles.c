@@ -1809,40 +1809,23 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 }
 
 
-SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier )
+SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 {
-	UINT8	ubMercsInSector[ 20 ] = { 0 };
-	UINT8	ubNumMercs = 0;
-	UINT8	ubChosenMerc;
-
 	// If not a vehicle, ignore!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE)) return NULL;
+
+	const VEHICLETYPE* const v = &pVehicleList[pSoldier->bVehicleID];
+
+	size_t       n_mercs = 0;
+	SOLDIERTYPE* mercs_in_vehicle[20];
+	const INT32 seats = GetVehicleSeats(v);
+	for (size_t i = 0; i < seats; ++i)
 	{
-		return( NULL );
+		SOLDIERTYPE* const s = v->pPassengers[i];
+		if (s != NULL) mercs_in_vehicle[n_mercs++] = s;
 	}
 
-	const INT32 iId = pSoldier->bVehicleID;
-
-	// Loop through passengers and update each guy's position
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
-	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
-		{
-			ubMercsInSector[ ubNumMercs ] = (UINT8)iCounter;
-			ubNumMercs++;
-		}
-	}
-
-	if ( ubNumMercs > 0 )
-	{
-		ubChosenMerc = (UINT8)Random( ubNumMercs );
-
-		// If we are air raid, AND red exists somewhere...
-		return pVehicleList[iId].pPassengers[ubChosenMerc]; // XXX TODO000D
-  }
-
-  return( NULL );
+	return n_mercs == 0 ? NULL : mercs_in_vehicle[Random(n_mercs)];
 }
 
 
