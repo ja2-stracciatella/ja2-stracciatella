@@ -2073,7 +2073,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	}
 	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_QUIT };
+		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_FIRED };
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
