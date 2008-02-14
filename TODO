@@ -17,7 +17,6 @@ med prio
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
-- HACK0002 get rid of the directory mumbo jumbo
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
   distribution, which would be a rather complex task with pregenerated randoms
 - HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
