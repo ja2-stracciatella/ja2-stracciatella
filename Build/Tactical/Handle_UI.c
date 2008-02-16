@@ -491,8 +491,8 @@ UINT32  HandleTacticalUI( void )
 		{
 			// Look for soldier full
 			SOLDIERTYPE* const s = FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
-			gUIFullTarget = s;
-			if (s != NULL) guiUIFullTargetFlags = GetSoldierFindFlags(s);
+			gUIFullTarget        = s;
+			guiUIFullTargetFlags = (s != NULL ? GetSoldierFindFlags(s) : 0);
 		}
 
 		// Check if current event has changed and clear event if so, to prepare it for execution
