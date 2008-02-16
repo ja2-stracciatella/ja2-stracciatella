@@ -562,8 +562,6 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
 
-	BOOLEAN				fDone = FALSE;
-
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return;
 
@@ -603,9 +601,6 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 								// Check if we're on terrain
 								//if (gUIFullTarget == NULL)
 								//{
-									// ATE:
-									fDone = FALSE;
-
 									if ( ( guiUIFullTargetFlags & OWNED_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
 									{
 										const SOLDIERTYPE* const tgt = gUIFullTarget;
@@ -618,11 +613,6 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
                       }
                     }
                   }
-
-									if( fDone == TRUE )
-									{
-										break;
-									}
 
 									if (GetSelectedMan() != NULL && !fClickHoldIntercepted)
 									{
