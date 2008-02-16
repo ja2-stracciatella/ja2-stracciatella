@@ -494,10 +494,6 @@ UINT32  HandleTacticalUI( void )
 			gUIFullTarget = s;
 			if (s != NULL) guiUIFullTargetFlags = GetSoldierFindFlags(s);
 		}
-		else
-		{
-			gUIFullTarget = NULL;
-		}
 
 		// Check if current event has changed and clear event if so, to prepare it for execution
 		// Clearing it does things like set first time flag, param variavles, etc
