@@ -873,26 +873,21 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 								case TALKCURSOR_MODE:
 								case MOVE_MODE:
 								{
-									const SOLDIERTYPE* const sel = GetSelectedMan();
-									if (sel != NULL)
-                  {
-									  const SOLDIERTYPE* const tgt = gUIFullTarget;
-									  if (tgt != NULL &&
-									  		!(tgt->uiStatusFlags & SOLDIER_VEHICLE) &&
-									  		guiUIFullTargetFlags & OWNED_MERC       &&
-									  		guiUIFullTargetFlags & VISIBLE_MERC     &&
-									  		!(guiUIFullTargetFlags & DEAD_MERC))
-									  {
-											PopupAssignmentMenuInTactical();
-											fClickHoldIntercepted = TRUE;
-										  break;
-									  }
-									  else
-									  {
-										  fShowAssignmentMenu = FALSE;
-										  CreateDestroyAssignmentPopUpBoxes( );
-										  DetermineWhichAssignmentMenusCanBeShown( );
-									  }
+									const SOLDIERTYPE* const tgt = gUIFullTarget;
+									if (tgt != NULL                             &&
+											!(tgt->uiStatusFlags & SOLDIER_VEHICLE) &&
+											guiUIFullTargetFlags & OWNED_MERC       &&
+											guiUIFullTargetFlags & VISIBLE_MERC     &&
+											!(guiUIFullTargetFlags & DEAD_MERC))
+									{
+										PopupAssignmentMenuInTactical();
+										fClickHoldIntercepted = TRUE;
+									}
+									else if (GetSelectedMan() != NULL)
+									{
+										fShowAssignmentMenu = FALSE;
+										CreateDestroyAssignmentPopUpBoxes();
+										DetermineWhichAssignmentMenusCanBeShown();
 
 									  // ATE:
 									  if ( !fClickHoldIntercepted )

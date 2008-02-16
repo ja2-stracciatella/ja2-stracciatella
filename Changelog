@@ -1,3 +1,4 @@
+(r3028) Fix a vanilla glich, which prevented showing the assignment menu by right-clicking in tactical mode, when a soldier was targeted, but no soldier was selected.
 (r3027) Fix a vanilla bug, which bogusly allowed giving vehicles other assignments (like "train") by right-clicking them in tactical mode.
 (r3023) Fix a vanilla glitch: When a random soldier in a vehicle should say a battle sound maybe none was said though there were soldiers in the vehicle.
 (r2984) Fix a vanilla memory leak when handling delayed/stolen items from Bobby Ray's.
