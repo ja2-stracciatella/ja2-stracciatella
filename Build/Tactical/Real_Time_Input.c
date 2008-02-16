@@ -876,10 +876,12 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 									const SOLDIERTYPE* const sel = GetSelectedMan();
 									if (sel != NULL)
                   {
-									  if (guiUIFullTargetFlags & OWNED_MERC   &&
-									  		guiUIFullTargetFlags & VISIBLE_MERC &&
-									  		!(guiUIFullTargetFlags & DEAD_MERC) &&
-									  		!(sel->uiStatusFlags & SOLDIER_VEHICLE))
+									  const SOLDIERTYPE* const tgt = gUIFullTarget;
+									  if (tgt != NULL &&
+									  		!(tgt->uiStatusFlags & SOLDIER_VEHICLE) &&
+									  		guiUIFullTargetFlags & OWNED_MERC       &&
+									  		guiUIFullTargetFlags & VISIBLE_MERC     &&
+									  		!(guiUIFullTargetFlags & DEAD_MERC))
 									  {
 											PopupAssignmentMenuInTactical();
 											fClickHoldIntercepted = TRUE;
