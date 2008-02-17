@@ -75,7 +75,6 @@ void GetRTMouseButtonInput(UINT32* puiNewEvent)
 static void QueryRTLeftButton(UINT32* puiNewEvent)
 {
 	static	UINT32 uiSingleClickTime;
-	BOOLEAN fDone = FALSE;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
@@ -649,41 +648,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																{
 																	gfRTClickLeftHoldIntercepted = TRUE;
 																}
-
-
-#if 0
-															fDone = FALSE;
-															pSoldier = gUIFullTarget;
-															if (pSoldier != NULL && gpItemPointer == NULL)
-															{
-																if( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) &&( pSoldier->bAssignment >= ON_DUTY )&&!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-																{
-																	fShowAssignmentMenu = TRUE;
-																	gfRTClickLeftHoldIntercepted = TRUE;
-																	CreateDestroyAssignmentPopUpBoxes( );
-																	SetTacticalPopUpAssignmentBoxXY( );
-																	DetermineBoxPositions( );
-																	DetermineWhichAssignmentMenusCanBeShown( );
-																	fFirstClickInAssignmentScreenMask = TRUE;
-																	gfIgnoreScrolling = TRUE;
-
-																	fDone = TRUE;
-																}
-																else
-																{
-																	fShowAssignmentMenu = FALSE;
-																	CreateDestroyAssignmentPopUpBoxes( );
-																	DetermineWhichAssignmentMenusCanBeShown( );
-																}
-															}
-
-															if( fDone == TRUE )
-															{
-																break;
-															}
-#endif
 															break;
-
 
 														case LOOKCURSOR_MODE:
 															// If we cannot actually do anything, return to movement mode
@@ -1208,17 +1173,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 										*puiNewEvent = T_CHANGE_TO_TALKING;
 										return;
 									}
-									else if ( ubItemCursor == AIDCURS )
-									{
-										// IF it's an ememy, goto confirm action mode
-										if ( ( guiUIFullTargetFlags & OWNED_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )
-										{
-											//MoveTargetSoldier = gUIFullTarget;
-											//*puiNewEvent = A_ON_TERRAIN;
-											//return;
-										}
-									}
-									else
+									else if (ubItemCursor != AIDCURS)
 									{
 										// IF it's an ememy, goto confirm action mode
 										if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && ( guiUIFullTargetFlags & VISIBLE_MERC ) && !( guiUIFullTargetFlags & DEAD_MERC ) )

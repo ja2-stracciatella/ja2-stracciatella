@@ -199,25 +199,6 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 			{
 				ubCursorID =  HandleNonActivatedTossCursor( pSoldier, sTargetGridNo, fRecalc, uiCursorFlags, ubItemCursor );
 			}
-
-#if 0
-			if ( gCurrentUIMode == ACTION_MODE && ubItemCursor == TRAJECTORYCURS && ( gTacticalStatus.uiFlags & INCOMBAT ) )
-			{
-				// Alrighty, let's change the cursor!
-				const SOLDIERTYPE* const tgt = gUIFullTarget;
-				if (fRecalc &&
-						tgt != NOBODY &&
-						IsValidTargetMerc(tgt) &&
-						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
-						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
-						guiUIFullTargetFlags & VISIBLE_MERC &&
-						!(guiUIFullTargetFlags & DEAD_MERC) &&
-						!gfCannotGetThrough)
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
-				}
-			}
-#endif
 			break;
 
 		case BOMBCURS:

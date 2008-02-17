@@ -597,43 +597,24 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 							case LOOKCURSOR_MODE:
 							case TALKCURSOR_MODE:
 							case MOVE_MODE:
-
-								// Check if we're on terrain
-								//if (gUIFullTarget == NULL)
-								//{
-									if ( ( guiUIFullTargetFlags & OWNED_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
+								if (guiUIFullTargetFlags & OWNED_MERC && !(guiUIFullTargetFlags & UNCONSCIOUS_MERC))
+								{
+									const SOLDIERTYPE* const tgt = gUIFullTarget;
+									if (tgt != NULL && gpItemPointer == NULL && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
 									{
-										const SOLDIERTYPE* const tgt = gUIFullTarget;
-										if (tgt != NULL && gpItemPointer == NULL && !(tgt->uiStatusFlags & SOLDIER_VEHICLE))
+										//if (tgt->bAssignment >= ON_DUTY)
 										{
-											//if (tgt->bAssignment >= ON_DUTY)
-											{
-												PopupAssignmentMenuInTactical();
-    										fClickHoldIntercepted = TRUE;
-                      }
-                    }
-                  }
-
-									if (GetSelectedMan() != NULL && !fClickHoldIntercepted)
-									{
-										*puiNewEvent = U_MOVEMENT_MENU;
-										fClickHoldIntercepted = TRUE;
+											PopupAssignmentMenuInTactical();
+											fClickHoldIntercepted = TRUE;
+										}
 									}
-								//}
-								//else
-								//{
-									// If we are on a selected guy
-								//	if ( guiUIFullTargetFlags & SELECTED_MERC && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
-								//	{
-										//*puiNewEvent = U_POSITION_MENU;
-										//fClickHoldIntercepted = TRUE;
-								//	}
-							//		else if ( guiUIFullTargetFlags & OWNED_MERC )
-							//		{
-										// If we are on a non-selected guy selected guy
-							//		}
+								}
 
-								//}
+								if (GetSelectedMan() != NULL && !fClickHoldIntercepted)
+								{
+									*puiNewEvent = U_MOVEMENT_MENU;
+									fClickHoldIntercepted = TRUE;
+								}
 								break;
 						}
 					}
