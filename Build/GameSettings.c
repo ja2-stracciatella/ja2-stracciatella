@@ -252,7 +252,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 void DisplayGameSettings( )
 {
 	//Display the version number
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls (%hs)", pMessageStrings[MSG_VERSION], zVersionLabel, czVersionNumber);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %hs (%hs)", pMessageStrings[MSG_VERSION], g_version_label, czVersionNumber);
 
 	//Display the difficulty level
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);

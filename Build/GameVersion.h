@@ -13,7 +13,7 @@ extern "C" {
 //	Keeps track of the game version
 //
 
-extern	wchar_t		zVersionLabel[16];
+extern const char g_version_label[];
 extern const char czVersionNumber[];
 
 

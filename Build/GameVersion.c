@@ -5,17 +5,13 @@
 //	Keeps track of the game version
 //
 
+const char g_version_label[] =
 #ifdef JA2BETAVERSION
-
-//BETA/TEST BUILD VERSION
-wchar_t		zVersionLabel[16]		= L"Beta v. 0.98";
-
+	//BETA/TEST BUILD VERSION
+	"Beta v. 0.98";
 #else
-
 	//RELEASE BUILD VERSION
-	wchar_t		zVersionLabel[16]		= L"Release v1.12";
-
-
+	"Release v1.12";
 #endif
 
 const char czVersionNumber[] = "Build 04.12.02";
