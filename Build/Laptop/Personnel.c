@@ -402,9 +402,8 @@ static void RemovePersonnelGraphics(void)
 
 
 static void DisplayFaceOfDisplayedMerc(void);
-static void DisplayNumberDeparted(void);
-static void DisplayNumberOnCurrentTeam(void);
 static void DisplayPastMercsPortraits(void);
+static void DisplayPersonnelSummary(void);
 static void DisplayPersonnelTextOnTitleBar(void);
 static void DisplayPicturesOfCurrentTeam(void);
 static void DisplayStateOfPastTeamMembers(void);
@@ -435,12 +434,7 @@ void RenderPersonnel(void)
 	// show selected merc
 	DisplayFaceOfDisplayedMerc();
 
-	// show current team size
-	DisplayNumberOnCurrentTeam();
-
-	// show departed team size
-	DisplayNumberDeparted();
-
+	DisplayPersonnelSummary();
 	DisplayTeamStats();
 
 	// past team
@@ -1437,7 +1431,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 static void DisplayCostOfCurrentTeam(void);
 
 
-static void DisplayNumberOnCurrentTeam(void)
+static void DisplayPersonnelSummary(void)
 {
 	// display number on team
 	SetFont(FONT10ARIAL);
@@ -1448,36 +1442,22 @@ static void DisplayNumberOnCurrentTeam(void)
 	{
 		mprintf(PERS_CURR_TEAM_X, PERS_CURR_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[0], GetNumberOfMercsDeadOrAliveOnPlayersTeam());
 		DisplayCostOfCurrentTeam();
-	}
-	else
-	{
-		const wchar_t* s = pPersonelTeamStrings[0];
-		INT16 sX = 0;
-		INT16 sY = 0;
-		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, PERS_CURR_TEAM_Y, s);
-	}
-}
 
-
-static void DisplayNumberDeparted(void)
-{
-	// display number departed from team
-	SetFont(FONT10ARIAL);
-	SetFontBackground(FONT_BLACK);
-	SetFontForeground(PERS_TEXT_FONT_COLOR);
-
-	if (!fCurrentTeamMode)
-	{
-		mprintf(PERS_CURR_TEAM_X, PERS_DEPART_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[1], GetNumberOfPastMercsOnPlayersTeam());
-	}
-	else
-	{
-		const wchar_t* s = pPersonelTeamStrings[1];
+		const wchar_t* const s = pPersonelTeamStrings[1];
 		INT16 sX = 0;
 		INT16 sY = 0;
 		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
 		mprintf(sX, PERS_DEPART_TEAM_Y, s);
+	}
+	else
+	{
+		const wchar_t* const s = pPersonelTeamStrings[0];
+		INT16 sX = 0;
+		INT16 sY = 0;
+		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
+		mprintf(sX, PERS_CURR_TEAM_Y, s);
+
+		mprintf(PERS_CURR_TEAM_X, PERS_DEPART_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[1], GetNumberOfPastMercsOnPlayersTeam());
 	}
 }
 
