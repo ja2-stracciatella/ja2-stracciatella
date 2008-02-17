@@ -877,7 +877,12 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 		INT8 bSkill1 = p->bSkillTrait;
 		INT8 bSkill2 = p->bSkillTrait2;
 
-		if (bSkill1 == NO_SKILLTRAIT) bSkill1 = bSkill2;
+		if (bSkill1 == NO_SKILLTRAIT)
+		{
+			bSkill1 = bSkill2;
+			bSkill2 = NO_SKILLTRAIT;
+		}
+
 		if (bSkill1 != NO_SKILLTRAIT)
 		{
 			if (bSkill1 == bSkill2)
