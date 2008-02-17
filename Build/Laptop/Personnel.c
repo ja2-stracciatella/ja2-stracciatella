@@ -401,7 +401,6 @@ static void RemovePersonnelGraphics(void)
 }
 
 
-static void DisplayAmountOnCurrentMerc(void);
 static void DisplayFaceOfDisplayedMerc(void);
 static void DisplayNumberDeparted(void);
 static void DisplayNumberOnCurrentTeam(void);
@@ -431,6 +430,8 @@ void RenderPersonnel(void)
 
 	DisplayPastMercsPortraits();
 
+	RenderAtmPanel();
+
 	// show selected merc
 	DisplayFaceOfDisplayedMerc();
 
@@ -450,11 +451,6 @@ void RenderPersonnel(void)
 
 	// show text on titlebar
 	DisplayPersonnelTextOnTitleBar();
-
-	// render the atm panel
-	RenderAtmPanel();
-
-	DisplayAmountOnCurrentMerc();
 
 	// en-dis-able start button
 	UpDateStateOfStartButton();
@@ -1149,6 +1145,7 @@ typedef struct PastMercInfo
 } PastMercInfo;
 
 
+static void DisplayAmountOnChar(const SOLDIERTYPE*);
 static void DisplayDepartedCharName(const MERCPROFILESTRUCT*, INT32 iState);
 static void DisplayDepartedCharStats(const MERCPROFILESTRUCT*, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
@@ -1171,6 +1168,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
 		RenderPersonnelStats(s);
+		DisplayAmountOnChar(s);
 	}
 	else
 	{
@@ -2479,12 +2477,6 @@ static INT32 GetFundsOnMerc(const SOLDIERTYPE* pSoldier)
 	INT32 iCurrentPocket = 0;
 	// run through mercs pockets, if any money in them, add to total
 
-	// error check
-	if (pSoldier == NULL)
-	{
-		return 0;
-	}
-
 	// run through grunts pockets and count all the spare change
 	for (iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++)
 	{
@@ -2560,13 +2552,11 @@ static void UpDateStateOfStartButton(void)
 }
 
 
-static void DisplayAmountOnCurrentMerc(void)
+static void DisplayAmountOnChar(const SOLDIERTYPE* const s)
 {
-	if (!fCurrentTeamMode) return;
-
 	// will display the amount that the merc is carrying on him or herself
 	CHAR16 sString[64];
-	SPrintMoney(sString, GetFundsOnMerc(GetSoldierOfCurrentSlot()));
+	SPrintMoney(sString, GetFundsOnMerc(s));
 
 	SetFont(ATM_FONT);
 	SetFontForeground(FONT_WHITE);
