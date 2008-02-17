@@ -2056,7 +2056,21 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_OTHER };
+		if (*i == -1 || iSlot-- != 0) continue;
+		INT state;
+		if (GetProfile(*i)->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
+		{
+			state = DEPARTED_MARRIED;
+		}
+		else if (*i < BIFF)
+		{
+			state = DEPARTED_CONTRACT_EXPIRED;
+		}
+		else
+		{
+			state = DEPARTED_QUIT;
+		}
+		return (PastMercInfo){ *i, state };
 	}
 	return (PastMercInfo){ NO_PROFILE, -1 };
 }
@@ -2174,44 +2188,9 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
 	mprintf(sX, CHAR_NAME_Y, name);
 
-	const wchar_t* State;
-	if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
-	{
-		//displaye 'married'
-		State = pPersonnelDepartedStateStrings[DEPARTED_MARRIED];
-	}
-	else if (iState == DEPARTED_DEAD)
-	{
-		State = pPersonnelDepartedStateStrings[DEPARTED_DEAD];
-	}
-	else if (iId < BIFF) // if the merc is an AIM merc
-	{
-		//if dismissed
-		if (iState == DEPARTED_FIRED)
-			State = pPersonnelDepartedStateStrings[DEPARTED_FIRED];
-		else
-			State = pPersonnelDepartedStateStrings[DEPARTED_CONTRACT_EXPIRED];
-	}
-
-	//else if its a MERC merc
-	else if (iId >= BIFF && iId <= BUBBA)
-	{
-		if (iState == DEPARTED_FIRED)
-			State = pPersonnelDepartedStateStrings[DEPARTED_FIRED];
-		else
-			State = pPersonnelDepartedStateStrings[DEPARTED_QUIT];
-	}
-	//must be a RPC
-	else
-	{
-		if (iState == DEPARTED_FIRED)
-			State = pPersonnelDepartedStateStrings[DEPARTED_FIRED];
-		else
-			State = pPersonnelDepartedStateStrings[DEPARTED_QUIT];
-	}
-
-	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, State, CHAR_NAME_FONT, &sX, &sY);
-	mprintf(sX, CHAR_LOC_Y, State);
+	const wchar_t* const state_txt = pPersonnelDepartedStateStrings[iState];
+	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, state_txt, CHAR_NAME_FONT, &sX, &sY);
+	mprintf(sX, CHAR_LOC_Y, state_txt);
 }
 
 
