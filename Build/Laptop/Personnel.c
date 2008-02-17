@@ -532,26 +532,6 @@ static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
 }
 
 
-static void RenderPersonnelFaceCurrent(const SOLDIERTYPE* const s)
-{
-	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
-	RenderPersonnelFace(s->ubProfile, s->bLife > 0);
-}
-
-
-static void RenderPersonnelFacePast(const UINT8 profile, const INT32 state)
-{
-	//if this is not a valid merc
-	if (state != DEPARTED_DEAD &&
-			state != DEPARTED_FIRED &&
-			state != DEPARTED_OTHER)
-	{
-		return;
-	}
-	RenderPersonnelFace(profile, state != DEPARTED_DEAD);
-}
-
-
 static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void);
 static INT32 GetNumberOfPastMercsOnPlayersTeam(void);
 
@@ -710,8 +690,6 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
-
 	const wchar_t* sTownName = NULL;
 	if (s->bAssignment != ASSIGNMENT_POW &&
 			s->bAssignment != IN_TRANSIT)
@@ -795,8 +773,6 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	wchar_t sString[50];
 	INT16 sX;
 	INT16 sY;
-
-	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
 	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
 	const BOOLEAN fAmIaRobot = AM_A_ROBOT(s);
@@ -1195,29 +1171,30 @@ static PastMercInfo GetSelectedPastMercInfo(void);
 static void DisplayFaceOfDisplayedMerc(void)
 {
 	// valid person?, display
-	if (iCurrentPersonSelectedId != -1)
+	if (iCurrentPersonSelectedId == -1) return;
+
+	// highlight it
+	DisplayHighLightBox();
+
+	// if showing inventory, leave
+	if (fCurrentTeamMode)
 	{
-		// highlight it
-		DisplayHighLightBox();
+		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
+		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
+		RenderPersonnelFace(s->ubProfile, s->bLife > 0);
+		DisplayCharName(s);
 
-		// if showing inventory, leave
-		if (fCurrentTeamMode)
-		{
-			const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-			RenderPersonnelFaceCurrent(s);
-			DisplayCharName(s);
+		if (gubPersonnelInfoState == PRSNL_INV) return;
 
-			if (gubPersonnelInfoState == PRSNL_INV) return;
-
-			RenderPersonnelStats(s);
-		}
-		else
-		{
-			const PastMercInfo info = GetSelectedPastMercInfo();
-			RenderPersonnelFacePast(info.id, info.state);
-			DisplayDepartedCharName(info.id, info.state);
-			DisplayDepartedCharStats(info.id, info.state);
-		}
+		RenderPersonnelStats(s);
+	}
+	else
+	{
+		const PastMercInfo info = GetSelectedPastMercInfo();
+		if (info.id == NO_PROFILE) return;
+		RenderPersonnelFace(     info.id, info.state != DEPARTED_DEAD);
+		DisplayDepartedCharName( info.id, info.state);
+		DisplayDepartedCharStats(info.id, info.state);
 	}
 }
 
@@ -2081,7 +2058,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	{
 		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_OTHER };
 	}
-	return (PastMercInfo){ -1, -1 };
+	return (PastMercInfo){ NO_PROFILE, -1 };
 }
 
 
@@ -2190,11 +2167,6 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
-
-	if (iState == -1 || iId == -1)
-	{
-		return;
-	}
 
 	const MERCPROFILESTRUCT* const p = &gMercProfiles[iId];
 
@@ -2678,8 +2650,6 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 	wchar_t sString[50];
 	wchar_t sStringA[50];
 	INT16 sX, sY;
-
-	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 
 	const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
 
