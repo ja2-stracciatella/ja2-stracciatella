@@ -592,7 +592,7 @@ const wchar_t *pPersonnelScreenStrings[] =
 	L"Laufzeit:", // time remaining on current contract
 	L"Getötet", // number of kills by merc
 	L"Mithilfe", // number of assists on kills by merc
-	L"Tgl. Kosten:", // daily cost of merc
+	L"Tägliche Kosten:", // daily cost of merc
 	L"Gesamtkosten:", // total cost of merc
 	L"Vertrag:", // cost of current contract
 	L"Diensttage:", // total service rendered by merc
@@ -2084,7 +2084,7 @@ const wchar_t *pPersonelTeamStrings[] =
 {
 	L"Aktuelles Team",
 	L"Ausgeschieden",
-	L"Tgl. Kosten:",
+	L"Tägliche Kosten:",
 	L"Höchste Kosten:",
 	L"Niedrigste Kosten:",
 	L"Im Kampf getötet:",

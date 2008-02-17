@@ -6,7 +6,7 @@
 (r2896) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when loading a savegame, which starts in tacical, and opening the assignment menu of a merc.
 (r2832) Fix a bug in the sound system: Some sounds are sampled at 44kHz, but the sound system uses 22kHz as playback rate, so resample these sounds before playing.
 (r2678) Fix a crash, which is caused by a vanilla mixup of SoldierID and ProfileID, in the insurance contract screen when there are no insurable mercs.
-(r2609, r2840, r2886, r2974) Improve the German translation, especially fix gross vanilla mistranslations for the terms "shooting range" and "hired".
+(r2609, r2840, r2886, r2974, r3047) Improve the German translation, especially fix gross vanilla mistranslations for the terms "shooting range" and "hired".
 (r2580) Fix a vanilla memory leak of the radar image when a meanwhile sequence is playing.
 (r2576) Fix a vanilla glitch: After a battle against bloodcats probably a wrong soldier (e.g. a soldier not in the battle sector) tried to say his "cool"-line.
 (r2569, r2575) Fix a vanilla glitch: The clickable area of the vehicle selection box did not have the same width as the graphics of the box.
