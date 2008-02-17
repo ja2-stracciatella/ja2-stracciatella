@@ -606,8 +606,8 @@ const wchar_t* pSquadMenuStrings[] =
 
 const wchar_t* pPersonnelScreenStrings[] =
 {
-	L"Deposito med.: ", // amount of medical deposit put down on the merc
-	L"Contratto in corso: ", // cost of current contract
+	L"Deposito med.:", // amount of medical deposit put down on the merc
+	L"Contratto in corso:", // cost of current contract
 	L"Uccisi", // number of kills by merc
 	L"Assistiti", // number of assists on kills by merc
 	L"Costo giornaliero:", // daily cost of merc
