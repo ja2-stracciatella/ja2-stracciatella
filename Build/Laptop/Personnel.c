@@ -408,10 +408,10 @@ static void DisplayNumberDeparted(void);
 static void DisplayNumberOnCurrentTeam(void);
 static void DisplayPastMercsPortraits(void);
 static void DisplayPersonnelTextOnTitleBar(void);
-static BOOLEAN DisplayPicturesOfCurrentTeam(void);
+static void DisplayPicturesOfCurrentTeam(void);
 static void DisplayStateOfPastTeamMembers(void);
 static void DisplayTeamStats(void);
-static BOOLEAN RenderAtmPanel(void);
+static void RenderAtmPanel(void);
 static void RenderPersonnelScreenBackground(void);
 static void UpDateStateOfStartButton(void);
 
@@ -1016,10 +1016,10 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 }
 
 
-static BOOLEAN DisplayPicturesOfCurrentTeam(void)
+static void DisplayPicturesOfCurrentTeam(void)
 {
 	// will display the small portraits of the current team
-	if (!fCurrentTeamMode) return TRUE;
+	if (!fCurrentTeamMode) return;
 
 	INT32 i = 0;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
@@ -1031,7 +1031,7 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
 
 		SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-		CHECKF(guiFACE != NO_VOBJECT);
+		CHECKV(guiFACE != NO_VOBJECT);
 
 		if (s->bLife <= 0)
 		{
@@ -1053,8 +1053,6 @@ static BOOLEAN DisplayPicturesOfCurrentTeam(void)
 		DeleteVideoObject(guiFACE);
 		i++;
 	}
-
-	return TRUE;
 }
 
 
@@ -2348,16 +2346,15 @@ static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 }
 
 
-static BOOLEAN RenderAtmPanel(void)
+static void RenderAtmPanel(void)
 {
 	// just show basic panel
 	// bounding
 	SGPVObject* const uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
-	CHECKF(uiBox != NO_VOBJECT);
+	CHECKV(uiBox != NO_VOBJECT);
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 	DeleteVideoObject(uiBox);
-	return TRUE;
 }
 
 
