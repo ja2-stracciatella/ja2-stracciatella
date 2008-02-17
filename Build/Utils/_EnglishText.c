@@ -1676,7 +1676,6 @@ const wchar_t *pTransactionText[] =
 
 const wchar_t *pTransactionAlternateText[] =
 {
-	L"Insurance for", 				// insurance for a merc
 	L"Ext. %ls's contract by one day.", 				// entend mercs contract by a day
 	L"Ext. %ls contract by 1 week.",
 	L"Ext. %ls contract by 2 weeks.",

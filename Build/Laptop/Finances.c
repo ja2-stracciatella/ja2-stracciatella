@@ -964,9 +964,9 @@ static void ProcessTransactionString(wchar_t pString[], size_t Length, const Fin
 		case CANCELLED_INSURANCE: s = pTransactionText[CANCELLED_INSURANCE]; goto copy_name;
 		case INSURANCE_PAYOUT:    s = pTransactionText[INSURANCE_PAYOUT];    goto copy_name;
 
-		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[1]; goto copy_name;
-		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[2]; goto copy_name;
-		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[3]; goto copy_name;
+		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[0]; goto copy_name;
+		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[1]; goto copy_name;
+		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[2]; goto copy_name;
 
 		case DEPOSIT_FROM_GOLD_MINE:
 		case DEPOSIT_FROM_SILVER_MINE: s = pTransactionText[16]; goto copy;
