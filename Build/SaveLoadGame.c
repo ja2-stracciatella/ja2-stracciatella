@@ -537,7 +537,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 	SaveGameHeader.uiSavedGameVersion = guiSavedGameVersion;
 	wcscpy( SaveGameHeader.sSavedGameDesc, pGameDesc );
-	strcpy( SaveGameHeader.zGameVersionNumber, czVersionNumber );
+	strcpy(SaveGameHeader.zGameVersionNumber, g_version_number);
 
 	SaveGameHeader.uiFlags;
 

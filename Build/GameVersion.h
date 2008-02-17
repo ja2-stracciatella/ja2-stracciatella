@@ -14,7 +14,7 @@ extern "C" {
 //
 
 extern const char g_version_label[];
-extern const char czVersionNumber[];
+extern const char g_version_number[];
 
 
 //

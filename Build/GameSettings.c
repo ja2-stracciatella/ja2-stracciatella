@@ -150,7 +150,7 @@ BOOLEAN	SaveGameSettings()
 	gGameSettings.ubSpeechVolume = (UINT8)GetSpeechVolume( );
 	gGameSettings.ubMusicVolumeSetting = (UINT8)MusicGetVolume( );
 
-	strcpy( gGameSettings.zVersionNumber, czVersionNumber );
+	strcpy(gGameSettings.zVersionNumber, g_version_number);
 
 	gGameSettings.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
@@ -252,7 +252,7 @@ void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
 void DisplayGameSettings( )
 {
 	//Display the version number
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %hs (%hs)", pMessageStrings[MSG_VERSION], g_version_label, czVersionNumber);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %hs (%hs)", pMessageStrings[MSG_VERSION], g_version_label, g_version_number);
 
 	//Display the difficulty level
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls: %ls", gzGIOScreenText[GIO_DIF_LEVEL_TEXT], gzGIOScreenText[gGameOptions.ubDifficultyLevel + GIO_EASY_TEXT - 1]);

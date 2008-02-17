@@ -1741,7 +1741,7 @@ static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
 		ubRetVal = SLS_SAVED_GAME_VERSION_OUT_OF_DATE;
 	}
 
-	if( strcmp( SaveGameHeader.zGameVersionNumber, czVersionNumber ) != 0 )
+	if (strcmp(SaveGameHeader.zGameVersionNumber, g_version_number)!= 0)
 	{
 		if( ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE )
 			ubRetVal = SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE;

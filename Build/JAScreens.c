@@ -244,7 +244,7 @@ UINT32 InitScreenHandle(void)
 #else
 			L"%ls: %hs (%hs)",
 #endif
-			pMessageStrings[MSG_VERSION], g_version_label, czVersionNumber
+			pMessageStrings[MSG_VERSION], g_version_label, g_version_number
 		);
 
 #ifdef JA2BETAVERSION
