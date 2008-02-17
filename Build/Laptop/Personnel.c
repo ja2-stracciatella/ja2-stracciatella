@@ -489,11 +489,8 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 }
 
 
-static void RenderPersonnelFace(const INT32 profile, const BOOLEAN alive)
+static void RenderPersonnelFace(const MERCPROFILESTRUCT* const p, const BOOLEAN alive)
 {
-	// draw face to profile iId
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[profile];
-
 	char sTemp[100];
 	sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
 
@@ -1161,8 +1158,8 @@ typedef struct PastMercInfo
 } PastMercInfo;
 
 
-static void DisplayDepartedCharName(INT32 iId, INT32 iState);
-static void DisplayDepartedCharStats(INT32 iId, INT32 iState);
+static void DisplayDepartedCharName(const MERCPROFILESTRUCT*, INT32 iState);
+static void DisplayDepartedCharStats(const MERCPROFILESTRUCT*, INT32 iState);
 static BOOLEAN DisplayHighLightBox(void);
 static PastMercInfo GetSelectedPastMercInfo(void);
 
@@ -1180,7 +1177,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 	{
 		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
-		RenderPersonnelFace(s->ubProfile, s->bLife > 0);
+		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
 
 		if (gubPersonnelInfoState == PRSNL_INV) return;
@@ -1191,9 +1188,10 @@ static void DisplayFaceOfDisplayedMerc(void)
 	{
 		const PastMercInfo info = GetSelectedPastMercInfo();
 		if (info.id == NO_PROFILE) return;
-		RenderPersonnelFace(     info.id, info.state != DEPARTED_DEAD);
-		DisplayDepartedCharName( info.id, info.state);
-		DisplayDepartedCharStats(info.id, info.state);
+		const MERCPROFILESTRUCT* const p = GetProfile(info.id);
+		RenderPersonnelFace(     p, info.state != DEPARTED_DEAD);
+		DisplayDepartedCharName( p, info.state);
+		DisplayDepartedCharStats(p, info.state);
 	}
 }
 
@@ -2100,7 +2098,7 @@ static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDea
 }
 
 
-static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
+static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT32 iState)
 {
 	wchar_t sString[50];
 	INT16 sX;
@@ -2109,8 +2107,6 @@ static void DisplayDepartedCharStats(INT32 iId, INT32 iState)
 	SetFont(FONT10ARIAL);
 	SetFontBackground(FONT_BLACK);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
-
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[iId];
 
 	const INT8 life = p->bLife;
 	const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
@@ -2172,7 +2168,7 @@ static void EnableDisableDeparturesButtons(void)
 }
 
 
-static void DisplayDepartedCharName(INT32 iId, INT32 iState)
+static void DisplayDepartedCharName(const MERCPROFILESTRUCT* const p, const INT32 iState)
 {
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
@@ -2180,8 +2176,6 @@ static void DisplayDepartedCharName(INT32 iId, INT32 iState)
 	SetFont(CHAR_NAME_FONT);
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
-
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[iId];
 
 	const wchar_t* name = p->zNickname;
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
