@@ -156,9 +156,7 @@ enum
 {
 	PERSONNEL_STAT_BTN,
 	PERSONNEL_EMPLOYMENT_BTN,
-	PERSONNEL_INV_BTN,
-
-	PERSONNEL_NUM_BTN,
+	PERSONNEL_INV_BTN
 };
 
 
@@ -478,11 +476,11 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-	if (gubPersonnelInfoState == PERSONNEL_STAT_BTN)
+	if (gubPersonnelInfoState == PRSNL_STATS)
 	{
 		DisplayCharStats(s);
 	}
-	else if (gubPersonnelInfoState == PERSONNEL_EMPLOYMENT_BTN)
+	else if (gubPersonnelInfoState == PRSNL_EMPLOYMENT)
 	{
 		DisplayEmploymentinformation(s);
 	}
@@ -1089,9 +1087,9 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			if (iCurrentPersonSelectedId != -1 &&
 					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
-					gubPersonnelInfoState == PERSONNEL_INV_BTN)
+					gubPersonnelInfoState == PRSNL_INV)
 			{
-				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
+				gubPersonnelInfoState = PRSNL_STATS;
 			}
 		}
 		else
@@ -1127,10 +1125,10 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if (iCurrentPersonSelectedId == iPortraitId)
 			{
 				//increment the info page when the user right clicks
-				if (gubPersonnelInfoState < PERSONNEL_NUM_BTN - 1)
+				if (gubPersonnelInfoState < PRSNL_INV)
 					gubPersonnelInfoState++;
 				else
-					gubPersonnelInfoState = PERSONNEL_STAT_BTN;
+					gubPersonnelInfoState = PRSNL_STATS;
 			}
 
 			iCurrentPersonSelectedId = iPortraitId;
@@ -1142,9 +1140,9 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			//if the selected merc is valid, and they are a POW, change to the inventory display
 			if (iCurrentPersonSelectedId != -1 &&
 					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
-					gubPersonnelInfoState == PERSONNEL_INV_BTN)
+					gubPersonnelInfoState == PRSNL_INV)
 			{
-				gubPersonnelInfoState = PERSONNEL_STAT_BTN;
+				gubPersonnelInfoState = PRSNL_STATS;
 			}
 		}
 	}
@@ -1446,7 +1444,7 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 
 		fCreated = TRUE;
 	}
-	else if (fCreated && gubPersonnelInfoState != PERSONNEL_INV_BTN)
+	else if (fCreated && gubPersonnelInfoState != PRSNL_INV)
 	{
 		// destroy buttons
 		RemoveButton(giPersonnelInventoryButtons[0]);
@@ -1864,7 +1862,7 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		SelectFirstDisplayedMerc();
 
 		//Switch the panel on the right to be the stat panel
-		gubPersonnelInfoState = PERSONNEL_STAT_BTN;
+		gubPersonnelInfoState = PRSNL_STATS;
 
 		fReDrawScreenFlag = TRUE;
 	}
