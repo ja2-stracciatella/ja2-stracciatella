@@ -2164,7 +2164,6 @@ const wchar_t* pPersonnelDepartedStateStrings[] =
 	//reasons why a merc has left.
 	L"Убит в бою",
 	L"Уволен",
-	L"Другое",
 	L"Замужем",///TRNSL ASSUME only female merc can depart from team by marrying somebody
 	L"Контракт истек",
 	L"Ушел",

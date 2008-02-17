@@ -2074,7 +2074,6 @@ const wchar_t *pPersonnelDepartedStateStrings[] =
 	//reasons why a merc has left.
 	L"Getötet",
 	L"Entlassen",
-	L"Sonstiges",
 	L"Heirat",
 	L"Vertrag zu Ende",
 	L"Quit",
