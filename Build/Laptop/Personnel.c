@@ -252,8 +252,6 @@ static INT32 giCurrentUpperLeftPortraitNumber = 0;
 // which mode are we showing?..current team?...or deadly departed?
 static BOOLEAN fCurrentTeamMode = TRUE;
 
-BOOLEAN fShowAtmPanelStartButton = TRUE;
-
 // mouse regions
 static MOUSE_REGION gPortraitMouseRegions[PERSONNEL_PORTRAIT_NUMBER];
 
@@ -276,6 +274,7 @@ void GameInitPersonnel(void)
 
 static void CreateDestroyCurrentDepartedMouseRegions(BOOLEAN create);
 static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create);
+static void CreateDestroyStartATMButton(BOOLEAN create);
 static void CreatePersonnelButtons(void);
 static void SelectFirstDisplayedMerc(void);
 static BOOLEAN LoadPersonnelGraphics(void);
@@ -296,7 +295,7 @@ void EnterPersonnel(void)
 	LoadPersonnelGraphics();
 
 	// show atm panel
-	fShowAtmPanelStartButton = TRUE;
+	CreateDestroyStartATMButton(TRUE);
 
 	// load personnel
 	LoadPersonnelScreenBackgroundGraphics();
@@ -320,7 +319,6 @@ void EnterPersonnel(void)
 
 static void CreateDestroyButtonsForDepartedTeamList(void);
 static void CreateDestroyPersonnelInventoryScrollButtons(void);
-static void CreateDestroyStartATMButton(void);
 static void DeletePersonnelButtons(void);
 static void DeletePersonnelScreenBackgroundGraphics(void);
 static void RemovePersonnelGraphics(void);
@@ -336,8 +334,7 @@ void ExitPersonnel(void)
 	}
 
 	// get rid of atm panel buttons
-	fShowAtmPanelStartButton = FALSE;
-	CreateDestroyStartATMButton();
+	CreateDestroyStartATMButton(FALSE);
 
 	gubPersonnelInfoState = PRSNL_STATS;
 
@@ -2413,9 +2410,6 @@ static BOOLEAN RenderAtmPanel(void)
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 	DeleteVideoObject(uiBox);
-
-	// create destroy
-	CreateDestroyStartATMButton();
 	return TRUE;
 }
 
@@ -2436,12 +2430,12 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void PersonnelStatStartButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static void CreateDestroyStartATMButton(void)
+static void CreateDestroyStartATMButton(const BOOLEAN create)
 {
 	static BOOLEAN fCreated = FALSE;
 	// create/destroy atm start button as needed
 
-	if (!fCreated && fShowAtmPanelStartButton)
+	if (!fCreated && create)
 	{
 		// not created, must create
 		MakeButton(PERSONNEL_STAT_BTN,        80, PersonnelStatStartButtonCallback, gsAtmStartButtonText[0]);
@@ -2450,7 +2444,7 @@ static void CreateDestroyStartATMButton(void)
 
 		fCreated = TRUE;
 	}
-	else if (fCreated && !fShowAtmPanelStartButton)
+	else if (fCreated && !create)
 	{
 		// stop showing
 		RemoveButton(giPersonnelATMStartButton[PERSONNEL_STAT_BTN]);
@@ -2583,12 +2577,6 @@ static INT32 GetFundsOnMerc(const SOLDIERTYPE* pSoldier)
 // check if current guy can have atm
 static void UpDateStateOfStartButton(void)
 {
-	// start button being shown?
-	if (!fShowAtmPanelStartButton)
-	{
-		return;
-	}
-
 	if (gubPersonnelInfoState == PRSNL_INV)
 	{
 		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags |= BUTTON_CLICKED_ON;

@@ -219,9 +219,6 @@ BOOLEAN fReDrawBookMarkInfo = FALSE;
 // show the 2 second info about bookmarks being accessed by clicking on web
 BOOLEAN fShowBookmarkInfo = FALSE;
 
-// show start button for ATM panel?
-extern BOOLEAN fShowAtmPanelStartButton;
-
 
 //TEMP! Disables the loadpending delay when switching b/n www pages
 static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
@@ -580,8 +577,6 @@ static INT32 EnterLaptop(void)
 	//DEF: Added to Init things in various laptop pages
 	EnterLaptopInitLaptopPages();
 	InitalizeSubSitesList();
-
-	fShowAtmPanelStartButton = TRUE;
 
 	InvalidateScreen();
 
