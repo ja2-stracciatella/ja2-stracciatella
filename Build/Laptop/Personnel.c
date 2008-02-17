@@ -1130,8 +1130,8 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 typedef struct PastMercInfo
 {
-	ProfileID id;
-	INT8      state;
+	MERCPROFILESTRUCT* profile;
+	INT8               state;
 } PastMercInfo;
 
 
@@ -1163,8 +1163,8 @@ static void DisplayFaceOfDisplayedMerc(void)
 	else
 	{
 		const PastMercInfo info = GetSelectedPastMercInfo();
-		if (info.id == NO_PROFILE) return;
-		const MERCPROFILESTRUCT* const p = GetProfile(info.id);
+		const MERCPROFILESTRUCT* const p = info.profile;
+		if (p == NULL) return;
 		RenderPersonnelFace(     p, info.state != DEPARTED_DEAD);
 		DisplayDepartedCharName( p, info.state);
 		DisplayDepartedCharStats(p, info.state);
@@ -1974,25 +1974,26 @@ static void DisplayPastMercsPortraits(void)
 // returns ID of Merc in this slot
 static PastMercInfo GetSelectedPastMercInfo(void)
 {
-	INT32 iSlot = giCurrentUpperLeftPortraitNumber + iCurrentPersonSelectedId;
-
-	Assert(!fCurrentTeamMode);
-	Assert(iSlot < GetNumberOfPastMercsOnPlayersTeam());
+	INT32 slot = giCurrentUpperLeftPortraitNumber + iCurrentPersonSelectedId;
+	Assert(slot < GetNumberOfPastMercsOnPlayersTeam());
 
 	const LaptopSaveInfoStruct* const l = &LaptopSaveInfo;
 	for (const INT16* i = l->ubDeadCharactersList; i != endof(l->ubDeadCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_DEAD };
+		if (*i == -1 || slot-- != 0) continue;
+		return (PastMercInfo){ GetProfile(*i), DEPARTED_DEAD };
 	}
 	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
-		if (*i != -1 && iSlot-- == 0) return (PastMercInfo){ *i, DEPARTED_FIRED };
+		if (*i == -1 || slot-- != 0) continue;
+		return (PastMercInfo){ GetProfile(*i), DEPARTED_FIRED };
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
-		if (*i == -1 || iSlot-- != 0) continue;
+		if (*i == -1 || slot-- != 0) continue;
+		MERCPROFILESTRUCT* const p = GetProfile(*i);
 		INT state;
-		if (GetProfile(*i)->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
+		if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
 		{
 			state = DEPARTED_MARRIED;
 		}
@@ -2004,9 +2005,9 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 		{
 			state = DEPARTED_QUIT;
 		}
-		return (PastMercInfo){ *i, state };
+		return (PastMercInfo){ p, state };
 	}
-	return (PastMercInfo){ NO_PROFILE, -1 };
+	return (PastMercInfo){ NULL, -1 };
 }
 
 
