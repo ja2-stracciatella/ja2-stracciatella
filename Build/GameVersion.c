@@ -18,7 +18,8 @@ wchar_t		zVersionLabel[16]		= L"Beta v. 0.98";
 
 #endif
 
-char		czVersionNumber[16]	= "Build 04.12.02";
+const char czVersionNumber[] = "Build 04.12.02";
+CASSERT(lengthof(czVersionNumber) <= 16);
 
 
 //
