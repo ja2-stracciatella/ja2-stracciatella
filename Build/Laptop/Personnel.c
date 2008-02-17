@@ -403,7 +403,6 @@ static void RemovePersonnelGraphics(void)
 
 static void DisplayAmountOnCurrentMerc(void);
 static void DisplayFaceOfDisplayedMerc(void);
-static void DisplayInventoryForSelectedChar(void);
 static void DisplayNumberDeparted(void);
 static void DisplayNumberOnCurrentTeam(void);
 static void DisplayPastMercsPortraits(void);
@@ -441,9 +440,6 @@ void RenderPersonnel(void)
 	// show departed team size
 	DisplayNumberDeparted();
 
-	// showinventory of selected guy if applicable
-	DisplayInventoryForSelectedChar();
-
 	DisplayTeamStats();
 
 	// past team
@@ -467,6 +463,7 @@ void RenderPersonnel(void)
 
 static void DisplayCharStats(const SOLDIERTYPE* s);
 static void DisplayEmploymentinformation(const SOLDIERTYPE* s);
+static void DisplayCharInventory(const SOLDIERTYPE*);
 
 
 static void RenderPersonnelStats(const SOLDIERTYPE* const s)
@@ -476,13 +473,11 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 	SetFontForeground(PERS_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-	if (gubPersonnelInfoState == PRSNL_STATS)
+	switch (gubPersonnelInfoState)
 	{
-		DisplayCharStats(s);
-	}
-	else if (gubPersonnelInfoState == PRSNL_EMPLOYMENT)
-	{
-		DisplayEmploymentinformation(s);
+		case PRSNL_STATS:      DisplayCharStats(s);             break;
+		case PRSNL_EMPLOYMENT: DisplayEmploymentinformation(s); break;
+		case PRSNL_INV:        DisplayCharInventory(s);         break;
 	}
 }
 
@@ -1175,9 +1170,6 @@ static void DisplayFaceOfDisplayedMerc(void)
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
-
-		if (gubPersonnelInfoState == PRSNL_INV) return;
-
 		RenderPersonnelStats(s);
 	}
 	else
@@ -1195,14 +1187,9 @@ static void DisplayFaceOfDisplayedMerc(void)
 static void RenderSliderBarForPersonnelInventory(void);
 
 
-static void DisplayInventoryForSelectedChar(void)
+// display the inventory for this merc
+static void DisplayCharInventory(const SOLDIERTYPE* const pSoldier)
 {
-	// display the inventory for this merc
-	if (gubPersonnelInfoState != PRSNL_INV)
-	{
-		return;
-	}
-
 	CreateDestroyPersonnelInventoryScrollButtons();
 
 	UINT8 ubItemCount = 0;
@@ -1212,12 +1199,8 @@ static void DisplayInventoryForSelectedChar(void)
 
 	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
 
-	if (!fCurrentTeamMode) return;
-
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
-
-	const SOLDIERTYPE* const pSoldier = GetSoldierOfCurrentSlot();
 
 	//if this is a robot, dont display any inventory
 	if (AM_A_ROBOT(pSoldier)) return;
@@ -1251,9 +1234,6 @@ static void DisplayInventoryForSelectedChar(void)
 
 				BltVideoObjectOutline(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, TRANSPARENT);
 
-				SetFont(FONT10ARIAL);
-				SetFontForeground(FONT_WHITE);
-				SetFontBackground(FONT_BLACK);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				wcslcpy(sString, ItemNames[sIndex], lengthof(sString));
