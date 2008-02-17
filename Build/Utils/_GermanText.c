@@ -873,11 +873,6 @@ const wchar_t *gpStrategicString[] =
 	L"Das sieht nicht gut aus. Gelände ist unzugänglich. Versuchen Sie es an einer anderen Stelle.",
 	L"Plazieren Sie Ihre Söldner in den markierten Sektor auf der Karte.",
 
-	//This message is for mercs arriving in sectors. Ex: Red has arrived in sector A9.
-	//Don't uppercase first character, or add spaces on either end.
-
-	L"ist angekommen im Sektor",
-
 	//These entries are for button popup help text for the prebattle interface. All popup help
 	//text supports the use of \n to denote new line. Do not use spaces before or after the \n.
 	L"Entscheidet Schlacht |automatisch für Sie\nohne Karte zu laden.",

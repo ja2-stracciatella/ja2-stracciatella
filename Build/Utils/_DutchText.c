@@ -911,11 +911,6 @@ const wchar_t* gpStrategicString[] =
 	L"Ziet er hier niet goed uit. Het is onbegaanbaar. Probeer een andere locatie.",
 	L"Plaats je huurlingen in de gemarkeerde sectie van de kaart.",
 
-	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
-	//Don't uppercase first character, or add spaces on either end.
-
-	L"is gearriveerd in sector",
-
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
 	L"Lost het gevecht |Automatisch\nop zonder de kaart te laden.",

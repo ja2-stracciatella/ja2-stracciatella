@@ -896,11 +896,6 @@ const wchar_t* gpStrategicString[] =
 	L"Не очень-то хорошее место. Туда не пройти. Выберите другую позицию.",
 	L"Разместите своих наемников в выделенной области.",
 
-	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
-	//Don't uppercase first character, or add spaces on either end.
-
-	L"прибыл(а) в сектор",
-
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
 	L"Битва разрешается автоматически\nбез вашего участия (|A)",

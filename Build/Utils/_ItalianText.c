@@ -896,11 +896,6 @@ const wchar_t* gpStrategicString[] =
 	L"Non sembra così bello qui. È inacessibile. Provate con una diversa postazione.",
 	L"Posizionate i vostri mercenari nella sezione illuminata della mappa.",
 
-	//This message is for mercs arriving in sectors.  Ex:  Red has arrived in sector A9.
-	//Don't uppercase first character, or add spaces on either end.
-
-	L"è arivato nel settore",
-
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
 	L"|Automaticamente svolge i combattimenti al vostro posto\nsenza caricare la mappa.",
