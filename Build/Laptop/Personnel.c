@@ -1927,7 +1927,7 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther);
+static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead);
 
 
 static void DisplayPastMercsPortraits(void)
@@ -1994,7 +1994,7 @@ static void DisplayPastMercsPortraits(void)
 			// show dead pictures
 			if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
 			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubDeadCharactersList[iCounterA], iCounter, TRUE, FALSE, FALSE);
+				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubDeadCharactersList[iCounterA], iCounter, TRUE);
 				iCounter++;
 			}
 		}
@@ -2009,7 +2009,7 @@ static void DisplayPastMercsPortraits(void)
 			// show fired pics
 			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
 			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubLeftCharactersList[iCounterA], iCounter, FALSE, TRUE, FALSE);
+				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubLeftCharactersList[iCounterA], iCounter, FALSE);
 				iCounter++;
 			}
 		}
@@ -2024,7 +2024,7 @@ static void DisplayPastMercsPortraits(void)
 			// show other pics
 			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
 			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubOtherCharactersList[iCounterA], iCounter, FALSE, FALSE, TRUE);
+				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubOtherCharactersList[iCounterA], iCounter, FALSE);
 				iCounter++;
 			}
 		}
@@ -2071,7 +2071,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 }
 
 
-static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead, BOOLEAN fFired, BOOLEAN fOther)
+static BOOLEAN DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, const BOOLEAN fDead)
 {
 	char sTemp[100];
 	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
