@@ -1447,6 +1447,7 @@ static void DisplayNumberOnCurrentTeam(void)
 	if (fCurrentTeamMode)
 	{
 		mprintf(PERS_CURR_TEAM_X, PERS_CURR_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[0], GetNumberOfMercsDeadOrAliveOnPlayersTeam());
+		DisplayCostOfCurrentTeam();
 	}
 	else
 	{
@@ -1456,9 +1457,6 @@ static void DisplayNumberOnCurrentTeam(void)
 		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
 		mprintf(sX, PERS_CURR_TEAM_Y, s);
 	}
-
-	// now the cost of the current team, if applicable
-	DisplayCostOfCurrentTeam();
 }
 
 
@@ -1486,12 +1484,6 @@ static void DisplayNumberDeparted(void)
 
 static void DisplayCostOfCurrentTeam(void)
 {
-	if (!fCurrentTeamMode) return;
-
-	SetFont(FONT10ARIAL);
-	SetFontBackground(FONT_BLACK);
-	SetFontForeground(PERS_TEXT_FONT_COLOR);
-
 	INT32 min_cost = 999999;
 	INT32 max_cost = 0;
 	INT32 sum_cost = 0;
