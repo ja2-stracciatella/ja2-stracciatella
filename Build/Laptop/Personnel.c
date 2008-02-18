@@ -510,12 +510,9 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void);
 static INT32 GetNumberOfPastMercsOnPlayersTeam(void);
 
 
-static BOOLEAN NextPersonnelFace(void)
+static void NextPersonnelFace(void)
 {
-	if (iCurrentPersonSelectedId == -1)
-	{
-		return TRUE;
-	}
+	if (iCurrentPersonSelectedId == -1) return;
 
 	if (fCurrentTeamMode)
 	{
@@ -523,7 +520,6 @@ static BOOLEAN NextPersonnelFace(void)
 		if (iCurrentPersonSelectedId == GetNumberOfMercsDeadOrAliveOnPlayersTeam() - 1)
 		{
 			iCurrentPersonSelectedId = 0;
-			return FALSE; //def added 3/14/99 to enable disable buttons properly
 		}
 		else
 		{
@@ -551,17 +547,12 @@ static BOOLEAN NextPersonnelFace(void)
 		iCurrentPersonSelectedId =  iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
-
-	return TRUE;
 }
 
 
-static BOOLEAN PrevPersonnelFace(void)
+static void PrevPersonnelFace(void)
 {
-	if (iCurrentPersonSelectedId == -1)
-	{
-		return TRUE;
-	}
+	if (iCurrentPersonSelectedId == -1) return;
 
 	if (fCurrentTeamMode)
 	{
@@ -569,11 +560,6 @@ static BOOLEAN PrevPersonnelFace(void)
 		if (iCurrentPersonSelectedId == 0)
 		{
 			iCurrentPersonSelectedId = GetNumberOfMercsDeadOrAliveOnPlayersTeam() - 1;
-
-			if (iCurrentPersonSelectedId == 0)
-			{
-				return FALSE; //def added 3/14/99 to enable disable buttons properly
-			}
 		}
 		else
 		{
@@ -604,8 +590,6 @@ static BOOLEAN PrevPersonnelFace(void)
 		iCurrentPersonSelectedId = iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
-
-	return TRUE;
 }
 
 
@@ -890,26 +874,17 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 static void SetPersonnelButtonStates(void)
 {
 	// this function will look at what page we are viewing, enable and disable buttons as needed
-	if (!PrevPersonnelFace())
+	const INT32 merc_count = fCurrentTeamMode ?
+		GetNumberOfMercsDeadOrAliveOnPlayersTeam() :
+		GetNumberOfPastMercsOnPlayersTeam();
+	if (merc_count == 1)
 	{
-		// first page, disable left buttons
 		DisableButton(giPersonnelButton[0]);
-	}
-	else
-	{
-		// enable buttons
-		NextPersonnelFace();
-		EnableButton(giPersonnelButton[0]);
-	}
-
-	if (!NextPersonnelFace())
-	{
 		DisableButton(giPersonnelButton[1]);
 	}
 	else
 	{
-		// decrement page
-		PrevPersonnelFace();
+		EnableButton(giPersonnelButton[0]);
 		EnableButton(giPersonnelButton[1]);
 	}
 }
