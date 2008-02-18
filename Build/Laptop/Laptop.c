@@ -2213,37 +2213,30 @@ static void HandleLapTopESCKey(void)
 		// get rid of new mail warning box
 		fNewMailFlag = FALSE;
 		CreateDestroyNewMailButton();
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
-		RenderLaptop();
 	}
 	else if (MailToDelete != NULL)
 	{
 		// get rid of delete mail box
 		MailToDelete = NULL;
 		CreateDestroyDeleteNoticeMailButton();
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
-		RenderLaptop();
 	}
 	else if (gfShowBookmarks)
 	{
 		// get rid of bookmarks
 		gfShowBookmarks = FALSE;
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
 		RenderLapTopImage();
-		RenderLaptop();
 	}
 	else
 	{
 		// leave
 		fExitingLaptopFlag = TRUE;
 		HandleExit();
+		return;
 	}
+
+	// force redraw
+	fReDrawScreenFlag = TRUE;
+	RenderLaptop();
 }
 
 
@@ -2255,44 +2248,33 @@ void HandleRightButtonUpEvent(void)
 		// get rid of new mail warning box
 		fNewMailFlag = FALSE;
 		CreateDestroyNewMailButton();
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
-		RenderLaptop();
 	}
 	else if (MailToDelete != NULL)
 	{
 		// get rid of delete mail box
 		MailToDelete = NULL;
 		CreateDestroyDeleteNoticeMailButton();
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
-		RenderLaptop();
 	}
 	else if (gfShowBookmarks)
 	{
 		// get rid of bookmarks
 		gfShowBookmarks = FALSE;
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
 		RenderLapTopImage();
-		RenderLaptop();
 	}
 	else if (fDisplayMessageFlag)
 	{
 		fDisplayMessageFlag = FALSE;
-
-		// force redraw
-		fReDrawScreenFlag = TRUE;
 		RenderLapTopImage();
-		RenderLaptop();
 	}
-	else if (fShowBookmarkInfo)
+	else
 	{
 		fShowBookmarkInfo = FALSE;
+		return;
 	}
+
+	// force redraw
+	fReDrawScreenFlag = TRUE;
+	RenderLaptop();
 }
 
 
