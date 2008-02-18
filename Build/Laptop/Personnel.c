@@ -297,11 +297,10 @@ void EnterPersonnel(void)
 	// load personnel
 	LoadPersonnelScreenBackgroundGraphics();
 
+	SelectFirstDisplayedMerc();
 
 	// render screen
 	RenderPersonnel();
-
-	SelectFirstDisplayedMerc();
 
 	CreateDestroyMouseRegionsForPersonnelPortraits(TRUE);
 	CreateDestroyCurrentDepartedMouseRegions(TRUE);
