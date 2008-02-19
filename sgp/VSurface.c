@@ -603,6 +603,9 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
 		SDL_BlitSurface(src->surface, &src_rect, dst->surface, &dstrect);
+#if defined __GNUC__ && defined i386
+		__asm__ __volatile__("cld"); // XXX HACK000D
+#endif
 	}
 	else
 	{

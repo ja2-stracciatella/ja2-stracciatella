@@ -1,10 +1,11 @@
-HACK000C
+HACK000D
 TODO0014
 
 high prio
 - TODO0001 implement blitters and related functions
 - TODO0004 Make it 64bit clean
 - TODO0005 Make it endian agnostic
+- HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
 
 med prio
 - TODO0003 Implement sound streaming
