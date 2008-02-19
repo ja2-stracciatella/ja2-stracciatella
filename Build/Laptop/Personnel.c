@@ -313,7 +313,7 @@ void EnterPersonnel(void)
 }
 
 
-static void CreateDestroyButtonsForDepartedTeamList(void);
+static void CreateDestroyButtonsForDepartedTeamList(BOOLEAN create);
 static void CreateDestroyPersonnelInventoryScrollButtons(void);
 static void DeletePersonnelButtons(void);
 static void DeletePersonnelScreenBackgroundGraphics(void);
@@ -322,12 +322,7 @@ static void RemovePersonnelGraphics(void);
 
 void ExitPersonnel(void)
 {
-	if (!fCurrentTeamMode)
-	{
-		fCurrentTeamMode = TRUE;
-		CreateDestroyButtonsForDepartedTeamList();
-		fCurrentTeamMode = FALSE;
-	}
+	CreateDestroyButtonsForDepartedTeamList(FALSE);
 
 	// get rid of atm panel buttons
 	CreateDestroyStartATMButton(FALSE);
@@ -357,7 +352,7 @@ static void HandlePersonnelKeyboard(void);
 void HandlePersonnel(void)
 {
 	// create / destroy buttons for scrolling departed list
-	CreateDestroyButtonsForDepartedTeamList();
+	CreateDestroyButtonsForDepartedTeamList(!fCurrentTeamMode);
 
 	// enable / disable departures buttons
 	EnableDisableDeparturesButtons();
@@ -1786,13 +1781,14 @@ static void DepartedDownCallBack(GUI_BUTTON* btn, INT32 reason);
 static void DepartedUpCallBack(GUI_BUTTON* btn, INT32 reason);
 
 
-static void CreateDestroyButtonsForDepartedTeamList(void)
+static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 {
 	// creates/ destroys the buttons for cdeparted team list
 	static BOOLEAN fCreated = FALSE;
 
-	if (!fCurrentTeamMode && !fCreated)
+	if (create)
 	{
+		if (fCreated) return;
 		// not created. create
 		giPersonnelButton[4] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   MSYS_PRIORITY_HIGHEST - 1, DepartedUpCallBack);
 		giPersonnelButton[5] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
@@ -1800,17 +1796,16 @@ static void CreateDestroyButtonsForDepartedTeamList(void)
 		// set up cursors for these buttons
 		SetButtonCursor(giPersonnelButton[4], CURSOR_LAPTOP_SCREEN);
 		SetButtonCursor(giPersonnelButton[5], CURSOR_LAPTOP_SCREEN);
-
-		fCreated = TRUE;
 	}
-	else if (fCurrentTeamMode && fCreated)
+	else
 	{
+		if (!fCreated) return;
 		// created. destroy
 		RemoveButton(giPersonnelButton[4]);
 		RemoveButton(giPersonnelButton[5]);
-		fCreated = FALSE;
 		fReDrawScreenFlag = TRUE;
 	}
+	fCreated = create;
 }
 
 
