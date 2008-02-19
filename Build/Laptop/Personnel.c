@@ -1145,97 +1145,87 @@ static void RenderSliderBarForPersonnelInventory(void);
 
 
 // display the inventory for this merc
-static void DisplayCharInventory(const SOLDIERTYPE* const pSoldier)
+static void DisplayCharInventory(const SOLDIERTYPE* const s)
 {
 	CreateDestroyPersonnelInventoryScrollButtons();
-
-	UINT8 ubItemCount = 0;
-	UINT8 ubUpToCount = 0;
-	INT16 sX, sY;
-	CHAR16 sString[128];
 
 	BltVideoObject(FRAME_BUFFER, guiPersonnelInventory, 0, 397, 200);
 
 	// render the bar for the character
 	RenderSliderBarForPersonnelInventory();
 
-	//if this is a robot, dont display any inventory
-	if (AM_A_ROBOT(pSoldier)) return;
+	// if this is a robot, don't display any inventory
+	if (AM_A_ROBOT(s)) return;
 
-	for (UINT ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++)
+	INT32 item_count = -(INT32)uiCurrentInventoryIndex;
+	for (UINT pos = 0; pos < NUM_INV_SLOTS; ++pos)
 	{
-		INT16 PosX = 397 + 3;
-		INT16 PosY = 200 + 8 + ubItemCount * 29;
-
 		//if the character is a robot, only display the inv for the hand pos
-		if (pSoldier->ubProfile == ROBOT && ubCounter != HANDPOS) // XXX can this ever be true? before is if (AM_A_ROBOT()) return;
+		if (s->ubProfile == ROBOT && pos != HANDPOS) continue; // XXX can this ever be true? before is if (AM_A_ROBOT()) return;
+
+		const OBJECTTYPE* const o       = &s->inv[pos];
+		const INT32             o_count = o->ubNumberOfObjects;
+		if (o_count == 0) continue;
+
+		if (item_count < 0)
 		{
+			++item_count;
 			continue;
 		}
 
-		if (pSoldier->inv[ubCounter].ubNumberOfObjects > 0)
+		wchar_t sString[128];
+		INT16   sX;
+		INT16   sY;
+
+		const INT16 PosX = 397 + 3;
+		const INT16 PosY = 200 + 8 + item_count * 29;
+
+		const UINT16   item_idx = o->usItem;
+		const INVTYPE* item     = &Item[item_idx];
+
+		const SGPVObject*  const gfx   = GetInterfaceGraphicForItem(item);
+		const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(gfx, item->ubGraphicNum);
+		const INT16              cen_x = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
+		const INT16              cen_y = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
+		BltVideoObjectOutline(FRAME_BUFFER, gfx, item->ubGraphicNum, cen_x, cen_y, TRANSPARENT);
+
+		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		wcslcpy(sString, ItemNames[item_idx], lengthof(sString));
+		ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
+		mprintf(PosX + 65, PosY + 3, sString);
+
+		// condition
+		if (item->usItemClass & IC_AMMO)
 		{
-			if (uiCurrentInventoryIndex > ubUpToCount)
-			{
-				ubUpToCount++;
-			}
-			else
-			{
-				INT16 sIndex = pSoldier->inv[ubCounter].usItem;
-				const INVTYPE* pItem = &Item[sIndex];
-				const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
-
-				const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
-				INT16 sCenX = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
-				INT16 sCenY = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
-
-				BltVideoObjectOutline(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX, sCenY, TRANSPARENT);
-
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-				wcslcpy(sString, ItemNames[sIndex], lengthof(sString));
-				ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
-				mprintf(PosX + 65, PosY + 3, sString);
-
-				// condition
-				if (Item[pSoldier->inv[ubCounter].usItem].usItemClass & IC_AMMO)
-				{
-					INT32 iTotalAmmo = 0;
-					for (INT32 cnt = 0; cnt < pSoldier->inv[ubCounter].ubNumberOfObjects; cnt++)
-					{
-						iTotalAmmo += pSoldier->inv[ubCounter].ubShotsLeft[cnt];
-					}
-
-					swprintf(sString, lengthof(sString), L"%d/%d", iTotalAmmo, pSoldier->inv[ubCounter].ubNumberOfObjects * Magazine[Item[pSoldier->inv[ubCounter].usItem].ubClassIndex].ubMagSize);
-				}
-				else
-				{
-					swprintf(sString, lengthof(sString), L"%2d%%", pSoldier->inv[ubCounter].bStatus[0]);
-				}
-
-				FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
-				mprintf(sX, sY, L"%ls", sString);
-
-				if (Item[pSoldier->inv[ubCounter].usItem].usItemClass & IC_GUN)
-				{
-					wcslcpy(sString, AmmoCaliber[Weapon[Item[pSoldier->inv[ubCounter].usItem].ubClassIndex].ubCalibre], lengthof(sString));
-					ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
-					mprintf(PosX + 65, PosY + 15, sString);
-				}
-
-				// if more than 1?
-				if (pSoldier->inv[ubCounter].ubNumberOfObjects > 1)
-				{
-					swprintf(sString, lengthof(sString), L"x%d",  pSoldier->inv[ubCounter].ubNumberOfObjects);
-					FindFontRightCoordinates(PosX, PosY + 15, 58, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
-					mprintf(sX, sY, sString);
-				}
-
-				ubItemCount++;
-			}
+			INT32 total_ammo = 0;
+			for (INT32 i = 0; i < o_count; ++i) total_ammo += o->ubShotsLeft[i];
+			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * Magazine[item->ubClassIndex].ubMagSize);
+		}
+		else
+		{
+			swprintf(sString, lengthof(sString), L"%2d%%", o->bStatus[0]);
 		}
 
-		if (ubItemCount == NUMBER_OF_INVENTORY_PERSONNEL) break;
+		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
+		mprintf(sX, sY, L"%ls", sString);
+
+		if (item->usItemClass & IC_GUN)
+		{
+			wcslcpy(sString, AmmoCaliber[Weapon[item->ubClassIndex].ubCalibre], lengthof(sString));
+			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
+			mprintf(PosX + 65, PosY + 15, sString);
+		}
+
+		// if more than 1?
+		if (o_count > 1)
+		{
+			swprintf(sString, lengthof(sString), L"x%d", o_count);
+			FindFontRightCoordinates(PosX, PosY + 15, 58, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
+			mprintf(sX, sY, sString);
+		}
+
+		if (++item_count == NUMBER_OF_INVENTORY_PERSONNEL) break;
 	}
 }
 
