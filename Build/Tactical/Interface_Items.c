@@ -3867,7 +3867,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 							gpItemPointerSoldier->sPendingActionData2 = usMapPos;
 
 	 						// Turn towards.....gridno
-							EVENT_SetSoldierDesiredDirection( gpItemPointerSoldier, (INT8)GetDirectionFromGridNo( usMapPos, gpItemPointerSoldier ) );
+							EVENT_SetSoldierDesiredDirectionForward(gpItemPointerSoldier, (INT8)GetDirectionFromGridNo(usMapPos, gpItemPointerSoldier));
 
 							EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , FALSE );
 						}

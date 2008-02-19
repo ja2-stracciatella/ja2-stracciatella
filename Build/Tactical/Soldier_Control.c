@@ -1131,7 +1131,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		{
 			if ( pSoldier->ubPendingDirection != NO_PENDING_DIRECTION )
 			{
-				EVENT_SetSoldierDesiredDirection(pSoldier, pSoldier->ubPendingDirection);
+				EVENT_SetSoldierDesiredDirectionForward(pSoldier, pSoldier->ubPendingDirection);
 				pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 				pSoldier->usPendingAnimation = ADJACENT_GET_ITEM;
 				pSoldier->fTurningUntilDone	 = TRUE;
@@ -1145,7 +1145,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		{
 			if ( pSoldier->ubPendingDirection != NO_PENDING_DIRECTION )
 			{
-				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->ubPendingDirection );
+				EVENT_SetSoldierDesiredDirectionForward(pSoldier, pSoldier->ubPendingDirection);
 				pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 				pSoldier->usPendingAnimation = CLIMBUPROOF;
 				pSoldier->fTurningUntilDone	 = TRUE;
@@ -1158,7 +1158,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		{
 			if ( pSoldier->ubPendingDirection != NO_PENDING_DIRECTION )
 			{
-				EVENT_SetSoldierDesiredDirection( pSoldier, pSoldier->ubPendingDirection );
+				EVENT_SetSoldierDesiredDirectionForward(pSoldier, pSoldier->ubPendingDirection);
 				pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
 				pSoldier->usPendingAnimation = CLIMBDOWNROOF;
 				pSoldier->fTurningFromPronePosition = FALSE;
@@ -4183,7 +4183,7 @@ static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection,
 static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* const pSoldier, UINT16 usNewDirection, const BOOLEAN fInitalMove, const UINT16 usAnimState)
 {
 	//if ( usAnimState == WALK_BACKWARDS )
-	if ( pSoldier->bReverse && usAnimState != SIDE_STEP )
+	if (pSoldier->bReverse && usAnimState != SIDE_STEP) // XXX TODO0014
 	{
 		// OK, check if we are going to go in the exact opposite than our facing....
 		usNewDirection = OppositeDirection(usNewDirection);
@@ -4291,6 +4291,13 @@ static void EVENT_InternalSetSoldierDesiredDirection(SOLDIERTYPE* const pSoldier
 void EVENT_SetSoldierDesiredDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 {
 	EVENT_InternalSetSoldierDesiredDirection( pSoldier, usNewDirection, FALSE, pSoldier->usAnimState );
+}
+
+
+void EVENT_SetSoldierDesiredDirectionForward(SOLDIERTYPE* const s, const UINT16 new_direction)
+{
+	s->bReverse = FALSE; // XXX TODO0014
+	EVENT_SetSoldierDesiredDirection(s, new_direction);
 }
 
 
@@ -5698,7 +5705,7 @@ void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
 	{
 		pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
 		pSoldier->fDontChargeTurningAPs = TRUE;
-		EVENT_SetSoldierDesiredDirection(pSoldier, bDirection);
+		EVENT_SetSoldierDesiredDirectionForward(pSoldier, bDirection);
 		pSoldier->fTurningUntilDone = TRUE;
 		// ATE: Reset flag to go back to prone...
 		pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
@@ -7690,7 +7697,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		InternalGivingSoldierCancelServices( pSoldier, FALSE );
 
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
-		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+		EVENT_SetSoldierDesiredDirectionForward(pSoldier, ubDirection);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 
 		// CHECK OUR STANCE AND GOTO CROUCH IF NEEDED
@@ -9102,7 +9109,7 @@ void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 	if ( IsCuttableWireFenceAtGridNo( sGridNo ) )
 	{
 		// CHANGE DIRECTION AND GOTO ANIMATION NOW
-		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+		EVENT_SetSoldierDesiredDirectionForward(pSoldier, ubDirection);
 		EVENT_SetSoldierDirection( pSoldier, ubDirection );
 
 		//BOOLEAN CutWireFence( INT16 sGridNo )

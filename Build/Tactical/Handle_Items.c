@@ -1385,7 +1385,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 			{
 				// OK, go from prone/crouch to stand first!
 				ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
-				EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+				EVENT_SetSoldierDesiredDirectionForward(pSoldier, ubDirection);
 
 				ChangeSoldierState( pSoldier, THROW_ITEM, 0 , FALSE );
 			}

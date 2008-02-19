@@ -308,7 +308,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 		}
 	}
 
-	EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+	EVENT_SetSoldierDesiredDirectionForward(pSoldier, ubDirection);
 
 	// Is the door opened?
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
