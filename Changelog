@@ -41,7 +41,7 @@ v0.7 - 2007-10-21 - Cinnamon
 v0.6 - 2007-09-09 - Strawberry
 (r1472) Fix graphically stuck buttons.
 (r1461, r1475) Fix wide string/string format specifiers.
-(r1458) Fix an infinite loop when throwing objects.
+(r1458) Fix a vanilla infinite loop when throwing objects.
 (r1449) Fix vanilla graphical glitches: When the team panel is visible, the dialogue box, civilian quote box and the list of items on ground still get clamped vertically as if the invetory panel was visible, i.e. 20px to high.
 (r1442) Change the scroll speeds, so diagonal scrolling is always axis aligned.
 (r1427) Fix a vanilla bug: Do not count vehicles for calculating the average stats in the personnel screen.
@@ -70,21 +70,21 @@ v0.5 - 2007-07-24 - Hazelnut
 (r1201) Adjust the char/glyph mapping table for two Russian releases (BUKA Agonia Vlasti and Russian Gold) and fix the incorrectly encoded Russian texts when loading them from the data files.
 (r1198) Fix the incorrectly encoded Polish texts when loading them from data files. Playing with Polish data files should work flawlessly now.
 (r1196) Correct the char to glyph translation table. This should fix the Polish translation.
-(r1193) Simplify the interface of GetTileIndexFromTypeSubIndex(). This also fixes one incorrect use of this function in PasteSingleBrokenWall().
+(r1193) Simplify the interface of GetTileIndexFromTypeSubIndex(). This also fixes one vanilla incorrect use of this function in PasteSingleBrokenWall().
 
 v0.4 - 2007-07-08 - Cherry
 (r1183) Add configfile handling and change the code to use the configfile to determine the path to the binary data.
-(r1139) In SwapLarrysProfiles() ->bInvStatus[] gets copied twice, but ->bInvNumber[] not at all. Rectify this.
-(r1121) If text is highlighted and delete gets pressed do not just beep but actually delete the text.
+(r1139) Fix a vanilla bug: In SwapLarrysProfiles() ->bInvStatus[] gets copied twice, but ->bInvNumber[] not at all. Rectify this.
+(r1121) Fix a vanilla glitch: If text is highlighted and delete gets pressed do not just beep but actually delete the text.
 (r1120) Slightly alter the behaviour when pressing left and right without shift and a part of the text was highlighted, i.e. do not consider the fact there was a highlight when calculating the new cursor position. It feels better this way imo.
 (r1103, r1104, r1105) Fix hotkey highlights in texts
 (r1081) Load the item names from the correct position in the data file. The bug was introduced in r396.
-(r1025) Unload all fonts on exit. Five fonts were not unloaded.
+(r1025) Fix a vanilla resource leak: Unload all fonts on exit. Five fonts were not unloaded.
 (r1004) Check whether gusSelectedSoldier is not NO_SOLDIER before using it as an index into MercPtrs[] to prevent an out of bounds array access. This fixes a crash when entering tactical mode in a sector where all mercs are busy.
-(r970) Fix a memory leak in ClearEventQueue(): Free the removed events.
+(r970) Fix a vanilla memory leak in ClearEventQueue(): Free the removed events.
 (r928) #include <stdint.h> to get the declaration for uintptr_t and do not rely on namespace pollution of other headers.
 (r854, r903) Fix wide string/string format specifiers.
-(r829) Fix two old bugs in the IMP result mail generator:
+(r829) Fix two vanilla bugs in the IMP result mail generator:
        - No text was generated if agility was below average, but above the extremly low limit, because the latter test was reversed
        - If leadership was the only extremly low attribute no introduction text was generated
 (r805) Do not store the email subjects in the savegames, but always fetch them from the data files. This way f.e. you do not end up with english subjects when loading a savegame made with the english version in the german version.
@@ -94,18 +94,18 @@ v0.4 - 2007-07-08 - Cherry
 v0.3 - 2007-04-08 - Chocolate
 (r688, r690, r696, r698, r699, r700, r703, r704, r706) Windows support
 (r676) The yes/no buttons for deleting emails work again now.
-(r674) Simplify the code to swap emails. This fixes the bug that sorting emails corrupts emails with variable content (i.e. mercenary names and monetary amounts), because not all parts of emails got swapped.
-(r658) Plug some file leaks on error.
+(r674) Simplify the code to swap emails. This fixes the vanilla bug that sorting emails corrupts emails with variable content (i.e. mercenary names and monetary amounts), because not all parts of emails got swapped.
+(r658) Plug some vanilla file leaks on error.
 (r652) Slightly improve command line parameter parsing and provide the -nosound switch.
-(r634) If FileOpen() fails 0 is returned, not -1.
-(r629) In CreateVideoObject() the passed HIMAGE gets destroyed on only one error path, not on others and neither if the function returns successfully. Its callers always destroy the HIMAGE, therefore remove the only DestroyImage() in CreateVideoObject(), so the HIMAGE does not get freed twice on this error path.
-(r627) In BltStretchVideoSurface() return with an error, if either VSurface has a colour depth != 16, not only if both have a colour depth != 16.
-(r623) Do not leak a lock on a VSurface on error.
-(r597) Do not leak the file handle when playing a Smack file fails.
-(r563) Do not close the file in STCILoadIndexed(). The caller does that.
-(r560) When reading a savegame fails do no close the file multiple times.
-(r559) When writing a savegame fails do no close the not yet opened file resp. do not close it multiple times.
-(r549) There is no technical reason to forbid % and \ when entering text. % caused problems because printf()-like functions were used incorrectly. \ never was a problem.
+(r634) Fix a vanilla bug: If FileOpen() fails 0 is returned, not -1.
+(r629) Fix incorrect vanilla resource handling: In CreateVideoObject() the passed HIMAGE gets destroyed on only one error path, not on others and neither if the function returns successfully. Its callers always destroy the HIMAGE, therefore remove the only DestroyImage() in CreateVideoObject(), so the HIMAGE does not get freed twice on this error path.
+(r627) Fix a vanilla glitch: In BltStretchVideoSurface() return with an error, if either VSurface has a colour depth != 16, not only if both have a colour depth != 16.
+(r623) Fix a vanilla resource leak: Do not leak a lock on a VSurface on error.
+(r597) Fix incorrect vanilla file handling: Do not leak the file handle when playing a Smack file fails.
+(r563) Fix incorrect vanilla file handling: Do not close the file in STCILoadIndexed(). The caller does that.
+(r560) Fix incorrect vanilla file handling: When reading a savegame fails do no close the file multiple times.
+(r559) Fix incorrect vanilla file handling: When writing a savegame fails do no close the not yet opened file resp. do not close it multiple times.
+(r549) Remove a vanilla restriction: There is no technical reason to forbid % and \ when entering text. % caused problems because printf()-like functions were used incorrectly. \ never was a problem.
 (r548) Use the unicode char provided by SDL for text input. This is a lot simpler and avoids the internal translation table, which cannot respect different keyboard layouts.
 (r528) Use scroll lock to toggle input grabbing. This is useful for scrolling with the mouse in tactical mode when playing in windowed mode.
 (r505, r583, r584, r602, r606, r705) Fix wide string/string format specifiers.
@@ -113,13 +113,13 @@ v0.3 - 2007-04-08 - Chocolate
 v0.2 - 2007-03-15 - Pistachio
 (r497) Fix scrolling of the tactical view: SDL_UpdateRect() was missing.
 (r491) Implement sound support.
-(r484) Fix some format string vulnerabilities which lead to crashes when a text field (for example the savegame title) contains a percent sign.
-(r480) Properly print percent ("%") signs.  Some strings get parsed by printf()-like functions multiple times. Of course only the first time (if at all) they should be interpreted as format strings. Therefore Do The Right Thing(tm) and use "%S" as format string and the already parsed string as argument in the subsequent runs. The directly visible effect is dissapearing percent signs. There are some gross (and partially incorrect, because they had a dangling % in the format string) workarounds for this in the code. Now that these strings are correctly handled remove those workarounds.
+(r484) Fix some vanilla format string vulnerabilities which lead to crashes when a text field (for example the savegame title) contains a percent sign.
+(r480) Fix vanilla odditities in string  handling: Properly print percent ("%") signs.  Some strings get parsed by printf()-like functions multiple times. Of course only the first time (if at all) they should be interpreted as format strings. Therefore Do The Right Thing(tm) and use "%S" as format string and the already parsed string as argument in the subsequent runs. The directly visible effect is dissapearing percent signs. There are some gross (and partially incorrect, because they had a dangling % in the format string) workarounds for this in the code. Now that these strings are correctly handled remove those workarounds.
 (r479, r486) Fix wide string/string format specifiers.
 (r468) Do not try to close a file when it was not opened.
 (r467) Use %C instead of %c to print wchar_ts.
 (r464) Set the title bar text to something meaningful.
-(r458) Fix an incorrect translation, which also displayed some garbage. This bug is present in the original game.
+(r458) Fix a vanilla incorrect translation, which also displayed some garbage.
 (r451) Implement Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip().
 (r450) Implement Blt8BPPDataTo16BPPBufferTransShadowZNBClip().
 (r446) Implement Blt8BPPDataTo16BPPBufferOutlineZClip().
@@ -128,13 +128,13 @@ v0.2 - 2007-03-15 - Pistachio
 (r400) Implement Blt8BPPDataTo16BPPBufferOutlineClip() and Blt8BPPDataTo16BPPBufferShadowZNBClip(). They are used when things get thrown + clipping.
 (r399) Implement a simple zoom blitter.
 (r397) Implement Blt8BPPDataTo16BPPBufferOutlineZNB() and Blt8BPPDataTo16BPPBufferShadowZNB(). They are used when things get thrown.
-(r395) The money button image has 5 subimages, not 7, which is assumed for creating this button in the tactical screen. Use the same subimages like the map screen to fix this out of bounds access.
+(r395) Fix a vanilla out of bounds access: The money button image has 5 subimages, not 7, which is assumed for creating this button in the tactical screen. Use the same subimages like the map screen.
 (r393) Implement Blt8BPPDataTo16BPPBufferTransZTranslucent() and Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(). They are used for explosions and probably other semi-transparent stuff.
 (r392) Fix minor graphical glitch in Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured(): The pixelation alignment was dependent on the number of skipped lines, which it should not.
 (r391) Fix Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(): The obscured parts of the sprites were not displayed.
 (r390) Implement Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured().
 (r382) Fix a memory leak: The SDL_Surface got leaked when deleting a video surface.
-(r381) Fix a memory leak which happens during loading savegames.
+(r381) Fix a vanilla memory leak which happens during loading savegames.
 (r378) Fix Blt8BPPDataTo16BPPBufferMonoShadowClip(), clipping was done incorrectly which lead to graphical artifacts when drawing text.
 
 v0.1 - 2006-11-16 - Vanilla - First release
@@ -148,11 +148,11 @@ v0.1 - 2006-11-16 - Vanilla - First release
 (r341) Add -FULLSCREEN as a commandline-option to start ja2 in fullscreen.
 (r340) Add handling of special keys to hackish keyboard support (r71)
 (r327) Implement Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip().
-(r319) Reduce the timer code to the only functionality it is used for: Getting a millisecond counter. This fixes a race condition caused by wrinting to the global counter multiple times in the callback, which could cause the counter jump backwards. This was present in the original code.
+(r319) Reduce the timer code to the only functionality it is used for: Getting a millisecond counter. This fixes a vanilla race condition caused by wrinting to the global counter multiple times in the callback, which could cause the counter jump backwards.
 (r256) Further SDLify the video module and throw away unused DirectX stuff. The in-game mouse cursor works now.
 (r246) Implement a hack to display /something/ when a zooming blit is requested.
 (r243) Make the editor compile and start. You need the file "Editor.slf".
-(r238) Fix crash when entering a sector and you are immediately in combat mode.
+(r238) Fix crash, caused by a vanilla out of bounds array access, when entering a sector and you are immediately in combat mode.
 (r194) Implement CheckVideoObjectScreenCoordinateInData().
 (r167) Implement Blt8BPPDataTo16BPPBufferHalfRect().
 (r155) Implement Blt8BPPDataTo16BPPBufferTransShadowZNB().
@@ -185,7 +185,7 @@ v0.1 - 2006-11-16 - Vanilla - First release
 (r68) Implement/FIXME some mouse movement related functions.
 (r67) Implement Blt16BPPBufferShadowRect().
 (r66) SDLify BltVSurfaceUsingDD().
-(r65, r113) Fix an existing bufferoverflow: uiSeekAmount is the number of bytes, not the number of 16bit characters. So properly adjust the loop delimiter.
+(r65, r113) Fix a vanilla buffer overflow: uiSeekAmount is the number of bytes, not the number of 16bit characters. So properly adjust the loop delimiter.
 (r64) Implement Blt16BPPBufferPixelateRectWithColor().
 (r57) Implement Blt8BPPDataTo16BPPBufferMonoShadowClip().
 (r54) SDLify some parts of the code. The main menu shows up now.
