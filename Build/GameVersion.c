@@ -11,7 +11,7 @@ const char g_version_label[] =
 	"Beta v. 0.98";
 #else
 	//RELEASE BUILD VERSION
-	"Release v1.12";
+	"Release v0.8 - Lemon";
 #endif
 
 const char g_version_number[] = "Build 04.12.02";
