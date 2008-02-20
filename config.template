@@ -24,6 +24,7 @@
 #JA2TESTVERSION   := yes
 #JA2EDITOR        := yes
 #WITH_FIXMES      := yes
+#WITH_MAEMO       := yes
 #WITH_SOUND_DEBUG := yes
 #WITH_ZLIB        := yes
 

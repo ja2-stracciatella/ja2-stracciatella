@@ -1,3 +1,4 @@
+(r3064) Add support for Maemo, so the menu button acts as modifier key to perform right clicks.
 (r3059) (Partially) fix a vanilla bug: Mercs could perform actions while looking into the opposite direction, when they were moving backwards just before.  In most cases this was harmless, but in some instances (climbing down a roof, jumping over a fence) the merc would end up in the wrong spot.
 (r3052) Minor improvement of the English translation.
 (r3028) Fix a vanilla glich, which prevented showing the assignment menu by right-clicking in tactical mode, when a soldier was targeted, but no soldier was selected.

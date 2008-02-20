@@ -108,18 +108,35 @@ static void UpdateMousePos(const SDL_MouseButtonEvent* BtnEv)
 }
 
 
+#if defined WITH_MAEMO
+static BOOLEAN g_down_right;
+#endif
+
+
 void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 {
 	UpdateMousePos(BtnEv);
 	switch (BtnEv->button)
 	{
 		case SDL_BUTTON_LEFT:
+		{
+#if defined WITH_MAEMO
+			/* If the menu button (mapped to F4) is pressed, then treat the event as
+			 * right click */
+			const Uint8* const key_state = SDL_GetKeyState(NULL);
+			g_down_right = key_state[SDLK_F4];
+			if (g_down_right) goto right_button;
+#endif
 			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfLeftButtonState = TRUE;
 			QueueMouseEvent(LEFT_BUTTON_DOWN);
 			break;
+		}
 
 		case SDL_BUTTON_RIGHT:
+#if defined WITH_MAEMO
+right_button:
+#endif
 			guiRightButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfRightButtonState = TRUE;
 			QueueMouseEvent(RIGHT_BUTTON_DOWN);
@@ -138,6 +155,9 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 	{
 		case SDL_BUTTON_LEFT:
 		{
+#if defined WITH_MAEMO
+			if (g_down_right) goto right_button;
+#endif
 			guiLeftButtonRepeatTimer = 0;
 			gfLeftButtonState = FALSE;
 			QueueMouseEvent(LEFT_BUTTON_UP);
@@ -154,6 +174,9 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 		}
 
 		case SDL_BUTTON_RIGHT:
+#if defined WITH_MAEMO
+right_button:
+#endif
 			guiRightButtonRepeatTimer = 0;
 			gfRightButtonState = FALSE;
 			QueueMouseEvent(RIGHT_BUTTON_UP);
@@ -165,6 +188,11 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 {
 	SDLKey Key = KeySym->sym;
+#if defined WITH_MAEMO
+	/* Use the menu button (mapped to F4) as modifier for right click */
+	if (Key == SDLK_F4) return;
+#endif
+
 	if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
 	{
 		if (KeySym->mod & KMOD_NUM)
