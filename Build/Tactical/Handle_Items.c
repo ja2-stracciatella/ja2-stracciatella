@@ -2112,10 +2112,11 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 	new_item->pNext      = NULL;
 	new_item->iItemIndex = iWorldItem;
 
+	ITEM_POOL* item_pool = GetItemPool(sNewGridNo, ubLevel);
+
 	LEVELNODE* const pNode = AddItemGraphicToWorld(&Item[pObject->usItem], sNewGridNo, ubLevel);
 	new_item->pLevelNode = pNode;
 
-	ITEM_POOL* item_pool = GetItemPool(sNewGridNo, ubLevel);
 	if (item_pool != NULL)
 	{
 		// Add to exitsing pool
