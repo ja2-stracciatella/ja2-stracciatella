@@ -317,7 +317,6 @@ SOLDIERCREATESTRUCT
 fStatic: strange
 fPlayerMerc: strange
 fCopyProfileItemsOver: strange
-MiscPal
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange

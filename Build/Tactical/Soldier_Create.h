@@ -98,7 +98,6 @@ typedef struct
 	PaletteRepID			PantsPal;
 	PaletteRepID			VestPal;
 	PaletteRepID			SkinPal;
-	PaletteRepID			MiscPal;
 
 	//Waypoint information for patrolling
 	INT16 sPatrolGrid[ MAXPATROLGRIDS ];

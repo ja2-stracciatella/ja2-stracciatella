@@ -1180,7 +1180,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						strcpy(curr->pDetailedPlacement->VestPal,  pSoldier->VestPal);
 						strcpy(curr->pDetailedPlacement->SkinPal,  pSoldier->SkinPal);
 						strcpy(curr->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
-						strcpy(curr->pDetailedPlacement->MiscPal,  pSoldier->MiscPal);
 
 						//copy soldier's inventory
 						memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
