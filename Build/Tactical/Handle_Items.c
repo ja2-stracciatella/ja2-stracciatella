@@ -2630,127 +2630,63 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 }
 
 
-BOOLEAN RemoveItemFromPool( INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel )
+void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8 ubLevel)
 {
-	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fItemFound = FALSE;
-	LEVELNODE		*pObject;
-
-
-	// Check for and existing pool on the object layer
-	ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
+	ITEM_POOL* item = GetItemPool(grid_no, ubLevel);
+	for (;; item = item->pNext)
 	{
-
-		// REMOVE FROM LIST
-
-		// LOOP THROUGH LIST TO FIND NODE WE WANT
-		pItemPoolTemp = pItemPool;
-		while( pItemPoolTemp != NULL )
-		{
-			if ( pItemPoolTemp->iItemIndex == iItemIndex )
-			{
-				fItemFound = TRUE;
-				break;
-			}
-			pItemPoolTemp = pItemPoolTemp->pNext;
-		}
-
-		if ( !fItemFound )
-		{
-			// COULDNOT FIND ITEM? MAYBE SOMEBODY GOT IT BEFORE WE GOT THERE!
-			return( FALSE );
-		}
-
-		// REMOVE GRAPHIC
-		RemoveItemGraphicFromWorld( &(Item[ gWorldItems[ iItemIndex ].o.usItem ] ), sGridNo, ubLevel, pItemPoolTemp->pLevelNode );
-
-		// IF WE ARE LOCATIONG STILL, KILL LOCATOR!
-		if ( pItemPoolTemp->bFlashColor != 0 )
-		{
-			// REMOVE TIMER!
-			RemoveFlashItemSlot( pItemPoolTemp );
-		}
-
-		// REMOVE PREV
-		if ( pItemPoolTemp->pPrev != NULL )
-		{
-			pItemPoolTemp->pPrev->pNext = pItemPoolTemp->pNext;
-		}
-
-		// REMOVE NEXT
-		if ( pItemPoolTemp->pNext != NULL )
-		{
-			pItemPoolTemp->pNext->pPrev = pItemPoolTemp->pPrev;
-		}
-
-
-		// IF THIS NODE WAS THE HEAD, SET ANOTHER AS HEAD AT THIS GRIDNO
-		if ( pItemPoolTemp->pPrev == NULL )
-		{
-			// WE'RE HEAD
-			if ( ubLevel == 0 )
-			{
-				pObject = gpWorldLevelData[ sGridNo ].pStructHead;
-			}
-			else
-			{
-				pObject = gpWorldLevelData[ sGridNo ].pOnRoofHead;
-			}
-
-			fItemFound = FALSE;
-			// LOOP THORUGH OBJECT LAYER
-			while( pObject != NULL )
-			{
-				if ( pObject->uiFlags & LEVELNODE_ITEM )
-				{
-					// ADJUST TO NEXT GUY FOR HEAD
-					pObject->pItemPool = pItemPoolTemp->pNext;
-					fItemFound = TRUE;
-				}
-				pObject = pObject->pNext;
-			}
-
-			if (!fItemFound)
-			{
-				// THIS WAS THE LAST ITEM IN THE POOL!
-				gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_ITEMPOOL_PRESENT);
-			}
-		}
-
-		// Find any structure with flag set as having items on top.. if this one did...
-		if ( pItemPoolTemp->bRenderZHeightAboveLevel > 0 )
-		{
-			STRUCTURE		*pStructure;
-
-			// Check if an item pool exists here....
-			if (GetItemPool(pItemPoolTemp->sGridNo, pItemPoolTemp->ubLevel) == NULL)
-			{
-				pStructure = FindStructure( pItemPoolTemp->sGridNo , STRUCTURE_HASITEMONTOP );
-
-				if ( pStructure != NULL )
-				{
-					// Remove...
-					pStructure->fFlags &= (~STRUCTURE_HASITEMONTOP );
-
-					// Re-adjust interactive tile...
-					BeginCurInteractiveTileCheck( INTILE_CHECK_SELECTIVE );
-				}
-			}
-		}
-
-		AdjustItemPoolVisibility( pItemPoolTemp );
-
-		// DELETE
-		MemFree( pItemPoolTemp );
-
-		RemoveItemFromWorld( iItemIndex );
-
-		return( TRUE );
+		// Could not find item? Maybe somebody got it before we got there!
+		if (item == NULL) return;
+		if (item->iItemIndex == item_index) break;
 	}
 
-	return( FALSE );
+	RemoveItemGraphicFromWorld(&Item[gWorldItems[item_index].o.usItem], grid_no, ubLevel, item->pLevelNode);
+
+	if (item->bFlashColor != 0) RemoveFlashItemSlot(item);
+
+	ITEM_POOL* const next = item->pNext;
+	ITEM_POOL* const prev = item->pPrev;
+
+	if (next != NULL) next->pPrev = prev;
+
+	if (prev != NULL)
+	{
+		prev->pNext = next;
+	}
+	else if (next != NULL)
+	{
+		// This node was the head, set next as head at this gridno
+		const MAP_ELEMENT* const m = &gpWorldLevelData[grid_no];
+		for (LEVELNODE* l = (ubLevel == 0 ? m->pStructHead : m->pOnRoofHead); l != NULL; l = l->pNext)
+		{
+			if (!(l->uiFlags & LEVELNODE_ITEM)) continue;
+			l->pItemPool = next;
+		}
+	}
+	else
+	{
+		// This was the last item in the pool
+		gpWorldLevelData[grid_no].uiFlags &= ~MAPELEMENT_ITEMPOOL_PRESENT;
+
+		/* If there is a structure with the has item on top flag set, reset it,
+		 * because there are no more items here */
+		if (item->bRenderZHeightAboveLevel > 0)
+		{
+			STRUCTURE* const s = FindStructure(item->sGridNo, STRUCTURE_HASITEMONTOP);
+			if (s != NULL)
+			{
+				s->fFlags &= ~STRUCTURE_HASITEMONTOP;
+				// Re-adjust interactive tile...
+				BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
+			}
+		}
+	}
+
+	AdjustItemPoolVisibility(item);
+	MemFree(item);
+	RemoveItemFromWorld(item_index);
 }
+
 
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 {
