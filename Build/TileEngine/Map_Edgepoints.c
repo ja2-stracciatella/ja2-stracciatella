@@ -881,6 +881,9 @@ void GenerateMapEdgepoints()
 	gfGeneratingMapEdgepoints = FALSE;
 }
 
+
+#ifdef JA2EDITOR
+
 void SaveMapEdgepoints( HWFILE fp )
 {
 	//1st priority edgepoints -- for common entry -- tactical placement gui uses only these points.
@@ -918,6 +921,8 @@ void SaveMapEdgepoints( HWFILE fp )
 	if( gus2ndWestEdgepointArraySize )
 		FileWrite(fp, gps2ndWestEdgepointArray, gus2ndWestEdgepointArraySize * sizeof(INT16));
 }
+
+#endif
 
 
 static void OldLoadMapEdgepoints(INT8** hBuffer)

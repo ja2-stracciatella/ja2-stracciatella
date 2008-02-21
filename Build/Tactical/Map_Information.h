@@ -39,7 +39,10 @@ CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 
 extern MAPCREATE_STRUCT gMapInformation;
 
+#ifdef JA2EDITOR
 void SaveMapInformation( HWFILE fp );
+#endif
+
 void LoadMapInformation( INT8 **hBuffer );
 void ValidateAndUpdateMapVersionIfNecessary(void);
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo );

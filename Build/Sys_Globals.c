@@ -5,7 +5,10 @@
 #include "Gameloop.h"
 
 
+#ifdef JA2EDITOR
 char g_filename[200];
+#endif
+
 BOOLEAN				gfEditMode = FALSE;
 INT8					gbFPSDisplay = SHOW_MIN_FPS;
 BOOLEAN				gfGlobalError			= FALSE;

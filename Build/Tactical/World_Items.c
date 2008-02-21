@@ -334,6 +334,8 @@ void TrashWorldItems()
 }
 
 
+#ifdef JA2EDITOR
+
 void SaveWorldItemsToMap( HWFILE fp )
 {
 	UINT32 i;
@@ -350,6 +352,8 @@ void SaveWorldItemsToMap( HWFILE fp )
 			FileWrite(fp, &gWorldItems[i], sizeof(WORLDITEM));
 	}
 }
+
+#endif
 
 
 static void DeleteWorldItemsBelongingToQueenIfThere(void);

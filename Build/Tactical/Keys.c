@@ -757,6 +757,9 @@ void LoadDoorTableFromMap( INT8 **hBuffer )
 	}
 }
 
+
+#ifdef JA2EDITOR
+
 //Saves the existing door information to the map.  Before it actually saves, it'll verify that the
 //door still exists.  Otherwise, it'll ignore it.  It is possible in the editor to delete doors in
 //many different ways, so I opted to put it in the saving routine.
@@ -774,6 +777,9 @@ void SaveDoorTableToMap( HWFILE fp )
 	FileWrite(fp, &gubNumDoors, 1);
 	FileWrite(fp, DoorTable, sizeof(DOOR) * gubNumDoors);
 }
+
+#endif
+
 
 //The editor adds locks to the world.  If the gridno already exists, then the currently existing door
 //information is overwritten.

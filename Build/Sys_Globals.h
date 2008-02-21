@@ -17,6 +17,8 @@ extern UINT32	guiGameCycleCounter;
 
 extern				BOOLEAN  SET_ERROR( const char *String, ...);
 
+#ifdef JA2EDITOR
 extern char g_filename[200];
+#endif
 
 #endif

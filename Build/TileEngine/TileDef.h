@@ -150,8 +150,12 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel );
 
 // Database access functions
 BOOLEAN GetSubIndexFromTileIndex( UINT16 usIndex, UINT16 *pusSubIndex );
+
+#ifdef JA2EDITOR
 BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16 *pusSubIndex );
 BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pusSubIndex );
+#endif
+
 UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex);
 BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType );
 UINT32 GetTileFlags(UINT16 usIndex);

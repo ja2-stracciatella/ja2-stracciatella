@@ -244,7 +244,10 @@ void TrashWorld(void);
 /* Deletes everything then re-creates the world with simple ground tiles */
 BOOLEAN NewWorld( void );
 
+#ifdef JA2EDITOR
 BOOLEAN SaveWorld(const char *puiFilename);
+#endif
+
 BOOLEAN LoadWorld(const char *puiFilename);
 void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
@@ -258,7 +261,9 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 
 LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
+#ifdef JA2EDITOR
 void ReloadTileset( UINT8 ubID );
+#endif
 
 BOOLEAN FloorAtGridNo( UINT32 iMapIndex );
 BOOLEAN DoorAtGridNo( UINT32 iMapIndex );

@@ -169,6 +169,9 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 	MemFree( pNode );
 }
 
+
+#ifdef JA2EDITOR
+
 //These serialization functions are assuming the passing of a valid file
 //pointer to the beginning of the save/load area, which is not necessarily at
 //the beginning of the file.  This is just a part of the whole map serialization.
@@ -190,10 +193,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	//mode, and kill them all, while replacing them with the proper ones.  Not only that, the alternate
 	//editing mode is turned off, and if intentions are to play the game, the user will be facing many
 	//enemies!
-	#ifdef JA2EDITOR
-		if( !gfOriginalList )
-			ResetAllMercPositions();
-	#endif
+	if (!gfOriginalList) ResetAllMercPositions();
 
 	curr = gSoldierInitHead;
 	for( i=0; i < gMapInformation.ubNumIndividuals; i++ )
@@ -213,6 +213,8 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 	}
 	return TRUE;
 }
+
+#endif
 
 
 BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )

@@ -109,11 +109,17 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 	return TRUE; //modified
 }
 
+
+#ifdef JA2EDITOR
+
 void SaveMapInformation( HWFILE fp )
 {
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
 	FileWrite(fp, &gMapInformation, sizeof(MAPCREATE_STRUCT));
 }
+
+#endif
+
 
 void LoadMapInformation( INT8 **hBuffer )
 {

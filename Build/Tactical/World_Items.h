@@ -43,7 +43,10 @@ void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
 void LoadWorldItemsFromMap( INT8 **hBuffer );
+
+#ifdef JA2EDITOR
 void SaveWorldItemsToMap( HWFILE fp );
+#endif
 
 void TrashWorldItems(void);
 

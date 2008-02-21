@@ -1450,6 +1450,8 @@ void CompileWorldMovementCosts( )
 }
 
 
+#ifdef JA2EDITOR
+
 static void RemoveWorldWireFrameTiles(void);
 static void SaveMapLights(HWFILE hfile);
 
@@ -1457,7 +1459,6 @@ static void SaveMapLights(HWFILE hfile);
 // SAVING CODE
 BOOLEAN SaveWorld(const char *puiFilename)
 {
-#ifdef JA2EDITOR
 	INT32			cnt;
 	UINT32		uiSoldierSize;
 	UINT32		uiType;
@@ -1946,10 +1947,11 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	FileClose( hfile );
 
 	strlcpy(g_filename, puiFilename, lengthof(g_filename));
-#endif //JA2EDITOR
 
 	return( TRUE );
 }
+
+#endif
 
 
 #define NUM_DIR_SEARCHES				5
@@ -2989,7 +2991,9 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 	gfWorldLoaded = TRUE;
 
+#ifdef JA2EDITOR
 	strlcpy(g_filename, puiFilename, lengthof(g_filename));
+#endif
 
 	//Remove this rather large chunk of memory from the system now!
 	MemFree( pBufferHead );
@@ -3202,7 +3206,9 @@ void TrashWorld( void )
 
 	//gfBlitBattleSectorLocator = FALSE;
 	gfWorldLoaded = FALSE;
+#ifdef JA2EDITOR
 	strcpy(g_filename, "none");
+#endif
 }
 
 
@@ -3640,6 +3646,8 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 }
 
 
+#ifdef JA2EDITOR
+
 static void RemoveWorldWireFrameTiles(void)
 {
 	INT32					cnt;
@@ -3650,6 +3658,8 @@ static void RemoveWorldWireFrameTiles(void)
 		RemoveWireFrameTiles( (INT16)cnt );
 	}
 }
+
+#endif
 
 
 static void RemoveWireFrameTiles(INT16 sGridNo)
@@ -3715,6 +3725,8 @@ static INT8 IsHiddenTileMarkerThere(INT16 sGridNo)
 }
 
 
+#ifdef JA2EDITOR
+
 void ReloadTileset( UINT8 ubID )
 {
 	CHAR8	aFilename[ 255 ];
@@ -3739,6 +3751,8 @@ void ReloadTileset( UINT8 ubID )
 	FileDelete( aFilename );
 }
 
+#endif
+
 
 BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 {
@@ -3749,6 +3763,8 @@ BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 	return FALSE;
 }
 
+
+#ifdef JA2EDITOR
 
 static void SaveMapLights(HWFILE hfile)
 {
@@ -3776,6 +3792,8 @@ static void SaveMapLights(HWFILE hfile)
 		if (!IsSoldierLight(l)) InjectLightSpriteIntoFile(hfile, l);
 	}
 }
+
+#endif
 
 
 static void LoadMapLights(INT8** hBuffer)
