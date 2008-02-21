@@ -1898,7 +1898,7 @@ static LEVELNODE* AddItemGraphicToWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubL
 }
 
 
-static void RemoveItemGraphicFromWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, LEVELNODE* pLevelNode)
+static void RemoveItemGraphicFromWorld(INT16 sGridNo, UINT8 ubLevel, LEVELNODE* pLevelNode)
 {
 	LEVELNODE *pNode;
 
@@ -2640,7 +2640,7 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 		if (item->iItemIndex == item_index) break;
 	}
 
-	RemoveItemGraphicFromWorld(&Item[gWorldItems[item_index].o.usItem], grid_no, ubLevel, item->pLevelNode);
+	RemoveItemGraphicFromWorld(grid_no, ubLevel, item->pLevelNode);
 
 	if (item->bFlashColor != 0) RemoveFlashItemSlot(item);
 
