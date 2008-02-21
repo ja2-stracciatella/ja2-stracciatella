@@ -2137,7 +2137,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 		// Set flag to indicate item pool presence
 		gpWorldLevelData[sNewGridNo].uiFlags |= MAPELEMENT_ITEMPOOL_PRESENT;
 	}
-	new_item->pPrev = item_pool;
 
 	// Set visible!
 	new_item->bVisible = bVisible;
@@ -2632,8 +2631,9 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 
 void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8 ubLevel)
 {
+	ITEM_POOL* prev = NULL;
 	ITEM_POOL* item = GetItemPool(grid_no, ubLevel);
-	for (;; item = item->pNext)
+	for (;; prev = item, item = item->pNext)
 	{
 		// Could not find item? Maybe somebody got it before we got there!
 		if (item == NULL) return;
@@ -2645,9 +2645,6 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 	if (item->bFlashColor != 0) RemoveFlashItemSlot(item);
 
 	ITEM_POOL* const next = item->pNext;
-	ITEM_POOL* const prev = item->pPrev;
-
-	if (next != NULL) next->pPrev = prev;
 
 	if (prev != NULL)
 	{

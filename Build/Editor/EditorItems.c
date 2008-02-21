@@ -1115,22 +1115,16 @@ void SelectNextItemInPool()
 
 void SelectPrevItemInPool()
 {
-	if( gpItemPool )
+	if (!gpItemPool) return;
+
+	for (ITEM_POOL* i = GetItemPool(gpItemPool->sGridNo, 0);; i = i->pNext)
 	{
-		if( gpItemPool->pPrev )
-		{
-			gpItemPool = gpItemPool->pPrev;
-		}
-		else
-		{
-			gpItemPool = GetItemPool(gpItemPool->sGridNo, 0);
-			while( gpItemPool->pNext )
-			{
-				gpItemPool = gpItemPool->pNext;
-			}
-		}
+		if (i->pNext != gpItemPool && i->pNext != NULL) continue;
+
+		gpItemPool = i;
 		SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
 		MarkWorldDirty();
+		break;
 	}
 }
 
