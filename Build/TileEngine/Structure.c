@@ -1293,34 +1293,6 @@ STRUCTURE * FindBaseStructure( STRUCTURE * pStructure )
 }
 
 
-static STRUCTURE* FindNonBaseStructure(INT16 sGridNo, STRUCTURE* pStructure)
-{ // finds a non-base structure in a location
-	CHECKF( pStructure );
-	if (!(pStructure->fFlags & STRUCTURE_BASE_TILE))
-	{	// error!
-		return( NULL );
-	}
-
-	return( FindStructureByID( sGridNo, pStructure->usStructureID ) );
-}
-
-
-static INT16 GetBaseTile(STRUCTURE* pStructure)
-{
-	if (pStructure == NULL)
-	{
-		return( -1 );
-	}
-	if (pStructure->fFlags & STRUCTURE_BASE_TILE)
-	{
-		return( pStructure->sGridNo );
-	}
-	else
-	{
-		return( pStructure->sBaseGridNo );
-	}
-}
-
 INT8 StructureHeight( STRUCTURE * pStructure )
 { // return the height of an object from 1-4
 	UINT8				ubLoopX, ubLoopY;
