@@ -3137,33 +3137,30 @@ static INT8 GetListMouseHotSpot(INT16 sLargestLineWidth, INT8 bNumItemsListed, I
 }
 
 
-static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
+static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
 static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	pItemPool->bFlashColor = 59;
-	pItemPool->uiTimerID   = AddFlashItemSlot(pItemPool, Callback);
+	AddFlashItemSlot(pItemPool, Callback);
 }
 
 
 /// ITEM POOL INDICATOR FUNCTIONS
 
 
-static INT32 GetFreeFlashItemSlot(void)
+static ITEM_POOL_LOCATOR* GetFreeFlashItemSlot(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumFlashItemSlots; uiCount++)
+	for (ITEM_POOL_LOCATOR* l = FlashItemSlots; l != FlashItemSlots + guiNumFlashItemSlots; ++l)
 	{
-		if(( FlashItemSlots[uiCount].fAllocated == FALSE ) )
-			return((INT32)uiCount);
+		if (!l->fAllocated) return l;
 	}
-
-	if(guiNumFlashItemSlots < NUM_ITEM_FLASH_SLOTS )
-		return((INT32)guiNumFlashItemSlots++);
-
-	return(-1);
+	if (guiNumFlashItemSlots < NUM_ITEM_FLASH_SLOTS)
+	{
+		return &FlashItemSlots[guiNumFlashItemSlots++];
+	}
+	return NULL;
 }
 
 
@@ -3182,22 +3179,17 @@ INT32 uiCount;
 }
 
 
-static INT32 AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
+static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
-	INT32			iFlashItemIndex;
+	ITEM_POOL_LOCATOR* const l = GetFreeFlashItemSlot();
+	if (l == NULL) return;
 
-	if( ( iFlashItemIndex = GetFreeFlashItemSlot() )==(-1) )
-		return(-1);
-
-	FlashItemSlots[ iFlashItemIndex ].pItemPool	  = pItemPool;
-
-	FlashItemSlots[ iFlashItemIndex ].bRadioFrame				= 0;
-	FlashItemSlots[ iFlashItemIndex ].uiLastFrameUpdate = GetJA2Clock( );
-	FlashItemSlots[ iFlashItemIndex ].Callback				  = Callback;
-	FlashItemSlots[ iFlashItemIndex ].fAllocated				= TRUE;
-	FlashItemSlots[iFlashItemIndex].ubFlags           = ITEM_LOCATOR_LOCKED;
-
-	return( iFlashItemIndex );
+	l->pItemPool         = pItemPool;
+	l->bRadioFrame       = 0;
+	l->uiLastFrameUpdate = GetJA2Clock();
+	l->Callback          = Callback;
+	l->fAllocated        = TRUE;
+	l->ubFlags           = ITEM_LOCATOR_LOCKED;
 }
 
 

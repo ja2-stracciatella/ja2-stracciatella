@@ -45,7 +45,6 @@ struct ITEM_POOL
 	INT32				iItemIndex;
 	INT8				bVisible;
 	INT8				bFlashColor;
-	UINT32			uiTimerID;
 	INT16				sGridNo;
 	UINT8				ubLevel;
 	UINT16			usFlags;
