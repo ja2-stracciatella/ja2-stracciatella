@@ -1,6 +1,7 @@
 #ifndef __PHYSICS_H
 #define	__PHYSICS_H
 
+#include "Item_Types.h"
 #include "JA2Types.h"
 #include "Phys_Math.h"
 #include "WorldDef.h"

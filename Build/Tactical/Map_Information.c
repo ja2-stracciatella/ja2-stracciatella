@@ -15,6 +15,7 @@
 #include "Lighting.h"
 #include "Animated_ProgressBar.h"
 #include "Debug.h"
+#include "World_Items.h"
 
 
 //Don't mess with this value, unless you want to force update all maps in the game!

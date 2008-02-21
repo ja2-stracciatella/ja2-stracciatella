@@ -4,7 +4,6 @@
 #include "JA2Types.h"
 #include "TileDef.h"
 #include "Structure.h"
-#include "Handle_Items.h"
 
 
 #define WORLD_TILE_X		40

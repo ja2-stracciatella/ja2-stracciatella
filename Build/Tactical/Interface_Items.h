@@ -1,7 +1,6 @@
 #ifndef __INTERFACE_ITEMS_H
 #define __INTERFACE_ITEMS_H
 
-#include "Handle_Items.h"
 #include "MouseSystem.h"
 #include "Soldier_Control.h"
 

@@ -12,6 +12,7 @@ typedef struct ANIM_PROF     ANIM_PROF;
 typedef struct BULLET        BULLET;
 typedef struct EXPLOSIONTYPE EXPLOSIONTYPE;
 typedef struct FACETYPE      FACETYPE;
+typedef struct ITEM_POOL     ITEM_POOL;
 typedef struct LEVELNODE     LEVELNODE;
 typedef struct LIGHT_SPRITE  LIGHT_SPRITE;
 typedef struct PathSt        PathSt;

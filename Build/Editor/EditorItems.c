@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include "HImage.h"
+#include "Handle_Items.h"
 #include "Local.h"
 #include "TileDef.h"
 #include "Edit_Sys.h"

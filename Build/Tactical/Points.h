@@ -1,6 +1,8 @@
 #ifndef __POINTS_H_
 #define __POINTS_H_
 
+#include "Item_Types.h"
+
 
 #define AP_MINIMUM              10      // no merc can have less for his turn
 #define AP_MAXIMUM              25      // no merc can have more for his turn

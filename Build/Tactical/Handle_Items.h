@@ -38,9 +38,9 @@
 #define ITEMPOOL_VISIBLE( pItemPool )			( ( pItemPool->bVisible >= 1 ) || (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS) )
 
 
-typedef struct TAG_ITEM_POOL
+struct ITEM_POOL
 {
-	struct TAG_ITEM_POOL	*pNext;
+	struct ITEM_POOL* pNext;
 
 	INT32				iItemIndex;
 	INT8				bVisible;
@@ -51,7 +51,7 @@ typedef struct TAG_ITEM_POOL
 	UINT16			usFlags;
 	INT8				bRenderZHeightAboveLevel;
 	LEVELNODE*  pLevelNode;
-} ITEM_POOL;
+};
 
 
 INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );

@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font.h"
+#include "Handle_Items.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Gameloop.h"

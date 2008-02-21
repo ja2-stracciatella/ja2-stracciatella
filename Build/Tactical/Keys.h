@@ -1,7 +1,9 @@
 #ifndef		_KEYS_H_
 #define		_KEYS_H_
 
+#include "Item_Types.h"
 #include "Types.h"
+
 
 typedef struct
 {

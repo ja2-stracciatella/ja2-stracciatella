@@ -1,4 +1,5 @@
 #include "HImage.h"
+#include "Handle_Items.h"
 #include "Local.h"
 #include "MapScreen.h"
 #include "Gameloop.h"
