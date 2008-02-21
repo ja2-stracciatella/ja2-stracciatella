@@ -2100,20 +2100,6 @@ fail_loop:
 }
 
 
-static BOOLEAN InitStructureDB(void)
-{
-	gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
-	return( TRUE );
-}
-
-
-static BOOLEAN FiniStructureDB(void)
-{
-	gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
-	return( TRUE );
-}
-
-
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
 {
 	STRUCTURE * pCurrent, *pStructure;
