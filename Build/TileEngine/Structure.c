@@ -1233,63 +1233,42 @@ STRUCTURE * SwapStructureForPartnerAndStoreChangeInMap( INT16 sGridNo, STRUCTURE
 	return( InternalSwapStructureForPartner( sGridNo, pStructure, TRUE, TRUE ) );
 }
 
-STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags )
-{ // finds a structure that matches any of the given flags
-	STRUCTURE * pCurrent;
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
-	while (pCurrent != NULL)
-	{
-		if ((pCurrent->fFlags & fFlags) != 0)
-		{
-			return( pCurrent );
-		}
-		pCurrent = pCurrent->pNext;
-	}
-	return( NULL );
-}
-
-STRUCTURE * FindNextStructure( STRUCTURE * pStructure, UINT32 fFlags )
+STRUCTURE* FindStructure(const INT16 sGridNo, const UINT32 flags)
 {
-	STRUCTURE * pCurrent;
-
-	CHECKF( pStructure );
-	pCurrent = pStructure->pNext;
-	while (pCurrent != NULL)
+	Assert(flags != 0);
+	for (STRUCTURE* i = gpWorldLevelData[sGridNo].pStructureHead;; i = i->pNext)
 	{
-		if ((pCurrent->fFlags & fFlags) != 0)
-		{
-			return( pCurrent );
-		}
-		pCurrent = pCurrent->pNext;
+		if (i == NULL || i->fFlags & flags) return i;
 	}
-	return( NULL );
 }
 
-STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID )
-{ // finds a structure that matches any of the given flags
-	STRUCTURE * pCurrent;
 
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
-	while (pCurrent != NULL)
+STRUCTURE* FindNextStructure(const STRUCTURE* const s, const UINT32 flags)
+{
+	Assert(flags != 0);
+	CHECKN(s);
+	for (STRUCTURE* i = s->pNext;; i = i->pNext)
 	{
-		if (pCurrent->usStructureID == usStructureID)
-		{
-			return( pCurrent );
-		}
-		pCurrent = pCurrent->pNext;
+		if (i == NULL || i->fFlags & flags) return i;
 	}
-	return( NULL );
 }
 
-STRUCTURE * FindBaseStructure( STRUCTURE * pStructure )
-{ // finds the base structure for any structure
-	CHECKF( pStructure );
-	if (pStructure->fFlags & STRUCTURE_BASE_TILE)
+
+STRUCTURE* FindStructureByID(const INT16 sGridNo, const UINT16 structure_id)
+{
+	for (STRUCTURE* i = gpWorldLevelData[sGridNo].pStructureHead;; i = i->pNext)
 	{
-		return( pStructure );
+		if (i == NULL || i->usStructureID == structure_id) return i;
 	}
-	return( FindStructureByID( pStructure->sBaseGridNo, pStructure->usStructureID ) );
+}
+
+
+STRUCTURE* FindBaseStructure(STRUCTURE* const s)
+{
+	CHECKN(s);
+	if (s->fFlags & STRUCTURE_BASE_TILE) return s;
+	return FindStructureByID(s->sBaseGridNo, s->usStructureID);
 }
 
 

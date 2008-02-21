@@ -44,10 +44,15 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure );
 //
 // functions to find a structure in a location
 //
-STRUCTURE * FindStructure( INT16 sGridNo, UINT32 fFlags );
-STRUCTURE * FindNextStructure( STRUCTURE * pStructure, UINT32 fFlags );
-STRUCTURE * FindStructureByID( INT16 sGridNo, UINT16 usStructureID );
-STRUCTURE * FindBaseStructure( STRUCTURE * pStructure );
+
+// Finds a structure that matches any of the given flags
+STRUCTURE* FindStructure(INT16 sGridNo, UINT32 flags);
+
+STRUCTURE* FindNextStructure(const STRUCTURE* s, UINT32 flags);
+STRUCTURE* FindStructureByID(INT16 sGridNo, UINT16 structure_id);
+
+// Finds the base structure for any structure
+STRUCTURE* FindBaseStructure(STRUCTURE* s);
 
 //
 // functions related to interactive tiles
