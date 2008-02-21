@@ -120,7 +120,6 @@ MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
 MergeMessageBoxCallBack(): users
 MinAPsToThrow(): usInHand is INT16, but used as %s
-MiscPal: unused
 MoveBullet(): RemoveBullet() before BulletMissed() (twice) and CorpseHit() seems wrong
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
 MoveOverheadRegionCallback(): empty
@@ -336,7 +335,6 @@ fTurnInProgress: only gets printed for debug
 bViewRange: always NORMAL_VIEW_RANGE
 bNewOppCnt: strange
 fShowLocator: maybe unnecessary
-MiscPal
 pThrowParams: load/save?
 pLevelNode: load/save?
 sBlackList: strange
