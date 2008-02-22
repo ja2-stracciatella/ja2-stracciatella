@@ -2251,8 +2251,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
 					{
-						CreateItem( MONEY, 1, &Object );
-						Object.uiMoneyAmount = 10000;
+						CreateMoney(10000, &Object);
 						const INT32 iWorldItem = AddItemToPool(sGridNo, &Object, -1, pSoldier->bLevel, 0, 0);
 
 						// shouldn't have any current action but make sure everything

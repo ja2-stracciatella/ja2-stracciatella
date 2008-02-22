@@ -5767,10 +5767,8 @@ static void RemoveMoney(void)
 			gpItemDescObject->uiMoneyAmount = gRemoveMoney.uiMoneyRemaining;
 
 				//Create an item to get the money that is being removed
-			CreateItem( MONEY, 0, &InvSlot.ItemObject );
+			CreateMoney(gRemoveMoney.uiMoneyRemoving, &InvSlot.ItemObject);
 
-			//Set the amount thast is being removed
-			InvSlot.ItemObject.uiMoneyAmount = gRemoveMoney.uiMoneyRemoving;
 			InvSlot.ubIdOfMercWhoOwnsTheItem = gpItemDescSoldier->ubProfile;
 
 			//if we are removing money from the players account

@@ -2173,30 +2173,16 @@ static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* c
 			}
 		}
 
-		UINT32 money_left = p->uiMoney;
-		if (money_left > 0)
+		for (UINT32 money_left = p->uiMoney; money_left > 0;)
 		{
-			for (;;)
-			{
-				const INT8 slot_id = FindEmptySlotWithin(s, BIGPOCK1POS, SMALLPOCK8POS);
-				if (slot_id == NO_SLOT) break;
-				OBJECTTYPE* const slot = &s->inv[slot_id];
+			const INT8 slot_id = FindEmptySlotWithin(s, BIGPOCK1POS, SMALLPOCK8POS);
+			if (slot_id == NO_SLOT) break;
+			OBJECTTYPE* const slot = &s->inv[slot_id];
 
-				CreateItem(MONEY, 100, slot);
-				const UINT32 slot_limit = MoneySlotLimit(slot_id);
-				if (money_left > slot_limit)
-				{
-					// fill pocket with money
-					slot->uiMoneyAmount = slot_limit;
-					money_left -= slot_limit;
-				}
-				else
-				{
-					slot->uiMoneyAmount = money_left;
-					// done!
-					break;
-				}
-			}
+			const UINT32 slot_limit  = MoneySlotLimit(slot_id);
+			const UINT32 slot_amount = min(money_left, slot_limit);
+			CreateMoney(slot_amount, slot);
+			money_left -= slot_amount;
 		}
 	}
 	else if (pCreateStruct->fCopyProfileItemsOver)
