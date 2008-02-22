@@ -48,6 +48,17 @@ CFLAGS += -DJA2
 #CFLAGS += -D_DEBUG
 
 
+ifdef WITH_DEMO
+CFLAGS += -DJA2DEMO
+endif
+
+ifdef WITH_DEMO_ADS
+ifndef WITH_DEMO
+$(error WITH_DEMO_ADS needs WITH_DEMO)
+endif
+CFLAGS += -DJA2DEMOADS
+endif
+
 ifdef WITH_FIXMES
 CFLAGS += -DWITH_FIXMES
 endif
