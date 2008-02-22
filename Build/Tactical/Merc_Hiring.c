@@ -90,7 +90,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	// BUILD STRUCTURES
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
 	MercCreateStruct.ubProfile						= ubCurrentSoldier;
-	MercCreateStruct.fPlayerMerc					= TRUE;
 	MercCreateStruct.sSectorX							= pHireMerc->sSectorX;
 	MercCreateStruct.sSectorY							= pHireMerc->sSectorY;
 	MercCreateStruct.bSectorZ							= pHireMerc->bSectorZ;

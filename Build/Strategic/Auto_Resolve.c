@@ -3145,7 +3145,6 @@ static void CreateTempPlayerMerc(void)
 	MercCreateStruct.sSectorX								= gpAR->ubSectorX;
 	MercCreateStruct.sSectorY								= gpAR->ubSectorY;
 	MercCreateStruct.bSectorZ								= 0;
-	MercCreateStruct.fPlayerMerc						= TRUE;
 	MercCreateStruct.fCopyProfileItemsOver	= TRUE;
 
 	//Create the player soldier

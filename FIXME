@@ -314,7 +314,6 @@ OneOverMass: always 1/60.f
 
 SOLDIERCREATESTRUCT
 fStatic: strange
-fPlayerMerc: strange
 fCopyProfileItemsOver: strange
 fKillSlotIfOwnerDies
 fUseGivenVehicle: strange

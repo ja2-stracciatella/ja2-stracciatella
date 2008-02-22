@@ -57,7 +57,6 @@ typedef struct
 
 	//Profile information used for special NPCs and player mercs.
 	UINT8							ubProfile;
-	BOOLEAN						fPlayerMerc;
 	BOOLEAN						fCopyProfileItemsOver;
 
 	//Location information

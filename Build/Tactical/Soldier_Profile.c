@@ -818,11 +818,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		MercCreateStruct.bUseGivenVehicleID	= pSoldier->bVehicleID;
 	}
 
-	if ( ubTeam == gbPlayerNum )
-	{
-		MercCreateStruct.fPlayerMerc = TRUE;
-	}
-
 	SOLDIERTYPE* const pNewSoldier = TacticalCreateSoldier(&MercCreateStruct);
 	if (pNewSoldier != NULL)
 	{
