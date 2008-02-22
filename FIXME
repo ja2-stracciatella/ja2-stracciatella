@@ -15,7 +15,6 @@ CaptureTimerCallback(): complicated
 CenterX(): use %
 ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-CheckForMultiTilesInTreeAndAddToUndoList(): unused (self recursion)
 ChooseCreatureQuestStartDay(): empty
 ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty

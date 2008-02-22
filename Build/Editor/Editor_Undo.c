@@ -503,45 +503,6 @@ static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 }
 
 
-static void CheckMapIndexForMultiTileStructures(UINT16 usMapIndex)
-{
-	STRUCTURE *		pStructure;
-	UINT8					ubLoop;
-	INT32					iCoveredMapIndex;
-
-	pStructure = gpWorldLevelData[usMapIndex].pStructureHead;
-	while (pStructure)
-	{
-		if (pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1)
-		{
-			for (ubLoop = 0; ubLoop < pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++)
-			{
-				// for multi-tile structures we have to add, to the undo list, all the other tiles covered by the structure
-				if (pStructure->fFlags & STRUCTURE_BASE_TILE)
-				{
-					iCoveredMapIndex = usMapIndex + pStructure->pDBStructureRef->ppTile[ubLoop]->sPosRelToBase;
-				}
-				else
-				{
-					iCoveredMapIndex = pStructure->sBaseGridNo + pStructure->pDBStructureRef->ppTile[ubLoop]->sPosRelToBase;
-				}
-				AddToUndoList( iCoveredMapIndex );
-			}
-		}
-		pStructure = pStructure->pNext;
-	}
-}
-
-
-static void CheckForMultiTilesInTreeAndAddToUndoList(MapIndexBinaryTree* node)
-{
-	CheckMapIndexForMultiTileStructures( node->usMapIndex );
-	if( node->left )
-		CheckForMultiTilesInTreeAndAddToUndoList( node->left );
-	if( node->right )
-		CheckForMultiTilesInTreeAndAddToUndoList( node->right );
-}
-
 BOOLEAN RemoveAllFromUndoList( void )
 {
 	ClearUndoMapIndexTree();
