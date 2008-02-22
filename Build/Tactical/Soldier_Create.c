@@ -2101,155 +2101,121 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 }
 
 
-static void CopyProfileItems(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
+static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 {
-	UINT32								cnt, cnt2;
-	MERCPROFILESTRUCT *		pProfile;
-	OBJECTTYPE 						Obj;
-	UINT32								uiMoneyLeft, uiMoneyLimitInSlot;
-	INT8									bSlot;
+	if (!(Item[o->usItem].fFlags & ITEM_ATTACHMENT)) return FALSE;
 
-	pProfile = &(gMercProfiles[pCreateStruct->ubProfile]);
+	// try to find the appropriate item to attach to!
+	for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		OBJECTTYPE* const tgt_o = &s->inv[i];
+		if (tgt_o->usItem != NOTHING && ValidAttachment(o->usItem, tgt_o->usItem))
+		{
+			AttachObject(NULL, tgt_o, o);
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+
+static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* const pCreateStruct)
+{
+	MERCPROFILESTRUCT* const p = GetProfile(pCreateStruct->ubProfile);
 
 	// Copy over inv if we want to
-	if (pSoldier->bTeam != OUR_TEAM)
+	if (s->bTeam != OUR_TEAM)
 	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
 		{
-			if ( pProfile->inv[ cnt ] != NOTHING )
+			const UINT16      item = p->inv[i];
+			OBJECTTYPE* const slot = &s->inv[i];
+			if (item != NOTHING)
 			{
-				if ( Item[ pProfile->inv[ cnt ] ].usItemClass == IC_KEY )
+				const UINT8 count = p->bInvNumber[i];
+				if (Item[item].usItemClass == IC_KEY)
 				{
-					// since keys depend on 2 values, they pretty much have to be hardcoded.
-					// and if a case isn't handled here it's better to not give any key than
-					// to provide one which doesn't work and would confuse everything.
-					switch( pCreateStruct->ubProfile )
+					/* since keys depend on 2 values, they pretty much have to be
+					 * hardcoded.  if a case isn't handled here it's better to not give
+					 * any key than to provide one which doesn't work and would confuse
+					 * everything. */
+					if (KEY_1 <= item && item <= KEY_32)
 					{
-						case BREWSTER:
-							if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-							{
-								CreateKeyObject( &(pSoldier->inv[ cnt ] ), pProfile->bInvNumber[ cnt ], 19 );
-							}
-							else
-							{
-								memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
-							}
-							break;
-						case SKIPPER:
-							if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-							{
-								CreateKeyObject( &(pSoldier->inv[ cnt ] ), pProfile->bInvNumber[ cnt ], 11 );
-							}
-							else
-							{
-								memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
-							}
-							break;
-						case DOREEN:
-							if ( pProfile->inv[ cnt ] >= KEY_1 && pProfile->inv[ cnt ] <= KEY_32)
-							{
-								CreateKeyObject( &(pSoldier->inv[ cnt ] ), pProfile->bInvNumber[ cnt ], 32 );
-							}
-							else
-							{
-								memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
-							}
-							break;
-						default:
-							memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
-							break;
+						switch (pCreateStruct->ubProfile)
+						{
+							case BREWSTER: CreateKeyObject(slot, count, 19); break;
+							case SKIPPER:  CreateKeyObject(slot, count, 11); break;
+							case DOREEN:   CreateKeyObject(slot, count, 32); break;
+							default:       memset(slot, 0, sizeof(*slot));   break;
+						}
+					}
+					else
+					{
+						memset(slot, 0, sizeof(*slot));
 					}
 				}
 				else
 				{
-					CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &(pSoldier->inv[ cnt ] ) );
+					CreateItems(item, p->bInvStatus[i], count, slot);
 				}
-				if ( pProfile->inv[ cnt ] == ROCKET_RIFLE || pProfile->inv[ cnt ] == AUTO_ROCKET_RIFLE )
+				if (item == ROCKET_RIFLE || item == AUTO_ROCKET_RIFLE)
 				{
-					pSoldier->inv[ cnt ].ubImprintID = pSoldier->ubProfile;
+					slot->ubImprintID = s->ubProfile;
 				}
-				if (gubItemDroppableFlag[cnt])
+				if (p->ubInvUndroppable & gubItemDroppableFlag[i])
 				{
-					if (pProfile->ubInvUndroppable & gubItemDroppableFlag[cnt])
-					{
-						pSoldier->inv[cnt].fFlags |= OBJECT_UNDROPPABLE;
-					}
+					slot->fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 			else
 			{
-				memset( &(pSoldier->inv[cnt]), 0, sizeof( OBJECTTYPE ) );
+				memset(slot, 0, sizeof(*slot));
 			}
 		}
-		if (pProfile->uiMoney > 0)
+
+		UINT32 money_left = p->uiMoney;
+		if (money_left > 0)
 		{
-			uiMoneyLeft = pProfile->uiMoney;
-			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
-
-			// add in increments of
-			while ( bSlot != NO_SLOT )
+			for (;;)
 			{
-				uiMoneyLimitInSlot = MAX_MONEY_PER_SLOT;
-				if ( bSlot >= SMALLPOCK1POS )
-				{
-					uiMoneyLimitInSlot /= 2;
-				}
+				const INT8 slot_id = FindEmptySlotWithin(s, BIGPOCK1POS, SMALLPOCK8POS);
+				if (slot_id == NO_SLOT) break;
+				OBJECTTYPE* const slot = &s->inv[slot_id];
 
-				CreateItem( MONEY, 100, &( pSoldier->inv[ bSlot ] ) );
-				if ( uiMoneyLeft > uiMoneyLimitInSlot )
+				CreateItem(MONEY, 100, slot);
+				const UINT32 slot_limit = MoneySlotLimit(slot_id);
+				if (money_left > slot_limit)
 				{
 					// fill pocket with money
-					pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLimitInSlot;
-					uiMoneyLeft -= uiMoneyLimitInSlot;
+					slot->uiMoneyAmount = slot_limit;
+					money_left -= slot_limit;
 				}
 				else
 				{
-					pSoldier->inv[ bSlot ].uiMoneyAmount = uiMoneyLeft;
+					slot->uiMoneyAmount = money_left;
 					// done!
 					break;
 				}
-
-				bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, SMALLPOCK8POS );
 			}
 		}
 	}
 	else if (pCreateStruct->fCopyProfileItemsOver)
 	{
-		// do some special coding to put stuff in the profile in better-looking
-		// spots
-		memset( pSoldier->inv, 0, NUM_INV_SLOTS * sizeof( OBJECTTYPE ) );
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		/* do some special coding to put stuff in the profile in better-looking
+		 * spots */
+		memset(s->inv, 0, sizeof(s->inv));
+		for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
 		{
-			if ( pProfile->inv[ cnt ] != NOTHING )
-			{
-				CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &Obj );
-				if (Item[Obj.usItem].fFlags & ITEM_ATTACHMENT)
-				{
-					// try to find the appropriate item to attach to!
-					for ( cnt2 = 0; cnt2 < NUM_INV_SLOTS; cnt2++ )
-					{
-						if ( pSoldier->inv[ cnt2 ].usItem != NOTHING && ValidAttachment( Obj.usItem, pSoldier->inv[ cnt2 ].usItem ) )
-						{
-							AttachObject( NULL, &(pSoldier->inv[ cnt2 ]), &Obj );
-							break;
-						}
-					}
-					if (cnt2 == NUM_INV_SLOTS)
-					{
-						// oh well, couldn't find anything to attach to!
-						AutoPlaceObject( pSoldier, &Obj, FALSE );
-					}
-				}
-				else
-				{
-					AutoPlaceObject( pSoldier, &Obj, FALSE );
-				}
+			if (p->inv[i] == NOTHING) continue;
 
-			}
+			OBJECTTYPE o;
+			CreateItems(p->inv[i], p->bInvStatus[i], p->bInvNumber[i], &o);
+			if (!TryToAttach(s, &o)) AutoPlaceObject(s, &o, FALSE);
 		}
-		pProfile->usOptionalGearCost = 0;
+		p->usOptionalGearCost = 0;
 	}
 }
+
 
 //SPECIAL!  Certain events in the game can cause profiled NPCs to become enemies.  The two cases are
 //adding Mike and Iggy.  We will only add one NPC in any given combat and the conditions for setting
