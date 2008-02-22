@@ -129,86 +129,84 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	//Simply returning won't help.
 	Assert(!pCreateStruct->fStatic);
 
-	// Some values initialized here but could be changed before going to the common one
-	SOLDIERTYPE Soldier;
-	InitSoldierStruct(&Soldier);
+	const ProfileID profile = pCreateStruct->ubProfile;
+	const INT8      team_id = pCreateStruct->bTeam;
 
-	Soldier.uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
-
-	// OK, CHECK IF WE HAVE A VALID PROFILE ID!
-	if (pCreateStruct->ubProfile != NO_PROFILE)
+	// Given team, get an ID for this guy!
+	SOLDIERTYPE* s;
+	SoldierID    id;
+	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
-		// We have a merc created by profile, do this!
-		TacticalCopySoldierFromProfile(&Soldier, pCreateStruct);
+		// We are creating a dynamically allocated soldier for autoresolve.
+		s = MemAlloc(sizeof(*s));
+		if (!s) return NULL;
+		id = 255;
 	}
 	else
 	{
-		TacticalCopySoldierFromCreateStruct(&Soldier, pCreateStruct);
+		const TacticalTeamType* const team = &gTacticalStatus.Team[team_id];
+		id = team->bFirstID;
+		// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
+		if (team_id == gbPlayerNum)
+		{
+			const MERCPROFILESTRUCT* const p = GetProfile(profile);
+			switch (p->ubBodyType)
+			{
+				case ELDORADO:
+				case HUMVEE:
+				case ICECREAMTRUCK:
+				case JEEP:
+					id = team->bLastID - 1;
+					break;
+			}
+		}
+
+		const UINT8 bLastTeamID = team->bLastID;
+		for (;;)
+		{
+			s = GetMan(id);
+			if (!s->bActive) break;
+			if (++id > bLastTeamID) return NULL;
+		}
 	}
 
-	// We want to determine what team to place these guys in...
+	// Some values initialized here but could be changed before going to the common one
+	InitSoldierStruct(s);
+	s->ubID                   = id;
+	s->uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
+
+	// OK, CHECK IF WE HAVE A VALID PROFILE ID!
+	if (profile != NO_PROFILE)
+	{
+		// We have a merc created by profile, do this!
+		TacticalCopySoldierFromProfile(s, pCreateStruct);
+	}
+	else
+	{
+		TacticalCopySoldierFromCreateStruct(s, pCreateStruct);
+	}
 
 	// First off, force player team if they are a player guy! ( do some other stuff for only our guys!
 	if (pCreateStruct->fPlayerMerc || pCreateStruct->bTeam == PLAYER_PLAN)
 	{
-		Soldier.uiStatusFlags |= SOLDIER_PC;
-		Soldier.bVisible = 1;
+		s->uiStatusFlags |= SOLDIER_PC;
+		s->bVisible       = 1;
 	}
 	else
 	{
-		Soldier.uiStatusFlags |= SOLDIER_ENEMY;
+		s->uiStatusFlags |= SOLDIER_ENEMY;
 	}
 
-	// Check for auto team
-	Soldier.bTeam = pCreateStruct->bTeam;
+	s->bTeam = team_id;
+
 	// if WE_SEE_WHAT_MILITIA_SEES
-	if (Soldier.bTeam == MILITIA_TEAM) Soldier.bVisible = 1;
+	if (s->bTeam == MILITIA_TEAM) s->bVisible = 1;
 
-	// Copy the items over for thew soldier, only if we have a valid profile id!
-	if ( pCreateStruct->ubProfile != NO_PROFILE )
-		CopyProfileItems( &Soldier, pCreateStruct );
-
-	// Given team, get an ID for this guy!
-	SOLDIERTYPE* s;
-	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
-	{
-		// We are creating a dynamically allocated soldier for autoresolve.
-		Soldier.ubID = 255;
-
-		s = MemAlloc(sizeof(*s));
-		if (!s) return NULL;
-	}
-	else
-	{
-		INT32 cnt = gTacticalStatus.Team[Soldier.bTeam].bFirstID;
-
-		// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
-		if( Soldier.ubBodyType == HUMVEE ||
-				Soldier.ubBodyType == ELDORADO ||
-				Soldier.ubBodyType == ICECREAMTRUCK ||
-				Soldier.ubBodyType == JEEP )
-		{
-			if( Soldier.bTeam == gbPlayerNum )
-			{
-				cnt = gTacticalStatus.Team[ Soldier.bTeam ].bLastID - 1;
-			}
-		}
-
-		const UINT8 bLastTeamID = gTacticalStatus.Team[Soldier.bTeam].bLastID;
-		for (;;)
-		{
-			s = GetMan(cnt);
-			if (!s->bActive) break;
-			if (++cnt > bLastTeamID) return NULL;
-		}
-
-		// OK, set ID
-		Soldier.ubID = (UINT8)cnt;
-	}
-	*s = Soldier;
+	// Copy the items over for the soldier, only if we have a valid profile id!
+	if (profile != NO_PROFILE) CopyProfileItems(s, pCreateStruct);
 
 	// LOAD MERC's FACE!
-	if (pCreateStruct->ubProfile != NO_PROFILE && s->bTeam == OUR_TEAM)
+	if (profile != NO_PROFILE && s->bTeam == OUR_TEAM)
 	{
 		InitSoldierFace(s);
 	}
