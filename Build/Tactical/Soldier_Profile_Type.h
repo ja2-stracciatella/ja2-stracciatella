@@ -178,7 +178,6 @@ typedef struct
 
 	// skills
 	INT8		bStealRate;
-	INT8		bVocalVolume;
 	UINT8		ubQuoteRecord;
 	INT8		bDeathRate;
 
