@@ -262,7 +262,6 @@ bPadding
 MERCPROFILESTRUCT
 ubFaceIndex: overwritten after load from data file
 bArmourAttractiveness: overwritten after load from data file
-bStealRate
 uiEyeDelay
 uiMouthDelay
 bMainGunAttractiveness: overwritten after load from data file

@@ -177,7 +177,6 @@ typedef struct
 	INT8		bLearnToHate;
 
 	// skills
-	INT8		bStealRate;
 	UINT8		ubQuoteRecord;
 	INT8		bDeathRate;
 
