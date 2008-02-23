@@ -3732,7 +3732,6 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 	else
 	{
 		OBJECTTYPE *pItem;
-		OBJECTTYPE tempItem;
 		PlayAutoResolveSample(BULLET_IMPACT_1 + PreRandom(3), 50, 1, MIDDLEPAN);
 		if( !pTarget->pSoldier->bLife )
 		{ //Soldier already dead (can't kill him again!)
@@ -3752,11 +3751,14 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 
 		if( pAttacker->bWeaponSlot != HANDPOS )
 		{ //switch items
-			tempItem = pAttacker->pSoldier->inv[HANDPOS];
-			pAttacker->pSoldier->inv[HANDPOS] = pAttacker->pSoldier->inv[pAttacker->bWeaponSlot];
-			iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife | fClaw) );
-			pAttacker->pSoldier->inv[pAttacker->bWeaponSlot] = pAttacker->pSoldier->inv[HANDPOS];
-			pAttacker->pSoldier->inv[HANDPOS] = tempItem;
+			SOLDIERTYPE* const att  = pAttacker->pSoldier;
+			OBJECTTYPE*  const wpn  = &att->inv[pAttacker->bWeaponSlot];
+			OBJECTTYPE*  const hand = &att->inv[HANDPOS];
+			OBJECTTYPE tempItem = *hand;
+			*hand = *wpn;
+			iImpact = HTHImpact(att, pTarget->pSoldier, ubAccuracy, fKnife | fClaw);
+			*wpn  = *hand;
+			*hand = tempItem;
 		}
 		else
 		{
