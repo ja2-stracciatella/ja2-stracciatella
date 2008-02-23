@@ -284,8 +284,6 @@ typedef struct
 
 	UINT8	ubRoomRangeEnd[2];
 
-	INT8 bPadding[ 4 ];
-
 	UINT8 ubLastQuoteSaid;
 
 	INT8 bRace;
@@ -349,7 +347,6 @@ typedef struct
 	INT32	iMercMercContractLength;		//Used for MERC mercs, specifies how many days the merc has gone since last page
 
 	UINT32	uiTotalCostToDate;			// The total amount of money that has been paid to the merc for their salary
-	UINT8		ubBuffer[4];
 } MERCPROFILESTRUCT;
 
 

@@ -113,7 +113,7 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U16A(S, Merc->usStatChangeSuccesses, lengthof(Merc->usStatChangeSuccesses))
 	EXTR_U8(S, Merc->ubStrategicInsertionCode)
 	EXTR_U8A(S, Merc->ubRoomRangeEnd, lengthof(Merc->ubRoomRangeEnd))
-	EXTR_I8A(S, Merc->bPadding, lengthof(Merc->bPadding))
+	EXTR_SKIP(S, 4)
 	EXTR_U8(S, Merc->ubLastQuoteSaid)
 	EXTR_I8(S, Merc->bRace)
 	EXTR_I8(S, Merc->bNationality)
@@ -174,7 +174,6 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	Merc->ubSuspiciousDeath            = 0;
 	Merc->iMercMercContractLength      = 0;
 	Merc->uiTotalCostToDate            = 0;
-	for (UINT8* i = Merc->ubBuffer; i != endof(Merc->ubBuffer); ++i) *i = 0;
 
 #else
 
@@ -282,7 +281,7 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U16A(S, Merc->usStatChangeSuccesses, lengthof(Merc->usStatChangeSuccesses))
 	EXTR_U8(S, Merc->ubStrategicInsertionCode)
 	EXTR_U8A(S, Merc->ubRoomRangeEnd, lengthof(Merc->ubRoomRangeEnd))
-	EXTR_I8A(S, Merc->bPadding, lengthof(Merc->bPadding))
+	EXTR_SKIP(S, 4)
 	EXTR_U8(S, Merc->ubLastQuoteSaid)
 	EXTR_I8(S, Merc->bRace)
 	EXTR_I8(S, Merc->bNationality)
@@ -341,7 +340,7 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U8(S, Merc->ubSuspiciousDeath)
 	EXTR_I32(S, Merc->iMercMercContractLength)
 	EXTR_U32(S, Merc->uiTotalCostToDate)
-	EXTR_U8A(S, Merc->ubBuffer, lengthof(Merc->ubBuffer))
+	EXTR_SKIP(S, 4)
 	Assert(S == Src + 716);
 #endif
 }
@@ -460,7 +459,7 @@ void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U16A(S, Merc->usStatChangeSuccesses, lengthof(Merc->usStatChangeSuccesses))
 	EXTR_U8(S, Merc->ubStrategicInsertionCode)
 	EXTR_U8A(S, Merc->ubRoomRangeEnd, lengthof(Merc->ubRoomRangeEnd))
-	EXTR_I8A(S, Merc->bPadding, lengthof(Merc->bPadding))
+	EXTR_SKIP(S, 4)
 	EXTR_U8(S, Merc->ubLastQuoteSaid)
 	EXTR_I8(S, Merc->bRace)
 	EXTR_I8(S, Merc->bNationality)
@@ -519,7 +518,7 @@ void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U8(S, Merc->ubSuspiciousDeath)
 	EXTR_I32(S, Merc->iMercMercContractLength)
 	EXTR_U32(S, Merc->uiTotalCostToDate)
-	EXTR_U8A(S, Merc->ubBuffer, lengthof(Merc->ubBuffer))
+	EXTR_SKIP(S, 4)
 
 #ifdef _WIN32 // XXX HACK000A
 	Assert(S == Src + 716);
@@ -655,7 +654,7 @@ void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 	INJ_U16A(D, Merc->usStatChangeSuccesses, lengthof(Merc->usStatChangeSuccesses))
 	INJ_U8(D, Merc->ubStrategicInsertionCode)
 	INJ_U8A(D, Merc->ubRoomRangeEnd, lengthof(Merc->ubRoomRangeEnd))
-	INJ_I8A(D, Merc->bPadding, lengthof(Merc->bPadding))
+	INJ_SKIP(D, 4)
 	INJ_U8(D, Merc->ubLastQuoteSaid)
 	INJ_I8(D, Merc->bRace)
 	INJ_I8(D, Merc->bNationality)
@@ -714,7 +713,7 @@ void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 	INJ_U8(D, Merc->ubSuspiciousDeath)
 	INJ_I32(D, Merc->iMercMercContractLength)
 	INJ_U32(D, Merc->uiTotalCostToDate)
-	INJ_U8A(D, Merc->ubBuffer, lengthof(Merc->ubBuffer))
+	INJ_SKIP(D, 4)
 
 #ifdef _WIN32 // XXX HACK000A
 	Assert(D == Dst + 716);

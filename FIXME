@@ -273,7 +273,6 @@ bMainGunAttractiveness: overwritten after load from data file
 fUseProfileInsertionInfo: overwritten after load from data file
 sGridNo: overwritten after load from data file
 bMercTownReputation: probably always INITIAL_TOWN_REPUTATION (0)
-bPadding[4]
 bRace
 bNationality
 bAppearance
@@ -287,7 +286,6 @@ bBaseMorale
 sMedicalDepositAmount: overwritten after load from data file
 usOptionalGearCost: overwritten after load from data file
 sTrueSalary: write-only/read-to-init-self
-ubBuffer[4]
 
 BASIC_SOLDIERCREATE_STRUCT
 PADDINGSLOTS[14]
