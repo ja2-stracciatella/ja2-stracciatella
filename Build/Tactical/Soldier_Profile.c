@@ -1235,7 +1235,6 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 	dst->usBattlesFought             = src->usBattlesFought;
 	dst->usTimesWounded              = src->usTimesWounded;
 	dst->usTotalDaysServed           = src->usTotalDaysServed;
-	dst->bResigned                   = src->bResigned;
 	dst->bActive                     = src->bActive;
 	dst->fUseProfileInsertionInfo    = src->fUseProfileInsertionInfo;
 	dst->sGridNo                     = src->sGridNo;

@@ -268,7 +268,6 @@ bScientific
 uiEyeDelay
 uiMouthDelay
 bMinService
-bResigned
 bMainGunAttractiveness: overwritten after load from data file
 fUseProfileInsertionInfo: overwritten after load from data file
 sGridNo: overwritten after load from data file
