@@ -197,8 +197,6 @@ typedef struct
 	UINT16	usEyesY;
 	UINT16	usMouthX;
 	UINT16	usMouthY;
-	UINT32	uiEyeDelay;
-	UINT32	uiMouthDelay;
 	UINT32	uiBlinkFrequency;
 	UINT32	uiExpressionFrequency;
 	UINT16	sSectorX;

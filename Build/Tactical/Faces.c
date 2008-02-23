@@ -179,7 +179,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	face->soldier               = s;
 	face->ubCharacterNum        = id;
 	face->sEyeFrame             = 0;
-	face->uiEyeDelay            = 50 + Random(30); // p->uiEyeDelay;
+	face->uiEyeDelay            = 50 + Random(30);
 
 	UINT32 blink_freq = p->uiBlinkFrequency;
 	blink_freq = (Random(2) ? blink_freq + Random(2000) : blink_freq - Random(2000));
@@ -187,7 +187,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	face->uiExpressionFrequency = p->uiExpressionFrequency;
 	face->sMouthFrame           = 0;
-	face->uiMouthDelay          = 120; // p->uiMouthDelay;
+	face->uiMouthDelay          = 120;
 	face->uiVideoObject         = vo;
 
 	// Set palette
