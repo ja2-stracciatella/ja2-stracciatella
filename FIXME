@@ -264,7 +264,6 @@ ubFaceIndex: overwritten after load from data file
 bArmourAttractiveness: overwritten after load from data file
 bStealRate
 bVocalVolume
-bScientific
 uiEyeDelay
 uiMouthDelay
 bMinService

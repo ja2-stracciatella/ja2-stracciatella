@@ -181,7 +181,6 @@ typedef struct
 	INT8		bVocalVolume;
 	UINT8		ubQuoteRecord;
 	INT8		bDeathRate;
-	INT8		bScientific;
 
 	INT16		sExpLevelGain;
 	INT16		sLifeGain;
