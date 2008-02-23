@@ -183,176 +183,125 @@ static void StartSomeMercsOnAssignment(void);
 
 BOOLEAN LoadMercProfiles(void)
 {
-//	FILE *fptr;
-	HWFILE fptr;
-	const char *pFileName = "BINARYDATA/Prof.dat";
-	UINT32 uiLoop, uiLoop2, uiLoop3;
-	UINT16 usItem, usNewGun, usAmmo, usNewAmmo;
+	const char* const pFileName = "BINARYDATA/Prof.dat";
 
-	fptr = FileOpen(pFileName, FILE_ACCESS_READ);
-	if( !fptr )
+	const HWFILE fptr = FileOpen(pFileName, FILE_ACCESS_READ);
+	if (!fptr)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName) );
-		return(FALSE);
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName));
+		return FALSE;
 	}
 
-	for(uiLoop=0; uiLoop< NUM_PROFILES; uiLoop++)
+	for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
 	{
 #ifdef JA2DEMO
-		BYTE Data[696];
-		if (!FileRead(fptr, &Data, sizeof(Data)))
+		BYTE data[696];
+		if (!FileRead(fptr, &data, sizeof(data)))
 #else
-		BYTE Data[716];
-		if (!JA2EncryptedFileRead(fptr, &Data, sizeof(Data)))
+		BYTE data[716];
+		if (!JA2EncryptedFileRead(fptr, &data, sizeof(data)))
 #endif
 		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s",uiLoop, pFileName) );
-			FileClose( fptr );
-			return(FALSE);
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s", uiLoop, pFileName));
+			FileClose(fptr);
+			return FALSE;
 		}
 
-		ExtractMercProfileUTF16(Data, &gMercProfiles[uiLoop]);
+		MERCPROFILESTRUCT* const p = GetProfile(uiLoop);
+		ExtractMercProfileUTF16(data, p);
 
-		//if the Dialogue exists for the merc, allow the merc to be hired
-		if (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)))
-		{
-			gMercProfiles[uiLoop].bMercStatus = 0;
-		}
-		else
-			gMercProfiles[uiLoop].bMercStatus = MERC_HAS_NO_TEXT_FILE;
+		// If the dialogue exists for the merc, allow the merc to be hired
+		p->bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
 
-		// if the merc has a medical deposit
-		if( gMercProfiles[ uiLoop ].bMedicalDeposit )
-		{
-			gMercProfiles[uiLoop].sMedicalDepositAmount = CalcMedicalDeposit( &gMercProfiles[uiLoop]);
-		}
-		else
-			gMercProfiles[uiLoop].sMedicalDepositAmount = 0;
+		p->sMedicalDepositAmount = (p->bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
 
-		// ATE: New, face display indipendent of ID num now
+		// ATE: New, face display independent of ID num now
 		// Setup face index value
 		// Default is the ubCharNum
-		gMercProfiles[uiLoop].ubFaceIndex = (UINT8)uiLoop;
+		p->ubFaceIndex = (UINT8)uiLoop;
 
 #ifndef JA2DEMO
-		if ( !gGameOptions.fGunNut )
+		if (!gGameOptions.fGunNut)
 		{
-
 			// CJC: replace guns in profile if they aren't available
-			for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
+			for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
 			{
-				usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
+				const UINT16 usItem = p->inv[uiLoop2];
+				if (!(Item[usItem].usItemClass & IC_GUN) || !ExtendedGunListGun(usItem)) continue;
 
-				if ( ( Item[ usItem ].usItemClass & IC_GUN ) && ExtendedGunListGun( usItem ) )
+				const UINT16 usNewGun = StandardGunListReplacement(usItem);
+				if (usNewGun == NOTHING) continue;
+
+				p->inv[uiLoop2] = usNewGun;
+
+				// must search through inventory and replace ammo accordingly
+				for (UINT32 uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; ++uiLoop3)
 				{
-					usNewGun = StandardGunListReplacement( usItem );
-					if ( usNewGun != NOTHING )
-					{
-						gMercProfiles[uiLoop].inv[ uiLoop2 ] = usNewGun;
+					const UINT16 usAmmo = p->inv[uiLoop3];
+					if (!(Item[usAmmo].usItemClass & IC_AMMO)) continue;
 
-						// must search through inventory and replace ammo accordingly
-						for ( uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; uiLoop3++ )
-						{
-							usAmmo = gMercProfiles[ uiLoop ].inv[ uiLoop3 ];
-							if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
-							{
-								usNewAmmo = FindReplacementMagazineIfNecessary( usItem, usAmmo, usNewGun );
-								if (usNewAmmo != NOTHING)
-								{
-									// found a new magazine, replace...
-									gMercProfiles[ uiLoop ].inv[ uiLoop3 ] = usNewAmmo;
-								}
-							}
-						}
-					}
-				}
+					const UINT16 usNewAmmo = FindReplacementMagazineIfNecessary(usItem, usAmmo, usNewGun);
+					if (usNewAmmo == NOTHING) continue;
 
-			}
-
-		} // end of if not gun nut
-#endif
-
-		//ATE: Calculate some inital attractiveness values for buddy's inital equipment...
-		// Look for gun and armour
-		gMercProfiles[uiLoop].bMainGunAttractiveness		= -1;
-		gMercProfiles[uiLoop].bArmourAttractiveness			= -1;
-
-		for ( uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; uiLoop2++ )
-		{
-			usItem = gMercProfiles[uiLoop].inv[ uiLoop2 ];
-
-			if ( usItem != NOTHING )
-			{
-				// Check if it's a gun
-				if ( Item[ usItem ].usItemClass & IC_GUN )
-				{
-					gMercProfiles[uiLoop].bMainGunAttractiveness = Weapon[ usItem ].ubDeadliness;
-				}
-
-				// If it's armour
-				if ( Item[ usItem ].usItemClass & IC_ARMOUR )
-				{
-					gMercProfiles[uiLoop].bArmourAttractiveness = Armour[ Item[ usItem ].ubClassIndex ].ubProtection;
+					// found a new magazine, replace...
+					p->inv[uiLoop3] = usNewAmmo;
 				}
 			}
 		}
+#endif
 
-
-		// OK, if we are a created slot, this will get overriden at some time..
-
-		//add up the items the merc has for the usOptionalGearCost
-		gMercProfiles[ uiLoop ].usOptionalGearCost = 0;
-		for ( uiLoop2 = 0; uiLoop2< NUM_INV_SLOTS; uiLoop2++ )
+		/* Calculate inital attractiveness for the merc's initial gun and armour.
+		 * Calculate the optional gear cost. */
+		p->bMainGunAttractiveness = -1;
+		p->bArmourAttractiveness  = -1;
+		p->usOptionalGearCost     =  0;
+		for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
 		{
-			if ( gMercProfiles[ uiLoop ].inv[ uiLoop2 ] != NOTHING )
-			{
-				//get the item
-				usItem = gMercProfiles[ uiLoop ].inv[ uiLoop2 ];
+			const UINT16 usItem = p->inv[uiLoop2];
+			if (usItem == NOTHING) continue;
+			const INVTYPE* const item = &Item[usItem];
 
-				//add the cost
-				gMercProfiles[ uiLoop ].usOptionalGearCost += Item[ usItem ].usPrice;
-			}
+			if (item->usItemClass & IC_GUN)    p->bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
+			if (item->usItemClass & IC_ARMOUR) p->bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
+
+			p->usOptionalGearCost += item->usPrice;
 		}
 
 		//These variables to get loaded in
-		gMercProfiles[ uiLoop ].fUseProfileInsertionInfo = FALSE;
-		gMercProfiles[ uiLoop ].sGridNo = 0;
+		p->fUseProfileInsertionInfo = FALSE;
+		p->sGridNo                  = 0;
 
 		// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
-		gMercProfiles[ uiLoop ].bHatedCount[0]    = gMercProfiles[ uiLoop ].bHatedTime[0];
-		gMercProfiles[ uiLoop ].bHatedCount[1]    = gMercProfiles[ uiLoop ].bHatedTime[1];
-		gMercProfiles[ uiLoop ].bLearnToHateCount = gMercProfiles[ uiLoop ].bLearnToHateTime;
-		gMercProfiles[ uiLoop ].bLearnToLikeCount = gMercProfiles[ uiLoop ].bLearnToLikeTime;
+		p->bHatedCount[0]    = p->bHatedTime[0];
+		p->bHatedCount[1]    = p->bHatedTime[1];
+		p->bLearnToHateCount = p->bLearnToHateTime;
+		p->bLearnToLikeCount = p->bLearnToLikeTime;
 	}
 
-	// SET SOME DEFAULT LOCATIONS FOR STARTING NPCS
+	FileClose(fptr);
 
-	FileClose( fptr );
-
-	// decide which terrorists are active
-	#ifndef JA2DEMO
+#ifndef JA2DEMO
 	DecideActiveTerrorists();
-	#endif
+#endif
 
 	// initialize mercs' status
-	StartSomeMercsOnAssignment( );
+	StartSomeMercsOnAssignment();
 
 	// initial recruitable mercs' reputation in each town
-	InitializeProfilesForTownReputation( );
+	InitializeProfilesForTownReputation();
 
-	#ifdef JA2EDITOR
+#ifdef JA2EDITOR
 	gfProfileDataLoaded = TRUE;
-	#endif
+#endif
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
-	InitalizeStaticExternalNPCFaces( );
+	InitalizeStaticExternalNPCFaces();
 
-	// car portrait values
-	LoadCarPortraitValues( );
+	LoadCarPortraitValues();
 
-
-	return(TRUE);
+	return TRUE;
 }
+
 
 #define MAX_ADDITIONAL_TERRORISTS 4
 
