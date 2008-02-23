@@ -257,7 +257,6 @@ typedef struct
 	INT8	bMarksmanship;
 	UINT8	bMinService;
 	INT8	bWisdom;
-	UINT8	bActive;
 
 	UINT8	bInvStatus[19];
 	UINT8 bInvNumber[19];
