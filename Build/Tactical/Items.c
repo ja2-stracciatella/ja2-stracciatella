@@ -1310,7 +1310,8 @@ INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon )
 	return( ITEM_NOT_FOUND );
 }
 
-INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon )
+
+INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const UINT16 usWeapon)
 {
 	INT8		bLoop;
 

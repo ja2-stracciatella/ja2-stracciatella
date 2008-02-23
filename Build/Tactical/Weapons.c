@@ -4093,65 +4093,50 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 }
 
 
-void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
+static BOOLEAN HasLauncher(const SOLDIERTYPE* const s)
+{
+	const OBJECTTYPE* const o = &s->inv[HANDPOS];
+	return
+		FindAttachment(          o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND &&
+		FindLaunchableAttachment(o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
+}
+
+
+void ChangeWeaponMode(SOLDIERTYPE* const s)
 {
 	// ATE: Don't do this if in a fire amimation.....
-	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIRE )
+	if (gAnimControl[s->usAnimState].uiFlags & ANIM_FIRE) return;
+
+	INT8 mode = s->bWeaponMode;
+	switch (mode)
 	{
-		return;
+		case WM_NORMAL:
+			if (IsGunBurstCapable(s, HANDPOS))
+			{
+				mode = WM_BURST;
+			}
+			else if (HasLauncher(s))
+			{
+				mode = WM_ATTACHED;
+			}
+			else
+			{
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_NOT_BURST_CAPABLE], s->name);
+			}
+			break;
+
+		case WM_BURST: mode = (HasLauncher(s) ? WM_ATTACHED : WM_NORMAL); break;
+
+		default:
+		case WM_ATTACHED: mode = WM_NORMAL; break;
 	}
 
-	if (FindAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER ) == ITEM_NOT_FOUND || FindLaunchableAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER ) == ITEM_NOT_FOUND )
-	{
-		// swap between single/burst fire
-		if (IsGunBurstCapable(pSoldier, HANDPOS))
-		{
-			pSoldier->bWeaponMode++;
-			if (pSoldier->bWeaponMode > WM_BURST)
-			{
-				// return to normal mode after going past burst
-				pSoldier->bWeaponMode = WM_NORMAL;
-			}
-		}
-		else
-		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_NOT_BURST_CAPABLE], pSoldier->name);
-			// do nothing
-			return;
-		}
-	}
-	else
-	{
-		// grenade launcher available, makes things more complicated
-		pSoldier->bWeaponMode++;
-		if (pSoldier->bWeaponMode == NUM_WEAPON_MODES)
-		{
-			// return to the beginning
-			pSoldier->bWeaponMode = WM_NORMAL;
-		}
-		else
-		{
-			// do NOT give message that gun is burst capable, because if we skip past
-			// burst capable then we are going on to the grenade launcher
-			if (pSoldier->bWeaponMode == WM_BURST && !IsGunBurstCapable(pSoldier, HANDPOS))
-			{
-				// skip past that mode!
-				pSoldier->bWeaponMode++;
-			}
-		}
-	}
-
-	if (pSoldier->bWeaponMode == WM_BURST)
-	{
-		pSoldier->bDoBurst = TRUE;
-	}
-	else
-	{
-		pSoldier->bDoBurst = FALSE;
-	}
-	DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	s->bWeaponMode = mode;
+	s->bDoBurst    = (mode == WM_BURST);
+	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 	gfUIForceReExamineCursorData = TRUE;
 }
+
 
 void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 {

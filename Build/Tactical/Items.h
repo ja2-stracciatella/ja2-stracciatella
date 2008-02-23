@@ -159,7 +159,7 @@ void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );
 
 extern void ActivateXRayDevice( SOLDIERTYPE * pSoldier );
 extern void TurnOffXRayEffects( SOLDIERTYPE * pSoldier );
-extern INT8 FindLaunchableAttachment( OBJECTTYPE * pObj, UINT16 usWeapon );
+INT8 FindLaunchableAttachment(const OBJECTTYPE* pObj, UINT16 usWeapon);
 
 BOOLEAN CanItemFitInPosition(SOLDIERTYPE* s, OBJECTTYPE* pObj, INT8 bPos, BOOLEAN fDoingPlacement);
 
