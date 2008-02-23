@@ -257,7 +257,7 @@ BOOLEAN LoadMercProfiles(void)
 							if ( (Item[ usAmmo ].usItemClass & IC_AMMO) )
 							{
 								usNewAmmo = FindReplacementMagazineIfNecessary( usItem, usAmmo, usNewGun );
-								if (usNewAmmo != NOTHING );
+								if (usNewAmmo != NOTHING)
 								{
 									// found a new magazine, replace...
 									gMercProfiles[ uiLoop ].inv[ uiLoop3 ] = usNewAmmo;

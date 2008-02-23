@@ -1,3 +1,5 @@
+(r3086) Fix a vanilla bug when playing a non-gun nut game: When replacing weapons and ammunition for this mode, sometimes ammunition was erroneously removed.  This caused that Vicky had no extra ammunition at start.
+
 v0.8 - 2008-02-20 - Lemon
 (r3064) Add support for Maemo, so the menu button acts as modifier key to perform right clicks.
 (r3059) (Partially) fix a vanilla bug: Mercs could perform actions while looking into the opposite direction, when they were moving backwards just before.  In most cases this was harmless, but in some instances (climbing down a roof, jumping over a fence) the merc would end up in the wrong spot.
