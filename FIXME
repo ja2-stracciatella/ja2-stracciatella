@@ -279,7 +279,6 @@ bRefinementCareLevel
 bHatedNationality
 bHatedNationalityCareLevel
 bRacist
-bBaseMorale
 sMedicalDepositAmount: overwritten after load from data file
 usOptionalGearCost: overwritten after load from data file
 sTrueSalary: write-only/read-to-init-self

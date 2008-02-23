@@ -295,7 +295,6 @@ typedef struct
 	UINT32 uiBiWeeklySalary;
 	INT8 bMedicalDeposit;
 	INT8 bAttitude;
-	INT8 bBaseMorale;
 	UINT16 sMedicalDepositAmount;
 
 	INT8 bLearnToLike;
