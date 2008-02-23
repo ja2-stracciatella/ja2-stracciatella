@@ -254,7 +254,6 @@ typedef struct
 	INT8	bExpLevel;		// general experience level
 
 	INT8	bMarksmanship;
-	UINT8	bMinService;
 	INT8	bWisdom;
 
 	UINT8	bInvStatus[19];

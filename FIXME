@@ -266,7 +266,6 @@ bStealRate
 bVocalVolume
 uiEyeDelay
 uiMouthDelay
-bMinService
 bMainGunAttractiveness: overwritten after load from data file
 fUseProfileInsertionInfo: overwritten after load from data file
 sGridNo: overwritten after load from data file
