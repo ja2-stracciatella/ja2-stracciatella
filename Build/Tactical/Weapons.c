@@ -3409,7 +3409,8 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	return( iImpact );
 }
 
-INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BOOLEAN fBladeAttack )
+
+INT32 HTHImpact(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTarget, const INT32 iHitBy, const BOOLEAN fBladeAttack)
 {
 	INT32 iImpact, iFluke, iBonus;
 

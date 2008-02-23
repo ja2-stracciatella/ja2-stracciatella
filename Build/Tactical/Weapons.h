@@ -265,7 +265,7 @@ extern BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo, BOOLE
 
 void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier );
 
-INT32 HTHImpact( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTarget, INT32 iHitBy, BOOLEAN fBladeAttack );
+INT32 HTHImpact(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pTarget, INT32 iHitBy, BOOLEAN fBladeAttack);
 
 UINT16 GunRange(const OBJECTTYPE* pObj);
 
