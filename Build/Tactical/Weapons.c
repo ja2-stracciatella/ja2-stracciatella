@@ -3840,7 +3840,7 @@ void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 }
 
 
-BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNotify )
+BOOLEAN IsGunBurstCapable(const SOLDIERTYPE* const pSoldier, const UINT8 ubHandPos)
 {
 	BOOLEAN fCapable = FALSE;
 
@@ -3854,11 +3854,6 @@ BOOLEAN IsGunBurstCapable( SOLDIERTYPE *pSoldier, UINT8 ubHandPos , BOOLEAN fNot
 				fCapable = TRUE;
 			}
 		}
-	}
-
-	if ( fNotify && !fCapable )
-	{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[ STR_NOT_BURST_CAPABLE ], pSoldier->name );
 	}
 
 	return( fCapable );
@@ -4109,7 +4104,7 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 	if (FindAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER ) == ITEM_NOT_FOUND || FindLaunchableAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER ) == ITEM_NOT_FOUND )
 	{
 		// swap between single/burst fire
-		if ( IsGunBurstCapable( pSoldier, HANDPOS , TRUE ) )
+		if (IsGunBurstCapable(pSoldier, HANDPOS))
 		{
 			pSoldier->bWeaponMode++;
 			if (pSoldier->bWeaponMode > WM_BURST)
@@ -4120,6 +4115,7 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 		}
 		else
 		{
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, Message[STR_NOT_BURST_CAPABLE], pSoldier->name);
 			// do nothing
 			return;
 		}
@@ -4137,7 +4133,7 @@ void ChangeWeaponMode( SOLDIERTYPE * pSoldier )
 		{
 			// do NOT give message that gun is burst capable, because if we skip past
 			// burst capable then we are going on to the grenade launcher
-			if ( pSoldier->bWeaponMode == WM_BURST && !( IsGunBurstCapable( pSoldier, HANDPOS, FALSE ) ) )
+			if (pSoldier->bWeaponMode == WM_BURST && !IsGunBurstCapable(pSoldier, HANDPOS))
 			{
 				// skip past that mode!
 				pSoldier->bWeaponMode++;

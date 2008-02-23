@@ -409,7 +409,7 @@ INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 us
 			if ( (pSoldier->ubProfile != NO_PROFILE) && (gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == PSYCHO) )
 			{
 				// psychos might possibly switch to burst if they can
-				if ( !pSoldier->bDoBurst && IsGunBurstCapable( pSoldier, HANDPOS, FALSE ) )
+				if (!pSoldier->bDoBurst && IsGunBurstCapable(pSoldier, HANDPOS))
 				{
 					// chance of firing burst if we have points... chance decreasing when ordered to do aimed shot
 

@@ -3411,7 +3411,7 @@ bCanAttack = FALSE;
 			// IF ENOUGH APs TO BURST, RANDOM CHANCE OF DOING SO
 			//////////////////////////////////////////////////////////////////////////
 
-			if (IsGunBurstCapable( pSoldier, BestAttack.bWeaponIn, FALSE ) &&
+			if (IsGunBurstCapable(pSoldier, BestAttack.bWeaponIn) &&
 					BestShot.opponent->bLife >= OKLIFE && // don't burst at downed targets
 					pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
 					pSoldier->bTeam != gbPlayerNum)

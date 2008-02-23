@@ -746,7 +746,7 @@ static void UpdateSMPanel(void)
 	else
 	{
 		// Enable some buttons!
-		if ( IsGunBurstCapable( gpSMCurrentMerc, HANDPOS , FALSE ) || FindAttachment( &(gpSMCurrentMerc->inv[HANDPOS]), UNDER_GLAUNCHER ) != ITEM_NOT_FOUND )
+		if (IsGunBurstCapable(gpSMCurrentMerc, HANDPOS) || FindAttachment(&gpSMCurrentMerc->inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND)
 		{
 			EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
 		}
