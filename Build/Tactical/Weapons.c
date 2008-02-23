@@ -3410,71 +3410,54 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 }
 
 
-INT32 HTHImpact(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTarget, const INT32 iHitBy, const BOOLEAN fBladeAttack)
+INT32 HTHImpact(const SOLDIERTYPE* const att, const SOLDIERTYPE* const tgt, const INT32 iHitBy, const BOOLEAN fBladeAttack)
 {
-	INT32 iImpact, iFluke, iBonus;
-
+	INT32        impact   = EffectiveExpLevel(att) / 2; // 0 to 4 for level
+	const INT8   strength = EffectiveStrength(att);
+	const UINT16 weapon   = att->usAttackingWeapon;
 	if (fBladeAttack)
 	{
-		iImpact = ( EffectiveExpLevel( pSoldier ) / 2); // 0 to 4 for level
-		iImpact += Weapon[ pSoldier->usAttackingWeapon ].ubImpact;
-		iImpact += EffectiveStrength( pSoldier ) / 20; // 0 to 5 for strength, adjusted by damage taken
+		impact += strength / 20; // 0 to 5 for strength, adjusted by damage taken
+		impact += Weapon[weapon].ubImpact;
 
-		if ( AM_A_ROBOT( pTarget ) )
-		{
-			iImpact /= 4;
-		}
+		if (AM_A_ROBOT(tgt)) impact /= 4;
 	}
 	else
 	{
-		iImpact = ( EffectiveExpLevel( pSoldier ) / 2); // 0 to 4 for level
-		iImpact += EffectiveStrength( pSoldier ) / 5; // 0 to 20 for strength, adjusted by damage taken
+		impact += strength / 5; // 0 to 20 for strength, adjusted by damage taken
 
 		// NB martial artists don't get a bonus for using brass knuckles!
-		if (pSoldier->usAttackingWeapon && !( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) ) )
+		if (weapon && !HAS_SKILL_TRAIT(att, MARTIALARTS))
 		{
-			iImpact += Weapon[ pSoldier->usAttackingWeapon ].ubImpact;
-
-			if ( AM_A_ROBOT( pTarget ) )
-			{
-				iImpact /= 2;
-			}
+			impact += Weapon[weapon].ubImpact;
+			if (AM_A_ROBOT(tgt)) impact /= 2;
 		}
 		else
 		{
 			// base HTH damage
-			iImpact += 5;
-			if ( AM_A_ROBOT( pTarget ) )
-			{
-				iImpact = 0;
-			}
+			impact += 5;
+			if (AM_A_ROBOT(tgt)) impact = 0;
 		}
-
 	}
 
-
-	iFluke = PreRandom( 51 ) - 25; // +/-25% bonus due to random factors
-	iBonus = iHitBy / 2;				// up to 50% extra impact for accurate attacks
-
-	iImpact = iImpact * (100 + iFluke + iBonus) / 100;
+	const INT32 fluke = PreRandom(51) - 25; // +/-25% bonus due to random factors
+	const INT32 bonus = iHitBy / 2;         // up to 50% extra impact for accurate attacks
+	impact = impact * (100 + fluke + bonus) / 100;
 
 	if (!fBladeAttack)
 	{
 		// add bonuses for hand-to-hand and martial arts
-		if ( HAS_SKILL_TRAIT( pSoldier, MARTIALARTS ) )
+		if (HAS_SKILL_TRAIT(att, MARTIALARTS))
 		{
-			iImpact = iImpact * ( 100 + gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS( pSoldier, MARTIALARTS ) ) / 100;
-			if (pSoldier->usAnimState == NINJA_SPINKICK)
-			{
-				iImpact *= 2;
-			}
+			impact = impact * (100 + gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(att, MARTIALARTS)) / 100;
+			if (att->usAnimState == NINJA_SPINKICK) impact *= 2;
 		}
 		// SPECIAL  - give TRIPLE bonus for damage for hand-to-hand trait
 		// because the HTH bonus is half that of martial arts, and gets only 1x for to-hit bonus
-		iImpact = iImpact * (100 + 3 * gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS(pSoldier, HANDTOHAND)) / 100;
+		impact = impact * (100 + 3 * gbSkillTraitBonus[HANDTOHAND] * NUM_SKILL_TRAITS(att, HANDTOHAND)) / 100;
 	}
 
-	return( iImpact );
+	return impact;
 }
 
 
