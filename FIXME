@@ -320,7 +320,6 @@ fHasKeys: strange
 
 SOLDIERTYPE
 fReloading: always FALSE
-bScientific: just copied around a bit
 sHeightAdjustment: seems to be always 0
 sDesiredHeight: strange
 sTempNewGridNo: strange

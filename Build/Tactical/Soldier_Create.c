@@ -540,7 +540,6 @@ static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const
 	pSoldier->bMedical									= pProfile->bMedical;
 	pSoldier->bMechanical								= pProfile->bMechanical;
 	pSoldier->bExplosive								= pProfile->bExplosive;
-	pSoldier->bScientific								= pProfile->bScientific;
 
 	pSoldier->uiAnimSubFlags						= pProfile->uiBodyTypeSubFlags;
 	pSoldier->ubBodyType								= pProfile->ubBodyType;

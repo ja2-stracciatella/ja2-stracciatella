@@ -834,7 +834,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		pNewSoldier->bMedical												= pSoldier->bMedical;
 		pNewSoldier->bMechanical										= pSoldier->bMechanical;
 		pNewSoldier->bExplosive											= pSoldier->bExplosive;
-		pNewSoldier->bScientific										= pSoldier->bScientific;
 		pNewSoldier->bLastRenderVisibleValue				= pSoldier->bLastRenderVisibleValue;
 		pNewSoldier->bVisible												= pSoldier->bVisible;
 
@@ -1212,7 +1211,6 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 					pProfile->bMedical									= pSoldier->bMedical;
 					pProfile->bMechanical								= pSoldier->bMechanical;
 					pProfile->bExplosive								= pSoldier->bExplosive;
-					pProfile->bScientific								= pSoldier->bScientific;
 				}
 			}
 		}

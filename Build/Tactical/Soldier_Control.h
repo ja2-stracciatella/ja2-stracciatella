@@ -343,7 +343,6 @@ struct SOLDIERTYPE
 	SOLDIERTYPE*                opponent;
 	INT8												bLastRenderVisibleValue;
 	UINT8												ubAttackingHand;
-	INT8												bScientific;
 	// traits
 	INT16												sWeightCarriedAtTurnStart;
 	wchar_t											name[ 10 ];
