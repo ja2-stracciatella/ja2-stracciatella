@@ -163,13 +163,6 @@ typedef struct
 {
 	wchar_t	zName[ NAME_LENGTH ];
 	wchar_t	zNickname[ NICKNAME_LENGTH ];
-	UINT32	uiAttnSound;
-	UINT32	uiCurseSound;
-	UINT32	uiDieSound;
-	UINT32	uiGoodSound;
-	UINT32	uiGruntSound;
-	UINT32	uiGrunt2Sound;
-	UINT32  uiOkSound;
 	UINT8		ubFaceIndex;
 	PaletteRepID		PANTS;
 	PaletteRepID		VEST;
@@ -358,7 +351,6 @@ typedef struct
 	UINT32	uiTotalCostToDate;			// The total amount of money that has been paid to the merc for their salary
 	UINT8		ubBuffer[4];
 } MERCPROFILESTRUCT;
-CASSERT(sizeof(MERCPROFILESTRUCT) == 796)
 
 
 #define TIME_BETWEEN_HATED_COMPLAINTS 24

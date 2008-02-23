@@ -260,13 +260,6 @@ ubCreatedSectorID: write-only
 bPadding
 
 MERCPROFILESTRUCT
-uiAttnSound
-uiCurseSound
-uiDieSound
-uiGoodSound
-uiGruntSound
-uiGrunt2Sound
-uiOkSound
 ubFaceIndex: overwritten after load from data file
 bArmourAttractiveness: overwritten after load from data file
 bStealRate
