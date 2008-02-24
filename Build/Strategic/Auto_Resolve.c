@@ -3749,21 +3749,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 				pAttacker->pSoldier->usAttackingWeapon = pAttacker->pSoldier->inv[ pAttacker->bWeaponSlot ].usItem;
 		}
 
-		if( pAttacker->bWeaponSlot != HANDPOS )
-		{ //switch items
-			SOLDIERTYPE* const att  = pAttacker->pSoldier;
-			OBJECTTYPE*  const wpn  = &att->inv[pAttacker->bWeaponSlot];
-			OBJECTTYPE*  const hand = &att->inv[HANDPOS];
-			OBJECTTYPE tempItem = *hand;
-			*hand = *wpn;
-			iImpact = HTHImpact(att, pTarget->pSoldier, ubAccuracy, fKnife | fClaw);
-			*wpn  = *hand;
-			*hand = tempItem;
-		}
-		else
-		{
-			iImpact = HTHImpact( pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, (BOOLEAN)(fKnife || fClaw) );
-		}
+		iImpact = HTHImpact(pAttacker->pSoldier, pTarget->pSoldier, ubAccuracy, fKnife | fClaw);
 
 		iNewLife = pTarget->pSoldier->bLife - iImpact;
 
