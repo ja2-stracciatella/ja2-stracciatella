@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-BOOLEAN	QuantizeImage( UINT8 *pDest, UINT8 *pSrc, INT16 sWidth, INT16 sHeight, SGPPaletteEntry *pPalette );
+BOOLEAN QuantizeImage(UINT8* pDest, const SGPPaletteEntry* pSrc, INT16 sWidth, INT16 sHeight, SGPPaletteEntry* pPalette);
 
 #ifdef __cplusplus
 }

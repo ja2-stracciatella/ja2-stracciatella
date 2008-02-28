@@ -22,26 +22,22 @@ CQuantizer::~CQuantizer ()
         DeleteTree (&m_pTree);
 }
 
-BOOLEAN CQuantizer::ProcessImage(BYTE* pData, int iWidth, int iHeight)
+
+BOOLEAN CQuantizer::ProcessImage(const SGPPaletteEntry* pData, const int iWidth, const int iHeight)
 {
-    BYTE* pbBits;
-    BYTE r, g, b;
     int i, j;
 
-
-    pbBits = (BYTE*)pData;
     for (i=0; i<iHeight; i++) {
         for (j=0; j<iWidth; j++) {
-            b = *pbBits++;
-            g = *pbBits++;
-            r = *pbBits++;
+            const BYTE b = pData->peRed;
+            const BYTE g = pData->peGreen;
+            const BYTE r = pData->peBlue;
+            ++pData;
             AddColor (&m_pTree, r, g, b, m_nColorBits, 0, &m_nLeafCount,
                 m_pReducibleNodes);
             while (m_nLeafCount > m_nMaxColors)
                 ReduceTree (m_nColorBits, &m_nLeafCount, m_pReducibleNodes);
         }
-				//Padding
-        //pbBits ++;
     }
     return TRUE;
 }

@@ -43,17 +43,9 @@ static SGPVSurface* gi8BitMiniMap;
 // quantizes it into an 8-bit image ans writes it to an sti file in radarmaps.
 
 
-typedef struct
-{
-	INT8	r;
-	INT8	g;
-	INT8	b;
-
-} RGBValues;
-
-
 UINT32	MapUtilScreenHandle( )
 {
+	static SGPPaletteEntry* p24BitValues = NULL;
 	static INT16		fNewMap = TRUE;
   InputAtom  InputEvent;
 	GETFILESTRUCT FileInfo;
@@ -63,9 +55,6 @@ UINT32	MapUtilScreenHandle( )
 	UINT32					uiDestPitchBYTES, uiSrcPitchBYTES;
 	UINT16						*pDestBuf, *pSrcBuf;
 	UINT8						*pDataPtr;
-
-	static	UINT8						*p24BitDest = NULL;
-	static	RGBValues				*p24BitValues=NULL;
 
 	UINT32					uiRGBColor;
 
@@ -109,9 +98,7 @@ UINT32	MapUtilScreenHandle( )
 		FListNode = FileList;
 
 		//Allocate 24 bit Surface
-		p24BitValues = MemAlloc( MINIMAP_X_SIZE * MINIMAP_Y_SIZE * sizeof( RGBValues ) );
-		p24BitDest	 = (UINT8*)p24BitValues;
-
+		p24BitValues = MemAlloc(MINIMAP_X_SIZE * MINIMAP_Y_SIZE * sizeof(*p24BitValues));
 
 		//Allocate 8-bit surface
 		gi8BitMiniMap = AddVideoSurface(88, 44, 8);
@@ -225,9 +212,10 @@ UINT32	MapUtilScreenHandle( )
 			//Write into dest!
 			pDestBuf[ ( iY * (uiDestPitchBYTES/2) ) + iX ] = sDest16BPPColor;
 
-			p24BitValues[ ( iY * (uiDestPitchBYTES/2) ) + iX ].r = (UINT8)bAvR;
-			p24BitValues[ ( iY * (uiDestPitchBYTES/2) ) + iX ].g = (UINT8)bAvG;
-			p24BitValues[ ( iY * (uiDestPitchBYTES/2) ) + iX ].b = (UINT8)bAvB;
+			SGPPaletteEntry* const dst = &p24BitValues[iY * (uiDestPitchBYTES / 2) + iX];
+			dst->peRed   = bAvR;
+			dst->peGreen = bAvG;
+			dst->peBlue  = bAvB;
 
 			//Increment
 			dY += gdYStep;
@@ -249,7 +237,7 @@ UINT32	MapUtilScreenHandle( )
 	//QUantize!
 	pDataPtr = (UINT8*)LockVideoSurface(gi8BitMiniMap, &uiSrcPitchBYTES);
 	pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	QuantizeImage( pDataPtr, p24BitDest, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette );
+	QuantizeImage(pDataPtr, p24BitValues, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette);
 	SetVideoSurfacePalette(gi8BitMiniMap, pPalette);
 	// Blit!
 	Blt8BPPDataTo16BPPBuffer(pDestBuf, uiDestPitchBYTES, gi8BitMiniMap, pDataPtr, 300, 360);

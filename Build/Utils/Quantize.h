@@ -26,7 +26,7 @@ protected:
 public:
     CQuantizer (UINT nMaxColors, UINT nColorBits);
     virtual ~CQuantizer ();
-    BOOLEAN ProcessImage(BYTE* pData, int iWidth, int iHeight);
+    BOOLEAN ProcessImage(const SGPPaletteEntry* pData, int iWidth, int iHeight);
     UINT GetColorCount ();
 		void GetColorTable(SGPPaletteEntry* prgb);
 
