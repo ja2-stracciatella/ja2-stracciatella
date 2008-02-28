@@ -551,7 +551,6 @@ static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel);
 //the worst class of item, while 11 is the best.
 static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bWeaponClass, INT8 bAmmoClips, INT8 bAttachClass, BOOLEAN fAttachment)
 {
-	INVTYPE *pItem;
 	OBJECTTYPE Object;
 	UINT16 i;
 	UINT16 usRandom;
@@ -637,7 +636,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 		{ //Count the number of valid attachments.
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				if( pItem->usItemClass == IC_MISC && pItem->ubCoolness == bAttachClass && ValidAttachment( i, usGunIndex ) )
 					usNumMatches++;
 			}
@@ -651,7 +650,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 			usRandom = (UINT16)Random( usNumMatches );
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				if( pItem->usItemClass == IC_MISC && pItem->ubCoolness == bAttachClass && ValidAttachment( i, usGunIndex ) )
 				{
 					if( usRandom )
@@ -964,7 +963,6 @@ static void ChooseGrenadesForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bHelmetClass, INT8 bVestClass, INT8 bLeggingsClass)
 {
 	UINT16 i;
-	INVTYPE *pItem;
 	UINT16 usRandom;
 	UINT16 usNumMatches;
 	INT8 bOrigVestClass = bVestClass;
@@ -979,7 +977,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			//don't find one, we keep lowering the class until we do.
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bHelmetClass )
 				{
@@ -995,7 +993,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			usRandom = (UINT16)Random( usNumMatches );
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bHelmetClass )
 				{
 					if( Armour[ pItem->ubClassIndex ].ubArmourClass == ARMOURCLASS_HELMET )
@@ -1029,7 +1027,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 				if ( ( i == TSHIRT ) || ( i == LEATHER_JACKET ) || ( i == TSHIRT_DEIDRANNA ) )
 					continue;
 
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bVestClass )
 				{
@@ -1049,7 +1047,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 				if ( ( i == TSHIRT ) || ( i == LEATHER_JACKET ) || ( i == TSHIRT_DEIDRANNA ) )
 					continue;
 
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bVestClass )
 				{
 					if( Armour[ pItem->ubClassIndex ].ubArmourClass == ARMOURCLASS_VEST )
@@ -1090,7 +1088,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			//don't find one, we keep lowering the class until we do.
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				// NOTE: This relies on treated armor to have a coolness of 0 in order for enemies not to be equipped with it
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bLeggingsClass )
 				{
@@ -1106,7 +1104,7 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 			usRandom = (UINT16)Random( usNumMatches );
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				if( pItem->usItemClass == IC_ARMOUR && pItem->ubCoolness == bLeggingsClass )
 				{
 					if( Armour[ pItem->ubClassIndex ].ubArmourClass == ARMOURCLASS_LEGGINGS )
@@ -1145,7 +1143,7 @@ static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp,
 		//don't find one, we keep lowering the class until we do.
 		for( i = 0; i < MAXITEMS; i++ )
 		{
-			pItem = &Item[ i ];
+			const INVTYPE* const pItem = &Item[i];
 			if( ( pItem->usItemClass == IC_BLADE || pItem->usItemClass == IC_THROWING_KNIFE ) && pItem->ubCoolness == bKnifeClass )
 			{
 				usNumMatches++;
@@ -1159,7 +1157,7 @@ static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp,
 		usRandom = (UINT16)Random( usNumMatches );
 		for( i = 0; i < MAXITEMS; i++ )
 		{
-			pItem = &Item[ i ];
+			const INVTYPE* const pItem = &Item[i];
 			if( ( pItem->usItemClass == IC_BLADE || pItem->usItemClass == IC_THROWING_KNIFE ) && pItem->ubCoolness == bKnifeClass )
 			{
 				if( usRandom )
@@ -1290,7 +1288,6 @@ static void ChooseFaceGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp)
 static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKitClass)
 {
 	UINT16 i;
-	INVTYPE *pItem;
 	UINT16 usRandom;
 	UINT16 usNumMatches = 0;
 	OBJECTTYPE Object;
@@ -1312,7 +1309,7 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 		// count how many non-medical KITS are eligible ( of sufficient or lower coolness)
 		for( i = 0; i < MAXITEMS; i++ )
 		{
-			pItem = &Item[ i ];
+			const INVTYPE* const pItem = &Item[i];
 			// skip toolkits
 			if( ( pItem->usItemClass == IC_KIT ) && ( pItem->ubCoolness > 0 ) && pItem->ubCoolness <= bKitClass && ( i != TOOLKIT ) )
 			{
@@ -1326,7 +1323,7 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 			usRandom = (UINT16)Random( usNumMatches );
 			for( i = 0; i < MAXITEMS; i++ )
 			{
-				pItem = &Item[ i ];
+				const INVTYPE* const pItem = &Item[i];
 				// skip toolkits
 				if( ( pItem->usItemClass == IC_KIT ) && ( pItem->ubCoolness > 0 ) && pItem->ubCoolness <= bKitClass && ( i != TOOLKIT ) )
 				{
@@ -1355,7 +1352,6 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bMiscClass)
 {
 	UINT16 i;
-	INVTYPE *pItem;
 	UINT16 usRandom;
 	UINT16 usNumMatches = 0;
 	OBJECTTYPE Object;
@@ -1384,7 +1380,7 @@ static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 	i = 0;
 	while ( iMiscItemsList[ i ] != -1 )
 	{
-		pItem = &Item[ iMiscItemsList [ i ] ];
+		const INVTYPE* const pItem = &Item[iMiscItemsList[i]];
 		if( ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bMiscClass ) )
 		{
 			// exclude REGEN_BOOSTERs unless Sci-Fi flag is on
@@ -1406,7 +1402,7 @@ static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 		i = 0;
 		while ( iMiscItemsList[ i ] != -1 )
 		{
-			pItem = &Item[ iMiscItemsList [ i ] ];
+			const INVTYPE* const pItem = &Item[iMiscItemsList[i]];
 			if( ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bMiscClass ) )
 			{
 				// exclude REGEN_BOOSTERs unless Sci-Fi flag is on
@@ -1433,7 +1429,6 @@ static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBombClass)
 {
 	UINT16 i;
-	INVTYPE *pItem;
 	UINT16 usRandom;
 	UINT16 usNumMatches = 0;
 	OBJECTTYPE Object;
@@ -1441,7 +1436,7 @@ static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBo
 	// count how many are eligible
 	for( i = 0; i < MAXITEMS; i++ )
 	{
-		pItem = &Item[ i ];
+		const INVTYPE* const pItem = &Item[i];
 		if( ( pItem->usItemClass == IC_BOMB ) && ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bBombClass ) )
 		{
 			usNumMatches++;
@@ -1455,7 +1450,7 @@ static void ChooseBombsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bBo
 		usRandom = (UINT16)Random( usNumMatches );
 		for( i = 0; i < MAXITEMS; i++ )
 		{
-			pItem = &Item[ i ];
+			const INVTYPE* const pItem = &Item[i];
 			if( ( pItem->usItemClass == IC_BOMB ) && ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bBombClass ) )
 			{
 				if( usRandom )

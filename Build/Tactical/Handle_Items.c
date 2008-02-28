@@ -1867,7 +1867,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 }
 
 
-static LEVELNODE* AddItemGraphicToWorld(INVTYPE* pItem, INT16 sGridNo, UINT8 ubLevel)
+static LEVELNODE* AddItemGraphicToWorld(const INVTYPE* const pItem, const INT16 sGridNo, const UINT8 ubLevel)
 {
 	UINT16			usTileIndex;
 	LEVELNODE		*pNode;

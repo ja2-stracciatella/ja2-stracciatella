@@ -117,7 +117,6 @@ EditorItemsInfo eInfo;
 void EntryInitEditorItemsInfo()
 {
 	INT32 i;
-	INVTYPE *item;
 	eInfo.uiBuffer = 0;
 	eInfo.fKill = 0;
 	eInfo.fActive = 0;
@@ -137,7 +136,7 @@ void EntryInitEditorItemsInfo()
 		eInfo.sNumTriggers = NUMBER_TRIGGERS;
 		for( i=0; i < MAXITEMS; i++ )
 		{
-			item = &Item[i];
+			const INVTYPE* const item = &Item[i];
 			if( Item[i].fFlags & ITEM_NOT_EDITOR )
 				continue;
 			if( i == SWITCH || i == ACTION_ITEM )
@@ -762,7 +761,6 @@ static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 void AddSelectedItemToWorld( INT16 sGridNo )
 {
 	OBJECTTYPE	tempObject;
-	INVTYPE		*pItem;
 	INT8 bVisibility = INVISIBLE;
 	BOOLEAN fFound = FALSE;
 	IPListNode *pIPCurr, *pIPPrev;
@@ -859,8 +857,8 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 		gWorldItems[ iItemIndex ].ubNonExistChance = 0;
 	}
 
-	OBJECTTYPE* const pObject = &gWorldItems[iItemIndex].o;
-	pItem = &( Item[ pObject->usItem ] );
+	OBJECTTYPE*    const pObject = &gWorldItems[iItemIndex].o;
+	const INVTYPE* const pItem   = &Item[pObject->usItem];
 	if( pItem->usItemClass == IC_AMMO )
 	{
 		if (Random( 2 ))

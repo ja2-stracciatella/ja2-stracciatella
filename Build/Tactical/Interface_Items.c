@@ -1734,7 +1734,6 @@ void InitItemInterface( )
 void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* const pSoldier, const OBJECTTYPE* pObject, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 sOutlineColor)
 {
 	UINT16								uiStringLength;
-	INVTYPE								*pItem;
 	INT16									sNewY, sNewX;
 
 	if ( pObject->usItem == NOTHING )
@@ -1742,6 +1741,7 @@ void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* const pSoldie
 		return;
 	}
 
+	const INVTYPE* pItem;
 	if ( ubStatusIndex < RENDER_ITEM_ATTACHMENT1 )
 	{
 		pItem = &Item[ pObject->usItem ];
@@ -5189,7 +5189,6 @@ void RenderItemPickupMenu( )
 	INT32			cnt;
 	INT16			sX, sY, sCenX, sCenY, sFontX, sFontY, sNewX, sNewY;
 	wchar_t			pStr[ 100 ];
-	INVTYPE   *pItem;
 	OBJECTTYPE  *pObject;
 	UINT16			uiStringLength;
 
@@ -5248,7 +5247,7 @@ void RenderItemPickupMenu( )
 			{
 				// Get item to render
 				pObject = &(gWorldItems[ gItemPickupMenu.ItemPoolSlots[ cnt ]->iItemIndex ].o );
-				pItem = &( Item[ pObject->usItem ] );
+				const INVTYPE* const pItem = &Item[pObject->usItem];
 
 				const UINT16 usItemTileIndex = GetTileGraphicForItem(pItem);
 				const TILE_ELEMENT* const te = &gTileDatabase[usItemTileIndex];

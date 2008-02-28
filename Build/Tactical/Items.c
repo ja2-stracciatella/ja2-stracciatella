@@ -49,7 +49,7 @@
 //ATE: When adding new items, make sure to update text.c with text description
 ///////////////////////////////////////////////////////////////////////////
 
-INVTYPE Item[MAXITEMS] =
+const INVTYPE Item[] =
 {
 //  							CLASS								SOUND			GRPH	GRA-			PER
 //CLASS						INDEX		CURSOR			TYPE			TYPE	PHIC	WT	PCKT	PRICE COOL	DESCRIPTION							REL		REPAIR	FLAGS
@@ -449,6 +449,7 @@ INVTYPE Item[MAXITEMS] =
 {	IC_NONE,				0,			INVALIDCURS,	0,				0,		0,		0,	0,		   0,	0,		/* nothing! */				0,		0,			0},
 
 };
+CASSERT(lengthof(Item) == MAXITEMS);
 
 
 typedef struct
@@ -1687,9 +1688,8 @@ UINT8 CalculateObjectWeight(const OBJECTTYPE* const pObject)
 {
 	INT32 cnt;
 	UINT16 usWeight;
-	INVTYPE * pItem;
 
-	pItem = &(Item[ pObject->usItem ]);
+	const INVTYPE* const pItem = &Item[pObject->usItem];
 
 	// Start with base weight
 	usWeight = pItem->ubWeight;
@@ -2319,7 +2319,6 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot )
 {
 	INT8				bLoop;
-	INVTYPE *		pItem;
 
 	for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
 	{
@@ -2327,7 +2326,7 @@ INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bE
 		{
 			continue;
 		}
-		pItem = &(Item[pSoldier->inv[bLoop].usItem]);
+		const INVTYPE* const pItem = &Item[pSoldier->inv[bLoop].usItem];
 		if (pItem->usItemClass == IC_AMMO)
 		{
 			if (Magazine[pItem->ubClassIndex].ubCalibre == ubCalibre && (Magazine[pItem->ubClassIndex].ubMagSize == ubMagSize || ubMagSize == ANY_MAGSIZE))
@@ -3104,13 +3103,12 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, BOOLEAN fNewItem, INT8 bExcludeSlot)
 {
 	INT8			bSlot;
-	INVTYPE	* pItem;
 	UINT8			ubPerSlot;
 
 	// statuses of extra objects would be 0 if the # exceeds the maximum
 	Assert( pObj->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
-	pItem = &(Item[pObj->usItem]);
+	const INVTYPE* const pItem = &Item[pObj->usItem];
 	ubPerSlot = pItem->ubPerPocket;
 
 	// Overrides to the standard system: put guns in hand, armour on body (if slot empty)
@@ -4864,7 +4862,6 @@ void DumpItemsList( void )
   CHAR8 zPrintFileName[60];
   FILE *FDump;
 	UINT16 usItem;
-	INVTYPE *pItem;
 
   // open output file
  	strcpy(zPrintFileName, "ItemDump.txt");
@@ -4879,8 +4876,7 @@ void DumpItemsList( void )
 
 	for( usItem = 0; usItem < MAXITEMS; usItem++ )
 	{
-		pItem= &( Item[ usItem ] );
-
+		const INVTYPE* const pItem = &Item[usItem];
 		if (pItem->ubCoolness > 0 )
 		{
 			fprintf(FDump, "%28ls     %2d     $%4d\n", ItemNames[ usItem ], pItem->ubCoolness, pItem->usPrice );

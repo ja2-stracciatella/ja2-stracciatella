@@ -663,8 +663,6 @@ typedef enum
 #define LAST_HEAD_ITEM SUNGOGGLES
 
 
-extern INVTYPE Item[MAXITEMS];
-
-
+extern const INVTYPE Item[];
 
 #endif

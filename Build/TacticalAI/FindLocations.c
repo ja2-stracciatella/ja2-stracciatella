@@ -1620,7 +1620,6 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	INT16					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
 	OBJECTTYPE *	pObj;
-	INVTYPE *			pItem;
 	INT32					iItemIndex, iBestItemIndex;
 
 	iTempValue = -1;
@@ -1739,7 +1738,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						while( pItemPool )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
-							pItem = &(Item[pObj->usItem]);
+							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass == IC_GUN && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
 								// maybe this gun has ammo (adjust for whether it is better than ours!)
@@ -1772,7 +1771,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						while( pItemPool )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
-							pItem = &(Item[pObj->usItem]);
+							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if (pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
 								if ( (pItem->usItemClass & IC_GUN) && (pObj->bGunAmmoStatus < 0 || pObj->ubGunShotsLeft == 0 || ( (pObj->usItem == ROCKET_RIFLE || pObj->usItem == AUTO_ROCKET_RIFLE) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
@@ -1812,7 +1811,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						while( pItemPool )
 						{
 							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
-							pItem = &(Item[pObj->usItem]);
+							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
 								if ( (pItem->usItemClass & IC_GUN) && (pObj->bGunAmmoStatus < 0 || pObj->ubGunShotsLeft == 0 || ( (pObj->usItem == ROCKET_RIFLE || pObj->usItem == AUTO_ROCKET_RIFLE) && pObj->ubImprintID != NOBODY && pObj->ubImprintID != pSoldier->ubID) ) )
