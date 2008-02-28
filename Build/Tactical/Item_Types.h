@@ -27,15 +27,6 @@
 #define	TINCANCURS	22
 #define REFUELCURS  23
 
-#define CAMERARANGE 10
-
-#define CONDBUL 0
-#define COND 0
-#define SINGLE 0
-#define LIQ 0
-#define USAGE 0
-#define BUCKS 0
-
 #define ITEM_NOT_FOUND -1
 
 
@@ -254,7 +245,6 @@ typedef struct
 	UINT32		usItemClass;
 	UINT8			ubClassIndex;
 	UINT8			ubCursor;
-	INT8			bSoundType;
 	UINT8			ubGraphicType;
 	UINT8			ubGraphicNum;
 	UINT8			ubWeight; //2 units per kilogram; roughly 1 unit per pound
