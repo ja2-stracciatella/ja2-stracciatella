@@ -3687,8 +3687,8 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 	}
 
 	// SEE IF WE ARE OVER A TALKABLE GUY!
-	SOLDIERTYPE* const tgt = GetValidTalkableNPCFromMouse(TRUE, FALSE, TRUE);
-	BOOLEAN fGiveItem = (tgt != NULL);
+	SOLDIERTYPE* const tgt = gUIFullTarget;
+	BOOLEAN fGiveItem = tgt != NULL && IsValidTalkableNPC(tgt, TRUE, FALSE, TRUE);
 
 	// OK, if different than default, change....
 	if ( gfItemPointerDifferentThanDefault )
