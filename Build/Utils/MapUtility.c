@@ -26,7 +26,7 @@
 
 #ifdef JA2EDITOR
 
-#include "Quantize_Wrap.h"
+#include "Quantize.h"
 
 #define		MINIMAP_X_SIZE			88
 #define		MINIMAP_Y_SIZE			44

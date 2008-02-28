@@ -399,7 +399,6 @@ SRCS += Build/Utils/Multi_Language_Graphic_Utils.c
 SRCS += Build/Utils/Music_Control.c
 SRCS += Build/Utils/PopUpBox.c
 SRCS += Build/Utils/Quantize.cc
-SRCS += Build/Utils/Quantize_Wrap.cc
 SRCS += Build/Utils/STIConvert.c
 SRCS += Build/Utils/Slider.c
 SRCS += Build/Utils/Sound_Control.c
