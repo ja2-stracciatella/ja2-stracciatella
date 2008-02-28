@@ -1351,13 +1351,8 @@ static void ChooseKitsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKit
 
 static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bMiscClass)
 {
-	UINT16 i;
-	UINT16 usRandom;
-	UINT16 usNumMatches = 0;
-	OBJECTTYPE Object;
-
 	// not all of these are IC_MISC, some are IC_PUNCH (not covered anywhere else)
-	INT32 iMiscItemsList[] =
+	static const INT32 iMiscItemsList[] =
 	{
 		CANTEEN,
 		CANTEEN,
@@ -1372,55 +1367,45 @@ static void ChooseMiscGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 		CHEWING_GUM,
 		CIGARS,
 		GOLDWATCH,
-		-1
+		NOTHING
 	};
 
-
 	// count how many are eligible
-	i = 0;
-	while ( iMiscItemsList[ i ] != -1 )
+	UINT16 usNumMatches = 0;
+	for (const INT32* i = iMiscItemsList; *i != NOTHING; ++i)
 	{
-		const INVTYPE* const pItem = &Item[iMiscItemsList[i]];
-		if( ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bMiscClass ) )
+		const INVTYPE* const pItem = &Item[*i];
+		if (pItem->ubCoolness >  0          &&
+				pItem->ubCoolness <= bMiscClass &&
+				(*i != REGEN_BOOSTER || gGameOptions.fSciFi)) // exclude REGEN_BOOSTERs unless Sci-Fi flag is on
 		{
-			// exclude REGEN_BOOSTERs unless Sci-Fi flag is on
-			if ( ( iMiscItemsList [ i ] != REGEN_BOOSTER ) || ( gGameOptions.fSciFi ) )
-			{
-				usNumMatches++;
-			}
+			++usNumMatches;
 		}
-
-		i++;
 	}
 
-
 	// if any are eligible, pick one of them at random
-	if( usNumMatches )
+	if (usNumMatches == 0) return;
+
+	UINT16 usRandom = Random(usNumMatches);
+	for (const INT32* i = iMiscItemsList; *i != NOTHING; ++i)
 	{
-		usRandom = (UINT16)Random( usNumMatches );
-
-		i = 0;
-		while ( iMiscItemsList[ i ] != -1 )
+		const INVTYPE* const pItem = &Item[*i];
+		if (pItem->ubCoolness >  0          &&
+				pItem->ubCoolness <= bMiscClass &&
+				(*i != REGEN_BOOSTER || gGameOptions.fSciFi)) // exclude REGEN_BOOSTERs unless Sci-Fi flag is on
 		{
-			const INVTYPE* const pItem = &Item[iMiscItemsList[i]];
-			if( ( pItem->ubCoolness > 0 ) && ( pItem->ubCoolness <= bMiscClass ) )
+			if (usRandom)
 			{
-				// exclude REGEN_BOOSTERs unless Sci-Fi flag is on
-				if ( ( iMiscItemsList [ i ] != REGEN_BOOSTER ) || ( gGameOptions.fSciFi ) )
-				{
-					if( usRandom )
-						usRandom--;
-					else
-					{
-						CreateItem( ( UINT16 ) iMiscItemsList[ i ], (INT8)(80 + Random( 21 )), &Object );
-						Object.fFlags |= OBJECT_UNDROPPABLE;
-						PlaceObjectInSoldierCreateStruct( pp, &Object );
-						break;
-					}
-				}
+				--usRandom;
 			}
-
-			i++;
+			else
+			{
+				OBJECTTYPE Object;
+				CreateItem(*i, 80 + Random(21), &Object);
+				Object.fFlags |= OBJECT_UNDROPPABLE;
+				PlaceObjectInSoldierCreateStruct(pp, &Object);
+				break;
+			}
 		}
 	}
 }
