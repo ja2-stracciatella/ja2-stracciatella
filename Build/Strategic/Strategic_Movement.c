@@ -728,26 +728,6 @@ static UINT8 AddGroupToList(GROUP* pGroup)
 }
 
 
-static void RemoveGroupIdFromList(UINT8 ubId)
-{
-	GROUP *pGroup;
-
-	if( ubId == 0 )
-	{
-		// no group, leave
-		return;
-	}
-
-	// get group
-	pGroup = GetGroup( ubId );
-
-	// is there in fact a group?
-	Assert( pGroup );
-
-	// now remove this group
-	RemoveGroupFromList( pGroup );
-
-}
 //Destroys the waypoint list, detaches group from list, then deallocated the memory for the group
 void RemoveGroupFromList( GROUP *pGroup )
 {
