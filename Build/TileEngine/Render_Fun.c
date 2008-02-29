@@ -293,35 +293,3 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 
 	CalculateWorldWireFrameTiles( FALSE );
 }
-
-
-static BOOLEAN AddSpecialTileRange(SGPRect* pSelectRegion)
-{
-	INT32 cnt1, cnt2;
-
-	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
-	{
-		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
-		{
-			AddObjectToHead( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT );
-		}
-	}
-
-	return( TRUE );
-}
-
-
-static BOOLEAN RemoveSpecialTileRange(SGPRect* pSelectRegion)
-{
-	INT32 cnt1, cnt2;
-
-	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
-	{
-		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
-		{
-			RemoveObject( (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ), SPECIALTILE_MAPEXIT );
-		}
-	}
-
-	return( TRUE );
-}
