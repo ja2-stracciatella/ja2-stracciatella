@@ -1657,66 +1657,6 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
-static INT8 KillDyingInTeam(UINT team)
-{
-	INT8 kill_count = 0;
-	FOR_ALL_IN_TEAM(s, team)
-	{
-		if (s->bLife < OKLIFE && s->bLife != 0)
-		{
-			s->bLife = 0;
-			BOOLEAN fMadeCorpse;
-			HandleSoldierDeath(s, &fMadeCorpse);
-			++kill_count;
-		}
-	}
-	return kill_count;
-}
-
-
-static void HandleEnemyStatusInCurrentMapBeforeLoadingNewMap(void)
-{
-	return;
-
-	// If any of the soldiers/creatures/milita/civilians are dying, kill them now.
-	const INT8 bKilledEnemies   = KillDyingInTeam(ENEMY_TEAM);
-	const INT8 bKilledCreatures = KillDyingInTeam(CREATURE_TEAM);
-	const INT8 bKilledRebels    = KillDyingInTeam(MILITIA_TEAM);
-	const INT8 bKilledCivilians = KillDyingInTeam(CIV_TEAM);
-
-// TEST MESSAGES ONLY!
-	if( bKilledCivilians )
-		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d civilians died after you left the sector.", bKilledCivilians );
-	if( bKilledRebels )
-		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d militia died after you left the sector.", bKilledRebels );
-	if( bKilledEnemies )
-		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d enemies died after you left the sector.", bKilledEnemies );
-	if( bKilledCreatures )
-		ScreenMsg( FONT_BLUE, MSG_TESTVERSION, L"%d creatures died after you left the sector.", bKilledCreatures );
-
-	if( !gbWorldSectorZ )
-	{
-		SECTORINFO *pSector;
-		pSector = &SectorInfo[ SECTOR(gWorldSectorX, gWorldSectorY) ];
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
-		pSector->ubCreaturesInBattle = 0;
-		//RecalculateSectorWeight(
-	}
-	else if( gbWorldSectorZ > 0 )
-	{
-		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-		if( !pSector )
-			return;
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
-		pSector->ubCreaturesInBattle = 0;
-	}
-}
-
 BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 {
 	SECTORINFO *pSector;
