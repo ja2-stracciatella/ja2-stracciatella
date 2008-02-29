@@ -2,6 +2,11 @@
 #include "Quantize.h"
 
 
+#define COLOUR_BITS   6
+#define MAX_COLOURS 255
+
+
+typedef struct NODE NODE;
 struct NODE
 {
 	BOOLEAN bIsLeaf;     // TRUE if node has no children
@@ -14,70 +19,29 @@ struct NODE
 };
 
 
-class CQuantizer
+static UINT  g_leaf_count;
+static NODE* g_reducible_nodes[COLOUR_BITS];
+
+
+static NODE* CreateNode(const UINT level)
 {
-	public:
-		CQuantizer(UINT nMaxColors, UINT nColorBits);
-		~CQuantizer();
-		void ProcessImage(const SGPPaletteEntry* pData, int iWidth, int iHeight);
-		UINT GetColorCount();
-		void GetColorTable(SGPPaletteEntry* prgb);
+	NODE* const node = malloc(sizeof(*node));
 
-	private:
-		void   AddColor(NODE** ppNode, BYTE r, BYTE g, BYTE b, UINT level);
-		NODE*  CreateNode(UINT nLevel);
-		void   ReduceTree();
-
-		NODE* m_pTree;
-		UINT  m_nLeafCount;
-		NODE* m_pReducibleNodes[9];
-		UINT  m_nMaxColors;
-		UINT  m_nColorBits;
-};
-
-
-CQuantizer::CQuantizer(const UINT nMaxColors, const UINT nColorBits)
-{
-	m_pTree      = NULL;
-	m_nLeafCount = 0;
-	for (UINT i = 0; i <= nColorBits; ++i) m_pReducibleNodes[i] = NULL;
-	m_nMaxColors = nMaxColors;
-	m_nColorBits = nColorBits;
-}
-
-
-static void DeleteTree(NODE** const ppNode)
-{
-	NODE* const node = *ppNode;
-	for (int i = 0; i < 8; i++)
+	node->bIsLeaf = level == COLOUR_BITS;
+	if (node->bIsLeaf)
 	{
-		if (node->pChild[i] != NULL) DeleteTree(&node->pChild[i]);
+		++g_leaf_count;
 	}
-	delete node;
-	*ppNode = NULL;
-}
-
-
-CQuantizer::~CQuantizer()
-{
-	if (m_pTree != NULL) DeleteTree(&m_pTree);
-}
-
-
-void CQuantizer::ProcessImage(const SGPPaletteEntry* pData, const int iWidth, const int iHeight)
-{
-	for (size_t i = iWidth * iHeight; i != 0; --i)
+	else
 	{
-		const BYTE b = pData->peRed;
-		const BYTE g = pData->peGreen;
-		const BYTE r = pData->peBlue;
-		AddColor(&m_pTree, pData->peRed, pData->peGreen, pData->peBlue, 0);
-		while (m_nLeafCount > m_nMaxColors) ReduceTree();
+		node->pNext = g_reducible_nodes[level];
+		g_reducible_nodes[level] = node;
 	}
+	return node;
 }
 
 
-void CQuantizer::AddColor(NODE** const ppNode, const BYTE r, const BYTE g, const BYTE b, const UINT level)
+static void AddColor(NODE** const ppNode, const BYTE r, const BYTE g, const BYTE b, const UINT level)
 {
 	// If the node doesn't exist, create it.
 	if (*ppNode == NULL) *ppNode = CreateNode(level);
@@ -104,34 +68,15 @@ void CQuantizer::AddColor(NODE** const ppNode, const BYTE r, const BYTE g, const
 }
 
 
-NODE* CQuantizer::CreateNode(const UINT level)
+static void ReduceTree(void)
 {
-	NODE* const pNode = new NODE;
-
-	pNode->bIsLeaf = level == m_nColorBits;
-	if (pNode->bIsLeaf)
-	{
-		++m_nLeafCount;
-	}
-	else
-	{
-		pNode->pNext = m_pReducibleNodes[level];
-		m_pReducibleNodes[level] = pNode;
-	}
-	return pNode;
-}
-
-
-void CQuantizer::ReduceTree()
-{
-	NODE** const pReducibleNodes = m_pReducibleNodes;
 	int i;
 	// Find the deepest level containing at least one reducible node.
-	for (i = m_nColorBits - 1; i > 0 && pReducibleNodes[i] == NULL; i--) {}
+	for (i = COLOUR_BITS - 1; i > 0 && g_reducible_nodes[i] == NULL; i--) {}
 
 	// Reduce the node most recently added to the list at level i.
-	NODE* const pNode = pReducibleNodes[i];
-	pReducibleNodes[i] = pNode->pNext;
+	NODE* const node = g_reducible_nodes[i];
+	g_reducible_nodes[i] = node->pNext;
 
 	UINT nRedSum   = 0;
 	UINT nGreenSum = 0;
@@ -140,24 +85,39 @@ void CQuantizer::ReduceTree()
 
 	for (i = 0; i < 8; ++i)
 	{
-		const NODE* const child = pNode->pChild[i];
+		NODE* const child = node->pChild[i];
 		if (child != NULL)
 		{
 			nRedSum   += child->nRedSum;
 			nGreenSum += child->nGreenSum;
 			nBlueSum  += child->nBlueSum;
-			pNode->nPixelCount += child->nPixelCount;
-			delete child;
-			pNode->pChild[i] = NULL;
+			node->nPixelCount += child->nPixelCount;
+			free(child);
+			node->pChild[i] = NULL;
 			++nChildren;
 		}
 	}
 
-	pNode->bIsLeaf    = TRUE;
-	pNode->nRedSum    = nRedSum;
-	pNode->nGreenSum  = nGreenSum;
-	pNode->nBlueSum   = nBlueSum;
-	m_nLeafCount     -= nChildren - 1;
+	node->bIsLeaf    = TRUE;
+	node->nRedSum    = nRedSum;
+	node->nGreenSum  = nGreenSum;
+	node->nBlueSum   = nBlueSum;
+	g_leaf_count    -= nChildren - 1;
+}
+
+
+static NODE* ProcessImage(const SGPPaletteEntry* pData, const int iWidth, const int iHeight)
+{
+	NODE* tree = NULL;
+	for (size_t i = iWidth * iHeight; i != 0; --i)
+	{
+		const BYTE b = pData->peRed;
+		const BYTE g = pData->peGreen;
+		const BYTE r = pData->peBlue;
+		AddColor(&tree, pData->peRed, pData->peGreen, pData->peBlue, 0);
+		while (g_leaf_count > MAX_COLOURS) ReduceTree();
+	}
+	return tree;
 }
 
 
@@ -183,15 +143,14 @@ static size_t GetPaletteColors(const NODE* const pTree, SGPPaletteEntry* const p
 }
 
 
-UINT CQuantizer::GetColorCount()
+static void DeleteTree(NODE* const node)
 {
-	return m_nLeafCount;
-}
-
-
-void CQuantizer::GetColorTable(SGPPaletteEntry* const prgb)
-{
-	GetPaletteColors(m_pTree, prgb, 0);
+	for (int i = 0; i < 8; i++)
+	{
+		NODE* const child = node->pChild[i];
+		if (child != NULL) DeleteTree(child);
+	}
+	free(node);
 }
 
 
@@ -199,7 +158,7 @@ static void MapPalette(UINT8* const pDest, const SGPPaletteEntry* const pSrc, co
 {
 	for (size_t i = sWidth * sHeight; i != 0; --i)
 	{
-		// OK, FOR EACH PALETTE ENTRY, FIND CLOSEST
+		// For each palette entry, find closest
 		INT32  best        = 0;
 		UINT32 lowest_dist = 9999999;
 		for (INT32 cnt = 0; cnt < sNumColors; ++cnt)
@@ -226,15 +185,15 @@ static void MapPalette(UINT8* const pDest, const SGPPaletteEntry* const pSrc, co
 
 void QuantizeImage(UINT8* const pDest, const SGPPaletteEntry* const pSrc, const INT16 sWidth, const INT16 sHeight, SGPPaletteEntry* const pPalette)
 {
-	// FIRST CREATE PALETTE
-	CQuantizer q(255, 6);
-	q.ProcessImage(pSrc, sWidth, sHeight);
-	const INT16 sNumColors = q.GetColorCount();
+	// First create palette
+	g_leaf_count = 0;
+	for (UINT i = 0; i <= COLOUR_BITS; ++i) g_reducible_nodes[i] = NULL;
+	NODE* const tree = ProcessImage(pSrc, sWidth, sHeight);
 
 	memset(pPalette, 0,  sizeof(*pPalette) * 256);
-	q.GetColorTable(pPalette);
+	GetPaletteColors(tree, pPalette, 0);
+	DeleteTree(tree);
 
-	// THEN MAP IMAGE TO PALETTE
-	// OK, MAPIT!
-	MapPalette(pDest, pSrc, sWidth, sHeight, sNumColors, pPalette);
+	// Then map image to palette
+	MapPalette(pDest, pSrc, sWidth, sHeight, g_leaf_count, pPalette);
 }

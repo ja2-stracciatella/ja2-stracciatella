@@ -97,8 +97,6 @@ CCFLAGS += -Werror-implicit-function-declaration
 CCFLAGS += -Wimplicit-int
 CCFLAGS += -Wsequence-point
 
-CXXFLAGS += $(CFLAGS)
-
 LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
 
@@ -398,7 +396,7 @@ SRCS += Build/Utils/Message.c
 SRCS += Build/Utils/Multi_Language_Graphic_Utils.c
 SRCS += Build/Utils/Music_Control.c
 SRCS += Build/Utils/PopUpBox.c
-SRCS += Build/Utils/Quantize.cc
+SRCS += Build/Utils/Quantize.c
 SRCS += Build/Utils/STIConvert.c
 SRCS += Build/Utils/Slider.c
 SRCS += Build/Utils/Sound_Control.c
@@ -452,11 +450,11 @@ LNGS += Build/Utils/_RussianText.c
 
 SRCS += $(LNGS)
 
-DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
-OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
+DEPS = $(filter %.d, $(SRCS:.c=.d))
+OBJS = $(filter %.o, $(SRCS:.c=.o))
 
 .SUFFIXES:
-.SUFFIXES: .c .cc .d .o
+.SUFFIXES: .c .d .o
 
 Q ?= @
 
@@ -472,23 +470,15 @@ endif
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
-	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+	$(Q)$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
 	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
 
-.cc.o:
-	@echo '===> CXX $<'
-	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
-
 .c.d:
 	@echo '===> DEP $<'
 	$(Q)$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
-
-.cc.d:
-	@echo '===> DEP $<'
-	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean distclean:
 	@echo '===> CLEAN'
