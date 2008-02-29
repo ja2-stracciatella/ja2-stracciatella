@@ -11,7 +11,6 @@
 #include "Insurance_Text.h"
 #include "Soldier_Profile.h"
 #include "Overhead.h"
-#include "Text_Input.h"
 #include "Soldier_Add.h"
 #include "Game_Clock.h"
 #include "Finances.h"
@@ -147,14 +146,6 @@ static InsuranceInfo insurance_info[3];
 void GameInitInsuranceContract()
 {
 	gsCurrentInsuranceMercIndex = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-}
-
-
-static void EnterLaptopInitInsuranceContract(void)
-{
-	SetInputFieldStringWith16BitString(1, L"0");
-	SetInputFieldStringWith16BitString(2, L"0");
-	SetInputFieldStringWith16BitString(3, L"0");
 }
 
 
