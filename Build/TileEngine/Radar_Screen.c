@@ -528,20 +528,8 @@ static void AdjustWorldCenterFromRadarCoords(INT16 sRadarX, INT16 sRadarY)
 	sNewCenterWorldY = (INT16)(gCenterWorldY + sTempY_W);
 
 	SetRenderCenter( sNewCenterWorldX, sNewCenterWorldY );
-
 }
 
-
-static void DisableRadarScreenRender(void)
-{
-	fRenderRadarScreen = FALSE;
-}
-
-
-static void EnableRadarScreenRender(void)
-{
-	fRenderRadarScreen = TRUE;
-}
 
 void ToggleRadarScreenRender( void )
 {
