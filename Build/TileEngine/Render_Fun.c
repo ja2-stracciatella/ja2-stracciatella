@@ -27,27 +27,6 @@ BOOLEAN InitRoomDatabase( )
 }
 
 
-static void SetTileRoomNum(INT16 sGridNo, UINT8 ubRoomNum)
-{
-	// Add to global room list
-	gubWorldRoomInfo[ sGridNo ] = ubRoomNum;
-}
-
-
-static void SetTileRangeRoomNum(SGPRect* pSelectRegion, UINT8 ubRoomNum)
-{
-	INT32 cnt1, cnt2;
-
-	for ( cnt1 = pSelectRegion->iTop; cnt1 <= pSelectRegion->iBottom; cnt1++ )
-	{
-		for ( cnt2 = pSelectRegion->iLeft; cnt2 <= pSelectRegion->iRight; cnt2++ )
-		{
-			gubWorldRoomInfo[  (INT16)MAPROWCOLTOPOS( cnt1, cnt2 ) ] = ubRoomNum;
-		}
-	}
-
-}
-
 BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
 {
 	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
