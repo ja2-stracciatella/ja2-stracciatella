@@ -1287,39 +1287,6 @@ void MoveTeamOnFoot( void )
 */
 
 
-/*
-UINT32 GetEtaGivenRoute(PathSt* pPath)
-{
-	// will return the eta of a passed path in global time units, in minutes
-	PathSt* pNode = pPath;
-
-	if( pPath == NULL )
-	{
-		return( GetWorldTotalMin( ) );
-	}
-	else if( pPath -> pNext == NULL )
-	{
-		return( GetWorldTotalMin( ) );
-	}
-	else
-	{
-		// there is a path
-		while( pNode -> pNext )
-		{
-			// run through list
-			pNode = pNode -> pNext;
-		}
-
-		// have last sector, therefore the eta of the path
-		return( pNode -> uiEta );
-	}
-
-	// error
-	return( 0 );
-}
-*/
-
-
 #ifdef BETA_VERSION
 void VerifyAllMercsInGroupAreOnSameSquad( GROUP *pGroup )
 {

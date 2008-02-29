@@ -64,9 +64,6 @@ PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath);
 void MoveCharacterOnPath( SOLDIERTYPE *pCharacter );
 // move the whole team
 void MoveTeamOnFoot( void );
-
-// get the final eta of this path to the last sector in it's list
-UINT32 GetEtaGivenRoute(PathSt* pPath);
 */
 
 // rebuild way points for strategic mapscreen path changes
