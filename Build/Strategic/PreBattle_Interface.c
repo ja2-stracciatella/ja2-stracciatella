@@ -1629,12 +1629,6 @@ void CalculateNonPersistantPBIInfo(void)
 }
 
 
-static void ClearNonPersistantPBIInfo(void)
-{
-	gfBlitBattleSectorLocator = FALSE;
-}
-
-
 static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVehicles);
 
 
