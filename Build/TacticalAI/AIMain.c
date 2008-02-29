@@ -796,59 +796,6 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 }
 
 
-static UINT8 GetMostThreateningOpponent(SOLDIERTYPE* pSoldier)
-{
-	UINT32				uiLoop;
-	INT32					iThreatVal,iMinThreat = 30000;
-	SOLDIERTYPE		*pTargetSoldier;
-	UINT8					ubTargetSoldier = NO_SOLDIER;
-
-	// Loop through all mercs
-
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
-	{
-		pTargetSoldier = MercSlots[ uiLoop ];
-
-		if (!pTargetSoldier)
-		{
-			continue;
-		}
-
-		// if this soldier is on same team as me, skip him
-		if (pTargetSoldier->bTeam == pSoldier->bTeam || pTargetSoldier->bSide == pSoldier->bSide)
-		{
-			continue;
-		}
-
-		// if potential opponent is dead, skip him
-		if (!pTargetSoldier->bLife)
-		{
-			continue;
-		}
-
-		if (pSoldier->bOppList[pTargetSoldier->ubID] != SEEN_CURRENTLY)
-		  continue;
-
-		// Special stuff for Carmen the bounty hunter
-		if (pSoldier->bAttitude == ATTACKSLAYONLY && pTargetSoldier->ubProfile != 64)
-		{
-			continue;  // next opponent
-		}
-
-		iThreatVal = CalcManThreatValue(pTargetSoldier, pSoldier->sGridNo, TRUE, pSoldier);
-		if (iThreatVal < iMinThreat)
-		{
-			iMinThreat			= iThreatVal;
-			ubTargetSoldier	= pTargetSoldier->ubID;
-		}
-
-	}
-
-	return( ubTargetSoldier );
-}
-
-
-
 void FreeUpNPCFromPendingAction( 	SOLDIERTYPE *pSoldier )
 {
 	if ( pSoldier )
