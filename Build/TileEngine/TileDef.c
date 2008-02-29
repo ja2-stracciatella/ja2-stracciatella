@@ -365,26 +365,8 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 	}
 
 	return( FALSE );
-
 }
 
-
-static UINT8 GetLandLevelDepth(UINT32 iMapIndex)
-{
-	UINT8					level = 0;
-	LEVELNODE		*pLand;
-
-	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
-
-	while( pLand != NULL )
-	{
-		level++;
-		pLand = pLand->pNext;
-	}
-
-	return( level );
-
-}
 
 BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
 {
