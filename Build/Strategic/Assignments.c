@@ -7389,324 +7389,260 @@ static UINT8 RepairRobot(SOLDIERTYPE* pRobot, UINT8 ubRepairPts, BOOLEAN* pfNoth
 }
 
 
-void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam1, INT32 iParam2, INT32 iParam3 )
+void SetSoldierAssignment(SOLDIERTYPE* const s, const INT8 assignment, const INT32 iParam1, const INT32 iParam2, const INT32 iParam3)
 {
-	switch( bAssignment )
+	switch (assignment)
 	{
-		case( ASSIGNMENT_HOSPITAL ):
-			if( CanCharacterPatient( pSoldier ) )
-			{
+		case ASSIGNMENT_HOSPITAL:
+			if (!CanCharacterPatient(s)) return;
 
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-				pSoldier->bBleeding = 0;
+			s->bOldAssignment = s->bAssignment;
+			s->bBleeding = 0;
 
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
 
-				// remove from squad
+			// remove from squad
+			RemoveCharacterFromSquads(s);
 
-				RemoveCharacterFromSquads(  pSoldier );
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
 
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
+			if (s->bAssignment != ASSIGNMENT_HOSPITAL) SetTimeOfAssignmentChangeForMerc(s);
 
-				if( ( pSoldier->bAssignment != ASSIGNMENT_HOSPITAL ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
+			RebuildCurrentSquad();
 
+			ChangeSoldiersAssignment(s, ASSIGNMENT_HOSPITAL);
 
-				RebuildCurrentSquad( );
-
-				ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_HOSPITAL );
-
-				AssignMercToAMovementGroup( pSoldier );
-			}
-			break;
-		case( PATIENT ):
-			if( CanCharacterPatient( pSoldier ) )
-			{
-				// set as doctor
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-
-				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != PATIENT ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, PATIENT );
-
-				AssignMercToAMovementGroup( pSoldier );
-			}
-
-		break;
-		case( DOCTOR ):
-			if( CanCharacterDoctor( pSoldier ) )
-			{
-
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-
-					// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-
-				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != DOCTOR ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, DOCTOR );
-
-				MakeSureMedKitIsInHand( pSoldier );
-				AssignMercToAMovementGroup( pSoldier );
-			}
-		break;
-		case( TRAIN_TOWN ):
-			if( CanCharacterTrainMilitia( pSoldier ) )
-			{
-				// train militia
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-
-				// remove from squad
-				RemoveCharacterFromSquads(  pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != TRAIN_TOWN ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, TRAIN_TOWN );
-
-				if( pMilitiaTrainerSoldier == NULL )
-				{
-					if( SectorInfo[ SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) ].fMilitiaTrainingPaid == FALSE )
-					{
-						// show a message to confirm player wants to charge cost
-						HandleInterfaceMessageForCostOfTrainingMilitia( pSoldier );
-					}
-				}
-
-				AssignMercToAMovementGroup( pSoldier );
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-			}
-		break;
-		case( TRAIN_SELF ):
-			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, TRUE, FALSE ) )
-			{
-				// train stat
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-				// remove from squad
-				RemoveCharacterFromSquads( pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != TRAIN_SELF ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, TRAIN_SELF );
-
-				AssignMercToAMovementGroup( pSoldier );
-
-				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
-
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-			}
-			break;
-			case( TRAIN_TEAMMATE ):
-			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, FALSE, TRUE ) )
-			{
-
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-				// remove from squad
-				RemoveCharacterFromSquads( pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != TRAIN_TEAMMATE ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, TRAIN_TEAMMATE );
-				AssignMercToAMovementGroup( pSoldier );
-
-				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
-
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-			}
-		break;
-		case( TRAIN_BY_OTHER ):
-			if( CanCharacterTrainStat( pSoldier, ( INT8 )iParam1, TRUE, FALSE ) )
-			{
-				// train stat
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-				// remove from squad
-				RemoveCharacterFromSquads( pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != TRAIN_BY_OTHER ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, TRAIN_BY_OTHER );
-
-				AssignMercToAMovementGroup( pSoldier );
-
-				// set stat to train
-				pSoldier -> bTrainStat = ( INT8 )iParam1;
-
-				// set dirty flag
-				fTeamPanelDirty = TRUE;
-				fMapScreenBottomDirty = TRUE;
-				gfRenderPBInterface = TRUE;
-			}
-			break;
-		case( REPAIR ):
-			if( CanCharacterRepair( pSoldier ) )
-			{
-				pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-				// remove from squad
-				RemoveCharacterFromSquads( pSoldier );
-
-				// remove from any vehicle
-				if( pSoldier->bOldAssignment == VEHICLE )
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
-				if( ( pSoldier->bAssignment != REPAIR ) ||( pSoldier ->fFixingSAMSite != ( UINT8 )iParam1 ) || ( pSoldier ->fFixingRobot != ( UINT8 )iParam2 ) || ( pSoldier ->bVehicleUnderRepairID != ( UINT8 )iParam3 ) )
-				{
-					SetTimeOfAssignmentChangeForMerc( pSoldier );
-				}
-
-				ChangeSoldiersAssignment( pSoldier, REPAIR );
-				MakeSureToolKitIsInHand( pSoldier );
-				AssignMercToAMovementGroup( pSoldier );
-				pSoldier -> fFixingSAMSite = ( UINT8 )iParam1;
-				pSoldier -> fFixingRobot = ( UINT8 )iParam2;
-				pSoldier -> bVehicleUnderRepairID = ( INT8 )iParam3;
-			}
+			AssignMercToAMovementGroup(s);
 			break;
 
-		case( VEHICLE ):
-			if (CanCharacterVehicle(pSoldier))
-			{
-				VEHICLETYPE* const v = GetVehicle(iParam1);
-				if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
-				{
-					if (IsEnoughSpaceInVehicle(v))
-					{
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+		case PATIENT:
+			if (!CanCharacterPatient(s)) return;
 
-						// set dirty flag
-						fTeamPanelDirty = TRUE;
-						fMapScreenBottomDirty = TRUE;
-						gfRenderPBInterface = TRUE;
+			s->bOldAssignment = s->bAssignment;
 
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
 
-						if( pSoldier->bOldAssignment == VEHICLE )
-						{
-							TakeSoldierOutOfVehicle( pSoldier );
-						}
+			// remove from squad
+			RemoveCharacterFromSquads(s);
 
-						// remove from squad
-						RemoveCharacterFromSquads( pSoldier );
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
 
-						if (!PutSoldierInVehicle(pSoldier, v))
-						{
-							AddCharacterToAnySquad( pSoldier );
-						}
-						else
-						{
-							if( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier ->iVehicleId != ( UINT8 )iParam1 ) )
-							{
-								SetTimeOfAssignmentChangeForMerc( pSoldier );
-							}
+			if (s->bAssignment != PATIENT) SetTimeOfAssignmentChangeForMerc(s);
 
-							pSoldier -> iVehicleId = iParam1;
-							ChangeSoldiersAssignment( pSoldier, VEHICLE );
-							AssignMercToAMovementGroup( pSoldier );
-						}
-					}
-					else
-					{
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
-					}
-				}
-			}
+			ChangeSoldiersAssignment(s, PATIENT);
+
+			AssignMercToAMovementGroup(s);
 			break;
+
+		case DOCTOR:
+			if (!CanCharacterDoctor(s)) return;
+
+			s->bOldAssignment = s->bAssignment;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != DOCTOR) SetTimeOfAssignmentChangeForMerc(s);
+
+			ChangeSoldiersAssignment(s, DOCTOR);
+
+			MakeSureMedKitIsInHand(s);
+			AssignMercToAMovementGroup(s);
+			break;
+
+		case TRAIN_TOWN:
+			if (!CanCharacterTrainMilitia(s)) return;
+
+			// train militia
+			s->bOldAssignment = s->bAssignment;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != TRAIN_TOWN) SetTimeOfAssignmentChangeForMerc(s);
+
+			ChangeSoldiersAssignment(s, TRAIN_TOWN);
+
+			if (pMilitiaTrainerSoldier == NULL &&
+					!SectorInfo[SECTOR(s->sSectorX, s->sSectorY)].fMilitiaTrainingPaid)
+			{
+				// show a message to confirm player wants to charge cost
+				HandleInterfaceMessageForCostOfTrainingMilitia(s);
+			}
+
+			AssignMercToAMovementGroup(s);
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+			break;
+
+		case TRAIN_SELF:
+			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE)) return;
+
+			// train stat
+			s->bOldAssignment = s->bAssignment;
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != TRAIN_SELF) SetTimeOfAssignmentChangeForMerc(s);
+
+			ChangeSoldiersAssignment(s, TRAIN_SELF);
+
+			AssignMercToAMovementGroup(s);
+
+			// set stat to train
+			s->bTrainStat = (INT8)iParam1;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+			break;
+
+		case TRAIN_TEAMMATE:
+			if (!CanCharacterTrainStat(s, (INT8)iParam1, FALSE, TRUE)) return;
+
+			s->bOldAssignment = s->bAssignment;
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != TRAIN_TEAMMATE) SetTimeOfAssignmentChangeForMerc(s);
+
+			ChangeSoldiersAssignment(s, TRAIN_TEAMMATE);
+			AssignMercToAMovementGroup(s);
+
+			// set stat to train
+			s->bTrainStat = (INT8)iParam1;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+			break;
+
+		case TRAIN_BY_OTHER:
+			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE))
+
+			// train stat
+			s->bOldAssignment = s->bAssignment;
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(s);
+
+			ChangeSoldiersAssignment(s, TRAIN_BY_OTHER);
+
+			AssignMercToAMovementGroup(s);
+
+			// set stat to train
+			s->bTrainStat = (INT8)iParam1;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+			break;
+
+		case REPAIR:
+			if (!CanCharacterRepair(s)) return;
+
+			s->bOldAssignment = s->bAssignment;
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			// remove from any vehicle
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			if (s->bAssignment != REPAIR || s->fFixingSAMSite != (UINT8)iParam1 || s->fFixingRobot != (UINT8)iParam2 || s->bVehicleUnderRepairID != (UINT8)iParam3)
+			{
+				SetTimeOfAssignmentChangeForMerc(s);
+			}
+
+			ChangeSoldiersAssignment(s, REPAIR);
+			MakeSureToolKitIsInHand(s);
+			AssignMercToAMovementGroup(s);
+			s->fFixingSAMSite        = (UINT8)iParam1;
+			s->fFixingRobot          = (UINT8)iParam2;
+			s->bVehicleUnderRepairID = (INT8)iParam3;
+			break;
+
+		case VEHICLE:
+		{
+			if (!CanCharacterVehicle(s)) return;
+
+			VEHICLETYPE* const v = GetVehicle(iParam1);
+			if (v == NULL || !IsThisVehicleAccessibleToSoldier(s, v)) return;
+
+			if (!IsEnoughSpaceInVehicle(v))
+			{
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
+				return;
+			}
+
+			s->bOldAssignment = s->bAssignment;
+
+			// set dirty flag
+			fTeamPanelDirty       = TRUE;
+			fMapScreenBottomDirty = TRUE;
+			gfRenderPBInterface   = TRUE;
+
+			if (s->bOldAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+
+			// remove from squad
+			RemoveCharacterFromSquads(s);
+
+			if (!PutSoldierInVehicle(s, v))
+			{
+				AddCharacterToAnySquad(s);
+				return;
+			}
+
+			if (s->bAssignment != VEHICLE || s->iVehicleId != (UINT8)iParam1)
+			{
+				SetTimeOfAssignmentChangeForMerc(s);
+			}
+
+			s->iVehicleId = iParam1;
+			ChangeSoldiersAssignment(s, VEHICLE);
+			AssignMercToAMovementGroup(s);
+			break;
+		}
 	}
 }
-
 
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
