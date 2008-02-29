@@ -418,18 +418,6 @@ UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex)
 }
 
 
-static BOOLEAN MoveLandIndexToTop(UINT32 iMapIndex, UINT16 usIndex)
-{
-
-	// Remove, then add again
-	RemoveLand( iMapIndex, usIndex );
-
-	AddLandToHead( iMapIndex, usIndex );
-
-	return( TRUE );
-}
-
-
 // Database access functions
 BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
 {
