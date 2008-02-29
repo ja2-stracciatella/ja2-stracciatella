@@ -415,17 +415,6 @@ static BOOLEAN CheckForAndExitTacticalDebug(void)
 }
 
 
-static void ExitDebugScreen(void)
-{
-	if ( guiCurrentScreen == DEBUG_SCREEN )
-	{
-		gfExitDebugScreen = TRUE;
-	}
-
-	CheckForAndExitTacticalDebug( );
-}
-
-
 static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent);
 static void DebugRenderHook(void);
 
