@@ -355,27 +355,6 @@ INT8 GetTownAssociatedWithMine( INT8 bMineIndex )
 }
 
 
-// which mine belongs tot his town
-static INT8 GetMineAssociatedWithThisTown(INT8 bTownId)
-{
-	INT8 bCounter = 0;
-
-	// run through list of mines
-	for( bCounter = 0; bCounter < MAX_NUMBER_OF_MINES; bCounter++ )
-	{
-		if( gMineLocation[ bCounter ].bAssociatedTown == bTownId )
-		{
-			// town found, return the fact
-			return( gMineLocation[ bCounter ].bAssociatedTown );
-		}
-	}
-
-	// return that no town found..a 0
-	return( 0 );
-
-}
-
-
 // remove actual ore from mine
 static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 {
@@ -729,24 +708,6 @@ void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY )
 
 	*psX = gMineLocation[ ubMineIndex ].sSectorX;
 	*psY = gMineLocation[ ubMineIndex ].sSectorY;
-}
-
-
-// get the index of the mine associated with this town
-static INT8 GetMineIndexForTown(INT8 bTownId)
-{
-	UINT8 ubMineIndex = 0;
-
-	// given town id, send sector value of mine, a 0 means no mine for this town
-	for( ubMineIndex = 0; ubMineIndex < MAX_NUMBER_OF_MINES; ubMineIndex++ )
-	{
-		if( gMineLocation[ ubMineIndex ].bAssociatedTown == bTownId )
-		{
-			return( ubMineIndex );
-		}
-	}
-
-	return( -1 );
 }
 
 
