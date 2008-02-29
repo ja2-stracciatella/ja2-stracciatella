@@ -543,19 +543,6 @@ void EnableEditorButton( INT32 iEditorButtonID )
 }
 
 
-static void ClickEditorButtons(INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID)
-{
-	INT32 i;
-	GUI_BUTTON *b;
-	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
-	{
-		Assert( iEditorButton[ i ] != -1 );
-		b = ButtonList[ iEditorButton[ i ] ];
-		Assert( b );
-		b->uiFlags |= BUTTON_CLICKED_ON;
-	}
-}
-
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
 	INT32 i;
