@@ -207,33 +207,6 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 }
 
 
-static BOOLEAN CheckIfMercIsNearNPC(SOLDIERTYPE* pMerc, UINT8 ubProfileId)
-{
-	INT16						sGridNo;
-
-	// no merc nearby?
-	if ( pMerc == NULL )
-	{
-		return( FALSE );
-	}
-
-	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileId);
-	if ( pNPC == NULL )
-	{
-		return( FALSE );
-	}
-	sGridNo = pNPC->sGridNo;
-
-	// is the merc and NPC close enough?
-	if (PythSpacesAway( sGridNo, pMerc->sGridNo ) <= 9)
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
-
 static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
