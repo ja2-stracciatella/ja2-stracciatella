@@ -215,58 +215,8 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN RemoveAllPlayersFromPGroup(GROUP* pGroup);
-
-
-// remove all grunts from player mvt grp
-static BOOLEAN RemoveAllPlayersFromGroup(UINT8 ubGroupId)
-{
-	GROUP *pGroup;
-
-	// grab group id
-	pGroup = GetGroup( ubGroupId );
-
-	// init errors checks
-	AssertMsg( pGroup, String( "Attempting to RemovePlayerFromGroup( %d ) from non-existant group", ubGroupId) );
-
-	return RemoveAllPlayersFromPGroup( pGroup );
-}
-
-
 static void CancelEmptyPersistentGroupMovement(GROUP* pGroup);
 
-
-static BOOLEAN RemoveAllPlayersFromPGroup(GROUP* pGroup)
-{
-	PLAYERGROUP *curr;
-
-	AssertMsg( pGroup->fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!");
-
-	curr = pGroup->pPlayerList;
-	while( curr )
-	{
-		pGroup->pPlayerList = pGroup->pPlayerList->next;
-
-		curr->pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
-		curr->pSoldier->ubGroupID = 0;
-
-		MemFree( curr );
-
-		curr = pGroup->pPlayerList;
-	}
-	pGroup->ubGroupSize = 0;
-
-	if( !pGroup->fPersistant )
-	{	//remove the empty group
-		RemovePGroup( pGroup );
-	}
-	else
-	{
-		CancelEmptyPersistentGroupMovement( pGroup );
-	}
-
-	return TRUE;
-}
 
 BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier )
 {
