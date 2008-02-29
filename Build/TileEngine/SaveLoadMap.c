@@ -769,31 +769,6 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 }
 
 
-static void AddObjectToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ)
-{
-	MODIFY_MAP Map;
-	UINT32	uiType;
-	UINT16	usSubIndex;
-
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		return;
-
-	GetTileType( usIndex, &uiType );
-	GetSubIndexFromTileIndex( usIndex, &usSubIndex );
-
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
-
-	Map.usGridNo = (UINT16)uiMapIndex;
-//	Map.usIndex		= usIndex;
-	Map.usImageType = (UINT16)uiType;
-	Map.usSubImageIndex = usSubIndex;
-
-	Map.ubType		= SLM_OBJECT;
-
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
-}
-
-
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
 {
 	MODIFY_MAP Map;
