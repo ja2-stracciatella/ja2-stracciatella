@@ -5601,25 +5601,6 @@ static void MAPBeginItemPointer(SOLDIERTYPE* pSoldier, UINT8 ubHandPos)
 }
 
 
-static void MAPBeginKeyRingItemPointer(SOLDIERTYPE* pSoldier, UINT8 uiKeySlot)
-{
-	// If not null return
-	if ( gpItemPointer != NULL )
-	{
-		return;
-	}
-
-	// Set mouse
-	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
-	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
-	MSYS_SetCurrentCursor( EXTERN_CURSOR );
-  fMapInventoryItem=TRUE;
-	fTeamPanelDirty=TRUE;
-}
-
-
 void MAPEndItemPointer(void)
 {
 	if ( gpItemPointer != NULL )
