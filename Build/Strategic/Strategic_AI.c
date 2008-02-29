@@ -5101,21 +5101,3 @@ static void ReinitializeUnvisitedGarrisons(void)
 		}
 	}
 }
-
-
-static GROUP* FindPendingGroupForGarrisonSector(UINT8 ubSectorID)
-{
-	GROUP *pGroup;
-	SECTORINFO *pSector;
-	pSector = &SectorInfo[ ubSectorID ];
-	if( pSector->ubGarrisonID != NO_GARRISON )
-	{
-		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
-		{
-			pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
-			Assert( pGroup );
-			return pGroup;
-		}
-	}
-	return NULL;
-}
