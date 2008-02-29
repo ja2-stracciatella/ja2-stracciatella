@@ -669,13 +669,6 @@ void DoScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBO
 
 
 // a basic box that don't care what screen we came from
-static void DoUpperScreenIndependantMessageBox(wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
-{
-	const SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
-	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
-}
-
-// a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	const SGPRect CenteringRect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
