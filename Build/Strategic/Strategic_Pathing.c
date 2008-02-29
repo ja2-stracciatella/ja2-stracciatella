@@ -1663,24 +1663,6 @@ INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN CheckIfPathIsEmpty(PathSt* pHeadPath)
-{
-	// no path
-	if( pHeadPath == NULL )
-	{
-		return( TRUE );
-	}
-
-	// nothing next either
-	if( pHeadPath->pNext == NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
-
 PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier)
 {
 	PathSt* pMercPath = NULL;
