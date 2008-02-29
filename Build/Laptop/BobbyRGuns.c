@@ -206,13 +206,6 @@ void GameInitBobbyRGuns()
 }
 
 
-static void EnterInitBobbyRGuns(void)
-{
-	memset(&BobbyRayPurchases, 0, MAX_PURCHASE_AMOUNT);
-}
-
-
-
 BOOLEAN EnterBobbyRGuns()
 {
 	gfBigImageMouseRegionCreated = FALSE;
