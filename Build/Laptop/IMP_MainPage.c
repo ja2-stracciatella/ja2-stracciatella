@@ -344,16 +344,6 @@ void BtnIMPMainPageVoiceCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void NextProfilingMode(void)
-{
-  // this function will change to mode the player is in for profiling
-
-	// if less than done
-  if(iCurrentProfileMode < 5)
-    iCurrentProfileMode++;
-}
-
-
 static BOOLEAN CheckIfFinishedCharacterGeneration(void)
 {
   // this function checks to see if character is done character generation
