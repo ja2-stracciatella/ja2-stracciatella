@@ -18,7 +18,6 @@
 
 #define CENTER_GRIDNO (WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2)
 
-#define WORLD_BASE_HEIGHT			0
 #define WORLD_CLIFF_HEIGHT		80
 
 //A macro that actually memcpy's over data and increments the pointer automatically
@@ -32,8 +31,6 @@
 
 // Defines for shade levels
 #define DEFAULT_SHADE_LEVEL		4
-#define MIN_SHADE_LEVEL				4
-#define MAX_SHADE_LEVEL				15
 
 
 // DEFINES FOR LEVELNODE FLAGS
