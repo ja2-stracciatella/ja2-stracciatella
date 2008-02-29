@@ -4411,26 +4411,6 @@ static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void)
 }
 
 
-static UINT8 CountNumberOfItemsOfValueInThePlayersOfferArea(void)
-{
-	UINT8	ubCnt;
-	UINT8	ubCount=0;
-
-	//loop through the players offer area and see if there are any items there
-	for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
-	{
-		const INVENTORY_IN_SLOT* const o = &PlayersOfferArea[ubCnt];
-		//if is an item here
-		if (o->fActive)
-		{
-			//and if it has not been evaluated
-			if (o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE) ubCount++;
-		}
-	}
-	return( ubCount );
-}
-
-
 static UINT8 CountNumberOfItemsInThePlayersOfferArea(void)
 {
 	UINT8	ubCnt;
@@ -5237,25 +5217,6 @@ static void CrossOutUnwantedItems(void)
 			}
 		}
 	}
-}
-
-
-static INT16 GetNumberOfItemsInPlayerOfferArea(void)
-{
-	INT16 sCounter = 0;
-	INT32 iCounter = 0;
-
-
-	// find number of active slot in player offer area
-	for( iCounter = 0; iCounter < SKI_NUM_TRADING_INV_SLOTS; iCounter++ )
-	{
-		if( PlayersOfferArea[ iCounter ].fActive )
-		{
-			sCounter++;
-		}
-	}
-
-	return( sCounter );
 }
 
 
