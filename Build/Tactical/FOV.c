@@ -200,20 +200,6 @@ static INT32 GetFreeSlantRoof(void)
 }
 
 
-static void RecountSlantRoofs(void)
-{
-	INT32 uiCount;
-
-	for(uiCount=guiNumSlantRoofs-1; (uiCount >=0) ; uiCount--)
-	{
-		if( ( gSlantRoofData[uiCount].fAllocated ) )
-		{
-			guiNumSlantRoofs=(UINT32)(uiCount+1);
-			break;
-		}
-	}
-}
-
 void ClearSlantRoofs( void )
 {
 	UINT32 uiCount;
