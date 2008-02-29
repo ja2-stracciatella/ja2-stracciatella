@@ -7941,12 +7941,6 @@ static void TrashCanMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void MapInvDoneButtonfastHelpCall(void)
-{
-	SetPendingNewScreen( LAPTOP_SCREEN );
-}
-
-
 static void UpdateStatusOfMapSortButtons(void)
 {
 	INT32 iCounter = 0;
