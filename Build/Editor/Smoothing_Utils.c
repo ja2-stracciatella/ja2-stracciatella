@@ -429,44 +429,4 @@ void RestoreWalls( UINT32 iMapIndex )
 	}
 }
 
-
-static UINT16 GetWallClass(LEVELNODE* pWall)
-{
-	UINT16 row, col, rowVariants;
-	UINT16 usWallIndex;
-	if( !pWall )
-		return 0xffff;
-	GetSubIndexFromTileIndex( pWall->usIndex, &usWallIndex );
-	for ( row = 0; row < NUM_WALL_TYPES; row++ )
-	{
-		rowVariants = gbWallTileLUT[row][0];
-		for( col = 1; col <= rowVariants; col++ )
-		{
-			if( usWallIndex == gbWallTileLUT[row][col] )
-			{
-				return row;  //row is the wall class
-			}
-		}
-	}
-	return 0xffff;
-}
-
-
-static UINT16 GetVerticalWallClass(UINT16 iMapIndex)
-{
-	LEVELNODE *pWall;
-	if( pWall = GetVerticalWall( iMapIndex ) )
-		return GetWallClass( pWall );
-	return 0xffff;
-}
-
-
-static UINT16 GetHorizontalWallClass(UINT16 iMapIndex)
-{
-	LEVELNODE *pWall;
-	if( pWall = GetVerticalWall( iMapIndex ) )
-		return GetWallClass( pWall );
-	return 0xffff;
-}
-
 #endif

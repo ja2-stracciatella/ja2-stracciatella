@@ -37,7 +37,6 @@ enum {
 };
 
 //in newsmooth.c
-extern INT8 gbWallTileLUT[NUM_WALL_TYPES][7];
 extern void EraseWalls( UINT32 iMapIndex );
 extern void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType );
 //in Smoothing Utils
