@@ -2480,55 +2480,6 @@ static UINT32 WaitForSelectionWindowResponse(void)
 }
 
 
-//	Displays the image of the currently highlighted tileset slot image. Usually this is for
-//	8 bit image (.STI) files
-static void ShowCurrentSlotImage(HVOBJECT hVObj, INT32 iWindow)
-{
-	SGPRect			ClipRect, NewRect;
-	INT32				iStartX;
-	INT32				iStartY;
-	INT32				iPicHeight, iPicWidth;
-	INT16				sTempOffsetX;
-	INT16				sTempOffsetY;
-	ETRLEObject *pETRLEObject;
-	INT32				iWinWidth, iWinHeight;
-
-	NewRect.iLeft = (iWindow == 0) ? (336) : (488);
-	NewRect.iTop = 211;
-	NewRect.iRight = (iWindow == 0) ? (485) : (637);
-	NewRect.iBottom = 399;
-
-	iWinWidth = NewRect.iRight - NewRect.iLeft;
-	iWinHeight = NewRect.iBottom - NewRect.iTop;
-
-	GetClippingRect(&ClipRect);
-	SetClippingRect(&NewRect);
-
-	pETRLEObject = &(hVObj->pETRLEObject[0]);
-
-	iPicWidth = (INT32)pETRLEObject->usWidth;
-	iPicHeight = (INT32)pETRLEObject->usHeight;
-
-	iStartX = ( (iWinWidth - iPicWidth) / 2 ) + NewRect.iLeft;
-	iStartY = ( (iWinHeight - iPicHeight) / 2 ) + NewRect.iTop;
-
-	// We have to store the offset data in temp variables before zeroing them and blitting
-	sTempOffsetX = pETRLEObject->sOffsetX;
-	sTempOffsetY = pETRLEObject->sOffsetY;
-
-	// Set the offsets used for blitting to 0
-	pETRLEObject->sOffsetX = 0;
-	pETRLEObject->sOffsetY = 0;
-
-	SetObjectShade( hVObj, DEFAULT_SHADE_LEVEL );
-	BltVideoObject(FRAME_BUFFER, hVObj, 0, iStartX, iStartY);
-
-	pETRLEObject->sOffsetX = sTempOffsetX;
-	pETRLEObject->sOffsetY = sTempOffsetY;
-
-	SetClippingRect(&ClipRect);
-}
-
 //----------------------------------------------------------------------------------------------
 //	PlaceLight
 //
