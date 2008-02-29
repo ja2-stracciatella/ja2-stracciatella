@@ -1246,51 +1246,6 @@ void HandleAnimationOfSectors( void )
 }
 
 
-// last sector value in helicopter's path
-static INT16 LastSectorInHelicoptersPath(void)
-{
-	// get the last sector value in the helictoper's path
-	PathSt* pNode = NULL;
-	UINT32 uiLocation = 0;
-
-	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
-	if( CanHelicopterFly( ) == FALSE )
-	{
-		// big number, no go
-		return( 0 );
-	}
-
-	uiLocation = pVehicleList[ iHelicopterVehicleId ].sSectorX + pVehicleList[ iHelicopterVehicleId ].sSectorY * MAP_WORLD_X;
-
-	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
-
-	// any path yet?
-	if( pNode != NULL )
-	{
-		while( pNode)
-		{
-			uiLocation = pNode -> uiSectorId;
-
-			pNode = pNode ->pNext;
-		}
-	}
-
-	pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
-	// any path yet?
-	if( pNode != NULL )
-	{
-		while( pNode )
-		{
-			uiLocation = pNode -> uiSectorId;
-
-			pNode = pNode ->pNext;
-		}
-	}
-
-	return( ( INT16 )uiLocation );
-}
-
-
 static void AddHelicopterToMaps(BOOLEAN fAdd, UINT8 ubSite);
 static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite);
 

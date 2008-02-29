@@ -3783,7 +3783,7 @@ void DisplayDistancesForHelicopter( void )
 
 //	sTotalCanTravel = ( INT16 )GetTotalDistanceHelicopterCanTravel( );
 	sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
-	sTotalOfTrip = sDistanceToGo;		// + ( INT16 ) ( DistanceToNearestRefuelPoint( ( INT16 )( LastSectorInHelicoptersPath() % MAP_WORLD_X ), ( INT16 ) ( LastSectorInHelicoptersPath() / MAP_WORLD_X ) ) );
+	sTotalOfTrip = sDistanceToGo;
 
   sNumSafeSectors = GetNumSafeSectorsInPath( );
   sNumUnSafeSectors = GetNumUnSafeSectorsInPath( );
