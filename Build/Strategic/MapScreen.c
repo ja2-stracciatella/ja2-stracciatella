@@ -271,10 +271,6 @@
 #define CHAR_MORALE_WID 175 - CHAR_MORALE_X
 #define CHAR_MORALE_HEI 101 - CHAR_MORALE_Y
 
-#define CHAR_PAY_X 150
-#define CHAR_PAY_Y 80+4
-#define CHAR_PAY_HEI GetFontHeight(CHAR_FONT)
-#define CHAR_PAY_WID 45
 #define SOLDIER_PIC_X 9
 #define SOLDIER_PIC_Y 20
 #define SOLDIER_HAND_X 6
@@ -925,30 +921,6 @@ static void RenderIconsForUpperLeftCornerPiece(INT8 bCharNumber)
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
-
-
-static void DrawPay(INT16 sCharNumber)
-{
-	// will draw the pay
-	INT32 uiSalary;
-	wchar_t sString[7];
-
-	const INT16 usMercProfileID = gCharactersList[sCharNumber].merc->ubProfile;
-
-	// grab salary
-	uiSalary=( ( UINT32 ) gMercProfiles[ usMercProfileID ].sSalary );
-
-
-	// font stuff
-	SetFontForeground( CHAR_TITLE_FONT_COLOR );
-	SetFontBackground( FONT_BLACK );
-
-	swprintf( sString, lengthof(sString), L"%d", uiSalary );
-	DrawStringRight(sString, CHAR_PAY_X, CHAR_PAY_Y, CHAR_PAY_WID, CHAR_PAY_HEI, CHAR_FONT);
-}
-
-
 static void DrawCharBars(void)
 {
 	// will draw the heath, morale and breath bars for a character being displayed in the upper left hand corner
@@ -988,6 +960,9 @@ static void DrawCharBars(void)
 		DrawSoldierUIBars(pSoldier, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
 	}
 }
+
+
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
 // Draw attributes & skills for given soldier
