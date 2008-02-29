@@ -1332,44 +1332,6 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 }
 
 
-static INT16 FindFinalGridNoGivenDirectionGridNoForceAngle(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, real dzDegrees, OBJECTTYPE* pItem)
-{
-	vector_3		vDirNormal, vPosition, vForce;
-	INT16				sDestX, sDestY, sSrcX, sSrcY;
-	INT16				sEndGridNo;
-
-
-	// Get XY from gridno
-	ConvertGridNoToCenterCellXY( sGridNo, &sDestX, &sDestY );
-	ConvertGridNoToCenterCellXY( sSrcGridNo, &sSrcX, &sSrcY );
-
-	// Set position
-	vPosition.x = sSrcX;
-	vPosition.y = sSrcY;
-	vPosition.z = sStartZ;
-
-	// OK, get direction normal
-	vDirNormal.x = (float)(sDestX - sSrcX);
-	vDirNormal.y = (float)(sDestY - sSrcY);
-	vDirNormal.z = 0;
-
-	// NOmralize
-	vDirNormal = VGetNormal( &vDirNormal );
-
-	// From degrees, calculate Z portion of normal
-	vDirNormal.z	= (float)sin( dzDegrees );
-
-	// Now use a force
-	vForce.x = dForce * vDirNormal.x;
-	vForce.y = dForce * vDirNormal.y;
-	vForce.z = dForce * vDirNormal.z;
-
-	CalculateObjectTrajectory( sEndZ, pItem, &vPosition, &vForce, &sEndGridNo );
-
-	return( sEndGridNo );
-}
-
-
 static real FindBestAngleForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT16 sStartZ, INT16 sEndZ, real dForce, const OBJECTTYPE* pItem, INT16* psGridNo)
 {
 	vector_3		vDirNormal, vPosition, vForce;
