@@ -206,28 +206,6 @@ INT8 SoldierClassToMilitiaRank(UINT8 ubSoldierClass)
 }
 
 
-// feed this a _MITILIA rank, it will return you a SOLDIER_CLASS_, or -1 if the guy's not militia
-static INT8 MilitiaRankToSoldierClass(UINT8 ubRank)
-{
-	INT8 bSoldierClass = -1;
-
-	switch( ubRank )
-	{
-		case GREEN_MILITIA:
-			bSoldierClass = SOLDIER_CLASS_GREEN_MILITIA;
-			break;
-		case REGULAR_MILITIA:
-			bSoldierClass = SOLDIER_CLASS_REG_MILITIA;
-			break;
-		case ELITE_MILITIA:
-			bSoldierClass = SOLDIER_CLASS_ELITE_MILITIA;
-			break;
-	}
-
-	return(bSoldierClass);
-}
-
-
 // add militias of a certain rank
 static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
 {
