@@ -205,9 +205,6 @@ void HandleAnimationOfSectors( void );
 // check and handle skyrider monologue
 void CheckAndHandleSkyriderMonologues( void );
 
-// total cost of helicopter trip
-//INT32 GetTotalCostOfHelicopterTrip( void );
-
 void HandleHelicopterOnGroundGraphic( void );
 
 void HandleHelicopterOnGroundSkyriderProfile( void );
