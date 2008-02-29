@@ -591,36 +591,6 @@ UINT16 GetWallOrientation(UINT16 usIndex)
 }
 
 
-static BOOLEAN ContainsWallOrientation(INT32 iMapIndex, UINT32 uiType, UINT16 usWallOrientation, UINT8* pubLevel)
-{
-	LEVELNODE	*pStruct = NULL;
-	UINT8					level = 0;
-
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-
-	// Look through all objects and Search for type
-
-	while( pStruct != NULL )
-	{
-		UINT16 usCheckWallOrient = GetWallOrientation(pStruct->usIndex);
-		if ( usCheckWallOrient == usWallOrientation )
-		{
-				*pubLevel = level;
-				return( TRUE );
-		}
-
-		// Advance to next
-		pStruct = pStruct->pNext;
-
-		level++;
-
-	}
-
-	// Could not find it, return FALSE
-	return( FALSE );
-}
-
-
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
 {
 	pTileElem->pAnimData = MemAlloc( sizeof( TILE_ANIMATION_DATA ) );
