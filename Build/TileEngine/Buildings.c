@@ -368,16 +368,6 @@ BUILDING * FindBuilding( INT16 sGridNo )
 }
 
 
-static BOOLEAN InBuilding(INT16 sGridNo)
-{
-	if ( FindBuilding( sGridNo ) == NULL )
-	{
-		return( FALSE );
-	}
-	return( TRUE );
-}
-
-
 void GenerateBuildings( void )
 {
 	UINT32	uiLoop;
