@@ -2306,36 +2306,6 @@ static void LoadGlobalSummary(void)
 }
 
 
-static void GenerateSummaryList(void)
-{
-	FILE *fp;
-	STRING512			Dir;
-
-	//Set current directory to JA2/DevInfo which contains all of the summary data
-	const char* ExecDir = GetExecutableDirectory();
-	sprintf( Dir, "%s/DevInfo", ExecDir );
-	if( !SetFileManCurrentDirectory( Dir ) )
-	{
-		//Directory doesn't exist, so create it, and continue.
-		if( !MakeFileManDirectory( Dir ) )
-			AssertMsg( 0, "Can't create new directory, JA2/DevInfo for summary information." );
-		if( !SetFileManCurrentDirectory( Dir ) )
-			AssertMsg( 0, "Can't set to new directory, JA2/DevInfo for summary information." );
-		//Generate a simple readme file.
-		fp = fopen( "readme.txt", "w" );
-		Assert( fp );
-		fprintf( fp, "%s\n%s\n", "This information is used in conjunction with the editor.",
-			"This directory or it's contents shouldn't be included with final release." );
-		fclose( fp );
-	}
-
-
-	//Set current directory back to data directory!
-	sprintf( Dir, "%s/Data", ExecDir );
-	SetFileManCurrentDirectory( Dir );
-}
-
-
 static void UpdateMasterProgress(void);
 
 
