@@ -760,17 +760,6 @@ void HandleHeliDrop( )
 }
 
 
-static void BeginMercEntering(SOLDIERTYPE* const pSoldier, const INT16 sGridNo)
-{
-	ResetHeliSeats( );
-	AddMercToHeli(pSoldier);
-	StartHelicopterRun( sGridNo );
-
-	// Make sure AI does nothing.....
-	PauseAIUntilManuallyUnpaused();
-}
-
-
 static void HandleFirstHeliDropOfGame(void)
 {
 	// Are we in the first heli drop?
