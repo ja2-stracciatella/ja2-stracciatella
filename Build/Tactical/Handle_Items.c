@@ -2363,40 +2363,6 @@ INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool)
 }
 
 
-static BOOLEAN DoesItemPoolContainAllItemsOfHigherZLevel(ITEM_POOL* pItemPool)
-{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel == 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
-
-static BOOLEAN DoesItemPoolContainAllItemsOfZeroZLevel(ITEM_POOL* pItemPool)
-{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if ( pItemPool->bRenderZHeightAboveLevel != 0 )
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
-}
-
-
 static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 {
 	const ITEM_POOL* pItemPool;
