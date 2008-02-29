@@ -945,15 +945,6 @@ void FreeUpNPCFromAttacking(SOLDIERTYPE* const pSoldier)
 }
 
 
-static void FreeUpNPCFromLoweringGun(SOLDIERTYPE* pSoldier)
-{
-	if ( pSoldier && pSoldier->bAction == AI_ACTION_LOWER_GUN )
-	{
-		ActionDone(pSoldier);
-	}
-}
-
-
 void FreeUpNPCFromTurning(SOLDIERTYPE* pSoldier)
 {
 	// if NPC is in the process of changing facing, mark him as being done!
