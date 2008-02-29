@@ -633,19 +633,6 @@ void UnPauseGame(void)
 }
 
 
-static void TogglePause(void)
-{
-	if ( gfGamePaused )
-	{
-		UnPauseGame();
-	}
-	else
-	{
-		PauseGame();
-	}
-}
-
-
 BOOLEAN GamePaused()
 {
 	return gfGamePaused;
