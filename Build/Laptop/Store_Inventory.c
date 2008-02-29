@@ -1,7 +1,6 @@
 #include "Types.h"
 #include "Store_Inventory.h"
 #include "Random.h"
-#include "Weapons.h"
 #include "Debug.h"
 #include "LaptopSave.h"
 #include "ShopKeeper_Interface.h"
@@ -528,59 +527,4 @@ void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 			pInventoryArray[i].ubItemQuality = 0;
 		}
 	}
-}
-
-
-static STORE_INVENTORY *GetPtrToStoreInventory(UINT8 ubDealerID);
-
-
-static BOOLEAN DoesGunOfSameClassExistInInventory(UINT8 ubItemIndex, UINT8 ubDealerID)
-{
-	UINT16 i;
-
-	STORE_INVENTORY *pInventoryArray;
-
-	pInventoryArray = GetPtrToStoreInventory( ubDealerID );
-	if( pInventoryArray == NULL )
-		return( FALSE );
-
-
-	//go through all of the guns
-	for(i=0; i<MAX_WEAPONS; i++)
-	{
-		//if it's the class we are looking for
-		if( Weapon[ i ].ubWeaponClass == ubItemIndex )
-		{
-			// and it's a sufficiently cool gun to be counted as good
-			if (Item[ i ].ubCoolness >= 4)
-			{
-				//if there is already a qty on hand, then we found a match
-				if( pInventoryArray[ i ].ubQtyOnHand )
-				{
-					return(TRUE);
-				}
-			}
-		}
-	}
-	return(FALSE);
-}
-
-
-static STORE_INVENTORY *GetPtrToStoreInventory(UINT8 ubDealerID)
-{
-	if( ubDealerID >= BOBBY_RAY_LISTS )
-		return( NULL );
-
-
-	if( ubDealerID == BOBBY_RAY_NEW )
-		return( LaptopSaveInfo.BobbyRayInventory );
-	else if( ubDealerID == BOBBY_RAY_USED )
-		return( LaptopSaveInfo.BobbyRayUsedInventory );
-	else
-		Assert( 0 );
-//	else
-//		return( gArmsDealersInventory[ ubDealerID - TONYS_ITEMS ] );
-
-
-	return( NULL );
 }
