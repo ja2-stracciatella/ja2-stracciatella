@@ -91,8 +91,6 @@
 #define			DESC_STATUS_BAR_SHADOW	STATUS_BAR_SHADOW
 #define			DESC_STATUS_BAR					STATUS_BAR
 
-#define			MIN_LOB_RANGE						4
-
 #define			INV_BAR_DX							5
 #define			INV_BAR_DY							21
 
@@ -4075,22 +4073,6 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 	return( TRUE );
 }
-
-
-static BOOLEAN ItemCursorInLobRange(UINT16 usMapPos)
-{
-	// Draw item depending on distance from buddy
-	if ( GetRangeFromGridNoDiff( usMapPos, gpItemPointerSoldier->sGridNo ) > MIN_LOB_RANGE )
-	{
-		return( FALSE );
-	}
-	else
-	{
-		return( TRUE );
-	}
-}
-
-
 
 
 BOOLEAN InItemStackPopup( )
