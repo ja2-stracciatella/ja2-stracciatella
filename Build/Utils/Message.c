@@ -145,13 +145,6 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 }
 
 
-static void EnableStringVideoOverlay(ScrollStringSt* pStringSt, BOOLEAN fEnable)
-{
-	if (pStringSt->video_overlay == NULL) return;
-	EnableVideoOverlay(fEnable, pStringSt->video_overlay);
-}
-
-
 // this function will go through list of display strings and clear them all out
 void ClearDisplayedListOfTacticalStrings(void)
 {
