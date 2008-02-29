@@ -141,20 +141,6 @@ BOOLEAN InitMercPopupBox( )
 }
 
 
-static BOOLEAN ShutDownPopUpBoxes(void)
-{
-
-	INT32 iCounter = 0;
-	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES ; iCounter++ )
-	{
-		// now attempt to remove this box
-		RemoveMercPopupBoxFromIndex( iCounter );
-	}
-
-	return( TRUE );
-}
-
-
 // Tactical Popup
 static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
 {
