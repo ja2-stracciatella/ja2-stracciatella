@@ -5890,26 +5890,6 @@ void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYP
 }
 
 
-static UINT8 GetPrefferedItemSlotGraphicNum(UINT16 usItem)
-{
-	// Check for small item...
-	if ( Item[usItem].ubPerPocket >= 1 )
-	{
-		// Small
-		return( 2 );
-	}
-
-	// Now it could be large or armour, check class...
-	if ( Item[ usItem ].usItemClass == IC_ARMOUR )
-	{
-		return( 1 );
-	}
-
-	// OK, it's a big one...
-	return( 0 );
-}
-
-
 void CancelItemPointer( )
 {
 	// ATE: If we have an item pointer end it!
