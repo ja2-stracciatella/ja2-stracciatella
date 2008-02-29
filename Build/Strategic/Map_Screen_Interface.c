@@ -4201,25 +4201,6 @@ INT32 GetNumberOfMercsInUpdateList(void)
 }
 
 
-static BOOLEAN IsThePopUpBoxEmpty(void)
-{
-	INT32 iCounter = 0;
-	BOOLEAN fEmpty = TRUE;
-
-	// run through the non-empty slots
-	for( iCounter = 0; iCounter < SIZE_OF_UPDATE_BOX; iCounter++ )
-	{
-		// valid guy here
-		if( pUpdateSoldierBox[ iCounter ] != NULL )
-		{
-			fEmpty = FALSE;
-		}
-	}
-
-	return( fEmpty );
-}
-
-
 void AddSoldierToWaitingListQueue(const SOLDIERTYPE* const s)
 {
 	SpecialCharacterDialogueEvent(DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, 0);
