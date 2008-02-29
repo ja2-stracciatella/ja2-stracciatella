@@ -132,8 +132,6 @@ typedef enum
 
 #define NUM_REAL_APPROACHES APPROACH_RECRUIT
 
-#define CONVO_DIST 5
-
 extern INT8	gbFirstApproachFlags[4];
 
 extern void ShutdownNPCQuotes( void );
