@@ -294,15 +294,6 @@ static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops,
 }
 
 
-static void PlayAutoResolveSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
-{
-	if( gpAR->fSound )
-	{
-		PlayJA2SampleFromFile(szFileName, ubVolume, ubLoops, uiPan);
-	}
-}
-
-
 extern void ClearPreviousAIGroupAssignment( GROUP *pGroup );
 
 
