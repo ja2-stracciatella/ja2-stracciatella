@@ -45,21 +45,6 @@ static INT32 GetFreeSmokeEffect(void)
 }
 
 
-static void RecountSmokeEffects(void)
-{
-	INT32 uiCount;
-
-	for(uiCount=guiNumSmokeEffects-1; (uiCount >=0) ; uiCount--)
-	{
-		if( ( gSmokeEffectData[uiCount].fAllocated ) )
-		{
-			guiNumSmokeEffects=(UINT32)(uiCount+1);
-			break;
-		}
-	}
-}
-
-
 static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags);
 
 
