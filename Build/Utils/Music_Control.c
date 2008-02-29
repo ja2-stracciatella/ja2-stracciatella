@@ -474,21 +474,6 @@ void SetMusicFadeSpeed( INT8 bFadeSpeed )
 }
 
 
-static void FadeMusicForXSeconds(UINT32 uiDelay)
-{
-	INT16 sNumTimeSteps, sNumVolumeSteps;
-
-	// get # time steps in delay....
-	sNumTimeSteps = (INT16)( uiDelay / 10 );
-
-	// Devide this by music volume...
-	sNumVolumeSteps = (INT16)( uiMusicVolume / sNumTimeSteps );
-
-	// Set fade delay...
-	SetMusicFadeSpeed( (INT8)sNumVolumeSteps );
-}
-
-
 static void DoneFadeOutDueToEndMusic(void)
 {
 	// Quit game....
