@@ -453,6 +453,8 @@ BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandInd
 }
 
 
+#ifdef JA2EDITOR
+
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
 	UINT32 fTileType;
@@ -476,6 +478,8 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 	// Could not find it
 	return FALSE;
 }
+
+#endif
 
 
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )

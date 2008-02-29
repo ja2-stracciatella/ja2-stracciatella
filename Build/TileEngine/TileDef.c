@@ -241,6 +241,8 @@ BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
 }
 
 
+#ifdef JA2EDITOR
+
 BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)
 {
 	UINT16	usTempIndex;
@@ -275,66 +277,9 @@ BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)
 			return( AddLandToHead( iMapIndex, usIndex ) );
 		}
 	}
-
 }
 
-
-static BOOLEAN SetLandIndexWithRadius(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
-{
-	UINT16				usTempIndex;
-	INT16					sTop, sBottom;
-	INT16					sLeft, sRight;
-	INT16					cnt1, cnt2;
-	INT32				  iNewIndex;
-	BOOLEAN				fDoPaste = FALSE;
-	INT32					leftmost;
-	//BOOLEAN				fNewCommand;
-
-	// Determine start end end indicies and num rows
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	//fNewCommand = fFirstDrawMode; //NEW_UNDO_COMMAND;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
-	{
-
-		leftmost = ( ( iMapIndex + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
-		{
-			iNewIndex = iMapIndex + ( WORLD_COLS * cnt1 ) + cnt2;
-
-			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
-				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
-			{
-
-				if ( fReplace )
-				{
-					fDoPaste = TRUE;
-				}
-				else
-				{
-					if ( !TypeExistsInLandLayer( iNewIndex, uiNewType, &usTempIndex ) )
-					{
-						fDoPaste = TRUE;
-					}
-				}
-
-				if ( fDoPaste && ((uiNewType >= FIRSTFLOOR && uiNewType <= LASTFLOOR) ||
-												 ((uiNewType < FIRSTFLOOR || uiNewType > LASTFLOOR) &&
-						!TypeRangeExistsInLandLayer(iNewIndex, FIRSTFLOOR, LASTFLOOR))))
-				{
-					SetLandIndex(iNewIndex, usIndex, uiNewType);
-				}
-			}
-		}
-	}
-
-	return( TRUE );
-}
+#endif
 
 
 BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
