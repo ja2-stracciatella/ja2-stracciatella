@@ -376,17 +376,6 @@ static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 ubIndex)
 }
 
 
-static BOOLEAN ReloadCivQuoteFile(UINT8 ubIndex)
-{
-	if (gpCivQuoteInfoArray[ubIndex] != NULL)
-	{
-		MemFree( gpCivQuoteInfoArray[ubIndex] );
-		gpCivQuoteInfoArray[ubIndex] = NULL;
-	}
-	return( EnsureCivQuoteFileLoaded( ubIndex ) );
-}
-
-
 static BOOLEAN ReloadCivQuoteFileIfLoaded(UINT8 ubIndex)
 {
 	if (gpCivQuoteInfoArray[ubIndex] != NULL)
