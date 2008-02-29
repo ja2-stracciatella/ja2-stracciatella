@@ -2527,9 +2527,6 @@ UINT8 LightGetColors(SGPPaletteEntry *pPal)
 	Sets the number of light colors, and the RGB value for each.
 
 ***************************************************************************************/
-#ifdef JA2EDITOR
-BOOLEAN gfEditorForceRebuildAllColors = FALSE;
-#endif
 
 extern void SetAllNewTileSurfacesLoaded( BOOLEAN fNew );
 
