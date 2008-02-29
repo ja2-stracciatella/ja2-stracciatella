@@ -683,13 +683,6 @@ static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond)
 }
 
 
-//Function for accessing the current rate
-static UINT8 ClockResolution(void)
-{
-	return gubClockResolution;
-}
-
-
 static void CreateDestroyScreenMaskForPauseGame(void);
 
 
