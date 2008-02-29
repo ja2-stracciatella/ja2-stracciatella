@@ -392,16 +392,6 @@ UINT8 GetTileTypeLogicalHeight(UINT32 fType)
 }
 
 
-static BOOLEAN LandTypeHeigher(UINT32 uiDestType, UINT32 uiSrcType)
-{
-	// Get logical height of type at head and type we wish to paste
-	UINT8 ubDestLogHeight = GetTileTypeLogicalHeight(uiDestType);
-	UINT8 ubSrcLogHeight  = GetTileTypeLogicalHeight(uiSrcType);
-
-	return( ubDestLogHeight > ubSrcLogHeight );
-}
-
-
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
 	LEVELNODE		*pLand		 = NULL;
