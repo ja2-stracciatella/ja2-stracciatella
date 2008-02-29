@@ -144,18 +144,6 @@ void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScre
 }
 
 
-static void FloatFromScreenToCellCoordinates(FLOAT dScreenX, FLOAT dScreenY, FLOAT* pdCellX, FLOAT* pdCellY)
-{
-	FLOAT dCellX, dCellY;
-
-	dCellX = ( ( dScreenX + ( 2 * dScreenY ) ) / 4 );
-	dCellY = ( ( 2 * dScreenY ) - dScreenX ) / 4;
-
-	*pdCellX = dCellX;
-	*pdCellY = dCellY;
-}
-
-
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 {
 	INT16 sWorldX, sWorldY;
