@@ -39,7 +39,6 @@
 #include "Map_Screen_Helicopter.h"
 #include "PreBattle_Interface.h"
 #include "WordWrap.h"
-#include "Interface_Control.h"
 #include "GameSettings.h"
 #include "Campaign_Types.h"
 #include "MapScreen.h"
@@ -4581,27 +4580,6 @@ void CreateDestroyTheUpdateBox( void )
 		ResetSoldierUpdateBox( );
 
 		CreateDestroyUpdatePanelButtons( 0, 0, FALSE );
-	}
-}
-
-
-static void UpdateButtonsDuringCharacterDialoguePicture(void)
-{
-	// stop showing buttons during certain instances of dialogue
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		UnMarkButtonDirty( giCharInfoButton[ 0 ] );
-		UnMarkButtonDirty( giCharInfoButton[ 1 ] );
-	}
-
-}
-
-
-static void UpdateButtonsDuringCharacterDialogueSubTitles(void)
-{
-	if( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] ) )
-	{
-		UnMarkButtonDirty( giMapContractButton );
 	}
 }
 
