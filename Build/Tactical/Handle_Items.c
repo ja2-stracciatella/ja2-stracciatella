@@ -3089,51 +3089,6 @@ BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel
 	}
 
 	return( fSelectionDone );
-
-}
-
-
-static INT8 GetListMouseHotSpot(INT16 sLargestLineWidth, INT8 bNumItemsListed, INT16 sFontX, INT16 sFontY, INT8 bCurStart)
-{
-	INT16	 cnt = 0;
-	INT16  sTestX1, sTestX2, sTestY1, sTestY2;
-	INT16  sLineHeight;
-	INT8	 gbCurrentItemSel = -1;
-	INT8	 bListedItems;
-
-	sLineHeight = GetFontHeight( SMALLFONT1 ) - 2;
-
-	sTestX1 = sFontX;
-	sTestX2 = sFontX + sLargestLineWidth;
-
-
-	bListedItems = ( bNumItemsListed - bCurStart );
-
-
-	if ( gusMouseXPos < sTestX1 || gusMouseXPos > sTestX2 )
-	{
-		gbCurrentItemSel = -1;
-	}
-	else
-	{
-		// Determine where mouse is!
-		for ( cnt = 0; cnt < bListedItems; cnt++ )
-		{
-			sTestY1 = sFontY + ( sLineHeight * cnt );
-			sTestY2 = sFontY + ( sLineHeight * ( cnt + 1 ) );
-
-			if ( gusMouseYPos > sTestY1 && gusMouseYPos < sTestY2 )
-			{
-				gbCurrentItemSel = (INT8)cnt;
-				break;
-			}
-		}
-	}
-
-	// OFFSET START
-	gbCurrentItemSel += bCurStart;
-
-	return( gbCurrentItemSel );
 }
 
 
