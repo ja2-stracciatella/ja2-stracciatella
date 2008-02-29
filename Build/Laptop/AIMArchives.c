@@ -430,13 +430,6 @@ static void DisplayAlumniOldMercPopUp(void)
 }
 
 
-static void DestroyPopUpBox(void)
-{
-	gfDestroyPopUpBox = FALSE;
-	RenderAimArchives();
-}
-
-
 static void InitAlumniFaceRegions(void)
 {
 	UINT16	usPosX, usPosY,i,x,y, usNumRows;
