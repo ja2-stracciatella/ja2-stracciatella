@@ -1538,11 +1538,6 @@ void RestoreSavedTextInputMode()
 }
 
 
-static UINT16 GetTextInputCursor(void)
-{
-	return gusTextInputCursor;
-}
-
 void SetTextInputCursor( UINT16 usNewCursor )
 {
 	STACKTEXTINPUTNODE *stackCurr;
