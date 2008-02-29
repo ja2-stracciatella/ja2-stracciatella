@@ -17,8 +17,6 @@
 #define			DRAW_CLIFFS			1
 #define			DRAW_CLIFF_LAND 2
 
-BOOLEAN			gfWarning;
-
 BOOLEAN			gfDoFill;
 UINT16			CurrentPaste;
 UINT16			gDebrisPaste;

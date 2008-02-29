@@ -27,8 +27,6 @@
 #include "MemMan.h"
 
 
-BOOLEAN			gfWarning = FALSE;
-
 BOOLEAN			gfDoFill = FALSE;
 UINT16			CurrentPaste = NO_TILE;
 UINT16			gDebrisPaste = NO_TILE;
