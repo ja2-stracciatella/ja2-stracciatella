@@ -1667,68 +1667,56 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 }
 
 
-static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVehicles)
+static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOOLEAN fExitVehicles)
 {
-	PLAYERGROUP *pPlayer, *pNextPlayer;
-	SOLDIERTYPE *pSoldier;
 	INT8 bUniqueVehicleSquad = -1;
-	BOOLEAN fSuccess;
-
-
-	if ( pGroup->fVehicle )
+	if (pGroup->fVehicle)
 	{
 		// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
 		bUniqueVehicleSquad = GetFirstEmptySquad();
-		if ( bUniqueVehicleSquad == -1 )
-		{
-			return;
-		}
+		if (bUniqueVehicleSquad == -1) return;
 	}
 
-
-	pPlayer = pGroup->pPlayerList;
-
-	while( pPlayer )
+	BOOLEAN      fSuccess; // XXX uninitialized
+	PLAYERGROUP* next;
+	for (PLAYERGROUP* p = pGroup->pPlayerList; p; p = next)
 	{
-		pSoldier = pPlayer->pSoldier;
-		Assert( pSoldier );
+		SOLDIERTYPE* const s = p->pSoldier;
+		Assert(s);
 
 		// store ptr to next soldier in group, once removed from group, his info will get memfree'd!
-		pNextPlayer = pPlayer->next;
+		next = p->next;
 
-		if ( pSoldier->bActive && pSoldier->bLife && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+		if (!s->bActive || s->bLife == 0 || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		if (!PlayerMercInvolvedInThisCombat(s) || s->bAssignment < ON_DUTY) continue;
+		// if involved, but off-duty (includes mercs inside vehicles!)
+
+		// if in a vehicle, pull him out
+		if (s->bAssignment == VEHICLE)
 		{
-			// if involved, but off-duty (includes mercs inside vehicles!)
-			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->bAssignment >= ON_DUTY ) )
+			if (fExitVehicles)
 			{
-				// if in a vehicle, pull him out
-				if( pSoldier->bAssignment == VEHICLE )
-				{
-					if ( fExitVehicles )
-					{
-						TakeSoldierOutOfVehicle( pSoldier );
+				TakeSoldierOutOfVehicle(s);
 
-						// put them on the unique squad assigned to people leaving this vehicle.  Can't add them to existing squads,
-						// because if this is a simultaneous group attack, the mercs could be coming from different sides, and the
-						// placement screen can't handle mercs on the same squad arriving from difference edges!
-						fSuccess = AddCharacterToSquad( pSoldier, bUniqueVehicleSquad );
-					}
-				}
-				else
-				{
-					// add him to ANY on duty foot squad
-					fSuccess = AddCharacterToAnySquad( pSoldier );
-				}
-
-				// it better work...
-				Assert( fSuccess );
-
-				// stand him up
-				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
+				/* put them on the unique squad assigned to people leaving this vehicle.
+				 * Can't add them to existing squads, because if this is a simultaneous
+				 * group attack, the mercs could be coming from different sides, and the
+				 * placement screen can't handle mercs on the same squad arriving from
+				 * different edges! */
+				fSuccess = AddCharacterToSquad(s, bUniqueVehicleSquad);
 			}
 		}
+		else
+		{
+			// add him to ANY on duty foot squad
+			fSuccess = AddCharacterToAnySquad(s);
+		}
 
-		pPlayer = pNextPlayer;
+		Assert(fSuccess);
+
+		// stand him up
+		MakeSoldiersTacticalAnimationReflectAssignment(s);
 	}
 }
 
