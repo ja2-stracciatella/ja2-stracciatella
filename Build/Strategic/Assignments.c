@@ -329,6 +329,7 @@ static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, Assignment
 	if (!(c & AC_MOVING) && s->fBetweenSectors)                                         return FALSE;
 	if (!(c & AC_UNDERGROUND) && s->bSectorZ != 0)                                      return FALSE;
 	if (IsCharacterInTransit(s))                                                        return FALSE;
+	if (s->bAssignment == ASSIGNMENT_POW)                                               return FALSE;
 	return TRUE;
 }
 
@@ -593,7 +594,6 @@ static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 	return
 		s->bLife > 0 &&
 		s->bLife != s->bLifeMax &&
-		s->bAssignment != ASSIGNMENT_POW &&
 		AreAssignmentConditionsMet(s, AC_UNCONSCIOUS | AC_EPC | AC_UNDERGROUND);
 #endif
 }
@@ -795,13 +795,6 @@ static BOOLEAN CanCharacterSleep(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhyNot)
 	#endif
 
 	if (!AreAssignmentConditionsMet(pSoldier, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return FALSE;
-
-	// POW?
-	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
-	{
-		return( FALSE );
-	}
-
 
 	// traveling?
 	if ( pSoldier->fBetweenSectors )

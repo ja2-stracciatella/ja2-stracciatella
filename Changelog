@@ -1,3 +1,4 @@
+(r3192) Fix a vanilla bug, which allowed erroneously freeing POWs by giving multiple mercs an assignment at once along with the POW.
 (r3104) Fix a crash caused by r1766 when using alternate give mode (right-click) to hand an item to another merc in tactical mode.
 (r3086) Fix a vanilla bug when playing a non-gun nut game: When replacing weapons and ammunition for this mode, sometimes ammunition was erroneously removed.  This caused that Vicky had no extra ammunition at start.
 
