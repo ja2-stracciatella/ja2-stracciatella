@@ -2911,32 +2911,24 @@ INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts
 }
 
 
-void MakeSoldiersTacticalAnimationReflectAssignment( SOLDIERTYPE *pSoldier )
+void MakeSoldiersTacticalAnimationReflectAssignment(SOLDIERTYPE* const s)
 {
+	if (!s->bInSector || !gfWorldLoaded || s->bLife < OKLIFE) return;
 	// soldier is in tactical, world loaded, he's OKLIFE
-	if( ( pSoldier -> bInSector ) && gfWorldLoaded && ( pSoldier -> bLife >= OKLIFE ) )
+
+	// Set animation based on his assignment
+	switch (s->bAssignment)
 	{
-		// Set animation based on his assignment
-		if ( pSoldier -> bAssignment == DOCTOR )
-		{
-			SoldierInSectorDoctor( pSoldier, pSoldier -> usStrategicInsertionData );
-		}
-		else if ( pSoldier -> bAssignment == PATIENT )
-		{
-			SoldierInSectorPatient( pSoldier, pSoldier -> usStrategicInsertionData );
-		}
-		else if ( pSoldier -> bAssignment == REPAIR )
-		{
-			SoldierInSectorRepair( pSoldier, pSoldier -> usStrategicInsertionData );
-		}
-		else
-		{
-			if (pSoldier->usAnimState != WKAEUP_FROM_SLEEP && !(pSoldier->bOldAssignment < ON_DUTY))
+		case DOCTOR:  SoldierInSectorDoctor( s, s->usStrategicInsertionData); break;
+		case PATIENT: SoldierInSectorPatient(s, s->usStrategicInsertionData); break;
+		case REPAIR:  SoldierInSectorRepair( s, s->usStrategicInsertionData); break;
+
+		default:
+			if (s->usAnimState != WKAEUP_FROM_SLEEP && s->bOldAssignment >= ON_DUTY)
 			{
-				// default: standing
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
+				ChangeSoldierState(s, STANDING, 1, TRUE);
 			}
-		}
+			break;
 	}
 }
 
