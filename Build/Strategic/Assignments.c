@@ -326,8 +326,9 @@ static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, Assignment
 	if (!(c & AC_EPC) && s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)                      return FALSE;
 	if (!(c & AC_IN_HELI_IN_HOSTILE_SECTOR) && IsSoldierInHelicopterInHostileSector(s)) return FALSE;
 	if (!(c & AC_MECHANICAL) && (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)))  return FALSE;
-	if (!(c & AC_MOVING) && (IsCharacterInTransit(s) || s->fBetweenSectors))            return FALSE;
+	if (!(c & AC_MOVING) && s->fBetweenSectors)                                         return FALSE;
 	if (!(c & AC_UNDERGROUND) && s->bSectorZ != 0)                                      return FALSE;
+	if (IsCharacterInTransit(s))                                                        return FALSE;
 	return TRUE;
 }
 
@@ -793,23 +794,7 @@ static BOOLEAN CanCharacterSleep(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhyNot)
 		return(FALSE );
 	#endif
 
-	// dead or dying?
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		return( FALSE );
-	}
-
-	// vehicle or robot?
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-	{
-		return( FALSE );
-	}
-
-	// in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		return( FALSE );
-	}
+	if (!AreAssignmentConditionsMet(pSoldier, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return FALSE;
 
 	// POW?
 	if( pSoldier -> bAssignment == ASSIGNMENT_POW )
