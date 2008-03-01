@@ -3826,6 +3826,14 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 }
 
 
+static void PreChangeAssignment(SOLDIERTYPE* const s)
+{
+	s->bOldAssignment = s->bAssignment;
+	if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+	RemoveCharacterFromSquads(s);
+}
+
+
 static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier);
 
 
@@ -3857,21 +3865,13 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( ( iRepairWhat >= REPAIR_MENU_VEHICLE1 ) && ( iRepairWhat <= REPAIR_MENU_VEHICLE3 ) )
 		{
 			// repair VEHICLE
-
-			pSoldier->bOldAssignment = pSoldier->bAssignment;
+			PreChangeAssignment(pSoldier);
 
 			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) || ( pSoldier -> fFixingSAMSite ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
 
-			if (pSoldier->bAssignment == VEHICLE)
-			{
-				TakeSoldierOutOfVehicle( pSoldier );
-			}
-
-			// remove from squad
-			RemoveCharacterFromSquads( pSoldier );
 			MakeSureToolKitIsInHand( pSoldier );
 
 			ChangeSoldiersAssignment( pSoldier, REPAIR );
@@ -3918,15 +3918,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
 		{
 			// repair ROBOT
-			pSoldier->bOldAssignment = pSoldier->bAssignment;
-
-			// remove from squad
-			if (pSoldier->bAssignment == VEHICLE)
-			{
-				TakeSoldierOutOfVehicle( pSoldier );
-			}
-
-			RemoveCharacterFromSquads( pSoldier );
+			PreChangeAssignment(pSoldier);
 			MakeSureToolKitIsInHand( pSoldier );
 
 			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot == FALSE ) )
@@ -5533,14 +5525,9 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 			{
 				// able to add, do it
-				pSoldier->bOldAssignment = pSoldier->bAssignment;
+				PreChangeAssignment(pSoldier);
 
 				const INT8 old_assignment = pSoldier->bAssignment;
-				if (old_assignment == VEHICLE)
-				{
-					TakeSoldierOutOfVehicle( pSoldier );
-				}
-
 				AddCharacterToSquad( pSoldier, ( INT8 )iValue );
 
 				if (old_assignment == VEHICLE)
@@ -5695,8 +5682,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 					// PASSED ALL THE TESTS - ALLOW SOLDIER TO TRAIN MILITIA HERE
-
-					pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+					PreChangeAssignment(pSoldier);
 
 					if( ( pSoldier->bAssignment != TRAIN_TOWN ) )
 					{
@@ -5708,14 +5694,6 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// stop showing menu
 					fShowAssignmentMenu = FALSE;
 					giAssignHighLine = -1;
-
-					// remove from squad
-
-					if (pSoldier->bAssignment == VEHICLE)
-					{
-						TakeSoldierOutOfVehicle( pSoldier );
-					}
-					RemoveCharacterFromSquads(  pSoldier );
 
 					ChangeSoldiersAssignment( pSoldier, TRAIN_TOWN );
 
@@ -5816,7 +5794,7 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else if( CanCharacterTrainStat( pSoldier, ( INT8 )( iValue ), ( BOOLEAN )( ( gbTrainingMode == TRAIN_SELF ) || ( gbTrainingMode == TRAIN_BY_OTHER ) ), ( BOOLEAN )( gbTrainingMode == TRAIN_TEAMMATE ) ) )
 		{
-			pSoldier->bOldAssignment = pSoldier->bAssignment;
+			PreChangeAssignment(pSoldier);
 
 			if( ( pSoldier->bAssignment != gbTrainingMode ) )
 			{
@@ -5831,13 +5809,6 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// stop showing ALL menus
 			fShowAssignmentMenu = FALSE;
 			giAssignHighLine = -1;
-
-			// remove from squad/vehicle
-			if (pSoldier->bAssignment == VEHICLE)
-			{
-				TakeSoldierOutOfVehicle( pSoldier );
-			}
-			RemoveCharacterFromSquads( pSoldier );
 
 			// train stat
 			ChangeSoldiersAssignment( pSoldier, gbTrainingMode );
@@ -5905,7 +5876,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// can character doctor?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
+						PreChangeAssignment(pSoldier);
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
 						{
@@ -5922,13 +5893,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
 
-						// remove from squad
-
-						if (pSoldier->bAssignment == VEHICLE)
-						{
-							TakeSoldierOutOfVehicle( pSoldier );
-						}
-						RemoveCharacterFromSquads(  pSoldier );
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
 						AssignMercToAMovementGroup( pSoldier );
 
@@ -5995,21 +5959,12 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fShowAssignmentMenu = FALSE;
 						giAssignHighLine = -1;
 
-
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+						PreChangeAssignment(pSoldier);
 
 						if( ( pSoldier->bAssignment != DOCTOR ) )
 						{
 							SetTimeOfAssignmentChangeForMerc( pSoldier );
 						}
-
-						// remove from squad
-
-						if (pSoldier->bAssignment == VEHICLE)
-						{
-							TakeSoldierOutOfVehicle( pSoldier );
-						}
-						RemoveCharacterFromSquads(  pSoldier );
 
 						ChangeSoldiersAssignment( pSoldier, DOCTOR );
 
@@ -6041,7 +5996,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					// can character patient?
 					if( CanCharacterPatient( pSoldier ) )
 					{
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
+						PreChangeAssignment(pSoldier);
 
 						if( ( pSoldier->bAssignment != PATIENT ) )
 						{
@@ -6058,13 +6013,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
 
-						// remove from squad
-
-						if (pSoldier->bAssignment == VEHICLE )
-						{
-							TakeSoldierOutOfVehicle( pSoldier );
-						}
-						RemoveCharacterFromSquads(  pSoldier );
 						ChangeSoldiersAssignment( pSoldier, PATIENT );
 
 						AssignMercToAMovementGroup( pSoldier );
@@ -7309,9 +7257,7 @@ static UINT8 RepairRobot(SOLDIERTYPE* pRobot, UINT8 ubRepairPts, BOOLEAN* pfNoth
 
 static void PreSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
 {
-	s->bOldAssignment = s->bAssignment;
-	if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
-	RemoveCharacterFromSquads(s);
+	PreChangeAssignment(s);
 	fTeamPanelDirty       = TRUE;
 	fMapScreenBottomDirty = TRUE;
 	gfRenderPBInterface   = TRUE;
@@ -8461,7 +8407,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					{
 						if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
 						{
-							pSoldier->bOldAssignment = pSoldier->bAssignment;
+							PreChangeAssignment(pSoldier);
 
 							// is the squad between sectors
 							if( Squad[ bAssignment ][ 0 ] )
@@ -8481,13 +8427,6 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 									}
 								}
 							}
-
-							if (pSoldier->bAssignment == VEHICLE)
-							{
-								TakeSoldierOutOfVehicle( pSoldier );
-							}
-							// remove from current squad, if any
-							RemoveCharacterFromSquads( pSoldier );
 
 							// able to add, do it
 							AddCharacterToSquad( pSoldier, bAssignment );
