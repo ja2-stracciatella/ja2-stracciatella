@@ -304,28 +304,30 @@ static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 }
 
 
+/* Which conditions are allowed to perform an assignment? */
 typedef enum AssignmentConditions
 {
-	AC_CONSCIOUS                     = 1U << 0,
-	AC_NOT_COMBAT                    = 1U << 1,
-	AC_NOT_EPC                       = 1U << 2,
-	AC_NOT_IN_HELI_IN_HOSTILE_SECTOR = 1U << 3,
-	AC_NOT_MECHANICAL                = 1U << 4,
-	AC_NOT_MOVING                    = 1U << 5,
-	AC_NOT_UNDERGROUND               = 1U << 6
+	AC_IMPASSABLE                = 1U << 0,
+	AC_UNCONSCIOUS               = 1U << 1,
+	AC_COMBAT                    = 1U << 2,
+	AC_EPC                       = 1U << 3,
+	AC_IN_HELI_IN_HOSTILE_SECTOR = 1U << 4,
+	AC_MECHANICAL                = 1U << 5,
+	AC_MOVING                    = 1U << 6,
+	AC_UNDERGROUND               = 1U << 7
 } AssignmentConditions;
 
 
 static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, AssignmentConditions c)
 {
-	if (SectorIsImpassable(SECTOR(s->sSectorX, s->sSectorY)))                            return FALSE;
-	if (c & AC_CONSCIOUS && s->bLife < OKLIFE)                                           return FALSE;
-	if (c & AC_NOT_COMBAT && s->bInSector && gTacticalStatus.fEnemyInSector)             return FALSE;
-	if (c & AC_NOT_EPC && s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)                      return FALSE;
-	if (c & AC_NOT_IN_HELI_IN_HOSTILE_SECTOR && IsSoldierInHelicopterInHostileSector(s)) return FALSE;
-	if (c & AC_NOT_MECHANICAL && (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)))  return FALSE;
-	if (c & AC_NOT_MOVING && (IsCharacterInTransit(s) || s->fBetweenSectors))            return FALSE;
-	if (c & AC_NOT_UNDERGROUND && s->bSectorZ != 0)                                      return FALSE;
+	if (!(c & AC_IMPASSABLE) && SectorIsImpassable(SECTOR(s->sSectorX, s->sSectorY)))   return FALSE;
+	if (!(c & AC_UNCONSCIOUS) && s->bLife < OKLIFE)                                     return FALSE;
+	if (!(c & AC_COMBAT) && s->bInSector && gTacticalStatus.fEnemyInSector)             return FALSE;
+	if (!(c & AC_EPC) && s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)                      return FALSE;
+	if (!(c & AC_IN_HELI_IN_HOSTILE_SECTOR) && IsSoldierInHelicopterInHostileSector(s)) return FALSE;
+	if (!(c & AC_MECHANICAL) && (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)))  return FALSE;
+	if (!(c & AC_MOVING) && (IsCharacterInTransit(s) || s->fBetweenSectors))            return FALSE;
+	if (!(c & AC_UNDERGROUND) && s->bSectorZ != 0)                                      return FALSE;
 	return TRUE;
 }
 
@@ -338,7 +340,7 @@ static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(const SOLDIERTYPE* const s)
 #else
 	return
 		s->bMedical > 0 &&
-		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
+		AreAssignmentConditionsMet(s, AC_UNDERGROUND);
 #endif
 }
 
@@ -534,7 +536,7 @@ static BOOLEAN BasicCanCharacterRepair(const SOLDIERTYPE* const s)
 {
 	return
 		s->bMechanical > 0 &&
-		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
+		AreAssignmentConditionsMet(s, AC_UNDERGROUND);
 }
 
 
@@ -591,7 +593,7 @@ static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 		s->bLife > 0 &&
 		s->bLife != s->bLifeMax &&
 		s->bAssignment != ASSIGNMENT_POW &&
-		AreAssignmentConditionsMet(s, AC_NOT_COMBAT | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING);
+		AreAssignmentConditionsMet(s, AC_UNCONSCIOUS | AC_EPC | AC_UNDERGROUND);
 #endif
 }
 
@@ -617,7 +619,7 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 		s->bLeadership > 0 &&
 		CanSectorContainMilita(s->sSectorX, s->sSectorY, s->bSectorZ) &&
 		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
-		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MECHANICAL | AC_NOT_MOVING);
+		AreAssignmentConditionsMet(s, 0);
 #endif
 }
 
@@ -707,7 +709,7 @@ static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, con
 	return FALSE;
 #else
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if (!AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND)) return FALSE;
+	if (!AreAssignmentConditionsMet(s, 0)) return FALSE;
 
 	const INT8 stat_val = GetTrainingStatValue(s, bStat);
 	return
@@ -722,7 +724,7 @@ static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, con
 static BOOLEAN CanCharacterOnDuty(const SOLDIERTYPE* const s)
 {
 	// can character commit themselves to on duty?
-	return AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING);
+	return AreAssignmentConditionsMet(s, AC_COMBAT | AC_EPC | AC_MECHANICAL | AC_UNDERGROUND);
 }
 
 
@@ -734,7 +736,7 @@ static BOOLEAN CanCharacterPractise(const SOLDIERTYPE* const s)
 	// this assignment is no go in the demo
 	return FALSE;
 #else
-	return AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_EPC | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+	return AreAssignmentConditionsMet(s, 0);
 #endif
 }
 
@@ -937,7 +939,7 @@ static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
 		fInMapMode && // strictly for visual reasons - we don't want them just vanishing if in tactical
 		AnyAccessibleVehiclesInSoldiersSector(s) &&
 		(!gTacticalStatus.fEnemyInSector || s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ) && // if we're in BATTLE in the current sector, disallow
-		AreAssignmentConditionsMet(s, AC_CONSCIOUS | AC_NOT_COMBAT | AC_NOT_IN_HELI_IN_HOSTILE_SECTOR | AC_NOT_MOVING | AC_NOT_UNDERGROUND);
+		AreAssignmentConditionsMet(s, AC_EPC | AC_MECHANICAL);
 #endif
 }
 
