@@ -3163,12 +3163,11 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 	}
 
 	// Randomly fall back or forward, if we are in the standing hit animation
+	UINT16 state;
 	if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == STANDING_BURST_HIT || pSoldier->usAnimState == RIFLE_STAND_HIT )
 	{
 		INT8			bTestDirection = pSoldier->bDirection;
 		BOOLEAN		fForceDirection = FALSE;
-		BOOLEAN		fDoFallback			= FALSE;
-
 
 		// TRY FALLING BACKWARDS, ( ONLY IF WE ARE A MERC! )
 #ifdef TESTFALLBACK
@@ -3206,34 +3205,16 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 					ChangeToFallbackAnimation( pSoldier, pSoldier->bDirection );
 					return;
 				}
-				else
-				{
-					fDoFallback = TRUE;
-				}
 			}
-			else
-			{
-				fDoFallback = TRUE;
-			}
-
-		}
-		else
-		{
-			fDoFallback = TRUE;
 		}
 
-		if ( fDoFallback )
-		{
-			// 1 )REC DIRECTION
-			// 2 ) SET FLAG FOR STARTING TO FALL
-			BeginTyingToFall( pSoldier );
-			ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
-			return;
-		}
+		// 1) Rec direction
+		// 2) Set flag for starting to fall
+		BeginTyingToFall(pSoldier);
+		state = FALLFORWARD_FROMHIT_STAND;
 	}
 	else
 	{
-		UINT16 state;
 		switch (pSoldier->usAnimState)
 		{
 			case GENERIC_HIT_CROUCH:
@@ -3258,8 +3239,8 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: Genmeric hit not chained");
 				return;
 		}
-		ChangeSoldierState(pSoldier, state, 0, FALSE);
 	}
+	ChangeSoldierState(pSoldier, state, 0, FALSE);
 }
 
 
