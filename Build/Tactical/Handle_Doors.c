@@ -229,6 +229,7 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 {
 	pSoldier->ubDoorHandleCode = ubHandleCode;
 
+	UINT16 state;
 	switch( ubHandleCode )
 	{
 		case HANDLE_DOOR_OPEN:
@@ -238,21 +239,20 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 		case HANDLE_DOOR_LOCK:
 		case HANDLE_DOOR_UNTRAP:
 		case HANDLE_DOOR_CROWBAR:
-
-			ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, TRUE, OPEN_DOOR ), 0, FALSE );
+			state = GetAnimStateForInteraction(pSoldier, TRUE, OPEN_DOOR);
 			break;
 
 		case HANDLE_DOOR_FORCE:
-
-			ChangeSoldierState( pSoldier, KICK_DOOR, 0 , FALSE );
+			state = KICK_DOOR;
 			break;
 
 		case HANDLE_DOOR_LOCKPICK:
-
-			ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, TRUE, PICK_LOCK ), 0 , FALSE );
+			state = GetAnimStateForInteraction(pSoldier, TRUE, PICK_LOCK);
 			break;
-	}
 
+		default: return;
+	}
+	ChangeSoldierState(pSoldier, state, 0 , FALSE);
 }
 
 

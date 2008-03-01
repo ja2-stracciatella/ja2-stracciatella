@@ -713,28 +713,22 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// END: GOTO AIM STANCE BASED ON HEIGHT
 						// If we are a robot - we need to do stuff different here
+						UINT16 state;
 						if ( AM_A_ROBOT( pSoldier ) )
 						{
-							ChangeSoldierState( pSoldier, STANDING, 0 , FALSE );
+							state = STANDING;
 						}
 						else
 						{
 							switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 							{
-								case ANIM_STAND:
-									ChangeSoldierState( pSoldier, AIM_RIFLE_STAND, 0 , FALSE );
-									break;
-
-								case ANIM_PRONE:
-									ChangeSoldierState( pSoldier, AIM_RIFLE_PRONE, 0 , FALSE );
-									break;
-
-								case ANIM_CROUCH:
-									ChangeSoldierState( pSoldier, AIM_RIFLE_CROUCH, 0 , FALSE );
-									break;
-
+								case ANIM_STAND:  state = AIM_RIFLE_STAND;  break;
+								case ANIM_PRONE:  state = AIM_RIFLE_PRONE;  break;
+								case ANIM_CROUCH: state = AIM_RIFLE_CROUCH; break;
+								default:          return TRUE;
 							}
 						}
+						ChangeSoldierState(pSoldier, state, 0, FALSE);
 						return( TRUE );
 					}
 
@@ -1047,32 +1041,25 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								}
 							}
 
+							UINT16 state;
 							if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH )
 							{
 								if ( fNPCPunch )
 								{
 									ChangeSoldierStance( pSoldier, ANIM_STAND );
-									return( TRUE );
+									return TRUE;
 								}
 								else
 								{
-									ChangeSoldierState( pSoldier, CROUCHING, 0, FALSE );
-									return( TRUE );
+									state = CROUCHING;
 								}
 							}
 							else
 							{
-								if ( fMartialArtist && !AreInMeanwhile( ) )
-								{
-									ChangeSoldierState( pSoldier, NINJA_BREATH, 0, FALSE );
-									return( TRUE );
-								}
-								else
-								{
-									ChangeSoldierState( pSoldier, PUNCH_BREATH, 0, FALSE );
-									return( TRUE );
-								}
+								state = (fMartialArtist && !AreInMeanwhile() ? NINJA_BREATH : PUNCH_BREATH);
 							}
+							ChangeSoldierState(pSoldier, state, 0, FALSE);
+							return TRUE;
 						}
 					}
 
@@ -1680,71 +1667,33 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
 						{
 							// If we are dead, play some death animations!!
-							switch( pSoldier->usAnimState )
+							UINT16 state;
+							switch (pSoldier->usAnimState)
 							{
-								case FLYBACK_HIT:
-									ChangeSoldierState( pSoldier, FLYBACK_HIT_DEATH, 0, FALSE );
-									break;
-
+								case FLYBACK_HIT:                   state = FLYBACK_HIT_DEATH;        break;
 								case GENERIC_HIT_DEATHTWITCHNB:
 								case FALLFORWARD_FROMHIT_STAND:
-								case ENDFALLFORWARD_FROMHIT_CROUCH:
-
-									ChangeSoldierState( pSoldier, GENERIC_HIT_DEATH, 0, FALSE );
-									break;
-
+								case ENDFALLFORWARD_FROMHIT_CROUCH: state = GENERIC_HIT_DEATH;        break;
 								case FALLBACK_HIT_DEATHTWITCHNB:
-								case FALLBACK_HIT_STAND:
-									ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATH, 0, FALSE );
-									break;
-
+								case FALLBACK_HIT_STAND:            state = FALLBACK_HIT_DEATH;       break;
 								case PRONE_HIT_DEATHTWITCHNB:
-								case PRONE_LAY_FROMHIT:
-
-									ChangeSoldierState( pSoldier, PRONE_HIT_DEATH, 0, FALSE );
-									break;
-
-								case FALLOFF:
-									ChangeSoldierState( pSoldier, FALLOFF_DEATH, 0, FALSE );
-									break;
-
-								case FALLFORWARD_ROOF:
-									ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH, 0, FALSE);
-									break;
-
-								case ADULTMONSTER_DYING:
-									ChangeSoldierState( pSoldier, ADULTMONSTER_DYING_STOP, 0, FALSE);
-									break;
-
-								case LARVAE_DIE:
-									ChangeSoldierState( pSoldier, LARVAE_DIE_STOP, 0, FALSE);
-									break;
-
-								case QUEEN_DIE:
-									ChangeSoldierState( pSoldier, QUEEN_DIE_STOP, 0, FALSE);
-									break;
-
-								case INFANT_DIE:
-									ChangeSoldierState( pSoldier, INFANT_DIE_STOP, 0, FALSE);
-									break;
-
-								case CRIPPLE_DIE:
-									ChangeSoldierState( pSoldier, CRIPPLE_DIE_STOP, 0, FALSE);
-									break;
-
-								case ROBOTNW_DIE:
-									ChangeSoldierState( pSoldier, ROBOTNW_DIE_STOP, 0, FALSE);
-									break;
-
-								case CRIPPLE_DIE_FLYBACK:
-									ChangeSoldierState( pSoldier, CRIPPLE_DIE_FLYBACK_STOP, 0, FALSE);
-									break;
+								case PRONE_LAY_FROMHIT:             state = PRONE_HIT_DEATH;          break;
+								case FALLOFF:                       state = FALLOFF_DEATH;            break;
+								case FALLFORWARD_ROOF:              state = FALLOFF_FORWARD_DEATH;    break;
+								case ADULTMONSTER_DYING:            state = ADULTMONSTER_DYING_STOP;  break;
+								case LARVAE_DIE:                    state = LARVAE_DIE_STOP;          break;
+								case QUEEN_DIE:                     state = QUEEN_DIE_STOP;           break;
+								case INFANT_DIE:                    state = INFANT_DIE_STOP;          break;
+								case CRIPPLE_DIE:                   state = CRIPPLE_DIE_STOP;         break;
+								case ROBOTNW_DIE:                   state = ROBOTNW_DIE_STOP;         break;
+								case CRIPPLE_DIE_FLYBACK:           state = CRIPPLE_DIE_FLYBACK_STOP; break;
 
 								default:
 									// IF we are here - something is wrong - we should have a death animation here
 									DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: Death sequence needed for animation %d", pSoldier->usAnimState ) );
-
+									return TRUE;
 							}
+							ChangeSoldierState(pSoldier, state, 0, FALSE);
 						}
 						else
 						{
@@ -1968,45 +1917,30 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							return( TRUE );
 						}
 						SoldierGotoStationaryStance( pSoldier );
-						return( TRUE );
 					}
 					else
 					{
 						ubCurrentHeight = gAnimControl[ pSoldier->usAnimState ].ubEndHeight;
 
 						// We need to go more, continue
-						if ( ubDesiredHeight == ANIM_STAND && ubCurrentHeight == ANIM_CROUCH )
+						UINT16 state;
+						if      (ubDesiredHeight == ANIM_STAND  && ubCurrentHeight == ANIM_CROUCH) state = KNEEL_UP;
+						else if (ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_STAND)  state = KNEEL_DOWN;
+						else if (ubDesiredHeight == ANIM_PRONE  && ubCurrentHeight == ANIM_CROUCH) state = PRONE_DOWN;
+						else if (ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_PRONE)  state = PRONE_UP;
+						else
 						{
-							 // Return here because if now, we will skipp a few frames
-							 ChangeSoldierState( pSoldier, KNEEL_UP, 0 , FALSE );
-							 return( TRUE );
+							// IF we are here - something is wrong - we should have a death animation here
+#ifdef JA2BETAVERSION
+							ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
+#endif
+							SoldierGotoStationaryStance(pSoldier);
+							return TRUE;
 						}
-						if ( ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_STAND )
-						{
-							 // Return here because if now, we will skipp a few frames
-							 ChangeSoldierState( pSoldier, KNEEL_DOWN, 0 , FALSE );
-							 return( TRUE );
-						}
-						else if ( ubDesiredHeight == ANIM_PRONE && ubCurrentHeight == ANIM_CROUCH )
-						{
-							 // Return here because if now, we will skipp a few frames
-							 ChangeSoldierState( pSoldier, PRONE_DOWN, 0 , FALSE );
-							 return( TRUE );
-						}
-						else if ( ubDesiredHeight == ANIM_CROUCH && ubCurrentHeight == ANIM_PRONE )
-						{
-							 // Return here because if now, we will skipp a few frames
-							 ChangeSoldierState( pSoldier, PRONE_UP, 0 , FALSE );
-							 return( TRUE );
-						}
+						// Return here because if now, we will skip a few frames
+						ChangeSoldierState(pSoldier, state, 0, FALSE);
 					}
-					// IF we are here - something is wrong - we should have a death animation here
-					#ifdef JA2BETAVERSION
-						ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"Soldier Ani: GOTO Stance not chained properly: %d %d %d", ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState );
-					#endif
-
-					SoldierGotoStationaryStance( pSoldier );
-					return( TRUE );
+					return TRUE;
 			}
 
 			// Adjust frame control pos, and try again
@@ -3142,62 +3076,30 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier)
 
 void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse)
 {
+	if (!HandleSoldierDeath(pSoldier, pfMadeCorpse)) return;
 
-	if ( HandleSoldierDeath( pSoldier, pfMadeCorpse ) )
+	// Select approriate death
+	UINT16 state;
+	switch( pSoldier->usAnimState )
 	{
-		// Select approriate death
-		switch( pSoldier->usAnimState )
-		{
-			case FLYBACK_HIT_DEATH:
-				ChangeSoldierState( pSoldier, FLYBACK_HITDEATH_STOP, 0, FALSE );
-				break;
+		case FLYBACK_HIT_DEATH:     state = FLYBACK_HITDEATH_STOP;      break;
+		case GENERIC_HIT_DEATH:     state = FALLFORWARD_HITDEATH_STOP;  break;
+		case FALLBACK_HIT_DEATH:    state = FALLBACK_HITDEATH_STOP;     break;
+		case PRONE_HIT_DEATH:       state = PRONE_HITDEATH_STOP;        break;
+		case JFK_HITDEATH:          state = JFK_HITDEATH_STOP;          break;
+		case FALLOFF_DEATH:         state = FALLOFF_DEATH_STOP;         break;
+		case FALLOFF_FORWARD_DEATH: state = FALLOFF_FORWARD_DEATH_STOP; break;
+		case WATER_DIE:             state = WATER_DIE_STOP;             break;
+		case DEEP_WATER_DIE:        state = DEEP_WATER_DIE_STOPPING;    break;
+		case COW_DYING:             state = COW_DYING_STOP;             break;
+		case BLOODCAT_DYING:        state = BLOODCAT_DYING_STOP;        break;
 
-			case GENERIC_HIT_DEATH:
-				ChangeSoldierState( pSoldier, FALLFORWARD_HITDEATH_STOP, 0, FALSE );
-				break;
-
-			case FALLBACK_HIT_DEATH:
-				ChangeSoldierState( pSoldier, FALLBACK_HITDEATH_STOP, 0, FALSE );
-				break;
-
-			case PRONE_HIT_DEATH:
-				ChangeSoldierState( pSoldier, PRONE_HITDEATH_STOP, 0, FALSE );
-				break;
-
-			case JFK_HITDEATH:
-				ChangeSoldierState( pSoldier, JFK_HITDEATH_STOP, 0, FALSE );
-				break;
-
-			case FALLOFF_DEATH:
-				ChangeSoldierState( pSoldier, FALLOFF_DEATH_STOP, 0, FALSE );
-				break;
-
-			case FALLOFF_FORWARD_DEATH:
-				ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH_STOP, 0, FALSE );
-				break;
-
-			case WATER_DIE:
-				ChangeSoldierState( pSoldier, WATER_DIE_STOP, 0, FALSE );
-				break;
-
-			case DEEP_WATER_DIE:
-				ChangeSoldierState( pSoldier, DEEP_WATER_DIE_STOPPING, 0, FALSE );
-				break;
-
-			case COW_DYING:
-				ChangeSoldierState( pSoldier, COW_DYING_STOP, 0, FALSE);
-				break;
-
-			case BLOODCAT_DYING:
-				ChangeSoldierState( pSoldier, BLOODCAT_DYING_STOP, 0, FALSE);
-				break;
-
-			default:
-
-				// IF we are here - something is wrong - we should have an animation stop here
-				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 440 Error, Death STOP not handled" );
-		}
+		default:
+			// IF we are here - something is wrong - we should have an animation stop here
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: CODE 440 Error, Death STOP not handled" );
+			return;
 	}
+	ChangeSoldierState(pSoldier, state, 0, FALSE);
 }
 
 
@@ -3208,293 +3110,209 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 {
 	INT16					sNewGridNo;
 
-	if ( pSoldier->bLife < OKLIFE )
+	if (pSoldier->bLife >= OKLIFE) return;
+
+	// Cancel services here...
+	ReceivingSoldierCancelServices( pSoldier );
+	GivingSoldierCancelServices( pSoldier );
+
+
+	// If we are a monster, set life to zero ( no unconscious )
+	switch( pSoldier->ubBodyType )
 	{
-		// Cancel services here...
-		ReceivingSoldierCancelServices( pSoldier );
-		GivingSoldierCancelServices( pSoldier );
+		case ADULTFEMALEMONSTER:
+		case AM_MONSTER:
+		case YAF_MONSTER:
+		case YAM_MONSTER:
+		case LARVAE_MONSTER:
+		case INFANT_MONSTER:
+		case CRIPPLECIV:
+		case ROBOTNOWEAPON:
+		case QUEENMONSTER:
+		case TANK_NW:
+		case TANK_NE:
 
+			pSoldier->bLife = 0;
+			break;
+	}
 
-		// If we are a monster, set life to zero ( no unconscious )
-		switch( pSoldier->ubBodyType )
+	// OK, if we are in a meanwhile and this is elliot...
+	if ( AreInMeanwhile( ) )
+	{
+		const SOLDIERTYPE* const pQueen = FindSoldierByProfileID(QUEEN);
+		if ( pQueen )
 		{
-			case ADULTFEMALEMONSTER:
-			case AM_MONSTER:
-			case YAF_MONSTER:
-			case YAM_MONSTER:
-			case LARVAE_MONSTER:
-			case INFANT_MONSTER:
-			case CRIPPLECIV:
-			case ROBOTNOWEAPON:
-			case QUEENMONSTER:
-			case TANK_NW:
-			case TANK_NE:
-
-				pSoldier->bLife = 0;
-				break;
+			TriggerNPCWithGivenApproach( QUEEN, APPROACH_DONE_SLAPPED, FALSE );
 		}
+	}
 
-		// OK, if we are in a meanwhile and this is elliot...
-		if ( AreInMeanwhile( ) )
+	// We are unconscious now, play randomly, this animation continued, or a new death
+	if ( CheckSoldierHitRoof( pSoldier ) )
+	{
+		return;
+	}
+
+	// If guy is now dead, play sound!
+	if ( pSoldier->bLife == 0  )
+	{
+		if ( !AreInMeanwhile() )
 		{
-			const SOLDIERTYPE* const pQueen = FindSoldierByProfileID(QUEEN);
-			if ( pQueen )
-			{
-				TriggerNPCWithGivenApproach( QUEEN, APPROACH_DONE_SLAPPED, FALSE );
-			}
+			DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+			pSoldier->fDeadSoundPlayed = TRUE;
 		}
+	}
 
-		// We are unconscious now, play randomly, this animation continued, or a new death
-		if ( CheckSoldierHitRoof( pSoldier ) )
-		{
-			return;
-		}
-
-		// If guy is now dead, play sound!
-		if ( pSoldier->bLife == 0  )
-		{
-			if ( !AreInMeanwhile() )
-			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
-  			pSoldier->fDeadSoundPlayed = TRUE;
-			}
-		}
-
-		// Randomly fall back or forward, if we are in the standing hit animation
-		if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == STANDING_BURST_HIT || pSoldier->usAnimState == RIFLE_STAND_HIT )
-		{
-			INT8			bTestDirection = pSoldier->bDirection;
-			BOOLEAN		fForceDirection = FALSE;
-			BOOLEAN		fDoFallback			= FALSE;
+	// Randomly fall back or forward, if we are in the standing hit animation
+	if ( pSoldier->usAnimState == GENERIC_HIT_STAND || pSoldier->usAnimState == STANDING_BURST_HIT || pSoldier->usAnimState == RIFLE_STAND_HIT )
+	{
+		INT8			bTestDirection = pSoldier->bDirection;
+		BOOLEAN		fForceDirection = FALSE;
+		BOOLEAN		fDoFallback			= FALSE;
 
 
-			// TRY FALLING BACKWARDS, ( ONLY IF WE ARE A MERC! )
+		// TRY FALLING BACKWARDS, ( ONLY IF WE ARE A MERC! )
 #ifdef TESTFALLBACK
-			if ( IS_MERC_BODY_TYPE( pSoldier ) )
+		if ( IS_MERC_BODY_TYPE( pSoldier ) )
 #elif defined ( TESTFALLFORWARD )
-			if ( 0 )
+		if ( 0 )
 #else
-			if ( Random(100 ) > 40 && IS_MERC_BODY_TYPE( pSoldier ) && !IsProfileATerrorist( pSoldier->ubProfile ) )
+		if ( Random(100 ) > 40 && IS_MERC_BODY_TYPE( pSoldier ) && !IsProfileATerrorist( pSoldier->ubProfile ) )
 #endif
+		{
+			// CHECK IF WE HAVE AN ATTACKER, TAKE OPPOSITE DIRECTION!
+			const SOLDIERTYPE* const attacker = pSoldier->attacker;
+			if (attacker != NULL)
 			{
-				// CHECK IF WE HAVE AN ATTACKER, TAKE OPPOSITE DIRECTION!
-				const SOLDIERTYPE* const attacker = pSoldier->attacker;
-				if (attacker != NULL)
-				{
-					// Find direction!
-					bTestDirection = (INT8)GetDirectionFromGridNo(attacker->sGridNo, pSoldier);
-					fForceDirection = TRUE;
-				}
+				// Find direction!
+				bTestDirection = (INT8)GetDirectionFromGridNo(attacker->sGridNo, pSoldier);
+				fForceDirection = TRUE;
+			}
 
-				sNewGridNo = pSoldier->sGridNo;
+			sNewGridNo = pSoldier->sGridNo;
+
+			if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, bTestDirection, FALLBACK_HIT_STAND ) )
+			{
+				// SECOND GRIDNO
+				sNewGridNo = NewGridNo(sNewGridNo, DirectionInc(OppositeDirection(bTestDirection)));
 
 				if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, bTestDirection, FALLBACK_HIT_STAND ) )
 				{
-					// SECOND GRIDNO
-					sNewGridNo = NewGridNo(sNewGridNo, DirectionInc(OppositeDirection(bTestDirection)));
-
-					if ( OKFallDirection( pSoldier, sNewGridNo, pSoldier->bLevel, bTestDirection, FALLBACK_HIT_STAND ) )
+					// ALL'S OK HERE..... IF WE FORCED DIRECTION, SET!
+					if ( fForceDirection )
 					{
-						// ALL'S OK HERE..... IF WE FORCED DIRECTION, SET!
-						if ( fForceDirection )
-						{
-							EVENT_SetSoldierDesiredDirection( pSoldier, bTestDirection );
-							EVENT_SetSoldierDirection( pSoldier, bTestDirection );
-						}
-						ChangeToFallbackAnimation( pSoldier, pSoldier->bDirection );
-						return;
+						EVENT_SetSoldierDesiredDirection( pSoldier, bTestDirection );
+						EVENT_SetSoldierDirection( pSoldier, bTestDirection );
 					}
-					else
-					{
-						fDoFallback = TRUE;
-					}
+					ChangeToFallbackAnimation( pSoldier, pSoldier->bDirection );
+					return;
 				}
 				else
 				{
 					fDoFallback = TRUE;
 				}
-
 			}
 			else
 			{
 				fDoFallback = TRUE;
 			}
 
-			if ( fDoFallback )
-			{
-				// 1 )REC DIRECTION
-				// 2 ) SET FLAG FOR STARTING TO FALL
-        BeginTyingToFall( pSoldier );
-				ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
-				return;
-			}
-
-		}
-		else if ( pSoldier->usAnimState == GENERIC_HIT_CROUCH )
-		{
-			ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_CROUCH, 0 , FALSE);
-      BeginTyingToFall( pSoldier );
-			return;
-		}
-		else if ( pSoldier->usAnimState == GENERIC_HIT_PRONE )
-		{
-			ChangeSoldierState( pSoldier, PRONE_LAY_FROMHIT, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == ADULTMONSTER_HIT )
-		{
-			ChangeSoldierState( pSoldier, ADULTMONSTER_DYING, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == LARVAE_HIT )
-		{
-			ChangeSoldierState( pSoldier, LARVAE_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == QUEEN_HIT )
-		{
-			ChangeSoldierState( pSoldier, QUEEN_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == CRIPPLE_HIT )
-		{
-			ChangeSoldierState( pSoldier, CRIPPLE_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == ROBOTNW_HIT )
-		{
-			ChangeSoldierState( pSoldier, ROBOTNW_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == INFANT_HIT )
-		{
-			ChangeSoldierState( pSoldier, INFANT_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == COW_HIT )
-		{
-			ChangeSoldierState( pSoldier, COW_DYING, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == BLOODCAT_HIT )
-		{
-			ChangeSoldierState( pSoldier, BLOODCAT_DYING, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == WATER_HIT )
-		{
-			ChangeSoldierState( pSoldier, WATER_DIE, 0 , FALSE );
-			return;
-		}
-		else if ( pSoldier->usAnimState == DEEP_WATER_HIT )
-		{
-			ChangeSoldierState( pSoldier, DEEP_WATER_DIE, 0 , FALSE );
-			return;
 		}
 		else
 		{
-			// We have missed something here - send debug msg
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: Genmeric hit not chained" );
+			fDoFallback = TRUE;
+		}
+
+		if ( fDoFallback )
+		{
+			// 1 )REC DIRECTION
+			// 2 ) SET FLAG FOR STARTING TO FALL
+			BeginTyingToFall( pSoldier );
+			ChangeSoldierState( pSoldier, FALLFORWARD_FROMHIT_STAND, 0, FALSE );
+			return;
 		}
 	}
+	else
+	{
+		UINT16 state;
+		switch (pSoldier->usAnimState)
+		{
+			case GENERIC_HIT_CROUCH:
+				ChangeSoldierState(pSoldier, FALLFORWARD_FROMHIT_CROUCH, 0, FALSE);
+				BeginTyingToFall(pSoldier);
+				return;
 
+			case GENERIC_HIT_PRONE: state = PRONE_LAY_FROMHIT;  break;
+			case ADULTMONSTER_HIT:  state = ADULTMONSTER_DYING; break;
+			case LARVAE_HIT:        state = LARVAE_DIE;         break;
+			case QUEEN_HIT:         state = QUEEN_DIE;          break;
+			case CRIPPLE_HIT:       state = CRIPPLE_DIE;        break;
+			case ROBOTNW_HIT:       state = ROBOTNW_DIE;        break;
+			case INFANT_HIT:        state = INFANT_DIE;         break;
+			case COW_HIT:           state = COW_DYING;          break;
+			case BLOODCAT_HIT:      state = BLOODCAT_DYING;     break;
+			case WATER_HIT:         state = WATER_DIE;          break;
+			case DEEP_WATER_HIT:    state = DEEP_WATER_DIE;     break;
+
+			default:
+				// We have missed something here - send debug msg
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Soldier Ani: Genmeric hit not chained");
+				return;
+		}
+		ChangeSoldierState(pSoldier, state, 0, FALSE);
+	}
 }
 
 
 BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 {
-	if ( pSoldier->bLife == 0 )
+	if (pSoldier->bLife != 0) return FALSE;
+
+	DoMercBattleSound(pSoldier, BATTLE_SOUND_DIE1);
+	pSoldier->fDeadSoundPlayed = TRUE;
+
+	// Increment  being attacked count
+	pSoldier->bBeingAttackedCount++;
+
+	if (gGameSettings.fOptions[TOPTION_BLOOD_N_GORE])
 	{
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
-		pSoldier->fDeadSoundPlayed = TRUE;
-
-	  // Increment  being attacked count
-	  pSoldier->bBeingAttackedCount++;
-
-		if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
+		UINT16 state;
+		switch (pSoldier->usAnimState)
 		{
-			switch( pSoldier->usAnimState )
-			{
-				case FLYBACKHIT_STOP:
-					ChangeSoldierState( pSoldier, FLYBACK_HIT_DEATH, 0, FALSE );
-					break;
+			case FLYBACKHIT_STOP:            state = FLYBACK_HIT_DEATH;     break;
+			case FALLFORWARD_FROMHIT_STAND:
+			case FALLFORWARD_FROMHIT_CROUCH:
+			case STAND_FALLFORWARD_STOP:     state = GENERIC_HIT_DEATH;     break;
+			case FALLBACKHIT_STOP:           state = FALLBACK_HIT_DEATH;    break;
+			case PRONE_LAYFROMHIT_STOP:
+			case PRONE_LAY_FROMHIT:          state = PRONE_HIT_DEATH;       break;
+			case FALLOFF_STOP:               state = FALLOFF_DEATH;         break;
+			case FALLOFF_FORWARD_STOP:       state = FALLOFF_FORWARD_DEATH; break;
+			case ADULTMONSTER_HIT:           state = ADULTMONSTER_DYING;    break;
+			case LARVAE_HIT:                 state = LARVAE_DIE;            break;
+			case QUEEN_HIT:                  state = QUEEN_DIE;             break;
+			case CRIPPLE_HIT:                state = CRIPPLE_DIE;           break;
+			case ROBOTNW_HIT:                state = ROBOTNW_DIE;           break;
+			case INFANT_HIT:                 state = INFANT_DIE;            break;
+			case COW_HIT:                    state = COW_DYING;             break;
+			case BLOODCAT_HIT:               state = BLOODCAT_DYING;        break;
 
-				case FALLFORWARD_FROMHIT_STAND:
-				case FALLFORWARD_FROMHIT_CROUCH:
-				case STAND_FALLFORWARD_STOP:
-					ChangeSoldierState( pSoldier, GENERIC_HIT_DEATH, 0, FALSE );
-					break;
-
-				case FALLBACKHIT_STOP:
-					ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATH, 0, FALSE );
-					break;
-
-				case PRONE_LAYFROMHIT_STOP:
-        case PRONE_LAY_FROMHIT:
-
-					ChangeSoldierState( pSoldier, PRONE_HIT_DEATH, 0, FALSE );
-					break;
-
-				case FALLOFF_STOP:
-					ChangeSoldierState( pSoldier, FALLOFF_DEATH, 0, FALSE );
-					break;
-
-				case FALLOFF_FORWARD_STOP:
-					ChangeSoldierState( pSoldier, FALLOFF_FORWARD_DEATH, 0, FALSE);
-					break;
-
-        case ADULTMONSTER_HIT:
-    			ChangeSoldierState( pSoldier, ADULTMONSTER_DYING, 0 , FALSE );
-		    	break;
-
-        case LARVAE_HIT:
-	    		ChangeSoldierState( pSoldier, LARVAE_DIE, 0 , FALSE );
-			    break;
-
-        case QUEEN_HIT:
-    			ChangeSoldierState( pSoldier, QUEEN_DIE, 0 , FALSE );
-		    	break;
-
-        case CRIPPLE_HIT:
-    			ChangeSoldierState( pSoldier, CRIPPLE_DIE, 0 , FALSE );
-		    	break;
-
-        case ROBOTNW_HIT:
-    			ChangeSoldierState( pSoldier, ROBOTNW_DIE, 0 , FALSE );
-			    break;
-
-        case INFANT_HIT:
-    			ChangeSoldierState( pSoldier, INFANT_DIE, 0 , FALSE );
-		    	break;
-
-        case COW_HIT:
-    			ChangeSoldierState( pSoldier, COW_DYING, 0 , FALSE );
-		    	break;
-
-        case BLOODCAT_HIT:
-    			ChangeSoldierState( pSoldier, BLOODCAT_DYING, 0 , FALSE );
-		    	break;
-
-				default:
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Death state %d has no death hit", pSoldier->usAnimState ) );
-					{
-						BOOLEAN fMadeCorpse;
-						CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
-					}
-					break;
-
-			}
+			default:
+				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Death state %d has no death hit", pSoldier->usAnimState ) );
+				{
+					BOOLEAN fMadeCorpse;
+					CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
+				}
+				return TRUE;
 		}
-		else
-		{
-			BOOLEAN fMadeCorpse;
-
-			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
-		}
-		return( TRUE );
+		ChangeSoldierState(pSoldier, state, 0, FALSE);
 	}
+	else
+	{
+		BOOLEAN fMadeCorpse;
 
-	return( FALSE );
+		CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
+	}
+	return( TRUE );
 }
 
 
@@ -3530,57 +3348,27 @@ static BOOLEAN HandleUnjamAnimation(SOLDIERTYPE* pSoldier)
 	pSoldier->uiPendingActionData1 = pSoldier->usAniCode;
 	pSoldier->sPendingActionData2  = pSoldier->usAnimState;
 	// Check what animatnion we should do.....
-	switch( pSoldier->usAnimState )
+	UINT16 state;
+	switch (pSoldier->usAnimState)
 	{
 		case SHOOT_RIFLE_STAND:
 		case STANDING_BURST:
-		case FIRE_STAND_BURST_SPREAD:
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, STANDING_SHOOT_UNJAM, 0 , FALSE );
-			return( TRUE );
-
+		case FIRE_STAND_BURST_SPREAD: state = STANDING_SHOOT_UNJAM;      break;
 		case PRONE_BURST:
-		case SHOOT_RIFLE_PRONE:
-
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, PRONE_SHOOT_UNJAM, 0 , FALSE );
-			return( TRUE );
-
+		case SHOOT_RIFLE_PRONE:       state = PRONE_SHOOT_UNJAM;         break;
 		case CROUCHED_BURST:
-		case SHOOT_RIFLE_CROUCH:
-
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, CROUCH_SHOOT_UNJAM, 0 , FALSE );
-			return( TRUE );
-
-		case SHOOT_DUAL_STAND:
-
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, STANDING_SHOOT_DWEL_UNJAM, 0 , FALSE );
-			return( TRUE );
-
-		case SHOOT_DUAL_PRONE:
-
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, PRONE_SHOOT_DWEL_UNJAM, 0 , FALSE );
-			return( TRUE );
-
-		case SHOOT_DUAL_CROUCH:
-
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, CROUCH_SHOOT_DWEL_UNJAM, 0 , FALSE );
-			return( TRUE );
-
+		case SHOOT_RIFLE_CROUCH:      state = CROUCH_SHOOT_UNJAM;        break;
+		case SHOOT_DUAL_STAND:        state = STANDING_SHOOT_DWEL_UNJAM; break;
+		case SHOOT_DUAL_PRONE:        state = PRONE_SHOOT_DWEL_UNJAM;    break;
+		case SHOOT_DUAL_CROUCH:       state = CROUCH_SHOOT_DWEL_UNJAM;   break;
 		case FIRE_LOW_STAND:
-		case FIRE_BURST_LOW_STAND:
+		case FIRE_BURST_LOW_STAND:    state = STANDING_SHOOT_LOW_UNJAM;  break;
 
-			// Normal shoot rifle.... play
-			ChangeSoldierState( pSoldier, STANDING_SHOOT_LOW_UNJAM, 0 , FALSE );
-			return( TRUE );
-
+		default: return FALSE;
 	}
-
-	return( FALSE );
+	// Normal shoot rifle.... play
+	ChangeSoldierState(pSoldier, state, 0 , FALSE);
+	return TRUE;
 }
 
 
@@ -3715,44 +3503,26 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 		}
 	}
 
+	UINT16 state;
 	switch( pSoldier->usAnimState )
 	{
-		case FLYBACK_HIT:
-			ChangeSoldierState( pSoldier, FLYBACKHIT_STOP, 0, FALSE );
-			break;
-
+		case FLYBACK_HIT:                   state = FLYBACKHIT_STOP;        break;
 		case GENERIC_HIT_DEATHTWITCHNB:
 		case FALLFORWARD_FROMHIT_STAND:
-		case ENDFALLFORWARD_FROMHIT_CROUCH:
-
-			ChangeSoldierState( pSoldier, STAND_FALLFORWARD_STOP, 0, FALSE );
-			break;
-
+		case ENDFALLFORWARD_FROMHIT_CROUCH: state = STAND_FALLFORWARD_STOP; break;
 		case FALLBACK_HIT_DEATHTWITCHNB:
-		case FALLBACK_HIT_STAND:
-			ChangeSoldierState( pSoldier, FALLBACKHIT_STOP, 0, FALSE );
-			break;
-
+		case FALLBACK_HIT_STAND:            state = FALLBACKHIT_STOP;       break;
 		case PRONE_HIT_DEATHTWITCHNB:
-		case PRONE_LAY_FROMHIT:
-
-			ChangeSoldierState( pSoldier, PRONE_LAYFROMHIT_STOP, 0, FALSE );
-			break;
-
-		case FALLOFF:
-			ChangeSoldierState( pSoldier, FALLOFF_STOP, 0, FALSE );
-			break;
-
-		case FALLFORWARD_ROOF:
-			ChangeSoldierState( pSoldier, FALLOFF_FORWARD_STOP, 0, FALSE);
-			break;
+		case PRONE_LAY_FROMHIT:             state = PRONE_LAYFROMHIT_STOP;  break;
+		case FALLOFF:                       state = FALLOFF_STOP;           break;
+		case FALLFORWARD_ROOF:              state = FALLOFF_FORWARD_STOP;   break;
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: unconscious hit sequence needed for animation %d", pSoldier->usAnimState ) );
-
+			return TRUE;
 	}
-
+	ChangeSoldierState(pSoldier, state, 0, FALSE);
 	return( TRUE );
 }
 

@@ -255,32 +255,16 @@ BOOLEAN InUIPlanMode( )
 }
 
 
-static void SelectPausedFireAnimation(SOLDIERTYPE* pSoldier)
+static void SelectPausedFireAnimation(SOLDIERTYPE* const s)
 {
 	// Determine which animation to do...depending on stance and gun in hand...
-
-	switch ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
+	UINT16 state;
+	switch (gAnimControl[s->usAnimState].ubEndHeight)
 	{
-		case ANIM_STAND:
-
-			if ( pSoldier->bDoBurst > 0 )
-			{
-				ChangeSoldierState( pSoldier, STANDING_BURST, 2 , FALSE );
-			}
-			else
-			{
-				ChangeSoldierState( pSoldier, SHOOT_RIFLE_STAND, 2 , FALSE );
-			}
-			break;
-
-		case ANIM_PRONE:
-			ChangeSoldierState( pSoldier, SHOOT_RIFLE_PRONE, 2 , FALSE );
-			break;
-
-		case ANIM_CROUCH:
-			ChangeSoldierState( pSoldier, SHOOT_RIFLE_CROUCH, 2 , FALSE );
-			break;
-
+		case ANIM_STAND:  state = (s->bDoBurst > 0 ? STANDING_BURST : SHOOT_RIFLE_STAND); break;
+		case ANIM_PRONE:  state = SHOOT_RIFLE_PRONE; break;
+		case ANIM_CROUCH: state = SHOOT_RIFLE_CROUCH; break;
+		default:          return;
 	}
-
+	ChangeSoldierState(s, state, 2, FALSE);
 }

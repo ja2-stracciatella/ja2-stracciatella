@@ -3033,26 +3033,13 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 	{
 		if ( pSoldier -> bAssignment == DOCTOR )
 		{
-			if ( guiCurrentScreen == GAME_SCREEN )
-			{
-				ChangeSoldierState( pSoldier, END_DOCTOR, 1, TRUE );
-			}
-			else
-			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
-			}
-
+			const UINT16 state = (guiCurrentScreen == GAME_SCREEN ? END_DOCTOR : STANDING);
+			ChangeSoldierState(pSoldier, state, 1, TRUE);
 		}
 		else if ( pSoldier -> bAssignment == REPAIR )
 		{
-			if ( guiCurrentScreen == GAME_SCREEN )
-			{
-				ChangeSoldierState( pSoldier, END_REPAIRMAN, 1, TRUE );
-			}
-			else
-			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
-			}
+			const UINT16 state = (guiCurrentScreen == GAME_SCREEN ? END_REPAIRMAN : STANDING);
+			ChangeSoldierState(pSoldier, state, 1, TRUE);
 		}
 		else if ( pSoldier -> bAssignment == PATIENT )
 		{
@@ -8015,14 +8002,8 @@ BOOLEAN PutMercInAsleepState( SOLDIERTYPE *pSoldier )
 	{
 		if( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
 		{
-			if( guiCurrentScreen == GAME_SCREEN )
-			{
-				ChangeSoldierState( pSoldier, GOTO_SLEEP, 1, TRUE );
-			}
-			else
-			{
-				ChangeSoldierState( pSoldier, SLEEPING, 1, TRUE );
-			}
+			const UINT16 state = (guiCurrentScreen == GAME_SCREEN ? GOTO_SLEEP : SLEEPING);
+			ChangeSoldierState(pSoldier, state, 1, TRUE);
 		}
 
 		// set merc asleep
@@ -8059,14 +8040,8 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 	{
 		if ( ( gfWorldLoaded ) && ( pSoldier->bInSector ) )
 		{
-			if ( guiCurrentScreen == GAME_SCREEN )
-			{
-				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
-			}
-			else
-			{
-				ChangeSoldierState( pSoldier, STANDING, 1, TRUE );
-			}
+			const UINT16 state = (guiCurrentScreen == GAME_SCREEN ? WKAEUP_FROM_SLEEP : STANDING);
+			ChangeSoldierState(pSoldier, state, 1, TRUE);
 		}
 
 		// set merc awake

@@ -525,14 +525,8 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 		{
 			if ( ubTargetStance != ANIM_PRONE )
 			{
-				if ( Random( 2 ) == 0 )
-				{
-					ChangeSoldierState( pSoldier, NINJA_LOWKICK, 0 , FALSE );
-				}
-				else
-				{
-					ChangeSoldierState( pSoldier, NINJA_PUNCH, 0 , FALSE );
-				}
+				const UINT16 state = (Random(2) == 0 ? NINJA_LOWKICK : NINJA_PUNCH);
+				ChangeSoldierState(pSoldier, state, 0, FALSE);
 
 				// CHECK IF HE CAN SEE US, IF SO CHANGE DIRECTION
 				if ( pTSoldier->bOppList[ pSoldier->ubID ] == 0 && pTSoldier->bTeam != pSoldier->bTeam )
@@ -3197,60 +3191,27 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	// CHECK FOR DOING HIT WHILE DOWN
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_HITSTOP ) )
 	{
-		switch( pSoldier->usAnimState )
+		UINT16 state;
+		switch (pSoldier->usAnimState)
 		{
-			case FLYBACKHIT_STOP:
-				ChangeSoldierState( pSoldier, FALLBACK_DEATHTWICH, 0, FALSE );
-				break;
-
-			case STAND_FALLFORWARD_STOP:
-				ChangeSoldierState( pSoldier, GENERIC_HIT_DEATHTWITCHNB, 0, FALSE );
-				break;
-
-			case JFK_HITDEATH_STOP:
-				ChangeSoldierState( pSoldier, JFK_HITDEATH_TWITCHB, 0, FALSE );
-				break;
-
-			case FALLBACKHIT_STOP:
-				ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATHTWITCHNB, 0, FALSE );
-				break;
-
-			case PRONE_LAYFROMHIT_STOP:
-				ChangeSoldierState( pSoldier, PRONE_HIT_DEATHTWITCHNB, 0, FALSE );
-				break;
-
-			case PRONE_HITDEATH_STOP:
-				ChangeSoldierState( pSoldier, PRONE_HIT_DEATHTWITCHB, 0 , FALSE );
-				break;
-
-			case FALLFORWARD_HITDEATH_STOP:
-				ChangeSoldierState( pSoldier, GENERIC_HIT_DEATHTWITCHB, 0 , FALSE );
-				break;
-
-			case FALLBACK_HITDEATH_STOP:
-				ChangeSoldierState( pSoldier, FALLBACK_HIT_DEATHTWITCHB, 0 , FALSE );
-				break;
-
-			case FALLOFF_DEATH_STOP:
-				ChangeSoldierState( pSoldier, FALLOFF_TWITCHB, 0 , FALSE );
-				break;
-
-			case FALLOFF_STOP:
-				ChangeSoldierState( pSoldier, FALLOFF_TWITCHNB, 0 , FALSE );
-				break;
-
-			case FALLOFF_FORWARD_DEATH_STOP:
-				ChangeSoldierState( pSoldier, FALLOFF_FORWARD_TWITCHB, 0 , FALSE );
-				break;
-
-			case FALLOFF_FORWARD_STOP:
-				ChangeSoldierState( pSoldier, FALLOFF_FORWARD_TWITCHNB, 0 , FALSE );
-				break;
+			case FLYBACKHIT_STOP:            state = FALLBACK_DEATHTWICH;        break;
+			case STAND_FALLFORWARD_STOP:     state = GENERIC_HIT_DEATHTWITCHNB;  break;
+			case JFK_HITDEATH_STOP:          state = JFK_HITDEATH_TWITCHB;       break;
+			case FALLBACKHIT_STOP:           state = FALLBACK_HIT_DEATHTWITCHNB; break;
+			case PRONE_LAYFROMHIT_STOP:      state = PRONE_HIT_DEATHTWITCHNB;    break;
+			case PRONE_HITDEATH_STOP:        state = PRONE_HIT_DEATHTWITCHB;     break;
+			case FALLFORWARD_HITDEATH_STOP:  state = GENERIC_HIT_DEATHTWITCHB;   break;
+			case FALLBACK_HITDEATH_STOP:     state = FALLBACK_HIT_DEATHTWITCHB;  break;
+			case FALLOFF_DEATH_STOP:         state = FALLOFF_TWITCHB;            break;
+			case FALLOFF_STOP:               state = FALLOFF_TWITCHNB;           break;
+			case FALLOFF_FORWARD_DEATH_STOP: state = FALLOFF_FORWARD_TWITCHB;    break;
+			case FALLOFF_FORWARD_STOP:       state = FALLOFF_FORWARD_TWITCHNB;   break;
 
 			default:
 				DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Control: Death state %d has no death hit", pSoldier->usAnimState ) );
-
+				return;
 		}
+		ChangeSoldierState(pSoldier, state, 0, FALSE);
 		return;
 	}
 
