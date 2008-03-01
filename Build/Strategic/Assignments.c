@@ -634,20 +634,14 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* s);
 
 
-BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
+BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 {
-	if( BasicCanCharacterTrainMilitia( pSoldier ) &&
-			MilitiaTrainingAllowedInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) &&
-			DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( pSoldier ) &&
-			!IsAreaFullOfMilitia(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) &&
-			( CountMilitiaTrainersInSoldiersSector( pSoldier ) < MAX_MILITIA_TRAINERS_PER_SECTOR ) )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return
+		BasicCanCharacterTrainMilitia(s)                                      &&
+		MilitiaTrainingAllowedInSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
+		DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(s)              &&
+		!IsAreaFullOfMilitia(s->sSectorX, s->sSectorY, s->bSectorZ)           &&
+		CountMilitiaTrainersInSoldiersSector(s) < MAX_MILITIA_TRAINERS_PER_SECTOR;
 }
 
 
