@@ -538,20 +538,11 @@ static BOOLEAN BasicCanCharacterRepair(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN CanCharacterRepairButDoesntHaveARepairkit(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterRepairButDoesntHaveARepairkit(const SOLDIERTYPE* const s)
 {
-	if ( BasicCanCharacterRepair( pSoldier ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	// make sure he actually doesn't have a toolkit
-	if ( FindObj( pSoldier, TOOLKIT ) != NO_SLOT )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		BasicCanCharacterRepair(s) &&
+		FindObj(s, TOOLKIT) == NO_SLOT; // make sure he actually doesn't have a toolkit
 }
 
 
