@@ -318,19 +318,6 @@ INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType  )
 }
 
 
-static INT8 GetDrugSideEffect(SOLDIERTYPE* pSoldier, UINT8 ubDrugType)
-{
-	// If we have a o-positive effect
-	if ( pSoldier->bDrugEffect[ ubDrugType ] > 0 )
-	{
-		return( 0 );
-	}
-	else
-	{
-		return( pSoldier->bDrugSideEffect[ ubDrugType ] );
-	}
-}
-
 void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
 {
 	INT8  bDrunkLevel;
