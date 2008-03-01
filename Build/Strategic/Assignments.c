@@ -2831,56 +2831,34 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 
 
 // this function will actually pass on the pts to the mercs stat
-static void TrainSoldierWithPts(SOLDIERTYPE* pSoldier, INT16 sTrainPts)
+static void TrainSoldierWithPts(SOLDIERTYPE* const s, const INT16 train_pts)
 {
-	UINT8 ubChangeStat = 0;
-
-	if( sTrainPts <= 0 )
-	{
-		return;
-	}
+	if (train_pts <= 0) return;
 
 	// which stat to modify?
-	switch( pSoldier -> bTrainStat )
+	UINT8 stat;
+	switch (s->bTrainStat)
 	{
-		case( STRENGTH ):
-			ubChangeStat = STRAMT;
-			break;
-		case( DEXTERITY ):
-			ubChangeStat = DEXTAMT;
-			break;
-		case( AGILITY ):
-			ubChangeStat = AGILAMT;
-			break;
-		case( HEALTH ):
-			ubChangeStat = HEALTHAMT;
-			break;
-		case( LEADERSHIP ):
-			ubChangeStat = LDRAMT;
-			break;
-		case( MARKSMANSHIP ):
-			ubChangeStat = MARKAMT;
-			break;
-		case( EXPLOSIVE_ASSIGN ):
-			ubChangeStat = EXPLODEAMT;
-			break;
-		case( MEDICAL ):
-			ubChangeStat = MEDICALAMT;
-			break;
-		case( MECHANICAL ):
-			ubChangeStat = MECHANAMT;
-			break;
+		case STRENGTH:         stat = STRAMT;     break;
+		case DEXTERITY:        stat = DEXTAMT;    break;
+		case AGILITY:          stat = AGILAMT;    break;
+		case HEALTH:           stat = HEALTHAMT;  break;
+		case LEADERSHIP:       stat = LDRAMT;     break;
+		case MARKSMANSHIP:     stat = MARKAMT;    break;
+		case EXPLOSIVE_ASSIGN: stat = EXPLODEAMT; break;
+		case MEDICAL:          stat = MEDICALAMT; break;
+		case MECHANICAL:       stat = MECHANAMT;  break;
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
 #ifdef JA2BETAVERSION
-			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", pSoldier->bTrainStat);
+			ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"TrainSoldierWithPts: ERROR - Unknown bTrainStat %d", s->bTrainStat);
 #endif
 			return;
 	}
 
 	// give this merc a few chances to increase a stat (TRUE means it's training, reverse evolution doesn't apply)
-	StatChange( pSoldier, ubChangeStat, sTrainPts, FROM_TRAINING );
+	StatChange(s, stat, train_pts, FROM_TRAINING);
 }
 
 
