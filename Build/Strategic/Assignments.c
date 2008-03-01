@@ -651,54 +651,21 @@ BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static BOOLEAN DoesTownHaveRatingToTrainMilitia(INT8 bTownId)
+BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* const s)
 {
-	// min loyalty rating?
-	if( ( gTownLoyalty[ bTownId ].ubRating < MIN_RATING_TO_TRAIN_TOWN ) )
-	{
-		// nope
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-
-BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* const pSoldier)
-{
-	INT8 bTownId = 0;
-	BOOLEAN fSamSitePresent = FALSE;
-
-
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if( pSoldier -> bSectorZ != 0 )
+	if (s->bSectorZ != 0) return FALSE;
+
+	const INT8 bTownId = GetTownIdForSector(s->sSectorX, s->sSectorY);
+	if (bTownId != BLANK_SECTOR)
 	{
-		return( FALSE );
+		// Does this town have sufficient loyalty to train militia?
+		return gTownLoyalty[bTownId].ubRating >= MIN_RATING_TO_TRAIN_TOWN;
 	}
-
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
-
-	// is there a town really here
-	if( bTownId == BLANK_SECTOR )
+	else
 	{
-		fSamSitePresent = IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
-
-		// if there is a sam site here
-		if( fSamSitePresent )
-		{
-			return( TRUE );
-		}
-
-		return( FALSE );
+		return IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ);
 	}
-
-	// does this town have sufficient loyalty to train militia
-	if( DoesTownHaveRatingToTrainMilitia( bTownId ) == FALSE )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
 }
 
 
