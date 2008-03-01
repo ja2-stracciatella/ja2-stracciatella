@@ -9005,58 +9005,22 @@ static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK)
 }
 
 
-void ResumeOldAssignment(SOLDIERTYPE* pSoldier)
+void ResumeOldAssignment(SOLDIERTYPE* const s)
 {
-	BOOLEAN fOldAssignmentInvalid = FALSE;
-
-
-	// ARM: I don't think the whole "old assignment" idea is a very good one, and I doubt the code that maintains that
-	// variable is very foolproof, plus what meaning does the old assignemnt have later, anyway?
-	// so I'd rather just settle for putting him into any squad:
-	fOldAssignmentInvalid = TRUE;
-
-/*
-	if ( pSoldier->bOldAssignment == pSoldier->bAssigment )
-	{
-		// no good: we rely on this to make sure guys training militia STOP training militia!
-		fOldAssignmentInvalid = TRUE;
-	}
-	else if( pSoldier->bOldAssignment == VEHICLE )
-	{
-		SetSoldierAssignment( pSoldier, ( INT8 )( pSoldier->bOldAssignment ), ( pSoldier->iVehicleId ), 0, 0 );
-
-		// it might not work - check
-		if ( pSoldier->bAssignment != VEHICLE )
-		{
-			fOldAssignmentInvalid = TRUE;
-		}
-	}
-	else if( pSoldier->bOldAssignment < ON_DUTY )
-	{
-		if( AddCharacterToSquad( pSoldier, pSoldier->bOldAssignment ) == FALSE )
-		{
-			fOldAssignmentInvalid = TRUE;
-		}
-	}
-	else
-	{
-		fOldAssignmentInvalid = TRUE;
-	}
-*/
-
-	if ( fOldAssignmentInvalid )
-	{
-		AddCharacterToAnySquad( pSoldier );
-	}
-
+	/* ARM: I don't think the whole "old assignment" idea is a very good one, and
+	 * I doubt the code that maintains that variable is very foolproof, plus what
+	 * meaning does the old assignemnt have later, anyway?  So I'd rather just
+	 * settle for putting him into any squad: */
+	AddCharacterToAnySquad(s);
 
 	// make sure the player has time to OK this before proceeding
 	StopTimeCompression();
 
-	// assignment has changed, redraw left side as well as the map (to update on/off duty icons)
-	fTeamPanelDirty = TRUE;
+	/* Assignment has changed, redraw left side as well as the map (to update
+	 * on/off duty icons) */
+	fTeamPanelDirty          = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
-	fMapPanelDirty = TRUE;
+	fMapPanelDirty           = TRUE;
 }
 
 
