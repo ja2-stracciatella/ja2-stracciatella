@@ -943,66 +943,6 @@ PathSt* RemoveHeadFromStrategicPath(PathSt* pList)
 
 	// return new head
 	return( pNewHead );
-
-}
-
-
-// remove node with this value.. starting at end and working it's way back
-static PathSt* RemoveSectorFromStrategicPathList(PathSt* pList, INT16 sX, INT16 sY)
-{
-	// find sector sX, sY ...then remove it
-	INT16 sSector = 0;
-	INT16 sCurrentSector = -1;
-	PathSt* pNode = pList;
-	PathSt* pPastNode = pList;
-
-	// get sector value
-	sSector = sX + ( sY * MAP_WORLD_X );
-
-	// check if there is a valid list
-	if( pNode == NULL )
-	{
-		return( pNode );
-	}
-
-	// get current sector value
-	sCurrentSector = ( INT16 )pNode -> uiSectorId;
-
-	// move to end of list
-	pNode = MoveToEndOfPathList( pNode );
-
-	// move through list
-	while( ( pNode )&&( sSector != sCurrentSector ) )
-	{
-		// set past node up
-		pPastNode = pNode;
-
-		// next value
-		pNode = pNode -> pPrev;
-
-		// get current sector value
-	  sCurrentSector = ( INT16 )pNode -> uiSectorId;
-	}
-
-	// no list left, sector not found
-	if( pNode == NULL )
-	{
-		return ( NULL );
-	}
-
-	// sector found...remove it
-	pPastNode->pNext = pNode -> pNext;
-
-	// remove node
-	MemFree( pNode );
-
-	// set up prev for next
-	pPastNode -> pNext -> pPrev = pPastNode;
-
-
-	pPastNode = MoveToBeginningOfPathList( pPastNode );
-
-	return ( pPastNode );
 }
 
 
