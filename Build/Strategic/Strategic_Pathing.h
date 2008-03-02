@@ -57,13 +57,6 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId );
 // copy paths
 PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath);
 
-/*
-// move character along path
-void MoveCharacterOnPath( SOLDIERTYPE *pCharacter );
-// move the whole team
-void MoveTeamOnFoot( void );
-*/
-
 // rebuild way points for strategic mapscreen path changes
 void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup);
 
