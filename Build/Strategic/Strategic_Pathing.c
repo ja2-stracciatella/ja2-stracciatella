@@ -478,7 +478,6 @@ PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSect
 	PathSt* pNode = NULL;
 	PathSt* pDeleteNode = NULL;
 	PathSt* pHeadOfPathList = pPath;
- INT32 iOldDelta = 0;
  iCurrentSectorNum=iStartSectorNum;
 
 
@@ -542,9 +541,6 @@ PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSect
 					}
      return NULL;
 	 }
-
-	 iOldDelta = iDelta;
-
 
 	 pHeadOfPathList = pNode;
 	 if(!pNode)
