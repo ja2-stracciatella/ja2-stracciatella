@@ -2361,7 +2361,7 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 	UpdateForContOverPortrait(s, TRUE);
 
 	// Remove any interactive tiles we could be over!
-	BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
+	BeginCurInteractiveTileCheck();
 }
 
 

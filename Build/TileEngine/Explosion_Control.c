@@ -867,7 +867,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 
 
 				// Remove any interactive tiles we could be over!
-				BeginCurInteractiveTileCheck( INTILE_CHECK_SELECTIVE );
+				BeginCurInteractiveTileCheck();
 
 				if ( pCurrent->fFlags & STRUCTURE_WALLSTUFF )
 				{

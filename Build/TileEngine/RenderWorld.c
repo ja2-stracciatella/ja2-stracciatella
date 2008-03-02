@@ -351,7 +351,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
 			ShouldCheckForMouseDetections())
 	{
-		BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
+		BeginCurInteractiveTileCheck();
 		// If we are in edit mode, don't do this...
 		fCheckForMouseDetections = !gfEditMode;
 	}

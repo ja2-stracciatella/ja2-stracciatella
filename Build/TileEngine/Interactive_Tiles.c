@@ -604,7 +604,7 @@ LEVELNODE* GetCurInteractiveTileGridNoAndStructure(INT16* const psGridNo, STRUCT
 }
 
 
-void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
+void BeginCurInteractiveTileCheck(void)
 {
 	gfOverIntTile = FALSE;
 
@@ -612,9 +612,9 @@ void BeginCurInteractiveTileCheck( UINT8 bCheckFlags )
 	gfCycleIntTile = FALSE;
 
 	// Reset some highest values
-	gCurIntTile.sHeighestScreenY	= 0;
-	gCurIntTile.fFound						= FALSE;
-	gCurIntTile.ubFlags						= bCheckFlags;
+	gCurIntTile.sHeighestScreenY = 0;
+	gCurIntTile.fFound           = FALSE;
+	gCurIntTile.ubFlags          = INTILE_CHECK_SELECTIVE;
 
 	// Reset stack values
 	gCurIntTileStack.bNum = 0;

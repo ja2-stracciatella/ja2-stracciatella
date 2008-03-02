@@ -2640,7 +2640,7 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 			{
 				s->fFlags &= ~STRUCTURE_HASITEMONTOP;
 				// Re-adjust interactive tile...
-				BeginCurInteractiveTileCheck(INTILE_CHECK_SELECTIVE);
+				BeginCurInteractiveTileCheck();
 			}
 		}
 	}

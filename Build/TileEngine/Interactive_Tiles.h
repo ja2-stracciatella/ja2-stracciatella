@@ -24,7 +24,7 @@ BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
 
-void BeginCurInteractiveTileCheck( UINT8 bCheckFlags );
+void BeginCurInteractiveTileCheck(void);
 void EndCurInteractiveTileCheck(void);
 void LogMouseOverInteractiveTile( INT16 sGridNo );
 BOOLEAN ShouldCheckForMouseDetections(void);

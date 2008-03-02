@@ -1110,7 +1110,7 @@ void ChangeInterfaceLevel( INT16 sLevel )
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 	// Remove any interactive tiles we could be over!
-	BeginCurInteractiveTileCheck( INTILE_CHECK_SELECTIVE );
+	BeginCurInteractiveTileCheck();
 	gfPlotNewMovement = TRUE;
   ErasePath(FALSE);
 }
