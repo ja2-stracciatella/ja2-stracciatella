@@ -94,30 +94,6 @@ static LEVELNODE* IsWallPresentAtGridno(INT16 sGridNo)
 }
 
 
-// OK, THIS FUNCTION RETURNS A LEVELNODE POINTER TO A WALL OF THE SAME ORIENTATION
-// AS WAS GIVEN. RETURNS NULL IF NONE FOUND.
-static LEVELNODE* GetWallLevelNodeOfSameOrientationAtGridno(INT16 sGridNo, INT8 ubOrientation)
-{
-	LEVELNODE *pNode = NULL;
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALLSTUFF );
-
-	while ( pStructure != NULL )
-	{
-		// Check orientation
-		if ( pStructure->ubWallOrientation == ubOrientation )
-		{
-			pNode = FindLevelNodeBasedOnStructure( sGridNo, pStructure );
-			return( pNode );
-		}
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALLSTUFF );
-	}
-
-	return( NULL );
-}
-
-
 LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT16 sGridNo, INT8 ubOrientation, STRUCTURE **ppStructure )
 {
 	LEVELNODE *pNode = NULL;
