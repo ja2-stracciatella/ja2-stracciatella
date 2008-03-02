@@ -5,12 +5,7 @@
 #include "WorldDef.h"
 
 
-#define INTTILE_DOOR_TILE_ONE			1
-
 #define INTTILE_DOOR_OPENSPEED	70
-
-#define	INTILE_CHECK_FULL						1
-#define	INTILE_CHECK_SELECTIVE			2
 
 
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection );

@@ -42,7 +42,6 @@
 typedef struct CUR_INTERACTIVE_TILE
 {
 	INT16      sGridNo;
-	UINT8      ubFlags;
 	INT16      sTileIndex;
 	INT16      sMaxScreenY;
 	INT16      sHeighestScreenY;
@@ -614,7 +613,6 @@ void BeginCurInteractiveTileCheck(void)
 	// Reset some highest values
 	gCurIntTile.sHeighestScreenY = 0;
 	gCurIntTile.fFound           = FALSE;
-	gCurIntTile.ubFlags          = INTILE_CHECK_SELECTIVE;
 
 	// Reset stack values
 	gCurIntTileStack.bNum = 0;
@@ -681,48 +679,81 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 
 	TileElem = &(gTileDatabase[pNode->usIndex]);
 
-	if ( gCurIntTile.ubFlags == INTILE_CHECK_SELECTIVE )
+	// See if we are on an interactable tile!
+	// Try and get struct data from levelnode pointer
+	pStructure = pNode->pStructureData;
+
+	// If no data, quit
+	if ( pStructure == NULL )
 	{
-		// See if we are on an interactable tile!
-		// Try and get struct data from levelnode pointer
-		pStructure = pNode->pStructureData;
+		return( FALSE );
+	}
 
-		// If no data, quit
-		if ( pStructure == NULL )
+	if ( !( pStructure->fFlags & ( STRUCTURE_OPENABLE | STRUCTURE_HASITEMONTOP ) ) )
+	{
+		return( FALSE );
+	}
+
+	const SOLDIERTYPE* const sel = GetSelectedMan();
+	if (sel != NULL && sel->ubBodyType == ROBOTNOWEAPON) return FALSE;
+
+	// If we are a door, we need a different definition of being visible than other structs
+	if ( pStructure->fFlags & STRUCTURE_ANYDOOR )
+	{
+		if ( !IsDoorVisibleAtGridNo( sGridNo ) )
 		{
 			return( FALSE );
 		}
 
-		if ( !( pStructure->fFlags & ( STRUCTURE_OPENABLE | STRUCTURE_HASITEMONTOP ) ) )
+		// OK, For a OPENED door, addition requirements are: need to be in 'HAND CURSOR' mode...
+		if ( pStructure->fFlags & STRUCTURE_OPEN )
 		{
-			return( FALSE );
-		}
-
-		const SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL && sel->ubBodyType == ROBOTNOWEAPON) return FALSE;
-
-		// If we are a door, we need a different definition of being visible than other structs
-		if ( pStructure->fFlags & STRUCTURE_ANYDOOR )
-		{
-			if ( !IsDoorVisibleAtGridNo( sGridNo ) )
+			//Are we in hand cursor mode?
+			if ( gCurrentUIMode != HANDCURSOR_MODE && gCurrentUIMode != ACTION_MODE )
 			{
 				return( FALSE );
 			}
+		}
 
-			// OK, For a OPENED door, addition requirements are: need to be in 'HAND CURSOR' mode...
-			if ( pStructure->fFlags & STRUCTURE_OPEN )
+		// If this option is on...
+		if ( !gGameSettings.fOptions[ TOPTION_SNAP_CURSOR_TO_DOOR ] )
+		{
+			if ( gCurrentUIMode != HANDCURSOR_MODE )
 			{
-				//Are we in hand cursor mode?
-				if ( gCurrentUIMode != HANDCURSOR_MODE && gCurrentUIMode != ACTION_MODE )
-				{
-					return( FALSE );
-				}
+				return( FALSE );
+			}
+		}
+	}
+	else
+	{
+		// IF we are a switch, reject in another direction...
+		if ( pStructure->fFlags & STRUCTURE_SWITCH )
+		{
+			// Find a new gridno based on switch's orientation...
+			INT16 sNewGridNo = NOWHERE;
+
+			switch( pStructure->pDBStructureRef->pDBStructure->ubWallOrientation )
+			{
+				case OUTSIDE_TOP_LEFT:
+				case INSIDE_TOP_LEFT:
+
+					// Move south...
+					sNewGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
+					break;
+
+				case OUTSIDE_TOP_RIGHT:
+				case INSIDE_TOP_RIGHT:
+
+					// Move east...
+					sNewGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
+					break;
+
 			}
 
-			// If this option is on...
-			if ( !gGameSettings.fOptions[ TOPTION_SNAP_CURSOR_TO_DOOR ] )
+			if ( sNewGridNo != NOWHERE )
 			{
-				if ( gCurrentUIMode != HANDCURSOR_MODE )
+				// If we are hidden by a roof, reject it!
+				if ( !gfBasement && IsRoofVisible2( sNewGridNo ) && !( gTacticalStatus.uiFlags&SHOW_ALL_ITEMS ) )
 				{
 					return( FALSE );
 				}
@@ -730,57 +761,21 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 		}
 		else
 		{
-			// IF we are a switch, reject in another direction...
-			if ( pStructure->fFlags & STRUCTURE_SWITCH )
+			// If we are hidden by a roof, reject it!
+			if ( !gfBasement && IsRoofVisible( sGridNo ) && !( gTacticalStatus.uiFlags&SHOW_ALL_ITEMS ) )
 			{
-				// Find a new gridno based on switch's orientation...
-				INT16 sNewGridNo = NOWHERE;
-
-				switch( pStructure->pDBStructureRef->pDBStructure->ubWallOrientation )
-				{
-					case OUTSIDE_TOP_LEFT:
-					case INSIDE_TOP_LEFT:
-
-						// Move south...
-						sNewGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-						break;
-
-					case OUTSIDE_TOP_RIGHT:
-					case INSIDE_TOP_RIGHT:
-
-						// Move east...
-						sNewGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-						break;
-
-				}
-
-				if ( sNewGridNo != NOWHERE )
-				{
-					// If we are hidden by a roof, reject it!
-					if ( !gfBasement && IsRoofVisible2( sNewGridNo ) && !( gTacticalStatus.uiFlags&SHOW_ALL_ITEMS ) )
-					{
-						return( FALSE );
-					}
-				}
-			}
-			else
-			{
-				// If we are hidden by a roof, reject it!
-				if ( !gfBasement && IsRoofVisible( sGridNo ) && !( gTacticalStatus.uiFlags&SHOW_ALL_ITEMS ) )
-				{
-					return( FALSE );
-				}
-			}
-		}
-
-		// Check if it's a hidden struct and we have not revealed anything!
-		if ( TileElem->uiFlags & HIDDEN_TILE )
-		{
-			if ( !IsHiddenStructureVisible( sGridNo, pNode->usIndex ) )
-			{
-				// Return false
 				return( FALSE );
 			}
+		}
+	}
+
+	// Check if it's a hidden struct and we have not revealed anything!
+	if ( TileElem->uiFlags & HIDDEN_TILE )
+	{
+		if ( !IsHiddenStructureVisible( sGridNo, pNode->usIndex ) )
+		{
+			// Return false
+			return( FALSE );
 		}
 	}
 
