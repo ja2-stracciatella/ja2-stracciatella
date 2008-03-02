@@ -622,43 +622,23 @@ LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
 }
 
 
-
-LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems )
+LEVELNODE* ConditionalGetCurInteractiveTileGridNoAndStructure(INT16* const psGridNo, STRUCTURE** const ppStructure, const BOOLEAN fRejectOnTopItems)
 {
-	LEVELNODE *pNode;
-	STRUCTURE	*pStructure;
-
-	*ppStructure = NULL;
-
-	pNode = InternalGetCurInteractiveTile( fRejectOnTopItems );
-
-	if ( pNode != NULL )
+	GridNo     g = NOWHERE;
+	STRUCTURE* s = NULL;
+	LEVELNODE* n = InternalGetCurInteractiveTile(fRejectOnTopItems);
+	if (n != NULL)
 	{
-		*psGridNo = gCurIntTile.sGridNo;
-	}
-	else
-	{
-		*psGridNo = NOWHERE;
-	}
-
-	if ( pNode != NULL )
-	{
-		if ( gCurIntTile.fStructure )
+		g = gCurIntTile.sGridNo;
+		if (gCurIntTile.fStructure)
 		{
-			pStructure = FindStructureByID( gCurIntTile.sGridNo, gCurIntTile.usStructureID );
-			if (pStructure == NULL)
-			{
-				*ppStructure = NULL;
-				return( NULL );
-			}
-			else
-			{
-				*ppStructure = pStructure;
-			}
+			s = FindStructureByID(g, gCurIntTile.usStructureID);
+			if (s == NULL) n = NULL;
 		}
 	}
-
-	return( pNode );
+	*ppStructure = s;
+	*psGridNo    = g;
+	return n;
 }
 
 
