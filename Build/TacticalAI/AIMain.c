@@ -432,8 +432,11 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 	if (gfTurnBasedAI)
 	{
-		if (GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart > DEADLOCK_DELAY &&
-				gUIDeadlockedSoldier == NOBODY)
+		if (GetJA2Clock() - gTacticalStatus.uiTimeSinceMercAIStart > DEADLOCK_DELAY
+#ifdef JA2TESTVERSION
+				&& gUIDeadlockedSoldier == NOBODY
+#endif
+			)
 		{
       // ATE: Display message that deadlock occured...
       LiveMessage( "Breaking Deadlock" );

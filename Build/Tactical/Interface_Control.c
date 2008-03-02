@@ -564,6 +564,7 @@ void RenderTopmostTacticalInterface( )
 		}
 	}
 
+#ifdef JA2TESTVERSION
 	if (gUIDeadlockedSoldier != NOBODY)
 	{
 		SetFont( LARGEFONT1 );
@@ -571,9 +572,8 @@ void RenderTopmostTacticalInterface( )
 		SetFontForeground( FONT_MCOLOR_WHITE );
 		gprintfdirty( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier  );
 		mprintf( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier );
-
 	}
-
+#endif
 
 	// Syncronize for upcoming soldier counters
 	SYNCTIMECOUNTER( );
