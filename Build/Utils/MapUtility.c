@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Input.h"
 #include "SGP.h"
 #include "Font.h"
 #include "HImage.h"

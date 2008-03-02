@@ -8,7 +8,6 @@
 #include "Render_Fun.h"
 #include "Render_Dirty.h"
 #include "MouseSystem.h"
-#include "Interface.h"
 #include "SysUtil.h"
 #include "Points.h"
 #include "Random.h"

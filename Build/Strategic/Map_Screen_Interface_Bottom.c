@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "Interface.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Border.h"

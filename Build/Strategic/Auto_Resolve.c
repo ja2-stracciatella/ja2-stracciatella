@@ -27,7 +27,6 @@
 #include "Font_Control.h"
 #include "Soldier_Create.h"
 #include "Overhead.h"
-#include "Interface.h"
 #include "Items.h"
 #include "Weapons.h"
 #include "Sound_Control.h"

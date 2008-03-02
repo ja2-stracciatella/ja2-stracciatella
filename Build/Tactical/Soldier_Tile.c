@@ -22,7 +22,6 @@
 #include "Soldier_Ani.h"
 #include "OppList.h"
 #include "AI.h"
-#include "Interface.h"
 #include "Faces.h"
 #include "Soldier_Profile.h"
 #include "Campaign.h"

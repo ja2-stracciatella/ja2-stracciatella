@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Handle_Items.h"
+#include "Interface.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"

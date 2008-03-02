@@ -13,7 +13,6 @@
 #include "Animation_Data.h"
 #include "Render_Dirty.h"
 #include "Sys_Globals.h"
-#include "Interface.h"
 #include "Soldier_Ani.h"
 #include "English.h"
 #include "MessageBoxScreen.h"
