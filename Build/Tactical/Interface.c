@@ -1512,7 +1512,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 void EndDeadlockMsg( )
 {
 	// Reset gridlock
-	gfUIInDeadlock = FALSE;
+	gUIDeadlockedSoldier = NOBODY;
 }
 
 

@@ -564,9 +564,7 @@ void RenderTopmostTacticalInterface( )
 		}
 	}
 
-
-
-	if ( gfUIInDeadlock )
+	if (gUIDeadlockedSoldier != NOBODY)
 	{
 		SetFont( LARGEFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );

@@ -176,7 +176,6 @@ UINT32		guiShowUPDownArrows;
 BOOLEAN		gfUIHandleSelection;
 INT16			gsSelectedGridNo;
 extern SOLDIERTYPE* gSelectedGuy;
-BOOLEAN		gfUIInDeadlock;
 UINT8			gUIDeadlockedSoldier;
 
 BOOLEAN		gfUIMouseOnValidCatcher;

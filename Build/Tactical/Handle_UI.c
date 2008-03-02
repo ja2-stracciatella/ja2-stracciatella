@@ -312,7 +312,6 @@ BOOLEAN		gfUIDisplayActionPointsCenter		= FALSE;
 INT16			gUIDisplayActionPointsOffY			= 0;
 INT16			gUIDisplayActionPointsOffX			= 0;
 BOOLEAN		gfUIHandleSelection							= FALSE;
-BOOLEAN		gfUIInDeadlock									= FALSE;
 UINT8			gUIDeadlockedSoldier						= NOBODY;
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
 UINT16		gsUIHandleShowMoveGridLocation  = NOWHERE ;
