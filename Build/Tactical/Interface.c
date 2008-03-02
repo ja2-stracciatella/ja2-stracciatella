@@ -2988,7 +2988,8 @@ static INT16   gsMultiPurposeLocatorGridNo;
 static INT8    gbMultiPurposeLocatorLevel;
 static INT8    gbMultiPurposeLocatorCycles;
 
-void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
+
+void BeginMultiPurposeLocator(const INT16 sGridNo, const INT8 bLevel)
 {
   guiMultiPurposeLocatorLastUpdate = 0;
   gbMultiPurposeLocatorCycles      = 0;
@@ -2997,22 +2998,6 @@ void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo )
 
   gsMultiPurposeLocatorGridNo = sGridNo;
   gbMultiPurposeLocatorLevel  = bLevel;
-
-  if ( fSlideTo )
-  {
-  	// FIRST CHECK IF WE ARE ON SCREEN
-	  if ( GridNoOnScreen( sGridNo ) )
-	  {
-		  return;
-	  }
-
-	  // sGridNo here for DG compatibility
-	  gTacticalStatus.sSlideTarget = sGridNo;
-	  gTacticalStatus.sSlideReason = NOBODY;
-
-	  // Plot new path!
-	  gfPlotNewMovement = TRUE;
-  }
 }
 
 

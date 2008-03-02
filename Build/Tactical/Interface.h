@@ -200,7 +200,7 @@ void ToggleTacticalPanels(void);
 
 void DirtyTopMessage(void);
 
-void BeginMultiPurposeLocator( INT16 sGridNo, INT8 bLevel, BOOLEAN fSlideTo );
+void BeginMultiPurposeLocator(INT16 sGridNo, INT8 bLevel);
 void HandleMultiPurposeLocator(void);
 void RenderTopmostMultiPurposeLocator(void);
 

@@ -1443,7 +1443,7 @@ void LookForAndMayCommentOnSeeingCorpse( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
     // Say quote...
 		TacticalCharacterDialogue( pSoldier, QUOTE_HEADSHOT );
 
-    BeginMultiPurposeLocator( sGridNo, ubLevel, FALSE );
+    BeginMultiPurposeLocator(sGridNo, ubLevel);
 
     // Reset values....
     pSoldier->bCorpseQuoteTolerance = (INT8)( Random(3) + 1 );
