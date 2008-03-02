@@ -5533,18 +5533,6 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		bChecked = FALSE;
 	}
-
-
-}
-
-
-static void ItemPickupBackgroundClick(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-	{
-		// OK, goto team panel....
-		ToggleTacticalPanels();
-	}
 }
 
 
