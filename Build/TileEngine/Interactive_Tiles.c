@@ -543,82 +543,38 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 }
 
 
-static LEVELNODE* InternalGetCurInteractiveTile(BOOLEAN fRejectItemsOnTop)
+static LEVELNODE* InternalGetCurInteractiveTile(const BOOLEAN fRejectItemsOnTop)
 {
-	LEVELNODE *pNode = NULL;
-	STRUCTURE	*pStructure = NULL;
+	if (_KeyDown(SHIFT)) return NULL;
+	if (!gfOverIntTile)  return NULL;
 
-	// OK, Look for our tile!
-
-	// Check for shift down!
-	if ( _KeyDown( SHIFT ) )
+	LEVELNODE* n = gpWorldLevelData[gCurIntTile.sGridNo].pStructHead;
+	for (; n != NULL; n = n->pNext)
 	{
-		return( NULL );
-	}
-
-
-	if ( gfOverIntTile )
-	{
-		pNode = gpWorldLevelData[ gCurIntTile.sGridNo	].pStructHead;
-
-		while( pNode != NULL )
+		if (n->usIndex != gCurIntTile.sTileIndex) continue;
+		if (fRejectItemsOnTop && gCurIntTile.fStructure)
 		{
-			if ( pNode->usIndex == gCurIntTile.sTileIndex )
-			{
-				if ( fRejectItemsOnTop )
-				{
-					// get strucuture here...
-					if ( gCurIntTile.fStructure )
-					{
-						pStructure = FindStructureByID( gCurIntTile.sGridNo, gCurIntTile.usStructureID );
-						if (pStructure != NULL)
-						{
-							if ( pStructure->fFlags & STRUCTURE_HASITEMONTOP )
-							{
-								return( NULL );
-							}
-						}
-						else
-						{
-							return( NULL );
-						}
-					}
-				}
-
-				return( pNode );
-			}
-
-			pNode = pNode->pNext;
+			// get strucuture here...
+			STRUCTURE* const s = FindStructureByID(gCurIntTile.sGridNo, gCurIntTile.usStructureID);
+			if (s == NULL || s->fFlags & STRUCTURE_HASITEMONTOP) return NULL;
 		}
+		break;
 	}
-
-	return( NULL );
+	return n;
 }
 
 
-
-LEVELNODE *GetCurInteractiveTile( )
+LEVELNODE* GetCurInteractiveTile(void)
 {
-	return( InternalGetCurInteractiveTile( TRUE ) );
+	return InternalGetCurInteractiveTile(TRUE);
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo )
+LEVELNODE* GetCurInteractiveTileGridNo(INT16* const psGridNo)
 {
-	LEVELNODE *pNode;
-
-	pNode = GetCurInteractiveTile( );
-
-	if ( pNode != NULL )
-	{
-		*psGridNo = gCurIntTile.sGridNo;
-	}
-	else
-	{
-		*psGridNo = NOWHERE;
-	}
-
-	return( pNode );
+	LEVELNODE* const n = GetCurInteractiveTile();
+	*psGridNo = (n != NULL ? gCurIntTile.sGridNo : NOWHERE);
+	return n;
 }
 
 
@@ -642,9 +598,9 @@ LEVELNODE* ConditionalGetCurInteractiveTileGridNoAndStructure(INT16* const psGri
 }
 
 
-LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure )
+LEVELNODE* GetCurInteractiveTileGridNoAndStructure(INT16* const psGridNo, STRUCTURE** const ppStructure)
 {
-	return( ConditionalGetCurInteractiveTileGridNoAndStructure( psGridNo, ppStructure, TRUE ) );
+	return ConditionalGetCurInteractiveTileGridNoAndStructure(psGridNo, ppStructure, TRUE);
 }
 
 
