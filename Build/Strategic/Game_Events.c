@@ -705,18 +705,6 @@ BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
 }
 
 
-static void LockStrategicEventFromDeletion(STRATEGICEVENT* pEvent)
-{
-	pEvent->ubFlags |= SEF_PREVENT_DELETION;
-}
-
-
-static void UnlockStrategicEventFromDeletion(STRATEGICEVENT* pEvent)
-{
-	pEvent->ubFlags &= ~SEF_PREVENT_DELETION;
-}
-
-
 static void ValidateGameEvents(void)
 {
 	STRATEGICEVENT *curr;

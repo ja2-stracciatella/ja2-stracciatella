@@ -3,7 +3,7 @@
 
 #include "Game_Event_Hook.h"
 
-#define SEF_PREVENT_DELETION	0x01
+
 #define SEF_DELETION_PENDING	0x02
 
 typedef struct STRATEGICEVENT
