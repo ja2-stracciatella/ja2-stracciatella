@@ -3,7 +3,7 @@
 
 #include "Handle_UI.h"
 #include "MouseSystem.h"
-#include "Structure.h"
+
 
 #define					MAX_UICOMPOSITES	4
 
