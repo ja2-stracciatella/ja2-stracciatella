@@ -22,10 +22,6 @@
 #include "MemMan.h"
 
 
-// mvt modifier
-//#define FOOT_MVT_MODIFIER 2
-
-
 UINT16 gusPlottedPath[256];
 UINT16 gusMapPathingData[256];
 UINT16 gusPathDataSize;
@@ -1045,106 +1041,6 @@ PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath)
 	return ( pDestNode );
 }
 
-
-static INT32 GetStrategicMvtSpeed(SOLDIERTYPE* pCharacter)
-{
-	// will return the strategic speed of the character
-	INT32 iSpeed;
-
-	// avg of strength and agility * percentage health..very simple..replace later
-
-	iSpeed = ( INT32 )( ( pCharacter -> bAgility + pCharacter -> bStrength ) / 2 );
-	iSpeed *= ( INT32 )(( pCharacter -> bLife ) );
-	iSpeed /= ( INT32 )pCharacter -> bLifeMax;
-
-	return ( iSpeed );
-}
-
-/*
-void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter )
-{
-	PathSt* pNode = NULL;
-	UINT32 uiDeltaEta =0;
-	INT32 iMveDelta = 0;
-	BOOLEAN fInVehicle;
-
-	// valid character
-	if( pCharacter == NULL )
-	{
-		return;
-	}
-
-	// the rules change a little for people in vehicles
-	if( pCharacter -> bAssignment == VEHICLE )
-	{
-		fInVehicle = TRUE;
-	}
-
-	if( ( pCharacter -> pMercPath == NULL ) && ( fInVehicle == FALSE ) )
-	{
-		return;
-	}
-
-	if (fInVehicle == TRUE && GetVehicle(pCharacter->iVehicleId) != NULL)
-	{
-		// valid vehicle, is there a path for it?
-		if( pVehicleList[ iId ].pMercPath == NULL )
-		{
-			// nope
-			return;
-		}
-	}
-
-
-	// go through path list, calculating eta's based on previous sector eta, speed of mvt through sector, and eta cost of sector
-	pNode = GetSoldierMercPathPtr( pCharacter );
-
-	// while there are nodes, calculate eta
-	while( pNode )
-	{
-		// first node, set eta to current time
-		if( pNode -> pPrev == NULL )
-		{
-			pNode -> uiEta = GetWorldTotalMin( );
-		}
-		else
-		{
-			// get delta in sectors
-			switch( pNode -> uiSectorId - pNode -> pPrev -> uiSectorId )
-			{
-			case( NORTH_MOVE ):
-				iMveDelta = 0;
-				break;
-			case( SOUTH_MOVE ):
-				iMveDelta = 2;
-				break;
-			case( EAST_MOVE ):
-				iMveDelta = 1;
-				break;
-			case( WEST_MOVE ):
-				iMveDelta = 3;
-				break;
-			}
-
-			if( fInVehicle == TRUE )
-			{
-				// which type
-
-			}
-			else
-			{
-				// get delta..is the  sector ( mvt cost * modifier ) / ( character strategic speed * mvt speed )
-				uiDeltaEta = ( ( StrategicMap[ pNode -> uiSectorId ].uiFootEta[ iMveDelta ] * FOOT_MVT_MODIFIER ) / ( GetStrategicMvtSpeed( pCharacter ) * ( pNode -> fSpeed + 1 ) ) );
-			}
-
-
-			// next sector eta
-			pNode -> uiEta = pNode -> pPrev -> uiEta + ( uiDeltaEta );
-		}
-		pNode = pNode -> pNext;
-	}
-}
-*/
 
 /*
 void MoveCharacterOnPath( SOLDIERTYPE *pCharacter )

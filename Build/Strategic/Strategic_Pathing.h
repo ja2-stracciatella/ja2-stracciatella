@@ -57,8 +57,6 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId );
 // copy paths
 PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath);
 
-// build eta's for characters path - no longer used
-//void CalculateEtaForCharacterPath( SOLDIERTYPE *pCharacter );
 /*
 // move character along path
 void MoveCharacterOnPath( SOLDIERTYPE *pCharacter );
