@@ -5635,20 +5635,6 @@ static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void)
 }
 
 
-static BOOLEAN ShadeUndergroundMapElem(INT16 sSectorX, INT16 sSectorY)
-{
-	INT16 sScreenX, sScreenY;
-
-	GetScreenXYFromMapXY( sSectorX, sSectorY, &sScreenX, &sScreenY );
-
-	sScreenX += 1;
-
-	ShadowVideoSurfaceRect( guiSAVEBUFFER, sScreenX, sScreenY, sScreenX + MAP_GRID_X - 2, sScreenY + MAP_GRID_Y - 2 );
-
-	return( TRUE );
-}
-
-
 static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY);
 
 
