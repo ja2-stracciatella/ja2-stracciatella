@@ -11,14 +11,8 @@
 
 #define EMPTY_CACHE_ENTRY		65000
 
-static UINT32 guiCacheSize = MIN_CACHE_SIZE;
+static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
 
-
-static void DetermineOptimumAnimationCacheSize( )
-{
-	// If we have lots-a memory, adjust accordingly!
-	guiCacheSize = MIN_CACHE_SIZE;
-}
 
 BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {
