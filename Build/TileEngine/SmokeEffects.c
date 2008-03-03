@@ -24,8 +24,8 @@
 
 
 // GLOBAL FOR SMOKE LISTING
-SMOKEEFFECT				gSmokeEffectData[ NUM_SMOKE_EFFECT_SLOTS ];
-UINT32						guiNumSmokeEffects = 0;
+static SMOKEEFFECT gSmokeEffectData[NUM_SMOKE_EFFECT_SLOTS];
+static UINT32      guiNumSmokeEffects = 0;
 
 
 static INT32 GetFreeSmokeEffect(void)
