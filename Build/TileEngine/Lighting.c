@@ -564,20 +564,6 @@ static INT32 LightGetFree(void)
 }
 
 
-// Calculates the 2D linear distance between two points.
-static INT32 LinearDistance(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
-{
-INT32 iDx, iDy;
-
-	iDx=abs(iX1-iX2);
-	iDx*=iDx;
-	iDy=abs(iY1-iY2);
-	iDy*=iDy;
-
-	return((INT32)sqrt((DOUBLE)(iDx+iDy)));
-}
-
-
 /* Calculates the 2D linear distance between two points. Returns the result in
  * a DOUBLE for greater accuracy. */
 static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
