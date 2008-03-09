@@ -88,10 +88,7 @@ void ClearIntList( void )
 
 static BOOLEAN BloodcatsPresent(void)
 {
-	if ( gTacticalStatus.Team[ CREATURE_TEAM ].bTeamActive == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!IsTeamActive(CREATURE_TEAM)) return FALSE;
 
 	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{
@@ -339,7 +336,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 				break;
 			}
 		}
-		else if (!(gTacticalStatus.Team[ ubTeam ].bTeamActive))
+		else if (!IsTeamActive(ubTeam))
 		{
 			// inactive team, skip to the next one
 			ubTeam++;
@@ -1602,7 +1599,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 
 		for (UINT8 ubTeam = 0; ubTeam < MAXTEAMS; ++ubTeam)
 		{
-			if (gTacticalStatus.Team[ubTeam].bTeamActive && (gTacticalStatus.Team[ubTeam].bSide != pSoldier->bSide) && ubTeam != CIV_TEAM)
+			if (IsTeamActive(ubTeam) && gTacticalStatus.Team[ubTeam].bSide != pSoldier->bSide && ubTeam != CIV_TEAM)
 			{
 				FOR_ALL_IN_TEAM(pOpponent, ubTeam)
 				{

@@ -6607,7 +6607,7 @@ void DoPOWPathChecks(void)
 
 BOOLEAN HostileCiviliansPresent( void )
 {
-	if (!gTacticalStatus.Team[CIV_TEAM].bTeamActive) return FALSE;
+	if (!IsTeamActive(CIV_TEAM)) return FALSE;
 
 	CFOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
@@ -6623,7 +6623,7 @@ BOOLEAN HostileCiviliansPresent( void )
 
 BOOLEAN HostileBloodcatsPresent(void)
 {
-	if (!gTacticalStatus.Team[CREATURE_TEAM].bTeamActive) return FALSE;
+	if (!IsTeamActive(CREATURE_TEAM)) return FALSE;
 
 	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
 	{

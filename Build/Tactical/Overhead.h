@@ -196,6 +196,12 @@ extern UINT32       guiNumMercSlots;
 
 extern TacticalStatusType gTacticalStatus;
 
+static inline BOOLEAN IsTeamActive(const UINT team)
+{
+	return gTacticalStatus.Team[team].bTeamActive;
+}
+
+
 #define BASE_FOR_ALL_IN_TEAM(type, iter, team)                                      \
 	for (type*       iter        = &Menptr[gTacticalStatus.Team[(team)].bFirstID],    \
 	         * const end__##iter = &Menptr[gTacticalStatus.Team[(team)].bLastID + 1]; \

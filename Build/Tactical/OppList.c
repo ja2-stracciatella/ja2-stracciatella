@@ -850,12 +850,12 @@ static INT16 TeamNoLongerSeesMan(const UINT8 ubTeam, SOLDIERTYPE* const pOpponen
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 	if ( bIteration == 0 )
 	{
-		if ( ubTeam == gbPlayerNum && gTacticalStatus.Team[ MILITIA_TEAM ].bTeamActive )
+		if (ubTeam == gbPlayerNum && IsTeamActive(MILITIA_TEAM))
 		{
 			// check militia team as well
 			return TeamNoLongerSeesMan(MILITIA_TEAM, pOpponent, exclude, 1);
 		}
-		else if ( ubTeam == MILITIA_TEAM && gTacticalStatus.Team[ gbPlayerNum ].bTeamActive )
+		else if (ubTeam == MILITIA_TEAM && IsTeamActive(gbPlayerNum))
 		{
 			// check player team as well
 			return TeamNoLongerSeesMan(gbPlayerNum, pOpponent, exclude, 1);
@@ -2967,7 +2967,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 		else
 		{
 			// radioing to militia that we saw someone! alert them!
-			if ( gTacticalStatus.Team[ MILITIA_TEAM ].bTeamActive && !gTacticalStatus.Team[ MILITIA_TEAM ].bAwareOfOpposition )
+			if (IsTeamActive(MILITIA_TEAM) && !gTacticalStatus.Team[MILITIA_TEAM].bAwareOfOpposition)
 			{
 				HandleInitialRedAlert(MILITIA_TEAM);
 			}
@@ -4444,10 +4444,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 	for (UINT8 bTeam = 0; bTeam < MAXTEAMS; ++bTeam)
 	{
 		// skip any inactive teams
-		if (!gTacticalStatus.Team[bTeam].bTeamActive)
-		{
-			continue;
-		}
+		if (!IsTeamActive(bTeam)) continue;
 
 		// if a the noise maker is a person, not just NOBODY
 		if (noise_maker != NULL)

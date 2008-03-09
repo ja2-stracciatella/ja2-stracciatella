@@ -1305,7 +1305,7 @@ void EndAirRaid( )
 	{
 		SetMusicMode( MUSIC_TACTICAL_NOTHING );
 
-		if ( !gTacticalStatus.Team[ ENEMY_TEAM ].bTeamActive && !gTacticalStatus.Team[ CREATURE_TEAM ].bTeamActive )
+		if (!IsTeamActive(ENEMY_TEAM) && !IsTeamActive(CREATURE_TEAM))
 		{
 			SetTeamStatusGreen(MILITIA_TEAM);
 			SetTeamStatusGreen(CIV_TEAM);
