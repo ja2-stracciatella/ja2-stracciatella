@@ -126,7 +126,9 @@ BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const S
 
 	if ( fBadChangeToGetThrough )
 	{
-		if ( gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo ||  gTacticalStatus.sCantGetThroughGridNo != sTargetGridNo || gTacticalStatus.ubCantGetThroughID != pSoldier->ubID )
+		if (gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo ||
+				gTacticalStatus.sCantGetThroughGridNo        != sTargetGridNo     ||
+				gTacticalStatus.cant_get_through             != pSoldier)
 		{
 			gTacticalStatus.fCantGetThrough = FALSE;
 		}
@@ -134,10 +136,10 @@ BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const S
 		// Have we done this once already?
 		if ( !gTacticalStatus.fCantGetThrough )
 		{
-			gTacticalStatus.fCantGetThrough								= TRUE;
-			gTacticalStatus.sCantGetThroughGridNo					= sTargetGridNo;
-			gTacticalStatus.ubCantGetThroughID						= pSoldier->ubID;
-			gTacticalStatus.sCantGetThroughSoldierGridNo	= pSoldier->sGridNo;
+			gTacticalStatus.fCantGetThrough              = TRUE;
+			gTacticalStatus.sCantGetThroughGridNo        = sTargetGridNo;
+			gTacticalStatus.cant_get_through             = pSoldier;
+			gTacticalStatus.sCantGetThroughSoldierGridNo = pSoldier->sGridNo;
 
 			// PLay quote
 			TacticalCharacterDialogue( pSoldier, QUOTE_NO_LINE_OF_FIRE );
@@ -146,11 +148,13 @@ BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const S
 		else
 		{
 			// Is this a different case?
-			if ( gTacticalStatus.sCantGetThroughGridNo != sTargetGridNo || gTacticalStatus.ubCantGetThroughID != pSoldier->ubID || gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo )
+			if (gTacticalStatus.sCantGetThroughGridNo        != sTargetGridNo ||
+					gTacticalStatus.cant_get_through             != pSoldier      ||
+					gTacticalStatus.sCantGetThroughSoldierGridNo != pSoldier->sGridNo)
 			{
 				// PLay quote
 				gTacticalStatus.sCantGetThroughGridNo	= sTargetGridNo;
-				gTacticalStatus.ubCantGetThroughID		= pSoldier->ubID;
+				gTacticalStatus.cant_get_through      = pSoldier;
 
 				TacticalCharacterDialogue( pSoldier, QUOTE_NO_LINE_OF_FIRE );
 				return( FALSE );

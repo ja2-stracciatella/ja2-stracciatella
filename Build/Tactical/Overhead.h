@@ -93,7 +93,7 @@ typedef struct
 	BOOLEAN          fCantGetThrough;
 	INT16            sCantGetThroughGridNo;
 	INT16            sCantGetThroughSoldierGridNo;
-	UINT8            ubCantGetThroughID;
+	SOLDIERTYPE*     cant_get_through;
 	BOOLEAN          fDidGameJustStart;
 	UINT8            ubLastRequesterTargetID;
 	BOOLEAN          fGoodToAllowCrows;
