@@ -111,8 +111,8 @@ GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
 
 
-BOOLEAN SaveGameSettings(void);
-BOOLEAN LoadGameSettings(void);
+void SaveGameSettings(void);
+void LoadGameSettings(void);
 
 void InitGameOptions(void);
 
