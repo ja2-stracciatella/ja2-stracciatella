@@ -2149,7 +2149,7 @@ else
 		 {
 			 if (!pOpponent->bNeutral && (pSoldier->bSide != pOpponent->bSide))
 			 {
-				SlideTo(0, pOpponent, pSoldier->ubID, SETLOCATOR);
+				SlideTo(pOpponent, pSoldier->ubID, SETLOCATOR);
 			 }
 		 }
     }
@@ -2741,7 +2741,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 				LocateSoldier(pSoldier, SETLOCATOR);
 
 				// Now slide to other guy....
-				SlideTo(NOWHERE, gTacticalStatus.enemy_sighting_on_their_turn_enemy, NOBODY, SETLOCATOR);
+				SlideTo(gTacticalStatus.enemy_sighting_on_their_turn_enemy, NOBODY, SETLOCATOR);
 			}
 
 			// Unset User's turn UI

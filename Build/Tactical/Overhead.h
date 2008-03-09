@@ -251,7 +251,7 @@ void LocateGridNo( UINT16 sGridNo );
 void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator);
 
 void BeginTeamTurn( UINT8 ubTeam );
-void SlideTo(INT16 sGridno, SOLDIERTYPE* tgt, UINT16 usReasonID, BOOLEAN fSetLocator);
+void SlideTo(SOLDIERTYPE* tgt, UINT16 usReasonID, BOOLEAN fSetLocator);
 void SlideToLocation( UINT16 usReasonID, INT16 sDestGridNo );
 
 void RebuildAllSoldierShadeTables(void);

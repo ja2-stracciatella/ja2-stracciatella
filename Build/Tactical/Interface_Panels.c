@@ -3105,7 +3105,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 			// If we are currently selected, slide to location
 			if (s == GetSelectedMan())
 			{
-				SlideTo(NOWHERE, s, NOBODY, SETLOCATOR);
+				SlideTo(s, NOBODY, SETLOCATOR);
 			}
 			else
 			{
@@ -3126,7 +3126,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 				// If we are currently selected, slide to location
 				if (s == GetSelectedMan())
 				{
-					SlideTo(NOWHERE, s, NOBODY, DONTSETLOCATOR);
+					SlideTo(s, NOBODY, DONTSETLOCATOR);
 				}
 				else
 				{

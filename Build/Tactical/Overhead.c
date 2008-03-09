@@ -2411,7 +2411,7 @@ void LocateGridNo(UINT16 sGridNo)
 }
 
 
-void SlideTo(const INT16 sGridno, SOLDIERTYPE* const tgt, const UINT16 usReasonID, const BOOLEAN fSetLocator)
+void SlideTo(SOLDIERTYPE* const tgt, const UINT16 usReasonID, const BOOLEAN fSetLocator)
 {
 	if (fSetLocator == SETANDREMOVEPREVIOUSLOCATOR)
 	{
@@ -5136,7 +5136,7 @@ void CycleThroughKnownEnemies( )
 			if (s->ubID > usStartToLook)
 			{
 				usStartToLook = s->ubID;
-				SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+				SlideTo(s, 0, SETANDREMOVEPREVIOUSLOCATOR);
 				return;
 			}
 			else
@@ -5175,7 +5175,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 				s->ubID > pSrcSoldier->ubLastEnemyCycledID)
 		{
 			pSrcSoldier->ubLastEnemyCycledID = s->ubID;
-			SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+			SlideTo(s, 0, SETANDREMOVEPREVIOUSLOCATOR);
 			ChangeInterfaceLevel(s->bLevel);
 			return;
 		}
@@ -5195,7 +5195,7 @@ void CycleVisibleEnemies( SOLDIERTYPE *pSrcSoldier )
 				s->ubID > pSrcSoldier->ubLastEnemyCycledID)
 		{
 			pSrcSoldier->ubLastEnemyCycledID = s->ubID;
-			SlideTo(0, s, 0, SETANDREMOVEPREVIOUSLOCATOR);
+			SlideTo(s, 0, SETANDREMOVEPREVIOUSLOCATOR);
 			ChangeInterfaceLevel(s->bLevel);
 			return;
 		}
