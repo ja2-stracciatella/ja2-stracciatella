@@ -2312,7 +2312,6 @@ static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, const SOLDIERTYPE* s)
 		//  THROW_PARAMS								*pThrowParams;
 		//	UINT16											*pGlowShades[ 20 ]; //
 		//	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
-		//	SGPPaletteEntry							*p8BPPPalette
 		//	OBJECTTYPE									*pTempObject;
 static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 {
@@ -2443,7 +2442,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			//Make sure all the pointer references are NULL'ed out.
 			SavedSoldierInfo.pTempObject	 = NULL;
 			SavedSoldierInfo.pKeyRing	 = NULL;
-			SavedSoldierInfo.p8BPPPalette	 = NULL;
 			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
 			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
 			SavedSoldierInfo.pThrowParams	 = NULL;

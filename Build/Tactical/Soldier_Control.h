@@ -470,7 +470,6 @@ struct SOLDIERTYPE
 	PaletteRepID								VestPal;	// 30
 	PaletteRepID								SkinPal;	// 30
 
-	SGPPaletteEntry							*p8BPPPalette; // 4
 	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 	UINT16											*pGlowShades[ 20 ]; //
 	INT8												bMedical;

@@ -129,7 +129,6 @@ BOOLEAN		LightHideRays(INT16 iX, INT16 iY);
 
 // makes the 16-bit palettes
 void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiType, BOOLEAN fForce);
-void CreateSoldierPaletteTables(SOLDIERTYPE* pSoldier);
 
 // returns the true light value at a tile (ignoring fake/merc lights)
 UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel );

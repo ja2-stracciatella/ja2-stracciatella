@@ -752,13 +752,6 @@ BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
 		// Delete faces
 		DeleteSoldierFace( pSoldier );
 
-		// FREE PALETTES
-		if ( pSoldier->p8BPPPalette != NULL )
-		{
-			MemFree( pSoldier->p8BPPPalette );
-			pSoldier->p8BPPPalette = NULL;
-		}
-
 		for ( cnt = 0; cnt < NUM_SOLDIER_SHADES; cnt++ )
 		{
 			if ( pSoldier->pShades[ cnt ] != NULL )
@@ -5016,18 +5009,14 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 
 BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 {
-	if (s->p8BPPPalette != NULL) MemFree(s->p8BPPPalette);
-
-	// Allocate mem for new palette
-	SGPPaletteEntry* const pal = MemAlloc(sizeof(*pal) * 256);
-	s->p8BPPPalette = pal;
-	memset(pal, 0, sizeof(*pal) * 256);
-	CHECKF(pal != NULL);
-
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
 	const UINT16 anim_surface = GetSoldierAnimationSurface(s, s->usAnimState);
 	CHECKF(anim_surface != INVALID_ANIMATION_SURFACE);
 
+	SGPPaletteEntry tmp_pal[256];
+	memset(tmp_pal, 0, sizeof(*tmp_pal) * 256);
+
+	const SGPPaletteEntry* pal;
 	char col_filename[100];
 	const INT8 body_type_palette = GetBodyTypePaletteSubstitutionCode(s, s->ubBodyType, col_filename);
 	if (body_type_palette == -1)
@@ -5037,19 +5026,24 @@ BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 		if (palette_anim_surface != INVALID_ANIMATION_SURFACE)
 		{
 			// Use palette from HVOBJECT, then use substitution for pants, etc
-			memcpy(pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->pPaletteEntry, sizeof(*pal) * 256);
+			memcpy(tmp_pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->pPaletteEntry, sizeof(*tmp_pal) * 256);
 
 			// Substitute based on head, etc
-			SetPaletteReplacement(pal, s->HeadPal);
-			SetPaletteReplacement(pal, s->VestPal);
-			SetPaletteReplacement(pal, s->PantsPal);
-			SetPaletteReplacement(pal, s->SkinPal);
+			SetPaletteReplacement(tmp_pal, s->HeadPal);
+			SetPaletteReplacement(tmp_pal, s->VestPal);
+			SetPaletteReplacement(tmp_pal, s->PantsPal);
+			SetPaletteReplacement(tmp_pal, s->SkinPal);
 		}
+		pal = tmp_pal;
 	}
-	else if (body_type_palette == 0 || !CreateSGPPaletteFromCOLFile(pal, col_filename))
+	else if (body_type_palette != 0 && CreateSGPPaletteFromCOLFile(tmp_pal, col_filename))
+	{
+		pal = tmp_pal;
+	}
+	else
 	{
 		// Use palette from hvobject
-		memcpy(pal, gAnimSurfaceDatabase[anim_surface].hVideoObject->pPaletteEntry, sizeof(*pal) * 256);
+		pal = gAnimSurfaceDatabase[anim_surface].hVideoObject->pPaletteEntry;
 	}
 
 
@@ -5081,7 +5075,7 @@ BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 	}
 
 
-	CreateSoldierPaletteTables(s);
+	CreateBiasedShadedPalettes(s->pShades, pal);
 
 	s->pEffectShades[0] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
 	s->pEffectShades[1] = Create16BPPPaletteShaded(pal, 100, 150, 100, TRUE);

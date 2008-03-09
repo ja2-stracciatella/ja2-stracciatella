@@ -2818,13 +2818,6 @@ void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 }
 
 
-void CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
-{
-	// create the basic shade table
-	CreateBiasedShadedPalettes(pSoldier->pShades, pSoldier->p8BPPPalette);
-}
-
-
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
 	return l->template->name;
