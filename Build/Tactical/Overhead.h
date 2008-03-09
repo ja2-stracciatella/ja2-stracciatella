@@ -81,7 +81,7 @@ typedef struct
 	UINT8            ubPanicTolerance[NUM_PANIC_TRIGGERS];
 	BOOLEAN          fAtLeastOneGuyOnMultiSelect;
 	BOOLEAN          fKilledEnemyOnAttack;
-	UINT8            ubEnemyKilledOnAttack;
+	SOLDIERTYPE*     enemy_killed_on_attack;
 	INT8             bEnemyKilledOnAttackLevel;
 	UINT16           ubEnemyKilledOnAttackLocation;
 	BOOLEAN          fItemsSeenOnAttack;

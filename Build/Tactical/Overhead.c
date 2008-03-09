@@ -6196,11 +6196,12 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		pSoldier->uiStatusFlags &= (~SOLDIER_ATTACK_NOTICED);
 	}
 
-	if ( gTacticalStatus.fKilledEnemyOnAttack )
+	TacticalStatusType* const ts = &gTacticalStatus;
+	if (ts->fKilledEnemyOnAttack)
 	{
 		// Check for death quote...
-		HandleKilledQuote(GetMan(gTacticalStatus.ubEnemyKilledOnAttack), GetMan(gTacticalStatus.ubEnemyKilledOnAttackKiller), gTacticalStatus.ubEnemyKilledOnAttackLocation, gTacticalStatus.bEnemyKilledOnAttackLevel);
-		gTacticalStatus.fKilledEnemyOnAttack = FALSE;
+		HandleKilledQuote(ts->enemy_killed_on_attack, GetMan(ts->ubEnemyKilledOnAttackKiller), ts->ubEnemyKilledOnAttackLocation, ts->bEnemyKilledOnAttackLevel);
+		ts->fKilledEnemyOnAttack = FALSE;
 	}
 
 	// ATE: Check for stat changes....

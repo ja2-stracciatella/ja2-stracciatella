@@ -2958,11 +2958,11 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			{
 				if (attacker->bTeam == gbPlayerNum && gTacticalStatus.ubAttackBusyCount > 0)
 				{
-					gTacticalStatus.fKilledEnemyOnAttack	= TRUE;
-					gTacticalStatus.ubEnemyKilledOnAttack = pSoldier->ubID;
+					gTacticalStatus.fKilledEnemyOnAttack          = TRUE;
+					gTacticalStatus.enemy_killed_on_attack        = pSoldier;
 					gTacticalStatus.ubEnemyKilledOnAttackLocation = pSoldier->sGridNo;
-					gTacticalStatus.bEnemyKilledOnAttackLevel = pSoldier->bLevel;
-					gTacticalStatus.ubEnemyKilledOnAttackKiller = pSoldier->attacker->ubID;
+					gTacticalStatus.bEnemyKilledOnAttackLevel     = pSoldier->bLevel;
+					gTacticalStatus.ubEnemyKilledOnAttackKiller   = pSoldier->attacker->ubID;
 
 					// also check if we are in mapscreen, if so update soldier's list
 					if( guiCurrentScreen == MAP_SCREEN )
