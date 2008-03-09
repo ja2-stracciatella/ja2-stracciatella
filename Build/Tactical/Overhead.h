@@ -45,7 +45,6 @@ typedef struct
 	TacticalTeamType Team[MAXTEAMS];
 	UINT8            ubCurrentTeam;
 	INT16            sSlideTarget;
-	INT16            sSlideReason;
 	UINT32           uiTimeSinceMercAIStart;
 	INT8             fPanicFlags;
 	UINT8            ubSpottersCalledForBy;

@@ -2433,7 +2433,6 @@ void SlideTo(SOLDIERTYPE* const tgt, const UINT16 usReasonID, const BOOLEAN fSet
 
 	// sGridNo here for DG compatibility
 	gTacticalStatus.sSlideTarget = tgt->sGridNo;
-	gTacticalStatus.sSlideReason = usReasonID;
 
 	// Plot new path!
 	gfPlotNewMovement = TRUE;
@@ -2449,7 +2448,6 @@ void SlideToLocation(UINT16 usReasonID, INT16 sDestGridNo)
 
 	// sGridNo here for DG compatibility
 	gTacticalStatus.sSlideTarget = sDestGridNo;
-	gTacticalStatus.sSlideReason = usReasonID;
 
 	// Plot new path!
 	gfPlotNewMovement = TRUE;
