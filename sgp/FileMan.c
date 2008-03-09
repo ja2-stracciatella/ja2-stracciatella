@@ -731,18 +731,6 @@ INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FI
 }
 
 
-UINT32 FileSize(const char* const filename)
-{
-	const HWFILE hFile = FileOpen(filename, FILE_ACCESS_READ);
-	if (hFile == 0) return 0;
-
-	const UINT32 uiSize = FileGetSize(hFile);
-	FileClose(hFile);
-
-	return uiSize;
-}
-
-
 FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE hFile)
 {
 	INT16  sLibraryID;

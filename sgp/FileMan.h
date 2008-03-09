@@ -77,7 +77,6 @@ BOOLEAN FileSeek(HWFILE, INT32 distance, INT how);
 INT32   FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);
-UINT32 FileSize(const char* filename);
 
 BOOLEAN     SetFileManCurrentDirectory(const char* pcDirectory);
 BOOLEAN     GetFileManCurrentDirectory(STRING512 pcDirectory);
