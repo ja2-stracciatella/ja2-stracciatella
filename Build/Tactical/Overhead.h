@@ -31,7 +31,6 @@ typedef struct
 	INT8     bAwareOfOpposition;
 	INT8     bHuman;
 } TacticalTeamType;
-CASSERT(sizeof(TacticalTeamType) == 16)
 
 
 #define PANIC_BOMBS_HERE    0x01
@@ -142,7 +141,6 @@ typedef struct
 	UINT16           sCreatureTenseQuoteDelay;
 	UINT32           uiCreatureTenseQuoteLastUpdate;
 } TacticalStatusType;
-CASSERT(sizeof(TacticalStatusType) == 360)
 
 
 extern UINT8 gbPlayerNum;

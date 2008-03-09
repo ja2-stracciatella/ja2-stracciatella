@@ -3,6 +3,7 @@
 #include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
+#include "LoadSaveTacticalStatusType.h"
 #include "Local.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -2678,8 +2679,7 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
 {
-	//write the gTacticalStatus to the saved game file
-	if (!FileWrite(hFile, &gTacticalStatus, sizeof(TacticalStatusType))) return FALSE;
+	if (!InjectTacticalStatusTypeIntoFile(hFile)) return FALSE;
 
 	//
 	//Save the current sector location to the saved game file
@@ -2700,8 +2700,7 @@ static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
 
 static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 {
-	//Read the gTacticalStatus to the saved game file
-	if (!FileRead(hFile, &gTacticalStatus, sizeof(TacticalStatusType))) return FALSE;
+	if (!ExtractTacticalStatusTypeFromFile(hFile)) return FALSE;
 
 	//
 	//Load the current sector location to the saved game file

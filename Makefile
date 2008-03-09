@@ -202,6 +202,7 @@ SRCS += Build/Laptop/Mercs_No_Account.c
 SRCS += Build/Laptop/Personnel.c
 SRCS += Build/Laptop/Store_Inventory.c
 SRCS += Build/LoadSaveEMail.c
+SRCS += Build/LoadSaveTacticalStatusType.c
 SRCS += Build/Loading_Screen.c
 SRCS += Build/MainMenuScreen.c
 SRCS += Build/MessageBoxScreen.c
