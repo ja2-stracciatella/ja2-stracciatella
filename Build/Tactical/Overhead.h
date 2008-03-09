@@ -49,7 +49,7 @@ typedef struct
 	UINT32           uiTimeSinceMercAIStart;
 	INT8             fPanicFlags;
 	UINT8            ubSpottersCalledForBy;
-	UINT8            ubTheChosenOne;
+	SOLDIERTYPE*     the_chosen_one;
 	UINT32           uiTimeOfLastInput;
 	UINT32           uiTimeSinceDemoOn;
 	BOOLEAN          fCivGroupHostile[ NUM_CIV_GROUPS ];

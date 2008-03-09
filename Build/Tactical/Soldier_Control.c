@@ -908,7 +908,10 @@ void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStart
 BOOLEAN ReevaluateEnemyStance( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 {
 	// make the chosen one not turn to face us
-	if ( OK_ENEMY_MERC( pSoldier ) && pSoldier->ubID != gTacticalStatus.ubTheChosenOne && gAnimControl[ usAnimState ].ubEndHeight == ANIM_STAND && !( pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
+	if (OK_ENEMY_MERC(pSoldier)                             &&
+			pSoldier != gTacticalStatus.the_chosen_one          &&
+			gAnimControl[usAnimState].ubEndHeight == ANIM_STAND &&
+			!(pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 	{
 		if ( pSoldier->fTurningFromPronePosition == TURNING_FROM_PRONE_OFF )
 		{
@@ -8760,11 +8763,10 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 
 	if (pSoldier->uiStatusFlags & SOLDIER_ENEMY)
 	{
-
-		if ( !(gTacticalStatus.bPanicTriggerIsAlarm) && (gTacticalStatus.ubTheChosenOne == pSoldier->ubID) )
+		if (!gTacticalStatus.bPanicTriggerIsAlarm && gTacticalStatus.the_chosen_one == pSoldier)
 		{
 			// replace this guy as the chosen one!
-			gTacticalStatus.ubTheChosenOne = NOBODY;
+			gTacticalStatus.the_chosen_one = NULL;
 			MakeClosestEnemyChosenOne();
 		}
 

@@ -1561,10 +1561,15 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
  // if we're an alerted enemy, and there are panic bombs or a trigger around
- if ( (!PTR_CIVILIAN || pSoldier->ubProfile == WARDEN) && ( ( gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || (pSoldier->ubID == gTacticalStatus.ubTheChosenOne) || (pSoldier->ubProfile == WARDEN) ) &&
-     (gTacticalStatus.fPanicFlags & (PANIC_BOMBS_HERE | PANIC_TRIGGERS_HERE ) ) ) )
+	if ((!PTR_CIVILIAN || pSoldier->ubProfile == WARDEN) &&
+			(
+				gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition ||
+				pSoldier            == gTacticalStatus.the_chosen_one    ||
+				pSoldier->ubProfile == WARDEN
+			) &&
+			gTacticalStatus.fPanicFlags & (PANIC_BOMBS_HERE | PANIC_TRIGGERS_HERE))
   {
-		if ( pSoldier->ubProfile == WARDEN && gTacticalStatus.ubTheChosenOne == NOBODY )
+		if (pSoldier->ubProfile == WARDEN && gTacticalStatus.the_chosen_one == NULL)
 		{
 			PossiblyMakeThisEnemyChosenOne( pSoldier );
 		}
@@ -2635,7 +2640,9 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  // can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
  ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
-	if ( (pSoldier->bTeam == ENEMY_TEAM || pSoldier->ubProfile == WARDEN) && (gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) && (gTacticalStatus.ubTheChosenOne == NOBODY) )
+	if ((pSoldier->bTeam == ENEMY_TEAM || pSoldier->ubProfile == WARDEN) &&
+			gTacticalStatus.fPanicFlags    &  PANIC_TRIGGERS_HERE            &&
+			gTacticalStatus.the_chosen_one == NULL)
 	{
 		INT8 bPanicTrigger;
 
@@ -2648,7 +2655,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	}
 
  // if this soldier is the "Chosen One" (enemies only)
- if (pSoldier->ubID == gTacticalStatus.ubTheChosenOne)
+	if (pSoldier == gTacticalStatus.the_chosen_one)
   {
    // do some special panic AI decision making
    bActionReturned = PanicAI(pSoldier,ubCanMove);

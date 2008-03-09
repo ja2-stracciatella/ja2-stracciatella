@@ -2771,10 +2771,10 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 
 		CheckForAlertWhenEnemyDies(pSoldierOld);
 
-		if (gTacticalStatus.ubTheChosenOne == pSoldierOld->ubID)
+		if (gTacticalStatus.the_chosen_one == pSoldierOld)
 		{
 			// reset the chosen one!
-			gTacticalStatus.ubTheChosenOne = NOBODY;
+			gTacticalStatus.the_chosen_one = NULL;
 		}
 
 		if (pSoldierOld->ubProfile == QUEEN)
@@ -6479,7 +6479,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
 	}
 
-	gTacticalStatus.ubTheChosenOne = NOBODY;
+	gTacticalStatus.the_chosen_one = NULL;
 
 	ClearIntList();
 

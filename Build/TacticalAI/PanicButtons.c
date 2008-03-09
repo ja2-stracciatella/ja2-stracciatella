@@ -157,7 +157,7 @@ void MakeClosestEnemyChosenOne()
 	// if we found have an eligible enemy, make him our "chosen one"
 	if (closest_enemy != NULL)
 	{
-		gTacticalStatus.ubTheChosenOne = closest_enemy->ubID; // flag him as the chosen one
+		gTacticalStatus.the_chosen_one = closest_enemy; // flag him as the chosen one
 
 #ifdef TESTVERSION
 		NumMessage("TEST MSG: The chosen one is ",TheChosenOne);
@@ -234,7 +234,7 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 	if ( iAPCost <= CalcActionPoints( pSoldier ) * 2)
 	{
 		// go!!!
-		gTacticalStatus.ubTheChosenOne = pSoldier->ubID;
+		gTacticalStatus.the_chosen_one = pSoldier;
 		return;
 	}
 	// else return keys to normal
@@ -286,7 +286,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 	if ( gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE )
 	{
 		// Have WE been chosen to go after the trigger?
-		if (pSoldier->ubID == gTacticalStatus.ubTheChosenOne)
+		if (pSoldier == gTacticalStatus.the_chosen_one)
 		{
 			bPanicTrigger = ClosestPanicTrigger( pSoldier );
 			if (bPanicTrigger == -1)
@@ -366,7 +366,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 #ifdef TESTVERSION
 							PopMessage("TEST MSG: Oh oh!  !legalDest - ChosenOne can't get to the trigger!");
 #endif
-							gTacticalStatus.ubTheChosenOne = NOBODY;   // strip him of his Chosen One status
+							gTacticalStatus.the_chosen_one = NULL; // strip him of his Chosen One status
 							MakeClosestEnemyChosenOne();     // and replace him!
 						}
 					}
@@ -382,7 +382,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 #ifdef TESTVERSION
 				PopMessage("TEST MSG: Oh oh!  !adjacentFound - ChosenOne can't get to the trigger!");
 #endif
-				gTacticalStatus.ubTheChosenOne = NOBODY; // strip him of his Chosen One status
+				gTacticalStatus.the_chosen_one = NULL; // strip him of his Chosen One status
 				MakeClosestEnemyChosenOne();   // and replace him!
 			}
 		}
@@ -395,7 +395,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 void InitPanicSystem( void )
 {
 	// start by assuming there is no panic bombs or triggers here
-	gTacticalStatus.ubTheChosenOne				= NOBODY;
+	gTacticalStatus.the_chosen_one = NULL;
 	FindPanicBombsAndTriggers();
 }
 
@@ -453,7 +453,8 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 	UINT32		uiPercentEnemiesKilled;
 	INT8			bLoop;
 
-	if ( !(gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) || gTacticalStatus.ubTheChosenOne != NOBODY )
+	if (!(gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE) ||
+			gTacticalStatus.the_chosen_one != NULL)
 	{
 		// already done!
 		return( FALSE );
@@ -464,7 +465,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
 		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(WARDEN);
-		if ( !pSoldier || pSoldier->ubID == gTacticalStatus.ubTheChosenOne )
+		if (!pSoldier || pSoldier == gTacticalStatus.the_chosen_one)
 		{
 			return( FALSE );
 		}

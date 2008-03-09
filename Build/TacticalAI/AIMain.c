@@ -1877,12 +1877,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			DeductPoints( pSoldier, AP_PULL_TRIGGER, 0 );
 
 			//gTacticalStatus.fPanicFlags					= 0; // turn all flags off
-			gTacticalStatus.ubTheChosenOne			= NOBODY;
+			gTacticalStatus.the_chosen_one = NULL;
 			break;
 
 		case AI_ACTION_USE_DETONATOR:
 			//gTacticalStatus.fPanicFlags					= 0; // turn all flags off
-			gTacticalStatus.ubTheChosenOne			= NOBODY;
+			gTacticalStatus.the_chosen_one = NULL;
 			//gTacticalStatus.sPanicTriggerGridno	= NOWHERE;
 
 		  // grab detonator and set off bomb(s)
@@ -1897,7 +1897,14 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 		case AI_ACTION_RED_ALERT:             // tell friends opponent(s) seen
 			// if a computer merc, and up to now they didn't know you're here
-			if (!(pSoldier->uiStatusFlags & SOLDIER_PC) && ( !(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) || ( ( gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE ) && gTacticalStatus.ubTheChosenOne == NOBODY ) ) )
+			if (!(pSoldier->uiStatusFlags & SOLDIER_PC) &&
+					(
+						!gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition ||
+						(
+							gTacticalStatus.fPanicFlags & PANIC_TRIGGERS_HERE &&
+							gTacticalStatus.the_chosen_one == NULL
+						)
+					))
 			{
 				HandleInitialRedAlert(pSoldier->bTeam);
 			}
