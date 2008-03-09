@@ -3134,10 +3134,7 @@ static void HickCowAttacked(SOLDIERTYPE* pNastyGuy, SOLDIERTYPE* pTarget)
 static void MilitiaChangesSides(void)
 {
 	// make all the militia change sides
-	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bMenInSector == 0 )
-	{
-		return;
-	}
+	if (!IsTeamActive(MILITIA_TEAM)) return;
 
 	// remove anyone (rebels) on our team and put them back in the civ team
 	FOR_ALL_IN_TEAM(s, MILITIA_TEAM)
@@ -5490,7 +5487,7 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 			if ( bNumNotOKRealMercs < 4 && bNumNotOKRealMercs > 1 )
 			{
 				// Check if any enemies exist....
-				if ( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector > 0 )
+				if (IsTeamActive(ENEMY_TEAM))
 				{
 					//if( GetWorldDay() > STARTDAY_ALLOW_PLAYER_CAPTURE_FOR_RESCUE && !( gStrategicStatus.uiFlags & STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE ))
 					{
@@ -6377,22 +6374,19 @@ void AddManToTeam( INT8 bTeam )
 	}
 }
 
-void RemoveManFromTeam( INT8 bTeam )
+
+void RemoveManFromTeam(const INT8 bTeam)
 {
 	// ATE; if not loading game!
-	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
+	if (!IsTeamActive(bTeam))
 	{
-		// Decrement men in sector number!
-		gTacticalStatus.Team[ bTeam ].bMenInSector--;
-		if (gTacticalStatus.Team[bTeam].bMenInSector < 0)
-		{
-			#ifdef JA2BETAVERSION
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[ bTeam ].bMenInSector );
-			#endif
-			// reset!
-			gTacticalStatus.Team[ bTeam ].bMenInSector = 0;
-		}
+#ifdef JA2BETAVERSION
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
+#endif
+		return;
 	}
+	--gTacticalStatus.Team[bTeam].bMenInSector;
 }
 
 

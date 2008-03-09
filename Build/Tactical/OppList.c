@@ -5636,11 +5636,7 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime )
 
 		for( cnt = 0; cnt < MAXTEAMS; cnt++ )
 		{
-			if ( gTacticalStatus.Team[ cnt ].bMenInSector > 0 )
-			{
-				// decay team's public opplist
-				DecayPublicOpplist( (INT8)cnt );
-			}
+			if (IsTeamActive(cnt)) DecayPublicOpplist((INT8)cnt);
 		}
 		// update time
 		gTacticalStatus.uiTimeSinceLastOpplistDecay = uiTime;

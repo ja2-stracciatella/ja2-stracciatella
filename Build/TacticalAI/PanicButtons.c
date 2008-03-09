@@ -459,10 +459,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 		return( FALSE );
 	}
 
-	if ( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector == 0 )
-	{
-		return( FALSE );
-	}
+	if (!IsTeamActive(ENEMY_TEAM)) return FALSE;
 
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{

@@ -3141,7 +3141,7 @@ static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* con
       if ( pSoldier->ubProfile != NO_PROFILE )
       {
 				// ignore if the player is fighting the enemy here and this is a good guy
-				if ( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector > 0 && (gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) )
+				if (IsTeamActive(ENEMY_TEAM) && gMercProfiles[pSoldier->ubProfile].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY)
 				{
 					continue;
 				}

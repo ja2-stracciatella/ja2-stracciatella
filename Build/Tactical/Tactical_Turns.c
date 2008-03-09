@@ -160,7 +160,7 @@ void HandleTacticalEndTurn(void)
 	/*
 	for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 	{
-		if ( gTacticalStatus.Team[ cnt ].bMenInSector > 0 )
+		if (IsTeamActive(cnt))
 		{
 			// decay team's public opplist
 			DecayPublicOpplist( (INT8)cnt );
