@@ -1484,7 +1484,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	// ATE: If this is an AI guy.. unlock him!
 	if ( gTacticalStatus.fEnemySightingOnTheirTurn )
 	{
-		if ( gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID == pSoldier->ubID )
+		if (gTacticalStatus.enemy_sighting_on_their_turn_enemy == pSoldier)
 		{
 			pSoldier->fPauseAllAnimation = FALSE;
 			gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;

@@ -2741,8 +2741,7 @@ static void OurTeamSeesSomeone(SOLDIERTYPE* pSoldier, INT8 bNumReRevealed, INT8 
 				LocateSoldier(pSoldier, SETLOCATOR);
 
 				// Now slide to other guy....
-				SlideTo(NOWHERE, GetMan(gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID), NOBODY, SETLOCATOR);
-
+				SlideTo(NOWHERE, gTacticalStatus.enemy_sighting_on_their_turn_enemy, NOBODY, SETLOCATOR);
 			}
 
 			// Unset User's turn UI
@@ -2926,13 +2925,13 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 							{
 								// this has already come up so turn OFF the pause-all-anims flag for the previous
 								// person and set it for this next person
-								GetMan(gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID)->fPauseAllAnimation = FALSE;
+								gTacticalStatus.enemy_sighting_on_their_turn_enemy->fPauseAllAnimation = FALSE;
 							}
 							else
 							{
 								gTacticalStatus.fEnemySightingOnTheirTurn = TRUE;
 							}
-							gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID = pOpponent->ubID;
+							gTacticalStatus.enemy_sighting_on_their_turn_enemy = pOpponent;
 							gTacticalStatus.uiTimeSinceDemoOn = GetJA2Clock( );
 
 							pOpponent->fPauseAllAnimation = TRUE;

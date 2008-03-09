@@ -61,7 +61,7 @@ typedef struct
 	BOOLEAN          fEnemyInSector;
 	BOOLEAN          fInterruptOccurred;
 	INT8             bRealtimeSpeed;
-	UINT8            ubEnemySightingOnTheirTurnEnemyID;
+	SOLDIERTYPE*     enemy_sighting_on_their_turn_enemy;
 	BOOLEAN          fEnemySightingOnTheirTurn;
 	BOOLEAN          fAutoBandageMode;
 	UINT8            ubAttackBusyCount;

@@ -2103,7 +2103,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		// ATE: Remove this if we were stopped....
 		if (gTacticalStatus.fEnemySightingOnTheirTurn)
 		{
-			if (gTacticalStatus.ubEnemySightingOnTheirTurnEnemyID == pSoldier->ubID)
+			if (gTacticalStatus.enemy_sighting_on_their_turn_enemy == pSoldier)
 			{
 				pSoldier->fPauseAllAnimation = FALSE;
 				gTacticalStatus.fEnemySightingOnTheirTurn = FALSE;
