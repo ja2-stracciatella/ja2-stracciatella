@@ -984,7 +984,7 @@ static UINT32 ProcessFileIO(void)
 			}
 			else
 				gusLightLevel = (UINT16)(EDITOR_LIGHT_MAX - ubAmbientLightLevel );
-			gEditorLightColor = gpLightColors[ 0 ];
+			gEditorLightColor = g_light_color;
 			gfRenderWorld = TRUE;
 			gfRenderTaskbar = TRUE;
 			fEnteringLoadSaveScreen = TRUE;

@@ -221,7 +221,6 @@ void EditScreenShutdown(void)
 static BOOLEAN EditModeInit(void)
 {
 	UINT32 x;
-	SGPPaletteEntry	LColors[2];
 
 	OutputDebugString( "Entering editor mode...\n" );
 
@@ -250,8 +249,7 @@ static BOOLEAN EditModeInit(void)
 	EntryInitEditorItemsInfo();
 	EntryInitEditorMercsInfo();
 
-	LightGetColors( LColors );
-	gEditorLightColor = LColors[0];
+	gEditorLightColor = *LightGetColor();
 
 	//essentially, we are turning the game off so the game doesn't process in conjunction with the
 	//editor.

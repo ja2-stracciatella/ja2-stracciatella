@@ -1155,8 +1155,6 @@ BOOLEAN PrepareCreaturesForBattle()
 {
 	UNDERGROUND_SECTORINFO *pSector;
 	INT32 i, iRandom;
-	SGPPaletteEntry	LColors[3];
-	UINT8 ubNumColors;
 	BOOLEAN fQueen;
 	UINT8 ubLarvaePercentage;
 	UINT8 ubInfantPercentage;
@@ -1175,17 +1173,10 @@ BOOLEAN PrepareCreaturesForBattle()
 
 	if( !gubCreatureBattleCode )
 	{
-		ubNumColors = LightGetColors( LColors );
-		//if( ubNumColors != 1 )
-		//	ScreenMsg( FONT_RED, MSG_ERROR, L"This map has more than one light color -- KM, LC : 1" );
-
 		//By default, we only play creature music in the cave levels (the creature levels all consistently
 		//have blue lights while human occupied mines have red lights.  We always play creature music
 		//when creatures are in the level.
-		if( LColors->peBlue )
-			gfUseCreatureMusic = TRUE;
-		else
-			gfUseCreatureMusic = FALSE;
+		gfUseCreatureMusic = LightGetColor()->peBlue != 0;
 
 		if( !gbWorldSectorZ )
 			return FALSE;  //Creatures don't attack overworld with this battle code.

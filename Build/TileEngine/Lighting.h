@@ -97,10 +97,10 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* l);
 // Save a light list into a file
 BOOLEAN LightSave(const LightTemplate*, const char* pFilename);
 
-// Sets the RGB values and number of light colors (1/2)
-BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors);
-// Returns the number of colors active (1/2) and the palette colors
-UINT8 LightGetColors(SGPPaletteEntry *pPal);
+// Sets the light color
+void LightSetColor(const SGPPaletteEntry* pPal);
+// Returns the active color
+const SGPPaletteEntry* LightGetColor(void);
 
 
 // High-Level Sprite Interface
@@ -147,9 +147,8 @@ extern LIGHT_SPRITE			LightSprites[MAX_LIGHT_SPRITES];
 // Lighting system general data
 extern UINT8						ubAmbientLightLevel;
 
-// Lighting colors
-extern UINT8						gubNumLightColors;
-extern SGPPaletteEntry	gpLightColors[3];
+// Lighting color
+extern SGPPaletteEntry g_light_color;
 
 
 // macros
@@ -157,6 +156,6 @@ extern SGPPaletteEntry	gpLightColors[3];
 
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE*);
 
-void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256], const SGPPaletteEntry* Bias);
+void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256]);
 
 #endif

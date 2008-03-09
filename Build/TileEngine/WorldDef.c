@@ -387,12 +387,14 @@ void BuildTileShadeTables(  )
 		gfForceBuildShadeTables = FALSE;
 	}
 	//now, determine if we are using specialized colors.
-	if( gpLightColors[0].peRed || gpLightColors[0].peGreen ||	gpLightColors[0].peBlue )
+	if (g_light_color.peRed   != 0 ||
+			g_light_color.peGreen != 0 ||
+			g_light_color.peBlue  != 0)
 	{ //we are, which basically means we force build the shadetables.  However, the one
 		//exception is if we are loading another map and the colors are the same.
-		if( gpLightColors[0].peRed != ubLastRed ||
-				gpLightColors[0].peGreen != ubLastGreen ||
-				gpLightColors[0].peBlue != ubLastBlue )
+		if (g_light_color.peRed   != ubLastRed   ||
+				g_light_color.peGreen != ubLastGreen ||
+				g_light_color.peBlue  != ubLastBlue)
 		{	//Same tileset, but colors are different, so set things up to regenerate the shadetables.
 			gfForceBuildShadeTables = TRUE;
 		}
@@ -440,9 +442,9 @@ void BuildTileShadeTables(  )
 	//Restore the data directory once we are finished.
 	SetFileManCurrentDirectory( DataDir );
 
-	ubLastRed = gpLightColors[0].peRed;
-	ubLastGreen = gpLightColors[0].peGreen;
-	ubLastBlue = gpLightColors[0].peBlue;
+	ubLastRed   = g_light_color.peRed;
+	ubLastGreen = g_light_color.peGreen;
+	ubLastBlue  = g_light_color.peBlue;
 
 	#ifdef JA2TESTVERSION
 		uiBuildShadeTableTime = GetJA2Clock() - uiStartTime;
@@ -3768,15 +3770,13 @@ BOOLEAN IsSoldierLight(const LIGHT_SPRITE* const l)
 
 static void SaveMapLights(HWFILE hfile)
 {
-	SGPPaletteEntry	LColors[3];
-	UINT8 ubNumColors;
 	UINT16 usNumLights = 0;
 
-	ubNumColors = LightGetColors( LColors );
-
 	// Save the current light colors!
+	const UINT8 ubNumColors = 1;
 	FileWrite(hfile, &ubNumColors, 1);
-	FileWrite(hfile, LColors, sizeof(SGPPaletteEntry) * ubNumColors);
+	const SGPPaletteEntry* LColor = LightGetColor();
+	FileWrite(hfile, LColor, sizeof(*LColor));
 
 	//count number of non-merc lights.
 	CFOR_ALL_LIGHT_SPRITES(l)
@@ -3811,15 +3811,7 @@ static void LoadMapLights(INT8** hBuffer)
 
 	LOADDATA( &usNumLights, *hBuffer, 2 );
 
-	ubNumColors = 1;
-
-	// ATE: OK, only regenrate if colors are different.....
-	//if ( LColors[0].peRed != gpLightColors[0].peRed ||
-	//		 LColors[0].peGreen != gpLightColors[0].peGreen ||
-	//		 LColors[0].peBlue != gpLightColors[0].peBlue )
-	{
-		LightSetColors( LColors, ubNumColors );
-	}
+	LightSetColor(LColors);
 
 	//Determine which lights are valid for the current time.
 	UINT32 light_time = 0;

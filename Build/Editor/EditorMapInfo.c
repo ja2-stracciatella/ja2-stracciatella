@@ -179,7 +179,7 @@ void ExtractAndUpdateMapInfo()
 	if( fUpdateLight1 )
 	{
 		gfEditorForceShadeTableRebuild = TRUE;
-		LightSetColors(	&gEditorLightColor, 1 );
+		LightSetColor(&gEditorLightColor);
 		gfEditorForceShadeTableRebuild = FALSE;
 	}
 

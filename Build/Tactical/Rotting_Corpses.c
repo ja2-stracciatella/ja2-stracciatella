@@ -609,7 +609,7 @@ static BOOLEAN CreateCorpsePalette(ROTTING_CORPSE* pCorpse)
 	}
 
 	// create the basic shade table
-	CreateBiasedShadedPalettes(pCorpse->pShades, pal, &gpLightColors[0]);
+	CreateBiasedShadedPalettes(pCorpse->pShades, pal);
 
 	return( TRUE );
 }

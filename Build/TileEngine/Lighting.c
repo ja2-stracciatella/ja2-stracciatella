@@ -47,13 +47,6 @@
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
 
-#define LVL1_L1_PER			(50)
-#define LVL1_L2_PER			(50)
-
-#define LVL2_L1_PER			(30)
-#define LVL2_L2_PER			(70)
-
-
 // stucture of node in linked list for lights
 typedef struct LIGHT_NODE
 {
@@ -82,12 +75,10 @@ LIGHT_SPRITE	LightSprites[MAX_LIGHT_SPRITES];
 
 // Lighting system general data
 UINT8						ubAmbientLightLevel=DEFAULT_SHADE_LEVEL;
-UINT8						gubNumLightColors=1;
 
-// Externed in Rotting Corpses.c
-SGPPaletteEntry	gpLightColors[3]={{0,0,0,0}, {0,0,255,0}, {0,0,0,0}};
+SGPPaletteEntry g_light_color = { 0, 0, 0, 0 };
 
-SGPPaletteEntry gpOrigLights[2]={{0,0,0,0}, {0,0,255,0}};
+static SGPPaletteEntry gpOrigLight = { 0, 0, 0, 0 };
 
 
 /*
@@ -235,21 +226,13 @@ BOOLEAN InitLightingSystem(void)
 	return(TRUE);
 }
 
+
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
 BOOLEAN SetDefaultWorldLightingColors(void)
 {
-	SGPPaletteEntry pPal[2];
-
-	pPal[0].peRed=0;
-	pPal[0].peGreen=0;
-	pPal[0].peBlue=0;
-	pPal[1].peRed=0;
-	pPal[1].peGreen=0;
-	pPal[1].peBlue=128;
-
-	LightSetColors(&pPal[0], 1);
-
-	return(TRUE);
+	static const SGPPaletteEntry pPal = { 0, 0, 0 };
+	LightSetColor(&pPal);
+	return TRUE;
 }
 
 
@@ -2499,33 +2482,23 @@ INT32 iCount;
 	return(LightLoad(pFilename));
 }
 
-UINT8 LightGetColors(SGPPaletteEntry *pPal)
-{
-	if(pPal!=NULL)
-		memcpy(pPal, &gpOrigLights[0], sizeof(SGPPaletteEntry)*gubNumLightColors);
 
-	return(gubNumLightColors);
+const SGPPaletteEntry* LightGetColor(void)
+{
+	return &gpOrigLight;
 }
 
-/****************************************************************************************
-	LightSetColors
 
-	Sets the number of light colors, and the RGB value for each.
-
-***************************************************************************************/
 
 extern void SetAllNewTileSurfacesLoaded( BOOLEAN fNew );
 
-BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
+void LightSetColor(const SGPPaletteEntry* const pPal)
 {
-	INT16 sRed, sGreen, sBlue;
+	Assert(pPal != NULL);
 
-	Assert( ubNumColors >=1 && ubNumColors <=2 );
-	Assert( pPal );
-
-	if( pPal[0].peRed != gpLightColors[0].peRed ||
-			pPal[0].peGreen != gpLightColors[0].peGreen ||
-			pPal[0].peBlue != gpLightColors[0].peBlue )
+	if (pPal->peRed   != g_light_color.peRed   ||
+			pPal->peGreen != g_light_color.peGreen ||
+			pPal->peBlue  != g_light_color.peBlue)
 	{	//Set the entire tileset database so that it reloads everything.  It has to because the
 		//colors have changed.
 		SetAllNewTileSurfacesLoaded( TRUE );
@@ -2534,32 +2507,8 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 	// before doing anything, get rid of all the old palettes
 	DestroyTileShadeTables( );
 
-	// we will have at least one light color
-	memcpy(&gpLightColors[0], &pPal[0], sizeof(SGPPaletteEntry));
-	memcpy(&gpOrigLights[0], &pPal[0], sizeof(SGPPaletteEntry)*2);
-
-	gubNumLightColors=ubNumColors;
-
-	// if there are two colors, calculate a third palette that is a mix of the two
-	if(ubNumColors==2)
-	{
-		sRed=__min((((INT16)pPal[0].peRed)*LVL1_L1_PER/100 + ((INT16)pPal[1].peRed)*LVL1_L2_PER/100), 255);
-		sGreen=__min((((INT16)pPal[0].peGreen)*LVL1_L1_PER/100 + ((INT16)pPal[1].peGreen)*LVL1_L2_PER/100), 255);
-		sBlue=__min((((INT16)pPal[0].peBlue)*LVL1_L1_PER/100 + ((INT16)pPal[1].peBlue)*LVL1_L2_PER/100), 255);
-
-		gpLightColors[1].peRed=(UINT8)(sRed);
-		gpLightColors[1].peGreen=(UINT8)(sGreen);
-		gpLightColors[1].peBlue=(UINT8)(sBlue);
-
-		sRed=__min((((INT16)pPal[0].peRed)*LVL2_L1_PER/100 + ((INT16)pPal[1].peRed)*LVL2_L2_PER/100), 255);
-		sGreen=__min((((INT16)pPal[0].peGreen)*LVL2_L1_PER/100 + ((INT16)pPal[1].peGreen)*LVL2_L2_PER/100), 255);
-		sBlue=__min((((INT16)pPal[0].peBlue)*LVL2_L1_PER/100 + ((INT16)pPal[1].peBlue)*LVL2_L2_PER/100), 255);
-
-		gpLightColors[2].peRed=(UINT8)(sRed);
-		gpLightColors[2].peGreen=(UINT8)(sGreen);
-		gpLightColors[2].peBlue=(UINT8)(sBlue);
-
-	}
+	g_light_color = *pPal;
+	gpOrigLight   = *pPal;
 
 	BuildTileShadeTables( );
 
@@ -2568,8 +2517,6 @@ BOOLEAN LightSetColors(SGPPaletteEntry *pPal, UINT8 ubNumColors)
 	RebuildAllSoldierShadeTables( );
 
 	SetRenderFlags(RENDER_FLAG_FULL);
-
-	return(TRUE);
 }
 
 //---------------------------------------------------------------------------------------
@@ -2807,23 +2754,11 @@ static void CreateShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry Shade
 }
 
 
-void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256], const SGPPaletteEntry* Bias)
+void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256])
 {
 	SGPPaletteEntry LightPal[256];
-	AddSaturatePalette(LightPal, ShadePal, Bias);
+	AddSaturatePalette(LightPal, ShadePal, &g_light_color);
 	CreateShadedPalettes(Shades, LightPal);
-}
-
-
-static void CreateObjectPalette(HVOBJECT pObj, UINT32 uiBase, const SGPPaletteEntry* Light)
-{
-	CreateBiasedShadedPalettes(pObj->pShades + uiBase, pObj->pPaletteEntry, Light);
-}
-
-
-static void CreateSoldierShadedPalette(SOLDIERTYPE* pSoldier, UINT32 uiBase, const SGPPaletteEntry* Light)
-{
-	CreateBiasedShadedPalettes(pSoldier->pShades + uiBase, pSoldier->p8BPPPalette, Light);
 }
 
 
@@ -2860,11 +2795,14 @@ void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 		if( !fLoaded )
 		{ //This is expensive as hell to call!
 			// build the shade tables
-			CreateObjectPalette(pObj, 0, &gpLightColors[0]);
+			CreateBiasedShadedPalettes(pObj->pShades, pObj->pPaletteEntry);
 
 			//We paid to generate the shade table, so now save it, so we don't have to regenerate it ever
 			//again!
-			if( !gfForceBuildShadeTables && !gpLightColors[0].peRed && !gpLightColors[0].peGreen && !gpLightColors[0].peBlue )
+			if (!gfForceBuildShadeTables   &&
+					g_light_color.peRed   == 0 &&
+					g_light_color.peGreen == 0 &&
+					g_light_color.peBlue  == 0)
 			{
 				SaveShadeTable( pObj, uiTileIndex );
 			}
@@ -2872,16 +2810,6 @@ void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 			else
 				uiNumTablesSaved++;
 			#endif
-		}
-
-		// if two lights are active
-		if(gubNumLightColors==2)
-		{
-			// build the second light's palette and table
-			CreateObjectPalette(pObj, 16, &gpLightColors[1]);
-
-			// build a table that is a mix of the first two
-			CreateObjectPalette(pObj, 32, &gpLightColors[2]);
 		}
 
 		// build neutral palette as well!
@@ -2893,17 +2821,7 @@ void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 void CreateSoldierPaletteTables(SOLDIERTYPE *pSoldier)
 {
 	// create the basic shade table
-	CreateSoldierShadedPalette(pSoldier, 0, &gpLightColors[0]);
-
-	// if two lights are active
-	if(gubNumLightColors==2)
-	{
-		// build the second light's palette and table
-		CreateSoldierShadedPalette(pSoldier, 16, &gpLightColors[1]);
-
-		// build a table that is a mix of the first two
-		CreateSoldierShadedPalette(pSoldier, 32, &gpLightColors[2]);
-	}
+	CreateBiasedShadedPalettes(pSoldier->pShades, pSoldier->p8BPPPalette);
 }
 
 
