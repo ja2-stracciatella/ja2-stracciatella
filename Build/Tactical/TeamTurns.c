@@ -142,7 +142,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 				// Slide to selected guy...
 				if (sel != NULL)
 				{
-					SlideTo(sel, NOBODY, SETLOCATOR);
+					SlideTo(sel, SETLOCATOR);
 
 					// Say ATTENTION SOUND...
 					if (fDoBattleSnd) DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
@@ -416,7 +416,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	}
 	EndDeadlockMsg( );
 
-	if (pSoldier->bVisible != -1) SlideTo(pSoldier, NOBODY, SETLOCATOR);
+	if (pSoldier->bVisible != -1) SlideTo(pSoldier, SETLOCATOR);
 
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
 
@@ -623,7 +623,7 @@ static void StartInterrupt(void)
 		SelectSoldier(first_interrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
 
 		// ATE; Slide to guy who got interrupted!
-		SlideTo(gLastInterruptedGuy, NOBODY, SETLOCATOR);
+		SlideTo(gLastInterruptedGuy, SETLOCATOR);
 
 		// Dirty panel interface!
 		fInterfacePanelDirty						= DIRTYLEVEL2;
@@ -847,7 +847,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 				SOLDIERTYPE* const sel = GetSelectedMan();
 				if (sel != NULL)
 				{
-					SlideTo(sel, NOBODY, SETLOCATOR);
+					SlideTo(sel, SETLOCATOR);
 
 					// Say ATTENTION SOUND...
 					DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
