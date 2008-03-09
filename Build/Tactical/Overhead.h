@@ -106,8 +106,8 @@ typedef struct
 	INT8             bConsNumTurnsWeHaventSeenButEnemyDoes;
 	BOOLEAN          fSomeoneHit;
 	UINT32           uiTimeSinceLastOpplistDecay;
+	SOLDIERTYPE*     enemy_killed_on_attack_killer;
 	INT8             bMercArrivingQuoteBeingUsed;
-	UINT8            ubEnemyKilledOnAttackKiller;
 	BOOLEAN          fCountingDownForGuideDescription;
 	INT8             bGuideDescriptionCountDown;
 	UINT8            ubGuideDescriptionToUse;

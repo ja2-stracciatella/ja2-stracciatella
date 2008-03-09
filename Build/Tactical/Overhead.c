@@ -6200,7 +6200,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 	if (ts->fKilledEnemyOnAttack)
 	{
 		// Check for death quote...
-		HandleKilledQuote(ts->enemy_killed_on_attack, GetMan(ts->ubEnemyKilledOnAttackKiller), ts->ubEnemyKilledOnAttackLocation, ts->bEnemyKilledOnAttackLevel);
+		HandleKilledQuote(ts->enemy_killed_on_attack, ts->enemy_killed_on_attack_killer, ts->ubEnemyKilledOnAttackLocation, ts->bEnemyKilledOnAttackLevel);
 		ts->fKilledEnemyOnAttack = FALSE;
 	}
 
