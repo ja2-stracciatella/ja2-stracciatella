@@ -123,24 +123,25 @@ static UINT16 CreateFontPaletteTables(INT32 Font)
 		}
 	}
 
-	pObj->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pObj->pPaletteEntry, 255,   0,   0, TRUE);
-	pObj->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pObj->pPaletteEntry,   0,   0, 255, TRUE);
-	pObj->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pObj->pPaletteEntry,   0, 255,   0, TRUE);
-	pObj->pShades[FONT_SHADE_YELLOW]  = Create16BPPPaletteShaded(pObj->pPaletteEntry, 255, 255,   0, TRUE);
-	pObj->pShades[FONT_SHADE_NEUTRAL] = Create16BPPPaletteShaded(pObj->pPaletteEntry, 255, 255, 255, FALSE);
-	pObj->pShades[FONT_SHADE_WHITE]   = Create16BPPPaletteShaded(pObj->pPaletteEntry, 255, 255, 255, TRUE);
+	const SGPPaletteEntry* const pal = pObj->pPaletteEntry;
+	pObj->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
+	pObj->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
+	pObj->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pal,   0, 255,   0, TRUE);
+	pObj->pShades[FONT_SHADE_YELLOW]  = Create16BPPPaletteShaded(pal, 255, 255,   0, TRUE);
+	pObj->pShades[FONT_SHADE_NEUTRAL] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	pObj->pShades[FONT_SHADE_WHITE]   = Create16BPPPaletteShaded(pal, 255, 255, 255, TRUE);
 
 	// the rest are darkening tables, right down to all-black.
-	pObj->pShades[ 0] = Create16BPPPaletteShaded(pObj->pPaletteEntry, 165, 165, 165, FALSE);
-	pObj->pShades[ 7] = Create16BPPPaletteShaded(pObj->pPaletteEntry, 135, 135, 135, FALSE);
-	pObj->pShades[ 8] = Create16BPPPaletteShaded(pObj->pPaletteEntry, 105, 105, 105, FALSE);
-	pObj->pShades[ 9] = Create16BPPPaletteShaded(pObj->pPaletteEntry,  75,  75,  75, FALSE);
-	pObj->pShades[10] = Create16BPPPaletteShaded(pObj->pPaletteEntry,  45,  45,  45, FALSE);
-	pObj->pShades[11] = Create16BPPPaletteShaded(pObj->pPaletteEntry,  36,  36,  36, FALSE);
-	pObj->pShades[12] = Create16BPPPaletteShaded(pObj->pPaletteEntry,  27,  27,  27, FALSE);
-	pObj->pShades[13] = Create16BPPPaletteShaded(pObj->pPaletteEntry,  18,  18,  18, FALSE);
-	pObj->pShades[14] = Create16BPPPaletteShaded(pObj->pPaletteEntry,   9,   9,   9, FALSE);
-	pObj->pShades[15] = Create16BPPPaletteShaded(pObj->pPaletteEntry,   0,   0,   0, FALSE);
+	pObj->pShades[ 0] = Create16BPPPaletteShaded(pal, 165, 165, 165, FALSE);
+	pObj->pShades[ 7] = Create16BPPPaletteShaded(pal, 135, 135, 135, FALSE);
+	pObj->pShades[ 8] = Create16BPPPaletteShaded(pal, 105, 105, 105, FALSE);
+	pObj->pShades[ 9] = Create16BPPPaletteShaded(pal,  75,  75,  75, FALSE);
+	pObj->pShades[10] = Create16BPPPaletteShaded(pal,  45,  45,  45, FALSE);
+	pObj->pShades[11] = Create16BPPPaletteShaded(pal,  36,  36,  36, FALSE);
+	pObj->pShades[12] = Create16BPPPaletteShaded(pal,  27,  27,  27, FALSE);
+	pObj->pShades[13] = Create16BPPPaletteShaded(pal,  18,  18,  18, FALSE);
+	pObj->pShades[14] = Create16BPPPaletteShaded(pal,   9,   9,   9, FALSE);
+	pObj->pShades[15] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
 
 	// Set current shade table to neutral color
 	pObj->pShadeCurrent = pObj->pShades[FONT_SHADE_NEUTRAL];

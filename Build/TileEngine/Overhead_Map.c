@@ -526,10 +526,11 @@ void GoIntoOverheadMap( )
 	AssertMsg(uiPERSONS != NO_VOBJECT, "Missing INTERFACE/PERSONS.sti");
 
 	// Add shades to persons....
-	SGPVObject* const hVObject = uiPERSONS;
-	hVObject->pShades[ 0 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 256, 256, 256, FALSE );
-	hVObject->pShades[ 1 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 310, 310, 310, FALSE );
-	hVObject->pShades[ 2 ]		  = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 0, 0, 0, FALSE );
+	SGPVObject*            const vo  = uiPERSONS;
+	const SGPPaletteEntry* const pal = vo->pPaletteEntry;
+	vo->pShades[0] = Create16BPPPaletteShaded(pal, 256, 256, 256, FALSE);
+	vo->pShades[1] = Create16BPPPaletteShaded(pal, 310, 310, 310, FALSE);
+	vo->pShades[2] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
 
 	gfOverheadMapDirty = TRUE;
 

@@ -95,8 +95,9 @@ void LoadRadarScreenBitmap(const char* const filename)
 	gusRadarImage = radar;
 
 	// ATE: Add a shade table!
-	radar->pShades[0] = Create16BPPPaletteShaded(radar->pPaletteEntry, 255, 255, 255, FALSE);
-	radar->pShades[1] = Create16BPPPaletteShaded(radar->pPaletteEntry, 100, 100, 100, FALSE);
+	const SGPPaletteEntry* const pal = radar->pPaletteEntry;
+	radar->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, FALSE);
 
 	// Dirty interface
 	fInterfacePanelDirty = TRUE;

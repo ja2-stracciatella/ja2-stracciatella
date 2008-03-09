@@ -55,11 +55,8 @@ void SetFontForeground(UINT8 ubForeground)
 {
 	if (FontDefault < 0 || (FontDefault > MAX_FONTS)) return;
 
-	UINT32 uiRed   = FontObjs[FontDefault]->pPaletteEntry[ubForeground].peRed;
-	UINT32 uiGreen = FontObjs[FontDefault]->pPaletteEntry[ubForeground].peGreen;
-	UINT32 uiBlue  = FontObjs[FontDefault]->pPaletteEntry[ubForeground].peBlue;
-
-	FontForeground16 = Get16BPPColor(FROMRGB(uiRed, uiGreen, uiBlue));
+	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->pPaletteEntry[ubForeground];
+	FontForeground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
 }
 
 
@@ -67,11 +64,8 @@ void SetFontShadow(UINT8 ubShadow)
 {
 	if (FontDefault < 0 || FontDefault > MAX_FONTS) return;
 
-	UINT32 uiRed   = FontObjs[FontDefault]->pPaletteEntry[ubShadow].peRed;
-	UINT32 uiGreen = FontObjs[FontDefault]->pPaletteEntry[ubShadow].peGreen;
-	UINT32 uiBlue  = FontObjs[FontDefault]->pPaletteEntry[ubShadow].peBlue;
-
-	FontShadow16 = Get16BPPColor(FROMRGB(uiRed, uiGreen, uiBlue));
+	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->pPaletteEntry[ubShadow];
+	FontShadow16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
 
 	if (ubShadow != 0 && FontShadow16 == 0) FontShadow16 = 1;
 }
@@ -87,11 +81,8 @@ void SetFontBackground(UINT8 ubBackground)
 {
 	if (FontDefault < 0 || FontDefault > MAX_FONTS) return;
 
-	UINT32 uiRed   = FontObjs[FontDefault]->pPaletteEntry[ubBackground].peRed;
-	UINT32 uiGreen = FontObjs[FontDefault]->pPaletteEntry[ubBackground].peGreen;
-	UINT32 uiBlue  = FontObjs[FontDefault]->pPaletteEntry[ubBackground].peBlue;
-
-	FontBackground16 = Get16BPPColor(FROMRGB(uiRed, uiGreen, uiBlue));
+	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->pPaletteEntry[ubBackground];
+	FontBackground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
 }
 
 

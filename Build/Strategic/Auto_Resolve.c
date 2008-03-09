@@ -1791,8 +1791,9 @@ static void CreateAutoResolveInterface(void)
 	SGPVObject* const hVObject = gpAR->iFaces;
 	if (hVObject != NULL)
 	{
-		hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
-		hVObject->pShades[ 1 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
+		SGPPaletteEntry* const pal = hVObject->pPaletteEntry;
+		hVObject->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+		hVObject->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
 	//Add the battle over panels
@@ -1814,8 +1815,9 @@ static void CreateAutoResolveInterface(void)
 		SGPVObject* const hVObject = gpMercs[i].uiVObjectID;
 		if (hVObject != NULL)
 		{
-			hVObject->pShades[ 0 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 255, 255, 255, FALSE );
-			hVObject->pShades[ 1 ] = Create16BPPPaletteShaded( hVObject->pPaletteEntry, 250, 25, 25, TRUE );
+			SGPPaletteEntry* const pal = hVObject->pPaletteEntry;
+			hVObject->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+			hVObject->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 		}
 	}
 
