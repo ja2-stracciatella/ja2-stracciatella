@@ -2439,7 +2439,7 @@ void SlideTo(SOLDIERTYPE* const tgt, const UINT16 usReasonID, const BOOLEAN fSet
 }
 
 
-void SlideToLocation(UINT16 usReasonID, INT16 sDestGridNo)
+void SlideToLocation(const INT16 sDestGridNo)
 {
 	if (sDestGridNo == NOWHERE) return;
 
@@ -6222,7 +6222,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 			// Turn off item lock for locators...
 			gTacticalStatus.fLockItemLocators = FALSE;
 			// Slide to location!
-			SlideToLocation( 0,  gTacticalStatus.usItemsSeenOnAttackGridNo );
+			SlideToLocation(gTacticalStatus.usItemsSeenOnAttackGridNo);
 		}
 	}
 

@@ -830,8 +830,7 @@ void HandleDialogue( )
 			// Turn off item lock for locators...
 			gTacticalStatus.fLockItemLocators = FALSE;
 
-			// Slide to location!
-			SlideToLocation( 0,  (UINT16)QItem->uiSpecialEventData );
+			SlideToLocation((UINT16)QItem->uiSpecialEventData);
 
 			gpCurrentTalkingFace = QItem->face;
 			gubCurrentTalkingID   = QItem->ubCharacterNum;
