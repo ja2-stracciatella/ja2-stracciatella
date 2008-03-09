@@ -9,7 +9,7 @@
 BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
 {
 	BYTE data[256];
-	if (FileRead(file, data, sizeof(data))) return FALSE;
+	if (!FileRead(file, data, sizeof(data))) return FALSE;
 
 	const BYTE* d = data;
 	EXTR_BOOL(d, o->fAllocated)
