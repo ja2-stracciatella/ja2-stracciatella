@@ -708,9 +708,9 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 
 													if ( gTacticalStatus.ubAttackBusyCount > 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 													{
-														gTacticalStatus.fItemsSeenOnAttack = TRUE;
-														gTacticalStatus.ubItemsSeenOnAttackSoldier = pSoldier->ubID;
-														gTacticalStatus.usItemsSeenOnAttackGridNo  = (INT16)(marker);
+														gTacticalStatus.fItemsSeenOnAttack           = TRUE;
+														gTacticalStatus.items_seen_on_attack_soldier = pSoldier;
+														gTacticalStatus.usItemsSeenOnAttackGridNo    = (INT16)marker;
 													}
 													else
 													{

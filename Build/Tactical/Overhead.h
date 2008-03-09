@@ -85,7 +85,7 @@ typedef struct
 	INT8             bEnemyKilledOnAttackLevel;
 	UINT16           ubEnemyKilledOnAttackLocation;
 	BOOLEAN          fItemsSeenOnAttack;
-	BOOLEAN          ubItemsSeenOnAttackSoldier;
+	SOLDIERTYPE*     items_seen_on_attack_soldier;
 	UINT16           usItemsSeenOnAttackGridNo;
 	BOOLEAN          fLockItemLocators;
 	UINT8            ubLastQuoteSaid;

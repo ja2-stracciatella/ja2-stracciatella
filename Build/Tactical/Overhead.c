@@ -6213,7 +6213,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.fItemsSeenOnAttack = FALSE;
 
 		// Display quote!
-		SOLDIERTYPE* const s = GetMan(gTacticalStatus.ubItemsSeenOnAttackSoldier);
+		SOLDIERTYPE* const s = gTacticalStatus.items_seen_on_attack_soldier;
 		if (!AM_AN_EPC(s))
 		{
 			TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo, 0);
