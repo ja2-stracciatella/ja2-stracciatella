@@ -1962,17 +1962,6 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
      bMoraleCategory = MORALE_FEARLESS;
   }
 
- // if only 1/4 of side left, reduce morale
- // and do this after we've capped all those other silly values
- /*
- if ( pSoldier->bTeam == ENEMY_TEAM && gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector <= gTacticalStatus.bOriginalSizeOfEnemyForce / 4 )
- {
-	bMoraleCategory -= 2;
-  if (bMoraleCategory < MORALE_HOPELESS)
-    bMoraleCategory = MORALE_HOPELESS;
- }
- */
-
  // brave guys never get hopeless, at worst they get worried
  if (bMoraleCategory == MORALE_HOPELESS &&
      (pSoldier->bAttitude == BRAVESOLO || pSoldier->bAttitude == BRAVEAID))

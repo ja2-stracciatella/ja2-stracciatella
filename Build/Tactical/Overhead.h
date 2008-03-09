@@ -55,7 +55,6 @@ typedef struct
 	UINT8            ubLastBattleSectorX;
 	UINT8            ubLastBattleSectorY;
 	BOOLEAN          fLastBattleWon;
-	INT8             bOriginalSizeOfEnemyForce;
 	BOOLEAN          fVirginSector;
 	BOOLEAN          fEnemyInSector;
 	BOOLEAN          fInterruptOccurred;

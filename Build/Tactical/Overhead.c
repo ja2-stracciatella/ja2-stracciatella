@@ -6366,10 +6366,6 @@ void AddManToTeam( INT8 bTeam )
 	{
 		// Increment men in sector number!
 		gTacticalStatus.Team[ bTeam ].bMenInSector++;
-		if ( bTeam == ENEMY_TEAM )
-		{
-			gTacticalStatus.bOriginalSizeOfEnemyForce++;
-		}
 	}
 }
 
@@ -6461,7 +6457,6 @@ static void EndBattleWithUnconsciousGuysCallback(UINT8 bExitValue)
 void InitializeTacticalStatusAtBattleStart(void)
 {
 	gTacticalStatus.ubArmyGuysKilled = 0;
-	gTacticalStatus.bOriginalSizeOfEnemyForce = 0;
 
 	gTacticalStatus.fPanicFlags = 0;
 	gTacticalStatus.fEnemyFlags = 0;
