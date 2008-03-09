@@ -5014,150 +5014,112 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale);
 
 
-BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier )
+BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 {
-	UINT16 usAnimSurface, usPaletteAnimSurface;
-	CHAR8	zColFilename[ 100 ];
-	INT32 iWhich;
-	INT32 cnt;
-	INT8	bBodyTypePalette;
-	SGPPaletteEntry							Temp8BPPPalette[ 256 ];
-
-	//NT32 uiCount;
-	//PPaletteEntry Pal[256];
-
-	if ( pSoldier->p8BPPPalette != NULL )
-	{
-		MemFree( pSoldier->p8BPPPalette );
-		pSoldier->p8BPPPalette = NULL;
-	}
-
+	if (s->p8BPPPalette != NULL) MemFree(s->p8BPPPalette);
 
 	// Allocate mem for new palette
-	pSoldier->p8BPPPalette = MemAlloc( sizeof( SGPPaletteEntry ) * 256 );
-	memset( pSoldier->p8BPPPalette, 0, sizeof( SGPPaletteEntry ) * 256 );
-
-	CHECKF( pSoldier->p8BPPPalette != NULL );
+	SGPPaletteEntry* const pal = MemAlloc(sizeof(*pal) * 256);
+	s->p8BPPPalette = pal;
+	memset(pal, 0, sizeof(*pal) * 256);
+	CHECKF(pal != NULL);
 
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+	const UINT16 anim_surface = GetSoldierAnimationSurface(s, s->usAnimState);
+	CHECKF(anim_surface != INVALID_ANIMATION_SURFACE);
 
-	CHECKF( usAnimSurface != INVALID_ANIMATION_SURFACE );
-
-	if ( ( bBodyTypePalette = GetBodyTypePaletteSubstitutionCode( pSoldier, pSoldier->ubBodyType, zColFilename ) ) == -1 )
+	char col_filename[100];
+	const INT8 body_type_palette = GetBodyTypePaletteSubstitutionCode(s, s->ubBodyType, col_filename);
+	if (body_type_palette == -1)
 	{
 		// ATE: here we want to use the breath cycle for the palette.....
-		usPaletteAnimSurface = LoadSoldierAnimationSurface( pSoldier, STANDING );
-
-		if ( usPaletteAnimSurface != INVALID_ANIMATION_SURFACE )
+		const UINT16 palette_anim_surface = LoadSoldierAnimationSurface(s, STANDING);
+		if (palette_anim_surface != INVALID_ANIMATION_SURFACE)
 		{
 			// Use palette from HVOBJECT, then use substitution for pants, etc
-			memcpy( pSoldier->p8BPPPalette, gAnimSurfaceDatabase[ usPaletteAnimSurface ].hVideoObject->pPaletteEntry, sizeof( pSoldier->p8BPPPalette ) * 256 );
+			memcpy(pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->pPaletteEntry, sizeof(*pal) * 256);
 
 			// Substitute based on head, etc
-			SetPaletteReplacement( pSoldier->p8BPPPalette, pSoldier->HeadPal );
-			SetPaletteReplacement( pSoldier->p8BPPPalette, pSoldier->VestPal );
-			SetPaletteReplacement( pSoldier->p8BPPPalette, pSoldier->PantsPal );
-			SetPaletteReplacement( pSoldier->p8BPPPalette, pSoldier->SkinPal );
+			SetPaletteReplacement(pal, s->HeadPal);
+			SetPaletteReplacement(pal, s->VestPal);
+			SetPaletteReplacement(pal, s->PantsPal);
+			SetPaletteReplacement(pal, s->SkinPal);
 		}
 	}
-	else if ( bBodyTypePalette == 0 )
+	else if (body_type_palette == 0 || !CreateSGPPaletteFromCOLFile(pal, col_filename))
 	{
 		// Use palette from hvobject
-		memcpy( pSoldier->p8BPPPalette, gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->pPaletteEntry, sizeof( pSoldier->p8BPPPalette ) * 256 );
+		memcpy(pal, gAnimSurfaceDatabase[anim_surface].hVideoObject->pPaletteEntry, sizeof(*pal) * 256);
 	}
-	else
+
+
+	for (INT32 i = 0; i < NUM_SOLDIER_SHADES; ++i)
 	{
-		// Use col file
-		if ( CreateSGPPaletteFromCOLFile( Temp8BPPPalette, zColFilename ) )
+		if (s->pShades[i] != NULL)
 		{
-			// Copy into palette
-			memcpy( pSoldier->p8BPPPalette,		Temp8BPPPalette, sizeof( pSoldier->p8BPPPalette ) * 256 );
-		}
-		else
-		{
-			// Use palette from hvobject
-			memcpy( pSoldier->p8BPPPalette, gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->pPaletteEntry, sizeof( pSoldier->p8BPPPalette ) * 256 );
+			MemFree(s->pShades[i]);
+			s->pShades[i] = NULL;
 		}
 	}
 
-
-	for ( iWhich = 0; iWhich < NUM_SOLDIER_SHADES; iWhich++ )
+	for (INT32 i = 0; i < NUM_SOLDIER_EFFECTSHADES; ++i)
 	{
-		if ( pSoldier->pShades[ iWhich ] != NULL )
+		if (s->pEffectShades[i] != NULL)
 		{
-			MemFree( pSoldier->pShades[ iWhich ] );
-			pSoldier->pShades[ iWhich ] = NULL;
+			MemFree(s->pEffectShades[i]);
+			s->pEffectShades[i] = NULL;
 		}
 	}
 
-	for ( iWhich = 0; iWhich < NUM_SOLDIER_EFFECTSHADES; iWhich++ )
+	for (INT32 i = 0; i < 20; ++i)
 	{
-		if ( pSoldier->pEffectShades[ iWhich ] != NULL )
+		if (s->pGlowShades[i] != NULL)
 		{
-			MemFree( pSoldier->pEffectShades[ iWhich ] );
-			pSoldier->pEffectShades[ iWhich ] = NULL;
-		}
-	}
-
-	for ( iWhich = 0; iWhich < 20; iWhich++ )
-	{
-		if ( pSoldier->pGlowShades[ iWhich ] != NULL )
-		{
-			MemFree( pSoldier->pGlowShades[ iWhich ] );
-			pSoldier->pGlowShades[ iWhich ] = NULL;
+			MemFree(s->pGlowShades[i]);
+			s->pGlowShades[i] = NULL;
 		}
 	}
 
 
-	CreateSoldierPaletteTables(pSoldier);
+	CreateSoldierPaletteTables(s);
 
-
-	// Build a grayscale palette for testing grayout of mercs
-	//for(uiCount=0; uiCount < 256; uiCount++)
-	//{
-	//	Pal[uiCount].peRed=(UINT8)(uiCount%128)+128;
-	//	Pal[uiCount].peGreen=(UINT8)(uiCount%128)+128;
-	//	Pal[uiCount].peBlue=(UINT8)(uiCount%128)+128;
-	//}
-	pSoldier->pEffectShades[ 0 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 100, 100, TRUE );
-	pSoldier->pEffectShades[ 1 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 150, 100, TRUE );
+	s->pEffectShades[0] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	s->pEffectShades[1] = Create16BPPPaletteShaded(pal, 100, 150, 100, TRUE);
 
 	// Build shades for glowing visible bad guy
 
 	// First do visible guy
-	pSoldier->pGlowShades[ 0 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 255, 255, 255, FALSE );
-	for ( cnt = 1; cnt < 10; cnt++ )
+	s->pGlowShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	for (INT32 i = 1; i < 10; ++i)
 	{
-		pSoldier->pGlowShades[cnt] = CreateEnemyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[cnt], 0);
+		s->pGlowShades[i] = CreateEnemyGlow16BPPPalette(pal, gRedGlowR[i], 0);
 	}
 
 	// Now for gray guy...
-	pSoldier->pGlowShades[ 10 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 100, 100, TRUE );
-	for ( cnt = 11; cnt < 19; cnt++ )
+	s->pGlowShades[10] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	for (INT32 i = 11; i < 19; ++i)
 	{
-		pSoldier->pGlowShades[cnt] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[cnt], 0);
+		s->pGlowShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[i], 0);
 	}
-	pSoldier->pGlowShades[19] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gRedGlowR[18], 0);
-
+	s->pGlowShades[19] = CreateEnemyGreyGlow16BPPPalette(pal, gRedGlowR[18], 0);
 
 	// ATE: OK, piggyback on the shades we are not using for 2 colored lighting....
 	// ORANGE, VISIBLE GUY
-	pSoldier->pShades[ 20 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 255, 255, 255, FALSE );
-	for ( cnt = 21; cnt < 30; cnt++ )
+	s->pShades[20] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	for (INT32 i = 21; i < 30; ++i)
 	{
-		pSoldier->pShades[cnt] = CreateEnemyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[cnt - 20], gOrangeGlowG[cnt - 20]);
+		s->pShades[i] = CreateEnemyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
 	}
 
 	// ORANGE, GREY GUY
-	pSoldier->pShades[ 30 ] = Create16BPPPaletteShaded( pSoldier->p8BPPPalette, 100, 100, 100, TRUE );
-	for ( cnt = 31; cnt < 39; cnt++ )
+	s->pShades[30] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
+	for (INT32 i = 31; i < 39; ++i)
 	{
-		pSoldier->pShades[cnt] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[cnt - 20], gOrangeGlowG[cnt - 20]);
+		s->pShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
 	}
-	pSoldier->pShades[39] = CreateEnemyGreyGlow16BPPPalette(pSoldier->p8BPPPalette, gOrangeGlowR[18], gOrangeGlowG[18]);
+	s->pShades[39] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[18], gOrangeGlowG[18]);
 
-	return( TRUE );
+	return TRUE;
 }
 
 
