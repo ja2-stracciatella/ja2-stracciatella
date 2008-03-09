@@ -438,7 +438,6 @@ BOOLEAN InitOverhead(void)
 		}
 
 		gTacticalStatus.Team[i].ubLastMercToRadio  = NOBODY;
-		gTacticalStatus.Team[i].bTeamActive        = FALSE;
 		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
 	}
 
@@ -6370,10 +6369,6 @@ void AddManToTeam( INT8 bTeam )
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		// Increment men in sector number!
-		if (gTacticalStatus.Team[ bTeam ].bMenInSector == 0)
-		{
-			gTacticalStatus.Team[ bTeam ].bTeamActive = TRUE;
-		}
 		gTacticalStatus.Team[ bTeam ].bMenInSector++;
 		if ( bTeam == ENEMY_TEAM )
 		{
@@ -6389,11 +6384,7 @@ void RemoveManFromTeam( INT8 bTeam )
 	{
 		// Decrement men in sector number!
 		gTacticalStatus.Team[ bTeam ].bMenInSector--;
-		if (gTacticalStatus.Team[ bTeam ].bMenInSector == 0)
-		{
-			gTacticalStatus.Team[ bTeam ].bTeamActive = FALSE;
-		}
-		else if (gTacticalStatus.Team[ bTeam ].bMenInSector < 0)
+		if (gTacticalStatus.Team[bTeam].bMenInSector < 0)
 		{
 			#ifdef JA2BETAVERSION
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[ bTeam ].bMenInSector );

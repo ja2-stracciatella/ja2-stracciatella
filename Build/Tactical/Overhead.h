@@ -27,7 +27,7 @@ typedef struct
 	INT8     bSide;
 	INT8     bMenInSector;
 	UINT8    ubLastMercToRadio;
-	INT8     bTeamActive;
+	INT8     bTeamActive_UNUNSED; // XXX HACK000B
 	INT8     bAwareOfOpposition;
 	INT8     bHuman;
 } TacticalTeamType;
@@ -198,7 +198,7 @@ extern TacticalStatusType gTacticalStatus;
 
 static inline BOOLEAN IsTeamActive(const UINT team)
 {
-	return gTacticalStatus.Team[team].bTeamActive;
+	return gTacticalStatus.Team[team].bMenInSector > 0;
 }
 
 
