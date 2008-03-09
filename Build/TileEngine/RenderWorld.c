@@ -2139,7 +2139,7 @@ void ScrollWorld(void)
 
 			ScrollFlags = 0;
 			INT8 bDirection;
-			if (SoldierLocationRelativeToScreen(gTacticalStatus.sSlideTarget, gTacticalStatus.sSlideReason, &bDirection, &ScrollFlags) &&
+			if (SoldierLocationRelativeToScreen(gTacticalStatus.sSlideTarget, &bDirection, &ScrollFlags) &&
 					GridNoOnVisibleWorldTile(gTacticalStatus.sSlideTarget))
 			{
 				static const UINT32 gScrollDirectionFlags[] =
