@@ -463,7 +463,7 @@ all: $(BINARY)
 ifndef NO_DEPS
 depend: $(DEPS)
 
-ifeq ($(findstring $(MAKECMDGOALS), clean depend Data),)
+ifeq ($(findstring $(MAKECMDGOALS), clean depend deinstall distclean lowercase),)
 -include $(DEPS)
 endif
 endif
@@ -491,6 +491,13 @@ install: $(BINARY)
 	$(Q)$(INSTALL_MAN) ja2.6 $(MANPREFIX)/man/man6
 	$(Q)$(INSTALL_DATA) ja2-stracciatella.desktop $(PREFIX)/share/applications
 	$(Q)$(INSTALL_DATA) Build/Res/jagged3.ico $(PREFIX)/share/pixmaps/jagged2.ico
+
+deinstall:
+	@echo '===> DEINSTALL'
+	$(Q)rm $(PREFIX)/bin/$(BINARY)
+	$(Q)rm $(MANPREFIX)/man/man6/ja2.6
+	$(Q)rm $(PREFIX)/share/applications/ja2-stracciatella.desktop
+	$(Q)rm $(PREFIX)/share/pixmaps/jagged2.ico
 
 
 lowercase:
