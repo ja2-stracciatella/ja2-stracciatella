@@ -3324,7 +3324,7 @@ static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
 			return( FALSE );
 		}
 
-		SOLDIERTYPE* const s = GetSoldierFromMercID(uiProfileID);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(uiProfileID);
 		//Should never happen
 		//Assert(s != NULL);
 		pTemp->pSoldier = s;

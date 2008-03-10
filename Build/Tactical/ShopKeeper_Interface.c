@@ -3094,7 +3094,7 @@ static void DisplayPlayersOfferArea(void)
 				//get an updated status from the amount in the pocket
 				if (o->bSlotIdInOtherLocation != -1 && o->ubIdOfMercWhoOwnsTheItem != NO_PROFILE)
 				{
-					const SOLDIERTYPE* const s = GetSoldierFromMercID(o->ubIdOfMercWhoOwnsTheItem);
+					const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(o->ubIdOfMercWhoOwnsTheItem);
 					Assert(s != NULL);
 					o->ItemObject.uiMoneyAmount = s->inv[o->bSlotIdInOtherLocation].uiMoneyAmount;
 					o->uiItemPrice = o->ItemObject.uiMoneyAmount;
@@ -5810,7 +5810,7 @@ static void IfMercOwnedCopyItemToMercInv(const INVENTORY_IN_SLOT* pInv)
 		Assert( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE );
 
 		// get soldier
-		SOLDIERTYPE* const s = GetSoldierFromMercID(pInv->ubIdOfMercWhoOwnsTheItem);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pInv->ubIdOfMercWhoOwnsTheItem);
 		Assert(s != NULL);
 		Assert(CanMercInteractWithSelectedShopkeeper(s));
 
@@ -5842,7 +5842,7 @@ static void IfMercOwnedRemoveItemFromMercInv2(UINT8 ubOwnerProfileId, INT8 bOwne
 		// and it better have a valid merc who owned it
 		Assert( ubOwnerProfileId != NO_PROFILE );
 
-		SOLDIERTYPE* const s = GetSoldierFromMercID(ubOwnerProfileId);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubOwnerProfileId);
 		Assert(s != NULL);
 		Assert(CanMercInteractWithSelectedShopkeeper(s));
 
@@ -5864,7 +5864,7 @@ static BOOLEAN SKITryToReturnInvToOwnerOrCurrentMerc(INVENTORY_IN_SLOT* pInv)
 	// if it does have an owner
 	if( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE )
 	{
-		SOLDIERTYPE* const s = GetSoldierFromMercID(pInv->ubIdOfMercWhoOwnsTheItem);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pInv->ubIdOfMercWhoOwnsTheItem);
 		// if that soldier is not in player's hire any longer
 		if (s == NULL) return FALSE;
 
@@ -6463,7 +6463,7 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 	//if the dealer is Micky
 	if( gbSelectedArmsDealerID == ARMS_DEALER_MICKY )
 	{
-		const SOLDIERTYPE* const s = GetSoldierFromMercID(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID);
+		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID);
 		if (s != NULL && GetDrunkLevel(s) == DRUNK)
 		{
 			//Micky is DRUNK, pays more!

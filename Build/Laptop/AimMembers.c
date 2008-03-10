@@ -1331,7 +1331,7 @@ static INT8 AimMemberHireMerc(void)
 	}
 
 	//Set the type of contract the merc is on
-	SOLDIERTYPE* const s = GetSoldierFromMercID(ubCurrentSoldier);
+	SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubCurrentSoldier);
 	if (s == NULL) return FALSE;
 	s->bTypeOfLastContract = bTypeOfContract;
 

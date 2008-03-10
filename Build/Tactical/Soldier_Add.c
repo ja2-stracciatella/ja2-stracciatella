@@ -1355,7 +1355,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 // IsMercOnTeam() checks to see if the passed in Merc Profile ID is currently on the player's team
 BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 {
-	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 	return s != NULL;
 }
 
@@ -1363,30 +1363,20 @@ BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 // ATE: Added this new function for contract renewals
 BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 {
-	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 	return s != NULL && s->bLife > 0;
 }
 
 
 BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
 {
-	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 	return s != NULL && s->bAssignment != IN_TRANSIT;
 }
 
 
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 {
-	const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 	return s != NULL && s->bAssignment != IN_TRANSIT && s->bLife > 0;
-}
-
-
-SOLDIERTYPE* GetSoldierFromMercID(UINT8 ubMercID)
-{
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
-	{
-		if (s->ubProfile == ubMercID) return s;
-	}
-	return NULL;
 }

@@ -37,9 +37,6 @@ BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID);
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID);
 
 
-// Gets the Soldier from the Merc Profile ID, else returns NULL
-SOLDIERTYPE* GetSoldierFromMercID(UINT8 ubMercID);
-
 UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAnimState, INT16 sSweetGridNo, INT8 ubRadius, UINT8 *pubDirection, BOOLEAN fClosestToMerc );
 
 UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* pSoldier, UINT16 usAnimState, INT8 ubRadius, BOOLEAN fClosestToMerc, const SOLDIERTYPE* pSrcSoldier);

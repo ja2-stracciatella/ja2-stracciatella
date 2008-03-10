@@ -328,7 +328,7 @@ void RenderInsuranceContract()
 	{
 		sMercID = gubInsuranceMercArray[ sNextMercID ];
 
-		const SOLDIERTYPE* const s = GetSoldierFromMercID(sMercID);
+		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(sMercID);
 		if (sMercID != -1 && MercIsInsurable(s))
 		{
 			DisplayOrderGrid( ubCount, (UINT8)sMercID );
@@ -399,7 +399,7 @@ static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
 	wchar_t		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
 
-	const SOLDIERTYPE* const pSoldier = GetSoldierFromMercID(ubMercID);
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 	Assert(ubGridNumber < 3);
 
@@ -600,7 +600,7 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 	{
 		const UINT idx = MSYS_GetBtnUserData(btn);
 		InsuranceInfo* const i = &insurance_info[idx];
-		SOLDIERTYPE* const s = GetSoldierFromMercID(i->merc_id);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(i->merc_id);
 
 		HandleAcceptButton(s);
 
@@ -771,8 +771,7 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 	FLOAT flRiskFactor;
 	UINT32 uiDailyInsurancePremium;
 	UINT32 uiTotalInsurancePremium;
-	const SOLDIERTYPE* const pSoldier = GetSoldierFromMercID(ubMercID);
-
+	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 	// only mercs with at least 2 days to go on their employment contract are insurable
 	// def: 2/5/99.  However if they already have insurance is SHOULD be ok
@@ -1099,7 +1098,7 @@ static void EnableDisableInsuranceContractAcceptButtons(void)
 	for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 	{
 		const InsuranceInfo* const ins = &insurance_info[i];
-		const SOLDIERTYPE* const s = GetSoldierFromMercID(ins->merc_id);
+		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ins->merc_id);
 		if (s == NULL) continue;
 
 		if (CanSoldierExtendInsuranceContract(s) && !IsMercDead(ins->merc_id))

@@ -640,7 +640,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 			if( i == MERC_LARRY_ROACHBURN )
 				continue;
 
-			const SOLDIERTYPE* const s = GetSoldierFromMercID(ubMercID);
+			const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 			//if the merc is dead, dont advance the contract length
 			if (!IsMercDead(s->ubProfile))

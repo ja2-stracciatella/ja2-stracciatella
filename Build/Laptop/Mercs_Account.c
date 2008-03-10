@@ -370,7 +370,7 @@ static void SettleMercAccounts(void)
 				//if the player can afford to pay this merc
 				if( LaptopSaveInfo.iCurrentBalance > iContractCharge )
 				{
-					pSoldier = GetSoldierFromMercID(ubMercID);
+					pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 					LaptopSaveInfo.guiNumberOfMercPaymentsInDays += pSoldier->iTotalContractLength;
 
@@ -410,7 +410,7 @@ static void SettleMercAccounts(void)
 
 		if( IsMercOnTeam( ubMercID ) )
 		{
-			pSoldier = GetSoldierFromMercID( ubMercID );
+			pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 			LaptopSaveInfo.guiNumberOfMercPaymentsInDays += pSoldier->iTotalContractLength;
 
