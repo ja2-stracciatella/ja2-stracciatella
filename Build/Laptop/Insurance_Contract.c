@@ -135,7 +135,6 @@ static BUTTON_PICS* guiInsuranceAcceptClearFormButtonImage;
 typedef struct InsuranceInfo
 {
 	UINT32       button;
-	INT16        length;
 	SOLDIERTYPE* soldier;
 } InsuranceInfo;
 
@@ -399,9 +398,7 @@ static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSo
 
 	Assert(ubGridNumber < 3);
 
-	InsuranceInfo* const i = &insurance_info[ubGridNumber];
-	i->soldier = pSoldier;
-	i->length  = pSoldier->iTotalLengthOfInsuranceContract;
+	insurance_info[ubGridNumber].soldier = pSoldier;
 
 	const INT32 dx = INS_CTRCT_ORDER_GRID_X + INS_CTRCT_ORDER_GRID_OFFSET_X * ubGridNumber;
 	const INT32 dy = INS_CTRCT_ORDER_GRID_Y;
@@ -595,16 +592,9 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		const UINT idx = MSYS_GetBtnUserData(btn);
-		InsuranceInfo* const i = &insurance_info[idx];
-		SOLDIERTYPE* const s = i->soldier;
+		SOLDIERTYPE* const s = insurance_info[idx].soldier;
 
 		HandleAcceptButton(s);
-
-		//specify the length of the insurance contract
-		s->iTotalLengthOfInsuranceContract = i->length;
-
-		//reset the insurance length
-		i->length = 0;
 
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
