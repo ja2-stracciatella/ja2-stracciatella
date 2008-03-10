@@ -21,14 +21,14 @@ enum
 // TACTICAL ENGINE STATUS FLAGS
 typedef struct
 {
-	UINT8    bFirstID;
-	UINT8    bLastID;
-	COLORVAL RadarColor;
-	INT8     bSide;
-	INT8     bMenInSector;
-	UINT8    ubLastMercToRadio;
-	INT8     bAwareOfOpposition;
-	INT8     bHuman;
+	UINT8        bFirstID;
+	UINT8        bLastID;
+	COLORVAL     RadarColor;
+	INT8         bSide;
+	INT8         bMenInSector;
+	INT8         bAwareOfOpposition;
+	INT8         bHuman;
+	SOLDIERTYPE* last_merc_to_radio;
 } TacticalTeamType;
 
 

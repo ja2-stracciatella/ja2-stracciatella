@@ -1498,7 +1498,8 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 		// CJC: restrict "last one to radio" to only if that guy saw us this turn or last turn
 
 		// if this friend is not under fire, and isn't the last one to radio
-		if ( ! ( pFriend->bUnderFire || (pFriend->ubID == gTacticalStatus.Team[pFriend->bTeam].ubLastMercToRadio && GuySawEnemyThisTurnOrBefore( pFriend ) ) ) )
+		if (!pFriend->bUnderFire &&
+				(pFriend != gTacticalStatus.Team[pFriend->bTeam].last_merc_to_radio || !GuySawEnemyThisTurnOrBefore(pFriend)))
 		{
 			continue;          // next merc
 		}

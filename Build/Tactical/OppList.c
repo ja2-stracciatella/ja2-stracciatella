@@ -2356,10 +2356,8 @@ void RemoveManAsTarget(SOLDIERTYPE *pSoldier)
 
  ResetLastKnownLocs(pSoldier);
 
- if (gTacticalStatus.Team[pSoldier->bTeam].ubLastMercToRadio == ubTarget)
-   gTacticalStatus.Team[pSoldier->bTeam].ubLastMercToRadio = NOBODY;
-
-
+	TacticalTeamType* const tt = &gTacticalStatus.Team[pSoldier->bTeam];
+	if (tt->last_merc_to_radio == pSoldier) tt->last_merc_to_radio = NULL;
 }
 
 
@@ -2776,7 +2774,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 	DebugMsg(TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("RADIO SIGHTINGS: for %d about %d", pSoldier->ubID, SOLDIER2ID(about)));
 #endif
 
- gTacticalStatus.Team[pSoldier->bTeam].ubLastMercToRadio = pSoldier->ubID;
+	gTacticalStatus.Team[pSoldier->bTeam].last_merc_to_radio = pSoldier;
 
  // who are we radioing about?
 	if (about == EVERYBODY)
@@ -5609,7 +5607,7 @@ void DecayPublicOpplist(INT8 bTeam)
 	{
 		// forget about the last radio alert (ie. throw away who made the call)
 		// this is mainly so POINT_PATROL guys don't SEEK_FRIEND forever after
-		gTacticalStatus.Team[bTeam].ubLastMercToRadio = NOBODY;
+		gTacticalStatus.Team[bTeam].last_merc_to_radio = NULL;
 	}
 
 	// decay watched locs as well

@@ -437,7 +437,7 @@ BOOLEAN InitOverhead(void)
 			gTacticalStatus.Team[i].bHuman = FALSE;
 		}
 
-		gTacticalStatus.Team[i].ubLastMercToRadio  = NOBODY;
+		gTacticalStatus.Team[i].last_merc_to_radio = NULL;
 		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
 	}
 
@@ -6469,7 +6469,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 
 	for (INT32 i = 0; i < MAXTEAMS; ++i)
 	{
-		gTacticalStatus.Team[i].ubLastMercToRadio  = NOBODY;
+		gTacticalStatus.Team[i].last_merc_to_radio = NULL;
 		gTacticalStatus.Team[i].bAwareOfOpposition = FALSE;
 	}
 
