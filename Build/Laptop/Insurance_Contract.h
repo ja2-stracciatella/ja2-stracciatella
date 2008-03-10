@@ -4,7 +4,6 @@
 #include "JA2Types.h"
 
 
-void GameInitInsuranceContract(void);
 BOOLEAN EnterInsuranceContract(void);
 void ExitInsuranceContract(void);
 void HandleInsuranceContract(void);

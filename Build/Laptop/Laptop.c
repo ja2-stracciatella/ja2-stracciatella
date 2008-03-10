@@ -394,7 +394,6 @@ UINT32 LaptopScreenInit(void)
 	GameInitBobbyRMailOrder();
 	GameInitEmail();
 	GameInitCharProfile();
-	GameInitInsuranceContract();
 	GameInitFiles();
 	GameInitPersonnel();
 

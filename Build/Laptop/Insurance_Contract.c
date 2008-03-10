@@ -143,12 +143,6 @@ typedef struct InsuranceInfo
 static InsuranceInfo insurance_info[3];
 
 
-void GameInitInsuranceContract()
-{
-	gsCurrentInsuranceMercIndex = gTacticalStatus.Team[ gbPlayerNum ].bFirstID;
-}
-
-
 static INT32 MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
