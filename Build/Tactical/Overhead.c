@@ -4354,7 +4354,7 @@ void EnterCombatMode( UINT8 ubStartingTeam )
 	// 1 ) we see bloodcats ( which makes them hostile )
 	// 2 ) we make civs hostile
 	// only do this once they are seen.....
-	if (!gTacticalStatus.fEnemyInSector) SetEnemyPresence();
+	SetEnemyPresence();
 
 	CommonEnterCombatModeCode( );
 
