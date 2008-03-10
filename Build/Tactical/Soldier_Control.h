@@ -539,7 +539,6 @@ struct SOLDIERTYPE
 	INT8												bUnderFire;
 	INT8												bShock;
 	INT8												bBypassToGreen;
-	UINT8												ubLastMercToRadio;
 	INT8												bDominantDir;				// AI main direction to face...
 	INT8												bPatrolCnt;					// number of patrol gridnos
 	INT8												bNextPatrolPnt;			// index to next patrol gridno
