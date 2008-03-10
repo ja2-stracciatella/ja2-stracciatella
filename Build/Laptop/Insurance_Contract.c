@@ -1087,7 +1087,7 @@ static void EnableDisableInsuranceContractAcceptButtons(void)
 		const SOLDIERTYPE* const s = ins->soldier;
 		if (s == NULL) continue;
 
-		if (CanSoldierExtendInsuranceContract(s) && !IsMercDead(s->ubProfile))
+		if (CanSoldierExtendInsuranceContract(s))
 		{
 			EnableButton(ins->button);
 		}
