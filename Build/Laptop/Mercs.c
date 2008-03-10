@@ -620,7 +620,6 @@ static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 
 void DailyUpdateOfMercSite( UINT16 usDate)
 {
-	UINT8		ubMercID;
 	INT32		iNumDays;
 	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
 
@@ -633,28 +632,18 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 	//loop through all of the hired mercs from M.E.R.C.
 	for (INT16 i = 0; i < NUMBER_OF_MERCS; ++i)
 	{
-		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
-		if( IsMercOnTeam( ubMercID ) )
-		{
-			//if it larry Roach burn advance.  ( cause larry is in twice, a sober larry and a stoned larry )
-			if( i == MERC_LARRY_ROACHBURN )
-				continue;
+		//if it larry Roach burn advance.  ( cause larry is in twice, a sober larry and a stoned larry )
+		if (i == MERC_LARRY_ROACHBURN) continue;
 
-			const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
+		const ProfileID pid = GetMercIDFromMERCArray((UINT8)i);
+		if (!IsMercOnTeam(pid)) continue;
+		MERCPROFILESTRUCT* const p = GetProfile(pid);
 
-			//if the merc is dead, dont advance the contract length
-			if (!IsMercDead(s->ubProfile))
-			{
-				gMercProfiles[s->ubProfile].iMercMercContractLength += 1;
-//				s->iTotalContractLength++;
-			}
+		//if the merc is dead, dont advance the contract length
+		if (!IsMercDead(pid)) p->iMercMercContractLength += 1;
 
-			//Get the longest time
-			if (gMercProfiles[s->ubProfile].iMercMercContractLength > iNumDays)
-			{
-				iNumDays = gMercProfiles[s->ubProfile].iMercMercContractLength;
-			}
-		}
+		//Get the longest time
+		if (p->iMercMercContractLength > iNumDays) iNumDays = p->iMercMercContractLength;
 	}
 
 	//if the players hasnt paid for a while, get email him to tell him to pay
