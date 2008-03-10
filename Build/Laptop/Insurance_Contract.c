@@ -111,7 +111,7 @@ UINT8		gubNumberofDisplayedInsuranceGrids;
 
 BOOLEAN	gfChangeInsuranceFormButtons = FALSE;
 
-UINT8		gubInsuranceMercArray[ 20 ];
+static const SOLDIERTYPE* g_insurance_merc_array[20];
 INT16		gsCurrentInsuranceMercIndex;
 INT16		gsMaxPlayersOnTeam;
 
@@ -268,7 +268,7 @@ void HandleInsuranceContract()
 
 static BOOLEAN AreAnyAimMercsOnTeam(void);
 static void DisableInsuranceContractNextPreviousbuttons(void);
-static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID);
+static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, const SOLDIERTYPE*);
 static void InsContractNoMercsPopupCallBack(UINT8 bExitValue);
 static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier);
 
@@ -277,7 +277,6 @@ void RenderInsuranceContract()
 {
 	wchar_t		sText[800];
 	UINT8			ubCount=0;
-	INT16			sMercID;
 	INT16			sNextMercID;
 	UINT16		usPosX;
 
@@ -326,12 +325,10 @@ void RenderInsuranceContract()
 	sNextMercID =	gsCurrentInsuranceMercIndex;
 	while( ( ubCount < gubNumberofDisplayedInsuranceGrids ) && ( sNextMercID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID ) )
 	{
-		sMercID = gubInsuranceMercArray[ sNextMercID ];
-
-		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(sMercID);
-		if (sMercID != -1 && MercIsInsurable(s))
+		const SOLDIERTYPE* const s = g_insurance_merc_array[sNextMercID];
+		if (MercIsInsurable(s))
 		{
-			DisplayOrderGrid( ubCount, (UINT8)sMercID );
+			DisplayOrderGrid(ubCount, s);
 			ubCount++;
 		}
 
@@ -392,14 +389,13 @@ static UINT32 GetTimeRemainingOnSoldiersContract(const SOLDIERTYPE* pSoldier);
 static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSoldier);
 
 
-static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, UINT8 ubMercID)
+static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, const SOLDIERTYPE* const pSoldier)
 {
+	const ProfileID ubMercID = pSoldier->ubProfile;
 	INT32		iCostOfContract=0;
 	char			sTemp[100];
 	wchar_t		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
-
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 	Assert(ubGridNumber < 3);
 
@@ -882,7 +878,7 @@ static void BuildInsuranceArray(void)
 	{
 		if (MercIsInsurable(s))
 		{
-			gubInsuranceMercArray[gsMaxPlayersOnTeam++] = s->ubProfile;
+			g_insurance_merc_array[gsMaxPlayersOnTeam++] = s;
 		}
 	}
 }
