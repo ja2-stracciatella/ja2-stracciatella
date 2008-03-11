@@ -269,13 +269,11 @@ static BOOLEAN AreAnyAimMercsOnTeam(void);
 static void DisableInsuranceContractNextPreviousbuttons(void);
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, SOLDIERTYPE*);
 static void InsContractNoMercsPopupCallBack(UINT8 bExitValue);
-static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier);
 
 
 void RenderInsuranceContract()
 {
 	wchar_t		sText[800];
-	UINT8			ubCount=0;
 	INT16			sNextMercID;
 	UINT16		usPosX;
 
@@ -322,20 +320,15 @@ void RenderInsuranceContract()
 
 
 	sNextMercID =	gsCurrentInsuranceMercIndex;
-	while( ( ubCount < gubNumberofDisplayedInsuranceGrids ) && ( sNextMercID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID ) )
+	const UINT count_insurance_grids = gubNumberofDisplayedInsuranceGrids;
+	for (UINT i = 0; i < count_insurance_grids; ++i)
 	{
-		SOLDIERTYPE* const s = g_insurance_merc_array[sNextMercID];
-		if (MercIsInsurable(s))
-		{
-			DisplayOrderGrid(ubCount, s);
-			ubCount++;
-		}
-
-		sNextMercID++;
+		SOLDIERTYPE* const s = g_insurance_merc_array[sNextMercID++];
+		DisplayOrderGrid(i, s);
 	}
 
 	//if there are no valid mercs to insure
-	if( ubCount == 0 )
+	if (count_insurance_grids == 0)
 	{
 		//if there where AIM mercs ( on short contract )
 		if( AreAnyAimMercsOnTeam( ) )
@@ -631,6 +624,9 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 			guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE_INFO;
 	}
 }
+
+
+static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier);
 
 
 static INT8 CountInsurableMercs(void)
