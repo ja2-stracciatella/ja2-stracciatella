@@ -625,24 +625,10 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 }
 
 
-static BOOLEAN MercIsInsurable(const SOLDIERTYPE* pSoldier);
-
-
-static INT8 CountInsurableMercs(void)
-{
-	INT8 bCount = 0;
-	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		if (MercIsInsurable(s)) ++bCount;
-	}
-	return bCount;
-}
-
-
 static void DisableInsuranceContractNextPreviousbuttons(void)
 {
 	//disable the next button if there is no more mercs to display
-	if( ( gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids ) < CountInsurableMercs() )
+	if (gsCurrentInsuranceMercIndex + gubNumberofDisplayedInsuranceGrids < g_n_insurable_mercs)
 	{
 		EnableButton( guiInsContractNextBackButton );
 	}
@@ -852,6 +838,9 @@ static void InsContractNoMercsPopupCallBack(UINT8 bExitValue)
 		guiCurrentLaptopMode = LAPTOP_MODE_INSURANCE;
 	}
 }
+
+
+static BOOLEAN MercIsInsurable(const SOLDIERTYPE*);
 
 
 static void BuildInsuranceArray(void)
