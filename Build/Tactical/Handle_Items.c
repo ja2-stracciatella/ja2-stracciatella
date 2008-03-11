@@ -174,1106 +174,805 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot);
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI )
+INT32 HandleItem(SOLDIERTYPE* const s, UINT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
 {
-	INT16							sTargetGridNo;
-	INT16							sAPCost;
-	INT16							sActionGridNo;
-	UINT8							ubDirection;
-	INT16							sAdjustedGridNo;
-	BOOLEAN						fDropBomb = FALSE;
-  BOOLEAN						fAddingTurningCost = FALSE;
-  BOOLEAN						fAddingRaiseGunCost = FALSE;
-	LEVELNODE					*pIntNode;
-	STRUCTURE					*pStructure;
-	INT16							sGridNo;
-
-
 	// Remove any previous actions
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	s->ubPendingAction = NO_PENDING_ACTION;
 
 	// here is where we would set a different value if the weapon mode is on
 	// "attached weapon"
-	pSoldier->usAttackingWeapon = usHandItem;
+	s->usAttackingWeapon = usHandItem;
 
 	// Find soldier flags depend on if it's our own merc firing or a NPC
-	SOLDIERTYPE* pTargetSoldier = WhoIsThere2(usGridNo, bLevel);
-	if (pTargetSoldier != NULL)
+	INT16        sGridNo;
+	SOLDIERTYPE* tgt = WhoIsThere2(usGridNo, bLevel);
+	if (tgt != NULL && fFromUI)
 	{
-    if ( fFromUI )
-    {
-	    // ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
-	    pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
-
-  		if ( pIntNode != NULL && pTargetSoldier == pSoldier )
-      {
-        // Truncate target sioldier
-        pTargetSoldier = NULL;
-      }
-    }
+		// ATE: Check if we are targeting an interactive tile, and adjust gridno accordingly...
+		STRUCTURE* pStructure;
+		LEVELNODE* const pIntNode = GetCurInteractiveTileGridNoAndStructure(&sGridNo, &pStructure);
+		if (pIntNode != NULL && tgt == s)
+		{
+			// Truncate target soldier
+			tgt = NULL;
+		}
 	}
 
 	// ATE: If in realtime, set attacker count to 0...
-	if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 due to no combat");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
-  if ( pTargetSoldier )
-  {
-    pTargetSoldier->bBeingAttackedCount = 0;
-  }
-
+	if (tgt) tgt->bBeingAttackedCount = 0;
 
 	// Check our soldier's life for unconscious!
-	if ( pSoldier->bLife < OKLIFE )
-	{
-		return( ITEM_HANDLE_UNCONSCIOUS );
-	}
+	if (s->bLife < OKLIFE)          return ITEM_HANDLE_UNCONSCIOUS;
+	if (!HandItemWorks(s, HANDPOS)) return ITEM_HANDLE_BROKEN;
 
-	if (HandItemWorks( pSoldier, HANDPOS ) == FALSE )
-	{
-		return( ITEM_HANDLE_BROKEN );
-	}
+	const INVTYPE* const item = &Item[usHandItem];
 
-	if ( fFromUI && pSoldier->bTeam == gbPlayerNum && pTargetSoldier && (pTargetSoldier->bTeam == gbPlayerNum || pTargetSoldier->bNeutral) && pTargetSoldier->ubBodyType != CROW && Item[ usHandItem ].usItemClass != IC_MEDKIT )
+	if (fFromUI                                      &&
+			s->bTeam == gbPlayerNum                      &&
+			tgt                                          &&
+			(tgt->bTeam == gbPlayerNum || tgt->bNeutral) &&
+			tgt->ubBodyType != CROW                      &&
+			item->usItemClass != IC_MEDKIT               &&
+			s->ubProfile != NO_PROFILE)
 	{
-		if ( pSoldier->ubProfile != NO_PROFILE  )
+		// nice mercs won't shoot other nice guys or neutral civilians
+		if (gMercProfiles[s->ubProfile].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY &&
+				(
+					(tgt->ubProfile == NO_PROFILE && tgt->bNeutral) ||
+					gMercProfiles[tgt->ubProfile].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY
+				))
 		{
-			// nice mercs won't shoot other nice guys or neutral civilians
-			if ( (gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) && ( (pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->bNeutral) || gMercProfiles[ pTargetSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_GOODGUY) )
-			{
-				TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
-				return( ITEM_HANDLE_REFUSAL );
-			}
-			if ( pTargetSoldier->ubProfile != NO_PROFILE )
-			{
-				// buddies won't shoot each other
-				if ( WhichBuddy( pSoldier->ubProfile, pTargetSoldier->ubProfile ) != -1 )
-				{
-					TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
-					return( ITEM_HANDLE_REFUSAL );
-				}
-			}
-
-			// any recruited rebel will refuse to fire on another rebel or neutral nameless civ
-			if ( pSoldier->ubCivilianGroup == REBEL_CIV_GROUP && (pTargetSoldier->ubCivilianGroup == REBEL_CIV_GROUP || ( pTargetSoldier->bNeutral && pTargetSoldier->ubProfile == NO_PROFILE && pTargetSoldier->ubCivilianGroup == NON_CIV_GROUP && pTargetSoldier->ubBodyType != CROW ) ) )
-			{
-				TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
-				return( ITEM_HANDLE_REFUSAL );
-			}
+			TacticalCharacterDialogue(s, QUOTE_REFUSING_ORDER);
+			return ITEM_HANDLE_REFUSAL;
+		}
+		// buddies won't shoot each other
+		if (tgt->ubProfile != NO_PROFILE &&
+				WhichBuddy(s->ubProfile, tgt->ubProfile) != -1)
+		{
+			TacticalCharacterDialogue(s, QUOTE_REFUSING_ORDER);
+			return ITEM_HANDLE_REFUSAL;
 		}
 
+		// any recruited rebel will refuse to fire on another rebel or neutral nameless civ
+		if (s->ubCivilianGroup == REBEL_CIV_GROUP &&
+				(
+					tgt->ubCivilianGroup == REBEL_CIV_GROUP ||
+					(
+						tgt->bNeutral                         &&
+						tgt->ubProfile       == NO_PROFILE    &&
+						tgt->ubCivilianGroup == NON_CIV_GROUP &&
+						tgt->ubBodyType      != CROW
+					)
+				))
+		{
+			TacticalCharacterDialogue(s, QUOTE_REFUSING_ORDER);
+			return ITEM_HANDLE_REFUSAL;
+		}
 	}
 
 	// Check HAND ITEM
-	if ( Item[ usHandItem ].usItemClass == IC_GUN || Item[ usHandItem ].usItemClass == IC_THROWING_KNIFE )
+	if (item->usItemClass == IC_GUN || item->usItemClass == IC_THROWING_KNIFE)
 	{
 		// WEAPONS
-		if ( usHandItem == ROCKET_RIFLE || usHandItem == AUTO_ROCKET_RIFLE )
+		if (usHandItem == ROCKET_RIFLE || usHandItem == AUTO_ROCKET_RIFLE)
 		{
 			// check imprint ID
 			// NB not-imprinted value is NO_PROFILE
 			// imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
-			if (pSoldier->ubProfile != NO_PROFILE)
+			OBJECTTYPE* const wpn = &s->inv[s->ubAttackingHand];
+			if (s->ubProfile != NO_PROFILE)
 			{
-				if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != pSoldier->ubProfile )
+				if (wpn->ubImprintID != s->ubProfile)
 				{
-					if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID == NO_PROFILE )
+					if (wpn->ubImprintID == NO_PROFILE)
 					{
 						// first shot using "virgin" gun... set imprint ID
-						pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID = pSoldier->ubProfile;
+						wpn->ubImprintID = s->ubProfile;
 
 						// this could be an NPC (Krott)
-						if (pSoldier->bTeam == gbPlayerNum)
+						if (s->bTeam == gbPlayerNum)
 						{
 							PlayJA2Sample(RG_ID_IMPRINTED, HIGHVOLUME, 1, MIDDLE);
-
-      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%ls\"", TacticalStr[ GUN_GOT_FINGERPRINT ] );
-
-							return( ITEM_HANDLE_BROKEN );
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%ls\"", TacticalStr[GUN_GOT_FINGERPRINT]);
+							return ITEM_HANDLE_BROKEN;
 						}
 					}
 					else
 					{
 						// access denied!
-						if (pSoldier->bTeam == gbPlayerNum)
+						if (s->bTeam == gbPlayerNum)
 						{
 							PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
-
-							//if (Random( 100 ) < (UINT32) pSoldier->bWisdom)
-							//{
-							//	DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-							//}
-							//else
-							//{
-							//	TacticalCharacterDialogue( pSoldier, QUOTE_USELESS_ITEM );
-							//}
 						}
-						return( ITEM_HANDLE_BROKEN );
+						return ITEM_HANDLE_BROKEN;
 					}
 				}
 			}
 			else
 			{
 				// guaranteed not to be controlled by the player, so no feedback required
-				if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != (NO_PROFILE + 1) )
+				if (wpn->ubImprintID != NO_PROFILE + 1)
 				{
-					if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID == NO_PROFILE )
-					{
-						pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID = (NO_PROFILE + 1);
-					}
-					else
-					{
-						return( ITEM_HANDLE_BROKEN );
-					}
+					if (wpn->ubImprintID != NO_PROFILE) return ITEM_HANDLE_BROKEN;
+					wpn->ubImprintID = NO_PROFILE + 1;
 				}
 			}
 		}
 
 		// IF we are not a throwing knife, check for ammo, reloading...
-		if ( Item[ usHandItem ].usItemClass != IC_THROWING_KNIFE )
+		if (item->usItemClass != IC_THROWING_KNIFE)
 		{
 			// CHECK FOR AMMO!
-			if ( !EnoughAmmo( pSoldier, fFromUI, HANDPOS ) )
+			if (!EnoughAmmo(s, fFromUI, HANDPOS))
 			{
 				//ATE: Reflect that we need to reset for bursting
-				pSoldier->fDoSpread = FALSE;
-				return( ITEM_HANDLE_NOAMMO );
+				s->fDoSpread = FALSE;
+				return ITEM_HANDLE_NOAMMO;
 			}
 
 			// Check if we are reloading
-			if ( (gTacticalStatus.uiFlags & REALTIME) || !(gTacticalStatus.uiFlags & INCOMBAT) )
+			if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+					s->fReloading)
 			{
-				if ( pSoldier->fReloading )
-				{
-					return( ITEM_HANDLE_RELOADING );
-				}
+				return ITEM_HANDLE_RELOADING;
 			}
 		}
 
 		// Get gridno - either soldier's position or the gridno
-		if ( pTargetSoldier != NULL )
-		{
-			sTargetGridNo	= pTargetSoldier->sGridNo;
-		}
-		else
-		{
-			sTargetGridNo	= usGridNo;
-		}
+		const INT16 sTargetGridNo = (tgt != NULL ? tgt->sGridNo : usGridNo);
 
 		// If it's a player guy, check ChanceToGetThrough to play quote
-		if ( fFromUI && (gTacticalStatus.uiFlags & TURNBASED ) && (gTacticalStatus.uiFlags & INCOMBAT) )
+		if (fFromUI                             &&
+				gTacticalStatus.uiFlags & TURNBASED &&
+				gTacticalStatus.uiFlags & INCOMBAT  &&
+				!s->fDoSpread                       &&
+				!HandleCheckForBadChangeToGetThrough(s, tgt, sTargetGridNo, bLevel))
 		{
-			// Don't do if no spread!
-			if ( !pSoldier->fDoSpread )
-			{
-				if ( !HandleCheckForBadChangeToGetThrough( pSoldier, pTargetSoldier, sTargetGridNo , bLevel ) )
-				{
-					return( ITEM_HANDLE_OK );
-				}
-			}
+			return ITEM_HANDLE_OK;
 		}
-
 
 		// Get AP COSTS
 		// ATE: OK something funny going on here - AI seems to NEED FALSE here,
 		// Our guys NEED TRUE. We shoulkd at some time make sure the AI and
 		// our guys are deducting/checking in the same manner to avoid
 		// these differences.
-		sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, pSoldier->bAimTime );
+		const INT16 sAPCost = CalcTotalAPsToAttack(s, sTargetGridNo, TRUE, s->bAimTime);
 
-
-		GetAPChargeForShootOrStabWRTGunRaises( pSoldier, sTargetGridNo, TRUE, &fAddingTurningCost, &fAddingRaiseGunCost );
+		BOOLEAN fAddingTurningCost  = FALSE;
+		BOOLEAN fAddingRaiseGunCost = FALSE;
+		GetAPChargeForShootOrStabWRTGunRaises(s, sTargetGridNo, TRUE, &fAddingTurningCost, &fAddingRaiseGunCost);
 
 		// If we are standing and are asked to turn AND raise gun, ignore raise gun...
-		if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND )
+		if (gAnimControl[s->usAnimState].ubHeight == ANIM_STAND)
 		{
-			if ( fAddingRaiseGunCost )
-			{
-				pSoldier->fDontChargeTurningAPs = TRUE;
-			}
+			if (fAddingRaiseGunCost) s->fDontChargeTurningAPs = TRUE;
 		}
 		else
 		{
 			// If raising gun, don't charge turning!
-		  if ( fAddingTurningCost )
+			if (fAddingTurningCost) s->fDontChargeReadyAPs = TRUE;
+		}
+
+		// If this is a player guy, show message about no APS
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		// Psychos might possibly switch to burst if they can
+		if (s->ubProfile != NO_PROFILE                              &&
+				gMercProfiles[s->ubProfile].bPersonalityTrait == PSYCHO &&
+				!s->bDoBurst                                            &&
+				IsGunBurstCapable(s, HANDPOS))
+		{
+			// chance of firing burst if we have points... chance decreasing when ordered to do aimed shot
+
+			// temporarily set burst to true to calculate action points
+			s->bDoBurst = TRUE;
+			const INT16 sAPCost = CalcTotalAPsToAttack(s, sTargetGridNo, TRUE, 0);
+			// reset burst mode to false (which is what it was at originally)
+			s->bDoBurst = FALSE;
+
+			// we have enough points to do this burst, roll the dice and see if we want to change
+			if (EnoughPoints(s, sAPCost, 0, FALSE) && Random(3 + s->bAimTime) == 0)
 			{
-				pSoldier->fDontChargeReadyAPs = TRUE;
+				DoMercBattleSound(s, BATTLE_SOUND_LAUGH1);
+				s->bDoBurst    = TRUE;
+				s->bWeaponMode = WM_BURST;
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[26], s->name);
 			}
 		}
 
+		// Deduct points if our target is different!
+		// if attacking a new target (or if the specific target is uncertain)
 
-
-
-		// If this is a player guy, show message about no APS
-		if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
+		if (fFromUI)
 		{
-			if ( (pSoldier->ubProfile != NO_PROFILE) && (gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == PSYCHO) )
+			// set the target level; if the AI calls this it will have set the level already...
+			s->bTargetLevel = gsInterfaceLevel;
+		}
+
+		if (item->usItemClass != IC_THROWING_KNIFE)
+		{
+			// If doing spread, set down the first gridno.....
+			if (!s->fDoSpread || s->sSpreadLocations[0] == 0)
 			{
-				// psychos might possibly switch to burst if they can
-				if (!pSoldier->bDoBurst && IsGunBurstCapable(pSoldier, HANDPOS))
-				{
-					// chance of firing burst if we have points... chance decreasing when ordered to do aimed shot
-
-					// temporarily set burst to true to calculate action points
-					pSoldier->bDoBurst = TRUE;
-					sAPCost = CalcTotalAPsToAttack( pSoldier, sTargetGridNo, TRUE, 0 );
-					// reset burst mode to false (which is what it was at originally)
-					pSoldier->bDoBurst = FALSE;
-
-					if ( EnoughPoints( pSoldier, sAPCost, 0, FALSE ) )
-					{
-						// we have enough points to do this burst, roll the dice and see if we want to change
-						if ( Random( 3 + pSoldier->bAimTime ) == 0 )
-						{
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_LAUGH1 );
-							pSoldier->bDoBurst = TRUE;
-							pSoldier->bWeaponMode = WM_BURST;
-
-        			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 26 ], pSoldier->name );
-						}
-					}
-
-				}
-			}
-
-			// Deduct points if our target is different!
-			// if attacking a new target (or if the specific target is uncertain)
-
-		// DEF:  Made into an event
-//		EVENT_FireSoldierWeapon( pSoldier, sTargetGridNo );
-			if (fFromUI)
-			{
-				// set the target level; if the AI calls this it will have set the level already...
-				pSoldier->bTargetLevel = (INT8) gsInterfaceLevel;
-			}
-
-			if ( Item[ usHandItem ].usItemClass != IC_THROWING_KNIFE )
-			{
-				// If doing spread, set down the first gridno.....
-				if ( pSoldier->fDoSpread )
-				{
-					if ( pSoldier->sSpreadLocations[ 0 ] != 0 )
-					{
-						SendBeginFireWeaponEvent( pSoldier, pSoldier->sSpreadLocations[ 0 ] );
-					}
-					else
-					{
-						SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-					}
-				}
-				else
-				{
-					SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-				}
-
-				// ATE: Here to make cursor go back to move after LAW shot...
-				if ( fFromUI && usHandItem == ROCKET_LAUNCHER )
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-				}
-
+				SendBeginFireWeaponEvent(s, sTargetGridNo);
 			}
 			else
 			{
-				UINT8 ubDirection;
-				// Start knife throw attack
-
-				// Get direction
-				ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
-
-				EVENT_SoldierBeginKnifeThrowAttack( pSoldier, sTargetGridNo, ubDirection );
-
+				SendBeginFireWeaponEvent(s, s->sSpreadLocations[0]);
 			}
 
-			if (fFromUI)
+			// ATE: Here to make cursor go back to move after LAW shot...
+			if (fFromUI && usHandItem == ROCKET_LAUNCHER)
 			{
-				// If in turn based - refresh aim to first level
-				if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
-				{
-					pSoldier->bShownAimTime = REFINE_AIM_1;
-
-					// Locate to soldier if he's about to shoot!
-					if ( pSoldier->bTeam != gbPlayerNum  )
-					{
-						ShowRadioLocator(pSoldier, SHOW_LOCATOR_NORMAL);
-					}
-				}
+				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 			}
-
-			// OK, set UI
-			SetUIBusy(pSoldier);
 		}
 		else
 		{
-			return( ITEM_HANDLE_NOAPS );
+			// Start knife throw attack
+			const UINT8 ubDirection = GetDirectionFromGridNo(sTargetGridNo, s);
+			EVENT_SoldierBeginKnifeThrowAttack(s, sTargetGridNo, ubDirection);
 		}
 
-		return( ITEM_HANDLE_OK );
+		// If in turn based - refresh aim to first level
+		if (fFromUI                             &&
+				gTacticalStatus.uiFlags & TURNBASED &&
+				gTacticalStatus.uiFlags & INCOMBAT)
+		{
+			s->bShownAimTime = REFINE_AIM_1;
+
+			// Locate to soldier if he's about to shoot!
+			if (s->bTeam != gbPlayerNum) ShowRadioLocator(s, SHOW_LOCATOR_NORMAL);
+		}
+
+		SetUIBusy(s);
+		return ITEM_HANDLE_OK;
 	}
 
-
 	//TRY PUNCHING
-	if ( Item[ usHandItem ].usItemClass == IC_PUNCH )
+	if (item->usItemClass == IC_PUNCH)
 	{
-		 INT16	sCnt;
-		 INT16	sSpot;
-		 INT16		sGotLocation = NOWHERE;
-		 BOOLEAN	fGotAdjacent = FALSE;
+		INT16 sGotLocation = NOWHERE;
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		for (INT16 i = 0; i < NUM_WORLD_DIRECTIONS; ++i)
+		{
+			const INT16 sSpot = NewGridNo(s->sGridNo, DirectionInc(i));
 
-		 for ( sCnt = 0; sCnt < NUM_WORLD_DIRECTIONS; sCnt++ )
-		 {
-				sSpot = NewGridNo( pSoldier->sGridNo, DirectionInc( sCnt ) );
+			// Make sure movement costs are OK....
+			if (gubWorldMovementCosts[sSpot][i][bLevel] >= TRAVELCOST_BLOCKED)
+			{
+				continue;
+			}
 
-        // Make sure movement costs are OK....
-        if ( gubWorldMovementCosts[ sSpot ][ sCnt ][ bLevel ] >= TRAVELCOST_BLOCKED )
-        {
-          continue;
-        }
+			// Check for who is there...
+			if (tgt != NULL && tgt == WhoIsThere2(sSpot, s->bLevel))
+			{
+				// We've got a guy here....
+				// Who is the one we want......
+				sGotLocation    = sSpot;
+				sAdjustedGridNo = tgt->sGridNo;
+				ubDirection     = i;
+				break;
+			}
+		}
 
-				// Check for who is there...
-				if (pTargetSoldier != NULL &&
-						pTargetSoldier == WhoIsThere2(sSpot, pSoldier->bLevel))
-					{
-						// We've got a guy here....
-						// Who is the one we want......
-						sGotLocation = sSpot;
-						sAdjustedGridNo	= pTargetSoldier->sGridNo;
-						ubDirection		= ( UINT8 )sCnt;
-						break;
-					}
-		 }
+		BOOLEAN	fGotAdjacent = FALSE;
+		if (sGotLocation == NOWHERE)
+		{
+			// See if we can get there to punch
+			const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+			if (sActionGridNo != -1)
+			{
+				// OK, we've got somebody...
+				sGotLocation = sActionGridNo;
+				fGotAdjacent = TRUE;
+			}
+		}
 
-		 if ( sGotLocation == NOWHERE )
-		 {
-			 // See if we can get there to punch
-			 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-			 if ( sActionGridNo != -1 )
-			 {
-					// OK, we've got somebody...
-					sGotLocation = sActionGridNo;
+		// Did we get a loaction?
+		if (sGotLocation == NOWHERE) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
 
-					fGotAdjacent = TRUE;
-			 }
-		 }
+		s->sTargetGridNo = usGridNo;
+		s->usActionData  = usGridNo;
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sGotLocation && fGotAdjacent)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_PUNCH;
+			s->sPendingActionData2      = sAdjustedGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
 
-		 // Did we get a loaction?
-		 if ( sGotLocation != NOWHERE )
-		 {
-				pSoldier->sTargetGridNo = usGridNo;
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sGotLocation, s->usUIMovementMode, FALSE, TRUE);
+		}
+		else
+		{
+			s->bAction = AI_ACTION_KNIFE_STAB;
+			EVENT_SoldierBeginPunchAttack(s, sAdjustedGridNo, ubDirection);
+		}
 
-				pSoldier->usActionData	= usGridNo;
-				// CHECK IF WE ARE AT THIS GRIDNO NOW
-				if ( pSoldier->sGridNo != sGotLocation && fGotAdjacent )
-				{
-					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_PUNCH;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
-
-					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sGotLocation, pSoldier->usUIMovementMode, FALSE, TRUE );
-				}
-				else
-				{
-					pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-					EVENT_SoldierBeginPunchAttack( pSoldier, sAdjustedGridNo, ubDirection );
-				}
-
-				// OK, set UI
-				SetUIBusy(pSoldier);
-
-				gfResetUIMovementOptimization = TRUE;
-
-				return( ITEM_HANDLE_OK );
-		 }
-		 else
-		 {
-				return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-		 }
+		SetUIBusy(s);
+		gfResetUIMovementOptimization = TRUE;
+		return ITEM_HANDLE_OK;
 	}
 
 	//USING THE MEDKIT
-	if ( Item[ usHandItem ].usItemClass == IC_MEDKIT )
+	if (item->usItemClass == IC_MEDKIT)
 	{
 		// ATE: AI CANNOT GO THROUGH HERE!
-		UINT16 usMapPos;
+		const UINT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : GetMouseMapPos());
+
+		// See if we can get there to stab
 		BOOLEAN	fHadToUseCursorPos = FALSE;
-
-		if (gTacticalStatus.fAutoBandageMode)
+		UINT8   ubDirection;
+		INT16   sAdjustedGridNo;
+		INT16   sActionGridNo      = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		if (sActionGridNo == -1)
 		{
-			usMapPos = usGridNo;
+			// Try another location...
+			sActionGridNo = FindAdjacentGridEx(s, usMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+			if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+			if (!gTacticalStatus.fAutoBandageMode) fHadToUseCursorPos = TRUE;
+		}
+
+		// Calculate AP costs...
+		INT16 sAPCost = GetAPsToBeginFirstAid(s);
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		SetUIBusy(s);
+
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction = MERC_GIVEAID;
+			if      (fHadToUseCursorPos) s->sPendingActionData2 = usMapPos;
+			else if (tgt != NULL)        s->sPendingActionData2 = tgt->sGridNo;
+			else                         s->sPendingActionData2 = usGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
+
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
 		}
 		else
 		{
-			usMapPos = GetMouseMapPos();
+			EVENT_SoldierBeginFirstAid(s, sAdjustedGridNo, ubDirection);
 		}
 
-		 // See if we can get there to stab
-		 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-		 if ( sActionGridNo == -1 )
-		 {
-			 // Try another location...
-			 sActionGridNo =  FindAdjacentGridEx( pSoldier, usMapPos, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
+	}
 
-			 if ( sActionGridNo == -1 )
-			 {
-					return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-			 }
+	if (usHandItem == WIRECUTTERS)
+	{
+		// See if we can get there to stab
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
 
-			 if ( !gTacticalStatus.fAutoBandageMode )
-			 {
-					fHadToUseCursorPos = TRUE;
-			 }
-		 }
+		// Calculate AP costs...
+		INT16 sAPCost = GetAPsToCutFence(s);
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
 
-		 // Calculate AP costs...
-		 sAPCost = GetAPsToBeginFirstAid( pSoldier );
-		sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_CUTFFENCE;
+			s->sPendingActionData2      = sAdjustedGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
 
-			if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
+		}
+		else
+		{
+			EVENT_SoldierBeginCutFence(s, sAdjustedGridNo, ubDirection);
+		}
+
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
+	}
+
+	if (usHandItem == TOOLKIT)
+	{
+		// For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
+		BOOLEAN      fVehicle       = FALSE;
+		INT16        sVehicleGridNo = -1;
+		SOLDIERTYPE* t;
+		if (IsRepairableStructAtGridNo(usGridNo, &t) == 2)
+		{
+			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 0, t);
+			if (sNewGridNo != NOWHERE)
 			{
-				// OK, set UI
-				SetUIBusy(pSoldier);
-
-				// CHECK IF WE ARE AT THIS GRIDNO NOW
-				if ( pSoldier->sGridNo != sActionGridNo )
-				{
-					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_GIVEAID;
-
-					if ( fHadToUseCursorPos )
-					{
-						pSoldier->sPendingActionData2  = usMapPos;
-					}
-					else
-					{
-						if ( pTargetSoldier != NULL )
-						{
-							pSoldier->sPendingActionData2  = pTargetSoldier->sGridNo;
-						}
-						else
-						{
-							pSoldier->sPendingActionData2  = usGridNo;
-						}
-					}
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
-
-					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-				}
-				else
-				{
-					EVENT_SoldierBeginFirstAid( pSoldier, sAdjustedGridNo, ubDirection );
-				}
-
-				if ( fFromUI )
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-				}
-
-				return( ITEM_HANDLE_OK );
+				usGridNo       = sNewGridNo;
+				sVehicleGridNo = t->sGridNo;
+				fVehicle       = TRUE;
 			}
-		 else
-		 {
-				return( ITEM_HANDLE_NOAPS );
-		 }
-	}
+		}
 
-  if ( usHandItem == WIRECUTTERS )
-	{
-		 // See if we can get there to stab
-		 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-		 if ( sActionGridNo != -1 )
-		 {
-				// Calculate AP costs...
-				sAPCost = GetAPsToCutFence( pSoldier );
-			sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
+		// See if we can get there to stab
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
 
-				if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
-				{
-					// CHECK IF WE ARE AT THIS GRIDNO NOW
-					if ( pSoldier->sGridNo != sActionGridNo )
-					{
-						// SEND PENDING ACTION
-						pSoldier->ubPendingAction = MERC_CUTFFENCE;
-						pSoldier->sPendingActionData2  = sAdjustedGridNo;
-						pSoldier->bPendingActionData3  = ubDirection;
-						pSoldier->ubPendingActionAnimCount = 0;
+		// Calculate AP costs...
+		INT16 sAPCost = GetAPsToBeginRepair(s);
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
 
-						// WALK UP TO DEST FIRST
-						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode , FALSE, TRUE );
-					}
-					else
-					{
-						EVENT_SoldierBeginCutFence( pSoldier, sAdjustedGridNo, ubDirection );
-					}
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_REPAIR;
+			s->sPendingActionData2      = fVehicle ? sVehicleGridNo : sAdjustedGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
 
-					// OK, set UI
-					SetUIBusy(pSoldier);
-
-					if ( fFromUI )
-					{
-						guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-					}
-
-					return( ITEM_HANDLE_OK );
-			 }
-			 else
-			 {
-					return( ITEM_HANDLE_NOAPS );
-			 }
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
 		}
 		else
 		{
-			return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
+			EVENT_SoldierBeginRepair(s, sAdjustedGridNo, ubDirection);
 		}
+
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
 	}
 
-  if ( usHandItem == TOOLKIT )
+	if (usHandItem == GAS_CAN)
 	{
-		 BOOLEAN	fVehicle = FALSE;
-		 INT16		sVehicleGridNo=-1;
-
-		 // For repair, check if we are over a vehicle, then get gridnot to edge of that vehicle!
-		 SOLDIERTYPE* tgt;
-		 if (IsRepairableStructAtGridNo(usGridNo, &tgt) == 2)
-		 {
-				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
-				if ( sNewGridNo != NOWHERE )
-				{
-					usGridNo = sNewGridNo;
-
-					sVehicleGridNo = tgt->sGridNo;
-
-					fVehicle = TRUE;
-				}
-		 }
-
-		 // See if we can get there to stab
-		 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-
-		 if ( sActionGridNo != -1 )
-		 {
-				// Calculate AP costs...
-				sAPCost = GetAPsToBeginRepair( pSoldier );
-			sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-				if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
-				{
-					// CHECK IF WE ARE AT THIS GRIDNO NOW
-					if ( pSoldier->sGridNo != sActionGridNo )
-					{
-						// SEND PENDING ACTION
-						pSoldier->ubPendingAction = MERC_REPAIR;
-						pSoldier->sPendingActionData2  = sAdjustedGridNo;
-
-						if ( fVehicle )
-						{
-							pSoldier->sPendingActionData2  = sVehicleGridNo;
-						}
-
-						pSoldier->bPendingActionData3  = ubDirection;
-						pSoldier->ubPendingActionAnimCount = 0;
-
-						// WALK UP TO DEST FIRST
-						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-					}
-					else
-					{
-						EVENT_SoldierBeginRepair( pSoldier, sAdjustedGridNo, ubDirection );
-					}
-
-					// OK, set UI
-					SetUIBusy(pSoldier);
-
-					if ( fFromUI )
-					{
-						guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-					}
-
-					return( ITEM_HANDLE_OK );
-			 }
-			 else
-			 {
-					return( ITEM_HANDLE_NOAPS );
-			 }
-		}
-		else
-		{
-			return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-		}
-	}
-
-  if ( usHandItem == GAS_CAN )
-	{
-		 INT16		sVehicleGridNo=-1;
-
 		// For refueling, check if we are over a vehicle, then get gridno to edge of that vehicle!
-		const SOLDIERTYPE* const tgt = GetRefuelableStructAtGridNo(usGridNo);
-		if (tgt != NULL)
-		 {
-				const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, tgt);
-				if ( sNewGridNo != NOWHERE )
-				{
-					usGridNo = sNewGridNo;
-					sVehicleGridNo = tgt->sGridNo;
-				}
-		 }
-
-		 // See if we can get there to stab
-		 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-
-		 if ( sActionGridNo != -1 )
-		 {
-				// Calculate AP costs...
-				sAPCost = GetAPsToRefuelVehicle( pSoldier );
-			sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-				if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
-				{
-					// CHECK IF WE ARE AT THIS GRIDNO NOW
-					if ( pSoldier->sGridNo != sActionGridNo )
-					{
-						// SEND PENDING ACTION
-						pSoldier->ubPendingAction = MERC_FUEL_VEHICLE;
-						pSoldier->sPendingActionData2  = sAdjustedGridNo;
-
-						pSoldier->sPendingActionData2  = sVehicleGridNo;
-						pSoldier->bPendingActionData3  = ubDirection;
-						pSoldier->ubPendingActionAnimCount = 0;
-
-						// WALK UP TO DEST FIRST
-						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-					}
-					else
-					{
-						EVENT_SoldierBeginRefuel( pSoldier, sAdjustedGridNo, ubDirection );
-					}
-
-					// OK, set UI
-					SetUIBusy(pSoldier);
-
-					if ( fFromUI )
-					{
-						guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-					}
-
-					return( ITEM_HANDLE_OK );
-			 }
-			 else
-			 {
-					return( ITEM_HANDLE_NOAPS );
-			 }
-		}
-		else
+		INT16                    sVehicleGridNo = -1;
+		const SOLDIERTYPE* const t              = GetRefuelableStructAtGridNo(usGridNo);
+		if (t != NULL)
 		{
-			return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-		}
-	}
-
-
-  if ( usHandItem == JAR )
-	{
-		 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-
-		 if ( sActionGridNo != -1 )
-		 {
-				// Calculate AP costs...
-				sAPCost = GetAPsToUseJar( pSoldier, sActionGridNo );
-			sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-				if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
-				{
-					// CHECK IF WE ARE AT THIS GRIDNO NOW
-					if ( pSoldier->sGridNo != sActionGridNo )
-					{
-						// SEND PENDING ACTION
-						pSoldier->ubPendingAction = MERC_TAKEBLOOD;
-						pSoldier->sPendingActionData2  = sAdjustedGridNo;
-						pSoldier->bPendingActionData3  = ubDirection;
-						pSoldier->ubPendingActionAnimCount = 0;
-
-						// WALK UP TO DEST FIRST
-						EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-					}
-					else
-					{
-						EVENT_SoldierBeginTakeBlood( pSoldier, sAdjustedGridNo, ubDirection );
-					}
-
-					// OK, set UI
-					SetUIBusy(pSoldier);
-
-					if ( fFromUI )
-					{
-						guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-					}
-
-					return( ITEM_HANDLE_OK );
-			 }
-			 else
-			 {
-					return( ITEM_HANDLE_NOAPS );
-			 }
-		}
-		else
-		{
-			return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-		}
-	}
-
-  if ( usHandItem == STRING_TIED_TO_TIN_CAN )
-	{
-		 STRUCTURE					*pStructure;
-		 LEVELNODE					*pIntTile;
-
-		 // Get structure info for in tile!
-		 pIntTile = GetCurInteractiveTileGridNoAndStructure( &usGridNo, &pStructure );
-
-		 // We should not have null here if we are given this flag...
-		 if ( pIntTile != NULL )
-		 {
-			 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE );
-
-			 if ( sActionGridNo != -1 )
-			 {
-					// Calculate AP costs...
-					sAPCost = AP_ATTACH_CAN;
-				sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-					if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
-					{
-						// CHECK IF WE ARE AT THIS GRIDNO NOW
-						if ( pSoldier->sGridNo != sActionGridNo )
-						{
-							// SEND PENDING ACTION
-							pSoldier->ubPendingAction = MERC_ATTACH_CAN;
-							pSoldier->sPendingActionData2  = usGridNo;
-							pSoldier->bPendingActionData3  = ubDirection;
-							pSoldier->ubPendingActionAnimCount = 0;
-
-							// WALK UP TO DEST FIRST
-							EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-						}
-						else
-						{
-							EVENT_SoldierBeginTakeBlood( pSoldier, usGridNo, ubDirection );
-						}
-
-						// OK, set UI
-						SetUIBusy(pSoldier);
-
-						if ( fFromUI )
-						{
-							guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-						}
-
-						return( ITEM_HANDLE_OK );
-				 }
-				 else
-				 {
-						return( ITEM_HANDLE_NOAPS );
-				 }
-			}
-			else
+			const INT16 sNewGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 0, t);
+			if (sNewGridNo != NOWHERE)
 			{
-				return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
+				usGridNo       = sNewGridNo;
+				sVehicleGridNo = t->sGridNo;
 			}
+		}
+
+		// See if we can get there to stab
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+		// Calculate AP costs...
+		INT16 sAPCost = GetAPsToRefuelVehicle(s);
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction      = MERC_FUEL_VEHICLE;
+			s->sPendingActionData2  = sAdjustedGridNo;
+			s->sPendingActionData2  = sVehicleGridNo;
+			s->bPendingActionData3  = ubDirection;
+			s->ubPendingActionAnimCount = 0;
+
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
 		}
 		else
 		{
-			 return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
+			EVENT_SoldierBeginRefuel(s, sAdjustedGridNo, ubDirection);
 		}
+
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
+	}
+
+	if (usHandItem == JAR)
+	{
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+		// Calculate AP costs...
+		INT16 sAPCost = GetAPsToUseJar(s, sActionGridNo);
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_TAKEBLOOD;
+			s->sPendingActionData2      = sAdjustedGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
+
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
+		}
+		else
+		{
+			EVENT_SoldierBeginTakeBlood(s, sAdjustedGridNo, ubDirection);
+		}
+
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
+	}
+
+	if (usHandItem == STRING_TIED_TO_TIN_CAN)
+	{
+		// Get structure info for in tile!
+		STRUCTURE* pStructure;
+		const LEVELNODE* const pIntTile = GetCurInteractiveTileGridNoAndStructure(&usGridNo, &pStructure);
+		// We should not have null here if we are given this flag...
+		if (pIntTile == NULL) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		const INT16 sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, FALSE, TRUE);
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+		// Calculate AP costs...
+		INT16 sAPCost = AP_ATTACH_CAN;
+		sAPCost += PlotPath(s, sActionGridNo, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_ATTACH_CAN;
+			s->sPendingActionData2      = usGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
+
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
+		}
+		else
+		{
+			EVENT_SoldierBeginTakeBlood(s, usGridNo, ubDirection);
+		}
+
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
 	}
 
 	// Check for remote detonator cursor....
-	if ( Item[ usHandItem ].ubCursor == REMOTECURS )
+	if (item->ubCursor == REMOTECURS)
 	{
-		sAPCost = AP_USE_REMOTE;
+		const INT16 sAPCost = AP_USE_REMOTE;
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
 
-		if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
+		DeductPoints(s, sAPCost, 0);
+		if ( usHandItem == XRAY_DEVICE )
 		{
-			DeductPoints( pSoldier, sAPCost, 0 );
-			if ( usHandItem == XRAY_DEVICE )
-			{
-  			PlayLocationJA2Sample(pSoldier->sGridNo, USE_X_RAY_MACHINE, HIGHVOLUME, 1);
-
-				ActivateXRayDevice( pSoldier );
-				return( ITEM_HANDLE_OK );
-			}
-			else // detonator
-			{
-				// Save gridno....
-				pSoldier->sPendingActionData2  = usGridNo;
-
-				EVENT_SoldierBeginUseDetonator( pSoldier );
-
-				if ( fFromUI )
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-				}
-
-				// Now start anim....
-				return( ITEM_HANDLE_OK );
-			}
+			PlayLocationJA2Sample(s->sGridNo, USE_X_RAY_MACHINE, HIGHVOLUME, 1);
+			ActivateXRayDevice(s);
 		}
-		else
+		else // detonator
 		{
-			return( ITEM_HANDLE_NOAPS );
+			// Save gridno....
+			s->sPendingActionData2 = usGridNo;
+			EVENT_SoldierBeginUseDetonator(s);
+			if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 		}
+		return ITEM_HANDLE_OK;
 	}
 
-
+	BOOLEAN fDropBomb = FALSE;
 	// Check for mine.. anything without a detonator.....
-	if ( Item[ usHandItem ].ubCursor == BOMBCURS )
-	{
-		fDropBomb = TRUE;
-	}
+	if (item->ubCursor == BOMBCURS) fDropBomb = TRUE;
 
 	// Check for a bomb like a mine, that uses a pressure detonator
-	if ( Item[ usHandItem ].ubCursor == INVALIDCURS )
+	if (item->ubCursor == INVALIDCURS)
 	{
 		// Found detonator...
-		if ( FindAttachment( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ), DETONATOR) != ITEM_NOT_FOUND || FindAttachment( &(pSoldier->inv[ pSoldier->ubAttackingHand ] ), REMDETONATOR ) != ITEM_NOT_FOUND )
+		const OBJECTTYPE* const obj = &s->inv[s->ubAttackingHand];
+		if (FindAttachment(obj, DETONATOR)    != ITEM_NOT_FOUND ||
+				FindAttachment(obj, REMDETONATOR) != ITEM_NOT_FOUND)
 		{
 			fDropBomb = TRUE;
 		}
 	}
 
-	if ( fDropBomb )
+	if (fDropBomb)
 	{
 		// Save gridno....
-		pSoldier->sPendingActionData2  = usGridNo;
+		s->sPendingActionData2 = usGridNo;
 
-		if ( pSoldier->sGridNo != usGridNo )
+		if (s->sGridNo != usGridNo)
 		{
 			// SEND PENDING ACTION
-			pSoldier->ubPendingAction = MERC_DROPBOMB;
-			pSoldier->ubPendingActionAnimCount = 0;
+			s->ubPendingAction          = MERC_DROPBOMB;
+			s->ubPendingActionAnimCount = 0;
 
 			// WALK UP TO DEST FIRST
-			EVENT_InternalGetNewSoldierPath( pSoldier, usGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
+			EVENT_InternalGetNewSoldierPath(s, usGridNo, s->usUIMovementMode, FALSE, TRUE);
 		}
 		else
 		{
-			EVENT_SoldierBeginDropBomb( pSoldier );
+			EVENT_SoldierBeginDropBomb(s);
 		}
 
-		// OK, set UI
-		SetUIBusy(pSoldier);
-
-		if ( fFromUI )
-		{
-			guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-		}
-
-		return( ITEM_HANDLE_OK );
+		SetUIBusy(s);
+		if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return ITEM_HANDLE_OK;
 	}
 
 	//USING THE BLADE
-	if ( Item[ usHandItem ].usItemClass == IC_BLADE )
+	if (item->usItemClass == IC_BLADE)
 	{
-		 // See if we can get there to stab
-		 if ( pSoldier->ubBodyType == BLOODCAT )
-		 {
-			sActionGridNo =  FindNextToAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-		 }
-		 else if ( CREATURE_OR_BLOODCAT( pSoldier ) && PythSpacesAway( pSoldier->sGridNo, usGridNo ) > 1 )
-		 {
-			sActionGridNo =  FindNextToAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+		UINT8 ubDirection;
+		INT16 sAdjustedGridNo;
+		INT16 sActionGridNo;
+		// See if we can get there to stab
+		if (s->ubBodyType == BLOODCAT)
+		{
+			sActionGridNo = FindNextToAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		}
+		else if (CREATURE_OR_BLOODCAT(s) && PythSpacesAway(s->sGridNo, usGridNo) > 1)
+		{
+			sActionGridNo = FindNextToAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
 			if (sActionGridNo == -1)
 			{
-			 sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
+				sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
 			}
-		 }
-		 else
-		 {
-			sActionGridNo =  FindAdjacentGridEx( pSoldier, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE );
-		 }
-
-		 if ( sActionGridNo != -1 )
-		 {
-				pSoldier->usActionData = sActionGridNo;
-
-				// CHECK IF WE ARE AT THIS GRIDNO NOW
-				if ( pSoldier->sGridNo != sActionGridNo )
-				{
-					// SEND PENDING ACTION
-					pSoldier->ubPendingAction = MERC_KNIFEATTACK;
-					pSoldier->sPendingActionData2  = sAdjustedGridNo;
-					pSoldier->bPendingActionData3  = ubDirection;
-					pSoldier->ubPendingActionAnimCount = 0;
-
-					// WALK UP TO DEST FIRST
-					EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, FALSE, TRUE );
-				}
-				else
-				{
-					// for the benefit of the AI
-					pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-					EVENT_SoldierBeginBladeAttack( pSoldier, sAdjustedGridNo, ubDirection );
-				}
-
-				// OK, set UI
-				SetUIBusy(pSoldier);
-
-				if ( fFromUI )
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-					gfResetUIMovementOptimization = TRUE;
-				}
-
-				return( ITEM_HANDLE_OK );
-		 }
-		 else
-		 {
-				return( ITEM_HANDLE_CANNOT_GETTO_LOCATION );
-		 }
-	}
-
-
-	if ( Item[ usHandItem ].usItemClass == IC_TENTACLES )
-	{
-		 // See if we can get there to stab
-		 //pSoldier->sTargetGridNo = sTargetGridNo;
-		 //pSoldier->sLastTarget = sTargetGridNo;
-		 //pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
-
-		 gTacticalStatus.ubAttackBusyCount++;
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount) );
-
-
- 	   sAPCost = CalcTotalAPsToAttack( pSoldier, sGridNo, FALSE, pSoldier->bAimTime );
-
-		 DeductPoints( pSoldier, sAPCost, 0 );
-
-		 EVENT_InitNewSoldierAnim( pSoldier, QUEEN_SWIPE, 0 , FALSE );
-
-		 //FireWeapon( pSoldier, sTargetGridNo );
-		 pSoldier->bAction = AI_ACTION_KNIFE_STAB;
-
-		 return( ITEM_HANDLE_OK );
-	}
-
-
-	// THIS IS IF WE WERE FROM THE UI
-	if ( Item[ usHandItem ].usItemClass == IC_GRENADE || Item[ usHandItem ].usItemClass == IC_LAUNCHER || Item[ usHandItem ].usItemClass == IC_THROWN )
-	{
-		INT16 sCheckGridNo;
-
-		// Get gridno - either soldier's position or the gridno
-		if ( pTargetSoldier != NULL )
-		{
-			sTargetGridNo	= pTargetSoldier->sGridNo;
 		}
 		else
 		{
-			sTargetGridNo	= usGridNo;
+			sActionGridNo = FindAdjacentGridEx(s, usGridNo, &ubDirection, &sAdjustedGridNo, TRUE, FALSE);
+		}
+		if (sActionGridNo == -1) return ITEM_HANDLE_CANNOT_GETTO_LOCATION;
+
+		s->usActionData = sActionGridNo;
+
+		// CHECK IF WE ARE AT THIS GRIDNO NOW
+		if (s->sGridNo != sActionGridNo)
+		{
+			// SEND PENDING ACTION
+			s->ubPendingAction          = MERC_KNIFEATTACK;
+			s->sPendingActionData2      = sAdjustedGridNo;
+			s->bPendingActionData3      = ubDirection;
+			s->ubPendingActionAnimCount = 0;
+
+			// WALK UP TO DEST FIRST
+			EVENT_InternalGetNewSoldierPath(s, sActionGridNo, s->usUIMovementMode, FALSE, TRUE);
+		}
+		else
+		{
+			// for the benefit of the AI
+			s->bAction = AI_ACTION_KNIFE_STAB;
+			EVENT_SoldierBeginBladeAttack(s, sAdjustedGridNo, ubDirection);
 		}
 
-		sAPCost = MinAPsToAttack( pSoldier, sTargetGridNo, TRUE );
+		SetUIBusy(s);
+
+		if (fFromUI)
+		{
+			guiPendingOverrideEvent       = A_CHANGE_TO_MOVE;
+			gfResetUIMovementOptimization = TRUE;
+		}
+
+		return ITEM_HANDLE_OK;
+	}
+
+	if (item->usItemClass == IC_TENTACLES)
+	{
+		gTacticalStatus.ubAttackBusyCount++;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting swipe attack, incrementing a.b.c in HandleItems to %d", gTacticalStatus.ubAttackBusyCount));
+		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
+		DeductPoints(s, sAPCost, 0);
+		EVENT_InitNewSoldierAnim(s, QUEEN_SWIPE, 0, FALSE);
+		s->bAction = AI_ACTION_KNIFE_STAB;
+		return ITEM_HANDLE_OK;
+	}
+
+	// THIS IS IF WE WERE FROM THE UI
+	if (item->usItemClass == IC_GRENADE || item->usItemClass == IC_LAUNCHER || item->usItemClass == IC_THROWN)
+	{
+		// Get gridno - either soldier's position or the gridno
+		const INT16 sTargetGridNo = (tgt != NULL ? tgt->sGridNo : usGridNo);
+		const INT16 sAPCost       = MinAPsToAttack(s, sTargetGridNo, TRUE);
 
 		// Check if these is room to place mortar!
-		if ( usHandItem == MORTAR )
+		if (usHandItem == MORTAR)
 		{
-			ubDirection = (UINT8)GetDirectionFromGridNo( sTargetGridNo, pSoldier );
-
-			// Get new gridno!
-			sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubDirection ) );
-
-			if ( !OKFallDirection( pSoldier, sCheckGridNo, pSoldier->bLevel, ubDirection , pSoldier->usAnimState ) )
+			const UINT8 ubDirection  = (UINT8)GetDirectionFromGridNo(sTargetGridNo, s);
+			const INT16 sCheckGridNo = NewGridNo((UINT16)s->sGridNo, (UINT16)DirectionInc(ubDirection));
+			if (!OKFallDirection(s, sCheckGridNo, s->bLevel, ubDirection, s->usAnimState))
 			{
-				return( ITEM_HANDLE_NOROOM );
+				return ITEM_HANDLE_NOROOM;
 			}
 
-			pSoldier->fDontChargeAPsForStanceChange = TRUE;
+			s->fDontChargeAPsForStanceChange = TRUE;
 		}
-		else if ( usHandItem == GLAUNCHER || usHandItem == UNDER_GLAUNCHER )
+		else if (usHandItem == GLAUNCHER || usHandItem == UNDER_GLAUNCHER)
 		{
-			GetAPChargeForShootOrStabWRTGunRaises( pSoldier, sTargetGridNo, TRUE, &fAddingTurningCost, &fAddingRaiseGunCost );
+			BOOLEAN fAddingTurningCost  = FALSE;
+			BOOLEAN fAddingRaiseGunCost = FALSE;
+			GetAPChargeForShootOrStabWRTGunRaises(s, sTargetGridNo, TRUE, &fAddingTurningCost, &fAddingRaiseGunCost);
 
 			// If we are standing and are asked to turn AND raise gun, ignore raise gun...
-			if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND )
+			if (gAnimControl[s->usAnimState].ubHeight == ANIM_STAND)
 			{
-				if ( fAddingRaiseGunCost )
-				{
-					pSoldier->fDontChargeTurningAPs = TRUE;
-				}
+				if (fAddingRaiseGunCost) s->fDontChargeTurningAPs = TRUE;
 			}
 			else
 			{
 				// If raising gun, don't charge turning!
-				if ( fAddingTurningCost )
-				{
-					pSoldier->fDontChargeReadyAPs = TRUE;
-				}
+				if (fAddingTurningCost) s->fDontChargeReadyAPs = TRUE;
 			}
 		}
 
 		// If this is a player guy, show message about no APS
-		if ( EnoughPoints( pSoldier, sAPCost, 0, fFromUI ) )
+		if (!EnoughPoints(s, sAPCost, 0, fFromUI)) return ITEM_HANDLE_NOAPS;
+
+		s->ubAttackingHand   = HANDPOS;
+		s->usAttackingWeapon = usHandItem;
+		s->bTargetLevel      = bLevel;
+
+		// Look at the cursor, if toss cursor...
+		if (item->ubCursor == TOSSCURS)
 		{
-			pSoldier->ubAttackingHand = HANDPOS;
-			pSoldier->usAttackingWeapon = usHandItem;
-			pSoldier->bTargetLevel    = bLevel;
+			s->sTargetGridNo = sTargetGridNo;
+			s->target        = WhoIsThere2(sTargetGridNo, s->bTargetLevel);
 
-			// Look at the cursor, if toss cursor...
-			if ( Item[ usHandItem ].ubCursor == TOSSCURS )
-			{
-				pSoldier->sTargetGridNo = sTargetGridNo;
-				//	pSoldier->sLastTarget = sTargetGridNo;
-				pSoldier->target = WhoIsThere2(sTargetGridNo, pSoldier->bTargetLevel);
+			// Increment attack counter...
+			gTacticalStatus.ubAttackBusyCount++;
 
-				// Increment attack counter...
-				gTacticalStatus.ubAttackBusyCount++;
+			// ATE: Don't charge turning...
+			s->fDontChargeTurningAPs = TRUE;
 
-				// ATE: Don't charge turning...
-				pSoldier->fDontChargeTurningAPs = TRUE;
-
-				FireWeapon( pSoldier, sTargetGridNo );
-			}
-			else
-			{
-
-				SendBeginFireWeaponEvent( pSoldier, sTargetGridNo );
-
-			}
-
-			// OK, set UI
-			SetUIBusy(pSoldier);
-
-			return( ITEM_HANDLE_OK );
-
+			FireWeapon(s, sTargetGridNo);
 		}
 		else
 		{
-			return( ITEM_HANDLE_NOAPS );
+			SendBeginFireWeaponEvent(s, sTargetGridNo);
 		}
+
+		SetUIBusy(s);
+		return ITEM_HANDLE_OK;
 	}
 
 	// CHECK FOR BOMB....
-	if ( Item[ usHandItem ].ubCursor == INVALIDCURS )
+	if (item->ubCursor == INVALIDCURS)
 	{
 		// Found detonator...
-		if ( FindAttachment( &(pSoldier->inv[ usHandItem ] ), DETONATOR) != ITEM_NOT_FOUND || FindAttachment( &(pSoldier->inv[ usHandItem ] ), REMDETONATOR ) )
+		OBJECTTYPE* const obj =  &s->inv[usHandItem];
+		if ( FindAttachment(obj, DETONATOR) != ITEM_NOT_FOUND || FindAttachment(obj, REMDETONATOR))
 		{
-			StartBombMessageBox( pSoldier, usGridNo );
-
-			if ( fFromUI )
-			{
-				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-			}
-
-			return( ITEM_HANDLE_OK );
+			StartBombMessageBox(s, usGridNo);
+			if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+			return ITEM_HANDLE_OK;
 		}
 	}
 
-	return( ITEM_HANDLE_OK );
+	return ITEM_HANDLE_OK;
 }
 
 
