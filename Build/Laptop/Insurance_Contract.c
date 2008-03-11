@@ -112,8 +112,8 @@ UINT8		gubNumberofDisplayedInsuranceGrids;
 BOOLEAN	gfChangeInsuranceFormButtons = FALSE;
 
 static SOLDIERTYPE* g_insurance_merc_array[20];
+static UINT         g_n_insurable_mercs;
 INT16		gsCurrentInsuranceMercIndex;
-INT16		gsMaxPlayersOnTeam;
 
 
 //link to the varios pages
@@ -597,10 +597,9 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 
 static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID)
 {
-	UINT8	i;
 	UINT8	ubCount=0;
 
-	for( i=0; i<gsMaxPlayersOnTeam; i++)
+	for (UINT8 i = 0; i < g_n_insurable_mercs; ++i)
 	{
 		if( i>= ubStartMercID )
 		{
@@ -857,14 +856,14 @@ static void InsContractNoMercsPopupCallBack(UINT8 bExitValue)
 
 static void BuildInsuranceArray(void)
 {
-	gsMaxPlayersOnTeam = 0;
+	g_n_insurable_mercs = 0;
 
 	// store profile #s of all insurable mercs in an array
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		if (MercIsInsurable(s))
 		{
-			g_insurance_merc_array[gsMaxPlayersOnTeam++] = s;
+			g_insurance_merc_array[g_n_insurable_mercs++] = s;
 		}
 	}
 }
