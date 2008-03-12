@@ -563,7 +563,6 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 {
 	INT16 sDesiredMercLoc;
 	UINT8	ubDesiredMercDir;
-	UINT8	ubDesiredMerc;
 	INT16	sDesiredMercDist;
 
 	// if a quote record has been set and we're not doing movement, then
@@ -613,7 +612,7 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 		///////////////
 		// CHECK TO SEE IF WE WANT TO GO UP TO PERSON AND SAY SOMETHING
 		///////////////
-		pSoldier->usActionData = NPCConsiderInitiatingConv( pSoldier, &ubDesiredMerc );
+		pSoldier->usActionData = NPCConsiderInitiatingConv(pSoldier);
 		if (pSoldier->usActionData != NOWHERE)
 		{
 			return( AI_ACTION_APPROACH_MERC );

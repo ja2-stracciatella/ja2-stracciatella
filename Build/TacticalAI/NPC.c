@@ -2107,7 +2107,8 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 	}
 }
 
-INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
+
+INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 {
 	INT16						sMyGridNo, sDist, sDesiredMercDist = 100;
 	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
@@ -2116,7 +2117,6 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	SOLDIERTYPE *		pDesiredMerc;
 	NPCQuoteInfo *	pNPCQuoteInfoArray;
 
-	CHECKF( pubDesiredMerc );
 	sMyGridNo = pNPC->sGridNo;
 
 	ubNPC = pNPC->ubProfile;
@@ -2183,7 +2183,6 @@ INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc )
 	}
 	else
 	{
-		*pubDesiredMerc = ubDesiredMerc;
 		return ( pDesiredMerc->sGridNo );
 	}
 }

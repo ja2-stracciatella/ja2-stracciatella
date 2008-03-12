@@ -168,7 +168,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, UINT8 ubWaterOK, UINT8 fFlags);
 void LoadWeaponIfNeeded(SOLDIERTYPE *pSoldier);
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable );
-INT16 NPCConsiderInitiatingConv( SOLDIERTYPE * pNPC, UINT8 * pubDesiredMerc );
+INT16 NPCConsiderInitiatingConv(SOLDIERTYPE* pNPC);
 void NPCDoesAct(SOLDIERTYPE *pSoldier);
 INT8 OKToAttack(SOLDIERTYPE *ptr, int target);
 BOOLEAN NeedToRadioAboutPanicTrigger( void );
