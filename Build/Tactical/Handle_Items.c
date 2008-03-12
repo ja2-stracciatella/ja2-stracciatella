@@ -2417,7 +2417,7 @@ void NotifySoldiersToLookforItems( )
 }
 
 
-void AllSoldiersLookforItems( BOOLEAN fShowLocators )
+void AllSoldiersLookforItems(void)
 {
 	UINT32 cnt;
 	SOLDIERTYPE *pSoldier;
@@ -2428,7 +2428,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 
 		if ( pSoldier != NULL )
 		{
-			RevealRoofsAndItems(pSoldier, fShowLocators);
+			RevealRoofsAndItems(pSoldier, TRUE);
 		}
 	}
 

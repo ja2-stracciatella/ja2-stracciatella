@@ -758,7 +758,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	}
 
 	// Make team look for items
-	AllSoldiersLookforItems( TRUE );
+	AllSoldiersLookforItems();
 
 	// If not a player, you can completely remove soldiertype
 	// otherwise, just remove their graphic

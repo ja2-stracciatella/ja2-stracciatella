@@ -67,7 +67,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 
 void NotifySoldiersToLookforItems(void);
-void AllSoldiersLookforItems( BOOLEAN RevealRoofsAndItems );
+void AllSoldiersLookforItems(void);
 
 
 void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList );
