@@ -83,8 +83,6 @@
 // TIMER DELAYS
 #define	DAMAGE_DISPLAY_DELAY		250
 
-#define PTR_OURTEAM     (pSoldier->bTeam == gbPlayerNum)
-
 
 #define DONTSETLOCATOR									0
 #define SETLOCATOR											1

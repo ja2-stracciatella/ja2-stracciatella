@@ -64,8 +64,7 @@ void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 
 	Assert(pSoldier->bActive);
 
 	// ignore non-player soldiers
-	if (!PTR_OURTEAM)
-		return;
+	if (!IsOnOurTeam(pSoldier)) return;
 
 	// ignore anything without a profile
 	if (pSoldier->ubProfile == NO_PROFILE)
@@ -765,8 +764,7 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldie
 			return;
 
 		// ignore non-player soldiers
-		if (!PTR_OURTEAM)
-			return;
+		if (!IsOnOurTeam(pSoldier)) return;
 
 		// ignore anything without a profile
 		if (pSoldier->ubProfile == NO_PROFILE)

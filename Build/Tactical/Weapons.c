@@ -1037,8 +1037,8 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 		// NB bDoBurst will be 2 at this point for the first shot since it was incremented
 		// above
-		if (PTR_OURTEAM &&
-				pSoldier->target != NULL &&
+		if (IsOnOurTeam(pSoldier)                            &&
+				pSoldier->target != NULL                         &&
 				(!pSoldier->bDoBurst || pSoldier->bDoBurst == 2) &&
 				gTacticalStatus.uiFlags & INCOMBAT)
 		{
@@ -1103,7 +1103,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		// Deduct knife from inv! (not here, later?)
 
 		// Improve for using a throwing knife....
-		if (PTR_OURTEAM && pSoldier->target != NULL)
+		if (IsOnOurTeam(pSoldier) && pSoldier->target != NULL)
 		{
 			if ( fGonnaHit )
 			{
@@ -1333,7 +1333,7 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			FreeUpAttacker(pSoldier);
 		}
 
-		if (PTR_OURTEAM && pSoldier->target != NULL)
+		if (IsOnOurTeam(pSoldier) && pSoldier->target != NULL)
 		{
 			if ( fGonnaHit )
 			{

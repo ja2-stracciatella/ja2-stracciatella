@@ -710,9 +710,8 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 #endif
 
 			// if it's our local player's merc
-			if (PTR_OURTEAM)
-				// revealing roofs and looking for items handled here, too
-				RevealRoofsAndItems(pSoldier, TRUE);
+			// revealing roofs and looking for items handled here, too
+			if (IsOnOurTeam(pSoldier)) RevealRoofsAndItems(pSoldier, TRUE);
 		}
 		// unless in easy mode allow alerted enemies to radio
 		else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )
@@ -729,7 +728,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 // Temporary for opplist synching - disable random order radioing
 #ifndef RECORDOPPLIST
 		// if this soldier's NOT on our team (MAY be under our control, though!)
-		if (!PTR_OURTEAM)
+		if (!IsOnOurTeam(pSoldier))
 			OurTeamRadiosRandomlyAbout(pSoldier);	// radio about him only
 #endif
 
@@ -1531,16 +1530,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	 else
 			DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String("FAILED LINEOFSIGHT: ID %d (%ls)to ID %d Personally %d, public %d",pSoldier->ubID,pSoldier->name,pOpponent->ubID,*pPersOL,*pbPublOL) );
 #endif
-
-/*
-   // if we're looking for a local merc, and changed doors were in the way
-   if (PTR_OURTEAM && (NextFreeDoorIndex > 0))
-     // make or fail, if we passed through any "changed" doors along the way,
-     // reveal their true status (change the structure to its real value)
-     // (do this even if we don't have LOS, to close doors that *BREAK* LOS)
-     RevealDoorsAlongLOS();
-*/
-
  }
 
 
@@ -2043,9 +2032,9 @@ else
  // if looker is on local team, and the enemy was invisible or "maybe"
  // visible just prior to this
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
- if ( ( PTR_OURTEAM || (pSoldier->bTeam == MILITIA_TEAM) ) && (pOpponent->bVisible <= 0))
+	if ((IsOnOurTeam(pSoldier) || pSoldier->bTeam == MILITIA_TEAM) && pOpponent->bVisible <= 0)
 #else
- if (PTR_OURTEAM && (pOpponent->bVisible <= 0))
+	if (IsOnOurTeam(pSoldier) && pOpponent->bVisible <= 0)
 #endif
   {
    // if opponent was truly invisible, not just turned off temporarily (FALSE)
@@ -2116,10 +2105,8 @@ else
 			 }
 		 }
     }
-
-
   }
-	else if (!PTR_OURTEAM)
+	else if (!IsOnOurTeam(pSoldier))
 	{
 	 // ATE: Check stance, change to threatending
 	 ReevaluateEnemyStance( pSoldier, pSoldier->usAnimState );
@@ -2488,9 +2475,9 @@ void BetweenTurnsVisibilityAdjustments(void)
 		if (pSoldier->bInSector && pSoldier->bLife)
 		{
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-			if (!PTR_OURTEAM && pSoldier->bTeam != MILITIA_TEAM)
+			if (!IsOnOurTeam(pSoldier) && pSoldier->bTeam != MILITIA_TEAM)
 #else
-			if (!PTR_OURTEAM)
+			if (!IsOnOurTeam(pSoldier))
 #endif
 			{
 				// check if anyone on our team currently sees him (exclude NOBODY)
@@ -2804,7 +2791,10 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
    // if it's our merc, and he currently sees this opponent
-   if (PTR_OURTEAM && (*pPersOL == SEEN_CURRENTLY) && !(( pOpponent->bSide == pSoldier->bSide) || pOpponent->bNeutral))
+		if (IsOnOurTeam(pSoldier)               &&
+				*pPersOL         == SEEN_CURRENTLY  &&
+				pOpponent->bSide != pSoldier->bSide &&
+				!pOpponent->bNeutral)
    {
     // don't care whether and how many new enemies are seen if everyone visible
     // and he's healthy enough to be a threat (so is worth talking about)
@@ -2928,7 +2918,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
  // if this soldier is on the local team
-  if (PTR_OURTEAM)
+	if (IsOnOurTeam(pSoldier))
   {
    // don't trigger sighting quotes or stop merc's movement if everyone visible
    //if (!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))

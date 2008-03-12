@@ -6229,8 +6229,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 s
 		}
 	}
 
-
-	if (PTR_OURTEAM)
+	if (IsOnOurTeam(pSoldier))
 	{
 		// EXPERIENCE GAIN: Took some damage
 	  StatChange( pSoldier, EXPERAMT, ( UINT16 )( 5 * ubCombinedLoss ), FROM_FAILURE );
@@ -7856,8 +7855,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 
  DeductPoints( pSoldier, (INT16)uiUsedAPs, (INT16)( ( uiUsedAPs * BP_PER_AP_LT_EFFORT) ) );
 
-
- if ( PTR_OURTEAM )
+	if (IsOnOurTeam(pSoldier))
  {
 	 // MEDICAL GAIN   (actual / 2):  Helped someone by giving first aid
 	 StatChange(pSoldier, MEDICALAMT, (UINT16)(uiActual / 2), FALSE);

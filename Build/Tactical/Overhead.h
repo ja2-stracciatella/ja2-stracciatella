@@ -123,6 +123,11 @@ typedef struct
 
 extern UINT8 gbPlayerNum;
 
+static inline BOOLEAN IsOnOurTeam(const SOLDIERTYPE* const s)
+{
+	return s->bTeam == gbPlayerNum;
+}
+
 extern SOLDIERTYPE* g_selected_man;
 
 extern const char* const gzActionStr[];
