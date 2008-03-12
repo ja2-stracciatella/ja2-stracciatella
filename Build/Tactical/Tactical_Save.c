@@ -1879,17 +1879,7 @@ void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, 
 	gMercProfiles[ ubNpcId ].bSectorZ = bSectorZ;
 
 	gMercProfiles[ ubNpcId ].fUseProfileInsertionInfo = FALSE;
-
-	/*
-	if (!gMercProfiles[ ubNpcId ].ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR)
-	{
-		gMercProfiles[ ubNpcId ].fUseProfileInsertionInfo = PROFILE_DONT_USE_GRIDNO;
-	}
-	*/
 }
-
-
-
 
 
 BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, ROTTING_CORPSE_DEFINITION *pRottingCorpseDef )

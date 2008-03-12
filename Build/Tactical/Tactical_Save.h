@@ -12,17 +12,6 @@
 #define		MAPS_DIR		"Temp/"
 
 
-
-//Defines used for the bUseMercGridNoPlacement contained in the the merc profile struct
-enum
-{
-	PROFILE_NOT_SET,								// initially set to this
-	PROFILE_DONT_USE_GRIDNO,				// if the merc is switching sectors, etc
-	PROFILE_USE_GRIDNO,							// if we are to use the GridNo variable in the profile struct
-};
-
-
-
 // Add
 BOOLEAN AddMapModification( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
