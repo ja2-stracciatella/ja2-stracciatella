@@ -271,7 +271,8 @@ void ExamineSlantRoofFOVSlots( )
 
 }
 
-void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLocators, UINT8 ubLevel, BOOLEAN fForce )
+
+void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocators, const UINT8 ubLevel, const BOOLEAN fForce)
 {
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;
  INT8 Blocking, markerDir;
@@ -366,11 +367,7 @@ void RevealRoofsAndItems(SOLDIERTYPE *pSoldier, UINT32 itemsToo, BOOLEAN fShowLo
 	// ATE: if in this special cercumstance... our guys are moving on their own...
 	// Stop sighting items
 	// IN the future, we may want to do something else here...
-
-	if ( gTacticalStatus.uiFlags & OUR_MERCS_AUTO_MOVE )
-	{
-		itemsToo = FALSE;
-	}
+	const BOOLEAN itemsToo = !(gTacticalStatus.uiFlags & OUR_MERCS_AUTO_MOVE);
 
   for (maincnt = 0; maincnt < MAXVIEWPATHS; maincnt++)
   {
