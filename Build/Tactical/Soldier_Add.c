@@ -1247,7 +1247,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 		{
 			if ( pSoldier->bTeam == gbPlayerNum )
 			{
-				RevealRoofsAndItems(pSoldier, FALSE, TRUE);
+				RevealRoofsAndItems(pSoldier, FALSE);
 
         // ATE: Patch fix: If we are in an non-interruptable animation, stop!
         if ( pSoldier->usAnimState == HOPFENCE )

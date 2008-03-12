@@ -721,7 +721,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 			// if it's our local player's merc
 			if (PTR_OURTEAM)
 				// revealing roofs and looking for items handled here, too
-				RevealRoofsAndItems(pSoldier, TRUE, FALSE);
+				RevealRoofsAndItems(pSoldier, TRUE);
 		}
 		// unless in easy mode allow alerted enemies to radio
 		else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )

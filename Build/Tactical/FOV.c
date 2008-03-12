@@ -272,7 +272,7 @@ void ExamineSlantRoofFOVSlots( )
 }
 
 
-void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocators, const BOOLEAN fForce)
+void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocators)
 {
 	const UINT8 ubLevel = pSoldier->bLevel;
  UINT32 maincnt,markercnt,marker,tilesLeftToSee,cnt,prevmarker;

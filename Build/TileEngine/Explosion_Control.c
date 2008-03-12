@@ -2686,7 +2686,7 @@ void HandleExplosionQueue(void)
 			// call fov code
 			FOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if (s->bInSector) RevealRoofsAndItems(s, FALSE, FALSE);
+				if (s->bInSector) RevealRoofsAndItems(s, FALSE);
 			}
 
 			gfExplosionQueueMayHaveChangedSight = FALSE;

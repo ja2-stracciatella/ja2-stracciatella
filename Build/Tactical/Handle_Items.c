@@ -2428,7 +2428,7 @@ void AllSoldiersLookforItems( BOOLEAN fShowLocators )
 
 		if ( pSoldier != NULL )
 		{
-			RevealRoofsAndItems(pSoldier, fShowLocators, FALSE);
+			RevealRoofsAndItems(pSoldier, fShowLocators);
 		}
 	}
 

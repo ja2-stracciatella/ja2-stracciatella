@@ -1,7 +1,7 @@
 #ifndef __FOV_H
 #define __FOV_H
 
-void RevealRoofsAndItems(SOLDIERTYPE* pSoldier, BOOLEAN fShowLocators, BOOLEAN fForce);
+void RevealRoofsAndItems(SOLDIERTYPE* pSoldier, BOOLEAN fShowLocators);
 
 void ClearSlantRoofs( void );
 void AddSlantRoofFOVSlot( INT16 sGridNo );
