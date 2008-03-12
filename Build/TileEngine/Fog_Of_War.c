@@ -9,7 +9,6 @@
 //This is only done in the cave levels.
 void RemoveFogFromGridNo( UINT32 uiGridNo )
 {
-	INT32 i;
 	INT32 x, y;
 	x = uiGridNo % WORLD_COLS;
 	y = uiGridNo / WORLD_COLS;

@@ -248,13 +248,12 @@ BOOLEAN LoadDataFromLibrary(const HWFILE file, void* const pData, const UINT32 u
 	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
 	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
 
-	BOOLEAN fRet = FALSE;
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
 		if (uiFileNum == 0) return FALSE;
 
 		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		return (fread(pData, uiBytesToRead, 1, hRealFile) == 1);
+		return fread(pData, uiBytesToRead, 1, hRealFile) == 1;
 	}
 	else
 	{

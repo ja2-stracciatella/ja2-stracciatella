@@ -129,8 +129,6 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
-	static INT16		sMoveClickGridNo					= 0;
-
 
 	// LEFT MOUSE BUTTON
   if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )

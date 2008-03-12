@@ -78,7 +78,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
 	static BOOLEAN	fValidDoubleClickPossible = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
-	static INT16		sMoveClickGridNo					= 0;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
 

@@ -1131,7 +1131,6 @@ static void ChooseArmourForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bH
 static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bKnifeClass, BOOLEAN fGrenadeLauncher, BOOLEAN fLAW, BOOLEAN fMortar)
 {
 	UINT16 i;
-	INVTYPE *pItem;
 	UINT16 usRandom;
 	UINT16 usNumMatches = 0;
 	UINT16 usKnifeIndex = 0;
