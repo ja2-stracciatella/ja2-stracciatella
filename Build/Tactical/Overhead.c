@@ -361,16 +361,15 @@ INT32 MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier)
 }
 
 
-INT32 MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* pSoldier)
+void MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* const pSoldier)
 {
-	BOOLEAN fRet = RemoveAwaySlot(pSoldier);
-	if (!fRet) return -1;
+	if (!RemoveAwaySlot(pSoldier)) return;
 
 	AddManToTeam(pSoldier->bTeam);
 
 	pSoldier->bInSector      = TRUE;
 	pSoldier->uiStatusFlags &= ~SOLDIER_OFF_MAP;
-	return AddMercSlot(pSoldier);
+	AddMercSlot(pSoldier);
 }
 
 

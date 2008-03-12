@@ -278,7 +278,7 @@ BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier  );
 INT32   AddAwaySlot(SOLDIERTYPE* pSoldier);
 BOOLEAN RemoveAwaySlot(SOLDIERTYPE* pSoldier);
 INT32   MoveSoldierFromMercToAwaySlot(SOLDIERTYPE* pSoldier);
-INT32   MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* pSoldier);
+void    MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* pSoldier);
 
 void EnterCombatMode( UINT8 ubStartingTeam );
 void ExitCombatMode(void);
