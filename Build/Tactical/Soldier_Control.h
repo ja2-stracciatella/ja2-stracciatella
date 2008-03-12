@@ -981,7 +981,11 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 
 BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier );
 
-#define PTR_CIVILIAN    (pSoldier->bTeam == CIV_TEAM)
+static inline BOOLEAN IsOnCivTeam(const SOLDIERTYPE* const s)
+{
+	return s->bTeam == CIV_TEAM;
+}
+
 #define PTR_CROUCHED	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH)
 #define PTR_STANDING	(gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND)
 #define PTR_PRONE	    (gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_PRONE)

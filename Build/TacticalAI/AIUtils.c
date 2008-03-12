@@ -1440,10 +1440,7 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 
 	// civilians don't really have any "friends", so they don't bother with this
-	if (PTR_CIVILIAN)
-	{
-		return(sClosestFriend);
-	}
+	if (IsOnCivTeam(pSoldier)) return sClosestFriend;
 
 	// consider every friend of this soldier (locations assumed to be known)
 	FOR_ALL_MERCS(i)

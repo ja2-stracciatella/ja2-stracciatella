@@ -1141,7 +1141,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
    return;
   }
 
- if (PTR_CIVILIAN && pSoldier->service &&
+	if (IsOnCivTeam(pSoldier) && pSoldier->service &&
      (pSoldier->bNeutral || MedicsMissionIsEscort(pSoldier)))
   {
 #ifdef DEBUGDECISIONS
@@ -1481,7 +1481,7 @@ static void AIDecideRadioAnimation(SOLDIERTYPE* pSoldier)
 		return;
 	}
 
-	if ( PTR_CIVILIAN && pSoldier->ubCivilianGroup != KINGPIN_CIV_GROUP )
+	if (IsOnCivTeam(pSoldier) && pSoldier->ubCivilianGroup != KINGPIN_CIV_GROUP)
 	{
 		// don't play anim
 		ActionDone( pSoldier );

@@ -224,7 +224,7 @@ static BOOLEAN SatisfiesAIListConditions(SOLDIERTYPE* pSoldier, UINT8* pubDoneCo
 
 	// if we are dealing with the civ team and this person
 	// hasn't heard any gunfire, handle only 1 time in 10
-	if (PTR_CIVILIAN)
+	if (IsOnCivTeam(pSoldier))
 	{
 		if ( pSoldier->ubBodyType == CROW || pSoldier->ubBodyType == COW )
 		{

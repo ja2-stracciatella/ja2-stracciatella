@@ -660,7 +660,13 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
  INT32 iChance, iSneaky = 10;
  INT8  bInWater,bInGas;
 
- BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
+	const BOOLEAN fCivilian =
+		IsOnCivTeam(pSoldier) &&
+		(
+			pSoldier->ubCivilianGroup == NON_CIV_GROUP ||
+			pSoldier->bNeutral                         ||
+			(FATCIV <= pSoldier->ubBodyType && pSoldier->ubBodyType <= CRIPPLECIV)
+		);
  BOOLEAN fCivilianOrMilitia = PTR_CIV_OR_MILITIA;
 
 	gubNPCPathCount = 0;
@@ -1118,7 +1124,13 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  INT32 iNoiseValue;
  INT32 iChance, iSneaky;
  INT16 sClosestFriend;
- BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
+	const BOOLEAN fCivilian =
+		IsOnCivTeam(pSoldier) &&
+		(
+			pSoldier->ubCivilianGroup == NON_CIV_GROUP ||
+			pSoldier->bNeutral                         ||
+			(FATCIV <= pSoldier->ubBodyType && pSoldier->ubBodyType <= CRIPPLECIV)
+		);
  BOOLEAN fClimb;
  BOOLEAN fReachable;
 
@@ -1545,9 +1557,13 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  UINT32	uiStartTime, uiEndTime;
  #endif
  BOOLEAN fClimb;
- BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP ||
-		(pSoldier->bNeutral && gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL) ||
-		(pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
+	const BOOLEAN fCivilian =
+		IsOnCivTeam(pSoldier) &&
+		(
+			pSoldier->ubCivilianGroup == NON_CIV_GROUP                                                               ||
+			(pSoldier->bNeutral && gTacticalStatus.fCivGroupHostile[pSoldier->ubCivilianGroup] == CIV_GROUP_NEUTRAL) ||
+			(FATCIV <= pSoldier->ubBodyType && pSoldier->ubBodyType <= CRIPPLECIV)
+		);
 
  // if we have absolutely no action points, we can't do a thing under RED!
  if (!pSoldier->bActionPoints)
@@ -1560,7 +1576,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
  // if we're an alerted enemy, and there are panic bombs or a trigger around
-	if ((!PTR_CIVILIAN || pSoldier->ubProfile == WARDEN) &&
+	if ((!IsOnCivTeam(pSoldier) || pSoldier->ubProfile == WARDEN) &&
 			(
 				gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition ||
 				pSoldier            == gTacticalStatus.the_chosen_one    ||
@@ -2619,7 +2635,13 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  BOOLEAN	fTryPunching = FALSE;
 
  ATTACKTYPE BestShot,BestThrow,BestStab,BestAttack;
- BOOLEAN fCivilian = (PTR_CIVILIAN && (pSoldier->ubCivilianGroup == NON_CIV_GROUP || pSoldier->bNeutral || (pSoldier->ubBodyType >= FATCIV && pSoldier->ubBodyType <= CRIPPLECIV) ) );
+	const BOOLEAN fCivilian =
+		IsOnCivTeam(pSoldier) &&
+		(
+			pSoldier->ubCivilianGroup == NON_CIV_GROUP ||
+			pSoldier->bNeutral                         ||
+			(FATCIV <= pSoldier->ubBodyType && pSoldier->ubBodyType <= CRIPPLECIV)
+		);
  UINT8	ubBestStance, ubStanceCost;
  BOOLEAN fChangeStanceFirst; // before firing
  BOOLEAN fClimb;
@@ -4013,7 +4035,8 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 
 				case STATUS_YELLOW:
 					// if all enemies have been RED alerted, or we're under fire
-					if (!PTR_CIVILIAN && (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire))
+					if (!IsOnCivTeam(pSoldier) &&
+							(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire))
 					{
 						pSoldier->bAlertStatus = STATUS_RED;
 					}
@@ -4033,7 +4056,8 @@ void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 
 				case STATUS_GREEN:
 					// if all enemies have been RED alerted, or we're under fire
-					if (!PTR_CIVILIAN && (gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire))
+					if (!IsOnCivTeam(pSoldier) &&
+							(gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition || pSoldier->bUnderFire))
 					{
 						pSoldier->bAlertStatus = STATUS_RED;
 					}

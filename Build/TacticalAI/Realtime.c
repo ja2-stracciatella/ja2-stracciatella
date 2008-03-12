@@ -222,7 +222,6 @@ void RTHandleAI( SOLDIERTYPE * pSoldier )
 		{
 			// do a standard wait before doing anything else!
 			pSoldier->bAction = AI_ACTION_WAIT;
-			//if (PTR_CIVILIAN && pSoldier->bAlertStatus != STATUS_BLACK)
 			if ( PTR_CIV_OR_MILITIA && !(pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP ) )
 			{
 				pSoldier->usActionData = (UINT16) REALTIME_CIV_AI_DELAY;

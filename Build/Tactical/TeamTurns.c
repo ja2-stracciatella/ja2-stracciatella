@@ -988,7 +988,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		if (pSoldier->bTeam == gTacticalStatus.ubCurrentTeam )
 		{
 			// if this is a player's a merc or civilian
-			if ((pSoldier->uiStatusFlags & SOLDIER_PC) || PTR_CIVILIAN)
+			if (pSoldier->uiStatusFlags & SOLDIER_PC || IsOnCivTeam(pSoldier))
 			{
 				// then they are not allowed to interrupt their own team
 				return(FALSE);
@@ -1085,7 +1085,7 @@ BOOLEAN StandardInterruptConditionsMet(const SOLDIERTYPE* const pSoldier, const 
 		if (pSoldier->bSide == pOpponent->bSide)
 		{
 			// human/civilians on same side can't interrupt each other
-			if ((pSoldier->uiStatusFlags & SOLDIER_PC) || PTR_CIVILIAN)
+			if (pSoldier->uiStatusFlags & SOLDIER_PC || IsOnCivTeam(pSoldier))
 			{
 				return(FALSE);
 			}

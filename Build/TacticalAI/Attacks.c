@@ -1734,10 +1734,7 @@ INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 
 	// NEUTRAL civilians are not allowed to attack, but those that are not
 	// neutral (KILLNPC mission guynums, escorted guys) can, if they're armed
-	if (PTR_CIVILIAN && pSoldier->bNeutral)
-	{
-		return(FALSE);
-	}
+	if (IsOnCivTeam(pSoldier) && pSoldier->bNeutral) return FALSE;
 
 	// test if if we are able to attack (in general, not at any specific target)
 	bCanAttack = OKToAttack(pSoldier,NOWHERE);

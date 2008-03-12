@@ -50,7 +50,7 @@ enum
 
 #define MAX_ROAMING_RANGE       WORLD_COLS
 
-#define PTR_CIV_OR_MILITIA ( PTR_CIVILIAN || (pSoldier->bTeam == MILITIA_TEAM) )
+#define PTR_CIV_OR_MILITIA (IsOnCivTeam(pSoldier) || pSoldier->bTeam == MILITIA_TEAM)
 
 #define REALTIME_AI_DELAY (10000 + Random( 1000 ))
 #define REALTIME_CIV_AI_DELAY ( 1000 * (gTacticalStatus.Team[ MILITIA_TEAM ].bMenInSector + gTacticalStatus.Team[ CIV_TEAM ].bMenInSector) + 5000 + 2000 * Random( 3 ) )
