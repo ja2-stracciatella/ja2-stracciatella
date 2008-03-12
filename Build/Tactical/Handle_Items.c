@@ -2398,40 +2398,15 @@ ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel)
 }
 
 
-
-void NotifySoldiersToLookforItems( )
+void NotifySoldiersToLookforItems(void)
 {
-	UINT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
-	{
-		pSoldier = MercSlots[ cnt ];
-
-		if ( pSoldier != NULL )
-		{
-			pSoldier->uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
-		}
-	}
-
+	FOR_ALL_MERCS(i) (*i)->uiStatusFlags |= SOLDIER_LOOKFOR_ITEMS;
 }
 
 
 void AllSoldiersLookforItems(void)
 {
-	UINT32 cnt;
-	SOLDIERTYPE *pSoldier;
-
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
-	{
-		pSoldier = MercSlots[ cnt ];
-
-		if ( pSoldier != NULL )
-		{
-			RevealRoofsAndItems(pSoldier, TRUE);
-		}
-	}
-
+	FOR_ALL_MERCS(i) RevealRoofsAndItems(*i, TRUE);
 }
 
 

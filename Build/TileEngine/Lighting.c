@@ -1648,26 +1648,16 @@ INT16 iX, iY;
 BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
-	UINT32	cnt;
-	SOLDIERTYPE *pSoldier;
 
 	ubAmbientLightLevel=iIntensity;
 
 	if( !gfEditMode )
 	{
 		// Loop for all good guys in tactical map and add a light if required
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		FOR_ALL_MERCS(i)
 		{
-			pSoldier = MercSlots[ cnt ];
-
-			if ( pSoldier != NULL )
-			{
-				if ( pSoldier->bTeam == gbPlayerNum )
-				{
-					// Re-create soldier lights
-					ReCreateSoldierLight( pSoldier );
-				}
-			}
+			SOLDIERTYPE* const s = *i;
+			if (s->bTeam == gbPlayerNum) ReCreateSoldierLight(s);
 		}
 	}
 

@@ -402,26 +402,19 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 void DecaySmokeEffects( UINT32 uiTime )
 {
 	SMOKEEFFECT *pSmoke;
-	UINT32	cnt, cnt2;
   BOOLEAN fUpdate = FALSE;
   BOOLEAN fSpreadEffect;
   INT8    bLevel;
   UINT16   usNumUpdates = 1;
 
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
-	{
-		if ( MercSlots[ cnt ] )
-		{
-			// reset 'hit by gas' flags
-			MercSlots[ cnt ]->fHitByGasFlags = 0;
-		}
-	}
+	// reset 'hit by gas' flags
+	FOR_ALL_MERCS(i) (*i)->fHitByGasFlags = 0;
 
   // ATE: 1 ) make first pass and delete/mark any smoke effect for update
   // all the deleting has to be done first///
 
   // age all active tear gas clouds, deactivate those that are just dispersing
-  for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
+  for (UINT32 cnt = 0; cnt < guiNumSmokeEffects; ++cnt)
   {
 		fSpreadEffect = TRUE;
 
@@ -460,7 +453,7 @@ void DecaySmokeEffects( UINT32 uiTime )
       {
 				pSmoke->uiTimeOfLastUpdate = uiTime;
 
-        for ( cnt2 = 0; cnt2 < usNumUpdates; cnt2++ )
+        for (UINT32 cnt2 = 0; cnt2 < usNumUpdates; ++cnt2)
         {
 				  pSmoke->bAge++;
 
@@ -512,7 +505,7 @@ void DecaySmokeEffects( UINT32 uiTime )
     }
   }
 
-  for ( cnt = 0; cnt < guiNumSmokeEffects; cnt++ )
+  for (UINT32 cnt = 0; cnt < guiNumSmokeEffects; ++cnt)
   {
 		pSmoke = &gSmokeEffectData[ cnt ];
 

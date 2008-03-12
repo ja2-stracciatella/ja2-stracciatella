@@ -1317,11 +1317,7 @@ BOOLEAN ExecuteOverhead(void)
 				gbNumMercsUntilWaitingOver = 0;
 
 				// Reset all waitng codes
-				for (UINT32 i = 0; i < guiNumMercSlots; ++i)
-				{
-					SOLDIERTYPE* const pSoldier = MercSlots[i];
-					if (pSoldier != NULL) pSoldier->ubWaitActionToDo = 0;
-				}
+				FOR_ALL_MERCS(i) (*i)->ubWaitActionToDo = 0;
 			}
 
 			if (gbNumMercsUntilWaitingOver == 0)
@@ -4518,72 +4514,45 @@ static BOOLEAN SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE* pTeamSoldier)
 
 static BOOLEAN WeSeeNoOne(void)
 {
-	UINT32		uiLoop;
-	SOLDIERTYPE * pSoldier;
-
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-		if ( pSoldier != NULL )
-		{
-			if ( pSoldier->bTeam == gbPlayerNum )
-			{
-				if ( pSoldier->bOppCnt > 0 )
-				{
-					return( FALSE );
-				}
-			}
-		}
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam == gbPlayerNum && s->bOppCnt > 0) return FALSE;
 	}
-
-	return( TRUE );
+	return TRUE;
 }
 
 
 static BOOLEAN NobodyAlerted(void)
 {
-	UINT32		uiLoop;
-	SOLDIERTYPE * pSoldier;
-
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-		if ( pSoldier != NULL )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam        != gbPlayerNum &&
+				!s->bNeutral                   &&
+				s->bLife        >= OKLIFE      &&
+				s->bAlertStatus >= STATUS_RED)
 		{
-			if ( ( pSoldier->bTeam != gbPlayerNum ) && ( ! pSoldier->bNeutral ) && (pSoldier->bLife >= OKLIFE) && (pSoldier->bAlertStatus >= STATUS_RED) )
-			{
-				return( FALSE );
-			}
+			return FALSE;
 		}
 	}
-
 	return( TRUE );
 }
 
 
 static BOOLEAN WeSawSomeoneThisTurn(void)
 {
-	UINT32		uiLoop, uiLoop2;
-	SOLDIERTYPE * pSoldier;
-
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-		if ( pSoldier != NULL )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam != gbPlayerNum) continue;
+
+		for (UINT32 uiLoop2 = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; uiLoop2 < TOTAL_SOLDIERS; ++uiLoop2)
 		{
-			if ( pSoldier->bTeam == gbPlayerNum )
-			{
-				for ( uiLoop2 = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; uiLoop2 < TOTAL_SOLDIERS; uiLoop2++ )
-				{
-					if ( pSoldier->bOppList[ uiLoop2 ] == SEEN_THIS_TURN )
-					{
-						return( TRUE );
-					}
-				}
-			}
+			if (s->bOppList[uiLoop2] == SEEN_THIS_TURN) return TRUE;
 		}
 	}
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -4620,8 +4589,6 @@ static UINT8 NumEnemyInSectorNotDeadOrDying(void);
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 {
-	SOLDIERTYPE *pTeamSoldier;
-	UINT32 cnt = 0;
 	BOOLEAN	fWeSeeNoOne, fNobodyAlerted;
 	BOOLEAN	fSayQuote = FALSE;
 	BOOLEAN fWeSawSomeoneRecently = FALSE, fSomeoneSawSomeoneRecently = FALSE;
@@ -4655,23 +4622,20 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 	}
 	else
 	{
-
 		// we have to loop through EVERYONE to see if anyone sees a hostile... if so, stay in turnbased...
-
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		FOR_ALL_MERCS(i)
 		{
-			pTeamSoldier = MercSlots[ cnt ];
-			if ( pTeamSoldier && pTeamSoldier->bLife >= OKLIFE && !pTeamSoldier->bNeutral )
+			SOLDIERTYPE* const s = *i;
+			if (s->bLife >= OKLIFE &&
+					!s->bNeutral       &&
+					SoldierHasSeenEnemiesLastFewTurns(s))
 			{
-				if ( SoldierHasSeenEnemiesLastFewTurns( pTeamSoldier ) )
+				gTacticalStatus.bConsNumTurnsNotSeen = 0;
+				fSomeoneSawSomeoneRecently = TRUE;
+				if (s->bTeam == gbPlayerNum || (s->bTeam == MILITIA_TEAM && s->bSide == 0)) // or friendly militia
 				{
-					gTacticalStatus.bConsNumTurnsNotSeen = 0;
-					fSomeoneSawSomeoneRecently = TRUE;
-					if ( pTeamSoldier->bTeam == gbPlayerNum || (pTeamSoldier->bTeam == MILITIA_TEAM && pTeamSoldier->bSide == 0 ) ) // or friendly militia
-					{
-						fWeSawSomeoneRecently = TRUE;
-						break;
-					}
+					fWeSawSomeoneRecently = TRUE;
+					break;
 				}
 			}
 		}
@@ -5221,28 +5185,16 @@ BOOLEAN PlayerTeamFull( )
 	return( TRUE );
 }
 
-UINT8 NumPCsInSector( void )
+
+UINT8 NumPCsInSector(void)
 {
-	SOLDIERTYPE *pTeamSoldier;
-	UINT32				cnt = 0;
-	UINT8				ubNumPlayers = 0;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+	UINT8 ubNumPlayers = 0;
+	FOR_ALL_MERCS(i)
 	{
-		if ( MercSlots[ cnt ] )
-		{
-			pTeamSoldier = MercSlots[ cnt ];
-			if ( pTeamSoldier->bTeam == gbPlayerNum && pTeamSoldier->bLife > 0 )
-			{
-				ubNumPlayers++;
-			}
-		}
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam == gbPlayerNum && s->bLife > 0) ++ubNumPlayers;
 	}
-
-	return( ubNumPlayers );
-
+	return ubNumPlayers;
 }
 
 
@@ -5643,14 +5595,12 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 	INT8									bTolerance;
 	INT16									sClosestOpponent, sClosestOppLoc;
 	UINT8									ubPointsLost, ubTotalPointsLost, ubNewStance;
-	UINT32								uiLoop;
 	UINT8									ubLoop2;
-	SOLDIERTYPE *					pSoldier;
 
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[uiLoop];
-		if (pSoldier && IS_MERC_BODY_TYPE( pSoldier) && pSoldier->bLife >= OKLIFE && pSoldier->ubSuppressionPoints > 0)
+		SOLDIERTYPE* const pSoldier = *i;
+		if (IS_MERC_BODY_TYPE(pSoldier) && pSoldier->bLife >= OKLIFE && pSoldier->ubSuppressionPoints > 0)
 		{
 			bTolerance = CalcSuppressionTolerance( pSoldier );
 

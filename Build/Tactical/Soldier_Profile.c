@@ -736,9 +736,6 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	UINT32									cnt;
 	INT16										sOldGridNo;
 
-	UINT32									uiSlot;
-	SOLDIERTYPE							*pGroupMember;
-
 	if (gfInTalkPanel)
 	{
 		DeleteTalkingMenu();
@@ -799,19 +796,11 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 
 		// OK, loop through all active merc slots, change
 		// Change ANY attacker's target if they were once on this guy.....
-		for ( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
+		FOR_ALL_MERCS(i)
 		{
-			pGroupMember = MercSlots[ uiSlot ];
-
-			if ( pGroupMember != NULL )
-			{
-				if (pGroupMember->target == pSoldier)
-				{
-					pGroupMember->target = pNewSoldier;
-				}
-			}
+			SOLDIERTYPE* const s = *i;
+			if (s->target == pSoldier) s->target = pNewSoldier;
 		}
-
 
 		// Set insertion gridNo
 		pNewSoldier->sInsertionGridNo								= sOldGridNo;
@@ -1111,56 +1100,50 @@ BOOLEAN IsProfileAHeadMiner(UINT8 ubProfile)
 
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 {
-	UINT32 uiCount;
-	SOLDIERTYPE *pSoldier = NULL;
 	MERCPROFILESTRUCT * pProfile;
 	BOOLEAN				fDoCopy = FALSE;
 
-	for( uiCount=0; uiCount < guiNumMercSlots; uiCount++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiCount ];
-
-		if ( pSoldier != NULL )
+		const SOLDIERTYPE* const pSoldier = *i;
+		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-			if ( pSoldier->ubProfile != NO_PROFILE )
+			fDoCopy = FALSE;
+
+			// If we are above player mercs
+			if ( fPlayerMercs )
 			{
-				fDoCopy = FALSE;
-
-				// If we are above player mercs
-				if ( fPlayerMercs )
+				if ( pSoldier->ubProfile < FIRST_RPC )
 				{
-					if ( pSoldier->ubProfile < FIRST_RPC )
-					{
-						fDoCopy = TRUE;
-					}
+					fDoCopy = TRUE;
 				}
-				else
+			}
+			else
+			{
+				if ( pSoldier->ubProfile >= FIRST_RPC )
 				{
-					if ( pSoldier->ubProfile >= FIRST_RPC )
-					{
-						fDoCopy = TRUE;
-					}
+					fDoCopy = TRUE;
 				}
+			}
 
-				if ( fDoCopy )
-				{
-					// get profile...
-					pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
+			if ( fDoCopy )
+			{
+				// get profile...
+				pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
 
-					// Copy....
-					pProfile->bLife 										= pSoldier->bLife;
-					pProfile->bLifeMax									= pSoldier->bLifeMax;
-					pProfile->bAgility									= pSoldier->bAgility;
-					pProfile->bLeadership								= pSoldier->bLeadership;
-					pProfile->bDexterity								= pSoldier->bDexterity;
-					pProfile->bStrength									= pSoldier->bStrength;
-					pProfile->bWisdom										= pSoldier->bWisdom;
-					pProfile->bExpLevel									= pSoldier->bExpLevel;
-					pProfile->bMarksmanship							= pSoldier->bMarksmanship;
-					pProfile->bMedical									= pSoldier->bMedical;
-					pProfile->bMechanical								= pSoldier->bMechanical;
-					pProfile->bExplosive								= pSoldier->bExplosive;
-				}
+				// Copy....
+				pProfile->bLife 										= pSoldier->bLife;
+				pProfile->bLifeMax									= pSoldier->bLifeMax;
+				pProfile->bAgility									= pSoldier->bAgility;
+				pProfile->bLeadership								= pSoldier->bLeadership;
+				pProfile->bDexterity								= pSoldier->bDexterity;
+				pProfile->bStrength									= pSoldier->bStrength;
+				pProfile->bWisdom										= pSoldier->bWisdom;
+				pProfile->bExpLevel									= pSoldier->bExpLevel;
+				pProfile->bMarksmanship							= pSoldier->bMarksmanship;
+				pProfile->bMedical									= pSoldier->bMedical;
+				pProfile->bMechanical								= pSoldier->bMechanical;
+				pProfile->bExplosive								= pSoldier->bExplosive;
 			}
 		}
 	}

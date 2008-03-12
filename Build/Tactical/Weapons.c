@@ -4131,47 +4131,41 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 		{ SOUTH, -1,        -1 }
 	};
 
-	UINT32                  cnt, cnt2;
-	SOLDIERTYPE							*pSoldier;
 	INT8										bDir;
 	INT32										iChance;
 	INT32										iImpact;
 	INT32										iHitBy;
 
 	// Loop through all mercs and make go
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ cnt ];
-
-		if (pSoldier != NULL )
+		SOLDIERTYPE* const pSoldier = *i;
+		if ( pSoldier->ubID != pQueenSoldier->ubID )
 		{
-			if ( pSoldier->ubID != pQueenSoldier->ubID )
+			// ATE: Ok, lets check for some basic things here!
+			if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
 			{
-				// ATE: Ok, lets check for some basic things here!
-				if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+				// Get Pyth spaces away....
+				if ( GetRangeInCellCoordsFromGridNoDiff( pQueenSoldier->sGridNo, pSoldier->sGridNo ) <= Weapon[ CREATURE_QUEEN_TENTACLES].usRange )
 				{
-					// Get Pyth spaces away....
-					if ( GetRangeInCellCoordsFromGridNoDiff( pQueenSoldier->sGridNo, pSoldier->sGridNo ) <= Weapon[ CREATURE_QUEEN_TENTACLES].usRange )
+					// get direction
+					bDir = (INT8)GetDirectionFromGridNo( pSoldier->sGridNo, pQueenSoldier );
+
+					//
+					for (UINT32 cnt2 = 0; cnt2 < 2; ++cnt2)
 					{
-						// get direction
-						bDir = (INT8)GetDirectionFromGridNo( pSoldier->sGridNo, pQueenSoldier );
-
-						//
-						for ( cnt2 = 0; cnt2 < 2; cnt2++ )
+						if ( bValidDishoutDirs[ pQueenSoldier->uiPendingActionData1 ][ cnt2 ] == bDir )
 						{
-							if ( bValidDishoutDirs[ pQueenSoldier->uiPendingActionData1 ][ cnt2 ] == bDir )
-							{
-								iChance = CalcChanceToStab( pQueenSoldier, pSoldier, 0 );
+							iChance = CalcChanceToStab( pQueenSoldier, pSoldier, 0 );
 
-								// CC: Look here for chance to hit, damage, etc...
-								// May want to not hit if target is prone, etc....
-								iHitBy = iChance - (INT32) PreRandom( 100 );
-								if ( iHitBy > 0 )
-								{
-									// Hit!
-									iImpact = HTHImpact( pQueenSoldier, pSoldier, iHitBy, TRUE );
-			 						EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, OppositeDirection(bDir), 50, pQueenSoldier, 0, ANIM_CROUCH, 0);
-								}
+							// CC: Look here for chance to hit, damage, etc...
+							// May want to not hit if target is prone, etc....
+							iHitBy = iChance - (INT32) PreRandom( 100 );
+							if ( iHitBy > 0 )
+							{
+								// Hit!
+								iImpact = HTHImpact( pQueenSoldier, pSoldier, iHitBy, TRUE );
+								EVENT_SoldierGotHit(pSoldier, CREATURE_QUEEN_TENTACLES, iImpact, iImpact, OppositeDirection(bDir), 50, pQueenSoldier, 0, ANIM_CROUCH, 0);
 							}
 						}
 					}

@@ -387,8 +387,6 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldie
 	INT32		iTotalCoverPoints=0;
 	INT8		bNumEnemies=0;
 	INT8		bPercentCoverForGridno=0;
-	UINT32	uiLoop;
-	SOLDIERTYPE *pOpponent;
 	INT32		iGetThrough=0;
 	INT32		iBulletGetThrough=0;
 	INT32		iHighestValue=0;
@@ -398,15 +396,12 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldie
 	UINT16	usSightLimit;
 
 	//loop through all the enemies and determine the cover
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ uiLoop ];
+		SOLDIERTYPE* const pOpponent = *i;
 
 		// if this merc is inactive, at base, on assignment, dead, unconscious
-		if (!pOpponent || pOpponent->bLife < OKLIFE)
-		{
-			continue;          // next merc
-		}
+		if (pOpponent->bLife < OKLIFE) continue;
 
 		// if this man is neutral / on the same side, he's not an opponent
  		if( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))

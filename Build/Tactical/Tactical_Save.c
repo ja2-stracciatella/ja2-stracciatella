@@ -1624,8 +1624,6 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
 
 static void SaveNPCInformationToProfileStruct(void)
 {
-	UINT32								cnt;
-	SOLDIERTYPE *					pSoldier;
 	MERCPROFILESTRUCT *		pProfile;
 
 	//Loop through the active NPC's
@@ -1636,12 +1634,11 @@ static void SaveNPCInformationToProfileStruct(void)
 		return;
 	}
 
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ cnt ];
-
+		const SOLDIERTYPE* const pSoldier = *i;
 		//if it is an active NPC
-		if ( pSoldier && pSoldier->ubProfile != NO_PROFILE && pSoldier->bTeam == CIV_TEAM )
+		if (pSoldier->ubProfile != NO_PROFILE && pSoldier->bTeam == CIV_TEAM)
 		{
 			//Save Temp Npc Quote Info array
 			SaveTempNpcQuoteInfoForNPCToTempFile( pSoldier->ubProfile );

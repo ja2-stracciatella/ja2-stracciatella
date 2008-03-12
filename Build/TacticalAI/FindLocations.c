@@ -513,7 +513,6 @@ static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentBetter)
 {
 	// all 32-bit integers for max. speed
-	UINT32 uiLoop;
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
 	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
@@ -531,7 +530,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT16	*		pusLastLoc;
 	INT8 *		pbPersOL;
 	INT8 *		pbPublOL;
-	SOLDIERTYPE *pOpponent;
 	UINT16 usMovementMode;
 	INT8	fHasGasMask;
 
@@ -648,15 +646,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iMyThreatValue = CalcManThreatValue(pSoldier,NOWHERE,FALSE,pSoldier);
 
 	// look through all opponents for those we know of
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ uiLoop ];
+		SOLDIERTYPE* const pOpponent = *i;
 
 		// if this merc is inactive, at base, on assignment, dead, unconscious
-		if (!pOpponent || pOpponent->bLife < OKLIFE)
-		{
-			continue;          // next merc
-		}
+		if (pOpponent->bLife < OKLIFE) continue; // next merc
 
 		// if this man is neutral / on the same side, he's not an opponent
  		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
@@ -760,7 +755,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	iCurrentScale = 0;
 
 	// for every opponent that threatens, consider this spot's cover vs. him
-	for (uiLoop = 0; uiLoop < uiThreatCnt; uiLoop++)
+	for (UINT32 uiLoop = 0; uiLoop < uiThreatCnt; ++uiLoop)
 	{
 		// if this threat is CURRENTLY within 20 tiles
 		if (Threat[uiLoop].iOrigRange <= MAX_THREAT_RANGE)
@@ -934,7 +929,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			iCoverScale = 0;
 
 			// for every opponent that threatens, consider this spot's cover vs. him
-			for (uiLoop = 0; uiLoop < uiThreatCnt; uiLoop++)
+			for (UINT32 uiLoop = 0; uiLoop < uiThreatCnt; ++uiLoop)
 			{
 				// calculate the range we would be at from this opponent
 				iThreatRange = GetRangeInCellCoordsFromGridNoDiff( sGridNo, Threat[uiLoop].sGridNo );
@@ -1066,14 +1061,12 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 {
 	INT16 sGridNo;
 	INT16 sBestSpot = NOWHERE;
-	UINT32 uiLoop;
 	INT32 iThreatRange,iClosestThreatRange = 1500, iSpotClosestThreatRange;
 	INT16 sThreatLoc, sThreatGridNo[MAXMERCS];
 	UINT32 uiThreatCnt = 0;
 	INT32 iSearchRange;
 	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT8 * pbPersOL,*pbPublOL, bEscapeDirection, bBestEscapeDirection = -1;
-	SOLDIERTYPE *pOpponent;
 	INT16	sOrigin;
 	INT32	iRoamRange;
 
@@ -1093,15 +1086,12 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplistS
 
 	// look through all opponents for those we know of
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ uiLoop ];
+		SOLDIERTYPE* const pOpponent = *i;
 
 		// if this merc is inactive, at base, on assignment, dead, unconscious
-		if (!pOpponent || (pOpponent->bLife < OKLIFE))
-		{
-			continue;          // next merc
-		}
+		if (pOpponent->bLife < OKLIFE) continue; // next merc
 
 		// if this man is neutral / on the same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
@@ -1330,7 +1320,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 			{
 				bEscapeDirection = -1;
 				// for every opponent that threatens, consider this spot's cover vs. him
-				for (uiLoop = 0; uiLoop < uiThreatCnt; uiLoop++)
+				for (UINT32 uiLoop = 0; uiLoop < uiThreatCnt; ++uiLoop)
 				{
 					//iThreatRange = AdjPixelsAway(CenterX(sGridNo),CenterY(sGridNo), CenterX(sThreatGridNo[iLoop]),CenterY(sThreatGridNo[iLoop]));
 					iThreatRange = GetRangeInCellCoordsFromGridNoDiff( sGridNo, sThreatGridNo[uiLoop] );

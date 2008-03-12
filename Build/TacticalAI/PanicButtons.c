@@ -14,10 +14,8 @@
 
 void MakeClosestEnemyChosenOne()
 {
-	UINT32				cnt;
 	INT16					sPathCost, sShortestPath = 1000;
 	INT8					bOldKeys = -1;
-	SOLDIERTYPE *	pSoldier;
 	INT8					bPanicTrigger;
 	INT16					sPanicTriggerGridNo;
 
@@ -38,14 +36,9 @@ void MakeClosestEnemyChosenOne()
 
 	// consider every enemy, looking for the closest capable, unbusy one
 	SOLDIERTYPE* closest_enemy = NULL;
-	for (cnt = 0; cnt < guiNumMercSlots; cnt++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[cnt];
-
-		if (!pSoldier)	// if this merc is inactive, or not here
-		{
-			continue;
-		}
+		SOLDIERTYPE* const pSoldier = *i;
 
 		// if this merc is unconscious, or dead
 		if (pSoldier->bLife < OKLIFE)

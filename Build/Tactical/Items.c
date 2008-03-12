@@ -4775,8 +4775,6 @@ BOOLEAN ItemIsCool(const OBJECTTYPE* pObj)
 
 void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 {
-	SOLDIERTYPE *	pSoldier2;
-	UINT32				uiSlot;
 	INT8					bBatteries;
 
 	// check for batteries
@@ -4798,29 +4796,25 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 
 	// first, scan through all mercs and turn off xrayed flag for anyone
 	// previously xrayed by this guy
-	for ( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier2 = MercSlots[ uiSlot ];
-		if ( pSoldier2 )
+		SOLDIERTYPE* const tgt = *i;
+		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
+				tgt->ubXRayedBy         == pSoldier->ubID)
 		{
-			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->ubXRayedBy == pSoldier->ubID) )
-			{
-				pSoldier2->ubMiscSoldierFlags &= (~SOLDIER_MISC_XRAYED);
-				pSoldier2->ubXRayedBy = NOBODY;
-			}
+			tgt->ubMiscSoldierFlags &= ~SOLDIER_MISC_XRAYED;
+			tgt->ubXRayedBy          = NOBODY;
 		}
 	}
 	// now turn on xray for anyone within range
-	for ( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier2 = MercSlots[ uiSlot ];
-		if ( pSoldier2 )
+		SOLDIERTYPE* const tgt = *i;
+		if (tgt->bTeam != pSoldier->bTeam &&
+				PythSpacesAway(pSoldier->sGridNo, tgt->sGridNo) < XRAY_RANGE)
 		{
-			if ( pSoldier2->bTeam != pSoldier->bTeam && PythSpacesAway( pSoldier->sGridNo, pSoldier2->sGridNo ) < XRAY_RANGE )
-			{
-				pSoldier2->ubMiscSoldierFlags |= SOLDIER_MISC_XRAYED;
-				pSoldier2->ubXRayedBy = pSoldier->ubID;
-			}
+			tgt->ubMiscSoldierFlags |= SOLDIER_MISC_XRAYED;
+			tgt->ubXRayedBy          = pSoldier->ubID;
 		}
 	}
 	pSoldier->uiXRayActivatedTime = GetWorldTotalSeconds();
@@ -4828,9 +4822,6 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 
 void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 {
-	SOLDIERTYPE *	pSoldier2;
-	UINT32				uiSlot;
-
 	if ( !pSoldier->uiXRayActivatedTime )
 	{
 		return;
@@ -4838,16 +4829,14 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 
 	// scan through all mercs and turn off xrayed flag for anyone
 	// xrayed by this guy
-	for ( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier2 = MercSlots[ uiSlot ];
-		if ( pSoldier2 )
+		SOLDIERTYPE* const tgt = *i;
+		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
+				tgt->ubXRayedBy         == pSoldier->ubID)
 		{
-			if ( (pSoldier2->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) && (pSoldier2->ubXRayedBy == pSoldier->ubID) )
-			{
-				pSoldier2->ubMiscSoldierFlags &= (~SOLDIER_MISC_XRAYED);
-				pSoldier2->ubXRayedBy = NOBODY;
-			}
+			tgt->ubMiscSoldierFlags &= ~SOLDIER_MISC_XRAYED;
+			tgt->ubXRayedBy          = NOBODY;
 		}
 	}
 	pSoldier->uiXRayActivatedTime = 0;

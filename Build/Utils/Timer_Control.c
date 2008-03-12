@@ -114,22 +114,18 @@ static UINT32 TimeProc(UINT32 interval, void* params)
       {
 			  // Set update flags for soldiers
 			  ////////////////////////////
-				for (UINT32 gCNT = 0; gCNT < guiNumMercSlots; gCNT++)
+				FOR_ALL_MERCS(i)
 			  {
-					SOLDIERTYPE* gPSOLDIER = MercSlots[gCNT];
-
-				  if ( gPSOLDIER != NULL )
-				  {
-					  UPDATETIMECOUNTER( gPSOLDIER->UpdateCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->DamageCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->ReloadCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->BlinkSelCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PortraitFlashCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->AICounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->FadeCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->NextTileCounter );
-					  UPDATETIMECOUNTER( gPSOLDIER->PanelAnimateCounter );
-				  }
+					SOLDIERTYPE* const s = *i;
+					UPDATETIMECOUNTER(s->UpdateCounter);
+					UPDATETIMECOUNTER(s->DamageCounter);
+					UPDATETIMECOUNTER(s->ReloadCounter);
+					UPDATETIMECOUNTER(s->BlinkSelCounter);
+					UPDATETIMECOUNTER(s->PortraitFlashCounter);
+					UPDATETIMECOUNTER(s->AICounter);
+					UPDATETIMECOUNTER(s->FadeCounter);
+					UPDATETIMECOUNTER(s->NextTileCounter);
+					UPDATETIMECOUNTER(s->PanelAnimateCounter);
 			  }
       }
 #endif

@@ -104,14 +104,12 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 
 void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 {
- UINT32 uiLoop;
  INT32 iAttackValue;
  INT32 iThreatValue;
  INT32 iHitRate,iBestHitRate,iPercentBetter;
  INT32 iEstDamage;
  UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
  UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit,ubBestChanceToHit = 0;
- SOLDIERTYPE *pOpponent;
  UINT8 ubBurstAPs;
 
  ubBestChanceToHit = ubBestAimTime = ubChanceToHit = 0;
@@ -126,13 +124,12 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
  //pbPersOL = &(pSoldier->bOppList[0]);
 
  // determine which attack against which target has the greatest attack value
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
- {
-	pOpponent = MercSlots[ uiLoop ];
+	FOR_ALL_MERCS(i)
+	{
+		SOLDIERTYPE* const pOpponent = *i;
 
-  // if this merc is inactive, at base, on assignment, or dead
-	if (!pOpponent || !pOpponent->bLife)
-     continue;          // next merc
+		// if this merc is inactive, at base, on assignment, or dead
+		if (!pOpponent->bLife) continue; // next merc
 
    // if this man is neutral / on the same side, he's not an opponent
    if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
@@ -410,7 +407,7 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 {
 	// September 9, 1998: added code for LAWs (CJC)
-	UINT8 ubLoop, ubLoop2;
+	UINT8 ubLoop2;
 	INT32 iAttackValue;
 	INT32 iHitRate, iThreatValue, iTotalThreatValue,iOppThreatValue[MAXMERCS];
 	INT16 sGridNo, sEndGridNo, sFriendTile[MAXMERCS], sOpponentTile[MAXMERCS];
@@ -431,7 +428,6 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	INT8	bPayloadPocket;
 	INT8  bMaxLeft,bMaxRight,bMaxUp,bMaxDown,bXOffset,bYOffset;
 	INT8	bPersOL, bPublOL;
-	SOLDIERTYPE *pOpponent, *pFriend;
 	static INT16	sExcludeTile[100]; // This array is for storing tiles that we have
 	UINT8 ubNumExcludedTiles = 0;		// already considered, to prevent duplication of effort
 	INT32	iTossRange;
@@ -507,15 +503,9 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	ubDiff = SoldierDifficultyLevel( pSoldier );
 
 	// make a list of tiles one's friends are positioned in
-	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
+	FOR_ALL_MERCS(i)
 	{
-
-		pFriend = MercSlots[ubLoop];
-
-		if ( !pFriend )
-		{
-			continue; // next soldier
-		}
+		const SOLDIERTYPE* const pFriend = *i;
 
 		if (pFriend->bLife == 0)
 		{
@@ -538,15 +528,9 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	//NumMessage("ubFriendCnt = ",ubFriendCnt);
 
 	// make a list of tiles one's CURRENTLY SEEN opponents are positioned in
-	for (ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ubLoop];
-
-		if (!pOpponent)
-		{
-			// inactive or not in sector
-			continue;          // next soldier
-		}
+		SOLDIERTYPE* const pOpponent = *i;
 
 		if (!pOpponent->bLife)
 		{
@@ -712,7 +696,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 	// look at the squares near each known opponent and try to find the one
 	// place where a tossed projectile would do the most harm to the opponents
 	// while avoiding one's friends
-	for (ubLoop = 0; ubLoop < ubOpponentCnt; ubLoop++)
+	for (UINT8 ubLoop = 0; ubLoop < ubOpponentCnt; ++ubLoop)
 	{
 		// search all tiles within 2 squares of this opponent
 		ubSearchRange = MAX_TOSS_SEARCH_DIST;
@@ -1070,13 +1054,11 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 
 void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAttack )
 {
- UINT32 uiLoop;
  INT32 iAttackValue;
  INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
  BOOLEAN fSurpriseStab;
  UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
  UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
- SOLDIERTYPE *pOpponent;
  UINT16 usTrueMovementMode;
 
  InitAttackType(pBestStab);      // set all structure fields to defaults
@@ -1090,13 +1072,12 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
  // determine which attack against which target has the greatest attack value
 
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
- {
-	pOpponent = MercSlots[ uiLoop ];
+	FOR_ALL_MERCS(i)
+	{
+		SOLDIERTYPE* const pOpponent = *i;
 
-	// if this merc is inactive, at base, on assignment, or dead
-	if (!pOpponent || !pOpponent->bLife)
-     continue;          // next merc
+		// if this merc is inactive, at base, on assignment, or dead
+		if (!pOpponent->bLife) continue; // next merc
 
    // if this man is neutral / on the same side, he's not an opponent
    if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide) )
@@ -1280,28 +1261,23 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 
 void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 {
- UINT32 uiLoop;
  INT32 iAttackValue;
  INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
  BOOLEAN fSurpriseStab;
  UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
  UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
- SOLDIERTYPE *pOpponent;
-
 
  InitAttackType(pBestStab);      // set all structure fields to defaults
 
  pSoldier->usAttackingWeapon = pSoldier->inv[HANDPOS].usItem;
 
  // determine which attack against which target has the greatest attack value
+	FOR_ALL_MERCS(i)
+	{
+		SOLDIERTYPE* const pOpponent = *i;
 
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
- {
-	pOpponent = MercSlots[ uiLoop ];
-
-	// if this merc is inactive, at base, on assignment, or dead
-	if (!pOpponent || !pOpponent->bLife)
-     continue;          // next merc
+		// if this merc is inactive, at base, on assignment, or dead
+		if (!pOpponent->bLife) continue; // next merc
 
    // if this man is neutral / on the same side, he's not an opponent
    if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
@@ -1432,24 +1408,18 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
 static UINT8 NumMercsCloseTo(INT16 sGridNo, UINT8 ubMaxDist)
 {
-	INT8						bNumber = 0;
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	INT8 bNumber = 0;
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam == gbPlayerNum &&
+				s->bLife >= OKLIFE      &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= ubMaxDist)
 		{
-			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= ubMaxDist)
-			{
-				bNumber++;
-			}
+			++bNumber;
 		}
 	}
-
-	return( bNumber );
+	return bNumber;
 }
 
 

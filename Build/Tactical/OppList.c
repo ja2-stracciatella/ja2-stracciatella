@@ -372,8 +372,6 @@ static void HandleBestSightingPositionInRealtime(void)
 	// This function is called for handling interrupts when opening a door in non-combat or
 	// just sighting in non-combat, deciding who gets the first turn
 
-	UINT8		ubLoop;
-
 	if ( gfDelayResolvingBestSightingDueToDoor )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "HBSPIR: skipping due to door flag" );
@@ -414,7 +412,7 @@ static void HandleBestSightingPositionInRealtime(void)
 			}
 		}
 
-		for ( ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ubLoop++ )
+		for (UINT8 ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ++ubLoop)
 		{
 			if (gBestToMakeSighting[ubLoop] != NULL)
 			{
@@ -423,12 +421,10 @@ static void HandleBestSightingPositionInRealtime(void)
 			}
 		}
 
-		for ( ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++ )
+		FOR_ALL_MERCS(i)
 		{
-			if ( MercSlots[ ubLoop ] )
-			{
-				AssertMsg( MercSlots[ ubLoop ]->bInterruptDuelPts == NO_INTERRUPT, String( "%ls (%d) still has interrupt pts!", MercSlots[ ubLoop ]->name, MercSlots[ ubLoop ]->ubID ) );
-			}
+			SOLDIERTYPE* const s = *i;
+			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
 		}
 	}
 }
@@ -437,8 +433,6 @@ static void HandleBestSightingPositionInRealtime(void)
 static void HandleBestSightingPositionInTurnbased(void)
 {
 	// This function is called for handling interrupts when opening a door in turnbased
-
-	UINT8		ubLoop, ubLoop2;
 	BOOLEAN	fOk = FALSE;
 
 	if (gBestToMakeSighting[0] != NULL)
@@ -446,7 +440,8 @@ static void HandleBestSightingPositionInTurnbased(void)
 		if (gBestToMakeSighting[0]->bTeam != gTacticalStatus.ubCurrentTeam)
 		{
 			// interrupt!
-			for ( ubLoop = 0; ubLoop < gubBestToMakeSightingSize; ubLoop++ )
+			UINT8 ubLoop;
+			for (ubLoop = 0; ubLoop < gubBestToMakeSightingSize; ++ubLoop)
 			{
 				if (gBestToMakeSighting[ubLoop] == NULL)
 				{
@@ -469,7 +464,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 			{
 				// this is the guy who gets "interrupted"; all else before him interrupted him
 				AddToIntList(gBestToMakeSighting[ubLoop], FALSE, TRUE);
-				for ( ubLoop2 = 0; ubLoop2 < ubLoop; ubLoop2++ )
+				for (UINT8 ubLoop2 = 0; ubLoop2 < ubLoop; ++ubLoop2)
 				{
 					AddToIntList(gBestToMakeSighting[ubLoop2], TRUE, TRUE);
 				}
@@ -477,7 +472,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 			}
 
 		}
-		for ( ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ubLoop++ )
+		for (UINT8 ubLoop = 0; ubLoop < BEST_SIGHTING_ARRAY_SIZE; ++ubLoop)
 		{
 			if (gBestToMakeSighting[ubLoop] != NULL)
 			{
@@ -486,12 +481,10 @@ static void HandleBestSightingPositionInTurnbased(void)
 			}
 		}
 
-		for ( ubLoop = 0; ubLoop < guiNumMercSlots; ubLoop++ )
+		FOR_ALL_MERCS(i)
 		{
-			if ( MercSlots[ ubLoop ] )
-			{
-				AssertMsg( MercSlots[ ubLoop ]->bInterruptDuelPts == NO_INTERRUPT, String( "%ls (%d) still has interrupt pts!", MercSlots[ ubLoop ]->name, MercSlots[ ubLoop ]->ubID ) );
-			}
+			SOLDIERTYPE* const s = *i;
+			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
 		}
 	}
 }
@@ -623,8 +616,6 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 {
- UINT32 uiLoop;
- SOLDIERTYPE *pThem;
  INT8			bTempNewSituation;
 
  if (!pSoldier->bActive || !pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD )
@@ -651,7 +642,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 		InitSightArrays();
 	}
 
-	for ( uiLoop = 0; uiLoop < NUM_WATCHED_LOCS; uiLoop++ )
+	for (UINT32 uiLoop = 0; uiLoop < NUM_WATCHED_LOCS; ++uiLoop)
 	{
 		gfWatchedLocHasBeenIncremented[ pSoldier->ubID ][ uiLoop ] = FALSE;
 	}
@@ -746,11 +737,10 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 		// all non-humans under our control would now radio, if they were allowed
 		// to radio automatically (but they're not).  So just nuke new opp cnt
 		// NEW: under LOCALOPPLIST, humans on other teams now also radio in here
-		for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+		FOR_ALL_MERCS(i)
 		{
-			pThem = MercSlots[ uiLoop ];
-
-			if (pThem != NULL && pThem->bLife >= OKLIFE)
+			SOLDIERTYPE* const pThem = *i;
+			if (pThem->bLife >= OKLIFE)
 			{
 				// if this merc is on the same team as the target soldier
 				if (pThem->bTeam == pSoldier->bTeam)
@@ -1063,9 +1053,6 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier);
 
 void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pOtherSoldier;
-
 	pSoldier->fMuzzleFlash = FALSE;
 
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
@@ -1077,52 +1064,43 @@ void EndMuzzleFlash( SOLDIERTYPE * pSoldier )
 		pSoldier->bVisible = 0; // indeterminate state
 	}
 
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOtherSoldier = MercSlots[ uiLoop ];
-
-		if ( pOtherSoldier != NULL )
+		SOLDIERTYPE* const pOtherSoldier = *i;
+		if ( pOtherSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
 		{
-			if ( pOtherSoldier->bOppList[ pSoldier->ubID ] == SEEN_CURRENTLY )
+			if ( pOtherSoldier->sGridNo != NOWHERE )
 			{
-        if ( pOtherSoldier->sGridNo != NOWHERE )
-        {
-				  if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > DistanceVisible( pOtherSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->bLevel ) )
-				  {
-					  // if this guy can no longer see us, change to seen this turn
-					  HandleManNoLongerSeen( pOtherSoldier, pSoldier, &(pOtherSoldier->bOppList[ pSoldier->ubID ]), &(gbPublicOpplist[ pOtherSoldier->bTeam ][ pSoldier->ubID ] ) );
-				  }
-				  // else this person is still seen, if the looker is on our side or the militia the person should stay visible
-			  #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-				  else if ( pOtherSoldier->bTeam == gbPlayerNum || pOtherSoldier->bTeam == MILITIA_TEAM )
-			  #else
-				  else if ( pOtherSoldier->bTeam == gbPlayerNum )
-			  #endif
-				  {
-					  pSoldier->bVisible = TRUE; // yes, still seen
-				  }
-        }
+				if ( PythSpacesAway( pOtherSoldier->sGridNo, pSoldier->sGridNo ) > DistanceVisible( pOtherSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->bLevel ) )
+				{
+					// if this guy can no longer see us, change to seen this turn
+					HandleManNoLongerSeen( pOtherSoldier, pSoldier, &(pOtherSoldier->bOppList[ pSoldier->ubID ]), &(gbPublicOpplist[ pOtherSoldier->bTeam ][ pSoldier->ubID ] ) );
+				}
+				// else this person is still seen, if the looker is on our side or the militia the person should stay visible
+#ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
+				else if ( pOtherSoldier->bTeam == gbPlayerNum || pOtherSoldier->bTeam == MILITIA_TEAM )
+#else
+				else if ( pOtherSoldier->bTeam == gbPlayerNum )
+#endif
+				{
+					pSoldier->bVisible = TRUE; // yes, still seen
+				}
 			}
 		}
 	}
 	DecideTrueVisibility(pSoldier);
 }
 
-void TurnOffEveryonesMuzzleFlashes( void )
+
+void TurnOffEveryonesMuzzleFlashes(void)
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier != NULL && pSoldier->fMuzzleFlash )
-		{
-			EndMuzzleFlash( pSoldier );
-		}
+		SOLDIERTYPE* const s = *i;
+		if (s->fMuzzleFlash) EndMuzzleFlash(s);
 	}
 }
+
 
 void TurnOffTeamsMuzzleFlashes( UINT8 ubTeam )
 {
@@ -1206,9 +1184,6 @@ void InitOpplistForDoorOpening( void )
 
 void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 {
- UINT32 uiLoop;
- SOLDIERTYPE *pSoldier;
-
 	if( ( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
 		return;
@@ -1229,14 +1204,10 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 		}
 	}
 
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
-	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier != NULL && pSoldier->bLife >= OKLIFE )
-		{
-			HandleSight(pSoldier,SIGHT_LOOK);  // no radio or interrupts yet
-		}
+  FOR_ALL_MERCS(i)
+  {
+  	SOLDIERTYPE* const s = *i;
+  	if (s->bLife >= OKLIFE) HandleSight(s, SIGHT_LOOK); // no radio or interrupts yet
   }
 
 	// the player team now radios about all sightings
@@ -1276,10 +1247,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 {
- UINT32 uiLoop;
- SOLDIERTYPE *pOpponent;
-
-
 #ifdef TESTOPPLIST
  DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3,
 	   String("MANLOOKSFOROTHERTEAMS ID %d(%ls) team %d side %d",pSoldier->ubID,pSoldier->name,pSoldier->bTeam,pSoldier->bSide));
@@ -1287,14 +1254,10 @@ static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 
 
   // one soldier (pSoldier) looks for every soldier on another team (pOpponent)
-
-
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
- {
-   pOpponent = MercSlots[ uiLoop ];
-
-	 // if this soldier is around and alive
-	 if (pOpponent && pOpponent->bLife)
+	FOR_ALL_MERCS(i)
+	{
+		SOLDIERTYPE* const pOpponent = *i;
+		if (pOpponent->bLife)
 	 {
      // and if he's on another team...
      if (pSoldier->bTeam != pOpponent->bTeam)
@@ -2181,10 +2144,7 @@ static void DecideTrueVisibility(SOLDIERTYPE* pSoldier)
 
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 {
-	UINT32 uiLoop;
 	INT8 bOldOppList;
-	SOLDIERTYPE *pSoldier;
-
 
 	//NumMessage("OtherTeamsLookForMan, guy#",oppPtr->guynum);
 
@@ -2206,12 +2166,12 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 
 
 	// all soldiers not on oppPtr's team now look for him
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
+		SOLDIERTYPE* const pSoldier = *i;
 
 		// if this merc is active, in this sector, and well enough to look
-		if (pSoldier != NULL && pSoldier->bLife >= OKLIFE  && (pSoldier->ubBodyType != LARVAE_MONSTER))
+		if (pSoldier->bLife >= OKLIFE  && (pSoldier->ubBodyType != LARVAE_MONSTER))
 		{
 			// if this merc is on the same team as the target soldier
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -2436,20 +2396,14 @@ static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, 
 
 static void ResetLastKnownLocs(const SOLDIERTYPE* pSoldier)
 {
-	UINT32 uiLoop;
-
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		if (MercSlots[uiLoop])
-		{
-			gsLastKnownOppLoc[pSoldier->ubID][MercSlots[uiLoop]->ubID] = NOWHERE;
-
-			// IAN added this June 14/97
-			gsPublicLastKnownOppLoc[pSoldier->bTeam][MercSlots[uiLoop]->ubID] = NOWHERE;
-		}
+		const SoldierID tgt_id = (*i)->ubID;
+		gsLastKnownOppLoc[pSoldier->ubID][tgt_id] = NOWHERE;
+		// IAN added this June 14/97
+		gsPublicLastKnownOppLoc[pSoldier->bTeam][tgt_id] = NOWHERE;
 	}
 }
-
 
 
 /*
@@ -2555,10 +2509,8 @@ void BetweenTurnsVisibilityAdjustments(void)
 
 static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN fVirginSector)
 {
-	SOLDIERTYPE *pTeamSoldier;
 	UINT8				ubNumEnemies = 0;
 	UINT8				ubNumAllies = 0;
-	UINT32			cnt;
 
 	if ( AreInMeanwhile( ) )
 	{
@@ -2570,34 +2522,17 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 	{
 		// Get total enemies.
 		// Loop through all mercs in sector and count # of enemies
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		FOR_ALL_MERCS(i)
 		{
-			pTeamSoldier = MercSlots[ cnt ];
-
-			if ( pTeamSoldier != NULL )
-			{
-				if ( OK_ENEMY_MERC( pTeamSoldier ) )
-				{
-					ubNumEnemies++;
-				}
-			}
+			const SOLDIERTYPE* const t = *i;
+			if (OK_ENEMY_MERC(t)) ++ubNumEnemies;
 		}
 
 		// OK, after this, check our guys
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+		FOR_ALL_MERCS(i)
 		{
-			pTeamSoldier = MercSlots[ cnt ];
-
-			if ( pTeamSoldier != NULL )
-			{
-				if ( !OK_ENEMY_MERC( pTeamSoldier ) )
-				{
-					 if ( pTeamSoldier->bOppCnt >= ( ubNumEnemies / 2 ) )
-					 {
-							ubNumAllies++;
-					 }
-				}
-			}
+			const SOLDIERTYPE* const t = *i;
+			if (!OK_ENEMY_MERC(t) && t->bOppCnt >= ubNumEnemies / 2) ++ubNumAllies;
 		}
 
 		// now check!
@@ -2628,19 +2563,14 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 
 				// Get total enemies.
 				// Loop through all mercs in sector and count # of enemies
-				for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+				FOR_ALL_MERCS(i)
 				{
-					pTeamSoldier = MercSlots[ cnt ];
-
-					if ( pTeamSoldier != NULL )
+					const SOLDIERTYPE* const t = *i;
+					if (OK_ENEMY_MERC(t)                   &&
+							t->uiStatusFlags & SOLDIER_MONSTER &&
+							pSoldier->bOppList[t->ubID] == SEEN_CURRENTLY)
 					{
-						if ( OK_ENEMY_MERC( pTeamSoldier ) )
-						{
-							if ( pTeamSoldier->uiStatusFlags & SOLDIER_MONSTER && pSoldier->bOppList[ pTeamSoldier->ubID ] == SEEN_CURRENTLY )
-							{
-								ubNumEnemies++;
-							}
-						}
+						++ubNumEnemies;
 					}
 				}
 
@@ -5272,9 +5202,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE*
 
 void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 {
-	UINT32 uiLoop;
 	INT8 *pPersOL;           // pointer into soldier's opponent list
-	SOLDIERTYPE *pOpponent;
 
 	// reduce all seen/known opponent's turn counters by 1 (towards 0)
 	// 1) verify accuracy of the opplist by testing sight vs known opponents
@@ -5313,12 +5241,11 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	}
 
 	// man looks for each of his opponents WHO ARE ALREADY KNOWN TO HIM
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ uiLoop ];
-
+		SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
-		if (pOpponent != NULL && pOpponent->bLife)
+		if (pOpponent->bLife)
 		{
 			// if this merc is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -5382,7 +5309,6 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 {
 	INT8 *pPersOL;           // pointer into soldier's opponent list
-	SOLDIERTYPE *pOpponent;
 
 	// reduce all currently seen opponent's turn counters by 1 (towards 0)
 
@@ -5404,12 +5330,11 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 	}
 
 	// man looks for each of his opponents WHO IS CURRENTLY SEEN
-	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; ++uiLoop)
+	FOR_ALL_MERCS(i)
 	{
-		pOpponent = MercSlots[ uiLoop ];
-
+		const SOLDIERTYPE* const pOpponent = *i;
 		// if this merc is active, here, and alive
-		if (pOpponent != NULL && pOpponent->bLife)
+		if (pOpponent->bLife)
 		{
 			// if this merc is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -5438,15 +5363,8 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 
 void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 {
-	UINT32 uiLoop,uiTeamMateLoop;
-	INT8 *pPersOL,*pMatePersOL;    // pointers into soldier's opponent list
-	SOLDIERTYPE *pOpponent,*pTeamMate;
-	BOOLEAN bOpponentStillSeen;
-
-
 	// OK, someone died. Anyone that the deceased ALONE saw has to decay
 	// immediately in the Public Opplist.
-
 
   // If deceased didn't see ANYONE, don't bother
 	if (pSoldier->bOppCnt == 0)
@@ -5456,16 +5374,15 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 
 
 	// Deceased looks for each of his opponents who is "seen currently"
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		// first, initialize flag since this will be a "new" opponent
-		bOpponentStillSeen = FALSE;
+		SOLDIERTYPE* const pOpponent = *i;
 
-		// grab a pointer to the "opponent"
-		pOpponent = MercSlots[ uiLoop ];
+		// first, initialize flag since this will be a "new" opponent
+		BOOLEAN bOpponentStillSeen = FALSE;
 
 		// if this opponent is active, here, and alive
-		if (pOpponent != NULL && pOpponent->bLife)
+		if (pOpponent->bLife)
 		{
 			// if this opponent is on the same team, he's no opponent, so skip him
 			if (pSoldier->bTeam == pOpponent->bTeam)
@@ -5474,7 +5391,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 			}
 
 			// point to what the deceased's personal opplist value is
-			pPersOL = pSoldier->bOppList + pOpponent->ubID;
+			const INT8* const pPersOL = pSoldier->bOppList + pOpponent->ubID;
 
 			// if this opponent was CURRENTLY SEEN by the deceased (before his
 			// untimely demise)
@@ -5482,13 +5399,11 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 			{
 				// then we need to know if any teammates ALSO see this opponent, so loop through
 				// trying to find ONE witness to the death...
-				for (uiTeamMateLoop = 0; uiTeamMateLoop < guiNumMercSlots; uiTeamMateLoop++)
+				FOR_ALL_MERCS(j)
 				{
-					// grab a pointer to the potential teammate
-					pTeamMate = MercSlots[ uiTeamMateLoop ];
-
+					const SOLDIERTYPE* const pTeamMate = *j;
 					// if this teammate is active, here, and alive
-					if (pTeamMate != NULL && pTeamMate->bLife)
+					if (pTeamMate->bLife)
 					{
 						// if this opponent is NOT on the same team, then skip him
 						if (pTeamMate->bTeam != pSoldier->bTeam)
@@ -5497,7 +5412,7 @@ void VerifyPublicOpplistDueToDeath(SOLDIERTYPE *pSoldier)
 						}
 
 						// point to what the teammate's personal opplist value is
-						pMatePersOL = pTeamMate->bOppList + pOpponent->ubID;
+						const INT8* const pMatePersOL = pTeamMate->bOppList + pOpponent->ubID;
 
 						// test to see if this value is "seen currently"
 						if (*pMatePersOL == SEEN_CURRENTLY)
@@ -5527,11 +5442,8 @@ static void DecayWatchedLocs(INT8 bTeam);
 
 void DecayPublicOpplist(INT8 bTeam)
 {
-	UINT32 uiLoop;
 	INT8 bNoPubliclyKnownOpponents = TRUE;
-	SOLDIERTYPE *pSoldier;
 	INT8 *pbPublOL;
-
 
 	//NumMessage("Decay for team #",team);
 
@@ -5555,12 +5467,11 @@ void DecayPublicOpplist(INT8 bTeam)
 	}
 
 	// decay the team's Public Opplist
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[uiLoop];
-
-		// for every active, living soldier on ANOTHER team
-		if (pSoldier && pSoldier->bLife && (pSoldier->bTeam != bTeam))
+		SOLDIERTYPE* const pSoldier = *i;
+		// for every living soldier on ANOTHER team
+		if (pSoldier->bLife && pSoldier->bTeam != bTeam)
 		{
 			// hang a pointer to the byte holding team's public opplist for this merc
 			pbPublOL = &gbPublicOpplist[bTeam][pSoldier->ubID];
@@ -5617,21 +5528,12 @@ void DecayPublicOpplist(INT8 bTeam)
 // bit of a misnomer; this is now decay all opplists
 void NonCombatDecayPublicOpplist( UINT32 uiTime )
 {
-	UINT32	cnt;
-
 	if ( uiTime - gTacticalStatus.uiTimeSinceLastOpplistDecay >= TIME_BETWEEN_RT_OPPLIST_DECAYS)
 	{
 		// decay!
-		for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
-		{
-			if ( MercSlots[ cnt ] )
-			{
-				VerifyAndDecayOpplist( MercSlots[ cnt ] );
-			}
-		}
+		FOR_ALL_MERCS(i) VerifyAndDecayOpplist(*i);
 
-
-		for( cnt = 0; cnt < MAXTEAMS; cnt++ )
+		for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
 		{
 			if (IsTeamActive(cnt)) DecayPublicOpplist((INT8)cnt);
 		}
@@ -5642,19 +5544,20 @@ void NonCombatDecayPublicOpplist( UINT32 uiTime )
 
 void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier )
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pOpponent;
-
 	pSoldier->bOppCnt = 0;
 
 	if (!pSoldier->bNeutral)
 	{
-		for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+		FOR_ALL_MERCS(i)
 		{
-			pOpponent = MercSlots[uiLoop];
-
-			// for every active, living soldier on ANOTHER team
-			if (pOpponent && pOpponent->bLife && !pOpponent->bNeutral && (pOpponent->bTeam != pSoldier->bTeam) && (!CONSIDERED_NEUTRAL( pOpponent, pSoldier ) && !CONSIDERED_NEUTRAL( pSoldier, pOpponent ) && (pSoldier->bSide != pOpponent->bSide)) )
+			SOLDIERTYPE* const pOpponent = *i;
+			// for every living soldier on ANOTHER team
+			if (pOpponent->bLife                         &&
+					!pOpponent->bNeutral                     &&
+					pOpponent->bTeam != pSoldier->bTeam      &&
+					!CONSIDERED_NEUTRAL(pOpponent, pSoldier) &&
+					!CONSIDERED_NEUTRAL(pSoldier, pOpponent) &&
+					pSoldier->bSide != pOpponent->bSide)
 			{
 				if ( pSoldier->bOppList[pOpponent->ubID] == SEEN_CURRENTLY )
 				{
@@ -5672,19 +5575,19 @@ void RecalculateOppCntsDueToNoLongerNeutral( SOLDIERTYPE * pSoldier )
 
 void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier )
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pOpponent;
-
 	if (pSoldier->bNeutral)
 	{
 		pSoldier->bOppCnt = 0;
 
-		for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+		FOR_ALL_MERCS(i)
 		{
-			pOpponent = MercSlots[uiLoop];
-
-			// for every active, living soldier on ANOTHER team
-			if (pOpponent && pOpponent->bLife && !pOpponent->bNeutral && (pOpponent->bTeam != pSoldier->bTeam) && !CONSIDERED_NEUTRAL( pSoldier, pOpponent ) && (pSoldier->bSide != pOpponent->bSide) )
+			SOLDIERTYPE* const pOpponent = *i;
+			// for every living soldier on ANOTHER team
+			if (pOpponent->bLife                         &&
+					!pOpponent->bNeutral                     &&
+					pOpponent->bTeam != pSoldier->bTeam      &&
+					!CONSIDERED_NEUTRAL(pSoldier, pOpponent) &&
+					pSoldier->bSide != pOpponent->bSide)
 			{
 				if ( pOpponent->bOppList[pSoldier->ubID] == SEEN_CURRENTLY )
 				{

@@ -209,10 +209,10 @@ void HandleTacticalEndTurn(void)
 		// OK, loop through the mercs to perform 'end turn' events on each...
 		// We're looping through only mercs in tactical engine, ignoring our mercs
 		// because they were done earilier...
-		for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
+		FOR_ALL_MERCS(i)
 		{
-			SOLDIERTYPE* const pSoldier = MercSlots[cnt];
-			if (pSoldier != NULL && pSoldier->bActive)
+			SOLDIERTYPE* const pSoldier = *i;
+			if (pSoldier->bActive)
 			{
 				if ( pSoldier->bTeam != gbPlayerNum )
 				{

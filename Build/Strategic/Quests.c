@@ -210,8 +210,6 @@ static BOOLEAN CheckNPCIsEnemy(UINT8 ubProfileID)
 static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
@@ -221,16 +219,16 @@ static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 	}
 	sGridNo = pNPC->sGridNo;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife > 0 && pSoldier->bLife < pSoldier->bLifeMax && pSoldier->bAssignment != ASSIGNMENT_HOSPITAL )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam       == gbPlayerNum &&
+				s->bLife       >  0           &&
+				s->bLife       <  s->bLifeMax &&
+				s->bAssignment != ASSIGNMENT_HOSPITAL &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= HOSPITAL_PATIENT_DISTANCE)
 		{
-			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= HOSPITAL_PATIENT_DISTANCE)
-			{
-				bNumber++;
-			}
+			++bNumber;
 		}
 	}
 
@@ -241,8 +239,6 @@ static INT8 NumWoundedMercsNearby(UINT8 ubProfileID)
 static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
 {
 	INT8						bNumber = 0;
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
@@ -252,16 +248,14 @@ static INT8 NumMercsNear(UINT8 ubProfileID, UINT8 ubMaxDist)
 	}
 	sGridNo = pNPC->sGridNo;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam == gbPlayerNum &&
+				s->bLife >= OKLIFE      &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= ubMaxDist)
 		{
-			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= ubMaxDist)
-			{
-				bNumber++;
-			}
+			++bNumber;
 		}
 	}
 
@@ -381,8 +375,6 @@ static BOOLEAN CheckTalkerUnpropositionedFemale(void)
 static INT8 NumMalesPresent(UINT8 ubProfileID)
 {
 	INT8						bNumber = 0;
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
@@ -392,19 +384,16 @@ static INT8 NumMalesPresent(UINT8 ubProfileID)
 	}
 	sGridNo = pNPC->sGridNo;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE)
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam     == gbPlayerNum            &&
+				s->bLife     >= OKLIFE                 &&
+				s->ubProfile != NO_PROFILE             &&
+				GetProfile(s->ubProfile)->bSex == MALE &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= 8)
 		{
-			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile].bSex == MALE )
-			{
-				if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= 8)
-				{
-					bNumber++;
-				}
-			}
+			++bNumber;
 		}
 	}
 
@@ -414,8 +403,6 @@ static INT8 NumMalesPresent(UINT8 ubProfileID)
 
 static BOOLEAN FemalePresent(UINT8 ubProfileID)
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
 	INT16						sGridNo;
 
 	const SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubProfileID);
@@ -425,19 +412,16 @@ static BOOLEAN FemalePresent(UINT8 ubProfileID)
 	}
 	sGridNo = pNPC->sGridNo;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && pSoldier->bTeam == gbPlayerNum && pSoldier->bLife >= OKLIFE)
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam     == gbPlayerNum              &&
+				s->bLife     >= OKLIFE                   &&
+				s->ubProfile != NO_PROFILE               &&
+				GetProfile(s->ubProfile)->bSex == FEMALE &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= 10)
 		{
-			if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile].bSex == FEMALE )
-			{
-				if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= 10)
-				{
-					return( TRUE );
-				}
-			}
+			return TRUE;
 		}
 	}
 
@@ -484,23 +468,18 @@ static BOOLEAN CheckNPCSector(UINT8 ubProfileID, INT16 sSectorX, INT16 sSectorY,
 
 static BOOLEAN AIMMercWithin(INT16 sGridNo, INT16 sDistance)
 {
-	UINT32					uiLoop;
-	SOLDIERTYPE *		pSoldier;
-
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier && (pSoldier->bTeam == gbPlayerNum) && (pSoldier->bLife >= OKLIFE) && ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
+		const SOLDIERTYPE* const s = *i;
+		if (s->bTeam               == gbPlayerNum         &&
+				s->bLife               >= OKLIFE              &&
+				s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC &&
+				PythSpacesAway(sGridNo, s->sGridNo) <= sDistance)
 		{
-			if (PythSpacesAway( sGridNo, pSoldier->sGridNo ) <= sDistance)
-			{
-				return( TRUE );
-			}
+			return TRUE;
 		}
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 

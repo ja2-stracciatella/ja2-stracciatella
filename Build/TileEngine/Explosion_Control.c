@@ -1859,7 +1859,7 @@ static void GetRayStopInfo(UINT32 uiNewSpot, UINT8 ubDir, INT8 bLevel, BOOLEAN f
 
 void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem, SOLDIERTYPE* const owner, const BOOLEAN fSubsequent, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
- INT32 uiNewSpot, uiTempSpot, uiBranchSpot, cnt, branchCnt;
+	INT32 uiNewSpot, uiTempSpot, uiBranchSpot, branchCnt;
  INT32  uiTempRange, ubBranchRange;
  UINT8  ubDir,ubBranchDir, ubKeepGoing;
  INT16 sRange;
@@ -1905,6 +1905,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
    uiTempRange = sRange;
 
+		INT32 cnt;
 	 if (ubDir & 1)
 	 {
 		cnt = 3;
@@ -2059,13 +2060,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 	if (fAnyMercHit)
 	{
 		// reset explosion hit flag so we can damage mercs again
-		for ( cnt = 0; cnt < (INT32)guiNumMercSlots; cnt++ )
-		{
-			if ( MercSlots[ cnt ] )
-			{
-				MercSlots[ cnt ]->ubMiscSoldierFlags &= ~SOLDIER_MISC_HURT_BY_EXPLOSION;
-			}
-		}
+		FOR_ALL_MERCS(i) (*i)->ubMiscSoldierFlags &= ~SOLDIER_MISC_HURT_BY_EXPLOSION;
 	}
 
 	if ( fSubsequent != BLOOD_SPREAD_EFFECT )

@@ -2195,21 +2195,14 @@ void HandleInitialRedAlert(INT8 bTeam)
 
 static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
 {
- UINT32 uiLoop;
- SOLDIERTYPE *pFriend;
  INT16 sDistVisible;
 
  // THIS ROUTINE SHOULD ONLY BE CALLED FOR SOLDIERS ON STATUS GREEN or YELLOW
 
  // go through each soldier, looking for "friends" (soldiers on same side)
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
-  {
-   pFriend = MercSlots[ uiLoop ];
-
-	 if (!pFriend)
-	 {
-		continue;
-	 }
+	FOR_ALL_MERCS(i)
+	{
+		const SOLDIERTYPE* const pFriend = *i;
 
    // if this man is neutral / NOT on my side, he's not my friend
    if (pFriend->bNeutral || (pSoldier->bSide != pFriend->bSide))

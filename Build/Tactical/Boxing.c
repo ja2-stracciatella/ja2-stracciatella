@@ -163,21 +163,14 @@ void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSoldier )
 
 UINT8 CountPeopleInBoxingRing( void )
 {
-	SOLDIERTYPE * pSoldier;
-	UINT32 uiLoop;
 	UINT8 ubRoom;
 	UINT8 ubTotalInRing = 0;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
-
-		if ( pSoldier != NULL )
+		if (InARoom((*i)->sGridNo, &ubRoom) && ubRoom == BOXING_RING)
 		{
-			if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING)
-			{
-				ubTotalInRing++;
-			}
+			++ubTotalInRing;
 		}
 	}
 
@@ -190,39 +183,26 @@ static BOOLEAN PickABoxer(void);
 
 static void CountPeopleInBoxingRingAndDoActions(void)
 {
-	UINT32					uiLoop;
 	UINT8						ubTotalInRing = 0;
 	UINT8						ubRoom;
 	UINT8						ubPlayersInRing = 0;
-	SOLDIERTYPE *		pSoldier;
 	SOLDIERTYPE *		pInRing[2] = { NULL, NULL };
 	SOLDIERTYPE *		pNonBoxingPlayer = NULL;
 
-	for ( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier = MercSlots[ uiLoop ];
+		SOLDIERTYPE* const s = *i;
+		if (!InARoom(s->sGridNo, &ubRoom) || ubRoom != BOXING_RING) continue;
 
-		if ( pSoldier != NULL )
+		if (ubTotalInRing < 2) pInRing[ubTotalInRing] = s;
+		++ubTotalInRing;
+
+		if (s->uiStatusFlags & SOLDIER_PC)
 		{
-			if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING)
+			++ubPlayersInRing;
+			if (!pNonBoxingPlayer && !(s->uiStatusFlags & SOLDIER_BOXER))
 			{
-				if ( ubTotalInRing < 2 )
-				{
-					pInRing[ ubTotalInRing ] = pSoldier;
-				}
-				ubTotalInRing++;
-
-				if ( pSoldier->uiStatusFlags & SOLDIER_PC )
-				{
-					ubPlayersInRing++;
-
-					if ( !pNonBoxingPlayer && !(pSoldier->uiStatusFlags & SOLDIER_BOXER) )
-					{
-						pNonBoxingPlayer = pSoldier;
-					}
-
-				}
-
+				pNonBoxingPlayer = s;
 			}
 		}
 	}
@@ -261,7 +241,7 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 		if ( ubTotalInRing == 2 && ubPlayersInRing == 1 )
 		{
 			// ladieees and gennleman, we have a fight!
-			for ( uiLoop = 0; uiLoop < 2; uiLoop++ )
+			for (UINT32 uiLoop = 0; uiLoop < 2; ++uiLoop)
 			{
 				if ( ! ( pInRing[ uiLoop ]->uiStatusFlags & SOLDIER_BOXER ) )
 				{
@@ -496,15 +476,8 @@ void SetBoxingState( INT8 bNewState )
 	#endif
 }
 
-void ClearAllBoxerFlags( void )
-{
-	UINT32	uiSlot;
 
-	for( uiSlot = 0; uiSlot < guiNumMercSlots; uiSlot++ )
-	{
-		if ( MercSlots[ uiSlot ] && MercSlots[ uiSlot ]->uiStatusFlags & SOLDIER_BOXER )
-		{
-			MercSlots[ uiSlot ]->uiStatusFlags &= ~(SOLDIER_BOXER);
-		}
-	}
+void ClearAllBoxerFlags(void)
+{
+	FOR_ALL_MERCS(i) (*i)->uiStatusFlags &= ~SOLDIER_BOXER;
 }

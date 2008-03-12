@@ -589,57 +589,53 @@ void RenderTopmostTacticalInterface( )
 	RenderAccumulatedBurstLocations( );
 
 	// Loop through all mercs and make go
-	for (UINT32 cnt = 0; cnt < guiNumMercSlots; ++cnt)
+	FOR_ALL_MERCS(i)
 	{
-		SOLDIERTYPE* const pSoldier = MercSlots[cnt];
-		if (pSoldier != NULL )
+		SOLDIERTYPE* const pSoldier = *i;
+		if (pSoldier != gSelectedGuy) DrawSelectedUIAboveGuy(pSoldier);
+
+		if ( pSoldier->fDisplayDamage )
 		{
-			if (pSoldier != gSelectedGuy) DrawSelectedUIAboveGuy(pSoldier);
+			// Display damage
 
-			if ( pSoldier->fDisplayDamage )
+			// Use world coordinates!
+			INT16 sMercScreenX, sMercScreenY, sOffsetX, sOffsetY, sDamageX, sDamageY;
+
+			if ( pSoldier->sGridNo != NOWHERE && pSoldier->bVisible != -1 )
 			{
-				// Display damage
+				GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
+				GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 
-				// Use world coordinates!
-				INT16 sMercScreenX, sMercScreenY, sOffsetX, sOffsetY, sDamageX, sDamageY;
-
-				if ( pSoldier->sGridNo != NOWHERE && pSoldier->bVisible != -1 )
+				if ( pSoldier->ubBodyType == QUEENMONSTER )
 				{
-					GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-					GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
+					sDamageX = sMercScreenX + pSoldier->sDamageX - pSoldier->sBoundingBoxOffsetX;
+					sDamageY = sMercScreenY + pSoldier->sDamageY - pSoldier->sBoundingBoxOffsetY;
 
-          if ( pSoldier->ubBodyType == QUEENMONSTER )
-          {
-		        sDamageX = sMercScreenX + pSoldier->sDamageX - pSoldier->sBoundingBoxOffsetX;
-		        sDamageY = sMercScreenY + pSoldier->sDamageY - pSoldier->sBoundingBoxOffsetY;
-
-		        sDamageX += 25;
-		        sDamageY += 10;
-          }
-          else
-          {
-					  sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )  );
-					  sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
-
-					  sDamageX -= sOffsetX;
-					  sDamageY -= sOffsetY;
-
-			      if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
-			      {
-				      sDamageY = ( sMercScreenY - sOffsetY );
-            }
-          }
-
-          SetFont( TINYFONT1 );
-					SetFontBackground( FONT_MCOLOR_BLACK );
-					SetFontForeground( FONT_MCOLOR_WHITE );
-
-					gprintfdirty( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
-					mprintf( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
+					sDamageX += 25;
+					sDamageY += 10;
 				}
+				else
+				{
+					sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )  );
+					sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
+
+					sDamageX -= sOffsetX;
+					sDamageY -= sOffsetY;
+
+					if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
+					{
+						sDamageY = ( sMercScreenY - sOffsetY );
+					}
+				}
+
+				SetFont( TINYFONT1 );
+				SetFontBackground( FONT_MCOLOR_BLACK );
+				SetFontForeground( FONT_MCOLOR_WHITE );
+
+				gprintfdirty( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
+				mprintf( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
 			}
 		}
-
 	}
 
 	SOLDIERTYPE* const sel = GetSelectedMan();

@@ -153,8 +153,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* pSoldier, SGPRect* pRect);
 // THIS FUNCTION IS CALLED FAIRLY REGULARLY
 SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 {
-	UINT32				cnt;
-	SOLDIERTYPE		*pSoldier;
 	SGPRect				aRect;
 	BOOLEAN				fSoldierFound = FALSE;
 	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
@@ -162,8 +160,6 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 	SOLDIERTYPE* best_merc = NULL;
 	UINT16				usAnimSurface;
 	INT32					iMercScreenX, iMercScreenY;
-	BOOLEAN				fInScreenRect = FALSE;
-	BOOLEAN				fInGridNo			= FALSE;
 
 	if ( _KeyDown( SHIFT ) )
 	{
@@ -179,176 +175,173 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 
 
 	// Loop through all mercs and make go
-	for ( cnt = 0; cnt < guiNumMercSlots; cnt++ )
+	FOR_ALL_MERCS(i)
 	{
-		pSoldier			= MercSlots[ cnt ];
-		fInScreenRect = FALSE;
-		fInGridNo			= FALSE;
+		SOLDIERTYPE* const pSoldier = *i;
 
-		if ( pSoldier != NULL )
+		BOOLEAN fInScreenRect = FALSE;
+		BOOLEAN fInGridNo     = FALSE;
+
+		if ( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) && ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) ) )
 		{
-
-			if ( pSoldier->bActive && !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) && ( pSoldier->bVisible != -1 || (gTacticalStatus.uiFlags&SHOW_ALL_MERCS) ) )
+			// OK, ignore if we are a passenger...
+			if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
 			{
-				// OK, ignore if we are a passenger...
-				if ( pSoldier->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER ) )
+				continue;
+			}
+
+			// If we want same level, skip if buggy's not on the same level!
+			if ( uiFlags & FIND_SOLDIER_SAMELEVEL )
+			{
+				if ( pSoldier->bLevel != (UINT8)( uiFlags >> 16 ) )
 				{
 					continue;
 				}
+			}
 
-				// If we want same level, skip if buggy's not on the same level!
-				if ( uiFlags & FIND_SOLDIER_SAMELEVEL )
+			if (!(uiFlags & FIND_SOLDIER_GRIDNO))
+			{
+				// Get Rect contained in the soldier
+				GetSoldierScreenRect( pSoldier, &aRect );
+
+				// Get XY From gridno
+				ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
+
+				// Get screen XY pos from map XY
+				// Be carefull to convert to cell cords
+				//CellXYToScreenXY( (INT16)((sXMapPos*CELL_X_SIZE)), (INT16)((sYMapPos*CELL_Y_SIZE)), &sScreenX, &sScreenY);
+
+				// Set mouse stuff
+				sScreenX = gusMouseXPos;
+				sScreenY = gusMouseYPos;
+
+				if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
 				{
-					if ( pSoldier->bLevel != (UINT8)( uiFlags >> 16 ) )
+					fInScreenRect = TRUE;
+				}
+
+				if ( pSoldier->sGridNo == sGridNo )
+				{
+					fInGridNo			= TRUE;
+				}
+
+				// ATE: If we are an enemy....
+				if ( !gGameSettings.fOptions[ TOPTION_SMART_CURSOR ] )
+				{
+					if ( pSoldier->ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
 					{
-						continue;
+						// ATE: NOT if we are in action or comfirm action mode
+						if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver )
+						{
+							fInScreenRect = FALSE;
+						}
 					}
 				}
 
-				if (!(uiFlags & FIND_SOLDIER_GRIDNO))
+				// ATE: Refine this further....
+				// Check if this is the selected guy....
+				if (pSoldier == GetSelectedMan())
 				{
-					// Get Rect contained in the soldier
-					GetSoldierScreenRect( pSoldier, &aRect );
-
-					// Get XY From gridno
-					ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
-
-					// Get screen XY pos from map XY
-					// Be carefull to convert to cell cords
-					//CellXYToScreenXY( (INT16)((sXMapPos*CELL_X_SIZE)), (INT16)((sYMapPos*CELL_Y_SIZE)), &sScreenX, &sScreenY);
-
-					// Set mouse stuff
-					sScreenX = gusMouseXPos;
-					sScreenY = gusMouseYPos;
-
-					if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
+					// Are we in action mode...
+					if ( gCurrentUIMode == ACTION_MODE || gCurrentUIMode == CONFIRM_ACTION_MODE )
 					{
-						fInScreenRect = TRUE;
+						// Are we in medic mode?
+						if ( GetActionModeCursor( pSoldier ) != AIDCURS )
+						{
+							fInScreenRect = FALSE;
+							fInGridNo			= FALSE;
+						}
+					}
+				}
+
+				// Make sure we are always on guy if we are on same gridno
+				if ( fInScreenRect || fInGridNo )
+				{
+					// Check if we are a vehicle and refine if so....
+					if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+					{
+						usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+
+						if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
+						{
+							iMercScreenX = (INT32)( sScreenX - aRect.iLeft );
+							iMercScreenY = (INT32)( -1 * ( sScreenY - aRect.iBottom ) );
+
+							if ( !CheckVideoObjectScreenCoordinateInData( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject, pSoldier->usAniFrame, iMercScreenX, iMercScreenY ) )
+							{
+								continue;
+							}
+						}
 					}
 
+					// If thgis is from a gridno, use mouse pos!
 					if ( pSoldier->sGridNo == sGridNo )
 					{
-						fInGridNo			= TRUE;
+
 					}
 
-					// ATE: If we are an enemy....
-					if ( !gGameSettings.fOptions[ TOPTION_SMART_CURSOR ] )
-					{
-						if ( pSoldier->ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
-						{
-							// ATE: NOT if we are in action or comfirm action mode
-							if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver )
-							{
-								fInScreenRect = FALSE;
-							}
-						}
-					}
+					 // Only break here if we're not creating a stack of these fellas
+					 if ( uiFlags & FIND_SOLDIER_BEGINSTACK )
+					 {
+						 gfHandleStack = TRUE;
 
-					// ATE: Refine this further....
-					// Check if this is the selected guy....
-					if (pSoldier == GetSelectedMan())
-					{
-						// Are we in action mode...
-						if ( gCurrentUIMode == ACTION_MODE || gCurrentUIMode == CONFIRM_ACTION_MODE )
-						{
-							// Are we in medic mode?
-							if ( GetActionModeCursor( pSoldier ) != AIDCURS )
-							{
-								fInScreenRect = FALSE;
-								fInGridNo			= FALSE;
-							}
-						}
-					}
+							// Add this one!
+						 gSoldierStack.mercs[gSoldierStack.bNum] = pSoldier;
+						 gSoldierStack.bNum++;
 
-					// Make sure we are always on guy if we are on same gridno
-					if ( fInScreenRect || fInGridNo )
-					{
-						// Check if we are a vehicle and refine if so....
-						if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-						{
-							usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
-
-							if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
-							{
-								iMercScreenX = (INT32)( sScreenX - aRect.iLeft );
-                iMercScreenY = (INT32)( -1 * ( sScreenY - aRect.iBottom ) );
-
-								if ( !CheckVideoObjectScreenCoordinateInData( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject, pSoldier->usAniFrame, iMercScreenX, iMercScreenY ) )
-								{
-									continue;
-								}
-							}
-						}
-
-						// If thgis is from a gridno, use mouse pos!
-						if ( pSoldier->sGridNo == sGridNo )
-						{
-
-						}
-
-						 // Only break here if we're not creating a stack of these fellas
-			 			 if ( uiFlags & FIND_SOLDIER_BEGINSTACK )
+						 // Determine if it's the current
+						 if ( aRect.iBottom > sHeighestMercScreenY )
 						 {
-							 gfHandleStack = TRUE;
+								sMaxScreenMercY = (UINT16)aRect.iBottom;
+								sHeighestMercScreenY = sMaxScreenMercY;
 
-								// Add this one!
-							 gSoldierStack.mercs[gSoldierStack.bNum] = pSoldier;
-							 gSoldierStack.bNum++;
-
-							 // Determine if it's the current
-							 if ( aRect.iBottom > sHeighestMercScreenY )
-							 {
-									sMaxScreenMercY = (UINT16)aRect.iBottom;
-									sHeighestMercScreenY = sMaxScreenMercY;
-
-									gSoldierStack.bCur = gSoldierStack.bNum - 1;
-							 }
+								gSoldierStack.bCur = gSoldierStack.bNum - 1;
 						 }
-						 //Are we handling a stack right now?
-						 else if ( gfHandleStack )
+					 }
+					 //Are we handling a stack right now?
+					 else if ( gfHandleStack )
+					 {
+							// Are we the selected stack?
+							if ( gSoldierStack.fUseGridNo )
+							{
+								 fSoldierFound = FALSE;
+								 break;
+							}
+							else if (gSoldierStack.mercs[gSoldierStack.bCur] == pSoldier)
+							{
+								 best_merc = pSoldier;
+								 fSoldierFound = TRUE;
+								 break;
+							}
+					 }
+					 else
+					 {
+						 // Determine if it's the best one
+						 if ( aRect.iBottom > sHeighestMercScreenY )
 						 {
-							  // Are we the selected stack?
-								if ( gSoldierStack.fUseGridNo )
-								{
-									 fSoldierFound = FALSE;
-									 break;
-								}
-								else if (gSoldierStack.mercs[gSoldierStack.bCur] == pSoldier)
-								{
-									 best_merc = pSoldier;
-									 fSoldierFound = TRUE;
-									 break;
-								}
+								sMaxScreenMercY = (UINT16)aRect.iBottom;
+								sHeighestMercScreenY = sMaxScreenMercY;
+								best_merc = pSoldier;
 						 }
-						 else
-						 {
-							 // Determine if it's the best one
-							 if ( aRect.iBottom > sHeighestMercScreenY )
-							 {
-									sMaxScreenMercY = (UINT16)aRect.iBottom;
-									sHeighestMercScreenY = sMaxScreenMercY;
-									best_merc = pSoldier;
-							 }
 
-							 fSoldierFound = TRUE;
-							 // Don't break here, find the rest!
+						 fSoldierFound = TRUE;
+						 // Don't break here, find the rest!
 
-						 }
-					}
-
+					 }
 				}
-				else
-				{
-					//Otherwise, look for a bad guy by way of gridno]
-					// Selective means don't give out enemy mercs if they are not visible
 
-					///&& !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel )
-					if ( pSoldier->sGridNo == sGridNo && !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel ) )
-					{
-						best_merc = pSoldier;
-						fSoldierFound = TRUE;
-						break;
-					}
+			}
+			else
+			{
+				//Otherwise, look for a bad guy by way of gridno]
+				// Selective means don't give out enemy mercs if they are not visible
+
+				///&& !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel )
+				if ( pSoldier->sGridNo == sGridNo && !NewOKDestination( pSoldier, sGridNo, TRUE, (INT8)gsInterfaceLevel ) )
+				{
+					best_merc = pSoldier;
+					fSoldierFound = TRUE;
+					break;
 				}
 			}
 		}

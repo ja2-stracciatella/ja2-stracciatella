@@ -169,6 +169,13 @@ static inline void SetSelectedMan(SOLDIERTYPE* const s)
 extern SOLDIERTYPE* MercSlots[TOTAL_SOLDIERS];
 extern UINT32       guiNumMercSlots;
 
+#define FOR_ALL_MERCS(iter)                                           \
+	for (SOLDIERTYPE**       iter        = MercSlots,                   \
+	                ** const end__##iter = MercSlots + guiNumMercSlots; \
+	     iter != end__##iter;                                           \
+	     ++iter)                                                        \
+		if (*iter == NULL) continue; else
+
 
 extern TacticalStatusType gTacticalStatus;
 

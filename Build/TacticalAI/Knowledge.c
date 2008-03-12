@@ -131,7 +131,6 @@ void CallEldinTo( INT16 sGridNo )
 
 INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN * pfClimbingNecessary, BOOLEAN * pfReachable )
 {
-	UINT32 uiLoop;
 	INT8 * pbPersOL, * pbPublOL;
 	INT16 *psLastLoc,*psNoiseGridNo;
 	INT8 * pbNoiseLevel;
@@ -143,7 +142,6 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	INT8	bBestLevel = 0;
 	INT16 sClimbingGridNo;
 	BOOLEAN fClimbingNecessary = FALSE;
-	SOLDIERTYPE * pTemp;
 
 	pubNoiseVolume = &gubPublicNoiseVolume[pSoldier->bTeam];
 	psNoiseGridNo = &gsPublicNoiseGridno[pSoldier->bTeam];
@@ -156,13 +154,12 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 	pbPublOL = gbPublicOpplist[pSoldier->bTeam];
 
 	// look through this man's personal & public opplists for opponents heard
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pTemp = MercSlots[ uiLoop ];
+		const SOLDIERTYPE* const pTemp = *i;
 
 		// if this merc is inactive, at base, on assignment, or dead
-		if (!pTemp || !pTemp->bLife)
-			continue;          // next merc
+		if (!pTemp->bLife) continue; // next merc
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))
@@ -320,9 +317,7 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 {
 	UINT8 ubTotal = 0;
-	UINT32 uiLoop;
 	INT8 *pbPersOL,*pbPublOL;
-	SOLDIERTYPE * pTemp;
 
 	// if merc knows of a more important misc. noise than his team does
 	if (!(CREATURE_OR_BLOODCAT( pSoldier )) && (pSoldier->ubNoiseVolume > gubPublicNoiseVolume[pSoldier->bTeam]))
@@ -335,15 +330,9 @@ INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly)
 	pbPersOL = &(pSoldier->bOppList[0]);
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pTemp = MercSlots[ uiLoop ];
-
-		// if this merc is inactive, at base, on assignment, or dead
-		if (!pTemp)
-		{
-			continue;          // next merc
-		}
+		const SOLDIERTYPE* const pTemp = *i;
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pTemp ) || (pSoldier->bSide == pTemp->bSide))

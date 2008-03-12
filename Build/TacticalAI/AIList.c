@@ -327,9 +327,7 @@ BOOLEAN MoveToFrontOfAIList(SOLDIERTYPE* const s)
 BOOLEAN BuildAIListForTeam( INT8 bTeam )
 {
 	// loop through all non-player-team guys and add to list
-	UINT32					uiLoop;
 	BOOLEAN					fInsertRet;
-	SOLDIERTYPE *		pSoldier;
 	BOOLEAN					fRet = FALSE;
 	UINT8						ubCount = 0;
 	UINT8						ubDoneCount = 0;
@@ -342,11 +340,11 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 	ClearAIList();
 
 	// create a new list
-	for( uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++ )
+	FOR_ALL_MERCS(i)
 	{
+		SOLDIERTYPE* const pSoldier = *i;
 		// non-null merc slot ensures active
-		pSoldier = MercSlots[ uiLoop ];
-		if ( pSoldier && pSoldier->bTeam == bTeam )
+		if (pSoldier->bTeam == bTeam)
 		{
 			if ( !SatisfiesAIListConditions( pSoldier, &ubDoneCount, TRUE ) )
 			{

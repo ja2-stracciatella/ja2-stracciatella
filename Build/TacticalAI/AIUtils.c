@@ -578,10 +578,9 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 	// go through each soldier, looking for "friends" (soldiers on same side)
 	UINT8 ubFriendCount = 0;
 	const SOLDIERTYPE* friends[MAXMERCS];
-	for (UINT32 uiLoop = 0; uiLoop < guiNumMercSlots; ++uiLoop)
+	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const friend = MercSlots[uiLoop];
-		if (!friend)     continue; // if this merc is inactive, not in sector, or dead
+		const SOLDIERTYPE* const friend = *i;
 		if (friend == s) continue; // skip ourselves
 
 		/* if this man not neutral, but is on my side, OR if he is neutral, but so
@@ -802,11 +801,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
-	UINT32	uiLoop;
 	INT8		*pbNoiseLevel;
 	INT8		*pbPersOL,*pbPublOL;
 	INT16		sClimbGridNo;
-	SOLDIERTYPE * pOpp;
 
 	// CJC: can't trace a path to every known disturbance!
 	// for starters, try the closest one as the crow flies
@@ -823,15 +820,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 //	psLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
 
 	// look through this man's personal & public opplists for opponents known
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpp = MercSlots[ uiLoop ];
-
-		// if this merc is inactive, at base, on assignment, or dead
-		if (!pOpp)
-		{
-			continue;          // next merc
-		}
+		const SOLDIERTYPE* const pOpp = *i;
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpp ) || (pSoldier->bSide == pOpp->bSide) )
@@ -998,11 +989,9 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
 {
 	INT16 sGridNo, sClosestOpponent = NOWHERE;
-	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
 	INT8	*pbPersOL,*pbPublOL;
 	INT8  bLevel, bClosestLevel;
-	SOLDIERTYPE * pOpp;
 
 	bClosestLevel = -1;
 
@@ -1014,15 +1003,9 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 	pbPublOL = &(gbPublicOpplist[pSoldier->bTeam][0]);
 
 	// look through this man's personal & public opplists for opponents known
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpp = MercSlots[ uiLoop ];
-
-		// if this merc is inactive, at base, on assignment, or dead
-		if (!pOpp)
-		{
-			continue;          // next merc
-		}
+		const SOLDIERTYPE* const pOpp = *i;
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpp ) || (pSoldier->bSide == pOpp->bSide))
@@ -1107,24 +1090,16 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLevel)
 {
 	INT16 sGridNo, sClosestOpponent = NOWHERE;
-	UINT32 uiLoop;
 	INT32 iRange, iClosestRange = 1500;
 	INT8	*pbPersOL;
 	INT8  bLevel, bClosestLevel;
-	SOLDIERTYPE * pOpp;
 
 	bClosestLevel = -1;
 
 	// look through this man's personal & public opplists for opponents known
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pOpp = MercSlots[ uiLoop ];
-
-		// if this merc is inactive, at base, on assignment, or dead
-		if (!pOpp)
-		{
-			continue;          // next merc
-		}
+		const SOLDIERTYPE* const pOpp = *i;
 
 		// if this merc is neutral/on same side, he's not an opponent
 		if ( CONSIDERED_NEUTRAL( pSoldier, pOpp ) || (pSoldier->bSide == pOpp->bSide))
@@ -1461,10 +1436,8 @@ static BOOLEAN GuySawEnemyThisTurnOrBefore(SOLDIERTYPE* pSoldier)
 
 INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbingNecessary)
 {
-	UINT32 uiLoop;
 	INT16 sPathCost, sClosestFriend = NOWHERE, sShortestPath = 1000, sClimbGridNo;
 	BOOLEAN fClimbingNecessary, fClosestClimbingNecessary = FALSE;
-	SOLDIERTYPE *pFriend;
 
 	// civilians don't really have any "friends", so they don't bother with this
 	if (PTR_CIVILIAN)
@@ -1473,15 +1446,9 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 	}
 
 	// consider every friend of this soldier (locations assumed to be known)
-	for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
+	FOR_ALL_MERCS(i)
 	{
-		pFriend = MercSlots[ uiLoop ];
-
-		// if this merc is inactive, at base, on assignment, or dead
-		if (!pFriend)
-		{
-			continue;          // next merc
-		}
+		SOLDIERTYPE* const pFriend = *i;
 
 		// if this merc is neutral or NOT on the same side, he's not a friend
 		if (pFriend->bNeutral || (pSoldier->bSide != pFriend->bSide))
@@ -1740,7 +1707,6 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 {
- UINT32 uiLoop, uiLoop2;
  INT32 iOurTotalThreat = 0, iTheirTotalThreat = 0;
  INT16 sOppThreatValue, sFrndThreatValue, sMorale;
  INT32 iPercent;
@@ -1748,7 +1714,6 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
  INT8 bMoraleCategory;
  UINT8 *pSeenOpp; //,*friendOlPtr;
  INT8  *pbPersOL, *pbPublOL;
- SOLDIERTYPE *pOpponent,*pFriend;
 
  // if army guy has NO weapons left then panic!
  if ( pSoldier->bTeam == ENEMY_TEAM )
@@ -1764,13 +1729,12 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
  pSeenOpp  = &(gbSeenOpponents[pSoldier->ubID][0]);
 
  // loop through every one of my possible opponents
- for (uiLoop = 0; uiLoop < guiNumMercSlots; uiLoop++)
- {
-	pOpponent = MercSlots[ uiLoop ];
+	FOR_ALL_MERCS(i)
+	{
+		SOLDIERTYPE* const pOpponent = *i;
 
-   // if this merc is inactive, at base, on assignment, dead, unconscious
-   if (!pOpponent || (pOpponent->bLife < OKLIFE))
-     continue;          // next merc
+		// if this merc is inactive, at base, on assignment, dead, unconscious
+		if (pOpponent->bLife < OKLIFE) continue; // next merc
 
    // if this merc is neutral/on same side, he's not an opponent, skip him!
    if ( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
@@ -1822,13 +1786,12 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
    // THROUGH THEIR PERSONAL OPPLISTS AND CHECK WHICH OF MY FRIENDS KNOW
    // SOMETHING ABOUT HIM AND WHAT THEIR THREAT VALUE TO HIM IS.
 
-   for (uiLoop2 = 0; uiLoop2 < guiNumMercSlots; uiLoop2++)
-    {
-     pFriend = MercSlots[ uiLoop2 ];
+		FOR_ALL_MERCS(j)
+		{
+			SOLDIERTYPE* const pFriend = *j;
 
-     // if this merc is inactive, at base, on assignment, dead, unconscious
-     if (!pFriend || (pFriend->bLife < OKLIFE))
-       continue;        // next merc
+			// if this merc is inactive, at base, on assignment, dead, unconscious
+			if (pFriend->bLife < OKLIFE) continue; // next merc
 
      // if this merc is not on my side, then he's NOT one of my friends
 
