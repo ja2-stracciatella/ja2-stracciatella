@@ -2110,81 +2110,55 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 
 INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 {
-	INT16						sMyGridNo, sDist, sDesiredMercDist = 100;
-	UINT8						ubNPC, ubMerc, ubDesiredMerc = NOBODY;
-	UINT8						ubTalkDesire, ubHighestTalkDesire = 0;
-	SOLDIERTYPE *		pMerc;
-	SOLDIERTYPE *		pDesiredMerc;
-	NPCQuoteInfo *	pNPCQuoteInfoArray;
+	const UINT8 ubNPC = pNPC->ubProfile;
+	if (!EnsureQuoteFileLoaded(ubNPC)) return NOWHERE; // error
+	NPCQuoteInfo* const pNPCQuoteInfoArray = gpNPCQuoteInfoArray[ubNPC];
 
-	sMyGridNo = pNPC->sGridNo;
-
-	ubNPC = pNPC->ubProfile;
-	if (EnsureQuoteFileLoaded( ubNPC ) == FALSE)
-	{
-		// error!!!
-		return( NOWHERE );
-	}
-	pNPCQuoteInfoArray = gpNPCQuoteInfoArray[ubNPC];
-
+	const INT16  sMyGridNo           = pNPC->sGridNo;
+	INT16        sDesiredMercDist    = 100;
+	UINT8        ubDesiredMerc       = NOBODY;
+	UINT8        ubHighestTalkDesire = 0;
+	SOLDIERTYPE* pDesiredMerc;
 	// loop through all mercs
-	for ( ubMerc = 0; ubMerc < guiNumMercSlots; ubMerc++ )
+	for (UINT8 ubMerc = 0; ubMerc < guiNumMercSlots; ++ubMerc)
 	{
-		pMerc = MercSlots[ ubMerc ];
-		if (pMerc != NULL)
+		const SOLDIERTYPE* const pMerc = MercSlots[ubMerc];
+		if (pMerc == NULL) continue;
+
+		// only look for mercs on the side of the player
+		if (pMerc->bSide != gbPlayerNum) continue;
+
+		// only look for active mercs
+		if (pMerc->bAssignment >= ON_DUTY) continue;
+
+		// if they're not visible, don't think about it
+		if (pNPC->bOppList[ubMerc] != SEEN_CURRENTLY) continue;
+
+		/* what's the opinion required for the highest-opinion quote that we would
+		 * say to this merc */
+		const UINT8 ubTalkDesire = NPCConsiderTalking(pNPC->ubProfile, pMerc->ubProfile, NPC_INITIATING_CONV, 0, pNPCQuoteInfoArray, NULL, NULL);
+		if (ubTalkDesire == 0) continue;
+
+		if (ubTalkDesire > ubHighestTalkDesire)
 		{
-			// only look for mercs on the side of the player
-			if (pMerc->bSide != gbPlayerNum)
+			ubHighestTalkDesire = ubTalkDesire;
+			ubDesiredMerc       = ubMerc;
+			pDesiredMerc        = GetMan(ubMerc);
+			sDesiredMercDist    = PythSpacesAway(sMyGridNo, pDesiredMerc->sGridNo);
+		}
+		else if (ubTalkDesire == ubHighestTalkDesire)
+		{
+			const INT16 sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc)->sGridNo);
+			if (sDist < sDesiredMercDist)
 			{
-				continue;
-			}
-
-			// only look for active mercs
-			if (pMerc->bAssignment >= ON_DUTY )
-			{
-				continue;
-			}
-
-			// if they're not visible, don't think about it
-			if (pNPC->bOppList[ubMerc] != SEEN_CURRENTLY)
-			{
-				continue;
-			}
-
-			// what's the opinion required for the highest-opinion quote that we would
-			// say to this merc
-			ubTalkDesire = NPCConsiderTalking( pNPC->ubProfile, pMerc->ubProfile, NPC_INITIATING_CONV, 0, pNPCQuoteInfoArray, NULL, NULL );
-			if (ubTalkDesire > 0)
-			{
-				if (ubTalkDesire > ubHighestTalkDesire)
-				{
-					ubHighestTalkDesire = ubTalkDesire;
-					ubDesiredMerc = ubMerc;
-					pDesiredMerc = GetMan(ubMerc);
-					sDesiredMercDist = PythSpacesAway( sMyGridNo, pDesiredMerc->sGridNo );
-				}
-				else if (ubTalkDesire == ubHighestTalkDesire)
-				{
-					sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc)->sGridNo);
-					if (sDist < sDesiredMercDist)
-					{
-						// we can say the same thing to this merc, and they're closer!
-						ubDesiredMerc = ubMerc;
-						sDesiredMercDist = sDist;
-					}
-				}
+				// we can say the same thing to this merc, and they're closer!
+				ubDesiredMerc    = ubMerc;
+				sDesiredMercDist = sDist;
 			}
 		}
 	}
 
-	if (ubDesiredMerc == NOBODY)
-	{
-		return( NOWHERE );
-	}
-	else
-	{
-		return ( pDesiredMerc->sGridNo );
-	}
+	return ubDesiredMerc == NOBODY ? NOWHERE : pDesiredMerc->sGridNo;
 }
 
 
