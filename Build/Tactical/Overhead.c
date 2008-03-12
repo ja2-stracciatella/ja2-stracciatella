@@ -263,11 +263,10 @@ static void RecountMercSlots(void)
 }
 
 
-INT32 AddMercSlot(SOLDIERTYPE* pSoldier)
+void AddMercSlot(SOLDIERTYPE* pSoldier)
 {
 	const INT32 iMercIndex = GetFreeMercSlot();
 	if (iMercIndex != -1) MercSlots[iMercIndex] = pSoldier;
-	return iMercIndex;
 }
 
 

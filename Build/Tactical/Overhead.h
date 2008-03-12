@@ -272,7 +272,7 @@ BOOLEAN TeamMemberNear(INT8 bTeam, INT16 sGridNo, INT32 iRange);
 
 
 // FUNCTIONS FOR MANIPULATING MERC SLOTS - A LIST OF ALL ACTIVE MERCS
-INT32 AddMercSlot(SOLDIERTYPE* pSoldier);
+void    AddMercSlot(SOLDIERTYPE* pSoldier);
 BOOLEAN RemoveMercSlot( SOLDIERTYPE *pSoldier  );
 
 INT32   AddAwaySlot(SOLDIERTYPE* pSoldier);
