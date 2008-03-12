@@ -711,7 +711,7 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 		pSoldier->sFinalDestination = sGridNo;
 
 		// Make call to FOV to update items...
-		RevealRoofsAndItems(pSoldier, TRUE, pSoldier->bLevel, TRUE);
+		RevealRoofsAndItems(pSoldier, TRUE, TRUE);
 
 		// Handle sight!
 		HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO);

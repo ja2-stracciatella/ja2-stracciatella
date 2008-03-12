@@ -809,7 +809,7 @@ BOOLEAN ExecuteOverhead(void)
 					// Check if we need to look for items
 					if (pSoldier->uiStatusFlags & SOLDIER_LOOKFOR_ITEMS)
 					{
-						RevealRoofsAndItems(pSoldier, FALSE, pSoldier->bLevel, FALSE);
+						RevealRoofsAndItems(pSoldier, FALSE, FALSE);
 						pSoldier->uiStatusFlags &= ~SOLDIER_LOOKFOR_ITEMS;
 					}
 
@@ -6236,7 +6236,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		{
 			if (pSightSoldier->bInSector)
 			{
-				RevealRoofsAndItems(pSightSoldier, FALSE, pSightSoldier->bLevel, FALSE);
+				RevealRoofsAndItems(pSightSoldier, FALSE, FALSE);
 			}
 		}
 		gTacticalStatus.uiFlags &= ~CHECK_SIGHT_AT_END_OF_ATTACK;
