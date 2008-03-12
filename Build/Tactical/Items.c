@@ -4800,10 +4800,10 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
-				tgt->ubXRayedBy         == pSoldier->ubID)
+				tgt->xrayed_by          == pSoldier)
 		{
 			tgt->ubMiscSoldierFlags &= ~SOLDIER_MISC_XRAYED;
-			tgt->ubXRayedBy          = NOBODY;
+			tgt->xrayed_by           = NULL;
 		}
 	}
 	// now turn on xray for anyone within range
@@ -4814,7 +4814,7 @@ void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
 				PythSpacesAway(pSoldier->sGridNo, tgt->sGridNo) < XRAY_RANGE)
 		{
 			tgt->ubMiscSoldierFlags |= SOLDIER_MISC_XRAYED;
-			tgt->ubXRayedBy          = pSoldier->ubID;
+			tgt->xrayed_by           = pSoldier;
 		}
 	}
 	pSoldier->uiXRayActivatedTime = GetWorldTotalSeconds();
@@ -4833,10 +4833,10 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 	{
 		SOLDIERTYPE* const tgt = *i;
 		if (tgt->ubMiscSoldierFlags &  SOLDIER_MISC_XRAYED &&
-				tgt->ubXRayedBy         == pSoldier->ubID)
+				tgt->xrayed_by          == pSoldier)
 		{
 			tgt->ubMiscSoldierFlags &= ~SOLDIER_MISC_XRAYED;
-			tgt->ubXRayedBy          = NOBODY;
+			tgt->xrayed_by           = NULL;
 		}
 	}
 	pSoldier->uiXRayActivatedTime = 0;

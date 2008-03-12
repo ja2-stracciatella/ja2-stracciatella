@@ -546,7 +546,7 @@ struct SOLDIERTYPE
 	INT16												sNoiseGridno;
 	UINT8												ubNoiseVolume;
 	INT8												bLastAttackHit;
-	UINT8												ubXRayedBy;
+	SOLDIERTYPE*                xrayed_by;
 	FLOAT												dHeightAdjustment;
 	INT8												bMorale;
 	INT8												bTeamMoraleMod;

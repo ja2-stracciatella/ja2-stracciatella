@@ -1022,7 +1022,7 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 	pSoldier->bCurrentCivQuote				= -1;
 	pSoldier->bCurrentCivQuoteDelta		= 0;
 	pSoldier->uiBattleSoundID					= NO_SAMPLE;
-	pSoldier->ubXRayedBy							= NOBODY;
+	pSoldier->xrayed_by 							= NULL;
 	pSoldier->uiXRayActivatedTime			= 0;
 	pSoldier->bBulletsLeft						= 0;
 	pSoldier->bVehicleUnderRepairID		= -1;
