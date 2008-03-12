@@ -4122,10 +4122,7 @@ static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
 	if ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ giSMStealthButton ]->uiFlags & BUTTON_ENABLED ) )
   {
 	  // ATE: Toggle stealth
-	  if ( gpSMCurrentMerc != NULL && pSoldier->ubID == gpSMCurrentMerc->ubID )
-	  {
-		  gfUIStanceDifferent = TRUE;
-	  }
+	  if (pSoldier == gpSMCurrentMerc) gfUIStanceDifferent = TRUE;
 
 	  pSoldier->bStealthMode = ! pSoldier->bStealthMode;
 	  gfPlotNewMovement   = TRUE;

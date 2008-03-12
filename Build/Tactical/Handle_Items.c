@@ -3065,17 +3065,14 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
   // ATE: OK, check if we have an item in the cursor from
   // this soldier and from this inv slot, if so, delete!!!!!!!
-  if ( gpItemPointer != NULL )
-  {
-    if ( pSoldier->ubID == gpItemPointerSoldier->ubID )
-    {
-      if ( bInvPos == gbItemPointerSrcSlot && usItemNum == gpItemPointer->usItem  )
-      {
-        // Remove!!!
-        EndItemPointer( );
-      }
-    }
-  }
+	if (gpItemPointer != NULL                 &&
+			pSoldier      == gpItemPointerSoldier &&
+			bInvPos       == gbItemPointerSrcSlot &&
+			usItemNum     == gpItemPointer->usItem)
+	{
+		// Remove!!!
+		EndItemPointer( );
+	}
 
 	// ATE: Deduct APs!
 	DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );

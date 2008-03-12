@@ -2082,14 +2082,6 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 			return;
 
-		// CJC: OK, get source, dest guy if different, don't allow panels to be brought up
-		/*
-		if ( gpItemPointer && gpSMCurrentMerc->ubID != gpItemPointerSoldier->ubID )
-		{
-			return;
-		}
-		*/
-
 		// Turn off new item glow!
 		gpSMCurrentMerc->bNewItemCount[ uiHandPos ] = 0;
 

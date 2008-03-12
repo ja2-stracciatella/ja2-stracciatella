@@ -1457,10 +1457,7 @@ INT16 ClosestReachableFriendInTrouble(SOLDIERTYPE *pSoldier, BOOLEAN * pfClimbin
 		}
 
 		// if this "friend" is actually US
-		if (pFriend->ubID == pSoldier->ubID)
-		{
-			continue;          // next merc
-		}
+		if (pFriend == pSoldier) continue; // next merc
 
 		// CJC: restrict "last one to radio" to only if that guy saw us this turn or last turn
 

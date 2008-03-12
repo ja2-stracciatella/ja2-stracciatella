@@ -2209,8 +2209,7 @@ static void ManChecksOnFriends(SOLDIERTYPE* pSoldier)
      continue;  // next merc
 
    // if this merc is actually ME
-   if (pFriend->ubID == pSoldier->ubID)
-     continue;  // next merc
+		if (pFriend == pSoldier) continue; // next merc
 
    sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pFriend->sGridNo, pFriend->bLevel );
    // if we can see far enough to see this friend

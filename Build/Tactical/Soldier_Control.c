@@ -7644,7 +7644,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		pTSoldier->ubServiceCount++;
 
 		// If target and doer are no the same guy...
-		if ( pTSoldier->ubID != pSoldier->ubID && !pTSoldier->bCollapsed )
+		if (pTSoldier != pSoldier && !pTSoldier->bCollapsed)
 		{
 			SoldierGotoStationaryStance( pTSoldier );
 		}
