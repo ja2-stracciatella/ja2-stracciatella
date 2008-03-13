@@ -132,7 +132,7 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 		else
 		{
 			// Remove the object....
-			DeleteObj( pObject );
+			if (--pObject->ubNumberOfObjects == 0) DeleteObj(pObject);
 
 			// ATE: Make guy collapse from heart attack if too much stuff taken....
 			if ( pSoldier->bDrugSideEffectRate[ ubDrugType ] > ( ubDrugSideEffect[ ubDrugType ] * 3 ) )
