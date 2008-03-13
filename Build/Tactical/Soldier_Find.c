@@ -78,10 +78,9 @@ SOLDIERTYPE* FindSoldierFromMouse(void)
 }
 
 
-BOOLEAN IsOwnedMerc(const SOLDIERTYPE* s)
+BOOLEAN IsOwnedMerc(const SOLDIERTYPE* const s)
 {
-	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
-	if (!(t->bFirstID <= s->ubID && s->ubID <= t->bLastID)) return FALSE;
+	if (!IsOnOurTeam(s)) return FALSE;
 	if (s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		const VEHICLETYPE* const v = GetVehicle(s->bVehicleID);
@@ -98,9 +97,8 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 
  // FInd out and set flags
 	if (s == GetSelectedMan()) MercFlags |= SELECTED_MERC;
-	const TacticalTeamType* const t = &gTacticalStatus.Team[gbPlayerNum];
-	if (s->ubID >= t->bFirstID && s->ubID <= t->bLastID)
- {
+	if (IsOnOurTeam(s))
+	{
 		if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		{
 			const VEHICLETYPE* const v = GetVehicle(s->bVehicleID);
@@ -226,15 +224,13 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 				}
 
 				// ATE: If we are an enemy....
-				if ( !gGameSettings.fOptions[ TOPTION_SMART_CURSOR ] )
+				if (!gGameSettings.fOptions[TOPTION_SMART_CURSOR] &&
+						IsOnOurTeam(pSoldier))
 				{
-					if ( pSoldier->ubID >= gTacticalStatus.Team[ gbPlayerNum ].bFirstID && pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
+					// ATE: NOT if we are in action or comfirm action mode
+					if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver )
 					{
-						// ATE: NOT if we are in action or comfirm action mode
-						if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver )
-						{
-							fInScreenRect = FALSE;
-						}
+						fInScreenRect = FALSE;
 					}
 				}
 

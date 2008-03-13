@@ -642,7 +642,7 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier)
 	// ANYTHING AFTER HERE CAN FAIL
 	do
 	{
-		if (pSoldier->ubID <= gTacticalStatus.Team[OUR_TEAM].bLastID)
+		if (IsOnOurTeam(pSoldier))
 		{
 			pSoldier->pKeyRing = MemAlloc( NUM_KEYS * sizeof( KEY_ON_RING ) );
 			memset(  pSoldier->pKeyRing , 0, NUM_KEYS * sizeof( KEY_ON_RING ) );

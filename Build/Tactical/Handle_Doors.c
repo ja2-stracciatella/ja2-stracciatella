@@ -313,7 +313,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	// Is the door opened?
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
 	{
-		if ( pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID && !( pStructure->fFlags & STRUCTURE_SWITCH ) )
+		if (IsOnOurTeam(pSoldier) && !(pStructure->fFlags & STRUCTURE_SWITCH))
 		{
 			// Bring up menu to decide what to do....
 			SoldierGotoStationaryStance( pSoldier );
@@ -342,7 +342,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	else
 	{
 		// Bring up the menu, only if it has a lock!
-		if ( pSoldier->ubID <= gTacticalStatus.Team[ gbPlayerNum ].bLastID )
+		if (IsOnOurTeam(pSoldier))
 		{
 			pDoor = FindDoorInfoAtGridNo( pBaseStructure->sGridNo );
 
