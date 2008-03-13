@@ -4397,34 +4397,29 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 }
 
 
-BOOLEAN CanPlayerUseRocketRifle( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay )
+BOOLEAN CanPlayerUseRocketRifle(SOLDIERTYPE* const s, const BOOLEAN fDisplay)
 {
-	if ( pSoldier->inv[ pSoldier->ubAttackingHand ].usItem == ROCKET_RIFLE || pSoldier->inv[ pSoldier->ubAttackingHand ].usItem == AUTO_ROCKET_RIFLE )
+	const OBJECTTYPE* const wpn = &s->inv[s->ubAttackingHand];
+	if (wpn->usItem == ROCKET_RIFLE || wpn->usItem == AUTO_ROCKET_RIFLE)
   {
     // check imprint ID
     // NB not-imprinted value is NO_PROFILE
     // imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
-    if (pSoldier->ubProfile != NO_PROFILE)
-    {
-	    if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != pSoldier->ubProfile )
-	    {
-        // NOT a virgin gun...
-		    if ( pSoldier->inv[ pSoldier->ubAttackingHand ].ubImprintID != NO_PROFILE )
-		    {
-			    // access denied!
-			    if (pSoldier->bTeam == gbPlayerNum)
-			    {
-				    PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
-
-            if ( fDisplay )
-            {
-      			  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[ GUN_NOGOOD_FINGERPRINT ] );
-            }
-			    }
-			    return( FALSE );
-		    }
-	    }
-    }
+    if (s->ubProfile     != NO_PROFILE   &&
+				wpn->ubImprintID != s->ubProfile &&
+				wpn->ubImprintID != NO_PROFILE) // NOT a virgin gun...
+		{
+			// access denied!
+			if (s->bTeam == gbPlayerNum)
+			{
+				PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
+				if (fDisplay)
+				{
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]);
+				}
+			}
+			return FALSE;
+		}
   }
-  return( TRUE );
+  return TRUE;
 }
