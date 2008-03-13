@@ -1580,7 +1580,6 @@ static void SMInvMoveCamoCallback(MOUSE_REGION* const pRegion, const INT32 iReas
 static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	//UINT16 usNewItemIndex;
-	UINT8	 ubSrcID, ubDestID;
   BOOLEAN fGoodAPs;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
@@ -1589,70 +1588,15 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// If we do not have an item in hand, start moving it
 		if ( gpItemPointer != NULL )
 		{
-			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
-			ubSrcID  = gpSMCurrentMerc->ubID;
-			ubDestID = gpItemPointerSoldier->ubID;
-
-			//if ( ubSrcID == ubDestID )
+			// We are doing this ourselve, continue
+			if ( gpSMCurrentMerc->bLife >= CONSCIOUSNESS )
 			{
-				// We are doing this ourselve, continue
-				if ( gpSMCurrentMerc->bLife >= CONSCIOUSNESS )
+				//usNewItemIndex = gpItemPointer->usItem;
+
+				// Try to apply camo....
+				if (ApplyCamo(gpSMCurrentMerc, gpItemPointer, &fGoodAPs))
 				{
-					//usNewItemIndex = gpItemPointer->usItem;
-
-					// Try to apply camo....
-					if (ApplyCamo(gpSMCurrentMerc, gpItemPointer, &fGoodAPs))
-					{
-            if ( fGoodAPs )
-            {
-						  // Dirty
-						  fInterfacePanelDirty = DIRTYLEVEL2;
-
-						  // Check if it's the same now!
-						  if ( gpItemPointer->ubNumberOfObjects == 0 )
-						  {
-							  gbCompatibleApplyItem = FALSE;
-							  EndItemPointer( );
-						  }
-
-						  // Say OK acknowledge....
-						  DoMercBattleSound( gpSMCurrentMerc, BATTLE_SOUND_COOL1 );
-            }
-					}
-					else if ( ApplyCanteen( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
-					{
-						// Dirty
-            if ( fGoodAPs )
-            {
-						  fInterfacePanelDirty = DIRTYLEVEL2;
-
-						  // Check if it's the same now!
-						  if ( gpItemPointer->ubNumberOfObjects == 0 )
-						  {
-							  gbCompatibleApplyItem = FALSE;
-							  EndItemPointer( );
-						  }
-            }
-					}
-					else if ( ApplyElixir( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
-					{
-            if ( fGoodAPs )
-            {
-  						// Dirty
-						  fInterfacePanelDirty = DIRTYLEVEL2;
-
-						  // Check if it's the same now!
-						  if ( gpItemPointer->ubNumberOfObjects == 0 )
-						  {
-							  gbCompatibleApplyItem = FALSE;
-							  EndItemPointer( );
-						  }
-
-						  // Say OK acknowledge....
-   					  DoMercBattleSound( gpSMCurrentMerc, BATTLE_SOUND_COOL1 );
-            }
-					}
-					else if ( ApplyDrugs( gpSMCurrentMerc, gpItemPointer ) )
+					if ( fGoodAPs )
 					{
 						// Dirty
 						fInterfacePanelDirty = DIRTYLEVEL2;
@@ -1664,26 +1608,74 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 							EndItemPointer( );
 						}
 
-						/*
-						// COMMENTED OUT DUE TO POTENTIAL SERIOUS PROBLEMS WITH STRATEGIC EVENT SYSTEM
+						// Say OK acknowledge....
+						DoMercBattleSound( gpSMCurrentMerc, BATTLE_SOUND_COOL1 );
+					}
+				}
+				else if ( ApplyCanteen( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
+				{
+					// Dirty
+					if ( fGoodAPs )
+					{
+						fInterfacePanelDirty = DIRTYLEVEL2;
 
-						if ( gpSMCurrentMerc->ubProfile == LARRY_NORMAL )
+						// Check if it's the same now!
+						if ( gpItemPointer->ubNumberOfObjects == 0 )
 						{
-							// Larry's taken something!
-							gpSMCurrentMerc = SwapLarrysProfiles( gpSMCurrentMerc );
+							gbCompatibleApplyItem = FALSE;
+							EndItemPointer( );
 						}
-						*/
+					}
+				}
+				else if ( ApplyElixir( gpSMCurrentMerc, gpItemPointer, &fGoodAPs ) )
+				{
+					if ( fGoodAPs )
+					{
+						// Dirty
+						fInterfacePanelDirty = DIRTYLEVEL2;
 
+						// Check if it's the same now!
+						if ( gpItemPointer->ubNumberOfObjects == 0 )
+						{
+							gbCompatibleApplyItem = FALSE;
+							EndItemPointer( );
+						}
 
 						// Say OK acknowledge....
 						DoMercBattleSound( gpSMCurrentMerc, BATTLE_SOUND_COOL1 );
+					}
+				}
+				else if ( ApplyDrugs( gpSMCurrentMerc, gpItemPointer ) )
+				{
+					// Dirty
+					fInterfacePanelDirty = DIRTYLEVEL2;
 
-					}
-					else
+					// Check if it's the same now!
+					if ( gpItemPointer->ubNumberOfObjects == 0 )
 					{
-						// Send message
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_DO_INV_STUFF_STR ] );
+						gbCompatibleApplyItem = FALSE;
+						EndItemPointer( );
 					}
+
+					/*
+					// COMMENTED OUT DUE TO POTENTIAL SERIOUS PROBLEMS WITH STRATEGIC EVENT SYSTEM
+
+					if ( gpSMCurrentMerc->ubProfile == LARRY_NORMAL )
+					{
+						// Larry's taken something!
+						gpSMCurrentMerc = SwapLarrysProfiles( gpSMCurrentMerc );
+					}
+					*/
+
+
+					// Say OK acknowledge....
+					DoMercBattleSound( gpSMCurrentMerc, BATTLE_SOUND_COOL1 );
+
+				}
+				else
+				{
+					// Send message
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_DO_INV_STUFF_STR ] );
 				}
 			}
 		}

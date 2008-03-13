@@ -1239,11 +1239,6 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		{
 			usGraphicToUse = THIRDPOINTERS2;
 		}
-		// show all people's names if !
-		//else if ( pSoldier->ubID >= 20 && pSoldier->bVisible != -1 )
-		//{
-
-		//}
 		else if ( pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED )
 		{
 
