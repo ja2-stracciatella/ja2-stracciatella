@@ -1210,7 +1210,6 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 		sAirRaidSaveStruct.sGridNo = gpRaidSoldier->sGridNo;
 
 		sAirRaidSaveStruct.sRaidSoldierID = MAX_NUM_SOLDIERS - 1;
-//		sAirRaidSaveStruct.sRaidSoldierID = gpRaidSoldier->ubID;
 	}
 	else
 		sAirRaidSaveStruct.sRaidSoldierID = -1;

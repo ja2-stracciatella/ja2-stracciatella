@@ -1990,7 +1990,6 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 else
   DebugMsg( TOPIC_JA2OPPLIST, DBG_LEVEL_3, String( "ManSeesMan: ID %d(%ls) to ID %d ALREADYSEENCURRENTLY",pSoldier->ubID,pSoldier->name,pOpponent->ubID) );
 #endif
-	//bOldOppValue = pSoldier->bOppList[ pOpponent->ubID ];
  // remember that the soldier is currently seen and his new location
  UpdatePersonal(pSoldier,pOpponent->ubID,SEEN_CURRENTLY,sOppGridno,bOppLevel);
 

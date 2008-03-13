@@ -2448,10 +2448,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           // THE GAS_CAN IS IN THE MERCS MAIN HAND AT THIS TIME
           {
 						SOLDIERTYPE* const pVehicle = WhoIsThere2(pSoldier->sPendingActionData2, pSoldier->bLevel);
-
-            // this is a ubID for soldiertype....
 						AddFuelToVehicle( pSoldier, pVehicle );
-
             fInterfacePanelDirty = DIRTYLEVEL2;
           }
 					break;

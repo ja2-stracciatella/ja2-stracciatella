@@ -1046,7 +1046,6 @@ void NPCDoesAct(SOLDIERTYPE *pSoldier)
 	{
 		DisplayHiddenInterrupt( pSoldier );
 	}
- //StartInterruptVisually(pSoldier->ubID);
  // *** IAN deleted lots of interrupt related code here to simplify JA2	development
 
  // CJC Feb 18 99: make sure that soldier is not in the middle of a turn due to visual crap to make enemies

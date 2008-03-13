@@ -3076,7 +3076,6 @@ void ShowRadioLocator(SOLDIERTYPE* s, UINT8 ubLocatorSpeed)
 {
 	//LocateSoldier(s, FALSE); // IC - this is already being done outside of this function :)
 	s->fFlashLocator = TRUE;
-	//gbPanelSelectedGuy = ubID;	IC - had to move this outside to make this function versatile
 	s->sLocatorFrame = 0;
 
 	if ( ubLocatorSpeed == SHOW_LOCATOR_NORMAL )
