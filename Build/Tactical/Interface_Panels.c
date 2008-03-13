@@ -1882,15 +1882,11 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else	// item in cursor
 		{
-			UINT8			ubSrcID, ubDestID;
 			BOOLEAN		fOKToGo = FALSE;
 			BOOLEAN		fDeductPoints = FALSE;
 
 			// ATE: OK, get source, dest guy if different... check for and then charge appropriate APs
-			ubSrcID  = gpSMCurrentMerc->ubID;
-			ubDestID = gpItemPointerSoldier->ubID;
-
-			if ( ubSrcID == ubDestID )
+			if (gpSMCurrentMerc == gpItemPointerSoldier)
 			{
 				// We are doing this ourselve, continue
 				fOKToGo = TRUE;
