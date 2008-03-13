@@ -1632,49 +1632,25 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const pSoldier, const UINT32 uiHandPos, const UINT16 usReplaceItem)
+BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* const s, const UINT32 uiHandPos, const UINT16 usReplaceItem)
 {
-	BOOLEAN fRefuse = FALSE;
+	if (s->ubProfile != NAILS) return FALSE;
+	if (uiHandPos != VESTPOS)  return FALSE;
 
-	if (pSoldier->ubProfile == NAILS)
+	switch (usReplaceItem)
 	{
-		// if this the VEST POS?
-		if ( uiHandPos == VESTPOS )
-		{
-			// Are we trying to pick it up?
-			if ( usReplaceItem == NOTHING )
-			{
-				fRefuse = TRUE;
-			}
-			else
-			{
-				// Do we have nothing or the leather vest or kevlar leather vest?
-				if ( usReplaceItem == LEATHER_JACKET ||
-						 usReplaceItem == LEATHER_JACKET_W_KEVLAR ||
-						 usReplaceItem == LEATHER_JACKET_W_KEVLAR_18 ||
-						 usReplaceItem == LEATHER_JACKET_W_KEVLAR_Y ||
-						 usReplaceItem == COMPOUND18 ||
-						 usReplaceItem == JAR_QUEEN_CREATURE_BLOOD )
-				{
-					// This is good....
-					fRefuse = FALSE;
-				}
-				else
-				{
-					fRefuse = TRUE;
-				}
-			}
+		case LEATHER_JACKET:
+		case LEATHER_JACKET_W_KEVLAR:
+		case LEATHER_JACKET_W_KEVLAR_18:
+		case LEATHER_JACKET_W_KEVLAR_Y:
+		case COMPOUND18:
+		case JAR_QUEEN_CREATURE_BLOOD:
+			return FALSE;
 
-			if ( fRefuse )
-			{
-				// Say quote!
-				TacticalCharacterDialogue( pSoldier, 61 );
-				return( TRUE );
-			}
-		}
+		default:
+			TacticalCharacterDialogue(s, 61);
+			return TRUE;
 	}
-
-	return( FALSE );
 }
 
 
