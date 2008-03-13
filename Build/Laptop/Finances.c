@@ -1031,10 +1031,7 @@ static BOOLEAN WriteBalanceToDisk(void)
 	// write balance to disk
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
-	// close file
   FileClose( hFileHandle );
-
-
   return( TRUE );
 }
 
@@ -1059,7 +1056,6 @@ static void GetBalanceFromDisk(void)
 	// get balance from disk first
   FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
-	// close file
   FileClose( hFileHandle );
 }
 
@@ -1093,9 +1089,7 @@ static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance)
 	FileWrite(hFileHandle, &pFinanceList->iAmount,        sizeof(INT32));
 	FileWrite(hFileHandle, &pFinanceList->iBalanceToDate, sizeof(INT32));
 
-		// close file
   FileClose( hFileHandle );
-
   return( TRUE );
 }
 
@@ -1281,7 +1275,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage)
 		iCount++;
 	}
 
-  // close file
 	FileClose( hFileHandle );
 
 	// check to see if we in fact have a list to display
@@ -1406,7 +1399,6 @@ static INT32 GetPreviousDaysBalance(void)
 	if( fOkToContinue == FALSE )
 	{
 		// reached beginning of file, nothing found, return 0
-    // close file
 	  FileClose( hFileHandle );
 		return 0;
 	}
@@ -1560,11 +1552,8 @@ static INT32 GetPreviousDaysIncome(void)
 
 	// now run back one more day and add up the total of deposits
 
-	 // close file
 	FileClose( hFileHandle );
-
 	return( iTotalPreviousIncome );
-
 }
 
 
@@ -1643,11 +1632,8 @@ static INT32 GetTodaysDaysIncome(void)
 
 	// now run back one more day and add up the total of deposits
 
-	 // close file
 	FileClose( hFileHandle );
-
 	return( iTotalIncome );
-
 }
 
 
@@ -1764,9 +1750,7 @@ static INT32 GetTodaysOtherDeposits(void)
 
 	// now run back one more day and add up the total of deposits
 
-	 // close file
 	FileClose( hFileHandle );
-
 	return( iTotalIncome );
 }
 
@@ -1844,9 +1828,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 		iCounter++;
 	}
 
-	 // close file
 	FileClose( hFileHandle );
-
 	return( iTotalPreviousIncome );
 }
 

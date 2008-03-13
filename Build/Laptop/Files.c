@@ -462,7 +462,6 @@ static void OpenAndReadFilesFile(void)
 	  uiByteCount += sizeof( UINT32 ) + sizeof( UINT8 )+ 128 + 128 + sizeof(UINT8) + sizeof( BOOLEAN );
 	}
 
-  // close file
 	FileClose( hFileHandle );
 }
 
@@ -498,7 +497,6 @@ static BOOLEAN OpenAndWriteFilesFile(void)
 
 	}
 
-	// close file
   FileClose( hFileHandle );
   // clear out the old list
 	ClearFilesList( );

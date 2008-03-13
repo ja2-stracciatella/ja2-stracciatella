@@ -528,7 +528,6 @@ static void LoadInCurrentImpCharacter(void)
 	// read in the profile
 	if (!ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId])) return;
 
-	// close file
 	FileClose(hFile);
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )

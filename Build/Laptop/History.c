@@ -607,7 +607,6 @@ static void OpenAndReadHistoryFile(void)
 	  uiByteCount +=  SIZE_OF_HISTORY_FILE_RECORD;
 	}
 
-  // close file
 	FileClose( hFileHandle );
 }
 
@@ -651,7 +650,6 @@ static BOOLEAN OpenAndWriteHistoryFile(void)
 
 	}
 
-	// close file
   FileClose( hFileHandle );
   // clear out the old list
 	ClearHistoryList( );
@@ -1210,7 +1208,6 @@ static BOOLEAN LoadInHistoryRecords(UINT32 uiPage)
 		iCount++;
 	}
 
-  // close file
 	FileClose( hFileHandle );
 
 	// check to see if we in fact have a list to display
@@ -1389,9 +1386,7 @@ static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory)
 	FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
 	FileWrite(hFileHandle, &pHistoryList->ubColor,      sizeof(UINT8));
 
-		// close file
   FileClose( hFileHandle );
-
   return( TRUE );
 }
 

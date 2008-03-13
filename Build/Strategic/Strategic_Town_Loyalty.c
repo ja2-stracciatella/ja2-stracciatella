@@ -1252,7 +1252,6 @@ void WriteOutDistancesBetweenTowns( void )
 
 	FileWrite(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
 
-	// close file
   FileClose( hFileHandle );
 }
 
@@ -1312,9 +1311,7 @@ void ReadInDistancesBetweenTowns( void )
 
 	FileRead(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
 
-	// close file
   FileClose( hFileHandle );
-
 	return;
 }
 
