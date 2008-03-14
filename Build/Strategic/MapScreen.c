@@ -9045,8 +9045,6 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowErrorMessage)
 {
-	INT8 bErrorNumber = -1;
-
 	if ( bCharNumber == -1 )
 		return( FALSE );
 
@@ -9057,22 +9055,13 @@ static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowEr
 	Assert( pSoldier );
 	Assert( pSoldier->bActive );
 
+	const MoveError ret = CanEntireMovementGroupMercIsInMove(pSoldier);
+	if (ret == ME_OK) return TRUE;
 
-	if ( CanEntireMovementGroupMercIsInMove( pSoldier, &bErrorNumber ) )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		// function may fail without returning any specific error # (-1).
-		// if it gave us the # of an error msg, and we were told to display it
-		if ( ( bErrorNumber != -1 ) && fShowErrorMessage )
-		{
-			ReportMapScreenMovementError( bErrorNumber );
-		}
-
-		return( FALSE );
-	}
+	// function may fail without returning any specific error # (-1).
+	// if it gave us the # of an error msg, and we were told to display it
+	if (ret != -1 && fShowErrorMessage) ReportMapScreenMovementError(ret);
+	return FALSE;
 }
 
 

@@ -503,8 +503,26 @@ void AddSoldierToWaitingListQueue(const SOLDIERTYPE* s);
 void AddReasonToWaitingListQueue( INT32 iReason );
 void AddDisplayBoxToWaitingQueue( void );
 
+typedef enum MoveError
+{
+	ME_CUSTOM          = -99,
+	ME_OK              =   0,
+	ME_UNDERGROUND     =   1,
+	ME_ENEMY           =   2,
+	ME_BUSY            =   3,
+	ME_POW             =   5,
+	ME_TRANSIT         =   8,
+	ME_AIR_RAID        =  10,
+	ME_COMBAT          =  11,
+	ME_VEHICLE_EMPTY   =  32,
+	ME_MUSEUM          =  34,
+	ME_VEHICLE_NO_GAS  =  42,
+	ME_VEHICLE_DAMAGED =  47,
+	ME_ROBOT_ALONE     =  49
+} MoveError;
+
 // can this group move it out
-BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber );
+MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE*);
 void ReportMapScreenMovementError( INT8 bErrorNumber );
 
 void HandleRebuildingOfMapScreenCharacterList( void );

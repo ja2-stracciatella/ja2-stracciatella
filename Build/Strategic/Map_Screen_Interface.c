@@ -3752,25 +3752,6 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-typedef enum MoveError
-{
-	ME_CUSTOM          = -99,
-	ME_OK              =   0,
-	ME_UNDERGROUND     =   1,
-	ME_ENEMY           =   2,
-	ME_BUSY            =   3,
-	ME_POW             =   5,
-	ME_TRANSIT         =   8,
-	ME_AIR_RAID        =  10,
-	ME_COMBAT          =  11,
-	ME_VEHICLE_EMPTY   =  32,
-	ME_MUSEUM          =  34,
-	ME_VEHICLE_NO_GAS  =  42,
-	ME_VEHICLE_DAMAGED =  47,
-	ME_ROBOT_ALONE     =  49
-} MoveError;
-
-
 static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE*);
 
 
@@ -5193,19 +5174,13 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbErrorNumber )
+MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 {
 	INT32 iCounter = 0;
 
 	// first check the requested character himself
 	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
-	if (ret != ME_OK)
-	{
-		// failed no point checking anyone else
-		*pbErrorNumber = ret;
-		return( FALSE );
-	}
-
+	if (ret != ME_OK) return ret; // failed no point checking anyone else
 
 	// now check anybody who would be travelling with him
 
@@ -5241,12 +5216,8 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 		{
 			// can this character also move strategically?
 			const MoveError ret = CanCharacterMoveInStrategic(pCurrentSoldier);
-			if (ret != ME_OK)
-			{
-				// cannot move, fail, and don't bother checking anyone else, either
-				*pbErrorNumber = ret;
-				return( FALSE );
-			}
+			// cannot move, fail, and don't bother checking anyone else, either
+			if (ret != ME_OK) return ret;
 		}
 	}
 
