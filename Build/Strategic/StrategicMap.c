@@ -4390,31 +4390,26 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 }
 
 
-
-//This is called just before the world is unloaded to preserve location information for RPCs and NPCs either in
-//the sector or strategically in the sector (such as firing an NPC in a sector that isn't yet loaded.)  When loading that
-//sector, the RPC would be added.
+/* This is called just before the world is unloaded to preserve location
+ * information for RPCs and NPCs either in the sector or strategically in the
+ * sector (such as firing an NPC in a sector that isn't yet loaded.)  When
+ * loading that sector, the RPC would be added. */
 //@@@Evaluate
-void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s)
+void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 {
-	if (!s || s->ubProfile == NO_PROFILE)
-	{ //Doesn't have profile information.
-		return;
-	}
+	if (s->ubProfile == NO_PROFILE) return;
+	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 
-	if (gMercProfiles[s->ubProfile].ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE)
-	//if (gMercProfiles[s->ubProfile].ubStrategicInsertionCode == INSERTION_CODE_PERMANENT_GRIDNO)
-	{
-		// can't be changed!
-		return;
-	}
+	// can't be changed?
+	if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) return;
 
 	if (gfWorldLoaded && s->bActive && s->bInSector)
-	{ //This soldier is currently in the sector
+	{
+		// This soldier is currently in the sector
 
-					//@@@Evaluate -- insert code here
-					//SAMPLE CODE:  There are multiple situations that I didn't code.  The gridno should be the final destination
-					//or reset???
+		//@@@Evaluate -- insert code here
+		//SAMPLE CODE:  There are multiple situations that I didn't code.  The gridno should be the final destination
+		//or reset???
 
 		if (s->ubQuoteRecord && s->ubQuoteActionID)
 		{
@@ -4423,50 +4418,49 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s)
 			{
 				// Handle traversal.  This NPC's sector will NOT already be set correctly, so we have to call for that too
 				HandleNPCChangesForTacticalTraversal(s);
-				gMercProfiles[s->ubProfile].fUseProfileInsertionInfo = FALSE;
+				p->fUseProfileInsertionInfo = FALSE;
 				if (s->ubProfile != NO_PROFILE && NPCHasUnusedRecordWithGivenApproach(s->ubProfile, APPROACH_DONE_TRAVERSAL))
 				{
-					gMercProfiles[s->ubProfile].ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
+					p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
 				}
-
 			}
 			else
 			{
 				if (s->sFinalDestination == s->sGridNo)
 				{
-					gMercProfiles[s->ubProfile].usStrategicInsertionData = s->sGridNo;
+					p->usStrategicInsertionData = s->sGridNo;
 				}
 				else if (s->sAbsoluteFinalDestination != NOWHERE)
 				{
-					gMercProfiles[s->ubProfile].usStrategicInsertionData = s->sAbsoluteFinalDestination;
+					p->usStrategicInsertionData = s->sAbsoluteFinalDestination;
 				}
 				else
 				{
-					gMercProfiles[s->ubProfile].usStrategicInsertionData = s->sFinalDestination;
+					p->usStrategicInsertionData = s->sFinalDestination;
 				}
 
-				gMercProfiles[s->ubProfile].fUseProfileInsertionInfo = TRUE;
-				gMercProfiles[s->ubProfile].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				gMercProfiles[s->ubProfile].ubQuoteActionID          = s->ubQuoteActionID;
-				gMercProfiles[s->ubProfile].ubQuoteRecord            = s->ubQuoteActionID;
+				p->fUseProfileInsertionInfo = TRUE;
+				p->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				p->ubQuoteActionID          = s->ubQuoteActionID;
+				p->ubQuoteRecord            = s->ubQuoteActionID;
 			}
 		}
 		else
 		{
-			gMercProfiles[s->ubProfile].fUseProfileInsertionInfo = FALSE;
+			p->fUseProfileInsertionInfo = FALSE;
 		}
-
 	}
 	else
-	{ //use strategic information
-
-		//It appears to set the soldier's strategic insertion code everytime a group arrives in a new sector.  The insertion data
-		//isn't needed for these cases as the code is a direction only.
-		gMercProfiles[s->ubProfile].ubStrategicInsertionCode = s->ubStrategicInsertionCode;
-		gMercProfiles[s->ubProfile].usStrategicInsertionData = 0;
+	{
+		//use strategic information
+		/* It appears to set the soldier's strategic insertion code everytime a
+		 * group arrives in a new sector.  The insertion data isn't needed for these
+		 * cases as the code is a direction only. */
+		p->ubStrategicInsertionCode = s->ubStrategicInsertionCode;
+		p->usStrategicInsertionData = 0;
 
 		//Strategic system should now work.
-		gMercProfiles[s->ubProfile].fUseProfileInsertionInfo = TRUE;
+		p->fUseProfileInsertionInfo = TRUE;
 	}
 }
 
