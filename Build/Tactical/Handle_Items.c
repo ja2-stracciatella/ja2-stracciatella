@@ -3500,7 +3500,7 @@ static void SetOffBoobyTrapInMapScreen(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObjec
 	}
 
 	// injure the inventory character
-	SoldierTakeDamage(pSoldier, ubPtsDmg, ubPtsDmg, TAKE_DAMAGE_EXPLOSION, NULL, TRUE);
+	SoldierTakeDamage(pSoldier, ubPtsDmg, ubPtsDmg, TAKE_DAMAGE_EXPLOSION, NULL);
 
 	// play the sound
 	PlayJA2Sample(EXPLOSION_1, BTNVOLUME, 1, MIDDLEPAN);

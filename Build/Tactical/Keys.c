@@ -633,7 +633,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		  gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 
-			SoldierTakeDamage(pSoldier, 10 + PreRandom(10), 3 + PreRandom(3) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL, TRUE);
+			SoldierTakeDamage(pSoldier, 10 + PreRandom(10), 3 + PreRandom(3) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
 
 		case SUPER_ELECTRIC:
@@ -646,7 +646,7 @@ void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		  gTacticalStatus.ubAttackBusyCount++;
 		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
 
-			SoldierTakeDamage(pSoldier, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL, TRUE);
+			SoldierTakeDamage(pSoldier, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
 
 		default:

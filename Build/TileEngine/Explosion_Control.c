@@ -1230,7 +1230,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE* const pExpl
 				break;
 		}
 		// a gas effect, take damage directly...
-		SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL, TRUE);
+		SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL);
 		if ( pSoldier->bLife >= CONSCIOUSNESS )
 		{
 			DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
@@ -1619,7 +1619,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 						break;
 				}
 				// a gas effect, take damage directly...
-				SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL, TRUE);
+				SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL);
 				if ( pSoldier->bLife >= CONSCIOUSNESS )
 				{
 					DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );

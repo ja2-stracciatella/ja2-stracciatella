@@ -889,7 +889,7 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 	}
 
 	// otherwise hurt them
-	SoldierTakeDamage(pSoldier, 100, 100, TAKE_DAMAGE_BLOODLOSS, NULL, TRUE);
+	SoldierTakeDamage(pSoldier, 100, 100, TAKE_DAMAGE_BLOODLOSS, NULL);
 	return TRUE;
 }
 
