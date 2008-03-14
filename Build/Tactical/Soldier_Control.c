@@ -3107,12 +3107,12 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	// OK, If we are a vehicle.... damage vehicle...( people inside... )
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, att, NOWHERE, TRUE);
+		SoldierTakeDamage(pSoldier, sDamage, sBreathLoss, ubReason, att, TRUE);
 		return;
 	}
 
 	// DEDUCT LIFE
-	ubCombinedLoss = SoldierTakeDamage(pSoldier, ANIM_CROUCH, sDamage, sBreathLoss, ubReason, att, NOWHERE, TRUE);
+	ubCombinedLoss = SoldierTakeDamage(pSoldier, sDamage, sBreathLoss, ubReason, att, TRUE);
 
 	// ATE: OK, Let's check our ASSIGNMENT state,
 	// If anything other than on a squad or guard, make them guard....
@@ -5836,7 +5836,7 @@ static void HandleTakeDamageDeath(SOLDIERTYPE* pSoldier, UINT8 bOldLife, UINT8 u
 static FLOAT CalcSoldierNextBleed(SOLDIERTYPE* pSoldier);
 
 
-UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, const INT8 bHeight, INT16 sLifeDeduct, INT16 sBreathLoss, const UINT8 ubReason, SOLDIERTYPE* const attacker, const INT16 sSourceGrid, const BOOLEAN fShowDamage)
+UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sBreathLoss, const UINT8 ubReason, SOLDIERTYPE* const attacker, const BOOLEAN fShowDamage)
 {
 	INT8		bOldLife;
 	UINT8		ubCombinedLoss;
@@ -6690,7 +6690,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 				//EVENT_InitNewSoldierAnim( pSoldier, FALLFORWARD_ROOF, 0 , FALSE );
 
 				// Deduct hitpoints/breath for falling!
-				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, NOWHERE, TRUE);
+				SoldierTakeDamage(pSoldier, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, TRUE);
 
 				fReturnVal = TRUE;
 
@@ -6705,7 +6705,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 				pSoldier->usPendingAnimation = FALLOFF;
 
 				// Deduct hitpoints/breath for falling!
-				SoldierTakeDamage(pSoldier, ANIM_CROUCH, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, NOWHERE, TRUE);
+				SoldierTakeDamage(pSoldier, 100, 5000, TAKE_DAMAGE_FALLROOF, NULL, TRUE);
 
 				fReturnVal = TRUE;
 			}
@@ -8665,7 +8665,7 @@ static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 	// If we are already dead, don't show damage!
 	if ( !fBandagedBleed )
 	{
-		SoldierTakeDamage(pSoldier, ANIM_CROUCH, 1, 100, TAKE_DAMAGE_BLOODLOSS, NULL, NOWHERE, TRUE);
+		SoldierTakeDamage(pSoldier, 1, 100, TAKE_DAMAGE_BLOODLOSS, NULL, TRUE);
 	}
 }
 

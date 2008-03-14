@@ -5518,7 +5518,7 @@ static BOOLEAN KillIncompacitatedEnemyInSector(void)
 			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
 			{
 				// KIll......
-				SoldierTakeDamage(pTeamSoldier, ANIM_CROUCH, pTeamSoldier->bLife, 100, TAKE_DAMAGE_BLOODLOSS, NULL, NOWHERE, TRUE);
+				SoldierTakeDamage(pTeamSoldier, pTeamSoldier->bLife, 100, TAKE_DAMAGE_BLOODLOSS, NULL, TRUE);
 				fReturnVal = TRUE;
 			}
 		}
