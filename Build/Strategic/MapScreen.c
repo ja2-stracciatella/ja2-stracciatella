@@ -894,10 +894,8 @@ static void RenderHandPosItem(void)
 }
 
 
-static void RenderIconsForUpperLeftCornerPiece(INT8 bCharNumber)
+static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 {
-	const SOLDIERTYPE* const s = gCharactersList[bCharNumber].merc;
-
 	// if merc is an AIM merc
 	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 	{
@@ -1277,16 +1275,13 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, wchar_t* sSt
 
 
 // "character" refers to hired people AND vehicles
-static void DrawCharacterInfo(INT16 sCharNumber)
+static void DrawCharacterInfo(const SOLDIERTYPE* pSoldier)
 {
 	wchar_t sString[80];
 	INT16 usMercProfileID;
 	INT32 iTimeRemaining=0;
 	INT32 iDailyCost = 0;
 	UINT32 uiArrivalTime;
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[sCharNumber].merc;
-	if (pSoldier == NULL) return;
 
 	if( pSoldier->ubProfile == NO_PROFILE )
 	{
@@ -1600,19 +1595,20 @@ static BOOLEAN CharacterIsInTransitAndHasItemPickedUp(INT8 bCharacterNumber)
 static void DisplayCharacterInfo(void)
 {
 	Assert( bSelectedInfoChar < MAX_CHARACTER_COUNT );
-	Assert(gCharactersList[bSelectedInfoChar].merc != NULL);
+	const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+	Assert(s != NULL);
 
 	// set font buffer
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw character info and face
-	DrawCharacterInfo( bSelectedInfoChar );
+	DrawCharacterInfo(s);
 
 	RenderHandPosItem();
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	RenderIconsForUpperLeftCornerPiece( bSelectedInfoChar );
+	RenderIconsForUpperLeftCornerPiece(s);
 
 	// mark all pop ups as dirty
 	MarkAllBoxesAsAltered( );
