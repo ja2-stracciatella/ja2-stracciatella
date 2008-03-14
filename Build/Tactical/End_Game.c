@@ -271,9 +271,8 @@ static void DoneFadeOutKilledQueen(void)
   // ATE: GEt rid of elliot in P3...
   gMercProfiles[ ELLIOT ].sSectorX = 1;
 
-	ChangeNpcToDifferentSector( DEREK, 3, MAP_ROW_P, 0 );
-	ChangeNpcToDifferentSector( OLIVER, 3, MAP_ROW_P, 0 );
-
+	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
+	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
 
 	// OK, insertion data found, enter sector!
 	SetCurrentWorldSector( 3, MAP_ROW_P, 0 );

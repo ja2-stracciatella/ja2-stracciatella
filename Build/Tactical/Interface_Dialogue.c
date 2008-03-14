@@ -1693,8 +1693,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				ChangeNpcToDifferentSector(FATIMA,  10, 1, 1);
-				ChangeNpcToDifferentSector(DIMITRI, 10, 1, 1);
+				ChangeNpcToDifferentSector(GetProfile(FATIMA),  10, 1, 1);
+				ChangeNpcToDifferentSector(GetProfile(DIMITRI), 10, 1, 1);
 
 				gFadeOutDoneCallback = DoneFadeOutActionBasement;
 

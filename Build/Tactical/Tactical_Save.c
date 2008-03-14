@@ -1863,9 +1863,9 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 }
 
 
-void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	if (gMercProfiles[ ubNpcId ].ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
+	if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
 	{
 		// override location, this person is OUTTA here
 		sSectorX = 0;
@@ -1874,11 +1874,10 @@ void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, 
 	}
 	// Carmen no longer traverses out, he is temporarily removed instead
 
-	gMercProfiles[ ubNpcId ].sSectorX = sSectorX;
-	gMercProfiles[ ubNpcId ].sSectorY = sSectorY;
-	gMercProfiles[ ubNpcId ].bSectorZ = bSectorZ;
-
-	gMercProfiles[ ubNpcId ].fUseProfileInsertionInfo = FALSE;
+	p->sSectorX = sSectorX;
+	p->sSectorY = sSectorY;
+	p->bSectorZ = bSectorZ;
+	p->fUseProfileInsertionInfo = FALSE;
 }
 
 

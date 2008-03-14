@@ -403,7 +403,7 @@ static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT
 	NPC_SAVE_INFO* const si = GetFreeNPCSave();
 	if (si == NULL) return;
 
-	const MERCPROFILESTRUCT* const p  = GetProfile(pid);
+	MERCPROFILESTRUCT* const p  = GetProfile(pid);
 	si->ubProfile = pid;
 	si->sX        = p->sSectorX;
 	si->sY        = p->sSectorY;
@@ -411,7 +411,7 @@ static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT
 	si->sGridNo   = p->sGridNo;
 
 	ReloadQuoteFile(pid);
-	ChangeNpcToDifferentSector(pid, sector_x, sector_y, 0);
+	ChangeNpcToDifferentSector(p, sector_x, sector_y, 0);
 }
 
 

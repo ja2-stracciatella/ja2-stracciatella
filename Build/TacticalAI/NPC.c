@@ -2969,7 +2969,7 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 		return;
 	}
 
-	MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 	switch (s->ubQuoteActionID)
 	{
 		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p->sSectorX++; break;
@@ -2980,7 +2980,7 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(s->ubProfile, p->sSectorX, p->sSectorY, p->bSectorZ);
+	ChangeNpcToDifferentSector(p, p->sSectorX, p->sSectorY, p->bSectorZ);
 }
 
 

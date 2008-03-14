@@ -50,7 +50,7 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir );
 BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pNumberOfData );
 
 //Call this function to set the new sector a NPC will travel to
-void ChangeNpcToDifferentSector( UINT8 ubNpcId, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* npc, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file
