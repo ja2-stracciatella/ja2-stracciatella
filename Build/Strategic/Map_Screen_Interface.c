@@ -337,10 +337,6 @@ SGPPoint OrigVehiclePosition={160,150};
 BOOLEAN gfAtLeastOneMercWasHired = FALSE;
 
 
-// how many people does the player have?
-//INT32 GetNumberOfCharactersOnPlayersTeam( void );
-
-
 void InitalizeVehicleAndCharacterList( void )
 {
 	// will init the vehicle and character lists to zero
@@ -1608,108 +1604,6 @@ void HandleGroupAboutToArrive( void )
 //	fTeamPanelDirty = TRUE;
 //	fCharacterInfoPanelDirty = TRUE;
 }
-
-
-/*
-void HandleMapScreenUpArrow( void )
-{
-	INT32 iValue = 0;
-	INT32 iHighLine = 0;
-
-	// check state and update
-	if( fShowAssignmentMenu == TRUE )
-	{
-		if( GetBoxShadeFlag( ghAssignmentBox, iValue ) == FALSE )
-		{
-			if( iHighLine ==  0)
-			{
-				iHighLine = ( INT32 )GetNumberOfLinesOfTextInBox( ghAssignmentBox );
-			}
-			else
-			{
-				iHighLine++;
-			}
-		}
-	}
-	else
-	{
-		if( ( giHighLine == 0 ) || ( giHighLine  == -1 ) )
-		{
-			giHighLine = GetNumberOfCharactersOnPlayersTeam( ) - 1;
-			fTeamPanelDirty = TRUE;
-		}
-		else
-		{
-			giHighLine--;
-			fTeamPanelDirty = TRUE;
-		}
-
-	}
-}
-
-
-void HandleMapScreenDownArrow( void )
-{
-	INT32 iValue = 0;
-	INT32 iHighLine = 0;
-
-	// check state and update
-	if( fShowContractMenu == TRUE )
-	{
-		if( iHighLine == ( INT32 )GetNumberOfLinesOfTextInBox( ghContractBox ) - 1 )
-		{
-			iHighLine = 0;
-		}
-		else
-		{
-			iHighLine++;
-		}
-
-		HighLightBoxLine( ghContractBox, iHighLine );
-	}
-	else if( fShowAssignmentMenu == TRUE )
-	{
-		if( GetBoxShadeFlag( ghAssignmentBox, iValue ) == FALSE )
-		{
-			if( iHighLine == ( INT32 )GetNumberOfLinesOfTextInBox( ghAssignmentBox ) - 1 )
-			{
-				iHighLine = 0;
-			}
-			else
-			{
-				iHighLine--;
-			}
-		}
-	}
-	else
-	{
-		if( ( giHighLine == GetNumberOfCharactersOnPlayersTeam( ) - 1 ) || ( giHighLine  == -1 ) )
-		{
-			giHighLine = 0;
-			fTeamPanelDirty = TRUE;
-		}
-		else
-		{
-			giHighLine++;
-			fTeamPanelDirty = TRUE;
-		}
-
-	}
-}
-
-
-INT32 GetNumberOfCharactersOnPlayersTeam( void )
-{
-	INT32 iNumberOfPeople = 0, iCounter = 0;
-
-	for(iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		if (gCharactersList[iCounter].merc != NULL) iNumberOfPeople++;
-	}
-
-	return( iNumberOfPeople );
-}
-*/
 
 
 void CreateMapStatusBarsRegion( void )

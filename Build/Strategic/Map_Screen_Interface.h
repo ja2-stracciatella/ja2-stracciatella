@@ -360,10 +360,6 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiIndex );
 // handle a group about to arrive in a sector
 void HandleGroupAboutToArrive( void );
 
-// up arrow
-void HandleMapScreenUpArrow( void );
-void HandleMapScreenDownArrow( void );
-
 
 // create and destroy the status bars mouse region
 void CreateMapStatusBarsRegion( void );
