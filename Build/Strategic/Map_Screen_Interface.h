@@ -540,7 +540,7 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 
 void EndUpdateBox( BOOLEAN fContinueTimeCompression );
 
-extern BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot );
+BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE*);
 
 INT32 GetNumberOfMercsInUpdateList(void);
 

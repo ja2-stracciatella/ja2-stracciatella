@@ -2009,31 +2009,24 @@ static BOOLEAN ValidSelectableCharForNextOrPrev(INT32 iNewCharSlot)
 		fHoldingItem = TRUE;
 	}
 
+	const SOLDIERTYPE* const s = gCharactersList[iNewCharSlot].merc;
 
 	// if showing merc inventory, or holding an item
 	if ( fShowInventoryFlag || fHoldingItem )
 	{
 		// the new guy must have accessible inventory
-		if (!MapCharacterHasAccessibleInventory(gCharactersList[iNewCharSlot].merc))
+		if (!MapCharacterHasAccessibleInventory(s))
 		{
 			return( FALSE );
 		}
 	}
 
-
-	if ( fHoldingItem )
-	{
-		return ( MapscreenCanPassItemToCharNum( iNewCharSlot ) );
-	}
-	else
-	{
-		return( TRUE );
-	}
+	if (fHoldingItem) return MapscreenCanPassItemToChar(s);
+	return TRUE;
 }
 
 
-
-BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot )
+BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 {
 	SOLDIERTYPE *pOldSoldier;
 
@@ -2046,14 +2039,6 @@ BOOLEAN MapscreenCanPassItemToCharNum( INT32 iNewCharSlot )
 	{
 		return( FALSE );
 	}
-
-	// can't pass items to nobody!
-	if ( iNewCharSlot == -1 )
-	{
-		return( FALSE );
-	}
-
-	const SOLDIERTYPE* const pNewSoldier = gCharactersList[iNewCharSlot].merc;
 
 	// if showing sector inventory, and the item came from there
 	if ( fShowMapInventoryPool && !gpItemPointerSoldier && fMapInventoryItem )

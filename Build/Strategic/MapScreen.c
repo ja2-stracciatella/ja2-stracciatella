@@ -9221,13 +9221,22 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 {
 	Assert( ( bCharNumber >= -1 ) && ( bCharNumber < MAX_CHARACTER_COUNT ) );
 
-	if (bCharNumber != -1 && gCharactersList[bCharNumber].merc == NULL) return;
+	const SOLDIERTYPE* s;
+	if (bCharNumber != -1)
+	{
+		s = gCharactersList[bCharNumber].merc;
+		if (s == NULL) return;
+	}
+	else
+	{
+		s = NULL;
+	}
 
 	// if holding an item
 	if ( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem )
 	{
 		// make sure we can give it to this guy, otherwise don't allow the change
-		if ( !MapscreenCanPassItemToCharNum( bCharNumber ) )
+		if (s == NULL || !MapscreenCanPassItemToChar(s))
 		{
 			return;
 		}
@@ -9264,8 +9273,7 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 		if ( fShowInventoryFlag )
 		{
 			// and we're changing to nobody or a guy whose inventory can't be accessed
-			if (bCharNumber == -1 ||
-					!MapCharacterHasAccessibleInventory(gCharactersList[bCharNumber].merc))
+			if (s == NULL || !MapCharacterHasAccessibleInventory(s))
 			{
 				// then get out of inventory mode
 				fShowInventoryFlag = FALSE;
