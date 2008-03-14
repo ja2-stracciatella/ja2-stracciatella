@@ -217,7 +217,6 @@ gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
-guiCacheSize: const
 guiMemTotal: remove
 guiPOPUPTEX: load probably unnecessary in MapScreen.c
 gzFilename: wchar_t[] -> char[]?
@@ -282,7 +281,6 @@ OBJECTTYPE
 ubGunUnused
 bMoneyStatus: only one use, which most probably is wrong
 ubMoneyUnused
-ubLocationID
 bKeyStatus
 ubKeyUnused
 ubOwnershipUnused
@@ -318,11 +316,6 @@ bHasKeys: strange
 fForceShade: pForceShade != NULL?
 fDoingExternalDeath: always TRUE?
 ubLastDamageReason: necessary?
-
-TacticalStatusType
-fGoingToEnterDemo_UNUSED
-fNOTDOLASTDEMO_UNUSED
-fMultiplayer
 
 
 BUGS

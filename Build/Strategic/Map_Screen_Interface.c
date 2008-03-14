@@ -5008,6 +5008,24 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 }
 
 
+typedef enum MoveError
+{
+	ME_CUSTOM          = -99,
+	ME_UNDERGROUND     =   1,
+	ME_ENEMY           =   2,
+	ME_BUSY            =   3,
+	ME_POW             =   5,
+	ME_TRANSIT         =   8,
+	ME_AIR_RAID        =  10,
+	ME_COMBAT          =  11,
+	ME_VEHICLE_EMPTY   =  32,
+	ME_MUSEUM          =  34,
+	ME_VEHICLE_NO_GAS  =  42,
+	ME_VEHICLE_DAMAGED =  47,
+	ME_ROBOT_ALONE     =  49
+} MoveError;
+
+
 static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorNumber)
 {
 	INT16 sSector = 0;
@@ -5026,14 +5044,14 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	// still in transit?
 	if( IsCharacterInTransit( pSoldier ) == TRUE )
 	{
-		*pbErrorNumber = 8;
+		*pbErrorNumber = ME_TRANSIT;
 		return( FALSE );
 	}
 
 	// a POW?
 	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
-		*pbErrorNumber = 5;
+		*pbErrorNumber = ME_POW;
 		return( FALSE );
 	}
 
@@ -5041,7 +5059,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	// underground? (can't move strategically, must use tactical traversal )
 	if( pSoldier->bSectorZ != 0 )
 	{
-		*pbErrorNumber = 1;
+		*pbErrorNumber = ME_UNDERGROUND;
 		return( FALSE );
 	}
 
@@ -5054,21 +5072,21 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		// empty (needs a driver!)?
 		if (GetNumberInVehicle(v) == 0)
 		{
-			*pbErrorNumber = 32;
+			*pbErrorNumber = ME_VEHICLE_EMPTY;
 			return( FALSE );
 		}
 
 		// too damaged?
 		if ( pSoldier->bLife < OKLIFE )
 		{
-			*pbErrorNumber = 47;
+			*pbErrorNumber = ME_VEHICLE_DAMAGED;
 			return( FALSE );
 		}
 
 		// out of fuel?
 		if ( !VehicleHasFuel( pSoldier ) )
 		{
-			*pbErrorNumber = 42;
+			*pbErrorNumber = ME_VEHICLE_NO_GAS;
 			return( FALSE );
 		}
 	}
@@ -5078,7 +5096,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		if ( pSoldier->bLife <= 0 )
 		{
 			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 35 ], pSoldier->name );
-			*pbErrorNumber = -99;	// customized error message!
+			*pbErrorNumber = ME_CUSTOM; // customized error message!
 			return( FALSE );
 		}
 
@@ -5086,7 +5104,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		if ( pSoldier->bLife < OKLIFE )
 		{
 			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 33 ], pSoldier->name );
-			*pbErrorNumber = -99;	// customized error message!
+			*pbErrorNumber = ME_CUSTOM; // customized error message!
 			return( FALSE );
 		}
 	}
@@ -5105,21 +5123,21 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 				// in combat?
 				if( gTacticalStatus.uiFlags & INCOMBAT )
 				{
-					*pbErrorNumber = 11;
+					*pbErrorNumber = ME_COMBAT;
 					return( FALSE );
 				}
 
 				// hostile sector?
 				if ( gTacticalStatus.fEnemyInSector )
 				{
-					*pbErrorNumber = 2;
+					*pbErrorNumber = ME_ENEMY;
 					return( FALSE );
 				}
 
 				// air raid in loaded sector where character is?
 				if( InAirRaid( ) )
 				{
-					*pbErrorNumber = 10;
+					*pbErrorNumber = ME_AIR_RAID;
 					return( FALSE );
 				}
 			}
@@ -5127,7 +5145,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 			// not necessarily loaded - if there are any hostiles there
 			if( NumHostilesInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
 			{
-				*pbErrorNumber = 2;
+				*pbErrorNumber = ME_ENEMY;
 				return( FALSE );
 			}
 		}
@@ -5145,7 +5163,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 			{
 				if (FindObj(s, CHALICE) != ITEM_NOT_FOUND)
 				{
-					*pbErrorNumber = 34;
+					*pbErrorNumber = ME_MUSEUM;
 					return FALSE;
 				}
 			}
@@ -5156,7 +5174,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	// on assignment, other than just in a VEHICLE?
 	if( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
 	{
-		*pbErrorNumber = 3;
+		*pbErrorNumber = ME_BUSY;
 		return( FALSE );
 	}
 
@@ -5166,7 +5184,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	{
 		// too tired
 		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 43 ], pSoldier->name );
-		*pbErrorNumber = -99;	// customized error message!
+		*pbErrorNumber = ME_CUSTOM; // customized error message!
 		return( FALSE );
 	}
 
@@ -5178,7 +5196,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		if ( ( ( pSoldier->bAssignment == VEHICLE ) && ( !IsRobotControllerInVehicle( pSoldier->iVehicleId ) ) ) ||
 				 ( ( pSoldier->bAssignment  < ON_DUTY ) && ( !IsRobotControllerInSquad( pSoldier->bAssignment ) ) ) )
 		{
-			*pbErrorNumber = 49;
+			*pbErrorNumber = ME_ROBOT_ALONE;
 			return( FALSE );
 		}
 	}
@@ -5199,7 +5217,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%ls %ls", pSoldier->name ,pMapErrorString[ 7 ] );
 			}
 
-			*pbErrorNumber = -99;	// customized error message!
+			*pbErrorNumber = ME_CUSTOM; // customized error message!
 			return( FALSE );
 		}
 	}
@@ -5226,7 +5244,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	{
 		// inform user this specific merc cannot be moved out of the sector
 		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 29 ], pSoldier->name );
-		*pbErrorNumber = -99;	// customized error message!
+		*pbErrorNumber = ME_CUSTOM; // customized error message!
 		return( FALSE );
 	}
 
@@ -5295,18 +5313,11 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 }
 
 
-
-void ReportMapScreenMovementError( INT8 bErrorNumber )
+void ReportMapScreenMovementError(const INT8 bErrorNumber)
 {
-	if ( bErrorNumber == -99 )
-	{
-		// - 99 is a special message # indicating a customized message
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, gsCustomErrorString, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-	}
-	else
-	{
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapErrorString[ bErrorNumber ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-	}
+	// a customized message?
+	const wchar_t* const text = (bErrorNumber != ME_CUSTOM ? pMapErrorString[bErrorNumber] : gsCustomErrorString);
+	DoMapMessageBox(MSG_BOX_BASIC_STYLE, text, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 }
 
 
