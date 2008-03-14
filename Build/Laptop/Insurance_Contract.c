@@ -142,6 +142,13 @@ typedef struct InsuranceInfo
 static InsuranceInfo insurance_info[3];
 
 
+static void SetNumberOfDisplayedInsuranceMercs(void)
+{
+	gubNumberofDisplayedInsuranceGrids =
+		min(g_n_insurable_mercs - gsCurrentInsuranceMercIndex, 3);
+}
+
+
 static INT32 MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
@@ -155,7 +162,6 @@ static INT32 MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, co
 
 static void BuildInsuranceArray(void);
 static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate);
-static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID);
 static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
@@ -166,9 +172,7 @@ BOOLEAN EnterInsuranceContract()
 	//build the list of mercs that are can be displayed
 	BuildInsuranceArray();
 
-	gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID( (UINT8) gsCurrentInsuranceMercIndex );
-	if( gubNumberofDisplayedInsuranceGrids > 3 )
-		gubNumberofDisplayedInsuranceGrids = 3;
+	SetNumberOfDisplayedInsuranceMercs();
 
 	InitInsuranceDefaults();
 
@@ -244,9 +248,7 @@ void HandleInsuranceContract()
 		CreateDestroyInsuranceContractFormButtons( FALSE );
 
 		//Get the new number of displayed insurance grids
-		gubNumberofDisplayedInsuranceGrids = GetNumberOfHireMercsStartingFromID( (UINT8) gsCurrentInsuranceMercIndex );
-		if( gubNumberofDisplayedInsuranceGrids > 3 )
-			gubNumberofDisplayedInsuranceGrids = 3;
+		SetNumberOfDisplayedInsuranceMercs();
 
 		//create the new set of buttons
 		CreateDestroyInsuranceContractFormButtons( TRUE );
@@ -592,22 +594,6 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 		//redraw the screen
 		fPausedReDrawScreenFlag = TRUE;
 	}
-}
-
-
-static INT8 GetNumberOfHireMercsStartingFromID(UINT8 ubStartMercID)
-{
-	UINT8	ubCount=0;
-
-	for (UINT8 i = 0; i < g_n_insurable_mercs; ++i)
-	{
-		if( i>= ubStartMercID )
-		{
-			ubCount++;
-		}
-	}
-
-	return( ubCount );
 }
 
 
