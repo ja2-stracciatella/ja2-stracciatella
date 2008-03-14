@@ -1999,7 +1999,7 @@ INT32 GetNumberOfPeopleInCharacterList( void )
 }
 
 
-static BOOLEAN ValidSelectableCharForNextOrPrev(INT32 iNewCharSlot)
+static BOOLEAN ValidSelectableCharForNextOrPrev(const SOLDIERTYPE* const s)
 {
 	BOOLEAN fHoldingItem = FALSE;
 
@@ -2008,8 +2008,6 @@ static BOOLEAN ValidSelectableCharForNextOrPrev(INT32 iNewCharSlot)
 	{
 		fHoldingItem = TRUE;
 	}
-
-	const SOLDIERTYPE* const s = gCharactersList[iNewCharSlot].merc;
 
 	// if showing merc inventory, or holding an item
 	if ( fShowInventoryFlag || fHoldingItem )
@@ -2145,9 +2143,10 @@ void GoToNextCharacterInList( void )
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if (gCharactersList[iCount].merc != NULL &&
+		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
+		if (s != NULL &&
 				iCount < MAX_CHARACTER_COUNT &&
-				ValidSelectableCharForNextOrPrev(iCount))
+				ValidSelectableCharForNextOrPrev(s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
@@ -2193,9 +2192,10 @@ void GoToPrevCharacterInList( void )
 	// now run through the list and find first prev guy
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		if (gCharactersList[iCount].merc &&
+		const SOLDIERTYPE* const s = gCharactersList[iCount].merc;
+		if (s != NULL &&
 				iCount < MAX_CHARACTER_COUNT &&
-				ValidSelectableCharForNextOrPrev(iCount))
+				ValidSelectableCharForNextOrPrev(s))
 		{
 			ChangeSelectedInfoChar( ( INT8 )iCount, TRUE );
 			break;
