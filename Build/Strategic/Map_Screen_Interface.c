@@ -2014,7 +2014,7 @@ static BOOLEAN ValidSelectableCharForNextOrPrev(INT32 iNewCharSlot)
 	if ( fShowInventoryFlag || fHoldingItem )
 	{
 		// the new guy must have accessible inventory
-		if ( !MapCharacterHasAccessibleInventory( ( INT8 ) iNewCharSlot ) )
+		if (!MapCharacterHasAccessibleInventory(gCharactersList[iNewCharSlot].merc))
 		{
 			return( FALSE );
 		}

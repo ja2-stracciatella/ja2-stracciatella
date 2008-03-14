@@ -5128,10 +5128,8 @@ static void BltCharInvPanel(void)
 {
 	CHAR16 sString[ 32 ];
 
-	// make sure we're here legally
-	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
-
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	Assert(MapCharacterHasAccessibleInventory(pSoldier));
 
 	BltVideoObject(guiSAVEBUFFER, guiMAPINV, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 
@@ -5250,10 +5248,8 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	UINT32 uiHandPos;
 
-	// make sure we're here legally
-	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
-
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	Assert(MapCharacterHasAccessibleInventory(pSoldier));
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -5304,10 +5300,8 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	UINT16	usOldItemIndex, usNewItemIndex;
 	static BOOLEAN	fRightDown = FALSE;
 
-	// make sure we're here legally
-	Assert( MapCharacterHasAccessibleInventory( bSelectedInfoChar ) );
-
 	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	Assert(MapCharacterHasAccessibleInventory(pSoldier));
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -8910,10 +8904,7 @@ BOOLEAN CanToggleSelectedCharInventory( void )
 	if (pSoldier == NULL) return FALSE;
 
 	// does the selected guy have inventory and can we get at it?
-	if ( !MapCharacterHasAccessibleInventory( bSelectedInfoChar ) )
-	{
-		return(FALSE);
-	}
+	if (!MapCharacterHasAccessibleInventory(pSoldier)) return FALSE;
 
 	// if not in inventory, and holding an item from sector inventory
 	if( !fShowInventoryFlag &&
@@ -8936,27 +8927,15 @@ BOOLEAN CanToggleSelectedCharInventory( void )
 }
 
 
-
-BOOLEAN MapCharacterHasAccessibleInventory( INT8 bCharNumber )
+BOOLEAN MapCharacterHasAccessibleInventory(const SOLDIERTYPE* const s)
 {
-	Assert( bCharNumber >= 0 );
-	Assert( bCharNumber < MAX_CHARACTER_COUNT );
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[bCharNumber].merc;
-	if (pSoldier == NULL) return FALSE;
-
-	if( ( pSoldier->bAssignment == IN_TRANSIT ) ||
-			( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-			( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ||
-			( AM_A_ROBOT( pSoldier ) ) ||
-			( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ) ||
-			( pSoldier->bLife < OKLIFE )
-		)
-	{
-		return(FALSE);
-	}
-
-	return( TRUE );
+	return
+		s->bAssignment         != IN_TRANSIT     &&
+		s->bAssignment         != ASSIGNMENT_POW &&
+		!(s->uiStatusFlags & SOLDIER_VEHICLE)    &&
+		!AM_A_ROBOT(s)                           &&
+		s->ubWhatKindOfMercAmI != MERC_TYPE__EPC &&
+		s->bLife               >= OKLIFE;
 }
 
 
@@ -9285,7 +9264,8 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 		if ( fShowInventoryFlag )
 		{
 			// and we're changing to nobody or a guy whose inventory can't be accessed
-			if ( ( bCharNumber == -1 ) || !MapCharacterHasAccessibleInventory( bCharNumber ) )
+			if (bCharNumber == -1 ||
+					!MapCharacterHasAccessibleInventory(gCharactersList[bCharNumber].merc))
 			{
 				// then get out of inventory mode
 				fShowInventoryFlag = FALSE;
