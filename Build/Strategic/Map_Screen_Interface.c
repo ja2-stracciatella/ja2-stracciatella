@@ -3752,33 +3752,41 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorNumber);
+typedef enum MoveError
+{
+	ME_CUSTOM          = -99,
+	ME_OK              =   0,
+	ME_UNDERGROUND     =   1,
+	ME_ENEMY           =   2,
+	ME_BUSY            =   3,
+	ME_POW             =   5,
+	ME_TRANSIT         =   8,
+	ME_AIR_RAID        =  10,
+	ME_COMBAT          =  11,
+	ME_VEHICLE_EMPTY   =  32,
+	ME_MUSEUM          =  34,
+	ME_VEHICLE_NO_GAS  =  42,
+	ME_VEHICLE_DAMAGED =  47,
+	ME_ROBOT_ALONE     =  49
+} MoveError;
+
+
+static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE*);
 
 
 static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN fShowErrorMessage)
 {
-	INT8 bErrorNumber = -1;
-
 	// valid soldier?
 	Assert( pSoldier );
 	Assert( pSoldier->bActive );
 
+	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
+	if (ret == ME_OK) return TRUE;
 
-	if( CanCharacterMoveInStrategic( pSoldier, &bErrorNumber ) )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		// function may fail without returning any specific error # (-1).
-		// if it gave us the # of an error msg, and we were told to display it
-		if ( ( bErrorNumber != -1 ) && fShowErrorMessage )
-		{
-			ReportMapScreenMovementError( bErrorNumber );
-		}
-
-		return( FALSE );
-	}
+	// function may fail without returning any specific error # (-1).
+	// if it gave us the # of an error msg, and we were told to display it
+	if (ret != -1 && fShowErrorMessage) ReportMapScreenMovementError(ret);
+	return FALSE;
 }
 
 
@@ -5008,25 +5016,7 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 }
 
 
-typedef enum MoveError
-{
-	ME_CUSTOM          = -99,
-	ME_UNDERGROUND     =   1,
-	ME_ENEMY           =   2,
-	ME_BUSY            =   3,
-	ME_POW             =   5,
-	ME_TRANSIT         =   8,
-	ME_AIR_RAID        =  10,
-	ME_COMBAT          =  11,
-	ME_VEHICLE_EMPTY   =  32,
-	ME_MUSEUM          =  34,
-	ME_VEHICLE_NO_GAS  =  42,
-	ME_VEHICLE_DAMAGED =  47,
-	ME_ROBOT_ALONE     =  49
-} MoveError;
-
-
-static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorNumber)
+static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 {
 	INT16 sSector = 0;
 	BOOLEAN fProblemExists = FALSE;
@@ -5042,27 +5032,13 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 
 
 	// still in transit?
-	if( IsCharacterInTransit( pSoldier ) == TRUE )
-	{
-		*pbErrorNumber = ME_TRANSIT;
-		return( FALSE );
-	}
+	if (IsCharacterInTransit(pSoldier)) return ME_TRANSIT;
 
 	// a POW?
-	if( pSoldier->bAssignment == ASSIGNMENT_POW )
-	{
-		*pbErrorNumber = ME_POW;
-		return( FALSE );
-	}
-
+	if (pSoldier->bAssignment == ASSIGNMENT_POW) return ME_POW;
 
 	// underground? (can't move strategically, must use tactical traversal )
-	if( pSoldier->bSectorZ != 0 )
-	{
-		*pbErrorNumber = ME_UNDERGROUND;
-		return( FALSE );
-	}
-
+	if (pSoldier->bSectorZ != 0) return ME_UNDERGROUND;
 
 	// vehicle checks
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
@@ -5070,25 +5046,13 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
 		Assert(v != NULL);
 		// empty (needs a driver!)?
-		if (GetNumberInVehicle(v) == 0)
-		{
-			*pbErrorNumber = ME_VEHICLE_EMPTY;
-			return( FALSE );
-		}
+		if (GetNumberInVehicle(v) == 0) return ME_VEHICLE_EMPTY;
 
 		// too damaged?
-		if ( pSoldier->bLife < OKLIFE )
-		{
-			*pbErrorNumber = ME_VEHICLE_DAMAGED;
-			return( FALSE );
-		}
+		if (pSoldier->bLife < OKLIFE) return ME_VEHICLE_DAMAGED;
 
 		// out of fuel?
-		if ( !VehicleHasFuel( pSoldier ) )
-		{
-			*pbErrorNumber = ME_VEHICLE_NO_GAS;
-			return( FALSE );
-		}
+		if (!VehicleHasFuel(pSoldier)) return ME_VEHICLE_NO_GAS;
 	}
 	else	// non-vehicle
 	{
@@ -5096,16 +5060,14 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		if ( pSoldier->bLife <= 0 )
 		{
 			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 35 ], pSoldier->name );
-			*pbErrorNumber = ME_CUSTOM; // customized error message!
-			return( FALSE );
+			return ME_CUSTOM; // customized error message!
 		}
 
 		// too injured?
 		if ( pSoldier->bLife < OKLIFE )
 		{
 			swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 33 ], pSoldier->name );
-			*pbErrorNumber = ME_CUSTOM; // customized error message!
-			return( FALSE );
+			return ME_CUSTOM; // customized error message!
 		}
 	}
 
@@ -5121,32 +5083,19 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 					( pSoldier->bSectorZ == gbWorldSectorZ ) )
 			{
 				// in combat?
-				if( gTacticalStatus.uiFlags & INCOMBAT )
-				{
-					*pbErrorNumber = ME_COMBAT;
-					return( FALSE );
-				}
+				if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;
 
 				// hostile sector?
-				if ( gTacticalStatus.fEnemyInSector )
-				{
-					*pbErrorNumber = ME_ENEMY;
-					return( FALSE );
-				}
+				if (gTacticalStatus.fEnemyInSector) return ME_ENEMY;
 
 				// air raid in loaded sector where character is?
-				if( InAirRaid( ) )
-				{
-					*pbErrorNumber = ME_AIR_RAID;
-					return( FALSE );
-				}
+				if (InAirRaid()) return ME_AIR_RAID;
 			}
 
 			// not necessarily loaded - if there are any hostiles there
 			if( NumHostilesInSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ ) > 0 )
 			{
-				*pbErrorNumber = ME_ENEMY;
-				return( FALSE );
+				return ME_ENEMY;
 			}
 		}
 	}
@@ -5161,11 +5110,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		{
 			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{
-				if (FindObj(s, CHALICE) != ITEM_NOT_FOUND)
-				{
-					*pbErrorNumber = ME_MUSEUM;
-					return FALSE;
-				}
+				if (FindObj(s, CHALICE) != ITEM_NOT_FOUND) return ME_MUSEUM;
 			}
 		}
 	}
@@ -5174,8 +5119,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	// on assignment, other than just in a VEHICLE?
 	if( ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) )
 	{
-		*pbErrorNumber = ME_BUSY;
-		return( FALSE );
+		return ME_BUSY;
 	}
 
 	// if he's walking/driving, and so tired that he would just stop the group anyway in the next sector,
@@ -5184,8 +5128,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	{
 		// too tired
 		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 43 ], pSoldier->name );
-		*pbErrorNumber = ME_CUSTOM; // customized error message!
-		return( FALSE );
+		return ME_CUSTOM; // customized error message!
 	}
 
 
@@ -5196,8 +5139,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 		if ( ( ( pSoldier->bAssignment == VEHICLE ) && ( !IsRobotControllerInVehicle( pSoldier->iVehicleId ) ) ) ||
 				 ( ( pSoldier->bAssignment  < ON_DUTY ) && ( !IsRobotControllerInSquad( pSoldier->bAssignment ) ) ) )
 		{
-			*pbErrorNumber = ME_ROBOT_ALONE;
-			return( FALSE );
+			return ME_ROBOT_ALONE;
 		}
 	}
 	// an Escorted NPC?
@@ -5217,8 +5159,7 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%ls %ls", pSoldier->name ,pMapErrorString[ 7 ] );
 			}
 
-			*pbErrorNumber = ME_CUSTOM; // customized error message!
-			return( FALSE );
+			return ME_CUSTOM; // customized error message!
 		}
 	}
 
@@ -5244,13 +5185,11 @@ static BOOLEAN CanCharacterMoveInStrategic(SOLDIERTYPE* pSoldier, INT8* pbErrorN
 	{
 		// inform user this specific merc cannot be moved out of the sector
 		swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), pMapErrorString[ 29 ], pSoldier->name );
-		*pbErrorNumber = ME_CUSTOM; // customized error message!
-		return( FALSE );
+		return ME_CUSTOM; // customized error message!
 	}
 
-
 	// passed all checks - this character may move strategically!
-	return( TRUE );
+	return ME_OK;
 }
 
 
@@ -5259,9 +5198,11 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 	INT32 iCounter = 0;
 
 	// first check the requested character himself
-	if( CanCharacterMoveInStrategic( pSoldier, pbErrorNumber ) == FALSE )
+	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
+	if (ret != ME_OK)
 	{
 		// failed no point checking anyone else
+		*pbErrorNumber = ret;
 		return( FALSE );
 	}
 
@@ -5299,9 +5240,11 @@ BOOLEAN CanEntireMovementGroupMercIsInMove( SOLDIERTYPE *pSoldier, INT8 *pbError
 		if (ubCurrentGroup == ubGroup || c->selected)
 		{
 			// can this character also move strategically?
-			if( CanCharacterMoveInStrategic( pCurrentSoldier, pbErrorNumber ) == FALSE )
+			const MoveError ret = CanCharacterMoveInStrategic(pCurrentSoldier);
+			if (ret != ME_OK)
 			{
 				// cannot move, fail, and don't bother checking anyone else, either
+				*pbErrorNumber = ret;
 				return( FALSE );
 			}
 		}
