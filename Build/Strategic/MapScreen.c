@@ -6295,7 +6295,7 @@ static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowErrorMessage);
+static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber);
 static void MakeMapModesSuitableForDestPlotting(INT8 bCharNumber);
 
 
@@ -6339,7 +6339,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 			// Find out if this guy and everyone travelling with him is allowed to move strategically
 			// NOTE: errors are reported within...
-			if ( CanChangeDestinationForCharSlot( ( INT8 ) iValue, TRUE ) )
+			if (CanChangeDestinationForCharSlot(iValue))
 			{
 				// turn off sector inventory, turn on show teams filter, etc.
 				MakeMapModesSuitableForDestPlotting( ( INT8 ) iValue );
@@ -9043,7 +9043,7 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowErrorMessage)
+static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber)
 {
 	if ( bCharNumber == -1 )
 		return( FALSE );
@@ -9058,7 +9058,7 @@ static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber, BOOLEAN fShowEr
 	const MoveError ret = CanEntireMovementGroupMercIsInMove(pSoldier);
 	if (ret == ME_OK) return TRUE;
 
-	if (fShowErrorMessage) ReportMapScreenMovementError(ret);
+	ReportMapScreenMovementError(ret);
 	return FALSE;
 }
 
