@@ -1569,18 +1569,9 @@ static void DrawCharacterInfo(const SOLDIERTYPE* pSoldier)
 
 
 // this character is in transit has an item picked up
-static BOOLEAN CharacterIsInTransitAndHasItemPickedUp(INT8 bCharacterNumber)
+static BOOLEAN CharacterIsInTransitAndHasItemPickedUp(const SOLDIERTYPE* const s)
 {
-
-	// valid character?
-	if( bCharacterNumber == -1 )
-	{
-		// nope
-		return( FALSE );
-	}
-
-	const SOLDIERTYPE* const s = gCharactersList[bCharacterNumber].merc;
-	if (s == NULL || s->bAssignment != IN_TRANSIT) return FALSE;
+	if (s->bAssignment != IN_TRANSIT) return FALSE;
 
 	// item picked up?
 	if( gMPanelRegion.Cursor != EXTERN_CURSOR)
@@ -8283,17 +8274,8 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 }
 
 
-static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(INT8 bCharId)
+static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(const SOLDIERTYPE* const s)
 {
-	// invalid char id
-	if( bCharId == -1 )
-	{
-		return( FALSE );
-	}
-
-	const SOLDIERTYPE* const s = gCharactersList[bCharId].merc;
-	if (s == NULL) return FALSE;
-
 	// char is in loaded sector
 	if (s->sSectorX != gWorldSectorX ||
 			s->sSectorY != gWorldSectorY ||
@@ -8352,10 +8334,16 @@ static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 	else
 	{
 		// standard checks
-		if ( ( GetNumberOfPeopleInCharacterList( ) < 2 ) ||
-				 ( CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed( bSelectedInfoChar ) ) ||
-				 ( CharacterIsInTransitAndHasItemPickedUp( bSelectedInfoChar ) ) ||
-				 ( fShowDescriptionFlag ) )
+		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+		if (GetNumberOfPeopleInCharacterList() < 2 ||
+				fShowDescriptionFlag ||
+				(
+					s != NULL &&
+					(
+						CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(s) ||
+						CharacterIsInTransitAndHasItemPickedUp(s)
+					)
+				))
 		{
 			DisableButton( giCharInfoButton[ 0 ] );
 			DisableButton( giCharInfoButton[ 1 ] );
