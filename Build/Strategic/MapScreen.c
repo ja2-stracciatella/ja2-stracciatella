@@ -6295,7 +6295,7 @@ static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber);
+static BOOLEAN CanChangeDestinationForChar(SOLDIERTYPE*);
 static void MakeMapModesSuitableForDestPlotting(INT8 bCharNumber);
 
 
@@ -6320,7 +6320,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 			return;
 		}
 
-		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		SOLDIERTYPE* const s = gCharactersList[iValue].merc;
 		if (s != NULL)
 		{
 			if ( HandleCtrlOrShiftInTeamPanel( ( INT8 ) iValue ) )
@@ -6339,7 +6339,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 			// Find out if this guy and everyone travelling with him is allowed to move strategically
 			// NOTE: errors are reported within...
-			if (CanChangeDestinationForCharSlot(iValue))
+			if (CanChangeDestinationForChar(s))
 			{
 				// turn off sector inventory, turn on show teams filter, etc.
 				MakeMapModesSuitableForDestPlotting( ( INT8 ) iValue );
@@ -9043,19 +9043,9 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-static BOOLEAN CanChangeDestinationForCharSlot(INT8 bCharNumber)
+static BOOLEAN CanChangeDestinationForChar(SOLDIERTYPE* const s)
 {
-	if ( bCharNumber == -1 )
-		return( FALSE );
-
-	SOLDIERTYPE* const pSoldier = gCharactersList[bCharNumber].merc;
-	if (pSoldier == NULL) return FALSE;
-
-	// valid soldier?
-	Assert( pSoldier );
-	Assert( pSoldier->bActive );
-
-	const MoveError ret = CanEntireMovementGroupMercIsInMove(pSoldier);
+	const MoveError ret = CanEntireMovementGroupMercIsInMove(s);
 	if (ret == ME_OK) return TRUE;
 
 	ReportMapScreenMovementError(ret);
