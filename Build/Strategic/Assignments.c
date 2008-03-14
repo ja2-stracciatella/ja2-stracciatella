@@ -7303,7 +7303,7 @@ void SetSoldierAssignment(SOLDIERTYPE* const s, const INT8 assignment, const INT
 			break;
 
 		case TRAIN_BY_OTHER:
-			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE))
+			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE)) return;
 			PreSetAssignment(s, assignment);
 			if (s->bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(s);
 			// set stat to train
