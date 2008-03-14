@@ -3764,9 +3764,7 @@ static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN
 	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
 	if (ret == ME_OK) return TRUE;
 
-	// function may fail without returning any specific error # (-1).
-	// if it gave us the # of an error msg, and we were told to display it
-	if (ret != -1 && fShowErrorMessage) ReportMapScreenMovementError(ret);
+	if (fShowErrorMessage) ReportMapScreenMovementError(ret);
 	return FALSE;
 }
 
@@ -5221,9 +5219,8 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 		}
 	}
 
-
 	// everybody can move...  Yey!  :-)
-	return( TRUE );
+	return ME_OK;
 }
 
 
