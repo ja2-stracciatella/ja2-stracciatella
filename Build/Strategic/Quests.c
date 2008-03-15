@@ -666,7 +666,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			}
 			else
 			{
-				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = CheckNPCWithin( ubProfileID, 85, 12 );
+				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = CheckNPCWithin(ubProfileID, BRENDA, 12);
 			}
 			break;
 		case FACT_BRENDA_DEAD:
@@ -681,7 +681,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 			*/
 		case FACT_SPIKE_AT_DOOR:
-			gubFact[FACT_SPIKE_AT_DOOR] = CheckNPCAt( 93, 9817 );
+			gubFact[FACT_SPIKE_AT_DOOR] = CheckNPCAt(SPIKE, 9817);
 			break;
 		case FACT_WOUNDED_MERCS_NEARBY:
 			gubFact[usFact] = (NumWoundedMercsNearby( ubProfileID ) > 0);
@@ -693,7 +693,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[usFact] = (NumWoundedMercsNearby( ubProfileID ) > 1);
 			break;
 		case FACT_HANS_AT_SPOT:
-			gubFact[usFact] = CheckNPCAt( 117, 13523 );
+			gubFact[usFact] = CheckNPCAt(HANS, 13523);
 			break;
 		case FACT_MULTIPLE_MERCS_CLOSE:
 			gubFact[usFact] = ( NumMercsNear( ubProfileID, 3 ) > 1 );
@@ -723,13 +723,13 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[usFact] = CheckTalkerFemale();
 			break;
 		case FACT_CARMEN_IN_C5:
-			gubFact[usFact] = CheckNPCSector( 78, 5, MAP_ROW_C, 0 );
+			gubFact[usFact] = CheckNPCSector(CARMEN, 5, MAP_ROW_C, 0);
 			break;
 		case FACT_JOEY_IN_C5:
-			gubFact[usFact] = CheckNPCSector( 90, 5, MAP_ROW_C, 0 );
+			gubFact[usFact] = CheckNPCSector(JOEY, 5, MAP_ROW_C, 0);
 			break;
 		case FACT_JOEY_NEAR_MARTHA:
-			gubFact[usFact] = CheckNPCWithin( 90, 109, 5 ) && ( CheckGuyVisible( MARTHA, JOEY ) || CheckGuyVisible( JOEY, MARTHA ) );
+			gubFact[usFact] = CheckNPCWithin(JOEY, MARTHA, 5) && (CheckGuyVisible(MARTHA, JOEY) || CheckGuyVisible(JOEY, MARTHA));
 			break;
 		case FACT_JOEY_DEAD:
 			gubFact[usFact] = gMercProfiles[ JOEY ].bMercStatus == MERC_IS_DEAD;
