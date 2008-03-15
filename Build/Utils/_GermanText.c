@@ -1686,8 +1686,8 @@ const wchar_t *pMapErrorString[] =
 	L"Sie haben noch keine Teammitglieder.", 		// you have no members, can't do anything
 	L"Söldner kann nicht gehorchen.",			 		// merc can't comply with your order
 //6-10
-	L"braucht eine Eskorte. Plazieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
-	L"braucht eine Eskorte. Plazieren Sie sie in einem Trupp mit Eskorte.", // for a female
+	L"%ls braucht eine Eskorte. Plazieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
+	L"%ls braucht eine Eskorte. Plazieren Sie sie in einem Trupp mit Eskorte.", // for a female
 	L"Söldner ist noch nicht in Arulco!",
 	L"Erst mal Vertrag aushandeln!",
 	L"",

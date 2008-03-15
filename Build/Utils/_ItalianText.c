@@ -1745,8 +1745,8 @@ const wchar_t* pMapErrorString[] =
 	L"Non avete ancora membri nella squadra.", 		// you have no members, can't do anything
 	L"I mercenari non possono attenersi agli ordini.",			 		// merc can't comply with your order
 //6-10
-	L"ha bisogno di una scorta per muoversi. Inseritelo in una squadra che ne è provvista.", // merc can't move unescorted .. for a male
-	L"ha bisogno di una scorta per muoversi. Inseritela in una squadra che ne è provvista.", // for a female
+	L"%ls ha bisogno di una scorta per muoversi. Inseritelo in una squadra che ne è provvista.", // merc can't move unescorted .. for a male
+	L"%ls ha bisogno di una scorta per muoversi. Inseritela in una squadra che ne è provvista.", // for a female
 	L"Il mercenario non è ancora arrivato ad Arulco!",
 	L"Sembra che ci siano negoziazioni di contratto da stabilire.",
 	L"",

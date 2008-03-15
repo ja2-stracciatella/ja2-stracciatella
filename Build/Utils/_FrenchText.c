@@ -1745,8 +1745,8 @@ const wchar_t* pMapErrorString[] =
 	L"Vous n'avez plus aucun membre dans votre escouade.", 		// you have non members, can't do anything
 	L"Le mercenaire ne peut obéir.",			 		// merc can't comply with your order
 //6-10
-	L"doit être escorté. Mettez-le dans une escouade.", // merc can't move unescorted .. for a male
-	L"doit être escortée. Mettez-la dans une escouade.", // for a female
+	L"%ls doit être escorté. Mettez-le dans une escouade.", // merc can't move unescorted .. for a male
+	L"%ls doit être escortée. Mettez-la dans une escouade.", // for a female
 	L"Ce mercenaire n'est pas encore arrivé !",
 	L"Il faudrait d'abord revoir les termes du contrat...",
 	L"",

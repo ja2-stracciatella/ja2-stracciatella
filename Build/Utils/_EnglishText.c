@@ -1745,8 +1745,8 @@ const wchar_t *pMapErrorString[] =
 	L"You don't have any team members yet.", 		// you have no members, can't do anything
 	L"Merc can't comply.",			 		// merc can't comply with your order
 //6-10
-	L"needs an escort to move. Place him on a squad with one.", // merc can't move unescorted .. for a male
-	L"needs an escort to move. Place her on a squad with one.", // for a female
+	L"%ls needs an escort to move. Place him on a squad with one.", // merc can't move unescorted .. for a male
+	L"%ls needs an escort to move. Place her on a squad with one.", // for a female
 	L"Merc hasn't yet arrived in Arulco!",
 	L"Looks like there's some contract negotiations to settle first.",
 	L"",

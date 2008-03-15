@@ -5008,15 +5008,9 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 				 ( ( pSoldier->bAssignment  < ON_DUTY ) && ( NumberOfNonEPCsInSquad( pSoldier->bAssignment ) == 0 ) ) )
 		{
 			// are they male or female
-			if( gMercProfiles[ pSoldier->ubProfile ].bSex == MALE )
-			{
-				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%ls %ls", pSoldier->name ,pMapErrorString[ 6 ] );
-			}
-			else
-			{
-				swprintf( gsCustomErrorString, lengthof(gsCustomErrorString), L"%ls %ls", pSoldier->name ,pMapErrorString[ 7 ] );
-			}
-
+			const MERCPROFILESTRUCT* const p    = GetProfile(pSoldier->ubProfile);
+			const wchar_t*           const text = p->bSex == MALE ? pMapErrorString[6] : pMapErrorString[7];
+			swprintf(gsCustomErrorString, lengthof(gsCustomErrorString), text, pSoldier->name);
 			return ME_CUSTOM; // customized error message!
 		}
 	}

@@ -1760,8 +1760,8 @@ const wchar_t* pMapErrorString[] =
 	L"Je hebt nog geen team-leden.", 			// you have no members, can't do anything
 	L"Huurling kan order niet opvolgen.",			 		// merc can't comply with your order
 //6-10
-	L"heeft een escorte nodig. Plaats hem in een team.", // merc can't move unescorted .. for a male
-	L"heeft een escorte nodig. Plaats haar in een team.", // for a female
+	L"%ls heeft een escorte nodig. Plaats hem in een team.", // merc can't move unescorted .. for a male
+	L"%ls heeft een escorte nodig. Plaats haar in een team.", // for a female
 	L"Huurling is nog niet in Arulco aangekomen!",
 	L"Het lijkt erop dat er eerst nog contractbesprekingen gehouden moeten worden.",
 	L"",

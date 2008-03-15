@@ -1760,8 +1760,8 @@ const wchar_t* pMapErrorString[] =
 	L"У вас в команде пока никого нет",	// you have no members, can't do anything
 	L"Боец не может выполнить приказ.",		// merc can't comply with your order
 //6-10
-	L" нуждается в сопровождении. Назначьте его в отряд.", // merc can't move unescorted .. for a male
-	L" нуждается в сопровождении. Назначьте ее в отряд.", // for a female
+	L"%ls нуждается в сопровождении. Назначьте его в отряд.", // merc can't move unescorted .. for a male
+	L"%ls нуждается в сопровождении. Назначьте ее в отряд.", // for a female
 	L"Наемник еще не прибыл в Арулько!",
 	L"Кажется, сначала нужно уладить некоторые проблемы с контрактом.",
 	L"",

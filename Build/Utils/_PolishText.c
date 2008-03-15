@@ -1744,8 +1744,8 @@ const wchar_t* pMapErrorString[] =
 	L"Nie masz jeszcze ludzi.", 		// you have no members, can't do anything
 	L"Najemnik nie może wypełnić tego rozkazu.",			 		// merc can't comply with your order
 //6-10
-	L"musi mieć eskortę, aby się przemieszczać. Umieść go w oddziale z eskortą.", // merc can't move unescorted .. for a male
-	L"musi mieć eskortę, aby się przemieszczać. Umieść ją w oddziale z eskortą.", // for a female
+	L"%ls musi mieć eskortę, aby się przemieszczać. Umieść go w oddziale z eskortą.", // merc can't move unescorted .. for a male
+	L"%ls musi mieć eskortę, aby się przemieszczać. Umieść ją w oddziale z eskortą.", // for a female
 	L"Najemnik nie przybył jeszcze do Arulco!",
 	L"Wygląda na to, że trzeba wpierw uregulować sprawy kontraktu.",
 	L"",
