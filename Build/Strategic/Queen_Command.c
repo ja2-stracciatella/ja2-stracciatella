@@ -557,7 +557,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			if (pGroup->pPlayerList == NULL) continue;
 
 			// clear the movt for this grunt and his buddies
-			RemoveGroupWaypoints( pGroup->ubGroupID );
+			RemovePGroupWaypoints(pGroup);
 		}
 	}
 

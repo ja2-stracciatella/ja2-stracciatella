@@ -4371,7 +4371,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
 	// release memory for its waypoints
-	RemoveGroupWaypoints( pGroup->ubGroupID );
+	RemovePGroupWaypoints(pGroup);
 
 	pGroup->uiTraverseTime = 0;
 	SetGroupArrivalTime( pGroup, 0 );
