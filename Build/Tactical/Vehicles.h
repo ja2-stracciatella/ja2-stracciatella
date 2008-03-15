@@ -78,8 +78,10 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
 // Return the vehicle, iff the vehicle ID is valid, NULL otherwise
 VEHICLETYPE* GetVehicle(INT32 vehicle_id);
 
-// set up vehicle mvt for this grunt involved
-BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier );
+/* Given this grunt, find out if asscoiated vehicle has a mvt group, if so,
+ * set this grunts mvt group to the vehicle.  For pathing purposes, will be
+ * reset to zero in copying of path */
+void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 
 // update mercs position when vehicle arrives
 void UpdatePositionOfMercsInVehicle(const VEHICLETYPE*);

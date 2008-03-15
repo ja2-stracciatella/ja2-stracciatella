@@ -660,62 +660,19 @@ static BOOLEAN CopyVehiclePathToSoldier(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
+void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 {
-	// given this grunt, find out if asscoiated vehicle has a mvt group, if so, set this grunts mvt group tho the vehicle
-	// for pathing purposes, will be reset to zero in copying of path
-	INT32 iId = 0;
+	INT32 vid;
+	// Check if character is in fact in a vehicle
+	if      (s->uiStatusFlags &  SOLDIER_VEHICLE) vid = s->bVehicleID;
+	else if (s->bAssignment   == VEHICLE)         vid = s->iVehicleId;
+	else                                          return;
 
-		// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		// grab the id the character is
-		iId = pSoldier->bVehicleID;
-	}
-	else
-	{
-		// grab the id the character is
-		iId = pSoldier->iVehicleId;
-	}
-
-	if( pSoldier->pMercPath )
-	{
-		// clear soldier's path
-		pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, pSoldier->ubGroupID );
-	}
-
-	// if no group, create one for vehicle
-	//if( pVehicleList[ iId ].ubMovementGroup == 0 )
-	//{
-		// get the vehicle a mvt group
-		//pVehicleList[ iId ].ubMovementGroup = CreateNewVehicleGroupDepartingFromSector( ( UINT8 )( pVehicleList[ iId ].sSectorX ), ( UINT8 )( pVehicleList[ iId ].sSectorY ), iId );
-		//pVehicleList[ iId ].ubMovementGroup = CreateNewVehicleGroupDepartingFromSector( ( UINT8 )( pVehicleList[ iId ].sSectorX ), ( UINT8 )( pVehicleList[ iId ].sSectorY ), iId );
-
-
-		// add everyone in vehicle to this mvt group
-		//const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
-		//for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
-		//{
-		//	if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
-		//	{
-		//			// add character
-		//		AddPlayerToGroup( pVehicleList[ iId ].ubMovementGroup, pVehicleList[ iId ].pPassengers[ iCounter ] );
-		//	}
-		//}
-	//}
-
-	CopyVehiclePathToSoldier( pSoldier );
+	s->pMercPath = ClearStrategicPathList(s->pMercPath, s->ubGroupID);
+	CopyVehiclePathToSoldier(s);
 
 	// set up mvt group
-	pSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
-
-
-	return ( TRUE );
+	s->ubGroupID = pVehicleList[vid].ubMovementGroup;
 }
 
 
