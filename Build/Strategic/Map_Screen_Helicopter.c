@@ -1968,7 +1968,7 @@ static void MakeHeliReturnToBase(void)
 		pVehicleList[ iHelicopterVehicleId ].pMercPath = ClearStrategicPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
 
 		// plot path to that sector
-		pVehicleList[ iHelicopterVehicleId ].pMercPath = AppendStrategicPath( MoveToBeginningOfPathList( BuildAStrategicPath( NULL, GetLastSectorIdInVehiclePath( iHelicopterVehicleId ) , ( INT16 )( CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iLocation ][ 0 ], ubRefuelList[ iLocation ][ 1 ] ) ) , pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, FALSE /*, FALSE */ ) ), pVehicleList[ iHelicopterVehicleId ].pMercPath );
+		pVehicleList[iHelicopterVehicleId].pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE /*, FALSE */)), pVehicleList[iHelicopterVehicleId].pMercPath);
 		pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
 
 		// rebuild the movement waypoints

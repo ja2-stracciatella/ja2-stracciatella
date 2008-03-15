@@ -468,35 +468,30 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNu);
 
 
-PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSectorNum, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */ )
+PathSt* BuildAStrategicPath(const INT16 iStartSectorNum, const INT16 iEndSectorNum, const INT16 sMvtGroupNumber, const BOOLEAN fTacticalTraversal /*, BOOLEAN fTempPath */)
 {
 
  INT32 iCurrentSectorNum;
  INT32 iDelta=0;
  INT32 iPathLength;
  INT32 iCount=0;
-	PathSt* pNode = NULL;
 	PathSt* pDeleteNode = NULL;
-	PathSt* pHeadOfPathList = pPath;
  iCurrentSectorNum=iStartSectorNum;
 
 
- if (pNode==NULL)
- {
-	 // start new path list
-	 pNode=MemAlloc(sizeof(PathSt));
+	// start new path list
+	PathSt* pNode = MemAlloc(sizeof(PathSt));
 /*
-   if ( _KeyDown( CTRL ))
-		 pNode->fSpeed=SLOW_MVT;
-	 else
+	if ( _KeyDown( CTRL ))
+		pNode->fSpeed=SLOW_MVT;
+	else
 */
-		 pNode->fSpeed=NORMAL_MVT;
-	 pNode->uiSectorId=iStartSectorNum;
-	 pNode->pNext=NULL;
-   pNode->pPrev=NULL;
-	 pNode->uiEta = GetWorldTotalMin( );
-	 pHeadOfPathList = pNode;
- }
+		pNode->fSpeed=NORMAL_MVT;
+	pNode->uiSectorId=iStartSectorNum;
+	pNode->pNext=NULL;
+	pNode->pPrev=NULL;
+	pNode->uiEta = GetWorldTotalMin( );
+	PathSt* pHeadOfPathList = pNode;
 
  if(iEndSectorNum < MAP_WORLD_X-1)
 	 return NULL;
@@ -561,12 +556,10 @@ PathSt* BuildAStrategicPath(PathSt* pPath, INT16 iStartSectorNum, INT16 iEndSect
 	{
 		MemFree(pNode);
 		pHeadOfPathList = NULL;
-		pPath = pHeadOfPathList;
 	  return FALSE;
 	}
 
-	pPath=pHeadOfPathList;
-	return pPath;
+	return pHeadOfPathList;
 }
 
 
@@ -1156,10 +1149,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathSt* pNode = NULL;
-
-	// build the path
-	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE */ );
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), ubGroupID, FALSE /*, FALSE */);
 
 	if( pNode == NULL )
 	{
@@ -1180,10 +1170,7 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 
 static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY)
 {
-	PathSt* pNode = NULL;
-
-	// build the path
-	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE*/ );
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), ubGroupID, FALSE /*, FALSE*/);
 
 	if( pNode == NULL )
 	{
@@ -1206,8 +1193,6 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, IN
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathSt* pNode = NULL;
-
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
 
@@ -1217,8 +1202,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	// build the path
-	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE */ );
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), ubGroupID, FALSE /*, FALSE */);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
@@ -1248,8 +1232,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY )
 {
-	PathSt* pNode = NULL;
-
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
 
@@ -1259,8 +1241,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	// build the path
-	pNode = BuildAStrategicPath( pNode , ( INT16 )CALCULATE_STRATEGIC_INDEX( sStartX, sStartY ), ( INT16 )CALCULATE_STRATEGIC_INDEX( sDestX, sDestY ), ubGroupID, FALSE /*, FALSE */ );
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), ubGroupID, FALSE /*, FALSE */);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
