@@ -158,121 +158,53 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
 }
 
 
-static void SetUpArmorForVehicle(UINT8 ubID);
+static void SetUpArmorForVehicle(VEHICLETYPE*);
 
 
-INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType )
+INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo, const UINT8 ubType)
 {
-	// insert this vehicle into the list
-	// how many vehicles are there?
-	INT32 iVehicleIdValue = -1;
-	INT32 iCounter = 0, iCount = 0;
-	VEHICLETYPE *pTempList = NULL;
-	BOOLEAN fFoundEmpty = FALSE;
-	GROUP *pGroup;
-
-
-	if( pVehicleList != NULL )
+	INT32 vid;
+	for (vid = 0;; ++vid)
 	{
-		// not the first, add to list
-		for( iCounter = 0; iCounter < ubNumberOfVehicles ; iCounter++ )
+		if (vid == ubNumberOfVehicles)
 		{
-			// might have an empty slot
-			if( pVehicleList[ iCounter ].fValid == FALSE )
-			{
-				iCount = iCounter;
-				iCounter = ubNumberOfVehicles;
-				fFoundEmpty = TRUE;
-			  iVehicleIdValue = iCount;
-			}
+			pVehicleList = MemRealloc(pVehicleList, sizeof(*pVehicleList) * ++ubNumberOfVehicles);
+			break;
 		}
+		if (!pVehicleList[vid].fValid) break;
 	}
-
-	if( fFoundEmpty == FALSE )
-	{
-		iCount = ubNumberOfVehicles;
-	}
-
-	if( iCount == 0 )
-	{
-		pVehicleList = MemAlloc( sizeof( VEHICLETYPE ) );
-
-		// Set!
-		memset( pVehicleList, 0, sizeof( VEHICLETYPE ) );
-
-		ubNumberOfVehicles = 1;
-		iVehicleIdValue		 = 0;
-	}
-
-
-	if( ( iVehicleIdValue == -1 ) && ( iCount != 0 ) && ( fFoundEmpty == FALSE ) )
-	{
-
-		// no empty slot found, need to realloc
-		pTempList = MemAlloc( sizeof( VEHICLETYPE ) * ubNumberOfVehicles );
-
-		// copy to temp
-		memcpy( pTempList, pVehicleList, sizeof( VEHICLETYPE ) * ubNumberOfVehicles );
-
-		// now realloc
-		pVehicleList = MemRealloc( pVehicleList, ( sizeof( VEHICLETYPE ) * ( ubNumberOfVehicles + 1 ) ) );
-
-		// memset the stuff
-		memset( pVehicleList, 0, ( sizeof( VEHICLETYPE ) * ( ubNumberOfVehicles + 1 ) ) );
-
-		// now copy the stuff back
-		memcpy( pVehicleList, pTempList, sizeof( VEHICLETYPE ) * ( ubNumberOfVehicles ) );
-
-		// now get rid of crap
-		MemFree( pTempList );
-
-		// now get the index value
-		iVehicleIdValue = ubNumberOfVehicles;
-
-		ubNumberOfVehicles++;
-
-
-	}
+	VEHICLETYPE* const v = &pVehicleList[vid];
 
 	// found a slot
-	pVehicleList[ iCount ].ubMovementGroup = 0;
-	pVehicleList[ iCount ].sSectorX = sMapX;
-	pVehicleList[ iCount ].sSectorY = sMapY;
-	pVehicleList[ iCount ].sSectorZ = 0;
-	pVehicleList[ iCount ].sGridNo = sGridNo;
-	memset( pVehicleList[ iCount ].pPassengers, 0, 10 * sizeof( SOLDIERTYPE * ) );
-	pVehicleList[ iCount ].fValid = TRUE;
-	pVehicleList[ iCount ].ubVehicleType = ubType;
-	pVehicleList[ iCount ].pMercPath = NULL;
-	pVehicleList[ iCount ].fDestroyed = FALSE;
-	pVehicleList[ iCount ].ubMovementGroup  = gubVehicleMovementGroups[ iCount ];
+	memset(v, 0, sizeof(*v));
+	v->ubMovementGroup = 0;
+	v->sSectorX        = sMapX;
+	v->sSectorY        = sMapY;
+	v->sSectorZ        = 0;
+	v->sGridNo         = sGridNo;
+	v->fValid          = TRUE;
+	v->ubVehicleType   = ubType;
+	v->pMercPath       = NULL;
+	v->fDestroyed      = FALSE;
+	v->ubMovementGroup = gubVehicleMovementGroups[vid];
+	SetUpArmorForVehicle(v);
 
 	// ATE: Add movement mask to group...
-	pGroup = GetGroup( pVehicleList[ iCount ].ubMovementGroup );
-
-	if( !pGroup )
-	{
-		if( gfEditMode )
-		{
-			//This is okay, no groups exist, so simply return.
-			return iVehicleIdValue;
-		}
-		Assert( 0 );
-	}
-
-	pGroup->ubTransportationMask = g_vehicle_type_info[ubType].movement_type;
+	GROUP* const g = GetGroup(v->ubMovementGroup);
+	// This is okay, no groups exist, so simply return.
+	if (!g && gfEditMode) return vid;
+	Assert(g);
 
 	// ARM: setup group movement defaults
-	pGroup->ubSectorX = ( UINT8 ) sMapX;
-	pGroup->ubNextX   = ( UINT8 ) sMapX;
-	pGroup->ubSectorY = ( UINT8 ) sMapY;
-	pGroup->ubNextY   = ( UINT8 ) sMapY;
-	pGroup->uiTraverseTime = 0;
-	pGroup->uiArrivalTime  = 0;
+	g->ubTransportationMask = g_vehicle_type_info[ubType].movement_type;
+	g->ubSectorX            = sMapX;
+	g->ubNextX              = sMapX;
+	g->ubSectorY            = sMapY;
+	g->ubNextY              = sMapY;
+	g->uiTraverseTime       = 0;
+	g->uiArrivalTime        = 0;
 
-	SetUpArmorForVehicle( ( UINT8 )iCount );
-
-	return( iVehicleIdValue );
+	return vid;
 }
 
 
@@ -1311,7 +1243,7 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 
 
 // set up armor values for this vehicle
-static void SetUpArmorForVehicle(UINT8 ubID)
+static void SetUpArmorForVehicle(VEHICLETYPE* const v)
 {
 	INT32 iCounter = 0;
 
@@ -1319,13 +1251,13 @@ static void SetUpArmorForVehicle(UINT8 ubID)
 	// set up the internal and external armor for vehicles
 	for( iCounter = 0; iCounter < NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE; iCounter++ )
 	{
-		pVehicleList[ ubID ].sInternalHitLocations[ iCounter ] = sVehicleInternalOrigArmorValues[ pVehicleList[ ubID ].ubVehicleType ][ iCounter ];
+		v->sInternalHitLocations[iCounter] = sVehicleInternalOrigArmorValues[v->ubVehicleType][iCounter];
 	}
 
 
 	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE; iCounter++ )
 	{
-		pVehicleList[ ubID ].sExternalArmorLocationsStatus[ iCounter ] = 100;
+		v->sExternalArmorLocationsStatus[iCounter] = 100;
 	}
 	*/
 }
