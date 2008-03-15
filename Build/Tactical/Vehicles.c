@@ -77,54 +77,6 @@ static const VehicleTypeInfo g_vehicle_type_info[] =
 };
 
 
-/*
-// location of crits based on facing
-INT8 bInternalCritHitsByLocation[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ]={
-	{ ENGINE_HIT_LOCATION, ENGINE_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION,CREW_COMPARTMENT_HIT_LOCATION, RF_TIRE_HIT_LOCATION, LF_TIRE_HIT_LOCATION }, // front
-	{ ENGINE_HIT_LOCATION, LF_TIRE_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, LR_TIRE_HIT_LOCATION, GAS_TANK_HIT_LOCATION}, // left side
-	{ ENGINE_HIT_LOCATION, RF_TIRE_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, RR_TIRE_HIT_LOCATION, GAS_TANK_HIT_LOCATION}, // right side
-	{ CREW_COMPARTMENT_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, RR_TIRE_HIT_LOCATION, LR_TIRE_HIT_LOCATION, GAS_TANK_HIT_LOCATION }, // rear
-	{ ENGINE_HIT_LOCATION, RF_TIRE_HIT_LOCATION, LF_TIRE_HIT_LOCATION, RR_TIRE_HIT_LOCATION,LR_TIRE_HIT_LOCATION, GAS_TANK_HIT_LOCATION,}, // bottom side
-	{ ENGINE_HIT_LOCATION, ENGINE_HIT_LOCATION, ENGINE_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, CREW_COMPARTMENT_HIT_LOCATION, GAS_TANK_HIT_LOCATION }, // top
-};
-*/
-
-// original armor values for vehicles
-/*
-	ELDORADO_CAR = 0,
-	HUMMER,
-	ICE_CREAM_TRUCK,
-	JEEP_CAR,
-	TANK_CAR,
-	HELICOPTER,
-*/
-
-
-/*
-INT16 sVehicleExternalOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES ][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ]={
-	{ 100,100,100,100,100,100 }, // helicopter
-	{ 500,500,500,500,500,500 }, // hummer
-};
-*/
-
-/*
-// external armor values
-INT16 sVehicleInternalOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES ][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ]={
-	{ 250,250,250,250,250,250 }, // eldorado
-	{ 250,250,250,250,250,250 }, // hummer
-	{ 250,250,250,250,250,250 }, // ice cream
-	{ 250,250,250,250,250,250 }, // feep
-	{ 850,850,850,850,850,850 }, // tank
-	{ 50,50,50,50,50,50 }, // helicopter
-};
-*/
-
-// ap cost per crit
-#define COST_PER_ENGINE_CRIT 15
-#define COST_PER_TIRE_HIT 5
-//#define VEHICLE_MAX_INTERNAL 250
-
-
 // Loop through and create a few soldier squad ID's for vehicles ( max # 3 )
 void InitVehicles( )
 {
@@ -158,9 +110,6 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
 }
 
 
-static void SetUpArmorForVehicle(VEHICLETYPE*);
-
-
 INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo, const UINT8 ubType)
 {
 	INT32 vid;
@@ -187,7 +136,6 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	v->pMercPath       = NULL;
 	v->fDestroyed      = FALSE;
 	v->ubMovementGroup = gubVehicleMovementGroups[vid];
-	SetUpArmorForVehicle(v);
 
 	// ATE: Add movement mask to group...
 	GROUP* const g = GetGroup(v->ubMovementGroup);
@@ -1215,18 +1163,6 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 }
 
 
-/*
-INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocation )
-{
-	INT16 sArmorValue = 0;
-
-	sArmorValue = sVehicleInternalOrigArmorValues[ pVehicleList[ ubID ].ubVehicleType ][ ubLocation ];
-
-	// return the armor value
-	return( sArmorValue );
-}
-*/
-
 SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 {
 	FOR_ALL_SOLDIERS(s)
@@ -1240,60 +1176,6 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 
 	return NULL;
 }
-
-
-// set up armor values for this vehicle
-static void SetUpArmorForVehicle(VEHICLETYPE* const v)
-{
-	INT32 iCounter = 0;
-
-/*
-	// set up the internal and external armor for vehicles
-	for( iCounter = 0; iCounter < NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE; iCounter++ )
-	{
-		v->sInternalHitLocations[iCounter] = sVehicleInternalOrigArmorValues[v->ubVehicleType][iCounter];
-	}
-
-
-	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE; iCounter++ )
-	{
-		v->sExternalArmorLocationsStatus[iCounter] = 100;
-	}
-	*/
-}
-
-void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
-{
-	UINT8 pubDeducations = 0;
-	INT32 iCounter = 0;
-
-	(*pubPoints) += 35;
-
-	// check for state of critcals
-
-
-	// handle for each engine crit
-	pubDeducations += pVehicleList[ pSoldier->bVehicleID ].sCriticalHits[ ENGINE_HIT_LOCATION ] * COST_PER_ENGINE_CRIT;
-
-	// handle each tire
-	for( iCounter = RF_TIRE_HIT_LOCATION; iCounter < LR_TIRE_HIT_LOCATION; iCounter++ )
-	{
-		if( pVehicleList[ pSoldier->bVehicleID ].sCriticalHits[ iCounter ] )
-		{
-			pubDeducations += COST_PER_TIRE_HIT;
-		}
-	}
-
-	// make sure we don't go too far
-	if( pubDeducations > (*pubPoints) )
-	{
-		pubDeducations = (*pubPoints);
-	}
-
-	// now deduct pts
-	(*pubPoints) -= pubDeducations;
-}
-
 
 
 BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )

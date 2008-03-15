@@ -19,33 +19,6 @@ enum{
 };
 
 
-// external armor hit locations
-enum{
-	FRONT_EXTERNAL_HIT_LOCATION,
-	LEFT_EXTERNAL_HIT_LOCATION,
-	RIGHT_EXTERNAL_HIT_LOCATION,
-	REAR_EXTERNAL_HIT_LOCATION,
-	BOTTOM_EXTERNAL_HIT_LOCATION,
-	TOP_EXTERNAL_HIT_LOCATION,
-	NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE,
-};
-
-// internal critical hit locations
-enum{
-	ENGINE_HIT_LOCATION,
-	CREW_COMPARTMENT_HIT_LOCATION,
-	RF_TIRE_HIT_LOCATION,
-	LF_TIRE_HIT_LOCATION,
-	RR_TIRE_HIT_LOCATION,
-	LR_TIRE_HIT_LOCATION,
-	GAS_TANK_HIT_LOCATION,
-	NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE,
-};
-
-//extern INT8 bInternalCritHitsByLocation[NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
-
-extern INT16 sVehicleOrigArmorValues[ NUMBER_OF_TYPES_OF_VEHICLES][ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE];
-
 // struct for vehicles
 struct VEHICLETYPE
 {
@@ -58,9 +31,6 @@ struct VEHICLETYPE
  BOOLEAN fBetweenSectors;  // between sectors?
  INT16		 sGridNo;   // location in tactical
  SOLDIERTYPE *pPassengers[ 10 ];
- INT16		 sInternalHitLocations[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
- INT16		 sExternalArmorLocationsStatus[ NUMBER_OF_EXTERNAL_HIT_LOCATIONS_ON_VEHICLE ];
- INT16		 sCriticalHits[ NUMBER_OF_INTERNAL_HIT_LOCATIONS_IN_VEHICLE ];
  BOOLEAN	 fDestroyed;
  INT32		 iMovementSoundID;
  BOOLEAN fValid;
@@ -137,11 +107,6 @@ void VehicleTakeDamage(UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo,
 
 // the soldiertype containing this tactical incarnation of this vehicle
 SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId );
-
-void AdjustVehicleAPs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints );
-
-// get orig armor values for vehicle in this location
-//INT16 GetOrigInternalArmorValueForVehicleInLocation( UINT8 ubID, UINT8 ubLocation );
 
 // does it need fixing?
 BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId );

@@ -458,11 +458,7 @@ INT8 CalcActionPoints(SOLDIERTYPE *pSold)
 	HandleAPEffectDueToDrugs( pSold, &ubPoints );
 
 	// If we are a vehicle, adjust APS...
-	if ( pSold->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		AdjustVehicleAPs( pSold, &ubPoints );
-	}
-
+	if (pSold->uiStatusFlags & SOLDIER_VEHICLE) ubPoints += 35;
 
 	// if we are in boxing mode, adjust APs... THIS MUST BE LAST!
 	if ( gTacticalStatus.bBoxingState == BOXING || gTacticalStatus.bBoxingState == PRE_BOXING )
