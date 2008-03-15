@@ -584,9 +584,6 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 	ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 	v->pMercPath = CopyPaths(pSoldier->pMercPath);
 
-	// move to beginning
-	v->pMercPath = MoveToBeginningOfPathList(v->pMercPath);
-
 	// now clear soldier's path
 	pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
 
