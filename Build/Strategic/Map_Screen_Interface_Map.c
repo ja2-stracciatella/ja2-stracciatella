@@ -1644,7 +1644,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 
 
 // trace a route for a passed path...doesn't require dest char - most more general
-static BOOLEAN TracePathRoute(PathSt* pPath)
+static BOOLEAN TracePathRoute(PathSt* const pPath)
 {
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iArrow=-1;
@@ -1654,7 +1654,6 @@ static BOOLEAN TracePathRoute(PathSt* pPath)
  INT32 iDeltaA, iDeltaB, iDeltaB1;
  INT32 iDirection = 0;
  BOOLEAN fUTurnFlag=FALSE;
-	PathSt* pNode = NULL;
 	PathSt* pPastNode = NULL;
 	PathSt* pNextNode = NULL;
 
@@ -1662,14 +1661,7 @@ static BOOLEAN TracePathRoute(PathSt* pPath)
  {
 	 return FALSE;
  }
-
-
- while( pPath->pPrev )
- {
-	 pPath = pPath->pPrev;
- }
-
- pNode = pPath;
+	PathSt* pNode = MoveToBeginningOfPathList(pPath);
 
   iDirection=-1;
 	if (pNode->pNext)
