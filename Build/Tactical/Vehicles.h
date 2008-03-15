@@ -109,7 +109,7 @@ void VehicleTakeDamage(UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo,
 SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId );
 
 // does it need fixing?
-BOOLEAN DoesVehicleNeedAnyRepairs( INT32 iVehicleId );
+BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE*);
 
 // repair the vehicle
 INT8 RepairVehicle( INT32 iVehicleId, INT8 bTotalPts, BOOLEAN *pfNothingToRepair );

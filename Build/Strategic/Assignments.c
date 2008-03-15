@@ -7075,10 +7075,7 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId
 	if (v->fDestroyed) return FALSE;
 
 	// is it damaged at all?
-	if ( !DoesVehicleNeedAnyRepairs( iVehicleId ) )
-	{
-		return(FALSE);
-	}
+	if (!DoesVehicleNeedAnyRepairs(v)) return FALSE;
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
 	if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) return FALSE;
