@@ -678,45 +678,23 @@ PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList)
 	return( pHeadOfPathList );
 }
 
-PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup)
+
+PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 {
 	// will clear out a strategic path and return head of list as NULL
-	PathSt* pNode = pHeadOfPath;
-	PathSt* pDeleteNode = pHeadOfPath;
 
 	// is there in fact a path?
-	if( pNode == NULL )
+	if (pHeadOfPath == NULL) return NULL;
+
+	for (PathSt* n = pHeadOfPath; n != NULL;)
 	{
-		// no path, leave
-		return ( pNode );
+		PathSt* const del = n;
+		n = n->pNext;
+		MemFree(del);
 	}
 
-	// clear list
-	while( pNode -> pNext )
-	{
-		// set up delete node
-		pDeleteNode = pNode;
-
-		// move to next node
-		pNode = pNode -> pNext;
-
-		// delete delete node
-		MemFree( pDeleteNode );
-	}
-
-	// clear out last node
-	MemFree( pNode );
-
-	pNode = NULL;
-	pDeleteNode = NULL;
-
-	if( ( sMvtGroup != -1 ) && ( sMvtGroup != 0 ) )
-	{
-	  // clear this groups mvt pathing
-	  RemoveGroupWaypoints( ( UINT8 )sMvtGroup );
-	}
-
-	return( pNode );
+	if (sMvtGroup != -1 && sMvtGroup != 0) RemoveGroupWaypoints(sMvtGroup);
+	return NULL;
 }
 
 
