@@ -1546,10 +1546,6 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY )
 	// set up mvt group for helicopter
 	SetUpHelicopterForMovement( );
 
-	// move to beginning of list
-	//pHelicopterPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
-	MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
-
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
 	pVehicleList[ iHelicopterVehicleId ].pMercPath = AppendStrategicPath( MoveToBeginningOfPathList( BuildAStrategicPath( NULL, GetLastSectorOfHelicoptersPath( ), ( INT16 )( sX + sY*( MAP_WORLD_X ) ), pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, FALSE /*, FALSE */ ) ), pVehicleList[ iHelicopterVehicleId ].pMercPath );
