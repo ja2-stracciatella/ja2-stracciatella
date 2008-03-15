@@ -1132,11 +1132,8 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			SaveGameHeader.ubMin = (UINT8)guiMin;
 
 			//Get the sector value to save.
-			GetBestPossibleSectorXYZValues( &SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ );
+			GetBestPossibleSectorXYZValues(&SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ);
 
-//			SaveGameHeader.sSectorX = gWorldSectorX;
-//			SaveGameHeader.sSectorY = gWorldSectorY;
-//			SaveGameHeader.bSectorZ = gbWorldSectorZ;
 			SaveGameHeader.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
 			SaveGameHeader.iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
 			wcscpy( SaveGameHeader.sSavedGameDesc, gzGameDescTextField );

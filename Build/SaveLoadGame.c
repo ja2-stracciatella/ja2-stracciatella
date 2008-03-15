@@ -551,50 +551,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	SaveGameHeader.sInitialGameOptions = gGameOptions;
 
 	//Get the sector value to save.
-	GetBestPossibleSectorXYZValues( &SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ );
-
-/*
-
-	//if the current sector is valid
-	if( gfWorldLoaded )
-	{
-		SaveGameHeader.sSectorX = gWorldSectorX;
-		SaveGameHeader.sSectorY = gWorldSectorY;
-		SaveGameHeader.bSectorZ = gbWorldSectorZ;
-	}
-	else if( Squad[ iCurrentTacticalSquad ][ 0 ] && iCurrentTacticalSquad != NO_CURRENT_SQUAD )
-	{
-//		if( Squad[ iCurrentTacticalSquad ][ 0 ]->bAssignment != IN_TRANSIT )
-		{
-			SaveGameHeader.sSectorX = Squad[ iCurrentTacticalSquad ][ 0 ]->sSectorX;
-			SaveGameHeader.sSectorY = Squad[ iCurrentTacticalSquad ][ 0 ]->sSectorY;
-			SaveGameHeader.bSectorZ = Squad[ iCurrentTacticalSquad ][ 0 ]->bSectorZ;
-		}
-	}
-	else
-	{
-		BOOLEAN				fFoundAMerc=FALSE;
-
-		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
-		{
-			if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
-			{
-				SaveGameHeader.sSectorX = s->sSectorX;
-				SaveGameHeader.sSectorY = s->sSectorY;
-				SaveGameHeader.bSectorZ = s->bSectorZ;
-				fFoundAMerc = TRUE;
-				break;
-			}
-		}
-
-		if( !fFoundAMerc )
-		{
-			SaveGameHeader.sSectorX = gWorldSectorX;
-			SaveGameHeader.sSectorY = gWorldSectorY;
-			SaveGameHeader.bSectorZ = gbWorldSectorZ;
-		}
-	}
-*/
+	GetBestPossibleSectorXYZValues(&SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ);
 
 	SaveGameHeader.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
 	SaveGameHeader.iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
@@ -3666,65 +3623,57 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 #endif
 
-void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *pbSectorZ )
+
+void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSectorY, INT8* const pbSectorZ)
 {
 	//if the current sector is valid
-	if( gfWorldLoaded )
+	if (gfWorldLoaded)
 	{
 		*psSectorX = gWorldSectorX;
 		*psSectorY = gWorldSectorY;
 		*pbSectorZ = gbWorldSectorZ;
+		return;
 	}
-	else if( iCurrentTacticalSquad != NO_CURRENT_SQUAD && Squad[ iCurrentTacticalSquad ][ 0 ] )
+
+	if (iCurrentTacticalSquad != NO_CURRENT_SQUAD)
 	{
-		if( Squad[ iCurrentTacticalSquad ][ 0 ]->bAssignment != IN_TRANSIT )
+		const SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][0];
+		if (s != NULL && s->bAssignment != IN_TRANSIT)
 		{
-			*psSectorX = Squad[ iCurrentTacticalSquad ][ 0 ]->sSectorX;
-			*psSectorY = Squad[ iCurrentTacticalSquad ][ 0 ]->sSectorY;
-			*pbSectorZ = Squad[ iCurrentTacticalSquad ][ 0 ]->bSectorZ;
+			*psSectorX = s->sSectorX;
+			*psSectorY = s->sSectorY;
+			*pbSectorZ = s->bSectorZ;
+			return;
 		}
 	}
-	else
+
+	//loop through all the mercs on the players team to find the one that is not moving
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		BOOLEAN				fFoundAMerc=FALSE;
-
-		//loop through all the mercs on the players team to find the one that is not moving
-		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+		if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 		{
-			if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
-			{
-				//we found an alive, merc that is not moving
-				*psSectorX = s->sSectorX;
-				*psSectorY = s->sSectorY;
-				*pbSectorZ = s->bSectorZ;
-				fFoundAMerc = TRUE;
-				break;
-			}
-		}
-
-		//if we didnt find a merc
-		if( !fFoundAMerc )
-		{
-			//loop through all the mercs and find one that is moving
-			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
-			{
-				//we found an alive, merc that is not moving
-				*psSectorX = s->sSectorX;
-				*psSectorY = s->sSectorY;
-				*pbSectorZ = s->bSectorZ;
-				fFoundAMerc = TRUE;
-				break;
-			}
-
-			//if we STILL havent found a merc, give up and use the -1, -1, -1
-			if( !fFoundAMerc )
-			{
-				*psSectorX = gWorldSectorX;
-				*psSectorY = gWorldSectorY;
-				*pbSectorZ = gbWorldSectorZ;
-			}
+			//we found an alive, merc that is not moving
+			*psSectorX = s->sSectorX;
+			*psSectorY = s->sSectorY;
+			*pbSectorZ = s->bSectorZ;
+			return;
 		}
 	}
+
+	// loop through all the mercs and find one that is moving
+	CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+	{
+		//we found an alive, merc that is not moving
+		*psSectorX = s->sSectorX;
+		*psSectorY = s->sSectorY;
+		*pbSectorZ = s->bSectorZ;
+		return;
+	}
+
+	// if we STILL havent found a merc, give up and use the -1, -1, -1
+	*psSectorX = gWorldSectorX;
+	*psSectorY = gWorldSectorY;
+	*pbSectorZ = gbWorldSectorZ;
 }
 
 

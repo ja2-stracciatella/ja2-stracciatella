@@ -63,7 +63,7 @@ BOOLEAN		LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile );
 
 BOOLEAN DoesUserHaveEnoughHardDriveSpace(void);
 
-void GetBestPossibleSectorXYZValues( INT16 *psSectorX, INT16 *psSectorY, INT8 *pbSectorZ );
+void GetBestPossibleSectorXYZValues(INT16* psSectorX, INT16* psSectorY, INT8* pbSectorZ);
 
 
 UINT32	guiLastSaveGameNum;
