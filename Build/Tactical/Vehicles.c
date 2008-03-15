@@ -597,69 +597,6 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-// set up soldier mvt for vehicle
-static BOOLEAN CopyVehiclePathToSoldier(SOLDIERTYPE* pSoldier)
-{
-	INT32 iId;
-
-	// valid soldier?
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-
-	// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		// grab the id the character is
-		iId = pSoldier->bVehicleID;
-	}
-	else
-	{
-		// grab the id the character is
-		iId = pSoldier->iVehicleId;
-	}
-
-	// check if vehicle is valid
-	if( iId != -1 )
-	{
-		// check if vehicle has mvt group, if not, get one for it
-		if (GetVehicle(iId) == NULL)
-		{
-			return ( FALSE );
-		}
-	}
-
-
-	// reset mvt group for the grunt
-	// ATE: NOT if we are the vehicle
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		pSoldier->ubGroupID = pVehicleList[ iId ].ubMovementGroup;
-	}
-
-	// valid vehicle
-
-	// clear grunt path
-	if( pSoldier->pMercPath )
-	{
-		// clear soldier's path
-		pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
-	}
-
-	// now copy over
-	pSoldier->pMercPath = CopyPaths(pVehicleList[ iId ].pMercPath, pSoldier->pMercPath );
-
-	return( TRUE );
-
-}
-
-
 void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 {
 	INT32 vid;
@@ -667,12 +604,12 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 	if      (s->uiStatusFlags &  SOLDIER_VEHICLE) vid = s->bVehicleID;
 	else if (s->bAssignment   == VEHICLE)         vid = s->iVehicleId;
 	else                                          return;
+	VEHICLETYPE* const v = GetVehicle(vid);
+	Assert(v != NULL);
 
-	s->pMercPath = ClearStrategicPathList(s->pMercPath, s->ubGroupID);
-	CopyVehiclePathToSoldier(s);
-
-	// set up mvt group
-	s->ubGroupID = pVehicleList[vid].ubMovementGroup;
+	ClearStrategicPathList(s->pMercPath, s->ubGroupID);
+	s->pMercPath = CopyPaths(v->pMercPath, NULL);
+	s->ubGroupID = v->ubMovementGroup;
 }
 
 

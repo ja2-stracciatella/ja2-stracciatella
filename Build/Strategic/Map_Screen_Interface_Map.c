@@ -1485,19 +1485,7 @@ static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* 
 
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 {
-	PathSt* pPath = NULL;
-
-/* ARM: Hopefully no longer required once using GetSoldierMercPathPtr() ???
-	// check if in vehicle, if so, copy path to vehicle
-	if( ( pCharacter->bAssignment == VEHICLE )||( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		// get the real path from vehicle's structure and copy it into this soldier's
-		CopyVehiclePathToSoldier( pCharacter );
-	}
-*/
-
-	pPath = GetSoldierMercPathPtr( pCharacter );
-
+	PathSt* const pPath = GetSoldierMercPathPtr(pCharacter);
   // trace real route
 	TracePathRoute( FALSE, TRUE, pPath );
 	AnimateRoute( pPath );
