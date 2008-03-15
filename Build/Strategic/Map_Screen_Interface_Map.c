@@ -1480,14 +1480,14 @@ static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
 
 
 static void AnimateRoute(PathSt* pPath);
-static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* pPath);
+static BOOLEAN TracePathRoute(PathSt* pPath);
 
 
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 {
 	PathSt* const pPath = GetSoldierMercPathPtr(pCharacter);
   // trace real route
-	TracePathRoute( FALSE, TRUE, pPath );
+	TracePathRoute(pPath);
 	AnimateRoute( pPath );
 }
 
@@ -1495,7 +1495,7 @@ void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
 void DisplaySoldierTempPath(void)
 {
 	// now render temp route
-	TracePathRoute( FALSE, TRUE,  pTempCharacterPath );
+	TracePathRoute(pTempCharacterPath);
 }
 
 
@@ -1509,7 +1509,7 @@ void DisplayHelicopterPath( void )
   ClipBlitsToMapViewRegion( );
 
 	// trace both lists..temp is conditional if cursor has sat in same sector grid long enough
-  TracePathRoute( TRUE, TRUE, pVehicleList[ iHelicopterVehicleId ].pMercPath );
+  TracePathRoute(pVehicleList[iHelicopterVehicleId].pMercPath);
 	AnimateRoute( pVehicleList[ iHelicopterVehicleId ].pMercPath );
 
 	// restore
@@ -1520,10 +1520,7 @@ void DisplayHelicopterPath( void )
 void DisplayHelicopterTempPath( void )
 {
 	//should we draw temp path?
-	if( fDrawTempHeliPath )
-	{
-	  TracePathRoute( TRUE, TRUE, pTempHelicopterPath );
-	}
+	if (fDrawTempHeliPath) TracePathRoute(pTempHelicopterPath);
 }
 
 
@@ -1647,7 +1644,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 
 
 // trace a route for a passed path...doesn't require dest char - most more general
-static BOOLEAN TracePathRoute(BOOLEAN fCheckFlag, BOOLEAN fForceUpDate, PathSt* pPath)
+static BOOLEAN TracePathRoute(PathSt* pPath)
 {
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iArrow=-1;
