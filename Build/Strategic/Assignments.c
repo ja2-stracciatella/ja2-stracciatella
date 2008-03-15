@@ -8379,20 +8379,18 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 							PreChangeAssignment(pSoldier);
 
 							// is the squad between sectors
-							if( Squad[ bAssignment ][ 0 ] )
+							const SOLDIERTYPE* const t = Squad[bAssignment][0];
+							if (t != NULL && t->fBetweenSectors)
 							{
-								if( Squad[ bAssignment ][ 0 ]->fBetweenSectors )
+								// between sectors, remove from old mvt group
+								if (pSoldier->bAssignment >= ON_DUTY)
 								{
-									// between sectors, remove from old mvt group
-									if (pSoldier->bAssignment >= ON_DUTY)
+									// remove from group
+									// the guy wasn't in a sqaud, but moving through a sector?
+									if ( pSoldier->ubGroupID != 0 )
 									{
-										// remove from group
-										// the guy wasn't in a sqaud, but moving through a sector?
-										if ( pSoldier->ubGroupID != 0 )
-										{
-											// now remove from mvt group
-											RemovePlayerFromGroup( pSoldier->ubGroupID, pSoldier );
-										}
+										// now remove from mvt group
+										RemovePlayerFromGroup( pSoldier->ubGroupID, pSoldier );
 									}
 								}
 							}

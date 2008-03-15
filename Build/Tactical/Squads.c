@@ -156,15 +156,13 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 	for( bCounter =0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; bCounter++ )
 	{
+		const SOLDIERTYPE* const t = Squad[bSquadValue][bCounter];
 		// check if on current squad and current slot?
-		if( Squad[ bSquadValue ][ bCounter ] == pCharacter )
-		{
-			// 'successful of sorts, if there, then he's 'added'
-			return ( TRUE );
-		}
+		// 'successful of sorts, if there, then he's 'added'
+		if (t == pCharacter) return TRUE;
 
 		// free slot, add here
-		if( Squad[ bSquadValue ][ bCounter ] == NULL )
+		if (t == NULL)
 		{
 			// check if squad empty, if not check sector x,y,z are the same as this guys
 			if( SquadIsEmpty( bSquadValue ) == FALSE )
@@ -178,21 +176,12 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				}
 				// remove them
 				RemoveCharacterFromSquads( pCharacter );
-
-//				fBetweenSectors =  Squad[ bSquadValue ][ 0 ]->fBetweenSectors;
 			}
 			else
 			{
 				// remove them
 				RemoveCharacterFromSquads( pCharacter );
 			}
-
-/*
-			if( fBetweenSectors == TRUE )
-			{
-				pCharacter->fBetweenSectors = TRUE;
-			}
-*/
 
 			// copy path of squad to this char
 			CopyPathOfSquadToCharacter( pCharacter, bSquadValue );
@@ -538,13 +527,9 @@ INT8 NumberOfNonEPCsInSquad( INT8 bSquadValue )
 	// find number of characters in particular squad.
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
-
+		const SOLDIERTYPE* const s = Squad[bSquadValue][bCounter];
 		// valid slot?
-		if( Squad[ bSquadValue ][ bCounter ] != NULL && !AM_AN_EPC( Squad[ bSquadValue ][ bCounter ] ) )
-		{
-			// yep
-			bSquadCount++;
-		}
+		if (s != NULL && !AM_AN_EPC(s)) ++bSquadCount;
 	}
 
 	// return number found
@@ -563,12 +548,9 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue )
 	// find number of characters in particular squad.
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
+		const SOLDIERTYPE* const s = Squad[bSquadValue][bCounter];
 		// valid slot?
-		if ( ( Squad[ bSquadValue ][ bCounter ] != NULL ) && ControllingRobot( Squad[ bSquadValue ][ bCounter ] ) )
-		{
-			// yep
-			return( TRUE );
-		}
+		if (s != NULL && ControllingRobot(s)) return TRUE;
 	}
 
 	// return number found
@@ -584,14 +566,14 @@ BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMa
 
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
+		const SOLDIERTYPE* const s = Squad[bSquadValue][bCounter];
 		// if valid soldier, get current sector and return
-		if( Squad[ bSquadValue ][ bCounter ] != NULL )
+		if (s != NULL)
 		{
-			*sMapX = Squad[ bSquadValue ][ bCounter ] -> sSectorX;
-			*sMapY = Squad[ bSquadValue ][ bCounter ] -> sSectorY;
-			*sMapZ = ( INT16 )Squad[ bSquadValue ][ bCounter ] -> bSectorZ;
-
-			return ( TRUE );
+			*sMapX = s->sSectorX;
+			*sMapY = s->sSectorY;
+			*sMapZ = s->bSectorZ;
+			return TRUE;
 		}
 
 	}
@@ -610,10 +592,11 @@ static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadVa
 
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
-		if( ( Squad[ bSquadValue ][ bCounter ] != pCharacter ) &&( Squad[ bSquadValue ][ bCounter ] != NULL ) )
+		const SOLDIERTYPE* const t = Squad[bSquadValue][bCounter];
+		if (t != NULL && t != pCharacter)
 		{
 			// valid character, copy paths
-			 pCharacter -> pMercPath = CopyPaths(  Squad[ bSquadValue ][ bCounter ] -> pMercPath, pCharacter -> pMercPath);
+			pCharacter->pMercPath = CopyPaths(t->pMercPath, pCharacter->pMercPath);
 
 			 // return success
 			 return ( TRUE );
@@ -643,15 +626,16 @@ BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 	// copy each person on squad, skip this character
   for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
-		if( ( Squad[ bSquadValue ][ bCounter ] != pCharacter ) &&( Squad[ bSquadValue ][ bCounter ] != NULL ) )
+		SOLDIERTYPE* const t = Squad[bSquadValue][bCounter];
+		if (t != NULL && t != pCharacter)
 		{
 			// valid character, copy paths
 
 			// first empty path
-			Squad[ bSquadValue ][ bCounter ] -> pMercPath = ClearStrategicPathList( Squad[ bSquadValue ][ bCounter ] -> pMercPath, -1 );
+			t->pMercPath = ClearStrategicPathList(t->pMercPath, -1);
 
 			// then copy
-			Squad[ bSquadValue ][ bCounter ] -> pMercPath = CopyPaths( pCharacter -> pMercPath, Squad[ bSquadValue ][ bCounter ] -> pMercPath );
+			t->pMercPath = CopyPaths(pCharacter->pMercPath, t->pMercPath);
 
 			 // successful at least once
 			 fSuccess = TRUE;
@@ -726,11 +710,9 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 	{
 		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 		{
-			if(  Squad[ iCurrentTacticalSquad ][ iCounter ] != NULL )
-			{
-				// squad set, now add soldiers in
-				CheckForAndAddMercToTeamPanel( Squad[ iCurrentTacticalSquad ][ iCounter ] );
-			}
+			SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][iCounter];
+			// squad set, now add soldiers in
+			if (s != NULL) CheckForAndAddMercToTeamPanel(s);
 		}
 	}
 
@@ -772,11 +754,9 @@ void RebuildCurrentSquad( void )
 	{
 		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 		{
-			if(  Squad[ iCurrentTacticalSquad ][ iCounter ] != NULL )
-			{
-				// squad set, now add soldiers in
-				CheckForAndAddMercToTeamPanel( Squad[ iCurrentTacticalSquad ][ iCounter ] );
-			}
+			SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][iCounter];
+			// squad set, now add soldiers in
+			if (s != NULL) CheckForAndAddMercToTeamPanel(s);
 		}
 
 		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
@@ -804,21 +784,6 @@ void ExamineCurrentSquadLights( void )
 	{
 		if (s->bInSector && s->bLife >= OKLIFE) PositionSoldierLight(s);
 	}
-
-	// check if valid value passed
-	//if( ( iCurrentTacticalSquad >= NUMBER_OF_SQUADS ) || ( iCurrentTacticalSquad < 0 ) )
-	//{
-		// no
-	//	return;
-	//}
-
-	//for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	//{
-	//	if(  Squad[ iCurrentTacticalSquad ][ iCounter ] != NULL )
-	//	{
-	//		PositionSoldierLight( Squad[ iCurrentTacticalSquad ][ iCounter ] );
-	//	}
-	//}
 }
 
 
@@ -837,10 +802,14 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 	// go through memebrs of squad...if anyone on this map, return true
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		if(  Squad[ iCurrentSquad ][ iCounter ] != NULL )
+		const SOLDIERTYPE* const s = Squad[iCurrentSquad][iCounter];
+		if (s != NULL)
 		{
 			// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-			if( ( Squad[ iCurrentSquad ][ iCounter ]->sSectorX == gWorldSectorX ) && ( Squad[ iCurrentSquad ][ iCounter ]->sSectorY == gWorldSectorY ) && Squad[ iCurrentSquad ][ iCounter ]->bSectorZ == gbWorldSectorZ && Squad[ iCurrentSquad ][ iCounter ]->fBetweenSectors != TRUE )
+			if (s->sSectorX == gWorldSectorX  &&
+					s->sSectorY == gWorldSectorY  &&
+					s->bSectorZ == gbWorldSectorZ &&
+					s->fBetweenSectors != TRUE)
 			{
 				return( TRUE );
 			}
@@ -914,10 +883,8 @@ BOOLEAN SaveSquadInfoToSavedGameFile( HWFILE hFile )
 	{
 		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
 		{
-			if( Squad[ iCounter ][ iCounterB ] )
-				sSquadSaveStruct[ iCounter ][ iCounterB ].uiID	= Squad[ iCounter ][ iCounterB ]->ubID;
-			else
-				sSquadSaveStruct[ iCounter ][ iCounterB ].uiID = -1;
+			const SOLDIERTYPE* const s = Squad[iCounter][iCounterB];
+			sSquadSaveStruct[iCounter][iCounterB].uiID = (s != NULL ? s->ubID : -1);
 		}
 	}
 
@@ -964,10 +931,8 @@ BOOLEAN LoadSquadInfoFromSavedGameFile( HWFILE hFile )
 	{
 		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
 		{
-			if( sSquadSaveStruct[ iCounter ][ iCounterB ].uiID != -1 )
-				Squad[iCounter][iCounterB] = GetMan(sSquadSaveStruct[iCounter][iCounterB].uiID);
-			else
-				Squad[ iCounter ][ iCounterB ] = NULL;
+			const INT16 id = sSquadSaveStruct[iCounter][iCounterB].uiID;
+			Squad[iCounter][iCounterB] = (id != -1 ? GetMan(id) : NULL);
 		}
 	}
 
@@ -986,12 +951,13 @@ void GetLocationOfSquad( INT16 *sX, INT16 *sY, INT8 *bZ, INT8 bSquadValue )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		if( Squad[ bSquadValue ][ iCounter ] )
+		const SOLDIERTYPE* const s = Squad[bSquadValue][iCounter];
+		if (s)
 		{
 			// valid guy
-			*sX = Squad[ bSquadValue ][ iCounter ]->sSectorX;
-			*sY = Squad[ bSquadValue ][ iCounter ]->sSectorY;
-			*bZ = Squad[ bSquadValue ][ iCounter ]->bSectorZ;
+			*sX = s->sSectorX;
+			*sY = s->sSectorY;
+			*bZ = s->bSectorZ;
 		}
 	}
 }
@@ -1002,10 +968,8 @@ BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
 	{
-		if( Squad[ bSquadValue ][ iCounter ] )
-		{
-			return( Squad[ bSquadValue ][ iCounter ]->fBetweenSectors );
-		}
+		const SOLDIERTYPE* const s = Squad[bSquadValue][iCounter];
+		if (s) return s->fBetweenSectors;
 	}
 
 	return( FALSE );
@@ -1021,13 +985,12 @@ static void RebuildSquad(INT8 bSquadValue)
 	{
 		for( iCounter = 0 ;iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD - 1; iCounter++ )
 		{
-			if( Squad[ bSquadValue ][ iCounter ] == NULL )
+			SOLDIERTYPE** const cur  = &Squad[bSquadValue][iCounter];
+			SOLDIERTYPE** const next = &Squad[bSquadValue][iCounter + 1];
+			if (*cur == NULL && *next != NULL)
 			{
-				if( Squad[ bSquadValue ][ iCounter + 1 ] != NULL )
-				{
-					Squad[ bSquadValue ][ iCounter ] = Squad[ bSquadValue ][ iCounter + 1 ];
-					Squad[ bSquadValue ][ iCounter + 1 ] = NULL;
-				}
+				*cur  = *next;
+				*next = NULL;
 			}
 		}
 	}
@@ -1171,7 +1134,6 @@ BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier)
 
 INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 {
-	SOLDIERTYPE *pSoldier;
 	INT8 bCounter = 0;
 	INT8 bSquadCount = 0;
 
@@ -1183,13 +1145,9 @@ INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 	// find number of characters in particular squad.
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
-
-		// valid slot?
-		if( Squad[ bSquadValue ][ bCounter ] != NULL )
+		const SOLDIERTYPE* const pSoldier = Squad[bSquadValue][bCounter];
+		if (pSoldier != NULL)
 		{
-			// yep
-			pSoldier = Squad[ bSquadValue ][ bCounter ] ;
-
 			//Kris:  This breaks the CLIENT of this function, tactical traversal.  Do NOT check for EPCS or ROBOT here.
 			//if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) &&
 			if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -1206,7 +1164,6 @@ INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 
 BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 {
-	SOLDIERTYPE *pSoldier;
 	INT8 bCounter = 0;
 
 	if( bSquadValue == NO_CURRENT_SQUAD )
@@ -1217,18 +1174,8 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 	// find number of characters in particular squad.
 	for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
 	{
-		// valid slot?
-		if( Squad[ bSquadValue ][ bCounter ] != NULL )
-		{
-			// yep
-			pSoldier = Squad[ bSquadValue ][ bCounter ] ;
-
-			// If we are an EPC or ROBOT, don't allow this
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-			{
-				return( TRUE );
-			}
-		}
+		const SOLDIERTYPE* const s = Squad[bSquadValue][bCounter];
+		if (s != NULL && s->uiStatusFlags & SOLDIER_VEHICLE) return TRUE;
 	}
 
 	return(FALSE );
