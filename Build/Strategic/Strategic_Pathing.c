@@ -958,10 +958,8 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 }
 
 
-PathSt* CopyPaths(PathSt* src, PathSt* const pDestPath)
+PathSt* CopyPaths(PathSt* src)
 {
-	ClearStrategicPathList(pDestPath, -1);
-
 	if (src == NULL) return NULL;
 
 	PathSt* const head = MemAlloc(sizeof(*head));

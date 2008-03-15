@@ -580,15 +580,12 @@ BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
 	}
 
 	// valid vehicle
-
-	// now clear soldier's path
-	pVehicleList[ iId ].pMercPath = ClearStrategicPathList( pVehicleList[ iId ].pMercPath, pVehicleList[ iId ].ubMovementGroup );
-
-	// now copy over
-	pVehicleList[ iId ].pMercPath = CopyPaths( pSoldier->pMercPath, pVehicleList[ iId ].pMercPath );
+	VEHICLETYPE* const v = &pVehicleList[iId];
+	ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
+	v->pMercPath = CopyPaths(pSoldier->pMercPath);
 
 	// move to beginning
-	pVehicleList[ iId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iId ].pMercPath );
+	v->pMercPath = MoveToBeginningOfPathList(v->pMercPath);
 
 	// now clear soldier's path
 	pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
@@ -608,7 +605,7 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 	Assert(v != NULL);
 
 	ClearStrategicPathList(s->pMercPath, s->ubGroupID);
-	s->pMercPath = CopyPaths(v->pMercPath, NULL);
+	s->pMercPath = CopyPaths(v->pMercPath);
 	s->ubGroupID = v->ubMovementGroup;
 }
 

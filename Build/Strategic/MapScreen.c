@@ -9306,20 +9306,22 @@ void CopyPathToAllSelectedCharacters(PathSt* pPath)
 		if (!c->selected) continue;
 
 		SOLDIERTYPE* const pSoldier = c->merc;
+		PathSt*      const cur_path = GetSoldierMercPathPtr(pSoldier);
 		// skip itself!
-		if ( GetSoldierMercPathPtr( pSoldier ) != pPath )
+		if (cur_path != pPath)
 		{
-			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+			ClearStrategicPathList(cur_path, 0);
+			if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-				pVehicleList[ pSoldier->bVehicleID ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->bVehicleID ].pMercPath );
+				pVehicleList[pSoldier->bVehicleID].pMercPath = CopyPaths(pPath);
 			}
 			else if( pSoldier->bAssignment == VEHICLE )
 			{
-				pVehicleList[ pSoldier->iVehicleId ].pMercPath = CopyPaths( pPath, pVehicleList[ pSoldier->iVehicleId ].pMercPath );
+				pVehicleList[pSoldier->iVehicleId].pMercPath = CopyPaths(pPath);
 			}
 			else
 			{
-				pSoldier->pMercPath = CopyPaths( pPath, pSoldier->pMercPath );
+				pSoldier->pMercPath = CopyPaths(pPath);
 			}
 
 			// don't use CopyPathToCharactersSquadIfInOne(), it will whack the original pPath by replacing that merc's path!
@@ -9539,7 +9541,8 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 		SetUpCursorForStrategicMap();
 
 		// remember the helicopter's current path so we can restore it if need be
-		gpHelicopterPreviousMercPath = CopyPaths( pVehicleList[ iHelicopterVehicleId ].pMercPath, gpHelicopterPreviousMercPath );
+		ClearStrategicPathList(gpHelicopterPreviousMercPath, 0);
+		gpHelicopterPreviousMercPath = CopyPaths(pVehicleList[iHelicopterVehicleId].pMercPath);
 
 		// affects Skyrider's dialogue
 		SetFactTrue( FACT_SKYRIDER_USED_IN_MAPSCREEN );
@@ -10126,7 +10129,8 @@ void RememberPreviousPathForAllSelectedChars(void)
 		if (!c->selected) continue;
 
 		// remember his previous path by copying it to his slot in the array kept for that purpose
-		gpCharacterPreviousMercPath[iCounter] = CopyPaths(GetSoldierMercPathPtr(c->merc), gpCharacterPreviousMercPath[iCounter]);
+		ClearStrategicPathList(gpCharacterPreviousMercPath[iCounter], 0);
+		gpCharacterPreviousMercPath[iCounter] = CopyPaths(GetSoldierMercPathPtr(c->merc));
 	}
 }
 
@@ -10152,10 +10156,8 @@ static void RestorePreviousPaths(void)
 		{
 			gpHelicopterPreviousMercPath = MoveToBeginningOfPathList( gpHelicopterPreviousMercPath );
 
-			// clear current path
-			*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-			// replace it with the previous one
-			*ppMovePath = CopyPaths( gpHelicopterPreviousMercPath, *ppMovePath );
+			ClearStrategicPathList(*ppMovePath, ubGroupId);
+			*ppMovePath = CopyPaths(gpHelicopterPreviousMercPath);
 			// will need to rebuild waypoints
 			fPathChanged = TRUE;
 		}
@@ -10220,10 +10222,8 @@ static void RestorePreviousPaths(void)
 			{
 				gpCharacterPreviousMercPath[ iCounter ] = MoveToBeginningOfPathList( gpCharacterPreviousMercPath[ iCounter ] );
 
-				// clear current path
-				*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-				// replace it with the previous one
-				*ppMovePath = CopyPaths( gpCharacterPreviousMercPath[ iCounter ], *ppMovePath );
+				ClearStrategicPathList(*ppMovePath, ubGroupId);
+				*ppMovePath = CopyPaths(gpCharacterPreviousMercPath[iCounter]);
 				// will need to rebuild waypoints
 				fPathChanged = TRUE;
 			}

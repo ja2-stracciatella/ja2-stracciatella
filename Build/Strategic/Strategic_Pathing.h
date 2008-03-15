@@ -55,7 +55,7 @@ INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);
 INT16 GetLastSectorIdInVehiclePath( INT32 iId );
 
 // copy paths
-PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath);
+PathSt* CopyPaths(PathSt* src);
 
 // rebuild way points for strategic mapscreen path changes
 void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup);

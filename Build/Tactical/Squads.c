@@ -596,7 +596,8 @@ static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadVa
 		if (t != NULL && t != pCharacter)
 		{
 			// valid character, copy paths
-			pCharacter->pMercPath = CopyPaths(t->pMercPath, pCharacter->pMercPath);
+			ClearStrategicPathList(pCharacter->pMercPath, 0);
+			pCharacter->pMercPath = CopyPaths(t->pMercPath);
 
 			 // return success
 			 return ( TRUE );
@@ -630,12 +631,8 @@ BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		if (t != NULL && t != pCharacter)
 		{
 			// valid character, copy paths
-
-			// first empty path
-			t->pMercPath = ClearStrategicPathList(t->pMercPath, -1);
-
-			// then copy
-			t->pMercPath = CopyPaths(pCharacter->pMercPath, t->pMercPath);
+			ClearStrategicPathList(t->pMercPath, -1);
+			t->pMercPath = CopyPaths(pCharacter->pMercPath);
 
 			 // successful at least once
 			 fSuccess = TRUE;
