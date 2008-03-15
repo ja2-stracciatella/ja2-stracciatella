@@ -1480,7 +1480,7 @@ static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
 
 
 static void AnimateRoute(PathSt* pPath);
-static BOOLEAN TracePathRoute(PathSt* pPath);
+static void TracePathRoute(PathSt*);
 
 
 void DisplaySoldierPath( SOLDIERTYPE *pCharacter )
@@ -1644,7 +1644,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 
 
 // trace a route for a passed path...doesn't require dest char - most more general
-static BOOLEAN TracePathRoute(PathSt* const pPath)
+static void TracePathRoute(PathSt* const pPath)
 {
  BOOLEAN fSpeedFlag=FALSE;
  INT32 iArrow=-1;
@@ -1657,10 +1657,7 @@ static BOOLEAN TracePathRoute(PathSt* const pPath)
 	PathSt* pPastNode = NULL;
 	PathSt* pNextNode = NULL;
 
- if ( pPath==NULL )
- {
-	 return FALSE;
- }
+	if (pPath == NULL) return;
 	PathSt* pNode = MoveToBeginningOfPathList(pPath);
 
   iDirection=-1;
@@ -1681,8 +1678,7 @@ static BOOLEAN TracePathRoute(PathSt* const pPath)
 		 {
       iDeltaA=(INT16)pNode->uiSectorId-(INT16)pPastNode->uiSectorId;
 		  iDeltaB=(INT16)pNode->uiSectorId-(INT16)pNextNode->uiSectorId;
-			if (iDeltaA ==0)
-		   return( FALSE );
+			if (iDeltaA == 0) return;
      if(pNode->fSpeed)
 			 fSpeedFlag=FALSE;
 		 else
@@ -2341,16 +2337,12 @@ static BOOLEAN TracePathRoute(PathSt* const pPath)
 
 		 pPastNode=pNode;
 		 pNode=pNode->pNext;
-		 if(!pNode)
-			 return( FALSE );
+			if (!pNode) return;
 		 if (pNode->pNext)
 		  pNextNode=pNode->pNext;
 		 else
       pNextNode=NULL;
 		}
-
-		return ( TRUE );
-
 }
 
 
