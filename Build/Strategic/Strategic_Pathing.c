@@ -1046,7 +1046,7 @@ void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup)
 	//       group would add new arrival events without removing the existing one(s).
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, sMvtGroup );
 
-	RemoveGroupWaypoints( ( UINT8 )sMvtGroup );
+	RemovePGroupWaypoints(pGroup);
 
 
 	if( pGroup->fPlayer )
