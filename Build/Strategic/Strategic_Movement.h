@@ -138,7 +138,7 @@ void RemoveGroup( UINT8 ubGroupID );//takes a groupID
 void RemovePGroup( GROUP *pGroup ); //same function, but takes a GROUP*
 
 //Clears a groups waypoints.  This is necessary when sending new orders such as different routes.
-void RemovePGroupWaypoints(GROUP*);
+void RemoveGroupWaypoints(GROUP*);
 
 //Player grouping functions
 //.........................

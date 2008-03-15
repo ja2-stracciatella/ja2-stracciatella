@@ -697,7 +697,7 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 	{
 		GROUP* const g = GetGroup(sMvtGroup);
 		Assert(g);
-		RemovePGroupWaypoints(g);
+		RemoveGroupWaypoints(g);
 	}
 	return NULL;
 }
@@ -1051,8 +1051,7 @@ void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup)
 	//       group would add new arrival events without removing the existing one(s).
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, sMvtGroup );
 
-	RemovePGroupWaypoints(pGroup);
-
+	RemoveGroupWaypoints(pGroup);
 
 	if( pGroup->fPlayer )
 	{
@@ -1447,11 +1446,8 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 	}
 
 	// clear the waypoints for this group too - no mercpath = no waypoints!
-	RemovePGroupWaypoints( pGroup );
-	// not used anymore
-	//SetWayPointsAsCanceled( pCurrentMerc->ubGroupID );
+	RemoveGroupWaypoints(pGroup);
 }
-
 
 
 // clears the contents of the soldier's mercpPath, as well as his vehicle path if he is a / or is in a vehicle

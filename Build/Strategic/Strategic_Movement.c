@@ -2191,7 +2191,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 }
 
 
-void RemovePGroupWaypoints( GROUP *pGroup )
+void RemoveGroupWaypoints(GROUP* const pGroup)
 {
 	WAYPOINT* wp;
 	//if there aren't any waypoints to delete, then return.
@@ -2256,9 +2256,7 @@ void RemovePGroup( GROUP *pGroup )
 		curr->next = pGroup->next;
 	}
 
-
-	//Remove the waypoints.
-	RemovePGroupWaypoints( pGroup );
+	RemoveGroupWaypoints(pGroup);
 
 	//Remove the arrival event if applicable.
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
@@ -2317,8 +2315,7 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 	// make sure it is valid
 	Assert( pGroup );
 
-	//Remove waypoints
-	RemovePGroupWaypoints( pGroup );
+	RemoveGroupWaypoints(pGroup);
 
 	// set sector x and y to passed values
 	pGroup->ubSectorX = pGroup->ubNextX = ( UINT8 ) sSectorX;
@@ -2350,11 +2347,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 	Assert( pGroup );
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
-	//Remove waypoints
-	if( !gfRandomizingPatrolGroup )
-	{
-		RemovePGroupWaypoints( pGroup );
-	}
+	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(pGroup);
 
 	// set sector x and y to passed values
 	pGroup->ubSectorX = pGroup->ubNextX = (UINT8)SECTORX( ubSectorID );
@@ -2375,8 +2368,7 @@ static void SetGroupNextSectorValue(INT16 sSectorX, INT16 sSectorY, UINT8 ubGrou
 	// make sure it is valid
 	Assert( pGroup );
 
-	//Remove waypoints
-	RemovePGroupWaypoints( pGroup );
+	RemoveGroupWaypoints(pGroup);
 
 	// set sector x and y to passed values
 	pGroup->ubNextX = ( UINT8 ) sSectorX;
@@ -4363,8 +4355,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
 	// prevent it from arriving empty
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
-	// release memory for its waypoints
-	RemovePGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(pGroup);
 
 	pGroup->uiTraverseTime = 0;
 	SetGroupArrivalTime( pGroup, 0 );
