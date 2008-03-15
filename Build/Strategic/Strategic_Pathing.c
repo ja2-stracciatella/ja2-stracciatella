@@ -693,7 +693,12 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 		MemFree(del);
 	}
 
-	if (sMvtGroup != -1 && sMvtGroup != 0) RemoveGroupWaypoints(sMvtGroup);
+	if (sMvtGroup != -1 && sMvtGroup != 0)
+	{
+		GROUP* const g = GetGroup(sMvtGroup);
+		Assert(g);
+		RemovePGroupWaypoints(g);
+	}
 	return NULL;
 }
 

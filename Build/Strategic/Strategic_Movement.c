@@ -2190,13 +2190,6 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 }
 
-void RemoveGroupWaypoints( UINT8 ubGroupID )
-{
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	Assert( pGroup );
-	RemovePGroupWaypoints( pGroup );
-}
 
 void RemovePGroupWaypoints( GROUP *pGroup )
 {
