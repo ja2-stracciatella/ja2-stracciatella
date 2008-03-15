@@ -773,7 +773,7 @@ BOOLEAN SetUpMvtGroupForVehicle( SOLDIERTYPE *pSoldier )
 
 VEHICLETYPE* GetVehicle(const INT32 vehicle_id)
 {
-	if (vehicle_id < 0 || ubNumberOfVehicles <= vehicle_id) return FALSE;
+	if (vehicle_id < 0 || ubNumberOfVehicles <= vehicle_id) return NULL;
 	VEHICLETYPE* const v = &pVehicleList[vehicle_id];
 	return v->fValid ? v : NULL;
 }
