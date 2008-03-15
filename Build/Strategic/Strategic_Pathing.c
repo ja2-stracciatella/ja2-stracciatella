@@ -950,69 +950,41 @@ INT16 GetLastSectorIdInVehiclePath( INT32 iId )
 	}
 
 	return sLastSector;
-
-
 }
 
 
-
-PathSt* CopyPaths(PathSt* pSourcePath, PathSt* pDestPath)
+PathSt* CopyPaths(PathSt* src, PathSt* const pDestPath)
 {
-	PathSt* pDestNode = pDestPath;
-	PathSt* pCurNode = pSourcePath;
-	// copies path from source to dest
+	ClearStrategicPathList(pDestPath, -1);
 
+	if (src == NULL) return NULL;
 
-	// NULL out dest path
-	pDestNode = ClearStrategicPathList( pDestNode, -1 );
-	Assert( pDestNode == NULL );
+	PathSt* const head = MemAlloc(sizeof(*head));
+	head->uiSectorId = src->uiSectorId;
+	head->uiEta      = src->uiEta;
+	head->fSpeed     = src->fSpeed;
+	head->pPrev      = NULL;
 
-
-	// start list off
-	if ( pCurNode != NULL )
+	for (PathSt* dst = head;;)
 	{
-		pDestNode = MemAlloc( sizeof( PathSt ) );
+		src = src->pNext;
+		if (src == NULL)
+		{
+			dst->pNext = NULL;
+			break;
+		}
 
-		// set next and prev nodes
-		pDestNode -> pPrev = NULL;
-		pDestNode -> pNext = NULL;
+		PathSt* const p = MemAlloc(sizeof(*p));
+		p->uiSectorId	= src->uiSectorId;
+		p->uiEta      = src->uiEta;
+		p->fSpeed     = src->fSpeed;
+		p->pPrev      = dst;
 
-		// copy sector value and times
-		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
-		pDestNode -> uiEta			= pCurNode -> uiEta;
-		pDestNode -> fSpeed			= pCurNode -> fSpeed;
-
-		pCurNode = pCurNode -> pNext;
+		dst->pNext = p;
+		dst = p;
 	}
 
-	while( pCurNode != NULL )
-	{
-
-		pDestNode -> pNext = MemAlloc( sizeof( PathSt ) );
-
-		// set next's previous to current
-		pDestNode -> pNext -> pPrev = pDestNode;
-
-		// set next's next to null
-		pDestNode -> pNext -> pNext = NULL;
-
-		// increment ptr
-		pDestNode = pDestNode -> pNext;
-
-		// copy sector value and times
-		pDestNode -> uiSectorId	= pCurNode -> uiSectorId;
-		pDestNode -> uiEta			= pCurNode -> uiEta;
-		pDestNode -> fSpeed			= pCurNode -> fSpeed;
-
-		pCurNode = pCurNode -> pNext;
-	}
-
-
-	// move back to beginning fo list
-	pDestNode = MoveToBeginningOfPathList( pDestNode );
-
-	// return to head of path
-	return ( pDestNode );
+	return head;
 }
 
 
