@@ -470,93 +470,57 @@ static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNu);
 
 PathSt* BuildAStrategicPath(const INT16 iStartSectorNum, const INT16 iEndSectorNum, const INT16 sMvtGroupNumber, const BOOLEAN fTacticalTraversal)
 {
-
- INT32 iCurrentSectorNum;
- INT32 iDelta=0;
- INT32 iPathLength;
- INT32 iCount=0;
-	PathSt* pDeleteNode = NULL;
- iCurrentSectorNum=iStartSectorNum;
-
-
 	// start new path list
-	PathSt* pNode = MemAlloc(sizeof(PathSt));
-/*
-	if ( _KeyDown( CTRL ))
-		pNode->fSpeed=SLOW_MVT;
-	else
-*/
-		pNode->fSpeed=NORMAL_MVT;
-	pNode->uiSectorId=iStartSectorNum;
-	pNode->pNext=NULL;
-	pNode->pPrev=NULL;
-	pNode->uiEta = GetWorldTotalMin( );
-	PathSt* pHeadOfPathList = pNode;
+	PathSt* p = MemAlloc(sizeof(*p));
+	p->fSpeed     = NORMAL_MVT;
+	p->uiSectorId = iStartSectorNum;
+	p->pNext      = NULL;
+	p->pPrev      = NULL;
+	p->uiEta      = GetWorldTotalMin();
+	PathSt* pHeadOfPathList = p;
 
- if(iEndSectorNum < MAP_WORLD_X-1)
-	 return NULL;
+	if (iEndSectorNum < MAP_WORLD_X - 1) return NULL;
 
- iPathLength=((INT32)FindStratPath(((INT16)iStartSectorNum),((INT16)iEndSectorNum), sMvtGroupNumber, fTacticalTraversal ));
- while(iPathLength > iCount)
- {
-	 switch(gusMapPathingData[iCount])
-	 {
-		 case(NORTH):
-			 iDelta=NORTH_MOVE;
-		 break;
-		 case(SOUTH):
-			 iDelta=SOUTH_MOVE;
-     break;
-		 case(EAST):
-			 iDelta=EAST_MOVE;
-     break;
-		 case(WEST):
-			 iDelta=WEST_MOVE;
-     break;
-	 }
-	 iCount++;
-   // create new node
-   iCurrentSectorNum+=iDelta;
-
-   if(!AddSectorToPathList(pHeadOfPathList, (UINT16)iCurrentSectorNum))
-	 {
-		 pNode=pHeadOfPathList;
-		 // intersected previous node, delete path to date
-		 if(!pNode)
-			 return NULL;
-		 while(pNode->pNext)
-				   pNode=pNode->pNext;
-			// start backing up
-			while(pNode->uiSectorId!=(UINT32)iStartSectorNum)
-					{
-					 pDeleteNode=pNode;
-					 pNode=pNode->pPrev;
-					 pNode->pNext=NULL;
-					 MemFree(pDeleteNode);
-					}
-     return NULL;
-	 }
-
-	 pHeadOfPathList = pNode;
-	 if(!pNode)
-		 return NULL;
-	 while(pNode->pNext)
-		 pNode=pNode->pNext;
-
- }
-
-  pNode=pHeadOfPathList;
-
-	if(!pNode)
-		return NULL;
-  while(pNode->pNext)
-		 pNode=pNode->pNext;
-
-	if (!pNode->pPrev)
+	INT32 iCurrentSectorNum = iStartSectorNum;
+	INT32 iDelta            = 0;
+	const INT32 iPathLength = FindStratPath(iStartSectorNum, iEndSectorNum, sMvtGroupNumber, fTacticalTraversal);
+	for (INT32 i = 0; i < iPathLength; ++i)
 	{
-		MemFree(pNode);
-		pHeadOfPathList = NULL;
-	  return FALSE;
+		switch (gusMapPathingData[i])
+		{
+			case NORTH: iDelta = NORTH_MOVE; break;
+			case SOUTH: iDelta = SOUTH_MOVE; break;
+			case EAST:  iDelta = EAST_MOVE;  break;
+			case WEST:  iDelta = WEST_MOVE;  break;
+		}
+		// create new node
+		iCurrentSectorNum += iDelta;
+
+		if (!AddSectorToPathList(pHeadOfPathList, (UINT16)iCurrentSectorNum))
+		{
+			p = pHeadOfPathList;
+			// intersected previous node, delete path to date
+			if (!p) return NULL;
+			while (p->pNext) p = p->pNext;
+			// start backing up
+			while (p->uiSectorId != (UINT32)iStartSectorNum)
+			{
+				PathSt* const pDeleteNode = p;
+				p        = p->pPrev;
+				p->pNext = NULL;
+				MemFree(pDeleteNode);
+			}
+			return NULL;
+		}
+
+		pHeadOfPathList = p;
+		while (p->pNext) p = p->pNext;
+	}
+
+	if (!p->pPrev)
+	{
+		MemFree(p);
+		return NULL;
 	}
 
 	return pHeadOfPathList;
