@@ -2118,7 +2118,7 @@ static void TracePathRoute(PathSt* const pPath)
 }
 
 
-static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate);
+static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fForceUpDate);
 
 
 static void AnimateRoute(PathSt* pPath)
@@ -2127,11 +2127,11 @@ static void AnimateRoute(PathSt* pPath)
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// the animated path
-  if( TraceCharAnimatedRoute( pPath, FALSE, FALSE ))
+	if (TraceCharAnimatedRoute(pPath, FALSE))
   {
 // ARM? Huh?  Why the same thing twice more?
-    TraceCharAnimatedRoute( pPath, FALSE, TRUE );
-    TraceCharAnimatedRoute( pPath, FALSE, TRUE );
+		TraceCharAnimatedRoute(pPath, TRUE);
+		TraceCharAnimatedRoute(pPath, TRUE);
 	}
 }
 
@@ -2193,7 +2193,7 @@ static void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 i
 }
 
 
-static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN fForceUpDate)
+static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceUpDate)
 {
 	static PathSt* pCurrentNode = NULL;
  static BOOLEAN fUpDateFlag=FALSE;
@@ -2282,9 +2282,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fCheckFlag, BOOLEAN
   	// sufficient time, update base time
     giAnimateRouteBaseTime=GetJA2Clock();
     fUpDateFlag=!fUpDateFlag;
-
-  	if(fCheckFlag)
-		  return TRUE;
 
 		fNextNode=TRUE;
   }
