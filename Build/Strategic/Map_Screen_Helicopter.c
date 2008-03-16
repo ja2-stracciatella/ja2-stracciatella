@@ -1951,35 +1951,33 @@ void PayOffSkyriderDebtIfAny( )
 
 static void MakeHeliReturnToBase(void)
 {
-	INT32 iLocation = 0;
-
-
 	// if already at a refueling point
-	if ( CheckForArrivalAtRefuelPoint() )
+	if (CheckForArrivalAtRefuelPoint())
 	{
-		ReFuelHelicopter( );
+		ReFuelHelicopter();
 	}
 	else
 	{
 		// choose destination (closest refueling sector)
-		iLocation = LocationOfNearestRefuelPoint( TRUE );
+		const INT32 iLocation = LocationOfNearestRefuelPoint(TRUE);
 
+		VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
 		// null out path
-		pVehicleList[ iHelicopterVehicleId ].pMercPath = ClearStrategicPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+		v->pMercPath = ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 
 		// plot path to that sector
-		pVehicleList[iHelicopterVehicleId].pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE)), pVehicleList[iHelicopterVehicleId].pMercPath);
-		pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
+		v->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE)), v->pMercPath);
+		v->pMercPath = MoveToBeginningOfPathList(v->pMercPath);
 
 		// rebuild the movement waypoints
-		RebuildWayPointsForGroupPath( pVehicleList[ iHelicopterVehicleId ].pMercPath, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+		RebuildWayPointsForGroupPath(v->pMercPath, v->ubMovementGroup);
 
 		fHeliReturnStraightToBase = TRUE;
-		fHoveringHelicopter = FALSE;
+		fHoveringHelicopter       = FALSE;
 	}
 
 	// stop time compression if it's on so player can digest this
-	StopTimeCompression( );
+	StopTimeCompression();
 }
 
 
