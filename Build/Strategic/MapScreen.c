@@ -10140,8 +10140,6 @@ static void RestorePreviousPaths(void)
 		// if the helicopter had a previous path
 		if( gpHelicopterPreviousMercPath != NULL )
 		{
-			gpHelicopterPreviousMercPath = MoveToBeginningOfPathList( gpHelicopterPreviousMercPath );
-
 			ClearStrategicPathList(*ppMovePath, ubGroupId);
 			*ppMovePath = CopyPaths(gpHelicopterPreviousMercPath);
 			// will need to rebuild waypoints
