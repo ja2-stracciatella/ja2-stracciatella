@@ -523,7 +523,7 @@ PathSt* BuildAStrategicPath(const INT16 iStartSectorNum, const INT16 iEndSectorN
 		return NULL;
 	}
 
-	return pHeadOfPathList;
+	return MoveToBeginningOfPathList(pHeadOfPathList);
 }
 
 
@@ -1076,8 +1076,6 @@ BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStar
 		return( FALSE );
 	}
 
-	pNode = MoveToBeginningOfPathList( pNode );
-
 	// start movement to next sector
 	RebuildWayPointsForGroupPath( pNode, ubGroupID );
 
@@ -1099,8 +1097,6 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(UINT8 ubGroupID, IN
 
 	// remove tail from path
 	pNode = RemoveTailFromStrategicPath( pNode );
-
-	pNode = MoveToBeginningOfPathList( pNode );
 
 	// start movement to next sector
 	RebuildWayPointsForGroupPath( pNode, ubGroupID );
@@ -1138,8 +1134,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 			return( TRUE );
 		}
 	}
-
-	pNode = MoveToBeginningOfPathList( pNode );
 
 	// start movement to next sector
 	RebuildWayPointsForGroupPath( pNode, ubGroupID );
@@ -1180,8 +1174,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 
 	// remove tail from path
 	pNode = RemoveTailFromStrategicPath( pNode );
-
-	pNode = MoveToBeginningOfPathList( pNode );
 
 	// start movement to next sector
 	RebuildWayPointsForGroupPath( pNode, ubGroupID );

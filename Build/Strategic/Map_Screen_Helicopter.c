@@ -1963,7 +1963,7 @@ static void MakeHeliReturnToBase(void)
 
 		VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
 		ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
-		v->pMercPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE));
+		v->pMercPath = BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE);
 		RebuildWayPointsForGroupPath(v->pMercPath, v->ubMovementGroup);
 
 		fHeliReturnStraightToBase = TRUE;
