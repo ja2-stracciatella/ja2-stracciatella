@@ -5760,13 +5760,7 @@ void AbortMovementPlottingMode( void )
 	pTempCharacterPath = ClearStrategicPathList(pTempCharacterPath, 0);
 
 	// clear the helicopter's temporary path (this is the route being constantly updated on the map)
-	if( pTempHelicopterPath )
-	{
-		// make sure we're at the beginning
-		pTempHelicopterPath = MoveToBeginningOfPathList( pTempHelicopterPath );
-		pTempHelicopterPath = ClearStrategicPathList( pTempHelicopterPath, 0 );
-	}
-
+	pTempHelicopterPath = ClearStrategicPathList(pTempHelicopterPath, 0);
 
 	EndConfirmMapMoveMode( );
 

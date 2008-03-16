@@ -736,7 +736,7 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 		}
 	}
 
-	pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
+	pNode = pTempHelicopterPath;
 
 	// any path yet?
 	if( pNode != NULL )
@@ -1762,7 +1762,7 @@ INT16 GetNumSafeSectorsInPath( void )
 	}
 
 
-  pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
+	pNode = pTempHelicopterPath;
 	// any path yet?
 	if( pNode != NULL )
 	{
@@ -1843,7 +1843,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		}
 	}
 
-  pNode = MoveToBeginningOfPathList( pTempHelicopterPath );
+	pNode = pTempHelicopterPath;
 	// any path yet?
 	if( pNode != NULL )
 	{
