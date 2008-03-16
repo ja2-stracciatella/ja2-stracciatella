@@ -10204,8 +10204,6 @@ static void RestorePreviousPaths(void)
 			// if we have the previous path stored for the dest char
 			if( gpCharacterPreviousMercPath[ iCounter ] )
 			{
-				gpCharacterPreviousMercPath[ iCounter ] = MoveToBeginningOfPathList( gpCharacterPreviousMercPath[ iCounter ] );
-
 				ClearStrategicPathList(*ppMovePath, ubGroupId);
 				*ppMovePath = CopyPaths(gpCharacterPreviousMercPath[iCounter]);
 				// will need to rebuild waypoints
