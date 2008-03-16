@@ -563,65 +563,20 @@ PathSt* BuildAStrategicPath(const INT16 iStartSectorNum, const INT16 iEndSectorN
 }
 
 
-static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNum)
+static BOOLEAN AddSectorToPathList(PathSt* path, const UINT16 uiSectorNum)
 {
-	PathSt* pNode = NULL;
-	PathSt* pTempNode = NULL;
-	PathSt* pHeadOfList = pPath;
-  pNode=pPath;
+	if (uiSectorNum < MAP_WORLD_X - 1) return FALSE;
 
-  if(uiSectorNum < MAP_WORLD_X-1)
-		return FALSE;
+	while (path->pNext) path = path->pNext;
 
-	if (pNode==NULL)
-		{
-		 pNode=MemAlloc(sizeof(PathSt));
-
-		 // Implement EtaCost Array as base EtaCosts of sectors
-		 // pNode->uiEtaCost=EtaCost[uiSectorNum];
-     pNode->uiSectorId=uiSectorNum;
-		 pNode->uiEta= GetWorldTotalMin( );
-		 pNode->pNext=NULL;
-		 pNode->pPrev=NULL;
-/*
-     if ( _KeyDown( CTRL ))
-	       pNode->fSpeed=SLOW_MVT;
-	   else
-*/
-		   pNode->fSpeed=NORMAL_MVT;
-
-
-		 return TRUE;
-		}
-	 else
-		 {
-		  //if (pNode->uiSectorId==uiSectorNum)
-			//	  return FALSE;
-			while(pNode->pNext)
-			{
-      //  if (pNode->uiSectorId==uiSectorNum)
-			//	  return FALSE;
-				pNode=pNode->pNext;
-
-			}
-
-			pTempNode=MemAlloc(sizeof(PathSt));
-      pTempNode->uiEta=0;
-			pNode->pNext=pTempNode;
-			pTempNode->uiSectorId=uiSectorNum;
-			pTempNode->pPrev=pNode;
-			pTempNode->pNext=NULL;
-/*
-      if ( _KeyDown( CTRL ))
-       pTempNode->fSpeed=SLOW_MVT;
-      else
-*/
-			 pTempNode->fSpeed=NORMAL_MVT;
-      pNode=pTempNode;
-
-	 }
-	 pPath = pHeadOfList;
-	 return TRUE;
+	PathSt* const p = MemAlloc(sizeof(*p));
+	path->pNext   = p;
+	p->uiEta      = 0;
+	p->uiSectorId = uiSectorNum;
+	p->pPrev      = path;
+	p->pNext      = NULL;
+	p->fSpeed     = NORMAL_MVT;
+	return TRUE;
 }
 
 
