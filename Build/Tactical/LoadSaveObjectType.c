@@ -77,6 +77,7 @@ const BYTE* ExtractObject(const BYTE* Src, OBJECTTYPE* o)
 
 				default: goto extract_status;
 			}
+			break;
 
 		default:
 extract_status:
@@ -173,6 +174,7 @@ BYTE* InjectObject(BYTE* Dst, const OBJECTTYPE* o)
 
 				default: goto inject_status;
 			}
+			break;
 
 		default:
 inject_status:
