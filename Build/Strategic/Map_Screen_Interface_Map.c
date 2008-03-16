@@ -1552,7 +1552,7 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY )
 void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 {
 	// clear old temp path
-	pTempHelicopterPath = ClearStrategicPathList( pTempHelicopterPath, 0 );
+	pTempHelicopterPath = ClearStrategicPathList(MoveToBeginningOfPathList(pTempHelicopterPath), 0);
 
 	// is cursor allowed here?..if not..don't build temp path
 	if( !IsTheCursorAllowedToHighLightThisSector( sX, sY ) )

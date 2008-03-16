@@ -1,3 +1,4 @@
+(r3325, r3327) Plug vanilla memory leaks which occur during strategic movement planning.
 (r3274) Fix a vanilla bug: Only consume one adrenaline booster at a time, even when multiple are selected (only the effects of one are applied).
 (r3214) Fix an error in r2460 which caused that only one merc at a time could be put into a vehicle.
 (r3192) Fix a vanilla bug, which allowed erroneously freeing POWs by giving multiple mercs an assignment at once along with the POW.
