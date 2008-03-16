@@ -1294,7 +1294,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 
 	// will plot a path from current position to sX, sY
 	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pCharacter->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), fTacticalTraversal /*, FALSE */)), pCharacter->pMercPath);
+	pCharacter->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), fTacticalTraversal)), pCharacter->pMercPath);
 
 	// move to beginning of list
 	pCharacter->pMercPath = MoveToBeginningOfPathList( pCharacter->pMercPath );
@@ -1322,7 +1322,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const I
 		return;
 	}
 
-	pTempCharacterPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, GetSoldierGroupId(pCharacter), FALSE /*, TRUE */));
+	pTempCharacterPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, GetSoldierGroupId(pCharacter), FALSE));
 }
 
 
@@ -1541,7 +1541,7 @@ void PlotPathForHelicopter( INT16 sX, INT16 sY )
 
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pVehicleList[iHelicopterVehicleId].pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE /*, FALSE */)), pVehicleList[iHelicopterVehicleId].pMercPath);
+	pVehicleList[iHelicopterVehicleId].pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE)), pVehicleList[iHelicopterVehicleId].pMercPath);
 
 	// move to beginning of list
 	pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
@@ -1561,7 +1561,7 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 	}
 
 	// build path
-	pTempHelicopterPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE /*, TRUE */));
+	pTempHelicopterPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE));
 }
 
 
