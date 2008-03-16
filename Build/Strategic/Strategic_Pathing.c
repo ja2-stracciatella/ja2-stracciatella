@@ -678,6 +678,7 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 
 	// is there in fact a path?
 	if (pHeadOfPath == NULL) return NULL;
+	Assert(pHeadOfPath->pPrev == NULL);
 
 	for (PathSt* n = pHeadOfPath; n != NULL;)
 	{

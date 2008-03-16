@@ -5821,7 +5821,7 @@ static void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(void)
 				// clear the temp path
 				if( pTempCharacterPath )
 				{
-					pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, 0 );
+					pTempCharacterPath = ClearStrategicPathList(MoveToBeginningOfPathList(pTempCharacterPath), 0);
 				}
 			}
 
