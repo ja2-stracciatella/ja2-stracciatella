@@ -1517,34 +1517,27 @@ void DisplayHelicopterTempPath( void )
 }
 
 
-void PlotPathForHelicopter( INT16 sX, INT16 sY )
+void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 {
 	// will plot the path for the helicopter
 
 	// no heli...go back
-	if( !fShowAircraftFlag || !fHelicopterAvailable )
-	{
-		return;
-	}
+	if (!fShowAircraftFlag || !fHelicopterAvailable) return;
 
 	// is cursor allowed here?..if not..don't build path
-	if( !IsTheCursorAllowedToHighLightThisSector( sX, sY ) )
-	{
-		return;
-	}
+	if (!IsTheCursorAllowedToHighLightThisSector(sX, sY)) return;
 
 	// set up mvt group for helicopter
-	SetUpHelicopterForMovement( );
+	SetUpHelicopterForMovement();
 
+	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pVehicleList[iHelicopterVehicleId].pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE)), pVehicleList[iHelicopterVehicleId].pMercPath);
-
-	// move to beginning of list
-	pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
+	v->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), v->ubMovementGroup, FALSE)), MoveToBeginningOfPathList(v->pMercPath));
 
 	fMapPanelDirty = TRUE;
 }
+
 
 void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 {
