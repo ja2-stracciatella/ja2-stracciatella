@@ -1962,14 +1962,8 @@ static void MakeHeliReturnToBase(void)
 		const INT32 iLocation = LocationOfNearestRefuelPoint(TRUE);
 
 		VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
-		// null out path
-		v->pMercPath = ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
-
-		// plot path to that sector
-		v->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE)), v->pMercPath);
-		v->pMercPath = MoveToBeginningOfPathList(v->pMercPath);
-
-		// rebuild the movement waypoints
+		ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
+		v->pMercPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE));
 		RebuildWayPointsForGroupPath(v->pMercPath, v->ubMovementGroup);
 
 		fHeliReturnStraightToBase = TRUE;
