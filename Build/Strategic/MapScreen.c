@@ -5757,12 +5757,7 @@ void AbortMovementPlottingMode( void )
 	ClearPreviousPaths();
 
 	// clear the character's temporary path (this is the route being constantly updated on the map)
-	if( pTempCharacterPath )
-	{
-		// make sure we're at the beginning
-		pTempCharacterPath = MoveToBeginningOfPathList( pTempCharacterPath );
-		pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, 0 );
-	}
+	pTempCharacterPath = ClearStrategicPathList(pTempCharacterPath, 0);
 
 	// clear the helicopter's temporary path (this is the route being constantly updated on the map)
 	if( pTempHelicopterPath )
@@ -5819,10 +5814,7 @@ static void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(void)
 				gfRenderPBInterface = TRUE;
 
 				// clear the temp path
-				if( pTempCharacterPath )
-				{
-					pTempCharacterPath = ClearStrategicPathList(MoveToBeginningOfPathList(pTempCharacterPath), 0);
-				}
+				pTempCharacterPath = ClearStrategicPathList(pTempCharacterPath, 0);
 			}
 
 			// reset fact temp path has been drawn

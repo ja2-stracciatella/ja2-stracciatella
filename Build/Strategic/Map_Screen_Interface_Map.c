@@ -1313,9 +1313,6 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 
 void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const INT16 sX, const INT16 sY)
 {
-	// make sure we're at the beginning
-	pTempCharacterPath = MoveToBeginningOfPathList( pTempCharacterPath );
-
 	// clear old temp path
 	pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, -1 );
 
@@ -1325,8 +1322,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const I
 		return;
 	}
 
-	// build path
-	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), FALSE /*, TRUE */);
+	pTempCharacterPath = MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, GetSoldierGroupId(pCharacter), FALSE /*, TRUE */));
 }
 
 
