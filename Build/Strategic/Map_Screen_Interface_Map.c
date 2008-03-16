@@ -1296,9 +1296,6 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
 	pCharacter->pMercPath = AppendStrategicPath(MoveToBeginningOfPathList(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), fTacticalTraversal)), pCharacter->pMercPath);
 
-	// move to beginning of list
-	pCharacter->pMercPath = MoveToBeginningOfPathList( pCharacter->pMercPath );
-
 	// check if in vehicle, if so, copy path to vehicle
 	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
