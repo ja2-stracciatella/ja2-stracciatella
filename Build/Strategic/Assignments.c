@@ -5183,6 +5183,7 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 				break;
 			case( REMOVE_MERC ):
+				bSelectedInfoChar = -1;
 				StrategicRemoveMerc( pSoldier );
 
 				// dirty region
