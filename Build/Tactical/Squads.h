@@ -81,7 +81,7 @@ BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMa
 void RebuildCurrentSquad( void );
 
 // copy path from character back to squad
-BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
+void CopyPathOfCharacterToSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue);
 
 // what is the id of the current squad?
 INT32 CurrentSquad( void );

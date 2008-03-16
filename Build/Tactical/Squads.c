@@ -609,20 +609,10 @@ static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadVa
 }
 
 
-BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+void CopyPathOfCharacterToSquad(SOLDIERTYPE* const pCharacter, const INT8 bSquadValue)
 {
 	// copy path of this character to members of squad
-	BOOLEAN fSuccess = FALSE;
 	INT8 bCounter =0;
-
-  // anyone else on squad?
-	if( NumberOfPeopleInSquad( bSquadValue ) < 2)
-	{
-		// nope
-
-		// return failure
-		return ( FALSE );
-	}
 
 	// copy each person on squad, skip this character
   for( bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; bCounter++ )
@@ -633,14 +623,8 @@ BOOLEAN CopyPathOfCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			// valid character, copy paths
 			ClearStrategicPathList(t->pMercPath, -1);
 			t->pMercPath = CopyPaths(pCharacter->pMercPath);
-
-			 // successful at least once
-			 fSuccess = TRUE;
 		}
 	}
-
-	// return success?
-	return ( fSuccess );
 }
 
 
