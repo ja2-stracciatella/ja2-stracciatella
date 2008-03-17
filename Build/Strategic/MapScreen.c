@@ -1627,13 +1627,8 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 		return( 0 );
 	}
 
-	if( pPath == NULL )
-	{
-		return( 0 );
-	}
-
-	pPath = MoveToBeginningOfPathList( pPath );
-
+	if (pPath == NULL) return 0;
+	Assert(pPath->pPrev == NULL);
 
 	if( fPlotForHelicopter == FALSE )
 	{
