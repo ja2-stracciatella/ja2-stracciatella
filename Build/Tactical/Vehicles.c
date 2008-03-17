@@ -1,4 +1,5 @@
 #include "LoadSaveVehicleType.h"
+#include "SaveLoadGame.h"
 #include "Soldier_Find.h"
 #include "Vehicles.h"
 #include "Strategic_Pathing.h"
@@ -1117,32 +1118,7 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32
 		if (!v->fValid) continue;
 
 		if (!ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion)) return FALSE;
-
-		//Load the number of nodes
-		UINT32 uiTotalNodeCount;
-		if (!FileRead(hFile, &uiTotalNodeCount, sizeof(UINT32))) return FALSE;
-		if (uiTotalNodeCount == 0) continue;
-
-		PathSt* path = NULL;
-		for (UINT32 uiNodeCount = 0; uiNodeCount < uiTotalNodeCount; ++uiNodeCount)
-		{
-			PathSt* const n = MemAlloc(sizeof(*n));
-			if (n == NULL) return FALSE;
-
-			if (!FileRead(hFile, n, sizeof(PathSt))) return FALSE;
-			n->pPrev = path;
-			n->pNext = NULL;
-
-			if (path == NULL)
-			{
-				v->pMercPath = n;
-			}
-			else
-			{
-				path->pNext = n;
-			}
-			path = n;
-		}
+		if (!LoadMercPath(hFile, &v->pMercPath))                       return FALSE;
 	}
 	return TRUE;
 }

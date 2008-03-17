@@ -2338,9 +2338,6 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 }
 
 
-static BOOLEAN LoadMercPathToSoldierStruct(HWFILE hFile, SOLDIERTYPE* s);
-
-
 static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
@@ -2413,7 +2410,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			Assert(s->ubID == cnt);
 
 			// Load the pMercPath
-			if (!LoadMercPathToSoldierStruct(hFile, s)) return FALSE;
+			if (!LoadMercPath(hFile, &s->pMercPath)) return FALSE;
 
 			//do we have a 	KEY_ON_RING									*pKeyRing;
 
@@ -2870,7 +2867,7 @@ static BOOLEAN SaveMercPathFromSoldierStruct(const HWFILE hFile, const SOLDIERTY
 }
 
 
-static BOOLEAN LoadMercPathToSoldierStruct(const HWFILE hFile, SOLDIERTYPE* const s)
+BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
 {
 	//Load the number of the nodes
 	UINT32 uiNumOfNodes = 0;
@@ -2890,7 +2887,7 @@ static BOOLEAN LoadMercPathToSoldierStruct(const HWFILE hFile, SOLDIERTYPE* cons
 		//Put the node into the list
 		if (path == NULL)
 		{
-			s->pMercPath = n;
+			*head = n;
 		}
 		else
 		{
