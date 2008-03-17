@@ -2872,68 +2872,33 @@ static BOOLEAN SaveMercPathFromSoldierStruct(const HWFILE hFile, const SOLDIERTY
 
 static BOOLEAN LoadMercPathToSoldierStruct(const HWFILE hFile, SOLDIERTYPE* const s)
 {
-	UINT32	uiNumOfNodes=0;
-	PathSt* pTempPath = NULL;
-	PathSt* pTemp = NULL;
-	UINT32	cnt;
-
-	//The list SHOULD be empty at this point
-/*
-	//if there is nodes, loop through and delete them
-	if (s->pMercPath )
-	{
-		pTempPath = s->pMercPath;
-		while( pTempPath )
-		{
-			pTemp = pTempPath;
-			pTempPath = pTempPath->pNext;
-
-			MemFree( pTemp );
-			pTemp=NULL;
-		}
-
-		s->pMercPath = NULL;
-	}
-*/
-
 	//Load the number of the nodes
+	UINT32 uiNumOfNodes = 0;
 	if (!FileRead(hFile, &uiNumOfNodes, sizeof(UINT32))) return FALSE;
 
 	//load all the nodes
-	for( cnt=0; cnt<uiNumOfNodes; cnt++ )
+	PathSt* path = NULL;
+	for (UINT32 cnt = 0; cnt < uiNumOfNodes; ++cnt)
 	{
-		//Allocate memory for the new node
-		pTemp = MemAlloc( sizeof( PathSt ) );
-		if( pTemp == NULL )
-			return( FALSE );
+		PathSt* const n = MemAlloc(sizeof(*n));
+		if (n == NULL) return FALSE;
 
-		//Load the node
-		if (!FileRead(hFile, pTemp, sizeof(PathSt))) return FALSE;
+		if (!FileRead(hFile, n, sizeof(PathSt))) return FALSE;
+		n->pPrev = path;
+		n->pNext = NULL;
 
 		//Put the node into the list
-		if( cnt == 0 )
+		if (path == NULL)
 		{
-			pTempPath = pTemp;
-			pTemp->pPrev = NULL;
+			s->pMercPath = n;
 		}
 		else
 		{
-			pTempPath->pNext = pTemp;
-			pTemp->pPrev = pTempPath;
-
-			pTempPath = pTempPath->pNext;
+			path->pNext = n;
 		}
-
-		pTemp->pNext = NULL;
+		path = n;
 	}
-
-	//move to beginning of list
-	pTempPath = MoveToBeginningOfPathList( pTempPath );
-
-	s->pMercPath = pTempPath;
-	if (s->pMercPath) s->pMercPath->pPrev = NULL;
-
-	return( TRUE );
+	return TRUE;
 }
 
 
