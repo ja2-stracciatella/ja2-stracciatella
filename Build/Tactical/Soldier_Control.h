@@ -219,7 +219,6 @@ struct PathSt
 	PathSt* pNext;
 	PathSt* pPrev;
 };
-CASSERT(sizeof(PathSt) == 20)
 
 
 enum {

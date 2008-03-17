@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
@@ -2837,7 +2838,15 @@ BOOLEAN SaveMercPath(const HWFILE f, const PathSt* const head)
 
 	for (const PathSt* p = head; p != NULL; p = p->pNext)
 	{
-		if (!FileWrite(f, p, sizeof(*p))) return FALSE;
+		BYTE  data[20];
+		BYTE* d = data;
+		INJ_U32(d, p->uiSectorId)
+		INJ_U32(d, p->uiEta)
+		INJ_BOOL(d, p->fSpeed)
+		INJ_SKIP(d, 11)
+		Assert(d == endof(data));
+
+		if (!FileWrite(f, data, sizeof(data))) return FALSE;
 	}
 	return TRUE;
 }
@@ -2856,7 +2865,16 @@ BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
 		PathSt* const n = MemAlloc(sizeof(*n));
 		if (n == NULL) return FALSE;
 
-		if (!FileRead(hFile, n, sizeof(PathSt))) return FALSE;
+		BYTE data[20];
+		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
+
+		const BYTE* d = data;
+		EXTR_U32(d, n->uiSectorId)
+		EXTR_U32(d, n->uiEta)
+		EXTR_BOOL(d, n->fSpeed)
+		EXTR_SKIP(d, 11)
+		Assert(d == endof(data));
+
 		n->pPrev = path;
 		n->pNext = NULL;
 
