@@ -268,6 +268,8 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	pathQB[ndx].pathNdx		= trailStratTreedxB;
 	trailStratTreedxB++;
 
+	const GROUP* const heli_group = iHelicopterVehicleId != -1 ?
+		GetGroup(pVehicleList[iHelicopterVehicleId].ubMovementGroup) : NULL;
 
 	do
 	{
@@ -314,33 +316,22 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 			}
 
 			// are we plotting path or checking for existance of one?
-			if( iHelicopterVehicleId != -1 )
+			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
+			if (nextCost == 0xFFFFFFFF) continue;
+
+			if (pGroup == heli_group)
 			{
-				nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
-				if ( nextCost != 0xffffffff && sMvtGroupNumber == pVehicleList[ iHelicopterVehicleId].ubMovementGroup )
+				// is a heli, its pathing is determined not by time (it's always the same) but by total cost
+				// Skyrider will avoid uncontrolled airspace as much as possible...
+				if (StrategicMap[curLoc].fEnemyAirControlled == TRUE)
 				{
-					// is a heli, its pathing is determined not by time (it's always the same) but by total cost
-					// Skyrider will avoid uncontrolled airspace as much as possible...
-					if ( StrategicMap[ curLoc ].fEnemyAirControlled == TRUE )
-					{
-						nextCost = COST_AIRSPACE_UNSAFE;
-					}
-					else
-					{
-						nextCost = COST_AIRSPACE_SAFE;
-					}
+					nextCost = COST_AIRSPACE_UNSAFE;
+				}
+				else
+				{
+					nextCost = COST_AIRSPACE_SAFE;
 				}
 			}
-			else
-			{
-				nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
-			}
-
-			if( nextCost == 0xffffffff )
-			{
-				continue;
-			}
-
 
 			// if we're building this path due to a tactical traversal exit, we have to force the path to the next sector be
 			// in the same direction as the traversal, even if it's not the shortest route, otherwise pathing can crash!  This
