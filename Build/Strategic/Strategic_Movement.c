@@ -2786,21 +2786,6 @@ static BOOLEAN PlayerGroupInMotion(GROUP* pGroup)
 }
 
 
-// get travel time for this group
-INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup )
-{
-	GROUP *pGroup;
-
-	// get the group
-	pGroup = GetGroup( ubGroup );
-
-	// make sure it is valid
-	Assert( pGroup );
-
-	return( GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup ) );
-}
-
-
 //Add this group to the current battle fray!
 //NOTE:  For enemies, only MAX_STRATEGIC_TEAM_SIZE at a time can be in a battle, so
 //if it ever gets past that, god help the player, but we'll have to insert them

@@ -188,6 +188,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 // calculate the eta time in world total mins of this group
 INT32 CalculateTravelTimeOfGroupId( UINT8 ubId );
 
+// Get travel time for this group
 INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup );
 
 UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
@@ -195,9 +196,6 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 
 // is the player greoup with this id in motion
 BOOLEAN PlayerIDGroupInMotion( UINT8 ubID );
-
-// get travel time for this group?
-INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup );
 
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );

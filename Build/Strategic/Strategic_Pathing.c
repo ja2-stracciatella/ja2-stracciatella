@@ -195,13 +195,12 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	INT16 sOrigination;
 	BOOLEAN fPlotDirectPath = FALSE;
 	static BOOLEAN fPreviousPlotDirectPath = FALSE;		// don't save
-	GROUP *pGroup;
 
 	// ******** Fudge by Bret (for now), curAPcost is never initialized in this function, but should be!
 	// so this is just to keep things happy!
 
 	// for player groups only!
-	pGroup = GetGroup( ( UINT8 )sMvtGroupNumber );
+	GROUP* const pGroup = GetGroup(sMvtGroupNumber);
 	if ( pGroup->fPlayer )
 	{
 		// if player is holding down SHIFT key, find the shortest route instead of the quickest route!
@@ -317,7 +316,7 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 			// are we plotting path or checking for existance of one?
 			if( iHelicopterVehicleId != -1 )
 			{
-				nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+				nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
 				if ( nextCost != 0xffffffff && sMvtGroupNumber == pVehicleList[ iHelicopterVehicleId].ubMovementGroup )
 				{
 					// is a heli, its pathing is determined not by time (it's always the same) but by total cost
@@ -334,7 +333,7 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 			}
 			else
 			{
-				nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+				nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
 			}
 
 			if( nextCost == 0xffffffff )
