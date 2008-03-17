@@ -1094,92 +1094,57 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 }
 
 
-BOOLEAN LoadVehicleInformationFromSavedGameFile( HWFILE hFile, UINT32 uiSavedGameVersion )
+BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32 uiSavedGameVersion)
 {
-	UINT32		uiTotalNodeCount=0;
-	UINT8			cnt;
-	UINT32		uiNodeCount=0;
-	PathSt		*pPath=NULL;
-	PathSt		*pTempPath;
-
-	//Clear out th vehicle list
-	ClearOutVehicleList( );
+	ClearOutVehicleList();
 
 	//Load the number of elements
 	if (!FileRead(hFile, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
+	if (ubNumberOfVehicles == 0) return TRUE;
 
-	if( ubNumberOfVehicles != 0 )
+	//allocate memory to hold the vehicle list
+	VEHICLETYPE* const vl = MemAlloc(sizeof(*vl) * ubNumberOfVehicles);
+	pVehicleList = vl;
+	if (vl == NULL) return FALSE;
+	memset(vl, 0, sizeof(*vl) * ubNumberOfVehicles);
+
+	//loop through all the vehicles and load each one
+	for (UINT8 cnt = 0; cnt < ubNumberOfVehicles; ++cnt)
 	{
-		//allocate memory to hold the vehicle list
-		pVehicleList = MemAlloc( sizeof( VEHICLETYPE ) * ubNumberOfVehicles );
-		if( pVehicleList == NULL )
-			return( FALSE );
-		memset( pVehicleList, 0, sizeof( VEHICLETYPE ) * ubNumberOfVehicles );
+		VEHICLETYPE* const v = &vl[cnt];
+		//Load if the vehicle spot is valid
+		if (!FileRead(hFile, &v->fValid, sizeof(BOOLEAN))) return FALSE;
+		if (!v->fValid) continue;
 
+		if (!ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion)) return FALSE;
 
-		//loop through all the vehicles and load each one
-		for( cnt=0; cnt< ubNumberOfVehicles; cnt++ )
+		//Load the number of nodes
+		UINT32 uiTotalNodeCount;
+		if (!FileRead(hFile, &uiTotalNodeCount, sizeof(UINT32))) return FALSE;
+		if (uiTotalNodeCount == 0) continue;
+
+		PathSt* path = NULL;
+		for (UINT32 uiNodeCount = 0; uiNodeCount < uiTotalNodeCount; ++uiNodeCount)
 		{
-			//Load if the vehicle spot is valid
-			if (!FileRead(hFile, &pVehicleList[cnt].fValid, sizeof(BOOLEAN))) return FALSE;
+			PathSt* const n = MemAlloc(sizeof(*n));
+			if (n == NULL) return FALSE;
 
-			if( pVehicleList[cnt].fValid )
+			if (!FileRead(hFile, n, sizeof(PathSt))) return FALSE;
+			n->pPrev = path;
+			n->pNext = NULL;
+
+			if (path == NULL)
 			{
-				if (!ExtractVehicleTypeFromFile(hFile, &pVehicleList[cnt], uiSavedGameVersion)) return FALSE;
-
-				//Load the number of nodes
-				if (!FileRead(hFile, &uiTotalNodeCount, sizeof(UINT32))) return FALSE;
-
-				if( uiTotalNodeCount != 0 )
-				{
-					pPath = NULL;
-
-					pVehicleList[cnt].pMercPath = NULL;
-
-					//loop through each node
-					for( uiNodeCount=0; uiNodeCount<uiTotalNodeCount; uiNodeCount++ )
-					{
-						//allocate memory to hold the vehicle path
-						pTempPath = MemAlloc( sizeof( PathSt ) );
-						if( pTempPath == NULL )
-							return( FALSE );
-						memset( pTempPath, 0, sizeof( PathSt ) );
-
-						//Load all the nodes
-						if (!FileRead(hFile, pTempPath, sizeof(PathSt))) return FALSE;
-
-						//
-						//Setup the pointer info
-						//
-
-						if( pVehicleList[cnt].pMercPath == NULL )
-							pVehicleList[cnt].pMercPath = pTempPath;
-
-
-						//if there is a previous node
-						if( pPath != NULL )
-						{
-							pPath->pNext = pTempPath;
-
-							pTempPath->pPrev = pPath;
-						}
-						else
-							pTempPath->pPrev = NULL;
-
-
-						pTempPath->pNext = NULL;
-
-						pPath = pTempPath;
-					}
-				}
-				else
-				{
-					pVehicleList[cnt].pMercPath = NULL;
-				}
+				v->pMercPath = n;
 			}
+			else
+			{
+				path->pNext = n;
+			}
+			path = n;
 		}
 	}
-	return( TRUE );
+	return TRUE;
 }
 
 
