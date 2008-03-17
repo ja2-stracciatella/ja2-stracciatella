@@ -1633,12 +1633,13 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 static void TracePathRoute(PathSt* const pPath)
 {
 	if (pPath == NULL) return;
+	Assert(pPath->pPrev == NULL);
 
 	INT32 iDirection = -1;
 	INT32 iArrow     = -1;
 	const PathSt* prev = NULL;
 	const PathSt* next;
-	for (const PathSt* node = MoveToBeginningOfPathList(pPath); node != NULL; prev = node, node = next)
+	for (const PathSt* node = pPath; node != NULL; prev = node, node = next)
 	{
 		next = node->pNext;
 
