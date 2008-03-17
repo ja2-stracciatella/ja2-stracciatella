@@ -1048,27 +1048,23 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 }
 
 
-BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
+BOOLEAN SaveVehicleInformationToSaveGameFile(const HWFILE f)
 {
-	UINT8		cnt;
-
 	//Save the number of elements
-	if (!FileWrite(hFile, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
+	if (!FileWrite(f, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
 
 	//loop through all the vehicles and save each one
-	for( cnt=0; cnt< ubNumberOfVehicles; cnt++ )
+	for (UINT8 i = 0; i < ubNumberOfVehicles; ++i)
 	{
+		const VEHICLETYPE* const v = &pVehicleList[i];
 		//save if the vehicle spot is valid
-		if (!FileWrite(hFile, &pVehicleList[cnt].fValid, sizeof(BOOLEAN))) return FALSE;
+		if (!FileWrite(f, &v->fValid, sizeof(BOOLEAN))) return FALSE;
+		if (!v->fValid) continue;
 
-		if( pVehicleList[cnt].fValid )
-		{
-			if (!InjectVehicleTypeIntoFile(hFile, &pVehicleList[cnt])) return FALSE;
-			if (!SaveMercPath(hFile, pVehicleList[cnt].pMercPath))     return FALSE;
-		}
+		if (!InjectVehicleTypeIntoFile(f, v)) return FALSE;
+		if (!SaveMercPath(f, v->pMercPath))   return FALSE;
 	}
-
-	return( TRUE );
+	return TRUE;
 }
 
 
