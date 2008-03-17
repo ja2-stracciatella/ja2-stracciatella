@@ -39,9 +39,6 @@ PathSt* AppendStrategicPath(PathSt* pNewSection, PathSt* pHeadOfPathList);
 // clear out strategic path list
 PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup);
 
-// move to beginning of list
-PathSt* MoveToBeginningOfPathList(PathSt* pList);
-
 // remove head of list
 PathSt* RemoveHeadFromStrategicPath(PathSt* pList);
 

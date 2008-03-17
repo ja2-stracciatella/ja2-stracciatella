@@ -676,27 +676,6 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 	return( pHeadOfPath );
 }
 
-PathSt* MoveToBeginningOfPathList(PathSt* pList)
-{
-
-	// move to beginning of this list
-
-	// no list, return
-	if( pList == NULL )
-	{
-		return ( NULL );
-	}
-
-	// move to beginning of list
-	while( pList -> pPrev )
-	{
-		pList = pList -> pPrev;
-	}
-
-	return ( pList );
-
-}
-
 
 static PathSt* MoveToEndOfPathList(PathSt* pList)
 {

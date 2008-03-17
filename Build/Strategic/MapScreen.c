@@ -10146,7 +10146,6 @@ static void RestorePreviousPaths(void)
 			if( *ppMovePath )
 			{
 				// wipe it out!
-				*ppMovePath = MoveToBeginningOfPathList( *ppMovePath );
 				*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
 				// will need to rebuild waypoints
 				fPathChanged = TRUE;
@@ -10210,7 +10209,6 @@ static void RestorePreviousPaths(void)
 				if( *ppMovePath )
 				{
 					// wipe it out!
-					*ppMovePath = MoveToBeginningOfPathList( *ppMovePath );
 					*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
 					// will need to rebuild waypoints
 					fPathChanged = TRUE;

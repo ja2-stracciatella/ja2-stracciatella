@@ -1289,9 +1289,6 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 		SetUpMvtGroupForVehicle( pCharacter );
 	}
 
-	// make sure we are at the beginning
-	pCharacter->pMercPath = MoveToBeginningOfPathList( pCharacter->pMercPath );
-
 	// will plot a path from current position to sX, sY
 	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
 	pCharacter->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), fTacticalTraversal), pCharacter->pMercPath);
@@ -1495,9 +1492,6 @@ void DisplaySoldierTempPath(void)
 
 void DisplayHelicopterPath( void )
 {
-	// move to beginning of path list
-	pVehicleList[ iHelicopterVehicleId ].pMercPath = MoveToBeginningOfPathList( pVehicleList[ iHelicopterVehicleId ].pMercPath );
-
 	// clip to map
   ClipBlitsToMapViewRegion( );
 
@@ -1533,7 +1527,7 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), v->ubMovementGroup, FALSE), MoveToBeginningOfPathList(v->pMercPath));
+	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), v->ubMovementGroup, FALSE), v->pMercPath);
 
 	fMapPanelDirty = TRUE;
 }
