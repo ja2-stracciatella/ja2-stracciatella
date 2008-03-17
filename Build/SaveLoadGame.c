@@ -2259,9 +2259,6 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 }
 
 
-static BOOLEAN SaveMercPathFromSoldierStruct(HWFILE hFile, const SOLDIERTYPE* s);
-
-
 		//Not saving any of these in the soldier struct
 		//	LEVELNODE*                   pLevelNode;
 		//	UINT16											*pForcedShade;
@@ -2314,8 +2311,7 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 
 			// Save all the pointer info from the structure
 
-			//Save the pMercPath
-			if (!SaveMercPathFromSoldierStruct(hFile, s)) return FALSE;
+			if (!SaveMercPath(hFile, s->pMercPath)) return FALSE;
 
 			//do we have a 	KEY_ON_RING									*pKeyRing;
 			if (s->pKeyRing != NULL)
@@ -2833,37 +2829,17 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 }
 
 
-static BOOLEAN SaveMercPathFromSoldierStruct(const HWFILE hFile, const SOLDIERTYPE* const s)
+BOOLEAN SaveMercPath(const HWFILE f, const PathSt* const head)
 {
-	UINT32	uiNumOfNodes=0;
-	const PathSt* pTempPath = s->pMercPath;
+	UINT32 n_nodes = 0;
+	for (const PathSt* p = head; p != NULL; p = p->pNext) ++n_nodes;
+	if (!FileWrite(f, &n_nodes, sizeof(UINT32))) return FALSE;
 
-	//loop through to get all the nodes
-	while( pTempPath )
+	for (const PathSt* p = head; p != NULL; p = p->pNext)
 	{
-		uiNumOfNodes++;
-		pTempPath = pTempPath->pNext;
+		if (!FileWrite(f, p, sizeof(*p))) return FALSE;
 	}
-
-
-	//Save the number of the nodes
-	if (!FileWrite(hFile, &uiNumOfNodes, sizeof(UINT32))) return FALSE;
-
-	//loop through all the nodes and add them
-	pTempPath = s->pMercPath;
-
-	//loop through nodes and save all the nodes
-	while( pTempPath )
-	{
-		//Save the number of the nodes
-		if (!FileWrite(hFile, pTempPath, sizeof(PathSt))) return FALSE;
-
-		pTempPath = pTempPath->pNext;
-	}
-
-
-
-	return( TRUE );
+	return TRUE;
 }
 
 

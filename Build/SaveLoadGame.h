@@ -65,7 +65,8 @@ BOOLEAN DoesUserHaveEnoughHardDriveSpace(void);
 
 void GetBestPossibleSectorXYZValues(INT16* psSectorX, INT16* psSectorY, INT8* pbSectorZ);
 
-BOOLEAN LoadMercPath(HWFILE hFile, PathSt** head);
+BOOLEAN SaveMercPath(HWFILE, const PathSt* head);
+BOOLEAN LoadMercPath(HWFILE, PathSt** head);
 
 UINT32	guiLastSaveGameNum;
 INT8		GetNumberForAutoSave( BOOLEAN fLatestAutoSave );

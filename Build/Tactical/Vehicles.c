@@ -1050,8 +1050,6 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 
 BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 {
-	PathSt* pTempPathPtr;
-	UINT32		uiNodeCount=0;
 	UINT8		cnt;
 
 	//Save the number of elements
@@ -1066,28 +1064,7 @@ BOOLEAN SaveVehicleInformationToSaveGameFile( HWFILE hFile )
 		if( pVehicleList[cnt].fValid )
 		{
 			if (!InjectVehicleTypeIntoFile(hFile, &pVehicleList[cnt])) return FALSE;
-
-			//count the number of nodes in the vehicles path
-			uiNodeCount=0;
-			pTempPathPtr = pVehicleList[cnt].pMercPath;
-			while( pTempPathPtr )
-			{
-				uiNodeCount++;
-				pTempPathPtr = pTempPathPtr->pNext;
-			}
-
-			//Save the number of nodes
-			if (!FileWrite(hFile, &uiNodeCount, sizeof(UINT32))) return FALSE;
-
-			//save all the nodes
-			pTempPathPtr = pVehicleList[cnt].pMercPath;
-			while( pTempPathPtr )
-			{
-				//Save the node
-				if (!FileWrite(hFile, pTempPathPtr, sizeof(PathSt))) return FALSE;
-
-				pTempPathPtr = pTempPathPtr->pNext;
-			}
+			if (!SaveMercPath(hFile, pVehicleList[cnt].pMercPath))     return FALSE;
 		}
 	}
 
