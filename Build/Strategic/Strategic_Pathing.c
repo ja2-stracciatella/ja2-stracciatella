@@ -315,33 +315,26 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 			}
 
 			// are we plotting path or checking for existance of one?
-			if( sMvtGroupNumber != 0 )
+			if( iHelicopterVehicleId != -1 )
 			{
-				if( iHelicopterVehicleId != -1 )
+				nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+				if ( nextCost != 0xffffffff && sMvtGroupNumber == pVehicleList[ iHelicopterVehicleId].ubMovementGroup )
 				{
-					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
-					if ( nextCost != 0xffffffff && sMvtGroupNumber == pVehicleList[ iHelicopterVehicleId].ubMovementGroup )
+					// is a heli, its pathing is determined not by time (it's always the same) but by total cost
+					// Skyrider will avoid uncontrolled airspace as much as possible...
+					if ( StrategicMap[ curLoc ].fEnemyAirControlled == TRUE )
 					{
-						// is a heli, its pathing is determined not by time (it's always the same) but by total cost
-						// Skyrider will avoid uncontrolled airspace as much as possible...
-						if ( StrategicMap[ curLoc ].fEnemyAirControlled == TRUE )
-						{
-							nextCost = COST_AIRSPACE_UNSAFE;
-						}
-						else
-						{
-							nextCost = COST_AIRSPACE_SAFE;
-						}
+						nextCost = COST_AIRSPACE_UNSAFE;
 					}
-				}
-				else
-				{
-					nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
+					else
+					{
+						nextCost = COST_AIRSPACE_SAFE;
+					}
 				}
 			}
 			else
 			{
-				nextCost = GetTravelTimeForFootTeam( ( UINT8 ) ( SECTOR( curLoc%MAP_WORLD_X, curLoc/MAP_WORLD_X  ) ), ( UINT8 )( iCnt / 2 ));
+				nextCost = GetTravelTimeForGroup( ( UINT8 ) ( SECTOR( ( curLoc%MAP_WORLD_X ), ( curLoc / MAP_WORLD_X ) ) ), ( UINT8 )( iCnt / 2 ), ( UINT8 )sMvtGroupNumber );
 			}
 
 			if( nextCost == 0xffffffff )

@@ -2800,16 +2800,6 @@ INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup )
 	return( GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup ) );
 }
 
-INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection )
-{
-	GROUP Group;
-
-	// group going on foot
-	Group.ubTransportationMask = FOOT;
-
-	return( GetSectorMvtTimeForGroup( ubSector, ubDirection, &( Group ) ) );
-
-}
 
 //Add this group to the current battle fray!
 //NOTE:  For enemies, only MAX_STRATEGIC_TEAM_SIZE at a time can be in a battle, so

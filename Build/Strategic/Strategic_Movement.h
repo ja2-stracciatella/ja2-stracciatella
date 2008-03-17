@@ -196,9 +196,6 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 // is the player greoup with this id in motion
 BOOLEAN PlayerIDGroupInMotion( UINT8 ubID );
 
-// find if a path exists?
-INT32 GetTravelTimeForFootTeam( UINT8 ubSector, UINT8 ubDirection );
-
 // get travel time for this group?
 INT32 GetTravelTimeForGroup( UINT8 ubSector, UINT8 ubDirection, UINT8 ubGroup );
 
