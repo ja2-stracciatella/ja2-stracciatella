@@ -1014,7 +1014,7 @@ INT16 ClosestKnownOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLev
 		}
 
 		// Special stuff for Carmen the bounty hunter
-		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpp->ubProfile != 64)
+		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpp->ubProfile != SLAY)
 		{
 			continue;  // next opponent
 		}
@@ -1108,7 +1108,7 @@ INT16 ClosestSeenOpponent(SOLDIERTYPE *pSoldier, INT16 * psGridNo, INT8 * pbLeve
 		}
 
 		// Special stuff for Carmen the bounty hunter
-		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpp->ubProfile != 64)
+		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpp->ubProfile != SLAY)
 		{
 			continue;  // next opponent
 		}
@@ -1735,7 +1735,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
      continue;          // next merc
 
 		// Special stuff for Carmen the bounty hunter
-		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != 64)
+		if (pSoldier->bAttitude == ATTACKSLAYONLY && pOpponent->ubProfile != SLAY)
 		{
 			continue;  // next opponent
 		}
