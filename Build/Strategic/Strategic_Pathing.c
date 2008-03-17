@@ -465,82 +465,53 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 }
 
 
-static BOOLEAN AddSectorToPathList(PathSt* pPath, UINT16 uiSectorNu);
-
-
-PathSt* BuildAStrategicPath(const INT16 iStartSectorNum, const INT16 iEndSectorNum, const INT16 sMvtGroupNumber, const BOOLEAN fTacticalTraversal)
+PathSt* BuildAStrategicPath(const INT16 start_sector, const INT16 end_sector, const INT16 sMvtGroupNumber, const BOOLEAN fTacticalTraversal)
 {
+	if (end_sector < MAP_WORLD_X - 1) return NULL;
+
+	const INT32 path_len = FindStratPath(start_sector, end_sector, sMvtGroupNumber, fTacticalTraversal);
+	if (path_len == 0) return NULL;
+
 	// start new path list
-	PathSt* p = MemAlloc(sizeof(*p));
-	p->fSpeed     = NORMAL_MVT;
-	p->uiSectorId = iStartSectorNum;
-	p->pNext      = NULL;
-	p->pPrev      = NULL;
-	p->uiEta      = GetWorldTotalMin();
-	PathSt* pHeadOfPathList = p;
+	PathSt* const head = MemAlloc(sizeof(*head));
+	head->fSpeed     = NORMAL_MVT;
+	head->uiSectorId = start_sector;
+	head->pNext      = NULL;
+	head->pPrev      = NULL;
+	head->uiEta      = GetWorldTotalMin();
 
-	if (iEndSectorNum < MAP_WORLD_X - 1) return NULL;
-
-	INT32 iCurrentSectorNum = iStartSectorNum;
-	INT32 iDelta            = 0;
-	const INT32 iPathLength = FindStratPath(iStartSectorNum, iEndSectorNum, sMvtGroupNumber, fTacticalTraversal);
-	for (INT32 i = 0; i < iPathLength; ++i)
+	INT32   cur_sector = start_sector;
+	INT32   delta      = 0;
+	PathSt* path       = head;
+	for (INT32 i = 0; i < path_len; ++i)
 	{
 		switch (gusMapPathingData[i])
 		{
-			case NORTH: iDelta = NORTH_MOVE; break;
-			case SOUTH: iDelta = SOUTH_MOVE; break;
-			case EAST:  iDelta = EAST_MOVE;  break;
-			case WEST:  iDelta = WEST_MOVE;  break;
+			case NORTH: delta = NORTH_MOVE; break;
+			case SOUTH: delta = SOUTH_MOVE; break;
+			case EAST:  delta = EAST_MOVE;  break;
+			case WEST:  delta = WEST_MOVE;  break;
 		}
 		// create new node
-		iCurrentSectorNum += iDelta;
+		cur_sector += delta;
 
-		if (!AddSectorToPathList(pHeadOfPathList, (UINT16)iCurrentSectorNum))
+		if (cur_sector < MAP_WORLD_X - 1)
 		{
-			p = pHeadOfPathList;
-			// intersected previous node, delete path to date
-			if (!p) return NULL;
-			while (p->pNext) p = p->pNext;
-			// start backing up
-			while (p->uiSectorId != (UINT32)iStartSectorNum)
-			{
-				PathSt* const pDeleteNode = p;
-				p        = p->pPrev;
-				p->pNext = NULL;
-				MemFree(pDeleteNode);
-			}
+			ClearStrategicPathList(head, 0);
 			return NULL;
 		}
 
-		pHeadOfPathList = p;
-		while (p->pNext) p = p->pNext;
+		PathSt* const n = MemAlloc(sizeof(*n));
+		n->uiEta      = 0;
+		n->uiSectorId = cur_sector;
+		n->pPrev      = path;
+		n->pNext      = NULL;
+		n->fSpeed     = NORMAL_MVT;
+		path->pNext   = n;
+		path          = n;
 	}
 
-	if (!p->pPrev)
-	{
-		MemFree(p);
-		return NULL;
-	}
-
-	return MoveToBeginningOfPathList(pHeadOfPathList);
-}
-
-
-static BOOLEAN AddSectorToPathList(PathSt* path, const UINT16 uiSectorNum)
-{
-	if (uiSectorNum < MAP_WORLD_X - 1) return FALSE;
-
-	while (path->pNext) path = path->pNext;
-
-	PathSt* const p = MemAlloc(sizeof(*p));
-	path->pNext   = p;
-	p->uiEta      = 0;
-	p->uiSectorId = uiSectorNum;
-	p->pPrev      = path;
-	p->pNext      = NULL;
-	p->fSpeed     = NORMAL_MVT;
-	return TRUE;
+	return head;
 }
 
 
