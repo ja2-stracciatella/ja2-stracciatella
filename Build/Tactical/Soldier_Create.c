@@ -149,8 +149,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		// ATE: If we are a vehicle, and a player, start at a different slot ( 2 - max )
 		if (team_id == gbPlayerNum)
 		{
-			const MERCPROFILESTRUCT* const p = GetProfile(profile);
-			switch (p->ubBodyType)
+			switch (profile != NO_PROFILE ? GetProfile(profile)->ubBodyType : pCreateStruct->bBodyType)
 			{
 				case ELDORADO:
 				case HUMVEE:
