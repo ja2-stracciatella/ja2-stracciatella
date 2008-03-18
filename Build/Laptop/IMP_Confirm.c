@@ -32,7 +32,6 @@
 
 UINT32 giIMPConfirmButton[ 2 ];
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
-BOOLEAN fNoAlreadySelected = FALSE;
 
 
 typedef struct FacePosInfo
@@ -256,16 +255,6 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason)
 
 		fButtonPendingFlag = TRUE;
 		iCurrentImpPage = IMP_HOME_PAGE;
-#endif
-
-#if 0 // XXX was commented out
-		if( fNoAlreadySelected == TRUE )
-		{
-			// already selected no
-			fButtonPendingFlag = TRUE;
-			iCurrentImpPage = IMP_HOME_PAGE;
-		}
-		fNoAlreadySelected = TRUE;
 #endif
 	}
 }
