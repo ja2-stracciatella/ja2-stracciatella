@@ -361,12 +361,11 @@ BOOLEAN fShowInventoryFlag = FALSE;
 BOOLEAN fMapInventoryItem=FALSE;
 BOOLEAN fShowDescriptionFlag=FALSE;
 
-static BOOLEAN gfHotKeyEnterSector        = FALSE;
-static BOOLEAN fOneFrame                  = FALSE;
-static BOOLEAN fShowFaceHightLight        = FALSE;
-static BOOLEAN fShowItemHighLight         = FALSE;
-static BOOLEAN gfAllowSkyriderTooFarQuote = FALSE;
-static BOOLEAN fJustFinishedPlotting      = FALSE;
+static BOOLEAN gfHotKeyEnterSector   = FALSE;
+static BOOLEAN fOneFrame             = FALSE;
+static BOOLEAN fShowFaceHightLight   = FALSE;
+static BOOLEAN fShowItemHighLight    = FALSE;
+static BOOLEAN fJustFinishedPlotting = FALSE;
 
 // for the flashing of the contract departure time...for when mercs are leaving in an hour or less
 static BOOLEAN fFlashContractFlag = FALSE;
@@ -3286,18 +3285,6 @@ static UINT32 HandleMapUI(void)
 						 // plotting for the chopper?
 						 if( fPlotForHelicopter == TRUE )
 						 {
-/*
-							 if( IsSectorOutOfTheWay( sMapX, sMapY ) == TRUE )
-							 {
-								 if( gfAllowSkyriderTooFarQuote == TRUE )
-								 {
-									 SkyRiderTalk( DESTINATION_TOO_FAR );
-								 }
-
-								 return( MAP_SCREEN );
-							 }
-*/
-
 							 PlotPathForHelicopter( sMapX, sMapY );
 							 fTeamPanelDirty = TRUE;
 						 }
@@ -4846,8 +4833,6 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 			{
 				fLBBeenPressedInMapView = TRUE;
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
-
-				gfAllowSkyriderTooFarQuote = FALSE;
 			}
 		}
 		else	// L-button is NOT down at the moment
@@ -4918,8 +4903,6 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 					}
 					else	// clicked on a new sector
 					{
-						gfAllowSkyriderTooFarQuote = TRUE;
-
 						// draw new map route
 						*puiNewEvent = MAP_EVENT_PLOT_PATH;
 					}

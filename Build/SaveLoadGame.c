@@ -180,7 +180,7 @@ typedef struct
 	INT32 iHelicopterVehicleId;
 
 	// total distance travelled
-	INT32 UNUSEDiTotalHeliDistanceSinceRefuel;
+	INT32 UNUSEDiTotalHeliDistanceSinceRefuel; // XXX HACK000B
 
 	// total owed to player
 	INT32 iTotalAccumulatedCostByPlayer;
@@ -3003,9 +3003,6 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	// helicopter vehicle id
 	sGeneralInfo.iHelicopterVehicleId = iHelicopterVehicleId;
 
-	// total distance travelled
-//	sGeneralInfo.iTotalHeliDistanceSinceRefuel = iTotalHeliDistanceSinceRefuel;
-
 	// total owed by player
 	sGeneralInfo.iTotalAccumulatedCostByPlayer = iTotalAccumulatedCostByPlayer;
 
@@ -3223,9 +3220,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	// helicopter vehicle id
 	iHelicopterVehicleId = sGeneralInfo.iHelicopterVehicleId;
-
-	// total distance travelled
-//	iTotalHeliDistanceSinceRefuel = sGeneralInfo.iTotalHeliDistanceSinceRefuel;
 
 	// total owed to player
 	iTotalAccumulatedCostByPlayer = sGeneralInfo.iTotalAccumulatedCostByPlayer;

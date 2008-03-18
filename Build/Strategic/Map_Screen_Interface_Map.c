@@ -3461,7 +3461,6 @@ void DisplayDistancesForHelicopter( void )
 {
 	// calculate the distance travelled, the proposed distance, and total distance one can go
 	// display these on screen
-	INT16 sDistanceToGo = 0;//, sDistanceSoFar = 0, sTotalCanTravel = 0;
 	INT16 sX = 0, sY = 0;
 	CHAR16 sString[ 32 ];
 	INT16 sTotalOfTrip = 0;
@@ -3492,15 +3491,11 @@ void DisplayDistancesForHelicopter( void )
 
 	BltVideoObject(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
 
-//	sTotalCanTravel = ( INT16 )GetTotalDistanceHelicopterCanTravel( );
-	sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
+	INT16 sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
 	sTotalOfTrip = sDistanceToGo;
 
   sNumSafeSectors = GetNumSafeSectorsInPath( );
   sNumUnSafeSectors = GetNumUnSafeSectorsInPath( );
-
-//	sDistanceSoFar = ( INT16 )HowFarHelicopterhasTravelledSinceRefueling( );
-//	 sTotalDistanceOfTrip = ( INT16 )DistanceToNearestRefuelPoint( )
 
 	if( sDistanceToGo == 9999)
 	{
@@ -3514,22 +3509,9 @@ void DisplayDistancesForHelicopter( void )
 
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, pHelicopterEtaStrings[0]);
 
-/*
-  if ( IsSectorOutOfTheWay( sMapX, sMapY ) )
-  {
-		SetFontForeground( FONT_RED );
-	}
-	else
-*/
-	{
-		SetFontForeground( FONT_LTGREEN );
-	}
-
 	swprintf( sString, lengthof(sString), L"%d", sTotalOfTrip );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5, MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
 	mprintf( sX, sYPosition + 5, sString );
-
-	SetFontForeground( FONT_LTGREEN );
 
 	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
 

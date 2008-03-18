@@ -44,12 +44,6 @@
 
 #define MIN_DAYS_BETWEEN_SKYRIDER_MONOLOGUES 1
 
-// refuel delay
-#define REFUEL_HELICOPTER_DELAY							30		// minutes
-
-// total number of sectors one can go
-//#define MAX_HELICOPTER_DISTANCE 25
-
 // maximum chance out of a hundred per unsafe sector that a SAM site in decent working condition will hit Skyrider
 #define MAX_SAM_SITE_ACCURACY		33
 
@@ -74,9 +68,6 @@ INT32 iHelicopterVehicleId = -1;
 
 // helicopter icon
 SGPVObject* guiHelicopterIcon;
-
-// total distance travelled
-//INT32 iTotalHeliDistanceSinceRefuel = 0;
 
 // total owed to player
 INT32 iTotalAccumulatedCostByPlayer = 0;
@@ -161,7 +152,6 @@ void InitializeHelicopter( void )
 	fPlotForHelicopter = FALSE;
 	pTempHelicopterPath = NULL;
 
-//	iTotalHeliDistanceSinceRefuel = 0;
 	iTotalAccumulatedCostByPlayer = 0;
 
 	fHelicopterDestroyed = FALSE;
@@ -284,10 +274,6 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 		iTotalAccumulatedCostByPlayer += GetCostOfPassageForHelicopter( sX, sY );
 	}
 
-	// accumulate distance travelled
-//	AddSectorToHelicopterDistanceTravelled( );
-
-
 	// check if heli has any real path left
 	if( EndOfHelicoptersPath( ) )
 	{
@@ -324,34 +310,6 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 
 	return( FALSE );
 }
-
-/*
-INT32 GetTotalDistanceHelicopterCanTravel( void )
-{
-	return( MAX_HELICOPTER_DISTANCE );
-}
-
-INT32 HowFarHelicopterhasTravelledSinceRefueling( void )
-{
-	// return total distance
-	return( iTotalHeliDistanceSinceRefuel );
-}
-
-INT32 HowFurtherCanHelicopterTravel( void )
-{
-	// how many sectors further can we go on remaining fuel?
-	return( MAX_HELICOPTER_DISTANCE - ( HowFarHelicopterhasTravelledSinceRefueling( ) + DistanceOfIntendedHelicopterPath( ) ) );
-}
-
-void AddSectorToHelicopterDistanceTravelled( void )
-{
-	// up the distance
-	iTotalHeliDistanceSinceRefuel++;
-
-	//reset hover time
-	uiStartHoverTime = 0;
-}
-*/
 
 
 static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable);
@@ -428,36 +386,13 @@ static INT32 DistanceToNearestRefuelPoint(INT16 sX, INT16 sY)
 }
 
 
-/*
-BOOLEAN IsSectorOutOfTheWay( INT16 sX, INT16 sY )
-{
-	// check distance to nearest refuel point
-	if( DistanceToNearestRefuelPoint( sX, sY ) > HowFurtherCanHelicopterTravel( ) )
-	{
-		return( TRUE );
-	}
-
-
-	return( FALSE );
-}
-*/
-
-
 static void LandHelicopter(void);
 
 
 static void ReFuelHelicopter(void)
 {
 	// land, pay the man, and refuel
-
 	LandHelicopter( );
-
-/*
-	AddStrategicEvent( EVENT_HELICOPTER_DONE_REFUELING, GetWorldTotalMin() + REFUEL_HELICOPTER_DELAY, 0 );
-
-	// reset distance traveled
-	iTotalHeliDistanceSinceRefuel = 0;
-*/
 }
 
 
@@ -503,7 +438,6 @@ static void SkyriderDestroyed(void)
 
 	// zero out balance due
 	gMercProfiles[ SKYRIDER ].iBalance = 0;
-//	iTotalHeliDistanceSinceRefuel = 0;
 	iTotalAccumulatedCostByPlayer = 0;
 
 	// remove vehicle and reset
@@ -523,14 +457,6 @@ BOOLEAN CanHelicopterFly( void )
 	}
 
 	if (GetVehicle(iHelicopterVehicleId) == NULL) return FALSE;
-
-/*
-	// travelled too far?
-	if( iTotalHeliDistanceSinceRefuel > MAX_HELICOPTER_DISTANCE )
-	{
-		return( FALSE );
-	}
-*/
 
 	// is the pilot alive, well, and willing to help us?
 	if( IsHelicopterPilotAvailable( ) == FALSE )

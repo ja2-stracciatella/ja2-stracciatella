@@ -103,9 +103,6 @@ extern BOOLEAN fHeliReturnStraightToBase;
 extern BOOLEAN fHelicopterIsAirBorne;
 
 
-// total distance travelled
-//extern INT32 iTotalHeliDistanceSinceRefuel;
-
 // total owed to player
 //extern INT32 iTotalAccumlatedCostByPlayer;
 
@@ -142,24 +139,6 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier );
 extern BOOLEAN	fSAMSitesDisabledFromAttackingPlayer;
 #endif
 
-
-/* ARM: Max. fuel range system removed
-// add another sector to how far helictoper has travelled
-void AddSectorToHelicopterDistanceTravelled( void );
-
-// total distance travelled since last refuel
-INT32 HowFarHelicopterhasTravelledSinceRefueling( void );
-
-// get the total the heli can go
-INT32 GetTotalDistanceHelicopterCanTravel( void );
-
-// how far can helicopter can travel before refuel
-INT32 HowFurtherCanHelicopterTravel( void );
-
-// check if this sector is out of the way
-BOOLEAN IsSectorOutOfTheWay( INT16 sX, INT16 sY );
-
-*/
 
 // have pilot say different stuff
 void HelicopterDialogue( UINT8 ubDialogueCondition );
