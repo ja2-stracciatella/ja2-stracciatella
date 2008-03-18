@@ -1495,9 +1495,10 @@ void DisplayHelicopterPath( void )
 	// clip to map
   ClipBlitsToMapViewRegion( );
 
+	const VEHICLETYPE* const v = GetHelicopter();
 	// trace both lists..temp is conditional if cursor has sat in same sector grid long enough
-  TracePathRoute(pVehicleList[iHelicopterVehicleId].pMercPath);
-	AnimateRoute( pVehicleList[ iHelicopterVehicleId ].pMercPath );
+	TracePathRoute(v->pMercPath);
+	AnimateRoute(v->pMercPath);
 
 	// restore
 	RestoreClipRegionToFullScreen( );
@@ -1524,7 +1525,7 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	// set up mvt group for helicopter
 	SetUpHelicopterForMovement();
 
-	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	VEHICLETYPE* const v = GetHelicopter();
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
 	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), v->ubMovementGroup, FALSE), v->pMercPath);
@@ -1545,16 +1546,14 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 	}
 
 	// build path
-	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, pVehicleList[iHelicopterVehicleId].ubMovementGroup, FALSE);
+	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, GetHelicopter()->ubMovementGroup, FALSE);
 }
 
 
 // clear out helicopter path list, after and including this sector
 UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 {
-	VEHICLETYPE *pVehicle = NULL;
 	INT32 iOrigLength = 0;
-
 
 	// clear out helicopter path list, after and including this sector
 	if( iHelicopterVehicleId == -1 ||  !CanHelicopterFly() )
@@ -1563,9 +1562,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 		return( ABORT_PLOTTING );
 	}
 
-
-	pVehicle = &( pVehicleList[ iHelicopterVehicleId ] );
-
+	VEHICLETYPE* const pVehicle = GetHelicopter();
 
 	iOrigLength = GetLengthOfPath( pVehicle->pMercPath );
 	if( !iOrigLength )
@@ -1607,11 +1604,10 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 
 INT16 GetLastSectorOfHelicoptersPath( void )
 {
+	const VEHICLETYPE* const v = GetHelicopter();
 	// will return the last sector of the helicopter's current path
-	INT16 sLastSector = pVehicleList[ iHelicopterVehicleId ].sSectorX + pVehicleList[ iHelicopterVehicleId ].sSectorY * MAP_WORLD_X ;
-	PathSt* pNode = NULL;
-
-	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
+	INT16 sLastSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
+	PathSt* pNode = v->pMercPath;
 
 	while( pNode )
 	{
@@ -3564,7 +3560,7 @@ void DisplayDistancesForHelicopter( void )
 	iTime = GetPathTravelTimeDuringPlotting( pTempHelicopterPath );
 
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
-	iTime += GetPathTravelTimeDuringPlotting( pVehicleList[ iHelicopterVehicleId ].pMercPath );
+	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter()->pMercPath);
 
 	swprintf( sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
@@ -3593,7 +3589,6 @@ void DisplayPositionOfHelicopter( void )
 	FLOAT flRatio = 0.0;
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
-	GROUP *pGroup;
 
 	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
 	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
@@ -3611,11 +3606,11 @@ void DisplayPositionOfHelicopter( void )
 		// draw the destination icon first, so when they overlap, the real one is on top!
 		DisplayDestinationOfHelicopter( );
 
+		const VEHICLETYPE* const v = GetHelicopter();
 		// check if mvt group
-		if( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup != 0 )
+		if (v->ubMovementGroup != 0)
 		{
-
-			pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+			const GROUP* const pGroup = GetGroup(v->ubMovementGroup);
 
 			// this came up in one bug report!
 			Assert( pGroup->uiTraverseTime != -1 );
@@ -3740,7 +3735,7 @@ static void DisplayDestinationOfHelicopter(void)
 	}
 
 	// if helicopter is going somewhere
-	if ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 1 )
+	if (GetLengthOfPath(GetHelicopter()->pMercPath) > 1)
 	{
 		// get destination
 		sSector = GetLastSectorIdInVehiclePath( iHelicopterVehicleId );
@@ -3771,7 +3766,6 @@ static void DisplayDestinationOfHelicopter(void)
 
 BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSectorY )
 {
-	GROUP *pGroup = NULL;
 	BOOLEAN fHelicopterOverNextSector = FALSE;
 	FLOAT flRatio = 0.0;
 	INT16 sSectorX;
@@ -3787,11 +3781,11 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 		return( FALSE );
 	}
 
+	const VEHICLETYPE* const v = GetHelicopter();
 
 	// figure out over which sector the helicopter APPEARS to be to the player (because we slide it smoothly across the
 	// map, unlike groups travelling on the ground, it can appear over its next sector while it's not there yet.
-
-	pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	const GROUP* const pGroup = GetGroup(v->ubMovementGroup);
 	Assert( pGroup );
 
 	if ( pGroup->fBetweenSectors )
@@ -3821,8 +3815,8 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	else
 	{
 		// use current sector's coordinates
-		sSectorX = pVehicleList[ iHelicopterVehicleId ].sSectorX;
-		sSectorY = pVehicleList[ iHelicopterVehicleId ].sSectorY;
+		sSectorX = v->sSectorX;
+		sSectorY = v->sSectorY;
 	}
 
 	// check if helicopter appears where he clicked

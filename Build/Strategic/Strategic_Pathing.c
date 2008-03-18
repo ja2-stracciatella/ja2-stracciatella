@@ -269,7 +269,7 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	trailStratTreedxB++;
 
 	const GROUP* const heli_group = iHelicopterVehicleId != -1 ?
-		GetGroup(pVehicleList[iHelicopterVehicleId].ubMovementGroup) : NULL;
+		GetGroup(GetHelicopter()->ubMovementGroup) : NULL;
 
 	do
 	{

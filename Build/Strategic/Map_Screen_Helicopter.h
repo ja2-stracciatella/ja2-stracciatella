@@ -1,8 +1,10 @@
 #ifndef __MAP_SCREEN_HELICOPTER_H
 #define __MAP_SCREEN_HELICOPTER_H
 
+#include "Debug.h"
 #include "JA2Types.h"
 #include "Strategic_Movement.h"
+#include "Vehicles.h"
 
 
 // costs of flying through sectors
@@ -76,6 +78,14 @@ extern BOOLEAN fHelicopterAvailable;
 
 // helicopter vehicle id value
 extern INT32 iHelicopterVehicleId;
+
+static inline VEHICLETYPE* GetHelicopter(void)
+{
+	Assert(0 <= iHelicopterVehicleId && iHelicopterVehicleId < ubNumberOfVehicles);
+	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	Assert(v->fValid);
+	return v;
+}
 
 // heli is hovering
 extern BOOLEAN fHoveringHelicopter;

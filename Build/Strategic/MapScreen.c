@@ -1670,7 +1670,7 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 	}
 	else
 	{
-		ubGroupId = pVehicleList[ iHelicopterVehicleId ].ubMovementGroup;
+		ubGroupId = GetHelicopter()->ubMovementGroup;
 		pGroup = GetGroup( ubGroupId );
 	}
 
@@ -7426,8 +7426,9 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			TakeOffHelicopter( );
 
 			// rebuild waypoints - helicopter
-			ppMovePath = &( pVehicleList[ iHelicopterVehicleId ].pMercPath );
-			RebuildWayPointsForGroupPath( *ppMovePath, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+			VEHICLETYPE* const v = GetHelicopter();
+			ppMovePath = &v->pMercPath;
+			RebuildWayPointsForGroupPath(*ppMovePath, v->ubMovementGroup);
 
 			// pointer to previous helicopter path
 			pPreviousMercPath = gpHelicopterPreviousMercPath;
@@ -9513,7 +9514,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 
 		// remember the helicopter's current path so we can restore it if need be
 		ClearStrategicPathList(gpHelicopterPreviousMercPath, 0);
-		gpHelicopterPreviousMercPath = CopyPaths(pVehicleList[iHelicopterVehicleId].pMercPath);
+		gpHelicopterPreviousMercPath = CopyPaths(GetHelicopter()->pMercPath);
 
 		// affects Skyrider's dialogue
 		SetFactTrue( FACT_SKYRIDER_USED_IN_MAPSCREEN );
@@ -9568,10 +9569,7 @@ static void ExplainWhySkyriderCantFly(void)
 
 static UINT8 PlayerMercsInHelicopterSector(void)
 {
-	GROUP *pGroup = NULL;
-
-	Assert( iHelicopterVehicleId != -1);
-	pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
 
 	if ( pGroup->fBetweenSectors )
 	{
@@ -10119,8 +10117,9 @@ static void RestorePreviousPaths(void)
 
 	if ( fPlotForHelicopter == TRUE )
 	{
-		ppMovePath = &( pVehicleList[ iHelicopterVehicleId ].pMercPath );
-		ubGroupId = pVehicleList[ iHelicopterVehicleId ].ubMovementGroup;
+		VEHICLETYPE* const v = GetHelicopter();
+		ppMovePath = &v->pMercPath;
+		ubGroupId  = v->ubMovementGroup;
 
 		// if the helicopter had a previous path
 		if( gpHelicopterPreviousMercPath != NULL )

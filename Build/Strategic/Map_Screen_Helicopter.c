@@ -204,9 +204,10 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	pSoldier -> sSectorX = pVehicleList[ iHelicopterVehicleId ].sSectorX;
-	pSoldier -> sSectorY = pVehicleList[ iHelicopterVehicleId ].sSectorY;
-	pSoldier -> bSectorZ = 0;
+	const VEHICLETYPE* const v = GetHelicopter();
+	pSoldier->sSectorX = v->sSectorX;
+	pSoldier->sSectorY = v->sSectorY;
+	pSoldier->bSectorZ = 0;
 
 	// reset between sectors
 	pSoldier->fBetweenSectors = FALSE;
@@ -388,7 +389,6 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 {
 	INT32 iShortestDistance = 9999;
 	INT32 iCounter = 0;
-	INT32 iDistance = 9999;
 	INT32 iClosestLocation = -1;
 
 	// find shortest distance to refuel site
@@ -398,7 +398,8 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 		if( ( fRefuelingSiteAvailable[ iCounter ] ) || ( fMustBeAvailable == FALSE ) )
 		{
 			// find if sector is under control, find distance from heli to it
-			iDistance = ( INT32 )FindStratPath( ( INT16 )( CALCULATE_STRATEGIC_INDEX( pVehicleList[ iHelicopterVehicleId ].sSectorX , pVehicleList[ iHelicopterVehicleId ].sSectorY ) ), ( INT16 )( CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iCounter ][ 0 ], ubRefuelList[ iCounter ][ 1 ] ) ) , pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, FALSE );
+			const VEHICLETYPE* const v = GetHelicopter();
+			const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v->sSectorX , v->sSectorY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iCounter][0], ubRefuelList[iCounter][1]), v->ubMovementGroup, FALSE);
 
 			if( iDistance < iShortestDistance )
 			{
@@ -418,12 +419,11 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 static INT32 DistanceToNearestRefuelPoint(INT16 sX, INT16 sY)
 {
 	INT32 iClosestLocation;
-	INT32 iDistance;
 
 	// don't notify player during these checks!
 	iClosestLocation = LocationOfNearestRefuelPoint( FALSE );
 
-	iDistance = ( INT32 )FindStratPath( ( INT16 )( CALCULATE_STRATEGIC_INDEX( sX, sY ) ), ( INT16 )( CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iClosestLocation ][ 0 ], ubRefuelList[ iClosestLocation ][ 1 ] ) ) , pVehicleList[ iHelicopterVehicleId ].ubMovementGroup, FALSE );
+	const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(sX, sY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iClosestLocation][0], ubRefuelList[iClosestLocation][1]), GetHelicopter()->ubMovementGroup, FALSE);
 	return( iDistance );
 }
 
@@ -485,7 +485,7 @@ static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY)
 static void SkyriderDestroyed(void)
 {
 	// remove any arrival events for the helicopter's group
-	const VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	const VEHICLETYPE* const v = GetHelicopter();
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, v->ubMovementGroup);
 
 	KillAllInVehicle(v);
@@ -671,8 +671,9 @@ void HandleHeliHoverTooLong( void )
 	// hovered too long, inform player heli is returning to base
 	HeliCharacterDialogue( pSkyRider, RETURN_TO_BASE );
 
+	const VEHICLETYPE* const v = GetHelicopter();
 	// If the sector is safe
-	if ( NumEnemiesInSector( pVehicleList[ iHelicopterVehicleId ].sSectorX, pVehicleList[ iHelicopterVehicleId ].sSectorY ) == 0 )
+	if (NumEnemiesInSector(v->sSectorX, v->sSectorY) == 0)
 	{
 		// kick everyone out!
 		MoveAllInHelicopterToFootMovementGroup( );
@@ -715,7 +716,6 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies)
 // if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 INT32 DistanceOfIntendedHelicopterPath( void )
 {
-	PathSt* pNode = NULL;
 	INT32 iLength = 0;
 
 	if( CanHelicopterFly( ) == FALSE )
@@ -724,7 +724,7 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 		return( 9999 );
 	}
 
-	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
+	const PathSt* pNode = GetHelicopter()->pMercPath;
 
 	// any path yet?
 	if( pNode != NULL )
@@ -754,14 +754,12 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 
 static BOOLEAN CheckForArrivalAtRefuelPoint(void)
 {
+	const VEHICLETYPE* const v = GetHelicopter();
 	// check if this is our final destination
-	if ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 )
-	{
-		return( FALSE );
-	}
+	if (GetLengthOfPath(v->pMercPath) > 0) return FALSE;
 
 	// check if we're at a refuel site
-	if( DistanceToNearestRefuelPoint( pVehicleList[ iHelicopterVehicleId ].sSectorX, pVehicleList[ iHelicopterVehicleId ].sSectorY ) > 0 )
+	if (DistanceToNearestRefuelPoint(v->sSectorX, v->sSectorY) > 0)
 	{
 		// not at a refuel point
 		return( FALSE );
@@ -776,7 +774,7 @@ static BOOLEAN CheckForArrivalAtRefuelPoint(void)
 void SetUpHelicopterForMovement( void )
 {
 	// check if helicopter vehicle has a mvt group, if not, assign one in this sector
-	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	VEHICLETYPE* const v = GetHelicopter();
 
 	// if no group, create one for vehicle
 	if (v->ubMovementGroup == 0)
@@ -855,8 +853,9 @@ void UpdateRefuelSiteAvailability( void )
 			// reactivate a grounded helicopter, if here
 			if ( !fHelicopterAvailable && !fHelicopterDestroyed && fSkyRiderAvailable && ( iHelicopterVehicleId != -1 ) )
 			{
-				if( ( pVehicleList[ iHelicopterVehicleId ].sSectorX == ubRefuelList[ iCounter ][ 0 ]) &&
-					  ( pVehicleList[ iHelicopterVehicleId ].sSectorY == ubRefuelList[ iCounter ][ 1 ]) )
+				const VEHICLETYPE* const v = GetHelicopter();
+				if (v->sSectorX == ubRefuelList[iCounter][0] &&
+						v->sSectorY == ubRefuelList[iCounter][1])
 				{
 					// no longer grounded
 					DoScreenIndependantMessageBox(pSkyriderText[3], MSG_BOX_FLAG_OK, NULL);
@@ -910,7 +909,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	if (bNewSquad == -1) return;
 
 	// go through list of everyone in helicopter
-	const VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+	const VEHICLETYPE* const v = GetHelicopter();
 	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
@@ -1389,9 +1388,10 @@ static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite)
 	// skyrider is setup, helicopter isn't destroyed, so this ought to be a valid vehicle id
 	Assert( iHelicopterVehicleId != -1 );
 
+	const VEHICLETYPE* const v = GetHelicopter();
 	// on the ground, but is it at this site or at another one?
-	if ( ( ubRefuelList[ ubRefuelingSite ][ 0 ] == pVehicleList[ iHelicopterVehicleId ].sSectorX ) &&
-			 ( ubRefuelList[ ubRefuelingSite ][ 1 ] == pVehicleList[ iHelicopterVehicleId ].sSectorY ) )
+	if (ubRefuelList[ubRefuelingSite][0] == v->sSectorX &&
+			ubRefuelList[ubRefuelingSite][1] == v->sSectorY)
 	{
 		return(TRUE);
 	}
@@ -1550,7 +1550,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
       {
         // otherwise it's handled in the callback
 	      // remove any arrival events for the helicopter's group
-	      DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	      DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, GetHelicopter()->ubMovementGroup);
       }
 
 			// special return code indicating heli was destroyed
@@ -1566,33 +1566,23 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 // are we at the end of the path for the heli?
 static BOOLEAN EndOfHelicoptersPath(void)
 {
-	if( pVehicleList[ iHelicopterVehicleId ].pMercPath == NULL )
-	{
-		return( TRUE );
-	}
-
-	if( pVehicleList[ iHelicopterVehicleId ].pMercPath->pNext == NULL )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	const VEHICLETYPE* const v = GetHelicopter();
+	return v->pMercPath == NULL || v->pMercPath->pNext == NULL;
 }
 
 
 // check if helicopter can take off?
 BOOLEAN CanHelicopterTakeOff( void )
 {
-	INT16 sHelicopterSector = 0;
-
 	// if it's already in the air
 	if( fHelicopterIsAirBorne == TRUE )
 	{
 		return( TRUE );
 	}
 
+	const VEHICLETYPE* const v = GetHelicopter();
 	// grab location
-	sHelicopterSector = pVehicleList[ iHelicopterVehicleId ].sSectorX + pVehicleList[ iHelicopterVehicleId ].sSectorY * MAP_WORLD_X;
+	const INT16 sHelicopterSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
 	// if it's not in enemy control, we can take off
 	if( StrategicMap[ sHelicopterSector ].fEnemyControlled == FALSE )
 	{
@@ -1683,12 +1673,10 @@ static void AddHelicopterToMaps(BOOLEAN fAdd, UINT8 ubSite)
 
 BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	GROUP *pGroup;
-
 	// up and about?
 	if ( fHelicopterAvailable && ( iHelicopterVehicleId != -1 ) && CanHelicopterFly() && fHelicopterIsAirBorne )
 	{
-		pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+		const GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
 
 		// the right sector?
 		if ( ( sSectorX == pGroup->ubSectorX ) && ( sSectorY == pGroup->ubSectorY ) )
@@ -1715,11 +1703,8 @@ BOOLEAN IsGroupTheHelicopterGroup( GROUP *pGroup )
 INT16 GetNumSafeSectorsInPath( void )
 {
 	// get the last sector value in the helictoper's path
-	PathSt* pNode = NULL;
 	UINT32 uiLocation = 0;
   UINT32  uiCount = 0;
-	INT32 iHeliSector = -1;
-	GROUP *pGroup;
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 	if( CanHelicopterFly( ) == FALSE )
@@ -1728,14 +1713,14 @@ INT16 GetNumSafeSectorsInPath( void )
 		return( 0 );
 	}
 
-
+	const VEHICLETYPE* const v = GetHelicopter();
 	// may need to skip the sector the chopper is currently in
-	iHeliSector = CALCULATE_STRATEGIC_INDEX( pVehicleList[ iHelicopterVehicleId ].sSectorX, pVehicleList[ iHelicopterVehicleId ].sSectorY );
+	const INT32 iHeliSector = CALCULATE_STRATEGIC_INDEX(v->sSectorX, v->sSectorY);
 
 	// get chopper's group ptr
-	pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	GROUP* const pGroup = GetGroup(v->ubMovementGroup);
 
-	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
+	const PathSt* pNode = v->pMercPath;
 
 	// any path yet?
 	if( pNode != NULL )
@@ -1771,7 +1756,7 @@ INT16 GetNumSafeSectorsInPath( void )
 		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
 		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
  				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
-				 ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
+				GetLengthOfPath(v->pMercPath) > 0)
 		{
 			pNode = pNode->pNext;
 		}
@@ -1796,12 +1781,8 @@ INT16 GetNumSafeSectorsInPath( void )
 INT16 GetNumUnSafeSectorsInPath( void )
 {
 	// get the last sector value in the helictoper's path
-	PathSt* pNode = NULL;
 	UINT32 uiLocation = 0;
   UINT32  uiCount = 0;
-	INT32 iHeliSector = -1;
-	GROUP *pGroup;
-
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 	if( CanHelicopterFly( ) == FALSE )
@@ -1810,14 +1791,14 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		return( 0 );
 	}
 
-
+	const VEHICLETYPE* const v = GetHelicopter();
 	// may need to skip the sector the chopper is currently in
-	iHeliSector = CALCULATE_STRATEGIC_INDEX( pVehicleList[ iHelicopterVehicleId ].sSectorX, pVehicleList[ iHelicopterVehicleId ].sSectorY );
+	const INT32 iHeliSector = CALCULATE_STRATEGIC_INDEX(v->sSectorX, v->sSectorY);
 
 	// get chopper's group ptr
-	pGroup = GetGroup( pVehicleList[ iHelicopterVehicleId ].ubMovementGroup );
+	GROUP* const pGroup = GetGroup(v->ubMovementGroup);
 
-	pNode = pVehicleList[ iHelicopterVehicleId ].pMercPath;
+	const PathSt* pNode = v->pMercPath;
 
 	// any path yet?
 	if( pNode != NULL )
@@ -1852,7 +1833,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
 		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
 				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
-				 ( GetLengthOfPath( pVehicleList[ iHelicopterVehicleId ].pMercPath ) > 0 ) )
+				GetLengthOfPath(v->pMercPath) > 0)
 		{
 			pNode = pNode->pNext;
 		}
@@ -1961,7 +1942,7 @@ static void MakeHeliReturnToBase(void)
 		// choose destination (closest refueling sector)
 		const INT32 iLocation = LocationOfNearestRefuelPoint(TRUE);
 
-		VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
+		VEHICLETYPE* const v = GetHelicopter();
 		ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 		v->pMercPath = BuildAStrategicPath(GetLastSectorIdInVehiclePath(iHelicopterVehicleId), (INT16)(CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1])), v->ubMovementGroup, FALSE);
 		RebuildWayPointsForGroupPath(v->pMercPath, v->ubMovementGroup);
