@@ -151,6 +151,11 @@ enum
 #define SIZE_OF_PERSONNEL_CURSOR 19
 
 
+#define CFOR_ALL_PERSONNEL(iter) \
+	CFOR_ALL_IN_TEAM(iter, OUR_TEAM)  \
+		if (iter->uiStatusFlags & SOLDIER_VEHICLE) continue; else
+
+
 // enums for the buttons in the information side bar (used with giPersonnelATMStartButton[])
 enum
 {
@@ -921,11 +926,7 @@ static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void)
 	INT32 iCounter = 0;
 
 	// grab number on team
-	CFOR_ALL_IN_TEAM(i, OUR_TEAM)
-	{
-		if (!(i->uiStatusFlags & SOLDIER_VEHICLE)) iCounter++;
-	}
-
+	CFOR_ALL_PERSONNEL(s) ++iCounter;
 	return iCounter;
 }
 
@@ -972,10 +973,8 @@ static void DisplayPicturesOfCurrentTeam(void)
 	if (!fCurrentTeamMode) return;
 
 	INT32 i = 0;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_ALL_PERSONNEL(s)
 	{
-		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue;
-
 		// found the next actual guy
 		char sTemp[100];
 		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
@@ -1123,7 +1122,6 @@ static void DisplayFaceOfDisplayedMerc(void)
 	if (fCurrentTeamMode)
 	{
 		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-		if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
 		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
 		RenderPersonnelStats(s);
@@ -1425,7 +1423,7 @@ static void DisplayCostOfCurrentTeam(void)
 	INT32 max_cost = 0;
 	INT32 sum_cost = 0;
 
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_ALL_PERSONNEL(s)
 	{
 		if (s->bLife <= 0) continue;
 
@@ -1515,9 +1513,9 @@ static void DisplayTeamStats(void)
 		INT32 count             = 0;
 		if (fCurrentTeamMode)
 		{
-			CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+			CFOR_ALL_PERSONNEL(s)
 			{
-				if (s->uiStatusFlags & SOLDIER_VEHICLE || s->bLife <= 0 || AM_A_ROBOT(s)) continue;
+				if (s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
 				INT32 val;
 				switch (stat)
@@ -2216,13 +2214,10 @@ static void SelectFirstDisplayedMerc(void)
 	// set current soldier
 	if (fCurrentTeamMode)
 	{
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+		CFOR_ALL_PERSONNEL(s)
 		{
-			if (!(s->uiStatusFlags & SOLDIER_VEHICLE))
-			{
-				iCurrentPersonSelectedId = 0;
-				return;
-			}
+			iCurrentPersonSelectedId = 0;
+			return;
 		}
 		iCurrentPersonSelectedId = -1;
 	}
@@ -2238,7 +2233,7 @@ static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 	Assert(fCurrentTeamMode);
 
 	INT32 slot = iCurrentPersonSelectedId;
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+	CFOR_ALL_PERSONNEL(s)
 	{
 		if (slot-- == 0) return s;
 	}
