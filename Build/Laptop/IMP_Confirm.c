@@ -33,83 +33,36 @@
 UINT32 giIMPConfirmButton[ 2 ];
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
 BOOLEAN fNoAlreadySelected = FALSE;
-UINT16 uiEyeXPositions[ ]={
-	8,
-	9,
-	8,
-	6,
-	13,
-	11,
-	8,
-	8,
-	4,				//208
-	5,				//209
-	7,
-	5,				//211
-	7,
-	11,
-	8,				//214
-	5,
-};
 
-UINT16 uiEyeYPositions[ ]=
+
+typedef struct FacePosInfo
 {
-	5,
-	4,
-	5,
-	6,
-	5,
-	5,
-	4,
-	4,
-	4,		//208
-	5,
-	5,		//210
-	7,
-	6,		//212
-	5,
-	5,		//214
-	6,
-};
+	UINT8 eye_x;
+	UINT8 eye_y;
+	UINT8 mouth_x;
+	UINT8 mouth_y;
+} FacePosInfo;
 
-UINT16 uiMouthXPositions[]=
+static const FacePosInfo g_face_info[] =
 {
-	8,
-	9,
-	7,
-	7,
-	11,
-	10,
-	8,
-	8,
-	5,		//208
-	6,
-	7,		//210
-	6,
-	7,		//212
-	9,
-	7,		//214
-	5,
+	{  8,  5,  8, 21 },
+	{  9,  4,  9, 23 },
+	{  8,  5,  7, 24 },
+	{  6,  6,  7, 25 },
+	{ 13,  5, 11, 23 },
+	{ 11,  5, 10, 24 },
+	{  8,  4,  8, 24 },
+	{  8,  4,  8, 24 },
+	{  4,  4,  5, 25 },
+	{  5,  5,  6, 24 },
+	{  7,  5,  7, 24 },
+	{  5,  7,  6, 26 },
+	{  7,  6,  7, 24 },
+	{ 11,  5,  9, 23 },
+	{  8,  5,  7, 24 },
+	{  5,  6,  5, 26 }
 };
 
-UINT16 uiMouthYPositions[]={
-	21,
-	23,
-	24,
-	25,
-	23,
-	24,
-	24,
-	24,
-	25,		//208
-	24,
-	24,		//210
-	26,
-	24,		//212
-	23,
-	24,		//214
-	26,
-};
 
 BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
 
@@ -226,7 +179,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
 	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );
 
-	SetProfileFaceData( HireMercStruct.ubProfileID , ( UINT8 ) ( 200 + iPortraitNumber ), uiEyeXPositions[ iPortraitNumber ], uiEyeYPositions[ iPortraitNumber ], uiMouthXPositions[ iPortraitNumber ], uiMouthYPositions[ iPortraitNumber ] );
+	const FacePosInfo* const fi = &g_face_info[iPortraitNumber];
+	SetProfileFaceData(HireMercStruct.ubProfileID, 200 + iPortraitNumber, fi->eye_x, fi->eye_y, fi->mouth_x, fi->mouth_y);
 
 	//if we succesfully hired the merc
 	if( !HireMerc( &HireMercStruct ) )
@@ -552,19 +506,15 @@ static void LoadInCurrentImpCharacter(void)
 }
 
 
-
-void ResetIMPCharactersEyesAndMouthOffsets( UINT8 ubMercProfileID )
+void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
   // ATE: Check boundary conditions!
-  if( ( ( gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ) > 16 ) || ( ubMercProfileID >= PROF_HUMMER ) )
-  {
-    return;
-  }
+	MERCPROFILESTRUCT* const p = GetProfile(ubMercProfileID);
+	if (p->ubFaceIndex - 200 > 16 || ubMercProfileID >= PROF_HUMMER) return;
 
-	gMercProfiles[ ubMercProfileID ].usEyesX = uiEyeXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200 ];
-	gMercProfiles[ ubMercProfileID ].usEyesY = uiEyeYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
-
-
-	gMercProfiles[ ubMercProfileID ].usMouthX = uiMouthXPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
-	gMercProfiles[ ubMercProfileID ].usMouthY = uiMouthYPositions[ gMercProfiles[ ubMercProfileID ].ubFaceIndex - 200  ];
+	const FacePosInfo* const fi = &g_face_info[p->ubFaceIndex - 200];
+	p->usEyesX  = fi->eye_x;
+	p->usEyesY  = fi->eye_y;
+	p->usMouthX = fi->mouth_x;
+	p->usMouthY = fi->mouth_y;
 }
