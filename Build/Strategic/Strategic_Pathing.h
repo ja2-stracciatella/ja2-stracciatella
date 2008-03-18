@@ -48,9 +48,6 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 // get id of last sector in mercs path list
 INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);
 
-// get id of last sector in mercs path list
-INT16 GetLastSectorIdInVehiclePath( INT32 iId );
-
 // copy paths
 PathSt* CopyPaths(PathSt* src);
 

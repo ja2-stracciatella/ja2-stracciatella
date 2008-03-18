@@ -3738,7 +3738,7 @@ static void DisplayDestinationOfHelicopter(void)
 	if (GetLengthOfPath(GetHelicopter()->pMercPath) > 1)
 	{
 		// get destination
-		sSector = GetLastSectorIdInVehiclePath( iHelicopterVehicleId );
+		const INT16 sSector = GetLastSectorOfHelicoptersPath();
 		sMapX = sSector % MAP_WORLD_X;
 		sMapY = sSector / MAP_WORLD_X;
 

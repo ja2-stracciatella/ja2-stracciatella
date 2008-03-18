@@ -784,25 +784,6 @@ INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter)
 	return sLastSector;
 }
 
-// get id of last sector in vehicle path list
-INT16 GetLastSectorIdInVehiclePath( INT32 iId )
-{
-	const VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return -1;
-
-	// get current last sector
-	INT16 sLastSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
-
-	const PathSt* pNode = v->pMercPath;
-	while( pNode )
-	{
-		sLastSector = ( INT16 ) ( pNode -> uiSectorId );
-		pNode = pNode -> pNext;
-	}
-
-	return sLastSector;
-}
-
 
 PathSt* CopyPaths(PathSt* src)
 {
