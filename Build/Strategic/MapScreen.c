@@ -7787,22 +7787,12 @@ static void UpDateStatusOfContractBox(void)
 }
 
 
-static void DestroyTheItemInCursor(void)
-{
-	// actually destroy this item
-	// End Item pickup
-	MAPEndItemPointer( );
-	gpItemPointer = NULL;
-}
-
-
 static void TrashItemMessageBoxCallBack(UINT8 bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		// find the item and get rid of it
-
-		DestroyTheItemInCursor( );
+		MAPEndItemPointer();
 
 		// reset cursor
 		MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
