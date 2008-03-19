@@ -8391,7 +8391,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 }
 
 
-static INT16 CalcLocationValueForChar(INT32 iCounter);
+static INT16 CalcLocationValueForChar(const SOLDIERTYPE*);
 static INT32 GetContractExpiryTime(const SOLDIERTYPE* s);
 static void SwapCharactersInList(INT32 iCharA, INT32 iCharB);
 
@@ -8471,15 +8471,14 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 
 			case( 3 ):
 				//by location
-
-				sEndSectorA = CalcLocationValueForChar( iCounter );
+				sEndSectorA = CalcLocationValueForChar(a);
 
 				for( iCounterA = 0; iCounterA < FIRST_VEHICLE; iCounterA++ )
 				{
 					const SOLDIERTYPE* const b = gCharactersList[iCounterA].merc;
 					if (b == NULL) break;
 
-					sEndSectorB = CalcLocationValueForChar( iCounterA );
+					sEndSectorB = CalcLocationValueForChar(b);
 
 					if( ( sEndSectorB > sEndSectorA ) && ( iCounterA < iCounter ) )
 					{
@@ -9273,24 +9272,14 @@ static INT32 GetGroundTravelTimeOfSoldier(const SOLDIERTYPE* const s)
 }
 
 
-static INT16 CalcLocationValueForChar(INT32 iCounter)
+static INT16 CalcLocationValueForChar(const SOLDIERTYPE* const s)
 {
-	INT16 sLocValue = 0;
-
-	Assert( iCounter < MAX_CHARACTER_COUNT );
-
-	const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-	if (pSoldier == NULL) return sLocValue;
-
 	// don't reveal location of POWs!
-	if( pSoldier->bAssignment != ASSIGNMENT_POW )
-	{
-		sLocValue = SECTOR( pSoldier->sSectorX, pSoldier->sSectorY );
-		// underground: add 1000 per sublevel
-		sLocValue += 1000 * ( pSoldier->bSectorZ );
-	}
+	if (s->bAssignment == ASSIGNMENT_POW) return 0;
 
-	return( sLocValue );
+	return
+		SECTOR(s->sSectorX, s->sSectorY) +
+		s->bSectorZ * 1000; // underground: add 1000 per sublevel
 }
 
 
