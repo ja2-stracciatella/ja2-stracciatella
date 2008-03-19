@@ -3070,7 +3070,7 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 
 
 static BOOLEAN LoadEnemyGroupStructFromSavedGame(HWFILE hFile, GROUP* pGroup);
-static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup);
+static BOOLEAN LoadPlayerGroupList(HWFILE f, GROUP*);
 static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup);
 
 
@@ -3129,7 +3129,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 			if( pTemp->ubGroupSize )
 			{
 				//Save the player group list
-				LoadPlayerGroupList( hFile, &pTemp );
+				LoadPlayerGroupList(hFile, pTemp);
 			}
 		}
 		else //else its an enemy group
@@ -3247,66 +3247,32 @@ static BOOLEAN SavePlayerGroupList(HWFILE hFile, GROUP* pGroup)
 
 
 //Loads the LL for the playerlist from the savegame file
-static BOOLEAN LoadPlayerGroupList(HWFILE hFile, GROUP** pGroup)
+static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 {
-	PLAYERGROUP		*pTemp=NULL;
-	PLAYERGROUP		*pHead=NULL;
-	UINT32	uiNumberOfNodes=0;
-	UINT32	cnt=0;
-	GROUP		*pTempGroup = *pGroup;
-
-//	pTemp = pGroup;
-
-//	pHead = *pGroup->pPlayerList;
-
 	// Load the number of nodes in the player list
-	if (!FileRead(hFile, &uiNumberOfNodes, sizeof(UINT32)))
+	UINT32 node_count;
+	if (!FileRead(f, &node_count, sizeof(UINT32))) return FALSE;
+
+	PLAYERGROUP** anchor = &g->pPlayerList;
+	for (UINT32 i = node_count; i != 0; --i)
 	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
+		PLAYERGROUP* const pg = MemAlloc(sizeof(*pg));
+		if (pg == NULL) return FALSE;
 
+		UINT32 profile_id;
+		if (!FileRead(f, &profile_id, sizeof(UINT32))) return FALSE;
 
-	//loop through all the nodes and set them up
-	for( cnt=0; cnt< uiNumberOfNodes; cnt++)
-	{
-		//allcate space for the current node
-		pTemp = MemAlloc( sizeof( PLAYERGROUP ) );
-		if( pTemp == NULL )
-			return( FALSE );
-
-
-		// Load the ubProfile ID for this node
-		UINT32 uiProfileID;
-		if (!FileRead(hFile, &uiProfileID, sizeof(UINT32)))
-		{
-			//Error Writing size of L.L. to disk
-			return( FALSE );
-		}
-
-		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(uiProfileID);
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(profile_id);
 		//Should never happen
 		//Assert(s != NULL);
-		pTemp->pSoldier = s;
+		pg->pSoldier = s;
+		pg->next     = NULL;
 
-		pTemp->next = NULL;
-
-		//if its the first time through
-		if( cnt == 0 )
-		{
-			pTempGroup->pPlayerList = pTemp;
-			pHead = pTemp;
-		}
-		else
-		{
-			pHead->next = pTemp;
-
-			//move to the next node
-			pHead = pHead->next;
-		}
+		*anchor = pg;
+		anchor  = &pg->next;
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 
 
