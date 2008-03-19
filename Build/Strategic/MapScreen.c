@@ -1274,296 +1274,209 @@ static void ConvertMinTimeToETADayHourMinString(UINT32 uiTimeInMin, wchar_t* sSt
 
 
 // "character" refers to hired people AND vehicles
-static void DrawCharacterInfo(const SOLDIERTYPE* pSoldier)
+static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 {
 	wchar_t sString[80];
-	INT16 usMercProfileID;
-	INT32 iTimeRemaining=0;
-	INT32 iDailyCost = 0;
-	UINT32 uiArrivalTime;
 
-	if( pSoldier->ubProfile == NO_PROFILE )
-	{
-		return;
-	}
-
+	const ProfileID pid = s->ubProfile;
+	if (pid == NO_PROFILE) return;
+	const MERCPROFILESTRUCT* const p = GetProfile(pid);
 
 	// draw particular info about a character that are neither attributes nor skills
 
-
-	// get profile information
-	usMercProfileID = pSoldier->ubProfile;
-
-
-	// set font stuff
 	SetFont(CHAR_FONT);
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-
-	// Nickname (beneath Picture)
-	const wchar_t* Nickname;
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	const wchar_t* nickname; // Nickname (beneath Picture)
+	const wchar_t* name;     // Full name (Top Box)
+	if (s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		// vehicle
-		Nickname = pShortVehicleStrings[pVehicleList[pSoldier->bVehicleID].ubVehicleType];
+		const VEHICLETYPE* const v = &pVehicleList[s->bVehicleID];
+		nickname = pShortVehicleStrings[v->ubVehicleType];
+		name     = pVehicleStrings[     v->ubVehicleType];
 	}
 	else
 	{
-		// soldier
-		Nickname = gMercProfiles[usMercProfileID].zNickname;
+		nickname = p->zNickname;
+		name     = p->zName;
 	}
-	DrawStringCentered(Nickname, PIC_NAME_X, PIC_NAME_Y, PIC_NAME_WID, PIC_NAME_HEI, CHAR_FONT);
+	DrawStringCentered(nickname, PIC_NAME_X,  PIC_NAME_Y,  PIC_NAME_WID,  PIC_NAME_HEI,  CHAR_FONT);
+	DrawStringCentered(name,     CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
 
-
-	// Full name (Top Box)
-	const wchar_t* Name;
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		// vehicle
-		Name = pVehicleStrings[pVehicleList[pSoldier->bVehicleID].ubVehicleType];
-	}
-	else
-	{
-		// soldier
-		Name = gMercProfiles[usMercProfileID].zName;
-	}
-	DrawStringCentered(Name, CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
-
-
-	// Assignment
-	const wchar_t* Assignment;
-	if( pSoldier->bAssignment == VEHICLE )
+	const wchar_t* assignment;
+	if (s->bAssignment == VEHICLE)
 	{
 		// show vehicle type
-		Assignment = pShortVehicleStrings[pVehicleList[pSoldier->iVehicleId].ubVehicleType];
+		assignment = pShortVehicleStrings[pVehicleList[s->iVehicleId].ubVehicleType];
 	}
 	else
 	{
-		Assignment = pAssignmentStrings[pSoldier->bAssignment];
+		assignment = pAssignmentStrings[s->bAssignment];
 	}
-	DrawStringCentered(Assignment, CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
-
+	DrawStringCentered(assignment, CHAR_ASSIGN_X, CHAR_ASSIGN1_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
 	// second assignment line
+	switch (s->bAssignment)
+	{
+		case TRAIN_SELF:
+		case TRAIN_TEAMMATE:
+		case TRAIN_BY_OTHER:
+			wcscpy(sString, pAttributeMenuStrings[s->bTrainStat]);
+			break;
 
-	// train self / teammate / by other ?
-	if( ( pSoldier->bAssignment == TRAIN_SELF ) || ( pSoldier->bAssignment == TRAIN_TEAMMATE ) || ( pSoldier->bAssignment == TRAIN_BY_OTHER ) )
-	{
-		wcscpy(sString, pAttributeMenuStrings[pSoldier->bTrainStat]);
-	}
-	// train town?
-	else if( pSoldier->bAssignment == TRAIN_TOWN )
-	{
-		wcscpy(sString,pTownNames[GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY ) ] );
-	}
-	// repairing?
-	else if( pSoldier->bAssignment == REPAIR )
-	{
-		if ( pSoldier->fFixingRobot )
-		{
-			// robot
-			wcscpy( sString, pRepairStrings[ 3 ] );
-		}
-/*
-		else if ( pSoldier->fFixingSAMSite )
-		{
-			// SAM site
-			wcscpy( sString, pRepairStrings[ 1 ] );
-		}
-*/
-		else if ( pSoldier->bVehicleUnderRepairID != -1 )
-		{
-			// vehicle
-			wcscpy( sString, pShortVehicleStrings[ pVehicleList[ pSoldier->bVehicleUnderRepairID ].ubVehicleType ] );
-		}
-		else
-		{
-			// items
-			wcscpy( sString, pRepairStrings[ 0 ] );
-		}
-	}
-	// in transit?
-	else if( pSoldier->bAssignment == IN_TRANSIT )
-	{
-		// show ETA
-		ConvertMinTimeToETADayHourMinString( pSoldier->uiTimeSoldierWillArrive, sString, lengthof(sString));
-	}
-	// traveling ?
-	else if ( PlayerIDGroupInMotion( GetSoldierGroupId( pSoldier ) ) )
-	{
-		// show ETA
-		uiArrivalTime = GetWorldTotalMin( ) + CalculateTravelTimeOfGroupId( GetSoldierGroupId( pSoldier ) );
-		ConvertMinTimeToETADayHourMinString( uiArrivalTime, sString, lengthof(sString));
-	}
-	else
-	{
-		// show location
-		GetMapscreenMercLocationString( pSoldier, sString, lengthof(sString));
-	}
+		case TRAIN_TOWN:
+			wcscpy(sString, pTownNames[GetTownIdForSector(s->sSectorX, s->sSectorY)]);
+			break;
 
-	if ( wcslen( sString ) > 0 )
-	{
-		DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
+		case REPAIR:
+			if (s->fFixingRobot)
+			{
+				wcscpy(sString, pRepairStrings[3]); // robot
+			}
+#if 0 /* XXX was commented out */
+			else if (s->fFixingSAMSite)
+			{
+				wcscpy(sString, pRepairStrings[1]); // SAM site
+			}
+#endif
+			else if (s->bVehicleUnderRepairID != -1)
+			{
+				wcscpy(sString, pShortVehicleStrings[pVehicleList[s->bVehicleUnderRepairID].ubVehicleType]); // vehicle
+			}
+			else
+			{
+				wcscpy(sString, pRepairStrings[0]); // items
+			}
+			break;
+
+		case IN_TRANSIT:
+			// show ETA
+			ConvertMinTimeToETADayHourMinString(s->uiTimeSoldierWillArrive, sString, lengthof(sString));
+			break;
+
+		default:
+			if (PlayerIDGroupInMotion(GetSoldierGroupId(s)))
+			{
+				// show ETA
+				const UINT32 uiArrivalTime = GetWorldTotalMin() + CalculateTravelTimeOfGroupId(GetSoldierGroupId(s));
+				ConvertMinTimeToETADayHourMinString(uiArrivalTime, sString, lengthof(sString));
+			}
+			else
+			{
+				// show location
+				GetMapscreenMercLocationString(s, sString, lengthof(sString));
+			}
+			break;
 	}
+	DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
-	DrawCharHealth(pSoldier);
+	DrawCharHealth(s);
 
-	// if a vehicle or robot
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-	{
-		// we're done - the remainder applies only to people
-		return;
-	}
+	// if a vehicle or robot, we're done - the remainder applies only to people
+	if (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)) return;
 
-	DrawCharStats(pSoldier);
+	DrawCharStats(s);
 
 	// remaining contract length
 
 	// dead?
-	if( pSoldier->bLife <= 0 )
+	if (s->bLife <= 0)
 	{
 		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 	}
 	// what kind of merc
-	else if(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || pSoldier->ubProfile == SLAY )
+	else if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s->ubProfile == SLAY)
 	{
-		FLOAT dTimeLeft = 0.0;
-
 		// amount of time left on contract
-		iTimeRemaining = pSoldier->iEndofContractTime-GetWorldTotalMin();
+		INT32 iTimeRemaining = s->iEndofContractTime-GetWorldTotalMin();
 
-		//if the merc is in transit
-		if( pSoldier->bAssignment == IN_TRANSIT )
+		/* if the merc is in transit and if the time left on the contract is greater
+		 * then the contract time */
+		if (s->bAssignment == IN_TRANSIT &&
+				iTimeRemaining > (INT32)(s->iTotalContractLength * NUM_MIN_IN_DAY))
 		{
-			//and if the ttime left on the cotract is greater then the contract time
-			if( iTimeRemaining > (INT32)( pSoldier->iTotalContractLength * NUM_MIN_IN_DAY ) )
-			{
-				iTimeRemaining = ( pSoldier->iTotalContractLength * NUM_MIN_IN_DAY );
-			}
+			iTimeRemaining = s->iTotalContractLength * NUM_MIN_IN_DAY;
 		}
 
-
-		if(iTimeRemaining >= ( 24 * 60 ) )
+		if (iTimeRemaining >= 24 * 60)
 		{
-			//calculate the exact time left on the contract ( ex 1.8 days )
-			dTimeLeft = (FLOAT)(iTimeRemaining / (60*24.0) );
-
+			//calculate the exact time left on the contract (ex 1.8 days)
+			const float dTimeLeft = iTimeRemaining / (60 * 24.0);
 			// more than a day, display in green
-			iTimeRemaining /= (60*24);
-			if( pSoldier->bLife > 0 )
-			{
-				SetFontForeground(FONT_LTGREEN);
-			}
-
-			swprintf(sString, lengthof(sString), L"%.1f%ls/%d%ls", dTimeLeft, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
+			SetFontForeground(FONT_LTGREEN);
+			swprintf(sString, lengthof(sString), L"%.1f%ls/%d%ls", dTimeLeft, gpStrategicString[STR_PB_DAYS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 		}
 		else
 		{
 			// less than a day, display hours left in red
-			if( iTimeRemaining > 5 )
+			if (iTimeRemaining > 5)
 			{
-				BOOLEAN fNeedToIncrement = FALSE;
-
-				if( iTimeRemaining % 60 != 0 )
-					fNeedToIncrement = TRUE;
-
+				const BOOLEAN fNeedToIncrement = (iTimeRemaining % 60 != 0);
 				iTimeRemaining /= 60;
-
-				if( fNeedToIncrement )
-					iTimeRemaining++;
+				if (fNeedToIncrement) ++iTimeRemaining;
 			}
 			else
 			{
 				iTimeRemaining /= 60;
 			}
-
-			if( pSoldier->bLife > 0 )
-			{
-				SetFontForeground(FONT_RED);
-			}
-
-		 swprintf(sString, lengthof(sString), L"%d%ls/%d%ls",iTimeRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ], pSoldier->iTotalContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ]);
+			SetFontForeground(FONT_RED);
+			swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", iTimeRemaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 		}
 	}
-	else if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
+	else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 	{
-		INT32 iBeenHiredFor = ( GetWorldTotalMin( ) / NUM_MIN_IN_DAY ) - pSoldier->iStartContractTime;
-
-		swprintf(sString, lengthof(sString), L"%d%ls/%d%ls",gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ], iBeenHiredFor, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
+		const INT32 iBeenHiredFor = GetWorldTotalMin() / NUM_MIN_IN_DAY - s->iStartContractTime;
+		swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", p->iMercMercContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION], iBeenHiredFor, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 	}
 	else
 	{
 		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(sString));
 	}
-
-
-	// set font stuff
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
-
-	// center and draw
 	DrawStringCentered(sString, CHAR_TIME_REMAINING_X, CHAR_TIME_REMAINING_Y, CHAR_TIME_REMAINING_WID, CHAR_TIME_REMAINING_HEI, CHAR_FONT);
 
-
 	// salary
-	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
+	INT32 iDailyCost;
+	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 	{
 		// daily rate
-		if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
+		switch (s->bTypeOfLastContract)
 		{
-			iDailyCost = ( gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary / 14 );
-		}
-		if( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_1_WEEK )
-		{
-			iDailyCost = ( gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary / 7 );
-		}
-		else
-		{
-			iDailyCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+			case CONTRACT_EXTEND_2_WEEK: iDailyCost = p->uiBiWeeklySalary / 14; break;
+			case CONTRACT_EXTEND_1_WEEK: iDailyCost = p->uiWeeklySalary   /  7; break;
+			default:                     iDailyCost = p->sSalary;               break;
 		}
 	}
 	else
 	{
-		iDailyCost = gMercProfiles[ pSoldier->ubProfile ].sSalary;
+		iDailyCost = p->sSalary;
 	}
-
 	SPrintMoney(sString, iDailyCost);
 	DrawStringRight(sString, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
 
-
 	// medical deposit
-	if (gMercProfiles[pSoldier->ubProfile].sMedicalDepositAmount > 0)
+	if (p->sMedicalDepositAmount > 0)
 	{
-		SPrintMoney(sString, gMercProfiles[pSoldier->ubProfile].sMedicalDepositAmount);
+		SPrintMoney(sString, p->sMedicalDepositAmount);
 		DrawStringRight(sString, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 
-/*
-	// life insurance
-	SPrintMoney(sString, pSoldier->usLifeInsuranceAmount);
-	DrawStringRight(sString, CHAR_LIFE_INSUR_X, CHAR_LIFE_INSUR_Y, CHAR_LIFE_INSUR_WID, CHAR_LIFE_INSUR_HEI, CHAR_FONT);
-*/
-
-	// morale
-	const wchar_t* Morale;
-	if( pSoldier->bAssignment != ASSIGNMENT_POW )
+	const wchar_t* morale;
+	if (s->bAssignment == ASSIGNMENT_POW)
 	{
-		if ( pSoldier->bLife != 0 )
-		{
-			Morale = GetMoraleString(pSoldier);
-		}
-		else
-		{
-			Morale = L"";
-		}
+		morale = pPOWStrings[1]; // POW - morale unknown
+	}
+	else if (s->bLife == 0)
+	{
+		morale = L"";
 	}
 	else
 	{
-		// POW - morale unknown
-		Morale = pPOWStrings[1];
+		morale = GetMoraleString(s);
 	}
-	DrawStringCentered(Morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
+	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
 
 
