@@ -153,8 +153,6 @@ SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier );
 
 BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup );
 
-void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId );
-
 void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 
 UINT8 GetVehicleArmourType(UINT8 vehicle_id);

@@ -5499,15 +5499,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			{
 				// able to add, do it
 				PreChangeAssignment(pSoldier);
-
-				const INT8 old_assignment = pSoldier->bAssignment;
 				AddCharacterToSquad( pSoldier, ( INT8 )iValue );
-
-				if (old_assignment == VEHICLE)
-				{
-					SetSoldierExitVehicleInsertionData(pSoldier, pSoldier->iVehicleId);
-				}
-
 				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
 			}
 

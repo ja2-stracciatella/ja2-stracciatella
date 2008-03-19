@@ -387,7 +387,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 }
 
 
-void SetSoldierExitVehicleInsertionData( SOLDIERTYPE *pSoldier, INT32 iId )
+static void SetSoldierExitVehicleInsertionData(SOLDIERTYPE* const pSoldier, const INT32 iId)
 {
 	if ( iId == iHelicopterVehicleId && !pSoldier->bInSector )
   {
