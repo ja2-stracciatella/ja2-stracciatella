@@ -391,148 +391,102 @@ static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 
 
 // remove soldier from vehicle
-static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* pSoldier, INT32 iId)
+static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s, const INT32 iId)
 {
-	// remove soldier from vehicle
-	BOOLEAN fSoldierLeft = FALSE;
-	BOOLEAN	fSoldierFound = FALSE;
-	SOLDIERTYPE *pVehicleSoldier;
-
 	VEHICLETYPE* const v = GetVehicle(iId);
 	if (v == NULL) return FALSE;
 
 	// now look for the grunt
 	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	for (INT32 i = 0;; ++i)
 	{
-		if (v->pPassengers[iCounter] == pSoldier)
-		{
-			fSoldierFound = TRUE;
+		if (i == seats)             return FALSE;
+		if (v->pPassengers[i] != s) continue;
 
-			v->pPassengers[iCounter]->ubGroupID = 0;
-			v->pPassengers[iCounter]->sSectorY  = v->sSectorY;
-			v->pPassengers[iCounter]->sSectorX  = v->sSectorX;
-			v->pPassengers[iCounter]->bSectorZ  = v->sSectorZ;
-			v->pPassengers[iCounter]            = NULL;
-
-
-			pSoldier->uiStatusFlags &= ( ~( SOLDIER_DRIVER | SOLDIER_PASSENGER ) );
-
-			// check if anyone left in vehicle
-			fSoldierLeft = FALSE;
-			for (iCounter = 0; iCounter < seats; ++iCounter)
-			{
-				if (v->pPassengers[iCounter] != NULL)
-				{
-					fSoldierLeft = TRUE;
-				}
-			}
-
-
-			if (v->ubMovementGroup != 0)
-			{
-				RemovePlayerFromGroup(v->ubMovementGroup, pSoldier);
-			}
-
-			break;
-		}
+		v->pPassengers[i] = NULL;
+		break;
 	}
 
+	s->ubGroupID      = 0;
+	s->sSectorY       = v->sSectorY;
+	s->sSectorX       = v->sSectorX;
+	s->bSectorZ       = v->sSectorZ;
+	s->uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
-	if ( !fSoldierFound )
-	{
-		return( FALSE );
-	}
+	if (v->ubMovementGroup != 0) RemovePlayerFromGroup(v->ubMovementGroup, s);
 
-	// Are we the last?
-	if( fSoldierLeft == FALSE )
-	{
-		// is the vehicle the helicopter?..it can continue moving when no soldiers aboard (Skyrider remains)
-		if( iId != iHelicopterVehicleId )
-		{
-			pVehicleSoldier = GetSoldierStructureForVehicle( iId );
-			Assert ( pVehicleSoldier );
-
-			if ( pVehicleSoldier )
-			{
-				// and he has a route set
-				if ( GetLengthOfMercPath( pVehicleSoldier ) > 0 )
-				{
-					// cancel the entire path (also handles reversing directions)
-					CancelPathForVehicle(v, FALSE);
-				}
-
-				// if the vehicle was abandoned between sectors
-				if (v->fBetweenSectors)
-				{
-					// teleport it to the closer of its current and next sectors (it beats having it arrive empty later)
-					TeleportVehicleToItsClosestSector(pVehicleSoldier->ubGroupID);
-				}
-
-        // Remove vehicle from squad.....
-        RemoveCharacterFromSquads( pVehicleSoldier );
-        // ATE: Add him back to vehicle group!
-				if (!DoesPlayerExistInPGroup(v->ubMovementGroup, pVehicleSoldier))
-        {
-					AddPlayerToGroup(v->ubMovementGroup, pVehicleSoldier);
-        }
-				ChangeSoldiersAssignment( pVehicleSoldier, ASSIGNMENT_EMPTY );
-
-
-/* ARM Removed Feb. 17, 99 - causes pVehicleSoldier->ubGroupID to become 0, which will cause assert later on
-				RemovePlayerFromGroup( pVehicleSoldier->ubGroupID, pVehicleSoldier );
-*/
-
-/*
-				// Change sides...
-				pVehicleSoldier = ChangeSoldierTeam( pVehicleSoldier, CIV_TEAM );
-				// subtract it from mapscreen list
-				fReBuildCharacterList = TRUE;
-
-				RemoveCharacterFromSquads( pVehicleSoldier );
-*/
-			}
-		}
-	}
-
-
-	// if he got out of the chopper
-	if ( iId == iHelicopterVehicleId )
+	// is the vehicle the helicopter?..it can continue moving when no soldiers aboard (Skyrider remains)
+	if (iId == iHelicopterVehicleId)
 	{
 		// and he's alive
-		if ( pSoldier->bLife >= OKLIFE )
+		if (s->bLife >= OKLIFE)
 		{
 			// mark the sector as visited (flying around in the chopper doesn't, so this does it as soon as we get off it)
-			SetSectorFlag( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, SF_ALREADY_VISITED );
+			SetSectorFlag(s->sSectorX, s->sSectorY, s->bSectorZ, SF_ALREADY_VISITED);
 		}
 
-		if (!pSoldier->bInSector)
+		if (!s->bInSector)
 		{
-			if (pSoldier->sSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X &&
-					pSoldier->sSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y &&
-					pSoldier->bSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z)
+			if (s->sSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X &&
+					s->sSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y &&
+					s->bSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z)
 			{
 				// This is Drassen, make insertion gridno specific
-				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				pSoldier->usStrategicInsertionData = 10125;
+				s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				s->usStrategicInsertionData = 10125;
 			}
 			else
 			{
 				// Not anything different here - just use center gridno
-				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
+				s->ubStrategicInsertionCode = INSERTION_CODE_CENTER;
 			}
 		}
 
     // Update in sector if this is the current sector.....
-		if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ )
+		if (s->sSectorX == gWorldSectorX &&
+				s->sSectorY == gWorldSectorY &&
+				s->bSectorZ == gbWorldSectorZ)
 		{
-			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		}
+		return TRUE;
+	}
+	else
+	{
+		// check if anyone left in vehicle
+		for (INT32 i = 0; i < seats; ++i)
+		{
+			if (v->pPassengers[i] != NULL) return TRUE;
 		}
 
-	}
+		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(iId);
+		Assert(vs);
+		if (!vs) return TRUE;
 
-	// soldier successfully removed
-	return( TRUE );
+		// and he has a route set
+		if (GetLengthOfMercPath(vs) > 0)
+		{
+			// cancel the entire path (also handles reversing directions)
+			CancelPathForVehicle(v, FALSE);
+		}
+
+		// if the vehicle was abandoned between sectors
+		if (v->fBetweenSectors)
+		{
+			// teleport it to the closer of its current and next sectors (it beats having it arrive empty later)
+			TeleportVehicleToItsClosestSector(vs->ubGroupID);
+		}
+
+		// Remove vehicle from squad.....
+		RemoveCharacterFromSquads(vs);
+		// ATE: Add him back to vehicle group!
+		if (!DoesPlayerExistInPGroup(v->ubMovementGroup, vs))
+		{
+			AddPlayerToGroup(v->ubMovementGroup, vs);
+		}
+		ChangeSoldiersAssignment(vs, ASSIGNMENT_EMPTY);
+		return TRUE;
+	}
 }
 
 

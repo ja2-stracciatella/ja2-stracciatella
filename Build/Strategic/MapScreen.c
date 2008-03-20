@@ -6154,7 +6154,7 @@ static void TeamListAssignmentRegionMvtCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 
 static BOOLEAN CanChangeDestinationForChar(SOLDIERTYPE*);
-static void MakeMapModesSuitableForDestPlotting(INT8 bCharNumber);
+static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE*);
 
 
 static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
@@ -6200,7 +6200,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 			if (CanChangeDestinationForChar(s))
 			{
 				// turn off sector inventory, turn on show teams filter, etc.
-				MakeMapModesSuitableForDestPlotting( ( INT8 ) iValue );
+				MakeMapModesSuitableForDestPlotting(s);
 
 				// check if person is in a vehicle
 				if (s->bAssignment == VEHICLE)
@@ -6265,7 +6265,8 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		MakeMapModesSuitableForDestPlotting( ( INT8 ) iValue );
+		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
+		if (s != NULL) MakeMapModesSuitableForDestPlotting(s);
 
 		// reset list if the clicked character isn't also selected
 		ChangeSelectedInfoChar( ( INT8 ) iValue, ( BOOLEAN )( IsEntryInSelectedListSet( ( INT8 ) iValue ) == FALSE ) );
@@ -9295,11 +9296,8 @@ static void CancelChangeArrivalSectorMode(void)
 }
 
 
-static void MakeMapModesSuitableForDestPlotting(INT8 bCharNumber)
+static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldier)
 {
-	const SOLDIERTYPE* const pSoldier = gCharactersList[bCharNumber].merc;
-	if (pSoldier == NULL) return;
-
 	CancelSectorInventoryDisplayIfOn(FALSE);
 
 	TurnOnShowTeamsMode();
