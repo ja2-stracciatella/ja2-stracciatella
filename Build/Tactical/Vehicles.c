@@ -160,35 +160,18 @@ void RemoveVehicleFromList(VEHICLETYPE* const v)
 }
 
 
-void ClearOutVehicleList( void )
+void ClearOutVehicleList(void)
 {
-	// empty out the vehicle list
-	if( pVehicleList )
-	{
-		FOR_ALL_VEHICLES(v)
-		{
-			//if the vehicle has a valid path
-			if (v->pMercPath)
-			{
-				//toast the vehicle path
-				v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
-			}
-		}
+	if (pVehicleList == NULL) return;
 
-		MemFree( pVehicleList );
-		pVehicleList = NULL;
-		ubNumberOfVehicles = 0;
+	FOR_ALL_VEHICLES(v)
+	{
+		v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
 	}
 
-/*
-	// empty out the vehicle list
-	if( pVehicleList )
-	{
-		MemFree( pVehicleList );
-		pVehicleList = NULL;
-		ubNumberOfVehicles = 0;
-	}
-*/
+	MemFree(pVehicleList);
+	pVehicleList       = NULL;
+	ubNumberOfVehicles = 0;
 }
 
 
