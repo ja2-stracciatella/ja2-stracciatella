@@ -3149,17 +3149,11 @@ static INT32 FindActiveTimedBomb(void)
 }
 
 
-BOOLEAN ActiveTimedBombExists( void )
+BOOLEAN ActiveTimedBombExists(void)
 {
-	if ( gfWorldLoaded )
-	{
-		return( FindActiveTimedBomb() != -1 );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return gfWorldLoaded && FindActiveTimedBomb() != -1;
 }
+
 
 void RemoveAllActiveTimedBombs( void )
 {
