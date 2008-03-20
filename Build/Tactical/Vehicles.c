@@ -391,9 +391,10 @@ static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 
 
 // remove soldier from vehicle
-static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s, const INT32 iId)
+static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 {
-	VEHICLETYPE* const v = GetVehicle(iId);
+	const INT32        iId = s->iVehicleId;
+	VEHICLETYPE* const v   = GetVehicle(iId);
 	if (v == NULL) return FALSE;
 
 	// now look for the grunt
@@ -718,7 +719,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	}
 	else
 	{
-		return RemoveSoldierFromVehicle(s, s->iVehicleId);
+		return RemoveSoldierFromVehicle(s);
 	}
 }
 
@@ -752,7 +753,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 20, 3, vs);
 	}
 
-	RemoveSoldierFromVehicle(s, vs->bVehicleID);
+	RemoveSoldierFromVehicle(s);
 
 	s->sInsertionGridNo         = sGridNo;
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
