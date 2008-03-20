@@ -2653,14 +2653,11 @@ static BOOLEAN AllSoldiersInSquadSelected(INT32 iSquadNumber)
 
 static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
 {
-	INT32 iCounter = 0, iCount = 0;
-	SOLDIERTYPE *pPassenger = NULL;
 	BOOLEAN fHasDriver = FALSE;
 	BOOLEAN fFirstFailure;
 
-
 	// run through vehicle list and set them on
-	for( iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; ++iCounter)
 	{
 		if( iVehicleMovingList[ iCounter ] == iVehicleId )
 		{
@@ -2668,15 +2665,15 @@ static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
 
 			fFirstFailure = TRUE;
 
-			for( iCount = 0; iCount < 10; iCount++ )
+			const VEHICLETYPE* const v = &pVehicleList[iVehicleId];
+			CFOR_ALL_PASSENGERS(v, i)
 			{
-				pPassenger = pVehicleList[ iVehicleId ].pPassengers[ iCount ];
+				SOLDIERTYPE* const pPassenger = *i;
 
 				if ( fAndAllOnBoard )
 				{
 					// try to select everyone in vehicle
-
-					if ( pPassenger && pPassenger->bActive )
+					if (pPassenger->bActive)
 					{
 						// is he able & allowed to move?
 						if ( CanMoveBoxSoldierMoveStrategically( pPassenger, fFirstFailure ) )
@@ -2710,12 +2707,8 @@ static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
 
 static void DeselectVehicleForMovement(INT32 iVehicleId)
 {
-	INT32 iCounter = 0, iCount = 0;
-	SOLDIERTYPE *pPassenger = NULL;
-
-
 	// run through vehicle list and set them off
-	for( iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < giNumberOfVehiclesInSectorMoving; ++iCounter)
 	{
 		if( iVehicleMovingList[ iCounter ] == iVehicleId )
 		{
@@ -2723,14 +2716,11 @@ static void DeselectVehicleForMovement(INT32 iVehicleId)
 			fVehicleIsMoving[ iCounter ] = FALSE;
 
 			// now deselect everyone in vehicle
-			for( iCount = 0; iCount < 10 ; iCount++ )
+			const VEHICLETYPE* const v = &pVehicleList[iVehicleId];
+			CFOR_ALL_PASSENGERS(v, i)
 			{
-				pPassenger = pVehicleList[ iVehicleId ].pPassengers[ iCount ];
-
-				if ( pPassenger && pPassenger->bActive )
-				{
-					DeselectSoldierForMovement( pPassenger );
-				}
+				SOLDIERTYPE* const s = *i;
+				if (s->bActive) DeselectSoldierForMovement(s);
 			}
 
 			break;

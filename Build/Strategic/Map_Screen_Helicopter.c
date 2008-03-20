@@ -709,14 +709,9 @@ void SetUpHelicopterForMovement( void )
 		v->ubMovementGroup = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY, iHelicopterVehicleId);
 
 		// add everyone in vehicle to this mvt group
-		const INT32 seats = GetVehicleSeats(v);
-		for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+		CFOR_ALL_PASSENGERS(v, i)
 		{
-			if (v->pPassengers[iCounter] != NULL)
-			{
-				// add character
-				AddPlayerToGroup(v->ubMovementGroup, v->pPassengers[iCounter]);
-			}
+			AddPlayerToGroup(v->ubMovementGroup, *i);
 		}
 	}
 }
@@ -836,37 +831,32 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 
 	// go through list of everyone in helicopter
 	const VEHICLETYPE* const v = GetHelicopter();
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		// get passenger
-		SOLDIERTYPE* const pSoldier = v->pPassengers[iCounter];
+		SOLDIERTYPE* const pSoldier = *i;
 
-		if( pSoldier != NULL )
+		// better really be in there!
+		Assert ( pSoldier->bAssignment == VEHICLE );
+		Assert ( pSoldier->iVehicleId == iHelicopterVehicleId );
+
+		fSuccess = RemoveSoldierFromHelicopter( pSoldier );
+		Assert( fSuccess );
+
+		AddCharacterToSquad( pSoldier, bNewSquad );
+
+		// ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
+		// called when buddy is added to a squad. However, the insertion code onlt sets set for
+		// the first merc, so the rest are going to use whatever they had previously....
+		if ( !fInsertionCodeSet )
 		{
-			// better really be in there!
-			Assert ( pSoldier->bAssignment == VEHICLE );
-			Assert ( pSoldier->iVehicleId == iHelicopterVehicleId );
-
-			fSuccess = RemoveSoldierFromHelicopter( pSoldier );
-			Assert( fSuccess );
-
-			AddCharacterToSquad( pSoldier, bNewSquad );
-
-      // ATE: OK - the ubStrategicInsertionCode is set 'cause groupArrivesInsector has been
-      // called when buddy is added to a squad. However, the insertion code onlt sets set for
-      // the first merc, so the rest are going to use whatever they had previously....
-      if ( !fInsertionCodeSet )
-      {
-        ubInsertionCode = pSoldier->ubStrategicInsertionCode;
-        usInsertionData = pSoldier->usStrategicInsertionData;
-        fInsertionCodeSet = TRUE;
-      }
-      else
-      {
-        pSoldier->ubStrategicInsertionCode = ubInsertionCode;
-        pSoldier->usStrategicInsertionData = usInsertionData;
-      }
+			ubInsertionCode = pSoldier->ubStrategicInsertionCode;
+			usInsertionData = pSoldier->usStrategicInsertionData;
+			fInsertionCodeSet = TRUE;
+		}
+		else
+		{
+			pSoldier->ubStrategicInsertionCode = ubInsertionCode;
+			pSoldier->usStrategicInsertionData = usInsertionData;
 		}
 	}
 }

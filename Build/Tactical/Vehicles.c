@@ -282,14 +282,9 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 	}
 
 	// check if the grunt is already here
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		if (v->pPassengers[iCounter] == pSoldier)
-		{
-			// guy found, no need to add
-			return( TRUE );
-		}
+		if (*i == pSoldier) return TRUE; // guy found, no need to add
 	}
 
 	if ( pVehicleSoldier )
@@ -303,6 +298,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 		PlayLocationJA2Sample(pVehicleSoldier->sGridNo, g_vehicle_type_info[pVehicleList[pVehicleSoldier->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	}
 
+	const INT32 seats = GetVehicleSeats(v);
 	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
 	{
 		// check if slot free
@@ -455,10 +451,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 	else
 	{
 		// check if anyone left in vehicle
-		for (INT32 i = 0; i < seats; ++i)
-		{
-			if (v->pPassengers[i] != NULL) return TRUE;
-		}
+		CFOR_ALL_PASSENGERS(v, i) return TRUE;
 
 		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(iId);
 		Assert(vs);
@@ -570,12 +563,9 @@ VEHICLETYPE* GetVehicle(const INT32 vehicle_id)
 void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of mercs in vehicle and set all thier states as arrived
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		SOLDIERTYPE* const s = v->pPassengers[iCounter];
-		if (s == NULL) continue;
-
+		SOLDIERTYPE* const s = *i;
 		s->sSectorY        = v->sSectorY;
 		s->sSectorX        = v->sSectorX;
 		s->fBetweenSectors = FALSE;
@@ -617,74 +607,49 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of occupants and kill them
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		if (v->pPassengers[iCounter] != NULL)
-		{
-			if (!KillPersonInVehicle(v->pPassengers[iCounter]))
-			{
-				return FALSE;
-			}
-		}
+		if (!KillPersonInVehicle(*i)) return FALSE;
 	}
-
 	return TRUE;
 }
+
 
 INT32 GetNumberInVehicle(const VEHICLETYPE* const v)
 {
 	// go through list of occupants in vehicles and count them
-	INT32 iCount = 0;
-
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
-	{
-		if (v->pPassengers[iCounter] != NULL)
-		{
-			iCount++;
-		}
-	}
-
-	return( iCount );
+	INT32 count = 0;
+	CFOR_ALL_PASSENGERS(v, i) ++count;
+	return count;
 }
+
 
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	INT32 iCount = 0;
-
 	const VEHICLETYPE* const v = GetVehicle(iId);
 	if (v == NULL) return 0;
 
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	INT32 count = 0;
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		if (v->pPassengers[iCounter] != NULL && !AM_AN_EPC(v->pPassengers[iCounter]))
-		{
-			iCount++;
-		}
+		const SOLDIERTYPE* const s = *i;
+		if (!AM_AN_EPC(s)) ++count;
 	}
-
-	return( iCount );
+	return count;
 }
+
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
 	const VEHICLETYPE* const v = GetVehicle(iId);
 	if (v == NULL) return FALSE;
 
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		const SOLDIERTYPE* const pSoldier = v->pPassengers[iCounter];
-		if ( pSoldier != NULL && ControllingRobot( pSoldier ) )
-		{
-			return( TRUE );
-		}
+		if (ControllingRobot(*i)) return TRUE;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -785,15 +750,8 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 
 void AddPassangersToTeamPanel( INT32 iId )
 {
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
-	for (INT32 cnt = 0; cnt < seats; ++cnt)
-	{
-		if( pVehicleList[ iId ].pPassengers[ cnt ] != NULL )
-		{
-			// add character
-			AddPlayerToInterfaceTeamSlot(pVehicleList[iId].pPassengers[cnt]);
-		}
-	}
+	const VEHICLETYPE* const v = &pVehicleList[iId];
+	CFOR_ALL_PASSENGERS(v, i) AddPlayerToInterfaceTeamSlot(*i);
 }
 
 
@@ -1026,12 +984,9 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
 
 	// Loop through passengers and update each guy's position
-	const INT32 seats = GetVehicleSeats(v);
-	for (INT32 i = 0; i < seats; ++i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
-		SOLDIERTYPE* const s = v->pPassengers[i];
-		if (s == NULL) continue;
-		EVENT_SetSoldierPositionXY(s, vs->dXPos, vs->dYPos, SSP_NONE);
+		EVENT_SetSoldierPositionXY(*i, vs->dXPos, vs->dYPos, SSP_NONE);
 	}
 }
 
@@ -1317,12 +1272,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_vehicle[20];
-	const INT32 seats = GetVehicleSeats(v);
-	for (size_t i = 0; i < seats; ++i)
-	{
-		SOLDIERTYPE* const s = v->pPassengers[i];
-		if (s != NULL) mercs_in_vehicle[n_mercs++] = s;
-	}
+	CFOR_ALL_PASSENGERS(v, i) mercs_in_vehicle[n_mercs++] = *i;
 
 	return n_mercs == 0 ? NULL : mercs_in_vehicle[Random(n_mercs)];
 }
