@@ -1036,86 +1036,48 @@ static void DestroyStash(void)
 static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne)
 {
 	// get # of items in sector that are visible to the player
-	UINT32 uiTotalNumberOfRealItems = 0;
-	WORLDITEM * pTotalSectorList = NULL;
 	UINT32 uiItemCount = 0;
-	INT32 iCounter = 0;
-	BOOLEAN fReturn = TRUE;
 
-	if( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY) && ( sMapZ == gbWorldSectorZ ) )
+	if (sMapX == gWorldSectorX &&
+			sMapY == gWorldSectorY &&
+			sMapZ == gbWorldSectorZ)
 	{
 		// now run through list and
 		CFOR_ALL_WORLD_ITEMS(wi)
 		{
-			if (IsMapScreenWorldItemVisibleInMapInventory(wi))
-			{
-				// add it
-				if ( fCountStacksAsOne )
-				{
-					uiItemCount++;
-				}
-				else
-				{
-					uiItemCount += wi->o.ubNumberOfObjects;
-				}
-			}
+			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
+			uiItemCount += (fCountStacksAsOne ? 1 : wi->o.ubNumberOfObjects);
 		}
 	}
 	else
 	{
 		// get total number, visable and invisible
-		fReturn = GetNumberOfActiveWorldItemsFromTempFile( sMapX, sMapY, ( INT8 )( sMapZ ), &( uiTotalNumberOfRealItems ) );
-		Assert( fReturn );
+		BOOLEAN fReturn;
+		UINT32 uiTotalNumberOfRealItems = 0;
+		fReturn = GetNumberOfActiveWorldItemsFromTempFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfRealItems);
+		Assert(fReturn);
 
 		UINT32 uiTotalNumberOfItems = 0;
-		fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, ( INT8 )( sMapZ ), &( uiTotalNumberOfItems ), FALSE );
-		Assert( fReturn );
+		fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
+		Assert(fReturn);
 
-		if( uiTotalNumberOfItems > 0 )
+		if (uiTotalNumberOfItems > 0)
 		{
-			// allocate space for the list
-			pTotalSectorList = MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+			WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
+			LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, pTotalSectorList);
 
-				// now load into mem
-			LoadWorldItemsFromTempItemFile(  sMapX,  sMapY, ( INT8 ) ( sMapZ ), pTotalSectorList );
-		}
-
-		// now run through list and
-		for( iCounter = 0; ( UINT32 )( iCounter )< uiTotalNumberOfRealItems; iCounter++ )
-		{
-			// if visible to player, then state fact
-//			if( pTotalSectorList[ iCounter ].bVisible == 1 && pTotalSectorList[ iCounter ].fExists )
-			if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter ] ) )
+			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfRealItems; ++iCounter)
 			{
-				// add it
-				if ( fCountStacksAsOne )
-				{
-					uiItemCount++;
-				}
-				else
-				{
-					uiItemCount += pTotalSectorList[ iCounter ].o.ubNumberOfObjects;
-				}
+				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
+				if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
+				uiItemCount += (fCountStacksAsOne ? 1 : wi->o.ubNumberOfObjects);
 			}
-		}
 
-		// if anything was alloced, then get rid of it
-		if( pTotalSectorList != NULL )
-		{
-			MemFree( pTotalSectorList );
-			pTotalSectorList = NULL;
-
-			#ifdef JA2BETAVERSION
-			if( uiTotalNumberOfItems == 0 )
-			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"pTotalSectorList is NOT NULL when uiTotalNumberOfRealItems is %d.", uiTotalNumberOfRealItems );
-			}
-			#endif
+			MemFree(pTotalSectorList);
 		}
 	}
 
-
-	return( uiItemCount );
+	return uiItemCount;
 }
 
 
