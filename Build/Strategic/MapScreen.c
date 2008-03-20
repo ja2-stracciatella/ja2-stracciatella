@@ -7455,8 +7455,9 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 			}
 
 			// vehicles
-			ppMovePath = &( pVehicleList[ iVehicleId ].pMercPath );
-			ubGroupId = pVehicleList[ iVehicleId ].ubMovementGroup;
+			VEHICLETYPE* const v = &pVehicleList[iVehicleId];
+			ppMovePath = &v->pMercPath;
+			ubGroupId  = v->ubMovementGroup;
 		}
 		else
 		{
@@ -10044,13 +10045,15 @@ static void RestorePreviousPaths(void)
 
 			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				ppMovePath = &( pVehicleList[ pSoldier->bVehicleID ].pMercPath );
-				ubGroupId = pVehicleList[ pSoldier->bVehicleID ].ubMovementGroup;
+				VEHICLETYPE* const v = &pVehicleList[pSoldier->bVehicleID];
+				ppMovePath = &v->pMercPath;
+				ubGroupId  = v->ubMovementGroup;
 			}
 			else if( pSoldier->bAssignment == VEHICLE )
 			{
-				ppMovePath = &( pVehicleList[ pSoldier->iVehicleId ].pMercPath );
-				ubGroupId = pVehicleList[ pSoldier->iVehicleId ].ubMovementGroup;
+				VEHICLETYPE* const v = &pVehicleList[pSoldier->iVehicleId];
+				ppMovePath = &v->pMercPath;
+				ubGroupId  = v->ubMovementGroup;
 			}
 			else if( pSoldier->bAssignment < ON_DUTY )
 			{
