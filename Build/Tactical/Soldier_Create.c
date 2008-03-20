@@ -1050,7 +1050,7 @@ void TacticalRemoveSoldierPointer(SOLDIERTYPE* const pSoldier, const BOOLEAN fRe
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle )
 	{
 		// remove this vehicle from the list
-		RemoveVehicleFromList( pSoldier->bVehicleID );
+		RemoveVehicleFromList(GetVehicle(pSoldier->bVehicleID));
 	}
 
 	// Handle crow leave....

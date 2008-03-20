@@ -153,23 +153,12 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 }
 
 
-BOOLEAN RemoveVehicleFromList( INT32 iId )
+void RemoveVehicleFromList(VEHICLETYPE* const v)
 {
-	// remove this vehicle from the list
-	VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return FALSE;
-
-	// clear remaining path nodes
-	if (v->pMercPath != NULL )
-	{
-		v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
-	}
-
-	// zero out mem
+	v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
 	memset(v, 0, sizeof(*v));
-
-	return( TRUE );
 }
+
 
 void ClearOutVehicleList( void )
 {

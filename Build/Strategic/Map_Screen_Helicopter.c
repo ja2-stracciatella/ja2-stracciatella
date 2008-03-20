@@ -420,7 +420,7 @@ static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY)
 static void SkyriderDestroyed(void)
 {
 	// remove any arrival events for the helicopter's group
-	const VEHICLETYPE* const v = GetHelicopter();
+	VEHICLETYPE* const v = GetHelicopter();
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, v->ubMovementGroup);
 
 	KillAllInVehicle(v);
@@ -441,7 +441,7 @@ static void SkyriderDestroyed(void)
 	iTotalAccumulatedCostByPlayer = 0;
 
 	// remove vehicle and reset
-	RemoveVehicleFromList( iHelicopterVehicleId );
+	RemoveVehicleFromList(v);
 	iHelicopterVehicleId = -1;
 }
 
