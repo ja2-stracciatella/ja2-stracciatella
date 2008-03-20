@@ -703,31 +703,22 @@ BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 }
 
 
-BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier )
+BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 {
 	// if not in vehicle, don't take out, not much point, now is there?
-	if( pSoldier->bAssignment != VEHICLE )
-	{
-		return( FALSE );
-	}
+	if (s->bAssignment != VEHICLE) return FALSE;
 
-	if( ( pSoldier->sSectorX != gWorldSectorX ) || ( pSoldier->sSectorY != gWorldSectorY ) || ( pSoldier->bSectorZ != 0 ) || !pSoldier->bInSector )
+	if (s->sSectorX == gWorldSectorX &&
+			s->sSectorY == gWorldSectorY &&
+			s->bSectorZ == 0             &&
+			s->bInSector                 &&
+			s->iVehicleId != iHelicopterVehicleId) // helicopter isn't a soldiertype instance
 	{
-		// add the soldier
-		return( RemoveSoldierFromVehicle( pSoldier, pSoldier->iVehicleId ) );
+		return ExitVehicle(s);
 	}
 	else
 	{
-		// helicopter isn't a soldiertype instance
-		if( pSoldier->iVehicleId == iHelicopterVehicleId )
-		{
-			return( RemoveSoldierFromVehicle( pSoldier, pSoldier->iVehicleId ) );
-		}
-		else
-		{
-			// exit the vehicle
-			return( ExitVehicle( pSoldier ) );
-		}
+		return RemoveSoldierFromVehicle(s, s->iVehicleId);
 	}
 }
 
