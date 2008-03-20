@@ -533,19 +533,14 @@ static void HandlePossiblyDamagedPackage(void)
 
 void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 {
-	UINT32				uiLoop;
 	UINT32				uiTotalCash = 0;
 	BOOLEAN				fKingpinWillDiscover = FALSE, fKingpinDiscovers = FALSE;
 
 	// money in D5b1 must be less than 30k
-
-	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+	CFOR_ALL_WORLD_ITEMS(wi)
 	{
-		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
-		{
-			uiTotalCash += gWorldItems[uiLoop].o.uiMoneyAmount;
-		}
+		const OBJECTTYPE* const o = &wi->o;
+		if (o->usItem == MONEY) uiTotalCash += o->uiMoneyAmount;
 	}
 
 	// This function should be called every time sector D5/B1 is unloaded!
@@ -592,14 +587,9 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// the sector is unloaded NOW so set Kingpin's balance and remove the cash
 		gMercProfiles[ KINGPIN ].iBalance = - (30000 - (INT32) uiTotalCash);
 		// remove all money from map
-		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+		FOR_ALL_WORLD_ITEMS(wi)
 		{
-			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == MONEY )
-			{
-				// remove!
-				gWorldItems[ uiLoop ].fExists = FALSE;
-			}
+			if (wi->o.usItem == MONEY) wi->fExists = FALSE; // remove!
 		}
 	}
 	else if ( fKingpinDiscovers )
@@ -1021,30 +1011,28 @@ void RemoveAssassin( UINT8 ubProfile )
 
 void CheckForMissingHospitalSupplies( void )
 {
-	UINT32				uiLoop;
 	OBJECTTYPE *	pObj;
 	UINT8					ubMedicalObjects = 0;
 
-	for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+	CFOR_ALL_WORLD_ITEMS(wi)
 	{
 		// loop through all items, look for ownership
-		if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP && gWorldItems[ uiLoop ].o.ubOwnerCivGroup == DOCTORS_CIV_GROUP )
+		if (wi->o.usItem != OWNERSHIP || wi->o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;
+
+		const ITEM_POOL* pItemPool = GetItemPool(wi->sGridNo, 0);
+		while( pItemPool )
 		{
-			const ITEM_POOL* pItemPool = GetItemPool(gWorldItems[uiLoop].sGridNo, 0);
-			while( pItemPool )
+			pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
+
+			if ( pObj->bStatus[ 0 ] > 60 )
 			{
-				pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
-
-				if ( pObj->bStatus[ 0 ] > 60 )
+				if ( pObj->usItem == FIRSTAIDKIT || pObj->usItem == MEDICKIT || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
 				{
-					if ( pObj->usItem == FIRSTAIDKIT || pObj->usItem == MEDICKIT || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
-					{
-						ubMedicalObjects++;
-					}
+					ubMedicalObjects++;
 				}
-
-				pItemPool = pItemPool->pNext;
 			}
+
+			pItemPool = pItemPool->pNext;
 		}
 	}
 

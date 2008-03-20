@@ -849,7 +849,6 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 	UINT8	ubDir, ubMovementCost;
 	BOOLEAN fReachable = FALSE;
 	INT16 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
-	INT16	sNewLoc;
 
 	BOOLEAN	fSecondary = FALSE;
 
@@ -914,36 +913,30 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 
 	GlobalItemsReachableTest( sGridNo, sGridNo2 );
 
-	for (UINT32 uiCounter = 0; uiCounter < guiNumWorldItems; ++uiCounter)
+	FOR_ALL_WORLD_ITEMS(wi)
 	{
 		// reset reachablity
 		fReachable = FALSE;
 
-		// item doesn't exist, ignore it
-		if( gWorldItems[ uiCounter ].fExists == FALSE )
-		{
-			continue;
-		}
-
 		// if the item is trapped then flag it as unreachable, period
-		if ( gWorldItems[ uiCounter ].o.bTrap > 0 )
+		if (wi->o.bTrap > 0 )
 		{
 			fReachable = FALSE;
 		}
-		else if ( ItemTypeExistsAtLocation( gWorldItems[ uiCounter ].sGridNo, OWNERSHIP, gWorldItems[ uiCounter ].ubLevel, NULL ) )
+		else if (ItemTypeExistsAtLocation(wi->sGridNo, OWNERSHIP, wi->ubLevel, NULL))
 		{
 			fReachable = FALSE;
 		}
-		else if ( gWorldItems[ uiCounter ].o.usItem == CHALICE )
+		else if (wi->o.usItem == CHALICE)
 		{
 			fReachable = FALSE;
 		}
-		else if ( gpWorldLevelData[ gWorldItems[ uiCounter ].sGridNo ].uiFlags & MAPELEMENT_REACHABLE )
+		else if (gpWorldLevelData[wi->sGridNo].uiFlags & MAPELEMENT_REACHABLE)
 		{
 			// the gridno itself is reachable so the item is reachable
 			fReachable = TRUE;
 		}
-		else if ( gWorldItems[ uiCounter ].ubLevel > 0 )
+		else if (wi->ubLevel > 0)
 		{
 			// items on roofs are always reachable
 			fReachable = TRUE;
@@ -953,14 +946,14 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 			// check the 4 grids around the item, if any is reachable...then the item is reachable
 			for ( ubDir = 0; ubDir < NUM_WORLD_DIRECTIONS; ubDir += 2 )
 			{
-				sNewLoc = NewGridNo( gWorldItems[ uiCounter ].sGridNo, DirectionInc( ubDir ) );
-				if ( sNewLoc != gWorldItems[ uiCounter ].sGridNo )
+				const INT16 sNewLoc = NewGridNo(wi->sGridNo, DirectionInc(ubDir));
+				if (sNewLoc != wi->sGridNo)
 				{
 					// then it's a valid gridno, so test it
 					// requires non-wall movement cost from one location to the other!
 					if ( gpWorldLevelData[ sNewLoc ].uiFlags & MAPELEMENT_REACHABLE )
 					{
-						ubMovementCost = gubWorldMovementCosts[gWorldItems[uiCounter].sGridNo][OppositeDirection(ubDir)][0];
+						ubMovementCost = gubWorldMovementCosts[wi->sGridNo][OppositeDirection(ubDir)][0];
 						// if we find a door movement cost, if the door is open the gridno should be accessible itself
 						if ( ubMovementCost != TRAVELCOST_DOOR && ubMovementCost != TRAVELCOST_WALL )
 						{
@@ -974,11 +967,11 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 
 		if( fReachable )
 		{
-			gWorldItems[ uiCounter ].usFlags |= WORLD_ITEM_REACHABLE;
+			wi->usFlags |= WORLD_ITEM_REACHABLE;
 		}
 		else
 		{
-			gWorldItems[ uiCounter ].usFlags &= ~( WORLD_ITEM_REACHABLE );
+			wi->usFlags &= ~WORLD_ITEM_REACHABLE;
 		}
 	}
 }
@@ -2715,20 +2708,19 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMap
 
 static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems)
 {
-	UINT32	uiCounter;
 	UINT32	uiItemCounter=0;
 
 	if( !gfWorldLoaded )
 		return( 0 );
 
 	//loop through all the world items
-	for( uiCounter= 0; uiCounter < guiNumWorldItems; uiCounter++ )
+	CFOR_ALL_WORLD_ITEMS(wi)
 	{
 		//if the item CAN be visible in mapscreen sector inventory
-		if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ uiCounter ] ) )
+		if (IsMapScreenWorldItemVisibleInMapInventory(wi))
 		{
 			//increment
-			uiItemCounter += gWorldItems[ uiCounter ].o.ubNumberOfObjects;
+			uiItemCounter += wi->o.ubNumberOfObjects;
 		}
 	}
 

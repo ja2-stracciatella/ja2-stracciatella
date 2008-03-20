@@ -807,7 +807,7 @@ static void DestroyMapInventoryButtons(void)
 
 static void CheckGridNoOfItemsInMapScreenMapInventory(void);
 static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne);
-static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(WORLDITEM* pWorldItem);
+static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(const WORLDITEM*);
 static void SortSectorInventory(WORLDITEM* pInventory, UINT32 uiSizeOfArray);
 
 
@@ -817,7 +817,6 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 	UINT32 uiItemCount = 0;
 	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
 	WORLDITEM * pTotalSectorList = NULL;
-	INT32 iCounter = 0;
 	UINT32	uiTotalNumberOfSeenItems=0;
 
 //	#ifdef _DEBUG
@@ -846,22 +845,15 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 	if( ( sMapX == gWorldSectorX )&&( gWorldSectorY == sMapY ) &&(gbWorldSectorZ == sMapZ ) )
 	{
 		// sector loaded, just copy from list
-		for( iCounter = 0; ( UINT32 )( iCounter ) < guiNumWorldItems; iCounter++ )
+		CFOR_ALL_WORLD_ITEMS(wi)
 		{
 			// check if visible, if so, then copy over object type
 			// if visible to player, then state fact
 
-/*
-			if( gWorldItems[ iCounter].bVisible == 1 &&
-					gWorldItems[ iCounter ].fExists &&
-					gWorldItems[ iCounter ].o.usItem != SWITCH &&
-					gWorldItems[ iCounter ].o.bTrap <= 0 )
-*/
-			if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ iCounter ] ) )
+			if (IsMapScreenWorldItemVisibleInMapInventory(wi))
 			{
 				// one more item
-				pInventoryPoolList[uiItemCount] = gWorldItems[iCounter];
-				uiItemCount++;
+				pInventoryPoolList[uiItemCount++] = *wi;
 			}
 		}
 
@@ -877,16 +869,12 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 			uiItemCount = 0;
 
 			// now copy over
-			for( iCounter = 0; ( UINT32 )iCounter < guiNumWorldItems; iCounter++ )
+			CFOR_ALL_WORLD_ITEMS(wi)
 			{
-//				if( ( gWorldItems[ iCounter ].bVisible  != 1 ) &&
-//						( gWorldItems[ iCounter ].o.ubNumberOfObjects > 0 ) &&
-//							gWorldItems[ iCounter ].fExists )
-				if( IsMapScreenWorldItemInvisibleInMapInventory( &gWorldItems[ iCounter ] ) )
+				if (IsMapScreenWorldItemInvisibleInMapInventory(wi))
 				{
 					// one more item
-					pUnSeenItems[uiItemCount] = gWorldItems[iCounter];
-					uiItemCount++;
+					pUnSeenItems[uiItemCount++] = *wi;
 				}
 			}
 
@@ -917,7 +905,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 
 
 		// now run through list and
-		for( iCounter = 0; ( UINT32 )( iCounter )< uiTotalNumberOfRealItems; iCounter++ )
+		for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfRealItems; ++iCounter)
 		{
 			// if visible to player, then state fact
 /*
@@ -953,7 +941,7 @@ static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ)
 			uiItemCount = 0;
 
 			// now copy over
-			for( iCounter = 0; ( UINT32 )iCounter < uiTotalNumberOfItems; iCounter++ )
+			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
 			{
 /*
 				if( ( pTotalSectorList[ iCounter].bVisible  != 1 ) &&
@@ -1095,7 +1083,7 @@ static void DestroyStash(void)
 static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne)
 {
 	// get # of items in sector that are visible to the player
-	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
+	UINT32 uiTotalNumberOfRealItems = 0;
 	WORLDITEM * pTotalSectorList = NULL;
 	UINT32 uiItemCount = 0;
 	INT32 iCounter = 0;
@@ -1103,14 +1091,10 @@ static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLE
 
 	if( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY) && ( sMapZ == gbWorldSectorZ ) )
 	{
-		uiTotalNumberOfItems = guiNumWorldItems;
-
 		// now run through list and
-		for( iCounter = 0; ( UINT32 )( iCounter )< uiTotalNumberOfItems; iCounter++ )
+		CFOR_ALL_WORLD_ITEMS(wi)
 		{
-			// if visible to player, then state fact
-//			if( gWorldItems[ iCounter ].bVisible == 1 && gWorldItems[ iCounter ].fExists )
-			if( IsMapScreenWorldItemVisibleInMapInventory( &gWorldItems[ iCounter ] ) )
+			if (IsMapScreenWorldItemVisibleInMapInventory(wi))
 			{
 				// add it
 				if ( fCountStacksAsOne )
@@ -1119,7 +1103,7 @@ static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLE
 				}
 				else
 				{
-					uiItemCount += gWorldItems[ iCounter ].o.ubNumberOfObjects;
+					uiItemCount += wi->o.ubNumberOfObjects;
 				}
 			}
 		}
@@ -1130,6 +1114,7 @@ static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLE
 		fReturn = GetNumberOfActiveWorldItemsFromTempFile( sMapX, sMapY, ( INT8 )( sMapZ ), &( uiTotalNumberOfRealItems ) );
 		Assert( fReturn );
 
+		UINT32 uiTotalNumberOfItems = 0;
 		fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, ( INT8 )( sMapZ ), &( uiTotalNumberOfItems ), FALSE );
 		Assert( fReturn );
 
@@ -1839,7 +1824,7 @@ static void HandleMapSectorInventory(void)
 
 
 //CJC look here to add/remove checks for the sector inventory
-BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
+BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM* const pWorldItem)
 {
 	if( pWorldItem->bVisible == 1 &&
 			pWorldItem->fExists &&
@@ -1855,7 +1840,7 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem )
 
 
 //CJC look here to add/remove checks for the sector inventory
-static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(WORLDITEM* pWorldItem)
+static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(const WORLDITEM* const pWorldItem)
 {
 	if( pWorldItem->fExists &&
 			!IsMapScreenWorldItemVisibleInMapInventory( pWorldItem ) )

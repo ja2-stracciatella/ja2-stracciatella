@@ -217,23 +217,9 @@ static INT32 GetFreeWorldItemIndex(void)
 
 static UINT32 GetNumUsedWorldItems(void)
 {
-	UINT32 uiCount, uiNumItems;
-	uiNumItems = 0;
-
-	if ( guiNumWorldItems == 0 )
-	{
-		return( 0 );
-	}
-
-	for( uiCount = 0; uiCount < guiNumWorldItems; uiCount++ )
-	{
-		if( gWorldItems[ uiCount ].fExists )
-		{
-			uiNumItems++;
-		}
-	}
-
-	return( uiNumItems );
+	UINT32 count = 0;
+	CFOR_ALL_WORLD_ITEMS(wi) ++count;
+	return count;
 }
 
 
@@ -321,7 +307,6 @@ void TrashWorldItems()
 
 void SaveWorldItemsToMap( HWFILE fp )
 {
-	UINT32 i;
 	UINT32		uiActualNumWorldItems;
 
 
@@ -329,11 +314,7 @@ void SaveWorldItemsToMap( HWFILE fp )
 
 	FileWrite(fp, &uiActualNumWorldItems, 4);
 
-	for( i = 0; i < guiNumWorldItems; i++ )
-	{
-		if( gWorldItems[ i ].fExists )
-			FileWrite(fp, &gWorldItems[i], sizeof(WORLDITEM));
-	}
+	CFOR_ALL_WORLD_ITEMS(wi) FileWrite(fp, wi, sizeof(WORLDITEM));
 }
 
 #endif
@@ -466,39 +447,33 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 
 static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 {
-	UINT32	uiLoop;
 	UINT32	uiLoop2;
-	INT16		sGridNo;
-	UINT8		ubLevel;
 
 	// only do this after Carmen has talked to player and terrorists have been placed
 	//if ( CheckFact( FACT_CARMEN_EXPLAINED_DEAL, 0 ) == TRUE )
 	{
-
-		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+		CFOR_ALL_WORLD_ITEMS(wi)
 		{
 			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP )
+			if (wi->o.usItem != OWNERSHIP) continue;
+
+			const ProfileID pid = wi->o.ubOwnerProfile;
+			// if owner is a terrorist
+			if (!IsProfileATerrorist(pid)) continue;
+
+			const MERCPROFILESTRUCT* const p = GetProfile(pid);
+			// and they were not set in the current sector
+			if (p->sSectorX == gWorldSectorX && p->sSectorY == gWorldSectorY) continue;
+
+			// then all items in this location should be deleted
+			const INT16 sGridNo = wi->sGridNo;
+			const UINT8 ubLevel = wi->ubLevel;
+			for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
 			{
-				// if owner is a terrorist
-				if ( IsProfileATerrorist( gWorldItems[ uiLoop ].o.ubOwnerProfile ) )
+				// loop through all items, look for ownership
+				if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
 				{
-					// and they were not set in the current sector
-					if ( gMercProfiles[ gWorldItems[ uiLoop ].o.ubOwnerProfile ].sSectorX != gWorldSectorX ||
-						gMercProfiles[ gWorldItems[ uiLoop ].o.ubOwnerProfile ].sSectorY != gWorldSectorY )
-					{
-						// then all items in this location should be deleted
-						sGridNo = gWorldItems[ uiLoop ].sGridNo;
-						ubLevel = gWorldItems[ uiLoop ].ubLevel;
-						for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
-						{
-							// loop through all items, look for ownership
-							if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
-							{
-								RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
-							}
-						}
-					}
+					RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
 				}
 			}
 		}
@@ -509,59 +484,53 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 
 static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
-	UINT32	uiLoop;
 	UINT32	uiLoop2;
-	INT16		sGridNo;
-	UINT8		ubLevel;
 	INT8		bSlot;
 
 	if ( gMercProfiles[ QUEEN ].sSectorX == gWorldSectorX &&
 		gMercProfiles[ QUEEN ].sSectorY == gWorldSectorY &&
 		gMercProfiles[ QUEEN ].bSectorZ == gbWorldSectorZ )
 	{
-
-		for ( uiLoop = 0; uiLoop < guiNumWorldItems; uiLoop++ )
+		CFOR_ALL_WORLD_ITEMS(wi)
 		{
 			// loop through all items, look for ownership
-			if ( gWorldItems[ uiLoop ].fExists && gWorldItems[ uiLoop ].o.usItem == OWNERSHIP )
+			if (wi->o.usItem != OWNERSHIP) continue;
+
+			// if owner is the Queen
+			if (wi->o.ubOwnerProfile != QUEEN) continue;
+
+			// then all items in this location should be deleted
+			const INT16 sGridNo = wi->sGridNo;
+			const UINT8 ubLevel = wi->ubLevel;
+			for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
 			{
-				// if owner is the Queen
-				if ( gWorldItems[ uiLoop ].o.ubOwnerProfile == QUEEN )
+				// loop through all items, look for those in same tile
+				if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
 				{
-					// then all items in this location should be deleted
-					sGridNo = gWorldItems[ uiLoop ].sGridNo;
-					ubLevel = gWorldItems[ uiLoop ].ubLevel;
-					for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
+					// upgrade equipment
+					switch ( gWorldItems[ uiLoop2 ].o.usItem )
 					{
-						// loop through all items, look for those in same tile
-						if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
-						{
-							// upgrade equipment
-							switch ( gWorldItems[ uiLoop2 ].o.usItem )
+						case AUTO_ROCKET_RIFLE:
+							bSlot = FindObjectInSoldierProfile( QUEEN, ROCKET_RIFLE );
+							if ( bSlot != NO_SLOT )
 							{
-								case AUTO_ROCKET_RIFLE:
-									bSlot = FindObjectInSoldierProfile( QUEEN, ROCKET_RIFLE );
-									if ( bSlot != NO_SLOT )
-									{
-										// give her auto rifle
-										gMercProfiles[ QUEEN ].inv[ bSlot ] = AUTO_ROCKET_RIFLE;
-									}
-									break;
-								case SPECTRA_HELMET_18:
-									gMercProfiles[ QUEEN ].inv[ HELMETPOS ] = SPECTRA_HELMET_18;
-									break;
-								case SPECTRA_VEST_18:
-									gMercProfiles[ QUEEN ].inv[ VESTPOS ] = SPECTRA_VEST_18;
-									break;
-								case SPECTRA_LEGGINGS_18:
-									gMercProfiles[ QUEEN ].inv[ LEGPOS ] = SPECTRA_LEGGINGS_18;
-									break;
-								default:
-									break;
+								// give her auto rifle
+								gMercProfiles[ QUEEN ].inv[ bSlot ] = AUTO_ROCKET_RIFLE;
 							}
-							RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
-						}
+							break;
+						case SPECTRA_HELMET_18:
+							gMercProfiles[ QUEEN ].inv[ HELMETPOS ] = SPECTRA_HELMET_18;
+							break;
+						case SPECTRA_VEST_18:
+							gMercProfiles[ QUEEN ].inv[ VESTPOS ] = SPECTRA_VEST_18;
+							break;
+						case SPECTRA_LEGGINGS_18:
+							gMercProfiles[ QUEEN ].inv[ LEGPOS ] = SPECTRA_LEGGINGS_18;
+							break;
+						default:
+							break;
 					}
+					RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
 				}
 			}
 		}

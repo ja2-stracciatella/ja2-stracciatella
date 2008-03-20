@@ -44,6 +44,6 @@ extern INT16 sObjectSourceGridNo;
 extern INT32 iCurrentInventoryPoolPage;
 extern BOOLEAN fMapInventoryItemCompatable[ ];
 
-BOOLEAN IsMapScreenWorldItemVisibleInMapInventory( WORLDITEM *pWorldItem );
+BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM*);
 
 #endif

@@ -455,14 +455,11 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion < 18 )
 	{
 		// replace useless crowbars with proper ones
-		UINT32 i;
 		gMapInformation.ubMapVersion = 18;
-		for ( i = 0; i < guiNumWorldItems; i++ )
+		FOR_ALL_WORLD_ITEMS(wi)
 		{
-			if ( gWorldItems[ i ].o.usItem == JAR_ELIXIR )
-			{
-				gWorldItems[ i ].o.usItem = CROWBAR;
-			}
+			OBJECTTYPE* const o = &wi->o;
+			if (o->usItem == JAR_ELIXIR) o->usItem = CROWBAR;
 		}
 	}
 	if( gMapInformation.ubMapVersion < 19 )
