@@ -806,7 +806,7 @@ static void DestroyMapInventoryButtons(void)
 
 
 static void CheckGridNoOfItemsInMapScreenMapInventory(void);
-static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne);
+static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ);
 static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(const WORLDITEM*);
 static void SortSectorInventory(WORLDITEM* pInventory, UINT32 uiSizeOfArray);
 
@@ -814,7 +814,7 @@ static void SortSectorInventory(WORLDITEM* pInventory, UINT32 uiSizeOfArray);
 static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, const INT16 sMapZ)
 {
 	// get size of the current stash in sector (count stacks as one item)
-	INT32 iSize = GetSizeOfStashInSector(sMapX, sMapY, sMapZ, TRUE);
+	INT32 iSize = GetSizeOfStashInSector(sMapX, sMapY, sMapZ);
 	// round off .. we want at least 1 free page of space...
 	iSize = iSize - iSize % MAP_INVENTORY_POOL_SLOT_COUNT + MAP_INVENTORY_POOL_SLOT_COUNT;
 
@@ -1033,7 +1033,7 @@ static void DestroyStash(void)
 }
 
 
-static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLEAN fCountStacksAsOne)
+static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const INT16 sMapZ)
 {
 	// get # of items in sector that are visible to the player
 	UINT32 uiItemCount = 0;
@@ -1046,7 +1046,7 @@ static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLE
 		CFOR_ALL_WORLD_ITEMS(wi)
 		{
 			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-			uiItemCount += (fCountStacksAsOne ? 1 : wi->o.ubNumberOfObjects);
+			++uiItemCount;
 		}
 	}
 	else
@@ -1070,7 +1070,7 @@ static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ, BOOLE
 			{
 				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
 				if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-				uiItemCount += (fCountStacksAsOne ? 1 : wi->o.ubNumberOfObjects);
+				++uiItemCount;
 			}
 
 			MemFree(pTotalSectorList);

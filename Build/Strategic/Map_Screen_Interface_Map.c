@@ -5776,7 +5776,6 @@ static void ShowItemsOnMap(void)
 			// to speed this up, only look at sector that player has visited
 			if( GetSectorFlagStatus( sMapX, sMapY, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) )
 			{
-//				uiItemCnt = GetSizeOfStashInSector( sMapX, sMapY, ( INT16 ) iCurrentMapSectorZ, FALSE );
 				uiItemCnt = GetNumberOfVisibleWorldItemsFromSectorStructureForSector( sMapX, sMapY, ( UINT8 ) iCurrentMapSectorZ );
 
 				if ( uiItemCnt > 0 )

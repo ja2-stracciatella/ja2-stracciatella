@@ -601,7 +601,6 @@ static void AddItemsInSectorToBox(void)
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 2 ] );
 	AddMonoString(box, wString);
 
-//	swprintf( wString, L"%d", GetSizeOfStashInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ, FALSE ));
 	swprintf( wString, lengthof(wString), L"%d", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
 	AddSecondColumnMonoString(box, wString);
 }
