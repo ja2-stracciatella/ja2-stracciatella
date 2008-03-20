@@ -96,18 +96,14 @@ void InitVehicles( )
 }
 
 
-void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle )
+void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 {
-	const VEHICLETYPE* const v = &pVehicleList[pVehicle->bVehicleID];
-	wcscpy(pVehicle->name, zVehicleName[v->ubVehicleType]);
-
-	pVehicle->ubProfile = g_vehicle_type_info[pVehicleList[pVehicle->bVehicleID].ubVehicleType].profile;
-
-  // Init fuel!
-  pVehicle->sBreathRed = 10000;
-  pVehicle->bBreath    = 100;
-
-  pVehicle->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
+	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
+	wcscpy(vs->name, zVehicleName[v->ubVehicleType]);
+	vs->ubProfile           = g_vehicle_type_info[v->ubVehicleType].profile;
+  vs->sBreathRed          = 10000; // Init fuel
+  vs->bBreath             = 100;
+  vs->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
 }
 
 
