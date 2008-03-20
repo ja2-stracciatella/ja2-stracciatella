@@ -740,22 +740,9 @@ BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 }
 
 
-static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldier)
-{
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
-	{
-		if (s->uiStatusFlags & SOLDIER_VEHICLE && s->bVehicleID == pSrcSoldier->iVehicleId)
-		{
-			return s;
-		}
-	}
-	return NULL;
-}
-
-
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const vs = GetVehicleSoldierPointerFromPassenger(s);
+	SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(s->iVehicleId);
 	if (vs == NULL) return FALSE;
 
 	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
