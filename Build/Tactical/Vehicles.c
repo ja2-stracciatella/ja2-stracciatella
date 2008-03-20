@@ -1018,29 +1018,20 @@ void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const U
 	p->sSectorY = ubSectorY;
 }
 
-void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier )
+
+void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 {
-	SOLDIERTYPE *pPassenger;
-
 	// If not a vehicle, ignore!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-	{
-		return;
-	}
-
-	const INT32 iId = pSoldier->bVehicleID;
+	if (!(vs->uiStatusFlags & SOLDIER_VEHICLE)) return;
+	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
 
 	// Loop through passengers and update each guy's position
-	const INT32 seats = GetVehicleSeats(&pVehicleList[iId]);
-	for (INT32 iCounter = 0; iCounter < seats; ++iCounter)
+	const INT32 seats = GetVehicleSeats(v);
+	for (INT32 i = 0; i < seats; ++i)
 	{
-		if( pVehicleList[ iId ].pPassengers[ iCounter ] != NULL )
-		{
-			pPassenger = pVehicleList[ iId ].pPassengers[ iCounter ];
-
-			// Set gridno.....
-			EVENT_SetSoldierPositionXY(pPassenger, pSoldier->dXPos, pSoldier->dYPos, SSP_NONE);
-		}
+		SOLDIERTYPE* const s = v->pPassengers[i];
+		if (s == NULL) continue;
+		EVENT_SetSoldierPositionXY(s, vs->dXPos, vs->dYPos, SSP_NONE);
 	}
 }
 
