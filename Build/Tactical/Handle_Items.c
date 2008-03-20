@@ -3852,8 +3852,6 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 	UINT8						ubDetectLevel, ubDirection;
 	MAP_ELEMENT *		pMapElement;
 	UINT32					fCheckFlag;
-	UINT32					uiWorldBombIndex;
-	OBJECTTYPE *		pObj;
 	BOOLEAN					fMining, fFoundMetal = FALSE;
 //	ITEM_POOL *			pItemPool;
 	UINT8						ubMovementCost;
@@ -3935,34 +3933,34 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		}
 
 		// check for boobytraps
-		for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+		CFOR_ALL_WORLD_BOMBS(wb)
 		{
-			if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sNextGridNo)
+			WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
+			if (wi->sGridNo != sNextGridNo) continue;
+
+			OBJECTTYPE* const pObj = &wi->o;
+			if ( pObj->bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
 			{
-				pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-				if ( pObj->bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
+				if ( fMining && pObj->bTrap <= 10 )
 				{
-					if ( fMining && pObj->bTrap <= 10 )
+					// add blue flag
+					AddBlueFlag( sNextGridNo, pSoldier->bLevel );
+					fFoundMetal = TRUE;
+					break;
+				}
+				else if (ubDetectLevel >= pObj->bTrap)
+				{
+					if (pSoldier->uiStatusFlags & SOLDIER_PC )
 					{
-						// add blue flag
-						AddBlueFlag( sNextGridNo, pSoldier->bLevel );
-						fFoundMetal = TRUE;
-						break;
-					}
-					else if (ubDetectLevel >= pObj->bTrap)
-					{
-						if (pSoldier->uiStatusFlags & SOLDIER_PC )
-						{
-      				// detected exposives buried nearby...
-							StatChange( pSoldier, EXPLODEAMT, (UINT16) (pObj->bTrap), FALSE );
+						// detected exposives buried nearby...
+						StatChange( pSoldier, EXPLODEAMT, (UINT16) (pObj->bTrap), FALSE );
 
-							// set item as known
-							pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
-						}
-
-						*psProblemGridNo = sNextGridNo;
-						return( TRUE );
+						// set item as known
+						pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					}
+
+					*psProblemGridNo = sNextGridNo;
+					return( TRUE );
 				}
 			}
 		}

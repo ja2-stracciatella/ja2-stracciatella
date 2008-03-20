@@ -2078,50 +2078,15 @@ void SpreadEffectSmoke(const SMOKEEFFECT* const s, const BOOLEAN subsequent, con
 
 static void ToggleActionItemsByFrequency(INT8 bFrequency)
 {
-	UINT32				uiWorldBombIndex;
-	OBJECTTYPE *	pObj;
-
 	// Go through all the bombs in the world, and look for remote ones
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		if (gWorldBombs[uiWorldBombIndex].fExists)
+		OBJECTTYPE* const pObj = &gWorldItems[wb->iItemIndex].o;
+		if ( pObj->bDetonatorType == BOMB_REMOTE )
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_REMOTE )
+			// Found a remote bomb, so check to see if it has the same frequency
+			if (pObj->bFrequency == bFrequency)
 			{
-				// Found a remote bomb, so check to see if it has the same frequency
-				if (pObj->bFrequency == bFrequency)
-				{
-					// toggle its active flag
-					if (pObj->fFlags & OBJECT_DISABLED_BOMB)
-					{
-						pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
-					}
-					else
-					{
-						pObj->fFlags |= OBJECT_DISABLED_BOMB;
-					}
-				}
-			}
-		}
-	}
-}
-
-
-static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
-{
-	UINT32				uiWorldBombIndex;
-	OBJECTTYPE *	pObj;
-
-	// Go through all the bombs in the world, and look for remote ones
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
-	{
-		if ( gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo )
-		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_PRESSURE )
-			{
-				// Found a pressure item
 				// toggle its active flag
 				if (pObj->fFlags & OBJECT_DISABLED_BOMB)
 				{
@@ -2131,6 +2096,32 @@ static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 				{
 					pObj->fFlags |= OBJECT_DISABLED_BOMB;
 				}
+			}
+		}
+	}
+}
+
+
+static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
+{
+	// Go through all the bombs in the world, and look for remote ones
+	CFOR_ALL_WORLD_BOMBS(wb)
+	{
+		WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
+		if (wi->sGridNo != sGridNo) continue;
+
+		OBJECTTYPE* const pObj = &wi->o;
+		if ( pObj->bDetonatorType == BOMB_PRESSURE )
+		{
+			// Found a pressure item
+			// toggle its active flag
+			if (pObj->fFlags & OBJECT_DISABLED_BOMB)
+			{
+				pObj->fFlags &= (~OBJECT_DISABLED_BOMB);
+			}
+			else
+			{
+				pObj->fFlags |= OBJECT_DISABLED_BOMB;
 			}
 		}
 	}
@@ -2879,26 +2870,22 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 
 void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 {
-	UINT32				uiWorldBombIndex;
-	OBJECTTYPE *	pObj;
-
 	// Go through all the bombs in the world, and look for mines at this location
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		if (gWorldBombs[uiWorldBombIndex].fExists && gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].sGridNo == sGridNo)
+		const WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
+		if (wi->sGridNo != sGridNo) continue;
+
+		const OBJECTTYPE* const pObj = &wi->o;
+		if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->bDetonatorType == BOMB_SWITCH)
 		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
+			// send out a signal to detonate other bombs, rather than this which
+			// isn't a bomb but a trigger
 
-			if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->bDetonatorType == BOMB_SWITCH)
-			{
-				// send out a signal to detonate other bombs, rather than this which
-				// isn't a bomb but a trigger
+			// first set attack busy count to 0 in case of a lingering a.b.c. problem...
+			gTacticalStatus.ubAttackBusyCount = 0;
 
-				// first set attack busy count to 0 in case of a lingering a.b.c. problem...
-				gTacticalStatus.ubAttackBusyCount = 0;
-
-				SetOffBombsByFrequency(s, pObj->bFrequency);
-			}
+			SetOffBombsByFrequency(s, pObj->bFrequency);
 		}
 	}
 }
@@ -3150,24 +3137,17 @@ static void HandleBuldingDestruction(const INT16 sGridNo, const SOLDIERTYPE* con
 
 static INT32 FindActiveTimedBomb(void)
 {
-	UINT32				uiWorldBombIndex;
-	OBJECTTYPE *	pObj;
-
 	// Go through all the bombs in the world, and look for timed ones
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	FOR_ALL_WORLD_BOMBS(wb)
 	{
-		if (gWorldBombs[uiWorldBombIndex].fExists)
-		{
-			pObj = &( gWorldItems[ gWorldBombs[uiWorldBombIndex].iItemIndex ].o );
-			if ( pObj->bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
-			{
-				return( gWorldBombs[uiWorldBombIndex].iItemIndex );
-			}
-		}
-	}
+		const OBJECTTYPE* const pObj = &gWorldItems[wb->iItemIndex].o;
+		if (pObj->bDetonatorType != BOMB_TIMED || pObj->fFlags & OBJECT_DISABLED_BOMB) continue;
 
-	return( -1 );
+		return wb->iItemIndex;
+	}
+	return -1;
 }
+
 
 BOOLEAN ActiveTimedBombExists( void )
 {

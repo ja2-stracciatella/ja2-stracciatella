@@ -59,6 +59,15 @@ typedef struct
 extern WORLDBOMB * gWorldBombs;
 extern UINT32 guiNumWorldBombs;
 
+#define BASE_FOR_ALL_WORLD_BOMBS(type, iter)                     \
+	for (type*       iter        = gWorldBombs,                    \
+	         * const end__##iter = gWorldBombs + guiNumWorldBombs; \
+	     iter != end__##iter;                                      \
+	     ++iter)                                                   \
+		if (!iter->fExists) continue; else
+#define FOR_ALL_WORLD_BOMBS( iter) BASE_FOR_ALL_WORLD_BOMBS(      WORLDBOMB, iter)
+#define CFOR_ALL_WORLD_BOMBS(iter) BASE_FOR_ALL_WORLD_BOMBS(const WORLDBOMB, iter)
+
 extern void FindPanicBombsAndTriggers( void );
 extern INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel);
 
