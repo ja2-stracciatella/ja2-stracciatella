@@ -756,7 +756,7 @@ static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldi
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
 	SOLDIERTYPE* const vs = GetVehicleSoldierPointerFromPassenger(s);
-	if (vs == NULL || !(vs->uiStatusFlags & SOLDIER_VEHICLE)) return FALSE;
+	if (vs == NULL) return FALSE;
 
 	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
 	if (sGridNo == NOWHERE)
