@@ -3155,17 +3155,12 @@ BOOLEAN ActiveTimedBombExists(void)
 }
 
 
-void RemoveAllActiveTimedBombs( void )
+void RemoveAllActiveTimedBombs(void)
 {
-	INT32	iItemIndex;
-
-	do
+	for (;;)
 	{
-		iItemIndex = FindActiveTimedBomb();
-		if (iItemIndex != -1 )
-		{
-			RemoveItemFromWorld( iItemIndex );
-		}
-	} while( iItemIndex != -1 );
-
+		const INT32 item_idx = FindActiveTimedBomb();
+		if (item_idx == -1) break;
+		RemoveItemFromWorld(item_idx);
+	}
 }
