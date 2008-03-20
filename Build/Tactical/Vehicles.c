@@ -753,63 +753,45 @@ static SOLDIERTYPE* GetVehicleSoldierPointerFromPassenger(SOLDIERTYPE* pSrcSoldi
 }
 
 
-BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier )
+BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE		*pVehicle;
-	INT16					sGridNo;
+	SOLDIERTYPE* const vs = GetVehicleSoldierPointerFromPassenger(s);
+	if (vs == NULL || !(vs->uiStatusFlags & SOLDIER_VEHICLE)) return FALSE;
 
-	// Get vehicle from soldier...
-	pVehicle = GetVehicleSoldierPointerFromPassenger( pSoldier );
-
-	if ( pVehicle == NULL )
+	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
+	if (sGridNo == NOWHERE)
 	{
-		return( FALSE );
+		// ATE: BUT we need a place, widen the search
+		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 20, 3, vs);
 	}
 
-	// TEST IF IT'S VALID...
-	if ( pVehicle->uiStatusFlags & SOLDIER_VEHICLE )
+	RemoveSoldierFromVehicle(s, vs->bVehicleID);
+
+	s->sInsertionGridNo         = sGridNo;
+	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	s->usStrategicInsertionData = s->sInsertionGridNo;
+	s->iVehicleId               = -1;
+
+	//AllTeamsLookForAll( FALSE );
+	s->bOppList[vs->ubID] = 1;
+
+	// Add to sector....
+	EVENT_SetSoldierPosition(s, sGridNo, SSP_NONE);
+
+	// Update visiblity.....
+	HandleSight(s, SIGHT_LOOK | SIGHT_RADIO);
+
+	AddCharacterToUniqueSquad(s);
+
+	// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
+	if (guiCurrentScreen == GAME_SCREEN)
 	{
-		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 3, pVehicle);
-
-		if ( sGridNo == NOWHERE )
-		{
-			// ATE: BUT we need a place, widen the search
-			sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 20, 3, pVehicle);
-		}
-
-		// OK, remove....
-		RemoveSoldierFromVehicle( pSoldier, pVehicle->bVehicleID );
-
-		// Were we the driver, and if so, pick another....
-		pSoldier->sInsertionGridNo = sGridNo;
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->usStrategicInsertionData = pSoldier->sInsertionGridNo;
-		pSoldier->iVehicleId = -1;
-
-		//AllTeamsLookForAll( FALSE );
-		pSoldier->bOppList[ pVehicle->ubID ] = 1;
-
-		// Add to sector....
-		EVENT_SetSoldierPosition(pSoldier, sGridNo, SSP_NONE);
-
-		// Update visiblity.....
-		HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
-
-		// Add to unique squad....
-		AddCharacterToUniqueSquad( pSoldier );
-
-		// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
-	  if ( guiCurrentScreen == GAME_SCREEN )
-		{
-			SetCurrentSquad( pSoldier->bAssignment, TRUE );
-			SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
-		}
-
-		PlayLocationJA2Sample(pVehicle->sGridNo, g_vehicle_type_info[pVehicleList[pVehicle->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
-		return( TRUE );
+		SetCurrentSquad(s->bAssignment, TRUE);
+		SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 	}
 
-	return( FALSE );
+	PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[pVehicleList[vs->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
+	return TRUE;
 }
 
 
