@@ -175,34 +175,16 @@ void ClearOutVehicleList(void)
 }
 
 
-BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE* pSoldier, const VEHICLETYPE* v)
+BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE* const s, const VEHICLETYPE* const v)
 {
-	if( pSoldier == NULL )
-	{
-		return( FALSE );
-	}
-
-	// if the soldier or the vehicle is between sectors
-	if (pSoldier->fBetweenSectors || v->fBetweenSectors)
-	{
-		return( FALSE );
-	}
-
-	// any sector values off?
-	if (pSoldier->sSectorX != v->sSectorX ||
-			pSoldier->sSectorY != v->sSectorY ||
-			pSoldier->bSectorZ != v->sSectorZ)
-	{
-		return( FALSE );
-	}
-
-	// if vehicle is not ok to use then return false
-	if (!OKUseVehicle(g_vehicle_type_info[v->ubVehicleType].profile))
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		s != NULL                  &&
+		!s->fBetweenSectors        &&
+		!v->fBetweenSectors        &&
+		s->sSectorX == v->sSectorX &&
+		s->sSectorY == v->sSectorY &&
+		s->bSectorZ == v->sSectorZ &&
+		OKUseVehicle(g_vehicle_type_info[v->ubVehicleType].profile);
 }
 
 
