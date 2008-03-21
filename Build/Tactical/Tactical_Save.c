@@ -584,111 +584,71 @@ fail:
 static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-BOOLEAN AddItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItemsToAdd, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible, BOOLEAN fReplaceEntireFile )
+BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible, const BOOLEAN fReplaceEntireFile)
 {
-	UINT32	uiNumberOfItems=0;
-	WORLDITEM *pWorldItems;
-	UINT32	cnt;
-	UINT32	uiLoop1=0;
+	UINT32 uiNumberOfItems;
+	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE)) goto fail;
 
+	WORLDITEM* wis = MemAlloc(sizeof(*wis) * uiNumberOfItems);
+	if (wis == NULL) goto fail;
+	memset(wis, 0, sizeof(*wis) * uiNumberOfItems);
 
-	if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
+	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wis)) goto fail_mem;
+
+	if (fReplaceEntireFile)
 	{
-		//Errror getting the numbers of the items from the sector
-		return( FALSE );
-	}
-
-	//Allocate memeory for the item
-	pWorldItems = MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
-	if( pWorldItems == NULL )
-	{
-		//Error Allocating memory for the temp item array
-		return( FALSE );
-	}
-
-	//Clear the memory
-	memset( pWorldItems, 0, sizeof( WORLDITEM ) * uiNumberOfItems );
-
-	//Load in the sectors Item Info
-	if( !LoadWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, pWorldItems ) )
-	{
-		//error reading in the items from the Item mod file
-		MemFree( pWorldItems );
-		return( FALSE );
-	}
-
-
-	//if we are to replace the entire file
-	if( fReplaceEntireFile )
-	{
-		//first loop through and mark all entries that they dont exists
-		for( cnt=0; cnt<uiNumberOfItems; cnt++)
-			pWorldItems[ cnt ].fExists = FALSE;
+		// First loop through and mark all entries that they dont exists
+		for (UINT32 cnt = 0; cnt < uiNumberOfItems; ++cnt) wis[cnt].fExists = FALSE;
 
 		//Now delete the item temp file
-		DeleteTempItemMapFile( sMapX, sMapY, bMapZ );
+		DeleteTempItemMapFile(sMapX, sMapY, bMapZ);
 	}
 
 	//loop through all the objects to add
-	for( uiLoop1=0; uiLoop1 < uiNumberOfItemsToAdd; uiLoop1++)
+	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
 	{
-		//Loop through the array to see if there is a free spot to add an item to it
-		for( cnt=0; cnt < uiNumberOfItems; cnt++)
+		// Loop through the array to see if there is a free spot to add an item to it
+		UINT32 cnt;
+		for (cnt = 0;; ++cnt)
 		{
-			if( pWorldItems[ cnt ].fExists == FALSE )
+			if (cnt == uiNumberOfItems)
 			{
-				//We have found a free spot, break
+				//Error, there wasnt a free spot.  Reallocate memory for the array
+				wis = MemRealloc(wis, sizeof(*wis) * ++uiNumberOfItems);
+				if (wis == NULL) goto fail;
 				break;
 			}
+			if (!wis[cnt].fExists) break;
 		}
 
-		if( cnt == ( uiNumberOfItems ) )
+		WORLDITEM* const wi = &wis[cnt];
+		wi->fExists                  = TRUE;
+		wi->sGridNo                  = sGridNo;
+		wi->ubLevel                  = ubLevel;
+		wi->usFlags                  = usFlags;
+		wi->bVisible                 = bVisible;
+		wi->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
+		wi->o                        = pObject[uiLoop1];
+
+		if (sGridNo == NOWHERE && !(wi->usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT))
 		{
-			//Error, there wasnt a free spot.  Reallocate memory for the array
-			pWorldItems = MemRealloc( pWorldItems, sizeof( WORLDITEM ) * (uiNumberOfItems + 1 ) );
-			if( pWorldItems == NULL )
-			{
-				//error realloctin memory
-				return( FALSE );
-			}
-
-			//Increment the total number of item in the array
-			uiNumberOfItems++;
-
-			//set the spot were the item is to be added
-			cnt = uiNumberOfItems - 1;
-		}
-
-		pWorldItems[ cnt ].fExists = TRUE;
-		pWorldItems[ cnt ].sGridNo = sGridNo;
-		pWorldItems[ cnt ].ubLevel = ubLevel;
-		pWorldItems[ cnt ].usFlags = usFlags;
-		pWorldItems[ cnt ].bVisible = bVisible;
-		pWorldItems[ cnt ].bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
-
-
-		//Check
-		if( sGridNo == NOWHERE && !( pWorldItems[ cnt ].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT ) )
-		{
-			pWorldItems[ cnt ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
-
+			wi->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", pWorldItems[cnt].o.usItem, ItemNames[pWorldItems[cnt].o.usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Trying to add item ( %d: %ls ) to invalid gridno in unloaded sector. Please Report.", wi->o.usItem, ItemNames[wi->o.usItem]);
 		}
-
-
-		pWorldItems[cnt].o = pObject[uiLoop1];
 	}
 
-	//Save the Items to the the file
-	SaveWorldItemsToTempItemFile( sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems );
+	SaveWorldItemsToTempItemFile(sMapX, sMapY, bMapZ, uiNumberOfItems, wis);
 
+	MemFree(wis);
+	return TRUE;
 
-	//Free the memory used to load in the item array
-	MemFree( pWorldItems );
-
-	return( TRUE );
+fail_mem:
+	MemFree(wis);
+fail:
+	return FALSE;
 }
+
 
 extern BOOLEAN gfInMeanwhile;
 
