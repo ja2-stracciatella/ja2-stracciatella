@@ -533,84 +533,51 @@ BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WO
 }
 
 
-BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pSizeOfData, BOOLEAN fIfEmptyCreate )
+BOOLEAN GetNumberOfWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pSizeOfData, const BOOLEAN fIfEmptyCreate)
 {
-	HWFILE	hFile;
-	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumberOfItems=0;
+	char zMapName[128];
+	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ);
 
-	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
-
-
-	//Check if the file DOESNT exists
-	if( !FileExistsNoDB( zMapName ) )
+	HWFILE f;
+	if (!FileExistsNoDB(zMapName))
 	{
-		if( fIfEmptyCreate )
+		if (fIfEmptyCreate)
 		{
-			WORLDITEM TempWorldItems[ 10 ];
-			UINT32		uiNumberOfItems = 10;
+			// The file doesnt exists, create a file that has an initial amount of Items
+			f = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+			if (f == 0) goto fail;
 
-			//If the file doesnt exists, create a file that has an initial amount of Items
-			hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-			if( hFile == 0 )
-			{
-				//Error opening item modification file
-				return( FALSE );
-			}
+			UINT32    item_count = 10;
+			WORLDITEM TempWorldItems[10];
+			memset(TempWorldItems, 0, sizeof(TempWorldItems));
 
-			memset( TempWorldItems, 0, ( sizeof( WORLDITEM ) * 10 ) );
-
-			//write the the number of item in the maps item file
-			if (!FileWrite(hFile, &uiNumberOfItems, sizeof(UINT32)))
-			{
-				//Error Writing size of array to disk
-				FileClose( hFile );
-				return( FALSE );
-			}
-
-			//write the the number of item in the maps item file
-			if (!FileWrite(hFile, TempWorldItems, uiNumberOfItems * sizeof(WORLDITEM)))
-			{
-				//Error Writing size of array to disk
-				FileClose( hFile );
-				return( FALSE );
-			}
-
-			//Close the file
-			FileClose( hFile );
+			// Write the the number of items in the maps item file
+			if (!FileWrite(f, &item_count, sizeof(UINT32)))            goto fail_close;
+			if (!FileWrite(f, TempWorldItems, sizeof(TempWorldItems))) goto fail_close;
+			FileClose(f);
 		}
 		else
 		{
-			// the file doesnt exist
 			*pSizeOfData = 0;
-
-			return( TRUE );
+			return TRUE;
 		}
 	}
 
+	f = FileOpen(zMapName, FILE_ACCESS_READ);
+	if (f == 0) goto fail;
 
-	//Open the file for reading, if it exists
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
+	// Load the size of the world item table
+	UINT32 item_count;
+	if (!FileRead(f, &item_count, sizeof(UINT32))) goto fail_close;
+	*pSizeOfData = item_count;
 
+	FileClose(f);
+	return TRUE;
 
-	// Load the size of the World ITem table
-	if (!FileRead(hFile, &uiNumberOfItems, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	*pSizeOfData = uiNumberOfItems;
-
-	FileClose( hFile );
-
-	return( TRUE );
+fail_close:
+	FileClose(f);
+fail:
+	return FALSE;
 }
 
 
