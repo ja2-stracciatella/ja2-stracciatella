@@ -863,25 +863,21 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	{
 		// not loaded, load
 		// get total number, visable and invisible
-		BOOLEAN fReturn;
 		UINT32 uiTotalNumberOfItems = 0;
-		fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
-		Assert(fReturn);
-
-		UINT32 uiTotalNumberOfRealItems = 0;
-		fReturn = GetNumberOfActiveWorldItemsFromTempFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfRealItems);
+		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
 		Assert(fReturn);
 
 		WORLDITEM* pTotalSectorList = NULL;
-		if (uiTotalNumberOfRealItems > 0)
+		if (uiTotalNumberOfItems > 0)
 		{
 			pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
 			LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, pTotalSectorList);
 		}
 
+		UINT32 unseen_count = 0;
 		UINT32 uiItemCount = 0;
 		// now run through list and
-		for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfRealItems; ++iCounter)
+		for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
 		{
 			// if visible to player, then state fact
 			const WORLDITEM* const wi = &pTotalSectorList[iCounter];
@@ -893,16 +889,22 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"The %d item in the list is NOT valid. Please send save.  DF 1.", iCounter);
 			}
 
-			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-			pInventoryPoolList[uiItemCount++] = *wi;
+			if (IsMapScreenWorldItemVisibleInMapInventory(wi))
+			{
+				pInventoryPoolList[uiItemCount++] = *wi;
+			}
+			else
+			{
+				++unseen_count;
+			}
 		}
 
 		uiTotalNumberOfSeenItems = uiItemCount;
 
 		// now allocate space for all the unseen items
-		if (uiTotalNumberOfRealItems > uiItemCount)
+		if (unseen_count > 0)
 		{
-			pUnSeenItems = MemAlloc((uiTotalNumberOfRealItems - uiItemCount) * sizeof(*pUnSeenItems));
+			pUnSeenItems = MemAlloc(unseen_count * sizeof(*pUnSeenItems));
 			uiItemCount = 0;
 
 			// now copy over
@@ -911,6 +913,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
 				if (!IsMapScreenWorldItemInvisibleInMapInventory(wi)) continue;
 				pUnSeenItems[uiItemCount++] = *wi;
+				Assert(uiItemCount <= unseen_count);
 			}
 
 			// copy over number of unseen
@@ -918,7 +921,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 		}
 
 		// if anything was alloced, then get rid of it
-		if (uiTotalNumberOfRealItems > 0) MemFree(pTotalSectorList);
+		if (uiTotalNumberOfItems > 0) MemFree(pTotalSectorList);
 	}
 
 	CheckGridNoOfItemsInMapScreenMapInventory();
@@ -1049,14 +1052,8 @@ static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const 
 	}
 	else
 	{
-		// get total number, visable and invisible
-		BOOLEAN fReturn;
-		UINT32 uiTotalNumberOfRealItems = 0;
-		fReturn = GetNumberOfActiveWorldItemsFromTempFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfRealItems);
-		Assert(fReturn);
-
 		UINT32 uiTotalNumberOfItems = 0;
-		fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
+		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
 		Assert(fReturn);
 
 		if (uiTotalNumberOfItems > 0)
@@ -1064,7 +1061,7 @@ static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const 
 			WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
 			LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, pTotalSectorList);
 
-			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfRealItems; ++iCounter)
+			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
 			{
 				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
 				if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;

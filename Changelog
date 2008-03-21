@@ -1,3 +1,4 @@
+(r3400) Fix a vanilla bug, which under rare circumstances caused items to disappear when changing sectors and looking at the sector inventory.
 (r3340) Fix a bug, which caused corrupted savegames when saving pseudo objects.  Most common symptom is corrupted savegames after receiving the "donation" from Armand.
 (r3325, r3327) Plug vanilla memory leaks which occur during strategic movement planning.
 (r3274) Fix a vanilla bug: Only consume one adrenaline booster at a time, even when multiple are selected (only the effects of one are applied).

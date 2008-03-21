@@ -1553,35 +1553,6 @@ static void SaveNPCInformationToProfileStruct(void)
 }
 
 
-BOOLEAN GetNumberOfActiveWorldItemsFromTempFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pNumberOfData)
-{
-	UINT32 active_item_count = 0;
-	if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ))
-	{
-		UINT32 item_count;
-		if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &item_count, TRUE)) return FALSE;
-		if (item_count != 0) // If there are items in the data file
-		{
-			WORLDITEM* const wi = MemAlloc(sizeof(*wi) * item_count);
-			if (wi == NULL) return FALSE;
-			memset(wi, 0, sizeof(*wi) * item_count);
-
-			if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wi)) return FALSE;
-
-			active_item_count = 0;
-			for (UINT32 cnt = 0; cnt < item_count; ++cnt)
-			{
-				if (wi[cnt].fExists) ++active_item_count;
-			}
-
-			MemFree(wi);
-		}
-	}
-	*pNumberOfData = active_item_count;
-	return TRUE;
-}
-
-
 static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
@@ -2466,14 +2437,8 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
 {
-	BOOLEAN	fReturn;
-	// get total number, visable and invisible
-	UINT32 uiTotalNumberOfRealItems;
-	fReturn = GetNumberOfActiveWorldItemsFromTempFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfRealItems);
-	Assert(fReturn);
-
 	UINT32 uiTotalNumberOfItems;
-	fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, FALSE);
+	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, FALSE);
 	Assert(fReturn);
 
 	UINT32 uiItemCount = 0;
@@ -2482,7 +2447,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT1
 		WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
 		LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, pTotalSectorList);
 
-		for (const WORLDITEM* wi = pTotalSectorList; wi != pTotalSectorList + uiTotalNumberOfRealItems; ++wi)
+		for (const WORLDITEM* wi = pTotalSectorList; wi != pTotalSectorList + uiTotalNumberOfItems; ++wi)
 		{
 			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
 			uiItemCount += wi->o.ubNumberOfObjects;

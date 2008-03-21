@@ -46,9 +46,6 @@ BOOLEAN AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT1
 BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir );
 
 
-//Gets the number of ACTIVE ( Not the TOTAL number ) of World Items from the sectors temp file
-BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pNumberOfData );
-
 //Call this function to set the new sector a NPC will travel to
 void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* npc, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
