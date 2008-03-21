@@ -2419,64 +2419,38 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 
 void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ)
 {
-	//Convert the current sector location into a file name
+	// Convert the current sector location into a file name
 	char zTempName[512];
-	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE, FALSE );
+	GetMapFileName(sMapX, sMapY, bMapZ, zTempName, FALSE, FALSE);
 
-	switch( uiType )
+	const char* prefix;
+	switch (uiType)
 	{
-		case SF_ITEM_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/i_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_ROTTING_CORPSE_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/r_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/m_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_DOOR_TABLE_TEMP_FILES_EXISTS:
-			sprintf( pMapName, "%s/d_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_REVEALED_STATUS_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/v_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_DOOR_STATUS_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/ds_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/e_%s", MAPS_DIR, zTempName);
-			break;
+		case SF_ITEM_TEMP_FILE_EXISTS:              prefix = "i";  break;
+		case SF_ROTTING_CORPSE_TEMP_FILE_EXISTS:    prefix = "r";  break;
+		case SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS: prefix = "m";  break;
+		case SF_DOOR_TABLE_TEMP_FILES_EXISTS:       prefix = "d";  break;
+		case SF_REVEALED_STATUS_TEMP_FILE_EXISTS:   prefix = "v";  break;
+		case SF_DOOR_STATUS_TEMP_FILE_EXISTS:       prefix = "ds"; break;
+		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:   prefix = "e";  break;
+		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:     prefix = "sm"; break;
+		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:  prefix = "l";  break;
 
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
 			// NB save game version 0 is "saving game"
-			if ( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiSaveGameVersion != 0 && guiSaveGameVersion < 78 )
+			if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && guiSaveGameVersion != 0 && guiSaveGameVersion < 78)
 			{
-				sprintf( pMapName, "%s/c_%s", MAPS_DIR, zTempName);
+				prefix = "c";
 			}
 			else
 			{
-				sprintf( pMapName, "%s/cc_%s", MAPS_DIR, zTempName);
+				prefix = "cc";
 			}
 			break;
 
-		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/sm_%s", MAPS_DIR, zTempName);
-			break;
-
-		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:
-			sprintf( pMapName, "%s/l_%s", MAPS_DIR, zTempName);
-			break;
-
-		default:
-			Assert( 0 );
-			break;
+		default: Assert(0); return;
 	}
+	sprintf(pMapName, MAPS_DIR "%s_%s", prefix, zTempName);
 }
 
 
