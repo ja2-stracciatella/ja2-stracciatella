@@ -900,13 +900,6 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 	uiSizeToSave = gubNumDoors * sizeof( DOOR );
 
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
-
-	//add the 'd' for 'Door' to the front of the map name
-//	sprintf( zMapName, "%s\\d_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
@@ -954,13 +947,6 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	CHAR8		zMapName[ 128 ];
 
 //	return( TRUE );
-
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'd' for 'Door' to the front of the map name
-//	sprintf( zMapName, "%s\\d_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -1543,15 +1529,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 		gpDoorStatus[ ubCnt ].ubFlags &= ( ~DOOR_BUSY );
 	}
 
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\ds_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-
 
 	//Open the file for writing, Create it if it doesnt exist
 	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -1596,12 +1574,6 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 	UINT8		ubLoop;
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\ds_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 

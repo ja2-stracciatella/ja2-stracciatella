@@ -35,10 +35,6 @@ static void RemoveEnemySoldierTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 		//Delete any temp file that is here and toast the flag that say's one exists.
 		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
 
-//		GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-		//add the 'e' for 'Enemy preserved' to the front of the map name
-//		sprintf( zMapName, "%s\\e_%s", MAPS_DIR, zTempName);
-
 		GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 		//Delete the temp file.
@@ -49,13 +45,11 @@ static void RemoveEnemySoldierTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 
 static void RemoveCivilianTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	//CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS ) )
 	{
 		//Delete any temp file that is here and toast the flag that say's one exists.
 		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
-		//GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
 
 		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
@@ -115,12 +109,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
 	//STEP ONE:  Set up the temp file to read from.
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'e' for 'Enemy preserved' to the front of the map name
-//	sprintf( zMapName, "%s\\e_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -433,14 +421,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	//STEP ONE:  Set up the temp file to read from.
 
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'e' for 'Enemy preserved' to the front of the map name
-//	sprintf( zMapName, "%s\\e_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
 
 	//Count the number of enemies ( elites, regulars, admins and creatures ) that are in the temp file.
 
@@ -812,7 +793,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	UINT32 uiTimeSinceLastLoaded;
 	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
 		CHAR8		zReason[256];
@@ -825,11 +805,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	//STEP ONE:  Set up the temp file to read from.
 
-	//Convert the current sector location into a file name
-	//GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'e' for 'Enemy preserved' to the front of the map name
-	//sprintf( zMapName, "%s\\c_%s", MAPS_DIR, zTempName);
 	GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//Open the file for reading
@@ -1077,7 +1052,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
 	HWFILE hfile;
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
 
@@ -1216,19 +1190,12 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 	//STEP TWO:  Set up the temp file to write to.
 
-	//Convert the current sector location into a file name
-	//GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
-
 	if( fEnemy )
 	{
-		//add the 'e' for 'Enemy preserved' to the front of the map name
-		//sprintf( zMapName, "%s\\e_%s", MAPS_DIR, zTempName);
 		GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 	}
 	else
 	{
-		//add the 'e' for 'Enemy preserved' to the front of the map name
-		//sprintf( zMapName, "%s\\c_%s", MAPS_DIR, zTempName);
 		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 	}
 
@@ -1349,15 +1316,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	*pubNumAdmins = 0;
 	*pubNumCreatures = 0;
 
-
 	//STEP ONE:  Set up the temp file to read from.
-
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'e' for 'Enemy preserved' to the front of the map name
-//	sprintf( zMapName, "%s\\e_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 

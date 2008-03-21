@@ -41,12 +41,6 @@ static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSecto
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
 
-	//Convert the current sector location into a file name
-//	GetMapFileName( sSectorX, sSectorY, bSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\m_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
@@ -95,12 +89,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
 	MODIFY_MAP *pTempArrayOfMaps=NULL;
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\m_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -569,12 +557,6 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 	Assert( gpRevealedMap != NULL );
 
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'v' for 'reVeiled Map' to the front of the map name
-//	sprintf( zMapName, "%s\\v_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 
@@ -613,12 +595,6 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTempName, FALSE );
-
-	//add the 'v' for 'reVeiled Map' to the front of the map name
-//	sprintf( zMapName, "%s\\v_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -834,13 +810,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	UINT16	usSubIndex;
 	UINT32	cnt;
 
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( sSectorX, sSectorY, ubSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\m_%s", MAPS_DIR, zTempName);
-
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, ubSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
@@ -1016,13 +985,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	MODIFY_MAP *pMap;
 	MODIFY_MAP *pTempArrayOfMaps=NULL;
 //	UINT16	usIndex;
-
-
-	//Convert the current sector location into a file name
-//	GetMapFileName( usSectorX, usSectorY, bSectorZ, zTempName, FALSE );
-
-	//add the 'm' for 'Modifed Map' to the front of the map name
-//	sprintf( zMapName, "%s\\m_%s", MAPS_DIR, zTempName);
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, usSectorX, usSectorY, bSectorZ );
 

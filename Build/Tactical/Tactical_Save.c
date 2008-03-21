@@ -1296,19 +1296,9 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 
-/*
-	//Convert the current sector location into a file name
-	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE );
-
-	//add the 'r' for 'Rotting Corpses' to the front of the map name
-	sprintf( zMapName, "%s\\r_%s", MAPS_DIR, zTempName);
-*/
-
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
-
 
 	//Open the file for writing, Create it if it doesnt exist
 	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
@@ -1353,15 +1343,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
-
-/*
-	//Convert the current sector location into a file name
-	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE );
-
-	sprintf( zMapName, "%s\\r_%s", MAPS_DIR, zTempName);
-*/
 	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	//Check to see if the file exists
@@ -1381,7 +1363,6 @@ static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
 	HWFILE	hFile;
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
 	UINT32		cnt;
@@ -1391,14 +1372,8 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 
 	//Delete the existing rotting corpse array
 	RemoveCorpses( );
-/*
-	//Convert the current sector location into a file name
-	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE );
 
-	sprintf( zMapName, "%s\\r_%s", MAPS_DIR, zTempName);
-*/
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
-
 
 	//Check to see if the file exists
 	if( !FileExists( zMapName ) )
@@ -1770,16 +1745,8 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 s
 {
 	HWFILE	hFile;
 	UINT32	uiNumberOfCorpses;
-//	CHAR8		zTempName[ 128 ];
 	CHAR8		zMapName[ 128 ];
 
-/*
-	//Convert the current sector location into a file name
-	GetMapFileName( sMapX,sMapY, bMapZ, zTempName, FALSE );
-
-	//add the 'r' for 'Rotting Corpses' to the front of the map name
-	sprintf( zMapName, "%s\\r_%s", MAPS_DIR, zTempName);
-*/
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	//CHECK TO SEE if the file exist
