@@ -1517,25 +1517,15 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 }
 
 
-
-
-BOOLEAN AddWorldItemsToUnLoadedSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, WORLDITEM *pWorldItem, BOOLEAN fOverWrite )
+BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 item_count, const WORLDITEM* const wis, BOOLEAN overwrite)
 {
-	UINT32 uiLoop;
-	BOOLEAN fLoop=fOverWrite;
-
-	for( uiLoop=0; uiLoop<uiNumberOfItems; uiLoop++)
+	for (const WORLDITEM* wi = wis; wi != wis + item_count; ++wi)
 	{
-		//If the item exists
-		if( pWorldItem[uiLoop].fExists )
-		{
-			AddItemsToUnLoadedSector( sMapX, sMapY, bMapZ, pWorldItem[uiLoop].sGridNo, 1, &pWorldItem[ uiLoop ].o, pWorldItem[ uiLoop ].ubLevel, pWorldItem[ uiLoop ].usFlags, pWorldItem[ uiLoop ].bRenderZHeightAboveLevel, pWorldItem[ uiLoop ].bVisible, fLoop );
-
-			fLoop = FALSE;
-		}
+		if (!wi->fExists) continue;
+		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, wi->bVisible, overwrite);
+		overwrite = FALSE;
 	}
-
-	return( TRUE );
+	return TRUE;
 }
 
 
