@@ -42,8 +42,6 @@
 #include "ArmsDealerInvInit.h"
 
 
-extern BOOLEAN SaveWorldItemsToTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM *pData );
-
 // status bar colors
 #define DESC_STATUS_BAR FROMRGB( 201, 172,  133 )
 #define DESC_STATUS_BAR_SHADOW FROMRGB( 140, 136,  119 )

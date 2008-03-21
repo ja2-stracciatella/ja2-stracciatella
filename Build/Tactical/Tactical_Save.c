@@ -439,49 +439,31 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 }
 
 
-BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM* pData)
+BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 uiNumberOfItems, const WORLDITEM* const pData)
 {
-	HWFILE	hFile;
-	CHAR8		zMapName[ 128 ];
+	char filename[128];
+	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
+	const HWFILE f = FileOpen(filename, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	if (f == 0) goto fail;
 
-	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	// Save the size of the item table
+	if (!FileWrite(f, &uiNumberOfItems, sizeof(UINT32))) goto fail_close;
 
-	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-	if( hFile == 0 )
+	if (uiNumberOfItems != 0 && // If there are items to save
+			!FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM)))
 	{
-		//Error opening map modification file
-		return( FALSE );
+		goto fail_close;
 	}
 
-	//Save the size of the ITem table
-	if (!FileWrite(hFile, &uiNumberOfItems, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
+	FileClose(f);
+	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
+	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, FALSE);
+	return TRUE;
 
-
-	//if there are items to save..
-	if( uiNumberOfItems != 0 )
-	{
-		//Save the ITem array
-		if (!FileWrite(hFile, pData, uiNumberOfItems * sizeof(WORLDITEM)))
-		{
-			//Error Writing size of array to disk
-			FileClose( hFile );
-			return( FALSE );
-		}
-	}
-
-	FileClose( hFile );
-
-	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS );
-
-	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems( sMapX, sMapY, bMapZ, FALSE );
-
-	return( TRUE );
+fail_close:
+	FileClose(f);
+fail:
+	return FALSE;
 }
 
 
