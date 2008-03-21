@@ -1646,57 +1646,32 @@ static void SaveNPCInformationToProfileStruct(void)
 }
 
 
-BOOLEAN GetNumberOfActiveWorldItemsFromTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *pNumberOfData )
+BOOLEAN GetNumberOfActiveWorldItemsFromTempFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pNumberOfData)
 {
-	UINT32	uiNumberOfItems=0;
-	WORLDITEM *pWorldItems;
-	UINT32	cnt;
-	UINT32	uiNumberOfActive=0;
-
-	//
-	// Load in the sectors ITems
-	//
-
+	UINT32 active_item_count = 0;
 	if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ))
 	{
-		//Get the number of items from the file
-		if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
+		UINT32 item_count;
+		if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &item_count, TRUE)) return FALSE;
+		if (item_count != 0) // If there are items in the data file
 		{
-			//Error getting the numbers of the items from the sector
-			return( FALSE );
-		}
+			WORLDITEM* const wi = MemAlloc(sizeof(*wi) * item_count);
+			if (wi == NULL) return FALSE;
+			memset(wi, 0, sizeof(*wi) * item_count);
 
-		//If there items in the data file
-		if( uiNumberOfItems != 0 )
-		{
-			pWorldItems = MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
-			if( pWorldItems == NULL )
+			if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wi)) return FALSE;
+
+			active_item_count = 0;
+			for (UINT32 cnt = 0; cnt < item_count; ++cnt)
 			{
-				//Error Allocating memory for the temp item array
-				return( FALSE );
+				if (wi[cnt].fExists) ++active_item_count;
 			}
 
-			//Clear the memory
-			memset( pWorldItems, 0, sizeof( WORLDITEM ) * uiNumberOfItems );
-
-			//Load the World Items from the file
-			if( !LoadWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, pWorldItems ) )
-				return( FALSE );
-
-			uiNumberOfActive = 0;
-			for( cnt=0; cnt<uiNumberOfItems; cnt++ )
-			{
-				if( pWorldItems[cnt].fExists )
-					uiNumberOfActive++;
-			}
-			MemFree( pWorldItems );
+			MemFree(wi);
 		}
-		*pNumberOfData = uiNumberOfActive;
 	}
-	else
-		*pNumberOfData = 0;
-
-	return( TRUE );
+	*pNumberOfData = active_item_count;
+	return TRUE;
 }
 
 
