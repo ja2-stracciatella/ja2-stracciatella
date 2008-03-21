@@ -2464,60 +2464,45 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 }
 
 
-static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame)
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
 {
-	UINT32 uiTotalNumberOfItems = 0, uiTotalNumberOfRealItems = 0;
-	WORLDITEM * pTotalSectorList = NULL;
-	UINT32 uiItemCount = 0;
-	INT32 iCounter = 0;
 	BOOLEAN	fReturn;
-
-
 	// get total number, visable and invisible
-	fReturn = GetNumberOfActiveWorldItemsFromTempFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfRealItems ) );
-	Assert( fReturn );
+	UINT32 uiTotalNumberOfRealItems;
+	fReturn = GetNumberOfActiveWorldItemsFromTempFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfRealItems);
+	Assert(fReturn);
 
-	fReturn = GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &( uiTotalNumberOfItems ), FALSE );
-	Assert( fReturn );
+	UINT32 uiTotalNumberOfItems;
+	fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, FALSE);
+	Assert(fReturn);
 
-	if( uiTotalNumberOfItems > 0 )
+	UINT32 uiItemCount = 0;
+	if (uiTotalNumberOfItems > 0)
 	{
-		// allocate space for the list
-		pTotalSectorList = MemAlloc( sizeof( WORLDITEM ) * uiTotalNumberOfItems );
+		WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
+		LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, pTotalSectorList);
 
-		// now load into mem
-		LoadWorldItemsFromTempItemFile(  sMapX,  sMapY, bMapZ, pTotalSectorList );
+		for (const WORLDITEM* wi = pTotalSectorList; wi != pTotalSectorList + uiTotalNumberOfRealItems; ++wi)
+		{
+			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
+			uiItemCount += wi->o.ubNumberOfObjects;
+		}
+
+		MemFree(pTotalSectorList);
 	}
 
-	// now run through list and
-	for( iCounter = 0; ( UINT32 )( iCounter )< uiTotalNumberOfRealItems; iCounter++ )
+#ifdef JA2BETAVERSION
+	if (fLoadingGame && guiSaveGameVersion >= 86)
 	{
-		// if visible to player, then state fact
-		if( IsMapScreenWorldItemVisibleInMapInventory( &pTotalSectorList[ iCounter ] ) )
+		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMapX, sMapY, bMapZ);
+		if (uiItemCount != uiReported)
 		{
-			uiItemCount += pTotalSectorList[ iCounter ].o.ubNumberOfObjects;
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"SynchronizeItemTempFile()  Error!  Reported %d, should be %d", uiReported, uiItemCount);
 		}
 	}
+#endif
 
-	// if anything was alloced, then get rid of it
-	if( pTotalSectorList != NULL )
-	{
-		MemFree( pTotalSectorList );
-		pTotalSectorList = NULL;
-	}
-
-	#ifdef JA2BETAVERSION
-	if( fLoadingGame && guiSaveGameVersion >= 86 )
-	{
-		UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector( sMapX, sMapY, bMapZ );
-
-		if( uiItemCount != uiReported )
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"SynchronizeItemTempFile()  Error!  Reported %d, should be %d", uiReported, uiItemCount  );
-	}
-	#endif
-
-	//record the number of items
-	SetNumberOfVisibleWorldItemsInSectorStructureForSector( sMapX, sMapY, bMapZ, uiItemCount );
+	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMapX, sMapY, bMapZ, uiItemCount);
 }
 
 
