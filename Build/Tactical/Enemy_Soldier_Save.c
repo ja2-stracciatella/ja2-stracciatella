@@ -27,35 +27,27 @@ BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
 
 
-static void RemoveEnemySoldierTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static void RemoveTempFile(const INT16 x, const INT16 y, const INT8 z, const UINT32 file_flag)
 {
-	CHAR8		zMapName[ 128 ];
-	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS ) )
-	{
-		//Delete any temp file that is here and toast the flag that say's one exists.
-		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
+	if (!GetSectorFlagStatus(x, y, z, file_flag)) return;
 
-		GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-
-		//Delete the temp file.
-		FileDelete( zMapName );
-	}
+	// Delete any temp file that is here and toast the flag that says one exists.
+	ReSetSectorFlag(x, y, z, file_flag);
+	char filename[128];
+	GetMapTempFileName(file_flag, filename, x, y, z);
+	FileDelete(filename);
 }
 
 
-static void RemoveCivilianTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static void RemoveEnemySoldierTempFile(const INT16 x, const INT16 y, const INT8 z)
 {
-	CHAR8		zMapName[ 128 ];
-	if( GetSectorFlagStatus( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS ) )
-	{
-		//Delete any temp file that is here and toast the flag that say's one exists.
-		ReSetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
+	RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
+}
 
-		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-		//Delete the temp file.
-		FileDelete( zMapName );
-	}
+static void RemoveCivilianTempFile(const INT16 x, const INT16 y, const INT8 z)
+{
+	RemoveTempFile(x, y, z, SF_CIV_PRESERVED_TEMP_FILE_EXISTS);
 }
 
 
