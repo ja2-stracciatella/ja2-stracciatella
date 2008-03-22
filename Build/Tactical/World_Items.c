@@ -225,43 +225,37 @@ static UINT32 GetNumUsedWorldItems(void)
 
 INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
 {
-	UINT32	iItemIndex;
-	INT32		iReturn;
-
 	// ATE: Check if the gridno is OK
-	if ( (sGridNo) == NOWHERE )
+	if (sGridNo == NOWHERE)
 	{
+#ifdef JA2BETAVERSION
 		// Display warning.....
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
-		#endif
-		return( -1 );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Error: Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
+#endif
+		return -1;
 	}
 
-	iItemIndex = GetFreeWorldItemIndex( );
+	const UINT32 iItemIndex = GetFreeWorldItemIndex();
+	WORLDITEM* const wi = &gWorldItems[iItemIndex];
 
 	//Add the new world item to the table.
-	gWorldItems[ iItemIndex ].fExists										= TRUE;
-	gWorldItems[ iItemIndex ].sGridNo										= sGridNo;
-	gWorldItems[ iItemIndex ].ubLevel										= ubLevel;
-	gWorldItems[ iItemIndex ].usFlags										= usFlags;
-	gWorldItems[ iItemIndex ].bVisible									= bVisible;
-	gWorldItems[ iItemIndex ].bRenderZHeightAboveLevel  = bRenderZHeightAboveLevel;
-
-	gWorldItems[iItemIndex].o = *pObject;
+	wi->fExists                  = TRUE;
+	wi->sGridNo                  = sGridNo;
+	wi->ubLevel                  = ubLevel;
+	wi->usFlags                  = usFlags;
+	wi->bVisible                 = bVisible;
+	wi->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
+	wi->o                        = *pObject;
 
 	// Add a bomb reference if needed
 	if (usFlags & WORLD_ITEM_ARMED_BOMB)
 	{
-		iReturn = AddBombToWorld( iItemIndex );
-		if (iReturn == -1)
-		{
-			return( -1 );
-		}
+		if (AddBombToWorld(iItemIndex) == -1) return -1;
 	}
 
-	return ( iItemIndex );
+	return iItemIndex;
 }
+
 
 void RemoveItemFromWorld( INT32 iItemIndex )
 {
