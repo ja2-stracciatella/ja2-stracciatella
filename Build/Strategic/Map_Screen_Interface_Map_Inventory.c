@@ -804,122 +804,77 @@ static void DestroyMapInventoryButtons(void)
 
 
 static void CheckGridNoOfItemsInMapScreenMapInventory(void);
-static INT32 GetSizeOfStashInSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ);
-static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(const WORLDITEM*);
 static void SortSectorInventory(WORLDITEM* pInventory, UINT32 uiSizeOfArray);
 
 
 static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, const INT16 sMapZ)
 {
-	// get size of the current stash in sector (count stacks as one item)
-	INT32 iSize = GetSizeOfStashInSector(sMapX, sMapY, sMapZ);
-	// round off .. we want at least 1 free page of space...
-	iSize = iSize - iSize % MAP_INVENTORY_POOL_SLOT_COUNT + MAP_INVENTORY_POOL_SLOT_COUNT;
-
-	iTotalNumberOfSlots = iSize;
-	pInventoryPoolList = MemAlloc(sizeof(*pInventoryPoolList) * iSize);
-	memset(pInventoryPoolList, 0, sizeof(*pInventoryPoolList) * iSize);
-
-	iLastInventoryPoolPage = (iSize - 1) / MAP_INVENTORY_POOL_SLOT_COUNT;
-
-	uiNumberOfUnSeenItems = 0;
-
-	UINT32 uiTotalNumberOfSeenItems;
-	// now laod these items into memory, based on fact if sector is in fact loaded
+	WORLDITEM*       items;
+	const WORLDITEM* items_end;
 	if (sMapX == gWorldSectorX &&
 			sMapY == gWorldSectorY &&
 			sMapZ == gbWorldSectorZ)
 	{
-		UINT32 uiItemCount = 0;
-		// sector loaded, just copy from list
-		CFOR_ALL_WORLD_ITEMS(wi)
-		{
-			// check if visible, if so, then copy over object type
-			// if visible to player, then state fact
-			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-			pInventoryPoolList[uiItemCount++] = *wi;
-		}
-
-		uiTotalNumberOfSeenItems = uiItemCount;
-
-		// now allocate space for all the unseen items
-		if (guiNumWorldItems > uiItemCount)
-		{
-			pUnSeenItems = MemAlloc((guiNumWorldItems - uiItemCount) * sizeof(*pUnSeenItems));
-
-			uiItemCount = 0;
-			// now copy over
-			CFOR_ALL_WORLD_ITEMS(wi)
-			{
-				if (!IsMapScreenWorldItemInvisibleInMapInventory(wi)) continue;
-				pUnSeenItems[uiItemCount++] = *wi;
-			}
-
-			// copy over number of unseen
-			uiNumberOfUnSeenItems = uiItemCount;
-		}
+		items      = gWorldItems;
+		items_end  = gWorldItems + guiNumWorldItems;
 	}
 	else
 	{
-		// not loaded, load
-		// get total number, visable and invisible
-		UINT32     uiTotalNumberOfItems = 0;
-		WORLDITEM* pTotalSectorList;
-		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
+		UINT32 item_count = 0;
+		items             = NULL;
+		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &item_count, &items);
 		Assert(fReturn);
-
-		UINT32 unseen_count = 0;
-		UINT32 uiItemCount = 0;
-		// now run through list and
-		for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
-		{
-			// if visible to player, then state fact
-			const WORLDITEM* const wi = &pTotalSectorList[iCounter];
-			if (!wi->fExists) continue;
-
-			//TEST!!  If the item exists, and is NOT VALID, report it
-			if (wi->o.usItem > MAXITEMS)
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"The %d item in the list is NOT valid. Please send save.  DF 1.", iCounter);
-			}
-
-			if (IsMapScreenWorldItemVisibleInMapInventory(wi))
-			{
-				pInventoryPoolList[uiItemCount++] = *wi;
-			}
-			else
-			{
-				++unseen_count;
-			}
-		}
-
-		uiTotalNumberOfSeenItems = uiItemCount;
-
-		// now allocate space for all the unseen items
-		if (unseen_count > 0)
-		{
-			pUnSeenItems = MemAlloc(unseen_count * sizeof(*pUnSeenItems));
-			uiItemCount = 0;
-
-			// now copy over
-			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
-			{
-				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
-				if (!IsMapScreenWorldItemInvisibleInMapInventory(wi)) continue;
-				pUnSeenItems[uiItemCount++] = *wi;
-				Assert(uiItemCount <= unseen_count);
-			}
-
-			// copy over number of unseen
-			uiNumberOfUnSeenItems = uiItemCount;
-		}
-
-		// if anything was alloced, then get rid of it
-		if (uiTotalNumberOfItems > 0) MemFree(pTotalSectorList);
+		items_end  = items + item_count;
 	}
 
+	UINT32 visible_count = 0;
+	UINT32 unseen_count  = 0;
+	for (const WORLDITEM* wi = items; wi != items_end; ++wi)
+	{
+		if (!wi->fExists) continue;
+		if (IsMapScreenWorldItemVisibleInMapInventory(wi))
+		{
+			++visible_count;
+		}
+		else
+		{
+			++unseen_count;
+		}
+	}
+
+	const UINT32 slot_count = visible_count - visible_count % MAP_INVENTORY_POOL_SLOT_COUNT + MAP_INVENTORY_POOL_SLOT_COUNT;
+	iLastInventoryPoolPage  = (slot_count - 1) / MAP_INVENTORY_POOL_SLOT_COUNT;
+
+	WORLDITEM* visible_item = MemAlloc(sizeof(*visible_item) * slot_count);
+	memset(visible_item, 0,            sizeof(*visible_item) * slot_count);
+	WORLDITEM* unseen_item  = (unseen_count != 0 ? MemAlloc(sizeof(*unseen_item) * unseen_count) : NULL);
+
+	iTotalNumberOfSlots      = slot_count;
+	pInventoryPoolList       = visible_item;
+	uiNumberOfUnSeenItems    = unseen_count;
+	pUnSeenItems             = unseen_item;
+
+	for (const WORLDITEM* wi = items; wi != items_end; ++wi)
+	{
+		if (!wi->fExists) continue;
+		if (IsMapScreenWorldItemVisibleInMapInventory(wi))
+		{
+			*visible_item++ = *wi;
+			Assert(visible_item <= pInventoryPoolList + visible_count);
+		}
+		else
+		{
+			*unseen_item++ = *wi;
+			Assert(unseen_item <= pUnSeenItems + unseen_count);
+		}
+	}
+	Assert(visible_item == pInventoryPoolList + visible_count);
+	Assert(unseen_item  == pUnSeenItems       + unseen_count);
+
+	if (items != gWorldItems && items != NULL) MemFree(items);
+
 	CheckGridNoOfItemsInMapScreenMapInventory();
-	SortSectorInventory(pInventoryPoolList, uiTotalNumberOfSeenItems);
+	SortSectorInventory(pInventoryPoolList, visible_count);
 }
 
 
@@ -1025,45 +980,6 @@ static void DestroyStash(void)
 	// clear out stash
 	MemFree( pInventoryPoolList );
 
-}
-
-
-static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const INT16 sMapZ)
-{
-	// get # of items in sector that are visible to the player
-	UINT32 uiItemCount = 0;
-
-	if (sMapX == gWorldSectorX &&
-			sMapY == gWorldSectorY &&
-			sMapZ == gbWorldSectorZ)
-	{
-		// now run through list and
-		CFOR_ALL_WORLD_ITEMS(wi)
-		{
-			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-			++uiItemCount;
-		}
-	}
-	else
-	{
-		UINT32     uiTotalNumberOfItems = 0;
-		WORLDITEM* pTotalSectorList;
-		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
-		Assert(fReturn);
-
-		if (uiTotalNumberOfItems > 0)
-		{
-			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
-			{
-				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
-				if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
-				++uiItemCount;
-			}
-			MemFree(pTotalSectorList);
-		}
-	}
-
-	return uiItemCount;
 }
 
 
@@ -1732,19 +1648,6 @@ BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM* const pWorldI
 			pWorldItem->o.usItem != SWITCH &&
 			pWorldItem->o.usItem != ACTION_ITEM &&
 			pWorldItem->o.bTrap <= 0 )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
-
-//CJC look here to add/remove checks for the sector inventory
-static BOOLEAN IsMapScreenWorldItemInvisibleInMapInventory(const WORLDITEM* const pWorldItem)
-{
-	if( pWorldItem->fExists &&
-			!IsMapScreenWorldItemVisibleInMapInventory( pWorldItem ) )
 	{
 		return( TRUE );
 	}
