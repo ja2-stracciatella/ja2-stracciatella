@@ -477,55 +477,49 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 
 static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
-	UINT32	uiLoop2;
-	INT8		bSlot;
+	MERCPROFILESTRUCT* const q = GetProfile(QUEEN);
 
-	if ( gMercProfiles[ QUEEN ].sSectorX == gWorldSectorX &&
-		gMercProfiles[ QUEEN ].sSectorY == gWorldSectorY &&
-		gMercProfiles[ QUEEN ].bSectorZ == gbWorldSectorZ )
+	if (q->sSectorX != gWorldSectorX ||
+			q->sSectorY != gWorldSectorY ||
+			q->bSectorZ != gbWorldSectorZ)
 	{
-		CFOR_ALL_WORLD_ITEMS(wi)
+		return;
+	}
+
+	CFOR_ALL_WORLD_ITEMS(wi)
+	{
+		// Look for items belonging to the queen
+		if (wi->o.usItem         != OWNERSHIP) continue;
+		if (wi->o.ubOwnerProfile != QUEEN)     continue;
+
+		// Delete all items on this tile
+		const INT16 sGridNo = wi->sGridNo;
+		const UINT8 ubLevel = wi->ubLevel;
+		for (UINT32 uiLoop2 = 0; uiLoop2 < guiNumWorldItems; ++uiLoop2)
 		{
-			// loop through all items, look for ownership
-			if (wi->o.usItem != OWNERSHIP) continue;
+			const WORLDITEM* const item = &gWorldItems[uiLoop2];
+			if (!item->fExists)           continue;
+			if (item->sGridNo != sGridNo) continue;
+			if (item->ubLevel != ubLevel) continue;
 
-			// if owner is the Queen
-			if (wi->o.ubOwnerProfile != QUEEN) continue;
-
-			// then all items in this location should be deleted
-			const INT16 sGridNo = wi->sGridNo;
-			const UINT8 ubLevel = wi->ubLevel;
-			for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
+			// Upgrade equipment
+			switch (item->o.usItem)
 			{
-				// loop through all items, look for those in same tile
-				if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
+				case AUTO_ROCKET_RIFLE:
 				{
-					// upgrade equipment
-					switch ( gWorldItems[ uiLoop2 ].o.usItem )
-					{
-						case AUTO_ROCKET_RIFLE:
-							bSlot = FindObjectInSoldierProfile( QUEEN, ROCKET_RIFLE );
-							if ( bSlot != NO_SLOT )
-							{
-								// give her auto rifle
-								gMercProfiles[ QUEEN ].inv[ bSlot ] = AUTO_ROCKET_RIFLE;
-							}
-							break;
-						case SPECTRA_HELMET_18:
-							gMercProfiles[ QUEEN ].inv[ HELMETPOS ] = SPECTRA_HELMET_18;
-							break;
-						case SPECTRA_VEST_18:
-							gMercProfiles[ QUEEN ].inv[ VESTPOS ] = SPECTRA_VEST_18;
-							break;
-						case SPECTRA_LEGGINGS_18:
-							gMercProfiles[ QUEEN ].inv[ LEGPOS ] = SPECTRA_LEGGINGS_18;
-							break;
-						default:
-							break;
-					}
-					RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
+					// Give her auto rifle
+					const INT8 bSlot = FindObjectInSoldierProfile(QUEEN, ROCKET_RIFLE);
+					if (bSlot != NO_SLOT) q->inv[bSlot] = AUTO_ROCKET_RIFLE;
+					break;
 				}
+
+				case SPECTRA_HELMET_18:   q->inv[HELMETPOS] = SPECTRA_HELMET_18;   break;
+				case SPECTRA_VEST_18:     q->inv[VESTPOS]   = SPECTRA_VEST_18;     break;
+				case SPECTRA_LEGGINGS_18: q->inv[LEGPOS]    = SPECTRA_LEGGINGS_18; break;
+
+				default: break;
 			}
+			RemoveItemFromPool(sGridNo, uiLoop2, ubLevel);
 		}
 	}
 }
