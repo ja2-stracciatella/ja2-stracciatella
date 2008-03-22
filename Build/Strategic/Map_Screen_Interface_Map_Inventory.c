@@ -430,97 +430,72 @@ static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 i
 
 static void SaveSeenAndUnseenItems(void)
 {
-	WORLDITEM *pSeenItemsList = NULL;
-	INT32 iCounter = 0;
-	INT32 iItemCount = 0;
-	INT32 iTotalNumberItems = 0;
-
-	// allocate space
-	iTotalNumberItems = GetTotalNumberOfItems( );
+	const INT32 iTotalNumberItems = GetTotalNumberOfItems();
 
 	// if there are seen items, build a temp world items list of them and save them
-	if( iTotalNumberItems > 0 )
+	INT32      iItemCount = 0;
+	WORLDITEM* pSeenItemsList;
+	if (iTotalNumberItems > 0)
 	{
-		pSeenItemsList = MemAlloc( ( sizeof( WORLDITEM ) * ( iTotalNumberItems ) )  );
+		pSeenItemsList = MemAlloc(sizeof(*pSeenItemsList) * iTotalNumberItems);
 
 		// copy
-		for( iCounter = 0; iCounter < iTotalNumberOfSlots; iCounter++ )
+		for (INT32 iCounter = 0; iCounter < iTotalNumberOfSlots; ++iCounter)
 		{
-			if( pInventoryPoolList[ iCounter ].o.ubNumberOfObjects > 0 )
-			{
-				// copy object stuff
-				pSeenItemsList[iItemCount] = pInventoryPoolList[iCounter];
+			const WORLDITEM* const pi = &pInventoryPoolList[iCounter];
+			if (pi->o.ubNumberOfObjects == 0) continue;
 
-				// check if item actually lives at a gridno
-				// if not, check predicessor, iItemCount is not 0
-				if( pSeenItemsList[ iItemCount ].sGridNo == 0 )
+			WORLDITEM* const si = &pSeenItemsList[iItemCount++];
+			*si = *pi;
+
+			// Check if item actually lives at a gridno
+			if (si->sGridNo == 0)
+			{
+				// Use gridno of predecessor, if there is one
+				if (si != pSeenItemsList)
 				{
-					if( iItemCount > 0 )
-					{
-						// borrow from predicessor
-						pSeenItemsList[ iItemCount ].sGridNo = pSeenItemsList[ iItemCount - 1 ].sGridNo;
-					}
-					else
-					{
-						// get entry grid location
-					}
+					// borrow from predecessor
+					si->sGridNo = si[-1].sGridNo;
 				}
-				pSeenItemsList[ iItemCount ].fExists = TRUE;
-				pSeenItemsList[ iItemCount ].bVisible = TRUE;
-				iItemCount++;
+				else
+				{
+					// get entry grid location
+				}
 			}
+			si->fExists  = TRUE;
+			si->bVisible = TRUE;
 		}
+	}
+	else
+	{
+		pSeenItemsList = NULL;
 	}
 
 	// if this is the loaded sector handle here
-	if( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == ( INT8 ) ( iCurrentMapSectorZ ) ) )
+	if (gWorldSectorX  == sSelMapX &&
+			gWorldSectorY  == sSelMapY &&
+			gbWorldSectorZ == (INT8)iCurrentMapSectorZ)
 	{
-		ReBuildWorldItemStashForLoadedSector( iItemCount, uiNumberOfUnSeenItems, pSeenItemsList, pSaveList );
+		ReBuildWorldItemStashForLoadedSector(iItemCount, uiNumberOfUnSeenItems, pSeenItemsList, pSaveList);
 	}
 	else
 	{
 		// now copy over unseen and seen
-		if( uiNumberOfUnSeenItems > 0 )
-		{
-			// over write file and copy unseen
-			SaveWorldItemsToTempItemFile(sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pSaveList);
-
-			// check if seen items exist too
-			if( iItemCount > 0 )
-			{
-				AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount, pSeenItemsList);
-			}
-
-		}
-		else if( iItemCount > 0 )
-		{
-			// copy only seen items
-			SaveWorldItemsToTempItemFile(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount, pSeenItemsList);
-		}
-		else
-		{
-			// get rid of the file
-			SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ), 0, NULL );
-			return;
-		}
+		SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pSaveList);
+		AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount,            pSeenItemsList);
 	}
 
 	// now clear out seen list
-	if( pSeenItemsList != NULL )
-	{
-		MemFree( pSeenItemsList );
-		pSeenItemsList = NULL;
-	}
+	if (pSeenItemsList != NULL) MemFree(pSeenItemsList);
 
 	// clear out unseen list
-	if( pSaveList != NULL )
+	if (pSaveList != NULL)
 	{
-		MemFree( pSaveList );
+		MemFree(pSaveList);
 		pSaveList = NULL;
 	}
 
 	uiNumberOfUnSeenItems = 0;
-	iItemCount = 0;
 }
 
 
