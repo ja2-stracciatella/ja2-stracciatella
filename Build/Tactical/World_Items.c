@@ -532,19 +532,12 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 
 
 // Refresh item pools
-void RefreshWorldItemsIntoItemPools(const WORLDITEM* const pItemList, const INT32 iNumberOfItems)
+void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 item_count)
 {
-	INT32			i;
-	WORLDITEM		dummyItem;
-
-	for ( i = 0; i < iNumberOfItems; i++ )
+	for (const WORLDITEM* i = items; i != items + item_count; ++i)
 	{
-		if( pItemList[ i ].fExists )
-		{
-			dummyItem = pItemList[i];
-
-			AddItemToPool( dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel );
-		}
+		if (!i->fExists) continue;
+		OBJECTTYPE o = i->o; // XXX AddItemToPool() may alter the object
+		AddItemToPool(i->sGridNo, &o, i->bVisible, i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
 	}
-
 }
