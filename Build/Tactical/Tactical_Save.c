@@ -443,7 +443,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const
 {
 	char filename[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
-	const HWFILE f = FileOpen(filename, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE f = FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if (f == 0) goto fail;
 
 	// Save the size of the item table
