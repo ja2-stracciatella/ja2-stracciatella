@@ -4300,7 +4300,7 @@ static void ClearAllItemPools(void)
 
 
 // Refresh item pools
-void RefreshItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
+void RefreshItemPools(const WORLDITEM* const pItemList, const INT32 iNumberOfItems)
 {
 	ClearAllItemPools( );
 

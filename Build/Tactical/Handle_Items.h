@@ -114,7 +114,7 @@ void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel  );
 // check if item is booby trapped
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
 
-void RefreshItemPools( WORLDITEM* pItemList, INT32 iNumberOfItems );
+void RefreshItemPools(const WORLDITEM* pItemList, INT32 iNumberOfItems);
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex );
 

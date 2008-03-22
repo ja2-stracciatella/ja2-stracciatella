@@ -223,8 +223,7 @@ static UINT32 GetNumUsedWorldItems(void)
 }
 
 
-
-INT32 AddItemToWorld( INT16 sGridNo, OBJECTTYPE *pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible )
+INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
 {
 	UINT32	iItemIndex;
 	INT32		iReturn;
@@ -539,7 +538,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 
 
 // Refresh item pools
-void RefreshWorldItemsIntoItemPools( WORLDITEM * pItemList, INT32 iNumberOfItems )
+void RefreshWorldItemsIntoItemPools(const WORLDITEM* const pItemList, const INT32 iNumberOfItems)
 {
 	INT32			i;
 	WORLDITEM		dummyItem;
