@@ -257,19 +257,19 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 }
 
 
-void RemoveItemFromWorld( INT32 iItemIndex )
+void RemoveItemFromWorld(const INT32 iItemIndex)
 {
-	// Ensure the item still exists, then if it's a bomb,
-	// remove the appropriate entry from the bomb table
-	if (gWorldItems[ iItemIndex ].fExists)
+	WORLDITEM* const wi = &gWorldItems[iItemIndex];
+	if (!wi->fExists) return;
+
+	// If it's a bomb, remove the appropriate entry from the bomb table
+	if (wi->usFlags & WORLD_ITEM_ARMED_BOMB)
 	{
-		if (gWorldItems[ iItemIndex ].usFlags & WORLD_ITEM_ARMED_BOMB)
-		{
-			RemoveBombFromWorldByItemIndex( iItemIndex );
-		}
-		gWorldItems[ iItemIndex ].fExists = FALSE;
+		RemoveBombFromWorldByItemIndex(iItemIndex);
 	}
+	wi->fExists = FALSE;
 }
+
 
 void TrashWorldItems()
 {
