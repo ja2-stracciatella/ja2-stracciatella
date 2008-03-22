@@ -929,32 +929,6 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 }
 
 
-// handle loyalty adjustment for theft
-static BOOLEAN HandleLoyaltyAdjustmentForRobbery(SOLDIERTYPE* pSoldier)
-{
-	// not to be implemented at this time
-	return( FALSE );
-
-/*
-	// this function will handle robbery by the passed soldiertype of an object from a town he/she is in
-	// it will check LOS code for all civilians around the stealing soldier if any of them have LOS to the soldier
-	// then roll against thief's dexterity, if fail then you were caught( adjust loyalty base on theft and value of the object and if the object is owned by one of the people with LOS) and return a TRUE
-	// otherwise return false.
-
-	INT8 bTownId = 0;
-
-	// get town id
-	bTownId = GetTownIdForSector( pSoldier->sSectorX, pSoldier->sSectorY );
-
-
-	// debug message
-  ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Theft not yet implemented.");
-
-	return ( FALSE );
-*/
-}
-
-
 // handle loyalty adjustment for dmg inflicted on a building
 static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sPointsDmg)
 {

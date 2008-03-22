@@ -1311,24 +1311,6 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 								// continue, to try and place ay others...
 								continue;
 							}
-							/*
-							// handle theft.. will return true if theft has failed ( if soldier was caught )
-							if( pSoldier->bTeam == OUR_TEAM )
-							{
-								// check to see if object was owned by another
-								if( Object.fFlags & OBJECT_OWNED_BY_CIVILIAN )
-								{
-									// owned by a civilian
-									if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
-									{
-										// implememnt actual tactical reaction for theft..shoot robber, yell out, etc
-									}
-
-									// reset who owns object
-									Object.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
-								}
-							}
-							*/
 
 							//pItemPoolToDelete = pItemPool;
 							iItemIndexToDelete = pItemPool->iItemIndex;
@@ -1388,24 +1370,6 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				}
 				else
 				{
-/*
-					// handle theft.. will return true if theft has failed ( if soldier was caught )
-					if( pSoldier->bTeam == OUR_TEAM )
-					{
-						// check to see if object was owned by another
-						if( Object.fFlags & OBJECT_OWNED_BY_CIVILIAN )
-						{
-							// owned by a civilian
-							if( HandleLoyaltyAdjustmentForRobbery( pSoldier ) == TRUE )
-							{
-								// implememnt actual tactical reaction for theft..shoot robber, yell out, etc
-							}
-
-							// reset who owns object
-							Object.fFlags &= ~( OBJECT_OWNED_BY_CIVILIAN );
-						}
-					}
-*/
 					RemoveItemFromPool( sGridNo, iItemIndex, pSoldier->bLevel );
 
 					if ( !AutoPlaceObject( pSoldier, &(gWorldItems[ iItemIndex ].o ), TRUE ) )
