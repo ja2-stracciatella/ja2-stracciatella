@@ -516,20 +516,11 @@ fail:
 static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible, const BOOLEAN fReplaceEntireFile)
+BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
 	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis)) goto fail;
-
-	if (fReplaceEntireFile)
-	{
-		// First loop through and mark all entries that they dont exists
-		for (UINT32 cnt = 0; cnt < uiNumberOfItems; ++cnt) wis[cnt].fExists = FALSE;
-
-		//Now delete the item temp file
-		DeleteTempItemMapFile(sMapX, sMapY, bMapZ);
-	}
 
 	//loop through all the objects to add
 	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
@@ -1392,13 +1383,12 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 }
 
 
-BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis, BOOLEAN overwrite)
+BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis)
 {
 	for (const WORLDITEM* wi = wis; wi != wis + item_count; ++wi)
 	{
 		if (!wi->fExists) continue;
-		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, wi->bVisible, overwrite);
-		overwrite = FALSE;
+		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, wi->bVisible);
 	}
 	return TRUE;
 }
@@ -1923,7 +1913,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 			}
 		}
 
-		AddWorldItemsToUnLoadedSector(sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems, FALSE);
+		AddWorldItemsToUnLoadedSector(sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems);
 	}
 
   DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->bLevel, 1, FALSE, 0, TRUE );
