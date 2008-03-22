@@ -404,7 +404,7 @@ void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen )
 
 
 static INT32 GetTotalNumberOfItems(void);
-static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 iNumberUnSeenItems, WORLDITEM* pSeenItemsList, WORLDITEM* pUnSeenItemsList);
+static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 iNumberUnSeenItems, const WORLDITEM* pSeenItemsList, const WORLDITEM* pUnSeenItemsList);
 
 
 static void SaveSeenAndUnseenItems(void)
@@ -822,68 +822,49 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 }
 
 
-static void ReBuildWorldItemStashForLoadedSector(INT32 iNumberSeenItems, INT32 iNumberUnSeenItems, WORLDITEM* pSeenItemsList, WORLDITEM* pUnSeenItemsList)
+static void ReBuildWorldItemStashForLoadedSector(const INT32 iNumberSeenItems, const INT32 iNumberUnSeenItems, const WORLDITEM* const pSeenItemsList, const WORLDITEM* const pUnSeenItemsList)
 {
-	INT32 iTotalNumberOfItems = 0;
-	INT32 iCurrentItem = 0;
-	INT32 iCounter = 0;
-	INT32 iRemainder = 0;
-	UINT32	uiTotalNumberOfVisibleItems=0;
-	WORLDITEM * pTotalList = NULL;
-
-	// clear out the list
-	TrashWorldItems( );
+	TrashWorldItems();
 
 	// get total number of items
-	iTotalNumberOfItems = iNumberUnSeenItems + iNumberSeenItems;
+	INT32 iTotalNumberOfItems = iNumberUnSeenItems + iNumberSeenItems;
 
-	iRemainder = iTotalNumberOfItems % 10;
+	const INT32 iRemainder = iTotalNumberOfItems % 10;
 
 	// if there is a remainder, then add onto end of list
-	if( iRemainder )
-	{
-		iTotalNumberOfItems += 10 - iRemainder;
-	}
+	if (iRemainder) iTotalNumberOfItems += 10 - iRemainder;
 
 	// allocate space for items
-	pTotalList = MemAlloc( sizeof( WORLDITEM ) * iTotalNumberOfItems );
+	WORLDITEM* const pTotalList = MemAlloc(sizeof(*pTotalList) * iTotalNumberOfItems);
+	memset(pTotalList, 0, sizeof(*pTotalList) * iTotalNumberOfItems);
 
-	for( iCounter = 0; iCounter < iTotalNumberOfItems; iCounter++ )
-	{
-		// clear out the structure
-		memset( &( pTotalList[ iCounter ] ), 0, sizeof( WORLDITEM ) );
-	}
-
+	INT32 iCurrentItem = 0;
 	// place seen items in the world
-	for( iCounter = 0; iCounter < iNumberSeenItems; iCounter++ )
+	for (INT32 i = 0; i < iNumberSeenItems; ++i)
 	{
-		pTotalList[iCurrentItem] = pSeenItemsList[iCounter];
-		iCurrentItem++;
+		pTotalList[iCurrentItem++] = pSeenItemsList[i];
 	}
 
 	// now store the unseen item list
-	for( iCounter = 0; iCounter < iNumberUnSeenItems; iCounter++ )
+	for (INT32 i = 0; i < iNumberUnSeenItems; ++i)
 	{
-		pTotalList[iCurrentItem] = pUnSeenItemsList[iCounter];
-		iCurrentItem++;
+		pTotalList[iCurrentItem++] = pUnSeenItemsList[i];
 	}
 
-	RefreshItemPools( pTotalList, iTotalNumberOfItems );
+	RefreshItemPools(pTotalList, iTotalNumberOfItems);
 
 	//Count the total number of visible items
-	for( iCounter = 0; iCounter < iNumberSeenItems; iCounter++ )
+	UINT32 uiTotalNumberOfVisibleItems = 0;
+	for (INT32 i = 0; i < iNumberSeenItems; ++i)
 	{
-		uiTotalNumberOfVisibleItems += pSeenItemsList[ iCounter ].o.ubNumberOfObjects;
+		uiTotalNumberOfVisibleItems += pSeenItemsList[i].o.ubNumberOfObjects;
 	}
 
 	//reset the visible item count in the sector info struct
-	SetNumberOfVisibleWorldItemsInSectorStructureForSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ , uiTotalNumberOfVisibleItems );
+	SetNumberOfVisibleWorldItemsInSectorStructureForSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, uiTotalNumberOfVisibleItems);
 
 	// clear out allocated space for total list
-	MemFree( pTotalList );
-
-	// reset total list
-	pTotalList = NULL;
+	MemFree(pTotalList);
 }
 
 
