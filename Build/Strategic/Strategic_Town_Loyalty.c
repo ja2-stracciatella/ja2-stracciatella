@@ -1059,7 +1059,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 		// only save if something was stolen
 		if (uiNewTotal < uiNumberOfItems)
 		{
-			AddWorldItemsToUnLoadedSector( sSectorX, sSectorY, ( UINT8 )sSectorZ, 0, uiNumberOfItems, pItemList, TRUE );
+			AddWorldItemsToUnLoadedSector(sSectorX, sSectorY, sSectorZ, uiNumberOfItems, pItemList, TRUE);
 		}
 
 		// mem free

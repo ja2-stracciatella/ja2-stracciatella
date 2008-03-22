@@ -483,19 +483,19 @@ static void SaveSeenAndUnseenItems(void)
 		if( uiNumberOfUnSeenItems > 0 )
 		{
 			// over write file and copy unseen
-			AddWorldItemsToUnLoadedSector( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ), 0, uiNumberOfUnSeenItems, pSaveList, TRUE );
+			AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pSaveList, TRUE);
 
 			// check if seen items exist too
 			if( iItemCount > 0 )
 			{
-				AddWorldItemsToUnLoadedSector( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ), 0, iItemCount, pSeenItemsList, FALSE );
+				AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount, pSeenItemsList, FALSE);
 			}
 
 		}
 		else if( iItemCount > 0 )
 		{
 			// copy only seen items
-			AddWorldItemsToUnLoadedSector( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ), 0, iItemCount, pSeenItemsList, TRUE );
+			AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount, pSeenItemsList, TRUE);
 		}
 		else
 		{

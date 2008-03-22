@@ -1392,7 +1392,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 }
 
 
-BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 item_count, const WORLDITEM* const wis, BOOLEAN overwrite)
+BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis, BOOLEAN overwrite)
 {
 	for (const WORLDITEM* wi = wis; wi != wis + item_count; ++wi)
 	{
@@ -1923,8 +1923,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 			}
 		}
 
-		//Add the soldiers items to an unloaded sector
-		AddWorldItemsToUnLoadedSector( sMapX, sMapY, bMapZ, sGridNo, uiNumberOfItems, pWorldItems, FALSE );
+		AddWorldItemsToUnLoadedSector(sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems, FALSE);
 	}
 
   DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->bLevel, 1, FALSE, 0, TRUE );

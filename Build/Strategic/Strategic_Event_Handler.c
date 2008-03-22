@@ -472,7 +472,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 				pTemp[uiLoop].sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
 			}
 		}
-		AddWorldItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 0, uiNumWorldItems, pTemp, TRUE);
+		AddWorldItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, uiNumWorldItems, pTemp, TRUE);
 		MemFree(pTemp);
 	}
 }
