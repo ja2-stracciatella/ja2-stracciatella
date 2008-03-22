@@ -109,76 +109,52 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 }
 
 
-void FindPanicBombsAndTriggers( void )
+void FindPanicBombsAndTriggers(void)
 {
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
-	STRUCTURE *			pSwitch;
-	INT16						sGridNo = NOWHERE;
-	INT8						bPanicIndex;
-
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		const WORLDITEM*  const wi   = &gWorldItems[wb->iItemIndex];
-		const OBJECTTYPE* const pObj = &wi->o;
-		if (pObj->bFrequency == PANIC_FREQUENCY || pObj->bFrequency == PANIC_FREQUENCY_2 || pObj->bFrequency == PANIC_FREQUENCY_3 )
+		const WORLDITEM*  const wi = &gWorldItems[wb->iItemIndex];
+		const OBJECTTYPE* const o  = &wi->o;
+
+		INT8 bPanicIndex;
+		switch (o->bFrequency)
 		{
-			if (pObj->usItem == SWITCH)
+			case PANIC_FREQUENCY:   bPanicIndex = 0; break;
+			case PANIC_FREQUENCY_2: bPanicIndex = 1; break;
+			case PANIC_FREQUENCY_3: bPanicIndex = 2; break;
+			default:                continue;
+		}
+
+		if (o->usItem == SWITCH)
+		{
+			INT16                  sGridNo = wi->sGridNo;
+			const STRUCTURE* const switch_ = FindStructure(sGridNo, STRUCTURE_SWITCH);
+			if (switch_)
 			{
-				sGridNo = wi->sGridNo;
-				switch( pObj->bFrequency )
+				switch (switch_->ubWallOrientation)
 				{
-					case PANIC_FREQUENCY:
-						bPanicIndex = 0;
-						break;
+					case INSIDE_TOP_LEFT:
+					case OUTSIDE_TOP_LEFT:  sGridNo += DirectionInc(SOUTH); break;
+					case INSIDE_TOP_RIGHT:
+					case OUTSIDE_TOP_RIGHT: sGridNo += DirectionInc(EAST);  break;
 
-					case PANIC_FREQUENCY_2:
-						bPanicIndex = 1;
-						break;
-
-					case PANIC_FREQUENCY_3:
-						bPanicIndex = 2;
-						break;
-
-					default:
-						// augh!!!
-						continue;
-				}
-
-				pSwitch = FindStructure( sGridNo, STRUCTURE_SWITCH );
-				if (pSwitch)
-				{
-					switch( pSwitch->ubWallOrientation )
-					{
-						case INSIDE_TOP_LEFT:
-						case OUTSIDE_TOP_LEFT:
-							sGridNo += DirectionInc( SOUTH );
-							break;
-						case INSIDE_TOP_RIGHT:
-						case OUTSIDE_TOP_RIGHT:
-							sGridNo += DirectionInc( EAST );
-							break;
-						default:
-							break;
-					}
-				}
-
-				gTacticalStatus.sPanicTriggerGridNo[ bPanicIndex ] = sGridNo;
-				gTacticalStatus.ubPanicTolerance[ bPanicIndex ] = pObj->ubTolerance;
-				if (pObj->fFlags & OBJECT_ALARM_TRIGGER)
-				{
-					gTacticalStatus.bPanicTriggerIsAlarm[ bPanicIndex ] = TRUE;
-				}
-				gTacticalStatus.fPanicFlags |= PANIC_TRIGGERS_HERE;
-				bPanicIndex++;
-				if (bPanicIndex == NUM_PANIC_TRIGGERS)
-				{
-					return;
+					default: break;
 				}
 			}
-			else
+
+			gTacticalStatus.fPanicFlags                      |= PANIC_TRIGGERS_HERE;
+			gTacticalStatus.sPanicTriggerGridNo[bPanicIndex]  = sGridNo;
+			gTacticalStatus.ubPanicTolerance[bPanicIndex]     = o->ubTolerance;
+			if (o->fFlags & OBJECT_ALARM_TRIGGER)
 			{
-				gTacticalStatus.fPanicFlags |= PANIC_BOMBS_HERE;
+				gTacticalStatus.bPanicTriggerIsAlarm[bPanicIndex] = TRUE;
 			}
+			if (bPanicIndex + 1 == NUM_PANIC_TRIGGERS) return;
+		}
+		else
+		{
+			gTacticalStatus.fPanicFlags |= PANIC_BOMBS_HERE;
 		}
 	}
 }
