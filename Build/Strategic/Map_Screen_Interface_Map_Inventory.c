@@ -125,10 +125,7 @@ BOOLEAN fMapInventoryItemCompatable[ MAP_INVENTORY_POOL_SLOT_COUNT ];
 BOOLEAN fChangedInventorySlots = FALSE;
 
 // the unseen items list...have to save this
-WORLDITEM *pUnSeenItems = NULL;
-
-// save list to write to temp file
-WORLDITEM *pSaveList = NULL;
+static WORLDITEM* pUnSeenItems = NULL;
 
 INT32 giFlashHighlightedItemBaseTime = 0;
 INT32 giCompatibleItemBaseTime = 0;
@@ -302,7 +299,6 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 
 
 static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ);
-static void ClearUpTempUnSeenList(void);
 static void CreateMapInventoryButtons(void);
 static void CreateMapInventoryPoolDoneButton(void);
 static void CreateMapInventoryPoolSlots(void);
@@ -372,9 +368,6 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 
 		DestroyInventoryPoolDoneButton( );
 
-		// clear up unseen list
-		ClearUpTempUnSeenList( );
-
 		// now save results
 		SaveSeenAndUnseenItems( );
 
@@ -407,20 +400,6 @@ void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen )
 		fShowMapInventoryPool = FALSE;
 		CreateDestroyMapInventoryPoolButtons( fExitFromMapScreen );
 	}
-}
-
-
-static void ClearUpTempUnSeenList(void)
-{
-	// save these items and all the others
-	if( pUnSeenItems == NULL )
-	{
-		return;
-	}
-
-	// build the list based on this
-	pSaveList = pUnSeenItems;
-	pUnSeenItems = NULL;
 }
 
 
@@ -476,26 +455,16 @@ static void SaveSeenAndUnseenItems(void)
 			gWorldSectorY  == sSelMapY &&
 			gbWorldSectorZ == (INT8)iCurrentMapSectorZ)
 	{
-		ReBuildWorldItemStashForLoadedSector(iItemCount, uiNumberOfUnSeenItems, pSeenItemsList, pSaveList);
+		ReBuildWorldItemStashForLoadedSector(iItemCount, uiNumberOfUnSeenItems, pSeenItemsList, pUnSeenItems);
 	}
 	else
 	{
 		// now copy over unseen and seen
-		SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pSaveList);
+		SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pUnSeenItems);
 		AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount,            pSeenItemsList);
 	}
 
-	// now clear out seen list
 	if (pSeenItemsList != NULL) MemFree(pSeenItemsList);
-
-	// clear out unseen list
-	if (pSaveList != NULL)
-	{
-		MemFree(pSaveList);
-		pSaveList = NULL;
-	}
-
-	uiNumberOfUnSeenItems = 0;
 }
 
 
@@ -955,6 +924,12 @@ static void DestroyStash(void)
 	// clear out stash
 	MemFree( pInventoryPoolList );
 
+	if (pUnSeenItems != NULL)
+	{
+		MemFree(pUnSeenItems);
+		pUnSeenItems = NULL;
+	}
+	uiNumberOfUnSeenItems = 0;
 }
 
 
