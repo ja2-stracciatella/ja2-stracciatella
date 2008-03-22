@@ -467,51 +467,31 @@ fail:
 }
 
 
-
-BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WORLDITEM *pData )
+BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, WORLDITEM* const pData)
 {
-	HWFILE	hFile;
-	CHAR8		zMapName[ 128 ];
-	UINT32 uiNumberOfItems=0;
+	char filename[128];
+	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
 
-	GetMapTempFileName( SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	// If the file doesn't exists, it's no problem
+	if (!FileExists(filename)) return TRUE;
 
+	const HWFILE f = FileOpen(filename, FILE_ACCESS_READ);
+	if (f == 0) goto fail;
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	// Load the size of the world item table
+	UINT32 item_count;
+	if (!FileRead(f, &item_count, sizeof(UINT32))) goto fail_close;
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
+	// Load the world item table
+	if (!FileRead(f, pData, item_count * sizeof(*pData))) goto fail_close;
 
+	FileClose(f);
+	return TRUE;
 
-	// Load the size of the World ITem table
-	if (!FileRead(hFile, &uiNumberOfItems, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	// Load the World ITem table
-	if (!FileRead(hFile, pData, uiNumberOfItems * sizeof(WORLDITEM)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	FileClose( hFile );
-
-	return( TRUE );
+fail_close:
+	FileClose(f);
+fail:
+	return FALSE;
 }
 
 
