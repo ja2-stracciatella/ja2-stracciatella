@@ -387,9 +387,6 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	// This function moves all the items that Pablos has stolen
 	// (or items that were delayed) to the arrival location for new shipments,
 	INT16			sStartGridNo;
-	UINT32		uiNumWorldItems, uiLoop;
-	BOOLEAN		fOk;
-	WORLDITEM * pTemp;
 	UINT8			ubLoop;
 	OBJECTTYPE Object;
 
@@ -463,28 +460,19 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		fOk = GetNumberOfWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems);
-		if (!fOk)
+		UINT32     uiNumWorldItems;
+		WORLDITEM* pTemp;
+		const BOOLEAN fOk = LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems, &pTemp);
+		if (!fOk) return;
+
+		for (UINT32 uiLoop = 0; uiLoop < uiNumWorldItems; ++uiLoop)
 		{
-			return;
-		}
-		pTemp = MemAlloc( sizeof( WORLDITEM ) * uiNumWorldItems);
-		if (!pTemp)
-		{
-			return;
-		}
-		fOk = LoadWorldItemsFromTempItemFile( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp );
-		if (fOk)
-		{
-			for (uiLoop = 0; uiLoop < uiNumWorldItems; uiLoop++)
+			if (pTemp[uiLoop].sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
 			{
-				if (pTemp[uiLoop].sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
-				{
-					pTemp[uiLoop].sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
-				}
+				pTemp[uiLoop].sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
 			}
-			AddWorldItemsToUnLoadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 0, uiNumWorldItems, pTemp, TRUE );
 		}
+		AddWorldItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, 0, uiNumWorldItems, pTemp, TRUE);
 		MemFree(pTemp);
 	}
 }

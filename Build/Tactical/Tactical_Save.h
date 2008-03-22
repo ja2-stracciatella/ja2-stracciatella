@@ -23,9 +23,6 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile );
 BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile );
 
 
-//Retrieves the number of items in the sectors temp item file
-BOOLEAN GetNumberOfWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32* puiNumberOfItems);
-
 //Saves the Current Sectors, ( world Items, rotting corpses, ... )  to the temporary file used to store the sectors items
 BOOLEAN SaveCurrentSectorsInformationToTempItemFile(void);
 
@@ -33,7 +30,7 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile(void);
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile(void);
 
 // Loads a World Item array from that sectors temp item file
-BOOLEAN LoadWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, WORLDITEM *pData );
+BOOLEAN LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32* item_count, WORLDITEM** items);
 
 //  Adds an array of Item Objects to the specified location on a unloaded map.
 //  If you want to overwrite all the items in the array set fReplaceEntireFile to TRUE.

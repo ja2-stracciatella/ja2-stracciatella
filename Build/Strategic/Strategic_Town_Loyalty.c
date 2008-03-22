@@ -1014,8 +1014,6 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubChance )
 {
 	// remove random items in sector
-	UINT32 uiNumberOfItems = 0, iCounter = 0;
-	WORLDITEM *pItemList;
 	UINT32 uiNewTotal = 0;
 	CHAR16 wSectorName[ 128 ];
 
@@ -1033,21 +1031,15 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 	if( gWorldSectorX != sSectorX || gWorldSectorY != sSectorY || gbWorldSectorZ != sSectorZ )
 	{
 		// if the player has never been there, there's no temp file, and 0 items will get returned, preventing any stealing
-		GetNumberOfWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ, &uiNumberOfItems);
+		UINT32     uiNumberOfItems = 0;
+		WORLDITEM* pItemList;
+		LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ, &uiNumberOfItems, &pItemList);
+		if (uiNumberOfItems == 0) return;
 
-		if( uiNumberOfItems == 0 )
-		{
-			return;
-		}
-
-		pItemList = MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
-
-		// now load items
-		LoadWorldItemsFromTempItemFile( sSectorX, sSectorY, ( UINT8 )sSectorZ, pItemList );
 		uiNewTotal = uiNumberOfItems;
 
 		// set up item list ptrs
-		for( iCounter = 0; iCounter < uiNumberOfItems ; iCounter++ )
+		for (UINT32 iCounter = 0; iCounter < uiNumberOfItems; ++iCounter)
 		{
 			//if the item exists, and is visible and reachable, see if it should be stolen
 			if ( pItemList[ iCounter ].fExists && pItemList[ iCounter ].bVisible == TRUE && pItemList[ iCounter ].usFlags & WORLD_ITEM_REACHABLE )
@@ -1075,7 +1067,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 	}
 	else	// handle a loaded sector
 	{
-		for( iCounter = 0; iCounter < guiNumWorldItems; iCounter++ )
+		for (UINT32 iCounter = 0; iCounter < guiNumWorldItems; ++iCounter)
 		{
 			// note, can't do reachable test here because we'd have to do a path call...
 			if ( gWorldItems[ iCounter ].fExists && gWorldItems[ iCounter ].bVisible == TRUE )

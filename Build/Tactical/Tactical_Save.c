@@ -467,56 +467,45 @@ fail:
 }
 
 
-BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, WORLDITEM* const pData)
+BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 z, UINT32* const item_count, WORLDITEM** const items)
 {
 	char filename[128];
-	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
+	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
 
+	HWFILE     f;
+	UINT32     l_item_count;
+	WORLDITEM* l_items;
 	// If the file doesn't exists, it's no problem
-	if (!FileExists(filename)) return TRUE;
-
-	const HWFILE f = FileOpen(filename, FILE_ACCESS_READ);
-	if (f == 0) goto fail;
-
-	// Load the size of the world item table
-	UINT32 item_count;
-	if (!FileRead(f, &item_count, sizeof(UINT32))) goto fail_close;
-
-	// Load the world item table
-	if (!FileRead(f, pData, item_count * sizeof(*pData))) goto fail_close;
-
-	FileClose(f);
-	return TRUE;
-
-fail_close:
-	FileClose(f);
-fail:
-	return FALSE;
-}
-
-
-BOOLEAN GetNumberOfWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pSizeOfData)
-{
-	char zMapName[128];
-	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ);
-
-	if (!FileExistsNoDB(zMapName))
+	if (FileExists(filename))
 	{
-		*pSizeOfData = 0;
-		return TRUE;
+		f = FileOpen(filename, FILE_ACCESS_READ);
+		if (f == 0) goto fail;
+
+		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) goto fail_close;
+		if (l_item_count != 0)
+		{
+			l_items = MemAlloc(l_item_count * sizeof(*l_items));
+			if (l_items == NULL) goto fail_close;
+
+			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) goto fail_free;
+		}
+		else
+		{
+			l_items = NULL;
+		}
+		FileClose(f);
 	}
-
-	const HWFILE f = FileOpen(zMapName, FILE_ACCESS_READ);
-	if (f == 0) goto fail;
-
-	// Load the size of the world item table
-	UINT32 item_count;
-	if (!FileRead(f, &item_count, sizeof(UINT32))) goto fail_close;
-	*pSizeOfData = item_count;
-
-	FileClose(f);
+	else
+	{
+		l_item_count = 0;
+		l_items      = NULL;
+	}
+	*item_count = l_item_count;
+	*items      = l_items;
 	return TRUE;
 
+fail_free:
+	MemFree(l_items);
 fail_close:
 	FileClose(f);
 fail:
@@ -529,22 +518,9 @@ static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible, const BOOLEAN fReplaceEntireFile)
 {
-	UINT32 uiNumberOfItems;
-	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems)) goto fail;
-
+	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
-	if (uiNumberOfItems != 0)
-	{
-		WORLDITEM* wis = MemAlloc(sizeof(*wis) * uiNumberOfItems);
-		if (wis == NULL) goto fail;
-		memset(wis, 0, sizeof(*wis) * uiNumberOfItems);
-
-		if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wis)) goto fail_mem;
-	}
-	else
-	{
-		wis = NULL;
-	}
+	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis)) goto fail;
 
 	if (fReplaceEntireFile)
 	{
@@ -594,8 +570,6 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 	MemFree(wis);
 	return TRUE;
 
-fail_mem:
-	MemFree(wis);
 fail:
 	return FALSE;
 }
@@ -1072,28 +1046,14 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 
 static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
-	UINT32	uiNumberOfItems=0;
-	WORLDITEM *pWorldItems = NULL;
 	UINT32	cnt;
   INT16   sNewGridNo;
 
-	//Get the number of items from the file
-	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems))
-	{
-		//Error getting the numbers of the items from the sector
-		return( FALSE );
-	}
+	UINT32     uiNumberOfItems;
+	WORLDITEM* pWorldItems;
+	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &pWorldItems)) return FALSE;
 
-	if( uiNumberOfItems )
-	{
-		pWorldItems = MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
-		if( pWorldItems == NULL )
-		{
-			//Error Allocating memory for the temp item array
-			return( FALSE );
-		}
-	}
-	else
+	if (uiNumberOfItems == 0)
 	{
 		//if there are no items in the temp, the player might have cleared all of them out, check to see
 		//If we have already been to the sector
@@ -1112,17 +1072,6 @@ static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 b
 		//there are no items in the file
 		return( TRUE );
 	}
-
-	//Clear the memory
-	memset( pWorldItems, 0, sizeof( WORLDITEM ) * uiNumberOfItems );
-
-	//Load the World Items from the file
-	if( !LoadWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, pWorldItems ) )
-	{
-		MemFree(pWorldItems);
-		return( FALSE );
-	}
-
 
 	//If we have already been to the sector
 	if( GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_ALREADY_LOADED ) )
@@ -2406,22 +2355,19 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
 {
-	UINT32 uiTotalNumberOfItems;
-	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems);
+	UINT32     uiTotalNumberOfItems = 0;
+	WORLDITEM* pTotalSectorList;
+	const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
 	Assert(fReturn);
 
 	UINT32 uiItemCount = 0;
 	if (uiTotalNumberOfItems > 0)
 	{
-		WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
-		LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, pTotalSectorList);
-
 		for (const WORLDITEM* wi = pTotalSectorList; wi != pTotalSectorList + uiTotalNumberOfItems; ++wi)
 		{
 			if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
 			uiItemCount += wi->o.ubNumberOfObjects;
 		}
-
 		MemFree(pTotalSectorList);
 	}
 

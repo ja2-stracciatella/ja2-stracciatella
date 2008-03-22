@@ -863,16 +863,10 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	{
 		// not loaded, load
 		// get total number, visable and invisible
-		UINT32 uiTotalNumberOfItems = 0;
-		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems);
+		UINT32     uiTotalNumberOfItems = 0;
+		WORLDITEM* pTotalSectorList;
+		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
 		Assert(fReturn);
-
-		WORLDITEM* pTotalSectorList = NULL;
-		if (uiTotalNumberOfItems > 0)
-		{
-			pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
-			LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, pTotalSectorList);
-		}
 
 		UINT32 unseen_count = 0;
 		UINT32 uiItemCount = 0;
@@ -1052,22 +1046,19 @@ static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const 
 	}
 	else
 	{
-		UINT32 uiTotalNumberOfItems = 0;
-		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems);
+		UINT32     uiTotalNumberOfItems = 0;
+		WORLDITEM* pTotalSectorList;
+		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
 		Assert(fReturn);
 
 		if (uiTotalNumberOfItems > 0)
 		{
-			WORLDITEM* const pTotalSectorList = MemAlloc(sizeof(*pTotalSectorList) * uiTotalNumberOfItems);
-			LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, pTotalSectorList);
-
 			for (INT32 iCounter = 0; (UINT32)iCounter < uiTotalNumberOfItems; ++iCounter)
 			{
 				const WORLDITEM* const wi = &pTotalSectorList[iCounter];
 				if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
 				++uiItemCount;
 			}
-
 			MemFree(pTotalSectorList);
 		}
 	}
