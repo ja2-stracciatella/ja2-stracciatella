@@ -24,7 +24,7 @@ BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile );
 
 
 //Retrieves the number of items in the sectors temp item file
-BOOLEAN GetNumberOfWorldItemsFromTempItemFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 *puiNumberOfItems, BOOLEAN fIfEmptyCreate );
+BOOLEAN GetNumberOfWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32* puiNumberOfItems);
 
 //Saves the Current Sectors, ( world Items, rotting corpses, ... )  to the temporary file used to store the sectors items
 BOOLEAN SaveCurrentSectorsInformationToTempItemFile(void);

@@ -864,7 +864,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 		// not loaded, load
 		// get total number, visable and invisible
 		UINT32 uiTotalNumberOfItems = 0;
-		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
+		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems);
 		Assert(fReturn);
 
 		WORLDITEM* pTotalSectorList = NULL;
@@ -1053,7 +1053,7 @@ static INT32 GetSizeOfStashInSector(const INT16 sMapX, const INT16 sMapY, const 
 	else
 	{
 		UINT32 uiTotalNumberOfItems = 0;
-		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems, FALSE);
+		const BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &uiTotalNumberOfItems);
 		Assert(fReturn);
 
 		if (uiTotalNumberOfItems > 0)

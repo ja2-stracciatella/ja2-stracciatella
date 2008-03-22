@@ -495,37 +495,18 @@ fail:
 }
 
 
-BOOLEAN GetNumberOfWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pSizeOfData, const BOOLEAN fIfEmptyCreate)
+BOOLEAN GetNumberOfWorldItemsFromTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, UINT32* const pSizeOfData)
 {
 	char zMapName[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ);
 
-	HWFILE f;
 	if (!FileExistsNoDB(zMapName))
 	{
-		if (fIfEmptyCreate)
-		{
-			// The file doesnt exists, create a file that has an initial amount of Items
-			f = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-			if (f == 0) goto fail;
-
-			UINT32    item_count = 10;
-			WORLDITEM TempWorldItems[10];
-			memset(TempWorldItems, 0, sizeof(TempWorldItems));
-
-			// Write the the number of items in the maps item file
-			if (!FileWrite(f, &item_count, sizeof(UINT32)))            goto fail_close;
-			if (!FileWrite(f, TempWorldItems, sizeof(TempWorldItems))) goto fail_close;
-			FileClose(f);
-		}
-		else
-		{
-			*pSizeOfData = 0;
-			return TRUE;
-		}
+		*pSizeOfData = 0;
+		return TRUE;
 	}
 
-	f = FileOpen(zMapName, FILE_ACCESS_READ);
+	const HWFILE f = FileOpen(zMapName, FILE_ACCESS_READ);
 	if (f == 0) goto fail;
 
 	// Load the size of the world item table
@@ -549,13 +530,21 @@ static BOOLEAN DeleteTempItemMapFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible, const BOOLEAN fReplaceEntireFile)
 {
 	UINT32 uiNumberOfItems;
-	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE)) goto fail;
+	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems)) goto fail;
 
-	WORLDITEM* wis = MemAlloc(sizeof(*wis) * uiNumberOfItems);
-	if (wis == NULL) goto fail;
-	memset(wis, 0, sizeof(*wis) * uiNumberOfItems);
+	WORLDITEM* wis;
+	if (uiNumberOfItems != 0)
+	{
+		WORLDITEM* wis = MemAlloc(sizeof(*wis) * uiNumberOfItems);
+		if (wis == NULL) goto fail;
+		memset(wis, 0, sizeof(*wis) * uiNumberOfItems);
 
-	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wis)) goto fail_mem;
+		if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, wis)) goto fail_mem;
+	}
+	else
+	{
+		wis = NULL;
+	}
 
 	if (fReplaceEntireFile)
 	{
@@ -1089,7 +1078,7 @@ static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 b
   INT16   sNewGridNo;
 
 	//Get the number of items from the file
-	if( !GetNumberOfWorldItemsFromTempItemFile( sMapX, sMapY, bMapZ, &uiNumberOfItems, TRUE ) )
+	if (!GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems))
 	{
 		//Error getting the numbers of the items from the sector
 		return( FALSE );
@@ -2418,7 +2407,7 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
 {
 	UINT32 uiTotalNumberOfItems;
-	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, FALSE);
+	BOOLEAN fReturn = GetNumberOfWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems);
 	Assert(fReturn);
 
 	UINT32 uiItemCount = 0;
