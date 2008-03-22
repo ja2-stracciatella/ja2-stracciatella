@@ -1489,7 +1489,6 @@ void EndCaptureSequence( )
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
 	INT32					i;
-	WORLDITEM			WorldItem;
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
 
@@ -1571,20 +1570,12 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->bLevel = 0;
 
 		// OK, drop all items!
+		const GridNo drop_pos = sAlmaCaptureItemsGridNo[gStrategicStatus.ubNumCapturedForRescue];
 		for ( i = 0; i < NUM_INV_SLOTS; i++ )
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
-				WorldItem.fExists = TRUE;
-				WorldItem.sGridNo = sAlmaCaptureItemsGridNo[ gStrategicStatus.ubNumCapturedForRescue ];
-				WorldItem.ubLevel = 0;
-				WorldItem.usFlags = 0;
-				WorldItem.bVisible = FALSE;
-				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				WorldItem.o = pSoldier->inv[i];
-
-				AddWorldItemsToUnLoadedSector(13, 9, 0, 1, &WorldItem);
+				AddItemsToUnLoadedSector(13, 9, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, FALSE);
 				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
@@ -1605,20 +1596,12 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		pSoldier->bLevel = 0;
 
 		// OK, drop all items!
+		const GridNo drop_pos = sInterrogationItemGridNo[gStrategicStatus.ubNumCapturedForRescue];
 		for ( i = 0; i < NUM_INV_SLOTS; i++ )
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
-				WorldItem.fExists = TRUE;
-				WorldItem.sGridNo = sInterrogationItemGridNo[ gStrategicStatus.ubNumCapturedForRescue ];
-				WorldItem.ubLevel = 0;
-				WorldItem.usFlags = 0;
-				WorldItem.bVisible = FALSE;
-				WorldItem.bRenderZHeightAboveLevel = 0;
-
-				WorldItem.o = pSoldier->inv[i];
-
-				AddWorldItemsToUnLoadedSector(7, 14, 0, 1, &WorldItem);
+				AddItemsToUnLoadedSector(7, 14, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, FALSE);
 				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}

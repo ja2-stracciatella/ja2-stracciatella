@@ -1810,9 +1810,7 @@ BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFla
 BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE *pSoldier, INT16  sGridNo, UINT32 uiFlags )
 {
 	UINT32			uiNumberOfItems;
-	WORLDITEM		*pWorldItems=NULL;
 	UINT				i;
-	UINT8				bCount=0;
 	UINT16			uiFlagsForWorldItems=0;
 	UINT16			usFlagsForRottingCorpse=0;
 	ROTTING_CORPSE_DEFINITION		Corpse;
@@ -1879,18 +1877,7 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 	//if there are items to add
 	if( uiNumberOfItems )
 	{
-		//allocate memory for the world item array
-		pWorldItems = MemAlloc( sizeof( WORLDITEM ) * uiNumberOfItems );
-		if( pWorldItems == NULL )
-		{
-			//Error Allocating memory for the temp item array
-			return( FALSE );
-		}
-		//Clear the memory
-		memset( pWorldItems, 0, sizeof( WORLDITEM ) * uiNumberOfItems );
-
 		//loop through all the soldiers items and add them to the world item array
-		bCount = 0;
 		for ( i = 0; i < NUM_INV_SLOTS; i++ )
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
@@ -1899,21 +1886,10 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, i );
-
-					pWorldItems[ bCount ].fExists = TRUE;
-					pWorldItems[ bCount ].sGridNo = sGridNo;
-					pWorldItems[ bCount ].ubLevel = (UINT8)pSoldier->bLevel;
-					pWorldItems[ bCount ].usFlags = uiFlagsForWorldItems;
-					pWorldItems[ bCount ].bVisible = TRUE;
-					pWorldItems[ bCount ].bRenderZHeightAboveLevel = 0;
-
-					pWorldItems[bCount].o = pSoldier->inv[i];
-					bCount++;
+					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, &pSoldier->inv[i], pSoldier->bLevel, uiFlagsForWorldItems, 0, TRUE);
 				}
 			}
 		}
-
-		AddWorldItemsToUnLoadedSector(sMapX, sMapY, bMapZ, uiNumberOfItems, pWorldItems);
 	}
 
   DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->bLevel, 1, FALSE, 0, TRUE );
@@ -1961,10 +1937,6 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sMapX, sMapY, bMapZ, &Corpse);
-
-	//FRee the memory used for the pWorldItem array
-	MemFree( pWorldItems );
-	pWorldItems = NULL;
 
 	return( TRUE );
 }
