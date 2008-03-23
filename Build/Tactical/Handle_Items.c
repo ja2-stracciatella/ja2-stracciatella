@@ -3809,76 +3809,39 @@ static void SwitchMessageBoxCallBack(UINT8 ubExitValue)
 static void AddBlueFlag(INT16 sGridNo, INT8 bLevel);
 
 
-BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN fCheckAroundGridno, INT16 * psProblemGridNo )
+BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const BOOLEAN fCheckAroundGridno, INT16* const psProblemGridNo)
 {
-	INT16						sNextGridNo;
-	// BOOLEAN fWorthChecking = FALSE, fProblemExists = FALSE, fDetectedProblem = FALSE;
-	UINT8						ubDetectLevel, ubDirection;
-	MAP_ELEMENT *		pMapElement;
-	UINT32					fCheckFlag;
-	BOOLEAN					fMining, fFoundMetal = FALSE;
-//	ITEM_POOL *			pItemPool;
-	UINT8						ubMovementCost;
-
-	ubDetectLevel = 0;
-
-	if ( FindObj( pSoldier, METALDETECTOR ) != NO_SLOT )
+	BOOLEAN fMining;
+	UINT8   ubDetectLevel;
+	if (FindObj(s, METALDETECTOR) != NO_SLOT)
 	{
-		fMining = TRUE;
+		fMining       = TRUE;
+		ubDetectLevel = 0;
 	}
 	else
 	{
-		fMining = FALSE;
-
-		ubDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
-		/*
-		if (pSoldier->bStealthMode)
-		{
-			ubDetectLevel++;
-		}
-		switch (pSoldier->usAnimState)
-		{
-			case CRAWLING:
-				ubDetectLevel += 2;
-				break;
-
-			case SWATTING:
-				ubDetectLevel++;
-				break;
-
-			default:
-				break;
-		}
-		*/
+		fMining       = FALSE;
+		ubDetectLevel = CalcTrapDetectLevel(s, FALSE);
 	}
 
-	if (pSoldier->bSide == 0)
-	{
-		fCheckFlag = MAPELEMENT_PLAYER_MINE_PRESENT;
-	}
-	else
-	{
-		fCheckFlag = MAPELEMENT_ENEMY_MINE_PRESENT;
-	}
+	const UINT32 fCheckFlag = (s->bSide == 0 ? MAPELEMENT_PLAYER_MINE_PRESENT : MAPELEMENT_ENEMY_MINE_PRESENT);
 
 	// check every tile around gridno for the presence of "nasty stuff"
-	for (ubDirection = 0; ubDirection < 8; ubDirection++)
+	for (UINT8 ubDirection = 0; ubDirection < 8; ++ubDirection)
 	{
-		if ( fCheckAroundGridno )
+		INT16 sNextGridNo;
+		if (fCheckAroundGridno)
 		{
 			// get the gridno of the next spot adjacent to lastGridno in that direction
-			sNextGridNo = NewGridNo( sGridNo, (INT16) DirectionInc( (UINT8) ubDirection ) );
+			sNextGridNo = NewGridNo(sGridNo, (INT16)DirectionInc((UINT8)ubDirection));
 
 			// don't check directions that are impassable!
-			ubMovementCost = gubWorldMovementCosts[ sNextGridNo ][ ubDirection ][ pSoldier->bLevel ];
-			if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
+			UINT8 ubMovementCost = gubWorldMovementCosts[sNextGridNo][ubDirection][s->bLevel];
+			if (IS_TRAVELCOST_DOOR(ubMovementCost))
 			{
-				ubMovementCost = DoorTravelCost( NULL, sNextGridNo, ubMovementCost, FALSE, NULL );
+				ubMovementCost = DoorTravelCost(NULL, sNextGridNo, ubMovementCost, FALSE, NULL);
 			}
-			if ( ubMovementCost >= TRAVELCOST_BLOCKED)
-			{
-				continue;
-			}
+			if (ubMovementCost >= TRAVELCOST_BLOCKED) continue;
 		}
 		else
 		{
@@ -3888,13 +3851,9 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 		}
 
 		// if this sNextGridNo isn't out of bounds... but it never can be
-		pMapElement = &(gpWorldLevelData[sNextGridNo]);
-
-		if (pMapElement->uiFlags & fCheckFlag)
-		{
-			// already know there's a mine there
-			continue;
-		}
+		const MAP_ELEMENT* const pMapElement = &gpWorldLevelData[sNextGridNo];
+		// already know there's a mine there?
+		if (pMapElement->uiFlags & fCheckFlag) continue;
 
 		// check for boobytraps
 		CFOR_ALL_WORLD_BOMBS(wb)
@@ -3902,84 +3861,37 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 			WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
 			if (wi->sGridNo != sNextGridNo) continue;
 
-			OBJECTTYPE* const pObj = &wi->o;
-			if ( pObj->bDetonatorType == BOMB_PRESSURE && !(pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) && (!(pObj->fFlags & OBJECT_DISABLED_BOMB)) )
+			OBJECTTYPE* const o = &wi->o;
+			if (o->bDetonatorType != BOMB_PRESSURE)     continue;
+			if (o->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) continue;
+			if (o->fFlags & OBJECT_DISABLED_BOMB)       continue;
+
+			if (fMining && o->bTrap <= 10)
 			{
-				if ( fMining && pObj->bTrap <= 10 )
+				// add blue flag
+				AddBlueFlag(sNextGridNo, s->bLevel);
+				*psProblemGridNo = NOWHERE;
+				return TRUE;
+			}
+			else if (ubDetectLevel >= o->bTrap)
+			{
+				if (s->uiStatusFlags & SOLDIER_PC)
 				{
-					// add blue flag
-					AddBlueFlag( sNextGridNo, pSoldier->bLevel );
-					fFoundMetal = TRUE;
-					break;
-				}
-				else if (ubDetectLevel >= pObj->bTrap)
-				{
-					if (pSoldier->uiStatusFlags & SOLDIER_PC )
-					{
-						// detected exposives buried nearby...
-						StatChange( pSoldier, EXPLODEAMT, (UINT16) (pObj->bTrap), FALSE );
+					// detected explosives buried nearby...
+					StatChange(s, EXPLODEAMT, (UINT16)o->bTrap, FALSE);
 
-						// set item as known
-						pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
-					}
-
-					*psProblemGridNo = sNextGridNo;
-					return( TRUE );
+					// set item as known
+					o->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 				}
+
+				*psProblemGridNo = sNextGridNo;
+				return TRUE;
 			}
 		}
-
-		/*
-		// also check for metal items if using a metal detector
-		if (fMining)
-		{
-			// add blue flags where we find metallic objects hidden
-			GetItemPool( sNextGridNo, &pItemPool, pSoldier->bLevel );
-			while( pItemPool )
-			{
-				if ( pItemPool->bVisible == BURIED || (pItemPool->bVisible != TRUE && gWorldItems[ pItemPool->iItemIndex ].o.bTrap > 0 ) )
-				{
-					pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
-					if ( pObj->usItem == ACTION_ITEM && pObj-> )
-					{
-						switch( pObj->bActionValue )
-						{
-							case ACTION_ITEM_BLOW_UP:
-							case ACTION_ITEM_LOCAL_ALARM:
-							case ACTION_ITEM_GLOBAL_ALARM:
-								// add blue flag
-								AddBlueFlag( sNextGridNo, pSoldier->bLevel );
-								fFoundMetal = TRUE;
-								break;
-							default:
-								break;
-
-						}
-					}
-					else if (Item[ pObj->usItem ].fFlags & ITEM_METAL)
-					{
-						// add blue flag
-						AddBlueFlag( sNextGridNo, pSoldier->bLevel );
-						fFoundMetal = TRUE;
-						break;
-					}
-				}
-				pItemPool = pItemPool->pNext;
-			}
-		}
-		*/
-
 	}
 
 	*psProblemGridNo = NOWHERE;
-	if (fFoundMetal)
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return FALSE;
 }
 
 
