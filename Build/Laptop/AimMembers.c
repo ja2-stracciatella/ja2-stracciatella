@@ -1927,25 +1927,16 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static UINT8 WillMercAcceptCall(void)
 {
-	//if merc has hung up on the player twice within a period of time (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES )the merc cant ber hired
-	if( gMercProfiles[ gbCurrentSoldier ].bMercStatus == MERC_ANNOYED_WONT_CONTACT )
-	{
-		return(AIM_VIDEO_MERC_UNAVAILABLE_MODE);
-	}
+	/* If merc has hung up on the player twice within a period of time
+	 * (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES), the merc cant ber hired */
+	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
+	if (p->bMercStatus == MERC_ANNOYED_WONT_CONTACT) return AIM_VIDEO_MERC_UNAVAILABLE_MODE;
 
-	//if the merc is currently on contract, the answering machine will pick up.
-	if( (gMercProfiles[ gbCurrentSoldier ].bMercStatus > 0 ) || (gMercProfiles[ gbCurrentSoldier ].bMercStatus == MERC_HAS_NO_TEXT_FILE  ) || (gMercProfiles[ gbCurrentSoldier ].bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET  ) )
-	{
-		return(AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE);
-	}
+	/* If the merc is at home, or if the merc is only slightly annoyed at the
+	 * player, he will greet the player */
+	if (IsMercHireable(gbCurrentSoldier)) return AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
 
-	// if the merc is at home, or if the merc is only slightly annoyed at the player,  he will greet the player
-	if( IsMercHireable( gbCurrentSoldier ) )
-	{
-		return(AIM_VIDEO_FIRST_CONTACT_MERC_MODE);
-	}
-	else
-		return(AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE);
+	return AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE;
 }
 
 
