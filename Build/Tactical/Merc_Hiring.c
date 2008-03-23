@@ -388,21 +388,22 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN IsMercHireable( UINT8 ubMercID )
+BOOLEAN IsMercHireable(const ProfileID pid)
 {
-	//If the merc has an .EDT file, is not away on assignment, and isnt already hired (but not arrived yet), he is not DEAD and he isnt returning home
-	if( ( gMercProfiles[ ubMercID ].bMercStatus == MERC_HAS_NO_TEXT_FILE ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus > 0 ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD ) ||
-			( gMercProfiles[ ubMercID ].uiDayBecomesAvailable > 0 ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus == MERC_WORKING_ELSEWHERE ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus == MERC_FIRED_AS_A_POW ) ||
-			( gMercProfiles[ ubMercID ].bMercStatus == MERC_RETURNING_HOME ) )
-		return(FALSE);
-	else
-		return(TRUE);
+	const MERCPROFILESTRUCT* const p = GetProfile(pid);
+	/* If the merc has an .EDT file, is not away on assignment, and isn't already
+	 * hired (but not arrived yet), he is not dead and he isn't returning home */
+	return
+		p->bMercStatus <= 0                              &&
+		p->bMercStatus != MERC_HAS_NO_TEXT_FILE          &&
+		p->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET &&
+		p->bMercStatus != MERC_IS_DEAD                   &&
+		p->bMercStatus != MERC_RETURNING_HOME            &&
+		p->bMercStatus != MERC_WORKING_ELSEWHERE         &&
+		p->bMercStatus != MERC_FIRED_AS_A_POW            &&
+		p->uiDayBecomesAvailable == 0;
 }
+
 
 BOOLEAN IsMercDead( UINT8 ubMercID )
 {
