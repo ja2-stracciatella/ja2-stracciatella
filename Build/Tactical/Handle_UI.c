@@ -5369,7 +5369,6 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 	INT16 sDirs[4] = { NORTH, EAST, SOUTH, WEST };
 	INT32 cnt;
   UINT8 ubMovementCost;
-  INT32 iDoorGridNo;
 
 	// First check that action point cost is zero so far
 	// ie: NO PATH!
@@ -5388,7 +5387,7 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
     ubMovementCost = gubWorldMovementCosts[ sIntSpot ][ sDirs[ cnt ] ][ pSoldier->bLevel ];
 	  if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
     {
-		  ubMovementCost = DoorTravelCost( pSoldier, sIntSpot, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );
+			ubMovementCost = DoorTravelCost(pSoldier, sIntSpot, ubMovementCost, pSoldier->bTeam == gbPlayerNum, NULL);
 	  }
 
 	  // If we have hit an obstacle, STOP HERE
