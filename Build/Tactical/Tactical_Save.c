@@ -1399,64 +1399,29 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
 
 static void SaveNPCInformationToProfileStruct(void)
 {
-	MERCPROFILESTRUCT *		pProfile;
-
-	//Loop through the active NPC's
-
 	// Only do this on save now... on traversal this is handled in the strategic code
-	if ( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-	{
-		return;
-	}
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) return;
 
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const pSoldier = *i;
+		const SOLDIERTYPE* const s = *i;
 		//if it is an active NPC
-		if (pSoldier->ubProfile != NO_PROFILE && pSoldier->bTeam == CIV_TEAM)
-		{
-			//Save Temp Npc Quote Info array
-			SaveTempNpcQuoteInfoForNPCToTempFile( pSoldier->ubProfile );
+		if (s->ubProfile == NO_PROFILE || s->bTeam != CIV_TEAM) continue;
 
-			pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
+		SaveTempNpcQuoteInfoForNPCToTempFile(s->ubProfile);
 
-			pProfile->ubQuoteActionID = pSoldier->ubQuoteActionID;
-			pProfile->ubQuoteRecord = pSoldier->ubQuoteRecord;
+		MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 
-			// if the merc is NOT added due to flag set, return
-			if ( pProfile->ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR )
-			{
-				continue;
-			}
+		p->ubQuoteActionID = s->ubQuoteActionID;
+		p->ubQuoteRecord   = s->ubQuoteRecord;
 
-			if ( pProfile->ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE )
-			{
-				continue;
-			}
+		// if the merc is NOT added due to flag set, return
+		if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR)       continue;
+		if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) continue;
 
-			pProfile->fUseProfileInsertionInfo = TRUE;
-			pProfile->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			//if ( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-			//{
-				// if we are saving the game, save the NPC's current location
-				pProfile->usStrategicInsertionData = pSoldier->sGridNo;
-			//}
-			/*
-			else
-			{
-				// If the NPC is moving, save the final destination, else save the current location
-				if ( pSoldier->sFinalDestination != pSoldier->sGridNo )
-				{
-					pProfile->usStrategicInsertionData = pSoldier->sFinalDestination;
-				}
-				else
-				{
-					pProfile->usStrategicInsertionData = pSoldier->sGridNo;
-				}
-			}
-			*/
-
-		}
+		p->fUseProfileInsertionInfo = TRUE;
+		p->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+		p->usStrategicInsertionData = s->sGridNo;
 	}
 }
 
