@@ -1156,7 +1156,7 @@ static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wc
 }
 
 
-static UINT32 DisplayMercChargeAmount(void);
+static void DisplayMercChargeAmount(void);
 static void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown);
 
 
@@ -1490,60 +1490,51 @@ static void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown)
 }
 
 
-static UINT32 DisplayMercChargeAmount(void)
+static void DisplayMercChargeAmount(void)
 {
-	wchar_t		wTemp[50];
-	wchar_t		wDollarTemp[50];
+	if (gubVideoConferencingMode != AIM_VIDEO_HIRE_MERC_MODE) return;
 
-	if( gubVideoConferencingMode != AIM_VIDEO_HIRE_MERC_MODE )
-		return(0);
-
-	// Display the 'black hole'for the contract charge  in the video conference terminal
+	// Display the 'black hole' for the contract charge  in the video conference terminal
 	BltVideoObject(FRAME_BUFFER, guiVideoContractCharge, 0, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y);
+
+	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
 
 	if (FindSoldierByProfileIDOnPlayerTeam(gbCurrentSoldier) == NULL)
 	{
-		giContractAmount = 0;
-
 		//the contract charge amount
+		INT32 amount;
 
 		// Get the salary rate
-		if( gubContractLength == AIM_CONTRACT_LENGTH_ONE_DAY)
-			giContractAmount = gMercProfiles[gbCurrentSoldier].sSalary;
-
-		else if( gubContractLength == AIM_CONTRACT_LENGTH_ONE_WEEK)
-			giContractAmount = gMercProfiles[gbCurrentSoldier].uiWeeklySalary;
-
-		else if( gubContractLength == AIM_CONTRACT_LENGTH_TWO_WEEKS)
-			giContractAmount = gMercProfiles[gbCurrentSoldier].uiBiWeeklySalary;
-
-		// if there is a medical deposit, add it in
-		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
+		switch (gubContractLength)
 		{
-			giContractAmount += gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount;
+			case AIM_CONTRACT_LENGTH_ONE_DAY:   amount = p->sSalary;          break;
+			case AIM_CONTRACT_LENGTH_ONE_WEEK:  amount = p->uiWeeklySalary;   break;
+			case AIM_CONTRACT_LENGTH_TWO_WEEKS: amount = p->uiBiWeeklySalary; break;
+			default:                            amount = 0;                   break;
 		}
 
-		//If hired with the equipment, add it in aswell
-		if( gfBuyEquipment )
-		{
-			giContractAmount += gMercProfiles[gbCurrentSoldier].usOptionalGearCost;
-		}
+		// If there is a medical deposit, add it in
+		if (p->bMedicalDeposit) amount += p->sMedicalDepositAmount;
+
+		// If hired with the equipment, add it in aswell
+		if (gfBuyEquipment) amount += p->usOptionalGearCost;
+
+		giContractAmount = amount;
 	}
 
+	wchar_t wDollarTemp[50];
 	SPrintMoney(wDollarTemp, giContractAmount);
 
-	//if the merc hasnt just been hired
-//	if (FindSoldierByProfileIDOnPlayerTeam(gbCurrentSoldier) == NULL)
+	wchar_t wTemp[50];
+	if (p->bMedicalDeposit)
 	{
-		if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-			swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL] );
-		else
-			wcslcpy(wTemp, wDollarTemp, lengthof(wTemp));
-
-		DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X + 1, AIM_CONTRACT_CHARGE_AMOUNNT_Y + 3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL]);
 	}
-
-	return(giContractAmount);
+	else
+	{
+		wcslcpy(wTemp, wDollarTemp, lengthof(wTemp));
+	}
+	DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X + 1, AIM_CONTRACT_CHARGE_AMOUNNT_Y + 3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 
