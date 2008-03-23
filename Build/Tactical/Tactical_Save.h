@@ -12,10 +12,6 @@
 #define		MAPS_DIR		"Temp/"
 
 
-// Add
-BOOLEAN AddMapModification( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-
-
 //Load the Map modifications from the saved game file
 BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile );
 
