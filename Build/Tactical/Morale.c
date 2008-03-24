@@ -144,103 +144,87 @@ static void DecayStrategicMorale(SOLDIERTYPE* pSoldier)
 	}
 }
 
-void DecayTacticalMoraleModifiers( void )
-{
-	BOOLEAN				fHandleNervous;
 
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+void DecayTacticalMoraleModifiers(void)
+{
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		//if the merc is in Arulco
 		// CJC: decay modifiers while asleep! or POW!
-		if (pSoldier->ubProfile   != NO_PROFILE &&
-				pSoldier->bAssignment != IN_TRANSIT &&
-				pSoldier->bAssignment != ASSIGNMENT_DEAD)
+		if (s->ubProfile   == NO_PROFILE)      continue;
+		if (s->bAssignment == IN_TRANSIT)      continue;
+		if (s->bAssignment == ASSIGNMENT_DEAD) continue;
+
+		// only let morale mod decay if it is positive while merc is a POW
+		if (s->bAssignment == ASSIGNMENT_POW && s->bTacticalMoraleMod < 0) continue;
+
+		switch (GetProfile(s->ubProfile)->bPersonalityTrait)
 		{
-			// only let morale mod decay if it is positive while merc is a POW
-			if ( pSoldier->bAssignment == ASSIGNMENT_POW && pSoldier->bTacticalMoraleMod < 0 )
-			{
-				continue;
-			}
-
-			switch( gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait )
-			{
-				case CLAUSTROPHOBIC:
-					if ( pSoldier->bSectorZ > 0 )
+			case CLAUSTROPHOBIC:
+				if (s->bSectorZ > 0)
+				{
+					// underground, no recovery... in fact, if tact morale is high, decay
+					if (s->bTacticalMoraleMod > PHOBIC_LIMIT)
 					{
-						// underground, no recovery... in fact, if tact morale is high, decay
-						if ( pSoldier->bTacticalMoraleMod > PHOBIC_LIMIT )
-						{
-							HandleMoraleEvent( pSoldier, MORALE_CLAUSTROPHOBE_UNDERGROUND, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
-						}
-						continue;
+						HandleMoraleEvent(s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s->sSectorX, s->sSectorY, s->bSectorZ);
 					}
-					break;
-				case NERVOUS:
-					if ( pSoldier->bMorale < 50 )
+					continue;
+				}
+				break;
+
+			case NERVOUS:
+				if (s->bMorale < 50)
+				{
+					BOOLEAN handle_nervous;
+					if (s->ubGroupID != 0 && PlayerIDGroupInMotion(s->ubGroupID))
 					{
-						if (pSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pSoldier->ubGroupID ))
- 						{
-							if ( NumberOfPeopleInSquad( pSoldier->bAssignment ) == 1 )
-							{
-								fHandleNervous = TRUE;
-							}
-							else
-							{
-								fHandleNervous = FALSE;
-							}
-						}
-						else if (pSoldier->bInSector)
+						handle_nervous = NumberOfPeopleInSquad(s->bAssignment) == 1;
+					}
+					else if (s->bInSector)
+					{
+						handle_nervous = DistanceToClosestFriend(s) > NERVOUS_RADIUS;
+					}
+					else
+					{
+						// look for anyone else in same sector
+						handle_nervous = TRUE;
+						CFOR_ALL_IN_TEAM(other, gbPlayerNum)
 						{
-							if ( DistanceToClosestFriend( pSoldier ) > NERVOUS_RADIUS )
+							if (other != s &&
+									other->sSectorX == s->sSectorX &&
+									other->sSectorY == s->sSectorY &&
+									other->bSectorZ == s->bSectorZ)
 							{
-								fHandleNervous = TRUE;
-							}
-							else
-							{
-								fHandleNervous = FALSE;
-							}
-						}
-						else
-						{
-							// look for anyone else in same sector
-							fHandleNervous = TRUE;
-							CFOR_ALL_IN_TEAM(other, gbPlayerNum)
-							{
-								if (other != pSoldier &&
-										other->sSectorX == pSoldier->sSectorX &&
-										other->sSectorY == pSoldier->sSectorY &&
-										other->bSectorZ == pSoldier->bSectorZ)
-								{
-									// found someone!
-									fHandleNervous = FALSE;
-									break;
-								}
+								// found someone!
+								handle_nervous = FALSE;
+								break;
 							}
 						}
+					}
 
-						if ( fHandleNervous )
+					if (handle_nervous)
+					{
+						if (s->bTacticalMoraleMod == PHOBIC_LIMIT)
 						{
-							if ( pSoldier->bTacticalMoraleMod == PHOBIC_LIMIT )
-							{
-								// don't change morale
-								continue;
-							}
-
-							// alone, no recovery... in fact, if tact morale is high, decay
-							if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY) )
-							{
-								TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-								pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
-							}
-							HandleMoraleEvent( pSoldier, MORALE_NERVOUS_ALONE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+							// don't change morale
 							continue;
 						}
-					}
-			}
 
-			DecayTacticalMorale( pSoldier );
-			RefreshSoldierMorale( pSoldier );
+						// alone, no recovery... in fact, if tact morale is high, decay
+						if (!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY))
+						{
+							TacticalCharacterDialogue(s, QUOTE_PERSONALITY_TRAIT);
+							s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
+						}
+						HandleMoraleEvent(s, MORALE_NERVOUS_ALONE, s->sSectorX, s->sSectorY, s->bSectorZ);
+						continue;
+					}
+				}
+				break;
 		}
+
+		DecayTacticalMorale(s);
+		RefreshSoldierMorale(s);
 	}
 }
 
