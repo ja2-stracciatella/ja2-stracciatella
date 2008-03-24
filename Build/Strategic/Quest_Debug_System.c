@@ -3401,40 +3401,34 @@ static void EnableFactMouseRegions(void)
 
 static INT32 GetMaxNumberOfQuotesToPlay(void)
 {
-	INT32	iNumberOfQuotes = 0;
-	UINT8	ubProfileID =(UINT8)gNpcListBox.sCurSelectedItem;
+	const ProfileID pid = gNpcListBox.sCurSelectedItem;
 
-	//if it is the RPCs and they are to say the sector descs
-	if( gfRpcToSaySectorDesc && ubProfileID >=57 && ubProfileID <= 60 )
+	INT32	iNumberOfQuotes;
+	if (gfRpcToSaySectorDesc && MIGUEL <= pid && pid <= DIMITRI)
 	{
-		iNumberOfQuotes = 34
-			;
+		// If it is the RPCs and they are to say the sector descs
+		iNumberOfQuotes = 34;
 	}
-
-	// else if it is a RPC who is on our team
-	else if(	gMercProfiles[ gNpcListBox.sCurSelectedItem ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED &&
-						ubProfileID >=57 &&
-						ubProfileID <= 72 )
+	else if (GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED &&
+			MIGUEL <= pid && pid <= MADDOG)
 	{
+		// It is a RPC who is on our team
 		iNumberOfQuotes = 119;
 	}
-
-	//else if it is the queen
-	else if( ubProfileID == QUEEN )
+	else if (pid == QUEEN)
 	{
 		iNumberOfQuotes = 138;
 	}
-
-	//else if it is speck
-	else if( ubProfileID == 159 )
+	else if (pid == SPECK)
 	{
 		iNumberOfQuotes  = 72;
 	}
 	else
+	{
 		iNumberOfQuotes  = 138;
+	}
 
-
-	return( iNumberOfQuotes + 1 );
+	return iNumberOfQuotes + 1;
 }
 
 
