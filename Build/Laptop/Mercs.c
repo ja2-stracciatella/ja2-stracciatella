@@ -1430,7 +1430,6 @@ static UINT8 CountNumberOfMercMercsWhoAreDead(void);
 static BOOLEAN IsAnyMercMercsDead(void);
 static BOOLEAN IsAnyMercMercsHired(void);
 static void MakeBiffAwayForCoupleOfDays(void);
-static UINT8 NumberOfMercMercsDead(void);
 
 
 static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
@@ -1526,11 +1525,9 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 
 		else
 		{
-			UINT8	ubNumMercsDead = NumberOfMercMercsDead();
 			UINT8	ubRandom = ( UINT8 ) Random( 100 );
 
 			//if business is good
-//			if( ubRandom < 40 && ubNumMercsDead < 2 && CountNumberOfMercMercsHired() > 1 )
 			if( ubRandom < 40 && AreAnyOfTheNewMercsAvailable() && CountNumberOfMercMercsHired() > 1 )
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_3_BUSINESS_GOOD );
@@ -1737,22 +1734,6 @@ static BOOLEAN IsAnyMercMercsDead(void)
 	}
 
 	return( FALSE );
-}
-
-
-static UINT8 NumberOfMercMercsDead(void)
-{
-	UINT8	i;
-	UINT8	ubNumDead = 0;
-
-	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
-	{
-		if( gMercProfiles[ i+BIFF ].bMercStatus == MERC_IS_DEAD )
-			ubNumDead++;
-	}
-
-	return( ubNumDead );
 }
 
 
