@@ -1018,7 +1018,7 @@ BOOLEAN InitializeSMPanel(void)
 	//DEfine region for selected guy panel
 	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, 342, 85, 391, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
 
-	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback, FALSE);
+	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
 
 	// this is important! It will disable buttons like SM_MAP_SCREEN_BUTTON when they're supposed to be disabled - the previous

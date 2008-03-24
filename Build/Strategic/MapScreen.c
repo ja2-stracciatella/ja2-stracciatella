@@ -4989,7 +4989,7 @@ void CreateDestroyMapInvButton()
   // disable allmouse regions in this space
   fTeamPanelDirty=TRUE;
 
-  InitInvSlotInterface( gMapScreenInvPocketXY, &gSCamoXY, MAPInvMoveCallback, MAPInvClickCallback, MAPInvMoveCamoCallback, MAPInvClickCamoCallback, FALSE );
+	InitInvSlotInterface(gMapScreenInvPocketXY, &gSCamoXY, MAPInvMoveCallback, MAPInvClickCallback, MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
   MSYS_EnableRegion(&gMPanelRegion);
 
 	// switch hand region help text to "Exit Inventory"

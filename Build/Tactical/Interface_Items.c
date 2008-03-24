@@ -691,7 +691,7 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 }
 
 
-BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback, const BOOLEAN fSetHighestPrioity)
+BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback)
 {
 	INT32 cnt;
 
@@ -732,7 +732,7 @@ BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV
 		gSMInvData[ cnt ].sX = pRegionDesc[ cnt ].sX;
 		gSMInvData[ cnt ].sY = pRegionDesc[ cnt ].sY;
 
-		MSYS_DefineRegion(&gSMInvRegion[cnt], gSMInvData[cnt].sX, gSMInvData[cnt].sY, gSMInvData[cnt].sX + gSMInvData[cnt].sWidth, gSMInvData[cnt].sY + gSMInvData[cnt].sHeight, fSetHighestPrioity ? MSYS_PRIORITY_HIGHEST : MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
+		MSYS_DefineRegion(&gSMInvRegion[cnt], gSMInvData[cnt].sX, gSMInvData[cnt].sY, gSMInvData[cnt].sX + gSMInvData[cnt].sWidth, gSMInvData[cnt].sY + gSMInvData[cnt].sHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData( &gSMInvRegion[ cnt ], 0, cnt );
 	}
 

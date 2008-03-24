@@ -36,7 +36,7 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
-BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback, BOOLEAN fSetHighestPrioity);
+BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
 void ShutdownInvSlotInterface(void);
 void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel);
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
