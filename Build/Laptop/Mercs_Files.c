@@ -99,7 +99,6 @@
 static SGPVObject* guiPortraitBox;
 static SGPVObject* guiStatsBox;
 static SGPVObject* guiBioBox;
-static SGPVObject* guiMercFace;
 
 //
 // Buttons
@@ -182,7 +181,7 @@ void HandleMercsFiles()
 }
 
 
-static BOOLEAN DisplayMercFace(UINT8 ubMercID);
+static void DisplayMercFace(ProfileID);
 static void DisplayMercsStats(UINT8 ubMercID);
 static void EnableDisableMercFilesNextPreviousButton(void);
 static void LoadAndDisplayMercBio(UINT8 ubMercID);
@@ -284,73 +283,71 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static BOOLEAN DisplayMercFace(UINT8 ubMercID)
+static void DisplayMercFace(const ProfileID pid)
 {
-	const char *sFaceLoc = "FACES/BIGFACES/";
-	char						sTemp[100];
-	MERCPROFILESTRUCT	*pMerc;
-
 	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
-	pMerc = &gMercProfiles[ ubMercID ];
+	const MERCPROFILESTRUCT* const p = GetProfile(pid);
+	const SOLDIERTYPE*       const s = FindSoldierByProfileIDOnPlayerTeam(pid);
 
-	//See if the merc is currently hired
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
+	// Load the face graphic
+	char sTemp[100];
+  sprintf(sTemp, "FACES/BIGFACES/%02d.sti", pid);
+	SGPVObject* const face = AddVideoObjectFromFile(sTemp);
+	CHECKV(face != NO_VOBJECT);
 
-	// load the Face graphic and add it
-  sprintf(sTemp, "%s%02d.sti", sFaceLoc, ubMercID);
-	guiMercFace = AddVideoObjectFromFile(sTemp);
-	CHECKF(guiMercFace != NO_VOBJECT);
-
-	//Blt face to screen
-	SGPVObject* const hFaceHandle = guiMercFace;
-  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y);
-
-	//if the merc is dead, shadow the face red and put text over top saying the merc is dead
-	if( IsMercDead( ubMercID ) )
+	BOOLEAN        shaded;
+	const wchar_t* text;
+	if (IsMercDead(pid))
 	{
-		//shade the face red, (to signif that he is dead)
-		hFaceHandle->pShades[ 0 ]		= Create16BPPPaletteShaded( hFaceHandle->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE );
-
-		//set the red pallete to the face
-		SetObjectShade(hFaceHandle, 0);
-
-		//Blt face to screen
-	  BltVideoObject(FRAME_BUFFER, hFaceHandle, 0,MERC_FACE_X, MERC_FACE_Y);
-
-		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_MERC_IS_DEAD], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		// The merc is dead, shade the face red and put text over top saying the merc is dead
+		face->pShades[0] = Create16BPPPaletteShaded(face->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		SetObjectShade(face, 0);
+		shaded = FALSE;
+		text   = MercInfo[MERC_FILES_MERC_IS_DEAD];
+	}
+	else if (pid == FLO && gubFact[FACT_PC_MARRYING_DARYL_IS_FLO])
+	{
+		shaded = TRUE;
+		text   = pPersonnelDepartedStateStrings[2];
+	}
+	else if (p->bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
+	{
+		// The merc is currently a POW or the merc was fired as a pow
+		shaded = TRUE;
+		text   = pPOWStrings[0];
+	}
+	else if (p->bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET || p->bMercStatus > 0)
+	{
+		// The merc is hired already
+		shaded = TRUE;
+		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
+	}
+	else if (!IsMercHireable(pid))
+	{
+		// The merc is away on another assignemnt, say the merc is unavailable
+		shaded = TRUE;
+		text   = MercInfo[MERC_FILES_MERC_UNAVAILABLE];
+	}
+	else
+	{
+		shaded = FALSE;
+		text   = NULL;
 	}
 
-	else if( ubMercID == FLO && gubFact[ FACT_PC_MARRYING_DARYL_IS_FLO ] )
+  BltVideoObject(FRAME_BUFFER, face, 0, MERC_FACE_X, MERC_FACE_Y);
+
+  if (shaded)
+  {
+		ShadowVideoSurfaceRect(FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
+  }
+
+	if (text != NULL)
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
-		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, pPersonnelDepartedStateStrings[2], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, text, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	//else if the merc is currently a POW or, the merc was fired as a pow
-	else if( pMerc->bMercStatus == MERC_FIRED_AS_A_POW || ( pSoldier &&  pSoldier->bAssignment == ASSIGNMENT_POW ) )
-	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
-		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, pPOWStrings[0], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	}
-
-	//if the merc is hired already, say it
-	else if( !IsMercHireable( ubMercID ) && pMerc->bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET || pMerc->bMercStatus > 0 )
-	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
-		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_ALREADY_HIRED], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	}
-
-	//if the merc is away on another assignemnt, say the merc is unavailable
-	else if( !IsMercHireable( ubMercID ) )
-	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, MERC_FACE_X, MERC_FACE_Y, MERC_FACE_X + MERC_FACE_WIDTH, MERC_FACE_Y + MERC_FACE_HEIGHT);
-		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, MercInfo[MERC_FILES_MERC_UNAVAILABLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	}
-
-	DeleteVideoObject(guiMercFace);
-
-	return( TRUE );
+	DeleteVideoObject(face);
 }
 
 
