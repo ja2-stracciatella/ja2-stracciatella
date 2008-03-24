@@ -346,7 +346,6 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 
 	//set the contract length and the charge
 	pSoldier->iTotalContractLength += iContractLength;
-//	pSoldier->iTotalContractCharge = iContractCharge;
 	pSoldier->bTypeOfLastContract = ubDesiredAction;
 
 	//determine the end of the contract

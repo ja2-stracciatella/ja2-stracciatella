@@ -153,9 +153,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	pSoldier->iStartOfInsuranceContract = 0;
 	pSoldier->iTotalLengthOfInsuranceContract = 0;
 
-	//Init the contract charge
-//	pSoldier->iTotalContractCharge = 0;
-
 	// store arrival time in soldier structure so map screen can display it
 	pSoldier->uiTimeSoldierWillArrive = pHireMerc->uiTimeTillMercArrives;
 
@@ -206,19 +203,16 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 		//determine how much the contract is, and remember what type of contract he got
 		if( pHireMerc->iTotalContractLength == 1 )
 		{
-			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].sSalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_DAY;
       pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
 		}
 		else if( pHireMerc->iTotalContractLength == 7 )
 		{
-			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_WEEK;
       pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
 		}
 		else if( pHireMerc->iTotalContractLength == 14 )
 		{
-			//pSoldier->iTotalContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary;
 			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_2_WEEK;
       // These luck fellows need to stay the whole duration!
       pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
@@ -231,7 +225,6 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	else if( ( ubCurrentSoldier >= 40 ) && ( ubCurrentSoldier <= 50 ) )
 	{
 		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__MERC;
-		//pSoldier->iTotalContractCharge = -1;
 
 		gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength = 1;
 
@@ -244,13 +237,11 @@ INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
 	else if( ( ubCurrentSoldier >= 51 ) && ( ubCurrentSoldier < 57 ) )
 	{
 		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__PLAYER_CHARACTER;
-		//pSoldier->iTotalContractCharge = -1;
 	}
 	//else its a NPC merc
 	else
 	{
 		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__NPC;
-		//pSoldier->iTotalContractCharge = -1;
 	}
 
 	//remove the merc from the Personnel screens departed list ( if they have never been hired before, its ok to call it )
