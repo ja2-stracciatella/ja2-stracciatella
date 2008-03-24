@@ -4261,7 +4261,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 		return FALSE;
 	}
 
-	if( gTacticalStatus.fDidGameJustStart && gWorldSectorX == 9 && gWorldSectorY == 1 && !gbWorldSectorZ )
+	if (DidGameJustStart() && gWorldSectorX == 9 && gWorldSectorY == 1 && !gbWorldSectorZ)
 	{
 		return FALSE;
 	}

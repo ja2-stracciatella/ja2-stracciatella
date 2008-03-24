@@ -2350,7 +2350,7 @@ static void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen(void);
 
 void DisplayMapScreenFastHelpList(void)
 {
-	if( gTacticalStatus.fDidGameJustStart )
+	if (DidGameJustStart())
 	{
 		if( AnyMercsHired() == FALSE )
 		{
@@ -2420,7 +2420,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 	// create or destroy the screen mask as needed
 	if( ( ( fShowMapScreenHelpText == TRUE ) || ( fInterfaceFastHelpTextActive == TRUE ) ) && ( fCreated == FALSE ) )
 	{
-		if( gTacticalStatus.fDidGameJustStart )
+		if (DidGameJustStart())
 		{
 			MSYS_DefineRegion( &gMapScreenHelpTextMask , ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iX ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iY ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iX + pMapScreenFastHelpWidthList[ 9 ] ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iY + iHeightOfInitFastHelpText ), MSYS_PRIORITY_HIGHEST,
 				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback );
@@ -4645,10 +4645,7 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	}
 
 	// make sure the game just started
-	if( gTacticalStatus.fDidGameJustStart == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!DidGameJustStart()) return FALSE;
 
 	// select starting sector (A9 - Omerta)
 	ChangeSelectedMapSector( 9, 1, 0 );
@@ -4686,10 +4683,7 @@ static void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen(void)
 {
 	INT32 iTime = 0, iDifference = 0;
 
-	if( gTacticalStatus.fDidGameJustStart == FALSE )
-	{
-		return;
-	}
+	if (!DidGameJustStart()) return;
 
 	if( AnyMercsHired() == FALSE )
 	{

@@ -1877,7 +1877,7 @@ INT8 HelpScreenDetermineWhichMapScreenHelpToShow()
 		return( HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED );
 	}
 
-	if( gTacticalStatus.fDidGameJustStart )
+	if (DidGameJustStart())
 	{
 		return( HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO );
 	}

@@ -4783,7 +4783,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 
 				// ignore left clicks in the map screen if:
 				// game just started or we're in the prebattle interface or if we are about to hit pre-battle
-				if ( ( gTacticalStatus.fDidGameJustStart == TRUE ) ||
+				if (DidGameJustStart() ||
 						 ( gfPreBattleInterfaceActive == TRUE ) ||
 						 ( fDisableMapInterfaceDueToBattle  == TRUE ) )
 				{
@@ -4903,7 +4903,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 
 				// ignore right clicks in the map area if:
 				// game just started or we're in the prebattle interface or if we are about to hit pre-battle
-				if ( ( gTacticalStatus.fDidGameJustStart == TRUE ) ||
+				if (DidGameJustStart() ||
 						 ( gfPreBattleInterfaceActive == TRUE ) ||
 						 ( fDisableMapInterfaceDueToBattle  == TRUE ) )
 				{
@@ -9687,7 +9687,7 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
 	if( ( fShowAircraftFlag == TRUE ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
 	{
 		// don't allow moving bullseye until after initial arrival
-		if ( gTacticalStatus.fDidGameJustStart == FALSE )
+		if (!DidGameJustStart())
 		{
 			// if he clicked on the bullseye, and we're on the surface level
 			if ( ( sMapX == gsMercArriveSectorX ) && ( sMapY == gsMercArriveSectorY ) && ( iCurrentMapSectorZ == 0 ) )
