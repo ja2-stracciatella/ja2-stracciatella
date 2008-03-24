@@ -2400,7 +2400,7 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 		// If 64, do something special
 		if ( pQuotePtr->ubTriggerNPCRec == QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO )
 		{
-			TacticalCharacterDialogueWithSpecialEvent(chosen, pQuotePtr->ubTriggerNPCRec, DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC, 57, 6);
+			TacticalCharacterDialogueWithSpecialEvent(chosen, pQuotePtr->ubTriggerNPCRec, DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC, MIGUEL, 6);
 		}
 		else
 		{
