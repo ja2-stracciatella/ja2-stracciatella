@@ -76,7 +76,6 @@
 
 // height of map inventory pool bar
 #define ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL 20
-#define ITEMDESC_ITEM_STATUS_WIDTH_INV_POOL 2
 
 // map bar offsets
 #define ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X 5
@@ -239,7 +238,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	// draw bar for condition
 	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
 	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
-	DrawItemUIBarEx(&item->o, 0, dx + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y, ITEMDESC_ITEM_STATUS_WIDTH_INV_POOL, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, col0, col1, guiSAVEBUFFER);
+	DrawItemUIBarEx(&item->o, 0, dx + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, col0, col1, guiSAVEBUFFER);
 
 	// if the item is not reachable, or if the selected merc is not in the current sector
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();

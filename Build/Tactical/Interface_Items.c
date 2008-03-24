@@ -148,7 +148,6 @@
 #define		MAP_ITEMDESC_ITEM_STATUS_X					( 18 + gsInvDescX )
 #define		MAP_ITEMDESC_ITEM_STATUS_Y					( 53 + gsInvDescY )
 
-#define		ITEMDESC_ITEM_STATUS_WIDTH			2
 #define		ITEMDESC_ITEM_STATUS_HEIGHT			50
 #define   ITEMDESC_ITEM_STATUS_HEIGHT_MAP 40
 #define   ITEMDESC_DESC_WIDTH			301
@@ -160,7 +159,6 @@
 #define		ITEMDESC_AMMO_TEXT_Y	1
 #define		ITEMDESC_AMMO_TEXT_WIDTH 31
 
-#define		ITEM_BAR_WIDTH					2
 #define		ITEM_BAR_HEIGHT					20
 
 #define		ITEM_FONT								TINYFONT1
@@ -1018,9 +1016,8 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 		// Add item status bar
 		sBarX = sX - gSMInvData[ sPocket ].sBarDx;
 		sBarY = sY + gSMInvData[ sPocket ].sBarDy;
-		DrawItemUIBarEx(pObject, 0, sBarX, sBarY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(pObject, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
-
 }
 
 
@@ -2577,9 +2574,8 @@ void RenderItemDescriptionBox(void)
 	{
 		const INT16 x = (in_map ? MAP_ITEMDESC_ITEM_STATUS_X : ITEMDESC_ITEM_STATUS_X);
 		const INT16 y = (in_map ? MAP_ITEMDESC_ITEM_STATUS_Y : ITEMDESC_ITEM_STATUS_Y);
-		const INT16 w = ITEMDESC_ITEM_STATUS_WIDTH;
 		const INT16 h = (in_map ? ITEMDESC_ITEM_STATUS_HEIGHT_MAP : ITEMDESC_ITEM_STATUS_HEIGHT);
-		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, w, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 
 	BOOLEAN fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -2611,7 +2607,7 @@ void RenderItemDescriptionBox(void)
 
 				sCenX -= xy[cnt].sBarDx;
 				sCenY += xy[cnt].sBarDy;
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 			}
 
 			if (fHatchOutAttachments)
@@ -4252,7 +4248,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
 			INT16 sNewY = gsItemPopupY + INV_BAR_DY + 3;
-			DrawItemUIBarEx(gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+			DrawItemUIBarEx(gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 		}
 	}
 
@@ -4441,7 +4437,7 @@ void RenderKeyRingPopup( BOOLEAN fFullRender )
 			pObject.ubNumberOfObjects = gpItemPopupSoldier->pKeyRing[ cnt ].ubNumber;
 
 			// show 100% status for each
-			DrawItemUIBarEx(&pObject, 0, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 7, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight + 24, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+			DrawItemUIBarEx(&pObject, 0, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 7, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 
 			// set item type
 			pObject.usItem = FIRST_KEY + LockTable[ gpItemPopupSoldier->pKeyRing[ cnt].ubKeyID ].usKeyItem;

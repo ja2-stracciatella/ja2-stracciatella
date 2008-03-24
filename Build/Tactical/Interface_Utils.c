@@ -204,7 +204,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sWidth, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
 {
 	FLOAT											 dStart, dEnd, dPercentage;
 	//UINT16										 usLineColor;
@@ -268,13 +268,12 @@ void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, cons
 
 	if ( uiBuffer == guiSAVEBUFFER )
 	{
-		RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
+		RestoreExternBackgroundRect(sXPos, sYPos - sHeight, 2, sHeight + 1);
 	}
 	else
 	{
-		InvalidateRegion( sXPos, (INT16)(sYPos - sHeight), sXPos + sWidth, (INT16)(sYPos + 1 ) );
+		InvalidateRegion(sXPos, sYPos - sHeight, sXPos + 2, sYPos + 1);
 	}
-
 }
 
 
