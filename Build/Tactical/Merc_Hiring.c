@@ -58,197 +58,177 @@ INT16	gsMercArriveSectorX = 9;
 INT16	gsMercArriveSectorY = 1;
 
 
-INT8 HireMerc( MERC_HIRE_STRUCT *pHireMerc)
+INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 {
-	UINT8		ubCurrentSoldier = pHireMerc->ubProfileID;
-	MERCPROFILESTRUCT				*pMerc;
-	SOLDIERCREATE_STRUCT		MercCreateStruct;
-	BOOLEAN fReturn = FALSE;
-	pMerc = &gMercProfiles[ ubCurrentSoldier ];
+	const ProfileID          pid = h->ubProfileID;
+	MERCPROFILESTRUCT* const p   = GetProfile(pid);
 
-	//If we are to disregard the ststus of the merc
-	#ifdef JA2TESTVERSION
-		if( !gForceHireMerc )
-	#endif
-	//If the merc is away, Dont hire him, or if the merc is only slightly annoyed at the player
-	if( ( pMerc->bMercStatus != 0 ) && (pMerc->bMercStatus != MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) && ( pMerc->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET ) )
-		return( MERC_HIRE_FAILED );
+	// If we are to disregard the status of the merc
+#ifdef JA2TESTVERSION
+	if (!gForceHireMerc)
+#endif
+	{
+		switch (p->bMercStatus)
+		{
+			case 0:
+			case MERC_ANNOYED_BUT_CAN_STILL_CONTACT:
+			case MERC_HIRED_BUT_NOT_ARRIVED_YET:
+				break;
 
-	if( NumberOfMercsOnPlayerTeam() >= 18 )
-		return( MERC_HIRE_OVER_20_MERCS_HIRED );
+			default:
+				return MERC_HIRE_FAILED;
+		}
+	}
+
+	if (NumberOfMercsOnPlayerTeam() >= 18) return MERC_HIRE_OVER_20_MERCS_HIRED;
 
 	// ATE: if we are to use landing zone, update to latest value
 	// they will be updated again just before arrival...
-	if ( pHireMerc->fUseLandingZoneForArrival )
+	if (h->fUseLandingZoneForArrival)
 	{
-		pHireMerc->sSectorX	= gsMercArriveSectorX;
-		pHireMerc->sSectorY	= gsMercArriveSectorY;
-		pHireMerc->bSectorZ	= 0;
+		h->sSectorX	= gsMercArriveSectorX;
+		h->sSectorY	= gsMercArriveSectorY;
+		h->bSectorZ	= 0;
 	}
 
-	// BUILD STRUCTURES
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-	MercCreateStruct.ubProfile						= ubCurrentSoldier;
-	MercCreateStruct.sSectorX							= pHireMerc->sSectorX;
-	MercCreateStruct.sSectorY							= pHireMerc->sSectorY;
-	MercCreateStruct.bSectorZ							= pHireMerc->bSectorZ;
-	MercCreateStruct.bTeam								= OUR_TEAM;
-	MercCreateStruct.fCopyProfileItemsOver= pHireMerc->fCopyProfileItemsOver;
-
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);
-	if (pSoldier == NULL)
+	SOLDIERCREATE_STRUCT MercCreateStruct;
+	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct.ubProfile             = pid;
+	MercCreateStruct.sSectorX              = h->sSectorX;
+	MercCreateStruct.sSectorY              = h->sSectorY;
+	MercCreateStruct.bSectorZ              = h->bSectorZ;
+	MercCreateStruct.bTeam                 = OUR_TEAM;
+	MercCreateStruct.fCopyProfileItemsOver = h->fCopyProfileItemsOver;
+	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	if (s == NULL)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
-		return( MERC_HIRE_FAILED );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		return MERC_HIRE_FAILED;
 	}
 
-	if( DidGameJustStart() )
+#ifndef JA2DEMO // ATE: Insert for demo, not using the heli sequence
+	if (DidGameJustStart())
 	{
 		// OK, CHECK FOR FIRST GUY, GIVE HIM SPECIAL ITEM!
-#ifndef JA2DEMO
-		if (pSoldier->ubID == 0)
+		if (s->ubID == 0)
 		{
 			// OK, give this item to our merc!
-			OBJECTTYPE Object;
-
-			// make an objecttype
-			memset( &Object, 0, sizeof( OBJECTTYPE ) );
-			Object.usItem						= LETTER;
-			Object.ubNumberOfObjects = 1;
-			Object.bStatus[0]				= 100;
-			// Give it
-			fReturn = AutoPlaceObject(pSoldier, &Object, FALSE);
-			Assert( fReturn );
+			OBJECTTYPE o;
+			memset(&o, 0, sizeof(o));
+			o.usItem            = LETTER;
+			o.ubNumberOfObjects = 1;
+			o.bStatus[0]        = 100;
+			const BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
+			Assert(fReturn);
 		}
 
 		// Set insertion for first time in chopper
-
-		// ATE: Insert for demo , not using the heli sequence....
-		pHireMerc->ubInsertionCode				= INSERTION_CODE_CHOPPER;
-#endif
+		h->ubInsertionCode = INSERTION_CODE_CHOPPER;
 	}
+#endif
 
-	//record how long the merc will be gone for
-	pMerc->bMercStatus = (UINT8)pHireMerc->iTotalContractLength;
+	// Record how long the merc will be gone for
+	p->bMercStatus = (UINT8)h->iTotalContractLength;
 
-	//Copy over insertion data....
-	pSoldier->ubStrategicInsertionCode = pHireMerc->ubInsertionCode;
-	pSoldier->usStrategicInsertionData = pHireMerc->usInsertionData;
-	// ATE: Copy over value for using alnding zone to soldier type
-	pSoldier->fUseLandingZoneForArrival = pHireMerc->fUseLandingZoneForArrival;
-
+	// Copy over insertion data
+	s->ubStrategicInsertionCode = h->ubInsertionCode;
+	s->usStrategicInsertionData = h->usInsertionData;
+	// ATE: Copy over value for using landing zone to soldier type
+	s->fUseLandingZoneForArrival = h->fUseLandingZoneForArrival;
 
 	// Set assignment
-	//ATE: If first time, make ON_DUTY, otherwise GUARD
-	if( ( pSoldier->bAssignment != IN_TRANSIT ) )
-	{
-		SetTimeOfAssignmentChangeForMerc( pSoldier );
-	}
-	ChangeSoldiersAssignment( pSoldier, IN_TRANSIT );
+	if (s->bAssignment != IN_TRANSIT) SetTimeOfAssignmentChangeForMerc(s);
+	ChangeSoldiersAssignment(s, IN_TRANSIT);
 
-	//set the contract length
-	pSoldier->iTotalContractLength = pHireMerc->iTotalContractLength;
+	// Set the contract length
+	s->iTotalContractLength = h->iTotalContractLength;
 
-	//reset the insurance values
-	pSoldier->iStartOfInsuranceContract = 0;
-	pSoldier->iTotalLengthOfInsuranceContract = 0;
+	// Reset the insurance values
+	s->iStartOfInsuranceContract       = 0;
+	s->iTotalLengthOfInsuranceContract = 0;
 
-	// store arrival time in soldier structure so map screen can display it
-	pSoldier->uiTimeSoldierWillArrive = pHireMerc->uiTimeTillMercArrives;
+	// Store arrival time in soldier structure so map screen can display it
+	s->uiTimeSoldierWillArrive = h->uiTimeTillMercArrives;
 
-
-	//Set the type of merc
-
-	if( DidGameJustStart() )
+	if (DidGameJustStart())
 	{
 		// Set time of initial merc arrival in minutes
-		pHireMerc->uiTimeTillMercArrives = ( STARTING_TIME + FIRST_ARRIVAL_DELAY ) / NUM_SEC_IN_MIN;
-
-// ATE: Insert for demo , not using the heli sequence....
-#ifndef JA2DEMO
-		// Set insertion for first time in chopper
-		pHireMerc->ubInsertionCode				= INSERTION_CODE_CHOPPER;
-#endif
+		h->uiTimeTillMercArrives = (STARTING_TIME + FIRST_ARRIVAL_DELAY) / NUM_SEC_IN_MIN;
 
 		//set when the merc's contract is finished
-		pSoldier->iEndofContractTime = GetMidnightOfFutureDayInMinutes( pSoldier->iTotalContractLength ) + ( GetHourWhenContractDone( pSoldier ) * 60 );
+		s->iEndofContractTime = GetMidnightOfFutureDayInMinutes(s->iTotalContractLength) + GetHourWhenContractDone(s) * 60;
 	}
 	else
 	{
-		//set when the merc's contract is finished ( + 1 cause it takes a day for the merc to arrive )
-		pSoldier->iEndofContractTime = GetMidnightOfFutureDayInMinutes( 1 + pSoldier->iTotalContractLength ) + ( GetHourWhenContractDone( pSoldier ) * 60 );
+		//set when the merc's contract is finished (+1 cause it takes a day for the merc to arrive)
+		s->iEndofContractTime = GetMidnightOfFutureDayInMinutes(1 + s->iTotalContractLength) + GetHourWhenContractDone(s) * 60;
 	}
 
-	//Set the time and ID of the last hired merc will arrive
-	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = pHireMerc->ubProfileID;
-	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = pHireMerc->uiTimeTillMercArrives;
+	// Set the time and ID of the last hired merc will arrive
+	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc     = pid;
+	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = h->uiTimeTillMercArrives;
 
-
-	//if we are trying to hire a merc that should arrive later, put the merc in the queue
-	if( pHireMerc->uiTimeTillMercArrives  != 0 )
+	// If we are trying to hire a merc that should arrive later, put the merc in the queue
+	if (h->uiTimeTillMercArrives != 0)
 	{
-		AddStrategicEvent( EVENT_DELAYED_HIRING_OF_MERC, pHireMerc->uiTimeTillMercArrives,  pSoldier->ubID );
-
-		//specify that the merc is hired but hasnt arrived yet
-		pMerc->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
-
+		AddStrategicEvent(EVENT_DELAYED_HIRING_OF_MERC, h->uiTimeTillMercArrives, s->ubID);
+		// Specify that the merc is hired but has not arrived yet
+		p->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
 	}
 
-
-	//if the merc is an AIM merc
-	if( ubCurrentSoldier < 40 )
+	// Set the type of merc
+	if (pid < BIFF)
 	{
+		s->ubWhatKindOfMercAmI = MERC_TYPE__AIM_MERC;
 
-		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__AIM_MERC;
-		//determine how much the contract is, and remember what type of contract he got
-		if( pHireMerc->iTotalContractLength == 1 )
+		// Determine how much the contract is, and remember what type of contract he got
+		switch (h->iTotalContractLength)
 		{
-			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_DAY;
-      pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
-		}
-		else if( pHireMerc->iTotalContractLength == 7 )
-		{
-			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_1_WEEK;
-      pSoldier->iTimeCanSignElsewhere = GetWorldTotalMin();
-		}
-		else if( pHireMerc->iTotalContractLength == 14 )
-		{
-			pSoldier->bTypeOfLastContract = CONTRACT_EXTEND_2_WEEK;
-      // These luck fellows need to stay the whole duration!
-      pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
+			case 1:
+				s->bTypeOfLastContract   = CONTRACT_EXTEND_1_DAY;
+      	s->iTimeCanSignElsewhere = GetWorldTotalMin();
+      	break;
+
+			case 7:
+				s->bTypeOfLastContract   = CONTRACT_EXTEND_1_WEEK;
+      	s->iTimeCanSignElsewhere = GetWorldTotalMin();
+      	break;
+
+			case 14:
+				s->bTypeOfLastContract   = CONTRACT_EXTEND_2_WEEK;
+      	// This fellow needs to stay the whole duration!
+      	s->iTimeCanSignElsewhere = s->iEndofContractTime;
+      	break;
 		}
 
 		// remember the medical deposit we PAID.  The one in his profile can increase when he levels!
-		pSoldier->usMedicalDeposit = gMercProfiles[ pSoldier->ubProfile ].sMedicalDepositAmount;
+		s->usMedicalDeposit = p->sMedicalDepositAmount;
 	}
-	//if the merc is from M.E.R.C.
-	else if( ( ubCurrentSoldier >= 40 ) && ( ubCurrentSoldier <= 50 ) )
+	else if (pid <= BUBBA)
 	{
-		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__MERC;
+		s->ubWhatKindOfMercAmI = MERC_TYPE__MERC;
 
-		gMercProfiles[ pSoldier->ubProfile ].iMercMercContractLength = 1;
+		p->iMercMercContractLength = 1;
 
-		//Set starting conditions for the merc
-		pSoldier->iStartContractTime = GetWorldDay( );
+		// Set starting conditions for the merc
+		s->iStartContractTime = GetWorldDay();
 
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, pid, GetWorldTotalMin(), -1, -1);
 	}
-	//If the merc is from IMP, (ie a player character)
-	else if( ( ubCurrentSoldier >= 51 ) && ( ubCurrentSoldier < 57 ) )
+	else if (pid < MIGUEL)
 	{
-		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__PLAYER_CHARACTER;
+		s->ubWhatKindOfMercAmI = MERC_TYPE__PLAYER_CHARACTER;
 	}
-	//else its a NPC merc
 	else
 	{
-		pSoldier->ubWhatKindOfMercAmI = MERC_TYPE__NPC;
+		s->ubWhatKindOfMercAmI = MERC_TYPE__NPC;
 	}
 
-	//remove the merc from the Personnel screens departed list ( if they have never been hired before, its ok to call it )
-	RemoveNewlyHiredMercFromPersonnelDepartedList( pSoldier->ubProfile );
+	// remove the merc from the Personnel screens departed list (if they have never been hired before, its ok to call it)
+	RemoveNewlyHiredMercFromPersonnelDepartedList(s->ubProfile);
 
 	gfAtLeastOneMercWasHired = TRUE;
-	return( MERC_HIRE_OK );
+	return MERC_HIRE_OK;
 }
 
 
