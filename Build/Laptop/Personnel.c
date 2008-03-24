@@ -2497,9 +2497,6 @@ static void HandlePersonnelKeyboard(void)
 }
 
 
-static INT32 CalcTimeLeftOnMercContract(const SOLDIERTYPE* pSoldier);
-
-
 static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 {
 	wchar_t sString[50];
@@ -2518,7 +2515,8 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s->ubProfile == SLAY)
 				{
 					const UINT32 uiMinutesInDay = 24 * 60;
-					INT32 iTimeLeftOnContract = CalcTimeLeftOnMercContract(s);
+					INT32 iTimeLeftOnContract = s->iEndofContractTime - GetWorldTotalMin();
+					if (iTimeLeftOnContract < 0) iTimeLeftOnContract = 0;
 
 					//if the merc is in transit
 					if (s->bAssignment == IN_TRANSIT)
@@ -2617,38 +2615,4 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				break;
 		}
 	}
-}
-
-
-/* AIM merc:  Returns the amount of time left on mercs contract
- * MERC merc: Returns the amount of time the merc has worked
- * IMP merc:  Returns the amount of time the merc has worked
- * else:      returns -1 */
-static INT32 CalcTimeLeftOnMercContract(const SOLDIERTYPE* pSoldier)
-{
-	INT32 iTimeLeftOnContract = -1;
-
-	if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-	{
-		iTimeLeftOnContract = pSoldier->iEndofContractTime-GetWorldTotalMin();
-
-		if (iTimeLeftOnContract < 0)
-			iTimeLeftOnContract = 0;
-	}
-	else if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-	{
-		iTimeLeftOnContract = gMercProfiles[pSoldier->ubProfile].iMercMercContractLength;
-	}
-
-	else if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER)
-	{
-		iTimeLeftOnContract = pSoldier->iTotalContractLength;
-	}
-
-	else
-	{
-		iTimeLeftOnContract = -1;
-	}
-
-	return iTimeLeftOnContract;
 }
