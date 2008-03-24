@@ -876,9 +876,10 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 			break;
 	}
 
-	LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID = pSoldier->ubID;
-	LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID = pSoldier->ubProfile;
-	LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].fActive = TRUE;
+	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
+	lip->ubSoldierID = pSoldier->ubID;
+	lip->ubMercID    = pSoldier->ubProfile;
+	lip->fActive     = TRUE;
 
 	// This uses the merc's latest salaries, ignoring that they may be higher than the salaries paid under the current
 	// contract if the guy has recently gained a level.  We could store his daily salary when he was last contracted,
@@ -908,7 +909,7 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 	uiDaysToPay = pSoldier->iTotalLengthOfInsuranceContract - ( GetWorldDay() + 1 - pSoldier->iStartOfInsuranceContract );
 
 	// calculate & store how much is to be paid out
-	LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice = uiDaysToPay * uiCostPerDay;
+	lip->iPayOutPrice = uiDaysToPay * uiCostPerDay;
 
 	// 4pm next day
 	uiTimeInMinutes = GetMidnightOfFutureDayInMinutes( 1 ) + 16 * 60;
@@ -933,21 +934,22 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 
 void StartInsuranceInvestigation( UINT8	ubPayoutID )
 {
+	const LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	UINT8 ubDays;
 
 	// send an email telling player an investigation is taking place
 	if (gStrategicStatus.ubInsuranceInvestigationsCnt == 0)
 	{
 		// first offense
-		AddEmailWithSpecialData( INSUR_SUSPIC, INSUR_SUSPIC_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID );
+		AddEmailWithSpecialData(INSUR_SUSPIC, INSUR_SUSPIC_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 	else
 	{
 		// subsequent offense
-		AddEmailWithSpecialData( INSUR_SUSPIC_2, INSUR_SUSPIC_2_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID );
+		AddEmailWithSpecialData(INSUR_SUSPIC_2, INSUR_SUSPIC_2_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 
-	if ( gMercProfiles[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID ].ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH )
+	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
 	{
 		// the fact that you tried to cheat them gets realized very quickly. :-)
 		ubDays = 1;
@@ -968,15 +970,16 @@ void StartInsuranceInvestigation( UINT8	ubPayoutID )
 
 void EndInsuranceInvestigation( UINT8	ubPayoutID )
 {
+	const LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	// send an email telling player the investigation is over
-	if ( gMercProfiles[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID ].ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH )
+	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
 	{
 		// fraud, no payout!
-		AddEmailWithSpecialData( INSUR_1HOUR_FRAUD, INSUR_1HOUR_FRAUD_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID );
+		AddEmailWithSpecialData(INSUR_1HOUR_FRAUD, INSUR_1HOUR_FRAUD_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 	else
 	{
-		AddEmailWithSpecialData( INSUR_INVEST_OVER, INSUR_INVEST_OVER_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID );
+		AddEmailWithSpecialData(INSUR_INVEST_OVER, INSUR_INVEST_OVER_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 
 		// only now make a payment (immediately)
 		InsuranceContractPayLifeInsuranceForDeadMerc( ubPayoutID );
@@ -987,29 +990,30 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 //void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct )
 void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 {
-	SOLDIERTYPE* const s = GetMan(LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID].ubSoldierID);
+	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	//if the mercs id number is the same what is in the soldier array
-	if( LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubSoldierID == s->ubID)
+	SOLDIERTYPE* const s = GetMan(lip->ubSoldierID);
+	if (lip->ubSoldierID == s->ubID)
 	{
 		// and if the soldier is still active ( player hasn't removed carcass yet ), reset insurance flag
 		if (s->bActive) s->usLifeInsurance = 0;
 	}
 
 	//add transaction to players account
-	AddTransactionToPlayersBook( INSURANCE_PAYOUT, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice );
+	AddTransactionToPlayersBook(INSURANCE_PAYOUT, lip->ubMercID, GetWorldTotalMin(), lip->iPayOutPrice);
 
 	//add to the history log the fact that the we paid the insurance claim
-	AddHistoryToPlayersLog( HISTORY_INSURANCE_CLAIM_PAYOUT, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID, GetWorldTotalMin(), -1, -1 );
+	AddHistoryToPlayersLog(HISTORY_INSURANCE_CLAIM_PAYOUT, lip->ubMercID, GetWorldTotalMin(), -1, -1);
 
 	//if there WASNT an investigation
-	if( gMercProfiles[ LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID ].ubSuspiciousDeath == 0 )
+	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == 0)
 	{
 		//Add an email telling the user that he received an insurance payment
-		AddEmailWithSpecialData( INSUR_PAYMENT, INSUR_PAYMENT_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].iPayOutPrice, LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].ubMercID );
+		AddEmailWithSpecialData(INSUR_PAYMENT, INSUR_PAYMENT_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 
 	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed --;
-	LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].fActive = FALSE;
+	lip->fActive = FALSE;
 //	MemFree( pPayoutStruct );
 }
 
