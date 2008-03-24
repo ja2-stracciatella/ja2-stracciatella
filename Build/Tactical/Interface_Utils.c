@@ -204,7 +204,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sWidth, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, const BOOLEAN fErase, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sWidth, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
 {
 	FLOAT											 dStart, dEnd, dPercentage;
 	//UINT16										 usLineColor;
@@ -246,12 +246,6 @@ void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, cons
   {
     sValue--;
   }
-
-	// Erase what was there
-	if ( fErase )
-	{
-		//RestoreExternBackgroundRect( sXPos, (INT16)(sYPos - sHeight), sWidth, (INT16)(sHeight + 1 ) );
-	}
 
 	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
