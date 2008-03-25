@@ -227,9 +227,6 @@ void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT1
 		value = o->bStatus[ubStatus];
 	}
 
-  // ATE: Subtract 1 to exagerate bad status
-  if (value < 100 && value > 1) --value;
-
 	UINT32 uiDestPitchBYTES;
 	UINT8* const pDestBuf = LockVideoSurface(uiBuffer, &uiDestPitchBYTES);
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
