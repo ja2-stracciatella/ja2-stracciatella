@@ -297,16 +297,6 @@ typedef struct
 	INT16 sValDx;
 } INV_DESC_STATS;
 
-typedef struct
-{
-	INT16 sX;
-	INT16 sY;
-	INT16 sHeight;
-	INT16 sWidth;
-	INT16 sBarDx;
-	INT16 sBarDy;
-} INV_ATTACHXY;
-
 
 static const SGPBox gMapDescNameBox = {  7, 65, 247, 8 };
 static const SGPBox gDescNameBox    = { 16, 67, 291, 8 };
@@ -359,22 +349,31 @@ static const INV_DESC_STATS gMapWeaponStats[] =
 };
 
 
-#define ATTACHMENT_BAR_HEIGHT 22
-static const INV_ATTACHXY gItemDescAttachmentsXY[] =
+typedef struct AttachmentGfxInfo
 {
-	{ 129, 12, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 },
-	{ 163, 12, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 },
-	{ 129, 39, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 },
-	{ 163, 39, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 }
+	SGPBox   item_box; // Bounding box of the item relative to a slot
+	SGPBox   bar_box;  // Bounding box of the status bar relative to a slot
+	SGPPoint slot[4];
+} AttachmentGfxInfo;
+
+static const AttachmentGfxInfo g_attachment_info =
+{
+	{ 7, 0, 28, 25 },
+	{ 2, 2,  2, 22 },
+	{
+		{ 128, 10 }, { 162, 10 },
+		{ 128, 36 }, { 162, 36 }
+	}
 };
 
-#define MAP_ATTACHMENT_BAR_HEIGHT 23
-static const INV_ATTACHXY gMapItemDescAttachmentsXY[] =
+static const AttachmentGfxInfo g_map_attachment_info =
 {
-	{ 173, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
-	{ 211, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
-	{ 173, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
-	{ 211, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 }
+	{ 6, 0, 31, 25 },
+	{ 1, 1,  2, 23 },
+	{
+		{ 170,  8 }, { 208,  8 },
+		{ 170, 34 }, { 208, 34 }
+	}
 };
 
 static const SGPRect gItemDescProsConsRects[] =
@@ -2157,24 +2156,17 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 	if ( gpItemDescObject->usItem != MONEY  )
 	{
-		for (INT32 cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
+		const AttachmentGfxInfo* const agi = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_map_attachment_info : &g_attachment_info);
+		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
 			// Build a mouse region here that is over any others.....
-//			if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-			const INV_ATTACHXY* xy;
-			INT16 dx;
-			if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
-			{
-				xy = &gMapItemDescAttachmentsXY[cnt];
-				dx = 0;
-			}
-			else
-			{
-				 xy = &gItemDescAttachmentsXY[cnt];
-				 dx = xy->sBarDx;
-			}
-			MSYS_DefineRegion(&gItemDescAttachmentRegions[cnt], gsInvDescX + xy->sX, gsInvDescY + xy->sY, gsInvDescX + xy->sX + dx + xy->sWidth, gsInvDescY + xy->sY + xy->sHeight, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback);
-			MSYS_SetRegionUserData( &gItemDescAttachmentRegions[cnt], 0, cnt );
+			const UINT16        x = agi->item_box.x + agi->slot[i].iX + gsInvDescX;
+			const UINT16        y = agi->item_box.y + agi->slot[i].iY + gsInvDescY;
+			const UINT16        w = agi->item_box.w;
+			const UINT16        h = agi->item_box.h;
+			MOUSE_REGION* const r = &gItemDescAttachmentRegions[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback);
+			MSYS_SetRegionUserData(r, 0, i);
 		}
 		SetAttachmentTooltips();
 	}
@@ -2597,25 +2589,30 @@ void RenderItemDescriptionBox(void)
 
 	// Display attachments
 	{
-		const INV_ATTACHXY* const xy = (in_map ? gMapItemDescAttachmentsXY : gItemDescAttachmentsXY);
-		for (INT32 cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
+		const AttachmentGfxInfo* const agi = (in_map ? &g_map_attachment_info : &g_attachment_info);
+		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
-			if (obj->usAttachItem[cnt] != NOTHING)
-			{
-				INT16 sCenX = dx + xy[cnt].sX + 5;
-				INT16 sCenY = dy + xy[cnt].sY - 1;
+			if (obj->usAttachItem[i] == NOTHING) continue;
 
-				INVRenderItem(guiSAVEBUFFER, NULL, obj, sCenX, sCenY, xy[cnt].sWidth, xy[cnt].sHeight, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + cnt, TRANSPARENT);
+			const INT16 x = dx + agi->slot[i].iX;
+			const INT16 y = dy + agi->slot[i].iY;
 
-				sCenX -= xy[cnt].sBarDx;
-				sCenY += xy[cnt].sBarDy;
-				const INT16 h = (in_map ? MAP_ATTACHMENT_BAR_HEIGHT : ATTACHMENT_BAR_HEIGHT);
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
-			}
+			const INT16 item_x = agi->item_box.x + x;
+			const INT16 item_y = agi->item_box.y + y;
+			const INT16 item_w = agi->item_box.w;
+			const INT16 item_h = agi->item_box.h;
+			INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
+
+			const INT16 bar_x = agi->bar_box.x + x;
+			const INT16 bar_h = agi->bar_box.h;
+			const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
+			DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 
 			if (fHatchOutAttachments)
 			{
-				DrawHatchOnInventory(guiSAVEBUFFER, dx + xy[cnt].sX, dy + xy[cnt].sY - 2, xy[cnt].sWidth + xy[cnt].sBarDx, xy[cnt].sHeight + 2);
+				const UINT16 hatch_w = agi->item_box.x + agi->item_box.w;
+				const UINT16 hatch_h = agi->item_box.x + agi->item_box.w;
+				DrawHatchOnInventory(guiSAVEBUFFER, x, y, hatch_w, hatch_h);
 			}
 		}
 	}
