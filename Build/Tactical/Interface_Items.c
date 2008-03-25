@@ -4376,80 +4376,64 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 }
 
 
-void RenderKeyRingPopup( BOOLEAN fFullRender )
+void RenderKeyRingPopup(const BOOLEAN fFullRender)
 {
-	UINT32								cnt;
-	OBJECTTYPE						pObject;
-	INT16 sKeyRingItemWidth = 0;
-	INT16 sOffSetY = 0, sOffSetX = 0;
+	const INT16 dx = gsKeyRingPopupInvX;
+	const INT16 dy = gsKeyRingPopupInvY;
 
-	if( guiCurrentScreen != MAP_SCREEN )
+	if (gfInKeyRingPopup)
 	{
-		sOffSetY = 8;
-	}
-	else
-	{
-		sOffSetX = 40;
-		sOffSetY = 15;
-	}
+		SetAllAutoFacesInactive();
 
-	if ( gfInKeyRingPopup )
-	{
-
-		//Disable all faces
-		SetAllAutoFacesInactive( );
-
-		// Shadow Area
-		if ( fFullRender )
+		if (fFullRender)
 		{
-			ShadowVideoSurfaceRect( FRAME_BUFFER, 0, gsKeyRingPopupInvY, gsKeyRingPopupInvX + gsKeyRingPopupInvWidth , gsKeyRingPopupInvY + gsKeyRingPopupInvHeight );
-		}
-
-	}
-
-	memset( &pObject, 0, sizeof( OBJECTTYPE ) );
-
-	pObject.usItem = KEY_1;
-	pObject.bStatus[ 0 ] = 100;
-
-	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
-	UINT32 usHeight = pTrav->usHeight;
-	UINT32 usWidth  = pTrav->usWidth;
-
-	if( guiCurrentScreen == MAP_SCREEN )
-	{
-		sKeyRingItemWidth						= MAP_KEY_RING_ROW_WIDTH;
-	}
-	else
-	{
-		// Set some globals
-		sKeyRingItemWidth						= KEY_RING_ROW_WIDTH;
-	}
-
-	for ( cnt = 0; cnt < NUMBER_KEYS_ON_KEYRING; cnt++ )
-	{
-		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, gsKeyRingPopupInvX + cnt % sKeyRingItemWidth * usWidth + sOffSetX, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight);
-
-		// will want to draw key here.. if there is one
-		if( ( gpItemPopupSoldier->pKeyRing[ cnt ].ubKeyID != INVALID_KEY_NUMBER ) && ( gpItemPopupSoldier->pKeyRing[ cnt ].ubNumber > 0 ) )
-		{
-			pObject.ubNumberOfObjects = gpItemPopupSoldier->pKeyRing[ cnt ].ubNumber;
-
-			// show 100% status for each
-			DrawItemUIBarEx(&pObject, 0, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 7, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
-
-			// set item type
-			pObject.usItem = FIRST_KEY + LockTable[ gpItemPopupSoldier->pKeyRing[ cnt].ubKeyID ].usKeyItem;
-
-			// render the item
-			INVRenderItem(FRAME_BUFFER, NULL, &pObject, gsKeyRingPopupInvX + sOffSetX + cnt % sKeyRingItemWidth * usWidth + 8, gsKeyRingPopupInvY + sOffSetY + cnt / sKeyRingItemWidth * usHeight, usWidth - 8, usHeight - 2, DIRTYLEVEL2, 0, TRANSPARENT);
+			ShadowVideoSurfaceRect(FRAME_BUFFER, 0, dy, dx + gsKeyRingPopupInvWidth, dy + gsKeyRingPopupInvHeight);
 		}
 	}
 
-	//RestoreExternBackgroundRect( gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight );
-	InvalidateRegion( gsKeyRingPopupInvX, gsKeyRingPopupInvY, gsKeyRingPopupInvX + gsKeyRingPopupInvWidth, gsKeyRingPopupInvY + gsKeyRingPopupInvHeight );
+	OBJECTTYPE o;
+	memset(&o, 0, sizeof(o));
+	o.bStatus[0] = 100;
 
+	const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	const UINT32 box_w = pTrav->usWidth;
+	const UINT32 box_h = pTrav->usHeight;
+
+	INT16 offset_x;
+	INT16 offset_y;
+	INT16 key_ring_cols;
+	if (guiCurrentScreen == MAP_SCREEN)
+	{
+		offset_x      = 40;
+		offset_y      = 15;
+		key_ring_cols = MAP_KEY_RING_ROW_WIDTH;
+	}
+	else
+	{
+		offset_x      = 0;
+		offset_y      = 8;
+		key_ring_cols = KEY_RING_ROW_WIDTH;
+	}
+
+	const KEY_ON_RING* const key_ring = gpItemPopupSoldier->pKeyRing;
+	for (UINT32 i = 0; i < NUMBER_KEYS_ON_KEYRING; ++i)
+	{
+		const UINT x = dx + offset_x + i % key_ring_cols * box_w;
+		const UINT y = dy + offset_y + i / key_ring_cols * box_h;
+
+		BltVideoObject(FRAME_BUFFER, guiItemPopupBoxes, 0, x, y);
+
+		const KEY_ON_RING* const key = &key_ring[i];
+		if (key->ubKeyID == INVALID_KEY_NUMBER || key->ubNumber == 0) continue;
+
+		o.ubNumberOfObjects = key->ubNumber;
+		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
+
+		DrawItemUIBarEx(&o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+		INVRenderItem(FRAME_BUFFER, NULL, &o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, TRANSPARENT);
+	}
+
+	InvalidateRegion(dx, dy, dx + gsKeyRingPopupInvWidth, dy + gsKeyRingPopupInvHeight);
 }
 
 
