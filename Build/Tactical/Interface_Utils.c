@@ -204,75 +204,49 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* const pObject, const UINT8 ubStatus, const INT16 sXPos, const INT16 sYPos, const INT16 sHeight, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT16 x, const INT16 y, const INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
 {
-	FLOAT											 dStart, dEnd, dPercentage;
-	//UINT16										 usLineColor;
-
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-	UINT16										 usLineColor;
-	INT16											 sValue;
-
-
-	if ( ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1 )
+	INT16 value;
+	// Adjust for ammo, other things
+	const INVTYPE* const item = &Item[o->usItem];
+	if (ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1)
 	{
-		sValue = pObject->bAttachStatus[ ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1 ];
+		value = o->bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
+	}
+	else if (item->usItemClass & IC_AMMO)
+	{
+		value = 100 * o->ubShotsLeft[ubStatus] / Magazine[item->ubClassIndex].ubMagSize;
+		if (value > 100) value = 100;
+	}
+	else if (item->usItemClass & IC_KEY)
+	{
+		value = 100;
 	}
 	else
 	{
-		sValue = pObject->bStatus[ ubStatus ];
-	}
-
-	// Adjust for ammo, other thingys..
-	if( Item[ pObject->usItem ].usItemClass & IC_AMMO )
-	{
-		sValue = sValue * 100 / Magazine[ Item[ pObject->usItem ].ubClassIndex ].ubMagSize;
-
-		if ( sValue > 100 )
-		{
-			sValue = 100;
-		}
-
-	}
-
-	if( Item[ pObject->usItem ].usItemClass & IC_KEY )
-	{
-		sValue =100;
+		value = o->bStatus[ubStatus];
 	}
 
   // ATE: Subtract 1 to exagerate bad status
-  if ( sValue < 100 && sValue > 1 )
-  {
-    sValue--;
-  }
+  if (value < 100 && value > 1) --value;
 
-	pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
+	UINT32 uiDestPitchBYTES;
+	UINT8* const pDestBuf = LockVideoSurface(uiBuffer, &uiDestPitchBYTES);
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	const INT h = max_h * value / 100;
+	LineDraw(TRUE, x,     y, x,     y - h, sColor1, pDestBuf);
+	LineDraw(TRUE, x + 1, y, x + 1, y - h, sColor2, pDestBuf);
 
-	// FIRST DO BREATH
-	dPercentage = (FLOAT)sValue / (FLOAT)100;
-	dEnd				=	dPercentage * sHeight;
-	dStart			= sYPos;
+	UnLockVideoSurface(uiBuffer);
 
-	//usLineColor = Get16BPPColor( STATUS_BAR );
-	usLineColor = sColor1;
-	RectangleDraw( TRUE, sXPos, (INT32)dStart, sXPos, (INT32)( dStart - dEnd ) , usLineColor, pDestBuf );
-
-	usLineColor = sColor2;
-	RectangleDraw( TRUE, sXPos+ 1, (INT32)dStart, sXPos + 1, (INT32)( dStart - dEnd ), usLineColor, pDestBuf );
-
-
-	UnLockVideoSurface( uiBuffer );
-
-	if ( uiBuffer == guiSAVEBUFFER )
+	if (uiBuffer == guiSAVEBUFFER)
 	{
-		RestoreExternBackgroundRect(sXPos, sYPos - sHeight, 2, sHeight + 1);
+		RestoreExternBackgroundRect(x, y - max_h, 2, max_h + 1);
 	}
 	else
 	{
-		InvalidateRegion(sXPos, sYPos - sHeight, sXPos + 2, sYPos + 1);
+		InvalidateRegion(x, y - max_h, x + 2, y + 1);
 	}
 }
 
