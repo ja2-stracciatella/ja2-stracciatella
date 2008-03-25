@@ -146,10 +146,10 @@
 #define		MAP_ITEMDESC_CONS_START_X		( 23 + gsInvDescX )
 #define		MAP_ITEMDESC_CONS_START_Y		(240 + gsInvDescY)
 #define		MAP_ITEMDESC_ITEM_STATUS_X					( 18 + gsInvDescX )
-#define		MAP_ITEMDESC_ITEM_STATUS_Y					( 53 + gsInvDescY )
+#define		MAP_ITEMDESC_ITEM_STATUS_Y					( 54 + gsInvDescY )
 
-#define		ITEMDESC_ITEM_STATUS_HEIGHT			50
-#define   ITEMDESC_ITEM_STATUS_HEIGHT_MAP 40
+#define   ITEMDESC_ITEM_STATUS_HEIGHT     51
+#define   ITEMDESC_ITEM_STATUS_HEIGHT_MAP 42
 #define   ITEMDESC_DESC_WIDTH			301
 #define   MAP_ITEMDESC_DESC_WIDTH 220
 #define		ITEMDESC_ITEM_WIDTH			117
@@ -359,6 +359,7 @@ static const INV_DESC_STATS gMapWeaponStats[] =
 };
 
 
+#define ATTACHMENT_BAR_HEIGHT 22
 static const INV_ATTACHXY gItemDescAttachmentsXY[] =
 {
 	{ 129, 12, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 },
@@ -367,12 +368,13 @@ static const INV_ATTACHXY gItemDescAttachmentsXY[] =
 	{ 163, 39, SM_INV_SLOT_HEIGHT, SM_INV_SLOT_WIDTH, INV_BAR_DX - 1, INV_BAR_DY + 1 }
 };
 
+#define MAP_ATTACHMENT_BAR_HEIGHT 23
 static const INV_ATTACHXY gMapItemDescAttachmentsXY[] =
 {
-	{ 173, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY },
-	{ 211, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY },
-	{ 173, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY },
-	{ 211, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY }
+	{ 173, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
+	{ 211, 10, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
+	{ 173, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 },
+	{ 211, 36, SM_INV_SLOT_HEIGHT, 26, INV_BAR_DX + 2, INV_BAR_DY + 1 }
 };
 
 static const SGPRect gItemDescProsConsRects[] =
@@ -2607,7 +2609,8 @@ void RenderItemDescriptionBox(void)
 
 				sCenX -= xy[cnt].sBarDx;
 				sCenY += xy[cnt].sBarDy;
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				const INT16 h = (in_map ? MAP_ATTACHMENT_BAR_HEIGHT : ATTACHMENT_BAR_HEIGHT);
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + cnt, sCenX, sCenY, h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 			}
 
 			if (fHatchOutAttachments)
