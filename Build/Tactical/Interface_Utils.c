@@ -204,7 +204,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT16 x, const INT16 y, const INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
 {
 	INT16 value;
 	// Adjust for ammo, other things
@@ -234,6 +234,7 @@ void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT1
 	UINT8* const pDestBuf = LockVideoSurface(uiBuffer, &uiDestPitchBYTES);
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	--max_h; // LineDraw() includes the end point
 	const INT h = max_h * value / 100;
 	LineDraw(TRUE, x,     y, x,     y - h, sColor1, pDestBuf);
 	LineDraw(TRUE, x + 1, y, x + 1, y - h, sColor2, pDestBuf);
