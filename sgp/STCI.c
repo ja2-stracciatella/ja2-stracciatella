@@ -11,68 +11,57 @@ static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const 
 static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
 
 
-BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents )
+BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 {
-	HWFILE			hFile;
-	STCIHeader	Header;
+	Assert(image != NULL);
 
-	// Check that hImage is valid, and that the file in question exists
-	Assert( hImage != NULL );
+	const HWFILE f = FileOpen(image->ImageFile, FILE_ACCESS_READ);
+	if (!f) goto fail;
 
-	SGPImage TempImage = *hImage;
-
-	// Open the file and read the header
-	hFile = FileOpen(TempImage.ImageFile, FILE_ACCESS_READ);
-	CHECKF( hFile );
-
-	if (!FileRead(hFile, &Header, sizeof(Header)) || memcmp(Header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
+	STCIHeader header;
+	if (!FileRead(f, &header, sizeof(header)) || memcmp(header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
 	{
-		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header." );
-		FileClose( hFile );
-		return( FALSE );
+		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header.");
+		goto fail_close;
 	}
 
 	// Determine from the header the data stored in the file. and run the appropriate loader
-	if (Header.fFlags & STCI_RGB)
+	if (header.fFlags & STCI_RGB)
 	{
-		if( !STCILoadRGB( &TempImage, fContents, hFile, &Header ) )
+		if (!STCILoadRGB(image, fContents, f, &header))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image." );
-			FileClose( hFile );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image.");
+			goto fail_close;
 		}
 	}
-	else if (Header.fFlags & STCI_INDEXED)
+	else if (header.fFlags & STCI_INDEXED)
 	{
-		if( !STCILoadIndexed( &TempImage, fContents, hFile, &Header ) )
+		if (!STCILoadIndexed(image, fContents, f, &header))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image." );
-			FileClose( hFile );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image.");
+			goto fail_close;
 		}
 	}
 	else
-	{	// unsupported type of data, or the right flags weren't set!
-		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file." );
-		FileClose( hFile );
-		return( FALSE );
+	{
+		// Unsupported type of data, or the right flags weren't set!
+		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file.");
+		goto fail_close;
 	}
 
 	// Requested data loaded successfully.
-	FileClose( hFile );
+	FileClose(f);
 
-	// Set some more flags in the temporary image structure, copy it so that hImage points
-	// to it, and return.
-	if (Header.fFlags & STCI_ZLIB_COMPRESSED)
-	{
-		TempImage.fFlags |= IMAGE_COMPRESSED;
-	}
-	TempImage.usWidth = Header.usWidth;
-	TempImage.usHeight = Header.usHeight;
-	TempImage.ubBitDepth = Header.ubDepth;
-	*hImage = TempImage;
+	if (header.fFlags & STCI_ZLIB_COMPRESSED) image->fFlags |= IMAGE_COMPRESSED;
+	image->usWidth    = header.usWidth;
+	image->usHeight   = header.usHeight;
+	image->ubBitDepth = header.ubDepth;
+	return TRUE;
 
-	return( TRUE );
+fail_close:
+	FileClose(f);
+fail:
+	return FALSE;
 }
 
 
