@@ -396,65 +396,24 @@ static BOOLEAN SortMercArray(void)
 }
 
 
-static INT32 CompareValue(const INT32 Num1, const INT32 Num2);
-
-
 static INT32 QsortCompare(const void* pNum1, const void* pNum2)
 {
-	UINT8 Num1 = *(UINT8*)pNum1;
-	UINT8 Num2 = *(UINT8*)pNum2;
+	const MERCPROFILESTRUCT* const p1 = GetProfile(*(UINT8*)pNum1);
+	const MERCPROFILESTRUCT* const p2 = GetProfile(*(UINT8*)pNum2);
 
-	switch( gubCurrentSortMode )
+	INT32 v1;
+	INT32 v2;
+	switch (gubCurrentSortMode)
 	{
-		//Price						INT16	uiWeeklySalary
-		case 0:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].uiWeeklySalary,  (INT32)gMercProfiles[Num2].uiWeeklySalary ) );
-		//Experience			INT16	bExpLevel
-		case 1:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].bExpLevel,  (INT32)gMercProfiles[Num2].bExpLevel) );
-		//Marksmanship		INT16	bMarksmanship
-		case 2:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMarksmanship,  (INT32)gMercProfiles[Num2].bMarksmanship ) );
-		//Medical					INT16	bMedical
-		case 3:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMedical,  (INT32)gMercProfiles[Num2].bMedical ) );
-		//Explosives			INT16	bExplosive
-		case 4:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].bExplosive,  (INT32)gMercProfiles[Num2].bExplosive ) );
-		//Mechanical			INT16	bMechanical
-		case 5:
-			return( CompareValue((INT32)gMercProfiles[ Num1 ].bMechanical,  (INT32)gMercProfiles[Num2].bMechanical ) );
+		/* Price        */ case 0: v1 = p1->uiWeeklySalary; v2 = p2->uiWeeklySalary; break;
+		/* Experience   */ case 1: v1 = p1->bExpLevel;      v2 = p2->bExpLevel;      break;
+		/* Marksmanship */ case 2: v1 = p1->bMarksmanship;  v2 = p2->bMarksmanship;  break;
+		/* Medical      */ case 3: v1 = p1->bMedical;       v2 = p2->bMedical;       break;
+		/* Explosives   */ case 4: v1 = p1->bExplosive;     v2 = p2->bExplosive;     break;
+		/* Mechanical   */ case 5: v1 = p1->bMechanical;    v2 = p2->bMechanical;    break;
 
-		default:
-			Assert( 0 );
-			return( 0 );
+		default: Assert(0); return 0;
 	}
-}
-
-
-static INT32 CompareValue(const INT32 Num1, const INT32 Num2)
-{
-	// Ascending
-	if( gubCurrentListMode == AIM_ASCEND)
-	{
-		if( Num1 < Num2)
-			return(-1);
-		else if( Num1 == Num2)
-			return(0);
-		else
-			return(1);
-	}
-
-	// Descending
-	else if( gubCurrentListMode == AIM_DESCEND )
-	{
-		if( Num1 > Num2)
-			return(-1);
-		else if( Num1 == Num2)
-			return(0);
-		else
-			return(1);
-	}
-
-	return( 0 );
+	const INT32 ret = (v1 > v2) - (v1 < v2);
+	return gubCurrentListMode == AIM_ASCEND ? ret : -ret;
 }
