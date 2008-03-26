@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "Files.h"
 #include "Game_Clock.h"
+#include "LoadSaveData.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"
@@ -176,7 +177,7 @@ static MOUSE_REGION pFilesRegions[MAX_FILES_PAGE];
 
 static void CheckForUnreadFiles(void);
 static void OpenAndReadFilesFile(void);
-static BOOLEAN OpenAndWriteFilesFile(void);
+static void OpenAndWriteFilesFile(void);
 static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead);
 
 
@@ -420,88 +421,57 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead)
 }
 
 
+#define FILE_ENTRY_SIZE 263
+
+
 static void OpenAndReadFilesFile(void)
 {
-  // this procedure will open and read in data to the finance list
-  HWFILE hFileHandle;
-  UINT8 ubCode;
-  UINT32 uiByteCount=0;
-	BOOLEAN fRead;
+	ClearFilesList();
 
-	// clear out the old list
-	ClearFilesList( );
-
-	// open file
-	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
-
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		return;
-  }
-
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return;
-	}
+	const HWFILE f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
+	if (!f) return;
 
 	// file exists, read in data, continue until file end
-  while( FileGetSize( hFileHandle ) > uiByteCount)
+  for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
 	{
+		BYTE data[FILE_ENTRY_SIZE];
+		FileRead(f, data, sizeof(data));
 
-		// read in data
-    FileRead(hFileHandle, &ubCode,          sizeof(UINT8));
-		FileSeek(hFileHandle, 4 + 128 + 128 + 1, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
-		FileRead(hFileHandle, &fRead,           sizeof(UINT8));
-		// add transaction
-	  ProcessAndEnterAFilesRecord(ubCode, fRead);
+		UINT8 code;
+		UINT8 already_read;
 
-		// increment byte counter
-	  uiByteCount += sizeof( UINT32 ) + sizeof( UINT8 )+ 128 + 128 + sizeof(UINT8) + sizeof( BOOLEAN );
+		const BYTE* d = data;
+		EXTR_U8(d, code)
+		EXTR_SKIP(d, 261)
+		EXTR_U8(d, already_read)
+		Assert(d == endof(data));
+
+		ProcessAndEnterAFilesRecord(code, already_read);
 	}
 
-	FileClose( hFileHandle );
+	FileClose(f);
 }
 
 
-static BOOLEAN OpenAndWriteFilesFile(void)
+static void OpenAndWriteFilesFile(void)
 {
-  // this procedure will open and write out data from the finance list
-  HWFILE hFileHandle;
-	FilesUnit* pFilesList = pFilesListHead;
+	const HWFILE f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	if (!f) return;
 
-	// open file
-	hFileHandle = FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-
-	// if no file exits, do nothing
-	if(!hFileHandle)
+  for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{
-		return ( FALSE );
-  }
+		BYTE  data[FILE_ENTRY_SIZE];
+		BYTE* d = data;
+		INJ_U8(d, i->ubCode)
+		INJ_SKIP(d, 261)
+		INJ_U8(d, i->fRead)
+		Assert(d == endof(data));
 
-	BYTE Zeroes[4 + 128 + 128 + 1];
-	memset(Zeroes, 0, sizeof(Zeroes));
-
-  // write info, while there are elements left in the list
-  while(pFilesList)
-	{
-    	// now write date and amount, and code
-		FileWrite(hFileHandle, &pFilesList->ubCode,   sizeof(UINT8));
-		FileWrite(hFileHandle, Zeroes, sizeof(Zeroes)); // XXX HACK000B
-		FileWrite(hFileHandle, &pFilesList->fRead,    sizeof(UINT8));
-
-		// next element in list
-		pFilesList = pFilesList->Next;
-
+		FileWrite(f, data, sizeof(data));
 	}
 
-  FileClose( hFileHandle );
-  // clear out the old list
-	ClearFilesList( );
-
-	return ( TRUE );
+  FileClose(f);
+	ClearFilesList();
 }
 
 
