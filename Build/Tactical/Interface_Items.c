@@ -2023,122 +2023,104 @@ static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BOOLEAN ReloadItemDesc(void);
 
 
-BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier )
+BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
 {
-	wchar_t	pStr[10];
-	INT16		sForeColour;
-
-	//Set the current screen
+	// Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
+	const BOOLEAN in_map = (guiCurrentItemDescriptionScreen == MAP_SCREEN);
 
-	// Set X, Y
 	gsInvDescX = sX;
 	gsInvDescY = sY;
 
-	gpItemDescObject = pObject;
+	gpItemDescObject       = o;
 	gubItemDescStatusIndex = ubStatusIndex;
-	gpItemDescSoldier = pSoldier;
-	fItemDescDelete		= FALSE;
+	gpItemDescSoldier      = s;
+	fItemDescDelete		     = FALSE;
 
 	// Build a mouse region here that is over any others.....
-	if (guiCurrentItemDescriptionScreen ==  MAP_SCREEN )
+	if (in_map)
 	{
-
-		//return( FALSE );
-
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback);
 
 		giMapInvDescButton = QuickCreateButtonImg("INTERFACE/itemdescdonebutton.sti", -1, 0, -1, 1, -1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
 
-			fShowDescriptionFlag = TRUE;
+		fShowDescriptionFlag = TRUE;
 	}
 	else
 	{
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + ITEMDESC_WIDTH, gsInvDescY + ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
 	}
-  // Add region
-	if ( (Item[ pObject->usItem ].usItemClass & IC_GUN) && pObject->usItem != ROCKET_LAUNCHER )
-	{
-		// Add button
-//    if( guiCurrentScreen != MAP_SCREEN )
-		//if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
-		 swprintf( pStr, lengthof(pStr), L"%d/%d", gpItemDescObject->ubGunShotsLeft, Weapon[ gpItemDescObject->usItem ].ubMagSize );
-		 sForeColour = ITEMDESC_AMMO_FORE;
 
-		const char* Filename = "INTERFACE/infobox.sti";
-		switch( pObject->ubGunAmmoType )
+	if (Item[o->usItem].usItemClass & IC_GUN && o->usItem != ROCKET_LAUNCHER)
+	{
+		wchar_t	pStr[10];
+		swprintf(pStr, lengthof(pStr), L"%d/%d", o->ubGunShotsLeft, Weapon[o->usItem].ubMagSize);
+
+		INT32 img;
+		switch (o->ubGunAmmoType)
 		{
 			case AMMO_AP:
-			case AMMO_SUPER_AP:
-			 //sForeColour = ITEMDESC_FONTAPFORE;
-				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 8, 5, -1, 7, -1);
-			 break;
-			case AMMO_HP:
-			 //sForeColour = ITEMDESC_FONTHPFORE;
-
-				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 12, 9, -1, 11, -1);
-			 break;
-			default:
-			 //sForeColour = FONT_MCOLOR_WHITE;
-				giItemDescAmmoButtonImages = LoadButtonImage(Filename, 4, 1, -1, 3, -1);
-			 break;
+			case AMMO_SUPER_AP: img = 5; break;
+			case AMMO_HP:       img = 9; break;
+			default:            img = 1; break;
 		}
+		BUTTON_PICS* const ammo_img = LoadButtonImage("INTERFACE/infobox.sti", img + 3, img, -1, img + 2, -1);
+		giItemDescAmmoButtonImages = ammo_img;
 
-		const INT16         h  = GetDimensionsOfButtonPic(giItemDescAmmoButtonImages)->h;
-		const SGPBox* const xy = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_desc_item_box_map: &g_desc_item_box);
+		const INT16         h  = GetDimensionsOfButtonPic(ammo_img)->h;
+		const SGPBox* const xy = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
 		const INT16         x  = gsInvDescX + xy->x;
 		const INT16         y  = gsInvDescY + xy->y + xy->h - h; // align with bottom
-		giItemDescAmmoButton = CreateIconAndTextButton(giItemDescAmmoButtonImages, pStr, TINYFONT1, sForeColour, FONT_MCOLOR_BLACK, sForeColour, FONT_MCOLOR_BLACK, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
+		const INT16         text_col   = ITEMDESC_AMMO_FORE;
+		const INT16         shadow_col = FONT_MCOLOR_BLACK;
+		const INT32 ammo_btn = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
+		giItemDescAmmoButton = ammo_btn;
 
-		//if we are being init from the shop keeper screen and this is a dealer item we are getting info from
-		const wchar_t* help;
-		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL )
+		/* Disable the eject button, if we are being init from the shop keeper
+		 * screen and this is a dealer item we are getting info from */
+		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL)
 		{
-			//disable the eject button
-			SpecifyDisabledButtonStyle( giItemDescAmmoButton, DISABLED_STYLE_HATCHED );
-
-			DisableButton( giItemDescAmmoButton );
-			help = L"";
+			SpecifyDisabledButtonStyle(ammo_btn, DISABLED_STYLE_HATCHED);
+			DisableButton(ammo_btn);
 		}
 		else
 		{
-			help = Message[STR_EJECT_AMMO];
+			SetButtonFastHelpText(ammo_btn, Message[STR_EJECT_AMMO]);
 		}
-		SetButtonFastHelpText(giItemDescAmmoButton, help);
 
 		INT16 usX;
 		INT16 usY;
 		FindFontCenterCoordinates(ITEMDESC_AMMO_TEXT_X, ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight(TINYFONT1), pStr, TINYFONT1, &usX, &usY);
-		SpecifyButtonTextOffsets(giItemDescAmmoButton,  usX, usY, TRUE);
+		SpecifyButtonTextOffsets(ammo_btn, usX, usY, TRUE);
 	}
 
-	if ( ITEM_PROS_AND_CONS( gpItemDescObject->usItem ) )
+	if (ITEM_PROS_AND_CONS(o->usItem))
 	{
 		const INT16 sProsConsIndent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
-		const SGPRect* const rects = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? gMapItemDescProsConsRects : gItemDescProsConsRects);
-		for (INT32 cnt = 0; cnt < 2; ++cnt)
+		const SGPRect* const rects = (in_map ? gMapItemDescProsConsRects : gItemDescProsConsRects);
+		for (INT32 i = 0; i < 2; ++i)
 		{
 			// Add region for pros/cons help text
-			const SGPRect* const rect = &rects[cnt];
+			const SGPRect* const rect = &rects[i];
 			const UINT16         l    = ITEMDESC_PROS_START_X + sProsConsIndent;
 			const UINT16         t    = gsInvDescY + rect->iTop;
 			const UINT16         r    = gsInvDescX + rect->iRight;
 			const UINT16         b    = gsInvDescY + rect->iBottom;
-			MOUSE_REGION* const  reg  = &gProsAndConsRegions[cnt];
+			MOUSE_REGION* const  reg  = &gProsAndConsRegions[i];
 			MSYS_DefineRegion(reg, l, t, r, b, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
 
 			const wchar_t* label;
 			// use temp variable to prevent an initial comma from being displayed
 			wchar_t FullItemTemp[SIZE_ITEM_PROS];
-			if (cnt == 0)
+			if (i == 0)
 			{
 				label = gzProsLabel;
-				GenerateProsString(FullItemTemp, gpItemDescObject, 1000);
+				GenerateProsString(FullItemTemp, o, 1000);
 			}
 			else
 			{
 				label = gzConsLabel;
-				GenerateConsString(FullItemTemp, gpItemDescObject, 1000);
+				GenerateConsString(FullItemTemp, o, 1000);
 			}
 			wchar_t text[SIZE_ITEM_PROS];
 			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
@@ -2154,9 +2136,9 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	guiBullet = AddVideoObjectFromFile("INTERFACE/bullet.STI");
 	CHECKF(guiBullet != NO_VOBJECT);
 
-	if ( gpItemDescObject->usItem != MONEY  )
+	if (o->usItem != MONEY)
 	{
-		const AttachmentGfxInfo* const agi = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &g_map_attachment_info : &g_attachment_info);
+		const AttachmentGfxInfo* const agi = (in_map ? &g_map_attachment_info : &g_attachment_info);
 		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
 			// Build a mouse region here that is over any others.....
@@ -2172,77 +2154,65 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 	}
 	else
 	{
-		memset( &gRemoveMoney, 0, sizeof( REMOVE_MONEY ) );
-		gRemoveMoney.uiTotalAmount = gpItemDescObject->uiMoneyAmount;
-		gRemoveMoney.uiMoneyRemaining = gpItemDescObject->uiMoneyAmount;
-		gRemoveMoney.uiMoneyRemoving = 0;
+		memset(&gRemoveMoney, 0, sizeof(REMOVE_MONEY));
+		gRemoveMoney.uiTotalAmount    = o->uiMoneyAmount;
+		gRemoveMoney.uiMoneyRemaining = o->uiMoneyAmount;
+		gRemoveMoney.uiMoneyRemoving  = 0;
 
-		// Load graphic
 		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
 		CHECKF(guiMoneyGraphicsForDescBox != NO_VOBJECT);
 
-		//Create buttons for the money
-//		if (guiCurrentScreen ==  MAP_SCREEN )
+		// Create buttons for the money
 		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
-		const MoneyLoc* Loc = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
-		INT32 cnt;
-		for (cnt = 0; cnt < MAX_ATTACHMENTS - 1; cnt++)
+		const MoneyLoc* const loc = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
+		INT32 i;
+		for (i = 0; i < MAX_ATTACHMENTS - 1; i++)
 		{
-			guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
-				guiMoneyButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
+			guiMoneyButtonBtn[i] = CreateIconAndTextButton(
+				guiMoneyButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
 				5, DEFAULT_SHADOW,
 				5, DEFAULT_SHADOW,
-				Loc->x + gMoneyButtonOffsets[cnt].x, Loc->y + gMoneyButtonOffsets[cnt].y, MSYS_PRIORITY_HIGHEST,
+				loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 				BtnMoneyButtonCallback
 			);
-			MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
+			MSYS_SetBtnUserData(guiMoneyButtonBtn[i], i);
 		}
 		if (gRemoveMoney.uiTotalAmount < 1000) DisableButton(guiMoneyButtonBtn[M_1000]);
 		if (gRemoveMoney.uiTotalAmount <  100) DisableButton(guiMoneyButtonBtn[M_100]);
 		if (gRemoveMoney.uiTotalAmount <   10) DisableButton(guiMoneyButtonBtn[M_10]);
 
-		//Create the Done button
+		// Create the Done button
 		guiMoneyDoneButtonImage = UseLoadedButtonImage(guiMoneyButtonImage, -1, 3, -1, 4, -1);
-		guiMoneyButtonBtn[cnt] = CreateIconAndTextButton(
-			guiMoneyDoneButtonImage, gzMoneyAmounts[cnt], BLOCKFONT2,
+		guiMoneyButtonBtn[i] = CreateIconAndTextButton(
+			guiMoneyDoneButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
 			5, DEFAULT_SHADOW,
 			5, DEFAULT_SHADOW,
-			Loc->x + gMoneyButtonOffsets[cnt].x, Loc->y + gMoneyButtonOffsets[cnt].y, MSYS_PRIORITY_HIGHEST,
+			loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 			BtnMoneyButtonCallback
 		);
-		MSYS_SetBtnUserData(guiMoneyButtonBtn[cnt], cnt);
+		MSYS_SetBtnUserData(guiMoneyButtonBtn[i], i);
 	}
-
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
+	gfInItemDescBox      = TRUE;
 
+	CHECKF(ReloadItemDesc());
 
-	gfInItemDescBox = TRUE;
-
-	CHECKF( ReloadItemDesc( ) );
-
-	if ( gpItemPointer )
+	gpAttachSoldier = (gpItemPointer ? gpItemPointerSoldier : s);
+	// Store attachments that item originally had
+	for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 	{
-		gpAttachSoldier = gpItemPointerSoldier;
-	}
-	else
-	{
-		gpAttachSoldier = pSoldier;
-	}
-	// store attachments that item originally had
-	for (INT32 cnt = 0; cnt < MAX_ATTACHMENTS; ++cnt)
-	{
-		gusOriginalAttachItem[ cnt ] = pObject->usAttachItem[ cnt ];
-		gbOriginalAttachStatus[ cnt ] = pObject->bAttachStatus[ cnt ];
+		gusOriginalAttachItem[i]  = o->usAttachItem[i];
+		gbOriginalAttachStatus[i] = o->bAttachStatus[i];
 	}
 
 	if (gpItemPointer != NULL && !gfItemDescHelpTextOffset && !CheckFact(FACT_ATTACHED_ITEM_BEFORE, 0))
 	{
 		const wchar_t* text;
-		if (!(Item[pObject->usItem].fFlags & ITEM_HIDDEN_ADDON) && (
-					ValidAttachment(gpItemPointer->usItem, pObject->usItem) ||
-					ValidLaunchable(gpItemPointer->usItem, pObject->usItem) ||
-					ValidMerge(gpItemPointer->usItem, pObject->usItem)
+		if (!(Item[o->usItem].fFlags & ITEM_HIDDEN_ADDON) && (
+					ValidAttachment(gpItemPointer->usItem, o->usItem) ||
+					ValidLaunchable(gpItemPointer->usItem, o->usItem) ||
+					ValidMerge(     gpItemPointer->usItem, o->usItem)
 				))
 		{
 			text = Message[STR_ATTACHMENT_HELP];
@@ -2255,13 +2225,11 @@ BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY,
 
 		StartShowingInterfaceFastHelpText();
 
-		SetFactTrue( FACT_ATTACHED_ITEM_BEFORE );
+		SetFactTrue(FACT_ATTACHED_ITEM_BEFORE);
 		gfItemDescHelpTextOffset = TRUE;
 	}
 
-
-
-	return( TRUE );
+	return TRUE;
 }
 
 
