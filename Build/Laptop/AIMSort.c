@@ -105,7 +105,6 @@ static AIMSortInfo g_aim_sort_info[] =
 
 UINT8			gubCurrentSortMode;
 UINT8			gubCurrentListMode;
-UINT8			gubOldListMode;
 
 // Mouse stuff
 //Clicking on To Mugshot
@@ -129,7 +128,6 @@ void GameInitAimSort()
 {
 	gubCurrentSortMode=0;
 	gubCurrentListMode=AIM_DESCEND;
-	gubOldListMode=AIM_DESCEND;
 }
 
 
@@ -359,10 +357,9 @@ static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 static void SetSortOrder(const UINT8 order)
 {
 	if (gubCurrentListMode == order) return;
+	DrawSelectLight(gubCurrentListMode, AIM_SORT_OFF);
 	gubCurrentListMode = order;
 	DrawSelectLight(order, AIM_SORT_ON);
-	DrawSelectLight(gubOldListMode, AIM_SORT_OFF);
-	gubOldListMode = order;
 }
 
 
