@@ -104,7 +104,6 @@ static AIMSortInfo g_aim_sort_info[] =
 };
 
 UINT8			gubCurrentSortMode;
-UINT8			gubOldSortMode;
 UINT8			gubCurrentListMode;
 UINT8			gubOldListMode;
 
@@ -129,7 +128,6 @@ static SGPVObject* guiSelectLight;
 void GameInitAimSort()
 {
 	gubCurrentSortMode=0;
-	gubOldSortMode=0;
 	gubCurrentListMode=AIM_DESCEND;
 	gubOldListMode=AIM_DESCEND;
 }
@@ -316,10 +314,9 @@ static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void SetSortCriterion(const UINT8 criterion)
 {
 	if (gubCurrentSortMode == criterion) return;
+	DrawSelectLight(gubCurrentSortMode, AIM_SORT_OFF);
 	gubCurrentSortMode = criterion;
 	DrawSelectLight(criterion, AIM_SORT_ON);
-	DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-	gubOldSortMode = criterion;
 }
 
 
