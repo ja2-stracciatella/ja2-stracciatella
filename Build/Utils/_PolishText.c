@@ -2589,26 +2589,23 @@ const wchar_t* AimSortText[] =
 
 	L"Sortuj wg:",					// Title for the way to sort
 
-	// sort by...
-
-	L"Ceny",
-	L"Doświadczenia",
-	L"Um. strzeleckich",
-	L"Um. med.",
-	L"Zn. mat. wyb.",
-	L"Zn. mechaniki",
-
 	//Text of the links to other AIM pages
 
 	L"Portrety najemników",
 	L"Akta najemnika",
-	L"Pokaż galerię byłych członków A.I.M.",
-
-	// text to display how the entries will be sorted
-
-	L"Rosnąco",
-	L"Malejąco",
+	L"Pokaż galerię byłych członków A.I.M."
 };
+
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Ceny";
+const wchar_t str_aim_sort_experience[]   = L"Doświadczenia";
+const wchar_t str_aim_sort_marksmanship[] = L"Um. strzeleckich";
+const wchar_t str_aim_sort_medical[]      = L"Um. med.";
+const wchar_t str_aim_sort_explosives[]   = L"Zn. mat. wyb.";
+const wchar_t str_aim_sort_mechanical[]   = L"Zn. mechaniki";
+const wchar_t str_aim_sort_ascending[]    = L"Rosnąco";
+const wchar_t str_aim_sort_descending[]   = L"Malejąco";
 
 
 //Aim Policies.c

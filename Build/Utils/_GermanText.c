@@ -2460,26 +2460,22 @@ const wchar_t *AimSortText[] =
 	L"A.I.M. Mitglieder",				// Title
 	L"Sortieren:",					// Title for the way to sort
 
-	// sort by...
-
-	L"Preis",
-	L"Erfahrung",
-	L"Treffsicherheit",
-	L"Medizin",
-	L"Sprengstoff",
-	L"Technik",
-
 	//Text of the links to other AIM pages
 
 	L"Den Söldner-Kurzindex ansehen",
 	L"Personalakte der Söldner ansehen",
-	L"Die AIM-Veteranengalerie ansehen",
-
-	// text to display how the entries will be sorted
-
-	L"Aufsteigend",
-	L"Absteigend",
+	L"Die AIM-Veteranengalerie ansehen"
 };
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Preis";
+const wchar_t str_aim_sort_experience[]   = L"Erfahrung";
+const wchar_t str_aim_sort_marksmanship[] = L"Treffsicherheit";
+const wchar_t str_aim_sort_medical[]      = L"Medizin";
+const wchar_t str_aim_sort_explosives[]   = L"Sprengstoff";
+const wchar_t str_aim_sort_mechanical[]   = L"Technik";
+const wchar_t str_aim_sort_ascending[]    = L"Aufsteigend";
+const wchar_t str_aim_sort_descending[]   = L"Absteigend";
 
 //Aim Policies.c
 //The page in which the AIM policies and regulations are displayed
@@ -2802,7 +2798,7 @@ const wchar_t *zMarksMapScreenText[] =
 	// stuff for contracts
 	L"Sie können zwar den Vertrag bezahlen, haben aber kein Geld für die Lebensversicherung.",
 	L"%ls Lebensversicherungsprämien kosten %ls pro %d Zusatztag(en). Wollen Sie das bezahlen?",
-	L"Inventar auswählen.",
+	L"Sektorinventar",
 
 	L"Söldner hat Krankenversicherung.",
 

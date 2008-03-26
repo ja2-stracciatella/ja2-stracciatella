@@ -2590,26 +2590,23 @@ const wchar_t *AimSortText[] =
 	// Title for the way to sort
 	L"Sort By:",
 
-	// sort by...
-
-	L"Price",
-	L"Experience",
-	L"Marksmanship",
-	L"Medical",
-	L"Explosives",
-	L"Mechanical",
-
 	//Text of the links to other AIM pages
 
 	L"View the mercenary mug shot index",
 	L"Review the individual mercenary's file",
-	L"Browse the A.I.M. Alumni Gallery",
-
-	// text to display how the entries will be sorted
-
-	L"Ascending",
-	L"Descending",
+	L"Browse the A.I.M. Alumni Gallery"
 };
+
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Price";
+const wchar_t str_aim_sort_experience[]   = L"Experience";
+const wchar_t str_aim_sort_marksmanship[] = L"Marksmanship";
+const wchar_t str_aim_sort_medical[]      = L"Medical";
+const wchar_t str_aim_sort_explosives[]   = L"Explosives";
+const wchar_t str_aim_sort_mechanical[]   = L"Mechanical";
+const wchar_t str_aim_sort_ascending[]    = L"Ascending";
+const wchar_t str_aim_sort_descending[]   = L"Descending";
 
 
 //Aim Policies.c

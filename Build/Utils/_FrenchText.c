@@ -2589,26 +2589,23 @@ const wchar_t* AimSortText[] =
 	// Title for the way to sort
 	L"Tri par :",
 
-	// sort by...
-
-	L"Prix",
-	L"Expérience",
-	L"Tir",
-	L"Médecine",
-	L"Explosifs",
-	L"Technique",
-
 	//Text of the links to other AIM pages
 
 	L"Afficher l'index de la galerie de portraits",
 	L"Consulter le fichier individuel",
-	L"Consulter la galerie des anciens de l'A.I.M.",
-
-	// text to display how the entries will be sorted
-
-	L"Ascendant",
-	L"Descendant",
+	L"Consulter la galerie des anciens de l'A.I.M."
 };
+
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Prix";
+const wchar_t str_aim_sort_experience[]   = L"Expérience";
+const wchar_t str_aim_sort_marksmanship[] = L"Tir";
+const wchar_t str_aim_sort_medical[]      = L"Médecine";
+const wchar_t str_aim_sort_explosives[]   = L"Explosifs";
+const wchar_t str_aim_sort_mechanical[]   = L"Technique";
+const wchar_t str_aim_sort_ascending[]    = L"Ascendant";
+const wchar_t str_aim_sort_descending[]   = L"Descendant";
 
 
 //Aim Policies.c

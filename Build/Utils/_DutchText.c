@@ -2604,26 +2604,23 @@ const wchar_t* 		AimSortText[] =
 	// Title for the way to sort
 	L"Sort. op:",
 
-	// sort by...
-
-	L"Prijs",
-	L"Ervaring",
-	L"Trefzekerheid",
-	L"Medisch",
-	L"Explosieven",
-	L"Technisch",
-
 	//Text of the links to other AIM pages
 
 	L"Bekijk portretfotoindex van huurlingen",
 	L"Bekijk het huurlingendossier",
-	L"Bekijk de A.I.M. Veteranen",
-
-	// text to display how the entries will be sorted
-
-	L"Oplopend",
-	L"Aflopend",
+	L"Bekijk de A.I.M. Veteranen"
 };
+
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Prijs";
+const wchar_t str_aim_sort_experience[]   = L"Ervaring";
+const wchar_t str_aim_sort_marksmanship[] = L"Trefzekerheid";
+const wchar_t str_aim_sort_medical[]      = L"Medisch";
+const wchar_t str_aim_sort_explosives[]   = L"Explosieven";
+const wchar_t str_aim_sort_mechanical[]   = L"Technisch";
+const wchar_t str_aim_sort_ascending[]    = L"Oplopend";
+const wchar_t str_aim_sort_descending[]   = L"Aflopend";
 
 
 //Aim Policies.c

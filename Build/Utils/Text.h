@@ -753,19 +753,21 @@ enum
 {
 	AIM_AIMMEMBERS,
 	SORT_BY,
-	PRICE,
-	EXPERIENCE,
-	AIMMARKSMANSHIP,
-	AIMMEDICAL,
-	EXPLOSIVES,
-	AIMMECHANICAL,
 	MUGSHOT_INDEX,
 	MERCENARY_FILES,
-	ALUMNI_GALLERY,
-	ASCENDING,
-	DESCENDING
+	ALUMNI_GALLERY
 };
 extern		const wchar_t *AimSortText[];
+
+extern const wchar_t str_aim_sort_price[];
+extern const wchar_t str_aim_sort_experience[];
+extern const wchar_t str_aim_sort_marksmanship[];
+extern const wchar_t str_aim_sort_medical[];
+extern const wchar_t str_aim_sort_explosives[];
+extern const wchar_t str_aim_sort_mechanical[];
+extern const wchar_t str_aim_sort_ascending[];
+extern const wchar_t str_aim_sort_descending[];
+
 
 //Aim Policies.c
 enum

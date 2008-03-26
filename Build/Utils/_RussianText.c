@@ -2604,26 +2604,23 @@ const wchar_t* AimSortText[] =
 	// Title for the way to sort
 	L"Сортировка:",
 
-	// sort by...
-
-	L"Цена",
-	L"Опытность",
-	L"Меткость",
-	L"Медицина",
-	L"Взрывчатка",
-	L"Механика",
-
 	//Text of the links to other AIM pages
 
 	L"Просмотреть фото наемников",
 	L"Просмотреть характеристики наемников",
-	L"Просмотреть галерею бывших членов А.I.M.",
-
-	// text to display how the entries will be sorted
-
-	L"по возрастанию",
-	L"по убыванию   "
+	L"Просмотреть галерею бывших членов А.I.M."
 };
+
+
+// text to display how the entries will be sorted
+const wchar_t str_aim_sort_price[]        = L"Цена";
+const wchar_t str_aim_sort_experience[]   = L"Опытность";
+const wchar_t str_aim_sort_marksmanship[] = L"Меткость";
+const wchar_t str_aim_sort_medical[]      = L"Медицина";
+const wchar_t str_aim_sort_explosives[]   = L"Взрывчатка";
+const wchar_t str_aim_sort_mechanical[]   = L"Механика";
+const wchar_t str_aim_sort_ascending[]    = L"по возрастанию";
+const wchar_t str_aim_sort_descending[]   = L"по убыванию   ";
 
 
 //Aim Policies.c
