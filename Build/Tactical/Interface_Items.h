@@ -66,7 +66,7 @@ BOOLEAN		gfInItemDescBox;
 
 BOOLEAN InItemDescriptionBox(void);
 void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex);
-BOOLEAN InternalInitItemDescriptionBox( OBJECTTYPE *pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE *pSoldier );
+void InternalInitItemDescriptionBox(OBJECTTYPE* pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
 void InitKeyItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex);
 void RenderItemDescriptionBox(void);
 void HandleItemDescriptionBox( BOOLEAN *pfDirty );

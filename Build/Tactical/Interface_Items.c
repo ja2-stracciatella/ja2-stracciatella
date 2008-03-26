@@ -2025,7 +2025,7 @@ static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BOOLEAN ReloadItemDesc(void);
 
 
-BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
+void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
 {
 	// Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -2132,11 +2132,11 @@ BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, cons
 
 	// Load graphic
 	guiItemDescBox = AddVideoObjectFromFile("INTERFACE/infobox.sti");
-	CHECKF(guiItemDescBox != NO_VOBJECT);
+	CHECKV(guiItemDescBox != NO_VOBJECT);
 	guiMapItemDescBox = AddVideoObjectFromFile("INTERFACE/iteminfoc.STI");
-	CHECKF(guiMapItemDescBox != NO_VOBJECT);
+	CHECKV(guiMapItemDescBox != NO_VOBJECT);
 	guiBullet = AddVideoObjectFromFile("INTERFACE/bullet.STI");
-	CHECKF(guiBullet != NO_VOBJECT);
+	CHECKV(guiBullet != NO_VOBJECT);
 
 	if (o->usItem != MONEY)
 	{
@@ -2162,7 +2162,7 @@ BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, cons
 		gRemoveMoney.uiMoneyRemoving  = 0;
 
 		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
-		CHECKF(guiMoneyGraphicsForDescBox != NO_VOBJECT);
+		CHECKV(guiMoneyGraphicsForDescBox != NO_VOBJECT);
 
 		// Create buttons for the money
 		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
@@ -2198,7 +2198,7 @@ BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, cons
 	fInterfacePanelDirty = DIRTYLEVEL2;
 	gfInItemDescBox      = TRUE;
 
-	CHECKF(ReloadItemDesc());
+	CHECKV(ReloadItemDesc());
 
 	gpAttachSoldier = (gpItemPointer ? gpItemPointerSoldier : s);
 	// Store attachments that item originally had
@@ -2230,8 +2230,6 @@ BOOLEAN InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, cons
 		SetFactTrue(FACT_ATTACHED_ITEM_BEFORE);
 		gfItemDescHelpTextOffset = TRUE;
 	}
-
-	return TRUE;
 }
 
 
