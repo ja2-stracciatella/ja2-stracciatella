@@ -356,33 +356,25 @@ static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 }
 
 
+static void SetSortOrder(const UINT8 order)
+{
+	if (gubCurrentListMode == order) return;
+	gubCurrentListMode = order;
+	DrawSelectLight(order, AIM_SORT_ON);
+	DrawSelectLight(gubOldListMode, AIM_SORT_OFF);
+	gubOldListMode = order;
+}
+
+
 static void SelectAscendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentListMode != AIM_ASCEND)
-		{
-			gubCurrentListMode = AIM_ASCEND;
-			DrawSelectLight(gubCurrentListMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldListMode, AIM_SORT_OFF);
-			gubOldListMode = gubCurrentListMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortOrder(AIM_ASCEND);
 }
 
 
 static void SelectDescendBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentListMode != AIM_DESCEND )
-		{
-			gubCurrentListMode = AIM_DESCEND;
-			DrawSelectLight(gubCurrentListMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldListMode, AIM_SORT_OFF);
-			gubOldListMode = gubCurrentListMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortOrder(AIM_DESCEND);
 }
 
 
