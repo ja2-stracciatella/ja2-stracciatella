@@ -80,7 +80,7 @@ void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sStr
 void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length, UINT8* pubFontColor);
 
 // mapscreen wrapper to init the item description box
-BOOLEAN MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
+void MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
 
 // rebuild contract box this character
 void RebuildContractBoxForMerc(const SOLDIERTYPE* s);

@@ -5167,17 +5167,13 @@ static void MAPInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-BOOLEAN MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier)
+void MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier)
 {
-	BOOLEAN fRet;
-
-	fRet = InternalInitItemDescriptionBox( pObject, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, ubStatusIndex, pSoldier );
+	InternalInitItemDescriptionBox(pObject, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, ubStatusIndex, pSoldier);
 
 	fShowDescriptionFlag=TRUE;
 	fTeamPanelDirty=TRUE;
 	fInterfacePanelDirty = DIRTYLEVEL2;
-
-	return( fRet );
 }
 
 
