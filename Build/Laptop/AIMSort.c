@@ -313,93 +313,49 @@ static void SelectToArchiveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+static void SetSortCriterion(const UINT8 criterion)
+{
+	if (gubCurrentSortMode == criterion) return;
+	gubCurrentSortMode = criterion;
+	DrawSelectLight(criterion, AIM_SORT_ON);
+	DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
+	gubOldSortMode = criterion;
+}
+
+
 static void SelectPriceBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 0)
-		{
-			gubCurrentSortMode = 0;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(0);
 }
 
 
 static void SelectExpBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 1)
-		{
-			gubCurrentSortMode = 1;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(1);
 }
 
 
 static void SelectMarkBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 2)
-		{
-			gubCurrentSortMode = 2;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(2);
 }
 
 
 static void SelectMedicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 3)
-		{
-			gubCurrentSortMode = 3;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(3);
 }
 
 
 static void SelectExplosiveBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 4)
-		{
-			gubCurrentSortMode = 4;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(4);
 }
 
 
 static void SelectMechanicalBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		if(gubCurrentSortMode != 5)
-		{
-			gubCurrentSortMode = 5;
-			DrawSelectLight(gubCurrentSortMode, AIM_SORT_ON);
-			DrawSelectLight(gubOldSortMode, AIM_SORT_OFF);
-			gubOldSortMode = gubCurrentSortMode;
-		}
-	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP) SetSortCriterion(5);
 }
 
 
