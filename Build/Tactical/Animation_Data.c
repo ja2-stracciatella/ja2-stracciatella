@@ -802,62 +802,41 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 
 static BOOLEAN LoadAnimationProfiles(void)
 {
-//	FILE *			pInput;
-	HWFILE			pInput;
-	INT32				iProfileCount, iDirectionCount, iTileCount;
-	ANIM_PROF_DIR			*pProfileDirs;
+	const HWFILE f = FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ);
+	if (!f) goto fail;
 
-//	pInput = fopen( ANIMPROFILEFILENAME, "rb" );
-	pInput = FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ);
+	if (!FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) goto fail_close;
+	ANIM_PROF* const aps = MemAlloc(gubNumAnimProfiles * sizeof(*gpAnimProfiles));
+	gpAnimProfiles = aps;
 
-	if ( !pInput )
+	for (INT32 profile_idx = 0; profile_idx < gubNumAnimProfiles; ++profile_idx)
 	{
-		return( FALSE );
-	}
-
-	// Writeout profile data!
-//	if ( fread( &gubNumAnimProfiles, sizeof( gubNumAnimProfiles ), 1, pInput ) != 1 )
-	if (!FileRead(pInput, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) return FALSE;
-
-	// Malloc profile data!
-	gpAnimProfiles = MemAlloc( gubNumAnimProfiles * sizeof( ANIM_PROF ) );
-
-	// Loop profiles
-	for ( iProfileCount = 0; iProfileCount < gubNumAnimProfiles; iProfileCount++ )
-	{
-		// Loop directions
-		for ( iDirectionCount = 0; iDirectionCount < 8; iDirectionCount++ )
+		ANIM_PROF* const ap = &aps[profile_idx];
+		for (INT32 direction_idx = 0; direction_idx < 8; ++direction_idx)
 		{
-			// Get prodile direction pointer
-			pProfileDirs = &( gpAnimProfiles[ iProfileCount ].Dirs[ iDirectionCount ] );
+			ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
 
-			// Read # tiles
-//			if ( fread( &pProfileDirs->ubNumTiles, sizeof( UINT8 ), 1, pInput ) != 1 )
-			if (!FileRead(pInput, &pProfileDirs->ubNumTiles, sizeof(UINT8))) return FALSE;
+			if (!FileRead(f, &apd->ubNumTiles, sizeof(UINT8))) goto fail_close;
+			ANIM_PROF_TILE* const apts = MemAlloc(sizeof(*apd->pTiles) * apd->ubNumTiles);
+			apd->pTiles = apts;
 
-			// Malloc space for tiles!
-			pProfileDirs->pTiles = MemAlloc( sizeof( ANIM_PROF_TILE ) * pProfileDirs->ubNumTiles );
-
-			// Loop tiles
-			for ( iTileCount = 0; iTileCount < pProfileDirs->ubNumTiles; iTileCount++ )
+			for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)
 			{
-//				if ( fread( &pProfileDirs->pTiles[ iTileCount ].usTileFlags, sizeof( UINT16 ), 1, pInput ) != 1 )
-				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].usTileFlags, sizeof(UINT16))) return FALSE;
-
-//				if ( fread( &pProfileDirs->pTiles[ iTileCount ].bTileX, sizeof( INT8 ), 1, pInput ) != 1 )
-				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].bTileX, sizeof(INT8))) return FALSE;
-
-//				if ( fread( &pProfileDirs->pTiles[ iTileCount ].bTileY, sizeof( INT8 ), 1, pInput ) != 1 )
-				if (!FileRead(pInput, &pProfileDirs->pTiles[iTileCount].bTileY, sizeof(INT8))) return FALSE;
+				ANIM_PROF_TILE* const apt = &apts[tile_idx];
+				if (!FileRead(f, &apt->usTileFlags, sizeof(UINT16))) goto fail_close;
+				if (!FileRead(f, &apt->bTileX,      sizeof(INT8)))   goto fail_close;
+				if (!FileRead(f, &apt->bTileY,      sizeof(INT8)))   goto fail_close;
 			}
-
 		}
 	}
 
-//	fclose( pInput );
-	FileClose( pInput );
+	FileClose(f);
+	return TRUE;
 
-	return( TRUE );
+fail_close:
+	FileClose(f);
+fail:
+	return FALSE;
 }
 
 
