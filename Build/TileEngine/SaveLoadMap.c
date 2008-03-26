@@ -279,8 +279,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 		ReSetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
 	}
 
-	FileClose( hFile );
-
 	//Free the memory used for the temp array
 	MemFree( pTempArrayOfMaps );
 	pTempArrayOfMaps = NULL;

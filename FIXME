@@ -93,7 +93,6 @@ LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
 LightSave(): complicated
-LoadAllMapChangesFromMapTempFileAndApplyThem(): Double FileClose()?
 LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
 LoadAmbientControlFile(): complicated, pointless strcpy()
 LoadAnimationProfiles(): file leak on error
