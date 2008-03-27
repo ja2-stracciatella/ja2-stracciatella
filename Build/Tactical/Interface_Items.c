@@ -2560,26 +2560,27 @@ void RenderItemDescriptionBox(void)
 		const AttachmentGfxInfo* const agi = (in_map ? &g_map_attachment_info : &g_attachment_info);
 		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
-			if (obj->usAttachItem[i] == NOTHING) continue;
-
 			const INT16 x = dx + agi->slot[i].iX;
 			const INT16 y = dy + agi->slot[i].iY;
 
-			const INT16 item_x = agi->item_box.x + x;
-			const INT16 item_y = agi->item_box.y + y;
-			const INT16 item_w = agi->item_box.w;
-			const INT16 item_h = agi->item_box.h;
-			INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
+			if (obj->usAttachItem[i] != NOTHING)
+			{
+				const INT16 item_x = agi->item_box.x + x;
+				const INT16 item_y = agi->item_box.y + y;
+				const INT16 item_w = agi->item_box.w;
+				const INT16 item_h = agi->item_box.h;
+				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
 
-			const INT16 bar_x = agi->bar_box.x + x;
-			const INT16 bar_h = agi->bar_box.h;
-			const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
-			DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				const INT16 bar_x = agi->bar_box.x + x;
+				const INT16 bar_h = agi->bar_box.h;
+				const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+			}
 
 			if (fHatchOutAttachments)
 			{
 				const UINT16 hatch_w = agi->item_box.x + agi->item_box.w;
-				const UINT16 hatch_h = agi->item_box.x + agi->item_box.w;
+				const UINT16 hatch_h = agi->item_box.y + agi->item_box.h;
 				DrawHatchOnInventory(guiSAVEBUFFER, x, y, hatch_w, hatch_h);
 			}
 		}
