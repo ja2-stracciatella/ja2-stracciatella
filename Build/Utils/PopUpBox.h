@@ -11,7 +11,7 @@
 
 #define NO_POPUP_BOX NULL
 
-PopUpBox* CreatePopUpBox(SGPPoint Position, UINT32 uiFlags, SGPVSurface*);
+PopUpBox* CreatePopUpBox(SGPPoint Position, UINT32 uiFlags, SGPVSurface*, const SGPVObject* border);
 
 void SetMargins(PopUpBox*, UINT32 uiLeft, UINT32 uiTop, UINT32 uiBottom, UINT32 uiRight);
 UINT32 GetTopMarginSize(const PopUpBox*);
@@ -22,7 +22,6 @@ void SetBoxX(PopUpBox*, INT16 x);
 void SetBoxY(PopUpBox*, INT16 y);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
 const SGPBox* GetBoxArea(const PopUpBox*);
-void SetBorderType(PopUpBox*, const SGPVObject* border);
 void SetBackGroundSurface(PopUpBox*, SGPVSurface*);
 void AddMonoString(PopUpBox*, const wchar_t* pString);
 void SetBoxFont(PopUpBox*, UINT32 font);

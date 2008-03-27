@@ -3028,10 +3028,7 @@ static void CreatePopUpBoxForMovementBox(void)
 {
 	// create the pop up box and mouse regions for movement list
 
-	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghMoveBox,guiPOPUPBORDERS);
+	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS);
 
  // background texture
  SetBackGroundSurface(ghMoveBox, guiPOPUPTEX);

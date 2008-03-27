@@ -195,10 +195,7 @@ void CreateDestroyTownInfoBox( void )
 
 static void CreateTownInfoBox(void)
 {
-	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER);
-
- // border type?
- SetBorderType(ghTownMineBox, guiPOPUPBORDERS);
+	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS);
 
  // background texture
  SetBackGroundSurface(ghTownMineBox, guiPOPUPTEX);

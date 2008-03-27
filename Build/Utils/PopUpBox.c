@@ -87,7 +87,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -99,8 +99,9 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 			memset(box, 0, sizeof(*box));
 
 			SetBoxXY(box, Position.iX, Position.iY);
-			box->uiFlags  = uiFlags;
-			box->uiBuffer = buffer;
+			box->uiFlags            = uiFlags;
+			box->uiBuffer           = buffer;
+			box->iBorderObjectIndex = border;
 
 			*i = box;
 			return box;
@@ -199,12 +200,6 @@ void SetBoxY(PopUpBox* const box, const INT16 y)
 const SGPBox* GetBoxArea(const PopUpBox* const box)
 {
 	return &box->pos;
-}
-
-
-void SetBorderType(PopUpBox* const box, const SGPVObject* const border)
-{
-	box->iBorderObjectIndex = border;
 }
 
 
