@@ -48,9 +48,6 @@ static UINT32 guiMapButtonInventory[2];
 static UINT16 sTotalButtonWidth = 0;
 
 
-// add "sector" line text to any popup box
-static void AddSectorToBox(void);
-
 // callback to turn on sector invneotry list
 static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason);
@@ -74,135 +71,100 @@ void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 }
 
 
-static void AddCommonInfoToBox(void);
-static void AddInventoryButtonForMapPopUpBox(void);
-static void AddItemsInSectorToBox(void);
-static void AddTextToBlankSectorBox(void);
-static void AddTextToMineBox(void);
-static void AddTextToTownBox(void);
-static void CreateTownInfoBox(void);
+static void AddCommonInfoToBox(PopUpBox*);
+static void AddInventoryButtonForMapPopUpBox(const PopUpBox*);
+static void AddItemsInSectorToBox(PopUpBox*);
+static void AddSectorToBox(PopUpBox*);
+static void AddTextToBlankSectorBox(PopUpBox*);
+static void AddTextToMineBox(PopUpBox*);
+static void AddTextToTownBox(PopUpBox*);
 static void MinWidthOfTownMineInfoBox(void);
-static void PositionTownMineInfoBox(void);
+static void PositionTownMineInfoBox(PopUpBox*);
 static void RemoveInventoryButtonForMapPopUpBox(void);
 
 
-void CreateDestroyTownInfoBox( void )
+void CreateDestroyTownInfoBox(void)
 {
-	// create destroy pop up box for town/mine info
-	static BOOLEAN fCreated = FALSE;
-	INT8 bTownId = 0;
-
-	if( ( fCreated == FALSE ) && ( fShowTownInfo == TRUE ) )
+	PopUpBox* box = ghTownMineBox;
+	if (box == NO_POPUP_BOX && fShowTownInfo)
 	{
-		// create pop up box
-		CreateTownInfoBox( );
+		box = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6, 2);
+		ghTownMineBox = box;
 
 		// decide what kind of text to add to display
-
-		if ( bCurrentTownMineSectorZ == 0 )
+		if (bCurrentTownMineSectorZ == 0)
 		{
 			// only show the mine info when mines button is selected, otherwise we need to see the sector's regular town info
-			if ( ( IsThereAMineInThisSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) == TRUE) && fShowMineFlag )
+			if (fShowMineFlag && IsThereAMineInThisSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY))
 			{
-				AddTextToMineBox( );
+				AddTextToMineBox(box);
 			}
 			else
 			{
-				bTownId = GetTownIdForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
-
 				// do we add text for the town box?
-				if( bTownId != BLANK_SECTOR )
+				const INT8 bTownId = GetTownIdForSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+				if (bTownId != BLANK_SECTOR)
 				{
 					// add text for town box
-					AddTextToTownBox( );
+					AddTextToTownBox(box);
 				}
 				else
 				{
 					// just a blank sector (handles SAM sites if visible)
-					AddTextToBlankSectorBox( );
+					AddTextToBlankSectorBox(box);
 				}
 			}
 
 			// add "militia", "militia training", "control" "enemy forces", etc. lines text to any popup box
-			AddCommonInfoToBox();
+			AddCommonInfoToBox(box);
 		}
-		else	// underground
+		else // underground
 		{
-			// sector
-			AddSectorToBox();
+			AddSectorToBox(box);
 		}
 
-		AddItemsInSectorToBox();
+		AddItemsInSectorToBox(box);
 
-
-		// set font type
-    SetBoxFont(ghTownMineBox, BLOCKFONT2);
-
-		// set highlight color
-		SetBoxHighLight(ghTownMineBox, FONT_WHITE);
-
-		SetBoxSecondColumnForeground( ghTownMineBox, FONT_WHITE );
-		SetBoxSecondColumnBackground( ghTownMineBox, FONT_BLACK );
-		SetBoxSecondColumnHighLight( ghTownMineBox, FONT_WHITE );
-		SetBoxSecondColumnShade( ghTownMineBox, FONT_BLACK );
-		SetBoxSecondColumnMinimumOffset( ghTownMineBox, 20 );
-
-		// unhighlighted color
-		SetBoxForeground(ghTownMineBox, FONT_YELLOW);
-
-		// background color
-		SetBoxBackground(ghTownMineBox, FONT_BLACK);
-
-		// shaded color..for darkened text
-		SetBoxShade( ghTownMineBox, FONT_BLACK );
+    SetBoxFont(                     box, BLOCKFONT2);
+		SetBoxHighLight(                box, FONT_WHITE);
+		SetBoxSecondColumnForeground(   box, FONT_WHITE);
+		SetBoxSecondColumnBackground(   box, FONT_BLACK);
+		SetBoxSecondColumnHighLight(    box, FONT_WHITE);
+		SetBoxSecondColumnShade(        box, FONT_BLACK);
+		SetBoxSecondColumnMinimumOffset(box, 20);
+		SetBoxForeground(               box, FONT_YELLOW);
+		SetBoxBackground(               box, FONT_BLACK);
+		SetBoxShade(                    box, FONT_BLACK);
 
 		// give title line (0) different color from the rest
-		SetBoxLineForeground( ghTownMineBox, 0, FONT_LTGREEN );
+		SetBoxLineForeground(box, 0, FONT_LTGREEN);
 
-		// ressize box to text
 		MinWidthOfTownMineInfoBox();
-		SpecifyBoxMinWidth(ghTownMineBox, sTotalButtonWidth + 30);
-		ResizeBoxToText( ghTownMineBox );
+		SpecifyBoxMinWidth(box, sTotalButtonWidth + 30);
+		ResizeBoxToText(box);
 
-		ShowBox( ghTownMineBox );
+		ShowBox(box);
 
-		// now position box
-		PositionTownMineInfoBox( );
-
-		// now add the button
-		AddInventoryButtonForMapPopUpBox( );
-
-		fCreated = TRUE;
+		PositionTownMineInfoBox(box);
+		AddInventoryButtonForMapPopUpBox(box);
 	}
-	else if( ( fCreated == TRUE ) && ( fShowTownInfo == FALSE ) )
+	else if (box != NO_POPUP_BOX && !fShowTownInfo)
 	{
-		const SGPBox area = *GetBoxArea(ghTownMineBox);
+		const SGPBox area = *GetBoxArea(box);
 
-		// destroy pop up box
-		RemoveBox( ghTownMineBox );
+		RemoveBox(box);
 		ghTownMineBox = NO_POPUP_BOX;
 
-		// remove inventory button
-		RemoveInventoryButtonForMapPopUpBox( );
+		RemoveInventoryButtonForMapPopUpBox();
 
-		// restore background
 		RestoreExternBackgroundRect(area.x, area.y, area.w, area.h + 3);
-
-		fCreated = FALSE;
 	}
-}
-
-
-static void CreateTownInfoBox(void)
-{
-	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6, 2);
 }
 
 
 // adds text to town info box
-static void AddTextToTownBox(void)
+static void AddTextToTownBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	UINT8 ubTownId = 0;
 	UINT16 usTownSectorIndex;
@@ -237,8 +199,7 @@ static void AddTextToTownBox(void)
 	// blank line
 	AddMonoString(box, L"");
 
-	// sector
-	AddSectorToBox();
+	AddSectorToBox(box);
 
 	// town size
 	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 0 ] );
@@ -287,9 +248,8 @@ static void AddTextToTownBox(void)
 
 
 // adds text to mine info box
-static void AddTextToMineBox(void)
+static void AddTextToMineBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	UINT8 ubMineIndex;
 	UINT8 ubTown;
 	CHAR16 wString[ 64 ];
@@ -303,9 +263,7 @@ static void AddTextToMineBox(void)
 	// blank line
 	AddMonoString(box, L"");
 
-
-	// sector
-	AddSectorToBox();
+	AddSectorToBox(box);
 
 	// mine status
 	swprintf( wString, lengthof(wString), L"%ls:", pwMineStrings[ 9 ]);
@@ -411,9 +369,8 @@ static void AddTextToMineBox(void)
 
 
 // add text to non-town/non-mine the other boxes
-static void AddTextToBlankSectorBox(void)
+static void AddTextToBlankSectorBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	UINT16 usSectorValue = 0;
 
 	// get the sector value
@@ -435,14 +392,13 @@ static void AddTextToBlankSectorBox(void)
 	// blank line
 	AddMonoString(box, L"");
 
-	// sector
-	AddSectorToBox();
+	AddSectorToBox(box);
 }
 
 
-static void AddSectorToBox(void)
+// add "sector" line text to any popup box
+static void AddSectorToBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	CHAR16 wString2[ 10 ];
 
@@ -461,9 +417,8 @@ static void AddSectorToBox(void)
 }
 
 
-static void AddCommonInfoToBox(void)
+static void AddCommonInfoToBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 	BOOLEAN fUnknownSAMSite = FALSE;
 	UINT8 ubMilitiaTotal = 0;
@@ -567,9 +522,8 @@ static void AddCommonInfoToBox(void)
 }
 
 
-static void AddItemsInSectorToBox(void)
+static void AddItemsInSectorToBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghTownMineBox;
 	CHAR16 wString[ 64 ];
 
 	// items in sector (this works even for underground)
@@ -583,13 +537,13 @@ static void AddItemsInSectorToBox(void)
 
 
 // position town/mine info box on the screen
-static void PositionTownMineInfoBox(void)
+static void PositionTownMineInfoBox(PopUpBox* const box)
 {
 	// position the box based on x and y of the selected sector
 	INT16 sX = 0;
 	INT16 sY = 0;
   GetScreenXYFromMapXY(bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
-	const SGPBox* const area = GetBoxArea(ghTownMineBox);
+	const SGPBox* const area = GetBoxArea(box);
 
 	// now position box - the x axis
 	INT16 x = sX;
@@ -601,7 +555,7 @@ static void PositionTownMineInfoBox(void)
 	if (y           < MapScreenRect.iTop)    y = MapScreenRect.iTop + 5;
 	if (y + area->h > MapScreenRect.iBottom) y = MapScreenRect.iBottom - area->h - 8;
 
-	SetBoxXY(ghTownMineBox, x, y);
+	SetBoxXY(box, x, y);
 }
 
 
@@ -614,7 +568,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 }
 
 
-static void AddInventoryButtonForMapPopUpBox(void)
+static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 {
 	// load the button
 	SGPVObject* const uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
@@ -623,7 +577,7 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiObject, 0);
 	INT16 sWidthA = pTrav->usWidth;
 
-	const SGPBox* const area = GetBoxArea(ghTownMineBox);
+	const SGPBox* const area = GetBoxArea(box);
 	INT16         const dx   = (area->w - sTotalButtonWidth) / 3;
 	INT16               x    = area->x + dx;
 	INT16         const y    = area->y + area->h - (BOX_BUTTON_HEIGHT + 5);
