@@ -172,9 +172,6 @@ void CreateDestroyTownInfoBox( void )
 		// now add the button
 		AddInventoryButtonForMapPopUpBox( );
 
-		// now position box
-		PositionTownMineInfoBox( );
-
 		fCreated = TRUE;
 	}
 	else if( ( fCreated == TRUE ) && ( fShowTownInfo == FALSE ) )
