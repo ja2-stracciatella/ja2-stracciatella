@@ -87,7 +87,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -103,6 +103,10 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 			box->uiBuffer           = buffer;
 			box->iBorderObjectIndex = border;
 			box->iBackGroundSurface = background;
+			box->uiLeftMargin       = margin_l;
+			box->uiRightMargin      = margin_r;
+			box->uiTopMargin        = margin_t;
+			box->uiBottomMargin     = margin_b;
 
 			*i = box;
 			return box;
@@ -112,16 +116,6 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 	// ran out of available popup boxes - probably not freeing them up right!
 	Assert(0);
 	return NO_POPUP_BOX;
-}
-
-
-void SetMargins(PopUpBox* const box, const UINT32 uiLeft, const UINT32 uiTop, const UINT32 uiBottom, const UINT32 uiRight)
-{
-	box->uiLeftMargin   = uiLeft;
-	box->uiRightMargin  = uiRight;
-	box->uiTopMargin    = uiTop;
-	box->uiBottomMargin = uiBottom;
-	box->fUpdated       = FALSE;
 }
 
 

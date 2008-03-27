@@ -195,10 +195,7 @@ void CreateDestroyTownInfoBox( void )
 
 static void CreateTownInfoBox(void)
 {
-	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX);
-
- // margin sizes
-	SetMargins(ghTownMineBox, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6);
+	ghTownMineBox = CreatePopUpBox(TownMinePosition, 0, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 8 + BOX_BUTTON_HEIGHT, 6);
 
  // space between lines
  SetLineSpace(ghTownMineBox, 2);
