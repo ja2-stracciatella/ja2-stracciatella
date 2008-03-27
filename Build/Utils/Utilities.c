@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "HImage.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "VObject.h"
 #include "FileMan.h"
@@ -11,36 +12,32 @@
 #include "VSurface.h"
 
 
-BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile )
+BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
 {
-  HWFILE     hFileHandle;
-	BYTE			 bColHeader[ 8 ];
-	UINT32		 cnt;
-
-	// Open and read in the file
-	hFileHandle = FileOpen(ColFile, FILE_ACCESS_READ);
-	if (hFileHandle == 0)
+	const HWFILE f = FileOpen(col_file, FILE_ACCESS_READ);
+	if (f == 0)
 	{
-		// Return FALSE w/ debug
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Cannot open COL file");
-		return( FALSE );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot open COL file");
+		return FALSE;
 	}
 
-	// Skip header
-  FileRead(hFileHandle, bColHeader, sizeof(bColHeader));
-
-	// Read in a palette entry at a time
-	for ( cnt = 0; cnt < 256; cnt++ )
+	BYTE data[776];
+	const BOOLEAN ret = FileRead(f, data, sizeof(data));
+	if (ret)
 	{
-	  FileRead(hFileHandle, &pPalette[cnt].peRed,   sizeof(UINT8));
-	  FileRead(hFileHandle, &pPalette[cnt].peGreen, sizeof(UINT8));
-	  FileRead(hFileHandle, &pPalette[cnt].peBlue,  sizeof(UINT8));
+		const BYTE* d = data;
+		EXTR_SKIP(d, 8); // skip header
+		for (UINT i = 0; i != 256; ++i)
+		{
+			EXTR_U8(d, pal[i].peRed)
+			EXTR_U8(d, pal[i].peGreen)
+			EXTR_U8(d, pal[i].peBlue)
+		}
+		Assert(d == endof(data));
 	}
 
-	// Close file
-	FileClose( hFileHandle );
-
-	return( TRUE );
+	FileClose(f);
+	return ret;
 }
 
 
