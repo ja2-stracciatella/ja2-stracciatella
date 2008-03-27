@@ -356,7 +356,6 @@ BOOLEAN fMapPanelDirty=TRUE;
 BOOLEAN fTeamPanelDirty = TRUE;
 BOOLEAN fCharacterInfoPanelDirty = TRUE;
 BOOLEAN fReDrawFace=FALSE;
-BOOLEAN fFirstTimeInMapScreen = TRUE;
 BOOLEAN fShowInventoryFlag = FALSE;
 BOOLEAN fMapInventoryItem=FALSE;
 BOOLEAN fShowDescriptionFlag=FALSE;
@@ -2272,11 +2271,6 @@ UINT32 MapScreenHandle(void)
 		// reset all selected character flags
 		ResetAllSelectedCharacterModes( );
 
-		if( fFirstTimeInMapScreen == TRUE )
-		{
-			fFirstTimeInMapScreen = FALSE;
-		}
-
 		fShowMapInventoryPool = FALSE;
 
 		// init character list - set all values in the list to 0
@@ -2336,19 +2330,6 @@ UINT32 MapScreenHandle(void)
 
 		FillSurface(guiSAVEBUFFER, Get16BPPColor(RGB_NEAR_BLACK));
 		FillSurface(FRAME_BUFFER,  Get16BPPColor(RGB_NEAR_BLACK));
-
-		if( ( fFirstTimeInMapScreen == TRUE ) && ( AnyMercsHired( ) == FALSE ) )
-		{
-			// render both panels for the restore
-			RenderMapRegionBackground( );
-			RenderTeamRegionBackground( );
-
-			// now do the warning box
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapErrorString[ 4 ], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-		}
-
-
-		fFirstTimeInMapScreen = FALSE;
 
 		if( gpCurrentTalkingFace != NULL )
 		{

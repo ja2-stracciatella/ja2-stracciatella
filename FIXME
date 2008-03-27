@@ -204,13 +204,13 @@ gTacticalStatus.ubEngagedInConvFromActionMercID, ENGAGED_IN_CONV: redundant?
 gTacticalStatus.ubSpottersCalledForBy: once != NOBODY never gets NOBODY again
 gTileTypeLogicalHeight[]: always 1 (memset)?
 gTileTypeLogicalHeight[]: definition not used in file
+gWhoThrewRock: useful?
 gbSAMGraphicList[]: definition not used in file
 gbSkillTraitBonus[]: definition not used in file
 gfDrawPathPoints: always FALSE, debug
 gfItemDescHelpTextOffset: once TRUE never gets FALSE again
 gfProgBarActive: once TRUE it never changes anymore
 gsRadarY: always RADAR_WINDOW_TM_Y?
-gWhoThrewRock: useful?
 gszCivGroupNames[]: move declaration
 gszFilename: wchar_t[] -> char[]?
 gubAnimSurfaceCorpseID: static if possible
@@ -219,6 +219,7 @@ gubWorldRoomHidden: static?
 guiMemTotal: remove
 guiPOPUPTEX: load probably unnecessary in MapScreen.c
 gzFilename: wchar_t[] -> char[]?
+pMapErrorString[4]: unused
 pMapInventoryErrorString[0]: probably unused
 pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?

@@ -240,7 +240,7 @@ typedef struct
 
 	UINT8		ubSMCurrentMercID;
 
-	BOOLEAN	fFirstTimeInMapScreen;
+	BOOLEAN	fFirstTimeInMapScreen; // XXX HACK000B
 
 	BOOLEAN	fDisableDueToBattleRoster;
 
@@ -3069,9 +3069,6 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 	else
 		sGeneralInfo.ubSMCurrentMercID = 255;
 
-	//Save the fact that it is the first time in mapscreen
-	sGeneralInfo.fFirstTimeInMapScreen = fFirstTimeInMapScreen;
-
 	//save map screen disabling buttons
 	sGeneralInfo.fDisableDueToBattleRoster = fDisableDueToBattleRoster;
 	sGeneralInfo.fDisableMapInterfaceDueToBattle = fDisableMapInterfaceDueToBattle;
@@ -3302,9 +3299,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
 	}
 	*/
-
-	//Restore the fact that it is the first time in mapscreen
-	fFirstTimeInMapScreen = sGeneralInfo.fFirstTimeInMapScreen;
 
 	//Load map screen disabling buttons
 	fDisableDueToBattleRoster = sGeneralInfo.fDisableDueToBattleRoster;

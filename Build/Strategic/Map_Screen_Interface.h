@@ -186,7 +186,6 @@ extern BOOLEAN fShowSquadMenu ;
 extern BOOLEAN fShowContractMenu ;
 extern BOOLEAN fShowRemoveMenu ;
 
-extern BOOLEAN fFirstTimeInMapScreen;
 extern BOOLEAN fLockOutMapScreenInterface;
 
 // The character data structure

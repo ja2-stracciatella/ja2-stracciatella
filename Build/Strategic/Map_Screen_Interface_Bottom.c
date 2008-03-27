@@ -1172,7 +1172,6 @@ BOOLEAN AnyUsableRealMercenariesOnTeam( void )
 #ifdef JA2DEMO
 void HandleLeavingOfMapScreenDuringDemo( void )
 {
-	//fFirstTimeInMapScreen = TRUE;
 	SetPendingNewScreen( GAME_SCREEN );
 }
 #endif
