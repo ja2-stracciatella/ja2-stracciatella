@@ -1755,8 +1755,6 @@ void HandleMAPUILoseCursorFromOtherScreen( void )
 void UpdateMapScreenAssignmentPositions( void )
 {
 	// set the position of the pop up boxes
-	SGPPoint pPoint;
-
 
 	if( guiCurrentScreen != MAP_SCREEN )
 	{
@@ -1808,32 +1806,18 @@ void UpdateMapScreenAssignmentPositions( void )
 
 	if( fShowAssignmentMenu )
 	{
-		GetBoxPosition( ghAssignmentBox, &pPoint);
-		pPoint.iY = giBoxY;
-
-		SetBoxPosition( ghAssignmentBox, pPoint );
-
-		GetBoxPosition( ghEpcBox, &pPoint);
-		pPoint.iY = giBoxY;
-
-		SetBoxPosition( ghEpcBox, pPoint );
+		SetBoxY(ghAssignmentBox, giBoxY);
+		SetBoxY(ghEpcBox,        giBoxY);
 	}
 
 	if( fShowAttributeMenu )
 	{
-		GetBoxPosition( ghAttributeBox, &pPoint);
-
-		pPoint.iY = giBoxY + ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN;
-
-		SetBoxPosition( ghAttributeBox, pPoint );
+		SetBoxY(ghAttributeBox, giBoxY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN);
 	}
 
 	if( fShowRepairMenu )
 	{
-		GetBoxPosition( ghRepairBox, &pPoint);
-		pPoint.iY = giBoxY + ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR;
-
-		SetBoxPosition( ghRepairBox, pPoint );
+		SetBoxY(ghRepairBox, giBoxY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR);
 	}
 }
 
@@ -3103,14 +3087,12 @@ static void CreatePopUpBoxForMovementBox(void)
 	// adjust position to try to keep it in the map area as best as possible
 	if (Position.iX + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
-		Position.iX = max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w);
-		SetBoxPosition( ghMoveBox, Position );
+		SetBoxX(ghMoveBox, max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
 	}
 
 	if (Position.iY + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
-		Position.iY = max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h);
-		SetBoxPosition( ghMoveBox, Position );
+		SetBoxY(ghMoveBox, max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
 	}
 }
 

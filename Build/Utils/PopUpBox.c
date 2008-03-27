@@ -195,6 +195,20 @@ void GetBoxPosition(const PopUpBox* const box, SGPPoint* const Position)
 }
 
 
+void SetBoxX(PopUpBox* const box, const INT16 x)
+{
+	box->pos.x    = x;
+	box->fUpdated = FALSE;
+}
+
+
+void SetBoxY(PopUpBox* const box, const INT16 y)
+{
+	box->pos.y    = y;
+	box->fUpdated = FALSE;
+}
+
+
 const SGPBox* GetBoxArea(const PopUpBox* const box)
 {
 	return &box->pos;

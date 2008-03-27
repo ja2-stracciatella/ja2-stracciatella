@@ -6028,7 +6028,6 @@ static UINT32 GetLastSquadListedInSquadMenu(void);
 static void CreateSquadBox(void)
 {
 	// will create a pop up box for squad selection
-	SGPPoint pPoint;
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
@@ -6055,23 +6054,18 @@ static void CreateSquadBox(void)
 
 	DetermineBoxPositions();
 
-	GetBoxPosition(ghSquadBox, &pPoint);
-	const SGPBox* area = GetBoxArea(ghSquadBox);
-
+	const SGPBox* const area = GetBoxArea(ghSquadBox);
 	if (giBoxY + area->h >= SCREEN_HEIGHT)
 	{
-		pPoint.iY = SquadPosition.iY = SCREEN_HEIGHT - 1 - area->h;
+		SquadPosition.iY = SCREEN_HEIGHT - 1 - area->h;
+		SetBoxY(ghSquadBox, SquadPosition.iY);
 	}
-
-	SetBoxPosition( ghSquadBox, pPoint );
 }
 
 
 static void CreateEPCBox(void)
 {
 	// will create a pop up box for squad selection
-	SGPPoint pPoint;
-
 	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
 
@@ -6085,15 +6079,12 @@ static void CreateEPCBox(void)
 	// resize box to text
 	ResizeBoxToText(ghEpcBox);
 
-	GetBoxPosition(ghEpcBox, &pPoint);
-	const SGPBox* area = GetBoxArea(ghEpcBox);
-
+	const SGPBox* const area = GetBoxArea(ghEpcBox);
 	if (giBoxY + area->h >= SCREEN_HEIGHT)
 	{
-		pPoint.iY = AssignmentPosition.iY = SCREEN_HEIGHT - 1 - area->h;
+		AssignmentPosition.iY = SCREEN_HEIGHT - 1 - area->h;
+		SetBoxY(ghEpcBox, AssignmentPosition.iY);
 	}
-
-	SetBoxPosition(ghEpcBox, pPoint);
 }
 
 
