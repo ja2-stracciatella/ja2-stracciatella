@@ -387,9 +387,6 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 // set up the event of animating a mine sector
 void SetUpAnimationOfMineSectors( INT32 iEvent );
 
-// set up the help text
-void SetUpMapScreenFastHelpText( void );
-
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
 

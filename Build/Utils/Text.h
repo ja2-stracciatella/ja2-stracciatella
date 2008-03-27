@@ -59,7 +59,6 @@ extern const wchar_t *pwMineStrings[];
 extern const wchar_t *pwMiscSectorStrings[];
 extern const wchar_t *pMapInventoryErrorString[];
 extern const wchar_t *pMapInventoryStrings[];
-extern const wchar_t *pMapScreenFastHelpTextList[];
 extern const wchar_t *pMovementMenuStrings[];
 extern const wchar_t *pUpdateMercStrings[];
 extern const wchar_t *pMapScreenBorderButtonHelpText[];

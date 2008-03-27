@@ -1449,22 +1449,6 @@ const wchar_t* pMapInventoryStrings[] =
 };
 
 
-// help text for the user
-
-const wchar_t* pMapScreenFastHelpTextList[] =
-{
-	L"Per cambiare l'incarico di un mercenario, come, ad esempio, cambiare la squadra, dottore o riparare, cliccate dentro la colonna 'Compito'",
-	L"Per assegnare a un mercenario una destinazione in un altro settore, cliccate dentro la colonna 'Dest'",
-	L"Una volta che a un mercenario è stato ordinato di procedere, una compressione di tempo gli permetterà di muoversi.",
-	L"Cliccando di sinistro, selezionerete il settore. Cliccando di sinistro un'altra volta, darete al mercenario ordini di movimento. Cliccando di destro, darete informazioni sommarie al settore.",
-	L"Premete 'h' in questo settore di questa schermata ogni volta che vorrete accedere a questa finestra d'aiuto.",
-	L"Test Text",
-	L"Test Text",
-	L"Test Text",
-	L"Test Text",
-	L"Non potrete fare molto in questa schermata finché non arriverete ad Arulco. Quando avrete definito la vostra squadra, cliccate sul pulsante Compressione di Tempo in basso a destra. Questo diminuirà il tempo necessario alla vostra squadra per raggiungere Arulco.",
-};
-
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =

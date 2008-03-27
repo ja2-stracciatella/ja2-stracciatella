@@ -1410,21 +1410,6 @@ const wchar_t *pMapInventoryStrings[] =
 	L"Zahl der Gegenstände", 		// total number of items in sector
 };
 
-// help text for the user
-const wchar_t *pMapScreenFastHelpTextList[] =
-{
-	L"Um die Aufgabe eines Söldners zu ändern und ihn einem anderen Trupp, einem Reparatur- oder Ärzteteam zuzuweisen, klicken Sie in die 'Aufträge'-Spalte.",
-	L"Um einen Söldner an einen anderen Bestimmungsort zu versetzen, klicken Sie in die 'Aufträge'-Spalte.",
-	L"Wenn ein Söldner seinen Marschbefehl erhalten hat, kann er sich mit dem Zeitraffer schneller bewegen.",
-	L"Die linke Maustaste wählt den Sektor aus. Zweiter Klick auf die linke Maustaste erteilt Marschbefehl an Söldner. Mit der rechten Maustaste erhalten Sie Kurzinfos über den Sektor.",
-	L"Hilfe aufrufen mit Taste 'h'.",
-	L"Test-Text",
-	L"Test-Text",
-	L"Test-Text",
-	L"Test-Text",
-	L"In diesem Bildschirm können Sie nicht viel machen, bevor Sie in Arulco ankommen. Wenn Sie Ihr Team fertiggestellt haben, klicken Sie auf den Zeitraffer-Button unten links. Dadurch vergeht die Zeit schneller, bis Ihr Team in Arulco ankommt.",
-};
-
 // movement menu text
 const wchar_t *pMovementMenuStrings[] =
 {

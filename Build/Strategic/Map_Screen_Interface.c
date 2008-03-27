@@ -71,9 +71,6 @@
 #define MAP_INVEN_POOL_X 300
 #define MAP_INVEN_POOL_Y 300
 
-// the number of help region messages
-#define NUMBER_OF_MAPSCREEN_HELP_MESSAGES 5
-
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
 
@@ -155,34 +152,6 @@ SGPVObject* guiSectorLocatorGraphicID;
 #define ANIMATED_BATTLEICON_FRAME_TIME 80
 #define MAX_FRAME_COUNT_FOR_ANIMATED_BATTLE_ICON 12
 
-
-
-SGPPoint pMapScreenFastHelpLocationList[]={
-	{ 25,200 },
-	{ 150,200 },
-	{ 450,430 },
-	{ 400,200 },
-	{ 250,100 },
-	{ 100,100 },
-	{ 100,100 },
-	{ 100,100 },
-	{ 100,100 },
-	{ 150,200 },
-	{ 100,100 },
-};
-
-INT32 pMapScreenFastHelpWidthList[]={
-	100,
-	100,
-	100,
-	100,
-	100,
-	100,
-	100,
-	100,
-	100,
-	300,
-};
 
 // number of mercs in sector capable of moving
 INT32 giNumberOfSoldiersInSectorMoving = 0;
@@ -2190,7 +2159,7 @@ void HandleShowingOfTacticalInterfaceFastHelpText( void )
 
 	if( fInterfaceFastHelpTextActive )
 	{
-		DisplayFastHelpRegions( pFastHelpMapScreenList, giSizeOfInterfaceFastHelpTextList );
+		DisplayFastHelpRegions(pFastHelpMapScreenList, giSizeOfInterfaceFastHelpTextList);
 
 		PauseGame();
 
@@ -2310,29 +2279,6 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	iH = DisplayWrappedString(iX + 10, iY + 6, pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, MARK_DIRTY);
 
 	InvalidateRegion(  iX, iY, (iX + iW) , (iY + iH + 20 ) );
-}
-
-
-void SetUpMapScreenFastHelpText( void )
-{
-	INT32 iCounter = 0;
-
-	// now run through and display all the fast help text for the mapscreen functional regions
-	for( iCounter = 0; iCounter < NUMBER_OF_MAPSCREEN_HELP_MESSAGES; iCounter++ )
-	{
-		pFastHelpMapScreenList[ iCounter ].iX = pMapScreenFastHelpLocationList[ iCounter ].iX;
-		pFastHelpMapScreenList[ iCounter ].iY = pMapScreenFastHelpLocationList[ iCounter ].iY;
-		pFastHelpMapScreenList[ iCounter ].iW = pMapScreenFastHelpWidthList[ iCounter ];
-		wcscpy( pFastHelpMapScreenList[ iCounter ].FastHelpText, pMapScreenFastHelpTextList[ iCounter ] );
-	}
-
-// DEF: removed cause the help screen will replace the help screen
-/*
-	pFastHelpMapScreenList[ 9 ].iX = pMapScreenFastHelpLocationList[ 9 ].iX;
-	pFastHelpMapScreenList[ 9 ].iY = pMapScreenFastHelpLocationList[ 9 ].iY;
-	pFastHelpMapScreenList[ 9 ].iW = pMapScreenFastHelpWidthList[ 9 ];
-	wcscpy( pFastHelpMapScreenList[ 9 ].FastHelpText, pMapScreenFastHelpTextList[ 9 ] );
-*/
 }
 
 

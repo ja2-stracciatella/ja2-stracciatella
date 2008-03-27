@@ -2061,9 +2061,6 @@ UINT32 MapScreenInit(void)
 	// init palettes for big map
 	InitializePalettesForMap( );
 
-	// set up mapscreen fast help text
-	SetUpMapScreenFastHelpText( );
-
 	// set up leave list arrays for dismissed mercs
 	InitLeaveList( );
 

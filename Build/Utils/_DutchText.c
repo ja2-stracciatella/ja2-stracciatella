@@ -1463,22 +1463,6 @@ const wchar_t* pMapInventoryStrings[] =
 };
 
 
-// help text for the user
-
-const wchar_t* pMapScreenFastHelpTextList[] =
-{
-	L"Om de taken van een huurling te veranderen, zoals team, dokter of repareren, klik dan in de 'Toewijzen'-kolom",
-	L"Om een huurling een ander doel te geven, klik dan in de 'Doel'-kolom",
-	L"Op het moment dat een huurling een reis-order gekregen heeft, kan deze met de tijd-versneller in beweging worden gezet.",
-	L"Links-klikken selecteert de sector. Nogmaals links-klikken geeft de huurling een reisorder. Rechts-klikken geeft sector-informatie.",
-	L"Druk op een willekeurig moment op 'h'om deze helptekst te krijgen.",
-	L"Test Tekst",
-	L"Test Tekst",
-	L"Test Tekst",
-	L"Test Tekst",
-	L"Totdat je arriveert in Arulco is er niet veel te doen bij dit scherm. Als je klaar bent met het samenstellen van je team, klik dan op de Tijd-Versnel-knop rechtsonder. Zo verstrijkt de tijd totdat je team in Arulco aankomt.",
-};
-
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =

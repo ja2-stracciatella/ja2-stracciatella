@@ -1449,22 +1449,6 @@ const wchar_t* pMapInventoryStrings[] =
 };
 
 
-// help text for the user
-
-const wchar_t* pMapScreenFastHelpTextList[] =
-{
-	L"Cliquez sur la colonne Affectation pour assigner un mercenaire à une nouvelle tâche",
-	L"Cliquez sur la colonne Destination pour ordonner à un mercenaire de se rendre dans un secteur",
-	L"Utilisez la compression du temps pour que le voyage du mercenaire vous paraisse moins long.",
-	L"Cliquez sur un secteur pour le sélectionner. Cliquez à nouveau pour donner un ordre de mouvement à un mercenaire ou effectuez un clic droit pour obtenir des informations sur le secteur.",
-	L"Appuyez sur 'H' pour afficher l'aide en ligne.",
-	L"Test Text",
-	L"Test Text",
-	L"Test Text",
-	L"Test Text",
-	L"Cet écran ne vous est d'aucune utilité tant que vous n'êtes pas arrivé à Arulco. Une fois votre équipe constituée, cliquez sur le bouton de compression du temps en bas à droite. Le temps vous paraîtra moins long...",
-};
-
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =

@@ -1448,22 +1448,6 @@ const wchar_t* pMapInventoryStrings[] =
 };
 
 
-// help text for the user
-
-const wchar_t* pMapScreenFastHelpTextList[] =
-{
-	L"Kliknij w kolumnie 'Przydz.', aby przydzielić najemnika do innego oddziału lub wybranego zadania.",
-	L"Aby wyznaczyć najemnikowi cel w innym sektorze, kliknij pole w kolumnie 'Cel'.",
-	L"Gdy najemnicy otrzymają już rozkaz przemieszczenia się, kompresja czasu pozwala im szybciej dotrzeć na miejsce.",
-	L"Kliknij lewym klawiszem aby wybrać sektor. Kliknij ponownie aby wydać najemnikom rozkazy przemieszczenia, lub kliknij prawym klawiszem by uzyskać informacje o sektorze.",
-	L"Naciśnij w dowolnym momencie klawisz 'H' by wyświetlić okienko pomocy.",
-	L"Próbny tekst",
-	L"Próbny tekst",
-	L"Próbny tekst",
-	L"Próbny tekst",
-	L"Niewiele możesz tu zrobić, dopóki najemnicy nie przylecą do Arulco. Gdy już zbierzesz swój oddział, kliknij przycisk Kompresji Czasu, w prawym dolnym rogu. W ten sposób twoi najemnicy szybciej dotrą na miejsce.",
-};
-
 // movement menu text
 
 const wchar_t* pMovementMenuStrings[] =
