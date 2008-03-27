@@ -65,12 +65,6 @@ static PopUpBox* PopUpBoxList[MAX_POPUP_BOX_COUNT];
 #define BOTTOM_RIGHT_CORNER 3
 
 
-void SetLineSpace(PopUpBox* const box, const UINT32 uiLineSpace)
-{
-	box->uiLineSpace = uiLineSpace;
-}
-
-
 UINT32 GetLineSpace(const PopUpBox* const box)
 {
 	// return number of pixels between lines for this box
@@ -87,7 +81,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -107,6 +101,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 			box->uiRightMargin      = margin_r;
 			box->uiTopMargin        = margin_t;
 			box->uiBottomMargin     = margin_b;
+			box->uiLineSpace        = line_space;
 
 			*i = box;
 			return box;

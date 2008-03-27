@@ -3027,10 +3027,7 @@ static void AddStringsToMoveBox(void);
 static void CreatePopUpBoxForMovementBox(void)
 {
 	// create the pop up box and mouse regions for movement list
-	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4);
-
- // space between lines
- SetLineSpace(ghMoveBox, 2);
+	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
 
  // add strings
  AddStringsToMoveBox( );
