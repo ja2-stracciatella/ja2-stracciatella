@@ -3026,8 +3026,6 @@ static void AddStringsToMoveBox(void);
 
 static void CreatePopUpBoxForMovementBox(void)
 {
-	SGPPoint Position;
-
 	// create the pop up box and mouse regions for movement list
 
 	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE);

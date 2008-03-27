@@ -90,7 +90,6 @@ void CreateDestroyTownInfoBox( void )
 {
 	// create destroy pop up box for town/mine info
 	static BOOLEAN fCreated = FALSE;
-	SGPPoint pPosition;
 	INT8 bTownId = 0;
 
 	if( ( fCreated == FALSE ) && ( fShowTownInfo == TRUE ) )

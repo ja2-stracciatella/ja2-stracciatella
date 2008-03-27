@@ -4565,8 +4565,6 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
 	INT32 iFontHeight = 0;
-	INT32 uuiBoxXPosition = 0;
-	INT32 iBoxYPosition = 0;
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 
@@ -4686,7 +4684,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 		// grab height of font
 		iFontHeight = GetLineSpace( ghRemoveMercAssignBox ) + GetFontHeight( GetBoxFont( ghRemoveMercAssignBox ) );
 
-		// grab box x and y position
 		const SGPBox* const area          = GetBoxArea(ghRemoveMercAssignBox);
 		INT32         const iBoxXPosition = area->x;
 		INT32         const iBoxYPosition = area->y;
