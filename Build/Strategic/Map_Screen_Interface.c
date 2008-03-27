@@ -3043,7 +3043,6 @@ static void AddStringsToMoveBox(void);
 static void CreatePopUpBoxForMovementBox(void)
 {
 	SGPPoint Position;
-	SGPRect Dimensions;
 
 	// create the pop up box and mouse regions for movement list
 
@@ -3099,18 +3098,18 @@ static void CreatePopUpBoxForMovementBox(void)
  ResizeBoxToText( ghMoveBox );
 
 	GetBoxPosition( ghMoveBox, &Position);
-	GetBoxSize( ghMoveBox, &Dimensions );
+	const SGPBox* const area = GetBoxArea(ghMoveBox);
 
 	// adjust position to try to keep it in the map area as best as possible
-	if ( Position.iX + Dimensions.iRight >= ( MAP_VIEW_START_X + MAP_VIEW_WIDTH ) )
+	if (Position.iX + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
-		Position.iX = max( MAP_VIEW_START_X, ( MAP_VIEW_START_X + MAP_VIEW_WIDTH ) - Dimensions.iRight );
+		Position.iX = max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w);
 		SetBoxPosition( ghMoveBox, Position );
 	}
 
-	if ( Position.iY + Dimensions.iBottom >= ( MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) )
+	if (Position.iY + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
-		Position.iY = max( MAP_VIEW_START_Y, ( MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) - Dimensions.iBottom );
+		Position.iY = max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h);
 		SetBoxPosition( ghMoveBox, Position );
 	}
 }
@@ -3245,8 +3244,6 @@ static void BuildMouseRegionsForMoveBox(void)
 {
 	INT32 iCounter = 0, iTotalNumberOfLines = 0, iCount = 0, iCountB = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect Dimensions;
 	INT32 iFontHeight = 0;
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
@@ -3263,12 +3260,7 @@ static void BuildMouseRegionsForMoveBox(void)
 	iBoxXPosition = pPosition.iX;
 	iBoxYPosition = pPosition.iY + GetTopMarginSize( ghMoveBox ) - 2;	// -2 to improve highlighting accuracy between lines
 
-
-	// get dimensions..mostly for width
-	GetBoxSize( ghMoveBox, &Dimensions );
-
-	// get width
-	iBoxWidth = Dimensions.iRight;
+	const INT32 iBoxWidth = GetBoxArea(ghMoveBox)->w;
 
 	// box heading
 	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

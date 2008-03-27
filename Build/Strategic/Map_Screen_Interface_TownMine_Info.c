@@ -180,9 +180,7 @@ void CreateDestroyTownInfoBox( void )
 	}
 	else if( ( fCreated == TRUE ) && ( fShowTownInfo == FALSE ) )
 	{
-		// get box size
-		SGPRect pDimensions;
-		GetBoxSize( ghTownMineBox, &pDimensions );
+		const SGPBox area = *GetBoxArea(ghTownMineBox);
 
 		// get position
 		GetBoxPosition( ghTownMineBox, &pPosition);
@@ -195,7 +193,7 @@ void CreateDestroyTownInfoBox( void )
 		RemoveInventoryButtonForMapPopUpBox( );
 
 		// restore background
-		RestoreExternBackgroundRect( ( INT16 )pPosition.iX, ( INT16 )pPosition.iY, ( INT16 ) ( pDimensions.iRight - pDimensions.iLeft ), ( INT16 ) ( pDimensions.iBottom - pDimensions.iTop + 3 ) );
+		RestoreExternBackgroundRect(pPosition.iX, pPosition.iY, area.w, area.h + 3);
 
 		fCreated = FALSE;
 	}
@@ -610,7 +608,6 @@ static void AddItemsInSectorToBox(void)
 static void PositionTownMineInfoBox(void)
 {
 	// position town mine info box
-	SGPRect pDimensions;
 	SGPPoint pPosition;
 	INT16 sX =0, sY = 0;
 
@@ -624,8 +621,7 @@ static void PositionTownMineInfoBox(void)
 	// set new position
 	SetBoxPosition( ghTownMineBox, pPosition );
 
-	// get box size
-	GetBoxSize( ghTownMineBox, &pDimensions );
+	const SGPBox* const area = GetBoxArea(ghTownMineBox);
 
 	// get position
 	GetBoxPosition( ghTownMineBox, &pPosition);
@@ -636,9 +632,9 @@ static void PositionTownMineInfoBox(void)
 		pPosition.iX = MapScreenRect.iLeft + 5;
 	}
 
-	if( pPosition.iX + pDimensions.iRight > MapScreenRect.iRight )
+	if (pPosition.iX + area->w > MapScreenRect.iRight)
 	{
-		pPosition.iX = MapScreenRect.iRight - pDimensions.iRight - 5;
+		pPosition.iX = MapScreenRect.iRight - area->w - 5;
 	}
 
 
@@ -648,9 +644,9 @@ static void PositionTownMineInfoBox(void)
 		pPosition.iY = MapScreenRect.iTop + 5;
 	}
 
-	if(  pPosition.iY + pDimensions.iBottom > MapScreenRect.iBottom )
+	if (pPosition.iY + area->h > MapScreenRect.iBottom)
 	{
-		pPosition.iY = MapScreenRect.iBottom - pDimensions.iBottom - 8;
+		pPosition.iY = MapScreenRect.iBottom - area->h - 8;
 	}
 
 
@@ -671,7 +667,6 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 
 static void AddInventoryButtonForMapPopUpBox(void)
 {
-	SGPRect pDimensions;
 	SGPPoint pPosition;
 
 	// load the button
@@ -683,11 +678,11 @@ static void AddInventoryButtonForMapPopUpBox(void)
 
 	INT16 sTotalBoxWidth = sTotalButtonWidth;
 
-	GetBoxSize( ghTownMineBox , &pDimensions );
+	const SGPBox* const area = GetBoxArea(ghTownMineBox);
 	GetBoxPosition( ghTownMineBox, &pPosition );
 
-	const INT16 y  = pPosition.iY + pDimensions.iBottom - (BOX_BUTTON_HEIGHT + 5);
-	const INT16 dx = (pDimensions.iRight - sTotalBoxWidth) / 3;
+	const INT16 y  = pPosition.iY + area->h - (BOX_BUTTON_HEIGHT + 5);
+	const INT16 dx = (area->w - sTotalBoxWidth) / 3;
 	INT16       x  = pPosition.iX + dx;
 	MakeButton(0, pMapPopUpInventoryText[0], x, y, MapTownMineInventoryButtonCallBack);
 

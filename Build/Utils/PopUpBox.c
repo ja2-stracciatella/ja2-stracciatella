@@ -195,12 +195,9 @@ void GetBoxPosition(const PopUpBox* const box, SGPPoint* const Position)
 }
 
 
-void GetBoxSize(const PopUpBox* const box, SGPRect* const dimensions)
+const SGPBox* GetBoxArea(const PopUpBox* const box)
 {
-	dimensions->iLeft   = 0;
-	dimensions->iTop    = 0;
-	dimensions->iRight  = box->pos.w;
-	dimensions->iBottom = box->pos.h;
+	return &box->pos;
 }
 
 

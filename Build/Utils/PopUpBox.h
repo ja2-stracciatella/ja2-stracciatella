@@ -21,7 +21,7 @@ void SetBoxBuffer(PopUpBox*, SGPVSurface*);
 void SetBoxPosition(PopUpBox*, SGPPoint Position);
 void GetBoxPosition(const PopUpBox*, SGPPoint* Position);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
-void GetBoxSize(const PopUpBox*, SGPRect* dimensions);
+const SGPBox* GetBoxArea(const PopUpBox*);
 void SetBorderType(PopUpBox*, const SGPVObject* border);
 void SetBackGroundSurface(PopUpBox*, SGPVSurface*);
 void AddMonoString(PopUpBox*, const wchar_t* pString);

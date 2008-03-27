@@ -3149,7 +3149,6 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 	SOLDIERTYPE *pSoldier = NULL;
 	SGPPoint pPosition;
 	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 	static BOOLEAN fShowRemoveMenu = FALSE;
 
 
@@ -3203,11 +3202,8 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 			iBoxXPosition = pPosition.iX;
 			iBoxYPosition = pPosition.iY;
 
-			// get dimensions..mostly for width
-			GetBoxSize( ghEpcBox, &pDimensions );
-
 			// get width
-			iBoxWidth = pDimensions.iRight;
+			iBoxWidth = GetBoxArea(ghEpcBox)->w;
 		}
 		else
 		{
@@ -3221,11 +3217,8 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 			iBoxXPosition = pPosition.iX;
 			iBoxYPosition = pPosition.iY;
 
-			// get dimensions..mostly for width
-			GetBoxSize( ghAssignmentBox, &pDimensions );
-
 			// get width
-			iBoxWidth = pDimensions.iRight;
+			iBoxWidth = GetBoxArea(ghAssignmentBox)->w;
 		}
 
 
@@ -3280,8 +3273,6 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition, pPoint;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 	SOLDIERTYPE *pSoldier = NULL;
 
 
@@ -3289,11 +3280,8 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 	{
 		GetBoxPosition( ghAssignmentBox, &pPoint);
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghAssignmentBox, &pDimensions );
-
 		// vehicle position
-		VehiclePosition.iX = pPoint.iX + pDimensions.iRight;
+		VehiclePosition.iX = pPoint.iX + GetBoxArea(ghAssignmentBox)->w;
 
 		SetBoxPosition( ghVehicleBox , VehiclePosition );
 	}
@@ -3311,11 +3299,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghVehicleBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghVehicleBox)->w;
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
 
@@ -3677,15 +3661,11 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		SGPPoint pPosition;
 		GetBoxPosition(box, &pPosition);
 
-		// get dimensions..mostly for width
-		SGPRect pDimensions;
-		GetBoxSize(box, &pDimensions);
-
 		const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
 
 		UINT16 const x   = pPosition.iX;
 		UINT16       y   = pPosition.iY + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
-		UINT16 const w   = pDimensions.iRight;
+		UINT16 const w   = GetBoxArea(box)->w;
 		UINT16 const h   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 		INT32        idx = 0;
 
@@ -4433,8 +4413,6 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 	static BOOLEAN fShowRemoveMenu = FALSE;
 
 	// will create/destroy mouse regions for the map screen Contract main menu
@@ -4492,11 +4470,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghContractBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghContractBox)->w;
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghContractBox ); iCounter++ )
@@ -4555,8 +4529,6 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 
 	// will create/destroy mouse regions for the map screen assignment main menu
 
@@ -4583,11 +4555,7 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghTrainingBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghTrainingBox)->w;
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghTrainingBox ); iCounter++ )
@@ -4655,8 +4623,6 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 
@@ -4683,11 +4649,7 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghAttributeBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghAttributeBox)->w;
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAttributeBox ); iCounter++ )
@@ -4757,8 +4719,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 	if( ( ( fShowAssignmentMenu == TRUE ) || ( fShowContractMenu == TRUE ) ) && ( fCreated == FALSE ) )
@@ -4796,11 +4756,7 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghRemoveMercAssignBox, &pDimensions );
-
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghRemoveMercAssignBox)->w;
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghRemoveMercAssignBox ); iCounter++ )
@@ -4873,9 +4829,6 @@ static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
 	INT32 iBoxXPosition = 0;
 	INT32 iBoxYPosition = 0;
 	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
-
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 
@@ -4883,7 +4836,6 @@ static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
 	{
 		// create squad box
 		CreateSquadBox( );
-		GetBoxSize( ghAssignmentBox, &pDimensions );
 
 		CheckAndUpdateTacticalAssignmentPopUpPositions( );
 
@@ -4898,11 +4850,8 @@ static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
 		iBoxXPosition = pPosition.iX;
 		iBoxYPosition = pPosition.iY;
 
-		// get dimensions..mostly for width
-		GetBoxSize( ghSquadBox, &pDimensions );
-
 		// get width
-		iBoxWidth = pDimensions.iRight;
+		const INT32 iBoxWidth = GetBoxArea(ghSquadBox)->w;
 
 		// define regions
 		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1; iCounter++ )
@@ -6080,7 +6029,6 @@ static void CreateSquadBox(void)
 {
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
-	SGPRect pDimensions;
 	CHAR16 sString[ 64 ];
 	UINT32 uiMaxSquad;
 
@@ -6108,11 +6056,11 @@ static void CreateSquadBox(void)
 	DetermineBoxPositions();
 
 	GetBoxPosition(ghSquadBox, &pPoint);
-	GetBoxSize(ghSquadBox, &pDimensions);
+	const SGPBox* area = GetBoxArea(ghSquadBox);
 
-	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
+	if (giBoxY + area->h >= SCREEN_HEIGHT)
 	{
-		pPoint.iY = SquadPosition.iY = SCREEN_HEIGHT - 1 - pDimensions.iBottom;
+		pPoint.iY = SquadPosition.iY = SCREEN_HEIGHT - 1 - area->h;
 	}
 
 	SetBoxPosition( ghSquadBox, pPoint );
@@ -6123,7 +6071,6 @@ static void CreateEPCBox(void)
 {
 	// will create a pop up box for squad selection
 	SGPPoint pPoint;
-	SGPRect pDimensions;
 
 	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
@@ -6139,12 +6086,11 @@ static void CreateEPCBox(void)
 	ResizeBoxToText(ghEpcBox);
 
 	GetBoxPosition(ghEpcBox, &pPoint);
+	const SGPBox* area = GetBoxArea(ghEpcBox);
 
-	GetBoxSize(ghEpcBox, &pDimensions);
-
-	if (giBoxY + pDimensions.iBottom >= SCREEN_HEIGHT)
+	if (giBoxY + area->h >= SCREEN_HEIGHT)
 	{
-		pPoint.iY = AssignmentPosition.iY = SCREEN_HEIGHT - 1 - pDimensions.iBottom;
+		pPoint.iY = AssignmentPosition.iY = SCREEN_HEIGHT - 1 - area->h;
 	}
 
 	SetBoxPosition(ghEpcBox, pPoint);
@@ -6493,7 +6439,6 @@ void DetermineBoxPositions( void )
 	// depending on how many boxes there are, reposition as needed
 	SGPPoint pPoint;
 	SGPPoint pNewPoint;
-	SGPRect pDimensions;
 	SOLDIERTYPE *pSoldier = NULL;
 
 	if (!fShowAssignmentMenu || ghAssignmentBox == NO_POPUP_BOX) return;
@@ -6515,20 +6460,21 @@ void DetermineBoxPositions( void )
 	pPoint.iX = gsAssignmentBoxesX;
 	pPoint.iY = gsAssignmentBoxesY;
 
+	const SGPBox* area;
 	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		SetBoxPosition( ghEpcBox, pPoint );
-		GetBoxSize( ghEpcBox, &pDimensions );
+		area = GetBoxArea(ghEpcBox);
 	}
 	else
 	{
 		SetBoxPosition( ghAssignmentBox, pPoint );
-		GetBoxSize( ghAssignmentBox, &pDimensions );
+		area = GetBoxArea(ghAssignmentBox);
 	}
 
 
 	// hang it right beside the assignment/EPC box menu
-	pNewPoint.iX = pPoint.iX + pDimensions.iRight;
+	pNewPoint.iX = pPoint.iX + area->w;
 	pNewPoint.iY = pPoint.iY;
 
 	if (fShowSquadMenu && ghSquadBox != NO_POPUP_BOX)
@@ -6553,13 +6499,12 @@ void DetermineBoxPositions( void )
 		OrigTrainPosition.iY = pNewPoint.iY;
 		OrigTrainPosition.iX = pNewPoint.iX;
 
-		GetBoxSize( ghTrainingBox, &pDimensions );
 		GetBoxPosition( ghTrainingBox, &pPoint );
 
 		if (fShowAttributeMenu && ghAttributeBox != NO_POPUP_BOX)
 		{
 			// hang it right beside the training box menu
-			pNewPoint.iX = pPoint.iX + pDimensions.iRight;
+			pNewPoint.iX = pPoint.iX + GetBoxArea(ghTrainingBox)->w;
 			pNewPoint.iY = pPoint.iY;
 			SetBoxPosition( ghAttributeBox, pNewPoint );
 		}
@@ -6636,7 +6581,6 @@ static void RepositionMouseRegions(void)
 
 static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 {
-	SGPRect pDimensions, pDimensions2, pDimensions3;
 	SGPPoint pPoint;
 	INT16 sLongest;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -6656,32 +6600,25 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	//get the soldier
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		GetBoxSize( ghEpcBox, &pDimensions2 );
-	}
-	else
-	{
-		GetBoxSize( ghAssignmentBox, &pDimensions2 );
-	}
+	const SGPBox* const area2 = GetBoxArea(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
 
 	if( fShowRepairMenu == TRUE )
 	{
-		GetBoxSize( ghRepairBox, &pDimensions );
+		const SGPBox* const area = GetBoxArea(ghRepairBox);
 
-		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
+		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( pDimensions2.iBottom >  pDimensions.iBottom )
+		if (area2->h > area->h)
 		{
-			sLongest = pDimensions2.iBottom + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
+			sLongest = area2->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
 		}
 		else
 		{
-			sLongest = pDimensions.iBottom  + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
+			sLongest = area->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
 		}
 
 		if( gsAssignmentBoxesY + sLongest >= 360 )
@@ -6690,30 +6627,22 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
+		pPoint.iX = gsAssignmentBoxesX + area2->w;
 		pPoint.iY = gsAssignmentBoxesY + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
 
 		SetBoxPosition( ghRepairBox, pPoint );
 	}
 	else if( fShowSquadMenu == TRUE )
 	{
-		GetBoxSize( ghSquadBox, &pDimensions );
+		const SGPBox* const area = GetBoxArea(ghSquadBox);
 
-
-		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
+		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( pDimensions2.iBottom >  pDimensions.iBottom )
-		{
-			sLongest = ( INT16 )pDimensions2.iBottom;
-		}
-		else
-		{
-			sLongest  = ( INT16 )pDimensions.iBottom;
-		}
+		sLongest = area2->h > area->h ? area2->h : area->h;
 
 		if( gsAssignmentBoxesY + sLongest >= 360 )
 		{
@@ -6721,35 +6650,35 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
+		pPoint.iX = gsAssignmentBoxesX + area2->w;
 		pPoint.iY = gsAssignmentBoxesY;
 
 		SetBoxPosition( ghSquadBox, pPoint );
 	}
 	else if( fShowAttributeMenu == TRUE )
 	{
-		GetBoxSize( ghTrainingBox, &pDimensions );
-		GetBoxSize( ghAttributeBox, &pDimensions3 );
+		const SGPBox* const area  = GetBoxArea(ghTrainingBox);
+		const SGPBox* const area3 = GetBoxArea(ghAttributeBox);
 
-		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight >= SCREEN_WIDTH)
+		if (gsAssignmentBoxesX + area2->w + area->w + area3->w >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight + pDimensions3.iRight);
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w + area3->w);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( gsAssignmentBoxesY + pDimensions3.iBottom + ( GetFontHeight( MAP_SCREEN_FONT ) * ASSIGN_MENU_TRAIN ) >= 360 )
+		if (gsAssignmentBoxesY + area3->h + GetFontHeight(MAP_SCREEN_FONT) * ASSIGN_MENU_TRAIN >= 360)
 		{
-			gsAssignmentBoxesY = ( INT16 )( 359 - ( pDimensions3.iBottom ) );
+			gsAssignmentBoxesY = 359 - area3->h;
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight;
+		pPoint.iX = gsAssignmentBoxesX + area2->w + area->w;
 		pPoint.iY = gsAssignmentBoxesY;
 
 		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
 		SetBoxPosition( ghAttributeBox, pPoint );
 
-		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
+		pPoint.iX = gsAssignmentBoxesX + area2->w;
 		pPoint.iY = gsAssignmentBoxesY;
 
 		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
@@ -6760,23 +6689,22 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	}
 	else if( fShowTrainingMenu == TRUE )
 	{
-		GetBoxSize( ghTrainingBox, &pDimensions );
-
-		if (gsAssignmentBoxesX + pDimensions2.iRight + pDimensions.iRight >= SCREEN_WIDTH)
+		const SGPBox* const area = GetBoxArea(ghTrainingBox);
+		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (pDimensions2.iRight + pDimensions.iRight);
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if (gsAssignmentBoxesY + pDimensions2.iBottom + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN >= 360)
+		if (gsAssignmentBoxesY + area2->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN >= 360)
 		{
-			gsAssignmentBoxesY = 359 - pDimensions2.iBottom - (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
+			gsAssignmentBoxesY = 359 - area2->h - (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
 
 
-		pPoint.iX = gsAssignmentBoxesX + pDimensions2.iRight;
+		pPoint.iX = gsAssignmentBoxesX + area2->w;
 		pPoint.iY = gsAssignmentBoxesY;
 		pPoint.iY += ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
 
@@ -6785,15 +6713,15 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 	else
 	{
 		// just the assignment box
-		if (gsAssignmentBoxesX + pDimensions2.iRight >= SCREEN_WIDTH)
+		if (gsAssignmentBoxesX + area2->w >= SCREEN_WIDTH)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - pDimensions2.iRight;
+			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - area2->w;
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		if( gsAssignmentBoxesY + pDimensions2.iBottom  >= 360 )
+		if (gsAssignmentBoxesY + area2->h >= 360)
 		{
-			gsAssignmentBoxesY = ( INT16 )( 359 - ( pDimensions2.iBottom  ) );
+			gsAssignmentBoxesY = 359 - area2->h;
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
@@ -6818,20 +6746,16 @@ static void PositionCursorForTacticalAssignmentBox(void)
 {
 	// position cursor over y of on duty in tactical assignments
 	SGPPoint pPosition;
-	SGPRect pDimensions;
 	INT32 iFontHeight;
 
 	// get x.y position of box
 	GetBoxPosition( ghAssignmentBox, &pPosition);
 
-	// get dimensions..mostly for width
-	GetBoxSize( ghAssignmentBox, &pDimensions );
-
 	iFontHeight = GetLineSpace( ghAssignmentBox ) + GetFontHeight( GetBoxFont( ghAssignmentBox ) );
 
 	if( gGameSettings.fOptions[ TOPTION_DONT_MOVE_MOUSE ] == FALSE )
 	{
-		SimulateMouseMovement( pPosition.iX + pDimensions.iRight - 6, pPosition.iY + ( iFontHeight / 2 ) + 2 );
+		SimulateMouseMovement(pPosition.iX + GetBoxArea(ghAssignmentBox)->w - 6, pPosition.iY + iFontHeight / 2 + 2);
 	}
 }
 
