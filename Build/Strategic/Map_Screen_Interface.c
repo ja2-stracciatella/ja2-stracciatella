@@ -193,8 +193,6 @@ INT32 giNumberOfSquadsInSectorMoving = 0;
 // number of vehicles in sector moving
 INT32 giNumberOfVehiclesInSectorMoving = 0;
 
-INT32 iHeightOfInitFastHelpText = 0;
-
 // the list of soldiers that are moving
 SOLDIERTYPE * pSoldierMovingList[ MAX_CHARACTER_COUNT ];
 BOOLEAN fSoldierIsMoving[ MAX_CHARACTER_COUNT ];
@@ -2311,10 +2309,7 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 
 	iH = DisplayWrappedString(iX + 10, iY + 6, pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, MARK_DIRTY);
 
-	iHeightOfInitFastHelpText = iH + 20;
-
 	InvalidateRegion(  iX, iY, (iX + iW) , (iY + iH + 20 ) );
-
 }
 
 
@@ -2363,18 +2358,8 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 	// create or destroy the screen mask as needed
 	if (fInterfaceFastHelpTextActive && !fCreated)
 	{
-		if (DidGameJustStart())
-		{
-			MSYS_DefineRegion( &gMapScreenHelpTextMask , ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iX ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iY ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iX + pMapScreenFastHelpWidthList[ 9 ] ), ( INT16 )( pMapScreenFastHelpLocationList[ 9 ].iY + iHeightOfInitFastHelpText ), MSYS_PRIORITY_HIGHEST,
-				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback );
-		}
-		else
-		{
-			MSYS_DefineRegion(&gMapScreenHelpTextMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback);
-		}
-
+		MSYS_DefineRegion(&gMapScreenHelpTextMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapScreenHelpTextScreenMaskBtnCallback);
 		fCreated = TRUE;
-
 	}
 	else if (!fInterfaceFastHelpTextActive && fCreated)
 	{
