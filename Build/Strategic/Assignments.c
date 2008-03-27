@@ -3655,145 +3655,109 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void RepairMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
+static void MakeRepairRegion(const INT32 idx, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h, const UINT32 data)
+{
+	MOUSE_REGION* const r = &gRepairMenuRegion[idx];
+	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
+	MSYS_SetRegionUserData(r, 0, idx);
+	MSYS_SetRegionUserData(r, 1, data);
+}
+
+
 static void CreateDestroyMouseRegionForRepairMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 
-	UINT32 uiCounter = 0;
-	INT32 iCount = 0;
-	INT32 iFontHeight = 0;
-	INT32 iBoxXPosition = 0;
-	INT32 iBoxYPosition = 0;
-	SGPPoint pPosition;
-	INT32 iBoxWidth = 0;
-	SGPRect pDimensions;
-	SOLDIERTYPE *pSoldier = NULL;
-
-	if( ( fShowRepairMenu == TRUE ) && ( fCreated == FALSE ) )
+	if (fShowRepairMenu && !fCreated)
 	{
-		CheckAndUpdateTacticalAssignmentPopUpPositions( );
+		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		if( ( fShowRepairMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
-		{
-			//SetBoxPosition(ghRepairBox, RepairPosition);
-		}
+		PopUpBox* const box = ghRepairBox;
 
-		// grab height of font
-		iFontHeight = GetLineSpace( ghRepairBox ) + GetFontHeight( GetBoxFont( ghRepairBox ) );
-
-		// get x.y position of box
-		GetBoxPosition( ghRepairBox, &pPosition);
-
-		// grab box x and y position
-		iBoxXPosition = pPosition.iX;
-		iBoxYPosition = pPosition.iY;
+		SGPPoint pPosition;
+		GetBoxPosition(box, &pPosition);
 
 		// get dimensions..mostly for width
-		GetBoxSize( ghRepairBox, &pDimensions );
+		SGPRect pDimensions;
+		GetBoxSize(box, &pDimensions);
 
-		// get width
-		iBoxWidth = pDimensions.iRight;
+		const SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
 
-		pSoldier = GetSelectedAssignSoldier( FALSE );
+		UINT16 const x   = pPosition.iX;
+		UINT16       y   = pPosition.iY + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
+		UINT16 const w   = pDimensions.iRight;
+		UINT16 const h   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		INT32        idx = 0;
 
 		// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
 		// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
 
-		if ( pSoldier->bSectorZ == 0 )
+		if (s->bSectorZ == 0)
 		{
 			// vehicles
 			CFOR_ALL_VEHICLES(v)
 			{
 				// don't even list the helicopter, because it's NEVER repairable...
-				if (VEHICLE2ID(v) != iHelicopterVehicleId)
-				{
-					// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
-					if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-					{
-						// add mouse region for each line of text..and set user data
-						MOUSE_REGION* const r = &gRepairMenuRegion[iCount];
-						const UINT16        x = iBoxXPosition;
-						const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount;
-						const UINT16        w = iBoxWidth;
-						const UINT16        h = iFontHeight;
-						MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
+				if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
 
-						MSYS_SetRegionUserData(r, 0, iCount);
-						// 2nd user data is the vehicle index, which can easily be different from the region index!
-						MSYS_SetRegionUserData(r, 1, VEHICLE2ID(v));
-						iCount++;
-					}
-				}
+				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
+				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+
+				// add mouse region for each line of text..and set user data
+				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
+				y += h;
 			}
 		}
 
-
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 		// SAM site
-		if( ( IsThisSectorASAMSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) == TRUE ) && ( IsTheSAMSiteInSectorRepairable( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) ) )
+		if (IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
+				IsTheSAMSiteInSectorRepairable(s->sSectorX, s->sSectorY, s->bSectorZ))
 		{
-			MSYS_DefineRegion(&gRepairMenuRegion[iCount], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCount + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
-
-			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, REPAIR_MENU_SAM_SITE );
-			iCount++;
+			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_SAM_SITE);
+			y += h;
 		}
 */
 
-
 		// robot
-		if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) )
+		if (IsRobotInThisSector(s->sSectorX, s->sSectorY, s->bSectorZ))
 		{
-			MSYS_DefineRegion(&gRepairMenuRegion[iCount], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCount + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
-
-			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
-			MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_ROBOT );
-			iCount++;
+			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ROBOT);
+			y += h;
 		}
 
-
 		// items
-		MSYS_DefineRegion(&gRepairMenuRegion[iCount], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCount + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
-
-		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
-		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_ITEMS );
-		iCount++;
-
+		MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ITEMS);
+		y += h;
 
 		// cancel
-		MSYS_DefineRegion(&gRepairMenuRegion[iCount], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCount, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCount + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, RepairMenuMvtCallback, RepairMenuBtnCallback);
+		MakeRepairRegion(idx, x, y, w, h, REPAIR_MENU_CANCEL);
 
-		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 0, iCount );
-		MSYS_SetRegionUserData( &gRepairMenuRegion[ iCount ], 1, REPAIR_MENU_CANCEL );
-
-
-		PauseGame( );
+		PauseGame();
 
 		// unhighlight all strings in box
-		UnHighLightBox( ghRepairBox );
+		UnHighLightBox(box);
 
 		fCreated = TRUE;
 	}
-	else if( ( ( fShowRepairMenu == FALSE ) || ( fShowAssignmentMenu == FALSE ) ) && ( fCreated == TRUE ) )
+	else if ((!fShowRepairMenu || !fShowAssignmentMenu) && fCreated)
 	{
 		fCreated = FALSE;
 
 		// remove these regions
-		for( uiCounter = 0; uiCounter < GetNumberOfLinesOfTextInBox( ghRepairBox ); uiCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRepairBox); ++i)
 		{
-			MSYS_RemoveRegion( &gRepairMenuRegion[ uiCounter ] );
+			MSYS_RemoveRegion(&gRepairMenuRegion[i]);
 		}
 
 		fShowRepairMenu = FALSE;
 
-		SetRenderFlags( RENDER_FLAG_FULL );
+		SetRenderFlags(RENDER_FLAG_FULL);
 
-		HideBox( ghRepairBox );
+		HideBox(ghRepairBox);
 
-		if ( fShowAssignmentMenu )
-		{
-			// remove highlight on the parent menu
-			UnHighLightBox( ghAssignmentBox );
-		}
+		// Remove highlight on the parent menu
+		if (fShowAssignmentMenu) UnHighLightBox(ghAssignmentBox);
 	}
 }
 
