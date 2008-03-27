@@ -5934,8 +5934,7 @@ static void RestorePopUpBoxes(void)
 
 static PopUpBox* MakeBox(const SGPPoint pos, const UINT32 flags)
 {
-	PopUpBox* const box = CreatePopUpBox(pos, flags | POPUP_BOX_FLAG_RESIZE);
-	SetBoxBuffer(box, FRAME_BUFFER);
+	PopUpBox* const box = CreatePopUpBox(pos, flags | POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER);
 	SetBorderType(box, guiPOPUPBORDERS);
 	SetBackGroundSurface(box, guiPOPUPTEX);
 	SetMargins(box, 6, 6, 4, 4);

@@ -87,7 +87,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -99,7 +99,8 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags)
 			memset(box, 0, sizeof(*box));
 
 			SetBoxXY(box, Position.iX, Position.iY);
-			box->uiFlags = uiFlags;
+			box->uiFlags  = uiFlags;
+			box->uiBuffer = buffer;
 
 			*i = box;
 			return box;
@@ -170,13 +171,6 @@ void UnSecondaryShadeStringInBox(PopUpBox* const box, const INT32 iLineNumber)
 		// shade line
 		box->Text[iLineNumber]->fSecondaryShadeFlag = FALSE;
 	}
-}
-
-
-void SetBoxBuffer(PopUpBox* const box, SGPVSurface* const buffer)
-{
-	box->uiBuffer = buffer;
-	box->fUpdated = FALSE;
 }
 
 
