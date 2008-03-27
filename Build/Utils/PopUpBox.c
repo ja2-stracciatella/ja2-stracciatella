@@ -87,7 +87,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border)
+PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background)
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -102,6 +102,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 			box->uiFlags            = uiFlags;
 			box->uiBuffer           = buffer;
 			box->iBorderObjectIndex = border;
+			box->iBackGroundSurface = background;
 
 			*i = box;
 			return box;
@@ -200,12 +201,6 @@ void SetBoxY(PopUpBox* const box, const INT16 y)
 const SGPBox* GetBoxArea(const PopUpBox* const box)
 {
 	return &box->pos;
-}
-
-
-void SetBackGroundSurface(PopUpBox* const box, SGPVSurface* const bg)
-{
-	box->iBackGroundSurface = bg;
 }
 
 
