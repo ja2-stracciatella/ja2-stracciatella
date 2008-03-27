@@ -600,28 +600,22 @@ static void AddItemsInSectorToBox(void)
 // position town/mine info box on the screen
 static void PositionTownMineInfoBox(void)
 {
-	// position town mine info box
-	INT16 sX =0, sY = 0;
-
 	// position the box based on x and y of the selected sector
-  GetScreenXYFromMapXY( bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
-
-	// set new position
-	SetBoxXY(ghTownMineBox, sX, sY);
-
+	INT16 sX = 0;
+	INT16 sY = 0;
+  GetScreenXYFromMapXY(bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
 	const SGPBox* const area = GetBoxArea(ghTownMineBox);
-	INT16 x = area->x;
-	INT16 y = area->y;
 
 	// now position box - the x axis
+	INT16 x = sX;
 	if (x           < MapScreenRect.iLeft)  x = MapScreenRect.iLeft + 5;
 	if (x + area->w > MapScreenRect.iRight) x = MapScreenRect.iRight - area->w - 5;
 
 	// position - the y axis
+	INT16 y = sY;
 	if (y           < MapScreenRect.iTop)    y = MapScreenRect.iTop + 5;
 	if (y + area->h > MapScreenRect.iBottom) y = MapScreenRect.iBottom - area->h - 8;
 
-	// reset position
 	SetBoxXY(ghTownMineBox, x, y);
 }
 
