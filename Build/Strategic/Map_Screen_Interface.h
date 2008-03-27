@@ -200,8 +200,6 @@ typedef struct MapScreenCharacterSt
 // map screen character structure list, contrains soldier ids into menptr
 extern MapScreenCharacterSt gCharactersList[ ];
 
-extern BOOLEAN fShowMapScreenHelpText;
-
 
 // map inventory pool inited
 extern BOOLEAN fMapInventoryPoolInited;
@@ -389,15 +387,6 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 
 // set up the event of animating a mine sector
 void SetUpAnimationOfMineSectors( INT32 iEvent );
-
-// display map screen
-void DisplayMapScreenFastHelpList( void );
-
-// is the text up?
-BOOLEAN IsMapScreenHelpTextUp( void );
-
-// stop the help text in mapscreen
-void StopMapScreenHelpText( void );
 
 // set up the help text
 void SetUpMapScreenFastHelpText( void );

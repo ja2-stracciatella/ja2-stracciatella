@@ -331,18 +331,12 @@ static void BtnLaptopCallback(GUI_BUTTON *btn, INT32 reason)
 #ifdef JA2DEMO
 		DisabledInDemo();
 #else
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP);
-	}
-	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 #endif
 	}
 }
@@ -352,17 +346,12 @@ static void BtnTacticalCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
-	}
-	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 	}
 }
 
@@ -371,7 +360,6 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText( );
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	}
@@ -379,10 +367,6 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
   {
 		fMapScreenBottomDirty = TRUE;
 		RequestTriggerExitFromMapscreen(MAP_EXIT_TO_OPTIONS);
-	}
-	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 	}
 }
 
@@ -477,7 +461,6 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	  iLastRepeatScrollTime = 0;
@@ -498,7 +481,6 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	  iLastRepeatScrollTime = 0;
@@ -526,7 +508,6 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	  iLastRepeatScrollTime = 0;
@@ -547,7 +528,6 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
 	  iLastRepeatScrollTime = 0;
@@ -1157,13 +1137,6 @@ static void DisplayProjectedDailyMineIncome(void)
 
 BOOLEAN CommonTimeCompressionChecks( void )
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return( TRUE );
-	}
-
 	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
 	{
 		// abort plotting movement

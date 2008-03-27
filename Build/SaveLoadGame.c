@@ -251,7 +251,7 @@ typedef struct
 	BOOLEAN	fBoxerFought[ NUM_BOXERS ];
 
 	BOOLEAN	fHelicopterDestroyed;								//if the chopper is destroyed
-	BOOLEAN	fShowMapScreenHelpText;							//If true, displays help in mapscreen
+	BOOLEAN	fShowMapScreenHelpText; // If true, displays help in mapscreen // XXX HACK000B
 
 	INT32		iSortStateForMapScreenList;
 	BOOLEAN	fFoundTixa;
@@ -3086,7 +3086,6 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 
 	//Save the helicopter status
 	sGeneralInfo.fHelicopterDestroyed = fHelicopterDestroyed;
-	sGeneralInfo.fShowMapScreenHelpText = fShowMapScreenHelpText;
 
 	sGeneralInfo.iSortStateForMapScreenList = giSortStateForMapScreenList;
 	sGeneralInfo.fFoundTixa = fFoundTixa;
@@ -3320,8 +3319,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	//Load the helicopter status
 	fHelicopterDestroyed = sGeneralInfo.fHelicopterDestroyed;
-	fShowMapScreenHelpText = sGeneralInfo.fShowMapScreenHelpText;
-
 
 	giSortStateForMapScreenList = sGeneralInfo.iSortStateForMapScreenList;
 	fFoundTixa = sGeneralInfo.fFoundTixa;

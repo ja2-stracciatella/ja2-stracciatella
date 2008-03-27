@@ -97,8 +97,6 @@
 #define DBL_CLICK_DELAY_FOR_MOVE_MENU 200
 
 
-#define TIMER_FOR_SHOW_EXIT_TO_TACTICAL_MESSAGE 15000
-
 #define REASON_FOR_SOLDIER_UPDATE_OFFSET_Y				(14)
 
 #define MAX_MAPSCREEN_FAST_HELP			100
@@ -138,7 +136,6 @@ MOUSE_REGION gMoveMenuRegion[ MAX_POPUP_BOX_STRING_COUNT ];
 
 MOUSE_REGION gMapScreenHelpTextMask;
 
-BOOLEAN fShowMapScreenHelpText = FALSE;
 BOOLEAN fScreenMaskForMoveCreated = FALSE;
 BOOLEAN fLockOutMapScreenInterface = FALSE;
 
@@ -228,7 +225,6 @@ MOUSE_REGION	gMapStatusBarsRegion;
 
 SGPPoint MovePosition={450, 100 };
 
-BOOLEAN fResetTimerForFirstEntryIntoMapScreen = FALSE;
 static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
 #ifndef JA2DEMO
@@ -300,7 +296,6 @@ BOOLEAN fResetContractGlow = FALSE;
 // timers for double click
 INT32 giDblClickTimersForMoveBoxMouseRegions[ MAX_POPUP_BOX_STRING_COUNT ];
 
-INT32 giExitToTactBaseTime = 0;
 UINT32 guiSectorLocatorBaseTime = 0;
 
 
@@ -1023,13 +1018,6 @@ void GoUpOneLevelInMap( void )
 
 void JumpToLevel( INT32 iLevel )
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return;
-	}
-
 	if( gfPreBattleInterfaceActive == TRUE )
 	{
 		return;
@@ -2164,6 +2152,7 @@ void SetUpAnimationOfMineSectors( INT32 iEvent )
 }
 
 
+static void StopMapScreenHelpText(void);
 static void StopShowingInterfaceFastHelpText(void);
 
 
@@ -2329,32 +2318,6 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 }
 
 
-static void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen(void);
-
-
-void DisplayMapScreenFastHelpList(void)
-{
-	if (DidGameJustStart())
-	{
-		if( AnyMercsHired() == FALSE )
-		{
-			return;
-		}
-
-		HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen( );
-// DEF: removed cause the help screen will replace the help screen
-//		DisplayFastHelpRegions( &pFastHelpMapScreenList[ 9 ], 1 );
-
-	}
-	else
-	{
-		DisplayFastHelpRegions( pFastHelpMapScreenList, giSizeOfInterfaceFastHelpTextList );
-	}
-
-	SetUpShutDownMapScreenHelpTextScreenMask( );
-}
-
-
 void SetUpMapScreenFastHelpText( void )
 {
 	INT32 iCounter = 0;
@@ -2377,20 +2340,16 @@ void SetUpMapScreenFastHelpText( void )
 */
 }
 
-void StopMapScreenHelpText( void )
+
+// stop the help text in mapscreen
+static void StopMapScreenHelpText(void)
 {
-	fShowMapScreenHelpText = FALSE;
 	fTeamPanelDirty = TRUE;
 	fMapPanelDirty = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 	fMapScreenBottomDirty = TRUE;
 
 	SetUpShutDownMapScreenHelpTextScreenMask( );
-}
-
-BOOLEAN IsMapScreenHelpTextUp( void )
-{
-	return( fShowMapScreenHelpText );
 }
 
 
@@ -2402,7 +2361,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 	static BOOLEAN fCreated = FALSE;
 
 	// create or destroy the screen mask as needed
-	if( ( ( fShowMapScreenHelpText == TRUE ) || ( fInterfaceFastHelpTextActive == TRUE ) ) && ( fCreated == FALSE ) )
+	if (fInterfaceFastHelpTextActive && !fCreated)
 	{
 		if (DidGameJustStart())
 		{
@@ -2417,7 +2376,7 @@ static void SetUpShutDownMapScreenHelpTextScreenMask(void)
 		fCreated = TRUE;
 
 	}
-	else if( ( fShowMapScreenHelpText == FALSE ) && ( fInterfaceFastHelpTextActive == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fInterfaceFastHelpTextActive && fCreated)
 	{
 		MSYS_RemoveRegion( &gMapScreenHelpTextMask );
 
@@ -4605,46 +4564,6 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 
 
 	return( TRUE );
-}
-
-
-// handle display of fast help
-static void HandleDisplayOfExitToTacticalMessageForFirstEntryToMapScreen(void)
-{
-	INT32 iTime = 0, iDifference = 0;
-
-	if (!DidGameJustStart()) return;
-
-	if( AnyMercsHired() == FALSE )
-	{
-		return;
-	}
-
-	if( fResetTimerForFirstEntryIntoMapScreen )
-	{
-		giExitToTactBaseTime = 0;
-		fResetTimerForFirstEntryIntoMapScreen = FALSE;
-	}
-
-	// is this the first time in?
-	if( giExitToTactBaseTime == 0 )
-	{
-		// gte the clock, for initing
-		giExitToTactBaseTime = GetJA2Clock();
-	}
-
-	iTime = GetJA2Clock();
-
-	iDifference = iTime - giExitToTactBaseTime;
-
-	if( iDifference > TIMER_FOR_SHOW_EXIT_TO_TACTICAL_MESSAGE )
-	{
-		fShowMapScreenHelpText = FALSE;
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
-		giExitToTactBaseTime = 0;
-	}
 }
 
 

@@ -463,7 +463,6 @@ static PathSt* gpHelicopterPreviousMercPath = NULL;
 
 
 extern BOOLEAN fDeletedNode;
-extern BOOLEAN fResetTimerForFirstEntryIntoMapScreen;
 extern BOOLEAN gfStartedFromMapScreen;
 
 extern INT32 iDialogueBox;
@@ -2170,7 +2169,6 @@ UINT32 MapScreenHandle(void)
 		gfInChangeArrivalSectorMode = FALSE;
 
 		fLeavingMapScreen = FALSE;
-		fResetTimerForFirstEntryIntoMapScreen = TRUE;
 		fFlashAssignDone = FALSE;
 		gfEnteringMapScreen = 0;
 
@@ -2277,7 +2275,6 @@ UINT32 MapScreenHandle(void)
 		if( fFirstTimeInMapScreen == TRUE )
 		{
 			fFirstTimeInMapScreen = FALSE;
-//			fShowMapScreenHelpText = TRUE;
 		}
 
 		fShowMapInventoryPool = FALSE;
@@ -2589,7 +2586,7 @@ UINT32 MapScreenHandle(void)
 	}
 
 
-	if(	!fShowMapInventoryPool && !gfPauseDueToPlayerGamePause && !IsMapScreenHelpTextUp( )	/* && !fDisabledMapBorder */ )
+	if (!fShowMapInventoryPool && !gfPauseDueToPlayerGamePause /* && !fDisabledMapBorder */)
 	{
 		RenderMapCursorsIndexesAnims( );
 	}
@@ -2870,16 +2867,7 @@ UINT32 MapScreenHandle(void)
 	DisplayExitToTacticalGlowDuringDemo( );
 #endif
 
-	if( fShowMapScreenHelpText )
-	{
-		// display map screen fast help
-		DisplayMapScreenFastHelpList( );
-	}
-	else
-	{
-		// render help
-		RenderButtonsFastHelp( );
-	}
+	RenderButtonsFastHelp();
 
 	// execute dirty
 	ExecuteBaseDirtyRectQueue( );
@@ -3514,13 +3502,6 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 				continue;
 			}
 
-			if( IsMapScreenHelpTextUp() )
-			{
-				// stop mapscreen text
-				StopMapScreenHelpText( );
-				continue;
-			}
-
 			// handle for fast help text for interface stuff
 			if( IsTheInterfaceFastHelpTextActive() )
 			{
@@ -3555,10 +3536,6 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					else if (g_ui_message_overlay != NULL && !gfInConfirmMapMoveMode)
 					{
 						CancelMapUIMessage( );
-					}
-					else if( IsMapScreenHelpTextUp( ) )
-					{
-						StopMapScreenHelpText( );
 					}
         	else if ( gpCurrentTalkingFace != NULL && gpCurrentTalkingFace->fTalking )
           {
@@ -4009,8 +3986,6 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 
 							ShouldTheHelpScreenComeUp( HELP_SCREEN_MAPSCREEN, TRUE );
 						}
-
-//					fShowMapScreenHelpText = TRUE;
 					break;
 
 				#ifndef JA2DEMO
@@ -4401,15 +4376,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	// ATE: Shutdown tactical interface panel
 //	ShutdownCurrentPanel( );
 
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-
-		return;
-	}
-
-
 	// still plotting movement?
 	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
 	{
@@ -4596,12 +4562,6 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 
 BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 {
-	if( IsMapScreenHelpTextUp( ) )
-	{
-		// don't show highlight while global help text is up
-		return( FALSE );
-	}
-
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
@@ -4755,15 +4715,6 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 				fLBBeenPressedInMapView = FALSE;
 				RESETCOUNTER( LMOUSECLICK_DELAY_COUNTER );
 
-				// if we are showing help text in mapscreen
-				if( fShowMapScreenHelpText )
-				{
-					fShowMapScreenHelpText = FALSE;
-					fCharacterInfoPanelDirty = TRUE;
-					fMapPanelDirty = TRUE;
-					return;
-				}
-
 				// if in militia redistribution popup
 				if ( sSelectedMilitiaTown != 0 )
 				{
@@ -4870,15 +4821,6 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 			{
 				fRBBeenPressedInMapView = FALSE;
 				RESETCOUNTER( RMOUSECLICK_DELAY_COUNTER );
-
-				// if we are showing help text in mapscreen
-				if( fShowMapScreenHelpText )
-				{
-					fShowMapScreenHelpText = FALSE;
-					fCharacterInfoPanelDirty = TRUE;
-					fMapPanelDirty = TRUE;
-					return;
-				}
 
 				// if in militia redistribution popup
 				if ( sSelectedMilitiaTown != 0 )
@@ -5827,8 +5769,6 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 #ifdef JA2DEMO
 		DisabledInDemo();
 #else
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
-
 #if 0 // XXX was commented out
 		if (bSelectedDestChar != -1 || fPlotForHelicopter == TRUE)
 		{
@@ -5842,12 +5782,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText();
 		RequestContractMenu();
-	}
-	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
-	{
-		if (IsMapScreenHelpTextUp()) StopMapScreenHelpText( );
 #endif
 	}
 }
@@ -5870,13 +5805,6 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// set to new info character...make sure is valid
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iValue].merc;
 		if (pSoldier != NULL)
 		{
@@ -5923,13 +5851,6 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iValue].merc;
 		if (pSoldier != NULL)
 		{
@@ -6008,13 +5929,6 @@ static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iRe
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// set to new info character...make sure is valid
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iValue].merc;
 		if (pSoldier != NULL)
 		{
@@ -6167,13 +6081,6 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		SOLDIERTYPE* const s = gCharactersList[iValue].merc;
 		if (s != NULL)
 		{
@@ -6338,14 +6245,6 @@ static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// set to new info character...make sure is valid.. not in transit and alive and concious
-
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		SOLDIERTYPE* const pSoldier = gCharactersList[iValue].merc;
 		if (pSoldier != NULL)
 		{
@@ -6878,14 +6777,6 @@ static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 		if (CanExtendContractForSoldier(pSoldier))
 		{
@@ -7164,13 +7055,6 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 
 static void ResetAllSelectedCharacterModes(void)
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return;
-	}
-
 	// if in militia redistribution popup
 	if ( sSelectedMilitiaTown != 0 )
 	{
@@ -7545,13 +7429,6 @@ static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		if( gfPreBattleInterfaceActive == TRUE )
 		{
 			return;
@@ -7703,13 +7580,6 @@ static void TrashCanBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-			return;
-		}
-
 		// check if an item is in the cursor, if so, warn player
 		if( gpItemPointer != NULL )
 		{
@@ -8171,15 +8041,9 @@ static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(c
 // how many on team, if less than 2, disable prev/next merc buttons
 static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 {
-	if( gfPreBattleInterfaceActive )
-	{
-		if( IsMapScreenHelpTextUp() )
-		{
-			// stop mapscreen text
-			StopMapScreenHelpText( );
-		}
-	}
-	else if( bSelectedInfoChar == -1 )
+	if (gfPreBattleInterfaceActive) return;
+
+	if (bSelectedInfoChar == -1)
 	{
 		DisableButton( giCharInfoButton[ 0 ] );
 		DisableButton( giCharInfoButton[ 1 ] );
@@ -8358,15 +8222,7 @@ static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 	// grab the button index value for the sort buttons
 	INT32 iValue = MSYS_GetBtnUserData(btn);
 
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		if (IsMapScreenHelpTextUp())
-		{
-			StopMapScreenHelpText( );
-			return;
-		}
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
 		ChangeCharacterListSortMethod( iValue );
 	}
@@ -10195,13 +10051,6 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 static void RequestToggleMercInventoryPanel(void)
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return;
-	}
-
 	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
 	{
 		AbortMovementPlottingMode( );
@@ -10240,13 +10089,6 @@ static void RequestToggleMercInventoryPanel(void)
 
 static void RequestContractMenu(void)
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return;
-	}
-
 	if( gfPreBattleInterfaceActive == TRUE )
 	{
 		return;
@@ -10297,13 +10139,6 @@ static void ChangeCharacterListSortMethod(INT32 iValue)
 {
 	Assert( iValue >= 0 );
 	Assert( iValue < MAX_SORT_METHODS );
-
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-		return;
-	}
 
 	if( gfPreBattleInterfaceActive == TRUE )
 	{

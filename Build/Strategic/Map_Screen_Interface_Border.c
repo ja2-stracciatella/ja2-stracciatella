@@ -1358,12 +1358,6 @@ static BOOLEAN DoesPlayerHaveAnyMilitia(void)
 
 static void CommonBtnCallbackBtnDownChecks(void)
 {
-	if( IsMapScreenHelpTextUp() )
-	{
-		// stop mapscreen text
-		StopMapScreenHelpText( );
-	}
-
 	// any click cancels MAP UI messages, unless we're in confirm map move mode
 	if (g_ui_message_overlay != NULL && !gfInConfirmMapMoveMode)
 	{
