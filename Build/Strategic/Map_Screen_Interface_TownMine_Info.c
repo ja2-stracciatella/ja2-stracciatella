@@ -604,51 +604,28 @@ static void AddItemsInSectorToBox(void)
 static void PositionTownMineInfoBox(void)
 {
 	// position town mine info box
-	SGPPoint pPosition;
 	INT16 sX =0, sY = 0;
 
 	// position the box based on x and y of the selected sector
   GetScreenXYFromMapXY( bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
 
-	// set box position
-	pPosition.iX = sX;
-	pPosition.iY = sY;
-
 	// set new position
-	SetBoxPosition( ghTownMineBox, pPosition );
+	SetBoxXY(ghTownMineBox, sX, sY);
 
 	const SGPBox* const area = GetBoxArea(ghTownMineBox);
-
-	pPosition.iX = area->x;
-	pPosition.iY = area->y;
+	INT16 x = area->x;
+	INT16 y = area->y;
 
 	// now position box - the x axis
-	if( pPosition.iX < MapScreenRect.iLeft )
-	{
-		pPosition.iX = MapScreenRect.iLeft + 5;
-	}
-
-	if (pPosition.iX + area->w > MapScreenRect.iRight)
-	{
-		pPosition.iX = MapScreenRect.iRight - area->w - 5;
-	}
-
+	if (x           < MapScreenRect.iLeft)  x = MapScreenRect.iLeft + 5;
+	if (x + area->w > MapScreenRect.iRight) x = MapScreenRect.iRight - area->w - 5;
 
 	// position - the y axis
-	if( pPosition.iY < MapScreenRect.iTop )
-	{
-		pPosition.iY = MapScreenRect.iTop + 5;
-	}
-
-	if (pPosition.iY + area->h > MapScreenRect.iBottom)
-	{
-		pPosition.iY = MapScreenRect.iBottom - area->h - 8;
-	}
-
-
+	if (y           < MapScreenRect.iTop)    y = MapScreenRect.iTop + 5;
+	if (y + area->h > MapScreenRect.iBottom) y = MapScreenRect.iBottom - area->h - 8;
 
 	// reset position
-	SetBoxPosition( ghTownMineBox, pPosition );
+	SetBoxXY(ghTownMineBox, x, y);
 }
 
 

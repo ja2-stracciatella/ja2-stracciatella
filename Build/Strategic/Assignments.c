@@ -3181,7 +3181,7 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-			SetBoxPosition(ghAssignmentBox, AssignmentPosition);
+			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
 		pSoldier = GetSelectedAssignSoldier( FALSE );
@@ -3249,7 +3249,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		// vehicle position
 		const SGPBox* const area = GetBoxArea(ghAssignmentBox);
 		VehiclePosition.iX = area->x + area->w;
-		SetBoxPosition(ghVehicleBox, VehiclePosition);
+		SetBoxXY(ghVehicleBox, VehiclePosition.iX, VehiclePosition.iY);
 	}
 
 
@@ -4414,7 +4414,7 @@ void CreateDestroyMouseRegionsForContractMenu( void )
 
 		if( fShowContractMenu )
 		{
-			SetBoxPosition(ghContractBox, ContractPosition);
+			SetBoxXY(ghContractBox, ContractPosition.iX, ContractPosition.iY);
 		}
 		// grab height of font
 		iFontHeight = GetLineSpace( ghContractBox ) + GetFontHeight( GetBoxFont( ghContractBox ) );
@@ -4488,7 +4488,7 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 
 		if( ( fShowTrainingMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-			SetBoxPosition(ghTrainingBox, TrainPosition);
+			SetBoxXY(ghTrainingBox, TrainPosition.iX, TrainPosition.iY);
 		}
 
 		HandleShadingOfLinesForTrainingMenu( );
@@ -4575,7 +4575,7 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 
 		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
 		{
-			SetBoxPosition(ghAssignmentBox, AssignmentPosition);
+			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
 		HandleShadingOfLinesForAttributeMenus( );
@@ -4661,22 +4661,22 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 
 		if( fShowContractMenu )
 		{
-			SetBoxPosition(ghContractBox, ContractPosition);
+			SetBoxXY(ghContractBox, ContractPosition.iX, ContractPosition.iY);
 		}
 		else
 		{
-			SetBoxPosition( ghAssignmentBox , AssignmentPosition );
+			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
 		if( fShowContractMenu )
 		{
 			// set box position to contract box position
-			SetBoxPosition( ghRemoveMercAssignBox , ContractPosition );
+			SetBoxXY(ghRemoveMercAssignBox, ContractPosition.iX, ContractPosition.iY);
 		}
 		else
 		{
 			// set box position to contract box position
-			SetBoxPosition( ghRemoveMercAssignBox , AssignmentPosition );
+			SetBoxXY(ghRemoveMercAssignBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
 		CheckAndUpdateTacticalAssignmentPopUpPositions( );
@@ -6350,7 +6350,6 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 void DetermineBoxPositions( void )
 {
 	// depending on how many boxes there are, reposition as needed
-	SGPPoint pNewPoint;
 	SOLDIERTYPE *pSoldier = NULL;
 
 	if (!fShowAssignmentMenu || ghAssignmentBox == NO_POPUP_BOX) return;
@@ -6369,56 +6368,42 @@ void DetermineBoxPositions( void )
 		gsAssignmentBoxesY = area->y;
 	}
 
-	SGPPoint pPoint;
-	pPoint.iX = gsAssignmentBoxesX;
-	pPoint.iY = gsAssignmentBoxesY;
+	INT16 x = gsAssignmentBoxesX;
+	INT16 y = gsAssignmentBoxesY;
 
-	const SGPBox* area;
-	if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-	{
-		SetBoxPosition( ghEpcBox, pPoint );
-		area = GetBoxArea(ghEpcBox);
-	}
-	else
-	{
-		SetBoxPosition( ghAssignmentBox, pPoint );
-		area = GetBoxArea(ghAssignmentBox);
-	}
-
+	PopUpBox* const box = (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
+	SetBoxXY(box, x, y);
 
 	// hang it right beside the assignment/EPC box menu
-	pNewPoint.iX = pPoint.iX + area->w;
-	pNewPoint.iY = pPoint.iY;
+	x += GetBoxArea(box)->w;
 
 	if (fShowSquadMenu && ghSquadBox != NO_POPUP_BOX)
 	{
-		SetBoxPosition( ghSquadBox, pNewPoint );
+		SetBoxXY(ghSquadBox, x, y);
 	}
 
 	if (fShowRepairMenu && ghRepairBox != NO_POPUP_BOX)
 	{
 		CreateDestroyMouseRegionForRepairMenu( );
-		pNewPoint.iY += ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
+		y += (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
 
-		SetBoxPosition( ghRepairBox, pNewPoint );
+		SetBoxXY(ghRepairBox, x, y);
 	}
 
 	if (fShowTrainingMenu && ghTrainingBox != NO_POPUP_BOX)
 	{
-		pNewPoint.iY += ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
-		SetBoxPosition( ghTrainingBox, pNewPoint );
-		TrainPosition.iX = pNewPoint.iX;
-		TrainPosition.iY = pNewPoint.iY;
-		OrigTrainPosition.iY = pNewPoint.iY;
-		OrigTrainPosition.iX = pNewPoint.iX;
+		y += (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
+		SetBoxXY(ghTrainingBox, x, y);
+		TrainPosition.iX = x;
+		TrainPosition.iY = y;
+		OrigTrainPosition.iY = y;
+		OrigTrainPosition.iX = x;
 
 		if (fShowAttributeMenu && ghAttributeBox != NO_POPUP_BOX)
 		{
 			// hang it right beside the training box menu
 			const SGPBox* const area = GetBoxArea(ghTrainingBox);
-			pNewPoint.iX = area->x + area->w;
-			pNewPoint.iY = area->y;
-			SetBoxPosition( ghAttributeBox, pNewPoint );
+			SetBoxXY(ghAttributeBox, area->x + area->w, area->y);
 		}
 	}
 }
@@ -6493,7 +6478,6 @@ static void RepositionMouseRegions(void)
 
 static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 {
-	SGPPoint pPoint;
 	INT16 sLongest;
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -6539,10 +6523,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + area2->w;
-		pPoint.iY = gsAssignmentBoxesY + (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_REPAIR );
-
-		SetBoxPosition( ghRepairBox, pPoint );
+		const INT16 x = gsAssignmentBoxesX + area2->w;
+		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
+		SetBoxXY(ghRepairBox, x, y);
 	}
 	else if( fShowSquadMenu == TRUE )
 	{
@@ -6562,10 +6545,7 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + area2->w;
-		pPoint.iY = gsAssignmentBoxesY;
-
-		SetBoxPosition( ghSquadBox, pPoint );
+		SetBoxXY(ghSquadBox, gsAssignmentBoxesX + area2->w, gsAssignmentBoxesY);
 	}
 	else if( fShowAttributeMenu == TRUE )
 	{
@@ -6584,20 +6564,10 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX + area2->w + area->w;
-		pPoint.iY = gsAssignmentBoxesY;
-
-		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
-		SetBoxPosition( ghAttributeBox, pPoint );
-
-		pPoint.iX = gsAssignmentBoxesX + area2->w;
-		pPoint.iY = gsAssignmentBoxesY;
-
-		pPoint.iY += (  ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
-
-		SetBoxPosition( ghTrainingBox, pPoint );
-
-
+		const INT16 x = gsAssignmentBoxesX + area2->w;
+		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
+		SetBoxXY(ghAttributeBox, x + area->w, y);
+		SetBoxXY(ghTrainingBox,  x,           y);
 	}
 	else if( fShowTrainingMenu == TRUE )
 	{
@@ -6614,13 +6584,9 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-
-
-		pPoint.iX = gsAssignmentBoxesX + area2->w;
-		pPoint.iY = gsAssignmentBoxesY;
-		pPoint.iY += ( ( GetFontHeight( MAP_SCREEN_FONT ) + 2 ) * ASSIGN_MENU_TRAIN );
-
-		SetBoxPosition( ghTrainingBox, pPoint );
+		const INT16 x = gsAssignmentBoxesX + area2->w;
+		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
+		SetBoxXY(ghTrainingBox, x, y);
 	}
 	else
 	{
@@ -6637,17 +6603,8 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 			SetRenderFlags( RENDER_FLAG_FULL );
 		}
 
-		pPoint.iX = gsAssignmentBoxesX;
-		pPoint.iY = gsAssignmentBoxesY;
-
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC)
-		{
-			SetBoxPosition( ghEpcBox, pPoint );
-		}
-		else
-		{
-			SetBoxPosition( ghAssignmentBox, pPoint );
-		}
+		PopUpBox* const box = pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+		SetBoxXY(box, gsAssignmentBoxesX, gsAssignmentBoxesY);
 	}
 
 	RepositionMouseRegions( );

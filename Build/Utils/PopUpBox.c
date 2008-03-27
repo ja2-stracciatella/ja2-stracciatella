@@ -98,7 +98,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags)
 			if (box == NULL) return NO_POPUP_BOX;
 			memset(box, 0, sizeof(*box));
 
-			SetBoxPosition(box, Position);
+			SetBoxXY(box, Position.iX, Position.iY);
 			box->uiFlags = uiFlags;
 
 			*i = box;
@@ -180,10 +180,10 @@ void SetBoxBuffer(PopUpBox* const box, SGPVSurface* const buffer)
 }
 
 
-void SetBoxPosition(PopUpBox* const box, const SGPPoint Position)
+void SetBoxXY(PopUpBox* const box, const INT16 x, const INT16 y)
 {
-	box->pos.x    = Position.iX;
-	box->pos.y    = Position.iY;
+	box->pos.x    = x;
+	box->pos.y    = y;
 	box->fUpdated = FALSE;
 }
 

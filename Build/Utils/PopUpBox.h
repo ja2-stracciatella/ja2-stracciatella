@@ -18,7 +18,7 @@ UINT32 GetTopMarginSize(const PopUpBox*);
 void SetLineSpace(PopUpBox*, UINT32 uiLineSpace);
 UINT32 GetLineSpace(const PopUpBox*);
 void SetBoxBuffer(PopUpBox*, SGPVSurface*);
-void SetBoxPosition(PopUpBox*, SGPPoint Position);
+void SetBoxXY(PopUpBox*, INT16 x, INT16 y);
 void SetBoxX(PopUpBox*, INT16 x);
 void SetBoxY(PopUpBox*, INT16 y);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
