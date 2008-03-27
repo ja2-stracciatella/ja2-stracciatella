@@ -3021,59 +3021,42 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 }
 
 
-static void AddStringsToMoveBox(void);
+static void AddStringsToMoveBox(PopUpBox*);
 
 
 static void CreatePopUpBoxForMovementBox(void)
 {
 	// create the pop up box and mouse regions for movement list
-	ghMoveBox = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
+	PopUpBox* const box = CreatePopUpBox(MovePosition, POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
+	ghMoveBox = box;
 
- // add strings
- AddStringsToMoveBox( );
+	AddStringsToMoveBox(box);
 
+	SetBoxFont(      box, MAP_SCREEN_FONT);
+	SetBoxHighLight( box, FONT_WHITE);
+	SetBoxForeground(box, FONT_LTGREEN);
+	SetBoxBackground(box, FONT_BLACK);
+	SetBoxShade(     box, FONT_BLACK);
 
- // set font type
- SetBoxFont(ghMoveBox, MAP_SCREEN_FONT);
+	// make the header line WHITE
+	SetBoxLineForeground(box, 0, FONT_WHITE);
 
- // set highlight color
- SetBoxHighLight(ghMoveBox, FONT_WHITE);
+	// make the done and cancel lines YELLOW
+	const UINT32 line_count = GetNumberOfLinesOfTextInBox(box);
+	SetBoxLineForeground(box, line_count - 1, FONT_YELLOW);
+	if (IsAnythingSelectedForMoving()) SetBoxLineForeground(box, line_count - 2, FONT_YELLOW);
 
- // unhighlighted color
- SetBoxForeground(ghMoveBox, FONT_LTGREEN);
+	ResizeBoxToText(box);
 
- // make the header line WHITE
- SetBoxLineForeground( ghMoveBox, 0, FONT_WHITE );
-
- // make the done and cancel lines YELLOW
- SetBoxLineForeground( ghMoveBox, GetNumberOfLinesOfTextInBox( ghMoveBox ) - 1, FONT_YELLOW );
-
-	if ( IsAnythingSelectedForMoving() )
-	{
-		SetBoxLineForeground( ghMoveBox, GetNumberOfLinesOfTextInBox( ghMoveBox ) - 2, FONT_YELLOW );
-	}
-
- // background color
- SetBoxBackground(ghMoveBox, FONT_BLACK);
-
- // shaded color..for darkened text
- SetBoxShade( ghMoveBox, FONT_BLACK );
-
-
- // resize box to text
- ResizeBoxToText( ghMoveBox );
-
-	const SGPBox* const area = GetBoxArea(ghMoveBox);
-
-	// adjust position to try to keep it in the map area as best as possible
+	// adjust position to try to keep it in the map area as good as possible
+	const SGPBox* const area = GetBoxArea(box);
 	if (area->x + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
-		SetBoxX(ghMoveBox, max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
+		SetBoxX(box, max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
 	}
-
 	if (area->y + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
-		SetBoxY(ghMoveBox, max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
+		SetBoxY(box, max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
 	}
 }
 
@@ -3081,15 +3064,14 @@ static void CreatePopUpBoxForMovementBox(void)
 static BOOLEAN AllOtherSoldiersInListAreSelected(void);
 
 
-static void AddStringsToMoveBox(void)
+static void AddStringsToMoveBox(PopUpBox* const box)
 {
-	PopUpBox* const box = ghMoveBox;
 	INT32 iCount = 0, iCountB = 0;
 	CHAR16 sString[ 128 ], sStringB[ 128 ];
 	BOOLEAN fFirstOne = TRUE;
 
 	// clear all the strings out of the box
-	RemoveAllBoxStrings(ghMoveBox);
+	RemoveAllBoxStrings(box);
 
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
