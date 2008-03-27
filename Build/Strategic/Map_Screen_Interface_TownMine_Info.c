@@ -182,9 +182,6 @@ void CreateDestroyTownInfoBox( void )
 	{
 		const SGPBox area = *GetBoxArea(ghTownMineBox);
 
-		// get position
-		GetBoxPosition( ghTownMineBox, &pPosition);
-
 		// destroy pop up box
 		RemoveBox( ghTownMineBox );
 		ghTownMineBox = NO_POPUP_BOX;
@@ -193,7 +190,7 @@ void CreateDestroyTownInfoBox( void )
 		RemoveInventoryButtonForMapPopUpBox( );
 
 		// restore background
-		RestoreExternBackgroundRect(pPosition.iX, pPosition.iY, area.w, area.h + 3);
+		RestoreExternBackgroundRect(area.x, area.y, area.w, area.h + 3);
 
 		fCreated = FALSE;
 	}
@@ -623,8 +620,8 @@ static void PositionTownMineInfoBox(void)
 
 	const SGPBox* const area = GetBoxArea(ghTownMineBox);
 
-	// get position
-	GetBoxPosition( ghTownMineBox, &pPosition);
+	pPosition.iX = area->x;
+	pPosition.iY = area->y;
 
 	// now position box - the x axis
 	if( pPosition.iX < MapScreenRect.iLeft )
@@ -667,8 +664,6 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 
 static void AddInventoryButtonForMapPopUpBox(void)
 {
-	SGPPoint pPosition;
-
 	// load the button
 	SGPVObject* const uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
 
@@ -676,14 +671,10 @@ static void AddInventoryButtonForMapPopUpBox(void)
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiObject, 0);
 	INT16 sWidthA = pTrav->usWidth;
 
-	INT16 sTotalBoxWidth = sTotalButtonWidth;
-
 	const SGPBox* const area = GetBoxArea(ghTownMineBox);
-	GetBoxPosition( ghTownMineBox, &pPosition );
-
-	const INT16 y  = pPosition.iY + area->h - (BOX_BUTTON_HEIGHT + 5);
-	const INT16 dx = (area->w - sTotalBoxWidth) / 3;
-	INT16       x  = pPosition.iX + dx;
+	INT16         const dx   = (area->w - sTotalButtonWidth) / 3;
+	INT16               x    = area->x + dx;
+	INT16         const y    = area->y + area->h - (BOX_BUTTON_HEIGHT + 5);
 	MakeButton(0, pMapPopUpInventoryText[0], x, y, MapTownMineInventoryButtonCallBack);
 
 	x += sWidthA + dx;

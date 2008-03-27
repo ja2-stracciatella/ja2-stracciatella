@@ -3081,16 +3081,15 @@ static void CreatePopUpBoxForMovementBox(void)
  // resize box to text
  ResizeBoxToText( ghMoveBox );
 
-	GetBoxPosition( ghMoveBox, &Position);
 	const SGPBox* const area = GetBoxArea(ghMoveBox);
 
 	// adjust position to try to keep it in the map area as best as possible
-	if (Position.iX + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
+	if (area->x + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
 		SetBoxX(ghMoveBox, max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
 	}
 
-	if (Position.iY + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
+	if (area->y + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
 		SetBoxY(ghMoveBox, max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
 	}
@@ -3225,24 +3224,17 @@ static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void BuildMouseRegionsForMoveBox(void)
 {
 	INT32 iCounter = 0, iTotalNumberOfLines = 0, iCount = 0, iCountB = 0;
-	SGPPoint pPosition;
 	INT32 iFontHeight = 0;
-	INT32 iBoxXPosition = 0;
-	INT32 iBoxYPosition = 0;
 	BOOLEAN fDefinedOtherRegion = FALSE;
 
 
 	// grab height of font
 	iFontHeight = GetLineSpace( ghMoveBox ) + GetFontHeight( GetBoxFont( ghMoveBox ) );
 
-	// get x.y position of box
-	GetBoxPosition( ghMoveBox, &pPosition);
-
-	// grab box x and y position
-	iBoxXPosition = pPosition.iX;
-	iBoxYPosition = pPosition.iY + GetTopMarginSize( ghMoveBox ) - 2;	// -2 to improve highlighting accuracy between lines
-
-	const INT32 iBoxWidth = GetBoxArea(ghMoveBox)->w;
+	const SGPBox* const area          = GetBoxArea(ghMoveBox);
+	INT32         const iBoxXPosition = area->x;
+	INT32         const iBoxYPosition = area->y + GetTopMarginSize(ghMoveBox) - 2; // -2 to improve highlighting accuracy between lines
+	INT32         const iBoxWidth     = area->w;
 
 	// box heading
 	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);

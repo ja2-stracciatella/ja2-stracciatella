@@ -19,7 +19,6 @@ void SetLineSpace(PopUpBox*, UINT32 uiLineSpace);
 UINT32 GetLineSpace(const PopUpBox*);
 void SetBoxBuffer(PopUpBox*, SGPVSurface*);
 void SetBoxPosition(PopUpBox*, SGPPoint Position);
-void GetBoxPosition(const PopUpBox*, SGPPoint* Position);
 void SetBoxX(PopUpBox*, INT16 x);
 void SetBoxY(PopUpBox*, INT16 y);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
