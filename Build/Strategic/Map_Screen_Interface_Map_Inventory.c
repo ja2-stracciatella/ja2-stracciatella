@@ -1659,25 +1659,12 @@ static INT32 MapScreenSectorInventoryCompare(const void* pNum1, const void* pNum
 
 static BOOLEAN CanPlayerUseSectorInventory(void)
 {
-	INT16	sSectorX, sSectorY, sSectorZ;
-	BOOLEAN fInCombat;
-
-	//Get the sector that has a battle
-	fInCombat = GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle( &sSectorX, &sSectorY, &sSectorZ );
-
-	//if there is a battle going on
-	if( fInCombat )
-	{
-		//if the selected map is the one with the combat
-		if( ( ( sSelMapX == sSectorX ) &&
-					( sSelMapY == sSectorY ) &&
-					( iCurrentMapSectorZ == sSectorZ )
-				)
-			)
-		{
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
+	INT16 x;
+	INT16 y;
+	INT16 z;
+	return
+		!GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(&x, &y, &z) ||
+		sSelMapX           != x ||
+		sSelMapY           != y ||
+		iCurrentMapSectorZ != z;
 }
