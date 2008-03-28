@@ -1434,7 +1434,6 @@ const wchar_t* pwMiscSectorStrings[] =
 
 const wchar_t* pMapInventoryErrorString[] =
 {
-	L"%ls n'est pas assez près.",	//Merc is in sector with item but not close enough
 	L"Sélection impossible.",  //MARK CARTER
 	L"%ls n'est pas dans le bon secteur.",
 	L"En combat, vous devez prendre les objets vous-même.",

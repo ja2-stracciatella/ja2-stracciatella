@@ -593,7 +593,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		const SOLDIERTYPE* const s = GetSelectedInfoChar();
 		if (s == NULL)
 		{
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[1], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[0], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
 		}
 
@@ -603,7 +603,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 				s->bSectorZ != iCurrentMapSectorZ ||
 				s->fBetweenSectors)
 		{
-			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[5]);
+			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
 			wchar_t buf[128];
 			swprintf(buf, lengthof(buf), msg, s->name);
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
@@ -613,7 +613,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		// If in battle inform player they will have to do this in tactical
 		if (!CanPlayerUseSectorInventory())
 		{
-			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[3] : pMapInventoryErrorString[4]);
+			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
 		}

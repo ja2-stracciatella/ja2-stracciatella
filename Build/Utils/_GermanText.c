@@ -1396,7 +1396,6 @@ const wchar_t *pwMiscSectorStrings[] =
 // error strings for inventory
 const wchar_t *pMapInventoryErrorString[] =
 {
-	L"%ls ist nicht nah genug.",	//Merc is in sector with item but not close enough
 	L"Diesen Söldner können Sie nicht auswählen.",
 	L"%ls ist nicht im Sektor.",
 	L"Während einer Schlacht müssen Sie Gegenstände manuell nehmen.",

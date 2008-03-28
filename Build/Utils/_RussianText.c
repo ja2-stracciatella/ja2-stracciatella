@@ -1433,7 +1433,6 @@ const wchar_t* pwMiscSectorStrings[] =
 
 const wchar_t* pMapInventoryErrorString[] =
 {
-	L"%ls недостаточно близко.",	//Merc is in sector with item but not close enough
 	L"Нельзя выбрать этого бойца.",  //MARK CARTER
 	L"%ls не в этом секторе, и не может взять этот предмет.",
 	L"Во время битвы надо подбирать предметы вручную",
