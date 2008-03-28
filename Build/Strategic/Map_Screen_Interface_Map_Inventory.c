@@ -243,6 +243,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	// if the item is not reachable, or if the selected merc is not in the current sector
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (!(item->usFlags & WORLD_ITEM_REACHABLE) ||
+			s           == NULL     ||
 			s->sSectorX != sSelMapX ||
 			s->sSectorY != sSelMapY ||
 			s->bSectorZ != iCurrentMapSectorZ)
