@@ -565,163 +565,107 @@ static BOOLEAN CanPlayerUseSectorInventory(void);
 static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr);
 
 
-static void MapInvenPoolSlots(MOUSE_REGION* pRegion, INT32 iReason)
+static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 {
 	// btn callback handler for assignment screen mask region
-	INT32 iCounter = 0;
-	INT32 iOldNumberOfObjects = 0;
-	CHAR16 sString[ 128 ];
-
-	iCounter = MSYS_GetRegionUserData( pRegion, 0 );
-
-	if( ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
+	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		if ( gpItemPointer == NULL )
-		{
-			fShowMapInventoryPool = FALSE;
-		}
-		// else do nothing
+		if (gpItemPointer == NULL) fShowMapInventoryPool = FALSE;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
+		INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
+		WORLDITEM* const slot     = &pInventoryPoolList[iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + slot_idx];
 
-		if ( gpItemPointer == NULL )
-		{
-			// Return if empty
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.usItem == NOTHING )
-				return;
-		}
-
-
+		// Return if empty
+		if (gpItemPointer == NULL && slot->o.usItem == NOTHING) return;
 
 		// is this item reachable
-		if( !(  pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].usFlags & WORLD_ITEM_REACHABLE ) )
+		if (slot->o.usItem != NOTHING && !(slot->usFlags & WORLD_ITEM_REACHABLE))
 		{
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.usItem != NOTHING )
-			{
-				// not reachable
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				return;
-			}
-		}
-
-
-		// check if selected merc is in this sector, if not, warn them and leave
-
-		// valid character?
-		const SOLDIERTYPE* const s = GetSelectedInfoChar();
-		if (s == NULL)
-		{
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 1 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
+			// not reachable
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
 		}
 
-
-
-		//if( fShowInventoryFlag )
+		// Valid character?
+		const SOLDIERTYPE* const s = GetSelectedInfoChar();
+		if (s == NULL)
 		{
-			// not in sector?
-			if( s->sSectorX != sSelMapX ||
-					s->sSectorY != sSelMapY ||
-					s->bSectorZ != iCurrentMapSectorZ ||
-					s->fBetweenSectors)
-			{
-				if ( gpItemPointer == NULL )
-				{
-					swprintf(sString, lengthof(sString), pMapInventoryErrorString[2], s->name);
-				}
-				else
-				{
-					swprintf(sString, lengthof(sString), pMapInventoryErrorString[5], s->name);
-				}
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				return;
-			}
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[1], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
 		}
 
+		// Check if selected merc is in this sector, if not, warn them and leave
+		if (s->sSectorX != sSelMapX           ||
+				s->sSectorY != sSelMapY           ||
+				s->bSectorZ != iCurrentMapSectorZ ||
+				s->fBetweenSectors)
+		{
+			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[5]);
+			wchar_t buf[128];
+			swprintf(buf, lengthof(buf), msg, s->name);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		// If in battle inform player they will have to do this in tactical
+		if (!CanPlayerUseSectorInventory())
+		{
+			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[3] : pMapInventoryErrorString[4]);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
 
 		// If we do not have an item in hand, start moving it
-		if ( gpItemPointer == NULL )
+		if (gpItemPointer == NULL)
 		{
-
-
-			// Return if empty
-			if ( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.usItem == NOTHING )
-				return;
-
-			// if in battle inform player they will have to do this in tactical
-//			if( ( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) ) )
-			if (!CanPlayerUseSectorInventory())
-			{
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 3 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				return;
-			}
-
-			sObjectSourceGridNo = pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo;
-			BeginInventoryPoolPtr( &( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o ) );
+			sObjectSourceGridNo = slot->sGridNo;
+			BeginInventoryPoolPtr(&slot->o);
 		}
 		else
 		{
-
-			// if in battle inform player they will have to do this in tactical
-//			if( ( gTacticalStatus.fEnemyInSector ) ||( ( sSelMapX == gWorldSectorX ) && ( sSelMapY == gWorldSectorY ) && ( iCurrentMapSectorZ == gbWorldSectorZ ) && ( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-			if (!CanPlayerUseSectorInventory())
-			{
-				DoMapMessageBox( MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[ 4 ], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-				return;
-			}
-
-			iOldNumberOfObjects =  pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o.ubNumberOfObjects;
-
+			const INT32 iOldNumberOfObjects = slot->o.ubNumberOfObjects;
 
 			// Else, try to place here
-			if ( PlaceObjectInInventoryStash( &( pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].o ), gpItemPointer ) )
+			if (PlaceObjectInInventoryStash(&slot->o, gpItemPointer))
 			{
-
 				// set as reachable and set gridno
-				pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].usFlags |= WORLD_ITEM_REACHABLE;
+				slot->usFlags |= WORLD_ITEM_REACHABLE;
 
-				// if loaded sector, grab grid no of dropping soldier
-				//if( ( sSelMapX == gWorldSectorX )&&( gWorldSectorY == sSelMapY ) &&(gbWorldSectorZ == iCurrentMapSectorZ ) )
-				//{
-					// nothing here before, then place here
-					if( iOldNumberOfObjects == 0 )
+				// nothing here before, then place here
+				if (iOldNumberOfObjects == 0)
+				{
+					if (sObjectSourceGridNo == NOWHERE)
 					{
-						if( sObjectSourceGridNo == NOWHERE )
-						{
-							pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
-							pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo = sObjectSourceGridNo;
-						}
-						else
-						{
-							pInventoryPoolList[ ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) + iCounter ].sGridNo = sObjectSourceGridNo;
-						}
+						slot->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 					}
-				//}
+					slot->sGridNo = sObjectSourceGridNo;
+				}
 
 				// Check if it's the same now!
-				if ( gpItemPointer->ubNumberOfObjects == 0 )
+				if (gpItemPointer->ubNumberOfObjects == 0)
 				{
-					MAPEndItemPointer( );
+					MAPEndItemPointer();
 				}
 				else
 				{
 					// update ptr
 					// now set the cursor
-					guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-					gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
+					const INVTYPE* const item = &Item[gpItemPointer->usItem];
+					guiExternVo         = GetInterfaceGraphicForItem(item);
+					gusExternVoSubIndex = item->ubGraphicNum;
 
 					fMapInventoryItem = TRUE;
-					MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
-					SetCurrentCursorFromDatabase( EXTERN_CURSOR );
+					MSYS_ChangeRegionCursor(&gMPanelRegion, EXTERN_CURSOR);
+					SetCurrentCursorFromDatabase(EXTERN_CURSOR);
 				}
 			}
 		}
 
 		// dirty region, force update
 		fMapPanelDirty = TRUE;
-
 	}
 }
 
