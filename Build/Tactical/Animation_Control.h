@@ -520,8 +520,8 @@ typedef enum AnimationStates
 } AnimationStates;
 
 
-UINT16						gusAnimInst[ MAX_ANIMATIONS ][ MAX_FRAMES_PER_ANIM ];
-const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES];
+extern UINT16                gusAnimInst[MAX_ANIMATIONS][MAX_FRAMES_PER_ANIM];
+extern const ANIMCONTROLTYPE gAnimControl[NUMANIMATIONSTATES];
 
 extern const ANI_SPEED_DEF gubAnimWalkSpeeds[];
 extern const ANI_SPEED_DEF gubAnimRunSpeeds[];

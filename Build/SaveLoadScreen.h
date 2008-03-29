@@ -10,7 +10,7 @@
 //This flag is used to diferentiate between loading a game and saveing a game.
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
-BOOLEAN		gfSaveGame;
+extern BOOLEAN gfSaveGame;
 
 //if there is to be a slot selected when entering this screen
 extern INT8			gbSetSlotToBeSelected;

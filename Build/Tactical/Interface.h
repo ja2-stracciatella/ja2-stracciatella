@@ -167,7 +167,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text);
 
 
 extern VIDEO_OVERLAY* g_ui_message_overlay;
-UINT32				guiUIMessageTime;
+extern UINT32         guiUIMessageTime;
 
 typedef enum MESSAGE_TYPES
 {
