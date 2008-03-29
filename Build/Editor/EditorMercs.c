@@ -229,11 +229,6 @@ INT8 bCivArray[MAX_CIVTYPES]={ RANDOM, FATCIV, MANCIV, MINICIV, DRESSCIV, HATKID
 INT8 gbCurrCreature = BLOODCAT;
 
 
-
-BOOLEAN gfSaveBuffer = FALSE;
-BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
-SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
-
 void GameInitEditorMercsInfo()
 {
 	INT32 i;
@@ -2997,8 +2992,11 @@ static void UpdateScheduleInfo(void)
 	}
 }
 
-BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
-SOLDIERCREATE_STRUCT gSaveBufferDetailedPlacement;
+
+static BOOLEAN                    gfSaveBuffer = FALSE;
+static BASIC_SOLDIERCREATE_STRUCT gSaveBufferBasicPlacement;
+static SOLDIERCREATE_STRUCT       gSaveBufferDetailedPlacement;
+
 
 void CopyMercPlacement( INT32 iMapIndex )
 {
