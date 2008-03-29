@@ -3,7 +3,9 @@
 
 #include "Overhead_Types.h"
 
-BOOLEAN CreateSGPPaletteFromCOLFile( SGPPaletteEntry *pPalette, SGPFILENAME ColFile );
+
+BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* pal, const char* col_file);
+
 BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst);
 
 #endif

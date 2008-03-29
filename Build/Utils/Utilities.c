@@ -2,6 +2,7 @@
 #include "HImage.h"
 #include "LoadSaveData.h"
 #include "Types.h"
+#include "Utilities.h"
 #include "VObject.h"
 #include "FileMan.h"
 #include "Font_Control.h"
