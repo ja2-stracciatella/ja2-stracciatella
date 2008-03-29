@@ -81,11 +81,11 @@
 typedef struct
 {
 	const char* zAnimStr;
-	INT16			sSpeed;
-	FLOAT			dMovementChange;
-	UINT32		uiFlags;
-	UINT8			ubHeight;
-	UINT8			ubEndHeight;
+	FLOAT       dMovementChange;
+	UINT32      uiFlags;
+	INT16       sSpeed;
+	UINT8       ubHeight;
+	UINT8       ubEndHeight;
 } ANIMCONTROLTYPE;
 
 
