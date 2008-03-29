@@ -396,7 +396,7 @@ HWFILE OpenFileFromLibrary(const char* const pName)
 	if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
 	{
 		//reallocate more space for the array
-		FileOpenStruct* const pOpenFiles = MemRealloc(lib->pOpenFiles, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
+		FileOpenStruct* const pOpenFiles = MemRealloc(lib->pOpenFiles, sizeof(*pOpenFiles) * (lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME));
 		if (!pOpenFiles) return 0;
 
 		//increment the number of open files that we can have open
