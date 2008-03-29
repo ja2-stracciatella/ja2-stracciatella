@@ -1,4 +1,5 @@
 #include "Types.h"
+#include "QuestText.h"
 #include "Quests.h"
 
 
