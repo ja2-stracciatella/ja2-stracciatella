@@ -48,7 +48,7 @@ typedef enum HeliStateEnums
 	NUM_HELI_STATES
 } HeliStateEnums;
 
-enum HeliCodes
+typedef enum HeliCodes
 {
 	HELI_REST,
 	HELI_MOVE_DOWN,
