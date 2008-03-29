@@ -81,8 +81,8 @@ INT32						giCurrentTilesetID = 0;
 UINT32			gCurrentBackground = FIRSTTEXTURE;
 
 
-CHAR8 TileSurfaceFilenames[NUMBEROFTILETYPES][32];
 static INT8 gbNewTileSurfaceLoaded[NUMBEROFTILETYPES];
+
 
 void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 {
