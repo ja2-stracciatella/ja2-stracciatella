@@ -6,7 +6,6 @@
 
 // CATEGORY TYPES
 #define NO_TILE									64000
-#define ERASE_TILE							65000
 #define REQUIRES_SMOOTHING_TILE	19
 #define NUM_WALL_ORIENTATIONS		40
 

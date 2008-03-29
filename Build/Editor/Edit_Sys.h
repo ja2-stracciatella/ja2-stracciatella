@@ -18,7 +18,6 @@
 #define			DRAW_CLIFF_LAND 2
 
 UINT16			CurrentPaste;
-UINT16			CurrentStruct;
 
 void EraseMapTile( UINT32 iMapIndex );
 void QuickEraseMapTile( UINT32 iMapIndex );

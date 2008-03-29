@@ -28,7 +28,6 @@
 
 
 UINT16			CurrentPaste = NO_TILE;
-UINT16			CurrentStruct = NO_TILE;
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -539,11 +538,6 @@ static void PasteStructureCommon(UINT32 iMapIndex)
 				GetLandHeadType( iMapIndex, &fHeadType  );
 			}
 		}
-	}
-	else if ( CurrentStruct == ERASE_TILE && iMapIndex < 0x8000 )
-	{
-		RemoveAllStructsOfTypeRange( iMapIndex, FIRSTOSTRUCT, LASTOSTRUCT );
-		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTSHADOW, LASTSHADOW );
 	}
 }
 
