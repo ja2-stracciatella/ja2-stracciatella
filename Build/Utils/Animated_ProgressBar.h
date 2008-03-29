@@ -3,31 +3,6 @@
 
 #include "Types.h"
 
-#define MAX_PROGRESSBARS 4
-
-typedef struct PROGRESSBAR
-{
-	UINT8 ubProgressBarID;
-	UINT16 usBarLeft, usBarTop, usBarRight, usBarBottom;
-	BOOLEAN fPanel;
-	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
-	UINT16 usColor, usLtColor, usDkColor;
-	wchar_t *swzTitle;
-	UINT16 usTitleFont;
-	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
-	UINT16 usMsgFont;
-	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
-	UINT8 ubRelativeStartPercentage, ubRelativeEndPercentage;
-	UINT8 ubColorFillRed;
-	UINT8 ubColorFillGreen;
-	UINT8 ubColorFillBlue;
-	double rStart, rEnd;
-	BOOLEAN	fDisplayText;
-	BOOLEAN	fUseSaveBuffer;	//use the save buffer when display the text
-	double rLastActual;
-}PROGRESSBAR;
-
-PROGRESSBAR *pBar[ MAX_PROGRESSBARS ];
 
 void CreateLoadingScreenProgressBar(void);
 void RemoveLoadingScreenProgressBar(void);
