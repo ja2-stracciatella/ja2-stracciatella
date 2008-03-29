@@ -2234,7 +2234,7 @@ void SelectNextAvailSoldier(const SOLDIERTYPE* const last)
 	{
 		if (OkControllableMerc(s))
 		{
-			SelectSoldier(s, 0);
+			SelectSoldier(s, SELSOLDIER_NONE);
 			return;
 		}
 	}
@@ -2533,7 +2533,7 @@ void HandlePlayerTeamMemberDeath(SOLDIERTYPE* pSoldier)
 	{
 		if (new_selected_soldier)
 		{
-			SelectSoldier(new_selected_soldier, 0);
+			SelectSoldier(new_selected_soldier, SELSOLDIER_NONE);
 		}
 		else
 		{
@@ -6354,7 +6354,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* const pSoldier)
 			SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 			if (next != pSoldier)
 			{
-				SelectSoldier(next, 0);
+				SelectSoldier(next, SELSOLDIER_NONE);
 			}
 			else
 			{
@@ -6363,7 +6363,7 @@ void RemoveSoldierFromTacticalSector(SOLDIERTYPE* const pSoldier)
 				if (pNewSoldier != pSoldier)
 				{
 					// Good squad found!
-					SelectSoldier(pNewSoldier, 0);
+					SelectSoldier(pNewSoldier, SELSOLDIER_NONE);
 				}
 				else
 				{

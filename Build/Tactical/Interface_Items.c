@@ -3352,7 +3352,7 @@ void DrawItemTileCursor( )
 
 		// If we are here and we are not selected, select!
 		// ATE Design discussion propably needed here...
-		SelectSoldier(gpItemPointerSoldier, 0);
+		SelectSoldier(gpItemPointerSoldier, SELSOLDIER_NONE);
 
 		// ATE: if good for locate, locate to selected soldier....
 		if ( gbItemPointerLocateGood )

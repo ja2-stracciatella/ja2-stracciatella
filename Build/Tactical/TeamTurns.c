@@ -800,7 +800,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			}
 			else
 			{
-				SelectSoldier(interrupted, 0);
+				SelectSoldier(interrupted, SELSOLDIER_NONE);
 			}
 
 			if (gfHiddenInterrupt)

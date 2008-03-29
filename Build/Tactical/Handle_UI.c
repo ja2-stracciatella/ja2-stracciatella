@@ -1273,7 +1273,7 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 				// GO INTO IDLE MODE
 				// guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
 
-				SelectSoldier(FindNextActiveAndAliveMerc(sel, FALSE, FALSE), 0);
+				SelectSoldier(FindNextActiveAndAliveMerc(sel, FALSE, FALSE), SELSOLDIER_NONE);
 			}
 			else if (UIOKMoveDestination(sel, usMapPos) != 1 && pIntNode == NULL)
 			{

@@ -1772,7 +1772,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
 				return;
 
-			SelectSoldier(gpSMCurrentMerc, 0);
+			SelectSoldier(gpSMCurrentMerc, SELSOLDIER_NONE);
 
 			// OK, check if this is Nails, and we're in the vest position , don't allow it to come off....
 			if ( HandleNailsVestFetish( gpSMCurrentMerc, uiHandPos, NOTHING ) )
@@ -3718,7 +3718,7 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			}
 			else
 			{
-				SelectSoldier(gpItemPopupSoldier, 0);
+				SelectSoldier(gpItemPopupSoldier, SELSOLDIER_NONE);
 			}
 
 			usOldItemIndex =  ( UINT16 )uiKeyRing ;

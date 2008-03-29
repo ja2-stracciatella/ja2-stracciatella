@@ -991,7 +991,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 		SOLDIERTYPE* const next = FindNextActiveAndAliveMerc(pSoldier, FALSE, FALSE);
 		if (next != pSoldier)
 		{
-			SelectSoldier(next, 0);
+			SelectSoldier(next, SELSOLDIER_NONE);
 		}
 		else
 		{

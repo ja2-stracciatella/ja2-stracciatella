@@ -249,6 +249,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 
 typedef enum SelSoldierFlags
 {
+	SELSOLDIER_NONE           = 0,
 	SELSOLDIER_ACKNOWLEDGE    = 1U << 0,
 	SELSOLDIER_FORCE_RESELECT = 1U << 1,
 	SELSOLDIER_FROM_UI        = 1U << 2
