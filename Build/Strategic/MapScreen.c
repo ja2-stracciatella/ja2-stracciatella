@@ -452,8 +452,6 @@ static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 #endif
 
 
-SOLDIERTYPE		*gpItemPointerSoldier;
-
 static PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
 static PathSt* gpHelicopterPreviousMercPath = NULL;
 
