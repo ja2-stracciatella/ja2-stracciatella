@@ -205,4 +205,6 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void );
 
 extern NPCQuoteInfo* gpNPCQuoteInfoArray[];
 
+INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* pNPC);
+
 #endif
