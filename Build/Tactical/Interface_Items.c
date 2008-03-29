@@ -2508,7 +2508,7 @@ void RenderItemDescriptionBox(void)
 	const INT16             dx     = gsInvDescX;
 	const INT16             dy     = gsInvDescY;
 
-	const const SGPVObject* const box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
+	const SGPVObject* const box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
 	BltVideoObject(guiSAVEBUFFER, box_gfx, 0, dx, dy);
 
 	//Display the money 'seperating' border
