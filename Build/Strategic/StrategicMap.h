@@ -163,4 +163,6 @@ extern INT8 gbGreenToRegPromotions;
 extern INT8 gbRegToElitePromotions;
 extern INT8 gbMilitiaPromotions;
 
+extern BOOLEAN gfGettingNameFromSaveLoadScreen;
+
 #endif

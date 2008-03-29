@@ -188,8 +188,6 @@ BOOLEAN		gfLoadGameUponEntry = FALSE;
 
 BOOLEAN		gfHadToMakeBasementLevels = FALSE;
 
-BOOLEAN		gfGettingNameFromSaveLoadScreen = FALSE;
-
 
 //
 //Buttons
