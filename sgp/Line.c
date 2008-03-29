@@ -292,13 +292,11 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 
 
 // Draws a pixel in the specified color
-void PixelDraw(BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, INT8* pScreen)
+void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 sColor, UINT16* const pScreen)
 {
 	if (fClip && !ClipPoint(xp, yp)) return;
 
-	// point to the bitmap address first pixel to draw
-	pScreen += yp * giImageWidth + xp * 2;
-	*(UINT16*)pScreen = sColor;
+	pScreen[yp * (giImageWidth >> 1) + xp] = sColor;
 }
 
 
