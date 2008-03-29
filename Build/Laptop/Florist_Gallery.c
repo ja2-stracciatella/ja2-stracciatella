@@ -67,7 +67,7 @@ BOOLEAN		FloristGallerySubPagesVisitedFlag[ 4 ];
 
 //Floral buttons
 static BUTTON_PICS* guiGalleryButtonImage;
-UINT32	guiGalleryButton[ FLOR_GALLERY_NUMBER_FLORAL_BUTTONS ];
+static UINT32 guiGalleryButton[FLOR_GALLERY_NUMBER_FLORAL_BUTTONS];
 
 //Next Previous buttons
 static BUTTON_PICS* guiFloralGalleryButtonImage;
