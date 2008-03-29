@@ -18,8 +18,6 @@
 #include "Font_Control.h"
 
 
-UINT8			gubCurrentSortMode;
-UINT8			gubCurrentListMode;
 extern UINT8			gbCurrentIndex;
 
 
