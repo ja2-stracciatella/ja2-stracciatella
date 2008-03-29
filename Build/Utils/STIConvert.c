@@ -60,7 +60,7 @@ static void ConvertRGBDistribution555To565(UINT16* p16BPPData, UINT32 uiNumberOf
 }
 
 
-static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubImageBuffer, UINT16* pusNumberOfSubImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags);
+static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, STCISubImage** ppSubImageBuffer, UINT16* pusNumberOfSubImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags);
 
 
 void WriteSTIFile(INT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, const char* const cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
@@ -114,9 +114,7 @@ void WriteSTIFile(INT8* const pData, SGPPaletteEntry* const pPalette, const INT1
 
 	if ((Header.fFlags & STCI_INDEXED) && (fFlags & CONVERT_ETRLE_COMPRESS))
 	{
-		if( !ConvertToETRLE( &pOutputBuffer, &uiCompressedSize, (UINT8 **) &pSubImageBuffer, &usNumberOfSubImages, pData, sWidth, sHeight, fFlags ) )
-		{
-		}
+		ConvertToETRLE(&pOutputBuffer, &uiCompressedSize, &pSubImageBuffer, &usNumberOfSubImages, pData, sWidth, sHeight, fFlags);
 		uiSubImageBufferSize = (UINT32) usNumberOfSubImages * STCI_SUBIMAGE_SIZE;
 
 		Header.Indexed.usNumberOfSubImages = usNumberOfSubImages;
@@ -208,19 +206,17 @@ static BOOLEAN GoPastWall(INT16* psNewX, INT16* psNewY, UINT16 usWidth, UINT16 u
 static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, INT16 sOrigX, INT16 sOrigY);
 
 
-static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubImageBuffer, UINT16* pusNumberOfSubImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags)
+static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, STCISubImage** const ppSubImageBuffer, UINT16* const pusNumberOfSubImages, UINT8* const p8BPPBuffer, const UINT16 usWidth, const UINT16 usHeight, const UINT32 fFlags)
 {
 	INT16						sCurrX;
 	INT16						sCurrY;
 	INT16						sNextX;
 	INT16						sNextY;
 	UINT8 *					pOutputNext;
-	UINT8 *					pTemp;
 	BOOLEAN					fContinue = TRUE;
 	BOOLEAN					fOk = TRUE;
 	BOOLEAN					fStore;
 	BOOLEAN					fNextExists;
-	STCISubImage *	pCurrSubImage;
 	STCISubImage		TempSubImage;
 	UINT32					uiSubImageCompressedSize;
 	UINT32					uiSpaceLeft;
@@ -241,13 +237,13 @@ static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubI
 		// we want a 1-element SubImage array for this...
 		// allocate!
 		*pusNumberOfSubImages = 1;
-		*ppSubImageBuffer = MemAlloc( STCI_SUBIMAGE_SIZE );
+		*ppSubImageBuffer = MemAlloc(sizeof(*ppSubImageBuffer));
 		if (!(*ppSubImageBuffer))
 		{
 			MemFree( *ppDest );
 			return( FALSE );
 		}
-		pCurrSubImage = (STCISubImage *) *ppSubImageBuffer;
+		STCISubImage* const pCurrSubImage = *ppSubImageBuffer;
 		pCurrSubImage->sOffsetX = 0;
 		pCurrSubImage->sOffsetY = 0;
 		pCurrSubImage->usWidth = usWidth;
@@ -288,7 +284,7 @@ static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubI
 		while (fContinue)
 		{
 			// allocate more memory for SubImage structures, and set the current pointer to the last one
-			pTemp = (UINT8 *) MemRealloc( *ppSubImageBuffer, (*pusNumberOfSubImages + 1) * STCI_SUBIMAGE_SIZE );
+			STCISubImage* const pTemp = MemRealloc(*ppSubImageBuffer, (*pusNumberOfSubImages + 1) * sizeof(*ppSubImageBuffer));
 			if (pTemp == NULL)
 			{
 				fOk = FALSE;
@@ -298,7 +294,7 @@ static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, UINT8** ppSubI
 			{
 				*ppSubImageBuffer = pTemp;
 			}
-			pCurrSubImage = (STCISubImage *) (*ppSubImageBuffer + (*pusNumberOfSubImages) * STCI_SUBIMAGE_SIZE);
+			STCISubImage* const pCurrSubImage = *ppSubImageBuffer + *pusNumberOfSubImages;
 
 			pCurrSubImage->sOffsetX = sCurrX;
 			pCurrSubImage->sOffsetY = sCurrY;
