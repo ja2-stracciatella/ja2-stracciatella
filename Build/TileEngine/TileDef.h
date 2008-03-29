@@ -39,7 +39,7 @@ enum WallOrientationDefines
 };
 
 // TERRAIN ID VALUES.
-enum TerrainTypeDefines
+typedef enum TerrainTypeDefines
 {
 	NO_TERRAIN,
 	FLAT_GROUND,

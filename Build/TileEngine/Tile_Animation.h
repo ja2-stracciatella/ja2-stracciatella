@@ -105,7 +105,7 @@ typedef struct TAG_anitile_params
 } ANITILE_PARAMS;
 
 
-enum KeyFrameEnums
+typedef enum KeyFrameEnums
 {
 	ANI_KEYFRAME_NO_CODE,
 	ANI_KEYFRAME_BEGIN_TRANSLUCENCY,
