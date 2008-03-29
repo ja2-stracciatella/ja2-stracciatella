@@ -69,9 +69,8 @@ typedef struct TAG_UI_EVENT
 	UI_HANDLEFNC		HandleEvent;
 	BOOLEAN					fFirstTime;
 	BOOLEAN					fDoneMenu;
-	UINT32					uiMenuPreviousMode;
+	UI_MODE         uiMenuPreviousMode;
 	UINT32					uiParams[3];
-
 } UI_EVENT;
 
 

@@ -199,7 +199,7 @@ static UINT32     guiUIInterfaceSwapCursorsTime   = 0;
 INT16             gsJumpOverGridNo                = 0;
 
 
-#define M(flags, to, handler) { flags, to, handler, FALSE, FALSE, 0, { 0, 0, 0 } }
+#define M(flags, to, handler) { flags, to, handler, FALSE, FALSE, DONT_CHANGEMODE, { 0, 0, 0 } }
 
 static UI_EVENT gEvents[NUM_UI_EVENTS] =
 {
@@ -881,9 +881,9 @@ static void ClearEvent(UI_EVENT* pUIEvent)
 	 memset( pUIEvent->uiParams, 0, sizeof( pUIEvent->uiParams ) );
 	 pUIEvent->fDoneMenu					= FALSE;
 	 pUIEvent->fFirstTime					= TRUE;
-	 pUIEvent->uiMenuPreviousMode = 0;
-
+	 pUIEvent->uiMenuPreviousMode = DONT_CHANGEMODE;
 }
+
 
 void EndMenuEvent( UINT32	uiEvent )
 {
