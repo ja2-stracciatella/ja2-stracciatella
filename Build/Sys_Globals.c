@@ -10,6 +10,7 @@ char g_filename[200];
 #endif
 
 BOOLEAN				gfEditMode = FALSE;
+BOOLEAN fFirstTimeInGameScreen = TRUE;
 INT8					gbFPSDisplay = SHOW_MIN_FPS;
 BOOLEAN				gfGlobalError			= FALSE;
 

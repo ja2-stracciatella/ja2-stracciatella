@@ -208,7 +208,6 @@ static UINT32 giUpArrowRect   = NO_BGND_RECT;
 static UINT32 giDownArrowRect = NO_BGND_RECT;
 
 
-BOOLEAN fFirstTimeInGameScreen  = TRUE;
 BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
 INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
