@@ -21,7 +21,7 @@ UINT32	guiTime;
 UINT32	guiFadeDelay;
 BOOLEAN	gfFirstTimeInFade = FALSE;
 INT16		gsFadeCount;
-INT8		gbFadeType;
+static INT8 gbFadeType;
 INT16		gsFadeRealCount;
 BOOLEAN	gfFadeInVideo;
 

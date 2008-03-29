@@ -16,7 +16,6 @@ typedef void (*FADE_FUNCTION)( void );
 
 BOOLEAN						gfFadeInitialized;
 BOOLEAN						gfFadeIn;
-INT8							gbFadeType;
 FADE_FUNCTION			gFadeFunction;
 BOOLEAN						gfFadeInVideo;
 
