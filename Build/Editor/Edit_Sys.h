@@ -17,13 +17,8 @@
 #define			DRAW_CLIFFS			1
 #define			DRAW_CLIFF_LAND 2
 
-BOOLEAN			gfDoFill;
 UINT16			CurrentPaste;
-UINT16			gDebrisPaste;
-UINT16			gChangeElevation;
 UINT16			CurrentStruct;
-UINT32			gDoBanks;
-UINT32			gDoCliffs;
 
 void EraseMapTile( UINT32 iMapIndex );
 void QuickEraseMapTile( UINT32 iMapIndex );

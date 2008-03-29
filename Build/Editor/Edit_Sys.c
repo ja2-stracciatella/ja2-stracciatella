@@ -27,14 +27,8 @@
 #include "MemMan.h"
 
 
-BOOLEAN			gfDoFill = FALSE;
 UINT16			CurrentPaste = NO_TILE;
-UINT16			gDebrisPaste = NO_TILE;
-UINT16			gChangeElevation = FALSE;
 UINT16			CurrentStruct = NO_TILE;
-UINT32			gDoBanks = NO_BANKS;
-UINT32			gDoCliffs = NO_CLIFFS;
-
 
 
 //---------------------------------------------------------------------------------------------------------------
