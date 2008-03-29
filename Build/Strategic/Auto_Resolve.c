@@ -521,19 +521,19 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 	RenderButtons();
 
 	//Allocate memory for all the globals while we are in this mode.
-	gpAR = (AUTORESOLVE_STRUCT*)MemAlloc( sizeof( AUTORESOLVE_STRUCT ) );
+	gpAR = MALLOC(AUTORESOLVE_STRUCT);
 	Assert( gpAR );
 	memset( gpAR, 0, sizeof( AUTORESOLVE_STRUCT ) );
 	//Mercs -- 20 max
-	gpMercs = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * 20 );
+	gpMercs = MALLOCN(SOLDIERCELL, 20);
 	Assert( gpMercs );
 	memset( gpMercs, 0, sizeof( SOLDIERCELL ) * 20 );
 	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
-	gpCivs = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * MAX_ALLOWABLE_MILITIA_PER_SECTOR );
+	gpCivs = MALLOCN(SOLDIERCELL, MAX_ALLOWABLE_MILITIA_PER_SECTOR);
 	Assert( gpCivs );
 	memset( gpCivs, 0, sizeof( SOLDIERCELL ) * MAX_ALLOWABLE_MILITIA_PER_SECTOR );
 	//Enemies -- 32 max
-	gpEnemies = (SOLDIERCELL*)MemAlloc( sizeof( SOLDIERCELL) * 32 );
+	gpEnemies = MALLOCN(SOLDIERCELL, 32);
 	Assert( gpEnemies );
 	memset( gpEnemies, 0, sizeof( SOLDIERCELL ) * 32 );
 
@@ -818,7 +818,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 					gpMercs[ index ].uiFlags |= CELL_EPC;
 				}
 			}
-			gpMercs[ index ].pRegion = (MOUSE_REGION*)MemAlloc( sizeof( MOUSE_REGION ) );
+			gpMercs[index].pRegion = MALLOC(MOUSE_REGION);
 			Assert( gpMercs[ index ].pRegion );
 			memset( gpMercs[ index ].pRegion, 0, sizeof( MOUSE_REGION ) );
 			MSYS_DefineRegion( gpMercs[ index ].pRegion, gpMercs[ index ].xp, gpMercs[ index ].yp,

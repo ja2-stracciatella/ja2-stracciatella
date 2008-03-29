@@ -48,7 +48,7 @@ static void SetQueue(UINT8 ubQueueID, HLIST hQueue);
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID)
 {
-	EVENT* pEvent = MemAlloc(sizeof(*pEvent) + uiDataSize);
+	EVENT* pEvent = MALLOCE(EVENT, uiDataSize);
 	CHECKF(pEvent != NULL);
 
 	// Set values

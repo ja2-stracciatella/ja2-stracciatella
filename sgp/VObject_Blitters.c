@@ -670,10 +670,8 @@ BlitDone:
 **********************************************************************************************/
 UINT16 *InitZBuffer(UINT32 uiPitch, UINT32 uiHeight)
 {
-UINT16 *pBuffer;
-
-	if((pBuffer=MemAlloc(uiPitch*uiHeight))==NULL)
-		return(NULL);
+	UINT16* const pBuffer = MALLOCN(UINT16, uiPitch * uiHeight);
+	if (pBuffer == NULL) return NULL;
 
 	memset(pBuffer, 0, (uiPitch*uiHeight));
 	return(pBuffer);

@@ -114,10 +114,9 @@ static UINT8 AddGroupToList(GROUP* pGroup);
 //step before adding waypoints and members to the player group.
 UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	GROUP *pNew;
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewPlayerGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewPlayerGroup with out of range sectorY value of %d", ubSectorY ) );
-	pNew = (GROUP*)MemAlloc( sizeof( GROUP ) );
+	GROUP* const pNew = MALLOC(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewPlayerGroup." );
 	memset( pNew, 0, sizeof( GROUP ) );
 	pNew->pPlayerList = NULL;
@@ -141,10 +140,9 @@ UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY 
 
 UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY , UINT32 uiUNISEDVehicleId )
 {
-	GROUP *pNew;
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewVehicleGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewVehicleGroup with out of range sectorY value of %d", ubSectorY ) );
-	pNew = (GROUP*)MemAlloc( sizeof( GROUP ) );
+	GROUP* const pNew = MALLOC(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewVehicleGroup." );
 	memset( pNew, 0, sizeof( GROUP ) );
 	pNew->pWaypoints = NULL;
@@ -171,10 +169,10 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup;
-	PLAYERGROUP *pPlayer, *curr;
+	PLAYERGROUP *curr;
 	pGroup = GetGroup( ubGroupID );
 	Assert( pGroup );
-	pPlayer = (PLAYERGROUP*)MemAlloc( sizeof( PLAYERGROUP ) );
+	PLAYERGROUP* const pPlayer = MALLOC(PLAYERGROUP);
 	Assert( pPlayer );
 	AssertMsg( pGroup->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 	pPlayer->pSoldier = pSoldier;
@@ -518,12 +516,12 @@ BOOLEAN AddWaypointToPGroup( GROUP* pGroup, UINT8 ubSectorX, UINT8 ubSectorY ) /
 
 	if( !pWay )
 	{ //We are adding the first waypoint.
-		pGroup->pWaypoints = (WAYPOINT*)MemAlloc( sizeof( WAYPOINT ) );
+		pGroup->pWaypoints = MALLOC(WAYPOINT);
 		pWay = pGroup->pWaypoints;
 	}
 	else
 	{ //Add the waypoint to the end of the list
-		pWay->next = (WAYPOINT*)MemAlloc( sizeof( WAYPOINT ) );
+		pWay->next = MALLOC(WAYPOINT);
 		pWay = pWay->next;
 	}
 
@@ -585,12 +583,11 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 //............................................................
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites )
 {
-	GROUP *pNew;
 	AssertMsg( uiSector >= 0 && uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
-	pNew = (GROUP*)MemAlloc( sizeof( GROUP ) );
+	GROUP* const pNew = MALLOC(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewEnemyGroup." );
 	memset( pNew, 0, sizeof( GROUP ) );
-	pNew->pEnemyGroup = (ENEMYGROUP*)MemAlloc( sizeof( ENEMYGROUP ) );
+	pNew->pEnemyGroup = MALLOC(ENEMYGROUP);
 	AssertMsg( pNew->pEnemyGroup, "MemAlloc failure during enemy group creation." );
 	memset( pNew->pEnemyGroup, 0, sizeof( ENEMYGROUP ) );
 	pNew->pWaypoints = NULL;
@@ -3077,7 +3074,6 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup);
 BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 {
 	GROUP *pGroup=NULL;
-	GROUP	*pTemp=NULL;
 	UINT32	uiNumberOfGroups=0;
 	UINT32	cnt;
 	UINT32 bit, index, mask;
@@ -3106,7 +3102,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	for( cnt=0; cnt< uiNumberOfGroups; cnt++ )
 	{
 		//allocate memory for the node
-		pTemp = MemAlloc( sizeof( GROUP ));
+		GROUP* const pTemp = MALLOC(GROUP);
 		if( pTemp == NULL )
 			return( FALSE );
 		memset( pTemp, 0, sizeof( GROUP ) );
@@ -3256,7 +3252,7 @@ static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 	PLAYERGROUP** anchor = &g->pPlayerList;
 	for (UINT32 i = node_count; i != 0; --i)
 	{
-		PLAYERGROUP* const pg = MemAlloc(sizeof(*pg));
+		PLAYERGROUP* const pg = MALLOC(PLAYERGROUP);
 		if (pg == NULL) return FALSE;
 
 		UINT32 profile_id;
@@ -3293,10 +3289,8 @@ static BOOLEAN SaveEnemyGroupStruct(HWFILE hFile, GROUP* pGroup)
 //Loads the enemy group struct from the saved game file
 static BOOLEAN LoadEnemyGroupStructFromSavedGame(HWFILE hFile, GROUP* pGroup)
 {
-	ENEMYGROUP *pEnemyGroup=NULL;
-
 	//Alllocate memory for the enemy struct
-	pEnemyGroup = MemAlloc( sizeof( ENEMYGROUP ) );
+	ENEMYGROUP* const pEnemyGroup = MALLOC(ENEMYGROUP);
 	if( pEnemyGroup == NULL )
 		return( FALSE );
 	memset( pEnemyGroup, 0, sizeof( ENEMYGROUP ) );
@@ -3414,8 +3408,6 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup)
 	UINT32	cnt=0;
 	UINT32	uiNumberOfWayPoints=0;
 	WAYPOINT *pWayPoints = pGroup->pWaypoints;
-	WAYPOINT *pTemp=NULL;
-
 
 	//Load the number of waypoints
 	if (!FileRead(hFile, &uiNumberOfWayPoints, sizeof(UINT32)))
@@ -3431,7 +3423,7 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup)
 		for(cnt=0; cnt<uiNumberOfWayPoints; cnt++)
 		{
 			//Allocate memory for the node
-			pTemp = MemAlloc( sizeof( WAYPOINT ) );
+			WAYPOINT* const pTemp = MALLOC(WAYPOINT);
 			if( pTemp == NULL )
 				return( FALSE );
 			memset( pTemp, 0, sizeof( WAYPOINT ) );

@@ -513,7 +513,7 @@ static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubS
 			pHistory=pHistory->Next;
 
 		// alloc space
-		pHistory->Next=MemAlloc(sizeof(HistoryUnit));
+		pHistory->Next = MALLOC(HistoryUnit);
 
 		// set up information passed
 		pHistory = pHistory->Next;
@@ -530,7 +530,7 @@ static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubS
 	else
 	{
 		// alloc space
-		pHistory=MemAlloc(sizeof(HistoryUnit));
+		pHistory = MALLOC(HistoryUnit);
 
 		// setup info passed
 		pHistory->Next = NULL;

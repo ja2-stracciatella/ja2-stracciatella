@@ -87,7 +87,7 @@ static void AddStandardVideoSurface(HVSURFACE hVSurface)
 {
 	if (hVSurface == NULL) return;
 
-	VSURFACE_NODE* Node = MemAlloc(sizeof(*Node));
+	VSURFACE_NODE* const Node = MALLOC(VSURFACE_NODE);
 	Assert(Node != NULL); // out of memory?
 	Node->hVSurface = hVSurface;
 
@@ -331,7 +331,7 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 		uiRBitMask, uiGBitMask, uiBBitMask, 0
 	);
 
-	HVSURFACE hVSurface = MemAlloc(sizeof(*hVSurface));
+	SGPVSurface* const hVSurface = MALLOC(SGPVSurface);
 	CHECKF(hVSurface != NULL);
 
 	hVSurface->surface       = surface;
@@ -443,7 +443,7 @@ BOOLEAN SetVideoSurfacePalette(SGPVSurface* const hVSurface, const SGPPaletteEnt
 	// Create palette object if not already done so
 	if (hVSurface->pPalette == NULL)
 	{
-		hVSurface->pPalette = MemAlloc(sizeof(*hVSurface->pPalette) * 256);
+		hVSurface->pPalette = MALLOCN(SDL_Color, 256);
 	}
 	for (UINT32 i = 0; i < 256; i++)
 	{
@@ -629,7 +629,7 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 
 static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 {
-	HVSURFACE hVSurface = MemAlloc(sizeof(*hVSurface));
+	SGPVSurface* const hVSurface = MALLOC(SGPVSurface);
 	hVSurface->surface       = surface;
 	hVSurface->usHeight      = surface->h;
 	hVSurface->usWidth       = surface->w;
@@ -772,7 +772,7 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* Info = MemAlloc(sizeof(*Info) * guiVSurfaceSize);
+	DUMPINFO* const Info = MALLOCN(DUMPINFO, guiVSurfaceSize);
 	memset(Info, 0, sizeof(*Info) * guiVSurfaceSize);
 
 	//Loop through the list and record every unique filename and count them
@@ -818,13 +818,13 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 static void RecordVSurface(const char* Filename, UINT32 LineNum, const char* SourceFile)
 {
 	//record the filename of the vsurface (some are created via memory though)
-	gpVSurfaceTail->pName = MemAlloc(strlen(Filename) + 1);
+	gpVSurfaceTail->pName = MALLOCN(char, strlen(Filename) + 1);
 	strcpy(gpVSurfaceTail->pName, Filename);
 
 	//record the code location of the calling creating function.
 	char str[256];
 	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
-	gpVSurfaceTail->pCode = MemAlloc(strlen(str) + 1);
+	gpVSurfaceTail->pCode = MALLOCN(char, strlen(str) + 1);
 	strcpy(gpVSurfaceTail->pCode, str);
 }
 

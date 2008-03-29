@@ -59,15 +59,14 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	gFileDataBase.usNumberOfLibraries = LibCount;
 
 	//allocate memory for the each of the library headers
-	UINT32 uiSize = LibCount * sizeof(LibraryHeaderStruct);
-	if( uiSize )
+	if (LibCount > 0)
 	{
-		LibraryHeaderStruct* const libs = MemAlloc(uiSize);
+		LibraryHeaderStruct* const libs = MALLOCN(LibraryHeaderStruct, LibCount);
 		gFileDataBase.pLibraries = libs;
 		CHECKF(libs);
 
 		//set all the memrory to 0
-		memset(libs, 0, uiSize);
+		memset(libs, 0, sizeof(*libs) * LibCount);
 
 		//Load up each library
 		for (i = 0; i < LibCount; i++)
@@ -83,12 +82,11 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	//allocate memory for the handles of the 'real files' that will be open
 	//This is needed because the the code wouldnt be able to tell the difference between a 'real' handle and a made up one
 	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-	uiSize = INITIAL_NUM_HANDLES * sizeof(*rfh->pRealFilesOpen);
-	rfh->pRealFilesOpen = MemAlloc(uiSize);
+	rfh->pRealFilesOpen = MALLOCN(FILE*, INITIAL_NUM_HANDLES);
 	CHECKF(rfh->pRealFilesOpen);
 
 	//clear the memory
-	memset(rfh->pRealFilesOpen, 0, uiSize);
+	memset(rfh->pRealFilesOpen, 0, sizeof(*rfh->pRealFilesOpen) * INITIAL_NUM_HANDLES);
 
 	//set the initial number how many files can be opened at the one time
 	rfh->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
@@ -148,7 +146,7 @@ static int CompareFileHeader(const void* a, const void* b)
 // Replace all \ in a string by /
 static char* Slashify(const char* s)
 {
-	char* const res = MemAlloc(strlen(s) + 1);
+	char* const res = MALLOCN(char, strlen(s) + 1);
 	if (res == NULL) return NULL;
 	char* d = res;
 	do { *d++ = (*s == '\\' ? '/' : *s); } while (*s++ != '\0');
@@ -178,7 +176,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 
 	const UINT32 count_entries = LibFileHeader.iEntries;
 
-	FileHeaderStruct* fhs = MemAlloc(sizeof(*fhs) * count_entries);
+	FileHeaderStruct* fhs = MALLOCN(FileHeaderStruct, count_entries);
 #ifdef JA2TESTVERSION
 	lib->uiTotalMemoryAllocatedForLibrary = sizeof(*fhs) * count_entries;
 #endif
@@ -228,7 +226,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 #endif
 
 	//allocate space for the open files array
-	FileOpenStruct* const fo = MemAlloc(INITIAL_NUM_HANDLES * sizeof(*fo));
+	FileOpenStruct* const fo = MALLOCN(FileOpenStruct, INITIAL_NUM_HANDLES);
 	lib->pOpenFiles = fo;
 	if (!fo) return FALSE;
 	memset(fo, 0, INITIAL_NUM_HANDLES * sizeof(*fo));
@@ -673,9 +671,6 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 //	UINT32	cnt;
 	INT32	iFilePos=0;
 
-	DIRENTRY *pAllEntries;
-
-
 	memset( pLastWriteTime, 0, sizeof( SGP_FILETIME ) );
 
 	SetFilePointer(lib->hLibraryHandle, 0, NULL, FILE_BEGIN);
@@ -694,7 +689,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	if( uiFileNum >= (UINT32)LibFileHeader.iEntries )
 		return( FALSE );
 
-	pAllEntries = MemAlloc( sizeof( DIRENTRY ) * LibFileHeader.iEntries );
+	DIRENTRY* const pAllEntries = MALLOCN(DIRENTRY, LibFileHeader.iEntries);
 	if( pAllEntries == NULL )
 		return( FALSE );
 	memset( pAllEntries, 0, sizeof( DIRENTRY ) );

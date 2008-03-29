@@ -79,8 +79,7 @@ static UINT16 gusTextInputCursor = CURSOR_IBEAM;
 //one.
 static void PushTextInputLevel(void)
 {
-	STACKTEXTINPUTNODE *pNewLevel;
-	pNewLevel = (STACKTEXTINPUTNODE*)MemAlloc( sizeof( STACKTEXTINPUTNODE ) );
+	STACKTEXTINPUTNODE* const pNewLevel = MALLOC(STACKTEXTINPUTNODE);
 	Assert( pNewLevel );
 	pNewLevel->head = gpTextInputHead;
 	pNewLevel->pColors = pColors;
@@ -134,7 +133,7 @@ void InitTextInputMode()
 		//KillTextInputMode();
 	}
 	gpTextInputHead = NULL;
-	pColors = (TextInputColors*)MemAlloc( sizeof( TextInputColors ) );
+	pColors = MALLOC(TextInputColors);
 	Assert( pColors );
 	gfTextInputMode = TRUE;
 	gfEditingText = FALSE;
@@ -218,8 +217,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
 void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t* szInitText, UINT8 ubMaxChars, UINT16 usInputType)
 {
-	TEXTINPUTNODE *pNode;
-	pNode = (TEXTINPUTNODE*)MemAlloc(sizeof(TEXTINPUTNODE));
+	TEXTINPUTNODE* const pNode = MALLOC(TEXTINPUTNODE);
 	Assert(pNode);
 	memset( pNode, 0, sizeof( TEXTINPUTNODE ) );
 	pNode->next = NULL;
@@ -244,7 +242,7 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 	if( usInputType == INPUTTYPE_EXCLUSIVE_24HOURCLOCK )
 		ubMaxChars = 6;
 	//Allocate and copy the string.
-	pNode->szString = (wchar_t*)MemAlloc( (ubMaxChars+1)*sizeof(wchar_t) );
+	pNode->szString = MALLOCN(wchar_t, ubMaxChars + 1);
 	Assert( pNode->szString );
 	if( szInitText )
 	{
@@ -282,8 +280,7 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 //externally, except for the TAB keys.
 void AddUserInputField( INPUT_CALLBACK userFunction )
 {
-	TEXTINPUTNODE *pNode;
-	pNode = (TEXTINPUTNODE*)MemAlloc(sizeof(TEXTINPUTNODE));
+	TEXTINPUTNODE* const pNode = MALLOC(TEXTINPUTNODE);
 	Assert(pNode);
 	pNode->next = NULL;
   if( !gpTextInputHead ) //first entry, so we don't start with text input.
@@ -1475,7 +1472,7 @@ static void ExecuteCopyCommand(void)
 			ubEnd = gubStartHilite;
 		}
 		ubCount = (UINT8)(ubEnd - ubStart);
-		szClipboard = (UINT16*)MemAlloc( ( ubCount + 1 ) * 2 );
+		szClipboard = MALLOCN(UINT16, ubCount + 1);
 		Assert( szClipboard );
 		for( ubCount = ubStart; ubCount < ubEnd; ubCount++ )
 		{

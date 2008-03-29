@@ -71,13 +71,13 @@ void BuildItemPoolList()
 		{
 			if( !pIPHead )
 			{
-				pIPHead = (IPListNode*)MemAlloc( sizeof( IPListNode ) );
+				pIPHead = MALLOC(IPListNode);
 				Assert( pIPHead );
 				tail = pIPHead;
 			}
 			else
 			{
-				tail->next = (IPListNode*)MemAlloc( sizeof( IPListNode ) );
+				tail->next = MALLOC(IPListNode);
 				Assert( tail->next );
 				tail = tail->next;
 			}
@@ -273,7 +273,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			return;
 	}
 	//Allocate memory to store all the item pointers.
-	eInfo.pusItemIndex = (UINT16*)MemAlloc( sizeof(UINT16) * eInfo.sNumItems );
+	eInfo.pusItemIndex = MALLOCN(UINT16, eInfo.sNumItems);
 
 	//Disable the appropriate scroll buttons based on the saved scroll index if applicable
 	//Left most scroll position
@@ -914,7 +914,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	ShowItemCursor( sGridNo );
 	if( pIPPrev )
 	{
-		pIPPrev->next = (IPListNode*)MemAlloc( sizeof( IPListNode ) );
+		pIPPrev->next = MALLOC(IPListNode);
 		Assert( pIPPrev->next );
 		pIPPrev = pIPPrev->next;
 		pIPPrev->next = NULL;
@@ -923,7 +923,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	}
 	else
 	{
-		pIPHead = (IPListNode*)MemAlloc( sizeof( IPListNode ) );
+		pIPHead = MALLOC(IPListNode);
 		Assert( pIPHead );
 		pIPHead->next = NULL;
 		pIPHead->sGridNo = sGridNo;

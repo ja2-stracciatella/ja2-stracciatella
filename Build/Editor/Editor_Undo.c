@@ -126,7 +126,7 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 	MapIndexBinaryTree *curr, *parent;
 	if( !top )
 	{
-		top = (MapIndexBinaryTree*)MemAlloc( sizeof( MapIndexBinaryTree ) );
+		top = MALLOC(MapIndexBinaryTree);
 		Assert( top );
 		top->usMapIndex = usMapIndex;
 		top->left = NULL;
@@ -149,7 +149,7 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 	//if we made it this far, then curr is null and parent is pointing
 	//directly above.
 	//Create the new node and fill in the information.
-	curr = (MapIndexBinaryTree*)MemAlloc( sizeof( MapIndexBinaryTree ) );
+	curr = MALLOC(MapIndexBinaryTree);
 	Assert( curr );
 	curr->usMapIndex = usMapIndex;
 	curr->left = NULL;
@@ -343,9 +343,6 @@ static void CropStackToMaxLength(INT32 iMaxCmds)
 //save the light radius and light ID, so that we place it during undo execution.
 void AddLightToUndoList(const INT32 iMapIndex, const INT32 iLightRadius)
 {
-	undo_stack		*pNode;
-	undo_struct		*pUndoInfo;
-
 	if(	!gfUndoEnabled )
 		return;
 	//When executing an undo command (by adding a light or removing one), that command
@@ -356,11 +353,11 @@ void AddLightToUndoList(const INT32 iMapIndex, const INT32 iLightRadius)
 	if( gfIgnoreUndoCmdsForLights )
 		return;
 
-	pNode = (undo_stack*)MemAlloc( sizeof( undo_stack ) );
+	undo_stack* const pNode = MALLOC(undo_stack);
 	if( !pNode )
 		return;
 
-	pUndoInfo = (undo_struct *)MemAlloc( sizeof( undo_struct ) );
+	undo_struct* const pUndoInfo = MALLOC(undo_struct);
 	if( !pUndoInfo )
 	{
 		MemFree( pNode );
@@ -418,29 +415,26 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 
 static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 {
-	undo_stack		*pNode;
-	undo_struct		*pUndoInfo;
-	MAP_ELEMENT		*pData;
 	STRUCTURE			*pStructure;
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
 
-	if ( (pNode = (undo_stack *)MemAlloc(sizeof( undo_stack )) ) == NULL )
+	undo_stack* const pNode = MALLOC(undo_stack);
+	if (pNode == NULL) return FALSE;
+
+	undo_struct* const pUndoInfo = MALLOC(undo_struct);
+	if (pUndoInfo == NULL)
 	{
-		return( FALSE );
+		MemFree(pNode);
+		return FALSE;
 	}
 
-	if ( (pUndoInfo = (undo_struct *)MemAlloc(sizeof( undo_struct )) ) == NULL )
+	MAP_ELEMENT* const pData = MALLOC(MAP_ELEMENT);
+	if (pData == NULL)
 	{
-		MemFree( pNode );
-		return( FALSE );
-	}
-
-	if ( (pData = (MAP_ELEMENT *)MemAlloc(sizeof( MAP_ELEMENT )) ) == NULL )
-	{
-		MemFree( pNode );
-		MemFree( pUndoInfo );
-		return( FALSE );
+		MemFree(pNode);
+		MemFree(pUndoInfo);
+		return FALSE;
 	}
 
 	// Init map element struct
@@ -715,7 +709,6 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 {
 	MAP_ELEMENT			*pOldMapElement;
 	LEVELNODE				*pOldLevelNode;
-	LEVELNODE			  *pLevelNode;
 	LEVELNODE				*pNewLevelNode;
 	LEVELNODE				*tail;
 	INT32						x;
@@ -730,13 +723,12 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 	if( pOldStructure )
 	{
 		STRUCTURE				*pNewStructure;
-		STRUCTURE				*pStructure;
 		STRUCTURE				*tail;
 		tail = NULL;
 		pNewStructure = NULL;
 		while( pOldStructure )
 		{
-			pStructure = (STRUCTURE*)MemAlloc( sizeof( STRUCTURE ) );
+			STRUCTURE* const pStructure = MALLOC(STRUCTURE);
 			if( !pStructure )
 			{
 				DeleteMapElementContentsAfterCreationFail( pNewMapElement );
@@ -788,7 +780,7 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 		while( pOldLevelNode )
 		{
 			//copy the level node
-			pLevelNode = ( LEVELNODE* )MemAlloc( sizeof( LEVELNODE ) );
+			LEVELNODE* pLevelNode = MALLOC(LEVELNODE);
 			if( !pLevelNode )
 			{
 				DeleteMapElementContentsAfterCreationFail( pNewMapElement );
@@ -834,7 +826,7 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 				case 2: //OBJECT LAYER
 					if( pOldLevelNode->pItemPool )
 					{ //save the item pool?
-						//pNewLevelNode->pItemPool = (ITEM_POOL*)MemAlloc( sizeof( ITEM_POOL ) );
+						//pNewLevelNode->pItemPool = MALLOC(ITEM_POOL);
 					}
 					break;
 				case 3: //STRUCT LAYER

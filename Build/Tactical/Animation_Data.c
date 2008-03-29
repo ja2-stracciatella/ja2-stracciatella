@@ -806,7 +806,7 @@ static BOOLEAN LoadAnimationProfiles(void)
 	if (!f) goto fail;
 
 	if (!FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) goto fail_close;
-	ANIM_PROF* const aps = MemAlloc(gubNumAnimProfiles * sizeof(*gpAnimProfiles));
+	ANIM_PROF* const aps = MALLOCN(ANIM_PROF, gubNumAnimProfiles);
 	gpAnimProfiles = aps;
 
 	for (INT32 profile_idx = 0; profile_idx < gubNumAnimProfiles; ++profile_idx)
@@ -817,7 +817,7 @@ static BOOLEAN LoadAnimationProfiles(void)
 			ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
 
 			if (!FileRead(f, &apd->ubNumTiles, sizeof(UINT8))) goto fail_close;
-			ANIM_PROF_TILE* const apts = MemAlloc(sizeof(*apd->pTiles) * apd->ubNumTiles);
+			ANIM_PROF_TILE* const apts = MALLOCN(ANIM_PROF_TILE, apd->ubNumTiles);
 			apd->pTiles = apts;
 
 			for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)

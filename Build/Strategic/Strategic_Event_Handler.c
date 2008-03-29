@@ -134,8 +134,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
-		pStolenObject = MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		pObject       = MALLOCN(OBJECTTYPE, usNumberOfItems);
+		pStolenObject = MALLOCN(OBJECTTYPE, usNumberOfItems);
 		if( pObject == NULL || pStolenObject == NULL)
 			return;
 		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
@@ -1099,7 +1099,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = MemAlloc( sizeof( OBJECTTYPE ) * usNumberOfItems );
+		pObject = MALLOCN(OBJECTTYPE, usNumberOfItems);
 		if( pObject == NULL )
 			return;
 		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );

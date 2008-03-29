@@ -446,7 +446,7 @@ static void TakeScreenshot(void)
 	UINT16* p16BPPData;
 	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
 	{
-		p16BPPData = MemAlloc(SCREEN_WIDTH * 2);
+		p16BPPData = MALLOCN(UINT16, SCREEN_WIDTH);
 	}
 
 	for (INT32 iIndex = SCREEN_HEIGHT - 1; iIndex >= 0; iIndex--)
@@ -761,7 +761,7 @@ void VideoCaptureToggle(void)
 	{
 		for (INT32 cnt = 0; cnt < MAX_NUM_FRAMES; cnt++)
 		{
-			gpFrameData[cnt] = MemAlloc(SCREEN_WIDTH * SCREEN_HEIGHT * 2);
+			gpFrameData[cnt] = MALLOCN(UINT16, SCREEN_WIDTH * SCREEN_HEIGHT);
 		}
 		guiLastFrame = GetClock();
 	}

@@ -1417,8 +1417,6 @@ void ShutDownLeaveList( void )
 
 BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 {
-	MERC_LEAVE_ITEM *pItem, *pCurrentItem;
-
 	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
 
 
@@ -1428,7 +1426,7 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	}
 
 	// allocate space
-	pItem = MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+	MERC_LEAVE_ITEM* const pItem = MALLOC(MERC_LEAVE_ITEM);
 
 	// copy object
 	pItem->o = *o;
@@ -1437,7 +1435,7 @@ BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
 	pItem->pNext = NULL;
 
 	// now add to list in this index slot
-	pCurrentItem = gpLeaveListHead[ uiSlotIndex ];
+	MERC_LEAVE_ITEM* pCurrentItem = gpLeaveListHead[ uiSlotIndex ];
 
 	if( pCurrentItem == NULL )
 	{
@@ -5065,7 +5063,6 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 {
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
-	MERC_LEAVE_ITEM *pItem;
 	UINT32 uiCount=0;
 	BOOLEAN	fNodeExists = FALSE;
 	UINT32	uiSubItem;
@@ -5089,7 +5086,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 			if (!FileRead(hFile, &uiCount, sizeof(UINT32))) return FALSE;
 
 			// allocate space
-			gpLeaveListHead[ iCounter ] = MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+			gpLeaveListHead[iCounter] = MALLOC(MERC_LEAVE_ITEM);
 			if( gpLeaveListHead[ iCounter ] == NULL )
 			{
 				return( FALSE );
@@ -5101,7 +5098,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 			for( uiSubItem=0; uiSubItem< uiCount; uiSubItem++ )
 			{
 				// allocate space
-				pItem = MemAlloc( sizeof( MERC_LEAVE_ITEM ) );
+				MERC_LEAVE_ITEM* const pItem = MALLOC(MERC_LEAVE_ITEM);
 				if( pItem == NULL )
 				{
 					return( FALSE );

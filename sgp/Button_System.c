@@ -577,7 +577,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 		return NULL;
 	}
 
-	GUI_BUTTON* b = MemAlloc(sizeof(*b));
+	GUI_BUTTON* const b = MALLOC(GUI_BUTTON);
 	if (b == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Cannot allocte memory for button struct");
@@ -647,7 +647,7 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 {
 	if (text == NULL || text[0] == L'\0') return;
 
-	wchar_t* Buf = MemAlloc((wcslen(text) + 1) * sizeof(*Buf));
+	wchar_t* const Buf = MALLOCN(wchar_t, wcslen(text) + 1);
 	AssertMsg(Buf != NULL, "Out of memory error:  Couldn't allocate string in CopyButtonText.");
 	wcscpy(Buf, text);
 	b->string = Buf;

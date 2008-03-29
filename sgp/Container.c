@@ -57,7 +57,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 
 	UINT32 uiAmount = uiNum_items * uiSiz_each;
 
-	HQUEUE hQueue = MemAlloc(uiAmount + sizeof(QueueHeader));
+	const HQUEUE hQueue = MALLOCE(QueueHeader, uiAmount);
 	if (hQueue == NULL)
 	{
 		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
@@ -88,7 +88,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 
 	UINT32 uiAmount = uiNum_items * uiSiz_each;
 
-	HLIST hList = MemAlloc(uiAmount + sizeof(ListHeader));
+	const HLIST hList = MALLOCE(ListHeader, uiAmount);
 	if (hList == NULL)
 	{
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");

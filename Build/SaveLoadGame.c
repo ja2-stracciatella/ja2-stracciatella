@@ -2522,7 +2522,7 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) goto ret_close;
 
 	//Allocate a buffer to read the data into
-	UINT8* pData = MemAlloc( uiFileSize );
+	UINT8* const pData = MALLOCN(UINT8, uiFileSize);
 	if (pData == NULL) goto ret_close;
 
 	// Read the saource file into the buffer
@@ -2551,7 +2551,6 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
 	UINT32	uiFileSize;
 	HWFILE	hSrcFile;
-	UINT8		*pData;
 
 	#ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -2583,7 +2582,7 @@ BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
 	}
 
 	//Allocate a buffer to read the data into
-	pData = MemAlloc( uiFileSize );
+	UINT8* pData = MALLOCN(UINT8, uiFileSize);
 	if( pData == NULL )
 	{
 		FileClose( hSrcFile );
@@ -2862,7 +2861,7 @@ BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
 	PathSt* path = NULL;
 	for (UINT32 cnt = 0; cnt < uiNumOfNodes; ++cnt)
 	{
-		PathSt* const n = MemAlloc(sizeof(*n));
+		PathSt* const n = MALLOC(PathSt);
 		if (n == NULL) return FALSE;
 
 		BYTE data[20];
@@ -3897,7 +3896,7 @@ static void HandleOldBobbyRMailOrders(void)
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderUsed != 0 )
 	{
 		//Allocate memory for the list
-		gpNewBobbyrShipments = MemAlloc( sizeof( NewBobbyRayOrderStruct ) * LaptopSaveInfo.usNumberOfBobbyRayOrderUsed );
+		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderUsed);
 		if( gpNewBobbyrShipments == NULL )
 		{
 			Assert(0);

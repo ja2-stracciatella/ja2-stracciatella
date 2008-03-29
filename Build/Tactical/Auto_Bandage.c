@@ -334,8 +334,7 @@ static BOOLEAN CreateAutoBandageString(void)
 	else
 	{
 		// make a temporary string to hold most of the doctors names joined by commas
-		wchar_t* const sTemp = MemAlloc(uiDoctorNameStringLength * sizeof(*sTemp));
-	//	sTemp = MemAlloc( 1000 );
+		wchar_t* const sTemp = MALLOCN(wchar_t, uiDoctorNameStringLength);
 		if (!sTemp)
 		{
 			return( FALSE );

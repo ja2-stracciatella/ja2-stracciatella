@@ -260,7 +260,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 						curr->pBasicPlacement->fPriorityExistance = TRUE;
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
-							curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
+							curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
 						}
 						//now replace the map pristine placement info with the temp map file version..
 						*curr->pDetailedPlacement = tempDetailedPlacement;
@@ -616,7 +616,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
-						curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
+						curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
 					}
 					//now replace the map pristine placement info with the temp map file version..
 					*curr->pDetailedPlacement = tempDetailedPlacement;
@@ -928,7 +928,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						if( !curr->pDetailedPlacement )
 						{
 							//need to upgrade the placement to detailed placement
-							curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
+							curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
 						}
 						//now replace the map pristine placement info with the temp map file version..
 						*curr->pDetailedPlacement = tempDetailedPlacement;
@@ -1089,7 +1089,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
 							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
+							curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
 							memset( curr->pDetailedPlacement, 0, sizeof( SOLDIERCREATE_STRUCT ) );
 						}
 
@@ -1478,7 +1478,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 					curr->pBasicPlacement->fPriorityExistance = TRUE;
 					if( !curr->pDetailedPlacement )
 					{ //need to upgrade the placement to detailed placement
-						curr->pDetailedPlacement = (SOLDIERCREATE_STRUCT*)MemAlloc( sizeof( SOLDIERCREATE_STRUCT ) );
+						curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
 					}
 					//now replace the map pristine placement info with the temp map file version..
 					*curr->pDetailedPlacement = tempDetailedPlacement;

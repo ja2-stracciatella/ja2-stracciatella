@@ -1334,7 +1334,7 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 					usGreatestHeightInRow = 0;
 				}
 
-				DisplayList* pCurNode = MemAlloc(sizeof(*pCurNode));
+				DisplayList* const pCurNode = MALLOC(DisplayList);
 				if (pCurNode == NULL) return FALSE;
 
 				pCurNode->hObj      = pDisplaySpec->hVObject;

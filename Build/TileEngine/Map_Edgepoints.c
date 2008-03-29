@@ -324,7 +324,7 @@ static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, I
 	us1stBenchmarkID = us2ndBenchmarkID = 0xffff;
 	if( !(*psArray2) )
 	{
-		*psArray2 = (INT16*)MemAlloc( sizeof( INT16 ) * 400 );
+		*psArray2 = MALLOCN(INT16, 400);
 	}
 	for( i = 0; i < *pusArraySize1; i++ )
 	{
@@ -551,7 +551,7 @@ void GenerateMapEdgepoints()
 		if( gus1stNorthEdgepointArraySize )
 		{
 			//Allocate and copy over the valid gridnos.
-			gps1stNorthEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16) );
+			gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
 			for( i = 0; i < gus1stNorthEdgepointArraySize; i++ )
 				gps1stNorthEdgepointArray[ i ] = sVGridNo[ i ];
 		}
@@ -594,7 +594,7 @@ void GenerateMapEdgepoints()
 		}
 		if( gus1stEastEdgepointArraySize )
 		{ //Allocate and copy over the valid gridnos.
-			gps1stEastEdgepointArray = (INT16*)MemAlloc( gus1stEastEdgepointArraySize * sizeof( INT16) );
+			gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
 			for( i = 0; i < gus1stEastEdgepointArraySize; i++ )
 				gps1stEastEdgepointArray[ i ] = sVGridNo[ i ];
 		}
@@ -637,7 +637,7 @@ void GenerateMapEdgepoints()
 		}
 		if( gus1stSouthEdgepointArraySize )
 		{ //Allocate and copy over the valid gridnos.
-			gps1stSouthEdgepointArray = (INT16*)MemAlloc( gus1stSouthEdgepointArraySize * sizeof( INT16) );
+			gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
 			for( i = 0; i < gus1stSouthEdgepointArraySize; i++ )
 				gps1stSouthEdgepointArray[ i ] = sVGridNo[ i ];
 		}
@@ -680,7 +680,7 @@ void GenerateMapEdgepoints()
 		}
 		if( gus1stWestEdgepointArraySize )
 		{ //Allocate and copy over the valid gridnos.
-			gps1stWestEdgepointArray = (INT16*)MemAlloc( gus1stWestEdgepointArraySize * sizeof( INT16) );
+			gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
 			for( i = 0; i < gus1stWestEdgepointArraySize; i++ )
 				gps1stWestEdgepointArray[ i ] = sVGridNo[ i ];
 		}
@@ -728,7 +728,7 @@ void GenerateMapEdgepoints()
 			if( gus2ndNorthEdgepointArraySize )
 			{
 				//Allocate and copy over the valid gridnos.
-				gps2ndNorthEdgepointArray = (INT16*)MemAlloc( gus2ndNorthEdgepointArraySize * sizeof( INT16) );
+				gps2ndNorthEdgepointArray = MALLOCN(INT16, gus2ndNorthEdgepointArraySize);
 				for( i = 0; i < gus2ndNorthEdgepointArraySize; i++ )
 					gps2ndNorthEdgepointArray[ i ] = sVGridNo[ i ];
 			}
@@ -771,7 +771,7 @@ void GenerateMapEdgepoints()
 			}
 			if( gus2ndEastEdgepointArraySize )
 			{ //Allocate and copy over the valid gridnos.
-				gps2ndEastEdgepointArray = (INT16*)MemAlloc( gus2ndEastEdgepointArraySize * sizeof( INT16) );
+				gps2ndEastEdgepointArray = MALLOCN(INT16, gus2ndEastEdgepointArraySize);
 				for( i = 0; i < gus2ndEastEdgepointArraySize; i++ )
 					gps2ndEastEdgepointArray[ i ] = sVGridNo[ i ];
 			}
@@ -814,7 +814,7 @@ void GenerateMapEdgepoints()
 			}
 			if( gus2ndSouthEdgepointArraySize )
 			{ //Allocate and copy over the valid gridnos.
-				gps2ndSouthEdgepointArray = (INT16*)MemAlloc( gus2ndSouthEdgepointArraySize * sizeof( INT16) );
+				gps2ndSouthEdgepointArray = MALLOCN(INT16, gus2ndSouthEdgepointArraySize);
 				for( i = 0; i < gus2ndSouthEdgepointArraySize; i++ )
 					gps2ndSouthEdgepointArray[ i ] = sVGridNo[ i ];
 			}
@@ -857,7 +857,7 @@ void GenerateMapEdgepoints()
 			}
 			if( gus2ndWestEdgepointArraySize )
 			{ //Allocate and copy over the valid gridnos.
-				gps2ndWestEdgepointArray = (INT16*)MemAlloc( gus2ndWestEdgepointArraySize * sizeof( INT16) );
+				gps2ndWestEdgepointArray = MALLOCN(INT16, gus2ndWestEdgepointArraySize);
 				for( i = 0; i < gus2ndWestEdgepointArraySize; i++ )
 					gps2ndWestEdgepointArray[ i ] = sVGridNo[ i ];
 			}
@@ -931,7 +931,7 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stNorthEdgepointArraySize )
 	{
-		gps1stNorthEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
+		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
 		Assert( gps1stNorthEdgepointArray );
 		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -939,7 +939,7 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	LOADDATA( &gus1stEastEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stEastEdgepointArraySize )
 	{
-		gps1stEastEdgepointArray = (INT16*)MemAlloc( gus1stEastEdgepointArraySize * sizeof( INT16 ) );
+		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
 		Assert( gps1stEastEdgepointArray );
 		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -947,7 +947,7 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	LOADDATA( &gus1stSouthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stSouthEdgepointArraySize )
 	{
-		gps1stSouthEdgepointArray = (INT16*)MemAlloc( gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
+		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
 		Assert( gps1stSouthEdgepointArray );
 		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -955,7 +955,7 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	LOADDATA( &gus1stWestEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stWestEdgepointArraySize )
 	{
-		gps1stWestEdgepointArray = (INT16*)MemAlloc( gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
 		Assert( gps1stWestEdgepointArray );
 		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -976,7 +976,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stNorthEdgepointArraySize )
 	{
-		gps1stNorthEdgepointArray = (INT16*)MemAlloc( gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
+		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
 		Assert( gps1stNorthEdgepointArray );
 		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -984,7 +984,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus1stEastEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stEastEdgepointArraySize )
 	{
-		gps1stEastEdgepointArray = (INT16*)MemAlloc( gus1stEastEdgepointArraySize * sizeof( INT16 ) );
+		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
 		Assert( gps1stEastEdgepointArray );
 		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -992,7 +992,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus1stSouthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stSouthEdgepointArraySize )
 	{
-		gps1stSouthEdgepointArray = (INT16*)MemAlloc( gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
+		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
 		Assert( gps1stSouthEdgepointArray );
 		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1000,7 +1000,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus1stWestEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus1stWestEdgepointArraySize )
 	{
-		gps1stWestEdgepointArray = (INT16*)MemAlloc( gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
 		Assert( gps1stWestEdgepointArray );
 		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1009,7 +1009,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus2ndNorthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus2ndNorthEdgepointArraySize )
 	{
-		gps2ndNorthEdgepointArray = (INT16*)MemAlloc( gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
+		gps2ndNorthEdgepointArray = MALLOCN(INT16, gus2ndNorthEdgepointArraySize);
 		Assert( gps2ndNorthEdgepointArray );
 		LOADDATA( gps2ndNorthEdgepointArray, *hBuffer, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1017,7 +1017,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus2ndEastEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus2ndEastEdgepointArraySize )
 	{
-		gps2ndEastEdgepointArray = (INT16*)MemAlloc( gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
+		gps2ndEastEdgepointArray = MALLOCN(INT16, gus2ndEastEdgepointArraySize);
 		Assert( gps2ndEastEdgepointArray );
 		LOADDATA( gps2ndEastEdgepointArray, *hBuffer, gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1025,7 +1025,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus2ndSouthEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus2ndSouthEdgepointArraySize )
 	{
-		gps2ndSouthEdgepointArray = (INT16*)MemAlloc( gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
+		gps2ndSouthEdgepointArray = MALLOCN(INT16, gus2ndSouthEdgepointArraySize);
 		Assert( gps2ndSouthEdgepointArray );
 		LOADDATA( gps2ndSouthEdgepointArray, *hBuffer, gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1033,7 +1033,7 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	LOADDATA( &gus2ndWestEdgepointMiddleIndex, *hBuffer, 2 );
 	if( gus2ndWestEdgepointArraySize )
 	{
-		gps2ndWestEdgepointArray = (INT16*)MemAlloc( gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
+		gps2ndWestEdgepointArray = MALLOCN(INT16, gus2ndWestEdgepointArraySize);
 		Assert( gps2ndWestEdgepointArray );
 		LOADDATA( gps2ndWestEdgepointArray, *hBuffer, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
 	}
@@ -1088,7 +1088,6 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 	UINT16 usArraySize=0;
 	INT32 i=-1;
 	UINT16 usSlots, usCurrSlot;
-	INT16 *psTempArray = NULL;
 
 	AssertMsg( ubNumDesiredPoints > 0  && ubNumDesiredPoints <= 32,
 		String( "ChooseMapEdgepoints:  Desired points = %d, valid range is 1-32", ubNumDesiredPoints ) );
@@ -1162,7 +1161,7 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 
 	// JA2 Gold: don't place people in the water.
 	// If any of the waypoints is on a water spot, we're going to have to remove it
-	psTempArray = MemAlloc( sizeof(INT16) * usArraySize );
+	INT16* const psTempArray = MALLOCN(INT16, usArraySize);
 	memcpy(psTempArray, psArray, sizeof(INT16) * usArraySize );
 	psArray = psTempArray;
 	for (i = 0; i < usArraySize; i++)
@@ -1226,7 +1225,7 @@ void BeginMapEdgepointSearch()
 
 	//Create the reserved list
 	AssertMsg( !gpReservedGridNos, "Attempting to BeginMapEdgepointSearch that has already been created." );
-	gpReservedGridNos = (INT16*)MemAlloc( 20 * sizeof( INT16 ) );
+	gpReservedGridNos = MALLOCN(INT16, 20);
 	Assert( gpReservedGridNos );
 	gsReservedIndex = 0;
 

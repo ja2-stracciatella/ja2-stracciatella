@@ -1114,7 +1114,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 			pSoldier->bPendingActionData5 = bInvPos;
 			// Copy temp object
-			pSoldier->pTempObject	= MemAlloc( sizeof( OBJECTTYPE ) );
+			pSoldier->pTempObject	= MALLOC(OBJECTTYPE);
 			*pSoldier->pTempObject = *pObject;
 
 
@@ -1146,7 +1146,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
 {
-	pSoldier->pTempObject = MemAlloc( sizeof( OBJECTTYPE ) );
+	pSoldier->pTempObject = MALLOC(OBJECTTYPE);
 	if (pSoldier->pTempObject == NULL)
 	{
 		// OUT OF MEMORY! YIKES!
@@ -1775,7 +1775,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 
 	// Check for and existing pool on the object layer
 
-	ITEM_POOL* const new_item = MemAlloc(sizeof(*new_item));
+	ITEM_POOL* const new_item = MALLOC(ITEM_POOL);
 	new_item->pNext      = NULL;
 	new_item->iItemIndex = iWorldItem;
 

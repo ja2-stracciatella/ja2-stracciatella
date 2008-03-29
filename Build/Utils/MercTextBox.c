@@ -266,7 +266,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		// no box yet
 
 		// create box
-		pPopUpTextBox= MemAlloc( sizeof( MercPopUpBox ) );
+		pPopUpTextBox = MALLOC(MercPopUpBox);
 
 		// copy over ptr
 		gPopUpTextBox = pPopUpTextBox;

@@ -93,7 +93,7 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 {
 	if (hVObject == NULL) return;
 
-	VOBJECT_NODE* Node = MemAlloc(sizeof(*Node));
+	VOBJECT_NODE* const Node = MALLOC(VOBJECT_NODE);
 	Assert(Node != NULL); // out of memory?
 	Node->hVObject = hVObject;
 
@@ -137,7 +137,7 @@ SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 		return NULL;
 	}
 
-	SGPVObject* const vo = MemAlloc(sizeof(*vo));
+	SGPVObject* const vo = MALLOC(SGPVObject);
 	CHECKF(vo != NULL);
 	memset(vo, 0, sizeof(*vo));
 
@@ -156,7 +156,7 @@ SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 		const SGPPaletteEntry* const src_pal = hImage->pPalette;
 		Assert(src_pal != NULL);
 
-		SGPPaletteEntry* const pal = MemAlloc(sizeof(*pal) * 256);
+		SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
 		memcpy(pal, src_pal, sizeof(*pal) * 256);
 
 		vo->pPaletteEntry = pal;
@@ -470,7 +470,7 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* Info = MemAlloc(sizeof(*Info) * guiVObjectSize);
+	DUMPINFO* const Info = MALLOCN(DUMPINFO, guiVObjectSize);
 	memset(Info, 0, sizeof(*Info) * guiVObjectSize);
 
 	//Loop through the list and record every unique filename and count them
@@ -518,13 +518,13 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
 {
 	//record the filename of the vObject (some are created via memory though)
-	gpVObjectTail->pName = MemAlloc(strlen(Filename) + 1);
+	gpVObjectTail->pName = MALLOCN(char, strlen(Filename) + 1);
 	strcpy(gpVObjectTail->pName, Filename);
 
 	//record the code location of the calling creating function.
 	char str[256];
 	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
-	gpVObjectTail->pCode = MemAlloc(strlen(str) + 1);
+	gpVObjectTail->pCode = MALLOCN(char, strlen(str) + 1);
 	strcpy(gpVObjectTail->pCode, str);
 }
 

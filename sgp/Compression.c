@@ -9,7 +9,7 @@
 
 static voidpf ZAlloc(voidpf opaque, uInt items, uInt size)
 {
-  return( MemAlloc( items * size ) );
+  return MALLOCN(UINT8, items * size);
 }
 
 
@@ -20,11 +20,10 @@ static void ZFree(voidpf opaque, voidpf address)
 
 PTR DecompressInit( BYTE * pCompressedData, UINT32 uiDataSize )
 {
-	z_stream *	pZStream;
 	int					iZRetCode;
 
 	// allocate memory for the z_stream struct
-	pZStream = MemAlloc( sizeof( z_stream ) );
+	z_stream* const pZStream = MALLOC(z_stream);
 	if( pZStream == NULL )
 	{ // out of memory!
 		return( NULL );

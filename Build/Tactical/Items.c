@@ -3488,7 +3488,7 @@ BOOLEAN CreateKeyObject( OBJECTTYPE * pObj , UINT8 ubNumberOfKeys, UINT8 ubKeyID
 BOOLEAN AllocateObject( OBJECTTYPE **pObj )
 {
 	// create a key object
-	*pObj = MemAlloc( sizeof( OBJECTTYPE ) );
+	*pObj = MALLOC(OBJECTTYPE);
 	Assert( pObj );
 
 	return( TRUE );

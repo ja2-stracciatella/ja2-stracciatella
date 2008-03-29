@@ -138,9 +138,8 @@ extern void BuildUndergroundSectorInfoList();
 
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {
-	CREATURE_DIRECTIVE *curr;
 	UINT8 ubSectorX, ubSectorY;
-	curr = (CREATURE_DIRECTIVE*)MemAlloc( sizeof( CREATURE_DIRECTIVE ) );
+	CREATURE_DIRECTIVE* const curr = MALLOC(CREATURE_DIRECTIVE);
 	Assert( curr );
 	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
 	ubSectorY = (UINT8)((ubSectorID / 16) + 1);

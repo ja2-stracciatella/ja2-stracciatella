@@ -416,7 +416,7 @@ static void SaveSeenAndUnseenItems(void)
 	WORLDITEM* pSeenItemsList;
 	if (iTotalNumberItems > 0)
 	{
-		pSeenItemsList = MemAlloc(sizeof(*pSeenItemsList) * iTotalNumberItems);
+		pSeenItemsList = MALLOCN(WORLDITEM, iTotalNumberItems);
 
 		// copy
 		for (INT32 iCounter = 0; iCounter < iTotalNumberOfSlots; ++iCounter)
@@ -733,9 +733,9 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	const UINT32 slot_count = visible_count - visible_count % MAP_INVENTORY_POOL_SLOT_COUNT + MAP_INVENTORY_POOL_SLOT_COUNT;
 	iLastInventoryPoolPage  = (slot_count - 1) / MAP_INVENTORY_POOL_SLOT_COUNT;
 
-	WORLDITEM* visible_item = MemAlloc(sizeof(*visible_item) * slot_count);
-	memset(visible_item, 0,            sizeof(*visible_item) * slot_count);
-	WORLDITEM* unseen_item  = (unseen_count != 0 ? MemAlloc(sizeof(*unseen_item) * unseen_count) : NULL);
+	WORLDITEM* visible_item = MALLOCN(WORLDITEM, slot_count);
+	memset(visible_item, 0, sizeof(*visible_item) * slot_count);
+	WORLDITEM* unseen_item  = (unseen_count != 0 ? MALLOCN(WORLDITEM, unseen_count) : NULL);
 
 	iTotalNumberOfSlots      = slot_count;
 	pInventoryPoolList       = visible_item;
@@ -779,7 +779,7 @@ static void ReBuildWorldItemStashForLoadedSector(const INT32 iNumberSeenItems, c
 	if (iRemainder) iTotalNumberOfItems += 10 - iRemainder;
 
 	// allocate space for items
-	WORLDITEM* const pTotalList = MemAlloc(sizeof(*pTotalList) * iTotalNumberOfItems);
+	WORLDITEM* const pTotalList = MALLOCN(WORLDITEM, iTotalNumberOfItems);
 	memset(pTotalList, 0, sizeof(*pTotalList) * iTotalNumberOfItems);
 
 	INT32 iCurrentItem = 0;
@@ -815,7 +815,6 @@ static void ReBuildWorldItemStashForLoadedSector(const INT32 iNumberSeenItems, c
 static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 {
 	INT32 iSizeOfList = iTotalNumberOfSlots;
-	WORLDITEM * pOldList;
 
 	// no items added, leave
 	if( iNumberOfItems == 0 )
@@ -825,7 +824,7 @@ static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 
 	iTotalNumberOfSlots+= iNumberOfItems;
 
-	pOldList = MemAlloc( sizeof( WORLDITEM ) * iSizeOfList );
+	WORLDITEM* const pOldList = MALLOCN(WORLDITEM, iSizeOfList);
 	memset( pOldList, 0, sizeof( WORLDITEM ) * iSizeOfList );
 
 	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );

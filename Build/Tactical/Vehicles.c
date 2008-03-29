@@ -896,7 +896,7 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32
 	if (ubNumberOfVehicles == 0) return TRUE;
 
 	//allocate memory to hold the vehicle list
-	VEHICLETYPE* const vl = MemAlloc(sizeof(*vl) * ubNumberOfVehicles);
+	VEHICLETYPE* const vl = MALLOCN(VEHICLETYPE, ubNumberOfVehicles);
 	pVehicleList = vl;
 	if (vl == NULL) return FALSE;
 	memset(vl, 0, sizeof(*vl) * ubNumberOfVehicles);

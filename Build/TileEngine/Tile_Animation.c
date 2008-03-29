@@ -44,7 +44,7 @@ static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
 
 ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 {
-	ANITILE* const a = MemAlloc(sizeof(*a));
+	ANITILE* const a = MALLOC(ANITILE);
 
 	INT32        cached_tile = -1;
 	const INT16  gridno      = parms->sGridNo;

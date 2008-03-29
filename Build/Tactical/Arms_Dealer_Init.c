@@ -1122,7 +1122,7 @@ static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT
 	Assert(pDealerItem);
 	Assert( ubElementsNeeded > 0);
 
-	pDealerItem->SpecialItem = MemAlloc( sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
+	pDealerItem->SpecialItem = MALLOCN(DEALER_SPECIAL_ITEM, ubElementsNeeded);
 	if( pDealerItem->SpecialItem == NULL )
 	{
 		Assert( 0 );

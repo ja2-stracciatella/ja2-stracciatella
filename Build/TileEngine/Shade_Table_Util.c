@@ -143,7 +143,7 @@ BOOLEAN LoadShadeTable( HVOBJECT pObj, UINT32 uiTileTypeIndex )
 
 	for( i = 0; i < 16; i++ )
 	{
-		pObj->pShades[ i ] = MemAlloc( 512 );
+		pObj->pShades[i] = MALLOCN(UINT16, 256);
 		Assert( pObj->pShades[ i ] );
 		FileRead(hfile, pObj->pShades[i], 512);
 	}

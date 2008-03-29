@@ -77,7 +77,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 		pStructureFileRef = NULL;
 	}
 
-	TILE_IMAGERY* const pTileSurf = MemAlloc(sizeof(*pTileSurf));
+	TILE_IMAGERY* const pTileSurf = MALLOC(TILE_IMAGERY);
 
 	// Set all values to zero
 	memset( pTileSurf, 0, sizeof( TILE_IMAGERY ) );
@@ -93,7 +93,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 	else if (hImage->uiAppDataSize == hVObject->usNumberOfObjects * sizeof( AuxObjectData ))
 	{
 		// Valid auxiliary data, so make a copy of it for TileSurf
-		pTileSurf->pAuxData = MemAlloc( hImage->uiAppDataSize );
+		pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->usNumberOfObjects);
 		if (pTileSurf->pAuxData == NULL) goto fail_tile_imagery;
 		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
 	}

@@ -96,7 +96,7 @@ UINT32	MapUtilScreenHandle( )
 		FListNode = FileList;
 
 		//Allocate 24 bit Surface
-		p24BitValues = MemAlloc(MINIMAP_X_SIZE * MINIMAP_Y_SIZE * sizeof(*p24BitValues));
+		p24BitValues = MALLOCN(SGPPaletteEntry, MINIMAP_X_SIZE * MINIMAP_Y_SIZE);
 
 		//Allocate 8-bit surface
 		gi8BitMiniMap = AddVideoSurface(88, 44, 8);

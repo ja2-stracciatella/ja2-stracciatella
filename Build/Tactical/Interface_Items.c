@@ -3723,7 +3723,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					 if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					 {
 							// Make a temp object for ammo...
-							gpItemPointerSoldier->pTempObject	 = MemAlloc( sizeof( OBJECTTYPE ) );
+							gpItemPointerSoldier->pTempObject	 = MALLOC(OBJECTTYPE);
 							*gpItemPointerSoldier->pTempObject = TempObject;
 
 							// Remove from soldier's inv...
@@ -3822,8 +3822,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				switch ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubHeight )
 				{
 					case ANIM_STAND:
-
-						gpItemPointerSoldier->pTempObject = MemAlloc( sizeof( OBJECTTYPE ) );
+						gpItemPointerSoldier->pTempObject = MALLOC(OBJECTTYPE);
 						if (gpItemPointerSoldier->pTempObject != NULL)
 						{
 							*gpItemPointerSoldier->pTempObject = *gpItemPointer;
@@ -4840,7 +4839,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	CHECKF(gItemPickupMenu.uiPanelVo != NO_VOBJECT);
 
 	// Memalloc selection array...
-	 gItemPickupMenu.pfSelectedArray = MemAlloc(( sizeof( UINT8 ) * gItemPickupMenu.ubTotalItems ) );
+	gItemPickupMenu.pfSelectedArray = MALLOCN(UINT8, gItemPickupMenu.ubTotalItems);
 	// seto to 0
 	memset( gItemPickupMenu.pfSelectedArray, 0, ( sizeof( UINT8 ) * gItemPickupMenu.ubTotalItems ) );
 

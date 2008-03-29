@@ -119,7 +119,7 @@ static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UI
 
 			iNumValues = uiWidth * uiHeight;
 
-			hImage->p16BPPData = MemAlloc( iNumValues * (uiImagePixelSize / 8) );
+			hImage->p16BPPData = MALLOCN(UINT16, iNumValues);
 
 			if ( hImage->p16BPPData == NULL )
 				goto end;
@@ -150,7 +150,7 @@ static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UI
 
 		if ( uiImagePixelSize == 24 )
 		{
-			hImage->p8BPPData = MemAlloc( uiWidth * uiHeight * (uiImagePixelSize / 8) );
+			hImage->p8BPPData = MALLOCN(UINT8, uiWidth * uiHeight * 3);
 
 			if ( hImage->p8BPPData == NULL )
 				goto end;

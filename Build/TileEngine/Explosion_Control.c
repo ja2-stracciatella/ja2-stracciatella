@@ -954,7 +954,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 			sBaseGridNo = pBaseStructure->sGridNo;
 			ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
-			ppTile = MemAlloc(sizeof(*ppTile) * ubNumberOfTiles);
+      ppTile = MALLOCN(DB_STRUCTURE_TILE*, ubNumberOfTiles);
 			memcpy(ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof(*ppTile) * ubNumberOfTiles);
 
 			if ( bMultiStructSpecialFlag == -1 )

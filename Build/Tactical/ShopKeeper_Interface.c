@@ -2332,7 +2332,7 @@ static BOOLEAN DetermineArmsDealersSellingInventory(void)
 	}
 
 	//allocate memory to hold the inventory in memory
-	gpTempDealersInventory = MemAlloc( sizeof( INVENTORY_IN_SLOT ) * gSelectArmsDealerInfo.uiNumDistinctInventoryItems );
+	gpTempDealersInventory = MALLOCN(INVENTORY_IN_SLOT, gSelectArmsDealerInfo.uiNumDistinctInventoryItems);
 	if( gpTempDealersInventory == NULL )
 	{
 		Assert( 0 );

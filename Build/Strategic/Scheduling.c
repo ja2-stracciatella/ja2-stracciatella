@@ -52,7 +52,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 {
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
-	gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
+	gpScheduleList = MALLOC(SCHEDULENODE);
 	*gpScheduleList = *pSchedule;
 	gpScheduleList->next = curr;
 	gubScheduleID++;
@@ -362,7 +362,7 @@ void LoadSchedules( INT8 **hBuffer )
 		BYTE data[36];
 		LOADDATA(data, *hBuffer, sizeof(data));
 
-		SCHEDULENODE* const node = MemAlloc(sizeof(*node));
+		SCHEDULENODE* const node = MALLOC(SCHEDULENODE);
 
 		const BYTE* s = data;
 		EXTR_PTR( s, node->next)
@@ -413,7 +413,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 		BYTE data[36];
 		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
 
-		SCHEDULENODE* const node = MemAlloc(sizeof(*node));
+		SCHEDULENODE* const node = MALLOC(SCHEDULENODE);
 
 		const BYTE* s = data;
 		EXTR_PTR(    s, node->next)
@@ -940,7 +940,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 	//Create a new node at the head of the list.  The head will become the new schedule
 	//we are about to add.
 	curr = gpScheduleList;
-	gpScheduleList = (SCHEDULENODE*)MemAlloc( sizeof( SCHEDULENODE ) );
+	gpScheduleList = MALLOC(SCHEDULENODE);
 	memset( gpScheduleList, 0, sizeof( SCHEDULENODE ) );
 	gpScheduleList->next = curr;
 	gubScheduleID++;

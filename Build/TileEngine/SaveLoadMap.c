@@ -83,12 +83,9 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiFileSize;
-	UINT32	uiNumberOfElements;
 	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
-	MODIFY_MAP *pTempArrayOfMaps=NULL;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -108,13 +105,12 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 		return( FALSE );
 	}
 
-
 	//Get the size of the file
-	uiFileSize = FileGetSize( hFile );
-
+	const UINT32 uiFileSize         = FileGetSize(hFile);
+	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
 	//Allocate memory for the buffer
-	pTempArrayOfMaps = MemAlloc( uiFileSize );
+	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
 	if( pTempArrayOfMaps == NULL )
 	{
 		Assert( 0 );
@@ -122,7 +118,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	}
 
 	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
+	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -133,8 +129,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 
 	//Delete the file
 	FileDelete( zMapName );
-
-	uiNumberOfElements = uiFileSize / sizeof( MODIFY_MAP );
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
 	{
@@ -281,7 +275,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 
 	//Free the memory used for the temp array
 	MemFree( pTempArrayOfMaps );
-	pTempArrayOfMaps = NULL;
 
 	return( TRUE );
 }
@@ -435,7 +428,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 	STRUCTURE * pStructure;
 
 
-	gpRevealedMap = MemAlloc( NUM_REVEALED_BYTES );
+	gpRevealedMap = MALLOCN(UINT8, NUM_REVEALED_BYTES);
 	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
 
@@ -613,7 +606,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 
 	//Allocate memory
 	Assert( gpRevealedMap == NULL );
-	gpRevealedMap = MemAlloc( NUM_REVEALED_BYTES );
+	gpRevealedMap = MALLOCN(UINT8, NUM_REVEALED_BYTES);
 	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
 
@@ -799,10 +792,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 {
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	MODIFY_MAP *pTempArrayOfMaps=NULL;
 	MODIFY_MAP *pMap;
-	UINT32	uiFileSize;
-	UINT32	uiNumberOfElements;
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	uiType;
 	UINT16	usSubIndex;
@@ -819,10 +809,13 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	}
 
 	//Get the size of the temp file
-	uiFileSize = FileGetSize( hFile );
+	const UINT32 uiFileSize = FileGetSize(hFile);
+
+	//Get the number of elements in the file
+	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
 	//Allocate memory for the buffer
-	pTempArrayOfMaps = MemAlloc( uiFileSize );
+	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
 	if( pTempArrayOfMaps == NULL )
 	{
 		Assert( 0 );
@@ -830,7 +823,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	}
 
 	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
+	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -841,9 +834,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 	//Delete the file
 	FileDelete( zMapName );
-
-	//Get the number of elements in the file
-	uiNumberOfElements = uiFileSize / sizeof( MODIFY_MAP );
 
 	//Get the image type and subindex
 	GetTileType( usIndex, &uiType );
@@ -977,11 +967,8 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 //	MODIFY_MAP Map;
 	CHAR8		zMapName[ 128 ];
 	HWFILE	hFile;
-	UINT32	uiFileSize;
-	UINT32	uiNumberOfElements;
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
-	MODIFY_MAP *pTempArrayOfMaps=NULL;
 //	UINT16	usIndex;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, usSectorX, usSectorY, bSectorZ );
@@ -1002,11 +989,11 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Get the size of the file
-	uiFileSize = FileGetSize( hFile );
-
+	const UINT32 uiFileSize         = FileGetSize(hFile);
+	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
 	//Allocate memory for the buffer
-	pTempArrayOfMaps = MemAlloc( uiFileSize );
+	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
 	if( pTempArrayOfMaps == NULL )
 	{
 		Assert( 0 );
@@ -1014,7 +1001,7 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 	}
 
 	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, uiFileSize))
+	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
 	{
 		FileClose( hFile );
 		return( FALSE );
@@ -1022,8 +1009,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 u
 
 	//Close the file
 	FileClose( hFile );
-
-	uiNumberOfElements = uiFileSize / sizeof( MODIFY_MAP );
 
 	//loop through all the array elements to
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )

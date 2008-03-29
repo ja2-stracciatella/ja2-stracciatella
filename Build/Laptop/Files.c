@@ -399,7 +399,7 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead)
 			pFiles = pFiles->Next;
 		}
 		// alloc space
-		pFiles->Next = MemAlloc(sizeof(FilesUnit));
+		pFiles->Next = MALLOC(FilesUnit);
 
 		// set up information passed
 		pFiles = pFiles->Next;
@@ -410,7 +410,7 @@ static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead)
 	else
 	{
 		// alloc space
-		pFiles=MemAlloc(sizeof(FilesUnit));
+		pFiles = MALLOC(FilesUnit);
 
 		// setup info passed
 		pFiles->Next = NULL;
@@ -949,15 +949,14 @@ static BOOLEAN HandleSpecialFiles(void)
 
 static void AddStringToFilesList(const wchar_t* const pString)
 {
-	FileString* pFileString;
 	FileString* pTempString = pFileStringList;
 
 	// create string structure
-	pFileString = MemAlloc( sizeof( FileString ) );
+	FileString* const pFileString = MALLOC(FileString);
 
 
   // alloc string and copy
-	pFileString->pString = MemAlloc(sizeof(*pFileString->pString) * (wcslen(pString) + 1));
+	pFileString->pString = MALLOCN(wchar_t, wcslen(pString) + 1);
 	wcscpy( pFileString->pString, pString );
 
 	// set Next to NULL
@@ -1107,12 +1106,9 @@ static void HandleFileViewerButtonStates(void)
 
 static FileRecordWidth* CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWidth, INT32 iRecordHeightAdjustment, UINT8 ubFlags)
 {
-	FileRecordWidth* pTempRecord = NULL;
-
 	// allocs and inits a width info record for the multipage file viewer...this will tell the procedure that does inital computation on which record is the start of the current page
 	// how wide special records are ( ones that share space with pictures )
-	pTempRecord = MemAlloc( sizeof( FileRecordWidth ) );
-
+	FileRecordWidth* const pTempRecord = MALLOC(FileRecordWidth);
 	pTempRecord -> Next = NULL;
 	pTempRecord -> iRecordNumber = iRecordNumber;
 	pTempRecord -> iRecordWidth = iRecordWidth;

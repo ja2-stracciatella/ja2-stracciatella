@@ -711,7 +711,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					//gets reset when the confirm order graphic disappears
 					gfCanAcceptOrder = FALSE;
 
-//					pBobbyRayPurchase = MemAlloc( sizeof( BobbyRayOrderStruct ) );
+//					pBobbyRayPurchase = MALLOC(BobbyRayOrderStruct);
 //					memset(pBobbyRayPurchase, 0, sizeof( BobbyRayOrderStruct ) );
 
 
@@ -1832,7 +1832,7 @@ static void PurchaseBobbyOrder(void)
 		//gets reset when the confirm order graphic disappears
 		gfCanAcceptOrder = FALSE;
 
-	//					pBobbyRayPurchase = MemAlloc( sizeof( BobbyRayOrderStruct ) );
+	//					pBobbyRayPurchase = MALLOC(BobbyRayOrderStruct);
 	//					memset(pBobbyRayPurchase, 0, sizeof( BobbyRayOrderStruct ) );
 
 
@@ -2183,7 +2183,7 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	else
 	{
 		//Allocate memory for the list
-		gpNewBobbyrShipments = MemAlloc( sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment );
+		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, giNumberOfNewBobbyRShipment);
 		if( gpNewBobbyrShipments == NULL )
 		{
 			Assert(0);

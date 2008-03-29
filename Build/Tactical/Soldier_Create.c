@@ -138,7 +138,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
 		// We are creating a dynamically allocated soldier for autoresolve.
-		s = MemAlloc(sizeof(*s));
+		s = MALLOC(SOLDIERTYPE);
 		if (!s) return NULL;
 		id = 255;
 	}
@@ -1795,7 +1795,6 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 {
-	SOLDIERTYPE *pSoldier;
 	//This code looks for a soldier of specified type that currently exists in tactical and
 	//returns the pointer to that soldier.  This is used when copying the exact status of
 	//all remaining enemy troops (or creatures) to finish the battle in autoresolve.  To
@@ -1811,7 +1810,7 @@ static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 				s->sGridNo = NOWHERE;
 
 				//Allocate and copy the soldier
-				pSoldier = (SOLDIERTYPE*)MemAlloc( sizeof( SOLDIERTYPE ) );
+				SOLDIERTYPE* const pSoldier = MALLOC(SOLDIERTYPE);
 				if( !pSoldier )
 					return NULL;
 				*pSoldier = *s;

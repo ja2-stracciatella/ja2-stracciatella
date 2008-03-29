@@ -204,7 +204,7 @@ BOOLEAN InitializeWorld( )
 
 	// Initialize world data
 
-	gpWorldLevelData = MemAlloc( WORLD_MAX * sizeof( MAP_ELEMENT ) );
+	gpWorldLevelData = MALLOCN(MAP_ELEMENT, WORLD_MAX);
 	CHECKF( gpWorldLevelData );
 
 	// Zero world
@@ -2057,10 +2057,8 @@ extern BOOLEAN gfUpdatingNow;
 BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 {
 	FLOAT	dMajorMapVersion;
-	SUMMARYFILE *pSummary;
 	HWFILE	hfile;
 	MAPCREATE_STRUCT mapInfo;
-	INT8 *pBuffer, *pBufferHead;
 	UINT32					uiFileSize;
 	UINT32 uiFlags;
 	INT32 cnt;
@@ -2102,8 +2100,8 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		return FALSE;
 
 	uiFileSize = FileGetSize( hfile );
-	pBuffer = (INT8*)MemAlloc( uiFileSize );
-	pBufferHead = pBuffer;
+	INT8*       pBuffer     = MALLOCN(INT8, uiFileSize);
+	INT8* const pBufferHead = pBuffer;
 	FileRead(hfile, pBuffer, uiFileSize);
 	FileClose( hfile );
 
@@ -2117,7 +2115,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	//RenderProgressBar( 1, 0 );
 
 	//clear the summary file info
-	pSummary = (SUMMARYFILE*)MemAlloc( sizeof( SUMMARYFILE ) );
+	SUMMARYFILE* const pSummary = MALLOC(SUMMARYFILE);
 	Assert( pSummary );
 	memset( pSummary, 0, sizeof( SUMMARYFILE ) );
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
@@ -2480,8 +2478,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	CHAR8						aFilename[ 50 ];
 	UINT8						ubCombine;
 	UINT8							bCounts[ WORLD_MAX ][8];
-	INT8						*pBuffer;
-	INT8						*pBufferHead;
 	BOOLEAN					fGenerateEdgePoints = FALSE;
 #ifdef JA2TESTVERSION
 	uiLoadWorldStartTime = GetJA2Clock();
@@ -2521,8 +2517,8 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	//Get the file size and alloc one huge buffer for it.
 	//We will use this buffer to transfer all of the data from.
 	uiFileSize = FileGetSize( hfile );
-	pBuffer = (INT8*)MemAlloc( uiFileSize );
-	pBufferHead = pBuffer;
+	INT8*       pBuffer     = MALLOCN(INT8, uiFileSize);
+	INT8* const pBufferHead = pBuffer;
 	FileRead(hfile, pBuffer, uiFileSize);
 	FileClose( hfile );
 

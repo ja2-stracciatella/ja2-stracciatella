@@ -456,7 +456,7 @@ PathSt* BuildAStrategicPath(const INT16 start_sector, const INT16 end_sector, co
 	if (path_len == 0) return NULL;
 
 	// start new path list
-	PathSt* const head = MemAlloc(sizeof(*head));
+	PathSt* const head = MALLOC(PathSt);
 	head->fSpeed     = NORMAL_MVT;
 	head->uiSectorId = start_sector;
 	head->pNext      = NULL;
@@ -484,7 +484,7 @@ PathSt* BuildAStrategicPath(const INT16 start_sector, const INT16 end_sector, co
 			return NULL;
 		}
 
-		PathSt* const n = MemAlloc(sizeof(*n));
+		PathSt* const n = MALLOC(PathSt);
 		n->uiEta      = 0;
 		n->uiSectorId = cur_sector;
 		n->pPrev      = path;
@@ -789,7 +789,7 @@ PathSt* CopyPaths(PathSt* src)
 {
 	if (src == NULL) return NULL;
 
-	PathSt* const head = MemAlloc(sizeof(*head));
+	PathSt* const head = MALLOC(PathSt);
 	head->uiSectorId = src->uiSectorId;
 	head->uiEta      = src->uiEta;
 	head->fSpeed     = src->fSpeed;
@@ -804,7 +804,7 @@ PathSt* CopyPaths(PathSt* src)
 			break;
 		}
 
-		PathSt* const p = MemAlloc(sizeof(*p));
+		PathSt* const p = MALLOC(PathSt);
 		p->uiSectorId	= src->uiSectorId;
 		p->uiEta      = src->uiEta;
 		p->fSpeed     = src->fSpeed;
@@ -1319,12 +1319,8 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 
 static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
 {
-	PathSt* pNode = NULL;
-
-
 	// allocate and hang a new node at the front of the path list
-	pNode = MemAlloc( sizeof( PathSt ) );
-
+	PathSt* const pNode = MALLOC(PathSt);
 	pNode->uiSectorId = CALCULATE_STRATEGIC_INDEX( ubSectorX, ubSectorY );
 	pNode->pNext = *ppMercPath;
 	pNode->pPrev = NULL;

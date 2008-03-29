@@ -83,8 +83,8 @@ extern BOOLEAN fDialogueBoxDueToLastMessage;
 
 static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
-	ScrollStringSt* i = MemAlloc(sizeof(*i));
-	i->pString16             = MemAlloc(sizeof(*i->pString16) * (wcslen(pString) + 1));
+	ScrollStringSt* const i = MALLOC(ScrollStringSt);
+	i->pString16             = MALLOCN(wchar_t, wcslen(pString) + 1);
 	wcscpy(i->pString16, pString);
 	i->video_overlay         = NULL;
 	i->usColor               = usColor;
@@ -818,17 +818,16 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 			else
 			{
 				// There is now message here, add one
-				s = MemAlloc(sizeof(ScrollStringSt));
+				s = MALLOC(ScrollStringSt);
 				if (s == NULL) return FALSE;
 				memset(s, 0, sizeof(*s));
 				*i = s;
 			}
 
 			//allocate space for the new string
-			s->pString16 = MemAlloc(uiSizeOfString);
+			s->pString16 = MALLOCN(wchar_t, uiSizeOfString / sizeof(wchar_t));
 			if (s->pString16 == NULL) return FALSE;
-
-			memset(s->pString16, 0, uiSizeOfString);
+			memset(s->pString16, 0, sizeof(*s->pString16) * (uiSizeOfString / sizeof(wchar_t)));
 
 			//copy the string over
 			wcscpy(s->pString16, SavedString);

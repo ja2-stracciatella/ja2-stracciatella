@@ -20,11 +20,11 @@ BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnim
 
 	// Allocate entries
 	AnimDebugMsg( String( "*** Initializing anim cache surface for soldier %d", usSoldierID ) );
-	pAnimCache->usCachedSurfaces = MemAlloc( sizeof( UINT16 ) * guiCacheSize );
+	pAnimCache->usCachedSurfaces = MALLOCN(UINT16, guiCacheSize);
 	CHECKF( pAnimCache->usCachedSurfaces!= NULL );
 
 	AnimDebugMsg( String( "*** Initializing anim cache hit counter for soldier %d", usSoldierID ) );
-	pAnimCache->sCacheHits = MemAlloc( sizeof( UINT16) * guiCacheSize );
+	pAnimCache->sCacheHits = MALLOCN(UINT16, guiCacheSize);
 	CHECKF( pAnimCache->sCacheHits!= NULL );
 
 	// Zero entries

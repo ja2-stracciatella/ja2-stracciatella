@@ -312,7 +312,7 @@ static BOOLEAN AddFutureDayStrategicEventUsingSeconds(UINT8 ubCallbackID, UINT32
 
 STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID, UINT32 uiTimeStamp, UINT32 uiParam )
 {
-	STRATEGICEVENT		*pNode, *pNewNode, *pPrevNode;
+	STRATEGICEVENT		*pNode, *pPrevNode;
 
 	if( gfProcessingGameEvents && uiTimeStamp <= guiTimeStampOfCurrentlyExecutingEvent )
 	{ //Prevents infinite loops of posting events that are the same time or earlier than the event
@@ -330,7 +330,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 		return NULL;
 	}
 
-	pNewNode = MemAlloc( sizeof( STRATEGICEVENT ) );
+	STRATEGICEVENT* const pNewNode = MALLOC(STRATEGICEVENT);
 	Assert( pNewNode );
 	memset( pNewNode, 0, sizeof( STRATEGICEVENT ) );
 	pNewNode->ubCallbackID		= ubCallbackID;
@@ -665,10 +665,8 @@ BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
 	//loop through all the events and save them.
 	for( cnt=0; cnt<uiNumGameEvents; cnt++ )
 	{
-		STRATEGICEVENT *pTempEvent = NULL;
-
 		// allocate memory for the event
-		pTempEvent = MemAlloc( sizeof( STRATEGICEVENT ) );
+		STRATEGICEVENT* const pTempEvent = MALLOC(STRATEGICEVENT);
 		if( pTempEvent == NULL )
 			return( FALSE );
 

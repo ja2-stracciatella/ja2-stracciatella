@@ -66,9 +66,8 @@ void RemoveLoadingScreenProgressBar()
 //A panel is automatically created if you specify a title using SetProgressBarTitle
 BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
-	PROGRESSBAR *pNew;
 	//Allocate new progress bar
-	pNew = (PROGRESSBAR*)MemAlloc( sizeof( PROGRESSBAR ) );
+	PROGRESSBAR* const pNew = MALLOC(PROGRESSBAR);
 	Assert( pNew );
 
 	if( pBar[ ubProgressBarID ] )
@@ -141,7 +140,7 @@ void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, UINT32 usFont, UIN
 	}
 	if( pString && wcslen( pString ) )
 	{
-		pCurr->swzTitle = (wchar_t*)MemAlloc( sizeof( wchar_t ) * ( wcslen( pString ) + 1 ) );
+		pCurr->swzTitle = MALLOCN(wchar_t, wcslen(pString) + 1);
 		wcscpy(pCurr->swzTitle, pString);
 	}
 	pCurr->usTitleFont = usFont;

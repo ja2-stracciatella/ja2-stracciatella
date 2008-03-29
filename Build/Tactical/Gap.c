@@ -39,7 +39,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 		const UINT32 count = size / 8;
 		if (count > 0)
 		{
-			AUDIO_GAP* const gaps  = MemAlloc(sizeof(*gaps) * count);
+			AUDIO_GAP* const gaps  = MALLOCN(AUDIO_GAP, count);
 
 			pGapList->gaps = gaps;
 			pGapList->end  = gaps + count;

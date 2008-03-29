@@ -20,8 +20,7 @@ UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 
 static UNDERGROUND_SECTORINFO* NewUndergroundNode(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ)
 {
-	UNDERGROUND_SECTORINFO *curr;
-	curr = (UNDERGROUND_SECTORINFO*)MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );
+	UNDERGROUND_SECTORINFO* const curr = MALLOC(UNDERGROUND_SECTORINFO);
 	AssertMsg( curr, "Failed to create an underground sector info node." );
 	memset( curr, 0, sizeof( UNDERGROUND_SECTORINFO ) );
 

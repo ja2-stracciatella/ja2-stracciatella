@@ -2398,7 +2398,7 @@ static void LoadSummary(const char* pSector, UINT8 ubLevel, FLOAT dMajorMapVersi
 		MemFree( gpSectorSummary[x][y][ubLevel] );
 		gpSectorSummary[x][y][ubLevel] = NULL;
 	}
-	gpSectorSummary[x][y][ubLevel] = (SUMMARYFILE*)MemAlloc( sizeof( SUMMARYFILE ) );
+	gpSectorSummary[x][y][ubLevel] = MALLOC(SUMMARYFILE);
 	if( gpSectorSummary[x][y][ubLevel] )
 		*gpSectorSummary[x][y][ubLevel] = temp;
 	if( gpSectorSummary[x][y][ubLevel]->ubSummaryVersion < GLOBAL_SUMMARY_VERSION )
@@ -2776,7 +2776,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	ShowButton( iSummaryButton[ SUMMARY_SCIFI ] );
 	ShowButton( iSummaryButton[ SUMMARY_REAL ] );
 	ShowButton( iSummaryButton[ SUMMARY_ENEMY ] );
-	gpWorldItemsSummaryArray = (WORLDITEM*)MemAlloc( sizeof( WORLDITEM ) * uiNumItems );
+	gpWorldItemsSummaryArray = MALLOCN(WORLDITEM, uiNumItems);
 	gusWorldItemsSummaryArraySize = gpCurrentSectorSummary->usNumItems;
 	FileRead(hfile, gpWorldItemsSummaryArray, sizeof(WORLDITEM) * uiNumItems);
 
@@ -2838,12 +2838,12 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Pass 1 completed, so now allocate enough space to hold all the items
 	if( gusPEnemyItemsSummaryArraySize )
 	{
-		gpPEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
+		gpPEnemyItemsSummaryArray = MALLOCN(OBJECTTYPE, gusPEnemyItemsSummaryArraySize);
 		memset( gpPEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
 	}
 	if( gusNEnemyItemsSummaryArraySize )
 	{
-		gpNEnemyItemsSummaryArray = (OBJECTTYPE*)MemAlloc( sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
+		gpNEnemyItemsSummaryArray = MALLOCN(OBJECTTYPE, gusNEnemyItemsSummaryArraySize);
 		memset( gpNEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
 	}
 

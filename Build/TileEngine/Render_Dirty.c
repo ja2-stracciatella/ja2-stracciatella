@@ -187,21 +187,21 @@ INT32	 iTempX, iTempY;
 
 	gBackSaves[iBackIndex].fZBuffer=FALSE;
 
-	UINT32 uiBufSize = (sRight - sLeft) * 2 * (sBottom - sTop);
+	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
 
 	if (uiBufSize == 0)
 		return NO_BGND_RECT;
 
 	if (uiFlags & BGND_FLAG_SAVERECT)
 	{
-		if ((gBackSaves[iBackIndex].pSaveArea = MemAlloc(uiBufSize)) == NULL)
-			return NO_BGND_RECT;
+		gBackSaves[iBackIndex].pSaveArea = MALLOCN(INT16, uiBufSize);
+		if (gBackSaves[iBackIndex].pSaveArea == NULL) return NO_BGND_RECT;
 	}
 
 	if (uiFlags & BGND_FLAG_SAVE_Z)
 	{
-		if ((gBackSaves[iBackIndex].pZSaveArea = MemAlloc(uiBufSize)) == NULL)
-			return NO_BGND_RECT;
+		gBackSaves[iBackIndex].pZSaveArea = MALLOCN(INT16, uiBufSize);
+		if (gBackSaves[iBackIndex].pZSaveArea == NULL) return NO_BGND_RECT;
 		gBackSaves[iBackIndex].fZBuffer = TRUE;
 	}
 
@@ -765,7 +765,6 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 void AllocateVideoOverlaysArea( )
 {
 	UINT32 uiCount;
-	UINT32 uiBufSize;
 	UINT32 iBackIndex;
 
 	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
@@ -775,26 +774,22 @@ void AllocateVideoOverlaysArea( )
 			iBackIndex = gVideoOverlays[uiCount].uiBackground;
 
 			// Get buffer size
-			uiBufSize=(( gBackSaves[ iBackIndex ].sRight-gBackSaves[ iBackIndex ].sLeft)*2)*(gBackSaves[ iBackIndex ].sBottom-gBackSaves[ iBackIndex ].sTop );
+			const BACKGROUND_SAVE* bgs = &gBackSaves[iBackIndex];
+			const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom-bgs->sTop);
 
 			gVideoOverlays[uiCount].fActivelySaving = TRUE;
 
 			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
 
 			// Allocate
-			if( ( gVideoOverlays[ uiCount ].pSaveArea = MemAlloc( uiBufSize ) ) == NULL )
-			{
-				continue;
-			}
+			gVideoOverlays[uiCount].pSaveArea = MALLOCN(INT16, uiBufSize);
 		}
 	}
-
 }
 
 
 static void AllocateVideoOverlayArea(UINT32 uiCount)
 {
-	UINT32 uiBufSize;
 	UINT32 iBackIndex;
 
 	if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
@@ -802,16 +797,15 @@ static void AllocateVideoOverlayArea(UINT32 uiCount)
 		iBackIndex = gVideoOverlays[uiCount].uiBackground;
 
 		// Get buffer size
-		uiBufSize=(( gBackSaves[ iBackIndex ].sRight-gBackSaves[ iBackIndex ].sLeft)*2)*(gBackSaves[ iBackIndex ].sBottom-gBackSaves[ iBackIndex ].sTop );
+		const BACKGROUND_SAVE* bgs = &gBackSaves[iBackIndex];
+		const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 		gVideoOverlays[uiCount].fActivelySaving = TRUE;
 
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
 
 		// Allocate
-		if( ( gVideoOverlays[ uiCount ].pSaveArea = MemAlloc( uiBufSize ) ) == NULL )
-		{
-		}
+		gVideoOverlays[uiCount].pSaveArea = MALLOCN(INT16, uiBufSize);
 	}
 
 }

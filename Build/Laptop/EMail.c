@@ -534,10 +534,9 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
 {
 	// will add a message to the list of messages
-	Email* pTempEmail = NULL;
 
 	// add new element onto list
-  pTempEmail=MemAlloc(sizeof(Email));
+  Email* const pTempEmail = MALLOC(Email);
 
 	// copy offset and length of the actual message in email.edt
 	pTempEmail->usOffset =(UINT16)iMessageOffset;
@@ -605,7 +604,7 @@ static void RemoveEmailMessage(Email* Mail)
 
 static void AddEmailPage(void)
 {
-	Page* const p = MemAlloc(sizeof(*p));
+	Page* const p = MALLOC(Page);
 	for (Email** i = p->Mail; i != endof(p->Mail); ++i) *i = NULL;
 	p->Next = NULL;
 
@@ -1716,7 +1715,7 @@ static void AddEmailRecordToList(const wchar_t* const pString)
 	{
 
 		// list empty, set this node to head
-		pTempRecord = MemAlloc( sizeof(Record));
+		pTempRecord = MALLOC(Record);
 		pMessageRecordList = pTempRecord;
 	}
   else
@@ -1728,7 +1727,7 @@ static void AddEmailRecordToList(const wchar_t* const pString)
 		}
 
 		// found, alloc
-		pTempRecord -> Next = MemAlloc( sizeof(Record) );
+		pTempRecord -> Next = MALLOC(Record);
 
 		// move to node
 		pTempRecord = pTempRecord -> Next;

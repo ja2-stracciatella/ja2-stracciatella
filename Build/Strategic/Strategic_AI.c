@@ -1061,24 +1061,24 @@ void InitStrategicAI()
 	giPatrolArraySize = sizeof( gOrigPatrolGroup ) / sizeof( PATROL_GROUP );
 	if( !gPatrolGroup )
 	{ //Allocate it (otherwise, we just overwrite it because the size never changes)
-		gPatrolGroup = (PATROL_GROUP*)MemAlloc( sizeof( gOrigPatrolGroup ) );
+		gPatrolGroup = MALLOCN(PATROL_GROUP, lengthof(gOrigPatrolGroup));
 		Assert( gPatrolGroup );
 	}
 	memcpy( gPatrolGroup, gOrigPatrolGroup, sizeof( gOrigPatrolGroup ) );
 
-	gubPatrolReinforcementsDenied = (UINT8*)MemAlloc( giPatrolArraySize );
+	gubPatrolReinforcementsDenied = MALLOCN(UINT8, giPatrolArraySize);
 	memset( gubPatrolReinforcementsDenied, 0, giPatrolArraySize );
 
 	//initialize the garrison group definitions
 	giGarrisonArraySize = sizeof( gOrigGarrisonGroup ) / sizeof( GARRISON_GROUP );
 	if( !gGarrisonGroup )
 	{
-		gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( sizeof( gOrigGarrisonGroup ) );
+		gGarrisonGroup = MALLOCN(GARRISON_GROUP, lengthof(gOrigGarrisonGroup));
 		Assert( gGarrisonGroup );
 	}
 	memcpy( gGarrisonGroup, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
 
-	gubGarrisonReinforcementsDenied = (UINT8*)MemAlloc( giGarrisonArraySize );
+	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
 	memset( gubGarrisonReinforcementsDenied, 0, giGarrisonArraySize );
 
 	//Modify initial force sizes?
@@ -3082,7 +3082,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	{
 		MemFree( gPatrolGroup );
 	}
-	gPatrolGroup = (PATROL_GROUP*)MemAlloc( giPatrolArraySize * sizeof( PATROL_GROUP ) );
+	gPatrolGroup = MALLOCN(PATROL_GROUP, giPatrolArraySize);
 	if (!FileRead(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP))) return FALSE;
 	i = SAVED_PATROL_GROUPS - giPatrolArraySize;
 	while( i-- )
@@ -3096,7 +3096,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	{
 		MemFree( gGarrisonGroup );
 	}
-	gGarrisonGroup = (GARRISON_GROUP*)MemAlloc( giGarrisonArraySize * sizeof( GARRISON_GROUP ) );
+	gGarrisonGroup = MALLOCN(GARRISON_GROUP, giGarrisonArraySize);
 	if (!FileRead(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP))) return FALSE;
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
@@ -3110,7 +3110,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		MemFree( gubPatrolReinforcementsDenied );
 		gubPatrolReinforcementsDenied = NULL;
 	}
-	gubPatrolReinforcementsDenied = (UINT8*)MemAlloc( giPatrolArraySize );
+	gubPatrolReinforcementsDenied = MALLOCN(UINT8, giPatrolArraySize);
 	if (!FileRead(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize)) return FALSE;
 
 	//Load the list of reinforcement garrison points.
@@ -3119,7 +3119,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		MemFree( gubGarrisonReinforcementsDenied );
 		gubGarrisonReinforcementsDenied = NULL;
 	}
-	gubGarrisonReinforcementsDenied = (UINT8*)MemAlloc( giGarrisonArraySize );
+	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
 	if (!FileRead(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize)) return FALSE;
 
 	#ifdef JA2BETAVERSION

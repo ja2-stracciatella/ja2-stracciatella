@@ -484,7 +484,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) goto fail_close;
 		if (l_item_count != 0)
 		{
-			l_items = MemAlloc(l_item_count * sizeof(*l_items));
+			l_items = MALLOCN(WORLDITEM, l_item_count);
 			if (l_items == NULL) goto fail_close;
 
 			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) goto fail_free;
@@ -2052,11 +2052,9 @@ BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	UINT32	uiLoop;
 	UINT8		ubArrayIndex = 0;
 	UINT8		ubLastByte = 0;//, ubTemp;
-	UINT8 * pMemBlock;
 	BOOLEAN	fRet;
 
-	pMemBlock = (UINT8 *) MemAlloc( uiBytesToWrite );
-
+	UINT8* const pMemBlock = MALLOCN(UINT8, uiBytesToWrite);
 	if ( !pMemBlock )
 	{
 		return( FALSE );
@@ -2125,11 +2123,9 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	UINT8		ubArrayIndex = 0;
 	//UINT8		ubLastNonBlank = 0;
 	UINT8		ubLastByte = 0;//, ubTemp;
-	UINT8 * pMemBlock;
 	BOOLEAN	fRet;
 
-	pMemBlock = (UINT8 *) MemAlloc( uiBytesToWrite );
-
+	UINT8* const pMemBlock = MALLOCN(UINT8, uiBytesToWrite);
 	if ( !pMemBlock )
 	{
 		return( FALSE );

@@ -79,7 +79,7 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 	if ( fContents & IMAGE_BITMAPDATA )
 	{
 		// Allocate memory for buffer
-		hImage->p8BPPData = MemAlloc( hImage->usWidth * hImage->usHeight );
+		hImage->p8BPPData = MALLOCN(UINT8, hImage->usWidth * hImage->usHeight);
 
 		if ( !BlitPcxToBuffer( pPcxObject, hImage->p8BPPData, hImage->usWidth, hImage->usHeight, 0, 0, FALSE ) )
 		{
@@ -108,7 +108,6 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 static PcxObject* LoadPcx(const char* pFilename)
 {
   PcxHeader  Header;
-  PcxObject *pCurrentPcxObject;
   HWFILE     hFileHandle;
   UINT32     uiFileSize;
   UINT8     *pPcxBuffer;
@@ -127,14 +126,14 @@ static PcxObject* LoadPcx(const char* pFilename)
   }
 
 	// Create enw pCX object
-	pCurrentPcxObject = MemAlloc( sizeof( PcxObject ) );
+	PcxObject* const pCurrentPcxObject = MALLOC(PcxObject);
 
 	if ( pCurrentPcxObject == NULL )
 	{
 		return( NULL );
 	}
 
-	pCurrentPcxObject->pPcxBuffer = MemAlloc( uiFileSize - (sizeof(PcxHeader) + 768) );
+	pCurrentPcxObject->pPcxBuffer = MALLOCN(UINT8, uiFileSize - (sizeof(PcxHeader) + 768));
 
 	if ( pCurrentPcxObject->pPcxBuffer == NULL )
 	{
@@ -389,7 +388,7 @@ static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 	pubPalette = &(pCurrentPcxObject->ubPalette[0]);
 
 	// Allocate memory for palette
-	hImage->pPalette = MemAlloc( sizeof( SGPPaletteEntry ) * 256 );
+	hImage->pPalette = MALLOCN(SGPPaletteEntry, 256);
 
 	if ( hImage->pPalette == NULL )
 	{

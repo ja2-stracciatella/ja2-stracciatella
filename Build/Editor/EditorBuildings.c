@@ -182,7 +182,7 @@ static void BuildLayout(INT32 iMapIndex, INT32 iOffset)
 		curr = curr->next;
 	}
 	//Good, it hasn't, so process it and add it to the head of the list.
-	curr = (BUILDINGLAYOUTNODE*)MemAlloc( sizeof( BUILDINGLAYOUTNODE ) );
+	curr = MALLOC(BUILDINGLAYOUTNODE);
 	Assert( curr );
 	curr->sGridNo = (INT16)iMapIndex;
 	curr->next = gpBuildingLayoutList;
@@ -205,7 +205,7 @@ void CopyBuilding( INT32 iMapIndex )
 		return;
 	//Okay, a building does exist here to some undetermined capacity.
 	//Allocate the basic structure, then calculate the layout.  The head node is
-	gpBuildingLayoutList = (BUILDINGLAYOUTNODE*)MemAlloc( sizeof( BUILDINGLAYOUTNODE ) );
+	gpBuildingLayoutList = MALLOC(BUILDINGLAYOUTNODE);
 	Assert( gpBuildingLayoutList );
 	gpBuildingLayoutList->sGridNo = (INT16)iMapIndex;
 	gpBuildingLayoutList->next = NULL;
@@ -438,7 +438,7 @@ static void ReplaceRoof(INT32 iMapIndex, UINT16 usRoofType)
 		curr = curr->next;
 	}
 	//Good, it hasn't, so process it and add it to the head of the list.
-	curr = (ROOFNODE*)MemAlloc( sizeof( ROOFNODE ) );
+	curr = MALLOC(ROOFNODE);
 	Assert( curr );
 	curr->iMapIndex = iMapIndex;
 	curr->next = gpRoofList;
@@ -467,7 +467,7 @@ void ReplaceBuildingWithNewRoof( INT32 iMapIndex )
 	usRoofType = (UINT16)SelSingleNewRoof[ iCurBank ].uiObject;
 
 	//now start building a linked list of all nodes visited -- start the first node.
-	gpRoofList = (ROOFNODE*)MemAlloc( sizeof( ROOFNODE ) );
+	gpRoofList = MALLOC(ROOFNODE);
 	Assert( gpRoofList );
 	gpRoofList->iMapIndex = iMapIndex;
 	gpRoofList->next = 0;

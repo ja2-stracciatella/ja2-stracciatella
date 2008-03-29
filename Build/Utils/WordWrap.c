@@ -10,7 +10,7 @@
 
 static WRAPPED_STRING* AllocWrappedString(const wchar_t* str)
 {
-	WRAPPED_STRING* ws = MemAlloc(sizeof(*ws) + sizeof(*ws->sString) * (wcslen(str) + 1));
+	WRAPPED_STRING* const ws = MALLOCE(WRAPPED_STRING, sizeof(*ws->sString) * (wcslen(str) + 1));
 	ws->pNextWrappedString = NULL;
 	wcscpy(ws->sString, str);
 	return ws;

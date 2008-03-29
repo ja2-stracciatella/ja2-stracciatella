@@ -1727,7 +1727,7 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
-	t->name = MemAlloc(strlen(usName) + 1);
+	t->name = MALLOCN(char, strlen(usName) + 1);
 	strcpy(t->name, usName);
 
 	return t;
@@ -1747,7 +1747,7 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTS%d-%d.LHT", iRadius1, iRadius2);
-	t->name = MemAlloc(strlen(usName) + 1);
+	t->name = MALLOCN(char, strlen(usName) + 1);
 	strcpy(t->name, usName);
 
 	return t;
@@ -1767,7 +1767,7 @@ INT32 iLight;
 
 	char usName[14];
 	sprintf(usName, "LTE%d-%d.LHT", iRadius1, iRadius2);
-	t->name = MemAlloc(strlen(usName) + 1);
+	t->name = MALLOCN(char, strlen(usName) + 1);
 	strcpy(t->name, usName);
 
 	return t;
@@ -2429,7 +2429,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 	LightTemplate* const t = &g_light_templates[iLight];
 
 	FileRead(hFile, &t->n_lights, sizeof(t->n_lights));
-	t->lights = MemAlloc(t->n_lights * sizeof(*t->lights));
+	t->lights = MALLOCN(LIGHT_NODE, t->n_lights);
 	if (t->lights == NULL)
 	{
 		t->n_lights = 0;
@@ -2438,7 +2438,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 	FileRead(hFile, t->lights, sizeof(*t->lights) * t->n_lights);
 
 	FileRead(hFile, &t->n_rays, sizeof(t->n_rays));
-	t->rays = MemAlloc(t->n_rays * sizeof(*t->rays));
+	t->rays = MALLOCN(UINT16, t->n_rays);
 	if (t->rays ==NULL)
 	{
 		t->n_lights = 0;
@@ -2450,7 +2450,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 
 	FileClose(hFile);
 
-	t->name = MemAlloc(strlen(pFilename) + 1);
+	t->name = MALLOCN(char, strlen(pFilename) + 1);
 	strcpy(t->name, pFilename);
 	return t;
 }

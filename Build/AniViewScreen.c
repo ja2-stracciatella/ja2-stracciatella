@@ -318,7 +318,7 @@ static void BuildListFile(void)
 	fseek( infoFile, 0, SEEK_SET ); //reset header file
 
 	// Allocate array
-	pusStates = MemAlloc( sizeof( UINT16 ) * numEntries );
+	pusStates = MALLOCN(UINT16, numEntries);
 
 	fOKFiles = TRUE;
 

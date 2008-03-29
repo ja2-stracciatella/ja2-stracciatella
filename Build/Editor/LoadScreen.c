@@ -632,12 +632,10 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 
 FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 {
-	FDLG_LIST *pNode;
-
 	// Add to start of list
 	if ( pList == NULL )
 	{
-		pNode = (FDLG_LIST *)MemAlloc( sizeof(FDLG_LIST) );
+		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
 		pNode->FileInfo = *pInfo;
 		pNode->pPrev = pNode->pNext = NULL;
 		return(pNode);
@@ -647,7 +645,7 @@ FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 	if (strcasecmp(pList->FileInfo.zFileName, pInfo->zFileName) > 0)
 	{
 		// pInfo is smaller than pList (i.e. Insert before)
-		pNode = (FDLG_LIST *)MemAlloc( sizeof(FDLG_LIST) );
+		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
 		pNode->FileInfo = *pInfo;
 		pNode->pNext = pList;
 		pNode->pPrev = pList->pPrev;

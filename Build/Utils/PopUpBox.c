@@ -88,7 +88,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 	{
 		if (*i == NULL)
 		{
-			PopUpBox* const box = MemAlloc(sizeof(*box));
+			PopUpBox* const box = MALLOC(PopUpBox);
 			if (box == NULL) return NO_POPUP_BOX;
 			memset(box, 0, sizeof(*box));
 
@@ -208,11 +208,11 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 		return;
 	}
 
-	PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
+	PopUpString* const pStringSt = MALLOC(PopUpString);
 	if (pStringSt == NULL)
 		return;
 
-	wchar_t* const pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
+	wchar_t* const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
 	if (pLocalString == NULL)
 		return;
 
@@ -245,11 +245,11 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 		return;
 	}
 
-	PopUpString* pStringSt = MemAlloc(sizeof(*pStringSt));
+	PopUpString* const pStringSt = MALLOC(PopUpString);
 	if (pStringSt == NULL)
 		return;
 
-	wchar_t* const pLocalString = MemAlloc(sizeof(*pLocalString) * (wcslen(pString) + 1));
+	wchar_t* const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
 	if (pLocalString == NULL)
 		return;
 

@@ -32,7 +32,7 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	if (dot == NULL) goto fail;
 	const char* const ext = dot + 1;
 
-	SGPImage* const img = MemAlloc(sizeof(*img));
+	SGPImage* const img = MALLOC(SGPImage);
 	if (img == NULL) goto fail;
 	memset(img, 0, sizeof(*img));
 	strcpy(img->ImageFile, filename);
@@ -221,8 +221,6 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 	UINT8 *	pDest;
 	UINT32	uiDestStart;
 
-	UINT8 *	pScanLine;
-
 	PTR			pDecompPtr;
 	UINT32	uiDecompressed;
 
@@ -263,7 +261,7 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 	CHECKF( pDecompPtr );
 
 	// Allocate memory for one scanline
-	pScanLine = MemAlloc( hImage->usWidth );
+	UINT8* const pScanLine = MALLOCN(UINT8, hImage->usWidth);
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
@@ -304,7 +302,6 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	UINT16 *	pDestTemp;
 	UINT32		uiDestStart;
 
-	UINT8 *		pScanLine;
 	UINT8 *		pScanLineTemp;
 
 	PTR				pDecompPtr;
@@ -352,7 +349,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	CHECKF( pDecompPtr );
 
 	// Allocate memory for one scanline
-	pScanLine = MemAlloc( hImage->usWidth );
+	UINT8* const pScanLine = MALLOCN(UINT8, hImage->usWidth);
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
@@ -554,7 +551,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 {
 	Assert(pPalette != NULL);
 
-	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
+	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -596,7 +593,7 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 {
 	Assert(pPalette != NULL);
 
-	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
+	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -678,14 +675,14 @@ BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
 	pBuffer->usNumberOfObjects = hImage->usNumberOfObjects;
 
 	// Create buffer for objects
-	pBuffer->pETRLEObject = MemAlloc( sizeof( ETRLEObject ) * pBuffer->usNumberOfObjects );
+	pBuffer->pETRLEObject = MALLOCN(ETRLEObject, pBuffer->usNumberOfObjects);
 	CHECKF( pBuffer->pETRLEObject != NULL );
 
 	// Copy into buffer
 	memcpy( pBuffer->pETRLEObject, hImage->pETRLEObject, sizeof( ETRLEObject ) * pBuffer->usNumberOfObjects );
 
 	// Allocate memory for pixel data
-	pBuffer->pPixData = MemAlloc( hImage->uiSizePixData );
+	pBuffer->pPixData = MALLOCN(UINT8, hImage->uiSizePixData);
 	CHECKF( pBuffer->pPixData != NULL );
 
 	pBuffer->uiSizePixData = hImage->uiSizePixData;

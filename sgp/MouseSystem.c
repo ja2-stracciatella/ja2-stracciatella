@@ -956,7 +956,7 @@ void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
 		return; //blank (or clear)
 
 	// Allocate memory for the button's FastHelp text string...
-	region->FastHelpText = (wchar_t*)MemAlloc( (wcslen( szText ) + 1) * sizeof(wchar_t) );
+	region->FastHelpText = MALLOCN(wchar_t, wcslen(szText) + 1);
 	Assert( region->FastHelpText );
 
 	wcscpy( region->FastHelpText, szText );

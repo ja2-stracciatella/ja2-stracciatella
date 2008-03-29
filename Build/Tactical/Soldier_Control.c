@@ -640,7 +640,7 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier)
 	{
 		if (IsOnOurTeam(pSoldier))
 		{
-			pSoldier->pKeyRing = MemAlloc( NUM_KEYS * sizeof( KEY_ON_RING ) );
+			pSoldier->pKeyRing = MALLOCN(KEY_ON_RING, NUM_KEYS);
 			memset(  pSoldier->pKeyRing , 0, NUM_KEYS * sizeof( KEY_ON_RING ) );
 
 			for( iCounter = 0; iCounter < NUM_KEYS; iCounter++ )
@@ -5339,8 +5339,8 @@ BOOLEAN LoadPaletteData( )
 	}
 
 	// Malloc!
-	gpPaletteSubRanges = MemAlloc(sizeof(*gpPaletteSubRanges) * guiNumPaletteSubRanges);
-	gubpNumReplacementsPerRange = MemAlloc( sizeof( UINT8 ) * guiNumPaletteSubRanges );
+	gpPaletteSubRanges          = MALLOCN(PaletteSubRangeType, guiNumPaletteSubRanges);
+	gubpNumReplacementsPerRange = MALLOCN(UINT8,               guiNumPaletteSubRanges);
 
 	// Read # of types for each!
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
@@ -5372,7 +5372,7 @@ BOOLEAN LoadPaletteData( )
 	}
 
 	// Malloc!
-	gpPalRep = MemAlloc( sizeof( PaletteReplacementType ) * guiNumReplacements );
+	gpPalRep = MALLOCN(PaletteReplacementType, guiNumReplacements);
 
 	// Read!
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
@@ -5394,7 +5394,7 @@ BOOLEAN LoadPaletteData( )
 			return( FALSE );
 		}
 
-		SGPPaletteEntry* Pal = MemAlloc(sizeof(*Pal) * gpPalRep[cnt].ubPaletteSize);
+		SGPPaletteEntry* const Pal = MALLOCN(SGPPaletteEntry, gpPalRep[cnt].ubPaletteSize);
 		gpPalRep[cnt].rgb = Pal;
 		CHECKF(Pal != NULL);
 
@@ -8159,7 +8159,7 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 {
 	Assert(pPalette != NULL);
 
-	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
+	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -8176,7 +8176,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 {
 	Assert(pPalette != NULL);
 
-	UINT16* p16BPPPalette = MemAlloc(sizeof(*p16BPPPalette) * 256);
+	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{

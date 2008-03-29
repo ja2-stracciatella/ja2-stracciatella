@@ -810,7 +810,7 @@ static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iA
 			pFinance=pFinance->Next;
 
 		// alloc space
-		pFinance->Next=MemAlloc(sizeof(FinanceUnit));
+		pFinance->Next = MALLOC(FinanceUnit);
 
 		// set up information passed
 		pFinance = pFinance->Next;
@@ -826,7 +826,7 @@ static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iA
 	else
 	{
 		// alloc space
-		pFinance=MemAlloc(sizeof(FinanceUnit));
+		pFinance = MALLOC(FinanceUnit);
 
 		// setup info passed
 		pFinance->Next = NULL;

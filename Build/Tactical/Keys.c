@@ -745,7 +745,7 @@ void LoadDoorTableFromMap( INT8 **hBuffer )
 	LOADDATA( &gubNumDoors, *hBuffer, 1 );
 
 	gubMaxDoors = gubNumDoors;
-	DoorTable = (DOOR *)MemAlloc( sizeof( DOOR ) * gubMaxDoors );
+	DoorTable = MALLOCN(DOOR, gubMaxDoors);
 
 	LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
 
@@ -802,10 +802,9 @@ void AddDoorInfoToTable( DOOR *pDoor )
 	}
 	else
 	{ //we need to allocate more memory, so add ten more slots.
-		DOOR *NewDoorTable;
 		gubMaxDoors += 10;
 		//Allocate new table with max+10 doors.
-		NewDoorTable = (DOOR*)MemAlloc( sizeof( DOOR ) * gubMaxDoors );
+		DOOR* const NewDoorTable = MALLOCN(DOOR, gubMaxDoors);
 		//Copy contents of existing door table to new door table.
 		memcpy( NewDoorTable, DoorTable, sizeof( DOOR ) * gubNumDoors );
 		//Deallocate the existing door table (possible to not have one).
@@ -981,7 +980,7 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	if( gubNumDoors != 0 )
 	{
 		//Allocate space for the door table
-		DoorTable = MemAlloc( sizeof( DOOR ) * gubMaxDoors );
+		DoorTable = MALLOCN(DOOR, gubMaxDoors);
 		if( DoorTable == NULL )
 		{
 			FileClose( hFile );
@@ -1089,7 +1088,7 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 		//Set the initial number of doors
 		gubNumDoorStatus = 1;
 
-		gpDoorStatus = MemAlloc( sizeof( DOOR_STATUS ) );
+		gpDoorStatus = MALLOC(DOOR_STATUS);
 		if( gpDoorStatus == NULL )
 			return( FALSE );
 	}
@@ -1604,7 +1603,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 
 	//Allocate space for the door status array
-	gpDoorStatus = MemAlloc( sizeof( DOOR_STATUS ) * gubNumDoorStatus );
+	gpDoorStatus = MALLOCN(DOOR_STATUS, gubNumDoorStatus);
 	AssertMsg(gpDoorStatus != NULL , "Error Allocating memory for the gpDoorStatus");
 	memset( gpDoorStatus, 0, sizeof( DOOR_STATUS ) * gubNumDoorStatus );
 

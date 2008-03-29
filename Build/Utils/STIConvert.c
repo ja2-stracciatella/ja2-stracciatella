@@ -223,7 +223,7 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 
 	// worst-case situation	estimate
 	uiSpaceLeft = (UINT32) usWidth * (UINT32) usHeight * 3;
-	*ppDest = MemAlloc( uiSpaceLeft );
+	*ppDest = MALLOCN(UINT8, uiSpaceLeft);
 	CHECKF( *ppDest );
 	*puiDestLen = uiSpaceLeft;
 
@@ -237,7 +237,7 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 		// we want a 1-element SubImage array for this...
 		// allocate!
 		*pusNumberOfSubImages = 1;
-		*ppSubImageBuffer = MemAlloc(sizeof(*ppSubImageBuffer));
+		*ppSubImageBuffer = MALLOC(STCISubImage);
 		if (!(*ppSubImageBuffer))
 		{
 			MemFree( *ppDest );

@@ -71,14 +71,13 @@ void KillSoldierInitList()
 
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
 {
-	SOLDIERINITNODE *curr;
 	//Allocate memory for node
-	curr = (SOLDIERINITNODE*)MemAlloc( sizeof (SOLDIERINITNODE ) );
+	SOLDIERINITNODE* const curr = MALLOC(SOLDIERINITNODE);
 	Assert( curr );
 	memset( curr, 0, sizeof( SOLDIERINITNODE ) );
 
 	//Allocate memory for basic placement
-	curr->pBasicPlacement = ( BASIC_SOLDIERCREATE_STRUCT* )MemAlloc( sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+	curr->pBasicPlacement = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
 	if( !curr->pBasicPlacement )
 	{
 		AssertMsg( 0, "Failed to allocate memory for AddBasicPlacementToSoldierInitList." );
@@ -264,7 +263,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
-			SOLDIERCREATE_STRUCT* Soldier = MemAlloc(sizeof(*Soldier));
+			SOLDIERCREATE_STRUCT* const Soldier = MALLOC(SOLDIERCREATE_STRUCT);
 			if (Soldier == NULL)
 			{
 				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );

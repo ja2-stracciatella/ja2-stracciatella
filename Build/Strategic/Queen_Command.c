@@ -1355,7 +1355,6 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 {
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
-	UNDERGROUND_SECTORINFO *TempNode = NULL;
 	UNDERGROUND_SECTORINFO *TempSpot = NULL;
 
 	//Clear the current LL
@@ -1368,7 +1367,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 	{
 
 		//Malloc space for the new node
-		TempNode = MemAlloc( sizeof( UNDERGROUND_SECTORINFO ) );
+		UNDERGROUND_SECTORINFO* const TempNode = MALLOC(UNDERGROUND_SECTORINFO);
 		if( TempNode == NULL )
 			return( FALSE );
 
