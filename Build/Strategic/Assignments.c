@@ -2495,7 +2495,6 @@ static int TownTrainerQsortCompare(const void* pArg1, const void* pArg2)
 INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const SOLDIERTYPE* pStudent, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
 	// return the bonus training pts of this instructor with this student,...if student null, simply assignment student skill of 0 and student wisdom of 100
-	INT16 sTrainingPts = 0;
 	INT8 bTraineeEffWisdom = 0;
 	INT8 bTraineeNatWisdom = 0;
 	INT8 bTraineeSkill = 0;
@@ -2600,7 +2599,7 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 	}
 
 	// calculate effective training pts
-	sTrainingPts = ( bTrainerEffSkill - bTraineeSkill ) * ( bTraineeEffWisdom + ( EffectiveWisdom( pInstructor ) + EffectiveLeadership( pInstructor ) ) / 2 ) / INSTRUCTED_TRAINING_DIVISOR;
+	UINT16 sTrainingPts = (bTrainerEffSkill - bTraineeSkill) * (bTraineeEffWisdom + (EffectiveWisdom(pInstructor) + EffectiveLeadership(pInstructor)) / 2) / INSTRUCTED_TRAINING_DIVISOR;
 
 	// calculate normal training pts - what it would be if his stats were "normal" (ignoring drugs, fatigue)
 	*pusMaxPts   = ( bTrainerNatSkill - bTraineeSkill ) * ( bTraineeNatWisdom + ( pInstructor->bWisdom + pInstructor->bLeadership ) / 2 ) / INSTRUCTED_TRAINING_DIVISOR;
@@ -2647,7 +2646,6 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 
 INT16 GetSoldierTrainingPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
-	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
 
 	// assume training impossible for max pts
@@ -2667,7 +2665,7 @@ INT16 GetSoldierTrainingPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGu
 	*pusMaxPts = __max(s->bWisdom * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// calculate effective training pts
-	sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
+	UINT16 sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// get special bonus if we're training marksmanship and we're in the gun range sector in Alma
 	if ( ( bTrainStat == MARKSMANSHIP ) && fAtGunRange )
@@ -2687,7 +2685,6 @@ INT16 GetSoldierTrainingPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGu
 
 INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGunRange, UINT16* pusMaxPts)
 {
-	INT16 sTrainingPts = 0;
 	INT8	bTrainingBonus = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
@@ -2710,7 +2707,7 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 	*pusMaxPts = __max(s->bWisdom * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// calculate effective training pts
-	sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
+	UINT16 sTrainingPts = __max(EffectiveWisdom(s) * (TRAINING_RATING_CAP - bSkill) / SELF_TRAINING_DIVISOR, 1);
 
 	// get special bonus if we're training marksmanship and we're in the gun range sector in Alma
 	if ( ( bTrainStat == MARKSMANSHIP ) && fAtGunRange )
@@ -2842,7 +2839,6 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY
 
 INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts)
 {
-	INT16 sTotalTrainingPts = 0;
 	INT8 bTrainingBonus = 0;
 //	UINT8 ubTownId = 0;
 
@@ -2851,7 +2847,7 @@ INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts
 
 	// calculate effective training points (this is hundredths of pts / hour)
 	// typical: 300/hr, maximum: 600/hr
-	sTotalTrainingPts = ( EffectiveWisdom( pTrainer ) + EffectiveLeadership ( pTrainer ) + ( 10 * EffectiveExpLevel ( pTrainer ) ) ) * TOWN_TRAINING_RATE;
+	UINT16 sTotalTrainingPts = (EffectiveWisdom(pTrainer) + EffectiveLeadership(pTrainer) + 10 * EffectiveExpLevel(pTrainer)) * TOWN_TRAINING_RATE;
 
 	// check for teaching bonuses
 	if( gMercProfiles[ pTrainer -> ubProfile ].bSkillTrait == TEACHING )

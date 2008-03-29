@@ -24,7 +24,7 @@ BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnim
 	CHECKF( pAnimCache->usCachedSurfaces!= NULL );
 
 	AnimDebugMsg( String( "*** Initializing anim cache hit counter for soldier %d", usSoldierID ) );
-	pAnimCache->sCacheHits = MALLOCN(UINT16, guiCacheSize);
+	pAnimCache->sCacheHits = MALLOCN(INT16, guiCacheSize);
 	CHECKF( pAnimCache->sCacheHits!= NULL );
 
 	// Zero entries

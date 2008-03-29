@@ -63,7 +63,7 @@ static void ConvertRGBDistribution555To565(UINT16* p16BPPData, UINT32 uiNumberOf
 static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, STCISubImage** ppSubImageBuffer, UINT16* pusNumberOfSubImages, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, UINT32 fFlags);
 
 
-void WriteSTIFile(INT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, const char* const cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
+void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, const char* const cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
 {
 
 	FILE *							pOutput;

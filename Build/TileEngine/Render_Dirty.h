@@ -30,7 +30,7 @@ typedef struct
 	BOOLEAN		fZBuffer;
 	UINT32		uiFlags;
 	INT16			*pSaveArea;
-	INT16			*pZSaveArea;
+	UINT16*   pZSaveArea;
 	INT16			sLeft;
 	INT16			sTop;
 	INT16			sRight;

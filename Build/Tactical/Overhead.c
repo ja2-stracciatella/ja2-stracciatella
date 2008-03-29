@@ -1427,7 +1427,7 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 
 static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* pSoldier, UINT16 GridNo, BOOLEAN CheckAround, BOOLEAN* pfKeepMoving)
 {
-	UINT16 sMineGridNo;
+	INT16 sMineGridNo;
 	if (NearbyGroundSeemsWrong(pSoldier, GridNo, CheckAround, &sMineGridNo))
 	{
 		if (pSoldier->uiStatusFlags & SOLDIER_PC)

@@ -94,12 +94,12 @@ static BOOLEAN Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 }
 
 
-static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color);
-static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawHorizontalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawVerticalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color);
 
 
 /* Draws a line between the specified endpoints in color Color. */
-void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char* ScreenPtr)
+void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr)
 {
 	if (fClip && !Clip2D(&XStart, &YStart, &XEnd, &YEnd)) return;
 
@@ -302,9 +302,9 @@ void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 
 
 /* Draws a horizontal run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color)
+static void DrawHorizontalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color)
 {
-	char* WorkingScreenPtr = *ScreenPtr;
+	UINT8* WorkingScreenPtr = *ScreenPtr;
 
 	for (int i = 0; i < RunLength; i++)
 	{
@@ -319,9 +319,9 @@ static void DrawHorizontalRun(char** ScreenPtr, int XAdvance, int RunLength, int
 
 /* Draws a vertical run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int Color)
+static void DrawVerticalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color)
 {
-	char* WorkingScreenPtr = *ScreenPtr;
+	UINT8* WorkingScreenPtr = *ScreenPtr;
 
 	for (int i = 0; i < RunLength; i++)
 	{
@@ -335,7 +335,7 @@ static void DrawVerticalRun(char** ScreenPtr, int XAdvance, int RunLength, int C
 
 
 /* Draws a rectangle between the specified endpoints in color Color. */
-void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, char* ScreenPtr)
+void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr)
 {
 	LineDraw(fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
 	LineDraw(fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);

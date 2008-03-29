@@ -561,7 +561,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 {
 	// obtain maximum roaming distance from soldier's origin
-	UINT16 usOrigin;
+	INT16 usOrigin;
 	const UINT16 usMaxDist = RoamingRange(s, &usOrigin);
 
 	// make sure origin is a legal gridno!
@@ -653,7 +653,6 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 {
 	INT16 sRandDest = NOWHERE;
-	UINT16 usOrigin, usMaxDist;
 	UINT8	ubTriesLeft;
 	BOOLEAN fLimited = FALSE, fFound = FALSE;
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;
@@ -676,7 +675,8 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 		ubTriesLeft = 1;
 	}
 
-	usMaxDist = RoamingRange(pSoldier,&usOrigin);
+	INT16  usOrigin;
+	UINT16 usMaxDist = RoamingRange(pSoldier,&usOrigin);
 
 	if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 	{
@@ -1706,7 +1706,6 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
  INT32 iPercent;
  INT8	bMostRecentOpplistValue;
  INT8 bMoraleCategory;
- UINT8 *pSeenOpp; //,*friendOlPtr;
  INT8  *pbPersOL, *pbPublOL;
 
  // if army guy has NO weapons left then panic!
@@ -1720,7 +1719,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 
  // hang pointers to my personal opplist, my team's public opplist, and my
  // list of previously seen opponents
- pSeenOpp  = &(gbSeenOpponents[pSoldier->ubID][0]);
+	const INT8* pSeenOpp = &gbSeenOpponents[pSoldier->ubID][0];
 
  // loop through every one of my possible opponents
 	FOR_ALL_MERCS(i)

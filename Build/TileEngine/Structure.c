@@ -1610,7 +1610,6 @@ void DebugStructurePage1( void )
 	STRUCTURE *		pStructure;
 	STRUCTURE *		pBase;
 	//LEVELNODE *		pLand;
-	INT8					bHeight, bDens0, bDens1, bDens2, bDens3;
 	INT8					bStructures;
 
 	static const wchar_t* const WallOrientationString[] =
@@ -1699,9 +1698,13 @@ void DebugStructurePage1( void )
 		{
 			gprintf( 0, LINE_HEIGHT * 1, L"UNKNOWN STRUCTURE! (%x)", pStructure->fFlags );
 		}
-		bHeight = StructureHeight( pStructure );
+		const INT8 bHeight = StructureHeight(pStructure);
 		pBase = FindBaseStructure( pStructure );
 		gprintf( 0, LINE_HEIGHT * 2, L"Structure height %d, cube offset %d, armour %d, HP %d", bHeight, pStructure->sCubeOffset, gubMaterialArmour[pStructure->pDBStructureRef->pDBStructure->ubArmour], pBase->ubHitPoints );
+		UINT8 bDens0;
+		UINT8 bDens1;
+		UINT8 bDens2;
+		UINT8 bDens3;
 		if (StructureDensity( pStructure, &bDens0, &bDens1, &bDens2, &bDens3 ) == TRUE)
 		{
 			gprintf( 0, LINE_HEIGHT * 3, L"Structure fill %d%%/%d%%/%d%%/%d%% density %d", bDens0, bDens1, bDens2, bDens3,

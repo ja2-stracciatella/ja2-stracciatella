@@ -147,7 +147,7 @@ void RestartMineProduction( INT8 bMineIndex );
 BOOLEAN IsMineShutDown( INT8 bMineIndex );
 
 // Find the sector location of a mine
-void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY );
+void GetMineSector(UINT8 ubMineIndex, UINT16* psX, UINT16* psY);
 
 void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType );
 

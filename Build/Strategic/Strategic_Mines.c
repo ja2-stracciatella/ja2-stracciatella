@@ -360,8 +360,6 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 {
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
-	INT16 sSectorX, sSectorY;
-
 
 	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < MAX_NUMBER_OF_MINES ) );
 
@@ -388,6 +386,8 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 		gMineStatus[ bMineIndex ].fRunningOut = FALSE;
 
 		// tell the strategic AI about this, that mine's and town's value is greatly reduced
+		UINT16 sSectorX;
+		UINT16 sSectorY;
 		GetMineSector( bMineIndex, &sSectorX, &sSectorY );
 		StrategicHandleMineThatRanOut( ( UINT8 ) SECTOR( sSectorX, sSectorY ) );
 
@@ -702,7 +702,8 @@ INT8 GetMineIndexForSector( INT16 sX, INT16 sY )
 	return( -1 );
 }
 
-void GetMineSector( UINT8 ubMineIndex, INT16 * psX, INT16 * psY )
+
+void GetMineSector(const UINT8 ubMineIndex, UINT16* const psX, UINT16* const psY)
 {
 	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
 

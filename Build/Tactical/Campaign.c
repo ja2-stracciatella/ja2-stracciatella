@@ -123,7 +123,6 @@ static void ProcessStatChange(MERCPROFILESTRUCT* pProfile, UINT8 ubStat, UINT16 
 	UINT16 usSubpointsPerPoint;
 	UINT16 usSubpointsPerLevel;
 	INT8 bCurrentRating;
-  UINT16 *psStatGainPtr;
 	BOOLEAN fAffectedByWisdom = TRUE;
 
 	Assert(pProfile != NULL);
@@ -142,6 +141,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT* pProfile, UINT8 ubStat, UINT16 
 	usSubpointsPerPoint = SubpointsPerPoint(ubStat, pProfile->bExpLevel);
 	usSubpointsPerLevel = SubpointsPerPoint(EXPERAMT, pProfile->bExpLevel);
 
+	INT16* psStatGainPtr;
   switch (ubStat)
   {
     case HEALTHAMT:

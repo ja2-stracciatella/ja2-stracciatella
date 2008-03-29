@@ -200,7 +200,7 @@ INT32	 iTempX, iTempY;
 
 	if (uiFlags & BGND_FLAG_SAVE_Z)
 	{
-		gBackSaves[iBackIndex].pZSaveArea = MALLOCN(INT16, uiBufSize);
+		gBackSaves[iBackIndex].pZSaveArea = MALLOCN(UINT16, uiBufSize);
 		if (gBackSaves[iBackIndex].pZSaveArea == NULL) return NO_BGND_RECT;
 		gBackSaves[iBackIndex].fZBuffer = TRUE;
 	}
