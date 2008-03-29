@@ -22,7 +22,7 @@ INT8 EffectiveExpLevel(    const SOLDIERTYPE* s);
 INT8 EffectiveMedical(     const SOLDIERTYPE* s);
 
 
-enum
+typedef enum SkillChecks
 {
 	NO_CHECK = 0,
 	LOCKPICKING_CHECK,
@@ -39,9 +39,7 @@ enum
 	LIE_TO_QUEEN_CHECK,
 	ATTACHING_SPECIAL_ITEM_CHECK,
 	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,
-	DISARM_ELECTRONIC_TRAP_CHECK,
+	DISARM_ELECTRONIC_TRAP_CHECK
 } SkillChecks;
-
-
 
 #endif

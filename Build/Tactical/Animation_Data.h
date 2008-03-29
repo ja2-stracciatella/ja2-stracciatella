@@ -29,7 +29,7 @@
 
 #define NUMSOLDIERBODYTYPES	4
 
-enum
+typedef enum SoldierBodyTypes
 {
 	REGMALE = 0,
 	BIGMALE,
@@ -64,7 +64,6 @@ enum
 	JEEP,
 
   TOTALBODYTYPES
-
 } SoldierBodyTypes;
 
 

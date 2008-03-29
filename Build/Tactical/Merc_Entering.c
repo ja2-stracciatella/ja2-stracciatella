@@ -36,7 +36,7 @@
 #define		ME_SCRIPT_DELAY				100
 #define		NUM_PER_HELI_RUN		6
 
-enum
+typedef enum HeliStateEnums
 {
 	HELI_APPROACH,
 	HELI_MOVETO,
@@ -46,10 +46,9 @@ enum
 	HELI_MOVEAWAY,
 	HELI_EXIT,
 	NUM_HELI_STATES
-
 } HeliStateEnums;
 
-enum
+enum HeliCodes
 {
 	HELI_REST,
 	HELI_MOVE_DOWN,
@@ -66,9 +65,7 @@ enum
 	HELI_GOTO_EXIT,
 	HELI_GOTO_MOVETO,
 	HELI_GOTO_MOVEAWAY,
-	HELI_DONE,
-
-
+	HELI_DONE
 } HeliCodes;
 
 

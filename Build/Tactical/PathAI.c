@@ -110,9 +110,9 @@ struct trail_s
 };
 typedef struct trail_s trail_t;
 
-enum
+typedef enum TrailFlags
 {
-	STEP_BACKWARDS = 0x01,
+	STEP_BACKWARDS = 0x01
 } TrailFlags;
 
 #define EASYWATERCOST	TRAVELCOST_FLAT / 2

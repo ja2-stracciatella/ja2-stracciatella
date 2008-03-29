@@ -7,7 +7,7 @@
 
 #define	NUM_CORPSE_SHADES		17
 
-enum
+typedef enum RottingCorpseDefines
 {
 	NO_CORPSE,
 	SMERC_JFK,
@@ -69,10 +69,8 @@ enum
   BURNT_DEAD,
   EXPLODE_DEAD,
 
-  NUM_CORPSES,
-
+  NUM_CORPSES
 } RottingCorpseDefines;
-
 
 
 #define		ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO			0x01		//Find the closest spot to the given gridno

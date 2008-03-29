@@ -25,7 +25,7 @@ extern BOOLEAN gfInAirRaid;
 // what ari raid mode are we in?
 extern UINT8 gubAirRaidMode;
 
-enum
+typedef enum AIR_RAID_STATES
 {
 	AIR_RAID_TRYING_TO_START,
 	AIR_RAID_START,
@@ -38,7 +38,6 @@ enum
 	AIR_RAID_END_BOMBING,
 	AIR_RAID_START_END,
 	AIR_RAID_END
-
 } AIR_RAID_STATES;
 
 

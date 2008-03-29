@@ -39,7 +39,7 @@ enum WallOrientationDefines
 };
 
 // TERRAIN ID VALUES.
-enum
+enum TerrainTypeDefines
 {
 	NO_TERRAIN,
 	FLAT_GROUND,
@@ -53,9 +53,7 @@ enum
 	MED_WATER,
 	DEEP_WATER,
 	NUM_TERRAIN_TYPES
-
 } TerrainTypeDefines;
-
 
 
 // These structures are placed in a list and used for all tile imagery

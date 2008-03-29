@@ -11,7 +11,8 @@
 
 
 // Sector name identifiers
-enum {
+typedef enum Towns
+{
   BLANK_SECTOR=0,
 	OMERTA,
 	DRASSEN,

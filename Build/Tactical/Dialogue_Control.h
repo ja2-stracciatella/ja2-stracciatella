@@ -5,7 +5,7 @@
 #include "GameScreen.h"
 
 // An enumeration for dialog quotes
-enum
+typedef enum DialogQuoteIDs
 {
 	// 0
 	QUOTE_SEE_ENEMY = 0,
@@ -151,10 +151,7 @@ enum
 	QUOTE_PERSONALITY_BIAS_WITH_MERC_1,
 	QUOTE_PERSONALITY_BIAS_WITH_MERC_2,
 	QUOTE_MERC_LEAVING_ALSUCO_SOON,
-	QUOTE_MERC_GONE_UP_IN_PRICE,
-
-
-
+	QUOTE_MERC_GONE_UP_IN_PRICE
 } DialogQuoteIDs;
 
 

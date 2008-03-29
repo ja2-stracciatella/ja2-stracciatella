@@ -830,7 +830,7 @@ struct SOLDIERTYPE
 #define LVL_INCREASE				0x0400
 
 
-enum
+typedef enum WeaponModes
 {
 	WM_NORMAL = 0,
 	WM_BURST,

@@ -109,9 +109,8 @@ typedef struct
 } RANDOM_ANI_DEF;
 
 
-
 // Enumeration of animation states
-enum
+typedef enum AnimationStates
 {
 	WALKING = 0,
 	STANDING,
@@ -518,9 +517,7 @@ enum
   LOCKPICK_CROUCHED,
 
 	NUMANIMATIONSTATES
-
 } AnimationStates;
-
 
 
 UINT16						gusAnimInst[ MAX_ANIMATIONS ][ MAX_FRAMES_PER_ANIM ];

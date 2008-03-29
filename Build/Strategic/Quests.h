@@ -41,7 +41,7 @@
 //  Q U E S T     D E F I N E S
 // --------------------------------------------------------------------------------------
 
-enum
+typedef enum Quests
 {
 	QUEST_DELIVER_LETTER = 0,
 	QUEST_FOOD_ROUTE,
@@ -196,8 +196,7 @@ enum
 
 
 // FACTS
-
-enum
+typedef enum Facts
 {
 	// city liberations
 	FACT_OMERTA_LIBERATED	=																		0,
@@ -515,7 +514,7 @@ enum
 	FACT_PABLO_BRIBED =																				365,
 
 	FACT_CONRAD_SHOULD_GO =																		367,
-	FACT_PLAYER_KILLED_BOXERS =																368,
+	FACT_PLAYER_KILLED_BOXERS =																368
 } Facts;
 //**  END FACTS *************************
 

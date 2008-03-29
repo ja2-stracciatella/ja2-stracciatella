@@ -169,7 +169,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text);
 extern VIDEO_OVERLAY* g_ui_message_overlay;
 UINT32				guiUIMessageTime;
 
-enum
+typedef enum MESSAGE_TYPES
 {
 	NO_MESSAGE,
 	COMPUTER_TURN_MESSAGE,
@@ -177,8 +177,7 @@ enum
 	PLAYER_INTERRUPT_MESSAGE,
 	MILITIA_INTERRUPT_MESSAGE,
 	AIR_RAID_TURN_MESSAGE,
-	PLAYER_TURN_MESSAGE,
-
+	PLAYER_TURN_MESSAGE
 } MESSAGE_TYPES;
 
 void HandleTopMessages(void);

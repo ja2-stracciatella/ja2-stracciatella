@@ -203,7 +203,7 @@ enum
 
 
 // Enumerate directions
-enum
+typedef enum WorldDirections
 {
 	NORTH = 0,
 	NORTHEAST,
@@ -215,7 +215,7 @@ enum
 	NORTHWEST,
 	NUM_WORLD_DIRECTIONS,
 	DIRECTION_IRRELEVANT,
-	DIRECTION_EXITGRID = 255,
+	DIRECTION_EXITGRID = 255
 } WorldDirections;
 
 
@@ -270,7 +270,7 @@ enum
 
 
 // boxing state
-enum
+typedef enum BoxingStates
 {
 	NOT_BOXING = 0,
 	BOXING_WAITING_FOR_PLAYER,

@@ -12,7 +12,7 @@
 
 #define NUM_BOXERS 3
 
-enum
+typedef enum DisqualificationReasons
 {
 	BOXER_OUT_OF_RING,
 	NON_BOXER_IN_RING,

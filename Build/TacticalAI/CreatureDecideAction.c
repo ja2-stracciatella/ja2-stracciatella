@@ -15,7 +15,7 @@
 #define CAN_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER && s->ubBodyType != INFANT_MONSTER)
 #define CAN_LISTEN_TO_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER)
 
-enum
+typedef enum CreatureCaller
 {
 	CALLER_FEMALE  = 0,
 	CALLER_MALE,
@@ -24,7 +24,7 @@ enum
 	NUM_CREATURE_CALLERS
 } CreatureCaller;
 
-enum
+typedef enum CreatureMobility
 {
 	CREATURE_MOBILE = 0,
 	CREATURE_CRAWLER,

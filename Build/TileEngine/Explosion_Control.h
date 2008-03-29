@@ -26,7 +26,7 @@ struct EXPLOSIONTYPE
 };
 
 
-enum
+typedef enum EXPLOSION_TYPES
 {
 	NO_BLAST,
 	BLAST_1,
@@ -39,7 +39,6 @@ enum
   MUSTARD_EXP,
 
 	NUM_EXP_TYPES
-
 } EXPLOSION_TYPES;
 
 typedef struct
