@@ -46,7 +46,6 @@
 #	include "WordWrap.h"
 #endif
 
-#define _UNICODE
 
 #define MAX_DEBUG_PAGES 4
 
@@ -61,14 +60,6 @@ BOOLEAN	gfDoneWithSplashScreen = FALSE;
 
 
 INT8 gCurDebugPage = 0;
-
-
-HVSURFACE			hVAnims[ 7 ];
-INT8					bTitleAnimFrame = 0;
-UINT32				uiTitleAnimTime = 0;
-UINT32				uiDoTitleAnimTime = 0;
-BOOLEAN				gfDoTitleAnimation = FALSE;
-BOOLEAN				gfStartTitleAnimation = FALSE;
 
 
 static void DefaultDebugPage1(void);
