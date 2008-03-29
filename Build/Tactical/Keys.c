@@ -1463,15 +1463,14 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 		return;
 	}
 
-	BOOLEAN fDifferent = FALSE;
 	if (fOpenedGraphic && !fWantToBeOpen)
 	{
 		// Close the beast!
-		fDifferent = TRUE;
 		pNode->usIndex = gOpenDoorList[cnt];
 	}
 	else if (!fOpenedGraphic && fWantToBeOpen)
 	{
+		BOOLEAN fDifferent = FALSE;
 		// Find the closed door graphic and adjust....
 		for (INT32 i = 0; gOpenDoorList[i] != -1; ++i)
 		{
@@ -1484,9 +1483,12 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 				break;
 			}
 		}
+		if (!fDifferent) return;
 	}
-
-	if (!fDifferent) return;
+	else
+	{
+		return;
+	}
 
 	SwapStructureForPartner(sBaseGridNo, pBaseStructure);
 	RecompileLocalMovementCosts(sBaseGridNo);
