@@ -62,10 +62,10 @@ enum
 };
 
 
-BOOLEAN				gfSwitchPanel;
-BOOLEAN				gfUIStanceDifferent;
-UINT8					gbNewPanel;
-INT16					gsCurInterfacePanel;
+extern BOOLEAN gfSwitchPanel;
+extern BOOLEAN gfUIStanceDifferent;
+extern UINT8   gbNewPanel;
+extern INT16   gsCurInterfacePanel;
 
 
 extern SGPVObject* guiCLOSE;
@@ -82,8 +82,8 @@ extern SGPVObject* guiPORTRAITICONS;
 extern SGPVObject* guiBURSTACCUM;
 
 
-MOUSE_REGION		gViewportRegion;
-MOUSE_REGION		gRadarRegion;
+extern MOUSE_REGION gViewportRegion;
+extern MOUSE_REGION gRadarRegion;
 
 #define				MOVEMENT_MENU_LOOK			1
 #define				MOVEMENT_MENU_ACTIONC		2
@@ -110,11 +110,11 @@ typedef enum
 
 
 BOOLEAN InitializeTacticalInterface(void);
-BOOLEAN	fInterfacePanelDirty;
-BOOLEAN gfPausedTacticalRenderFlags;
-BOOLEAN gfPausedTacticalRenderInterfaceFlags;
-INT16		gsInterfaceLevel;
-BOOLEAN	gfInMovementMenu;
+extern BOOLEAN fInterfacePanelDirty;
+extern BOOLEAN gfPausedTacticalRenderFlags;
+extern BOOLEAN gfPausedTacticalRenderInterfaceFlags;
+extern INT16   gsInterfaceLevel;
+extern BOOLEAN gfInMovementMenu;
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent );

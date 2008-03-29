@@ -7,7 +7,7 @@
 #define		INTERFACE_NORENDERBUTTONS				0x00000002
 #define		INTERFACE_SHOPKEEP_INTERFACE		0x00000008
 
-UINT32		guiTacticalInterfaceFlags;
+extern UINT32 guiTacticalInterfaceFlags;
 
 
 void SetTacticalInterfaceFlags( UINT32 uiFlags );

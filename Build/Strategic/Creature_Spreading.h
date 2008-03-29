@@ -18,7 +18,7 @@ void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, 
 
 void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex );
 
-BOOLEAN gfUseCreatureMusic;
+extern BOOLEAN gfUseCreatureMusic;
 
 BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex );
 

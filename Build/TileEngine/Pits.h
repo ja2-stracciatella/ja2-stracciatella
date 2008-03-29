@@ -14,8 +14,8 @@ void SearchForOtherMembersWithinPitRadiusAndMakeThemFall( INT16 sGridNo, INT16 s
 void AddAllPits(void);
 void RemoveAllPits(void);
 
-BOOLEAN gfShowPits;
-BOOLEAN gfLoadPitsWithoutArming;
+extern BOOLEAN gfShowPits;
+extern BOOLEAN gfLoadPitsWithoutArming;
 
 void HandleFallIntoPitFromAnimation(SOLDIERTYPE* s);
 

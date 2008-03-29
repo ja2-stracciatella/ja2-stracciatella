@@ -16,7 +16,7 @@ void ConvertTacticalBattleIntoStrategicAutoResolveBattle(void);
 
 UINT8 GetAutoResolveSectorID(void);
 
-BOOLEAN gfTransferTacticalOppositionToAutoResolve;
+extern BOOLEAN gfTransferTacticalOppositionToAutoResolve;
 
 //Returns TRUE if autoresolve is active or a sector is loaded.
 BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ );

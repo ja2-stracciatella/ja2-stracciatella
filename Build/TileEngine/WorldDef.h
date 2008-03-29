@@ -214,15 +214,15 @@ typedef struct MAP_ELEMENT
 
 
 // World Data
-MAP_ELEMENT			*gpWorldLevelData;
+extern MAP_ELEMENT* gpWorldLevelData;
 
 // World Movement Costs
-UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
+extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];
 
 
-INT32						giCurrentTilesetID;
+extern INT32 giCurrentTilesetID;
 
-UINT32					gSurfaceMemUsage;
+extern UINT32 gSurfaceMemUsage;
 
 extern INT16		gsRecompileAreaTop;
 extern INT16		gsRecompileAreaLeft;

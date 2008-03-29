@@ -157,69 +157,69 @@ typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 
 
 // GLOBAL STATUS VARS
-UI_MODE									gCurrentUIMode;
-extern UINT32 guiCurrentEvent;
-extern UINT32 guiCurrentUICursor;
-INT16										gsSelectedLevel;
-BOOLEAN									gfPlotNewMovement;
-UINT32									guiPendingOverrideEvent;
+extern UI_MODE gCurrentUIMode;
+extern UINT32  guiCurrentEvent;
+extern UINT32  guiCurrentUICursor;
+extern INT16   gsSelectedLevel;
+extern BOOLEAN gfPlotNewMovement;
+extern UINT32  guiPendingOverrideEvent;
 
 
 // GLOBALS
-BOOLEAN		gfUIDisplayActionPoints;
-BOOLEAN		gfUIDisplayActionPointsInvalid;
-BOOLEAN		gfUIDisplayActionPointsBlack;
-BOOLEAN		gfUIDisplayActionPointsCenter;
-INT16			gUIDisplayActionPointsOffY;
-INT16			gUIDisplayActionPointsOffX;
-UINT32		guiShowUPDownArrows;
-BOOLEAN		gfUIHandleSelection;
-INT16			gsSelectedGridNo;
+extern BOOLEAN      gfUIDisplayActionPoints;
+extern BOOLEAN      gfUIDisplayActionPointsInvalid;
+extern BOOLEAN      gfUIDisplayActionPointsBlack;
+extern BOOLEAN      gfUIDisplayActionPointsCenter;
+extern INT16        gUIDisplayActionPointsOffY;
+extern INT16        gUIDisplayActionPointsOffX;
+extern UINT32       guiShowUPDownArrows;
+extern BOOLEAN      gfUIHandleSelection;
+extern INT16        gsSelectedGridNo;
 extern SOLDIERTYPE* gSelectedGuy;
 
 #ifdef JA2TESTVERSION
 extern UINT8 gUIDeadlockedSoldier;
 #endif
 
-BOOLEAN		gfUIMouseOnValidCatcher;
+extern BOOLEAN            gfUIMouseOnValidCatcher;
 extern const SOLDIERTYPE* gUIValidCatcher;
-BOOLEAN		gUIUseReverse;
+extern BOOLEAN            gUIUseReverse;
 
 
-BOOLEAN		gfUIHandleShowMoveGrid;
-UINT16		gsUIHandleShowMoveGridLocation;
+extern BOOLEAN gfUIHandleShowMoveGrid;
+extern UINT16  gsUIHandleShowMoveGridLocation;
 
-BOOLEAN		gUITargetShotWaiting;
+extern BOOLEAN gUITargetShotWaiting;
 
-BOOLEAN		gfUIWaitingForUserSpeechAdvance;
+extern BOOLEAN gfUIWaitingForUserSpeechAdvance;
 
-BOOLEAN		gfUIAllMoveOn;
-BOOLEAN		gfUICanBeginAllMoveCycle;
+extern BOOLEAN gfUIAllMoveOn;
+extern BOOLEAN gfUICanBeginAllMoveCycle;
 
-BOOLEAN		gfUIRefreshArrows;
+extern BOOLEAN gfUIRefreshArrows;
 
-BOOLEAN		gfUIHandlePhysicsTrajectory;
+extern BOOLEAN gfUIHandlePhysicsTrajectory;
 
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
 extern SOLDIERTYPE* gUIFullTarget;
 UINT32	guiUIFullTargetFlags;
 
-BOOLEAN	gfUIConfirmExitArrows;
-INT16		gsJumpOverGridNo;
+extern BOOLEAN gfUIConfirmExitArrows;
+extern INT16   gsJumpOverGridNo;
 
 UINT32  HandleTacticalUI(void);
 UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent );
 
-BOOLEAN		gfUIShowCurIntTile;
+extern BOOLEAN gfUIShowCurIntTile;
 
-SGPRect		gRubberBandRect;
-BOOLEAN		gRubberBandActive;
+extern SGPRect gRubberBandRect;
+extern BOOLEAN gRubberBandActive;
 
 void EndMenuEvent( UINT32	uiEvent );
 void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc );
 
-BOOLEAN		gfUIForceReExamineCursorData;
+extern BOOLEAN gfUIForceReExamineCursorData;
 
 // FUNCTIONS IN INPUT MODULES
 void GetKeyboardInput( UINT32 *puiNewEvent );

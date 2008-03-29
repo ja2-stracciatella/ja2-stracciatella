@@ -10,7 +10,6 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot );
 void HandleHeliDrop(void);
 
 
-BOOLEAN		gfIngagedInDrop;
-
+extern BOOLEAN gfIngagedInDrop;
 
 #endif

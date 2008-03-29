@@ -14,10 +14,10 @@ extern FADE_HOOK		gFadeOutDoneCallback;
 typedef void (*FADE_FUNCTION)( void );
 
 
-BOOLEAN						gfFadeInitialized;
-BOOLEAN						gfFadeIn;
-FADE_FUNCTION			gFadeFunction;
-BOOLEAN						gfFadeInVideo;
+extern BOOLEAN       gfFadeInitialized;
+extern BOOLEAN       gfFadeIn;
+extern FADE_FUNCTION gFadeFunction;
+extern BOOLEAN       gfFadeInVideo;
 
 BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit );
 BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit );

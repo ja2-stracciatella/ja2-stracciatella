@@ -3,7 +3,8 @@
 
 #include "WorldDef.h"
 
-TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
+
+extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 
 TILE_IMAGERY* LoadTileSurface(const char* cFilename);

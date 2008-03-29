@@ -25,7 +25,7 @@ enum
 	ALWAYSON_LIGHT
 };
 void ChangeLightDefault( INT8 bLightType );
-INT8 gbDefaultLightType;
+extern INT8 gbDefaultLightType;
 
 #endif
 #endif

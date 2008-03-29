@@ -24,9 +24,9 @@ enum{
 };
 
 // For speed, etc lets make these globals, forget the functions if you want
-INT16			gWorldSectorX;
-INT16			gWorldSectorY;
-INT8			gbWorldSectorZ;
+extern INT16 gWorldSectorX;
+extern INT16 gWorldSectorY;
+extern INT8  gbWorldSectorZ;
 
 #define NUMBER_OF_SAMS 4
 

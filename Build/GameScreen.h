@@ -14,8 +14,8 @@ void FadeOutGameScreen(void);
 typedef void (*MODAL_HOOK)( void );
 
 
-BOOLEAN	gfGameScreenLocateToSoldier;
-BOOLEAN	gfEnteringMapScreen;
+extern BOOLEAN gfGameScreenLocateToSoldier;
+extern BOOLEAN gfEnteringMapScreen;
 extern SOLDIERTYPE* gPreferredInitialSelectedGuy;
 
 

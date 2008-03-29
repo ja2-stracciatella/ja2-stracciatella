@@ -6,7 +6,7 @@
 
 
 #define		MAX_NUMBER_MERCS							40
-UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
+extern UINT8 AimMercArray[MAX_NUMBER_MERCS];
 
 #define		NUM_AIM_SCREENS								6
 

@@ -18,8 +18,7 @@ typedef struct
 } TILE_CACHE_ELEMENT;
 
 
-TILE_CACHE_ELEMENT		*gpTileCache;
-
+extern TILE_CACHE_ELEMENT* gpTileCache;
 
 
 BOOLEAN InitTileCache(void);

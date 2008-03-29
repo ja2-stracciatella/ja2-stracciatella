@@ -11,7 +11,7 @@ extern UINT8 gubTerrorists[];
 extern INT16 gsTerroristSector[][5][2];
 extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 
-MERCPROFILESTRUCT gMercProfiles[ NUM_PROFILES ];
+extern MERCPROFILESTRUCT gMercProfiles[NUM_PROFILES];
 
 static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
 {

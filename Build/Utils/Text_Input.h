@@ -177,6 +177,6 @@ BOOLEAN TextInputMode(void);
 void InitClipboard(void);
 void KillClipboard(void);
 
-BOOLEAN gfNoScroll;
+extern BOOLEAN gfNoScroll;
 
 #endif

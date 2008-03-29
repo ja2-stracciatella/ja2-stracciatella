@@ -45,8 +45,7 @@ typedef struct
 
 
 // GLOBAL NPC STRUCT
-NPC_DIALOGUE_TYPE		gTalkPanel;
-
+extern NPC_DIALOGUE_TYPE gTalkPanel;
 
 
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData );
@@ -361,7 +360,7 @@ extern INT8 gbHospitalPriceModifier;
 UINT32 CalcPatientMedicalCost(const SOLDIERTYPE* s);
 extern UINT32 CalcMedicalCost( UINT8 ubId );
 
-BOOLEAN							gfInTalkPanel;
+extern BOOLEAN gfInTalkPanel;
 
 void HandleTalkingMenuBackspace(void);
 

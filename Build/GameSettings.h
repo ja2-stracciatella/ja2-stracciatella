@@ -104,11 +104,11 @@ typedef struct
 CASSERT(sizeof(GAME_OPTIONS) == 12)
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
-GAME_SETTINGS		gGameSettings;
+extern GAME_SETTINGS gGameSettings;
 
 
 //This structure will contain the Game options set at the beginning of the game.
-GAME_OPTIONS		gGameOptions;
+extern GAME_OPTIONS gGameOptions;
 
 
 void SaveGameSettings(void);

@@ -120,18 +120,18 @@ typedef struct
 
 
 // Globals used
-TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
-UINT16					gTileDatabaseSize;
-UINT16					gTileTypeStartIndex[ NUMBEROFTILETYPES ];
+extern TILE_ELEMENT gTileDatabase[NUMBEROFTILES];
+extern UINT16       gTileDatabaseSize;
+extern UINT16       gTileTypeStartIndex[NUMBEROFTILETYPES];
 
 static inline const TILE_ELEMENT* TileElemFromTileType(const UINT16 tile_type)
 {
 	return &gTileDatabase[gTileTypeStartIndex[tile_type]];
 }
 
-UINT16					gusNumAnimatedTiles;
-UINT16					gusAnimatedTiles[ MAX_ANIMATED_TILES ];
-UINT8					gTileTypeMovementCost[ NUM_TERRAIN_TYPES ];
+extern UINT16 gusNumAnimatedTiles;
+extern UINT16 gusAnimatedTiles[MAX_ANIMATED_TILES];
+extern UINT8  gTileTypeMovementCost[NUM_TERRAIN_TYPES];
 
 void CreateTileDatabase(void);
 

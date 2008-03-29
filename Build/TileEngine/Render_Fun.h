@@ -7,8 +7,8 @@
 #define   MAX_ROOMS		250
 
 
-UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
-UINT8						gubWorldRoomInfo[ WORLD_MAX ];
+extern UINT8 gubWorldRoomHidden[MAX_ROOMS];
+extern UINT8 gubWorldRoomInfo[WORLD_MAX];
 
 
 BOOLEAN InitRoomDatabase(void);

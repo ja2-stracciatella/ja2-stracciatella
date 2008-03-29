@@ -6,12 +6,12 @@
 
 char gubErrorText[200];
 BOOLEAN				gfAniEditMode;
-BOOLEAN				gfEditMode;
+extern BOOLEAN gfEditMode;
 BOOLEAN				fFirstTimeInGameScreen;
 
 INT16					gsCurrentActionPoints;
-INT8					gbFPSDisplay;
-BOOLEAN				gfGlobalError;
+extern INT8    gbFPSDisplay;
+extern BOOLEAN gfGlobalError;
 
 extern UINT32	guiGameCycleCounter;
 

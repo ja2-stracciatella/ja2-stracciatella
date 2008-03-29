@@ -82,7 +82,7 @@ void DisplayFrameRate(void);
 void HandleTitleScreenAnimation(void);
 
 //External Globals
-UINT32				guiCurrentScreen;
+extern UINT32 guiCurrentScreen;
 
 typedef void (*RENDER_HOOK)( void );
 
@@ -92,8 +92,8 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage );
 
 void EnableFPSOverlay(BOOLEAN fEnable);
 
-BOOLEAN gfExitDebugScreen;
-INT8 gCurDebugPage;
+extern BOOLEAN gfExitDebugScreen;
+extern INT8    gCurDebugPage;
 
 #ifdef JA2DEMOADS
 void DoDemoIntroduction(void);

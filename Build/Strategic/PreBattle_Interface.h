@@ -54,29 +54,29 @@ void CalculateNonPersistantPBIInfo(void);
 
 //Using the ESC key in the PBI will get rid of the PBI and go back to mapscreen, but
 //only if the PBI isn't persistant (!gfPersistantPBI).
-BOOLEAN gfPersistantPBI;
+extern BOOLEAN gfPersistantPBI;
 
 //Contains general information about the type of encounter the player is faced with.  This
 //determines whether or not you can autoresolve the battle or even retreat.  This code
 //dictates the header that is used at the top of the PBI.
-UINT8 gubEnemyEncounterCode;
+extern UINT8 gubEnemyEncounterCode;
 
 //The autoresolve during tactical battle option needs more detailed information than the
 //gubEnemyEncounterCode can provide.  The explicit version contains possibly unique codes
 //for reasons not normally used in the PBI.  For example, if we were fighting the enemy
 //in a normal situation, then shot at a civilian, the civilians associated with the victim
 //would turn hostile, which would disable the ability to autoresolve the battle.
-BOOLEAN gubExplicitEnemyEncounterCode;
+extern BOOLEAN gubExplicitEnemyEncounterCode;
 
 //Location of the current battle (determines where the animated icon is blitted) and if the
 //icon is to be blitted.
-BOOLEAN gfBlitBattleSectorLocator;
+extern BOOLEAN gfBlitBattleSectorLocator;
 
 extern UINT8 gubPBSectorX;
 extern UINT8 gubPBSectorY;
 extern UINT8 gubPBSectorZ;
 
-BOOLEAN gfCantRetreatInPBI;
+extern BOOLEAN gfCantRetreatInPBI;
 //SAVE END
 
 void WakeUpAllMercsInSectorUnderAttack( void );

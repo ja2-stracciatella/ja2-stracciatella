@@ -528,7 +528,7 @@ typedef struct
 } AnimationSurfaceType;
 
 
-AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
+extern AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 
 BOOLEAN InitAnimationSystem(void);
@@ -541,7 +541,7 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
 STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* s, UINT16 usSurfaceIndex, UINT16 usAnimState);
 
 // Profile data
-ANIM_PROF		*gpAnimProfiles;
+extern ANIM_PROF* gpAnimProfiles;
 
 void ZeroAnimSurfaceCounts(void);
 

@@ -79,9 +79,8 @@ extern INT32 giTimeCompressSpeeds[ NUM_TIME_COMPRESS_SPEEDS ];
 #define WORLDTIMESTR	gswzWorldTimeStr
 
 
-
 // compress mode now in use
-INT32 giTimeCompressMode;
+extern INT32 giTimeCompressMode;
 
 
 enum

@@ -62,7 +62,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 void INVRenderItem(SGPVSurface* uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, INT16 sOutlineColor);
 
 
-BOOLEAN		gfInItemDescBox;
+extern BOOLEAN gfInItemDescBox;
 
 BOOLEAN InItemDescriptionBox(void);
 void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex);
@@ -91,10 +91,10 @@ BOOLEAN InKeyRingPopup( void );
 void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition );
 
 
-extern OBJECTTYPE* gpItemPointer;
-extern OBJECTTYPE  gItemPointer;
-SOLDIERTYPE		*gpItemPointerSoldier;
-BOOLEAN				gfItemPointerDifferentThanDefault;
+extern OBJECTTYPE*  gpItemPointer;
+extern OBJECTTYPE   gItemPointer;
+extern SOLDIERTYPE* gpItemPointerSoldier;
+extern BOOLEAN      gfItemPointerDifferentThanDefault;
 
 
 void BeginItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubHandPos );

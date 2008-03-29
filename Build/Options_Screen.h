@@ -9,7 +9,7 @@
 
 
 //Record the previous screen the user was in.
-UINT32		guiPreviousOptionScreen;
+extern UINT32 guiPreviousOptionScreen;
 
 
 UINT32	OptionsScreenHandle( void );

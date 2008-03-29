@@ -68,7 +68,7 @@ void GetBestPossibleSectorXYZValues(INT16* psSectorX, INT16* psSectorY, INT8* pb
 BOOLEAN SaveMercPath(HWFILE, const PathSt* head);
 BOOLEAN LoadMercPath(HWFILE, PathSt** head);
 
-UINT32	guiLastSaveGameNum;
+extern UINT32 guiLastSaveGameNum;
 INT8		GetNumberForAutoSave( BOOLEAN fLatestAutoSave );
 
 extern UINT32 guiJA2EncryptionSet;

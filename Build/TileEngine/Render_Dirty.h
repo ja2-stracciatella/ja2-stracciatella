@@ -80,7 +80,7 @@ typedef struct
 
 
 // GLOBAL VARIABLES
-SGPRect		gDirtyClipRect;
+extern SGPRect gDirtyClipRect;
 
 
 // DIRTY QUEUE
