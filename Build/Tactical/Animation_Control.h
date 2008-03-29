@@ -77,12 +77,10 @@
 #define INVALID_ANIMATION						0xFFF0
 #define FOUND_INVALID_ANIMATION			0xFFF1
 
-#define MAX_ANIM_STR_SIZE			30
-
 
 typedef struct
 {
-	CHAR8			zAnimStr[ MAX_ANIM_STR_SIZE ];
+	const char* zAnimStr;
 	INT16			sSpeed;
 	FLOAT			dMovementChange;
 	UINT32		uiFlags;
