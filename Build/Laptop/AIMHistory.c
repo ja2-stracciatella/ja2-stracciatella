@@ -55,7 +55,7 @@
 
 static SGPVObject* guiContentButton;
 
-UINT8			gubCurPageNum;
+static UINT8 gubCurPageNum;
 BOOLEAN		gfInToc =  FALSE;
 BOOLEAN		gfExitingAimHistory;
 BOOLEAN		AimHistorySubPagesVisitedFlag[ NUM_AIM_HISTORY_PAGES ];

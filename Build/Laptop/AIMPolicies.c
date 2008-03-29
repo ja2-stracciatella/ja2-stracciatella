@@ -153,7 +153,7 @@ UINT32	guiPoliciesMenuButton[ AIM_POLICY_MENU_BUTTON_AMOUNT ];
 static BUTTON_PICS* guiPoliciesMenuButtonImage;
 
 
-UINT8			gubCurPageNum;
+static UINT8       gubCurPageNum;
 BOOLEAN		gfInPolicyToc =  FALSE;
 BOOLEAN		gfInAgreementPage = FALSE;
 BOOLEAN		gfAimPolicyMenuBarLoaded = FALSE;
