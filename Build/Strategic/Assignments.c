@@ -307,6 +307,7 @@ static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 /* Which conditions are allowed to perform an assignment? */
 typedef enum AssignmentConditions
 {
+	AC_NONE                      = 0,
 	AC_IMPASSABLE                = 1U << 0,
 	AC_UNCONSCIOUS               = 1U << 1,
 	AC_COMBAT                    = 1U << 2,
@@ -620,7 +621,7 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 		s->bLeadership > 0 &&
 		CanSectorContainMilita(s->sSectorX, s->sSectorY, s->bSectorZ) &&
 		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
-		AreAssignmentConditionsMet(s, 0);
+		AreAssignmentConditionsMet(s, AC_NONE);
 #endif
 }
 
@@ -710,7 +711,7 @@ static BOOLEAN CanCharacterTrainStat(const SOLDIERTYPE* const s, INT8 bStat, con
 	return FALSE;
 #else
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
-	if (!AreAssignmentConditionsMet(s, 0)) return FALSE;
+	if (!AreAssignmentConditionsMet(s, AC_NONE)) return FALSE;
 
 	const INT8 stat_val = GetTrainingStatValue(s, bStat);
 	return
@@ -737,7 +738,7 @@ static BOOLEAN CanCharacterPractise(const SOLDIERTYPE* const s)
 	// this assignment is no go in the demo
 	return FALSE;
 #else
-	return AreAssignmentConditionsMet(s, 0);
+	return AreAssignmentConditionsMet(s, AC_NONE);
 #endif
 }
 
