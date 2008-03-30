@@ -338,7 +338,7 @@ static BOOLEAN gfVideoFaceActive=FALSE;
 
 static UINT8     gubPopUpBoxAction = AIM_POPUP_NOTHING;
 static BOOLEAN   gfRedrawScreen    = FALSE;
-UINT8            gubContractLength;
+static UINT8     gubContractLength;
 static BOOLEAN   gfBuyEquipment;
 static INT32     giContractAmount  = 0;
 static FACETYPE* giMercFaceIndex;

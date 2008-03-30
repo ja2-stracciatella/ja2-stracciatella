@@ -46,7 +46,7 @@ extern BOOLEAN fPausedTimeDuringQuote;
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
 
-UINT8		gubContractLength = 0;		//used when extending a mercs insurance contract
+static UINT8 gubContractLength = 0; // Used when extending a mercs insurance contract
 SOLDIERTYPE *gpInsuranceSoldier=NULL;
 
 // The values need to be saved!
