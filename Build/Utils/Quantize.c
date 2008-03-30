@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include "HImage.h"
+#include "MemMan.h"
 #include "Quantize.h"
 
 
@@ -27,7 +28,7 @@ static NODE* g_reducible_nodes[COLOUR_BITS];
 
 static NODE* CreateNode(const UINT level)
 {
-	NODE* const node = malloc(sizeof(*node));
+	NODE* const node = MALLOC(NODE);
 
 	node->bIsLeaf = level == COLOUR_BITS;
 	if (node->bIsLeaf)

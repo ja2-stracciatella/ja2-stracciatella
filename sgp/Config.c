@@ -1,4 +1,5 @@
 #include "Config.h"
+#include "MemMan.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,8 +50,7 @@ static void ConfigUpdateEntry(const char* key, const char* value)
 
 const config_entry* ConfigRegisterKey(const char* key)
 {
-	config_entry* new_config = malloc(sizeof(*new_config));
-
+	config_entry* const new_config = MALLOC(config_entry);
 	if (new_config != NULL)
 	{
 		new_config->key   = strdup(key);
