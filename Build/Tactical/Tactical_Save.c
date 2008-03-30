@@ -73,11 +73,6 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
 
 
-static const UINT8 gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
-static const UINT8 gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
-static const UINT8 gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
-static const UINT8 gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE];
-
 static INT32 giErrorMessageBox = 0;
 
 
@@ -1989,32 +1984,8 @@ UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
 }
 
 
-static const UINT8* GetRotationArray(void)
-{
-	// based on guiJA2EncryptionSet
-	if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 )
-	{
-		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 3 )
-		{
-			return( gubEncryptionArray1[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-		else
-		{
-			return( gubEncryptionArray2[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-	}
-	else
-	{
-		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 9 )
-		{
-			return( gubEncryptionArray3[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-		else
-		{
-			return( gubEncryptionArray4[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-	}
-}
+static const UINT8* GetRotationArray(void);
+
 
 BOOLEAN NewJA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
 {
@@ -4632,3 +4603,31 @@ static const UINT8 gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 		71,142,46,234,237,200,4
 	}
 };
+
+
+static const UINT8* GetRotationArray(void)
+{
+	// based on guiJA2EncryptionSet
+	if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 )
+	{
+		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 3 )
+		{
+			return( gubEncryptionArray1[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
+		}
+		else
+		{
+			return( gubEncryptionArray2[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
+		}
+	}
+	else
+	{
+		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 9 )
+		{
+			return( gubEncryptionArray3[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
+		}
+		else
+		{
+			return( gubEncryptionArray4[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
+		}
+	}
+}
