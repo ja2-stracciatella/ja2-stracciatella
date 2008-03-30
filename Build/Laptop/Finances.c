@@ -1023,10 +1023,7 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static BOOLEAN WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-  HWFILE hFileHandle;
-
-	// open file
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	const HWFILE hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
 
 	// write balance to disk
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
