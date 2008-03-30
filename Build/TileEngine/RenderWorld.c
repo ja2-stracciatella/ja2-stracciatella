@@ -1097,21 +1097,12 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 							// Adjust for interface level
 							sYPos += gsRenderHeight;
 
-							// OK, check for LEVELNODE HIDDEN...
-							BOOLEAN fHiddenTile = FALSE;
-
-							if (uiLevelNodeFlags & LEVELNODE_HIDDEN)
-							{
-								fHiddenTile = TRUE;
-
-								// If we are a roof and have SHOW_ALL_ROOFS on, turn off hidden tile check!
-								if (TileElem != NULL && TileElem->uiFlags & ROOF_TILE && gTacticalStatus.uiFlags & SHOW_ALL_ROOFS)
-								{
-									fHiddenTile = FALSE;
-								}
-							}
-
-							if (fRenderTile && !fHiddenTile)
+							if (fRenderTile &&
+									(
+										!(uiLevelNodeFlags & LEVELNODE_HIDDEN) ||
+										// If it is a roof and SHOW_ALL_ROOFS is on, turn off hidden tile check
+										(TileElem != NULL && TileElem->uiFlags & ROOF_TILE && gTacticalStatus.uiFlags & SHOW_ALL_ROOFS)
+									))
 							{
 								if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 								{
