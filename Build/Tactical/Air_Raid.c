@@ -72,7 +72,7 @@ BOOLEAN				gfAirRaidHasHadTurn = FALSE;
 UINT8					gubBeginTeamTurn = 0;
 BOOLEAN				gfHaveTBBatton = FALSE;
 INT16					gsNotLocatedYet = FALSE;
-INT32					giNumFrames;
+static INT32  giNumFrames;
 
 AIR_RAID_DEFINITION	gAirRaidDef;
 

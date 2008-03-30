@@ -32,7 +32,7 @@ static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
 static UINT32  guiLastFrame;
 static UINT16* gpFrameData[MAX_NUM_FRAMES];
-INT32 giNumFrames = 0;
+static INT32   giNumFrames = 0;
 
 
 // Globals for mouse cursor
