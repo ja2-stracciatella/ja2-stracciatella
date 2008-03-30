@@ -53,7 +53,7 @@ struct ITEM_POOL
 };
 
 
-INT32 HandleItem( SOLDIERTYPE *pSoldier, UINT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI );
+INT32 HandleItem(SOLDIERTYPE* pSoldier, INT16 usGridNo, INT8 bLevel, UINT16 usHandItem, BOOLEAN fFromUI);
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleFlashingItems(void);

@@ -174,7 +174,7 @@ static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot);
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
 
-INT32 HandleItem(SOLDIERTYPE* const s, UINT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
+INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const UINT16 usHandItem, const BOOLEAN fFromUI)
 {
 	// Remove any previous actions
 	s->ubPendingAction = NO_PENDING_ACTION;
@@ -508,7 +508,7 @@ INT32 HandleItem(SOLDIERTYPE* const s, UINT16 usGridNo, const INT8 bLevel, const
 	if (item->usItemClass == IC_MEDKIT)
 	{
 		// ATE: AI CANNOT GO THROUGH HERE!
-		const UINT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : GetMouseMapPos());
+		const INT16 usMapPos = (gTacticalStatus.fAutoBandageMode ? usGridNo : GetMouseMapPos());
 
 		// See if we can get there to stab
 		BOOLEAN	fHadToUseCursorPos = FALSE;
