@@ -1047,9 +1047,6 @@ static void GetBalanceFromDisk(void)
 		return;
   }
 
-	// start at beginning
-	FileSeek( hFileHandle, 0, FILE_SEEK_FROM_START);
-
 	// get balance from disk first
   FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 
