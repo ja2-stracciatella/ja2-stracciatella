@@ -225,7 +225,7 @@ static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
 
 
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
-UINT32 guiExitScreen = MAP_SCREEN;
+static UINT32 guiExitScreen = MAP_SCREEN;
 
 // Laptop screen graphic handle
 static SGPVObject* guiLAPTOP;

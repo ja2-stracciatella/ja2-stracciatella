@@ -14,7 +14,7 @@
 #include "VSurface.h"
 
 
-UINT32	guiExitScreen;
+static UINT32 guiExitScreen;
 BOOLEAN	gfFadeInitialized = FALSE;
 INT16		gsFadeLimit;
 UINT32	guiTime;
