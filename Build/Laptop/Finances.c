@@ -2,6 +2,7 @@
 #include "Laptop.h"
 #include "Finances.h"
 #include "Game_Clock.h"
+#include "LoadSaveData.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "VObject.h"
 #include "WCheck.h"
@@ -19,6 +20,10 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "FileMan.h"
+
+
+#define FINANCE_HEADER_SIZE 4
+#define FINANCE_RECORD_SIZE (1 + 1 + 4 + 4 + 4)
 
 
 // the financial structure
@@ -1161,86 +1166,51 @@ static BOOLEAN LoadNextPage(void)
 }
 
 
-static BOOLEAN LoadInRecords(UINT32 uiPage)
+// Loads in records belonging to page
+static BOOLEAN LoadInRecords(const UINT32 page)
 {
-	// loads in records belogning, to page uiPage
-  // no file, return
-	BOOLEAN fOkToContinue=TRUE;
-  INT32 iCount =0;
-  HWFILE hFileHandle;
-  UINT8 ubCode, ubSecondCode;
-	INT32 iBalanceToDate;
-	UINT32 uiDate;
-	INT32 iAmount;
-  UINT32 uiByteCount=0;
+	if (page != 0) return FALSE; // check if bad page
 
-	// check if bad page
-	if( uiPage == 0 )
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return FALSE;
+
+	BOOLEAN      ret  = FALSE;
+	const UINT32 size = FileGetSize(f);
+	if (size >= FINANCE_HEADER_SIZE)
 	{
-		return ( FALSE );
-	}
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		return FALSE;
-  }
-
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return( FALSE );
-	}
-
-  // is the file long enough?
-  if( ( FileGetSize( hFileHandle ) - sizeof( INT32 ) - 1) / ( NUM_RECORDS_PER_PAGE * ( sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 ))  ) + 1 < uiPage )
-	{
-		// nope
-		FileClose( hFileHandle );
-    return( FALSE );
-	}
-
-	FileSeek( hFileHandle, sizeof( INT32 ) + ( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * ( sizeof( INT32 )+ sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32)), FILE_SEEK_FROM_START );
-
-	uiByteCount = sizeof( INT32 )+( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * ( sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8)  + sizeof( INT32 ) );
-	// file exists, read in data, continue until end of page
-  while( ( iCount < NUM_RECORDS_PER_PAGE )&&( fOkToContinue ) &&( uiByteCount < FileGetSize( hFileHandle ) ) )
-	{
-
-		// read in data
-    FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
-	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
-    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-		// add transaction
-	  ProcessAndEnterAFinacialRecord(ubCode, uiDate, iAmount, ubSecondCode, iBalanceToDate);
-
-		// increment byte counter
-	  uiByteCount += sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 );
-
-		// we've overextended our welcome, and bypassed end of file, get out
-		if( uiByteCount >=  FileGetSize( hFileHandle ) )
+		UINT32       records      = (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
+		const UINT32 skip_records = NUM_RECORDS_PER_PAGE * (page - 1);
+		if (records > skip_records)
 		{
-			// not ok to continue
-			fOkToContinue = FALSE;
+			records -= skip_records;
+			FileSeek(f, FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
+
+			if (records > NUM_RECORDS_PER_PAGE) records = NUM_RECORDS_PER_PAGE;
+			for (; records > 0; --records)
+			{
+				BYTE data[FINANCE_RECORD_SIZE];
+				FileRead(f, data, sizeof(data));
+
+				UINT8  code;
+				UINT8  second_code;
+				UINT32 date;
+				INT32  amount;
+				INT32  balance_to_date;
+				const BYTE* d = data;
+				EXTR_U8(d, code);
+				EXTR_U8(d, second_code);
+				EXTR_U32(d, date);
+				EXTR_I32(d, amount);
+				EXTR_I32(d, balance_to_date);
+				Assert(d == endof(data));
+
+				ProcessAndEnterAFinacialRecord(code, date, amount, second_code, balance_to_date);
+			}
+			ret = TRUE;
 		}
-
-		iCount++;
 	}
-
-	FileClose( hFileHandle );
-
-	// check to see if we in fact have a list to display
-  if( pFinanceListHead == NULL )
-	{
-		// got no records, return false
-		return( FALSE );
-	}
-
-	return( TRUE );
+	FileClose(f);
+	return ret;
 }
 
 
