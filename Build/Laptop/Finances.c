@@ -153,7 +153,6 @@ static void DestroyFinanceButtons(void);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
 static BOOLEAN AppendFinanceToEndOfFile(void);
-static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
 static BOOLEAN LoadPreviousPage(void);
@@ -1055,36 +1054,18 @@ static BOOLEAN AppendFinanceToEndOfFile(void)
 }
 
 
+// This function will read in the last unit in the finance list, to grab its id number
 static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void)
 {
-	// this function will read in the last unit in the finance list, to grab it's id number
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return 0;
 
+  const UINT32 size = FileGetSize(f);
+	FileClose(f);
 
-  HWFILE hFileHandle;
-  INT32 iFileSize = 0;
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		return 0;
-  }
-
-	// make sure file is more than balance size + length of 1 record - 1 byte
-  if ( FileGetSize( hFileHandle ) < sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 )  )
-	{
-    FileClose( hFileHandle );
-    return 0;
-	}
-
-	// size is?
-  iFileSize = FileGetSize( hFileHandle );
-
-	// done with file, close it
-	FileClose( hFileHandle );
-
-  // file size -1 / sizeof record in bytes is id
-	return ( (  iFileSize - 1 ) / ( sizeof( INT32 ) + sizeof( UINT32 ) + sizeof( UINT8 )+ sizeof(UINT8) + sizeof( INT32 )) );
-
+	// make sure file is at least balance size
+	if (size < FINANCE_HEADER_SIZE) return 0;
+	return (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
 }
 
 
