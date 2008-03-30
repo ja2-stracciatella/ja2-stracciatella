@@ -361,6 +361,7 @@ BOOLEAN		gfUIForceReExamineCursorData		= FALSE;
 
 
 SOLDIERTYPE* gUIFullTarget = NULL;
+UINT32       guiUIFullTargetFlags;
 
 
 static void ClearEvent(UI_EVENT* pUIEvent);

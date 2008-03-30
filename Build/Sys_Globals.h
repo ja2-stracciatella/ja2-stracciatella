@@ -4,12 +4,10 @@
 #define				SHOW_MIN_FPS			0
 #define				SHOW_FULL_FPS			1
 
-char gubErrorText[200];
-BOOLEAN				gfAniEditMode;
+extern char    gubErrorText[200];
+extern BOOLEAN gfAniEditMode;
 extern BOOLEAN gfEditMode;
 extern BOOLEAN fFirstTimeInGameScreen;
-
-INT16					gsCurrentActionPoints;
 extern INT8    gbFPSDisplay;
 extern BOOLEAN gfGlobalError;
 

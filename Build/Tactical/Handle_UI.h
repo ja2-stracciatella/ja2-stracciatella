@@ -202,7 +202,7 @@ extern BOOLEAN gfUIHandlePhysicsTrajectory;
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
 extern SOLDIERTYPE* gUIFullTarget;
-UINT32	guiUIFullTargetFlags;
+extern UINT32       guiUIFullTargetFlags;
 
 extern BOOLEAN gfUIConfirmExitArrows;
 extern INT16   gsJumpOverGridNo;
@@ -284,6 +284,7 @@ void PopupAssignmentMenuInTactical(void);
 
 extern BOOLEAN         gfUIOverItemPool;
 extern INT16           gfUIOverItemPoolGridNo;
+extern INT16           gsCurrentActionPoints;
 extern BOOLEAN         fRightButtonDown;
 extern BOOLEAN         fLeftButtonDown;
 extern BOOLEAN         fIgnoreLeftUp;

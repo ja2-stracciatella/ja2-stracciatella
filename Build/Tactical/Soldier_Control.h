@@ -870,8 +870,8 @@ typedef struct PaletteReplacementType
 
 
 // VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
-UINT8										*gubpNumReplacementsPerRange;
-PaletteReplacementType	*gpPalRep;
+extern UINT8*                  gubpNumReplacementsPerRange;
+extern PaletteReplacementType* gpPalRep;
 
 extern UINT8	bHealthStrRanges[];
 

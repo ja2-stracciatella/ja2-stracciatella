@@ -202,6 +202,10 @@ static UINT32 guiNumReplacements;
 BOOLEAN	gfGetNewPathThroughPeople = FALSE;
 
 
+UINT8*                  gubpNumReplacementsPerRange;
+PaletteReplacementType* gpPalRep;
+
+
 void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 {
   if ( pSoldier->ubBodyType == CROW )
