@@ -1605,10 +1605,8 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 
 	//Allocate space for the door status array
-	gpDoorStatus = MALLOCN(DOOR_STATUS, gubNumDoorStatus);
+	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
 	AssertMsg(gpDoorStatus != NULL , "Error Allocating memory for the gpDoorStatus");
-	memset( gpDoorStatus, 0, sizeof( DOOR_STATUS ) * gubNumDoorStatus );
-
 
 	// Load the number of elements in the door status array
 	if (!FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus))

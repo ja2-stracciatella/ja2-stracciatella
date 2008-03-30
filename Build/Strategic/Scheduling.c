@@ -940,8 +940,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 	//Create a new node at the head of the list.  The head will become the new schedule
 	//we are about to add.
 	curr = gpScheduleList;
-	gpScheduleList = MALLOC(SCHEDULENODE);
-	memset( gpScheduleList, 0, sizeof( SCHEDULENODE ) );
+	gpScheduleList = MALLOCZ(SCHEDULENODE);
 	gpScheduleList->next = curr;
 	gubScheduleID++;
 	//Assign all of the links

@@ -644,8 +644,7 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier)
 	{
 		if (IsOnOurTeam(pSoldier))
 		{
-			pSoldier->pKeyRing = MALLOCN(KEY_ON_RING, NUM_KEYS);
-			memset(  pSoldier->pKeyRing , 0, NUM_KEYS * sizeof( KEY_ON_RING ) );
+			pSoldier->pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
 
 			for( iCounter = 0; iCounter < NUM_KEYS; iCounter++ )
 			{

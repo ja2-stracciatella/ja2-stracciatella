@@ -2838,13 +2838,11 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Pass 1 completed, so now allocate enough space to hold all the items
 	if( gusPEnemyItemsSummaryArraySize )
 	{
-		gpPEnemyItemsSummaryArray = MALLOCN(OBJECTTYPE, gusPEnemyItemsSummaryArraySize);
-		memset( gpPEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusPEnemyItemsSummaryArraySize );
+		gpPEnemyItemsSummaryArray = MALLOCNZ(OBJECTTYPE, gusPEnemyItemsSummaryArraySize);
 	}
 	if( gusNEnemyItemsSummaryArraySize )
 	{
-		gpNEnemyItemsSummaryArray = MALLOCN(OBJECTTYPE, gusNEnemyItemsSummaryArraySize);
-		memset( gpNEnemyItemsSummaryArray, 0, sizeof( OBJECTTYPE ) * gusNEnemyItemsSummaryArraySize );
+		gpNEnemyItemsSummaryArray = MALLOCNZ(OBJECTTYPE, gusNEnemyItemsSummaryArraySize);
 	}
 
 	//PASS #2

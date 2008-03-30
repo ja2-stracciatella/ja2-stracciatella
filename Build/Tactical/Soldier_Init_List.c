@@ -72,9 +72,8 @@ void KillSoldierInitList()
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
 {
 	//Allocate memory for node
-	SOLDIERINITNODE* const curr = MALLOC(SOLDIERINITNODE);
+	SOLDIERINITNODE* const curr = MALLOCZ(SOLDIERINITNODE);
 	Assert( curr );
-	memset( curr, 0, sizeof( SOLDIERINITNODE ) );
 
 	//Allocate memory for basic placement
 	curr->pBasicPlacement = MALLOC(BASIC_SOLDIERCREATE_STRUCT);

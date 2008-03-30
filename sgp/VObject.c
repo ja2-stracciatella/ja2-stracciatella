@@ -137,9 +137,8 @@ SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 		return NULL;
 	}
 
-	SGPVObject* const vo = MALLOC(SGPVObject);
+	SGPVObject* const vo = MALLOCZ(SGPVObject);
 	CHECKF(vo != NULL);
-	memset(vo, 0, sizeof(*vo));
 
 	ETRLEData TempETRLEData;
 	CHECKF(GetETRLEImageData(hImage, &TempETRLEData));
@@ -470,8 +469,7 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* const Info = MALLOCN(DUMPINFO, guiVObjectSize);
-	memset(Info, 0, sizeof(*Info) * guiVObjectSize);
+	DUMPINFO* const Info = MALLOCNZ(DUMPINFO, guiVObjectSize);
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;

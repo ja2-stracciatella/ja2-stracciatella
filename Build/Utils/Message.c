@@ -818,16 +818,14 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 			else
 			{
 				// There is now message here, add one
-				s = MALLOC(ScrollStringSt);
+				s = MALLOCZ(ScrollStringSt);
 				if (s == NULL) return FALSE;
-				memset(s, 0, sizeof(*s));
 				*i = s;
 			}
 
 			//allocate space for the new string
-			s->pString16 = MALLOCN(wchar_t, uiSizeOfString / sizeof(wchar_t));
+			s->pString16 = MALLOCNZ(wchar_t, uiSizeOfString / sizeof(wchar_t));
 			if (s->pString16 == NULL) return FALSE;
-			memset(s->pString16, 0, sizeof(*s->pString16) * (uiSizeOfString / sizeof(wchar_t)));
 
 			//copy the string over
 			wcscpy(s->pString16, SavedString);

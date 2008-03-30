@@ -2677,10 +2677,9 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 			if( gpNPCQuoteInfoArray[ cnt ] == NULL )
 			{
 				//allocate memory for the quote
-				gpNPCQuoteInfoArray[cnt] = MALLOCN(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
+				gpNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
 				if( gpNPCQuoteInfoArray[ cnt ] == NULL )
 					return( FALSE );
-				memset( gpNPCQuoteInfoArray[ cnt ], 0, sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS );
 			}
 
 			//Load the NPC quote entry
@@ -2712,10 +2711,9 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 				if( gpCivQuoteInfoArray[ cnt ] == NULL )
 				{
 					//allocate memory for the quote
-					gpCivQuoteInfoArray[cnt] = MALLOCN(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
+					gpCivQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
 					if( gpCivQuoteInfoArray[ cnt ] == NULL )
 						return( FALSE );
-					memset( gpCivQuoteInfoArray[ cnt ], 0, sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS );
 				}
 
 				//Load the civ quote entry
@@ -2853,10 +2851,9 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 			if( gpBackupNPCQuoteInfoArray[ cnt ] == NULL )
 			{
 				//allocate memory for the quote
-				gpBackupNPCQuoteInfoArray[cnt] = MALLOCN(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
+				gpBackupNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
 				if( gpBackupNPCQuoteInfoArray[ cnt ] == NULL )
 					return( FALSE );
-				memset( gpBackupNPCQuoteInfoArray[ cnt ], 0, sizeof( NPCQuoteInfo )  * NUM_NPC_QUOTE_RECORDS );
 			}
 
 			//Load the NPC quote entry

@@ -61,12 +61,9 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	//allocate memory for the each of the library headers
 	if (LibCount > 0)
 	{
-		LibraryHeaderStruct* const libs = MALLOCN(LibraryHeaderStruct, LibCount);
+		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, LibCount);
 		gFileDataBase.pLibraries = libs;
 		CHECKF(libs);
-
-		//set all the memrory to 0
-		memset(libs, 0, sizeof(*libs) * LibCount);
 
 		//Load up each library
 		for (i = 0; i < LibCount; i++)
@@ -82,11 +79,8 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	//allocate memory for the handles of the 'real files' that will be open
 	//This is needed because the the code wouldnt be able to tell the difference between a 'real' handle and a made up one
 	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-	rfh->pRealFilesOpen = MALLOCN(FILE*, INITIAL_NUM_HANDLES);
+	rfh->pRealFilesOpen = MALLOCNZ(FILE*, INITIAL_NUM_HANDLES);
 	CHECKF(rfh->pRealFilesOpen);
-
-	//clear the memory
-	memset(rfh->pRealFilesOpen, 0, sizeof(*rfh->pRealFilesOpen) * INITIAL_NUM_HANDLES);
 
 	//set the initial number how many files can be opened at the one time
 	rfh->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
@@ -226,10 +220,9 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 #endif
 
 	//allocate space for the open files array
-	FileOpenStruct* const fo = MALLOCN(FileOpenStruct, INITIAL_NUM_HANDLES);
+	FileOpenStruct* const fo = MALLOCNZ(FileOpenStruct, INITIAL_NUM_HANDLES);
 	lib->pOpenFiles = fo;
 	if (!fo) return FALSE;
-	memset(fo, 0, INITIAL_NUM_HANDLES * sizeof(*fo));
 #ifdef JA2TESTVERSION
 	lib->uiTotalMemoryAllocatedForLibrary += INITIAL_NUM_HANDLES * sizeof(*fo);
 #endif

@@ -1066,8 +1066,7 @@ void InitStrategicAI()
 	}
 	memcpy( gPatrolGroup, gOrigPatrolGroup, sizeof( gOrigPatrolGroup ) );
 
-	gubPatrolReinforcementsDenied = MALLOCN(UINT8, giPatrolArraySize);
-	memset( gubPatrolReinforcementsDenied, 0, giPatrolArraySize );
+	gubPatrolReinforcementsDenied = MALLOCNZ(UINT8, giPatrolArraySize);
 
 	//initialize the garrison group definitions
 	giGarrisonArraySize = sizeof( gOrigGarrisonGroup ) / sizeof( GARRISON_GROUP );
@@ -1078,8 +1077,7 @@ void InitStrategicAI()
 	}
 	memcpy( gGarrisonGroup, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
 
-	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
-	memset( gubGarrisonReinforcementsDenied, 0, giGarrisonArraySize );
+	gubGarrisonReinforcementsDenied = MALLOCNZ(UINT8, giGarrisonArraySize);
 
 	//Modify initial force sizes?
 	if( giForcePercentage != 100 )

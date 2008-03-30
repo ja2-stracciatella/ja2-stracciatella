@@ -2025,12 +2025,11 @@ BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	UINT8		ubLastByte = 0;//, ubTemp;
 	BOOLEAN	fRet;
 
-	UINT8* const pMemBlock = MALLOCN(UINT8, uiBytesToWrite);
+	UINT8* const pMemBlock = MALLOCNZ(UINT8, uiBytesToWrite);
 	if ( !pMemBlock )
 	{
 		return( FALSE );
 	}
-	memset( pMemBlock, 0, uiBytesToWrite );
 
 	const UINT8* pubRotationArray = GetRotationArray();
 
@@ -2096,13 +2095,11 @@ BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 	UINT8		ubLastByte = 0;//, ubTemp;
 	BOOLEAN	fRet;
 
-	UINT8* const pMemBlock = MALLOCN(UINT8, uiBytesToWrite);
+	UINT8* const pMemBlock = MALLOCNZ(UINT8, uiBytesToWrite);
 	if ( !pMemBlock )
 	{
 		return( FALSE );
 	}
-	memset( pMemBlock, 0, uiBytesToWrite );
-
 
 	memcpy( pMemBlock, pDest, uiBytesToWrite );
 	for ( uiLoop = 0; uiLoop < uiBytesToWrite; uiLoop++ )

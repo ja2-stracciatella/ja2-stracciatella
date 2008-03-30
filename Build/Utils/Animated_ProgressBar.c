@@ -67,13 +67,11 @@ void RemoveLoadingScreenProgressBar()
 BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
 {
 	//Allocate new progress bar
-	PROGRESSBAR* const pNew = MALLOC(PROGRESSBAR);
+	PROGRESSBAR* const pNew = MALLOCZ(PROGRESSBAR);
 	Assert( pNew );
 
 	if( pBar[ ubProgressBarID ] )
 		RemoveProgressBar( ubProgressBarID );
-
-	memset( pNew, 0, sizeof( PROGRESSBAR ) );
 
 	pBar[ ubProgressBarID ] = pNew;
 	pNew->ubProgressBarID = ubProgressBarID;

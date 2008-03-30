@@ -772,8 +772,7 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* const Info = MALLOCN(DUMPINFO, guiVSurfaceSize);
-	memset(Info, 0, sizeof(*Info) * guiVSurfaceSize);
+	DUMPINFO* const Info = MALLOCNZ(DUMPINFO, guiVSurfaceSize);
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;

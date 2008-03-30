@@ -733,8 +733,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	const UINT32 slot_count = visible_count - visible_count % MAP_INVENTORY_POOL_SLOT_COUNT + MAP_INVENTORY_POOL_SLOT_COUNT;
 	iLastInventoryPoolPage  = (slot_count - 1) / MAP_INVENTORY_POOL_SLOT_COUNT;
 
-	WORLDITEM* visible_item = MALLOCN(WORLDITEM, slot_count);
-	memset(visible_item, 0, sizeof(*visible_item) * slot_count);
+	WORLDITEM* visible_item = MALLOCNZ(WORLDITEM, slot_count);
 	WORLDITEM* unseen_item  = (unseen_count != 0 ? MALLOCN(WORLDITEM, unseen_count) : NULL);
 
 	iTotalNumberOfSlots      = slot_count;
@@ -779,8 +778,7 @@ static void ReBuildWorldItemStashForLoadedSector(const INT32 iNumberSeenItems, c
 	if (iRemainder) iTotalNumberOfItems += 10 - iRemainder;
 
 	// allocate space for items
-	WORLDITEM* const pTotalList = MALLOCN(WORLDITEM, iTotalNumberOfItems);
-	memset(pTotalList, 0, sizeof(*pTotalList) * iTotalNumberOfItems);
+	WORLDITEM* const pTotalList = MALLOCNZ(WORLDITEM, iTotalNumberOfItems);
 
 	INT32 iCurrentItem = 0;
 	// place seen items in the world
@@ -824,8 +822,7 @@ static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 
 	iTotalNumberOfSlots+= iNumberOfItems;
 
-	WORLDITEM* const pOldList = MALLOCN(WORLDITEM, iSizeOfList);
-	memset( pOldList, 0, sizeof( WORLDITEM ) * iSizeOfList );
+	WORLDITEM* const pOldList = MALLOCNZ(WORLDITEM, iSizeOfList);
 
 	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );
 

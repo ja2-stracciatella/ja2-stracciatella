@@ -32,9 +32,8 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	if (dot == NULL) goto fail;
 	const char* const ext = dot + 1;
 
-	SGPImage* const img = MALLOC(SGPImage);
+	SGPImage* const img = MALLOCZ(SGPImage);
 	if (img == NULL) goto fail;
-	memset(img, 0, sizeof(*img));
 	strcpy(img->ImageFile, filename);
 
 	// determine type from extension

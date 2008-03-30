@@ -204,11 +204,8 @@ BOOLEAN InitializeWorld( )
 
 	// Initialize world data
 
-	gpWorldLevelData = MALLOCN(MAP_ELEMENT, WORLD_MAX);
+	gpWorldLevelData = MALLOCNZ(MAP_ELEMENT, WORLD_MAX);
 	CHECKF( gpWorldLevelData );
-
-	// Zero world
-	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
 
 	// Init room database
 	InitRoomDatabase( );
@@ -2115,9 +2112,8 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	//RenderProgressBar( 1, 0 );
 
 	//clear the summary file info
-	SUMMARYFILE* const pSummary = MALLOC(SUMMARYFILE);
+	SUMMARYFILE* const pSummary = MALLOCZ(SUMMARYFILE);
 	Assert( pSummary );
-	memset( pSummary, 0, sizeof( SUMMARYFILE ) );
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
 	pSummary->dMajorMapVersion = gdMajorMapVersion;
 

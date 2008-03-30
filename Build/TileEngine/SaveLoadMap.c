@@ -428,9 +428,8 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 	STRUCTURE * pStructure;
 
 
-	gpRevealedMap = MALLOCN(UINT8, NUM_REVEALED_BYTES);
+	gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
 	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
-	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
 
 	//Loop though all the map elements
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -606,10 +605,8 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 
 	//Allocate memory
 	Assert( gpRevealedMap == NULL );
-	gpRevealedMap = MALLOCN(UINT8, NUM_REVEALED_BYTES);
+	gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
 	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
-	memset( gpRevealedMap, 0, NUM_REVEALED_BYTES );
-
 
 
 	// Load the Reveal map array structure

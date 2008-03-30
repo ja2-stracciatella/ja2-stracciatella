@@ -5086,24 +5086,22 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 			if (!FileRead(hFile, &uiCount, sizeof(UINT32))) return FALSE;
 
 			// allocate space
-			gpLeaveListHead[iCounter] = MALLOC(MERC_LEAVE_ITEM);
+			gpLeaveListHead[iCounter] = MALLOCZ(MERC_LEAVE_ITEM);
 			if( gpLeaveListHead[ iCounter ] == NULL )
 			{
 				return( FALSE );
 			}
-			memset( gpLeaveListHead[ iCounter ], 0, sizeof( MERC_LEAVE_ITEM ) );
 
 			pCurrentItem = gpLeaveListHead[ iCounter ];
 
 			for( uiSubItem=0; uiSubItem< uiCount; uiSubItem++ )
 			{
 				// allocate space
-				MERC_LEAVE_ITEM* const pItem = MALLOC(MERC_LEAVE_ITEM);
+				MERC_LEAVE_ITEM* const pItem = MALLOCZ(MERC_LEAVE_ITEM);
 				if( pItem == NULL )
 				{
 					return( FALSE );
 				}
-				memset( pItem, 0, sizeof( MERC_LEAVE_ITEM ) );
 
 				// Load the items
 				if (!FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;

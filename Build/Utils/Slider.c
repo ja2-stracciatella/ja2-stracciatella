@@ -98,9 +98,8 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 	if (ubStyle >= NUM_SLIDER_STYLES) return NULL;
 
-	SLIDER* const s = MALLOC(SLIDER);
+	SLIDER* const s = MALLOCZ(SLIDER);
 	if (s == NULL) return NULL;
-	memset(s, 0, sizeof(*s));
 
 	// Assign the settings to the current slider
 	s->usPosX               = usPosX;

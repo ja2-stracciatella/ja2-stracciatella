@@ -78,10 +78,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 		pStructureFileRef = NULL;
 	}
 
-	TILE_IMAGERY* const pTileSurf = MALLOC(TILE_IMAGERY);
-
-	// Set all values to zero
-	memset( pTileSurf, 0, sizeof( TILE_IMAGERY ) );
+	TILE_IMAGERY* const pTileSurf = MALLOCZ(TILE_IMAGERY);
 
 	pTileSurf->vo									= hVObject;
 	pTileSurf->pStructureFileRef	= pStructureFileRef;

@@ -116,9 +116,8 @@ UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY 
 {
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewPlayerGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewPlayerGroup with out of range sectorY value of %d", ubSectorY ) );
-	GROUP* const pNew = MALLOC(GROUP);
+	GROUP* const pNew = MALLOCZ(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewPlayerGroup." );
-	memset( pNew, 0, sizeof( GROUP ) );
 	pNew->pPlayerList = NULL;
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = pNew->ubNextX = ubSectorX;
@@ -142,9 +141,8 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 {
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewVehicleGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewVehicleGroup with out of range sectorY value of %d", ubSectorY ) );
-	GROUP* const pNew = MALLOC(GROUP);
+	GROUP* const pNew = MALLOCZ(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewVehicleGroup." );
-	memset( pNew, 0, sizeof( GROUP ) );
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = pNew->ubNextX = ubSectorX;
 	pNew->ubSectorY = pNew->ubNextY = ubSectorY;
@@ -584,12 +582,10 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites )
 {
 	AssertMsg( uiSector >= 0 && uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
-	GROUP* const pNew = MALLOC(GROUP);
+	GROUP* const pNew = MALLOCZ(GROUP);
 	AssertMsg( pNew, "MemAlloc failure during CreateNewEnemyGroup." );
-	memset( pNew, 0, sizeof( GROUP ) );
-	pNew->pEnemyGroup = MALLOC(ENEMYGROUP);
+	pNew->pEnemyGroup = MALLOCZ(ENEMYGROUP);
 	AssertMsg( pNew->pEnemyGroup, "MemAlloc failure during enemy group creation." );
-	memset( pNew->pEnemyGroup, 0, sizeof( ENEMYGROUP ) );
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = (UINT8)SECTORX( uiSector );
 	pNew->ubSectorY = (UINT8)SECTORY( uiSector );
@@ -3102,10 +3098,9 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	for( cnt=0; cnt< uiNumberOfGroups; cnt++ )
 	{
 		//allocate memory for the node
-		GROUP* const pTemp = MALLOC(GROUP);
+		GROUP* const pTemp = MALLOCZ(GROUP);
 		if( pTemp == NULL )
 			return( FALSE );
-		memset( pTemp, 0, sizeof( GROUP ) );
 
 		//Read in the node
 		if (!FileRead(hFile, pTemp, sizeof(GROUP)))
@@ -3290,10 +3285,9 @@ static BOOLEAN SaveEnemyGroupStruct(HWFILE hFile, GROUP* pGroup)
 static BOOLEAN LoadEnemyGroupStructFromSavedGame(HWFILE hFile, GROUP* pGroup)
 {
 	//Alllocate memory for the enemy struct
-	ENEMYGROUP* const pEnemyGroup = MALLOC(ENEMYGROUP);
+	ENEMYGROUP* const pEnemyGroup = MALLOCZ(ENEMYGROUP);
 	if( pEnemyGroup == NULL )
 		return( FALSE );
-	memset( pEnemyGroup, 0, sizeof( ENEMYGROUP ) );
 
 	//Load the enemy struct
 	if (!FileRead(hFile, pEnemyGroup, sizeof(ENEMYGROUP)))
@@ -3423,10 +3417,9 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup)
 		for(cnt=0; cnt<uiNumberOfWayPoints; cnt++)
 		{
 			//Allocate memory for the node
-			WAYPOINT* const pTemp = MALLOC(WAYPOINT);
+			WAYPOINT* const pTemp = MALLOCZ(WAYPOINT);
 			if( pTemp == NULL )
 				return( FALSE );
-			memset( pTemp, 0, sizeof( WAYPOINT ) );
 
 			//Load the waypoint node
 			if (!FileRead(hFile, pTemp, sizeof(WAYPOINT)))

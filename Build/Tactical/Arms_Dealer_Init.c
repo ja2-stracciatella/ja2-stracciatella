@@ -1122,15 +1122,13 @@ static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT
 	Assert(pDealerItem);
 	Assert( ubElementsNeeded > 0);
 
-	pDealerItem->SpecialItem = MALLOCN(DEALER_SPECIAL_ITEM, ubElementsNeeded);
+	// zero them out (they're inactive until an item is actually added)
+	pDealerItem->SpecialItem = MALLOCNZ(DEALER_SPECIAL_ITEM, ubElementsNeeded);
 	if( pDealerItem->SpecialItem == NULL )
 	{
 		Assert( 0 );
 		return(FALSE);
 	}
-
-	// zero them out (they're inactive until an item is actually added)
-	memset( pDealerItem->SpecialItem, 0, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
 

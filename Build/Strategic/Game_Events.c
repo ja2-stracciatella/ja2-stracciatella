@@ -330,9 +330,8 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 		return NULL;
 	}
 
-	STRATEGICEVENT* const pNewNode = MALLOC(STRATEGICEVENT);
+	STRATEGICEVENT* const pNewNode = MALLOCZ(STRATEGICEVENT);
 	Assert( pNewNode );
-	memset( pNewNode, 0, sizeof( STRATEGICEVENT ) );
 	pNewNode->ubCallbackID		= ubCallbackID;
 	pNewNode->uiParam					= uiParam;
 	pNewNode->ubEventType			= ubEventType;

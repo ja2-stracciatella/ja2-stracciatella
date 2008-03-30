@@ -1315,8 +1315,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2)
 {
 	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOC(DIALOGUE_Q_STRUCT);
-	memset( QItem, 0, sizeof( DIALOGUE_Q_STRUCT ) );
+	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
@@ -1348,8 +1347,7 @@ BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT
 static BOOLEAN CharacterDialogueWithSpecialEventEx(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2, const UINT32 uiData3)
 {
 	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOC(DIALOGUE_Q_STRUCT);
-	memset( QItem, 0, sizeof( DIALOGUE_Q_STRUCT ) );
+	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
@@ -1381,8 +1379,7 @@ static BOOLEAN CharacterDialogueWithSpecialEventEx(const UINT8 ubCharacterNum, c
 BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed)
 {
 	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOC(DIALOGUE_Q_STRUCT);
-	memset( QItem, 0, sizeof( DIALOGUE_Q_STRUCT ) );
+	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
 
 	QItem->ubCharacterNum = ubCharacterNum;
 	QItem->usQuoteNum			= usQuoteNum;
@@ -1410,8 +1407,7 @@ BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, F
 BOOLEAN SpecialCharacterDialogueEvent(const UINT32 uiSpecialEventFlag, const UINT32 uiSpecialEventData1, const UINT32 uiSpecialEventData2, const UINT32 uiSpecialEventData3, FACETYPE* const face, const UINT8 bUIHandlerID)
 {
 	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOC(DIALOGUE_Q_STRUCT);
-	memset( QItem, 0, sizeof( DIALOGUE_Q_STRUCT ) );
+	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
 
 	QItem->uiSpecialEventFlag		= uiSpecialEventFlag;
 	QItem->uiSpecialEventData		= uiSpecialEventData1;
@@ -1440,8 +1436,7 @@ BOOLEAN SpecialCharacterDialogueEvent(const UINT32 uiSpecialEventFlag, const UIN
 BOOLEAN SpecialCharacterDialogueEventWithExtraParam(const UINT32 uiSpecialEventFlag, const UINT32 uiSpecialEventData1, const UINT32 uiSpecialEventData2, const UINT32 uiSpecialEventData3, const UINT32 uiSpecialEventData4, FACETYPE* const face, const UINT8 bUIHandlerID )
 {
 	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOC(DIALOGUE_Q_STRUCT);
-	memset( QItem, 0, sizeof( DIALOGUE_Q_STRUCT ) );
+	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
 
 	QItem->uiSpecialEventFlag		= uiSpecialEventFlag;
 	QItem->uiSpecialEventData		= uiSpecialEventData1;

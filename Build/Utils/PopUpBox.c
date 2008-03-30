@@ -88,9 +88,8 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 	{
 		if (*i == NULL)
 		{
-			PopUpBox* const box = MALLOC(PopUpBox);
+			PopUpBox* const box = MALLOCZ(PopUpBox);
 			if (box == NULL) return NO_POPUP_BOX;
-			memset(box, 0, sizeof(*box));
 
 			SetBoxXY(box, Position.iX, Position.iY);
 			box->uiFlags            = uiFlags;

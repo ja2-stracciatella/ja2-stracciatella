@@ -670,11 +670,9 @@ BlitDone:
 **********************************************************************************************/
 UINT16* InitZBuffer(const UINT32 width, const UINT32 height)
 {
-	UINT16* const buf = MALLOCN(UINT16, width * height);
-	if (buf == NULL) return NULL;
-	memset(buf, 0, sizeof(*buf) * width * height);
-	return buf;
+	return MALLOCNZ(UINT16, width * height);
 }
+
 
 /**********************************************************************************************
  ShutdownZBuffer

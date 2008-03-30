@@ -217,9 +217,8 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
 void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t* szInitText, UINT8 ubMaxChars, UINT16 usInputType)
 {
-	TEXTINPUTNODE* const pNode = MALLOC(TEXTINPUTNODE);
+	TEXTINPUTNODE* const pNode = MALLOCZ(TEXTINPUTNODE);
 	Assert(pNode);
-	memset( pNode, 0, sizeof( TEXTINPUTNODE ) );
 	pNode->next = NULL;
   if( !gpTextInputHead ) //first entry, so we start with text input.
 	{

@@ -52,9 +52,18 @@ PTR  MemReallocReal(PTR ptr, UINT32 size, const char*, INT32);
 #	endif
 #endif
 
-#define MALLOC(type)         (type*)MemAlloc(sizeof(type))
-#define MALLOCE(type, extra) (type*)MemAlloc(sizeof(type) + (extra))
-#define MALLOCN(type, count) (type*)MemAlloc(sizeof(type) * (count))
+static inline void* MallocZ(const size_t n)
+{
+	void* const p = MemAlloc(n);
+	if (p != NULL) memset(p, 0, n);
+	return p;
+}
+
+#define MALLOC(type)          (type*)MemAlloc(sizeof(type))
+#define MALLOCE(type, extra)  (type*)MemAlloc(sizeof(type) + (extra))
+#define MALLOCN(type, count)  (type*)MemAlloc(sizeof(type) * (count))
+#define MALLOCNZ(type, count) (type*)MallocZ(sizeof(type) * (count))
+#define MALLOCZ(type)         (type*)MallocZ(sizeof(type))
 
 #define REALLOC(ptr, type, count) (type*)MemRealloc(ptr, sizeof(type) * (count))
 

@@ -134,12 +134,10 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject       = MALLOCN(OBJECTTYPE, usNumberOfItems);
-		pStolenObject = MALLOCN(OBJECTTYPE, usNumberOfItems);
+		pObject       = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
+		pStolenObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
 		if( pObject == NULL || pStolenObject == NULL)
 			return;
-		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
-		memset( pStolenObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 	// check for potential theft
@@ -1099,10 +1097,9 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = MALLOCN(OBJECTTYPE, usNumberOfItems);
+		pObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
 		if( pObject == NULL )
 			return;
-		memset( pObject, 0, sizeof( OBJECTTYPE ) * usNumberOfItems );
 	}
 
 

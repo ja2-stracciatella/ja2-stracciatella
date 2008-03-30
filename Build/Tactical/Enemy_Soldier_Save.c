@@ -1089,8 +1089,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 						if( !curr->pDetailedPlacement )
 						{ //need to upgrade the placement to detailed placement
 							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
-							memset( curr->pDetailedPlacement, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+							curr->pDetailedPlacement = MALLOCZ(SOLDIERCREATE_STRUCT);
 						}
 
 						//Copy over the data of the soldier.

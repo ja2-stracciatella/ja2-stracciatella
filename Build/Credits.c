@@ -341,9 +341,8 @@ static void DeleteFirstNode(void)
 
 static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
-	CRDT_NODE* const pNodeToAdd = MALLOC(CRDT_NODE);
+	CRDT_NODE* const pNodeToAdd = MALLOCZ(CRDT_NODE);
 	if (pNodeToAdd == NULL) return;
-	memset(pNodeToAdd, 0, sizeof(*pNodeToAdd));
 
 	//Determine the font and the color to use
 	UINT32 uiFontToUse;

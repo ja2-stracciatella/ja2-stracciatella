@@ -382,12 +382,11 @@ static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 ui
 	UINT32										uiHitPoints;
 
 	pCurrent = pFileRef->pubStructureData;
-	DB_STRUCTURE_REF* const pDBStructureRef = MALLOCN(DB_STRUCTURE_REF, pFileRef->usNumberOfStructures);
+	DB_STRUCTURE_REF* const pDBStructureRef = MALLOCNZ(DB_STRUCTURE_REF, pFileRef->usNumberOfStructures);
 	if (pDBStructureRef == NULL)
 	{
 		return( FALSE );
 	}
-	memset( pDBStructureRef, 0, pFileRef->usNumberOfStructures * sizeof( DB_STRUCTURE_REF ) );
 	pFileRef->pDBStructureRef = pDBStructureRef;
 	for (usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; usLoop++)
 	{
@@ -444,12 +443,11 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 	UINT32								uiDataSize = 0;
 	BOOLEAN								fOk;
 
-	STRUCTURE_FILE_REF* const pFileRef = MALLOC(STRUCTURE_FILE_REF);
+	STRUCTURE_FILE_REF* const pFileRef = MALLOCZ(STRUCTURE_FILE_REF);
 	if (pFileRef == NULL)
 	{
 		return( NULL );
 	}
-	memset( pFileRef, 0, sizeof( STRUCTURE_FILE_REF ) );
 	fOk = LoadStructureData( szFileName, pFileRef, &uiDataSize );
 	if (!fOk)
 	{
@@ -495,10 +493,8 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF* pDBStructureRef, UINT8
 	CHECKN( pTile );
 
 	// allocate memory...
-	STRUCTURE* const pStructure = MALLOC(STRUCTURE);
+	STRUCTURE* const pStructure = MALLOCZ(STRUCTURE);
 	CHECKN( pStructure );
-
-	memset( pStructure, 0, sizeof( STRUCTURE ) );
 
 	// setup
 	pStructure->fFlags = pDBStructure->fFlags;
@@ -880,9 +876,8 @@ static STRUCTURE* InternalAddStructureToWorld(INT16 sBaseGridNo, INT8 bLevel, DB
 	// there is an easy way to remove an entire object from the world quickly
 
 	// NB we add 1 because the 0th element is in fact the reference count!
-	STRUCTURE** const ppStructure = MALLOCN(STRUCTURE*, pDBStructure->ubNumberOfTiles);
+	STRUCTURE** const ppStructure = MALLOCNZ(STRUCTURE*, pDBStructure->ubNumberOfTiles);
 	CHECKF( ppStructure );
-	memset( ppStructure, 0, pDBStructure->ubNumberOfTiles * sizeof( STRUCTURE * ) );
 
 	for (ubLoop = BASE_TILE; ubLoop < pDBStructure->ubNumberOfTiles; ubLoop++)
 	{ // for each tile, create the appropriate STRUCTURE struct
@@ -1816,9 +1811,8 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 	if (!fFound) return TRUE;
 
 	const UINT         zcount = hVObject->usNumberOfObjects;
-	ZStripInfo** const zinfo  = MALLOCN(ZStripInfo*, zcount);
+	ZStripInfo** const zinfo  = MALLOCNZ(ZStripInfo*, zcount);
 	if (zinfo == NULL) return FALSE;
-	memset(zinfo, 0, sizeof(*zinfo) * zcount);
 
 	INT16 sSTIStep;
 	if (fFromAnimation)

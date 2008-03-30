@@ -4839,9 +4839,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	CHECKF(gItemPickupMenu.uiPanelVo != NO_VOBJECT);
 
 	// Memalloc selection array...
-	gItemPickupMenu.pfSelectedArray = MALLOCN(BOOLEAN, gItemPickupMenu.ubTotalItems);
-	// seto to 0
-	memset(gItemPickupMenu.pfSelectedArray, 0, sizeof(BOOLEAN) * gItemPickupMenu.ubTotalItems);
+	gItemPickupMenu.pfSelectedArray = MALLOCNZ(BOOLEAN, gItemPickupMenu.ubTotalItems);
 
 	// Calcualate dimensions
 	CalculateItemPickupMenuDimensions( );
