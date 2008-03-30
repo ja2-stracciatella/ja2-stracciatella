@@ -668,13 +668,12 @@ BlitDone:
 	much except allocate a chunk of memory, and zero it.
 
 **********************************************************************************************/
-UINT16 *InitZBuffer(UINT32 uiPitch, UINT32 uiHeight)
+UINT16* InitZBuffer(const UINT32 width, const UINT32 height)
 {
-	UINT16* const pBuffer = MALLOCN(UINT16, uiPitch * uiHeight);
-	if (pBuffer == NULL) return NULL;
-
-	memset(pBuffer, 0, (uiPitch*uiHeight));
-	return(pBuffer);
+	UINT16* const buf = MALLOCN(UINT16, width * height);
+	if (buf == NULL) return NULL;
+	memset(buf, 0, sizeof(*buf) * width * height);
+	return buf;
 }
 
 /**********************************************************************************************

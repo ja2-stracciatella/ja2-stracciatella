@@ -17,7 +17,7 @@ BOOLEAN BltIsClipped(const SGPVObject* hSrcVObject, INT32 iX, INT32 iY, UINT16 u
 CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion );
 
 
-UINT16 *InitZBuffer(UINT32 uiPitch, UINT32 uiHeight);
+UINT16* InitZBuffer(UINT32 width, UINT32 height);
 BOOLEAN ShutdownZBuffer(UINT16 *pBuffer);
 
 // translucency blitters
