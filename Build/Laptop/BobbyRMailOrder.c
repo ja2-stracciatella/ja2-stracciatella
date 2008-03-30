@@ -284,7 +284,7 @@ static BUTTON_PICS* guiBobbyRBackImage;
 
 //Home Button
 static void BtnBobbyRHomeCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRHome;
+static UINT32       guiBobbyRHome;
 static BUTTON_PICS* guiBobbyRHomeImage;
 
 //Goto Shipment Page Button

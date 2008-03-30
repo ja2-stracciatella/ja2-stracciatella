@@ -192,7 +192,7 @@ static BUTTON_PICS* guiBobbyROrderFormImage;
 
 // The Home button
 static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRHome;
+static UINT32       guiBobbyRHome;
 static BUTTON_PICS* guiBobbyRHomeImage;
 
 
