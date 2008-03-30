@@ -1350,25 +1350,14 @@ static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory)
 {
   	// will write the current finance to disk
-  HWFILE hFileHandle;
 	HistoryUnit* pHistoryList = pHistoryListHead;
 
-
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 
 	// if no file exits, do nothing
 	if(!hFileHandle)
 	{
     return ( FALSE );
-	}
-
-	// go to the end
-	if( FileSeek( hFileHandle,0,FILE_SEEK_FROM_END ) == FALSE )
-	{
-		// error
-    FileClose( hFileHandle );
-		return( FALSE );
 	}
 
 		#ifdef JA2TESTVERSION

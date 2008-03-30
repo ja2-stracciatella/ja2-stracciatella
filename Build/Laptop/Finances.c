@@ -1057,23 +1057,13 @@ static void GetBalanceFromDisk(void)
 static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance)
 {
   	// will write the current finance to disk
-  HWFILE hFileHandle;
 	FinanceUnit* pFinanceList = pFinanceListHead;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if (!hFileHandle)
 	{
     return FALSE;
 	}
-
-	// go to the end
-	if( FileSeek( hFileHandle,0,FILE_SEEK_FROM_END ) == FALSE )
-	{
-		// error
-    FileClose( hFileHandle );
-		return( FALSE );
-	}
-
 
 	// write finance to disk
   // now write date and amount, and code

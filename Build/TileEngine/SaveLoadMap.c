@@ -39,21 +39,16 @@ void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
 static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
 		return( FALSE );
 	}
-
-	//Move to the end of the file
-	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
-
 
 	if (!FileWrite(hFile, pMap, sizeof(MODIFY_MAP)))
 	{

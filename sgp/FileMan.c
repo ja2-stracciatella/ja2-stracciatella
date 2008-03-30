@@ -174,11 +174,12 @@ HWFILE FileOpen(const char* const filename, const UINT32 flags)
 {
 	const char* fmode;
 	int         mode;
-	switch (flags & FILE_ACCESS_READWRITE)
+	switch (flags & (FILE_ACCESS_READWRITE | FILE_ACCESS_APPEND))
 	{
-		case FILE_ACCESS_READ:      fmode = "rb";  mode = O_RDONLY; break;
-		case FILE_ACCESS_WRITE:     fmode = "wb";  mode = O_WRONLY; break;
-		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode = O_RDWR;   break;
+		case FILE_ACCESS_READ:      fmode = "rb";  mode = O_RDONLY;            break;
+		case FILE_ACCESS_WRITE:     fmode = "wb";  mode = O_WRONLY;            break;
+		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode = O_RDWR;              break;
+		case FILE_ACCESS_APPEND:    fmode = "ab";  mode = O_WRONLY | O_APPEND; break;
 
 		default: abort();
 	}
@@ -189,7 +190,7 @@ HWFILE FileOpen(const char* const filename, const UINT32 flags)
 		d = open(filename, mode | O_CREAT | O_TRUNC, 0600);
 		if (d < 0) return 0;
 	}
-	else if (flags & FILE_ACCESS_WRITE)
+	else if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
 	{
 		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
 		d = open(filename, mode, 0600);

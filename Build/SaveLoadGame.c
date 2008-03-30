@@ -2903,7 +2903,6 @@ static void InitSaveGameFilePosition(void)
 
 static void SaveGameFilePosition(const HWFILE save, const char* const pMsg)
 {
-	HWFILE	hFile;
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen=0;
 	CHAR8		zFileName[128];
@@ -2911,13 +2910,11 @@ static void SaveGameFilePosition(const HWFILE save, const char* const pMsg)
 	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
 
 	// create the save game file
-	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		return;
 	}
-
-	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 	const INT32 pos = FileGetPos(save);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -2943,7 +2940,6 @@ static void InitLoadGameFilePosition(void)
 
 static void LoadGameFilePosition(const HWFILE load, const char* const pMsg)
 {
-	HWFILE	hFile;
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen=0;
 
@@ -2951,13 +2947,11 @@ static void LoadGameFilePosition(const HWFILE load, const char* const pMsg)
 	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
 
 	// create the save game file
-	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		return;
 	}
-
-	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 	const INT32 pos = FileGetPos(load);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -3486,7 +3480,6 @@ BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID)
 {
 	CHAR8		zFileName[128];
-	HWFILE	hFile;
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen;
 
@@ -3505,13 +3498,11 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 	else
 	{
 		// create the save game file
-		hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+		const HWFILE hFile = FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 		if( !hFile )
 		{
 			return;
 		}
-
-		FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
@@ -3530,7 +3521,6 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 
 static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, HWFILE hSaveFile)
 {
-	HWFILE	hFile;
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen=0;
 
@@ -3541,13 +3531,11 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 	sprintf(zFileName, "%s/%s.txt", g_savegame_dir, gzNameOfMapTempFile);
 
 	// create the save game file
-	hFile = FileOpen(zFileName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		return;
 	}
-
-	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
 
 	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );

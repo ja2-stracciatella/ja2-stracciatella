@@ -9,8 +9,9 @@ enum
 	FILE_ACCESS_READ      = 1U << 0,
 	FILE_ACCESS_WRITE     = 1U << 1,
 	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_CREATE_ALWAYS    = 1U << 2, // create new file. overwrite existing
-	FILE_OPEN_ALWAYS      = 1U << 3  // open a file, create if doesn't exist
+	FILE_ACCESS_APPEND    = 1U << 2,
+	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
+	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
 };
 
 enum

@@ -2803,7 +2803,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 {
 	static BOOLEAN	fFirstTimeIn = TRUE;
 
-	HWFILE		hFile;
   char			DestString[1024];
 //	char			MercName[ NICKNAME_LENGTH ];
 //	char			NpcName[ NICKNAME_LENGTH ];
@@ -2832,23 +2831,12 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 		fFirstTimeIn = FALSE;
 	}
 
-
-	//open the file
-	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
+	const HWFILE hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
 		return;
 	}
-
-	if( FileSeek( hFile,0,FILE_SEEK_FROM_END ) == FALSE )
-	{
-		// error
-    FileClose( hFile );
-		return;
-	}
-
-
 
 	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
 //	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
@@ -2879,7 +2867,6 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 {
 //	static UINT32		uiLineNumber = 1;
 //	static UINT32		uiRecordNumber = 1;
-	HWFILE		hFile;
   va_list		argptr;
   char		TempString[1024];
   char		DestString[1024];
@@ -2900,19 +2887,10 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	vsprintf(TempString, pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
-
-	//open the file
-	hFile = FileOpen(QUEST_DEBUG_FILE, FILE_OPEN_ALWAYS | FILE_ACCESS_WRITE);
+	const HWFILE hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
-		return;
-	}
-
-	if( FileSeek( hFile,0,FILE_SEEK_FROM_END ) == FALSE )
-	{
-		// error
-    FileClose( hFile );
 		return;
 	}
 
