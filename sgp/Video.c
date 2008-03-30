@@ -15,7 +15,10 @@
 #include "VSurface.h"
 #include "Video.h"
 #include <SDL.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <stdarg.h>
+#include <unistd.h>
 
 
 #define MAX_DIRTY_REGIONS     128
@@ -430,12 +433,30 @@ static void WriteTGAHeader(FILE* const f)
 }
 
 
+/* Create a file for a screenshot, which is guaranteed not to exist yet. */
+static FILE* CreateScreenshotFile(void)
+{
+	const char* const exec_dir = GetExecutableDirectory();
+	do
+	{
+		char filename[2048];
+		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir, guiPrintFrameBufferIndex++);
+		const int fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0644);
+		if (fd >= 0)
+		{
+			FILE* const f = fdopen(fd, "wb");
+			if (f == NULL) close(fd);
+			return f;
+		}
+	}
+	while (errno == EEXIST);
+	return NULL;
+}
+
+
 static void TakeScreenshot(void)
 {
-	const char* ExecDir = GetExecutableDirectory();
-	char FileName[2048];
-	sprintf(FileName, "%s/SCREEN%03d.TGA", ExecDir, guiPrintFrameBufferIndex++);
-	FILE* OutputFile = fopen(FileName, "wb");
+	FILE* const OutputFile = CreateScreenshotFile();
 	if (OutputFile == NULL) return;
 
 	WriteTGAHeader(OutputFile);
