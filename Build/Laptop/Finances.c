@@ -795,45 +795,20 @@ static void ClearFinanceList(void)
 }
 
 
-static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate)
+static void ProcessAndEnterAFinacialRecord(const UINT8 ubCode, const UINT32 uiDate, const INT32 iAmount, const UINT8 ubSecondCode, const INT32 iBalanceToDate)
 {
-	FinanceUnit* pFinance = pFinanceListHead;
+	FinanceUnit* const fu = MALLOC(FinanceUnit);
+	fu->Next           = NULL;
+	fu->ubCode         = ubCode;
+	fu->ubSecondCode   = ubSecondCode;
+	fu->uiDate         = uiDate;
+	fu->iAmount        = iAmount;
+	fu->iBalanceToDate = iBalanceToDate;
 
- 	// add to finance list
-	if(pFinance)
-	{
-		// go to end of list
-		while(pFinance->Next)
-			pFinance=pFinance->Next;
-
-		// alloc space
-		pFinance->Next = MALLOC(FinanceUnit);
-
-		// set up information passed
-		pFinance = pFinance->Next;
-		pFinance->Next = NULL;
-		pFinance->ubCode = ubCode;
-    pFinance->ubSecondCode = ubSecondCode;
-		pFinance->uiDate = uiDate;
-		pFinance->iAmount = iAmount;
-		pFinance->iBalanceToDate = iBalanceToDate;
-
-
-	}
-	else
-	{
-		// alloc space
-		pFinance = MALLOC(FinanceUnit);
-
-		// setup info passed
-		pFinance->Next = NULL;
-		pFinance->ubCode = ubCode;
-    pFinance->ubSecondCode = ubSecondCode;
-		pFinance->uiDate = uiDate;
-		pFinance->iAmount= iAmount;
-		pFinance->iBalanceToDate = iBalanceToDate;
-	  pFinanceListHead = pFinance;
-	}
+	// Append to end of list
+	FinanceUnit** i = &pFinanceListHead;
+	while (*i != NULL) i = &(*i)->Next;
+	*i = fu;
 }
 
 
