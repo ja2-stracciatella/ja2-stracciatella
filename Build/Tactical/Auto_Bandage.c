@@ -321,7 +321,7 @@ static BOOLEAN CreateAutoBandageString(void)
 		uiDoctorNameStringLength += wcslen( Message[STR_ARE_APPLYING_FIRST_AID] );
 	}
 
-	sAutoBandageString = MemRealloc( sAutoBandageString, uiDoctorNameStringLength * sizeof( CHAR16 ) );
+	sAutoBandageString = REALLOC(sAutoBandageString, wchar_t, uiDoctorNameStringLength);
 	if (!sAutoBandageString)
 	{
 		return( FALSE );

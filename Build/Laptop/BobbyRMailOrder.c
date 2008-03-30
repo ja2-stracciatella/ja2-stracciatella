@@ -694,7 +694,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
 					{
 						LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MemRealloc( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, sizeof( BobbyRayOrderStruct ) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems );
+						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
 						if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
 							return;
 
@@ -1814,7 +1814,7 @@ static void PurchaseBobbyOrder(void)
 		if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
 		{
 			LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MemRealloc( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, sizeof( BobbyRayOrderStruct ) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems );
+			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
 			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
 				return;
 
@@ -1897,7 +1897,7 @@ void AddJohnsGunShipment()
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
 	{
 		LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MemRealloc( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, sizeof( BobbyRayOrderStruct ) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems );
+		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
 		if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
 			return;
 
@@ -2067,7 +2067,7 @@ static BOOLEAN AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UIN
 		giNumberOfNewBobbyRShipment++;
 
 		//allocate some more memory
-		gpNewBobbyrShipments = MemRealloc( gpNewBobbyrShipments, sizeof( NewBobbyRayOrderStruct ) * giNumberOfNewBobbyRShipment );
+		gpNewBobbyrShipments = REALLOC(gpNewBobbyrShipments, NewBobbyRayOrderStruct, giNumberOfNewBobbyRShipment);
 
 		iFoundSpot = giNumberOfNewBobbyRShipment - 1;
 	}

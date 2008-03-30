@@ -52,7 +52,7 @@ static INT32 GetFreeWorldBombIndex(void)
 	uiOldNumWorldBombs = guiNumWorldBombs;
 	guiNumWorldBombs += 10;
 	//Allocate new table with max+10 items.
-	newWorldBombs = (WORLDBOMB*)MemRealloc( gWorldBombs, sizeof( WORLDBOMB ) * guiNumWorldBombs );
+	newWorldBombs = REALLOC(gWorldBombs, WORLDBOMB, guiNumWorldBombs);
 	if (newWorldBombs == NULL)
 	{
 		return( -1 );
@@ -175,7 +175,7 @@ static INT32 GetFreeWorldItemIndex(void)
 	uiOldNumWorldItems = guiNumWorldItems;
 	guiNumWorldItems += 10;
 	//Allocate new table with max+10 items.
-	newWorldItems = (WORLDITEM*)MemRealloc( gWorldItems, sizeof( WORLDITEM ) * guiNumWorldItems );
+	newWorldItems = REALLOC(gWorldItems, WORLDITEM, guiNumWorldItems);
 	if (newWorldItems == NULL)
 	{
 		return( -1 );

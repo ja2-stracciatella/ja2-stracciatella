@@ -830,7 +830,7 @@ static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );
 
 	// rebuild stash
-	pInventoryPoolList = MemRealloc( pInventoryPoolList, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
+	pInventoryPoolList = REALLOC(pInventoryPoolList, WORLDITEM, iTotalNumberOfSlots);
 
 	// set new mem to 0
 	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iTotalNumberOfSlots );

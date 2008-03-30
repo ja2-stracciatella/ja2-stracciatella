@@ -532,7 +532,7 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 			if (cnt == uiNumberOfItems)
 			{
 				//Error, there wasnt a free spot.  Reallocate memory for the array
-				wis = MemRealloc(wis, sizeof(*wis) * ++uiNumberOfItems);
+				wis = REALLOC(wis, WORLDITEM, ++uiNumberOfItems);
 				if (wis == NULL) goto fail;
 				break;
 			}

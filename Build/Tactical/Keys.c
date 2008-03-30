@@ -1078,7 +1078,7 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 		gubNumDoorStatus++;
 
 		//reallocate memory to hold the new door
-		gpDoorStatus = MemRealloc( gpDoorStatus, sizeof( DOOR_STATUS ) * gubNumDoorStatus );
+		gpDoorStatus = REALLOC(gpDoorStatus, DOOR_STATUS, gubNumDoorStatus);
 		if( gpDoorStatus == NULL )
 			return( FALSE );
 

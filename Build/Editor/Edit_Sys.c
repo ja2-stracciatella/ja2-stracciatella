@@ -876,7 +876,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 
 						// If we are top-most, add to smooth list
 						sNumSmoothTiles++;
-						puiSmoothTiles = MemRealloc( puiSmoothTiles, sNumSmoothTiles * sizeof( UINT32 ) );
+						puiSmoothTiles = REALLOC(puiSmoothTiles, UINT32, sNumSmoothTiles);
 						puiSmoothTiles[ sNumSmoothTiles-1 ] = iNewIndex;
 					}
 				}

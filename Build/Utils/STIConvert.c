@@ -284,7 +284,7 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 		while (fContinue)
 		{
 			// allocate more memory for SubImage structures, and set the current pointer to the last one
-			STCISubImage* const pTemp = MemRealloc(*ppSubImageBuffer, (*pusNumberOfSubImages + 1) * sizeof(*ppSubImageBuffer));
+			STCISubImage* const pTemp = REALLOC(*ppSubImageBuffer, STCISubImage, *pusNumberOfSubImages + 1);
 			if (pTemp == NULL)
 			{
 				fOk = FALSE;

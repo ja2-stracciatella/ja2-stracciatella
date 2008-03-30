@@ -114,7 +114,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	{
 		if (vid == ubNumberOfVehicles)
 		{
-			pVehicleList = MemRealloc(pVehicleList, sizeof(*pVehicleList) * ++ubNumberOfVehicles);
+			pVehicleList = REALLOC(pVehicleList, VEHICLETYPE, ++ubNumberOfVehicles);
 			break;
 		}
 		if (!pVehicleList[vid].fValid) break;

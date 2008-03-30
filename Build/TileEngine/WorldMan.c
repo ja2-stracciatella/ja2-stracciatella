@@ -620,7 +620,7 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 			RemoveLand(iMapIndex, pOldLand->usIndex);
 
 			++*pubNumHigherTypes;
-			*puiHigherTypes = MemRealloc(*puiHigherTypes, *pubNumHigherTypes * sizeof(UINT32));
+			*puiHigherTypes = REALLOC(*puiHigherTypes, UINT32, *pubNumHigherTypes);
 			(*puiHigherTypes)[*pubNumHigherTypes - 1] = fTileType;
 		}
 	}

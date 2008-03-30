@@ -1152,7 +1152,7 @@ static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubE
 	}
 
 	// already allocated, but change its size
-	pDealerItem->SpecialItem = MemRealloc( pDealerItem->SpecialItem, sizeof( DEALER_SPECIAL_ITEM ) * ubElementsNeeded );
+	pDealerItem->SpecialItem = REALLOC(pDealerItem->SpecialItem, DEALER_SPECIAL_ITEM, ubElementsNeeded);
 	if( pDealerItem->SpecialItem == NULL )
 	{
 		Assert( 0 );

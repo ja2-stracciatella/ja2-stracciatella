@@ -56,6 +56,8 @@ PTR  MemReallocReal(PTR ptr, UINT32 size, const char*, INT32);
 #define MALLOCE(type, extra) (type*)MemAlloc(sizeof(type) + (extra))
 #define MALLOCN(type, count) (type*)MemAlloc(sizeof(type) * (count))
 
+#define REALLOC(ptr, type, count) (type*)MemRealloc(ptr, sizeof(type) * (count))
+
 #ifdef __cplusplus
 }
 #endif

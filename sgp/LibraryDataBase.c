@@ -211,7 +211,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 
 	if (used_entries != count_entries)
 	{
-		fhs = MemRealloc(fhs, sizeof(*fhs) * used_entries);
+		fhs = REALLOC(fhs, FileHeaderStruct, used_entries);
 	}
 
 	qsort(fhs, used_entries, sizeof(*fhs), CompareFileHeader);
@@ -396,7 +396,7 @@ HWFILE OpenFileFromLibrary(const char* const pName)
 	if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
 	{
 		//reallocate more space for the array
-		FileOpenStruct* const pOpenFiles = MemRealloc(lib->pOpenFiles, sizeof(*pOpenFiles) * (lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME));
+		FileOpenStruct* const pOpenFiles = REALLOC(lib->pOpenFiles, FileOpenStruct, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
 		if (!pOpenFiles) return 0;
 
 		//increment the number of open files that we can have open
@@ -429,8 +429,7 @@ HWFILE CreateRealFileHandle(FILE* hFile)
 	//if there isnt enough space to put the file, realloc more space
 	if (rfh->iNumFilesOpen >= rfh->iSizeOfOpenFileArray - 1)
 	{
-		const UINT32 uiSize = (rfh->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME) * sizeof(*rfh->pRealFilesOpen);
-		rfh->pRealFilesOpen = MemRealloc(rfh->pRealFilesOpen, uiSize);
+		rfh->pRealFilesOpen = REALLOC(rfh->pRealFilesOpen, FILE*, rfh->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
 		CHECKF(rfh->pRealFilesOpen);
 
 		//Clear out the new part of the array

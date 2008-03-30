@@ -298,7 +298,7 @@ static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, co
 	const UINT16 n_lights = t->n_lights;
 	Assert((t->lights == NULL) == (n_lights == 0));
 
-	t->lights = MemRealloc(t->lights, (n_lights + 1) * sizeof(*t->lights));
+	t->lights = REALLOC(t->lights, LIGHT_NODE, n_lights + 1);
 	if (t->lights == NULL) return 65535;
 
 	LIGHT_NODE* const l = &t->lights[n_lights];
@@ -330,7 +330,7 @@ static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT1
 	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
 
-	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
+	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
 	if (t->rays == NULL) return 65535;
 
 	t->rays[n_rays] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
@@ -346,7 +346,7 @@ static UINT16 LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, c
 	Assert((t->rays == NULL) == (n_rays == 0));
 	Assert(usIndex <= n_rays);
 
-	t->rays = MemRealloc(t->rays, (n_rays + 1) * sizeof(*t->rays));
+	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
 	if (t->rays == NULL) return 65535;
 
 	memmove(t->rays + usIndex + 1, t->rays + usIndex, (n_rays - usIndex) * sizeof(*t->rays));

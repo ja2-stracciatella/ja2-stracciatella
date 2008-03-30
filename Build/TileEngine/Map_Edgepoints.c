@@ -309,7 +309,7 @@ static void CompactEdgepointArray(INT16** psArray, UINT16* pusMiddleIndex, UINT1
 			usValidIndex++;
 		}
 	}
-	*psArray = (INT16*)MemRealloc( *psArray, *pusArraySize * sizeof( INT16) );
+	*psArray = REALLOC(*psArray, INT16, *pusArraySize);
 	Assert( *psArray );
 }
 
@@ -428,7 +428,7 @@ static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, I
 	}
 	//Now compact the primary array, because some edgepoints have been removed.
 	CompactEdgepointArray( psArray1, pusMiddleIndex1, pusArraySize1 );
-	(*psArray2) = (INT16*)MemRealloc( (*psArray2), *pusArraySize2 * sizeof( INT16 ) );
+	*psArray2 = REALLOC(*psArray2, INT16, *pusArraySize2);
 }
 
 
