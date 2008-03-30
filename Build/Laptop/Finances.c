@@ -147,7 +147,7 @@ static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
-static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance);
+static BOOLEAN AppendFinanceToEndOfFile(void);
 static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
@@ -169,7 +169,6 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 {
 	// adds transaction to player's book(Financial List)
 	// outside of the financial system(the code in this .c file), this is the only function you'll ever need
-	FinanceUnit* pFinance = pFinanceListHead;
 
 	// read in balance from file
 
@@ -194,8 +193,6 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
 	// clear list
 	ClearFinanceList( );
 
-	pFinance=pFinanceListHead;
-
 	// update balance
 	LaptopSaveInfo.iCurrentBalance += iAmount;
 
@@ -205,7 +202,7 @@ void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate
   WriteBalanceToDisk( );
 
   // append to end of file
-  AppendFinanceToEndOfFile( pFinance );
+	AppendFinanceToEndOfFile();
 
 	// set number of pages
 	SetLastPageInRecords( );
@@ -1054,7 +1051,7 @@ static void GetBalanceFromDisk(void)
 }
 
 
-static BOOLEAN AppendFinanceToEndOfFile(FinanceUnit* pFinance)
+static BOOLEAN AppendFinanceToEndOfFile(void)
 {
   	// will write the current finance to disk
 	FinanceUnit* pFinanceList = pFinanceListHead;
