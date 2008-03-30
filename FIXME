@@ -197,7 +197,6 @@ fPotentialForDebug: ?
 fResetContractGlow: probably always TRUE
 fUseDisabledAutoShade: some tests seems to be inverted
 gMercPlacement: memory leak?
-gOldClipRect: common variable
 gOpenDoorList[], gClosedDoorList[]: users, code duplication
 gSaveBufferBasicPlacement, gSaveBufferDetailedPlacement: necessarily global?
 gTacticalStatus.ubEngagedInConvFromActionMercID, ENGAGED_IN_CONV: redundant?

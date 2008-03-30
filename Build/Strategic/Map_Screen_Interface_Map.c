@@ -423,7 +423,7 @@ INT16 gpSamSectorY[] = { SAM_1_Y, SAM_2_Y, SAM_3_Y, SAM_4_Y };
 // map region
 SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MAP_GRID_Y - 1), MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y};
 
-SGPRect gOldClipRect;
+static SGPRect gOldClipRect;
 
 // screen region
 SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };

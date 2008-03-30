@@ -182,7 +182,7 @@ INT16 gsScrollYIncrement;
 static UINT32 gRenderFlags = 0;
 
 static SGPRect gClippingRect = { 0, 0, SCREEN_WIDTH, 360 };
-SGPRect gOldClipRect;
+static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;
 INT16   gsRenderWorldOffsetX = -1;
