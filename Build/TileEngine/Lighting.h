@@ -67,7 +67,7 @@ typedef struct LightTemplate LightTemplate;
 struct LIGHT_SPRITE
 {
 					INT16		iX, iY;
-	LightTemplate* template;
+	LightTemplate* light_template;
 					UINT32	uiFlags;
 };
 

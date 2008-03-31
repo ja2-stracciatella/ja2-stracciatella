@@ -1812,7 +1812,7 @@ BOOLEAN fOnlyWalls;
 
 //MAP_ELEMENT * pMapElement;
 
-	const LightTemplate* const t = l->template;
+	const LightTemplate* const t = l->light_template;
 	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
@@ -2324,7 +2324,7 @@ INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
 BOOLEAN fOnlyWalls;
 
-	LightTemplate* const t = l->template;
+	LightTemplate* const t = l->light_template;
 	if (t->lights == NULL) return FALSE;
 
 	// clear out all the flags
@@ -2534,8 +2534,8 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
 	l->iX          = WORLD_COLS + 1;
 	l->iY          = WORLD_ROWS + 1;
 
-	l->template = LightLoadCachedTemplate(pName);
-	if (l->template == NULL) return NULL;
+	l->light_template = LightLoadCachedTemplate(pName);
+	if (l->light_template == NULL) return NULL;
 
 	l->uiFlags |= LIGHT_SPR_ACTIVE;
 	return l;
@@ -2810,5 +2810,5 @@ void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
 
 const char* LightSpriteGetTypeName(const LIGHT_SPRITE* const l)
 {
-	return l->template->name;
+	return l->light_template->name;
 }
