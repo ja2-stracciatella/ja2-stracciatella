@@ -500,106 +500,70 @@ static void DrawRecordsColumnHeadersText(void)
 }
 
 
+static void DrawStringCentered(const INT32 x, const INT32 y, const INT32 w, const wchar_t* const str)
+{
+	INT16 sx;
+	INT16 sy;
+	FindFontCenterCoordinates(x, 0, w, 0, str, FINANCE_TEXT_FONT, &sx, &sy);
+	mprintf(sx, y, str);
+}
+
+
 static void ProcessTransactionString(wchar_t pString[], size_t Length, const FinanceUnit* pFinance);
 
 
+// draws the text of the records
 static void DrawRecordsText(void)
 {
-  // draws the text of the records
-	wchar_t sString[512];
-
-  // setup the font stuff
 	SetFont(FINANCE_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
+	SetFontShadow(NO_SHADOW);
 
-	const FinanceUnit* pCurFinance = pFinanceListHead;
-
-	// anything to print
-	if (pCurFinance == NULL)
+	const FinanceUnit* fu = pFinanceListHead;
+	for (INT32 i = 0; i < NUM_RECORDS_PER_PAGE && fu != NULL; ++i, fu = fu->Next)
 	{
-		// nothing to print
-		return;
-	}
+		const INT32 y = 12 + RECORD_Y + i * (GetFontHeight(FINANCE_TEXT_FONT) + 6);
+		wchar_t     sString[512];
 
-	// loop through record list
-	for (INT32 iCounter = 0; iCounter < NUM_RECORDS_PER_PAGE; iCounter++)
-	{
+		SetFontForeground(FONT_BLACK);
+
 		// get and write the date
-		swprintf(sString, lengthof(sString), L"%d", pCurFinance->uiDate / ( 24*60 ) );
+		swprintf(sString, lengthof(sString), L"%d", fu->uiDate / (24 * 60));
+		DrawStringCentered(RECORD_DATE_X, y, RECORD_DATE_WIDTH, sString);
 
-		INT16 usX;
-		INT16 usY;
-
-		FindFontCenterCoordinates(RECORD_DATE_X,0,RECORD_DATE_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
-		mprintf(usX, 12+RECORD_Y + ( iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);
-
-		// get and write debit/ credit
-		if(pCurFinance->iAmount >=0)
+		// get and write debit/credit
+		if (fu->iAmount >= 0)
 		{
 			// increase in asset - debit
-			SPrintMoney(sString, pCurFinance->iAmount);
-
-		 FindFontCenterCoordinates(RECORD_DEBIT_X,0,RECORD_DEBIT_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
-		 mprintf(usX, 12+RECORD_Y + (iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);
+			SPrintMoney(sString, fu->iAmount);
+			DrawStringCentered(RECORD_DEBIT_X, y, RECORD_DEBIT_WIDTH, sString);
 		}
 		else
 		{
 			// decrease in asset - credit
-		 SetFontForeground(FONT_RED);
-			SPrintMoney(sString, -pCurFinance->iAmount);
-
-		 FindFontCenterCoordinates(RECORD_CREDIT_X ,0 , RECORD_CREDIT_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
-		 mprintf(usX, 12+RECORD_Y + (iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);
-		 SetFontForeground(FONT_BLACK);
+			SetFontForeground(FONT_RED);
+			SPrintMoney(sString, -fu->iAmount);
+			DrawStringCentered(RECORD_CREDIT_X, y, RECORD_CREDIT_WIDTH, sString);
 		}
 
 		// the balance to this point
-    INT32 iBalance = pCurFinance->iBalanceToDate;
-
-		// set font based on balance
-		if(iBalance >=0)
+		INT32 balance = fu->iBalanceToDate;
+		if (balance >= 0)
 		{
-      SetFontForeground(FONT_BLACK);
+			SetFontForeground(FONT_BLACK);
 		}
 		else
 		{
-      SetFontForeground(FONT_RED);
-			iBalance = ( iBalance ) * ( -1 );
+			SetFontForeground(FONT_RED);
+			balance = -balance;
 		}
+		SPrintMoney(sString, balance);
+		DrawStringCentered(RECORD_BALANCE_X, y, RECORD_BALANCE_WIDTH, sString);
 
 		// transaction string
-		ProcessTransactionString(sString, lengthof(sString), pCurFinance);
-    FindFontCenterCoordinates(RECORD_TRANSACTION_X,0,RECORD_TRANSACTION_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
-		mprintf(usX, 12+RECORD_Y + (iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);
-
-
-		// print the balance string
-		SPrintMoney(sString, iBalance);
-
-		FindFontCenterCoordinates(RECORD_BALANCE_X,0,RECORD_BALANCE_WIDTH,0, sString, FINANCE_TEXT_FONT,&usX, &usY);
-		mprintf(usX, 12+RECORD_Y + (iCounter * ( GetFontHeight( FINANCE_TEXT_FONT ) + 6 ) ), sString);
-
-		// restore font color
-		SetFontForeground(FONT_BLACK);
-
-		// next finance
-		pCurFinance = pCurFinance->Next;
-
-		// last page, no finances left, return
-		if( ! pCurFinance )
-		{
-
-			// restore shadow
-      SetFontShadow(DEFAULT_SHADOW);
-			return;
-		}
-
+		ProcessTransactionString(sString, lengthof(sString), fu);
+		DrawStringCentered(RECORD_TRANSACTION_X, y, RECORD_TRANSACTION_WIDTH, sString);
 	}
-
-	// restore shadow
-  SetFontShadow(DEFAULT_SHADOW);
 }
 
 
