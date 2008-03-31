@@ -158,8 +158,6 @@ static BOOLEAN LoadInRecords(UINT32 uiPage);
 static BOOLEAN LoadPreviousPage(void);
 static BOOLEAN LoadNextPage(void);
 
-static INT32 GetPreviousDaysIncome(void);
-
 static void SetFinanceButtonStates(void);
 static INT32 GetTodaysDebits(void);
 static INT32 GetYesterdaysOtherDeposits(void);
@@ -621,6 +619,7 @@ static void DrawFinanceTitleText(void)
 }
 
 
+static INT32 GetPreviousDaysIncome(void);
 static INT32 GetTodaysBalance(void);
 static INT32 GetTodaysDaysIncome(void);
 static void SPrintMoneyNoDollarOnZero(wchar_t* Str, INT32 Amount);
@@ -1325,83 +1324,55 @@ static INT32 GetTodaysBalance(void)
 }
 
 
+/* will return the income from the previous day, which is todays starting
+ * balance - yesterdays starting balance */
 static INT32 GetPreviousDaysIncome(void)
 {
-  // will return the income from the previous day
-  // which is todays starting balance - yesterdays starting balance
-  HWFILE hFileHandle;
-  UINT32 iDateInMinutes = 0;
-	BOOLEAN fOkToContinue = FALSE;
-	BOOLEAN fOkToIncrement = FALSE;
-	UINT32 iByteCount = 0;
-  INT32 iCounter = 1;
-	UINT8 ubCode;
-	UINT8 ubSecondCode;
-	UINT32 uiDate;
-	INT32 iAmount;
-	INT32 iBalanceToDate;
-  BOOLEAN fGoneTooFar = FALSE;
+	const UINT32 date_in_minutes = GetWorldTotalMin();
+	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
+
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return 0;
+	const UINT32 size = FileGetSize(f);
+
 	INT32 iTotalPreviousIncome = 0;
-
-	// what day is it?
-  iDateInMinutes = GetWorldTotalMin( );
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!hFileHandle)
+	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
+	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
+	INT32   iCounter       = 1;
+	BOOLEAN fOkToIncrement = FALSE;
+	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		return 0;
-  }
+		FileSeek(f,  RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
 
-  // start at the end, move back until Date / 24 * 60 on the record is =  ( iDateInMinutes /  ( 24 * 60 ) ) - 2
-  iByteCount+= sizeof( INT32 );
+		BYTE data[RECORD_SIZE];
+		FileRead(f, data, sizeof(data));
 
-  // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	while( ( iByteCount < FileGetSize( hFileHandle ) ) && ( ! fOkToContinue ) &&( !fGoneTooFar ) )
-	{
-		FileSeek( hFileHandle,  RECORD_SIZE * iCounter , FILE_SEEK_FROM_END );
+		UINT8  code;
+		UINT32 date;
+		INT32  amount;
+		const BYTE* d = data;
+		EXTR_U8(d, code);
+		EXTR_SKIP(d, 1);
+		EXTR_U32(d, date);
+		EXTR_I32(d, amount);
+		EXTR_SKIP(d, 4);
+		Assert(d == endof(data));
 
-    // incrment byte count
-    iByteCount += RECORD_SIZE;
+		// now ok to increment amount
+		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = TRUE;
 
-		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
-	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
-    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
-
-		// check to see if we are far enough
-		if( ( uiDate / ( 24 * 60 ) )== ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
-		{
-			fOkToContinue = TRUE;
-		}
-
-			// there are no entries for the previous day
-		if(  ( uiDate / ( 24 * 60 ) ) < ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
-    {
-			fGoneTooFar = TRUE;
-
-		}
-
-		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 1 )
-		{
-			// now ok to increment amount
-			fOkToIncrement = TRUE;
-		}
-
-		if( ( fOkToIncrement ) && ( ( ubCode == DEPOSIT_FROM_GOLD_MINE ) || ( ubCode == DEPOSIT_FROM_SILVER_MINE) ) )
+		if (fOkToIncrement && (code == DEPOSIT_FROM_GOLD_MINE || code == DEPOSIT_FROM_SILVER_MINE))
 		{
 			// increment total
-			iTotalPreviousIncome += iAmount;
+			iTotalPreviousIncome += amount;
 		}
 
-		iCounter++;
+		// check to see if we are far enough
+		if (date / (24 * 60) <= date_in_days - 2) break;
 	}
 
-
-	// now run back one more day and add up the total of deposits
-
-	FileClose( hFileHandle );
-	return( iTotalPreviousIncome );
+	FileClose(f);
+	return iTotalPreviousIncome;
 }
 
 
