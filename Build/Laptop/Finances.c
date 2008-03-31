@@ -1069,31 +1069,27 @@ static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void)
 }
 
 
+// Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
-	// grabs the size of the file and interprets number of pages it will take up
-   HWFILE hFileHandle;
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!hFileHandle)
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	if (!f)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
 		return;
-  }
+	}
 
 	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
+	if (FileGetSize(f) == 0)
 	{
-    FileClose( hFileHandle );
-    guiLastPageInRecordsList = 1;
+		FileClose(f);
+		guiLastPageInRecordsList = 1;
 		return;
 	}
 
+	FileClose(f);
 
-	// done with file, close it
-	FileClose( hFileHandle );
-
-	guiLastPageInRecordsList = ( ReadInLastElementOfFinanceListAndReturnIdNumber( ) - 1 )/ NUM_RECORDS_PER_PAGE;
+	guiLastPageInRecordsList = (ReadInLastElementOfFinanceListAndReturnIdNumber() - 1) / NUM_RECORDS_PER_PAGE;
 }
 
 
