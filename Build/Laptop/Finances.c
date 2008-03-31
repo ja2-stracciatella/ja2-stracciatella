@@ -1052,21 +1052,6 @@ static BOOLEAN AppendFinanceToEndOfFile(void)
 }
 
 
-// This function will read in the last unit in the finance list, to grab its id number
-static UINT32 ReadInLastElementOfFinanceListAndReturnIdNumber(void)
-{
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!f) return 0;
-
-  const UINT32 size = FileGetSize(f);
-	FileClose(f);
-
-	// make sure file is at least balance size
-	if (size < FINANCE_HEADER_SIZE) return 0;
-	return (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
-}
-
-
 // Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
@@ -1077,17 +1062,18 @@ static void SetLastPageInRecords(void)
 		return;
 	}
 
-	// make sure file is more than 0 length
-	if (FileGetSize(f) == 0)
+	const UINT32 size = FileGetSize(f);
+	FileClose(f);
+
+	if (size < FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE)
 	{
-		FileClose(f);
-		guiLastPageInRecordsList = 1;
+		guiLastPageInRecordsList = 0;
 		return;
 	}
 
-	FileClose(f);
-
-	guiLastPageInRecordsList = (ReadInLastElementOfFinanceListAndReturnIdNumber() - 1) / NUM_RECORDS_PER_PAGE;
+	guiLastPageInRecordsList =
+		(size - FINANCE_HEADER_SIZE - FINANCE_RECORD_SIZE) /
+		(FINANCE_RECORD_SIZE * NUM_RECORDS_PER_PAGE);
 }
 
 
