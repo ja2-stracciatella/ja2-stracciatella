@@ -1146,7 +1146,7 @@ static BOOLEAN LoadNextPage(void)
 // Loads in records belonging to page
 static BOOLEAN LoadInRecords(const UINT32 page)
 {
-	if (page != 0) return FALSE; // check if bad page
+	if (page == 0) return FALSE; // check if bad page
 
 	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	if (!f) return FALSE;
