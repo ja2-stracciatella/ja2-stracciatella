@@ -152,7 +152,7 @@ static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void GetBalanceFromDisk(void);
 static BOOLEAN WriteBalanceToDisk(void);
-static BOOLEAN AppendFinanceToEndOfFile(void);
+static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
 static BOOLEAN LoadPreviousPage(void);
@@ -992,27 +992,24 @@ static void GetBalanceFromDisk(void)
 }
 
 
-static BOOLEAN AppendFinanceToEndOfFile(void)
+// will write the current finance to disk
+static void AppendFinanceToEndOfFile(void)
 {
-  	// will write the current finance to disk
-	FinanceUnit* pFinanceList = pFinanceListHead;
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	if (!f) return;
 
-	const HWFILE hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
-	if (!hFileHandle)
-	{
-    return FALSE;
-	}
+	const FinanceUnit* const fu = pFinanceListHead;
+	BYTE  data[FINANCE_RECORD_SIZE];
+	BYTE* d = data;
+	INJ_U8(d, fu->ubCode);
+	INJ_U8(d, fu->ubSecondCode);
+	INJ_U32(d, fu->uiDate);
+	INJ_I32(d, fu->iAmount);
+	INJ_I32(d, fu->iBalanceToDate);
+	Assert(d == endof(data));
 
-	// write finance to disk
-  // now write date and amount, and code
-	FileWrite(hFileHandle, &pFinanceList->ubCode,         sizeof(UINT8));
-	FileWrite(hFileHandle, &pFinanceList->ubSecondCode,   sizeof(UINT8));
-	FileWrite(hFileHandle, &pFinanceList->uiDate,         sizeof(UINT32));
-	FileWrite(hFileHandle, &pFinanceList->iAmount,        sizeof(INT32));
-	FileWrite(hFileHandle, &pFinanceList->iBalanceToDate, sizeof(INT32));
-
-  FileClose( hFileHandle );
-  return( TRUE );
+	FileWrite(f, data, sizeof(data));
+	FileClose(f);
 }
 
 
