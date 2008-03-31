@@ -72,7 +72,7 @@ void HandleTacticalPanelSwitch( )
 		SetCurrentTacticalPanelCurrentMerc(gNewPanelSoldier);
 		gfSwitchPanel = FALSE;
 
-		if ( (!guiTacticalInterfaceFlags & INTERFACE_NORENDERBUTTONS ) && !( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE ) )
+		if (!(guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE))
 		{
 			RenderButtons( );
 		}
@@ -485,18 +485,9 @@ void RenderTopmostTacticalInterface( )
 
 	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
-		if ( !(guiTacticalInterfaceFlags & INTERFACE_NORENDERBUTTONS ) )
-		{
-			// If we want to rederaw whole screen, dirty all buttons!
-			if ( fInterfacePanelDirty == DIRTYLEVEL2 )
-			{
-				MarkButtonsDirty( );
-			}
-
-
-			RenderButtons( );
-		}
-
+		// If we want to rederaw whole screen, dirty all buttons!
+		if (fInterfacePanelDirty == DIRTYLEVEL2) MarkButtonsDirty();
+		RenderButtons();
 		return;
 	}
 
@@ -764,19 +755,11 @@ void RenderTopmostTacticalInterface( )
 		RemoveMouseRegionForPauseOfClock( );
 	}
 
+	// If we want to rederaw whole screen, dirty all buttons!
+	if (fInterfacePanelDirty == DIRTYLEVEL2) MarkButtonsDirty();
 
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_NORENDERBUTTONS ) )
-	{
-		// If we want to rederaw whole screen, dirty all buttons!
-		if ( fInterfacePanelDirty == DIRTYLEVEL2 )
-		{
-			MarkButtonsDirty( );
-		}
-
-
-		RenderButtons( );
-		RenderPausedGameBox( );
-	}
+	RenderButtons();
+	RenderPausedGameBox();
 
 		// mark all pop ups as dirty
 	MarkAllBoxesAsAltered( );

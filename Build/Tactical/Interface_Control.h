@@ -4,7 +4,6 @@
 #include "Types.h"
 
 #define		INTERFACE_MAPSCREEN							0x00000001
-#define		INTERFACE_NORENDERBUTTONS				0x00000002
 #define		INTERFACE_SHOPKEEP_INTERFACE		0x00000008
 
 extern UINT32 guiTacticalInterfaceFlags;

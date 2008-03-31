@@ -4149,9 +4149,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-	//guiTacticalInterfaceFlags |= INTERFACE_NORENDERBUTTONS;
-
-
 	gfInItemStackPopup = TRUE;
 
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -4245,8 +4242,6 @@ static void DeleteItemStackPopup(void)
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
-	//guiTacticalInterfaceFlags &= (~INTERFACE_NORENDERBUTTONS);
-
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
 	{
@@ -4320,9 +4315,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
-
-	//guiTacticalInterfaceFlags |= INTERFACE_NORENDERBUTTONS;
-
 
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
@@ -4421,8 +4413,6 @@ void DeleteKeyRingPopup(void)
 	}
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
-
-	//guiTacticalInterfaceFlags &= (~INTERFACE_NORENDERBUTTONS);
 
 //	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	if (guiCurrentItemDescriptionScreen != MAP_SCREEN)
