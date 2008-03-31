@@ -159,7 +159,6 @@ static BOOLEAN LoadPreviousPage(void);
 static BOOLEAN LoadNextPage(void);
 
 static INT32 GetPreviousDaysIncome(void);
-static INT32 GetPreviousDaysBalance(void);
 
 static void SetFinanceButtonStates(void);
 static INT32 GetTodaysBalance(void);
@@ -1237,80 +1236,51 @@ static void SPrintMoneyNoDollarOnZero(wchar_t* Str, INT32 Amount)
 }
 
 
+// find out what today is, then go back 2 days, get balance for that day
 static INT32 GetPreviousDaysBalance(void)
 {
-	// find out what today is, then go back 2 days, get balance for that day
-  HWFILE hFileHandle;
-  UINT32 iDateInMinutes = 0;
-	BOOLEAN fOkToContinue = FALSE;
-	UINT32 iByteCount = 0;
-  INT32 iCounter =1;
-	UINT8 ubCode;
-	UINT8 ubSecondCode;
-	UINT32 uiDate;
-	INT32 iAmount;
-	INT32 iBalanceToDate;
-  BOOLEAN fGoneTooFar= FALSE;
+	const UINT32 date_in_minutes = GetWorldTotalMin() - 60 * 24;
+	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	// what day is it?
-  iDateInMinutes = GetWorldTotalMin( ) - ( 60 * 24 );
+	if (date_in_days < 2) return 0;
 
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
-	if (!hFileHandle)
-	{
-		return 0;
-  }
+	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return 0;
+	const UINT32 size = FileGetSize(f);
 
-  // start at the end, move back until Date / 24 * 60 on the record is =  ( iDateInMinutes /  ( 24 * 60 ) ) - 2
-  iByteCount+= sizeof( INT32 );
+	INT32 balance = 0;
+  // start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
   // loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	while( ( iByteCount < FileGetSize( hFileHandle ) ) && ( ! fOkToContinue ) && ( ! fGoneTooFar ) )
+	INT32 iCounter = 1;
+	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek( hFileHandle,  RECORD_SIZE * iCounter , FILE_SEEK_FROM_END );
+		FileSeek(f, RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
 
-    // incrment byte count
-    iByteCount += RECORD_SIZE;
+		BYTE data[RECORD_SIZE];
+		FileRead(f, data, sizeof(data));
 
-		FileRead(hFileHandle, &ubCode,         sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode,   sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,         sizeof(UINT32));
-	  FileRead(hFileHandle, &iAmount,        sizeof(INT32));
-    FileRead(hFileHandle, &iBalanceToDate, sizeof(INT32));
+		UINT32 date;
+		INT32 balance_to_date;
+		const BYTE* d = data;
+		EXTR_SKIP(d, 2);
+		EXTR_U32(d, date);
+		EXTR_SKIP(d, 4);
+		EXTR_I32(d, balance_to_date);
+		Assert(d == endof(data));
 
 		// check to see if we are far enough
-		if( ( uiDate / ( 24 * 60 ) ) == ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
+		if (date / (24 * 60) == date_in_days - 2)
 		{
-			fOkToContinue = TRUE;
+			balance = balance_to_date;
+			break;
 		}
 
-		if( iDateInMinutes / ( 24 * 60 ) >= 2 )
-		{
-			// there are no entries for the previous day
-			if(  ( uiDate / ( 24 * 60 ) ) < ( iDateInMinutes / ( 24 * 60 ) ) - 2 )
-			{
-				fGoneTooFar = TRUE;
-
-			}
-		}
-		else
-		{
-			fGoneTooFar = TRUE;
-		}
-		iCounter++;
+		// there are no entries for the previous day
+		if (date / (24 * 60) < date_in_days - 2) break;
 	}
 
-	if( fOkToContinue == FALSE )
-	{
-		// reached beginning of file, nothing found, return 0
-	  FileClose( hFileHandle );
-		return 0;
-	}
-
-  FileClose( hFileHandle );
-
-	// reached 3 days ago, or beginning of file
-	return iBalanceToDate;
-
+	FileClose(f);
+	return balance;
 }
 
 
