@@ -409,11 +409,11 @@ static void CreateCorpsePalette(ROTTING_CORPSE*);
 
 ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 {
-	if (pCorpseDef->sGridNo == NOWHERE)   goto fail;
-	if (pCorpseDef->ubType  == NO_CORPSE) goto fail;
+	if (pCorpseDef->sGridNo == NOWHERE)   return NULL;
+	if (pCorpseDef->ubType  == NO_CORPSE) return NULL;
 
 	ROTTING_CORPSE* const c = GetFreeRottingCorpse();
-	if (c == NULL) goto fail;
+	if (c == NULL) return NULL;
 
 	// Copy elements in
 	c->def = *pCorpseDef;
@@ -443,7 +443,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 		}
 
     // If time of death is a few days, now, don't add at all!
-		if (GetWorldTotalMin() - c->def.uiTimeOfDeath > DELAY_UNTIL_DONE_ROTTING) goto fail;
+		if (GetWorldTotalMin() - c->def.uiTimeOfDeath > DELAY_UNTIL_DONE_ROTTING) return NULL;
 	}
 
 	// Check if on roof or not...
@@ -471,7 +471,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	}
 
 	ANITILE* const ani = CreateAnimationTile(&AniParams);
-  if (ani == NULL) goto fail;
+	if (ani == NULL) return NULL;
 	c->pAniTile = ani;
 
   LEVELNODE*       const n    = ani->pLevelNode;
@@ -524,11 +524,6 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	}
 
 	return c;
-
-fail_ani:
-	DeleteAniTile(ani);
-fail:
-	return NULL;
 }
 
 
