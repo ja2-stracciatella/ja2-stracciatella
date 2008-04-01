@@ -523,30 +523,6 @@ void DecaySmokeEffects( UINT32 uiTime )
 }
 
 
-
-BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
-{
-/*
-	UINT32	uiNumSmokeEffects=0;
-
-	//loop through and count the number of smoke effects
-	CFOR_ALL_SMOKE_EFFECTS(s) ++uiNumSmokeEffects;
-
-	//Save the Number of Smoke Effects
-	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32))) return FALSE;
-
-	if( uiNumSmokeEffects != 0 )
-	{
-		CFOR_ALL_SMOKE_EFFECTS(s)
-		{
-			if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
-		}
-	}
-*/
-	return( TRUE );
-}
-
-
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
 	UINT32	uiCount;

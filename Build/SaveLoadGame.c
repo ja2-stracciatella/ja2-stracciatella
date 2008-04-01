@@ -782,14 +782,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	SaveGameFilePosition(hFile, "PreGenerated Random Files");
 #endif
 
-	if( !SaveSmokeEffectsToSaveGameFile( hFile ) )
-	{
-		goto FAILED_TO_SAVE;
-	}
-#ifdef JA2BETAVERSION
-	SaveGameFilePosition(hFile, "Smoke Effect Structures");
-#endif
-
 	if( !SaveArmsDealerInventoryToSaveGameFile( hFile ) )
 	{
 		goto FAILED_TO_SAVE;
