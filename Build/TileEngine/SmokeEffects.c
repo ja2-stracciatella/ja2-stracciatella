@@ -38,20 +38,17 @@ static UINT32      guiNumSmokeEffects = 0;
 #define CFOR_ALL_SMOKE_EFFECTS(iter) BASE_FOR_ALL_SMOKE_EFFECTS(const SMOKEEFFECT, iter)
 
 
-static INT32 GetFreeSmokeEffect(void)
+static SMOKEEFFECT* GetFreeSmokeEffect(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
+	for (SMOKEEFFECT* s = gSmokeEffectData; s != gSmokeEffectData + guiNumSmokeEffects; ++s)
 	{
-		if(( gSmokeEffectData[uiCount].fAllocated==FALSE ) )
-			return( (INT32)uiCount );
+		if (!s->fAllocated) return s;
 	}
-
-	if( guiNumSmokeEffects < NUM_SMOKE_EFFECT_SLOTS )
-		return( (INT32) guiNumSmokeEffects++ );
-
-	return( -1 );
+	if (guiNumSmokeEffects < NUM_SMOKE_EFFECT_SLOTS)
+	{
+		return &gSmokeEffectData[guiNumSmokeEffects++];
+	}
+	return NULL;
 }
 
 
@@ -114,20 +111,16 @@ static UINT8 FromSmokeTypeToWorldFlags(INT8 bType)
 }
 
 
-INT32 NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
+void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel, SOLDIERTYPE* const owner)
 {
-	SMOKEEFFECT *pSmoke;
-	INT32				iSmokeIndex;
 	INT8				bSmokeEffectType=0;
 	UINT8				ubDuration=0;
 	UINT8				ubStartRadius=0;
 
-	if( ( iSmokeIndex = GetFreeSmokeEffect() )==(-1) )
-		return(-1);
+	SMOKEEFFECT* const pSmoke = GetFreeSmokeEffect();
+	if (pSmoke == NULL) return;
 
-	memset( &gSmokeEffectData[ iSmokeIndex ], 0, sizeof( SMOKEEFFECT ) );
-
-	pSmoke = &gSmokeEffectData[ iSmokeIndex ];
+	memset(pSmoke, 0, sizeof(*pSmoke));
 
 	// Set some values...
 	pSmoke->sGridNo									= sGridNo;
@@ -213,8 +206,6 @@ INT32 NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel
 
   // ATE: FALSE into subsequent-- it's the first one!
   SpreadEffectSmoke(pSmoke, FALSE, bLevel);
-
-	return( iSmokeIndex );
 }
 
 
