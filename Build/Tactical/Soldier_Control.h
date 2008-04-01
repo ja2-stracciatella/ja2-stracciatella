@@ -938,9 +938,11 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT16 sLifeDeduct, INT16 sBreathL
 void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 
+#define INVALID_PALREP 0xFFU
+
 // Palette functions for soldiers
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
-BOOLEAN GetPaletteRepIndexFromID(const PaletteRepID aPalRep, UINT8* pubPalIndex);
+UINT8   GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
 BOOLEAN LoadPaletteData(void);
 BOOLEAN DeletePaletteData(void);

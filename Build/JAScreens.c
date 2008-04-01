@@ -342,8 +342,8 @@ static void PalEditRenderHook(void)
 
 static BOOLEAN CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
 {
-	UINT8 ubPaletteRep;
-	CHECKF(GetPaletteRepIndexFromID(pal, &ubPaletteRep));
+	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(pal);
+	CHECKF(ubPaletteRep != INVALID_PALREP);
 	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;
 
 	ubPaletteRep++;

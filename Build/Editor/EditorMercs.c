@@ -312,8 +312,7 @@ void ProcessMercEditing(void)
 			return;
 	}
 
-	UINT8 ubPaletteRep;
-	GetPaletteRepIndexFromID(soldier_pal, &ubPaletteRep);
+	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(soldier_pal);
 	const INT32 start = iEditColorStart[ubType];
 	const UINT8 range = gubpNumReplacementsPerRange[ubType];
 	if (iEditWhichStat & 1)
@@ -664,7 +663,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if( !strlen( pSoldier->HeadPal ) )
 			ubPaletteRep = 0xff;
 		else
-			GetPaletteRepIndexFromID( pSoldier->HeadPal, &ubPaletteRep );
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->HeadPal);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 0 );
 
@@ -673,7 +672,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if( !strlen( pSoldier->SkinPal ) )
 			ubPaletteRep = 0xff;
 		else
-			GetPaletteRepIndexFromID( pSoldier->SkinPal, &ubPaletteRep );
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->SkinPal);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 1 );
 
@@ -682,7 +681,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if( !strlen( pSoldier->VestPal ) )
 			ubPaletteRep = 0xff;
 		else
-			GetPaletteRepIndexFromID( pSoldier->VestPal, &ubPaletteRep );
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->VestPal);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 2 );
 
@@ -691,7 +690,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 		if( !strlen( pSoldier->VestPal ) )
 			ubPaletteRep = 0xff;
 		else
-			GetPaletteRepIndexFromID( pSoldier->PantsPal, &ubPaletteRep );
+			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->PantsPal);
 	}
 	ShowEditMercColorSet( ubPaletteRep, 3 );
 }

@@ -298,7 +298,5 @@ typedef CHAR8 PaletteRepID[ 30 ];
 // MACROS
 // This will set an animation ID
 #define			SET_PALETTEREP_ID( a, b )				( strcpy( a, b ) )
-																						// strcmp returns 0 if true!
-#define     COMPARE_PALETTEREP_ID( a, b )		( strcmp( a, b ) ? FALSE : TRUE )
 
 #endif

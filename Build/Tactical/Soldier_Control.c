@@ -5422,9 +5422,9 @@ BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalR
 {
 	UINT32 cnt2;
 	UINT8	 ubType;
-	UINT8  ubPalIndex;
 
-	CHECKF( GetPaletteRepIndexFromID( aPalRep, &ubPalIndex ) );
+	const UINT8 ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
+	CHECKF(ubPalIndex != INVALID_PALREP);
 
 	// Get range type
 	ubType = gpPalRep[ ubPalIndex ].ubType;
@@ -5472,22 +5472,16 @@ BOOLEAN DeletePaletteData( )
 }
 
 
-BOOLEAN GetPaletteRepIndexFromID(const PaletteRepID aPalRep, UINT8* pubPalIndex)
+UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep)
 {
-	UINT32 cnt;
-
 	// Check if type exists
-	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
+	for (UINT32 i = 0; i < guiNumReplacements; ++i)
 	{
-		if ( COMPARE_PALETTEREP_ID( aPalRep, gpPalRep[ cnt ].ID ) )
-		{
-			*pubPalIndex = ( UINT8 )cnt;
-			return( TRUE );
-		}
+		if (strcmp(pal_rep, gpPalRep[i].ID) == 0) return i;
 	}
 
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Invalid Palette Replacement ID given");
-	return( FALSE );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Invalid Palette Replacement ID given");
+	return INVALID_PALREP;
 }
 
 
