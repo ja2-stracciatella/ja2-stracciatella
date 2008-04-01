@@ -28,6 +28,16 @@ static SMOKEEFFECT gSmokeEffectData[NUM_SMOKE_EFFECT_SLOTS];
 static UINT32      guiNumSmokeEffects = 0;
 
 
+#define BASE_FOR_ALL_SMOKE_EFFECTS(type, iter)                    \
+	for (type* iter        = gSmokeEffectData,                      \
+	         * iter##__end = gSmokeEffectData + guiNumSmokeEffects; \
+	     iter != iter##__end;                                       \
+	     ++iter)                                                    \
+		if (!iter->fAllocated) continue; else
+#define FOR_ALL_SMOKE_EFFECTS(iter)  BASE_FOR_ALL_SMOKE_EFFECTS(      SMOKEEFFECT, iter)
+#define CFOR_ALL_SMOKE_EFFECTS(iter) BASE_FOR_ALL_SMOKE_EFFECTS(const SMOKEEFFECT, iter)
+
+
 static INT32 GetFreeSmokeEffect(void)
 {
 	UINT32 uiCount;
@@ -401,7 +411,6 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmokeEffects( UINT32 uiTime )
 {
-	SMOKEEFFECT *pSmoke;
   BOOLEAN fUpdate = FALSE;
   BOOLEAN fSpreadEffect;
   INT8    bLevel;
@@ -414,119 +423,109 @@ void DecaySmokeEffects( UINT32 uiTime )
   // all the deleting has to be done first///
 
   // age all active tear gas clouds, deactivate those that are just dispersing
-  for (UINT32 cnt = 0; cnt < guiNumSmokeEffects; ++cnt)
+	FOR_ALL_SMOKE_EFFECTS(pSmoke)
   {
 		fSpreadEffect = TRUE;
 
-		pSmoke = &gSmokeEffectData[ cnt ];
-
-		if ( pSmoke->fAllocated )
+		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
 		{
-      if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+			bLevel = 1;
+		}
+		else
+		{
+			bLevel = 0;
+		}
 
 
-      // Do things differently for combat /vs realtime
-      // always try to update during combat
-      if (gTacticalStatus.uiFlags & INCOMBAT )
-      {
-        fUpdate = TRUE;
-      }
-      else
-      {
-			  // ATE: Do this every so ofte, to acheive the effect we want...
-			  if ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) > 10 )
-			  {
-          fUpdate = TRUE;
+		// Do things differently for combat /vs realtime
+		// always try to update during combat
+		if (gTacticalStatus.uiFlags & INCOMBAT )
+		{
+			fUpdate = TRUE;
+		}
+		else
+		{
+			// ATE: Do this every so ofte, to acheive the effect we want...
+			if ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) > 10 )
+			{
+				fUpdate = TRUE;
 
-          usNumUpdates = ( UINT16 ) ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) / 10 );
-        }
-      }
+				usNumUpdates = ( UINT16 ) ( ( uiTime - pSmoke->uiTimeOfLastUpdate ) / 10 );
+			}
+		}
 
-      if ( fUpdate )
-      {
-				pSmoke->uiTimeOfLastUpdate = uiTime;
+		if ( fUpdate )
+		{
+			pSmoke->uiTimeOfLastUpdate = uiTime;
 
-        for (UINT32 cnt2 = 0; cnt2 < usNumUpdates; ++cnt2)
-        {
-				  pSmoke->bAge++;
+			for (UINT32 cnt2 = 0; cnt2 < usNumUpdates; ++cnt2)
+			{
+				pSmoke->bAge++;
 
-					if ( pSmoke->bAge == 1 )
+				if ( pSmoke->bAge == 1 )
+				{
+					// ATE: At least mark for update!
+					pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
+					fSpreadEffect = FALSE;
+				}
+				else
+				{
+					fSpreadEffect = TRUE;
+				}
+
+				if ( fSpreadEffect )
+				{
+					// if this cloud remains effective (duration not reached)
+					if ( pSmoke->bAge <= pSmoke->ubDuration)
 					{
-            // ATE: At least mark for update!
-            pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
-						fSpreadEffect = FALSE;
+						// ATE: Only mark now and increse radius - actual drawing is done
+						// in another pass cause it could
+						// just get erased...
+						pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
+
+						// calculate the new cloud radius
+						// cloud expands by 1 every turn outdoors, and every other turn indoors
+
+						// ATE: If radius is < maximun, increase radius, otherwise keep at max
+						if ( pSmoke->ubRadius < Explosive[ Item[ pSmoke->usItem ].ubClassIndex ].ubRadius )
+						{
+							pSmoke->ubRadius++;
+						}
 					}
 					else
 					{
-						fSpreadEffect = TRUE;
+						// deactivate tear gas cloud (use last known radius)
+						SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
+						pSmoke->fAllocated = FALSE;
+						break;
 					}
-
-          if ( fSpreadEffect )
-          {
-				    // if this cloud remains effective (duration not reached)
-				    if ( pSmoke->bAge <= pSmoke->ubDuration)
-				    {
-              // ATE: Only mark now and increse radius - actual drawing is done
-              // in another pass cause it could
-              // just get erased...
-              pSmoke->bFlags |= SMOKE_EFFECT_MARK_FOR_UPDATE;
-
-				      // calculate the new cloud radius
-				      // cloud expands by 1 every turn outdoors, and every other turn indoors
-
-              // ATE: If radius is < maximun, increase radius, otherwise keep at max
-              if ( pSmoke->ubRadius < Explosive[ Item[ pSmoke->usItem ].ubClassIndex ].ubRadius )
-              {
-					      pSmoke->ubRadius++;
-              }
-				    }
-  			    else
-				    {
-					    // deactivate tear gas cloud (use last known radius)
-					    SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
-					    pSmoke->fAllocated = FALSE;
-              break;
-				    }
-          }
-        }
+				}
 			}
-			else
-			{
-				// damage anyone standing in cloud
-				SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0);
-			}
-    }
+		}
+		else
+		{
+			// damage anyone standing in cloud
+			SpreadEffectSmoke(pSmoke, REDO_SPREAD_EFFECT, 0);
+		}
   }
 
-  for (UINT32 cnt = 0; cnt < guiNumSmokeEffects; ++cnt)
-  {
-		pSmoke = &gSmokeEffectData[ cnt ];
-
-		if ( pSmoke->fAllocated )
+	FOR_ALL_SMOKE_EFFECTS(pSmoke)
+	{
+		if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
 		{
-      if ( pSmoke->bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
+			bLevel = 1;
+		}
+		else
+		{
+			bLevel = 0;
+		}
 
-		  // if this cloud remains effective (duration not reached)
-		  if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
-			{
-  			SpreadEffectSmoke(pSmoke, TRUE, bLevel);
-        pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
-			}
-    }
+		// if this cloud remains effective (duration not reached)
+		if ( pSmoke->bFlags & SMOKE_EFFECT_MARK_FOR_UPDATE )
+		{
+			SpreadEffectSmoke(pSmoke, TRUE, bLevel);
+			pSmoke->bFlags &= (~SMOKE_EFFECT_MARK_FOR_UPDATE);
+		}
   }
 
 	AllTeamsLookForAll( TRUE );
@@ -537,31 +536,19 @@ void DecaySmokeEffects( UINT32 uiTime )
 BOOLEAN SaveSmokeEffectsToSaveGameFile( HWFILE hFile )
 {
 /*
-	UINT32	uiCnt=0;
 	UINT32	uiNumSmokeEffects=0;
 
-
 	//loop through and count the number of smoke effects
-	for( uiCnt=0; uiCnt<guiNumSmokeEffects; uiCnt++)
-	{
-		if( gSmokeEffectData[ uiCnt ].fAllocated )
-			uiNumSmokeEffects++;
-	}
-
+	CFOR_ALL_SMOKE_EFFECTS(s) ++uiNumSmokeEffects;
 
 	//Save the Number of Smoke Effects
 	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32))) return FALSE;
 
 	if( uiNumSmokeEffects != 0 )
 	{
-		//loop through and save the number of smoke effects
-		for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
+		CFOR_ALL_SMOKE_EFFECTS(s)
 		{
-			const SMOKEEFFECT* const s = &gSmokeEffectData[uiCnt];
-			if (s->fAllocated)
-			{
-				if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
-			}
+			if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
 		}
 	}
 */
@@ -573,7 +560,6 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
 	UINT32	uiCount;
 	UINT32	uiCnt=0;
-  INT8    bLevel;
 
 	//no longer need to load smoke effects.  They are now in temp files
 	if( guiSaveGameVersion < 75 )
@@ -600,24 +586,11 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 				break;
 		}
 
-
 		//loop through and apply the smoke effects to the map
-		for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
+		FOR_ALL_SMOKE_EFFECTS(s)
 		{
-			//if this slot is allocated
-			if( gSmokeEffectData[uiCount].fAllocated )
-			{
-        if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
-        {
-          bLevel = 1;
-        }
-        else
-        {
-          bLevel = 0;
-        }
-
-				SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel);
-			}
+			const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
+			SpreadEffectSmoke(s, TRUE, bLevel);
 		}
 	}
 
@@ -630,7 +603,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiNumSmokeEffects=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
-	UINT32	uiCnt;
 
 	//get the name of the map
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
@@ -639,11 +611,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	FileDelete( zMapName );
 
 	//loop through and count the number of smoke effects
-	for( uiCnt=0; uiCnt<guiNumSmokeEffects; uiCnt++)
-	{
-		if( gSmokeEffectData[ uiCnt ].fAllocated )
-			uiNumSmokeEffects++;
-	}
+	CFOR_ALL_SMOKE_EFFECTS(s) ++uiNumSmokeEffects;
 
 	//if there are no smoke effects
 	if( uiNumSmokeEffects == 0 )
@@ -672,20 +640,14 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return( FALSE );
 	}
 
-
-	//loop through and save the number of smoke effects
-	for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
+	CFOR_ALL_SMOKE_EFFECTS(s)
 	{
-		const SMOKEEFFECT* const s = &gSmokeEffectData[uiCnt];
-		if (s->fAllocated)
+		if (!InjectSmokeEffectIntoFile(hFile, s))
 		{
-			if (!InjectSmokeEffectIntoFile(hFile, s))
-			{
-				//Close the file
-				FileClose( hFile );
+			//Close the file
+			FileClose( hFile );
 
-				return( FALSE );
-			}
+			return( FALSE );
 		}
 	}
 
@@ -705,7 +667,6 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
-  INT8    bLevel;
 
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
@@ -738,24 +699,11 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		}
 	}
 
-
 	//loop through and apply the smoke effects to the map
-	for(uiCount=0; uiCount < guiNumSmokeEffects; uiCount++)
+	FOR_ALL_SMOKE_EFFECTS(s)
 	{
-		//if this slot is allocated
-		if( gSmokeEffectData[uiCount].fAllocated )
-		{
-      if ( gSmokeEffectData[uiCount].bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
-
-			SpreadEffectSmoke(&gSmokeEffectData[uiCount], TRUE, bLevel);
-		}
+		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
+		SpreadEffectSmoke(s, TRUE, bLevel);
 	}
 
 	FileClose( hFile );
@@ -774,29 +722,10 @@ void ResetSmokeEffects()
 
 void UpdateSmokeEffectGraphics( )
 {
-  UINT32      uiCnt;
-	SMOKEEFFECT *pSmoke;
-  INT8        bLevel;
-
-	//loop through and save the number of smoke effects
-	for( uiCnt=0; uiCnt < guiNumSmokeEffects; uiCnt++)
+	FOR_ALL_SMOKE_EFFECTS(s)
 	{
-		pSmoke = &gSmokeEffectData[ uiCnt ];
-
-		//if the smoke is active
-		if( gSmokeEffectData[ uiCnt ].fAllocated )
-		{
-      if ( gSmokeEffectData[uiCnt].bFlags & SMOKE_EFFECT_ON_ROOF )
-      {
-        bLevel = 1;
-      }
-      else
-      {
-        bLevel = 0;
-      }
-
-			SpreadEffectSmoke(pSmoke, ERASE_SPREAD_EFFECT, bLevel);
-  		SpreadEffectSmoke(pSmoke, TRUE,                bLevel);
-    }
+		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
+		SpreadEffectSmoke(s, ERASE_SPREAD_EFFECT, bLevel);
+		SpreadEffectSmoke(s, TRUE,                bLevel);
   }
 }
