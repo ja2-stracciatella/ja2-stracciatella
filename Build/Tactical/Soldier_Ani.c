@@ -449,36 +449,30 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					}
 
 				case 441:
+				{
 					// CODE: Show mussel flash
-					if ( pSoldier->bVisible == -1 )
-					{
-						break;
-					}
+					if (pSoldier->bVisible == -1) break;
 
 					// DO ONLY IF WE'RE AT A GOOD LEVEL
-					if ( ubAmbientLightLevel < MIN_AMB_LEVEL_FOR_MERC_LIGHTS )
-					{
-						break;
-					}
+					if (ubAmbientLightLevel < MIN_AMB_LEVEL_FOR_MERC_LIGHTS) break;
 
 					LIGHT_SPRITE* const l = LightSpriteCreate("L-R03.LHT");
 					pSoldier->muzzle_flash = l;
 					if (l == NULL) return TRUE;
 
 					LightSpritePower(l, TRUE);
+
 					// Get one move forward
-					{
-						UINT16	usNewGridNo;
-						INT16 sXPos, sYPos;
+					const UINT16 usNewGridNo = NewGridNo(pSoldier->sGridNo, DirectionInc(pSoldier->bDirection));
+					INT16 x;
+					INT16 y;
+					ConvertGridNoToXY(usNewGridNo, &x, &y);
+					LightSpritePosition(l, x, y);
 
-						usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
-						ConvertGridNoToCenterCellXY( usNewGridNo, &sXPos, &sYPos );
-						LightSpritePosition(l, sXPos / CELL_X_SIZE, sYPos / CELL_Y_SIZE);
-
-						// Start count
-						pSoldier->bMuzFlashCount = 1;
-					}
+					// Start count
+					pSoldier->bMuzFlashCount = 1;
 					break;
+				}
 
 				case 442:
 
