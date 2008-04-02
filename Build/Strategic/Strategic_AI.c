@@ -3137,9 +3137,9 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 				gPatrolGroup[ i ].bSize = 10;
 			}
 		}
-		FOR_ALL_GROUPS(pGroup)
+		FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 		{
-			if( !pGroup->fPlayer && pGroup->ubGroupSize >= 16 )
+			if (pGroup->ubGroupSize >= 16)
 			{ //accident in patrol groups being too large
 				UINT8	ubGetRidOfXTroops = pGroup->ubGroupSize - 10;
 				if( gbWorldSectorZ || pGroup->ubSectorX != gWorldSectorX || pGroup->ubSectorY != gWorldSectorY )
@@ -4452,9 +4452,9 @@ static void UpgradeAdminsToTroops(void)
 
 
 	// check all moving enemy groups for administrators
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( pGroup->ubGroupSize && !pGroup->fPlayer && !pGroup->fVehicle)
+		if (pGroup->ubGroupSize && !pGroup->fVehicle)
 		{
 			Assert ( pGroup->pEnemyGroup );
 
@@ -4968,9 +4968,9 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 	UINT8 ubNumGroupsRedirected = 0;
 	WAYPOINT *pWaypoint;
 	UINT8 ubDestSectorID;
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer && pGroup->ubMoveType == ONE_WAY )
+		if (pGroup->ubMoveType == ONE_WAY)
 		{ //check the waypoint list
 			if( GroupWillMoveThroughSector( pGroup, ubSectorX, ubSectorY ) )
 			{

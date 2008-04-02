@@ -1957,26 +1957,24 @@ static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue)
 
 static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup)
 {
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer )
-		{ //then check to see if this group will arrive in next sector before the player group.
-			if( pGroup->uiArrivalTime < pPlayerGroup->uiArrivalTime )
-			{ //check to see if enemy group will cross paths with player group.
-				if( pGroup->ubNextX == pPlayerGroup->ubSectorX &&
-						pGroup->ubNextY == pPlayerGroup->ubSectorY &&
-						pGroup->ubSectorX == pPlayerGroup->ubNextX &&
-						pGroup->ubSectorY == pPlayerGroup->ubNextY )
-				{ //Okay, the enemy group will cross paths with the player, so find and delete the arrival event
-					//and repost it in the future (like a minute or so after the player arrives)
-					DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
+		// Check to see if this group will arrive in next sector before the player group.
+		if( pGroup->uiArrivalTime < pPlayerGroup->uiArrivalTime )
+		{ //check to see if enemy group will cross paths with player group.
+			if( pGroup->ubNextX == pPlayerGroup->ubSectorX &&
+					pGroup->ubNextY == pPlayerGroup->ubSectorY &&
+					pGroup->ubSectorX == pPlayerGroup->ubNextX &&
+					pGroup->ubSectorY == pPlayerGroup->ubNextY )
+			{ //Okay, the enemy group will cross paths with the player, so find and delete the arrival event
+				//and repost it in the future (like a minute or so after the player arrives)
+				DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
-					// NOTE: This can cause the arrival time to be > GetWorldTotalMin() + TraverseTime, so keep that in mind
-					// if you have any code that uses these 3 values to figure out how far along its route a group is!
-					SetGroupArrivalTime( pGroup, pPlayerGroup->uiArrivalTime + 1 + Random( 10 ) );
-					if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-						AssertMsg( 0, "Failed to add movement event." );
-				}
+				// NOTE: This can cause the arrival time to be > GetWorldTotalMin() + TraverseTime, so keep that in mind
+				// if you have any code that uses these 3 values to figure out how far along its route a group is!
+				SetGroupArrivalTime( pGroup, pPlayerGroup->uiArrivalTime + 1 + Random( 10 ) );
+				if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
+					AssertMsg( 0, "Failed to add movement event." );
 			}
 		}
 	}

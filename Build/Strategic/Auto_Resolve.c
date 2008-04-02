@@ -715,9 +715,10 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	}
 
 	//Now assign the rest of the soldiers to groups
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer && pGroup->ubSectorX == gpAR->ubSectorX && pGroup->ubSectorY == gpAR->ubSectorY )
+		if (pGroup->ubSectorX == gpAR->ubSectorX &&
+				pGroup->ubSectorY == gpAR->ubSectorY)
 		{
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;

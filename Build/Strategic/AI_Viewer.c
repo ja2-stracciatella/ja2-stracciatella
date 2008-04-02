@@ -633,9 +633,11 @@ static void RenderInfoInSector(void)
 		pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
 
 		//Now count the number of mobile groups in the sector.
-		CFOR_ALL_GROUPS(pGroup)
+		CFOR_ALL_NON_PLAYER_GROUPS(pGroup)
 		{
-			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY )
+			if (!pGroup->fVehicle &&
+					pGroup->ubSectorX == ubSectorX &&
+					pGroup->ubSectorY == ubSectorY)
 			{
 				ubNumTroops += pGroup->pEnemyGroup->ubNumTroops;
 				ubNumElites += pGroup->pEnemyGroup->ubNumElites;
@@ -1468,9 +1470,9 @@ static void PrintEnemyPopTable(void)
 	}
 
 	// count moving enemies
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer && !pGroup->fDebugGroup )
+		if (!pGroup->fDebugGroup)
 		{
 			Assert( pGroup->pEnemyGroup != NULL );
 
@@ -1844,9 +1846,9 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 
 
 	// handle mobile enemies anchored in this sector
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer && !pGroup->fVehicle )
+		if (!pGroup->fVehicle)
 		{
 			if ( ( pGroup->ubSectorX == ubSectorX ) && ( pGroup->ubSectorY == ubSectorY ) )
 			{

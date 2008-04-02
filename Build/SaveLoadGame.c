@@ -3725,57 +3725,54 @@ static void TruncateStrategicGroupSizes(void)
 		}
 	}
 	//Enemy groups
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 	{
-		if( !pGroup->fPlayer )
+		if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
 		{
-			if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
+			pGroup->ubGroupSize = 20;
+			if( pGroup->pEnemyGroup->ubNumAdmins > pGroup->pEnemyGroup->ubNumTroops )
 			{
-				pGroup->ubGroupSize = 20;
-				if( pGroup->pEnemyGroup->ubNumAdmins > pGroup->pEnemyGroup->ubNumTroops )
+				if( pGroup->pEnemyGroup->ubNumAdmins > pGroup->pEnemyGroup->ubNumElites )
 				{
-					if( pGroup->pEnemyGroup->ubNumAdmins > pGroup->pEnemyGroup->ubNumElites )
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 20;
-						pGroup->pEnemyGroup->ubNumTroops = 0;
-						pGroup->pEnemyGroup->ubNumElites = 0;
-					}
-					else
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 0;
-						pGroup->pEnemyGroup->ubNumTroops = 0;
-						pGroup->pEnemyGroup->ubNumElites = 20;
-					}
-				}
-				else if( pGroup->pEnemyGroup->ubNumTroops > pGroup->pEnemyGroup->ubNumElites )
-				{
-					if( pGroup->pEnemyGroup->ubNumTroops > pGroup->pEnemyGroup->ubNumAdmins )
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 0;
-						pGroup->pEnemyGroup->ubNumTroops = 20;
-						pGroup->pEnemyGroup->ubNumElites = 0;
-					}
-					else
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 20;
-						pGroup->pEnemyGroup->ubNumTroops = 0;
-						pGroup->pEnemyGroup->ubNumElites = 0;
-					}
+					pGroup->pEnemyGroup->ubNumAdmins = 20;
+					pGroup->pEnemyGroup->ubNumTroops = 0;
+					pGroup->pEnemyGroup->ubNumElites = 0;
 				}
 				else
 				{
-					if( pGroup->pEnemyGroup->ubNumElites > pGroup->pEnemyGroup->ubNumTroops )
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 0;
-						pGroup->pEnemyGroup->ubNumTroops = 0;
-						pGroup->pEnemyGroup->ubNumElites = 20;
-					}
-					else
-					{
-						pGroup->pEnemyGroup->ubNumAdmins = 0;
-						pGroup->pEnemyGroup->ubNumTroops = 20;
-						pGroup->pEnemyGroup->ubNumElites = 0;
-					}
+					pGroup->pEnemyGroup->ubNumAdmins = 0;
+					pGroup->pEnemyGroup->ubNumTroops = 0;
+					pGroup->pEnemyGroup->ubNumElites = 20;
+				}
+			}
+			else if( pGroup->pEnemyGroup->ubNumTroops > pGroup->pEnemyGroup->ubNumElites )
+			{
+				if( pGroup->pEnemyGroup->ubNumTroops > pGroup->pEnemyGroup->ubNumAdmins )
+				{
+					pGroup->pEnemyGroup->ubNumAdmins = 0;
+					pGroup->pEnemyGroup->ubNumTroops = 20;
+					pGroup->pEnemyGroup->ubNumElites = 0;
+				}
+				else
+				{
+					pGroup->pEnemyGroup->ubNumAdmins = 20;
+					pGroup->pEnemyGroup->ubNumTroops = 0;
+					pGroup->pEnemyGroup->ubNumElites = 0;
+				}
+			}
+			else
+			{
+				if( pGroup->pEnemyGroup->ubNumElites > pGroup->pEnemyGroup->ubNumTroops )
+				{
+					pGroup->pEnemyGroup->ubNumAdmins = 0;
+					pGroup->pEnemyGroup->ubNumTroops = 0;
+					pGroup->pEnemyGroup->ubNumElites = 20;
+				}
+				else
+				{
+					pGroup->pEnemyGroup->ubNumAdmins = 0;
+					pGroup->pEnemyGroup->ubNumTroops = 20;
+					pGroup->pEnemyGroup->ubNumElites = 0;
 				}
 			}
 		}

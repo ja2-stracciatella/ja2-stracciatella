@@ -161,19 +161,16 @@ static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 
 	if( !pLocGroup->ubSectorZ )
 	{
-		FOR_ALL_GROUPS(pGroup)
+		FOR_ALL_NON_PLAYER_GROUPS(pGroup)
 		{
-			if( !pGroup->fPlayer )
+			if( pGroup->ubSectorX == pLocGroup->ubSectorX && pGroup->ubSectorY == pLocGroup->ubSectorY )
 			{
-				if( pGroup->ubSectorX == pLocGroup->ubSectorX && pGroup->ubSectorY == pLocGroup->ubSectorY )
+				if( pGroup->pEnemyGroup->ubAdminsInBattle || pGroup->pEnemyGroup->ubTroopsInBattle || pGroup->pEnemyGroup->ubElitesInBattle )
 				{
-					if( pGroup->pEnemyGroup->ubAdminsInBattle || pGroup->pEnemyGroup->ubTroopsInBattle || pGroup->pEnemyGroup->ubElitesInBattle )
-					{
-						ubInvalidGroups++;
-						pGroup->pEnemyGroup->ubAdminsInBattle = 0;
-						pGroup->pEnemyGroup->ubTroopsInBattle = 0;
-						pGroup->pEnemyGroup->ubElitesInBattle = 0;
-					}
+					ubInvalidGroups++;
+					pGroup->pEnemyGroup->ubAdminsInBattle = 0;
+					pGroup->pEnemyGroup->ubTroopsInBattle = 0;
+					pGroup->pEnemyGroup->ubElitesInBattle = 0;
 				}
 			}
 		}
