@@ -3157,61 +3157,30 @@ static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
 }
 
 
-static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup)
+static BOOLEAN LoadWayPointList(const HWFILE f, GROUP* const g)
 {
-	UINT32	cnt=0;
-	UINT32	uiNumberOfWayPoints=0;
-	WAYPOINT *pWayPoints = pGroup->pWaypoints;
+	// Load the number of waypoints
+	UINT32 uiNumberOfWayPoints;
+	if (!FileRead(f, &uiNumberOfWayPoints, sizeof(UINT32))) return FALSE;
 
-	//Load the number of waypoints
-	if (!FileRead(hFile, &uiNumberOfWayPoints, sizeof(UINT32)))
+	WAYPOINT** anchor = &g->pWaypoints;
+	for (UINT32 i = uiNumberOfWayPoints; i != 0; --i)
 	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
+		WAYPOINT* const w = MALLOCZ(WAYPOINT);
+		if (w == NULL) return FALSE;
+
+		if (!FileRead(f, w, sizeof(WAYPOINT))) return FALSE;
+		w->next = NULL;
+
+		// Add the node to the list
+		*anchor = w;
+		anchor  = &w->next;
 	}
+	*anchor = NULL;
 
-
-	if( uiNumberOfWayPoints )
-	{
-		pWayPoints = pGroup->pWaypoints;
-		for(cnt=0; cnt<uiNumberOfWayPoints; cnt++)
-		{
-			//Allocate memory for the node
-			WAYPOINT* const pTemp = MALLOCZ(WAYPOINT);
-			if( pTemp == NULL )
-				return( FALSE );
-
-			//Load the waypoint node
-			if (!FileRead(hFile, pTemp, sizeof(WAYPOINT)))
-			{
-				//Error Writing size of L.L. to disk
-				return( FALSE );
-			}
-
-
-			pTemp->next = NULL;
-
-
-			//if its the first node
-			if( cnt == 0 )
-			{
-				pGroup->pWaypoints = pTemp;
-				pWayPoints = pTemp;
-			}
-			else
-			{
-				pWayPoints->next = pTemp;
-
-				//Advance to the next waypoint
-				pWayPoints = pWayPoints->next;
-			}
-		}
-	}
-	else
-		pGroup->pWaypoints = NULL;
-
-	return( TRUE );
+	return TRUE;
 }
+
 
 void CalculateGroupRetreatSector( GROUP *pGroup )
 {
