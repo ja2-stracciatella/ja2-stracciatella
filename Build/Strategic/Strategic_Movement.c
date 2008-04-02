@@ -3670,8 +3670,6 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup)
 
 void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 {
-	GROUP		*pGroup	=	NULL;
-	BOOLEAN fDone		= FALSE;
 	INT32		cnt;
 	BOOLEAN	fDoChange = FALSE;
 
@@ -3681,8 +3679,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 		for( cnt = 0; cnt < 55; cnt++ )
 		{
 			// create mvt groups
-			pGroup = GetGroup( (UINT8)cnt );
-
+			GROUP* const pGroup = GetGroup(cnt);
 			if( pGroup != NULL && pGroup->fPlayer )
 			{
 				pGroup->fPersistant = TRUE;
@@ -3696,8 +3693,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 		for( cnt = 0; cnt <  NUMBER_OF_SQUADS; cnt++ )
 		{
 			// create mvt groups
-			pGroup = GetGroup( SquadMovementGroups[ cnt ] );
-
+			GROUP* const pGroup = GetGroup(SquadMovementGroups[cnt]);
 			if ( pGroup != NULL )
 			{
 				pGroup->fPersistant = TRUE;
@@ -3706,8 +3702,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 
 		for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 		{
-			pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
-
+			GROUP* const pGroup = GetGroup(gubVehicleMovementGroups[cnt]);
 			if ( pGroup != NULL )
 			{
 				pGroup->fPersistant = TRUE;
@@ -3720,23 +3715,9 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 	if ( fDoChange )
 	{
 		//Remove all empty groups
-		fDone = FALSE;
-		while( !fDone )
+		FOR_ALL_GROUPS_SAFE(g)
 		{
-			pGroup = gpGroupList;
-			while( pGroup )
-			{
-				if( !pGroup->ubGroupSize && !pGroup->fPersistant )
-				{
-					RemovePGroup( pGroup );
-					break;
-				}
-				pGroup = pGroup->next;
-				if( !pGroup )
-				{
-					fDone = TRUE;
-				}
-			}
+			if (g->ubGroupSize == 0 && !g->fPersistant) RemovePGroup(g);
 		}
 	}
 }
