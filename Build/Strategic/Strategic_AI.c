@@ -3126,7 +3126,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 				gPatrolGroup[ i ].bSize = 10;
 			}
 		}
-		FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+		FOR_ALL_ENEMY_GROUPS(pGroup)
 		{
 			if (pGroup->ubGroupSize >= 16)
 			{ //accident in patrol groups being too large
@@ -4434,7 +4434,7 @@ static void UpgradeAdminsToTroops(void)
 
 
 	// check all moving enemy groups for administrators
-	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+	FOR_ALL_ENEMY_GROUPS(pGroup)
 	{
 		if (pGroup->ubGroupSize && !pGroup->fVehicle)
 		{
@@ -4950,7 +4950,7 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 	UINT8 ubNumGroupsRedirected = 0;
 	WAYPOINT *pWaypoint;
 	UINT8 ubDestSectorID;
-	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+	FOR_ALL_ENEMY_GROUPS(pGroup)
 	{
 		if (pGroup->ubMoveType == ONE_WAY)
 		{ //check the waypoint list

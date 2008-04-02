@@ -1927,7 +1927,7 @@ static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue)
 
 static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup)
 {
-	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+	FOR_ALL_ENEMY_GROUPS(pGroup)
 	{
 		// Check to see if this group will arrive in next sector before the player group.
 		if( pGroup->uiArrivalTime < pPlayerGroup->uiArrivalTime )
@@ -3326,7 +3326,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 
 GROUP* FindEnemyMovementGroupInSector(const UINT8 ubSectorX, const UINT8 ubSectorY)
 {
-	FOR_ALL_NON_PLAYER_GROUPS(g)
+	FOR_ALL_ENEMY_GROUPS(g)
 	{
 		if (g->ubSectorX == ubSectorX &&
 				g->ubSectorY == ubSectorY &&

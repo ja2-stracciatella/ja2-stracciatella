@@ -161,7 +161,7 @@ static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 
 	if( !pLocGroup->ubSectorZ )
 	{
-		FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+		FOR_ALL_ENEMY_GROUPS(pGroup)
 		{
 			if( pGroup->ubSectorX == pLocGroup->ubSectorX && pGroup->ubSectorY == pLocGroup->ubSectorY )
 			{

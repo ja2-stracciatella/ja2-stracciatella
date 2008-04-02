@@ -3725,7 +3725,7 @@ static void TruncateStrategicGroupSizes(void)
 		}
 	}
 	//Enemy groups
-	FOR_ALL_NON_PLAYER_GROUPS(pGroup)
+	FOR_ALL_ENEMY_GROUPS(pGroup)
 	{
 		if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites > MAX_STRATEGIC_TEAM_SIZE )
 		{

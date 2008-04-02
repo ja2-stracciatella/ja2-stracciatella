@@ -708,7 +708,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	}
 
 	//Now assign the rest of the soldiers to groups
-	CFOR_ALL_NON_PLAYER_GROUPS(pGroup)
+	CFOR_ALL_ENEMY_GROUPS(pGroup)
 	{
 		if (pGroup->ubSectorX == gpAR->ubSectorX &&
 				pGroup->ubSectorY == gpAR->ubSectorY)
