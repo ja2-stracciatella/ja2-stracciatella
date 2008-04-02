@@ -2893,66 +2893,33 @@ static BOOLEAN SavePlayerGroupList(HWFILE hFile, const GROUP* pGroup);
 static BOOLEAN SaveWayPointList(HWFILE hFile, const GROUP* pGroup);
 
 
-BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
+BOOLEAN SaveStrategicMovementGroupsToSaveGameFile(const HWFILE f)
 {
-	UINT32	uiNumberOfGroups=0;
-
-	//Count the number of active groups
-	CFOR_ALL_GROUPS(pGroup) ++uiNumberOfGroups;
-
 	// Save the number of movement groups to the saved game file
-	if (!FileWrite(hFile, &uiNumberOfGroups, sizeof(UINT32)))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
+	UINT32 uiNumberOfGroups = 0;
+	CFOR_ALL_GROUPS(g) ++uiNumberOfGroups;
+	if (!FileWrite(f, &uiNumberOfGroups, sizeof(UINT32))) return FALSE;
 
-	//Loop through the linked lists and add each node
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_GROUPS(g)
 	{
-		// Save each node in the LL
-		if (!FileWrite(hFile, pGroup, sizeof(GROUP)))
-		{
-			//Error Writing group node to disk
-			return( FALSE );
-		}
+		if (!FileWrite(f, g, sizeof(GROUP))) return FALSE;
 
-		//
 		// Save the linked list, for the current type of group
-		//
-
-		// If its a player group
-		if( pGroup->fPlayer )
+		if (g->fPlayer)
 		{
-			//if there is a player list, add it
-			if( pGroup->ubGroupSize )
-			{
-				//Save the player group list
-				SavePlayerGroupList( hFile, pGroup );
-			}
+			if (g->ubGroupSize) SavePlayerGroupList(f, g);
 		}
-		else //else its an enemy group
+		else
 		{
-			//Make sure the pointer is valid
-			Assert( pGroup->pEnemyGroup );
-
-			//
-			SaveEnemyGroupStruct( hFile, pGroup );
+			Assert(g->pEnemyGroup);
+			SaveEnemyGroupStruct(f, g);
 		}
 
-		//Save the waypoint list for the group, if they have one
-		SaveWayPointList( hFile, pGroup );
+		SaveWayPointList(f, g);
 	}
 
 	// Save the unique id mask
-	if (!FileWrite(hFile, uniqueIDMask, sizeof(UINT32) * 8))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
-
-
-	return( TRUE );
+	return FileWrite(f, uniqueIDMask, sizeof(uniqueIDMask));
 }
 
 
