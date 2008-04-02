@@ -888,9 +888,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	HandleOtherGroupsArrivingSimultaneously( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
 
-	FOR_ALL_GROUPS(curr)
+	FOR_ALL_PLAYER_GROUPS(curr)
 	{
-		if( curr->fPlayer && curr->ubGroupSize )
+		if (curr->ubGroupSize)
 		{
 			if( !curr->fBetweenSectors )
 			{
@@ -1779,10 +1779,9 @@ static void PrepareGroupsForSimultaneousArrival(void)
 {
 	UINT32 uiLatestArrivalTime = 0;
 
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_PLAYER_GROUPS(pGroup)
 	{ //For all of the groups that haven't arrived yet, determine which one is going to take the longest.
 		if( pGroup != gpPendingSimultaneousGroup
-			  && pGroup->fPlayer
 				&& pGroup->fBetweenSectors
 				&& pGroup->ubNextX == gpPendingSimultaneousGroup->ubSectorX
 				&& pGroup->ubNextY == gpPendingSimultaneousGroup->ubSectorY &&
@@ -1880,9 +1879,10 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 
 	//Count the number of groups that are scheduled to arrive in the same sector and are currently
 	//adjacent to the sector in question.
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_PLAYER_GROUPS(pGroup)
 	{
-		if( pGroup != pFirstGroup && pGroup->fPlayer && pGroup->fBetweenSectors &&
+		if (pGroup != pFirstGroup   &&
+				pGroup->fBetweenSectors &&
 			  pGroup->ubNextX == pFirstGroup->ubSectorX && pGroup->ubNextY == pFirstGroup->ubSectorY &&
 				!(pGroup->uiFlags & GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) &&
 				!IsGroupTheHelicopterGroup( pGroup ) )
@@ -2673,9 +2673,9 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
 	PLAYERGROUP *pPlayer;
 	UINT8 ubNumMercs = 0;
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_PLAYER_GROUPS(pGroup)
 	{
-		if( pGroup->fPlayer && !pGroup->fBetweenSectors)
+		if (!pGroup->fBetweenSectors)
 		{
 			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
 			{
@@ -2700,9 +2700,9 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
 	PLAYERGROUP *pPlayer;
 	UINT8 ubNumGroups = 0;
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_PLAYER_GROUPS(pGroup)
 	{
-		if( pGroup->fPlayer && !pGroup->fBetweenSectors)
+		if (!pGroup->fBetweenSectors)
 		{
 			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
 			{
@@ -2929,9 +2929,10 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
 	PLAYERGROUP *pPlayer;
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_PLAYER_GROUPS(pGroup)
 	{
-		if( pGroup->fPlayer && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
+		if (pGroup->ubSectorX == gWorldSectorX  &&
+				pGroup->ubSectorY == gWorldSectorY  &&
 			  pGroup->ubSectorZ == gbWorldSectorZ && !pGroup->fBetweenSectors )
 		{ //This player group is in the currently loaded sector...
 			pGroup->ubSectorX = ubSectorX;

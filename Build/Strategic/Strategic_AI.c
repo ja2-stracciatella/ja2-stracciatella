@@ -758,24 +758,21 @@ void ValidatePlayersAreInOneGroupOnly(void)
 		//iGroups ------ counts the number of groups the merc is in.
 		//iMismatches -- counts the cases where the merc's ubGroupID doesn't match the ubGroupID of the group
 		//               the merc exists in.
-		CFOR_ALL_GROUPS(pGroup)
+		CFOR_ALL_PLAYER_GROUPS(pGroup)
 		{
-			if( pGroup->fPlayer )
+			pPlayer = pGroup->pPlayerList;
+			while( pPlayer )
 			{
-				pPlayer = pGroup->pPlayerList;
-				while( pPlayer )
+				if( pPlayer->pSoldier == pSoldier )
 				{
-					if( pPlayer->pSoldier == pSoldier )
+					if( pSoldier->ubGroupID != pGroup->ubGroupID )
 					{
-						if( pSoldier->ubGroupID != pGroup->ubGroupID )
-						{
-							iMismatches++;
-						}
-						iGroups++;
-						break;
+						iMismatches++;
 					}
-					pPlayer = pPlayer->next;
+					iGroups++;
+					break;
 				}
+				pPlayer = pPlayer->next;
 			}
 		}
 
@@ -794,25 +791,22 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					iMismatches = 0;
 					iGroups = 0;
 					const GROUP* pOtherGroup = NULL;
-					CFOR_ALL_GROUPS(pGroup)
+					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						if( pGroup->fPlayer )
+						pPlayer = pGroup->pPlayerList;
+						while( pPlayer )
 						{
-							pPlayer = pGroup->pPlayerList;
-							while( pPlayer )
+							if( pPlayer->pSoldier == pSoldier )
 							{
-								if( pPlayer->pSoldier == pSoldier )
+								if( pSoldier->ubGroupID != pGroup->ubGroupID )
 								{
-									if( pSoldier->ubGroupID != pGroup->ubGroupID )
-									{
-										pOtherGroup = pGroup;
-										iMismatches++;
-									}
-									iGroups++;
-									break;
+									pOtherGroup = pGroup;
+									iMismatches++;
 								}
-								pPlayer = pPlayer->next;
+								iGroups++;
+								break;
 							}
+							pPlayer = pPlayer->next;
 						}
 						if( iMismatches == 1 )
 						{
@@ -839,25 +833,22 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					iMismatches = 0;
 					iGroups = 0;
 					const GROUP* pOtherGroup = NULL;
-					CFOR_ALL_GROUPS(pGroup)
+					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						if( pGroup->fPlayer )
+						pPlayer = pGroup->pPlayerList;
+						while( pPlayer )
 						{
-							pPlayer = pGroup->pPlayerList;
-							while( pPlayer )
+							if( pPlayer->pSoldier == pSoldier )
 							{
-								if( pPlayer->pSoldier == pSoldier )
+								if( pSoldier->ubGroupID != pGroup->ubGroupID )
 								{
-									if( pSoldier->ubGroupID != pGroup->ubGroupID )
-									{
-										pOtherGroup = pGroup;
-										iMismatches++;
-									}
-									iGroups++;
-									break;
+									pOtherGroup = pGroup;
+									iMismatches++;
 								}
-								pPlayer = pPlayer->next;
+								iGroups++;
+								break;
 							}
+							pPlayer = pPlayer->next;
 						}
 					}
 					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);
