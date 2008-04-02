@@ -684,7 +684,7 @@ void RemoveGroupFromList(GROUP* const g)
 		MemFree(g);
 		return;
 	}
-	Assert(0);
+	AssertMsg(0, "Trying to remove a strategic group that isn't in the list!");
 }
 
 
@@ -2174,68 +2174,43 @@ void RemoveGroup( UINT8 ubGroupID )
 	RemovePGroup( pGroup );
 }
 
-BOOLEAN gfRemovingAllGroups = FALSE;
 
-void RemovePGroup( GROUP *pGroup )
+static BOOLEAN gfRemovingAllGroups = FALSE;
+
+
+void RemovePGroup(GROUP* const g)
 {
-	UINT32 bit, index, mask;
-
-	if( pGroup->fPersistant && !gfRemovingAllGroups )
+	if (g->fPersistant && !gfRemovingAllGroups)
 	{
-		CancelEmptyPersistentGroupMovement( pGroup );
+		CancelEmptyPersistentGroupMovement(g);
 		return;
-		DoScreenIndependantMessageBox( L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL );
-	}
-	//if removing head, then advance head first.
-	if( pGroup == gpGroupList )
-		gpGroupList = gpGroupList->next;
-	else
-	{ //detach this node from the list.
-		GROUP *curr;
-		curr = gpGroupList;
-		while( curr->next && curr->next != pGroup )
-			curr = curr->next;
-		AssertMsg( curr->next == pGroup, "Trying to remove a strategic group that isn't in the list!");
-		curr->next = pGroup->next;
+		DoScreenIndependantMessageBox(L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
 
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(g);
 
-	//Remove the arrival event if applicable.
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
+	// Remove the arrival event if applicable.
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g->ubGroupID);
 
-	//Determine what type of group we have (because it requires different methods)
-	if( pGroup->fPlayer )
-	{ //Remove player group
-		PLAYERGROUP *pPlayer;
-		while( pGroup->pPlayerList )
+	// Determine what type of group we have (because it requires different methods)
+	if (g->fPlayer)
+	{
+		while (g->pPlayerList)
 		{
-			pPlayer = pGroup->pPlayerList;
-			pGroup->pPlayerList = pGroup->pPlayerList->next;
-			MemFree( pPlayer );
+			PLAYERGROUP* const pPlayer = g->pPlayerList;
+			g->pPlayerList = g->pPlayerList->next;
+			MemFree(pPlayer);
 		}
 	}
 	else
 	{
-		RemoveGroupFromStrategicAILists( pGroup->ubGroupID );
-		MemFree( pGroup->pEnemyGroup );
+		RemoveGroupFromStrategicAILists(g->ubGroupID);
+		MemFree(g->pEnemyGroup);
 	}
 
-	//clear the unique group ID
-	index = pGroup->ubGroupID / 32;
-	bit = pGroup->ubGroupID % 32;
-	mask = 1 << bit;
-
-	if( !(uniqueIDMask[ index ] & mask) )
-	{
-		mask = mask;
-	}
-
-	uniqueIDMask[ index ] -= mask;
-
-	MemFree( pGroup );
-	pGroup = NULL;
+	RemoveGroupFromList(g);
 }
+
 
 void RemoveAllGroups()
 {
