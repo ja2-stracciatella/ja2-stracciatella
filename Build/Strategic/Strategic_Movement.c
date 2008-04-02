@@ -3014,44 +3014,26 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
 }
 
 
-//Saves the Player's group list to the saved game file
+// Saves the Player's group list to the saved game file
 static BOOLEAN SavePlayerGroupList(const HWFILE hFile, const GROUP* const pGroup)
 {
-	UINT32	uiNumberOfNodesInList=0;
-	PLAYERGROUP		*pTemp=NULL;
-
-	pTemp = pGroup->pPlayerList;
-
-	while( pTemp )
+	// Save the number of nodes in the list
+	UINT32 uiNumberOfNodesInList = 0;
+	for (const PLAYERGROUP* p = pGroup->pPlayerList; p != NULL; p = p->next)
 	{
-		uiNumberOfNodesInList++;
-		pTemp = pTemp->next;
+		++uiNumberOfNodesInList;
 	}
+	if (!FileWrite(hFile, &uiNumberOfNodesInList, sizeof(UINT32))) return FALSE;
 
-	//Save the number of nodes in the list
-	if (!FileWrite(hFile, &uiNumberOfNodesInList, sizeof(UINT32)))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
-
-	pTemp = pGroup->pPlayerList;
-
-	//Loop trhough and save only the players profile id
-	while( pTemp )
+	// Loop through and save only the players profile id
+	for (const PLAYERGROUP* p = pGroup->pPlayerList; p != NULL; p = p->next)
 	{
 		// Save the ubProfile ID for this node
-		const UINT32 uiProfileID = pTemp->pSoldier->ubProfile;
-		if (!FileWrite(hFile, &uiProfileID, sizeof(UINT32)))
-		{
-			//Error Writing size of L.L. to disk
-			return( FALSE );
-		}
-
-		pTemp = pTemp->next;
+		const UINT32 uiProfileID = p->pSoldier->ubProfile;
+		if (!FileWrite(hFile, &uiProfileID, sizeof(UINT32))) return FALSE;
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 
 
