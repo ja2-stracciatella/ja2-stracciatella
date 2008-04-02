@@ -158,7 +158,7 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* pSoldier, INT8 bSquadNumb
 
 SOLDIERTYPE*  PickRandomPassengerFromVehicle( SOLDIERTYPE *pSoldier );
 
-BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup );
+BOOLEAN DoesVehicleGroupHaveAnyPassengers(const GROUP*);
 
 void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 

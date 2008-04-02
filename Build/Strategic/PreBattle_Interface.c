@@ -156,14 +156,12 @@ extern void CalculateGroupRetreatSector( GROUP *pGroup );
 static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 {
 	SECTORINFO *pSector;
-	GROUP *pGroup;
 	UINT8 ubSectorID;
 	UINT8 ubInvalidGroups = 0;
 
 	if( !pLocGroup->ubSectorZ )
 	{
-		pGroup = gpGroupList;
-		while( pGroup )
+		FOR_ALL_GROUPS(pGroup)
 		{
 			if( !pGroup->fPlayer )
 			{
@@ -178,7 +176,6 @@ static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 					}
 				}
 			}
-			pGroup = pGroup->next;
 		}
 	}
 
@@ -1742,31 +1739,23 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 // we are entering the sector, clear out all mvt orders for grunts
 static void ClearMovementForAllInvolvedPlayerGroups(void)
 {
-	GROUP *pGroup;
-
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
 			// clear their strategic movement (mercpaths and waypoints)
 			ClearMercPathsAndWaypointsForAllInGroup( pGroup );
 		}
-		pGroup = pGroup->next;
 	}
 }
 
 void RetreatAllInvolvedPlayerGroups( void )
 {
-	GROUP *pGroup;
-
-
 	// make sure guys stop their off duty assignments, like militia training!
 	// but don't exit vehicles - drive off in them!
 	PutNonSquadMercsInBattleSectorOnSquads( FALSE );
 
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
@@ -1777,7 +1766,6 @@ void RetreatAllInvolvedPlayerGroups( void )
 				RetreatGroupToPreviousSector( pGroup );
 			}
 		}
-		pGroup = pGroup->next;
 	}
 }
 
@@ -1811,7 +1799,7 @@ BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s)
 }
 
 
-BOOLEAN PlayerGroupInvolvedInThisCombat( GROUP *pGroup )
+BOOLEAN PlayerGroupInvolvedInThisCombat(const GROUP* const pGroup)
 {
 	Assert( pGroup );
 

@@ -736,7 +736,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 	INT32 iGroups;
 	INT32 iMismatches;
 	INT32 iNumErrors;
-	GROUP *pGroup, *pOtherGroup;
 	PLAYERGROUP *pPlayer;
 	wchar_t str[1024];
 	UINT8 ubGroupID;
@@ -759,8 +758,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 		//iGroups ------ counts the number of groups the merc is in.
 		//iMismatches -- counts the cases where the merc's ubGroupID doesn't match the ubGroupID of the group
 		//               the merc exists in.
-		pGroup = gpGroupList;
-		while( pGroup )
+		CFOR_ALL_GROUPS(pGroup)
 		{
 			if( pGroup->fPlayer )
 			{
@@ -779,7 +777,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					pPlayer = pPlayer->next;
 				}
 			}
-			pGroup = pGroup->next;
 		}
 
 		if( iMismatches || !iGroups )
@@ -796,9 +793,8 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					//Get a pointer to the group that contains the merc
 					iMismatches = 0;
 					iGroups = 0;
-					pGroup = gpGroupList;
-					pOtherGroup = NULL;
-					while( pGroup )
+					const GROUP* pOtherGroup = NULL;
+					CFOR_ALL_GROUPS(pGroup)
 					{
 						if( pGroup->fPlayer )
 						{
@@ -822,9 +818,8 @@ void ValidatePlayersAreInOneGroupOnly(void)
 						{
 							break;
 						}
-						pGroup = pGroup->next;
 					}
-					pGroup = GetGroup( pSoldier->ubGroupID );
+					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);
 					Assert( pGroup );
 					Assert( pOtherGroup );
 					swprintf(str, lengthof(str), L"%ls in %c%d thinks he/she is in group %d in %c%d but isn't.  "
@@ -843,9 +838,8 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					//Get a pointer to the first mismatch group that contains the merc
 					iMismatches = 0;
 					iGroups = 0;
-					pGroup = gpGroupList;
-					pOtherGroup = NULL;
-					while( pGroup )
+					const GROUP* pOtherGroup = NULL;
+					CFOR_ALL_GROUPS(pGroup)
 					{
 						if( pGroup->fPlayer )
 						{
@@ -865,9 +859,8 @@ void ValidatePlayersAreInOneGroupOnly(void)
 								pPlayer = pPlayer->next;
 							}
 						}
-						pGroup = pGroup->next;
 					}
-					pGroup = GetGroup( pSoldier->ubGroupID );
+					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);
 					Assert( pGroup );
 					Assert( pOtherGroup );
 
@@ -3039,7 +3032,6 @@ static void ReinitializeUnvisitedGarrisons(void);
 
 BOOLEAN LoadStrategicAI( HWFILE hFile )
 {
-	GROUP *pGroup, *next;
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
 	ARMY_COMPOSITION gTempArmyComp;
@@ -3154,8 +3146,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 				gPatrolGroup[ i ].bSize = 10;
 			}
 		}
-		pGroup = gpGroupList;
-		while( pGroup )
+		FOR_ALL_GROUPS(pGroup)
 		{
 			if( !pGroup->fPlayer && pGroup->ubGroupSize >= 16 )
 			{ //accident in patrol groups being too large
@@ -3169,7 +3160,6 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 					}
 				}
 			}
-			pGroup = pGroup->next;
 		}
 	}
 	if( ubSAIVersion < 13 )
@@ -3224,14 +3214,12 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	{ //Patch all groups that have this flag set
 		gubNumGroupsArrivedSimultaneously = 0;
 		{
-			pGroup = gpGroupList;
-			while( pGroup )
+			FOR_ALL_GROUPS(pGroup)
 			{
 				if( pGroup->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY )
 				{
 					pGroup->uiFlags &= ~GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
 				}
-				pGroup = pGroup->next;
 			}
 		}
 	}
@@ -3271,12 +3259,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	}
 	if( ubSAIVersion < 21 )
 	{
-		pGroup = gpGroupList;
-		while( pGroup )
-		{
-			pGroup->uiFlags = 0;
-			pGroup = pGroup->next;
-		}
+		FOR_ALL_GROUPS(pGroup) pGroup->uiFlags = 0;
 	}
 	if( ubSAIVersion < 22 )
 	{ //adjust down the number of bloodcats based on difficulty in the two special bloodcat levels
@@ -3415,7 +3398,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( 3, 16 ) ].fEnemyControlled )
 		{ //Eliminate all enemy groups in this sector, because the player owns the sector, and it is not
 			//possible for them to spawn there!
-			pGroup = gpGroupList;
+			GROUP* pGroup = gpGroupList;
 			while( pGroup )
 			{
 				pNext = pGroup->next;
@@ -3444,10 +3427,10 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	EvolveQueenPriorityPhase( TRUE );
 
 	//Count and correct the floating groups
-	pGroup = gpGroupList;
+	GROUP* pGroup = gpGroupList;
 	while( pGroup )
 	{
-		next = pGroup->next; //store the next node as pGroup could be deleted!
+		GROUP* const next = pGroup->next; //store the next node as pGroup could be deleted!
 		if( !pGroup->fPlayer )
 		{
 			if( !pGroup->fBetweenSectors )
@@ -4433,7 +4416,6 @@ static void UpgradeAdminsToTroops(void)
 	SECTORINFO *pSector;
 	INT8 bPriority;
 	UINT8 ubAdminsToCheck;
-	GROUP *pGroup;
 	INT16 sPatrolIndex;
 
 
@@ -4479,8 +4461,7 @@ static void UpgradeAdminsToTroops(void)
 
 
 	// check all moving enemy groups for administrators
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->ubGroupSize && !pGroup->fPlayer && !pGroup->fVehicle)
 		{
@@ -4489,7 +4470,6 @@ static void UpgradeAdminsToTroops(void)
 			// skip sector if it's currently loaded, we'll never upgrade guys in those
 			if ( ( pGroup->ubSectorX == gWorldSectorX ) && ( pGroup->ubSectorY == gWorldSectorY ) )
 			{
-				pGroup = pGroup->next;
 				continue;
 			}
 
@@ -4531,8 +4511,6 @@ static void UpgradeAdminsToTroops(void)
 				}
 			}
 		}
-
-		pGroup = pGroup->next;
 	}
 }
 
@@ -4996,12 +4974,10 @@ static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMove
 //will cause them to avoid the sector.  Returns the number of redirected groups.
 static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSectorY)
 {
-	GROUP *pGroup;
 	UINT8 ubNumGroupsRedirected = 0;
 	WAYPOINT *pWaypoint;
 	UINT8 ubDestSectorID;
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && pGroup->ubMoveType == ONE_WAY )
 		{ //check the waypoint list
@@ -5016,7 +4992,6 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 				ubNumGroupsRedirected++;
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	if( ubNumGroupsRedirected )
 	{

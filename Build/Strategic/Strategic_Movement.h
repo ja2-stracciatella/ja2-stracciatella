@@ -127,6 +127,12 @@ CASSERT(sizeof(GROUP) == 84)
 extern GROUP *gpGroupList;
 
 
+#define BASE_FOR_ALL_GROUPS(type, iter) \
+	for (type iter = gpGroupList; iter != NULL; iter = iter->next)
+#define FOR_ALL_GROUPS(iter)  BASE_FOR_ALL_GROUPS(      GROUP*, iter)
+#define CFOR_ALL_GROUPS(iter) BASE_FOR_ALL_GROUPS(const GROUP*, iter)
+
+
 //General utility functions
 void RemoveAllGroups(void);
 GROUP* GetGroup( UINT8 ubGroupID );
@@ -226,7 +232,7 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UIN
 
 void RemoveGroupFromList( GROUP *pGroup );
 
-WAYPOINT *GetFinalWaypoint( GROUP *pGroup );
+WAYPOINT* GetFinalWaypoint(const GROUP*);
 
 void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY );
 
@@ -249,7 +255,7 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs );
 
 BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
 
-BOOLEAN GroupHasInTransitDeadOrPOWMercs( GROUP *pGroup );
+BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP*);
 
 void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle);
 

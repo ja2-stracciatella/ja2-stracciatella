@@ -720,13 +720,10 @@ void RemoveGroupFromList( GROUP *pGroup )
 
 GROUP* GetGroup( UINT8 ubGroupID )
 {
-	GROUP *curr;
-	curr = gpGroupList;
-	while( curr )
+	FOR_ALL_GROUPS(curr)
 	{
 		if( curr->ubGroupID == ubGroupID )
 			return curr;
-		curr = curr->next;
 	}
 	return NULL;
 }
@@ -854,7 +851,6 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 
 static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 {
-	GROUP *curr;
 	GROUP *pPlayerDialogGroup = NULL;
 	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
@@ -866,7 +862,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	if( gfWorldLoaded )
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
-		curr = FindMovementGroupInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, TRUE );
+		const GROUP* const curr = FindMovementGroupInSector((UINT8)gWorldSectorX, (UINT8)gWorldSectorY, TRUE);
 		if( !gbWorldSectorZ && PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, gbWorldSectorZ ) &&
 				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
 				curr )
@@ -892,8 +888,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	HandleOtherGroupsArrivingSimultaneously( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
 
-	curr = gpGroupList;
-	while( curr )
+	FOR_ALL_GROUPS(curr)
 	{
 		if( curr->fPlayer && curr->ubGroupSize )
 		{
@@ -938,7 +933,6 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 				}
 			}
 		}
-		curr = curr->next;
 	}
 
 	if( pGroup->fPlayer )
@@ -1003,15 +997,14 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 		if( gubNumGroupsArrivedSimultaneously )
 		{ //Because this is a battle case, clear all the group flags
-			curr = gpGroupList;
-			while( curr && gubNumGroupsArrivedSimultaneously )
+			FOR_ALL_GROUPS(curr)
 			{
+				if (gubNumGroupsArrivedSimultaneously == 0) break;
 				if( curr->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY )
 				{
 					curr->uiFlags &= ~GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
 					gubNumGroupsArrivedSimultaneously--;
 				}
-				curr = curr->next;
 			}
 		}
 
@@ -1784,11 +1777,9 @@ static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup);
 //groups so that they arrive at the same time (which is the time the final group would arrive).
 static void PrepareGroupsForSimultaneousArrival(void)
 {
-	GROUP *pGroup;
 	UINT32 uiLatestArrivalTime = 0;
 
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{ //For all of the groups that haven't arrived yet, determine which one is going to take the longest.
 		if( pGroup != gpPendingSimultaneousGroup
 			  && pGroup->fPlayer
@@ -1800,11 +1791,9 @@ static void PrepareGroupsForSimultaneousArrival(void)
 			uiLatestArrivalTime = max( pGroup->uiArrivalTime, uiLatestArrivalTime );
 			pGroup->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
 		}
-		pGroup = pGroup->next;
 	}
 	//Now, go through the list again, and reset their arrival event to the latest arrival time.
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->uiFlags & GROUPFLAG_MARKER )
 		{
@@ -1827,11 +1816,10 @@ static void PrepareGroupsForSimultaneousArrival(void)
 
 			pGroup->uiFlags &= ~GROUPFLAG_MARKER;
 		}
-		pGroup = pGroup->next;
 	}
 	//We still have the first group that has arrived.  Because they are set up to be in the destination
 	//sector, we will "warp" them back to the last sector, and also setup a new arrival time for them.
-	pGroup = gpPendingSimultaneousGroup;
+	GROUP* const pGroup = gpPendingSimultaneousGroup;
 	pGroup->ubNextX = pGroup->ubSectorX;
 	pGroup->ubNextY = pGroup->ubSectorY;
 	pGroup->ubSectorX = pGroup->ubPrevX;
@@ -1876,7 +1864,6 @@ static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue);
 //to do so, then we will set up the gui, and postpone the prebattle interface.
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 {
-	GROUP *pGroup;
 	UINT8 ubNumNearbyGroups = 0;
 
 	//If the user has already been asked, then don't ask the question again!
@@ -1893,8 +1880,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 
 	//Count the number of groups that are scheduled to arrive in the same sector and are currently
 	//adjacent to the sector in question.
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup != pFirstGroup && pGroup->fPlayer && pGroup->fBetweenSectors &&
 			  pGroup->ubNextX == pFirstGroup->ubSectorX && pGroup->ubNextY == pFirstGroup->ubSectorY &&
@@ -1904,7 +1890,6 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 			pGroup->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED;
 			ubNumNearbyGroups++;
 		}
-		pGroup = pGroup->next;
 	}
 
 	if( ubNumNearbyGroups )
@@ -1972,9 +1957,7 @@ static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue)
 
 static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup)
 {
-	GROUP *pGroup;
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer )
 		{ //then check to see if this group will arrive in next sector before the player group.
@@ -1996,7 +1979,6 @@ static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup)
 				}
 			}
 		}
-		pGroup = pGroup->next;
 	}
 }
 
@@ -2689,11 +2671,9 @@ INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup
 //Counts the number of live mercs in any given sector.
 UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
 	UINT8 ubNumMercs = 0;
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->fPlayer && !pGroup->fBetweenSectors)
 		{
@@ -2712,18 +2692,15 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 				}
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	return ubNumMercs;
 }
 
 UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
 	UINT8 ubNumGroups = 0;
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->fPlayer && !pGroup->fBetweenSectors)
 		{
@@ -2742,7 +2719,6 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 				}
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	return ubNumGroups;
 }
@@ -2952,10 +2928,8 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 
 void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->fPlayer && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
 			  pGroup->ubSectorZ == gbWorldSectorZ && !pGroup->fBetweenSectors )
@@ -2973,31 +2947,22 @@ void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UIN
 				pPlayer = pPlayer->next;
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	CheckAndHandleUnloadingOfCurrentWorld();
 }
 
 
-static BOOLEAN SaveEnemyGroupStruct(HWFILE hFile, GROUP* pGroup);
-static BOOLEAN SavePlayerGroupList(HWFILE hFile, GROUP* pGroup);
-static BOOLEAN SaveWayPointList(HWFILE hFile, GROUP* pGroup);
+static BOOLEAN SaveEnemyGroupStruct(HWFILE hFile, const GROUP* pGroup);
+static BOOLEAN SavePlayerGroupList(HWFILE hFile, const GROUP* pGroup);
+static BOOLEAN SaveWayPointList(HWFILE hFile, const GROUP* pGroup);
 
 
 BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 {
-	GROUP *pGroup=NULL;
 	UINT32	uiNumberOfGroups=0;
 
-	pGroup = gpGroupList;
-
 	//Count the number of active groups
-	while( pGroup )
-	{
-		uiNumberOfGroups++;
-		pGroup = pGroup->next;
-	}
-
+	CFOR_ALL_GROUPS(pGroup) ++uiNumberOfGroups;
 
 	// Save the number of movement groups to the saved game file
 	if (!FileWrite(hFile, &uiNumberOfGroups, sizeof(UINT32)))
@@ -3006,11 +2971,8 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 		return( FALSE );
 	}
 
-
-	pGroup = gpGroupList;
-
 	//Loop through the linked lists and add each node
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		// Save each node in the LL
 		if (!FileWrite(hFile, pGroup, sizeof(GROUP)))
@@ -3044,10 +3006,6 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile )
 
 		//Save the waypoint list for the group, if they have one
 		SaveWayPointList( hFile, pGroup );
-
-
-
-		pGroup = pGroup->next;
 	}
 
 	// Save the unique id mask
@@ -3156,8 +3114,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 	//@@@ TEMP!
 	//Rebuild the uniqueIDMask as a very old bug broke the uniqueID assignments in extremely rare cases.
 	memset( uniqueIDMask, 0, sizeof( UINT32 ) * 8 );
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->fPlayer )
 		{
@@ -3189,7 +3146,6 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 		bit = pGroup->ubGroupID % 32;
 		mask = 1 << bit;
 		uniqueIDMask[ index ] += mask;
-		pGroup = pGroup->next;
 	}
 
 	return Ret;
@@ -3197,7 +3153,7 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
 
 
 //Saves the Player's group list to the saved game file
-static BOOLEAN SavePlayerGroupList(HWFILE hFile, GROUP* pGroup)
+static BOOLEAN SavePlayerGroupList(const HWFILE hFile, const GROUP* const pGroup)
 {
 	UINT32	uiNumberOfNodesInList=0;
 	PLAYERGROUP		*pTemp=NULL;
@@ -3268,7 +3224,7 @@ static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 
 
 //Saves the enemy group struct to the saved game struct
-static BOOLEAN SaveEnemyGroupStruct(HWFILE hFile, GROUP* pGroup)
+static BOOLEAN SaveEnemyGroupStruct(const HWFILE hFile, const GROUP* const pGroup)
 {
 	//Save the enemy struct info to the saved game file
 	if (!FileWrite(hFile, pGroup->pEnemyGroup, sizeof(ENEMYGROUP)))
@@ -3355,7 +3311,7 @@ static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier
 }
 
 
-static BOOLEAN SaveWayPointList(HWFILE hFile, GROUP* pGroup)
+static BOOLEAN SaveWayPointList(const HWFILE hFile, const GROUP* const pGroup)
 {
 	UINT32	cnt=0;
 	UINT32	uiNumberOfWayPoints=0;
@@ -3596,9 +3552,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 
 GROUP* FindMovementGroupInSector( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fPlayer )
 {
-	GROUP *pGroup;
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->fPlayer )
 		{
@@ -3613,8 +3567,6 @@ GROUP* FindMovementGroupInSector( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fPla
 		}
 		else if( !fPlayer && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && !pGroup->ubSectorZ )
 			return pGroup;
-
-		pGroup = pGroup->next;
 	}
 	return NULL;
 }
@@ -3645,7 +3597,8 @@ BOOLEAN GroupAtFinalDestination( GROUP *pGroup )
 	return FALSE;
 }
 
-WAYPOINT *GetFinalWaypoint( GROUP *pGroup )
+
+WAYPOINT* GetFinalWaypoint(const GROUP* const pGroup)
 {
 	WAYPOINT *wp;
 
@@ -4551,7 +4504,7 @@ BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN GroupHasInTransitDeadOrPOWMercs( GROUP *pGroup )
+BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP* const pGroup)
 {
 	PLAYERGROUP *pPlayer;
 

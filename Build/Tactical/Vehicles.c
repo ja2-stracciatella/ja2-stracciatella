@@ -1227,7 +1227,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN DoesVehicleGroupHaveAnyPassengers( GROUP *pGroup )
+BOOLEAN DoesVehicleGroupHaveAnyPassengers(const GROUP* const pGroup)
 {
 	const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
 #ifdef JA2BETAVERSION

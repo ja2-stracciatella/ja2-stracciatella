@@ -445,7 +445,6 @@ static void RenderStationaryGroups(void)
 
 static void RenderMovingGroupsAndMercs(void)
 {
-	GROUP *pGroup;
 	INT32 x, y;
 	UINT8 ubNumTroops, ubNumAdmins, ubNumElites;
 	float ratio;
@@ -459,8 +458,7 @@ static void RenderMovingGroupsAndMercs(void)
 	SetFontShadow( FONT_NEARBLACK );
 
 	//Render groups that are moving...
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( pGroup->ubGroupSize && !pGroup->fVehicle)
 		{
@@ -547,8 +545,6 @@ static void RenderMovingGroupsAndMercs(void)
 				mprintf( x+7, y+7, L"%d", pGroup->ubGroupSize );
 			}
 		}
-
-		pGroup = pGroup->next;
 	}
 }
 
@@ -632,14 +628,12 @@ static void RenderInfoInSector(void)
 	if( !gbViewLevel )
 	{
 		SECTORINFO *pSector;
-		GROUP *pGroup;
 		UINT8 ubNumAdmins=0, ubNumTroops=0, ubNumElites=0, ubAdminsInBattle=0, ubTroopsInBattle=0, ubElitesInBattle=0, ubNumGroups=0;
 
 		pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
 
 		//Now count the number of mobile groups in the sector.
-		pGroup = gpGroupList;
-		while( pGroup )
+		CFOR_ALL_GROUPS(pGroup)
 		{
 			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY )
 			{
@@ -651,7 +645,6 @@ static void RenderInfoInSector(void)
 				ubAdminsInBattle += pGroup->pEnemyGroup->ubAdminsInBattle;
 				ubNumGroups++;
 			}
-			pGroup = pGroup->next;
 		}
 		ClearViewerRegion(280, 375, SCREEN_WIDTH, SCREEN_HEIGHT);
 		mprintf( 280, yp, L"SECTOR INFO:  %c%d  (ID: %d)", ubSectorY + 'A' - 1, ubSectorX, SECTOR( ubSectorX, ubSectorY ) );
@@ -1475,7 +1468,7 @@ static void PrintEnemyPopTable(void)
 	}
 
 	// count moving enemies
-	for (GROUP* pGroup = gpGroupList; pGroup; pGroup = pGroup->next)
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fDebugGroup )
 		{
@@ -1790,7 +1783,6 @@ static void BlitGroupIcon(UINT8 ubIconType, UINT8 ubIconColor, UINT32 uiX, UINT3
 static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UINT8 ubSectorX, UINT8 ubSectorY)
 {
 	SECTORINFO *pSector;
-	GROUP *pGroup;
 	INT32 iDesired, iSurplus;
 	UINT8 ubGroupCnt = 0;
 	UINT8 ubSectorID;
@@ -1827,7 +1819,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 
 		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
 		{
-			pGroup = GetGroup( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID );
+			const GROUP* const pGroup = GetGroup(gGarrisonGroup[pSector->ubGarrisonID].ubPendingGroupID);
 			if( pGroup )
 			{
 				mprintf( iScreenX, iScreenY, L"%d reinforcements on route from group %d in %c%d", pGroup->ubGroupSize, pGroup->ubGroupID,
@@ -1852,8 +1844,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 
 
 	// handle mobile enemies anchored in this sector
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle )
 		{
@@ -1963,8 +1954,6 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 				}
 			}
 		}
-
-		pGroup = pGroup->next;
 	}
 }
 

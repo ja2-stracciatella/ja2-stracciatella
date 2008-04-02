@@ -3621,7 +3621,6 @@ static void UnPauseAfterSaveGame(void)
 
 static void TruncateStrategicGroupSizes(void)
 {
-	GROUP *pGroup;
 	SECTORINFO *pSector;
 	INT32 i;
 	for( i = SEC_A1; i < SEC_P16; i++ )
@@ -3726,8 +3725,7 @@ static void TruncateStrategicGroupSizes(void)
 		}
 	}
 	//Enemy groups
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer )
 		{
@@ -3781,7 +3779,6 @@ static void TruncateStrategicGroupSizes(void)
 				}
 			}
 		}
-		pGroup = pGroup->next;
 	}
 }
 

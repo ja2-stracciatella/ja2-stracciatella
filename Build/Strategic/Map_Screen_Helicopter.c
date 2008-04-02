@@ -1605,8 +1605,7 @@ BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-
-BOOLEAN IsGroupTheHelicopterGroup( GROUP *pGroup )
+BOOLEAN IsGroupTheHelicopterGroup(const GROUP* const pGroup)
 {
 	const VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
 	return

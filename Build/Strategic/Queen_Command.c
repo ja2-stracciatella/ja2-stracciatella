@@ -105,21 +105,18 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	else
 	{
 		SECTORINFO *pSector;
-		GROUP *pGroup;
 
 		//Count stationary hostiles
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
 
 		//Count mobile enemies
-		pGroup = gpGroupList;
-		while( pGroup )
+		CFOR_ALL_GROUPS(pGroup)
 		{
 			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 			{
 				ubNumHostiles += pGroup->ubGroupSize;
 			}
-			pGroup = pGroup->next;
 		}
 	}
 
@@ -146,21 +143,18 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	else
 	{
 		SECTORINFO *pSector;
-		GROUP *pGroup;
 
 		//Count stationary enemies
 		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
 		//Count mobile enemies
-		pGroup = gpGroupList;
-		while( pGroup )
+		CFOR_ALL_GROUPS(pGroup)
 		{
 			if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 			{
 				ubNumEnemies += pGroup->ubGroupSize;
 			}
-			pGroup = pGroup->next;
 		}
 	}
 
@@ -170,21 +164,18 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	SECTORINFO *pSector;
-	GROUP *pGroup;
 	UINT8 ubNumTroops;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
-		pGroup = pGroup->next;
 	}
 	return ubNumTroops;
 }
@@ -213,21 +204,18 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	GROUP *pGroup;
 	SECTORINFO *pSector;
 	UINT8 ubNumTroops;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	ubNumTroops = 0;
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
-		pGroup = pGroup->next;
 	}
 
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
@@ -242,15 +230,13 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 
 static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
-	GROUP *pGroup;
 	SECTORINFO *pSector;
 	Assert( sSectorX >= 1 && sSectorX <= 16 );
 	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	//Now count the number of mobile groups in the sector.
 	*pubNumTroops = *pubNumElites = *pubNumAdmins = 0;
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
 		{
@@ -258,7 +244,6 @@ static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UIN
 			*pubNumElites += pGroup->pEnemyGroup->ubNumElites;
 			*pubNumAdmins += pGroup->pEnemyGroup->ubNumAdmins;
 		}
-		pGroup = pGroup->next;
 	}
 
 	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
@@ -311,8 +296,6 @@ static BOOLEAN IsAnyOfTeamOKInSector(const INT8 team)
 
 void EndTacticalBattleForEnemy()
 {
-	GROUP *pGroup;
-
 	//Clear enemies in battle for all stationary groups in the sector.
 	if( gbWorldSectorZ > 0 )
 	{
@@ -340,8 +323,7 @@ void EndTacticalBattleForEnemy()
 	gfProfiledEnemyAdded = FALSE;
 
 	//Clear enemies in battle for all mobile groups in the sector.
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY )
 		{
@@ -349,7 +331,6 @@ void EndTacticalBattleForEnemy()
 			pGroup->pEnemyGroup->ubElitesInBattle = 0;
 			pGroup->pEnemyGroup->ubAdminsInBattle = 0;
 		}
-		pGroup = pGroup->next;
 	}
 
 	/* Check to see if any of our mercs have abandoned the militia during a
@@ -400,7 +381,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 		//The player was actually in the sector first, and the enemy doesn't use reinforced placements
 		HandleArrivalOfReinforcements( gpBattleGroup );
 		//It is possible that other enemy groups have also arrived.  Add them in the same manner.
-		for (GROUP* pGroup = gpGroupList; pGroup; pGroup = pGroup->next)
+		FOR_ALL_GROUPS(pGroup)
 		{
 			if( pGroup != gpBattleGroup && !pGroup->fPlayer && !pGroup->fVehicle &&
 				  pGroup->ubSectorX == gpBattleGroup->ubSectorX &&
@@ -501,8 +482,10 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	//Now, process all of the groups and search for both enemy and player groups in the sector.
 	//For enemy groups, we fill up the slots until we have none left or all of the groups have been
 	//processed.
-	for (GROUP* pGroup = gpGroupList; pGroup && sNumSlots; pGroup = pGroup->next)
+	FOR_ALL_GROUPS(pGroup)
 	{
+		if (sNumSlots == 0) break;
+
 		if( !pGroup->fPlayer && !pGroup->fVehicle &&
 				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //Process enemy group in sector.
@@ -573,8 +556,10 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	//in a mobile group, but only for the ones that were assigned from the
 	sNumSlots = 32 - ubStationaryEnemies;
 
-	for (const GROUP* g = gpGroupList; g && sNumSlots; g = g->next)
+	CFOR_ALL_GROUPS(g)
 	{
+		if (sNumSlots == 0) break;
+
 		if (g->fPlayer)  continue;
 		if (g->fVehicle) continue;
 		if (g->ubSectorX != gWorldSectorX || g->ubSectorY != gWorldSectorY || gbWorldSectorZ) continue;
@@ -1052,7 +1037,6 @@ void AddPossiblePendingEnemiesToBattle()
 {
 	UINT8 ubSlots, ubNumAvailable;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins;
-	GROUP *pGroup;
   if( !gfPendingEnemies )
 	{ //Optimization.  No point in checking if we know that there aren't any more enemies that can
 		//be added to this battle.  This changes whenever a new enemy group arrives at the scene.
@@ -1063,9 +1047,11 @@ void AddPossiblePendingEnemiesToBattle()
 	{ //no available slots to add enemies to.  Try again later...
 		return;
 	}
-	pGroup = gpGroupList;
-	while( pGroup && ubSlots )
+
+	FOR_ALL_GROUPS(pGroup)
 	{
+		if (ubSlots == 0) break;
+
 		if( !pGroup->fPlayer && !pGroup->fVehicle && pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //This enemy group is currently in the sector.
 			ubNumElites = ubNumTroops = ubNumAdmins = 0;
@@ -1129,7 +1115,6 @@ void AddPossiblePendingEnemiesToBattle()
 				AddEnemiesToBattle( pGroup, ubStrategicInsertionCode, ubNumAdmins, ubNumTroops, ubNumElites, FALSE );
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	if( ubSlots )
 	{ //After going through the process, we have finished with some free slots and no more enemies to add.

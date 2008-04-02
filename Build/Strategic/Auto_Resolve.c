@@ -667,7 +667,6 @@ static void RefreshMerc(SOLDIERTYPE* pSoldier)
 static void AssociateEnemiesWithStrategicGroups(void)
 {
 	SECTORINFO *pSector;
-	GROUP *pGroup;
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT8 ubNumElitesInGroup, ubNumTroopsInGroup, ubNumAdminsInGroup;
 	INT32 i;
@@ -716,8 +715,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	}
 
 	//Now assign the rest of the soldiers to groups
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if( !pGroup->fPlayer && pGroup->ubSectorX == gpAR->ubSectorX && pGroup->ubSectorY == gpAR->ubSectorY )
 		{
@@ -752,7 +750,6 @@ static void AssociateEnemiesWithStrategicGroups(void)
 				}
 			}
 		}
-		pGroup = pGroup->next;
 	}
 }
 
@@ -2511,7 +2508,6 @@ static void CalculateRowsAndColumns(void);
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
 {
-	GROUP *pGroup;
 	PLAYERGROUP *pPlayer;
 	Assert( gpAR->ubSectorX >= 1 && gpAR->ubSectorX <= 16 );
 	Assert( gpAR->ubSectorY >= 1 && gpAR->ubSectorY <= 16 );
@@ -2541,8 +2537,7 @@ static void CalculateAutoResolveInfo(void)
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 	gpAR->ubMercs = 0;
-	pGroup = gpGroupList;
-	while( pGroup )
+	CFOR_ALL_GROUPS(pGroup)
 	{
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
@@ -2571,7 +2566,6 @@ static void CalculateAutoResolveInfo(void)
 				pPlayer = pPlayer->next;
 			}
 		}
-		pGroup = pGroup->next;
 	}
 	gpAR->iNumMercFaces = gpAR->ubMercs;
 	gpAR->iActualMercFaces = gpAR->ubMercs;

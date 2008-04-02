@@ -208,7 +208,7 @@ void InitializeHelicopter( void );
 
 BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY );
 
-BOOLEAN IsGroupTheHelicopterGroup( GROUP *pGroup );
+BOOLEAN IsGroupTheHelicopterGroup(const GROUP*);
 
 INT16 GetNumSafeSectorsInPath( void );
 
