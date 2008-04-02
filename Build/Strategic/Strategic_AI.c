@@ -696,11 +696,8 @@ static void ValidateLargeGroup(GROUP* pGroup)
 #ifdef JA2BETAVERSION
 static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 {
-	GROUP *pGroup, *pTempGroup = NULL;
 	PLAYERGROUP *pPlayer;
-	BOOLEAN fRemoveSoldierFromThisGroup = FALSE;
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS_SAFE(pGroup)
 	{
 		if( pGroup->fPlayer )
 		{
@@ -711,19 +708,12 @@ static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 				{
 					if( pSoldier->ubGroupID != pGroup->ubGroupID )
 					{
-						fRemoveSoldierFromThisGroup = TRUE;
-						pTempGroup = pGroup;
+						RemovePlayerFromPGroup(pGroup, pSoldier);
 					}
 					break;
 				}
 				pPlayer = pPlayer->next;
 			}
-		}
-		pGroup = pGroup->next;
-		if( fRemoveSoldierFromThisGroup )
-		{
-			fRemoveSoldierFromThisGroup = FALSE;
-			RemovePlayerFromPGroup( pTempGroup, pSoldier );
 		}
 	}
 }
@@ -3385,14 +3375,11 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 
 	if( ubSAIVersion < 28 )
 	{
-		GROUP *pNext;
 		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( 3, 16 ) ].fEnemyControlled )
 		{ //Eliminate all enemy groups in this sector, because the player owns the sector, and it is not
 			//possible for them to spawn there!
-			GROUP* pGroup = gpGroupList;
-			while( pGroup )
+			FOR_ALL_GROUPS_SAFE(pGroup)
 			{
-				pNext = pGroup->next;
 				if( !pGroup->fPlayer )
 				{
 					if( pGroup->ubSectorX == 3 && pGroup->ubSectorY == 16 && !pGroup->ubPrevX && !pGroup->ubPrevY )
@@ -3401,7 +3388,6 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 						RemovePGroup( pGroup );
 					}
 				}
-				pGroup = pNext;
 			}
 		}
 	}
@@ -3418,10 +3404,8 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	EvolveQueenPriorityPhase( TRUE );
 
 	//Count and correct the floating groups
-	GROUP* pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS_SAFE(pGroup)
 	{
-		GROUP* const next = pGroup->next; //store the next node as pGroup could be deleted!
 		if( !pGroup->fPlayer )
 		{
 			if( !pGroup->fBetweenSectors )
@@ -3435,7 +3419,6 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 				}
 			}
 		}
-		pGroup = next; //advance the node
 	}
 
 	#ifdef JA2BETAVERSION

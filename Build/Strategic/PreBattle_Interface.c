@@ -1628,17 +1628,10 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* pGroup, BOOLEAN fExitVe
 
 static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 {
-	GROUP *pGroup, *pNextGroup;
-
 	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.  Needed for
 	// the tactical placement interface to work in case of simultaneous multi-vehicle arrivals!
-
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS_SAFE(pGroup)
 	{
-		// store ptr to next group in list, temporary groups will get deallocated as soon as the merc in it is put on a squad!
-		pNextGroup = pGroup->next;
-
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
 			// the helicopter group CAN be involved, if it's on the ground, in which case everybody must get out of it
@@ -1655,8 +1648,6 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 				PutNonSquadMercsInPlayerGroupOnSquads( pGroup, fExitVehicles );
 			}
 		}
-
-		pGroup = pNextGroup;
 	}
 }
 

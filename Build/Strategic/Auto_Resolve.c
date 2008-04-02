@@ -348,7 +348,6 @@ static void EliminateAllFriendlies(void)
 
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	GROUP *pGroup, *pDeleteGroup;
 	SECTORINFO *pSector;
 	INT32 i;
 	UINT8 ubNumEnemies[ NUM_ENEMY_RANKS ];
@@ -357,7 +356,6 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 	//Clear any possible battle locator
 	gfBlitBattleSectorLocator = FALSE;
 
-	pGroup = gpGroupList;
 	pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
 
 
@@ -387,19 +385,14 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 		pSector->ubNumAdmins = 0;
 		pSector->ubNumCreatures = 0;
 		//Remove the mobile forces here, but only if battle is over.
-		while( pGroup )
+		FOR_ALL_GROUPS_SAFE(pGroup)
 		{
 			if( !pGroup->fPlayer && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY )
 			{
 				ClearPreviousAIGroupAssignment( pGroup );
-				pDeleteGroup = pGroup;
-				pGroup = pGroup->next;
-				if( gpBattleGroup == pDeleteGroup )
-					gpBattleGroup = NULL;
-				RemovePGroup( pDeleteGroup );
+				if (gpBattleGroup == pGroup) gpBattleGroup = NULL;
+				RemovePGroup(pGroup);
 			}
-			else
-				pGroup = pGroup->next;
 		}
 		if( gpBattleGroup )
 		{

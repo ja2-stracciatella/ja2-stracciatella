@@ -1644,15 +1644,15 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 
 			if( gubNumGroupsArrivedSimultaneously )
 			{
-				for (GROUP* g = gpGroupList; g != NULL && gubNumGroupsArrivedSimultaneously != 0;)
+				FOR_ALL_GROUPS_SAFE(g)
 				{
-					GROUP* const next = g->next;
+					if (gubNumGroupsArrivedSimultaneously == 0) break;
+
 					if (g->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY)
 					{
 						gubNumGroupsArrivedSimultaneously--;
 						HandleNonCombatGroupArrival(g, FALSE, FALSE);
 					}
-					g = next;
 				}
 			}
 		}
@@ -3626,14 +3626,11 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup);
 //ResetMovementForEnemyGroup() for more details on what the resetting does.
 void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	GROUP *pGroup, *next;
 	INT16 sSectorX, sSectorY, sSectorZ;
 
 	GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
-	pGroup = gpGroupList;
-	while( pGroup )
+	FOR_ALL_GROUPS_SAFE(pGroup)
 	{
-		next = pGroup->next;
 		if( !pGroup->fPlayer )
 		{
 			if( pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
@@ -3641,7 +3638,6 @@ void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY )
 				ResetMovementForEnemyGroup( pGroup );
 			}
 		}
-		pGroup = next;
 	}
 }
 

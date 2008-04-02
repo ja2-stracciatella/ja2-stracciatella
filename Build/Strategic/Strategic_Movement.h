@@ -133,7 +133,7 @@ extern GROUP *gpGroupList;
 #define CFOR_ALL_GROUPS(iter) BASE_FOR_ALL_GROUPS(const GROUP*, iter)
 
 #define BASE_FOR_ALL_NON_PLAYER_GROUPS(type, iter) \
-	BASE_FOR_ALL_GROUPS(type, iter)              \
+	BASE_FOR_ALL_GROUPS(type, iter)                  \
 		if (iter->fPlayer) continue; else
 #define FOR_ALL_NON_PLAYER_GROUPS(iter)  BASE_FOR_ALL_NON_PLAYER_GROUPS(      GROUP*, iter)
 #define CFOR_ALL_NON_PLAYER_GROUPS(iter) BASE_FOR_ALL_NON_PLAYER_GROUPS(const GROUP*, iter)
@@ -143,6 +143,10 @@ extern GROUP *gpGroupList;
 		if (!iter->fPlayer) continue; else
 #define FOR_ALL_PLAYER_GROUPS(iter)  BASE_FOR_ALL_PLAYER_GROUPS(      GROUP*, iter)
 #define CFOR_ALL_PLAYER_GROUPS(iter) BASE_FOR_ALL_PLAYER_GROUPS(const GROUP*, iter)
+
+#define FOR_ALL_GROUPS_SAFE(iter)                                                    \
+	for (GROUP* iter = gpGroupList, * iter##__next; iter != NULL; iter = iter##__next) \
+		if (iter##__next = iter->next, FALSE) {} else                                    \
 
 
 //General utility functions
