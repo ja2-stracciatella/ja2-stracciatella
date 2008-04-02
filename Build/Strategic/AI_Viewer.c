@@ -1454,7 +1454,6 @@ static void PrintEnemyPopTable(void)
 	UINT8		ubEnemyRank;
 	UINT8		ubEnemyType;
 	SECTORINFO *pSector;
-	GROUP *pGroup;
 	wchar_t wTempString[10];
 
 
@@ -1476,8 +1475,7 @@ static void PrintEnemyPopTable(void)
 	}
 
 	// count moving enemies
-	pGroup = gpGroupList;
-	while( pGroup )
+	for (GROUP* pGroup = gpGroupList; pGroup; pGroup = pGroup->next)
 	{
 		if( !pGroup->fPlayer && !pGroup->fDebugGroup )
 		{
@@ -1500,8 +1498,6 @@ static void PrintEnemyPopTable(void)
 			usEnemyPopTable[ ENEMY_RANK_TROOP ][ ubEnemyType ] += pGroup->pEnemyGroup->ubNumTroops;
 			usEnemyPopTable[ ENEMY_RANK_ELITE ][ ubEnemyType ] += pGroup->pEnemyGroup->ubNumElites;
 		}
-
-		pGroup = pGroup->next;
 	}
 
 
