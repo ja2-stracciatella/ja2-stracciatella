@@ -3067,39 +3067,23 @@ static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 }
 
 
-//Saves the enemy group struct to the saved game struct
-static BOOLEAN SaveEnemyGroupStruct(const HWFILE hFile, const GROUP* const pGroup)
+// Saves the enemy group struct to the saved game file
+static BOOLEAN SaveEnemyGroupStruct(const HWFILE f, const GROUP* const g)
 {
-	//Save the enemy struct info to the saved game file
-	if (!FileWrite(hFile, pGroup->pEnemyGroup, sizeof(ENEMYGROUP)))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return FileWrite(f, g->pEnemyGroup, sizeof(ENEMYGROUP));
 }
 
 
-//Loads the enemy group struct from the saved game file
-static BOOLEAN LoadEnemyGroupStructFromSavedGame(HWFILE hFile, GROUP* pGroup)
+// Loads the enemy group struct from the saved game file
+static BOOLEAN LoadEnemyGroupStructFromSavedGame(const HWFILE f, GROUP* const g)
 {
-	//Alllocate memory for the enemy struct
-	ENEMYGROUP* const pEnemyGroup = MALLOCZ(ENEMYGROUP);
-	if( pEnemyGroup == NULL )
-		return( FALSE );
+	ENEMYGROUP* const eg = MALLOCZ(ENEMYGROUP);
+	if (eg == NULL) return FALSE;
 
-	//Load the enemy struct
-	if (!FileRead(hFile, pEnemyGroup, sizeof(ENEMYGROUP)))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
+	if (!FileRead(f, eg, sizeof(ENEMYGROUP))) return FALSE;
 
-	//Assign the struct to the group list
-	pGroup->pEnemyGroup = pEnemyGroup;
-
-	return( TRUE );
+	g->pEnemyGroup = eg;
+	return TRUE;
 }
 
 
