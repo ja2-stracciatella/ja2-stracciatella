@@ -2961,130 +2961,56 @@ static BOOLEAN LoadPlayerGroupList(HWFILE f, GROUP*);
 static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup);
 
 
-BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile )
+BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
 {
-	GROUP *pGroup=NULL;
-	UINT32	uiNumberOfGroups=0;
-	UINT32	cnt;
-	UINT32 bit, index, mask;
-	UINT8  ubNumPlayerGroupsEmpty = 0;
-	UINT8  ubNumEnemyGroupsEmpty = 0;
-	UINT8  ubNumPlayerGroupsFull = 0;
-	UINT8  ubNumEnemyGroupsFull = 0;
+	// Delete the existing group list
+	while (gpGroupList) RemoveGroupFromList(gpGroupList);
 
-
-
-	//delete the existing group list
-	while( gpGroupList )
-		RemoveGroupFromList( gpGroupList );
-
-
-	//load the number of nodes in the list
-	if (!FileRead(hFile, &uiNumberOfGroups, sizeof(UINT32)))
-	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
-	}
-
-	pGroup = gpGroupList;
+	// Load the number of nodes in the list
+	UINT32 uiNumberOfGroups;
+	if (!FileRead(f, &uiNumberOfGroups, sizeof(UINT32))) return FALSE;
 
 	//loop through all the nodes and add them to the LL
-	for( cnt=0; cnt< uiNumberOfGroups; cnt++ )
+	GROUP** anchor = &gpGroupList;
+	for (UINT32 i = uiNumberOfGroups; i != 0; --i)
 	{
 		//allocate memory for the node
-		GROUP* const pTemp = MALLOCZ(GROUP);
-		if( pTemp == NULL )
-			return( FALSE );
+		GROUP* const g = MALLOCZ(GROUP);
+		if (g == NULL) return FALSE;
 
-		//Read in the node
-		if (!FileRead(hFile, pTemp, sizeof(GROUP)))
+		if (!FileRead(f, g, sizeof(GROUP))) return FALSE;
+		g->next = NULL;
+
+		if (g->fPlayer)
 		{
-			//Error Writing size of L.L. to disk
-			return( FALSE );
+			// If there is a player list, add it
+			if (g->ubGroupSize) LoadPlayerGroupList(f, g);
+		}
+		else // Else it's an enemy group
+		{
+			LoadEnemyGroupStructFromSavedGame(f, g);
 		}
 
+		LoadWayPointList(f, g);
 
-		//
-		// Add either the pointer or the linked list.
-		//
-
-		if( pTemp->fPlayer )
-		{
-			//if there is a player list, add it
-			if( pTemp->ubGroupSize )
-			{
-				//Save the player group list
-				LoadPlayerGroupList(hFile, pTemp);
-			}
-		}
-		else //else its an enemy group
-		{
-			LoadEnemyGroupStructFromSavedGame( hFile, pTemp );
-		}
-
-
-		//Save the waypoint list for the group, if they have one
-		LoadWayPointList( hFile, pTemp );
-
-
-		pTemp->next = NULL;
-
-		//add the node to the list
-
-		//if its the firs node
-		if( cnt == 0 )
-		{
-			gpGroupList = pTemp;
-			pGroup = gpGroupList;
-		}
-		else
-		{
-			pGroup->next = pTemp;
-			pGroup = pGroup->next;
-		}
+		// Add the node to the list
+		*anchor = g;
+		anchor  = &g->next;
 	}
-
-	// Load the unique id mask
-	BOOLEAN Ret = FileRead(hFile, uniqueIDMask, sizeof(UINT32) * 8);
 
 	//@@@ TEMP!
 	//Rebuild the uniqueIDMask as a very old bug broke the uniqueID assignments in extremely rare cases.
-	memset( uniqueIDMask, 0, sizeof( UINT32 ) * 8 );
-	CFOR_ALL_GROUPS(pGroup)
+	memset(uniqueIDMask, 0, sizeof(uniqueIDMask));
+	CFOR_ALL_GROUPS(g)
 	{
-		if( pGroup->fPlayer )
-		{
-			if( pGroup->ubGroupSize )
-			{
-				ubNumPlayerGroupsFull++;
-			}
-			else
-			{
-				ubNumPlayerGroupsEmpty++;
-			}
-		}
-		else
-		{
-			if( pGroup->ubGroupSize )
-			{
-				ubNumEnemyGroupsFull++;
-			}
-			else
-			{
-				ubNumEnemyGroupsEmpty++;
-			}
-		}
-		if( ubNumPlayerGroupsEmpty || ubNumEnemyGroupsEmpty )
-		{
-			//report error?
-		}
-		index = pGroup->ubGroupID / 32;
-		bit = pGroup->ubGroupID % 32;
-		mask = 1 << bit;
-		uniqueIDMask[ index ] += mask;
+		const UINT32 index = g->ubGroupID / 32;
+		const UINT32 bit   = g->ubGroupID % 32;
+		const UINT32 mask  = 1 << bit;
+		uniqueIDMask[index] += mask;
 	}
 
-	return Ret;
+	// Skip over saved unique id mask
+	return FileSeek(f, 32, FILE_SEEK_FROM_CURRENT);
 }
 
 
