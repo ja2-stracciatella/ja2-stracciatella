@@ -3139,45 +3139,21 @@ static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier
 }
 
 
-static BOOLEAN SaveWayPointList(const HWFILE hFile, const GROUP* const pGroup)
+static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
 {
-	UINT32	cnt=0;
-	UINT32	uiNumberOfWayPoints=0;
-	WAYPOINT *pWayPoints = pGroup->pWaypoints;
-
-	//loop trhough and count all the node in the waypoint list
-	while( pWayPoints != NULL )
+	// Save the number of waypoints
+	UINT32 uiNumberOfWayPoints = 0;
+	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
-		uiNumberOfWayPoints++;
-		pWayPoints = pWayPoints->next;
+		++uiNumberOfWayPoints;
 	}
+	if (!FileWrite(f, &uiNumberOfWayPoints, sizeof(UINT32))) return FALSE;
 
-	//Save the number of waypoints
-	if (!FileWrite(hFile, &uiNumberOfWayPoints, sizeof(UINT32)))
+	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
-		//Error Writing size of L.L. to disk
-		return( FALSE );
+		if (!FileWrite(f, w, sizeof(WAYPOINT))) return FALSE;
 	}
-
-
-	if( uiNumberOfWayPoints )
-	{
-		pWayPoints = pGroup->pWaypoints;
-		for(cnt=0; cnt<uiNumberOfWayPoints; cnt++)
-		{
-			//Save the waypoint node
-			if (!FileWrite(hFile, pWayPoints, sizeof(WAYPOINT)))
-			{
-				//Error Writing size of L.L. to disk
-				return( FALSE );
-			}
-
-			//Advance to the next waypoint
-			pWayPoints = pWayPoints->next;
-		}
-	}
-
-	return( TRUE );
+	return TRUE;
 }
 
 
