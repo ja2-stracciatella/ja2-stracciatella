@@ -638,36 +638,28 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 //1)  Find the first unused ID (unique)
 //2)  Assign that ID to the new group
 //3)  Insert the group at the end of the list.
-static UINT8 AddGroupToList(GROUP* pGroup)
+static UINT8 AddGroupToList(GROUP* const g)
 {
-	GROUP *curr;
-	UINT32 bit, index, mask;
-	UINT8 ID = 0;
-	//First, find a unique ID
-	while( ++ID )
+	// First, find a unique ID
+	for (UINT8 id = 0; ++id;)
 	{
-		index = ID / 32;
-		bit = ID % 32;
-		mask = 1 << bit;
-		if( !(uniqueIDMask[ index ] & mask) )
-		{ //found a free ID
-			pGroup->ubGroupID = ID;
-			uniqueIDMask[ index ] += mask;
-			//add group to list now.
-			curr = gpGroupList;
-			if( curr )
-			{ //point to the last item in list.
-				while( curr->next )
-					curr = curr->next;
-				curr->next = pGroup;
-			}
-			else //new list
-				gpGroupList = pGroup;
-			pGroup->next = NULL;
-			return ID;
-		}
+		const UINT32 index = id / 32;
+		const UINT32 bit   = id % 32;
+		const UINT32 mask  = 1 << bit;
+		if (uniqueIDMask[index] & mask) continue;
+
+		// Found a free id
+		g->ubGroupID         = id;
+		uniqueIDMask[index] |= mask;
+
+		// Append group to list
+		GROUP** i = &gpGroupList;
+		while (*i != NULL) i = &(*i)->next;
+		*i = g;
+
+		return id;
 	}
-	return FALSE;
+	return 0;
 }
 
 
