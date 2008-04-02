@@ -2813,7 +2813,6 @@ void HandleArrivalOfReinforcements( GROUP *pGroup )
 
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter )
 {
-	GROUP *curr = gpGroupList;
 	INT16 sBattleSector = -1;
 	BOOLEAN fMayRetreatFromBattle = FALSE;
 	BOOLEAN fRetreatingFromBattle = FALSE;
@@ -2843,74 +2842,67 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	// pre-battle interface to return where this function is used to show potential retreating directions instead!
 
 	//	check all groups
-	while( curr )
+	CFOR_ALL_PLAYER_GROUPS(curr)
 	{
-		// if player group
-		if( curr->fPlayer == TRUE )
+		fHelicopterGroup = IsGroupTheHelicopterGroup( curr );
+
+		// if this group is aboard the helicopter and we're showing the airspace layer, don't count any mercs aboard the
+		// chopper, because the chopper icon itself serves the function of showing the location/size of this group
+		if ( !fHelicopterGroup || !fShowAircraftFlag )
 		{
-			fHelicopterGroup = IsGroupTheHelicopterGroup( curr );
-
-			// if this group is aboard the helicopter and we're showing the airspace layer, don't count any mercs aboard the
-			// chopper, because the chopper icon itself serves the function of showing the location/size of this group
-			if ( !fHelicopterGroup || !fShowAircraftFlag )
+			// if only showing retreat paths, ignore groups not in the battle sector
+			// if NOT showing retreat paths, ignore groups not between sectors
+			if ( ( gfDisplayPotentialRetreatPaths == TRUE ) && ( sBattleSector == sSource ) ||
+					 ( gfDisplayPotentialRetreatPaths == FALSE ) && ( curr->fBetweenSectors == TRUE ) )
 			{
-				// if only showing retreat paths, ignore groups not in the battle sector
-				// if NOT showing retreat paths, ignore groups not between sectors
-				if ( ( gfDisplayPotentialRetreatPaths == TRUE ) && ( sBattleSector == sSource ) ||
-						 ( gfDisplayPotentialRetreatPaths == FALSE ) && ( curr->fBetweenSectors == TRUE ) )
+				fMayRetreatFromBattle = FALSE;
+				fRetreatingFromBattle = FALSE;
+
+				if( ( sBattleSector == sSource ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sDest ) )
 				{
-					fMayRetreatFromBattle = FALSE;
-					fRetreatingFromBattle = FALSE;
+					fMayRetreatFromBattle = TRUE;
+				}
 
-					if( ( sBattleSector == sSource ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sDest ) )
+				if( ( sBattleSector == sDest ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sSource ) )
+				{
+					fRetreatingFromBattle = TRUE;
+				}
+
+				ubMercsInGroup = curr->ubGroupSize;
+
+				if( ( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubNextX, curr->ubNextY ) == sDest) ) || ( fMayRetreatFromBattle == TRUE ) )
+				{
+					// if it's a valid vehicle, but not the helicopter (which can fly empty)
+					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
 					{
-						fMayRetreatFromBattle = TRUE;
+						// make sure empty vehicles (besides helicopter) aren't in motion!
+						Assert( ubMercsInGroup > 0 );
+						// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+						ubMercsInGroup--;
 					}
 
-					if( ( sBattleSector == sDest ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sSource ) )
+					*iCountEnter += ubMercsInGroup;
+
+					if( ( curr->uiArrivalTime - GetWorldTotalMin( ) <= ABOUT_TO_ARRIVE_DELAY ) || ( fMayRetreatFromBattle == TRUE ) )
 					{
-						fRetreatingFromBattle = TRUE;
+						*fAboutToArriveEnter = TRUE;
+					}
+				}
+				else if( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest )&&( SECTOR( curr -> ubNextX, curr->ubNextY ) == sSource) || ( fRetreatingFromBattle == TRUE ) )
+				{
+					// if it's a valid vehicle, but not the helicopter (which can fly empty)
+					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
+					{
+						// make sure empty vehicles (besides helicopter) aren't in motion!
+						Assert( ubMercsInGroup > 0 );
+						// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+						ubMercsInGroup--;
 					}
 
-					ubMercsInGroup = curr->ubGroupSize;
-
-					if( ( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubNextX, curr->ubNextY ) == sDest) ) || ( fMayRetreatFromBattle == TRUE ) )
-					{
-						// if it's a valid vehicle, but not the helicopter (which can fly empty)
-						if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
-						{
-							// make sure empty vehicles (besides helicopter) aren't in motion!
-							Assert( ubMercsInGroup > 0 );
-							// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
-							ubMercsInGroup--;
-						}
-
-						*iCountEnter += ubMercsInGroup;
-
-						if( ( curr->uiArrivalTime - GetWorldTotalMin( ) <= ABOUT_TO_ARRIVE_DELAY ) || ( fMayRetreatFromBattle == TRUE ) )
-						{
-							*fAboutToArriveEnter = TRUE;
-						}
-					}
-					else if( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest )&&( SECTOR( curr -> ubNextX, curr->ubNextY ) == sSource) || ( fRetreatingFromBattle == TRUE ) )
-					{
-						// if it's a valid vehicle, but not the helicopter (which can fly empty)
-						if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
-						{
-							// make sure empty vehicles (besides helicopter) aren't in motion!
-							Assert( ubMercsInGroup > 0 );
-							// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
-							ubMercsInGroup--;
-						}
-
-						*iCountExit += ubMercsInGroup;
-					}
+					*iCountExit += ubMercsInGroup;
 				}
 			}
 		}
-
-		// next group
-		curr = curr->next;
 	}
 
 	// if there was actually anyone leaving this sector and entering next
