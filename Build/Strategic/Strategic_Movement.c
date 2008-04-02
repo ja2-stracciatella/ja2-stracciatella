@@ -832,7 +832,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	if( gfWorldLoaded )
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
-		const GROUP* const curr = FindMovementGroupInSector((UINT8)gWorldSectorX, (UINT8)gWorldSectorY, TRUE);
+		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY);
 		if( !gbWorldSectorZ && PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, gbWorldSectorZ ) &&
 				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
 				curr )
@@ -1302,7 +1302,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 	//First check if the group arriving is going to queue another battle.
 	//NOTE:  We can't have more than one battle ongoing at a time.
 	if( fExceptionQueue || fCheckForBattle && gTacticalStatus.fEnemyInSector &&
-			FindMovementGroupInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, TRUE ) &&
+			FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) &&
 		  (pGroup->ubNextX != gWorldSectorX || pGroup->ubNextY != gWorldSectorY || gbWorldSectorZ > 0 ) ||
 			AreInMeanwhile() ||
 			//KM : Aug 11, 1999 -- Patch fix:  Added additional checks to prevent a 2nd battle in the case
@@ -3323,28 +3323,43 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	}
 }
 
-GROUP* FindMovementGroupInSector( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fPlayer )
+
+GROUP* FindEnemyMovementGroupInSector(const UINT8 ubSectorX, const UINT8 ubSectorY)
 {
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_NON_PLAYER_GROUPS(g)
 	{
-		if( pGroup->fPlayer )
+		if (g->ubSectorX == ubSectorX &&
+				g->ubSectorY == ubSectorY &&
+				g->ubSectorZ == 0)
 		{
-			// NOTE: These checks must always match the INVOLVED group checks in PBI!!!
-			if( fPlayer && pGroup->ubGroupSize && !pGroup->fBetweenSectors &&
-					pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && !pGroup->ubSectorZ &&
-					!GroupHasInTransitDeadOrPOWMercs( pGroup ) &&
-				( !IsGroupTheHelicopterGroup( pGroup ) ||	!fHelicopterIsAirBorne ) )
-			{
-				return pGroup;
-			}
+			return g;
 		}
-		else if( !fPlayer && pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && !pGroup->ubSectorZ )
-			return pGroup;
 	}
 	return NULL;
 }
 
-BOOLEAN GroupAtFinalDestination( GROUP *pGroup )
+
+GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
+{
+	FOR_ALL_PLAYER_GROUPS(g)
+	{
+		// NOTE: These checks must always match the INVOLVED group checks in PBI!!!
+		if (g->ubGroupSize != 0                 &&
+				!g->fBetweenSectors                 &&
+				g->ubSectorX   == x                 &&
+				g->ubSectorY   == y                 &&
+				g->ubSectorZ   == 0                 &&
+				!GroupHasInTransitDeadOrPOWMercs(g) &&
+				(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
+		{
+			return g;
+		}
+	}
+	return NULL;
+}
+
+
+BOOLEAN GroupAtFinalDestination(const GROUP* const pGroup)
 {
 	WAYPOINT *wp;
 

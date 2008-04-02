@@ -1379,7 +1379,7 @@ enum SAIMOVECODE
 static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMoveCode, UINT8 ubIntention);
 
 
-static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(GROUP* pPlayerGroup, GROUP* pEnemyGroup)
+static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerGroup, GROUP* pEnemyGroup)
 {
 	UINT16 usDefencePoints;
 	UINT16 usOffensePoints;
@@ -1425,7 +1425,7 @@ static void ConvertGroupTroopsToComposition(GROUP* pGroup, INT32 iCompositionID)
 static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT8 ubSize);
 
 
-static void HandlePlayerGroupNoticedByGarrison(GROUP* pPlayerGroup, UINT8 ubSectorID)
+static void HandlePlayerGroupNoticedByGarrison(const GROUP* const pPlayerGroup, const UINT8 ubSectorID)
 {
 	SECTORINFO *pSector;
 	GROUP *pGroup;
@@ -1899,7 +1899,6 @@ static void SendGroupToPool(GROUP** pGroup);
 BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 {
 	SECTORINFO *pSector;
-	GROUP *pEnemyGroup, *pPlayerGroup;
 	UINT8 ubNumEnemies;
 	UINT8 ubSectorID;
 	if( !gfQueenAIAwake )
@@ -1936,7 +1935,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 	{	//The enemy group has arrived at a new sector and now controls it.
 		//Look in each of the four directions, and the alertness rating will
 		//determine the chance to detect any players that may exist in that sector.
-		pEnemyGroup = pGroup;
+		GROUP* pEnemyGroup = pGroup;
 		if( GroupAtFinalDestination( pEnemyGroup ) )
 		{
 			return EvaluateGroupSituation( pEnemyGroup );
@@ -1944,7 +1943,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		ubSectorID = (UINT8)SECTOR( pEnemyGroup->ubSectorX, pEnemyGroup->ubSectorY );
 		if( pEnemyGroup && pEnemyGroup->ubSectorY > 1 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID - 16) ) )
 		{
-			pPlayerGroup = FindMovementGroupInSector( pEnemyGroup->ubSectorX, (UINT8)(pEnemyGroup->ubSectorY-1), TRUE );
+			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSectorX, pEnemyGroup->ubSectorY - 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -1961,7 +1960,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pEnemyGroup && pEnemyGroup->ubSectorX > 1 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID - 1) ) )
 		{
-			pPlayerGroup = FindMovementGroupInSector( (UINT8)(pEnemyGroup->ubSectorX-1), pEnemyGroup->ubSectorY, TRUE );
+			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSectorX - 1, pEnemyGroup->ubSectorY);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -1978,7 +1977,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pEnemyGroup && pEnemyGroup->ubSectorY < 16 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID + 16) ) )
 		{
-			pPlayerGroup = FindMovementGroupInSector( pEnemyGroup->ubSectorX, (UINT8)(pEnemyGroup->ubSectorY+1), TRUE );
+			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSectorX, pEnemyGroup->ubSectorY + 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -1995,7 +1994,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pEnemyGroup && pEnemyGroup->ubSectorX < 16 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID + 1) ) )
 		{
-			pPlayerGroup = FindMovementGroupInSector( (UINT8)(pEnemyGroup->ubSectorX+1), pEnemyGroup->ubSectorY, TRUE );
+			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSectorX + 1, pEnemyGroup->ubSectorY);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -2023,14 +2022,14 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		//player's new presence.
 		//NOTE:  Always returns false because it is the player group that we are handling.  We
 		//       don't mess with the player group here!
-		pPlayerGroup = pGroup;
+		const GROUP* const pPlayerGroup = pGroup;
 		if( pPlayerGroup->ubSectorZ )
 			return FALSE;
 		if( !EnemyPermittedToAttackSector( NULL, (UINT8)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY ) ) )
 			return FALSE;
 		if( pPlayerGroup->ubSectorY > 1 )
 		{
-			pEnemyGroup = FindMovementGroupInSector( pPlayerGroup->ubSectorX, (UINT8)(pPlayerGroup->ubSectorY-1), FALSE );
+			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY - 1);
 			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -2046,7 +2045,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pPlayerGroup->ubSectorX < 16 )
 		{
-			pEnemyGroup = FindMovementGroupInSector( (UINT8)(pPlayerGroup->ubSectorX+1), pPlayerGroup->ubSectorY, FALSE );
+			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX + 1, pPlayerGroup->ubSectorY);
 			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -2062,7 +2061,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pPlayerGroup->ubSectorY < 16 )
 		{
-			pEnemyGroup = FindMovementGroupInSector( pPlayerGroup->ubSectorX, (UINT8)(pPlayerGroup->ubSectorY+1), FALSE );
+			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY + 1);
 			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -2078,7 +2077,7 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pPlayerGroup->ubSectorX > 1 )
 		{
-			pEnemyGroup = FindMovementGroupInSector( (UINT8)(pPlayerGroup->ubSectorX-1), pPlayerGroup->ubSectorY, FALSE );
+			GROUP* const pEnemyGroup = FindEnemyMovementGroupInSector(pPlayerGroup->ubSectorX - 1, pPlayerGroup->ubSectorY);
 			if( pEnemyGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
@@ -2155,7 +2154,7 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 		if( ubSectorY > 1 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID - 16) ) )
 		{
 			/*
-			pPlayerGroup = FindMovementGroupInSector( ubSectorX, (UINT8)(ubSectorY-1), TRUE );
+			pPlayerGroup = FindPlayerMovementGroupInSector(bSectorX, ubSectorY - 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -2172,7 +2171,7 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 		if( ubSectorX < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 1) ) )
 		{
 			/*
-			pPlayerGroup = FindMovementGroupInSector( (UINT8)(ubSectorX+1), ubSectorY, TRUE );
+			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX + 1, ubSectorY);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -2189,7 +2188,7 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 		if( ubSectorY < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 16) ) )
 		{
 			/*
-			pPlayerGroup = FindMovementGroupInSector( ubSectorX, (UINT8)(ubSectorY+1), TRUE );
+			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX, ubSectorY + 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -2206,7 +2205,7 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 		if( ubSectorX > 1 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID - 1) ) )
 		{
 			/*
-			pPlayerGroup = FindMovementGroupInSector( (UINT8)(ubSectorX-1), ubSectorY, TRUE );
+			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX - 1, ubSectorY);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );

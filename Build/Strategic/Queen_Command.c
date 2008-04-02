@@ -1649,11 +1649,8 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 	{ //militia in sector
 		return TRUE;
 	}
-	if( FindMovementGroupInSector( (UINT8)SECTORX( ubSectorID ), (UINT8)SECTORY( ubSectorID ), TRUE ) )
-	{ //player in sector
-		return TRUE;
-	}
-	return FALSE;
+	// Player in sector?
+	return FindPlayerMovementGroupInSector(SECTORX(ubSectorID), SECTORY(ubSectorID)) != NULL;
 }
 
 

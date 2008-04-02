@@ -236,9 +236,10 @@ void HandleArrivalOfReinforcements( GROUP *pGroup );
 //blindly determines where to move the group.
 void RetreatGroupToPreviousSector( GROUP *pGroup );
 
-GROUP* FindMovementGroupInSector( UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fPlayer );
+GROUP* FindEnemyMovementGroupInSector(UINT8 x, UINT8 y);
+GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);
 
-BOOLEAN GroupAtFinalDestination( GROUP *pGroup );
+BOOLEAN GroupAtFinalDestination(const GROUP*);
 
 // find the travel time between waypts for this group
 INT32 FindTravelTimeBetweenWaypoints( WAYPOINT * pSource, WAYPOINT * pDest,  GROUP *pGroup );
