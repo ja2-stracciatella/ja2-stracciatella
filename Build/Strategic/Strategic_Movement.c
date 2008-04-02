@@ -214,75 +214,38 @@ BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 static void CancelEmptyPersistentGroupMovement(GROUP* pGroup);
 
 
-BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier )
+BOOLEAN RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 {
-	PLAYERGROUP *prev, *curr;
-	AssertMsg( pGroup->fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!" );
+	AssertMsg(g->fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!");
 
-	curr = pGroup->pPlayerList;
-
-	if( !curr )
+	for (PLAYERGROUP** i = &g->pPlayerList; *i != NULL; i = &(*i)->next)
 	{
-		return FALSE;
-	}
+		PLAYERGROUP* const p = *i;
+		if (p->pSoldier != s) continue;
 
-	if( curr->pSoldier == pSoldier )
-	{ //possibly the only node
-		pGroup->pPlayerList = pGroup->pPlayerList->next;
+		*i = p->next;
+		MemFree(p);
 
-		//delete the node
-		MemFree( curr );
+		s->ubPrevSectorID = SECTOR(g->ubPrevX, g->ubPrevY);
+		s->ubGroupID      = 0;
 
-		//process info for soldier
-		pGroup->ubGroupSize--;
-		pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
-		pSoldier->ubGroupID = 0;
-
-		// if there's nobody left in the group
-		if( pGroup->ubGroupSize == 0 )
+		if (--g->ubGroupSize == 0)
 		{
-			if ( !pGroup->fPersistant )
-			{	//remove the empty group
-				RemovePGroup( pGroup );
+			if (!g->fPersistant)
+			{
+				RemovePGroup(g);
 			}
 			else
 			{
-				CancelEmptyPersistentGroupMovement( pGroup );
+				CancelEmptyPersistentGroupMovement(g);
 			}
 		}
-
 		return TRUE;
 	}
-	prev = NULL;
 
-	while( curr )
-	{ //definately more than one node
-
-		if( curr->pSoldier == pSoldier )
-		{
-			//detach and delete the node
-			if( prev )
-			{
-				prev->next = curr->next;
-			}
-			MemFree( curr );
-
-			//process info for soldier
-			pSoldier->ubGroupID = 0;
-			pGroup->ubGroupSize--;
-			pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
-
-			return TRUE;
-		}
-
-		prev = curr;
-		curr = curr->next;
-
-	}
-
-	// !curr
 	return FALSE;
 }
+
 
 BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
