@@ -663,52 +663,30 @@ static UINT8 AddGroupToList(GROUP* const g)
 }
 
 
-//Destroys the waypoint list, detaches group from list, then deallocated the memory for the group
-void RemoveGroupFromList( GROUP *pGroup )
+/* Destroys the waypoint list, detaches group from list, then deallocated the
+ * memory for the group */
+void RemoveGroupFromList(GROUP* const g)
 {
-	GROUP *curr, *temp;
-	curr = gpGroupList;
-	if( !curr )
+	for (GROUP** i = &gpGroupList; *i != NULL; i = &(*i)->next)
+	{
+		if (*i != g) continue;
+
+		// Found the group, so now remove it.
+		*i = g->next;
+
+		// Clear the unique group ID
+		const UINT32 index = g->ubGroupID / 32;
+		const UINT32 bit   = g->ubGroupID % 32;
+		const UINT32 mask  = 1 << bit;
+		Assert(uniqueIDMask[index] & mask);
+		uniqueIDMask[index] &= ~mask;
+
+		MemFree(g);
 		return;
-	if( curr == pGroup )
-	{ //Removing head
-		gpGroupList = curr->next;
 	}
-	else while( curr->next )
-	{ //traverse the list
-		if( curr->next == pGroup )
-		{ //the next node is the one we want to remove
-			temp = curr;
-			//curr now points to the nod we want to remove
-			curr = curr->next;
-			//detach the node from the list
-			temp->next = curr->next;
-			break;
-		}
-		curr = curr->next;
-	}
-
-
-	if( curr == pGroup )
-	{ //we found the group, so now remove it.
-		UINT32 bit, index, mask;
-
-		//clear the unique group ID
-		index = pGroup->ubGroupID / 32;
-		bit = pGroup->ubGroupID % 32;
-		mask = 1 << bit;
-
-		if( !(uniqueIDMask[ index ] & mask) )
-		{
-			mask = mask;
-		}
-
-		uniqueIDMask[ index ] -= mask;
-
-		MemFree( curr );
-		curr = NULL;
-	}
+	Assert(0);
 }
+
 
 GROUP* GetGroup( UINT8 ubGroupID )
 {
