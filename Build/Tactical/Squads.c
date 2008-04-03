@@ -95,11 +95,7 @@ INT8 GetFirstEmptySquad( void )
 
 	for( ubCounter = 0; ubCounter < NUMBER_OF_SQUADS; ubCounter++ )
 	{
-		if( SquadIsEmpty( ubCounter ) == TRUE )
-		{
-			// empty squad, return value
-			return( ubCounter );
-		}
+		if (SquadIsEmpty(ubCounter)) return ubCounter;
 	}
 
 	// not found - none are completely empty (shouldn't ever happen!)
@@ -165,7 +161,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		if (t == NULL)
 		{
 			// check if squad empty, if not check sector x,y,z are the same as this guys
-			if( SquadIsEmpty( bSquadValue ) == FALSE )
+			if (!SquadIsEmpty(bSquadValue))
 			{
 				GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
 
@@ -316,7 +312,7 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
 	// first look for a compatible NON-EMPTY squad (don't start new squad if we don't have to)
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
 	{
-		if( SquadIsEmpty( bCounter ) == FALSE )
+		if (!SquadIsEmpty(bCounter))
 		{
 			if( AddCharacterToSquad( pCharacter, bCounter ) == TRUE )
 			{
@@ -361,7 +357,7 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
 	{
-		if( SquadIsEmpty( bCounter ) == TRUE )
+		if (SquadIsEmpty(bCounter))
 		{
 			if( AddCharacterToSquad( pCharacter, bCounter ) == TRUE )
 			{

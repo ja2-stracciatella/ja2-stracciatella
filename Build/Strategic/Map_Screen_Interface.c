@@ -3703,21 +3703,19 @@ static BOOLEAN IsThisSquadInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 	INT16 sX = 0, sY = 0;
 	INT8 bZ = 0;
 
-	// check if the squad is empty
-	if( SquadIsEmpty( bSquadValue ) == FALSE )
-	{
-		// now grab the squad location
-		GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
+	if (SquadIsEmpty(bSquadValue)) return FALSE;
 
-		// check if this non-empty squad is in this sector
-		if( ( sX == sSectorX ) && ( sY == sSectorY ) && ( bSectorZ == bZ ) )
+	// now grab the squad location
+	GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
+
+	// check if this non-empty squad is in this sector
+	if( ( sX == sSectorX ) && ( sY == sSectorY ) && ( bSectorZ == bZ ) )
+	{
+		// a squad that's between sectors isn't *in* this sector
+		if( !IsThisSquadOnTheMove( bSquadValue ) )
 		{
-			// a squad that's between sectors isn't *in* this sector
-			if( !IsThisSquadOnTheMove( bSquadValue ) )
-			{
-				// yep
-				return( TRUE );
-			}
+			// yep
+			return( TRUE );
 		}
 	}
 

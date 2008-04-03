@@ -9887,10 +9887,7 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber)
 	BOOLEAN fFirstOne = TRUE;
 
 	// ignore if that squad is empty
-	if( SquadIsEmpty( bSquadNumber ) == TRUE )
-	{
-		return;
-	}
+	if (SquadIsEmpty(bSquadNumber)) return;
 
 	// select nobody & reset the selected list
 	ChangeSelectedInfoChar( -1, TRUE );
