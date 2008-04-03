@@ -163,7 +163,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			// check if squad empty, if not check sector x,y,z are the same as this guys
 			if (!SquadIsEmpty(bSquadValue))
 			{
-				GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
+				SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ);
 
 				// if not same, return false
 				if( ( pCharacter->sSectorX != sX ) || ( pCharacter -> sSectorY != sY ) ||( pCharacter->bSectorZ != bZ) )
@@ -551,7 +551,8 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue )
 	return( FALSE );
 }
 
-BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16 *sMapX, INT16 *sMapY, INT16 *sMapZ )
+
+BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, INT16* const sMapX, INT16* const sMapY, INT8* const sMapZ)
 {
 	// returns if there is anyone on the squad and what sector ( strategic ) they are in
   INT8 bCounter =0;
@@ -918,24 +919,6 @@ BOOLEAN LoadSquadInfoFromSavedGameFile( HWFILE hFile )
 	return( TRUE );
 }
 
-
-void GetLocationOfSquad( INT16 *sX, INT16 *sY, INT8 *bZ, INT8 bSquadValue )
-{
-	// run through list of guys, once valid merc found, get his sector x and y and z
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
-	{
-		const SOLDIERTYPE* const s = Squad[bSquadValue][iCounter];
-		if (s)
-		{
-			// valid guy
-			*sX = s->sSectorX;
-			*sY = s->sSectorY;
-			*bZ = s->bSectorZ;
-		}
-	}
-}
 
 BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 {

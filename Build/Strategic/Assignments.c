@@ -927,8 +927,7 @@ static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
 static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 {
 	// can character join this squad?
-	INT16 sX, sY, sZ;
-
+	INT16 sX, sY;
 
 	Assert( bSquadValue < ON_DUTY );
 
@@ -957,6 +956,7 @@ static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 	}
 
 	// see if the squad us at the same x,y,z
+	INT8 sZ;
 	SectorSquadIsIn( bSquadValue, &sX, &sY, &sZ );
 
 	// check sector x y and z, if not same, cannot join squad

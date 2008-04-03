@@ -3706,7 +3706,7 @@ static BOOLEAN IsThisSquadInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 	if (SquadIsEmpty(bSquadValue)) return FALSE;
 
 	// now grab the squad location
-	GetLocationOfSquad( &sX, &sY, &bZ, bSquadValue );
+	SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ);
 
 	// check if this non-empty squad is in this sector
 	if( ( sX == sSectorX ) && ( sY == sSectorY ) && ( bSectorZ == bZ ) )
