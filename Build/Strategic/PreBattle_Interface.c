@@ -1636,7 +1636,6 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 		if (bUniqueVehicleSquad == -1) return;
 	}
 
-	BOOLEAN      fSuccess; // XXX uninitialized
 	PLAYERGROUP* next;
 	for (PLAYERGROUP* p = pGroup->pPlayerList; p; p = next)
 	{
@@ -1663,16 +1662,16 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 				 * group attack, the mercs could be coming from different sides, and the
 				 * placement screen can't handle mercs on the same squad arriving from
 				 * different edges! */
-				fSuccess = AddCharacterToSquad(s, bUniqueVehicleSquad);
+				const BOOLEAN fSuccess = AddCharacterToSquad(s, bUniqueVehicleSquad);
+				Assert(fSuccess);
 			}
 		}
 		else
 		{
 			// add him to ANY on duty foot squad
-			fSuccess = AddCharacterToAnySquad(s);
+			const BOOLEAN fSuccess = AddCharacterToAnySquad(s);
+			Assert(fSuccess);
 		}
-
-		Assert(fSuccess);
 
 		// stand him up
 		MakeSoldiersTacticalAnimationReflectAssignment(s);
