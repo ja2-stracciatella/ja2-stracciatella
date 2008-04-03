@@ -821,14 +821,11 @@ PathSt* CopyPaths(PathSt* src)
 #ifdef BETA_VERSION
 static void VerifyAllMercsInGroupAreOnSameSquad(GROUP* const pGroup)
 {
-	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	INT8 bSquad = -1;
 
 	// Let's choose somebody in group.....
-	pPlayer = pGroup->pPlayerList;
-
-	while( pPlayer != NULL )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 		Assert( pSoldier );
@@ -845,10 +842,7 @@ static void VerifyAllMercsInGroupAreOnSameSquad(GROUP* const pGroup)
 				Assert( pSoldier->bAssignment == bSquad );
 			}
 		}
-
-		pPlayer = pPlayer->next;
 	}
-
 }
 #endif
 
@@ -1224,11 +1218,9 @@ static void ClearPathForSoldier(SOLDIERTYPE* pSoldier);
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 {
-	PLAYERGROUP *pPlayer = NULL;
 	SOLDIERTYPE *pSoldier = NULL;
 
-	pPlayer = pGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -1236,8 +1228,6 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 		{
 			ClearPathForSoldier( pSoldier );
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	// if it's a vehicle
@@ -1289,11 +1279,9 @@ static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UIN
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	PLAYERGROUP *pPlayer = NULL;
 	SOLDIERTYPE *pSoldier = NULL;
 
-	pPlayer = pGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -1301,8 +1289,6 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 		{
 			AddSectorToFrontOfMercPath( &(pSoldier->pMercPath), ubSectorX, ubSectorY );
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	// if it's a vehicle

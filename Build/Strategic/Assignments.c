@@ -7572,21 +7572,17 @@ static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* const pSoldier)
 
 BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
 {
-	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fMeToo = FALSE;
 	BOOLEAN fGroupMustStop = FALSE;
 
 
 	Assert( pGroup );
-	Assert( pGroup->fPlayer );
 
-	pPlayer = pGroup->pPlayerList;
-
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		// if group has player list...  and a valid first soldier
-		if( pPlayer && pPlayer->pSoldier )
+		if (pPlayer->pSoldier)
 		{
 			pSoldier = pPlayer->pSoldier;
 
@@ -7613,8 +7609,6 @@ BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
 				pSoldier->fMercCollapsedFlag = TRUE;
 			}
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	return( fGroupMustStop );

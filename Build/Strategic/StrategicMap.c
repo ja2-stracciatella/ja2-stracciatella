@@ -2278,11 +2278,9 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	// Give guy(s) orders to walk off sector...
 	if( pGroup->fPlayer )
 	{	//For player groups, update the soldier information
-		PLAYERGROUP *curr;
 		UINT8				ubNum = 0;
 
-		curr = pGroup->pPlayerList;
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
 			if ( OK_CONTROLLABLE_MERC( curr->pSoldier) )
 			{
@@ -2338,23 +2336,18 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 			{
 				// We will remove them later....
 			}
-			curr = curr->next;
 		}
 
 		// ATE: Do another round, removing guys from group that can't go on...
 BEGINNING_LOOP:
-
-		curr = pGroup->pPlayerList;
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
 			if ( !OK_CONTROLLABLE_MERC( curr->pSoldier ) )
 			{
 				RemoveCharacterFromSquads( curr->pSoldier );
 				goto BEGINNING_LOOP;
 			}
-			curr = curr->next;
 		}
-
 
 		// OK, setup TacticalOverhead polling system that will notify us once everybody
 		// has made it to our destination.
@@ -2416,7 +2409,6 @@ static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup);
 
 void AllMercsWalkedToExitGrid()
 {
-	PLAYERGROUP *pPlayer;
 	BOOLEAN fDone;
 
   HandlePotentialMoraleHitForSkimmingSectors( gpAdjacentGroup );
@@ -2424,15 +2416,11 @@ void AllMercsWalkedToExitGrid()
 	if( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD )
 	{
 		Assert( gpAdjacentGroup );
-		pPlayer = gpAdjacentGroup->pPlayerList;
-		pPlayer = gpAdjacentGroup->pPlayerList;
-		while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
 
 			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
-
-			pPlayer = pPlayer->next;
 		}
 
 		SetGroupSectorValue( (UINT8)gsAdjacentSectorX, (UINT8)gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
@@ -2454,7 +2442,7 @@ void AllMercsWalkedToExitGrid()
 		while( !fDone )
 		{
 			fDone = FALSE;
-			pPlayer = gpAdjacentGroup->pPlayerList;
+			const PLAYERGROUP* pPlayer = gpAdjacentGroup->pPlayerList;
 			while( pPlayer )
 			{
 				if( pPlayer->pSoldier->bLife < OKLIFE )
@@ -2472,12 +2460,9 @@ void AllMercsWalkedToExitGrid()
 
 		// OK, Set insertion direction for all these guys....
 		Assert( gpAdjacentGroup );
-		pPlayer = gpAdjacentGroup->pPlayerList;
-		while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
-
-			pPlayer = pPlayer->next;
 		}
 		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
 
@@ -2500,12 +2485,10 @@ void AllMercsWalkedToExitGrid()
 static void SetupTacticalTraversalInformation(void)
 {
 	SOLDIERTYPE *pSoldier;
-	PLAYERGROUP *pPlayer;
 	INT16 sScreenX, sScreenY, sNewGridNo;
 
 	Assert( gpAdjacentGroup );
-	pPlayer = gpAdjacentGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -2548,8 +2531,6 @@ static void SetupTacticalTraversalInformation(void)
 				fUsingEdgePointsForStrategicEntry = TRUE;
 			}
 		}
-
-		pPlayer = pPlayer->next;
 	}
 	if( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD )
 	{
@@ -2565,7 +2546,6 @@ static void DoneFadeOutAdjacentSector(void);
 
 void AllMercsHaveWalkedOffSector( )
 {
-	PLAYERGROUP *pPlayer;
 	BOOLEAN fEnemiesInLoadedSector = FALSE;
 
 	if( NumEnemiesInAnySector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
@@ -2599,11 +2579,9 @@ void AllMercsHaveWalkedOffSector( )
 	if( ( gubAdjacentJumpCode == JUMP_ALL_NO_LOAD || gubAdjacentJumpCode == JUMP_SINGLE_NO_LOAD ) )
 	{ //Case 1:  Group is leaving sector, but there are other mercs in sector and player wants to stay, or
 		//         there are other mercs in sector while a battle is in progress.
-		pPlayer = gpAdjacentGroup->pPlayerList;
-		while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
 		{
 			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
-			pPlayer = pPlayer->next;
 		}
 		SetDefaultSquadOnSectorEntry( TRUE );
 	}
@@ -2709,12 +2687,10 @@ static void DoneFadeOutAdjacentSector(void)
 	if( gpAdjacentGroup->fPlayer )
 	{
 		//For player groups, update the soldier information
-		PLAYERGROUP *curr;
 		UINT32 uiAttempts;
 		INT16				sGridNo, sOldGridNo;
 		UINT8				ubNum = 0;
-		curr = gpAdjacentGroup->pPlayerList;
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, gpAdjacentGroup)
 		{
 			if (curr->pSoldier->sGridNo != NOWHERE)
 			{
@@ -2749,7 +2725,6 @@ static void DoneFadeOutAdjacentSector(void)
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
 #endif
 			}
-			curr = curr->next;
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -4467,8 +4442,6 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 
 static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 {
-	PLAYERGROUP *pPlayer;
-
   if ( !gTacticalStatus.fHasEnteredCombatModeSinceEntering && gTacticalStatus.fEnemyInSector )
   {
 		//Flag is set so if "wilderness" enemies are in the adjacent sector of this group, the group has
@@ -4477,15 +4450,11 @@ static void HandlePotentialMoraleHitForSkimmingSectors(GROUP* pGroup)
 		//time to setup a good ambush!
 		pGroup->uiFlags |= GROUPFLAG_HIGH_POTENTIAL_FOR_AMBUSH;
 
-	  pPlayer = pGroup->pPlayerList;
-
-	  while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	  {
       // Do morale hit...
       // CC look here!
       // pPlayer->pSoldier
-
-		  pPlayer = pPlayer->next;
 	  }
   }
 }

@@ -507,13 +507,10 @@ BOOLEAN AddWaypointToPGroup( GROUP* pGroup, UINT8 ubSectorX, UINT8 ubSectorY ) /
 
 	if( pGroup->fPlayer )
 	{
-		PLAYERGROUP *curr;
 		//Also, nuke any previous "tactical traversal" information.
-		curr = pGroup->pPlayerList;
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
 			curr->pSoldier->ubStrategicInsertionCode = 0;
-			curr = curr->next;
 		}
 	}
 
@@ -687,7 +684,6 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	// We first loop through the group and save ubID's ov valid guys to talk....
 	// ( Can't if sleeping, unconscious, and EPC, etc....
 	UINT8				ubNumMercs = 0;
-	PLAYERGROUP *pPlayer;
 
 	if( fDisableMapInterfaceDueToBattle )
 	{
@@ -698,11 +694,10 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	// Pipe up with quote...
 	AssertMsg( pPlayerDialogGroup, "Didn't get a player dialog group for prebattle interface." );
 
-	pPlayer = pPlayerDialogGroup->pPlayerList;
-	AssertMsg( pPlayer, String( "Player group %d doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID ) );
+	AssertMsg(pPlayerDialogGroup->pPlayerList, String( "Player group %d doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID));
 
 	SOLDIERTYPE* mercs_in_group[20];
-	while( pPlayer != NULL )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pPlayerDialogGroup)
 	{
 		SOLDIERTYPE* const pSoldier = pPlayer->pSoldier;
 
@@ -711,8 +706,6 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		{
 			mercs_in_group[ubNumMercs++] = pSoldier;
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	//Set music
@@ -785,7 +778,6 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 {
 	GROUP *pPlayerDialogGroup = NULL;
-	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	BOOLEAN fBattlePending = FALSE;
 	BOOLEAN fAliveMerc = FALSE;
@@ -835,8 +827,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 					{
 						//Now, a player group is in this sector.  Determine if the group contains any mercs that can fight.
 						//Vehicles, EPCs and the robot doesn't count.  Mercs below OKLIFE do.
-						pPlayer = curr->pPlayerList;
-						while( pPlayer )
+						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, curr)
 						{
 							pSoldier = pPlayer->pSoldier;
 							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
@@ -852,7 +843,6 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 									fAliveMerc = TRUE;
 								}
 							}
-							pPlayer = pPlayer->next;
 						}
 						if( !pPlayerDialogGroup && fCombatAbleMerc )
 						{
@@ -1087,7 +1077,6 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 static void AwardExperienceForTravelling(GROUP* pGroup)
 {
 	// based on how long movement took, mercs gain a bit of life experience for travelling
-	PLAYERGROUP *	pPlayerGroup;
 	SOLDIERTYPE	*	pSoldier;
 	UINT32				uiPoints;
 	UINT32				uiCarriedPercent;
@@ -1097,8 +1086,7 @@ static void AwardExperienceForTravelling(GROUP* pGroup)
 		return;
 	}
 
-	pPlayerGroup = pGroup->pPlayerList;
-	while ( pPlayerGroup )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayerGroup, pGroup)
 	{
 		pSoldier = pPlayerGroup->pSoldier;
 		if( pSoldier  && !AM_A_ROBOT( pSoldier ) &&
@@ -1126,9 +1114,7 @@ static void AwardExperienceForTravelling(GROUP* pGroup)
 				}
 			}
 		}
-		pPlayerGroup = pPlayerGroup->next;
 	}
-
 }
 
 
@@ -1402,8 +1388,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 		if( pGroup->fVehicle == FALSE )
 		{
 			// non-vehicle player group
-			const PLAYERGROUP* curr = pGroup->pPlayerList;
-			while( curr )
+			CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 			{
 				curr->pSoldier->fBetweenSectors = FALSE;
 				curr->pSoldier->sSectorX = pGroup->ubSectorX;
@@ -1431,7 +1416,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 				{
 					UpdateMercInSector( curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 				}
-				curr = curr->next;
 			}
 
 			// if there's anybody in the group
@@ -1496,8 +1480,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 				}
 
 				// set directions of insertion
-				const PLAYERGROUP* curr = pGroup->pPlayerList;
-				while( curr )
+				CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 				{
 					curr->pSoldier->fBetweenSectors = FALSE;
 					curr->pSoldier->sSectorX = pGroup->ubSectorX;
@@ -1516,8 +1499,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 						// add passenger to the tactical engine!
 						UpdateMercInSector( curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 					}
-
-					curr = curr->next;
 				}
 			}
 			else
@@ -2068,22 +2049,17 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	//For the case of player groups, we need to update the information of the soldiers.
 	if( pGroup->fPlayer )
 	{
-		PLAYERGROUP *curr;
-
 		if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
 		{
 			AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
 		}
 
-		curr = pGroup->pPlayerList;
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
 			curr->pSoldier->fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
 			RemoveSoldierFromTacticalSector(curr->pSoldier);
-
-			curr = curr->next;
 		}
 		CheckAndHandleUnloadingOfCurrentWorld();
 
@@ -2188,7 +2164,6 @@ void RemoveAllGroups()
 void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubGroupID )
 {
 	GROUP *pGroup;
-	PLAYERGROUP *pPlayer;
 
 	// get the group
 	pGroup = GetGroup( ubGroupID );
@@ -2209,14 +2184,12 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
 	// set all of the mercs in the group so that they are in the new sector too.
-	pPlayer = pGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pPlayer->pSoldier->sSectorX = sSectorX;
 		pPlayer->pSoldier->sSectorY = sSectorY;
 		pPlayer->pSoldier->bSectorZ = (UINT8)sSectorZ;
 		pPlayer->pSoldier->fBetweenSectors = FALSE;
-		pPlayer = pPlayer->next;
 	}
 
 	CheckAndHandleUnloadingOfCurrentWorld();
@@ -2439,7 +2412,6 @@ INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup
 	INT32 iBestTraverseTime = 1000000;
 	INT32 iEncumbrance, iHighestEncumbrance = 0;
 	SOLDIERTYPE *pSoldier;
-	PLAYERGROUP *curr;
 	BOOLEAN fFoot, fCar, fTruck, fTracked, fAir;
 	UINT8 ubTraverseType;
 	UINT8 ubTraverseMod;
@@ -2494,8 +2466,7 @@ INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup
 
 		if( pGroup->fPlayer )
 		{
-			curr = pGroup->pPlayerList;
-			while( curr )
+			CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 			{
 				pSoldier = curr->pSoldier;
 				if( pSoldier->bAssignment != VEHICLE )
@@ -2506,7 +2477,6 @@ INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup
 						iHighestEncumbrance = iEncumbrance;
 					}
 				}
-				curr = curr->next;
 			}
 			if( iHighestEncumbrance > 100 )
 			{
@@ -2577,7 +2547,6 @@ INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup
 //Counts the number of live mercs in any given sector.
 UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	PLAYERGROUP *pPlayer;
 	UINT8 ubNumMercs = 0;
 	CFOR_ALL_PLAYER_GROUPS(pGroup)
 	{
@@ -2586,15 +2555,13 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
 			{
 				//we have a group, make sure that it isn't a group containing only dead members.
-				pPlayer = pGroup->pPlayerList;
-				while( pPlayer )
+				CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 				{
 					// robots count as mercs here, because they can fight, but vehicles don't
 					if( ( pPlayer->pSoldier->bLife ) && !( pPlayer->pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 					{
 						ubNumMercs++;
 					}
-					pPlayer = pPlayer->next;
 				}
 			}
 		}
@@ -2613,15 +2580,13 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
 			{
 				//we have a group, make sure that it isn't a group containing only dead members.
-				pPlayer = pGroup->pPlayerList;
-				while( pPlayer )
+				CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 				{
 					if( pPlayer->pSoldier->bLife )
 					{
 						ubNumGroups++;
 						break;
 					}
-					pPlayer = pPlayer->next;
 				}
 			}
 		}
@@ -2673,7 +2638,6 @@ void HandleArrivalOfReinforcements( GROUP *pGroup )
 	if( pGroup->fPlayer )
 	{ //We don't have to worry about filling up the player slots, because it is impossible
 		//to have more player's in the game then the number of slots available for the player.
-		PLAYERGROUP *pPlayer;
 		UINT8 ubStrategicInsertionCode;
 		//First, determine which entrypoint to use, based on the travel direction of the group.
 		if( pGroup->ubSectorX < pGroup->ubPrevX )
@@ -2689,17 +2653,14 @@ void HandleArrivalOfReinforcements( GROUP *pGroup )
 			Assert( 0 );
 			return;
 		}
-		pPlayer = pGroup->pPlayerList;
 
 		cnt = 0;
-
-		while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 		{
 			pSoldier = pPlayer->pSoldier;
 			Assert( pSoldier );
 			pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
 			UpdateMercInSector( pSoldier, pGroup->ubSectorX, pGroup->ubSectorY, 0 );
-			pPlayer = pPlayer->next;
 
 			// DO arrives quote....
 			if ( cnt == 0 )
@@ -2826,7 +2787,6 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 
 void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	PLAYERGROUP *pPlayer;
 	FOR_ALL_PLAYER_GROUPS(pGroup)
 	{
 		if (pGroup->ubSectorX == gWorldSectorX  &&
@@ -2836,14 +2796,12 @@ void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UIN
 			pGroup->ubSectorX = ubSectorX;
 			pGroup->ubSectorY = ubSectorY;
 			pGroup->ubSectorZ = ubSectorZ;
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 			{
 				pPlayer->pSoldier->sSectorX = ubSectorX;
 				pPlayer->pSoldier->sSectorY = ubSectorY;
 				pPlayer->pSoldier->bSectorZ = ubSectorZ;
 				pPlayer->pSoldier->fBetweenSectors = FALSE;
-				pPlayer = pPlayer->next;
 			}
 		}
 	}
@@ -2945,22 +2903,19 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
 
 
 // Saves the Player's group list to the saved game file
-static BOOLEAN SavePlayerGroupList(const HWFILE hFile, const GROUP* const pGroup)
+static BOOLEAN SavePlayerGroupList(const HWFILE f, const GROUP* const g)
 {
 	// Save the number of nodes in the list
 	UINT32 uiNumberOfNodesInList = 0;
-	for (const PLAYERGROUP* p = pGroup->pPlayerList; p != NULL; p = p->next)
-	{
-		++uiNumberOfNodesInList;
-	}
-	if (!FileWrite(hFile, &uiNumberOfNodesInList, sizeof(UINT32))) return FALSE;
+	CFOR_ALL_PLAYERS_IN_GROUP(p, g) ++uiNumberOfNodesInList;
+	if (!FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32))) return FALSE;
 
 	// Loop through and save only the players profile id
-	for (const PLAYERGROUP* p = pGroup->pPlayerList; p != NULL; p = p->next)
+	CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 	{
 		// Save the ubProfile ID for this node
 		const UINT32 uiProfileID = p->pSoldier->ubProfile;
-		if (!FileWrite(hFile, &uiProfileID, sizeof(UINT32))) return FALSE;
+		if (!FileWrite(f, &uiProfileID, sizeof(UINT32))) return FALSE;
 	}
 
 	return TRUE;
@@ -3151,12 +3106,9 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	}
 	if( pGroup->fPlayer )
 	{ //update the previous sector for the mercs
-		PLAYERGROUP *pPlayer;
-		pPlayer = pGroup->pPlayerList;
-		while( pPlayer )
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 		{
 			pPlayer->pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
-			pPlayer = pPlayer->next;
 		}
 	}
 }
@@ -3232,23 +3184,17 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	//For the case of player groups, we need to update the information of the soldiers.
 	if( pGroup->fPlayer )
 	{
-		PLAYERGROUP *curr;
-		curr = pGroup->pPlayerList;
-
 		if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
 		{
 			AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
 		}
 
-
-		while( curr )
+		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 		{
 			curr->pSoldier->fBetweenSectors = TRUE;
 
 			// OK, Remove the guy from tactical engine!
 			RemoveSoldierFromTacticalSector(curr->pSoldier);
-
-			curr = curr->next;
 		}
 	}
 }
@@ -3627,11 +3573,9 @@ static void ReportVehicleOutOfGas(const VEHICLETYPE* const v, const UINT8 ubSect
 
 static void SetLocationOfAllPlayerSoldiersInGroup(GROUP* pGroup, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	PLAYERGROUP *pPlayer = NULL;
 	SOLDIERTYPE *pSoldier = NULL;
 
-	pPlayer = pGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -3641,10 +3585,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP* pGroup, INT16 sSectorX,
 			pSoldier->sSectorY = sSectorY;
 			pSoldier->bSectorZ = bSectorZ;
 		}
-
-		pPlayer = pPlayer->next;
 	}
-
 
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
@@ -4171,27 +4112,17 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(UINT8 ub
 BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 {
 	GROUP *pGroup;
-	PLAYERGROUP *curr;
 
 	pGroup = GetGroup( ubGroupID );
   Assert( pGroup );
 
-	curr = pGroup->pPlayerList;
-
-	if( !curr )
-	{
-		return FALSE;
-	}
-
-	while( curr )
+	CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
 	{ //definately more than one node
 
 		if( curr->pSoldier == pSoldier )
 		{
 			return TRUE;
 		}
-
-		curr = curr->next;
 	}
 
 	// !curr
@@ -4201,10 +4132,7 @@ BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 
 BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP* const pGroup)
 {
-	PLAYERGROUP *pPlayer;
-
-	pPlayer = pGroup->pPlayerList;
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		if ( pPlayer->pSoldier )
 		{
@@ -4216,8 +4144,6 @@ BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP* const pGroup)
 				return( TRUE );
 			}
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	// nope

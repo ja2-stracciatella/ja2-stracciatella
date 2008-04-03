@@ -1778,7 +1778,6 @@ void UpdateMapScreenAssignmentPositions( void )
 
 void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 {
-	PLAYERGROUP *pPlayer;
 	SOLDIERTYPE *pSoldier;
 	UINT8				ubNumMercs = 0;
 
@@ -1788,12 +1787,9 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 		return;
 	}
 
-
 	// Let's choose somebody in group.....
-	pPlayer = pGroup->pPlayerList;
-
 	SOLDIERTYPE* mercs_in_group[20];
-	while( pPlayer != NULL )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pSoldier = pPlayer->pSoldier;
 		Assert( pSoldier );
@@ -1803,8 +1799,6 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 		{
 			mercs_in_group[ubNumMercs++] = pSoldier;
 		}
-
-		pPlayer = pPlayer->next;
 	}
 
 	// At least say quote....

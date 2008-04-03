@@ -696,13 +696,11 @@ static void ValidateLargeGroup(GROUP* pGroup)
 #ifdef JA2BETAVERSION
 static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 {
-	PLAYERGROUP *pPlayer;
 	FOR_ALL_GROUPS_SAFE(pGroup)
 	{
 		if( pGroup->fPlayer )
 		{
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 			{
 				if( pPlayer->pSoldier == pSoldier )
 				{
@@ -712,7 +710,6 @@ static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
 					}
 					break;
 				}
-				pPlayer = pPlayer->next;
 			}
 		}
 	}
@@ -726,7 +723,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 	INT32 iGroups;
 	INT32 iMismatches;
 	INT32 iNumErrors;
-	PLAYERGROUP *pPlayer;
 	wchar_t str[1024];
 	UINT8 ubGroupID;
 	//Go through each merc slot in the player team
@@ -750,8 +746,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 		//               the merc exists in.
 		CFOR_ALL_PLAYER_GROUPS(pGroup)
 		{
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 			{
 				if( pPlayer->pSoldier == pSoldier )
 				{
@@ -762,7 +757,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					iGroups++;
 					break;
 				}
-				pPlayer = pPlayer->next;
 			}
 		}
 
@@ -783,8 +777,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					const GROUP* pOtherGroup = NULL;
 					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						pPlayer = pGroup->pPlayerList;
-						while( pPlayer )
+						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 						{
 							if( pPlayer->pSoldier == pSoldier )
 							{
@@ -796,7 +789,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 								iGroups++;
 								break;
 							}
-							pPlayer = pPlayer->next;
 						}
 						if( iMismatches == 1 )
 						{
@@ -825,8 +817,7 @@ void ValidatePlayersAreInOneGroupOnly(void)
 					const GROUP* pOtherGroup = NULL;
 					CFOR_ALL_PLAYER_GROUPS(pGroup)
 					{
-						pPlayer = pGroup->pPlayerList;
-						while( pPlayer )
+						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 						{
 							if( pPlayer->pSoldier == pSoldier )
 							{
@@ -838,7 +829,6 @@ void ValidatePlayersAreInOneGroupOnly(void)
 								iGroups++;
 								break;
 							}
-							pPlayer = pPlayer->next;
 						}
 					}
 					const GROUP* const pGroup = GetGroup(pSoldier->ubGroupID);

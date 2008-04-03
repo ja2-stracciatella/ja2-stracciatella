@@ -1470,63 +1470,38 @@ void UninvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
 
 SOLDIERTYPE* InvolvedSoldier( INT32 index )
 {
-	PLAYERGROUP *pPlayer=NULL;
 	BOOLEAN fFound = FALSE;
 	if( index < 0 || index > 19 )
 		return NULL;
 	CFOR_ALL_GROUPS(pGroup)
 	{
-		if (fFound) break;
-
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(p, pGroup)
 			{
-				index--;
-				if( index <= 0 )
-				{
-					fFound = TRUE;
-					break;
-				}
-				pPlayer = pPlayer->next;
+				if (--index <= 0) return p->pSoldier;
 			}
 		}
 	}
-	if( !fFound )
-		return NULL;
-	return pPlayer->pSoldier;
+	return NULL;
 }
 
 SOLDIERTYPE* UninvolvedSoldier( INT32 index )
 {
-	PLAYERGROUP *pPlayer=NULL;
-	BOOLEAN fFound = FALSE;
 	if( index < 0 || index > 19 )
 		return NULL;
 	CFOR_ALL_GROUPS(pGroup)
 	{
-		if (fFound) break;
-
 		if ( pGroup->fPlayer && !PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(p, pGroup)
 			{
-				index--;
-				if( index <= 0 )
-				{
-					fFound = TRUE;
-					break;
-				}
-				pPlayer = pPlayer->next;
+				if (--index <= 0) return p->pSoldier;
 			}
 		}
 		pGroup = pGroup->next;
 	}
-	if( !fFound )
-		return NULL;
-	return pPlayer->pSoldier;
+	return NULL;
 }
 */
 

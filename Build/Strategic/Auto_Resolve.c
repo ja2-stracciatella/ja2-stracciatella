@@ -2502,7 +2502,6 @@ static void CalculateRowsAndColumns(void);
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
 {
-	PLAYERGROUP *pPlayer;
 	Assert( gpAR->ubSectorX >= 1 && gpAR->ubSectorX <= 16 );
 	Assert( gpAR->ubSectorY >= 1 && gpAR->ubSectorY <= 16 );
 
@@ -2535,8 +2534,7 @@ static void CalculateAutoResolveInfo(void)
 	{
 		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
 		{
-			pPlayer = pGroup->pPlayerList;
-			while( pPlayer )
+			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 			{
 				// NOTE: Must check each merc individually, e.g. Robot without controller is an uninvolved merc on an involved group!
 				if ( PlayerMercInvolvedInThisCombat( pPlayer->pSoldier ) )
@@ -2557,7 +2555,6 @@ static void CalculateAutoResolveInfo(void)
 						UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
 					}
 				}
-				pPlayer = pPlayer->next;
 			}
 		}
 	}
