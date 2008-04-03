@@ -159,7 +159,7 @@ static BOOLEAN EnterIntroScreen(void)
 	}
 #endif
 
-	SmkInitialize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	SmkInitialize();
 
 	//get the index opf the first video to watch
 	iFirstVideoID = GetNextIntroVideo( SMKINTRO_FIRST_VIDEO );

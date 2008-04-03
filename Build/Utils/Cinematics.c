@@ -89,7 +89,7 @@ BOOLEAN fFlicStatus=FALSE;
 }
 
 
-void SmkInitialize(UINT32 uiWidth, UINT32 uiHeight)
+void SmkInitialize(void)
 {
 	// Wipe the flic list clean
 	memset(SmkList, 0, sizeof(SMKFLIC)*SMK_NUM_FLICS);
