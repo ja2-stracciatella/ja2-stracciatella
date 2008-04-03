@@ -3791,56 +3791,23 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					#endif
 					break;
 
-
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
-					// multi-selects all characters in that squad.  SHIFT key and 1-0 for squads 11-20
-					bSquadNumber = ( INT8 ) ( InputEvent.usParam - '1' );	// internal squad #s start at 0
-					SelectAllCharactersInSquad( bSquadNumber );
+				case SDLK_1:
+				case SDLK_2:
+				case SDLK_3:
+				case SDLK_4:
+				case SDLK_5:
+				case SDLK_6:
+				case SDLK_7:
+				case SDLK_8:
+				case SDLK_9:
+				case SDLK_0:
+				{
+					// Select all characters in squad 1-10 (+10 if SHIFT is pressed)
+					UINT squad_no = (InputEvent.usParam - SDLK_0 + 9) % 10U;
+					if (_KeyDown(SHIFT)) squad_no += 10;
+					SelectAllCharactersInSquad(squad_no);
 					break;
-
-				case '0':
-					SelectAllCharactersInSquad( 9 ); // internal squad #s start at 0
-					break;
-
-				case '!':
-					SelectAllCharactersInSquad( 10 ); // internal squad #s start at 0
-					break;
-				case '@':
-					SelectAllCharactersInSquad( 11 ); // internal squad #s start at 0
-					break;
-				case '#':
-					SelectAllCharactersInSquad( 12 ); // internal squad #s start at 0
-					break;
-				case '$':
-					SelectAllCharactersInSquad( 13 ); // internal squad #s start at 0
-					break;
-				case '%':
-					SelectAllCharactersInSquad( 14 ); // internal squad #s start at 0
-					break;
-				case '^':
-					SelectAllCharactersInSquad( 15 ); // internal squad #s start at 0
-					break;
-				case '&':
-					SelectAllCharactersInSquad( 16 ); // internal squad #s start at 0
-					break;
-				case '*':
-					SelectAllCharactersInSquad( 17 ); // internal squad #s start at 0
-					break;
-				case '(':
-					SelectAllCharactersInSquad( 18 ); // internal squad #s start at 0
-					break;
-				case ')':
-					SelectAllCharactersInSquad( 19 ); // internal squad #s start at 0
-					break;
-
+				}
 
 				case 'a':
 						if( fAlt )
