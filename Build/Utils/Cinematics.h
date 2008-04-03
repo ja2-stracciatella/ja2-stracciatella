@@ -1,14 +1,15 @@
-#ifndef _CINEMATICS_H_
-#define _CINEMATICS_H_
+#ifndef CINEMATICS_H
+#define CINEMATICS_H
 
 #include "Types.h"
 
+
 typedef struct SMKFLIC SMKFLIC;
 
-void    SmkInitialize(void);
-void				SmkShutdown(void);
-SMKFLIC			*SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fAutoClose);
-BOOLEAN			SmkPollFlics(void);
-void				SmkCloseFlic(SMKFLIC *pSmack);
+void     SmkInitialize(void);
+void     SmkShutdown(void);
+SMKFLIC* SmkPlayFlic(const char* filename, UINT32 left, UINT32 top, BOOLEAN auto_close);
+BOOLEAN  SmkPollFlics(void);
+void     SmkCloseFlic(SMKFLIC*);
 
 #endif

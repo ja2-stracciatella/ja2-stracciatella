@@ -1,11 +1,11 @@
-//----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Cinematics Module
 //
 //
 //	Stolen from Nemesis by Derek Beland.
 //	Originally by Derek Beland and Bret Rowden.
 //
-//----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #include "Cinematics.h"
 #include "Debug.h"
@@ -30,69 +30,52 @@ struct SMKFLIC
 };
 
 
-//-Flags-and-Symbols---------------------------------------------------------------
-
-#define SMK_NUM_FLICS				4										// Maximum number of flics open
-
 // SMKFLIC uiFlags
-#define SMK_FLIC_OPEN				0x00000001							// Flic is open
-#define SMK_FLIC_PLAYING		0x00000002							// Flic is playing
-#define SMK_FLIC_AUTOCLOSE	0x00000008							// Close when done
+#define SMK_FLIC_OPEN      0x00000001 // Flic is open
+#define SMK_FLIC_PLAYING   0x00000002 // Flic is playing
+#define SMK_FLIC_AUTOCLOSE 0x00000008 // Close when done
 
-//-Globals-------------------------------------------------------------------------
-static SMKFLIC SmkList[SMK_NUM_FLICS];
 
-static UINT32 guiSmackPixelFormat = SMACKBUFFER565;
+static SMKFLIC SmkList[4];
+static UINT32  guiSmackPixelFormat = SMACKBUFFER565;
 
 
 BOOLEAN SmkPollFlics(void)
 {
-UINT32 uiCount;
-BOOLEAN fFlicStatus=FALSE;
-
-	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
+	BOOLEAN fFlicStatus = FALSE;
+	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
 	{
-		if(SmkList[uiCount].uiFlags & SMK_FLIC_PLAYING)
-		{
-			fFlicStatus=TRUE;
-			if(!SmackWait(SmkList[uiCount].SmackHandle))
-			{
-				UINT32 Pitch;
-				UINT16* Dest = LockFrameBuffer(&Pitch);
-				SmackToBuffer
-				(
-					SmkList[uiCount].SmackHandle,
-					SmkList[uiCount].uiLeft,
-					SmkList[uiCount].uiTop,
-					Pitch,
-					SmkList[uiCount].SmackHandle->Height,
-					Dest,
-					guiSmackPixelFormat
-				);
-				SmackDoFrame(SmkList[uiCount].SmackHandle);
-				UnlockFrameBuffer();
+		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
+		fFlicStatus = TRUE;
 
-				// Check to see if the flic is done the last frame
-				if(SmkList[uiCount].SmackHandle->FrameNum==(SmkList[uiCount].SmackHandle->Frames-1))
-				{
-					// If flic is looping, reset frame to 0
-					if (SmkList[uiCount].uiFlags & SMK_FLIC_AUTOCLOSE)
-						SmkCloseFlic(&SmkList[uiCount]);
-				}
-				else
-					SmackNextFrame(SmkList[uiCount].SmackHandle);
-			}
+		Smack* const smk = i->SmackHandle;
+		if (SmackWait(smk)) continue;
+
+		UINT32        Pitch;
+		UINT16* const Dest = LockFrameBuffer(&Pitch);
+		SmackToBuffer(smk, i->uiLeft, i->uiTop, Pitch, smk->Height, Dest, guiSmackPixelFormat);
+		SmackDoFrame(smk);
+		UnlockFrameBuffer();
+
+		// Check to see if the flic is done the last frame
+		if (smk->FrameNum == smk->Frames - 1)
+		{
+			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
+		}
+		else
+		{
+			SmackNextFrame(smk);
 		}
 	}
 
-	return(fFlicStatus);
+	return fFlicStatus;
 }
 
 
 void SmkInitialize(void)
 {
 	// Wipe the flic list clean
-	memset(SmkList, 0, sizeof(SMKFLIC)*SMK_NUM_FLICS);
+	memset(SmkList, 0, sizeof(SmkList));
 
 	// Use MMX acceleration, if available
 	SmackUseMMX(1);
@@ -101,38 +84,31 @@ void SmkInitialize(void)
 
 void SmkShutdown(void)
 {
-UINT32 uiCount;
-
 	// Close and deallocate any open flics
-	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
+	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
 	{
-		if(SmkList[uiCount].uiFlags & SMK_FLIC_OPEN)
-			SmkCloseFlic(&SmkList[uiCount]);
+		if (i->uiFlags & SMK_FLIC_OPEN) SmkCloseFlic(i);
 	}
 }
 
 
-static SMKFLIC* SmkOpenFlic(const char* cFilename);
+static SMKFLIC* SmkOpenFlic(const char* filename);
 
 
-SMKFLIC *SmkPlayFlic(const char *cFilename, UINT32 uiLeft, UINT32 uiTop, BOOLEAN fClose)
+SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32 top, const BOOLEAN auto_close)
 {
-SMKFLIC *pSmack;
-
-	// Open the flic
-	if((pSmack=SmkOpenFlic(cFilename))==NULL)
-		return(NULL);
+	SMKFLIC* const sf = SmkOpenFlic(filename);
+	if (sf == NULL) return NULL;
 
 	// Set the blitting position on the screen
-	pSmack->uiLeft = uiLeft;
-	pSmack->uiTop  = uiTop;
+	sf->uiLeft = left;
+	sf->uiTop  = top;
 
 	// We're now playing, flag the flic for the poller to update
-	pSmack->uiFlags|=SMK_FLIC_PLAYING;
-	if(fClose)
-		pSmack->uiFlags|=SMK_FLIC_AUTOCLOSE;
+	sf->uiFlags |= SMK_FLIC_PLAYING;
+	if (auto_close) sf->uiFlags |= SMK_FLIC_AUTOCLOSE;
 
-	return(pSmack);
+	return sf;
 }
 
 
@@ -140,39 +116,34 @@ static SMKFLIC* SmkGetFreeFlic(void);
 static void SmkSetupVideo(void);
 
 
-static SMKFLIC* SmkOpenFlic(const char* cFilename)
+static SMKFLIC* SmkOpenFlic(const char* const filename)
 {
-	SMKFLIC *pSmack;
-	FILE* hFile;
-
-	// Get an available flic slot from the list
-	if(!(pSmack=SmkGetFreeFlic()))
+	SMKFLIC* const sf = SmkGetFreeFlic();
+	if (!sf)
 	{
 		FastDebugMsg("SMK ERROR: Out of flic slots, cannot open another");
-		goto fail;
+		return NULL;
 	}
 
-	// Attempt opening the filename
-	pSmack->hFileHandle = FileOpen(cFilename, FILE_ACCESS_READ);
-	if (!pSmack->hFileHandle)
+	sf->hFileHandle = FileOpen(filename, FILE_ACCESS_READ);
+	if (!sf->hFileHandle)
 	{
 		FastDebugMsg("SMK ERROR: Can't open the SMK file");
-		goto fail;
+		return NULL;
 	}
 
-	//Get the real file handle for the file man handle for the smacker file
-	hFile = GetRealFileHandleFromFileManFileHandle( pSmack->hFileHandle );
+	FILE* const f = GetRealFileHandleFromFileManFileHandle(sf->hFileHandle);
 
 	// Allocate a Smacker buffer for video decompression
-	pSmack->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
-	if (pSmack->SmackBuffer == NULL)
+	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+	if (sf->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
 		goto fail_close;
 	}
 
-	if(!(pSmack->SmackHandle=SmackOpen((CHAR8 *)hFile, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA)))
-//	if(!(pSmack->SmackHandle=SmackOpen(cFilename, SMACKTRACKS, SMACKAUTOEXTRA)))
+	sf->SmackHandle = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
+	if (!sf->SmackHandle)
 	{
 		FastDebugMsg("SMK ERROR: Smacker won't open the SMK file");
 		goto fail_close;
@@ -181,55 +152,46 @@ static SMKFLIC* SmkOpenFlic(const char* cFilename)
 	// Make sure we have a video surface
 	SmkSetupVideo();
 
-	// Smack flic is now open and ready to go
-	pSmack->uiFlags|=SMK_FLIC_OPEN;
-
-	return(pSmack);
+	sf->uiFlags |= SMK_FLIC_OPEN;
+	return sf;
 
 fail_close:
-	FileClose(pSmack->hFileHandle);
-fail:
+	FileClose(sf->hFileHandle);
 	return NULL;
 }
 
 
-void SmkCloseFlic(SMKFLIC *pSmack)
+void SmkCloseFlic(SMKFLIC* const sf)
 {
-	// Attempt opening the filename
-	FileClose(pSmack->hFileHandle);
-
-	// Deallocate the smack buffers
-	SmackBufferClose(pSmack->SmackBuffer);
-
-	// Close the smack flic
-	SmackClose(pSmack->SmackHandle);
-
-	// Zero the memory, flags, etc.
-	memset(pSmack, 0, sizeof(SMKFLIC));
+	FileClose(sf->hFileHandle);
+	SmackBufferClose(sf->SmackBuffer);
+	SmackClose(sf->SmackHandle);
+	memset(sf, 0, sizeof(*sf));
 }
 
 
 static SMKFLIC* SmkGetFreeFlic(void)
 {
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < SMK_NUM_FLICS; uiCount++)
-		if(!(SmkList[uiCount].uiFlags & SMK_FLIC_OPEN))
-			return(&SmkList[uiCount]);
-
-	return(NULL);
+	for (SMKFLIC* i = SmkList; i != endof(SmkList); ++i)
+	{
+		if (!(i->uiFlags & SMK_FLIC_OPEN)) return i;
+	}
+	return NULL;
 }
 
 
 static void SmkSetupVideo(void)
 {
-	UINT32 usRed, usGreen, usBlue;
-
-	GetPrimaryRGBDistributionMasks(&usRed, &usGreen, &usBlue);
-
-	if((usRed==0xf800) && (usGreen==0x07e0) && (usBlue==0x001f))
-		guiSmackPixelFormat=SMACKBUFFER565;
+	UINT32 red;
+	UINT32 green;
+	UINT32 blue;
+	GetPrimaryRGBDistributionMasks(&red, &green, &blue);
+	if (red == 0xf800 && green == 0x07e0 && blue == 0x001f)
+	{
+		guiSmackPixelFormat = SMACKBUFFER565;
+	}
 	else
-		guiSmackPixelFormat=SMACKBUFFER555;
-
+	{
+		guiSmackPixelFormat = SMACKBUFFER555;
+	}
 }
