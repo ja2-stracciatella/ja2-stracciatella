@@ -265,7 +265,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 			}
 
 			// if current tactical sqaud...upadte panel
-			if( NumberOfPeopleInSquad( ( INT8 )iCurrentTacticalSquad ) == 0 )
+			if (SquadIsEmpty(iCurrentTacticalSquad))
 			{
 				SetCurrentSquad( bSquadValue, TRUE );
 			}
