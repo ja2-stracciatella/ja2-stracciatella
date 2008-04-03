@@ -5827,6 +5827,8 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
+		ResetAllSelectedCharacterModes();
+
 		const SOLDIERTYPE* const pSoldier = gCharactersList[iValue].merc;
 		if (pSoldier != NULL)
 		{
@@ -5836,33 +5838,11 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 			RequestToggleMercInventoryPanel();
 
-
-			// highlight
-			giDestHighLine = -1;
-
-			// reset character
-			bSelectedAssignChar = -1;
-			bSelectedDestChar = -1;
-			bSelectedContractChar = -1;
-			fPlotForHelicopter = FALSE;
-
 			// if not dead or POW, select his sector
 			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
 				ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
 			}
-
-			// unhilight contract line
-			giContractHighLine = -1;
-
-			// can't assign highlight line
-			giAssignHighLine = -1;
-
-			// dirty team and map regions
-			fTeamPanelDirty = TRUE;
-			fMapPanelDirty = TRUE;
-//			fMapScreenBottomDirty = TRUE;
-			gfRenderPBInterface = TRUE;
 		}
 	}
 }
@@ -6141,19 +6121,9 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 		}
 	}
 
-
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		const SOLDIERTYPE* const s = gCharactersList[iValue].merc;
-		if (s != NULL) MakeMapModesSuitableForDestPlotting(s);
-
-		// reset list if the clicked character isn't also selected
-		ChangeSelectedInfoChar( ( INT8 ) iValue, ( BOOLEAN )( IsEntryInSelectedListSet( ( INT8 ) iValue ) == FALSE ) );
-
-		CancelPathsOfAllSelectedCharacters();
-
-		// reset selected characters
-		ResetAllSelectedCharacterModes( );
+		ResetAllSelectedCharacterModes();
 	}
 }
 
