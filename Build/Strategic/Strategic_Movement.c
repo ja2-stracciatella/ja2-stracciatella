@@ -2851,8 +2851,7 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup);
 
 BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
 {
-	// Delete the existing group list
-	while (gpGroupList) RemoveGroupFromList(gpGroupList);
+	RemoveAllGroups();
 
 	// Load the number of nodes in the list
 	UINT32 uiNumberOfGroups;

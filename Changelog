@@ -1,3 +1,4 @@
+(r3598) Fix a vanilla memory leak when loading savegames.
 (r3592) Fix vanilla bugs (different destinations within one squad, combats with no participants) when right clicking the the name, location or destination columns to abort movement planning mode.
 (r3546) Ensure that taking screenshots does not overwrite older screenshots.
 (r3529) Fix a bug caused by change of behaviour in r2719, which lead to truncation of the finance records.
