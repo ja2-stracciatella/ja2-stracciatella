@@ -3698,29 +3698,17 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void)
 }
 
 
-static BOOLEAN IsThisSquadInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, INT8 bSquadValue)
+static BOOLEAN IsThisSquadInThisSector(const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ, const INT8 bSquadValue)
 {
-	INT16 sX = 0, sY = 0;
-	INT8 bZ = 0;
-
-	if (SquadIsEmpty(bSquadValue)) return FALSE;
-
-	// now grab the squad location
-	SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ);
-
-	// check if this non-empty squad is in this sector
-	if( ( sX == sSectorX ) && ( sY == sSectorY ) && ( bSectorZ == bZ ) )
-	{
-		// a squad that's between sectors isn't *in* this sector
-		if( !IsThisSquadOnTheMove( bSquadValue ) )
-		{
-			// yep
-			return( TRUE );
-		}
-	}
-
-	// nope
-	return( FALSE );
+	INT16 sX;
+	INT16 sY;
+	INT8  bZ;
+	return
+		SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
+		sSectorX == sX                              &&
+		sSectorY == sY                              &&
+		bSectorZ == bZ                              &&
+		!IsThisSquadOnTheMove(bSquadValue);
 }
 
 

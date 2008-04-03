@@ -927,8 +927,6 @@ static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
 static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 {
 	// can character join this squad?
-	INT16 sX, sY;
-
 	Assert( bSquadValue < ON_DUTY );
 
 	if ( pSoldier->bAssignment == bSquadValue )
@@ -955,18 +953,14 @@ static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 		return( CHARACTER_CANT_JOIN_SQUAD );
 	}
 
-	// see if the squad us at the same x,y,z
-	INT8 sZ;
-	SectorSquadIsIn( bSquadValue, &sX, &sY, &sZ );
-
 	// check sector x y and z, if not same, cannot join squad
-	if( ( sX != pSoldier -> sSectorX ) || ( sY != pSoldier -> sSectorY ) || ( sZ != pSoldier -> bSectorZ ) )
+	INT16 sX;
+	INT16 sY;
+	INT8  sZ;
+	if (SectorSquadIsIn(bSquadValue, &sX, &sY, &sZ) &&
+			(sX != pSoldier->sSectorX || sY != pSoldier->sSectorY || sZ != pSoldier->bSectorZ))
 	{
-		// is there anyone on this squad?
-		if( NumberOfPeopleInSquad( bSquadValue ) > 0 )
-		{
-			return ( CHARACTER_CANT_JOIN_SQUAD_TOO_FAR );
-		}
+		return CHARACTER_CANT_JOIN_SQUAD_TOO_FAR;
 	}
 
 	if( IsThisSquadOnTheMove( bSquadValue ) == TRUE )

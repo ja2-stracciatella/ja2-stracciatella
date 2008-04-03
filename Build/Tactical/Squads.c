@@ -110,8 +110,6 @@ static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadVa
 BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 {
 	INT8 bCounter =0;
-	INT16 sX, sY;
-	INT8	bZ;
 //	BOOLEAN fBetweenSectors = FALSE;
 	GROUP	*pGroup;
 	BOOLEAN fNewSquad;
@@ -161,23 +159,16 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		if (t == NULL)
 		{
 			// check if squad empty, if not check sector x,y,z are the same as this guys
-			if (!SquadIsEmpty(bSquadValue))
+			INT16 sX;
+			INT16 sY;
+			INT8  bZ;
+			if (SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
+					(pCharacter->sSectorX != sX || pCharacter->sSectorY != sY || pCharacter->bSectorZ != bZ))
 			{
-				SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ);
+				return FALSE;
+			}
 
-				// if not same, return false
-				if( ( pCharacter->sSectorX != sX ) || ( pCharacter -> sSectorY != sY ) ||( pCharacter->bSectorZ != bZ) )
-				{
-					return ( FALSE );
-				}
-				// remove them
-				RemoveCharacterFromSquads( pCharacter );
-			}
-			else
-			{
-				// remove them
-				RemoveCharacterFromSquads( pCharacter );
-			}
+			RemoveCharacterFromSquads(pCharacter);
 
 			// copy path of squad to this char
 			CopyPathOfSquadToCharacter( pCharacter, bSquadValue );
