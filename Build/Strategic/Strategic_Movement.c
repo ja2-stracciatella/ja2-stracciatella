@@ -2978,7 +2978,6 @@ static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier
 	// run through members of group
 	UINT8 ubGroupId = pSoldier -> ubGroupID;
 	GROUP	*pGroup;
-	PLAYERGROUP *pPlayer=NULL;
 	SOLDIERTYPE *pCurrentSoldier=NULL;
 
 	pGroup = GetGroup( ubGroupId );
@@ -2995,18 +2994,9 @@ static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier
 		return;
 	}
 
-	// make sure there are members in the group..if so, then run through and make each bleeder compain
-	pPlayer = pGroup->pPlayerList;
-
-	// is there a player list?
-	if( pPlayer == NULL )
-	{
-		return;
-	}
-
 	BeginLoggingForBleedMeToos( TRUE );
 
-	while( pPlayer )
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
 	{
 		pCurrentSoldier = pPlayer->pSoldier;
 
@@ -3015,8 +3005,6 @@ static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier
 			// complain about bleeding
 			TacticalCharacterDialogue( pCurrentSoldier, QUOTE_STARTING_TO_BLEED );
 		}
-		pPlayer = pPlayer->next;
-
 	}
 
 	BeginLoggingForBleedMeToos( FALSE );
