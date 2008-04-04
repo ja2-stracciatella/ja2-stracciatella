@@ -3134,7 +3134,6 @@ static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
 	SOLDIERTYPE *pSoldier = NULL;
 	static BOOLEAN fShowRemoveMenu = FALSE;
 

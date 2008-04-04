@@ -113,8 +113,6 @@ static BOOLEAN gfTextInputMode = FALSE;
 static UINT8 gubCursorPos = 0;
 static UINT8 gubStartHilite = 0;
 
-//allow the user to cut, copy, and paste just like windows.
-static UINT16 gszClipboardString[256];
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
 //initializations that contain fields that edit text.  It also verifies and clears any existing

@@ -3702,7 +3702,6 @@ void DisplayPositionOfHelicopter( void )
 static void DisplayDestinationOfHelicopter(void)
 {
 	static INT16 sOldMapX = 0, sOldMapY = 0;
-	INT16 sSector;
 	INT16 sMapX, sMapY;
 	UINT32 x,y;
 

@@ -3450,7 +3450,6 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber);
 static void GetMapKeyboardInput(UINT32* puiNewEvent)
 {
   InputAtom					InputEvent;
-	INT8 bSquadNumber;
 	UINT8 ubGroupId = 0;
 	BOOLEAN fCtrl, fAlt;
 
