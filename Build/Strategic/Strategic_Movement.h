@@ -172,7 +172,7 @@ void RemoveGroupWaypoints(GROUP*);
 //step before adding waypoints and members to the player group.
 UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY );
 //Allows you to add or remove players from the group.
-BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier);
+void AddPlayerToGroup(UINT8 ubGroupID, SOLDIERTYPE*);
 
 BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
 BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier );

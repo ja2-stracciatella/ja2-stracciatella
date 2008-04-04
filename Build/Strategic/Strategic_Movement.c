@@ -163,50 +163,39 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 	return( AddGroupToList( pNew ) );
 }
 
-//Allows you to add players to the group.
-BOOLEAN AddPlayerToGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+
+void AddPlayerToGroup(const UINT8 group_id, SOLDIERTYPE* const s)
 {
-	GROUP *pGroup;
-	PLAYERGROUP *curr;
-	pGroup = GetGroup( ubGroupID );
-	Assert( pGroup );
-	PLAYERGROUP* const pPlayer = MALLOC(PLAYERGROUP);
-	Assert( pPlayer );
-	AssertMsg( pGroup->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
-	pPlayer->pSoldier = pSoldier;
-	pPlayer->next = NULL;
+	GROUP* const g = GetGroup(group_id);
+	Assert(g);
+	AssertMsg(g->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 
+	PLAYERGROUP* const p = MALLOC(PLAYERGROUP);
+	p->pSoldier = s;
+	p->next     = NULL;
 
-	if( !pGroup->pPlayerList )
+	s->ubGroupID = group_id;
+
+	PLAYERGROUP* i = g->pPlayerList;
+	if (!i)
 	{
-		pGroup->pPlayerList = pPlayer;
-		pGroup->ubGroupSize = 1;
-		pGroup->ubPrevX = (UINT8)((pSoldier->ubPrevSectorID % 16) + 1);
-		pGroup->ubPrevY = (UINT8)((pSoldier->ubPrevSectorID / 16) + 1);
-		pGroup->ubSectorX = (UINT8)pSoldier->sSectorX;
-		pGroup->ubSectorY = (UINT8)pSoldier->sSectorY;
-		pGroup->ubSectorZ = (UINT8)pSoldier->bSectorZ;
-
-		// set group id
-		pSoldier->ubGroupID = ubGroupID;
-
-		return TRUE;
+		g->pPlayerList = p;
+		g->ubGroupSize = 1;
+		g->ubPrevX     = s->ubPrevSectorID % 16 + 1;
+		g->ubPrevY     = s->ubPrevSectorID / 16 + 1;
+		g->ubSectorX   = s->sSectorX;
+		g->ubSectorY   = s->sSectorY;
+		g->ubSectorZ   = s->bSectorZ;
 	}
 	else
 	{
-		curr = pGroup->pPlayerList;
-		while( curr->next )
+		for (; i->next; i = i->next)
 		{
-			AssertMsg(curr->pSoldier->ubProfile != pSoldier->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", pSoldier->ubProfile));
-			curr = curr->next;
+			AssertMsg(i->pSoldier->ubProfile != s->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", s->ubProfile));
 		}
-		curr->next = pPlayer;
+		i->next = p;
 
-		// set group id
-		pSoldier->ubGroupID = ubGroupID;
-
-		pGroup->ubGroupSize++;
-		return TRUE;
+		g->ubGroupSize++;
 	}
 }
 
