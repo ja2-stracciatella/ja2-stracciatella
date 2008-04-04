@@ -1008,7 +1008,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	if ( fHatchItOut )
 	{
 		SGPVSurface* const uiWhichBuffer = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? guiSAVEBUFFER : FRAME_BUFFER);
-		DrawHatchOnInventory( uiWhichBuffer, sX, sY, (UINT16)(gSMInvData[ sPocket ].sWidth-1), (UINT16)(gSMInvData[ sPocket ].sHeight-1) );
+		DrawHatchOnInventory(uiWhichBuffer, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight);
 	}
 
 	// if there's an item in there

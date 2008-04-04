@@ -2584,10 +2584,10 @@ void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, con
 	UINT8	 *pDestBuf;
 	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
-	ClipRect.iLeft = usPosX;
-	ClipRect.iRight = usPosX + usWidth;
-	ClipRect.iTop = usPosY;
-	ClipRect.iBottom = usPosY + usHeight;
+	ClipRect.iLeft   = usPosX;
+	ClipRect.iRight  = usPosX + usWidth  - 1;
+	ClipRect.iTop    = usPosY;
+	ClipRect.iBottom = usPosY + usHeight - 1;
 
 	pDestBuf = LockVideoSurface( uiSurface, &uiDestPitchBYTES );
 	Blt16BPPBufferHatchRect((UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect);
@@ -5333,10 +5333,8 @@ void StartSKIDescriptionBox(void)
 	INT32 iCnt;
 
 	//if the current merc is too far away, dont shade the SM panel because it is already shaded
-	if( gfSMDisableForItems )
-		DrawHatchOnInventory(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, 338);
-	else
-		DrawHatchOnInventory(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	const UINT16 h = (gfSMDisableForItems ? INV_INTERFACE_START_Y : SCREEN_HEIGHT);
+	DrawHatchOnInventory(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, h);
 
 	InvalidateScreen();
 
@@ -6704,9 +6702,6 @@ static void EnableAllDealersOfferSlots(void)
 
 static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY)
 {
-	UINT16 usSlotX, usSlotY;
-	UINT16 usSlotWidth, usSlotHeight;
-
 	//if we are in the item desc panel
 	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
 	{
@@ -6714,12 +6709,10 @@ static void HatchOutInvSlot(UINT16 usPosX, UINT16 usPosY)
 		return;
 	}
 
-	usSlotX = ( UINT16 ) ( usPosX - 1 );
-	usSlotY = ( UINT16 ) ( usPosY - 1 );
-	usSlotWidth = SKI_INV_SLOT_WIDTH;
-	usSlotHeight = SKI_INV_SLOT_HEIGHT;
+	const UINT16 usSlotWidth  = SKI_INV_SLOT_WIDTH;
+	const UINT16 usSlotHeight = SKI_INV_SLOT_HEIGHT;
 
 	//Hatch it out
-	DrawHatchOnInventory(FRAME_BUFFER, usSlotX, usSlotY, usSlotWidth, usSlotHeight);
-	InvalidateRegion( usSlotX, usSlotY, usSlotX + usSlotWidth, usSlotY + usSlotHeight );
+	DrawHatchOnInventory(FRAME_BUFFER, usPosX, usPosY, usSlotWidth, usSlotHeight);
+	InvalidateRegion(usPosX, usPosY, usPosX + usSlotWidth, usPosY + usSlotHeight);
 }
