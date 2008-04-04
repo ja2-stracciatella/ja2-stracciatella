@@ -3,7 +3,7 @@
 (r3546) Ensure that taking screenshots does not overwrite older screenshots.
 (r3529) Fix a bug caused by change of behaviour in r2719, which lead to truncation of the finance records.
 (r3489) Fix a vanilla out of bounds access (which is a NULL-pointer access since r2625) when looking at the sector inventory and no merc is on the team.
-(r3444, r3445, r3600) Fix several vanilla graphical deviations when drawing items.
+(r3444, r3445, r3600, r3605) Fix several vanilla graphical deviations when drawing items.
 (r3432) Fix a vanilla display bug of the remaining time on Slay's contract.  It was always 2982616d 4h.
 (r3400) Fix a vanilla bug, which under rare circumstances caused items to disappear when changing sectors and looking at the sector inventory.
 (r3340) Fix a bug, which caused corrupted savegames when saving pseudo objects.  Most common symptom is corrupted savegames after receiving the "donation" from Armand.

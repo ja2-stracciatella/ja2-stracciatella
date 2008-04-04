@@ -46,49 +46,26 @@
 #define DESC_STATUS_BAR FROMRGB( 201, 172,  133 )
 #define DESC_STATUS_BAR_SHADOW FROMRGB( 140, 136,  119 )
 
-// page display positions
-#define MAP_INVENTORY_POOL_PAGE_X 506
-#define MAP_INVENTORY_POOL_PAGE_Y 336
-#define MAP_INVENTORY_POOL_PAGE_WIDTH 46 //552 - 494
-#define MAP_INVENTORY_POOL_PAGE_HEIGHT 345 - 332
-
-// the number of items
-#define MAP_INVENTORY_POOL_NUMBER_X 436
-#define MAP_INVENTORY_POOL_NUMBER_WIDTH 474 - 434
-
-// location
-#define MAP_INVENTORY_POOL_LOC_X 326
-#define MAP_INVENTORY_POOL_LOC_WIDTH 366 - 326
-
 // delay for flash of item
 #define DELAY_FOR_HIGHLIGHT_ITEM_FLASH 200
 
 // inventory slot font
 #define MAP_IVEN_FONT						SMALLCOMPFONT
 
-// the position of the background graphic
-#define INVEN_POOL_X 261
-#define INVEN_POOL_Y 0
-
-// inventory Graphic Offset X and y
-#define MAP_INVENTORY_POOL_SLOT_OFFSET_X 2
-#define MAP_INVENTORY_POOL_SLOT_OFFSET_Y 5
-
-// height of map inventory pool bar
-#define ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL 20
-
-// map bar offsets
-#define ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X 5
-#define ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y 22
-
 // inventory pool slot positions and sizes
-#define MAP_INVENTORY_POOL_SLOT_START_X 271
-#define MAP_INVENTORY_POOL_SLOT_START_Y 36
-#define MAP_INV_SLOT_COLS 9
-#define MAP_INVEN_SLOT_WIDTH 67
-#define MAP_INVEN_SPACE_BTWN_SLOTS 72
-#define MAP_INVEN_SLOT_HEIGHT 32
-#define MAP_INVEN_SLOT_IMAGE_HEIGHT 24
+#define MAP_INV_SLOT_ROWS 9
+
+
+static const SGPBox g_sector_inv_box        = { 261,   0, 379, 360 };
+static const SGPBox g_sector_inv_title_box  = { 266,   5, 370,  29 };
+static const SGPBox g_sector_inv_slot_box   = { 274,  37,  72,  32 };
+static const SGPBox g_sector_inv_region_box = {   0,   0,  67,  31 }; // relative to g_sector_inv_slot_box
+static const SGPBox g_sector_inv_item_box   = {   6,   0,  61,  24 }; // relative to g_sector_inv_slot_box
+static const SGPBox g_sector_inv_bar_box    = {   2,   2,   2,  20 }; // relative to g_sector_inv_slot_box
+static const SGPBox g_sector_inv_name_box   = {   0,  24,  67,   7 }; // relative to g_sector_inv_slot_box
+static const SGPBox g_sector_inv_loc_box    = { 326, 337,  39,  10 };
+static const SGPBox g_sector_inv_count_box  = { 437, 337,  39,  10 };
+static const SGPBox g_sector_inv_page_box   = { 505, 337,  50,  10 };
 
 
 // the current highlighted item
@@ -170,7 +147,8 @@ static void UpdateHelpTextForInvnentoryStashSlots(void);
 // blit the background panel for the inventory
 void BlitInventoryPoolGraphic( void )
 {
-	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, INVEN_POOL_X, INVEN_POOL_Y);
+	const SGPBox* const box = &g_sector_inv_box;
+	BltVideoObject(guiSAVEBUFFER, guiMapInventoryPoolBackground, 0, box->x, box->y);
 
 	// resize list
 	CheckAndUnDateSlotAllocation( );
@@ -224,21 +202,21 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	// check if anything there
 	if (item->o.ubNumberOfObjects == 0) return FALSE;
 
-	const INT32 dx = MAP_INVENTORY_POOL_SLOT_START_X + MAP_INVEN_SPACE_BTWN_SLOTS * (iCurrentSlot / MAP_INV_SLOT_COLS);
-	const INT32 dy = MAP_INVENTORY_POOL_SLOT_START_Y + MAP_INVEN_SLOT_HEIGHT      * (iCurrentSlot % MAP_INV_SLOT_COLS);
-
-	const INT16 sX = dx + MAP_INVENTORY_POOL_SLOT_OFFSET_X;
-	const INT16 sY = dy;
+	const SGPBox* const slot_box = &g_sector_inv_slot_box;
+	const INT32 dx = slot_box->x + slot_box->w * (iCurrentSlot / MAP_INV_SLOT_ROWS);
+	const INT32 dy = slot_box->y + slot_box->h * (iCurrentSlot % MAP_INV_SLOT_ROWS);
 
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	const UINT16 outline = (fMapInventoryItemCompatable[iCurrentSlot] ? Get16BPPColor(FROMRGB(255, 255, 255)) : TRANSPARENT);
-	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, sX + 7, sY, 60, 25, DIRTYLEVEL2, 0, outline);
+	const SGPBox* const item_box = &g_sector_inv_item_box;
+	const UINT16        outline  = (fMapInventoryItemCompatable[iCurrentSlot] ? Get16BPPColor(FROMRGB(255, 255, 255)) : TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, dx + item_box->x, dy + item_box->y, item_box->w, item_box->h, DIRTYLEVEL2, 0, outline);
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw bar for condition
 	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
 	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
-	DrawItemUIBarEx(&item->o, 0, dx + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_X, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y, ITEMDESC_ITEM_STATUS_HEIGHT_INV_POOL, col0, col1, guiSAVEBUFFER);
+	const SGPBox* const bar_box = &g_sector_inv_bar_box;
+	DrawItemUIBarEx(&item->o, 0, dx + bar_box->x, dy + bar_box->y + bar_box->h - 1, bar_box->h, col0, col1, guiSAVEBUFFER);
 
 	// if the item is not reachable, or if the selected merc is not in the current sector
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
@@ -249,13 +227,14 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 			s->bSectorZ != iCurrentMapSectorZ)
 	{
 		//Shade the item
-		DrawHatchOnInventory(guiSAVEBUFFER, sX, sY, MAP_INVEN_SLOT_WIDTH, MAP_INVEN_SLOT_IMAGE_HEIGHT);
+		DrawHatchOnInventory(guiSAVEBUFFER, dx + item_box->x, dy + item_box->y, item_box->w, item_box->h);
 	}
 
 	// the name
+	const SGPBox* const name_box = &g_sector_inv_name_box;
 	wchar_t sString[64];
 	wcscpy(sString, ShortItemNames[item->o.usItem]);
-	ReduceStringLength(sString, lengthof(sString), MAP_INVEN_SLOT_WIDTH, MAP_IVEN_FONT);
+	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
 
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -263,10 +242,10 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
 
-	INT16 sWidth  = 0;
-	INT16 sHeight = 0;
-	FindFontCenterCoordinates(dx + 4, 0, MAP_INVEN_SLOT_WIDTH, 0, sString, MAP_IVEN_FONT, &sWidth, &sHeight);
-	mprintf(sWidth, dy + ITEMDESC_ITEM_STATUS_INV_POOL_OFFSET_Y + 3, sString);
+	INT16 x;
+	INT16 y;
+	FindFontCenterCoordinates(dx + name_box->x, dy + name_box->y, name_box->w, name_box->h, sString, MAP_IVEN_FONT, &x, &y);
+	mprintf(x, y, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -485,37 +464,28 @@ static void MapInvenPoolSlotsMove(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void CreateMapInventoryPoolSlots(void)
 {
-	INT32 iCounter = 0;
-	INT16 sX = 0, sY = 0;
-	INT16 sXA = 0, sYA = 0;
-	INT16 sULX = 0, sULY = 0;
-	INT16 sBRX = 0, sBRY = 0;
-
-	MSYS_DefineRegion(&MapInventoryPoolMask, MAP_INVENTORY_POOL_SLOT_START_X, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
-
-	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 	{
-		sX = ( iCounter / MAP_INV_SLOT_COLS );
-		sY = ( iCounter % ( MAP_INV_SLOT_COLS ) );
+		const SGPBox* const inv_box = &g_sector_inv_box;
+		UINT16        const x       = inv_box->x;
+		UINT16        const y       = inv_box->y;
+		UINT16        const w       = inv_box->w;
+		UINT16        const h       = inv_box->h;
+		MSYS_DefineRegion(&MapInventoryPoolMask, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MapInvenPoolScreenMaskCallback);
+	}
 
-		sXA = sX + 1;
-		sYA = sY + 1;
-
-		sULX = MAP_INVENTORY_POOL_SLOT_START_X + 4;
-		sULY = MAP_INVENTORY_POOL_SLOT_START_Y + 1;
-
-		sULX += ( INT16 ) ( sX * MAP_INVEN_SPACE_BTWN_SLOTS  );
-		sULY += ( INT16 ) ( ( sY * MAP_INVEN_SLOT_HEIGHT ) );
-
-		sBRX = ( INT16 ) ( MAP_INVENTORY_POOL_SLOT_START_X + ( sXA * MAP_INVEN_SPACE_BTWN_SLOTS ) );
-		sBRY = ( INT16 ) ( MAP_INVENTORY_POOL_SLOT_START_Y + ( sYA * MAP_INVEN_SLOT_HEIGHT ) ) - 1;
-
-		MSYS_DefineRegion( &MapInventoryPoolSlots[ iCounter ],
-			sULX, sULY, sBRX, sBRY,
-			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MapInvenPoolSlotsMove, MapInvenPoolSlots );
-
-		MSYS_SetRegionUserData( &MapInventoryPoolSlots[iCounter], 0, iCounter );
-
+	const SGPBox* const slot_box = &g_sector_inv_slot_box;
+	const SGPBox* const reg_box  = &g_sector_inv_region_box;
+	for (UINT i = 0; i < MAP_INVENTORY_POOL_SLOT_COUNT; ++i)
+	{
+		UINT16        const sx = i / MAP_INV_SLOT_ROWS;
+		UINT16        const sy = i % MAP_INV_SLOT_ROWS;
+		UINT16        const x  = reg_box->x + slot_box->x + sx * slot_box->w;
+		UINT16        const y  = reg_box->y + slot_box->y + sy * slot_box->h;
+		UINT16        const w  = reg_box->w;
+		UINT16        const h  = reg_box->h;
+		MOUSE_REGION* const r  = &MapInventoryPoolSlots[i];
+		MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MapInvenPoolSlotsMove, MapInvenPoolSlots);
+		MSYS_SetRegionUserData(r, 0, i);
 	}
 }
 
@@ -1134,7 +1104,8 @@ static void DisplayPagesForMapInventoryPool(void)
 	swprintf( sString, lengthof(sString), L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
 
 	// grab centered coords
-	FindFontCenterCoordinates(MAP_INVENTORY_POOL_PAGE_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_PAGE_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
+	const SGPBox* const box = &g_sector_inv_page_box;
+	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 
 	mprintf( sX, sY, sString );
 
@@ -1198,7 +1169,8 @@ static void DrawNumberOfIventoryPoolItems(void)
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// grab centered coords
-	FindFontCenterCoordinates(MAP_INVENTORY_POOL_NUMBER_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_NUMBER_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
+	const SGPBox* const box = &g_sector_inv_count_box;
+	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 
 	mprintf( sX, sY, sString );
 
@@ -1209,7 +1181,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 static void CreateMapInventoryPoolDoneButton(void)
 {
 	// create done button
-	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", -1, 0, -1, 1, -1, 587, 336, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
+	guiMapInvenButton[2] = QuickCreateButtonImg("INTERFACE/done_button.sti", -1, 0, -1, 1, -1, 587, 333, MSYS_PRIORITY_HIGHEST, MapInventoryPoolDoneBtn);
 }
 
 
@@ -1238,7 +1210,8 @@ static void DisplayCurrentSector(void)
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// grab centered coords
-	FindFontCenterCoordinates(MAP_INVENTORY_POOL_LOC_X, MAP_INVENTORY_POOL_PAGE_Y ,MAP_INVENTORY_POOL_LOC_WIDTH ,MAP_INVENTORY_POOL_PAGE_HEIGHT ,sString , MAP_SCREEN_FONT, &sX, &sY);
+	const SGPBox* const box = &g_sector_inv_loc_box;
+	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
 
 	mprintf( sX, sY, sString );
 
@@ -1337,18 +1310,18 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 
 static void DrawTextOnSectorInventory(void)
 {
-	INT16 sX = 0, sY = 0;
-
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	const wchar_t* InvText = zMarksMapScreenText[11];
-	FindFontCenterCoordinates(MAP_INVENTORY_POOL_SLOT_START_X, MAP_INVENTORY_POOL_SLOT_START_Y - 20,  630 - MAP_INVENTORY_POOL_SLOT_START_X, GetFontHeight(FONT14ARIAL), InvText, FONT14ARIAL, &sX, &sY);
+	SetFont(FONT14ARIAL);
+	SetFontForeground(FONT_WHITE);
+	SetFontBackground(FONT_BLACK);
 
-	SetFont( FONT14ARIAL );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-
-	mprintf(sX, sY, InvText);
+	INT16 x;
+	INT16 y;
+	const SGPBox*  const box   = &g_sector_inv_title_box;
+	const wchar_t* const title = zMarksMapScreenText[11];
+	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, title, FONT14ARIAL, &x, &y);
+	mprintf(x, y, title);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
