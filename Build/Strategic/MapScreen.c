@@ -452,7 +452,6 @@ static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 #endif
 
 
-static PathSt* gpCharacterPreviousMercPath[MAX_CHARACTER_COUNT];
 static PathSt* gpHelicopterPreviousMercPath = NULL;
 
 
@@ -7130,7 +7129,8 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			return( FALSE );
 		}
 
-		const SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
+		MapScreenCharacterSt* const c = &gCharactersList[bSelectedDestChar];
+		const SOLDIERTYPE*    const s = c->merc;
 
 		// invalid soldier?  we shouldn't be here!
 		if (s == NULL)
@@ -7169,7 +7169,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			RebuildWayPointsForAllSelectedCharsGroups( );
 
 			// pointer to previous character path
-			pPreviousMercPath = gpCharacterPreviousMercPath[ bSelectedDestChar ];
+			pPreviousMercPath = c->prev_path;
 
 			fLastSectorInPath = TRUE;
 		}
@@ -9725,7 +9725,7 @@ static void InitPreviousPaths(void)
 	// init character previous paths
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		gpCharacterPreviousMercPath[ iCounter ] = NULL;
+		gCharactersList[iCounter].prev_path = NULL;
 	}
 
 	// init helicopter previous path
@@ -9739,12 +9739,12 @@ void RememberPreviousPathForAllSelectedChars(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		MapScreenCharacterSt* const c = &gCharactersList[iCounter];
 		if (!c->selected) continue;
 
 		// remember his previous path by copying it to his slot in the array kept for that purpose
-		ClearStrategicPathList(gpCharacterPreviousMercPath[iCounter], 0);
-		gpCharacterPreviousMercPath[iCounter] = CopyPaths(GetSoldierMercPathPtr(c->merc));
+		ClearStrategicPathList(c->prev_path, 0);
+		c->prev_path = CopyPaths(GetSoldierMercPathPtr(c->merc));
 	}
 }
 
@@ -9832,10 +9832,10 @@ static void RestorePreviousPaths(void)
 			fPathChanged = FALSE;
 
 			// if we have the previous path stored for the dest char
-			if( gpCharacterPreviousMercPath[ iCounter ] )
+			if (c->prev_path)
 			{
 				ClearStrategicPathList(*ppMovePath, ubGroupId);
-				*ppMovePath = CopyPaths(gpCharacterPreviousMercPath[iCounter]);
+				*ppMovePath = CopyPaths(c->prev_path);
 				// will need to rebuild waypoints
 				fPathChanged = TRUE;
 			}
@@ -9868,10 +9868,10 @@ static void ClearPreviousPaths(void)
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
+		MapScreenCharacterSt* const c = &gCharactersList[iCounter];
 		if (!c->selected) continue;
 
-		gpCharacterPreviousMercPath[iCounter] = ClearStrategicPathList(gpCharacterPreviousMercPath[iCounter], 0 );
+		c->prev_path = ClearStrategicPathList(c->prev_path, 0);
 	}
 	gpHelicopterPreviousMercPath = ClearStrategicPathList( gpHelicopterPreviousMercPath, 0 );
 }
