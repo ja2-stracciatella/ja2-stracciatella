@@ -525,7 +525,6 @@ void DecaySmokeEffects( UINT32 uiTime )
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 {
-	UINT32	uiCount;
 	UINT32	uiCnt=0;
 
 	//no longer need to load smoke effects.  They are now in temp files
@@ -630,7 +629,6 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	UINT32	uiCount;
 	UINT32	uiCnt=0;
 	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];

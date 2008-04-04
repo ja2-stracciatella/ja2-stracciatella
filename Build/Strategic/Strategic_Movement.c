@@ -2571,7 +2571,6 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 
 UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 {
-	PLAYERGROUP *pPlayer;
 	UINT8 ubNumGroups = 0;
 	CFOR_ALL_PLAYER_GROUPS(pGroup)
 	{

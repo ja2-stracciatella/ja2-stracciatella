@@ -743,9 +743,6 @@ void RebuildCurrentSquad( void )
 
 void ExamineCurrentSquadLights( void )
 {
-	// rebuilds current squad to reset faces in tactical
-	INT32 iCounter = 0;
-
 	// OK, we should add lights for any guy currently bInSector who is not bad OKLIFE...
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
