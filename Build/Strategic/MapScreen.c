@@ -913,47 +913,6 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 }
 
 
-static void DrawCharBars(void)
-{
-	// will draw the heath, morale and breath bars for a character being displayed in the upper left hand corner
-
-	if( ( bSelectedInfoChar == -1 )&&( bSelectedDestChar == -1 ) )
-	{
-		// error, no character to display right now
-		return;
-	}
-	else
-	{
-		// valid character
-		const SOLDIERTYPE* pSoldier;
-		if( bSelectedInfoChar != -1 )
-		{
-			pSoldier = gCharactersList[bSelectedInfoChar].merc;
-		}
-		else
-		{
-			pSoldier = gCharactersList[bSelectedDestChar].merc;
-		}
-
-		if( pSoldier == NULL )
-		{
-			// no soldier
-			return;
-		}
-
-		// skip POWs, dead guys
-		if( ( pSoldier->bLife == 0 ) ||
-				( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-				( pSoldier->bAssignment == ASSIGNMENT_POW ) )
-		{
-			return;
-		}
-
-		DrawSoldierUIBars(pSoldier, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
-	}
-}
-
-
 static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
@@ -7438,17 +7397,19 @@ static void HandleChangeOfHighLightedLine(void)
 
 static void HandleCharBarRender(void)
 {
-	if (!fDisableDueToBattleRoster && // check if the panel is disbled, if so, do not render
-			GetSelectedInfoChar() != NULL) // valid character?...render
-	{
-		//if( !( ( fShowContractMenu)||( fShowAssignmentMenu ) ) )
-		//{
-			// draw bars for them
-			DrawCharBars( );
+	if (fDisableDueToBattleRoster) return; // check if the panel is disbled, if so, do not render
 
-			UpdateCharRegionHelpText( );
-		//}
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s == NULL) return;
+
+	if (s->bLife       != 0               &&
+			s->bAssignment != ASSIGNMENT_DEAD &&
+			s->bAssignment != ASSIGNMENT_POW)
+	{
+		DrawSoldierUIBars(s, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
 	}
+
+	UpdateCharRegionHelpText();
 }
 
 
