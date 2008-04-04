@@ -2971,46 +2971,6 @@ static BOOLEAN LoadEnemyGroupStructFromSavedGame(const HWFILE f, GROUP* const g)
 }
 
 
-// check members of mvt group, if any are bleeding, complain before moving
-static void CheckMembersOfMvtGroupAndComplainAboutBleeding(SOLDIERTYPE* pSoldier)
-{
-	// run through members of group
-	UINT8 ubGroupId = pSoldier -> ubGroupID;
-	GROUP	*pGroup;
-	SOLDIERTYPE *pCurrentSoldier=NULL;
-
-	pGroup = GetGroup( ubGroupId );
-
-	// valid group?
-	if( pGroup == NULL )
-	{
-		return;
-	}
-
-	// player controlled group?
-	if( pGroup->fPlayer == FALSE )
-	{
-		return;
-	}
-
-	BeginLoggingForBleedMeToos( TRUE );
-
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-	{
-		pCurrentSoldier = pPlayer->pSoldier;
-
-		if( pCurrentSoldier->bBleeding > 0 )
-		{
-			// complain about bleeding
-			TacticalCharacterDialogue( pCurrentSoldier, QUOTE_STARTING_TO_BLEED );
-		}
-	}
-
-	BeginLoggingForBleedMeToos( FALSE );
-
-}
-
-
 static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
 {
 	// Save the number of waypoints

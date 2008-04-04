@@ -6049,9 +6049,6 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 				// remember the current paths for all selected characters so we can restore them if need be
 				RememberPreviousPathForAllSelectedChars();
 
-				// check each person in this mvt group, if any bleeding, have them complain
-				//CheckMembersOfMvtGroupAndComplainAboutBleeding(gCharactersList[bSelectedDestChar].merc);
-
 				// highlight
 				giDestHighLine = iValue;
 
