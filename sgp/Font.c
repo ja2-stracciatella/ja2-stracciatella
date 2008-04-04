@@ -165,31 +165,6 @@ static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 }
 
 
-/* Returns the length of a string with a variable number of arguments, in
- * pixels, using the current font. Maximum length in characters the string can
- * evaluate to is 512.
- * 'uiCharCount' specifies how many characters of the string are counted. */
-INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFontString, ...)
-{
-	Assert(pFontString != NULL);
-
-	va_list argptr;
-	va_start(argptr, pFontString);
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, argptr);
-	va_end(argptr);
-
-	// make sure the character count is legal
-	if (uiCharCount < wcslen(string))
-	{
-		// less than the full string, so whack off the end of it (it's temporary anyway)
-		string[uiCharCount] = '\0';
-	}
-
-	return(StringPixLength(string, usUseFont));
-}
-
-
 /* Returns the length of a string in pixels, depending on the font given. */
 INT16 StringPixLength(const wchar_t *string, INT32 UseFont)
 {

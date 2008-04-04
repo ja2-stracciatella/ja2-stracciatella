@@ -96,7 +96,6 @@ extern void			 UnloadFont(UINT32 FontIndex);
 
 UINT32 GetCharWidth(HVOBJECT Font, wchar_t c);
 
-extern INT16 StringPixLengthArg(INT32 usUseFont, UINT32 uiCharCount, const wchar_t* pFontString, ...);
 extern INT16 StringPixLength(const wchar_t *string,INT32 UseFont);
 extern void SaveFontSettings(void);
 extern void RestoreFontSettings(void);

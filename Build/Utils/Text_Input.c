@@ -1202,17 +1202,20 @@ static void RenderActiveTextField(void)
 		mprintf(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, L"%ls", gpActive->szString);
 	}
 	//Draw the cursor in the correct position.
-	if( gfEditingText && gpActive->szString )
-	{
-		UINT32 uiCursorXPos = StringPixLengthArg(pColors->usFont, gubCursorPos, L"%ls", gpActive->szString) + 2;
-		if( GetJA2Clock()%1000 < 500 )
-		{	//draw the blinking ibeam cursor during the on blink period.
-			ColorFillVideoSurfaceArea(FRAME_BUFFER,
-				gpActive->region.RegionTopLeftX + uiCursorXPos,
-				gpActive->region.RegionTopLeftY + usOffset,
-				gpActive->region.RegionTopLeftX + uiCursorXPos + 1,
-				gpActive->region.RegionTopLeftY + usOffset + GetFontHeight( pColors->usFont ), pColors->usCursorColor );
+	if (gfEditingText && gpActive->szString && GetJA2Clock() % 1000 < 500)
+	{	//draw the blinking ibeam cursor during the on blink period.
+		UINT32         dx   = 2;
+		const HVOBJECT font = GetFontObject(pColors->usFont);
+		const wchar_t* str  = gpActive->szString;
+		for (size_t i = gubCursorPos; i != 0; --i)
+		{
+			Assert(*str != L'\0');
+			dx += GetCharWidth(font, *str++);
 		}
+
+		const INT32 x = gpActive->region.RegionTopLeftX + dx;
+		const INT32 y = gpActive->region.RegionTopLeftY + usOffset;
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 1, y + GetFontHeight(pColors->usFont), pColors->usCursorColor);
 	}
 	RestoreFontSettings();
 }
