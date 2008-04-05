@@ -3140,52 +3140,43 @@ static void MilitiaChangesSides(void)
 }
 
 
-static SOLDIERTYPE* FindNextActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
+static SOLDIERTYPE* FindActiveAndAliveMerc(const SOLDIERTYPE* const curr, const UINT step, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
 {
-	for (INT32 i = begin; i <= last; ++i)
+	const TacticalTeamType* const t = &gTacticalStatus.Team[curr->bTeam];
+
+	SOLDIERTYPE* s;
+	SoldierID    i = curr->ubID;
+	do
 	{
-		SOLDIERTYPE* const s = GetMan(i);
+		UINT di = step;
+		if (i > t->bLastID - di) di -= t->bLastID - t->bFirstID + 1; // modulo, subtract span
+		i += di;
+		s = GetMan(i);
 		if (!s->bActive) continue;
 
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
-
-		if (fGoodForLessOKLife)
-		{
-			if (s->bLife > 0 && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
-			{
-				return s;
-			}
-		}
-		else
-		{
-			if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
-			{
-				return s;
-			}
-		}
+		if (s->bAssignment != curr->bAssignment)                  continue;
+		if (!OK_INTERRUPT_MERC(s))                                continue;
+		if (!s->bInSector)                                        continue;
+		if (s->bLife < (fGoodForLessOKLife ? 1 : OKLIFE))         continue;
+		break;
 	}
-
-	return NULL;
+	while (s != curr);
+	return s;
 }
 
 
-SOLDIERTYPE* FindNextActiveAndAliveMerc(SOLDIERTYPE* const s, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
+SOLDIERTYPE* FindNextActiveAndAliveMerc(const SOLDIERTYPE* const curr, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
 {
-	const TacticalTeamType* const t = &gTacticalStatus.Team[s->bTeam];
-	const UINT8 id = s->ubID;
-	const INT8 assignment = s->bAssignment;
-	SOLDIERTYPE* res;
+	return FindActiveAndAliveMerc(curr, 1, fGoodForLessOKLife, fOnlyRegularMercs);
+}
 
-	// look for all mercs on the same team,
-	res = FindNextActiveAndAliveMercRange(id + 1, t->bLastID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NULL) return res;
 
-	// none found, now loop back
-	res = FindNextActiveAndAliveMercRange(t->bFirstID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NULL) return res;
-
-	// IF we are here, keep as we always were!
-	return s;
+SOLDIERTYPE* FindPrevActiveAndAliveMerc(const SOLDIERTYPE* const curr, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
+{
+	const TacticalTeamType* const t    = &gTacticalStatus.Team[curr->bTeam];
+	UINT                    const step = t->bLastID - t->bFirstID; // modulo: -1
+	return FindActiveAndAliveMerc(curr, step, fGoodForLessOKLife, fOnlyRegularMercs);
 }
 
 
@@ -3218,57 +3209,6 @@ SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* s)
 	res = FindNextActiveSquadRange(0, assignment);
 	if (res != NULL) return res;
 
-	// IF we are here, keep as we always were!
-	return s;
-}
-
-
-static SOLDIERTYPE* FindPrevActiveAndAliveMercRange(UINT8 begin, UINT8 last, INT8 assignment, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs)
-{
-	for (INT32 i = begin; i >= last; --i)
-	{
-		SOLDIERTYPE* const s = GetMan(i);
-		if (!s->bActive) continue;
-
-		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;
-
-		if (fGoodForLessOKLife)
-		{
-			// Check for bLife > 0
-			if (s->bLife > 0 && s->bInSector && s->bTeam == gbPlayerNum && s->bAssignment < ON_DUTY  && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
-			{
-				return s;
-			}
-		}
-		else
-		{
-			if (OkControllableMerc(s) && OK_INTERRUPT_MERC(s) && assignment == s->bAssignment)
-			{
-				return s;
-			}
-		}
-	}
-
-	return NULL;
-}
-
-
-SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* const s, const BOOLEAN fGoodForLessOKLife, const BOOLEAN fOnlyRegularMercs)
-{
-	const TacticalTeamType* const t = &gTacticalStatus.Team[s->bTeam];
-	const UINT8 id = s->ubID;
-	const INT8 assignment = s->bAssignment;
-	SOLDIERTYPE* res;
-
-	// loop back
-	res = FindPrevActiveAndAliveMercRange(id - 1, t->bFirstID, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NULL) return res;
-
-	// look for all mercs on the same team,
-	res = FindPrevActiveAndAliveMercRange(t->bLastID, id, assignment, fGoodForLessOKLife, fOnlyRegularMercs);
-	if (res != NULL) return res;
-
-	// none found,
 	// IF we are here, keep as we always were!
 	return s;
 }

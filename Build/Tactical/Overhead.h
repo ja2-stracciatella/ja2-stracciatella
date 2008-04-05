@@ -269,8 +269,8 @@ void RebuildAllSoldierShadeTables(void);
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
 BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
 
-SOLDIERTYPE* FindNextActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
-SOLDIERTYPE* FindPrevActiveAndAliveMerc(SOLDIERTYPE* s, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+SOLDIERTYPE* FindNextActiveAndAliveMerc(const SOLDIERTYPE* curr, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
+SOLDIERTYPE* FindPrevActiveAndAliveMerc(const SOLDIERTYPE* curr, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
 
 void HandleNPCTeamMemberDeath( SOLDIERTYPE *pSoldier );
 
