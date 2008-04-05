@@ -3122,40 +3122,43 @@ void CheckIfSoldierUnassigned( SOLDIERTYPE *pSoldier )
 }
 
 
+static void CreateDestroyMouseRegionsForRemoveMenu(void);
+
+
+// Check if we can only remove character from team
+static BOOLEAN HandleRemoveMenu(const INT8 remove_char)
+{
+	static BOOLEAN fShowRemoveMenu = FALSE;
+
+	if (!fShowRemoveMenu)
+	{
+		if (remove_char == -1) return FALSE;
+		const SOLDIERTYPE* const s = gCharactersList[remove_char].merc;
+		if (s->bLife != 0 && s->bAssignment != ASSIGNMENT_POW) return FALSE;
+
+		bSelectedAssignChar = remove_char;
+	}
+
+	// dead guy handle menu stuff
+	fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
+	CreateDestroyMouseRegionsForRemoveMenu();
+	return TRUE;
+}
+
+
 static void AssignmentMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void CheckAndUpdateTacticalAssignmentPopUpPositions(void);
-static void CreateDestroyMouseRegionsForRemoveMenu(void);
 static SOLDIERTYPE* GetSelectedAssignSoldier(BOOLEAN fNullOK);
 static void PositionCursorForTacticalAssignmentBox(void);
 
 
+// Create/destroy mouse regions for the map screen assignment main menu
 static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 {
-	static BOOLEAN fCreated        = FALSE;
-	static BOOLEAN fShowRemoveMenu = FALSE;
+	static BOOLEAN fCreated = FALSE;
 
-	// will create/destroy mouse regions for the map screen assignment main menu
-	// check if we can only remove character from team..not assign
-	if (fShowRemoveMenu)
-	{
-		// dead guy handle menu stuff
-		fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
-		CreateDestroyMouseRegionsForRemoveMenu();
-		return;
-	}
-
-	if (bSelectedAssignChar != -1)
-	{
-		const SOLDIERTYPE* const s = gCharactersList[bSelectedAssignChar].merc;
-		if (s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW)
-		{
-			// dead guy handle menu stuff
-			fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
-			CreateDestroyMouseRegionsForRemoveMenu();
-			return;
-		}
-	}
+	if (HandleRemoveMenu(bSelectedAssignChar)) return;
 
 	if (fShowAssignmentMenu && !fCreated)
 	{
@@ -4344,23 +4347,9 @@ static void RestorePopUpBoxes(void);
 // Create/destroy mouse regions for the map screen Contract main menu
 void CreateDestroyMouseRegionsForContractMenu(void)
 {
-	static BOOLEAN fCreated        = FALSE;
-	static BOOLEAN fShowRemoveMenu = FALSE;
+	static BOOLEAN fCreated = FALSE;
 
-	// check if we can only remove character from team..not assign
-	if (fShowRemoveMenu ||
-			(bSelectedContractChar != -1 && gCharactersList[bSelectedContractChar].merc->bLife == 0))
-	{
-		// dead guy handle menu stuff
-		fShowRemoveMenu = fShowContractMenu;
-
-		// ATE: Added this setting of global variable 'cause
-		// it will cause an assert failure in GetSelectedAssignSoldier()
-		bSelectedAssignChar = bSelectedContractChar;
-
-		CreateDestroyMouseRegionsForRemoveMenu();
-		return;
-	}
+	if (HandleRemoveMenu(bSelectedContractChar)) return;
 
 	PopUpBox* const box = ghContractBox;
 	if (fShowContractMenu && !fCreated)
