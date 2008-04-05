@@ -4137,7 +4137,7 @@ void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier )
 		if (pSoldier == pQueenSoldier) continue;
 
 		// ATE: Ok, lets check for some basic things here!
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bActive && pSoldier->bInSector )
+		if (pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bInSector)
 		{
 			// Get Pyth spaces away....
 			if ( GetRangeInCellCoordsFromGridNoDiff( pQueenSoldier->sGridNo, pSoldier->sGridNo ) <= Weapon[ CREATURE_QUEEN_TENTACLES].usRange )
