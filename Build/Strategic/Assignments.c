@@ -3132,89 +3132,76 @@ static void PositionCursorForTacticalAssignmentBox(void);
 
 static void CreateDestroyMouseRegionsForAssignmentMenu(void)
 {
-	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	SOLDIERTYPE *pSoldier = NULL;
+	static BOOLEAN fCreated        = FALSE;
 	static BOOLEAN fShowRemoveMenu = FALSE;
-
 
 	// will create/destroy mouse regions for the map screen assignment main menu
 	// check if we can only remove character from team..not assign
-	if( ( bSelectedAssignChar != -1 )|| ( fShowRemoveMenu == TRUE ) )
+	if (fShowRemoveMenu)
 	{
-		if( fShowRemoveMenu == TRUE )
-		{
-			// dead guy handle menu stuff
-			fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
+		// dead guy handle menu stuff
+		fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
+		CreateDestroyMouseRegionsForRemoveMenu();
+		return;
+	}
 
-			CreateDestroyMouseRegionsForRemoveMenu( );
-
-			return;
-		}
+	if (bSelectedAssignChar != -1)
+	{
 		const SOLDIERTYPE* const s = gCharactersList[bSelectedAssignChar].merc;
 		if (s->bLife == 0 || s->bAssignment == ASSIGNMENT_POW)
 		{
 			// dead guy handle menu stuff
 			fShowRemoveMenu = fShowAssignmentMenu | fShowContractMenu;
-
-			CreateDestroyMouseRegionsForRemoveMenu( );
-
+			CreateDestroyMouseRegionsForRemoveMenu();
 			return;
 		}
 	}
 
-
-	if( ( fShowAssignmentMenu == TRUE ) && ( fCreated == FALSE ) )
+	if (fShowAssignmentMenu && !fCreated)
 	{
-
 		gfIgnoreScrolling = FALSE;
 
-		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
+		if (guiCurrentScreen == MAP_SCREEN)
 		{
 			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
-		pSoldier = GetSelectedAssignSoldier( FALSE );
+		const SOLDIERTYPE* const s    = GetSelectedAssignSoldier(FALSE);
+		const PopUpBox*    const box  = (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
+		const SGPBox*      const area = GetBoxArea(box);
+		UINT16             const x    = area->x;
+		UINT16                   y    = area->y + GetTopMarginSize(ghAssignmentBox);
+		UINT16             const w    = area->w;
+		UINT16             const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
-		const PopUpBox* const box           = (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
-		INT32           const iFontHeight   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
-		const SGPBox*   const area          = GetBoxArea(box);
-		INT32           const iBoxXPosition = area->x;
-		INT32           const iBoxYPosition = area->y;
-		INT32           const iBoxWidth     = area->w;
-
-		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
+		// Add mouse region for each line of text and set user data
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
 		{
-			// add mouse region for each line of text..and set user data
-			MSYS_DefineRegion(&gAssignmentMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback);
-
-			MSYS_SetRegionUserData( &gAssignmentMenuRegion[ iCounter ], 0, iCounter );
+			MOUSE_REGION* const r = &gAssignmentMenuRegion[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, AssignmentMenuMvtCallBack, AssignmentMenuBtnCallback);
+			MSYS_SetRegionUserData(r, 0, i);
+			y += dy;
 		}
 
-		// created
+		UnHighLightBox(ghAssignmentBox); // unhighlight all strings in box
+		CheckAndUpdateTacticalAssignmentPopUpPositions();
+		PositionCursorForTacticalAssignmentBox();
+
 		fCreated = TRUE;
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghAssignmentBox );
-		CheckAndUpdateTacticalAssignmentPopUpPositions( );
-
-		PositionCursorForTacticalAssignmentBox( );
 	}
-	else if( ( fShowAssignmentMenu == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fShowAssignmentMenu && fCreated)
 	{
 		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
 		{
-			MSYS_RemoveRegion( &gAssignmentMenuRegion[ iCounter ] );
+			MSYS_RemoveRegion(&gAssignmentMenuRegion[i]);
 		}
 
 		fShownAssignmentMenu = FALSE;
 
-		// not created
-		fCreated = FALSE;
-		SetRenderFlags( RENDER_FLAG_FULL );
+		SetRenderFlags(RENDER_FLAG_FULL);
 
+		fCreated = FALSE;
 	}
 }
 
@@ -4386,7 +4373,7 @@ void CreateDestroyMouseRegionsForContractMenu(void)
 		UINT16        const x    = area->x;
 		UINT16              y    = area->y + GetTopMarginSize(box);
 		UINT16        const w    = area->w;
-		INT32         const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		UINT16        const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// Add mouse region for each line of text and set user data
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
