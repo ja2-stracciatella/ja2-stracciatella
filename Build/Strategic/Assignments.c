@@ -238,9 +238,6 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 // a list of which sectors have characters
 static BOOLEAN fSectorsWithSoldiers[MAP_WORLD_X * MAP_WORLD_Y][4];
 
-// glow area for contract region?
-static BOOLEAN fGlowContractRegion = FALSE;
-
 
 /* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
 BOOLEAN IsTheSAMSiteInSectorRepairable( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
@@ -4304,7 +4301,6 @@ static void AssignmentScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason
 		// reset contract character and contract highlight line
 		giContractHighLine =-1;
 		bSelectedContractChar = -1;
-		fGlowContractRegion = FALSE;
 
 		// update mapscreen
 		fTeamPanelDirty          = TRUE;
@@ -4943,7 +4939,6 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 				// stop contratc glow if we are
-				fGlowContractRegion = FALSE;
 				giContractHighLine = -1;
 
 				break;
@@ -4958,7 +4953,6 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				gfRenderPBInterface = TRUE;
 
 				// stop contratc glow if we are
-				fGlowContractRegion = FALSE;
 				giContractHighLine = -1;
 
 				// reset selected characters
@@ -5096,7 +5090,6 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// reset contract character and contract highlight line
 			giContractHighLine =-1;
 			bSelectedContractChar = -1;
-			fGlowContractRegion = FALSE;
 
 			fShowContractMenu = FALSE;
 			// dirty region
@@ -5154,7 +5147,6 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// reset contract character and contract highlight line
 		giContractHighLine =-1;
 		bSelectedContractChar = -1;
-		fGlowContractRegion = FALSE;
 		fShowContractMenu = FALSE;
 
 		// dirty region

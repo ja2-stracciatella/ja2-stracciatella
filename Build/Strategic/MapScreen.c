@@ -540,62 +540,7 @@ BOOLEAN SetInfoChar(const SOLDIERTYPE* const s)
 static void ContractBoxGlow(void)
 {
 /* Why not?
- static INT32 iColorNum=10;
- static BOOLEAN fDelta=FALSE;
- static BOOLEAN fOldContractGlow = FALSE;
- UINT32 uiDestPitchBYTES;
- UINT8	*pDestBuf;
-
-
-	// stopped glowing?
-	if( ( fGlowContractRegion == FALSE )&&( ( fOldContractGlow == TRUE )||( fResetContractGlow== TRUE ) ) )
-	{
-		// restore background
-		// RestoreExternBackgroundRect( CONTRACT_X, CONTRACT_Y, CONTRACT_WIDTH+1, CONTRACT_HEIGHT+1 );
-
-		// reset old
-		fOldContractGlow = FALSE;
-	}
-
-	// not glowing right now, leave
-	if( ( fGlowContractRegion == FALSE )||( fResetContractGlow == TRUE ) )
-	{
-		// reset color rotation
-		iColorNum =0;
-		fDelta = TRUE;
-
-		// reset
-		fResetContractGlow = FALSE;
-		return;
-	}
-
-	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
-
-	// change direction of glow?
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-
-	// increment color
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-	UINT16 usColor = GlowColor(iColorNum);
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH, CONTRACT_Y+CONTRACT_HEIGHT, usColor, pDestBuf );
-	InvalidateRegion(CONTRACT_X, CONTRACT_Y, CONTRACT_X+CONTRACT_WIDTH+1, CONTRACT_Y+CONTRACT_HEIGHT+1);
-	UnLockVideoSurface( FRAME_BUFFER );
-
-	// restore background
-	if((iColorNum==0)||(iColorNum==1))
-		RestoreExternBackgroundRect( CONTRACT_X, CONTRACT_Y, CONTRACT_WIDTH+1, CONTRACT_HEIGHT+1 );
+	fResetContractGlow = FALSE;
 */
 }
 
@@ -655,12 +600,6 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 	UnLockVideoSurface( FRAME_BUFFER );
-
-/*
-	// restore background
-	if((iColorNum==0)||(iColorNum==1))
-		RestoreExternBackgroundRect( CONTRACT_X, CONTRACT_Y, CONTRACT_WIDTH+1, CONTRACT_HEIGHT+1 );
-*/
 }
 
 
