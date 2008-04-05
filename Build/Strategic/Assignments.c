@@ -4354,106 +4354,70 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void RestorePopUpBoxes(void);
 
 
-void CreateDestroyMouseRegionsForContractMenu( void )
+// Create/destroy mouse regions for the map screen Contract main menu
+void CreateDestroyMouseRegionsForContractMenu(void)
 {
-	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
+	static BOOLEAN fCreated        = FALSE;
 	static BOOLEAN fShowRemoveMenu = FALSE;
 
-	// will create/destroy mouse regions for the map screen Contract main menu
-	// will create/destroy mouse regions for the map screen assignment main menu
 	// check if we can only remove character from team..not assign
-	if( ( bSelectedContractChar != -1 )|| ( fShowRemoveMenu == TRUE ) )
+	if (fShowRemoveMenu ||
+			(bSelectedContractChar != -1 && gCharactersList[bSelectedContractChar].merc->bLife == 0))
 	{
-		if( fShowRemoveMenu == TRUE )
-		{
-			// dead guy handle menu stuff
-			fShowRemoveMenu =  fShowContractMenu;
+		// dead guy handle menu stuff
+		fShowRemoveMenu = fShowContractMenu;
 
-			// ATE: Added this setting of global variable 'cause
-			// it will cause an assert failure in GetSelectedAssignSoldier()
-			bSelectedAssignChar = bSelectedContractChar;
+		// ATE: Added this setting of global variable 'cause
+		// it will cause an assert failure in GetSelectedAssignSoldier()
+		bSelectedAssignChar = bSelectedContractChar;
 
-			CreateDestroyMouseRegionsForRemoveMenu( );
-
-			return;
-		}
-		if (gCharactersList[bSelectedContractChar].merc->bLife == 0)
-		{
-			// dead guy handle menu stuff
-			fShowRemoveMenu =  fShowContractMenu;
-
-			// ATE: Added this setting of global variable 'cause
-			// it will cause an assert failure in GetSelectedAssignSoldier()
-			bSelectedAssignChar = bSelectedContractChar;
-
-			CreateDestroyMouseRegionsForRemoveMenu( );
-
-			return;
-		}
+		CreateDestroyMouseRegionsForRemoveMenu();
+		return;
 	}
 
-
-	if( ( fShowContractMenu == TRUE ) && ( fCreated == FALSE ) )
+	PopUpBox* const box = ghContractBox;
+	if (fShowContractMenu && !fCreated)
 	{
-		if( bSelectedContractChar == -1 )
+		if (bSelectedContractChar == -1) return;
+
+		SetBoxXY(box, ContractPosition.iX, ContractPosition.iY);
+
+		const SGPBox* const area = GetBoxArea(box);
+		UINT16        const x    = area->x;
+		UINT16              y    = area->y + GetTopMarginSize(box);
+		UINT16        const w    = area->w;
+		INT32         const dy   = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+
+		// Add mouse region for each line of text and set user data
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
-			return;
+			MOUSE_REGION* const r = &gContractMenuRegion[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + dy, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, ContractMenuMvtCallback, ContractMenuBtnCallback);
+			MSYS_SetRegionUserData(r, 0, i);
+			y += dy;
 		}
 
-		if( fShowContractMenu )
-		{
-			SetBoxXY(ghContractBox, ContractPosition.iX, ContractPosition.iY);
-		}
-		// grab height of font
-		iFontHeight = GetLineSpace( ghContractBox ) + GetFontHeight( GetBoxFont( ghContractBox ) );
+		UnHighLightBox(box); // unhighlight all strings in box
+		PauseGame();
 
-		const SGPBox* const area          = GetBoxArea(ghContractBox);
-		INT32         const iBoxXPosition = area->x;
-		INT32         const iBoxYPosition = area->y;
-		INT32         const iBoxWidth     = area->w;
-
-		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghContractBox ); iCounter++ )
-		{
-			// add mouse region for each line of text..and set user data
-
-
-			MSYS_DefineRegion(&gContractMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghContractBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghContractBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, ContractMenuMvtCallback, ContractMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gContractMenuRegion[ iCounter ], 0, iCounter );
-		}
-
-		// created
 		fCreated = TRUE;
-
-		// pause game
-		PauseGame( );
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghContractBox );
-
 	}
-	else if( ( fShowContractMenu == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fShowContractMenu && fCreated)
 	{
 		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghContractBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
-			MSYS_RemoveRegion( &gContractMenuRegion[ iCounter ] );
+			MSYS_RemoveRegion(&gContractMenuRegion[i]);
 		}
 
-		fShownContractMenu = FALSE;
+		fShownContractMenu       = FALSE;
+		fMapPanelDirty           = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
 
-		fMapPanelDirty = TRUE;
-		fCharacterInfoPanelDirty= TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
+		RestorePopUpBoxes();
 
-		RestorePopUpBoxes( );
-
-		// not created
 		fCreated = FALSE;
 	}
 }
