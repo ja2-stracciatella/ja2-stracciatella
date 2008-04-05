@@ -8733,6 +8733,15 @@ static INT32 GetContractExpiryTime(const SOLDIERTYPE* const pSoldier)
 }
 
 
+SOLDIERTYPE* GetSelectedInfoChar(void)
+{
+	if (bSelectedInfoChar == -1) return NULL;
+	Assert(0 <= bSelectedInfoChar && bSelectedInfoChar < MAX_CHARACTER_COUNT);
+	SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
+	Assert(s != NULL);
+	return s;
+}
+
 
 void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 {

@@ -225,18 +225,6 @@ extern INT8 bSelectedDestChar;
 // current assignment character
 extern INT8 bSelectedAssignChar;
 
-// the info character
-extern INT8 bSelectedInfoChar;
-
-static inline SOLDIERTYPE* GetSelectedInfoChar(void)
-{
-	if (bSelectedInfoChar == -1) return NULL;
-	Assert(0 <= bSelectedInfoChar && bSelectedInfoChar < MAX_CHARACTER_COUNT);
-	SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-	Assert(s != NULL);
-	return s;
-}
-
 // the contract char
 extern INT8 bSelectedContractChar;
 

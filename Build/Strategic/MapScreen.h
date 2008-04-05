@@ -60,6 +60,10 @@ BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* s);
 
 void TellPlayerWhyHeCantCompressTime( void );
 
+// the info character
+extern INT8 bSelectedInfoChar;
+
+SOLDIERTYPE* GetSelectedInfoChar(void);
 void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList );
 
 void MAPEndItemPointer(void);
