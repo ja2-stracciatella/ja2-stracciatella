@@ -126,14 +126,6 @@ enum{
 	MAX_CONTRACT_MENU_STRING_COUNT,
 };
 
-// enums for pre battle interface pop ups
-enum
-{
-	ASSIGNMENT_POPUP,
-	DESTINATION_POPUP,
-	CONTRACT_POPUP
-};
-
 
 enum{
 	NO_REASON_FOR_UPDATE = 0,
@@ -306,9 +298,6 @@ void DisableTeamInfoPanels( void );
 
 // enable team info panels
 void EnableTeamInfoPanels( void );
-
-// activate pop up for soldiers in the pre battle interface
-void ActivateSoldierPopup( SOLDIERTYPE *pSoldier, UINT8 ubPopupType, INT16 xp, INT16 yp );
 
 // do mapscreen message box
 INT32 DoMapMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );

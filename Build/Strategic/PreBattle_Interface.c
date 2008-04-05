@@ -145,7 +145,6 @@ BOOLEAN gfCantRetreatInPBI = FALSE;
 
 BOOLEAN gfUsePersistantPBI;
 
-INT32 giHilitedInvolved, giHilitedUninvolved;
 
 extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
@@ -546,7 +545,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	}
 
 	gfRenderPBInterface = TRUE;
-	giHilitedInvolved = giHilitedUninvolved = -1;
 	MSYS_SetCurrentCursor( CURSOR_NORMAL );
 	StopTimeCompression();
 
@@ -901,7 +899,6 @@ void RenderPreBattleInterface()
 {
 	INT32 x;
 	INT32 y;
-	INT32 line;
 	INT32 width;
 	wchar_t str[100];
 	wchar_t pSectorName[ 128 ];
@@ -1068,11 +1065,9 @@ void RenderPreBattleInterface()
 		SetFontShadow( FONT_NEARBLACK );
 
 		SetFont( BLOCKFONT2 );
-		SetFontForeground( FONT_YELLOW );
 
 		//print out the participants of the battle.
 		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
-		line = 0;
 		y = TOP_Y + 1;
 		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
@@ -1080,10 +1075,6 @@ void RenderPreBattleInterface()
 			{
 				if (PlayerMercInvolvedInThisCombat(s))
 				{ //involved
-					if( line == giHilitedInvolved )
-						SetFontForeground( FONT_WHITE );
-					else
-						SetFontForeground( FONT_YELLOW );
 					//NAME
 					const wchar_t* const Name = s->name;
 					x = 17 + (52-StringPixLength(Name, BLOCKFONT2)) / 2;
@@ -1105,7 +1096,6 @@ void RenderPreBattleInterface()
 					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
 					mprintf(x, y, L"%ls", str);
 
-					line++;
 					y += ROW_HEIGHT;
 				}
 			}
@@ -1115,7 +1105,6 @@ void RenderPreBattleInterface()
 		// |  NAME  | ASSIGN |  LOC   |  DEST  |  DEP   |
 		if( !guiNumUninvolved )
 		{
-			SetFontForeground( FONT_YELLOW );
 			const wchar_t* None = gpStrategicString[STR_PB_NONE];
 			x = 17 + (52 - StringPixLength(None, BLOCKFONT2)) / 2;
 			y = BOTTOM_Y - ROW_HEIGHT + 2;
@@ -1131,10 +1120,6 @@ void RenderPreBattleInterface()
 					if (!PlayerMercInvolvedInThisCombat(s))
 					{
 						// uninvolved
-						if( line == giHilitedUninvolved )
-							SetFontForeground( FONT_WHITE );
-						else
-							SetFontForeground( FONT_YELLOW );
 						//NAME
 						const wchar_t* const Name = s->name;
 						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
@@ -1158,7 +1143,6 @@ void RenderPreBattleInterface()
 						GetMapscreenMercDepartureString(s, str, lengthof(str), &ubJunk);
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
 						mprintf( x, y, str );
-						line++;
 						y += ROW_HEIGHT;
 					}
 				}
@@ -1396,115 +1380,6 @@ static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier)
 		return pConditionStrings[COND_EXCELLENT];
 	}
 }
-
-/*
-void InvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
-{
-	gfRenderPBInterface = TRUE;
-	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		giHilitedInvolved = giHilitedUninvolved = -1;
-		return;
-	}
-	giHilitedInvolved = reg->RelativeYPos / 10;
-	giHilitedUninvolved = -1;
-}
-
-void InvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		SOLDIERTYPE *pSoldier;
-		INT16 y;
-		pSoldier = InvolvedSoldier( giHilitedInvolved );
-		if( !pSoldier )
-			return;
-		y = (INT16)(reg->RegionTopLeftY + giHilitedUninvolved * ROW_HEIGHT + 5);
-		if( y + 102 >= 360 )
-			y -= 102;
-		if( gusMouseXPos >= 76 && gusMouseXPos <= 129 )
-			ActivateSoldierPopup( pSoldier, ASSIGNMENT_POPUP, 102, y );
-		gfRenderPBInterface = TRUE;
-	}
-}
-
-void UninvolvedMoveCallback( MOUSE_REGION *reg, INT32 reason )
-{
-	gfRenderPBInterface = TRUE;
-	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		giHilitedInvolved = giHilitedUninvolved = -1;
-		return;
-	}
-	giHilitedUninvolved = reg->RelativeYPos / 10;
-	giHilitedInvolved = -1;
-}
-
-void UninvolvedClickCallback( MOUSE_REGION *reg, INT32 reason )
-{
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		SOLDIERTYPE *pSoldier;
-		INT16 y;
-		pSoldier = UninvolvedSoldier( giHilitedUninvolved );
-		if( !pSoldier )
-			return;
-		y = (INT16)(reg->RegionTopLeftY + giHilitedUninvolved * ROW_HEIGHT + 5);
-		if( y + 102 >= 360 )
-			y -= 102;
-		if( gusMouseXPos >= 76 && gusMouseXPos <= 129 )
-		{
-			ActivateSoldierPopup( pSoldier, ASSIGNMENT_POPUP, 102, y );
-		}
-		else if( gusMouseXPos >= 169 && gusMouseXPos <= 204 )
-		{
-			ActivateSoldierPopup( pSoldier, DESTINATION_POPUP, 186, y );
-		}
-		else if( gusMouseXPos >= 208 && gusMouseXPos <= 236 )
-		{
-			ActivateSoldierPopup( pSoldier, CONTRACT_POPUP, 172, y );
-		}
-		gfRenderPBInterface = TRUE;
-	}
-}
-
-SOLDIERTYPE* InvolvedSoldier( INT32 index )
-{
-	BOOLEAN fFound = FALSE;
-	if( index < 0 || index > 19 )
-		return NULL;
-	CFOR_ALL_GROUPS(pGroup)
-	{
-		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
-		{
-			CFOR_ALL_PLAYERS_IN_GROUP(p, pGroup)
-			{
-				if (--index <= 0) return p->pSoldier;
-			}
-		}
-	}
-	return NULL;
-}
-
-SOLDIERTYPE* UninvolvedSoldier( INT32 index )
-{
-	if( index < 0 || index > 19 )
-		return NULL;
-	CFOR_ALL_GROUPS(pGroup)
-	{
-		if ( pGroup->fPlayer && !PlayerGroupInvolvedInThisCombat( pGroup ) )
-		{
-			CFOR_ALL_PLAYERS_IN_GROUP(p, pGroup)
-			{
-				if (--index <= 0) return p->pSoldier;
-			}
-		}
-		pGroup = pGroup->next;
-	}
-	return NULL;
-}
-*/
-
 
 
 void ActivatePreBattleAutoresolveAction()
