@@ -1071,7 +1071,6 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 		if (s->sSectorX == sMapX &&
 				s->sSectorY == sMapY &&
 				s->bSectorZ == sMapZ &&
-				s->bActive &&
 				s->bLife >= OKLIFE)
 		{
 			// valid character

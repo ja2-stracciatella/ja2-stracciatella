@@ -5067,7 +5067,7 @@ static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	Assert(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN);
 
 	SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	Assert( pSoldier && pSoldier->bActive );
+	Assert(pSoldier);
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 

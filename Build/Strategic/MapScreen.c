@@ -8739,6 +8739,7 @@ SOLDIERTYPE* GetSelectedInfoChar(void)
 	Assert(0 <= bSelectedInfoChar && bSelectedInfoChar < MAX_CHARACTER_COUNT);
 	SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
 	Assert(s != NULL);
+	Assert(s->bActive);
 	return s;
 }
 
