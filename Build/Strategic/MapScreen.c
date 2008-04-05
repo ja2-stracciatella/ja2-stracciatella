@@ -7905,14 +7905,15 @@ static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 {
 	if (gfPreBattleInterfaceActive) return;
 
-	if (bSelectedInfoChar == -1)
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s == NULL)
 	{
-		DisableButton( giCharInfoButton[ 0 ] );
-		DisableButton( giCharInfoButton[ 1 ] );
-		DisableButton( giMapContractButton );
+		DisableButton(giCharInfoButton[0]);
+		DisableButton(giCharInfoButton[1]);
+		DisableButton(giMapContractButton);
 	}
 /* ARM: Commented out at KM's request, it won't reenabled them when coming back from PBI, on Feb. 22, 99
-	else if ( fShowInventoryFlag == FALSE ) // make sure that we are in fact showing the mapscreen inventory
+	else if (!fShowInventoryFlag) // make sure that we are in fact showing the mapscreen inventory
 	{
 		return;
 	}
@@ -7920,24 +7921,18 @@ static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void)
 	else
 	{
 		// standard checks
-		const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-		if (GetNumberOfPeopleInCharacterList() < 2 ||
-				fShowDescriptionFlag ||
-				(
-					s != NULL &&
-					(
-						CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(s) ||
-						CharacterIsInTransitAndHasItemPickedUp(s)
-					)
-				))
+		if (fShowDescriptionFlag                                               ||
+				GetNumberOfPeopleInCharacterList() < 2                             ||
+				CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(s) ||
+				CharacterIsInTransitAndHasItemPickedUp(s))
 		{
-			DisableButton( giCharInfoButton[ 0 ] );
-			DisableButton( giCharInfoButton[ 1 ] );
+			DisableButton(giCharInfoButton[0]);
+			DisableButton(giCharInfoButton[1]);
 		}
 		else
 		{
-			EnableButton( giCharInfoButton[ 0 ] );
-			EnableButton( giCharInfoButton[ 1 ] );
+			EnableButton(giCharInfoButton[0]);
+			EnableButton(giCharInfoButton[1]);
 		}
 	}
 }
