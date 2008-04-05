@@ -1101,14 +1101,10 @@ void UpdateAssignments()
 #ifdef JA2BETAVERSION
 void VerifyTownTrainingIsPaidFor( void )
 {
-	INT32 iCounter = 0;
-
-	for (iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++)
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL) continue;
-
-		if( pSoldier->bActive && ( pSoldier->bAssignment == TRAIN_TOWN ) )
+		const SOLDIERTYPE* const pSoldier = c->merc;
+		if (pSoldier->bAssignment == TRAIN_TOWN)
 		{
 			// make sure that sector is paid up!
 			if( SectorInfo[ SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) ].fMilitiaTrainingPaid == FALSE )
@@ -7637,18 +7633,14 @@ static void NotifyPlayerOfAssignmentAttemptFailure(INT8 bAssignment)
 BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarning )
 {
 	BOOLEAN fSuccess = TRUE;
-	INT32 iCounter = 0;
 	UINT8 ubNumberOfSelectedSoldiers = 0;
 
 	const SOLDIERTYPE* const sel_char = GetSelectedInfoChar();
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL) continue;
-		if (!pSoldier->bActive) continue;
+		SOLDIERTYPE* const pSoldier = c->merc;
 		if (pSoldier == sel_char) continue;
-		if (!IsEntryInSelectedListSet(iCounter)) continue;
 
 		// don't try to put vehicles, robots, to sleep if they're also selected
 		if (!CanChangeSleepStatusForSoldier(pSoldier)) continue;
@@ -7869,7 +7861,6 @@ void ReEvaluateEveryonesNothingToDo()
 
 void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 {
-	INT32 iCounter = 0;
 	SOLDIERTYPE *pSelectedSoldier = NULL;
 	BOOLEAN fItWorked;
 	BOOLEAN fRemoveFromSquad = TRUE;
@@ -7892,13 +7883,10 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 
 
 	// sets assignment for the list
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c        = &gCharactersList[iCounter];
-		SOLDIERTYPE* const                pSoldier = c->merc;
-		if (pSoldier != NULL &&
-				c->selected &&
-				( iCounter != bSelectedAssignChar ) &&
+		SOLDIERTYPE* const pSoldier = c->merc;
+		if (pSoldier != pSelectedSoldier &&
 				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			// assume it's NOT gonna work

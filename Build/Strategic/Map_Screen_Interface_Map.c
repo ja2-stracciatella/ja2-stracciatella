@@ -896,11 +896,9 @@ static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
 {
   // run through list
   UINT8 ubIconPosition = 0;
-	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[i].merc;
-		if (pSoldier == NULL) break;
-
+		const SOLDIERTYPE* const pSoldier = c->merc;
 		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
 				 ( pSoldier->sSectorX == sMapX) &&
 				 ( pSoldier->sSectorY == sMapY) &&
@@ -921,11 +919,9 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 {
   // run through list
 	UINT8 ubIconPosition = iCount;
-	for (UINT i = 0; i != MAX_CHARACTER_COUNT; ++i)
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const pSoldier = gCharactersList[i].merc;
-		if (pSoldier == NULL) break;
-
+		const SOLDIERTYPE* const pSoldier = c->merc;
     // given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
 		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&

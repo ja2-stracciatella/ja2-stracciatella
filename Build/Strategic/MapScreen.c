@@ -7103,7 +7103,6 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 static void RebuildWayPointsForAllSelectedCharsGroups(void)
 {
 	// rebuild the waypoints for everyone in the selected character list
-	INT32 iCounter = 0;
 	BOOLEAN fGroupIDRebuilt[ 256 ];
 	INT32 iVehicleId;
 	PathSt** ppMovePath = NULL;
@@ -7112,11 +7111,8 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 
 	memset( fGroupIDRebuilt, FALSE, sizeof( fGroupIDRebuilt ) );
 
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-		if (!c->selected) continue;
-
 		const SOLDIERTYPE* const pSoldier = c->merc;
 
 		// if he's IN a vehicle or IS a vehicle
@@ -7585,12 +7581,9 @@ static void HandlePreBattleInterfaceWithInventoryPanelUp(void)
 // this puts anyone who is on NO_ASSIGNMENT onto a free squad
 static void UpdateBadAssignments(void)
 {
-	UINT32 iCounter;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const s = gCharactersList[iCounter].merc;
-		if (s != NULL) CheckIfSoldierUnassigned(s);
+		CheckIfSoldierUnassigned(c->merc);
 	}
 }
 
@@ -7640,16 +7633,12 @@ static void HandleContractTimeFlashForMercThatIsAboutLeave(void)
 // merc about to leave, flash contract time
 static BOOLEAN AnyMercsLeavingRealSoon(void)
 {
-	UINT32 uiCounter = 0;
 	UINT32 uiTimeInMin = GetWorldTotalMin();
 	BOOLEAN fFoundOne = FALSE;
 
-	for( uiCounter = 0; uiCounter < MAX_CHARACTER_COUNT; uiCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const s = gCharactersList[uiCounter].merc;
-		if (s == NULL) continue;
-
-		if (s->iEndofContractTime - uiTimeInMin <= MINS_TO_FLASH_CONTRACT_TIME)
+		if (c->merc->iEndofContractTime - uiTimeInMin <= MINS_TO_FLASH_CONTRACT_TIME)
 		{
 			fFoundOne = TRUE;
 			break;
@@ -8263,11 +8252,9 @@ static void HandleCommonGlowTimer(void)
 }
 
 
+// run through list of grunts and handle awating further orders
 static void HandleAssignmentsDoneAndAwaitingFurtherOrders(void)
 {
-	// run through list of grunts and handle awating further orders
-	INT32 iCounter = 0, iCurrentTime = 0;
-
 	// update "nothing to do" flags if necessary
 	if ( gfReEvaluateEveryonesNothingToDo )
 	{
@@ -8275,7 +8262,7 @@ static void HandleAssignmentsDoneAndAwaitingFurtherOrders(void)
 	}
 
 	// grab the current time
-	iCurrentTime = GetJA2Clock();
+	const INT32 iCurrentTime = GetJA2Clock();
 
 	// only bother checking once flash interval has elapsed
 	if( ( iCurrentTime - giFlashAssignBaseTime ) >= ASSIGNMENT_DONE_FLASH_TIME )
@@ -8283,13 +8270,10 @@ static void HandleAssignmentsDoneAndAwaitingFurtherOrders(void)
 		// update timer so that we only run check so often
 		giFlashAssignBaseTime = iCurrentTime;
 
-		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+		CFOR_ALL_IN_CHAR_LIST(c)
 		{
-			const SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-			if (pSoldier == NULL) break;
-
 			// toggle and redraw if flash was left ON even though the flag is OFF
-			if( pSoldier->fDoneAssignmentAndNothingToDoFlag || fFlashAssignDone )
+			if (c->merc->fDoneAssignmentAndNothingToDoFlag || fFlashAssignDone)
 			{
 				fFlashAssignDone = !fFlashAssignDone;
 				fDrawCharacterList = TRUE;
@@ -8824,12 +8808,9 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 
 void CopyPathToAllSelectedCharacters(PathSt* pPath)
 {
-	INT32 iCounter = 0;
-
 	// run through list and copy paths for each selected character
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
 		if (!c->selected) continue;
 
 		SOLDIERTYPE* const pSoldier = c->merc;
@@ -8860,43 +8841,38 @@ void CopyPathToAllSelectedCharacters(PathSt* pPath)
 
 void CancelPathsOfAllSelectedCharacters()
 {
-	INT8 bCounter = 0;
 	BOOLEAN fSkyriderMsgShown = FALSE;
 
 	// cancel destination for the clicked and ALL other valid & selected characters with a route set
-	for( bCounter = 0; bCounter < MAX_CHARACTER_COUNT; bCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		// if we've clicked on a selected valid character
-		SOLDIERTYPE* const pSoldier = gCharactersList[bCounter].merc;
-		if (pSoldier != NULL && IsEntryInSelectedListSet(bCounter))
+		SOLDIERTYPE* const pSoldier = c->merc;
+		// and he has a route set
+		if ( GetLengthOfMercPath( pSoldier ) > 0 )
 		{
-			// and he has a route set
-			if ( GetLengthOfMercPath( pSoldier ) > 0 )
+			// if he's in the chopper, but player can't redirect it
+			if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) && ( CanHelicopterFly( ) == FALSE ) )
 			{
-				// if he's in the chopper, but player can't redirect it
-				if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) && ( CanHelicopterFly( ) == FALSE ) )
+				if ( !fSkyriderMsgShown )
 				{
-					if ( !fSkyriderMsgShown )
-					{
-						// explain
-						ExplainWhySkyriderCantFly();
-						fSkyriderMsgShown = TRUE;
-					}
-
-					// don't cancel, ignore
-					continue;
+					// explain
+					ExplainWhySkyriderCantFly();
+					fSkyriderMsgShown = TRUE;
 				}
 
+				// don't cancel, ignore
+				continue;
+			}
 
-				// cancel the entire path (also clears vehicles for any passengers selected, and handles reversing directions)
-				if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-				{
-					CancelPathForVehicle( &( pVehicleList[ pSoldier->bVehicleID ] ), FALSE );
-				}
-				else
-				{
-					CancelPathForCharacter( pSoldier );
-				}
+
+			// cancel the entire path (also clears vehicles for any passengers selected, and handles reversing directions)
+			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+			{
+				CancelPathForVehicle( &( pVehicleList[ pSoldier->bVehicleID ] ), FALSE );
+			}
+			else
+			{
+				CancelPathForCharacter( pSoldier );
 			}
 		}
 	}
@@ -9393,14 +9369,10 @@ static void BullsEyeOrChopperSelectionPopupCallback(UINT8 ubExitValue)
 // wake up anybody who needs to be awake to travel
 static void WakeUpAnySleepingSelectedMercsOnFootOrDriving(void)
 {
-	INT32 iCounter;
 	BOOLEAN fSuccess = FALSE;
 
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-		if (!c->selected) continue;
-
 		SOLDIERTYPE* const pSoldier = c->merc;
 		// if asleep
 		if ( pSoldier->fMercAsleep )
@@ -9632,13 +9604,8 @@ static void InitPreviousPaths(void)
 
 void RememberPreviousPathForAllSelectedChars(void)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	FOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-		if (!c->selected) continue;
-
 		// remember his previous path by copying it to his slot in the array kept for that purpose
 		ClearStrategicPathList(c->prev_path, 0);
 		c->prev_path = CopyPaths(GetSoldierMercPathPtr(c->merc));
@@ -9648,7 +9615,6 @@ void RememberPreviousPathForAllSelectedChars(void)
 
 static void RestorePreviousPaths(void)
 {
-	INT32 iCounter = 0;
 	PathSt** ppMovePath = NULL;
 	UINT8 ubGroupId = 0;
 	BOOLEAN fPathChanged = FALSE;
@@ -9694,11 +9660,8 @@ static void RestorePreviousPaths(void)
 	}
 	else	// character(s) plotting
 	{
-		for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+		CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 		{
-			const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-			if (!c->selected) continue;
-
 			SOLDIERTYPE* const pSoldier = c->merc;
 
 			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
@@ -9761,13 +9724,8 @@ static void RestorePreviousPaths(void)
 
 static void ClearPreviousPaths(void)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	FOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-		if (!c->selected) continue;
-
 		c->prev_path = ClearStrategicPathList(c->prev_path, 0);
 	}
 	gpHelicopterPreviousMercPath = ClearStrategicPathList( gpHelicopterPreviousMercPath, 0 );

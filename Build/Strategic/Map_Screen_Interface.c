@@ -381,12 +381,11 @@ void BuildSelectedListFromAToB( INT8 bA, INT8 bB )
 BOOLEAN MultipleCharacterListEntriesSelected( void )
 {
 	UINT8 ubSelectedCnt = 0;
-	INT32 iCounter = 0;
 
 	// check if more than one person is selected in the selected list
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++  )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		if (gCharactersList[iCounter].selected) ++ubSelectedCnt;
+		++ubSelectedCnt;
 	}
 
 	if( ubSelectedCnt > 1 )
@@ -403,18 +402,9 @@ BOOLEAN MultipleCharacterListEntriesSelected( void )
 
 void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( INT8 bAssignment )
 {
-	INT32 iCounter = 0;
-
- 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL) continue;
-
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
-
+		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
 		{
 			if ( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
@@ -428,18 +418,9 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( INT8 bAssignme
 
 void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY )
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL) continue;
-
-		if( pSoldier->bActive == FALSE )
-		{
-			continue;
-		}
-
+		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
 		{
 			if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == 0 ) )
@@ -571,15 +552,9 @@ void SelectUnselectedMercsWhoMustMoveWithThisGuy( void )
 
 static BOOLEAN AnyMercInSameSquadOrVehicleIsSelected(const SOLDIERTYPE* const pSoldier)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c = &gCharactersList[iCounter];
-		if (!c->selected) continue;
-
 		const SOLDIERTYPE* const pSoldier2 = c->merc;
-		if (pSoldier2 == NULL) continue;
 
 		// if they have the same assignment
 		if( pSoldier->bAssignment == pSoldier2->bAssignment )
@@ -1739,15 +1714,10 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 
 INT32 GetNumberOfPeopleInCharacterList( void )
 {
-	INT32 iCounter = 0, iCount = 0;
-
 	// get the number of valid mercs in the mapscreen character list
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		if (gCharactersList[iCounter].merc != NULL) iCount++;
-	}
-
-	return( iCount );
+	INT32 count = 0;
+	CFOR_ALL_IN_CHAR_LIST(c) ++count;
+	return count;
 }
 
 
@@ -2772,8 +2742,6 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	INT32 iCounter = 0;
-
 	// not allowed for underground movement!
 	Assert( sSectorZ == 0 );
 
@@ -2784,13 +2752,11 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 	// note that Skyrider can't be moved using the move box, and won't appear because the helicoprer is not in the char list
 
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL) continue;
-
-		if( ( pSoldier->bActive ) &&
-				( pSoldier->bAssignment != IN_TRANSIT ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
+		SOLDIERTYPE* const pSoldier = c->merc;
+		if (pSoldier->bAssignment != IN_TRANSIT     &&
+				pSoldier->bAssignment != ASSIGNMENT_POW &&
 				( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == sSectorZ ) )
 		{
 			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
@@ -4716,8 +4682,6 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 
 MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 {
-	INT32 iCounter = 0;
-
 	// first check the requested character himself
 	const MoveError ret = CanCharacterMoveInStrategic(pSoldier);
 	if (ret != ME_OK) return ret; // failed no point checking anyone else
@@ -4730,17 +4694,9 @@ MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE* const pSoldier)
 	// even if group is 0 (not that that should happen, should it?) still loop through for other mercs selected to move
 
 	// if anyone in the merc's group or also selected cannot move for whatever reason return false
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const MapScreenCharacterSt* const c               = &gCharactersList[iCounter];
-		SOLDIERTYPE* const                pCurrentSoldier = c->merc;
-		if (pCurrentSoldier == NULL) continue;
-
-		// skip inactive grunts
-		if( pCurrentSoldier->bActive == FALSE )
-		{
-			continue;
-		}
+		SOLDIERTYPE* const pCurrentSoldier = c->merc;
 
 		// skip the same guy we did already
 		if ( pCurrentSoldier == pSoldier )

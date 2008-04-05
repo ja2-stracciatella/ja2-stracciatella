@@ -771,19 +771,15 @@ static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrain
 
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT8 bSectorZ = 0;
-	INT32 iCounter = 0;
-
 
 	// get the sector values
 	sSectorX = pTrainer->sSectorX;
 	sSectorY = pTrainer->sSectorY;
 	bSectorZ = pTrainer->bSectorZ;
 
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
+	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pSoldier = gCharactersList[iCounter].merc;
-		if (pSoldier == NULL || !pSoldier->bActive) continue;
-
+		SOLDIERTYPE* const pSoldier = c->merc;
 		if( ( pSoldier->bAssignment == TRAIN_TOWN ) && ( pSoldier->sSectorX == sSectorX )&&( pSoldier->sSectorY == sSectorY )&&( pSoldier->bSectorZ == bSectorZ ) )
 		{
 			// done assignment
