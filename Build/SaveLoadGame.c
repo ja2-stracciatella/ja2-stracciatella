@@ -886,14 +886,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	SaveGameFilePosition(hFile, "Strategic AI");
 #endif
 
-	if( !SaveLightEffectsToSaveGameFile( hFile ) )
-	{
-		goto FAILED_TO_SAVE;
-	}
-#ifdef JA2BETAVERSION
-	SaveGameFilePosition(hFile, "Lighting Effects");
-#endif
-
 	if( !SaveWatchedLocsToSavedGame( hFile ) )
 	{
 		goto FAILED_TO_SAVE;

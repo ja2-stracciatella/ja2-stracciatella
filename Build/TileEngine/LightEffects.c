@@ -167,35 +167,6 @@ void DecayLightEffects( UINT32 uiTime )
 }
 
 
-
-BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile )
-{
-	/*
-	UINT32	uiNumberOfLights=0;
-
-	//loop through and count the number of active slots
-	CFOR_ALL_LIGHTEFFECTS(l)
-	{
-		++uiNumberOfLights;
-	}
-
-	//Save the Number of Light Effects
-	if (!FileWrite(hFile, &uiNumberOfLights, sizeof(UINT32))) return FALSE;
-
-	//if there are lights to save
-	if( uiNumberOfLights != 0 )
-	{
-		//loop through and save each active slot
-		CFOR_ALL_LIGHTEFFECTS(l)
-		{
-			if (!InjectLightEffectIntoFile(hFile, l)) return FALSE;
-		}
-	}
-*/
-	return( TRUE );
-}
-
-
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 {
 	//no longer need to load Light effects.  They are now in temp files

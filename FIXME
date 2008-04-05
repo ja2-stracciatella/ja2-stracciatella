@@ -162,7 +162,6 @@ STRUCTURE_TREE: never set
 STR_AR_MERC_RETREATING: string too long in German
 SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
-SaveLightEffectsToSaveGameFile(): empty
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
 SectorExitBackgroundCallback(): empty

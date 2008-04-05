@@ -32,7 +32,6 @@ void DecayLightEffects( UINT32 uiTime );
 LIGHTEFFECT* NewLightEffect(INT16 sGridNo, INT8 bType);
 
 
-BOOLEAN SaveLightEffectsToSaveGameFile( HWFILE hFile );
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile );
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
