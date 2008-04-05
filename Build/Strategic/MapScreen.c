@@ -1451,11 +1451,9 @@ static BOOLEAN CharacterIsInTransitAndHasItemPickedUp(const SOLDIERTYPE* const s
 
 static void DisplayCharacterInfo(void)
 {
-	Assert( bSelectedInfoChar < MAX_CHARACTER_COUNT );
-	const SOLDIERTYPE* const s = gCharactersList[bSelectedInfoChar].merc;
-	Assert(s != NULL);
+	const SOLDIERTYPE* const s = GetSelectedInfoChar();
+	if (s == NULL) return;
 
-	// set font buffer
 	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw character info and face
@@ -1468,7 +1466,7 @@ static void DisplayCharacterInfo(void)
 	RenderIconsForUpperLeftCornerPiece(s);
 
 	// mark all pop ups as dirty
-	MarkAllBoxesAsAltered( );
+	MarkAllBoxesAsAltered();
 }
 
 
@@ -6534,15 +6532,9 @@ static void RenderCharacterInfoBackground(void)
 
 	UpdateHelpTextForMapScreenMercIcons( );
 
-	if( ( bSelectedInfoChar != -1) && ( fDisableDueToBattleRoster == FALSE ) )
+	if (!fDisableDueToBattleRoster)
 	{
-		// valid char to display
 		DisplayCharacterInfo();
-	}
-
-	if( ( fDisableDueToBattleRoster == FALSE ) )
-	{
-		// draw attributes
 		RenderAttributeStringsForUpperLeftHandCorner( guiSAVEBUFFER );
 	}
 
