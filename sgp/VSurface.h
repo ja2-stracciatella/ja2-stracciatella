@@ -49,7 +49,10 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
 	#define AddVideoSurfaceFromFile(a) AddAndRecordVSurfaceFromFile(a, __LINE__, __FILE__)
 #endif
 
-BYTE* LockVideoSurface(SGPVSurface*, UINT32* uiPitch);
+/* Lock must be followed by release
+ * Pitch MUST be used for all width calculations (pitch is in bytes)
+ * The time between Locking and unlocking must be minimal */
+BYTE* LockVideoSurface(SGPVSurface*, UINT32* pitch);
 void UnLockVideoSurface(SGPVSurface*);
 
 // Blits a video Surface to another video Surface
