@@ -212,16 +212,13 @@ void HandleTacticalEndTurn(void)
 		FOR_ALL_MERCS(i)
 		{
 			SOLDIERTYPE* const pSoldier = *i;
-			if (pSoldier->bActive)
+			if ( pSoldier->bTeam != gbPlayerNum )
 			{
-				if ( pSoldier->bTeam != gbPlayerNum )
-				{
-					// Handle everything from getting breath back, to bleeding, etc
-					EVENT_BeginMercTurn(pSoldier);
+				// Handle everything from getting breath back, to bleeding, etc
+				EVENT_BeginMercTurn(pSoldier);
 
-					// Handle Player services
-					HandlePlayerServices( pSoldier );
-				}
+				// Handle Player services
+				HandlePlayerServices( pSoldier );
 			}
 		}
 	}

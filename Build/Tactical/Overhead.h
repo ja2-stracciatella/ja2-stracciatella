@@ -179,7 +179,7 @@ extern UINT32       guiNumMercSlots;
 	                ** const end__##iter = MercSlots + guiNumMercSlots; \
 	     iter != end__##iter;                                           \
 	     ++iter)                                                        \
-		if (*iter == NULL) continue; else
+		if (Assert(*iter == NULL || (*iter)->bActive), *iter == NULL) continue; else
 
 
 extern TacticalStatusType gTacticalStatus;
