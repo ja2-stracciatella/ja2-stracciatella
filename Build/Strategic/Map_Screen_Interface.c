@@ -129,7 +129,7 @@ typedef struct FASTHELPREGION
 static FASTHELPREGION pFastHelpMapScreenList[MAX_MAPSCREEN_FAST_HELP];
 
 // the move menu region
-MOUSE_REGION gMoveMenuRegion[ MAX_POPUP_BOX_STRING_COUNT ];
+static MOUSE_REGION gMoveMenuRegion[MAX_POPUP_BOX_STRING_COUNT];
 
 MOUSE_REGION gMapScreenHelpTextMask;
 
@@ -2956,158 +2956,99 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 }
 
 
+static void MakeRegionBlank(const INT32 i, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h)
+{
+	MSYS_DefineRegion(&gMoveMenuRegion[i], x, y + h * i, x + w, y + h * (i + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+}
+
+
 static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MoveMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
+static void MakeRegion(const INT32 i, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h, const UINT32 val_a, const UINT32 val_b)
+{
+	MOUSE_REGION* const r = &gMoveMenuRegion[i];
+	MSYS_DefineRegion(r, x, y + h * i, x + w, y + h * (i + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
+	MSYS_SetRegionUserData(r, 0, i);
+	MSYS_SetRegionUserData(r, 1, val_a);
+	MSYS_SetRegionUserData(r, 2, val_b);
+}
+
+
 static void BuildMouseRegionsForMoveBox(void)
 {
-	INT32 iCounter = 0, iTotalNumberOfLines = 0, iCount = 0, iCountB = 0;
-	INT32 iFontHeight = 0;
-	BOOLEAN fDefinedOtherRegion = FALSE;
+	const SGPBox* const area = GetBoxArea(ghMoveBox);
+	INT32         const x    = area->x;
+	INT32         const y    = area->y + GetTopMarginSize(ghMoveBox) - 2; // -2 to improve highlighting accuracy between lines
+	INT32         const w    = area->w;
+	INT32         const h    = GetLineSpace(ghMoveBox) + GetFontHeight(GetBoxFont(ghMoveBox));
+	INT32               i    = 0; // Region index
 
+	MakeRegionBlank(i++, x, y, w, h); // Box heading
+	MakeRegionBlank(i++, x, y, w, h); // Blank line
 
-	// grab height of font
-	iFontHeight = GetLineSpace( ghMoveBox ) + GetFontHeight( GetBoxFont( ghMoveBox ) );
-
-	const SGPBox* const area          = GetBoxArea(ghMoveBox);
-	INT32         const iBoxXPosition = area->x;
-	INT32         const iBoxYPosition = area->y + GetTopMarginSize(ghMoveBox) - 2; // -2 to improve highlighting accuracy between lines
-	INT32         const iBoxWidth     = area->w;
-
-	// box heading
-	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	iCounter++;
-
-	// blank line
-	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	iCounter++;
-
-	// calc total number of "moving" lines in the box
-	iTotalNumberOfLines = giNumberOfSoldiersInSectorMoving + giNumberOfSquadsInSectorMoving + giNumberOfVehiclesInSectorMoving;
-	// add the blank lines
-	iTotalNumberOfLines += iCounter;
-
-
-	// now add the strings
-	while( iCounter < iTotalNumberOfLines )
+	// Define regions for squad lines
+	for (INT32 iCount = 0; iCount < giNumberOfSquadsInSectorMoving; ++iCount)
 	{
-		// define regions for squad lines
-		for( iCount = 0; iCount < giNumberOfSquadsInSectorMoving; iCount++ )
+		MakeRegion(i++, x, y, w, h, SQUAD_REGION, iCount);
+
+		for (INT32 iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; ++iCountB)
 		{
-			MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, SQUAD_REGION );
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, iCount );
-			iCounter++;
-
-			for( iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; iCountB++ )
+			if (pSoldierMovingList[iCountB]->bAssignment == iSquadMovingList[iCount])
 			{
-				if( pSoldierMovingList[ iCountB ] -> bAssignment == iSquadMovingList[ iCount ] )
-				{
-					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-					// set user defines
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, SOLDIER_REGION );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, iCountB );
-					iCounter++;
-				}
-			}
-		}
-
-		for( iCount = 0; iCount < giNumberOfVehiclesInSectorMoving; iCount++ )
-		{
-			// define regions for vehicle lines
-			MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, VEHICLE_REGION );
-			MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, iCount );
-			iCounter++;
-
-			for( iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; iCountB++ )
-			{
-				if( ( pSoldierMovingList[ iCountB ] -> bAssignment == VEHICLE ) &&( pSoldierMovingList[ iCountB ] -> iVehicleId == iVehicleMovingList[ iCount ] ) )
-				{
-					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-					// set user defines
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, SOLDIER_REGION );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, iCountB );
-					iCounter++;
-				}
-			}
-		}
-
-
-		// define regions for "other" soldiers
-		for( iCount = 0; iCount < giNumberOfSoldiersInSectorMoving; iCount++ )
-		{
-			// this guy is not in a squad or vehicle
-			if( ( pSoldierMovingList[ iCount ]->bAssignment >= ON_DUTY )&&( pSoldierMovingList[ iCount ]->bAssignment != VEHICLE ) )
-			{
-				// this line gets place only once...
-				if( !fDefinedOtherRegion )
-				{
-					MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-					// set user defines
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, OTHER_REGION );
-					MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, 0 );
-					iCounter++;
-
-					fDefinedOtherRegion = TRUE;
-				}
-
-				MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-				// set user defines
-				MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-				MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, SOLDIER_REGION );
-				MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, iCount );
-				iCounter++;
+				MakeRegion(i++, x, y, w, h, SOLDIER_REGION, iCountB);
 			}
 		}
 	}
 
-
-	// blank line
-	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	iCounter++;
-
-
-	if ( IsAnythingSelectedForMoving() )
+	// Define regions for vehicle lines
+	for (INT32 iCount = 0; iCount < giNumberOfVehiclesInSectorMoving; ++iCount)
 	{
-		// DONE line
-		MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
+		MakeRegion(i++, x, y, w, h, VEHICLE_REGION, iCount);
 
-		// set user defines
-		MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-		MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, DONE_REGION );
-		MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, 0 );
-		iCounter++;
+		for (INT32 iCountB = 0; iCountB < giNumberOfSoldiersInSectorMoving; ++iCountB)
+		{
+			if (pSoldierMovingList[iCountB]->bAssignment == VEHICLE &&
+					pSoldierMovingList[iCountB]->iVehicleId  == iVehicleMovingList[iCount])
+			{
+				MakeRegion(i++, x, y, w, h, SOLDIER_REGION, iCountB);
+			}
+		}
+	}
+
+	// Define regions for "other" soldiers
+	BOOLEAN fDefinedOtherRegion = FALSE;
+	for (INT32 iCount = 0; iCount < giNumberOfSoldiersInSectorMoving; ++iCount)
+	{
+		// this guy is not in a squad or vehicle
+		if (pSoldierMovingList[iCount]->bAssignment >= ON_DUTY &&
+				pSoldierMovingList[iCount]->bAssignment != VEHICLE)
+		{
+			// this line gets place only once...
+			if (!fDefinedOtherRegion)
+			{
+				MakeRegion(i++, x, y, w, h, OTHER_REGION, 0);
+				fDefinedOtherRegion = TRUE;
+			}
+			MakeRegion(i++, x, y, w, h, SOLDIER_REGION, iCount);
+		}
+	}
+
+	Assert(i == 2 /* heading + blank line */ + giNumberOfSquadsInSectorMoving + giNumberOfVehiclesInSectorMoving + giNumberOfSoldiersInSectorMoving + (fDefinedOtherRegion ? 1 : 0));
+
+	MakeRegionBlank(i++, x, y, w, h); // blank line
+
+	if (IsAnythingSelectedForMoving())
+	{
+		MakeRegion(i++, x, y, w, h, DONE_REGION, 0); // DONE line
 	}
 	else
 	{
-		// blank line
-		MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-		iCounter++;
+		MakeRegionBlank(i++, x, y, w, h); // blank line
 	}
 
-	// CANCEL line
-	MSYS_DefineRegion(&gMoveMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MoveMenuMvtCallback, MoveMenuBtnCallback);
-
-	// set user defines
-	MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 0, iCounter );
-	MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 1, CANCEL_REGION );
-	MSYS_SetRegionUserData( &gMoveMenuRegion[ iCounter ], 2, 0 );
-	iCounter++;
+	MakeRegion(i++, x, y, w, h, CANCEL_REGION, 0); // CANCEL line
 }
 
 
