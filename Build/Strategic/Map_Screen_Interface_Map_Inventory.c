@@ -782,31 +782,10 @@ static void ReBuildWorldItemStashForLoadedSector(const INT32 iNumberSeenItems, c
 
 static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 {
-	INT32 iSizeOfList = iTotalNumberOfSlots;
-
-	// no items added, leave
-	if( iNumberOfItems == 0 )
-	{
-		return;
-	}
-
-	iTotalNumberOfSlots+= iNumberOfItems;
-
-	WORLDITEM* const pOldList = MALLOCNZ(WORLDITEM, iSizeOfList);
-
-	memcpy( pOldList, pInventoryPoolList, sizeof( WORLDITEM ) * iSizeOfList );
-
-	// rebuild stash
+	const INT32 count    = iTotalNumberOfSlots;
+	iTotalNumberOfSlots += iNumberOfItems;
 	pInventoryPoolList = REALLOC(pInventoryPoolList, WORLDITEM, iTotalNumberOfSlots);
-
-	// set new mem to 0
-	memset( pInventoryPoolList, 0, sizeof( WORLDITEM ) * iTotalNumberOfSlots );
-
-	// copy old info over
-	memcpy( pInventoryPoolList, pOldList, sizeof( WORLDITEM ) * iSizeOfList );
-
-	// free memeory
-	MemFree( pOldList );
+	memset(pInventoryPoolList + count, 0, sizeof(*pInventoryPoolList) * iNumberOfItems);
 }
 
 
