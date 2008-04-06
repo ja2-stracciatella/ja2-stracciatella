@@ -693,98 +693,64 @@ fail:
 }
 
 
-BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
+void DeleteSoldier(SOLDIERTYPE* const s)
 {
-	UINT32		cnt;
-	INT32			iGridNo;
-	INT8			bDir;
-	BOOLEAN		fRet;
-
-	if ( pSoldier != NULL )
+	if (s->sGridNo != NOWHERE)
 	{
-		if( pSoldier->sGridNo != NOWHERE )
+		// Remove adjacency records
+		for (INT8 bDir = 0; bDir < NUM_WORLD_DIRECTIONS; ++bDir)
 		{
-			// Remove adjacency records
-			for (bDir = 0; bDir < NUM_WORLD_DIRECTIONS; bDir++)
+			const INT32 iGridNo = s->sGridNo + DirIncrementer[bDir];
+			if (0 <= iGridNo && iGridNo < WORLD_MAX)
 			{
-				iGridNo = pSoldier->sGridNo + DirIncrementer[ bDir ];
-				if( iGridNo >= 0 && iGridNo < WORLD_MAX )
-				{
-					gpWorldLevelData[ iGridNo ].ubAdjacentSoldierCnt--;
-				}
+				--gpWorldLevelData[iGridNo].ubAdjacentSoldierCnt;
 			}
 		}
-
-		// Delete key ring
-		if (pSoldier->pKeyRing)
-		{
-			MemFree( pSoldier->pKeyRing );
-			pSoldier->pKeyRing = NULL;
-		}
-
-		// Delete faces
-		DeleteSoldierFace( pSoldier );
-
-		for ( cnt = 0; cnt < NUM_SOLDIER_SHADES; cnt++ )
-		{
-			if ( pSoldier->pShades[ cnt ] != NULL )
-			{
-				MemFree( pSoldier->pShades[ cnt ] );
-				pSoldier->pShades[ cnt ] = NULL;
-			}
-		}
-		for ( cnt = 0; cnt < NUM_SOLDIER_EFFECTSHADES; cnt++ )
-		{
-			if ( pSoldier->pEffectShades[ cnt ] != NULL )
-			{
-				MemFree( pSoldier->pEffectShades[ cnt ] );
-				pSoldier->pEffectShades[ cnt ] = NULL;
-			}
-		}
-
-		// Delete glows
-		for ( cnt = 0; cnt < 20; cnt++ )
-		{
-			if ( pSoldier->pGlowShades[ cnt ] != NULL )
-			{
-				MemFree( pSoldier->pGlowShades[ cnt ] );
-				pSoldier->pGlowShades[ cnt ] = NULL;
-			}
-
-		}
-
-
-    if ( pSoldier->ubBodyType == QUEENMONSTER )
-    {
-      DeletePositionSnd( pSoldier->iPositionSndID );
-    }
-
-		// Free any animations we may have locked...
-		UnLoadCachedAnimationSurfaces( pSoldier->ubID, &( pSoldier->AnimCache) );
-
-		// Free Animation cache
-		DeleteAnimationCache( pSoldier->ubID, &( pSoldier->AnimCache) );
-
-		// Soldier is not active
-		pSoldier->bActive = FALSE;
-
-		// Remove light
-		DeleteSoldierLight( pSoldier );
-
-		// Remove reseved movement value
-		UnMarkMovementReserved( pSoldier );
-
 	}
 
-	// REMOVE SOLDIER FROM SLOT!
-	fRet = RemoveMercSlot( pSoldier );
-
-	if (!fRet)
+	if (s->pKeyRing)
 	{
-		RemoveAwaySlot( pSoldier );
+		MemFree(s->pKeyRing);
+		s->pKeyRing = NULL;
 	}
 
-	return( TRUE );
+	DeleteSoldierFace(s);
+
+	for (UINT16** i = s->pShades; i != endof(s->pShades); ++i)
+	{
+		if (*i == NULL) continue;
+		MemFree(*i);
+		*i = NULL;
+	}
+
+	for (UINT16** i = s->pEffectShades; i != endof(s->pEffectShades); ++i)
+	{
+		if (*i == NULL) continue;
+		MemFree(*i);
+		*i = NULL;
+	}
+
+	for (UINT16** i = s->pGlowShades; i != endof(s->pGlowShades); ++i)
+	{
+		if (*i == NULL) continue;
+		MemFree(*i);
+		*i = NULL;
+	}
+
+	if (s->ubBodyType == QUEENMONSTER)
+	{
+		DeletePositionSnd(s->iPositionSndID);
+	}
+
+	// Free any animations we may have locked...
+	UnLoadCachedAnimationSurfaces(s->ubID, &s->AnimCache);
+	DeleteAnimationCache(s->ubID, &s->AnimCache);
+
+	DeleteSoldierLight(s);
+	UnMarkMovementReserved(s);
+	if (!RemoveMercSlot(s)) RemoveAwaySlot(s);
+
+	s->bActive = FALSE;
 }
 
 

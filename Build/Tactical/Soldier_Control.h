@@ -876,9 +876,8 @@ extern PaletteReplacementType* gpPalRep;
 extern UINT8	bHealthStrRanges[];
 
 
-// CREATION FUNCTIONS
-BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );
-void    DeleteSoldierLight(SOLDIERTYPE*);
+void DeleteSoldier(SOLDIERTYPE*);
+void DeleteSoldierLight(SOLDIERTYPE*);
 
 BOOLEAN CreateSoldierCommon(SOLDIERTYPE* s);
 
