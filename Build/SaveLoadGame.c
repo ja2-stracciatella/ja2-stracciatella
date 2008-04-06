@@ -2244,15 +2244,6 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 }
 
 
-		//Not saving any of these in the soldier struct
-		//	LEVELNODE*                   pLevelNode;
-		//	UINT16											*pForcedShade;
-		//
-		// 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
-		//  THROW_PARAMS								*pThrowParams;
-		//	UINT16											*pGlowShades[ 20 ]; //
-		//	UINT16											*pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
-		//	OBJECTTYPE									*pTempObject;
 static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 {
 	UINT16	cnt;
@@ -2374,17 +2365,6 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			{
 				return( FALSE );
 			}
-
-			//Make sure all the pointer references are NULL'ed out.
-			SavedSoldierInfo.pTempObject	 = NULL;
-			SavedSoldierInfo.pKeyRing	 = NULL;
-			memset( SavedSoldierInfo.pShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_SHADES );
-			memset( SavedSoldierInfo.pGlowShades, 0, sizeof( UINT16* ) * 20 );
-			SavedSoldierInfo.pThrowParams	 = NULL;
-			SavedSoldierInfo.pLevelNode	 = NULL;
-			SavedSoldierInfo.pForcedShade	 = NULL;
-			SavedSoldierInfo.pMercPath	 = NULL;
-			memset( SavedSoldierInfo.pEffectShades, 0, sizeof( UINT16* ) * NUM_SOLDIER_EFFECTSHADES );
 
 			SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
 			if (s == NULL) return FALSE;
