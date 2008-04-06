@@ -878,7 +878,7 @@ extern UINT8	bHealthStrRanges[];
 
 // CREATION FUNCTIONS
 BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier );
-BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier );
+void    DeleteSoldierLight(SOLDIERTYPE*);
 
 BOOLEAN CreateSoldierCommon(SOLDIERTYPE* s);
 

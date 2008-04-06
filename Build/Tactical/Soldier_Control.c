@@ -858,7 +858,7 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN ReCreateSoldierLight(SOLDIERTYPE* const s)
+void ReCreateSoldierLight(SOLDIERTYPE* const s)
 {
 	if (s->bTeam != gbPlayerNum) return;
 	if (!s->bActive)             return;
@@ -869,16 +869,14 @@ BOOLEAN ReCreateSoldierLight(SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN DeleteSoldierLight( SOLDIERTYPE *pSoldier )
+void DeleteSoldierLight(SOLDIERTYPE* const s)
 {
-	if (pSoldier->light != NULL)
-	{
-		LightSpriteDestroy(pSoldier->light);
-		pSoldier->light = NULL;
-	}
+	if (s->light == NULL) return;
 
-	return( TRUE );
+	LightSpriteDestroy(s->light);
+	s->light = NULL;
 }
+
 
 // FUNCTIONS CALLED BY EVENT PUMP
 /////////////////////////////////
