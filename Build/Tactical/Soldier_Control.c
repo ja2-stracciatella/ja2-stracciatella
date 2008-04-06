@@ -603,120 +603,94 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const pSoldier)
+BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const s)
 {
-	BOOLEAN fSuccess = FALSE;
-	INT32 iCounter = 0;
-
 	//if we are loading a saved game, we DO NOT want to reset the opplist, look for enemies, or say a dying commnet
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Set initial values for opplist!
-		InitSoldierOppList( pSoldier );
-		HandleSight( pSoldier, SIGHT_LOOK );
+		InitSoldierOppList(s);
+		HandleSight(s, SIGHT_LOOK);
 
 		// Set some quote flags
-		if ( pSoldier->bLife >= OKLIFE )
-		{
-			pSoldier->fDyingComment = FALSE;
-		}
-		else
-		{
-			pSoldier->fDyingComment = TRUE;
-		}
+		s->fDyingComment = (s->bLife < OKLIFE);
 	}
 
 	// ATE: Reset some timer flags...
-	pSoldier->uiTimeSameBattleSndDone = 0;
+	s->uiTimeSameBattleSndDone   = 0;
 	// ATE: Reset every time.....
-	pSoldier->fSoldierWasMoving				= TRUE;
-  pSoldier->iTuringSoundID          = NO_SAMPLE;
-  pSoldier->uiTimeSinceLastBleedGrunt = 0;
+	s->fSoldierWasMoving         = TRUE;
+  s->iTuringSoundID            = NO_SAMPLE;
+  s->uiTimeSinceLastBleedGrunt = 0;
 
-  if ( pSoldier->ubBodyType == QUEENMONSTER )
+  if (s->ubBodyType == QUEENMONSTER)
   {
-    pSoldier->iPositionSndID = NewPositionSnd(NOWHERE, POSITION_SOUND_FROM_SOLDIER, pSoldier, QUEEN_AMBIENT_NOISE);
+    s->iPositionSndID = NewPositionSnd(NOWHERE, POSITION_SOUND_FROM_SOLDIER, s, QUEEN_AMBIENT_NOISE);
   }
 
-
 	// ANYTHING AFTER HERE CAN FAIL
-	do
+	if (IsOnOurTeam(s))
 	{
-		if (IsOnOurTeam(pSoldier))
+		s->pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
+		for (UINT32 i = 0; i < NUM_KEYS; ++i)
 		{
-			pSoldier->pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
+			s->pKeyRing[i].ubKeyID = INVALID_KEY_NUMBER;
+		}
+	}
+	else
+	{
+		s->pKeyRing = NULL;
+	}
 
-			for( iCounter = 0; iCounter < NUM_KEYS; iCounter++ )
-			{
-				pSoldier->pKeyRing[ iCounter ].ubKeyID = INVALID_KEY_NUMBER;
-			}
-		}
-		else
-		{
-			pSoldier->pKeyRing = NULL;
-		}
-		// Create frame cache
-		if (!InitAnimationCache(pSoldier->ubID, &pSoldier->AnimCache))
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed animation cache creation");
-			break;
-		}
+	// Create frame cache
+	if (!InitAnimationCache(s->ubID, &s->AnimCache))
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed animation cache creation");
+		goto fail;
+	}
 
-		const UINT16 usState = pSoldier->usAnimState;
-		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	{
+		UINT16 ani_state = s->usAnimState;
+		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 		{
 			// Init new soldier state
 			// OFFSET FIRST ANIMATION FRAME FOR NEW MERCS
-			if ( usState != STANDING )
-			{
-				EVENT_InitNewSoldierAnim( pSoldier, usState, (UINT8)0, TRUE );
-			}
-			else
-			{
-				EVENT_InitNewSoldierAnim( pSoldier, usState, (UINT8)Random( 10 ), TRUE );
-			}
+			EVENT_InitNewSoldierAnim(s, ani_state, ani_state == STANDING ? Random(10) : 0, TRUE);
 		}
 		else
 		{
 			/// if we don't have a world loaded, and are in a bad anim, goto standing.
-			// bad anims are: HOPFENCE,
-			// CLIMBDOWNROOF, FALLFORWARD_ROOF,FALLOFF, CLIMBUPROOF
-			if( !gfWorldLoaded &&
-					( usState == HOPFENCE ||
-						usState == CLIMBDOWNROOF ||
-						usState == FALLFORWARD_ROOF ||
-						usState == FALLOFF ||
-						usState == CLIMBUPROOF ) )
+			UINT16 ani_code = s->usAniCode;
+			if (!gfWorldLoaded)
 			{
-				EVENT_InitNewSoldierAnim( pSoldier, STANDING, 0, TRUE );
+				switch (ani_state)
+				{
+					case HOPFENCE:
+					case CLIMBDOWNROOF:
+					case FALLFORWARD_ROOF:
+					case FALLOFF:
+					case CLIMBUPROOF:
+						ani_state = STANDING;
+						ani_code  = 0;
+						break;
+				}
 			}
-			else
-			{
-				EVENT_InitNewSoldierAnim( pSoldier, usState, pSoldier->usAniCode, TRUE );
-			}
-
+			EVENT_InitNewSoldierAnim(s, ani_state, ani_code, TRUE);
 		}
-
-		// Init palettes
-		if( CreateSoldierPalettes( pSoldier ) == FALSE )
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed in creating soldier palettes");
-			break;
-		}
-
-		fSuccess = TRUE;
-
-	} while( FALSE );
-
-	if ( !fSuccess )
-	{
-		DeleteSoldier( (pSoldier ) );
 	}
 
-	return( fSuccess );
+	if (!CreateSoldierPalettes(s))
+	{
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed in creating soldier palettes");
+		goto fail;
+	}
 
+	return TRUE;
+
+fail:
+	DeleteSoldier(s);
+	return FALSE;
 }
-
 
 
 BOOLEAN DeleteSoldier( SOLDIERTYPE *pSoldier )
