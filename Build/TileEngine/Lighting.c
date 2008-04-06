@@ -1906,92 +1906,75 @@ BOOLEAN fOnlyWalls;
 }
 
 
-static BOOLEAN LightRevealWall(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
+static BOOLEAN LightRevealWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
 {
-	LEVELNODE *pStruct;
-	UINT32 uiTile;
-	BOOLEAN fRerender=FALSE, fHitWall=FALSE, fDoRightWalls=TRUE, fDoLeftWalls=TRUE;
-	TILE_ELEMENT *TileElem;
+	Assert(gpWorldLevelData != NULL);
 
-	Assert(gpWorldLevelData!=NULL);
-
-	uiTile=MAPROWCOLTOPOS(sY, sX);
-
-	if(sX < sSrcX)
-		fDoRightWalls=FALSE;
-
-	if(sY < sSrcY)
-		fDoLeftWalls=FALSE;
+	const UINT32 uiTile = MAPROWCOLTOPOS(sY, sX);
 
 	// IF A FENCE, RETURN FALSE
-	if ( IsFencePresentAtGridno( (INT16)uiTile ) )
-	{
-		return( FALSE );
-	}
+	if (IsFencePresentAtGridno(uiTile)) return FALSE;
 
-	pStruct=gpWorldLevelData[uiTile].pStructHead;
-	while(pStruct!=NULL)
+	LEVELNODE* const head = gpWorldLevelData[uiTile].pStructHead;
+
+	BOOLEAN fDoRightWalls = (sX >= sSrcX);
+	BOOLEAN fDoLeftWalls  = (sY >= sSrcY);
+
+	for (const LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
-		TileElem = &(gTileDatabase[pStruct->usIndex]);
+		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
 		switch(TileElem->usWallOrientation)
 		{
 			case INSIDE_TOP_RIGHT:
 			case OUTSIDE_TOP_RIGHT:
-				if(!fDoRightWalls)
-					fDoLeftWalls=FALSE;
+				if (!fDoRightWalls) fDoLeftWalls = FALSE;
 				break;
 
 			case INSIDE_TOP_LEFT:
 			case OUTSIDE_TOP_LEFT:
-				if(!fDoLeftWalls)
-					fDoRightWalls=FALSE;
+				if (!fDoLeftWalls) fDoRightWalls = FALSE;
 				break;
 		}
-		pStruct=pStruct->pNext;
 	}
 
-	pStruct=gpWorldLevelData[uiTile].pStructHead;
-	while(pStruct!=NULL)
+	BOOLEAN fHitWall  = FALSE;
+	BOOLEAN fRerender = FALSE;
+	for (LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
-		TileElem = &(gTileDatabase[pStruct->usIndex]);
-		switch(TileElem->usWallOrientation)
+		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
+		switch (TileElem->usWallOrientation)
 		{
-			case NO_ORIENTATION:
-				break;
-
 			case INSIDE_TOP_RIGHT:
 			case OUTSIDE_TOP_RIGHT:
-				fHitWall=TRUE;
-				if((fDoRightWalls) && (sX >= sSrcX))
+				fHitWall = TRUE;
+				if (fDoRightWalls && sX >= sSrcX)
 				{
-					pStruct->uiFlags|=LEVELNODE_REVEAL;
-					fRerender=TRUE;
+					i->uiFlags |= LEVELNODE_REVEAL;
+					fRerender   = TRUE;
 				}
 				break;
 
 			case INSIDE_TOP_LEFT:
 			case OUTSIDE_TOP_LEFT:
-				fHitWall=TRUE;
-				if((fDoLeftWalls) && (sY >= sSrcY))
+				fHitWall = TRUE;
+				if (fDoLeftWalls && sY >= sSrcY)
 				{
-					pStruct->uiFlags|=LEVELNODE_REVEAL;
-					fRerender=TRUE;
+					i->uiFlags |= LEVELNODE_REVEAL;
+					fRerender   = TRUE;
 				}
 				break;
 		}
-		pStruct=pStruct->pNext;
 	}
 
-	if(fRerender)
-		SetRenderFlags(RENDER_FLAG_FULL);
-
-	return(fHitWall);
+	if (fRerender) SetRenderFlags(RENDER_FLAG_FULL);
+	return fHitWall;
 }
 
 
 static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, const INT16 sSrcY)
 {
 	Assert(gpWorldLevelData != NULL);
+
 	UINT32     const uiTile = MAPROWCOLTOPOS(sY, sX);
 	LEVELNODE* const head   = gpWorldLevelData[uiTile].pStructHead;
 
@@ -2028,7 +2011,7 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 				if (fDoRightWalls && sX >= sSrcX)
 				{
 					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender = TRUE;
+					fRerender   = TRUE;
 				}
 				break;
 
@@ -2038,7 +2021,7 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 				if (fDoLeftWalls && sY >= sSrcY)
 				{
 					i->uiFlags &= ~LEVELNODE_REVEAL;
-					fRerender = TRUE;
+					fRerender   = TRUE;
 				}
 				break;
 		}
