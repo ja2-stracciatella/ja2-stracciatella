@@ -36,8 +36,8 @@ extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSou
 
 #else
 
-#define Assert(a)
-#define AssertMsg(a,b)
+#define Assert(a)       ((void)0)
+#define AssertMsg(a, b) ((void)0)
 
 #endif
 
