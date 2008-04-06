@@ -636,42 +636,6 @@ SDL_Surface* GetMouseBufferObject(void)
 }
 
 
-PTR LockBackBuffer(UINT32 *uiPitch)
-{
-	*uiPitch = ScreenBuffer->pitch;
-	return ScreenBuffer->pixels;
-}
-
-
-void UnlockBackBuffer(void)
-{
-}
-
-
-PTR LockFrameBuffer(UINT32 *uiPitch)
-{
-	*uiPitch = FrameBuffer->pitch;
-	return FrameBuffer->pixels;
-}
-
-
-void UnlockFrameBuffer(void)
-{
-}
-
-
-PTR LockMouseBuffer(UINT32 *uiPitch)
-{
-	*uiPitch = MouseCursor->pitch;
-	return MouseCursor->pixels;
-}
-
-
-void UnlockMouseBuffer(void)
-{
-}
-
-
 static void GetRGBDistribution(void)
 {
 	const SDL_PixelFormat* const f = ScreenBuffer->format;

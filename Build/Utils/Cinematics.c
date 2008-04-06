@@ -16,6 +16,7 @@
 #include "Smack_Stub.h" // XXX
 #include "SoundMan.h"
 #include "Types.h"
+#include "VSurface.h"
 #include "Video.h"
 
 
@@ -52,10 +53,10 @@ BOOLEAN SmkPollFlics(void)
 		if (SmackWait(smk)) continue;
 
 		UINT32        Pitch;
-		UINT16* const Dest = LockFrameBuffer(&Pitch);
+		UINT16* const Dest = (UINT16*)LockVideoSurface(FRAME_BUFFER, &Pitch);
 		SmackToBuffer(smk, i->uiLeft, i->uiTop, Pitch, smk->Height, Dest, guiSmackPixelFormat);
 		SmackDoFrame(smk);
-		UnlockFrameBuffer();
+		UnLockVideoSurface(FRAME_BUFFER);
 
 		// Check to see if the flic is done the last frame
 		if (smk->FrameNum == smk->Frames - 1)
