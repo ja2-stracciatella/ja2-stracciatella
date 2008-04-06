@@ -1922,6 +1922,8 @@ static BOOLEAN LightRevealWall(const INT16 sX, const INT16 sY, const INT16 sSrcX
 
 	for (const LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
+		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
+
 		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
 		switch(TileElem->usWallOrientation)
 		{
@@ -1941,6 +1943,8 @@ static BOOLEAN LightRevealWall(const INT16 sX, const INT16 sY, const INT16 sSrcX
 	BOOLEAN fRerender = FALSE;
 	for (LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
+		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
+
 		const TILE_ELEMENT* const TileElem = &gTileDatabase[i->usIndex];
 		switch (TileElem->usWallOrientation)
 		{
@@ -1983,6 +1987,8 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 
 	for (const LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
+		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
+
 		const TILE_ELEMENT* const te = &gTileDatabase[i->usIndex];
 		switch (te->usWallOrientation)
 		{
@@ -2002,6 +2008,8 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 	BOOLEAN fRerender = FALSE;
 	for (LEVELNODE* i = head; i != NULL; i = i->pNext)
 	{
+		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
+
 		const TILE_ELEMENT* const te = &gTileDatabase[i->usIndex];
 		switch (te->usWallOrientation)
 		{
