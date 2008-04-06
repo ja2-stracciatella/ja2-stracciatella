@@ -46,7 +46,6 @@ INT16 DirectionInc(INT16 sDirection);
 INT32 OutOfBounds(INT16 sGridno, INT16 sProposedGridno);
 
 
-BOOLEAN GetMouseCell( INT32 *piMouseMapPos );
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY );
 BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY );
 
