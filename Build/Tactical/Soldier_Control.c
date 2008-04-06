@@ -857,29 +857,15 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	return( TRUE );
 }
 
-BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier )
+
+BOOLEAN ReCreateSoldierLight(SOLDIERTYPE* const s)
 {
-	if ( pSoldier->bTeam != gbPlayerNum )
-	{
-		return( FALSE );
-	}
+	if (s->bTeam != gbPlayerNum) return;
+	if (!s->bActive)             return;
+	if (!s->bInSector)           return;
 
-	if ( !pSoldier->bActive )
-	{
-		return( FALSE );
-	}
-
-	if ( !pSoldier->bInSector )
-	{
-		return( FALSE );
-	}
-
-	// Delete Light!
-	DeleteSoldierLight( pSoldier );
-
-	if (pSoldier->light == NULL) CreateSoldierLight(pSoldier);
-
-	return( TRUE );
+	DeleteSoldierLight(s);
+	CreateSoldierLight(s);
 }
 
 

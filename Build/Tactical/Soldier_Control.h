@@ -959,7 +959,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier);
 UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );
 void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
-BOOLEAN ReCreateSoldierLight( SOLDIERTYPE *pSoldier );
+void ReCreateSoldierLight(SOLDIERTYPE*);
 
 
 BOOLEAN DoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID );
