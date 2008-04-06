@@ -4562,7 +4562,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 
 				bHeard = TRUE;
 
-				ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sGridNo),CenterY(sGridNo));
+				ubNoiseDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sGridNo);
 
 				// check the 'noise heard & reported' bit for that soldier & direction
 				if ( ubNoiseType != NOISE_MOVEMENT || bTeam != OUR_TEAM || (pSoldier->bInterruptDuelPts != NO_INTERRUPT) || !(pSoldier->ubMovementNoiseHeard & (1 << ubNoiseDir) ) )

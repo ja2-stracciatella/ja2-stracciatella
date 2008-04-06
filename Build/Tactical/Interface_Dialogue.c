@@ -1632,7 +1632,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 		if (pSoldier && pSoldier2)
 		{
 			// see if we are facing this person
-			const UINT8 ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(pSoldier2->sGridNo), CenterY(pSoldier2->sGridNo));
+			const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, pSoldier2->sGridNo);
 			// if not already facing in that direction,
 			if (pSoldier->bDirection != ubDesiredMercDir)
 			{
@@ -2109,7 +2109,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (sGridNo != NOWHERE)
 					{
 						// see if we are facing this person
-						const UINT8 ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sGridNo), CenterY(sGridNo));
+						const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sGridNo);
 						// if not already facing in that direction,
 						if (pSoldier->bDirection != ubDesiredMercDir)
 						{

@@ -340,15 +340,13 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 {
 	INT16	sTempGridNo;
-	INT8	bDirection;
-	INT16	sXPos, sYPos, sXPos2, sYPos2;
 	UINT8	ubMovementCost;
 
 	if (sGridNo == sGridNo2 )
 	{
 		// checking the same space; if there is a closed door next to location in ANY direction then forget it
 		// (could be the player closed a door on us)
-		for (bDirection = 0; bDirection < NUM_WORLD_DIRECTIONS; bDirection++)
+		for (INT8 bDirection = 0; bDirection < NUM_WORLD_DIRECTIONS; ++bDirection)
 		{
 			sTempGridNo = NewGridNo( sGridNo, DirectionInc( bDirection ) );
 			ubMovementCost = gubWorldMovementCosts[ sTempGridNo ][ bDirection ][ 0 ];
@@ -374,11 +372,7 @@ static BOOLEAN CloseEnoughForGrenadeToss(INT16 sGridNo, INT16 sGridNo2)
 
 		sTempGridNo = sGridNo;
 
-		sXPos = CenterX( sGridNo );
-		sYPos = CenterY( sGridNo );
-		sXPos2 = CenterX( sGridNo2 );
-		sYPos2 = CenterY( sGridNo2 );
-		bDirection = atan8( sXPos, sYPos, sXPos2, sYPos2 );
+		const INT8 bDirection = GetDirectionToGridNoFromGridNo(sGridNo, sGridNo2);
 
 		// For each step of the loop, we are checking for door or obstacle movement costs.  If we
 		// find we're blocked, then this is no good for grenade tossing!

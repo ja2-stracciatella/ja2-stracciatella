@@ -434,7 +434,6 @@ static INT8 CreatureDecideActionGreen(SOLDIERTYPE* pSoldier)
 static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 {
 	// monster AI - heard something
-	UINT8 ubNoiseDir;
 	INT16 sNoiseGridNo;
 	INT32 iNoiseValue;
 	INT32 iChance, iSneaky;
@@ -468,7 +467,7 @@ static INT8 CreatureDecideActionYellow(SOLDIERTYPE* pSoldier)
 	if (pSoldier->bMobility != CREATURE_IMMOBILE)
 	{
 		// determine direction from this soldier in which the noise lies
-		ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo));
+		const UINT8 ubNoiseDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sNoiseGridNo);
 
 		// if soldier is not already facing in that direction,
 		// and the noise source is close enough that it could possibly be seen
@@ -825,7 +824,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 		 if (sClosestOpponent != NOWHERE)
 			{
 			 // determine direction from this soldier to the closest opponent
-				const UINT8 ubOpponentDir = atan8(CenterX(pSoldier->sGridNo), CenterY(pSoldier->sGridNo), CenterX(sClosestOpponent), CenterY(sClosestOpponent));
+				const UINT8 ubOpponentDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 			 // if soldier is not already facing in that direction,
 			 // and the opponent is close enough that he could possibly be seen
@@ -886,7 +885,6 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 	INT16 sClosestOpponent;
  INT16		sClosestDisturbance;
  UINT8		ubMinAPCost,ubCanMove/*,bInWater*/,bInGas;
- INT8			bDirection;
  UINT8		ubBestAttackAction;
  INT8			bCanAttack;
  INT8			bSpitIn, bWeaponIn;
@@ -1364,7 +1362,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 				}
 				else if (GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints) // turn to face enemy
 				{
-				 bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
+					const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 				 // if we're not facing towards him
 				 if (pSoldier->bDirection != bDirection && ValidCreatureTurn( pSoldier, bDirection ) )

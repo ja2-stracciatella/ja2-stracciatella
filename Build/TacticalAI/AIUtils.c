@@ -2013,7 +2013,7 @@ INT32 CalcManThreatValue( SOLDIERTYPE *pEnemy, INT16 sMyGrid, UINT8 ubReduceForC
 		else
 		{
 			// ADD 5% if man's already facing me
-			if (pEnemy->bDirection == atan8(CenterX(pEnemy->sGridNo),CenterY(pEnemy->sGridNo),CenterX(sMyGrid),CenterY(sMyGrid)))
+			if (pEnemy->bDirection == GetDirectionToGridNoFromGridNo(pEnemy->sGridNo, sMyGrid))
 			{
 				iThreatValue += (iThreatValue / 20);
 			}

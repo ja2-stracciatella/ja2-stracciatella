@@ -517,7 +517,6 @@ static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 {
 	UINT8 ubRoom;
 	INT16	sDesiredMercLoc;
-	UINT8 ubDesiredMercDir;
 
 	// boxer, should move into ring!
 	if ( InARoom( pSoldier->sGridNo, &ubRoom ))
@@ -529,7 +528,7 @@ static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 			if ( sDesiredMercLoc != NOWHERE )
 			{
 				// see if we are facing this person
-				ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
+				const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sDesiredMercLoc);
 
 				// if not already facing in that direction,
 				if ( pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
@@ -562,7 +561,6 @@ static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 {
 	INT16 sDesiredMercLoc;
-	UINT8	ubDesiredMercDir;
 	INT16	sDesiredMercDist;
 
 	// if a quote record has been set and we're not doing movement, then
@@ -586,7 +584,7 @@ static INT8 DecideActionNamedNPC(SOLDIERTYPE* pSoldier)
 			}
 
 			// see if we are facing this person
-			ubDesiredMercDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sDesiredMercLoc),CenterY(sDesiredMercLoc));
+			const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sDesiredMercLoc);
 
 			// if not already facing in that direction,
 			if (pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
@@ -728,10 +726,8 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 		//else if ( (gTacticalStatus.bBoxingState == PRE_BOXING || gTacticalStatus.bBoxingState == BOXING) && ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() ) )
 		else if ( PythSpacesAway( pSoldier->sGridNo, CENTER_OF_RING ) <= MaxDistanceVisible() )
 		{
-			UINT8 ubRingDir;
 			// face ring!
-
-			ubRingDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(CENTER_OF_RING),CenterY(CENTER_OF_RING));
+			const UINT8 ubRingDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, CENTER_OF_RING);
 			if ( gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
 			{
 				if ( pSoldier->bDirection != ubRingDir )
@@ -1119,7 +1115,6 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
 {
  INT32 iDummy;
- UINT8 ubNoiseDir;
  INT16 sNoiseGridNo;
  INT32 iNoiseValue;
  INT32 iChance, iSneaky;
@@ -1182,7 +1177,7 @@ static INT8 DecideActionYellow(SOLDIERTYPE* pSoldier)
  ////////////////////////////////////////////////////////////////////////////
 
  // determine direction from this soldier in which the noise lies
- ubNoiseDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sNoiseGridNo),CenterY(sNoiseGridNo));
+	const UINT8 ubNoiseDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sNoiseGridNo);
 
  // if soldier is not already facing in that direction,
  // and the noise source is close enough that it could possibly be seen
@@ -1548,7 +1543,6 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
  INT32 iDummy;
  INT16 iChance,sClosestOpponent,sClosestFriend;
  INT16 sClosestDisturbance, sDistVisible, sCheckGridNo;
- UINT8 ubCanMove,ubOpponentDir;
  INT8 bInWater, bInDeepWater, bInGas;
  INT8 bSeekPts = 0, bHelpPts = 0, bHidePts = 0, bWatchPts = 0;
  INT8	bHighestWatchLoc;
@@ -1573,7 +1567,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
   }
 
  // can this guy move to any of the neighbouring squares ? (sets TRUE/FALSE)
- ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
+	const UINT8 ubCanMove = (pSoldier->bActionPoints >= MinPtsToMove(pSoldier));
 
  // if we're an alerted enemy, and there are panic bombs or a trigger around
 	if ((!IsOnCivTeam(pSoldier) || pSoldier->ubProfile == WARDEN) &&
@@ -1815,7 +1809,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 			// if firing mortar make sure we have room
 			if ( pSoldier->inv[ BestThrow.bWeaponIn ].usItem == MORTAR )
 			{
-				ubOpponentDir = (UINT8)GetDirectionFromGridNo( BestThrow.sTarget, pSoldier );
+				const UINT8 ubOpponentDir = GetDirectionFromGridNo(BestThrow.sTarget, pSoldier);
 
 				// Get new gridno!
 				sCheckGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc( ubOpponentDir ) );
@@ -2182,7 +2176,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						if ( bHighestWatchLoc != -1 )
 						{
 							// see if we need turn to face that location
-							ubOpponentDir = atan8( CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX( gsWatchedLoc[ pSoldier->ubID ][ bHighestWatchLoc ] ),CenterY( gsWatchedLoc[ pSoldier->ubID ][ bHighestWatchLoc ] ) );
+							const UINT8 ubOpponentDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, gsWatchedLoc[pSoldier->ubID][bHighestWatchLoc]);
 
 							// if soldier is not already facing in that direction,
 							// and the opponent is close enough that he could possibly be seen
@@ -2398,7 +2392,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	 if (sClosestOpponent != NOWHERE)
 		{
 		 // determine direction from this soldier to the closest opponent
-		 ubOpponentDir = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
+			const UINT8 ubOpponentDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 		 // if soldier is not already facing in that direction,
 		 // and the opponent is close enough that he could possibly be seen
@@ -2442,9 +2436,10 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if (!gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints)
 		{
 			sClosestDisturbance = MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
+			UINT8 ubOpponentDir;
 			if ( sClosestDisturbance != NOWHERE )
 			{
-				ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
+				ubOpponentDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestDisturbance);
 				if ( pSoldier->bDirection == ubOpponentDir )
 				{
 					ubOpponentDir = (UINT8) PreRandom( NUM_WORLD_DIRECTIONS );
@@ -2588,7 +2583,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		sClosestDisturbance = MostImportantNoiseHeard( pSoldier, NULL, NULL, NULL );
 		if ( sClosestDisturbance != NOWHERE )
 		{
- 			ubOpponentDir = atan8( CenterX( pSoldier->sGridNo ), CenterY( pSoldier->sGridNo ), CenterX( sClosestDisturbance ), CenterY( sClosestDisturbance ) );
+			const UINT8 ubOpponentDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestDisturbance);
 			if ( pSoldier->bDirection != ubOpponentDir )
 			{
 				if ( !gfTurnBasedAI || GetAPsToLook( pSoldier ) <= pSoldier->bActionPoints )
@@ -2628,7 +2623,6 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  INT16	sClosestDisturbance;
  UINT8	ubMinAPCost,ubCanMove;
  INT8		bInDeepWater,bInGas;
- INT8		bDirection;
  UINT8	ubBestAttackAction = AI_ACTION_NONE;
  INT8		bCanAttack,bActionReturned;
  INT8		bWeaponIn;
@@ -3391,9 +3385,8 @@ bCanAttack = FALSE;
 
 				if ( (INT32)PreRandom( 100 ) < iChance || GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, BestAttack.sTarget ) <= MIN_PRONE_RANGE )
 				{
-
 					// first get the direction, as we will need to pass that in to ShootingStanceChange
-					bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(BestAttack.sTarget),CenterY(BestAttack.sTarget));
+					const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, BestAttack.sTarget);
 
 					ubBestStance = ShootingStanceChange( pSoldier, &BestAttack, bDirection );
 					if (ubBestStance != 0)
@@ -3700,7 +3693,7 @@ bCanAttack = FALSE;
 						// if we have a closest seen opponent
 						if (sClosestOpponent != NOWHERE)
 						{
-							bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
+							const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 							// if we're not facing towards him
 							if (pSoldier->bDirection != bDirection)
@@ -3757,7 +3750,7 @@ bCanAttack = FALSE;
 		 // if we have a closest reachable opponent
 		 if (sClosestOpponent != NOWHERE)
 		 {
-			 bDirection = atan8(CenterX(pSoldier->sGridNo),CenterY(pSoldier->sGridNo),CenterX(sClosestOpponent),CenterY(sClosestOpponent));
+				const INT8 bDirection = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sClosestOpponent);
 
 			 // if we're not facing towards him
 			 if ( pSoldier->bDirection != bDirection && InternalIsValidStance( pSoldier, bDirection, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
