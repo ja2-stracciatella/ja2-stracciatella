@@ -106,11 +106,7 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_I8(S, Soldier->bExpLevel)
 	EXTR_I16(S, Soldier->sInsertionGridNo)
 	EXTR_BOOL(S, Soldier->fContinueMoveAfterStanceChange)
-	EXTR_SKIP(S, 3)
-	EXTR_PTR(S, Soldier->AnimCache.usCachedSurfaces)
-	EXTR_PTR(S, Soldier->AnimCache.sCacheHits)
-	EXTR_U8(S, Soldier->AnimCache.ubCacheSize)
-	EXTR_SKIP(S, 3)
+	EXTR_SKIP(S, 15)
 	EXTR_I8(S, Soldier->bLife)
 	EXTR_U8(S, Soldier->bSide)
 	EXTR_U8(S, Soldier->bViewRange)
@@ -507,9 +503,12 @@ void ExtractSoldierType(const BYTE* Src, SOLDIERTYPE* Soldier)
 	EXTR_SOLDIER(S, Soldier->next_to_previous_attacker)
 	EXTR_SKIP(S, 39)
 
-	Soldier->face         = NULL;
-	Soldier->light        = NULL;
-	Soldier->muzzle_flash = NULL;
+	Soldier->AnimCache.usCachedSurfaces = NULL;
+	Soldier->AnimCache.sCacheHits       = NULL;
+	Soldier->AnimCache.ubCacheSize      = 0;
+	Soldier->face                       = NULL;
+	Soldier->light                      = NULL;
+	Soldier->muzzle_flash               = NULL;
 
 #ifdef _WIN32 // XXX HACK000A
 	Assert(S == Src + 2328);
@@ -620,11 +619,7 @@ void InjectSoldierType(BYTE* Dst, const SOLDIERTYPE* Soldier)
 	INJ_I8(D, Soldier->bExpLevel)
 	INJ_I16(D, Soldier->sInsertionGridNo)
 	INJ_BOOL(D, Soldier->fContinueMoveAfterStanceChange)
-	INJ_SKIP(D, 3)
-	INJ_PTR(D, Soldier->AnimCache.usCachedSurfaces)
-	INJ_PTR(D, Soldier->AnimCache.sCacheHits)
-	INJ_U8(D, Soldier->AnimCache.ubCacheSize)
-	INJ_SKIP(D, 3)
+	INJ_SKIP(D, 15)
 	INJ_I8(D, Soldier->bLife)
 	INJ_U8(D, Soldier->bSide)
 	INJ_U8(D, Soldier->bViewRange)
