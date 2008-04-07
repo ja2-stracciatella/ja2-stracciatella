@@ -138,24 +138,17 @@ LEVELNODE* AddObjectToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 
 LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
+	n->usIndex = usIndex;
 
-	LEVELNODE* pNextObject = CreateLevelNode();
-	CHECKN(pNextObject != NULL);
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pObjectHead;
+	n->pNext = *head;
+	*head    = n;
 
-	pNextObject->pNext = pObject;
-	pNextObject->usIndex = usIndex;
-
-	// Set head
-	gpWorldLevelData[iMapIndex].pObjectHead = pNextObject;
-
-	// If it's NOT the first head
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_OBJECTS);
-
-	//Add the object to the map temp file, if we have to
 	AddObjectToMapTempFile(iMapIndex, usIndex);
-
-	return pNextObject;
+	return n;
 }
 
 
