@@ -1064,18 +1064,17 @@ void AddExclusiveShadow(UINT32 iMapIndex, UINT16 usIndex)
 
 LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
+	n->usIndex = usIndex;
 
-	LEVELNODE* pNextShadow = CreateLevelNode();
-	CHECKN(pNextShadow != NULL);
-	pNextShadow->pNext = pShadow;
-	pNextShadow->usIndex = usIndex;
-
-	// Set head
-	gpWorldLevelData[iMapIndex].pShadowHead = pNextShadow;
+	// Prepend node to list
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pShadowHead;
+	n->pNext = *head;
+	*head = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
-	return pNextShadow;
+	return n;
 }
 
 
