@@ -3356,22 +3356,11 @@ static void TeleportSelectedSoldier(void)
 
 static void ToggleTreeTops(void)
 {
-	if ( gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ] )
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ REMOVING_TREETOPS_STR ] );
-		WorldHideTrees( );
-		gTacticalStatus.uiFlags |= NOHIDE_REDUNDENCY;
-	}
-	else
-	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ SHOWING_TREETOPS_STR ]);
-		WorldShowTrees( );
-		gTacticalStatus.uiFlags &= (~NOHIDE_REDUNDENCY);
-	}
-	gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ] = !gGameSettings.fOptions[ TOPTION_TOGGLE_TREE_TOPS ];
-
-	// FOR THE NEXT RENDER LOOP, RE-EVALUATE REDUNDENT TILES
-	InvalidateWorldRedundency( );
+	BOOLEAN* const show_trees = &gGameSettings.fOptions[TOPTION_TOGGLE_TREE_TOPS];
+	*show_trees = !*show_trees;
+	const wchar_t* const msg = (*show_trees ? TacticalStr[SHOWING_TREETOPS_STR] : TacticalStr[REMOVING_TREETOPS_STR]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+	SetTreeTopStateForMap();
 }
 
 
