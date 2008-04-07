@@ -629,6 +629,20 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 }
 
 
+static BOOLEAN AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, const INT8 level, LEVELNODE* const n)
+{
+	if (usIndex >= NUMBEROFTILES) return TRUE;
+
+	DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+	if (sr == NULL) return TRUE;
+
+	if (AddStructureToWorld(iMapIndex, level, sr, n)) return TRUE;
+
+	MemFree(n);
+	return FALSE;
+}
+
+
 // Struct layer
 // #################################################################
 
@@ -652,14 +666,7 @@ static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usI
 	LEVELNODE* const n = CreateLevelNode();
 	CHECKN(n != NULL);
 
-	if (fAddStructDBInfo &&
-			usIndex < NUMBEROFTILES &&
-			gTileDatabase[usIndex].pDBStructureRef != NULL &&
-			!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, n))
-	{
-		MemFree(n);
-		return NULL;
-	}
+	if (fAddStructDBInfo && !AddNodeToWorld(iMapIndex, usIndex, 0, n)) return NULL;
 
 	n->usIndex = usIndex;
 
@@ -705,15 +712,7 @@ BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	LEVELNODE* const n = CreateLevelNode();
 	CHECKF(n != NULL);
 
-	if (usIndex < NUMBEROFTILES)
-	{
-		DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
-		if (sr != NULL && !AddStructureToWorld(iMapIndex, 0, sr, n))
-		{
-			MemFree(n);
-			return FALSE;
-		}
-	}
+	if (!AddNodeToWorld(iMapIndex, usIndex, 0, n)) return FALSE;
 
 	n->usIndex = usIndex;
 
@@ -791,13 +790,7 @@ static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel
 		return FALSE;
 	}
 
-	if (usIndex < NUMBEROFTILES &&
-			gTileDatabase[usIndex].pDBStructureRef != NULL &&
-			!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct))
-	{
-		MemFree(pNextStruct);
-		return FALSE;
-	}
+	if (!AddNodeToWorld(iMapIndex, usIndex, 0, pNextStruct)) return FALSE;
 
 	// Set links, according to position!
 	pNextStruct->pNext = pStruct->pNext;
@@ -1508,17 +1501,7 @@ LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
 		pRoof = CreateLevelNode();
 		CHECKN(pRoof != NULL);
 
-		if (usIndex < NUMBEROFTILES)
-		{
-			if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-			{
-				if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pRoof))
-				{
-					MemFree(pRoof);
-					return FALSE;
-				}
-			}
-		}
+		if (!AddNodeToWorld(iMapIndex, usIndex, 1, pRoof)) return NULL;
 		pRoof->usIndex = usIndex;
 
 		gpWorldLevelData[iMapIndex].pRoofHead = pRoof;
@@ -1534,17 +1517,7 @@ LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
 				pNextRoof = CreateLevelNode();
 				CHECKN(pNextRoof != NULL);
 
-				if (usIndex < NUMBEROFTILES)
-				{
-					if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-					{
-						if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof))
-						{
-							MemFree(pNextRoof);
-							return FALSE;
-						}
-					}
-				}
+				if (!AddNodeToWorld(iMapIndex, usIndex, 1, pNextRoof)) return NULL;
 				pRoof->pNext = pNextRoof;
 
 				pNextRoof->pNext = NULL;
@@ -1567,17 +1540,7 @@ LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	LEVELNODE* pNextRoof = CreateLevelNode();
 	CHECKN(pNextRoof != NULL);
 
-	if (usIndex < NUMBEROFTILES)
-	{
-		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-		{
-			if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextRoof))
-			{
-				MemFree(pNextRoof);
-				return NULL;
-			}
-		}
-	}
+	if (!AddNodeToWorld(iMapIndex, usIndex, 1, pNextRoof)) return NULL;
 
 	pNextRoof->pNext = pRoof;
 	pNextRoof->usIndex = usIndex;
@@ -1746,15 +1709,7 @@ static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 	LEVELNODE* const n = CreateLevelNode();
 	CHECKN(n != NULL);
 
-	if (usIndex < NUMBEROFTILES)
-	{
-		DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
-		if (sr != NULL && !AddStructureToWorld(iMapIndex, 1, sr, n))
-		{
-			MemFree(n);
-			return NULL;
-		}
-	}
+	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
 	n->usIndex = usIndex;
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
