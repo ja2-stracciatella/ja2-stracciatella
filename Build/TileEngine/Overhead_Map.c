@@ -88,7 +88,8 @@ static SGPVObject* uiOVERMAP;
 static SGPVObject* uiPERSONS;
 BOOLEAN						gfOverheadMapDirty = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
-INT16							gsStartRestrictedX, gsStartRestrictedY;
+static INT16       gsStartRestrictedX;
+static INT16       gsStartRestrictedY;
 BOOLEAN						gfOverItemPool = FALSE;
 INT16							gsOveritemPoolGridNo;
 
@@ -1404,8 +1405,8 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 	*psScreenX /= 5;
 	*psScreenY /= 5;
 
-	*psScreenX += 5;
-	*psScreenY += 5;
+	*psScreenX += gsStartRestrictedX + 5;
+	*psScreenY += gsStartRestrictedY + 5;
 
 	//Subtract the height....
   //*psScreenY -= gpWorldLevelData[ sGridNo ].sHeight / 5;
@@ -1417,8 +1418,8 @@ static BOOLEAN InternalGetOverheadMouseGridNo(INT16* const psGridNo, const INT d
 	if (!(OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA)) return FALSE;
 
 	// ATE: Adjust alogrithm values a tad to reflect map positioning
-	INT16 const sWorldScreenX = gsStartRestrictedX + (gusMouseXPos -  5) * 5;
-	INT16       sWorldScreenY = gsStartRestrictedY + (gusMouseYPos + dy) * 5;
+	INT16 const sWorldScreenX = (gusMouseXPos - gsStartRestrictedX -  5) * 5;
+	INT16       sWorldScreenY = (gusMouseYPos - gsStartRestrictedY + dy) * 5;
 	INT32       uiCellX;
 	INT32       uiCellY;
 

@@ -1,3 +1,4 @@
+(r3668) Fix vanilla displacement of people and item markers in the overhead map for smaller maps (like the rebel basement).
 (r3638) Fix a vanilla out of bounds array access.
 (r3598) Fix a vanilla memory leak when loading savegames.
 (r3592) Fix vanilla bugs (different destinations within one squad, combats with no participants) when right clicking the the name, location or destination columns to abort movement planning mode.
