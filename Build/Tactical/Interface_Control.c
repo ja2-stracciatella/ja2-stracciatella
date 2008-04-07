@@ -744,7 +744,7 @@ void RenderTopmostTacticalInterface( )
 		RenderSectorExitMenu( );
 	}
 
-	if( fRenderRadarScreen == TRUE )
+	if (fRenderRadarScreen)
 	{
 	  RenderClock();
 	  RenderTownIDString( );

@@ -117,12 +117,8 @@ void ClearOutRadarMapImage( void )
 
 void MoveRadarScreen( )
 {
-
 	// check if we are allowed to do anything?
-	if( fRenderRadarScreen == FALSE )
-	{
-		return;
-	}
+	if (!fRenderRadarScreen) return;
 
 	// Remove old region
 	MSYS_RemoveRegion( &gRadarRegion );
@@ -157,10 +153,7 @@ static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	INT16 sRadarX, sRadarY;
 
 	// check if we are allowed to do anything?
-	if( fRenderRadarScreen == FALSE )
-	{
-		return;
-	}
+	if (!fRenderRadarScreen) return;
 
 	if (iReason == MSYS_CALLBACK_REASON_MOVE )
 	{
@@ -184,10 +177,7 @@ static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	INT16 sRadarX, sRadarY;
 
 	// check if we are allowed to do anything?
-	if( fRenderRadarScreen == FALSE )
-	{
-		return;
-	}
+	if (!fRenderRadarScreen) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -248,7 +238,7 @@ void RenderRadarScreen( )
 	CreateDestroyMouseRegionsForSquadList( );
 
 	// check if we are allowed to do anything?
-	if( fRenderRadarScreen == FALSE )
+	if (!fRenderRadarScreen)
 	{
 		RenderSquadList( );
 		return;
@@ -542,7 +532,7 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 	static BOOLEAN fCreated = FALSE;
 	INT16 sCounter = 0;
 
-	if( ( fRenderRadarScreen == FALSE ) && ( fCreated == FALSE ) )
+	if (!fRenderRadarScreen && !fCreated)
 	{
 		CHECKF(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y));
 		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, SCREEN_WIDTH - 538, SCREEN_HEIGHT - gsVIEWPORT_END_Y);
@@ -577,7 +567,7 @@ static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
 		// set fact regions are created
 		fCreated = TRUE;
 	}
-	else if( ( fRenderRadarScreen == TRUE ) && ( fCreated == TRUE ) )
+	else if (fRenderRadarScreen && fCreated)
 	{
 		// destroy regions
 
