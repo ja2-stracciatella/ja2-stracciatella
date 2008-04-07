@@ -753,48 +753,35 @@ BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 }
 
 
-static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel)
+static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
 {
-	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-
-	// If we want to insert at head;
+	// If we want to insert at head
 	if (ubLevel == 0)
 	{
-		 return AddStructToHead(iMapIndex, usIndex);
+		return AddStructToHead(iMapIndex, usIndex);
 	}
-
-	LEVELNODE* pNextStruct = CreateLevelNode();
-	CHECKF(pNextStruct != NULL);
-
-	pNextStruct->usIndex = usIndex;
 
 	// Move to index before insertion
-	UINT8 level = 0;
-	BOOLEAN CanInsert = FALSE;
-	while (pStruct != NULL)
+	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
+	for (UINT8 level = 0;; ++level)
 	{
-		if (level == ubLevel - 1)
-		{
-			CanInsert = TRUE;
-			break;
-		}
+		if (pStruct == NULL) return FALSE;
+
+		if (level == ubLevel - 1) break;
 
 		pStruct = pStruct->pNext;
-		level++;
 	}
 
-	// Check if level has been macthed
-	if (!CanInsert)
-	{
-		MemFree(pNextStruct);
-		return FALSE;
-	}
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
 
-	if (!AddNodeToWorld(iMapIndex, usIndex, 0, pNextStruct)) return FALSE;
+	n->usIndex = usIndex;
+
+	if (!AddNodeToWorld(iMapIndex, usIndex, 0, n)) return FALSE;
 
 	// Set links, according to position!
-	pNextStruct->pNext = pStruct->pNext;
-	pStruct->pNext = pNextStruct;
+	n->pNext       = pStruct->pNext;
+	pStruct->pNext = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
 	return TRUE;
