@@ -120,40 +120,19 @@ static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT
 // First for object layer
 // #################################################################
 
-LEVELNODE* AddObjectToTail(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddObjectToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead;
-	LEVELNODE* pNextObject = NULL;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
+	n->usIndex = usIndex;
 
-	// If we're at the head, set here
-	if (pObject == NULL)
-	{
-		pNextObject = CreateLevelNode();
-		CHECKF(pNextObject != NULL);
-		pNextObject->usIndex = usIndex;
-
-		gpWorldLevelData[iMapIndex].pObjectHead = pNextObject;
-	}
-	else
-	{
-		for (; pObject != NULL; pObject = pObject->pNext)
-		{
-			if (pObject->pNext == NULL)
-			{
-				pNextObject = CreateLevelNode();
-				CHECKF(pNextObject != NULL);
-				pObject->pNext = pNextObject;
-
-				pNextObject->pNext = NULL;
-				pNextObject->usIndex = usIndex;
-
-				break;
-			}
-		}
-	}
+	// Append node to list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pObjectHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_OBJECTS);
-	return pNextObject;
+	return n;
 }
 
 
