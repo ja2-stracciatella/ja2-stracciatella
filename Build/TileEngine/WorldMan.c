@@ -1492,44 +1492,20 @@ BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder
 
 LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
 {
-	LEVELNODE* pNextRoof = NULL;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
 
-	// If we're at the head, set here
-	LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead;
-	if (pRoof == NULL)
-	{
-		pRoof = CreateLevelNode();
-		CHECKN(pRoof != NULL);
+	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
-		if (!AddNodeToWorld(iMapIndex, usIndex, 1, pRoof)) return NULL;
-		pRoof->usIndex = usIndex;
+	n->usIndex = usIndex;
 
-		gpWorldLevelData[iMapIndex].pRoofHead = pRoof;
-
-		pNextRoof = pRoof;
-	}
-	else
-	{
-		for (; pRoof != NULL; pRoof = pRoof->pNext)
-		{
-			if (pRoof->pNext == NULL)
-			{
-				pNextRoof = CreateLevelNode();
-				CHECKN(pNextRoof != NULL);
-
-				if (!AddNodeToWorld(iMapIndex, usIndex, 1, pNextRoof)) return NULL;
-				pRoof->pNext = pNextRoof;
-
-				pNextRoof->pNext = NULL;
-				pNextRoof->usIndex = usIndex;
-
-				break;
-			}
-		}
-	}
+	// Append node to list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pRoofHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
-	return pNextRoof;
+	return n;
 }
 
 
