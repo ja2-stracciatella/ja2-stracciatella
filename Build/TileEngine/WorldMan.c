@@ -1729,40 +1729,19 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // Topmost layer
 // #################################################################
 
-LEVELNODE* AddTopmostToTail(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddTopmostToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pNextTopmost = NULL;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
+	n->usIndex = usIndex;
 
-	// If we're at the head, set here
-	LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
-	if (pTopmost == NULL)
-	{
-		pNextTopmost = CreateLevelNode();
-		CHECKN(pNextTopmost != NULL);
-		pNextTopmost->usIndex = usIndex;
-
-		gpWorldLevelData[iMapIndex].pTopmostHead = pNextTopmost;
-	}
-	else
-	{
-		while (pTopmost != NULL)
-		{
-			if (pTopmost->pNext == NULL)
-			{
-				pNextTopmost = CreateLevelNode();
-				CHECKN(pNextTopmost != NULL);
-				pTopmost->pNext = pNextTopmost;
-				pNextTopmost->pNext = NULL;
-				pNextTopmost->usIndex = usIndex;
-				break;
-			}
-
-			pTopmost = pTopmost->pNext;
-		}
-	}
+	// Append node to list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pTopmostHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
-	return pNextTopmost;
+	return n;
 }
 
 
