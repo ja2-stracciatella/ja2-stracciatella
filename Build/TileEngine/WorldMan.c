@@ -1762,18 +1762,17 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 
 LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
+	n->usIndex = usIndex;
 
-	LEVELNODE* pNextTopmost = CreateLevelNode();
-	CHECKN(pNextTopmost != NULL);
-	pNextTopmost->pNext = pTopmost;
-	pNextTopmost->usIndex = usIndex;
-
-	// Set head
-	gpWorldLevelData[iMapIndex].pTopmostHead = pNextTopmost;
+	// Prepend node to list
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pTopmostHead;
+	n->pNext = *head;
+	*head = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
-	return pNextTopmost;
+	return n;
 }
 
 
