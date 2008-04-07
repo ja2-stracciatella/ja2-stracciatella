@@ -1,32 +1,6 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 
-#define		ENV_TIME_00		0
-#define		ENV_TIME_01		1
-#define		ENV_TIME_02		2
-#define		ENV_TIME_03		3
-#define		ENV_TIME_04		4
-#define		ENV_TIME_05		5
-#define		ENV_TIME_06		6
-#define		ENV_TIME_07		7
-#define		ENV_TIME_08		8
-#define		ENV_TIME_09		9
-#define		ENV_TIME_10		10
-#define		ENV_TIME_11		11
-#define		ENV_TIME_12		12
-#define		ENV_TIME_13		13
-#define		ENV_TIME_14		14
-#define		ENV_TIME_15		15
-#define		ENV_TIME_16		16
-#define		ENV_TIME_17		17
-#define		ENV_TIME_18		18
-#define		ENV_TIME_19		19
-#define		ENV_TIME_20		20
-#define		ENV_TIME_21		21
-#define		ENV_TIME_22		22
-#define		ENV_TIME_23		23
-
-#define		ENV_NUM_TIMES				24
 
 //Make sure you use 24 for end time hours and 0 for start time hours if
 //midnight is the hour you wish to use.

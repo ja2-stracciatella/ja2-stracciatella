@@ -27,12 +27,6 @@
 BOOLEAN			gfBasement = FALSE;
 BOOLEAN			gfCaves = FALSE;
 
-
-#define   ENV_TOD_FLAGS_DAY										0x00000001
-#define   ENV_TOD_FLAGS_DAWN									0x00000002
-#define   ENV_TOD_FLAGS_DUSK									0x00000004
-#define   ENV_TOD_FLAGS_NIGHT									0x00000008
-
 /*
 #define		DAWNLIGHT_START											( 5 * 60 )
 #define		DAWN_START													( 6 * 60 )
@@ -90,32 +84,6 @@ UINT8 ubLightningTable[3][10][2]=
 																		{8, 0},
 																		{9, 0}	}	};
 
-// CJC: I don't think these are used anywhere!
-UINT8			guiTODFlags[ENV_NUM_TIMES] = {
-																			ENV_TOD_FLAGS_NIGHT,		// 00
-																			ENV_TOD_FLAGS_NIGHT,		// 01
-																			ENV_TOD_FLAGS_NIGHT,		// 02
-																			ENV_TOD_FLAGS_NIGHT,		// 03
-																			ENV_TOD_FLAGS_NIGHT,		// 04
-																			ENV_TOD_FLAGS_DAWN,			// 05
-																			ENV_TOD_FLAGS_DAWN,			// 06
-																			ENV_TOD_FLAGS_DAWN,			// 07
-																			ENV_TOD_FLAGS_DAY,		  // 08
-																			ENV_TOD_FLAGS_DAY,		  // 09
-																			ENV_TOD_FLAGS_DAY,		  // 10
-																			ENV_TOD_FLAGS_DAY,		  // 11
-																			ENV_TOD_FLAGS_DAY,			// 12
-																			ENV_TOD_FLAGS_DAY,		  // 13
-																			ENV_TOD_FLAGS_DAY,			// 14
-																			ENV_TOD_FLAGS_DAY,			// 15
-																			ENV_TOD_FLAGS_DAY,			// 16
-																			ENV_TOD_FLAGS_DAY,			// 17
-																			ENV_TOD_FLAGS_DAY,			// 18
-																			ENV_TOD_FLAGS_DUSK,			// 19
-																			ENV_TOD_FLAGS_DUSK,			// 20
-																			ENV_TOD_FLAGS_DUSK,			// 21
-																			ENV_TOD_FLAGS_NIGHT,		// 22
-																			ENV_TOD_FLAGS_NIGHT};		// 23
 
 typedef enum
 {
