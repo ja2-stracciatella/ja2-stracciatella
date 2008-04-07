@@ -1490,7 +1490,7 @@ BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder
 // Roof layer
 // #################################################################
 
-LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
+static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
 	CHECKN(n != NULL);
@@ -1498,32 +1498,35 @@ LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
 	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
 	n->usIndex = usIndex;
+	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
+	return n;
+}
+
+
+LEVELNODE* AddRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+{
+	LEVELNODE* const n = AddRoof(iMapIndex, usIndex);
+	if (n == NULL) return NULL;
 
 	// Append node to list
 	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pRoofHead;
 	while (*anchor != NULL) anchor = &(*anchor)->pNext;
 	*anchor = n;
 
-	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
 }
 
 
 LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* n = CreateLevelNode();
-	CHECKN(n != NULL);
-
-	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
-
-	n->usIndex = usIndex;
+	LEVELNODE* const n = AddRoof(iMapIndex, usIndex);
+	if (n == NULL) return NULL;
 
 	// Prepend node to list
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pRoofHead;
 	n->pNext = *head;
 	*head = n;
 
-	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
 }
 
