@@ -845,6 +845,19 @@ static BOOLEAN InsertStructIndex(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex);
 
 
+static void RemoveShadowBuddy(UINT32 iMapIndex, UINT16 usIndex)
+{
+	if (usIndex >= NUMBEROFTILES) return;
+	if (GridNoIndoors(iMapIndex)) return;
+
+	const TILE_ELEMENT* const te = &gTileDatabase[usIndex];
+	if (!(te->uiFlags & HAS_SHADOW_BUDDY)) return;
+	if (te->sBuddyNum == -1)               return;
+
+	RemoveShadow(iMapIndex, te->sBuddyNum);
+}
+
+
 BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 {
 	LEVELNODE* pPrevStruct	= NULL;
@@ -873,15 +886,7 @@ BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 
 			MemFree(pStruct);
 
-			if (usIndex < NUMBEROFTILES)
-			{
-				// Check flags for tiledat and set a shadow if we have a buddy
-				if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
-				{
-					RemoveShadow(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
-				}
-
-			}
+			RemoveShadowBuddy(iMapIndex, usIndex);
 			return TRUE;
 		}
 
@@ -909,14 +914,7 @@ static BOOLEAN InternalRemoveStruct(UINT32 MapIndex, LEVELNODE* Pred, LEVELNODE*
 	//If we have to, make sure to remove this node when we reload the map from a saved game
 	RemoveStructFromMapTempFile(MapIndex, Index);
 
-	if (Index < NUMBEROFTILES)
-	{
-		// Check flags for tiledat and set a shadow if we have a buddy
-		if (!GridNoIndoors(MapIndex) && gTileDatabase[Index].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[Index].sBuddyNum != -1)
-		{
-			RemoveShadow(MapIndex, gTileDatabase[Index].sBuddyNum);
-		}
-	}
+	RemoveShadowBuddy(MapIndex, Index);
 	MemFree(Removee);
 
 	return TRUE;
@@ -984,10 +982,7 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 				{
 					RemoveStruct(iMapIndex, usIndex);
 					fRetVal = TRUE;
-					if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
-					{
-						RemoveShadow(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
-					}
+					RemoveShadowBuddy(iMapIndex, usIndex);
 				}
 			}
 		}
