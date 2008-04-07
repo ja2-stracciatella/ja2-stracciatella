@@ -142,17 +142,17 @@ static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents)
 
 
 #if defined WITH_ZLIB
-static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
-static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
-static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
+static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
+static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 #endif
 
-static BOOLEAN Copy8BPPImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
-static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
-static BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect);
+static BOOLEAN Copy8BPPImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
+static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
+static BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 
 
-BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect )
+BOOLEAN CopyImageToBuffer(const HIMAGE hImage, const UINT32 fBufferType, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
 	// Use blitter based on type of image
 	Assert( hImage != NULL );
@@ -163,14 +163,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		if (hImage->fFlags & IMAGE_COMPRESSED)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery.");
-			return Copy8BPPCompressedImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+			return Copy8BPPCompressedImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 		}
 #endif
 
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery." );
-		return ( Copy8BPPImageTo8BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
-
+		return Copy8BPPImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 
 	if ( hImage->ubBitDepth == 8 && fBufferType == BUFFER_16BPP )
@@ -179,13 +178,13 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		if (hImage->fFlags & IMAGE_COMPRESSED)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer.");
-			return Copy8BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+			return Copy8BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 		}
 #endif
 
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer." );
-		return ( Copy8BPPImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
+		return Copy8BPPImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 
 	}
 
@@ -196,12 +195,12 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 		if (hImage->fFlags & IMAGE_COMPRESSED)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery.");
-			return  Copy16BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect);
+			return  Copy16BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 		}
 #endif
 
 			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
-		return( Copy16BPPImageTo16BPPBuffer( hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, srcRect ) );
+		return Copy16BPPImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 
 	return( FALSE );
@@ -211,10 +210,8 @@ BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UI
 
 #if defined WITH_ZLIB
 
-static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
-	UINT32	uiNumLines;
-	UINT32	uiLineSize;
 	UINT32		uiCnt;
 
 	UINT8 *	pDest;
@@ -232,14 +229,14 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 	CHECKF( usX < usDestWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
-	CHECKF( srcRect->iRight > srcRect->iLeft );
-	CHECKF( srcRect->iBottom > srcRect->iTop );
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
 
 	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "8BPP to 8BPP Compressed Blitter Called!" );
 	// determine where to start Copying and rectangle size
 	uiDestStart = usY * usDestWidth + usX;
-	uiNumLines = srcRect->iBottom - srcRect->iTop;
-	uiLineSize = srcRect->iRight - srcRect->iLeft;
+	const UINT32 uiLineSize = src_box->w;
+	const UINT32 uiNumLines = src_box->h;
 
 	Assert( usDestWidth >= uiLineSize );
 	Assert( usDestHeight >= uiNumLines );
@@ -264,7 +261,7 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
-	for (uiCnt = 0; uiCnt < (UINT32) srcRect->iTop; uiCnt++)
+	for (uiCnt = 0; uiCnt < (UINT32)src_box->y; uiCnt++)
 	{
 		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
 		Assert( uiDecompressed == hImage->usWidth );
@@ -277,23 +274,21 @@ static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf
 		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
 		Assert( uiDecompressed == hImage->usWidth );
 		// and blit
-//		memcpy( pDest, pScanLine + srcRect->iLeft, uiLineSize );
+//		memcpy( pDest, pScanLine + src_box->x, uiLineSize );
 		pDest += usDestWidth;
 	}
 	// decompress the last scanline and blit
 	uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
 	Assert( uiDecompressed == hImage->usWidth );
-//	memcpy( pDest, pScanLine + srcRect->iLeft, uiLineSize );
+//	memcpy( pDest, pScanLine + src_box->x, uiLineSize );
 
 	DecompressFini( pDecompPtr );
 	return( TRUE );
 }
 
 
-static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
-	UINT32		uiNumLines;
-	UINT32		uiLineSize;
 	UINT32		uiLine;
 	UINT32		uiCol;
 
@@ -317,15 +312,15 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	CHECKF( usX < usDestWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
-	CHECKF( srcRect->iRight > srcRect->iLeft );
-	CHECKF( srcRect->iBottom > srcRect->iTop );
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
 	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "End check" );
 	p16BPPPalette = hImage->pui16BPPPalette;
 
 	// determine where to start Copying and rectangle size
 	uiDestStart = usY * usDestWidth + usX;
-	uiNumLines = srcRect->iBottom - srcRect->iTop;
-	uiLineSize = srcRect->iRight - srcRect->iLeft;
+	const UINT32 uiLineSize = src_box->w;
+	const UINT32 uiNumLines = src_box->h;
 
 	Assert( usDestWidth >= uiLineSize );
 	Assert( usDestHeight >= uiNumLines );
@@ -352,7 +347,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 	CHECKF( pScanLine );
 
 	// go past all the scanlines we don't need to process
-	for (uiLine = 0; uiLine < (UINT32) srcRect->iTop; uiLine++)
+	for (uiLine = 0; uiLine < (UINT32)src_box->y; uiLine++)
 	{
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Skipping scanline" );
 		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
@@ -369,7 +364,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 
 		// set pointers and blit
 		pDestTemp = pDest;
-		pScanLineTemp = pScanLine + srcRect->iLeft;
+		pScanLineTemp = pScanLine + src_box->x;
 		for (uiCol = 0; uiCol < uiLineSize; uiCol++ )
 		{
 			*pDestTemp = p16BPPPalette[ *pScanLineTemp ];
@@ -386,7 +381,7 @@ static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBu
 }
 
 
-static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
 	// 16BPP Compressed image has not been implemented yet
 	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
@@ -395,9 +390,8 @@ static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestB
 #endif
 
 
-static BOOLEAN Copy8BPPImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy8BPPImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
-	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
 	UINT8 *pDest, *pSrc;
 
@@ -410,14 +404,14 @@ static BOOLEAN Copy8BPPImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 u
 	CHECKF( usX < usDestWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
-	CHECKF( srcRect->iRight > srcRect->iLeft );
-	CHECKF( srcRect->iBottom > srcRect->iTop );
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
 
 	// Determine memcopy coordinates
-	uiSrcStart = srcRect->iTop * hImage->usWidth + srcRect->iLeft;
-	uiDestStart = usY * usDestWidth + usX;
-	uiNumLines = ( srcRect->iBottom - srcRect->iTop ) + 1;
-	uiLineSize = ( srcRect->iRight - srcRect->iLeft ) + 1;
+	const UINT32 uiSrcStart  = src_box->y * hImage->usWidth + src_box->x;
+	const UINT32 uiDestStart = usY * usDestWidth + usX;
+	const UINT32 uiLineSize  = src_box->w;
+	const UINT32 uiNumLines  = src_box->h;
 
 	Assert( usDestWidth >= uiLineSize );
 	Assert( usDestHeight >= uiNumLines );
@@ -440,9 +434,8 @@ static BOOLEAN Copy8BPPImageTo8BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 u
 }
 
 
-static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy16BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
-	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 cnt;
 	UINT16 *pDest, *pSrc;
 
@@ -454,14 +447,14 @@ static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16
 	CHECKF( usX < hImage->usWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < hImage->usHeight );
-	CHECKF( srcRect->iRight > srcRect->iLeft );
-	CHECKF( srcRect->iBottom > srcRect->iTop );
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
 
 	// Determine memcopy coordinates
-	uiSrcStart = srcRect->iTop * hImage->usWidth + srcRect->iLeft;
-	uiDestStart = usY * usDestWidth + usX;
-	uiNumLines = ( srcRect->iBottom - srcRect->iTop ) + 1;
-	uiLineSize = ( srcRect->iRight - srcRect->iLeft ) + 1;
+	const UINT32 uiSrcStart  = src_box->y * hImage->usWidth + src_box->x;
+	const UINT32 uiDestStart = usY * usDestWidth + usX;
+	const UINT32 uiLineSize  = src_box->w;
+	const UINT32 uiNumLines  = src_box->h;
 
 	CHECKF( usDestWidth >= uiLineSize );
 	CHECKF( usDestHeight >= uiNumLines );
@@ -484,9 +477,8 @@ static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16
 }
 
 
-static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect* srcRect)
+static BOOLEAN Copy8BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
 {
-	UINT32 uiSrcStart, uiDestStart, uiNumLines, uiLineSize;
 	UINT32 rows, cols;
 	UINT8  *pSrc, *pSrcTemp;
 	UINT16 *pDest, *pDestTemp;
@@ -505,14 +497,14 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 
 	CHECKF( usX < usDestWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usY < usDestHeight );
-	CHECKF( srcRect->iRight > srcRect->iLeft );
-	CHECKF( srcRect->iBottom > srcRect->iTop );
+	CHECKF(src_box->w > 0);
+	CHECKF(src_box->h > 0);
 
 	// Determine memcopy coordinates
-	uiSrcStart = srcRect->iTop * hImage->usWidth + srcRect->iLeft;
-	uiDestStart = usY * usDestWidth + usX;
-	uiNumLines = ( srcRect->iBottom - srcRect->iTop );
-	uiLineSize = ( srcRect->iRight - srcRect->iLeft );
+	const UINT32 uiSrcStart  = src_box->y * hImage->usWidth + src_box->x;
+	const UINT32 uiDestStart = usY * usDestWidth + usX;
+	const UINT32 uiLineSize  = src_box->w;
+	const UINT32 uiNumLines  = src_box->h;
 
 	CHECKF( usDestWidth >= uiLineSize );
 	CHECKF( usDestHeight >= uiNumLines );

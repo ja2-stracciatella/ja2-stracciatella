@@ -131,7 +131,7 @@ SGPImage* CreateImage(const char* ImageFile, UINT16 fContents);
 BOOLEAN DestroyImage( HIMAGE hImage );
 
 // This function will run the appropriate copy function based on the type of HIMAGE object
-BOOLEAN CopyImageToBuffer( HIMAGE hImage, UINT32 fBufferType, BYTE *pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPRect *srcRect );
+BOOLEAN CopyImageToBuffer(HIMAGE hImage, UINT32 fBufferType, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_rect);
 
 
 // This function will create a buffer in memory of ETRLE data, excluding palette

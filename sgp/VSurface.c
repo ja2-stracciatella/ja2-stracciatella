@@ -392,21 +392,24 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 
 	// Blit Surface
 	// If rect is NULL, use entrie image size
-	SGPRect	aRect;
+	SGPBox box;
 	if (pSrcRect == NULL)
 	{
-		aRect.iLeft   = 0;
-		aRect.iTop    = 0;
-		aRect.iRight  = hImage->usWidth;
-		aRect.iBottom = hImage->usHeight;
+		box.x = 0;
+		box.y = 0;
+		box.w = hImage->usWidth;
+		box.h = hImage->usHeight;
 	}
 	else
 	{
-		aRect = *pSrcRect;
+		box.x = pSrcRect->iLeft;
+		box.y = pSrcRect->iTop;
+		box.w = pSrcRect->iRight  - pSrcRect->iLeft + 1;
+		box.h = pSrcRect->iBottom - pSrcRect->iTop  + 1;
 	}
 
 	// This HIMAGE function will transparently copy buffer
-	BOOLEAN Ret = CopyImageToBuffer(hImage, fBufferBPP, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &aRect);
+	BOOLEAN Ret = CopyImageToBuffer(hImage, fBufferBPP, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &box);
 	if (!Ret)
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
