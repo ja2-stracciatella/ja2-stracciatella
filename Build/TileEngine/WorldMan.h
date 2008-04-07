@@ -62,7 +62,6 @@ BOOLEAN WaterTooDeepForAttacks( INT16 sGridNo );
 // Structure manipulation routines
 BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddStructToTail( UINT32 iMapIndex, UINT16 usIndex );
-LEVELNODE *AddStructToTailCommon( UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo );
 LEVELNODE *ForceStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 
 BOOLEAN AddStructToHead( UINT32 iMapIndex, UINT16 usIndex );

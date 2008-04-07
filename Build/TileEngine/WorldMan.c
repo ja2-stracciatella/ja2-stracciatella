@@ -632,6 +632,9 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 // Struct layer
 // #################################################################
 
+static LEVELNODE* AddStructToTailCommon(UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo);
+
+
 LEVELNODE* AddStructToTail(UINT32 iMapIndex, UINT16 usIndex)
 {
 	return AddStructToTailCommon(iMapIndex, usIndex, TRUE);
@@ -644,90 +647,56 @@ LEVELNODE* ForceStructToTail(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-LEVELNODE* AddStructToTailCommon(UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo)
+static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usIndex, const BOOLEAN fAddStructDBInfo)
 {
-	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-	LEVELNODE* pNextStruct;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
 
-	// Do we have an empty list?
-	if (pStruct == NULL)
+	if (fAddStructDBInfo &&
+			usIndex < NUMBEROFTILES &&
+			gTileDatabase[usIndex].pDBStructureRef != NULL &&
+			!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, n))
 	{
-		pNextStruct = CreateLevelNode();
-		CHECKN(pNextStruct != NULL);
-
-		if (fAddStructDBInfo &&
-				usIndex < NUMBEROFTILES &&
-				gTileDatabase[usIndex].pDBStructureRef != NULL &&
-				!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct))
-		{
-			MemFree(pNextStruct);
-			return NULL;
-		}
-
-		pNextStruct->usIndex = usIndex;
-		pNextStruct->pNext = NULL;
-		gpWorldLevelData[iMapIndex].pStructHead = pNextStruct;
-	}
-	else
-	{
-		LEVELNODE* pTailStruct = NULL;
-
-		// MOVE TO TAIL
-		while (pStruct != NULL)
-		{
-			pTailStruct = pStruct;
-			pStruct = pStruct->pNext;
-		}
-
-		pNextStruct = CreateLevelNode();
-		CHECKN(pNextStruct != NULL);
-
-		if (fAddStructDBInfo &&
-				usIndex < NUMBEROFTILES &&
-				gTileDatabase[usIndex].pDBStructureRef != NULL &&
-				!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct))
-		{
-			MemFree(pNextStruct);
-			return NULL;
-		}
-		pNextStruct->usIndex = usIndex;
-
-		pNextStruct->pNext = NULL;
-		pTailStruct->pNext = pNextStruct;
+		MemFree(n);
+		return NULL;
 	}
 
-	// Check flags for tiledat and set a shadow if we have a buddy
+	n->usIndex = usIndex;
+
+	// Append node to list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pStructHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
+
 	if (usIndex < NUMBEROFTILES)
 	{
+		// Check flags for tiledat and set a shadow if we have a buddy
 		if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
 		{
 			LEVELNODE* const n = AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
 			n->uiFlags |= LEVELNODE_BUDDYSHADOW;
 		}
 
-		//Check for special flag to stop burn-through on same-tile structs...
-		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
+		// Check for special flag to stop burn-through on same-tile structs...
+		const DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+		if (sr != NULL)
 		{
-			const DB_STRUCTURE* pDBStructure = gTileDatabase[usIndex].pDBStructureRef->pDBStructure;
-
-			// Default to off....
-			gpWorldLevelData[iMapIndex].ubExtFlags[0] &= ~MAPELEMENT_EXT_NOBURN_STRUCT;
-
 			// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-			if (!FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) && pDBStructure->ubNumberOfTiles == 1)
+			if (!FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) && sr->pDBStructure->ubNumberOfTiles == 1)
 			{
-				// Set flag...
 				gpWorldLevelData[iMapIndex].ubExtFlags[0] |= MAPELEMENT_EXT_NOBURN_STRUCT;
+			}
+			else
+			{
+				gpWorldLevelData[iMapIndex].ubExtFlags[0] &= ~MAPELEMENT_EXT_NOBURN_STRUCT;
 			}
 		}
 	}
 
-	//Add the structure the maps temp file
 	AddStructToMapTempFile(iMapIndex, usIndex);
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
-
-	return pNextStruct;
+	return n;
 }
 
 
