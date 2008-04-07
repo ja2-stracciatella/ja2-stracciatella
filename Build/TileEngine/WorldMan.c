@@ -1780,69 +1780,30 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 // OnRoof layer
 // #################################################################
 
-LEVELNODE *AddOnRoofToTail( UINT32 iMapIndex, UINT16 usIndex )
+LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	// If we're at the head, set here
-	LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead;
-	if (pOnRoof == NULL)
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKN(n != NULL);
+
+	if (usIndex < NUMBEROFTILES)
 	{
-		pOnRoof = CreateLevelNode();
-		CHECKN(pOnRoof != NULL);
-
-		if (usIndex < NUMBEROFTILES)
+		DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+		if (sr != NULL && !AddStructureToWorld(iMapIndex, 1, sr, n))
 		{
-			if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-			{
-				if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pOnRoof))
-				{
-					MemFree(pOnRoof);
-					return FALSE;
-				}
-			}
+			MemFree(n);
+			return NULL;
 		}
-		pOnRoof->usIndex = usIndex;
-
-		gpWorldLevelData[iMapIndex].pOnRoofHead = pOnRoof;
-
-		ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
-		return pOnRoof;
 	}
-	else
-	{
-		LEVELNODE* pNextOnRoof = NULL;
 
-		while (pOnRoof != NULL)
-		{
-			if (pOnRoof->pNext == NULL)
-			{
-				pNextOnRoof = CreateLevelNode();
-				CHECKN(pNextOnRoof != NULL);
+	n->usIndex = usIndex;
 
-				if (usIndex < NUMBEROFTILES)
-				{
-					if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-					{
-						if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof))
-						{
-							MemFree(pNextOnRoof);
-							return NULL;
-						}
-					}
-				}
+	// Append the node to the list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pOnRoofHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
 
-				pOnRoof->pNext = pNextOnRoof;
-
-				pNextOnRoof->pNext = NULL;
-				pNextOnRoof->usIndex = usIndex;
-				break;
-			}
-
-			pOnRoof = pOnRoof->pNext;
-		}
-
-		ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
-		return pNextOnRoof;
-	}
+	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
+	return n;
 }
 
 
