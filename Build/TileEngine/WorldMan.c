@@ -1,4 +1,5 @@
 #include "Animation_Data.h"
+#include "Environment.h"
 #include "Font.h"
 #include "WorldDef.h"
 #include "WCheck.h"
@@ -20,8 +21,6 @@
 #include "GameSettings.h"
 #include "MemMan.h"
 
-
-extern BOOLEAN	gfBasement;
 
 static UINT32 guiLNCount[9];
 static const wchar_t gzLevelString[][15] =
