@@ -362,25 +362,13 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	CHECKF(hImage->usHeight >= hVSurface->usHeight);
 
 	// Check BPP and see if they are the same
-	UINT32 fBufferBPP = 0;
-	if (hImage->ubBitDepth != hVSurface->ubBitDepth)
+	UINT32 buffer_bpp;
+	switch (hVSurface->ubBitDepth)
 	{
-		// They are not the same, but we can go from 8->16 without much cost
-		if (hImage->ubBitDepth == 8 && hVSurface->ubBitDepth == 16)
-		{
-			fBufferBPP = BUFFER_16BPP;
-		}
+		case  8: buffer_bpp = BUFFER_8BPP;  break;
+		case 16: buffer_bpp = BUFFER_16BPP; break;
+		default: abort();
 	}
-	else
-	{
-		switch (hImage->ubBitDepth)
-		{
-			case  8: fBufferBPP = BUFFER_8BPP;  break;
-			case 16: fBufferBPP = BUFFER_16BPP; break;
-		}
-	}
-
-	Assert(fBufferBPP != 0);
 
 	UINT32      uiPitch;
 	BYTE* const pDest = LockVideoSurface(hVSurface, &uiPitch);
@@ -409,7 +397,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	}
 
 	// This HIMAGE function will transparently copy buffer
-	BOOLEAN Ret = CopyImageToBuffer(hImage, fBufferBPP, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &box);
+	BOOLEAN Ret = CopyImageToBuffer(hImage, buffer_bpp, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &box);
 	if (!Ret)
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
