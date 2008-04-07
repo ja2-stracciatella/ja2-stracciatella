@@ -272,34 +272,21 @@ LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 }
 
 
-BOOLEAN AddLandToHead(UINT32 iMapIndex, UINT16 usIndex)
+BOOLEAN AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
+	n->usIndex		= usIndex;
 
-	LEVELNODE* pNextLand = CreateLevelNode();
-	CHECKF(pNextLand != NULL);
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pLandHead;
+	if (*head != NULL) (*head)->pPrevNode = n;
+	n->pNext     = *head;
+	n->pPrevNode = NULL;
+	*head = n;
 
-	pNextLand->pNext			= pLand;
-	pNextLand->pPrevNode  = NULL;
-	pNextLand->usIndex		= usIndex;
-	pNextLand->ubShadeLevel = LightGetAmbient();
-
-	if (usIndex < NUMBEROFTILES)
+	if (usIndex < NUMBEROFTILES && gTileDatabase[usIndex].ubFullTile)
 	{
-		// Check for full tile
-		if (gTileDatabase[usIndex].ubFullTile)
-		{
-			gpWorldLevelData[iMapIndex].pLandStart = pNextLand;
-		}
-	}
-
-	// Set head
-	gpWorldLevelData[iMapIndex].pLandHead = pNextLand;
-
-	// If it's NOT the first head
-	if (pLand != NULL)
-	{
-		pLand->pPrevNode = pNextLand;
+		gpWorldLevelData[iMapIndex].pLandStart = n;
 	}
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
