@@ -1,5 +1,5 @@
 HACK000D
-TODO0014
+TODO0015
 
 high prio
 - TODO0001 implement blitters and related functions
@@ -30,3 +30,4 @@ low prio
 - TODO0012 Is this fix for the infinite loop when throwing right?
 - TODO0013 Code and comment disagree
 - TODO0014 Properly resolve the bReverse mess
+- TODO0015 Inconsistency between AddStructToTailCommon() and AddStructToHead() regarding return value of FindStructure()

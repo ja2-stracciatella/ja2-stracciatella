@@ -682,7 +682,7 @@ static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usI
 		if (sr != NULL)
 		{
 			// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-			if (!FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) && sr->pDBStructure->ubNumberOfTiles == 1)
+			if (!FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) && sr->pDBStructure->ubNumberOfTiles == 1) // XXX TODO0015
 			{
 				gpWorldLevelData[iMapIndex].ubExtFlags[0] |= MAPELEMENT_EXT_NOBURN_STRUCT;
 			}
@@ -700,56 +700,53 @@ static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usI
 }
 
 
-BOOLEAN AddStructToHead(UINT32 iMapIndex, UINT16 usIndex)
+BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-	DB_STRUCTURE* pDBStructure;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
 
-	LEVELNODE* pNextStruct = CreateLevelNode();
-	CHECKF(pNextStruct != NULL);
-
-	if (usIndex < NUMBEROFTILES &&
-			gTileDatabase[usIndex].pDBStructureRef != NULL &&
-			!AddStructureToWorld(iMapIndex, 0, gTileDatabase[usIndex].pDBStructureRef, pNextStruct))
+	if (usIndex < NUMBEROFTILES)
 	{
-		MemFree(pNextStruct);
-		return FALSE;
+		DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+		if (sr != NULL && !AddStructureToWorld(iMapIndex, 0, sr, n))
+		{
+			MemFree(n);
+			return FALSE;
+		}
 	}
 
-	pNextStruct->pNext = pStruct;
-	pNextStruct->usIndex = usIndex;
+	n->usIndex = usIndex;
 
-	// Set head
-	gpWorldLevelData[iMapIndex].pStructHead = pNextStruct;
+	// Prepend node to list
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pStructHead;
+	n->pNext = *head;
+	*head = n;
 
 	if (usIndex < NUMBEROFTILES)
 	{
 		// Check flags for tiledat and set a shadow if we have a buddy
 		if (!GridNoIndoors(iMapIndex) && gTileDatabase[usIndex].uiFlags & HAS_SHADOW_BUDDY && gTileDatabase[usIndex].sBuddyNum != -1)
 		{
-			LEVELNODE* const n = AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum );
+			LEVELNODE* const n = AddShadowToHead(iMapIndex, gTileDatabase[usIndex].sBuddyNum);
 			n->uiFlags |= LEVELNODE_BUDDYSHADOW;
 		}
 
 		//Check for special flag to stop burn-through on same-tile structs...
-		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
+		const DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+		if (sr != NULL)
 		{
-			pDBStructure = gTileDatabase[usIndex].pDBStructureRef->pDBStructure;
-
-			// Default to off....
-			gpWorldLevelData[iMapIndex].ubExtFlags[0] &= ~MAPELEMENT_EXT_NOBURN_STRUCT;
-
 			// If we are NOT a wall and NOT multi-tiles, set mapelement flag...
-			if (FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) != NULL && pDBStructure->ubNumberOfTiles == 1)
+			if (FindStructure(iMapIndex, STRUCTURE_WALLSTUFF) != NULL && sr->pDBStructure->ubNumberOfTiles == 1) // XXX TODO0015
 			{
-				// Set flag...
 				gpWorldLevelData[iMapIndex].ubExtFlags[0] |= MAPELEMENT_EXT_NOBURN_STRUCT;
 			}
+			else
+			{
+				gpWorldLevelData[iMapIndex].ubExtFlags[0] &= ~MAPELEMENT_EXT_NOBURN_STRUCT;
+			}
 		}
-
 	}
 
-	//Add the structure the maps temp file
 	AddStructToMapTempFile(iMapIndex, usIndex);
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
