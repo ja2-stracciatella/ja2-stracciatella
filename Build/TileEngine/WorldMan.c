@@ -250,42 +250,25 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // Land Piece Layer
 // #######################################################
 
-LEVELNODE* AddLandToTail(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
-	LEVELNODE* pNextLand = NULL;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
+	n->usIndex = usIndex;
 
-	// If we're at the head, set here
-	if (pLand == NULL)
+	// Append node to list
+	LEVELNODE*  prev   = NULL;
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pLandHead;
+	while (*anchor != NULL)
 	{
-		pNextLand = CreateLevelNode();
-		CHECKF(pNextLand != NULL);
-		pNextLand->usIndex = usIndex;
-
-		gpWorldLevelData[iMapIndex].pLandHead = pNextLand;
+		prev   = *anchor;
+		anchor = &prev->pNext;
 	}
-	else
-	{
-		while (pLand != NULL)
-		{
-			if (pLand->pNext == NULL)
-			{
-				pNextLand = CreateLevelNode();
-				CHECKF(pNextLand != NULL);
-				pLand->pNext = pNextLand;
-
-				pNextLand->pNext			= NULL;
-				pNextLand->pPrevNode  = pLand;
-				pNextLand->usIndex    = usIndex;
-				break;
-			}
-
-			pLand = pLand->pNext;
-		}
-	}
+	*anchor      = n;
+	n->pPrevNode = prev;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
-	return pNextLand;
+	return n;
 }
 
 
