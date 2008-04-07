@@ -51,7 +51,11 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 
 BOOLEAN ReplaceLandIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 BOOLEAN DeleteAllLandLayers( UINT32 iMapIndex );
-BOOLEAN InsertLandIndexAtLevel( UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel );
+
+#ifdef JA2EDITOR
+BOOLEAN InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
+#endif
+
 BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiHigherTypes, UINT8 *pubNumHigherTypes );
 void AdjustAllLandDirtyCount( UINT32 iMapIndex, INT8 bDirtyDiff );
 UINT8	GetTerrainType( INT16 sGridNo );

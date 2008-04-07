@@ -470,10 +470,10 @@ BOOLEAN DeleteAllLandLayers(UINT32 iMapIndex)
 }
 
 
-BOOLEAN InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel)
-{
-	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
+#ifdef JA2EDITOR
 
+BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
+{
 	// If we want to insert at head;
 	if (ubLevel == 0)
 	{
@@ -481,47 +481,36 @@ BOOLEAN InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel)
 		return TRUE;
 	}
 
-	LEVELNODE* pNextLand = CreateLevelNode();
-	CHECKF(pNextLand != NULL);
-	pNextLand->usIndex = usIndex;
-
 	// Move to index before insertion
-	UINT8 level = 0;
-	BOOLEAN CanInsert = FALSE;
-	while (pLand != NULL)
+	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
+	for (UINT8 level = 0;; ++level)
 	{
-		if (level == ubLevel - 1)
-		{
-			CanInsert = TRUE;
-			break;
-		}
+		if (pLand == NULL) return FALSE;
+
+		if (level == ubLevel - 1) break;
 
 		pLand = pLand->pNext;
-		level++;
 	}
 
-	// Check if level has been matched
-	if (!CanInsert)
-	{
-		return FALSE;
-	}
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
+	n->usIndex = usIndex;
 
 	// Set links, according to position!
-	pNextLand->pPrevNode = pLand;
-	pNextLand->pNext = pLand->pNext;
-	pLand->pNext = pNextLand;
+	n->pPrevNode = pLand;
+	n->pNext     = pLand->pNext;
+	pLand->pNext = n;
 
 	// Check for tail
-	if (pNextLand->pNext != NULL)
-	{
-		pNextLand->pNext->pPrevNode = pNextLand;
-	}
+	if (n->pNext != NULL) n->pNext->pPrevNode = n;
 
 	AdjustForFullTile(iMapIndex);
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return TRUE;
 }
+
+#endif
 
 
 BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes)
