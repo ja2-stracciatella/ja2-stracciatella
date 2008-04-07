@@ -67,7 +67,6 @@ static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSecto
 
 static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap);
 static void AddObjectFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex);
-static void AddStructFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex);
 static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap);
 static BOOLEAN ModifyWindowStatus(UINT32 uiMapIndex);
 static void RemoveSavedStructFromMap(UINT32 uiMapIndex, UINT16 usIndex);
@@ -151,7 +150,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 			case SLM_STRUCT:
 			{
 				UINT16 usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
-				AddStructFromMapTempFileToMap( pMap->usGridNo, usIndex );
+				AddStructToTail(pMap->usGridNo, usIndex);
 
 				// Save this struct back to the temp file
 				SaveModifiedMapStructToMapTempFile( pMap, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -307,12 +306,6 @@ void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 	Map.ubType		= SLM_STRUCT;
 
 	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-}
-
-
-static void AddStructFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex)
-{
-	AddStructToTailCommon( uiMapIndex, usIndex, TRUE );
 }
 
 
