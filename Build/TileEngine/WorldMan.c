@@ -1780,7 +1780,7 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 // OnRoof layer
 // #################################################################
 
-LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
 	CHECKN(n != NULL);
@@ -1796,42 +1796,36 @@ LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	}
 
 	n->usIndex = usIndex;
+	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
+	return n;
+}
+
+
+LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+{
+	LEVELNODE* const n = AddOnRoof(iMapIndex, usIndex);
+	if (n == NULL) return NULL;
 
 	// Append the node to the list
 	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pOnRoofHead;
 	while (*anchor != NULL) anchor = &(*anchor)->pNext;
 	*anchor = n;
 
-	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
 	return n;
 }
 
 
-LEVELNODE* AddOnRoofToHead(UINT32 iMapIndex, UINT16 usIndex)
+LEVELNODE* AddOnRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead;
+	LEVELNODE* const n = AddOnRoof(iMapIndex, usIndex);
+	CHECKN(n != NULL);
 
-	LEVELNODE* pNextOnRoof = CreateLevelNode();
-	CHECKN(pNextOnRoof != NULL);
-	if (usIndex < NUMBEROFTILES)
-	{
-		if (gTileDatabase[usIndex].pDBStructureRef != NULL)
-		{
-			if (!AddStructureToWorld(iMapIndex, 1, gTileDatabase[usIndex].pDBStructureRef, pNextOnRoof))
-			{
-				MemFree(pNextOnRoof);
-				return NULL;
-			}
-		}
-	}
+	// Prepend the node to the list
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pOnRoofHead;
+	n->pNext = *head;
+	*head = n;
 
-	pNextOnRoof->pNext = pOnRoof;
-	pNextOnRoof->usIndex = usIndex;
-
-	gpWorldLevelData[iMapIndex].pOnRoofHead = pNextOnRoof;
-
-	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
-	return pNextOnRoof;
+	return n;
 }
 
 
