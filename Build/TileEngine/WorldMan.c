@@ -1511,20 +1511,20 @@ LEVELNODE* AddRoofToTail(UINT32 iMapIndex, UINT16 usIndex)
 
 LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead;
+	LEVELNODE* n = CreateLevelNode();
+	CHECKN(n != NULL);
 
-	LEVELNODE* pNextRoof = CreateLevelNode();
-	CHECKN(pNextRoof != NULL);
+	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
-	if (!AddNodeToWorld(iMapIndex, usIndex, 1, pNextRoof)) return NULL;
+	n->usIndex = usIndex;
 
-	pNextRoof->pNext = pRoof;
-	pNextRoof->usIndex = usIndex;
-
-	gpWorldLevelData[iMapIndex].pRoofHead = pNextRoof;
+	// Prepend node to list
+	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pRoofHead;
+	n->pNext = *head;
+	*head = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
-	return pNextRoof;
+	return n;
 }
 
 
