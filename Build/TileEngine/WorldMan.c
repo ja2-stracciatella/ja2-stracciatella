@@ -1031,34 +1031,16 @@ BOOLEAN HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide)
 // Shadow layer
 // #################################################################
 
-BOOLEAN AddShadowToTail(UINT32 iMapIndex, UINT16 usIndex)
+BOOLEAN AddShadowToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* pShadow = gpWorldLevelData[iMapIndex].pShadowHead;
+	LEVELNODE* const n = CreateLevelNode();
+	CHECKF(n != NULL);
+	n->usIndex = usIndex;
 
-	// If we're at the head, set here
-	if (pShadow == NULL)
-	{
-		pShadow = CreateLevelNode();
-		CHECKF(pShadow != NULL);
-		pShadow->usIndex = usIndex;
-
-		gpWorldLevelData[iMapIndex].pShadowHead = pShadow;
-	}
-	else
-	{
-		for (; pShadow != NULL; pShadow = pShadow->pNext)
-		{
-			if (pShadow->pNext == NULL)
-			{
-				LEVELNODE* pNextShadow = CreateLevelNode();
-				CHECKF(pNextShadow != NULL);
-				pShadow->pNext = pNextShadow;
-				pNextShadow->pNext = NULL;
-				pNextShadow->usIndex = usIndex;
-				break;
-			}
-		}
-	}
+	// Append node to list
+	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pShadowHead;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
+	*anchor = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
 	return TRUE;
