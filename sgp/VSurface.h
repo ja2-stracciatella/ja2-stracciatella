@@ -21,10 +21,15 @@ struct SGPVSurface
 	SDL_Surface* surface;
 	UINT16       usHeight;      // Height of Video Surface
 	UINT16       usWidth;       // Width of Video Surface
-	UINT8        ubBitDepth;    // BPP ALWAYS 16!
 	SDL_Color*   pPalette;
 	UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
 };
+
+
+static inline UINT8 GetVSurfaceBPP(const SGPVSurface* const vs)
+{
+	return vs->surface->format->BitsPerPixel;
+}
 
 
 #ifdef __cplusplus

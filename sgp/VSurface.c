@@ -321,7 +321,6 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 	hVSurface->surface       = surface;
 	hVSurface->usHeight      = usHeight;
 	hVSurface->usWidth       = usWidth;
-	hVSurface->ubBitDepth    = ubBitDepth;
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
@@ -361,9 +360,10 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	CHECKF(hImage->usWidth  >= hVSurface->usWidth);
 	CHECKF(hImage->usHeight >= hVSurface->usHeight);
 
-	// Check BPP and see if they are the same
+	const UINT8 dst_bpp = GetVSurfaceBPP(hVSurface);
+
 	UINT32 buffer_bpp;
-	switch (hVSurface->ubBitDepth)
+	switch (dst_bpp)
 	{
 		case  8: buffer_bpp = BUFFER_8BPP;  break;
 		case 16: buffer_bpp = BUFFER_16BPP; break;
@@ -374,7 +374,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	BYTE* const pDest = LockVideoSurface(hVSurface, &uiPitch);
 
 	// Effective width ( in PIXELS ) is Pitch ( in bytes ) converted to pitch ( IN PIXELS )
-	UINT16 usEffectiveWidth = uiPitch / (hVSurface->ubBitDepth / 8);
+	const UINT16 usEffectiveWidth = uiPitch / (dst_bpp / 8);
 
 	CHECKF(pDest != NULL);
 
@@ -444,7 +444,7 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 
 	// Get right pixel format, based on bit depth
 	Uint32 ColorKey;
-	switch (hVSurface->ubBitDepth)
+	switch (GetVSurfaceBPP(hVSurface))
 	{
 		case  8: ColorKey = TransColor;                break;
 		case 16: ColorKey = Get16BPPColor(TransColor); break;
@@ -533,13 +533,6 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 	Assert(dst != NULL);
 	Assert(src != NULL);
 
-	// First check BPP values for compatibility
-	if (dst->ubBitDepth < src->ubBitDepth)
-	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
-		return FALSE;
-	}
-
 	// Check for source coordinate options - specific rect or full src dimensions
 	SDL_Rect src_rect;
 	if (SRect != NULL)
@@ -570,7 +563,9 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		src_rect.h = src->usHeight;
 	}
 
-	if (dst->ubBitDepth == src->ubBitDepth)
+	const UINT8 src_bpp = GetVSurfaceBPP(src);
+	const UINT8 dst_bpp = GetVSurfaceBPP(dst);
+	if (src_bpp == dst_bpp)
 	{
 		SDL_Rect dstrect;
 		dstrect.x = iDestX;
@@ -579,8 +574,9 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 #if defined __GNUC__ && defined i386
 		__asm__ __volatile__("cld"); // XXX HACK000D
 #endif
+		return TRUE;
 	}
-	else
+	else if (src_bpp < dst_bpp)
 	{
 		SGPRect r;
 		r.iLeft   = src_rect.x;
@@ -594,9 +590,11 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &r);
 		UnLockVideoSurface(dst);
 		UnLockVideoSurface(src);
+		return TRUE;
 	}
 
-	return TRUE;
+	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
+	return FALSE;
 }
 
 
@@ -606,7 +604,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 	hVSurface->surface       = surface;
 	hVSurface->usHeight      = surface->h;
 	hVSurface->usWidth       = surface->w;
-	hVSurface->ubBitDepth    = surface->format->BitsPerPixel;
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
@@ -664,8 +661,7 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const
 
 BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src, SGPRect* const SrcRect, SGPRect* const DestRect)
 {
-	//if the 2 images are not both 16bpp, return FALSE
-	if (dst->ubBitDepth != 16 || src->ubBitDepth != 16) return FALSE;
+	if (GetVSurfaceBPP(dst) != 16 || GetVSurfaceBPP(src) != 16) return FALSE;
 
 	const UINT32  s_pitch = src->surface->pitch >> 1;
 	const UINT32  d_pitch = dst->surface->pitch >> 1;
