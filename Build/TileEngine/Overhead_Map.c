@@ -90,8 +90,7 @@ BOOLEAN						gfOverheadMapDirty = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
 static INT16       gsStartRestrictedX;
 static INT16       gsStartRestrictedY;
-BOOLEAN						gfOverItemPool = FALSE;
-INT16							gsOveritemPoolGridNo;
+static INT16       gsOveritemPoolGridNo = NOWHERE;
 
 
 static void CopyOverheadDBShadetablesFromTileset(void);
@@ -341,8 +340,7 @@ void HandleOverheadMap( )
 	}
 
 	gfInOverheadMap = TRUE;
-	gfOverItemPool	= FALSE;
-
+	gsOveritemPoolGridNo = NOWHERE;
 
 	// Check tileset numbers
 	if ( gubSmTileNum != giCurrentTilesetID )
@@ -436,8 +434,6 @@ void HandleOverheadMap( )
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{
 					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos);
-
-					gfOverItemPool = TRUE;
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}
@@ -450,8 +446,6 @@ void HandleOverheadMap( )
 				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 				{
 					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos - 5);
-
-					gfOverItemPool = TRUE;
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}
@@ -1167,7 +1161,7 @@ static void RenderOverheadOverlays(void)
 				case VISIBLE:						usLineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );	break;
 			}
 
-			if ( gfOverItemPool && gsOveritemPoolGridNo == pWorldItem->sGridNo )
+			if (gsOveritemPoolGridNo == pWorldItem->sGridNo)
 			{
 				usLineColor = Get16BPPColor( FROMRGB( 255,   0,   0 ) );
 			}
