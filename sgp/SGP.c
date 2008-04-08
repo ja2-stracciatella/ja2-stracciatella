@@ -354,6 +354,10 @@ static BOOLEAN ParseParameters(char* const argv[])
 		{
 			SoundEnableSound(FALSE);
 		}
+		else if (strcmp(*argv, "-window") == 0)
+		{
+			VideoSetFullScreen(FALSE);
+		}
 		else
 		{
 			if (strcmp(*argv, "-help") != 0)
@@ -367,10 +371,11 @@ static BOOLEAN ParseParameters(char* const argv[])
 	if (!success)
 	{
 		fprintf(stderr,
-			"Usage: %s [-fullscreen] [-help] [-nosound]\n"
+			"Usage: %s [options]\n"
 			"  -fullscreen  Start the game in fullscreen mode\n"
 			"  -help        Display this information\n"
-			"  -nosound     Turn the sound and music off\n",
+			"  -nosound     Turn the sound and music off\n"
+			"  -window      Start the game in a window\n",
 			name
 		);
 	}
