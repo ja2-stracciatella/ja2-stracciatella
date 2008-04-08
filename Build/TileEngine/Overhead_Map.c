@@ -1015,166 +1015,132 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 
 static void RenderOverheadOverlays(void)
 {
-	WORLDITEM		*pWorldItem;
-	UINT32				i;
-	INT16				sX, sY;
-	UINT16			end;
-	UINT16			usLineColor=0;
-	UINT8				ubPassengers = 0;
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	SGPVObject* const hVObject = uiPERSONS;
-
-	//SOLDIER OVERLAY
-	if( gfTacticalPlacementGUIActive )
-	{ //loop through only the player soldiers
-		end = gTacticalStatus.Team[ OUR_TEAM ].bLastID;
-	}
-	else
-	{ //loop through all soldiers.
-		end = MAX_NUM_SOLDIERS;
-	}
-	for( i = 0; i < end; i++ )
+	// Soldier overlay
+	SGPVObject* const marker = uiPERSONS;
+	UINT16      const end    = (gfTacticalPlacementGUIActive ? gTacticalStatus.Team[OUR_TEAM].bLastID : MAX_NUM_SOLDIERS);
+	for (UINT32 i = 0; i < end; ++i)
 	{
-		//First, check to see if the soldier exists and is in the sector.
-		const SOLDIERTYPE* const pSoldier = GetMan(i);
-		if( !pSoldier->bActive || !pSoldier->bInSector )
+		const SOLDIERTYPE* const s = GetMan(i);
+		if (!s->bActive || !s->bInSector) continue;
+
+		if (!gfTacticalPlacementGUIActive && s->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
+		{
 			continue;
+		}
+
+		if (s->sGridNo == NOWHERE) continue;
+
 		//Soldier is here.  Calculate his screen position based on his current gridno.
-		GetOverheadScreenXYFromGridNo( pSoldier->sGridNo, &sX, &sY );
+		INT16 sX;
+		INT16 sY;
+		GetOverheadScreenXYFromGridNo(s->sGridNo, &sX, &sY);
 		//Now, draw his "doll"
 
 		//adjust for position.
 		sX += 2;
 		sY -= 5;
-		//sScreenY -= 7;	//height of doll
 
-		if( !gfTacticalPlacementGUIActive && pSoldier->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
+		sY -= GetOffsetLandHeight(s->sGridNo) / 5;
+		sY -= s->sHeightAdjustment / 5; // Adjust for height
+		sY += gsRenderHeight / 5;
+
+		UINT32 shade;
+		if (s == GetSelectedMan() && gfRadarCurrentGuyFlash && !gfTacticalPlacementGUIActive)
 		{
-			continue;
+			shade = 2;
 		}
-
-		if ( pSoldier->sGridNo == NOWHERE )
+		else if (s->sHeightAdjustment) // If on roof
 		{
-			continue;
-		}
-
-		sY -= ( GetOffsetLandHeight( pSoldier->sGridNo ) /5);
-
-		// Adjust for height...
-		sY -= ( pSoldier->sHeightAdjustment / 5 );
-
-		sY += ( gsRenderHeight / 5 );
-
-		// Adjust shade a bit...
-		SetObjectShade( hVObject, 0 );
-
-		// If on roof....
-		if ( pSoldier->sHeightAdjustment )
-		{
-			SetObjectShade( hVObject, 1 );
-		}
-
-		if (pSoldier == GetSelectedMan() &&
-				gfRadarCurrentGuyFlash       &&
-				!gfTacticalPlacementGUIActive)
-		{
-			SetObjectShade(hVObject, 2);
-		}
-		#ifdef JA2EDITOR
-		if( gfEditMode && gpSelected && gpSelected->pSoldier == pSoldier )
-		{ //editor:  show the selected edited merc as the yellow one.
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 0);
+			shade = 1;
 		}
 		else
-		#endif
-		if( !gfTacticalPlacementGUIActive )
+		{
+			shade = 0;
+		}
+		SetObjectShade(marker, shade);
+
+#ifdef JA2EDITOR
+		if (gfEditMode && gpSelected && gpSelected->pSoldier == s)
+		{ //editor:  show the selected edited merc as the yellow one.
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
+		}
+		else
+#endif
+		if (!gfTacticalPlacementGUIActive)
 		{ //normal
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam);
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, s->bTeam);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
 		}
-		else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+		else if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		{ //vehicle
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 9);
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 9);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 6, sY, sX + 9, sY + 10);
 		}
-		//else if( pSoldier->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER) )
-		//{// //don't draw person, because they are inside the vehicle.
-		//	ubPassengers++;
-		//}
-		else if( gpTacticalPlacementSelectedSoldier == pSoldier )
+		else if (gpTacticalPlacementSelectedSoldier == s)
 		{ //tactical placement selected merc
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 7);
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 7);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
-		else if( gpTacticalPlacementHilightedSoldier == pSoldier && pSoldier->uiStatusFlags )
+		else if (gpTacticalPlacementHilightedSoldier == s && s->uiStatusFlags)
 		{ //tactical placement hilighted merc
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, 8);
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 8);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX - 2, sY - 2, sX + 5, sY + 11);
 		}
 		else
 		{ //normal
-			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, hVObject, sX, sY, pSoldier->bTeam);
+			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, s->bTeam);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX, sY, sX + 3, sY + 9);
-		}
-		if( ubPassengers )
-		{
-			SetFont( SMALLCOMPFONT );
-			SetFontForeground( FONT_WHITE );
-			gprintfdirty( (INT16)(sX - 3), sY, L"%d", ubPassengers );
-			mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX - 3, sY, L"%d", ubPassengers);
 		}
 	}
 
-	//ITEMS OVERLAY
-	if( !gfTacticalPlacementGUIActive )
+	// Items overlay
+	if (!gfTacticalPlacementGUIActive)
 	{
-		for( i = 0 ; i < guiNumWorldItems; i++  )
+		CFOR_ALL_WORLD_ITEMS(wi)
 		{
-			pWorldItem = &gWorldItems[ i ];
-			if( !pWorldItem || !pWorldItem->fExists || pWorldItem->bVisible != VISIBLE && !(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS) )
+			if (wi->bVisible != VISIBLE && !(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS))
 			{
 				continue;
 			}
 
-			GetOverheadScreenXYFromGridNo( pWorldItem->sGridNo, &sX, &sY );
+			INT16 sX;
+			INT16 sY;
+			GetOverheadScreenXYFromGridNo(wi->sGridNo, &sX, &sY);
 
 			//adjust for position.
-			//sX += 2;
 			sY += 6;
-			sY -= ( GetOffsetLandHeight( pWorldItem->sGridNo ) /5);
+			sY -= GetOffsetLandHeight(wi->sGridNo) / 5;
+			sY += gsRenderHeight / 5;
 
-			sY += ( gsRenderHeight / 5 );
-
-
-			if ( gfRadarCurrentGuyFlash )
+			UINT32 col;
+			if (gsOveritemPoolGridNo == wi->sGridNo)
 			{
-				usLineColor = Get16BPPColor( FROMRGB( 0, 0, 0 ) );
+				col = FROMRGB(255, 0, 0);
 			}
-			else switch( pWorldItem->bVisible )
+			else if (gfRadarCurrentGuyFlash)
 			{
-				case HIDDEN_ITEM:				usLineColor = Get16BPPColor( FROMRGB(   0,   0, 255 ) );	break;
-				case BURIED:						usLineColor = Get16BPPColor( FROMRGB( 255,   0,   0 ) );	break;
-				case HIDDEN_IN_OBJECT:	usLineColor = Get16BPPColor( FROMRGB(   0,   0, 255 ) );	break;
-				case INVISIBLE:					usLineColor = Get16BPPColor( FROMRGB(   0, 255,   0 ) );  break;
-				case VISIBLE:						usLineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );	break;
+				col = FROMRGB(0, 0, 0);
 			}
-
-			if (gsOveritemPoolGridNo == pWorldItem->sGridNo)
+			else switch (wi->bVisible)
 			{
-				usLineColor = Get16BPPColor( FROMRGB( 255,   0,   0 ) );
+				case HIDDEN_ITEM:      col = FROMRGB(  0,   0, 255); break;
+				case BURIED:           col = FROMRGB(255,   0,   0); break;
+				case HIDDEN_IN_OBJECT: col = FROMRGB(  0,   0, 255); break;
+				case INVISIBLE:        col = FROMRGB(  0, 255,   0); break;
+				case VISIBLE:          col = FROMRGB(255, 255, 255); break;
+				default:               abort();
 			}
-
-			PixelDraw(FALSE, sX, sY, usLineColor, pDestBuf);
-
-			InvalidateRegion( sX, sY, (INT16)( sX + 1 ), (INT16)( sY + 1 ) );
-
+			PixelDraw(FALSE, sX, sY, Get16BPPColor(col), pDestBuf);
+			InvalidateRegion(sX, sY, sX + 1, sY + 1);
 		}
 	}
 
-	UnLockVideoSurface( FRAME_BUFFER );
+	UnLockVideoSurface(FRAME_BUFFER);
 }
+
 
 /*//Render the soldiers and items on top of the pristine overhead map.
 void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS )
