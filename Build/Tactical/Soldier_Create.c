@@ -941,6 +941,10 @@ static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, 
 			{
 				Name = TacticalStr[CIV_TEAM_MINER_NAME];
 			}
+			else if (pSoldier->ubBodyType == CROW)
+			{
+				Name = TacticalStr[CROW_HIT_LOCATION_STR];
+			}
 			else
 			{
 				Name = TacticalStr[CIV_TEAM_MERC_NAME];
