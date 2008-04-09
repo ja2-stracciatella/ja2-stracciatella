@@ -492,49 +492,24 @@ void PasteStructure2( UINT32 iMapIndex )
 
 //	This is the main (common) structure pasting function. The above three wrappers are only required because they
 //	each use different selection lists. Other than that, they are COMPLETELY identical.
-static void PasteStructureCommon(UINT32 iMapIndex)
+static void PasteStructureCommon(const UINT32 iMapIndex)
 {
-	BOOLEAN				fDoPaste = FALSE;
-	UINT16				usUseIndex;
-	UINT16				usUseObjIndex;
-	INT32					iRandSelIndex;
+	if (iMapIndex >= 0x8000) return;
 
-	if ( iMapIndex < 0x8000 )
-	{
-	/*
-		if ( gpWorldLevelData[ iMapIndex ].pStructHead != NULL )
-		{
-			fDoPaste = FALSE;
-		}
-		else
-		{
-			// Nothing is here, paste
-			fDoPaste = TRUE;
-		}
-*/
-		if ( /*fDoPaste &&*/ iMapIndex < 0x8000 )
-		{
-			iRandSelIndex = GetRandomSelection( );
-			if ( iRandSelIndex == -1 )
-			{
-				return;
-			}
+	const INT32 iRandSelIndex = GetRandomSelection();
+	if (iRandSelIndex == -1) return;
 
-			AddToUndoList( iMapIndex );
+	AddToUndoList(iMapIndex);
 
-			usUseIndex = pSelList[ iRandSelIndex ].usIndex;
-			usUseObjIndex = (UINT16)pSelList[ iRandSelIndex ].uiObject;
+	const UINT16 usUseIndex    = pSelList[iRandSelIndex].usIndex;
+	const UINT16 usUseObjIndex = pSelList[iRandSelIndex].uiObject;
 
-			// Check with Structure Database (aka ODB) if we can put the object here!
-			const DB_STRUCTURE_REF* const sr = gTileDatabase[gTileTypeStartIndex[usUseObjIndex] + usUseIndex].pDBStructureRef;
-			if (OkayToAddStructureToWorld(iMapIndex, 0, sr, INVALID_STRUCTURE_ID) || sr == NULL)
-			{
-				// Actual structure info is added by the functions below
-				AddStructToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-				// For now, adjust to shadows by a hard-coded amount,
-			}
-		}
-	}
+	// Check with Structure Database (aka ODB) if we can put the object here!
+	const DB_STRUCTURE_REF* const sr = gTileDatabase[gTileTypeStartIndex[usUseObjIndex] + usUseIndex].pDBStructureRef;
+	if (!OkayToAddStructureToWorld(iMapIndex, 0, sr, INVALID_STRUCTURE_ID) && sr != NULL) return;
+
+	// Actual structure info is added by the functions below
+	AddStructToHead(iMapIndex, gTileTypeStartIndex[usUseObjIndex] + usUseIndex);
 }
 
 
