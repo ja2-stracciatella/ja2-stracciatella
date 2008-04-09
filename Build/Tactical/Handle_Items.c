@@ -1821,7 +1821,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 	// Set flahs timer
 	new_item->bFlashColor              = FALSE;
 	new_item->sGridNo                  = sNewGridNo;
-	new_item->ubLevel                  = ubLevel;
 	new_item->bVisible                 = bVisible;
 	new_item->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
 
@@ -2189,7 +2188,8 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 	}
 
 	// Handle obscured flag...
-	HandleItemObscuredFlag( pItemPool->sGridNo, pItemPool->ubLevel );
+	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
 
 	if ( fSetLocator )
 	{
@@ -2240,7 +2240,8 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 	}
 
 	// Handle obscured flag...
-	HandleItemObscuredFlag( pItemPool->sGridNo, pItemPool->ubLevel );
+	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
 
 	// If we didn;t find any that should be modified..
 	if ( !fAtLeastModified )
@@ -2258,7 +2259,7 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 	}
 
 	// Handle obscured flag...
-	HandleItemObscuredFlag( pItemPool->sGridNo, pItemPool->ubLevel );
+	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
 }
 
 
@@ -2707,7 +2708,8 @@ void HandleFlashingItems( )
 							// UPDATE FLASH COLOR VALUE
 							pItemPool->bFlashColor--;
 
-							if ( pItemPool->ubLevel == 0 )
+							const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+							if (wi->ubLevel == 0)
 							{
 								pObject = gpWorldLevelData[ pItemPool->sGridNo ].pStructHead;
 							}
@@ -2792,7 +2794,8 @@ void RenderTopmostFlashingItems(void)
 		sYPos += gsRenderHeight;
 
 		// Adjust for level height
-		if (ip->ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
+		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
+		if (wi->ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
 
 		// Center circle!
 		sXPos -= 20;
@@ -3325,7 +3328,8 @@ static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 	if ( pItemPool )
 	{
 		IgniteExplosion(NULL, gpWorldLevelData[pItemPool->sGridNo].sHeight + pItemPool->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
-		RemoveItemFromPool( pItemPool->sGridNo, pItemPool->iItemIndex, pItemPool->ubLevel );
+		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		RemoveItemFromPool(pItemPool->sGridNo, pItemPool->iItemIndex, wi->ubLevel);
 	}
 }
 
