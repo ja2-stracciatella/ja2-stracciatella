@@ -77,20 +77,20 @@ typedef struct
 } SMALL_TILE_DB;
 
 
-SMALL_TILE_SURF		gSmTileSurf[ NUMBEROFTILETYPES ];
-SMALL_TILE_DB			gSmTileDB[ NUMBEROFTILES ];
-UINT8							gubSmTileNum   = 0;
-BOOLEAN						gfSmTileLoaded = FALSE;
-BOOLEAN						gfInOverheadMap = FALSE;
-MOUSE_REGION			OverheadRegion;
-MOUSE_REGION			OverheadBackgroundRegion;
-static SGPVObject* uiOVERMAP;
-static SGPVObject* uiPERSONS;
-BOOLEAN						gfOverheadMapDirty = FALSE;
+static SMALL_TILE_SURF gSmTileSurf[NUMBEROFTILETYPES];
+static SMALL_TILE_DB   gSmTileDB[NUMBEROFTILES];
+static UINT8           gubSmTileNum                   = 0;
+static BOOLEAN         gfSmTileLoaded = FALSE;
+static BOOLEAN         gfInOverheadMap = FALSE;
+static MOUSE_REGION    OverheadRegion;
+static MOUSE_REGION    OverheadBackgroundRegion;
+static SGPVObject*     uiOVERMAP;
+static SGPVObject*     uiPERSONS;
+BOOLEAN                gfOverheadMapDirty             = FALSE;
 extern BOOLEAN		gfRadarCurrentGuyFlash;
-static INT16       gsStartRestrictedX;
-static INT16       gsStartRestrictedY;
-static INT16       gsOveritemPoolGridNo = NOWHERE;
+static INT16           gsStartRestrictedX;
+static INT16           gsStartRestrictedY;
+static INT16           gsOveritemPoolGridNo           = NOWHERE;
 
 
 static void CopyOverheadDBShadetablesFromTileset(void);
