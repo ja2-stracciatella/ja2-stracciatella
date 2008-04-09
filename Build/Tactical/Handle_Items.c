@@ -1822,7 +1822,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 	new_item->bFlashColor              = FALSE;
 	new_item->sGridNo                  = sNewGridNo;
 	new_item->ubLevel                  = ubLevel;
-	new_item->usFlags                  = usFlags;
 	new_item->bVisible                 = bVisible;
 	new_item->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
 

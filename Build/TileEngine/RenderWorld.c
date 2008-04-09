@@ -728,7 +728,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									}
 
 									// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
-									if (bVisibleItemCount == MAX_RENDERED_ITEMS || wi->bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
+									if (bVisibleItemCount == MAX_RENDERED_ITEMS || wi->bVisible != VISIBLE || wi->usFlags & WORLD_ITEM_DONTRENDER)
 									{
 										if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
 									}
