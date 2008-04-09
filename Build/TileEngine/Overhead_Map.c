@@ -386,7 +386,7 @@ void HandleOverheadMap(void)
 				const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, 0, pStructure);
 				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
-					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos);
+					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}
@@ -397,7 +397,7 @@ void HandleOverheadMap(void)
 				const INT8 bZLevel = 0;
 				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
-					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos - 5);
+					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos - 5);
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}

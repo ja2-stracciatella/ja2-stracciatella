@@ -675,7 +675,7 @@ void RenderTopmostTacticalInterface( )
 					const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, sel->bLevel, pStructure);
 					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					{
-						DrawItemPoolList(pItemPool, gfUIOverItemPoolGridNo, bZLevel, gusMouseXPos, gusMouseYPos);
+						DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
 
 						// ATE: If over items, remove locator....
 						RemoveFlashItemSlot( pItemPool );
@@ -706,7 +706,7 @@ void RenderTopmostTacticalInterface( )
 
 					  if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
 					  {
-							DrawItemPoolList(pItemPool, gfUIOverItemPoolGridNo, bZLevel, gusMouseXPos, gusMouseYPos);
+							DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
 
 						  // ATE: If over items, remove locator....
 						  RemoveFlashItemSlot( pItemPool );

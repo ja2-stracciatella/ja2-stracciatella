@@ -2464,7 +2464,7 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 }
 
 
-void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, const INT8 bZLevel, const INT16 sXPos, const INT16 sYPos)
+void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, const INT16 sXPos, const INT16 sYPos)
 {
 	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
@@ -2802,7 +2802,7 @@ void RenderTopmostFlashingItems(void)
 
 		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 
-		DrawItemPoolList(ip, ip->sGridNo, wi->bRenderZHeightAboveLevel, sXPos, sYPos);
+		DrawItemPoolList(ip, wi->bRenderZHeightAboveLevel, sXPos, sYPos);
 	}
 }
 

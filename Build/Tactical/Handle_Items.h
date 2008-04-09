@@ -74,7 +74,7 @@ INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, INT8 bVisible,
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
-void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
+void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 void       RemoveItemFromPool(WORLDITEM*);
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
 
