@@ -1319,9 +1319,9 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 }
 
 
-static BOOLEAN InternalGetOverheadMouseGridNo(INT16* const psGridNo, const INT dy)
+static GridNo InternalGetOverheadMouseGridNo(const INT dy)
 {
-	if (!(OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA)) return FALSE;
+	if (!(OverheadRegion.uiFlags & MSYS_MOUSE_IN_AREA)) return NOWHERE;
 
 	// ATE: Adjust alogrithm values a tad to reflect map positioning
 	INT16 const sWorldScreenX = (gusMouseXPos - gsStartRestrictedX -  5) * 5;
@@ -1332,27 +1332,28 @@ static BOOLEAN InternalGetOverheadMouseGridNo(INT16* const psGridNo, const INT d
 	// Get new proposed center location.
 	GetFromAbsoluteScreenXYWorldXY(&uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY);
 
-	*psGridNo = MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
+	const GridNo grid_no = MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
 
 	// Adjust for height.....
-	sWorldScreenY = sWorldScreenY + gpWorldLevelData[*psGridNo].sHeight;
+	sWorldScreenY = sWorldScreenY + gpWorldLevelData[grid_no].sHeight;
 
 	GetFromAbsoluteScreenXYWorldXY(&uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY);
 
-	*psGridNo = MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
-	return TRUE;
+	return MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
 }
 
 
 BOOLEAN GetOverheadMouseGridNo(INT16* const psGridNo)
 {
-	return InternalGetOverheadMouseGridNo(psGridNo, -8);
+	*psGridNo = InternalGetOverheadMouseGridNo(-8);
+	return *psGridNo != NOWHERE;
 }
 
 
 static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* const psGridNo)
 {
-	return InternalGetOverheadMouseGridNo(psGridNo, 0);
+	*psGridNo = InternalGetOverheadMouseGridNo(0);
+	return *psGridNo != NOWHERE;
 }
 
 
