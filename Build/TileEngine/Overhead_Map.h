@@ -1,6 +1,9 @@
 #ifndef __OVERHEADMAP_H
 #define __OVERHEADMAP_H
 
+#include "JA2Types.h"
+
+
 void InitNewOverheadDB( UINT8 ubTilesetID );
 void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS, BOOLEAN fFromMapUtility );
 
@@ -14,7 +17,7 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 void TrashOverheadMap(void);
 
-BOOLEAN GetOverheadMouseGridNo(INT16* psGridNo);
+GridNo GetOverheadMouseGridNo(void);
 
 extern BOOLEAN gfOverheadMapDirty;
 

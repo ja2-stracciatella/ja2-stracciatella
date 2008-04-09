@@ -932,7 +932,6 @@ static void DialogRemoved(UINT8 ubResult);
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 {
 	INT32 i;
-	INT16 sGridNo;
 	BOOLEAN fInvalidArea = FALSE;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{ //if we have a selected merc, move him to the new closest map edgepoint of his side.
@@ -940,7 +939,8 @@ void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
 		{
 			if( gbSelectedMercID != -1 )
 			{
-				if( GetOverheadMouseGridNo( &sGridNo ) )
+				const GridNo sGridNo = GetOverheadMouseGridNo();
+				if (sGridNo != NOWHERE)
 				{ //we have clicked within a valid part of the map.
 					BeginMapEdgepointSearch();
 

@@ -367,7 +367,8 @@ void HandleOverheadMap(void)
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
 		INT16 usMapPos;
-		if (GetOverheadMouseGridNo(&usMapPos))
+		usMapPos = GetOverheadMouseGridNo();
+		if (usMapPos != NOWHERE)
 		{
 			const ITEM_POOL* pItemPool;
 
@@ -1344,10 +1345,9 @@ static GridNo InternalGetOverheadMouseGridNo(const INT dy)
 }
 
 
-BOOLEAN GetOverheadMouseGridNo(INT16* const psGridNo)
+GridNo GetOverheadMouseGridNo(void)
 {
-	*psGridNo = InternalGetOverheadMouseGridNo(-8);
-	return *psGridNo != NOWHERE;
+	return InternalGetOverheadMouseGridNo(-8);
 }
 
 
