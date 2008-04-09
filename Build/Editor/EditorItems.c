@@ -1295,7 +1295,6 @@ static void SelectNextKeyOfType(UINT8 ubKeyID)
 static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 {
 	IPListNode *curr;
-	OBJECTTYPE *pObject;
 	if( gpItemPool )
 	{
 		curr = pIPHead;
@@ -1363,7 +1362,6 @@ static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 static void SelectNextPressureAction(void)
 {
 	IPListNode *curr;
-	OBJECTTYPE *pObject;
 	if( gpItemPool )
 	{
 		curr = pIPHead;

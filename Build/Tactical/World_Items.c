@@ -249,7 +249,6 @@ void RemoveItemFromWorld(const INT32 iItemIndex)
 
 void TrashWorldItems()
 {
-	UINT32 i;
 	if( gWorldItems )
 	{
 		FOR_ALL_WORLD_ITEMS(wi)
@@ -413,8 +412,6 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 
 static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 {
-	UINT32	uiLoop2;
-
 	// only do this after Carmen has talked to player and terrorists have been placed
 	//if ( CheckFact( FACT_CARMEN_EXPLAINED_DEAL, 0 ) == TRUE )
 	{
