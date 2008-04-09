@@ -1205,11 +1205,10 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 }
 
 
-static void HandleAutoPlaceFail(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 sGridNo)
+static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o, const INT16 sGridNo)
 {
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
-		OBJECTTYPE* const o = &GetWorldItem(iItemIndex)->o;
 		// Place it in buddy's hand!
 		if ( gpItemPointer == NULL )
 		{
@@ -1337,8 +1336,9 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		if (pItemPoolToDelete != NULL)
 		{
 			gfDontChargeAPsToPickup = TRUE;
-			HandleAutoPlaceFail( pSoldier, pItemPoolToDelete->iItemIndex, sGridNo );
-			RemoveItemFromPool(GetWorldItem(pItemPoolToDelete->iItemIndex));
+			WORLDITEM* const wi = GetWorldItem(pItemPoolToDelete->iItemIndex);
+			HandleAutoPlaceFail(pSoldier, &wi->o, sGridNo);
+			RemoveItemFromPool(wi);
 		}
 	}
 	else
@@ -1373,7 +1373,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if (!AutoPlaceObject(pSoldier, &wi->o, TRUE))
 					{
 						gfDontChargeAPsToPickup = TRUE;
-						HandleAutoPlaceFail( pSoldier, iItemIndex, sGridNo );
+						HandleAutoPlaceFail(pSoldier, &wi->o, sGridNo);
 					}
 				}
 
@@ -3518,7 +3518,7 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
-				HandleAutoPlaceFail( gpBoobyTrapSoldier, gpBoobyTrapItemPool->iItemIndex, gsBoobyTrapGridNo );
+				HandleAutoPlaceFail(gpBoobyTrapSoldier, o, gsBoobyTrapGridNo);
 				RemoveItemFromPool(wi);
 			}
 		}
