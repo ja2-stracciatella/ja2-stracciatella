@@ -2757,66 +2757,54 @@ void HandleFlashingItems( )
 }
 
 
-void RenderTopmostFlashingItems( )
+void RenderTopmostFlashingItems(void)
 {
-	UINT32 cnt;
-	ITEM_POOL		*pItemPool;
-	ITEM_POOL_LOCATOR	*pLocator;
-
-	for ( cnt = 0; cnt < guiNumFlashItemSlots; cnt++ )
+	for (UINT32 cnt = 0; cnt < guiNumFlashItemSlots; ++cnt)
 	{
-		pLocator  = &( FlashItemSlots[ cnt ] );
+		const ITEM_POOL_LOCATOR* const l = &FlashItemSlots[cnt];
+		if (!l->fAllocated) continue;
 
-		if ( pLocator->fAllocated )
-		{
-			if ( !( pLocator->ubFlags & ( ITEM_LOCATOR_LOCKED ) ) )
-			{
-				pItemPool = pLocator->pItemPool;
+		if (l->ubFlags & ITEM_LOCATOR_LOCKED) continue;
 
-				// Update radio locator
-				{
-					FLOAT				dOffsetX, dOffsetY;
-					FLOAT				dTempX_S, dTempY_S;
-					INT16				sX, sY, sXPos, sYPos;
+		const ITEM_POOL* const ip = l->pItemPool;
 
-					ConvertGridNoToCenterCellXY( pItemPool->sGridNo, &sX, &sY );
+		// Update radio locator
+		INT16 sX;
+		INT16 sY;
+		ConvertGridNoToCenterCellXY(ip->sGridNo, &sX, &sY);
 
-					dOffsetX = (FLOAT)( sX - gsRenderCenterX );
-					dOffsetY = (FLOAT)( sY - gsRenderCenterY );
+		const FLOAT dOffsetX = sX - gsRenderCenterX;
+		const FLOAT dOffsetY = sY - gsRenderCenterY;
 
-					// Calculate guy's position
-					FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
+		// Calculate guy's position
+		FLOAT dTempX_S;
+		FLOAT dTempY_S;
+		FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-					sXPos = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
-					sYPos = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S - gpWorldLevelData[ pItemPool->sGridNo ].sHeight;
+		INT16 sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
+		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[ip->sGridNo].sHeight;
 
-					// Adjust for offset position on screen
-					sXPos -= gsRenderWorldOffsetX;
-					sYPos -= gsRenderWorldOffsetY;
-					sYPos -= pItemPool->bRenderZHeightAboveLevel;
+		// Adjust for offset position on screen
+		sXPos -= gsRenderWorldOffsetX;
+		sYPos -= gsRenderWorldOffsetY;
+		sYPos -= ip->bRenderZHeightAboveLevel;
 
-					// Adjust for render height
-					sYPos += gsRenderHeight;
+		// Adjust for render height
+		sYPos += gsRenderHeight;
 
-					// Adjust for level height
-					if ( pItemPool->ubLevel )
-					{
-						sYPos -= ROOF_LEVEL_HEIGHT;
-					}
+		// Adjust for level height
+		if (ip->ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
 
-					// Center circle!
-					sXPos -= 20;
-					sYPos -= 20;
+		// Center circle!
+		sXPos -= 20;
+		sYPos -= 20;
 
-					const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-					if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+		const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
+		if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
 
-					BltVideoObject(FRAME_BUFFER, guiRADIO, pLocator->bRadioFrame, sXPos, sYPos);
+		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 
-					DrawItemPoolList(pItemPool, pItemPool->sGridNo, pItemPool->bRenderZHeightAboveLevel, sXPos, sYPos);
-				}
-			}
-		}
+		DrawItemPoolList(ip, ip->sGridNo, ip->bRenderZHeightAboveLevel, sXPos, sYPos);
 	}
 }
 
