@@ -332,13 +332,6 @@ static void RenderOverheadOverlays(void);
 
 void HandleOverheadMap( )
 {
-	static BOOLEAN fFirst = TRUE;
-
-	if ( fFirst )
-	{
-		fFirst = FALSE;
-	}
-
 	gfInOverheadMap = TRUE;
 	gsOveritemPoolGridNo = NOWHERE;
 
