@@ -185,19 +185,6 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 
 	// Copy over shade tables from main tileset
 	CopyOverheadDBShadetablesFromTileset( );
-
-
-}
-
-
-static void DeleteOverheadDB(void)
-{
-	INT32 cnt;
-
-	for( cnt = 0; cnt < NUMBEROFTILETYPES; cnt++ )
-	{
-		DeleteVideoObject(gSmTileSurf[cnt].vo);
-	}
 }
 
 
@@ -330,80 +317,57 @@ static void HandleOverheadUI(void);
 static void RenderOverheadOverlays(void);
 
 
-void HandleOverheadMap( )
+void HandleOverheadMap(void)
 {
-	gfInOverheadMap = TRUE;
+	gfInOverheadMap      = TRUE;
 	gsOveritemPoolGridNo = NOWHERE;
 
 	// Check tileset numbers
-	if ( gubSmTileNum != giCurrentTilesetID )
+	if (gubSmTileNum != giCurrentTilesetID)
 	{
-		// If loaded, unload!
-		if ( gfSmTileLoaded )
-		{
-			//Unload
-			DeleteOverheadDB( );
-
-			// Force load
-			gfSmTileLoaded = FALSE;
-		}
+		gubSmTileNum = giCurrentTilesetID;
+		TrashOverheadMap();
 	}
 
-	gubSmTileNum = (UINT8)giCurrentTilesetID;
-
-
-	if ( gfSmTileLoaded == FALSE )
+	if (!gfSmTileLoaded)
 	{
-		// LOAD LAND
-		InitNewOverheadDB( gubSmTileNum );
+		InitNewOverheadDB(gubSmTileNum);
 		gfSmTileLoaded = TRUE;
 	}
 
-	// restore background rects
-	RestoreBackgroundRects( );
+	RestoreBackgroundRects();
 
-	// RENDER!!!!!!!!
 	RenderOverheadMap(0, WORLD_COLS / 2, 0, 0, SCREEN_WIDTH, 320, FALSE);
 
-	HandleTalkingAutoFaces( );
+	HandleTalkingAutoFaces();
 
-	if( !gfEditMode )
+	if (!gfEditMode)
 	{
-		// CHECK FOR UI
-		if( gfTacticalPlacementGUIActive )
+		if (gfTacticalPlacementGUIActive)
 		{
 			TacticalPlacementHandle();
-			if( !gfTacticalPlacementGUIActive )
-			{
-				return;
-			}
+			if (!gfTacticalPlacementGUIActive) return;
 		}
 		else
 		{
 			HandleOverheadUI();
 
-			if ( !gfInOverheadMap )
-			{
-				return;
-			}
-			RenderTacticalInterface( );
-			RenderRadarScreen( );
+			if (!gfInOverheadMap) return;
+			RenderTacticalInterface();
+			RenderRadarScreen();
 			RenderClock();
-			RenderTownIDString( );
+			RenderTownIDString();
 
-    	HandleAutoFaces( );
+    	HandleAutoFaces();
 		}
 	}
 
-	if( !gfEditMode && !gfTacticalPlacementGUIActive )
+	if (!gfEditMode && !gfTacticalPlacementGUIActive)
 	{
-		INT16 usMapPos;
-
-		gSelectedGuy = NULL;
-
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
-		if ( GetOverheadMouseGridNo( &usMapPos ) )
+		INT16 usMapPos;
+		if (GetOverheadMouseGridNo(&usMapPos))
 		{
 			const ITEM_POOL* pItemPool;
 
@@ -411,20 +375,15 @@ void HandleOverheadMap( )
 			pItemPool = GetClosestItemPool(usMapPos, 1, 0);
 			if (pItemPool != NULL)
 			{
-				STRUCTURE					*pStructure = NULL;
-				INT16							sIntTileGridNo;
-				INT8							bZLevel = 0;
-				INT16							sActionGridNo = usMapPos;
-
 				// Get interactive tile...
-				if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
-				{
-					sActionGridNo = sIntTileGridNo;
-				}
+				INT16       sIntTileGridNo;
+				STRUCTURE*  pStructure;
+				const INT16 sActionGridNo =
+					ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, FALSE) ?
+						sIntTileGridNo : usMapPos;
 
-				bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, 0, pStructure );
-
-				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
+				const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, 0, pStructure);
+				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
 					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos);
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
@@ -434,18 +393,17 @@ void HandleOverheadMap( )
 			pItemPool = GetClosestItemPool(usMapPos, 1, 1);
 			if (pItemPool != NULL)
 			{
-				INT8							bZLevel = 0;
-
-				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
+				const INT8 bZLevel = 0;
+				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
 					DrawItemPoolList(pItemPool, usMapPos, bZLevel, gusMouseXPos, gusMouseYPos - 5);
 					gsOveritemPoolGridNo = pItemPool->sGridNo;
 				}
 			}
-
     }
 
-    if ( GetOverheadMouseGridNoForFullSoldiersGridNo( &usMapPos ) )
+		gSelectedGuy = NULL;
+    if (GetOverheadMouseGridNoForFullSoldiersGridNo(&usMapPos))
     {
 			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
 			if (s != NULL)
@@ -463,19 +421,14 @@ void HandleOverheadMap( )
 		if (sel != NULL) DisplayMercNameInOverhead(sel);
 	}
 
-	RenderButtons( );
-
-	// save background rects
-	SaveBackgroundRects( );
-
+	RenderButtons();
+	SaveBackgroundRects();
 	RenderButtonsFastHelp();
-
-	ExecuteBaseDirtyRectQueue( );
-	EndFrameBufferRender( );
-
+	ExecuteBaseDirtyRectQueue();
+	EndFrameBufferRender();
 	fInterfacePanelDirty = FALSE;
-
 }
+
 
 BOOLEAN InOverheadMap( )
 {
@@ -1461,18 +1414,16 @@ static void CopyOverheadDBShadetablesFromTileset(void)
 			gSmTileSurf[ uiLoop ].vo->pShades[ uiLoop2 ] = pTileSurf->vo->pShades[ uiLoop2 ];
 		}
 	}
-
 }
 
-void TrashOverheadMap( )
-{
-	// If loaded, unload!
-	if ( gfSmTileLoaded )
-	{
-		//Unload
-		DeleteOverheadDB( );
 
-		// Force load
-		gfSmTileLoaded = FALSE;
+void TrashOverheadMap(void)
+{
+	if (!gfSmTileLoaded) return;
+	gfSmTileLoaded = FALSE;
+
+	for (SMALL_TILE_SURF* i = gSmTileSurf; i != endof(gSmTileSurf); ++i)
+	{
+		DeleteVideoObject(i->vo);
 	}
 }
