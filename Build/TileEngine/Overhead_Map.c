@@ -312,9 +312,9 @@ static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* psGridNo);
-static void HandleOverheadUI(void);
-static void RenderOverheadOverlays(void);
+static GridNo GetOverheadMouseGridNoForFullSoldiersGridNo(void);
+static void   HandleOverheadUI(void);
+static void   RenderOverheadOverlays(void);
 
 
 void HandleOverheadMap(void)
@@ -403,7 +403,8 @@ void HandleOverheadMap(void)
     }
 
 		gSelectedGuy = NULL;
-    if (GetOverheadMouseGridNoForFullSoldiersGridNo(&usMapPos))
+		usMapPos = GetOverheadMouseGridNoForFullSoldiersGridNo();
+		if (usMapPos != NOWHERE)
     {
 			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
 			if (s != NULL)
@@ -1350,10 +1351,9 @@ BOOLEAN GetOverheadMouseGridNo(INT16* const psGridNo)
 }
 
 
-static BOOLEAN GetOverheadMouseGridNoForFullSoldiersGridNo(INT16* const psGridNo)
+static GridNo GetOverheadMouseGridNoForFullSoldiersGridNo(void)
 {
-	*psGridNo = InternalGetOverheadMouseGridNo(0);
-	return *psGridNo != NOWHERE;
+	return InternalGetOverheadMouseGridNo(0);
 }
 
 
