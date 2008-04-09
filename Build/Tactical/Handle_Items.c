@@ -2469,234 +2469,109 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 }
 
 
-BOOLEAN DrawItemPoolList(const ITEM_POOL* pItemPool, INT16 sGridNo, INT8 bZLevel, INT16 sXPos, INT16 sYPos)
+void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, const INT8 bZLevel, const INT16 sXPos, const INT16 sYPos)
 {
-	INT16 sY;
-	const ITEM_POOL* pTempItemPool;
-	wchar_t pStr[ 100 ];
-	INT16		cnt = 0, sHeight = 0;
-	INT16	 sLargeLineWidth = 0, sLineWidth;
-	BOOLEAN			fSelectionDone = FALSE;
-
-	INT8				gbCurrentItemSel = 0;
-	INT8				bNumItemsListed = 0;
-	INT16				sFontX, sFontY;
-	INT16				sLargestLineWidth = 30;
-	INT8				bCurStart = 0;
-	BOOLEAN			fDoBack;
-
-
-	// Take a look at each guy in current sqaud and check for compatible ammo...
-
-	// Determine how many there are
-	// MOVE HEAD TO CURRENT START
-	cnt = 0;
-	pTempItemPool = pItemPool;
-	while( pTempItemPool != NULL )
+	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
-		if ( cnt == bCurStart )
-		{
-			break;
-		}
+		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
 
-		// ATE: Put some conditions on this....
-		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
-		{
-			cnt++;
-		}
-
-		pTempItemPool = pTempItemPool->pNext;
+		const WORLDITEM* const wi = &gWorldItems[i->iItemIndex];
+		HandleAnyMercInSquadHasCompatibleStuff(&wi->o);
 	}
 
-	cnt = bCurStart;
-	fDoBack = FALSE;
-	while( pTempItemPool != NULL )
+	const INT16 dy = GetFontHeight(SMALLFONT1) - 2;
+
+	// Determine how many there are
+	UINT    item_count = 0;
+	BOOLEAN fDoBack    = FALSE;
+	INT16   sHeight    = 0;
+	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
 		// IF WE HAVE MORE THAN THE SET AMOUNT, QUIT NOW!
-		if ( cnt == ( bCurStart + NUM_ITEMS_LISTED ) )
+		if (item_count == NUM_ITEMS_LISTED)
 		{
-			cnt++;
+			item_count++;
 			fDoBack = TRUE;
 			break;
 		}
 
-		// ATE: Put some conditions on this....
-		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
-		{
-			cnt++;
-		}
+		if (ItemPoolOKForDisplay(i, bZLevel)) item_count++;
 
-		sHeight += GetFontHeight( SMALLFONT1 ) - 2;
-
-		pTempItemPool = pTempItemPool->pNext;
+		sHeight += dy;
 	}
-
-
-	pTempItemPool = pItemPool;
-	while( pTempItemPool != NULL )
-	{
-		// ATE: Put some conditions on this....
-		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
-		{
-			HandleAnyMercInSquadHasCompatibleStuff(&gWorldItems[pTempItemPool->iItemIndex].o);
-		}
-
-		pTempItemPool = pTempItemPool->pNext;
-	}
-
-	// IF COUNT IS ALREADY > MAX, ADD A PREV...
-	if ( bCurStart >= NUM_ITEMS_LISTED )
-	{
-		cnt++;
-	}
-
-	bNumItemsListed = (INT8)cnt;
-
 
 	//RENDER LIST!
 	// Determine max length
-	pTempItemPool = pItemPool;
-	while( pTempItemPool != NULL )
+	INT16 sLargeLineWidth   = 0;
+	INT16 sLargestLineWidth = 30;
+	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
-		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
+		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
+
+		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
+		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
+		wchar_t                buf[100];
+		if (wi->o.ubNumberOfObjects > 1)
 		{
-			// Set string
-			if ( gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
-			{
-				swprintf( pStr, lengthof(pStr), L"%ls (%d)", ShortItemNames[ gWorldItems[ pTempItemPool->iItemIndex ].o.usItem ], gWorldItems[ pTempItemPool->iItemIndex ].o.ubNumberOfObjects );
-			}
-			else
-			{
-				wcslcpy(pStr, ShortItemNames[gWorldItems[pTempItemPool->iItemIndex].o.usItem], lengthof(pStr));
-			}
-
-			// Get Width
-			sLineWidth = StringPixLength( pStr,SMALLFONT1 );
-
-			if ( sLineWidth > sLargeLineWidth )
-			{
-				sLargeLineWidth = sLineWidth;
-			}
-			sLargestLineWidth = sLargeLineWidth;
+			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
+			txt = buf;
 		}
-		pTempItemPool = pTempItemPool->pNext;
+
+		const INT16 sLineWidth = StringPixLength(txt, SMALLFONT1);
+		if (sLargeLineWidth < sLineWidth) sLargeLineWidth = sLineWidth;
+		sLargestLineWidth = sLargeLineWidth;
 	}
 
 	// Determine where our mouse is!
+	INT16 x;
 	if (sXPos > SCREEN_WIDTH - sLargestLineWidth)
 	{
-		sFontX = sXPos - sLargestLineWidth;
+		x = sXPos - sLargestLineWidth;
 	}
 	else
 	{
-		sFontX = sXPos + 15;
+		x = sXPos + 15;
 	}
-	sFontY = sYPos;
+	INT16 y = sYPos;
 
 	// Move up if over interface....
-	sFontY = min(sFontY, gsVIEWPORT_WINDOW_END_Y - sHeight);
+	y = min(y, gsVIEWPORT_WINDOW_END_Y - sHeight);
 
 	// Detertime vertiacal center
-	sFontY -= ( sHeight / 2 );
+	y -= sHeight / 2;
 
 
-	SetFont( SMALLFONT1 );
-	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_DKGRAY );
-
-	// MOVE HEAD TO CURRENT START
-	cnt = 0;
-	while( pItemPool != NULL )
-	{
-		if ( cnt == bCurStart )
-		{
-			break;
-		}
-
-		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
-		{
-			cnt++;
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
+	SetFont(SMALLFONT1);
+	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontForeground(FONT_MCOLOR_DKGRAY);
 
 	// START DISPLAY LOOP
-	cnt = bCurStart;
-	sY	= sFontY;
-
-	// ADD PREV TO THIS LIST!
-	if ( bCurStart >= NUM_ITEMS_LISTED )
+	UINT display_count = 0;
+	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
-		// Set string
-		if ( cnt == gbCurrentItemSel )
+		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
+
+		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
+		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
+		wchar_t                buf[100];
+		if (wi->o.ubNumberOfObjects > 1)
 		{
-			SetFontForeground( FONT_MCOLOR_LTGRAY );
+			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
+			txt = buf;
 		}
-		else
+
+		gprintfdirty(x, y, txt);
+		mprintf(     x, y, txt);
+		y += dy;
+
+		if (fDoBack && ++display_count == item_count - 1)
 		{
-			SetFontForeground( FONT_MCOLOR_DKGRAY );
+			const wchar_t* const more = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
+			gprintfdirty(x, y, more);
+			mprintf(     x, y, more);
+			break;
 		}
-		const wchar_t* Prev = TacticalStr[ITEMPOOL_POPUP_PREV_STR];
-		gprintfdirty(sFontX, sY, Prev);
-		mprintf(sFontX, sY, Prev);
-		sY += GetFontHeight( SMALLFONT1 ) - 2;
-		cnt++;
 	}
-
-	while( pItemPool != NULL )
-	{
-		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
-		{
-			// Set string
-
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects > 1 )
-			{
-				swprintf( pStr, lengthof(pStr), L"%ls (%d)", ShortItemNames[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ], gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects );
-			}
-			else
-			{
-				wcslcpy(pStr, ShortItemNames[gWorldItems[pItemPool->iItemIndex].o.usItem], lengthof(pStr));
-			}
-
-			gprintfdirty( sFontX, sY, pStr );
-			mprintf( sFontX, sY, pStr );
-
-			sY += GetFontHeight( SMALLFONT1 ) - 2;
-			cnt++;
-		}
-		pItemPool = pItemPool->pNext;
-
-
-		if ( fDoBack )
-		{
-			if ( cnt == ( bNumItemsListed - 1) )
-			{
-				break;
-			}
-		}
-
-	}
-	if ( fDoBack )
-	{
-			if ( cnt == ( bNumItemsListed - 1) )
-			{
-				// Set string
-				if ( cnt == gbCurrentItemSel )
-				{
-					SetFontForeground( FONT_MCOLOR_LTGRAY );
-				}
-				else
-				{
-					SetFontForeground( FONT_MCOLOR_DKGRAY );
-				}
-				const wchar_t* More = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
-				gprintfdirty(sFontX, sY, More);
-				mprintf(sFontX, sY, More);
-			}
-	}
-
-	return( fSelectionDone );
 }
 
 
