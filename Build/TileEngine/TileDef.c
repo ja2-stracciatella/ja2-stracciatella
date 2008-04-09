@@ -224,23 +224,6 @@ void DeallocateTileDatabase( )
 }
 
 
-BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType )
-{
- UINT16					usIndex;
-
- Assert( puiType != NULL );
-
- CHECKF( gpWorldLevelData[ iMapIndex ].pLandHead != NULL );
-
- usIndex = gpWorldLevelData[ iMapIndex ].pLandHead->usIndex;
-
- GetTileType( usIndex, puiType );
-
- return( TRUE );
-
-}
-
-
 #ifdef JA2EDITOR
 
 BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)

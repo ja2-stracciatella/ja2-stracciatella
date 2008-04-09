@@ -495,7 +495,6 @@ void PasteStructure2( UINT32 iMapIndex )
 static void PasteStructureCommon(UINT32 iMapIndex)
 {
 	BOOLEAN				fDoPaste = FALSE;
-	UINT32				fHeadType;
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
 	INT32					iRandSelIndex;
@@ -533,9 +532,6 @@ static void PasteStructureCommon(UINT32 iMapIndex)
 				// Actual structure info is added by the functions below
 				AddStructToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
 				// For now, adjust to shadows by a hard-coded amount,
-
-				// Add mask if in long grass
-				GetLandHeadType( iMapIndex, &fHeadType  );
 			}
 		}
 	}

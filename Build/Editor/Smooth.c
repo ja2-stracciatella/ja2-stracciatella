@@ -100,7 +100,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
 	UINT16	land=0;
-	UINT32  uiTopType;
 	BOOLEAN	fSameTile;
 
 	INT16		*pSmoothStruct;
@@ -183,8 +182,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// Loop through smooth struct
 	cnt = 0;
 	fFound = FALSE;
-
-	GetLandHeadType( gridno, &uiTopType );
 
 	while( pSmoothStruct[ cnt ] != -1 )
 	{
@@ -354,7 +351,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
 	UINT16	land=0;
-	UINT32  uiTopType;
 	BOOLEAN	fSameTile;
 	INT16		*pSmoothStruct;
 
@@ -471,7 +467,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// Loop through smooth struct
 	cnt = 0;
 	fFound = FALSE;
-	GetLandHeadType( gridno, &uiTopType );
 	// Speed up of this while loop  using double/quick search will result
 	// in an incorrect solution due to multiple instances of bitvalues in the list of
 	// smoothed water textures

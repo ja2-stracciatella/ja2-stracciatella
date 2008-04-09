@@ -138,7 +138,6 @@ void CreateTileDatabase(void);
 
 
 // Land level manipulation functions
-BOOLEAN GetLandHeadType( INT32 iMapIndex, UINT32 *puiType );
 
 #ifdef JA2EDITOR
 BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType);
