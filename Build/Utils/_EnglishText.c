@@ -1077,8 +1077,6 @@ const wchar_t* const TacticalStr[] =
 	L"SMASHED",
 	L"There's a switch here.  Activate it?",
 	L"Disarm trap?",
-	L"Prev...",
-	L"Next...",
 	L"More...",
 
 	// In the next 2 strings, %s is an item name

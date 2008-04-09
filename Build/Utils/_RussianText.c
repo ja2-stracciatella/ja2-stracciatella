@@ -1076,8 +1076,6 @@ const wchar_t* const TacticalStr[] =
 	L"СЛОМАНАЯ",
 	L"Тут есть выключатель. Нажать?",
 	L"Обезвредить ловушку?",
-	L"Пред...",
-	L"След...",
 	L"Еще предметы...",
 
 	// In the next 2 strings, %ls is an item name

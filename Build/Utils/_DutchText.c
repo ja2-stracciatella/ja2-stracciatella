@@ -1091,8 +1091,6 @@ const wchar_t* const TacticalStr[] =
 	L"KAPOT",
 	L"Hier zit een schakelaar. Activeren?",
 	L"Boobytrap ontmantelen?",
-	L"Vorige...",
-	L"Volgende...",
 	L"Meer...",
 
 	// In the next 2 strings, %ls is an item name
