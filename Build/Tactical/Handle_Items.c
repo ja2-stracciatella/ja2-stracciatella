@@ -1240,11 +1240,9 @@ static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
 
 void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
 {
-	const ITEM_POOL* pItemPoolToDelete = NULL;
 	OBJECTTYPE			Object;
 	INT32						cnt = 0;
 	BOOLEAN					fPickup;
-	BOOLEAN					fFailedAutoPlace = FALSE;
 	INT32						iItemIndexToDelete;
 	BOOLEAN					fShouldSayCoolQuote = FALSE;
 	BOOLEAN					fDidSayCoolQuote = FALSE;
@@ -1253,6 +1251,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 	// OK. CHECK IF WE ARE DOING ALL IN THIS POOL....
 	if ( iItemIndex == ITEM_PICKUP_ACTION_ALL || iItemIndex == ITEM_PICKUP_SELECTION )
 	{
+		const ITEM_POOL* pItemPoolToDelete = NULL;
 		// DO all pickup!
 		// LOOP THROUGH LIST TO FIND NODE WE WANT
 		const ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
@@ -1309,12 +1308,10 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 								pItemPoolToDelete = pItemPool;
 								pItemPool = pItemPool->pNext;
-								fFailedAutoPlace = TRUE;
 								// continue, to try and place ay others...
 								continue;
 							}
 
-							//pItemPoolToDelete = pItemPool;
 							iItemIndexToDelete = pItemPool->iItemIndex;
 							pItemPool = pItemPool->pNext;
 							RemoveItemFromPool( sGridNo, iItemIndexToDelete, pSoldier->bLevel );
@@ -1338,12 +1335,11 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		}
 
 		// ATE; If here, and we failed to add any more stuff, put failed one in our cursor...
-		if ( pItemPoolToDelete != NULL && fFailedAutoPlace )
+		if (pItemPoolToDelete != NULL)
 		{
 			gfDontChargeAPsToPickup = TRUE;
 			HandleAutoPlaceFail( pSoldier, pItemPoolToDelete->iItemIndex, sGridNo );
 			RemoveItemFromPool( sGridNo, pItemPoolToDelete->iItemIndex, pSoldier->bLevel );
-			pItemPoolToDelete = NULL;
 		}
 	}
 	else
