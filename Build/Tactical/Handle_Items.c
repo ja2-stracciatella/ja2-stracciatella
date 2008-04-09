@@ -2479,34 +2479,19 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 		HandleAnyMercInSquadHasCompatibleStuff(&wi->o);
 	}
 
-	const INT16 dy = GetFontHeight(SMALLFONT1) - 2;
-
-	// Determine how many there are
-	UINT    item_count = 0;
-	BOOLEAN fDoBack    = FALSE;
-	INT16   sHeight    = 0;
-	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
-	{
-		// IF WE HAVE MORE THAN THE SET AMOUNT, QUIT NOW!
-		if (item_count == NUM_ITEMS_LISTED)
-		{
-			item_count++;
-			fDoBack = TRUE;
-			break;
-		}
-
-		if (ItemPoolOKForDisplay(i, bZLevel)) item_count++;
-
-		sHeight += dy;
-	}
-
-	//RENDER LIST!
-	// Determine max length
-	INT16 sLargeLineWidth   = 0;
-	INT16 sLargestLineWidth = 30;
+	// Calculate maximum with of the item names and count the items to display
+	INT16 max_w      = 0;
+	INT   item_count = 0;
 	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
 		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
+
+		if (item_count++ == NUM_ITEMS_LISTED)
+		{
+			const INT16 w = StringPixLength(TacticalStr[ITEMPOOL_POPUP_MORE_STR], SMALLFONT1);
+			if (max_w < w) max_w = w;
+			break;
+		}
 
 		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
 		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
@@ -2517,39 +2502,49 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 			txt = buf;
 		}
 
-		const INT16 sLineWidth = StringPixLength(txt, SMALLFONT1);
-		if (sLargeLineWidth < sLineWidth) sLargeLineWidth = sLineWidth;
-		sLargestLineWidth = sLargeLineWidth;
+		const INT16 w = StringPixLength(txt, SMALLFONT1);
+		if (max_w < w) max_w = w;
 	}
 
-	// Determine where our mouse is!
-	INT16 x;
-	if (sXPos > SCREEN_WIDTH - sLargestLineWidth)
+	/* Put list to the right of the given coordinate, if there is space,
+	 * otherwise to the left */
+	INT16 const x = (sXPos + 15 + max_w <= SCREEN_WIDTH ? sXPos + 15 : sXPos - max_w);
+
+	/* Try to center the list vertically relative to the given coordinate, but
+	 * clamp to the view area */
+	INT16 const dy = GetFontHeight(SMALLFONT1) - 2;
+	INT16 const h  = dy * item_count;
+	INT16       y;
+	if (sYPos < h / 2)
 	{
-		x = sXPos - sLargestLineWidth;
+		y = 0;
+	}
+	else if (sYPos + h / 2 >= gsVIEWPORT_WINDOW_END_Y)
+	{
+		y = gsVIEWPORT_WINDOW_END_Y - h;
 	}
 	else
 	{
-		x = sXPos + 15;
+		y = sYPos - h / 2;
 	}
-	INT16 y = sYPos;
-
-	// Move up if over interface....
-	y = min(y, gsVIEWPORT_WINDOW_END_Y - sHeight);
-
-	// Detertime vertiacal center
-	y -= sHeight / 2;
-
 
 	SetFont(SMALLFONT1);
 	SetFontBackground(FONT_MCOLOR_BLACK);
 	SetFontForeground(FONT_MCOLOR_DKGRAY);
 
-	// START DISPLAY LOOP
+	// Draw the item names
 	UINT display_count = 0;
 	for (const ITEM_POOL* i = pItemPool; i != NULL; i = i->pNext)
 	{
 		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
+
+		if (display_count++ == NUM_ITEMS_LISTED)
+		{
+			const wchar_t* const more = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
+			gprintfdirty(x, y, more);
+			mprintf(     x, y, more);
+			break;
+		}
 
 		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
 		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
@@ -2563,14 +2558,6 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 		gprintfdirty(x, y, txt);
 		mprintf(     x, y, txt);
 		y += dy;
-
-		if (fDoBack && ++display_count == item_count - 1)
-		{
-			const wchar_t* const more = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
-			gprintfdirty(x, y, more);
-			mprintf(     x, y, more);
-			break;
-		}
 	}
 }
 

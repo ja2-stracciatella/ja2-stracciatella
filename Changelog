@@ -1,3 +1,4 @@
+(r3673) Fix vanilla display glitches when drawing the list of names of items on the ground: Properly clamp the list to the view area and prevent incorrect display, when invisible items are present.
 (r3668) Fix vanilla displacement of people and item markers in the overhead map for smaller maps (like the rebel basement).
 (r3638) Fix a vanilla out of bounds array access.
 (r3598) Fix a vanilla memory leak when loading savegames.
