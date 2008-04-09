@@ -252,13 +252,9 @@ void TrashWorldItems()
 	UINT32 i;
 	if( gWorldItems )
 	{
-		for( i = 0; i < guiNumWorldItems; i++ )
+		FOR_ALL_WORLD_ITEMS(wi)
 		{
-			WORLDITEM* const wi = GetWorldItem(i);
-			if (wi->fExists)
-			{
-				RemoveItemFromPool(wi->sGridNo, i, wi->ubLevel);
-			}
+			RemoveItemFromPool(wi);
 		}
 		MemFree( gWorldItems );
 		gWorldItems = NULL;
@@ -438,13 +434,11 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 			// then all items in this location should be deleted
 			const INT16 sGridNo = wi->sGridNo;
 			const UINT8 ubLevel = wi->ubLevel;
-			for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
+			FOR_ALL_WORLD_ITEMS(owned_item)
 			{
-				// loop through all items, look for ownership
-				const WORLDITEM* const owned_item = GetWorldItem(uiLoop2);
-				if (owned_item->fExists && owned_item->sGridNo == sGridNo && owned_item->ubLevel == ubLevel)
+				if (owned_item->sGridNo == sGridNo && owned_item->ubLevel == ubLevel)
 				{
-					RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
+					RemoveItemFromPool(owned_item);
 				}
 			}
 		}
@@ -473,10 +467,8 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 		// Delete all items on this tile
 		const INT16 sGridNo = wi->sGridNo;
 		const UINT8 ubLevel = wi->ubLevel;
-		for (UINT32 uiLoop2 = 0; uiLoop2 < guiNumWorldItems; ++uiLoop2)
+		FOR_ALL_WORLD_ITEMS(item)
 		{
-			const WORLDITEM* const item = GetWorldItem(uiLoop2);
-			if (!item->fExists)           continue;
 			if (item->sGridNo != sGridNo) continue;
 			if (item->ubLevel != ubLevel) continue;
 
@@ -497,7 +489,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 
 				default: break;
 			}
-			RemoveItemFromPool(sGridNo, uiLoop2, ubLevel);
+			RemoveItemFromPool(item);
 		}
 	}
 }

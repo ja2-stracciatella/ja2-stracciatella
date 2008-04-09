@@ -1041,16 +1041,15 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 	}
 	else	// handle a loaded sector
 	{
-		for (UINT32 iCounter = 0; iCounter < guiNumWorldItems; ++iCounter)
+		FOR_ALL_WORLD_ITEMS(wi)
 		{
 			// note, can't do reachable test here because we'd have to do a path call...
-			const WORLDITEM* const wi = GetWorldItem(iCounter);
-			if (wi->fExists && wi->bVisible == TRUE)
+			if (wi->bVisible == TRUE)
 			{
 				if( Random( 100 ) < ubChance )
 				{
 					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
-					RemoveItemFromPool(wi->sGridNo, iCounter, wi->ubLevel);
+					RemoveItemFromPool(wi);
 				}
 			}
 		}

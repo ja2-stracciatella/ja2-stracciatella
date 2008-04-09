@@ -1243,7 +1243,6 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 	OBJECTTYPE			Object;
 	INT32						cnt = 0;
 	BOOLEAN					fPickup;
-	INT32						iItemIndexToDelete;
 	BOOLEAN					fShouldSayCoolQuote = FALSE;
 	BOOLEAN					fDidSayCoolQuote = FALSE;
   BOOLEAN         fSaidBoobyTrapQuote = FALSE;
@@ -1296,10 +1295,11 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 						}
 						else
 						{
+							WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
 							if ( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
 							{
 								// check to see if the object has been swapped with one in inventory
-								OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+								OBJECTTYPE* const o = &wi->o;
 								if (Object.usItem != o->usItem || Object.ubNumberOfObjects != o->ubNumberOfObjects)
 								{
 									// copy back because item changed, and we must make sure the item pool reflects this.
@@ -1312,9 +1312,8 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 								continue;
 							}
 
-							iItemIndexToDelete = pItemPool->iItemIndex;
 							pItemPool = pItemPool->pNext;
-							RemoveItemFromPool( sGridNo, iItemIndexToDelete, pSoldier->bLevel );
+							RemoveItemFromPool(wi);
 						}
 					}
 					else
@@ -1339,7 +1338,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		{
 			gfDontChargeAPsToPickup = TRUE;
 			HandleAutoPlaceFail( pSoldier, pItemPoolToDelete->iItemIndex, sGridNo );
-			RemoveItemFromPool( sGridNo, pItemPoolToDelete->iItemIndex, pSoldier->bLevel );
+			RemoveItemFromPool(GetWorldItem(pItemPoolToDelete->iItemIndex));
 		}
 	}
 	else
@@ -1368,9 +1367,10 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				}
 				else
 				{
-					RemoveItemFromPool( sGridNo, iItemIndex, pSoldier->bLevel );
+					WORLDITEM* const wi = GetWorldItem(iItemIndex);
+					RemoveItemFromPool(wi);
 
-					if (!AutoPlaceObject(pSoldier, &GetWorldItem(iItemIndex)->o, TRUE))
+					if (!AutoPlaceObject(pSoldier, &wi->o, TRUE))
 					{
 						gfDontChargeAPsToPickup = TRUE;
 						HandleAutoPlaceFail( pSoldier, iItemIndex, sGridNo );
@@ -2030,7 +2030,7 @@ static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 	// Check for and existing pool on the object layer
 	while ((pItemPool = GetItemPool(sGridNo, ubLevel)) != NULL)
 	{
-		RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, ubLevel );
+		RemoveItemFromPool(GetWorldItem(pItemPool->iItemIndex));
 	}
 }
 
@@ -2040,13 +2040,14 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
 	while( pItemPool )
 	{
-		if (GetWorldItem(pItemPool->iItemIndex)->bVisible == BURIED)
+		WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		if (wi->bVisible == BURIED)
 		{
 			pItemPool = pItemPool->pNext;
 		}
 		else
 		{
-			RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, ubLevel );
+			RemoveItemFromPool(wi);
 			// get new start pointer
 			pItemPool = GetItemPool(sGridNo, ubLevel);
 		}
@@ -2135,7 +2136,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 								// set flag so we don't traverse an additional time
 								fDeleted = TRUE;
 								// remove item from pool
-								RemoveItemFromPool( pItemPool->sGridNo, pItemPool->iItemIndex, pItemPool->ubLevel );
+								RemoveItemFromPool(wi);
 							}
 						}
 						break;
@@ -2256,18 +2257,18 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 }
 
 
-void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8 ubLevel)
+void RemoveItemFromPool(WORLDITEM* const wi)
 {
 	ITEM_POOL* prev = NULL;
-	ITEM_POOL* item = GetItemPool(grid_no, ubLevel);
+	ITEM_POOL* item = GetItemPool(wi->sGridNo, wi->ubLevel);
 	for (;; prev = item, item = item->pNext)
 	{
 		// Could not find item? Maybe somebody got it before we got there!
 		if (item == NULL) return;
-		if (item->iItemIndex == item_index) break;
+		if (GetWorldItem(item->iItemIndex) == wi) break;
 	}
 
-	RemoveItemGraphicFromWorld(grid_no, ubLevel, item->pLevelNode);
+	RemoveItemGraphicFromWorld(wi->sGridNo, wi->ubLevel, item->pLevelNode);
 
 	if (item->bFlashColor != 0) RemoveFlashItemSlot(item);
 
@@ -2280,8 +2281,8 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 	else if (next != NULL)
 	{
 		// This node was the head, set next as head at this gridno
-		const MAP_ELEMENT* const m = &gpWorldLevelData[grid_no];
-		for (LEVELNODE* l = (ubLevel == 0 ? m->pStructHead : m->pOnRoofHead); l != NULL; l = l->pNext)
+		const MAP_ELEMENT* const m = &gpWorldLevelData[wi->sGridNo];
+		for (LEVELNODE* l = (wi->ubLevel == 0 ? m->pStructHead : m->pOnRoofHead); l != NULL; l = l->pNext)
 		{
 			if (!(l->uiFlags & LEVELNODE_ITEM)) continue;
 			l->pItemPool = next;
@@ -2290,11 +2291,11 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 	else
 	{
 		// This was the last item in the pool
-		gpWorldLevelData[grid_no].uiFlags &= ~MAPELEMENT_ITEMPOOL_PRESENT;
+		gpWorldLevelData[wi->sGridNo].uiFlags &= ~MAPELEMENT_ITEMPOOL_PRESENT;
 
 		/* If there is a structure with the has item on top flag set, reset it,
 		 * because there are no more items here */
-		if (GetWorldItem(item->iItemIndex)->bRenderZHeightAboveLevel > 0)
+		if (wi->bRenderZHeightAboveLevel > 0)
 		{
 			STRUCTURE* const s = FindStructure(item->sGridNo, STRUCTURE_HASITEMONTOP);
 			if (s != NULL)
@@ -2307,8 +2308,8 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 	}
 
 	AdjustItemPoolVisibility(item);
+	RemoveItemFromWorld(item->iItemIndex);
 	MemFree(item);
-	RemoveItemFromWorld(item_index);
 }
 
 
@@ -2320,8 +2321,9 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 	const ITEM_POOL* pItemPool;
 	while ((pItemPool = GetItemPool(sStartPos, 0)) != NULL)
 	{
-		WORLDITEM TempWorldItem = *GetWorldItem(pItemPool->iItemIndex);
-		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
+		WORLDITEM* const wi            = GetWorldItem(pItemPool->iItemIndex);
+		WORLDITEM        TempWorldItem = *wi;
+		RemoveItemFromPool(wi);
 		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
 	return( TRUE );
@@ -3321,9 +3323,9 @@ static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 {
 	if ( pItemPool )
 	{
-		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
 		IgniteExplosion(NULL, gpWorldLevelData[pItemPool->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
-		RemoveItemFromPool(pItemPool->sGridNo, pItemPool->iItemIndex, wi->ubLevel);
+		RemoveItemFromPool(wi);
 	}
 }
 
@@ -3454,9 +3456,10 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 
 		if (iCheckResult >= 0)
 		{
+			WORLDITEM* const wi = GetWorldItem(gpBoobyTrapItemPool->iItemIndex);
 
 			// get the item
-			OBJECTTYPE Object = GetWorldItem(gpBoobyTrapItemPool->iItemIndex)->o;
+			OBJECTTYPE Object = wi->o;
 
 			// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in
 			// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
@@ -3504,19 +3507,19 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 			if ( AutoPlaceObject( gpBoobyTrapSoldier, &Object, TRUE ) )
 			{
 				// remove it from the ground
-				RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
+				RemoveItemFromPool(wi);
 			}
 			else
 			{
 				// make sure the item in the world is untrapped
-				OBJECTTYPE* const o = &GetWorldItem(gpBoobyTrapItemPool->iItemIndex)->o;
+				OBJECTTYPE* const o = &wi->o;
 				o->bTrap   = 0;
 				o->fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
 				HandleAutoPlaceFail( gpBoobyTrapSoldier, gpBoobyTrapItemPool->iItemIndex, gsBoobyTrapGridNo );
-				RemoveItemFromPool( gsBoobyTrapGridNo, gpBoobyTrapItemPool->iItemIndex, gbBoobyTrapLevel );
+				RemoveItemFromPool(wi);
 			}
 		}
 		else

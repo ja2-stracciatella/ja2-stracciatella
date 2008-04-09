@@ -1409,10 +1409,11 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			{
 				const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
 
-				if (DamageItemOnGround(&GetWorldItem(pItemPool->iItemIndex)->o, sGridNo, bLevel, sWoundAmt * 2, owner))
+				WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+				if (DamageItemOnGround(&wi->o, sGridNo, bLevel, sWoundAmt * 2, owner))
 				{
 					// item was destroyed
-					RemoveItemFromPool( sGridNo, pItemPool->iItemIndex, bLevel );
+					RemoveItemFromPool(wi);
 				}
 				pItemPool = pItemPoolNext;
 			}
@@ -1421,7 +1422,8 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			// Search for an explosive item in item pool
 			while ( ( iWorldItem = GetItemOfClassTypeInPool( sGridNo, IC_EXPLOSV, bLevel ) ) != -1 )
 			{
-				const OBJECTTYPE* const o = GetWorldItem(iWorldItem)->o;
+				const WORLDITEM*  const wi = GetWorldItem(iWorldItem);
+				const OBJECTTYPE* const o  = wi->o;
 				// Get usItem
 				usItem = o->usItem;
 
@@ -1429,14 +1431,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 				if (CheckForChainReaction(usItem, o->bStatus[0], sWoundAmt, TRUE))
 				{
-					RemoveItemFromPool( sGridNo, iWorldItem, bLevel );
+					RemoveItemFromPool(wi);
 
 					// OK, Ignite this explosion!
 					IgniteExplosion(NULL, 0, sGridNo, usItem, bLevel);
 				}
 				else
 				{
-					RemoveItemFromPool( sGridNo, iWorldItem, bLevel );
+					RemoveItemFromPool(wi);
 				}
 
 			}
@@ -2608,12 +2610,12 @@ void HandleExplosionQueue(void)
 			{
 				PlayLocationJA2Sample(sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
 				CallAvailableEnemiesTo( sGridNo );
-				//RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, 0 );
+				//RemoveItemFromPool(wi);
 			}
 			else if ( pObj->usBombItem == TRIP_FLARE )
 			{
 				NewLightEffect( sGridNo, LIGHT_FLARE_MARK_1 );
-				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
+				RemoveItemFromPool(wi);
 			}
 			else
 			{
@@ -2621,7 +2623,7 @@ void HandleExplosionQueue(void)
 
 				// We have to remove the item first to prevent the explosion from detonating it
 				// a second time :-)
-				RemoveItemFromPool( sGridNo, gWorldBombs[ uiWorldBombIndex ].iItemIndex, ubLevel );
+				RemoveItemFromPool(wi);
 
 				// make sure no one thinks there is a bomb here any more!
 				if ( gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT )

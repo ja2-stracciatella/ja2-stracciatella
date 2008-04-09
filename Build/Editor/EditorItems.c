@@ -988,7 +988,7 @@ void DeleteSelectedItem()
 		}
 		sGridNo = gpItemPool->sGridNo;
 		//remove the item
-		const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
 		if (wi->o.usItem == ACTION_ITEM)
 		{
 			switch (wi->o.bActionValue)
@@ -999,7 +999,7 @@ void DeleteSelectedItem()
 		}
 		if( gpEditingItemPool == gpItemPool )
 			gpEditingItemPool = NULL;
-		RemoveItemFromPool( sGridNo, gpItemPool->iItemIndex, 0 );
+		RemoveItemFromPool(wi);
 		gpItemPool = NULL;
 		//determine if there are still any items at this location
 		gpItemPool = GetItemPool(sGridNo, 0);
