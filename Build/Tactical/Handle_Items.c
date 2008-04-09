@@ -1230,7 +1230,7 @@ static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o
 
 
 static void CheckForPickedOwnership(void);
-static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel);
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator, INT8 bZLevel);
@@ -1274,7 +1274,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 
 				if ( fPickup )
 				{
-					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
+					if (ContinuePastBoobyTrap(pSoldier, sGridNo, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote))
 					{
 						// Make copy of item
 						Object = GetWorldItem(pItemPool->iItemIndex)->o;
@@ -1347,7 +1347,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		if ( ItemExistsAtLocation( sGridNo, iItemIndex, pSoldier->bLevel ) )
 		{
 
-			if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
+			if (ContinuePastBoobyTrap(pSoldier, sGridNo, iItemIndex, FALSE, &fSaidBoobyTrapQuote))
 			{
 
 				// Make copy of item
@@ -3334,7 +3334,7 @@ static void BoobyTrapDialogueCallBack(void);
 static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue);
 
 
-static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote)
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sGridNo, const INT32 iItemIndex, const BOOLEAN fInStrategic, BOOLEAN* const pfSaidQuote)
 {
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
