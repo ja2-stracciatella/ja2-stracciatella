@@ -733,9 +733,9 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
 									}
 
-									if (pItemPool->bRenderZHeightAboveLevel > 0)
+									if (wi->bRenderZHeightAboveLevel > 0)
 									{
-										sYPos -= pItemPool->bRenderZHeightAboveLevel;
+										sYPos -= wi->bRenderZHeightAboveLevel;
 									}
 								}
 

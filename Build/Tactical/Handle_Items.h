@@ -46,7 +46,6 @@ struct ITEM_POOL
 	INT8				bVisible;
 	INT8				bFlashColor;
 	INT16				sGridNo;
-	INT8				bRenderZHeightAboveLevel;
 	LEVELNODE*  pLevelNode;
 };
 

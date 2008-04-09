@@ -1822,7 +1822,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 	new_item->bFlashColor              = FALSE;
 	new_item->sGridNo                  = sNewGridNo;
 	new_item->bVisible                 = bVisible;
-	new_item->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
 
 	// ATE: Get head of pool again....
 	ITEM_POOL* const pool_head = GetItemPool(sNewGridNo, ubLevel);
@@ -2018,10 +2017,8 @@ INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool)
 	// OK, loop through pools and get any height != 0........
 	while( pItemPool != NULL )
 	{
-		if ( pItemPool->bRenderZHeightAboveLevel > 0 )
-		{
-			return( pItemPool->bRenderZHeightAboveLevel );
-		}
+		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		if (wi->bRenderZHeightAboveLevel > 0) return wi->bRenderZHeightAboveLevel;
 
 		pItemPool = pItemPool->pNext;
 	}
@@ -2301,7 +2298,7 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 
 		/* If there is a structure with the has item on top flag set, reset it,
 		 * because there are no more items here */
-		if (item->bRenderZHeightAboveLevel > 0)
+		if (GetWorldItem(item->iItemIndex)->bRenderZHeightAboveLevel > 0)
 		{
 			STRUCTURE* const s = FindStructure(item->sGridNo, STRUCTURE_HASITEMONTOP);
 			if (s != NULL)
@@ -2404,12 +2401,10 @@ BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel)
 	//Determine total #
 	while( pItemPool != NULL )
 	{
-		if ( pItemPool->bRenderZHeightAboveLevel == bZLevel )
+		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		if (wi->bRenderZHeightAboveLevel == bZLevel && wi->bVisible == VISIBLE)
 		{
-			if (GetWorldItem(pItemPool->iItemIndex)->bVisible == VISIBLE)
-			{
-				return( TRUE );
-			}
+			return( TRUE );
 		}
 
 		pItemPool = pItemPool->pNext;
@@ -2427,14 +2422,15 @@ BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel)
 		return( TRUE );
 	}
 
+	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
 	// Setup some conditions!
-	if (GetWorldItem(pItemPool->iItemIndex)->bVisible != VISIBLE)
+	if (wi->bVisible != VISIBLE)
 	{
 		return( FALSE );
 	}
 
 	// If -1, it means find all
-	if ( pItemPool->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1 )
+	if (wi->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
 		{
 		return( FALSE );
 	}
@@ -2450,17 +2446,18 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 		return( TRUE );
 	}
 
+	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Setup some conditions!
-		if (GetWorldItem(pItemPool->iItemIndex)->bVisible != VISIBLE)
+		if (wi->bVisible != VISIBLE)
 		{
 			return( FALSE );
 		}
 	}
 
 	// If -1, it means find all
-	if ( pItemPool->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1 )
+	if (wi->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
 		{
 		return( FALSE );
 	}
@@ -2785,16 +2782,17 @@ void RenderTopmostFlashingItems(void)
 		INT16 sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
 		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[ip->sGridNo].sHeight;
 
+		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
+
 		// Adjust for offset position on screen
 		sXPos -= gsRenderWorldOffsetX;
 		sYPos -= gsRenderWorldOffsetY;
-		sYPos -= ip->bRenderZHeightAboveLevel;
+		sYPos -= wi->bRenderZHeightAboveLevel;
 
 		// Adjust for render height
 		sYPos += gsRenderHeight;
 
 		// Adjust for level height
-		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
 		if (wi->ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
 
 		// Center circle!
@@ -2806,7 +2804,7 @@ void RenderTopmostFlashingItems(void)
 
 		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 
-		DrawItemPoolList(ip, ip->sGridNo, ip->bRenderZHeightAboveLevel, sXPos, sYPos);
+		DrawItemPoolList(ip, ip->sGridNo, wi->bRenderZHeightAboveLevel, sXPos, sYPos);
 	}
 }
 
@@ -3327,8 +3325,8 @@ static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 {
 	if ( pItemPool )
 	{
-		IgniteExplosion(NULL, gpWorldLevelData[pItemPool->sGridNo].sHeight + pItemPool->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
 		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+		IgniteExplosion(NULL, gpWorldLevelData[pItemPool->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
 		RemoveItemFromPool(pItemPool->sGridNo, pItemPool->iItemIndex, wi->ubLevel);
 	}
 }
