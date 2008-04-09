@@ -100,7 +100,7 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 {
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
+		WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
 		if (wi->sGridNo != sGridNo || wi->ubLevel != bLevel) continue;
 
 		return wb->iItemIndex;
@@ -114,7 +114,7 @@ void FindPanicBombsAndTriggers(void)
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		const WORLDITEM*  const wi = &gWorldItems[wb->iItemIndex];
+		const WORLDITEM*  const wi = GetWorldItem(wb->iItemIndex);
 		const OBJECTTYPE* const o  = &wi->o;
 
 		INT8 bPanicIndex;
@@ -212,7 +212,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	}
 
 	const UINT32 iItemIndex = GetFreeWorldItemIndex();
-	WORLDITEM* const wi = &gWorldItems[iItemIndex];
+	WORLDITEM* const wi = GetWorldItem(iItemIndex);
 
 	//Add the new world item to the table.
 	wi->fExists                  = TRUE;
@@ -235,7 +235,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 
 void RemoveItemFromWorld(const INT32 iItemIndex)
 {
-	WORLDITEM* const wi = &gWorldItems[iItemIndex];
+	WORLDITEM* const wi = GetWorldItem(iItemIndex);
 	if (!wi->fExists) return;
 
 	// If it's a bomb, remove the appropriate entry from the bomb table
@@ -254,9 +254,10 @@ void TrashWorldItems()
 	{
 		for( i = 0; i < guiNumWorldItems; i++ )
 		{
-			if( gWorldItems[ i ].fExists )
+			WORLDITEM* const wi = GetWorldItem(i);
+			if (wi->fExists)
 			{
-				RemoveItemFromPool( gWorldItems[ i ].sGridNo, i, gWorldItems[ i ].ubLevel );
+				RemoveItemFromPool(wi->sGridNo, i, wi->ubLevel);
 			}
 		}
 		MemFree( gWorldItems );
@@ -399,7 +400,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 				dummyItem.bVisible = BURIED;
 			}
 			const INT32 iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
-			gWorldItems[ iItemIndex ].ubNonExistChance = dummyItem.ubNonExistChance;
+			GetWorldItem(iItemIndex)->ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}
 
@@ -440,7 +441,8 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 			for ( uiLoop2 = 0; uiLoop2 < guiNumWorldItems; uiLoop2++ )
 			{
 				// loop through all items, look for ownership
-				if ( gWorldItems[ uiLoop2 ].fExists && gWorldItems[ uiLoop2 ].sGridNo == sGridNo && gWorldItems[ uiLoop2 ].ubLevel == ubLevel )
+				const WORLDITEM* const owned_item = GetWorldItem(uiLoop2);
+				if (owned_item->fExists && owned_item->sGridNo == sGridNo && owned_item->ubLevel == ubLevel)
 				{
 					RemoveItemFromPool( sGridNo, uiLoop2, ubLevel );
 				}
@@ -473,7 +475,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 		const UINT8 ubLevel = wi->ubLevel;
 		for (UINT32 uiLoop2 = 0; uiLoop2 < guiNumWorldItems; ++uiLoop2)
 		{
-			const WORLDITEM* const item = &gWorldItems[uiLoop2];
+			const WORLDITEM* const item = GetWorldItem(uiLoop2);
 			if (!item->fExists)           continue;
 			if (item->sGridNo != sGridNo) continue;
 			if (item->ubLevel != ubLevel) continue;

@@ -175,12 +175,13 @@ void AddAllPits()
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
-		if( gWorldItems[ i ].o.usItem == ACTION_ITEM )
+		const WORLDITEM* const wi = GetWorldItem(i);
+		if (wi->o.usItem != ACTION_ITEM) continue;
+
+		switch (wi->o.bActionValue)
 		{
-			if( gWorldItems[ i ].o.bActionValue == ACTION_ITEM_SMALL_PIT )
-				Add3X3Pit( gWorldItems[ i ].sGridNo );
-			else if( gWorldItems[ i ].o.bActionValue == ACTION_ITEM_LARGE_PIT )
-				Add5X5Pit( gWorldItems[ i ].sGridNo );
+			case ACTION_ITEM_SMALL_PIT: Add3X3Pit(wi->sGridNo); break;
+			case ACTION_ITEM_LARGE_PIT: Add5X5Pit(wi->sGridNo); break;
 		}
 	}
 }
@@ -190,12 +191,13 @@ void RemoveAllPits()
 	UINT32 i;
 	for( i = 0; i < guiNumWorldItems; i++ )
 	{
-		if( gWorldItems[ i ].o.usItem == ACTION_ITEM )
+		const WORLDITEM* const wi = GetWorldItem(i);
+		if (wi->o.usItem != ACTION_ITEM) continue;
+
+		switch (wi->o.bActionValue)
 		{
-			if( gWorldItems[ i ].o.bActionValue == ACTION_ITEM_SMALL_PIT )
-				Remove3X3Pit( gWorldItems[ i ].sGridNo );
-			else if( gWorldItems[ i ].o.bActionValue == ACTION_ITEM_LARGE_PIT )
-				Remove5X5Pit( gWorldItems[ i ].sGridNo );
+			case ACTION_ITEM_SMALL_PIT: Remove3X3Pit(wi->sGridNo); break;
+			case ACTION_ITEM_LARGE_PIT: Remove5X5Pit(wi->sGridNo); break;
 		}
 	}
 }

@@ -1209,15 +1209,16 @@ static void HandleAutoPlaceFail(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 s
 {
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
+		OBJECTTYPE* const o = &GetWorldItem(iItemIndex)->o;
 		// Place it in buddy's hand!
 		if ( gpItemPointer == NULL )
 		{
-			InternalBeginItemPointer( pSoldier, &(gWorldItems[ iItemIndex ].o ), NO_SLOT );
+			InternalBeginItemPointer(pSoldier, o, NO_SLOT);
 		}
 		else
 		{
 			// Add back to world...
-			AddItemToPool( sGridNo, &(gWorldItems[ iItemIndex ].o ), 1 , pSoldier->bLevel, 0, -1 );
+			AddItemToPool(sGridNo, o, 1 , pSoldier->bLevel, 0, -1);
 
 			// If we are a merc, say DAMN quote....
 			if ( pSoldier->bTeam == gbPlayerNum )
@@ -1279,7 +1280,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 					if ( ContinuePastBoobyTrap( pSoldier, sGridNo, bZLevel, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote ) )
 					{
 						// Make copy of item
-						Object = gWorldItems[pItemPool->iItemIndex].o;
+						Object = GetWorldItem(pItemPool->iItemIndex)->o;
 
 						if ( ItemIsCool( &Object ) )
 						{
@@ -1299,10 +1300,11 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							if ( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
 							{
 								// check to see if the object has been swapped with one in inventory
-								if ( Object.usItem != gWorldItems[ pItemPool->iItemIndex ].o.usItem || Object.ubNumberOfObjects != gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects )
+								OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+								if (Object.usItem != o->usItem || Object.ubNumberOfObjects != o->ubNumberOfObjects)
 								{
 									// copy back because item changed, and we must make sure the item pool reflects this.
-									gWorldItems[pItemPool->iItemIndex].o = Object;
+									*o = Object;
 								}
 
 								pItemPoolToDelete = pItemPool;
@@ -1354,7 +1356,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 			{
 
 				// Make copy of item
-				Object = gWorldItems[iItemIndex].o;
+				Object = GetWorldItem(iItemIndex)->o;
 
 				if ( ItemIsCool( &Object ) )
 				{
@@ -1372,7 +1374,7 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				{
 					RemoveItemFromPool( sGridNo, iItemIndex, pSoldier->bLevel );
 
-					if ( !AutoPlaceObject( pSoldier, &(gWorldItems[ iItemIndex ].o ), TRUE ) )
+					if (!AutoPlaceObject(pSoldier, &GetWorldItem(iItemIndex)->o, TRUE))
 					{
 						gfDontChargeAPsToPickup = TRUE;
 						HandleAutoPlaceFail( pSoldier, iItemIndex, sGridNo );
@@ -1469,7 +1471,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				gsBoobyTrapGridNo = sGridNo;
 				gbBoobyTrapLevel  = pSoldier->bLevel;
 				gfDisarmingBuriedBomb = TRUE;
-				gbTrapDifficulty = gWorldItems[ iItemIndex ].o.bTrap;
+				gbTrapDifficulty = GetWorldItem(iItemIndex)->o.bTrap;
 
 				DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ DISARM_TRAP_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL );
 			}
@@ -1864,7 +1866,7 @@ BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, I
 		const ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == usItem )
+			if (GetWorldItem(pItemPoolTemp->iItemIndex)->o.usItem == usItem)
 			{
 				if ( piItemIndex )
 				{
@@ -1892,7 +1894,7 @@ static INT32 GetItemOfClassTypeInPool(INT16 sGridNo, UINT32 uiItemClass, UINT8 u
 		const ITEM_POOL* pItemPoolTemp = pItemPool;
 		while( pItemPoolTemp != NULL )
 		{
-			if ( Item[ gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem ].usItemClass & uiItemClass )
+			if (Item[GetWorldItem(pItemPoolTemp->iItemIndex)->o.usItem].usItemClass & uiItemClass)
 			{
 				return( pItemPoolTemp->iItemIndex );
 			}
@@ -1933,7 +1935,7 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems(const ITEM_POOL* pItemPool)
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
 	{
-		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == HIDDEN_ITEM )
+		if (GetWorldItem(pItemPool->iItemIndex)->bVisible == HIDDEN_ITEM)
 		{
 			return( TRUE );
 		}
@@ -1950,7 +1952,7 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
 	{
-		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != HIDDEN_ITEM )
+		if (GetWorldItem(pItemPool->iItemIndex)->bVisible != HIDDEN_ITEM)
 		{
 			return( FALSE );
 		}
@@ -1975,11 +1977,11 @@ static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocat
 		// LOOP THROUGH LIST TO FIND NODE WE WANT
 		while( pItemPool != NULL )
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == HIDDEN_ITEM && gWorldItems[ pItemPool->iItemIndex ].o.usItem != OWNERSHIP )
+			WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+			if (wi->bVisible == HIDDEN_ITEM && wi->o.usItem != OWNERSHIP)
 			{
 				fFound = TRUE;
-
-				gWorldItems[ pItemPool->iItemIndex ].bVisible = INVISIBLE;
+				wi->bVisible = INVISIBLE;
 			}
 
 			pItemPool = pItemPool->pNext;
@@ -2047,7 +2049,7 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
 	while( pItemPool )
 	{
-		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == BURIED)
+		if (GetWorldItem(pItemPool->iItemIndex)->bVisible == BURIED)
 		{
 			pItemPool = pItemPool->pNext;
 		}
@@ -2092,18 +2094,17 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 {
 	ITEM_POOL		*pItemPoolTemp;
 	BOOLEAN			fAtLeastModified = FALSE, fDeleted = FALSE;
-	INT8				bVisibleValue;
-	//OBJECTTYPE *pObj;
 
 	pItemPoolTemp = pItemPool;
 	while( pItemPoolTemp != NULL )
 	{
-		bVisibleValue = gWorldItems[ pItemPoolTemp->iItemIndex ].bVisible;
+		WORLDITEM* const wi            = GetWorldItem(pItemPoolTemp->iItemIndex);
+		INT8       const bVisibleValue = wi->bVisible;
 
 		// Update each item...
 		if ( bVisibleValue != VISIBLE )
 		{
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == ACTION_ITEM )
+			if (wi->o.usItem == ACTION_ITEM)
 			{
 				// NEVER MAKE VISIBLE!
 				pItemPoolTemp = pItemPoolTemp->pNext;
@@ -2111,18 +2112,18 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 			}
 
 			// If we have reached a visible value we should not modify, ignore...
-			if ( bVisibleValue >= bAllGreaterThan && gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem != OWNERSHIP )
+			if (bVisibleValue >= bAllGreaterThan && wi->o.usItem != OWNERSHIP)
 			{
 				// Update the world value
-				gWorldItems[ pItemPoolTemp->iItemIndex ].bVisible = VISIBLE;
+				wi->bVisible = VISIBLE;
 
 				fAtLeastModified = TRUE;
 			}
 
 			/*
-			if ( gWorldItems[ pItemPoolTemp->iItemIndex ].o.usItem == ACTION_ITEM )
+			if (wi->o.usItem == ACTION_ITEM)
 			{
-				pObj = &(gWorldItems[ pItemPoolTemp->iItemIndex ].o);
+				OBJECTTYPE* const pObj = &wi->o;
 				switch( pObj->bActionValue )
 				{
 					case ACTION_ITEM_SMALL_PIT:
@@ -2133,7 +2134,7 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 							if (Random( 100 ) < 65)
 							{
 								ArmBomb( pObj, 0 ); // will be set to pressure type so freq is irrelevant
-								gWorldItems[ pItemPoolTemp->iItemIndex ].usFlags |= WORLD_ITEM_ARMED_BOMB;
+								wi->usFlags |= WORLD_ITEM_ARMED_BOMB;
 								AddBombToWorld( pItemPoolTemp->iItemIndex );
 							}
 							else
@@ -2208,7 +2209,7 @@ void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool)
 	while( pItemPoolTemp != NULL )
 	{
 		// Update the world value
-		gWorldItems[ pItemPoolTemp->iItemIndex ].bVisible = HIDDEN_IN_OBJECT;
+		GetWorldItem(pItemPoolTemp->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;
 		pItemPoolTemp->bVisible = HIDDEN_IN_OBJECT;
 
 		pItemPoolTemp						= pItemPoolTemp->pNext;
@@ -2231,7 +2232,7 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 
 		// Update each item...
 		// If we have reached a visible value we should not modify, ignore...
-		if ( gWorldItems[ pItemPoolTemp->iItemIndex ].bVisible == VISIBLE )
+		if (GetWorldItem(pItemPoolTemp->iItemIndex)->bVisible == VISIBLE)
 		{
 			fAtLeastModified = TRUE;
 		}
@@ -2321,13 +2322,12 @@ void RemoveItemFromPool(const INT16 grid_no, const INT32 item_index, const UINT8
 BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 {
 	// note, only works between locations on the ground
-	WORLDITEM		TempWorldItem;
 
 	// While there is an existing pool
 	const ITEM_POOL* pItemPool;
 	while ((pItemPool = GetItemPool(sStartPos, 0)) != NULL)
 	{
-		TempWorldItem = gWorldItems[pItemPool->iItemIndex];
+		WORLDITEM TempWorldItem = *GetWorldItem(pItemPool->iItemIndex);
 		RemoveItemFromPool( sStartPos, pItemPool->iItemIndex, 0 );
 		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
@@ -2406,7 +2406,7 @@ BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel)
 	{
 		if ( pItemPool->bRenderZHeightAboveLevel == bZLevel )
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].bVisible == VISIBLE )
+			if (GetWorldItem(pItemPool->iItemIndex)->bVisible == VISIBLE)
 			{
 				return( TRUE );
 			}
@@ -2428,7 +2428,7 @@ BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel)
 	}
 
 	// Setup some conditions!
-	if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE  )
+	if (GetWorldItem(pItemPool->iItemIndex)->bVisible != VISIBLE)
 	{
 		return( FALSE );
 	}
@@ -2453,7 +2453,7 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Setup some conditions!
-		if ( gWorldItems[ pItemPool->iItemIndex ].bVisible != VISIBLE  )
+		if (GetWorldItem(pItemPool->iItemIndex)->bVisible != VISIBLE)
 		{
 			return( FALSE );
 		}
@@ -2475,7 +2475,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 	{
 		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
 
-		const WORLDITEM* const wi = &gWorldItems[i->iItemIndex];
+		const WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
 		HandleAnyMercInSquadHasCompatibleStuff(&wi->o);
 	}
 
@@ -2493,7 +2493,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 			break;
 		}
 
-		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
+		const WORLDITEM* const wi  = GetWorldItem(i->iItemIndex);
 		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
 		wchar_t                buf[100];
 		if (wi->o.ubNumberOfObjects > 1)
@@ -2546,7 +2546,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT16 sGridNo, con
 			break;
 		}
 
-		const WORLDITEM* const wi  = &gWorldItems[i->iItemIndex];
+		const WORLDITEM* const wi  = GetWorldItem(i->iItemIndex);
 		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
 		wchar_t                buf[100];
 		if (wi->o.ubNumberOfObjects > 1)
@@ -3339,9 +3339,8 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 
 {
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
-	OBJECTTYPE *		pObj;
 
-	pObj = &(gWorldItems[ iItemIndex ].o);
+	OBJECTTYPE* const pObj = &GetWorldItem(iItemIndex)->o;
 
   (*pfSaidQuote) = FALSE;
 
@@ -3453,7 +3452,6 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
 		INT32						iCheckResult;
-		OBJECTTYPE 			Object;
 
 		iCheckResult = SkillCheck( gpBoobyTrapSoldier, DISARM_TRAP_CHECK, 0 );
 
@@ -3461,7 +3459,7 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 		{
 
 			// get the item
-			Object = gWorldItems[gpBoobyTrapItemPool->iItemIndex].o;
+			OBJECTTYPE Object = GetWorldItem(gpBoobyTrapItemPool->iItemIndex)->o;
 
 			// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in
 			// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
@@ -3514,8 +3512,9 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 			else
 			{
 				// make sure the item in the world is untrapped
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o.bTrap = 0;
-				gWorldItems[ gpBoobyTrapItemPool->iItemIndex ].o.fFlags &= ~( OBJECT_KNOWN_TO_BE_TRAPPED );
+				OBJECTTYPE* const o = &GetWorldItem(gpBoobyTrapItemPool->iItemIndex)->o;
+				o->bTrap   = 0;
+				o->fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
@@ -3708,7 +3707,7 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 		// check for boobytraps
 		CFOR_ALL_WORLD_BOMBS(wb)
 		{
-			WORLDITEM* const wi = &gWorldItems[wb->iItemIndex];
+			WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
 			if (wi->sGridNo != sNextGridNo) continue;
 
 			OBJECTTYPE* const o = &wi->o;
@@ -3884,28 +3883,25 @@ static void TestPotentialOwner(SOLDIERTYPE* pSoldier)
 
 static void CheckForPickedOwnership(void)
 {
-	UINT8							ubProfile;
-	UINT8							ubCivGroup;
-
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	const ITEM_POOL* pItemPool = GetItemPool(gsTempGridno, gpTempSoldier->bLevel);
 
 	while( pItemPool )
 	{
-		if ( gWorldItems[ pItemPool->iItemIndex ].o.usItem == OWNERSHIP )
+		const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+		if (o->usItem == OWNERSHIP)
 		{
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile != NO_PROFILE )
+			if (o->ubOwnerProfile != NO_PROFILE)
 			{
-				ubProfile = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerProfile;
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
+				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(o->ubOwnerProfile);
 				if ( pSoldier )
 				{
 					TestPotentialOwner( pSoldier );
 				}
 			}
-			if ( gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerCivGroup != NON_CIV_GROUP )
+			const UINT8 ubCivGroup = o->ubOwnerCivGroup;
+			if (ubCivGroup != NON_CIV_GROUP)
 			{
-				ubCivGroup = gWorldItems[ pItemPool->iItemIndex ].o.ubOwnerCivGroup;
 				if ( ubCivGroup == HICKS_CIV_GROUP && CheckFact( FACT_HICKS_MARRIED_PLAYER_MERC, 0 ) )
 				{
 					// skip because hicks appeased

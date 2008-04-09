@@ -40,7 +40,7 @@ extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE 
 UINT8	CalculateObjectWeight(const OBJECTTYPE* pObject);
 UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier);
 
-extern UINT16 TotalPoints( OBJECTTYPE * pObj );
+extern UINT16 TotalPoints(const OBJECTTYPE*);
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo );

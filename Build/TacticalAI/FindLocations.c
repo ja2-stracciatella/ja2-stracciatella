@@ -1610,7 +1610,6 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	INT16					sGridNo;
 	INT16					sBestSpot = NOWHERE;
 	INT32					iTempValue, iValue, iBestValue = 0;
-	OBJECTTYPE *	pObj;
 	INT32					iItemIndex, iBestItemIndex;
 
 	iTempValue = -1;
@@ -1728,7 +1727,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						// we are looking for ammo to match the gun in usItem
 						while( pItemPool )
 						{
-							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
+							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass == IC_GUN && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1761,7 +1760,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 					case SEARCH_WEAPONS:
 						while( pItemPool )
 						{
-							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
+							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if (pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1801,7 +1800,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 					default:
 						while( pItemPool )
 						{
-							pObj = &(gWorldItems[ pItemPool->iItemIndex ].o);
+							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1903,8 +1902,9 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	if (sBestSpot != NOWHERE)
 	{
-		DebugAI( String( "%d decides to pick up %ls", pSoldier->ubID, ItemNames[ gWorldItems[ iBestItemIndex ].o.usItem ] ) );
-		if (Item[gWorldItems[ iBestItemIndex ].o.usItem].usItemClass == IC_GUN)
+		const OBJECTTYPE* const o = &GetWorldItem(iBestItemIndex)->o;
+		DebugAI(String("%d decides to pick up %ls", pSoldier->ubID, ItemNames[o->usItem]));
+		if (Item[o->usItem].usItemClass == IC_GUN)
 		{
 			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
 			{

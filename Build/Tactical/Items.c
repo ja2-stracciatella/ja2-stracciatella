@@ -3507,7 +3507,8 @@ BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 	return( TRUE );
 }
 
-UINT16 TotalPoints( OBJECTTYPE * pObj )
+
+UINT16 TotalPoints(const OBJECTTYPE* const pObj)
 {
 	UINT16	usPoints = 0;
 	UINT8		ubLoop;

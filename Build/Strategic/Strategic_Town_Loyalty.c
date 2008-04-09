@@ -1044,13 +1044,13 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 		for (UINT32 iCounter = 0; iCounter < guiNumWorldItems; ++iCounter)
 		{
 			// note, can't do reachable test here because we'd have to do a path call...
-			if ( gWorldItems[ iCounter ].fExists && gWorldItems[ iCounter ].bVisible == TRUE )
+			const WORLDITEM* const wi = GetWorldItem(iCounter);
+			if (wi->fExists && wi->bVisible == TRUE)
 			{
 				if( Random( 100 ) < ubChance )
 				{
-					RemoveItemFromPool( gWorldItems[ iCounter ].sGridNo , iCounter, gWorldItems[ iCounter ].ubLevel );
-					// debug message
-					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[gWorldItems[iCounter].o.usItem], wSectorName);
+					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+					RemoveItemFromPool(wi->sGridNo, iCounter, wi->ubLevel);
 				}
 			}
 		}

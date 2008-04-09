@@ -820,8 +820,8 @@ static void RenderSelectedItemBlownUp(void)
 	mprintf( xp, yp, L"%d", i );
 
 	//If the item is hidden, render a blinking H (just like DG)
-	if( gWorldItems[ gpItemPool->iItemIndex ].bVisible == HIDDEN_ITEM ||
-			gWorldItems[ gpItemPool->iItemIndex ].bVisible == BURIED )
+	const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+	if (wi->bVisible == HIDDEN_ITEM || wi->bVisible == BURIED)
 	{
 		SetFont( FONT10ARIALBOLD );
 		if( GetJA2Clock() % 1000 > 500 )

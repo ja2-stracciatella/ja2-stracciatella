@@ -716,18 +716,19 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										pItemPool = pItemPool->pNext;
 									}
 
+									const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
 									if (bItemCount < MAX_RENDERED_ITEMS)
 									{
 										bItemCount++;
 
-										if (gWorldItems[pItemPool->iItemIndex].bVisible == VISIBLE)
+										if (wi->bVisible == VISIBLE)
 										{
 											bVisibleItemCount++;
 										}
 									}
 
 									// LIMIT RENDERING OF ITEMS TO ABOUT 7, DO NOT RENDER HIDDEN ITEMS TOO!
-									if (bVisibleItemCount == MAX_RENDERED_ITEMS || gWorldItems[pItemPool->iItemIndex].bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
+									if (bVisibleItemCount == MAX_RENDERED_ITEMS || wi->bVisible != VISIBLE || pItemPool->usFlags & WORLD_ITEM_DONTRENDER)
 									{
 										if (!(gTacticalStatus.uiFlags & SHOW_ALL_ITEMS)) goto next_node;
 									}

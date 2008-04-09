@@ -1,6 +1,7 @@
 #ifndef __WORLD_ITEMS
 #define __WORLD_ITEMS
 
+#include "Debug.h"
 #include "Item_Types.h"
 
 
@@ -37,6 +38,12 @@ extern WORLDITEM		*gWorldItems;
 
 // number of items in currently loaded sector
 extern UINT32 guiNumWorldItems;
+
+static inline WORLDITEM* GetWorldItem(const size_t idx)
+{
+	Assert(idx < guiNumWorldItems);
+	return &gWorldItems[idx];
+}
 
 #define BASE_FOR_ALL_WORLD_ITEMS(type, iter)                     \
 	for (type*       iter        = gWorldItems,                    \

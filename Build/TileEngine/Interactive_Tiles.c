@@ -246,7 +246,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				}
 
 				// Look for ownership here....
-				if ( 	gWorldItems[ pItemPool->iItemIndex ].o.usItem == OWNERSHIP )
+				if (GetWorldItem(pItemPool->iItemIndex)->o.usItem == OWNERSHIP)
 				{
 					fDoHumm			= FALSE;
 					TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_NOTHING , 500 );

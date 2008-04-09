@@ -743,7 +743,7 @@ static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 {
 	for (const ITEM_POOL* i = GetItemPool(sGridNo, 0); i != NULL; i = i->pNext)
 	{
-		if (gWorldItems[i->iItemIndex].o.usItem == SWITCH) return TRUE;
+		if (GetWorldItem(i->iItemIndex)->o.usItem == SWITCH) return TRUE;
 	}
 	return FALSE;
 }
@@ -838,17 +838,11 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 			break;
 	}
 
-	const INT32 iItemIndex = InternalAddItemToPool(&sGridNo, &tempObject, bVisibility, 0, usFlags, 0);
-	if( tempObject.usItem != OWNERSHIP )
-	{
-		gWorldItems[ iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance);
-	}
-	else
-	{
-		gWorldItems[ iItemIndex ].ubNonExistChance = 0;
-	}
+	INT32      const iItemIndex = InternalAddItemToPool(&sGridNo, &tempObject, bVisibility, 0, usFlags, 0);
+	WORLDITEM* const wi         = GetWorldItem(iItemIndex);
+	wi->ubNonExistChance = (tempObject.usItem != OWNERSHIP ? 100 - giDefaultExistChance : 0);
 
-	OBJECTTYPE*    const pObject = &gWorldItems[iItemIndex].o;
+	OBJECTTYPE*    const pObject = &wi->o;
 	const INVTYPE* const pItem   = &Item[pObject->usItem];
 	if( pItem->usItemClass == IC_AMMO )
 	{
@@ -881,7 +875,7 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	Assert(pItemPool != NULL);
 	while( pItemPool )
 	{
-		if( &(gWorldItems[ pItemPool->iItemIndex ].o) == pObject )
+		if (&GetWorldItem(pItemPool->iItemIndex)->o == pObject)
 		{
 			fFound = TRUE;
 			//ShowSelectedItem();
@@ -970,7 +964,7 @@ void HandleRightClickOnItem( INT16 sGridNo )
 		pIPCurr = pIPCurr->next;
 	}
 	Assert( gpCurrItemPoolNode );
-	SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
+	SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
 }
 
 extern void DeleteSelectedMercsItem();
@@ -990,16 +984,18 @@ void DeleteSelectedItem()
 		//save the mapindex
 		if( gpItemPool->pNext )
 		{
-			SpecifyItemToEdit( &gWorldItems[ gpItemPool->pNext->iItemIndex ].o, gpItemPool->sGridNo );
+			SpecifyItemToEdit(&GetWorldItem(gpItemPool->pNext->iItemIndex)->o, gpItemPool->sGridNo);
 		}
 		sGridNo = gpItemPool->sGridNo;
 		//remove the item
-		if( gWorldItems[ gpItemPool->iItemIndex ].o.usItem == ACTION_ITEM )
+		const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		if (wi->o.usItem == ACTION_ITEM)
 		{
-			if( gWorldItems[ gpItemPool->iItemIndex ].o.bActionValue == ACTION_ITEM_SMALL_PIT )
-				Remove3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-			else if( gWorldItems[ gpItemPool->iItemIndex ].o.bActionValue == ACTION_ITEM_LARGE_PIT )
-				Remove5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+			switch (wi->o.bActionValue)
+			{
+				case ACTION_ITEM_SMALL_PIT: Remove3X3Pit(wi->sGridNo); break;
+				case ACTION_ITEM_LARGE_PIT: Remove5X5Pit(wi->sGridNo); break;
+			}
 		}
 		if( gpEditingItemPool == gpItemPool )
 			gpEditingItemPool = NULL;
@@ -1048,7 +1044,7 @@ void ShowSelectedItem()
 	if( gpItemPool )
 	{
 		gpItemPool->bVisible = INVISIBLE;
-		gWorldItems[ gpItemPool->iItemIndex ].bVisible = INVISIBLE;
+		GetWorldItem(gpItemPool->iItemIndex)->bVisible = INVISIBLE;
 	}
 }
 
@@ -1057,7 +1053,7 @@ void HideSelectedItem()
 	if( gpItemPool )
 	{
 		gpItemPool->bVisible = HIDDEN_ITEM;
-		gWorldItems[ gpItemPool->iItemIndex ].bVisible = HIDDEN_ITEM;
+		GetWorldItem(gpItemPool->iItemIndex)->bVisible = HIDDEN_ITEM;
 	}
 }
 
@@ -1079,7 +1075,7 @@ void SelectNextItemPool()
 	//get the item pool at this node's gridno.
 	gpItemPool = GetItemPool(gpCurrItemPoolNode->sGridNo, 0);
 	MarkMapIndexDirty( gpItemPool->sGridNo );
-	SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
+	SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
 	if( gsItemGridNo != -1 )
 	{
 		CenterScreenAtMapIndex( gsItemGridNo );
@@ -1098,7 +1094,7 @@ void SelectNextItemInPool()
 		{
 			gpItemPool = GetItemPool(gpItemPool->sGridNo, 0);
 		}
-		SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
+		SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
 		MarkWorldDirty();
 	}
 }
@@ -1112,7 +1108,7 @@ void SelectPrevItemInPool()
 		if (i->pNext != gpItemPool && i->pNext != NULL) continue;
 
 		gpItemPool = i;
-		SpecifyItemToEdit( &gWorldItems[ gpItemPool->iItemIndex ].o, gpItemPool->sGridNo );
+		SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
 		MarkWorldDirty();
 		break;
 	}
@@ -1165,21 +1161,21 @@ static void FindNextItemOfSelectedType(void)
 static void SelectNextItemOfType(UINT16 usItem)
 {
 	IPListNode *curr;
-	OBJECTTYPE *pObject;
 	if( gpItemPool )
 	{
 		curr = pIPHead;
 		while( curr )
 		{ //skip quickly to the same gridno as the item pool
-			if( curr->sGridNo == gWorldItems[ gpItemPool->iItemIndex ].sGridNo )
+			if (curr->sGridNo == GetWorldItem(gpItemPool->iItemIndex)->sGridNo)
 			{
 				gpItemPool = gpItemPool->pNext;
 				while( gpItemPool )
 				{
-					pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+					WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+					OBJECTTYPE* const pObject = &wi->o;
 					if( pObject->usItem == usItem )
 					{
-						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+						SpecifyItemToEdit(pObject, wi->sGridNo);
 						CenterScreenAtMapIndex( gsItemGridNo );
 						return; //success! (another item in same itempool)
 					}
@@ -1195,10 +1191,11 @@ static void SelectNextItemOfType(UINT16 usItem)
 			gpItemPool = GetItemPool(curr->sGridNo, 0);
 			while( gpItemPool )
 			{
-				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+				WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+				OBJECTTYPE* const pObject = &wi->o;
 				if( pObject->usItem == usItem )
 				{
-					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+					SpecifyItemToEdit(pObject, wi->sGridNo);
 					CenterScreenAtMapIndex( gsItemGridNo );
 					return; //success! (found another item before reaching the end of the list)
 				}
@@ -1213,10 +1210,11 @@ static void SelectNextItemOfType(UINT16 usItem)
 		gpItemPool = GetItemPool(curr->sGridNo, 0);
 		while( gpItemPool )
 		{
-			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+			WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+			OBJECTTYPE* const pObject = &wi->o;
 			if( pObject->usItem == usItem )
 			{
-				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+				SpecifyItemToEdit(pObject, wi->sGridNo);
 				CenterScreenAtMapIndex( gsItemGridNo );
 				return; //success! (found first item in the list)
 			}
@@ -1230,21 +1228,21 @@ static void SelectNextItemOfType(UINT16 usItem)
 static void SelectNextKeyOfType(UINT8 ubKeyID)
 {
 	IPListNode *curr;
-	OBJECTTYPE *pObject;
 	if( gpItemPool )
 	{
 		curr = pIPHead;
 		while( curr )
 		{ //skip quickly to the same gridno as the item pool
-			if( curr->sGridNo == gWorldItems[ gpItemPool->iItemIndex ].sGridNo )
+			if (curr->sGridNo == GetWorldItem(gpItemPool->iItemIndex)->sGridNo)
 			{
 				gpItemPool = gpItemPool->pNext;
 				while( gpItemPool )
 				{
-					pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+					WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+					OBJECTTYPE* const pObject = &wi->o;
 					if( Item[ pObject->usItem ].usItemClass == IC_KEY && pObject->ubKeyID == ubKeyID )
 					{
-						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+						SpecifyItemToEdit(pObject, wi->sGridNo);
 						CenterScreenAtMapIndex( gsItemGridNo );
 						return; //success! (another item in same itempool)
 					}
@@ -1260,10 +1258,11 @@ static void SelectNextKeyOfType(UINT8 ubKeyID)
 			gpItemPool = GetItemPool(curr->sGridNo, 0);
 			while( gpItemPool )
 			{
-				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+				WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+				OBJECTTYPE* const pObject = &wi->o;
 				if( Item[ pObject->usItem ].usItemClass == IC_KEY && pObject->ubKeyID == ubKeyID )
 				{
-					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+					SpecifyItemToEdit(pObject, wi->sGridNo);
 					CenterScreenAtMapIndex( gsItemGridNo );
 					return; //success! (found another item before reaching the end of the list)
 				}
@@ -1278,10 +1277,11 @@ static void SelectNextKeyOfType(UINT8 ubKeyID)
 		gpItemPool = GetItemPool(curr->sGridNo, 0);
 		while( gpItemPool )
 		{
-			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+			WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+			OBJECTTYPE* const pObject = &wi->o;
 			if( Item[ pObject->usItem ].usItemClass == IC_KEY && pObject->ubKeyID == ubKeyID )
 			{
-				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+				SpecifyItemToEdit(pObject, wi->sGridNo);
 				CenterScreenAtMapIndex( gsItemGridNo );
 				return; //success! (found first item in the list)
 			}
@@ -1301,15 +1301,16 @@ static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 		curr = pIPHead;
 		while( curr )
 		{ //skip quickly to the same gridno as the item pool
-			if( curr->sGridNo == gWorldItems[ gpItemPool->iItemIndex ].sGridNo )
+			if (curr->sGridNo == GetWorldItem(gpItemPool->iItemIndex)->sGridNo)
 			{
 				gpItemPool = gpItemPool->pNext;
 				while( gpItemPool )
 				{
-					pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+					WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+					OBJECTTYPE* const pObject = &wi->o;
 					if( pObject->usItem == usItem && pObject->bFrequency == bFrequency )
 					{
-						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+						SpecifyItemToEdit(pObject, wi->sGridNo);
 						CenterScreenAtMapIndex( gsItemGridNo );
 						return; //success! (another item in same itempool)
 					}
@@ -1325,10 +1326,11 @@ static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 			gpItemPool = GetItemPool(curr->sGridNo, 0);
 			while( gpItemPool )
 			{
-				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+				WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+				OBJECTTYPE* const pObject = &wi->o;
 				if( pObject->usItem == usItem && pObject->bFrequency == bFrequency )
 				{
-					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+					SpecifyItemToEdit(pObject, wi->sGridNo);
 					CenterScreenAtMapIndex( gsItemGridNo );
 					return; //success! (found another item before reaching the end of the list)
 				}
@@ -1343,10 +1345,11 @@ static void SelectNextTriggerWithFrequency(UINT16 usItem, INT8 bFrequency)
 		gpItemPool = GetItemPool(curr->sGridNo, 0);
 		while( gpItemPool )
 		{
-			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+			WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+			OBJECTTYPE* const pObject = &wi->o;
 			if( pObject->usItem == usItem && pObject->bFrequency == bFrequency )
 			{
-				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+				SpecifyItemToEdit(pObject, wi->sGridNo);
 				CenterScreenAtMapIndex( gsItemGridNo );
 				return; //success! (found first item in the list)
 			}
@@ -1366,15 +1369,16 @@ static void SelectNextPressureAction(void)
 		curr = pIPHead;
 		while( curr )
 		{ //skip quickly to the same gridno as the item pool
-			if( curr->sGridNo == gWorldItems[ gpItemPool->iItemIndex ].sGridNo )
+			if (curr->sGridNo == GetWorldItem(gpItemPool->iItemIndex)->sGridNo)
 			{
 				gpItemPool = gpItemPool->pNext;
 				while( gpItemPool )
 				{
-					pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+					WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+					OBJECTTYPE* const pObject = &wi->o;
 					if( pObject->usItem == ACTION_ITEM && pObject->bDetonatorType == BOMB_PRESSURE )
 					{
-						SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+						SpecifyItemToEdit(pObject, wi->sGridNo);
 						CenterScreenAtMapIndex( gsItemGridNo );
 						return; //success! (another item in same itempool)
 					}
@@ -1390,10 +1394,11 @@ static void SelectNextPressureAction(void)
 			gpItemPool = GetItemPool(curr->sGridNo, 0);
 			while( gpItemPool )
 			{
-				pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+				WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+				OBJECTTYPE* const pObject = &wi->o;
 				if( pObject->usItem == ACTION_ITEM && pObject->bDetonatorType == BOMB_PRESSURE )
 				{
-					SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+					SpecifyItemToEdit(pObject, wi->sGridNo);
 					CenterScreenAtMapIndex( gsItemGridNo );
 					return; //success! (found another item before reaching the end of the list)
 				}
@@ -1408,10 +1413,11 @@ static void SelectNextPressureAction(void)
 		gpItemPool = GetItemPool(curr->sGridNo, 0);
 		while( gpItemPool )
 		{
-			pObject = &gWorldItems[ gpItemPool->iItemIndex ].o;
+			WORLDITEM*  const wi      = GetWorldItem(gpItemPool->iItemIndex);
+			OBJECTTYPE* const pObject = &wi->o;
 			if( pObject->usItem == ACTION_ITEM && pObject->bDetonatorType == BOMB_PRESSURE )
 			{
-				SpecifyItemToEdit( pObject, gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+				SpecifyItemToEdit(pObject, wi->sGridNo);
 				CenterScreenAtMapIndex( gsItemGridNo );
 				return; //success! (found first item in the list)
 			}
@@ -1433,10 +1439,11 @@ static UINT16 CountNumberOfItemPlacementsInWorld(UINT16 usItem, UINT16* pusQuant
 		const ITEM_POOL* pItemPool = GetItemPool(pIPCurr->sGridNo, 0);
 		while( pItemPool )
 		{
-			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == usItem )
+			const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+			if (o->usItem == usItem)
 			{
 				num++;
-				*pusQuantity += gWorldItems[ pItemPool->iItemIndex ].o.ubNumberOfObjects;
+				*pusQuantity += o->ubNumberOfObjects;
 			}
 			pItemPool = pItemPool->pNext;
 		}
@@ -1456,8 +1463,8 @@ static UINT16 CountNumberOfItemsWithFrequency(UINT16 usItem, INT8 bFrequency)
 		const ITEM_POOL* pItemPool = GetItemPool(pIPCurr->sGridNo, 0);
 		while( pItemPool )
 		{
-			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == usItem &&
-				  gWorldItems[ pItemPool->iItemIndex ].o.bFrequency == bFrequency )
+			const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+			if (o->usItem == usItem && o->bFrequency == bFrequency)
 			{
 				num++;
 			}
@@ -1479,8 +1486,8 @@ static UINT16 CountNumberOfPressureActionsInWorld(void)
 		const ITEM_POOL* pItemPool = GetItemPool(pIPCurr->sGridNo, 0);
 		while( pItemPool )
 		{
-			if( gWorldItems[ pItemPool->iItemIndex ].o.usItem == ACTION_ITEM &&
-				  gWorldItems[ pItemPool->iItemIndex ].o.bDetonatorType == BOMB_PRESSURE )
+			const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+			if (o->usItem == ACTION_ITEM && o->bDetonatorType == BOMB_PRESSURE)
 			{
 				num++;
 			}
@@ -1544,12 +1551,10 @@ static UINT16 CountNumberOfKeysOfTypeInWorld(UINT8 ubKeyID)
 		const ITEM_POOL* pItemPool = GetItemPool(pIPCurr->sGridNo, 0);
 		while( pItemPool )
 		{
-			if( Item[ gWorldItems[ pItemPool->iItemIndex ].o.usItem ].usItemClass == IC_KEY )
+			const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
+			if (Item[o->usItem].usItemClass == IC_KEY && o->ubKeyID == ubKeyID)
 			{
-				if( gWorldItems[ pItemPool->iItemIndex ].o.ubKeyID == ubKeyID )
-				{
-					num++;
-				}
+				num++;
 			}
 			pItemPool = pItemPool->pNext;
 		}

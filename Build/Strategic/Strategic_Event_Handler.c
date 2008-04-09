@@ -997,7 +997,6 @@ void RemoveAssassin( UINT8 ubProfile )
 
 void CheckForMissingHospitalSupplies( void )
 {
-	OBJECTTYPE *	pObj;
 	UINT8					ubMedicalObjects = 0;
 
 	CFOR_ALL_WORLD_ITEMS(wi)
@@ -1008,8 +1007,7 @@ void CheckForMissingHospitalSupplies( void )
 		const ITEM_POOL* pItemPool = GetItemPool(wi->sGridNo, 0);
 		while( pItemPool )
 		{
-			pObj = &( gWorldItems[ pItemPool->iItemIndex ].o );
-
+			const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
 			if ( pObj->bStatus[ 0 ] > 60 )
 			{
 				if ( pObj->usItem == FIRSTAIDKIT || pObj->usItem == MEDICKIT || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )

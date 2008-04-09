@@ -427,7 +427,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 	}
 	if( gpItemPool )
 	{
-		if( gWorldItems[ gpItemPool->iItemIndex ].bVisible == INVISIBLE )
+		if (GetWorldItem(gpItemPool->iItemIndex)->bVisible == INVISIBLE)
 		{
 			UnclickEditorButton( ITEMSTATS_HIDDEN_BTN );
 			ShowSelectedItem();
@@ -515,7 +515,7 @@ void UpdateItemStatsPanel()
 	}
 	if( gpEditingItemPool )
 	{
-		INT32 iPercent = 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance;
+		const INT32 iPercent = 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance;
 		if( iPercent == 100 )
 			SetFontForeground( FONT_YELLOW );
 		else if( iPercent >= 50 )
@@ -540,8 +540,9 @@ static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
 		ButtonList[ giBothCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		ButtonList[ giBothCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
-		gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags |= WORLD_ITEM_REALISTIC_ONLY;
+		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
+		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
+		wi->usFlags |= WORLD_ITEM_REALISTIC_ONLY;
 	}
 }
 
@@ -555,8 +556,9 @@ static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
 		ButtonList[ giBothCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		ButtonList[ giBothCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
-		gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags |= WORLD_ITEM_SCIFI_ONLY;
+		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
+		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
+		wi->usFlags |= WORLD_ITEM_SCIFI_ONLY;
 	}
 }
 
@@ -570,7 +572,8 @@ static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 		ButtonList[ giSciFiCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
 		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
 		ButtonList[ giBothCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
+		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
+		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
 	}
 }
 
@@ -589,12 +592,15 @@ static void SetupGameTypeFlags(void)
 			CreateCheckBoxButton(	616, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
 		SetButtonFastHelpText( giSciFiCheckboxButton, L"Item appears in |Sci-Fi mode only." );
 
-		if( gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags & WORLD_ITEM_REALISTIC_ONLY )
-			ButtonList[ giRealisticCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		else if( gWorldItems[ gpEditingItemPool->iItemIndex ].usFlags & WORLD_ITEM_SCIFI_ONLY )
-			ButtonList[ giSciFiCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		else
-			ButtonList[ giBothCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
+		INT32            btn_id;
+		WORLDITEM* const wi     = GetWorldItem(gpEditingItemPool->iItemIndex);
+		switch (wi->usFlags & (WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY))
+		{
+			case WORLD_ITEM_REALISTIC_ONLY: btn_id = giRealisticCheckboxButton; break;
+			case WORLD_ITEM_SCIFI_ONLY:     btn_id = giSciFiCheckboxButton;     break;
+			default:                        btn_id = giBothCheckboxButton;      break;
+		}
+		ButtonList[btn_id]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 	}
 }
 
@@ -636,7 +642,7 @@ static void SetupGunGUI(void)
 	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
@@ -754,7 +760,7 @@ static void ExtractAndUpdateGunGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 4 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 4, giDefaultExistChance );
 	}
 }
@@ -769,7 +775,7 @@ static void SetupAmmoGUI(void)
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -802,7 +808,7 @@ static void ExtractAndUpdateAmmoGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
 	}
 }
@@ -820,7 +826,7 @@ static void SetupArmourGUI(void)
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
@@ -867,7 +873,7 @@ static void ExtractAndUpdateArmourGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
 	}
 }
@@ -882,7 +888,7 @@ static void SetupEquipGUI(void)
 	AddTextInputField( 485, 400, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -914,7 +920,7 @@ static void ExtractAndUpdateEquipGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
 	}
 }
@@ -939,7 +945,7 @@ static void SetupExplosivesGUI(void)
 	AddTextInputField( 485, 420, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	yp = 375;
@@ -1000,7 +1006,7 @@ static void ExtractAndUpdateExplosivesGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 4 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 4, giDefaultExistChance );
 	}
 }
@@ -1013,7 +1019,7 @@ static void SetupMoneyGUI(void)
 	AddTextInputField( 485, 380, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1035,7 +1041,7 @@ static void ExtractAndUpdateMoneyGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 2 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 2, giDefaultExistChance );
 	}
 }
@@ -1102,7 +1108,7 @@ static void SetupKeysGUI(void)
 	wchar_t str[20];
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1114,7 +1120,7 @@ static void ExtractAndUpdateKeysGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 1 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 1, giDefaultExistChance );
 	}
 }
@@ -1135,7 +1141,7 @@ static void SetupActionItemsGUI(void)
 	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[gpEditingItemPool->iItemIndex].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 	pStr = GetActionItemName( gpItem );
@@ -1166,7 +1172,7 @@ static void ExtractAndUpdateActionItemsGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
 	}
 }
@@ -1203,7 +1209,7 @@ static void SetupTriggersGUI(void)
 	AddTextInputField( 485, 385, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance);
+		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 		if (gpItem->bFrequency >= PANIC_FREQUENCY_3)
 		{
@@ -1235,7 +1241,7 @@ static void ExtractAndUpdateTriggersGUI(void)
 	{
 		giDefaultExistChance = GetNumericStrictValueFromField( 3 );
 		giDefaultExistChance = ( giDefaultExistChance == -1 ) ? 100 : max( 1, min( giDefaultExistChance, 100 ) );
-		gWorldItems[ gpEditingItemPool->iItemIndex ].ubNonExistChance = (UINT8)(100 - giDefaultExistChance );
+		GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance = 100 - giDefaultExistChance;
 		SetInputFieldStringWithNumericStrictValue( 3, giDefaultExistChance );
 	}
 }
@@ -1499,10 +1505,12 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	//If the previous item was a pit, remove it before changing it
 	if( gpItem->usItem == ACTION_ITEM )
 	{
-		if( gpItem->bActionValue == ACTION_ITEM_SMALL_PIT )
-			Remove3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-		else if( gpItem->bActionValue == ACTION_ITEM_LARGE_PIT )
-			Remove5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+		const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		switch (gpItem->bActionValue)
+		{
+			case ACTION_ITEM_SMALL_PIT: Remove3X3Pit(wi->sGridNo); break;
+			case ACTION_ITEM_LARGE_PIT: Remove5X5Pit(wi->sGridNo); break;
+		}
 	}
 
 	ChangeActionItem( gpItem, gbActionItemIndex );
@@ -1511,10 +1519,12 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	//If the new item is a pit, add it so we can see how it looks.
 	if( gpItem->usItem == ACTION_ITEM )
 	{
-		if( gpItem->bActionValue == ACTION_ITEM_SMALL_PIT )
-			Add3X3Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
-		else if( gpItem->bActionValue == ACTION_ITEM_LARGE_PIT )
-			Add5X5Pit( gWorldItems[ gpItemPool->iItemIndex ].sGridNo );
+		const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		switch (gpItem->bActionValue)
+		{
+			case ACTION_ITEM_SMALL_PIT: Add3X3Pit(wi->sGridNo); break;
+			case ACTION_ITEM_LARGE_PIT: Add5X5Pit(wi->sGridNo); break;
+		}
 	}
 }
 
