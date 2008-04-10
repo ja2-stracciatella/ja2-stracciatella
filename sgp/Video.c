@@ -14,22 +14,26 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
-#include <SDL.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
 #include <unistd.h>
 
 
-#define MAX_DIRTY_REGIONS     128
+#define BUFFER_READY      0x00
+#define BUFFER_DIRTY      0x02
 
-#define VIDEO_OFF             0x00
-#define VIDEO_ON              0x01
-#define VIDEO_SHUTTING_DOWN   0x02
-#define VIDEO_SUSPENDED       0x04
+#define MAX_CURSOR_WIDTH  64
+#define MAX_CURSOR_HEIGHT 64
 
+#define MAX_DIRTY_REGIONS 128
 
-#define MAX_NUM_FRAMES 25
+#define VIDEO_OFF         0x00
+#define VIDEO_ON          0x01
+#define VIDEO_SUSPENDED   0x04
+
+#define MAX_NUM_FRAMES    25
+
 
 static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
@@ -48,7 +52,7 @@ static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
 
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
-static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED, VIDEO_SHUTTING_DOWN
+static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED
 
 // Dirty rectangle management variables
 static SDL_Rect DirtyRegions[MAX_DIRTY_REGIONS];

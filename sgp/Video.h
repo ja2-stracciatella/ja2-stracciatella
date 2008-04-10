@@ -1,47 +1,40 @@
-#ifndef __VIDEO_
-#define __VIDEO_
+#ifndef VIDEO_H
+#define VIDEO_H
 
-#include <SDL.h>
+#include <SDL_video.h>
 #include "Types.h"
 
-#define BUFFER_READY          0x00
-#define BUFFER_BUSY           0x01
-#define BUFFER_DIRTY          0x02
-#define BUFFER_DISABLED       0x03
 
-#define MAX_CURSOR_WIDTH      64
-#define MAX_CURSOR_HEIGHT     64
-#define VIDEO_NO_CURSOR				0xFFFF
+#define VIDEO_NO_CURSOR 0xFFFF
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void    VideoSetFullScreen(BOOLEAN Enable);
-BOOLEAN InitializeVideoManager(void);
-extern void                 ShutdownVideoManager(void);
-extern void                 SuspendVideoManager(void);
-extern BOOLEAN              RestoreVideoManager(void);
-extern void                 InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
-extern void                 InvalidateScreen(void);
-extern SDL_Surface* GetBackBufferObject(void);
-extern SDL_Surface* GetFrameBufferObject(void);
-extern SDL_Surface* GetMouseBufferObject(void);
-extern BOOLEAN              GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BblueBitMask);
-extern void                 EndFrameBufferRender(void);
-extern void                 PrintScreen(void);
+void         VideoSetFullScreen(BOOLEAN enable);
+BOOLEAN      InitializeVideoManager(void);
+void         ShutdownVideoManager(void);
+void         SuspendVideoManager(void);
+BOOLEAN      RestoreVideoManager(void);
+void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
+void         InvalidateScreen(void);
+SDL_Surface* GetBackBufferObject(void);
+SDL_Surface* GetFrameBufferObject(void);
+SDL_Surface* GetMouseBufferObject(void);
+BOOLEAN      GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
+void         EndFrameBufferRender(void);
+void         PrintScreen(void);
 
 void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth);
 
-void												VideoCaptureToggle( void );
-
+void VideoCaptureToggle(void);
 
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void RefreshScreen(void);
 
-void FatalError(const char *pError, ...);
+void FatalError(const char* pError, ...);
 
 #ifdef __cplusplus
 }
