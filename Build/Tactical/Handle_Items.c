@@ -1207,24 +1207,18 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 
 static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o, const INT16 sGridNo)
 {
-	if (pSoldier->bTeam == gbPlayerNum)
+	if (pSoldier->bTeam != gbPlayerNum) return;
+
+	if (gpItemPointer == NULL)
 	{
 		// Place it in buddy's hand!
-		if ( gpItemPointer == NULL )
-		{
-			InternalBeginItemPointer(pSoldier, o, NO_SLOT);
-		}
-		else
-		{
-			// Add back to world...
-			AddItemToPool(sGridNo, o, 1 , pSoldier->bLevel, 0, -1);
-
-			// If we are a merc, say DAMN quote....
-			if ( pSoldier->bTeam == gbPlayerNum )
-			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-			}
-		}
+		InternalBeginItemPointer(pSoldier, o, NO_SLOT);
+	}
+	else
+	{
+		// Add back to world
+		AddItemToPool(sGridNo, o, 1, pSoldier->bLevel, 0, -1);
+		DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
 	}
 }
 
