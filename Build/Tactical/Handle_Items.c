@@ -1233,7 +1233,7 @@ static void CheckForPickedOwnership(void);
 static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel);
-static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator);
+static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel);
 static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
 
 
@@ -1348,7 +1348,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 		}
 
 		// OK partner......look for any hidden items!
-		if (LookForHiddenItems(sGridNo, s->bLevel, TRUE))
+		if (LookForHiddenItems(sGridNo, s->bLevel))
 		{
 			// WISDOM GAIN (5):  Found a hidden object
 			StatChange(s, WISDOMAMT, 5, FALSE);
@@ -1416,7 +1416,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				if ( pSoldier->bTeam == gbPlayerNum && DoesItemPoolContainAllHiddenItems( pItemPool ) )
 				{
 					// He's touched them....
-					if (LookForHiddenItems(sGridNo, pSoldier->bLevel, TRUE))
+					if (LookForHiddenItems(sGridNo, pSoldier->bLevel))
 					{
 						// WISDOM GAIN (5):  Found a hidden object
 						StatChange( pSoldier, WISDOMAMT, 5, FALSE );
@@ -1896,7 +1896,7 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
 }
 
 
-static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocator)
+static BOOLEAN LookForHiddenItems(const INT16 sGridNo, const INT8 ubLevel)
 {
 	ITEM_POOL *pHeadItemPool = NULL;
 	BOOLEAN		fFound = FALSE;
@@ -1921,10 +1921,7 @@ static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocat
 	}
 
 	// If found, set item pool visibility...
-	if ( fFound )
-	{
-		SetItemPoolVisibilityOn( pHeadItemPool, INVISIBLE, fSetLocator );
-	}
+	if (fFound) SetItemPoolVisibilityOn(pHeadItemPool, INVISIBLE, TRUE);
 
 	return( fFound );
 }
