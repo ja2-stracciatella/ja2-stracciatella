@@ -1224,7 +1224,7 @@ static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o
 
 
 static void CheckForPickedOwnership(void);
-static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT32 iItemIndex, BOOLEAN fInStrategic, BOOLEAN* pfSaidQuote);
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT32 iItemIndex, BOOLEAN* pfSaidQuote);
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel);
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel);
@@ -1249,7 +1249,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 
 			if (iItemIndex == ITEM_PICKUP_SELECTION && !pfSelectionList[cnt++]) continue;
 
-			if (!ContinuePastBoobyTrap(s, sGridNo, i->iItemIndex, FALSE, &fSaidBoobyTrapQuote))
+			if (!ContinuePastBoobyTrap(s, sGridNo, i->iItemIndex, &fSaidBoobyTrapQuote))
 			{
 				break; // boobytrap found... stop picking up things!
 			}
@@ -1299,7 +1299,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 	{
 		// REMOVE ITEM FROM POOL
 		if (ItemExistsAtLocation(sGridNo, iItemIndex, s->bLevel) &&
-				ContinuePastBoobyTrap(s, sGridNo, iItemIndex, FALSE, &fSaidBoobyTrapQuote))
+				ContinuePastBoobyTrap(s, sGridNo, iItemIndex, &fSaidBoobyTrapQuote))
 		{
 			WORLDITEM*  const wi = GetWorldItem(iItemIndex);
 			OBJECTTYPE* const o  = &wi->o;
@@ -3261,10 +3261,9 @@ static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 
 
 static void BoobyTrapDialogueCallBack(void);
-static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue);
 
 
-static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sGridNo, const INT32 iItemIndex, const BOOLEAN fInStrategic, BOOLEAN* const pfSaidQuote)
+static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sGridNo, const INT32 iItemIndex, BOOLEAN* const pfSaidQuote)
 {
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
@@ -3322,14 +3321,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 				gfDisarmingBuriedBomb = FALSE;
 				gbTrapDifficulty = pObj->bTrap;
 
-				if( fInStrategic )
-				{
-					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ DISARM_BOOBYTRAP_PROMPT ], MAP_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapInMapScreenMessageBoxCallBack, NULL );
-				}
-				else
-				{
-					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ DISARM_BOOBYTRAP_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL );
-				}
+				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_BOOBYTRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL);
 			}
 			else
 			{
@@ -3345,6 +3337,9 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 
 	return( TRUE );
 }
+
+
+static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue);
 
 
 static void BoobyTrapDialogueCallBack(void)
