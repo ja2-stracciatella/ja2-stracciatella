@@ -319,8 +319,7 @@ UINT8 gUIDeadlockedSoldier = NOBODY;
 
 BOOLEAN		gfUIHandleShowMoveGrid					= FALSE;
 UINT16		gsUIHandleShowMoveGridLocation  = NOWHERE ;
-BOOLEAN		gfUIOverItemPool								= FALSE;
-INT16			gfUIOverItemPoolGridNo					= 0;
+GridNo    gfUIOverItemPoolGridNo          = NOWHERE;
 INT16			gsCurrentActionPoints						= 1;
 BOOLEAN		gfUIHandlePhysicsTrajectory			= FALSE;
 BOOLEAN		gfUIMouseOnValidCatcher					= FALSE;
@@ -391,7 +390,7 @@ UINT32  HandleTacticalUI( void )
 		//gfUIForceReExamineCursorData		= FALSE;
 		gfUINewStateForIntTile					= FALSE;
 		gfUIShowExitExitGrid						= FALSE;
-		gfUIOverItemPool								= FALSE;
+		gfUIOverItemPoolGridNo          = NOWHERE;
 		gfUIHandlePhysicsTrajectory			= FALSE;
 		gfUIMouseOnValidCatcher					= FALSE;
 		gUIValidCatcher                 = NULL;
@@ -2988,7 +2987,6 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 
 			if ( uiFlags == MOVEUI_TARGET_ITEMS )
 			{
-				gfUIOverItemPool = TRUE;
 				gfUIOverItemPoolGridNo = usMapPos;
 			}
 			else if ( uiFlags == MOVEUI_TARGET_MERCSFORAID )

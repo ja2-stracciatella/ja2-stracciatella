@@ -282,8 +282,7 @@ BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN 
 
 void PopupAssignmentMenuInTactical(void);
 
-extern BOOLEAN         gfUIOverItemPool;
-extern INT16           gfUIOverItemPoolGridNo;
+extern GridNo          gfUIOverItemPoolGridNo;
 extern INT16           gsCurrentActionPoints;
 extern BOOLEAN         fRightButtonDown;
 extern BOOLEAN         fLeftButtonDown;
