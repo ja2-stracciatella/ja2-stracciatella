@@ -297,6 +297,14 @@ void KeyUp(const SDL_keysym* KeySym)
 			);
 			break;
 
+		case SDLK_RETURN:
+			if (gfKeyState[ALT])
+			{
+				VideoToggleFullScreen();
+				break;
+			}
+			/* FALLTHROUGH */
+
 		default:
 			KeyChange(KeySym, FALSE);
 			break;

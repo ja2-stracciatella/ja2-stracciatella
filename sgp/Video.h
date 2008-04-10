@@ -26,6 +26,10 @@ BOOLEAN      GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBit
 void         EndFrameBufferRender(void);
 void         PrintScreen(void);
 
+/* Toggle between fullscreen and window mode after initialising the video
+ * manager */
+void VideoToggleFullScreen(void);
+
 void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth);
 
 void VideoCaptureToggle(void);

@@ -71,14 +71,54 @@ static UINT32  guiPrintFrameBufferIndex;
 static SDL_Surface* MouseCursor;
 static SDL_Surface* FrameBuffer;
 static SDL_Surface* ScreenBuffer;
+static Uint32       g_video_flags = SDL_SWSURFACE | SDL_HWPALETTE;
 
 
-static BOOLEAN Fullscreen = FALSE;
-
-
-void VideoSetFullScreen(BOOLEAN Enable)
+void VideoSetFullScreen(const BOOLEAN enable)
 {
-	Fullscreen = Enable;
+	if (enable)
+	{
+		g_video_flags |= SDL_FULLSCREEN;
+	}
+	else
+	{
+		g_video_flags &= ~SDL_FULLSCREEN;
+	}
+}
+
+
+void VideoToggleFullScreen(void)
+{
+	SDL_Surface* const scr = ScreenBuffer;
+
+	// First try using SDL magic to toggle fullscreen
+	if (SDL_WM_ToggleFullScreen(scr))
+	{
+		g_video_flags ^= SDL_FULLSCREEN;
+		return;
+	}
+
+	// Fallback to manual toggling
+	const SDL_PixelFormat* const fmt = scr->format;
+	int                    const w   = scr->w;
+	int                    const h   = scr->h;
+	Uint8                  const bpp = fmt->BitsPerPixel;
+
+	SDL_Surface* const tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, fmt->Rmask, fmt->Gmask, fmt->Bmask, fmt->Amask);
+	if (tmp == NULL) return;
+
+	SDL_BlitSurface(scr, NULL, tmp, NULL);
+
+	Uint32       const new_vflags = g_video_flags ^ SDL_FULLSCREEN;
+	SDL_Surface* const new_scr    = SDL_SetVideoMode(w, h, bpp, new_vflags);
+	if (new_scr != NULL)
+	{
+		g_video_flags = new_vflags;
+		ScreenBuffer  = new_scr;
+		SDL_BlitSurface(tmp, NULL, new_scr, NULL);
+		SDL_UpdateRect(new_scr, 0, 0, 0, 0);
+	}
+	SDL_FreeSurface(tmp);
 }
 
 
@@ -91,9 +131,7 @@ BOOLEAN InitializeVideoManager(void)
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
 
-	UINT32 VideoFlags = SDL_SWSURFACE | SDL_HWPALETTE;
-	if (Fullscreen) VideoFlags |= SDL_FULLSCREEN;
-	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, VideoFlags);
+	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
 	if (ScreenBuffer == NULL)
 	{
 		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to set up video mode");
