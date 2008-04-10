@@ -67,7 +67,7 @@ void NotifySoldiersToLookforItems(void);
 void AllSoldiersLookforItems(void);
 
 
-void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList );
+void SoldierGetItemFromWorld(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, const BOOLEAN* pfSelectionList);
 
 INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
 INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);

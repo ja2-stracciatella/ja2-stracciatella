@@ -1237,99 +1237,59 @@ static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel, BOOLEAN fSetLocat
 static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
 
 
-void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, BOOLEAN *pfSelectionList )
+void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const INT16 sGridNo, const INT8 bZLevel, const BOOLEAN* const pfSelectionList)
 {
-	OBJECTTYPE			Object;
-	INT32						cnt = 0;
-	BOOLEAN					fPickup;
-	BOOLEAN					fShouldSayCoolQuote = FALSE;
-	BOOLEAN					fDidSayCoolQuote = FALSE;
-  BOOLEAN         fSaidBoobyTrapQuote = FALSE;
-
+	BOOLEAN fShouldSayCoolQuote = FALSE;
+  BOOLEAN fSaidBoobyTrapQuote = FALSE;
 	// OK. CHECK IF WE ARE DOING ALL IN THIS POOL....
-	if ( iItemIndex == ITEM_PICKUP_ACTION_ALL || iItemIndex == ITEM_PICKUP_SELECTION )
+	if (iItemIndex == ITEM_PICKUP_ACTION_ALL || iItemIndex == ITEM_PICKUP_SELECTION)
 	{
 		const ITEM_POOL* pItemPoolToDelete = NULL;
-		// DO all pickup!
-		// LOOP THROUGH LIST TO FIND NODE WE WANT
-		const ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
-
-		while( pItemPool )
+		INT32            cnt               = 0;
+		const ITEM_POOL* next;
+		for (const ITEM_POOL* i = GetItemPool(sGridNo, s->bLevel); i != NULL; i = next)
 		{
-			if ( ItemPoolOKForPickup( pSoldier, pItemPool, bZLevel ) )
+			next = i->pNext;
+
+			if (!ItemPoolOKForPickup(s, i, bZLevel)) continue;
+
+			if (iItemIndex == ITEM_PICKUP_SELECTION && !pfSelectionList[cnt++]) continue;
+
+			if (!ContinuePastBoobyTrap(s, sGridNo, i->iItemIndex, FALSE, &fSaidBoobyTrapQuote))
 			{
-				fPickup = TRUE;
-
-				if ( iItemIndex == ITEM_PICKUP_SELECTION )
-				{
-					if ( !pfSelectionList[ cnt ] )
-					{
-						fPickup = FALSE;
-					}
-				}
-
-				// Increment counter...
-				//:ATE: Only incremrnt counter for items we can see..
-				cnt++;
-
-				if ( fPickup )
-				{
-					if (ContinuePastBoobyTrap(pSoldier, sGridNo, pItemPool->iItemIndex, FALSE, &fSaidBoobyTrapQuote))
-					{
-						// Make copy of item
-						Object = GetWorldItem(pItemPool->iItemIndex)->o;
-
-						if ( ItemIsCool( &Object ) )
-						{
-							fShouldSayCoolQuote = TRUE;
-						}
-
-						if (Object.usItem == SWITCH)
-						{
-							// ask about activating the switch!
-							bTempFrequency = Object.bFrequency;
-							gpTempSoldier = pSoldier;
-							DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ] , GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
-							pItemPool = pItemPool->pNext;
-						}
-						else
-						{
-							WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-							if ( !AutoPlaceObject( pSoldier, &Object, TRUE ) )
-							{
-								// check to see if the object has been swapped with one in inventory
-								OBJECTTYPE* const o = &wi->o;
-								if (Object.usItem != o->usItem || Object.ubNumberOfObjects != o->ubNumberOfObjects)
-								{
-									// copy back because item changed, and we must make sure the item pool reflects this.
-									*o = Object;
-								}
-
-								pItemPoolToDelete = pItemPool;
-								pItemPool = pItemPool->pNext;
-								// continue, to try and place ay others...
-								continue;
-							}
-
-							pItemPool = pItemPool->pNext;
-							RemoveItemFromPool(wi);
-						}
-					}
-					else
-					{
-						// boobytrap found... stop picking up things!
-						break;
-					}
-				}
-				else
-				{
-					pItemPool = pItemPool->pNext;
-				}
+				break; // boobytrap found... stop picking up things!
 			}
-			else
+
+			WORLDITEM*  const wi = GetWorldItem(i->iItemIndex);
+			OBJECTTYPE* const o  = &wi->o;
+
+			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
+
+			if (o->usItem == SWITCH)
 			{
-				pItemPool = pItemPool->pNext;
+				// ask about activating the switch!
+				bTempFrequency = o->bFrequency;
+				gpTempSoldier = s;
+				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[ACTIVATE_SWITCH_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL);
+				continue;
 			}
+
+			// Make copy of item
+			OBJECTTYPE Object = *o;
+			if (!AutoPlaceObject(s, &Object, TRUE))
+			{
+				// check to see if the object has been swapped with one in inventory
+				if (Object.usItem != o->usItem || Object.ubNumberOfObjects != o->ubNumberOfObjects)
+				{
+					// copy back because item changed, and we must make sure the item pool reflects this.
+					*o = Object;
+				}
+
+				pItemPoolToDelete = i;
+				continue; // try to place any others
+			}
+
+			RemoveItemFromPool(wi);
 		}
 
 		// ATE; If here, and we failed to add any more stuff, put failed one in our cursor...
@@ -1337,91 +1297,70 @@ void SoldierGetItemFromWorld( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 		{
 			gfDontChargeAPsToPickup = TRUE;
 			WORLDITEM* const wi = GetWorldItem(pItemPoolToDelete->iItemIndex);
-			HandleAutoPlaceFail(pSoldier, &wi->o, sGridNo);
+			HandleAutoPlaceFail(s, &wi->o, sGridNo);
 			RemoveItemFromPool(wi);
 		}
 	}
 	else
 	{
 		// REMOVE ITEM FROM POOL
-		if ( ItemExistsAtLocation( sGridNo, iItemIndex, pSoldier->bLevel ) )
+		if (ItemExistsAtLocation(sGridNo, iItemIndex, s->bLevel) &&
+				ContinuePastBoobyTrap(s, sGridNo, iItemIndex, FALSE, &fSaidBoobyTrapQuote))
 		{
+			WORLDITEM*  const wi = GetWorldItem(iItemIndex);
+			OBJECTTYPE* const o  = &wi->o;
 
-			if (ContinuePastBoobyTrap(pSoldier, sGridNo, iItemIndex, FALSE, &fSaidBoobyTrapQuote))
+			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
+
+			if (o->usItem == SWITCH)
 			{
+				// handle switch
+				bTempFrequency = o->bFrequency;
+				gpTempSoldier  = s;
+				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[ACTIVATE_SWITCH_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL);
+			}
+			else
+			{
+				RemoveItemFromPool(wi);
 
-				// Make copy of item
-				Object = GetWorldItem(iItemIndex)->o;
-
-				if ( ItemIsCool( &Object ) )
+				if (!AutoPlaceObject(s, o, TRUE))
 				{
-					fShouldSayCoolQuote = TRUE;
+					gfDontChargeAPsToPickup = TRUE;
+					HandleAutoPlaceFail(s, o, sGridNo);
 				}
-
-				if (Object.usItem == SWITCH)
-				{
-					// handle switch
-					bTempFrequency = Object.bFrequency;
-					gpTempSoldier = pSoldier;
-					DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ ACTIVATE_SWITCH_PROMPT ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL );
-				}
-				else
-				{
-					WORLDITEM* const wi = GetWorldItem(iItemIndex);
-					RemoveItemFromPool(wi);
-
-					if (!AutoPlaceObject(pSoldier, &wi->o, TRUE))
-					{
-						gfDontChargeAPsToPickup = TRUE;
-						HandleAutoPlaceFail(pSoldier, &wi->o, sGridNo);
-					}
-				}
-
 			}
 		}
 	}
 
 	// OK, check if potentially a good candidate for cool quote
-	if ( fShouldSayCoolQuote && pSoldier->bTeam == gbPlayerNum )
+	if (s->bTeam == OUR_TEAM)
 	{
-		// Do we have this quote..?
-		if ( QuoteExp_GotGunOrUsedGun[ pSoldier->ubProfile ] == QUOTE_FOUND_SOMETHING_SPECIAL )
+		if (fShouldSayCoolQuote                                                     &&
+				QuoteExp_GotGunOrUsedGun[s->ubProfile] == QUOTE_FOUND_SOMETHING_SPECIAL && // Do we have this quote..?
+				!(s->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE))          // Have we not said it today?
 		{
-			// Have we not said it today?
-			if ( !( pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE ) )
-			{
-				// set flag
-				pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE;
+			s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE;
+			TacticalCharacterDialogue(s, QUOTE_FOUND_SOMETHING_SPECIAL);
+		}
+		else if (!fSaidBoobyTrapQuote)
+		{
+			DoMercBattleSound(s, BATTLE_SOUND_GOTIT);
+		}
 
-				// Say it....
-				// We've found something!
-				TacticalCharacterDialogue( pSoldier, QUOTE_FOUND_SOMETHING_SPECIAL );
+		// OK partner......look for any hidden items!
+		if (LookForHiddenItems(sGridNo, s->bLevel, TRUE, 0))
+		{
+			// WISDOM GAIN (5):  Found a hidden object
+			StatChange(s, WISDOMAMT, 5, FALSE);
 
-				fDidSayCoolQuote = TRUE;
-			}
+			// We've found something!
+			TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
 		}
 	}
 
-	// Aknowledge....
-	if( pSoldier->bTeam == OUR_TEAM && !fDidSayCoolQuote && !fSaidBoobyTrapQuote )
-	{
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_GOTIT );
-	}
-
-
-	// OK partner......look for any hidden items!
-	if ( pSoldier->bTeam == gbPlayerNum && LookForHiddenItems( sGridNo, pSoldier->bLevel, TRUE, 0 ) )
-	{
-	  // WISDOM GAIN (5):  Found a hidden object
-    StatChange( pSoldier, WISDOMAMT, 5, FALSE );
-
-		// We've found something!
-		TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
-	}
-
-	gpTempSoldier = pSoldier;
-	gsTempGridno = sGridNo;
-	SetCustomizableTimerCallbackAndDelay( 1000, CheckForPickedOwnership, TRUE );
+	gpTempSoldier = s;
+	gsTempGridno  = sGridNo;
+	SetCustomizableTimerCallbackAndDelay(1000, CheckForPickedOwnership, TRUE);
 }
 
 
