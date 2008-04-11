@@ -1398,232 +1398,112 @@ static void NewMouth(FACETYPE* pFace)
 }
 
 
-void HandleAutoFaces( )
+void HandleAutoFaces(void)
 {
-	UINT32 uiCount;
-	FACETYPE				*pFace;
-	INT8	bLife;
-	INT8	bAPs;
-	BOOLEAN	fRerender = FALSE;
-	BOOLEAN	fHandleFace;
-
-	for ( uiCount = 0; uiCount < guiNumFaces; uiCount++ )
+	for (FACETYPE* f = gFacesData; f != gFacesData + guiNumFaces; ++f)
 	{
-		fRerender = FALSE;
-		fHandleFace = TRUE;
+		if (!f->fAllocated) continue;
 
-		// OK, NOW, check if our bLife status has changed, re-render if so!
-		if ( gFacesData[ uiCount ].fAllocated  )
+		BOOLEAN            fHandleFace = TRUE;
+		SOLDIERTYPE* const s           = f->soldier;
+		if (s != NULL)
 		{
-			pFace = &gFacesData[ uiCount ];
+			BOOLEAN render = FALSE;
 
-			// Are we a soldier?
-			SOLDIERTYPE* const pSoldier = pFace->soldier;
-			if (pSoldier != NULL)
+			UINT32 new_flags = f->uiFlags & ~(FACE_SHOW_WHITE_HILIGHT | FACE_SHOW_MOVING_HILIGHT | FACE_REDRAW_WHOLE_FACE_NEXT_FRAME);
+			if (s == gSelectedGuy)                                           new_flags |= FACE_SHOW_WHITE_HILIGHT;
+			if (s->sGridNo != s->sFinalDestination && s->sGridNo != NOWHERE) new_flags |= FACE_SHOW_MOVING_HILIGHT;
+			if (f->uiFlags != new_flags)                                     render     = TRUE;
+			f->uiFlags = new_flags;
+
+			if (s->bStealthMode != f->bOldStealthMode)
 			{
-				 // Get Life now
-				 bLife		 = pSoldier->bLife;
-				 bAPs      = pSoldier->bActionPoints;
-
-				if (pSoldier == gSelectedGuy)
-				 {
-					 pFace->uiFlags |= FACE_SHOW_WHITE_HILIGHT;
-				 }
-				 else
-				 {
-					 pFace->uiFlags &= ( ~FACE_SHOW_WHITE_HILIGHT );
-				 }
-
-				 if ( pSoldier->sGridNo != pSoldier->sFinalDestination && pSoldier->sGridNo != NOWHERE )
-				 {
-					 pFace->uiFlags |= FACE_SHOW_MOVING_HILIGHT;
-				 }
-				 else
-				 {
-					 pFace->uiFlags &= ( ~FACE_SHOW_MOVING_HILIGHT );
-				 }
-
-				 if ( pSoldier->bStealthMode != pFace->bOldStealthMode )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 // Check if we have fallen below OKLIFE...
-				 if ( bLife < OKLIFE && pFace->bOldSoldierLife >= OKLIFE )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( bLife >= OKLIFE && pFace->bOldSoldierLife < OKLIFE )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 // Check if we have fallen below CONSCIOUSNESS
-				 if ( bLife < CONSCIOUSNESS && pFace->bOldSoldierLife >= CONSCIOUSNESS )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( bLife >= CONSCIOUSNESS && pFace->bOldSoldierLife < CONSCIOUSNESS )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( pSoldier->bOppCnt != pFace->bOldOppCnt )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 // Check if assignment is idfferent....
-				 if ( pSoldier->bAssignment != pFace->bOldAssignment )
-				 {
-						pFace->bOldAssignment = pSoldier->bAssignment;
-						fRerender = TRUE;
-				 }
-
-				 // Check if we have fallen below CONSCIOUSNESS
-				 if ( bAPs == 0 && pFace->bOldActionPoints > 0 )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( bAPs > 0  && pFace->bOldActionPoints == 0 )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( !( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT ) && pFace->fOldShowHighlight )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( ( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT ) && !( pFace->fOldShowHighlight ) )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( !( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT ) && pFace->fOldShowMoveHilight )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT ) && !( pFace->fOldShowMoveHilight ) )
-				 {
-					 fRerender = TRUE;
-				 }
-
-				 if ( pFace->ubOldServiceCount != pSoldier->ubServiceCount )
-				 {
-					 fRerender = TRUE;
-					 pFace->ubOldServiceCount = pSoldier->ubServiceCount;
-				 }
-
-				 if ( pFace->fOldCompatibleItems != pFace->fCompatibleItems || gfInItemPickupMenu || gpItemPointer != NULL )
-				 {
-					 fRerender = TRUE;
-					 pFace->fOldCompatibleItems = pFace->fCompatibleItems;
-				 }
-
-
-				 if (pFace->old_service_partner != pSoldier->service_partner)
-				 {
-					 fRerender = TRUE;
-					 pFace->old_service_partner = pSoldier->service_partner;
-				 }
-
-				 pFace->bOldSoldierLife		= bLife;
-				 pFace->bOldActionPoints	= bAPs;
-				 pFace->bOldStealthMode		= pSoldier->bStealthMode;
-				 pFace->bOldOppCnt				= pSoldier->bOppCnt;
-
-				 if ( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT )
-				 {
-						pFace->fOldShowHighlight = TRUE;
-				 }
-				 else
-				 {
-						pFace->fOldShowHighlight = FALSE;
-				 }
-
-				 if ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT )
-				 {
-						pFace->fOldShowMoveHilight = TRUE;
-				 }
-				 else
-				 {
-						pFace->fOldShowMoveHilight = FALSE;
-				 }
-
-
-					if ( pSoldier->fGettingHit && pSoldier->fFlashPortrait == FLASH_PORTRAIT_STOP )
-					{
-						pSoldier->fFlashPortrait = TRUE;
-						pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
-						RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
-						fRerender = TRUE;
-					}
-					if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
-					{
-						// Loop through flash values
-						if ( TIMECOUNTERDONE( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY ) )
-						{
-							RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
-							pSoldier->bFlashPortraitFrame++;
-
-							if ( pSoldier->bFlashPortraitFrame > FLASH_PORTRAIT_ENDSHADE )
-							{
-								pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_ENDSHADE;
-
-								if ( pSoldier->fGettingHit )
-								{
-									pSoldier->fFlashPortrait = FLASH_PORTRAIT_WAITING;
-								}
-								else
-								{
-									// Render face again!
-									pSoldier->fFlashPortrait = FLASH_PORTRAIT_STOP;
-								}
-
-								fRerender = TRUE;
-							}
-						}
-					}
-					// CHECK IF WE WERE WAITING FOR GETTING HIT TO FINISH!
-					if ( !pSoldier->fGettingHit && pSoldier->fFlashPortrait == FLASH_PORTRAIT_WAITING )
-					{
-						pSoldier->fFlashPortrait = FALSE;
-						fRerender = TRUE;
-					}
-
-					if ( pSoldier->fFlashPortrait == FLASH_PORTRAIT_START )
-					{
-						fRerender = TRUE;
-					}
-
-				 if( pFace->uiFlags & FACE_REDRAW_WHOLE_FACE_NEXT_FRAME )
-				 {
-					 pFace->uiFlags &= ~FACE_REDRAW_WHOLE_FACE_NEXT_FRAME;
-
-					 fRerender = TRUE;
-				 }
-
-         if (	fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN )
-         {
-					 fRerender = TRUE;
-         }
-
-				 if (fRerender) RenderAutoFace(pFace);
-
-				 if ( bLife < CONSCIOUSNESS )
-				 {
-					 fHandleFace = FALSE;
-				 }
+				f->bOldStealthMode = s->bStealthMode;
+				render             = TRUE;
 			}
 
-			if (fHandleFace) BlinkAutoFace(pFace);
-			MouthAutoFace(pFace);
+			const INT8 bLife = s->bLife;
+			// Check if we have fallen below OKLIFE/CONSCIOUSNESS
+			if ((bLife < OKLIFE)        != (f->bOldSoldierLife < OKLIFE))        render = TRUE;
+			if ((bLife < CONSCIOUSNESS) != (f->bOldSoldierLife < CONSCIOUSNESS)) render = TRUE;
+			f->bOldSoldierLife  = bLife;
+
+			if (s->bOppCnt != f->bOldOppCnt)
+			{
+				f->bOldOppCnt = s->bOppCnt;
+				render        = TRUE;
+			}
+
+			// Check if assignment is idfferent....
+			if (s->bAssignment != f->bOldAssignment)
+			{
+				f->bOldAssignment = s->bAssignment;
+				render            = TRUE;
+			}
+
+			const INT8 bAPs  = s->bActionPoints;
+			if (bAPs == 0 && f->bOldActionPoints >  0) render = TRUE;
+			if (bAPs >  0 && f->bOldActionPoints == 0) render = TRUE;
+			f->bOldActionPoints = bAPs;
+
+			if (f->ubOldServiceCount != s->ubServiceCount)
+			{
+				f->ubOldServiceCount = s->ubServiceCount;
+				render               = TRUE;
+			}
+
+			if (f->fOldCompatibleItems != f->fCompatibleItems || gfInItemPickupMenu || gpItemPointer != NULL)
+			{
+				f->fOldCompatibleItems = f->fCompatibleItems;
+				render                 = TRUE;
+			}
+
+			if (f->old_service_partner != s->service_partner)
+			{
+				f->old_service_partner = s->service_partner;
+				render                 = TRUE;
+			}
+
+			if (s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_STOP)
+			{
+				s->fFlashPortrait      = TRUE;
+				s->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
+				RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
+				render = TRUE;
+			}
+
+			if (s->fFlashPortrait == FLASH_PORTRAIT_START &&
+					TIMECOUNTERDONE(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY)) // Loop through flash values
+			{
+				RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
+				s->bFlashPortraitFrame++;
+
+				if (s->bFlashPortraitFrame > FLASH_PORTRAIT_ENDSHADE)
+				{
+					s->bFlashPortraitFrame = FLASH_PORTRAIT_ENDSHADE;
+					s->fFlashPortrait      = (s->fGettingHit ? FLASH_PORTRAIT_WAITING : FLASH_PORTRAIT_STOP);
+					render                 = TRUE;
+				}
+			}
+
+			// CHECK IF WE WERE WAITING FOR GETTING HIT TO FINISH!
+			if (!s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_WAITING)
+			{
+				s->fFlashPortrait = FALSE;
+				render            = TRUE;
+			}
+
+			if (s->fFlashPortrait == FLASH_PORTRAIT_START) render = TRUE;
+
+			if (fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN) render = TRUE;
+
+			if (render) RenderAutoFace(f);
+
+			if (bLife < CONSCIOUSNESS) fHandleFace = FALSE;
 		}
+
+		if (fHandleFace) BlinkAutoFace(f);
+		MouthAutoFace(f);
 	}
 }
 

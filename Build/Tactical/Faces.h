@@ -112,11 +112,9 @@ struct FACETYPE
 
 	INT8			bOldSoldierLife;
 	INT8			bOldActionPoints;
-	BOOLEAN		fOldShowHighlight;
 	INT8			bOldAssignment;
 	INT8			ubOldServiceCount;
 	const SOLDIERTYPE* old_service_partner;
-	BOOLEAN		fOldShowMoveHilight;
 
 	UINT16		sMouthFrame;
   UINT32		uiMouthlast;
