@@ -1323,36 +1323,38 @@ void HandleAutoFaces(void)
 				render                 = TRUE;
 			}
 
-			if (s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_STOP)
+			switch (s->fFlashPortrait)
 			{
-				s->fFlashPortrait      = FLASH_PORTRAIT_START;
-				s->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
-				RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
-				render = TRUE;
+				case FLASH_PORTRAIT_STOP:
+					if (s->fGettingHit)
+					{
+						FlashSoldierPortrait(s);
+						render = TRUE;
+					}
+					break;
+
+				case FLASH_PORTRAIT_START:
+					if (TIMECOUNTERDONE(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY))
+					{
+						RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
+
+						if (++s->bFlashPortraitFrame > FLASH_PORTRAIT_ENDSHADE)
+						{
+							s->bFlashPortraitFrame = FLASH_PORTRAIT_ENDSHADE;
+							s->fFlashPortrait      = (s->fGettingHit ? FLASH_PORTRAIT_WAITING : FLASH_PORTRAIT_STOP);
+						}
+					}
+					render = TRUE;
+					break;
+
+				case FLASH_PORTRAIT_WAITING:
+					if (!s->fGettingHit)
+					{
+						s->fFlashPortrait = FLASH_PORTRAIT_STOP;
+						render = TRUE;
+					}
+					break;
 			}
-
-			if (s->fFlashPortrait == FLASH_PORTRAIT_START &&
-					TIMECOUNTERDONE(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY)) // Loop through flash values
-			{
-				RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
-				s->bFlashPortraitFrame++;
-
-				if (s->bFlashPortraitFrame > FLASH_PORTRAIT_ENDSHADE)
-				{
-					s->bFlashPortraitFrame = FLASH_PORTRAIT_ENDSHADE;
-					s->fFlashPortrait      = (s->fGettingHit ? FLASH_PORTRAIT_WAITING : FLASH_PORTRAIT_STOP);
-					render                 = TRUE;
-				}
-			}
-
-			// CHECK IF WE WERE WAITING FOR GETTING HIT TO FINISH!
-			if (!s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_WAITING)
-			{
-				s->fFlashPortrait = FLASH_PORTRAIT_STOP;
-				render            = TRUE;
-			}
-
-			if (s->fFlashPortrait == FLASH_PORTRAIT_START) render = TRUE;
 
 			if (fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN) render = TRUE;
 

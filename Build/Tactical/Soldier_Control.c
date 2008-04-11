@@ -8560,26 +8560,28 @@ static INT32 CheckBleeding(SOLDIERTYPE* pSoldier)
 }
 
 
-static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
+void FlashSoldierPortrait(SOLDIERTYPE* const s)
+{
+	s->fFlashPortrait      = FLASH_PORTRAIT_START;
+	s->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
+	RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
+}
+
+
+static void SoldierBleed(SOLDIERTYPE* const s, const BOOLEAN fBandagedBleed)
 {
 	// OK, here make some stuff happen for bleeding
-	// A banaged bleed does not show damage taken , just through existing bandages
+	// A banaged bleed does not show damage taken, just through existing bandages
 
-	// ATE: Do this ONLY if buddy is in sector.....
-	if ( ( pSoldier->bInSector && guiCurrentScreen == GAME_SCREEN ) || guiCurrentScreen != GAME_SCREEN )
+	if (guiCurrentScreen != GAME_SCREEN || s->bInSector)
 	{
-		pSoldier->fFlashPortrait      = FLASH_PORTRAIT_START;
-		pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
-		RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
-
-		// If we are in mapscreen, set this person as selected
-		if (guiCurrentScreen == MAP_SCREEN) SetInfoChar(pSoldier);
+		FlashSoldierPortrait(s);
+		if (guiCurrentScreen == MAP_SCREEN) SetInfoChar(s);
 	}
 
-	// If we are already dead, don't show damage!
-	if ( !fBandagedBleed )
+	if (!fBandagedBleed)
 	{
-		SoldierTakeDamage(pSoldier, 1, 100, TAKE_DAMAGE_BLOODLOSS, NULL);
+		SoldierTakeDamage(s, 1, 100, TAKE_DAMAGE_BLOODLOSS, NULL);
 	}
 }
 
@@ -9478,24 +9480,17 @@ void UpdateRobotControllerGivenController( SOLDIERTYPE *pSoldier )
 }
 
 
-static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* pSoldier)
+static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 {
 	// Do sound.....
-	// if ( pSoldier->bLife >= CONSCIOUSNESS )
+	// ATE: Limit how often we grunt...
+	if (GetJA2Clock() - s->uiTimeSinceLastBleedGrunt > 1000)
 	{
-    // ATE: Limit how often we grunt...
-    if ( ( GetJA2Clock( ) - pSoldier->uiTimeSinceLastBleedGrunt ) > 1000 )
-    {
-      pSoldier->uiTimeSinceLastBleedGrunt = GetJA2Clock( );
-
-		  DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
-    }
+		s->uiTimeSinceLastBleedGrunt = GetJA2Clock();
+		DoMercBattleSound(s, BATTLE_SOUND_HIT1 + Random(2));
 	}
 
-	// Flash portrait....
-	pSoldier->fFlashPortrait      = FLASH_PORTRAIT_START;
-	pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
-	RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
+	FlashSoldierPortrait(s);
 }
 
 

@@ -1058,4 +1058,6 @@ UINT16 PickSoldierReadyAnimation(SOLDIERTYPE* pSoldier, BOOLEAN fEndReady);
 
 extern BOOLEAN gfGetNewPathThroughPeople;
 
+void FlashSoldierPortrait(SOLDIERTYPE*);
+
 #endif
