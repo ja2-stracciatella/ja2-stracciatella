@@ -1264,8 +1264,7 @@ void HandleAutoFaces(void)
 	{
 		if (!f->fAllocated) continue;
 
-		BOOLEAN            fHandleFace = TRUE;
-		SOLDIERTYPE* const s           = f->soldier;
+		SOLDIERTYPE* const s = f->soldier;
 		if (s != NULL)
 		{
 			BOOLEAN render = FALSE;
@@ -1358,11 +1357,9 @@ void HandleAutoFaces(void)
 			if (fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN) render = TRUE;
 
 			if (render) RenderAutoFace(f);
-
-			if (bLife < CONSCIOUSNESS) fHandleFace = FALSE;
 		}
 
-		if (fHandleFace) BlinkAutoFace(f);
+		BlinkAutoFace(f);
 		MouthAutoFace(f);
 	}
 }
