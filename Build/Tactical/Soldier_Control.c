@@ -8568,7 +8568,7 @@ static void SoldierBleed(SOLDIERTYPE* pSoldier, BOOLEAN fBandagedBleed)
 	// ATE: Do this ONLY if buddy is in sector.....
 	if ( ( pSoldier->bInSector && guiCurrentScreen == GAME_SCREEN ) || guiCurrentScreen != GAME_SCREEN )
 	{
-		pSoldier->fFlashPortrait = TRUE;
+		pSoldier->fFlashPortrait      = FLASH_PORTRAIT_START;
 		pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
 		RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 
@@ -9493,7 +9493,7 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* pSoldier)
 	}
 
 	// Flash portrait....
-	pSoldier->fFlashPortrait = TRUE;
+	pSoldier->fFlashPortrait      = FLASH_PORTRAIT_START;
 	pSoldier->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
 	RESETTIMECOUNTER( pSoldier->PortraitFlashCounter, FLASH_PORTRAIT_DELAY );
 }

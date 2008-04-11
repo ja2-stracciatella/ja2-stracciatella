@@ -1325,7 +1325,7 @@ void HandleAutoFaces(void)
 
 			if (s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_STOP)
 			{
-				s->fFlashPortrait      = TRUE;
+				s->fFlashPortrait      = FLASH_PORTRAIT_START;
 				s->bFlashPortraitFrame = FLASH_PORTRAIT_STARTSHADE;
 				RESETTIMECOUNTER(s->PortraitFlashCounter, FLASH_PORTRAIT_DELAY);
 				render = TRUE;
@@ -1348,7 +1348,7 @@ void HandleAutoFaces(void)
 			// CHECK IF WE WERE WAITING FOR GETTING HIT TO FINISH!
 			if (!s->fGettingHit && s->fFlashPortrait == FLASH_PORTRAIT_WAITING)
 			{
-				s->fFlashPortrait = FALSE;
+				s->fFlashPortrait = FLASH_PORTRAIT_STOP;
 				render            = TRUE;
 			}
 
