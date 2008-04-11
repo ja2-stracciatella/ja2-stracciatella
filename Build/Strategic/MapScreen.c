@@ -793,7 +793,7 @@ void DrawFace(void)
 	fReDrawFace = FALSE;
 
 	// render their face
-	RenderSoldierFace( pSoldier, SOLDIER_PIC_X, SOLDIER_PIC_Y, TRUE );
+	RenderSoldierFace(pSoldier, SOLDIER_PIC_X, SOLDIER_PIC_Y);
 }
 
 

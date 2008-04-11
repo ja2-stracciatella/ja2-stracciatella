@@ -1351,7 +1351,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 		}
 
-		RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y, TRUE);
+		RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y);
 
 		if (InItemDescriptionBox())
 		{
@@ -2603,7 +2603,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 
-				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y, TRUE);
+				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
 
 				// Restore AP/LIFE POSIITONS
 

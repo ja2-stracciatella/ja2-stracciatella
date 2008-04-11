@@ -249,7 +249,7 @@ void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT1
 }
 
 
-void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, BOOLEAN fAutoFace)
+void RenderSoldierFace(const SOLDIERTYPE* const pSoldier, const INT16 sFaceX, const INT16 sFaceY)
 {
 	BOOLEAN fDoFace = FALSE;
 	UINT8 ubVehicleType = 0;
@@ -270,19 +270,18 @@ void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY, 
 			return;
 		}
 
-		if ( fAutoFace )
+		BOOLEAN fAutoFace;
+		// OK, check if this face actually went active...
+		if (pSoldier->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
 		{
-			// OK, check if this face actually went active...
-			if (pSoldier->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
-			{
-				// Render as an extern face...
-				fAutoFace = FALSE;
-			}
-			else
-			{
-				SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
-			//	SetAutoFaceActiveFromSoldier(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, pSoldier, sFaceX, sFaceY);
-			}
+			// Render as an extern face...
+			fAutoFace = FALSE;
+		}
+		else
+		{
+			SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
+		//	SetAutoFaceActiveFromSoldier(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, pSoldier, sFaceX, sFaceY);
+			fAutoFace = TRUE;
 		}
 
 		fDoFace = TRUE;
