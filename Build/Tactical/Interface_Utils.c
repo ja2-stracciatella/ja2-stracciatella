@@ -249,60 +249,28 @@ void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT1
 }
 
 
-void RenderSoldierFace(const SOLDIERTYPE* const pSoldier, const INT16 sFaceX, const INT16 sFaceY)
+void RenderSoldierFace(const SOLDIERTYPE* const s, const INT16 sFaceX, const INT16 sFaceY)
 {
-	BOOLEAN fDoFace = FALSE;
-	UINT8 ubVehicleType = 0;
-
-
-	if ( pSoldier->bActive )
-	{
-
-		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-		{
-			// get the type of vehicle
-			ubVehicleType = pVehicleList[ pSoldier->bVehicleID ].ubVehicleType;
-
-			// just draw the vehicle
-			BltVideoObject(guiSAVEBUFFER, giCarPortraits[ubVehicleType], 0, sFaceX, sFaceY);
-			RestoreExternBackgroundRect( sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT );
-
-			return;
-		}
-
-		BOOLEAN fAutoFace;
-		// OK, check if this face actually went active...
-		if (pSoldier->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
-		{
-			// Render as an extern face...
-			fAutoFace = FALSE;
-		}
-		else
-		{
-			SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
-		//	SetAutoFaceActiveFromSoldier(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, pSoldier, sFaceX, sFaceY);
-			fAutoFace = TRUE;
-		}
-
-		fDoFace = TRUE;
-
-		if ( fDoFace )
-		{
-			if ( fAutoFace )
-			{
-				RenderAutoFaceFromSoldier(pSoldier);
-			}
-			else
-			{
-				ExternRenderFaceFromSoldier(guiSAVEBUFFER, pSoldier, sFaceX, sFaceY);
-			}
-		}
-	}
-	else
+	if (!s->bActive)
 	{
 		// Put close panel there
 		BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
-		RestoreExternBackgroundRect( sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT );
+		RestoreExternBackgroundRect(sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT);
 	}
-
+	else if (s->uiStatusFlags & SOLDIER_VEHICLE)
+	{
+		// just draw the vehicle
+		const UINT8 vehicle_type = pVehicleList[s->bVehicleID].ubVehicleType;
+		BltVideoObject(guiSAVEBUFFER, giCarPortraits[vehicle_type], 0, sFaceX, sFaceY);
+		RestoreExternBackgroundRect(sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT);
+	}
+	else if (s->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) // OK, check if this face actually went active
+	{
+		ExternRenderFaceFromSoldier(guiSAVEBUFFER, s, sFaceX, sFaceY);
+	}
+	else
+	{
+		SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, s, sFaceX, sFaceY);
+		RenderAutoFaceFromSoldier(s);
+	}
 }
