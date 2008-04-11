@@ -827,46 +827,31 @@ static void DoRightIcon(SGPVSurface* const dst, FACETYPE* const pFace, const INT
 }
 
 
-static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDisplayBuffer, SGPVSurface* const buffer, const INT16 sFaceX, const INT16 sFaceY, const UINT16 usEyesX, const UINT16 usEyesY)
+static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDisplayBuffer, SGPVSurface* const buffer, const INT16 sFaceX, const INT16 sFaceY, const UINT16 usEyesX, const UINT16 usEyesY)
 {
-	INT16						sIconX, sIconY;
-	INT16						sIconIndex=-1;
-	BOOLEAN					fDoIcon = FALSE;
-	INT16						sPtsAvailable = 0;
-	UINT16 					usMaximumPts = 0;
-	CHAR16					sString[ 32 ];
-	UINT16					usTextWidth;
-	BOOLEAN					fAtGunRange = FALSE;
-	BOOLEAN					fShowNumber = FALSE;
-	INT16						sFontX, sFontY;
-	INT16						sX1, sY1, sY2, sX2;
-	UINT32					uiDestPitchBYTES;
-	UINT8						*pDestBuf;
-	UINT16					usLineColor;
-  INT8            bNumRightIcons = 0;
-
 	// If we are using an extern buffer...
-	SGPVSurface* uiRenderBuffer = buffer;
-	if (uiRenderBuffer == NO_VSURFACE)
+	SGPVSurface* uiRenderBuffer;
+	if (buffer != NO_VSURFACE)
 	{
-		if ( fDisplayBuffer )
-		{
-			uiRenderBuffer = pFace->uiAutoDisplayBuffer;
-		}
-		else
-		{
-			uiRenderBuffer = pFace->uiAutoRestoreBuffer;
-		}
+		uiRenderBuffer = buffer;
+	}
+	else if (fDisplayBuffer)
+	{
+		uiRenderBuffer = f->uiAutoDisplayBuffer;
+	}
+	else
+	{
+		uiRenderBuffer = f->uiAutoRestoreBuffer;
 	}
 
 	// BLIT HATCH
-	SOLDIERTYPE* const s = pFace->soldier;
+	SOLDIERTYPE* const s = f->soldier;
 	if (s != NULL)
 	{
 		if (s->bLife < CONSCIOUSNESS || s->fDeadPanel)
 		{
 			// Blit Closed eyes here!
-			BltVideoObject(uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, f->uiVideoObject, 1, usEyesX, usEyesY);
 
 			// Blit hatch!
 			BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
@@ -875,7 +860,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 		if (s->fMercAsleep == TRUE)
 		{
 			// blit eyes closed
-			BltVideoObject(uiRenderBuffer, pFace->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, f->uiVideoObject, 1, usEyesX, usEyesY);
 		}
 
 		if (s->uiStatusFlags & SOLDIER_DEAD)
@@ -892,19 +877,16 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 		}
 
     // ATE: If talking in popup, don't do the other things.....
-    if ( pFace->fTalking && gTacticalStatus.uiFlags & IN_ENDGAME_SEQUENCE )
+    if (f->fTalking && gTacticalStatus.uiFlags & IN_ENDGAME_SEQUENCE)
     {
       return;
     }
 
 		// ATE: Only do this, because we can be talking during an interrupt....
-		if (pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE && buffer == NO_VSURFACE)
+		// Don't do this if we are being handled elsewhere and it's not an extern buffer...
+		if (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) || buffer != NO_VSURFACE)
 		{
-			// Don't do this if we are being handled elsewhere and it's not an extern buffer...
-		}
-		else
-		{
-			HandleFaceHilights( pFace, uiRenderBuffer, sFaceX, sFaceY );
+			HandleFaceHilights(f, uiRenderBuffer, sFaceX, sFaceY);
 
 #ifdef JA2BETAVERSION
 			if (s->bOppCnt != 0)
@@ -914,30 +896,30 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 			{
 				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d", s->bOppCnt);
 
-				SetFont( TINYFONT1 );
-				SetFontForeground( FONT_DKRED );
-				SetFontBackground( FONT_NEARBLACK );
+				SetFont(TINYFONT1);
+				SetFontForeground(FONT_DKRED);
+				SetFontBackground(FONT_NEARBLACK);
 
-				sX1 = (INT16)( sFaceX );
-				sY1 = (INT16)( sFaceY );
+				const INT16 sX1 = sFaceX;
+				const INT16 sY1 = sFaceY;
+				const INT16 sX2 = sX1 + StringPixLength(sString, TINYFONT1) + 1;
+				const INT16 sY2 = sY1 + GetFontHeight(TINYFONT1) - 1;
 
-				sX2 = sX1 + StringPixLength( sString, TINYFONT1 ) + 1;
-				sY2 = sY1 + GetFontHeight( TINYFONT1 ) - 1;
-
-				mprintf( (INT16)( sX1 + 1), (INT16)( sY1 - 1 ), sString );
+				mprintf(sX1 + 1, sY1 - 1, sString);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				// Draw box
-				pDestBuf = LockVideoSurface( uiRenderBuffer, &uiDestPitchBYTES );
+				UINT32       uiDestPitchBYTES;
+				UINT8* const pDestBuf = LockVideoSurface(uiRenderBuffer, &uiDestPitchBYTES);
 				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-				usLineColor = Get16BPPColor( FROMRGB( 105, 8, 9 ) );
-				RectangleDraw( TRUE, sX1, sY1, sX2, sY2, usLineColor, pDestBuf );
+				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
+				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, pDestBuf);
 
-				UnLockVideoSurface( uiRenderBuffer );
-
+				UnLockVideoSurface(uiRenderBuffer);
 			}
 
 			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) && !gfHiddenInterrupt) ||
@@ -947,95 +929,69 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 				BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 			}
 
-			if ( !pFace->fDisabled && !pFace->fInvalidAnim )
+			// Render text above here if that's what was asked for
+			if (!f->fDisabled    &&
+					!f->fInvalidAnim &&
+					f->fDisplayTextOver != FACE_NO_TEXT_OVER)
 			{
-				// Render text above here if that's what was asked for
-				if ( pFace->fDisplayTextOver != FACE_NO_TEXT_OVER  )
+				SetFont(TINYFONT1);
+				SetFontBackground(FONT_MCOLOR_BLACK);
+				SetFontForeground(FONT_MCOLOR_WHITE);
+
+				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+				INT16 sFontX;
+				INT16 sFontY;
+				FindFontCenterCoordinates(sFaceX, sFaceY, f->usFaceWidth, f->usFaceHeight, f->zDisplayText, TINYFONT1, &sFontX, &sFontY);
+
+				if (f->fDisplayTextOver == FACE_DRAW_TEXT_OVER)
 				{
-					SetFont( TINYFONT1 );
-					SetFontBackground( FONT_MCOLOR_BLACK );
-					SetFontForeground( FONT_MCOLOR_WHITE );
-
-					SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-					FindFontCenterCoordinates(sFaceX, sFaceY, pFace->usFaceWidth, pFace->usFaceHeight, pFace->zDisplayText, TINYFONT1, &sFontX, &sFontY);
-
-					if ( pFace->fDisplayTextOver == FACE_DRAW_TEXT_OVER )
-					{
-						gprintfinvalidate( sFontX, sFontY, pFace->zDisplayText );
-						mprintf( sFontX, sFontY, pFace->zDisplayText );
-					}
-					else if ( pFace->fDisplayTextOver == FACE_ERASE_TEXT_OVER )
-					{
-						gprintfRestore( sFontX, sFontY, pFace->zDisplayText );
-						pFace->fDisplayTextOver = FACE_NO_TEXT_OVER;
-					}
-
-					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+					gprintfinvalidate(sFontX, sFontY, f->zDisplayText);
+					mprintf(sFontX, sFontY, f->zDisplayText);
 				}
+				else if (f->fDisplayTextOver == FACE_ERASE_TEXT_OVER)
+				{
+					gprintfRestore(sFontX, sFontY, f->zDisplayText);
+					f->fDisplayTextOver = FACE_NO_TEXT_OVER;
+				}
+
+				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
 
+		INT16 sIconIndex = -1;
+
     // Check if a robot and is not controlled....
-	  if (s->uiStatusFlags & SOLDIER_ROBOT)
-	  {
-		  if (!CanRobotBeControlled(s))
-      {
-        // Not controlled robot
-			  sIconIndex = 5;
-			  fDoIcon		 = TRUE;
-      }
-    }
+	  if (s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s)) sIconIndex = 5;
 
-    if (ControllingRobot(s))
-    {
-      // controlling robot
-			sIconIndex = 4;
-			fDoIcon		 = TRUE;
-    }
+    if (ControllingRobot(s)) sIconIndex = 4;
 
-    // If blind...
-    if (s->bBlindedCounter > 0)
-    {
-      DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 6 );
-      bNumRightIcons++;
-    }
+		INT8 icon_pos = 0;
+    if (s->bBlindedCounter > 0)               DoRightIcon(uiRenderBuffer, f, sFaceX, sFaceY, icon_pos++, 6);
+    if (s->bDrugEffect[DRUG_TYPE_ADRENALINE]) DoRightIcon(uiRenderBuffer, f, sFaceX, sFaceY, icon_pos++, 7);
+	  if (GetDrunkLevel(s) != SOBER)            DoRightIcon(uiRenderBuffer, f, sFaceX, sFaceY, icon_pos++, 8);
 
-    if (s->bDrugEffect[DRUG_TYPE_ADRENALINE])
-    {
-      DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 7 );
-      bNumRightIcons++;
-    }
-
-	  if (GetDrunkLevel(s) != SOBER)
-	  {
-      DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, bNumRightIcons, 8 );
-      bNumRightIcons++;
-    }
-
+		INT16   sPtsAvailable = 0;
+		UINT16  usMaximumPts  = 0;
+		BOOLEAN fShowNumber   = FALSE;
 		switch (s->bAssignment)
 		{
 			case DOCTOR:
-
-				sIconIndex = 1;
-				fDoIcon		 = TRUE;
 				sPtsAvailable = CalculateHealingPointsForDoctor(s, &usMaximumPts, FALSE);
-				fShowNumber = TRUE;
 
 				// divide both amounts by 10 to make the displayed numbers a little more user-palatable (smaller)
-				sPtsAvailable = ( sPtsAvailable + 5 ) / 10;
-				usMaximumPts  = ( usMaximumPts + 5 ) / 10;
+				sPtsAvailable = (sPtsAvailable + 5) / 10;
+				usMaximumPts  = (usMaximumPts  + 5) / 10;
+				fShowNumber   = TRUE;
+				sIconIndex    = 1;
 				break;
 
 			case PATIENT:
-
-				sIconIndex = 2;
-				fDoIcon		 = TRUE;
 				// show current health / maximum health
 				sPtsAvailable = s->bLife;
 				usMaximumPts  = s->bLifeMax;
-				fShowNumber = TRUE;
+				fShowNumber   = TRUE;
+				sIconIndex    = 2;
 				break;
 
 			case TRAIN_SELF:
@@ -1043,105 +999,85 @@ static void HandleRenderFaceAdjustments(FACETYPE* const pFace, const BOOLEAN fDi
 			case TRAIN_TEAMMATE:
 			case TRAIN_BY_OTHER:
 			{
-				sIconIndex = 3;
-				fDoIcon		 = TRUE;
-				fShowNumber = TRUE;
 				// there could be bonus pts for training at gun range
-				if (s->sSectorX == 13 && s->sSectorY == MAP_ROW_H && s->bSectorZ == 0)
-				{
-					fAtGunRange = TRUE;
-				}
+				const BOOLEAN fAtGunRange =
+					s->sSectorX == 13 && s->sSectorY == MAP_ROW_H && s->bSectorZ == 0;
 
 				switch (s->bAssignment)
 				{
-					case( TRAIN_SELF ):
+					case TRAIN_SELF:
 						sPtsAvailable = GetSoldierTrainingPts(s, s->bTrainStat, fAtGunRange, &usMaximumPts);
 						break;
-					case( TRAIN_BY_OTHER ):
+
+					case TRAIN_BY_OTHER:
 						sPtsAvailable = GetSoldierStudentPts(s, s->bTrainStat, fAtGunRange, &usMaximumPts);
 						break;
-					case( TRAIN_TOWN ):
-						sPtsAvailable = GetTownTrainPtsForCharacter(s, &usMaximumPts );
+
+					case TRAIN_TOWN:
+						sPtsAvailable = GetTownTrainPtsForCharacter(s, &usMaximumPts);
 						// divide both amounts by 10 to make the displayed numbers a little more user-palatable (smaller)
-						sPtsAvailable = ( sPtsAvailable + 5 ) / 10;
-						usMaximumPts  = ( usMaximumPts + 5 ) / 10;
+						sPtsAvailable = (sPtsAvailable + 5) / 10;
+						usMaximumPts  = (usMaximumPts  + 5) / 10;
 						break;
-					case( TRAIN_TEAMMATE ):
-						sPtsAvailable = GetBonusTrainingPtsDueToInstructor(s, NULL , s->bTrainStat, fAtGunRange, &usMaximumPts );
+
+					case TRAIN_TEAMMATE:
+						sPtsAvailable = GetBonusTrainingPtsDueToInstructor(s, NULL , s->bTrainStat, fAtGunRange, &usMaximumPts);
 						break;
 				}
+				fShowNumber = TRUE;
+				sIconIndex  = 3;
 				break;
 			}
 
 			case REPAIR:
-
-				sIconIndex = 0;
-				fDoIcon		 = TRUE;
 				sPtsAvailable = CalculateRepairPointsForRepairman(s, &usMaximumPts, FALSE);
-				fShowNumber = TRUE;
-
 				// check if we are repairing a vehicle
 				if (s->bVehicleUnderRepairID != -1)
 				{
 					// reduce to a multiple of VEHICLE_REPAIR_POINTS_DIVISOR.  This way skill too low will show up as 0 repair pts.
-					sPtsAvailable -= ( sPtsAvailable % VEHICLE_REPAIR_POINTS_DIVISOR );
-					usMaximumPts  -= ( usMaximumPts  % VEHICLE_REPAIR_POINTS_DIVISOR );
+					sPtsAvailable -= sPtsAvailable % VEHICLE_REPAIR_POINTS_DIVISOR;
+					usMaximumPts  -= usMaximumPts  % VEHICLE_REPAIR_POINTS_DIVISOR;
 				}
-
+				fShowNumber = TRUE;
+				sIconIndex  = 0;
 				break;
 		}
 
 		// Check for being serviced...
-		if (s->service_partner != NULL)
-		{
-			// Doctor...
-			sIconIndex = 1;
-			fDoIcon		 = TRUE;
-		}
+		if (s->service_partner != NULL) sIconIndex = 1; // Doctor
+		if (s->ubServiceCount  != 0)    sIconIndex = 2; // Patient
 
-		if (s->ubServiceCount != 0)
-		{
-			// Patient
-			sIconIndex = 2;
-			fDoIcon		 = TRUE;
-		}
-
-
-		if ( fDoIcon )
+		if (sIconIndex != -1)
 		{
 			// Find X, y for placement
-			GetXYForIconPlacement( pFace, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY );
+			INT16 sIconX;
+			INT16 sIconY;
+			GetXYForIconPlacement(f, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY);
 			BltVideoObject(uiRenderBuffer, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
 
       // ATE: Show numbers only in mapscreen
-			if( fShowNumber )
+			if (fShowNumber)
 			{
 				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
 
-				usTextWidth = StringPixLength( sString, FONT10ARIAL );
-				usTextWidth += 1;
+				SetFont(FONT10ARIAL);
+				SetFontForeground(FONT_YELLOW);
+				SetFontBackground(FONT_BLACK);
 
-				SetFont( FONT10ARIAL );
-				SetFontForeground( FONT_YELLOW );
-				SetFontBackground( FONT_BLACK );
-
-				mprintf(  sFaceX + pFace->usFaceWidth - usTextWidth, ( INT16 )( sFaceY + 3 ), sString );
+				const UINT16 usTextWidth = StringPixLength(sString, FONT10ARIAL) + 1;
+				mprintf(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
 	}
-  else
-  {
-		if ( pFace->ubCharacterNum == FATHER || pFace->ubCharacterNum == MICKY )
-    {
-      if ( gMercProfiles[ pFace->ubCharacterNum ].bNPCData >= 5 )
-      {
-        DoRightIcon( uiRenderBuffer, pFace, sFaceX, sFaceY, 0, 8 );
-      }
-    }
-  }
+  else if ((f->ubCharacterNum == FATHER || f->ubCharacterNum == MICKY) &&
+			gMercProfiles[f->ubCharacterNum].bNPCData >= 5)
+	{
+		DoRightIcon(uiRenderBuffer, f, sFaceX, sFaceY, 0, 8);
+	}
 }
 
 
