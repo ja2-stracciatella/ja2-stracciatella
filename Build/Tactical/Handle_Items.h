@@ -97,7 +97,7 @@ BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 void SoldierHandleDropItem( SOLDIERTYPE *pSoldier );
 
-INT8 GetZLevelOfItemPoolGivenStructure( INT16 sGridNo, UINT8 ubLevel, STRUCTURE *pStructure );
+INT8 GetZLevelOfItemPoolGivenStructure(INT16 sGridNo, UINT8 ubLevel, const STRUCTURE* pStructure);
 
 INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool);
 

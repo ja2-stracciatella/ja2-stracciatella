@@ -1,3 +1,4 @@
+(r3708) Fix a vanilla bug: Items on top and in structures (tables, crates, etc.) could not be selected in the overhead map.
 (r3704) Enable toggling between fullscreen and window mode at runtime by pressing ALT+RETURN.
 (r3675) Fix a vanilla display glitch: Set the name of crows to "CROW" instead of "CIVILIAN", so the proper name is displayed in the overhead map.
 (r3673) Fix vanilla display glitches when drawing the list of names of items on the ground: Properly clamp the list to the view area and prevent incorrect display, when invisible items are present.

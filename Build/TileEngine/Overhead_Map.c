@@ -31,7 +31,6 @@
 #include "Environment.h"
 #include "Faces.h"
 #include "Squads.h"
-#include "Interactive_Tiles.h"
 #include "Gameloop.h"
 #include "SysUtil.h"
 #include "Tile_Surface.h"
@@ -376,14 +375,8 @@ void HandleOverheadMap(void)
 			pItemPool = GetClosestItemPool(usMapPos, 1, 0);
 			if (pItemPool != NULL)
 			{
-				// Get interactive tile...
-				INT16       sIntTileGridNo;
-				STRUCTURE*  pStructure;
-				const INT16 sActionGridNo =
-					ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, FALSE) ?
-						sIntTileGridNo : usMapPos;
-
-				const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, 0, pStructure);
+				const STRUCTURE* const structure = FindStructure(usMapPos, STRUCTURE_HASITEMONTOP | STRUCTURE_OPENABLE);
+				INT8             const bZLevel   = GetZLevelOfItemPoolGivenStructure(usMapPos, 0, structure);
 				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
 					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
