@@ -2662,7 +2662,6 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 					}
 					else
 					{
-						//if ( ( uiMercFlags & ONDUTY_MERC ) && !( uiMercFlags & NOINTERRUPT_MERC ) )
 						if ( !( uiMercFlags & NOINTERRUPT_MERC ) )
 						{
 							// Add highlight to guy in interface.c

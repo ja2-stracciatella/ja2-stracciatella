@@ -113,7 +113,6 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 own_merc:
 			// It's our own merc
 			MercFlags |= OWNED_MERC;
-			if (s->bAssignment < ON_DUTY) MercFlags |= ONDUTY_MERC;
 		}
  }
  else
