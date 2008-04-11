@@ -503,103 +503,77 @@ static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer,
 static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE*, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
-static void BlinkAutoFace(FACETYPE* const pFace)
+static void BlinkAutoFace(FACETYPE* const f)
 {
-	INT16						sFrame;
+	if (!f->fAllocated || f->fDisabled || f->fInvalidAnim) return;
 
-	if (pFace->fAllocated && !pFace->fDisabled && !pFace->fInvalidAnim)
+	// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
+	const SOLDIERTYPE* const s = f->soldier;
+	if (s != NULL &&
+			(
+				s->bLife       <  OKLIFE ||
+				s->fMercAsleep == TRUE   ||
+				s->bAssignment == ASSIGNMENT_POW
+			))
 	{
-		// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
-		const SOLDIERTYPE* const s = pFace->soldier;
-		if (s != NULL)
-		{
-			if (s->bLife < OKLIFE ||
-					s->fMercAsleep == TRUE ||
-					s->bAssignment == ASSIGNMENT_POW)
-			{
-				return;
-			}
-		}
-
-		if ( pFace->ubExpression == NO_EXPRESSION )
-		{
-			// Get Delay time, if the first frame, use a different delay
-			if ( ( GetJA2Clock() - pFace->uiLastBlink ) > pFace->uiBlinkFrequency )
-			{
-				pFace->uiLastBlink = GetJA2Clock();
-				pFace->ubExpression = BLINKING;
-				pFace->uiEyelast = GetJA2Clock();
-			}
-
-			if ( pFace->fAnimatingTalking )
-			{
-				if ( ( GetJA2Clock() - pFace->uiLastExpression ) > pFace->uiExpressionFrequency )
-				{
-					pFace->uiLastExpression = GetJA2Clock();
-
-					if ( Random( 2 ) == 0 )
-					{
-						pFace->ubExpression = ANGRY;
-					}
-					else
-					{
-						pFace->ubExpression = SURPRISED;
-					}
-				}
-
-			}
-
-		}
-
-		if ( pFace->ubExpression != NO_EXPRESSION )
-		{
-			// Are we going to blink?
-			if (GetJA2Clock() - pFace->uiEyelast > pFace->uiEyeDelay)
-			{
-				pFace->uiEyelast = GetJA2Clock();
-
-				// Adjust
-				NewEye( pFace );
-
-				sFrame = pFace->sEyeFrame;
-
-				if ( sFrame >= 5 )
-				{
-					sFrame = 4;
-				}
-
-				if ( sFrame > 0 )
-				{
-					// Blit Accordingly!
-					BltVideoObject(pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, sFrame, pFace->usEyesX, pFace->usEyesY);
-
-					if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
-					{
-						InvalidateRegion( pFace->usEyesX, pFace->usEyesY, pFace->usEyesX + pFace->usEyesWidth, pFace->usEyesY + pFace->usEyesHeight );
-					}
-				}
-				else
-				{
-					//RenderFace( uiDestBuffer , uiCount );
-					pFace->ubExpression = NO_EXPRESSION;
-					// Update rects just for eyes
-
-					if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
-					{
-						FaceRestoreSavedBackgroundRect(pFace, pFace->usEyesX, pFace->usEyesY, pFace->usEyesX, pFace->usEyesY, pFace->usEyesWidth, pFace->usEyesHeight);
-					}
-					else
-					{
-						FaceRestoreSavedBackgroundRect(pFace, pFace->usEyesX, pFace->usEyesY, pFace->usEyesOffsetX, pFace->usEyesOffsetY, pFace->usEyesWidth, pFace->usEyesHeight);
-					}
-				}
-
-				HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
-			}
-		}
-
+		return;
 	}
 
+	if (f->ubExpression == NO_EXPRESSION)
+	{
+		// Get Delay time, if the first frame, use a different delay
+		if (GetJA2Clock() - f->uiLastBlink > f->uiBlinkFrequency)
+		{
+			f->uiLastBlink  = GetJA2Clock();
+			f->ubExpression = BLINKING;
+			f->uiEyelast    = GetJA2Clock();
+		}
+
+		if (f->fAnimatingTalking &&
+				GetJA2Clock() - f->uiLastExpression > f->uiExpressionFrequency)
+		{
+			f->uiLastExpression = GetJA2Clock();
+			f->ubExpression     = (Random(2) == 0 ? ANGRY : SURPRISED);
+		}
+	}
+
+	if (f->ubExpression != NO_EXPRESSION &&
+			GetJA2Clock() - f->uiEyelast > f->uiEyeDelay) // Are we going to blink?
+	{
+		f->uiEyelast = GetJA2Clock();
+
+		NewEye(f);
+
+		INT16 sFrame = f->sEyeFrame;
+		if (sFrame > 4) sFrame = 4;
+
+		if (sFrame > 0)
+		{
+			// Blit Accordingly!
+			BltVideoObject(f->uiAutoDisplayBuffer, f->uiVideoObject, sFrame, f->usEyesX, f->usEyesY);
+
+			if (f->uiAutoDisplayBuffer == FRAME_BUFFER)
+			{
+				InvalidateRegion(f->usEyesX, f->usEyesY, f->usEyesX + f->usEyesWidth, f->usEyesY + f->usEyesHeight);
+			}
+		}
+		else
+		{
+			f->ubExpression = NO_EXPRESSION;
+			// Update rects just for eyes
+
+			if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+			{
+				FaceRestoreSavedBackgroundRect(f, f->usEyesX, f->usEyesY, f->usEyesX, f->usEyesY, f->usEyesWidth, f->usEyesHeight);
+			}
+			else
+			{
+				FaceRestoreSavedBackgroundRect(f, f->usEyesX, f->usEyesY, f->usEyesOffsetX, f->usEyesOffsetY, f->usEyesWidth, f->usEyesHeight);
+			}
+		}
+
+		HandleRenderFaceAdjustments(f, TRUE, NO_VSURFACE, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+	}
 }
 
 
