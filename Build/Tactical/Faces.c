@@ -46,6 +46,14 @@ static FACETYPE gFacesData[NUM_FACE_SLOTS];
 static UINT32   guiNumFaces = 0;
 
 
+#define FOR_ALL_FACES(iter)                                    \
+	for (FACETYPE*       iter        = gFacesData,               \
+	             * const iter##__end = gFacesData + guiNumFaces; \
+	     iter != iter##__end;                                    \
+	     ++iter)                                                 \
+		if (!iter->fAllocated) continue; else
+
+
 typedef struct RPC_SMALL_FACE_VALUES
 {
 	ProfileID profile;
@@ -491,9 +499,9 @@ void SetAutoFaceInActive(FACETYPE* const pFace)
 
 void SetAllAutoFacesInactive(  )
 {
-	for (FACETYPE* i = gFacesData; i != gFacesData + guiNumFaces; ++i)
+	FOR_ALL_FACES(i)
 	{
-		if (i->fAllocated) SetAutoFaceInActive(i);
+		SetAutoFaceInActive(i);
 	}
 }
 
@@ -1260,10 +1268,8 @@ static void NewMouth(FACETYPE* pFace)
 
 void HandleAutoFaces(void)
 {
-	for (FACETYPE* f = gFacesData; f != gFacesData + guiNumFaces; ++f)
+	FOR_ALL_FACES(f)
 	{
-		if (!f->fAllocated) continue;
-
 		SOLDIERTYPE* const s = f->soldier;
 		if (s != NULL)
 		{
@@ -1369,10 +1375,9 @@ void HandleAutoFaces(void)
 
 void HandleTalkingAutoFaces( )
 {
-	for (FACETYPE* f = gFacesData; f != gFacesData + guiNumFaces; ++f)
+	FOR_ALL_FACES(f)
 	{
-		// OK, NOW, check if our bLife status has changed, re-render if so!
-		if (f->fAllocated) HandleTalkingAutoFace(f);
+		HandleTalkingAutoFace(f);
 	}
 }
 
