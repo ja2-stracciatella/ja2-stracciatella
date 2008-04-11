@@ -1014,45 +1014,22 @@ BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, DB_STRUC
 //
 
 
-static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructure)
+static void DeleteStructureFromTile(MAP_ELEMENT* const me, STRUCTURE* const s)
 { // removes a STRUCTURE element at a particular location from the world
 	// put location pointer in tile
-	if (pMapElement->pStructureHead == pStructure)
-	{
-		if (pMapElement->pStructureTail == pStructure)
-		{
-			// only element in the list!
-			pMapElement->pStructureHead = NULL;
-			pMapElement->pStructureTail = NULL;
-		}
-		else
-		{
-			// first element in the list of 2+ members
-			pMapElement->pStructureHead = pStructure->pNext;
-		}
-	}
-	else if (pMapElement->pStructureTail == pStructure)
-	{
-		// last element in the list
-		pStructure->pPrev->pNext = NULL;
-		pMapElement->pStructureTail = pStructure->pPrev;
-	}
-	else
-	{
-		// second or later element in the list; it's guaranteed that there is a
-		// previous element but not necessary a next
-		pStructure->pPrev->pNext = pStructure->pNext;
-		if (pStructure->pNext != NULL)
-		{
-			pStructure->pNext->pPrev = pStructure->pPrev;
-		}
-	}
-	if (pStructure->fFlags & STRUCTURE_OPENABLE)
-	{ // only one allowed in a tile, so we are safe to do this...
-		pMapElement->uiFlags &= (~MAPELEMENT_INTERACTIVETILE);
-	}
-	MemFree( pStructure );
+	STRUCTURE* const next = s->pNext;
+	STRUCTURE* const prev = s->pPrev;
+	Assert((prev == NULL) == (me->pStructureHead == s));
+	Assert((next == NULL) == (me->pStructureTail == s));
+	*(prev != NULL ? &prev->pNext : &me->pStructureHead) = next;
+	*(next != NULL ? &next->pPrev : &me->pStructureTail) = prev;
+
+	// only one allowed in a tile, so we are safe to do this
+	if (s->fFlags & STRUCTURE_OPENABLE) me->uiFlags &= ~MAPELEMENT_INTERACTIVETILE;
+
+	MemFree(s);
 }
+
 
 BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 { // removes all of the STRUCTURE elements for a structure from the world
