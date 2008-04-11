@@ -1160,9 +1160,7 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 {
 	BOOLEAN						fSetCursor = FALSE;
-	LEVELNODE					*pIntNode;
 	EXITGRID					ExitGrid;
-	INT16							sIntTileGridNo;
 
 	static INT16			sGridNoForItemsOver;
 	static INT8				bLevelForItemsOver;
@@ -1262,7 +1260,7 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 		if (sel != NULL)
 		 {
 			// Get interactvie tile node
-			pIntNode = GetCurInteractiveTileGridNo( &sIntTileGridNo );
+			const LEVELNODE* const pIntNode = GetCurInteractiveTile();
 
 			// Check were we are
 			// CHECK IF WE CAN MOVE HERE

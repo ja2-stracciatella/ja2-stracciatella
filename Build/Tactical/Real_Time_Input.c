@@ -559,8 +559,6 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																			//}/
 																			//else
 																			{
-																			  INT16							sIntTileGridNo;
-
 																				if (sel != NULL)
 																				{
 																					BeginDisplayTimedCursor( GetInteractiveTileCursor( guiCurrentUICursor, TRUE ), 300 );
@@ -569,13 +567,10 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																					{
 																						*puiNewEvent = C_MOVE_MERC;
 																					}
-																					else
+																					else if (GetCurInteractiveTile() != NULL)
 																					{
-																						if ( GetCurInteractiveTileGridNo( &sIntTileGridNo ) != NULL )
-																						{
-																							sel->fUIMovementFast = TRUE;
-																							*puiNewEvent = C_MOVE_MERC;
-																						}
+																						sel->fUIMovementFast = TRUE;
+																						*puiNewEvent = C_MOVE_MERC;
 																					}
 																					fValidDoubleClickPossible = TRUE;
 																				}
