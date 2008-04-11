@@ -665,81 +665,67 @@ static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffe
 static void NewMouth(FACETYPE* pFace);
 
 
-static void MouthAutoFace(FACETYPE* const pFace)
+static void MouthAutoFace(FACETYPE* const f)
 {
-	INT16						sFrame;
+	if (!f->fAllocated) return;
 
-	if (pFace->fAllocated)
+	if (f->fTalking      &&
+			!f->fDisabled    &&
+			!f->fInvalidAnim &&
+			f->fAnimatingTalking)
 	{
-		if ( pFace->fTalking )
+		// Check if we have an audio gap
+		if (PollAudioGap(f->uiSoundID, &f->GapList))
 		{
-			if (!pFace->fDisabled && !pFace->fInvalidAnim )
+			f->sMouthFrame = 0;
+
+			if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
 			{
-				if ( pFace->fAnimatingTalking )
-				{
-					// Check if we have an audio gap
-					if (PollAudioGap(pFace->uiSoundID, &pFace->GapList))
-					{
-						pFace->sMouthFrame = 0;
-
-						if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
-						{
-							FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
-						}
-						else
-						{
-							FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
-						}
-					}
-					else
-					{
-						// Get Delay time
-						if ( ( GetJA2Clock() - pFace->uiMouthlast ) > pFace->uiMouthDelay )
-						{
-							pFace->uiMouthlast = GetJA2Clock();
-
-							// Adjust
-							NewMouth( pFace );
-
-							sFrame = pFace->sMouthFrame;
-
-							if ( sFrame > 0 )
-							{
-								// Blit Accordingly!
-								BltVideoObject(pFace->uiAutoDisplayBuffer, pFace->uiVideoObject, sFrame + 4, pFace->usMouthX, pFace->usMouthY);
-
-								// Update rects
-								if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
-								{
-									InvalidateRegion( pFace->usMouthX, pFace->usMouthY, pFace->usMouthX + pFace->usMouthWidth, pFace->usMouthY + pFace->usMouthHeight );
-								}
-							}
-							else
-							{
-								//RenderFace( uiDestBuffer , uiCount );
-								//pFace->fTaking = FALSE;
-								// Update rects just for Mouth
-								if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
-								{
-									FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
-								}
-								else
-								{
-									FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
-								}
-							}
-
-							HandleRenderFaceAdjustments(pFace, TRUE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
-						}
-					}
-				}
+				FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
+			}
+			else
+			{
+				FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
 			}
 		}
-
-		if  ( !( pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE ) )
+		else if (GetJA2Clock() - f->uiMouthlast > f->uiMouthDelay)
 		{
-			HandleFaceHilights( pFace, pFace->uiAutoDisplayBuffer, pFace->usFaceX, pFace->usFaceY );
+			f->uiMouthlast = GetJA2Clock();
+
+			NewMouth(f);
+
+			const INT16 sFrame = f->sMouthFrame;
+			if (sFrame > 0)
+			{
+				// Blit Accordingly!
+				BltVideoObject(f->uiAutoDisplayBuffer, f->uiVideoObject, sFrame + 4, f->usMouthX, f->usMouthY);
+
+				// Update rects
+				if (f->uiAutoDisplayBuffer == FRAME_BUFFER)
+				{
+					InvalidateRegion(f->usMouthX, f->usMouthY, f->usMouthX + f->usMouthWidth, f->usMouthY + f->usMouthHeight);
+				}
+			}
+			else
+			{
+				// Update rects just for Mouth
+				if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+				{
+					FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
+				}
+				else
+				{
+					FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
+				}
+			}
+
+			HandleRenderFaceAdjustments(f, TRUE, NO_VSURFACE, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
 		}
+	}
+
+	if  (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE))
+	{
+		HandleFaceHilights(f, f->uiAutoDisplayBuffer, f->usFaceX, f->usFaceY);
 	}
 }
 
