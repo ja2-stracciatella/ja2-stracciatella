@@ -577,88 +577,52 @@ static void BlinkAutoFace(FACETYPE* const f)
 }
 
 
-static void HandleFaceHilights(FACETYPE* const pFace, SGPVSurface* const uiBuffer, const INT16 sFaceX, const INT16 sFaceY)
+static void DrawFaceRect(const FACETYPE* const f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
 {
-	UINT32					uiDestPitchBYTES;
-	UINT8						*pDestBuf;
-	UINT16					usLineColor;
+	UINT32       uiDestPitchBYTES;
+	UINT8* const pDestBuf = LockVideoSurface(buffer, &uiDestPitchBYTES);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f->usFaceWidth + 4, y + f->usFaceHeight + 4);
 
-	if (!pFace->fDisabled)
-  {
-		if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER && guiCurrentScreen == GAME_SCREEN )
-    {
-	    // If we are highlighted, do this now!
-	    if ( ( pFace->uiFlags & FACE_SHOW_WHITE_HILIGHT ) )
-	    {
-		    // Lock buffer
-		    pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-		    SetClippingRegionAndImageWidth( uiDestPitchBYTES, sFaceX-2, sFaceY-1, sFaceX + pFace->usFaceWidth + 4, sFaceY + pFace->usFaceHeight + 4 );
+	const UINT16 usLineColor = Get16BPPColor(colour);
+	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, pDestBuf);
 
-		    usLineColor = Get16BPPColor( FROMRGB( 255, 255, 255 ) );
-		    RectangleDraw( TRUE, (sFaceX - 2 ), (sFaceY - 1),sFaceX + pFace->usFaceWidth + 1, sFaceY + pFace->usFaceHeight , usLineColor, pDestBuf );
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		    SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	UnLockVideoSurface(buffer);
+}
 
-		    UnLockVideoSurface( uiBuffer );
-	    }
-	    else if ( ( pFace->uiFlags & FACE_SHOW_MOVING_HILIGHT  ) )
-	    {
-		    const SOLDIERTYPE* const s = pFace->soldier;
-		    if (s != NULL)
-		    {
-			    if (s->bLife >= OKLIFE)
-			    {
-				    // Lock buffer
-				    pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-				    SetClippingRegionAndImageWidth( uiDestPitchBYTES, sFaceX-2, sFaceY-1, sFaceX + pFace->usFaceWidth + 4, sFaceY + pFace->usFaceHeight + 4 );
 
-				    if (s->bStealthMode)
-				    {
-					    usLineColor = Get16BPPColor( FROMRGB( 158, 158, 12 ) );
-				    }
-				    else
-				    {
-					    usLineColor = Get16BPPColor( FROMRGB( 8, 12, 118 ) );
- 				    }
-    		    RectangleDraw( TRUE, (sFaceX - 2 ), (sFaceY - 1),sFaceX + pFace->usFaceWidth + 1, sFaceY + pFace->usFaceHeight , usLineColor, pDestBuf );
+static void HandleFaceHilights(const FACETYPE* const f, SGPVSurface* const uiBuffer, const INT16 sFaceX, const INT16 sFaceY)
+{
+	if (f->fDisabled) return;
 
-				    SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-				    UnLockVideoSurface( uiBuffer );
-			    }
-		    }
-	    }
-      else
-      {
-        // ATE: Zero out any highlight boxzes....
-		    // Lock buffer
-		    pDestBuf = LockVideoSurface( pFace->uiAutoDisplayBuffer, &uiDestPitchBYTES );
-		    SetClippingRegionAndImageWidth( uiDestPitchBYTES, pFace->usFaceX-2, pFace->usFaceY-1, pFace->usFaceX + pFace->usFaceWidth + 4, pFace->usFaceY + pFace->usFaceHeight + 4 );
-
-		    usLineColor = Get16BPPColor( FROMRGB( 0, 0, 0 ) );
-		    RectangleDraw( TRUE, (pFace->usFaceX - 2 ), (pFace->usFaceY - 1), pFace->usFaceX + pFace->usFaceWidth + 1, pFace->usFaceY + pFace->usFaceHeight , usLineColor, pDestBuf );
-
-		    SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-		    UnLockVideoSurface( pFace->uiAutoDisplayBuffer );
-      }
-    }
-  }
-
-	if (pFace->fCompatibleItems && !pFace->fDisabled)
+	if (f->uiAutoDisplayBuffer == FRAME_BUFFER && guiCurrentScreen == GAME_SCREEN)
 	{
-		// Lock buffer
-		pDestBuf = LockVideoSurface( uiBuffer, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth( uiDestPitchBYTES, sFaceX-2, sFaceY-1, sFaceX + pFace->usFaceWidth+ 4, sFaceY + pFace->usFaceHeight + 4 );
-
-		usLineColor = Get16BPPColor( FROMRGB( 255, 0, 0 ) );
-		RectangleDraw( TRUE, (sFaceX - 2), (sFaceY - 1), sFaceX + pFace->usFaceWidth + 1, sFaceY + pFace->usFaceHeight , usLineColor, pDestBuf );
-
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-		UnLockVideoSurface( uiBuffer );
+		// If we are highlighted, do this now!
+		if (f->uiFlags & FACE_SHOW_WHITE_HILIGHT)
+		{
+			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 255, 255));
+		}
+		else if (f->uiFlags & FACE_SHOW_MOVING_HILIGHT)
+		{
+			const SOLDIERTYPE* const s = f->soldier;
+			if (s != NULL && s->bLife >= OKLIFE)
+			{
+				const UINT32 color = (s->bStealthMode ? FROMRGB(158, 158, 12) : FROMRGB(8, 12, 118));
+				DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, color);
+			}
+		}
+		else
+		{
+			// ATE: Zero out any highlight boxzes....
+			DrawFaceRect(f, f->uiAutoDisplayBuffer, f->usFaceX, f->usFaceY, FROMRGB(0, 0, 0));
+		}
 	}
 
+	if (f->fCompatibleItems)
+	{
+		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 0, 0));
+	}
 }
 
 
