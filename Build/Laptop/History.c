@@ -461,49 +461,22 @@ static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 }
 
 
-static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor)
+static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ, const UINT8 ubColor)
 {
-	HistoryUnit* pHistory = pHistoryListHead;
+	HistoryUnit* const h = MALLOC(HistoryUnit);
+	h->Next         = NULL;
+	h->ubCode       = ubCode;
+	h->ubSecondCode = ubSecondCode;
+	h->uiDate       = uiDate;
+	h->sSectorX     = sSectorX;
+	h->sSectorY     = sSectorY;
+	h->bSectorZ     = bSectorZ;
+	h->ubColor      = ubColor;
 
- 	// add to History list
-	if(pHistory)
-	{
-		// go to end of list
-		while(pHistory->Next)
-			pHistory=pHistory->Next;
-
-		// alloc space
-		pHistory->Next = MALLOC(HistoryUnit);
-
-		// set up information passed
-		pHistory = pHistory->Next;
-		pHistory->Next = NULL;
-		pHistory->ubCode = ubCode;
-    pHistory->ubSecondCode = ubSecondCode;
-		pHistory->uiDate = uiDate;
-		pHistory->sSectorX = sSectorX;
-		pHistory->sSectorY = sSectorY;
-		pHistory->bSectorZ = bSectorZ;
-		pHistory->ubColor = ubColor;
-
-	}
-	else
-	{
-		// alloc space
-		pHistory = MALLOC(HistoryUnit);
-
-		// setup info passed
-		pHistory->Next = NULL;
-		pHistory->ubCode = ubCode;
-    pHistory->ubSecondCode = ubSecondCode;
-		pHistory->uiDate = uiDate;
-	  pHistoryListHead = pHistory;
-		pHistory->sSectorX = sSectorX;
-		pHistory->sSectorY = sSectorY;
-		pHistory->bSectorZ = bSectorZ;
-		pHistory->ubColor = ubColor;
-
-	}
+	// Append node to list
+	HistoryUnit** anchor = &pHistoryListHead;
+	while (*anchor != NULL) anchor = &(*anchor)->Next;
+	*anchor = h;
 }
 
 
