@@ -112,11 +112,7 @@ static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSec
 	AppendHistoryToEndOfFile();
 
 	// if in history mode, reload current page
-	if (fInHistoryMode)
-	{
-		ClearHistoryList();
-		LoadInHistoryRecords(iCurrentHistoryPage);
-	}
+	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
 }
 
 
@@ -162,7 +158,6 @@ void EnterHistory()
 	iCurrentHistoryPage = LaptopSaveInfo.iCurrentHistoryPage;
 	if (iCurrentHistoryPage <= 0) iCurrentHistoryPage = 1;
 
-	ClearHistoryList();
 	LoadInHistoryRecords(iCurrentHistoryPage);
 
 	// render hbackground
@@ -896,6 +891,8 @@ static void SetHistoryButtonStates(void)
 // loads in records belogning, to page uiPage
 static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 {
+	ClearHistoryList();
+
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
@@ -945,14 +942,9 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 }
 
 
+// clear out old list of records, and load in next page worth of records
 static BOOLEAN LoadNextHistoryPage(void)
 {
-
-	// clear out old list of records, and load in previous page worth of records
-  ClearHistoryList( );
-
-
-
 	// now load in previous page's records, if we can
   if ( LoadInHistoryRecords( iCurrentHistoryPage + 1 ) )
 	{
@@ -971,7 +963,6 @@ static BOOLEAN LoadNextHistoryPage(void)
 // clear out old list of records and load in previous page worth of records
 static void LoadPreviousHistoryPage(void)
 {
-	ClearHistoryList();
 	if (iCurrentHistoryPage <= 1) return;
 	LoadInHistoryRecords(--iCurrentHistoryPage);
 }
@@ -1027,11 +1018,7 @@ void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSec
 		}
 	}
 
-	if (fInHistoryMode)
-	{
-		ClearHistoryList();
-		LoadInHistoryRecords(iCurrentHistoryPage);
-	}
+	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
 
 	SetHistoryFact(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
 }
@@ -1052,11 +1039,7 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 		}
 	}
 
-	if (fInHistoryMode)
-	{
-		ClearHistoryList();
-		LoadInHistoryRecords(iCurrentHistoryPage);
-	}
+	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
 
 	return uiTime;
 }
