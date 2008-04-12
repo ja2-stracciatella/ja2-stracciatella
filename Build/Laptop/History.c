@@ -122,62 +122,34 @@ static BOOLEAN LoadNextHistoryPage(void);
 static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
 
 
-void SetHistoryFact(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
+static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY, const UINT8 colour)
 {
-	// adds History item to player's log(History List), returns unique id number of it
-	// outside of the History system(the code in this .c file), this is the only function you'll ever need
-	UINT8 ubColor = 0;
+	ClearHistoryList();
 
-	// clear the list
-  ClearHistoryList( );
+	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, 0, colour);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_HISTORY_UPDATED]);
 
-	// process the actual data
-	if( ubCode == HISTORY_QUEST_FINISHED )
-	{
-		ubColor = 0;
-	}
-	else
-	{
-		ubColor = 1;
-	}
-	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, ubColor);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
-
-  AppendHistoryToEndOfFile();
+	AppendHistoryToEndOfFile();
 
 	// if in history mode, reload current page
-  if( fInHistoryMode )
+	if (fInHistoryMode)
 	{
-	  iCurrentHistoryPage--;
-
-		// load in first page
-	  LoadNextHistoryPage( );
+		--iCurrentHistoryPage;
+		LoadNextHistoryPage();
 	}
 }
 
 
-void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY)
+void SetHistoryFact(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
 {
-	// adds History item to player's log(History List), returns unique id number of it
-	// outside of the History system(the code in this .c file), this is the only function you'll ever need
+	const UINT8 ubColor = (ubCode == HISTORY_QUEST_FINISHED ? 0 : 1);
+	InternalAddHistoryToPlayersLog(ubColor, ubSecondCode, uiDate, sSectorX, sSectorY, ubColor);
+}
 
-	// clear the list
-  ClearHistoryList( );
 
-	// process the actual data
-	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, 0);
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
-
-  AppendHistoryToEndOfFile();
-
-	// if in history mode, reload current page
-  if( fInHistoryMode )
-	{
-	  iCurrentHistoryPage--;
-
-		// load in first page
-	  LoadNextHistoryPage( );
-	}
+void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
+{
+	InternalAddHistoryToPlayersLog(ubCode, ubSecondCode, uiDate, sSectorX, sSectorY, 0);
 }
 
 
