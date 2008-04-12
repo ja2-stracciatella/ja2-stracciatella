@@ -161,9 +161,6 @@ void GameInitHistory()
 		FileClearAttributes( HISTORY_DATA_FILE );
 	  FileDelete( HISTORY_DATA_FILE );
 	}
-
-	AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin( ), -1, -1);
-
 }
 
 

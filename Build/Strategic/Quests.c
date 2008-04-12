@@ -1252,6 +1252,7 @@ void CheckForQuests( UINT32 uiDay )
 	// already started
 	if (gubQuest[QUEST_DELIVER_LETTER] == QUESTNOTSTARTED)
 	{
+		AddHistoryToPlayersLog(HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO, 0, GetWorldTotalMin(), -1, -1);
 		StartQuest( QUEST_DELIVER_LETTER, -1, -1 );
 #ifdef TESTQUESTS
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Started DELIVER LETTER quest");

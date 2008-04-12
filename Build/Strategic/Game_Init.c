@@ -403,8 +403,8 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 	// IF our first time, go into laptop!
 	if ( gubScreenCount == 0 )
 	{
-		InitStrategicLayer();
 		InitLaptopAndLaptopScreens();
+		InitStrategicLayer();
 
 		// Set new game flag
 		SetLaptopNewGameFlag( );
