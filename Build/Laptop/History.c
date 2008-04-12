@@ -370,18 +370,6 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static INT32 GetNumberOfHistoryPages(void);
-
-
-static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
-{
-	if (iCurrentHistoryPage >= GetNumberOfHistoryPages()) return FALSE;
-
-	++iCurrentHistoryPage;
-	return TRUE;
-}
-
-
 static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ, const UINT8 ubColor)
 {
 	HistoryUnit* const h = MALLOC(HistoryUnit);
@@ -679,6 +667,9 @@ static void DrawAPageofHistoryRecords(void)
 }
 
 
+static INT32 GetNumberOfHistoryPages(void);
+
+
 /* go through the list of 'histories' starting at current until end or
  * NUM_RECORDS_PER_PAGE and get the date range and the page number */
 static void DisplayPageNumberAndDateRange(void)
@@ -897,36 +888,26 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 }
 
 
+// look at what page we are viewing, enable and disable buttons as needed
 static void SetHistoryButtonStates(void)
 {
-	// this function will look at what page we are viewing, enable and disable buttons as needed
-
-	if( iCurrentHistoryPage == 1 )
+	if (iCurrentHistoryPage == 1)
 	{
 		// first page, disable left buttons
-		DisableButton( 	giHistoryButton[PREV_PAGE_BUTTON] );
-
+		DisableButton(giHistoryButton[PREV_PAGE_BUTTON]);
 	}
 	else
 	{
-		// enable buttons
-		EnableButton( giHistoryButton[PREV_PAGE_BUTTON] );
-
+		EnableButton(giHistoryButton[PREV_PAGE_BUTTON]);
 	}
 
-	if( IncrementCurrentPageHistoryDisplay( ) )
+	if (iCurrentHistoryPage < GetNumberOfHistoryPages())
 	{
-		// decrement page
-    iCurrentHistoryPage--;
-		DrawAPageofHistoryRecords( );
-
-		// enable buttons
-		EnableButton( giHistoryButton[ NEXT_PAGE_BUTTON ] );
-
+		EnableButton(giHistoryButton[NEXT_PAGE_BUTTON]);
 	}
 	else
 	{
-    DisableButton( 	giHistoryButton[ NEXT_PAGE_BUTTON ] );
+    DisableButton(giHistoryButton[NEXT_PAGE_BUTTON]);
 	}
 }
 
