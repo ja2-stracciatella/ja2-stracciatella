@@ -232,11 +232,7 @@ void HandleHistory()
 }
 
 
-static void DisplayHistoryListBackground(void);
-static void DisplayHistoryListHeaders(void);
-static void DisplayPageNumberAndDateRange(void);
 static void DrawAPageofHistoryRecords(void);
-static void DrawHistoryTitleText(void);
 static void RenderHistoryBackGround(void);
 
 
@@ -245,20 +241,8 @@ void RenderHistory( void )
 	 //render the background to the display
    RenderHistoryBackGround( );
 
-	 // the title bar text
-	 DrawHistoryTitleText( );
-
-	  // the actual lists background
-	 DisplayHistoryListBackground( );
-
-	 // the headers to each column
-	 DisplayHistoryListHeaders( );
-
 	 // render the currentpage of records
 	 DrawAPageofHistoryRecords( );
-
-	 // stuff at top of page, the date range and page numbers
-   DisplayPageNumberAndDateRange( );
 
 	 // title bar icon
 	 BlitTitleBarIcons(  );
@@ -310,9 +294,6 @@ static void RenderHistoryBackGround(void)
 	// render generic background for history system
 	BltVideoObject(FRAME_BUFFER, guiTITLE, 0, TOP_X, TOP_Y -  2);
 	BltVideoObject(FRAME_BUFFER, guiTOP,   0, TOP_X, TOP_Y + 22);
-
-  // display background for history list
-  DisplayHistoryListBackground( );
 }
 
 
@@ -713,6 +694,9 @@ static void DrawHistoryRecordsText(void)
 	// restore shadow
   SetFontShadow(DEFAULT_SHADOW);
 }
+
+
+static void DisplayPageNumberAndDateRange(void);
 
 
 static void DrawAPageofHistoryRecords(void)
