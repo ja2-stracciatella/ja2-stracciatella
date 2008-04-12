@@ -98,7 +98,7 @@ void ClearHistoryList( void );
 
 
 static BOOLEAN AppendHistoryToEndOfFile(void);
-static BOOLEAN LoadNextHistoryPage(void);
+static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage);
 static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
 
 
@@ -114,8 +114,8 @@ static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSec
 	// if in history mode, reload current page
 	if (fInHistoryMode)
 	{
-		--iCurrentHistoryPage;
-		LoadNextHistoryPage();
+		ClearHistoryList();
+		LoadInHistoryRecords(iCurrentHistoryPage);
 	}
 }
 
@@ -159,14 +159,11 @@ void EnterHistory()
   CreateHistoryButtons( );
 
 	// reset current to first page
-	if( LaptopSaveInfo.iCurrentHistoryPage > 0 )
-		iCurrentHistoryPage = LaptopSaveInfo.iCurrentHistoryPage - 1;
-	else
-		iCurrentHistoryPage = 0;
+	iCurrentHistoryPage = LaptopSaveInfo.iCurrentHistoryPage;
+	if (iCurrentHistoryPage <= 0) iCurrentHistoryPage = 1;
 
-	// load in first page
-	LoadNextHistoryPage( );
-
+	ClearHistoryList();
+	LoadInHistoryRecords(iCurrentHistoryPage);
 
 	// render hbackground
   RenderHistory( );
@@ -333,6 +330,9 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 		fReDrawScreenFlag = TRUE;
 	}
 }
+
+
+static BOOLEAN LoadNextHistoryPage(void);
 
 
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
@@ -1029,9 +1029,8 @@ void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSec
 
 	if (fInHistoryMode)
 	{
-	  --iCurrentHistoryPage;
-		// load in first page
-	  LoadNextHistoryPage();
+		ClearHistoryList();
+		LoadInHistoryRecords(iCurrentHistoryPage);
 	}
 
 	SetHistoryFact(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
@@ -1055,9 +1054,8 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 
 	if (fInHistoryMode)
 	{
-	  --iCurrentHistoryPage;
-		// load in first page
-	  LoadNextHistoryPage();
+		ClearHistoryList();
+		LoadInHistoryRecords(iCurrentHistoryPage);
 	}
 
 	return uiTime;
