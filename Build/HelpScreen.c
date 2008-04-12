@@ -39,7 +39,6 @@
 extern void PrintDate( void );
 extern void PrintNumberOnTeam( void );
 extern void PrintBalance( void );
-extern		BOOLEAN	gfGamePaused;
 
 
 #define			HELP_SCREEN_ACTIVE			0x00000001

@@ -79,7 +79,7 @@ static const VehicleTypeInfo g_vehicle_type_info[] =
 
 
 // Loop through and create a few soldier squad ID's for vehicles ( max # 3 )
-void InitVehicles( )
+void InitVehicles(void)
 {
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;

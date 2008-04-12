@@ -175,4 +175,7 @@ void HandlePlayerPauseUnPauseOfGame( void );
 
 void ClearTacticalStuffDueToTimeCompression( void );
 
+extern BOOLEAN gfGamePaused;
+extern BOOLEAN gfLockPauseState;
+
 #endif

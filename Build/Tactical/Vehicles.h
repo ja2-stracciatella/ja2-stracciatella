@@ -166,4 +166,6 @@ UINT8 GetVehicleArmourType(UINT8 vehicle_id);
 
 UINT8 GetVehicleSeats(const VEHICLETYPE*);
 
+void InitVehicles(void);
+
 #endif

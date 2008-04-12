@@ -1,7 +1,9 @@
 #include "Font_Control.h"
 #include "JAScreens.h"
 #include "Laptop.h"
+#include "Meanwhile.h"
 #include "Merc_Hiring.h"
+#include "Queen_Command.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"
@@ -54,13 +56,6 @@
 #include "SoundMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
-
-
-extern UINT32 uiMeanWhileFlags;
-extern BOOLEAN gfGamePaused;
-
-extern UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
-void InitVehicles(void); /* XXX shouldn't be here */
 
 
 UINT8			gubScreenCount=0;

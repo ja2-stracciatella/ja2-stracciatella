@@ -126,8 +126,6 @@ extern		INT32					giRTAILastUpdateTime;
 extern		BOOLEAN				gfRedrawSaveLoadScreen;
 extern		UINT8					gubScreenCount;
 extern		INT16					sWorldSectorLocationOfFirstBattle;
-extern		BOOLEAN				gfGamePaused;
-extern		BOOLEAN				gfLockPauseState;
 extern		BOOLEAN				gfLoadedGame;
 extern		UINT8					gubDesertTemperature;
 extern		UINT8					gubGlobalTemperature;

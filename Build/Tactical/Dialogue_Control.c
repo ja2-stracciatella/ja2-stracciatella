@@ -164,7 +164,6 @@ extern void HandlePendingInitConv( );
 // the next said quote will pause time
 BOOLEAN fPausedTimeDuringQuote = FALSE;
 BOOLEAN fWasPausedDuringDialogue = FALSE;
-extern BOOLEAN gfLockPauseState;
 
 INT8	gubLogForMeTooBleeds = FALSE;
 
