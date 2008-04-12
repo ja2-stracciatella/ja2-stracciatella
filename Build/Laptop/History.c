@@ -752,65 +752,41 @@ static void DrawAPageofHistoryRecords(void)
 static INT32 GetNumberOfHistoryPages(void);
 
 
+/* go through the list of 'histories' starting at current until end or
+ * NUM_RECORDS_PER_PAGE and get the date range and the page number */
 static void DisplayPageNumberAndDateRange(void)
 {
-	// this function will go through the list of 'histories' starting at current until end or
-	// MAX_PER_PAGE...it will get the date range and the page number
-	INT32 iLastPage=0;
-	INT32 iCounter=0;
-	HistoryUnit* pTempHistory = pHistoryListHead;
+	UINT               current_page;
+	UINT               count_pages;
+	UINT               first_date;
+	UINT               last_date;
+	const HistoryUnit* h = pHistoryListHead;
+	if (h == NULL)
+	{
+		current_page = 1;
+		count_pages  = 1;
+		first_date   = 1;
+		last_date    = 1;
+  }
+  else
+	{
+		current_page     = iCurrentHistoryPage;
+		count_pages      = GetNumberOfHistoryPages() + 1;
+		first_date       = h->uiDate / (24 * 60);
 
-  // setup the font stuff
+		UINT entry_count = NUM_RECORDS_PER_PAGE;
+		while (--entry_count != 0 && h->Next != NULL) h = h->Next;
+
+		last_date        = h->uiDate / (24 * 60);
+	}
+
 	SetFont(HISTORY_TEXT_FONT);
   SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
 
-	if (pTempHistory == NULL)
-	{
-		mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], 1, 1);
-		mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], 1, 1);
-
-    // reset shadow
-	  SetFontShadow(DEFAULT_SHADOW);
-
-		return;
-  }
-
-	UINT32 uiLastDate = pTempHistory->uiDate;
-
-/*
-	// find last page
-	while(pTempHistory)
-	{
-		iCounter++;
-		pTempHistory=pTempHistory->Next;
-	}
-
-  // set last page
-	iLastPage=iCounter/NUM_RECORDS_PER_PAGE;
-*/
-
-	iLastPage = GetNumberOfHistoryPages();
-
-	// reset counter
-	iCounter=0;
-
-	// run through list until end or num_records, which ever first
-  while((pTempHistory)&&(iCounter < NUM_RECORDS_PER_PAGE))
-	{
-		uiLastDate=pTempHistory->uiDate;
-		iCounter++;
-
-		pTempHistory = pTempHistory->Next;
-	}
-
-
-
-	// get the last page
-
-	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], iCurrentHistoryPage, iLastPage + 1);
-	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], pHistoryListHead->uiDate / (24 * 60), uiLastDate / (24 * 60));
+	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], current_page, count_pages);
+	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], first_date,   last_date);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
