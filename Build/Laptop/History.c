@@ -485,62 +485,41 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 #endif
 
 
+// open and read in data to the History list
 static void OpenAndReadHistoryFile(void)
 {
-  // this procedure will open and read in data to the History list
+	ClearHistoryList();
 
-	HWFILE hFileHandle;
-  UINT8 ubCode, ubSecondCode;
-	UINT32 uiDate;
-  INT16 sSectorX, sSectorY;
-	INT8 bSectorZ = 0;
-	UINT8 ubColor;
-  UINT32 uiByteCount=0;
+	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return;
 
-	// clear out the old list
-	ClearHistoryList( );
-
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
-
-	// failed to get file, return
-	if(!hFileHandle)
+	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
+	while (entry_count-- > 0)
 	{
-		return;
-  }
+		UINT8  ubCode;
+		UINT8  ubSecondCode;
+		UINT32 uiDate;
+		INT16  sSectorX;
+		INT16  sSectorY;
+		INT8   bSectorZ;
+		UINT8  ubColor;
 
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return;
+		FileRead(f, &ubCode,       sizeof(UINT8));
+		FileRead(f, &ubSecondCode, sizeof(UINT8));
+		FileRead(f, &uiDate,       sizeof(UINT32));
+		FileRead(f, &sSectorX,     sizeof(INT16));
+		FileRead(f, &sSectorY,     sizeof(INT16));
+		FileRead(f, &bSectorZ,     sizeof(INT8));
+		FileRead(f, &ubColor,      sizeof(UINT8));
+
+#ifdef JA2TESTVERSION
+		PerformCheckOnHistoryRecord(1, sSectorX, sSectorY, bSectorZ);
+#endif
+
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor);
 	}
 
-	// file exists, read in data, continue until file end
-  while( FileGetSize( hFileHandle ) > uiByteCount)
-	{
-		// read in other data
-    FileRead(hFileHandle, &ubCode,       sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode, sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,       sizeof(UINT32));
-    FileRead(hFileHandle, &sSectorX,     sizeof(INT16));
-    FileRead(hFileHandle, &sSectorY,     sizeof(INT16));
-		FileRead(hFileHandle, &bSectorZ,     sizeof(INT8));
-		FileRead(hFileHandle, &ubColor,      sizeof(UINT8));
-
-		#ifdef JA2TESTVERSION
-		//perform a check on the data to see if it is pooched
-		PerformCheckOnHistoryRecord( 1, sSectorX, sSectorY, bSectorZ );
-		#endif
-
-		// add transaction
-	  ProcessAndEnterAHistoryRecord( ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor );
-
-		// increment byte counter
-	  uiByteCount +=  SIZE_OF_HISTORY_FILE_RECORD;
-	}
-
-	FileClose( hFileHandle );
+	FileClose(f);
 }
 
 
@@ -1417,6 +1396,7 @@ static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestS
 
 
 #ifdef JA2TESTVERSION
+// perform a check on the data to see if it is pooched
 static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	if( sSectorX > 16 || sSectorY > 16 || bSectorZ > 3 || sSectorX < -1 || sSectorY < -1 || bSectorZ < 0 )
