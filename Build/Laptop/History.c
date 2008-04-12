@@ -1211,49 +1211,33 @@ static BOOLEAN AppendHistoryToEndOfFile(void)
   return( TRUE );
 }
 
-void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
-{
-	// run through history list
-	HistoryUnit* pList = pHistoryListHead;
-	BOOLEAN fFound = FALSE;
 
+void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSectorY)
+{
 	// set current page to before list
 	iCurrentHistoryPage = 0;
+	SetLastPageInHistoryRecords();
+	OpenAndReadHistoryFile();
 
-	SetLastPageInHistoryRecords( );
-
-	OpenAndReadHistoryFile( );
-
-	pList = pHistoryListHead;
-
-	while( pList )
+	for (HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
 	{
-		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if (h->ubSecondCode == ubCode && h->ubCode == HISTORY_QUEST_STARTED)
 		{
 			// reset color
-			pList -> ubColor = 0;
-			fFound = TRUE;
-
-			// save
-			OpenAndWriteHistoryFile( );
-			pList = NULL;
-		}
-
-		if( fFound != TRUE )
-		{
-			pList = pList->Next;
+			h->ubColor = 0;
+			OpenAndWriteHistoryFile();
+			break;
 		}
 	}
 
-	if( fInHistoryMode )
+	if (fInHistoryMode)
 	{
-	  iCurrentHistoryPage--;
-
+	  --iCurrentHistoryPage;
 		// load in first page
-	  LoadNextHistoryPage( );
+	  LoadNextHistoryPage();
 	}
 
-	SetHistoryFact( HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY );
+	SetHistoryFact(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
 }
 
 
