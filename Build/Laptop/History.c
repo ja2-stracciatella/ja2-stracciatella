@@ -143,7 +143,7 @@ static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSec
 void SetHistoryFact(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
 {
 	const UINT8 ubColor = (ubCode == HISTORY_QUEST_FINISHED ? 0 : 1);
-	InternalAddHistoryToPlayersLog(ubColor, ubSecondCode, uiDate, sSectorX, sSectorY, ubColor);
+	InternalAddHistoryToPlayersLog(ubCode, ubSecondCode, uiDate, sSectorX, sSectorY, ubColor);
 }
 
 
