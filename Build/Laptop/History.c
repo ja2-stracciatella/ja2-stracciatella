@@ -771,7 +771,7 @@ static void DisplayPageNumberAndDateRange(void)
   else
 	{
 		current_page     = iCurrentHistoryPage;
-		count_pages      = GetNumberOfHistoryPages() + 1;
+		count_pages      = GetNumberOfHistoryPages();
 		first_date       = h->uiDate / (24 * 60);
 
 		UINT entry_count = NUM_RECORDS_PER_PAGE;
@@ -1331,33 +1331,13 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	HWFILE hFileHandle;
-	UINT32	uiFileSize=0;
-	UINT32  uiSizeOfRecordsOnEachPage = 0;
-	INT32		iNumberOfHistoryPages = 0;
+	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return 1;
 
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	const UINT32 uiFileSize = FileGetSize(f) - 1;
+	FileClose(f);
 
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		return( 0 );
-  }
+	if (uiFileSize == 0) return 1;
 
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return( 0 );
-	}
-
-	uiFileSize = FileGetSize( hFileHandle ) - 1;
-	uiSizeOfRecordsOnEachPage = ( NUM_RECORDS_PER_PAGE * ( sizeof( UINT8 ) + sizeof( UINT32 ) + 3*sizeof( UINT8 )+ sizeof(INT16) + sizeof( INT16 ) ) );
-
-	iNumberOfHistoryPages = (INT32)( uiFileSize / uiSizeOfRecordsOnEachPage );
-
-	FileClose( hFileHandle );
-
-	return( iNumberOfHistoryPages );
+	return (uiFileSize / SIZE_OF_HISTORY_FILE_RECORD + NUM_RECORDS_PER_PAGE - 1) / NUM_RECORDS_PER_PAGE;
 }
