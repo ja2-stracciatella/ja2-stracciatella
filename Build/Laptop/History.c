@@ -370,46 +370,15 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static INT32 GetNumberOfHistoryPages(void);
+
+
 static BOOLEAN IncrementCurrentPageHistoryDisplay(void)
 {
-	HWFILE hFileHandle;
-	UINT32	uiFileSize=0;
-	UINT32  uiSizeOfRecordsOnEachPage = 0;
+	if (iCurrentHistoryPage >= GetNumberOfHistoryPages()) return FALSE;
 
-	// open file
-	hFileHandle = FileOpen( HISTORY_DATA_FILE, FILE_ACCESS_READ);
-
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		return( FALSE );
-  }
-
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-		return( FALSE );
-	}
-
-	uiFileSize = FileGetSize( hFileHandle ) - 1;
-	uiSizeOfRecordsOnEachPage = ( NUM_RECORDS_PER_PAGE * ( sizeof( UINT8 ) + sizeof( UINT32 ) + 3*sizeof( UINT8 )+ sizeof(INT16) + sizeof( INT16 ) ) );
-
-  // is the file long enough?
-//  if( ( FileGetSize( hFileHandle ) - 1 ) / ( NUM_RECORDS_PER_PAGE * ( sizeof( UINT8 ) + sizeof( UINT32 ) + 3*sizeof( UINT8 )+ sizeof(INT16) + sizeof( INT16 ) ) ) + 1 < ( UINT32 )( iCurrentHistoryPage + 1 ) )
-	if( uiFileSize / uiSizeOfRecordsOnEachPage + 1 < ( UINT32 )( iCurrentHistoryPage + 1 ) )
-	{
-		// nope
-		FileClose( hFileHandle );
-    return( FALSE );
-	}
-	else
-	{
-		iCurrentHistoryPage++;
-		FileClose( hFileHandle );
-	}
-
-	return( TRUE );
+	++iCurrentHistoryPage;
+	return TRUE;
 }
 
 
@@ -708,9 +677,6 @@ static void DrawAPageofHistoryRecords(void)
 	// update page numbers, and date ranges
 	DisplayPageNumberAndDateRange( );
 }
-
-
-static INT32 GetNumberOfHistoryPages(void);
 
 
 /* go through the list of 'histories' starting at current until end or
