@@ -107,9 +107,6 @@ INT32 iCurrentHistoryPage=1;
 // the History record list
 static HistoryUnit* pHistoryListHead = NULL;
 
-// current History record (the one at the top of the current page)
-static HistoryUnit* pCurrentHistory = NULL;
-
 
 // last page in list
 UINT32 guiLastPageInHistoryRecordsList = 0;
@@ -724,7 +721,6 @@ static void DrawHistoryRecordsText(void)
 static void DrawAPageofHistoryRecords(void)
 {
 	// this procedure will draw a series of history records to the screen
-  pCurrentHistory=pHistoryListHead;
 
 	// (re-)render background
 
@@ -762,7 +758,6 @@ static void DisplayPageNumberAndDateRange(void)
 	// MAX_PER_PAGE...it will get the date range and the page number
 	INT32 iLastPage=0;
 	INT32 iCounter=0;
-  UINT32 uiLastDate;
 	HistoryUnit* pTempHistory = pHistoryListHead;
 
   // setup the font stuff
@@ -771,7 +766,7 @@ static void DisplayPageNumberAndDateRange(void)
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
 
-	if( !pCurrentHistory )
+	if (pTempHistory == NULL)
 	{
 		mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], 1, 1);
 		mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], 1, 1);
@@ -782,7 +777,7 @@ static void DisplayPageNumberAndDateRange(void)
 		return;
   }
 
-	uiLastDate=pCurrentHistory->uiDate;
+	UINT32 uiLastDate = pTempHistory->uiDate;
 
 /*
 	// find last page
@@ -797,9 +792,6 @@ static void DisplayPageNumberAndDateRange(void)
 */
 
 	iLastPage = GetNumberOfHistoryPages();
-
-	// set temp to current, to get last date
-  pTempHistory=pCurrentHistory;
 
 	// reset counter
 	iCounter=0;
@@ -818,7 +810,7 @@ static void DisplayPageNumberAndDateRange(void)
 	// get the last page
 
 	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], iCurrentHistoryPage, iLastPage + 1);
-	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], pCurrentHistory->uiDate / (24 * 60), uiLastDate / (24 * 60));
+	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], pHistoryListHead->uiDate / (24 * 60), uiLastDate / (24 * 60));
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1084,7 +1076,6 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 	}
 
 	FileClose(f);
-	pCurrentHistory = pHistoryListHead;
 	return TRUE;
 }
 
