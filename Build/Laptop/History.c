@@ -321,51 +321,32 @@ static void LoadPreviousHistoryPage(void);
 
 static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 {
-	// force redraw
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag = TRUE;
 	}
 
-
-	// force redraw
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		fReDrawScreenFlag=TRUE;
-		// this page is > 0, there are pages before it, decrement
-
-		if(iCurrentHistoryPage > 0)
-		{
-			LoadPreviousHistoryPage( );
-			//iCurrentHistoryPage--;
-		  DrawAPageofHistoryRecords( );
-		}
-
-		// set new state
-		SetHistoryButtonStates( );
+		LoadPreviousHistoryPage();
+		SetHistoryButtonStates();
+		fReDrawScreenFlag = TRUE;
 	}
-
-
 }
 
 
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 {
-
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		fReDrawScreenFlag=TRUE;
+		fReDrawScreenFlag = TRUE;
 	}
 
-
-	// force redraw
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-    // increment currentPage
-		LoadNextHistoryPage( );
-		// set new state
-		SetHistoryButtonStates( );
-		fReDrawScreenFlag=TRUE;
+		LoadNextHistoryPage();
+		SetHistoryButtonStates();
+		fReDrawScreenFlag = TRUE;
 	}
 }
 
