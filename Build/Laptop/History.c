@@ -117,7 +117,7 @@ UINT32 guiLastPageInHistoryRecordsList = 0;
 void ClearHistoryList( void );
 
 
-static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory);
+static BOOLEAN AppendHistoryToEndOfFile(void);
 static BOOLEAN LoadNextHistoryPage(void);
 static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
 
@@ -127,7 +127,6 @@ void SetHistoryFact(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSect
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
 	UINT8 ubColor = 0;
-	HistoryUnit* pHistory = pHistoryListHead;
 
 	// clear the list
   ClearHistoryList( );
@@ -144,12 +143,7 @@ void SetHistoryFact(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSect
 	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, ubColor);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
 
-	// history list head
-  pHistory = pHistoryListHead;
-
-	// append to end of file
-  AppendHistoryToEndOfFile( pHistory );
-
+  AppendHistoryToEndOfFile();
 
 	// if in history mode, reload current page
   if( fInHistoryMode )
@@ -166,7 +160,6 @@ void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT
 {
 	// adds History item to player's log(History List), returns unique id number of it
 	// outside of the History system(the code in this .c file), this is the only function you'll ever need
-	HistoryUnit* pHistory = pHistoryListHead;
 
 	// clear the list
   ClearHistoryList( );
@@ -175,12 +168,7 @@ void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT
 	ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, 0, 0);
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_HISTORY_UPDATED ] );
 
-	// history list head
-  pHistory = pHistoryListHead;
-
-	// append to end of file
-  AppendHistoryToEndOfFile( pHistory );
-
+  AppendHistoryToEndOfFile();
 
 	// if in history mode, reload current page
   if( fInHistoryMode )
@@ -1347,7 +1335,7 @@ static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
 }
 
 
-static BOOLEAN AppendHistoryToEndOfFile(HistoryUnit* pHistory)
+static BOOLEAN AppendHistoryToEndOfFile(void)
 {
   	// will write the current finance to disk
 	HistoryUnit* pHistoryList = pHistoryListHead;
