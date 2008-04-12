@@ -1036,100 +1036,56 @@ static void SetHistoryButtonStates(void)
 }
 
 
-static BOOLEAN LoadInHistoryRecords(UINT32 uiPage)
+// loads in records belogning, to page uiPage
+static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 {
-	// loads in records belogning, to page uiPage
-  // no file, return
-	BOOLEAN fOkToContinue=TRUE;
-  INT32 iCount =0;
-  HWFILE hFileHandle;
-  UINT8 ubCode, ubSecondCode;
-	INT16 sSectorX, sSectorY;
-	INT8  bSectorZ;
-	UINT32 uiDate;
-	UINT8 ubColor;
-  UINT32 uiByteCount=0;
-
 	// check if bad page
-	if( uiPage == 0 )
+	if (uiPage == 0) return FALSE;
+
+	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	if (!f) return FALSE;
+
+	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
+	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
+	if (entry_count <= skip)
 	{
-		return ( FALSE );
+		FileClose(f);
+		return FALSE;
 	}
 
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	FileSeek(f, skip * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START);
+	entry_count -= skip;
 
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		return( FALSE );
-  }
+	if (entry_count > NUM_RECORDS_PER_PAGE) entry_count = NUM_RECORDS_PER_PAGE;
 
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
+	while (entry_count-- > 0)
 	{
-    FileClose( hFileHandle );
-		return( FALSE );
+		UINT8  ubCode;
+		UINT8  ubSecondCode;
+		UINT32 uiDate;
+		INT16  sSectorX;
+		INT16  sSectorY;
+		INT8   bSectorZ;
+		UINT8  ubColor;
+
+		FileRead(f, &ubCode,       sizeof(UINT8));
+		FileRead(f, &ubSecondCode, sizeof(UINT8));
+		FileRead(f, &uiDate,       sizeof(UINT32));
+		FileRead(f, &sSectorX,     sizeof(INT16));
+		FileRead(f, &sSectorY,     sizeof(INT16));
+		FileRead(f, &bSectorZ,     sizeof(INT8));
+		FileRead(f, &ubColor,      sizeof(UINT8));
+
+#ifdef JA2TESTVERSION
+		PerformCheckOnHistoryRecord(3, sSectorX, sSectorY, bSectorZ);
+#endif
+
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor);
 	}
 
-  // is the file long enough?
-  if( ( FileGetSize( hFileHandle ) - 1 ) / ( NUM_RECORDS_PER_PAGE * SIZE_OF_HISTORY_FILE_RECORD ) + 1 < uiPage )
-	{
-		// nope
-		FileClose( hFileHandle );
-    return( FALSE );
-	}
-
-	FileSeek( hFileHandle, ( uiPage - 1 ) * NUM_RECORDS_PER_PAGE * ( SIZE_OF_HISTORY_FILE_RECORD), FILE_SEEK_FROM_START );
-
-	uiByteCount = ( uiPage  - 1 ) * NUM_RECORDS_PER_PAGE * (SIZE_OF_HISTORY_FILE_RECORD );
-	// file exists, read in data, continue until end of page
-  while( ( iCount < NUM_RECORDS_PER_PAGE )&&( fOkToContinue ) )
-	{
-
-		// read in other data
-    FileRead(hFileHandle, &ubCode,       sizeof(UINT8));
-		FileRead(hFileHandle, &ubSecondCode, sizeof(UINT8));
-		FileRead(hFileHandle, &uiDate,       sizeof(UINT32));
-    FileRead(hFileHandle, &sSectorX,     sizeof(INT16));
-    FileRead(hFileHandle, &sSectorY,     sizeof(INT16));
-		FileRead(hFileHandle, &bSectorZ,     sizeof(INT8));
-		FileRead(hFileHandle, &ubColor,      sizeof(UINT8));
-
-		#ifdef JA2TESTVERSION
-		//perform a check on the data to see if it is pooched
-		PerformCheckOnHistoryRecord( 3, sSectorX, sSectorY, bSectorZ );
-		#endif
-
-		// add transaction
-    ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor);
-
-		// increment byte counter
-	  uiByteCount += SIZE_OF_HISTORY_FILE_RECORD;
-
-		// we've overextended our welcome, and bypassed end of file, get out
-		if( uiByteCount >=  FileGetSize( hFileHandle ) )
-		{
-			// not ok to continue
-			fOkToContinue = FALSE;
-		}
-
-		iCount++;
-	}
-
-	FileClose( hFileHandle );
-
-	// check to see if we in fact have a list to display
-  if( pHistoryListHead == NULL )
-	{
-		// got no records, return false
-		return( FALSE );
-	}
-
-	// set up current finance
+	FileClose(f);
 	pCurrentHistory = pHistoryListHead;
-
-	return( TRUE );
+	return TRUE;
 }
 
 
