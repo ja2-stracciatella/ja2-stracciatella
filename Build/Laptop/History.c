@@ -108,9 +108,6 @@ INT32 iCurrentHistoryPage=1;
 static HistoryUnit* pHistoryListHead = NULL;
 
 
-// last page in list
-UINT32 guiLastPageInHistoryRecordsList = 0;
-
 void ClearHistoryList( void );
 
 
@@ -1105,80 +1102,6 @@ static BOOLEAN LoadPreviousHistoryPage(void)
 }
 
 
-static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void);
-
-
-static void SetLastPageInHistoryRecords(void)
-{
-	// grabs the size of the file and interprets number of pages it will take up
-  HWFILE hFileHandle;
-
-	// no file, return
-	if ( ! (FileExists( HISTORY_DATA_FILE ) ) )
-		return;
-
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
-
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		guiLastPageInHistoryRecordsList = 1;
-		return;
-  }
-
-	// make sure file is more than 0 length
-  if ( FileGetSize( hFileHandle ) == 0 )
-	{
-    FileClose( hFileHandle );
-    guiLastPageInHistoryRecordsList = 1;
-		return;
-	}
-
-
-	// done with file, close it
-	FileClose( hFileHandle );
-
-	guiLastPageInHistoryRecordsList = ReadInLastElementOfHistoryListAndReturnIdNumber( ) / NUM_RECORDS_PER_PAGE;
-}
-
-
-static UINT32 ReadInLastElementOfHistoryListAndReturnIdNumber(void)
-{
-	// this function will read in the last unit in the history list, to grab it's id number
-
-
-  HWFILE hFileHandle;
-  INT32 iFileSize = 0;
-
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
-
-	// failed to get file, return
-	if(!hFileHandle)
-	{
-		return 0;
-  }
-
-	// make sure file is more than balance size + length of 1 record - 1 byte
-  if ( FileGetSize( hFileHandle ) < SIZE_OF_HISTORY_FILE_RECORD )
-	{
-    FileClose( hFileHandle );
-    return 0;
-	}
-
-	// size is?
-  iFileSize = FileGetSize( hFileHandle );
-
-	// done with file, close it
-	FileClose( hFileHandle );
-
-  // file size  / sizeof record in bytes is id
-	return ( (  iFileSize  ) / ( SIZE_OF_HISTORY_FILE_RECORD ) );
-
-}
-
-
 static BOOLEAN AppendHistoryToEndOfFile(void)
 {
   	// will write the current finance to disk
@@ -1216,7 +1139,6 @@ void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSec
 {
 	// set current page to before list
 	iCurrentHistoryPage = 0;
-	SetLastPageInHistoryRecords();
 	OpenAndReadHistoryFile();
 
 	for (HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
@@ -1244,7 +1166,6 @@ void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSec
 UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 {
 	iCurrentHistoryPage = 0;
-	SetLastPageInHistoryRecords();
 	OpenAndReadHistoryFile();
 
 	UINT32 uiTime = 0;
