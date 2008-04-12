@@ -42,15 +42,10 @@ struct HistoryUnit
 
 #define TOP_X											0+LAPTOP_SCREEN_UL_X
 #define TOP_Y											LAPTOP_SCREEN_UL_Y
-#define BLOCK_HIST_HEIGHT					10
 #define BOX_HEIGHT								14
 #define TOP_DIVLINE_Y							101
-#define DIVLINE_X									130
-#define MID_DIVLINE_Y							155
-#define BOT_DIVLINE_Y							204
 #define TITLE_X										140
 #define TITLE_Y										33
-#define TEXT_X										140
 #define PAGE_SIZE									22
 #define RECORD_Y									TOP_DIVLINE_Y
 #define RECORD_HISTORY_WIDTH			200
@@ -77,31 +72,22 @@ struct HistoryUnit
 
 // graphics handles
 static SGPVObject* guiTITLE;
-//UINT32 guiGREYFRAME;
 static SGPVObject* guiTOP;
-//UINT32 guiMIDDLE;
-//UINT32 guiBOTTOM;
-//UINT32 guiLINE;
 static SGPVObject* guiLONGLINE;
 static SGPVObject* guiSHADELINE;
-//UINT32 guiVERTLINE;
-//UINT32 guiBIGBOX;
 
 enum{
 	PREV_PAGE_BUTTON=0,
   NEXT_PAGE_BUTTON,
 };
 
-
-
 // the page flipping buttons
-INT32 giHistoryButton[2];
-BOOLEAN fInHistoryMode=FALSE;
+static INT32 giHistoryButton[2];
 
 
+static BOOLEAN fInHistoryMode = FALSE;
 // current page displayed
-INT32 iCurrentHistoryPage=1;
-
+static INT32 iCurrentHistoryPage = 1;
 
 
 // the History record list
@@ -265,12 +251,6 @@ static BOOLEAN LoadHistory(void)
 	guiSHADELINE = AddVideoObjectFromFile("LAPTOP/historylines.sti");
 	CHECKF(guiSHADELINE != NO_VOBJECT);
 
-/*
-Not being used???  DF commented out
-  // vert  line
-	guiVERTLINE = AddVideoObjectFromFile("LAPTOP/historyvertline.sti");
-	CHECKF(guiVERTLINE != NO_VOBJECT);
-*/
   // black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
 	CHECKF(guiLONGLINE != NO_VOBJECT);
