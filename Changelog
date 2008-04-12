@@ -1,3 +1,4 @@
+(r3721) Fix a vanilla bug: When starting a new game, the date of the first history entry was set to the date of the last loaded game.
 (r3708) Fix a vanilla bug: Items on top and in structures (tables, crates, etc.) could not be selected in the overhead map.
 (r3704) Enable toggling between fullscreen and window mode at runtime by pressing ALT+RETURN.
 (r3675) Fix a vanilla display glitch: Set the name of crows to "CROW" instead of "CIVILIAN", so the proper name is displayed in the overhead map.
