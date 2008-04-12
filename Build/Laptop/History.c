@@ -1257,47 +1257,30 @@ void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY )
 }
 
 
-UINT32 GetTimeQuestWasStarted( UINT8 ubCode )
+UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 {
-	// run through history list
-	HistoryUnit* pList = pHistoryListHead;
-	BOOLEAN fFound = FALSE;
-	UINT32 uiTime = 0;
-
-	// set current page to before list
 	iCurrentHistoryPage = 0;
+	SetLastPageInHistoryRecords();
+	OpenAndReadHistoryFile();
 
-	SetLastPageInHistoryRecords( );
-
-	OpenAndReadHistoryFile( );
-
-	pList = pHistoryListHead;
-
-	while( pList )
+	UINT32 uiTime = 0;
+	for (const HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
 	{
-		if( ( pList -> ubSecondCode == ubCode ) && ( pList->ubCode == HISTORY_QUEST_STARTED ) )
+		if (h->ubSecondCode == ubCode && h->ubCode == HISTORY_QUEST_STARTED)
 		{
-			uiTime = pList->uiDate;
-			fFound = TRUE;
-
-			pList = NULL;
-		}
-
-		if( fFound != TRUE )
-		{
-			pList = pList->Next;
+			uiTime = h->uiDate;
+			break;
 		}
 	}
 
-	if( fInHistoryMode )
+	if (fInHistoryMode)
 	{
-	  iCurrentHistoryPage--;
-
+	  --iCurrentHistoryPage;
 		// load in first page
-	  LoadNextHistoryPage( );
+	  LoadNextHistoryPage();
 	}
 
-	return( uiTime );
+	return uiTime;
 }
 
 
