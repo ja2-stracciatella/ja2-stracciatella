@@ -650,174 +650,116 @@ static void GetQuestEndedString(UINT8 ubQuestValue, wchar_t* sQuestString);
 static void GetQuestStartedString(UINT8 ubQuestValue, wchar_t* sQuestString);
 
 
-static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t Length, const HistoryUnit* const pHistory)
+static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t Length, const HistoryUnit* const h)
 {
-	switch( pHistory->ubCode)
+	const UINT8 code = h->ubCode;
+	switch (code)
 	{
-		case HISTORY_ENTERED_HISTORY_MODE:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_ENTERED_HISTORY_MODE ]);
+		case HISTORY_QUEST_STARTED:
+			GetQuestStartedString(h->ubSecondCode, pString);
 			break;
 
-		case HISTORY_HIRED_MERC_FROM_AIM:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_HIRED_MERC_FROM_AIM ], gMercProfiles[pHistory->ubSecondCode].zName  );
+		case HISTORY_QUEST_FINISHED:
+			GetQuestEndedString(h->ubSecondCode, pString);
+			break;
+
+		case HISTORY_LIBERATED_TOWN:
+		case HISTORY_MINE_RAN_OUT:
+		case HISTORY_MINE_REOPENED:
+		case HISTORY_MINE_RUNNING_OUT:
+		case HISTORY_MINE_SHUTDOWN:
+		case HISTORY_TALKED_TO_MINER:
+			swprintf(pString, Length, pHistoryStrings[code], pTownNames[h->ubSecondCode]);
 			break;
 
 		case HISTORY_MERC_KILLED:
-			if( pHistory->ubSecondCode != NO_PROFILE )
-				swprintf(pString, Length, pHistoryStrings[ HISTORY_MERC_KILLED ], gMercProfiles[pHistory->ubSecondCode].zName );
-#ifdef JA2BETAVERSION
-			else
+			if (h->ubSecondCode == NO_PROFILE)
 			{
-				swprintf(pString, Length, pHistoryStrings[ HISTORY_MERC_KILLED ], L"ERROR!!!  NO_PROFILE" );
-			}
+#ifdef JA2BETAVERSION
+				swprintf(pString, Length, pHistoryStrings[code], L"ERROR!!!  NO_PROFILE");
 #endif
+				break;
+			}
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zName);
 			break;
 
+		case HISTORY_HIRED_MERC_FROM_AIM:
 		case HISTORY_HIRED_MERC_FROM_MERC:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_HIRED_MERC_FROM_MERC ],  gMercProfiles[pHistory->ubSecondCode].zName );
-			break;
-
-		case HISTORY_SETTLED_ACCOUNTS_AT_MERC:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_SETTLED_ACCOUNTS_AT_MERC ] );
-			break;
-		case HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO ] );
-			break;
-		case( HISTORY_CHARACTER_GENERATED ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_CHARACTER_GENERATED ] );
-		  break;
-		case( HISTORY_PURCHASED_INSURANCE ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_PURCHASED_INSURANCE ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-		  break;
-		case( HISTORY_CANCELLED_INSURANCE ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_CANCELLED_INSURANCE ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-		  break;
-		case( HISTORY_INSURANCE_CLAIM_PAYOUT ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_INSURANCE_CLAIM_PAYOUT ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-		  break;
-
-		case HISTORY_EXTENDED_CONTRACT_1_DAY:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_EXTENDED_CONTRACT_1_DAY ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-			break;
-
-		case HISTORY_EXTENDED_CONTRACT_1_WEEK:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_EXTENDED_CONTRACT_1_WEEK ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-			break;
-
-		case HISTORY_EXTENDED_CONTRACT_2_WEEK:
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_EXTENDED_CONTRACT_2_WEEK ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-			break;
-
-		case( HISTORY_MERC_FIRED ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_MERC_FIRED ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-		  break;
-
-		case( HISTORY_MERC_QUIT ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_MERC_QUIT ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-		  break;
-
-		case( HISTORY_QUEST_STARTED ):
-		{
-			wchar_t sString[HISTORY_QUEST_TEXT_SIZE];
-			GetQuestStartedString(pHistory->ubSecondCode, sString);
-			swprintf(pString, Length, sString);
-			break;
-		}
-
-		case( HISTORY_QUEST_FINISHED ):
-		{
-			wchar_t sString[HISTORY_QUEST_TEXT_SIZE];
-			GetQuestEndedString(pHistory->ubSecondCode, sString);
-			swprintf(pString, Length, sString);
-			break;
-		}
-
-		case( HISTORY_TALKED_TO_MINER ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_TALKED_TO_MINER ], pTownNames[ pHistory->ubSecondCode ] );
-		  break;
-		case( HISTORY_LIBERATED_TOWN ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_LIBERATED_TOWN ], pTownNames[ pHistory->ubSecondCode ] );
-			break;
-		case( HISTORY_CHEAT_ENABLED ):
-			swprintf(pString, Length, pHistoryStrings[ HISTORY_CHEAT_ENABLED ] );
-			break;
-		case HISTORY_TALKED_TO_FATHER_WALKER:
-			swprintf( pString, Length, pHistoryStrings[ HISTORY_TALKED_TO_FATHER_WALKER ] );
-			break;
-		case HISTORY_MERC_MARRIED_OFF:
-			swprintf( pString, Length, pHistoryStrings[ HISTORY_MERC_MARRIED_OFF ], gMercProfiles[pHistory->ubSecondCode].zNickname );
-			break;
 		case HISTORY_MERC_CONTRACT_EXPIRED:
-			swprintf( pString, Length, pHistoryStrings[ HISTORY_MERC_CONTRACT_EXPIRED ], gMercProfiles[pHistory->ubSecondCode].zName );
-			break;
 		case HISTORY_RPC_JOINED_TEAM:
-			swprintf( pString, Length, pHistoryStrings[ HISTORY_RPC_JOINED_TEAM ], gMercProfiles[pHistory->ubSecondCode].zName );
-			break;
-		case HISTORY_ENRICO_COMPLAINED:
-			swprintf( pString, Length, pHistoryStrings[ HISTORY_ENRICO_COMPLAINED ] );
-			break;
-		case HISTORY_MINE_RUNNING_OUT:
-		case HISTORY_MINE_RAN_OUT:
-		case HISTORY_MINE_SHUTDOWN:
-		case HISTORY_MINE_REOPENED:
-			// all the same format
-			swprintf(pString, Length, pHistoryStrings[ pHistory->ubCode ], pTownNames[ pHistory->ubSecondCode ] );
-			break;
-		case HISTORY_LOST_BOXING:
-		case HISTORY_WON_BOXING:
-		case HISTORY_DISQUALIFIED_BOXING:
-		case HISTORY_NPC_KILLED:
-		case HISTORY_MERC_KILLED_CHARACTER:
-			swprintf( pString, Length, pHistoryStrings[ pHistory->ubCode ], gMercProfiles[pHistory->ubSecondCode].zNickname );
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zName);
 			break;
 
-		// ALL SIMPLE HISTORY LOG MSGS, NO PARAMS
-		case HISTORY_FOUND_MONEY:
+		case HISTORY_CANCELLED_INSURANCE:
+		case HISTORY_DISQUALIFIED_BOXING:
+		case HISTORY_EXTENDED_CONTRACT_1_DAY:
+		case HISTORY_EXTENDED_CONTRACT_1_WEEK:
+		case HISTORY_EXTENDED_CONTRACT_2_WEEK:
+		case HISTORY_INSURANCE_CLAIM_PAYOUT:
+		case HISTORY_LOST_BOXING:
+		case HISTORY_MERC_FIRED:
+		case HISTORY_MERC_KILLED_CHARACTER:
+		case HISTORY_MERC_MARRIED_OFF:
+		case HISTORY_MERC_QUIT:
+		case HISTORY_NPC_KILLED:
+		case HISTORY_PURCHASED_INSURANCE:
+		case HISTORY_WON_BOXING:
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zNickname);
+			break;
+
+		// all simple history log msgs, no params
+		case HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO:
+		case HISTORY_ARNOLD:
 		case HISTORY_ASSASSIN:
-		case HISTORY_DISCOVERED_TIXA:
-		case HISTORY_DISCOVERED_ORTA:
-		case HISTORY_GOT_ROCKET_RIFLES:
-		case HISTORY_DEIDRANNA_DEAD_BODIES:
 		case HISTORY_BOXING_MATCHES:
-		case HISTORY_SOMETHING_IN_MINES:
+		case HISTORY_BUM_KEYCARD:
+		case HISTORY_CHARACTER_GENERATED:
+		case HISTORY_CHEAT_ENABLED:
+		case HISTORY_CREATURESATTACKED:
+		case HISTORY_DAVE:
+		case HISTORY_DEFENDEDTOWNSECTOR:
+		case HISTORY_DEIDRANNA_DEAD_BODIES:
 		case HISTORY_DEVIN:
-		case HISTORY_MIKE:
-		case HISTORY_TONY:
+		case HISTORY_DISCOVERED_ORTA:
+		case HISTORY_DISCOVERED_TIXA:
+		case HISTORY_ENRICO_COMPLAINED:
+		case HISTORY_ENTERED_HISTORY_MODE:
+		case HISTORY_FATALAMBUSH:
+		case HISTORY_FOUND_MONEY:
+		case HISTORY_FRANZ:
+		case HISTORY_FREDO:
+		case HISTORY_GABBY:
+		case HISTORY_GAVE_CARMEN_HEAD:
+		case HISTORY_GOT_ROCKET_RIFLES:
+		case HISTORY_HOWARD:
+		case HISTORY_HOWARD_CYANIDE:
+		case HISTORY_JAKE:
+		case HISTORY_KEITH:
+		case HISTORY_KEITH_OUT_OF_BUSINESS:
+		case HISTORY_KILLEDBYBLOODCATS:
+		case HISTORY_KINGPIN_MONEY:
 		case HISTORY_KROTT:
 		case HISTORY_KYLE:
-		case HISTORY_MADLAB:
-		case HISTORY_GABBY:
-		case HISTORY_KEITH_OUT_OF_BUSINESS:
-		case HISTORY_HOWARD_CYANIDE:
-		case HISTORY_KEITH:
-		case HISTORY_HOWARD:
-		case HISTORY_PERKO:
-		case HISTORY_SAM:
-		case HISTORY_FRANZ:
-		case HISTORY_ARNOLD:
-		case HISTORY_FREDO:
-		case HISTORY_RICHGUY_BALIME:
-		case HISTORY_JAKE:
-		case HISTORY_BUM_KEYCARD:
-		case HISTORY_WALTER:
-		case HISTORY_DAVE:
-		case HISTORY_PABLO:
-		case HISTORY_KINGPIN_MONEY:
-		//VARIOUS BATTLE CONDITIONS
-		case HISTORY_LOSTTOWNSECTOR:
-		case HISTORY_DEFENDEDTOWNSECTOR:
 		case HISTORY_LOSTBATTLE:
-		case HISTORY_WONBATTLE:
-		case HISTORY_FATALAMBUSH:
-		case HISTORY_WIPEDOUTENEMYAMBUSH:
-		case HISTORY_UNSUCCESSFULATTACK:
-		case HISTORY_SUCCESSFULATTACK:
-		case HISTORY_CREATURESATTACKED:
-		case HISTORY_KILLEDBYBLOODCATS:
+		case HISTORY_LOSTTOWNSECTOR:
+		case HISTORY_MADLAB:
+		case HISTORY_MIKE:
+		case HISTORY_PABLO:
+		case HISTORY_PERKO:
+		case HISTORY_RICHGUY_BALIME:
+		case HISTORY_SAM:
+		case HISTORY_SETTLED_ACCOUNTS_AT_MERC:
 		case HISTORY_SLAUGHTEREDBLOODCATS:
-		case HISTORY_GAVE_CARMEN_HEAD:
 		case HISTORY_SLAY_MYSTERIOUSLY_LEFT:
-			swprintf( pString, Length, pHistoryStrings[ pHistory->ubCode ] );
+		case HISTORY_SOMETHING_IN_MINES:
+		case HISTORY_SUCCESSFULATTACK:
+		case HISTORY_TALKED_TO_FATHER_WALKER:
+		case HISTORY_TONY:
+		case HISTORY_UNSUCCESSFULATTACK:
+		case HISTORY_WALTER:
+		case HISTORY_WIPEDOUTENEMYAMBUSH:
+		case HISTORY_WONBATTLE:
+			swprintf(pString, Length, pHistoryStrings[code]);
 			break;
 	}
 }
