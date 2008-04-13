@@ -455,26 +455,15 @@ static BOOLEAN OpenAndWriteHistoryFile(void)
 }
 
 
-void ClearHistoryList( void )
+void ClearHistoryList(void)
 {
-	// remove each element from list of transactions
-
-	HistoryUnit* pHistoryList = pHistoryListHead;
-	HistoryUnit* pHistoryNode = pHistoryList;
-
-	// while there are elements in the list left, delete them
-	while( pHistoryList )
+	for (HistoryUnit* h = pHistoryListHead; h != NULL;)
 	{
-    // set node to list head
-		pHistoryNode=pHistoryList;
-
-		// set list head to next node
-		pHistoryList=pHistoryList->Next;
-
-		// delete current node
-		MemFree(pHistoryNode);
+		HistoryUnit* const next = h->Next;
+		MemFree(h);
+		h = next;
 	}
-  pHistoryListHead=NULL;
+	pHistoryListHead = NULL;
 }
 
 
