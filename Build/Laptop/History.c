@@ -517,80 +517,50 @@ static void DisplayHistoryListBackground(void)
 static void ProcessHistoryTransactionString(wchar_t* pString, size_t Length, const HistoryUnit* pHistory);
 
 
+// draw the text of the records
 static void DrawHistoryRecordsText(void)
 {
-  // draws the text of the records
-	HistoryUnit* pCurHistory = pHistoryListHead;
 	wchar_t sString[512];
-	INT16 sX =0, sY =0;
+	INT16   sX;
+	INT16   sY;
 
-  // setup the font stuff
 	SetFont(HISTORY_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
   SetFontShadow(NO_SHADOW);
 
-	// error check
-	if( !pCurHistory)
-		return;
-
-
-	// loop through record list
-	for (INT32 iCounter = 0; iCounter < NUM_RECORDS_PER_PAGE; iCounter++)
+	UINT entry_count = 0;
+	for (const HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
 	{
-		if( pCurHistory->ubColor == 0 )
-		{
-			SetFontForeground(FONT_BLACK);
-		}
-		else
-		{
-			SetFontForeground(FONT_RED);
-		}
+		SetFontForeground(h->ubColor == 0 ? FONT_BLACK : FONT_RED);
+
+		const INT32 y = RECORD_Y + entry_count * BOX_HEIGHT + 3;
+
 		// get and write the date
-		swprintf(sString, lengthof(sString), L"%d", ( pCurHistory->uiDate / ( 24 * 60 ) ) );
+		swprintf(sString, lengthof(sString), L"%d", h->uiDate / (24 * 60));
 		INT16 usX;
 		INT16 usY;
-		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH,0, sString, HISTORY_TEXT_FONT,&usX, &usY);
-		mprintf(usX, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString);
+		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH, 0, sString, HISTORY_TEXT_FONT, &usX, &usY);
+		mprintf(usX, y, sString);
 
-		// now the actual history text
-    //FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH,0,RECORD_HISTORY_WIDTH,0,  pHistoryStrings[pCurHistory->ubCode], HISTORY_TEXT_FONT,&usX, &usY);
-		ProcessHistoryTransactionString(sString, lengthof(sString), pCurHistory);
-//	mprintf(RECORD_DATE_X + RECORD_DATE_WIDTH + 25, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, pHistoryStrings[pCurHistory->ubCode] );
-		mprintf(RECORD_DATE_X + RECORD_LOCATION_WIDTH +RECORD_DATE_WIDTH + 15, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString );
-
-
-		// no location
-		if( ( pCurHistory->sSectorX == -1 )||( pCurHistory->sSectorY == -1 ) )
+		if (h->sSectorX == -1 || h->sSectorY == -1)
 		{
+			// no location
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0, pHistoryLocations, HISTORY_TEXT_FONT, &sX, &sY);
-		  mprintf(sX, RECORD_Y + iCounter * BOX_HEIGHT + 3, pHistoryLocations);
+		  mprintf(sX, y, pHistoryLocations);
     }
 		else
 		{
-			GetSectorIDString( pCurHistory->sSectorX, pCurHistory->sSectorY, pCurHistory->bSectorZ, sString, lengthof(sString), TRUE );
-			FindFontCenterCoordinates( RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString ,HISTORY_TEXT_FONT, &sX, &sY );
-
-			ReduceStringLength( sString, lengthof(sString), RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT );
-
-			mprintf(sX, RECORD_Y + ( iCounter * ( BOX_HEIGHT ) ) + 3, sString );
+			GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, sString, lengthof(sString), TRUE);
+			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
+			ReduceStringLength(sString, lengthof(sString), RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
+			mprintf(sX, y, sString);
 		}
 
-		// restore font color
-		SetFontForeground(FONT_BLACK);
+		// the actual history text
+		ProcessHistoryTransactionString(sString, lengthof(sString), h);
+		mprintf(RECORD_DATE_X + RECORD_LOCATION_WIDTH + RECORD_DATE_WIDTH + 15, y, sString);
 
-		// next History
-		pCurHistory = pCurHistory->Next;
-
-		// last page, no Historys left, return
-		if( ! pCurHistory )
-		{
-
-			// restore shadow
-      SetFontShadow(DEFAULT_SHADOW);
-			return;
-		}
-
+		if (++entry_count == NUM_RECORDS_PER_PAGE) break;
 	}
 
 	// restore shadow
