@@ -877,68 +877,61 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void ProcessTransactionString(wchar_t pString[], size_t Length, const FinanceUnit* pFinance)
+static void ProcessTransactionString(wchar_t pString[], const size_t Length, const FinanceUnit* const f)
 {
 	const wchar_t* s;
-	switch (pFinance->ubCode)
+	UINT8 code = f->ubCode;
+	switch (code)
 	{
-		case ACCRUED_INTEREST:  s = pTransactionText[ACCRUED_INTEREST];  goto copy;
-		case ANONYMOUS_DEPOSIT: s = pTransactionText[ANONYMOUS_DEPOSIT]; goto copy;
-		case TRANSACTION_FEE:   s = pTransactionText[TRANSACTION_FEE];   goto copy;
+		case DEPOSIT_FROM_SILVER_MINE:
+			code = DEPOSIT_FROM_GOLD_MINE;
+			/* FALLTHROUGH */
 
-		case HIRED_MERC: s = pMessageStrings[MSG_HIRED_MERC]; goto copy_name;
-
-		case BOBBYR_PURCHASE: s = pTransactionText[BOBBYR_PURCHASE]; goto copy;
-
-		case PAY_SPECK_FOR_MERC: s = pTransactionText[PAY_SPECK_FOR_MERC]; goto copy;
-
-		case MEDICAL_DEPOSIT: s = pTransactionText[MEDICAL_DEPOSIT]; goto copy_name;
-
-		case IMP_PROFILE: s = pTransactionText[IMP_PROFILE]; goto copy;
-
-		case PURCHASED_INSURANCE: s = pTransactionText[PURCHASED_INSURANCE]; goto copy_name;
-		case REDUCED_INSURANCE:   s = pTransactionText[REDUCED_INSURANCE];   goto copy_name;
-		case EXTENDED_INSURANCE:  s = pTransactionText[EXTENDED_INSURANCE];  goto copy_name;
-		case CANCELLED_INSURANCE: s = pTransactionText[CANCELLED_INSURANCE]; goto copy_name;
-		case INSURANCE_PAYOUT:    s = pTransactionText[INSURANCE_PAYOUT];    goto copy_name;
-
-		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[0]; goto copy_name;
-		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[1]; goto copy_name;
-		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[2]; goto copy_name;
-
+		case ACCRUED_INTEREST:
+		case ANONYMOUS_DEPOSIT:
+		case BOBBYR_PURCHASE:
 		case DEPOSIT_FROM_GOLD_MINE:
-		case DEPOSIT_FROM_SILVER_MINE: s = pTransactionText[16]; goto copy;
+		case IMP_PROFILE:
+		case PAY_SPECK_FOR_MERC:
+		case PURCHASED_FLOWERS:
+		case TRANSACTION_FEE:
+			wcslcpy(pString, pTransactionText[code], Length);
+			break;
 
-		case PURCHASED_FLOWERS: s = pTransactionText[PURCHASED_FLOWERS]; goto copy;
+		case CANCELLED_INSURANCE:
+		case EXTENDED_INSURANCE:
+		case FULL_MEDICAL_REFUND:
+		case INSURANCE_PAYOUT:
+		case MEDICAL_DEPOSIT:
+		case MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT:
+		case NO_MEDICAL_REFUND:
+		case PARTIAL_MEDICAL_REFUND:
+		case PAYMENT_TO_NPC:
+		case PURCHASED_INSURANCE:
+		case PURCHASED_ITEM_FROM_DEALER:
+		case REDUCED_INSURANCE:
+		case TRANSFER_FUNDS_FROM_MERC:
+		case TRANSFER_FUNDS_TO_MERC:
+			s = pTransactionText[code];
+			goto copy_name;
 
-		case FULL_MEDICAL_REFUND:    s = pTransactionText[FULL_MEDICAL_REFUND];    goto copy_name;
-		case PARTIAL_MEDICAL_REFUND: s = pTransactionText[PARTIAL_MEDICAL_REFUND]; goto copy_name;
-		case NO_MEDICAL_REFUND:      s = pTransactionText[NO_MEDICAL_REFUND];      goto copy_name;
-
-		case TRANSFER_FUNDS_TO_MERC:   s = pTransactionText[TRANSFER_FUNDS_TO_MERC];   goto copy_name;
-		case TRANSFER_FUNDS_FROM_MERC: s = pTransactionText[TRANSFER_FUNDS_FROM_MERC]; goto copy_name;
-		case PAYMENT_TO_NPC:           s = pTransactionText[PAYMENT_TO_NPC];           goto copy_name;
+		case HIRED_MERC:                   s = pMessageStrings[MSG_HIRED_MERC]; goto copy_name;
+		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[0];    goto copy_name;
+		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[1];    goto copy_name;
+		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[2];    goto copy_name;
 
 		case TRAIN_TOWN_MILITIA:
 		{
-			wchar_t str[128];
-			UINT8 ubSectorX = SECTORX(pFinance->ubSecondCode);
-			UINT8 ubSectorY = SECTORY(pFinance->ubSecondCode);
+			wchar_t     str[128];
+			const UINT8 ubSectorX = SECTORX(f->ubSecondCode);
+			const UINT8 ubSectorY = SECTORY(f->ubSecondCode);
 			GetSectorIDString(ubSectorX, ubSectorY, 0, str, lengthof(str), TRUE);
 			swprintf(pString, Length, pTransactionText[TRAIN_TOWN_MILITIA], str);
 			break;
 		}
 
-		case PURCHASED_ITEM_FROM_DEALER: s = pTransactionText[PURCHASED_ITEM_FROM_DEALER]; goto copy_name;
-
-		case MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT: s = pTransactionText[MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT]; goto copy_name;
-
-copy:
-		wcslcpy(pString, s, Length);
-		break;
-
 copy_name:
-		swprintf(pString, Length, s, gMercProfiles[pFinance->ubSecondCode].zNickname);
+		swprintf(pString, Length, s, GetProfile(f->ubSecondCode)->zNickname);
 		break;
 	}
 }
