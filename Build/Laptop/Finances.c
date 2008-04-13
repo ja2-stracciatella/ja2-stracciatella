@@ -879,7 +879,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 
 static void ProcessTransactionString(wchar_t pString[], const size_t Length, const FinanceUnit* const f)
 {
-	const wchar_t* s;
 	UINT8 code = f->ubCode;
 	switch (code)
 	{
@@ -899,6 +898,9 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 			break;
 
 		case CANCELLED_INSURANCE:
+		case EXTENDED_CONTRACT_BY_1_DAY:
+		case EXTENDED_CONTRACT_BY_1_WEEK:
+		case EXTENDED_CONTRACT_BY_2_WEEKS:
 		case EXTENDED_INSURANCE:
 		case FULL_MEDICAL_REFUND:
 		case HIRED_MERC:
@@ -913,12 +915,8 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 		case REDUCED_INSURANCE:
 		case TRANSFER_FUNDS_FROM_MERC:
 		case TRANSFER_FUNDS_TO_MERC:
-			s = pTransactionText[code];
-			goto copy_name;
-
-		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[0];    goto copy_name;
-		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[1];    goto copy_name;
-		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[2];    goto copy_name;
+			swprintf(pString, Length, pTransactionText[code], GetProfile(f->ubSecondCode)->zNickname);
+			break;
 
 		case TRAIN_TOWN_MILITIA:
 		{
@@ -929,10 +927,6 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 			swprintf(pString, Length, pTransactionText[TRAIN_TOWN_MILITIA], str);
 			break;
 		}
-
-copy_name:
-		swprintf(pString, Length, s, GetProfile(f->ubSecondCode)->zNickname);
-		break;
 	}
 }
 

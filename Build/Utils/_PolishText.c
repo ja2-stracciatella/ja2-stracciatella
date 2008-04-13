@@ -1632,9 +1632,9 @@ const wchar_t* pTransactionText[] =
 	L"Przedł. ubezp. dla - %ls", 				// johnny contract extended
 	L"Anulowano ubezp. dla - %ls",
 	L"Odszkodowanie za - %ls", 		// insurance claim for merc
-	L"1 dzień", 				// merc's contract extended for a day
-	L"1 tydzień", 				// merc's contract extended for a week
-	L"2 tygodnie", 				// ... for 2 weeks
+	L"Przedł. kontrakt z - %ls o 1 dzień.", 				// entend mercs contract by a day
+	L"Przedł. kontrakt z - %ls o 1 tydzień.",
+	L"Przedł. kontrakt z - %ls o 2 tygodnie.",
 	L"Przychód z kopalni",
 	L"", //String nuked
 	L"Zakup kwiatów",
@@ -1647,13 +1647,6 @@ const wchar_t* pTransactionText[] =
 	L"Samoobrona w - %ls", // initial cost to equip a town's militia
 	L"Zakupy u - %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
 	L"%ls wpłacił(a) pieniądze.",
-};
-
-const wchar_t* pTransactionAlternateText[] =
-{
-	L"Przedł. kontrakt z - %ls o 1 dzień.", 				// entend mercs contract by a day
-	L"Przedł. kontrakt z - %ls o 1 tydzień.",
-	L"Przedł. kontrakt z - %ls o 2 tygodnie.",
 };
 
 // helicopter pilot payment

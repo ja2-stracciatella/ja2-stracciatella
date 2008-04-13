@@ -74,7 +74,6 @@ extern const wchar_t  pFinanceTitle[];
 extern const wchar_t *pFinanceSummary[];
 extern const wchar_t *pFinanceHeaders[];
 extern const wchar_t *pTransactionText[];
-extern const wchar_t *pTransactionAlternateText[];
 extern const wchar_t *pMoralStrings[];
 extern const wchar_t *pSkyriderText[];
 extern const wchar_t  str_left_equipment[];

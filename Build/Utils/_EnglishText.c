@@ -1633,9 +1633,9 @@ const wchar_t *pTransactionText[] =
 	L"Extended Insurance for %ls", 				// johnny contract extended
 	L"Canceled Insurance for %ls",
 	L"Insurance Claim for %ls", 		// insurance claim for merc
-	L"a day", 				// merc's contract extended for a day
-	L"1 week", 				// merc's contract extended for a week
-	L"2 weeks", 				// ... for 2 weeks
+	L"Ext. %ls's contract by one day.", 				// entend mercs contract by a day
+	L"Ext. %ls contract by 1 week.",
+	L"Ext. %ls contract by 2 weeks.",
 	L"Mine income",
 	L"", //String nuked
 	L"Purchased Flowers",
@@ -1648,13 +1648,6 @@ const wchar_t *pTransactionText[] =
 	L"Equip militia in %ls", // initial cost to equip a town's militia
 	L"Purchased items from %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
 	L"%ls deposited money.",
-};
-
-const wchar_t *pTransactionAlternateText[] =
-{
-	L"Ext. %ls's contract by one day.", 				// entend mercs contract by a day
-	L"Ext. %ls contract by 1 week.",
-	L"Ext. %ls contract by 2 weeks.",
 };
 
 // helicopter pilot payment
