@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "Font_Control.h"
 #include "Laptop.h"
+#include "LoadSaveData.h"
 #include "History.h"
 #include "Game_Clock.h"
 #include "Quests.h"
@@ -97,7 +98,7 @@ static HistoryUnit* pHistoryListHead = NULL;
 void ClearHistoryList( void );
 
 
-static BOOLEAN AppendHistoryToEndOfFile(void);
+static void AppendHistoryToEndOfFile(void);
 static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage);
 static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
@@ -806,37 +807,30 @@ static void LoadPreviousHistoryPage(void)
 }
 
 
-static BOOLEAN AppendHistoryToEndOfFile(void)
+static void AppendHistoryToEndOfFile(void)
 {
-  	// will write the current finance to disk
-	HistoryUnit* pHistoryList = pHistoryListHead;
+	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	if (!f) return;
 
-	const HWFILE hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	const HistoryUnit* const h = pHistoryListHead;
 
-	// if no file exits, do nothing
-	if(!hFileHandle)
-	{
-    return ( FALSE );
-	}
+#ifdef JA2TESTVERSION
+	PerformCheckOnHistoryRecord(5, h->sSectorX, h->sSectorY, h->bSectorZ);
+#endif
 
-		#ifdef JA2TESTVERSION
-		//perform a check on the data to see if it is pooched
-		PerformCheckOnHistoryRecord( 5, pHistoryList->sSectorX, pHistoryList->sSectorY, pHistoryList->bSectorZ );
-		#endif
+	BYTE  data[12];
+	BYTE* d = data;
+	INJ_U8(d, h->ubCode)
+	INJ_U8(d, h->ubSecondCode)
+	INJ_U32(d, h->uiDate)
+	INJ_I16(d, h->sSectorX)
+	INJ_I16(d, h->sSectorY)
+	INJ_I8(d, h->bSectorZ)
+	INJ_SKIP(d, 1)
+	Assert(d == endof(data));
 
-
-	 	// now write date and amount, and code
-	FileWrite(hFileHandle, &pHistoryList->ubCode,       sizeof(UINT8));
-	FileWrite(hFileHandle, &pHistoryList->ubSecondCode, sizeof(UINT8));
-	FileWrite(hFileHandle, &pHistoryList->uiDate,       sizeof(UINT32));
-	FileWrite(hFileHandle, &pHistoryList->sSectorX,     sizeof(INT16));
-	FileWrite(hFileHandle, &pHistoryList->sSectorY,     sizeof(INT16));
-	FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
-	const UINT8 zero = 0;
-	FileWrite(hFileHandle, &zero,                       sizeof(UINT8));
-
-  FileClose( hFileHandle );
-  return( TRUE );
+	FileWrite(f, data, sizeof(data));
+	FileClose(f);
 }
 
 
