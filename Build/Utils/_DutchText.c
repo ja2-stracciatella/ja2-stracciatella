@@ -1637,7 +1637,7 @@ const wchar_t* pTransactionText[] =
 	L"Toegenomen Interest",			// interest the player has accumulated so far
 	L"Anonieme Storting",
 	L"Transactiekosten",
-	L"Gehuurd", 					// Merc was hired
+	L"%ls ingehuurd van AIM", // Merc was hired
 	L"Bobby Ray's Wapenhandel", 		// Bobby Ray is the name of an arms dealer
 	L"Rekeningen Voldaan bij M.E.R.C.",
 	L"Medische Storting voor %ls", 		// medical deposit for merc
@@ -3263,7 +3263,6 @@ const wchar_t* pMessageStrings[] =
 	L"Geopend",
 	L"Gesloten",
 	L"Schijfruimte raakt op. Er is slects %ls MB vrij en Jagged Alliance 2 heeft %ls MB nodig.",
-	L"%ls ingehuurd van AIM",
 	L"%ls heeft %ls gevangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls heeft de drug genomen.",		//'Merc name' has taken the drug
 	L"%ls heeft geen medische kennis",	//'Merc name' has no medical skill.

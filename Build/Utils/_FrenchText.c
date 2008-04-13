@@ -1623,7 +1623,7 @@ const wchar_t* pTransactionText[] =
 	L"Intérêts cumulés",			// interest the player has accumulated so far
 	L"Dépôt anonyme",
 	L"Commission",
-	L"Engagé", 				// Merc was hired
+	L"%ls embauché(e) sur le site AIM", // Merc was hired
 	L"Achats Bobby Ray", 		// Bobby Ray is the name of an arms dealer
 	L"Règlement M.E.R.C.",
 	L"Acompte médical pour %ls", 		// medical deposit for merc
@@ -3248,7 +3248,6 @@ const wchar_t* pMessageStrings[] =
 	L"Ouverte",
 	L"Fermée",
 	L"Espace disque insuffisant. Il ne vous reste que %ls Mo de libre et Jagged Alliance 2 nécessite %ls Mo.",
-	L"%ls embauché(e) sur le site AIM",
 	L"%ls prend %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls a pris la drogue.", //'Merc name' has taken the drug
 	L"%ls n'a aucune compétence médicale.",//'Merc name' has non medical skill.

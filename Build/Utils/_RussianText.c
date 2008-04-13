@@ -1638,7 +1638,7 @@ const wchar_t* pTransactionText[] =
 	L"Проценты",			// interest the player has accumulated so far
 	L"Анонимный вклад",
 	L"Плата за перевод",
-	L"Нанят(а)", 				// Merc was hired
+	L"%ls нанят(а) в AIM", // Merc was hired
 	L"Покупки у Бобби Рэя", 		// Bobby Ray is the name of an arms dealer
 	L"Оплата по счетам M.E.R.C.",
 	L"%ls: оплачен мед. депозит", 		// medical deposit for merc
@@ -3267,7 +3267,6 @@ const wchar_t* pMessageStrings[] =
 	L"Открытая", //doors definitions
 	L"Закрытая", //doors definitions
 	L"У вас кончается дисковое пространство. У вас осталось %lsМБ свободных, а для игры требуется %lsMБ.",
-	L"%ls нанят(а) в AIM",
 	L"%ls ловит %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls принимает препарат.", //'Merc name' has taken the drug
 	L"%ls не имеет медицинских навыков",//'Merc name' has no medical skill.

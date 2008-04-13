@@ -1622,7 +1622,7 @@ const wchar_t* pTransactionText[] =
 	L"Narosłe odsetki",			// interest the player has accumulated so far
 	L"Anonimowa wpłata",
 	L"Koszt transakcji",
-	L"Wynajęto -", 				// Merc was hired
+	L"Najęto - %ls z A.I.M.", // Merc was hired
 	L"Zakupy u Bobby'ego Ray'a", 		// Bobby Ray is the name of an arms dealer
 	L"Uregulowanie rachunków w M.E.R.C.",
 	L"Zastaw na życie dla - %ls", 		// medical deposit for merc
@@ -3248,7 +3248,6 @@ const wchar_t* pMessageStrings[] =
 	L"Otw.",
 	L"Zamkn.",
 	L"Brak miejsca na dysku twardym.  Na dysku wolne jest %ls MB, a wymagane jest przynajmniej %ls MB.",
-	L"Najęto - %ls z A.I.M.",
 	L"%ls złapał(a) %ls",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls zaaplikował(a) sobie lekarstwo", //'Merc name' has taken the drug
 	L"%ls nie posiada wiedzy medycznej",//'Merc name' has no medical skill.

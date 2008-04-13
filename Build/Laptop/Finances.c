@@ -901,6 +901,7 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 		case CANCELLED_INSURANCE:
 		case EXTENDED_INSURANCE:
 		case FULL_MEDICAL_REFUND:
+		case HIRED_MERC:
 		case INSURANCE_PAYOUT:
 		case MEDICAL_DEPOSIT:
 		case MERC_DEPOSITED_MONEY_TO_PLAYER_ACCOUNT:
@@ -915,7 +916,6 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 			s = pTransactionText[code];
 			goto copy_name;
 
-		case HIRED_MERC:                   s = pMessageStrings[MSG_HIRED_MERC]; goto copy_name;
 		case EXTENDED_CONTRACT_BY_1_DAY:   s = pTransactionAlternateText[0];    goto copy_name;
 		case EXTENDED_CONTRACT_BY_1_WEEK:  s = pTransactionAlternateText[1];    goto copy_name;
 		case EXTENDED_CONTRACT_BY_2_WEEKS: s = pTransactionAlternateText[2];    goto copy_name;

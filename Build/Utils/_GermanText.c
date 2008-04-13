@@ -1572,7 +1572,7 @@ const wchar_t *pTransactionText[] =
 	L"Aufgelaufene Zinsen",			// interest the player has accumulated so far
 	L"Anonyme Einzahlung",
 	L"Bearbeitungsgebühr",
-	L"Angeheuert", 				// Merc was hired
+	L"%ls von AIM angeheuert", // Merc was hired
 	L"Kauf bei Bobby Rays",	 		// Bobby Ray is the name of an arms dealer
 	L"Ausgeglichene Konten bei M.E.R.C.",
 	L"Krankenversicherung für %ls", 		// medical deposit for merc
@@ -3074,7 +3074,6 @@ const wchar_t *pMessageStrings[] =
 	L"offen",
 	L"zu",
 	L"Ihr Festplattenspeicher ist knapp. Sie haben lediglich %lsMB frei und Jagged Alliance 2 benötigt %lsMB.",
-	L"%ls von AIM angeheuert",
 	L"%ls hat %ls gefangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 
 	L"%ls hat die Droge genommen.", //'Merc name' has taken the drug

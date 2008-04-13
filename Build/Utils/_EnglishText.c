@@ -1623,7 +1623,7 @@ const wchar_t *pTransactionText[] =
 	L"Accrued Interest",			// interest the player has accumulated so far
 	L"Anonymous Deposit",
 	L"Transaction Fee",
-	L"Hired", 				// Merc was hired
+	L"Hired %ls from AIM", // Merc was hired
 	L"Bobby Ray Purchase", 		// Bobby Ray is the name of an arms dealer
 	L"Settled Accounts at M.E.R.C.",
 	L"Medical Deposit for %ls", 		// medical deposit for merc
@@ -3249,7 +3249,6 @@ const wchar_t *pMessageStrings[] =
 	L"Opened",
 	L"Closed",
 	L"You are running low on disk space.  You only have %lsMB free and Jagged Alliance 2 requires %lsMB.",
-	L"Hired %ls from AIM",
 	L"%ls has caught %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 	L"%ls has taken the drug.", //'Merc name' has taken the drug
 	L"%ls has no medical skill",//'Merc name' has no medical skill.
