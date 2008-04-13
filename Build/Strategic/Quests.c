@@ -1194,7 +1194,7 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 
     if ( fUpdateHistory )
     {
-		  ResetHistoryFact( ubQuest, sSectorX, sSectorY );
+			AddHistoryToPlayersLog(HISTORY_QUEST_FINISHED, ubQuest, GetWorldTotalMin(), sSectorX, sSectorY);
     }
 	}
 	else

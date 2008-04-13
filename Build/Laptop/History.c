@@ -3,6 +3,7 @@
 #include "Laptop.h"
 #include "History.h"
 #include "Game_Clock.h"
+#include "Quests.h"
 #include "Soldier_Control.h"
 #include "VObject.h"
 #include "WCheck.h"
@@ -35,7 +36,6 @@ struct HistoryUnit
 	INT16 sSectorX; // sector X this took place in
 	INT16 sSectorY; // sector Y this took place in
 	INT8 bSectorZ;
-	UINT8 ubColor;
 	HistoryUnit* Next; // next unit in the list
 };
 
@@ -99,27 +99,14 @@ void ClearHistoryList( void );
 
 static BOOLEAN AppendHistoryToEndOfFile(void);
 static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage);
-static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
+static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
 {
-	UINT8 colour;
-	switch (ubCode)
-	{
-		case HISTORY_QUEST_STARTED:
-		case HISTORY_CHEAT_ENABLED:
-			colour = 1;
-			break;
-
-		default:
-			colour = 0;
-			break;
-	}
-
 	ClearHistoryList();
 
-	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, 0, colour);
+	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, 0);
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_HISTORY_UPDATED]);
 
 	AppendHistoryToEndOfFile();
@@ -188,10 +175,6 @@ void ExitHistory()
 
   // not in History system anymore
   fInHistoryMode=FALSE;
-
-
-	// write out history list to file
-	//OpenAndWriteHistoryFile( );
 
 	// delete graphics
   RemoveHistory( );
@@ -346,7 +329,7 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ, const UINT8 ubColor)
+static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ)
 {
 	HistoryUnit* const h = MALLOC(HistoryUnit);
 	h->Next         = NULL;
@@ -356,7 +339,6 @@ static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDat
 	h->sSectorX     = sSectorX;
 	h->sSectorY     = sSectorY;
 	h->bSectorZ     = bSectorZ;
-	h->ubColor      = ubColor;
 
 	// Append node to list
 	HistoryUnit** anchor = &pHistoryListHead;
@@ -387,7 +369,6 @@ static void OpenAndReadHistoryFile(void)
 		INT16  sSectorX;
 		INT16  sSectorY;
 		INT8   bSectorZ;
-		UINT8  ubColor;
 
 		FileRead(f, &ubCode,       sizeof(UINT8));
 		FileRead(f, &ubSecondCode, sizeof(UINT8));
@@ -395,63 +376,16 @@ static void OpenAndReadHistoryFile(void)
 		FileRead(f, &sSectorX,     sizeof(INT16));
 		FileRead(f, &sSectorY,     sizeof(INT16));
 		FileRead(f, &bSectorZ,     sizeof(INT8));
-		FileRead(f, &ubColor,      sizeof(UINT8));
+		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
 
 #ifdef JA2TESTVERSION
 		PerformCheckOnHistoryRecord(1, sSectorX, sSectorY, bSectorZ);
 #endif
 
-		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor);
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
 
 	FileClose(f);
-}
-
-
-static BOOLEAN OpenAndWriteHistoryFile(void)
-{
-  // this procedure will open and write out data from the History list
-
-	HWFILE hFileHandle;
-	HistoryUnit* pHistoryList = pHistoryListHead;
-
-
-	// open file
-	hFileHandle = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-
-	// if no file exits, do nothing
-	if(!hFileHandle)
-	{
-		return ( FALSE );
-  }
-  // write info, while there are elements left in the list
-  while(pHistoryList)
-	{
-
-		#ifdef JA2TESTVERSION
-		//perform a check on the data to see if it is pooched
-		PerformCheckOnHistoryRecord( 2, pHistoryList->sSectorX, pHistoryList->sSectorY, pHistoryList->bSectorZ );
-		#endif
-
-    	// now write date and amount, and code
-		FileWrite(hFileHandle, &pHistoryList->ubCode,       sizeof(UINT8));
-		FileWrite(hFileHandle, &pHistoryList->ubSecondCode, sizeof(UINT8));
-		FileWrite(hFileHandle, &pHistoryList->uiDate,       sizeof(UINT32));
-		FileWrite(hFileHandle, &pHistoryList->sSectorX,     sizeof(INT16));
-		FileWrite(hFileHandle, &pHistoryList->sSectorY,     sizeof(INT16));
-		FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
-		FileWrite(hFileHandle, &pHistoryList->ubColor,      sizeof(UINT8));
-
-		// next element in list
-		pHistoryList = pHistoryList->Next;
-
-	}
-
-  FileClose( hFileHandle );
-  // clear out the old list
-	ClearHistoryList( );
-
-	return ( TRUE );
 }
 
 
@@ -531,7 +465,11 @@ static void DrawHistoryRecordsText(void)
 	UINT entry_count = 0;
 	for (const HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
 	{
-		SetFontForeground(h->ubColor == 0 ? FONT_BLACK : FONT_RED);
+		const UINT8 colour =
+			h->ubCode  == HISTORY_CHEAT_ENABLED ||
+			(h->ubCode == HISTORY_QUEST_STARTED && gubQuest[h->ubSecondCode] == QUESTINPROGRESS) ?
+				FONT_RED : FONT_BLACK;
+		SetFontForeground(colour);
 
 		const INT32 y = RECORD_Y + entry_count * BOX_HEIGHT + 3;
 
@@ -821,7 +759,6 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 		INT16  sSectorX;
 		INT16  sSectorY;
 		INT8   bSectorZ;
-		UINT8  ubColor;
 
 		FileRead(f, &ubCode,       sizeof(UINT8));
 		FileRead(f, &ubSecondCode, sizeof(UINT8));
@@ -829,13 +766,13 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 		FileRead(f, &sSectorX,     sizeof(INT16));
 		FileRead(f, &sSectorY,     sizeof(INT16));
 		FileRead(f, &bSectorZ,     sizeof(INT8));
-		FileRead(f, &ubColor,      sizeof(UINT8));
+		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
 
 #ifdef JA2TESTVERSION
 		PerformCheckOnHistoryRecord(3, sSectorX, sSectorY, bSectorZ);
 #endif
 
-		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ, ubColor);
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
 
 	FileClose(f);
@@ -895,33 +832,11 @@ static BOOLEAN AppendHistoryToEndOfFile(void)
 	FileWrite(hFileHandle, &pHistoryList->sSectorX,     sizeof(INT16));
 	FileWrite(hFileHandle, &pHistoryList->sSectorY,     sizeof(INT16));
 	FileWrite(hFileHandle, &pHistoryList->bSectorZ,     sizeof(INT8));
-	FileWrite(hFileHandle, &pHistoryList->ubColor,      sizeof(UINT8));
+	const UINT8 zero = 0;
+	FileWrite(hFileHandle, &zero,                       sizeof(UINT8));
 
   FileClose( hFileHandle );
   return( TRUE );
-}
-
-
-void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSectorY)
-{
-	// set current page to before list
-	iCurrentHistoryPage = 0;
-	OpenAndReadHistoryFile();
-
-	for (HistoryUnit* h = pHistoryListHead; h != NULL; h = h->Next)
-	{
-		if (h->ubSecondCode == ubCode && h->ubCode == HISTORY_QUEST_STARTED)
-		{
-			// reset color
-			h->ubColor = 0;
-			OpenAndWriteHistoryFile();
-			break;
-		}
-	}
-
-	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
-
-	AddHistoryToPlayersLog(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
 }
 
 

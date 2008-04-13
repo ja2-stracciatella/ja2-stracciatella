@@ -92,9 +92,6 @@ enum{
 	HISTORY_MERC_KILLED_CHARACTER,
 };
 
-// reset history fact..for quests
-void ResetHistoryFact( UINT8 ubCode, INT16 sSectorX, INT16 sSectorY );
-
 void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY);
 UINT32 GetTimeQuestWasStarted( UINT8 ubCode );
 
