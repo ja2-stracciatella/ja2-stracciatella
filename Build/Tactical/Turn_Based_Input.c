@@ -1937,7 +1937,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							gubCheatLevel++;
 							// ATE; We're done.... start cheat mode....
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CHEAT_LEVEL_TWO ] );
-							SetHistoryFact( HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1 );
+							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
 						}
 						else
 						{
@@ -2254,7 +2254,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							fGoodCheatLevelKey = TRUE;
 							// ATE; We're done.... start cheat mode....
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CHEAT_LEVEL_TWO ] );
-							SetHistoryFact( HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1 );
+							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
 						}
 						else
 						{

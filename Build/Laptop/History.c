@@ -102,8 +102,21 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage);
 static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubColor);
 
 
-static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY, const UINT8 colour)
+void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
 {
+	UINT8 colour;
+	switch (ubCode)
+	{
+		case HISTORY_QUEST_STARTED:
+		case HISTORY_CHEAT_ENABLED:
+			colour = 1;
+			break;
+
+		default:
+			colour = 0;
+			break;
+	}
+
 	ClearHistoryList();
 
 	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, 0, colour);
@@ -113,19 +126,6 @@ static void InternalAddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSec
 
 	// if in history mode, reload current page
 	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
-}
-
-
-void SetHistoryFact(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
-{
-	const UINT8 ubColor = (ubCode == HISTORY_QUEST_FINISHED ? 0 : 1);
-	InternalAddHistoryToPlayersLog(ubCode, ubSecondCode, uiDate, sSectorX, sSectorY, ubColor);
-}
-
-
-void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
-{
-	InternalAddHistoryToPlayersLog(ubCode, ubSecondCode, uiDate, sSectorX, sSectorY, 0);
 }
 
 
@@ -921,7 +921,7 @@ void ResetHistoryFact(const UINT8 ubCode, const INT16 sSectorX, const INT16 sSec
 
 	if (fInHistoryMode) LoadInHistoryRecords(iCurrentHistoryPage);
 
-	SetHistoryFact(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
+	AddHistoryToPlayersLog(HISTORY_QUEST_FINISHED, ubCode, GetWorldTotalMin(), sSectorX, sSectorY);
 }
 
 
