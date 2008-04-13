@@ -279,18 +279,6 @@ BOOLEAN SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1
 }
 
 
-void VarFindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT32 iFontIndex, INT16* psNewX, INT16* psNewY, const wchar_t* pFontString, ...)
-{
-	va_list argptr;
-	va_start(argptr, pFontString);
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, argptr);
-	va_end(argptr);
-
-	FindFontCenterCoordinates(sLeft, sTop, sWidth, sHeight, string, iFontIndex, psNewX, psNewY);
-}
-
-
 void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, INT32 iFontIndex, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text

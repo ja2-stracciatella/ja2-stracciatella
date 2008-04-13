@@ -1138,10 +1138,12 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 									SetFont(TINYFONT1);
 									SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
+									wchar_t buf[16];
+									swprintf(buf, lengthof(buf), L"%d", pNode->uiAPCost);
 									INT16 sX;
 									INT16 sY;
-									VarFindFontCenterCoordinates(sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pNode->uiAPCost);
-									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pNode->uiAPCost);
+									FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
+									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
 									SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_ITEM && !(uiFlags & TILES_DIRTY))
@@ -1543,10 +1545,12 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								{
 									SetFont(TINYFONT1);
 									SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
+									wchar_t buf[16];
+									swprintf(buf, lengthof(buf), L"%d", pSoldier->ubPlannedUIAPCost);
 									INT16 sX;
 									INT16 sY;
-									VarFindFontCenterCoordinates(sXPos, sYPos, 1, 1, TINYFONT1, &sX, &sY, L"%d", pSoldier->ubPlannedUIAPCost);
-									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", pSoldier->ubPlannedUIAPCost);
+									FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
+									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
 									SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 								}
 							}

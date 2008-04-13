@@ -809,8 +809,10 @@ void DisplayWayPoints(void)
 			else
 				SetFontBackground( FONT_LTRED );
 			SetFontForeground( FONT_WHITE );
-			VarFindFontCenterCoordinates( sScreenX, sScreenY, 1, 1, TINYFONT1, &sX, &sY, L"%d", bPoint );
-			mprintf(sX,sY,L"%d",bPoint);
+			wchar_t buf[16];
+			swprintf(buf, lengthof(buf), L"%d", bPoint);
+			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, buf, TINYFONT1, &sX, &sY);
+			mprintf(sX, sY, buf);
 		}
 	}
 }

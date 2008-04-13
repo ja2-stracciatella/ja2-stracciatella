@@ -1245,10 +1245,12 @@ static void PrintAP(SOLDIERTYPE* s, INT16 x, INT16 y, INT16 w, INT16 h)
 	SetFontBackground(FONT_MCOLOR_BLACK);
 
 	RestoreExternBackgroundRect(x, y, w, h);
+	wchar_t buf[16];
+	swprintf(buf, lengthof(buf), L"%d", ap);
 	INT16 sFontX;
 	INT16 sFontY;
-	VarFindFontCenterCoordinates(x, y, w, h, TINYFONT1, &sFontX, &sFontY, L"%d", ap);
-	mprintf(sFontX, sFontY, L"%d", ap);
+	FindFontCenterCoordinates(x, y, w, h, buf, TINYFONT1, &sFontX, &sFontY);
+	mprintf(sFontX, sFontY, buf);
 }
 
 

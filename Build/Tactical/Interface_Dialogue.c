@@ -781,9 +781,13 @@ void RenderTalkingMenu( )
 						}
 
 						default:
-							VarFindFontCenterCoordinates( sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, MILITARYFONT1, &sFontX, &sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], ubTalkMenuApproachIDs[ cnt ] );
-							mprintf( sFontX, sFontY, L"%ls (%d)", zTalkMenuStrings[ cnt ], CalcDesireToTalk( ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[ cnt ] )  );
+						{
+							wchar_t buf[512];
+							swprintf(buf, lengthof(buf), L"%ls (%d)", zTalkMenuStrings[cnt], CalcDesireToTalk(ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[cnt]));
+							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, buf, MILITARYFONT1, &sFontX, &sFontY);
+							mprintf(sFontX, sFontY, buf);
 							break;
+						}
 					}
 				}
 				else
