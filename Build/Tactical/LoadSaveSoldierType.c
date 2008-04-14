@@ -7,6 +7,8 @@
 
 void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 {
+	memset(s, 0, sizeof(*s));
+
 	const BYTE* d = data;
 	EXTR_U8(d, s->ubID)
 	EXTR_SKIP(d, 1)
@@ -148,10 +150,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_STR(d, s->PantsPal, lengthof(s->PantsPal))
 	EXTR_STR(d, s->VestPal, lengthof(s->VestPal))
 	EXTR_STR(d, s->SkinPal, lengthof(s->SkinPal))
-	EXTR_SKIP(d, 52)
-	EXTR_PTRA(d, s->pShades)
-	EXTR_PTRA(d, s->pGlowShades)
-	EXTR_SKIP(d, 4)
+	EXTR_SKIP(d, 328)
 	EXTR_I8(d, s->bMedical)
 	EXTR_BOOL(d, s->fBeginFade)
 	EXTR_U8(d, s->ubFadeLevel)
@@ -310,8 +309,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_U32(d, s->uiAnimSubFlags)
 	EXTR_U8(d, s->bAimShotLocation)
 	EXTR_U8(d, s->ubHitLocation)
-	EXTR_SKIP(d, 2)
-	EXTR_PTRA(d, s->pEffectShades)
+	EXTR_SKIP(d, 10)
 	EXTR_U8(d, s->ubPlannedUIAPCost)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, s->sPlannedTargetX)
@@ -506,13 +504,6 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 #else
 	Assert(d == data + 2352);
 #endif
-
-	s->AnimCache.usCachedSurfaces = NULL;
-	s->AnimCache.sCacheHits       = NULL;
-	s->AnimCache.ubCacheSize      = 0;
-	s->face                       = NULL;
-	s->light                      = NULL;
-	s->muzzle_flash               = NULL;
 }
 
 
@@ -659,10 +650,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_STR(d, s->PantsPal, lengthof(s->PantsPal))
 	INJ_STR(d, s->VestPal, lengthof(s->VestPal))
 	INJ_STR(d, s->SkinPal, lengthof(s->SkinPal))
-	INJ_SKIP(d, 52)
-	INJ_PTRA(d, s->pShades)
-	INJ_PTRA(d, s->pGlowShades)
-	INJ_SKIP(d, 4)
+	INJ_SKIP(d, 328)
 	INJ_I8(d, s->bMedical)
 	INJ_BOOL(d, s->fBeginFade)
 	INJ_U8(d, s->ubFadeLevel)
@@ -821,8 +809,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U32(d, s->uiAnimSubFlags)
 	INJ_U8(d, s->bAimShotLocation)
 	INJ_U8(d, s->ubHitLocation)
-	INJ_SKIP(d, 2)
-	INJ_PTRA(d, s->pEffectShades)
+	INJ_SKIP(d, 10)
 	INJ_U8(d, s->ubPlannedUIAPCost)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, s->sPlannedTargetX)
