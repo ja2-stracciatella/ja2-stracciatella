@@ -2833,38 +2833,6 @@ static void UpdateTEAMPanel(void)
 }
 
 
-static void HandleMouseOverTeamFaceForContMove(BOOLEAN fOn)
-{
-	if (fOn)
-	{
-		// Check if we are waiting to continue move...
-		if (CheckForMercContMove(gpSMCurrentMerc))
-		{
-			// Display 'cont' on face....
-			// Get face
-			FACETYPE* const pFace = gpSMCurrentMerc->face;
-
-			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
-			wcscpy(pFace->zDisplayText, TacticalStr[CONTINUE_OVER_FACE_STR]);
-
-			// While our mouse is here, draw a path!
-			PlotPath(gpSMCurrentMerc, gpSMCurrentMerc->sFinalDestination, NO_COPYROUTE, PLOT, gpSMCurrentMerc->usUIMovementMode, gpSMCurrentMerc->bActionPoints);
-		}
-	}
-	else
-	{
-		// Remove 'cont' on face....
-		// Get face
-		FACETYPE* const pFace = gpSMCurrentMerc->face;
-
-		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
-
-		// Erase path!
-		ErasePath(TRUE);
-	}
-}
-
-
 static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// If our flags are set to do this, gofoit!
