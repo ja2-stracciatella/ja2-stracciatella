@@ -5,304 +5,297 @@
 #include "LoadSaveObjectType.h"
 
 
-const BYTE* ExtractSoldierCreateUTF16(const BYTE* Src, SOLDIERCREATE_STRUCT* Soldier)
+const BYTE* ExtractSoldierCreateUTF16(const BYTE* const data, SOLDIERCREATE_STRUCT* const c)
 {
-	const BYTE* S = Src;
-
-	EXTR_BOOL(S, Soldier->fStatic)
-	EXTR_U8(S, Soldier->ubProfile)
-	EXTR_SKIP(S, 2)
-	EXTR_BOOL(S, Soldier->fCopyProfileItemsOver)
-	EXTR_SKIP(S, 1)
-	EXTR_I16(S, Soldier->sSectorX)
-	EXTR_I16(S, Soldier->sSectorY)
-	EXTR_I8(S, Soldier->bDirection)
-	EXTR_SKIP(S, 1)
-	EXTR_I16(S, Soldier->sInsertionGridNo)
-	EXTR_I8(S, Soldier->bTeam)
-	EXTR_I8(S, Soldier->bBodyType)
-	EXTR_I8(S, Soldier->bAttitude)
-	EXTR_I8(S, Soldier->bOrders)
-	EXTR_I8(S, Soldier->bLifeMax)
-	EXTR_I8(S, Soldier->bLife)
-	EXTR_I8(S, Soldier->bAgility)
-	EXTR_I8(S, Soldier->bDexterity)
-	EXTR_I8(S, Soldier->bExpLevel)
-	EXTR_I8(S, Soldier->bMarksmanship)
-	EXTR_I8(S, Soldier->bMedical)
-	EXTR_I8(S, Soldier->bMechanical)
-	EXTR_I8(S, Soldier->bExplosive)
-	EXTR_I8(S, Soldier->bLeadership)
-	EXTR_I8(S, Soldier->bStrength)
-	EXTR_I8(S, Soldier->bWisdom)
-	EXTR_I8(S, Soldier->bMorale)
-	EXTR_I8(S, Soldier->bAIMorale)
-	for (size_t i = 0; i < lengthof(Soldier->Inv); i++)
+	const BYTE* d = data;
+	EXTR_BOOL(d, c->fStatic)
+	EXTR_U8(d, c->ubProfile)
+	EXTR_SKIP(d, 2)
+	EXTR_BOOL(d, c->fCopyProfileItemsOver)
+	EXTR_SKIP(d, 1)
+	EXTR_I16(d, c->sSectorX)
+	EXTR_I16(d, c->sSectorY)
+	EXTR_I8(d, c->bDirection)
+	EXTR_SKIP(d, 1)
+	EXTR_I16(d, c->sInsertionGridNo)
+	EXTR_I8(d, c->bTeam)
+	EXTR_I8(d, c->bBodyType)
+	EXTR_I8(d, c->bAttitude)
+	EXTR_I8(d, c->bOrders)
+	EXTR_I8(d, c->bLifeMax)
+	EXTR_I8(d, c->bLife)
+	EXTR_I8(d, c->bAgility)
+	EXTR_I8(d, c->bDexterity)
+	EXTR_I8(d, c->bExpLevel)
+	EXTR_I8(d, c->bMarksmanship)
+	EXTR_I8(d, c->bMedical)
+	EXTR_I8(d, c->bMechanical)
+	EXTR_I8(d, c->bExplosive)
+	EXTR_I8(d, c->bLeadership)
+	EXTR_I8(d, c->bStrength)
+	EXTR_I8(d, c->bWisdom)
+	EXTR_I8(d, c->bMorale)
+	EXTR_I8(d, c->bAIMorale)
+	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		S = ExtractObject(S, &Soldier->Inv[i]);
+		d = ExtractObject(d, &c->Inv[i]);
 	}
-	EXTR_STR(S, Soldier->HeadPal, lengthof(Soldier->HeadPal))
-	EXTR_STR(S, Soldier->PantsPal, lengthof(Soldier->PantsPal))
-	EXTR_STR(S, Soldier->VestPal, lengthof(Soldier->VestPal))
-	EXTR_STR(S, Soldier->SkinPal, lengthof(Soldier->SkinPal))
-	EXTR_SKIP(S, 30)
-	EXTR_I16A(S, Soldier->sPatrolGrid, lengthof(Soldier->sPatrolGrid))
-	EXTR_I8(S, Soldier->bPatrolCnt)
-	EXTR_BOOL(S, Soldier->fVisible)
-	EXTR_WSTR16(S, Soldier->name, lengthof(Soldier->name))
-	EXTR_U8(S, Soldier->ubSoldierClass)
-	EXTR_BOOL(S, Soldier->fOnRoof)
-	EXTR_I8(S, Soldier->bSectorZ)
-	EXTR_SKIP(S, 6)
-	EXTR_U8(S, Soldier->ubCivilianGroup)
-	EXTR_BOOL(S, Soldier->fKillSlotIfOwnerDies)
-	EXTR_U8(S, Soldier->ubScheduleID)
-	EXTR_BOOL(S, Soldier->fUseGivenVehicle)
-	EXTR_I8(S, Soldier->bUseGivenVehicleID)
-	EXTR_BOOL(S, Soldier->fHasKeys)
-	EXTR_SKIP(S, 117)
+	EXTR_STR(d, c->HeadPal, lengthof(c->HeadPal))
+	EXTR_STR(d, c->PantsPal, lengthof(c->PantsPal))
+	EXTR_STR(d, c->VestPal, lengthof(c->VestPal))
+	EXTR_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	EXTR_SKIP(d, 30)
+	EXTR_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
+	EXTR_I8(d, c->bPatrolCnt)
+	EXTR_BOOL(d, c->fVisible)
+	EXTR_WSTR16(d, c->name, lengthof(c->name))
+	EXTR_U8(d, c->ubSoldierClass)
+	EXTR_BOOL(d, c->fOnRoof)
+	EXTR_I8(d, c->bSectorZ)
+	EXTR_SKIP(d, 6)
+	EXTR_U8(d, c->ubCivilianGroup)
+	EXTR_BOOL(d, c->fKillSlotIfOwnerDies)
+	EXTR_U8(d, c->ubScheduleID)
+	EXTR_BOOL(d, c->fUseGivenVehicle)
+	EXTR_I8(d, c->bUseGivenVehicleID)
+	EXTR_BOOL(d, c->fHasKeys)
+	EXTR_SKIP(d, 117)
+	Assert(d == data + 1040);
 
-	Assert(S == Src + 1040);
-	return S;
+	return d;
 }
 
 
-BOOLEAN ExtractSoldierCreateFromFileUTF16(HWFILE File, SOLDIERCREATE_STRUCT* Soldier)
+BOOLEAN ExtractSoldierCreateFromFileUTF16(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
 {
-	BYTE Data[1040];
-	BOOLEAN Ret = FileRead(File, Data, sizeof(Data));
-	if (Ret) ExtractSoldierCreateUTF16(Data, Soldier);
+	BYTE data[1040];
+	BOOLEAN Ret = FileRead(f, data, sizeof(data));
+	if (Ret) ExtractSoldierCreateUTF16(data, c);
 	return Ret;
 }
 
 
-static void ExtractSoldierCreate(const BYTE* Src, SOLDIERCREATE_STRUCT* Soldier)
+static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* const c)
 {
-	const BYTE* S = Src;
-
-	EXTR_BOOL(S, Soldier->fStatic)
-	EXTR_U8(S, Soldier->ubProfile)
-	EXTR_SKIP(S, 2)
-	EXTR_BOOL(S, Soldier->fCopyProfileItemsOver)
-	EXTR_SKIP(S, 1)
-	EXTR_I16(S, Soldier->sSectorX)
-	EXTR_I16(S, Soldier->sSectorY)
-	EXTR_I8(S, Soldier->bDirection)
-	EXTR_SKIP(S, 1)
-	EXTR_I16(S, Soldier->sInsertionGridNo)
-	EXTR_I8(S, Soldier->bTeam)
-	EXTR_I8(S, Soldier->bBodyType)
-	EXTR_I8(S, Soldier->bAttitude)
-	EXTR_I8(S, Soldier->bOrders)
-	EXTR_I8(S, Soldier->bLifeMax)
-	EXTR_I8(S, Soldier->bLife)
-	EXTR_I8(S, Soldier->bAgility)
-	EXTR_I8(S, Soldier->bDexterity)
-	EXTR_I8(S, Soldier->bExpLevel)
-	EXTR_I8(S, Soldier->bMarksmanship)
-	EXTR_I8(S, Soldier->bMedical)
-	EXTR_I8(S, Soldier->bMechanical)
-	EXTR_I8(S, Soldier->bExplosive)
-	EXTR_I8(S, Soldier->bLeadership)
-	EXTR_I8(S, Soldier->bStrength)
-	EXTR_I8(S, Soldier->bWisdom)
-	EXTR_I8(S, Soldier->bMorale)
-	EXTR_I8(S, Soldier->bAIMorale)
-	for (size_t i = 0; i < lengthof(Soldier->Inv); i++)
+	const BYTE* d = data;
+	EXTR_BOOL(d, c->fStatic)
+	EXTR_U8(d, c->ubProfile)
+	EXTR_SKIP(d, 2)
+	EXTR_BOOL(d, c->fCopyProfileItemsOver)
+	EXTR_SKIP(d, 1)
+	EXTR_I16(d, c->sSectorX)
+	EXTR_I16(d, c->sSectorY)
+	EXTR_I8(d, c->bDirection)
+	EXTR_SKIP(d, 1)
+	EXTR_I16(d, c->sInsertionGridNo)
+	EXTR_I8(d, c->bTeam)
+	EXTR_I8(d, c->bBodyType)
+	EXTR_I8(d, c->bAttitude)
+	EXTR_I8(d, c->bOrders)
+	EXTR_I8(d, c->bLifeMax)
+	EXTR_I8(d, c->bLife)
+	EXTR_I8(d, c->bAgility)
+	EXTR_I8(d, c->bDexterity)
+	EXTR_I8(d, c->bExpLevel)
+	EXTR_I8(d, c->bMarksmanship)
+	EXTR_I8(d, c->bMedical)
+	EXTR_I8(d, c->bMechanical)
+	EXTR_I8(d, c->bExplosive)
+	EXTR_I8(d, c->bLeadership)
+	EXTR_I8(d, c->bStrength)
+	EXTR_I8(d, c->bWisdom)
+	EXTR_I8(d, c->bMorale)
+	EXTR_I8(d, c->bAIMorale)
+	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		S = ExtractObject(S, &Soldier->Inv[i]);
+		d = ExtractObject(d, &c->Inv[i]);
 	}
-	EXTR_STR(S, Soldier->HeadPal, lengthof(Soldier->HeadPal))
-	EXTR_STR(S, Soldier->PantsPal, lengthof(Soldier->PantsPal))
-	EXTR_STR(S, Soldier->VestPal, lengthof(Soldier->VestPal))
-	EXTR_STR(S, Soldier->SkinPal, lengthof(Soldier->SkinPal))
-	EXTR_SKIP(S, 30)
-	EXTR_I16A(S, Soldier->sPatrolGrid, lengthof(Soldier->sPatrolGrid))
-	EXTR_I8(S, Soldier->bPatrolCnt)
-	EXTR_BOOL(S, Soldier->fVisible)
+	EXTR_STR(d, c->HeadPal, lengthof(c->HeadPal))
+	EXTR_STR(d, c->PantsPal, lengthof(c->PantsPal))
+	EXTR_STR(d, c->VestPal, lengthof(c->VestPal))
+	EXTR_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	EXTR_SKIP(d, 30)
+	EXTR_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
+	EXTR_I8(d, c->bPatrolCnt)
+	EXTR_BOOL(d, c->fVisible)
 #ifdef _WIN32 // XXX HACK000A
-	EXTR_WSTR16(S, Soldier->name, lengthof(Soldier->name))
+	EXTR_WSTR16(d, c->name, lengthof(c->name))
 #else
-	EXTR_WSTR32(S, Soldier->name, lengthof(Soldier->name))
+	EXTR_WSTR32(d, c->name, lengthof(c->name))
 #endif
-	EXTR_U8(S, Soldier->ubSoldierClass)
-	EXTR_BOOL(S, Soldier->fOnRoof)
-	EXTR_I8(S, Soldier->bSectorZ)
-	EXTR_SKIP(S, 6)
-	EXTR_U8(S, Soldier->ubCivilianGroup)
-	EXTR_BOOL(S, Soldier->fKillSlotIfOwnerDies)
-	EXTR_U8(S, Soldier->ubScheduleID)
-	EXTR_BOOL(S, Soldier->fUseGivenVehicle)
-	EXTR_I8(S, Soldier->bUseGivenVehicleID)
-	EXTR_BOOL(S, Soldier->fHasKeys)
-	EXTR_SKIP(S, 117)
-
+	EXTR_U8(d, c->ubSoldierClass)
+	EXTR_BOOL(d, c->fOnRoof)
+	EXTR_I8(d, c->bSectorZ)
+	EXTR_SKIP(d, 6)
+	EXTR_U8(d, c->ubCivilianGroup)
+	EXTR_BOOL(d, c->fKillSlotIfOwnerDies)
+	EXTR_U8(d, c->ubScheduleID)
+	EXTR_BOOL(d, c->fUseGivenVehicle)
+	EXTR_I8(d, c->bUseGivenVehicleID)
+	EXTR_BOOL(d, c->fHasKeys)
+	EXTR_SKIP(d, 117)
 #ifdef _WIN32 // XXX HACK000A
-	Assert(S == Src + 1040);
+	Assert(d == data + 1040);
 #else
-	Assert(S == Src + 1060);
+	Assert(d == data + 1060);
 #endif
 }
 
 
-BOOLEAN ExtractSoldierCreateFromFile(HWFILE File, SOLDIERCREATE_STRUCT* Soldier)
+BOOLEAN ExtractSoldierCreateFromFile(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
 {
 #ifdef _WIN32 // XXX HACK000A
-	BYTE Data[1040];
+	BYTE data[1040];
 #else
-	BYTE Data[1060];
+	BYTE data[1060];
 #endif
-	BOOLEAN Ret = FileRead(File, Data, sizeof(Data));
-	if (Ret) ExtractSoldierCreate(Data, Soldier);
+	BOOLEAN Ret = FileRead(f, data, sizeof(data));
+	if (Ret) ExtractSoldierCreate(data, c);
 	return Ret;
 }
 
 
-static void InjectSoldierCreateUTF16(BYTE* Dst, const SOLDIERCREATE_STRUCT* Soldier)
+static void InjectSoldierCreateUTF16(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)
 {
-	BYTE* D = Dst;
-
-	INJ_BOOL(D, Soldier->fStatic)
-	INJ_U8(D, Soldier->ubProfile)
-	INJ_SKIP(D, 2)
-	INJ_BOOL(D, Soldier->fCopyProfileItemsOver)
-	INJ_SKIP(D, 1)
-	INJ_I16(D, Soldier->sSectorX)
-	INJ_I16(D, Soldier->sSectorY)
-	INJ_I8(D, Soldier->bDirection)
-	INJ_SKIP(D, 1)
-	INJ_I16(D, Soldier->sInsertionGridNo)
-	INJ_I8(D, Soldier->bTeam)
-	INJ_I8(D, Soldier->bBodyType)
-	INJ_I8(D, Soldier->bAttitude)
-	INJ_I8(D, Soldier->bOrders)
-	INJ_I8(D, Soldier->bLifeMax)
-	INJ_I8(D, Soldier->bLife)
-	INJ_I8(D, Soldier->bAgility)
-	INJ_I8(D, Soldier->bDexterity)
-	INJ_I8(D, Soldier->bExpLevel)
-	INJ_I8(D, Soldier->bMarksmanship)
-	INJ_I8(D, Soldier->bMedical)
-	INJ_I8(D, Soldier->bMechanical)
-	INJ_I8(D, Soldier->bExplosive)
-	INJ_I8(D, Soldier->bLeadership)
-	INJ_I8(D, Soldier->bStrength)
-	INJ_I8(D, Soldier->bWisdom)
-	INJ_I8(D, Soldier->bMorale)
-	INJ_I8(D, Soldier->bAIMorale)
-	for (size_t i = 0; i < lengthof(Soldier->Inv); i++)
+	BYTE* d = data;
+	INJ_BOOL(d, c->fStatic)
+	INJ_U8(d, c->ubProfile)
+	INJ_SKIP(d, 2)
+	INJ_BOOL(d, c->fCopyProfileItemsOver)
+	INJ_SKIP(d, 1)
+	INJ_I16(d, c->sSectorX)
+	INJ_I16(d, c->sSectorY)
+	INJ_I8(d, c->bDirection)
+	INJ_SKIP(d, 1)
+	INJ_I16(d, c->sInsertionGridNo)
+	INJ_I8(d, c->bTeam)
+	INJ_I8(d, c->bBodyType)
+	INJ_I8(d, c->bAttitude)
+	INJ_I8(d, c->bOrders)
+	INJ_I8(d, c->bLifeMax)
+	INJ_I8(d, c->bLife)
+	INJ_I8(d, c->bAgility)
+	INJ_I8(d, c->bDexterity)
+	INJ_I8(d, c->bExpLevel)
+	INJ_I8(d, c->bMarksmanship)
+	INJ_I8(d, c->bMedical)
+	INJ_I8(d, c->bMechanical)
+	INJ_I8(d, c->bExplosive)
+	INJ_I8(d, c->bLeadership)
+	INJ_I8(d, c->bStrength)
+	INJ_I8(d, c->bWisdom)
+	INJ_I8(d, c->bMorale)
+	INJ_I8(d, c->bAIMorale)
+	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		D = InjectObject(D, &Soldier->Inv[i]);
+		d = InjectObject(d, &c->Inv[i]);
 	}
-	INJ_STR(D, Soldier->HeadPal, lengthof(Soldier->HeadPal))
-	INJ_STR(D, Soldier->PantsPal, lengthof(Soldier->PantsPal))
-	INJ_STR(D, Soldier->VestPal, lengthof(Soldier->VestPal))
-	INJ_STR(D, Soldier->SkinPal, lengthof(Soldier->SkinPal))
-	INJ_SKIP(D, 30)
-	INJ_I16A(D, Soldier->sPatrolGrid, lengthof(Soldier->sPatrolGrid))
-	INJ_I8(D, Soldier->bPatrolCnt)
-	INJ_BOOL(D, Soldier->fVisible)
-	INJ_WSTR16(D, Soldier->name, lengthof(Soldier->name))
-	INJ_U8(D, Soldier->ubSoldierClass)
-	INJ_BOOL(D, Soldier->fOnRoof)
-	INJ_I8(D, Soldier->bSectorZ)
-	INJ_SKIP(D, 6)
-	INJ_U8(D, Soldier->ubCivilianGroup)
-	INJ_BOOL(D, Soldier->fKillSlotIfOwnerDies)
-	INJ_U8(D, Soldier->ubScheduleID)
-	INJ_BOOL(D, Soldier->fUseGivenVehicle)
-	INJ_I8(D, Soldier->bUseGivenVehicleID)
-	INJ_BOOL(D, Soldier->fHasKeys)
-	INJ_SKIP(D, 117)
-
-	Assert(D == Dst + 1040);
+	INJ_STR(d, c->HeadPal, lengthof(c->HeadPal))
+	INJ_STR(d, c->PantsPal, lengthof(c->PantsPal))
+	INJ_STR(d, c->VestPal, lengthof(c->VestPal))
+	INJ_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	INJ_SKIP(d, 30)
+	INJ_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
+	INJ_I8(d, c->bPatrolCnt)
+	INJ_BOOL(d, c->fVisible)
+	INJ_WSTR16(d, c->name, lengthof(c->name))
+	INJ_U8(d, c->ubSoldierClass)
+	INJ_BOOL(d, c->fOnRoof)
+	INJ_I8(d, c->bSectorZ)
+	INJ_SKIP(d, 6)
+	INJ_U8(d, c->ubCivilianGroup)
+	INJ_BOOL(d, c->fKillSlotIfOwnerDies)
+	INJ_U8(d, c->ubScheduleID)
+	INJ_BOOL(d, c->fUseGivenVehicle)
+	INJ_I8(d, c->bUseGivenVehicleID)
+	INJ_BOOL(d, c->fHasKeys)
+	INJ_SKIP(d, 117)
+	Assert(d == data + 1040);
 }
 
 
-BOOLEAN InjectSoldierCreateIntoFileUTF16(HWFILE File, const SOLDIERCREATE_STRUCT* Soldier)
+BOOLEAN InjectSoldierCreateIntoFileUTF16(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
 {
-	BYTE Data[1040];
-	InjectSoldierCreateUTF16(Data, Soldier);
-	return FileWrite(File, Data, sizeof(Data));
+	BYTE data[1040];
+	InjectSoldierCreateUTF16(data, c);
+	return FileWrite(f, data, sizeof(data));
 }
 
 
-static void InjectSoldierCreate(BYTE* Dst, const SOLDIERCREATE_STRUCT* Soldier)
+static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)
 {
-	BYTE* D = Dst;
-
-	INJ_BOOL(D, Soldier->fStatic)
-	INJ_U8(D, Soldier->ubProfile)
-	INJ_SKIP(D, 2)
-	INJ_BOOL(D, Soldier->fCopyProfileItemsOver)
-	INJ_SKIP(D, 1)
-	INJ_I16(D, Soldier->sSectorX)
-	INJ_I16(D, Soldier->sSectorY)
-	INJ_I8(D, Soldier->bDirection)
-	INJ_SKIP(D, 1)
-	INJ_I16(D, Soldier->sInsertionGridNo)
-	INJ_I8(D, Soldier->bTeam)
-	INJ_I8(D, Soldier->bBodyType)
-	INJ_I8(D, Soldier->bAttitude)
-	INJ_I8(D, Soldier->bOrders)
-	INJ_I8(D, Soldier->bLifeMax)
-	INJ_I8(D, Soldier->bLife)
-	INJ_I8(D, Soldier->bAgility)
-	INJ_I8(D, Soldier->bDexterity)
-	INJ_I8(D, Soldier->bExpLevel)
-	INJ_I8(D, Soldier->bMarksmanship)
-	INJ_I8(D, Soldier->bMedical)
-	INJ_I8(D, Soldier->bMechanical)
-	INJ_I8(D, Soldier->bExplosive)
-	INJ_I8(D, Soldier->bLeadership)
-	INJ_I8(D, Soldier->bStrength)
-	INJ_I8(D, Soldier->bWisdom)
-	INJ_I8(D, Soldier->bMorale)
-	INJ_I8(D, Soldier->bAIMorale)
-	for (size_t i = 0; i < lengthof(Soldier->Inv); i++)
+	BYTE* d = data;
+	INJ_BOOL(d, c->fStatic)
+	INJ_U8(d, c->ubProfile)
+	INJ_SKIP(d, 2)
+	INJ_BOOL(d, c->fCopyProfileItemsOver)
+	INJ_SKIP(d, 1)
+	INJ_I16(d, c->sSectorX)
+	INJ_I16(d, c->sSectorY)
+	INJ_I8(d, c->bDirection)
+	INJ_SKIP(d, 1)
+	INJ_I16(d, c->sInsertionGridNo)
+	INJ_I8(d, c->bTeam)
+	INJ_I8(d, c->bBodyType)
+	INJ_I8(d, c->bAttitude)
+	INJ_I8(d, c->bOrders)
+	INJ_I8(d, c->bLifeMax)
+	INJ_I8(d, c->bLife)
+	INJ_I8(d, c->bAgility)
+	INJ_I8(d, c->bDexterity)
+	INJ_I8(d, c->bExpLevel)
+	INJ_I8(d, c->bMarksmanship)
+	INJ_I8(d, c->bMedical)
+	INJ_I8(d, c->bMechanical)
+	INJ_I8(d, c->bExplosive)
+	INJ_I8(d, c->bLeadership)
+	INJ_I8(d, c->bStrength)
+	INJ_I8(d, c->bWisdom)
+	INJ_I8(d, c->bMorale)
+	INJ_I8(d, c->bAIMorale)
+	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		D = InjectObject(D, &Soldier->Inv[i]);
+		d = InjectObject(d, &c->Inv[i]);
 	}
-	INJ_STR(D, Soldier->HeadPal, lengthof(Soldier->HeadPal))
-	INJ_STR(D, Soldier->PantsPal, lengthof(Soldier->PantsPal))
-	INJ_STR(D, Soldier->VestPal, lengthof(Soldier->VestPal))
-	INJ_STR(D, Soldier->SkinPal, lengthof(Soldier->SkinPal))
-	INJ_SKIP(D, 30)
-	INJ_I16A(D, Soldier->sPatrolGrid, lengthof(Soldier->sPatrolGrid))
-	INJ_I8(D, Soldier->bPatrolCnt)
-	INJ_BOOL(D, Soldier->fVisible)
+	INJ_STR(d, c->HeadPal, lengthof(c->HeadPal))
+	INJ_STR(d, c->PantsPal, lengthof(c->PantsPal))
+	INJ_STR(d, c->VestPal, lengthof(c->VestPal))
+	INJ_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	INJ_SKIP(d, 30)
+	INJ_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
+	INJ_I8(d, c->bPatrolCnt)
+	INJ_BOOL(d, c->fVisible)
 #ifdef _WIN32 // XXX HACK000A
-	INJ_WSTR16(D, Soldier->name, lengthof(Soldier->name))
+	INJ_WSTR16(d, c->name, lengthof(c->name))
 #else
-	INJ_WSTR32(D, Soldier->name, lengthof(Soldier->name))
+	INJ_WSTR32(d, c->name, lengthof(c->name))
 #endif
-	INJ_U8(D, Soldier->ubSoldierClass)
-	INJ_BOOL(D, Soldier->fOnRoof)
-	INJ_I8(D, Soldier->bSectorZ)
-	INJ_SKIP(D, 6)
-	INJ_U8(D, Soldier->ubCivilianGroup)
-	INJ_BOOL(D, Soldier->fKillSlotIfOwnerDies)
-	INJ_U8(D, Soldier->ubScheduleID)
-	INJ_BOOL(D, Soldier->fUseGivenVehicle)
-	INJ_I8(D, Soldier->bUseGivenVehicleID)
-	INJ_BOOL(D, Soldier->fHasKeys)
-	INJ_SKIP(D, 117)
-
+	INJ_U8(d, c->ubSoldierClass)
+	INJ_BOOL(d, c->fOnRoof)
+	INJ_I8(d, c->bSectorZ)
+	INJ_SKIP(d, 6)
+	INJ_U8(d, c->ubCivilianGroup)
+	INJ_BOOL(d, c->fKillSlotIfOwnerDies)
+	INJ_U8(d, c->ubScheduleID)
+	INJ_BOOL(d, c->fUseGivenVehicle)
+	INJ_I8(d, c->bUseGivenVehicleID)
+	INJ_BOOL(d, c->fHasKeys)
+	INJ_SKIP(d, 117)
 #ifdef _WIN32 // XXX HACK000A
-	Assert(D == Dst + 1040);
+	Assert(d == data + 1040);
 #else
-	Assert(D == Dst + 1060);
+	Assert(d == data + 1060);
 #endif
 }
 
 
-BOOLEAN InjectSoldierCreateIntoFile(HWFILE File, const SOLDIERCREATE_STRUCT* Soldier)
+BOOLEAN InjectSoldierCreateIntoFile(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
 {
 #ifdef _WIN32 // XXX HACK000A
-	BYTE Data[1040];
+	BYTE data[1040];
 #else
-	BYTE Data[1060];
+	BYTE data[1060];
 #endif
-	InjectSoldierCreate(Data, Soldier);
-	return FileWrite(File, Data, sizeof(Data));
+	InjectSoldierCreate(data, c);
+	return FileWrite(f, data, sizeof(data));
 }
