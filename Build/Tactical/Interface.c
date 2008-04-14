@@ -70,9 +70,7 @@ static INT32 giMenuAnchorX;
 static INT32 giMenuAnchorY;
 
 
-#define PROG_BAR_START_X			5
-#define PROG_BAR_START_Y			2
-#define PROG_BAR_LENGTH				627
+static const SGPBox g_progress_bar_box = { 5, 2, 630, 12 };
 
 static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
@@ -2053,7 +2051,7 @@ void EndUIMessage( )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
-static void CreateTopMessage(SGPVSurface* surface, UINT8 ubType, const wchar_t* psString);
+static void CreateTopMessage();
 
 
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
@@ -2085,7 +2083,7 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 		// Copy string
 		wcscpy( gTacticalStatus.zTopMessageString, pzString );
 
-		CreateTopMessage( gTopMessage.uiSurface, ubType, pzString );
+		CreateTopMessage();
 
 		return( TRUE );
 	}
@@ -2094,201 +2092,95 @@ BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 }
 
 
-static void CreateTopMessage(SGPVSurface* const uiSurface, const UINT8 ubType, const wchar_t* const psString)
+static void CreateTopMessage(void)
 {
-	INT16		sX, sY;
-	INT32		cnt2;
-	INT16		sBarX = 0;
-	BOOLEAN	fDoLimitBar = FALSE;
+	SGPVSurface* const dst = gTopMessage.uiSurface;
 
-	FLOAT		dNumStepsPerEnemy, dLength, dCurSize;
+	SetFontDestBuffer(dst, 0, 0, SCREEN_WIDTH, 20);
+	SetFont(TINYFONT1);
+	SetFontBackground(FONT_MCOLOR_BLACK);
 
-	SGPVObject* const uiBAR = AddVideoObjectFromFile("INTERFACE/rect.sti");
-	AssertMsg(uiBAR != NO_VOBJECT, "Missing INTERFACE/rect.sti");
-
-	SGPVObject* const uiPLAYERBAR = AddVideoObjectFromFile("INTERFACE/timebargreen.sti");
-	AssertMsg(uiPLAYERBAR != NO_VOBJECT, "Missing INTERFACE/timebargreen.sti");
-
-	SGPVObject* const uiINTBAR = AddVideoObjectFromFile("INTERFACE/timebaryellow.sti");
-	AssertMsg(uiINTBAR != NO_VOBJECT, "Missing INTERFACE/timebaryellow.sti");
-
-	// Change dest buffer
-	SetFontDestBuffer(uiSurface, 0, 0, SCREEN_WIDTH, 20);
-	SetFont( TINYFONT1 );
-
-	const SGPVObject* uiBarToUseInUpDate = NO_VOBJECT;
-	switch( ubType )
+	const char* bar_file;
+	UINT16      bar_gfx     = 0;
+	BOOLEAN	    fDoLimitBar = FALSE;
+	switch (gTacticalStatus.ubTopMessageType)
 	{
 		case COMPUTER_TURN_MESSAGE:
 		case COMPUTER_INTERRUPT_MESSAGE:
 		case MILITIA_INTERRUPT_MESSAGE:
 		case AIR_RAID_TURN_MESSAGE:
-
-			// Render rect into surface
-			BltVideoObject(uiSurface, uiBAR, 0, 0, 0);
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_MCOLOR_WHITE );
-			uiBarToUseInUpDate = uiBAR;
-			fDoLimitBar				 = TRUE;
+			bar_file = "INTERFACE/rect.sti";
+			SetFontForeground(FONT_MCOLOR_WHITE);
+			fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_INTERRUPT_MESSAGE:
-
-			// Render rect into surface
-			BltVideoObject(uiSurface, uiINTBAR, 0, 0, 0);
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_MCOLOR_BLACK );
-			SetFontShadow( NO_SHADOW );
-			uiBarToUseInUpDate = uiINTBAR;
+			bar_file = "INTERFACE/timebaryellow.sti";
+			SetFontForeground(FONT_MCOLOR_BLACK);
+			SetFontShadow(NO_SHADOW);
+			if (gGameOptions.fTurnTimeLimit) fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_TURN_MESSAGE:
-
-			// Render rect into surface
-			//if ( gGameOptions.fTurnTimeLimit )
+			bar_file = "INTERFACE/timebargreen.sti";
+			SetFontForeground(FONT_MCOLOR_BLACK);
+			SetFontShadow(NO_SHADOW);
+			if (gGameOptions.fTurnTimeLimit)
 			{
-				BltVideoObject(uiSurface, uiPLAYERBAR, 0, 0, 0);
+				fDoLimitBar = TRUE;
 			}
-			//else
-			//{
-			//	BltVideoObject(uiSurface, uiPLAYERBAR, 13, 0, 0);
-			//}
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_MCOLOR_BLACK );
-			SetFontShadow( NO_SHADOW );
-			uiBarToUseInUpDate = uiPLAYERBAR;
+			else
+			{
+				//bar_gfx     = 13;
+			}
 			break;
+
+		default:
+			abort();
 	}
 
-	// Update progress bar!
-#if 0
-	if ( ubType == COMPUTER_TURN_MESSAGE )
+	SGPVObject* const bar_vo = AddVideoObjectFromFile(bar_file);
+	AssertMsg(bar_vo != NO_VOBJECT, String("Missing %s", bar_file));
+
+	BltVideoObject(dst, bar_vo, bar_gfx, 0, 0);
+
+	const SGPBox*             const bar = &g_progress_bar_box;
+	const TacticalStatusType* const ts  = &gTacticalStatus;
+	if (fDoLimitBar)
 	{
-		INT32		cnt1, iLength;
-		INT16		usNumStepsPerEnemy;
+		INT32 bar_x = bar->x;
+		// Render end piece
+		BltVideoObject(dst, bar_vo, 1, bar_x, bar->y);
 
-		if ( gfProgBarActive )
+		INT32  gfx    = 2;
+		// -3 for the end pieces
+		UINT32 length = (bar->w - 3) * ts->usTactialTurnLimitCounter / ts->usTactialTurnLimitMax;
+		while (length-- != 0)
 		{
-			//usNumStepsPerEnemy = ( PROG_BAR_LENGTH / gubProgNumEnemies );
-
-			// Alrighty, do some fun stuff!
-
-			// Render end peice
-			sBarX = PROG_BAR_START_X;
-			BltVideoObject(uiSurface, uiBAR, 3, sBarX, PROG_BAR_START_Y);
-
-			// Determine Length
-		//	iLength   = (gubProgCurEnemy ) * usNumStepsPerEnemy;
-
-			cnt1 = 0;
-			cnt2 = 0;
-
-			while( cnt1 < iLength )
-			{
-				sBarX++;
-
-				// Check sBarX, ( just as a precaution )
-				if (sBarX > SCREEN_WIDTH)
-				{
-					break;
-				}
-
-				BltVideoObject(uiSurface, uiBAR, 4 + cnt2, sBarX, PROG_BAR_START_Y);
-
-				cnt1++;
-				cnt2++;
-
-				if ( cnt2 == 10 )
-				{
-					cnt2 = 0;
-				}
-			}
-
-			//gubProgNumEnemies = ubNum;
-			//gubProgCurEnemy		= 0;
-
-
+			BltVideoObject(dst, bar_vo, gfx, ++bar_x, bar->y);
+			if (++gfx == 12) gfx = 2;
 		}
-	}
-#endif
 
-	if ( gGameOptions.fTurnTimeLimit )
-	{
-		if ( ubType == PLAYER_TURN_MESSAGE || ubType == PLAYER_INTERRUPT_MESSAGE )
+		if (ts->usTactialTurnLimitCounter == ts->usTactialTurnLimitMax)
 		{
-			fDoLimitBar = TRUE;
+			// Render end piece
+			BltVideoObject(dst, bar_vo, gfx, ++bar_x, bar->y);
+			BltVideoObject(dst, bar_vo, 12,  ++bar_x, bar->y);
 		}
 	}
 
-	if ( fDoLimitBar )
-	{
-		dNumStepsPerEnemy = (FLOAT)( (FLOAT)PROG_BAR_LENGTH / (FLOAT)gTacticalStatus.usTactialTurnLimitMax );
+	DeleteVideoObject(bar_vo);
 
-		// Alrighty, do some fun stuff!
+	INT16 sX;
+	INT16 sY;
+	const wchar_t* const txt = ts->zTopMessageString;
+	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, txt, TINYFONT1, &sX, &sY);
+	mprintf(sX, sY, txt);
 
-		// Render end peice
-		sBarX = PROG_BAR_START_X;
-		BltVideoObject(uiSurface, uiBarToUseInUpDate, 1, sBarX, PROG_BAR_START_Y);
-
-		// Determine Length
-		dLength   = ( gTacticalStatus.usTactialTurnLimitCounter ) * dNumStepsPerEnemy;
-
-		dCurSize = 0;
-		cnt2 = 0;
-
-		while( dCurSize < dLength )
-		{
-			sBarX++;
-
-			// Check sBarX, ( just as a precaution )
-			if (sBarX >= SCREEN_WIDTH)
-			{
-				break;
-			}
-
-			BltVideoObject(uiSurface, uiBarToUseInUpDate, 2 + cnt2, sBarX, PROG_BAR_START_Y);
-
-			dCurSize++;
-			cnt2++;
-
-			if ( cnt2 == 10 )
-			{
-				cnt2 = 0;
-			}
-		}
-
-		// Do end...
-		if ( gTacticalStatus.usTactialTurnLimitCounter == gTacticalStatus.usTactialTurnLimitMax )
-		{
-			sBarX++;
-			BltVideoObject(uiSurface, uiBarToUseInUpDate, 2 + cnt2, sBarX, PROG_BAR_START_Y);
-			sBarX++;
-			BltVideoObject(uiSurface, uiBarToUseInUpDate, 12,       sBarX, PROG_BAR_START_Y);
-		}
-	}
-
-	// Delete rect
-	DeleteVideoObject(uiBAR);
-	DeleteVideoObject(uiINTBAR);
-
-	//if ( gGameOptions.fTurnTimeLimit )
-	{
-		DeleteVideoObject(uiPLAYERBAR);
-	}
-
-	// Draw text....
-	FindFontCenterCoordinates(0, 7, SCREEN_WIDTH, 1, psString, TINYFONT1, &sX, &sY);
-	mprintf( sX, sY, psString );
-
-	// Change back...
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	// Done!
-	SetFontShadow( DEFAULT_SHADOW );
-
+	SetFontShadow(DEFAULT_SHADOW);
 
 	gfTopMessageDirty = TRUE;
-
 }
 
 
@@ -2366,7 +2258,7 @@ void HandleTopMessages( )
 					gTacticalStatus.usTactialTurnLimitCounter = ( ( gubProgCurEnemy ) * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY );
 				}
 
-				CreateTopMessage( gTopMessage.uiSurface, gTacticalStatus.ubTopMessageType, gTacticalStatus.zTopMessageString );
+				CreateTopMessage();
 			}
 		}
 		else if ( gGameOptions.fTurnTimeLimit )
@@ -2410,7 +2302,7 @@ void HandleTopMessages( )
 									gTacticalStatus.usTactialTurnLimitCounter++;
 								}
 
-								CreateTopMessage( gTopMessage.uiSurface, gTacticalStatus.ubTopMessageType, gTacticalStatus.zTopMessageString );
+								CreateTopMessage();
 
 								// Have we reached max?
 								if ( gTacticalStatus.usTactialTurnLimitCounter == ( gTacticalStatus.usTactialTurnLimitMax - 1) )
@@ -2492,11 +2384,6 @@ void EndTopMessage( )
 			//SrcRect.iBottom = 20;
 			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
 		}
-		//else
-		//{
-			// Render to save buffer
-		//	CreateTopMessage( guiSAVEBUFFER, gTopMessageTypes[ 0 ], gzTopMessageStrings[ 0 ] );
-		//}
 
 		// Animate up...
 		//gTopMessage.bAnimate = 1;
@@ -2552,13 +2439,11 @@ void UpdateEnemyUIBar( )
 	}
 
 	// Do we have an active enemy bar?
-	if ( gTacticalStatus.fInTopMessage )
+	if (gTacticalStatus.fInTopMessage &&
+			gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE)
 	{
-		if ( gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE )
-		{
-			// Update message!
-			CreateTopMessage( gTopMessage.uiSurface, COMPUTER_TURN_MESSAGE, gTacticalStatus.zTopMessageString );
-		}
+		// Update message!
+		CreateTopMessage();
 	}
 }
 
