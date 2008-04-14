@@ -22,6 +22,11 @@
 #	include <sys/stat.h>
 #	include <sys/types.h>
 #	include "Stubs.h" // XXX
+
+#	if defined __APPLE__ && defined __MACH__
+#		include <CoreFoundation/CoreFoundation.h>
+#		include <sys/param.h>
+#	endif
 #endif
 
 
@@ -51,7 +56,7 @@ static BOOLEAN fFindInfoInUse[20];
 
 
 static char LocalPath[512];
-static const config_entry* BinDataDir;
+static config_entry* BinDataDir;
 
 static void TellAboutDataDir(const char* ConfigFile)
 {
@@ -63,6 +68,40 @@ static void TellAboutDataDir(const char* ConfigFile)
 		fprintf(stderr, "Please edit \"%s\" to point to the binary data.\n", ConfigFile);
 	}
 }
+
+
+#if defined __APPLE__  && defined __MACH__
+
+void SetBinDataDirFromBundle(void)
+{
+	CFBundleRef const app_bundle = CFBundleGetMainBundle();
+	if (app_bundle == NULL)
+	{
+		fputs("WARNING: Failed to get main bundle.\n", stderr);
+		return;
+	}
+
+	CFURLRef const app_url = CFBundleCopyBundleURL(app_bundle);
+	if (app_url == NULL)
+	{
+		fputs("WARNING: Failed to get URL of bundle.\n", stderr);
+		return;
+	}
+
+#define RESOURCE_PATH "/Contents/Resources/ja2"
+	char app_path[PATH_MAX + lengthof(RESOURCE_PATH)];
+	if (!CFURLGetFileSystemRepresentation(app_url, TRUE, (UInt8*)app_path, PATH_MAX))
+	{
+		fputs("WARNING: Failed to get application path.\n", stderr);
+		return;
+	}
+
+	strcat(app_path, RESOURCE_PATH);
+	ConfigSetValue(BinDataDir, app_path);
+#undef RESOURCE_PATH
+}
+
+#endif
 
 
 BOOLEAN InitializeFileManager(void)
@@ -118,18 +157,20 @@ BOOLEAN InitializeFileManager(void)
 	}
 	BinDataDir = ConfigRegisterKey("data_dir");
 
+#if defined __APPLE__  && defined __MACH__
+	SetBinDataDirFromBundle();
+#endif
+
 	char ConfigFile[512];
 	snprintf(ConfigFile, lengthof(ConfigFile), "%s/ja2.ini", LocalPath);
 	if (ConfigParseFile(ConfigFile))
 	{
-		fprintf(stderr, "Couldn't open configfile (\"%s\").\n", ConfigFile);
-		TellAboutDataDir(ConfigFile);
-		return FALSE;
+		fprintf(stderr, "WARNING: Could not open configuration file (\"%s\").\n", ConfigFile);
 	}
 
 	if (GetBinDataPath() == NULL)
 	{
-		fprintf(stderr, "Path to binary data is not set.\n");
+		fputs("ERROR: Path to binary data is not set.\n", stderr);
 		TellAboutDataDir(ConfigFile);
 		return FALSE;
 	}

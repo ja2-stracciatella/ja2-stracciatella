@@ -6,7 +6,10 @@ typedef struct config_entry config_entry;
 /* Registers a key. ConfigParseFile will only add key/value-pairs
  * which are registered
  */
-const config_entry* ConfigRegisterKey(const char* key);
+config_entry* ConfigRegisterKey(const char* key);
+
+/* Set the value of the config entry */
+void ConfigSetValue(config_entry*, const char* value);
 
 /* Returns the value associated with registered key
  */

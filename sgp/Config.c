@@ -38,8 +38,7 @@ static void ConfigUpdateEntry(const char* key, const char* value)
 	{
 		if (strcmp(cfg_pointer->key, key) == 0)
 		{
-			free(cfg_pointer->value);
-			cfg_pointer->value = strdup(value);
+			ConfigSetValue(cfg_pointer, value);
 			return;
 		}
 	}
@@ -48,7 +47,7 @@ static void ConfigUpdateEntry(const char* key, const char* value)
 }
 
 
-const config_entry* ConfigRegisterKey(const char* key)
+config_entry* ConfigRegisterKey(const char* key)
 {
 	config_entry* const new_config = MALLOC(config_entry);
 	if (new_config != NULL)
@@ -59,6 +58,13 @@ const config_entry* ConfigRegisterKey(const char* key)
 		config_head       = new_config;
 	}
 	return new_config;
+}
+
+
+void ConfigSetValue(config_entry* const entry, const char* const value)
+{
+	free(entry->value);
+	entry->value = strdup(value);
 }
 
 
