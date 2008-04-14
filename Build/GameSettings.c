@@ -11,7 +11,6 @@
 #include "LibraryDataBase.h"
 #include "Debug.h"
 #include "HelpScreen.h"
-#include "Shade_Table_Util.h"
 #include "Meanwhile.h"
 #include "Cheats.h"
 #include "Message.h"
@@ -83,7 +82,6 @@ fail_close:
 	FileClose(f);
 fail:
 	InitGameSettings();
-	DeleteShadeTableDir();
 }
 
 

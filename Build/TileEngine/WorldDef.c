@@ -39,7 +39,6 @@
 #include "FileMan.h"
 #include "Map_Edgepoints.h"
 #include "Environment.h"
-#include "Shade_Table_Util.h"
 #include "Structure_Wrap.h"
 #include "Scheduling.h"
 #include "EditorMapInfo.h"
@@ -53,7 +52,6 @@
 #include "LightEffects.h"
 #include "MemMan.h"
 #include "JAScreens.h"
-#include "Tile_Cache.h"
 
 
 #define  SET_MOVEMENTCOST( a, b, c, d )				( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
@@ -111,8 +109,6 @@ INT16		gsRecompileAreaBottom = 0;
 	extern UINT32 uiLoadMapTilesetTime;
 	extern UINT32 uiLoadMapLightsTime;
 	extern UINT32 uiBuildShadeTableTime;
-	extern UINT32 uiNumTablesLoaded;
-	extern UINT32 uiNumTablesSaved;
 	extern UINT32 uiNumImagesReloaded;
 #endif
 
@@ -185,9 +181,6 @@ BOOLEAN InitializeWorld( )
 
 	// DB Adds the _8 to the names if we're in 8 bit mode.
 	//ProcessTilesetNamesForBPP();
-
-	// Memset tileset list
-	memset( TileSurfaceFilenames, '\0', sizeof( TileSurfaceFilenames ) );
 
 	// ATE: MEMSET LOG HEIGHT VALUES
 	memset( gTileTypeLogicalHeight, 1, sizeof( gTileTypeLogicalHeight ) );
@@ -288,7 +281,6 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
 			tileset_to_add = GENERIC_1;
 		}
-		strcpy(TileSurfaceFilenames[uiLoop], filename);
 
 		// Adjust for tileset position
 		char AdjustedFilename[128];
@@ -346,60 +338,12 @@ extern BOOLEAN gfLoadShadeTablesFromTextFile;
 
 void BuildTileShadeTables(  )
 {
-	HWFILE				hfile;
-	STRING512			DataDir;
-	STRING512			ShadeTableDir;
 	UINT32					uiLoop;
-	CHAR8 	      cRootFile[ 128 ];
-  BOOLEAN       fForceRebuildForSlot = FALSE;
 
 #ifdef JA2TESTVERSION
-	UINT32				uiStartTime;
+	UINT32 uiStartTime = GetJA2Clock();
+	uiNumImagesReloaded = 0;
 #endif
-	static UINT8 ubLastRed = 255, ubLastGreen = 255, ubLastBlue = 255;
-
-	#ifdef JA2TESTVERSION
-		uiNumTablesLoaded = 0;
-		uiNumTablesSaved = 0;
-		uiNumImagesReloaded = 0;
-		uiStartTime = GetJA2Clock();
-	#endif
-
-
-	//Set the directory to the shadetable directory
-	GetFileManCurrentDirectory( DataDir );
-	sprintf( ShadeTableDir, "%s/ShadeTables", DataDir );
-	if( !SetFileManCurrentDirectory( ShadeTableDir ) )
-	{
-		AssertMsg( 0, "Can't set the directory to Data/ShadeTable.  Kris' big problem!" );
-	}
-	hfile = FileOpen("IgnoreShadeTables.txt", FILE_ACCESS_READ);
-	if( hfile )
-	{
-		FileClose( hfile );
-		gfForceBuildShadeTables = TRUE;
-	}
-	else
-	{
-		gfForceBuildShadeTables = FALSE;
-	}
-	//now, determine if we are using specialized colors.
-	if (g_light_color.peRed   != 0 ||
-			g_light_color.peGreen != 0 ||
-			g_light_color.peBlue  != 0)
-	{ //we are, which basically means we force build the shadetables.  However, the one
-		//exception is if we are loading another map and the colors are the same.
-		if (g_light_color.peRed   != ubLastRed   ||
-				g_light_color.peGreen != ubLastGreen ||
-				g_light_color.peBlue  != ubLastBlue)
-		{	//Same tileset, but colors are different, so set things up to regenerate the shadetables.
-			gfForceBuildShadeTables = TRUE;
-		}
-		else
-		{ //same colors, same tileset, so don't rebuild shadetables -- much faster!
-			gfForceBuildShadeTables = FALSE;
-		}
-	}
 
 	if( gfLoadShadeTablesFromTextFile )
 	{ //Because we're tweaking the RGB values in the text file, always force rebuild the shadetables
@@ -418,30 +362,14 @@ void BuildTileShadeTables(  )
 				if( gbNewTileSurfaceLoaded[ uiLoop ]  )
       #endif
 				{
-          fForceRebuildForSlot = FALSE;
-
-      		GetRootName( cRootFile, TileSurfaceFilenames[ uiLoop ] );
-
-          if ( strcmp( cRootFile, "grass2" ) == 0 )
-          {
-            fForceRebuildForSlot = TRUE;
-          }
-
 					#ifdef JA2TESTVERSION
 						uiNumImagesReloaded++;
 					#endif
 					RenderProgressBar( 0, uiLoop * 100 / NUMBEROFTILETYPES );
-					CreateTilePaletteTables( gTileSurfaceArray[ uiLoop ]->vo, uiLoop, fForceRebuildForSlot );
+					CreateTilePaletteTables(gTileSurfaceArray[uiLoop]->vo);
         }
 		}
 	}
-
-	//Restore the data directory once we are finished.
-	SetFileManCurrentDirectory( DataDir );
-
-	ubLastRed   = g_light_color.peRed;
-	ubLastGreen = g_light_color.peGreen;
-	ubLastBlue  = g_light_color.peBlue;
 
 	#ifdef JA2TESTVERSION
 		uiBuildShadeTableTime = GetJA2Clock() - uiStartTime;

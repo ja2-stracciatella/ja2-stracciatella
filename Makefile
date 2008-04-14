@@ -368,7 +368,6 @@ SRCS += Build/TileEngine/RenderWorld.c
 SRCS += Build/TileEngine/Render_Dirty.c
 SRCS += Build/TileEngine/Render_Fun.c
 SRCS += Build/TileEngine/SaveLoadMap.c
-SRCS += Build/TileEngine/Shade_Table_Util.c
 SRCS += Build/TileEngine/Simple_Render_Utils.c
 SRCS += Build/TileEngine/Smell.c
 SRCS += Build/TileEngine/SmokeEffects.c

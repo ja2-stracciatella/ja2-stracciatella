@@ -57,7 +57,6 @@
 #include "Queen_Command.h"
 #include "Cursor_Control.h"
 #include "PreBattle_Interface.h"
-#include "Shade_Table_Util.h"
 #include "Scheduling.h"
 #include "Gameloop.h"
 #include "Random.h"
@@ -311,8 +310,6 @@ extern void HandleRPCDescription( );
 	UINT32 uiLoadMapTilesetTime;
 	UINT32 uiLoadMapLightsTime;
 	UINT32 uiBuildShadeTableTime;
-	UINT32 uiNumTablesSaved;
-	UINT32 uiNumTablesLoaded;
 	UINT32 uiNumImagesReloaded;
 	#include "TileDat.h"
 #endif
@@ -523,18 +520,6 @@ static void EndLoadScreen(void)
 
 		uiPercentage = uiNumImagesReloaded * 100 / NUMBEROFTILETYPES;
 		fprintf( fp, "  2)  %d%% of the tileset images were actually reloaded.\n", uiPercentage );
-		if ( ( uiNumTablesSaved+uiNumTablesLoaded ) != 0 )
-		{
-			uiPercentage = uiNumTablesSaved * 100 / (uiNumTablesSaved+uiNumTablesLoaded);
-		}
-		else
-		{
-			uiPercentage = 0;
-		}
-		fprintf( fp, "  3)  Of that, %d%% of the shade tables were generated (not loaded).\n", uiPercentage );
-		if( gfForceBuildShadeTables )
-			fprintf( fp, "  NOTE:  Force building of shadetables enabled on this local computer.\n" );
-
 
 		//Unaccounted
 		uiUnaccounted = uiLoadWorldTime - uiTrashWorldTime - uiLoadMapTilesetTime - uiLoadMapLightsTime;

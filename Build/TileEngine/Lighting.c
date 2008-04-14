@@ -36,7 +36,6 @@
 #include "Lighting.h"
 #include "Structure_Internals.h"
 #include "Structure_Wrap.h"
-#include "Shade_Table_Util.h"
 #include "Rotting_Corpses.h"
 #include "FileMan.h"
 #include "Environment.h"
@@ -2736,49 +2735,16 @@ void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadeP
 	adjust automagically.
 
 **********************************************************************************************/
-#ifdef JA2TESTVERSION
-	extern UINT32 uiNumTablesSaved;
-#endif
-
-void CreateTilePaletteTables(HVOBJECT pObj, UINT32 uiTileIndex, BOOLEAN fForce)
+void CreateTilePaletteTables(const HVOBJECT pObj)
 {
-		BOOLEAN fLoaded = FALSE;
+	Assert(pObj != NULL);
 
-		Assert(pObj!=NULL);
+	// build the shade tables
+	CreateBiasedShadedPalettes(pObj->pShades, pObj->pPaletteEntry);
 
-		// create the basic shade table
-		if( !gfForceBuildShadeTables && !fForce )
-		{ //The overwhelming majority of maps use the neutral 0,0,0 light for outdoors.  These shadetables
-			//are extremely time consuming to generate, so we will attempt to load them.  If we do, then
-			//we skip the generation process altogether.
-			if( LoadShadeTable( pObj, uiTileIndex ) )
-			{
-				fLoaded = TRUE;
-			}
-		}
-		if( !fLoaded )
-		{ //This is expensive as hell to call!
-			// build the shade tables
-			CreateBiasedShadedPalettes(pObj->pShades, pObj->pPaletteEntry);
-
-			//We paid to generate the shade table, so now save it, so we don't have to regenerate it ever
-			//again!
-			if (!gfForceBuildShadeTables   &&
-					g_light_color.peRed   == 0 &&
-					g_light_color.peGreen == 0 &&
-					g_light_color.peBlue  == 0)
-			{
-				SaveShadeTable( pObj, uiTileIndex );
-			}
-			#ifdef JA2TESTVERSION
-			else
-				uiNumTablesSaved++;
-			#endif
-		}
-
-		// build neutral palette as well!
-		// Set current shade table to neutral color
-		pObj->pShadeCurrent=pObj->pShades[4];
+	// build neutral palette as well!
+	// Set current shade table to neutral color
+	pObj->pShadeCurrent = pObj->pShades[4];
 }
 
 

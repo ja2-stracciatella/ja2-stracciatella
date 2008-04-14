@@ -80,13 +80,11 @@ INT32   FileGetPos(HWFILE);
 UINT32 FileGetSize(HWFILE);
 
 BOOLEAN     SetFileManCurrentDirectory(const char* pcDirectory);
-BOOLEAN     GetFileManCurrentDirectory(STRING512 pcDirectory);
 const char* GetExecutableDirectory(void);
 
 BOOLEAN MakeFileManDirectory(const char* pcDirectory);
 
-// WARNING: THESE DELETE ALL FILES IN THE DIRECTORY (and all subdirectories if fRecursive is TRUE!!)
-BOOLEAN RemoveFileManDirectory(const char* pcDirectory, BOOLEAN fRecursive);
+// WARNING: THESE DELETE ALL FILES IN THE DIRECTORY
 BOOLEAN EraseDirectory(const char* pcDirectory);
 
 typedef struct GETFILESTRUCT

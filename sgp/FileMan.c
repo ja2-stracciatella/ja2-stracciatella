@@ -338,7 +338,7 @@ BOOLEAN SetFileManCurrentDirectory(const char* const pcDirectory)
 }
 
 
-BOOLEAN GetFileManCurrentDirectory(STRING512 pcDirectory)
+static BOOLEAN GetFileManCurrentDirectory(STRING512 pcDirectory)
 {
 #if 1 // XXX TODO
 	return getcwd(pcDirectory, sizeof(STRING512)) != NULL;
@@ -354,103 +354,7 @@ BOOLEAN MakeFileManDirectory(const char* const pcDirectory)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Removes ALL FILES in the specified directory (and all subdirectories with their files if fRecursive is TRUE)
-// Use EraseDirectory() to simply delete directory contents without deleting the directory itself
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOLEAN RemoveFileManDirectory(const char *pcDirectory, BOOLEAN fRecursive)
-{
-#if 1 // XXX TODO
-#	if defined WITH_FIXMES
-	fprintf(stderr, "===> %s:%d: IGNORING %s(\"%s\", %s)\n", __FILE__, __LINE__, __func__, pcDirectory, fRecursive ? "TRUE" : "FALSE");
-#	endif
-	return FALSE;
-	UNIMPLEMENTED
-#else
-	WIN32_FIND_DATA sFindData;
-	HANDLE		SearchHandle;
-	const CHAR8	*pFileSpec = "*.*";
-	BOOLEAN	fDone = FALSE;
-	BOOLEAN fRetval=FALSE;
-	CHAR8		zOldDir[512];
-	CHAR8		zSubdirectory[512];
-
-	GetFileManCurrentDirectory( zOldDir );
-
-	if( !SetFileManCurrentDirectory( pcDirectory ) )
-	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
-		return( FALSE );		//Error going into directory
-	}
-
-	//If there are files in the directory, DELETE THEM
-	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
-	{
-
-		fDone = FALSE;
-		do
-		{
-			// if the object is a directory
-			if( GetFileAttributes( sFindData.cFileName ) == FILE_ATTRIBUTE_DIRECTORY )
-			{
-				// only go in if the fRecursive flag is TRUE (like Deltree)
-				if (fRecursive)
-				{
-					sprintf(zSubdirectory, "%s\\%s", pcDirectory, sFindData.cFileName);
-
-					if ((strcmp(sFindData.cFileName, ".") != 0) && (strcmp(sFindData.cFileName, "..") != 0))
-					{
-						if (!RemoveFileManDirectory(zSubdirectory, TRUE))
-						{
-				   		FastDebugMsg(String("RemoveFileManDirectory: ERROR - Recursive call on %s failed", zSubdirectory));
-							break;
-						}
-					}
-				}
-				// otherwise, all the individual files will be deleted, but the subdirectories remain, causing
-				// RemoveDirectory() at the end to fail, thus this function will return FALSE in that event (failure)
-			}
-			else
-			{
-				FileDelete( sFindData.cFileName );
-			}
-
-			//find the next file in the directory
-			fRetval = FindNextFile( SearchHandle, &sFindData );
-			if( fRetval == 0 )
-			{
-				fDone = TRUE;
-			}
-		}	while(!fDone);
-
-		// very important: close the find handle, or subsequent RemoveDirectory() calls will fail
-		FindClose( SearchHandle );
-	}
-
-	if( !SetFileManCurrentDirectory( zOldDir ) )
-	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", zOldDir, GetLastError()));
-		return( FALSE );		//Error returning from subdirectory
-	}
-
-
-	// The directory MUST be empty
-	fRetval = RemoveDirectory( pcDirectory );
-	if (!fRetval)
-	{
-		FastDebugMsg(String("RemoveFileManDirectory: ERROR - RemoveDirectory on %s failed, error %d", pcDirectory, GetLastError()));
-	}
-
-	return fRetval;
-#endif
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Removes ALL FILES in the specified directory but leaves the directory alone.  Does not affect any subdirectories!
-// Use RemoveFilemanDirectory() to also delete the directory itself, or to recursively delete subdirectories.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOLEAN EraseDirectory(const char *pcDirectory)
 {
 #if 1 // XXX TODO
