@@ -80,7 +80,7 @@ extern HVOBJECT	 GetFontObject(INT32 iFont);
 extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 extern UINT32		 mprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 UINT32 mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...);
-UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...);
+UINT32 mprintf_buffer_coded(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...);
 UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...);
 
 /* Sets the destination buffer for printing to and the clipping rectangle. */

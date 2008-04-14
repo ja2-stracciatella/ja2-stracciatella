@@ -319,13 +319,13 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 	INT32 desty = y;
 
 	// Lock the dest buffer
-	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
 
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
 		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferTransparentClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -385,7 +385,7 @@ UINT32 mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 
 }
 
 
-static UINT32 vmprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
+static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, va_list ArgPtr)
 {
 	Assert(pFontString != NULL);
 
@@ -412,7 +412,7 @@ static UINT32 vmprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, IN
 		}
 
 		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip((UINT16*)pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
 
@@ -420,7 +420,7 @@ static UINT32 vmprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, IN
 }
 
 
-UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+UINT32 mprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, ...)
 {
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
@@ -433,8 +433,8 @@ UINT32 mprintf_buffer_coded(UINT8* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, I
 
 UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
 
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
