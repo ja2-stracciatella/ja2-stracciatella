@@ -193,9 +193,6 @@ void LoadShadeTablesFromTextFile()
 	}
 }
 
-// Debug variable
-UINT32	gNodesAdded=0;
-
 
 static LightTemplate* LightLoad(const char* pFilename);
 
