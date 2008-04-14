@@ -229,7 +229,14 @@ UINT32 InitScreenHandle(void)
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_WHITE );
 
-		mprintf( 10, 430,
+		const INT32 x = 10;
+		const INT32 y = SCREEN_HEIGHT;
+
+#ifdef JA2BETAVERSION
+		mprintf(x, y - 60, L"(Beta version error reporting enabled)");
+#endif
+
+		mprintf(x, y - 50,
 #ifdef _DEBUG
 			L"%ls: %hs (Debug %hs)",
 #else
@@ -238,14 +245,8 @@ UINT32 InitScreenHandle(void)
 			pMessageStrings[MSG_VERSION], g_version_label, g_version_number
 		);
 
-#ifdef JA2BETAVERSION
-
-		mprintf( 10, 420, L"(Beta version error reporting enabled)" );
-
-#endif
-
 #ifdef _DEBUG
-		mprintf( 10, 440, L"SOLDIERTYPE: %d bytes", sizeof( SOLDIERTYPE ) );
+		mprintf(x, y - 40, L"SOLDIERTYPE: %d bytes", sizeof(SOLDIERTYPE));
 #endif
 
 		InvalidateScreen( );
