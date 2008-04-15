@@ -544,24 +544,24 @@ static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
+VIDEO_OVERLAY* RegisterVideoOverlay(const UINT32 uiFlags, const VIDEO_OVERLAY_DESC* const vod)
 {
-	UINT16 uiStringLength, uiStringHeight;
-
-	BACKGROUND_SAVE* bgs;
-	if ( uiFlags & VOVERLAY_DIRTYBYTEXT )
+	INT16 right;
+	INT16 bottom;
+	if (uiFlags & VOVERLAY_DIRTYBYTEXT)
 	{
-		uiStringLength=StringPixLength( pTopmostDesc->pzText, pTopmostDesc->uiFontID );
-		uiStringHeight=GetFontHeight( pTopmostDesc->uiFontID );
-
-		bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
+		const UINT16 uiStringLength = StringPixLength(vod->pzText, vod->uiFontID);
+		const UINT16 uiStringHeight = GetFontHeight(vod->uiFontID);
+		right  = vod->sLeft + uiStringLength;
+		bottom = vod->sTop  + uiStringHeight;
 	}
 	else
 	{
-		// Register background
-		bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
+		right  = vod->sRight;
+		bottom = vod->sBottom;
 	}
 
+	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, vod->sLeft, vod->sTop, right, bottom);
 	if (bgs == NO_BGND_RECT) return NULL;
 
 	// Get next free topmost blitter index
@@ -573,14 +573,14 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pT
 	v->uiFlags      = uiFlags;
 	v->fAllocated   = 2;
 	v->background   = bgs;
-	v->uiFontID     = pTopmostDesc->uiFontID;
-	v->sX           = pTopmostDesc->sLeft;
-	v->sY           = pTopmostDesc->sTop;
-	v->ubFontBack   = pTopmostDesc->ubFontBack;
-	v->ubFontFore   = pTopmostDesc->ubFontFore;
+	v->uiFontID     = vod->uiFontID;
+	v->sX           = vod->sLeft;
+	v->sY           = vod->sTop;
+	v->ubFontBack   = vod->ubFontBack;
+	v->ubFontFore   = vod->ubFontFore;
 	v->uiDestBuff   = FRAME_BUFFER;
-	v->BltCallback  = pTopmostDesc->BltCallback;
-	wcslcpy(v->zText, pTopmostDesc->pzText, lengthof(v->zText));
+	v->BltCallback  = vod->BltCallback;
+	wcslcpy(v->zText, vod->pzText, lengthof(v->zText));
 
 	// Set disabled flag to true
 	if (uiFlags & VOVERLAY_STARTDISABLED)
