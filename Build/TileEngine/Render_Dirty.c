@@ -643,26 +643,19 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 }
 
 
-void AllocateVideoOverlaysArea( )
+void AllocateVideoOverlaysArea(void)
 {
-	UINT32 uiCount;
-	UINT32 iBackIndex;
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
-		{
-			// Get buffer size
-			const BACKGROUND_SAVE* bgs = gVideoOverlays[uiCount].background;
-			const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom-bgs->sTop);
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated || v->fDisabled) continue;
 
-			gVideoOverlays[uiCount].fActivelySaving = TRUE;
+		// Get buffer size
+		const BACKGROUND_SAVE* const bgs       = v->background;
+		const UINT32                 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
-			//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
-
-			// Allocate
-			gVideoOverlays[uiCount].pSaveArea = MALLOCN(UINT16, uiBufSize);
-		}
+		v->fActivelySaving = TRUE;
+		v->pSaveArea       = MALLOCN(UINT16, uiBufSize);
 	}
 }
 
