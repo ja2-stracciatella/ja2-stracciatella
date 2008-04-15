@@ -628,27 +628,20 @@ void ExecuteVideoOverlays(void)
 
 void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 {
-	UINT32  uiCount;
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
-		{
-			if ( gVideoOverlays[uiCount].fActivelySaving )
-			{
-				SGPVSurface* const old_dst = gVideoOverlays[uiCount].uiDestBuff;
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated || v->fDisabled) continue;
 
-				gVideoOverlays[uiCount].uiDestBuff = buffer;
+		if (!v->fActivelySaving) continue;
 
-				// Call Blit Function
-			 (*(gVideoOverlays[uiCount].BltCallback ) ) ( &(gVideoOverlays[uiCount]) );
-
-				gVideoOverlays[uiCount].uiDestBuff = old_dst;
-			}
-		}
+		SGPVSurface* const old_dst = v->uiDestBuff;
+		v->uiDestBuff = buffer;
+		v->BltCallback(v);
+		v->uiDestBuff = old_dst;
 	}
-
 }
+
 
 void AllocateVideoOverlaysArea( )
 {
