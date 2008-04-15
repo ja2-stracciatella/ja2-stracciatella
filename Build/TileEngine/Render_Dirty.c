@@ -789,80 +789,62 @@ void DeleteVideoOverlaysArea(void)
 }
 
 
-BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY )
+void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 {
-	UINT32 uiCount, uiDestPitchBYTES;
-	UINT8	 *pDestBuf;
+	const INT32 ClipX1 = 0;
+	const INT32 ClipY1 = gsVIEWPORT_WINDOW_START_Y;
+	const INT32 ClipX2 = SCREEN_WIDTH;
+	const INT32 ClipY2 = gsVIEWPORT_WINDOW_END_Y - 1;
 
-	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
-	INT32	uiLeftSkip, uiRightSkip, uiTopSkip, uiBottomSkip;
-	UINT32 usHeight, usWidth;
-	INT32	 iTempX, iTempY;
-	INT16		sLeft, sTop, sRight, sBottom;
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(BACKBUFFER, &uiDestPitchBYTES);
 
-	ClipX1 = 0;
-	ClipY1 = gsVIEWPORT_WINDOW_START_Y;
-	ClipX2 = SCREEN_WIDTH;
-	ClipY2 = gsVIEWPORT_WINDOW_END_Y - 1;
-
-
-	pDestBuf = LockVideoSurface( BACKBUFFER, &uiDestPitchBYTES);
-
-	for(uiCount=0; uiCount <  guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[uiCount];
-		if (v->fAllocated && !v->fDisabled)
-		{
-				if (v->pSaveArea != NULL)
-				{
-					// Get restore background values
-					const UINT32 iBackIndex = v->uiBackground;
-					sLeft			= gBackSaves[ iBackIndex ].sLeft;
-					sTop		  = gBackSaves[ iBackIndex ].sTop;
-					sRight		= gBackSaves[ iBackIndex ].sRight;
-					sBottom		= gBackSaves[ iBackIndex ].sBottom;
-					usHeight  = gBackSaves[ iBackIndex ].sHeight;
-					usWidth   = gBackSaves[ iBackIndex ].sWidth;
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated || v->fDisabled) continue;
 
+		if (v->pSaveArea == NULL) continue;
 
-					// Clip!!
-					iTempX = sLeft - sShiftX;
-					iTempY = sTop  - sShiftY;
+		// Get restore background values
+		const BACKGROUND_SAVE* const b = &gBackSaves[v->uiBackground];
+		INT16  sLeft    = b->sLeft;
+		INT16  sTop     = b->sTop;
+		INT16  sRight   = b->sRight;
+		INT16  sBottom  = b->sBottom;
+		UINT32 usHeight = b->sHeight;
+		UINT32 usWidth  = b->sWidth;
 
-					// Clip to rect
-					uiLeftSkip=__min( ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-					uiRightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
-					uiTopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
-					uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
+		// Clip!!
+		const INT32 iTempX = sLeft - sShiftX;
+		const INT32 iTempY = sTop  - sShiftY;
 
-					// check if whole thing is clipped
-					if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))
-						continue;
+		// Clip to rect
+		const INT32 uiLeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX),                   (INT32)usWidth);
+		const INT32 uiTopSkip    = __min(ClipY1 - __min(ClipY1, iTempY),                   (INT32)usHeight);
+		const INT32 uiRightSkip  = __min(  max(ClipX2, iTempX + (INT32)usWidth)  - ClipX2, (INT32)usWidth);
+		const INT32 uiBottomSkip = __min(__max(ClipY2, iTempY + (INT32)usHeight) - ClipY2, (INT32)usHeight);
 
-					// check if whole thing is clipped
-					if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))
-						continue;
+		// check if whole thing is clipped
+		if (uiLeftSkip >= (INT32)usWidth  || uiRightSkip  >= (INT32)usWidth)  continue;
+		if (uiTopSkip  >= (INT32)usHeight || uiBottomSkip >= (INT32)usHeight) continue;
 
-					// Set re-set values given based on clipping
-					sLeft    = iTempX + (INT16)uiLeftSkip;
-					sTop     = iTempY + (INT16)uiTopSkip;
-					sRight   = sRight  - sShiftX - (INT16)uiRightSkip;
-					sBottom  = sBottom - sShiftY - (INT16)uiBottomSkip;
+		// Set re-set values given based on clipping
+		sLeft    = iTempX + (INT16)uiLeftSkip;
+		sTop     = iTempY + (INT16)uiTopSkip;
+		sRight   = sRight  - sShiftX - (INT16)uiRightSkip;
+		sBottom  = sBottom - sShiftY - (INT16)uiBottomSkip;
 
-					usHeight = sBottom - sTop;
-					usWidth  = sRight -  sLeft;
+		usHeight = sBottom - sTop;
+		usWidth  = sRight -  sLeft;
 
-					Blt16BPPTo16BPP((UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16*)v->pSaveArea, gBackSaves[iBackIndex].sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
+		Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, (UINT16*)v->pSaveArea, b->sWidth * 2, sLeft, sTop, uiLeftSkip, uiTopSkip, usWidth, usHeight);
 
-					// Once done, check for pending deletion
-					if (v->fDeletionPending) RemoveVideoOverlay(v);
-				}
-		}
+		// Once done, check for pending deletion
+		if (v->fDeletionPending) RemoveVideoOverlay(v);
 	}
 
-	UnLockVideoSurface( BACKBUFFER );
-
-	return(TRUE);
+	UnLockVideoSurface(BACKBUFFER);
 }
 
 

@@ -98,7 +98,7 @@ void DeleteVideoOverlaysArea(void);
 void AllocateVideoOverlaysArea(void);
 void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* buffer);
 void RemoveVideoOverlay(VIDEO_OVERLAY*);
-BOOLEAN RestoreShiftedVideoOverlays( INT16 sShiftX, INT16 sShiftY );
+void RestoreShiftedVideoOverlays(INT16 sShiftX, INT16 sShiftY);
 void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
 void SetVideoOverlayTextF(VIDEO_OVERLAY*, const wchar_t* fmt, ...);
 void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
