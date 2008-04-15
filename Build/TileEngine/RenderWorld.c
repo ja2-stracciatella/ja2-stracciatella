@@ -1091,7 +1091,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 									usImageIndex = pSoldier->usAniFrame;
 
-									uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED | BGND_FLAG_MERC;
+									uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 									break;
 							}
 
