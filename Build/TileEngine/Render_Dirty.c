@@ -374,23 +374,18 @@ void SaveBackgroundRects(void)
 }
 
 
-BOOLEAN FreeBackgroundRect(INT32 iIndex)
+void FreeBackgroundRect(const INT32 iIndex)
 {
-	if ( iIndex != -1 )
-	{
-		gBackSaves[iIndex].fAllocated=FALSE;
+	if (iIndex == NO_BGND_RECT) return;
 
-		RecountBackgrounds();
-	}
-
-	return(TRUE);
+	gBackSaves[iIndex].fAllocated = FALSE;
+	RecountBackgrounds();
 }
 
-BOOLEAN FreeBackgroundRectPending(INT32 iIndex)
+
+void FreeBackgroundRectPending(const INT32 iIndex)
 {
 	gBackSaves[iIndex].fPendingDelete = TRUE;
-
-	return(TRUE);
 }
 
 
