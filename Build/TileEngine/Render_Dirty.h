@@ -27,7 +27,6 @@ typedef struct
 	BOOLEAN		fAllocated;
 	BOOLEAN		fFilled;
 	BOOLEAN		fFreeMemory;
-	BOOLEAN		fZBuffer;
 	UINT32		uiFlags;
 	INT16			*pSaveArea;
 	UINT16*   pZSaveArea;

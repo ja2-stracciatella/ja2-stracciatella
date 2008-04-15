@@ -185,8 +185,6 @@ INT32	 iTempX, iTempY;
 
 	memset(&gBackSaves[iBackIndex], 0, sizeof(BACKGROUND_SAVE));
 
-	gBackSaves[iBackIndex].fZBuffer=FALSE;
-
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
 
 	if (uiBufSize == 0)
@@ -202,7 +200,6 @@ INT32	 iTempX, iTempY;
 	{
 		gBackSaves[iBackIndex].pZSaveArea = MALLOCN(UINT16, uiBufSize);
 		if (gBackSaves[iBackIndex].pZSaveArea == NULL) return NO_BGND_RECT;
-		gBackSaves[iBackIndex].fZBuffer = TRUE;
 	}
 
 	gBackSaves[iBackIndex].fFreeMemory = TRUE;
@@ -260,15 +257,12 @@ UINT8	 *pDestBuf, *pSrcBuf;
 
 				}
 			}
-			else if ( gBackSaves[uiCount].uiFlags & BGND_FLAG_SAVE_Z )
+			else if (gBackSaves[uiCount].pZSaveArea != NULL)
 			{
-				if ( gBackSaves[uiCount].fZBuffer )
-				{
-					Blt16BPPTo16BPP(gpZBuffer, uiDestPitchBYTES, gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth * 2,
-								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-								0, 0,
-								gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-				}
+				Blt16BPPTo16BPP(gpZBuffer, uiDestPitchBYTES, gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth * 2,
+							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
+							0, 0,
+							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
 			}
 			else
 			{
@@ -313,10 +307,9 @@ BOOLEAN EmptyBackgroundRects(void)
 						MemFree(gBackSaves[uiCount].pSaveArea);
 					}
 				}
-				if(gBackSaves[uiCount].fZBuffer)
+				if (gBackSaves[uiCount].pZSaveArea != NULL)
 					MemFree(gBackSaves[uiCount].pZSaveArea);
 
-				gBackSaves[uiCount].fZBuffer=FALSE;
 				gBackSaves[uiCount].fAllocated=FALSE;
 				gBackSaves[uiCount].fFreeMemory=FALSE;
 				gBackSaves[uiCount].fFilled=FALSE;
@@ -338,11 +331,10 @@ BOOLEAN EmptyBackgroundRects(void)
 					}
 				}
 
-				if(gBackSaves[uiCount].fZBuffer)
+				if (gBackSaves[uiCount].pZSaveArea != NULL)
 					MemFree(gBackSaves[uiCount].pZSaveArea);
 			}
 
-			gBackSaves[uiCount].fZBuffer=FALSE;
 			gBackSaves[uiCount].fAllocated=FALSE;
 			gBackSaves[uiCount].fFreeMemory=FALSE;
 			gBackSaves[uiCount].fFilled=FALSE;
@@ -382,7 +374,7 @@ UINT8	 *pDestBuf, *pSrcBuf;
 					}
 
 				}
-				else if(gBackSaves[uiCount].fZBuffer)
+				else if (gBackSaves[uiCount].pZSaveArea != NULL)
 				{
 					Blt16BPPTo16BPP(gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2,
 							(UINT16 *)gpZBuffer, uiDestPitchBYTES,
@@ -434,11 +426,10 @@ static BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
 	if(gBackSaves[uiCount].fFreeMemory==TRUE)
 	{
 		//MemFree(gBackSaves[uiCount].pSaveArea);
-		if(gBackSaves[uiCount].fZBuffer)
+		if (gBackSaves[uiCount].pZSaveArea != NULL)
 			MemFree(gBackSaves[uiCount].pZSaveArea);
 	}
 
-	gBackSaves[uiCount].fZBuffer=FALSE;
 	gBackSaves[uiCount].fAllocated=FALSE;
 	gBackSaves[uiCount].fFreeMemory=FALSE;
 	gBackSaves[uiCount].fFilled=FALSE;
@@ -459,11 +450,10 @@ UINT32 uiCount;
 			if(gBackSaves[uiCount].fFreeMemory==TRUE)
 			{
 				//MemFree(gBackSaves[uiCount].pSaveArea);
-				if(gBackSaves[uiCount].fZBuffer)
+				if (gBackSaves[uiCount].pZSaveArea != NULL)
 					MemFree(gBackSaves[uiCount].pZSaveArea);
 			}
 
-			gBackSaves[uiCount].fZBuffer=FALSE;
 			gBackSaves[uiCount].fAllocated=FALSE;
 			gBackSaves[uiCount].fFreeMemory=FALSE;
 			gBackSaves[uiCount].fFilled=FALSE;
