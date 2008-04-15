@@ -389,7 +389,7 @@ void FreeBackgroundRectPending(const INT32 iIndex)
 }
 
 
-static void FreeBackgroundRectNow(INT32 uiCount)
+static void FreeBackgroundRectNow(const INT32 uiCount)
 {
 	BACKGROUND_SAVE* const b = &gBackSaves[uiCount];
 	if (b->fFreeMemory)
@@ -407,31 +407,26 @@ static void FreeBackgroundRectNow(INT32 uiCount)
 }
 
 
-BOOLEAN FreeBackgroundRectType(UINT32 uiFlags)
+void FreeBackgroundRectType(const UINT32 uiFlags)
 {
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if(gBackSaves[uiCount].uiFlags&uiFlags)
-		{
-			if(gBackSaves[uiCount].fFreeMemory==TRUE)
-			{
-				//MemFree(gBackSaves[uiCount].pSaveArea);
-				if (gBackSaves[uiCount].pZSaveArea != NULL)
-					MemFree(gBackSaves[uiCount].pZSaveArea);
-			}
+		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (!(b->uiFlags & uiFlags)) continue;
 
-			gBackSaves[uiCount].fAllocated=FALSE;
-			gBackSaves[uiCount].fFreeMemory=FALSE;
-			gBackSaves[uiCount].fFilled=FALSE;
-			gBackSaves[uiCount].pSaveArea=NULL;
+		if (b->fFreeMemory)
+		{
+			//MemFree(b->pSaveArea);
+			if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 		}
+
+		b->fAllocated  = FALSE;
+		b->fFreeMemory = FALSE;
+		b->fFilled     = FALSE;
+		b->pSaveArea   = NULL;
 	}
 
 	RecountBackgrounds();
-
-	return(TRUE);
 }
 
 

@@ -70,7 +70,7 @@ BOOLEAN ShutdownBackgroundRects(void);
 INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
 void    FreeBackgroundRect(INT32 iIndex);
 void    FreeBackgroundRectPending(INT32 iIndex);
-BOOLEAN FreeBackgroundRectType(UINT32 uiFlags);
+void    FreeBackgroundRectType(UINT32 uiFlags);
 void    RestoreBackgroundRects(void);
 void    SaveBackgroundRects(void);
 BOOLEAN InvalidateBackgroundRects(void);
