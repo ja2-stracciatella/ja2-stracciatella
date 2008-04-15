@@ -152,90 +152,68 @@ INT32 uiCount;
 }
 
 
-INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+INT32 RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
-INT32 iBackIndex;
-INT32  ClipX1, ClipY1, ClipX2, ClipY2;
-INT32	uiLeftSkip, uiRightSkip, uiTopSkip, uiBottomSkip;
-UINT32 usHeight, usWidth;
-INT32	 iTempX, iTempY;
+	const INT32 ClipX1 = gDirtyClipRect.iLeft;
+	const INT32 ClipY1 = gDirtyClipRect.iTop;
+	const INT32 ClipX2 = gDirtyClipRect.iRight;
+	const INT32 ClipY2 = gDirtyClipRect.iBottom;
 
+	const UINT32 usHeight = sBottom - sTop;
+	const UINT32 usWidth  = sRight -  sLeft;
 
-	// Don't register if we are rendering and we are below the viewport
-	//if ( sTop >= gsVIEWPORT_WINDOW_END_Y )
-	//{
-	//	return NO_BGND_RECT;
-	//}
-
-	ClipX1= gDirtyClipRect.iLeft;
-	ClipY1= gDirtyClipRect.iTop;
-	ClipX2= gDirtyClipRect.iRight;
-	ClipY2= gDirtyClipRect.iBottom;
-
-	usHeight = sBottom - sTop;
-	usWidth  = sRight -  sLeft;
-
-	//if((sClipLeft >= sClipRight) || (sClipTop >= sClipBottom))
-	//	return NO_BGND_RECT;
-	iTempX = sLeft;
-	iTempY = sTop;
+	const INT32 iTempX = sLeft;
+	const INT32 iTempY = sTop;
 
 	// Clip to rect
-	uiLeftSkip=__min( ClipX1 - min(ClipX1, iTempX), (INT32)usWidth);
-	uiRightSkip=__min(max(ClipX2, (iTempX+(INT32)usWidth)) - ClipX2, (INT32)usWidth);
-	uiTopSkip=__min(ClipY1 - __min(ClipY1, iTempY), (INT32)usHeight);
-	uiBottomSkip=__min(__max(ClipY2, (iTempY+(INT32)usHeight)) - ClipY2, (INT32)usHeight);
+	const INT32 uiLeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX),                   (INT32)usWidth);
+	const INT32 uiTopSkip    = __min(ClipY1 - __min(ClipY1, iTempY),                   (INT32)usHeight);
+	const INT32 uiRightSkip  = __min(  max(ClipX2, iTempX + (INT32)usWidth)  - ClipX2, (INT32)usWidth);
+	const INT32 uiBottomSkip = __min(__max(ClipY2, iTempY + (INT32)usHeight) - ClipY2, (INT32)usHeight);
 
 	// check if whole thing is clipped
-	if((uiLeftSkip >=(INT32)usWidth) || (uiRightSkip >=(INT32)usWidth))
-		return NO_BGND_RECT;
-
-	// check if whole thing is clipped
-	if((uiTopSkip >=(INT32)usHeight) || (uiBottomSkip >=(INT32)usHeight))
-		return NO_BGND_RECT;
+	if (uiLeftSkip >= (INT32)usWidth  || uiRightSkip  >= (INT32)usWidth)  return NO_BGND_RECT;
+	if (uiTopSkip  >= (INT32)usHeight || uiBottomSkip >= (INT32)usHeight) return NO_BGND_RECT;
 
 	// Set re-set values given based on clipping
-	sLeft  = sLeft + (INT16)uiLeftSkip;
-	sRight = sRight - (INT16)uiRightSkip;
-	sTop   = sTop + (INT16)uiTopSkip;
-	sBottom = sBottom - (INT16)uiBottomSkip;
+	sLeft   += uiLeftSkip;
+	sRight  -= uiRightSkip;
+	sTop    += uiTopSkip;
+	sBottom -= uiBottomSkip;
 
-	iBackIndex = GetFreeBackgroundBuffer();
+	const INT32 iBackIndex = GetFreeBackgroundBuffer();
 	if (iBackIndex == NO_BGND_RECT) return NO_BGND_RECT;
+	BACKGROUND_SAVE* const b = &gBackSaves[iBackIndex];
 
-	memset(&gBackSaves[iBackIndex], 0, sizeof(BACKGROUND_SAVE));
+	memset(b, 0, sizeof(*b));
 
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
-
-	if (uiBufSize == 0)
-		return NO_BGND_RECT;
+	if (uiBufSize == 0) return NO_BGND_RECT;
 
 	if (uiFlags & BGND_FLAG_SAVERECT)
 	{
-		gBackSaves[iBackIndex].pSaveArea = MALLOCN(INT16, uiBufSize);
-		if (gBackSaves[iBackIndex].pSaveArea == NULL) return NO_BGND_RECT;
+		b->pSaveArea = MALLOCN(INT16, uiBufSize);
+		if (b->pSaveArea == NULL) return NO_BGND_RECT;
 	}
 
 	if (uiFlags & BGND_FLAG_SAVE_Z)
 	{
-		gBackSaves[iBackIndex].pZSaveArea = MALLOCN(UINT16, uiBufSize);
-		if (gBackSaves[iBackIndex].pZSaveArea == NULL) return NO_BGND_RECT;
+		b->pZSaveArea = MALLOCN(UINT16, uiBufSize);
+		if (b->pZSaveArea == NULL) return NO_BGND_RECT;
 	}
 
-	gBackSaves[iBackIndex].fFreeMemory = TRUE;
+	b->fFreeMemory = TRUE;
+	b->fAllocated  = TRUE;
+	b->uiFlags     = uiFlags;
+	b->sLeft       = sLeft;
+	b->sTop        = sTop;
+	b->sRight      = sRight;
+	b->sBottom     = sBottom;
+	b->sWidth      = sRight  - sLeft;
+	b->sHeight     = sBottom - sTop;
+	b->fFilled     = FALSE;
 
-	gBackSaves[iBackIndex].fAllocated=TRUE;
-	gBackSaves[iBackIndex].uiFlags=uiFlags;
-	gBackSaves[iBackIndex].sLeft=sLeft;
-	gBackSaves[iBackIndex].sTop=sTop;
-	gBackSaves[iBackIndex].sRight=sRight;
-	gBackSaves[iBackIndex].sBottom=sBottom;
-	gBackSaves[iBackIndex].sWidth=(sRight-sLeft);
-	gBackSaves[iBackIndex].sHeight=(sBottom-sTop);
-
-	gBackSaves[iBackIndex].fFilled=FALSE;
-
-	return(iBackIndex);
+	return iBackIndex;
 }
 
 
