@@ -71,7 +71,7 @@ INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRig
 BOOLEAN FreeBackgroundRect(INT32 iIndex);
 BOOLEAN FreeBackgroundRectPending(INT32 iIndex);
 BOOLEAN FreeBackgroundRectType(UINT32 uiFlags);
-BOOLEAN RestoreBackgroundRects(void);
+void    RestoreBackgroundRects(void);
 BOOLEAN SaveBackgroundRects(void);
 BOOLEAN InvalidateBackgroundRects(void);
 BOOLEAN UpdateSaveBuffer(void);

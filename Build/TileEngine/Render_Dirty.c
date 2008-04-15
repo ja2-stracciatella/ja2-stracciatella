@@ -250,61 +250,41 @@ void RegisterBackgroundRectSingleFilled(const INT16 left, const INT16 top, const
 }
 
 
-BOOLEAN RestoreBackgroundRects(void)
+void RestoreBackgroundRects(void)
 {
-UINT32 uiCount, uiDestPitchBYTES, uiSrcPitchBYTES;
-UINT8	 *pDestBuf, *pSrcBuf;
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT32        uiSrcPitchBYTES;
+	UINT16* const pSrcBuf  = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSrcPitchBYTES);
 
-	pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	pSrcBuf = LockVideoSurface(guiSAVEBUFFER, &uiSrcPitchBYTES);
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if(gBackSaves[uiCount].fFilled && ( !gBackSaves[uiCount].fDisabled) )
+		const BACKGROUND_SAVE* b = &gBackSaves[i];
+		if (!b->fFilled || b->fDisabled) continue;
+
+		if (b->uiFlags & BGND_FLAG_SAVERECT)
 		{
-
-			if ( gBackSaves[uiCount].uiFlags & BGND_FLAG_SAVERECT )
+			if (b->pSaveArea != NULL)
 			{
-				if ( gBackSaves[uiCount].pSaveArea != NULL )
-				{
-					Blt16BPPTo16BPP( (UINT16*)pDestBuf, uiDestPitchBYTES, (UINT16 *)gBackSaves[uiCount].pSaveArea, gBackSaves[uiCount].sWidth*2,
-								gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-								0, 0,
-								gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-
-					AddBaseDirtyRect(gBackSaves[uiCount].sLeft, gBackSaves[uiCount].sTop,
-													gBackSaves[uiCount].sRight, gBackSaves[uiCount].sBottom);
-
-				}
-			}
-			else if (gBackSaves[uiCount].pZSaveArea != NULL)
-			{
-				Blt16BPPTo16BPP(gpZBuffer, uiDestPitchBYTES, gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth * 2,
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-							0, 0,
-							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-			}
-			else
-			{
-				Blt16BPPTo16BPP((UINT16 *)pDestBuf, uiDestPitchBYTES,
-							(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-
-				AddBaseDirtyRect(gBackSaves[uiCount].sLeft, gBackSaves[uiCount].sTop,
-													gBackSaves[uiCount].sRight, gBackSaves[uiCount].sBottom);
+				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, (UINT16*)b->pSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+				AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 		}
-
+		else if (b->pZSaveArea != NULL)
+		{
+			Blt16BPPTo16BPP(gpZBuffer, uiDestPitchBYTES, b->pZSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+		}
+		else
+		{
+			Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, pSrcBuf, uiSrcPitchBYTES, b->sLeft, b->sTop, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+			AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+		}
 	}
 
 	UnLockVideoSurface(FRAME_BUFFER);
 	UnLockVideoSurface(guiSAVEBUFFER);
 
-	EmptyBackgroundRects( );
-
-	return(TRUE);
+	EmptyBackgroundRects();
 }
 
 
