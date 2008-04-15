@@ -59,7 +59,7 @@ static UINT32        guiNumVideoOverlays = 0;
 SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 
-BOOLEAN		gfViewportDirty=FALSE;
+static BOOLEAN gfViewportDirty = FALSE;
 
 
 void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
@@ -91,19 +91,12 @@ void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 }
 
 
-BOOLEAN ExecuteBaseDirtyRectQueue( )
+void ExecuteBaseDirtyRectQueue(void)
 {
-	if(gfViewportDirty)
-	{
-		//InvalidateRegion(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
-		InvalidateScreen( );
-		gfViewportDirty=FALSE;
-		return(TRUE);
-	}
+	if (!gfViewportDirty) return;
+	gfViewportDirty = FALSE;
 
-
-
-	return( TRUE );
+	InvalidateScreen();
 }
 
 

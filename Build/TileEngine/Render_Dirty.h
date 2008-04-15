@@ -60,8 +60,8 @@ extern SGPRect gDirtyClipRect;
 
 
 // DIRTY QUEUE
-void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom );
-BOOLEAN ExecuteBaseDirtyRectQueue(void);
+void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
+void ExecuteBaseDirtyRectQueue(void);
 
 
 // BACKGROUND RECT BUFFERING STUFF
