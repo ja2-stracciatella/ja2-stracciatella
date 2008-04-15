@@ -88,7 +88,6 @@ void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
-UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...);
 
 
 // VIDEO OVERLAY STUFF

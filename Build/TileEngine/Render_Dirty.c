@@ -469,30 +469,6 @@ UINT16 uiStringLength, uiStringHeight;
 }
 
 
-UINT16 gprintfRestore(INT16 x, INT16 y, const wchar_t *pFontString, ...)
-{
-va_list argptr;
-wchar_t	string[512];
-UINT16 uiStringLength, uiStringHeight;
-
-	Assert(pFontString!=NULL);
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	uiStringLength=StringPixLength(string, FontDefault);
-	uiStringHeight=GetFontHeight(FontDefault);
-
-	if ( uiStringLength > 0 )
-	{
-		RestoreExternBackgroundRect( x, y, uiStringLength, uiStringHeight );
-	}
-
-	return(uiStringLength);
-}
-
-
 static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 {
 	VIDEO_OVERLAY* v;

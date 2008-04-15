@@ -959,7 +959,9 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				}
 				else if (f->fDisplayTextOver == FACE_ERASE_TEXT_OVER)
 				{
-					gprintfRestore(sFontX, sFontY, f->zDisplayText);
+					const INT16 w = StringPixLength(f->zDisplayText, TINYFONT1);
+					const INT16 h = GetFontHeight(TINYFONT1);
+					RestoreExternBackgroundRect(sFontX, sFontY, w, h);
 					f->fDisplayTextOver = FACE_NO_TEXT_OVER;
 				}
 
