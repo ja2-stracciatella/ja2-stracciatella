@@ -48,6 +48,14 @@ static VIDEO_OVERLAY gVideoOverlays[VIDEO_OVERLAYS];
 static UINT32        guiNumVideoOverlays = 0;
 
 
+#define FOR_ALL_VIDEO_OVERLAYS(iter)                                      \
+	for (VIDEO_OVERLAY* iter        = gVideoOverlays,                       \
+	                  * iter##__end = gVideoOverlays + guiNumVideoOverlays; \
+	     iter != iter##__end;                                               \
+	     ++iter)                                                            \
+		if (!iter->fAllocated || iter->fDisabled) continue; else
+
+
 SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 
@@ -607,12 +615,8 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 // FUnctions for entrie array of blitters
 void ExecuteVideoOverlays(void)
 {
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated) continue;
-		if (v->fDisabled)   continue;
-
 		// If we are scrolling but haven't saved yet, don't!
 		if (!v->fActivelySaving && gfScrollInertia > 0) continue;
 
@@ -628,11 +632,8 @@ void ExecuteVideoOverlays(void)
 
 void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 {
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated || v->fDisabled) continue;
-
 		if (!v->fActivelySaving) continue;
 
 		SGPVSurface* const old_dst = v->uiDestBuff;
@@ -645,11 +646,8 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 
 void AllocateVideoOverlaysArea(void)
 {
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated || v->fDisabled) continue;
-
 		// Get buffer size
 		const BACKGROUND_SAVE* const bgs       = v->background;
 		const UINT32                 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
@@ -679,11 +677,8 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 	UINT32        uiSrcPitchBYTES;
 	UINT16* const pSrcBuf = (UINT16*)LockVideoSurface(src, &uiSrcPitchBYTES);
 
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated || v->fDisabled) continue;
-
 		// OK, if our saved area is null, allocate it here!
 		if (v->pSaveArea == NULL)
 		{
@@ -702,11 +697,8 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 
 void DeleteVideoOverlaysArea(void)
 {
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated || v->fDisabled) continue;
-
 		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
 		v->pSaveArea       = NULL;
 		v->fActivelySaving = FALSE;
@@ -725,11 +717,8 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 	UINT32        uiDestPitchBYTES;
 	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(BACKBUFFER, &uiDestPitchBYTES);
 
-	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
+	FOR_ALL_VIDEO_OVERLAYS(v)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
-		if (!v->fAllocated || v->fDisabled) continue;
-
 		if (v->pSaveArea == NULL) continue;
 
 		// Get restore background values
