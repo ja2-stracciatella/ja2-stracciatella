@@ -774,20 +774,17 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 }
 
 
-void DeleteVideoOverlaysArea( )
+void DeleteVideoOverlaysArea(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		VIDEO_OVERLAY* const v = &gVideoOverlays[uiCount];
-		if (v->fAllocated && !v->fDisabled)
-		{
-			if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
-			v->pSaveArea       = NULL;
-			v->fActivelySaving = FALSE;
-			if (v->fDeletionPending) RemoveVideoOverlay(v);
-		}
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated || v->fDisabled) continue;
+
+		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
+		v->pSaveArea       = NULL;
+		v->fActivelySaving = FALSE;
+		if (v->fDeletionPending) RemoveVideoOverlay(v);
 	}
 }
 
