@@ -338,55 +338,39 @@ void EmptyBackgroundRects(void)
 }
 
 
-BOOLEAN SaveBackgroundRects(void)
+void SaveBackgroundRects(void)
 {
-UINT32 uiCount, uiDestPitchBYTES, uiSrcPitchBYTES;
-UINT8	 *pDestBuf, *pSrcBuf;
+	UINT32        uiDestPitchBYTES;
+	UINT16* const pSrcBuf  = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	UINT32        uiSrcPitchBYTES;
+	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSrcPitchBYTES);
 
-	pSrcBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	pDestBuf = LockVideoSurface(guiSAVEBUFFER, &uiSrcPitchBYTES);
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if(gBackSaves[uiCount].fAllocated && ( !gBackSaves[uiCount].fDisabled) )
+		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (!b->fAllocated || b->fDisabled) continue;
+
+		if (b->uiFlags & BGND_FLAG_SAVERECT)
 		{
-				if ( gBackSaves[uiCount].uiFlags & BGND_FLAG_SAVERECT )
-				{
-					if ( gBackSaves[uiCount].pSaveArea != NULL )
-					{
-						Blt16BPPTo16BPP((UINT16 *)gBackSaves[uiCount].pSaveArea, gBackSaves[uiCount].sWidth*2,
-									(UINT16 *)pSrcBuf, uiDestPitchBYTES,
-									0, 0,
-									gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-									gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-
-					}
-
-				}
-				else if (gBackSaves[uiCount].pZSaveArea != NULL)
-				{
-					Blt16BPPTo16BPP(gBackSaves[uiCount].pZSaveArea, gBackSaves[uiCount].sWidth*2,
-							(UINT16 *)gpZBuffer, uiDestPitchBYTES,
-							0, 0,
-							gBackSaves[uiCount].sLeft , gBackSaves[uiCount].sTop,
-							gBackSaves[uiCount].sWidth, gBackSaves[uiCount].sHeight);
-				}
-				else
-				{
-					AddBaseDirtyRect(gBackSaves[uiCount].sLeft, gBackSaves[uiCount].sTop,
-											gBackSaves[uiCount].sRight, gBackSaves[uiCount].sBottom);
-				}
-
-				gBackSaves[uiCount].fFilled=TRUE;
-
-
+			if (b->pSaveArea != NULL)
+			{
+				Blt16BPPTo16BPP(b->pSaveArea, b->sWidth * 2, pSrcBuf, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+			}
 		}
+		else if (b->pZSaveArea != NULL)
+		{
+			Blt16BPPTo16BPP(b->pZSaveArea, b->sWidth * 2, gpZBuffer, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+		}
+		else
+		{
+			AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
+		}
+
+		b->fFilled = TRUE;
 	}
 
 	UnLockVideoSurface(FRAME_BUFFER);
 	UnLockVideoSurface(guiSAVEBUFFER);
-
-	return(TRUE);
 }
 
 
