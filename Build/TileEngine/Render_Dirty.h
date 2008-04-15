@@ -28,7 +28,7 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fActivelySaving;
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
-	INT16*           pSaveArea;
+	UINT16*          pSaveArea;
 	UINT32           uiFontID;
 	INT16            sX;
 	INT16            sY;
