@@ -605,42 +605,24 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 
 
 // FUnctions for entrie array of blitters
-void ExecuteVideoOverlays( )
+void ExecuteVideoOverlays(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		if( gVideoOverlays[uiCount].fAllocated )
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated) continue;
+		if (v->fDisabled)   continue;
+
+		// If we are scrolling but haven't saved yet, don't!
+		if (!v->fActivelySaving && gfScrollInertia > 0) continue;
+
+		// ATE: Wait a frame before executing!
+		switch (v->fAllocated)
 		{
-				if ( !gVideoOverlays[uiCount].fDisabled )
-				{
-					// If we are scrolling but havn't saved yet, don't!
-					if ( !gVideoOverlays[uiCount].fActivelySaving && gfScrollInertia > 0 )
-					{
-						continue;
-					}
-
-					// ATE: Wait a frame before executing!
-					if ( gVideoOverlays[uiCount].fAllocated == 1 )
-					{
-						// Call Blit Function
-						(*(gVideoOverlays[uiCount].BltCallback ) ) ( &(gVideoOverlays[uiCount]) );
-					}
-					else if ( gVideoOverlays[uiCount].fAllocated == 2 )
-					{
-						 gVideoOverlays[uiCount].fAllocated = 1;
-					}
-				}
-
-				// Remove if pending
-				//if ( gVideoOverlays[uiCount].fDeletionPending )
-				//{
-				//	RemoveVideoOverlay( uiCount );
-				//}
+			case 1: v->BltCallback(v); break;
+			case 2: v->fAllocated = 1; break;
 		}
 	}
-
 }
 
 
