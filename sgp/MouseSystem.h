@@ -13,7 +13,9 @@
 #ifndef _MOUSE_SYSTEM_H_
 #define _MOUSE_SYSTEM_H_
 
+#include "JA2Types.h"
 #include "Types.h"
+
 
 #ifdef JA2
 #define _JA2_RENDER_DIRTY		// Undef this if not using the JA2 Dirty Rectangle System.
@@ -46,9 +48,9 @@ typedef struct _MOUSE_REGION {
 	} user;
 
 	//Fast help vars.
-	INT16					FastHelpTimer;		// Countdown timer for FastHelp text
-	wchar_t				*FastHelpText;		// Text string for the FastHelp (describes buttons if left there a while)
-	INT32					FastHelpRect;
+	INT16            FastHelpTimer; // Countdown timer for FastHelp text
+	wchar_t*         FastHelpText;  // Text string for the FastHelp (describes buttons if left there a while)
+	BACKGROUND_SAVE* FastHelpRect;
 
 	struct _MOUSE_REGION	*next;							// List maintenance, do NOT touch these entries
 	struct _MOUSE_REGION	*prev;

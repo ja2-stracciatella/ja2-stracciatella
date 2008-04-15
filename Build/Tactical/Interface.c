@@ -202,8 +202,8 @@ static UINT16 gsUpArrowY;
 static UINT16 gsDownArrowX;
 static UINT16 gsDownArrowY;
 
-static UINT32 giUpArrowRect   = NO_BGND_RECT;
-static UINT32 giDownArrowRect = NO_BGND_RECT;
+static BACKGROUND_SAVE* giUpArrowRect   = NO_BGND_RECT;
+static BACKGROUND_SAVE* giDownArrowRect = NO_BGND_RECT;
 
 
 BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;

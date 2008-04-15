@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-#define NO_BGND_RECT -1
+#define NO_BGND_RECT NULL
 
 #define BGND_FLAG_PERMANENT		0x80000000
 #define BGND_FLAG_SINGLE			0x40000000
@@ -22,21 +22,21 @@ typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
 // Struct for topmost blitters
 struct VIDEO_OVERLAY
 {
-		UINT32						uiFlags;
-		BOOLEAN						fAllocated;
-		BOOLEAN						fDisabled;
-		BOOLEAN						fActivelySaving;
-		BOOLEAN						fDeletionPending;
-		INT32						uiBackground;
-		INT16							*pSaveArea;
-		UINT32						uiFontID;
-		INT16							sX;
-		INT16							sY;
-		UINT8							ubFontBack;
-		UINT8							ubFontFore;
-		wchar_t						zText[ 200 ];
-	SGPVSurface* uiDestBuff;
-		OVERLAY_CALLBACK		BltCallback;
+	UINT32           uiFlags;
+	BOOLEAN          fAllocated;
+	BOOLEAN          fDisabled;
+	BOOLEAN          fActivelySaving;
+	BOOLEAN          fDeletionPending;
+	BACKGROUND_SAVE* background;
+	INT16*           pSaveArea;
+	UINT32           uiFontID;
+	INT16            sX;
+	INT16            sY;
+	UINT8            ubFontBack;
+	UINT8            ubFontFore;
+	wchar_t          zText[200];
+	SGPVSurface*     uiDestBuff;
+	OVERLAY_CALLBACK BltCallback;
 };
 
 
@@ -65,19 +65,20 @@ BOOLEAN ExecuteBaseDirtyRectQueue(void);
 
 
 // BACKGROUND RECT BUFFERING STUFF
-void  InitializeBackgroundRects(void);
-void  ShutdownBackgroundRects(void);
-INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
-void  FreeBackgroundRect(INT32 iIndex);
-void  FreeBackgroundRectPending(INT32 iIndex);
-void  FreeBackgroundRectType(UINT32 uiFlags);
-void  RestoreBackgroundRects(void);
-void  SaveBackgroundRects(void);
-void  InvalidateBackgroundRects(void);
-void  UpdateSaveBuffer(void);
-void  RestoreExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight);
-void  RegisterBackgroundRectSingleFilled(INT16 left, INT16 top, INT16 right, INT16 bottom);
-void  EmptyBackgroundRects(void);
+void             InitializeBackgroundRects(void);
+void             ShutdownBackgroundRects(void);
+BACKGROUND_SAVE* RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
+void             FreeBackgroundRect(BACKGROUND_SAVE*);
+void             FreeBackgroundRectPending(BACKGROUND_SAVE*);
+void             FreeBackgroundRectType(UINT32 uiFlags);
+void             RestoreBackgroundRects(void);
+void             SaveBackgroundRects(void);
+void             InvalidateBackgroundRects(void);
+void             UpdateSaveBuffer(void);
+void             RestoreExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight);
+void             RegisterBackgroundRectSingleFilled(INT16 left, INT16 top, INT16 right, INT16 bottom);
+void             EmptyBackgroundRects(void);
+void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 
 
 /* Dirties a single-frame rect exactly the size needed to save the background

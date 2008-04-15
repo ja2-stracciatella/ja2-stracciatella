@@ -22,23 +22,23 @@
 
 
 // Struct for backgrounds
-typedef struct
+struct BACKGROUND_SAVE
 {
-	BOOLEAN		fAllocated;
-	BOOLEAN		fFilled;
-	BOOLEAN		fFreeMemory;
-	UINT32		uiFlags;
-	INT16			*pSaveArea;
-	UINT16*   pZSaveArea;
-	INT16			sLeft;
-	INT16			sTop;
-	INT16			sRight;
-	INT16			sBottom;
-	INT16			sWidth;
-	INT16			sHeight;
-	BOOLEAN		fPendingDelete;
-	BOOLEAN		fDisabled;
-} BACKGROUND_SAVE;
+	BOOLEAN fAllocated;
+	BOOLEAN fFilled;
+	BOOLEAN fFreeMemory;
+	UINT32  uiFlags;
+	INT16*  pSaveArea;
+	UINT16* pZSaveArea;
+	INT16   sLeft;
+	INT16   sTop;
+	INT16   sRight;
+	INT16   sBottom;
+	INT16   sWidth;
+	INT16   sHeight;
+	BOOLEAN fPendingDelete;
+	BOOLEAN fDisabled;
+};
 
 
 static BACKGROUND_SAVE gBackSaves[BACKGROUND_BUFFERS];
@@ -112,24 +112,23 @@ BOOLEAN ExecuteBaseDirtyRectQueue( )
 }
 
 
-static INT32 GetFreeBackgroundBuffer(void)
+static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 {
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if((gBackSaves[uiCount].fAllocated==FALSE) && (gBackSaves[uiCount].fFilled==FALSE))
-			return((INT32)uiCount);
+		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (!b->fAllocated && !b->fFilled) return b;
 	}
 
-
-	if(guiNumBackSaves < BACKGROUND_BUFFERS)
-		return((INT32)guiNumBackSaves++);
+	if (guiNumBackSaves < BACKGROUND_BUFFERS)
+	{
+		return &gBackSaves[guiNumBackSaves++];
+	}
 #ifdef JA2BETAVERSION
 	else
 	{
 		//else display an error message
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("ERROR! GetFreeBackgroundBuffer(): Trying to allocate more saves then there is room:  guiCurrentScreen = %d", guiCurrentScreen ) );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("ERROR! GetFreeBackgroundBuffer(): Trying to allocate more saves then there is room:  guiCurrentScreen = %d", guiCurrentScreen));
 	}
 #endif
 
@@ -152,7 +151,7 @@ INT32 uiCount;
 }
 
 
-INT32 RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
 	const INT32 ClipY1 = gDirtyClipRect.iTop;
@@ -181,9 +180,8 @@ INT32 RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT1
 	sTop    += uiTopSkip;
 	sBottom -= uiBottomSkip;
 
-	const INT32 iBackIndex = GetFreeBackgroundBuffer();
-	if (iBackIndex == NO_BGND_RECT) return NO_BGND_RECT;
-	BACKGROUND_SAVE* const b = &gBackSaves[iBackIndex];
+	BACKGROUND_SAVE* const b = GetFreeBackgroundBuffer();
+	if (b == NO_BGND_RECT) return NO_BGND_RECT;
 
 	memset(b, 0, sizeof(*b));
 
@@ -213,16 +211,15 @@ INT32 RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT1
 	b->sHeight     = sBottom - sTop;
 	b->fFilled     = FALSE;
 
-	return iBackIndex;
+	return b;
 }
 
 
 void RegisterBackgroundRectSingleFilled(const INT16 left, const INT16 top, const INT16 right, const INT16 bottom)
 {
-	const INT32 bg_rect = RegisterBackgroundRect(BGND_FLAG_SINGLE, left, top, right, bottom);
-	if (bg_rect == NO_BGND_RECT) return;
+	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, left, top, right, bottom);
+	if (b == NO_BGND_RECT) return;
 
-	BACKGROUND_SAVE* const b = &gBackSaves[bg_rect];
 	b->fFilled = TRUE;
 	AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
 }
@@ -352,18 +349,18 @@ void SaveBackgroundRects(void)
 }
 
 
-void FreeBackgroundRect(const INT32 iIndex)
+void FreeBackgroundRect(BACKGROUND_SAVE* const b)
 {
-	if (iIndex == NO_BGND_RECT) return;
+	if (b == NULL) return;
 
-	gBackSaves[iIndex].fAllocated = FALSE;
+	b->fAllocated = FALSE;
 	RecountBackgrounds();
 }
 
 
-void FreeBackgroundRectPending(const INT32 iIndex)
+void FreeBackgroundRectPending(BACKGROUND_SAVE* const b)
 {
-	gBackSaves[iIndex].fPendingDelete = TRUE;
+	b->fPendingDelete = TRUE;
 }
 
 
@@ -432,9 +429,9 @@ void ShutdownBackgroundRects(void)
 }
 
 
-static void DisableBackgroundRect(const INT32 iIndex, const BOOLEAN fDisabled)
+static void DisableBackgroundRect(BACKGROUND_SAVE* const b, const BOOLEAN fDisabled)
 {
-	gBackSaves[iIndex].fDisabled = fDisabled;
+	b->fDisabled = fDisabled;
 }
 
 
@@ -456,12 +453,10 @@ void RestoreExternBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT1
 }
 
 
-BOOLEAN RestoreExternBackgroundRectGivenID(const INT32 iBack)
+void RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE* const b)
 {
-	const BACKGROUND_SAVE* const b = &gBackSaves[iBack];
-	if (!b->fAllocated) return FALSE;
+	if (!b->fAllocated) return;
 	RestoreExternBackgroundRect(b->sLeft, b->sTop, b->sWidth, b->sHeight);
-	return TRUE;
 }
 
 
@@ -551,23 +546,23 @@ static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 
 VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc)
 {
-	UINT32 iBackIndex;
 	UINT16 uiStringLength, uiStringHeight;
 
+	BACKGROUND_SAVE* bgs;
 	if ( uiFlags & VOVERLAY_DIRTYBYTEXT )
 	{
 		uiStringLength=StringPixLength( pTopmostDesc->pzText, pTopmostDesc->uiFontID );
 		uiStringHeight=GetFontHeight( pTopmostDesc->uiFontID );
 
-		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
+		bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sLeft + uiStringLength, pTopmostDesc->sTop + uiStringHeight);
 	}
 	else
 	{
 		// Register background
-		iBackIndex = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
+		bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, pTopmostDesc->sLeft, pTopmostDesc->sTop, pTopmostDesc->sRight, pTopmostDesc->sBottom);
 	}
 
-	if (iBackIndex == NO_BGND_RECT) return NULL;
+	if (bgs == NO_BGND_RECT) return NULL;
 
 	// Get next free topmost blitter index
 	VIDEO_OVERLAY* const v = GetFreeVideoOverlay();
@@ -577,7 +572,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pT
 	memset(v, 0, sizeof(*v));
 	v->uiFlags      = uiFlags;
 	v->fAllocated   = 2;
-	v->uiBackground = iBackIndex;
+	v->background   = bgs;
 	v->uiFontID     = pTopmostDesc->uiFontID;
 	v->sX           = pTopmostDesc->sLeft;
 	v->sY           = pTopmostDesc->sTop;
@@ -591,7 +586,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pT
 	if (uiFlags & VOVERLAY_STARTDISABLED)
 	{
 		v->fDisabled = TRUE;
-		DisableBackgroundRect(v->uiBackground, TRUE);
+		DisableBackgroundRect(v->background, TRUE);
 	}
 
 	return v;
@@ -610,9 +605,9 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 	}
 	else
 	{
-		//RestoreExternBackgroundRectGivenID(v->uiBackground);
+		//RestoreExternBackgroundRectGivenID(v->background);
 
-		FreeBackgroundRect(v->uiBackground);
+		FreeBackgroundRect(v->background);
 
 		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
 		v->pSaveArea = NULL;
@@ -695,10 +690,8 @@ void AllocateVideoOverlaysArea( )
 	{
 		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
 		{
-			iBackIndex = gVideoOverlays[uiCount].uiBackground;
-
 			// Get buffer size
-			const BACKGROUND_SAVE* bgs = &gBackSaves[iBackIndex];
+			const BACKGROUND_SAVE* bgs = gVideoOverlays[uiCount].background;
 			const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom-bgs->sTop);
 
 			gVideoOverlays[uiCount].fActivelySaving = TRUE;
@@ -718,7 +711,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 	Assert(!v->fDisabled);
 
 	// Get buffer size
-	const BACKGROUND_SAVE* const bgs = &gBackSaves[v->uiBackground];
+	const BACKGROUND_SAVE* const bgs = v->background;
 	const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 	v->fActivelySaving = TRUE;
@@ -744,7 +737,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 		}
 
 		// Save data from frame buffer!
-		const BACKGROUND_SAVE* const b = &gBackSaves[v->uiBackground];
+		const BACKGROUND_SAVE* const b = v->background;
 		Blt16BPPTo16BPP((UINT16*)v->pSaveArea, b->sWidth * 2, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 	}
 
@@ -785,7 +778,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 		if (v->pSaveArea == NULL) continue;
 
 		// Get restore background values
-		const BACKGROUND_SAVE* const b = &gBackSaves[v->uiBackground];
+		const BACKGROUND_SAVE* const b = v->background;
 		INT16  sLeft    = b->sLeft;
 		INT16  sTop     = b->sTop;
 		INT16  sRight   = b->sRight;
@@ -856,7 +849,7 @@ void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 	if (!v->fAllocated) return;
 
 	v->fDisabled = !fEnable;
-	DisableBackgroundRect(v->uiBackground, !fEnable);
+	DisableBackgroundRect(v->background, !fEnable);
 }
 
 
@@ -885,10 +878,10 @@ void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 
 		// Delete old rect
 		// Remove background
-		FreeBackgroundRectPending(v->uiBackground);
+		FreeBackgroundRectPending(v->background);
 
-		v->uiBackground = RegisterBackgroundRect(BGND_FLAG_PERMANENT, X, Y, X + uiStringLength, Y + uiStringHeight);
-		v->sX           = X;
-		v->sY           = Y;
+		v->background = RegisterBackgroundRect(BGND_FLAG_PERMANENT, X, Y, X + uiStringLength, Y + uiStringHeight);
+		v->sX         = X;
+		v->sY         = Y;
 	}
 }

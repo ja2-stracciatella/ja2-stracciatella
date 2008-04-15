@@ -71,9 +71,6 @@ BOOLEAN fDisableJustForIan = FALSE;
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
-// test extern functions
-BOOLEAN RestoreExternBackgroundRectGivenID( INT32 iBack );
-
 extern BOOLEAN gfFacePanelActive;
 
 // region created and due to last quote box
@@ -315,7 +312,7 @@ void HideMessagesDuringNPCDialogue(void)
 		const ScrollStringSt* const s = gpDisplayList[cnt];
 		if (s != NULL)
 		{
-			RestoreExternBackgroundRectGivenID(s->video_overlay->uiBackground);
+			RestoreExternBackgroundRectGivenID(s->video_overlay->background);
 			EnableVideoOverlay(FALSE, s->video_overlay);
 		}
 	}

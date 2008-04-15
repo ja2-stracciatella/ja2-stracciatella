@@ -75,11 +75,19 @@ static const INT16 gsFastHelpDelay = 600; // In timer ticks
 //NOTE:  This doesn't really need to be here, however, it is a good indication that
 //when an error appears here, that you need to go below to the init code and initialize the
 //values there as well.  That's the only reason why I left this here.
-static MOUSE_REGION MSYS_SystemBaseRegion = {
-								MSYS_ID_SYSTEM, MSYS_PRIORITY_SYSTEM, BASE_REGION_FLAGS,
-								-32767, -32767, 32767, 32767, 0, 0, 0, 0, 0, 0,
-								MSYS_NO_CALLBACK, MSYS_NO_CALLBACK, { 0,0,0,0 },
-								0, 0, -1, NULL, NULL };
+static MOUSE_REGION MSYS_SystemBaseRegion =
+{
+	MSYS_ID_SYSTEM,
+	MSYS_PRIORITY_SYSTEM,
+	BASE_REGION_FLAGS,
+	-32767, -32767, 32767, 32767,
+	0, 0, 0, 0, 0,
+	0,
+	MSYS_NO_CALLBACK, MSYS_NO_CALLBACK,
+	{ 0, 0, 0, 0 },
+	0, 0, NO_BGND_RECT,
+	NULL, NULL
+};
 
 static BOOLEAN gfRefreshUpdate = FALSE;
 
