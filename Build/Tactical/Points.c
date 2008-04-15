@@ -950,10 +950,10 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 }
 
 
-static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
+static UINT8 MinAPsToPunch(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost)
+UINT8 MinAPsToAttack(SOLDIERTYPE* const pSoldier, const INT16 sGridno, const UINT8 ubAddTurningCost)
 {
 	UINT16						sAPCost = 0;
 	UINT32						uiItemClass;
@@ -1047,7 +1047,7 @@ UINT8 BaseAPsToShootOrStab(const INT8 bAPs, const INT8 bAimSkill, const OBJECTTY
 	return( ( ( ( 100 * sTop ) / sBottom ) + 1) / 2);
 }
 
-void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise )
+void GetAPChargeForShootOrStabWRTGunRaises(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost, BOOLEAN* const pfChargeTurning, BOOLEAN* const pfChargeRaise)
 {
 	 UINT8 ubDirection;
    BOOLEAN	fAddingTurningCost = FALSE;
@@ -1097,7 +1097,8 @@ void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo
 	(*pfChargeRaise )  = fAddingRaiseGunCost;
 }
 
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
+
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
 {
  INT8	bFullAPs;
  INT8 bAimSkill;
@@ -1234,7 +1235,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurni
 }
 
 
-static UINT8 MinAPsToPunch(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost)
+static UINT8 MinAPsToPunch(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
 {
  UINT8	bAPCost = 0;
  UINT8	ubDirection;
@@ -1780,7 +1781,7 @@ BOOLEAN CheckForMercContMove(SOLDIERTYPE* const s)
 }
 
 
-INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
+INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* const pSoldier, const UINT16 usAnimState)
 {
 	UINT16 usItem;
 
@@ -1874,7 +1875,7 @@ INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier )
 #define AP_MAX_AIM_ATTACK       4       // maximum permitted extra aiming
 
 
-INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost )
+INT16 MinAPsToThrow(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
 {
 	INT32 iTop, iBottom;
 	INT32	iFullAPs;

@@ -112,7 +112,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier);
 void VerifyPublicOpplistDueToDeath( SOLDIERTYPE * pSoldier );
 void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT8 bReason );
 
-BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier );
+BOOLEAN MercSeesCreature(const SOLDIERTYPE*);
 
 INT8 GetWatchedLocPoints( UINT8 ubID, INT16 sGridNo, INT8 bLevel );
 INT8 GetHighestVisibleWatchedLoc(const SOLDIERTYPE* s);

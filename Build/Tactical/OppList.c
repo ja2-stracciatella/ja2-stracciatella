@@ -5768,7 +5768,7 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 }
 
 
-BOOLEAN MercSeesCreature( SOLDIERTYPE * pSoldier )
+BOOLEAN MercSeesCreature(const SOLDIERTYPE* const pSoldier)
 {
 	if (pSoldier->bOppCnt > 0)
 	{

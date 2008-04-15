@@ -287,7 +287,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCos
 INT8  MinPtsToMove(const SOLDIERTYPE* pSoldier);
 INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode);
 INT8 PtsToMoveDirection(const SOLDIERTYPE* pSoldier, INT8 bDirection);
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost );
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE* pSoldier, INT16 sGridno, UINT8 ubAddTurningCost);
 BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos );
 void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
@@ -302,7 +302,7 @@ UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 
 BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier );
 
-INT16 GetAPsToReadyWeapon( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
+INT16 GetAPsToReadyWeapon(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);
 
 INT8 GetAPsToClimbRoof( SOLDIERTYPE *pSoldier, BOOLEAN fClimbDown );
 
@@ -314,7 +314,7 @@ INT8 GetAPsToBeginFirstAid( SOLDIERTYPE *pSoldier );
 INT8 GetAPsToBeginRepair( SOLDIERTYPE *pSoldier );
 INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier );
 
-INT16 MinAPsToThrow( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost );
+INT16 MinAPsToThrow(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
 
 UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier );
 UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo );
@@ -327,7 +327,7 @@ INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier);
 
-void GetAPChargeForShootOrStabWRTGunRaises( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN *pfChargeTurning, BOOLEAN *pfChargeRaise );
+void GetAPChargeForShootOrStabWRTGunRaises(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN* pfChargeTurning, BOOLEAN* pfChargeRaise);
 
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot);
 INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );

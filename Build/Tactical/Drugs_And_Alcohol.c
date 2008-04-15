@@ -318,7 +318,7 @@ INT8 GetDrugEffect( SOLDIERTYPE *pSoldier, UINT8 ubDrugType  )
 }
 
 
-void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints )
+void HandleAPEffectDueToDrugs(const SOLDIERTYPE* const pSoldier, UINT8* const pubPoints)
 {
 	INT8  bDrunkLevel;
   INT16  sPoints = (*pubPoints);

@@ -952,7 +952,7 @@ void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMo
 INT16 GetDirectionFromXY(INT16 sXPos, INT16 sYPos, const SOLDIERTYPE* pSoldier);
 INT16 GetDirectionFromGridNo(INT16 sGridNo, const SOLDIERTYPE* pSoldier);
 UINT8 atan8( INT16 sXPos, INT16 sYPos, INT16 sXPos2, INT16 sYPos2 );
-INT8 CalcActionPoints(SOLDIERTYPE *pSold );
+INT8 CalcActionPoints(const SOLDIERTYPE*);
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier);
@@ -1036,7 +1036,7 @@ void EVENT_SoldierBeginAttachCan( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ub
 
 void PickDropItemAnimation( SOLDIERTYPE *pSoldier );
 
-BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier );
+BOOLEAN IsValidSecondHandShot(const SOLDIERTYPE*);
 BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier );
 
 void CrowsFlyAway( UINT8 ubTeam );

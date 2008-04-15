@@ -20,7 +20,7 @@
 BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject );
 
 void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier );
-void HandleAPEffectDueToDrugs( SOLDIERTYPE *pSoldier, UINT8 *pubPoints );
+void HandleAPEffectDueToDrugs(const SOLDIERTYPE* pSoldier, UINT8* pubPoints);
 void HandleBPEffectDueToDrugs( SOLDIERTYPE *pSoldier, INT16 *psPoints );
 
 

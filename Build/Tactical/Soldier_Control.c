@@ -374,7 +374,7 @@ static const UINT8 gubMaxActionPoints[] =
 CASSERT(lengthof(gubMaxActionPoints) == TOTALBODYTYPES)
 
 
-INT8 CalcActionPoints(SOLDIERTYPE *pSold)
+INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 {
   UINT8 ubPoints,ubMaxAPs;
 	INT8  bBandage;
@@ -9327,7 +9327,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 }
 
 
-BOOLEAN IsValidSecondHandShot( SOLDIERTYPE *pSoldier )
+BOOLEAN IsValidSecondHandShot(const SOLDIERTYPE* const pSoldier)
 {
 	if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass == IC_GUN &&
 			 !(Item[ pSoldier->inv[SECONDHANDPOS ].usItem ].fFlags & ITEM_TWO_HANDED) &&
