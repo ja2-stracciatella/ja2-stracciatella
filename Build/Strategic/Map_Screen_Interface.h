@@ -354,7 +354,7 @@ void InitLeaveList( void );
 void ShutDownLeaveList( void );
 
 // add item to leave equip index
-BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiIndex );
+void AddItemToLeaveIndex(const OBJECTTYPE* o, UINT32 uiIndex);
 
 // handle a group about to arrive in a sector
 void HandleGroupAboutToArrive( void );

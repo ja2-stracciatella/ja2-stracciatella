@@ -1317,44 +1317,20 @@ void ShutDownLeaveList( void )
 }
 
 
-BOOLEAN AddItemToLeaveIndex( OBJECTTYPE *o, UINT32 uiSlotIndex )
+void AddItemToLeaveIndex(const OBJECTTYPE* const o, const UINT32 uiSlotIndex)
 {
-	Assert( uiSlotIndex < NUM_LEAVE_LIST_SLOTS );
+	Assert(uiSlotIndex < NUM_LEAVE_LIST_SLOTS);
 
+	if (o == NULL) return;
 
-	if( o == NULL )
-	{
-		return( FALSE );
-	}
+	MERC_LEAVE_ITEM* const mli = MALLOC(MERC_LEAVE_ITEM);
+	mli->o     = *o;
+	mli->pNext = NULL;
 
-	// allocate space
-	MERC_LEAVE_ITEM* const pItem = MALLOC(MERC_LEAVE_ITEM);
-
-	// copy object
-	pItem->o = *o;
-
-	// nobody afterwards
-	pItem->pNext = NULL;
-
-	// now add to list in this index slot
-	MERC_LEAVE_ITEM* pCurrentItem = gpLeaveListHead[ uiSlotIndex ];
-
-	if( pCurrentItem == NULL )
-	{
-		gpLeaveListHead[ uiSlotIndex ] = pItem;
-		return( TRUE );
-	}
-
-	// move through list
-	while( pCurrentItem ->pNext )
-	{
-		 pCurrentItem = pCurrentItem->pNext;
-	}
-
-	// found
-	pCurrentItem->pNext = pItem;
-
-	return( TRUE );
+	// Append node to list
+	MERC_LEAVE_ITEM** anchor = &gpLeaveListHead[uiSlotIndex];
+	while (*anchor != NULL) &(*anchor)->pNext;
+	*anchor = mli;
 }
 
 
