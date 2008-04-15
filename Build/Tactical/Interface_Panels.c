@@ -2521,9 +2521,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 		MarkAButtonDirty(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]);
 		MarkAButtonDirty(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
-		// Blit video surface
 		BltVideoObject(guiSAVEBUFFER, guiTEAMPanel, 0, INTERFACE_START_X, INTERFACE_START_Y);
-		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
 
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
@@ -2537,8 +2535,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				//BLIT CLOSE PANEL
 				const INT32 x = dx + TM_FACE_X;
 				const INT32 y = dy + TM_FACE_Y;
-				BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, x, y);
-				RestoreExternBackgroundRect(x, y, TM_FACE_WIDTH, TM_FACE_HEIGHT);
+				BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, dx + TM_FACE_X, dy + TM_FACE_Y);
 
 				if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || INTERRUPT_QUEUED)
 				{
@@ -2546,7 +2543,6 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					const INT32 x = dx + TM_FACEHIGHTL_X;
 					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
-					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 			}
 			else
@@ -2595,14 +2591,12 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					const INT32 x = dx + TM_FACEHIGHTL_X;
 					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 0, x, y);
-					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 				else if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s))
 				{
 					const INT32 x = dx + TM_FACEHIGHTL_X;
 					const INT32 y = dy + TM_FACEHIGHTL_Y;
 					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
-					RestoreExternBackgroundRect(x, y, TM_FACEHIGHTL_WIDTH, TM_FACEHIGHTL_HEIGHT);
 				}
 
 				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
@@ -2628,11 +2622,12 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				INT16 sFontY;
 				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
 				mprintf(sFontX, sFontY, L"%ls", s->name);
-				gprintfRestore(sFontX, sFontY, L"%ls", s->name);
 				// reset to frame buffer!
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
+
+		RestoreExternBackgroundRect(INTERFACE_START_X, INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INTERFACE_START_Y);
 
 		RenderTownIDString();
 	}
