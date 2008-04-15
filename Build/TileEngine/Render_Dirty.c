@@ -259,7 +259,7 @@ void RestoreBackgroundRects(void)
 
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		const BACKGROUND_SAVE* b = &gBackSaves[i];
+		const BACKGROUND_SAVE* const b = &gBackSaves[i];
 		if (!b->fFilled || b->fDisabled) continue;
 
 		if (b->uiFlags & BGND_FLAG_SAVERECT)
@@ -288,64 +288,53 @@ void RestoreBackgroundRects(void)
 }
 
 
-BOOLEAN EmptyBackgroundRects(void)
+void EmptyBackgroundRects(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if(gBackSaves[uiCount].fFilled)
+		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (b->fFilled)
 		{
-			gBackSaves[uiCount].fFilled=FALSE;
+			b->fFilled = FALSE;
 
-			if(!(gBackSaves[uiCount].fAllocated) && (gBackSaves[uiCount].fFreeMemory==TRUE))
+			if (!b->fAllocated && b->fFreeMemory)
 			{
-				if ( gBackSaves[uiCount].uiFlags & BGND_FLAG_SAVERECT )
+				if (b->uiFlags & BGND_FLAG_SAVERECT && b->pSaveArea != NULL)
 				{
-					if ( gBackSaves[uiCount].pSaveArea != NULL )
-					{
-						MemFree(gBackSaves[uiCount].pSaveArea);
-					}
+					MemFree(b->pSaveArea);
 				}
-				if (gBackSaves[uiCount].pZSaveArea != NULL)
-					MemFree(gBackSaves[uiCount].pZSaveArea);
+				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 
-				gBackSaves[uiCount].fAllocated=FALSE;
-				gBackSaves[uiCount].fFreeMemory=FALSE;
-				gBackSaves[uiCount].fFilled=FALSE;
-				gBackSaves[uiCount].pSaveArea=NULL;
+				b->fAllocated  = FALSE;
+				b->fFreeMemory = FALSE;
+				b->fFilled     = FALSE;
+				b->pSaveArea   = NULL;
 
 				RecountBackgrounds();
 			}
 		}
 
-		if(gBackSaves[uiCount].uiFlags&BGND_FLAG_SINGLE || gBackSaves[uiCount].fPendingDelete )
+		if (b->uiFlags & BGND_FLAG_SINGLE || b->fPendingDelete)
 		{
-			if(gBackSaves[uiCount].fFreeMemory==TRUE)
+			if (b->fFreeMemory)
 			{
-				if ( gBackSaves[uiCount].uiFlags & BGND_FLAG_SAVERECT )
+				if (b->uiFlags & BGND_FLAG_SAVERECT && b->pSaveArea != NULL)
 				{
-					if ( gBackSaves[uiCount].pSaveArea != NULL )
-					{
-						MemFree(gBackSaves[uiCount].pSaveArea);
-					}
+					MemFree(b->pSaveArea);
 				}
 
-				if (gBackSaves[uiCount].pZSaveArea != NULL)
-					MemFree(gBackSaves[uiCount].pZSaveArea);
+				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 			}
 
-			gBackSaves[uiCount].fAllocated=FALSE;
-			gBackSaves[uiCount].fFreeMemory=FALSE;
-			gBackSaves[uiCount].fFilled=FALSE;
-			gBackSaves[uiCount].pSaveArea=NULL;
-			gBackSaves[uiCount].fPendingDelete = FALSE;
+			b->fAllocated     = FALSE;
+			b->fFreeMemory    = FALSE;
+			b->fFilled        = FALSE;
+			b->pSaveArea      = NULL;
+			b->fPendingDelete = FALSE;
 
 			RecountBackgrounds();
 		}
 	}
-
-	return(TRUE);
 }
 
 
