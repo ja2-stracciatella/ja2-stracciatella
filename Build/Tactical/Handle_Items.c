@@ -2727,8 +2727,7 @@ void RenderTopmostFlashingItems(void)
 		sXPos -= 20;
 		sYPos -= 20;
 
-		const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-		if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+		RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
 
 		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 

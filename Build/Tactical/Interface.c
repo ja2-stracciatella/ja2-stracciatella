@@ -1208,8 +1208,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 
 				// Add bars
-				const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-				if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+				RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
 
 				if ( ( !pSoldier->bNeutral && ( pSoldier->bSide != gbPlayerNum ) ) )
 				{
@@ -1362,8 +1361,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 			}
 
 			// Add bars
-			const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 34, sYPos + 11);
-			if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+			RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 34, sYPos + 11);
 			TileElem = gTileDatabase[ usGraphicToUse ];
 			BltVideoObject(  FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, sXPos, sYPos);
 
@@ -2756,8 +2754,7 @@ void RenderAimCubeUI( )
 			GetGridNoScreenPos( gCubeUIData.sGridNo, gCubeUIData.ubLevel, &sScreenX, &sScreenY );
 
 			// Save background
-			const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sScreenX, sScreenY - 70, sScreenX + 40, sScreenY + 50);
-			if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+			RegisterBackgroundRectSingleFilled(sScreenX, sScreenY - 70, sScreenX + 40, sScreenY + 50);
 
 			sBarHeight = 0;
 			bGraphicNum = 0;
@@ -2957,8 +2954,7 @@ void RenderTopmostMultiPurposeLocator( )
 	sXPos -= 20;
 	sYPos -= 20;
 
-	const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, sXPos, sYPos, sXPos + 40, sYPos + 40);
-	if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+	RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
 
 	BltVideoObject(FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos);
 }

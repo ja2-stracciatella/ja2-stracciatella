@@ -221,14 +221,17 @@ INT32	 iTempX, iTempY;
 	return(iBackIndex);
 }
 
-void SetBackgroundRectFilled( UINT32 uiBackgroundID )
+
+void RegisterBackgroundRectSingleFilled(const INT16 left, const INT16 top, const INT16 right, const INT16 bottom)
 {
-	gBackSaves[uiBackgroundID].fFilled=TRUE;
+	const INT32 bg_rect = RegisterBackgroundRect(BGND_FLAG_SINGLE, left, top, right, bottom);
+	if (bg_rect == NO_BGND_RECT) return;
 
-	AddBaseDirtyRect(gBackSaves[uiBackgroundID].sLeft, gBackSaves[uiBackgroundID].sTop,
-										gBackSaves[uiBackgroundID].sRight, gBackSaves[uiBackgroundID].sBottom);
-
+	BACKGROUND_SAVE* const b = &gBackSaves[bg_rect];
+	b->fFilled = TRUE;
+	AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
 }
+
 
 BOOLEAN RestoreBackgroundRects(void)
 {
@@ -556,8 +559,7 @@ UINT16 uiStringLength, uiStringHeight;
 
 	if ( uiStringLength > 0 )
 	{
-		const INT32 iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + uiStringLength, y + uiStringHeight);
-		if (iBack != NO_BGND_RECT) SetBackgroundRectFilled(iBack);
+		RegisterBackgroundRectSingleFilled(x, y, x + uiStringLength, y + uiStringHeight);
 	}
 
 	return(uiStringLength);

@@ -351,7 +351,6 @@ static void RenderRubberBanding(void)
 	UINT32										 uiDestPitchBYTES;
 	UINT8											 *pDestBuf;
 	INT16											 iLeft, iRight, iTop, iBottom;
-	INT32											 iBack = NO_BGND_RECT;
 	static INT32							 iFlashColor = 0;
 	static INT32							 uiTimeOfLastUpdate = 0;
 
@@ -388,78 +387,46 @@ static void RenderRubberBanding(void)
 	if ( ( iRight - iLeft ) > 0 )
 	{
 		LineDraw( TRUE, iLeft, iTop, iRight, iTop, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iLeft, iTop, iRight + 1, iTop + 1);
+		RegisterBackgroundRectSingleFilled(iLeft, iTop, iRight + 1, iTop + 1);
 	}
 	else if ( ( iRight - iLeft ) < 0 )
 	{
 		LineDraw( TRUE, iLeft, iTop, iRight, iTop, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iTop, iLeft + 1, iTop + 1);
+		RegisterBackgroundRectSingleFilled(iRight, iTop, iLeft + 1, iTop + 1);
 	}
-
-	if (iBack != NO_BGND_RECT)
-	{
-		SetBackgroundRectFilled( iBack );
-	}
-
-
-	iBack = NO_BGND_RECT;
 
 	if ( ( iRight - iLeft ) > 0 )
 	{
 		LineDraw( TRUE, iLeft, iBottom, iRight, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iLeft, iBottom, iRight + 1, iBottom + 1);
+		RegisterBackgroundRectSingleFilled(iLeft, iBottom, iRight + 1, iBottom + 1);
 	}
 	else if ( ( iRight - iLeft ) < 0 )
 	{
 		LineDraw( TRUE, iLeft, iBottom, iRight, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iBottom, iLeft + 1, iBottom + 1);
+		RegisterBackgroundRectSingleFilled(iRight, iBottom, iLeft + 1, iBottom + 1);
 	}
-
-	if (iBack != NO_BGND_RECT)
-	{
-		SetBackgroundRectFilled( iBack );
-	}
-
-
-
-	iBack = NO_BGND_RECT;
 
 	if ( ( iBottom - iTop ) > 0 )
 	{
 		LineDraw( TRUE, iLeft, iTop, iLeft, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iLeft, iTop, iLeft + 1, iBottom);
+		RegisterBackgroundRectSingleFilled(iLeft, iTop, iLeft + 1, iBottom);
 	}
 	else if ( ( iBottom - iTop ) < 0 )
 	{
 		LineDraw( TRUE, iLeft, iTop, iLeft, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iLeft, iBottom, iLeft + 1, iTop);
+		RegisterBackgroundRectSingleFilled(iLeft, iBottom, iLeft + 1, iTop);
 	}
-
-	if (iBack != NO_BGND_RECT)
-	{
-		SetBackgroundRectFilled( iBack );
-	}
-
-
-	iBack = NO_BGND_RECT;
 
 	if ( ( iBottom - iTop ) > 0 )
 	{
 		LineDraw( TRUE, iRight, iTop, iRight, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iTop, iRight + 1, iBottom);
+		RegisterBackgroundRectSingleFilled(iRight, iTop, iRight + 1, iBottom);
 	}
 	else if ( ( iBottom - iTop ) < 0 )
 	{
 		LineDraw( TRUE, iRight, iTop, iRight, iBottom, usLineColor, pDestBuf );
-		iBack = RegisterBackgroundRect(BGND_FLAG_SINGLE, iRight, iBottom, iRight + 1, iTop);
+		RegisterBackgroundRectSingleFilled(iRight, iBottom, iRight + 1, iTop);
 	}
-
-	if (iBack != NO_BGND_RECT)
-	{
-		SetBackgroundRectFilled( iBack );
-	}
-
-
 
 	UnLockVideoSurface( FRAME_BUFFER );
 }
