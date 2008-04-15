@@ -28,7 +28,7 @@ struct BACKGROUND_SAVE
 	BOOLEAN fFilled;
 	BOOLEAN fFreeMemory;
 	UINT32  uiFlags;
-	INT16*  pSaveArea;
+	UINT16* pSaveArea;
 	UINT16* pZSaveArea;
 	INT16   sLeft;
 	INT16   sTop;
@@ -190,7 +190,7 @@ BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16
 
 	if (uiFlags & BGND_FLAG_SAVERECT)
 	{
-		b->pSaveArea = MALLOCN(INT16, uiBufSize);
+		b->pSaveArea = MALLOCN(UINT16, uiBufSize);
 		if (b->pSaveArea == NULL) return NO_BGND_RECT;
 	}
 
@@ -241,7 +241,7 @@ void RestoreBackgroundRects(void)
 		{
 			if (b->pSaveArea != NULL)
 			{
-				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, (UINT16*)b->pSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
 				AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
 			}
 		}
