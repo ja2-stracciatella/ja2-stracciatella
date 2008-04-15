@@ -587,31 +587,26 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 }
 
 
-void AllocateVideoOverlaysArea(void)
-{
-	FOR_ALL_VIDEO_OVERLAYS(v)
-	{
-		// Get buffer size
-		const BACKGROUND_SAVE* const bgs       = v->background;
-		const UINT32                 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
-
-		v->fActivelySaving = TRUE;
-		v->pSaveArea       = MALLOCN(UINT16, uiBufSize);
-	}
-}
-
-
 static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 {
 	Assert(v->fAllocated);
 	Assert(!v->fDisabled);
 
 	// Get buffer size
-	const BACKGROUND_SAVE* const bgs = v->background;
-	const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
+	const BACKGROUND_SAVE* const bgs      = v->background;
+	UINT32                 const buf_size = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 	v->fActivelySaving = TRUE;
-	v->pSaveArea       = MALLOCN(UINT16, uiBufSize);
+	v->pSaveArea       = MALLOCN(UINT16, buf_size);
+}
+
+
+void AllocateVideoOverlaysArea(void)
+{
+	FOR_ALL_VIDEO_OVERLAYS(v)
+	{
+		AllocateVideoOverlayArea(v);
+	}
 }
 
 
