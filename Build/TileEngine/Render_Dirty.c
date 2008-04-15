@@ -16,7 +16,6 @@
 #endif
 
 
-#define		DIRTY_QUEUES				200
 #define		BACKGROUND_BUFFERS	500
 #define		VIDEO_OVERLAYS			100
 
@@ -126,13 +125,12 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 
 static void RecountBackgrounds(void)
 {
-INT32 uiCount;
-
-	for(uiCount=guiNumBackSaves-1; (uiCount >=0) ; uiCount--)
+	for (INT32 i = guiNumBackSaves - 1; i >= 0; --i)
 	{
-		if((gBackSaves[uiCount].fAllocated) || (gBackSaves[uiCount].fFilled))
+		const BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (b->fAllocated || b->fFilled)
 		{
-			guiNumBackSaves=(UINT32)(uiCount+1);
+			guiNumBackSaves = (UINT32)(i + 1);
 			break;
 		}
 	}
