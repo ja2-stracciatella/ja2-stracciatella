@@ -60,34 +60,26 @@ ITEM_POOL *gpItemPool = NULL;
 static void ShowItemCursor(INT32 iMapIndex);
 
 
-void BuildItemPoolList()
+void BuildItemPoolList(void)
 {
-	IPListNode *tail;
-	UINT16 i;
 	KillItemPoolList();
-	for( i = 0; i < WORLD_MAX; i++ )
+
+	IPListNode** anchor = &pIPHead;
+	for (UINT16 i = 0; i < WORLD_MAX; ++i)
 	{
-		if (GetItemPool(i, 0) != NULL)
-		{
-			if( !pIPHead )
-			{
-				pIPHead = MALLOC(IPListNode);
-				Assert( pIPHead );
-				tail = pIPHead;
-			}
-			else
-			{
-				tail->next = MALLOC(IPListNode);
-				Assert( tail->next );
-				tail = tail->next;
-			}
-			ShowItemCursor( i );
-			tail->sGridNo = i;
-			tail->next = NULL;
-		}
+		if (GetItemPool(i, 0) == NULL) continue;
+
+		ShowItemCursor(i);
+
+		IPListNode* const n = MALLOC(IPListNode);
+		n->sGridNo = i;
+		n->next    = NULL;
+
+		*anchor = n;
+		anchor = &n->next;
 	}
 	gpCurrItemPoolNode = pIPHead;
-	SpecifyItemToEdit( NULL, -1 );
+	SpecifyItemToEdit(NULL, -1);
 }
 
 
