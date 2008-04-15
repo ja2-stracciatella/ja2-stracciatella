@@ -1726,209 +1726,140 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(SGPVSurface* const uiBuffer, const SOLDIERTYPE* const pSoldier, const OBJECTTYPE* pObject, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 sOutlineColor)
+void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 outline_colour)
 {
-	UINT16								uiStringLength;
-	INT16									sNewY, sNewX;
+	if (o->usItem   == NOTHING)     return;
+	if (fDirtyLevel == DIRTYLEVEL0) return;
 
-	if ( pObject->usItem == NOTHING )
+	const INVTYPE* const item =
+		ubStatusIndex < RENDER_ITEM_ATTACHMENT1 ?
+			&Item[o->usItem] :
+			&Item[o->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
+
+	if (fDirtyLevel == DIRTYLEVEL2)
 	{
-		return;
-	}
+		// Center the object in the slot
+		const SGPVObject*  const item_vo = GetInterfaceGraphicForItem(item);
+		UINT8              const gfx_idx = item->ubGraphicNum;
+		const ETRLEObject* const e       = GetVideoObjectETRLESubregionProperties(item_vo, gfx_idx);
+		INT16              const cx      = sX + (sWidth  - e->usWidth)  / 2 - e->sOffsetX;
+		INT16              const cy      = sY + (sHeight - e->usHeight) / 2 - e->sOffsetY;
 
-	const INVTYPE* pItem;
-	if ( ubStatusIndex < RENDER_ITEM_ATTACHMENT1 )
-	{
-		pItem = &Item[ pObject->usItem ];
-	}
-	else
-	{
-		pItem = &Item[ pObject->usAttachItem[ ubStatusIndex - RENDER_ITEM_ATTACHMENT1 ] ];
-	}
+		BltVideoObjectOutlineShadow(buffer, item_vo, gfx_idx, cx - 2, cy + 2);
+		BltVideoObjectOutline(      buffer, item_vo, gfx_idx, cx,     cy, outline_colour);
 
-	if ( fDirtyLevel == DIRTYLEVEL2 )
-	{
-		// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-		const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
-		const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
-		UINT32 usHeight = pTrav->usHeight;
-		UINT32 usWidth  = pTrav->usWidth;
-
-		// CENTER IN SLOT!
-		// CANCEL OFFSETS!
-		INT16 sCenX = sX + abs(sWidth  - usWidth)  / 2 - pTrav->sOffsetX;
-		INT16 sCenY = sY + abs(sHeight - usHeight) / 2 - pTrav->sOffsetY;
-
-		// Shadow area
-		BltVideoObjectOutlineShadow(uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-		BltVideoObjectOutline(      uiBuffer, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, sOutlineColor);
-
-
-		if ( uiBuffer == FRAME_BUFFER )
+		if (buffer == FRAME_BUFFER)
 		{
-			InvalidateRegion( sX, sY, (INT16)(sX + sWidth), (INT16)(sY + sHeight ) );
+			InvalidateRegion(sX, sY, sX + sWidth, sY + sHeight);
 		}
 		else
 		{
-			RestoreExternBackgroundRect( sX, sY, sWidth, sHeight );
+			RestoreExternBackgroundRect(sX, sY, sWidth, sHeight);
 		}
-
 	}
 
-	SetFont( ITEM_FONT );
-
-	if ( fDirtyLevel != DIRTYLEVEL0 )
+	if (ubStatusIndex < RENDER_ITEM_ATTACHMENT1)
 	{
+		SetFont(ITEM_FONT);
+		SetFontBackground(FONT_MCOLOR_BLACK);
 
-		if ( ubStatusIndex < RENDER_ITEM_ATTACHMENT1 )
+		if (item->usItemClass == IC_GUN && o->usItem != ROCKET_LAUNCHER)
 		{
-
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_MCOLOR_DKGRAY );
-
-			// FIRST DISPLAY FREE ROUNDS REMIANING
-			if ( pItem->usItemClass == IC_GUN && pObject->usItem != ROCKET_LAUNCHER )
+			// Display free rounds remianing
+			UINT8 colour;
+			switch (o->ubGunAmmoType)
 			{
-				sNewY = sY + sHeight - 10;
-				sNewX = sX + 1;
-
-				switch (pObject->ubGunAmmoType)
-				{
-					case AMMO_AP:
-					case AMMO_SUPER_AP:
-						SetFontForeground( ITEMDESC_FONTAPFORE );
-						break;
-					case AMMO_HP:
-						SetFontForeground( ITEMDESC_FONTHPFORE );
-						break;
-					case AMMO_BUCKSHOT:
-						SetFontForeground( ITEMDESC_FONTBSFORE );
-						break;
-					case AMMO_HE:
-						SetFontForeground( ITEMDESC_FONTHEFORE );
-						break;
-					case AMMO_HEAT:
-						SetFontForeground( ITEMDESC_FONTHEAPFORE );
-						break;
-					default:
-						SetFontForeground( FONT_MCOLOR_DKGRAY );
-						break;
-				}
-
-				wchar_t pStr[100];
-				swprintf( pStr, lengthof(pStr), L"%d", pObject->ubGunShotsLeft );
-				if ( uiBuffer == guiSAVEBUFFER )
-				{
-					RestoreExternBackgroundRect( sNewX, sNewY, 20, 15 );
-				}
-				mprintf( sNewX, sNewY, pStr );
-				gprintfinvalidate( sNewX, sNewY, pStr );
-
-				SetFontForeground( FONT_MCOLOR_DKGRAY );
-
-				// Display 'JAMMED' if we are jammed
-				if ( pObject->bGunAmmoStatus < 0 )
-				{
-					SetFontForeground( FONT_MCOLOR_RED );
-
-					const wchar_t* Jammed;
-					if ( sWidth >= ( BIG_INV_SLOT_WIDTH - 10 )  )
-					{
-						Jammed = TacticalStr[JAMMED_ITEM_STR];
-					}
-					else
-					{
-						Jammed = TacticalStr[SHORT_JAMMED_GUN];
-					}
-
-					FindFontCenterCoordinates(sX, sY, sWidth, sHeight, Jammed, ITEM_FONT, &sNewX, &sNewY);
-					mprintf(sNewX, sNewY, Jammed);
-					gprintfinvalidate(sNewX, sNewY, Jammed);
-				}
+				case AMMO_AP:
+				case AMMO_SUPER_AP: colour = ITEMDESC_FONTAPFORE;   break;
+				case AMMO_HP:       colour = ITEMDESC_FONTHPFORE;   break;
+				case AMMO_BUCKSHOT: colour = ITEMDESC_FONTBSFORE;   break;
+				case AMMO_HE:       colour = ITEMDESC_FONTHEFORE;   break;
+				case AMMO_HEAT:     colour = ITEMDESC_FONTHEAPFORE; break;
+				default:            colour = FONT_MCOLOR_DKGRAY;    break;
 			}
-			else
+			SetFontForeground(colour);
+
+			wchar_t pStr[16];
+			swprintf(pStr, lengthof(pStr), L"%d", o->ubGunShotsLeft);
+
+			const INT16 sNewX = sX + 1;
+			const INT16 sNewY = sY + sHeight - 10;
+			if (buffer == guiSAVEBUFFER)
 			{
-				if ( ubStatusIndex != RENDER_ITEM_NOSTATUS )
-				{
-					// Now display # of items
-					if ( pObject->ubNumberOfObjects > 1 )
-					{
-						SetFontForeground( FONT_GRAY4 );
-
-						sNewY = sY + sHeight - 10;
-						wchar_t pStr[100];
-						swprintf( pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects );
-
-						// Get length of string
-						uiStringLength=StringPixLength(pStr, ITEM_FONT );
-
-						sNewX = sX + sWidth - uiStringLength - 4;
-
-						if ( uiBuffer == guiSAVEBUFFER )
-						{
-							RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
-						}
-						mprintf( sNewX, sNewY, pStr );
-						gprintfinvalidate( sNewX, sNewY, pStr );
-					}
-
-				}
+				RestoreExternBackgroundRect(sNewX, sNewY, 20, 15);
 			}
+			mprintf(          sNewX, sNewY, pStr);
+			gprintfinvalidate(sNewX, sNewY, pStr);
 
-			if ( ItemHasAttachments( pObject ) )
+			// Display 'JAMMED' if we are jammed
+			if (o->bGunAmmoStatus < 0)
 			{
-				if ( FindAttachment( pObject, UNDER_GLAUNCHER ) == NO_SLOT )
-				{
-					SetFontForeground( FONT_GREEN );
-				}
-				else
-				{
-					SetFontForeground( FONT_YELLOW );
-				}
+				SetFontForeground(FONT_MCOLOR_RED);
 
-				sNewY = sY;
-				const wchar_t* AttachMarker = L"*";
+				const wchar_t* const jammed =
+					sWidth >= BIG_INV_SLOT_WIDTH - 10 ?
+						TacticalStr[JAMMED_ITEM_STR] :
+						TacticalStr[SHORT_JAMMED_GUN];
 
-				// Get length of string
-				uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
-
-				sNewX = sX + sWidth - uiStringLength - 4;
-
-				if ( uiBuffer == guiSAVEBUFFER )
-				{
-					RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
-				}
-				mprintf(sNewX, sNewY, AttachMarker);
-				gprintfinvalidate(sNewX, sNewY, AttachMarker);
+				INT16 cx;
+				INT16 cy;
+				FindFontCenterCoordinates(sX, sY, sWidth, sHeight, jammed, ITEM_FONT, &cx, &cy);
+				mprintf(cx, cy, jammed);
+				gprintfinvalidate(cx, cy, jammed);
 			}
+		}
+		else if (ubStatusIndex != RENDER_ITEM_NOSTATUS && o->ubNumberOfObjects > 1)
+		{
+			// Display # of items
+			SetFontForeground(FONT_GRAY4);
 
-			if ( pSoldier && pObject == &(pSoldier->inv[HANDPOS] ) && ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_GUN ) && pSoldier->bWeaponMode != WM_NORMAL )
+			wchar_t pStr[16];
+			swprintf(pStr, lengthof(pStr), L"%d", o->ubNumberOfObjects);
+
+			const UINT16 uiStringLength = StringPixLength(pStr, ITEM_FONT);
+			const INT16  sNewX          = sX + sWidth - uiStringLength - 4;
+			const INT16  sNewY          = sY + sHeight - 10;
+
+			if (buffer == guiSAVEBUFFER)
 			{
-				SetFontForeground( FONT_DKRED );
-
-				sNewY = sY + 13; // rather arbitrary
-				const wchar_t* ModeMarker;
-				if ( pSoldier->bWeaponMode == WM_BURST )
-				{
-					ModeMarker = L"*";
-				}
-				else
-				{
-					ModeMarker = L"+";
-				}
-
-				// Get length of string
-				uiStringLength = StringPixLength(ModeMarker, ITEM_FONT);
-
-				sNewX = sX + sWidth - uiStringLength - 4;
-
-				if ( uiBuffer == guiSAVEBUFFER )
-				{
-					RestoreExternBackgroundRect( sNewX, sNewY, 15, 15 );
-				}
-				mprintf(sNewX, sNewY, ModeMarker);
-				gprintfinvalidate(sNewX, sNewY, ModeMarker);
+				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
 			}
+			mprintf(          sNewX, sNewY, pStr);
+			gprintfinvalidate(sNewX, sNewY, pStr);
+		}
+
+		if (ItemHasAttachments(o))
+		{
+			SetFontForeground(FindAttachment(o, UNDER_GLAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW);
+
+			const wchar_t* const attach_marker  = L"*";
+			UINT16         const uiStringLength = StringPixLength(attach_marker, ITEM_FONT);
+			INT16          const sNewX          = sX + sWidth - uiStringLength - 4;
+			INT16          const sNewY          = sY;
+
+			if (buffer == guiSAVEBUFFER)
+			{
+				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
+			}
+			mprintf(          sNewX, sNewY, attach_marker);
+			gprintfinvalidate(sNewX, sNewY, attach_marker);
+		}
+
+		if (s && o == &s->inv[HANDPOS] && Item[o->usItem].usItemClass == IC_GUN && s->bWeaponMode != WM_NORMAL)
+		{
+			SetFontForeground(FONT_DKRED);
+
+			const wchar_t* const mode_marker    = s->bWeaponMode == WM_BURST ? L"*" : L"+";
+			UINT16         const uiStringLength = StringPixLength(mode_marker, ITEM_FONT);
+			INT16          const sNewX          = sX + sWidth - uiStringLength - 4;
+			INT16          const sNewY          = sY + 13; // rather arbitrary
+
+			if (buffer == guiSAVEBUFFER)
+			{
+				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
+			}
+			mprintf(          sNewX, sNewY, mode_marker);
+			gprintfinvalidate(sNewX, sNewY, mode_marker);
 		}
 	}
 }
