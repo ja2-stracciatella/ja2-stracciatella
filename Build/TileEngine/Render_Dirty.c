@@ -734,26 +734,17 @@ void AllocateVideoOverlaysArea( )
 }
 
 
-static void AllocateVideoOverlayArea(UINT32 uiCount)
+static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 {
-	UINT32 iBackIndex;
+	Assert(v->fAllocated);
+	Assert(!v->fDisabled);
 
-	if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
-	{
-		iBackIndex = gVideoOverlays[uiCount].uiBackground;
+	// Get buffer size
+	const BACKGROUND_SAVE* const bgs = &gBackSaves[v->uiBackground];
+	const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
-		// Get buffer size
-		const BACKGROUND_SAVE* bgs = &gBackSaves[iBackIndex];
-		const UINT32 uiBufSize = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
-
-		gVideoOverlays[uiCount].fActivelySaving = TRUE;
-
-		//DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Setting Overlay Actively saving %d %ls", uiCount, gVideoOverlays[ uiCount ].zText ) );
-
-		// Allocate
-		gVideoOverlays[uiCount].pSaveArea = MALLOCN(INT16, uiBufSize);
-	}
-
+	v->fActivelySaving = TRUE;
+	v->pSaveArea       = MALLOCN(INT16, uiBufSize);
 }
 
 
@@ -770,7 +761,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 		// OK, if our saved area is null, allocate it here!
 		if (v->pSaveArea == NULL)
 		{
-			AllocateVideoOverlayArea(i);
+			AllocateVideoOverlayArea(v);
 			if (v->pSaveArea == NULL) continue;
 		}
 
