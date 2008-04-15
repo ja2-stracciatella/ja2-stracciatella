@@ -359,9 +359,8 @@ void FreeBackgroundRectPending(BACKGROUND_SAVE* const b)
 }
 
 
-static void FreeBackgroundRectNow(const INT32 uiCount)
+static void FreeBackgroundRectNow(BACKGROUND_SAVE* const b)
 {
-	BACKGROUND_SAVE* const b = &gBackSaves[uiCount];
 	if (b->fFreeMemory)
 	{
 		//MemFree(b->pSaveArea);
@@ -372,8 +371,6 @@ static void FreeBackgroundRectNow(const INT32 uiCount)
 	b->fFreeMemory = FALSE;
 	b->fFilled     = FALSE;
 	b->pSaveArea   = NULL;
-
-	RecountBackgrounds();
 }
 
 
@@ -382,18 +379,7 @@ void FreeBackgroundRectType(const UINT32 uiFlags)
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
 		BACKGROUND_SAVE* const b = &gBackSaves[i];
-		if (!(b->uiFlags & uiFlags)) continue;
-
-		if (b->fFreeMemory)
-		{
-			//MemFree(b->pSaveArea);
-			if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
-		}
-
-		b->fAllocated  = FALSE;
-		b->fFreeMemory = FALSE;
-		b->fFilled     = FALSE;
-		b->pSaveArea   = NULL;
+		if (b->uiFlags & uiFlags) FreeBackgroundRectNow(b);
 	}
 
 	RecountBackgrounds();
@@ -419,8 +405,11 @@ void ShutdownBackgroundRects(void)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if (gBackSaves[i].fAllocated) FreeBackgroundRectNow((INT32)i);
+		BACKGROUND_SAVE* const b = &gBackSaves[i];
+		if (b->fAllocated) FreeBackgroundRectNow(b);
 	}
+
+	RecountBackgrounds();
 }
 
 
