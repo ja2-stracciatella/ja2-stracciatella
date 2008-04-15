@@ -759,35 +759,24 @@ static void AllocateVideoOverlayArea(UINT32 uiCount)
 
 void SaveVideoOverlaysArea(SGPVSurface* const src)
 {
-	UINT32 uiCount;
-	UINT32 iBackIndex;
-	UINT32 uiSrcPitchBYTES;
-	UINT8	 *pSrcBuf;
+	UINT32        uiSrcPitchBYTES;
+	UINT16* const pSrcBuf = (UINT16*)LockVideoSurface(src, &uiSrcPitchBYTES);
 
-	pSrcBuf = LockVideoSurface(src, &uiSrcPitchBYTES );
-
-	for(uiCount=0; uiCount < guiNumVideoOverlays; uiCount++)
+	for (UINT32 i = 0; i < guiNumVideoOverlays; ++i)
 	{
-		if( gVideoOverlays[uiCount].fAllocated && !gVideoOverlays[uiCount].fDisabled )
+		VIDEO_OVERLAY* const v = &gVideoOverlays[i];
+		if (!v->fAllocated || v->fDisabled) continue;
+
+		// OK, if our saved area is null, allocate it here!
+		if (v->pSaveArea == NULL)
 		{
-			// OK, if our saved area is null, allocate it here!
-			if ( gVideoOverlays[uiCount].pSaveArea == NULL )
-			{
-				AllocateVideoOverlayArea( uiCount );
-			}
-
-			if ( gVideoOverlays[uiCount].pSaveArea != NULL )
-			{
-					iBackIndex = gVideoOverlays[uiCount].uiBackground;
-
-					// Save data from frame buffer!
-					Blt16BPPTo16BPP((UINT16 *)gVideoOverlays[uiCount].pSaveArea, gBackSaves[ iBackIndex ].sWidth*2,
-								(UINT16 *)pSrcBuf, uiSrcPitchBYTES,
-								0, 0,
-								gBackSaves[ iBackIndex ].sLeft , gBackSaves[ iBackIndex ].sTop,
-								gBackSaves[ iBackIndex ].sWidth, gBackSaves[ iBackIndex ].sHeight );
-			}
+			AllocateVideoOverlayArea(i);
+			if (v->pSaveArea == NULL) continue;
 		}
+
+		// Save data from frame buffer!
+		const BACKGROUND_SAVE* const b = &gBackSaves[v->uiBackground];
+		Blt16BPPTo16BPP((UINT16*)v->pSaveArea, b->sWidth * 2, pSrcBuf, uiSrcPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 	}
 
 	UnLockVideoSurface(src);
