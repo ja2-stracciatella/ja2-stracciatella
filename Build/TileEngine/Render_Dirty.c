@@ -237,13 +237,10 @@ void RestoreBackgroundRects(void)
 		const BACKGROUND_SAVE* const b = &gBackSaves[i];
 		if (!b->fFilled || b->fDisabled) continue;
 
-		if (b->uiFlags & BGND_FLAG_SAVERECT)
+		if (b->pSaveArea != NULL)
 		{
-			if (b->pSaveArea != NULL)
-			{
-				Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
-				AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
-			}
+			Blt16BPPTo16BPP(pDestBuf, uiDestPitchBYTES, b->pSaveArea, b->sWidth * 2, b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+			AddBaseDirtyRect(b->sLeft, b->sTop, b->sRight, b->sBottom);
 		}
 		else if (b->pZSaveArea != NULL)
 		{
@@ -274,10 +271,7 @@ void EmptyBackgroundRects(void)
 
 			if (!b->fAllocated && b->fFreeMemory)
 			{
-				if (b->uiFlags & BGND_FLAG_SAVERECT && b->pSaveArea != NULL)
-				{
-					MemFree(b->pSaveArea);
-				}
+				if (b->pSaveArea  != NULL) MemFree(b->pSaveArea);
 				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 
 				b->fAllocated  = FALSE;
@@ -293,11 +287,7 @@ void EmptyBackgroundRects(void)
 		{
 			if (b->fFreeMemory)
 			{
-				if (b->uiFlags & BGND_FLAG_SAVERECT && b->pSaveArea != NULL)
-				{
-					MemFree(b->pSaveArea);
-				}
-
+				if (b->pSaveArea != NULL)  MemFree(b->pSaveArea);
 				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 			}
 
@@ -325,12 +315,9 @@ void SaveBackgroundRects(void)
 		BACKGROUND_SAVE* const b = &gBackSaves[i];
 		if (!b->fAllocated || b->fDisabled) continue;
 
-		if (b->uiFlags & BGND_FLAG_SAVERECT)
+		if (b->pSaveArea != NULL)
 		{
-			if (b->pSaveArea != NULL)
-			{
-				Blt16BPPTo16BPP(b->pSaveArea, b->sWidth * 2, pSrcBuf, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
-			}
+			Blt16BPPTo16BPP(b->pSaveArea, b->sWidth * 2, pSrcBuf, uiDestPitchBYTES, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 		}
 		else if (b->pZSaveArea != NULL)
 		{
