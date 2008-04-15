@@ -1756,58 +1756,27 @@ UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN CheckForMercContMove( SOLDIERTYPE *pSoldier )
+BOOLEAN CheckForMercContMove(SOLDIERTYPE* const s)
 {
-	INT16 sAPCost;
-	INT16	sGridNo;
+	if (!(gTacticalStatus.uiFlags & INCOMBAT)) return FALSE;
 
-	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		return( FALSE );
-	}
+	if (gpItemPointer != NULL) return FALSE;
 
-	if ( gpItemPointer != NULL )
-	{
-		return( FALSE );
-	}
+	if (s->bLife < OKLIFE) return FALSE;
 
-	if( pSoldier->bLife >= OKLIFE )
-	{
-		if( pSoldier->sGridNo != pSoldier->sFinalDestination || pSoldier->bGoodContPath  )
-		{
-			// OK< check if we are the selected guy!
-			if (pSoldier == GetSelectedMan())
-			{
-				if (SoldierOnScreen(pSoldier))
-				{
-					sGridNo = pSoldier->sFinalDestination;
+	if (s->sGridNo == s->sFinalDestination && !s->bGoodContPath) return FALSE;
 
-					if ( pSoldier->bGoodContPath )
-					{
-						sGridNo = pSoldier->sContPathLocation;
-					}
+	if (s != GetSelectedMan()) return FALSE;
 
-					// Do a check if we can afford move here!
+	if (!SoldierOnScreen(s)) return FALSE;
 
-					// get a path to dest...
-					if ( FindBestPath( pSoldier, sGridNo, pSoldier->bLevel, pSoldier->usUIMovementMode, NO_COPYROUTE, 0 ) )
-					{
-						sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
+	const INT16 sGridNo = (s->bGoodContPath ? s->sContPathLocation : s->sFinalDestination);
+	if (!FindBestPath(s, sGridNo, s->bLevel, s->usUIMovementMode, NO_COPYROUTE, 0)) return FALSE;
 
-						if ( EnoughPoints( pSoldier, sAPCost, 0 , FALSE ) )
-						{
-							return( TRUE );
-						}
-					}
-					else
-					{
-						return( FALSE );
-					}
-				}
-			}
-		}
-	}
-	return( FALSE );
+	const INT16 sAPCost = PtsToMoveDirection(s, guiPathingData[0]);
+	if (!EnoughPoints(s, sAPCost, 0, FALSE)) return FALSE;
+
+	return TRUE;
 }
 
 
