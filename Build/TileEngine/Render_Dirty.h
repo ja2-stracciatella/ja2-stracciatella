@@ -65,19 +65,19 @@ BOOLEAN ExecuteBaseDirtyRectQueue(void);
 
 
 // BACKGROUND RECT BUFFERING STUFF
-BOOLEAN InitializeBackgroundRects(void);
-BOOLEAN ShutdownBackgroundRects(void);
+void  InitializeBackgroundRects(void);
+void  ShutdownBackgroundRects(void);
 INT32 RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
-void    FreeBackgroundRect(INT32 iIndex);
-void    FreeBackgroundRectPending(INT32 iIndex);
-void    FreeBackgroundRectType(UINT32 uiFlags);
-void    RestoreBackgroundRects(void);
-void    SaveBackgroundRects(void);
-BOOLEAN InvalidateBackgroundRects(void);
-BOOLEAN UpdateSaveBuffer(void);
-BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight );
-void    RegisterBackgroundRectSingleFilled(INT16 left, INT16 top, INT16 right, INT16 bottom);
-void    EmptyBackgroundRects(void);
+void  FreeBackgroundRect(INT32 iIndex);
+void  FreeBackgroundRectPending(INT32 iIndex);
+void  FreeBackgroundRectType(UINT32 uiFlags);
+void  RestoreBackgroundRects(void);
+void  SaveBackgroundRects(void);
+void  InvalidateBackgroundRects(void);
+void  UpdateSaveBuffer(void);
+void  RestoreExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight);
+void  RegisterBackgroundRectSingleFilled(INT16 left, INT16 top, INT16 right, INT16 bottom);
+void  EmptyBackgroundRects(void);
 
 
 /* Dirties a single-frame rect exactly the size needed to save the background

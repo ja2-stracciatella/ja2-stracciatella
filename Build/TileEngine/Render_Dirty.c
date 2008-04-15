@@ -430,51 +430,44 @@ void FreeBackgroundRectType(const UINT32 uiFlags)
 }
 
 
-BOOLEAN InitializeBackgroundRects(void)
+void InitializeBackgroundRects(void)
 {
-	guiNumBackSaves=0;
-	return( TRUE );
-}
-
-BOOLEAN InvalidateBackgroundRects(void)
-{
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
-		gBackSaves[uiCount].fFilled=FALSE;
-
-	return(TRUE);
+	guiNumBackSaves = 0;
 }
 
 
-BOOLEAN ShutdownBackgroundRects(void)
+void InvalidateBackgroundRects(void)
 {
-UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumBackSaves; uiCount++)
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
-		if(gBackSaves[uiCount].fAllocated)
-			FreeBackgroundRectNow((INT32)uiCount);
+		gBackSaves[i].fFilled = FALSE;
 	}
-
-	return(TRUE);
 }
 
 
-static void DisableBackgroundRect(INT32 iIndex, BOOLEAN fDisabled)
+void ShutdownBackgroundRects(void)
+{
+	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
+	{
+		if (gBackSaves[i].fAllocated) FreeBackgroundRectNow((INT32)i);
+	}
+}
+
+
+static void DisableBackgroundRect(const INT32 iIndex, const BOOLEAN fDisabled)
 {
 	gBackSaves[iIndex].fDisabled = fDisabled;
 }
 
-BOOLEAN UpdateSaveBuffer(void)
+
+void UpdateSaveBuffer(void)
 {
 	// Update saved buffer - do for the viewport size ony!
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
-	return TRUE;
 }
 
 
-BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight )
+void RestoreExternBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight)
 {
 	Assert(0 <= sLeft && sLeft + sWidth <= SCREEN_WIDTH && 0 <= sTop && sTop + sHeight <= SCREEN_HEIGHT);
 
@@ -482,8 +475,6 @@ BOOLEAN RestoreExternBackgroundRect( INT16 sLeft, INT16 sTop, INT16 sWidth, INT1
 
 	// Add rect to frame buffer queue
 	InvalidateRegionEx(sLeft, sTop, sLeft + sWidth, sTop + sHeight);
-
-	return(TRUE);
 }
 
 
@@ -491,7 +482,8 @@ BOOLEAN RestoreExternBackgroundRectGivenID(const INT32 iBack)
 {
 	const BACKGROUND_SAVE* const b = &gBackSaves[iBack];
 	if (!b->fAllocated) return FALSE;
-	return RestoreExternBackgroundRect(b->sLeft, b->sTop, b->sWidth, b->sHeight);
+	RestoreExternBackgroundRect(b->sLeft, b->sTop, b->sWidth, b->sHeight);
+	return TRUE;
 }
 
 
