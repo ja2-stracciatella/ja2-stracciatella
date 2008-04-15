@@ -374,50 +374,22 @@ static void RemoveFiles(void)
 }
 
 
-static void ProcessAndEnterAFilesRecord(UINT8 ubCode, BOOLEAN fRead)
+static void ProcessAndEnterAFilesRecord(const UINT8 ubCode, const BOOLEAN fRead)
 {
-	FilesUnit* pFiles = pFilesListHead;
-
- 	// add to Files list
-	if(pFiles)
+	// Append node to list
+	FilesUnit** anchor;
+	for (anchor = &pFilesListHead; *anchor != NULL; anchor = &(*anchor)->Next)
 	{
-		while(pFiles)
-		{
-      // check to see if the file is already there
-			if (pFiles->ubCode == ubCode) return;
-
-			// next in the list
-			pFiles = pFiles->Next;
-		}
-
-		// reset pointer
-		pFiles=pFilesListHead;
-
-		// go to end of list
-		while(pFiles->Next)
-		{
-			pFiles = pFiles->Next;
-		}
-		// alloc space
-		pFiles->Next = MALLOC(FilesUnit);
-
-		// set up information passed
-		pFiles = pFiles->Next;
-		pFiles->Next = NULL;
-		pFiles->ubCode = ubCode;
-		pFiles->fRead = fRead;
+		// Check if the file is already there
+		if ((*anchor)->ubCode == ubCode) return;
 	}
-	else
-	{
-		// alloc space
-		pFiles = MALLOC(FilesUnit);
 
-		// setup info passed
-		pFiles->Next = NULL;
-		pFiles->ubCode = ubCode;
-	  pFilesListHead = pFiles;
-		pFiles -> fRead = fRead;
-	}
+	FilesUnit* const f = MALLOC(FilesUnit);
+	f->Next   = NULL;
+	f->ubCode = ubCode;
+	f->fRead  = fRead;
+
+	*anchor = f;
 }
 
 
