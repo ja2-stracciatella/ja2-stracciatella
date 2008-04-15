@@ -1704,40 +1704,16 @@ static void ClearOutEmailMessageRecordsList(void)
 }
 
 
-static void AddEmailRecordToList(const wchar_t* const pString)
+static void AddEmailRecordToList(const wchar_t* const text)
 {
-	Record* pTempRecord;
+	Record* const e = MALLOC(Record);
+	e->Next = NULL;
+	wcscpy(e->pRecord, text);
 
-	// set to head of list
-	pTempRecord=pMessageRecordList;
-
-	if(!pTempRecord)
-	{
-
-		// list empty, set this node to head
-		pTempRecord = MALLOC(Record);
-		pMessageRecordList = pTempRecord;
-	}
-  else
-	{
-	  // run to end of list
-	  while(pTempRecord -> Next)
-		{
-		  pTempRecord = pTempRecord -> Next;
-		}
-
-		// found, alloc
-		pTempRecord -> Next = MALLOC(Record);
-
-		// move to node
-		pTempRecord = pTempRecord -> Next;
-  }
-
-	// set next to null
-	pTempRecord -> Next = NULL;
-
-	// copy in string
-  wcscpy( pTempRecord -> pRecord, pString );
+	// Append node to list
+	Record** anchor = &pMessageRecordList;
+	while (*anchor != NULL) anchor = &(*anchor)->Next;
+	*anchor = e;
 }
 
 
