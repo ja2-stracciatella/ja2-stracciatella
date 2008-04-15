@@ -62,13 +62,10 @@ SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 BOOLEAN		gfViewportDirty=FALSE;
 
 
-void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
+void AddBaseDirtyRect(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 {
-	SGPRect aRect;
-
 	if (iLeft < 0)            iLeft = 0;
 	if (iLeft > SCREEN_WIDTH) iLeft = SCREEN_WIDTH;
-
 
 	if (iTop < 0)             iTop = 0;
 	if (iTop > SCREEN_HEIGHT) iTop = SCREEN_HEIGHT;
@@ -76,33 +73,23 @@ void AddBaseDirtyRect( INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom )
 	if (iRight < 0)            iRight = 0;
 	if (iRight > SCREEN_WIDTH) iRight = SCREEN_WIDTH;
 
-
 	if (iBottom < 0)             iBottom = 0;
 	if (iBottom > SCREEN_HEIGHT) iBottom = SCREEN_HEIGHT;
 
-	if (  ( iRight - iLeft ) == 0 || ( iBottom - iTop ) == 0 )
+	if (iLeft == iRight || iTop == iBottom) return;
+
+	if (iLeft   == gsVIEWPORT_START_X        &&
+			iRight  == gsVIEWPORT_END_X          &&
+			iTop    == gsVIEWPORT_WINDOW_START_Y &&
+			iBottom == gsVIEWPORT_WINDOW_END_Y)
 	{
+		gfViewportDirty = TRUE;
 		return;
 	}
 
-
-	if((iLeft==gsVIEWPORT_START_X) &&
-			(iRight==gsVIEWPORT_END_X) &&
-			(iTop==gsVIEWPORT_WINDOW_START_Y) &&
-			(iBottom==gsVIEWPORT_WINDOW_END_Y))
-	{
-		gfViewportDirty=TRUE;
-		return;
-	}
-
-	// Add to list
-	aRect.iLeft		= iLeft;
-	aRect.iTop		= iTop;
-	aRect.iRight	= iRight;
-	aRect.iBottom	= iBottom;
-
-	InvalidateRegionEx(aRect.iLeft, aRect.iTop, aRect.iRight, aRect.iBottom);
+	InvalidateRegionEx(iLeft, iTop, iRight, iBottom);
 }
+
 
 BOOLEAN ExecuteBaseDirtyRectQueue( )
 {
