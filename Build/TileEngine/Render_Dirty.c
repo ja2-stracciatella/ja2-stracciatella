@@ -389,23 +389,23 @@ void FreeBackgroundRectPending(const INT32 iIndex)
 }
 
 
-static BOOLEAN FreeBackgroundRectNow(INT32 uiCount)
+static void FreeBackgroundRectNow(INT32 uiCount)
 {
-	if(gBackSaves[uiCount].fFreeMemory==TRUE)
+	BACKGROUND_SAVE* const b = &gBackSaves[uiCount];
+	if (b->fFreeMemory)
 	{
-		//MemFree(gBackSaves[uiCount].pSaveArea);
-		if (gBackSaves[uiCount].pZSaveArea != NULL)
-			MemFree(gBackSaves[uiCount].pZSaveArea);
+		//MemFree(b->pSaveArea);
+		if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
 	}
 
-	gBackSaves[uiCount].fAllocated=FALSE;
-	gBackSaves[uiCount].fFreeMemory=FALSE;
-	gBackSaves[uiCount].fFilled=FALSE;
-	gBackSaves[uiCount].pSaveArea=NULL;
+	b->fAllocated  = FALSE;
+	b->fFreeMemory = FALSE;
+	b->fFilled     = FALSE;
+	b->pSaveArea   = NULL;
 
 	RecountBackgrounds();
-	return(TRUE);
 }
+
 
 BOOLEAN FreeBackgroundRectType(UINT32 uiFlags)
 {
