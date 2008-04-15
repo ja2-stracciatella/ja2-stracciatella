@@ -21,7 +21,27 @@
 #define		VIDEO_OVERLAYS			100
 
 
-BACKGROUND_SAVE	gBackSaves[BACKGROUND_BUFFERS];
+// Struct for backgrounds
+typedef struct
+{
+	BOOLEAN		fAllocated;
+	BOOLEAN		fFilled;
+	BOOLEAN		fFreeMemory;
+	UINT32		uiFlags;
+	INT16			*pSaveArea;
+	UINT16*   pZSaveArea;
+	INT16			sLeft;
+	INT16			sTop;
+	INT16			sRight;
+	INT16			sBottom;
+	INT16			sWidth;
+	INT16			sHeight;
+	BOOLEAN		fPendingDelete;
+	BOOLEAN		fDisabled;
+} BACKGROUND_SAVE;
+
+
+static BACKGROUND_SAVE gBackSaves[BACKGROUND_BUFFERS];
 UINT32 guiNumBackSaves=0;
 
 static VIDEO_OVERLAY gVideoOverlays[VIDEO_OVERLAYS];
@@ -645,7 +665,6 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pT
 	v->uiFlags      = uiFlags;
 	v->fAllocated   = 2;
 	v->uiBackground = iBackIndex;
-	v->pBackground  = &gBackSaves[iBackIndex];
 	v->uiFontID     = pTopmostDesc->uiFontID;
 	v->sX           = pTopmostDesc->sLeft;
 	v->sY           = pTopmostDesc->sTop;

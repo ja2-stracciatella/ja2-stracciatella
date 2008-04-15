@@ -21,26 +21,6 @@
 // Callback for topmost blitters
 typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
 
-// Struct for backgrounds
-typedef struct
-{
-	BOOLEAN		fAllocated;
-	BOOLEAN		fFilled;
-	BOOLEAN		fFreeMemory;
-	UINT32		uiFlags;
-	INT16			*pSaveArea;
-	UINT16*   pZSaveArea;
-	INT16			sLeft;
-	INT16			sTop;
-	INT16			sRight;
-	INT16			sBottom;
-	INT16			sWidth;
-	INT16			sHeight;
-	BOOLEAN		fPendingDelete;
-	BOOLEAN		fDisabled;
-
-} BACKGROUND_SAVE;
-
 // Struct for topmost blitters
 struct VIDEO_OVERLAY
 {
@@ -50,7 +30,6 @@ struct VIDEO_OVERLAY
 		BOOLEAN						fActivelySaving;
 		BOOLEAN						fDeletionPending;
 		INT32						uiBackground;
-		BACKGROUND_SAVE		*pBackground;
 		INT16							*pSaveArea;
 		UINT32						uiFontID;
 		INT16							sX;
