@@ -855,217 +855,37 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
 
 
-// Draw attributes & skills for given soldier
-static void DrawCharStats(const SOLDIERTYPE* const pSoldier)
+static void PrintStat(const UINT32 change_time, const UINT16 stat_gone_up_bit, const INT8 stat_val, const INT16 x, const INT16 y)
 {
-	// will draw the characters stats, max life, strength, dex, and skills
-	wchar_t sString[9];
+	const UINT8 colour =
+		change_time == 0 || GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
+		stat_gone_up_bit != 0                                                            ? FONT_LTGREEN         :
+		                                                                                   FONT_RED;
+	SetFontForeground(colour);
+	wchar_t str[16];
+	swprintf(str, lengthof(str), L"%d", stat_val);
+	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
+}
 
-	// set up font
+
+// Draw attributes & skills for given soldier
+static void DrawCharStats(const SOLDIERTYPE* const s)
+{
 	SetFont(CHAR_FONT);
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 	SetFontBackground(FONT_BLACK);
 
-
-	// strength
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bStrength);
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeStrengthTime)&& ( pSoldier->uiChangeStrengthTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & STRENGTH_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, STR_X, STR_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// dexterity
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bDexterity );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeDexterityTime ) && ( pSoldier->uiChangeDexterityTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & DEX_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, DEX_X, DEX_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// agility
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bAgility );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeAgilityTime)&& ( pSoldier->uiChangeAgilityTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & AGIL_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, AGL_X, AGL_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// wisdom
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bWisdom );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeWisdomTime )&&( pSoldier->uiChangeWisdomTime != 0 ))
-	{
-		if( pSoldier->usValueGoneUp & WIS_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, WIS_X, WIS_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// leadership
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bLeadership );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeLeadershipTime ) && ( pSoldier->uiChangeLeadershipTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & LDR_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, LDR_X, LDR_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// experience level
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bExpLevel );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeLevelTime)&&( pSoldier->uiChangeLevelTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & LVL_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, LVL_X, LVL_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// marksmanship
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMarksmanship );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMarksmanshipTime) && ( pSoldier->uiChangeMarksmanshipTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & MRK_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, MRK_X, MRK_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// explosives
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bExplosive );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeExplosivesTime)&& ( pSoldier->uiChangeExplosivesTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & EXP_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, EXP_X, EXP_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// mechanical
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMechanical );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMechanicalTime )&& ( pSoldier->uiChangeMechanicalTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & MECH_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, MEC_X, MEC_Y, STAT_WID, STAT_HEI, CHAR_FONT);
-
-	// medical
-	swprintf( sString, lengthof(sString), L"%d", pSoldier->bMedical );
-
-	if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeMedicalTime)&& ( pSoldier->uiChangeMedicalTime != 0 ) )
-	{
-		if( pSoldier->usValueGoneUp & MED_INCREASE )
-		{
-			SetFontForeground( FONT_LTGREEN );
-		}
-		else
-		{
-			SetFontForeground( FONT_RED );
-		}
-	}
-	else
-	{
-		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-	}
-	DrawStringRight(sString, MED_X, MED_Y, STAT_WID, STAT_HEI, CHAR_FONT);
+	const UINT16 vgu = s->usValueGoneUp;
+	PrintStat(s->uiChangeAgilityTime,      vgu & AGIL_INCREASE,     s->bAgility,      AGL_X, AGL_Y); // agility
+	PrintStat(s->uiChangeDexterityTime,    vgu & DEX_INCREASE,      s->bDexterity,    DEX_X, DEX_Y); // dexterity
+	PrintStat(s->uiChangeStrengthTime,     vgu & STRENGTH_INCREASE, s->bStrength,     STR_X, STR_Y); // strength
+	PrintStat(s->uiChangeLeadershipTime,   vgu & LDR_INCREASE,      s->bLeadership,   LDR_X, LDR_Y); // leadership
+	PrintStat(s->uiChangeWisdomTime,       vgu & WIS_INCREASE,      s->bWisdom,       WIS_X, WIS_Y); // wisdom
+	PrintStat(s->uiChangeLevelTime,        vgu & LVL_INCREASE,      s->bExpLevel,     LVL_X, LVL_Y); // experience level
+	PrintStat(s->uiChangeMarksmanshipTime, vgu & MRK_INCREASE,      s->bMarksmanship, MRK_X, MRK_Y); // marksmanship
+	PrintStat(s->uiChangeExplosivesTime,   vgu & EXP_INCREASE,      s->bExplosive,    EXP_X, EXP_Y); // explosives
+	PrintStat(s->uiChangeMechanicalTime,   vgu & MECH_INCREASE,     s->bMechanical,   MEC_X, MEC_Y); // mechanical
+	PrintStat(s->uiChangeMedicalTime,      vgu & MED_INCREASE,      s->bMedical,      MED_X, MED_Y); // medical
 
 	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 }
