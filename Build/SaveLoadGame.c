@@ -1100,6 +1100,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	uiRelStartPerc = uiRelEndPerc =0;
 
   TrashAllSoldiers( );
+  RemoveAllGroups();
 
 	//Empty the dialogue Queue cause someone could still have a quote in waiting
 	EmptyDialogueQueue( );
