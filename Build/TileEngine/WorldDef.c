@@ -3606,29 +3606,9 @@ static void LoadMapLights(INT8** hBuffer)
 }
 
 
-static BOOLEAN IsRoofVisibleForWireframe(INT16 sMapPos)
+static BOOLEAN IsRoofVisibleForWireframe(const INT16 sMapPos)
 {
-	STRUCTURE * pStructure;
-
-	if ( !gfBasement )
-	{
-		pStructure = FindStructure( sMapPos, STRUCTURE_ROOF );
-
-		if ( pStructure != NULL )
-		{
-			return( TRUE );
-		}
-	}
-	else
-	{
-		//if ( InARoom( sMapPos, &ubRoom ) )
-		{
-			//if ( !( gpWorldLevelData[ sMapPos ].uiFlags & MAPELEMENT_REVEALED ) )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
+	return
+		gfBasement ||
+		FindStructure(sMapPos, STRUCTURE_ROOF) != NULL;
 }
