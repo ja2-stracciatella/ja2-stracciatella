@@ -123,9 +123,6 @@
 #define		MAP_BULLET_BURST_X			(117 + gsInvDescX)
 #define		MAP_BULLET_BURST_Y			(135 + gsInvDescY)
 
-#define		MAP_ITEMDESC_ITEM_X					(25 + gsInvDescX)
-#define		MAP_ITEMDESC_ITEM_Y					(6 + gsInvDescY)
-
 static const SGPBox g_itemdesc_desc_box            = { 11,  80, 301,  0 };
 static const SGPBox g_itemdesc_pros_cons_box       = { 11, 110, 301, 10 };
 static const SGPBox g_itemdesc_item_status_box     = {  6,  60,   2, 51 };
