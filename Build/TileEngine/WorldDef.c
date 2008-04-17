@@ -2965,33 +2965,27 @@ BOOLEAN NewWorld( void )
 }
 
 
-void TrashWorld( void )
+static void FreeLevelNodeList(LEVELNODE** const head)
 {
-	MAP_ELEMENT		*pMapTile;
-	LEVELNODE			*pLandNode;
-	LEVELNODE			*pObjectNode;
-	LEVELNODE			*pStructNode;
-	LEVELNODE			*pShadowNode;
-	LEVELNODE			*pMercNode;
-	LEVELNODE			*pRoofNode;
-	LEVELNODE			*pOnRoofNode;
-	LEVELNODE			*pTopmostNode;
-//	STRUCTURE			*pStructureNode;
+	LEVELNODE* i = *head;
+	*head = NULL;
 
-	if( !gfWorldLoaded )
-		return;
+	while (i != NULL)
+	{
+		LEVELNODE* const next = i->pNext;
+		MemFree(i);
+		i = next;
+	}
+}
 
 
-	// REMOVE ALL ITEMS FROM WORLD
-	TrashWorldItems(  );
+void TrashWorld(void)
+{
+	if (!gfWorldLoaded) return;
 
-	// Trash the overhead map
-	TrashOverheadMap( );
-
-	//Reset the smoke effects.
+	TrashWorldItems();
+	TrashOverheadMap();
 	ResetSmokeEffects();
-
-	//Reset the light effects
 	ResetLightEffects();
 
 	// Set soldiers to not active!
@@ -2999,129 +2993,65 @@ void TrashWorld( void )
 	{
 		if (s->bTeam == gbPlayerNum)
 		{
-			// Just delete levelnode
-			s->pLevelNode = NULL;
+			s->pLevelNode = NULL; // Just delete levelnode
 		}
 		else
 		{
-			// Delete from world
-			TacticalRemoveSoldier(s);
+			TacticalRemoveSoldier(s); // Delete from world
 		}
 	}
 
-	RemoveCorpses( );
+	RemoveCorpses();
+	DeleteAniTiles();
 
-	// Remove all ani tiles...
-	DeleteAniTiles( );
-
-
-	//Kill both soldier init lists.
+	// Kill both soldier init lists.
 	UseEditorAlternateList();
 	KillSoldierInitList();
 	UseEditorOriginalList();
 	KillSoldierInitList();
 
-	//Remove the schedules
 	DestroyAllSchedules();
 
-	// on trash world sheck if we have to set up the first meanwhile
-	HandleFirstMeanWhileSetUpWithTrashWorld( );
+	// On trash world check if we have to set up the first meanwhile
+	HandleFirstMeanWhileSetUpWithTrashWorld();
 
-	// Create world randomly from tiles
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	for (INT32 i = 0; i < WORLD_MAX; ++i)
 	{
-		pMapTile = &gpWorldLevelData[ cnt ];
+		MAP_ELEMENT* const me = &gpWorldLevelData[i];
 
 		// Free the memory associated with the map tile link lists
-		pLandNode = pMapTile->pLandHead;
-		while ( pLandNode != NULL )
-		{
-			pMapTile->pLandHead = pLandNode->pNext;
-			MemFree( pLandNode );
-			pLandNode = pMapTile->pLandHead;
-		}
+		FreeLevelNodeList(&me->pLandHead);
+		FreeLevelNodeList(&me->pObjectHead);
+		FreeLevelNodeList(&me->pStructHead);
+		FreeLevelNodeList(&me->pShadowHead);
+		FreeLevelNodeList(&me->pMercHead);
+		FreeLevelNodeList(&me->pRoofHead);
+		FreeLevelNodeList(&me->pOnRoofHead);
+		FreeLevelNodeList(&me->pTopmostHead);
 
-		pObjectNode = pMapTile->pObjectHead;
-		while ( pObjectNode != NULL )
+		while (me->pStructureHead != NULL)
 		{
-			pMapTile->pObjectHead = pObjectNode->pNext;
-			MemFree( pObjectNode );
-			pObjectNode = pMapTile->pObjectHead;
-		}
-
-		pStructNode = pMapTile->pStructHead;
-		while ( pStructNode != NULL )
-		{
-			pMapTile->pStructHead = pStructNode->pNext;
-			MemFree( pStructNode );
-			pStructNode = pMapTile->pStructHead;
-		}
-
-		pShadowNode = pMapTile->pShadowHead;
-		while ( pShadowNode != NULL )
-		{
-			pMapTile->pShadowHead = pShadowNode->pNext;
-			MemFree( pShadowNode );
-			pShadowNode = pMapTile->pShadowHead;
-		}
-
-		pMercNode = pMapTile->pMercHead;
-		while ( pMercNode != NULL )
-		{
-			pMapTile->pMercHead = pMercNode->pNext;
-			MemFree( pMercNode );
-			pMercNode = pMapTile->pMercHead;
-		}
-
-		pRoofNode = pMapTile->pRoofHead;
-		while ( pRoofNode != NULL )
-		{
-			pMapTile->pRoofHead = pRoofNode->pNext;
-			MemFree( pRoofNode );
-			pRoofNode = pMapTile->pRoofHead;
-		}
-
-		pOnRoofNode = pMapTile->pOnRoofHead;
-		while ( pOnRoofNode != NULL )
-		{
-			pMapTile->pOnRoofHead = pOnRoofNode->pNext;
-			MemFree( pOnRoofNode );
-			pOnRoofNode = pMapTile->pOnRoofHead;
-		}
-
-		pTopmostNode = pMapTile->pTopmostHead;
-		while ( pTopmostNode != NULL )
-		{
-			pMapTile->pTopmostHead = pTopmostNode->pNext;
-			MemFree( pTopmostNode );
-			pTopmostNode = pMapTile->pTopmostHead;
-		}
-
-		while (pMapTile->pStructureHead != NULL)
-		{
-			if (DeleteStructureFromWorld( pMapTile->pStructureHead ) == FALSE)
+			if (!DeleteStructureFromWorld(me->pStructureHead))
 			{
 				// ERROR!!!!!!
 				break;
 			}
 		}
-
 	}
 
 	// Zero world
-	memset( gpWorldLevelData, 0, WORLD_MAX * sizeof( MAP_ELEMENT ) );
+	memset(gpWorldLevelData, 0, WORLD_MAX * sizeof(*gpWorldLevelData));
 
 	// Set some default flags
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	for (INT32 i = 0; i < WORLD_MAX; ++i)
 	{
-		gpWorldLevelData[ cnt ].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
+		gpWorldLevelData[i].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
 	}
 
 	TrashDoorTable();
 	TrashMapEdgepoints();
 	TrashDoorStatusArray();
 
-	//gfBlitBattleSectorLocator = FALSE;
 	gfWorldLoaded = FALSE;
 #ifdef JA2EDITOR
 	strcpy(g_filename, "none");
@@ -3129,100 +3059,26 @@ void TrashWorld( void )
 }
 
 
-static void TrashMapTile(INT16 MapTile)
+static void TrashMapTile(const INT16 MapTile)
 {
-	MAP_ELEMENT		*pMapTile;
-	LEVELNODE			*pLandNode;
-	LEVELNODE			*pObjectNode;
-	LEVELNODE			*pStructNode;
-	LEVELNODE			*pShadowNode;
-	LEVELNODE			*pMercNode;
-	LEVELNODE			*pRoofNode;
-	LEVELNODE			*pOnRoofNode;
-	LEVELNODE			*pTopmostNode;
-
-	pMapTile = &gpWorldLevelData[ MapTile ];
+	MAP_ELEMENT* const me = &gpWorldLevelData[MapTile];
 
 	// Free the memory associated with the map tile link lists
-	pLandNode = pMapTile->pLandHead;
-	while ( pLandNode != NULL )
-	{
-		pMapTile->pLandHead = pLandNode->pNext;
-		MemFree( pLandNode );
-		pLandNode = pMapTile->pLandHead;
-	}
-	pMapTile->pLandHead = pMapTile->pLandStart = NULL;
+	me->pLandStart = NULL;
+	FreeLevelNodeList(&me->pLandHead);
+	FreeLevelNodeList(&me->pObjectHead);
+	FreeLevelNodeList(&me->pStructHead);
+	FreeLevelNodeList(&me->pShadowHead);
+	FreeLevelNodeList(&me->pMercHead);
+	FreeLevelNodeList(&me->pRoofHead);
+	FreeLevelNodeList(&me->pOnRoofHead);
+	FreeLevelNodeList(&me->pTopmostHead);
 
-	pObjectNode = pMapTile->pObjectHead;
-	while ( pObjectNode != NULL )
+	while (me->pStructureHead != NULL)
 	{
-		pMapTile->pObjectHead = pObjectNode->pNext;
-		MemFree( pObjectNode );
-		pObjectNode = pMapTile->pObjectHead;
+		DeleteStructureFromWorld(me->pStructureHead);
 	}
-	pMapTile->pObjectHead = NULL;
-
-	pStructNode = pMapTile->pStructHead;
-	while ( pStructNode != NULL )
-	{
-		pMapTile->pStructHead = pStructNode->pNext;
-		MemFree( pStructNode );
-		pStructNode = pMapTile->pStructHead;
-	}
-	pMapTile->pStructHead = NULL;
-
-	pShadowNode = pMapTile->pShadowHead;
-	while ( pShadowNode != NULL )
-	{
-		pMapTile->pShadowHead = pShadowNode->pNext;
-		MemFree( pShadowNode );
-		pShadowNode = pMapTile->pShadowHead;
-	}
-	pMapTile->pShadowHead = NULL;
-
-	pMercNode = pMapTile->pMercHead;
-	while ( pMercNode != NULL )
-	{
-		pMapTile->pMercHead = pMercNode->pNext;
-		MemFree( pMercNode );
-		pMercNode = pMapTile->pMercHead;
-	}
-	pMapTile->pMercHead = NULL;
-
-	pRoofNode = pMapTile->pRoofHead;
-	while ( pRoofNode != NULL )
-	{
-		pMapTile->pRoofHead = pRoofNode->pNext;
-		MemFree( pRoofNode );
-		pRoofNode = pMapTile->pRoofHead;
-	}
-	pMapTile->pRoofHead = NULL;
-
-	pOnRoofNode = pMapTile->pOnRoofHead;
-	while ( pOnRoofNode != NULL )
-	{
-		pMapTile->pOnRoofHead = pOnRoofNode->pNext;
-		MemFree( pOnRoofNode );
-		pOnRoofNode = pMapTile->pOnRoofHead;
-	}
-	pMapTile->pOnRoofHead =  NULL;
-
-	pTopmostNode = pMapTile->pTopmostHead;
-	while ( pTopmostNode != NULL )
-	{
-		pMapTile->pTopmostHead = pTopmostNode->pNext;
-		MemFree( pTopmostNode );
-		pTopmostNode = pMapTile->pTopmostHead;
-	}
-	pMapTile->pTopmostHead =  NULL;
-
-	while (pMapTile->pStructureHead != NULL)
-	{
-		DeleteStructureFromWorld( pMapTile->pStructureHead );
-	}
-	pMapTile->pStructureHead = pMapTile->pStructureTail = NULL;
 }
-
 
 
 BOOLEAN LoadMapTileset( INT32 iTilesetID )
