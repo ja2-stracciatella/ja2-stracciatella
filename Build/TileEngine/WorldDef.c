@@ -414,50 +414,45 @@ static void DestroyTileSurfaces(void)
 
 static void CompileWorldTerrainIDs(void)
 {
-	INT16						sGridNo;
-	INT16						sTempGridNo;
-	LEVELNODE	*			pNode;
-	TILE_ELEMENT *	pTileElement;
-	UINT8						ubLoop;
-
- 	for( sGridNo = 0; sGridNo < WORLD_MAX; sGridNo++ )
+	for (INT16 sGridNo = 0; sGridNo < WORLD_MAX; ++sGridNo)
 	{
-		if (GridNoOnVisibleWorldTile( sGridNo ))
+		if (!GridNoOnVisibleWorldTile(sGridNo)) continue;
+
+		// Check if we have anything in object layer which has a terrain modifier
+		const LEVELNODE* n = gpWorldLevelData[sGridNo].pObjectHead;
+
+		if (n != NULL && giCurrentTilesetID == TEMP_19)
 		{
-			// Check if we have anything in object layer which has a terrain modifier
-			pNode = gpWorldLevelData[ sGridNo ].pObjectHead;
-
 			// ATE: CRAPOLA! Special case stuff here for the friggen pool since art was fu*ked up
-			if ( giCurrentTilesetID == TEMP_19 )
+			switch (n->usIndex)
 			{
-				// Get ID
-				if ( pNode != NULL )
-				{
-					if ( pNode->usIndex == ANOTHERDEBRIS4 || pNode->usIndex == ANOTHERDEBRIS6 ||pNode->usIndex == ANOTHERDEBRIS7 )
-					{
-						gpWorldLevelData[sGridNo].ubTerrainID = LOW_WATER;
-						continue;
-					}
-				}
+				case ANOTHERDEBRIS4:
+				case ANOTHERDEBRIS6:
+				case ANOTHERDEBRIS7:
+					gpWorldLevelData[sGridNo].ubTerrainID = LOW_WATER;
+					continue;
 			}
+		}
 
-			if (pNode == NULL || pNode->usIndex >= NUMBEROFTILES || gTileDatabase[ pNode->usIndex ].ubTerrainID == NO_TERRAIN)
-			{	// Try terrain instead!
-				pNode = gpWorldLevelData[ sGridNo ].pLandHead;
-			}
-			pTileElement = &(gTileDatabase[ pNode->usIndex ]);
-			if (pTileElement->ubNumberOfTiles > 1)
+		if (n == NULL                   ||
+				n->usIndex >= NUMBEROFTILES ||
+				gTileDatabase[n->usIndex].ubTerrainID == NO_TERRAIN)
+		{	// Try terrain instead!
+			n = gpWorldLevelData[sGridNo].pLandHead;
+		}
+
+		const TILE_ELEMENT* const te = &gTileDatabase[n->usIndex];
+		if (te->ubNumberOfTiles > 1)
+		{
+			for (UINT8 ubLoop = 0; ubLoop < te->ubNumberOfTiles; ++ubLoop)
 			{
-				for (ubLoop = 0; ubLoop < pTileElement->ubNumberOfTiles; ubLoop++)
-				{
-					sTempGridNo = sGridNo + pTileElement->pTileLocData[ubLoop].bTileOffsetX + pTileElement->pTileLocData[ubLoop].bTileOffsetY * WORLD_COLS;
-					gpWorldLevelData[sTempGridNo].ubTerrainID = pTileElement->ubTerrainID;
-				}
+				const INT16 sTempGridNo = sGridNo + te->pTileLocData[ubLoop].bTileOffsetX + te->pTileLocData[ubLoop].bTileOffsetY * WORLD_COLS;
+				gpWorldLevelData[sTempGridNo].ubTerrainID = te->ubTerrainID;
 			}
-			else
-			{
-				gpWorldLevelData[sGridNo].ubTerrainID = pTileElement->ubTerrainID;
-			}
+		}
+		else
+		{
+			gpWorldLevelData[sGridNo].ubTerrainID = te->ubTerrainID;
 		}
 	}
 }
