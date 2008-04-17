@@ -288,7 +288,6 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 	STRUCTURE *pFenceStructure, *pFenceBaseStructure;
 	LEVELNODE *pFenceNode;
 	INT8		bFenceDestructionPartner = -1;
-	UINT32	uiFenceType;
 
 	pFenceStructure = FindStructure( sStructGridNo, STRUCTURE_FENCE );
 
@@ -304,7 +303,7 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 			pFenceNode = FindLevelNodeBasedOnStructure( pFenceBaseStructure->sGridNo, pFenceBaseStructure );
 
 			// Get type from index...
-			GetTileType( pFenceNode->usIndex, &uiFenceType );
+			const UINT32 uiFenceType = GetTileType(pFenceNode->usIndex);
 
 			bFenceDestructionPartner = -1 * ( pFenceBaseStructure->pDBStructureRef->pDBStructure->bDestructionPartner );
 
@@ -338,7 +337,6 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 	INT8	bDestructionPartner=-1;
 	INT8		bDamageReturnVal;
 	BOOLEAN	fContinue;
-	UINT32	uiTileType;
 	INT16		sBaseGridNo;
 	BOOLEAN	fExplosive;
 
@@ -421,7 +419,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					// It's -ve and 1-based, change to +ve, 1 based
 					bDestructionPartner = ( -1 * pBase->pDBStructureRef->pDBStructure->bDestructionPartner );
 
-					GetTileType( pNode->usIndex, &uiTileType );
+					const UINT32 uiTileType = GetTileType(pNode->usIndex);
 
 					fContinue = 2;
 				}
@@ -845,7 +843,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 				// OK, we need to remove the water from the fountain
 				// Lots of HARD CODING HERE :(
 				// Get tile type
-				GetTileType( pNode->usIndex, &uiTileType );
+				const UINT32 uiTileType = GetTileType(pNode->usIndex);
 				// Check if we are a fountain!
 				if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[uiTileType], "fount1.sti") == 0)
 				{

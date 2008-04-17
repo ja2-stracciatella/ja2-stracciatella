@@ -95,14 +95,12 @@ void DebugLevelNodePage(void)
 
 static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT16* pusIndex)
 {
-	UINT32 fTileType;
-
 	// Look through all objects and Search for type
 	for (; pStartNode != NULL; pStartNode = pStartNode->pNext)
 	{
 		if (pStartNode->usIndex != NO_TILE && pStartNode->usIndex < NUMBEROFTILES)
 		{
-			GetTileType(pStartNode->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pStartNode->usIndex);
 			if (fTileType == fType)
 			{
 				*pusIndex = pStartNode->usIndex;
@@ -191,14 +189,12 @@ BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
 
 BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusObjectIndex )
 {
-	UINT32 fTileType;
-
 	// Look through all objects and Search for type
 	for (const LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL; pObject = pObject->pNext)
 	{
 		if (pObject->usIndex != NO_TILE && pObject->usIndex < NUMBEROFTILES)
 		{
-			GetTileType(pObject->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pObject->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				*pusObjectIndex = pObject->usIndex;
@@ -221,7 +217,6 @@ BOOLEAN TypeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusObjec
 
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all objects and Search for type
@@ -231,7 +226,7 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 
 		if (pObject->usIndex != NO_TILE && pObject->usIndex < NUMBEROFTILES)
 		{
-			GetTileType(pObject->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pObject->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				RemoveObject(iMapIndex, pObject->usIndex);
@@ -397,14 +392,12 @@ BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandInd
 
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	UINT32 fTileType;
-
 	// Look through all objects and Search for type
 	for (const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead; pLand != NULL; )
 	{
 		if (pLand->usIndex != NO_TILE)
 		{
-			GetTileType(pLand->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pLand->usIndex);
 
 			pLand = pLand->pNext; // XXX TODO0009 if pLand->usIndex == NO_TILE this is an endless loop
 
@@ -425,7 +418,6 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
 	const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all objects and Search for type
@@ -435,7 +427,7 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 		{
 			const LEVELNODE* Next = pLand->pNext;
 
-			GetTileType(pLand->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pLand->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				// Remove Item
@@ -515,7 +507,6 @@ BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, con
 BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes)
 {
 	LEVELNODE* pOldLand = NULL;
-	UINT32 fTileType;
 
 	*pubNumHigherTypes = 0;
 	*puiHigherTypes = NULL;
@@ -538,7 +529,7 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 	// Look through all objects and Search for height
 	while (pLand != NULL)
 	{
-		GetTileType(pLand->usIndex, &fTileType);
+		const UINT32 fTileType = GetTileType(pLand->usIndex);
 
 		// Advance to next
 		pOldLand = pLand;
@@ -837,7 +828,6 @@ BOOLEAN RemoveStructFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 
 BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all structs and Search for type
@@ -845,7 +835,7 @@ BOOLEAN RemoveAllStructsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 	{
 		if (pStruct->usIndex != NO_TILE)
 		{
-			GetTileType(pStruct->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pStruct->usIndex);
 
 			// Advance to next
 			const LEVELNODE* pOldStruct = pStruct;
@@ -902,7 +892,6 @@ BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
 	BOOLEAN				fInsertFound = FALSE;
 	BOOLEAN				fRoofFound = FALSE;
 	UINT8					ubRoofLevel=0;
-	UINT32				uiCheckType;
 	UINT8					ubLevel = 0;
 
 	// Get orientation of piece we want to add
@@ -928,7 +917,7 @@ BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
 			}
 		}
 
-		GetTileType(pStruct->usIndex, &uiCheckType);
+		const UINT32 uiCheckType = GetTileType(pStruct->usIndex);
 
 //		if (uiCheckType >= FIRSTFLOOR && uiCheckType <= LASTFLOOR)
 		if (uiCheckType >= FIRSTROOF && uiCheckType <= LASTROOF)
@@ -1131,7 +1120,6 @@ BOOLEAN RemoveShadowFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 
 BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all shadows and Search for type
@@ -1139,7 +1127,7 @@ BOOLEAN RemoveAllShadowsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 	{
 		if (pShadow->usIndex != NO_TILE)
 		{
-			GetTileType(pShadow->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pShadow->usIndex);
 
 			// Advance to next
 			const LEVELNODE* pOldShadow = pShadow;
@@ -1471,14 +1459,12 @@ BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIn
 
 BOOLEAN TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16* pusRoofIndex)
 {
-	UINT32 fTileType;
-
 	// Look through all objects and Search for type
 	for (const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
 	{
 		if (pRoof->usIndex != NO_TILE)
 		{
-			GetTileType(pRoof->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pRoof->usIndex);
 
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
@@ -1511,7 +1497,6 @@ BOOLEAN IndexExistsInRoofLayer(INT16 sGridNo, UINT16 usIndex)
 
 BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all Roofs and Search for type
@@ -1519,7 +1504,7 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 	{
 		if (pRoof->usIndex != NO_TILE)
 		{
-			GetTileType(pRoof->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pRoof->usIndex);
 
 			// Advance to next
 			const LEVELNODE* pOldRoof = pRoof;
@@ -1540,14 +1525,12 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 
 void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags)
 {
-	UINT32 fTileType;
-
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
 	{
 		if (pRoof->usIndex != NO_TILE)
 		{
-			GetTileType(pRoof->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pRoof->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				pRoof->uiFlags &= ~uiFlags;
@@ -1560,14 +1543,12 @@ void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT
 
 void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags)
 {
-	UINT32 fTileType;
-
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
 	{
 		if (pRoof->usIndex != NO_TILE)
 		{
-			GetTileType( pRoof->usIndex, &fTileType );
+			const UINT32 fTileType = GetTileType(pRoof->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				pRoof->uiFlags |= uiFlags;
@@ -1689,7 +1670,6 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 
 BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType )
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all OnRoofs and Search for type
@@ -1697,7 +1677,7 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 	{
 		if (pOnRoof->usIndex != NO_TILE)
 		{
-			GetTileType(pOnRoof->usIndex, &fTileType);
+			const UINT32 fTileType = GetTileType(pOnRoof->usIndex);
 
 			// Advance to next
 			const LEVELNODE* pOldOnRoof = pOnRoof;
@@ -1830,7 +1810,6 @@ BOOLEAN RemoveTopmostFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 
 BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
-	UINT32 fTileType;
 	BOOLEAN fRetVal = FALSE;
 
 	// Look through all topmosts and Search for type
@@ -1841,7 +1820,7 @@ BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32
 
 		if (pOldTopmost->usIndex != NO_TILE && pOldTopmost->usIndex < NUMBEROFTILES)
 		{
-			GetTileType( pOldTopmost->usIndex, &fTileType );
+			const UINT32 fTileType = GetTileType(pOldTopmost->usIndex);
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
 				// Remove Item

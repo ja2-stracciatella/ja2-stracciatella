@@ -155,7 +155,7 @@ BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UI
 #endif
 
 UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex);
-BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType );
+UINT32 GetTileType(UINT16 usIndex);
 UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 fType);

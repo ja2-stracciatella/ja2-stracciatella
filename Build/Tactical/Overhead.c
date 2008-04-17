@@ -3419,14 +3419,12 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 //Kris:
 BOOLEAN FlatRoofAboveGridNo(INT32 iMapIndex)
 {
-	UINT32 uiTileType;
 	for (const LEVELNODE* i = gpWorldLevelData[iMapIndex].pRoofHead; i; i = i->pNext)
 	{
-		if (i->usIndex != NO_TILE)
-		{
-			GetTileType(i->usIndex, &uiTileType);
-			if (uiTileType >= FIRSTROOF && uiTileType <= LASTROOF) return TRUE;
-		}
+		if (i->usIndex == NO_TILE) continue;
+
+		const UINT32 uiTileType = GetTileType(i->usIndex);
+		if (uiTileType >= FIRSTROOF && uiTileType <= LASTROOF) return TRUE;
 	}
 	return FALSE;
 }

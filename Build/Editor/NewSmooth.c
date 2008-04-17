@@ -716,7 +716,6 @@ void EraseBuilding( UINT32 iMapIndex )
 static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 {
 	LEVELNODE	*pStruct = NULL;
-	UINT32 uiTileType;
 
 	if( !gfBasement && !FloorAtGridNo( iMapIndex ) )
 	{	//We don't have ownership issues if there isn't a floor here.
@@ -729,7 +728,7 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 	{
 		if ( pStruct->usIndex != NO_TILE )
 		{
-			GetTileType( pStruct->usIndex, &uiTileType );
+			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
@@ -751,7 +750,7 @@ static void EraseFloorOwnedBuildingPieces(UINT32 iMapIndex)
 	{
 		if ( pStruct->usIndex != NO_TILE )
 		{
-			GetTileType( pStruct->usIndex, &uiTileType );
+			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
 			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
 					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 			{
@@ -979,14 +978,13 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 		if( FloorAtGridNo( iMapIndex ) )
 		{
 			LEVELNODE *pFloor;
-			UINT32 uiTileType;
 			//If a floor is found, then we are adding to an existing structure.
 			fNewBuilding = FALSE;
 			//Extract the floor type.  We already checked if there was a floor here, so it is assumed.
 			pFloor = gpWorldLevelData[ iMapIndex ].pLandHead;
 			while( pFloor )
 			{
-				GetTileType( pFloor->usIndex, &uiTileType );
+				const UINT32 uiTileType = GetTileType(pFloor->usIndex);
 				if( uiTileType >= FIRSTFLOOR && uiTileType <= LASTFLOOR )
 				{
 					usFloorType = (UINT16)uiTileType;
@@ -1131,7 +1129,6 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 void AnalyseCaveMapForStructureInfo()
 {
 	LEVELNODE *pStruct;
-	UINT32 uiTileType;
 	INT32 iMapIndex;
 	for( iMapIndex = 0; iMapIndex < WORLD_MAX; iMapIndex++ )
 	{
@@ -1140,7 +1137,7 @@ void AnalyseCaveMapForStructureInfo()
 		{
 			if ( pStruct->usIndex != NO_TILE )
 			{
-				GetTileType( pStruct->usIndex, &uiTileType );
+				const UINT32 uiTileType = GetTileType(pStruct->usIndex);
 				if( uiTileType == FIRSTWALL )
 				{
 					const UINT16 usSubIndex = GetSubIndexFromTileIndex(pStruct->usIndex);

@@ -211,7 +211,6 @@ UINT32 count, maxCount=0, calls=0;
 static void Fill(INT32 x, INT32 y)
 {
 	INT32 iMapIndex;
-	UINT32 uiCheckType;
 
 	count++;
 	calls++;
@@ -225,7 +224,7 @@ static void Fill(INT32 x, INT32 y)
 		count--;
 		return;
 	}
-	GetTileType( gpWorldLevelData[ iMapIndex ].pLandHead->usIndex , &uiCheckType );
+	const UINT32 uiCheckType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 	if( guiSearchType == uiCheckType )
 		PasteTextureCommon( iMapIndex );
 	else
@@ -250,7 +249,7 @@ void TerrainFill( UINT32 iMapIndex )
 {
 	INT16 sX, sY;
 	//determine what we should be looking for to replace...
-	GetTileType( gpWorldLevelData[ iMapIndex ].pLandHead->usIndex, &guiSearchType );
+	guiSearchType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 
 	//check terminating conditions
 	if( guiSearchType == CurrentPaste )

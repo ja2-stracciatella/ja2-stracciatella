@@ -162,12 +162,11 @@ BOOLEAN CalcDoorInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusDoorType, UIN
 BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
 	LEVELNODE *pWall = NULL;
-	UINT32 uiTileType;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		*pusWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -182,7 +181,7 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		*pusWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -200,7 +199,6 @@ BOOLEAN CalcWindowInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, U
 BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallType, UINT16 *pusIndex )
 {
 	LEVELNODE *pWall = NULL;
-	UINT32 uiTileType;
 
 	if( gubBrokenWallUIValue == 2 ) //the hole in the wall
 	{
@@ -212,7 +210,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		*pusWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -227,7 +225,7 @@ BOOLEAN CalcBrokenWallInfoUsingSmartMethod( UINT32 iMapIndex, UINT16 *pusWallTyp
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		*pusWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -504,14 +502,13 @@ void PasteSmartDoor( UINT32 iMapIndex )
 void PasteSmartWindow( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall = NULL;
-	UINT32 uiTileType;
 	UINT16 usWallType;
 	UINT16 usIndex;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -530,7 +527,7 @@ void PasteSmartWindow( UINT32 iMapIndex )
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -550,14 +547,13 @@ void PasteSmartWindow( UINT32 iMapIndex )
 void PasteSmartBrokenWall( UINT32 iMapIndex )
 {
 	LEVELNODE *pWall;
-	UINT32 uiTileType;
 	UINT16 usWallType;
 	UINT16 usIndex;
 
 	pWall = GetVerticalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{
@@ -580,7 +576,7 @@ void PasteSmartBrokenWall( UINT32 iMapIndex )
 	pWall = GetHorizontalWall( iMapIndex );
 	if( pWall )
 	{
-		GetTileType( pWall->usIndex, &uiTileType );
+		const UINT32 uiTileType = GetTileType(pWall->usIndex);
 		usWallType = (UINT16)uiTileType;
 		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
 		{

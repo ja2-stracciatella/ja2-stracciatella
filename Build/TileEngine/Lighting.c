@@ -403,7 +403,6 @@ UINT16 usTileNo, usSrcTileNo;
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 {
 //LEVELNODE *pStruct;
-//UINT32 uiType;
 UINT16 usTileNo;
 UINT16 usSrcTileNo;
 INT8		bDirection;
@@ -463,7 +462,7 @@ UINT8		ubTravelCost;
 	{
 		if ( pStruct->usIndex < NUMBEROFTILES )
 		{
-			GetTileType( pStruct->usIndex, &uiType );
+			const UINT32 uiType = GetTileType(pStruct->usIndex);
 
 			// ATE: Changed to use last decordations rather than last decal
 			// Could maybe check orientation value? Depends on our

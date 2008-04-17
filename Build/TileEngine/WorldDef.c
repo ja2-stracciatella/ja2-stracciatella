@@ -141,14 +141,13 @@ BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
 BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 {
 	LEVELNODE	*pLand;
-	UINT32 uiTileType;
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 	// Look through all objects and Search for type
 	while( pLand )
 	{
 		if ( pLand->usIndex != NO_TILE )
 		{
-			GetTileType( pLand->usIndex, &uiTileType );
+			const UINT32 uiTileType = GetTileType(pLand->usIndex);
 			if ( uiTileType >= FIRSTFLOOR && uiTileType <= LASTFLOOR )
 			{
 				return TRUE;
@@ -1383,7 +1382,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 {
 	INT32			cnt;
 	UINT32		uiSoldierSize;
-	UINT32		uiType;
 	UINT32		uiFlags;
 	UINT32		uiNumWarningsCaught = 0;
 	HWFILE		hfile;
@@ -1503,9 +1501,8 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			// DON'T WRITE ANY ITEMS
 			if ( !(pObject->uiFlags & ( LEVELNODE_ITEM ) ) )
 			{
-				UINT32 uiTileType;
 				//Make sure this isn't a UI Element
-				GetTileType( pObject->usIndex, &uiTileType );
+				const UINT32 uiTileType = GetTileType(pObject->usIndex);
 				if( uiTileType < FIRSTPOINTERS )
 					ObjectCount++;
 			}
@@ -1691,7 +1688,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			while( pTailLand != NULL )
 			{
 				// Write out object type and sub-index
-				GetTileType( pTailLand->usIndex, &uiType );
+				const UINT32 uiType = GetTileType(pTailLand->usIndex);
 				ubType = (UINT8)uiType;
 				GetTypeSubIndexFromTileIndexChar( uiType, pTailLand->usIndex, &ubTypeSubIndex );
 				FileWrite(hfile, &ubType, sizeof(UINT8));
@@ -1713,7 +1710,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			if ( !(pObject->uiFlags & ( LEVELNODE_ITEM ) ) )
 			{
 				// Write out object type and sub-index
-				GetTileType( pObject->usIndex, &uiType );
+				const UINT32 uiType = GetTileType(pObject->usIndex);
 				//Make sure this isn't a UI Element
 				if( uiType < FIRSTPOINTERS )
 				{
@@ -1739,7 +1736,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			if ( !(pStruct->uiFlags & ( LEVELNODE_ITEM ) ) )
 			{
 				// Write out object type and sub-index
-				GetTileType( pStruct->usIndex, &uiType );
+				const UINT32 uiType = GetTileType(pStruct->usIndex);
 				ubType = (UINT8)uiType;
 				GetTypeSubIndexFromTileIndexChar( uiType, pStruct->usIndex, &ubTypeSubIndex );
 					FileWrite(hfile, &ubType, sizeof(UINT8));
@@ -1761,7 +1758,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			{
 				// Write out object type and sub-index
 				// Write out object type and sub-index
-				GetTileType( pShadow->usIndex, &uiType );
+				const UINT32 uiType = GetTileType(pShadow->usIndex);
 				ubType = (UINT8)uiType;
 				GetTypeSubIndexFromTileIndexChar( uiType, pShadow->usIndex, &ubTypeSubIndex );
 				FileWrite(hfile, &ubType, sizeof(UINT8));
@@ -1786,7 +1783,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 			if ( pRoof->usIndex != SLANTROOFCEILING1 )
 			{
 				// Write out object type and sub-index
-				GetTileType( pRoof->usIndex, &uiType );
+				const UINT32 uiType = GetTileType(pRoof->usIndex);
 				ubType = (UINT8)uiType;
 				GetTypeSubIndexFromTileIndexChar( uiType, pRoof->usIndex, &ubTypeSubIndex );
 				FileWrite(hfile, &ubType, sizeof(UINT8));
@@ -1804,7 +1801,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		while( pOnRoof != NULL )
 		{
 			// Write out object type and sub-index
-			GetTileType( pOnRoof->usIndex, &uiType );
+			const UINT32 uiType = GetTileType(pOnRoof->usIndex);
 			ubType = (UINT8)uiType;
 			GetTypeSubIndexFromTileIndexChar( uiType, pOnRoof->usIndex, &ubTypeSubIndex );
 			FileWrite(hfile, &ubType, sizeof(UINT8));

@@ -269,7 +269,6 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 {
 	UINT8					level = 0;
 	LEVELNODE			*pLand;
-	UINT32				fTileType=0;
 
 	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
 
@@ -278,8 +277,7 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 
 		if ( pLand->usIndex != NO_TILE )
 		{
-			GetTileType( pLand->usIndex, &fTileType );
-
+			const UINT32 fTileType = GetTileType(pLand->usIndex);
 			if ( fTileType == uiNewType )
 			{
 				*pubLevel = level;
@@ -298,8 +296,7 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 
 UINT16 GetSubIndexFromTileIndex(const UINT16 usTileIndex)
 {
-	UINT32 uiType = 0;
-	GetTileType(usTileIndex, &uiType);
+	const UINT32 uiType = GetTileType(usTileIndex);
 	return usTileIndex - gTileTypeStartIndex[uiType] + 1;
 }
 
@@ -343,18 +340,10 @@ UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex)
 
 
 // Database access functions
-BOOLEAN	GetTileType( UINT16 usIndex, UINT32 *puiType )
+UINT32 GetTileType(const UINT16 usIndex)
 {
-  TILE_ELEMENT		TileElem;
-
-	CHECKF( usIndex != NO_TILE );
-
-	// Get tile element
-	TileElem = gTileDatabase[ usIndex ];
-
-	*puiType = TileElem.fType;
-
-	return( TRUE );
+	Assert(usIndex < lengthof(gTileDatabase));
+	return gTileDatabase[usIndex].fType;
 }
 
 
@@ -374,7 +363,6 @@ UINT8 GetTileTypeLogicalHeight(UINT32 fType)
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
 {
 	LEVELNODE		*pLand		 = NULL;
-	UINT32				fTileType=0;
 	UINT8					level = 0;
 	UINT8					ubSrcTypeLevel=0;
 	BOOLEAN				fFound = FALSE;
@@ -396,10 +384,8 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 
 	while( pLand != NULL )
 	{
-
 		// Get type and height
-		GetTileType( pLand->usIndex, &fTileType );
-
+		const UINT32 fTileType = GetTileType(pLand->usIndex);
 		if ( gTileTypeLogicalHeight[ fTileType ] > ubSrcLogHeight )
 		{
 			*pubLastLevel = level;
@@ -421,7 +407,6 @@ BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel 
 static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLevel)
 {
 	LEVELNODE		*pLand		 = NULL;
-	UINT32				fTileType=0;
 	UINT8					level = 0;
 	UINT8					ubSrcTypeLevel;
   TILE_ELEMENT		TileElem;
@@ -435,9 +420,8 @@ static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLe
 	// Look through all objects and Search for type
 	while( pLand != NULL )
 	{
-
 		// Get type and height
-		GetTileType( pLand->usIndex, &fTileType );
+		const UINT32 fTileType = GetTileType(pLand->usIndex);
 
 		if ( gTileTypeLogicalHeight[ fTileType ] < ubSrcLogHeight )
 		{

@@ -283,7 +283,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( !gfApplyChangesToTempFile )
 		return;
@@ -291,7 +290,7 @@ void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -310,7 +309,6 @@ void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( !gfApplyChangesToTempFile )
 		return;
@@ -318,7 +316,7 @@ void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -342,7 +340,6 @@ static void AddObjectFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex)
 void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( !gfApplyChangesToTempFile )
 		return;
@@ -350,7 +347,7 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -369,7 +366,6 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( !gfApplyChangesToTempFile )
 		return;
@@ -377,7 +373,7 @@ void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -693,12 +689,11 @@ static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap)
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -718,12 +713,11 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
 {
 	MODIFY_MAP Map;
-	UINT32	uiType;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	memset( &Map, 0, sizeof( MODIFY_MAP ) );
@@ -772,7 +766,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	HWFILE	hFile;
 	MODIFY_MAP *pMap;
 	BOOLEAN	fRetVal=FALSE;
-	UINT32	uiType;
 	UINT32	cnt;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, ubSectorZ );
@@ -813,7 +806,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	FileDelete( zMapName );
 
 	//Get the image type and subindex
-	GetTileType( usIndex, &uiType );
+	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )

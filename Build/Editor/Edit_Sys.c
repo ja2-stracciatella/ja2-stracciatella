@@ -54,10 +54,9 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 {
 	//UINT16		usUseIndex;
 	//UINT16		usType;
-	//UINT32		uiCheckType;
 	//UINT16		usDummy;
 
-	//GetTileType( gpWorldLevelData[ iMapIndex ].pLandHead->usIndex, &uiCheckType );
+	//const UINT32 uiCheckType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 	//RemoveLand( iMapIndex, gpWorldLevelData[ iMapIndex ].pLandHead->usIndex );
 	//SmoothTerrainRadius( iMapIndex, uiCheckType, 1, TRUE );
 
@@ -81,7 +80,6 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 void EraseMapTile( UINT32 iMapIndex )
 {
 	INT32			iEraseMode;
-	UINT32		uiCheckType;
 	if ( iMapIndex >= 0x8000 )
 		return;
 
@@ -104,6 +102,7 @@ void EraseMapTile( UINT32 iMapIndex )
 			RemoveTopmost( (UINT16)iMapIndex, FIRSTPOINTERS8 );
 			break;
 		case DRAW_MODE_GROUND:
+		{
 			// Is there ground on this tile? if not, get out o here
 			if ( gpWorldLevelData[ iMapIndex ].pLandHead == NULL )
 				break;
@@ -112,10 +111,12 @@ void EraseMapTile( UINT32 iMapIndex )
 			if ( gpWorldLevelData[ iMapIndex ].pLandHead->pNext == NULL )
 				break;
 			AddToUndoList( iMapIndex );
-			GetTileType( gpWorldLevelData[ iMapIndex ].pLandHead->usIndex, &uiCheckType );
+			const UINT32 uiCheckType = GetTileType(gpWorldLevelData[iMapIndex].pLandHead->usIndex);
 			RemoveLand( iMapIndex, gpWorldLevelData[ iMapIndex ].pLandHead->usIndex );
 			SmoothTerrainRadius( iMapIndex, uiCheckType, 1, TRUE );
 			break;
+		}
+
 		case DRAW_MODE_OSTRUCTS:
 		case DRAW_MODE_OSTRUCTS1:
 		case DRAW_MODE_OSTRUCTS2:
@@ -728,7 +729,6 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 
 static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 {
-	UINT32					uiNewType;
 	UINT16					usNewIndex;
 
 	// If here, we want to make, esentially, what is a type in
@@ -745,7 +745,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 
   // Get top tile index
 	// Remove all land peices except
-	GetTileType( usIndex, &uiNewType );
+	const UINT32 uiNewType = GetTileType(usIndex);
 
 	DeleteAllLandLayers( iMapIndex );
 

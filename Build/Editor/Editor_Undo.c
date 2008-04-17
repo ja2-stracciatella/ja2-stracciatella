@@ -497,7 +497,6 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 	LEVELNODE *pUndoLand;
 	LEVELNODE *pLand;
 	LEVELNODE *pWLand;
-	UINT32		uiCheckType, uiWCheckType;
 	BOOLEAN		fFound;
 
 	pUndoLand = pUndoTile->pLandHead;
@@ -509,7 +508,7 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 		pLand = gpWorldLevelData[ iWorldTile ].pLandHead;
 		while( pLand != NULL )
 		{
-			GetTileType( pLand->usIndex, &uiCheckType );
+			const UINT32 uiCheckType = GetTileType(pLand->usIndex);
 			SmoothTerrainRadius( iWorldTile, uiCheckType, 1, TRUE );
 			pLand = pLand->pNext;
 		}
@@ -520,7 +519,7 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 		pLand = pUndoLand;
 		while( pLand != NULL )
 		{
-			GetTileType( pLand->usIndex, &uiCheckType );
+			const UINT32 uiCheckType = GetTileType(pLand->usIndex);
 			SmoothTerrainRadius( iWorldTile, uiCheckType, 1, TRUE );
 			pLand = pLand->pNext;
 		}
@@ -530,13 +529,13 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 		pLand = pUndoLand;
 		while( pLand != NULL )
 		{
-			GetTileType( pLand->usIndex, &uiCheckType);
+			const UINT32 uiCheckType = GetTileType(pLand->usIndex);
 
 			fFound = FALSE;
 			pWLand = pWorldLand;
 			while( pWLand != NULL && !fFound )
 			{
-				GetTileType( pWLand->usIndex, &uiWCheckType);
+				const UINT32 uiWCheckType = GetTileType(pWLand->usIndex);
 
 				if ( uiCheckType == uiWCheckType )
 					fFound = TRUE;
@@ -553,13 +552,13 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 		pWLand = pWorldLand;
 		while( pWLand != NULL )
 		{
-			GetTileType( pWLand->usIndex, &uiWCheckType);
+			const UINT32 uiWCheckType = GetTileType(pWLand->usIndex);
 
 			fFound = FALSE;
 			pLand = pUndoLand;
 			while( pLand != NULL && !fFound )
 			{
-				GetTileType( pLand->usIndex, &uiCheckType);
+				const UINT32 uiCheckType = GetTileType(pLand->usIndex);
 
 				if ( uiCheckType == uiWCheckType )
 					fFound = TRUE;
