@@ -276,4 +276,6 @@ void InitLoadedWorld(void);
 
 BOOLEAN IsSoldierLight(const LIGHT_SPRITE* l);
 
+void FreeLevelNodeList(LEVELNODE** const head);
+
 #endif

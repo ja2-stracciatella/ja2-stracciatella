@@ -163,146 +163,49 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 }
 
 
-static BOOLEAN DeleteStackNodeContents(undo_stack* pCurrent);
-
-
-static BOOLEAN DeleteTopStackNode(void)
+static undo_stack* DeleteStackNode(undo_stack* const del)
 {
-	undo_stack		*pCurrent;
+	undo_struct* const undo = del->pData;
+	undo_stack*  const succ = del->pNext;
+	MemFree(del);
 
-	pCurrent = gpTileUndoStack;
-
-	DeleteStackNodeContents( pCurrent );
-
-	// Remove node from stack, and free it's memory
-	gpTileUndoStack	= gpTileUndoStack->pNext;
-	MemFree( pCurrent );
-
-	return( TRUE );
-}
-
-
-static undo_stack* DeleteThisStackNode(undo_stack* pThisNode)
-{
-	undo_stack		*pCurrent;
-	undo_stack		*pNextNode;
-
-	pCurrent = pThisNode;
-	pNextNode	= pThisNode->pNext;
-
-	// Remove node from stack, and free it's memory
-	DeleteStackNodeContents( pCurrent );
-	MemFree( pCurrent );
-
-	return( pNextNode );
-}
-
-
-static BOOLEAN DeleteStackNodeContents(undo_stack* pCurrent)
-{
-	undo_struct		*pData;
-	MAP_ELEMENT		*pMapTile;
-	LEVELNODE			*pLandNode;
-	LEVELNODE			*pObjectNode;
-	LEVELNODE			*pStructNode;
-	LEVELNODE			*pShadowNode;
-	LEVELNODE			*pMercNode;
-	LEVELNODE			*pTopmostNode;
-	LEVELNODE			*pRoofNode;
-	LEVELNODE			*pOnRoofNode;
-	STRUCTURE			*pStructureNode;
-
-	pData = pCurrent->pData;
-	pMapTile = pData->pMapTile;
-
-	if( !pMapTile )
-		return TRUE;		//light was saved -- mapelement wasn't saved.
-
-	// Free the memory associated with the map tile liked lists
-	pLandNode = pMapTile->pLandHead;
-	while ( pLandNode != NULL )
+	MAP_ELEMENT* const me = undo->pMapTile;
+	if (me != NULL) // light was saved -- mapelement, too?
 	{
-		pMapTile->pLandHead = pLandNode->pNext;
-		MemFree( pLandNode );
-		pLandNode = pMapTile->pLandHead;
-	}
+		// Free the memory associated with the map tile lists
+		FreeLevelNodeList(&me->pLandHead);
+		FreeLevelNodeList(&me->pObjectHead);
+		FreeLevelNodeList(&me->pStructHead);
+		FreeLevelNodeList(&me->pShadowHead);
+		FreeLevelNodeList(&me->pMercHead);
+		FreeLevelNodeList(&me->pRoofHead);
+		FreeLevelNodeList(&me->pOnRoofHead);
+		FreeLevelNodeList(&me->pTopmostHead);
 
-	pObjectNode = pMapTile->pObjectHead;
-	while ( pObjectNode != NULL )
-	{
-		pMapTile->pObjectHead = pObjectNode->pNext;
-		MemFree( pObjectNode );
-		pObjectNode = pMapTile->pObjectHead;
-	}
-
-	pStructNode = pMapTile->pStructHead;
-	while ( pStructNode != NULL )
-	{
-		pMapTile->pStructHead = pStructNode->pNext;
-		MemFree( pStructNode );
-		pStructNode = pMapTile->pStructHead;
-	}
-
-	pShadowNode = pMapTile->pShadowHead;
-	while ( pShadowNode != NULL )
-	{
-		pMapTile->pShadowHead = pShadowNode->pNext;
-		MemFree( pShadowNode );
-		pShadowNode = pMapTile->pShadowHead;
-	}
-
-	pMercNode = pMapTile->pMercHead;
-	while ( pMercNode != NULL )
-	{
-		pMapTile->pMercHead = pMercNode->pNext;
-		MemFree( pMercNode );
-		pMercNode = pMapTile->pMercHead;
-	}
-
-	pRoofNode = pMapTile->pRoofHead;
-	while ( pRoofNode != NULL )
-	{
-		pMapTile->pRoofHead = pRoofNode->pNext;
-		MemFree( pRoofNode );
-		pRoofNode = pMapTile->pRoofHead;
-	}
-
-	pOnRoofNode = pMapTile->pOnRoofHead;
-	while ( pOnRoofNode != NULL )
-	{
-		pMapTile->pOnRoofHead = pOnRoofNode->pNext;
-		MemFree( pOnRoofNode );
-		pOnRoofNode = pMapTile->pOnRoofHead;
-	}
-
-	pTopmostNode = pMapTile->pTopmostHead;
-	while ( pTopmostNode != NULL )
-	{
-		pMapTile->pTopmostHead = pTopmostNode->pNext;
-		MemFree( pTopmostNode );
-		pTopmostNode = pMapTile->pTopmostHead;
-	}
-
-	pStructureNode = pMapTile->pStructureHead;
-	while( pStructureNode )
-	{
-		pMapTile->pStructureHead = pStructureNode->pNext;
-		if( pStructureNode->usStructureID > INVALID_STRUCTURE_ID )
-		{ //Okay to delete the structure data -- otherwise, this would be
-			//merc structure data that we DON'T want to delete, because the merc node
-			//that hasn't been modified will still use this structure data!
-			MemFree( pStructureNode );
+		for (STRUCTURE* s = me->pStructureHead; s != NULL;)
+		{
+			STRUCTURE* const next = s->pNext;
+			if (s->usStructureID > INVALID_STRUCTURE_ID)
+			{ /* Okay to delete the structure data -- otherwise, this would be merc
+				 * structure data that we DON'T want to delete, because the merc node that
+				 * hasn't been modified will still use this structure data! */
+				MemFree(s);
+			}
+			s = next;
 		}
-		pStructureNode = pMapTile->pStructureHead;
+		me->pStructureHead = NULL;
+
+		MemFree(me);
+		MemFree(undo);
 	}
 
-	// Free the map tile structure itself
-	MemFree( pMapTile );
+	return succ;
+}
 
-	// Free the undo struct
-	MemFree( pData );
 
-	return( TRUE );
+static void DeleteTopStackNode(void)
+{
+	gpTileUndoStack = DeleteStackNode(gpTileUndoStack);
 }
 
 
@@ -330,7 +233,7 @@ static void CropStackToMaxLength(INT32 iMaxCmds)
 	if ( (iCmdCount >= iMaxCmds) && pCurrent != NULL )
 	{
 		while ( pCurrent->pNext != NULL )
-			pCurrent->pNext = DeleteThisStackNode( pCurrent->pNext );
+			pCurrent->pNext = DeleteStackNode(pCurrent->pNext);
 	}
 }
 

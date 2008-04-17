@@ -2965,7 +2965,7 @@ BOOLEAN NewWorld( void )
 }
 
 
-static void FreeLevelNodeList(LEVELNODE** const head)
+void FreeLevelNodeList(LEVELNODE** const head)
 {
 	LEVELNODE* i = *head;
 	*head = NULL;
