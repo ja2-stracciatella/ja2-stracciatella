@@ -132,8 +132,7 @@
 #define		ITEMDESC_PROS_START_Y		(110 + gsInvDescY)
 #define		ITEMDESC_CONS_START_X		( 11 + gsInvDescX )
 #define		ITEMDESC_CONS_START_Y		(120 + gsInvDescY)
-#define		ITEMDESC_ITEM_STATUS_X					( 6 + gsInvDescX )
-#define		ITEMDESC_ITEM_STATUS_Y					( 60 + gsInvDescY )
+static const SGPBox g_itemdesc_item_status_box = { 6, 60, 2, 51 };
 #define		DOTDOTDOT L"..."
 #define		COMMA_AND_SPACE L", "
 
@@ -145,15 +144,10 @@
 #define		MAP_ITEMDESC_PROS_START_Y		(230 + gsInvDescY)
 #define		MAP_ITEMDESC_CONS_START_X		( 23 + gsInvDescX )
 #define		MAP_ITEMDESC_CONS_START_Y		(240 + gsInvDescY)
-#define		MAP_ITEMDESC_ITEM_STATUS_X					( 18 + gsInvDescX )
-#define		MAP_ITEMDESC_ITEM_STATUS_Y					( 54 + gsInvDescY )
+static const SGPBox g_map_itemdesc_item_status_box = { 18, 54, 2, 42 };
 
-#define   ITEMDESC_ITEM_STATUS_HEIGHT     51
-#define   ITEMDESC_ITEM_STATUS_HEIGHT_MAP 42
 #define   ITEMDESC_DESC_WIDTH			301
 #define   MAP_ITEMDESC_DESC_WIDTH 220
-#define		ITEMDESC_ITEM_WIDTH			117
-#define		ITEMDESC_ITEM_HEIGHT		54
 
 #define		ITEMDESC_AMMO_TEXT_X	3
 #define		ITEMDESC_AMMO_TEXT_Y	1
@@ -2465,9 +2459,10 @@ void RenderItemDescriptionBox(void)
 
 	// Display status
 	{
-		const INT16 x = (in_map ? MAP_ITEMDESC_ITEM_STATUS_X : ITEMDESC_ITEM_STATUS_X);
-		const INT16 y = (in_map ? MAP_ITEMDESC_ITEM_STATUS_Y : ITEMDESC_ITEM_STATUS_Y);
-		const INT16 h = (in_map ? ITEMDESC_ITEM_STATUS_HEIGHT_MAP : ITEMDESC_ITEM_STATUS_HEIGHT);
+		const SGPBox* const box = (in_map ? &g_map_itemdesc_item_status_box : &g_itemdesc_item_status_box);
+		INT16         const x   = box->x + dx;
+		INT16         const y   = box->y + dy;
+		INT16         const h   = box->h;
 		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 
