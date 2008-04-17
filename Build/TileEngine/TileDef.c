@@ -296,15 +296,11 @@ BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
 }
 
 
-BOOLEAN GetSubIndexFromTileIndex( UINT16 usTileIndex, UINT16 *pusSubIndex )
+UINT16 GetSubIndexFromTileIndex(const UINT16 usTileIndex)
 {
-	UINT32 uiType=0;
-	if( GetTileType( usTileIndex, &uiType ) )
-	{
-		*pusSubIndex = usTileIndex - gTileTypeStartIndex[ uiType ] + 1;
-		return TRUE;
-	}
-	return FALSE;
+	UINT32 uiType = 0;
+	GetTileType(usTileIndex, &uiType);
+	return usTileIndex - gTileTypeStartIndex[uiType] + 1;
 }
 
 

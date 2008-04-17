@@ -1143,8 +1143,7 @@ void AnalyseCaveMapForStructureInfo()
 				GetTileType( pStruct->usIndex, &uiTileType );
 				if( uiTileType == FIRSTWALL )
 				{
-					UINT16 usSubIndex;
-					GetSubIndexFromTileIndex( pStruct->usIndex, &usSubIndex );
+					const UINT16 usSubIndex = GetSubIndexFromTileIndex(pStruct->usIndex);
 					if( usSubIndex >= 60 && usSubIndex <= 65 )
 					{
 						pStruct->uiFlags |= LEVELNODE_CAVE;

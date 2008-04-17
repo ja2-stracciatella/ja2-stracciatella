@@ -3164,8 +3164,7 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 			if (n->pStructureData == base_structure)
 			{
 				// Get Subindex for this wall...
-				UINT16 usSubIndex;
-				GetSubIndexFromTileIndex(n->usIndex, &usSubIndex);
+				const UINT16 usSubIndex = GetSubIndexFromTileIndex(n->usIndex);
 				switch (usSubIndex) // Check for broken pieces...
 				{
 					case 48:
