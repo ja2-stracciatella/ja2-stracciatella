@@ -3153,72 +3153,44 @@ static void AddWireFrame(INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced)
 }
 
 
-static UINT16 GetWireframeGraphicNumToUseForWall(INT16 sGridNo, STRUCTURE* pStructure)
+static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE* const s)
 {
-	LEVELNODE     *pNode = NULL;
-	UINT8					ubWallOrientation;
-  UINT16        usValue = 0;
-  UINT16        usSubIndex;
-	STRUCTURE     *pBaseStructure;
+	const STRUCTURE* const base_structure = FindBaseStructure(s);
+	if (base_structure)
+	{
+		// Find levelnode...
+		for (const LEVELNODE* n = gpWorldLevelData[sGridNo].pStructHead; n != NULL; n = n->pNext)
+		{
+			if (n->pStructureData == base_structure)
+			{
+				// Get Subindex for this wall...
+				UINT16 usSubIndex;
+				GetSubIndexFromTileIndex(n->usIndex, &usSubIndex);
+				switch (usSubIndex) // Check for broken pieces...
+				{
+					case 48:
+					case 52: return WIREFRAMES12;
+					case 49:
+					case 53: return WIREFRAMES13;
+					case 50:
+					case 54: return WIREFRAMES10;
+					case 51:
+					case 55: return WIREFRAMES11;
+				}
+				break;
+			}
+		}
+	}
 
-	ubWallOrientation = pStructure->ubWallOrientation;
-
-	pBaseStructure = FindBaseStructure( pStructure );
-
-  if ( pBaseStructure )
-  {
-    // Find levelnode...
-	  pNode = gpWorldLevelData[sGridNo].pStructHead;
-	  while( pNode != NULL )
-	  {
-		  if (pNode->pStructureData == pBaseStructure)
-		  {
-			  break;
-		  }
-		  pNode = pNode->pNext;
-	  }
-
-    if ( pNode != NULL )
-    {
-      // Get Subindex for this wall...
-      GetSubIndexFromTileIndex( pNode->usIndex, &usSubIndex );
-
-      // Check for broken peices...
-      if ( usSubIndex == 48 || usSubIndex == 52 )
-      {
-        return( WIREFRAMES12 );
-      }
-      else if ( usSubIndex == 49 || usSubIndex == 53 )
-      {
-        return( WIREFRAMES13 );
-      }
-      else if ( usSubIndex == 50 || usSubIndex == 54 )
-      {
-        return( WIREFRAMES10 );
-      }
-      else if ( usSubIndex == 51 || usSubIndex == 55 )
-      {
-        return( WIREFRAMES11 );
-      }
-    }
-  }
-
-	switch( ubWallOrientation )
+	switch (s->ubWallOrientation)
 	{
 		case OUTSIDE_TOP_LEFT:
-		case INSIDE_TOP_LEFT:
-
-      usValue = WIREFRAMES6;
-			break;
-
+		case INSIDE_TOP_LEFT:   return WIREFRAMES6; break;
 		case OUTSIDE_TOP_RIGHT:
-		case INSIDE_TOP_RIGHT:
-      usValue = WIREFRAMES5;
-      break;
+		case INSIDE_TOP_RIGHT:  return WIREFRAMES5; break;
+	}
 
-  }
-
-  return( usValue );
+	return 0;
 }
 
 
