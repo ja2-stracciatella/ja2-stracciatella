@@ -1,3 +1,4 @@
+(r3806) Fix a vanilla glitch: The tooltip area for pros/cons of a weapon was wider than the item description box in the map screen.
 (r3757) For OSX get the path to the game data from the bundle.
 (r3755) Remove caching of shade tables on disk.
 (r3721) Fix a vanilla bug: When starting a new game, the date of the first history entry was set to the date of the last loaded game.

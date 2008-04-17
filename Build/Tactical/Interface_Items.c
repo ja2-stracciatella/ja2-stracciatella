@@ -126,28 +126,18 @@
 #define		MAP_ITEMDESC_ITEM_X					(25 + gsInvDescX)
 #define		MAP_ITEMDESC_ITEM_Y					(6 + gsInvDescY)
 
-#define		ITEMDESC_DESC_START_X		(11 + gsInvDescX)
-#define		ITEMDESC_DESC_START_Y		(80 + gsInvDescY)
-#define		ITEMDESC_PROS_START_X		( 11 + gsInvDescX )
-#define		ITEMDESC_PROS_START_Y		(110 + gsInvDescY)
-#define		ITEMDESC_CONS_START_X		( 11 + gsInvDescX )
-#define		ITEMDESC_CONS_START_Y		(120 + gsInvDescY)
-static const SGPBox g_itemdesc_item_status_box = { 6, 60, 2, 51 };
+static const SGPBox g_itemdesc_desc_box            = { 11,  80, 301,  0 };
+static const SGPBox g_itemdesc_pros_cons_box       = { 11, 110, 301, 10 };
+static const SGPBox g_itemdesc_item_status_box     = {  6,  60,   2, 51 };
+
+static const SGPBox g_map_itemdesc_desc_box        = { 23, 170, 220,  0 };
+static const SGPBox g_map_itemdesc_pros_cons_box   = { 23, 230, 220, 10 };
+static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
+
 #define		DOTDOTDOT L"..."
 #define		COMMA_AND_SPACE L", "
 
 #define		ITEM_PROS_AND_CONS( usItem ) ( ( Item[ usItem ].usItemClass & IC_GUN) )
-
-#define		MAP_ITEMDESC_DESC_START_X		( 23 + gsInvDescX )
-#define		MAP_ITEMDESC_DESC_START_Y		(170 + gsInvDescY)
-#define		MAP_ITEMDESC_PROS_START_X		( 23 + gsInvDescX )
-#define		MAP_ITEMDESC_PROS_START_Y		(230 + gsInvDescY)
-#define		MAP_ITEMDESC_CONS_START_X		( 23 + gsInvDescX )
-#define		MAP_ITEMDESC_CONS_START_Y		(240 + gsInvDescY)
-static const SGPBox g_map_itemdesc_item_status_box = { 18, 54, 2, 42 };
-
-#define   ITEMDESC_DESC_WIDTH			301
-#define   MAP_ITEMDESC_DESC_WIDTH 220
 
 #define		ITEMDESC_AMMO_TEXT_X	3
 #define		ITEMDESC_AMMO_TEXT_Y	1
@@ -368,18 +358,6 @@ static const AttachmentGfxInfo g_map_attachment_info =
 		{ 170,  8 }, { 208,  8 },
 		{ 170, 34 }, { 208, 34 }
 	}
-};
-
-static const SGPRect gItemDescProsConsRects[] =
-{// NB the left value is calculated based on the width of the 'pros' and 'cons' labels
-	{ 0, 111, 313, 118 },
-	{ 0, 119, 313, 126 }
-};
-
-static const SGPRect gMapItemDescProsConsRects[] =
-{
-	{ 0, 231, 313, 238 },
-	{ 0, 239, 313, 246 },
 };
 
 
@@ -2023,18 +2001,18 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 	if (ITEM_PROS_AND_CONS(o->usItem))
 	{
-		const INT16 sProsConsIndent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
-		const SGPRect* const rects = (in_map ? gMapItemDescProsConsRects : gItemDescProsConsRects);
+		INT16         const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+		const SGPBox* const box              = (in_map ? &g_map_itemdesc_pros_cons_box : &g_itemdesc_pros_cons_box);
+		UINT16        const x                = box->x + pros_cons_indent + gsInvDescX;
+		UINT16              y                = box->y                    + gsInvDescY;
+		UINT16        const w                = box->w - pros_cons_indent;
+		UINT16        const h                = GetFontHeight(ITEMDESC_FONT);
 		for (INT32 i = 0; i < 2; ++i)
 		{
 			// Add region for pros/cons help text
-			const SGPRect* const rect = &rects[i];
-			const UINT16         l    = ITEMDESC_PROS_START_X + sProsConsIndent;
-			const UINT16         t    = gsInvDescY + rect->iTop;
-			const UINT16         r    = gsInvDescX + rect->iRight;
-			const UINT16         b    = gsInvDescY + rect->iBottom;
-			MOUSE_REGION* const  reg  = &gProsAndConsRegions[i];
-			MSYS_DefineRegion(reg, l, t, r, b, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+			MOUSE_REGION* const r = &gProsAndConsRegions[i];
+			MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+			y += box->h;
 
 			const wchar_t* label;
 			// use temp variable to prevent an initial comma from being displayed
@@ -2051,7 +2029,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			}
 			wchar_t text[SIZE_ITEM_PROS];
 			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
-			SetRegionFastHelpText(reg, text);
+			SetRegionFastHelpText(r, text);
 		}
 	}
 
@@ -2562,10 +2540,8 @@ void RenderItemDescriptionBox(void)
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{
-		const UINT16 x = (in_map ? MAP_ITEMDESC_DESC_START_X : ITEMDESC_DESC_START_X);
-		const UINT16 y = (in_map ? MAP_ITEMDESC_DESC_START_Y : ITEMDESC_DESC_START_Y);
-		const UINT16 w = (in_map ? MAP_ITEMDESC_DESC_WIDTH   : ITEMDESC_DESC_WIDTH);
-		DisplayWrappedString(x, y, w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		const SGPBox* const box = (in_map ? &g_map_itemdesc_desc_box : &g_itemdesc_desc_box);
+		DisplayWrappedString(dx + box->x, dy + box->y, box->w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	if (ITEM_PROS_AND_CONS(obj->usItem))
@@ -2588,42 +2564,30 @@ void RenderItemDescriptionBox(void)
 			mprintf(usX, usY, pStr);
 		}
 
-		const INT16 sProsConsIndent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
-
 		{
-			const INT32 x = (in_map ? MAP_ITEMDESC_PROS_START_X : ITEMDESC_PROS_START_X);
-			const INT32 y = (in_map ? MAP_ITEMDESC_PROS_START_Y : ITEMDESC_PROS_START_Y);
+			const SGPBox* const box = (in_map ? &g_map_itemdesc_pros_cons_box : &g_itemdesc_pros_cons_box);
+			INT32               x   = box->x + dx;
+			INT32         const y   = box->y + dy;
+			INT32               w   = box->w;
+			INT32         const h   = box->h;
 
 			SetFontForeground(FONT_MCOLOR_DKWHITE2);
 			SetFontShadow(ITEMDESC_FONTSHADOW3);
-			mprintf(x, y, gzProsLabel);
+			mprintf(x, y,     gzProsLabel);
+			mprintf(x, y + h, gzConsLabel);
 
-			const UINT32 w = (in_map ? MAP_ITEMDESC_DESC_WIDTH : ITEMDESC_DESC_WIDTH);
-			GenerateProsString(gzItemPros, obj, w - sProsConsIndent - StringPixLength(DOTDOTDOT, ITEMDESC_FONT));
-			if (gzItemPros[0] != L'\0')
-			{
-				SetFontForeground(FONT_BLACK);
-				SetFontShadow(ITEMDESC_FONTSHADOW2);
-				DisplayWrappedString(x + sProsConsIndent, y, ITEMDESC_DESC_WIDTH - sProsConsIndent, 2, ITEMDESC_FONT, FONT_BLACK, gzItemPros, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-			}
-		}
+			SetFontForeground(FONT_BLACK);
+			SetFontShadow(ITEMDESC_FONTSHADOW2);
 
-		{
-			const INT32 x = (in_map ? MAP_ITEMDESC_CONS_START_X : ITEMDESC_CONS_START_X);
-			const INT32 y = (in_map ? MAP_ITEMDESC_CONS_START_Y : ITEMDESC_CONS_START_Y);
+			const INT16 pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+			x += pros_cons_indent;
+			w -= pros_cons_indent + StringPixLength(DOTDOTDOT, ITEMDESC_FONT);
 
-			SetFontForeground(FONT_MCOLOR_DKWHITE2);
-			SetFontShadow(ITEMDESC_FONTSHADOW3);
-			mprintf(x, y, gzConsLabel);
+			GenerateProsString(gzItemPros, obj, w);
+			mprintf(x, y, gzItemPros);
 
-			const UINT32 w = (in_map ? MAP_ITEMDESC_DESC_WIDTH : ITEMDESC_DESC_WIDTH);
-			GenerateConsString(gzItemCons, obj, w - sProsConsIndent - StringPixLength(DOTDOTDOT, ITEMDESC_FONT));
-			if (gzItemCons[0] != L'\0')
-			{
-				SetFontForeground(FONT_BLACK);
-				SetFontShadow(ITEMDESC_FONTSHADOW2);
-				DisplayWrappedString(x + sProsConsIndent, y, ITEMDESC_DESC_WIDTH - sProsConsIndent, 2, ITEMDESC_FONT, FONT_BLACK, gzItemCons, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-			}
+			GenerateConsString(gzItemCons, obj, w);
+			mprintf(x, y + h, gzItemCons);
 		}
 	}
 
