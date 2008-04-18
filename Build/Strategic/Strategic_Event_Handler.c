@@ -38,7 +38,7 @@ UINT32 guiPabloExtraDaysBribed = 0;
 UINT8		gubCambriaMedicalObjects;
 
 
-static void CloseCrate(const INT16 x, const INT16 y, const INT8 z, const GridNo grid_no)
+static BOOLEAN CloseCrate(const INT16 x, const INT16 y, const INT8 z, const GridNo grid_no)
 {
 	// Determine if the sector is loaded
 	if (gWorldSectorX == x && gWorldSectorY == y && gbWorldSectorZ == z)
@@ -57,72 +57,59 @@ static void CloseCrate(const INT16 x, const INT16 y, const INT8 z, const GridNo 
 static void DropOffItemsInMeduna(UINT8 ubOrderNum);
 
 
-void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
+void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 {
-	UINT8	i,j;
-	UINT16	usItem;
-	OBJECTTYPE		Object;
-	UINT16 usMapPos, usStandardMapPos;
-	UINT16 usNumberOfItems;
-	UINT32	uiCount = 0,uiStolenCount = 0;
 	static UINT8 ubShipmentsSinceNoBribes = 0;
-	UINT32	uiChanceOfTheft;
-	BOOLEAN		fPablosStoleSomething = FALSE;
-	BOOLEAN		fPablosStoleLastItem = FALSE;
-	OBJECTTYPE	*pObject=NULL;
-	OBJECTTYPE	*pStolenObject=NULL;
-	BOOLEAN			fThisShipmentIsFromJohnKulba = FALSE;	//if it is, dont add an email
-	UINT8		ubItemsDelivered;
-	UINT8		ubTempNumItems;
-	UINT8		ubItemsPurchased;
 
-	usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+	NewBobbyRayOrderStruct* const shipment = &gpNewBobbyrShipments[ubOrderID];
 
 	// if the delivery is for meduna, drop the items off there instead
-	if( gpNewBobbyrShipments[ ubOrderID ].fActive && gpNewBobbyrShipments[ ubOrderID ].ubDeliveryLoc == BR_MEDUNA )
+	if (shipment->fActive && shipment->ubDeliveryLoc == BR_MEDUNA)
 	{
-		DropOffItemsInMeduna( ubOrderID );
+		DropOffItemsInMeduna(ubOrderID);
 		return;
 	}
 
-	if (CheckFact( FACT_NEXT_PACKAGE_CAN_BE_LOST, 0 ))
+	UINT16 usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+	if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_LOST, 0))
 	{
-		SetFactFalse( FACT_NEXT_PACKAGE_CAN_BE_LOST );
-		if (Random( 100 ) < 50)
+		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_LOST);
+		if (Random(100) < 50)
 		{
 			// lose the whole shipment!
-			gpNewBobbyrShipments[ ubOrderID ].fActive = FALSE;
-			SetFactTrue( FACT_LAST_SHIPMENT_CRASHED );
+			shipment->fActive = FALSE;
+			SetFactTrue(FACT_LAST_SHIPMENT_CRASHED);
 			return;
 		}
-
 	}
-	else if (CheckFact( FACT_NEXT_PACKAGE_CAN_BE_DELAYED, 0 ))
+	else if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_DELAYED, 0))
 	{
 		// shipment went to wrong airport... reroute all items to a temporary
 		// gridno to represent the other airport (and damage them)
-		SetFactTrue( FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT );
+		SetFactTrue(FACT_LAST_SHIPMENT_WENT_TO_WRONG_AIRPORT);
+		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_DELAYED);
 		usStandardMapPos = LOST_SHIPMENT_GRIDNO;
-		SetFactFalse( FACT_NEXT_PACKAGE_CAN_BE_DELAYED );
 	}
-	else if ( (gTownLoyalty[ DRASSEN ].ubRating < 20) || StrategicMap[ CALCULATE_STRATEGIC_INDEX( 13, MAP_ROW_B ) ].fEnemyControlled )
+	else if (gTownLoyalty[DRASSEN].ubRating < 20 || StrategicMap[CALCULATE_STRATEGIC_INDEX(13, MAP_ROW_B)].fEnemyControlled)
 	{
 		// loss of the whole shipment
-		gpNewBobbyrShipments[ ubOrderID ].fActive = FALSE;
-
-		SetFactTrue( FACT_AGENTS_PREVENTED_SHIPMENT );
+		shipment->fActive = FALSE;
+		SetFactTrue(FACT_AGENTS_PREVENTED_SHIPMENT);
 		return;
 	}
 
 	//Must get the total number of items ( all item types plus how many of each item type ordered )
-	usNumberOfItems = 0;
-	for(i=0; i<gpNewBobbyrShipments[ ubOrderID ].ubNumberPurchases; i++)
+	BOOLEAN fThisShipmentIsFromJohnKulba = FALSE; //if it is, dont add an email
+	UINT16  usNumberOfItems              = 0;
+	for (UINT8 i = 0; i < shipment->ubNumberPurchases; ++i)
 	{
+		const BobbyRayPurchaseStruct* const purchase = &shipment->BobbyRayPurchase[i];
+
 		// Count how many items were purchased
-		usNumberOfItems += gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].ubNumberPurchased;
+		usNumberOfItems += purchase->ubNumberPurchased;
 
 		//if any items are AutoMags
-		if( gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].usItemIndex == AUTOMAG_III )
+		if (purchase->usItemIndex == AUTOMAG_III)
 		{
 			//This shipment is from John Kulba, dont add an email from bobby ray
 			fThisShipmentIsFromJohnKulba = TRUE;
@@ -132,22 +119,23 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	const BOOLEAN fSectorLoaded =
 		CloseCrate(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO);
 
-	//if we are NOT currently in the right sector
-	if( !fSectorLoaded )
+	OBJECTTYPE* pObject       = NULL;
+	OBJECTTYPE* pStolenObject = NULL;
+	if (!fSectorLoaded) // if we are NOT currently in the right sector
 	{
 		//build an array of objects to be added
 		pObject       = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
 		pStolenObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
-		if( pObject == NULL || pStolenObject == NULL)
-			return;
+		if (pObject == NULL || pStolenObject == NULL) return;
 	}
 
 	// check for potential theft
-	if (CheckFact( FACT_PABLO_WONT_STEAL, 0 ))
+	UINT32 uiChanceOfTheft;
+	if (CheckFact(FACT_PABLO_WONT_STEAL, 0))
 	{
 		uiChanceOfTheft = 0;
 	}
-	else if (CheckFact( FACT_PABLOS_BRIBED, 0 ))
+	else if (CheckFact(FACT_PABLOS_BRIBED, 0))
 	{
 		// Since Pacos has some money, reduce record of # of shipments since last bribed...
 		ubShipmentsSinceNoBribes /= 2;
@@ -155,137 +143,126 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	}
 	else
 	{
-		ubShipmentsSinceNoBribes++;
+		++ubShipmentsSinceNoBribes;
 		// this chance might seem high but it's only applied at most to every second item
-		uiChanceOfTheft = 12 + Random( 4 * ubShipmentsSinceNoBribes );
+		uiChanceOfTheft = 12 + Random(4 * ubShipmentsSinceNoBribes);
 	}
 
-	uiCount=0;
-	for ( i=0; i<gpNewBobbyrShipments[ ubOrderID ].ubNumberPurchases; i++ )
+	UINT32  uiCount               = 0;
+	UINT32  uiStolenCount         = 0;
+	BOOLEAN fPablosStoleSomething = FALSE;
+	BOOLEAN fPablosStoleLastItem  = FALSE;
+	for (UINT8 i = 0; i < shipment->ubNumberPurchases; ++i)
 	{
-		//Get the item
-		usItem = gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].usItemIndex;
+		const BobbyRayPurchaseStruct* const purchase = &shipment->BobbyRayPurchase[i];
+		UINT16                        const usItem   = purchase->usItemIndex;
 
-		//Create the item
-		CreateItem( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, &Object );
+		OBJECTTYPE Object;
+		CreateItem(usItem, purchase->bItemQuality, &Object);
 
-		// if it's a gun
-		if (Item [ usItem ].usItemClass == IC_GUN )
+		if (Item[usItem].usItemClass == IC_GUN)
 		{
-			// Empty out the bullets put in by CreateItem().  We now sell all guns empty of bullets.  This is done for BobbyR
-			// simply to be consistent with the dealers in Arulco, who must sell guns empty to prevent ammo cheats by players.
+			/* Empty out the bullets put in by CreateItem().  We now sell all guns
+			 * empty of bullets.  This is done for BobbyR simply to be consistent with
+			 * the dealers in Arulco, who must sell guns empty to prevent ammo cheats
+			 * by players. */
 			Object.ubGunShotsLeft = 0;
 		}
 
-		ubItemsDelivered = 0;
-
 		//add all the items that were purchased
-		ubItemsPurchased = gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].ubNumberPurchased;
-		for( j=0; j < ubItemsPurchased; j++)
+		UINT8 const ubItemsPurchased = purchase->ubNumberPurchased;
+		UINT8       ubItemsDelivered = 0;
+		for (UINT8 j = 0; j < ubItemsPurchased; ++j)
 		{
 			// Pablos might steal stuff but only:
 			// - if it's one of a group of items
 			// - if he didn't steal the previous item in the group (so he never steals > 50%)
 			// - if he has been bribed, he only sneaks out stuff which is cheap
-			if( fSectorLoaded )
+			if (fSectorLoaded)
 			{
 				// add ubItemsPurchased to the chance of theft so the chance increases when there are more items of a kind being ordered
-				if ( !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + ubItemsPurchased) )
+				if (!fPablosStoleLastItem && uiChanceOfTheft > 0 && Random(100) < uiChanceOfTheft + ubItemsPurchased)
 				{
-					uiStolenCount++;
-					usMapPos = PABLOS_STOLEN_DEST_GRIDNO; // off screen!
+					++uiStolenCount;
 					fPablosStoleSomething = TRUE;
-					fPablosStoleLastItem = TRUE;
+					fPablosStoleLastItem  = TRUE;
 				}
 				else
 				{
-					usMapPos = usStandardMapPos;
 					fPablosStoleLastItem = FALSE;
 
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
-						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
-						{
-							Object.bStatus[0] = 1;
-						}
-						AddItemToPool( usMapPos, &Object, -1, 0, 0, 0 );
+						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
+						Object.bStatus[0] = max(1, status);
+						AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
 					}
 					else
 					{
 						// record # delivered for later addition...
-						ubItemsDelivered++;
+						++ubItemsDelivered;
 					}
 				}
 			}
 			else
 			{
-				if ( j > 1 && !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random( 100 ) < (uiChanceOfTheft + j) )
+				if (j > 1 && !fPablosStoleLastItem && uiChanceOfTheft > 0 && Random(100) < uiChanceOfTheft + j)
 				{
 					pStolenObject[uiStolenCount] = Object;
-					uiStolenCount++;
+					++uiStolenCount;
 					fPablosStoleSomething = TRUE;
-					fPablosStoleLastItem = TRUE;
+					fPablosStoleLastItem  = TRUE;
 				}
 				else
 				{
 					fPablosStoleLastItem = FALSE;
 
-					//else we are not currently in the sector, so we build an array of items to add in one lump
-					//add the item to the item array
-
+					/* else we are not currently in the sector, so we build an array of
+					 * items to add in one lump add the item to the item array */
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						Object.bStatus[0] = (INT8) ( ( (70 + Random( 11 )) * (INT32) Object.bStatus[0] ) / 100 );
-						// make damn sure it can't hit 0
-						if (Object.bStatus[0] == 0)
-						{
-							Object.bStatus[0] = 1;
-						}
-						pObject[uiCount] = Object;
-						uiCount++;
+						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
+						Object.bStatus[0] = max(1, status);
+						pObject[uiCount++] = Object;
 					}
 					else
 					{
-						ubItemsDelivered++;
+						++ubItemsDelivered;
 					}
 				}
 			}
 		}
 
-		if ( gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].ubNumberPurchased == 1 && ubItemsDelivered == 1 )
+		if (purchase->ubNumberPurchased == 1 && ubItemsDelivered == 1)
 		{
 			// the item in Object will be the item to deliver
-			if( fSectorLoaded )
+			if (fSectorLoaded)
 			{
-				AddItemToPool( usStandardMapPos, &Object, -1, 0, 0, 0 );
+				AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
 			}
 			else
 			{
-				pObject[uiCount] = Object;
-				uiCount++;
+				pObject[uiCount++] = Object;
 			}
 		}
 		else
 		{
-			while ( ubItemsDelivered )
+			while (ubItemsDelivered)
 			{
 				// treat 0s as 1s :-)
-				ubTempNumItems = __min( ubItemsDelivered, __max( 1, Item[ usItem ].ubPerPocket ) );
-				CreateItems( usItem, gpNewBobbyrShipments[ ubOrderID ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
+				const UINT8 ubTempNumItems = __min(ubItemsDelivered, __max(1, Item[usItem].ubPerPocket));
+				CreateItems(usItem, purchase->bItemQuality, ubTempNumItems, &Object);
 
 				// stack as many as possible
-				if( fSectorLoaded )
+				if (fSectorLoaded)
 				{
-					AddItemToPool( usStandardMapPos, &Object, -1, 0, 0, 0 );
+					AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
 				}
 				else
 				{
-					pObject[uiCount] = Object;
-					uiCount++;
+					pObject[uiCount++] = Object;
 				}
 
 				ubItemsDelivered -= ubTempNumItems;
@@ -294,90 +271,78 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	}
 
 	//if we are NOT currently in the sector
-	if( !fSectorLoaded )
+	if (!fSectorLoaded)
 	{
 		//add all the items from the array that was built above
-		usMapPos = PABLOS_STOLEN_DEST_GRIDNO;
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		if (!AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1))
-		{
-			//Error adding the items
-			//return;
-		}
+		AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1);
 		if (uiStolenCount > 0)
 		{
-			if (!AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, -1))
-			{
-				//Error adding the items
-				//return;
-			}
+			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, -1);
 		}
-		MemFree( pObject );
-		MemFree( pStolenObject );
-		pObject = NULL;
-		pStolenObject = NULL;
+		MemFree(pObject);
+		MemFree(pStolenObject);
 	}
 
 	if (fPablosStoleSomething)
 	{
-		SetFactTrue( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT );
+		SetFactTrue(FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT);
 	}
 	else
 	{
-		SetFactFalse( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT );
+		SetFactFalse(FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT);
 	}
 
-	SetFactFalse( FACT_LARGE_SIZED_OLD_SHIPMENT_WAITING );
+	SetFactFalse(FACT_LARGE_SIZED_OLD_SHIPMENT_WAITING);
 
-	if ( CheckFact( FACT_NEXT_PACKAGE_CAN_BE_DELAYED, 0 ) )
+	if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_DELAYED, 0))
 	{
-		SetFactFalse( FACT_MEDIUM_SIZED_SHIPMENT_WAITING );
-		SetFactFalse( FACT_LARGE_SIZED_SHIPMENT_WAITING );
-		SetFactFalse( FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING );
+		SetFactFalse(FACT_MEDIUM_SIZED_SHIPMENT_WAITING);
+		SetFactFalse(FACT_LARGE_SIZED_SHIPMENT_WAITING);
+		SetFactFalse(FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING);
 	}
 	else
 	{
 		if (usNumberOfItems - uiStolenCount <= 5)
 		{
-			SetFactFalse( FACT_MEDIUM_SIZED_SHIPMENT_WAITING );
-			SetFactFalse( FACT_LARGE_SIZED_SHIPMENT_WAITING );
+			SetFactFalse(FACT_MEDIUM_SIZED_SHIPMENT_WAITING);
+			SetFactFalse(FACT_LARGE_SIZED_SHIPMENT_WAITING);
 		}
 		else if (usNumberOfItems - uiStolenCount <= 15)
 		{
-			SetFactTrue( FACT_MEDIUM_SIZED_SHIPMENT_WAITING );
-			SetFactFalse( FACT_LARGE_SIZED_SHIPMENT_WAITING );
+			SetFactTrue(FACT_MEDIUM_SIZED_SHIPMENT_WAITING);
+			SetFactFalse(FACT_LARGE_SIZED_SHIPMENT_WAITING);
 		}
 		else
 		{
-			SetFactFalse( FACT_MEDIUM_SIZED_SHIPMENT_WAITING );
-			SetFactTrue( FACT_LARGE_SIZED_SHIPMENT_WAITING );
+			SetFactFalse(FACT_MEDIUM_SIZED_SHIPMENT_WAITING);
+			SetFactTrue(FACT_LARGE_SIZED_SHIPMENT_WAITING);
 		}
 
 		// this shipment isn't old yet...
-		SetFactTrue( FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING );
+		SetFactTrue(FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING);
 
 		// set up even to make shipment "old"
-		AddSameDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay() + 120, FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING );
+		AddSameDayStrategicEvent(EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay() + 120, FACT_REALLY_NEW_BOBBYRAY_SHIPMENT_WAITING);
 	}
 
 	//We have received the shipment so fActice becomes fALSE
-	gpNewBobbyrShipments[ ubOrderID ].fActive = FALSE;
+	shipment->fActive = FALSE;
 
 	//Stop time compression the game
-	StopTimeCompression( );
+	StopTimeCompression();
 
 	//if the shipment is NOT from John Kulba, send an email
-	if( !fThisShipmentIsFromJohnKulba )
+	if (!fThisShipmentIsFromJohnKulba)
 	{
 		//Add an email from Bobby r telling the user the shipment 'Should' be there
-		AddEmail( BOBBYR_SHIPMENT_ARRIVED, BOBBYR_SHIPMENT_ARRIVED_LENGTH, BOBBY_R, GetWorldTotalMin() );
+		AddEmail(BOBBYR_SHIPMENT_ARRIVED, BOBBYR_SHIPMENT_ARRIVED_LENGTH, BOBBY_R, GetWorldTotalMin());
 	}
 	else
 	{
 		//if the shipment is from John Kulba
-
 		//Add an email from kulba telling the user the shipment is there
-		AddEmail( JOHN_KULBA_GIFT_IN_DRASSEN, JOHN_KULBA_GIFT_IN_DRASSEN_LENGTH, JOHN_KULBA, GetWorldTotalMin() );
+		AddEmail(JOHN_KULBA_GIFT_IN_DRASSEN, JOHN_KULBA_GIFT_IN_DRASSEN_LENGTH, JOHN_KULBA, GetWorldTotalMin());
 	}
 }
 
