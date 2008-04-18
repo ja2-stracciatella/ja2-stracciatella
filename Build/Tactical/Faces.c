@@ -1494,55 +1494,38 @@ void ShutupaYoFace(FACETYPE* const face)
 }
 
 
-static void SetupFinalTalkingDelay(FACETYPE* pFace)
+static void SetupFinalTalkingDelay(FACETYPE* const f)
 {
-	pFace->fFinishTalking = TRUE;
-
-	pFace->fAnimatingTalking = FALSE;
-
-	pFace->uiTalkingTimer = GetJA2Clock( );
-
-	if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ]  )
-	{
-		//pFace->uiTalkingDuration = FINAL_TALKING_DURATION;
-		pFace->uiTalkingDuration = 300;
-	}
-	else
-	{
-		pFace->uiTalkingDuration = 300;
-	}
-
-	pFace->sMouthFrame = 0;
+	f->fFinishTalking    = TRUE;
+	f->fAnimatingTalking = FALSE;
+	f->uiTalkingTimer    = GetJA2Clock();
+	f->uiTalkingDuration = 300;
+	f->sMouthFrame       = 0;
 
 	// Close mouth!
-	if ( !pFace->fDisabled )
+	if (!f->fDisabled)
 	{
-		if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
+		if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
 		{
-			FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
+			FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
 		}
 		else
 		{
-			FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY, pFace->usMouthWidth, pFace->usMouthHeight);
+			FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
 		}
 	}
 
-	// Setup flag to wait for advance ( because we have no text! )
-	if ( gGameSettings.fOptions[ TOPTION_KEY_ADVANCE_SPEECH ] && ( pFace->uiFlags & FACE_POTENTIAL_KEYWAIT ) )
+	// Setup flag to wait for advance (because we have no text!)
+	if (gGameSettings.fOptions[TOPTION_KEY_ADVANCE_SPEECH] && f->uiFlags & FACE_POTENTIAL_KEYWAIT)
 	{
-
 		// Check if we have had valid speech!
-		if ( !pFace->fValidSpeech || gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
+		if (!f->fValidSpeech || gGameSettings.fOptions[TOPTION_SUBTITLES])
 		{
-			// Set false!
-			pFace->fFinishTalking = FALSE;
+			f->fFinishTalking = FALSE;
 			// Set waiting for advance to true!
 			gfUIWaitingForUserSpeechAdvance = TRUE;
 		}
 	}
 
-	// Set final delay!
-	pFace->fValidSpeech = FALSE;
-
-
+	f->fValidSpeech = FALSE;
 }
