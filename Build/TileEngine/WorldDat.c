@@ -16,81 +16,53 @@ static void SetTilesetThreeTerrainValues(void);
 static void SetTilesetTwoTerrainValues(void);
 
 
-void InitEngineTilesets( )
+void InitEngineTilesets(void)
 {
-	UINT8			ubNumSets;
-	UINT32		cnt, cnt2, uiNumFiles;
-//	FILE					*hfile;
-	HWFILE			hfile;
-	CHAR8			zName[32];
-
-	//OPEN FILE
-//	hfile = fopen( "BINARYDATA/JA2SET.DAT", "rb" );
-	hfile = FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ);
-	if ( !hfile  )
+	const HWFILE f = FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ);
+	if (!f)
 	{
-		SET_ERROR( "Cannot open tileset data file" );
+		SET_ERROR("Cannot open tileset data file");
 		return;
 	}
 
-
 	// READ # TILESETS and compare
-//	fread( &ubNumSets, sizeof( ubNumSets ), 1, hfile );
-	FileRead(hfile, &ubNumSets, sizeof(ubNumSets));
-	// CHECK
-	if ( ubNumSets != NUM_TILESETS )
+	UINT8 ubNumSets;
+	FileRead(f, &ubNumSets, sizeof(ubNumSets));
+	if (ubNumSets != NUM_TILESETS)
 	{
-		// Report error
-		SET_ERROR( "Number of tilesets in code does not match data file" );
-		return;
+		SET_ERROR("Number of tilesets in code does not match data file");
+		goto ret_close;
 	}
 
 	// READ #files
-//	fread( &uiNumFiles, sizeof( uiNumFiles ), 1, hfile );
-	FileRead(hfile, &uiNumFiles, sizeof(uiNumFiles));
-
-	// COMPARE
-	if ( uiNumFiles != NUMBEROFTILETYPES )
+	UINT32 uiNumFiles;
+	FileRead(f, &uiNumFiles, sizeof(uiNumFiles));
+	if (uiNumFiles != NUMBEROFTILETYPES)
 	{
-		// Report error
-		SET_ERROR( "Number of tilesets slots in code does not match data file" );
-		return;
+		SET_ERROR("Number of tilesets slots in code does not match data file");
+		goto ret_close;
 	}
-
 
 	// Loop through each tileset, load name then files
-	for ( cnt = 0; cnt < NUM_TILESETS; cnt++ )
+	for (TILESET* ts = gTilesets; ts != endof(gTilesets); ++ts)
 	{
 		//Read name
-//		fread( &zName, sizeof( zName ), 1, hfile );
-		FileRead( hfile, &zName, sizeof(zName));
+		char zName[32];
+		FileRead(f, &zName, sizeof(zName));
+		swprintf(ts->zName, lengthof(ts->zName), L"%hs", zName);
 
 		// Read ambience value
-//		fread( &(gTilesets[ cnt ].ubAmbientID), sizeof( UINT8), 1, hfile );
-		FileRead(hfile, &gTilesets[cnt].ubAmbientID, sizeof(UINT8));
-
-		// Set into tileset
-		swprintf(gTilesets[cnt].zName, lengthof(gTilesets[cnt].zName), L"%hs", zName);
+		FileRead(f, &ts->ubAmbientID, sizeof(UINT8));
 
 		// Loop for files
-		for ( cnt2 = 0; cnt2 < uiNumFiles; cnt2++ )
+		for (UINT32 cnt2 = 0; cnt2 < uiNumFiles; ++cnt2)
 		{
 			// Read file name
-//			fread( &zName, sizeof( zName ), 1, hfile );
-			FileRead(hfile, &zName, sizeof(zName));
-
-			// Set into database
-			strcpy( gTilesets[ cnt ].TileSurfaceFilenames[ cnt2 ], zName );
-
+			FileRead(f, ts->TileSurfaceFilenames[cnt2], sizeof(ts->TileSurfaceFilenames[cnt2]));
 		}
-
 	}
 
-//	fclose( hfile );
-	FileClose( hfile );
-
-
-	// SET CALLBACK FUNTIONS!!!!!!!!!!!!!
+	// Set callbacks
 	gTilesets[CAVES_1      ].MovementCostFnc = SetTilesetTwoTerrainValues;
 	gTilesets[AIRSTRIP     ].MovementCostFnc = SetTilesetThreeTerrainValues;
 	gTilesets[DEAD_AIRSTRIP].MovementCostFnc = SetTilesetThreeTerrainValues;
@@ -103,6 +75,9 @@ void InitEngineTilesets( )
 	gTilesets[TEMP_29      ].MovementCostFnc = SetTilesetThreeTerrainValues;
 	gTilesets[TROPICAL_1   ].MovementCostFnc = SetTilesetFourTerrainValues;
 	gTilesets[TEMP_20      ].MovementCostFnc = SetTilesetFourTerrainValues;
+
+ret_close:
+	FileClose(f);
 }
 
 
