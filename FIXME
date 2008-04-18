@@ -12,7 +12,6 @@ CalcInteractiveObjectAPs(): second parameter unnecessary
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CenterX(): use %
-ChangeStatusOfOpenableStructInUnloadedSector(): file leak on error
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
 ChooseCreatureQuestStartDay(): empty
 ConfirmActionCancel(): overkill

@@ -929,92 +929,43 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 }
 
 
-
-
-BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen )
+BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, const UINT16 usSectorY, const INT8 bSectorZ, const UINT16 usGridNo, const BOOLEAN fChangeToOpen)
 {
-//	STRUCTURE * pStructure;
-//	MODIFY_MAP Map;
-	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
-	UINT32	cnt;
-	MODIFY_MAP *pMap;
-//	UINT16	usIndex;
+	char map_name[128];
+	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, map_name, usSectorX, usSectorY, bSectorZ);
 
-	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, usSectorX, usSectorY, bSectorZ );
+	// If the file doesn't exists, it's no problem.
+	if (!FileExists(map_name)) return TRUE;
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	// Read the map temp file into a buffer
+	const HWFILE src = FileOpen(map_name, FILE_ACCESS_READ);
+	if (src == 0) return FALSE;
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
-
-	//Get the size of the file
-	const UINT32 uiFileSize         = FileGetSize(hFile);
+	const UINT32 uiFileSize         = FileGetSize(src);
 	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
-	//Allocate memory for the buffer
 	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
-	if( pTempArrayOfMaps == NULL )
+	const BOOLEAN success_read =
+		pTempArrayOfMaps != NULL &&
+		FileRead(src, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
+	FileClose(src);
+	if (!success_read) return FALSE;
+
+	for (UINT32 i = 0; i < uiNumberOfElements; ++i)
 	{
-		Assert( 0 );
-		return( TRUE );
+		MODIFY_MAP* const m = &pTempArrayOfMaps[i];
+		if (m->ubType != SLM_OPENABLE_STRUCT || m->usGridNo != usGridNo) continue;
+		// This element is of the same type and on the same gridno
+
+		// Change to the desired settings
+		m->usImageType = fChangeToOpen;
+		break;
 	}
 
-	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	const HWFILE dst = FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	if (dst == 0) return FALSE;
 
-	//Close the file
-	FileClose( hFile );
-
-	//loop through all the array elements to
-	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
-	{
-		pMap = &pTempArrayOfMaps[ cnt ];
-
-		//if this element is of the same type
-		if( pMap->ubType == SLM_OPENABLE_STRUCT )
-		{
-			//if its on the same gridno
-			if( pMap->usGridNo == usGridNo )
-			{
-				//Change to the desired settings
-				pMap->usImageType = fChangeToOpen;
-
-				break;
-			}
-		}
-	}
-
-	//Open the file for writing
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
-
-	//Write the map temp file into a buffer
-	if (!FileWrite(hFile, pTempArrayOfMaps, uiFileSize))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	FileClose( hFile );
-
-	return( TRUE );
+	const BOOLEAN success_write = FileWrite(dst, pTempArrayOfMaps, uiFileSize);
+	FileClose(dst);
+	return success_write;
 }
