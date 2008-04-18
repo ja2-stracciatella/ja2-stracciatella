@@ -725,35 +725,34 @@ static void HandleTalkingAutoFace(FACETYPE* const f)
 
 
 // Local function - uses these variables because they have already been validated
-static void SetFaceShade(FACETYPE* pFace, BOOLEAN fExternBlit)
+static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
 {
-	const SOLDIERTYPE* const s = pFace->soldier;
+	const SOLDIERTYPE* const s = f->soldier;
 	if (s == NULL) return;
 
-	// Set to default
-	SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_NOSHADE);
-
-	if (pFace->video_overlay == NULL && !fExternBlit)
+	UINT32 shade;
+	if (!fExternBlit && // ATE: Don't shade for damage if blitting extern face
+			s->fFlashPortrait == FLASH_PORTRAIT_START)
 	{
-		if (s->bActionPoints == 0 && !(gTacticalStatus.uiFlags & REALTIME) && gTacticalStatus.uiFlags & INCOMBAT)
-		{
-			SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_LITESHADE);
-		}
+		shade = s->bFlashPortraitFrame;
 	}
-
-	if (s->bLife < OKLIFE)
+	else if (s->bLife < OKLIFE)
 	{
-		SetObjectShade(pFace->uiVideoObject, FLASH_PORTRAIT_DARKSHADE);
+		shade = FLASH_PORTRAIT_DARKSHADE;
 	}
-
-	// ATE: Don't shade for damage if blitting extern face...
-	if ( !fExternBlit )
+	else if (!fExternBlit                     &&
+			f->video_overlay == NULL              &&
+			s->bActionPoints == 0                 &&
+			!(gTacticalStatus.uiFlags & REALTIME) &&
+			gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		if (s->fFlashPortrait == FLASH_PORTRAIT_START)
-		{
-			SetObjectShade(pFace->uiVideoObject, s->bFlashPortraitFrame);
-		}
+		shade = FLASH_PORTRAIT_LITESHADE;
 	}
+	else
+	{
+		shade = FLASH_PORTRAIT_NOSHADE; // Set to default
+	}
+	SetObjectShade(f->uiVideoObject, shade);
 }
 
 
