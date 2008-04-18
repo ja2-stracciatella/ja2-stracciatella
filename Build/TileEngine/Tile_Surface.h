@@ -9,7 +9,7 @@ extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 TILE_IMAGERY* LoadTileSurface(const char* cFilename);
 
-void DeleteTileSurface( PTILE_IMAGERY	pTileSurf );
+void DeleteTileSurface(TILE_IMAGERY* pTileSurf);
 
 void SetRaisedObjectFlag(const char* cFilename, TILE_IMAGERY* pTileSurf);
 

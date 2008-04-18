@@ -68,8 +68,7 @@ typedef struct
 
 	// Reserved for added room and 32-byte boundaries
 	BYTE													bReserved[ 2 ];
-
-} TILE_IMAGERY, *PTILE_IMAGERY;
+} TILE_IMAGERY;
 
 typedef struct
 {

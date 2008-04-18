@@ -1393,13 +1393,11 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 static void CopyOverheadDBShadetablesFromTileset(void)
 {
 	UINT32					uiLoop, uiLoop2;
-	PTILE_IMAGERY   pTileSurf;
-
 
 	// Loop through tileset
 	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
 	{
-		pTileSurf = ( gTileSurfaceArray[ uiLoop ] );
+		const TILE_IMAGERY* const pTileSurf = gTileSurfaceArray[uiLoop];
 
 		gSmTileSurf[ uiLoop ].vo->fFlags |= VOBJECT_FLAG_SHADETABLE_SHARED;
 

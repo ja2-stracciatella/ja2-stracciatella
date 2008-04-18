@@ -297,9 +297,6 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 
 static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID)
 {
-	// Add tile surface
-	PTILE_IMAGERY  TileSurf;
-
 	// Delete the surface first!
 	if ( gTileSurfaceArray[ ubType ] != NULL )
 	{
@@ -307,8 +304,7 @@ static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTiles
 		gTileSurfaceArray[ ubType ] = NULL;
 	}
 
-	TileSurf = LoadTileSurface(Filename);
-
+	TILE_IMAGERY* const TileSurf = LoadTileSurface(Filename);
 	if ( TileSurf == NULL )
 		return( FALSE );
 

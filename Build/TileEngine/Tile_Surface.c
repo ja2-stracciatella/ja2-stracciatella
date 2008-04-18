@@ -117,7 +117,7 @@ fail:
 }
 
 
-void DeleteTileSurface( PTILE_IMAGERY	pTileSurf )
+void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 {
 	if ( pTileSurf->pStructureFileRef != NULL )
 	{

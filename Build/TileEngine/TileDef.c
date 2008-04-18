@@ -44,15 +44,13 @@ void CreateTileDatabase( )
 	UINT32					cnt1, cnt2;
 	UINT8						ubLoop;
 	UINT32					NumRegions;
-	PTILE_IMAGERY   TileSurf;
 	TILE_ELEMENT		TileElement;
 
 	// Loop through all surfaces and tiles and build database
 	for( cnt1 = 0; cnt1 < NUMBEROFTILETYPES; cnt1++ )
 	{
 		// Get number of regions
-		TileSurf = gTileSurfaceArray[ cnt1 ];
-
+		const TILE_IMAGERY* const TileSurf = gTileSurfaceArray[cnt1];
 		if ( TileSurf != NULL )
 		{
 
