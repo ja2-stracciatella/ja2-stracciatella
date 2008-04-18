@@ -21,19 +21,12 @@
 
 static BOOLEAN CaveAtGridNo(INT32 iMapIndex)
 {
-	STRUCTURE *pStruct;
 	LEVELNODE* pLevel;
 	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
 		return TRUE;
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
-	while( pStruct )
-	{
-		if( pStruct->fFlags & STRUCTURE_CAVEWALL )
-		{
-			return TRUE;
-		}
-		pStruct = pStruct->pNext;
-	}
+
+	if (FindStructure(iMapIndex, STRUCTURE_CAVEWALL) != NULL) return TRUE;
+
 	//may not have structure information, so check if there is a levelnode flag.
 	pLevel = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pLevel )

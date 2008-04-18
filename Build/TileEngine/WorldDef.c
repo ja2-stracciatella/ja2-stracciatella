@@ -112,31 +112,18 @@ INT16		gsRecompileAreaBottom = 0;
 	extern UINT32 uiNumImagesReloaded;
 #endif
 
-BOOLEAN DoorAtGridNo( UINT32 iMapIndex )
+
+BOOLEAN DoorAtGridNo(const UINT32 iMapIndex)
 {
-	STRUCTURE *pStruct;
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
-	while( pStruct )
-	{
-		if( pStruct->fFlags & STRUCTURE_ANYDOOR )
-			return TRUE;
-		pStruct = pStruct->pNext;
-	}
-	return FALSE;
+	return FindStructure(iMapIndex, STRUCTURE_ANYDOOR) != NULL;
 }
 
-BOOLEAN OpenableAtGridNo( UINT32 iMapIndex )
+
+BOOLEAN OpenableAtGridNo(const UINT32 iMapIndex)
 {
-	STRUCTURE *pStruct;
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructureHead;
-	while( pStruct )
-	{
-		if( pStruct->fFlags & STRUCTURE_OPENABLE )
-			return TRUE;
-		pStruct = pStruct->pNext;
-	}
-	return FALSE;
+	return FindStructure(iMapIndex, STRUCTURE_OPENABLE) != NULL;
 }
+
 
 BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
 {
