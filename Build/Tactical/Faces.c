@@ -708,50 +708,31 @@ static void MouthAutoFace(FACETYPE* const f)
 static void SetupFinalTalkingDelay(FACETYPE* pFace);
 
 
-static void HandleTalkingAutoFace(FACETYPE* const pFace)
+static void HandleTalkingAutoFace(FACETYPE* const f)
 {
-	if (pFace->fAllocated)
+	Assert(f->fAllocated);
+
+	if (!f->fTalking) return;
+
+	if (!f->fFinishTalking)
 	{
-		if ( pFace->fTalking )
+		// Check if we are done talking
+		if (f->fValidSpeech ?
+		      !SoundIsPlaying(f->uiSoundID) :
+		      GetJA2Clock() - f->uiTalkingTimer > f->uiTalkingDuration)
 		{
-			// Check if we are done!	( Check this first! )
-			if ( pFace->fValidSpeech )
-			{
-				// Check if we have finished, set some flags for the final delay down if so!
-				if ( !SoundIsPlaying( pFace->uiSoundID ) && !pFace->fFinishTalking )
-				{
-					SetupFinalTalkingDelay( pFace );
-				}
-			}
-			else
-			{
-				// Check if our delay is over
-				if ( !pFace->fFinishTalking )
-				{
-					if ( ( GetJA2Clock() - pFace->uiTalkingTimer ) > pFace->uiTalkingDuration )
-					{
-						// If here, setup for last delay!
-						SetupFinalTalkingDelay( pFace );
-
-					}
-				}
-			}
-
-			// Now check for end of talking
-			if ( pFace->fFinishTalking )
-			{
-					if ( ( GetJA2Clock() - pFace->uiTalkingTimer ) > pFace->uiTalkingDuration )
-					{
-						pFace->fTalking    = FALSE;
-						pFace->fAnimatingTalking = FALSE;
-
-						// Remove gap info
-						AudioGapListDone( &(pFace->GapList) );
-
-						// Call dialogue handler function
-						HandleDialogueEnd( pFace );
-					}
-			}
+			SetupFinalTalkingDelay(f);
+		}
+	}
+	else
+	{
+		if (GetJA2Clock() - f->uiTalkingTimer > f->uiTalkingDuration)
+		{
+			// end of talking
+			f->fTalking          = FALSE;
+			f->fAnimatingTalking = FALSE;
+			AudioGapListDone(&f->GapList); // Remove gap info
+			HandleDialogueEnd(f);          // Call dialogue handler function
 		}
 	}
 }
