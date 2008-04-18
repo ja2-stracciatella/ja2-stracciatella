@@ -944,16 +944,20 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 	const UINT32 uiFileSize         = FileGetSize(src);
 	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
-	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
+	MODIFY_MAP* const mm = MALLOCN(MODIFY_MAP, uiNumberOfElements);
 	const BOOLEAN success_read =
-		pTempArrayOfMaps != NULL &&
-		FileRead(src, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
+		mm != NULL &&
+		FileRead(src, mm, sizeof(*mm) * uiNumberOfElements);
 	FileClose(src);
-	if (!success_read) return FALSE;
+	if (!success_read)
+	{
+		if (mm != NULL) MemFree(mm);
+		return FALSE;
+	}
 
 	for (UINT32 i = 0; i < uiNumberOfElements; ++i)
 	{
-		MODIFY_MAP* const m = &pTempArrayOfMaps[i];
+		MODIFY_MAP* const m = &mm[i];
 		if (m->ubType != SLM_OPENABLE_STRUCT || m->usGridNo != usGridNo) continue;
 		// This element is of the same type and on the same gridno
 
@@ -965,7 +969,8 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 	const HWFILE dst = FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if (dst == 0) return FALSE;
 
-	const BOOLEAN success_write = FileWrite(dst, pTempArrayOfMaps, uiFileSize);
+	const BOOLEAN success_write = FileWrite(dst, mm, uiFileSize);
 	FileClose(dst);
+	MemFree(mm);
 	return success_write;
 }
