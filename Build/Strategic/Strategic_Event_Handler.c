@@ -38,6 +38,22 @@ UINT32 guiPabloExtraDaysBribed = 0;
 UINT8		gubCambriaMedicalObjects;
 
 
+static void CloseCrate(const INT16 x, const INT16 y, const INT8 z, const GridNo grid_no)
+{
+	// Determine if the sector is loaded
+	if (gWorldSectorX == x && gWorldSectorY == y && gbWorldSectorZ == z)
+	{
+		SetOpenableStructureToClosed(grid_no, 0);
+		return TRUE;
+	}
+	else
+	{
+		ChangeStatusOfOpenableStructInUnloadedSector(x, y, z, grid_no, FALSE);
+		return FALSE;
+	}
+}
+
+
 static void DropOffItemsInMeduna(UINT8 ubOrderNum);
 
 
@@ -48,7 +64,6 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 	OBJECTTYPE		Object;
 	UINT16 usMapPos, usStandardMapPos;
 	UINT16 usNumberOfItems;
-	BOOLEAN	fSectorLoaded = FALSE;
 	UINT32	uiCount = 0,uiStolenCount = 0;
 	static UINT8 ubShipmentsSinceNoBribes = 0;
 	UINT32	uiChanceOfTheft;
@@ -114,21 +129,8 @@ void BobbyRayPurchaseEventCallback( UINT8 ubOrderID )
 		}
 	}
 
-	// determine if the sector is loaded
-	if( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
-		fSectorLoaded = TRUE;
-	else
-		fSectorLoaded = FALSE;
-
-	// set crate to closed!
-	if ( fSectorLoaded )
-	{
-		SetOpenableStructureToClosed( BOBBYR_SHIPPING_DEST_GRIDNO, 0 );
-	}
-	else
-	{
-		ChangeStatusOfOpenableStructInUnloadedSector( BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, FALSE );
-	}
+	const BOOLEAN fSectorLoaded =
+		CloseCrate(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO);
 
 	//if we are NOT currently in the right sector
 	if( !fSectorLoaded )
@@ -1052,7 +1054,6 @@ void CheckForMissingHospitalSupplies( void )
 
 static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 {
-	BOOLEAN	fSectorLoaded = FALSE;
 	OBJECTTYPE		Object;
 	UINT32	uiCount = 0;
 	OBJECTTYPE	*pObject=NULL;
@@ -1068,22 +1069,8 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 		return;
 	}
 
-	// determine if the sector is loaded
-	if( ( gWorldSectorX == MEDUNA_ITEM_DROP_OFF_SECTOR_X ) && ( gWorldSectorY == MEDUNA_ITEM_DROP_OFF_SECTOR_Y ) && ( gbWorldSectorZ == MEDUNA_ITEM_DROP_OFF_SECTOR_Z ) )
-		fSectorLoaded = TRUE;
-	else
-		fSectorLoaded = FALSE;
-
-	// set crate to closed!
-	if ( fSectorLoaded )
-	{
-		SetOpenableStructureToClosed( MEDUNA_ITEM_DROP_OFF_GRIDNO, 0 );
-	}
-	else
-	{
-		ChangeStatusOfOpenableStructInUnloadedSector( MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, FALSE );
-	}
-
+	const BOOLEAN fSectorLoaded =
+		CloseCrate(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO);
 
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{
