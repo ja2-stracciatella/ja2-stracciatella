@@ -513,7 +513,10 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE*, INT16 sDestLeft, 
 
 static void BlinkAutoFace(FACETYPE* const f)
 {
-	if (!f->fAllocated || f->fDisabled || f->fInvalidAnim) return;
+	Assert(f->fAllocated);
+	Assert(!f->fDisabled);
+
+	if (f->fInvalidAnim) return;
 
 	// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
 	const SOLDIERTYPE* const s = f->soldier;
@@ -639,10 +642,10 @@ static void NewMouth(FACETYPE* pFace);
 
 static void MouthAutoFace(FACETYPE* const f)
 {
-	if (!f->fAllocated) return;
+	Assert(f->fAllocated);
+	Assert(!f->fDisabled);
 
 	if (f->fTalking      &&
-			!f->fDisabled    &&
 			!f->fInvalidAnim &&
 			f->fAnimatingTalking)
 	{
@@ -1272,6 +1275,8 @@ void HandleAutoFaces(void)
 {
 	FOR_ALL_FACES(f)
 	{
+		if (f->fDisabled) continue;
+
 		SOLDIERTYPE* const s = f->soldier;
 		if (s != NULL)
 		{
