@@ -299,46 +299,32 @@ void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const
 }
 
 
-static void GetFaceRelativeCoordinates(const FACETYPE* pFace, UINT16* pusEyesX, UINT16* pusEyesY, UINT16* pusMouthX, UINT16* pusMouthY)
+static void GetFaceRelativeCoordinates(const FACETYPE* const f, UINT16* const pusEyesX, UINT16* const pusEyesY, UINT16* const pusMouthX, UINT16* const pusMouthY)
 {
-	UINT16						usMercProfileID;
-	UINT16						usEyesX;
-	UINT16						usEyesY;
-	UINT16						usMouthX;
-	UINT16						usMouthY;
+	const ProfileID                pid = f->ubCharacterNum;
+	const MERCPROFILESTRUCT* const p   = GetProfile(pid);
 
-	usMercProfileID = pFace->ubCharacterNum;
-
-	//Take eyes x,y from profile unless we are an RPC and we are small faced.....
-	usEyesX				= gMercProfiles[ usMercProfileID ].usEyesX;
-	usEyesY				= gMercProfiles[ usMercProfileID ].usEyesY;
-	usMouthY			=	gMercProfiles[ usMercProfileID ].usMouthY;
-	usMouthX			= gMercProfiles[ usMercProfileID ].usMouthX;
-
-	// Use some other values for x,y, base on if we are a RPC!
-	if ( !( pFace->uiFlags & FACE_BIGFACE ) ||( pFace->uiFlags & FACE_FORCE_SMALL ))
+	// Take eyes x,y from profile unless we are an RPC and we are small faced
+	// Are we a recruited merc or small?
+	if (f->uiFlags & FACE_FORCE_SMALL ||
+			(!(f->uiFlags & FACE_BIGFACE) && p->ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 	{
-		// Are we a recruited merc? .. or small?
-		if( ( gMercProfiles[ usMercProfileID ].ubMiscFlags & ( PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE ) ) ||( pFace->uiFlags & FACE_FORCE_SMALL ) )
+		// Loop through all values of available profiles to find ours
+		for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
 		{
-			// Loop through all values of availible profiles to find ours!
-			for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
-			{
-				if (i->profile != usMercProfileID) continue;
-				usEyesX  = i->bEyesX;
-				usEyesY  = i->bEyesY;
-				usMouthX = i->bMouthX;
-				usMouthY = i->bMouthY;
-				break;
-			}
+			if (i->profile != pid) continue;
+			*pusEyesX  = i->bEyesX;
+			*pusEyesY  = i->bEyesY;
+			*pusMouthX = i->bMouthX;
+			*pusMouthY = i->bMouthY;
+			return;
 		}
 	}
 
-	(*pusEyesX)		= usEyesX;
-	(*pusEyesY)		= usEyesY;
-	(*pusMouthX)	= usMouthX;
-	(*pusMouthY)	= usMouthY;
-
+	*pusEyesX  = p->usEyesX;
+	*pusEyesY  = p->usEyesY;
+	*pusMouthX = p->usMouthX;
+	*pusMouthY = p->usMouthY;
 }
 
 
