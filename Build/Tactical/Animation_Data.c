@@ -747,48 +747,40 @@ fail:
 }
 
 
-BOOLEAN UnLoadAnimationSurface( UINT16 usSoldierID, UINT16 usSurfaceIndex )
+void UnLoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceIndex)
 {
 	// Decrement usage flag, only if this soldier has it currently tagged
-	if ( gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ] > 0 )
-	{
-		// Decrement usage count
-		AnimDebugMsg( String( "Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
-		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount--;
-		// Set history for particular sodlier
-		gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ] = 0;
-
-	}
-	else
+	INT8* const in_use = &gbAnimUsageHistory[usSurfaceIndex][usSoldierID];
+	if (*in_use <= 0)
 	{
 		// Return warning that we have not actually loaded the surface previously
 		AnimDebugMsg("Surface Database: WARNING!!! Soldier has tried to unlock surface that he has not locked.");
-		return( FALSE );
+		return;
 	}
+	*in_use = 0; // Set history for particular sodlier
 
-	AnimDebugMsg( String( "Surface Database: MercUsage: %d, Global Uasage: %d", gbAnimUsageHistory[ usSurfaceIndex ][ usSoldierID ], gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount ) );
+	AnimDebugMsg(String("Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID));
 
-	// Check for < 0
-	if ( gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount < 0 )
+	AnimationSurfaceType* const a         = &gAnimSurfaceDatabase[usSurfaceIndex];
+	INT8*                 const use_count = &a->bUsageCount;
+	--*use_count;
+
+	AnimDebugMsg(String("Surface Database: MercUsage: %d, Global Uasage: %d", *in_use, *use_count));
+
+	Assert(*use_count >= 0);
+	if (*use_count < 0) *use_count = 0;
+
+	// Delete if count reched zero
+	if (*use_count == 0)
 	{
-		gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount = 0;
+		AnimDebugMsg(String("Surface Database: Unloading Surface: %d", usSurfaceIndex));
+		SGPVObject** const vo = &a->hVideoObject;
+		CHECKV(*vo != NULL);
+		DeleteVideoObject(*vo);
+		*vo = NULL;
 	}
-
-
-	// Check if count has reached zero and delet if so
-	if ( gAnimSurfaceDatabase[ usSurfaceIndex ].bUsageCount == 0 )
-	{
-    	AnimDebugMsg( String( "Surface Database: Unloading Surface: %d", usSurfaceIndex ) );
-
-			CHECKF(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject != NULL);
-
-		DeleteVideoObject(gAnimSurfaceDatabase[usSurfaceIndex].hVideoObject);
-			gAnimSurfaceDatabase[ usSurfaceIndex ].hVideoObject = NULL;
-	}
-
-	return( TRUE );
-
 }
+
 
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 {
