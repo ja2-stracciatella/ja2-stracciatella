@@ -554,7 +554,7 @@ static BOOLEAN AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, cons
 {
 	if (usIndex >= NUMBEROFTILES) return TRUE;
 
-	DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
+	const DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
 	if (sr == NULL) return TRUE;
 
 	if (AddStructureToWorld(iMapIndex, level, sr, n)) return TRUE;

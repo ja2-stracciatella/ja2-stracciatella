@@ -479,7 +479,7 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 //
 
 
-static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF* pDBStructureRef, UINT8 ubTileNum)
+static STRUCTURE* CreateStructureFromDB(const DB_STRUCTURE_REF* const pDBStructureRef, const UINT8 ubTileNum)
 { // Creates a STRUCTURE struct for one tile of a structure
 	DB_STRUCTURE *				pDBStructure;
 	DB_STRUCTURE_TILE	*		pTile;
@@ -840,7 +840,7 @@ static BOOLEAN AddStructureToTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructur
 static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructure);
 
 
-static STRUCTURE* InternalAddStructureToWorld(INT16 sBaseGridNo, INT8 bLevel, DB_STRUCTURE_REF* pDBStructureRef, LEVELNODE* pLevelNode)
+static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelNode)
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
 	INT16									sGridNo;
 	STRUCTURE *						pBaseStructure;
@@ -1004,7 +1004,7 @@ static STRUCTURE* InternalAddStructureToWorld(INT16 sBaseGridNo, INT8 bLevel, DB
 }
 
 
-BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelN)
+BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelN)
 {
 	return InternalAddStructureToWorld(sBaseGridNo, bLevel, pDBStructureRef, pLevelN) != NULL;
 }
@@ -1105,7 +1105,6 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 	LEVELNODE *				pShadowNode;
 	STRUCTURE *				pBaseStructure;
 	STRUCTURE *				pNewBaseStructure;
-	DB_STRUCTURE_REF *	pPartnerDBStructure;
 	BOOLEAN						fDoor;
 
 	INT8							bDelta;
@@ -1132,7 +1131,7 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 
 	// record values
 	bDelta = pBaseStructure->pDBStructureRef->pDBStructure->bPartnerDelta;
-	pPartnerDBStructure = pBaseStructure->pDBStructureRef + bDelta;
+	const DB_STRUCTURE_REF* const pPartnerDBStructure = pBaseStructure->pDBStructureRef + bDelta;
 	sGridNo = pBaseStructure->sGridNo;
 	ubHitPoints = pBaseStructure->ubHitPoints;
 	sCubeOffset = pBaseStructure->sCubeOffset;
