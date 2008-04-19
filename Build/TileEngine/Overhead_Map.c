@@ -92,77 +92,58 @@ static INT16           gsOveritemPoolGridNo           = NOWHERE;
 static void CopyOverheadDBShadetablesFromTileset(void);
 
 
-void InitNewOverheadDB( UINT8 ubTilesetID )
+void InitNewOverheadDB(const UINT8 ubTilesetID)
 {
-	UINT32					uiLoop;
-	CHAR8	cAdjustedFile[ 128 ];
-	UINT32					cnt1, cnt2;
-	SMALL_TILE_SURF	s;
-	UINT32					NumRegions;
-	UINT32					dbSize = 0;
-
-
-	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		// Adjust for tileset position
-		sprintf(cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, gTilesets[ubTilesetID].TileSurfaceFilenames[uiLoop]);
+		char cAdjustedFile[128];
 
-		SGPVObject* hVObject = AddVideoObjectFromFile(cAdjustedFile);
-		if ( hVObject == NULL )
+		// Adjust for tileset position
+		sprintf(cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, gTilesets[ubTilesetID].TileSurfaceFilenames[i]);
+
+		SGPVObject* vo = AddVideoObjectFromFile(cAdjustedFile);
+		if (vo == NULL)
 		{
 			// TRY loading from default directory
 			// Adjust for tileset position
-			sprintf(cAdjustedFile, "TILESETS/0/T/%s", gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop]);
+			sprintf(cAdjustedFile, "TILESETS/0/T/%s", gTilesets[GENERIC_1].TileSurfaceFilenames[i]);
 
-			// LOAD ONE WE KNOW ABOUT!
-			hVObject = AddVideoObjectFromFile(cAdjustedFile);
-			if ( hVObject == NULL )
+			vo = AddVideoObjectFromFile(cAdjustedFile);
+			if (vo == NULL)
 			{
-				// LOAD ONE WE KNOW ABOUT!
-				hVObject = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
+				// Load one we know about
+				vo = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
 			}
 		}
 
-		gSmTileSurf[uiLoop].vo = hVObject;
+		gSmTileSurf[i].vo = vo;
 	}
 
-	// NOW LOOP THROUGH AND CREATE DATABASE
-	for( cnt1 = 0; cnt1 < NUMBEROFTILETYPES; cnt1++ )
+	// Create database
+	UINT32 dbSize = 0;
+	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		// Get number of regions
-		s = gSmTileSurf[ cnt1 ];
+		SGPVObject* const vo = gSmTileSurf[i].vo;
 
-		NumRegions = s.vo->usNumberOfObjects;
+		// Get number of regions and check for overflow
+		const UINT32 NumRegions = min(vo->usNumberOfObjects, gNumTilesPerType[i]);
 
-		// Check for overflow
-		if ( NumRegions > gNumTilesPerType[ cnt1 ] )
+		UINT32 k = 0;
+		for (; k < NumRegions; ++k)
 		{
-				// Cutof
-				NumRegions = gNumTilesPerType[ cnt1 ];
+			gSmTileDB[dbSize].vo         = vo;
+			gSmTileDB[dbSize].usSubIndex = k;
+			gSmTileDB[dbSize].fType      = i;
+			++dbSize;
 		}
 
-		for( cnt2 = 0; cnt2 < NumRegions; cnt2++ )
+		// Handle underflow
+		for (; k < gNumTilesPerType[i]; ++k)
 		{
-
-			gSmTileDB[ dbSize ].vo						= s.vo;
-			gSmTileDB[ dbSize ].usSubIndex		= (UINT16)cnt2;
-			gSmTileDB[ dbSize ].fType					= cnt1;
-
-			dbSize++;
-		}
-
-		// Check if data matches what should be there
-		if ( NumRegions < gNumTilesPerType[ cnt1 ] )
-		{
-				// Do underflows here
-				for ( cnt2 = NumRegions; cnt2 < gNumTilesPerType[ cnt1 ]; cnt2++ )
-				{
-					gSmTileDB[ dbSize ].vo						= s.vo;
-					gSmTileDB[ dbSize ].usSubIndex		= 0;
-					gSmTileDB[ dbSize ].fType					= cnt1;
-					dbSize++;
-				}
-
+			gSmTileDB[dbSize].vo         = vo;
+			gSmTileDB[dbSize].usSubIndex = 0;
+			gSmTileDB[dbSize].fType      = i;
+			++dbSize;
 		}
 	}
 
@@ -170,16 +151,18 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 	gsStartRestrictedY = 0;
 
 	// Calculate Scale factors because of restricted map scroll regions
-	if ( gMapInformation.ubRestrictedScrollID != 0 )
+	if (gMapInformation.ubRestrictedScrollID != 0)
 	{
-		INT16 sX1, sY1, sX2, sY2;
-
+		INT16 sX1;
+		INT16 sY1;
+		INT16 sX2;
+		INT16 sY2;
 		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &gsStartRestrictedY, SCREEN_WIDTH, 320);
 		CalculateRestrictedMapCoords(WEST,  &sX1, &sY1, &gsStartRestrictedX, &sY2, SCREEN_WIDTH, 320);
 	}
 
 	// Copy over shade tables from main tileset
-	CopyOverheadDBShadetablesFromTileset( );
+	CopyOverheadDBShadetablesFromTileset();
 }
 
 
