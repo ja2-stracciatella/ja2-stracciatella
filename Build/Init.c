@@ -214,9 +214,6 @@ void ShutdownJA2(void)
   }
 
 
-	// Shutdown animation system
-	DeInitAnimationSystem( );
-
 	ShutdownLightingSystem();
 
 	CursorDatabaseClear();
@@ -225,6 +222,8 @@ void ShutdownJA2(void)
 
 	// Shutdown Overhead
 	ShutdownOverhead( );
+
+	DeInitAnimationSystem();
 
 	DeinitializeWorld( );
 
