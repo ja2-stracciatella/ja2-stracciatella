@@ -1205,61 +1205,37 @@ static BOOLEAN AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN AddMercStructureInfoFromAnimSurface(INT16 sGridNo, SOLDIERTYPE *pSoldier, UINT16 usAnimSurface, UINT16 usAnimState)
+BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* const s, const UINT16 usAnimSurface, const UINT16 usAnimState)
 {
-	pSoldier->uiStatusFlags &= ~SOLDIER_MULTITILE;
+	s->uiStatusFlags &= ~SOLDIER_MULTITILE;
 
-	if (pSoldier->pLevelNode == NULL ||
-			usAnimSurface == INVALID_ANIMATION_SURFACE)
-	{
-		return FALSE;
-	}
+	LEVELNODE* const n = s->pLevelNode;
+	if (n == NULL || usAnimSurface == INVALID_ANIMATION_SURFACE) return FALSE;
 
 	// Remove existing structs
-	DeleteStructureFromWorld(pSoldier->pLevelNode->pStructureData);
-	pSoldier->pLevelNode->pStructureData = NULL;
+	DeleteStructureFromWorld(n->pStructureData);
+	n->pStructureData = NULL;
 
-	// Now check if we are multi-tiled!
-	const STRUCTURE_FILE_REF* const pStructureFileRef = GetAnimationStructureRef(pSoldier, usAnimSurface, usAnimState);
-	if (pStructureFileRef != NULL)
+	const STRUCTURE_FILE_REF* const sfr = GetAnimationStructureRef(s, usAnimSurface, usAnimState);
+	if (sfr == NULL) return TRUE; // XXX why TRUE?
+
+	const DB_STRUCTURE_REF* const sr =
+		s->ubBodyType == QUEENMONSTER ? // Queen uses only one direction
+			&sfr->pDBStructureRef[0] :
+			&sfr->pDBStructureRef[OneCDirection(s->bDirection)];
+
+	const BOOLEAN success = AddStructureToWorld(sGridNo, s->bLevel, sr, n);
+	if (!success)
 	{
-		BOOLEAN fReturn;
-		if (pSoldier->ubBodyType == QUEENMONSTER)
-		{
-			// Queen uses onely one direction....
-			fReturn = AddStructureToWorld(sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[0], pSoldier->pLevelNode);
-		}
-		else
-		{
-			fReturn = AddStructureToWorld(sGridNo, pSoldier->bLevel, &pStructureFileRef->pDBStructureRef[OneCDirection(pSoldier->bDirection)], pSoldier->pLevelNode);
-		}
-
-		if (!fReturn)
-		{
-			// Debug msg
-			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%ls), at %d direction %d", pSoldier->ubID, pSoldier->name, sGridNo, pSoldier->bDirection);
-
-			if (pStructureFileRef->pDBStructureRef[OneCDirection(pSoldier->bDirection)].pDBStructure->ubNumberOfTiles > 1)
-			{
-				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE;
-			}
-
-			return FALSE;
-		}
-		else
-		{
-			// Turn on if we are multi-tiled
-			if (pSoldier->pLevelNode->pStructureData->pDBStructureRef->pDBStructure->ubNumberOfTiles > 1)
-			{
-				// If we have more than one tile
-				pSoldier->uiStatusFlags |= SOLDIER_MULTITILE;
-			}
-		}
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"FAILED: add struct info for merc %d (%ls), at %d direction %d", s->ubID, s->name, sGridNo, s->bDirection);
 	}
 
-	return TRUE;
+	// Turn on if we are multi-tiled
+	if (sr->pDBStructure->ubNumberOfTiles > 1) s->uiStatusFlags |= SOLDIER_MULTITILE;
+
+	return success;
 }
+
 
 BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
 {
