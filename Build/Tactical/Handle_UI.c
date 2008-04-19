@@ -3850,12 +3850,10 @@ static UINT32 UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 	gUIDisplayActionPointsOffX = 14;
 	gUIDisplayActionPointsOffY = 7;
 
-	INT16 sXPos;
-	INT16 sYPos;
-	GetMouseXY( &sXPos, &sYPos );
+	const GridNo pos = GetMouseMapPos();
 
 	// Get direction from mouse pos
-	const INT16 sFacingDir = GetDirectionFromXY(sXPos, sYPos, sel);
+	const INT16 sFacingDir = GetDirectionFromGridNo(pos, sel);
 
 	// Set # of APs
 	gsCurrentActionPoints = (sFacingDir == sel->bDirection ? 0 : GetAPsToLook(sel));
