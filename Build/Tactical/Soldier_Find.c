@@ -152,7 +152,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 {
 	SGPRect				aRect;
 	BOOLEAN				fSoldierFound = FALSE;
-	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
+	INT16					sScreenX, sScreenY;
 	INT16					sMaxScreenMercY, sHeighestMercScreenY = -32000;
 	SOLDIERTYPE* best_merc = NULL;
 	UINT16				usAnimSurface;
@@ -201,13 +201,6 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 		{
 			// Get Rect contained in the soldier
 			GetSoldierScreenRect( pSoldier, &aRect );
-
-			// Get XY From gridno
-			ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
-
-			// Get screen XY pos from map XY
-			// Be carefull to convert to cell cords
-			//CellXYToScreenXY( (INT16)((sXMapPos*CELL_X_SIZE)), (INT16)((sYMapPos*CELL_Y_SIZE)), &sScreenX, &sScreenY);
 
 			// Set mouse stuff
 			sScreenX = gusMouseXPos;
