@@ -2486,7 +2486,7 @@ static void SetupTacticalTraversalInformation(void)
 		{
 			// Determine 'mirror' gridno...
 			// Convert to absolute xy
-			GetWorldXYAbsoluteScreenXY( (INT16)(pSoldier->sX / CELL_X_SIZE ), (INT16)(pSoldier->sY / CELL_Y_SIZE ), &sScreenX, &sScreenY );
+			GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(pSoldier->sY, pSoldier->sX), &sScreenX, &sScreenY);
 
 			// Get 'mirror', depending on what direction...
 			switch( gubTacticalDirection )
@@ -2722,8 +2722,6 @@ static void DoneFadeOutAdjacentSector(void)
 
 static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection, UINT16 usAdditionalData)
 {
-	INT16 sXMapPos;
-	INT16 sYMapPos;
 	INT16 sWorldX;
 	INT16 sWorldY;
 
@@ -2735,11 +2733,8 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 	if ( pSoldier->bLevel > 0 )
 		return( FALSE );
 
-	// get world absolute XY
-	ConvertGridNoToXY( pSoldier->sGridNo, &sXMapPos, &sYMapPos );
-
 	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( sXMapPos, sYMapPos, &sWorldX, &sWorldY);
+	GetAbsoluteScreenXYFromMapPos(pSoldier->sGridNo, &sWorldX, &sWorldY);
 
 	// Check direction
 	switch( bExitDirection )

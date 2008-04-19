@@ -2030,7 +2030,6 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 
 INT16 FindNearestEdgePoint( INT16 sGridNo )
 {
-	INT16			sGridX, sGridY;
 	INT16			sScreenX, sScreenY, sMaxScreenX, sMaxScreenY;
 	INT16			sDist[5], sMinDist;
 	INT32			iLoop;
@@ -2039,8 +2038,7 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 	INT32			iEdgepointArraySize;
 	INT16			sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
-	ConvertGridNoToXY( sGridNo, &sGridX, &sGridY );
-	GetWorldXYAbsoluteScreenXY( sGridX, sGridY, &sScreenX, &sScreenY );
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
 	sMaxScreenX = gsBRX - gsTLX;
 	sMaxScreenY = gsBRY - gsTLY;

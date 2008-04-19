@@ -225,7 +225,7 @@ void RenderRadarScreen( )
 	INT16 sTopLeftWorldX, sTopLeftWorldY;
 	INT16 sBottomRightWorldX, sBottomRightWorldY;
 
-	INT16	sXSoldPos, sYSoldPos, sXSoldScreen, sYSoldScreen, sXSoldRadar, sYSoldRadar;
+	INT16	sXSoldScreen, sYSoldScreen, sXSoldRadar, sYSoldRadar;
 
 	UINT32										 uiDestPitchBYTES;
 	UINT8											 *pDestBuf;
@@ -343,8 +343,7 @@ void RenderRadarScreen( )
 				continue;
 			}
 
-			ConvertGridNoToXY( pInventoryPoolList[ iItemNumber ].sGridNo, &sXSoldPos, &sYSoldPos );
-			GetWorldXYAbsoluteScreenXY( sXSoldPos, sYSoldPos, &sXSoldScreen, &sYSoldScreen );
+			GetAbsoluteScreenXYFromMapPos(pInventoryPoolList[iItemNumber].sGridNo, &sXSoldScreen, &sYSoldScreen);
 
 			// get radar x and y postion
 			sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
@@ -397,9 +396,7 @@ void RenderRadarScreen( )
 			}
 
 			// Get FULL screen coordinate for guy's position
-			// Getxy from gridno
-			ConvertGridNoToXY( pSoldier->sGridNo, &sXSoldPos, &sYSoldPos );
-			GetWorldXYAbsoluteScreenXY( sXSoldPos, sYSoldPos, &sXSoldScreen, &sYSoldScreen );
+			GetAbsoluteScreenXYFromMapPos(pSoldier->sGridNo, &sXSoldScreen, &sYSoldScreen);
 
 			sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
 			sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );

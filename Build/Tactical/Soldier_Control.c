@@ -2111,13 +2111,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 
 		if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
 		{
-			 //INT16 sX;
-			 //INT16 sY;
-			 //ConvertGridNoToXY(sNewGridNo, &sX, &sY);
-			 //INT16 sWorldX;
-			 //INT16 sZLevel;
-			 //GetWorldXYAbsoluteScreenXY( sX, sY, &sWorldX, &sZLevel);
-			 //pSoldier->sZLevelOverride = (sZLevel*Z_SUBLAYERS)+ROOF_Z_LEVEL;
 			 pSoldier->sZLevelOverride = TOPMOST_Z_LEVEL;
 		}
 

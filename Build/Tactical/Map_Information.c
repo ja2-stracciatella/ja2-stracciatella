@@ -75,20 +75,17 @@ Version 11 -- Kris -- obsolete May 2, 1998
 //is return the closest gridno.  Returns TRUE if the mapindex changes.
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 {
-	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
 	INT16 sTopLimit, sBottomLimit;
 
 	if( *sGridNo < 0 )
 		return FALSE; //entry point is non-existant
 
-	ConvertGridNoToXY( *sGridNo, &sXMapPos, &sYMapPos );
-
 	sTopLimit = 80;
 	sBottomLimit = gsBRY - gsTLY - 40;
 
 	//Get screen coordinates for current gridno
-	GetWorldXYAbsoluteScreenXY( sXMapPos, sYMapPos, &sWorldX, &sWorldY);
+	GetAbsoluteScreenXYFromMapPos(*sGridNo, &sWorldX, &sWorldY);
 
 	if( sWorldY < sTopLimit )
 	{

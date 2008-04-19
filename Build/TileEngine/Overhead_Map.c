@@ -290,7 +290,7 @@ static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 	INT16		sWorldScreenY, sY;
 
 	// Get Screen position of guy.....
-	GetWorldXYAbsoluteScreenXY( ( pSoldier->sX / CELL_X_SIZE ), ( pSoldier->sY / CELL_Y_SIZE ), &sWorldScreenX, &sWorldScreenY );
+	GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(pSoldier->sY, pSoldier->sX), &sWorldScreenX, &sWorldScreenY);
 
 	sWorldScreenX = gsStartRestrictedX + ( sWorldScreenX / 5 ) + 5;
 	sWorldScreenY = gsStartRestrictedY + ( sWorldScreenY / 5 ) + ( pSoldier->sHeightAdjustment / 5 ) + (gpWorldLevelData[ pSoldier->sGridNo ].sHeight/5) - 8;
@@ -1302,7 +1302,7 @@ static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 
 static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY)
 {
-	GetWorldXYAbsoluteScreenXY( (INT16)(CenterX( sGridNo ) / CELL_X_SIZE ), (INT16)( CenterY( sGridNo ) / CELL_Y_SIZE ), psScreenX, psScreenY );
+	GetAbsoluteScreenXYFromMapPos(sGridNo, psScreenX, psScreenY);
 	*psScreenX /= 5;
 	*psScreenY /= 5;
 

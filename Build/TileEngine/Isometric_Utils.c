@@ -242,14 +242,17 @@ GridNo GetMouseMapPos(void)
 }
 
 
-void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *psWorldScreenX, INT16 *psWorldScreenY )
+void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX, INT16* const psWorldScreenY)
 {
 	INT16 sScreenCenterX, sScreenCenterY;
-	INT16 sDistToCenterY, sDistToCenterX;
+
+	INT16 sWorldCellX;
+	INT16 sWorldCellY;
+	ConvertGridNoToCellXY(pos, &sWorldCellX, &sWorldCellY);
 
 	// Find the diustance from render center to true world center
-	sDistToCenterX = ( sWorldCellX * CELL_X_SIZE ) - gCenterWorldX;
-	sDistToCenterY = ( sWorldCellY * CELL_Y_SIZE ) - gCenterWorldY;
+	const INT16 sDistToCenterX = sWorldCellX - gCenterWorldX;
+	const INT16 sDistToCenterY = sWorldCellY - gCenterWorldY;
 
 
 	// From render center in world coords, convert to render center in "screen" coords
@@ -723,13 +726,7 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 {
 	INT16 sWorldX;
 	INT16 sWorldY;
-	INT16	sXMapPos, sYMapPos;
-
-	// Check for valid gridno...
-	ConvertGridNoToXY( sGridNo, &sXMapPos, &sYMapPos );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( sXMapPos, sYMapPos, &sWorldX, &sWorldY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
 	if ( sWorldX > 0 && sWorldX < ( gsTRX - gsTLX - 20 ) &&
 			 sWorldY > 20	&& sWorldY < ( gsBLY - gsTLY - 20 ) )

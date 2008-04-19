@@ -604,7 +604,6 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT1
 
 BOOLEAN GridNoOnScreen( INT16 sGridNo )
 {
-	INT16 sNewCenterWorldX, sNewCenterWorldY;
 	INT16 sWorldX;
 	INT16 sWorldY;
   INT16 sAllowance = 20;
@@ -614,10 +613,7 @@ BOOLEAN GridNoOnScreen( INT16 sGridNo )
     sAllowance = 40;
   }
 
-	ConvertGridNoToXY( sGridNo, &sNewCenterWorldX, &sNewCenterWorldY );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sNewCenterWorldX), (INT16)(sNewCenterWorldY), &sWorldX, &sWorldY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
 	// ATE: OK, here, adjust the top value so that it's a tile and a bit over, because of our mercs!
 	if ( sWorldX >= gsTopLeftWorldX && sWorldX <= gsBottomRightWorldX &&
@@ -645,18 +641,13 @@ BOOLEAN SoldierLocationRelativeToScreen(const INT16 sGridNo, INT8* const pbDirec
 {
 	INT16 sWorldX;
 	INT16 sWorldY;
-	INT16 sY, sX;
 	static BOOLEAN fCountdown = 0;
 	INT16 sScreenCenterX, sScreenCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
 
 	*puiScrollFlags = 0;
 
-	sX = CenterX( sGridNo );
-	sY = CenterY( sGridNo );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sX/CELL_X_SIZE), (INT16)(sY/CELL_Y_SIZE), &sWorldX, &sWorldY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
 	// Find the diustance from render center to true world center
 	sDistToCenterX = gsRenderCenterX - gCenterWorldX;
@@ -675,7 +666,7 @@ BOOLEAN SoldierLocationRelativeToScreen(const INT16 sGridNo, INT8* const pbDirec
 
 	// Get direction
 	//*pbDirection = atan8( sScreenCenterX, sScreenCenterY, sWorldX, sWorldY );
-	*pbDirection = atan8( gsRenderCenterX, gsRenderCenterY, (INT16)(sX), (INT16)(sY) );
+	*pbDirection = atan8(gsRenderCenterX, gsRenderCenterY, CenterX(sGridNo), CenterY(sGridNo));
 
 	// Check values!
 	if ( sWorldX > ( sScreenCenterX + 20 ) )

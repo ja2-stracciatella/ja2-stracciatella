@@ -561,7 +561,6 @@ int x,dif,absDif;
 
 INT8 SoundDir( INT16 sGridNo )
 {
-	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX;
 	INT16	sDif, sAbsDif;
@@ -571,11 +570,7 @@ INT8 SoundDir( INT16 sGridNo )
     return( MIDDLEPAN );
   }
 
-	// OK, get screen position of gridno.....
-	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sWorldX), (INT16)(sWorldY), &sScreenX, &sScreenY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
 	// Get middle of where we are now....
 	sMiddleX = gsTopLeftWorldX + ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2;
@@ -615,7 +610,6 @@ INT8 SoundDir( INT16 sGridNo )
 
 INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 {
-	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
 	INT16	sDifX, sAbsDifX;
@@ -626,11 +620,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
     return( bInitialVolume );
   }
 
-	// OK, get screen position of gridno.....
-	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sWorldX), (INT16)(sWorldY), &sScreenX, &sScreenY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
 	// Get middle of where we are now....
 	sMiddleX = gsTopLeftWorldX + ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2;
@@ -844,7 +834,6 @@ void SetPositionSndsInActive(void)
 
 static INT8 PositionSoundDir(INT16 sGridNo)
 {
-	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX;
 	INT16	sDif, sAbsDif;
@@ -854,11 +843,7 @@ static INT8 PositionSoundDir(INT16 sGridNo)
     return( MIDDLEPAN );
   }
 
-	// OK, get screen position of gridno.....
-	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sWorldX), (INT16)(sWorldY), &sScreenX, &sScreenY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
 	// Get middle of where we are now....
 	sMiddleX = gsTopLeftWorldX + ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2;
@@ -898,7 +883,6 @@ static INT8 PositionSoundDir(INT16 sGridNo)
 
 static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
 {
-	INT16 sWorldX, sWorldY;
 	INT16 sScreenX, sScreenY;
 	INT16	sMiddleX, sMiddleY;
 	INT16	sDifX, sAbsDifX;
@@ -911,11 +895,7 @@ static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
     return( bInitialVolume );
   }
 
-	// OK, get screen position of gridno.....
-	ConvertGridNoToXY( sGridNo, &sWorldX, &sWorldY );
-
-	// Get screen coordinates for current position of soldier
-	GetWorldXYAbsoluteScreenXY( (INT16)(sWorldX), (INT16)(sWorldY), &sScreenX, &sScreenY);
+	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
 
 	// Get middle of where we are now....
 	sMiddleX = gsTopLeftWorldX + ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2;

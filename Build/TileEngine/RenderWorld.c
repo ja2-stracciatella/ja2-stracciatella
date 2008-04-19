@@ -5688,7 +5688,7 @@ static void ExamineZBufferForHiddenTiles(INT16 sStartPointX_M, INT16 sStartPoint
 				// Look for anything less than struct layer!
 				INT16 sWorldX;
 				INT16 sZLevel;
-				GetWorldXYAbsoluteScreenXY(sTempPosX_M, sTempPosY_M, &sWorldX, &sZLevel);
+				GetAbsoluteScreenXYFromMapPos(usTileIndex, &sWorldX, &sZLevel);
 
 				sZLevel += gsRenderHeight;
 				sZLevel  = sZLevel * Z_SUBLAYERS + STRUCT_Z_LEVEL;
