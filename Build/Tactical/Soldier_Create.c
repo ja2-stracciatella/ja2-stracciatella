@@ -495,7 +495,12 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 	SOLDIERTYPE* const s = GetMan(existing->ubID);
 	*s = *existing;
 
-	InitSoldierFace(s);
+	if (s->ubProfile != NO_PROFILE &&
+			s->bTeam     == OUR_TEAM   &&
+			!(s->uiStatusFlags & SOLDIER_VEHICLE))
+	{
+		InitSoldierFace(s);
+	}
 
 	if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
 	{
