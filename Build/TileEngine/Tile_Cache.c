@@ -151,11 +151,17 @@ static INT16 FindCacheStructDataIndex(const char* cFilename)
 
 INT32 GetCachedTile(const char* const filename)
 {
+	INT32 idx = -1;
+
 	// Check to see if surface exists already
 	for (UINT32 cnt = 0; cnt < guiCurTileCacheSize; ++cnt)
 	{
 		TILE_CACHE_ELEMENT* const i = &gpTileCache[cnt];
-		if (i->pImagery == NULL) continue;
+		if (i->pImagery == NULL)
+		{
+			if (idx == -1) idx = cnt;
+			continue;
+		}
 
 		if (strcasecmp(i->zName, filename) != 0) continue;
 
@@ -164,62 +170,56 @@ INT32 GetCachedTile(const char* const filename)
 		return (INT32)cnt;
 	}
 
-	// Check if max size has been reached
-	if (guiCurTileCacheSize == guiMaxTileCacheSize)
+	if (idx == -1)
 	{
-		// cache out least used file
-		UINT32 ubLowestIndex = 0;
-		INT16  sMostHits     = 15000;
-		for (UINT32 cnt = 0; cnt < guiCurTileCacheSize; ++cnt)
+		if (guiCurTileCacheSize < guiMaxTileCacheSize)
 		{
-			const TILE_CACHE_ELEMENT* const i = &gpTileCache[cnt];
-			if (i->sHits < sMostHits)
+			idx = guiCurTileCacheSize++;
+		}
+		else
+		{
+			// cache out least used file
+			idx = 0;
+			INT16 sMostHits = gpTileCache[idx].sHits;
+			for (UINT32 cnt = 1; cnt < guiCurTileCacheSize; ++cnt)
 			{
-				sMostHits = i->sHits;
-				ubLowestIndex = cnt;
+				const TILE_CACHE_ELEMENT* const i = &gpTileCache[cnt];
+				if (i->sHits < sMostHits)
+				{
+					sMostHits = i->sHits;
+					idx       = cnt;
+				}
 			}
-		}
 
-		// Bump off lowest index
-		TILE_CACHE_ELEMENT* const del = &gpTileCache[ubLowestIndex];
-		DeleteTileSurface(del->pImagery);
-		del->sHits        = 0;
-		del->pImagery     = NULL;
-		del->sStructRefID = -1;
+			// Bump off lowest index
+			TILE_CACHE_ELEMENT* const del = &gpTileCache[idx];
+			DeleteTileSurface(del->pImagery);
+			del->sHits        = 0;
+			del->pImagery     = NULL;
+			del->sStructRefID = -1;
+		}
 	}
 
-	// If here, Insert at an empty slot
-	// Find an empty slot
-	for (UINT32 cnt = 0; cnt < guiMaxTileCacheSize; ++cnt)
+	TILE_CACHE_ELEMENT* const tce = &gpTileCache[idx];
+
+	tce->pImagery = LoadTileSurface(filename);
+	if (tce->pImagery == NULL) return -1;
+
+	strcpy(tce->zName, filename);
+	tce->sHits = 1;
+
+	GetRootName(tce->zRootName, filename);
+
+	tce->sStructRefID = FindCacheStructDataIndex(tce->zRootName);
+	if (tce->sStructRefID != -1) // ATE: Add z-strip info
 	{
-		TILE_CACHE_ELEMENT* const i = &gpTileCache[cnt];
-		if (i->pImagery != NULL) continue;
-
-		// Insert here
-		i->pImagery = LoadTileSurface(filename);
-		if (i->pImagery == NULL) return -1;
-
-		strcpy(i->zName, filename);
-		i->sHits = 1;
-
-		GetRootName(i->zRootName, filename);
-
-		i->sStructRefID = FindCacheStructDataIndex(i->zRootName);
-		if (i->sStructRefID != -1) // ATE: Add z-strip info
-		{
-			AddZStripInfoToVObject(i->pImagery->vo, gpTileCacheStructInfo[i->sStructRefID].pStructureFileRef, TRUE, 0);
-		}
-
-		const AuxObjectData* const aux = i->pImagery->pAuxData;
-		i->ubNumFrames = (aux != NULL ? aux->ubNumberOfFrames : 1);
-
-		// Has our cache size increased?
-		if (cnt >= guiCurTileCacheSize) guiCurTileCacheSize = cnt + 1;
-
-		return cnt;
+		AddZStripInfoToVObject(tce->pImagery->vo, gpTileCacheStructInfo[tce->sStructRefID].pStructureFileRef, TRUE, 0);
 	}
 
-	return -1;
+	const AuxObjectData* const aux = tce->pImagery->pAuxData;
+	tce->ubNumFrames = (aux != NULL ? aux->ubNumberOfFrames : 1);
+
+	return idx;
 }
 
 
