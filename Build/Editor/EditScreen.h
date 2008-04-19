@@ -21,7 +21,7 @@ extern void ShowCurrentDrawingMode( void );
 void DisplayTilesetPage(void);
 
 BOOLEAN PlaceLight(INT16 sRadius, GridNo pos);
-BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY );
+BOOLEAN RemoveLight(GridNo pos);
 extern BOOLEAN gfMercResetUponEditorEntry;
 
 void ProcessSelectionArea(void);

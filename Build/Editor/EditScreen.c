@@ -2554,10 +2554,9 @@ BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
 //	Returns TRUE if deleted the light, otherwise, returns FALSE.
 //	i.e. FALSE is not an error condition!
 //
-BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
+BOOLEAN RemoveLight(const GridNo pos)
 {
 	BOOLEAN fRemovedLight;
-	INT32 iMapIndex;
 	const char* pLastLightName;
 
 	fRemovedLight = FALSE;
@@ -2565,7 +2564,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 	// Check all lights if any at this given position
 	FOR_ALL_LIGHT_SPRITES(l)
 	{
-		if (l->iX == iMapX && l->iY == iMapY)
+		if (MAPROWCOLTOPOS(l->iY, l->iX) == pos)
 		{
 			if (!IsSoldierLight(l))
 			{
@@ -2574,8 +2573,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 				LightSpritePower(l, FALSE);
 				LightSpriteDestroy(l);
 				fRemovedLight = TRUE;
-				iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
-				RemoveAllObjectsOfTypeRange(iMapIndex, GOODRING, GOODRING);
+				RemoveAllObjectsOfTypeRange(pos, GOODRING, GOODRING);
 			}
 		}
 	}
@@ -2586,7 +2584,7 @@ BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY )
 		//should work.  Basically, the radius values aren't stored in the lights, so I have pull
 		//the radius out of the filename.  Ex:  L-RO5.LHT
 		usRadius = pLastLightName[4] - 0x30;
-		AddLightToUndoList(iMapIndex, usRadius);
+		AddLightToUndoList(pos, usRadius);
 	}
 
 	return( fRemovedLight );
@@ -2856,12 +2854,13 @@ static void HandleMouseClicksInGameScreen(void)
 			{
 				for ( sX = (INT16)gSelectRegion.iLeft; sX <= (INT16)gSelectRegion.iRight; sX++ )
 				{
+					const GridNo pos = MAPROWCOLTOPOS(sY, sX);
 					if ( iDrawMode == (DRAW_MODE_LIGHT + DRAW_MODE_ERASE) )
 					{
-						RemoveLight( sX, sY );
+						RemoveLight(pos);
 					}
 					else
-					EraseMapTile( MAPROWCOLTOPOS( sY, sX ) );
+						EraseMapTile(pos);
 				}
 			}
 

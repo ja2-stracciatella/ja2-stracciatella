@@ -439,13 +439,11 @@ BOOLEAN ExecuteUndoList( void )
 		// Find which map tile we are to "undo"
 		if( gpTileUndoStack->pData->fLightSaved )
 		{ //We saved a light, so delete that light
-			INT16 sX, sY;
 			//Turn on this flag so that the following code, when executed, doesn't attempt to
 			//add lights to the undo list.  That would cause problems...
 			gfIgnoreUndoCmdsForLights = TRUE;
-			ConvertGridNoToXY( (INT16)iUndoMapIndex, &sX, &sY );
 			if( !gpTileUndoStack->pData->ubLightRadius )
-				RemoveLight( sX, sY );
+				RemoveLight(iUndoMapIndex);
 			else
 				PlaceLight(gpTileUndoStack->pData->ubLightRadius, iUndoMapIndex);
 			//Turn off the flag so lights can again be added to the undo list.
