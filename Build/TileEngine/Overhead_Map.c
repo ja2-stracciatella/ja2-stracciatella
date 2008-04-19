@@ -59,12 +59,9 @@ extern SOLDIERINITNODE *gpSelected;
 #define FASTMAPROWCOLTOPOS( r, c )									( (r) * WORLD_COLS + (c) )
 
 
-
 typedef struct
 {
-	HVOBJECT	vo;
-	UINT32		fType;
-
+	HVOBJECT vo;
 } SMALL_TILE_SURF;
 
 typedef struct
@@ -126,8 +123,7 @@ void InitNewOverheadDB( UINT8 ubTilesetID )
 			}
 		}
 
-		gSmTileSurf[ uiLoop ].vo				= hVObject;
-		gSmTileSurf[ uiLoop ].fType		=	uiLoop;
+		gSmTileSurf[uiLoop].vo = hVObject;
 	}
 
 	// NOW LOOP THROUGH AND CREATE DATABASE
