@@ -266,7 +266,7 @@ void GetWorldXYAbsoluteScreenXY( INT32 sWorldCellX, INT32 sWorldCellY, INT16 *ps
 }
 
 
-void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, INT16 sWorldScreenX, INT16 sWorldScreenY )
+GridNo GetMapPosFromAbsoluteScreenXY(const INT16 sWorldScreenX, const INT16 sWorldScreenY)
 {
 	INT16 sWorldCenterX, sWorldCenterY;
 	INT16 sDistToCenterY, sDistToCenterX;
@@ -283,9 +283,10 @@ void GetFromAbsoluteScreenXYWorldXY( INT32 *psWorldCellX, INT32* psWorldCellY, I
 	sWorldCenterY = ( ( 2 * sDistToCenterY ) - sDistToCenterX ) / 4;
 
 	// Goto center again
-	*psWorldCellX = sWorldCenterX + gCenterWorldX;
-	*psWorldCellY = sWorldCenterY + gCenterWorldY;
+	sWorldCenterX += gCenterWorldX;
+	sWorldCenterY += gCenterWorldY;
 
+	return GETWORLDINDEXFROMWORLDCOORDS(sWorldCenterY, sWorldCenterX);
 }
 
 

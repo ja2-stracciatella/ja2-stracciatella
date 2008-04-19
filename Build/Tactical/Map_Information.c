@@ -77,7 +77,6 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 {
 	INT16 sXMapPos, sYMapPos;
 	INT16 sWorldX, sWorldY;
-	INT32 iNewMapX, iNewMapY;
 	INT16 sTopLimit, sBottomLimit;
 
 	if( *sGridNo < 0 )
@@ -93,18 +92,16 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 
 	if( sWorldY < sTopLimit )
 	{
-		GetFromAbsoluteScreenXYWorldXY( &iNewMapX, &iNewMapY, sWorldX, sTopLimit );
+		*sGridNo = GetMapPosFromAbsoluteScreenXY(sWorldX, sTopLimit);
 	}
 	else if( sWorldY > sBottomLimit )
 	{
-		GetFromAbsoluteScreenXYWorldXY( &iNewMapX, &iNewMapY, sWorldX, sBottomLimit );
+		*sGridNo = GetMapPosFromAbsoluteScreenXY(sWorldX, sBottomLimit);
 	}
 	else
 	{
 		return FALSE; //already valid
 	}
-
-	*sGridNo = (INT16)MAPROWCOLTOPOS( iNewMapY/10, iNewMapX/10 );
 
 	return TRUE; //modified
 }

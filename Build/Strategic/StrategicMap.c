@@ -2470,7 +2470,7 @@ void AllMercsWalkedToExitGrid()
 static void SetupTacticalTraversalInformation(void)
 {
 	SOLDIERTYPE *pSoldier;
-	INT16 sScreenX, sScreenY, sNewGridNo;
+	INT16 sScreenX, sScreenY;
 
 	Assert( gpAdjacentGroup );
 	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, gpAdjacentGroup)
@@ -2498,10 +2498,7 @@ static void SetupTacticalTraversalInformation(void)
 			}
 
 			// Convert into a gridno again.....
-			INT32 sWorldX;
-			INT32 sWorldY;
-			GetFromAbsoluteScreenXYWorldXY( &sWorldX, &sWorldY, sScreenX, sScreenY );
-			sNewGridNo = (INT16)GETWORLDINDEXFROMWORLDCOORDS( sWorldY, sWorldX );
+			const GridNo sNewGridNo = GetMapPosFromAbsoluteScreenXY(sScreenX, sScreenY);
 
 			// Save this gridNo....
 			pSoldier->sPendingActionData2				= sNewGridNo;

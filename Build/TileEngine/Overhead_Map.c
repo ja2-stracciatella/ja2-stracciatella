@@ -1279,14 +1279,14 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		sWorldScreenY = ( gusMouseYPos - gsStartRestrictedY ) * 5;
 
 		// Get new proposed center location.
-		INT32 uiCellX;
-		INT32 uiCellY;
-		GetFromAbsoluteScreenXYWorldXY( &uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY );
+		const GridNo pos = GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
+		INT16 cell_x;
+		INT16 cell_y;
+		ConvertGridNoToCenterCellXY(pos, &cell_x, &cell_y);
 
-		SetRenderCenter( (INT16)uiCellX, (INT16)uiCellY );
+		SetRenderCenter(cell_x, cell_y);
 
 		KillOverheadMap();
-
 	}
 	else if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
@@ -1321,20 +1321,14 @@ static GridNo InternalGetOverheadMouseGridNo(const INT dy)
 	// ATE: Adjust alogrithm values a tad to reflect map positioning
 	INT16 const sWorldScreenX = (gusMouseXPos - gsStartRestrictedX -  5) * 5;
 	INT16       sWorldScreenY = (gusMouseYPos - gsStartRestrictedY + dy) * 5;
-	INT32       uiCellX;
-	INT32       uiCellY;
 
 	// Get new proposed center location.
-	GetFromAbsoluteScreenXYWorldXY(&uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY);
-
-	const GridNo grid_no = MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
+	const GridNo grid_no = GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
 
 	// Adjust for height.....
 	sWorldScreenY = sWorldScreenY + gpWorldLevelData[grid_no].sHeight;
 
-	GetFromAbsoluteScreenXYWorldXY(&uiCellX, &uiCellY, sWorldScreenX, sWorldScreenY);
-
-	return MAPROWCOLTOPOS((uiCellY / CELL_Y_SIZE), (uiCellX / CELL_X_SIZE));
+	return GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
 }
 
 
