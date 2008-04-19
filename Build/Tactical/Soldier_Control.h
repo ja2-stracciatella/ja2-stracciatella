@@ -955,7 +955,7 @@ INT8 CalcActionPoints(const SOLDIERTYPE*);
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc );
 void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier );
 BOOLEAN MercInWater(const SOLDIERTYPE* pSoldier);
-UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight );
+UINT16 GetMoveStateBasedOnStance(const SOLDIERTYPE*, UINT8 ubStanceHeight);
 void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
 void ReCreateSoldierLight(SOLDIERTYPE*);
 

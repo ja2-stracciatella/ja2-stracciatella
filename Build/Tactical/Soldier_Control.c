@@ -2606,50 +2606,21 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 }
 
 
-UINT16 GetMoveStateBasedOnStance( SOLDIERTYPE *pSoldier, UINT8 ubStanceHeight )
+UINT16 GetMoveStateBasedOnStance(const SOLDIERTYPE* const s, const UINT8 ubStanceHeight)
 {
-	// Determine which animation to do...depending on stance and gun in hand...
-	switch ( ubStanceHeight )
+	switch (ubStanceHeight)
 	{
 		case ANIM_STAND:
-			if ( pSoldier->fUIMovementFast && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-			{
-				return( RUNNING );
-			}
-			else
-			{
-				return( WALKING );
-			}
+			return s->fUIMovementFast && !(s->uiStatusFlags & SOLDIER_VEHICLE) ?
+				RUNNING : WALKING;
 
-		case ANIM_PRONE:
-			if ( pSoldier->fUIMovementFast )
-			{
-				return( CRAWLING );
-			}
-			else
-			{
-				return( CRAWLING );
-			}
-
-		case ANIM_CROUCH:
-			if ( pSoldier->fUIMovementFast )
-			{
-				return( SWATTING );
-			}
-			else
-			{
-				return( SWATTING );
-			}
+		case ANIM_PRONE:  return CRAWLING;
+		case ANIM_CROUCH: return SWATTING;
 
 		default:
-			AssertMsg( FALSE, String( "GetMoveStateBasedOnStance: ERROR - Invalid height %d", ubStanceHeight ) );
-			break;
+			AssertMsg(FALSE, String("GetMoveStateBasedOnStance: ERROR - Invalid height %d", ubStanceHeight));
+			return 0;
 	}
-
-
-	// If here, an internal error has occured!
-	Assert( FALSE );
-	return ( 0 );
 }
 
 
