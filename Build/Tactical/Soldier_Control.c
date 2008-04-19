@@ -6775,14 +6775,19 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 }
 
 
-INT16 GetDirectionFromGridNo(INT16 sGridNo, const SOLDIERTYPE* pSoldier)
+INT16 GetDirectionFromGridNo(const INT16 sGridNo, const SOLDIERTYPE* const s)
 {
-	INT16 sXPos, sYPos;
+	INT16 sXPos;
+	INT16 sYPos;
+	ConvertGridNoToXY(sGridNo, &sXPos, &sYPos);
 
-	ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
+	INT16 sXPos2;
+	INT16 sYPos2;
+	ConvertGridNoToXY(s->sGridNo, &sXPos2, &sYPos2);
 
-	return( GetDirectionFromXY( sXPos, sYPos, pSoldier ) );
+	return atan8(sXPos2, sYPos2, sXPos, sYPos);
 }
+
 
 INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc )
 {
@@ -6796,15 +6801,6 @@ INT16 GetDirectionToGridNoFromGridNo( INT16 sGridNoDest, INT16 sGridNoSrc )
 
 }
 
-
-INT16 GetDirectionFromXY(INT16 sXPos, INT16 sYPos, const SOLDIERTYPE* pSoldier)
-{
-	INT16 sXPos2, sYPos2;
-
-	ConvertGridNoToXY( pSoldier->sGridNo, &sXPos2, &sYPos2 );
-
-	return( atan8( sXPos2, sYPos2, sXPos, sYPos ) );
-}
 
 #if 0
 UINT8  atan8( INT16 x1, INT16 y1, INT16 x2, INT16 y2 )
