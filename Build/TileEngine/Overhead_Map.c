@@ -96,24 +96,22 @@ void InitNewOverheadDB(const UINT8 ubTilesetID)
 {
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		char cAdjustedFile[128];
+		const char* filename    = gTilesets[ubTilesetID].TileSurfaceFilenames[i];
+		UINT8       use_tileset = ubTilesetID;
+		if (filename[0] == '\0')
+		{
+			// Try loading from default tileset
+			filename    = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
+			use_tileset = GENERIC_1;
+		}
 
-		// Adjust for tileset position
-		sprintf(cAdjustedFile, "TILESETS/%d/T/%s", ubTilesetID, gTilesets[ubTilesetID].TileSurfaceFilenames[i]);
-
-		SGPVObject* vo = AddVideoObjectFromFile(cAdjustedFile);
+		char adjusted_file[128];
+		sprintf(adjusted_file, "TILESETS/%d/T/%s", use_tileset, filename);
+		SGPVObject* vo = AddVideoObjectFromFile(adjusted_file);
 		if (vo == NULL)
 		{
-			// TRY loading from default directory
-			// Adjust for tileset position
-			sprintf(cAdjustedFile, "TILESETS/0/T/%s", gTilesets[GENERIC_1].TileSurfaceFilenames[i]);
-
-			vo = AddVideoObjectFromFile(cAdjustedFile);
-			if (vo == NULL)
-			{
-				// Load one we know about
-				vo = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
-			}
+			// Load one we know about
+			vo = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
 		}
 
 		gSmTileSurf[i].vo = vo;
