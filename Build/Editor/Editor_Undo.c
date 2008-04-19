@@ -447,7 +447,7 @@ BOOLEAN ExecuteUndoList( void )
 			if( !gpTileUndoStack->pData->ubLightRadius )
 				RemoveLight( sX, sY );
 			else
-				PlaceLight(gpTileUndoStack->pData->ubLightRadius, sX, sY);
+				PlaceLight(gpTileUndoStack->pData->ubLightRadius, iUndoMapIndex);
 			//Turn off the flag so lights can again be added to the undo list.
 			gfIgnoreUndoCmdsForLights = FALSE;
 		}

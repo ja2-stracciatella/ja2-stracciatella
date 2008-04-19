@@ -2483,11 +2483,10 @@ static UINT32 WaitForSelectionWindowResponse(void)
 //
 //	Creates and places a light of selected radius and color into the world.
 //
-BOOLEAN PlaceLight(const INT16 sRadius, const INT16 iMapX, const INT16 iMapY)
+BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
 {
 	UINT8 ubIntensity;
 	STRING512 Filename;
-	INT32 iMapIndex;
 	UINT16 usTmpIndex;
 
 	sprintf( Filename, "L-R%02d.LHT", sRadius );
@@ -2523,7 +2522,10 @@ BOOLEAN PlaceLight(const INT16 sRadius, const INT16 iMapX, const INT16 iMapY)
 	}
 
 	LightSpritePower(l, TRUE);
-	LightSpritePosition(l, iMapX, iMapY);
+	INT16 x;
+	INT16 y;
+	ConvertGridNoToXY(pos, &x, &y);
+	LightSpritePosition(l, x, y);
 
 	switch( gbDefaultLightType )
 	{
@@ -2531,14 +2533,13 @@ BOOLEAN PlaceLight(const INT16 sRadius, const INT16 iMapX, const INT16 iMapY)
 		case NIGHTTIME_LIGHT: l->uiFlags |= LIGHT_NIGHTTIME; break;
 	}
 
-	iMapIndex = ((INT32)iMapY * WORLD_COLS) + (INT32)iMapX;
-	if ( !TypeExistsInObjectLayer( iMapIndex, GOODRING, &usTmpIndex ) )
+	if (!TypeExistsInObjectLayer(pos, GOODRING, &usTmpIndex))
 	{
-		LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
+		LEVELNODE* const n = AddObjectToHead(pos, GOODRING1);
 		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 
-	AddLightToUndoList(iMapIndex, 0);
+	AddLightToUndoList(pos, 0);
 
 	return( TRUE );
 }
@@ -2829,10 +2830,10 @@ static void HandleMouseClicksInGameScreen(void)
 {
 	INT16 sX, sY;
 	BOOLEAN fPrevState;
-	INT16 sGridX;
-	INT16 sGridY;
-	if( !GetMouseXY( &sGridX, &sGridY ) )
-		return;
+
+	const GridNo iMapIndex = GetMouseMapPos();
+	if (iMapIndex == NOWHERE) return;
+
 	if( iCurrentTaskbar == TASK_OPTIONS || iCurrentTaskbar == TASK_NONE )
 	{ //if in taskbar modes which don't process clicks in the world.
 		return;
@@ -2841,8 +2842,6 @@ static void HandleMouseClicksInGameScreen(void)
 	{	//if mouse cursor not in the game screen.
 		return;
 	}
-
-	const UINT32 iMapIndex = MAPROWCOLTOPOS(sGridY, sGridX);
 
 	fPrevState = gfRenderWorld;
 
@@ -2905,7 +2904,7 @@ static void HandleMouseClicksInGameScreen(void)
 				// Add a normal light to the world
 				if( gfFirstPlacement )
 				{
-					PlaceLight(gsLightRadius, sGridX, sGridY);
+					PlaceLight(gsLightRadius, iMapIndex);
 					gfFirstPlacement = FALSE;
 				}
 				break;

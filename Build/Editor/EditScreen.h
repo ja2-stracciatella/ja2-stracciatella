@@ -4,6 +4,9 @@
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H
 
+#include "JA2Types.h"
+
+
 #define EDITOR_LIGHT_MAX		(SHADE_MIN + SHADE_MAX)
 #define EDITOR_LIGHT_FAKE		(EDITOR_LIGHT_MAX - SHADE_MAX - 2)
 
@@ -17,7 +20,7 @@ extern void ShowCurrentDrawingMode( void );
 
 void DisplayTilesetPage(void);
 
-BOOLEAN PlaceLight(INT16 sRadius, INT16 iMapX, INT16 iMapY);
+BOOLEAN PlaceLight(INT16 sRadius, GridNo pos);
 BOOLEAN RemoveLight( INT16 iMapX, INT16 iMapY );
 extern BOOLEAN gfMercResetUponEditorEntry;
 
