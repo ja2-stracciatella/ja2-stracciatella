@@ -6777,15 +6777,7 @@ void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLE
 
 INT16 GetDirectionFromGridNo(const INT16 sGridNo, const SOLDIERTYPE* const s)
 {
-	INT16 sXPos;
-	INT16 sYPos;
-	ConvertGridNoToXY(sGridNo, &sXPos, &sYPos);
-
-	INT16 sXPos2;
-	INT16 sYPos2;
-	ConvertGridNoToXY(s->sGridNo, &sXPos2, &sYPos2);
-
-	return atan8(sXPos2, sYPos2, sXPos, sYPos);
+	return GetDirectionToGridNoFromGridNo(s->sGridNo, sGridNo);
 }
 
 
