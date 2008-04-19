@@ -2,7 +2,6 @@
 #define ANIMATION_DATA_H_
 
 #include "JA2Types.h"
-#include "Structure_Internals.h"
 
 
 // DEFINES FOR ANIMATION PROFILES

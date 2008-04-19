@@ -13,7 +13,6 @@
 #include "Edit_Sys.h"
 #include "Smoothing_Utils.h"
 #include "Editor_Undo.h"
-#include "Structure_Internals.h"
 #include "Environment.h"
 #include "Random.h"
 #include "Render_Fun.h"

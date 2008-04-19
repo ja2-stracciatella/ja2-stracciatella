@@ -35,7 +35,6 @@
 #include "Sys_Globals.h"
 #include "TileDef.h"
 #include "Lighting.h"
-#include "Structure_Internals.h"
 #include "Structure_Wrap.h"
 #include "Rotting_Corpses.h"
 #include "FileMan.h"
