@@ -208,9 +208,9 @@ INT32 GetCachedTile(const char* const filename)
 	strcpy(tce->zName, filename);
 	tce->sHits = 1;
 
-	GetRootName(tce->zRootName, filename);
-
-	tce->sStructRefID = FindCacheStructDataIndex(tce->zRootName);
+	char root_name[30];
+	GetRootName(root_name, filename);
+	tce->sStructRefID = FindCacheStructDataIndex(root_name);
 	if (tce->sStructRefID != -1) // ATE: Add z-strip info
 	{
 		AddZStripInfoToVObject(tce->pImagery->vo, gpTileCacheStructInfo[tce->sStructRefID].pStructureFileRef, TRUE, 0);

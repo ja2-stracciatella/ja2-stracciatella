@@ -10,7 +10,6 @@
 typedef struct
 {
 	CHAR8					zName[ 128 ];			// Name of tile ( filename and directory here )
-	CHAR8					zRootName[ 30 ];	// Root name
 	TILE_IMAGERY	*pImagery;				// Tile imagery
 	INT16					sHits;
 	UINT8					ubNumFrames;
