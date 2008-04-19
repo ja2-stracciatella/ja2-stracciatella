@@ -7,6 +7,7 @@
 #include "AIInternals.h"
 #include "LOS.h"
 #include "Soldier_Profile.h"
+#include "Structure.h"
 #include "Weapons.h"
 #include "OppList.h"
 #include "PathAI.h"

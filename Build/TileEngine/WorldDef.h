@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 #include "TileDef.h"
-#include "Structure.h"
 
 
 #define WORLD_TILE_X		40

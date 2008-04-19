@@ -1,5 +1,6 @@
 #include "Font_Control.h"
 #include "Handle_Items.h"
+#include "Structure.h"
 #include "Types.h"
 #include "SaveLoadMap.h"
 #include "Overhead.h"

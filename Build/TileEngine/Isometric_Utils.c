@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "MouseSystem.h"
+#include "Structure.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"
 #include "Isometric_Utils.h"

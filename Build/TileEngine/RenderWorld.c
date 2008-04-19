@@ -23,6 +23,7 @@
 #include "Shading.h"
 #include "Soldier_Find.h"
 #include "Sound_Control.h"
+#include "Structure.h"
 #include "SysUtil.h"
 #include "Sys_Globals.h"
 #include "Tile_Cache.h"

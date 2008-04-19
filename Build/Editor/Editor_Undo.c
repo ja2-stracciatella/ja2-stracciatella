@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "Structure.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"

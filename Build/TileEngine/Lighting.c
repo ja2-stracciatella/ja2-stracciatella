@@ -18,6 +18,7 @@
 #include "HImage.h"
 #include "Overhead.h"
 #include "math.h"
+#include "Structure.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"

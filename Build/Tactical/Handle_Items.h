@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 #include "World_Items.h"
-#include "Structure.h"
 
 
 #define ITEM_HANDLE_OK													1

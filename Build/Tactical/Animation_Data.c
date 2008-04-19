@@ -1,5 +1,6 @@
 #include "HImage.h"
 #include "Overhead.h"
+#include "Structure.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"

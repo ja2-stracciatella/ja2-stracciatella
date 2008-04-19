@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include "HImage.h"
+#include "Structure.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"

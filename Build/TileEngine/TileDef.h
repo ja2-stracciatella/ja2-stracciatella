@@ -1,8 +1,9 @@
 #ifndef __TILEDEF_H
 #define __TILEDEF_H
 
+#include "JA2Types.h"
 #include "TileDat.h"
-#include "Structure.h"
+
 
 // CATEGORY TYPES
 #define NO_TILE									64000

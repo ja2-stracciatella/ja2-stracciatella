@@ -19,6 +19,7 @@
 #include "Interface_Dialogue.h"
 #include "Message.h"
 #include "Soldier_Profile.h"
+#include "Structure.h"
 #include "TeamTurns.h"
 #include "Interactive_Tiles.h"
 #include "Render_Fun.h"

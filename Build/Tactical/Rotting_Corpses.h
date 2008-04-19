@@ -2,6 +2,7 @@
 #define _ROTTING_CORPSES_H
 
 #include "Debug.h"
+#include "Overhead_Types.h"
 #include "Tile_Animation.h"
 
 

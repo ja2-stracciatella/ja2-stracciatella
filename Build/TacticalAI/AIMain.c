@@ -1,3 +1,4 @@
+#include "Structure.h"
 #include "Timer_Control.h"
 #include "AI.h"
 #include "Isometric_Utils.h"

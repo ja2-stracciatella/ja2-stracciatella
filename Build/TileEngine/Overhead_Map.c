@@ -3,6 +3,7 @@
 #include "Handle_Items.h"
 #include "Interface_Items.h"
 #include "Local.h"
+#include "Structure.h"
 #include "VObject.h"
 #include "TileDef.h"
 #include "VSurface.h"

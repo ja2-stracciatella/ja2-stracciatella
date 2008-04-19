@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include "Font.h"
+#include "Overhead_Types.h"
 #include "Types.h"
 #include "MouseSystem.h"
 #include "Button_System.h"

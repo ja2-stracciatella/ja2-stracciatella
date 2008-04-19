@@ -153,16 +153,16 @@ typedef struct TAG_DB_STRUCTURE
 	BYTE								bUnused[1];
 } DB_STRUCTURE; // 16 bytes
 
-typedef struct TAG_DB_STRUCTURE_REF
+struct DB_STRUCTURE_REF
 {
 	DB_STRUCTURE * 												pDBStructure;
 	DB_STRUCTURE_TILE **									ppTile; // dynamic array
-} DB_STRUCTURE_REF; 		// 8 bytes
+}; // 8 bytes
 
-typedef struct TAG_STRUCTURE
+struct STRUCTURE
 {
-	struct TAG_STRUCTURE *				pPrev;
-	struct TAG_STRUCTURE *				pNext;
+	STRUCTURE*                    pPrev;
+	STRUCTURE*                    pNext;
 	INT16													sGridNo;
 	UINT16												usStructureID;
 	const DB_STRUCTURE_REF*       pDBStructureRef;
@@ -185,19 +185,19 @@ typedef struct TAG_STRUCTURE
 	UINT8													ubVehicleHitLocation;
 	UINT8													ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
 	UINT8													ubUnused[1];
-} STRUCTURE; // 32 bytes
+}; // 32 bytes
 
-typedef struct TAG_STRUCTURE_FILE_REF
+struct STRUCTURE_FILE_REF
 {
-	struct TAG_STRUCTURE_FILE_REF *		pPrev;
-	struct TAG_STRUCTURE_FILE_REF *		pNext;
-	AuxObjectData *										pAuxData;
-	RelTileLoc *											pTileLocData;
-	UINT8 *														pubStructureData;
-	DB_STRUCTURE_REF *								pDBStructureRef; // dynamic array
-	UINT16														usNumberOfStructures;
-	UINT16														usNumberOfStructuresStored;
-} STRUCTURE_FILE_REF; // 24 bytes
+	STRUCTURE_FILE_REF* pPrev;
+	STRUCTURE_FILE_REF* pNext;
+	AuxObjectData*      pAuxData;
+	RelTileLoc*         pTileLocData;
+	UINT8*              pubStructureData;
+	DB_STRUCTURE_REF*   pDBStructureRef; // dynamic array
+	UINT16              usNumberOfStructures;
+	UINT16              usNumberOfStructuresStored;
+}; // 24 bytes
 
 #define STRUCTURE_SCRIPT_FILE_EXTENSION "JSS"
 #define STRUCTURE_FILE_EXTENSION "JSD"

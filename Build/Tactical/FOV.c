@@ -1,5 +1,6 @@
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
+#include "Structure.h"
 #include "WorldDef.h"
 #include "Render_Fun.h"
 #include "RenderWorld.h"

@@ -1,6 +1,7 @@
 #include "Items.h"
 #include "Handle_Items.h"
 #include "Overhead.h"
+#include "Structure.h"
 #include "Weapons.h"
 #include "Points.h"
 #include "TileDef.h"

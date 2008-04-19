@@ -21,6 +21,7 @@
 #include "Interface.h"
 #include "Input.h"
 #include "English.h"
+#include "Structure.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "PathAI.h"

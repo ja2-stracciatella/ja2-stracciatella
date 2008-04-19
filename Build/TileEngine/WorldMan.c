@@ -1,6 +1,7 @@
 #include "Animation_Data.h"
 #include "Environment.h"
 #include "Font.h"
+#include "Structure.h"
 #include "WorldDef.h"
 #include "WCheck.h"
 #include "Debug.h"

@@ -10,6 +10,7 @@
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
 #include "Animation_Control.h"
+#include "Structure.h"
 #include "Weapons.h"
 #include "Soldier_Ani.h"
 #include "Random.h"

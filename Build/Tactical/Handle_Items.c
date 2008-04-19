@@ -5,6 +5,7 @@
 #include "Local.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
+#include "Structure.h"
 #include "VObject.h"
 #include "Weapons.h"
 #include "Points.h"

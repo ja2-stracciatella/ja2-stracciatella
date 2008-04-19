@@ -3,6 +3,7 @@
 #include "Handle_Items.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
+#include "Structure.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "WCheck.h"
