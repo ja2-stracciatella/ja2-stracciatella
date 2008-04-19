@@ -3879,16 +3879,14 @@ static UINT32 UIHandleLCChangeToLook(UI_EVENT* pUIEvent)
 }
 
 
-static BOOLEAN MakeSoldierTurn(SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos)
+static BOOLEAN MakeSoldierTurn(SOLDIERTYPE* const pSoldier, const GridNo pos)
 {
-	INT16							sFacingDir, sAPCost;
-
 	// Get direction from mouse pos
-	sFacingDir = GetDirectionFromXY( sXPos, sYPos, pSoldier );
+	const INT16 sFacingDir = GetDirectionFromGridNo(pos, pSoldier);
 
 	if ( sFacingDir != pSoldier->bDirection )
 	{
-		sAPCost = GetAPsToLook( pSoldier );
+		const INT16 sAPCost = GetAPsToLook(pSoldier);
 
 		// Check AP cost...
 		if ( !EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
@@ -3919,12 +3917,8 @@ static BOOLEAN MakeSoldierTurn(SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos)
 
 static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 {
-	INT16							sXPos, sYPos;
-
-	if ( !GetMouseXY( &sXPos, &sYPos ) )
-  {
-    return( GAME_SCREEN );
-  }
+	const GridNo pos = GetMouseMapPos();
+	if (pos == NOWHERE) return GAME_SCREEN;
 
 	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
 	{
@@ -3933,7 +3927,7 @@ static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 		{
 			if (s->bInSector && s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
 			{
-				MakeSoldierTurn(s, sXPos, sYPos);
+				MakeSoldierTurn(s, pos);
 			}
 		}
 	}
@@ -3942,7 +3936,7 @@ static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 		SOLDIERTYPE* const sel = GetSelectedMan();
 		if (sel == NULL) return GAME_SCREEN;
 
-		if (MakeSoldierTurn(sel, sXPos, sYPos)) SetUIBusy(sel);
+		if (MakeSoldierTurn(sel, pos)) SetUIBusy(sel);
   }
 	return( GAME_SCREEN );
 }
