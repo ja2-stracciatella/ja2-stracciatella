@@ -465,7 +465,7 @@ FindFileInfo* FindFiles(const char* const pattern)
 	return gfi;
 #else
 	glob_t* const g = &gfi->glob_data;
-	switch (glob(pattern, 0, NULL, g))
+	switch (glob(pattern, GLOB_NOSORT, NULL, g))
 	{
 		case 0:
 		case GLOB_NOMATCH:
