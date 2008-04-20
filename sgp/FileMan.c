@@ -365,76 +365,44 @@ BOOLEAN SetFileManCurrentDirectory(const char* const pcDirectory)
 }
 
 
-static BOOLEAN GetFileManCurrentDirectory(STRING512 pcDirectory)
-{
-#if 1 // XXX TODO
-	return getcwd(pcDirectory, sizeof(STRING512)) != NULL;
-#else
-	return GetCurrentDirectory(512, pcDirectory) != 0;
-#endif
-}
-
-
 BOOLEAN MakeFileManDirectory(const char* const pcDirectory)
 {
 	return mkdir(pcDirectory, 0755) == 0;
 }
 
 
-// Removes ALL FILES in the specified directory but leaves the directory alone.  Does not affect any subdirectories!
-BOOLEAN EraseDirectory(const char *pcDirectory)
+BOOLEAN EraseDirectory(const char* const path)
 {
-#if 1 // XXX TODO
-	FIXME
-	return FALSE;
-#else
-	WIN32_FIND_DATA sFindData;
-	HANDLE		SearchHandle;
-	const CHAR8	*pFileSpec = "*.*";
-	BOOLEAN	fDone = FALSE;
-	CHAR8		zOldDir[512];
+	char pattern[512];
+	snprintf(pattern, lengthof(pattern), "%s/*", path);
 
-	GetFileManCurrentDirectory( zOldDir );
+	FindFileInfo* const find_info = FindFiles(pattern);
+	if (find_info == NULL) return FALSE;
 
-	if( !SetFileManCurrentDirectory( pcDirectory ) )
+	BOOLEAN success = FALSE;
+	for (;;)
 	{
-		FastDebugMsg(String("EraseDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", pcDirectory, GetLastError()));
-		return( FALSE );		//Error going into directory
-	}
-
-	//If there are files in the directory, DELETE THEM
-	SearchHandle = FindFirstFile( pFileSpec, &sFindData);
-	if( SearchHandle !=  INVALID_HANDLE_VALUE )
-	{
-
-		fDone = FALSE;
-		do
+		const char* const find_filename = FindFilesNext(find_info);
+		if (find_filename == NULL)
 		{
-			// if it's a file, not a directory
-			if( GetFileAttributes( sFindData.cFileName ) != FILE_ATTRIBUTES_DIRECTORY )
-			{
-				FileDelete( sFindData.cFileName );
-			}
+			success = TRUE;
+			break;
+		}
 
-			//find the next file in the directory
-			if ( !FindNextFile( SearchHandle, &sFindData ))
-			{
-				fDone = TRUE;
-			}
-		} while(!fDone);
+		char filename[512];
+		snprintf(filename, lengthof(filename), "%s/%s", path, find_filename);
 
-		// very important: close the find handle, or subsequent RemoveDirectory() calls will fail
-		FindClose( SearchHandle );
+		if (!FileDelete(filename))
+		{
+			const FileAttributes attr = FileGetAttributes(filename);
+			if (attr == FILE_ATTR_ERROR)     break;
+			if (attr &  FILE_ATTR_DIRECTORY) continue;
+			break;
+		}
 	}
 
-	if( !SetFileManCurrentDirectory( zOldDir ) )
-	{
-		FastDebugMsg(String("EraseDirectory: ERROR - SetFileManCurrentDirectory on %s failed, error %d", zOldDir, GetLastError()));
-		return( FALSE );		//Error returning from directory
-	}
-
-	return( TRUE );
-#endif
+	FindFilesFree(find_info);
+	return success;
 }
 
 

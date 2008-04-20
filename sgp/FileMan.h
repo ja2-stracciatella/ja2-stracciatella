@@ -60,7 +60,8 @@ const char* GetExecutableDirectory(void);
 
 BOOLEAN MakeFileManDirectory(const char* pcDirectory);
 
-// WARNING: THESE DELETE ALL FILES IN THE DIRECTORY
+/* Removes ALL FILES in the specified directory, but leaves the directory alone.
+ * Does not affect any subdirectories! */
 BOOLEAN EraseDirectory(const char* pcDirectory);
 
 
