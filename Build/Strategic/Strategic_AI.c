@@ -38,7 +38,6 @@
 #	include "ScreenIDs.h"
 #	include "Squads.h"
 #	include <stdarg.h>
-#	include "Stubs.h" // XXX
 #endif
 
 
@@ -913,7 +912,7 @@ void SAIReportError(const wchar_t* wErrorString)
 		{
 			char str[512];
 			sprintf( str, "%ls\n", wErrorString );
-			OutputDebugString( str );
+			DebugMsg(TOPIC_JA2SAI, DBG_LEVEL_1, str);
 		}
 
 		// this should keep it from repeating endlessly and allow player to save/bail
@@ -3823,7 +3822,7 @@ static void LogStrategicMsg(const char* str, ...)
 	}
 	if( guiCurrentScreen == AIVIEWER_SCREEN )
 	{
-		OutputDebugString( String( "%s\n", string ) );
+		DebugMsg(TOPIC_JA2SAI, DBG_LEVEL_1, string);
 	}
 
 	fclose( fp );
@@ -3855,7 +3854,7 @@ static void LogStrategicEvent(const char* str, ...)
 	}
 	if( guiCurrentScreen == AIVIEWER_SCREEN )
 	{
-		OutputDebugString( String( "%s\n", string ) );
+		DebugMsg(TOPIC_JA2SAI, DBG_LEVEL_1, string);
 	}
 
 	fclose( fp );
