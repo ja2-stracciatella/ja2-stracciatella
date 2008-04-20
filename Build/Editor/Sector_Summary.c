@@ -2062,7 +2062,6 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void CalculateOverrideStatus(void)
 {
-	GETFILESTRUCT FileInfo;
 	char szFilename[40];
 	gfOverrideDirty = FALSE;
 	gfOverride = FALSE;
@@ -2080,17 +2079,14 @@ static void CalculateOverrideStatus(void)
 	else
 		sprintf( szFilename, "MAPS/%ls", gszFilename );
 	swprintf(gszDisplayName, lengthof(gszDisplayName), L"%hs", szFilename + 5);
-	if( GetFileFirst( szFilename, &FileInfo) )
+	const UINT32 attr = FileGetAttributes(szFilename);
+	if (attr != FILE_ATTR_ERROR)
 	{
 		if( gfWorldLoaded )
 		{
-			if( FileInfo.uiFileAttribs & ( FILE_IS_READONLY | FILE_IS_SYSTEM ) )
-				gubOverrideStatus = READONLY;
-			else
-				gubOverrideStatus = OVERWRITE;
+			gubOverrideStatus = (attr & FILE_ATTR_READONLY ? READONLY : OVERWRITE);
 			ShowButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 			ButtonList[ iSummaryButton[ SUMMARY_OVERRIDE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-			GetFileClose(&FileInfo);
 			DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
 		}
 		if( gfTempFile )

@@ -86,8 +86,6 @@ static BOOLEAN gfIllegalName;
 static BOOLEAN gfDeleteFile;
 static BOOLEAN gfNoFiles;
 
-static GETFILESTRUCT FileInfo;
-
 static BOOLEAN fEnteringLoadSaveScreen = TRUE;
 
 static MOUSE_REGION BlanketRegion;
@@ -138,6 +136,7 @@ static void LoadSaveScreenEntry(void)
 		TrashFDlgList( FileList );
 
 	iTopFileShown = iTotalFiles = 0;
+	GETFILESTRUCT FileInfo;
 	if( GetFileFirst("MAPS/*.dat", &FileInfo) )
 	{
 		FileList = AddToFDlgList( FileList, &FileInfo );
@@ -359,12 +358,15 @@ UINT32 LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			fEnteringLoadSaveScreen = TRUE;
 			return EDIT_SCREEN;
+
 		case DIALOG_DELETE:
+		{
 			sprintf( gszCurrFilename, "MAPS/%ls", gzFilename );
-			if( GetFileFirst(gszCurrFilename, &FileInfo) )
+			const UINT32 attr = FileGetAttributes(gszCurrFilename);
+			if (attr != FILE_ATTR_ERROR)
 			{
 				wchar_t str[40];
-				if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_HIDDEN|FILE_IS_SYSTEM) )
+				if (attr & FILE_ATTR_READONLY)
 				{
 					swprintf(str, lengthof(str), L" Delete READ-ONLY file %ls? ", gzFilename);
 					gfReadOnly = TRUE;
@@ -375,6 +377,8 @@ UINT32 LoadSaveScreenHandle(void)
 				CreateMessageBox( str );
 			}
 			return LOADSAVE_SCREEN;
+		}
+
 		case DIALOG_SAVE:
 			if( !ExtractFilenameFromFields() )
 			{
@@ -388,11 +392,10 @@ UINT32 LoadSaveScreenHandle(void)
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = FALSE;
-				if( GetFileFirst(gszCurrFilename, &FileInfo) )
+				const UINT32 attr = FileGetAttributes(gszCurrFilename);
+				if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_READONLY)
 				{
-					if( FileInfo.uiFileAttribs & (FILE_IS_READONLY|FILE_IS_DIRECTORY|FILE_IS_HIDDEN|FILE_IS_SYSTEM|FILE_IS_OFFLINE|FILE_IS_TEMPORARY) )
-						gfReadOnly = TRUE;
-					GetFileClose(&FileInfo);
+					gfReadOnly = TRUE;
 				}
 				if( gfReadOnly )
 					CreateMessageBox( L" File is read only!  Choose a different name? " );
