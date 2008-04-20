@@ -14,7 +14,6 @@
 
 typedef struct TILE_CACHE_STRUCT
 {
-	char Filename[150];
 	char zRootName[30];
 	STRUCTURE_FILE_REF* pStructureFileRef;
 } TILE_CACHE_STRUCT;
@@ -78,18 +77,19 @@ BOOLEAN InitTileCache(  )
 		{
 			while( GetFileNext(&FileInfo) )
 			{
-				sprintf(gpTileCacheStructInfo[cnt].Filename, "%s/Data/TILECACHE/%s", GetBinDataPath(), FileInfo.zFileName);
+				char filename[150];
+				sprintf(filename, "%s/Data/TILECACHE/%s", GetBinDataPath(), FileInfo.zFileName);
 
 				// Get root name
-				GetRootName( gpTileCacheStructInfo[ cnt ].zRootName, gpTileCacheStructInfo[ cnt ].Filename );
+				GetRootName(gpTileCacheStructInfo[cnt].zRootName, filename);
 
 				// Load struc data....
-				gpTileCacheStructInfo[ cnt ].pStructureFileRef = LoadStructureFile( gpTileCacheStructInfo[ cnt ].Filename );
+				gpTileCacheStructInfo[cnt].pStructureFileRef = LoadStructureFile(filename);
 
 #ifdef JA2TESTVERSION
 				if ( gpTileCacheStructInfo[ cnt ].pStructureFileRef == NULL )
 				{
-					SET_ERROR(  "Cannot load tilecache JSD: %s", gpTileCacheStructInfo[ cnt ].Filename );
+					SET_ERROR("Cannot load tilecache JSD: %s", filename);
 				}
 #endif
         if (strcasecmp(gpTileCacheStructInfo[cnt].zRootName, "l_dead1") == 0)
