@@ -13,7 +13,6 @@
 #	include "Input.h"
 #endif
 #include "Timer.h"
-#include "Stubs.h" // XXX
 
 
 #ifdef __cplusplus
@@ -58,8 +57,7 @@ BOOLEAN InitializeDebugManager(void)
 
 void DebugMsg(TopicID uiTopicId, DebugLevel uiDebugLevel, const char* strMessage)
 {
-	OutputDebugString(strMessage);
-	OutputDebugString("\n");
+	fprintf(stderr, "%s\n", strMessage);
 
 //add _NO_DEBUG_TXT to your SGP preprocessor definitions to avoid this f**king huge file from
 //slowly growing behind the scenes!!!!
@@ -93,7 +91,7 @@ void _DebugMessage(const char* pString, UINT32 uiLineNum, const char* pSourceFil
 
 	if (gfRecordToDebugger)
 	{
-		OutputDebugString( ubOutputString );
+		fputs(ubOutputString, stderr);
 	}
 
 #ifndef _NO_DEBUG_TXT
@@ -120,7 +118,7 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 
 	//Output to debugger
 	if (gfRecordToDebugger)
-		OutputDebugString( ubOutputString );
+		fputs(ubOutputString, stderr);
 
 	//Record to file if required
 #ifndef _NO_DEBUG_TXT

@@ -430,7 +430,6 @@ SRCS += sgp/STCI.c
 SRCS += sgp/Shading.c
 SRCS += sgp/Smack_Stub.c
 SRCS += sgp/SoundMan.c
-SRCS += sgp/Stubs.c
 SRCS += sgp/VObject.c
 SRCS += sgp/VObject_Blitters.c
 SRCS += sgp/VSurface.c
