@@ -50,10 +50,11 @@ void InitTileCache(void)
 	INT16 file_count = 0;
 	if (GetFileFirst(jsd_file_pattern, &file_info))
 	{
-		while (GetFileNext(&file_info))
+		do
 		{
 			++file_count;
 		}
+		while (GetFileNext(&file_info));
 		GetFileClose(&file_info);
 	}
 
@@ -66,7 +67,7 @@ void InitTileCache(void)
 		UINT32 i = 0;
 		if (GetFileFirst(jsd_file_pattern, &file_info))
 		{
-			while (GetFileNext(&file_info))
+			do
 			{
 				char filename[150];
 				sprintf(filename, "%s/Data/TILECACHE/%s", data_path, file_info.zFileName);
@@ -88,6 +89,7 @@ void InitTileCache(void)
 
 				++i;
 			}
+			while (GetFileNext(&file_info));
 			GetFileClose(&file_info);
 		}
 	}

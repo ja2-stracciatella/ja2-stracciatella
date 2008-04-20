@@ -1,3 +1,4 @@
+(r3852) Fix a vanilla off-by-one bug: The first .jsd found, was skipped, which results in a randomly missing corpse graphic.
 (r3819) Plug vanilla memory leak, which occurs when receiving stuff from Bobby Ray.
 (r3806) Fix a vanilla glitch: The tooltip area for pros/cons of a weapon was wider than the item description box in the map screen.
 (r3757) For OSX get the path to the game data from the bundle.
