@@ -207,7 +207,7 @@ BOOLEAN FileDelete(const char* const path)
 			{
 				return errno == ENOENT;
 			}
-			return unlink(path) == 0;
+			return unlink(path) == 0 || errno == ENOENT;
 #endif
 
 		default: return FALSE;
