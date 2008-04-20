@@ -21,7 +21,7 @@ typedef struct
 extern TILE_CACHE_ELEMENT* gpTileCache;
 
 
-BOOLEAN InitTileCache(void);
+void InitTileCache(void);
 void DeleteTileCache(void);
 
 INT32 GetCachedTile(const char* cFilename);
