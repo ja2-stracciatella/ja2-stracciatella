@@ -63,15 +63,20 @@ BOOLEAN MakeFileManDirectory(const char* pcDirectory);
 // WARNING: THESE DELETE ALL FILES IN THE DIRECTORY
 BOOLEAN EraseDirectory(const char* pcDirectory);
 
-typedef struct GETFILESTRUCT
-{
-	INT32  iFindHandle;
-	char   zFileName[260];
-} GETFILESTRUCT;
 
-BOOLEAN GetFileFirst(const char* pSpec, GETFILESTRUCT* pGFStruct);
-BOOLEAN GetFileNext(GETFILESTRUCT* pGFStruct);
-void    GetFileClose(GETFILESTRUCT* pGFStruct);
+typedef struct FindFileInfo FindFileInfo;
+
+/* Search for files designated by pattern.  Returns NULL on error.  No match
+ * does not qualify as error. */
+FindFileInfo* FindFiles(const char* pattern);
+
+/* Get the next filename of a search started by FindFiles().  Returns NULL, iff
+ * there are no more files or an error occured. */
+const char* FindFilesNext(FindFileInfo*);
+
+/* Free the data returned by a successful call to FindFiles() */
+void FindFilesFree(FindFileInfo*);
+
 
 typedef enum FileAttributes
 {

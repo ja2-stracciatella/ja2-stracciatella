@@ -43,19 +43,18 @@ void InitTileCache(void)
 
 	// Look for JSD files in the tile cache directory and load any we find
 	const char* const data_path = GetBinDataPath();
-	GETFILESTRUCT     file_info;
 	char              jsd_file_pattern[512];
 	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/Data/TILECACHE/*.jsd", data_path);
 
 	INT16 file_count = 0;
-	if (GetFileFirst(jsd_file_pattern, &file_info))
+	FindFileInfo* const find_info = FindFiles(jsd_file_pattern);
+	if (find_info != NULL)
 	{
-		do
+		while (FindFilesNext(find_info) != NULL)
 		{
 			++file_count;
 		}
-		while (GetFileNext(&file_info));
-		GetFileClose(&file_info);
+		FindFilesFree(find_info);
 	}
 
 	if (file_count > 0)
@@ -65,12 +64,16 @@ void InitTileCache(void)
 
 		// Loop through and set filenames
 		UINT32 i = 0;
-		if (GetFileFirst(jsd_file_pattern, &file_info))
+		FindFileInfo* const find_info = FindFiles(jsd_file_pattern);
+		if (find_info != NULL)
 		{
-			do
+			for (;;)
 			{
+				const char* const find_filename = FindFilesNext(find_info);
+				if (find_filename == NULL) break;
+
 				char filename[150];
-				sprintf(filename, "%s/Data/TILECACHE/%s", data_path, file_info.zFileName);
+				sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
 
 				TILE_CACHE_STRUCT* const tc = &gpTileCacheStructInfo[i];
 				GetRootName(tc->zRootName, filename);
@@ -89,8 +92,7 @@ void InitTileCache(void)
 
 				++i;
 			}
-			while (GetFileNext(&file_info));
-			GetFileClose(&file_info);
+			FindFilesFree(find_info);
 		}
 	}
 }

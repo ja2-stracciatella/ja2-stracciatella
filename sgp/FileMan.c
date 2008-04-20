@@ -33,25 +33,17 @@
 DatabaseManagerHeaderStruct gFileDataBase;
 
 
-#ifdef _WIN32
-
-static HANDLE hFindInfoHandle[20];
-
-#else
-
-struct Glob
+struct FindFileInfo
 {
-	glob_t Glob;
-	UINT32 Index;
-};
-typedef struct Glob Glob;
-
-static Glob Win32FindInfo[20];
-
+#ifdef _WIN32
+	HANDLE          find_handle;
+	WIN32_FIND_DATA find_data;
+	BOOLEAN         first_done;
+#else
+	size_t index;
+	glob_t glob_data;
 #endif
-
-
-static BOOLEAN fFindInfoInUse[20];
+};
 
 
 static char LocalPath[512];
@@ -457,103 +449,78 @@ const char* GetExecutableDirectory(void)
 }
 
 
-#ifdef _WIN32
-static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, WIN32_FIND_DATA* pW32Struct);
-#else
-static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct);
-#endif
-
-
-BOOLEAN GetFileFirst(const char* const pSpec, GETFILESTRUCT* const pGFStruct)
+FindFileInfo* FindFiles(const char* const pattern)
 {
-	CHECKF(pSpec     != NULL);
-	CHECKF(pGFStruct != NULL);
+	CHECKF(pattern != NULL);
 
-	INT32   iWhich = 0;
-	BOOLEAN fFound = FALSE;
-	for (INT32 x = 0; x < 20; ++x)
-	{
-		if (!fFindInfoInUse[x])
-		{
-			iWhich = x;
-			fFound = TRUE;
-			break;
-		}
-	}
-
-	if (!fFound) return FALSE;
-
-	pGFStruct->iFindHandle = iWhich;
+	FindFileInfo* const gfi = MALLOCZ(FindFileInfo);
+	if (gfi == NULL) return NULL;
 
 #ifdef _WIN32
-	WIN32_FIND_DATA Win32FindInfo;
-	hFindInfoHandle[iWhich] = FindFirstFile(pSpec, &Win32FindInfo);
-	if (hFindInfoHandle[iWhich] == INVALID_HANDLE_VALUE) return FALSE;
-	W32toSGPFileFind(pGFStruct, &Win32FindInfo);
-#else
-	if (glob(pSpec, 0, NULL, &Win32FindInfo[iWhich].Glob) != 0)
+	const HANDLE h = FindFirstFile(pattern, &gfi->find_data);
+	if (h != INVALID_HANDLE_VALUE)
 	{
-		globfree(&Win32FindInfo[iWhich].Glob);
-		return FALSE;
+		gfi->find_handle = h;
 	}
-	Win32FindInfo[iWhich].Index = 0;
-	W32toSGPFileFind(pGFStruct, &Win32FindInfo[iWhich]);
-#endif
+	else if (GetLastError() != ERROR_FILE_NOT_FOUND)
+	{
+		MemFree(gfi);
+		return NULL;
+	}
+	return gfi;
+#else
+	glob_t* const g = &gfi->glob_data;
+	switch (glob(pattern, 0, NULL, g))
+	{
+		case 0:
+		case GLOB_NOMATCH:
+			return gfi;
 
-	fFindInfoInUse[iWhich] = TRUE;
-	return TRUE;
+		default:
+			globfree(g);
+			MemFree(gfi);
+			return NULL;
+	}
+#endif
 }
 
 
-BOOLEAN GetFileNext(GETFILESTRUCT* const pGFStruct)
+const char* FindFilesNext(FindFileInfo* const gfi)
 {
-	CHECKF(pGFStruct != NULL);
+	CHECKN(gfi != NULL);
 
 #ifdef _WIN32
-	WIN32_FIND_DATA Win32FindInfo;
-	if (!FindNextFile(hFindInfoHandle[pGFStruct->iFindHandle], &Win32FindInfo))
+	if (!gfi->first_done)
 	{
-		return FALSE;
+		gfi->first_done = TRUE;
+		// No match?
+		if (gfi->find_handle == NULL) return NULL;
 	}
-	W32toSGPFileFind(pGFStruct, &Win32FindInfo);
+	else
+	{
+		if (!FindNextFile(gfi->find_handle, &gfi->find_data)) return NULL;
+	}
+	return gfi->find_data.cFileName;
 #else
-	Glob* const g = &Win32FindInfo[pGFStruct->iFindHandle];
-	if (g->Index >= g->Glob.gl_pathc) return FALSE;
-	W32toSGPFileFind(pGFStruct, g);
+	if (gfi->index >= gfi->glob_data.gl_pathc) return NULL;
+
+	const char* const path  = gfi->glob_data.gl_pathv[gfi->index++];
+	const char* const start = strrchr(path, '/');
+	return start != NULL ? start + 1 : path;
 #endif
-	return TRUE;
 }
 
 
-void GetFileClose(GETFILESTRUCT* const pGFStruct)
+void FindFilesFree(FindFileInfo* const gfi)
 {
-	if (pGFStruct == NULL) return;
+	CHECKV(gfi != NULL);
 
 #ifdef _WIN32
-	FindClose(hFindInfoHandle[pGFStruct->iFindHandle]);
-	hFindInfoHandle[pGFStruct->iFindHandle] = INVALID_HANDLE_VALUE;
+	if (gfi->find_handle != NULL) FindClose(gfi->find_handle);
 #else
-	globfree(&Win32FindInfo[pGFStruct->iFindHandle].Glob);
+	globfree(&gfi->glob_data);
 #endif
-	fFindInfoInUse[pGFStruct->iFindHandle] = FALSE;
-}
-
-
-#ifdef _WIN32
-static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, WIN32_FIND_DATA* pW32Struct)
-#else
-static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct)
-#endif
-{
-	// Copy the filename
-#ifdef _WIN32
-	strcpy(pGFStruct->zFileName, pW32Struct->cFileName);
-#else
-	const char* const path  = pW32Struct->Glob.gl_pathv[pW32Struct->Index++];
-	const char*       start = strrchr(path, '/');
-	start = (start != NULL ? start + 1 : path);
-	strcpy(pGFStruct->zFileName, start);
-#endif
+	MemFree(gfi);
 }
 
 

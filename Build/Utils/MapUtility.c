@@ -46,7 +46,6 @@ UINT32	MapUtilScreenHandle( )
 	static SGPPaletteEntry* p24BitValues = NULL;
 	static INT16		fNewMap = TRUE;
   InputAtom  InputEvent;
-	GETFILESTRUCT FileInfo;
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
@@ -81,15 +80,18 @@ UINT32	MapUtilScreenHandle( )
 		if (giMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
-		if( GetFileFirst("MAPS/*.dat", &FileInfo) )
+		FindFileInfo* const find_info = FindFiles("MAPS/*.dat");
+		if (find_info != NULL)
 		{
-			do
+			for (;;)
 			{
-				FileList = AddToFDlgList(FileList, FileInfo.zFileName);
-				sFiles++;
+				const char* const filename = FindFilesNext(find_info);
+				if (filename == NULL) break;
+
+				FileList = AddToFDlgList(FileList, filename);
+				++sFiles;
 			}
-			while (GetFileNext(&FileInfo));
-			GetFileClose(&FileInfo);
+			FindFilesFree(find_info);
 		}
 
 		FListNode = FileList;
