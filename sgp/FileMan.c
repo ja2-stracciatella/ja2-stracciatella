@@ -203,11 +203,9 @@ BOOLEAN FileDelete(const char* const path)
 		/* On WIN32 read-only files cannot be deleted, so try to make the file
 		 * writable and unlink() again */
 		case EACCES:
-			if (chmod(path, S_IREAD | S_IWRITE) != 0)
-			{
-				return errno == ENOENT;
-			}
-			return unlink(path) == 0 || errno == ENOENT;
+			return
+				(chmod(path, S_IREAD | S_IWRITE) == 0 && unlink(path) == 0) ||
+				errno == ENOENT;
 #endif
 
 		default: return FALSE;
