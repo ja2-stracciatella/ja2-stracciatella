@@ -100,11 +100,6 @@ BOOLEAN InitializeFileManager(void)
 #ifdef _WIN32
 	_fmode = O_BINARY;
 
-	for (UINT i = 0; i < lengthof(hFindInfoHandle); ++i)
-	{
-		hFindInfoHandle[i] = INVALID_HANDLE_VALUE;
-	}
-
 	char home[MAX_PATH];
 	if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, home)))
 	{
