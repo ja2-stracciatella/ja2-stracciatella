@@ -196,11 +196,6 @@ static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
 			}
 			if( curr )
 			{
-				if( gfReadOnly )
-				{
-					FileClearAttributes( gszCurrFilename );
-					gfReadOnly = FALSE;
-				}
 				FileDelete( gszCurrFilename );
 
 				//File is deleted so redo the text fields so they show the
@@ -370,7 +365,6 @@ UINT32 LoadSaveScreenHandle(void)
 				if (attr & FILE_ATTR_READONLY)
 				{
 					swprintf(str, lengthof(str), L" Delete READ-ONLY file %ls? ", gzFilename);
-					gfReadOnly = TRUE;
 				}
 				else
 					swprintf(str, lengthof(str), L" Delete file %ls? ", gzFilename);

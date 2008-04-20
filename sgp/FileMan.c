@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include "Config.h"
 #include "Debug.h"
@@ -19,7 +20,6 @@
 #else
 #	include <glob.h>
 #	include <pwd.h>
-#	include <sys/stat.h>
 #	include <sys/types.h>
 
 #	if defined __APPLE__ && defined __MACH__
@@ -193,7 +193,25 @@ BOOLEAN FileExistsNoDB(const char* const filename)
 
 BOOLEAN FileDelete(const char* const path)
 {
-	return unlink(path) == 0 || errno == ENOENT;
+	if (unlink(path) == 0) return TRUE;
+
+	switch (errno)
+	{
+		case ENOENT: return TRUE;
+
+#ifdef _WIN32
+		/* On WIN32 read-only files cannot be deleted, so try to make the file
+		 * writable and unlink() again */
+		case EACCES:
+			if (chmod(path, S_IREAD | S_IWRITE) != 0)
+			{
+				return errno == ENOENT;
+			}
+			return unlink(path) == 0;
+#endif
+
+		default: return FALSE;
+	}
 }
 
 

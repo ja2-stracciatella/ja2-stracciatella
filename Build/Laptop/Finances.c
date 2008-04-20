@@ -253,12 +253,7 @@ INT32 GetProjectedTotalDailyIncome( void )
 void GameInitFinances()
 {
   // initialize finances on game start up
-	// unlink Finances data file
-	if( (FileExists( FINANCES_DATA_FILE ) ) )
-	{
-		FileClearAttributes( FINANCES_DATA_FILE );
-	  FileDelete( FINANCES_DATA_FILE );
-	}
+	FileDelete(FINANCES_DATA_FILE);
 	GetBalanceFromDisk( );
 }
 

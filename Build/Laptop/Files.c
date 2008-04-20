@@ -207,13 +207,7 @@ static void ClearFilesList(void);
 
 void GameInitFiles(void)
 {
-
-	if (  (FileExists( FILES_DAT_FILE ) == TRUE ) )
-	{
-		 FileClearAttributes( FILES_DAT_FILE );
-		 FileDelete( FILES_DAT_FILE );
-	}
-
+	FileDelete(FILES_DAT_FILE);
 	ClearFilesList( );
 
 	// add background check by RIS

@@ -3553,34 +3553,10 @@ static void HandleWebBookMarkNotifyTimer(void)
 void ClearOutTempLaptopFiles(void)
 {
 	// clear out all temp files from laptop
-
-	// file file
-	if (FileExists("files.dat"))
-	{
-		FileClearAttributes("files.dat");
-		FileDelete("files.dat");
-	}
-
-	// finances
-	if (FileExists("finances.dat"))
-	{
-		FileClearAttributes("finances.dat");
-		FileDelete("finances.dat");
-	}
-
-	// email
-	if (FileExists("email.dat"))
-	{
-		FileClearAttributes("email.dat");
-		FileDelete("email.dat");
-	}
-
-	// history
-	if (FileExists("history.dat"))
-	{
-		FileClearAttributes("history.dat");
-		FileDelete("history.dat");
-	}
+	FileDelete("files.dat");
+	FileDelete("finances.dat");
+	FileDelete("email.dat");
+	FileDelete("history.dat");
 }
 
 
