@@ -67,7 +67,6 @@
 
 #ifdef JA2EDITOR
 # include "EditScreen.h"
-# include "Stubs.h" // XXX
 #endif
 
 
@@ -606,14 +605,14 @@ UINT32  MainGameScreenHandle(void)
 
 			HandleTalkingAutoFaces( );
 		}
-		#ifdef JA2EDITOR
+#ifdef JA2EDITOR
 		else if( gfIntendOnEnteringEditor )
 		{
-			OutputDebugString( "Aborting normal game mode and entering editor mode...\n" );
+			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
 			SetPendingNewScreen( 0xffff ); //NO_SCREEN
 			return EDIT_SCREEN;
 		}
-		#endif
+#endif
 		else if( !gfEnteringMapScreen )
 		{
 			gfEnteringMapScreen = TRUE;

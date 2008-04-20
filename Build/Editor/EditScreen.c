@@ -79,7 +79,6 @@
 #include "Debug.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
-#include "Stubs.h" // XXX
 
 
 static BOOLEAN gfCorruptMap        = FALSE;
@@ -223,7 +222,7 @@ static BOOLEAN EditModeInit(void)
 {
 	UINT32 x;
 
-	OutputDebugString( "Entering editor mode...\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Entering editor mode...");
 
 
 	gfRealGunNut = gGameOptions.fGunNut;
@@ -359,7 +358,7 @@ static BOOLEAN EditModeInit(void)
 	}
 	else
 	{
-		OutputDebugString( "Creating summary window...\n" );
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Creating summary window...");
 		CreateSummaryWindow();
 		gfNeedToInitGame = TRUE;
 	}
@@ -374,7 +373,7 @@ static BOOLEAN EditModeInit(void)
 
 	gfIntendOnEnteringEditor = FALSE;
 
-	OutputDebugString( "Finished entering editor mode...\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Finished entering editor mode...");
 
 	return(TRUE);
 }

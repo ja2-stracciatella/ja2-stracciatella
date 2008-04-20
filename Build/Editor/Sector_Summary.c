@@ -38,7 +38,6 @@
 #include "MemMan.h"
 #include "Soldier_Create.h"
 #include "Video.h"
-#include "Stubs.h" // XXX
 
 
 #define MAP_SIZE			208
@@ -1785,7 +1784,7 @@ static void CreateGlobalSummary(void)
 	FILE *fp;
 	STRING512			Dir;
 
-	OutputDebugString( "Generating GlobalSummary Information...\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Generating GlobalSummary Information...");
 
 	gfGlobalSummaryExists = FALSE;
 	//Set current directory to JA2/DevInfo which contains all of the summary data
@@ -1811,7 +1810,7 @@ static void CreateGlobalSummary(void)
 	RegenerateSummaryInfoForAllOutdatedMaps();
 	gfRenderSummary = TRUE;
 
-	OutputDebugString( "GlobalSummary Information generated successfully.\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "GlobalSummary Information generated successfully.");
 }
 
 
@@ -2113,7 +2112,7 @@ static void LoadGlobalSummary(void)
 	FLOAT	dMajorVersion;
   INT32 x,y;
 
-	OutputDebugString( "Executing LoadGlobalSummary()...\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Executing LoadGlobalSummary()...");
 
 	gfMustForceUpdateAllMaps = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
@@ -2126,7 +2125,7 @@ static void LoadGlobalSummary(void)
 	//Check to make sure we have a DevInfo directory.  If we don't create one!
 	if( !SetFileManCurrentDirectory( DevInfoDir ) )
 	{
-		OutputDebugString( "LoadGlobalSummary() aborted -- doesn't exist on this local computer.\n");
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
 		return;
 	}
 
@@ -2286,7 +2285,7 @@ static void LoadGlobalSummary(void)
 				FileDelete( szFilename );
 			}
 		}
-		OutputDebugString( String("Sector Row %c complete... \n", y + 'A') );
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, String("Sector Row %c complete...", y + 'A'));
 	}
 
 	sprintf( MapsDir, "%s/Data", ExecDir );
@@ -2294,11 +2293,10 @@ static void LoadGlobalSummary(void)
 
 	if( gfMustForceUpdateAllMaps )
 	{
-		OutputDebugString( String( "A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.\n", gusNumberOfMapsToBeForceUpdated ) );
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, String("A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.", gusNumberOfMapsToBeForceUpdated));
 	}
 
-
-	OutputDebugString( "LoadGlobalSummary() finished...\n" );
+	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "LoadGlobalSummary() finished...");
 }
 
 

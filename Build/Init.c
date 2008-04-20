@@ -41,12 +41,9 @@
 #include "Shading.h"
 #include "VSurface.h"
 
-#ifdef JA2BETAVERSION
-#	ifdef JA2EDITOR
-#		include "EditScreen.h"
-#		include "JAScreens.h"
-#		include "Stubs.h" // XXX
-#	endif
+#if defined JA2BETAVERSION && defined JA2EDITOR
+#	include "EditScreen.h"
+#	include "JAScreens.h"
 #endif
 
 
@@ -151,36 +148,34 @@ UINT32 InitializeJA2(void)
 	}
 #endif
 
-#ifdef JA2BETAVERSION
-	#ifdef JA2EDITOR
-		// CHECK COMMANDLINE FOR SPECIAL UTILITY
-		if( !strcmp( gzCommandLine, "-EDITORAUTO" ) )
-		{
-			OutputDebugString( "Beginning JA2 using -EDITORAUTO commandline argument...\n" );
-			//For editor purposes, need to know the default map file.
-			strcpy(g_filename, "none");
-			//also set the sector
-			gWorldSectorX = 0;
-			gWorldSectorY = 0;
-			gfAutoLoadA9 = TRUE;
-			gfIntendOnEnteringEditor = TRUE;
-			gGameOptions.fGunNut = TRUE;
-			return( GAME_SCREEN );
-		}
-		if ( strcmp( gzCommandLine, "-EDITOR" ) == 0 )
-		{
-			OutputDebugString( "Beginning JA2 using -EDITOR commandline argument...\n" );
-			//For editor purposes, need to know the default map file.
-			strcpy(g_filename, "none");
-			//also set the sector
-			gWorldSectorX = 0;
-			gWorldSectorY = 0;
-			gfAutoLoadA9 = FALSE;
-			gfIntendOnEnteringEditor = TRUE;
-			gGameOptions.fGunNut = TRUE;
-			return( GAME_SCREEN );
-		}
-	#endif
+#if defined JA2BETAVERSION && defined JA2EDITOR
+	// CHECK COMMANDLINE FOR SPECIAL UTILITY
+	if( !strcmp( gzCommandLine, "-EDITORAUTO" ) )
+	{
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -EDITORAUTO commandline argument...");
+		//For editor purposes, need to know the default map file.
+		strcpy(g_filename, "none");
+		//also set the sector
+		gWorldSectorX = 0;
+		gWorldSectorY = 0;
+		gfAutoLoadA9 = TRUE;
+		gfIntendOnEnteringEditor = TRUE;
+		gGameOptions.fGunNut = TRUE;
+		return( GAME_SCREEN );
+	}
+	if ( strcmp( gzCommandLine, "-EDITOR" ) == 0 )
+	{
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -EDITOR commandline argument...");
+		//For editor purposes, need to know the default map file.
+		strcpy(g_filename, "none");
+		//also set the sector
+		gWorldSectorX = 0;
+		gWorldSectorY = 0;
+		gfAutoLoadA9 = FALSE;
+		gfIntendOnEnteringEditor = TRUE;
+		gGameOptions.fGunNut = TRUE;
+		return( GAME_SCREEN );
+	}
 #endif
 
 	return( INIT_SCREEN );
