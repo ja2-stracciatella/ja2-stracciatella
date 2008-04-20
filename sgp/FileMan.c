@@ -545,39 +545,14 @@ static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, WIN32_FIND_DATA* pW32Stru
 static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct)
 #endif
 {
-	UINT32 uiAttribMask;
-
 	// Copy the filename
 #ifdef _WIN32
 	strcpy(pGFStruct->zFileName, pW32Struct->cFileName);
 #else
-	const char* start = strrchr(pW32Struct->Glob.gl_pathv[pW32Struct->Index], '/');
-	start = (start != NULL ? start + 1 : pW32Struct->Glob.gl_pathv[pW32Struct->Index]);
+	const char* const path  = pW32Struct->Glob.gl_pathv[pW32Struct->Index++];
+	const char*       start = strrchr(path, '/');
+	start = (start != NULL ? start + 1 : path);
 	strcpy(pGFStruct->zFileName, start);
-#endif
-
-	// Copy the file attributes
-#ifdef _WIN32
-	pGFStruct->uiFileAttribs = 0;
-
-	for (uiAttribMask = 0x80000000; uiAttribMask > 0; uiAttribMask >>= 1)
-	{
-		switch (pW32Struct->dwFileAttributes & uiAttribMask)
-		{
-			case FILE_ATTRIBUTE_ARCHIVE:    pGFStruct->uiFileAttribs |= FILE_IS_ARCHIVE;    break;
-			case FILE_ATTRIBUTE_DIRECTORY:  pGFStruct->uiFileAttribs |= FILE_IS_DIRECTORY;  break;
-			case FILE_ATTRIBUTE_HIDDEN:     pGFStruct->uiFileAttribs |= FILE_IS_HIDDEN;     break;
-			case FILE_ATTRIBUTE_NORMAL:     pGFStruct->uiFileAttribs |= FILE_IS_NORMAL;     break;
-			case FILE_ATTRIBUTE_READONLY:   pGFStruct->uiFileAttribs |= FILE_IS_READONLY;   break;
-			case FILE_ATTRIBUTE_SYSTEM:     pGFStruct->uiFileAttribs |= FILE_IS_SYSTEM;     break;
-			case FILE_ATTRIBUTE_TEMPORARY:  pGFStruct->uiFileAttribs |= FILE_IS_TEMPORARY;  break;
-			case FILE_ATTRIBUTE_COMPRESSED: pGFStruct->uiFileAttribs |= FILE_IS_COMPRESSED; break;
-			case FILE_ATTRIBUTE_OFFLINE:    pGFStruct->uiFileAttribs |= FILE_IS_OFFLINE;    break;
-		}
-	}
-#else
-	pGFStruct->uiFileAttribs = FILE_IS_NORMAL; // XXX TODO
-	++pW32Struct->Index;
 #endif
 }
 
@@ -596,7 +571,7 @@ FileAttributes FileGetAttributes(const char* const filename)
 	if (w32attr == INVALID_FILE_ATTRIBUTES) return FILE_ATTR_ERROR;
 
 	if (w32attr & FILE_ATTRIBUTE_READONLY)  attr |= FILE_ATTR_READONLY;
-	if (w32attr & FILE_ATTRIBUTE_DIRECTORY) attr |= FILE_ATTRIBUTES_DIRECTORY;
+	if (w32attr & FILE_ATTRIBUTE_DIRECTORY) attr |= FILE_ATTR_DIRECTORY;
 #endif
 	return attr;
 }

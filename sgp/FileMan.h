@@ -21,20 +21,6 @@ enum
 	FILE_SEEK_FROM_CURRENT
 };
 
-// GetFile file attributes
-enum
-{
-	FILE_IS_READONLY   = 1U << 0,
-	FILE_IS_DIRECTORY  = 1U << 1,
-	FILE_IS_HIDDEN     = 1U << 2,
-	FILE_IS_NORMAL     = 1U << 3,
-	FILE_IS_ARCHIVE    = 1U << 4,
-	FILE_IS_SYSTEM     = 1U << 5,
-	FILE_IS_TEMPORARY  = 1U << 6,
-	FILE_IS_COMPRESSED = 1U << 7,
-	FILE_IS_OFFLINE    = 1U << 8,
-};
-
 typedef struct SGP_FILETIME
 {
 	UINT32 Lo;
@@ -81,7 +67,6 @@ typedef struct GETFILESTRUCT
 {
 	INT32  iFindHandle;
 	char   zFileName[260];
-	UINT32 uiFileAttribs;
 } GETFILESTRUCT;
 
 BOOLEAN GetFileFirst(const char* pSpec, GETFILESTRUCT* pGFStruct);
