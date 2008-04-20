@@ -83,13 +83,12 @@ UINT32	MapUtilScreenHandle( )
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		if( GetFileFirst("MAPS/*.dat", &FileInfo) )
 		{
-			FileList = AddToFDlgList( FileList, &FileInfo );
-			sFiles++;
-			while( GetFileNext(&FileInfo) )
+			do
 			{
-				FileList = AddToFDlgList( FileList, &FileInfo );
+				FileList = AddToFDlgList(FileList, FileInfo.zFileName);
 				sFiles++;
 			}
+			while (GetFileNext(&FileInfo));
 			GetFileClose(&FileInfo);
 		}
 
@@ -111,7 +110,7 @@ UINT32	MapUtilScreenHandle( )
 	}
 
 	char zFilename[260];
-	strcpy(zFilename, FListNode->FileInfo.zFileName);
+	strcpy(zFilename, FListNode->filename);
 
 	// OK, load maps and do overhead shrinkage of them...
 	if ( !LoadWorld( zFilename ) )

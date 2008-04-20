@@ -10,12 +10,12 @@
 typedef struct FDLG_LIST FDLG_LIST;
 struct FDLG_LIST
 {
-	GETFILESTRUCT FileInfo;
+	char       filename[260];
 	FDLG_LIST* pNext;
 	FDLG_LIST* pPrev;
 };
 
-extern FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo);
+FDLG_LIST* AddToFDlgList(FDLG_LIST* pList, const char* filename);
 
 
 BOOLEAN ExternalLoadMap(const wchar_t* szFilename);

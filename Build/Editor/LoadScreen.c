@@ -139,13 +139,12 @@ static void LoadSaveScreenEntry(void)
 	GETFILESTRUCT FileInfo;
 	if( GetFileFirst("MAPS/*.dat", &FileInfo) )
 	{
-		FileList = AddToFDlgList( FileList, &FileInfo );
-		iTotalFiles++;
-		while( GetFileNext(&FileInfo) )
+		do
 		{
-			FileList = AddToFDlgList( FileList, &FileInfo );
+			FileList = AddToFDlgList(FileList, FileInfo.zFileName);
 			iTotalFiles++;
 		}
+		while (GetFileNext(&FileInfo));
 		GetFileClose(&FileInfo);
 	}
 
@@ -210,7 +209,7 @@ static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
 				if( !temp )
 					wcscpy( gzFilename, L"" );
 				else
-					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->FileInfo.zFileName);
+					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->filename);
 				if( ValidFilename() )
 				{
 					SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -341,7 +340,7 @@ UINT32 LoadSaveScreenHandle(void)
 			SetFontForeground( FONT_BLACK );
 			SetFontBackground( 142 );
 		}
-		mprintf( 186,(73+ (x-iTopFileShown)*15 ), L"%ls", FListNode->FileInfo.zFileName);
+		mprintf(186, 73 + (x - iTopFileShown) * 15, L"%hs", FListNode->filename);
 		FListNode = FListNode->pNext;
 	}
 
@@ -514,8 +513,8 @@ static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering)
 		{
 			if( iCurrFileShown == (x-iTopFileShown) )
 			{
-				FListNode->FileInfo.zFileName[30] = 0;
-				SetInputFieldStringWith8BitString( 0, FListNode->FileInfo.zFileName );
+				FListNode->filename[30] = '\0';
+				SetInputFieldStringWith8BitString(0, FListNode->filename);
 				return;
 			}
 			FListNode = FListNode->pNext;
@@ -606,8 +605,8 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 		{
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
-			FListNode->FileInfo.zFileName[30] = 0;
-			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->FileInfo.zFileName);
+			FListNode->filename[30] = '\0';
+			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->filename);
 			if( ValidFilename() )
 			{
 				SetInputFieldStringWith16BitString( 0, gzFilename );
@@ -633,23 +632,24 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 	}
 }
 
-FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
+
+FDLG_LIST* AddToFDlgList(FDLG_LIST* const pList, const char* const filename)
 {
 	// Add to start of list
 	if ( pList == NULL )
 	{
 		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
-		pNode->FileInfo = *pInfo;
+		strlcpy(pNode->filename, filename, lengthof(pNode->filename));
 		pNode->pPrev = pNode->pNext = NULL;
 		return(pNode);
 	}
 
 	// Add and sort alphabetically without regard to case -- function limited to 10 chars comparison
-	if (strcasecmp(pList->FileInfo.zFileName, pInfo->zFileName) > 0)
+	if (strcasecmp(pList->filename, filename) > 0)
 	{
-		// pInfo is smaller than pList (i.e. Insert before)
+		// filename is smaller than pList (i.e. Insert before)
 		FDLG_LIST* const pNode = MALLOC(FDLG_LIST);
-		pNode->FileInfo = *pInfo;
+		strlcpy(pNode->filename, filename, lengthof(pNode->filename));
 		pNode->pNext = pList;
 		pNode->pPrev = pList->pPrev;
 		pList->pPrev = pNode;
@@ -657,7 +657,7 @@ FDLG_LIST *AddToFDlgList(FDLG_LIST *pList, GETFILESTRUCT *pInfo)
 	}
 	else
 	{
-		pList->pNext = AddToFDlgList( pList->pNext, pInfo );
+		pList->pNext = AddToFDlgList(pList->pNext, filename);
 		pList->pNext->pPrev = pList;
 	}
 	return(pList);
@@ -713,7 +713,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 	curr = prev = FileList;
 	while( curr )
 	{
-		usNodeLetter = curr->FileInfo.zFileName[0]; //first letter of filename.
+		usNodeLetter = curr->filename[0]; //first letter of filename.
 		if( usNodeLetter < 'a' )
 			usNodeLetter += 32; //convert uppercase to lower case A=65, a=97
 		if( usLetter <= usNodeLetter )
@@ -728,7 +728,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 		iTopFileShown = x;
 		if( iTopFileShown > iTotalFiles - 7 )
 			iTopFileShown = iTotalFiles - 7;
-		SetInputFieldStringWith8BitString( 0, prev->FileInfo.zFileName );
+		SetInputFieldStringWith8BitString(0, prev->filename);
 	}
 }
 
@@ -822,8 +822,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		}
 		if( curr )
 		{
-			SetInputFieldStringWith8BitString( 0, curr->FileInfo.zFileName );
-			swprintf(gzFilename, lengthof(gzFilename), L"%hs", curr->FileInfo.zFileName);
+			SetInputFieldStringWith8BitString(0, curr->filename);
+			swprintf(gzFilename, lengthof(gzFilename), L"%hs", curr->filename);
 		}
 	}
 }
