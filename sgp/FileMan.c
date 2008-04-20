@@ -21,7 +21,6 @@
 #	include <pwd.h>
 #	include <sys/stat.h>
 #	include <sys/types.h>
-#	include "Stubs.h" // XXX
 
 #	if defined __APPLE__ && defined __MACH__
 #		include <CoreFoundation/CoreFoundation.h>
@@ -399,7 +398,8 @@ BOOLEAN MakeFileManDirectory(const char* const pcDirectory)
 BOOLEAN EraseDirectory(const char *pcDirectory)
 {
 #if 1 // XXX TODO
-	UNIMPLEMENTED
+	FIXME
+	return FALSE;
 #else
 	WIN32_FIND_DATA sFindData;
 	HANDLE		SearchHandle;
@@ -582,32 +582,23 @@ static void W32toSGPFileFind(GETFILESTRUCT* pGFStruct, Glob* pW32Struct)
 }
 
 
-UINT32 FileGetAttributes(const char* const strFilename)
+FileAttributes FileGetAttributes(const char* const filename)
 {
+	FileAttributes attr = FILE_ATTR_NONE;
 #ifndef _WIN32 // XXX TODO
-	FIXME
 	struct stat sb;
-	if (stat(strFilename, &sb) != 0) return 0xFFFFFFFF;
+	if (stat(filename, &sb) != 0) return FILE_ATTR_ERROR;
 
-	UINT32 uiFileAttrib = 0;
-	if (S_ISDIR(sb.st_mode)) uiFileAttrib |= FILE_ATTRIBUTES_DIRECTORY;
-	return uiFileAttrib;
+	if (S_ISDIR(sb.st_mode))     attr |= FILE_ATTR_DIRECTORY;
+	if (!(sb.st_mode & S_IWUSR)) attr |= FILE_ATTR_READONLY;
 #else
-	const UINT32 uiAttribs = GetFileAttributes(strFilename);
+	const UINT32 w32attr = GetFileAttributes(filename);
+	if (w32attr == INVALID_FILE_ATTRIBUTES) return FILE_ATTR_ERROR;
 
-	if (uiAttribs == 0xFFFFFFFF) return uiAttribs;
-
-	UINT32 uiFileAttrib = 0;
-	if (uiAttribs & FILE_ATTRIBUTE_ARCHIVE)   uiFileAttrib |= FILE_ATTRIBUTES_ARCHIVE;
-	if (uiAttribs & FILE_ATTRIBUTE_HIDDEN)    uiFileAttrib |= FILE_ATTRIBUTES_HIDDEN;
-	if (uiAttribs & FILE_ATTRIBUTE_NORMAL)    uiFileAttrib |= FILE_ATTRIBUTES_NORMAL;
-	if (uiAttribs & FILE_ATTRIBUTE_OFFLINE)   uiFileAttrib |= FILE_ATTRIBUTES_OFFLINE;
-	if (uiAttribs & FILE_ATTRIBUTE_READONLY)  uiFileAttrib |= FILE_ATTRIBUTES_READONLY;
-	if (uiAttribs & FILE_ATTRIBUTE_SYSTEM)    uiFileAttrib |= FILE_ATTRIBUTES_SYSTEM;
-	if (uiAttribs & FILE_ATTRIBUTE_TEMPORARY) uiFileAttrib |= FILE_ATTRIBUTES_TEMPORARY;
-	if (uiAttribs & FILE_ATTRIBUTE_DIRECTORY) uiFileAttrib |= FILE_ATTRIBUTES_DIRECTORY;
-	return uiFileAttrib;
+	if (w32attr & FILE_ATTRIBUTE_READONLY)  attr |= FILE_ATTR_READONLY;
+	if (w32attr & FILE_ATTRIBUTE_DIRECTORY) attr |= FILE_ATTRIBUTES_DIRECTORY;
 #endif
+	return attr;
 }
 
 

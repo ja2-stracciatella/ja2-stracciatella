@@ -47,7 +47,6 @@
 #include "Map_Screen_Interface_Map_Inventory.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
-#include "Stubs.h" // XXX
 
 
 static BOOLEAN gfWasInMeanwhile = FALSE;
@@ -1142,13 +1141,11 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
 //Deletes the Temp map Directory
 BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 {
-	UINT32	uiRetVal;
-
 	//If the Map Temp directory exists, removes the temp files
-	uiRetVal = FileGetAttributes( MAPS_DIR );
-	if( uiRetVal != 0xFFFFFFFF )
+	const FileAttributes attr = FileGetAttributes(MAPS_DIR);
+	if (attr != FILE_ATTR_ERROR)
 	{
-		if( uiRetVal & FILE_ATTRIBUTES_DIRECTORY )
+		if (attr & FILE_ATTR_DIRECTORY)
 		{
 			//Erase the directory
 			if( !EraseDirectory( MAPS_DIR ) )

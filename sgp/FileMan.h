@@ -35,16 +35,6 @@ enum
 	FILE_IS_OFFLINE    = 1U << 8,
 };
 
-//File Attributes settings
-#define FILE_ATTRIBUTES_ARCHIVE   FILE_ATTRIBUTE_ARCHIVE
-#define FILE_ATTRIBUTES_HIDDEN    FILE_ATTRIBUTE_HIDDEN
-#define FILE_ATTRIBUTES_NORMAL    FILE_ATTRIBUTE_NORMAL
-#define FILE_ATTRIBUTES_OFFLINE   FILE_ATTRIBUTE_OFFLINE
-#define FILE_ATTRIBUTES_READONLY  FILE_ATTRIBUTE_READONLY
-#define FILE_ATTRIBUTES_SYSTEM    FILE_ATTRIBUTE_SYSTEM
-#define FILE_ATTRIBUTES_TEMPORARY FILE_ATTRIBUTE_TEMPORARY
-#define FILE_ATTRIBUTES_DIRECTORY FILE_ATTRIBUTE_DIRECTORY
-
 typedef struct SGP_FILETIME
 {
 	UINT32 Lo;
@@ -98,8 +88,16 @@ BOOLEAN GetFileFirst(const char* pSpec, GETFILESTRUCT* pGFStruct);
 BOOLEAN GetFileNext(GETFILESTRUCT* pGFStruct);
 void    GetFileClose(GETFILESTRUCT* pGFStruct);
 
-UINT32  FileGetAttributes(const char* filename);
-BOOLEAN FileClearAttributes(const char* filename);
+typedef enum FileAttributes
+{
+	FILE_ATTR_NONE      = 0,
+	FILE_ATTR_READONLY  = 1U << 0,
+	FILE_ATTR_DIRECTORY = 1U << 1,
+	FILE_ATTR_ERROR     = 0xFFFFFFFFU
+} FileAttributes;
+
+FileAttributes FileGetAttributes(const char* filename);
+BOOLEAN        FileClearAttributes(const char* filename);
 
 BOOLEAN GetFileManFileTime(HWFILE hFile, SGP_FILETIME* pCreationTime, SGP_FILETIME* pLastAccessedTime, SGP_FILETIME* pLastWriteTime);
 

@@ -499,7 +499,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 	//Check to see if the save directory exists
 	const char* const dir = g_savegame_dir;
-	if (FileGetAttributes(dir) == 0xFFFFFFFF && // if the directory does not exist
+	if (FileGetAttributes(dir) == FILE_ATTR_ERROR && // if the directory does not exist
 			!MakeFileManDirectory(dir))
 	{
 		goto FAILED_TO_SAVE_NO_CLOSE;
