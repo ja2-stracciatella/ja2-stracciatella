@@ -126,25 +126,6 @@ void DisplayFrameRate( )
 		//gprintfdirty( 0, 0, L"GOD MODE" );
 		//mprintf( 0, 0, L"GOD MODE" );
 	}
-
-#ifdef _DEBUG
-
-	SetFont( SMALLFONT1 );
-	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_DKGRAY );
-
-	if ( gbFPSDisplay == SHOW_FULL_FPS )
-	{
-		// Print Num tiles
-		//gprintfdirty( 0, 280, L"%d Tiles", gTileDatabaseSize );
-		//mprintf( 0, 280, L"%d Tiles", gTileDatabaseSize );
-
-		// Print tile mem usage
-		//gprintfdirty( 0, 300, L"%d kB", guiMemTotal / 1024 );
-		//mprintf( 0, 300, L"%d kB", guiMemTotal / 1024 );
-
-	}
-#endif
 }
 
 

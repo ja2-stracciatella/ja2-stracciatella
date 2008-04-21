@@ -121,7 +121,6 @@ typedef struct
 
 // Globals used
 extern TILE_ELEMENT gTileDatabase[NUMBEROFTILES];
-extern UINT16       gTileDatabaseSize;
 extern UINT16       gTileTypeStartIndex[NUMBEROFTILETYPES];
 
 static inline const TILE_ELEMENT* TileElemFromTileType(const UINT16 tile_type)

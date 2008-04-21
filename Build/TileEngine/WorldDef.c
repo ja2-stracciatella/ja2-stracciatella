@@ -161,8 +161,6 @@ static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 BOOLEAN InitializeWorld( )
 {
-
-	gTileDatabaseSize = 0;
 	gSurfaceMemUsage = 0;
 	giCurrentTilesetID = -1;
 

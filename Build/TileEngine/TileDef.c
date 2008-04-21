@@ -15,7 +15,7 @@
 
 // GLobals
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];
-UINT16					gTileDatabaseSize;
+static UINT16 gTileDatabaseSize;
 UINT16					gusNumAnimatedTiles = 0;
 UINT16					gusAnimatedTiles[ MAX_ANIMATED_TILES ];
 
