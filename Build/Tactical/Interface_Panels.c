@@ -2533,8 +2533,6 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			if (s == NULL)
 			{
 				//BLIT CLOSE PANEL
-				const INT32 x = dx + TM_FACE_X;
-				const INT32 y = dy + TM_FACE_Y;
 				BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, dx + TM_FACE_X, dy + TM_FACE_Y);
 
 				if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || INTERRUPT_QUEUED)

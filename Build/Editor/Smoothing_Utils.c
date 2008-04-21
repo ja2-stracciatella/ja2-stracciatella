@@ -170,7 +170,6 @@ LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
 LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 {
 	LEVELNODE *pStruct;
-	UINT32 uiTileType;
 
 	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
 	while( pStruct )
