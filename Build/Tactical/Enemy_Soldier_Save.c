@@ -1043,7 +1043,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	INT32 i;
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
-	HWFILE hfile;
 	CHAR8		zMapName[ 128 ];
 	UINT8 ubSectorID;
 
@@ -1190,8 +1189,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 	}
 
-	//Open the file for writing, Create it if it doesnt exist
-	hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;

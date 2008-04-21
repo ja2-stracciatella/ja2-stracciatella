@@ -202,7 +202,6 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32	uiNumLightEffects=0;
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 
 	//get the name of the map
@@ -226,8 +225,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return( TRUE );
 	}
 
-	//Open the file for writing
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file

@@ -1521,7 +1521,6 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d)
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 	UINT8		ubCnt;
 
 	// Turn off any DOOR BUSY flags....
@@ -1533,7 +1532,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file

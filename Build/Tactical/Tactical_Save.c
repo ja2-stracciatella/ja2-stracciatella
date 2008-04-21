@@ -1175,13 +1175,11 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 
 static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening map modification file
@@ -1427,11 +1425,8 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
-	HWFILE	hFile;
 
-
-	//Open the temp npc file
-	hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
+	const HWFILE hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
 	if( hFile == 0 )
 	{
 		//Error opening temp npc quote info
