@@ -1,6 +1,7 @@
 #include "FileMan.h"
 #include "Debug.h"
 #include "Isometric_Utils.h"
+#include "TileDat.h"
 #include "Types.h"
 #include "WorldDef.h"
 #include "WorldMan.h"

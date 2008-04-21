@@ -5,6 +5,7 @@
 #include "Gameloop.h"
 #include "HImage.h"
 #include "Soldier_Find.h"
+#include "TileDat.h"
 #include "Timer_Control.h"
 #include "SysUtil.h"
 #include "Overhead.h"

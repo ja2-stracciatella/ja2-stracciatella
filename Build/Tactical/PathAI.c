@@ -22,6 +22,7 @@
 #include "Input.h"
 #include "English.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "PathAI.h"

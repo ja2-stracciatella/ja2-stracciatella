@@ -11,6 +11,7 @@
 #include "Render_Fun.h"
 #include "StrategicMap.h"
 #include "Environment.h"
+#include "TileDef.h"
 #include "WorldMan.h"
 #include "MemMan.h"
 #include "FileMan.h"

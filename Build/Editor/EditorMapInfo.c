@@ -2,7 +2,6 @@
 
 #ifdef JA2EDITOR
 
-#include "TileDef.h"
 #include "Edit_Sys.h"
 #include "MouseSystem.h"
 #include "Line.h"

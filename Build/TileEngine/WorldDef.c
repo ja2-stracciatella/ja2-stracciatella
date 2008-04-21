@@ -2,6 +2,7 @@
 #include "HImage.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "WorldDat.h"

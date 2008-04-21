@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "HImage.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "Smooth.h"

@@ -2,6 +2,7 @@
 #include "Handle_Items.h"
 #include "Items.h"
 #include "Action_Items.h"
+#include "TileDef.h"
 #include "Weapons.h"
 #include "Interface_Cursors.h"
 #include "Soldier_Control.h"

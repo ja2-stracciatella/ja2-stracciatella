@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "TileDef.h"
 #include "WorldDef.h"	//LEVELNODE def
 #include "WorldMan.h"	//ReplaceStructIndex
 #include "SmartMethod.h"

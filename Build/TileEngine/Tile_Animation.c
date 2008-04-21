@@ -1,5 +1,6 @@
 #include "Physics.h"
 #include "Soldier_Find.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "Debug.h"

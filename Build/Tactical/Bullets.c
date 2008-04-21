@@ -1,4 +1,5 @@
 #include "LoadSaveBullet.h"
+#include "TileDat.h"
 #include "WorldDef.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"

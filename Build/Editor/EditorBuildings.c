@@ -6,7 +6,6 @@
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
-#include "TileDef.h"
 #include "Edit_Sys.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
@@ -27,6 +26,7 @@
 #include "Simple_Render_Utils.h"
 #include "Debug.h"
 #include "MemMan.h"
+#include "TileDat.h"
 #include "Video.h"
 
 

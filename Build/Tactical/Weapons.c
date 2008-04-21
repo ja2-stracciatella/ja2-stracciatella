@@ -6,6 +6,7 @@
 #include "Overhead.h"
 #include "Event_Pump.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "Weapons.h"
 #include "Animation_Control.h"

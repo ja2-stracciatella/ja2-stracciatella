@@ -1,5 +1,6 @@
 #include "Font_Control.h"
 #include "Overhead.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "Render_Fun.h"
 #include "Debug.h"

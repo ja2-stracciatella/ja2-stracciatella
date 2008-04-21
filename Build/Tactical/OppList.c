@@ -24,6 +24,7 @@
 #include "Interactive_Tiles.h"
 #include "Render_Fun.h"
 #include "Text.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "Soldier_Macros.h"
 #include "Soldier_Functions.h"

@@ -1,5 +1,6 @@
 #include "Handle_Items.h"
 #include "Soldier_Find.h"
+#include "TileDef.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "Debug.h"

@@ -4,6 +4,7 @@
 #include "LoadSaveRealObject.h"
 #include "Physics.h"
 #include "Structure.h"
+#include "TileDat.h"
 #include "WCheck.h"
 #include "Timer_Control.h"
 #include "Isometric_Utils.h"

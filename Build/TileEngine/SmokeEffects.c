@@ -2,6 +2,7 @@
 #include "Overhead.h"
 #include "Debug.h"
 #include "Soldier_Control.h"
+#include "TileDef.h"
 #include "Weapons.h"
 #include "Handle_Items.h"
 #include "WorldDef.h"

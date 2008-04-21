@@ -1,5 +1,6 @@
 #include "Cursors.h"
 #include "Font_Control.h"
+#include "TileDat.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
 #include "RenderWorld.h"

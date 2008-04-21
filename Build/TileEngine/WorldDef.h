@@ -2,7 +2,6 @@
 #define __WORLDDEF_H
 
 #include "JA2Types.h"
-#include "TileDef.h"
 
 
 #define WORLD_TILE_X		40

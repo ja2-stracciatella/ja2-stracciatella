@@ -1,5 +1,6 @@
 #include "Handle_Items.h"
 #include "Soldier_Find.h"
+#include "TileDef.h"
 #include "WorldDef.h"
 #include "Points.h"
 #include "Overhead.h"

@@ -16,7 +16,6 @@
 #include "HImage.h"
 #include "Input.h"
 #include "Local.h"
-#include "TileDef.h"
 #include "SysUtil.h"
 #include "Font.h"
 #include "Font_Control.h"

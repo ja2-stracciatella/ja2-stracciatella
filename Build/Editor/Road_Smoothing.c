@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "TileDef.h"
 #include "Types.h"
 #include "Road_Smoothing.h"
 #include "TileDat.h"

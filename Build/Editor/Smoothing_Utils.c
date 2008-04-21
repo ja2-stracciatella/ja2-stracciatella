@@ -3,6 +3,7 @@
 #ifdef JA2EDITOR
 
 #include <stdlib.h>
+#include "TileDef.h"
 #include "WorldDef.h"	//for LEVELNODE def
 #include "WorldMan.h" //for RemoveXXXX()
 #include "Isometric_Utils.h" //for GridNoOnVisibleWorldTile()

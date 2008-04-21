@@ -24,6 +24,7 @@ typedef struct SMOKEEFFECT        SMOKEEFFECT;
 typedef struct SOLDIERTYPE        SOLDIERTYPE;
 typedef struct STRUCTURE          STRUCTURE;
 typedef struct STRUCTURE_FILE_REF STRUCTURE_FILE_REF;
+typedef struct TILE_IMAGERY       TILE_IMAGERY;
 typedef struct VEHICLETYPE        VEHICLETYPE;
 typedef struct VIDEO_OVERLAY      VIDEO_OVERLAY;
 

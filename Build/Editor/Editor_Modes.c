@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "TileDat.h"
 #include "Types.h"
 #include "Editor_Modes.h"
 #include "Editor_Taskbar_Utils.h"

@@ -1,4 +1,5 @@
 #include "Structure.h"
+#include "TileDef.h"
 #include "Types.h"
 #include "Buildings.h"
 #include "Isometric_Utils.h"

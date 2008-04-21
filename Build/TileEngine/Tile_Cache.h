@@ -2,7 +2,6 @@
 #define __TILE_CACHE_H
 
 #include "JA2Types.h"
-#include "TileDef.h"
 
 
 #define	TILE_CACHE_START_INDEX		36000

@@ -2,6 +2,7 @@
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "WCheck.h"
 #include "Isometric_Utils.h"

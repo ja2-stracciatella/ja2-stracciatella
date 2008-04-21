@@ -3,6 +3,7 @@
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
+#include "TileDef.h"
 #include "VObject.h"
 #include "SysUtil.h"
 #include "RenderWorld.h"

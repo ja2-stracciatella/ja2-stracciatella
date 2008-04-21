@@ -2,6 +2,7 @@
 #include "Environment.h"
 #include "Font.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "WorldDef.h"
 #include "WCheck.h"
 #include "Debug.h"

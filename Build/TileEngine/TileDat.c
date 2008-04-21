@@ -1,3 +1,4 @@
+#include "TileDat.h"
 #include "TileDef.h"
 #include "WorldDef.h"
 

@@ -1,5 +1,6 @@
 #include "HImage.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "Tile_Surface.h"
 #include "VObject.h"
 #include "WorldDef.h"

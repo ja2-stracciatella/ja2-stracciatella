@@ -6,6 +6,7 @@
 #include "Physics.h"
 #include "Items.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "Weapons.h"
 #include "Spread_Burst.h"
 #include "Overhead.h"

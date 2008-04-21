@@ -8,6 +8,7 @@
 #include "Isometric_Utils.h"
 #include "Local.h"
 #include "Structure.h"
+#include "TileDat.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "Video.h"

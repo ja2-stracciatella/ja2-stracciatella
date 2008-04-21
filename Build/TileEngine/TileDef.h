@@ -57,7 +57,7 @@ typedef enum TerrainTypeDefines
 
 
 // These structures are placed in a list and used for all tile imagery
-typedef struct
+struct TILE_IMAGERY
 {
 	HVOBJECT									vo;
 	UINT32										fType;
@@ -69,7 +69,7 @@ typedef struct
 
 	// Reserved for added room and 32-byte boundaries
 	BYTE													bReserved[ 2 ];
-} TILE_IMAGERY;
+};
 
 typedef struct
 {

@@ -3,6 +3,7 @@
 #include "Boxing.h"
 #include "Render_Fun.h"
 #include "Random.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "WorldMan.h"
 #include "Soldier_Profile.h"

@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "TileDef.h"
 #include "WorldDef.h"
 #include "Random.h"
 #include "Smell.h"

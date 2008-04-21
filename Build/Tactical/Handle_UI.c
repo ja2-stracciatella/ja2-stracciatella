@@ -10,6 +10,7 @@
 #include "Soldier_Control.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "MouseSystem.h"
 #include "Cursors.h"

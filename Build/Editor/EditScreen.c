@@ -9,6 +9,7 @@
 #include "SGP.h"
 #include "Button_System.h"
 #include "Structure.h"
+#include "TileDef.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "VSurface.h"

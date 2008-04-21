@@ -2,6 +2,7 @@
 
 #ifdef JA2EDITOR
 
+#include "TileDat.h"
 #include "Types.h"
 #include "Cursor_Modes.h"
 #include "Random.h"

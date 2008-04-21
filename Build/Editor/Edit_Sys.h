@@ -4,6 +4,9 @@
 #ifndef __EDIT_SYS_H
 #define __EDIT_SYS_H
 
+#include "Types.h"
+
+
 #define			SMALLBRUSH		0
 #define			MEDIUMBRUSH		1
 #define     LARGEBRUSH		2

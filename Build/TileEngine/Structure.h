@@ -3,7 +3,6 @@
 
 #include "JA2Types.h"
 #include "Structure_Internals.h"
-#include "TileDef.h"
 #include "Overhead_Types.h"
 
 #define NOTHING_BLOCKING							0

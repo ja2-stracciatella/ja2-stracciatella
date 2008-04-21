@@ -26,6 +26,7 @@
 #include "Structure.h"
 #include "SysUtil.h"
 #include "Sys_Globals.h"
+#include "TileDef.h"
 #include "Tile_Cache.h"
 #include "Timer_Control.h"
 #include "VObject.h"
