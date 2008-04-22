@@ -1329,7 +1329,7 @@ void AddItemToLeaveIndex(const OBJECTTYPE* const o, const UINT32 uiSlotIndex)
 
 	// Append node to list
 	MERC_LEAVE_ITEM** anchor = &gpLeaveListHead[uiSlotIndex];
-	while (*anchor != NULL) &(*anchor)->pNext;
+	while (*anchor != NULL) anchor = &(*anchor)->pNext;
 	*anchor = mli;
 }
 
