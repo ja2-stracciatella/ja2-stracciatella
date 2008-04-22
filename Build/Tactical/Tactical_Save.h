@@ -44,7 +44,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* npc, INT16 sSectorX, INT16 sS
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file
-BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, ROTTING_CORPSE_DEFINITION *pRottingCorpseDef );
+BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const ROTTING_CORPSE_DEFINITION*);
 
 
 

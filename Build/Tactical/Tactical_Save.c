@@ -1529,73 +1529,38 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT1
 }
 
 
-BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ, ROTTING_CORPSE_DEFINITION *pRottingCorpseDef )
+BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const ROTTING_CORPSE_DEFINITION* const corpse_def)
 {
-	HWFILE	hFile;
-	UINT32	uiNumberOfCorpses;
-	CHAR8		zMapName[ 128 ];
+	char map_name[128];
+	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
 
-	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	const HWFILE f = FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS);
+	if (f == 0) return FALSE;
 
-	//CHECK TO SEE if the file exist
-	if( FileExists( zMapName ) )
+	UINT32 corpse_count;
+	if (FileGetSize(f) != 0)
 	{
-		//Open the file for reading
-		hFile = FileOpen(zMapName, FILE_ACCESS_READWRITE);
-		if( hFile == 0 )
-		{
-			//Error opening map modification file,
-			return( FALSE );
-		}
-
-		// Load the number of Rotting corpses
-		if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
-		{
-			//Error Writing size of array to disk
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileRead(f, &corpse_count, sizeof(corpse_count))) goto fail_close;
+		FileSeek(f, 0, FILE_SEEK_FROM_START);
 	}
 	else
 	{
-		//the file doesnt exists, create a new one
-		hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-		if( hFile == 0 )
-		{
-			//Error opening map modification file
-			return( FALSE );
-		}
-		uiNumberOfCorpses = 0;
+		corpse_count = 0;
 	}
 
-	//Start at the begining of the file
-	FileSeek( hFile, 0, FILE_SEEK_FROM_START );
+	++corpse_count;
+	if (!FileWrite(f, &corpse_count, sizeof(corpse_count))) goto fail_close;
 
-	//Add on to the number and save it back to disk
-	uiNumberOfCorpses++;
+	FileSeek(f, 0, FILE_SEEK_FROM_END);
+	if (!InjectRottingCorpseIntoFile(f, corpse_def)) goto fail_close;
 
-	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
+	FileClose(f);
+	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
+	return TRUE;
 
-
-	//Go to the end of the file
-	FileSeek( hFile, 0, FILE_SEEK_FROM_END );
-
-	//Append the new rotting corpse def to the end of the file
-	if (!InjectRottingCorpseIntoFile(hFile, pRottingCorpseDef))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-
-	FileClose( hFile );
-	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS );
-	return( TRUE );
+fail_close:
+	FileClose(f);
+	return FALSE;
 }
 
 
