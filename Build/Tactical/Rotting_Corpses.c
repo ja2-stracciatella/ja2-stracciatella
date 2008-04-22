@@ -636,8 +636,6 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	memset( &Corpse, 0, sizeof( Corpse ) );
 	Corpse.ubBodyType							= pSoldier->ubBodyType;
 	Corpse.sGridNo								= pSoldier->sGridNo;
-	Corpse.dXPos									= pSoldier->dXPos;
-	Corpse.dYPos									= pSoldier->dYPos;
 	Corpse.bLevel									= pSoldier->bLevel;
 	Corpse.ubProfile							= pSoldier->ubProfile;
 

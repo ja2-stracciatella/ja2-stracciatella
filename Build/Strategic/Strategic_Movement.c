@@ -1110,9 +1110,6 @@ static void AwardExperienceForTravelling(GROUP* pGroup)
 static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 {
   ROTTING_CORPSE_DEFINITION		Corpse;
-  INT16				                sXPos, sYPos;
-
-
 	memset( &Corpse, 0, sizeof( ROTTING_CORPSE_DEFINITION ) );
 
 	// Setup some values!
@@ -1137,30 +1134,17 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 
   // 1st gridno
 	Corpse.sGridNo								= 14319;
-	ConvertGridNoToXY( Corpse.sGridNo, &sXPos, &sYPos );
-	Corpse.dXPos									= (FLOAT)( CenterX( sXPos ) );
-	Corpse.dYPos									= (FLOAT)( CenterY( sYPos ) );
-
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 
-
   // 2nd gridno
 	Corpse.sGridNo								= 9835;
-	ConvertGridNoToXY( Corpse.sGridNo, &sXPos, &sYPos );
-	Corpse.dXPos									= (FLOAT)( CenterX( sXPos ) );
-	Corpse.dYPos									= (FLOAT)( CenterY( sYPos ) );
-
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 
 
   // 3rd gridno
 	Corpse.sGridNo								= 11262;
-	ConvertGridNoToXY( Corpse.sGridNo, &sXPos, &sYPos );
-	Corpse.dXPos									= (FLOAT)( CenterX( sXPos ) );
-	Corpse.dYPos									= (FLOAT)( CenterY( sYPos ) );
-
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
 }

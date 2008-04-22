@@ -1301,9 +1301,6 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 		{
 			def.sGridNo = gMapInformation.sWestGridNo;
 		}
-		//Recalculate the dx,dy info
-		def.dXPos = CenterX( def.sGridNo );
-		def.dYPos = CenterY( def.sGridNo );
 
     // If not from loading a save....
 	  if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
@@ -1744,7 +1741,6 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 	UINT16			uiFlagsForWorldItems=0;
 	UINT16			usFlagsForRottingCorpse=0;
 	ROTTING_CORPSE_DEFINITION		Corpse;
-	INT16				sXPos, sYPos;
 	UINT32			uiDeathAnim;
 	UINT32			uiPossibleDeathAnims[] = {	GENERIC_HIT_DEATH,
 																					FALLBACK_HIT_DEATH,
@@ -1834,10 +1830,6 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 	Corpse.ubBodyType							= pSoldier->ubBodyType;
 	Corpse.sGridNo								= sGridNo;
 
-	ConvertGridNoToXY( sGridNo, &sXPos, &sYPos );
-
-	Corpse.dXPos									= (FLOAT)( CenterX( sXPos ) );
-	Corpse.dYPos									= (FLOAT)( CenterY( sYPos ) );
 	Corpse.sHeightAdjustment			= pSoldier->sHeightAdjustment;
 	Corpse.bVisible								=	TRUE;
 

@@ -87,8 +87,6 @@ typedef struct
 	UINT8												ubType;
 	UINT8												ubBodyType;
 	INT16												sGridNo;
-	FLOAT												dXPos;
-	FLOAT												dYPos;
 	INT16												sHeightAdjustment;
 
 	PaletteRepID								HeadPal;			// Palette reps

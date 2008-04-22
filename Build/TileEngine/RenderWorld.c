@@ -620,11 +620,14 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 											pCorpse     = ID2CORPSE(pNode->pAniTile->v.user.uiData);
 											pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
 
-											dOffsetX = pCorpse->def.dXPos - gsRenderCenterX;
-											dOffsetY = pCorpse->def.dYPos - gsRenderCenterY;
-
 											// OK, if this is a corpse.... stop if not visible
 											if (pCorpse->def.bVisible != 1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS)) goto next_node;
+
+											INT16 x;
+											INT16 y;
+											ConvertGridNoToCenterCellXY(pCorpse->def.sGridNo, &x, &y);
+											dOffsetX = x - gsRenderCenterX;
+											dOffsetY = y - gsRenderCenterY;
 										}
 										else
 										{
