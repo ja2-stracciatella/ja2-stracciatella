@@ -58,7 +58,9 @@ UINT32 FileGetSize(HWFILE);
 BOOLEAN     SetFileManCurrentDirectory(const char* pcDirectory);
 const char* GetExecutableDirectory(void);
 
-BOOLEAN MakeFileManDirectory(const char* pcDirectory);
+/* Create the directory at path.  Returns true, iff the creation succeeded or
+ * the directory exists already. */
+BOOLEAN MakeFileManDirectory(const char* path);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */

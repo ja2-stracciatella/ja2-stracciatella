@@ -375,9 +375,13 @@ BOOLEAN SetFileManCurrentDirectory(const char* const pcDirectory)
 }
 
 
-BOOLEAN MakeFileManDirectory(const char* const pcDirectory)
+BOOLEAN MakeFileManDirectory(const char* const path)
 {
-	return mkdir(pcDirectory, 0755) == 0;
+	if (mkdir(path, 0755) == 0) return TRUE;
+	if (errno != EEXIST)        return FALSE;
+
+	const FileAttributes attr = FileGetAttributes(path);
+	return attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
 }
 
 

@@ -497,13 +497,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	if( pGameDesc[0] == '\0' )
 		wcscpy( pGameDesc, pMessageStrings[ MSG_NODESC ] );
 
-	//Check to see if the save directory exists
-	const char* const dir = g_savegame_dir;
-	if (FileGetAttributes(dir) == FILE_ATTR_ERROR && // if the directory does not exist
-			!MakeFileManDirectory(dir))
-	{
-		goto FAILED_TO_SAVE_NO_CLOSE;
-	}
+	if (!MakeFileManDirectory(g_savegame_dir)) goto FAILED_TO_SAVE_NO_CLOSE;
 
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );

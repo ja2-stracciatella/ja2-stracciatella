@@ -1141,27 +1141,13 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
 //Deletes the Temp map Directory
 BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 {
-	//If the Map Temp directory exists, removes the temp files
-	const FileAttributes attr = FileGetAttributes(MAPS_DIR);
-	if (attr != FILE_ATTR_ERROR)
+	if (!MakeFileManDirectory(MAPS_DIR))
 	{
-		if (attr & FILE_ATTR_DIRECTORY)
-		{
-			//Erase the directory
-			if( !EraseDirectory( MAPS_DIR ) )
-			{
-				//error erasing the temporary maps directory
-			}
-		}
+		//Erro creating the temp map directory
+		AssertMsg(0, "Error creating the Temp Directory.");
 	}
-	else
-	{
-		if( !MakeFileManDirectory( MAPS_DIR ) )
-		{
-			//Erro creating the temp map directory
-			AssertMsg( 0, "Error creating the Temp Directory.");
-		}
-	}
+
+	EraseDirectory(MAPS_DIR);
 
 	if( fCreateTempDir )
 	{
