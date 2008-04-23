@@ -1973,33 +1973,22 @@ BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
 #define ROTATION_ARRAY_SIZE 46
 static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
-BOOLEAN JA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
+BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
 {
-	UINT32	uiLoop;
-	UINT8		ubArrayIndex = 0;
-	//UINT8		ubLastNonBlank = 0;
-	UINT8		ubLastByte = 0;
-	UINT8		ubLastByteForNextLoop;
-	UINT8 *	pMemBlock;
+	if (!FileRead(f, pDest, uiBytesToRead)) return FALSE;
 
-	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead);
-	if ( fRet )
+	UINT8* const pMemBlock    = (UINT8*)pDest;
+	UINT8        ubArrayIndex = 0;
+	UINT8        ubLastByte   = 0;
+	for (UINT32 i = 0; i < uiBytesToRead; ++i)
 	{
-		pMemBlock = pDest;
-		for (uiLoop = 0; uiLoop < uiBytesToRead; uiLoop++)
-		{
-			ubLastByteForNextLoop = pMemBlock[ uiLoop ];
-			pMemBlock[ uiLoop ] -= (ubLastByte + ubRotationArray[ ubArrayIndex ]);
-			ubArrayIndex++;
-			if ( ubArrayIndex >= ROTATION_ARRAY_SIZE )
-			{
-				ubArrayIndex = 0;
-			}
-			ubLastByte = ubLastByteForNextLoop;
-		}
+		const UINT8 ubLastByteForNextLoop = pMemBlock[i];
+		pMemBlock[i] -= ubLastByte + ubRotationArray[ubArrayIndex];
+		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
+		ubLastByte = ubLastByteForNextLoop;
 	}
 
-	return( fRet );
+	return TRUE;
 }
 
 
