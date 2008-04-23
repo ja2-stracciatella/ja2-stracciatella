@@ -2473,8 +2473,8 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 
 static int TownTrainerQsortCompare(const void* pArg1, const void* pArg2)
 {
-	const TOWN_TRAINER_TYPE* const t1 = pArg1;
-	const TOWN_TRAINER_TYPE* const t2 = pArg2;
+	const TOWN_TRAINER_TYPE* const t1 = (const TOWN_TRAINER_TYPE*)pArg1;
+	const TOWN_TRAINER_TYPE* const t2 = (const TOWN_TRAINER_TYPE*)pArg2;
 	return (t1->sTrainingPts < t2->sTrainingPts) - (t1->sTrainingPts > t2->sTrainingPts);
 }
 
@@ -3341,7 +3341,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-		VEHICLETYPE* const v = MSYS_GetRegionUserPtr(pRegion);
+		VEHICLETYPE* const v = (VEHICLETYPE*)MSYS_GetRegionUserPtr(pRegion);
 
 		// inaccessible vehicles shouldn't be listed in the menu!
 		Assert(IsThisVehicleAccessibleToSoldier(s, v));

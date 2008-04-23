@@ -409,6 +409,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 		case JEEP:
 		case TANK_NW:
 		case TANK_NE:
+		{
 			s->uiStatusFlags |= SOLDIER_VEHICLE;
 
 			UINT8 ubVehicleID = 0;
@@ -450,6 +451,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 			}
 			SetVehicleValuesIntoSoldierType(s);
 			break;
+		}
 
 		default:
 			s->bNormalSmell = NORMAL_HUMAN_SMELL_STRENGTH;

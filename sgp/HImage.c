@@ -29,11 +29,11 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers
 	const char* const dot = strstr(filename, ".");
-	if (dot == NULL) goto fail;
+	if (dot == NULL) return NULL;
 	const char* const ext = dot + 1;
 
 	SGPImage* const img = MALLOCZ(SGPImage);
-	if (img == NULL) goto fail;
+	if (img == NULL) return NULL;
 	strcpy(img->ImageFile, filename);
 
 	// determine type from extension
@@ -66,7 +66,6 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 
 fail_img:
 	MemFree(img);
-fail:
 	return NULL;
 }
 

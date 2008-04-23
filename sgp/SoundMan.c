@@ -549,8 +549,8 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	void*  const odata     = s->pData;
 	if (s->uiFlags & SAMPLE_16BIT)
 	{
-		INT16*       const dst = ndata;
-		const INT16* const src = odata;
+		INT16*       const dst = (INT16*)ndata;
+		const INT16* const src = (const INT16*)odata;
 		if (s->uiFlags & SAMPLE_STEREO)
 		{
 			for (size_t i = 0; i < n_samples; ++i)
@@ -569,8 +569,8 @@ static BOOLEAN HalfSampleRate(SAMPLETAG* const s)
 	}
 	else
 	{
-		UINT8*       const dst = ndata;
-		const UINT8* const src = odata;
+		UINT8*       const dst = (UINT8*)ndata;
+		const UINT8* const src = (const UINT8*)odata;
 		if (s->uiFlags & SAMPLE_STEREO)
 		{
 			for (size_t i = 0; i < n_samples; ++i)
@@ -636,7 +636,7 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 	s->uiFlags |= SAMPLE_16BIT;
 
 	size_t       CountSamples = s->n_samples;
-	INT16* const Data         = malloc(CountSamples * GetSampleSize(s));
+	INT16* const Data         = (INT16*)malloc(CountSamples * GetSampleSize(s));
 	INT16*       D            = Data;
 
 	for (;;)

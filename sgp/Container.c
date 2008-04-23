@@ -259,7 +259,7 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
 	{
 		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(QueueHeader));
 		pTemp_cont->uiMax_size = uiNew_size;
-		hQueue = MemRealloc(hQueue, uiNew_size);
+		hQueue = (HQUEUE)MemRealloc(hQueue, uiNew_size);
 		if (hQueue == NULL)
 		{
 			DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
@@ -450,7 +450,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 		// need to resize the container
 		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(ListHeader));
 		pTemp_cont->uiMax_size = uiNew_size;
-		hList = MemRealloc(hList, uiNew_size);
+		hList = (HLIST)MemRealloc(hList, uiNew_size);
 		if (hList == NULL)
 		{
 			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not resize list container memory");

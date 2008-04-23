@@ -197,7 +197,7 @@ static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
 	{
 		if (KeySym->mod & KMOD_NUM)
 		{
-			Key = Key - SDLK_KP0 + SDLK_0;
+			Key = (SDLKey)(Key - SDLK_KP0 + SDLK_0);
 		}
 		else
 		{

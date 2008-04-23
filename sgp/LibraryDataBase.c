@@ -130,10 +130,9 @@ BOOLEAN ShutDownFileDatabase( )
 
 static int CompareFileHeader(const void* a, const void* b)
 {
-	const FileHeaderStruct* fhsa = a;
-	const FileHeaderStruct* fhsb = b;
-
-	return strcasecmp(fhsa->pFileName, fhsb->pFileName);
+	const FileHeaderStruct* fha = (const FileHeaderStruct*)a;
+	const FileHeaderStruct* fhb = (const FileHeaderStruct*)b;
+	return strcasecmp(fha->pFileName, fhb->pFileName);
 }
 
 
@@ -347,14 +346,14 @@ static const char* g_current_lib_path;
 static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruct* const lib, const char* const filename)
 {
 	g_current_lib_path = lib->sLibraryPath;
-	return bsearch(filename, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
+	return (const FileHeaderStruct*)bsearch(filename, lib->pFileHeader, lib->usNumberOfEntries, sizeof(*lib->pFileHeader), CompareFileNames);
 }
 
 
 static int CompareFileNames(const void* key, const void* member)
 {
-	const char* sSearchKey = key;
-	const FileHeaderStruct* TempFileHeader = member;
+	const char*             const sSearchKey     = (const char*)key;
+	const FileHeaderStruct* const TempFileHeader = (const FileHeaderStruct*)member;
 	char sFileNameWithPath[FILENAME_SIZE];
 
 	sprintf(sFileNameWithPath, "%s%s", g_current_lib_path, TempFileHeader->pFileName);
@@ -725,8 +724,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 
 static int CompareDirEntryFileNames(const void* key, const void* member)
 {
-	const char* sSearchKey = key;
-	const DIRENTRY* TempDirEntry = member;
-
+	const char*     const sSearchKey   = (const char*)key;
+	const DIRENTRY* const TempDirEntry = (const DIRENTRY*)member;
 	return strcasecmp(sSearchKey, TempDirEntry->sFileName);
 }
