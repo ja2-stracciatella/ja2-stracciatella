@@ -54,7 +54,7 @@ typedef struct PcxObject
 
 static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
 static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
-static PcxObject* LoadPcx(const char* pFilename);
+static PcxObject* LoadPcx(const char* filename);
 
 
 BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
@@ -105,75 +105,50 @@ BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
 }
 
 
-static PcxObject* LoadPcx(const char* pFilename)
+static PcxObject* LoadPcx(const char* const filename)
 {
-  PcxHeader  Header;
-  HWFILE     hFileHandle;
-  UINT32     uiFileSize;
-  UINT8     *pPcxBuffer;
+	const HWFILE f = FileOpen(filename, FILE_ACCESS_READ);
+	if (f == 0) return NULL;
 
-  // Open and read in the file
-	hFileHandle = FileOpen(pFilename, FILE_ACCESS_READ);
-  if (hFileHandle == 0)
-  { // damn we failed to open the file
-    return NULL;
-  }
-
-  uiFileSize = FileGetSize(hFileHandle);
-  if (uiFileSize == 0)
-  { // we failed to size up the file
-    return NULL;
-  }
-
-	// Create enw pCX object
-	PcxObject* const pCurrentPcxObject = MALLOC(PcxObject);
-
-	if ( pCurrentPcxObject == NULL )
-	{
-		return( NULL );
+	PcxHeader header;
+	if (!FileRead(f, &header, sizeof(header)) ||
+			header.ubManufacturer != 10           ||
+			header.ubEncoding     !=  1)
+	{ // We have an invalid pcx format
+		goto fail_f;
 	}
 
-	pCurrentPcxObject->pPcxBuffer = MALLOCN(UINT8, uiFileSize - (sizeof(PcxHeader) + 768));
+	const UINT32 file_size = FileGetSize(f);
+	if (file_size == 0) goto fail_f;
+	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
-	if ( pCurrentPcxObject->pPcxBuffer == NULL )
+	PcxObject* const pcx_obj = MALLOC(PcxObject);
+	if (pcx_obj == NULL) goto fail_f;
+
+	pcx_obj->pPcxBuffer = MALLOCN(UINT8, buffer_size);
+	if (pcx_obj->pPcxBuffer == NULL) goto fail_pcx_obj;
+
+	pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
+	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
+	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
+	pcx_obj->uiBufferSize = buffer_size;
+
+	if (!FileRead(f, pcx_obj->pPcxBuffer, buffer_size) ||
+			!FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette)))
 	{
-		return( NULL );
+		goto fail_pcx_buf;
 	}
 
-  // Ok we now have a file handle, so let's read in the data
-  FileRead(hFileHandle, &Header, sizeof(PcxHeader));
-  if ((Header.ubManufacturer != 10)||(Header.ubEncoding != 1))
-  { // We have an invalid pcx format
-    // Delete the object
-    MemFree( pCurrentPcxObject->pPcxBuffer );
-		MemFree( pCurrentPcxObject );
-    return( NULL );
-  }
+	FileClose(f);
+	return pcx_obj;
 
-  if (Header.ubBitsPerPixel == 8)
-  {
-    pCurrentPcxObject->usPcxFlags = PCX_256COLOR;
-  } else
-  {
-    pCurrentPcxObject->usPcxFlags  = 0;
-  }
-
-  pCurrentPcxObject->usWidth      = 1 + (Header.usRight - Header.usLeft);
-  pCurrentPcxObject->usHeight     = 1 + (Header.usBottom - Header.usTop);
-  pCurrentPcxObject->uiBufferSize = uiFileSize - 768 - sizeof(PcxHeader);
-
-  // We are ready to read in the pcx buffer data. Therefore we must lock the buffer
-  pPcxBuffer = pCurrentPcxObject->pPcxBuffer;
-
-  FileRead(hFileHandle, pPcxBuffer, pCurrentPcxObject->uiBufferSize);
-
-  // Read in the palette
-  FileRead(hFileHandle, pCurrentPcxObject->ubPalette, 768);
-
-	// Close file
-	FileClose( hFileHandle );
-
-  return pCurrentPcxObject;
+fail_pcx_buf:
+	MemFree(pcx_obj->pPcxBuffer);
+fail_pcx_obj:
+	MemFree(pcx_obj);
+fail_f:
+	FileClose(f);
+	return NULL;
 }
 
 
