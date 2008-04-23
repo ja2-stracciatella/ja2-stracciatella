@@ -1,7 +1,7 @@
 #ifndef LOADSAVETACTICALSTATUSTYPE_H
 #define LOADSAVETACTICALSTATUSTYPE_H
 
-#include "FileMan.h"
+#include "Types.h"
 
 
 BOOLEAN ExtractTacticalStatusTypeFromFile(HWFILE f);

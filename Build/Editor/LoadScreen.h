@@ -5,7 +5,6 @@
 #ifndef _JA2_LOAD_SCREEN_
 #define _JA2_LOAD_SCREEN_
 
-#include "FileMan.h"
 
 typedef struct FDLG_LIST FDLG_LIST;
 struct FDLG_LIST
