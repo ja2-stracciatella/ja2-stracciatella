@@ -1914,34 +1914,23 @@ UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
 static const UINT8* GetRotationArray(void);
 
 
-BOOLEAN NewJA2EncryptedFileRead(HWFILE hFile, PTR pDest, UINT32 uiBytesToRead)
+BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
 {
-	UINT32	uiLoop;
-	UINT8		ubArrayIndex = 0;
-	UINT8		ubLastByte = 0;
-	UINT8		ubLastByteForNextLoop;
-	UINT8 *	pMemBlock;
+	if (!FileRead(f, pDest, uiBytesToRead)) return FALSE;
 
-	const UINT8* pubRotationArray = GetRotationArray();
-
-	BOOLEAN fRet = FileRead(hFile, pDest, uiBytesToRead);
-	if ( fRet )
+	const UINT8* const pubRotationArray = GetRotationArray();
+	UINT8*       const pMemBlock        = (UINT8*)pDest;
+	UINT8              ubArrayIndex     = 0;
+	UINT8              ubLastByte       = 0;
+	for (UINT32 i = 0; i < uiBytesToRead; ++i)
 	{
-		pMemBlock = pDest;
-		for (uiLoop = 0; uiLoop < uiBytesToRead; uiLoop++)
-		{
-			ubLastByteForNextLoop = pMemBlock[ uiLoop ];
-			pMemBlock[ uiLoop ] -= (ubLastByte + pubRotationArray[ ubArrayIndex ]);
-			ubArrayIndex++;
-			if ( ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE )
-			{
-				ubArrayIndex = 0;
-			}
-			ubLastByte = ubLastByteForNextLoop;
-		}
+		const UINT8 ubLastByteForNextLoop = pMemBlock[i];
+		pMemBlock[i] -= ubLastByte + pubRotationArray[ubArrayIndex];
+		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
+		ubLastByte = ubLastByteForNextLoop;
 	}
 
-	return( fRet );
+	return TRUE;
 }
 
 
