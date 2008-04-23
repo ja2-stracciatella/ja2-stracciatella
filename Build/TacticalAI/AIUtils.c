@@ -580,28 +580,28 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 	const SOLDIERTYPE* friends[MAXMERCS];
 	FOR_ALL_MERCS(i)
 	{
-		const SOLDIERTYPE* const friend = *i;
-		if (friend == s) continue; // skip ourselves
+		const SOLDIERTYPE* const candidate = *i;
+		if (candidate == s) continue; // skip ourselves
 
 		/* if this man not neutral, but is on my side, OR if he is neutral, but so
 		 * am I, then he's a "friend" for the purposes of random visitations */
-		if ((friend->bNeutral ? s->bNeutral : s->bSide == friend->bSide) &&
-				SpacesAway(s->sGridNo, friend->sGridNo) > 1) // if we're not already neighbors
+		if ((candidate->bNeutral ? s->bNeutral : s->bSide == candidate->bSide) &&
+				SpacesAway(s->sGridNo, candidate->sGridNo) > 1) // if we're not already neighbors
 		{
 			// remember his guynum, increment friend counter
-			friends[ubFriendCount++] = friend;
+			friends[ubFriendCount++] = candidate;
 		}
 	}
 
 	while (ubFriendCount != 0)
 	{
 		// randomly select one of the remaining friends in the list
-		const UINT               friend_idx = PreRandom(ubFriendCount);
-		const SOLDIERTYPE* const friend     = friends[friend_idx];
+		const UINT               chosen_idx = PreRandom(ubFriendCount);
+		const SOLDIERTYPE* const chosen     = friends[chosen_idx];
 
 		/* if our movement range is NOT restricted, or this friend's within range
 		 * use distance - 1, because there must be at least 1 tile 1 space closer */
-		if (SpacesAway(usOrigin, friend->sGridNo) - 1 <= usMaxDist)
+		if (SpacesAway(usOrigin, chosen->sGridNo) - 1 <= usMaxDist)
 		{
 			// should be close enough, try to find a legal ->sDestination within 1 tile
 
@@ -627,10 +627,10 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 				fDirChecked[usDirection] = TRUE;
 
 				// determine the gridno 1 tile away from current friend in this direction
-				const UINT16 usDest = NewGridNo(friend->sGridNo, DirectionInc((INT16)(usDirection + 1)));
+				const UINT16 usDest = NewGridNo(chosen->sGridNo, DirectionInc((INT16)(usDirection + 1)));
 
 				// if that's out of bounds, ignore it & check next direction
-				if (usDest == friend->sGridNo) continue;
+				if (usDest == chosen->sGridNo) continue;
 
 				// if our movement range is NOT restricted
 				if (SpacesAway(usOrigin,usDest) <= usMaxDist &&
@@ -643,7 +643,7 @@ INT16 RandomFriendWithin(SOLDIERTYPE* const s)
 			}
 		}
 
-		friends[friend_idx] = friends[--ubFriendCount];
+		friends[chosen_idx] = friends[--ubFriendCount];
 	}
 
 	return FALSE;
