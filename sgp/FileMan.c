@@ -46,8 +46,8 @@ struct FindFileInfo
 };
 
 
-static char LocalPath[512];
-static config_entry* BinDataDir;
+static char         LocalPath[512];
+static ConfigEntry* BinDataDir;
 
 static void TellAboutDataDir(const char* ConfigFile)
 {

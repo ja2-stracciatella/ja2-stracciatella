@@ -8,14 +8,14 @@
 
 #define BUFFER_SIZE 1024
 
-struct config_entry
+struct ConfigEntry
 {
-	char* key;
-	char* value;
-	struct config_entry* next;
+	char*        key;
+	char*        value;
+	ConfigEntry* next;
 };
 
-static config_entry* config_head;
+static ConfigEntry* config_head;
 
 static char* Trim(char* string)
 {
@@ -34,7 +34,7 @@ static char* Trim(char* string)
 
 static void ConfigUpdateEntry(const char* key, const char* value)
 {
-	for (config_entry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
+	for (ConfigEntry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
 	{
 		if (strcmp(cfg_pointer->key, key) == 0)
 		{
@@ -47,9 +47,9 @@ static void ConfigUpdateEntry(const char* key, const char* value)
 }
 
 
-config_entry* ConfigRegisterKey(const char* key)
+ConfigEntry* ConfigRegisterKey(const char* const key)
 {
-	config_entry* const new_config = MALLOC(config_entry);
+	ConfigEntry* const new_config = MALLOC(ConfigEntry);
 	if (new_config != NULL)
 	{
 		new_config->key   = strdup(key);
@@ -61,16 +61,16 @@ config_entry* ConfigRegisterKey(const char* key)
 }
 
 
-void ConfigSetValue(config_entry* const entry, const char* const value)
+void ConfigSetValue(ConfigEntry* const entry, const char* const value)
 {
 	free(entry->value);
 	entry->value = strdup(value);
 }
 
 
-const char* ConfigGetValue(const config_entry* key)
+const char* ConfigGetValue(const ConfigEntry* const key)
 {
-	for (const config_entry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
+	for (const ConfigEntry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
 	{
 		if (cfg_pointer == key)
 		{
@@ -84,7 +84,7 @@ const char* ConfigGetValue(const config_entry* key)
 
 static void ConfigValueCheck(void)
 {
-	for (const config_entry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
+	for (const ConfigEntry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
 	{
 		if (cfg_pointer->value == NULL)
 		{
