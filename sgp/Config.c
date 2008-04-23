@@ -68,17 +68,9 @@ void ConfigSetValue(ConfigEntry* const entry, const char* const value)
 }
 
 
-const char* ConfigGetValue(const ConfigEntry* const key)
+const char* ConfigGetValue(const ConfigEntry* const cfg)
 {
-	for (const ConfigEntry* cfg_pointer = config_head; cfg_pointer != NULL; cfg_pointer = cfg_pointer->next)
-	{
-		if (cfg_pointer == key)
-		{
-			return cfg_pointer->value;
-		}
-	}
-
-	return NULL;
+	return cfg->value;
 }
 
 
