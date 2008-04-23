@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include "Config.h"
 #include "Debug.h"
@@ -20,7 +21,6 @@
 #else
 #	include <glob.h>
 #	include <pwd.h>
-#	include <sys/types.h>
 
 #	if defined __APPLE__ && defined __MACH__
 #		include <CoreFoundation/CoreFoundation.h>
@@ -350,24 +350,18 @@ UINT32 FileGetSize(const HWFILE hFile)
 	UINT32 uiFileNum;
 	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
 
-	UINT32 uiFileSize = 0xFFFFFFFF;
 	if (sLibraryID == REAL_FILE_LIBRARY_ID)
 	{
-		FILE* const hRealHandle = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		const long here = ftell(hRealHandle);
-		fseek(hRealHandle, 0, SEEK_END);
-		uiFileSize = ftell(hRealHandle);
-		fseek(hRealHandle, here, SEEK_SET);
+		FILE* const f = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
+		struct stat sb;
+		if (fstat(fileno(f), &sb) != 0) return 0;
+		return sb.st_size;
 	}
 	else
 	{
-		if (IsLibraryOpened(sLibraryID))
-		{
-			uiFileSize = gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileLength;
-		}
+		if (!IsLibraryOpened(sLibraryID)) return 0;
+		return gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileLength;
 	}
-
-	return uiFileSize == 0xFFFFFFFF ? 0 : uiFileSize;
 }
 
 
