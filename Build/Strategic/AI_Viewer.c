@@ -143,7 +143,7 @@ BOOLEAN gfViewerEntry;
 BOOLEAN gfExitViewer;
 
 BOOLEAN gfRenderViewer;
-BOOLEAN gfRenderMap;
+static BOOLEAN gfRenderMap;
 
 BOOLEAN gfViewEnemies = TRUE;
 INT8		gbViewLevel = 0;
@@ -163,9 +163,11 @@ UINT32 guiLastTime;
 INT32 giSaveTCMode; //time compression mode;
 
 //The sector coordinates of the mouse position (yellow)
-INT16 gsHiSectorX = 0, gsHiSectorY = 0;
+static INT16 gsHiSectorX = 0;
+static INT16 gsHiSectorY = 0;
 //The sector coordinates of the selected sector (red)
-INT16 gsSelSectorX = 0, gsSelSectorY = 0;
+static INT16 gsSelSectorX = 0;
+static INT16 gsSelSectorY = 0;
 
 INT32 iViewerButton[ NUM_VIEWER_BUTTONS ];
 

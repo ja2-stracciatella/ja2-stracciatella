@@ -116,7 +116,7 @@ BOOLEAN gfRenderGrid;
 //layer.  When clear, the entire map is shown in full color.
 BOOLEAN gfRenderProgress;
 //When set, only the map section is rerendered.
-BOOLEAN gfRenderMap;
+static BOOLEAN gfRenderMap;
 //When set, then we are overriding the ability to use normal methods for selecting sectors for saving and
 //loading.  Immediately upon entering the text input mode; for the temp file; then we are assuming that
 //the user will type in a name that doesn't follow standard naming conventions for the purposes of the
@@ -169,9 +169,11 @@ INT16 gsSectorX, gsSectorY;
 //The layer of the sector that is currently loaded in memory.
 INT32 gsSectorLayer;
 //The sector coordinates of the mouse position (yellow)
-INT16 gsHiSectorX, gsHiSectorY;
+static INT16 gsHiSectorX;
+static INT16 gsHiSectorY;
 //The sector coordinates of the selected sector (red)
-INT16 gsSelSectorX, gsSelSectorY;
+static INT16 gsSelSectorX;
+static INT16 gsSelSectorY;
 
 //Used to determine how long the F5 key has been held down for to determine whether or not the
 //summary is going to be persistant or not.
