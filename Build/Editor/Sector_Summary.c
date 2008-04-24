@@ -2201,47 +2201,36 @@ static void LoadGlobalSummary(void)
 static void UpdateMasterProgress(void);
 
 
-void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSummaryFileInfo)
+void WriteSectorSummaryUpdate(const char* const filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
 {
-	FILE *fp;
-	STRING512			Dir;
-	INT8 x, y;
+	const char* const ext = strstr(filename, ".dat");
+	AssertMsg(ext, "Illegal sector summary filename.");
 
-	//Set current directory to JA2/DevInfo which contains all of the summary data
-	const char* ExecDir = GetExecutableDirectory();
-	sprintf( Dir, "%s/DevInfo", ExecDir );
-	if( !SetFileManCurrentDirectory( Dir ) )
-		AssertMsg( 0, "JA2/DevInfo folder not found and should exist!");
+	STRING512 summary_filename;
+	snprintf(summary_filename, lengthof(summary_filename), DEVINFO_DIR "/%.*s.sum", (int)(ext - filename), filename);
 
-	char* ptr = strstr(puiFilename, ".dat");
-	if( !ptr )
-		AssertMsg( 0, "Illegal sector summary filename.");
-	strcpy(ptr, ".sum");
+	FILE* const f = fopen(summary_filename, "wb");
+	Assert(f);
+	fwrite(sf, sizeof(*sf), 1, f);
+	fclose(f);
 
-	//write the summary information
-	fp = fopen( puiFilename, "wb" );
-	Assert( fp );
-	fwrite( pSummaryFileInfo, 1, sizeof( SUMMARYFILE ), fp );
-	fclose( fp );
-
-	gusNumEntriesWithOutdatedOrNoSummaryInfo--;
+	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();
 
-	//extract the sector information out of the filename.
-	if( puiFilename[0] >= 'a' )
-		y = puiFilename[0] - 'a';
+	// Extract the sector information out of the filename.
+	INT8 y;
+	if (filename[0] >= 'a')
+		y = filename[0] - 'a';
 	else
-		y = puiFilename[0] - 'A';
-	if( puiFilename[2] < '0' || puiFilename[2] > '9' )
-		x = puiFilename[ 1 ] - '0' - 1;
+		y = filename[0] - 'A';
+
+	INT8 x;
+	if (filename[2] < '0' || filename[2] > '9')
+		x = filename[1] - '0' - 1;
 	else
-		x = (puiFilename[ 1 ] - '0') * 10 + puiFilename[ 2 ] - '0' - 1;
+		x = (filename[1] - '0') * 10 + filename[2] - '0' - 1;
 
-	gpSectorSummary[x][y][ubLevel] = pSummaryFileInfo;
-
-	//Set current directory back to data directory!
-	sprintf( Dir, "%s/Data", ExecDir );
-	SetFileManCurrentDirectory( Dir );
+	gpSectorSummary[x][y][ubLevel] = sf;
 }
 
 
