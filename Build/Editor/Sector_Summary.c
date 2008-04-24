@@ -40,6 +40,9 @@
 #include "Video.h"
 
 
+#define DEVINFO_DIR "../DevInfo"
+
+
 #define MAP_SIZE			208
 #define MAP_LEFT			417
 #define MAP_TOP				15
@@ -1779,34 +1782,26 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 }
 
 
-//This function can be very time consuming as it loads every map file with a valid
-//coordinate name, analyses it, and builds a new global summary file.
+/* This function can be very time consuming as it loads every map file with a
+ * valid coordinate name, analyses it, and builds a new global summary file. */
 static void CreateGlobalSummary(void)
 {
-	FILE *fp;
-	STRING512			Dir;
-
 	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Generating GlobalSummary Information...");
 
 	gfGlobalSummaryExists = FALSE;
-	//Set current directory to JA2/DevInfo which contains all of the summary data
-	const char* ExecDir = GetExecutableDirectory();
-	sprintf( Dir, "%s/DevInfo", ExecDir );
 
-	//Directory doesn't exist, so create it, and continue.
-	if( !MakeFileManDirectory( Dir ) )
-		AssertMsg( 0, "Can't create new directory, JA2/DevInfo for summary information." );
-	if( !SetFileManCurrentDirectory( Dir ) )
-		AssertMsg( 0, "Can't set to new directory, JA2/DevInfo for summary information." );
-	//Generate a simple readme file.
-	fp = fopen( "readme.txt", "w" );
-	Assert( fp );
-	fprintf( fp, "%s\n%s\n", "This information is used in conjunction with the editor.",
-		"This directory or it's contents shouldn't be included with final release." );
-	fclose( fp );
+	if (!MakeFileManDirectory(DEVINFO_DIR))
+		AssertMsg(0, "Can't create new directory, " DEVINFO_DIR " for summary information.");
 
-	sprintf( Dir, "%s/Data", ExecDir );
-	SetFileManCurrentDirectory( Dir );
+	// Generate a simple readme file.
+	FILE* const f = fopen(DEVINFO_DIR "/readme.txt", "w");
+	Assert(f);
+	fputs(
+		"This information is used in conjunction with the editor.\n"
+		"This directory or its contents shouldn't be included with final release.\n",
+		f
+	);
+	fclose(f);
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
@@ -2110,7 +2105,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 	sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
 	const HWFILE f_map = FileOpen(filename, FILE_ACCESS_READ);
 
-	sprintf(filename, "../DevInfo/%c%d%s.sum", 'A' + y, x + 1, suffix);
+	sprintf(filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
 
 	if (!f_map)
 	{
@@ -2163,7 +2158,7 @@ static void LoadGlobalSummary(void)
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
-	const FileAttributes attr = FileGetAttributes("../DevInfo");
+	const FileAttributes attr = FileGetAttributes(DEVINFO_DIR);
 	gfGlobalSummaryExists = attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
 	if (!gfGlobalSummaryExists)
 	{
