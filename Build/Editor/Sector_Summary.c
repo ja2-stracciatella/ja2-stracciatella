@@ -2171,9 +2171,6 @@ static void LoadGlobalSummary(void)
 		return;
 	}
 
-	//TEMP
-	FileDelete("../DevInfo/_global.sum");
-
 	/* Analyse all sectors to see if matching maps exist.  For any maps found, the
 	 * information will be stored in the gbSectorLevels array.  Also, it attempts
 	 * to load summaries for those maps.  If the summary information isn't found,
