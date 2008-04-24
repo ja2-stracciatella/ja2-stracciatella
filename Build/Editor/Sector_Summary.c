@@ -2162,12 +2162,17 @@ static void LoadGlobalSummary(void)
 
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
-	gfGlobalSummaryExists           = FALSE;
+
+	const FileAttributes attr = FileGetAttributes("../DevInfo");
+	gfGlobalSummaryExists = attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
+	if (!gfGlobalSummaryExists)
+	{
+		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
+		return;
+	}
 
 	//TEMP
 	FileDelete("../DevInfo/_global.sum");
-
-	gfGlobalSummaryExists = TRUE;
 
 	/* Analyse all sectors to see if matching maps exist.  For any maps found, the
 	 * information will be stored in the gbSectorLevels array.  Also, it attempts
