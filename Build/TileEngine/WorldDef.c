@@ -2133,7 +2133,7 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		for( cnt = 0; cnt < pSummary->usNumLights; cnt++ )
 		{
 			UINT8 ubStrLen;
-			pBuffer += sizeof( LIGHT_SPRITE );
+			pBuffer += 24; // size of a LIGHT_SPRITE on disk
 			LOADDATA( &ubStrLen, pBuffer, 1 );
 			if( ubStrLen )
 			{
