@@ -2103,197 +2103,96 @@ static void CalculateOverrideStatus(void)
 }
 
 
-static void LoadSummary(const char* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion);
+static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, const char* const suffix)
+{
+	char filename[40];
+
+	sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
+	const HWFILE f_map = FileOpen(filename, FILE_ACCESS_READ);
+
+	sprintf(filename, "../DevInfo/%c%d%s.sum", 'A' + y, x + 1, suffix);
+
+	if (!f_map)
+	{
+		FileDelete(filename);
+		return FALSE;
+	}
+
+	FLOAT dMajorMapVersion;
+	FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
+	FileClose(f_map);
+
+	FILE* const f_sum = fopen(filename, "rb");
+	if (!f_sum)
+	{
+		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
+	}
+	else
+	{
+		/* Even if the info is outdated (but existing), allocate the structure, but
+		 * indicate that the info is bad. */
+		SUMMARYFILE* const sum = MALLOC(SUMMARYFILE);
+		fread(sum, sizeof(SUMMARYFILE), 1, f_sum);
+		fclose(f_sum);
+
+		if (sum->ubSummaryVersion < MINIMUMVERSION ||
+				dMajorMapVersion      < gdMajorMapVersion)
+		{
+			++gusNumberOfMapsToBeForceUpdated;
+			gfMustForceUpdateAllMaps = TRUE;
+		}
+		sum->dMajorMapVersion = dMajorMapVersion;
+		UpdateSummaryInfo(sum);
+
+		SUMMARYFILE** const anchor = &gpSectorSummary[x][y][level];
+		if (*anchor) MemFree(*anchor);
+		*anchor = sum;
+
+		if (sum->ubSummaryVersion < GLOBAL_SUMMARY_VERSION)
+			++gusNumEntriesWithOutdatedOrNoSummaryInfo;
+	}
+
+	return TRUE;
+}
 
 
 static void LoadGlobalSummary(void)
 {
-	HWFILE	hfile;
-	STRING512			DevInfoDir;
-	STRING512			MapsDir;
-	FLOAT	dMajorVersion;
-  INT32 x,y;
-
 	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Executing LoadGlobalSummary()...");
 
-	gfMustForceUpdateAllMaps = FALSE;
+	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
-	gfGlobalSummaryExists = FALSE;
-	//Set current directory to JA2/DevInfo which contains all of the summary data
-	const char* ExecDir = GetExecutableDirectory();
-	sprintf( DevInfoDir, "%s/DevInfo", ExecDir );
-	sprintf( MapsDir, "%s/Data/Maps", ExecDir );
-
-	//Check to make sure we have a DevInfo directory.  If we don't create one!
-	if( !SetFileManCurrentDirectory( DevInfoDir ) )
-	{
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
-		return;
-	}
+	gfGlobalSummaryExists           = FALSE;
 
 	//TEMP
-	FileDelete( "_global.sum" );
+	FileDelete("../DevInfo/_global.sum");
 
 	gfGlobalSummaryExists = TRUE;
 
-	//Analyse all sectors to see if matching maps exist.  For any maps found, the information
-	//will be stored in the gbSectorLevels array.  Also, it attempts to load summaries for those
-	//maps.  If the summary information isn't found, then the occurrences are recorded and reported
-	//to the user when finished to give the option to generate them.
-	for( y = 0; y < 16; y++ )
+	/* Analyse all sectors to see if matching maps exist.  For any maps found, the
+	 * information will be stored in the gbSectorLevels array.  Also, it attempts
+	 * to load summaries for those maps.  If the summary information isn't found,
+	 * then the occurrences are recorded and reported to the user when finished to
+	 * give the option to generate them. */
+	for (INT32 y = 0; y < 16; ++y)
 	{
-		for( x = 0; x < 16; x++ )
+		for (INT32 x = 0; x < 16; ++x)
 		{
-			char szFilename[40];
-			char szSector[6];
-
-			gbSectorLevels[x][y] = 0;
-			sprintf( szSector, "%c%d", 'A' + y, x + 1 );
-
-			//main ground level
-			sprintf( szFilename, "%c%d.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= GROUND_LEVEL_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 0, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//main B1 level
-			sprintf( szFilename, "%c%d_b1.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= BASEMENT1_LEVEL_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 1, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b1.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//main B2 level
-			sprintf( szFilename, "%c%d_b2.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= BASEMENT2_LEVEL_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 2, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b2.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//main B3 level
-			sprintf( szFilename, "%c%d_b3.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= BASEMENT3_LEVEL_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 3, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b3.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//alternate ground level
-			sprintf( szFilename, "%c%d_a.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= ALTERNATE_GROUND_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 4, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_a.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//alternate B1 level
-			sprintf( szFilename, "%c%d_b1_a.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 5, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b1_a.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//alternate B2 level
-			sprintf( szFilename, "%c%d_b2_a.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= ALTERNATE_B2_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 6, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b2_a.sum", szSector );
-				FileDelete( szFilename );
-			}
-			//alternate B3 level
-			sprintf( szFilename, "%c%d_b3_a.dat", 'A' + y, x + 1 );
-			SetFileManCurrentDirectory( MapsDir );
-			hfile = FileOpen(szFilename, FILE_ACCESS_READ);
-			SetFileManCurrentDirectory( DevInfoDir );
-			if( hfile )
-			{
-				gbSectorLevels[x][y] |= ALTERNATE_B1_MASK;
-				FileRead(hfile, &dMajorVersion, sizeof(FLOAT));
-				FileClose( hfile );
-				LoadSummary( szSector, 7, dMajorVersion );
-			}
-			else
-			{
-				sprintf( szFilename, "%s_b3_a.sum", szSector );
-				FileDelete( szFilename );
-			}
+			BOOLEAN sector_levels = 0;
+			if (LoadSummary(x, y, 0, ""))       sector_levels |= GROUND_LEVEL_MASK;     // main ground level
+			if (LoadSummary(x, y, 1, "_b1"))    sector_levels |= BASEMENT1_LEVEL_MASK;  // main B1 level
+			if (LoadSummary(x, y, 2, "_b2"))    sector_levels |= BASEMENT2_LEVEL_MASK;  // main B2 level
+			if (LoadSummary(x, y, 3, "_b3"))    sector_levels |= BASEMENT3_LEVEL_MASK;  // main B3 level
+			if (LoadSummary(x, y, 4, "_a"))     sector_levels |= ALTERNATE_GROUND_MASK; // alternate ground level
+			if (LoadSummary(x, y, 5, "_b1_a"))  sector_levels |= ALTERNATE_B1_MASK;     // alternate B1 level
+			if (LoadSummary(x, y, 6, "_b2_a"))  sector_levels |= ALTERNATE_B2_MASK;     // alternate B2 level
+			if (LoadSummary(x, y, 7, "_b3_a"))  sector_levels |= ALTERNATE_B3_MASK;     // alternate B2 level
+			gbSectorLevels[x][y] = sector_levels;
 		}
 		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, String("Sector Row %c complete...", y + 'A'));
 	}
 
-	sprintf( MapsDir, "%s/Data", ExecDir );
-	SetFileManCurrentDirectory( MapsDir );
-
-	if( gfMustForceUpdateAllMaps )
+	if (gfMustForceUpdateAllMaps)
 	{
 		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, String("A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!!!!.", gusNumberOfMapsToBeForceUpdated));
 	}
@@ -2346,61 +2245,6 @@ void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSu
 	//Set current directory back to data directory!
 	sprintf( Dir, "%s/Data", ExecDir );
 	SetFileManCurrentDirectory( Dir );
-}
-
-
-static void LoadSummary(const char* pSector, UINT8 ubLevel, FLOAT dMajorMapVersion)
-{
-	char filename[40];
-	SUMMARYFILE temp;
-	INT32 x, y;
-	FILE *fp;
-	strcpy(filename, pSector);
-	if( ubLevel % 4 )
-	{
-		char str[4];
-		sprintf( str, "_b%d", ubLevel % 4 );
-		strcat( filename, str );
-	}
-	if( ubLevel >= 4 )
-	{
-		strcat( filename, "_a" );
-	}
-	strcat( filename, ".sum" );
-
-	fp = fopen( filename, "rb" );
-	if( !fp )
-	{
-		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
-		return;
-	}
-	fread( &temp, 1, sizeof( SUMMARYFILE ), fp );
-	if( temp.ubSummaryVersion < MINIMUMVERSION || dMajorMapVersion < gdMajorMapVersion )
-	{
-		gusNumberOfMapsToBeForceUpdated++;
-		gfMustForceUpdateAllMaps = TRUE;
-	}
-	temp.dMajorMapVersion = dMajorMapVersion;
-	UpdateSummaryInfo( &temp );
-	//even if the info is outdated (but existing), allocate the structure, but indicate that the info
-	//is bad.
-	y = pSector[0] - 'A';
-	if( pSector[2] >= '0' && pSector[2] <= '9' )
-		x = (pSector[1] - '0') * 10 + pSector[2] - '0' - 1;
-	else
-		x = pSector[1] - '0' - 1;
-	if( gpSectorSummary[x][y][ubLevel] )
-	{
-		MemFree( gpSectorSummary[x][y][ubLevel] );
-		gpSectorSummary[x][y][ubLevel] = NULL;
-	}
-	gpSectorSummary[x][y][ubLevel] = MALLOC(SUMMARYFILE);
-	if( gpSectorSummary[x][y][ubLevel] )
-		*gpSectorSummary[x][y][ubLevel] = temp;
-	if( gpSectorSummary[x][y][ubLevel]->ubSummaryVersion < GLOBAL_SUMMARY_VERSION )
-		gusNumEntriesWithOutdatedOrNoSummaryInfo++;
-
-	fclose( fp );
 }
 
 
