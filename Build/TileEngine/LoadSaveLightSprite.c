@@ -26,7 +26,7 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 	EXTR_U8(d, str_len)
 	char template_name[str_len];
 	EXTR_STR(d, template_name, str_len)
-	template_name[str_len] = '\0';
+	template_name[str_len - 1] = '\0';
 
 	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
 	// if this fails, then we will ignore the light.
