@@ -101,7 +101,7 @@ CASSERT(sizeof(SUMMARYFILE) == 408)
 extern BOOLEAN gfAutoLoadA9;
 
 extern BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel);
-void WriteSectorSummaryUpdate(char* puiFilename, UINT8 ubLevel, SUMMARYFILE* pSummaryFileInfo);
+void WriteSectorSummaryUpdate(const char* filename, UINT8 ubLevel, SUMMARYFILE*);
 
 extern BOOLEAN gfMustForceUpdateAllMaps;
 extern BOOLEAN gfMajorUpdate;
