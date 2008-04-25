@@ -546,7 +546,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 					//Get the heade for the saved game
 					if( !LoadSavedGameHeader( gbSelectedSaveLocation, &SaveGameHeader ) )
 					{
-						memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
 						gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 						gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
 						gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot = -1;
@@ -973,32 +972,13 @@ BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiEx
 }
 
 
-BOOLEAN InitSaveGameArray()
+void InitSaveGameArray(void)
 {
-	INT8	cnt;
-	CHAR8		zSaveGameName[ 512 ];
-	SAVED_GAME_HEADER SaveGameHeader;
-
-
-	for( cnt=0; cnt<NUM_SAVE_GAMES; cnt++)
+	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
 	{
-		CreateSavedGameFileNameFromNumber( cnt, zSaveGameName );
-
-		if( FileExists( zSaveGameName ) )
-		{
-			//Get the header for the saved game
-			if( !LoadSavedGameHeader( cnt, &SaveGameHeader ) )
-				gbSaveGameArray[cnt] = FALSE;
-			else
-				gbSaveGameArray[cnt] = TRUE;
-		}
-		else
-			gbSaveGameArray[cnt] = FALSE;
+		SAVED_GAME_HEADER SaveGameHeader;
+		gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
 	}
-
-
-
-	return( TRUE );
 }
 
 
@@ -1144,7 +1124,6 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			//Get the header for the specified saved game
 			if( !LoadSavedGameHeader( bEntryID, &SaveGameHeader ) )
 			{
-				memset( &SaveGameHeader, 0, sizeof( SaveGameHeader ) );
 				return( FALSE );
 			}
 		}
@@ -1276,70 +1255,30 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 }
 
 
-static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader)
+static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
 {
-	HWFILE hFile;
-	CHAR8		zSavedGameName[512];
+	// make sure the entry is valid
+	if (bEntry < 0 || NUM_SAVE_GAMES <= bEntry) goto fail;
 
-	//make sure the entry is valid
-	if( bEntry < 0 || bEntry > NUM_SAVE_GAMES )
-	{
-		memset( &pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
-		return( FALSE );
-	}
+	char zSavedGameName[512];
+	CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
 
-	//Get the name of the file
-	CreateSavedGameFileNameFromNumber( bEntry, zSavedGameName );
+	const HWFILE f = FileOpen(zSavedGameName, FILE_ACCESS_READ);
+	if (!f) goto fail_flag;
 
-	if( FileExists( zSavedGameName ) )
-	{
-		// create the save game file
-		hFile = FileOpen(zSavedGameName, FILE_ACCESS_READ);
-		if( !hFile )
-		{
-			gbSaveGameArray[ bEntry ] = FALSE;
-			return(FALSE);
-		}
+	const BOOLEAN success_read = FileRead(f, header, sizeof(*header));
+	FileClose(f);
+	if (!success_read) goto fail_flag;
 
-		//Load the Save Game header file
-		if (!FileRead(hFile, pSaveGameHeader, sizeof(SAVED_GAME_HEADER)))
-		{
-			FileClose( hFile );
-			gbSaveGameArray[ bEntry ] = FALSE;
-			return(FALSE);
-		}
+	endof(header->zGameVersionNumber)[-1] =  '\0';
+	endof(header->sSavedGameDesc)[-1]     = L'\0';
+	return TRUE;
 
-		FileClose( hFile );
-
-		//
-		// Do some Tests on the header to make sure it is valid
-		//
-
-		//Check to see if the desc field is bigger then it should be, ie no null char
-		if( wcslen( pSaveGameHeader->sSavedGameDesc ) >= SIZE_OF_SAVE_GAME_DESC )
-		{
-			memset( pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
-			gbSaveGameArray[ bEntry ] = FALSE;
-			return(FALSE);
-		}
-
-		//Check to see if the version # field is bigger then it should be, ie no null char
-		if( strlen( pSaveGameHeader->zGameVersionNumber ) >= GAME_VERSION_LENGTH )
-		{
-			memset( pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
-			gbSaveGameArray[ bEntry ] = FALSE;
-			return(FALSE);
-		}
-	}
-	else
-	{
-		memset( &pSaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
-#ifdef JA2BETAVERSION
-		wcscpy( pSaveGameHeader->sSavedGameDesc, L"ERROR loading saved game header, file doesn't exist!!" );
-#endif
-	}
-
-	return( TRUE );
+fail_flag:
+	gbSaveGameArray[bEntry] = FALSE;
+fail:
+	memset(header, 0, sizeof(*header));
+	return FALSE;
 }
 
 
@@ -1697,10 +1636,7 @@ static void SetSelection(UINT8 ubNewSelection)
 	else
 	{
 		//Get the header for the specified saved game
-		if( !LoadSavedGameHeader( ubNewSelection, &SaveGameHeader ) )
-		{
-			memset( &SaveGameHeader, 0, sizeof( SaveGameHeader ) );
-		}
+		LoadSavedGameHeader(ubNewSelection, &SaveGameHeader))
 	}
 
 	swprintf(zMouseHelpTextString, L"%ls: %ls\n%ls: %ls\n%ls: %ls\n%ls: %ls", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],

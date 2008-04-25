@@ -24,7 +24,7 @@ UINT32	SaveLoadScreenInit( void );
 
 BOOLEAN		DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
 
-BOOLEAN InitSaveGameArray(void);
+void InitSaveGameArray(void);
 
 
 BOOLEAN DoQuickSave(void);
