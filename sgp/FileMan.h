@@ -37,8 +37,6 @@ BOOLEAN InitializeFileManager(void);
 
 /* Checks if a file exists. */
 BOOLEAN FileExists(const char* filename);
-/* Checks if a file exists, but doesn't check the database files. */
-BOOLEAN FileExistsNoDB(const char* filename);
 
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */

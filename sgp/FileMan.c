@@ -164,6 +164,9 @@ BOOLEAN InitializeFileManager(void)
 }
 
 
+static BOOLEAN FileExistsNoDB(const char* filename);
+
+
 BOOLEAN FileExists(const char* const filename)
 {
 	BOOLEAN fExists = FileExistsNoDB(filename);
@@ -175,7 +178,8 @@ BOOLEAN FileExists(const char* const filename)
 }
 
 
-BOOLEAN FileExistsNoDB(const char* const filename)
+/* Checks if a file exists, but doesn't check the database files. */
+static BOOLEAN FileExistsNoDB(const char* const filename)
 {
 	FILE* file = fopen(filename, "rb");
 	if (file == NULL)
