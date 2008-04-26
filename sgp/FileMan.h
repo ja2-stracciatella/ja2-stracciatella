@@ -4,7 +4,7 @@
 #include "Types.h"
 
 
-enum
+typedef enum FileOpenFlags
 {
 	FILE_ACCESS_READ      = 1U << 0,
 	FILE_ACCESS_WRITE     = 1U << 1,
@@ -12,14 +12,14 @@ enum
 	FILE_ACCESS_APPEND    = 1U << 2,
 	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
 	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
-};
+} FileOpenFlags;
 
-enum
+typedef enum FileSeekMode
 {
 	FILE_SEEK_FROM_START,
 	FILE_SEEK_FROM_END,
 	FILE_SEEK_FROM_CURRENT
-};
+} FileSeekMode;
 
 typedef struct SGP_FILETIME
 {
@@ -42,13 +42,13 @@ BOOLEAN FileExists(const char* filename);
  * the file did not exist in the first place. */
 BOOLEAN FileDelete(const char* path);
 
-HWFILE FileOpen(const char* filename, UINT32 uiOptions);
+HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
 BOOLEAN FileRead(HWFILE hFile, void* pDest, UINT32 uiBytesToRead);
 BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite);
 
-BOOLEAN FileSeek(HWFILE, INT32 distance, INT how);
+BOOLEAN FileSeek(HWFILE, INT32 distance, FileSeekMode);
 INT32   FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);

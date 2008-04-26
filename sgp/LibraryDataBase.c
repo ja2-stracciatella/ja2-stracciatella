@@ -505,7 +505,7 @@ void CloseLibraryFile(const HWFILE file)
 }
 
 
-BOOLEAN LibraryFileSeek(const HWFILE file, INT32 distance, const INT how)
+BOOLEAN LibraryFileSeek(const HWFILE file, INT32 distance, const FileSeekMode how)
 {
 	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
 	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);

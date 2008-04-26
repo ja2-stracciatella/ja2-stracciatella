@@ -217,7 +217,7 @@ BOOLEAN FileDelete(const char* const path)
 }
 
 
-HWFILE FileOpen(const char* const filename, const UINT32 flags)
+HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 {
 	const char* fmode;
 	int         mode;
@@ -313,7 +313,7 @@ BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite)
 }
 
 
-BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const INT how)
+BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const FileSeekMode how)
 {
 	return LibraryFileSeek(hFile, distance, how);
 }
