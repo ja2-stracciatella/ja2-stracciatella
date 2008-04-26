@@ -1,5 +1,7 @@
-/* The text->font map table. */
-static const UINT16 TranslationTable[] =
+#include "TranslationTable.h"
+
+
+const UINT8 TranslationTable[] =
 {
 #if !defined RUSSIAN || defined RUSSIAN_GOLD
 

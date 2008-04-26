@@ -5,6 +5,7 @@
 #include "MemMan.h"
 #include "Font.h"
 #include "Debug.h"
+#include "TranslationTable.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "VObject.h"
@@ -230,8 +231,6 @@ UINT16 GetFontHeight(INT32 FontNum)
  * the requested wide char. */
 static INT16 GetIndex(wchar_t c)
 {
-#	include "TranslationTable.inc"
-
 	UINT16 Idx = 0;
 	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
 #if defined RUSSIAN
