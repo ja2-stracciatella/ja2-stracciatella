@@ -1,10 +1,10 @@
+#ifdef SGP_DEBUG
+
 #include <SDL.h>
 #include <stdarg.h>
 #include "Debug.h"
 #include "Timer.h"
 
-
-#ifdef SGP_DEBUG
 
 static BOOLEAN gfRecordToFile     = FALSE;
 static BOOLEAN gfRecordToDebugger = TRUE;
@@ -117,11 +117,8 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 	abort();
 }
 
-#endif
 
-// This is NOT a _DEBUG only function! It is also needed in
-// release mode builds. -- DB
-const char* String(const char* String, ...)
+const char* String(const char* const fmt, ...)
 {
 	static char TmpDebugString[8][512];
 	static UINT StringIndex = 0;
@@ -132,9 +129,11 @@ const char* String(const char* String, ...)
 	StringIndex = (StringIndex + 1) % lengthof(TmpDebugString);
 
 	va_list ArgPtr;
-	va_start(ArgPtr, String);
-	vsprintf(ResultString, String, ArgPtr);
+	va_start(ArgPtr, fmt);
+	vsprintf(ResultString, fmt, ArgPtr);
 	va_end(ArgPtr);
 
 	return ResultString;
 }
+
+#endif

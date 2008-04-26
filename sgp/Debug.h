@@ -9,9 +9,6 @@ extern "C" {
 #endif
 
 
-extern	const char* String(const char* String, ...);
-
-
 #if defined ( _DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
 // If DEBUG_ is defined, we need to initialize all the debug macros. Otherwise all the
@@ -67,6 +64,8 @@ extern void DebugMsg(TopicID TopicId, DebugLevel uiDebugLevel, const char* Str);
 #define FastDebugMsg(a) _DebugMessage(a, __LINE__, __FILE__)
 
 extern void _DebugMessage(const char* Message, UINT32 uiLineNum, const char* SourceFile);
+
+const char* String(const char* fmt, ...);
 
 #else
 
