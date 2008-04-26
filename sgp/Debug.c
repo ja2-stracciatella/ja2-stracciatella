@@ -5,15 +5,8 @@
 #endif
 
 #include <SDL.h>
-#include "Types.h"
-#include "Debug.h"
 #include <stdarg.h>
-//Kris addition
-#ifdef JA2
-#	include "ScreenIDs.h"
-#	include "Gameloop.h"
-#	include "Input.h"
-#endif
+#include "Debug.h"
 #include "Timer.h"
 
 
