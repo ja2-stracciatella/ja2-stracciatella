@@ -1,7 +1,7 @@
 #include "Multi_Language_Graphic_Utils.h"
 
 
-BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
+void GetMLGFilename(SGPFILENAME filename, const UINT16 usMLGGraphicID)
 {
 #if defined ENGLISH || defined FRENCH || defined RUSSIAN_GOLD
 	const char* s;
@@ -40,10 +40,9 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 		case MLG_LOADSAVEHEADER:     s = "INTERFACE/loadscreenaddons.sti";   break;
 		case MLG_SPLASH:             s = "INTERFACE/splash.sti";             break;
 		case MLG_IMPSYMBOL:          s = "LAPTOP/IMPSymbol.sti";             break;
-		default:                     return FALSE;
+		default:                     abort();
 	}
 	strcpy(filename, s);
-	return TRUE;
 
 #elif defined GERMAN
 	const char* s;
@@ -82,10 +81,9 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 		case MLG_LOADSAVEHEADER:     s = "GERMAN/loadscreenaddons_german.sti";   break;
 		case MLG_ORDERGRID:          s = "LAPTOP/OrderGrid.sti";                 break; //Same file
 		case MLG_SPLASH:             s = "German/splash_german.sti";             break;
-		default:                     return FALSE;
+		default:                     abort();
 	}
 	strcpy(filename, s);
-	return TRUE;
 
 #else
 	//The foreign language defined determines the name of the directory and filename.
@@ -144,9 +142,8 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 		case MLG_LOADSAVEHEADER:     s = "%s/loadscreenaddons_%s.sti";   break;
 		case MLG_SPLASH:             s = "%s/splash_%s.sti";             break;
 		case MLG_IMPSYMBOL:          s = "%s/IMPSymbol_%s.sti";          break;
-		default:                     return FALSE;
+		default:                     abort();
 	}
 	sprintf(filename, s, zLanguage, zLanguage);
-	return TRUE;
 #endif
 }

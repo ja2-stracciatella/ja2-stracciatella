@@ -41,6 +41,6 @@ enum
 	MLG_YOURAD13,
 };
 
-BOOLEAN GetMLGFilename( SGPFILENAME filename, UINT16 usMLGGraphicID );
+void GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID);
 
 #endif
