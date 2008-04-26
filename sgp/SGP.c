@@ -9,7 +9,6 @@
 #	include <locale.h>
 #endif
 
-#include "BuildDefines.h"
 #include "Button_System.h"
 #include "Debug.h"
 #include "FileMan.h"

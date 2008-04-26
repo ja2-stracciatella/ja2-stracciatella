@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef EDITSCREEN_H
 #define EDITSCREEN_H

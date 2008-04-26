@@ -58,7 +58,6 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "Items.h"
-#include "BuildDefines.h"
 
 #ifdef JA2TESTVERSION
 #	include "Soldier_Create.h"

@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef __SUMMARY_INFO_H
 #define __SUMMARY_INFO_H

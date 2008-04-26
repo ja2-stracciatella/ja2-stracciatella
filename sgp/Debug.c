@@ -1,6 +1,8 @@
 // Because we're in a library, define SGP_DEBUG here - the client may not always
 // use the code to write text, because the header switches on the define
-#define SGP_DEBUG
+#ifndef SGP_DEBUG
+#	define SGP_DEBUG
+#endif
 
 #include <SDL.h>
 #include "Types.h"

@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef __NEWSMOOTH_H
 #define __NEWSMOOTH_H

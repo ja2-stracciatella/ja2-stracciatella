@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 
 #ifndef __ROAD_SMOOTHING_H

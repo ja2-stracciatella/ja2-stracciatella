@@ -1,7 +1,6 @@
 #ifndef __FONT_CONTROL_H
 #define __FONT_CONTROL_H
 
-#include "BuildDefines.h"
 #include "Types.h"
 
 

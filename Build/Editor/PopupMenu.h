@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 //popupmenu.h
 //Author:  Kris Morness

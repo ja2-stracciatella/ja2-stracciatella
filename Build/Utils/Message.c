@@ -13,7 +13,6 @@
 #include "WordWrap.h"
 #include "Sound_Control.h"
 #include "SoundMan.h"
-#include "BuildDefines.h"
 #include "Dialogue_Control.h"
 #include "Game_Clock.h"
 #include <stdarg.h>

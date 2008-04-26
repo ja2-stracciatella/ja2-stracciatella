@@ -8,8 +8,6 @@
 //supported.  Just remove the commented line of code (search for UNCOMMENT), and it's fixed -- it is
 //currently disabled.
 
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 
 #include "Button_System.h"

@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef __SMOOTHING_UTILS_H
 #define __SMOOTHING_UTILS_H

@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef __EDIT_SYS_H
 #define __EDIT_SYS_H

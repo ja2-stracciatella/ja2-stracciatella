@@ -1,5 +1,3 @@
-#include "BuildDefines.h"
-
 #ifdef JA2EDITOR
 #ifndef __SMARTMETHOD_H
 #define __SMARTMETHOD_H

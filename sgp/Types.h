@@ -4,6 +4,11 @@
 #include "SGPStrings.h"
 
 
+#if defined DUTCH + defined ENGLISH + defined FRENCH + defined GERMAN + defined ITALIAN + defined POLISH + defined RUSSIAN + defined RUSSIAN_GOLD != 1
+#	error Exactly one of DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN or RUSSIAN_GOLD must be defined.
+#endif
+
+
 #include <stdlib.h> // for abort()
 #define UNIMPLEMENTED \
 	fprintf(stderr, "===> %s:%d: %s() is not implemented\n", __FILE__, __LINE__, __func__); \
@@ -32,10 +37,6 @@
 #define __min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) __max(a, b)
 #define min(a, b) __min(a, b)
-
-
-// build defines header....
-#include "BuildDefines.h"
 
 
 typedef          int  INT;
