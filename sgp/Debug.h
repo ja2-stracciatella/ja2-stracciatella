@@ -42,11 +42,10 @@ extern	void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSou
 #endif
 
 
-// Moved these out of the defines - debug mgr always initialized
+#ifdef SGP_DEBUG
+
 BOOLEAN	InitializeDebugManager(void);
 
-
-#ifdef SGP_DEBUG
 // If DEBUG_ is defined, we need to initialize all the debug macros. Otherwise all the
 // debug macros will be substituted by blank lines at compile time
 //*******************************************************************************************

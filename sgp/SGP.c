@@ -113,8 +113,10 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_EnableUNICODE(SDL_ENABLE);
 
+#ifdef SGP_DEBUG
 	// Initialize the Debug Manager - success doesn't matter
 	InitializeDebugManager();
+#endif
 
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
 	FastDebugMsg("Initializing Memory Manager");

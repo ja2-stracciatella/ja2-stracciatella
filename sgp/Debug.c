@@ -1,30 +1,15 @@
-// Because we're in a library, define SGP_DEBUG here - the client may not always
-// use the code to write text, because the header switches on the define
-#ifndef SGP_DEBUG
-#	define SGP_DEBUG
-#endif
-
 #include <SDL.h>
 #include <stdarg.h>
 #include "Debug.h"
 #include "Timer.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifdef SGP_DEBUG
 
 static BOOLEAN gfRecordToFile     = FALSE;
 static BOOLEAN gfRecordToDebugger = TRUE;
 
-#ifdef SGP_DEBUG
-
-
 static STRING512 gpcDebugLogFileName;
-
-#ifdef __cplusplus
-}
-#endif
 
 
 #ifndef _NO_DEBUG_TXT
