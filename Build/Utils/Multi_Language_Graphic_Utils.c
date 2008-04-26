@@ -45,7 +45,7 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 	strcpy(filename, s);
 	return TRUE;
 
-#elif defined(GERMAN)
+#elif defined GERMAN
 	const char* s;
 	switch (usMLGGraphicID)
 	{
@@ -98,24 +98,14 @@ BOOLEAN GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID)
 	//		"GERMAN/IMPSymbol_German.sti"
 
 	const char* zLanguage;
-#if   defined(DUTCH)
+#if   defined DUTCH
   zLanguage = "DUTCH";
-#elif defined(FRENCH)
-  zLanguage = "FRENCH";
-#elif defined(GERMAN)
-  zLanguage = "GERMAN";
-#elif defined(ITALIAN)
+#elif defined ITALIAN
   zLanguage = "ITALIAN";
-#elif defined(JAPANESE)
-  zLanguage = "JAPANESE";
-#elif defined(KOREAN)
-  zLanguage = "KOREAN";
-#elif defined(POLISH)
+#elif defined POLISH
   zLanguage = "POLISH";
-#elif defined RUSSIAN || defined RUSSIAN_GOLD
+#elif defined RUSSIAN
   zLanguage = "RUSSIAN";
-#elif defined(SPANISH)
-  zLanguage = "SPANISH";
 #endif
 
 	const char* s;
