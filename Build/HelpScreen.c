@@ -1863,25 +1863,13 @@ static void RefreshAllHelpScreenButtons(void)
 }
 
 
-
-INT8 HelpScreenDetermineWhichMapScreenHelpToShow()
+INT8 HelpScreenDetermineWhichMapScreenHelpToShow(void)
 {
-	if( fShowMapInventoryPool )
-	{
-		return( HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY );
-	}
-
-	if( AnyMercsHired() == FALSE )
-	{
-		return( HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED );
-	}
-
-	if (DidGameJustStart())
-	{
-		return( HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO );
-	}
-
-	return( HELP_SCREEN_MAPSCREEN );
+	return
+		fShowMapInventoryPool ? HELP_SCREEN_MAPSCREEN_SECTOR_INVENTORY :
+		!AnyMercsHired()      ? HELP_SCREEN_MAPSCREEN_NO_ONE_HIRED     :
+		DidGameJustStart()    ? HELP_SCREEN_MAPSCREEN_NOT_IN_ARULCO    :
+		                        HELP_SCREEN_MAPSCREEN;
 }
 
 
