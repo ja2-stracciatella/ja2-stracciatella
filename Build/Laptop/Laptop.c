@@ -2867,8 +2867,7 @@ static void DrawDeskTopBackground(void)
 
 static void LoadDesktopBackground(void)
 {
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_DESKTOP);
+	const char* const ImageFile = GetMLGFilename(MLG_DESKTOP);
 	guiDESKTOP = AddVideoSurfaceFromFile(ImageFile);
 	CHECKV(guiDESKTOP != NO_VSURFACE);
 }

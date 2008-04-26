@@ -36,8 +36,7 @@ BOOLEAN InitJA2SplashScreen(void)
 #ifdef ENGLISH
 	ClearMainMenu();
 #else
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_SPLASH);
+	const char* const ImageFile = GetMLGFilename(MLG_SPLASH);
 	if (!BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0))
 	{
 		AssertMsg(0, String("Failed to load %s", ImageFile));

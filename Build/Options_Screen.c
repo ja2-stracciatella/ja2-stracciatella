@@ -297,8 +297,7 @@ static BOOLEAN EnterOptionsScreen(void)
 	CHECKF(guiOptionBackGroundImage != NO_VOBJECT);
 
 	// load button, title graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_OPTIONHEADER);
+	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiOptionsAddOnImages != NO_VOBJECT);
 

@@ -345,8 +345,7 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 		gfLoadGameUponEntry = FALSE;
 
 		// Load button images
-		SGPFILENAME filename;
-		GetMLGFilename(filename, MLG_TITLETEXT);
+		const char* const filename = GetMLGFilename(MLG_TITLETEXT);
 
 		INT32 Slot;
 #if defined JA2DEMO

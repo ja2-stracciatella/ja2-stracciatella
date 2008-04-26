@@ -97,8 +97,7 @@ BOOLEAN LoadIMPSymbol( void )
 {
 
 	// this procedure will load the IMP main symbol into memory
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_IMPSYMBOL);
+	const char* const ImageFile = GetMLGFilename(MLG_IMPSYMBOL);
 	guiIMPSYMBOL = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiIMPSYMBOL != NO_VOBJECT);
 

@@ -200,8 +200,6 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 BOOLEAN EnterAIM()
 {
-	SGPFILENAME ImageFile;
-
 	gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
 	LaptopInitAim();
 
@@ -219,13 +217,15 @@ BOOLEAN EnterAIM()
 	guiLinks = AddVideoObjectFromFile("LAPTOP/Links.sti");
 	CHECKF(guiLinks != NO_VOBJECT);
 
+	const char* ImageFile;
+
 	// load the History graphic and add it
-	GetMLGFilename(ImageFile, MLG_HISTORY);
+	ImageFile = GetMLGFilename(MLG_HISTORY);
 	guiHistory = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiHistory != NO_VOBJECT);
 
 	// load the Wanring graphic and add it
-	GetMLGFilename(ImageFile, MLG_WARNING);
+	ImageFile = GetMLGFilename(MLG_WARNING);
 	guiWarning = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiWarning != NO_VOBJECT);
 
@@ -234,22 +234,22 @@ BOOLEAN EnterAIM()
 	CHECKF(guiFlowerAdvertisement != NO_VOBJECT);
 
 	// load the your ad advertisment and add it
-	GetMLGFilename(ImageFile, MLG_YOURAD13);
+	ImageFile = GetMLGFilename(MLG_YOURAD13);
 	guiAdForAdsImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiAdForAdsImages != NO_VOBJECT);
 
 	// load the insurance advertisment and add it
-	GetMLGFilename(ImageFile, MLG_INSURANCEAD10);
+	ImageFile = GetMLGFilename(MLG_INSURANCEAD10);
 	guiInsuranceAdImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiInsuranceAdImages != NO_VOBJECT);
 
 	// load the funeral advertisment and add it
-	GetMLGFilename(ImageFile, MLG_FUNERALAD9);
+	ImageFile = GetMLGFilename(MLG_FUNERALAD9);
 	guiFuneralAdImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiFuneralAdImages != NO_VOBJECT);
 
 	// load the funeral advertisment and add it
-	GetMLGFilename(ImageFile, MLG_BOBBYRAYAD21);
+	ImageFile = GetMLGFilename(MLG_BOBBYRAYAD21);
 	guiBobbyRAdImages = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiBobbyRAdImages != NO_VOBJECT);
 
@@ -406,8 +406,7 @@ BOOLEAN InitAimDefaults()
 	CHECKF(guiRustBackGround != NO_VOBJECT);
 
 	// load the Aim Symbol graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_AIMSYMBOL);
+	const char* const ImageFile = GetMLGFilename(MLG_AIMSYMBOL);
 	guiAimSymbol = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiAimSymbol != NO_VOBJECT);
 

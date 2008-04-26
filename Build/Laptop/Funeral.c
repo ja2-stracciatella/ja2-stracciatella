@@ -109,11 +109,11 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 BOOLEAN EnterFuneral()
 {
-	SGPFILENAME ImageFile;
+	const char* ImageFile;
 	UINT16					usPosX, i;
 
 	// load the Closed graphic and add it
-	GetMLGFilename(ImageFile, MLG_CLOSED);
+	ImageFile = GetMLGFilename(MLG_CLOSED);
 	guiClosedSign = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiClosedSign != NO_VOBJECT);
 
@@ -130,12 +130,12 @@ BOOLEAN EnterFuneral()
 	CHECKF(guiMarbleBackground != NO_VOBJECT);
 
 	// load the McGillicuttys sign graphic and add it
-	GetMLGFilename(ImageFile, MLG_MCGILLICUTTYS);
+	ImageFile = GetMLGFilename(MLG_MCGILLICUTTYS);
 	guiMcGillicuttys = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiMcGillicuttys != NO_VOBJECT);
 
 	// load the Mortuary  graphic and add it
-	GetMLGFilename(ImageFile, MLG_MORTUARY);
+	ImageFile = GetMLGFilename(MLG_MORTUARY);
 	guiMortuary = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiMortuary != NO_VOBJECT);
 

@@ -96,8 +96,7 @@ BOOLEAN EnterMercsAccount()
 	InitMercBackGround();
 
 	// load the Arrow graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_ORDERGRID);
+	const char* const ImageFile = GetMLGFilename(MLG_ORDERGRID);
 	guiMercOrderGrid = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiMercOrderGrid != NO_VOBJECT);
 

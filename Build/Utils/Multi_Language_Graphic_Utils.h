@@ -1,9 +1,8 @@
 #ifndef __MULTI_LANGUAGE_GRAPHIC_UTILS_H
 #define __MULTI_LANGUAGE_GRAPHIC_UTILS_H
 
-#include "Types.h"
 
-enum
+typedef enum MultiLanguageGraphic
 {
 	MLG_AIMSYMBOL,
 	MLG_BOBBYNAME,
@@ -39,8 +38,8 @@ enum
 	MLG_TOSTATS,
 	MLG_WARNING,
 	MLG_YOURAD13,
-};
+} MultiLanguageGraphic;
 
-void GetMLGFilename(SGPFILENAME filename, UINT16 usMLGGraphicID);
+const char* GetMLGFilename(MultiLanguageGraphic);
 
 #endif

@@ -175,16 +175,14 @@ BOOLEAN InitFloristDefaults()
 	if( guiCurrentLaptopMode == LAPTOP_MODE_FLORIST )
 	{
 		// load the small title graphic and add it
-		SGPFILENAME ImageFile;
-		GetMLGFilename(ImageFile, MLG_LARGEFLORISTSYMBOL);
+		const char* const ImageFile = GetMLGFilename(MLG_LARGEFLORISTSYMBOL);
 		guiLargeTitleSymbol = AddVideoObjectFromFile(ImageFile);
 		CHECKF(guiLargeTitleSymbol != NO_VOBJECT);
 	}
 	else
 	{
 		// load the leaf back graphic and add it
-		SGPFILENAME ImageFile;
-		GetMLGFilename(ImageFile, MLG_SMALLFLORISTSYMBOL);
+		const char* const ImageFile = GetMLGFilename(MLG_SMALLFLORISTSYMBOL);
 		guiSmallTitleSymbol = AddVideoObjectFromFile(ImageFile);
 		CHECKF(guiSmallTitleSymbol != NO_VOBJECT);
 

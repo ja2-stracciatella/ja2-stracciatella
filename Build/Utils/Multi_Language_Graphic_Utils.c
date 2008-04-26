@@ -1,10 +1,11 @@
+#include <stdlib.h>
 #include "Multi_Language_Graphic_Utils.h"
 
 
-void GetMLGFilename(SGPFILENAME filename, const UINT16 usMLGGraphicID)
+const char* GetMLGFilename(const MultiLanguageGraphic id)
 {
 	const char* s;
-	switch (usMLGGraphicID)
+	switch (id)
 	{
 #if defined ENGLISH || defined FRENCH || defined RUSSIAN_GOLD
 		case MLG_AIMSYMBOL:          s = "LAPTOP/AimSymbol.sti";             break;
@@ -136,5 +137,5 @@ void GetMLGFilename(SGPFILENAME filename, const UINT16 usMLGGraphicID)
 #endif
 		default:                     abort();
 	}
-	strcpy(filename, s);
+	return s;
 }

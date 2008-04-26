@@ -428,8 +428,7 @@ static BOOLEAN EnterSaveLoadScreen(void)
 	CHECKF(guiSlgBackGroundImage != NO_VOBJECT);
 
 	// load Load Screen Add ons graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_LOADSAVEHEADER);
+	const char* const ImageFile = GetMLGFilename(MLG_LOADSAVEHEADER);
 	guiBackGroundAddOns = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiBackGroundAddOns != NO_VOBJECT);
 

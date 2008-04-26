@@ -7836,10 +7836,9 @@ static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void AddTeamPanelSortButtonsForMapScreen(void)
 {
-	SGPFILENAME filename;
 	INT32 iImageIndex[ MAX_SORT_METHODS ] = { 0, 1, 5, 2, 3, 4 };		// sleep image is out or order (last)
 
-	GetMLGFilename( filename, MLG_GOLDPIECEBUTTONS );
+	const char* const filename = GetMLGFilename(MLG_GOLDPIECEBUTTONS);
 
 	for (INT32 i = 0; i < MAX_SORT_METHODS; ++i)
 	{

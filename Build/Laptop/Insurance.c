@@ -97,8 +97,7 @@ BOOLEAN EnterInsurance()
 	InitInsuranceDefaults();
 
 	// load the Insurance title graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_INSURANCETITLE);
+	const char* const ImageFile = GetMLGFilename(MLG_INSURANCETITLE);
 	guiInsuranceTitleImage = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiInsuranceTitleImage != NO_VOBJECT);
 
@@ -231,8 +230,7 @@ BOOLEAN InitInsuranceDefaults()
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
 	{
 		// load the small title for the every page other then the first page
-		SGPFILENAME ImageFile;
-		GetMLGFilename(ImageFile, MLG_SMALLTITLE);
+		const char* const ImageFile = GetMLGFilename(MLG_SMALLTITLE);
 		guiInsuranceSmallTitleImage = AddVideoObjectFromFile(ImageFile);
 		CHECKF(guiInsuranceSmallTitleImage != NO_VOBJECT);
 

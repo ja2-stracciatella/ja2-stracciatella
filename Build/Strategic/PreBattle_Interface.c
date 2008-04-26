@@ -386,8 +386,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	MSYS_DefineRegion( &PBInterfaceBlanket, 0, 0, 261, 359, MSYS_PRIORITY_HIGHEST - 5, 0, 0, 0 );
 
 	//Create the panel
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_PREBATTLEPANEL);
+	const char* const ImageFile = GetMLGFilename(MLG_PREBATTLEPANEL);
 	uiInterfaceImages = AddVideoObjectFromFile(ImageFile);
 	AssertMsg(uiInterfaceImages != NO_VOBJECT, "Failed to load interface/PreBattlePanel.sti");
 

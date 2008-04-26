@@ -366,8 +366,7 @@ BOOLEAN EnterBobbyRMailOrder()
 	CHECKF(guiDeliverySpeedGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_CONFIRMORDER);
+	const char* const ImageFile = GetMLGFilename(MLG_CONFIRMORDER);
 	guiConfirmGraphic = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiConfirmGraphic != NO_VOBJECT);
 

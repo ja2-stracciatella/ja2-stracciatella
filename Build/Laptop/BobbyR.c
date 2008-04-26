@@ -167,7 +167,6 @@ static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegio
 
 BOOLEAN EnterBobbyR()
 {
-	SGPFILENAME ImageFile;
 	UINT8 i;
 
 	// an array of mouse regions for the bobbies signs.  Top Left corner, bottom right corner
@@ -179,8 +178,10 @@ BOOLEAN EnterBobbyR()
 
 	InitBobbyRWoodBackground();
 
+	const char* ImageFile;
+
 	// load the Bobbyname graphic and add it
-	GetMLGFilename(ImageFile, MLG_BOBBYNAME);
+	ImageFile = GetMLGFilename(MLG_BOBBYNAME);
 	guiBobbyName = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiBobbyName != NO_VOBJECT);
 
@@ -197,7 +198,7 @@ BOOLEAN EnterBobbyR()
 	CHECKF(guiBottomHinge != NO_VOBJECT);
 
 	// load the Store Plaque graphic and add it
-	GetMLGFilename(ImageFile, MLG_STOREPLAQUE);
+	ImageFile = GetMLGFilename(MLG_STOREPLAQUE);
 	guiStorePlaque = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiStorePlaque != NO_VOBJECT);
 

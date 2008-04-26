@@ -137,8 +137,7 @@ BOOLEAN EnterMercsFiles()
 	InitMercBackGround();
 
 	// load the stats box graphic and add it
-	SGPFILENAME ImageFile;
-	GetMLGFilename(ImageFile, MLG_STATSBOX);
+	const char* const ImageFile = GetMLGFilename(MLG_STATSBOX);
 	guiStatsBox = AddVideoObjectFromFile(ImageFile);
 	CHECKF(guiStatsBox != NO_VOBJECT);
 
