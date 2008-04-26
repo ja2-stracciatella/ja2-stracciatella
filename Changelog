@@ -1,3 +1,5 @@
+(r3908) Fix a vanilla bug, which prevented the army from attacking San Mona, when the player has defense in Grumm.
+
 v0.9 - 2008-04-22 - Blueberry
 (r3852) Fix a vanilla off-by-one bug: The first .jsd found, was skipped, which results in a randomly missing corpse graphic.
 (r3819) Plug vanilla memory leak, which occurs when receiving stuff from Bobby Ray.

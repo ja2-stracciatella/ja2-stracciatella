@@ -1340,8 +1340,8 @@ static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 		case SEC_C6:
 		case SEC_D5:
 			//San Mona -- not until Kingpin is dead.
-			if ( CheckFact( FACT_KINGPIN_DEAD, 0 ) == FALSE )
-				return FALSE;
+			return CheckFact(FACT_KINGPIN_DEAD, 0);
+
 		case SEC_G1:
 			if( PlayerSectorDefended( SEC_G2 ) && (PlayerSectorDefended( SEC_H1 ) || PlayerSectorDefended( SEC_H2 )) )
 			{
