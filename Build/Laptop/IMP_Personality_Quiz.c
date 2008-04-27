@@ -856,7 +856,7 @@ static void HandleIMPQuizKeyBoard(void)
 
   while( ( DequeueEvent(&InputEvent) == TRUE )  )
   {
-	if( fSkipFrame == FALSE )
+		if (!fSkipFrame)
 	{
 		// HOOK INTO MOUSE HOOKS
 

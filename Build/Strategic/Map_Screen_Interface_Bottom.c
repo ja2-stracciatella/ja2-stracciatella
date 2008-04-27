@@ -619,7 +619,7 @@ static void DisplayCompressMode(void)
 		guiCompressionStringBaseTime = GetJA2Clock();
 	}
 
-	if( ( giTimeCompressMode != 0 ) && ( GamePaused( ) == FALSE ) )
+	if (giTimeCompressMode != 0 && !GamePaused())
 	{
 		usColor = FONT_LTGREEN;
 	}
@@ -832,7 +832,7 @@ static void EnableDisableBottomButtonsAndRegions(void)
 
 static void EnableDisableTimeCompressButtons(void)
 {
-	if( AllowedToTimeCompress( ) == FALSE )
+	if (!AllowedToTimeCompress())
 	{
 		DisableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_MORE ] );
 		DisableButton( guiMapBottomTimeButtons[ MAP_TIME_COMPRESS_LESS ] );
@@ -950,10 +950,7 @@ BOOLEAN AllowedToTimeCompress( void )
 	}
 
 	// no mercs have ever been hired
-	if( gfAtLeastOneMercWasHired == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!gfAtLeastOneMercWasHired) return FALSE;
 
 /*
 	//in air raid
@@ -1048,19 +1045,19 @@ void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
 	static BOOLEAN fCreated = FALSE;
 
 	// allowed to time compress?
-	if( AllowedToTimeCompress( )== FALSE )
+	if (!AllowedToTimeCompress())
 	{
 		// no, disable buttons
 		fDisabled = TRUE;
 	}
 
-	if( fInMapMode == FALSE )
+	if (!fInMapMode)
 	{
 		fDisabled = FALSE;
 	}
 
 	// check if disabled and not created, create
-	if( ( fDisabled ) && ( fCreated == FALSE ) )
+	if (fDisabled && !fCreated)
 	{
 		// mask over compress more button
 		MSYS_DefineRegion( &gTimeCompressionMask[ 0 ], 528, 456, 528 + 13, 456 + 14, MSYS_PRIORITY_HIGHEST - 1,
@@ -1076,7 +1073,7 @@ void CreateDestroyMouseRegionMasksForTimeCompressionButtons( void )
 
 		fCreated = TRUE;
 	}
-	else if( ( fDisabled == FALSE ) && ( fCreated ) )
+	else if (!fDisabled && fCreated)
 	{
 		// created and no longer need to disable
 		MSYS_RemoveRegion( &gTimeCompressionMask[ 0 ] );
@@ -1112,10 +1109,7 @@ static void DisplayProjectedDailyMineIncome(void)
 		fMapScreenBottomDirty = TRUE;
 
 		// if screen was not dirtied, leave
-		if( fMapBottomDirtied == FALSE )
-		{
-			return;
-		}
+		if (!fMapBottomDirtied) return;
 	}
 		// ste the font buffer
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

@@ -3076,7 +3076,7 @@ void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
 	}
 	else if ( ubMercID == LARRY_DRUNK )
 	{
-		if ( CheckFact( FACT_LARRY_CHANGED, 0 ) == FALSE )
+		if (!CheckFact(FACT_LARRY_CHANGED, 0))
 		{
 			ubMercID = LARRY_NORMAL;
 		}

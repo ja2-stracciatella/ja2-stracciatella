@@ -1642,7 +1642,7 @@ static void AddSpecialItemToArmsDealerInventoryAtElement(UINT8 ubArmsDealer, UIN
 {
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems < 255 );
 	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == FALSE );
+	Assert(!gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive);
 	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
 
 
@@ -2440,7 +2440,7 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 	if ( ( ubArmsDealer == ARMS_DEALER_KEITH ) && ( Item [ usItemIndex].usItemClass & ( IC_GUN | IC_LAUNCHER ) ) )
 	{
 		// Keith won't buy guns until the Hillbillies are vanquished
-		if( CheckFact( FACT_HILLBILLIES_KILLED, KEITH ) == FALSE )
+		if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
 		{
 			return( 0 );
 		}
@@ -2599,7 +2599,7 @@ static BOOLEAN GetArmsDealerShopHours(UINT8 ubArmsDealer, UINT32* puiOpeningTime
 		return( FALSE );
 	}
 
-	if ( ExtractScheduleDoorLockAndUnlockInfo( pSoldier, puiOpeningTime, puiClosingTime ) == FALSE )
+	if (!ExtractScheduleDoorLockAndUnlockInfo(pSoldier, puiOpeningTime, puiClosingTime))
 	{
 		return( FALSE );
 	}
@@ -2624,7 +2624,7 @@ UINT32 CalculateOvernightRepairDelay( UINT8 ubArmsDealer, UINT32 uiTimeWhenFreeT
 	// convert world time into 24hr military time for the day he's gonna start on it
 	uiTimeWhenFreeToStartIt = uiTimeWhenFreeToStartIt % NUM_MIN_IN_DAY;
 
-	if ( GetArmsDealerShopHours( ubArmsDealer, &uiOpeningTime, &uiClosingTime ) == FALSE )
+	if (!GetArmsDealerShopHours(ubArmsDealer, &uiOpeningTime, &uiClosingTime))
 	{
 		return( 0 );
 	}
@@ -2663,7 +2663,7 @@ UINT32 CalculateMinutesClosedBetween( UINT8 ubArmsDealer, UINT32 uiStartTime, UI
 
 	Assert( uiStartTime <= uiEndTime );
 
-	if ( GetArmsDealerShopHours( ubArmsDealer, &uiOpeningTime, &uiClosingTime ) == FALSE )
+	if (!GetArmsDealerShopHours(ubArmsDealer, &uiOpeningTime, &uiClosingTime))
 	{
 		return( 0 );
 	}

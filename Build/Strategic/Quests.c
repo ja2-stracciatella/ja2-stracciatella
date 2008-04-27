@@ -48,7 +48,7 @@ void SetFactTrue( UINT16 usFact )
 	// and code is more readable that way
 
 	// must intercept when Jake is first trigered to start selling fuel
-	if ( ( usFact == FACT_ESTONI_REFUELLING_POSSIBLE ) && ( CheckFact( usFact, 0 ) == FALSE ) )
+	if (usFact == FACT_ESTONI_REFUELLING_POSSIBLE && !CheckFact(usFact, 0))
 	{
 		// give him some gas...
 		GuaranteeAtLeastXItemsOfIndex( ARMS_DEALER_JAKE, GAS_CAN, ( UINT8 ) ( 4 + Random( 3 ) ) );
@@ -562,7 +562,9 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 		case FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT:
 		case FACT_NEW_BOBBYRAY_SHIPMENT_WAITING:
-			if ( gubFact[FACT_PABLO_PUNISHED_BY_PLAYER] == TRUE && gubFact[FACT_PABLO_RETURNED_GOODS] == FALSE && gMercProfiles[ PABLO ].bMercStatus != MERC_IS_DEAD )
+			if (gubFact[FACT_PABLO_PUNISHED_BY_PLAYER] == TRUE &&
+					!gubFact[FACT_PABLO_RETURNED_GOODS] &&
+					gMercProfiles[PABLO].bMercStatus != MERC_IS_DEAD)
 			{
 				gubFact[FACT_BOBBYRAY_SHIPMENT_IN_TRANSIT] = FALSE;
 				gubFact[FACT_NEW_BOBBYRAY_SHIPMENT_WAITING] = FALSE;

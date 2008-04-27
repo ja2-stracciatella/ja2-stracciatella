@@ -180,7 +180,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 	else if (fContents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
 	{ // seek past the palette
 		const UINT32 uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
-		if (FileSeek( hFile, uiFileSectionSize, FILE_SEEK_FROM_CURRENT) == FALSE)
+		if (!FileSeek(hFile, uiFileSectionSize, FILE_SEEK_FROM_CURRENT))
 		{
 			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!" );
 			return( FALSE );
@@ -250,7 +250,7 @@ static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, c
 	}
 	else if (fContents & IMAGE_APPDATA) // then there's a point in seeking ahead
 	{
-		if (FileSeek( hFile, pHeader->uiStoredSize, FILE_SEEK_FROM_CURRENT) == FALSE)
+		if (!FileSeek(hFile, pHeader->uiStoredSize, FILE_SEEK_FROM_CURRENT))
 		{
 			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!" );
 			return( FALSE );

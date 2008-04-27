@@ -484,7 +484,7 @@ void RemoveBox(PopUpBox* const box)
 
 void ShowBox(PopUpBox* const box)
 {
-	if (box->fShowBox == FALSE)
+	if (!box->fShowBox)
 	{
 		box->fShowBox = TRUE;
 		box->fUpdated = FALSE;

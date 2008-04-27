@@ -515,7 +515,7 @@ void HandleMercs()
 	//Reset the some variables
 	HandleSpeckIdleConversation( FALSE );
 
-	if( fCurrentlyInLaptop == FALSE )
+	if (!fCurrentlyInLaptop)
 	{
 		//if we are exiting the laptop screen, shut up the speck
 		StopSpeckFromTalking( );

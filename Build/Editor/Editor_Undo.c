@@ -354,7 +354,7 @@ static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 
 
 	// Copy the world map's tile
-	if ( CopyMapElementFromWorld( pData, iMapIndex ) == FALSE )
+	if (!CopyMapElementFromWorld(pData, iMapIndex))
 	{
 		MemFree( pNode );
 		MemFree( pUndoInfo );

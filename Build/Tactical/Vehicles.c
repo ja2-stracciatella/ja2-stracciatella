@@ -722,7 +722,7 @@ void VehicleTakeDamage(const UINT8 ubID, const UINT8 ubReason, const INT16 sDama
 		return;
 	}
 
-	if( pVehicleList[ ubID ].fDestroyed == FALSE )
+	if (!pVehicleList[ubID].fDestroyed)
 	{
 		switch( ubReason )
 		{

@@ -292,7 +292,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-	if ( pSoldier->bInSector == FALSE && !(pSoldier->fAIFlags & AI_CHECK_SCHEDULE) )
+	if (!pSoldier->bInSector && !(pSoldier->fAIFlags & AI_CHECK_SCHEDULE))
 	{
 		// don't do anything!
 		#ifdef TESTAICONTROL
@@ -761,7 +761,11 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 		// If we are not in an interrupt situation!
 		if ( (( gTacticalStatus.uiFlags & TURNBASED ) && ( gTacticalStatus.uiFlags & INCOMBAT )) && gubOutOfTurnPersons == 0 )
 		{
-			if( ( ( pSoldier->bVisible != -1 && pSoldier->bLife) || ( gTacticalStatus.uiFlags & SHOW_ALL_MERCS ) ) && ( fInValidSoldier == FALSE ) )
+			if (!fInValidSoldier &&
+					(
+						(pSoldier->bVisible != -1 && pSoldier->bLife) ||
+						gTacticalStatus.uiFlags & SHOW_ALL_MERCS
+					))
 			{
 				// If we are on a roof, set flag for rendering...
 				if ( pSoldier->bLevel != 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -2156,7 +2160,7 @@ void InitAttackType(ATTACKTYPE *pAttack)
 
 void HandleInitialRedAlert(INT8 bTeam)
 {
- if ( gTacticalStatus.Team[bTeam].bAwareOfOpposition == FALSE )
+	if (!gTacticalStatus.Team[bTeam].bAwareOfOpposition)
  {
 	#ifdef JA2TESTVERSION
 		ScreenMsg( FONT_MCOLOR_RED, MSG_ERROR, L"Enemies on team %d prompted to go on RED ALERT!", bTeam );

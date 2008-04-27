@@ -366,10 +366,7 @@ BOOLEAN BoxerAvailable( void )
 	UINT8			ubLoop;
 
 	// No way around this, BoxerAvailable will have to go find boxer IDs if they aren't set.
-	if ( CheckOnBoxers() == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!CheckOnBoxers()) return FALSE;
 
 	for( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 	{

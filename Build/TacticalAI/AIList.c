@@ -358,7 +358,7 @@ BOOLEAN BuildAIListForTeam( INT8 bTeam )
 			}
 
 			fInsertRet = InsertIntoAIList(pSoldier, bPriority);
-			if (fInsertRet == FALSE)
+			if (!fInsertRet)
 			{
 				// wtf???
 				break;

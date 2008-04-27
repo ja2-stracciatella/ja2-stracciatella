@@ -1050,9 +1050,8 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 		switch( gCurrentUIMode )
 		{
 			case RUBBERBAND_MODE:
-
 				// ATE: Make sure!
-				if ( gRubberBandActive == FALSE )
+				if (!gRubberBandActive)
 				{
 					*puiNewEvent = M_ON_TERRAIN;
 				}

@@ -458,7 +458,7 @@ static void ChangingAimHistorySubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
-	if( AimHistorySubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
+	if (!AimHistorySubPagesVisitedFlag[ubSubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;

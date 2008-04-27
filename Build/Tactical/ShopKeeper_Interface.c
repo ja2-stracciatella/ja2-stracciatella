@@ -1565,7 +1565,7 @@ static void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION* pRegion, 
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
 		//if there is nothing in the slot, exit
-		if( gpTempDealersInventory[ ubSelectedInvSlot ].fActive == FALSE )
+		if (!gpTempDealersInventory[ubSelectedInvSlot].fActive)
 			return;
 
 		gpHighLightedItemObject = &gpTempDealersInventory[ ubSelectedInvSlot ].ItemObject;
@@ -1575,7 +1575,7 @@ static void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION* pRegion, 
 	else if(iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		//if there is nothing in the slot, exit
-		if( gpTempDealersInventory[ ubSelectedInvSlot ].fActive == FALSE )
+		if (!gpTempDealersInventory[ubSelectedInvSlot].fActive)
 			return;
 
 		gpHighLightedItemObject = NULL;
@@ -3102,7 +3102,7 @@ static void DisplayPlayersOfferArea(void)
 				if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer != ARMS_DEALER_REPAIRS )
 				{
 					// don't evaluate anything he wouldn't buy!
-					if( WillShopKeeperRejectObjectsFromPlayer( gbSelectedArmsDealerID, ( INT8 ) sCnt ) == FALSE )
+					if (!WillShopKeeperRejectObjectsFromPlayer(gbSelectedArmsDealerID, sCnt))
 					{
 						// skip purchased items!
 						if (!(o->uiFlags & ARMS_INV_JUST_PURCHASED))
@@ -4849,7 +4849,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 
 
 	//Can this particular kind of item be sold/repaired here
-	if( WillShopKeeperRejectObjectsFromPlayer( gbSelectedArmsDealerID, bSlotID ) == FALSE )
+	if (!WillShopKeeperRejectObjectsFromPlayer(gbSelectedArmsDealerID, bSlotID))
 	{
 		//if the dealer repairs
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
@@ -5148,7 +5148,7 @@ static void CheckAndHandleClearingOfPlayerOfferArea(void)
 	}
 
 	// if all player's offer area slots are empty
-	if( fActiveSlot == FALSE )
+	if (!fActiveSlot)
 	{
 		ResetAllQuoteSaidFlags();
 		gfRemindedPlayerToPickUpHisStuff = FALSE;

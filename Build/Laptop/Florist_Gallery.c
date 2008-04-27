@@ -343,7 +343,7 @@ static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber)
 	else
 		ubSubPageNumber = ubSubPageNumber / 3;
 
-	if( FloristGallerySubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
+	if (!FloristGallerySubPagesVisitedFlag[ubSubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;

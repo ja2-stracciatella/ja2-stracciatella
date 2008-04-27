@@ -713,7 +713,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 
 	if (IsActionAffordable(pSoldier))
 	{
-		if (pSoldier->bActionInProgress == FALSE)
+		if (!pSoldier->bActionInProgress)
 		{
 			// start a move that didn't even get started before...
 			// hope this works...

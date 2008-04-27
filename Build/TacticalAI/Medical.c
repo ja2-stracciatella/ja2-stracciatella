@@ -133,7 +133,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 				else if (pSoldier == soldier_for_full_check)
 				{
 					// test this guy
-					if ( FullPatientCheck( pSoldier ) == FALSE )
+					if (!FullPatientCheck(pSoldier))
 					{
 						// shit!
 						gfAutoBandageFailed = TRUE;

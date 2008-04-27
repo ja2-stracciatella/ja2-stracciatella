@@ -96,8 +96,7 @@ static INT32 GetFreeObjectSlot(void)
 
 	for(uiCount=0; uiCount < guiNumObjectSlots; uiCount++)
 	{
-		if(( ObjectSlots[uiCount].fAllocated == FALSE ) )
-			return((INT32)uiCount);
+		if (!ObjectSlots[uiCount].fAllocated) return (INT32)uiCount;
 	}
 
 	if(guiNumObjectSlots < NUM_OBJECT_SLOTS )

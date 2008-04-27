@@ -1015,9 +1015,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 	}
 
 	// check if drassen controlled
-	else if( StrategicMap[  ( AIRPORT_X + ( MAP_WORLD_X * AIRPORT_Y ) ) ].fEnemyControlled == FALSE )
+	else if (!StrategicMap[AIRPORT_X + MAP_WORLD_X * AIRPORT_Y].fEnemyControlled)
 	{
-
 		if( ( pSoldier->sSectorX == AIRPORT_X ) && ( pSoldier->sSectorY == AIRPORT_Y ) && ( pSoldier->bSectorZ == 0 ) )
 		{
 			const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
@@ -1054,7 +1053,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 	/// which screen are we in?
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
-		if( fInSector == FALSE )
+		if (!fInSector)
 		{
 			// set up for mapscreen
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ), MercDepartEquipmentBoxCallBack );
@@ -1114,7 +1113,7 @@ static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
 	else
 	{
 		// no
-		if( StrategicMap[ BOBBYR_SHIPPING_DEST_SECTOR_X + ( BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X ) ].fEnemyControlled == FALSE )
+		if (!StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled)
 		{
 			HandleMercLeavingEquipmentInDrassen(pLeaveSoldier);
 		}

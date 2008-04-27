@@ -417,7 +417,7 @@ static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
-	if( InsuranceInfoSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
+	if (!InsuranceInfoSubPagesVisitedFlag[ubSubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;

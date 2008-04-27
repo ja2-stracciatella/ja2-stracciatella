@@ -874,7 +874,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	HandleTownLoyaltyForNPCRecruitment( pNewSoldier );
 
 	// Try putting them into the current squad
-	if ( AddCharacterToSquad( pNewSoldier, (INT8)CurrentSquad( ) ) == FALSE )
+	if (!AddCharacterToSquad(pNewSoldier, CurrentSquad()))
 	{
 		AddCharacterToAnySquad( pNewSoldier );
 	}
@@ -949,7 +949,7 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 	pNewSoldier->ubWhatKindOfMercAmI = MERC_TYPE__EPC;
 
 	// Try putting them into the current squad
-	if ( AddCharacterToSquad( pNewSoldier, (INT8)CurrentSquad( ) ) == FALSE )
+	if (!AddCharacterToSquad(pNewSoldier, CurrentSquad()))
 	{
 		AddCharacterToAnySquad( pNewSoldier );
 	}

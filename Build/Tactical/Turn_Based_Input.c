@@ -1058,7 +1058,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 
 				if ( _KeyDown( CTRL )   )
 				{
-					if ( fCtrlDown == FALSE )
+					if (!fCtrlDown)
 					{
 						ErasePath( TRUE );
 						gfPlotNewMovement = TRUE;
@@ -1083,7 +1083,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 
 				if ( _KeyDown( ALT )   )
 				{
-					if ( fAltDown == FALSE )
+					if (!fAltDown)
 					{
 						// Get currently selected guy and change reverse....
 						if (GetSelectedMan() != NULL)

@@ -1357,8 +1357,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			return;
 		}
 
-
-		if( pGroup->fVehicle == FALSE )
+		if (!pGroup->fVehicle)
 		{
 			// non-vehicle player group
 			CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
@@ -2694,7 +2693,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 			// if only showing retreat paths, ignore groups not in the battle sector
 			// if NOT showing retreat paths, ignore groups not between sectors
 			if ( ( gfDisplayPotentialRetreatPaths == TRUE ) && ( sBattleSector == sSource ) ||
-					 ( gfDisplayPotentialRetreatPaths == FALSE ) && ( curr->fBetweenSectors == TRUE ) )
+					!gfDisplayPotentialRetreatPaths && curr->fBetweenSectors == TRUE)
 			{
 				fMayRetreatFromBattle = FALSE;
 				fRetreatingFromBattle = FALSE;
@@ -3916,9 +3915,8 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 		return( FALSE );
 	}
 
-
 	// check for profiled NPCs in sector
-	if( WildernessSectorWithAllProfiledNPCsNotSpokenWith( sSectorX, sSectorY, bSectorZ ) == FALSE )
+	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(sSectorX, sSectorY, bSectorZ))
 	{
 		return( FALSE );
 	}

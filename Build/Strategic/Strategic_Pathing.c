@@ -1033,14 +1033,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 
 	if( pNode == NULL )
 	{
-		if( MoveGroupFromSectorToSector( ubGroupID, sStartX, sStartY, sDestX, sDestY ) == FALSE )
-		{
-			return( FALSE );
-		}
-		else
-		{
-			return( TRUE );
-		}
+		return MoveGroupFromSectorToSector(ubGroupID, sStartX, sStartY, sDestX, sDestY);
 	}
 
 	// start movement to next sector
@@ -1070,14 +1063,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 
 	if( pNode == NULL )
 	{
-		if( MoveGroupFromSectorToSectorButAvoidLastSector( ubGroupID, sStartX, sStartY, sDestX, sDestY ) == FALSE )
-		{
-			return( FALSE );
-		}
-		else
-		{
-			return( TRUE );
-		}
+		return MoveGroupFromSectorToSectorButAvoidLastSector(ubGroupID, sStartX, sStartY, sDestX, sDestY);
 	}
 
 	// remove tail from path

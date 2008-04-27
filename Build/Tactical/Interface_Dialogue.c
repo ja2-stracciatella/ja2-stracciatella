@@ -884,7 +884,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 					/*
 					// check if this is a shopkeeper who has been shutdown
-					if( HandleShopKeepHasBeenShutDown( gTalkPanel.ubCharNum ) == FALSE )
+					if (!HandleShopKeepHasBeenShutDown(gTalkPanel.ubCharNum))
 					{
 						DeleteTalkingMenu( );
 
@@ -2555,7 +2555,7 @@ unlock:
 				break;
 
 			case NPC_ACTION_TRIGGER_MARIA:
-				if ( CheckFact( FACT_MARIA_ESCAPE_NOTICED, MARIA ) == FALSE )
+				if (!CheckFact(FACT_MARIA_ESCAPE_NOTICED, MARIA))
 				{
 					TriggerNPCRecord( MARIA, 8 );
 				}
@@ -2668,15 +2668,15 @@ unlock:
 				break;
 
 			case NPC_ACTION_TRIGGER_FATHER_18_20_OR_15:
-				if ( CheckFact( 132, FATHER ) == FALSE )
+				if (!CheckFact(132, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 18 );
 				}
-				else if ( CheckFact( 133, FATHER ) == FALSE )
+				else if (!CheckFact(133, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 20 );
 				}
-				else if ( CheckFact( 134, FATHER ) == FALSE )
+				else if (!CheckFact(134, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 15 );
 				}
@@ -3337,7 +3337,7 @@ unlock:
 					// check if we owe vince cash
 					TriggerNPCRecord( ubTargetNPC, 21 );
 				}
-				else if ( CheckFact( FACT_VINCE_EXPLAINED_HAS_TO_CHARGE, ubTargetNPC ) == FALSE)
+				else if (!CheckFact(FACT_VINCE_EXPLAINED_HAS_TO_CHARGE, ubTargetNPC))
 				{
 					TriggerNPCRecord( ubTargetNPC, 15 );
 				}
@@ -3358,7 +3358,9 @@ unlock:
 						const INT32 iRandom = PreRandom(100);
 						if( ubTargetNPC == VINCE )
 						{
-							if ( (gbHospitalPriceModifier == HOSPITAL_RANDOM_FREEBIE || gbHospitalPriceModifier == HOSPITAL_FREEBIE) || (CheckFact( FACT_HOSPITAL_FREEBIE_DECISION_MADE, 0 ) == FALSE && iRandom < CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE ) )
+							if (gbHospitalPriceModifier == HOSPITAL_RANDOM_FREEBIE ||
+									gbHospitalPriceModifier == HOSPITAL_FREEBIE        ||
+									(!CheckFact(FACT_HOSPITAL_FREEBIE_DECISION_MADE, 0) && iRandom < CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE))
 							{
 								SetFactTrue( FACT_HOSPITAL_FREEBIE_DECISION_MADE );
 								if ( CheckFact( FACT_LOYALTY_HIGH, ubTargetNPC ) && CheckFact( FACT_24_HOURS_SINCE_DOCTOR_TALKED_TO, ubTargetNPC ) )
@@ -3397,7 +3399,12 @@ unlock:
 								gbHospitalPriceModifier = HOSPITAL_FREEBIE;
 								TriggerNPCRecord( ubTargetNPC, 20 );
 							}
-							else if ( CheckFact( FACT_LOYALTY_HIGH, ubTargetNPC ) && CheckFact( FACT_24_HOURS_SINCE_DOCTOR_TALKED_TO, ubTargetNPC ) && ( (gbHospitalPriceModifier == HOSPITAL_FREEBIE) || (CheckFact( FACT_HOSPITAL_FREEBIE_DECISION_MADE, 0 ) == FALSE && iRandom < CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE ) ) )
+							else if (CheckFact(FACT_LOYALTY_HIGH, ubTargetNPC)               &&
+									CheckFact(FACT_24_HOURS_SINCE_DOCTOR_TALKED_TO, ubTargetNPC) &&
+									(
+										gbHospitalPriceModifier == HOSPITAL_FREEBIE ||
+										(!CheckFact(FACT_HOSPITAL_FREEBIE_DECISION_MADE, 0) && iRandom < CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE)
+									))
 							{
 								// loyalty high... freebie
 								gbHospitalPriceModifier = HOSPITAL_FREEBIE;
@@ -3636,7 +3643,7 @@ unlock:
 
 			case NPC_ACTION_INITIATE_SHOPKEEPER_INTERFACE:
 				// check if this is a shopkeeper who has been shutdown
-				if( HandleShopKeepHasBeenShutDown( gTalkPanel.ubCharNum ) == FALSE )
+				if (!HandleShopKeepHasBeenShutDown(gTalkPanel.ubCharNum))
 				{
 					DeleteTalkingMenu( );
 

@@ -1569,7 +1569,7 @@ static void RenderAutoResolve(void)
 		{
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds *= 3;
 			gpAR->fMoraleEventsHandled = TRUE;
-			if ( CheckFact( FACT_FIRST_BATTLE_FOUGHT, 0 ) == FALSE )
+			if (!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
 			{
 				// this was the first battle against the army
 				SetFactTrue( FACT_FIRST_BATTLE_FOUGHT );

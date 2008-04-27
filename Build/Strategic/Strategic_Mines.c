@@ -958,7 +958,7 @@ void PlayerSpokeToHeadMiner( UINT8 ubMinerProfileId )
 	ubMineIndex = GetHeadMinersMineIndex( ubMinerProfileId );
 
 	// if this is our first time set a history fact
-	if( gMineStatus[ ubMineIndex ].fSpokeToHeadMiner == FALSE )
+	if (!gMineStatus[ubMineIndex].fSpokeToHeadMiner)
 	{
 		AddHistoryToPlayersLog( HISTORY_TALKED_TO_MINER, gMineLocation[ ubMineIndex ].bAssociatedTown, GetWorldTotalMin( ), gMineLocation[ ubMineIndex ].sSectorX,  gMineLocation[ ubMineIndex ].sSectorY );
 		gMineStatus[ ubMineIndex ].fSpokeToHeadMiner = TRUE;
@@ -1088,9 +1088,8 @@ void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId )
 	// get the index of his mine
 	ubMineIndex = GetHeadMinersMineIndex( ubMinerProfileId );
 
-
 	// if it's the first time he's been attacked
-	if ( gMineStatus[ ubMineIndex ].fAttackedHeadMiner == FALSE )
+	if (!gMineStatus[ubMineIndex].fAttackedHeadMiner)
 	{
 		// shut off production at his mine (Permanently!)
 		ShutOffMineProduction( ubMineIndex );
@@ -1211,7 +1210,7 @@ static BOOLEAN PlayerForgotToTakeOverMine(UINT8 ubMineIndex)
 	// mine not empty
 	// player hasn't spoken to the head miner, but hasn't attacked him either
 	// miner is alive
-	if ( (StrategicMap[( gMineLocation[ ubMineIndex ].sSectorX ) + ( MAP_WORLD_X * ( gMineLocation[ ubMineIndex ].sSectorY ) )].fEnemyControlled == FALSE ) &&
+	if (!StrategicMap[gMineLocation[ubMineIndex].sSectorX + MAP_WORLD_X * gMineLocation[ubMineIndex].sSectorY].fEnemyControlled &&
 		 ( !pMineStatus->fEmpty ) &&
 		 ( !pMineStatus->fSpokeToHeadMiner ) &&
 		 ( !pMineStatus->fAttackedHeadMiner ) &&

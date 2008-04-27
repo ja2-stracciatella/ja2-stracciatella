@@ -112,7 +112,7 @@ void CallEldinTo( INT16 sGridNo )
 				pSoldier->sNoiseGridno = sGridNo;
 				pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 				pSoldier->bAlertStatus = STATUS_RED;
-				if ( (pSoldier->bAction != AI_ACTION_GET_CLOSER) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) == FALSE )
+				if (pSoldier->bAction != AI_ACTION_GET_CLOSER || !CheckFact(FACT_MUSEUM_ALARM_WENT_OFF, 0))
 				{
 					CancelAIAction(pSoldier);
 					pSoldier->bNextAction = AI_ACTION_GET_CLOSER;

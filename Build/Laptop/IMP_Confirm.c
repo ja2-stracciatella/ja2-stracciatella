@@ -159,7 +159,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 
 	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
 
-	if( fLoadingCharacterForPreviousImpProfile == FALSE )
+	if (!fLoadingCharacterForPreviousImpProfile)
 	{
 		// give them items
 		GiveItemsToPC( 	HireMercStruct.ubProfileID );

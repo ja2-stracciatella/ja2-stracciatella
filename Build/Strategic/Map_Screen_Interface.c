@@ -407,7 +407,7 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( INT8 bAssignme
 		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
 		{
-			if ( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
+			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 			{
 				ResumeOldAssignment( pSoldier );
 			}
@@ -1041,7 +1041,7 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 	SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (s == NULL) return;
 
-	if( ( fWasInited == FALSE ) && ( fMapInventoryPoolInited ) )
+	if (!fWasInited && fMapInventoryPoolInited)
 	{
 		if (s->sSectorX == sMapX &&
 				s->sSectorY == sMapY &&
@@ -1055,7 +1055,7 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			CreateScreenMaskForInventoryPoolPopUp( );
 		}
 	}
-	else if( ( fWasInited == TRUE ) && ( fMapInventoryPoolInited == FALSE ) )
+	else if (fWasInited == TRUE && !fMapInventoryPoolInited)
 	{
 		fWasInited = FALSE;
 
@@ -1595,19 +1595,13 @@ void UpdateMapScreenAssignmentPositions( void )
 
 	if( bSelectedAssignChar == -1 )
 	{
-		if( gfPreBattleInterfaceActive == FALSE )
-		{
-			giBoxY = 0;
-		}
+		if (!gfPreBattleInterfaceActive) giBoxY = 0;
 		return;
 	}
 
 	if (gCharactersList[bSelectedAssignChar].merc == NULL)
 	{
-		if( gfPreBattleInterfaceActive == FALSE )
-		{
-			giBoxY = 0;
-		}
+		if (!gfPreBattleInterfaceActive) giBoxY = 0;
 		return;
 	}
 
@@ -2037,7 +2031,7 @@ void HandleShowingOfTacticalInterfaceFastHelpText( void )
 		fTextActive = TRUE;
 
 	}
-	else if( ( fInterfaceFastHelpTextActive == FALSE ) && ( fTextActive ) )
+	else if (!fInterfaceFastHelpTextActive && fTextActive)
 	{
 		fTextActive = FALSE;
 		UnPauseGame();
@@ -2379,7 +2373,7 @@ static BOOLEAN AllSoldiersInSquadSelected(INT32 iSquadNumber)
 	{
 		if( pSoldierMovingList[ iCounter ]->bAssignment == ( INT8 )iSquadNumber )
 		{
-			if( fSoldierIsMoving[ iCounter ] == FALSE )
+			if (!fSoldierIsMoving[iCounter])
 			{
 				return( FALSE );
 			}
@@ -2689,7 +2683,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	// not allowed for underground movement!
 	Assert( sSectorZ == 0 );
 
-	if( ( fShowMapScreenMovementList == TRUE ) && ( fCreated == FALSE ) )
+	if (fShowMapScreenMovementList == TRUE && !fCreated)
 	{
 		fCreated = TRUE;
 
@@ -2699,7 +2693,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		CreateScreenMaskForMoveBox( );
   	fMapPanelDirty = TRUE;
 	}
-	else if( ( fShowMapScreenMovementList == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fShowMapScreenMovementList && fCreated == TRUE)
 	{
 		fCreated = FALSE;
 
@@ -3489,7 +3483,7 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void)
 	{
 		if( ( pSoldierMovingList[ iCounter ]->bAssignment >= ON_DUTY ) && (  pSoldierMovingList[ iCounter ]->bAssignment >= VEHICLE ) )
 		{
-			if( fSoldierIsMoving[ iCounter ] == FALSE )
+			if (!fSoldierIsMoving[iCounter])
 			{
 				return( FALSE );
 			}
@@ -3534,7 +3528,7 @@ static INT8 FindSquadThatSoldierCanJoin(SOLDIERTYPE* pSoldier)
 		if( IsThisSquadInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, bCounter ) )
 		{
 			// does it have room?
-			if( IsThisSquadFull( bCounter ) == FALSE )
+			if (!IsThisSquadFull(bCounter))
 			{
 				// is it doing the same thing as the soldier is (staying or going) ?
 				if( IsSquadSelectedForMovement( bCounter ) == IsSoldierSelectedForMovement( pSoldier ) )
@@ -3552,10 +3546,7 @@ static INT8 FindSquadThatSoldierCanJoin(SOLDIERTYPE* pSoldier)
 void ReBuildMoveBox( void )
 {
 	// check to see if we need to rebuild the movement box and mouse regions
-	if( fRebuildMoveBox == FALSE )
-	{
-		return;
-	}
+	if (!fRebuildMoveBox) return;
 
 	// reset the fact
 	fRebuildMoveBox = FALSE;
@@ -3580,7 +3571,7 @@ static void MoveScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 void CreateScreenMaskForMoveBox( void )
 {
-	if( fScreenMaskForMoveCreated == FALSE )
+	if (!fScreenMaskForMoveCreated)
 	{
 		// set up the screen mask
 		MSYS_DefineRegion(&gMoveBoxScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MoveScreenMaskBtnCallback);
@@ -3699,10 +3690,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if( pSoldier -> bActive == FALSE )
-	{
-		return;
-	}
+	if (!pSoldier->bActive) return;
 
 	// if update
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
@@ -3751,11 +3739,7 @@ void DisplaySoldierUpdateBox( )
 	INT32 iCounter = 0;
 	INT32 iUpperLimit = 0;
 
-	if( fShowUpdateBox == FALSE )
-	{
-		return;
-	}
-
+	if (!fShowUpdateBox) return;
 
 	// get the number of mercs
 	iNumberOfMercsOnUpdatePanel = GetNumberOfMercsInUpdateList( );
@@ -3969,7 +3953,7 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if( ( fShowUpdateBox == TRUE ) && ( fCreated == FALSE ) )
+	if (fShowUpdateBox == TRUE && !fCreated)
 	{
 		// set to created
 		fCreated = TRUE;
@@ -3982,7 +3966,7 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 		MakeButton(0, x,                                 iY, ContinueUpdateButtonCallback, pUpdatePanelButtons[0], gzLateLocalizedString[51]);
 		MakeButton(1, x + TACT_UPDATE_MERC_FACE_X_WIDTH, iY, StopUpdateButtonCallback,     pUpdatePanelButtons[1], gzLateLocalizedString[52]);
 	}
-	else if( ( fShowUpdateBox == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fShowUpdateBox && fCreated == TRUE)
 	{
 		// set to uncreated
 		fCreated = FALSE;
@@ -4001,7 +3985,7 @@ void CreateDestroyTheUpdateBox( void )
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if( ( fCreated == FALSE ) && ( fShowUpdateBox == TRUE ) )
+	if (!fCreated && fShowUpdateBox == TRUE)
 	{
 
 		if( GetNumberOfMercsInUpdateList( ) == 0 )
@@ -4026,7 +4010,7 @@ void CreateDestroyTheUpdateBox( void )
 		// Do beep
 		PlayJA2SampleFromFile("Sounds/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 	}
-	else if( ( fCreated == TRUE ) && ( fShowUpdateBox == FALSE ) )
+	else if (fCreated == TRUE && !fShowUpdateBox)
 	{
 		fCreated = FALSE;
 
@@ -4220,7 +4204,7 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if( ( fCreated == FALSE ) && ( fCreate == TRUE ) )
+	if (!fCreated && fCreate == TRUE)
 	{
 		MSYS_DefineRegion( &gContractIconRegion, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y, CHAR_ICON_X + CHAR_ICON_WIDTH, CHAR_ICON_CONTRACT_Y + CHAR_ICON_HEIGHT,
 						 MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
@@ -4233,7 +4217,7 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 
 		fCreated = TRUE;
 	}
-	else if( ( fCreated == TRUE ) && ( fCreate == FALSE ) )
+	else if (fCreated == TRUE && !fCreate)
 	{
 		MSYS_RemoveRegion( &gContractIconRegion );
 		MSYS_RemoveRegion( &gInsuranceIconRegion );
@@ -4483,7 +4467,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 
 
 	// if merc is in a particular sector, not somewhere in between
-	if ( pSoldier->fBetweenSectors == FALSE )
+	if (!pSoldier->fBetweenSectors)
 	{
 		// and he's NOT flying above it all in a working helicopter
 		if( !SoldierAboardAirborneHeli( pSoldier ) )

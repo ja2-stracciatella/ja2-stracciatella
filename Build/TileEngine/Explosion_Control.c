@@ -2645,7 +2645,7 @@ void HandleExplosionQueue(void)
 
 	// See if we can reduce the # of elements on the queue that we have recorded
 	// Easier to do it at this time rather than in the loop above
-	while ( gubElementsOnExplosionQueue > 0 && gExplosionQueue[ gubElementsOnExplosionQueue - 1 ].fExists == FALSE )
+	while (gubElementsOnExplosionQueue > 0 && !gExplosionQueue[gubElementsOnExplosionQueue - 1].fExists)
 	{
 		gubElementsOnExplosionQueue--;
 	}

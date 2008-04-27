@@ -554,7 +554,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	INT16 sX = 0, sY = 0;
 
 	// are even in autobandage mode?
-	if( gTacticalStatus.fAutoBandageMode == FALSE )
+	if (!gTacticalStatus.fAutoBandageMode)
 	{
 		// nope,
 		return;
@@ -862,7 +862,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	iTotalPixelsHigh+= 35;
 
 	// if autobandage is complete, set the fact by enabling the done button
-	if( fAutoBandageComplete == FALSE )
+	if (!fAutoBandageComplete)
 	{
 		DisableButton( iEndAutoBandageButton[ 0 ]);
 		EnableButton( iEndAutoBandageButton[ 1 ] );
@@ -916,9 +916,8 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void DestroyTerminateAutoBandageButton(void)
 {
-
 	// destroy the kill autobandage button
-	if( fAutoEndBandageButtonCreated == FALSE )
+	if (!fAutoEndBandageButtonCreated)
 	{
 		// not around, don't destroy what ain't there
 		return;

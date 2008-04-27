@@ -545,7 +545,7 @@ static void ChangingAimArchiveSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
-	if( AimArchivesSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
+	if (!AimArchivesSubPagesVisitedFlag[ubSubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;

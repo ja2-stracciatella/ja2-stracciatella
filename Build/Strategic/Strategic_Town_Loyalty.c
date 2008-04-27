@@ -824,7 +824,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 
 		case MILITIA_TEAM:
 			// the rebels did it... check if are they on our side
-			if( CheckFact( FACT_REBELS_HATE_PLAYER, 0 ) == FALSE )
+			if (!CheckFact(FACT_REBELS_HATE_PLAYER, 0))
 			{
 				// on our side, penalty
 				iLoyaltyChange *= REDUCTION_FOR_MURDER_BY_REBEL;
@@ -961,7 +961,7 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 	else if ( pSoldier->ubCivilianGroup == REBEL_CIV_GROUP )
 	{
 		// the rebels did it...are they on our side
-		if( CheckFact( FACT_REBELS_HATE_PLAYER, 0 ) == FALSE )
+		if (!CheckFact(FACT_REBELS_HATE_PLAYER, 0))
 		{
 			sLoyaltyValue /= DIVISOR_FOR_REBEL_BUILDING_DMG;
 
@@ -1066,7 +1066,7 @@ void HandleTheftByCiviliansInSector( INT16 sX, INT16 sY, INT32 iLoyalty )
 	if( iLoyalty < THRESHOLD_FOR_TOWN_THEFT )
 	{
 		// sectors with mercs are immune
-		if( fSectorsWithSoldiers[ sX + ( MAP_WORLD_X * sY ) ][ 0 ] == FALSE )
+		if (!fSectorsWithSoldiers[sX + MAP_WORLD_X * sY][0])
 		{
 			// sectors not yet visited by player are also immune (other sectors in town could have been visited)
 			if ( GetSectorFlagStatus( sX, sY, 0, SF_ALREADY_VISITED ) == TRUE )

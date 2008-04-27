@@ -3217,7 +3217,7 @@ static void HandleQDSTalkingMerc(void)
 	{
 /*
 		//as soon as the panel is no longer active, refresh the screen
-		if( gfFacePanelActive == FALSE )
+		if (!gfFacePanelActive)
 		{
 			//Redraw the screen
 			gfRedrawQuestDebugSystem = TRUE;

@@ -1184,7 +1184,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		usNewState = SubstituteBodyTypeAnimation(pSoldier, usNewState);
 
 		// CHECK IF WE CAN DO THIS ANIMATION!
-		if ( IsAnimationValidForBodyType( pSoldier, usNewState ) == FALSE )
+		if (!IsAnimationValidForBodyType(pSoldier, usNewState))
 		{
 			return( FALSE );
 		}
@@ -1744,7 +1744,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 
 	// From animation control, set surface
- 	if ( SetSoldierAnimationSurface( pSoldier, usNewState ) == FALSE )
+	if (!SetSoldierAnimationSurface(pSoldier, usNewState))
 	{
 		return( FALSE );
 	}

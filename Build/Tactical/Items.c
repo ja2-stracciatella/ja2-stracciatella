@@ -2024,7 +2024,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 	if ( Item[ pGun->usItem ].usItemClass == IC_LAUNCHER || pGun->usItem == TANK_CANNON )
 	{
-		if ( AttachObject( pSoldier, pGun, pAmmo ) == FALSE )
+		if (!AttachObject(pSoldier, pGun, pAmmo))
 		{
 			// abort
 			return( FALSE );
@@ -3497,10 +3497,7 @@ BOOLEAN AllocateObject( OBJECTTYPE **pObj )
 
 BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 {
-	if( pObj == FALSE )
-	{
-		return( FALSE );
-	}
+	if (pObj == NULL) return FALSE;
 
 	// free up space
 	MemFree( pObj );

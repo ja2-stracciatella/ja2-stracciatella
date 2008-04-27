@@ -183,7 +183,7 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	}
 
 	// check if heli is in motion or if on the ground
-	if( ( fHelicopterIsAirBorne == TRUE ) && (fHoveringHelicopter == FALSE ) )
+	if (fHelicopterIsAirBorne == TRUE && !fHoveringHelicopter)
 	{
 		return( FALSE );
 	}
@@ -268,7 +268,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 
 
 	// player pays for travel if Skyrider is NOT returning to base (even if empty while scouting/going for pickup)
-	if ( fHeliReturnStraightToBase == FALSE )
+	if (!fHeliReturnStraightToBase)
 	{
 		// charge cost for flying another sector
 		iTotalAccumulatedCostByPlayer += GetCostOfPassageForHelicopter( sX, sY );
@@ -353,7 +353,7 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
 	{
 		// if this refuelling site is available
-		if( ( fRefuelingSiteAvailable[ iCounter ] ) || ( fMustBeAvailable == FALSE ) )
+		if (fRefuelingSiteAvailable[iCounter] || !fMustBeAvailable)
 		{
 			// find if sector is under control, find distance from heli to it
 			const VEHICLETYPE* const v = GetHelicopter();
@@ -403,7 +403,7 @@ static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY)
 	INT32 iCost = 0;
 
 	// if they don't control it
-	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sX, sY ) ].fEnemyAirControlled == FALSE )
+	if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled)
 	{
 		iCost = COST_AIRSPACE_SAFE;
 	}
@@ -451,18 +451,12 @@ BOOLEAN CanHelicopterFly( void )
 	// check if heli is available for flight?
 
 	// is the heli available
-	if( fHelicopterAvailable == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!fHelicopterAvailable) return FALSE;
 
 	if (GetVehicle(iHelicopterVehicleId) == NULL) return FALSE;
 
 	// is the pilot alive, well, and willing to help us?
-	if( IsHelicopterPilotAvailable( ) == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!IsHelicopterPilotAvailable()) return FALSE;
 
 	if( fHeliReturnStraightToBase == TRUE )
 	{
@@ -470,10 +464,7 @@ BOOLEAN CanHelicopterFly( void )
 	}
 
 	// grounded by enemies in sector?
-	if ( CanHelicopterTakeOff() == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (!CanHelicopterTakeOff()) return FALSE;
 
 	// everything A-OK!
 	return( TRUE );
@@ -482,10 +473,7 @@ BOOLEAN CanHelicopterFly( void )
 BOOLEAN IsHelicopterPilotAvailable( void )
 {
 	// what is state of skyrider?
-	if( fSkyRiderAvailable == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!fSkyRiderAvailable) return FALSE;
 
 	// owe any money to skyrider?
 	if( gMercProfiles[ SKYRIDER ].iBalance < 0 )
@@ -519,7 +507,7 @@ static void LandHelicopter(void)
 	HandleHelicopterOnGroundSkyriderProfile( );
 
 	// if we'll be unable to take off again (because there are enemies in the sector, or we owe pilot money)
-	if ( CanHelicopterFly() == FALSE )
+	if (!CanHelicopterFly())
 	{
 		// kick everyone out!
 		MoveAllInHelicopterToFootMovementGroup( );
@@ -588,11 +576,7 @@ void HandleHeliHoverTooLong( void )
 	// reset hover time
 	uiStartHoverTime = 0;
 
-	if( fHoveringHelicopter == FALSE )
-	{
-		return;
-	}
-
+	if (!fHoveringHelicopter) return;
 
 	// hovered too long, inform player heli is returning to base
 	HeliCharacterDialogue( pSkyRider, RETURN_TO_BASE );
@@ -615,10 +599,7 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies)
 	UINT8 ubChance;
 
 	// is the pilot and heli around?
-	if( CanHelicopterFly( ) == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!CanHelicopterFly()) return FALSE;
 
 	// if there aren't any, he obviously won't see them
 	if( ubNumEnemies == 0 )
@@ -644,7 +625,7 @@ INT32 DistanceOfIntendedHelicopterPath( void )
 {
 	INT32 iLength = 0;
 
-	if( CanHelicopterFly( ) == FALSE )
+	if (!CanHelicopterFly())
 	{
 		// big number, no go
 		return( 9999 );
@@ -761,7 +742,7 @@ void UpdateRefuelSiteAvailability( void )
 		// if enemy controlled sector (ground OR air, don't want to fly into enemy air territory)
 		if( ( StrategicMap[ CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iCounter ][ 0 ], ubRefuelList[ iCounter ][ 1 ] ) ].fEnemyControlled == TRUE ) ||
 				( StrategicMap[ CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iCounter ][ 0 ], ubRefuelList[ iCounter ][ 1 ] ) ].fEnemyAirControlled == TRUE ) ||
-				( ( iCounter == ESTONI_REFUELING_SITE ) && ( CheckFact( FACT_ESTONI_REFUELLING_POSSIBLE, 0 ) == FALSE ) ) )
+				(iCounter == ESTONI_REFUELING_SITE && !CheckFact(FACT_ESTONI_REFUELLING_POSSIBLE, 0)))
 		{
 			// mark refueling site as unavailable
 			fRefuelingSiteAvailable[ iCounter ] = FALSE;
@@ -789,7 +770,7 @@ void UpdateRefuelSiteAvailability( void )
 
 void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 {
-	if( fSkyRiderSetUp == FALSE )
+	if (!fSkyRiderSetUp)
 	{
 		fHelicopterAvailable = TRUE;
 		fSkyRiderAvailable = TRUE;
@@ -947,7 +928,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 uiSpecialCode)
 			CharacterDialogue( SKYRIDER, MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
 			CharacterDialogueWithSpecialEvent( SKYRIDER, MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI , FALSE , TRUE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1 );
 
-			if( SAMSitesUnderPlayerControl( SAM_2_X, SAM_2_Y ) == FALSE )
+			if (!SAMSitesUnderPlayerControl(SAM_2_X, SAM_2_Y))
 			{
 				CharacterDialogue( SKYRIDER, SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
 			}
@@ -1386,7 +1367,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 	UINT8 ubChance;
 
 	// if this sector is in friendly airspace, we're safe
-	if( StrategicMap[CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyAirControlled == FALSE )
+	if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY)].fEnemyAirControlled)
 	{
 		// no problem, friendly airspace
 		return( FALSE );
@@ -1500,7 +1481,7 @@ BOOLEAN CanHelicopterTakeOff( void )
 	// grab location
 	const INT16 sHelicopterSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
 	// if it's not in enemy control, we can take off
-	if( StrategicMap[ sHelicopterSector ].fEnemyControlled == FALSE )
+	if (!StrategicMap[sHelicopterSector].fEnemyControlled)
 	{
 		return( TRUE );
 	}
@@ -1622,11 +1603,7 @@ INT16 GetNumSafeSectorsInPath( void )
   UINT32  uiCount = 0;
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
-	if( CanHelicopterFly( ) == FALSE )
-	{
-		// big number, no go
-		return( 0 );
-	}
+	if (!CanHelicopterFly()) return 0;
 
 	const VEHICLETYPE* const v = GetHelicopter();
 	// may need to skip the sector the chopper is currently in
@@ -1700,11 +1677,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
   UINT32  uiCount = 0;
 
 	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
-	if( CanHelicopterFly( ) == FALSE )
-	{
-		// big number, no go
-		return( 0 );
-	}
+	if (!CanHelicopterFly()) return 0;
 
 	const VEHICLETYPE* const v = GetHelicopter();
 	// may need to skip the sector the chopper is currently in

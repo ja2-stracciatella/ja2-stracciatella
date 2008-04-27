@@ -1101,7 +1101,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 	INT32				cnt;
 
 	const OBJECTTYPE* pTestObject;
-	if( fFromMerc == FALSE )
+	if (!fFromMerc)
 	{
 		pTestObject = &( pInventoryPoolList[ bInvPos ].o );
 	}
@@ -1246,7 +1246,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapInventory( SOLDIERTYPE *pSoldier, INT32 bInv
 	INT32				cnt;
 	OBJECTTYPE  *pObject, *pTestObject ;
 
-	if( fFromMerc == FALSE )
+	if (!fFromMerc)
 	{
 		pTestObject = &( pInventoryPoolList[ iStartSlotNumber + bInvPos ].o);
 	}
@@ -2835,10 +2835,7 @@ void DeleteItemDescriptionBox( )
 	INT32 cnt, cnt2;
 	BOOLEAN	fFound, fAllFound;
 
-	if( gfInItemDescBox == FALSE )
-	{
-		return;
-	}
+	if (!gfInItemDescBox) return;
 
 //	DEF:
 

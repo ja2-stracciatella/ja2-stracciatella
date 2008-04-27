@@ -538,14 +538,14 @@ void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
 	sSectorX = pSoldier->sSectorX;
 	sSectorY = pSoldier->sSectorY;
 
-	Assert( SectorInfo[ SECTOR( sSectorX, sSectorY ) ].fMilitiaTrainingPaid == FALSE );
+	Assert(!SectorInfo[SECTOR(sSectorX, sSectorY)].fMilitiaTrainingPaid);
 
 	pMilitiaTrainerSoldier = pSoldier;
 
 	gfYesNoPromptIsForContinue = TRUE;
 
 	// is there enough loyalty to continue training
-	if( DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia( pSoldier ) == FALSE )
+	if (!DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(pSoldier))
 	{
 		// loyalty too low to continue training
 		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[8], pTownNames[ GetTownIdForSector(sSectorX, sSectorY)], MIN_RATING_TO_TRAIN_TOWN);
@@ -908,7 +908,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 
 		if( CanCharacterTrainMilitia( pSoldier ) == TRUE )
 		{
-			if( SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ].fMilitiaTrainingPaid == FALSE )
+			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 			{
 				// check to see if this sector is a town and needs equipment
 				gsUnpaidStrategicSector[ iCounter ] = CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY );
@@ -998,7 +998,7 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector);
 
 static void PayForTrainingInSector(UINT8 ubSector)
 {
-	Assert( SectorInfo[ ubSector ].fMilitiaTrainingPaid == FALSE );
+	Assert(!SectorInfo[ubSector].fMilitiaTrainingPaid);
 
 	// spend the money
 	AddTransactionToPlayersBook( TRAIN_TOWN_MILITIA, ubSector, GetWorldTotalMin(), -( MILITIA_TRAINING_COST ) );

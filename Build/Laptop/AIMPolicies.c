@@ -739,7 +739,7 @@ static void ResetAimPolicyButtons(void)
 
 static void DisableAimPolicyButton(void)
 {
-	if( gfExitingAimPolicy == TRUE || gfAimPolicyMenuBarLoaded == FALSE )
+	if (gfExitingAimPolicy == TRUE || !gfAimPolicyMenuBarLoaded)
 		return;
 
 	if( (gubCurPageNum == AIM_POLICY_TOC_PAGE ) )
@@ -758,7 +758,7 @@ static void ChangingAimPoliciesSubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
-	if( AimPoliciesSubPagesVisitedFlag[ ubSubPageNumber ] == FALSE )
+	if (!AimPoliciesSubPagesVisitedFlag[ubSubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;

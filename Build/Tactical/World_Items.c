@@ -46,8 +46,7 @@ static INT32 GetFreeWorldBombIndex(void)
 
 	for(uiCount=0; uiCount < guiNumWorldBombs; uiCount++)
 	{
-		if ( gWorldBombs[ uiCount ].fExists == FALSE )
-			return( (INT32)uiCount );
+		if (!gWorldBombs[uiCount].fExists) return (INT32)uiCount;
 	}
 
 	uiOldNumWorldBombs = guiNumWorldBombs;
@@ -169,8 +168,7 @@ static INT32 GetFreeWorldItemIndex(void)
 
 	for(uiCount=0; uiCount < guiNumWorldItems; uiCount++)
 	{
-		if ( gWorldItems[ uiCount ].fExists == FALSE )
-			return( (INT32)uiCount );
+		if (!gWorldItems[uiCount].fExists) return (INT32)uiCount;
 	}
 
 	uiOldNumWorldItems = guiNumWorldItems;

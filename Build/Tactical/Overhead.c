@@ -5761,7 +5761,11 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		MilitiaChangesSides();
 	}
 	// JA2 Gold: fix Slay
-	else if ( (pTarget->bTeam == CIV_TEAM && pTarget->bNeutral) && pTarget->ubProfile == SLAY && pTarget->bLife >= OKLIFE && CheckFact( 155, 0 ) == FALSE )
+	else if (pTarget->bTeam == CIV_TEAM &&
+			pTarget->bNeutral               &&
+			pTarget->ubProfile == SLAY      &&
+			pTarget->bLife     >= OKLIFE    &&
+			!CheckFact(155, 0))
 	{
 		TriggerNPCRecord( SLAY, 1 );
 	}

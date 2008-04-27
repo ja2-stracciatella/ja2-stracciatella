@@ -1011,11 +1011,8 @@ void RaiseWorldLand( )
 		}
 	}
 
-	if (fSomethingRaised == FALSE)
-	{
-		// no cliffs
-		return;
-	}
+	// no cliffs?
+	if (!fSomethingRaised) return;
 
 	// run through again, this pass is for placing raiselandstart in rows that have raiseland end but no raiselandstart
 	for (cnt=WORLD_MAX-1; cnt >=0 ; cnt--)

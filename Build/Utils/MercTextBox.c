@@ -183,12 +183,7 @@ static BOOLEAN RenderMercPopupBox(INT16 sDestX, INT16 sDestY, SGPVSurface* buffe
 
 BOOLEAN RenderMercPopUpBoxFromIndex(const INT32 iBoxId, const INT16 sDestX, const INT16 sDestY, SGPVSurface* const buffer)
 {
-
-	// set the current box
-	if( SetCurrentPopUpBox( iBoxId ) == FALSE )
-	{
-		return ( FALSE );
-	}
+	if (!SetCurrentPopUpBox(iBoxId)) return FALSE;
 
 	// now attempt to render the box
 	return RenderMercPopupBox(sDestX,  sDestY, buffer);
@@ -272,7 +267,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		gPopUpTextBox = pPopUpTextBox;
 
 			// Load appropriate images
-		if( LoadTextMercPopupImages( ubBackgroundIndex, ubBorderIndex ) == FALSE )
+		if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex))
 		{
 			MemFree( pPopUpTextBox );
 			return( -1 );
@@ -297,7 +292,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		{
 			//Remove old, set new
 			RemoveTextMercPopupImages( );
-			if( LoadTextMercPopupImages( ubBackgroundIndex, ubBorderIndex ) == FALSE )
+			if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex))
 			{
 				return( -1 );
 			}
@@ -505,11 +500,7 @@ static BOOLEAN RemoveMercPopupBox(void)
 BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId )
 {
 	// find this box, set it to current, and delete it
-	if( SetCurrentPopUpBox( uiId ) == FALSE )
-	{
-		// failed
-		return( FALSE );
-	}
+	if (!SetCurrentPopUpBox(uiId)) return FALSE;
 
 	// now try to remove it
 	return( RemoveMercPopupBox( ) );

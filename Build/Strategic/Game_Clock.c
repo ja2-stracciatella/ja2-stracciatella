@@ -866,7 +866,7 @@ static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 void CreateMouseRegionForPauseOfClock(void)
 {
-	if( fClockMouseRegionCreated == FALSE )
+	if (!fClockMouseRegionCreated)
 	{
 		// create a mouse region for pausing of game clock
 		MSYS_DefineRegion(
@@ -877,7 +877,7 @@ void CreateMouseRegionForPauseOfClock(void)
 
 		fClockMouseRegionCreated = TRUE;
 
-		if ( gfGamePaused == FALSE )
+		if (!gfGamePaused)
 		{
 			SetRegionFastHelpText( &gClockMouseRegion, pPausedGameText[ 2 ] );
 		}
@@ -955,7 +955,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if( ( ( fClockMouseRegionCreated == FALSE ) || ( gfGamePaused == FALSE ) || ( gfPauseDueToPlayerGamePause == FALSE ) ) && ( fCreated == TRUE ) )
+	if ((!fClockMouseRegionCreated || !gfGamePaused || !gfPauseDueToPlayerGamePause) && fCreated == TRUE)
 	{
 		fCreated = FALSE;
 		MSYS_RemoveRegion( &gClockScreenMaskMouseRegion );
@@ -969,7 +969,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		MarkButtonsDirty();
 		SetRenderFlags( RENDER_FLAG_FULL );
 	}
-	else if( (gfPauseDueToPlayerGamePause == TRUE ) && ( fCreated == FALSE ) )
+	else if (gfPauseDueToPlayerGamePause == TRUE && !fCreated)
 	{
 		// create a mouse region for pausing of game clock
 		MSYS_DefineRegion(&gClockScreenMaskMouseRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, 0, MSYS_NO_CALLBACK, ScreenMaskForGamePauseBtnCallBack);

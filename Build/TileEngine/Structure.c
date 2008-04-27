@@ -457,7 +457,7 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 	if (pFileRef->pubStructureData != NULL)
 	{
 		fOk = CreateFileStructureArrays( pFileRef, uiDataSize );
-		if (fOk == FALSE)
+		if (!fOk)
 		{
 			FreeStructureFileRef( pFileRef );
 			return( NULL );
@@ -982,7 +982,7 @@ static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT
 				return( NULL );
 			}
 		}
-		if (AddStructureToTile( &(gpWorldLevelData[sGridNo]), ppStructure[ubLoop], usStructureID ) == FALSE)
+		if (!AddStructureToTile(&gpWorldLevelData[sGridNo], ppStructure[ubLoop], usStructureID))
 		{
 			// error! abort!
 			for (ubLoop2 = BASE_TILE; ubLoop2 < ubLoop; ubLoop2++)
@@ -1136,7 +1136,7 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 	ubHitPoints = pBaseStructure->ubHitPoints;
 	sCubeOffset = pBaseStructure->sCubeOffset;
 	// delete the old structure and add the new one
-	if (DeleteStructureFromWorld( pBaseStructure ) == FALSE)
+	if (!DeleteStructureFromWorld(pBaseStructure))
 	{
 		return( NULL );
 	}

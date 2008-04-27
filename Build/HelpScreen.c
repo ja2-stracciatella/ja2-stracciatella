@@ -732,7 +732,7 @@ static void ExitHelpScreen(void)
 	HelpScreenSpecialExitCode();
 
 	//if the game was NOT paused
-	if( gHelpScreen.fWasTheGamePausedPriorToEnteringHelpScreen == FALSE )
+	if (!gHelpScreen.fWasTheGamePausedPriorToEnteringHelpScreen)
 	{
 		//un pause the game
 		UnPauseGame( );

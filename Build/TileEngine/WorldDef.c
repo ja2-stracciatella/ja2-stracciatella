@@ -620,13 +620,15 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 							SET_CURRMOVEMENTCOST( ubDirLoop, TRAVELCOST_OBSTACLE );
 						}
 
-						if ( FindStructure( (UINT16) (usGridNo - WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(usGridNo + WORLD_COLS), STRUCTURE_OBSTACLE ) == FALSE )
+						if (FindStructure(usGridNo - WORLD_COLS, STRUCTURE_OBSTACLE) == NULL &&
+								FindStructure(usGridNo + WORLD_COLS, STRUCTURE_OBSTACLE) == NULL)
 						{
 							FORCE_SET_MOVEMENTCOST( usGridNo, NORTH, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( usGridNo, SOUTH, 0, TRAVELCOST_FENCE );
 						}
 
-						if ( FindStructure( (UINT16)(usGridNo - 1), STRUCTURE_OBSTACLE ) == FALSE && FindStructure( (UINT16)(usGridNo + 1), STRUCTURE_OBSTACLE ) == FALSE )
+						if (FindStructure(usGridNo - 1, STRUCTURE_OBSTACLE) == NULL &&
+								FindStructure(usGridNo + 1, STRUCTURE_OBSTACLE) == NULL)
 						{
 							FORCE_SET_MOVEMENTCOST( usGridNo, EAST, 0, TRAVELCOST_FENCE );
 							FORCE_SET_MOVEMENTCOST( usGridNo, WEST, 0, TRAVELCOST_FENCE );

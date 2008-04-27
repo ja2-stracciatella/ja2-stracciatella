@@ -1185,7 +1185,7 @@ static void OpenFirstUnreadFile(void)
    {
 
 		 // if iCounter = iFileId, is a valid file
-     if(  pFilesList -> fRead == FALSE )
+		if (!pFilesList->fRead)
 		 {
 			 iHighLightFileLine = iCounter;
 		 }
@@ -1212,7 +1212,7 @@ static void CheckForUnreadFiles(void)
 	while( pFilesList )
   {
 		// unread?...if so, set flag
-		if( pFilesList -> fRead == FALSE )
+		if (!pFilesList->fRead)
 		{
 			fNewFilesInFileViewer = TRUE;
 		}
@@ -1324,7 +1324,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 
 			pTempString = pTempString ->Next;
 
-			if( ( pTempString == NULL ) && ( fGoingOffCurrentPage == FALSE ) )
+			if (pTempString == NULL && !fGoingOffCurrentPage)
 			{
 				// on last page
 				fOnLastFilesPageFlag = TRUE;

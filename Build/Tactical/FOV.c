@@ -702,7 +702,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
                           gTacticalStatus.fLockItemLocators = FALSE;
                         }
 
-												if ( !fItemsQuoteSaid && gTacticalStatus.fLockItemLocators == FALSE )
+												if (!fItemsQuoteSaid && !gTacticalStatus.fLockItemLocators)
 												{
 													gTacticalStatus.fLockItemLocators = TRUE;
 

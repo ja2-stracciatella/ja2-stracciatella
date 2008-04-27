@@ -121,7 +121,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
 	FastDebugMsg("Initializing Memory Manager");
 	// Initialize the Memory Manager
-	if (InitializeMemoryManager() == FALSE)
+	if (!InitializeMemoryManager())
 	{ // We were unable to initialize the memory manager
 		FastDebugMsg("FAILED : Initializing Memory Manager");
 		return FALSE;
@@ -183,7 +183,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing Game Manager");
 	// Initialize the Game
-	if (InitializeGame() == FALSE)
+	if (!InitializeGame())
 	{ // We were unable to initialize the game
 		FastDebugMsg("FAILED : Initializing Game Manager");
 		return FALSE;

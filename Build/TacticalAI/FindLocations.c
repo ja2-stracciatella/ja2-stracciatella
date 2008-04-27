@@ -1907,7 +1907,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 		DebugAI(String("%d decides to pick up %ls", pSoldier->ubID, ItemNames[o->usItem]));
 		if (Item[o->usItem].usItemClass == IC_GUN)
 		{
-			if (FindBetterSpotForItem( pSoldier, HANDPOS ) == FALSE)
+			if (!FindBetterSpotForItem(pSoldier, HANDPOS))
 			{
 				if (pSoldier->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 				{
@@ -2208,7 +2208,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
-	if ( (pSoldier->bTeam == gbPlayerNum) && (fInRing == FALSE) )
+	if (pSoldier->bTeam == gbPlayerNum && !fInRing)
 	{
 		// have player not go to the left of the ring
 		sMaxLeft = 0;

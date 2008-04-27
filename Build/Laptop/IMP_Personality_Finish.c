@@ -126,13 +126,7 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 	// this function will check to see if player has in fact confirmed selection and delay to
 	// read text has occurred
 
-
-
-	// if not confirm selected, return
-	if( fConfirmHasBeenSelectedFlag == FALSE )
-	{
-		return;
-	}
+	if (!fConfirmHasBeenSelectedFlag) return;
 
 	if( fCreateFinishOkButton == TRUE )
 	{
@@ -142,7 +136,7 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 	}
 
 	// create ok button
-	if( fCreatedOkIMPButton == FALSE )
+	if (!fCreatedOkIMPButton)
 	{
 		DestroyIMPersonalityFinishButtons( );
 		fCreateFinishOkButton = TRUE;

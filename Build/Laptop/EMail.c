@@ -438,7 +438,7 @@ void HandleEmail( void )
 	}
 
 	// not displaying anymore?
-	if( ( fDisplayMessageFlag == FALSE ) && ( fOldDisplayMessageFlag ) )
+	if (!fDisplayMessageFlag && fOldDisplayMessageFlag)
 	{
 		// then clear it out
 		ClearOutEmailMessageRecordsList( );
@@ -1042,7 +1042,7 @@ static INT32 DisplayEmailMessage(Email* pMail)
 
 	if( pTempRecord )
 	{
-		while( fDonePrintingMessage == FALSE )
+		while (!fDonePrintingMessage)
 		{
 			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
 			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, IAN_WRAP_NO_SHADOW);
@@ -2270,13 +2270,8 @@ static void HandleEmailViewerButtonStates(void)
 {
 	// handle state of email viewer buttons
 
-	if( fDisplayMessageFlag == FALSE )
-	{
-		// not displaying message, leave
-		return;
-	}
-
-
+	// leave, if not displaying message
+	if (!fDisplayMessageFlag) return;
 
 	if(  giNumberOfPagesToCurrentEmail <= 2 )
 	{
@@ -2373,7 +2368,7 @@ static void OpenMostRecentUnreadEmail(void)
 	while( pB )
 	{
 		// if date is lesser and unread , swap
-		if( ( pB->iDate < iLowestDate )&&( pB->fRead == FALSE ) )
+		if (pB->iDate < iLowestDate && !pB->fRead)
 		{
 			MostRecentMail = pB;
 			iLowestDate = pB -> iDate;
@@ -2640,7 +2635,7 @@ static void PreProcessEmail(Email* pMail)
 				pCurrentRecord = pTempRecord;
 				pTempRecord = pTempRecord ->Next;
 
-				if( fGoingOffCurrentPage == FALSE )
+				if (!fGoingOffCurrentPage)
 				{
 					pLastRecord = pTempRecord;
 				}

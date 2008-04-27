@@ -261,7 +261,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 		// CJC, Oct 5 98: this is all we should need from InitializeTacticalStatusAtBattleStart()
 		if( gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE && gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE )
 		{
-			if ( CheckFact( FACT_FIRST_BATTLE_FOUGHT, 0 ) == FALSE )
+			if (!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
 			{
 				SetFactTrue( FACT_FIRST_BATTLE_BEING_FOUGHT );
 			}

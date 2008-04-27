@@ -586,12 +586,12 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 
 			case FACT_KINGPIN_KNOWS_MONEY_GONE:
 				// more generally events for kingpin quest
-				if ( CheckFact( FACT_KINGPIN_KNOWS_MONEY_GONE, 0 ) == FALSE )
+				if (!CheckFact(FACT_KINGPIN_KNOWS_MONEY_GONE, 0))
 				{
 					// check for real whether to start quest
 					CheckForKingpinsMoneyMissing( FALSE );
 				}
-				else if ( CheckFact( FACT_KINGPIN_DEAD, 0 ) == FALSE )
+				else if (!CheckFact(FACT_KINGPIN_DEAD, 0))
 				{
 					if ( gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTNOTSTARTED )
 					{
@@ -1001,7 +1001,7 @@ void CheckForMissingHospitalSupplies( void )
 	if ( ubMedicalObjects < gubCambriaMedicalObjects )
 	{
 		// player's stolen something!
-		if ( CheckFact( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES, 0 ) == FALSE )
+		if (!CheckFact(FACT_PLAYER_STOLE_MEDICAL_SUPPLIES, 0))
 		{
 			SetFactTrue( FACT_PLAYER_STOLE_MEDICAL_SUPPLIES );
 		}

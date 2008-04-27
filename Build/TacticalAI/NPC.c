@@ -1007,7 +1007,9 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 						{
 							if ( ubNPC == VINCE || ubNPC == STEVE )
 							{
-								if ( CheckFact( FACT_VINCE_EXPECTING_MONEY, ubNPC ) == FALSE && gMercProfiles[ ubNPC ].iBalance < 0 && pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
+								if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
+										gMercProfiles[ubNPC].iBalance < 0             &&
+										pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
 								{
 									// increment balance
 									gMercProfiles[ ubNPC ].iBalance += (INT32) pObj->uiMoneyAmount;
@@ -1018,7 +1020,8 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									}
 									ScreenMsg( FONT_YELLOW, MSG_INTERFACE, TacticalStr[ BALANCE_OWED_STR ], gMercProfiles[ubNPC].zNickname, -gMercProfiles[ubNPC].iBalance );
 								}
-								else if ( CheckFact( FACT_VINCE_EXPECTING_MONEY, ubNPC ) == FALSE && pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
+								else if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
+										pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
 								{
 									// just accept cash!
 									if ( ubNPC == VINCE )
@@ -1263,16 +1266,11 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 	if (pNPCQuoteInfo->usFactMustBeTrue != NO_FACT)
 	{
 		fTrue = CheckFact( pNPCQuoteInfo->usFactMustBeTrue, ubNPC );
-		#ifdef JA2TESTVERSION
-			//Add entry to the quest debug file
-			NpcRecordLogging( ubApproach, "Fact (%d:'%ls') Must be True, status is %s", pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue], (fTrue == FALSE) ? "False, returning" : "True" );
-		#endif
-		if (fTrue == FALSE)
-		{
-			return( FALSE );
-		}
-
-
+#ifdef JA2TESTVERSION
+		//Add entry to the quest debug file
+		NpcRecordLogging(ubApproach, "Fact (%d:'%ls') Must be True, status is %s", pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue], fTrue ? "True" : "False, returning");
+#endif
+		if (!fTrue) return FALSE;
 	}
 
 	if (pNPCQuoteInfo->usFactMustBeFalse != NO_FACT)
@@ -1506,7 +1504,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 		// set delay for civ AI movement
 		pNPC->uiTimeSinceLastSpoke = GetJA2Clock();
 
-		if ( CheckFact( FACT_CURRENT_SECTOR_IS_SAFE, ubNPC ) == FALSE )
+		if (!CheckFact(FACT_CURRENT_SECTOR_IS_SAFE, ubNPC))
 		{
 			if ( bApproach != TRIGGER_NPC && bApproach != APPROACH_GIVEFIRSTAID && bApproach != APPROACH_DECLARATION_OF_HOSTILITY && bApproach != APPROACH_ENEMY_NPC_QUOTE )
 			{
@@ -1544,7 +1542,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 			// CHEAP HACK
 			// Since we don't have CONDITIONAL once-per-convo refreshes, do this in code
 			// NB fact 281 is 'Darren has explained boxing rules'
-			if ( ubNPC == DARREN && CheckFact( 281, DARREN ) == FALSE )
+			if (ubNPC == DARREN && !CheckFact(281, DARREN))
 			{
 				TURN_FLAG_OFF( pNPCQuoteInfoArray[11].fFlags, QUOTE_FLAG_SAID );
 			}
@@ -2941,7 +2939,7 @@ void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		{
 			// we won over the hillbillies
 			// set fact they are dead
-			if( CheckFact( FACT_HILLBILLIES_KILLED, KEITH ) == FALSE )
+			if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
 			{
 				SetFactTrue( FACT_HILLBILLIES_KILLED );
 			}
@@ -3075,7 +3073,7 @@ INT8 ConsiderCivilianQuotes( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, BOO
 		return( -1 );
 	}
 
-	if ( EnsureCivQuoteFileLoaded( bCivQuoteSectorIndex ) == FALSE )
+	if (!EnsureCivQuoteFileLoaded(bCivQuoteSectorIndex))
 	{
 		// error!!!
 		return( -1 );

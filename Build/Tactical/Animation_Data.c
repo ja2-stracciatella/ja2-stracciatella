@@ -702,7 +702,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 				sStartFrame = -1;
 			}
 
-			if (AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame) == FALSE)
+			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
 			{
 				SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
 				goto fail_vobj;

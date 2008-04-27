@@ -347,12 +347,14 @@ static void HandleTextEvent(const InputAtom* Inp)
 static void ProcessPlayerInputActivationString(void)
 {
   // prcess string to see if it matches activation string
-  if( ( ( wcscmp(pPlayerActivationString, L"XEP624") == 0 ) || ( wcscmp(pPlayerActivationString, L"xep624") == 0 ) )&&( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) &&( LaptopSaveInfo.gfNewGameLaptop < 2 ) )
+	if ((wcscmp(pPlayerActivationString, L"XEP624") == 0 || wcscmp(pPlayerActivationString, L"xep624") == 0) &&
+			!LaptopSaveInfo.fIMPCompletedFlag &&
+			LaptopSaveInfo.gfNewGameLaptop < 2)
 	{
 	  iCurrentImpPage = IMP_MAIN_PAGE;
 	}
 /*
-	else if( ( wcscmp(pPlayerActivationString, L"90210") == 0 ) && ( LaptopSaveInfo.fIMPCompletedFlag == FALSE ) )
+	else if (wcscmp(pPlayerActivationString, L"90210") == 0 && !LaptopSaveInfo.fIMPCompletedFlag)
 	{
 		LoadInCurrentImpCharacter( );
 	}

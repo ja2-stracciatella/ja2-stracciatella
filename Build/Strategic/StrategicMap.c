@@ -628,7 +628,7 @@ UINT8 GetTownSectorsUnderControl( INT8 bTownId )
 			usSector = (UINT16)CALCULATE_STRATEGIC_INDEX( iCounterA, iCounterB );
 
 			if( ( StrategicMap[ usSector ].bNameId == bTownId ) &&
-					( StrategicMap[ usSector ].fEnemyControlled == FALSE ) &&
+					!StrategicMap[usSector].fEnemyControlled &&
 					( NumEnemiesInSector( ( INT16 )iCounterA, ( INT16 )iCounterB ) == 0 ) )
 			{
 				ubSectorsControlled++;
@@ -1162,7 +1162,7 @@ void PrepareLoadedSector()
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 
 		//KM:  FEB 8, 99 -- This call is no longer required!  Done already when group arrives in sector.
-		//if( ( gbWorldSectorZ == 0 ) && ( fEnemyPresenceInThisSector == FALSE ) )
+		//if (gbWorldSectorZ == 0 && !fEnemyPresenceInThisSector)
 		//{
 		//	SetThisSectorAsPlayerControlled( gWorldSectorX, gWorldSectorY, 0 );
 		//}
@@ -1229,7 +1229,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	// are we in a mine sector, on the surface?
 	if ( IsThereAMineInThisSector( sNewSectorX, sNewSectorY ) && ( bNewSectorZ == 0 ))
 	{
-		if ( CheckFact( FACT_MINERS_PLACED, 0 ) == FALSE )
+		if (!CheckFact(FACT_MINERS_PLACED, 0))
 		{
 			// SET HEAD MINER LOCATIONS
 
@@ -1289,7 +1289,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 		}
 	}
 
-	if ( CheckFact( FACT_ROBOT_RECRUITED_AND_MOVED, 0 ) == FALSE )
+	if (!CheckFact(FACT_ROBOT_RECRUITED_AND_MOVED, 0))
 	{
 		const SOLDIERTYPE* const pRobot = FindSoldierByProfileIDOnPlayerTeam(ROBOT);
 		if (pRobot)
@@ -1430,7 +1430,7 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	// This has tobe done before loadworld, as it will remmove old gridnos if present
 	RemoveMercsInSector( );
 
-	if( AreInMeanwhile() == FALSE )
+	if (!AreInMeanwhile())
 	{
 		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ALREADY_VISITED );
 	}
@@ -3123,7 +3123,7 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl( void )
 	// if the sam site is under player control, up the number
 	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
 	{
-		if( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( pSamList[ iCounter ] ) ].fEnemyControlled == FALSE )
+		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(pSamList[iCounter])].fEnemyControlled)
 		{
 			iNumber++;
 		}
@@ -3141,7 +3141,7 @@ INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY )
 	if( IsThisSectorASAMSector( sX, sY, 0 ) == TRUE )
 	{
 		// is it under control by the player
-		if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sX , sY ) ].fEnemyControlled == FALSE )
+		if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyControlled)
 		{
 			// yes
 			fSamSiteUnderControl = TRUE;
@@ -3231,10 +3231,7 @@ void UpdateAirspaceControl( void )
 
 BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	if( IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ ) == FALSE )
-	{
-		return( FALSE );
-	}
+	if (!IsThisSectorASAMSector(sSectorX, sSectorY, bSectorZ)) return FALSE;
 
 	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bSAMCondition < MIN_CONDITION_FOR_SAM_SITE_TO_WORK )
 	{

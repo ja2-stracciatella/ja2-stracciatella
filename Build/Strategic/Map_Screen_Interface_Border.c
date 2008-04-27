@@ -648,7 +648,7 @@ void ToggleShowMilitiaMode( void )
 
 
 		// check if player has any militia
-		if ( DoesPlayerHaveAnyMilitia( ) == FALSE )
+		if (!DoesPlayerHaveAnyMilitia())
 		{
 			const wchar_t *pwString = NULL;
 
@@ -748,12 +748,8 @@ void BtnScrollNorthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-
 		// not zoomed in?...don't push down
-	  if( fZoomFlag == FALSE )
-		{
-			return;
-		}
+		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
 		if( ScrollButtonsDisplayingHelpMessage( ) )
@@ -777,12 +773,8 @@ void BtnScrollSouthMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-
 		// not zoomed in?...don't push down
-	  if( fZoomFlag == FALSE )
-		{
-			return;
-		}
+		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
 		 if( ScrollButtonsDisplayingHelpMessage( ) )
@@ -807,10 +799,7 @@ void BtnScrollEastMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
 	  // not zoomed in?...don't push down
-	  if( fZoomFlag == FALSE )
-		{
-			return;
-		}
+		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
 		if( ScrollButtonsDisplayingHelpMessage( ) )
@@ -834,12 +823,8 @@ void BtnScrollWestMapScreenCallback( GUI_BUTTON *btn,INT32 reason )
 
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-
 	  // not zoomed in?...don't push down
-	  if( fZoomFlag == FALSE )
-		{
-			return;
-		}
+		if (!fZoomFlag) return;
 
 		// are help messages being displayed?..redraw
 		if( ScrollButtonsDisplayingHelpMessage( ) )
@@ -1045,7 +1030,7 @@ void EnableMapBorderRegion( void )
 {
 	// will re-enable mapborder region
 
-	if( fDisabledMapBorder == FALSE )
+	if (!fDisabledMapBorder)
 	{
 		// checked, failed
 		return;
@@ -1064,7 +1049,7 @@ void TurnOnShowTeamsMode( void )
 {
 	// if mode already on, leave, else set and redraw
 
-	if( fShowTeamFlag == FALSE )
+	if (!fShowTeamFlag)
 	{
 		fShowTeamFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_TEAMS_BTN );
@@ -1102,7 +1087,7 @@ void TurnOnAirSpaceMode( void )
 {
 	// if mode already on, leave, else set and redraw
 
-	if( fShowAircraftFlag == FALSE )
+	if (!fShowAircraftFlag)
 	{
 		fShowAircraftFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_AIRSPACE_BTN );
@@ -1168,7 +1153,7 @@ static void TurnOnItemFilterMode(void)
 {
 	// if mode already on, leave, else set and redraw
 
-	if( fShowItemsFlag == FALSE )
+	if (!fShowItemsFlag)
 	{
 		fShowItemsFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_ITEM_BTN );

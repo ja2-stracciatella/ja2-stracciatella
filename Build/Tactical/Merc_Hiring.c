@@ -306,7 +306,7 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[ MERC_HAS_ARRIVED_STR ], pSoldier->name );
 
 		// ATE: He's going to say something, now that they've arrived...
-		if ( gTacticalStatus.bMercArrivingQuoteBeingUsed == FALSE && !gfFirstHeliRun )
+		if (!gTacticalStatus.bMercArrivingQuoteBeingUsed && !gfFirstHeliRun)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = TRUE;
 

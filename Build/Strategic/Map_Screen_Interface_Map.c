@@ -501,7 +501,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
-	 if( fDrawCursors && ( iCount == sSelMapX ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
+		if (fDrawCursors && iCount == sSelMapX && bSelectedDestChar == -1 && !fPlotForHelicopter)
 		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorX ) )
     SetFontForeground(FONT_WHITE);
@@ -511,7 +511,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 	 FindFontCenterCoordinates(MAP_HORT_INDEX_X + (iCount - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
 	 mprintf(usX,usY,pMapHortIndex[iCount]);
 
-	 if( fDrawCursors && ( iCount == sSelMapY) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
+		if (fDrawCursors && iCount == sSelMapY && bSelectedDestChar == -1 && !fPlotForHelicopter)
 		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorY ) )
     SetFontForeground(FONT_WHITE);
@@ -549,7 +549,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
-	 if( fDrawCursors && ( iCount == sSelMapX ) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
+		if (fDrawCursors && iCount == sSelMapX && bSelectedDestChar == -1 && !fPlotForHelicopter)
 		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorX ) )
     SetFontForeground(FONT_WHITE);
@@ -563,7 +563,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 
 	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
 	{
-	 if( fDrawCursors && ( iCount == sSelMapY) && ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
+		if (fDrawCursors && iCount == sSelMapY && bSelectedDestChar == -1 && !fPlotForHelicopter)
 		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
    else if( fDrawCursors && ( iCount == gsHighlightSectorY ) )
     SetFontForeground(FONT_WHITE);
@@ -2191,7 +2191,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 
 	// must be plotting movement
- if ( ( bSelectedDestChar == -1 ) && ( fPlotForHelicopter == FALSE ) )
+	if (bSelectedDestChar == -1 && !fPlotForHelicopter)
  {
 	 return FALSE;
  }

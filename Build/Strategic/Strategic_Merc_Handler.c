@@ -605,7 +605,7 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 	}
 	else if ( ubProfile == LARRY_DRUNK )
 	{
-		if ( CheckFact( FACT_LARRY_CHANGED, 0 ) == FALSE )
+		if (!CheckFact(FACT_LARRY_CHANGED, 0))
 		{
 			ubProfile = LARRY_NORMAL;
 		}

@@ -2595,7 +2595,7 @@ void HandleFlashingItems( )
 
 						if ( ( pLocator->ubFlags & ITEM_LOCATOR_LOCKED ) )
 						{
-							if ( gTacticalStatus.fLockItemLocators == FALSE )
+							if (!gTacticalStatus.fLockItemLocators)
 							{
 							  // Turn off!
 								pLocator->ubFlags &= (~ITEM_LOCATOR_LOCKED);

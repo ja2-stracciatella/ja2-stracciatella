@@ -138,7 +138,7 @@ void HandleCharProfile(void)
 	// page has changed, handle the fact..get rid of old page, load up new, and re render
 	if( ( iCurrentImpPage != iPreviousImpPage ) )
 	{
-		if( fDoneLoadPending == FALSE )
+		if (!fDoneLoadPending)
 		{
 			//make sure we are not hosing memory
 			Assert( iCurrentImpPage <= IMP_NUM_PAGES );

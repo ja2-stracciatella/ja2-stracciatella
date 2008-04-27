@@ -1710,7 +1710,11 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 									// or if alarm has gone off (status red)
 									InARoom( pOpponent->sGridNo, &ubRoom );
 
-									if ( ( CheckFact( FACT_MUSEUM_OPEN, 0 ) == FALSE && ubRoom >= 22 && ubRoom <= 41 ) || CheckFact( FACT_MUSEUM_ALARM_WENT_OFF, 0 ) || ( ubRoom == 39 || ubRoom == 40 ) || ( FindObj( pOpponent, CHALICE ) != NO_SLOT ) )
+									if ((!CheckFact(FACT_MUSEUM_OPEN, 0) && 22 <= ubRoom && ubRoom <= 41) ||
+											CheckFact(FACT_MUSEUM_ALARM_WENT_OFF, 0)                          ||
+											ubRoom == 39                                                      ||
+											ubRoom == 40                                                      ||
+											FindObj(pOpponent, CHALICE) != NO_SLOT)
 									{
 										SetFactTrue( FACT_MUSEUM_ALARM_WENT_OFF );
 										AddToShouldBecomeHostileOrSayQuoteList(pSoldier);
@@ -1744,7 +1748,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 										TriggerNPCRecord( ANGEL, 12 );
 									}
 								}
-								else if ( ( CheckFact( FACT_ANGEL_LEFT_DEED, ANGEL ) == TRUE ) && ( CheckFact( FACT_ANGEL_MENTIONED_DEED, ANGEL ) == FALSE ) )
+								else if (CheckFact(FACT_ANGEL_LEFT_DEED, ANGEL) == TRUE && !CheckFact(FACT_ANGEL_MENTIONED_DEED, ANGEL))
 								{
 									CancelAIAction(pSoldier);
 									pSoldier->sAbsoluteFinalDestination = NOWHERE;
@@ -1834,7 +1838,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 							}
 						}
 					}
-					else if ( pSoldier->ubCivilianGroup == HICKS_CIV_GROUP && CheckFact( FACT_HICKS_MARRIED_PLAYER_MERC, 0 ) == FALSE )
+					else if (pSoldier->ubCivilianGroup == HICKS_CIV_GROUP && !CheckFact(FACT_HICKS_MARRIED_PLAYER_MERC, 0))
 					{
 						UINT32	uiTime;
            	INT16	sX, sY;
@@ -1870,7 +1874,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 			  TacticalCharacterDialogue( pSoldier, QUOTE_AIM_SEEN_MIKE );
 			  pSoldier->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_EXT_MIKE;
 		  }
-      else if ( pOpponent->ubProfile == JOEY && gfPlayerTeamSawJoey == FALSE )
+			else if (pOpponent->ubProfile == JOEY && !gfPlayerTeamSawJoey)
       {
         TacticalCharacterDialogue( pSoldier, QUOTE_SPOTTED_JOEY );
         gfPlayerTeamSawJoey = TRUE;
@@ -1944,7 +1948,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 
 				if ( pSoldier->bTeam == OUR_TEAM && pOpponent->bTeam == ENEMY_TEAM )
 				{
-					if ( CheckFact( FACT_FIRST_BATTLE_FOUGHT, 0 ) == FALSE )
+					if (!CheckFact(FACT_FIRST_BATTLE_FOUGHT, 0))
 					{
 						SetFactTrue( FACT_FIRST_BATTLE_BEING_FOUGHT );
 					}

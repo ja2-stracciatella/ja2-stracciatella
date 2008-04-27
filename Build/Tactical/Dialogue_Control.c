@@ -265,10 +265,7 @@ void ShutdownStaticExternalNPCFaces( void )
 {
 	INT32 iCounter = 0;
 
-	if( fExternFacesLoaded == FALSE )
-	{
-		return;
-	}
+	if (!fExternFacesLoaded) return;
 
 	fExternFacesLoaded = FALSE;
 
@@ -428,7 +425,7 @@ void HandleDialogue( )
 
 	// Alrighty, check for a change in state, do stuff appropriately....
 	// Turned on
-	if ( fOldEngagedInConvFlagOn == FALSE && ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
+	if (!fOldEngagedInConvFlagOn && gTacticalStatus.uiFlags & ENGAGED_IN_CONV)
 	{
 		// OK, we have just entered...
 		fOldEngagedInConvFlagOn = TRUE;
@@ -694,7 +691,7 @@ void HandleDialogue( )
 
 	if( QItem-> fPauseTime )
 	{
-		if( GamePaused( ) == FALSE )
+		if (!GamePaused())
 		{
 			PauseGame();
 			LockPauseState( 15 );
@@ -1389,10 +1386,7 @@ BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, F
 	QItem->fDelayed				= fDelayed;
 
 	// check if pause already locked, if so, then don't mess with it
-	if( gfLockPauseState == FALSE )
-	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
-	}
+	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
 
 	fPausedTimeDuringQuote = FALSE;
 
@@ -1417,10 +1411,7 @@ BOOLEAN SpecialCharacterDialogueEvent(const UINT32 uiSpecialEventFlag, const UIN
 	QItem->iTimeStamp			= GetJA2Clock( );
 
 	// if paused state not already locked
-	if( gfLockPauseState == FALSE )
-	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
-	}
+	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
 
 	fPausedTimeDuringQuote = FALSE;
 
@@ -1447,10 +1438,7 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam(const UINT32 uiSpecialEventF
 	QItem->iTimeStamp			= GetJA2Clock( );
 
 	// if paused state not already locked
-	if( gfLockPauseState == FALSE )
-	{
-		QItem->fPauseTime     = fPausedTimeDuringQuote;
-	}
+	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
 
 	fPausedTimeDuringQuote = FALSE;
 

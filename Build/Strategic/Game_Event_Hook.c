@@ -340,7 +340,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_KEITH_GOING_OUT_OF_BUSINESS:
 			// make sure killbillies are still alive, if so, set fact 274 true
-			if( CheckFact( FACT_HILLBILLIES_KILLED, KEITH ) == FALSE )
+			if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
 			{
 				//s et the fact true keith is out of business
 				SetFactTrue( FACT_KEITH_OUT_OF_BUSINESS );

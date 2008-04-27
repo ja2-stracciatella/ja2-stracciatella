@@ -301,7 +301,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 	}
 */
 
-	if( ( fShowMapInventoryPool ) && ( fCreated == FALSE ) )
+	if (fShowMapInventoryPool && !fCreated)
 	{
 		if( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == iCurrentMapSectorZ ) )
 		{
@@ -328,11 +328,11 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 	}
-	else if( ( fShowMapInventoryPool == FALSE ) && ( fCreated == TRUE ) )
+	else if (!fShowMapInventoryPool && fCreated == TRUE)
 	{
 
 		// check fi we are in fact leaving mapscreen
-		if( fExitFromMapScreen == FALSE )
+		if (!fExitFromMapScreen)
 		{
 			// recreate mapborder buttons
 			CreateButtonsForMapBorder( );
@@ -1248,12 +1248,8 @@ static void DrawTextOnMapInventoryBackground(void)
 
 void HandleButtonStatesWhileMapInventoryActive( void )
 {
-
 	// are we even showing the amp inventory pool graphic?
-	if( fShowMapInventoryPool == FALSE )
-	{
-		return;
-	}
+	if (!fShowMapInventoryPool) return;
 
 	// first page, can't go back any
 	if( iCurrentInventoryPoolPage == 0 )
@@ -1399,7 +1395,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 				{
 					if( GetJA2Clock( ) - giCompatibleItemBaseTime > 100 )
 					{
-						if( fItemWasHighLighted == FALSE )
+						if (!fItemWasHighLighted)
 						{
 							fTeamPanelDirty = TRUE;
 							fItemWasHighLighted = TRUE;
@@ -1425,7 +1421,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 			{
 				if( GetJA2Clock( ) - giCompatibleItemBaseTime > 100 )
 				{
-					if( fItemWasHighLighted == FALSE )
+					if (!fItemWasHighLighted)
 					{
 						fItemWasHighLighted = TRUE;
 						fMapPanelDirty = TRUE;
