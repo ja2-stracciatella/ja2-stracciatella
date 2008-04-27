@@ -464,13 +464,6 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		return( TRUE );
 	}
 
-	/*
-	if( ( guiExitScreen == MAP_SCREEN ) && ( LaptopSaveInfo.gfNewGameLaptop ) )
-	{
-		SetLaptopExitScreen( GAME_SCREEN );
-		return( TRUE );
-	}
-*/
 	if ( gubScreenCount == 1 )
 	{
 		gubScreenCount = 2;

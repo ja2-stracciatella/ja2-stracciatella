@@ -1440,16 +1440,7 @@ BOOLEAN LeaveLapTopScreen(void)
 {
 	if (ExitLaptopDone())
 	{
-		// exit screen is set
-		// set new screen
-		//if( ( LaptopSaveInfo.gfNewGameLaptop != TRUE ) || !( AnyMercsHired() ) )
-	//	{
-			SetLaptopExitScreen(MAP_SCREEN);
-		//}
-		//if( ( LaptopSaveInfo.gfNewGameLaptop )&&( AnyMercsHired() ) )
-		//{
-		//	SetLaptopExitScreen( GAME_SCREEN );
-	//	}
+		SetLaptopExitScreen(MAP_SCREEN);
 
 		if (gfAtLeastOneMercWasHired)
 		{
@@ -1574,7 +1565,7 @@ BOOLEAN LeaveLapTopScreen(void)
 static BOOLEAN HandleExit(void)
 {
 	// new game, send email
-	if (LaptopSaveInfo.gfNewGameLaptop != 0)
+	if (LaptopSaveInfo.gfNewGameLaptop)
 	{
 		// Set an event to send this email (day 2 8:00-12:00)
 		if (!LaptopSaveInfo.fIMPCompletedFlag && !LaptopSaveInfo.fSentImpWarningAlready)
