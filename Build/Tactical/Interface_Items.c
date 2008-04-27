@@ -2960,7 +2960,7 @@ void DeleteItemDescriptionBox( )
 	 fMapScreenBottomDirty = TRUE;
 	}
 
-	if( InKeyRingPopup() == TRUE )
+	if (InKeyRingPopup())
 	{
 		DeleteKeyObject(gpItemDescObject);
 		gpItemDescObject = NULL;

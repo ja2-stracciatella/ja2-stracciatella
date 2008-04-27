@@ -497,7 +497,7 @@ void UpdateTownLoyaltyBasedOnFriendliesInTown( INT8 bTownId )
 		if (pSoldier->bLife >= OKLIFE)
 		{
 			// if soldier is in this sector
-			if( SectorIsPartOfTown( bTownId, pSoldier->sSectorX, pSoldier->sSectorY ) == TRUE )
+			if (SectorIsPartOfTown(bTownId, pSoldier->sSectorX, pSoldier->sSectorY))
 			{
 				// if onduty or in a vehicle
 				if( ( pSoldier->bAssignment < ON_DUTY ) || pSoldier->bAssignment == VEHICLE ) )
@@ -588,7 +588,8 @@ void UpdateTownLoyaltyBasedOnBadGuysInTown( INT8 bTownId )
 		for( sSectorY = 0; sSectorY < MAP_WORLD_Y; sSectorY++ )
 		{
 			// check if sector belongs to this town and is controlled by bad guys
-			if ( ( SectorIsPartOfTown( bTownId, sSectorX, sSectorY ) == TRUE ) && ( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled == TRUE ) )
+			if (SectorIsPartOfTown(bTownId, sSectorX, sSectorY) &&
+					StrategicMap[sSectorX + sSectorY * MAP_WORLD_X].fEnemyControlled)
 			{
 				// controlled by bad guys..adjust numbers for type
 				GetNumberOfEnemiesInSector( sSectorX, sSectorY, &ubAdmins, &ubRegs, &ubElites );
@@ -800,7 +801,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 
 		case ENEMY_TEAM:
 			// check whose sector this is
-			if( StrategicMap[( pSoldier -> sSectorX ) + ( MAP_WORLD_X * ( pSoldier -> sSectorY ) )].fEnemyControlled == TRUE )
+			if (StrategicMap[pSoldier->sSectorX + MAP_WORLD_X * pSoldier->sSectorY].fEnemyControlled)
 			{
 				// enemy soldiers... in enemy controlled sector.  Gain loyalty
 				fIncrement = TRUE;
@@ -846,7 +847,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				iLoyaltyChange *= MULTIPLIER_FOR_MURDER_BY_MONSTER;
 
 				// check whose sector this is
-				if( StrategicMap[( pSoldier -> sSectorX ) + ( MAP_WORLD_X * ( pSoldier -> sSectorY ) )].fEnemyControlled == TRUE )
+				if (StrategicMap[pSoldier->sSectorX + MAP_WORLD_X * pSoldier->sSectorY].fEnemyControlled)
 				{
 					// enemy controlled sector - gain loyalty
 					fIncrement = TRUE;
@@ -972,7 +973,7 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 
 
 	// penalize the side that should have stopped it
-	if( StrategicMap[ pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X ].fEnemyControlled == TRUE )
+	if (StrategicMap[pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X].fEnemyControlled)
 	{
 		// enemy should have prevented it, let them suffer a little
 		IncrementTownLoyalty( bTownId, sPolicingLoyalty );
@@ -991,10 +992,8 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 	UINT32 uiNewTotal = 0;
 	CHAR16 wSectorName[ 128 ];
 
-
 	// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
-	Assert( GetSectorFlagStatus( sSectorX, sSectorY, ( UINT8 ) sSectorZ, SF_ALREADY_VISITED ) == TRUE );
-
+	Assert(GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_ALREADY_VISITED));
 
 	// get sector name string
 	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, lengthof(wSectorName), TRUE );
@@ -1069,7 +1068,7 @@ void HandleTheftByCiviliansInSector( INT16 sX, INT16 sY, INT32 iLoyalty )
 		if (!fSectorsWithSoldiers[sX + MAP_WORLD_X * sY][0])
 		{
 			// sectors not yet visited by player are also immune (other sectors in town could have been visited)
-			if ( GetSectorFlagStatus( sX, sY, 0, SF_ALREADY_VISITED ) == TRUE )
+			if (GetSectorFlagStatus(sX, sY, 0, SF_ALREADY_VISITED))
 			{
 				ubChance = 5 + ( THRESHOLD_FOR_TOWN_THEFT - iLoyalty ) / 2;
 

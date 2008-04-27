@@ -248,10 +248,7 @@ void InitalizeStaticExternalNPCFaces( void )
 	INT32 iCounter = 0;
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 
-	if( fExternFacesLoaded == TRUE )
-	{
-		return;
-	}
+	if (fExternFacesLoaded) return;
 
 	fExternFacesLoaded = TRUE;
 
@@ -434,7 +431,7 @@ void HandleDialogue( )
 		PauseGame();
 		LockPauseState( 14 );
 	}
-	else if ( fOldEngagedInConvFlagOn == TRUE && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
+	else if (fOldEngagedInConvFlagOn && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 	{
 		// OK, we left...
 		fOldEngagedInConvFlagOn = FALSE;
@@ -856,7 +853,7 @@ void HandleDialogue( )
 				case( UPDATE_BOX_REASON_ADDSOLDIER ):
 				{
 					SOLDIERTYPE* const pUpdateSoldier = GetMan(QItem->uiSpecialEventData2);
-					if( pUpdateSoldier->bActive == TRUE )
+					if (pUpdateSoldier->bActive)
 					{
 						AddSoldierToUpdateBox( pUpdateSoldier );
 					}
@@ -1489,7 +1486,7 @@ static BOOLEAN ExecuteCharacterDialogue(const UINT8 ubCharacterNum, const UINT16
 		}
 
 		// sleeping guys don't talk.. go to standby to talk
-		if( pSoldier->fMercAsleep == TRUE )
+		if (pSoldier->fMercAsleep)
 		{
 			// check if the soldier was compaining about lack of sleep and was alseep, if so, leave them alone
 			if( ( usQuoteNum == QUOTE_NEED_SLEEP ) || ( usQuoteNum == QUOTE_OUT_OF_BREATH ) )
@@ -1814,10 +1811,7 @@ static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* con
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
 	// check if mouse region created, if so, do not recreate
-	if( fTextBoxMouseRegionCreated == TRUE )
-	{
-		return;
-	}
+	if (fTextBoxMouseRegionCreated) return;
 
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 

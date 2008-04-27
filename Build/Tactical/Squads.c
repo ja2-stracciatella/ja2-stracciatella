@@ -137,10 +137,8 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 		}
 	}
 
-
-
 	// if squad is on the move, can't add someone
-	if( IsThisSquadOnTheMove( bSquadValue ) == TRUE )
+	if (IsThisSquadOnTheMove(bSquadValue))
 	{
 		// nope, go away now
 		return( FALSE );
@@ -305,7 +303,7 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
 	{
 		if (!SquadIsEmpty(bCounter))
 		{
-			if( AddCharacterToSquad( pCharacter, bCounter ) == TRUE )
+			if (AddCharacterToSquad(pCharacter, bCounter))
 			{
 				return ( TRUE );
 			}
@@ -324,7 +322,7 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
 	// try the first empty one (and there better be one)
 	if ( bFirstEmptySquad != -1 )
 	{
-		if( AddCharacterToSquad( pCharacter, bFirstEmptySquad ) == TRUE )
+		if (AddCharacterToSquad(pCharacter, bFirstEmptySquad))
 		{
 			return ( TRUE );
 		}
@@ -350,7 +348,7 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 	{
 		if (SquadIsEmpty(bCounter))
 		{
-			if( AddCharacterToSquad( pCharacter, bCounter ) == TRUE )
+			if (AddCharacterToSquad(pCharacter, bCounter))
 			{
 				return ( bCounter );
 			}
@@ -789,7 +787,7 @@ void SetDefaultSquadOnSectorEntry( BOOLEAN fForce )
 	INT32 iCounter = 0;
 	// check if selected squad is in current sector, if so, do nothing, if not...first first case that they are
 
-	if( IsSquadOnCurrentTacticalMap( iCurrentTacticalSquad ) == TRUE )
+	if (IsSquadOnCurrentTacticalMap(iCurrentTacticalSquad))
 	{
 		// is in sector, leave
 		return;
@@ -800,7 +798,7 @@ void SetDefaultSquadOnSectorEntry( BOOLEAN fForce )
 	// find first squad availiable
 	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
 	{
-		if( IsSquadOnCurrentTacticalMap( iCounter ) == TRUE )
+		if (IsSquadOnCurrentTacticalMap(iCounter))
 		{
 			// squad in sector...set as current
 			SetCurrentSquad( iCounter, fForce );
@@ -989,10 +987,7 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 	INT32 iCounter = 0;
 
 	// is dead guy in any squad
-	if( IsDeadGuyOnAnySquad( pSoldier ) == TRUE )
-	{
-		return( TRUE );
-	}
+	if (IsDeadGuyOnAnySquad(pSoldier)) return TRUE;
 
 	if (IsDeadGuyOnSquad(pSoldier->ubProfile, iSquadValue)) return TRUE;
 

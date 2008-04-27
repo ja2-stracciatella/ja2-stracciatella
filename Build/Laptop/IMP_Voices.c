@@ -99,9 +99,8 @@ void ExitIMPVoices( void )
 
 void HandleIMPVoices( void )
 {
-
 	// do we need to re write screen
-	if ( fReDrawVoicesScreenFlag == TRUE )
+	if (fReDrawVoicesScreenFlag)
 	{
     RenderIMPVoices( );
 
@@ -245,7 +244,7 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
 UINT32 PlayVoice( void )
 {
 	// gender?
-	if( fCharacterIsMale == TRUE )
+	if (fCharacterIsMale)
 	{
 	  switch( iCurrentVoices )
 		{

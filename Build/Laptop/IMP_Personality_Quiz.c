@@ -854,7 +854,7 @@ static void HandleIMPQuizKeyBoard(void)
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
-  while( ( DequeueEvent(&InputEvent) == TRUE )  )
+	while (DequeueEvent(&InputEvent))
   {
 		if (!fSkipFrame)
 	{

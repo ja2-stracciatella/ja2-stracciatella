@@ -440,8 +440,7 @@ static void ResetAimHistoryButtons(void)
 
 static void DisableAimHistoryButton(void)
 {
-	if( gfExitingAimHistory == TRUE)
-		return;
+	if (gfExitingAimHistory) return;
 
 	if( (gubCurPageNum == 0 ) )
 	{

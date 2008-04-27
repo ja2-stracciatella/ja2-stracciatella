@@ -282,10 +282,7 @@ static NPC_SAVE_INFO* GetFreeNPCSave(void)
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime )
 {
 	// event scheduled to happen before, ignore
-	if( GetMeanWhileFlag( pMeanwhileDef->ubMeanwhileID )== TRUE )
-	{
-		return;
-	}
+	if (GetMeanWhileFlag(pMeanwhileDef->ubMeanwhileID)) return;
 
 	// set the meanwhile flag for this event
 	SetMeanWhileFlag( pMeanwhileDef->ubMeanwhileID );

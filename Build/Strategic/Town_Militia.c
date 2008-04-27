@@ -382,7 +382,7 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	}
 
 	// if sector is controlled by enemies, it's not ours (duh!)
-	if( !bMapZ && StrategicMap[ sMapX + sMapY * MAP_WORLD_X ].fEnemyControlled == TRUE )
+	if (!bMapZ && StrategicMap[sMapX + sMapY * MAP_WORLD_X].fEnemyControlled)
 	{
 		return FALSE;
 	}
@@ -892,7 +892,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 			if (pSoldier == NULL) continue;
 
 			if ((c->selected || iCounter == bSelectedAssignChar) &&
-					CanCharacterTrainMilitia(pSoldier) == TRUE &&
+					CanCharacterTrainMilitia(pSoldier)               &&
 					!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 			{
 				// check to see if this sector is a town and needs equipment
@@ -906,7 +906,7 @@ static void BuildListOfUnpaidTrainableSectors(void)
 		const SOLDIERTYPE* const pSoldier = gUIFullTarget;
 		iCounter = 0;
 
-		if( CanCharacterTrainMilitia( pSoldier ) == TRUE )
+		if (CanCharacterTrainMilitia(pSoldier))
 		{
 			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
 			{

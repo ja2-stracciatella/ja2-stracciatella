@@ -5441,7 +5441,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	}
 
 	// if the player has visited the sector during this game
-	if( GetSectorFlagStatus( sSectorX, sSectorY, 0, SF_ALREADY_VISITED ) == TRUE )
+	if (GetSectorFlagStatus(sSectorX, sSectorY, 0, SF_ALREADY_VISITED))
 	{
 		// then he always knows about any enemy presence for the remainder of the game, but not exact numbers
 		return KNOWS_THEYRE_THERE;
@@ -5483,7 +5483,7 @@ static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 		if ( ( pSoldier->bAssignment == IN_TRANSIT ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||
 				 ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
-				 ( pSoldier -> fMercAsleep == TRUE ) ||
+				pSoldier->fMercAsleep ||
 				 ( pSoldier->bLife < OKLIFE ) )
 		{
 			continue;

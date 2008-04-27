@@ -348,7 +348,7 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 		// enemy reinforcements arrive, and they deserve another crack at stealing what the first group missed! :-)
 
 		// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
-		if ( GetSectorFlagStatus( sMapX, sMapY, ( UINT8 ) bMapZ, SF_ALREADY_VISITED ) == TRUE )
+		if (GetSectorFlagStatus(sMapX, sMapY, bMapZ, SF_ALREADY_VISITED))
 		{
 			// enemies can steal items left lying about (random chance).  The more there are, the more they take!
 			ubTheftChance = 5 * NumEnemiesInAnySector( sMapX, sMapY, bMapZ );

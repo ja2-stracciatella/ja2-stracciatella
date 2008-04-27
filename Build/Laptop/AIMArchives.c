@@ -355,8 +355,7 @@ static void ResetAimArchiveButtons(void)
 
 static void DisableAimArchiveButton(void)
 {
-	if( gfExitingAimArchives == TRUE)
-		return;
+	if (gfExitingAimArchives) return;
 
 	if( (gubPageNum == 0 ) )
 	{

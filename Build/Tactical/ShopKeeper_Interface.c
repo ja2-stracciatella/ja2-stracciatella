@@ -5140,7 +5140,7 @@ static void CheckAndHandleClearingOfPlayerOfferArea(void)
 	// find out if all the player trade slots/offer area is empty
 	for( iCounter=0; iCounter<SKI_NUM_TRADING_INV_SLOTS; iCounter++)
 	{
-		if( PlayersOfferArea[ iCounter ].fActive == TRUE )
+		if (PlayersOfferArea[iCounter].fActive)
 		{
 			// nope, there is an active slot
 			fActiveSlot = TRUE;
@@ -5198,7 +5198,7 @@ static void CrossOutUnwantedItems(void)
 			if (!(o->uiFlags & ARMS_INV_JUST_PURCHASED))
 			{
 				//If item can't be sold here, or it's completely worthless (very cheap / very broken)
-				if( ( WillShopKeeperRejectObjectsFromPlayer( gbSelectedArmsDealerID, bSlotId ) == TRUE ) ||
+				if (WillShopKeeperRejectObjectsFromPlayer(gbSelectedArmsDealerID, bSlotId) ||
 						!(o->uiFlags & ARMS_INV_PLAYERS_ITEM_HAS_VALUE))
 				{
 					// get x and y positions

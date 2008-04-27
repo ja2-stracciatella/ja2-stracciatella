@@ -119,7 +119,7 @@ BOOLEAN CanAutoBandage( BOOLEAN fDoFullCheck )
 	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		// can this character be helped out by a teammate?
-		if ( CanCharacterBeAutoBandagedByTeammate( pSoldier ) == TRUE )
+		if (CanCharacterBeAutoBandagedByTeammate(pSoldier))
 		{
 			// yep, up the number of patients awaiting treatment in sector
 			ubPatients++;

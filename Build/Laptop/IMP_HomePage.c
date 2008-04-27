@@ -240,8 +240,7 @@ static void ProcessPlayerInputActivationString(void);
 static void GetPlayerKeyBoardInputForIMPHomePage(void)
 {
 	InputAtom					InputEvent;
-
-  while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
   {
 		if(	!HandleTextInput( &InputEvent ) && (InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT || InputEvent.usEvent == KEY_UP ) )
 		{
@@ -364,7 +363,7 @@ static void ProcessPlayerInputActivationString(void)
 		{
 			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 0 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		}
-		else if( LaptopSaveInfo.fIMPCompletedFlag == TRUE )
+		else if (LaptopSaveInfo.fIMPCompletedFlag)
 		{
 		   DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 6 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		}

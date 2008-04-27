@@ -183,16 +183,10 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	}
 
 	// check if heli is in motion or if on the ground
-	if (fHelicopterIsAirBorne == TRUE && !fHoveringHelicopter)
-	{
-		return( FALSE );
-	}
+	if (fHelicopterIsAirBorne && !fHoveringHelicopter) return FALSE;
 
 	// is the heli returning to base?..he ain't waiting if so
-	if( fHeliReturnStraightToBase == TRUE )
-	{
-		return( FALSE );
-	}
+	if (fHeliReturnStraightToBase) return FALSE;
 
 	const VEHICLETYPE* const v = GetHelicopter();
 	pSoldier->sSectorX = v->sSectorX;
@@ -225,7 +219,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 
 
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
-	if( HandleSAMSiteAttackOfHelicopterInSector( sX, sY ) == TRUE )
+	if (HandleSAMSiteAttackOfHelicopterInSector(sX, sY))
 	{
 		// destroyed
 		return( TRUE );
@@ -242,7 +236,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 		if( WhatPlayerKnowsAboutEnemiesInSector( sX, sY ) == KNOWS_NOTHING )
 		{
 			// but Skyrider notices them
-			if ( DoesSkyriderNoticeEnemiesInSector( ubNumEnemies ) == TRUE )
+			if (DoesSkyriderNoticeEnemiesInSector(ubNumEnemies))
 			{
 				// if just passing through (different quotes are used below if it's his final destination)
 				if( !EndOfHelicoptersPath( ) )
@@ -458,10 +452,7 @@ BOOLEAN CanHelicopterFly( void )
 	// is the pilot alive, well, and willing to help us?
 	if (!IsHelicopterPilotAvailable()) return FALSE;
 
-	if( fHeliReturnStraightToBase == TRUE )
-	{
-		return ( FALSE );
-	}
+	if (fHeliReturnStraightToBase) return FALSE;
 
 	// grounded by enemies in sector?
 	if (!CanHelicopterTakeOff()) return FALSE;
@@ -740,8 +731,8 @@ void UpdateRefuelSiteAvailability( void )
 	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
 	{
 		// if enemy controlled sector (ground OR air, don't want to fly into enemy air territory)
-		if( ( StrategicMap[ CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iCounter ][ 0 ], ubRefuelList[ iCounter ][ 1 ] ) ].fEnemyControlled == TRUE ) ||
-				( StrategicMap[ CALCULATE_STRATEGIC_INDEX( ubRefuelList[ iCounter ][ 0 ], ubRefuelList[ iCounter ][ 1 ] ) ].fEnemyAirControlled == TRUE ) ||
+		if (StrategicMap[CALCULATE_STRATEGIC_INDEX(ubRefuelList[iCounter][0], ubRefuelList[iCounter][1])].fEnemyControlled    ||
+				StrategicMap[CALCULATE_STRATEGIC_INDEX(ubRefuelList[iCounter][0], ubRefuelList[iCounter][1])].fEnemyAirControlled ||
 				(iCounter == ESTONI_REFUELING_SITE && !CheckFact(FACT_ESTONI_REFUELLING_POSSIBLE, 0)))
 		{
 			// mark refueling site as unavailable
@@ -1307,7 +1298,7 @@ BOOLEAN WillAirRaidBeStopped( INT16 sSectorX, INT16 sSectorY )
 
 
 	// if enemy controls this SAM site, then it can't stop an air raid
-	if( StrategicMap[CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyAirControlled == TRUE )
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY)].fEnemyAirControlled)
 	{
 		return( FALSE );
 	}
@@ -1394,10 +1385,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 	}
 
 #ifdef JA2TESTVERSION
-	if( fSAMSitesDisabledFromAttackingPlayer == TRUE )
-	{
-		return( FALSE );
-	}
+	if (fSAMSitesDisabledFromAttackingPlayer) return FALSE;
 #endif
 	// Hostile airspace controlled by a working SAM site, so SAM site fires a SAM at Skyrider!!!
 
@@ -1472,10 +1460,7 @@ static BOOLEAN EndOfHelicoptersPath(void)
 BOOLEAN CanHelicopterTakeOff( void )
 {
 	// if it's already in the air
-	if( fHelicopterIsAirBorne == TRUE )
-	{
-		return( TRUE );
-	}
+	if (fHelicopterIsAirBorne) return TRUE;
 
 	const VEHICLETYPE* const v = GetHelicopter();
 	// grab location

@@ -130,7 +130,7 @@ void HandleCharProfile(void)
 	}
 
 	// button pending, but not changing mode, still need a rernder, but under different circumstances
-	if( ( fButtonPendingFlag == TRUE )&&( iCurrentImpPage == iPreviousImpPage ) )
+	if (fButtonPendingFlag && iCurrentImpPage == iPreviousImpPage)
 	{
 		RenderCharProfile( );
 	}
@@ -164,7 +164,7 @@ void HandleCharProfile(void)
 
 		fVisitedIMPSubPages[ iCurrentImpPage ] = TRUE;
 
-		if( fButtonPendingFlag == TRUE )
+		if (fButtonPendingFlag)
 		{
       // render screen
       RenderCharProfile( );

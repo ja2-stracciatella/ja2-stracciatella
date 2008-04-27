@@ -1031,8 +1031,7 @@ static void DestroyFlowerOrderTextInputBoxes(void)
 static void HandleFloristOrderKeyBoardInput(void)
 {
 	InputAtom					InputEvent;
-
-	while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
 	{
 		if( !HandleTextInput( &InputEvent ) && InputEvent.usEvent == KEY_DOWN )
 		{

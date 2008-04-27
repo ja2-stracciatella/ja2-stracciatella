@@ -752,7 +752,7 @@ BOOLEAN IsThereAMineInThisSector( INT16 sX, INT16 sY )
 BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 {
 	// a value of TRUE is from the enemy's point of view
-	if (StrategicMap[( gMineLocation[ bMineIndex ].sSectorX ) + ( MAP_WORLD_X * ( gMineLocation[ bMineIndex ].sSectorY ) )].fEnemyControlled == TRUE )
+	if (StrategicMap[gMineLocation[bMineIndex].sSectorX + MAP_WORLD_X * gMineLocation[bMineIndex].sSectorY].fEnemyControlled)
 		return(FALSE);
 	else
 	{

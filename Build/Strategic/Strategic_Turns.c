@@ -46,7 +46,7 @@ void HandleStrategicTurn(void)
 		RESETCOUNTER( STRATEGIC_OVERHEAD );
 
 		// if the game is paused, or we're in mapscreen and time is not being compressed
-		if( ( GamePaused() == TRUE ) ||
+		if (GamePaused() ||
 				( ( guiCurrentScreen == MAP_SCREEN ) && !IsTimeBeingCompressed() ) )
 		{
 			// don't do any of this

@@ -1087,7 +1087,7 @@ static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const I
 		return( FALSE );
 	}
 
-	if( !fIgnoreAsleep && ( pSoldier->fMercAsleep == TRUE ) )
+	if (!fIgnoreAsleep && pSoldier->fMercAsleep)
 	{
 		// asleep!
 		return( FALSE );

@@ -487,8 +487,7 @@ HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
 	BYTE* pbyte = (BYTE*)hList + uiFinalLoc;
 	memmove(pbyte, pdata, pTemp_cont->uiSiz_of_elem);
 	pTemp_cont->uiTotal_items++;
-	if (fTail_check == TRUE)
-		pTemp_cont->uiTail += pTemp_cont->uiSiz_of_elem;
+	if (fTail_check) pTemp_cont->uiTail += pTemp_cont->uiSiz_of_elem;
 	return hList;
 }
 

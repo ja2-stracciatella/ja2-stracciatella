@@ -2405,7 +2405,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 			fRet = ReloadGun( pSoldier, pObj, &(pSoldier->inv[bSlot]) );
 			// if we are valid for two-pistol shooting (reloading) and we have enough APs still
 			// then do a reload of both guns!
-			if ( (fRet == TRUE) && IsValidSecondHandShotForReloadingPurposes( pSoldier ) )
+			if (fRet && IsValidSecondHandShotForReloadingPurposes(pSoldier))
 			{
 				pObj = &(pSoldier->inv[SECONDHANDPOS]);
 				bSlot = FindAmmoToReload( pSoldier, SECONDHANDPOS, NO_SLOT );
@@ -4147,7 +4147,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 					for ( bLoop2 = MAX_ATTACHMENTS - 1; bLoop2 >= 0; bLoop2-- )
 					{
 						// remove also checks for existence attachment
-						if ( RemoveAttachment( pObject, bLoop2, &Attachment ) == TRUE )
+						if (RemoveAttachment(pObject, bLoop2, &Attachment))
 						{
 							// drop it in Madlab's tile
 							AddItemToPool( pSoldier->sGridNo, &Attachment, 1, 0, 0, 0 );
@@ -4216,7 +4216,7 @@ void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 	{
 		fRet = RemoveObjectFromSoldierProfile( ubProfile, MONEY );
 	}
-	while ( fRet == TRUE );
+	while (fRet);
 
 	gMercProfiles[ ubProfile ].uiMoney = 0;
 

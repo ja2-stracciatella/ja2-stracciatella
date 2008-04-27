@@ -134,7 +134,7 @@ UINT32  AniEditScreenHandle(void)
 
 	}
 
-  if (DequeueEvent(&InputEvent) == TRUE)
+	if (DequeueEvent(&InputEvent))
   {
     if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
     {

@@ -66,7 +66,7 @@ void RenderIMPPersonalityFinish( void )
 	if( fConfirmHasBeenSelectedFlag )
 	{
 		// confirm was yes, display yes string
-		if(fConfirmIsYesFlag == TRUE)
+		if (fConfirmIsYesFlag)
 		{
       // display yes string
 			PrintImpText( );
@@ -128,7 +128,7 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 
 	if (!fConfirmHasBeenSelectedFlag) return;
 
-	if( fCreateFinishOkButton == TRUE )
+	if (fCreateFinishOkButton)
 	{
 		fCreateFinishOkButton = FALSE;
 		CreatePersonalityFinishOkButton( );

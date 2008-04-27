@@ -218,11 +218,11 @@ void RenderMapScreenInterfaceBottom( void )
 
 
 	// render whole panel
-	if( fMapScreenBottomDirty == TRUE )
+	if (fMapScreenBottomDirty)
 	{
 	  BltVideoObject(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
 
-		if( GetSectorFlagStatus( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE )
+		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 		{
 			GetMapFileName( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, bFilename, TRUE, TRUE );
 			LoadRadarScreenBitmap( bFilename );
@@ -398,8 +398,7 @@ static void CompressModeClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 #ifdef JA2DEMO
 		DisabledInDemo();
 #else
-		if ( CommonTimeCompressionChecks() == TRUE )
-			return;
+		if (CommonTimeCompressionChecks()) return;
 
 		RequestToggleTimeCompression();
 #endif
@@ -813,7 +812,7 @@ static void EnableDisableBottomButtonsAndRegions(void)
 	if( fShowInventoryFlag )
 	{
 		// and an item is in the cursor
-		if( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || ( InKeyRingPopup( ) == TRUE ) || InItemStackPopup() )
+		if (gMPanelRegion.Cursor == EXTERN_CURSOR || InKeyRingPopup() || InItemStackPopup())
 		{
 			DisableButton( giMapInvDoneButton );
 		}
@@ -954,7 +953,7 @@ BOOLEAN AllowedToTimeCompress( void )
 
 /*
 	//in air raid
-	if( InAirRaid( ) == TRUE )
+	if (InAirRaid())
 	{
 		return( FALSE );
 	}
@@ -1131,7 +1130,7 @@ static void DisplayProjectedDailyMineIncome(void)
 
 BOOLEAN CommonTimeCompressionChecks( void )
 {
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		// abort plotting movement
 		AbortMovementPlottingMode( );
@@ -1301,7 +1300,7 @@ void HandleExitsFromMapScreen( void )
 	if ( gbExitingMapScreenToWhere != -1 )
 	{
 		// delay all exits by one frame...
-		if( gfOneFramePauseOnExit == TRUE )
+		if (gfOneFramePauseOnExit)
 		{
 			gfOneFramePauseOnExit = FALSE;
 			return;

@@ -435,7 +435,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 	{
 		// NOTE: Having a buddy around will NOT stop a merc from leaving on another contract (IC's call)
 
-		if( fSayQuote == TRUE )
+		if (fSayQuote)
 		{
 			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
 			HandleImportantMercQuote( pSoldier, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL );
@@ -601,7 +601,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 		if (fBuddyAround)
 		{
 			// unhappy, but buddy's around, so will agree to renew, but tell us why we're doing it
-			if( fSayQuote == TRUE )
+			if (fSayQuote)
 			{
 				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
 				HandleImportantMercQuote( pSoldier, usBuddyQuote);
@@ -613,7 +613,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 		else
 		{
 			// unhappy, no buddies, will refuse to renew
-			if( fSayQuote == TRUE )
+			if (fSayQuote)
 			{
 				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
 
@@ -990,15 +990,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 
 	pLeaveSoldier = pSoldier;
 
-	if( pSoldier->fSignedAnotherContract == TRUE )
-	{
-		fAddRehireButton = FALSE;
-	}
-
-	if( pSoldier->fSignedAnotherContract == TRUE )
-	{
-		fAddRehireButton = FALSE;
-	}
+	if (pSoldier->fSignedAnotherContract) fAddRehireButton = FALSE;
 
 	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
 	{
@@ -1077,11 +1069,6 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 			Flags = fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 		}
 		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, Flags, MercDepartEquipmentBoxCallBack, NULL);
-	}
-
-	if( pSoldier->fSignedAnotherContract == TRUE )
-	{
-		//fCurrentMercFired = FALSE;
 	}
 }
 

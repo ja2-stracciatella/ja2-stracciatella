@@ -444,7 +444,7 @@ void RenderTopmostTacticalInterface( )
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
 
-	if ( gfRerenderInterfaceFromHelpText == TRUE )
+	if (gfRerenderInterfaceFromHelpText)
 	{
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		RenderPanel();

@@ -285,7 +285,7 @@ UINT32	MapUtilScreenHandle( )
 
 	InvalidateScreen( );
 
-  while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
   {
 		if (InputEvent.usEvent == KEY_DOWN && InputEvent.usParam == SDLK_ESCAPE)
       { // Exit the program

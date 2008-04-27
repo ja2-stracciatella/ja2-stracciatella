@@ -174,7 +174,7 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
     ubRepCount  = 0;
 
     // Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
-    if (fTransp == TRUE)
+		if (fTransp)
     {
       for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
       {
@@ -260,7 +260,7 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
     usCurrentY = usY;
 
     // Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
-    if (fTransp == TRUE)
+		if (fTransp)
     {
       for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
       {

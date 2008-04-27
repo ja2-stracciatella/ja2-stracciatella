@@ -556,7 +556,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 
 
 	// if not glowing right now, leave
-	if( ( giContractHighLine == -1 )||( fResetContractGlow == TRUE ) || fShowInventoryFlag )
+	if (giContractHighLine == -1 || fResetContractGlow || fShowInventoryFlag)
 	{
 		iColorNum = 0;
 		fDelta = TRUE;
@@ -617,7 +617,7 @@ static void GlowFace(void)
 		iColorNum =0;
 		fDelta = TRUE;
 
-		if( fOldFaceGlow == TRUE )
+		if (fOldFaceGlow)
 		{
 			RestoreExternBackgroundRect( 9, 18, ( UINT16 )( 61 - 9 ), ( UINT16 )( 64 - 18 ) );
 		}
@@ -676,7 +676,7 @@ static void GlowItem(void)
 		iColorNum =0;
 		fDelta = TRUE;
 
-		if( fOldItemGlow == TRUE )
+		if (fOldItemGlow)
 		{
 			RestoreExternBackgroundRect( 3, 80, ( UINT16 )( 65 - 3 ), ( UINT16 )( 105 - 80 ) );
 		}
@@ -735,7 +735,7 @@ static void GlowTrashCan(void)
 	{
 		iColorNum =0;
 
-		if( fOldTrashCanGlow == TRUE )
+		if (fOldTrashCanGlow)
 		{
 			RestoreExternBackgroundRect( TRASH_CAN_X, TRASH_CAN_Y, ( UINT16 )( TRASH_CAN_WIDTH + 2 ), ( UINT16 )( TRASH_CAN_HEIGHT + 2 ) );
 		}
@@ -1343,10 +1343,7 @@ static INT32 GetGroundTravelTimeOfSoldier(const SOLDIERTYPE* s);
 
 static void DisplayGroundEta(void)
 {
-	if( fPlotForHelicopter == TRUE )
-	{
-		return;
-	}
+	if (fPlotForHelicopter) return;
 
 	if( bSelectedDestChar == -1 )
 	{
@@ -1442,7 +1439,7 @@ static void HighLightAssignLine(void)
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
-		if( IsCharacterSelectedForAssignment( usCount ) == TRUE )
+		if (IsCharacterSelectedForAssignment(usCount))
 		{
 			usX=ASSIGN_X;
 			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
@@ -1522,7 +1519,7 @@ static void HighLightDestLine(void)
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
-		if( CharacterIsGettingPathPlotted( usCount ) == TRUE )
+		if (CharacterIsGettingPathPlotted(usCount))
 		{
 			usX=DEST_ETA_X-4;
 			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
@@ -1605,7 +1602,7 @@ static void HighLightSleepLine(void)
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
-		if( IsCharacterSelectedForSleep( usCount ) == TRUE )
+		if (IsCharacterSelectedForSleep(usCount))
 		{
 			usX=SLEEP_X-4;
 			usX2 = SLEEP_X + SLEEP_WIDTH;
@@ -1699,7 +1696,7 @@ static void DisplayCharacterList(void)
 	INT16 sCount=0;
 	UINT8 ubForegroundColor = 0;
 
-	if (fShowAssignmentMenu == TRUE && !fTeamPanelDirty)
+	if (fShowAssignmentMenu && !fTeamPanelDirty)
 	{
 		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		return;
@@ -1726,7 +1723,7 @@ static void DisplayCharacterList(void)
 		{
 			ubForegroundColor = FONT_METALGRAY;
 		}
-		else if( CharacterIsGettingPathPlotted( sCount ) == TRUE )
+		else if (CharacterIsGettingPathPlotted(sCount))
 		{
 			ubForegroundColor = FONT_LTBLUE;
 		}
@@ -2061,7 +2058,7 @@ UINT32 MapScreenHandle(void)
 
 		fOneFrame = FALSE;
 
-		if( fEnterMapDueToContract == TRUE )
+		if (fEnterMapDueToContract)
 		{
 			if( pContractReHireSoldier )
 			{
@@ -2130,14 +2127,14 @@ UINT32 MapScreenHandle(void)
 	// handle flashing of contract column for any mercs leaving very soon
 	HandleContractTimeFlashForMercThatIsAboutLeave( );
 
-	if (!fShownAssignmentMenu && fShowAssignmentMenu == TRUE)
+	if (!fShownAssignmentMenu && fShowAssignmentMenu)
 	{
 		// need a one frame pause
 		fShownAssignmentMenu = fShowAssignmentMenu;
 		fShowAssignmentMenu = FALSE;
 		fOneFrame = TRUE;
 	}
-	else if (!fShownContractMenu && fShowContractMenu == TRUE)
+	else if (!fShownContractMenu && fShowContractMenu)
 	{
 		fShownContractMenu = fShowContractMenu;
 		fShowContractMenu = FALSE;
@@ -2241,10 +2238,7 @@ UINT32 MapScreenHandle(void)
 	// place down background
 	BlitBackgroundToSaveBuffer( );
 
-	if( fLeavingMapScreen == TRUE )
-	{
-		return( MAP_SCREEN );
-	}
+	if (fLeavingMapScreen) return MAP_SCREEN;
 
 	if (!fDisableDueToBattleRoster)
 	{
@@ -2314,7 +2308,7 @@ UINT32 MapScreenHandle(void)
 	}
 
 	if (!fDisableDueToBattleRoster &&
-			(fShowAssignmentMenu == TRUE || fShowContractMenu == TRUE))
+			(fShowAssignmentMenu || fShowContractMenu))
 	{
 		// highlight lines?
 		HandleHighLightingOfLinesInTeamPanel( );
@@ -2358,7 +2352,7 @@ UINT32 MapScreenHandle(void)
 	// display town info
 	DisplayTownInfo( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ );
 
-	if( fShowTownInfo == TRUE )
+	if (fShowTownInfo)
 	{
 		// force update of town mine info boxes
 		ForceUpDateOfBox( ghTownMineBox );
@@ -2371,9 +2365,8 @@ UINT32 MapScreenHandle(void)
 		MarkAllBoxesAsAltered( );
 	}
 
-
 	// if plotting path
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		// plot out paths
 		PlotPermanentPaths( );
@@ -2426,9 +2419,9 @@ UINT32 MapScreenHandle(void)
 	}
 	#endif
 
-	if( fEndShowInventoryFlag == TRUE )
+	if (fEndShowInventoryFlag)
 	{
-		if( InKeyRingPopup( ) == TRUE )
+		if (InKeyRingPopup())
 		{
 			DeleteKeyRingPopup( );
 		}
@@ -2455,9 +2448,7 @@ UINT32 MapScreenHandle(void)
 	// if inventory is being manipulated, update cursor
 	HandleMapInventoryCursor();
 
-
-
-	if( fShowDescriptionFlag == TRUE )
+	if (fShowDescriptionFlag)
 	{
 		// unmark done button
 		if (gpItemDescObject->usItem == MONEY ||
@@ -2473,7 +2464,7 @@ UINT32 MapScreenHandle(void)
 	}
 	else
 	{
-		if( fShowInventoryFlag == TRUE )
+		if (fShowInventoryFlag)
 		{
 			MarkAButtonDirty( giMapInvDoneButton );
 			MarkAButtonDirty( giCharInfoButton[ 1 ] );
@@ -2871,7 +2862,7 @@ static UINT32 HandleMapUI(void)
 
 
 						 // plotting for the chopper?
-						 if( fPlotForHelicopter == TRUE )
+			if (fPlotForHelicopter)
 						 {
 							 PlotPathForHelicopter( sMapX, sMapY );
 							 fTeamPanelDirty = TRUE;
@@ -2896,7 +2887,7 @@ static UINT32 HandleMapUI(void)
 								// fMapPanelDirty = TRUE;
 							 }
 
-							if( ( IsTheCursorAllowedToHighLightThisSector( sMapX, sMapY ) == TRUE ) &&
+							if (IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY) &&
 									( SectorInfo[ ( SECTOR( sMapX, sMapY ) ) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER ) )
 							{
 								// Can we get go there?  (NULL temp character path)
@@ -2931,7 +2922,7 @@ static UINT32 HandleMapUI(void)
 			if ( GetMouseMapXY( &sMapX, &sMapY) )
 			{
 /*
-				if( fZoomFlag == TRUE )
+				if (fZoomFlag)
 				{
 					// convert to zoom out coords from screen coords
 		      sMapX = ( INT16 )( iZoomX / MAP_GRID_X + sMapX ) / 2;
@@ -3034,7 +3025,7 @@ static UINT32 HandleMapUI(void)
 					{
 						// if the click is ALSO over the helicopter icon
 						// NOTE: The helicopter icon is NOT necessarily directly over the helicopter's current sector!!!
-						if( CheckForClickOverHelicopterIcon( sMapX, sMapY ) == TRUE )
+						if (CheckForClickOverHelicopterIcon(sMapX, sMapY))
 						{
 							CreateBullsEyeOrChopperSelectionPopup();
 						}
@@ -3085,14 +3076,14 @@ static UINT32 HandleMapUI(void)
 
 
 				// if we're in airspace mode
-				if( fShowAircraftFlag == TRUE )
+				if (fShowAircraftFlag)
 				{
 					// if not moving soldiers, and not yet plotting the helicopter
 					if (bSelectedDestChar == -1 && !fPlotForHelicopter)
 					{
 						// if we're on the surface level, and the click is over the helicopter icon
 						// NOTE: The helicopter icon is NOT necessarily directly over the helicopter's current sector!!!
-						if( ( iCurrentMapSectorZ == 0 ) && CheckForClickOverHelicopterIcon( sMapX, sMapY ) == TRUE )
+						if (iCurrentMapSectorZ == 0 && CheckForClickOverHelicopterIcon(sMapX, sMapY))
 						{
 							RequestGiveSkyriderNewDestination( );
 							return( MAP_SCREEN );
@@ -3237,7 +3228,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						DeleteItemDescriptionBox( );
 					}
 					// plotting movement?
-					else if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+					else if (bSelectedDestChar != -1 || fPlotForHelicopter)
 					{
 						AbortMovementPlottingMode( );
 					}
@@ -3249,20 +3240,20 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						fCharacterInfoPanelDirty = TRUE;
 
 						// stop showing current assignment box
-						if( fShowAttributeMenu == TRUE )
+						if (fShowAttributeMenu)
 						{
 							fShowAttributeMenu = FALSE;
 							fMapPanelDirty = TRUE;
 						}
-						else if( fShowTrainingMenu == TRUE )
+						else if (fShowTrainingMenu)
 						{
 							fShowTrainingMenu = FALSE;
 						}
-						else if( fShowSquadMenu == TRUE )
+						else if (fShowSquadMenu)
 						{
 							fShowSquadMenu = FALSE;
 						}
-						else if( fShowRepairMenu == TRUE )
+						else if (fShowRepairMenu)
 						{
 							fShowRepairMenu = FALSE;
 						}
@@ -3274,7 +3265,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						// restore background to glow region
 						RestoreBackgroundForAssignmentGlowRegionList( );
 					}
-					else if( fShowContractMenu == TRUE )
+					else if (fShowContractMenu)
 					{
 						fShowContractMenu = FALSE;
 
@@ -3290,17 +3281,17 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 						sSelectedMilitiaTown = 0;
 						fMapPanelDirty = TRUE;
 					}
-					else if( fShowTownInfo == TRUE )
+					else if (fShowTownInfo)
 					{
 						fShowTownInfo = FALSE;
 						CreateDestroyScreenMaskForAssignmentAndContractMenus( );
 					}
-					else if( InKeyRingPopup( ) == TRUE )
+					else if (InKeyRingPopup())
 					{
 						DeleteKeyRingPopup( );
 						fTeamPanelDirty = TRUE;
 					}
-					else if( fShowInventoryFlag == TRUE )
+					else if (fShowInventoryFlag)
 					{
 						if ( gMPanelRegion.Cursor != EXTERN_CURSOR && !InItemStackPopup() )
 						{
@@ -3632,7 +3623,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 					#endif
 						{
 							// ARM: Feb01/98 - Cancel out of mapscreen movement plotting if Help subscreen is coming up
-							if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+							if (bSelectedDestChar != -1 || fPlotForHelicopter)
 							{
 								AbortMovementPlottingMode( );
 							}
@@ -3834,7 +3825,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 								break;
 
 /*
-							if( fZoomFlag == TRUE )
+							if (fZoomFlag)
 							{
 								// convert to zoom out coords from screen coords
 								sMapX = ( INT16 )( iZoomX / MAP_GRID_X + sMapX ) / 2;
@@ -4029,7 +4020,7 @@ void EndMapScreen( BOOLEAN fDuringFade )
 //	ShutdownCurrentPanel( );
 
 	// still plotting movement?
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -4288,11 +4279,11 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 		return;
 	}
 /*
-	else if (!IsTheCursorAllowedToHighLightThisSector(sMapX , sMapY) && fZoomFlag == TRUE && fStationary == TRUE)
+	else if (!IsTheCursorAllowedToHighLightThisSector(sMapX , sMapY) && fZoomFlag && fStationary)
 	{
 		return;
 	}
-	else if (!IsTheCursorAllowedToHighLightThisSector(iZoomX / (MAP_GRID_X * 2) + sMapX / 2, iZoomY / (MAP_GRID_Y * 2) + sMapY / 2) && fZoomFlag == TRUE && !fStationary)
+	else if (!IsTheCursorAllowedToHighLightThisSector(iZoomX / (MAP_GRID_X * 2) + sMapX / 2, iZoomY / (MAP_GRID_Y * 2) + sMapY / 2) && fZoomFlag && !fStationary)
   {
 		return;
 	}
@@ -4386,16 +4377,15 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 
 				// ignore left clicks in the map screen if:
 				// game just started or we're in the prebattle interface or if we are about to hit pre-battle
-				if (DidGameJustStart() ||
-						 ( gfPreBattleInterfaceActive == TRUE ) ||
-						 ( fDisableMapInterfaceDueToBattle  == TRUE ) )
+				if (DidGameJustStart()         ||
+						gfPreBattleInterfaceActive ||
+						fDisableMapInterfaceDueToBattle)
 				{
 					return;
 				}
 
-
 				// if in "plot route" mode
-				if ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+				if (bSelectedDestChar != -1 || fPlotForHelicopter)
 				{
 					fEndPlotting = FALSE;
 
@@ -4497,15 +4487,15 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 
 				// ignore right clicks in the map area if:
 				// game just started or we're in the prebattle interface or if we are about to hit pre-battle
-				if (DidGameJustStart() ||
-						 ( gfPreBattleInterfaceActive == TRUE ) ||
-						 ( fDisableMapInterfaceDueToBattle  == TRUE ) )
+				if (DidGameJustStart()         ||
+						gfPreBattleInterfaceActive ||
+						fDisableMapInterfaceDueToBattle)
 				{
 					return;
 				}
 
 
-				if ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+				if (bSelectedDestChar != -1 || fPlotForHelicopter)
 				{
 					// cancel/shorten the path
 					*puiNewEvent = MAP_EVENT_CANCEL_PATH;
@@ -4533,7 +4523,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 					// sector must be selected to bring up militia or town info boxes for it
 					if ( ( sMapX == sSelMapX ) && ( sSelMapY == sMapY ) )
 					{
-						if ( fShowMilitia == TRUE )
+						if (fShowMilitia)
 						{
 							HandleMilitiaRedistributionClick();
 						}
@@ -4541,7 +4531,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 						{
 							// if on the surface, or a real underground sector (we've visited it)
 							if ( ( iCurrentMapSectorZ == 0 ) ||
-									 ( GetSectorFlagStatus( sMapX, sMapY, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) == TRUE ) )
+									GetSectorFlagStatus(sMapX, sMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 							{
 								// toggle sector info for this sector
 								fShowTownInfo = !fShowTownInfo;
@@ -4623,7 +4613,7 @@ static void BltCharInvPanel(void)
 
 	if( gbCheckForMouseOverItemPos != -1 )
 	{
-		if( HandleCompatibleAmmoUIForMapScreen( pSoldier, (INT32)gbCheckForMouseOverItemPos, TRUE, TRUE ) == TRUE )
+		if (HandleCompatibleAmmoUIForMapScreen(pSoldier, gbCheckForMouseOverItemPos, TRUE, TRUE))
 		{
 			fMapPanelDirty = TRUE;
 		}
@@ -5140,10 +5130,7 @@ static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInt
 		sPrevMapY = sMapY;
 
 		// path was plotted and we moved, re draw map..to clean up mess
-		if( fTempPathAlreadyDrawn == TRUE )
-		{
-			fMapPanelDirty = TRUE;
-		}
+		if (fTempPathAlreadyDrawn) fMapPanelDirty = TRUE;
 
 		fTempPathAlreadyDrawn = FALSE;
 		fDrawTempPath = FALSE;
@@ -5151,10 +5138,7 @@ static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInt
 
 	iDifference = GetJA2Clock( ) - giPotCharPathBaseTime ;
 
-	if( fTempPathAlreadyDrawn == TRUE )
-	{
-		return;
-	}
+	if (fTempPathAlreadyDrawn) return;
 
 	if( iDifference > MIN_WAIT_TIME_FOR_TEMP_PATH )
 	{
@@ -5226,7 +5210,7 @@ static void RestorePreviousPaths(void);
 void AbortMovementPlottingMode( void )
 {
 	// invalid if we're not plotting movement
-	Assert( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) );
+	Assert(bSelectedDestChar != -1 || fPlotForHelicopter);
 
 	// make everybody go back to where they were going before this plotting session started
 	RestorePreviousPaths();
@@ -5273,13 +5257,17 @@ static void CheckToSeeIfMouseHasLeftMapRegionDuringPathPlotting(void)
 
 	if ( ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA ) == 0 )
 	{
-
-		if( fInArea == TRUE )
+		if (fInArea)
 		{
 			fInArea = FALSE;
 
 			// plotting path, clean up
-			if( ( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) || ( fDrawTempHeliPath == TRUE ) ) && ( fTempPathAlreadyDrawn == TRUE ) )
+			if (fTempPathAlreadyDrawn &&
+					(
+						bSelectedDestChar != -1 ||
+						fPlotForHelicopter      ||
+						fDrawTempHeliPath
+					))
 			{
 				fDrawTempHeliPath = FALSE;
 			  fMapPanelDirty = TRUE;
@@ -5419,7 +5407,7 @@ static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 		DisabledInDemo();
 #else
 #if 0 // XXX was commented out
-		if (bSelectedDestChar != -1 || fPlotForHelicopter == TRUE)
+		if (bSelectedDestChar != -1 || fPlotForHelicopter)
 		{
 			AbortMovementPlottingMode();
 			return;
@@ -5874,7 +5862,7 @@ static void TeamListSleepRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 			if (CanChangeSleepStatusForSoldier(pSoldier))
 			{
-				if( pSoldier->fMercAsleep == TRUE )
+				if (pSoldier->fMercAsleep)
 				{
 					// try to wake him up
 					if( SetMercAwake( pSoldier, TRUE, FALSE ) )
@@ -6079,7 +6067,7 @@ static void HandleHighLightingOfLinesInTeamPanel(void)
 
 static void PlotPermanentPaths(void)
 {
-	if( fPlotForHelicopter == TRUE )
+	if (fPlotForHelicopter)
 	{
 		DisplayHelicopterPath( );
 	}
@@ -6098,9 +6086,9 @@ static void PlotTemporaryPaths(void)
 	// check to see if we have in fact moved are are plotting a path?
 	if ( GetMouseMapXY( &sMapX, &sMapY ) )
 	{
-		if ( fPlotForHelicopter == TRUE )
+		if (fPlotForHelicopter)
 		{
-			Assert( fShowAircraftFlag == TRUE );
+			Assert(fShowAircraftFlag);
 /*
 			if( fZoomFlag )
 			{
@@ -6118,7 +6106,7 @@ static void PlotTemporaryPaths(void)
 			// check if potential path is allowed
 			DisplayThePotentialPathForHelicopter( sMapX, sMapY );
 
-			if( fDrawTempHeliPath == TRUE )
+			if (fDrawTempHeliPath)
 			{
 				// clip region
 				ClipBlitsToMapViewRegion( );
@@ -6149,7 +6137,7 @@ static void PlotTemporaryPaths(void)
 		  DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface( sMapX, sMapY );
 
 			// if we need to draw path, do it
-			if( fDrawTempPath == TRUE )
+			if (fDrawTempPath)
 			{
 				// clip region
 				ClipBlitsToMapViewRegion( );
@@ -6352,8 +6340,7 @@ static void DetermineIfContractMenuCanBeShown(void)
 static void CheckIfPlottingForCharacterWhileAirCraft(void)
 {
 	// if we are in aircraft mode and plotting for character, reset plotting character
-
-	if( fShowAircraftFlag == TRUE )
+	if (fShowAircraftFlag)
 	{
 		// if plotting, but not for heli
 		if (bSelectedDestChar != -1 && !fPlotForHelicopter)
@@ -6364,7 +6351,7 @@ static void CheckIfPlottingForCharacterWhileAirCraft(void)
 	}
 	else	// not in airspace mode
 	{
-		if( fPlotForHelicopter == TRUE )
+		if (fPlotForHelicopter)
 		{
 			// abort
 			AbortMovementPlottingMode();
@@ -6679,7 +6666,7 @@ static void ResetAllSelectedCharacterModes(void)
 
 
 	// if we were plotting movement
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode();
 	}
@@ -6737,12 +6724,9 @@ BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone)
 
 	INT8 bCounter = 0;
 
-
-
-
-	if( fDone == TRUE )
+	if (fDone)
 	{
-		if( fTalkingingGuy == TRUE )
+		if (fTalkingingGuy)
 		{
 			fCharacterInfoPanelDirty = TRUE;
 			fTalkingingGuy = FALSE;
@@ -6801,7 +6785,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 	// see if we have clicked on the last sector in the characters path
 
 	// check if helicopter
-	if( fPlotForHelicopter == TRUE )
+	if (fPlotForHelicopter)
 	{
 		if( sX + ( sY * MAP_WORLD_X ) == GetLastSectorOfHelicoptersPath( ) )
 		{
@@ -6969,7 +6953,7 @@ static void UpdateCursorIfInLastSector(void)
 	INT16 sMapX = 0, sMapY = 0;
 
 	// check to see if we are plotting a path, if so, see if we are highlighting the last sector int he path, if so, change the cursor
-	if ( ( bSelectedDestChar != -1) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		GetMouseMapXY(&sMapX, &sMapY);
 
@@ -7032,10 +7016,7 @@ static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( gfPreBattleInterfaceActive == TRUE )
-		{
-			return;
-		}
+		if (gfPreBattleInterfaceActive) return;
 
 		// now stop any dialogue in progress
 		StopAnyCurrentlyTalkingSpeech( );
@@ -7151,7 +7132,7 @@ static void HandleCharBarRender(void)
 // update the status of the contract box
 static void UpDateStatusOfContractBox(void)
 {
-	if( fShowContractMenu == TRUE )
+	if (fShowContractMenu)
 	{
 		ForceUpDateOfBox( ghContractBox );
 
@@ -7288,7 +7269,7 @@ static void CreateDestroyTrashCanRegion(void)
 		ResetCompatibleItemArray( );
 
 	}
-	else if (!fShowInventoryFlag && fCreated == TRUE)
+	else if (!fShowInventoryFlag && fCreated)
 	{
 		// trash can region
 		fCreated = FALSE;
@@ -7299,7 +7280,7 @@ static void CreateDestroyTrashCanRegion(void)
 
 		ShutdownKeyRingInterface( );
 
-		if( fShowDescriptionFlag == TRUE )
+		if (fShowDescriptionFlag)
 		{
 			// kill description
 			DeleteItemDescriptionBox( );
@@ -7370,9 +7351,9 @@ static void MonitorMapUIMessage(void)
 // handle pre battle interface in relation to inventory
 static void HandlePreBattleInterfaceWithInventoryPanelUp(void)
 {
-	if( ( gfPreBattleInterfaceActive == TRUE ) && ( fShowInventoryFlag == TRUE ) )
+	if (gfPreBattleInterfaceActive && fShowInventoryFlag)
 	{
-		if( fShowDescriptionFlag == TRUE )
+		if (fShowDescriptionFlag)
 		{
 			// kill description
 			DeleteItemDescriptionBox( );
@@ -7398,7 +7379,7 @@ static void UpdateBadAssignments(void)
 
 static void InterruptTimeForMenus(void)
 {
-	if( ( fShowAssignmentMenu == TRUE )||( fShowContractMenu == TRUE ) )
+	if (fShowAssignmentMenu || fShowContractMenu)
 	{
 		InterruptTime( );
 		PauseTimeForInterupt( );
@@ -7696,7 +7677,7 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if (fInMapMode == TRUE && !fCreated)
+	if (fInMapMode && !fCreated)
 	{
 		const INT16 prio = MSYS_PRIORITY_HIGHEST - 5;
 
@@ -7709,7 +7690,7 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 		fCreated = TRUE;
 
 	}
-	else if (!fInMapMode && fCreated == TRUE)
+	else if (!fInMapMode && fCreated)
 	{
 		RemoveButton( giCharInfoButton[ 0 ]);
 		RemoveButton( giCharInfoButton[ 1 ]);
@@ -8099,10 +8080,7 @@ static void DisplayIconsForMercsAsleep(void)
 	INT32 iCounter;
 
 	// if we are in inventory
-	if( fShowInventoryFlag == TRUE )
-	{
-		return;
-	}
+	if (fShowInventoryFlag) return;
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
@@ -8196,10 +8174,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 
 BOOLEAN CanToggleSelectedCharInventory( void )
 {
-	if( gfPreBattleInterfaceActive == TRUE )
-	{
-		return(FALSE);
-	}
+	if (gfPreBattleInterfaceActive) return FALSE;
 
 	// already in inventory and an item picked up?
 	if( fShowInventoryFlag && ( gMPanelRegion.Cursor == EXTERN_CURSOR ) )
@@ -8300,7 +8275,7 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	iCurrentMapSectorZ = bMapZ;
 
 	// if going underground while in airspace mode
-	if ( ( bMapZ > 0 ) && ( fShowAircraftFlag == TRUE ) )
+	if (bMapZ > 0 && fShowAircraftFlag)
 	{
 		// turn off airspace mode
 		ToggleAirspaceMode( );
@@ -8419,7 +8394,7 @@ static void CancelOrShortenPlottedPath(void)
 */
 
 	// check if we are in aircraft mode
-	if( fShowAircraftFlag == TRUE )
+	if (fShowAircraftFlag)
 	{
 		// check for helicopter path being plotted
 		if( !fPlotForHelicopter )
@@ -8756,7 +8731,7 @@ static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldie
 	}
 	else
 	{
-		if (fShowAircraftFlag == TRUE)
+		if (fShowAircraftFlag)
 		{
 			// turn off airspace mode automatically
 			ToggleAirspaceMode();
@@ -8818,7 +8793,7 @@ static UINT8 PlayerMercsInHelicopterSector(void);
 static BOOLEAN RequestGiveSkyriderNewDestination(void)
 {
 	// should we allow it?
-	if( CanHelicopterFly( ) == TRUE )
+	if (CanHelicopterFly())
 	{
 		// if not warned already, and chopper empty, but mercs are in this sector
 		if ( !gfSkyriderEmptyHelpGiven &&
@@ -9046,10 +9021,7 @@ static void HandleMilitiaRedistributionClick(void)
 		{
 			if ( MilitiaTrainingAllowedInSector( sSelMapX, sSelMapY, ( INT8 )iCurrentMapSectorZ ) )
 			{
-				if( fShowTownInfo == TRUE )
-				{
-					fShowTownInfo = FALSE;
-				}
+				fShowTownInfo  = FALSE;
 				fMapPanelDirty = TRUE;
 
 				// check if there's combat in any of the town's sectors
@@ -9127,8 +9099,8 @@ static void StartChangeSectorArrivalMode(void)
 static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
 {
 	// if in airspace mode, and not plotting paths
-	if (fShowAircraftFlag == TRUE &&
-			bSelectedDestChar == -1   &&
+	if (fShowAircraftFlag       &&
+			bSelectedDestChar == -1 &&
 			!fPlotForHelicopter)
 	{
 		// don't allow moving bullseye until after initial arrival
@@ -9383,7 +9355,7 @@ void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sStrin
 			}
 
 		 // last 3 days is Red, last 4 hours start flashing red/white!
-		 if( ( iMinsRemaining <= MINS_TO_FLASH_CONTRACT_TIME ) && ( fFlashContractFlag == TRUE ) )
+			if (iMinsRemaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag)
 		 {
 			 *pubFontColor = FONT_WHITE;
 		 }
@@ -9431,10 +9403,9 @@ static void RestorePreviousPaths(void)
 	BOOLEAN fPathChanged = FALSE;
 
 	// invalid if we're not plotting movement
-	Assert( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) );
+	Assert(bSelectedDestChar != -1 || fPlotForHelicopter);
 
-
-	if ( fPlotForHelicopter == TRUE )
+	if (fPlotForHelicopter)
 	{
 		VEHICLETYPE* const v = GetHelicopter();
 		ppMovePath = &v->pMercPath;
@@ -9622,7 +9593,7 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 static void RequestToggleMercInventoryPanel(void)
 {
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -9633,7 +9604,7 @@ static void RequestToggleMercInventoryPanel(void)
 		return;
 	}
 
-	if( fShowDescriptionFlag == TRUE )
+	if (fShowDescriptionFlag)
 	{
 		// turn off item description
 		DeleteItemDescriptionBox( );
@@ -9660,12 +9631,9 @@ static void RequestToggleMercInventoryPanel(void)
 
 static void RequestContractMenu(void)
 {
-	if( gfPreBattleInterfaceActive == TRUE )
-	{
-		return;
-	}
+	if (gfPreBattleInterfaceActive) return;
 
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -9711,12 +9679,9 @@ static void ChangeCharacterListSortMethod(INT32 iValue)
 	Assert( iValue >= 0 );
 	Assert( iValue < MAX_SORT_METHODS );
 
-	if( gfPreBattleInterfaceActive == TRUE )
-	{
-		return;
-	}
+	if (gfPreBattleInterfaceActive) return;
 
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}

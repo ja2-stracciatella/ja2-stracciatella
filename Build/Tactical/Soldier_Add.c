@@ -1315,7 +1315,7 @@ static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8
 				{
 					SoldierInSectorIncompaciated( pSoldier, pSoldier->sInsertionGridNo );
 				}
-				else if ( pSoldier->fMercAsleep == TRUE )
+				else if (pSoldier->fMercAsleep)
 				{
 					InternalSoldierInSectorSleep(pSoldier, pSoldier->sInsertionGridNo);
 				}

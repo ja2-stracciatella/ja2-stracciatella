@@ -1436,7 +1436,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
    return(FALSE);
   }
 
-	if (pSoldier->bLife < OKLIFE || pSoldier->fMercAsleep == TRUE )
+	if (pSoldier->bLife < OKLIFE || pSoldier->fMercAsleep)
 	{
 		return( FALSE );
 	}

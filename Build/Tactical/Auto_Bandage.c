@@ -99,7 +99,7 @@ void BeginAutoBandage( )
 		}
 
 		// can this character be helped out by a teammate?
-		if ( CanCharacterBeAutoBandagedByTeammate( pSoldier ) == TRUE )
+		if (CanCharacterBeAutoBandagedByTeammate(pSoldier))
 		{
 			fFoundAGuy = TRUE;
 			if ( fFoundAGuy && fFoundAMedKit )
@@ -258,7 +258,7 @@ BOOLEAN HandleAutoBandage( )
 		// Deque all game events
 		DequeAllGameEvents();
 
-		while (DequeueEvent(&InputEvent) == TRUE)
+		while (DequeueEvent(&InputEvent))
 		{
 			if ( InputEvent.usEvent == KEY_UP )
 			{

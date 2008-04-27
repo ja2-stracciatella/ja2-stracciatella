@@ -681,7 +681,7 @@ UINT32  MainGameScreenHandle(void)
 
 #ifdef JA2BETAVERSION
 
-	if ( GamePaused() == TRUE )
+	if (GamePaused())
 	{
 		SetFont( MILITARYFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );

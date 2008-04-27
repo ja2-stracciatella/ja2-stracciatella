@@ -508,8 +508,8 @@ static void BlinkAutoFace(FACETYPE* const f)
 	const SOLDIERTYPE* const s = f->soldier;
 	if (s != NULL &&
 			(
+				s->fMercAsleep           ||
 				s->bLife       <  OKLIFE ||
-				s->fMercAsleep == TRUE   ||
 				s->bAssignment == ASSIGNMENT_POW
 			))
 	{
@@ -834,7 +834,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 			BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
 		}
 
-		if (s->fMercAsleep == TRUE)
+		if (s->fMercAsleep)
 		{
 			// blit eyes closed
 			BltVideoObject(uiRenderBuffer, f->uiVideoObject, 1, usEyesX, usEyesY);

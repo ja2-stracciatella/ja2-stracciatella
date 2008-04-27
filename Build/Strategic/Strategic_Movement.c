@@ -1475,7 +1475,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			}
 			else
 			{
-				if (HandleHeliEnteringSector(v->sSectorX, v->sSectorY) == TRUE)
+				if (HandleHeliEnteringSector(v->sSectorX, v->sSectorY))
 				{
 					// helicopter destroyed
 					fGroupDestroyed = TRUE;
@@ -1996,7 +1996,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 
 
-	if( pGroup->fVehicle == TRUE )
+	if (pGroup->fVehicle)
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
@@ -2671,13 +2671,6 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 		sBattleSector = (INT16)SECTOR( gpBattleGroup->ubSectorX, gpBattleGroup->ubSectorY );
 	}
 
-	// debug only
-	if ( gfDisplayPotentialRetreatPaths == TRUE )
-	{
-		//Assert( gfPreBattleInterfaceActive );
-	}
-
-
 	// get number of characters entering/existing between these two sectors.  Special conditions during
 	// pre-battle interface to return where this function is used to show potential retreating directions instead!
 
@@ -2692,8 +2685,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 		{
 			// if only showing retreat paths, ignore groups not in the battle sector
 			// if NOT showing retreat paths, ignore groups not between sectors
-			if ( ( gfDisplayPotentialRetreatPaths == TRUE ) && ( sBattleSector == sSource ) ||
-					!gfDisplayPotentialRetreatPaths && curr->fBetweenSectors == TRUE)
+			if (gfDisplayPotentialRetreatPaths ? sBattleSector == sSource : curr->fBetweenSectors)
 			{
 				fMayRetreatFromBattle = FALSE;
 				fRetreatingFromBattle = FALSE;
@@ -2710,7 +2702,11 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 
 				ubMercsInGroup = curr->ubGroupSize;
 
-				if( ( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubNextX, curr->ubNextY ) == sDest) ) || ( fMayRetreatFromBattle == TRUE ) )
+				if (fMayRetreatFromBattle ||
+						(
+							SECTOR(curr->ubSectorX, curr->ubSectorY) == sSource &&
+							SECTOR(curr->ubNextX,   curr->ubNextY)   == sDest
+						))
 				{
 					// if it's a valid vehicle, but not the helicopter (which can fly empty)
 					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
@@ -2723,12 +2719,17 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 
 					*iCountEnter += ubMercsInGroup;
 
-					if( ( curr->uiArrivalTime - GetWorldTotalMin( ) <= ABOUT_TO_ARRIVE_DELAY ) || ( fMayRetreatFromBattle == TRUE ) )
+					if (fMayRetreatFromBattle ||
+							curr->uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
 					{
 						*fAboutToArriveEnter = TRUE;
 					}
 				}
-				else if( ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest )&&( SECTOR( curr -> ubNextX, curr->ubNextY ) == sSource) || ( fRetreatingFromBattle == TRUE ) )
+				else if (fRetreatingFromBattle ||
+						(
+							SECTOR(curr->ubSectorX, curr->ubSectorY) == sDest &&
+							SECTOR(curr->ubNextX,   curr->ubNextY)   == sSource
+						))
 				{
 					// if it's a valid vehicle, but not the helicopter (which can fly empty)
 					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
@@ -3088,7 +3089,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	pGroup->fBetweenSectors = TRUE;
 	pGroup->uiFlags |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
 
-	if( pGroup->fVehicle == TRUE )
+	if (pGroup->fVehicle)
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
@@ -3817,7 +3818,7 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
 
 
 	// if we haven't already checked for NPCs, and the group isn't empty
-	if ( fCheckForNPCs && ( HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote( pGroup ) == TRUE ) )
+	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(pGroup))
 	{
 		// wait for player to answer/confirm prompt before doing anything else
 		fPlayerPrompted = TRUE;

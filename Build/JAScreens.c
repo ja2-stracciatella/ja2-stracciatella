@@ -159,7 +159,7 @@ UINT32 ErrorScreenHandle(void)
 	EndFrameBufferRender( );
 
 	// Check for esc
-  while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
   {
       if( InputEvent.usEvent == KEY_DOWN )
 			{

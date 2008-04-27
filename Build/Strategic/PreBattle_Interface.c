@@ -235,7 +235,7 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 
 	// ARM: Feb01/98 - Cancel out of mapscreen movement plotting if PBI subscreen is coming up
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -1561,7 +1561,7 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 		if (pSoldier->bLife && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			// if involved, but asleep
-			if ( PlayerMercInvolvedInThisCombat( pSoldier ) && ( pSoldier->fMercAsleep == TRUE ) )
+			if (PlayerMercInvolvedInThisCombat(pSoldier) && pSoldier->fMercAsleep)
 			{
 				// FORCE him wake him up
 				SetMercAwake( pSoldier, FALSE, TRUE );

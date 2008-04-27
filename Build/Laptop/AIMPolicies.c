@@ -739,8 +739,7 @@ static void ResetAimPolicyButtons(void)
 
 static void DisableAimPolicyButton(void)
 {
-	if (gfExitingAimPolicy == TRUE || !gfAimPolicyMenuBarLoaded)
-		return;
+	if (gfExitingAimPolicy || !gfAimPolicyMenuBarLoaded) return;
 
 	if( (gubCurPageNum == AIM_POLICY_TOC_PAGE ) )
 	{

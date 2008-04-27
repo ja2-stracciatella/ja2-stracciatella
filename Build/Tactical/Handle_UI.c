@@ -558,7 +558,7 @@ UINT32  HandleTacticalUI( void )
 
 		// Check if menu event is done and if so set to privious mode
 		// This is needed to hook into the interface stuff which sets the fDoneMenu flag
-		if ( gEvents[ uiNewEvent ].fDoneMenu == TRUE  )
+		if (gEvents[uiNewEvent].fDoneMenu)
 		{
 			if (gCurrentUIMode == MENU_MODE || gCurrentUIMode == LOOKCURSOR_MODE)
 			{
@@ -4627,11 +4627,8 @@ BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* pSoldier, BOOLEAN fGive, BOOLEAN f
 	// Alright, let's do something special here for robot...
 	if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
 	{
-		if ( fValidGuy == TRUE && !fGive )
-		{
-			// Can't talk to robots!
-			fValidGuy = FALSE;
-		}
+		// Can't talk to robots!
+		if (!fGive) fValidGuy = FALSE;
 	}
 
 	// OK, check if they are stationary or not....

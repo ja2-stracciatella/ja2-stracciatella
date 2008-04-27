@@ -3136,9 +3136,8 @@ INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY )
 {
 	BOOLEAN fSamSiteUnderControl = FALSE;
 
-
 	// is this sector a SAM sector?
-	if( IsThisSectorASAMSector( sX, sY, 0 ) == TRUE )
+	if (IsThisSectorASAMSector(sX, sY, 0))
 	{
 		// is it under control by the player
 		if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyControlled)
@@ -3195,7 +3194,7 @@ void UpdateAirspaceControl( void )
 	// check if currently selected arrival sector still has secure airspace
 
 	// if it's not enemy air controlled
-	if ( StrategicMap[ CALCULATE_STRATEGIC_INDEX( gsMercArriveSectorX, gsMercArriveSectorY ) ].fEnemyAirControlled == TRUE )
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(gsMercArriveSectorX, gsMercArriveSectorY)].fEnemyAirControlled)
 	{
 		// NOPE!
 		CHAR16 sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];

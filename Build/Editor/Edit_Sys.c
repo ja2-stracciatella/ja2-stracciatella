@@ -1047,7 +1047,7 @@ void RaiseWorldLand( )
 	// now check along x=159, y=80 to x=80, y=0
 	for (cnt=( ( WORLD_COLS * WORLD_ROWS ) - ( WORLD_ROWS / 2 ) * ( WORLD_ROWS - 2 ) - 1 ); cnt >WORLD_ROWS-1 ; cnt-=(WORLD_ROWS+1))
 	{
-		if( fAboutToRaise == TRUE )
+		if (fAboutToRaise)
 		{
 			fRaiseSet=TRUE;
 			fAboutToRaise = FALSE;

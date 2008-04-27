@@ -461,7 +461,7 @@ void HandleEmail( void )
 	// handle buttons states
 	UpdateStatusOfNextPreviousButtons( );
 
-	if( fOpenMostRecentUnReadFlag == TRUE )
+	if (fOpenMostRecentUnReadFlag)
 	{
 		// enter email due to email icon on program panel
 		OpenMostRecentUnreadEmail( );
@@ -1264,9 +1264,8 @@ BOOLEAN DisplayNewMailBox( void )
 
 void ReDrawNewMailBox( void )
 {
-
 	// this function will check to see if the new mail region needs to be redrawn
-	if( fReDrawNewMailFlag == TRUE )
+	if (fReDrawNewMailFlag)
 	{
 		if( fNewMailFlag )
 		{
@@ -2641,7 +2640,7 @@ static void PreProcessEmail(Email* pMail)
 				}
 				// record get cut off?...end now
 
-				if( fGoingOffCurrentPage == TRUE )
+				if (fGoingOffCurrentPage)
 				{
 					pTempRecord = NULL;
 				}

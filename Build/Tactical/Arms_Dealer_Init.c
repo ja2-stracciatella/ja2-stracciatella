@@ -1783,7 +1783,7 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement( UINT8 ubArmsDealer, UINT
 {
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 );
 	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
-	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive == TRUE );
+	Assert(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive);
 
 	// wipe it out (turning off fActive)
 	memset( &( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ] ), 0, sizeof( DEALER_SPECIAL_ITEM ) );

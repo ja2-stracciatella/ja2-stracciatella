@@ -328,7 +328,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		fMapPanelDirty = TRUE;
 		fMapScreenBottomDirty = TRUE;
 	}
-	else if (!fShowMapInventoryPool && fCreated == TRUE)
+	else if (!fShowMapInventoryPool && fCreated)
 	{
 
 		// check fi we are in fact leaving mapscreen
@@ -1355,7 +1355,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		giCompatibleItemBaseTime = 0;
 	}
 
-	if( fChangedInventorySlots == TRUE )
+	if (fChangedInventorySlots)
 	{
 		giCompatibleItemBaseTime = 0;
 		fChangedInventorySlots = FALSE;
@@ -1366,7 +1366,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 	{
 		giCompatibleItemBaseTime = GetJA2Clock( );
 
-		if( fItemWasHighLighted == TRUE )
+		if (fItemWasHighLighted)
 		{
 			fTeamPanelDirty = TRUE;
 			fMapPanelDirty = TRUE;

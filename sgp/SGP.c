@@ -49,7 +49,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
       switch(wParam)
       {
         case TRUE: // We are restarting DirectDraw
-          if (fRestore == TRUE)
+					if (fRestore)
           {
 #ifdef JA2
 	          RestoreVideoManager();

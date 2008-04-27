@@ -599,17 +599,17 @@ void RestoreBackgroundForAssignmentGlowRegionList( void )
 	// will restore the background region of the assignment list after a glow has ceased
 	// ( a _LOST_MOUSE reason to the assignment region mvt callback handler )
 
-	if( fShowAssignmentMenu == TRUE )
+	if (fShowAssignmentMenu)
 	{
 		// force update
 		ForceUpDateOfBox( ghAssignmentBox );
 		ForceUpDateOfBox( ghEpcBox );
 		ForceUpDateOfBox( ghRemoveMercAssignBox );
-		if( fShowSquadMenu == TRUE )
+		if (fShowSquadMenu)
 		{
 			ForceUpDateOfBox( ghSquadBox );
 		}
-		else if( fShowTrainingMenu == TRUE )
+		else if (fShowTrainingMenu)
 		{
 			ForceUpDateOfBox( ghTrainingBox );
 		}
@@ -724,7 +724,7 @@ void PlayGlowRegionSound( void )
 	if( uiSoundId != 0 )
 	{
 		// is sound playing?..don't play new one
-		if( SoundIsPlaying( uiSoundId ) == TRUE )
+		if (SoundIsPlaying(uiSoundId))
 		{
 			return;
 		}
@@ -888,17 +888,13 @@ void GoUpOneLevelInMap( void )
 
 void JumpToLevel( INT32 iLevel )
 {
-	if( gfPreBattleInterfaceActive == TRUE )
-	{
-		return;
-	}
+	if (gfPreBattleInterfaceActive) return;
 
 	// disable level-changes while in inventory pool (for keyboard equivalents!)
 	if( fShowMapInventoryPool )
 		return;
 
-
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -990,10 +986,8 @@ void HandleDisplayOfSelectedMercArrows( void )
 
 	if (GetSelectedInfoChar() == NULL) return;
 
-	if( fShowInventoryFlag == TRUE )
-	{
-		return;
-	}
+	if (fShowInventoryFlag) return;
+
 	// now blit one by the selected merc
 	sYPosition = Y_START+( bSelectedInfoChar * ( Y_SIZE + 2 ) ) - 1;
 
@@ -1012,7 +1006,7 @@ void HandleDisplayOfSelectedMercArrows( void )
 		if (s == NULL) continue;
 
 		// are they in the selected list or int he same mvt group as this guy
-		if (IsEntryInSelectedListSet(ubCount) == TRUE ||
+		if (IsEntryInSelectedListSet(ubCount) ||
 				(bSelectedDestChar != -1 && s->ubGroupID != 0 && gCharactersList[bSelectedDestChar].merc->ubGroupID == s->ubGroupID))
 		{
 			sYPosition = Y_START+( ubCount * ( Y_SIZE + 2) ) - 1;
@@ -1055,7 +1049,7 @@ void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
 			CreateScreenMaskForInventoryPoolPopUp( );
 		}
 	}
-	else if (fWasInited == TRUE && !fMapInventoryPoolInited)
+	else if (fWasInited && !fMapInventoryPoolInited)
 	{
 		fWasInited = FALSE;
 
@@ -1812,13 +1806,9 @@ void GoToNextCharacterInList( void )
 {
 	INT32 iCounter = 0, iCount = 0;
 
+	if (fShowDescriptionFlag) return;
 
-	if( fShowDescriptionFlag == TRUE )
-	{
-		return;
-	}
-
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -1860,13 +1850,9 @@ void GoToPrevCharacterInList( void )
 {
 	INT32 iCounter = 0, iCount = 0;
 
+	if (fShowDescriptionFlag) return;
 
-	if( fShowDescriptionFlag == TRUE )
-	{
-		return;
-	}
-
-	if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		AbortMovementPlottingMode( );
 	}
@@ -2683,7 +2669,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	// not allowed for underground movement!
 	Assert( sSectorZ == 0 );
 
-	if (fShowMapScreenMovementList == TRUE && !fCreated)
+	if (fShowMapScreenMovementList && !fCreated)
 	{
 		fCreated = TRUE;
 
@@ -2693,7 +2679,7 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		CreateScreenMaskForMoveBox( );
   	fMapPanelDirty = TRUE;
 	}
-	else if (!fShowMapScreenMovementList && fCreated == TRUE)
+	else if (!fShowMapScreenMovementList && fCreated)
 	{
 		fCreated = FALSE;
 
@@ -2841,7 +2827,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 			if( pSoldierMovingList[ iCountB ] -> bAssignment == iSquadMovingList[ iCount ] )
 			{
 				// add mercs in squads
-				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
+				if (IsSoldierSelectedForMovement(pSoldierMovingList[iCountB]))
 				{
 					swprintf( sString, lengthof(sString), L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
@@ -2868,7 +2854,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 			if( ( pSoldierMovingList[ iCountB ] -> bAssignment == VEHICLE ) &&( pSoldierMovingList[ iCountB ] -> iVehicleId == iVehicleMovingList[ iCount ] ) )
 			{
 				// add mercs in vehicles
-				if( IsSoldierSelectedForMovement( pSoldierMovingList[ iCountB ] ) == TRUE )
+				if (IsSoldierSelectedForMovement(pSoldierMovingList[iCountB]))
 				{
 					swprintf( sString, lengthof(sString), L"   *%ls*", pSoldierMovingList[ iCountB ]->name );
 				}
@@ -3092,7 +3078,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if( iRegionType == SQUAD_REGION )
 			{
 				// is the squad moving
-				if( fSquadIsMoving[ iListIndex ] == TRUE )
+				if (fSquadIsMoving[iListIndex])
 				{
 					// squad stays
 					DeselectSquadForMovement( iSquadMovingList[ iListIndex ] );
@@ -3106,7 +3092,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			else if( iRegionType == VEHICLE_REGION )
 			{
 				// is the vehicle moving
-				if( fVehicleIsMoving[ iListIndex ] == TRUE )
+				if (fVehicleIsMoving[iListIndex])
 				{
 					// vehicle stays
 					DeselectVehicleForMovement( iVehicleMovingList[ iListIndex ] );
@@ -3119,7 +3105,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 			else if( iRegionType == OTHER_REGION )
 			{
-				if( AllOtherSoldiersInListAreSelected( ) == TRUE )
+				if (AllOtherSoldiersInListAreSelected())
 				{
 					// deselect all others in the list
 					DeselectAllOtherSoldiersInList( );
@@ -3424,7 +3410,7 @@ static void HandleSettingTheSelectedListOfMercs(void)
 		if( fSelected )
 		{
 			// yes, are they the first one to be selected?
-			if( fFirstOne == TRUE )
+			if (fFirstOne)
 			{
 				// yes, then set them as the destination plotting character for movement arrow purposes
 				fFirstOne = FALSE;
@@ -3582,7 +3568,7 @@ void CreateScreenMaskForMoveBox( void )
 
 void RemoveScreenMaskForMoveBox( void )
 {
-	if( fScreenMaskForMoveCreated == TRUE )
+	if (fScreenMaskForMoveCreated)
 	{
 		// remove the screen mask
 		MSYS_RemoveRegion( &gMoveBoxScreenMask );
@@ -3953,7 +3939,7 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if (fShowUpdateBox == TRUE && !fCreated)
+	if (fShowUpdateBox && !fCreated)
 	{
 		// set to created
 		fCreated = TRUE;
@@ -3966,7 +3952,7 @@ static void CreateDestroyUpdatePanelButtons(INT32 iX, INT32 iY, BOOLEAN fFourWid
 		MakeButton(0, x,                                 iY, ContinueUpdateButtonCallback, pUpdatePanelButtons[0], gzLateLocalizedString[51]);
 		MakeButton(1, x + TACT_UPDATE_MERC_FACE_X_WIDTH, iY, StopUpdateButtonCallback,     pUpdatePanelButtons[1], gzLateLocalizedString[52]);
 	}
-	else if (!fShowUpdateBox && fCreated == TRUE)
+	else if (!fShowUpdateBox && fCreated)
 	{
 		// set to uncreated
 		fCreated = FALSE;
@@ -3985,9 +3971,8 @@ void CreateDestroyTheUpdateBox( void )
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if (!fCreated && fShowUpdateBox == TRUE)
+	if (!fCreated && fShowUpdateBox)
 	{
-
 		if( GetNumberOfMercsInUpdateList( ) == 0 )
 		{
 			fShowUpdateBox = FALSE;
@@ -4010,7 +3995,7 @@ void CreateDestroyTheUpdateBox( void )
 		// Do beep
 		PlayJA2SampleFromFile("Sounds/newbeep.wav", MIDVOLUME, 1, MIDDLEPAN);
 	}
-	else if (fCreated == TRUE && !fShowUpdateBox)
+	else if (fCreated && !fShowUpdateBox)
 	{
 		fCreated = FALSE;
 
@@ -4204,7 +4189,7 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 {
 	static BOOLEAN fCreated = FALSE;
 
-	if (!fCreated && fCreate == TRUE)
+	if (!fCreated && fCreate)
 	{
 		MSYS_DefineRegion( &gContractIconRegion, CHAR_ICON_X, CHAR_ICON_CONTRACT_Y, CHAR_ICON_X + CHAR_ICON_WIDTH, CHAR_ICON_CONTRACT_Y + CHAR_ICON_HEIGHT,
 						 MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
@@ -4217,7 +4202,7 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 
 		fCreated = TRUE;
 	}
-	else if (fCreated == TRUE && !fCreate)
+	else if (fCreated && !fCreate)
 	{
 		MSYS_RemoveRegion( &gContractIconRegion );
 		MSYS_RemoveRegion( &gInsuranceIconRegion );
@@ -4373,7 +4358,7 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 	// grab sector value
 	sSector = sSectorX + MAP_WORLD_X * sSectorY;
 
-	if( StrategicMap[ sSector ].fEnemyControlled == TRUE )
+	if (StrategicMap[sSector].fEnemyControlled)
 	{
 		// enemy controlled any ways, leave
 		return;

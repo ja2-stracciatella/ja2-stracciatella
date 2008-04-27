@@ -1224,7 +1224,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 	const GridNo usMapPos = GetMouseMapPos();
 
-  while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
   {
 		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
 

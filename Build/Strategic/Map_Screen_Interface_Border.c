@@ -205,7 +205,7 @@ void RenderMapBorderEtaPopUp( void )
 		return;
 	}
 
-	if( fPlotForHelicopter == TRUE )
+	if (fPlotForHelicopter)
 	{
 		DisplayDistancesForHelicopter( );
 		return;
@@ -540,7 +540,7 @@ static void MapBorderButtonOn(UINT8 ubBorderButtonIndex);
 
 void ToggleShowTownsMode( void )
 {
-	if( fShowTownFlag == TRUE )
+	if (fShowTownFlag)
 	{
 		fShowTownFlag = FALSE;
 		MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
@@ -550,19 +550,19 @@ void ToggleShowTownsMode( void )
 		fShowTownFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_TOWN_BTN );
 
-		if( fShowMineFlag == TRUE )
+		if (fShowMineFlag)
 		{
 			fShowMineFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 		}
 
-		if( fShowAircraftFlag == TRUE )
+		if (fShowAircraftFlag)
 		{
 			fShowAircraftFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
-		if( fShowItemsFlag == TRUE )
+		if (fShowItemsFlag)
 		{
 			fShowItemsFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
@@ -575,7 +575,7 @@ void ToggleShowTownsMode( void )
 
 void ToggleShowMinesMode( void )
 {
-	if( fShowMineFlag == TRUE )
+	if (fShowMineFlag)
 	{
 		fShowMineFlag = FALSE;
 		MapBorderButtonOff( MAP_BORDER_MINE_BTN );
@@ -585,19 +585,19 @@ void ToggleShowMinesMode( void )
 		fShowMineFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_MINE_BTN );
 
-		if( fShowTownFlag == TRUE )
+		if (fShowTownFlag)
 		{
 			fShowTownFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
-		if( fShowAircraftFlag == TRUE )
+		if (fShowAircraftFlag)
 		{
 			fShowAircraftFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
-		if( fShowItemsFlag == TRUE )
+		if (fShowItemsFlag)
 		{
 			fShowItemsFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
@@ -613,7 +613,7 @@ static BOOLEAN DoesPlayerHaveAnyMilitia(void);
 
 void ToggleShowMilitiaMode( void )
 {
-	if( fShowMilitia == TRUE )
+	if (fShowMilitia)
 	{
 		fShowMilitia = FALSE;
 		MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
@@ -625,7 +625,7 @@ void ToggleShowMilitiaMode( void )
 		MapBorderButtonOn( MAP_BORDER_MILITIA_BTN );
 
 		// if Team is ON, turn it OFF
-		if( fShowTeamFlag == TRUE )
+		if (fShowTeamFlag)
 		{
 			fShowTeamFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
@@ -633,14 +633,14 @@ void ToggleShowMilitiaMode( void )
 
 /*
 		// if Airspace is ON, turn it OFF
-		if( fShowAircraftFlag == TRUE )
+		if (fShowAircraftFlag)
 		{
 			fShowAircraftFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 */
 
-		if ( fShowItemsFlag == TRUE )
+		if (fShowItemsFlag)
 		{
 			fShowItemsFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
@@ -676,7 +676,7 @@ void ToggleShowMilitiaMode( void )
 
 void ToggleShowTeamsMode( void )
 {
-	if( fShowTeamFlag == TRUE )
+	if (fShowTeamFlag)
 	{
 		// turn show teams OFF
 		fShowTeamFlag = FALSE;
@@ -696,13 +696,13 @@ void ToggleShowTeamsMode( void )
 
 void ToggleAirspaceMode( void )
 {
-	if( fShowAircraftFlag == TRUE )
+	if (fShowAircraftFlag)
 	{
 		// turn airspace OFF
 		fShowAircraftFlag = FALSE;
 		MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 
-		if( fPlotForHelicopter == TRUE )
+		if (fPlotForHelicopter)
 		{
 			AbortMovementPlottingMode( );
 		}
@@ -724,7 +724,7 @@ static void TurnOnItemFilterMode(void);
 
 void ToggleItemsFilter( void )
 {
-	if( fShowItemsFlag == TRUE )
+	if (fShowItemsFlag)
 	{
 		// turn items OFF
 		fShowItemsFlag = FALSE;
@@ -885,7 +885,7 @@ void HandleMapScrollButtonStates( void )
 	// if underground, don't want zoom in
 	if( iCurrentMapSectorZ )
 	{
-		if( fZoomFlag == TRUE )
+		if (fZoomFlag)
 		{
 			fZoomFlag = FALSE;
 			fMapPanelDirty = TRUE;
@@ -1054,21 +1054,21 @@ void TurnOnShowTeamsMode( void )
 		fShowTeamFlag = TRUE;
 		MapBorderButtonOn( MAP_BORDER_TEAMS_BTN );
 
-		if( fShowMilitia == TRUE )
+		if (fShowMilitia)
 		{
 			fShowMilitia = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 		}
 
 /*
-		if( fShowAircraftFlag == TRUE )
+		if (fShowAircraftFlag)
 		{
 			fShowAircraftFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 */
 
-		if( fShowItemsFlag == TRUE )
+		if (fShowItemsFlag)
 		{
 			fShowItemsFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
@@ -1094,13 +1094,13 @@ void TurnOnAirSpaceMode( void )
 
 
 		// Turn off towns & mines (mostly because town/mine names overlap SAM site names)
-		if( fShowTownFlag == TRUE )
+		if (fShowTownFlag)
 		{
 			fShowTownFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
-		if( fShowMineFlag == TRUE )
+		if (fShowMineFlag)
 		{
 			fShowMineFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
@@ -1108,13 +1108,13 @@ void TurnOnAirSpaceMode( void )
 
 /*
 		// Turn off teams and militia
-		if( fShowTeamFlag == TRUE )
+		if (fShowTeamFlag)
 		{
 			fShowTeamFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 		}
 
-		if( fShowMilitia == TRUE )
+		if (fShowMilitia)
 		{
 			fShowMilitia = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
@@ -1122,7 +1122,7 @@ void TurnOnAirSpaceMode( void )
 */
 
 		// Turn off items
-		if( fShowItemsFlag == TRUE )
+		if (fShowItemsFlag)
 		{
 			fShowItemsFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_ITEM_BTN );
@@ -1160,37 +1160,37 @@ static void TurnOnItemFilterMode(void)
 
 
 		// Turn off towns, mines, teams, militia & airspace if any are on
-		if( fShowTownFlag == TRUE )
+		if (fShowTownFlag)
 		{
 			fShowTownFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TOWN_BTN );
 		}
 
-		if( fShowMineFlag == TRUE )
+		if (fShowMineFlag)
 		{
 			fShowMineFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MINE_BTN );
 		}
 
-		if( fShowTeamFlag == TRUE )
+		if (fShowTeamFlag)
 		{
 			fShowTeamFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_TEAMS_BTN );
 		}
 
-		if( fShowMilitia == TRUE )
+		if (fShowMilitia)
 		{
 			fShowMilitia = FALSE;
 			MapBorderButtonOff( MAP_BORDER_MILITIA_BTN );
 		}
 
-		if( fShowAircraftFlag == TRUE )
+		if (fShowAircraftFlag)
 		{
 			fShowAircraftFlag = FALSE;
 			MapBorderButtonOff( MAP_BORDER_AIRSPACE_BTN );
 		}
 
-		if( ( bSelectedDestChar != -1 ) || ( fPlotForHelicopter == TRUE ) )
+		if (bSelectedDestChar != -1 || fPlotForHelicopter)
 		{
 			AbortMovementPlottingMode( );
 		}

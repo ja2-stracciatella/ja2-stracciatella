@@ -3405,7 +3405,7 @@ static void TempHandleAimMemberKeyBoardInput(void)
 {
 	InputAtom					InputEvent;
 
-	while (DequeueEvent(&InputEvent) == TRUE)
+	while (DequeueEvent(&InputEvent))
 	{//!HandleTextInput( &InputEvent ) &&
 		if( InputEvent.usEvent == KEY_DOWN )
 		{

@@ -4213,7 +4213,7 @@ void CommonEnterCombatModeCode( )
 			CheckForPotentialAddToBattleIncrement( pSoldier );
 
 			// If guy is sleeping, wake him up!
-			if ( pSoldier->fMercAsleep == TRUE )
+			if (pSoldier->fMercAsleep)
 			{
 				ChangeSoldierState( pSoldier, WKAEUP_FROM_SLEEP, 1, TRUE );
 			}
@@ -4732,7 +4732,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		fBattleWon = FALSE;
 	}
 
-	if ( CheckForLosingEndOfBattle( ) == TRUE )
+	if (CheckForLosingEndOfBattle())
 	{
 		fBattleLost = TRUE;
 	}

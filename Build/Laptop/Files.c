@@ -246,7 +246,7 @@ void EnterFiles(void)
   RenderFiles( );
 
 	// entered due to icon
-	if( fEnteredFileViewerFromNewFileIcon == TRUE )
+	if (fEnteredFileViewerFromNewFileIcon)
 	{
 	  OpenFirstUnreadFile( );
 		fEnteredFileViewerFromNewFileIcon = FALSE;
@@ -882,7 +882,7 @@ static BOOLEAN HandleSpecialFiles(void)
 		}
 
 		// going over the edge, stop now
-		if( fGoingOffCurrentPage == TRUE )
+		if (fGoingOffCurrentPage)
 		{
 			pTempString = NULL;
 		}
@@ -1058,7 +1058,7 @@ static void HandleFileViewerButtonStates(void)
 
 
 	// turn off next page button
-	if( fOnLastFilesPageFlag == TRUE )
+	if (fOnLastFilesPageFlag)
 	{
 		DisableButton( giFilesPageButtons[ 1 ] );
 		ButtonList[ giFilesPageButtons[ 1 ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
@@ -1335,7 +1335,7 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			}
 
 			// going over the edge, stop now
-			if( fGoingOffCurrentPage == TRUE )
+			if (fGoingOffCurrentPage)
 			{
 				pTempString = NULL;
 			}

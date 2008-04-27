@@ -485,7 +485,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 
 		EnterTacticalScreen( );
 
-		if( gfAtLeastOneMercWasHired == TRUE )
+		if (gfAtLeastOneMercWasHired)
 		{
 			gubScreenCount = 3;
 		}

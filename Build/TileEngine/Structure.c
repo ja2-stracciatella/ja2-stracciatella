@@ -1676,7 +1676,7 @@ void DebugStructurePage1( void )
 		UINT8 bDens1;
 		UINT8 bDens2;
 		UINT8 bDens3;
-		if (StructureDensity( pStructure, &bDens0, &bDens1, &bDens2, &bDens3 ) == TRUE)
+		if (StructureDensity(pStructure, &bDens0, &bDens1, &bDens2, &bDens3))
 		{
 			gprintf( 0, LINE_HEIGHT * 3, L"Structure fill %d%%/%d%%/%d%%/%d%% density %d", bDens0, bDens1, bDens2, bDens3,
 				pStructure->pDBStructureRef->pDBStructure->ubDensity );

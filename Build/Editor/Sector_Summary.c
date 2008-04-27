@@ -2017,7 +2017,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderSummary = TRUE;
-		if( gubOverrideStatus == INACTIVE || gfOverride == TRUE )
+		if (gubOverrideStatus == INACTIVE || gfOverride)
 		{
 			if( gubOverrideStatus == READONLY )
 			{

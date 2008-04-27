@@ -244,7 +244,7 @@ void RenderRadarScreen( )
 		return;
 	}
 
-	if( AreInMeanwhile( ) == TRUE )
+	if (AreInMeanwhile())
 	{
 		// in a meanwhile, don't render any map
 		ClearOutRadarMapImage();
@@ -330,7 +330,7 @@ void RenderRadarScreen( )
 		gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
 	}
 
-	if( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( fShowMapInventoryPool == TRUE ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
 	{
 		for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 		{
@@ -458,8 +458,7 @@ void RenderRadarScreen( )
 	}
 	UnLockVideoSurface( FRAME_BUFFER );
 
-
-	if( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( fShowMapInventoryPool == TRUE ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
 	{
 		InvalidateRegion( RADAR_WINDOW_X, gsRadarY,
 										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
@@ -633,7 +632,7 @@ static void RenderSquadList(void)
 			}
 			else
 			{
-				if( IsSquadOnCurrentTacticalMap( ( INT32 ) sCounter ) == TRUE )
+				if (IsSquadOnCurrentTacticalMap(sCounter))
 				{
 					if( CurrentSquad( ) == ( INT32 ) sCounter )
 					{
@@ -673,7 +672,7 @@ static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( IsSquadOnCurrentTacticalMap( iValue ) == TRUE )
+		if (IsSquadOnCurrentTacticalMap(iValue))
 		{
 			sSelectedSquadLine = ( INT16 )iValue;
 		}
@@ -695,7 +694,7 @@ static void TacticalSquadListBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// find out if this squad is valid and on this map..if so, set as selected
-		if( IsSquadOnCurrentTacticalMap( iValue ) == TRUE )
+		if (IsSquadOnCurrentTacticalMap(iValue))
 		{
 			// ok, squad is here, set as selected
 			SetCurrentSquad( iValue, FALSE );

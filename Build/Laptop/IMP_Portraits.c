@@ -82,9 +82,8 @@ void ExitIMPPortraits( void )
 
 void HandleIMPPortraits( void )
 {
-
 	// do we need to re write screen
-	if ( fReDrawPortraitScreenFlag == TRUE )
+	if (fReDrawPortraitScreenFlag)
 	{
     RenderIMPPortraits( );
 

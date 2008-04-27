@@ -2387,7 +2387,7 @@ static UINT32 WaitForHelpScreenResponse(void)
 
 	fLeaveScreen = FALSE;
 
-	while (DequeueEvent(&DummyEvent) == TRUE)
+	while (DequeueEvent(&DummyEvent))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
@@ -2427,7 +2427,7 @@ static UINT32 WaitForSelectionWindowResponse(void)
 {
   InputAtom DummyEvent;
 
-	while (DequeueEvent(&DummyEvent) == TRUE)
+	while (DequeueEvent(&DummyEvent))
 	{
 		if ( DummyEvent.usEvent == KEY_DOWN )
 		{
