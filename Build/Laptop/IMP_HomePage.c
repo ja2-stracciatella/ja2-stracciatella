@@ -348,8 +348,7 @@ static void ProcessPlayerInputActivationString(void)
 {
   // prcess string to see if it matches activation string
 	if ((wcscmp(pPlayerActivationString, L"XEP624") == 0 || wcscmp(pPlayerActivationString, L"xep624") == 0) &&
-			!LaptopSaveInfo.fIMPCompletedFlag &&
-			LaptopSaveInfo.gfNewGameLaptop < 2)
+			!LaptopSaveInfo.fIMPCompletedFlag)
 	{
 	  iCurrentImpPage = IMP_MAIN_PAGE;
 	}
