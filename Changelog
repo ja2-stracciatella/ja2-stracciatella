@@ -1,3 +1,4 @@
+(r3914) Fix a bug in r2162, which could cause less militia to appear in a sector than there should.
 (r3908) Fix a vanilla bug, which prevented the army from attacking San Mona, when the player has defense in Grumm.
 
 v0.9 - 2008-04-22 - Blueberry

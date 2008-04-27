@@ -1338,7 +1338,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 	//detailed placements and classes.
 	FOR_ALL_SOLDIERINITNODES(curr)
 	{
-		if (ubFreeSlots == 0 || ubMaxNum == 0)
+		if (ubFreeSlots == 0 || ubMaxNum == 0) break;
 		if( !curr->pSoldier && (curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == MILITIA_TEAM) )
 		{
 			//Randomly determine if we will use this slot; the more available slots in proportion to
