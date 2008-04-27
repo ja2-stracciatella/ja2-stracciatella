@@ -160,7 +160,7 @@ void PrintImpText(void)
 			LoadAndDisplayIMPText(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y + 7, sWidth, IMP_ATTRIB_1 - 1, FONT14ARIAL, FONT_WHITE, TRUE, CENTER_JUSTIFIED);
 
 			// don't blit bonus if reviewing
-			if (fReviewStats != TRUE)
+			if (!fReviewStats)
 			{
 				LoadAndDisplayIMPText(LAPTOP_SCREEN_UL_X + 355, LAPTOP_SCREEN_WEB_UL_Y + 51, 640, IMP_ATTRIB_SA_2 - 1, FONT12ARIAL, FONT_WHITE, TRUE, 0);
 				LoadAndDisplayIMPText(LAPTOP_SCREEN_UL_X +  56, LAPTOP_SCREEN_WEB_UL_Y + 33, 240, IMP_ATTRIB_SA_15,    FONT10ARIAL, FONT_WHITE, TRUE, 0);

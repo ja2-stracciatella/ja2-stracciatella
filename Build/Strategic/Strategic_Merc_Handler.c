@@ -614,7 +614,9 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfile);
 	if ( pSoldier != NULL )
 	{
-		if ( pSoldier->bLife >= OKLIFE && pSoldier->fMercAsleep != TRUE && pSoldier->bAssignment < ON_DUTY )
+		if (!pSoldier->fMercAsleep          &&
+				pSoldier->bLife       >= OKLIFE &&
+				pSoldier->bAssignment <  ON_DUTY)
 		{
 			//ATE: Double check that this problem still exists!
 			if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )

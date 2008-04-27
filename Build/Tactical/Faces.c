@@ -1068,7 +1068,7 @@ BOOLEAN RenderAutoFace(FACETYPE* const pFace)
 	CHECKF(pFace->fAllocated);
 
 	// Check for disabled guy!
-	CHECKF( pFace->fDisabled != TRUE );
+	CHECKF(!pFace->fDisabled);
 
 	SetFaceShade(pFace, FALSE);
 

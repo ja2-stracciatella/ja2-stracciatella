@@ -714,9 +714,9 @@ void HourlyMoraleUpdate( void )
 	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
 	{
 		//if the merc is active, in Arulco, and conscious, not POW
-		if (pSoldier->ubProfile   != NO_PROFILE &&
-				pSoldier->bAssignment != IN_TRANSIT &&
-				pSoldier->fMercAsleep != TRUE &&
+		if (pSoldier->ubProfile   != NO_PROFILE      &&
+				!pSoldier->fMercAsleep                   &&
+				pSoldier->bAssignment != IN_TRANSIT      &&
 				pSoldier->bAssignment != ASSIGNMENT_DEAD &&
 				pSoldier->bAssignment != ASSIGNMENT_POW)
 		{
@@ -746,10 +746,10 @@ void HourlyMoraleUpdate( void )
 			CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
 			{
 				// skip past ourselves and all inactive mercs
-				if (pOtherSoldier              != pSoldier &&
-						pOtherSoldier->ubProfile   != NO_PROFILE &&
-						pOtherSoldier->bAssignment != IN_TRANSIT &&
-						pOtherSoldier->fMercAsleep != TRUE &&
+				if (pOtherSoldier              != pSoldier        &&
+						pOtherSoldier->ubProfile   != NO_PROFILE      &&
+						!pOtherSoldier->fMercAsleep                   &&
+						pOtherSoldier->bAssignment != IN_TRANSIT      &&
 						pOtherSoldier->bAssignment != ASSIGNMENT_DEAD &&
 						pOtherSoldier->bAssignment != ASSIGNMENT_POW)
 				{

@@ -771,7 +771,7 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 			if (s->sSectorX == gWorldSectorX  &&
 					s->sSectorY == gWorldSectorY  &&
 					s->bSectorZ == gbWorldSectorZ &&
-					s->fBetweenSectors != TRUE)
+					!s->fBetweenSectors)
 			{
 				return( TRUE );
 			}

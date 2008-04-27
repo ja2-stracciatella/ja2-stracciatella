@@ -222,7 +222,7 @@ void ExitAimPolicies()
 
 void HandleAimPolicies()
 {
-	if( (gfAimPolicyMenuBarLoaded != TRUE) && gubCurPageNum != 0)
+	if (!gfAimPolicyMenuBarLoaded && gubCurPageNum != 0)
 	{
 		InitAimPolicyMenuBar();
 //		RenderAimPolicies();

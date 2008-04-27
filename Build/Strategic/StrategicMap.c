@@ -786,7 +786,7 @@ static void HandleRPCDescriptionOfSector(INT16 sSectorX, INT16 sSectorY, INT16 s
 
 
 	// OK, if the first time in...
-	if ( GetSectorFlagStatus( sSectorX, sSectorY, ( UINT8 )sSectorZ, SF_HAVE_USED_GUIDE_QUOTE ) != TRUE )
+	if (!GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_HAVE_USED_GUIDE_QUOTE))
 	{
 		if ( sSectorZ != 0 )
 		{
