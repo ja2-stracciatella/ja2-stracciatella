@@ -601,18 +601,21 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 			// Else, try to place here
 			if (PlaceObjectInInventoryStash(&slot->o, gpItemPointer))
 			{
-				// set as reachable and set gridno
-				slot->usFlags |= WORLD_ITEM_REACHABLE;
-
 				// nothing here before, then place here
 				if (iOldNumberOfObjects == 0)
 				{
+					slot->sGridNo                  = sObjectSourceGridNo;
+					slot->ubLevel                  = s->bLevel;
+					slot->usFlags                  = 0;
+					slot->bRenderZHeightAboveLevel = 0;
+
 					if (sObjectSourceGridNo == NOWHERE)
 					{
 						slot->usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 					}
-					slot->sGridNo = sObjectSourceGridNo;
 				}
+
+				slot->usFlags |= WORLD_ITEM_REACHABLE;
 
 				// Check if it's the same now!
 				if (gpItemPointer->ubNumberOfObjects == 0)
