@@ -2289,33 +2289,14 @@ void HandleTopMessages(void)
 }
 
 
-void EndTopMessage( )
+void EndTopMessage(void)
 {
-	// OK, end the topmost message!
-	if ( gTacticalStatus.fInTopMessage )
-	{
-		SGPRect SrcRect;
+	if (!gTacticalStatus.fInTopMessage) return;
 
-		// We are....
-		// Re-render our strip and then copy to the save buffer...
-		gsVIEWPORT_WINDOW_START_Y = 0;
-		gTacticalStatus.fInTopMessage = FALSE;
+	gsVIEWPORT_WINDOW_START_Y     = 0;
+	gTacticalStatus.fInTopMessage = FALSE;
 
-		SetRenderFlags( RENDER_FLAG_FULL );
-		//RenderStaticWorldRect(0, 0, SCREEN_WIDTH, 20, TRUE);
-		//gsVIEWPORT_WINDOW_START_Y = 20;
-
-		// Copy into save buffer...
-		//SrcRect.iLeft   =  0;
-		//SrcRect.iTop    =  0;
-		//SrcRect.iRight  = SCREEN_WIDTH;
-		//SrcRect.iBottom = 20;
-		//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
-
-		// Handle first frame now...
-		// HandleTopMessages( );
-
-	}
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
