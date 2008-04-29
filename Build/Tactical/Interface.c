@@ -2171,39 +2171,6 @@ static void CreateTopMessage(void)
 }
 
 
-static void TurnExpiredCallBack(UINT8 bExitValue)
-{
-	// End turn...
-	UIHandleEndTurn( NULL );
-}
-
-
-static void CheckForAndHandleEndPlayerTimeLimit(void)
-{
-	if ( gTacticalStatus.fInTopMessage )
-	{
-		if ( gGameOptions.fTurnTimeLimit )
-		{
-			if ( gTacticalStatus.ubTopMessageType == PLAYER_TURN_MESSAGE || gTacticalStatus.ubTopMessageType == PLAYER_INTERRUPT_MESSAGE )
-			{
-				 if ( gTacticalStatus.usTactialTurnLimitCounter == ( gTacticalStatus.usTactialTurnLimitMax - 1 ) )
-				 {
-						// ATE: increase this so that we don't go into here again...
-						gTacticalStatus.usTactialTurnLimitCounter++;
-
-						// OK, set message that time limit has expired....
-						//DoMessageBox( MSG_BOX_BASIC_STYLE, L"Turn has Expired!", GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, TurnExpiredCallBack, NULL );
-
-						// End turn...
-						UIHandleEndTurn( NULL );
-
-				 }
-			}
-		}
-	}
-}
-
-
 void HandleTopMessages(void)
 {
 	TacticalStatusType* const ts = &gTacticalStatus;
@@ -2291,8 +2258,9 @@ void HandleTopMessages(void)
 					// Have we reached max?
 					if (ts->usTactialTurnLimitCounter == ts->usTactialTurnLimitMax - 1)
 					{
-						// IF we are not in lock ui mode....
-						CheckForAndHandleEndPlayerTimeLimit();
+						// ATE: increase this so that we don't go into here again...
+						++ts->usTactialTurnLimitCounter;
+						UIHandleEndTurn(NULL);
 					}
 				}
 			}
