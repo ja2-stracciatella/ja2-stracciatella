@@ -1142,7 +1142,7 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 	gTacticalStatus.ubAttackBusyCount++;
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Starting attack AIR RAID, attack count now %d", gTacticalStatus.ubAttackBusyCount) );
 
-	AddTopMessage( AIR_RAID_TURN_MESSAGE, TacticalStr[ AIR_RAID_TURN_STR ] );
+	AddTopMessage(AIR_RAID_TURN_MESSAGE);
 
 	// OK, handle some sound effects, depending on the mode we are in...
 	if ( ( gTacticalStatus.uiFlags & INCOMBAT ) )

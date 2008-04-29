@@ -2048,13 +2048,12 @@ void EndUIMessage( )
 static void CreateTopMessage();
 
 
-void AddTopMessage(const UINT8 ubType, const wchar_t* const pzString)
+void AddTopMessage(const MESSAGE_TYPES ubType)
 {
 	gTopMessage.fCreated = TRUE;
 
 	gTacticalStatus.ubTopMessageType = ubType;
 	gTacticalStatus.fInTopMessage    = TRUE;
-	wcscpy(gTacticalStatus.zTopMessageString, pzString);
 
 	CreateTopMessage();
 }
@@ -2062,7 +2061,8 @@ void AddTopMessage(const UINT8 ubType, const wchar_t* const pzString)
 
 static void CreateTopMessage(void)
 {
-	SGPVSurface* const dst = gTopMessage.uiSurface;
+	const TacticalStatusType* const ts  = &gTacticalStatus;
+	SGPVSurface*              const dst = gTopMessage.uiSurface;
 
 	SetFontDestBuffer(dst, 0, 0, SCREEN_WIDTH, 20);
 	SetFont(TINYFONT1);
@@ -2071,7 +2071,7 @@ static void CreateTopMessage(void)
 	const char* bar_file;
 	UINT16      bar_gfx     = 0;
 	BOOLEAN	    fDoLimitBar = FALSE;
-	switch (gTacticalStatus.ubTopMessageType)
+	switch (ts->ubTopMessageType)
 	{
 		case COMPUTER_TURN_MESSAGE:
 		case COMPUTER_INTERRUPT_MESSAGE:
@@ -2112,8 +2112,7 @@ static void CreateTopMessage(void)
 
 	BltVideoObject(dst, bar_vo, bar_gfx, 0, 0);
 
-	const SGPBox*             const bar = &g_progress_bar_box;
-	const TacticalStatusType* const ts  = &gTacticalStatus;
+	const SGPBox* const bar = &g_progress_bar_box;
 	if (fDoLimitBar)
 	{
 		INT32 bar_x = bar->x;
@@ -2139,11 +2138,31 @@ static void CreateTopMessage(void)
 
 	DeleteVideoObject(bar_vo);
 
+	const wchar_t* msg;
+	switch (ts->ubTopMessageType)
+	{
+		case COMPUTER_TURN_MESSAGE:
+		{
+			const UINT8 team = ts->ubCurrentTeam;
+			msg =
+				team == CREATURE_TEAM && HostileBloodcatsPresent() ? Message[STR_BLOODCATS_TURN] :
+				                                                     TeamTurnString[team];
+			break;
+		}
+
+		case COMPUTER_INTERRUPT_MESSAGE:
+		case PLAYER_INTERRUPT_MESSAGE:
+		case MILITIA_INTERRUPT_MESSAGE:  msg = Message[STR_INTERRUPT];             break;
+		case AIR_RAID_TURN_MESSAGE:      msg = TacticalStr[AIR_RAID_TURN_MESSAGE]; break;
+		case PLAYER_TURN_MESSAGE:        msg = TeamTurnString[OUR_TEAM];           break;
+
+		default: abort();
+	}
+
 	INT16 sX;
 	INT16 sY;
-	const wchar_t* const txt = ts->zTopMessageString;
-	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, txt, TINYFONT1, &sX, &sY);
-	mprintf(sX, sY, txt);
+	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, msg, TINYFONT1, &sX, &sY);
+	mprintf(sX, sY, msg);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFontShadow(DEFAULT_SHADOW);
@@ -2201,7 +2220,7 @@ void HandleTopMessages( )
 		if ( !gTopMessage.fCreated )
 		{
 			gfTopMessageDirty = TRUE;
-			AddTopMessage( gTacticalStatus.ubTopMessageType, gTacticalStatus.zTopMessageString );
+			AddTopMessage(gTacticalStatus.ubTopMessageType);
 		}
 
 		if ( gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE ||
@@ -2390,15 +2409,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 
 	if ( !gGameOptions.fTurnTimeLimit )
 	{
-		if ( fInterrupt == TRUE )
-		{
-			AddTopMessage( PLAYER_INTERRUPT_MESSAGE, Message[STR_INTERRUPT] );
-		}
-		else
-		{
-			//EndTopMessage();
-			AddTopMessage( PLAYER_TURN_MESSAGE, TeamTurnString[0] );
-		}
+		AddTopMessage(fInterrupt == TRUE ? PLAYER_INTERRUPT_MESSAGE : PLAYER_TURN_MESSAGE);
 		return;
 	}
 
@@ -2440,15 +2451,7 @@ void InitPlayerUIBar( BOOLEAN fInterrupt )
 
 
 	// OK, set value
-	if ( fInterrupt != TRUE )
-	{
-		AddTopMessage( PLAYER_TURN_MESSAGE, TeamTurnString[0] );
-	}
-	else
-	{
-		AddTopMessage( PLAYER_INTERRUPT_MESSAGE, Message[STR_INTERRUPT] );
-	}
-
+	AddTopMessage(fInterrupt != TRUE ? PLAYER_TURN_MESSAGE : PLAYER_INTERRUPT_MESSAGE);
 }
 
 

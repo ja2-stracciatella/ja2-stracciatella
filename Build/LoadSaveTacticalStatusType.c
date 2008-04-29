@@ -7,7 +7,7 @@
 
 BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
 {
-#ifdef _WIN32
+#ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
 #else
 	BYTE data[360];
@@ -64,14 +64,13 @@ BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
 	EXTR_U16(d, s->usTactialTurnLimitCounter)
 	EXTR_BOOL(d, s->fInTopMessage)
 	EXTR_U8(d, s->ubTopMessageType)
-#ifdef _WIN32
-	EXTR_WSTR16(d, s->zTopMessageString, lengthof(s->zTopMessageString))
+#ifdef _WIN32 // XXX HACK000A
+	EXTR_SKIP(d, 40)
 #else
-	EXTR_SKIP(d, 2)
-	EXTR_WSTR32(d, s->zTopMessageString, lengthof(s->zTopMessageString))
+	EXTR_SKIP(d, 82)
 #endif
 	EXTR_U16(d, s->usTactialTurnLimitMax)
-#ifndef _WIN32
+#ifndef _WIN32 // XXX HACK000A
 	EXTR_SKIP(d, 2)
 #endif
 	EXTR_U32(d, s->uiTactialTurnLimitClock)
@@ -138,7 +137,7 @@ BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
 
 BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)
 {
-#ifdef _WIN32
+#ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
 #else
 	BYTE data[360];
@@ -193,14 +192,13 @@ BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)
 	INJ_U16(d, s->usTactialTurnLimitCounter)
 	INJ_BOOL(d, s->fInTopMessage)
 	INJ_U8(d, s->ubTopMessageType)
-#ifdef _WIN32
-	INJ_WSTR16(d, s->zTopMessageString, lengthof(s->zTopMessageString))
+#ifdef _WIN32 // XXX HACK000A
+	INJ_SKIP(d, 40)
 #else
-	INJ_SKIP(d, 2)
-	INJ_WSTR32(d, s->zTopMessageString, lengthof(s->zTopMessageString))
+	INJ_SKIP(d, 82)
 #endif
 	INJ_U16(d, s->usTactialTurnLimitMax)
-#ifndef _WIN32
+#ifndef _WIN32 // XXX HACK000A
 	INJ_SKIP(d, 2)
 #endif
 	INJ_U32(d, s->uiTactialTurnLimitClock)

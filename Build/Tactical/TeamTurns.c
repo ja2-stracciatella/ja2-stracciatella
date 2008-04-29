@@ -86,21 +86,6 @@ void ClearIntList( void )
 }
 
 
-static BOOLEAN BloodcatsPresent(void)
-{
-	if (!IsTeamActive(CREATURE_TEAM)) return FALSE;
-
-	CFOR_ALL_IN_TEAM(s, CREATURE_TEAM)
-	{
-		if (s->bInSector && s->bLife > 0 && s->ubBodyType == BLOODCAT)
-		{
-			return TRUE;
-		}
-	}
-
-	return( FALSE );
-}
-
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 {
 	// Start the turn of player charactors
@@ -312,12 +297,6 @@ static void EndTurnEvents(void)
 }
 
 
-static void SetTeamTurnMessage(const UINT8 team)
-{
-	AddTopMessage(COMPUTER_TURN_MESSAGE, team == CREATURE_TEAM && BloodcatsPresent() ? Message[STR_BLOODCATS_TURN] : TeamTurnString[team]);
-}
-
-
 void BeginTeamTurn( UINT8 ubTeam )
 {
 	while( 1 )
@@ -391,7 +370,7 @@ void BeginTeamTurn( UINT8 ubTeam )
 				{
 					// Dirty panel interface!
 					fInterfacePanelDirty = DIRTYLEVEL2;
-					SetTeamTurnMessage(ubTeam);
+					AddTopMessage(COMPUTER_TURN_MESSAGE);
 					StartNPCAI(s);
 					return;
 				}
@@ -436,14 +415,10 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	latest->fTurningFromPronePosition = FALSE;
 
 	// get rid of any old overlay message
-	if ( pSoldier->bTeam == MILITIA_TEAM )
-	{
-		AddTopMessage( MILITIA_INTERRUPT_MESSAGE, Message[ STR_INTERRUPT ] );
-	}
-	else
-	{
-		AddTopMessage( COMPUTER_INTERRUPT_MESSAGE, Message[ STR_INTERRUPT ] );
-	}
+	const MESSAGE_TYPES msg =
+		pSoldier->bTeam == MILITIA_TEAM ? MILITIA_INTERRUPT_MESSAGE:
+		                                  COMPUTER_INTERRUPT_MESSAGE;
+	AddTopMessage(msg);
 
 	gfHiddenInterrupt = FALSE;
 }
@@ -481,7 +456,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	{
 		// Dirty panel interface!
 		fInterfacePanelDirty = DIRTYLEVEL2;
-		SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
+		AddTopMessage(COMPUTER_TURN_MESSAGE);
 	}
 
 	// freeze the user's interface
@@ -634,7 +609,7 @@ static void StartInterrupt(void)
 		HandleTacticalUI( );
 
 		InitPlayerUIBar( TRUE );
-		//AddTopMessage( PLAYER_INTERRUPT_MESSAGE, Message[STR_INTERRUPT] );
+		//AddTopMessage(PLAYER_INTERRUPT_MESSAGE);
 
 		PlayJA2Sample(ENDTURN_1, MIDVOLUME, 1, MIDDLEPAN);
 
@@ -919,28 +894,14 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 			}
 
-			if (fFound)
-			{
-				// back to the computer!
-				SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
+			AddTopMessage(COMPUTER_TURN_MESSAGE);
 
-				// Signal UI done enemy's turn
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
+			// Signal UI done enemy's turn
+			guiPendingOverrideEvent = LU_BEGINUILOCK;
 
-				ClearIntList();
-			}
-			else
-			{
-				// back to the computer!
-				SetTeamTurnMessage(gTacticalStatus.ubCurrentTeam);
+			ClearIntList();
 
-				// Signal UI done enemy's turn
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
-
-				// must clear int list before ending turn
-				ClearIntList();
-				EndAITurn();
-			}
+			if (!fFound) EndAITurn();
 		}
 
 		// Reset our interface!
