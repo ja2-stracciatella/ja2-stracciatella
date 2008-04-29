@@ -2204,137 +2204,119 @@ static void CheckForAndHandleEndPlayerTimeLimit(void)
 }
 
 
-void HandleTopMessages( )
+void HandleTopMessages(void)
 {
-	//UINT32		uiTime;
+	TacticalStatusType* const ts = &gTacticalStatus;
 
-	// OK, is out current count > 0 ?
-		if ( gTacticalStatus.fInTopMessage )
+	if (!ts->fInTopMessage)
 	{
-		//gfTopMessageDirty = TRUE;
+	  gsVIEWPORT_WINDOW_START_Y = 0;
+	  return;
+	}
 
+	/* ATE: If we are told to go into top message, but we have not initialized it
+	 * yet.  This is mostly for loading saved games. */
+	if (!gTopMessage.fCreated)
+	{
+		gfTopMessageDirty = TRUE;
+		AddTopMessage(ts->ubTopMessageType);
+	}
 
-		// ATE: If we are told to go into top message, but we have not
-		// initialized it yet...
-		// This is mostly for loading saved games.....
-		if ( !gTopMessage.fCreated )
-		{
-			gfTopMessageDirty = TRUE;
-			AddTopMessage(gTacticalStatus.ubTopMessageType);
-		}
-
-		if ( gTacticalStatus.ubTopMessageType == COMPUTER_TURN_MESSAGE ||
-				 gTacticalStatus.ubTopMessageType == COMPUTER_INTERRUPT_MESSAGE ||
-				 gTacticalStatus.ubTopMessageType == MILITIA_INTERRUPT_MESSAGE ||
-				 gTacticalStatus.ubTopMessageType == AIR_RAID_TURN_MESSAGE )
-		{
+	switch (ts->ubTopMessageType)
+	{
+		case COMPUTER_TURN_MESSAGE:
+		case COMPUTER_INTERRUPT_MESSAGE:
+		case MILITIA_INTERRUPT_MESSAGE:
+		case AIR_RAID_TURN_MESSAGE:
 			// OK, update timer.....
-			if ( TIMECOUNTERDONE( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS ) )
+			if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
 			{
-				RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
+				RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
 
 				// Update counter....
-				if ( gTacticalStatus.usTactialTurnLimitCounter < gTacticalStatus.usTactialTurnLimitMax )
+				if (ts->usTactialTurnLimitCounter < ts->usTactialTurnLimitMax)
 				{
-					gTacticalStatus.usTactialTurnLimitCounter++;
+					++ts->usTactialTurnLimitCounter;
 				}
 
 				// Check if we have reach limit...
-				if ( gTacticalStatus.usTactialTurnLimitCounter >= ( ( gubProgCurEnemy  ) * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY ) )
+				if (ts->usTactialTurnLimitCounter > gubProgCurEnemy * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY)
 				{
-					gTacticalStatus.usTactialTurnLimitCounter = ( ( gubProgCurEnemy ) * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY );
+					ts->usTactialTurnLimitCounter = gubProgCurEnemy * PLAYER_TEAM_TIMER_TICKS_PER_ENEMY;
 				}
 
 				CreateTopMessage();
 			}
-		}
-		else if ( gGameOptions.fTurnTimeLimit )
-		{
-			if ( gTacticalStatus.ubTopMessageType == PLAYER_TURN_MESSAGE || gTacticalStatus.ubTopMessageType == PLAYER_INTERRUPT_MESSAGE )
+			break;
+
+		case PLAYER_TURN_MESSAGE:
+		case PLAYER_INTERRUPT_MESSAGE:
+			if (gGameOptions.fTurnTimeLimit &&
+					!gfUserTurnRegionActive     &&
+					!AreWeInAUIMenu()           &&
+					GetJA2Clock() - ts->uiTactialTurnLimitClock > PLAYER_TEAM_TIMER_GRACE_PERIOD) // Check Grace period...
 			{
-				 if ( !gfUserTurnRegionActive && !AreWeInAUIMenu() )
-				 {
-						// Check Grace period...
-						if ( ( GetJA2Clock( ) - gTacticalStatus.uiTactialTurnLimitClock ) > PLAYER_TEAM_TIMER_GRACE_PERIOD )
+				ts->uiTactialTurnLimitClock = 0;
+
+				if (TIMECOUNTERDONE(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS))
+				{
+					RESETTIMECOUNTER(giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS);
+
+					if (ts->fTactialTurnLimitStartedBeep)
+					{
+						if (GetJA2Clock() - gTopMessage.uiTimeSinceLastBeep > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS)
 						{
-							gTacticalStatus.uiTactialTurnLimitClock = 0;
-
-							if ( TIMECOUNTERDONE( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS ) )
-							{
-								RESETTIMECOUNTER( giTimerTeamTurnUpdate, PLAYER_TEAM_TIMER_SEC_PER_TICKS );
-
-								if ( gTacticalStatus.fTactialTurnLimitStartedBeep )
-								{
-									if ( ( GetJA2Clock( ) - gTopMessage.uiTimeSinceLastBeep ) > PLAYER_TEAM_TIMER_TIME_BETWEEN_BEEPS )
-									{
-										gTopMessage.uiTimeSinceLastBeep = GetJA2Clock( );
-
-										// Start sample....
-										PlayJA2SampleFromFile("SOUNDS/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
-									}
-								}
-
-								// OK, have we gone past the time to
-								if ( !gTacticalStatus.fTactialTurnLimitStartedBeep && ( gTacticalStatus.usTactialTurnLimitMax - gTacticalStatus.usTactialTurnLimitCounter ) < PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP )
-								{
-									gTacticalStatus.fTactialTurnLimitStartedBeep = TRUE;
-
-									gTopMessage.uiTimeSinceLastBeep = GetJA2Clock( );
-
-								}
-
-								// Update counter....
-								if ( gTacticalStatus.usTactialTurnLimitCounter < gTacticalStatus.usTactialTurnLimitMax )
-								{
-									gTacticalStatus.usTactialTurnLimitCounter++;
-								}
-
-								CreateTopMessage();
-
-								// Have we reached max?
-								if ( gTacticalStatus.usTactialTurnLimitCounter == ( gTacticalStatus.usTactialTurnLimitMax - 1) )
-								{
-									// IF we are not in lock ui mode....
-									CheckForAndHandleEndPlayerTimeLimit( );
-								}
-							}
+							gTopMessage.uiTimeSinceLastBeep = GetJA2Clock();
+							PlayJA2SampleFromFile("SOUNDS/TURN_NEAR_END.WAV", HIGHVOLUME, 1, MIDDLEPAN);
 						}
-				 }
-			 }
-		}
+					}
+					else
+					{
+						// OK, have we gone past the time to
+						if (ts->usTactialTurnLimitMax - ts->usTactialTurnLimitCounter < PLAYER_TEAM_TIMER_TICKS_FROM_END_TO_START_BEEP)
+						{
+							ts->fTactialTurnLimitStartedBeep = TRUE;
+							gTopMessage.uiTimeSinceLastBeep = GetJA2Clock();
+						}
+					}
 
-		// Set redner viewport value
-		gsVIEWPORT_WINDOW_START_Y = 20;
+					// Update counter....
+					if (ts->usTactialTurnLimitCounter < ts->usTactialTurnLimitMax)
+					{
+						++ts->usTactialTurnLimitCounter;
+					}
 
-		// Check if we have scrolled...
-		if ( gTopMessage.sWorldRenderX != gsRenderCenterX || gTopMessage.sWorldRenderY != gsRenderCenterY )
-		{
-			gfTopMessageDirty = TRUE;
-		}
+					CreateTopMessage();
 
-		if ( gfTopMessageDirty )
-		{
-			gTopMessage.sWorldRenderX = gsRenderCenterX;
-			gTopMessage.sWorldRenderY = gsRenderCenterY;
-
-			SGPRect SrcRect;
-			SrcRect.iLeft   =  0;
-			SrcRect.iTop    =  0;
-			SrcRect.iRight  = SCREEN_WIDTH;
-			SrcRect.iBottom = 20;
-			BltVideoSurface(FRAME_BUFFER,  gTopMessage.uiSurface, 0, 0, &SrcRect);
-			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,          0, 0, &SrcRect);
-
-			InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
-
-			gfTopMessageDirty = FALSE;
-		}
-
+					// Have we reached max?
+					if (ts->usTactialTurnLimitCounter == ts->usTactialTurnLimitMax - 1)
+					{
+						// IF we are not in lock ui mode....
+						CheckForAndHandleEndPlayerTimeLimit();
+					}
+				}
+			}
+			break;
 	}
-	else
+
+	gsVIEWPORT_WINDOW_START_Y = 20;
+
+	if (gfTopMessageDirty                            ||
+			gTopMessage.sWorldRenderX != gsRenderCenterX ||
+			gTopMessage.sWorldRenderY != gsRenderCenterY)
 	{
-		// Set redner viewport value
-	  gsVIEWPORT_WINDOW_START_Y = 0;
+		gfTopMessageDirty         = FALSE;
+		gTopMessage.sWorldRenderX = gsRenderCenterX;
+		gTopMessage.sWorldRenderY = gsRenderCenterY;
+
+		SGPRect SrcRect;
+		SrcRect.iLeft   =  0;
+		SrcRect.iTop    =  0;
+		SrcRect.iRight  = SCREEN_WIDTH;
+		SrcRect.iBottom = 20;
+		BltVideoSurface(FRAME_BUFFER,  gTopMessage.uiSurface, 0, 0, &SrcRect);
+		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,          0, 0, &SrcRect);
+		InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
 	}
 }
 
