@@ -336,12 +336,6 @@ void GameLoop(void)
 
 }
 
-void SetCurrentScreen( UINT32 uiNewScreen )
-{
-	guiCurrentScreen = uiNewScreen;
- (*(GameScreens[guiCurrentScreen].HandleScreen))();
-
-}
 
 void SetPendingNewScreen( UINT32 uiNewScreen )
 {

@@ -87,7 +87,6 @@ extern UINT32 guiCurrentScreen;
 typedef void (*RENDER_HOOK)( void );
 
 void SetRenderHook( RENDER_HOOK pRenderOverride );
-void SetCurrentScreen( UINT32 uiNewScreen );
 void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage );
 
 void EnableFPSOverlay(BOOLEAN fEnable);
