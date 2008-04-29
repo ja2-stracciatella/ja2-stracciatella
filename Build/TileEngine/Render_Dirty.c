@@ -293,8 +293,6 @@ void SaveBackgroundRects(void)
 {
 	UINT32        uiDestPitchBYTES;
 	UINT16* const pSrcBuf  = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	UINT32        uiSrcPitchBYTES;
-	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSrcPitchBYTES);
 
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{
@@ -318,7 +316,6 @@ void SaveBackgroundRects(void)
 	}
 
 	UnLockVideoSurface(FRAME_BUFFER);
-	UnLockVideoSurface(guiSAVEBUFFER);
 }
 
 
