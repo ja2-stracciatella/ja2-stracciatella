@@ -481,11 +481,6 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 	// depending on the frame and the value returned here will vary thusly. However, for the
 	// uses of this function, we should be able to use just the first frame...
 
-	if ( pSoldier->usAniFrame >= gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->usNumberOfObjects )
-	{
-		int i = 0;
-	}
-
 	*psHeight					= (INT16)pSoldier->sBoundingBoxHeight;
 	*psWidth					= (INT16)pSoldier->sBoundingBoxWidth;
 }

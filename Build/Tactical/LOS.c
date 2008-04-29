@@ -1637,7 +1637,7 @@ INT16 SoldierToLocationWindowTest(const SOLDIERTYPE* pStartSoldier, INT16 sEndGr
 	// We don't want to consider distance limits here so pass in tile sight limit of 255
 	// and consider trees as little as possible
 	INT16 sWindowGridNo = NOWHERE;
-	const INT32 iRet = LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sEndGridNo, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo);
+	LineOfSightTest(pStartSoldier->sGridNo, dStartZPos, sEndGridNo, dEndZPos, 255, 0, TRUE, 0, FALSE, &sWindowGridNo);
 	if (sWindowGridNo == pStartSoldier->sGridNo) sWindowGridNo = NOWHERE; // XXX TODO0012
 	return( sWindowGridNo );
 }
@@ -4317,8 +4317,6 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	MAP_ELEMENT *		pMapElement;
 	STRUCTURE *			pStructure, *pTempStructure;
 
-	BOOLEAN					fRoofPresent = FALSE;
-
 	SOLDIERTYPE *		pTarget;
 	FLOAT						dTargetX;
 	FLOAT						dTargetY;
@@ -4357,6 +4355,7 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	dOldZUnits = (dZ - dDeltaZ );
 	dZUnits	  =		dZ;
 
+	//BOOLEAN fRoofPresent = FALSE;
 	//if (pBullet->fCheckForRoof)
 	//{
 	//	if (pMapElement->pRoofHead != NULL)

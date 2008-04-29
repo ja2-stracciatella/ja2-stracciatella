@@ -742,10 +742,6 @@ BOOLEAN ExecuteOverhead(void)
 						{
 							pSoldier->ubFadeLevel = gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel;
 						}
-						else
-						{
-							int i = 0;
-						}
 						pSoldier->fBeginFade           = TRUE;
 						pSoldier->sLocationOfFadeStart = pSoldier->sGridNo;
 
@@ -3071,7 +3067,7 @@ SOLDIERTYPE * CivilianGroupMemberChangesSides( SOLDIERTYPE * pAttacked )
 void CivilianGroupChangesSides( UINT8 ubCivilianGroup )
 {
 	// change civ group side due to external event (wall blowing up)
-	UINT8										ubFirstProfile = NO_PROFILE;
+	//UINT8 ubFirstProfile = NO_PROFILE;
 
 	gTacticalStatus.fCivGroupHostile[ ubCivilianGroup ] = CIV_GROUP_HOSTILE;
 

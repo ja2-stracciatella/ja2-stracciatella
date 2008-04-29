@@ -420,8 +420,6 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					// It's -ve and 1-based, change to +ve, 1 based
 					bDestructionPartner = ( -1 * pBase->pDBStructureRef->pDBStructure->bDestructionPartner );
 
-					const UINT32 uiTileType = GetTileType(pNode->usIndex);
-
 					fContinue = 2;
 				}
 			}

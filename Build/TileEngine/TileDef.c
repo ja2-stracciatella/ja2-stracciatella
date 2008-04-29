@@ -88,11 +88,6 @@ void CreateTileDatabase( )
 							TileElement.uiFlags |= MULTI_Z_TILE;
 						}
 					}
-					else
-					{
-						//Ate test to see if problems is gone
-						int i = 0;
-					}
 				}
 
 				// Structure database stuff!

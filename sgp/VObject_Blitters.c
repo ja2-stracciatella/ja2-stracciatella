@@ -2267,11 +2267,11 @@ BlitDone:
 BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
 {
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
-	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
+	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
 	// Assertions
@@ -2329,6 +2329,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestP
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 Unblitted;
+	INT32  LSCount;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -2532,11 +2534,11 @@ BlitDone:
 BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, const UINT16* p16BPPPalette)
 {
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
-	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
+	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
 	// Assertions
@@ -2593,6 +2595,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPi
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 Unblitted;
+	INT32  LSCount;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -3689,7 +3693,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
@@ -3832,6 +3836,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 	}
 	while (--BlitHeight > 0);
 #else
+	UINT32 Unblitted;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5293,7 +5298,6 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 	UINT32 LineSkip;
 //	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-	UINT32 rows;
 
 	// Assertions
 	Assert( hSrcVSurface != NULL );
@@ -5321,6 +5325,7 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 rows;
 	__asm {
 
 		mov		esi, SrcPtr					// pointer to current line start address in source
@@ -6582,7 +6587,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
@@ -6718,6 +6723,7 @@ BlitNonTransLoop: // blit non-transparent pixels
 	}
 	while (--BlitHeight > 0);
 #else
+	UINT32 Unblitted;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -8461,7 +8467,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const U
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
@@ -8523,6 +8529,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const U
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 Unblitted;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9409,11 +9416,11 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
-	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
+	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
 	// Assertions
@@ -9472,6 +9479,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 Unblitted;
+	INT32  LSCount;
 	__asm {
 
 		mov		esi, SrcPtr
@@ -9778,7 +9787,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 {
 	UINT16 *p16BPPPalette;
 	UINT32 uiOffset;
-	UINT32 usHeight, usWidth, Unblitted;
+	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
   ETRLEObject *pTrav;
@@ -9840,6 +9849,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
+	UINT32 Unblitted;
 	__asm {
 
 		mov		esi, SrcPtr

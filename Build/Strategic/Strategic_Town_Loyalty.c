@@ -406,10 +406,8 @@ static void UpdateTownLoyaltyRating(INT8 bTownId)
 // strategic handler, goes through and handles all strategic events for town loyalty updates...player controlled, monsters
 void HandleTownLoyalty( void )
 {
-	INT8 bTownId = 0;
-
 /* ARM: removed to experiment with keeping loyalty from drifing without any direct causes from the player
-	for( bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++ )
+	for (INT8 bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++)
 	{
 		// update loyalty of controlled/uncontrolled towns
 		UpdateLoyaltyBasedOnControl( bTownId );
@@ -640,9 +638,6 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	UINT32 uiChanceFalseAccusal = 0;
 	INT8 bKillerTeam = 0;
 	BOOLEAN fIncrement = FALSE;
-	UINT32 uiLoyaltyEffectDelay = 0;
-	UINT32 uiValue = 0;
-
 
 	// attacker CAN be NOBODY...  Don't treat is as murder if NOBODY killed us...
 	SOLDIERTYPE* const killer = pSoldier->attacker;
@@ -868,6 +863,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 
 /* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
 	// figure out how long before the news of the murder spreads and lowers town loyalty
+	UINT32 uiLoyaltyEffectDelay;
 	if (bSeenState == 0)
 	{
 		// nobody saw nothing.  Will be some time before the grisly remains are discovered...
@@ -881,7 +877,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 
 
 	// create the event value, with bTownId & for iLoyaltyChange as data
-	uiValue = BuildLoyaltyEventValue( bTownId , iLoyaltyChange, fIncrement );
+	const UINT32 uiValue = BuildLoyaltyEventValue(bTownId, iLoyaltyChange, fIncrement);
 	// post the event
 	AddStrategicEvent( EVENT_TOWN_LOYALTY_UPDATE, GetWorldTotalMin() + uiLoyaltyEffectDelay, uiValue );
 

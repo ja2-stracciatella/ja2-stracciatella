@@ -15,7 +15,6 @@
 void MakeClosestEnemyChosenOne()
 {
 	INT16					sPathCost, sShortestPath = 1000;
-	INT8					bOldKeys = -1;
 	INT8					bPanicTrigger;
 	INT16					sPanicTriggerGridNo;
 
@@ -100,7 +99,7 @@ void MakeClosestEnemyChosenOne()
 		}
 
 		// remember whether this guy had keys before
-		//bOldKeys = pSoldier->bHasKeys;
+		//const INT8 bOldKeys = pSoldier->bHasKeys;
 
 		// give him keys to see if with them he can get to the panic trigger
 		pSoldier->bHasKeys = (pSoldier->bHasKeys << 1) | 1;

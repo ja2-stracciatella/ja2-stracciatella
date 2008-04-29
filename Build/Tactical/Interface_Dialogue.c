@@ -1098,8 +1098,6 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey )
 
 void HandleTalkingMenuBackspace(void)
 {
-	BOOLEAN					fTalking = FALSE;
-
 	if ( !gfInTalkPanel )
 	{
 		return;
@@ -1110,6 +1108,7 @@ void HandleTalkingMenuBackspace(void)
 	// If we are in the process of speaking, stop this quote an move on...
 	// If we have been 'handled' by an outside source, check what was our talking value at the time
 	/*
+	BOOLEAN fTalking;
 	if ( gTalkPanel.fHandled )
 	{
 		fTalking = gTalkPanel.fHandledTalkingVal;

@@ -3816,7 +3816,7 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 	if (fZoomFlag)
 	{
 		UINT32 uiDestPitchBYTES;
-		UINT8* pDestBuf2 = LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
+		LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, MAP_VIEW_START_X + MAP_GRID_X - 1, MAP_VIEW_START_Y + MAP_GRID_Y - 1, MAP_VIEW_WIDTH + 1, MAP_VIEW_HEIGHT - 9);
 		UnLockVideoSurface(guiSAVEBUFFER);
 

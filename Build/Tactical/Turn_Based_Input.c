@@ -1035,7 +1035,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 
 void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 {
-	static BOOLEAN	fShifted = FALSE;
+	//static BOOLEAN fShifted = FALSE;
 	static BOOLEAN	fShifted2 = FALSE;
 	static BOOLEAN	fCtrlDown = FALSE;
 	static BOOLEAN	fAltDown = FALSE;

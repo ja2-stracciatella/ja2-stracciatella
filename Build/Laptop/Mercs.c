@@ -621,7 +621,6 @@ static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 void DailyUpdateOfMercSite( UINT16 usDate)
 {
 	INT32		iNumDays;
-	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
 
 	//if its the first day, leave
 	if( usDate == 1 )
@@ -684,6 +683,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 	ShouldAnyNewMercMercBecomeAvailable();
 
 /*
+	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
 	//If we should advacne the number of days that the good mercs arrive
 //	if( LaptopSaveInfo.guiNumberOfMercPaymentsInDays > 4 )
 	{

@@ -139,10 +139,6 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 		{
 			TacticalRemoveSoldier(pNode->pSoldier);
 		}
-		else
-		{
-			INT8 bug = 0;
-		}
 	}
 	if( pNode == gSoldierInitHead )
 	{

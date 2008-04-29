@@ -793,11 +793,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						// OK, if we are underground, we don't want to reveal stuff if
 						// 1 ) there is a roof over us and
 						// 2 ) we are not in a room
-						if ( gubWorldRoomInfo[ marker ] == NO_ROOM && TypeRangeExistsInRoofLayer( marker, FIRSTROOF, FOURTHROOF, &usIndex ) )
-						{
-							int i = 0;
-						}
-						else
+						if (gubWorldRoomInfo[marker] != NO_ROOM || !TypeRangeExistsInRoofLayer(marker, FIRSTROOF, FOURTHROOF, &usIndex))
 						{
 							gpWorldLevelData[ marker ].uiFlags |= MAPELEMENT_REVEALED;
 							if( gfCaves )

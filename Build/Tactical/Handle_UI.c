@@ -1233,11 +1233,6 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 
 		if (sel != NULL)
 		 {
-			if (sel->sGridNo == NOWHERE)
-       {
-          int i = 0;
-       }
-
 			if (GetExitGrid(usMapPos, &ExitGrid) && sel->bLevel == 0)
 			 {
 				 gfUIShowExitExitGrid = TRUE;

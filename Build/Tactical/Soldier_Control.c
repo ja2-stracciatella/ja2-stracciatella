@@ -2292,10 +2292,6 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 		SetSoldierAniSpeed( pSoldier );
 
 	}
-	else
-	{
-		int i = 0;
-	}
 }
 
 
@@ -8334,11 +8330,6 @@ static void GetActualSoldierAnimDims(SOLDIERTYPE* pSoldier, INT16* psHeight, INT
 	// OK, noodle here on what we should do... If we take each frame, it will be different slightly
 	// depending on the frame and the value returned here will vary thusly. However, for the
 	// uses of this function, we should be able to use just the first frame...
-
-	if ( pSoldier->usAniFrame >= gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->usNumberOfObjects )
-	{
-		int i = 0;
-	}
 
 	pTrav = &(gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->pETRLEObject[ pSoldier->usAniFrame ] );
 

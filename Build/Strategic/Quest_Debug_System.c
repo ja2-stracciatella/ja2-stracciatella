@@ -2002,7 +2002,7 @@ static void CalcPositionOfNewScrollBoxLocation(void)
 	FLOAT	dValue;
 	INT16	sHeight=0;
 //	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex - gpActiveListBox->usStartIndex ) + .5);
-	INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
+	//INT16	sHeightOfScrollBox = (INT16)(gpActiveListBox->usScrollBarHeight / (FLOAT)(gpActiveListBox->usMaxArrayIndex ) + .5);
 	INT16	sStartPosOfScrollArea = gpActiveListBox->usScrollPosY + gpActiveListBox->usScrollArrowHeight;
 
 	sMouseYPos = gusMouseYPos;

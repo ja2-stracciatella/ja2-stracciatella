@@ -79,7 +79,7 @@ static void ValidateEnemiesHaveWeapons(void)
 	{
 		wchar_t str[100];
 		swprintf(str, lengthof(str), L"%d enemies have been added without any weapons!  KM:0.  Please note sector.", iNumInvalid);
-		const INT32 iErrorDialog = DoMessageBox(MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 	}
 #endif
 }

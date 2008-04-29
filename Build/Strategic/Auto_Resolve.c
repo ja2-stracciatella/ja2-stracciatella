@@ -3200,7 +3200,6 @@ static void CalculateAttackValues(void)
 	UINT16 usBestAttack = 0xffff;
 	UINT16 usBreathStrengthPercentage;
 	//INT16 sOutnumberBonus = 0;
-	INT16 sMaxBonus = 0;
 	//PLAYER TEAM
 	gpAR->usPlayerAttack = 0;
 	gpAR->usPlayerDefence = 0;
@@ -3208,7 +3207,7 @@ static void CalculateAttackValues(void)
 	//if( gpAR->ubEnemies )
 	//{
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
-	//	sMaxBonus = 20;
+	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)(gpAR->ubMercs + gpAR->ubCivs) * sMaxBonus / gpAR->ubEnemies - sMaxBonus;
 	//	sOutnumberBonus = (INT16)min( sOutnumberBonus, max( sMaxBonus, 0 ) );
 	//}
@@ -3309,7 +3308,7 @@ static void CalculateAttackValues(void)
 	//if( gpAR->ubMercs + gpAR->ubCivs )
 	//{
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
-	//	sMaxBonus = 20;
+	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)gpAR->ubEnemies * sMaxBonus / (gpAR->ubMercs + gpAR->ubCivs) - sMaxBonus;
 	//	sOutnumberBonus = (INT16)min( sOutnumberBonus, max( sMaxBonus, 0 ) );
 	//}

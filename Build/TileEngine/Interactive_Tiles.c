@@ -193,7 +193,6 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
 void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	STRUCTURE			*pStructure, *pNewStructure;
-	INT16					sAPCost = 0, sBPCost = 0;
   BOOLEAN       fDidMissingQuote = FALSE;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
@@ -294,6 +293,8 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 
 	// Deduct points!
+	//INT16 sAPCost = 0;
+	//INT16 sBPCost = 0;
 	// CalcInteractiveObjectAPs( sGridNo, pStructure, &sAPCost, &sBPCost );
 	// DeductPoints( pSoldier, sAPCost, sBPCost );
 
