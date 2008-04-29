@@ -1653,13 +1653,19 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 	// Look through all OnRoofs and Search for type
 	for (const LEVELNODE* pOnRoof = gpWorldLevelData[iMapIndex].pOnRoofHead; pOnRoof != NULL;)
 	{
+		if (pOnRoof->uiFlags & LEVELNODE_CACHEDANITILE)
+		{
+			pOnRoof = pOnRoof->pNext;
+			continue;
+		}
+
 		if (pOnRoof->usIndex != NO_TILE)
 		{
 			const UINT32 fTileType = GetTileType(pOnRoof->usIndex);
 
 			// Advance to next
 			const LEVELNODE* pOldOnRoof = pOnRoof;
-			pOnRoof = pOnRoof->pNext;
+			pOnRoof = pOnRoof->pNext; // XXX TODO0009 if pStruct->usIndex == NO_TILE this is an endless loop
 
 			if (fTileType >= fStartType && fTileType <= fEndType)
 			{
