@@ -1,3 +1,4 @@
+(r3918) Fix a bug in r3226, which broke saving/loading savegames in the Windows version.
 (r3915) Fix a vanilla bug, which made items invisible, end up on the wrong level (floor/roof) or hover above the ground, when shuffling them in the sector inventory.
 (r3914) Fix a bug in r2162, which could cause less militia to appear in a sector than there should.
 (r3908) Fix a vanilla bug, which prevented the army from attacking San Mona, when the player has defense in Grumm.
