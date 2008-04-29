@@ -119,6 +119,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 			o.ubNumberOfObjects = 1;
 			o.bStatus[0]        = 100;
 			const BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
+			(void)fReturn;
 			Assert(fReturn);
 		}
 

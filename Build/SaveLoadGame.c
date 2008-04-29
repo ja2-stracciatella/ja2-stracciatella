@@ -137,7 +137,9 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 static BOOLEAN gMusicModeToPlay = FALSE;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
+#ifdef JA2BETAVERSION
 static UINT32 guiCurrentQuickSaveNumber = 0;
+#endif
 UINT32	guiLastSaveGameNum;
 
 UINT32	guiJA2EncryptionSet = 0;
@@ -386,7 +388,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	HWFILE	hFile=0;
 	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ 512 ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 	INT32		iSaveLoadGameMessageBoxID = -1;
@@ -397,6 +398,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	wcslcpy(pGameDesc, GameDesc, lengthof(pGameDesc));
 
 #ifdef JA2BETAVERSION
+	const UINT32 uiSizeOfGeneralInfo = sizeof(GENERAL_SAVE_INFO);
 	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
 	AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.  DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
 #endif
@@ -1086,7 +1088,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	INT16 sLoadSectorY;
 	INT8 bLoadSectorZ;
 	CHAR8		zSaveGameName[ 512 ];
-	UINT32	uiSizeOfGeneralInfo = sizeof( GENERAL_SAVE_INFO );
 
 	UINT32 uiRelStartPerc;
 	UINT32 uiRelEndPerc;
@@ -1108,6 +1109,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 #ifdef JA2BETAVERSION
+	const UINT32 uiSizeOfGeneralInfo = sizeof(GENERAL_SAVE_INFO);
 	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
 #endif
 

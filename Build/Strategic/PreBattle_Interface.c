@@ -1537,6 +1537,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 				 * placement screen can't handle mercs on the same squad arriving from
 				 * different edges! */
 				const BOOLEAN fSuccess = AddCharacterToSquad(s, bUniqueVehicleSquad);
+				(void)fSuccess;
 				Assert(fSuccess);
 			}
 		}
@@ -1544,6 +1545,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 		{
 			// add him to ANY on duty foot squad
 			const BOOLEAN fSuccess = AddCharacterToAnySquad(s);
+			(void)fSuccess;
 			Assert(fSuccess);
 		}
 
