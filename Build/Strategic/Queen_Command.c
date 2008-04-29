@@ -653,7 +653,6 @@ static BOOLEAN PrepareEnemyForUndergroundBattle(void)
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 {
-	wchar_t str[128];
 	EvaluateDeathEffectsToSoldierInitList( pSoldier );
 
 	switch( pSoldier->ubProfile )
@@ -724,6 +723,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumElites )
 					{
+						wchar_t str[128];
 						swprintf(str, lengthof(str), L"Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
@@ -750,6 +750,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumTroops )
 					{
+						wchar_t str[128];
 						swprintf(str, lengthof(str), L"Enemy troop killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
@@ -776,6 +777,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 				#ifdef JA2BETAVERSION
 					if( !pGroup->pEnemyGroup->ubNumAdmins )
 					{
+						wchar_t str[128];
 						swprintf(str, lengthof(str), L"Enemy administrator killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 						DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
 						break;
