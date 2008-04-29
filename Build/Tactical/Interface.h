@@ -182,7 +182,6 @@ typedef enum MESSAGE_TYPES
 
 void HandleTopMessages(void);
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString );
-BOOLEAN InTopMessageBarAnimation(void);
 void EndTopMessage(void);
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );

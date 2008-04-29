@@ -77,18 +77,13 @@ static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
 static UINT8   gubProgCurEnemy   = 0;
 
-typedef struct
+typedef struct TOP_MESSAGE
 {
 	SGPVSurface* uiSurface;
-	INT8				bCurrentMessage;
-	UINT32			uiTimeOfLastUpdate;
 	UINT32			uiTimeSinceLastBeep;
-	INT8				bAnimate;
-	INT8				bYPos;
 	BOOLEAN			fCreated;
 	INT16				sWorldRenderX;
 	INT16				sWorldRenderY;
-
 } TOP_MESSAGE;
 
 static TOP_MESSAGE gTopMessage;
@@ -2055,27 +2050,14 @@ static void CreateTopMessage();
 
 BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
 {
-	UINT32	cnt;
 	BOOLEAN	fFound = FALSE;
 
-	// Set time of last update
-	gTopMessage.uiTimeOfLastUpdate = GetJA2Clock( );
-
-	// Set flag to animate down...
-	//gTopMessage.bAnimate = -1;
-	//gTopMessage.bYPos		 = 2;
-
-	gTopMessage.bAnimate = 0;
-	gTopMessage.bYPos		 = 20;
 	gTopMessage.fCreated = TRUE;
 
 	fFound = TRUE;
-	cnt = 0;
 
 	if ( fFound )
 	{
-		gTopMessage.bCurrentMessage = (INT8)cnt;
-
 		gTacticalStatus.ubTopMessageType = ubType;
 		gTacticalStatus.fInTopMessage = TRUE;
 
@@ -2326,22 +2308,16 @@ void HandleTopMessages( )
 
 		if ( gfTopMessageDirty )
 		{
-			SGPRect SrcRect;
-
 			gTopMessage.sWorldRenderX = gsRenderCenterX;
 			gTopMessage.sWorldRenderY = gsRenderCenterY;
 
-			SrcRect.iLeft   =  0;
-			SrcRect.iTop    = 20 - gTopMessage.bYPos;
-			SrcRect.iRight  = SCREEN_WIDTH;
-			SrcRect.iBottom = 20;
-			BltVideoSurface(FRAME_BUFFER, gTopMessage.uiSurface, 0, 0, &SrcRect);
-
+			SGPRect SrcRect;
 			SrcRect.iLeft   =  0;
 			SrcRect.iTop    =  0;
 			SrcRect.iRight  = SCREEN_WIDTH;
 			SrcRect.iBottom = 20;
-			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
+			BltVideoSurface(FRAME_BUFFER,  gTopMessage.uiSurface, 0, 0, &SrcRect);
+			BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,          0, 0, &SrcRect);
 
 			InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
 
@@ -2362,54 +2338,28 @@ void EndTopMessage( )
 	// OK, end the topmost message!
 	if ( gTacticalStatus.fInTopMessage )
 	{
-		// Are we the last?
-		//if ( gTopMessage.bCurrentMessage == 1 )
-		{
-			SGPRect SrcRect;
+		SGPRect SrcRect;
 
-			// We are....
-			// Re-render our strip and then copy to the save buffer...
-			gsVIEWPORT_WINDOW_START_Y = 0;
-			gTacticalStatus.fInTopMessage = FALSE;
+		// We are....
+		// Re-render our strip and then copy to the save buffer...
+		gsVIEWPORT_WINDOW_START_Y = 0;
+		gTacticalStatus.fInTopMessage = FALSE;
 
-			SetRenderFlags( RENDER_FLAG_FULL );
-			//RenderStaticWorldRect(0, 0, SCREEN_WIDTH, 20, TRUE);
-			//gsVIEWPORT_WINDOW_START_Y = 20;
+		SetRenderFlags( RENDER_FLAG_FULL );
+		//RenderStaticWorldRect(0, 0, SCREEN_WIDTH, 20, TRUE);
+		//gsVIEWPORT_WINDOW_START_Y = 20;
 
-			// Copy into save buffer...
-			//SrcRect.iLeft   =  0;
-			//SrcRect.iTop    =  0;
-			//SrcRect.iRight  = SCREEN_WIDTH;
-			//SrcRect.iBottom = 20;
-			//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
-		}
-
-		// Animate up...
-		//gTopMessage.bAnimate = 1;
-		// Set time of last update
-		//gTopMessage.uiTimeOfLastUpdate = GetJA2Clock( ) + 150;
+		// Copy into save buffer...
+		//SrcRect.iLeft   =  0;
+		//SrcRect.iTop    =  0;
+		//SrcRect.iRight  = SCREEN_WIDTH;
+		//SrcRect.iBottom = 20;
+		//BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, &SrcRect);
 
 		// Handle first frame now...
 		// HandleTopMessages( );
 
 	}
-}
-
-
-BOOLEAN InTopMessageBarAnimation( )
-{
-	if ( gTacticalStatus.fInTopMessage )
-	{
-		if ( 	gTopMessage.bAnimate != 0 )
-		{
-			HandleTopMessages( );
-
-			return( TRUE );
-		}
-
-	}
-
-	return( FALSE );
 }
 
 

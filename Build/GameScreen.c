@@ -418,16 +418,6 @@ UINT32  MainGameScreenHandle(void)
 	}
 */
 
-	// Check if we are in bar animation...
-	if ( InTopMessageBarAnimation( ) )
-	{
-		ExecuteBaseDirtyRectQueue( );
-
-		EndFrameBufferRender( );
-
-		return( GAME_SCREEN );
-	}
-
 	if ( gfTacticalIsModal )
 	{
 		if ( gfTacticalIsModal == 1 )
