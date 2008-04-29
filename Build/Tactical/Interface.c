@@ -2048,28 +2048,15 @@ void EndUIMessage( )
 static void CreateTopMessage();
 
 
-BOOLEAN AddTopMessage( UINT8 ubType, const wchar_t *pzString )
+void AddTopMessage(const UINT8 ubType, const wchar_t* const pzString)
 {
-	BOOLEAN	fFound = FALSE;
-
 	gTopMessage.fCreated = TRUE;
 
-	fFound = TRUE;
+	gTacticalStatus.ubTopMessageType = ubType;
+	gTacticalStatus.fInTopMessage    = TRUE;
+	wcscpy(gTacticalStatus.zTopMessageString, pzString);
 
-	if ( fFound )
-	{
-		gTacticalStatus.ubTopMessageType = ubType;
-		gTacticalStatus.fInTopMessage = TRUE;
-
-		// Copy string
-		wcscpy( gTacticalStatus.zTopMessageString, pzString );
-
-		CreateTopMessage();
-
-		return( TRUE );
-	}
-
-	return( FALSE );
+	CreateTopMessage();
 }
 
 
