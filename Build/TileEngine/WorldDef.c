@@ -89,9 +89,6 @@ void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 }
 
 
-extern void SetInterfaceHeightLevel( );
-
-
 // Global Variables
 MAP_ELEMENT			*gpWorldLevelData;
 UINT32					gSurfaceMemUsage;
@@ -2351,8 +2348,6 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 	return TRUE;
 }
 #endif
-
-extern void LoadShadeTablesFromTextFile();
 
 
 static void LoadMapLights(INT8** hBuffer);

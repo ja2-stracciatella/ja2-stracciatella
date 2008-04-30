@@ -1,5 +1,4 @@
 #include "Overhead.h"
-#include "Types.h"
 #include "FileMan.h"
 #include "Creature_Spreading.h"
 #include "Campaign_Types.h"

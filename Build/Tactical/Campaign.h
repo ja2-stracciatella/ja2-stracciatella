@@ -76,4 +76,8 @@ void BuildStatChangeString(wchar_t* wString, size_t Length, const wchar_t* wName
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue );
 
+#ifdef JA2TESTVERSION
+void TestDumpStatChanges(void);
+#endif
+
 #endif

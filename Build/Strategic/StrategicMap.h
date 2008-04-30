@@ -150,6 +150,10 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 
 BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle(void);
 
+void BeginLoadScreen(void);
+
+void RemoveMercsInSector(void);
+
 //Used for determining the type of error message that comes up when you can't traverse to
 //an adjacent sector.  THESE VALUES DO NOT NEED TO BE SAVED!
 extern BOOLEAN	gfInvalidTraversal;

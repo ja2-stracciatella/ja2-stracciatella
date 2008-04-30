@@ -54,7 +54,6 @@
 #include "VSurface.h"
 
 
-extern void InitializeTacticalStatusAtBattleStart();
 extern BOOLEAN gfDelayAutoResolveStart;
 
 #ifdef JA2BETAVERSION
@@ -144,9 +143,6 @@ BOOLEAN gfCantRetreatInPBI = FALSE;
 //SAVE END
 
 BOOLEAN gfUsePersistantPBI;
-
-
-extern void CalculateGroupRetreatSector( GROUP *pGroup );
 
 
 #ifdef JA2BETAVERSION

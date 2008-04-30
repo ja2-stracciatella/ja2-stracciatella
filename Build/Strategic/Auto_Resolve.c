@@ -264,16 +264,10 @@ enum
 	MILITIA3F_FACE,
 };
 
-extern void CreateDestroyMapInvButton();
 
 //Autoresolve sets this variable which defaults to -1 when not needed.
 INT16 gsEnemyGainedControlOfSectorID = -1;
 INT16 gsCiviliansEatenByMonsters = -1;
-
-#ifdef JA2BETAVERSION
-	extern void CountRandomCalls( BOOLEAN fStart );
-	extern void GetRandomCalls( UINT32 *puiRandoms, UINT32 *puiPreRandoms );
-#endif
 
 //Dynamic globals -- to conserve memory, all global variables are allocated upon entry
 //and deleted before we leave.

@@ -218,4 +218,6 @@ BOOLEAN SoldierAboardAirborneHeli(const SOLDIERTYPE* s);
 
 void MoveAllInHelicopterToFootMovementGroup(void);
 
+void PayOffSkyriderDebtIfAny(void);
+
 #endif

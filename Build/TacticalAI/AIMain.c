@@ -45,9 +45,6 @@
 #define AI_DELAY 100
 
 
-extern void UpdateEnemyUIBar( void );
-extern void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier );
-
 //
 // Commented out/ to fix:
 // lots of other stuff, I think

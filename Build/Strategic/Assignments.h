@@ -227,4 +227,9 @@ void CreateContractBox(const SOLDIERTYPE* s);
 void VerifyTownTrainingIsPaidFor(void);
 #endif
 
+// screen mask for pop up menus
+void ClearScreenMaskForMapScreenExit(void);
+
+void CreateMercRemoveAssignBox(void);
+
 #endif

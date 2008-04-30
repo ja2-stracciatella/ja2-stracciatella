@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include <stdlib.h>
+#include "NewSmooth.h"
 #include "TileDef.h"
 #include "WorldDef.h"	//for LEVELNODE def
 #include "WorldMan.h" //for RemoveXXXX()
@@ -12,8 +13,6 @@
 #include "Edit_Sys.h"
 #include "Environment.h"
 
-
-extern UINT16 PickAWallPiece( UINT16 usWallPieceType );
 
 //This method isn't foolproof, but because erasing large areas of buildings could result in
 //multiple wall types for each building.  When processing the region, it is necessary to

@@ -1,3 +1,4 @@
+#include "Creature_Spreading.h"
 #include "Font_Control.h"
 #include "LoadSaveUndergroundSectorInfo.h"
 #include "Queen_Command.h"
@@ -52,8 +53,6 @@ SECTORINFO SectorInfo[256];
 UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead = NULL;
 extern UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail;
 BOOLEAN gfPendingEnemies = FALSE;
-
-extern void EndCreatureQuest();
 
 extern GARRISON_GROUP *gGarrisonGroup;
 

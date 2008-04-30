@@ -1,4 +1,5 @@
 #include "Real_Time_Input.h"
+#include "Spread_Burst.h"
 #include "VObject.h"
 #include "Debug.h"
 #include "Soldier_Control.h"

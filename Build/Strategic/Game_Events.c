@@ -104,9 +104,8 @@ BOOLEAN gfEventDeletionPending = FALSE;
 static BOOLEAN gfProcessingGameEvents = FALSE;
 UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
 
-//Determines if there are any events that will be processed between the current global time,
-//and the beginning of the next global time.
-BOOLEAN GameEventsPending( UINT32 uiAdjustment )
+
+BOOLEAN GameEventsPending(const UINT32 uiAdjustment)
 {
 	if( !gpEventList )
 		return FALSE;
@@ -175,9 +174,8 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 	swprintf(WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%ls %d, %02d:%02d", gpGameClockString, guiDay, guiHour, guiMin);
 }
 
-//If there are any events pending, they are processed, until the time limit is reached, or
-//a major event is processed (one that requires the player's attention).
-void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode )
+
+void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 {
 	STRATEGICEVENT *curr, *pEvent, *prev, *temp;
 	BOOLEAN fDeleteEvent = FALSE, fDeleteQueuedEvent = FALSE;

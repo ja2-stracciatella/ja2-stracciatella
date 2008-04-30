@@ -1407,6 +1407,7 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 }
 
 
+#ifdef JA2TESTVERSION
 
 void CheatToGetAll5Merc()
 {
@@ -1420,6 +1421,8 @@ void CheatToGetAll5Merc()
 */
 	LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_FOURTH_MERC_ARRIVES;
 }
+
+#endif
 
 
 static BOOLEAN AreAnyOfTheNewMercsAvailable(void);

@@ -1,4 +1,10 @@
+#include "AI_Viewer.h"
+#include "AniViewScreen.h"
+#include "Auto_Resolve.h"
 #include "Credits.h"
+#include "Fade_Screen.h"
+#include "MapUtility.h"
+#include "Quest_Debug_System.h"
 #include "Screens.h"
 #include "JAScreens.h"
 

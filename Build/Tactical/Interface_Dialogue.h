@@ -364,6 +364,8 @@ extern BOOLEAN gfInTalkPanel;
 
 void HandleTalkingMenuBackspace(void);
 
+void HandlePendingInitConv(void);
+
 extern BOOLEAN gfWaitingForTriggerTimer;
 extern INT32   iInterfaceDialogueBox;
 

@@ -8,6 +8,7 @@
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"
+#include "Tactical_Turns.h"
 #include "Timer.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -281,11 +282,7 @@ const char *pHortStrings[]={
 };
 
 
-extern void InitializeTacticalStatusAtBattleStart();
-
 extern BOOLEAN gfOverrideSector;
-
-extern void HandleRPCDescription( );
 
 
 //temp timer stuff -- to measure the time it takes to load a map.
@@ -732,9 +729,6 @@ void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
 	*psMapX = gWorldSectorX;
 	*psMapY = gWorldSectorY;
 }
-
-//not in overhead.h!
-extern UINT8 NumEnemyInSector();
 
 
 static void HandleRPCDescriptionOfSector(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)

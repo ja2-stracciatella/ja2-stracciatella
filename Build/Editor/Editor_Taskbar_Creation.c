@@ -8,6 +8,7 @@
 //editor
 #include "EditorDefines.h"
 #include "Editor_Callback_Prototypes.h"
+#include "Editor_Taskbar_Creation.h"
 #include "Editor_Taskbar_Utils.h"
 #include "EditorMercs.h"
 #include "EditorMapInfo.h"

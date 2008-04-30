@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include "Button_System.h"
+#include "Cursor_Modes.h"
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
@@ -134,7 +135,7 @@ void KillBuilding( UINT32 iMapIndex )
 
 BUILDINGLAYOUTNODE *gpBuildingLayoutList = NULL;
 INT16 gsBuildingLayoutAnchorGridNo = -1;
-extern void RemoveBuildingLayout();
+
 
 void DeleteBuildingLayout()
 {

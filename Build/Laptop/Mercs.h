@@ -90,4 +90,8 @@ void NewMercsAvailableAtMercSiteCallBack(void);
 
 void CalcAproximateAmountPaidToSpeck(void);
 
+#ifdef JA2TESTVERSION
+void CheatToGetAll5Merc(void);
+#endif
+
 #endif

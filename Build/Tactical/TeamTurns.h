@@ -30,4 +30,6 @@ BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier );
 
 void SayCloseCallQuotes(void);
 
+void DisplayHiddenTurnbased(SOLDIERTYPE* pActingSoldier);
+
 #endif

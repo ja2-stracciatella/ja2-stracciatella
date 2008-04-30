@@ -1,7 +1,8 @@
 #ifndef __MAP_INFORMATION_H
 #define __MAP_INFORMATION_H
 
-#include "Types.h"
+#include "JA2Types.h"
+
 
 extern FLOAT gdMajorMapVersion;
 extern UINT8 gubMinorMapVersion;
@@ -40,7 +41,11 @@ CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 extern MAPCREATE_STRUCT gMapInformation;
 
 #ifdef JA2EDITOR
+
 void SaveMapInformation( HWFILE fp );
+
+void UpdateSummaryInfo(SUMMARYFILE*);
+
 #endif
 
 void LoadMapInformation( INT8 **hBuffer );

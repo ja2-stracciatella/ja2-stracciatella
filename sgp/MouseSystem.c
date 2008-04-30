@@ -47,9 +47,6 @@ static MOUSE_REGION* gpRegionLastLButtonUp        = NULL;
 static UINT32        guiRegionLastLButtonDownTime = 0;
 
 
-extern void ReleaseAnchorMode();  //private function used here (implemented in Button System.c)
-
-
 static INT32 MSYS_ScanForID = FALSE;
 static INT32 MSYS_CurrentID = MSYS_ID_SYSTEM;
 

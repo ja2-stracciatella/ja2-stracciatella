@@ -42,7 +42,7 @@ extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
 SCHEDULENODE *gpScheduleList = NULL;
 UINT8				gubScheduleID = 0;
-void ReverseSchedules();
+
 
 //IMPORTANT:
 //This function adds a NEWLY allocated schedule to the list.  The pointer passed is totally
@@ -446,8 +446,8 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 }
 
 
-//used to fix a bug in the editor where the schedules were reversed.  Because only
-//some maps were effected, this feature was required.
+#ifdef JA2EDITOR
+
 void ReverseSchedules()
 {
 	SCHEDULENODE *pReverseHead, *pPrevReverseHead, *pPrevScheduleHead;
@@ -491,6 +491,9 @@ void ClearAllSchedules()
 		}
 	}
 }
+
+#endif
+
 
 BOOLEAN SaveSchedules( HWFILE hFile )
 {

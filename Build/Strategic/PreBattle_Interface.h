@@ -96,4 +96,6 @@ void LogBattleResults( UINT8 ubVictoryCode);
 extern BOOLEAN gfUsePersistantPBI;
 extern BOOLEAN gfRenderPBInterface;
 
+void HandlePreBattleInterfaceStates(void);
+
 #endif

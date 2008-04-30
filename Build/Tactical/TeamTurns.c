@@ -41,9 +41,6 @@
 #include "Items.h"
 
 
-extern void DecayPublicOpplist(INT8 bTeam);
-
-
 static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 

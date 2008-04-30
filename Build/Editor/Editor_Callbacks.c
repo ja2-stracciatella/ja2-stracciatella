@@ -24,7 +24,7 @@
 
 extern SOLDIERINITNODE *gpSelected;
 extern SCHEDULENODE gCurrSchedule;
-extern void ExtractAndUpdateMercSchedule();
+
 
 //TERRAIN
 void BtnFgGrndCallback(GUI_BUTTON *btn,INT32 reason)

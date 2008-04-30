@@ -86,9 +86,6 @@ const char *gpzSmackerFileNames[] =
 INT8	gbIntroScreenMode=-1;
 
 
-extern	void		CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue );
-
-
 UINT32	IntroScreenInit( void )
 {
 	//Set so next time we come in, we can set up

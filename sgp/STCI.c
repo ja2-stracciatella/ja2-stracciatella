@@ -2,8 +2,8 @@
 #include "FileMan.h"
 #include "ImgFmt.h"
 #include "HImage.h"
-#include "Types.h"
 #include "Debug.h"
+#include "STCI.h"
 #include "WCheck.h"
 
 

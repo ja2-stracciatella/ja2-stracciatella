@@ -257,6 +257,7 @@ typedef enum SelSoldierFlags
 void SelectSoldier(SOLDIERTYPE* s, SelSoldierFlags flags);
 
 
+void InternalLocateGridNo(UINT16 sGridNo, BOOLEAN fForce);
 void LocateGridNo( UINT16 sGridNo );
 void LocateSoldier(SOLDIERTYPE* s, BOOLEAN fSetLocator);
 
@@ -354,6 +355,7 @@ void DoPOWPathChecks( void );
 BOOLEAN HostileCiviliansPresent( void );
 BOOLEAN HostileBloodcatsPresent( void );
 UINT8 NumPCsInSector( void );
+UINT8 NumEnemyInSector(void);
 
 void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier );
 void SetSoldierNeutral( SOLDIERTYPE * pSoldier );
@@ -374,5 +376,7 @@ void HandleEndDemoInCreatureLevel(void);
 #endif
 
 UINT NumberOfMercsOnPlayerTeam(void);
+
+void InitializeTacticalStatusAtBattleStart(void);
 
 #endif

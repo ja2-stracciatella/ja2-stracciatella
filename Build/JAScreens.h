@@ -20,16 +20,6 @@ extern UINT32 MainGameScreenInit(void);
 extern UINT32 MainGameScreenHandle(void);
 void MainGameScreenShutdown(void);
 
-#ifdef JA2BETAVERSION
-extern UINT32 AIViewerScreenInit(void);
-extern UINT32 AIViewerScreenHandle(void);
-#endif
-
-
-extern	UINT32	QuestDebugScreenInit(void);
-extern	UINT32	QuestDebugScreenHandle(void);
-
-UINT32 AniEditScreenHandle(void);
 
 UINT32 PalEditScreenHandle(void);
 
@@ -44,18 +34,9 @@ UINT32 LaptopScreenHandle(void);
 void LaptopScreenShutdown(void);
 
 
-#ifdef JA2EDITOR
-UINT32	MapUtilScreenHandle( void );
-#endif
-
-UINT32	FadeScreenHandle( void );
-
 UINT32	MessageBoxScreenHandle( void );
 
 UINT32	MainMenuScreenHandle( void );
-
-UINT32	AutoResolveScreenHandle( void );
-void AutoResolveScreenShutdown(void);
 
 
 UINT32	SaveLoadScreenHandle( void );

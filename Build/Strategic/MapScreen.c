@@ -469,7 +469,6 @@ extern PathSt* pTempCharacterPath;
 extern PathSt* pTempHelicopterPath;
 
 extern BOOLEAN gfAutoAIAware;
-extern void HandlePreBattleInterfaceStates();
 
 extern OBJECTTYPE	*gpItemDescObject;
 
@@ -495,22 +494,6 @@ extern BOOLEAN gfMilitiaPopupCreated;
 
 void CancelMapUIMessage( void );
 
-
-// Pop Up Boxes
-void CreateMercRemoveAssignBox( void );
-
-// screen mask for pop up menus
-void ClearScreenMaskForMapScreenExit( void );
-
-
-// create/destroy inventory button as needed
-void CreateDestroyMapInvButton();
-
-
-#ifdef JA2TESTVERSION
-void TestDumpStatChanges( void );
-void DumpItemsList( void );
-#endif
 
 #ifdef JA2DEMO
 static void DisplayExitToTacticalGlowDuringDemo(void);

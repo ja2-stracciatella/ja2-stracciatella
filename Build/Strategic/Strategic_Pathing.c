@@ -1,3 +1,4 @@
+#include "Strategic_Movement_Costs.h"
 #include "Types.h"
 #include "WorldDef.h"
 #include "Strategic.h"
@@ -177,10 +178,6 @@ INT16 diStratDelta[8]=
 	-1,               //W
 	-MAP_WIDTH-1       //NW
 };
-
-
-extern UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector );
-
 
 
 // this will find if a shortest strategic path

@@ -1,3 +1,4 @@
+#include "Hourly_Update.h"
 #include "Types.h"
 #include "Game_Events.h"
 #include "SoundMan.h"
@@ -43,9 +44,6 @@
 extern BOOLEAN gfMercsNeverQuit;
 #endif
 
-extern void HandleHourlyUpdate();
-extern void HandleQuarterHourUpdate();
-extern void HandleMinuteUpdate();
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
 extern BOOLEAN gfPreventDeletionOfAnyEvent;
 

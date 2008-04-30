@@ -98,4 +98,8 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
 #endif
 
+/* whenever guiBaseJA2Clock changes, we must reset all the timer variables that
+ * use it as a reference */
+void ResetJA2ClockGlobalTimers(void);
+
 #endif

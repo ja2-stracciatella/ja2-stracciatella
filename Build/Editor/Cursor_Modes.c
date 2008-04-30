@@ -36,7 +36,6 @@ const wchar_t* const wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", 
 static BOOLEAN gfAllowRightButtonSelections = FALSE;
 BOOLEAN gfCurrentSelectionWithRightButton = FALSE;
 
-void RemoveBuildingLayout();
 
 //Used for offseting cursor to show that it is on the roof rather than on the ground.
 //This can be conveniently executed by moving the cursor up and right 3 gridnos for a

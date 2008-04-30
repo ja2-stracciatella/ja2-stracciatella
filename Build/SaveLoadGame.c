@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Font_Control.h"
+#include "GameLoop.h"
 #include "LoadSaveData.h"
 #include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
@@ -105,13 +106,6 @@ static const char g_savegame_name[]  = "SaveGame";
 static const char g_savegame_ext[]   = "sav";
 static const char g_savegame_dir[]   = "../SavedGames";
 
-
-extern void NextLoopCheckForEnoughFreeHardDriveSpace();
-extern void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion );
-extern void TrashAllSoldiers( );
-extern void ResetJA2ClockGlobalTimers( void );
-
-extern void BeginLoadScreen();
 
 //Global variable used
 #ifdef JA2BETAVERSION
@@ -3224,7 +3218,6 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 	//Restore the JA2 Clock
 	guiBaseJA2Clock = sGeneralInfo.uiBaseJA2Clock;
 
-	// whenever guiBaseJA2Clock changes, we must reset all the timer variables that use it as a reference
 	ResetJA2ClockGlobalTimers();
 
 

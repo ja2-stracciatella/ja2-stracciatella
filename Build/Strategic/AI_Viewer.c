@@ -1,7 +1,9 @@
+#ifdef JA2BETAVERSION
+
+#include "AI_Viewer.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
-#include "Types.h"
 #include "English.h"
 #include "Timer_Control.h"
 #include "VObject.h"
@@ -39,8 +41,6 @@
 #include "WordWrap.h"
 #include "SGP.h"
 
-
-#ifdef JA2BETAVERSION
 
 #define VIEWER_LEFT			15
 #define VIEWER_TOP			15

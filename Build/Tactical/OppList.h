@@ -138,4 +138,8 @@ extern SOLDIERTYPE* gInterruptProvoker;
 
 extern const SOLDIERTYPE* gWhoThrewRock;
 
+void DecayPublicOpplist(INT8 bTeam);
+
+void RecalculateOppCntsDueToBecomingNeutral(SOLDIERTYPE* pSoldier);
+
 #endif

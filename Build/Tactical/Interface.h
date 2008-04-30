@@ -208,6 +208,8 @@ void RenderTopmostMultiPurposeLocator(void);
 
 void GetSoldierAboveGuyPositions(const SOLDIERTYPE* s, INT16* psX, INT16* psY, BOOLEAN fRadio);
 
+void UpdateEnemyUIBar(void);
+
 extern SGPVObject* guiVEHINV;
 extern BOOLEAN gfInOpenDoorMenu;
 extern UINT32  guiUIMessageTimeDelay;

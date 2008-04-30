@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Editor_Callback_Prototypes.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -84,12 +85,6 @@ static BOOLEAN gfCorruptMap        = FALSE;
 static BOOLEAN gfCorruptSchedules  = FALSE;
 BOOLEAN        gfProfileDataLoaded = FALSE;
 
-extern void RemoveMercsInSector();
-extern void ReverseSchedules();
-extern void ClearAllSchedules();
-
-//defined in sector summary.c
-extern BOOLEAN HandleSummaryInput( InputAtom *pEvent );
 
 // These are global variables used by the main game loop
 
@@ -1224,7 +1219,6 @@ static void HandleJA2ToolbarSelection(void)
 
 
 extern INT8 gbCurrSelect;
-extern void DeleteSelectedMercsItem();
 
 
 static BOOLEAN CheckForSlantRoofs(void);
@@ -3284,7 +3278,6 @@ static void DrawObjectsBasedOnSelectionRegion(void)
 	}
 }
 
-extern void AutoLoadMap();
 
 //The main loop of the editor.
 UINT32  EditScreenHandle( void )

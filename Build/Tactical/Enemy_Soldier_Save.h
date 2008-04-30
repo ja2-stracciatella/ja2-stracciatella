@@ -1,6 +1,9 @@
 #ifndef __ENEMY_SOLDIER_SAVE_H
 #define __ENEMY_SOLDIER_SAVE_H
 
+#include "Types.h"
+
+
 //This funciton load both the enemies AND the civilians, now only used to load old saves
 BOOLEAN LoadEnemySoldiersFromTempFile(void);
 

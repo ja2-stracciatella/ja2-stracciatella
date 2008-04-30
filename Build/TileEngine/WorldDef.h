@@ -276,4 +276,8 @@ BOOLEAN IsSoldierLight(const LIGHT_SPRITE* l);
 
 void FreeLevelNodeList(LEVELNODE** const head);
 
+void SetAllNewTileSurfacesLoaded(BOOLEAN fNew);
+
+void RecompileLocalMovementCostsForWall(INT16 sGridNo, UINT8 ubOrientation);
+
 #endif

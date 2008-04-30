@@ -92,4 +92,6 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* pSoldier, EXPLOSIVETYPE* pExplosive, INT16
 
 void HandleExplosionQueue(void);
 
+BOOLEAN DoesSAMExistHere(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo);
+
 #endif

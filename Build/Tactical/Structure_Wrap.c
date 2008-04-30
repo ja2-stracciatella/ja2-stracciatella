@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "Explosion_Control.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
@@ -9,10 +10,6 @@
 #include "RenderWorld.h"
 #include "StrategicMap.h"
 #include "Rotting_Corpses.h"
-
-
-extern BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo );
-
 
 
 BOOLEAN	IsFencePresentAtGridno( INT16 sGridNo )

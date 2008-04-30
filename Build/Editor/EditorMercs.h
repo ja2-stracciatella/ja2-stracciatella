@@ -122,5 +122,9 @@ void KillDetailedPlacementForMerc(void);
 void CopyMercPlacement(INT32 iMapIndex);
 void PasteMercPlacement(INT32 iMapIndex);
 
+void ExtractAndUpdateMercSchedule(void);
+
+void DeleteSelectedMercsItem(void);
+
 #endif
 #endif

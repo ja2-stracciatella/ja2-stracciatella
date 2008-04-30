@@ -26,13 +26,6 @@
 #include "Items.h"
 
 
-extern void DecayPublicOpplist( INT8 bTeam );
-
-//not in overhead.h!
-extern UINT8 NumEnemyInSector();
-
-
-
 void HandleRPCDescription(  )
 {
 	UINT8	ubNumMercs = 0;

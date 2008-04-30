@@ -303,4 +303,10 @@ extern BOOLEAN gfUIShowExitSouth;
 
 BOOLEAN ValidQuickExchangePosition(void);
 
+void CheckForDisabledRegionRemove(void);
+
+void HandleTacticalUILoseCursorFromOtherScreen(void);
+
+void SetInterfaceHeightLevel(void);
+
 #endif

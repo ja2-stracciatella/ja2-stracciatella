@@ -113,11 +113,6 @@ UINT32	guiTacticalLeaveScreenID;
 BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 
-extern void CheckForDisabledRegionRemove( );
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
-
-
-
 UINT32 MainGameScreenInit(void)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;

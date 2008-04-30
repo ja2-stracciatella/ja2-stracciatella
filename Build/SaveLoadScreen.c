@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "GameLoop.h"
 #include "HImage.h"
 #include "Local.h"
 #include "Timer_Control.h"
@@ -131,10 +132,6 @@ enum
 	SLS_GAME_VERSION_OUT_OF_DATE,
 	SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE,
 };
-
-
-extern void NextLoopCheckForEnoughFreeHardDriveSpace();
-
 
 
 BOOLEAN		gfSaveLoadScreenEntry = TRUE;

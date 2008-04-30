@@ -37,10 +37,6 @@
 extern	BOOLEAN			gfFadeOut;
 
 
-//These functions shouldn't be used anywhere else...
-extern BOOLEAN GameEventsPending( UINT32 uiAdjustment );
-extern void ProcessPendingGameEvents( UINT32 uiAdjustment, UINT8 ubWarpCode );
-
 // is the clock pause region created currently?
 BOOLEAN fClockMouseRegionCreated = FALSE;
 

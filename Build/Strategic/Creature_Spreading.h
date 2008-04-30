@@ -1,6 +1,9 @@
 #ifndef __CREATURE_SPREADING_H
 #define __CREATURE_SPREADING_H
 
+#include "Types.h"
+
+
 void InitCreatureQuest(void);
 void SpreadCreatures(void);
 void DecayCreatures(void);
@@ -52,5 +55,7 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation( UINT8 *pubNumCr
 
 
 BOOLEAN PlayerGroupIsInACreatureInfestedMine(void);
+
+void EndCreatureQuest(void);
 
 #endif

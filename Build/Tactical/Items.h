@@ -168,4 +168,10 @@ void    CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj);
 void    StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToCopy);
 BOOLEAN ItemIsCool(const OBJECTTYPE* pObj);
 
+UINT16 StandardGunListAmmoReplacement(UINT16 usAmmo);
+
+#ifdef JA2TESTVERSION
+void DumpItemsList(void);
+#endif
+
 #endif

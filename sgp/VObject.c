@@ -123,6 +123,9 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 }
 
 
+#ifdef SGP_VIDEO_DEBUGGING
+static
+#endif
 SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
 	if (hImage == NULL)
@@ -168,6 +171,9 @@ SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 }
 
 
+#ifdef SGP_VIDEO_DEBUGGING
+static
+#endif
 SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
 	const HIMAGE hImage = CreateImage(ImageFile, IMAGE_ALLIMAGEDATA);

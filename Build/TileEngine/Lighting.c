@@ -2448,9 +2448,6 @@ const SGPPaletteEntry* LightGetColor(void)
 }
 
 
-
-extern void SetAllNewTileSurfacesLoaded( BOOLEAN fNew );
-
 void LightSetColor(const SGPPaletteEntry* const pPal)
 {
 	Assert(pPal != NULL);

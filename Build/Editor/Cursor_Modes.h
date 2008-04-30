@@ -34,6 +34,8 @@ extern BOOLEAN gfCurrentSelectionWithRightButton;
 
 extern SGPRect gSelectRegion;
 
+void RemoveBuildingLayout(void);
+
 #endif
 
 #endif

@@ -22,6 +22,6 @@ void SetDoorString( INT16 sGridNo );
 
 void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations );
 
-
+UINT16 GetAnimStateForInteraction(SOLDIERTYPE* pSoldier, BOOLEAN fDoor, UINT16 usAnimState);
 
 #endif

@@ -26,4 +26,7 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 //Returns TRUE if a battle is happening ONLY
 BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ);
 
+UINT32 AutoResolveScreenHandle(void);
+void   AutoResolveScreenShutdown(void);
+
 #endif

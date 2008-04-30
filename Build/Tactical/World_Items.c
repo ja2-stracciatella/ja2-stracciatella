@@ -35,8 +35,6 @@ UINT32				guiNumWorldItems = 0;
 WORLDBOMB *		gWorldBombs = NULL;
 UINT32				guiNumWorldBombs = 0;
 
-extern UINT16 StandardGunListAmmoReplacement( UINT16 usAmmo );
-
 
 static INT32 GetFreeWorldBombIndex(void)
 {

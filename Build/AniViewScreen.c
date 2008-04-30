@@ -1,3 +1,4 @@
+#include "AniViewScreen.h"
 #include "Gameloop.h"
 #include "WorldDef.h"
 #include "RenderWorld.h"

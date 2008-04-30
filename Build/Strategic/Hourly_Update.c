@@ -1,4 +1,6 @@
 #include "Assignments.h"
+#include "Hourly_Update.h"
+#include "Map_Screen_Helicopter.h"
 #include "Soldier_Profile.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Merc_Handler.h"
@@ -17,9 +19,6 @@
 #include "Dialogue_Control.h"
 #include "ScreenIDs.h"
 
-
-extern INT32 GetCurrentBalance( void );
-extern void PayOffSkyriderDebtIfAny( );
 
 void HandleMinuteUpdate()
 {

@@ -14,6 +14,7 @@ typedef struct BULLET             BULLET;
 typedef struct DB_STRUCTURE_REF   DB_STRUCTURE_REF;
 typedef struct EXPLOSIONTYPE      EXPLOSIONTYPE;
 typedef struct FACETYPE           FACETYPE;
+typedef struct GROUP              GROUP;
 typedef struct ITEM_POOL          ITEM_POOL;
 typedef struct LEVELNODE          LEVELNODE;
 typedef struct LIGHT_SPRITE       LIGHT_SPRITE;
@@ -27,5 +28,9 @@ typedef struct STRUCTURE_FILE_REF STRUCTURE_FILE_REF;
 typedef struct TILE_IMAGERY       TILE_IMAGERY;
 typedef struct VEHICLETYPE        VEHICLETYPE;
 typedef struct VIDEO_OVERLAY      VIDEO_OVERLAY;
+
+#ifdef JA2EDITOR
+typedef struct SUMMARYFILE SUMMARYFILE;
+#endif
 
 #endif

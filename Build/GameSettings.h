@@ -124,4 +124,6 @@ BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile );
 
 BOOLEAN CanGameBeSaved(void);
 
+void CDromEjectionErrorMessageBoxCallBack(UINT8 bExitValue);
+
 #endif

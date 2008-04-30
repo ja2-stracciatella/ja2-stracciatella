@@ -84,7 +84,7 @@ CASSERT(sizeof(ENEMYGROUP) == 29)
 #define GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY	0x00000020
 
 
-typedef struct GROUP
+struct GROUP
 {
 	BOOLEAN fDebugGroup;					//for testing purposes -- handled differently in certain cases.
 	BOOLEAN fPlayer;							//set if this is a player controlled group.
@@ -120,7 +120,7 @@ typedef struct GROUP
 		ENEMYGROUP *pEnemyGroup;		//a structure containing general enemy info
 	};
 	struct GROUP *next;						//next group
-}GROUP;
+};
 CASSERT(sizeof(GROUP) == 84)
 
 
@@ -279,6 +279,10 @@ BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
 BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP*);
 
 void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle);
+
+void CalculateGroupRetreatSector(GROUP*);
+
+void UpdatePersistantGroupsFromOldSave(UINT32 uiSavedGameVersion);
 
 extern BOOLEAN gfUndergroundTacticalTraversal;
 

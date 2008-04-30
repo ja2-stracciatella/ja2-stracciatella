@@ -1,3 +1,4 @@
+#include "GameLoop.h"
 #include "GameVersion.h"
 #include "Local.h"
 #include "SGP.h"

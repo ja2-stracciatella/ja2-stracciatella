@@ -114,6 +114,9 @@ extern INT32        giCharInfoButton[2];
 extern MOUSE_REGION gCharInfoHandRegion;
 extern BOOLEAN      fDrawCharacterList;
 
+// create/destroy inventory button as needed
+void CreateDestroyMapInvButton(void);
+
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);
 #endif

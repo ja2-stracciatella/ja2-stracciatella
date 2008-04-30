@@ -133,8 +133,6 @@ UINT32 uiMeanWhileFlags = 0;
 #define INTERROGATION_FLAG										0x00008000
 #define BALIME_LIBERATED_FLAG									0x00010000
 
-extern void InternalLocateGridNo( UINT16 sGridNo, BOOLEAN fForce );
-
 
 // set flag for this event
 static void SetMeanWhileFlag(UINT8 ubMeanwhileID)

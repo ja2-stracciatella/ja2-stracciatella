@@ -1,5 +1,6 @@
 #include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "FindLocations.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -129,8 +130,6 @@ static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728
 
 
 extern void EndGameMessageBoxCallBack( UINT8 ubExitValue );
-extern INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo );
-extern void RecalculateOppCntsDueToBecomingNeutral( SOLDIERTYPE * pSoldier );
 
 static const UINT8 ubTalkMenuApproachIDs[] =
 {

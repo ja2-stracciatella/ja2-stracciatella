@@ -159,8 +159,6 @@ INT16 gsTopPosition = 20;
 INT32 iDialogueBox = -1;
 
 
-extern void HandlePendingInitConv( );
-
 // the next said quote will pause time
 BOOLEAN fPausedTimeDuringQuote = FALSE;
 BOOLEAN fWasPausedDuringDialogue = FALSE;

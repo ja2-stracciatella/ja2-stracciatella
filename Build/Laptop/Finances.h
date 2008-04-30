@@ -47,4 +47,6 @@ INT32 GetProjectedTotalDailyIncome( void );
 
 void SPrintMoney(wchar_t* Str, INT32 Amount);
 
+INT32 GetCurrentBalance(void);
+
 #endif

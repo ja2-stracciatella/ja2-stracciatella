@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Editor_Callback_Prototypes.h"
 #include "HImage.h"
 #include "Handle_UI.h"
 #include "Interface.h"

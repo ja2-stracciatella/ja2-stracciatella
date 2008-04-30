@@ -1,5 +1,5 @@
+#include "Enemy_Soldier_Save.h"
 #include "LoadSaveSoldierCreate.h"
-#include "Types.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
 #include "Soldier_Add.h"
@@ -20,8 +20,6 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
-
-extern void AddPlacementToWorld( SOLDIERINITNODE *pNode );
 
 BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;

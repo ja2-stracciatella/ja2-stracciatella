@@ -99,8 +99,6 @@ static UINT32 uniqueIDMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 static GROUP* gpInitPrebattleGroup = NULL;
 
-extern void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum );
-
 // waiting for input from user
 static BOOLEAN gfWaitingForInput = FALSE;
 

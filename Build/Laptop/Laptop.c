@@ -327,12 +327,6 @@ void PrintNumberOnTeam(void);
 extern void ClearHistoryList(void);
 
 
-//TEMP CHEAT
-#ifdef JA2TESTVERSION
-extern void CheatToGetAll5Merc();
-#endif
-
-
 void SetLaptopExitScreen(UINT32 uiExitScreen)
 {
 	guiExitScreen = uiExitScreen;

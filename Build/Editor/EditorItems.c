@@ -957,7 +957,7 @@ void HandleRightClickOnItem( INT16 sGridNo )
 	SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
 }
 
-extern void DeleteSelectedMercsItem();
+
 
 void DeleteSelectedItem()
 {

@@ -170,7 +170,6 @@ SetSelection(): callers
 SetTilesetOneTerrainValues(): set callback to avoid explicit test
 SoldierCanSeeCatchComing(): empty
 SoldierCarriesTwoHandedWeapon(): complicated
-StandardGunListAmmoReplacement(): declaration in .c
 StrategicMap[]: definition not used in file
 StrategicPythSpacesAway(): avoid sqrt()
 TacticalScreenMsg(): no need for format string

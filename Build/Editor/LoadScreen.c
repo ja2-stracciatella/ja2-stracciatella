@@ -55,7 +55,6 @@ BOOLEAN gfErrorCatch = FALSE;
 wchar_t gzErrorCatchString[256] = L"";
 static INT32 giErrorCatchMessageBox = 0;
 
-extern void RemoveMercsInSector();
 
 enum{
 	DIALOG_NONE,

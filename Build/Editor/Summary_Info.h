@@ -19,7 +19,7 @@ typedef struct TEAMSUMMARY
 }TEAMSUMMARY; //15 bytes
 CASSERT(sizeof(TEAMSUMMARY) == 15)
 
-typedef struct SUMMARYFILE
+struct SUMMARYFILE
 {
 	//start version 1
 	UINT8 ubSummaryVersion;
@@ -92,7 +92,7 @@ typedef struct SUMMARYFILE
 	UINT8 ubPadding[164];							//	164
 	//																//-----
 	//																		400 total bytes
-}SUMMARYFILE;
+};
 CASSERT(sizeof(SUMMARYFILE) == 408)
 
 

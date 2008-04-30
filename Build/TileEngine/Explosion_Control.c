@@ -60,8 +60,6 @@
 
 
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
-extern void RecompileLocalMovementCostsForWall( INT16 sGridNo, UINT8 ubOrientation );
-void FatigueCharacter( SOLDIERTYPE *pSoldier );
 
 
 typedef struct ExplosionInfo

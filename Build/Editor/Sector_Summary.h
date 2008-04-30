@@ -2,6 +2,9 @@
 #ifndef __SECTOR_SUMMARY_H
 #define __SECTOR_SUMMARY_H
 
+#include "Input.h"
+
+
 void CreateSummaryWindow(void);
 void DestroySummaryWindow(void);
 void RenderSummaryWindow(void);
@@ -20,6 +23,10 @@ extern BOOLEAN gSectorExists[16][16];
 extern UINT16 gusNumEntriesWithOutdatedOrNoSummaryInfo;
 
 extern BOOLEAN gfUpdateSummaryInfo;
+
+void AutoLoadMap(void);
+
+BOOLEAN HandleSummaryInput(InputAtom*);
 
 #endif
 #endif

@@ -226,9 +226,6 @@ static const COLORVAL DefaultTeamColors[] =
 CASSERT(lengthof(DefaultTeamColors) == MAXTEAMS)
 
 
-UINT8 NumEnemyInSector( );
-
-
 UINT8         gubWaitingForAllMercsToExitCode  = 0;
 static INT8   gbNumMercsUntilWaitingOver       = 0;
 static UINT32 guiWaitingForAllMercsToExitTimer = 0;

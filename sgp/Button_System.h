@@ -251,6 +251,8 @@ const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 
 UINT16 GetGenericButtonFillColor(void);
 
+void ReleaseAnchorMode(void);
+
 #ifdef __cplusplus
 }
 #endif

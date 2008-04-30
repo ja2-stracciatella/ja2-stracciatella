@@ -28,4 +28,6 @@ BOOLEAN HandleFadeInCallback(void);
 void FadeInNextFrame(void);
 void FadeOutNextFrame(void);
 
+UINT32 FadeScreenHandle(void);
+
 #endif

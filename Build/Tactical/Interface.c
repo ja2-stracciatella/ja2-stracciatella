@@ -89,8 +89,6 @@ typedef struct TOP_MESSAGE
 static TOP_MESSAGE gTopMessage;
 BOOLEAN gfTopMessageDirty = FALSE;
 
-extern UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState );
-
 
 static MOUSE_REGION gMenuOverlayRegion;
 
@@ -2045,7 +2043,7 @@ void EndUIMessage( )
 #define PLAYER_TEAM_TIMER_TICKS_PER_ENEMY									( 2000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )
 
 
-static void CreateTopMessage();
+static void CreateTopMessage(void);
 
 
 void AddTopMessage(const MESSAGE_TYPES ubType)

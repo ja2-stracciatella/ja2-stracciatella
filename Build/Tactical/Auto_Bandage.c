@@ -71,9 +71,6 @@ static SGPVObject* giAutoBandagesSoldierFaces[2 * MAX_CHARACTER_COUNT];
 BOOLEAN fAutoEndBandageButtonCreated = FALSE;
 
 
-extern UINT8 NumEnemyInSector( );
-
-
 static void BeginAutoBandageCallBack(UINT8 bExitValue);
 
 
