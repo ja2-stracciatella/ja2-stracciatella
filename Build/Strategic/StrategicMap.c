@@ -4023,20 +4023,19 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 //Examples:		A9
 //						A10_B1
 //						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-static void GetLoadedSectorString(wchar_t* pString, size_t Length)
+static void GetLoadedSectorString(wchar_t* const pString, const size_t Length)
 {
-	if( !gfWorldLoaded )
+	if (!gfWorldLoaded)
 	{
-		swprintf( pString, Length, L"" );
-		return;
+		swprintf(pString, Length, L"");
 	}
-	if( gbWorldSectorZ )
+	else if (gbWorldSectorZ == 0)
 	{
-		swprintf( pString, Length, L"%c%d_b%d", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ );
+		swprintf(pString, Length, L"%c%d", gWorldSectorY + 'A' - 1, gWorldSectorX);
 	}
-	else if( !gbWorldSectorZ )
+	else
 	{
-		swprintf( pString, Length, L"%c%d", gWorldSectorY + 'A' - 1, gWorldSectorX );
+		swprintf(pString, Length, L"%c%d_b%d", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 	}
 }
 
