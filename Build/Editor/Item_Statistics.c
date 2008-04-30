@@ -15,7 +15,6 @@
 #include "Action_Items.h"
 #include "Item_Types.h"
 #include "Video.h"
-#include "Simple_Render_Utils.h"
 #include "Weapons.h"
 #include "Items.h"
 #include "EditScreen.h"

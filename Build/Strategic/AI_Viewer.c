@@ -10,7 +10,6 @@
 #include "VSurface.h"
 #include "Button_System.h"
 #include "Font_Control.h"
-#include "Simple_Render_Utils.h"
 #include "Editor_Taskbar_Utils.h"
 #include "Line.h"
 #include "Input.h"
