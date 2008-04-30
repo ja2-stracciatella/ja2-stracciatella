@@ -21,6 +21,10 @@
 #include "Video.h"
 #include "VSurface.h"
 
+#ifndef JA2BETAVERSION
+#	include "GameSettings.h"
+#endif
+
 
 BOOLEAN		gfIntroScreenEntry;
 BOOLEAN		gfIntroScreenExit;
