@@ -228,7 +228,9 @@ void CopyBuilding( INT32 iMapIndex )
 //This will prevent overlapping problems.
 static void SortBuildingLayout(INT32 iMapIndex)
 {
-	BUILDINGLAYOUTNODE *head, *curr, *prev, *prevBest, *best;
+	BUILDINGLAYOUTNODE* prevBest = NULL; // XXX HACK000E
+	BUILDINGLAYOUTNODE* best     = NULL; // XXX HACK000E
+	BUILDINGLAYOUTNODE *head, *curr, *prev;
 	INT32 iBestIndex;
 	head = NULL;
 	if( iMapIndex < gsBuildingLayoutAnchorGridNo )

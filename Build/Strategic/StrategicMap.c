@@ -2145,7 +2145,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 {
 	SOLDIERTYPE *pValidSoldier = NULL;
 	UINT32 uiTraverseTime=0;
-	UINT8 ubDirection;
+	UINT8 ubDirection = (UINT8)-1; // XXX HACK000E
 	EXITGRID ExitGrid;
 
 	// Set initial selected

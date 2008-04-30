@@ -2021,7 +2021,8 @@ fail_loop:
 
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
 {
-	STRUCTURE * pCurrent, *pStructure;
+	STRUCTURE* pStructure = NULL; // XXX HACK000E
+	STRUCTURE* pCurrent;
 	INT16				sDesiredLevel;
 	BOOLEAN			fOKStructOnLevel = FALSE;
 	BOOLEAN			fMinimumBlockingFound = FALSE;

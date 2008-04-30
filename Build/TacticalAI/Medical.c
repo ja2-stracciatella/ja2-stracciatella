@@ -1,5 +1,6 @@
 #include "Isometric_Utils.h"
 #include "Medical.h"
+#include "TileDef.h"
 #include "Types.h"
 #include "Soldier_Functions.h"
 #include "AI.h"
@@ -199,13 +200,16 @@ BOOLEAN CanCharacterBeAutoBandagedByTeammate(const SOLDIERTYPE* const pSoldier)
 
 static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 {
-	INT16						bBestPriority = 0, sBestAdjGridNo;
-	INT16						sPatientGridNo, sBestPatientGridNo;
+	INT16						bBestPriority = 0;
+	INT16						sPatientGridNo;
 	INT16						sShortestPath = 1000, sPathCost, sOtherMedicPathCost;
 	SOLDIERTYPE *		pBestPatient = NULL;
 	INT8						bPatientPriority;
 	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
+
+	INT16 sBestAdjGridNo     = NO_TILE; // XXX HACK000E
+	INT16 sBestPatientGridNo = NO_TILE; // XXX HACK000E
 
 	gubGlobalPathFlags = PATH_THROUGH_PEOPLE;
 

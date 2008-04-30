@@ -792,9 +792,9 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	// take everyone out of heli and add to movement group
 	INT8 bNewSquad;
 	BOOLEAN fSuccess;
-  UINT8   ubInsertionCode;
+  UINT8   ubInsertionCode = (UINT8)-1; // XXX HACK000E
   BOOLEAN fInsertionCodeSet = FALSE;
-  UINT16  usInsertionData;
+  UINT16  usInsertionData = (UINT16)-1; // XXX HACK000E
 
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one

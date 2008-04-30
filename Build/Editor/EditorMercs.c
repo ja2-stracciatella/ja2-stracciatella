@@ -1397,9 +1397,8 @@ void KillDetailedPlacementForMerc()
 
 static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
 {
-	INT8 *pbArray;
-	INT32	iMax, x;
-	INT32 iIndex;
+	INT8 *pbArray; // HACK000E
+	INT32	iMax, x; // HACK000E
 
 	gfRenderTaskbar = TRUE;
 	gfRenderMercInfo = TRUE;
@@ -1424,8 +1423,11 @@ static void ChangeBodyType(INT8 bOffset)  //+1 or -1 only
 			pbArray = bCivArray;
 			iMax = MAX_CIVTYPES;
 			break;
+
+		default: abort(); // HACK000E
 	}
 	//find the matching bodytype index within the array.
+	INT32 iIndex = -1; // XXX HACK000E
 	for( x = 0; x < iMax; x++ )
 	{
 		iIndex = pbArray[ x ];
@@ -1794,7 +1796,7 @@ void SetMercEditingMode( UINT8 ubNewMode )
 
 static void DisplayBodyTypeInfo(void)
 {
-	const wchar_t* str;
+	const wchar_t* str; // XXX HACK000E
 	switch( gpSelected->pBasicPlacement->bBodyType )
 	{
 		case RANDOM:              str = L"Random";         break;
@@ -1825,6 +1827,8 @@ static void DisplayBodyTypeInfo(void)
 		case AM_MONSTER:          str = L"Adt M Monster";  break;
 		case QUEENMONSTER:        str = L"Queen Monster";  break;
 		case BLOODCAT:            str = L"Bloodcat";       break;
+
+		default: abort(); // HACK000E
 	}
 	DrawEditorInfoBox( str, FONT10ARIAL, 490, 364, 70, 20 );
 }
@@ -2829,7 +2833,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 // 0:1A, 1:1B, 2:2A, 3:2B, ...
 void FindScheduleGridNo( UINT8 ubScheduleData )
 {
-	INT32 iMapIndex;
+	INT32 iMapIndex; // XXX HACK000E
 	switch( ubScheduleData )
 	{
 		case 0: //1a
@@ -2858,6 +2862,7 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 			break;
 		default:
 			AssertMsg( 0, "FindScheduleGridNo passed incorrect dataID." );
+			abort(); // HACK000E
 	}
 	if( iMapIndex != 0xffff )
 	{

@@ -38,7 +38,7 @@ void SyncStrategicTurnTimes(void)
 void HandleStrategicTurn(void)
 {
 	UINT32	uiTime;
-	UINT32	uiCheckTime;
+	UINT32	uiCheckTime; // XXX HACK000E
 
 	// OK, DO THIS CHECK EVERY ONCE AND A WHILE...
 	if ( COUNTERDONE( STRATEGIC_OVERHEAD ) )
@@ -79,6 +79,10 @@ void HandleStrategicTurn(void)
 				if( giTimeCompressSpeeds[ giTimeCompressMode ] > 0 )
 				{
 				  uiCheckTime = NUM_REAL_SEC_PER_TACTICAL_TURN / ( giTimeCompressSpeeds[ giTimeCompressMode ] * RT_COMPRESSION_TACTICAL_TURN_MODIFIER );
+				}
+				else
+				{
+					abort(); // XXX HACK000E
 				}
 			}
 

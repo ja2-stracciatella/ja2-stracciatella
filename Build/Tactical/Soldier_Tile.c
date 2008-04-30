@@ -46,7 +46,6 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 	if ( (gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->usPathDataSize > 0) )
 	{
 		UINT32	uiLoop;
-		UINT16	usTemp;
 		UINT16	usNewGridNo;
 
 		usNewGridNo = NewGridNo( pSoldier->sGridNo, DirectionInc( (UINT8)pSoldier->usPathingData[ pSoldier->usPathIndex ] ) );
@@ -55,6 +54,7 @@ static void OutputDebugInfoForTurnBasedNextTileWaiting(SOLDIERTYPE* pSoldier)
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("  Soldier path size %d, index %d", pSoldier->usPathDataSize, pSoldier->usPathIndex ) );
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("  Who is at blocked gridno: %d", SOLDIER2ID(WhoIsThere2(usNewGridNo, pSoldier->bLevel))));
 
+		UINT16 usTemp = NO_TILE; // XXX HACK000E
 		for ( uiLoop = 0; uiLoop < pSoldier->usPathDataSize; uiLoop++ )
 		{
 			if ( uiLoop > pSoldier->usPathIndex )

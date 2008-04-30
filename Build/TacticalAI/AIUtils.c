@@ -797,7 +797,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 	INT16		*psLastLoc, *pusNoiseGridNo;
 	INT8		*pbLastLevel;
 	INT16		sGridNo=-1;
-	INT8		bLevel, bClosestLevel;
+	INT8		bLevel;
 	BOOLEAN	fClimbingNecessary, fClosestClimbingNecessary = FALSE;
 	INT32		iPathCost;
 	INT16		sClosestDisturbance = NOWHERE;
@@ -820,6 +820,7 @@ INT16 ClosestReachableDisturbance(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK, 
 //	psLastLoc = &(gsLastKnownOppLoc[pSoldier->ubID][0]);
 
 	// look through this man's personal & public opplists for opponents known
+	INT8 bClosestLevel = 0; // XXX HACK000E
 	FOR_ALL_MERCS(i)
 	{
 		const SOLDIERTYPE* const pOpp = *i;

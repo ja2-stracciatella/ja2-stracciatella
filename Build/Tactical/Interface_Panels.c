@@ -597,7 +597,7 @@ static void UpdateSMPanel(void)
 		ubStanceState = gAnimControl[ gpSMCurrentMerc->usAnimState ].ubEndHeight;
 	}
 
-	INT32 stance_gfx;
+	INT32 stance_gfx; // XXX HACK000E
 	switch( ubStanceState )
 	{
 		case ANIM_STAND:
@@ -629,6 +629,8 @@ static void UpdateSMPanel(void)
 				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
 			}
 			break;
+
+		default: abort(); // HACK000E
 	}
 
 	// Stance button done wether we're disabled or not...

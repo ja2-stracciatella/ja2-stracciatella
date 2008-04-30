@@ -2104,7 +2104,7 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 	INT16        sDesiredMercDist    = 100;
 	UINT8        ubDesiredMerc       = NOBODY;
 	UINT8        ubHighestTalkDesire = 0;
-	SOLDIERTYPE* pDesiredMerc;
+	SOLDIERTYPE* pDesiredMerc        = NULL; // XXX HACK000E
 	// loop through all mercs
 	for (UINT8 ubMerc = 0; ubMerc < guiNumMercSlots; ++ubMerc)
 	{

@@ -4288,8 +4288,8 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 //	UINT8 ubPlayVolume;
 	INT8 bCheckTerrain = FALSE;
-	UINT8 ubNoiseDir;
-	UINT8 ubLoudestNoiseDir;
+	UINT8 ubNoiseDir        = (UINT8)-1; // XXX HACK000E probably ubLoudestNoiseDir should be used
+	UINT8 ubLoudestNoiseDir = (UINT8)-1; // XXX HACK000E
 
 #ifdef RECORDOPPLIST
 	fprintf(OpplistFile,"PN: nType=%s, nMaker=%d, g=%d, tType=%d, bVol=%d\n",

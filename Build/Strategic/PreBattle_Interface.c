@@ -846,7 +846,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 		SetFontForeground( FONT_BEIGE );
 	}
 	SetFontShadow( FONT_NEARBLACK );
-	const wchar_t* str;
+	const wchar_t* str; // XXX HACK000E
 	if( !gfPersistantPBI )
 	{
 		str = gzNonPersistantPBIText[8];
@@ -877,6 +877,8 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 		case ENTERING_BLOODCAT_LAIR_CODE:
 			str = gpStrategicString[STR_PB_ENTERINGBLOODCATLAIR_HEADER];
 			break;
+
+		default: abort(); // HACK000E
 	}
 	width = StringPixLength( str, FONT10ARIALBOLD );
 	x = 130 - width / 2;

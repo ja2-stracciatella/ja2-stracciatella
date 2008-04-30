@@ -1053,9 +1053,11 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
  INT32 iAttackValue;
  INT32 iThreatValue,iHitRate,iBestHitRate,iPercentBetter, iEstDamage;
  BOOLEAN fSurpriseStab;
- UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+ UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime;
  UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
  UINT16 usTrueMovementMode;
+
+ UINT8 ubBestAimTime = (UINT8)-1; // XXX HACK000E
 
  InitAttackType(pBestStab);      // set all structure fields to defaults
 
@@ -1260,8 +1262,10 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
  INT32 iAttackValue;
  INT32 iThreatValue,iHitRate,iBestHitRate, iEstDamage;
  BOOLEAN fSurpriseStab;
- UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
+ UINT8 ubRawAPCost,ubMinAPCost,ubMaxPossibleAimTime,ubAimTime;
  UINT8 ubChanceToHit,ubChanceToReallyHit,ubBestChanceToHit = 0;
+
+ UINT8 ubBestAimTime = (UINT8)-1; // XXX HACK000E
 
  InitAttackType(pBestStab);      // set all structure fields to defaults
 

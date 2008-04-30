@@ -281,7 +281,6 @@ static BOOLEAN DoTrapCheckOnStartingMenu(SOLDIERTYPE* pSoldier, DOOR* pDoor)
 void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor )
 {
 	STRUCTURE *			pBaseStructure;
-	BOOLEAN					fDoMenu = FALSE;
 	DOOR		*				pDoor;
 	DOOR_STATUS *		pDoorStatus;
   BOOLEAN         fTrapsFound = FALSE;
@@ -340,28 +339,13 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, CLOSE_DOOR ), 0, FALSE );
 		}
 	}
-	else
+	else if (IsOnOurTeam(pSoldier))
 	{
 		// Bring up the menu, only if it has a lock!
-		if (IsOnOurTeam(pSoldier))
-		{
-			pDoor = FindDoorInfoAtGridNo( pBaseStructure->sGridNo );
+		pDoor = FindDoorInfoAtGridNo( pBaseStructure->sGridNo );
 
-			if ( pDoor != NULL )
-			{
-        // Assume true
-				fDoMenu = TRUE;
-
-        // Check if it's locked.....
-        // If not locked, don't bring it up!
-        if ( !pDoor->fLocked )
-        {
-          fDoMenu = FALSE;
-        }
-			}
-		}
-
-		if ( fDoMenu )
+		if (pDoor != NULL &&
+				pDoor->fLocked) // If not locked, don't bring it up!
 		{
 			// Bring up menu to decide what to do....
 			SoldierGotoStationaryStance( pSoldier );

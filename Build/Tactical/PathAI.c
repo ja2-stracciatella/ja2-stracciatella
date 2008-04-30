@@ -545,7 +545,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	BOOLEAN		fContinuousTurnNeeded;
 	BOOLEAN		fCloseGoodEnough;
   UINT16    usMovementModeToUseForAPs;
-	INT16			sClosePathLimit;
+	INT16 sClosePathLimit = -1; // XXX HACK000E
 
 #ifdef PATHAI_SKIPLIST_DEBUG
 	CHAR8				zTempString[1000], zTS[50];

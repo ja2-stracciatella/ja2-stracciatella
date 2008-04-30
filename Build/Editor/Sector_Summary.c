@@ -727,7 +727,7 @@ static void RenderItemDetails(void)
 					SetFontForeground( FONT_RED );
 				else
 					SetFontForeground( 77 );
-				const wchar_t* Type;
+				const wchar_t* Type; // HACK000E
 				switch( i )
 				{
 					case 0: Type = L"Panic1";           break;
@@ -738,6 +738,8 @@ static void RenderItemDetails(void)
 					case 5:	Type = L"Norm3";            break;
 					case 6:	Type = L"Norm4";            break;
 					case 7:	Type = L"Pressure Actions"; break;
+
+					default: abort(); // HACK000E
 				}
 				if( i < 7 )
 				{

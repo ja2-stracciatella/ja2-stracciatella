@@ -1009,7 +1009,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		}
 	}
 
-	BOOLEAN StateAfter;
+	BOOLEAN StateAfter = TRUE; // XXX HACK000E
 
 	/* Kris:
 	 * Set the anchored button incase the user moves mouse off region while still

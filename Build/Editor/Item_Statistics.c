@@ -1263,7 +1263,7 @@ static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		INT32 i;
-		UINT16 usAttachment;
+		UINT16 usAttachment; // HACK000E
 		OBJECTTYPE temp;
 		for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 		{	//Loop through and find the button that was just modified
@@ -1275,6 +1275,8 @@ static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
+
+				default: abort(); // HACK000E
 			}
 			if( guiAttachmentButton[ i ] != -1 && btn == ButtonList[ guiAttachmentButton[ i ] ] )
 			{	//Found it, now check the state of the button.
@@ -1530,11 +1532,11 @@ void UpdateActionItem( INT8 bActionItemIndex )
 static void ReEvaluateAttachmentStatii(void)
 {
 	INT32 i;
-	UINT16 usAttachment;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
 		if( guiAttachmentButton[ i ] != -1 && !( ButtonList[ guiAttachmentButton[ i ] ]->uiFlags & BUTTON_CLICKED_ON ) )
 		{ //if button exists and button isn't clicked
+			UINT16 usAttachment; // XXX HACK000E
 			switch( i )
 			{
 				case 0: usAttachment = SILENCER;				break;
@@ -1543,6 +1545,8 @@ static void ReEvaluateAttachmentStatii(void)
 				case 3:	usAttachment = BIPOD;						break;
 				case 4: usAttachment = DUCKBILL;				break;
 				case 5: usAttachment = UNDER_GLAUNCHER;	break;
+
+				default: abort(); // HACK000E
 			}
 			if( ValidItemAttachment( gpItem, usAttachment, TRUE ) )
 				EnableButton( guiAttachmentButton[ i ] );

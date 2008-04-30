@@ -448,6 +448,8 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 	{
 		case  8: ColorKey = TransColor;                break;
 		case 16: ColorKey = Get16BPPColor(TransColor); break;
+
+		default: abort(); // HACK000E
 	}
 
 	SDL_SetColorKey(Surface, SDL_SRCCOLORKEY, ColorKey);

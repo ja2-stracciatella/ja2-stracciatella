@@ -517,7 +517,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 {
 	// all 32-bit integers for max. speed
 	INT32 iCurrentCoverValue, iCoverValue, iBestCoverValue;
-	INT32	iCurrentScale, iCoverScale, iBestCoverScale;
+	INT32	iCurrentScale, iCoverScale;
 	INT32	iDistFromOrigin, iDistCoverFromOrigin, iThreatCertainty;
 	INT16	sGridNo, sBestCover = NOWHERE;
 	INT32 iPathCost;
@@ -540,6 +540,8 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	UINT8	ubBackgroundLightPercent = 0;
 	UINT8	ubLightPercentDifference;
 	BOOLEAN		fNight;
+
+	INT32 iBestCoverScale = 0; // XXX HACK000E
 
 	switch( FindObj( pSoldier, GASMASK ) )
 	{

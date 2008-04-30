@@ -428,6 +428,7 @@ static void RenderStationaryGroups(void)
 			else
 			{
 				ubGroupSize = 0;
+				ubIconColor = (UINT8)-1; // XXX HACK000E
 			}
 
 			if ( ubGroupSize > 0 )

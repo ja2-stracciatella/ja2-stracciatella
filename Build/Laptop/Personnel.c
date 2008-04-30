@@ -1517,7 +1517,7 @@ static void DisplayTeamStats(void)
 			{
 				if (s->bLife <= 0 || AM_A_ROBOT(s)) continue;
 
-				INT32 val;
+				INT32 val; // XXX HACK000E
 				switch (stat)
 				{
 					case  0: val = s->bLifeMax;      break;
@@ -1531,6 +1531,8 @@ static void DisplayTeamStats(void)
 					case  8: val = s->bMechanical;   break;
 					case  9: val = s->bExplosive;    break;
 					case 10: val = s->bMedical;      break;
+
+					default: abort(); // HACK000E
 				}
 				if (min_val > val)
 				{
@@ -1550,12 +1552,14 @@ static void DisplayTeamStats(void)
 		{
 			for (UINT CurrentList = 0; CurrentList < 3; ++CurrentList)
 			{
-				const INT16* CurrentListValue;
+				const INT16* CurrentListValue; // XXX HACK000E
 				switch (CurrentList)
 				{
 					case 0: CurrentListValue = LaptopSaveInfo.ubDeadCharactersList;  break;
 					case 1: CurrentListValue = LaptopSaveInfo.ubLeftCharactersList;  break;
 					case 2: CurrentListValue = LaptopSaveInfo.ubOtherCharactersList; break;
+
+					default: abort(); // HACK000E
 				}
 
 				for (UINT32 i = 0; i < 256; i++)
@@ -1563,7 +1567,7 @@ static void DisplayTeamStats(void)
 					const INT32 id = CurrentListValue[i];
 					if (id == -1) continue;
 
-					INT32 val;
+					INT32 val; // XXX HACK000E
 					const MERCPROFILESTRUCT* const p = &gMercProfiles[id];
 					switch (stat)
 					{
@@ -1578,6 +1582,8 @@ static void DisplayTeamStats(void)
 						case  8: val = p->bMechanical;   break;
 						case  9: val = p->bExplosive;    break;
 						case 10: val = p->bMedical;      break;
+
+						default: abort(); // HACK000E
 					}
 					if (min_val > val)
 					{

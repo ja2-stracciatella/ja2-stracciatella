@@ -93,7 +93,7 @@ returns the menu entry number starting from 1.
 */
 void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 {
-	UINT16 usX, usY;
+	UINT16 usX, usY; // HACK000E
 	UINT16 usMenuHeight;
 	UINT16 usMenuWidth = 0;
 	UINT16 usCurrStrWidth;
@@ -126,6 +126,8 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 			usX = button->Area.RegionBottomRightX;
 			usY = button->Area.RegionBottomRightY;
 			break;
+
+		default: abort(); // HACK000E
 	}
 
 	//Decipher the popupMenuID

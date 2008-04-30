@@ -1079,7 +1079,7 @@ static BOOLEAN ValidCoordinate(void)
 	if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' ||
 		gzFilename[0] >= 'a' && gzFilename[0] <='p' )
 	{
-		UINT16 usTotal;
+		UINT16 usTotal; // XXX HACK000E
 		if( gzFilename[1] == '1' && gzFilename[2] >= '0' && gzFilename[2] <= '6' )
 		{
 			usTotal = ( gzFilename[1] - 0x30 ) * 10 + ( gzFilename[2] - 0x30 );
@@ -1094,6 +1094,10 @@ static BOOLEAN ValidCoordinate(void)
 			{
 				return FALSE;
 			}
+		}
+		else
+		{
+			abort(); // XXX HACK000E
 		}
 		if( usTotal >= 1 && usTotal <= 16 )
 		{

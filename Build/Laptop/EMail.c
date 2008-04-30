@@ -663,7 +663,7 @@ static void SortMessages(EMailSortCriteria Criterium)
 		Email* InsAfter = NULL;
 		for (Email* Other = NewList; Other != NULL; Other = Other->Next)
 		{
-			INT Order;
+			INT Order; // XXX HACK000E
 			switch (Criterium)
 			{
 				case RECEIVED:
@@ -684,6 +684,8 @@ static void SortMessages(EMailSortCriteria Criterium)
 				case READ:
 					Order = Other->fRead - Mail->fRead;
 					break;
+
+				default: abort(); // HACK000E
 			}
 			if (Order > 0) break;
 			InsAfter = Other;
@@ -2460,7 +2462,7 @@ void ShutDownEmailList()
 static void PreProcessEmail(Email* pMail)
 {
 	Record* pTempRecord;
-	Record* pCurrentRecord;
+	Record* pCurrentRecord = NULL; // XXX HACK000E
 	Record* pLastRecord;
 	Record* pTempList;
 	INT32 iCounter = 0, iHeight = 0, iOffSet = 0;
@@ -2744,6 +2746,7 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, 
 		else
 		{
 			pSubString = NULL;
+			sSearchString = NULL; // XXX HACK000E
 		}
 
 

@@ -418,7 +418,6 @@ BOOLEAN ExecuteUndoList( void )
 {
 	INT32				iCmdCount, iCurCount;
 	INT32				iUndoMapIndex;
-	BOOLEAN			fExitGrid;
 
 	if(	!gfUndoEnabled )
 		return FALSE;
@@ -436,6 +435,7 @@ BOOLEAN ExecuteUndoList( void )
 	{
 		iUndoMapIndex = gpTileUndoStack->pData->iMapIndex;
 
+		BOOLEAN fExitGrid = FALSE; // XXX HACK000E
 		// Find which map tile we are to "undo"
 		if( gpTileUndoStack->pData->fLightSaved )
 		{ //We saved a light, so delete that light

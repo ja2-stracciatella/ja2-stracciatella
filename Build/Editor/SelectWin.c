@@ -242,7 +242,7 @@ static INT32 MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBAC
 //
 void CreateJA2SelectionWindow( INT16 sWhat )
 {
-	DisplaySpec *pDSpec;
+	DisplaySpec *pDSpec; // XXX HACK000E
 	UINT16 usNSpecs;
 
 	fAllDone = FALSE;
@@ -381,6 +381,8 @@ void CreateJA2SelectionWindow( INT16 sWhat )
 			pSelList = SelRoom;
 			pNumSelList = &iNumRoomsSelected;
 			break;
+
+		default: abort(); // HACK000E
 	}
 
 	BuildDisplayWindow( pDSpec, usNSpecs, &pDispList, &SelWinStartPoint, &SelWinEndPoint,
@@ -918,36 +920,25 @@ void DisplaySelectionWindowGraphicalInformation()
 //
 static void AddToSelectionList(DisplayList* pNode)
 {
-	INT32 iIndex, iUseIndex;
-	BOOLEAN fDone;
-
-	fDone = FALSE;
-	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
+	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
 				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
-			fDone = TRUE;
-			iUseIndex = iIndex;
+			// Was already in the list, so bump up the count
+			++pSelList[iIndex].sCount;
+			return;
 		}
 	}
 
-	if ( fDone )
+	// Wasn't in the list, so add to end (if space available)
+	if ( (*pNumSelList) < MAX_SELECTIONS )
 	{
-		// Was already in the list, so bump up the count
-		pSelList[ iUseIndex ].sCount++;
-	}
-	else
-	{
-		// Wasn't in the list, so add to end (if space available)
-		if ( (*pNumSelList) < MAX_SELECTIONS )
-		{
-			pSelList[ (*pNumSelList) ].uiObject = pNode->uiObjIndx;
-			pSelList[ (*pNumSelList) ].usIndex = pNode->uiIndex;
-			pSelList[ (*pNumSelList) ].sCount = 1;
+		pSelList[ (*pNumSelList) ].uiObject = pNode->uiObjIndx;
+		pSelList[ (*pNumSelList) ].usIndex = pNode->uiIndex;
+		pSelList[ (*pNumSelList) ].sCount = 1;
 
-			(*pNumSelList)++;
-		}
+		(*pNumSelList)++;
 	}
 }
 
@@ -986,42 +977,29 @@ BOOLEAN ClearSelectionList( void )
 //	greater than one, then the count is decremented and the object remains in the list.
 static BOOLEAN RemoveFromSelectionList(DisplayList* pNode)
 {
-	INT32 iIndex, iUseIndex;
-	BOOLEAN fDone, fRemoved;
-
 	// Abort if no entries in list (pretend we removed a node)
 	if ( (*pNumSelList) <= 0 )
 		return( TRUE );
 
-	fRemoved = FALSE;
-	fDone = FALSE;
-	for (iIndex = 0; iIndex < (*pNumSelList) && !fDone; iIndex++ )
+	for (INT32 iIndex = 0; iIndex < *pNumSelList; ++iIndex)
 	{
 		if ( pNode->uiObjIndx == pSelList[ iIndex ].uiObject &&
 				 pNode->uiIndex == pSelList[ iIndex ].usIndex )
 		{
-			fDone = TRUE;
-			iUseIndex = iIndex;
+			if (--pSelList[iIndex].sCount <= 0)
+			{
+				// Squash the list to remove old entry
+				for ( iIndex = iIndex; iIndex < ((*pNumSelList) - 1); iIndex++ )
+					pSelList[ iIndex ] = pSelList[ iIndex + 1 ];
+
+				(*pNumSelList)--;
+				return TRUE;
+			}
+			break;
 		}
 	}
 
-	if ( fDone )
-	{
-		// Was already in the list, so bump up the count
-		pSelList[ iUseIndex ].sCount--;
-
-		if ( pSelList[ iUseIndex ].sCount <= 0 )
-		{
-			// Squash the list to remove old entry
-			for ( iIndex = iUseIndex; iIndex < ((*pNumSelList) - 1); iIndex++ )
-				pSelList[ iIndex ] = pSelList[ iIndex + 1 ];
-
-			(*pNumSelList)--;
-			fRemoved = TRUE;
-		}
-	}
-
-	return ( fRemoved );
+	return FALSE;
 }
 
 

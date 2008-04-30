@@ -594,10 +594,14 @@ static void DisplayCompressMode(void)
 	static UINT8 usColor = FONT_LTGREEN;
 
 	// get compress speed
-	const wchar_t* Time; // XXX may be uninitialised
+	const wchar_t* Time; // XXX HACK000E
 	if( giTimeCompressMode != NOT_USING_TIME_COMPRESSION )
 	{
 		Time = sTimeStrings[IsTimeBeingCompressed() ? giTimeCompressMode : 0];
+	}
+	else
+	{
+		abort(); // XXX HACK000E
 	}
 
 	RestoreExternBackgroundRect( 489, 456, 522 - 489, 467 - 454 );

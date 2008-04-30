@@ -396,7 +396,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	INT32 i;
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
-	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
@@ -425,8 +424,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 		#endif
 
-			goto FAIL_LOAD;
-
+			goto FAIL_LOAD_NO_CLOSE;
 		}
 	}
 	else
@@ -459,7 +457,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 
 	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
+	const HWFILE hfile = FileOpen(zMapName, FILE_ACCESS_READ);
 	if( hfile == 0 )
 	{	//Error opening map modification file
 		return FALSE;
@@ -765,6 +763,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
 		FileClose( hfile );
+FAIL_LOAD_NO_CLOSE:
 		#ifdef JA2TESTVERSION
 			AssertMsg( 0, zReason );
 		#endif

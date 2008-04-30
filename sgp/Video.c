@@ -506,7 +506,7 @@ static void TakeScreenshot(void)
 	// Copy 16 bit buffer to file
 
 	// 5/6/5.. create buffer...
-	UINT16* p16BPPData;
+	UINT16* p16BPPData = NULL; // XXX HACK000E
 	if (gusRedMask == 0xF800 && gusGreenMask == 0x07E0 && gusBlueMask == 0x001F)
 	{
 		p16BPPData = MALLOCN(UINT16, SCREEN_WIDTH);

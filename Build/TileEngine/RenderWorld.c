@@ -322,7 +322,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 	static UINT8        ubLevelNodeStartIndex[NUM_RENDER_FX_TYPES];
 	static RenderFXType RenderFXList[NUM_RENDER_FX_TYPES];
 
-	HVOBJECT hVObject;
+	HVOBJECT hVObject = NULL; // XXX HACK000E
 	const TILE_ELEMENT* TileElem  = NULL;
 	BOOLEAN fPixelate = FALSE;
 	INT16 sMultiTransShadowZBlitterIndex = -1;
@@ -2277,14 +2277,14 @@ void ScrollWorld(void)
 
 void InitRenderParams(UINT8 ubRestrictionID)
 {
-	INT16 gTopLeftWorldLimitX;
-	INT16 gTopLeftWorldLimitY;
-	INT16 gTopRightWorldLimitX;
-	INT16 gTopRightWorldLimitY;
-	INT16 gBottomLeftWorldLimitX;
-	INT16 gBottomLeftWorldLimitY;
-	INT16 gBottomRightWorldLimitX;
-	INT16 gBottomRightWorldLimitY;
+	INT16 gTopLeftWorldLimitX;     // XXX HACK000E
+	INT16 gTopLeftWorldLimitY;     // XXX HACK000E
+	INT16 gTopRightWorldLimitX;    // XXX HACK000E
+	INT16 gTopRightWorldLimitY;    // XXX HACK000E
+	INT16 gBottomLeftWorldLimitX;  // XXX HACK000E
+	INT16 gBottomLeftWorldLimitY;  // XXX HACK000E
+	INT16 gBottomRightWorldLimitX; // XXX HACK000E
+	INT16 gBottomRightWorldLimitY; // XXX HACK000E
 	switch (ubRestrictionID)
 	{
 		case 0: // Default!
@@ -2314,6 +2314,8 @@ void InitRenderParams(UINT8 ubRestrictionID)
 			gBottomRightWorldLimitX = CELL_X_SIZE * WORLD_ROWS * 7 / 10;
 			gBottomRightWorldLimitY = CELL_X_SIZE * WORLD_ROWS     /  2;
 			break;
+
+		default: abort(); // HACK000E
 	}
 
 	gCenterWorldX = CELL_X_SIZE * WORLD_ROWS / 2;

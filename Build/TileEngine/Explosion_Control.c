@@ -923,14 +923,16 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 	STRUCTURE							* pCurrent, *pNextCurrent, *pStructure;
 	STRUCTURE *						pBaseStructure;
 	INT16									sDesiredLevel;
-	DB_STRUCTURE_TILE			**ppTile;
 	UINT8									ubLoop, ubLoop2;
-	INT16									sNewGridNo, sNewGridNo2, sBaseGridNo;
+	INT16									sNewGridNo, sNewGridNo2;
 	BOOLEAN								fToBreak = FALSE;
 	BOOLEAN								fMultiStructure = FALSE;
-	UINT8									ubNumberOfTiles;
 	BOOLEAN								fMultiStructSpecialFlag = FALSE;
 	BOOLEAN								fExplodeDamageReturn = FALSE;
+
+	DB_STRUCTURE_TILE** ppTile          = NULL;    // XXX HACK000E
+	INT16               sBaseGridNo     = NO_TILE; // XXX HACK000E
+	UINT8               ubNumberOfTiles = 0;       // XXX HACK000E
 
 	// Based on distance away, damage any struct at this gridno
 	// OK, loop through structures and damage!

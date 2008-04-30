@@ -2352,7 +2352,6 @@ static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ub
 	INT16		sX, sY;
 	INT16		sGridNo;
 	INT32					leftmost;
-	BOOLEAN	fFound = FALSE;
 	UINT32		cnt = 0;
 
   if ( ubMaxRadius == 0 || ubMinRadius == 0 )
@@ -2360,7 +2359,7 @@ static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ub
     return( sSweetGridNo );
   }
 
-	do
+	for (;;)
 	{
 		sX = (UINT16)PreRandom( ubMaxRadius );
 		sY = (UINT16)PreRandom( ubMaxRadius );
@@ -2389,20 +2388,12 @@ static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ub
       continue;
     }
 
+		if (++cnt > 50) return NOWHERE;
+
 		if ( sGridNo >=0 && sGridNo < WORLD_MAX &&
 				 sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
 		{
-			fFound = TRUE;
+			return sGridNo;
 		}
-
-		cnt++;
-
-		if ( cnt > 50 )
-		{
-			return( NOWHERE );
-		}
-
-	} while( !fFound );
-
-	return( sGridNo );
+	}
 }

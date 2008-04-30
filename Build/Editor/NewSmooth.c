@@ -42,7 +42,7 @@ static BOOLEAN CaveAtGridNo(INT32 iMapIndex)
 static UINT16 GetCaveTileIndexFromPerimeterValue(UINT8 ubTotal)
 {
 	UINT16 usType = FIRSTWALL;
-	UINT16 usIndex;
+	UINT16 usIndex; // HACK000E
 
 	switch( ubTotal )
 	{
@@ -199,6 +199,8 @@ static UINT16 GetCaveTileIndexFromPerimeterValue(UINT8 ubTotal)
 		case 0xff:
 			usIndex = 60 + (UINT16)Random( 6 );
 			break;
+
+		default: abort(); // XXX HACK000E
 	}
 	return GetTileIndexFromTypeSubIndex(usType, usIndex);
 }
@@ -405,7 +407,7 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 {
 	INT16 sIndex;
-	UINT16 ubWallClass;
+	UINT16 ubWallClass; // XXX HACK000E
 	LEVELNODE *pStruct;
 	if( !usWallType )
 	{
@@ -562,6 +564,8 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 				AddExclusiveShadow( iMapIndex, usTileIndex );
 			}
 			break;
+
+		default: abort(); // HACK000E
 	}
 	sIndex = PickAWallPiece( ubWallClass );
 	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usWallType, sIndex);
@@ -930,7 +934,7 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 {
 	INT32 top, left, right, bottom, x, y;
 	UINT32 iMapIndex;
-	UINT16 usFloorType, usWallType, usRoofType;
+	UINT16 usFloorType, usWallType;
 	BOOLEAN fNewBuilding;
 	BOOLEAN fSlantRoof = FALSE;
 	BOOLEAN fVertical;
@@ -939,6 +943,8 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	left = pSelectRegion->iLeft;
 	right = pSelectRegion->iRight;
 	bottom = pSelectRegion->iBottom;
+
+	UINT16 usRoofType = (UINT16)-1; // XXX HACK000E
 
 	//Special case scenario:
 	//If the user selects a floor without walls, then it is implied that the user wishes to

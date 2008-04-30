@@ -514,7 +514,7 @@ static void CheckForValidArrivalSector(void)
 {
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2, sGoodX, sGoodY;
+	INT16  cnt1, cnt2;
 	UINT8	 ubRadius = 4;
 	INT32	 leftmost;
 	INT16	 sSectorGridNo, sSectorGridNo2;
@@ -541,6 +541,8 @@ static void CheckForValidArrivalSector(void)
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
+	INT16 sGoodX = 0; // XXX HACK000E
+	INT16 sGoodY = 0; // XXX HACK000E
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSectorGridNo + ( MAP_WORLD_X * cnt1 ) )/ MAP_WORLD_X ) * MAP_WORLD_X;

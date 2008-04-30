@@ -2664,7 +2664,7 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 	INT8	bTrainingBonus = 0;
 
 	INT16 sBestTrainingPts, sTrainingPtsDueToInstructor;
-	UINT16	usMaxTrainerPts, usBestMaxTrainerPts;
+	UINT16	usMaxTrainerPts;
 
 	// assume training impossible for max pts
 	*pusMaxPts = 0;
@@ -2702,6 +2702,7 @@ INT16 GetSoldierStudentPts(const SOLDIERTYPE* s, INT8 bTrainStat, BOOLEAN fAtGun
 
 	// for each trainable stat
 	sBestTrainingPts = -1;
+	UINT16 usBestMaxTrainerPts = 0; // XXX HACK000E
 
 	// search team for active instructors in this sector
 	CFOR_ALL_IN_TEAM(pTrainer, OUR_TEAM)

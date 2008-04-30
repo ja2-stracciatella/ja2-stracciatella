@@ -792,7 +792,6 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	UINT16	usPosY;
 	UINT32	uiStartLoc=0;
 	UINT32	uiTotal;
-	INT32		iSubTotal;
 
 	//Output the qty
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_QTY], usGridX + BOBBYR_GRID_FIRST_COLUMN_X, usGridY + BOBBYR_GRID_FIRST_COLUMN_Y - BOBBYR_GRID_TITLE_OFFSET, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -822,6 +821,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 		return;
 	}
 
+	INT32 iSubTotal = 0; // XXX HACK000E
 	if( fCalledFromOrderPage )
 	{
 		guiSubTotal = 0;

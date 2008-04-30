@@ -914,7 +914,6 @@ void RaiseWorldLand( )
 	BOOLEAN fRaiseSet;
 	BOOLEAN fSomethingRaised = FALSE;
 	UINT8 ubLoop;
-	UINT16 usIndex;
 	INT32 iStartNumberOfRaises = 0;
 	INT32 iNumberOfRaises = 0;
 	BOOLEAN fAboutToRaise = FALSE;
@@ -928,6 +927,7 @@ void RaiseWorldLand( )
 
 	}
 
+	UINT16 usIndex = (UINT16)-1; // XXX HACK000E
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
 	{
 

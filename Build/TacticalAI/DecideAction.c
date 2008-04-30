@@ -2637,7 +2637,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			pSoldier->bNeutral                         ||
 			(FATCIV <= pSoldier->ubBodyType && pSoldier->ubBodyType <= CRIPPLECIV)
 		);
- UINT8	ubBestStance, ubStanceCost;
+ UINT8	ubStanceCost;
  BOOLEAN fChangeStanceFirst; // before firing
  BOOLEAN fClimb;
  UINT8	ubBurstAPs;
@@ -2645,6 +2645,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  INT16	sCheckGridNo;
 
  BOOLEAN fAllowCoverCheck = FALSE;
+
+ UINT8 ubBestStance = (UINT8)-1; // XXX HACK000E
 
  // if we have absolutely no action points, we can't do a thing under BLACK!
  if (!pSoldier->bActionPoints)

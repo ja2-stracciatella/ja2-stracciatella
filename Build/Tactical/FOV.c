@@ -296,7 +296,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
  INT32				iDoorGridNo;
  STRUCTURE *	pStructure, *pDummy;
  INT8         bStructHeight;
- INT8         bThroughWindowDirection;
+	INT8 bThroughWindowDirection = -1; // XXX HACK000E
 
 	if ( pSoldier->uiStatusFlags & SOLDIER_ENEMY )
   {

@@ -2549,12 +2549,8 @@ BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
 //
 BOOLEAN RemoveLight(const GridNo pos)
 {
-	BOOLEAN fRemovedLight;
-	const char* pLastLightName;
-
-	fRemovedLight = FALSE;
-
 	// Check all lights if any at this given position
+	const char* pLastLightName = NULL;
 	FOR_ALL_LIGHT_SPRITES(l)
 	{
 		if (MAPROWCOLTOPOS(l->iY, l->iX) == pos)
@@ -2565,22 +2561,20 @@ BOOLEAN RemoveLight(const GridNo pos)
 				pLastLightName = LightSpriteGetTypeName(l);
 				LightSpritePower(l, FALSE);
 				LightSpriteDestroy(l);
-				fRemovedLight = TRUE;
 				RemoveAllObjectsOfTypeRange(pos, GOODRING, GOODRING);
 			}
 		}
 	}
-	if( fRemovedLight )
-	{
-		UINT16 usRadius;
-		//Assuming that the light naming convention doesn't change, then this following conversion
-		//should work.  Basically, the radius values aren't stored in the lights, so I have pull
-		//the radius out of the filename.  Ex:  L-RO5.LHT
-		usRadius = pLastLightName[4] - 0x30;
-		AddLightToUndoList(pos, usRadius);
-	}
 
-	return( fRemovedLight );
+	if (pLastLightName == NULL) return FALSE;
+
+	/* Assuming that the light naming convention doesn't change, then this
+	 * following conversion should work.  Basically, the radius values aren't
+	 * stored in the lights, so I have pull the radius out of the filename.
+	 * Ex:  L-RO5.LHT */
+	const UINT16 usRadius = pLastLightName[4] - 0x30;
+	AddLightToUndoList(pos, usRadius);
+	return TRUE;
 }
 
 

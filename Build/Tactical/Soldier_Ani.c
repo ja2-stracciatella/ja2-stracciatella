@@ -2640,7 +2640,6 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
 	UINT8	ubNumMercs = 0;
 	UINT8	ubChosenMerc;
 	INT16		sDistVisible = FALSE;
-  UINT16  usQuoteNum;
 
 	// Loop through all our guys and randomly say one from someone in our sector
 	SOLDIERTYPE* mercs_in_sector[20];
@@ -2715,6 +2714,7 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
     {
 		  ubChosenMerc = (UINT8)Random( ubNumMercs );
 			SOLDIERTYPE* const chosen = mercs_in_sector[ubChosenMerc];
+			UINT16 usQuoteNum; // XXX HACK000E
       switch( bBuddyIndex[ ubChosenMerc ] )
       {
         case 0:
@@ -2731,6 +2731,8 @@ static void SayBuddyWitnessedQuoteFromKill(SOLDIERTYPE* pKillerSoldier, INT16 sG
           usQuoteNum = QUOTE_LEARNED_TO_LIKE_WITNESSED;
 					chosen->usQuoteSaidExtFlags |= SOLDIER_QUOTE_SAID_BUDDY_3_WITNESSED;
           break;
+
+				default: abort(); // HACK000E
       }
 			TacticalCharacterDialogue(chosen, usQuoteNum);
     }

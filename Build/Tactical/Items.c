@@ -2003,7 +2003,6 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 {
 	OBJECTTYPE	OldAmmo;
 	UINT8				ubBulletsToMove;
-	INT8				bAPs;
 	UINT16			usReloadSound;
 	BOOLEAN			fSameAmmoType;
 	BOOLEAN			fSameMagazineSize;
@@ -2012,6 +2011,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	INT8				bReloadType;
 	UINT16			usNewAmmoItem;
 
+	INT8 bAPs = 0; // XXX HACK000E
 	if ( (gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) )
 	{
 		bAPs = GetAPsToReloadGunWithAmmo( pGun, pAmmo );

@@ -728,7 +728,7 @@ static void RenderDoorLockInfo(void)
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_RED );
 			SetFontShadow( FONT_NEARBLACK );
-			const wchar_t* TrapType;
+			const wchar_t* TrapType; // HACK000E
 			switch( DoorTable[ i ].ubTrapID )
 			{
 				case EXPLOSION:      TrapType = L"Explosion Trap"; break;
@@ -736,6 +736,8 @@ static void RenderDoorLockInfo(void)
 				case SIREN:          TrapType = L"Siren Trap"; break;
 				case SILENT_ALARM:   TrapType = L"Silent Alarm"; break;
 				case SUPER_ELECTRIC: TrapType = L"Super Electric Trap"; break;
+
+				default: abort(); // HACK000E
 			}
 			xp = sScreenX + 20 - StringPixLength(TrapType, FONT10ARIAL) / 2;
 			yp = sScreenY;

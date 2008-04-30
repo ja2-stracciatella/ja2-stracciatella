@@ -5349,12 +5349,14 @@ static void ShadeSubLevelsNotVisited(void)
 static void HandleLowerLevelMapBlit(void)
 {
 	// blits the sub level maps
-	const SGPVObject* vo;
+	const SGPVObject* vo; // XXX HACK000E
 	switch( iCurrentMapSectorZ )
 	{
 		case 1: vo = guiSubLevel1; break;
 		case 2: vo = guiSubLevel2; break;
 		case 3: vo = guiSubLevel3; break;
+
+		default: abort(); // HACK000E
 	}
 
 	// handle the blt of the sublevel

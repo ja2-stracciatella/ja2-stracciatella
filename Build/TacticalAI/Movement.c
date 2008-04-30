@@ -366,8 +366,10 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	INT16 sOrigin;
 	UINT16 usMaxDist;
 	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
-	INT8 bAPsLeft, fPathFlags;
+	INT8 fPathFlags;
 	UINT8 ubRoomRequired = 0, ubTempRoom;
+
+	INT8 bAPsLeft = -1; // XXX HACK000E
 
 	if ( bReserveAPs == -1 )
 	{

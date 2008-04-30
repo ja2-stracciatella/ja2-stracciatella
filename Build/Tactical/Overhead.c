@@ -6570,6 +6570,8 @@ static void DoCreatureTensionQuote(SOLDIERTYPE* s)
 			quote      = QUOTE_WORRIED_ABOUT_CREATURE_PRESENCE;
 			quote_flag = SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES;
 			break;
+
+		default: abort(); // HACK000E
 	}
 	if (s->usQuoteSaidFlags & quote_flag) return;
 	s->usQuoteSaidFlags |= quote_flag;

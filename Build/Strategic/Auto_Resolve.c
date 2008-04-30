@@ -1496,7 +1496,7 @@ static void RenderAutoResolve(void)
 	SetFontForeground( FONT_WHITE );
 	SetFontShadow( FONT_NEARBLACK );
 
-	const wchar_t* EncounterType;
+	const wchar_t* EncounterType; // XXX HACK000E
 	switch( gubEnemyEncounterCode )
 	{
 		case ENEMY_ENCOUNTER_CODE:
@@ -1506,6 +1506,8 @@ static void RenderAutoResolve(void)
 		case CREATURE_ATTACK_CODE:
 			EncounterType = gpStrategicString[STR_AR_DEFEND_HEADER];
 			break;
+
+		default: abort(); // HACK000E
 	}
 
 	xp = gpAR->sCenterStartX + 70 - StringPixLength(EncounterType, FONT10ARIALBOLD) / 2;
@@ -1641,7 +1643,7 @@ static void RenderAutoResolve(void)
 			}
 		}
 		//Render the end battle condition.
-			const wchar_t* BattleResult;
+			const wchar_t* BattleResult; // XXX HACK000E
 			switch( gpAR->ubBattleStatus )
 			{
 				case BATTLE_VICTORY:
@@ -1669,6 +1671,8 @@ static void RenderAutoResolve(void)
 					SetFontForeground( FONT_YELLOW );
 					BattleResult = gpStrategicString[STR_AR_OVER_RETREATED];
 					break;
+
+				default: abort(); // HACK000E
 			}
 			//Render the results of the battle.
 			SetFont( BLOCKFONT2 );

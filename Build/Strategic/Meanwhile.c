@@ -609,7 +609,7 @@ static void ProcessImplicationsOfMeanwhile(void)
 			break;
 		case AWOL_SCIENTIST:
 			{
-				INT16	sSectorX, sSectorY;
+				INT16	sSectorX, sSectorY; // XXX HACK000E
 
 				StartQuest( QUEST_FIND_SCIENTIST, -1, -1 );
 				// place Madlab and robot!
@@ -635,7 +635,7 @@ static void ProcessImplicationsOfMeanwhile(void)
 				}
 				else
 				{
-					Assert( 0 );
+					abort(); // HACK000E
 				}
 				gMercProfiles[ MADLAB ].sSectorX = sSectorX;
 				gMercProfiles[ MADLAB ].sSectorY = sSectorY;

@@ -1,4 +1,4 @@
-HACK000D
+HACK000E
 TODO0016
 
 high prio
@@ -14,6 +14,7 @@ med prio
 - TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
 - TODO000F Only half of the data gets saved/loaded
 - TODO0011 gubAnimCrawlSpeeds[] is only declared, gubAnimCrawlingSpeeds[] is never referenced, looks like a typo
+- HACK000E uninitialised variables
 
 low prio
 - TODO0000 remove RestrictMouseCursor() et al.
