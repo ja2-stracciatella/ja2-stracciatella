@@ -40,6 +40,7 @@ CFLAGS += -I sgp
 
 #CFLAGS += -Wall
 #CFLAGS += -W
+CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
 CFLAGS += -Wunused-variable
