@@ -8740,11 +8740,6 @@ void PositionSoldierLight( SOLDIERTYPE *pSoldier )
 	LightSpritePosition(l, pSoldier->sX / CELL_X_SIZE, pSoldier->sY / CELL_Y_SIZE);
 }
 
-void SetCheckSoldierLightFlag( SOLDIERTYPE *pSoldier )
-{
-		PositionSoldierLight( pSoldier );
-}
-
 
 void PickPickupAnimation( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {
