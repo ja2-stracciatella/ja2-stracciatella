@@ -423,11 +423,13 @@ static void HandleBestSightingPositionInRealtime(void)
 			}
 		}
 
+#if defined FORCE_ASSERTS_ON
 		FOR_ALL_MERCS(i)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
 		}
+#endif
 	}
 }
 
@@ -483,11 +485,13 @@ static void HandleBestSightingPositionInTurnbased(void)
 			}
 		}
 
+#if defined FORCE_ASSERTS_ON
 		FOR_ALL_MERCS(i)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
 		}
+#endif
 	}
 }
 

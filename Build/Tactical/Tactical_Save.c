@@ -2139,6 +2139,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT1
 	UINT32     uiTotalNumberOfItems = 0;
 	WORLDITEM* pTotalSectorList;
 	const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
+	(void)fReturn;
 	Assert(fReturn);
 
 	UINT32 uiItemCount = 0;

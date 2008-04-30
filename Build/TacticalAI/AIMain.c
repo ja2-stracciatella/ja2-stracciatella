@@ -92,8 +92,6 @@ void DebugAI(const char* szOutput)
 
 BOOLEAN InitAI( void )
 {
-	FILE *		DebugFile;
-
 #ifdef _DEBUG
 	if (gfDisplayCoverValues)
 	{
@@ -110,7 +108,8 @@ BOOLEAN InitAI( void )
 
 #ifdef JA2TESTVERSION
 	// Clear the AI debug txt file to prevent it from getting huge
-	if ((DebugFile = fopen( "aidebug.txt", "w" )) != NULL)
+	FILE* const DebugFile = fopen("aidebug.txt", "w");
+	if (DebugFile != NULL)
 	{
 		fputs( "\n", DebugFile );
 		fclose( DebugFile );
