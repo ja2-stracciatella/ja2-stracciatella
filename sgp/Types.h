@@ -138,4 +138,14 @@ typedef SGPFile*       HWFILE;
 
 #define TRANSPARENT ((UINT16)0)
 
+
+#ifdef __cplusplus
+#	define ENUM_BITSET(type)                                                                  \
+		static inline type operator &  (type  a, type b) { return     (type)((int)a & (int)b); } \
+		static inline type operator |  (type  a, type b) { return     (type)((int)a | (int)b); } \
+		static inline type operator |= (type& a, type b) { return a = (type)((int)a | (int)b); }
+#else
+#	define ENUM_BITSET(type)
+#endif
+
 #endif

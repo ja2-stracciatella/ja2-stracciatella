@@ -314,9 +314,10 @@ typedef enum AssignmentConditions
 	AC_MOVING                    = 1U << 6,
 	AC_UNDERGROUND               = 1U << 7
 } AssignmentConditions;
+ENUM_BITSET(AssignmentConditions)
 
 
-static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, AssignmentConditions c)
+static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, const AssignmentConditions c)
 {
 	if (!(c & AC_IMPASSABLE) && SectorIsImpassable(SECTOR(s->sSectorX, s->sSectorY)))   return FALSE;
 	if (!(c & AC_UNCONSCIOUS) && s->bLife < OKLIFE)                                     return FALSE;

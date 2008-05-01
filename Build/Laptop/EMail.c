@@ -1950,6 +1950,7 @@ typedef enum SkillBits
 	SKILL_MED  = 1 << 2,
 	SKILL_EXPL = 1 << 3
 } SkillBits;
+ENUM_BITSET(SkillBits)
 
 
 typedef enum PhysicalBits
@@ -1962,6 +1963,7 @@ typedef enum PhysicalBits
 	PHYS_WIS  = 1 << 4,
 	PHYS_LDR  = 1 << 5
 } PhysicalBits;
+ENUM_BITSET(PhysicalBits)
 
 
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)

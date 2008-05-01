@@ -13,6 +13,7 @@ typedef enum FileOpenFlags
 	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
 	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
 } FileOpenFlags;
+ENUM_BITSET(FileOpenFlags)
 
 typedef enum FileSeekMode
 {
@@ -86,6 +87,7 @@ typedef enum FileAttributes
 	FILE_ATTR_DIRECTORY = 1U << 1,
 	FILE_ATTR_ERROR     = 0xFFFFFFFFU
 } FileAttributes;
+ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);
 BOOLEAN        FileClearAttributes(const char* filename);

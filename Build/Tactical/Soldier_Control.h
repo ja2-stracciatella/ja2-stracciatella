@@ -894,6 +894,7 @@ typedef enum SetSoldierPosFlags
 	SSP_NO_FINAL_DEST = 1U << 1,
 	SSP_FORCE_DELETE  = 1U << 2
 } SetSoldierPosFlags;
+ENUM_BITSET(SetSoldierPosFlags)
 
 void EVENT_SetSoldierPosition(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);
 void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);

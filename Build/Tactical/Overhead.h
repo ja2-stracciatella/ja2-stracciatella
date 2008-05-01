@@ -253,6 +253,7 @@ typedef enum SelSoldierFlags
 	SELSOLDIER_FORCE_RESELECT = 1U << 1,
 	SELSOLDIER_FROM_UI        = 1U << 2
 } SelSoldierFlags;
+ENUM_BITSET(SelSoldierFlags)
 
 void SelectSoldier(SOLDIERTYPE* s, SelSoldierFlags flags);
 
