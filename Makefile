@@ -484,7 +484,7 @@ endif
 
 $(BINARY): $(OBJS)
 	@echo '===> LD $@'
-	$(Q)$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
+	$(Q)$(CXX) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
 .c.o:
 	@echo '===> CC $<'
