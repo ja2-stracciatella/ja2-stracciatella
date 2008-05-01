@@ -3906,27 +3906,6 @@ static BOOLEAN IsMouseInRegion(MOUSE_REGION* pRegion)
 }
 
 
-static void EnableButtonsForInItemBox(BOOLEAN fEnable)
-{
-	if ( !fEnable )
-	{
-		DisableButton( iSMPanelButtons[ NEXTMERC_BUTTON ] );
-		DisableButton( iSMPanelButtons[ PREVMERC_BUTTON ] );
-		DisableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-	}
-	else
-	{
-		EnableButton( iSMPanelButtons[ NEXTMERC_BUTTON ] );
-		EnableButton( iSMPanelButtons[ PREVMERC_BUTTON ] );
-
-		if ( !gfDisableTacticalPanelButtons )
-		{
-			EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-		}
-	}
-}
-
-
 static void ConfirmationToDepositMoneyToPlayersAccount(UINT8 ubExitValue);
 
 

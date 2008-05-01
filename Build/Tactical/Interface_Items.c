@@ -5215,7 +5215,6 @@ void RemoveItemPickupMenu( )
 		gfInItemPickupMenu = FALSE;
 
 		//gfSMDisableForItems = FALSE;
-		//EnableButtonsForInItemBox( TRUE );
 		EnableSMPanelButtons( TRUE , TRUE );
 		gfSMDisableForItems = FALSE;
 
