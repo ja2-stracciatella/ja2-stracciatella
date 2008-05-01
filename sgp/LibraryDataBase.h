@@ -27,22 +27,11 @@ typedef struct
 
 typedef struct
 {
-	UINT32	uiFilePosInFile;							// current position in the file
-	const FileHeaderStruct* pFileHeader;
-} FileOpenStruct;
-
-
-
-
-typedef struct
-{
 	char* sLibraryPath;
 	FILE* hLibraryHandle;
 	UINT16	usNumberOfEntries;
 	INT32		iNumFilesOpen;
-	INT32		iSizeOfOpenFileArray;
 	FileHeaderStruct *pFileHeader;
-	FileOpenStruct	*pOpenFiles;
 
 //
 //	Temp:	Total memory used for each library ( all memory allocated
@@ -54,21 +43,12 @@ typedef struct
 } LibraryHeaderStruct;
 
 
-typedef struct
+typedef struct LibraryFile
 {
-	INT32		iNumFilesOpen;
-	INT32		iSizeOfOpenFileArray;
-	FILE** pRealFilesOpen;
-} RealFileHeaderStruct;
-
-
-typedef struct
-{
-	char* sManagerName;
-	LibraryHeaderStruct	*pLibraries;
-	UINT16	usNumberOfLibraries;
-	RealFileHeaderStruct RealFiles;
-} DatabaseManagerHeaderStruct;
+	UINT32                  uiFilePosInFile; // current position in the file
+	LibraryHeaderStruct*    lib;
+	const FileHeaderStruct* pFileHeader;
+} LibraryFile;
 
 
 #ifdef __cplusplus
@@ -76,21 +56,15 @@ extern "C" {
 #endif
 
 
-//The FileDatabaseHeader
-extern DatabaseManagerHeaderStruct gFileDataBase;
-
-
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount);
 BOOLEAN ShutDownFileDatabase(void);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 
-HWFILE OpenFileFromLibrary(const char *pName);
-HWFILE CreateRealFileHandle(FILE* hFile);
+BOOLEAN OpenFileFromLibrary(const char* filename, LibraryFile*);
 /* Close an individual file that is contained in the library */
-void    CloseLibraryFile(HWFILE);
-BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum );
-BOOLEAN LoadDataFromLibrary(HWFILE, void* pData, UINT32 uiBytesToRead);
-BOOLEAN LibraryFileSeek(HWFILE, INT32 distance, FileSeekMode);
+void    CloseLibraryFile(LibraryFile*);
+BOOLEAN LoadDataFromLibrary(LibraryFile*, void* pData, UINT32 uiBytesToRead);
+BOOLEAN LibraryFileSeek(LibraryFile*, INT32 distance, FileSeekMode);
 
 BOOLEAN IsLibraryOpened( INT16 sLibraryID );
 

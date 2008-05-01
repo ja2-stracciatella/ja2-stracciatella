@@ -7,10 +7,6 @@
 #include "Debug.h"
 
 
-#define NUM_FILES_TO_ADD_AT_A_TIME 20
-#define INITIAL_NUM_HANDLES        20
-
-
 #define	FILENAME_SIZE 256
 
 
@@ -48,6 +44,16 @@ typedef struct
 CASSERT(sizeof(DIRENTRY) == 280)
 
 
+typedef struct
+{
+	LibraryHeaderStruct* pLibraries;
+	UINT16               usNumberOfLibraries;
+} DatabaseManagerHeaderStruct;
+
+
+static DatabaseManagerHeaderStruct gFileDataBase;
+
+
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
@@ -76,16 +82,6 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 		}
 	}
 
-	//allocate memory for the handles of the 'real files' that will be open
-	//This is needed because the the code wouldnt be able to tell the difference between a 'real' handle and a made up one
-	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-	rfh->pRealFilesOpen = MALLOCNZ(FILE*, INITIAL_NUM_HANDLES);
-	CHECKF(rfh->pRealFilesOpen);
-
-	//set the initial number how many files can be opened at the one time
-	rfh->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
-
-
 	return(TRUE);
 }
 
@@ -106,22 +102,6 @@ BOOLEAN ShutDownFileDatabase( )
 	{
 		MemFree( gFileDataBase.pLibraries );
 		gFileDataBase.pLibraries = NULL;
-	}
-
-	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-
-	//loop through all the 'opened files' ( there should be no files open )
-	for (sLoop1 = 0; sLoop1 < rfh->iNumFilesOpen; sLoop1++)
-	{
-		FastDebugMsg("ShutDownFileDatabase():  ERROR:  real file id still exists, wasnt closed");
-		fclose(rfh->pRealFilesOpen[sLoop1]);
-	}
-
-	//Free up the memory used for the real files array for the opened files
-	if (rfh->pRealFilesOpen)
-	{
-		MemFree(rfh->pRealFilesOpen);
-		rfh->pRealFilesOpen = NULL;
 	}
 
 	return( TRUE );
@@ -218,55 +198,30 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 	lib->uiTotalMemoryAllocatedForLibrary += strlen(lib->sLibraryPath) + 1;
 #endif
 
-	//allocate space for the open files array
-	FileOpenStruct* const fo = MALLOCNZ(FileOpenStruct, INITIAL_NUM_HANDLES);
-	lib->pOpenFiles = fo;
-	if (!fo) return FALSE;
-#ifdef JA2TESTVERSION
-	lib->uiTotalMemoryAllocatedForLibrary += INITIAL_NUM_HANDLES * sizeof(*fo);
-#endif
-
-	lib->hLibraryHandle       = hFile;
-	lib->iNumFilesOpen        = 0;
-	lib->iSizeOfOpenFileArray = INITIAL_NUM_HANDLES;
+	lib->hLibraryHandle = hFile;
+	lib->iNumFilesOpen  = 0;
 	return TRUE;
 }
 
 
-BOOLEAN LoadDataFromLibrary(const HWFILE file, void* const pData, const UINT32 uiBytesToRead)
+BOOLEAN LoadDataFromLibrary(LibraryFile* const f, void* const pData, const UINT32 uiBytesToRead)
 {
-	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
-	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
+	if (f->pFileHeader == NULL) return FALSE;
 
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		if (uiFileNum == 0) return FALSE;
+	UINT32 const uiOffsetInLibrary = f->pFileHeader->uiFileOffset;
+	UINT32 const uiLength          = f->pFileHeader->uiFileLength;
+	FILE*  const hLibraryFile      = f->lib->hLibraryHandle;
+	UINT32 const uiCurPos          = f->uiFilePosInFile;
 
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		return fread(pData, uiBytesToRead, 1, hRealFile) == 1;
-	}
-	else
-	{
-		if (!IsLibraryOpened(sLibraryID)) return FALSE;
-		const LibraryHeaderStruct* const lh = &gFileDataBase.pLibraries[sLibraryID];
-		FileOpenStruct*            const fo = &lh->pOpenFiles[uiFileNum];
-		if (fo->pFileHeader == NULL) return FALSE;
+	fseek(hLibraryFile, uiOffsetInLibrary + uiCurPos, SEEK_SET);
 
-		const UINT32 uiOffsetInLibrary = fo->pFileHeader->uiFileOffset;
-		const UINT32 uiLength          = fo->pFileHeader->uiFileLength;
-		FILE* const  hLibraryFile      = lh->hLibraryHandle;
-		const UINT32 uiCurPos          = fo->uiFilePosInFile;
+	// if we are trying to read more data than the size of the file, return an error
+	if (uiBytesToRead + uiCurPos > uiLength) return FALSE;
 
-		fseek(hLibraryFile, uiOffsetInLibrary + uiCurPos, SEEK_SET);
+	if (fread(pData, uiBytesToRead, 1, hLibraryFile) != 1) return FALSE;
 
-		// if we are trying to read more data than the size of the file, return an error
-		if (uiBytesToRead + uiCurPos > uiLength) return FALSE;
-
-		if (fread(pData, uiBytesToRead, 1, hLibraryFile) != 1) return FALSE;
-
-		fo->uiFilePosInFile += uiBytesToRead;
-		return TRUE;
-	}
+	f->uiFilePosInFile += uiBytesToRead;
+	return TRUE;
 }
 
 
@@ -362,191 +317,50 @@ static int CompareFileNames(const void* key, const void* member)
 }
 
 
-static BOOLEAN CheckIfFileIsAlreadyOpen(const char* pFileName, const LibraryHeaderStruct* lib);
-
-
 /* This function will see if a file is in a library.  If it is, the file will be
  * opened and a file handle will be created for it. */
-HWFILE OpenFileFromLibrary(const char* const pName)
+BOOLEAN OpenFileFromLibrary(const char* const pName, LibraryFile* const f)
 {
 	//Check if the file can be contained from an open library ( the path to the file a library path )
 	const INT16 sLibraryID = GetLibraryIDFromFileName(pName);
-	if (sLibraryID == -1) return 0;
+	if (sLibraryID == -1) return FALSE;
 
 	LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
 
-	if (CheckIfFileIsAlreadyOpen(pName, lib)) return 0;
-
 	//if the file is in a library, get the file
 	const FileHeaderStruct* const pFileHeader = GetFileHeaderFromLibrary(lib, pName);
-	if (pFileHeader == NULL) return 0;
+	if (pFileHeader == NULL) return FALSE;
 
 	//increment the number of open files
 	lib->iNumFilesOpen++;
 
-	//if there isnt enough space to put the file, realloc more space
-	if (lib->iNumFilesOpen >= lib->iSizeOfOpenFileArray)
-	{
-		//reallocate more space for the array
-		FileOpenStruct* const pOpenFiles = REALLOC(lib->pOpenFiles, FileOpenStruct, lib->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
-		if (!pOpenFiles) return 0;
-
-		//increment the number of open files that we can have open
-		lib->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
-		lib->pOpenFiles            = pOpenFiles;
-	}
-
-	UINT32 uiFileNum;
-	for (uiFileNum = 1;; ++uiFileNum)
-	{
-		if (uiFileNum >= lib->iSizeOfOpenFileArray)         return 0;
-		if (lib->pOpenFiles[uiFileNum].pFileHeader == NULL) break;
-	}
-
-	//Set the current file data into the array of open files
-	lib->pOpenFiles[uiFileNum].uiFilePosInFile = 0;
-	lib->pOpenFiles[uiFileNum].pFileHeader     = pFileHeader;
-
-	return DB_ADD_LIBRARY_ID(sLibraryID) | uiFileNum;
+	f->lib         = lib;
+	f->pFileHeader = pFileHeader;
+	return TRUE;
 }
 
 
-HWFILE CreateRealFileHandle(FILE* hFile)
+void CloseLibraryFile(LibraryFile* const f)
 {
-	RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-	HWFILE hLibFile;
-	INT32	iLoop1;
-	UINT32	uiFileNum=0;
-
-	//if there isnt enough space to put the file, realloc more space
-	if (rfh->iNumFilesOpen >= rfh->iSizeOfOpenFileArray - 1)
-	{
-		rfh->pRealFilesOpen = REALLOC(rfh->pRealFilesOpen, FILE*, rfh->iSizeOfOpenFileArray + NUM_FILES_TO_ADD_AT_A_TIME);
-		CHECKF(rfh->pRealFilesOpen);
-
-		//Clear out the new part of the array
-		memset(&rfh->pRealFilesOpen[rfh->iSizeOfOpenFileArray], 0, NUM_FILES_TO_ADD_AT_A_TIME * sizeof(*rfh->pRealFilesOpen));
-
-		rfh->iSizeOfOpenFileArray += NUM_FILES_TO_ADD_AT_A_TIME;
-	}
-
-
-	//loop through to find a new spot in the array
-	uiFileNum = 0;
-	for (iLoop1 = 1; iLoop1 < rfh->iSizeOfOpenFileArray; iLoop1++)
-	{
-		if (rfh->pRealFilesOpen[iLoop1] == NULL)
-		{
-			uiFileNum = iLoop1;
-			break;
-		}
-	}
-
-	//if for some reason we couldnt find a spot, return an error
-	if( uiFileNum == 0 )
-		return( 0 );
-
-	hLibFile = uiFileNum;
-	hLibFile |= DB_ADD_LIBRARY_ID( REAL_FILE_LIBRARY_ID );
-
-	rfh->pRealFilesOpen[iLoop1] = hFile;
-	rfh->iNumFilesOpen++;
-
-	return( hLibFile );
+	--f->lib->iNumFilesOpen;
 }
 
 
-
-
-BOOLEAN GetLibraryAndFileIDFromLibraryFileHandle( HWFILE hlibFile, INT16 *pLibraryID, UINT32 *pFileNum )
+BOOLEAN LibraryFileSeek(LibraryFile* const f, INT32 distance, const FileSeekMode how)
 {
-	*pFileNum = DB_EXTRACT_FILE_ID( hlibFile );
-	*pLibraryID = (UINT16)DB_EXTRACT_LIBRARY( hlibFile );
+	UINT32       uiCurPos = f->uiFilePosInFile;
+	const UINT32 uiSize   = f->pFileHeader->uiFileLength;
 
-	return( TRUE );
-}
-
-
-void CloseLibraryFile(const HWFILE file)
-{
-	const INT16  lib_id  = DB_EXTRACT_LIBRARY(file);
-	const UINT32 file_id = DB_EXTRACT_FILE_ID(file);
-
-	if (lib_id == REAL_FILE_LIBRARY_ID)
+	switch (how)
 	{
-		RealFileHeaderStruct* const rfh = &gFileDataBase.RealFiles;
-		// if its not already closed
-		if (rfh->pRealFilesOpen[file_id] != NULL)
-		{
-			fclose(rfh->pRealFilesOpen[file_id]);
-			rfh->pRealFilesOpen[file_id] = NULL;
-			Assert(rfh->iNumFilesOpen > 0);
-			--rfh->iNumFilesOpen;
-		}
+		case FILE_SEEK_FROM_START:   uiCurPos  = distance;          break;
+		case FILE_SEEK_FROM_END:     uiCurPos  = uiSize - distance; break;
+		case FILE_SEEK_FROM_CURRENT: uiCurPos += distance;          break;
+		default:                     return FALSE;
 	}
-	else
-	{
-		if (!IsLibraryOpened(lib_id)) return;
-		LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[lib_id];
 
-		// if the file_id is invalid
-		if (file_id >= (UINT32)lib->iSizeOfOpenFileArray) return;
-
-		// if the file is not opened, dont close it
-		if (lib->pOpenFiles[file_id].pFileHeader == NULL) return;
-
-		// reset the variables
-		lib->pOpenFiles[file_id].uiFilePosInFile = 0;
-		lib->pOpenFiles[file_id].pFileHeader     = NULL;
-
-		// decrement the number of files that are open
-		lib->iNumFilesOpen--;
-	}
-}
-
-
-BOOLEAN LibraryFileSeek(const HWFILE file, INT32 distance, const FileSeekMode how)
-{
-	const INT16  sLibraryID = DB_EXTRACT_LIBRARY(file);
-	const UINT32 uiFileNum  = DB_EXTRACT_FILE_ID(file);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		int whence;
-		switch (how)
-		{
-			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
-
-			case FILE_SEEK_FROM_END:
-				whence = SEEK_END;
-				if (distance > 0) distance = -distance;
-				break;
-
-			default: whence = SEEK_CUR; break;
-		}
-
-		FILE* const f = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		return fseek(f, distance, whence) == 0;
-	}
-	else
-	{
-		if (!IsLibraryOpened(sLibraryID)) return FALSE;
-		FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
-
-		UINT32       uiCurPos = fo->uiFilePosInFile;
-		const UINT32 uiSize   = fo->pFileHeader->uiFileLength;
-
-		switch (how)
-		{
-			case FILE_SEEK_FROM_START:   uiCurPos  = distance;          break;
-			case FILE_SEEK_FROM_END:     uiCurPos  = uiSize - distance; break;
-			case FILE_SEEK_FROM_CURRENT: uiCurPos += distance;          break;
-			default:                     return FALSE;
-		}
-
-		fo->uiFilePosInFile = uiCurPos;
-		return TRUE;
-	}
+	f->uiFilePosInFile = uiCurPos;
+	return TRUE;
 }
 
 
@@ -567,19 +381,7 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 	//if there are any open files, loop through the library and close down whatever file is still open
 	if (lib->iNumFilesOpen)
 	{
-		//loop though the array of open files to see if any are still open
-		for (uiLoop1 = 0; uiLoop1 < (UINT32)lib->usNumberOfEntries; uiLoop1++)
-		{
-			const char* const filename = lib->pFileHeader[uiLoop1].pFileName;
-			if (CheckIfFileIsAlreadyOpen(filename, lib))
-			{
-				FastDebugMsg(String("CloseLibrary():  ERROR:  %s library file id still exists, wasnt closed, closing now.", filename));
-				CloseLibraryFile(DB_ADD_LIBRARY_ID(sLibraryID) | uiLoop1);
-
-				//	Removed because the memory gets freed in the next for loop.  Would only enter here if files were still open
-				//	lib->pFileHeader[uiLoop1].pFileName = NULL;
-			}
-		}
+		FastDebugMsg(String("CloseLibrary():  ERROR:  %s library still has %d open files.", lib->sLibraryPath, lib->iNumFilesOpen));
 	}
 
 	//Free up the memory used for each file name
@@ -603,13 +405,6 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 		lib->sLibraryPath = NULL;
 	}
 
-	//Free up the space requiered for the open files array
-	if (lib->pOpenFiles)
-	{
-		MemFree(lib->pOpenFiles);
-		lib->pOpenFiles = NULL;
-	}
-
 	fclose(lib->hLibraryHandle);
 	lib->hLibraryHandle = NULL;
 
@@ -622,24 +417,6 @@ BOOLEAN IsLibraryOpened(const INT16 sLibraryID)
 	return
 		sLibraryID < gFileDataBase.usNumberOfLibraries &&
 		gFileDataBase.pLibraries[sLibraryID].hLibraryHandle != NULL;
-}
-
-
-static BOOLEAN CheckIfFileIsAlreadyOpen(const char* const pFileName, const LibraryHeaderStruct* const lib)
-{
-	UINT16 usLoop1=0;
-
-	const char* sTempName = strrchr(pFileName, '/');
-	const char* sName = sTempName == NULL ? pFileName : sTempName + 1;
-
-	//loop through all the open files to see if 'new' file to open is already open
-	for (usLoop1 = 1; usLoop1 < lib->iSizeOfOpenFileArray ; usLoop1++)
-	{
-		const FileHeaderStruct* const fh = lib->pOpenFiles[usLoop1].pFileHeader;
-		//check if the file is open
-		if (fh != NULL && strcasecmp(sName, fh->pFileName) == 0) return TRUE;
-	}
-	return( FALSE );
 }
 
 

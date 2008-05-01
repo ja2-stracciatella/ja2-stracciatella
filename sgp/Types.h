@@ -60,7 +60,6 @@ typedef unsigned char		BOOLEAN;
 typedef void *					PTR;
 typedef UINT8						BYTE;
 typedef CHAR8						STRING512[512];
-typedef UINT32					HWFILE;
 
 #define SGPFILENAME_LEN 100
 typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
@@ -132,6 +131,9 @@ typedef struct SGPVSurface SGPVSurface;
 typedef SGPVSurface*       HVSURFACE;
 
 typedef struct BUTTON_PICS BUTTON_PICS;
+
+typedef struct SGPFile SGPFile;
+typedef SGPFile*       HWFILE;
 
 
 #define TRANSPARENT ((UINT16)0)

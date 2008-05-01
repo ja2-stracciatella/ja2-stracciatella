@@ -29,9 +29,21 @@
 #endif
 
 
-//The FileDatabaseHeader
-DatabaseManagerHeaderStruct gFileDataBase;
+typedef enum SGPFileFlags
+{
+	SGPFILE_NONE = 0U,
+	SGPFILE_REAL = 1U << 0
+} SGPFileFlags;
 
+struct SGPFile
+{
+	SGPFileFlags flags;
+	union
+	{
+		FILE*       file;
+		LibraryFile lib;
+	} u;
+};
 
 struct FindFileInfo
 {
@@ -231,17 +243,18 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		default: abort();
 	}
 
+	SGPFile* const file = MALLOCZ(SGPFile);
+	if (!file) return NULL;
+
 	int d;
 	if (flags & FILE_CREATE_ALWAYS)
 	{
 		d = open(filename, mode | O_CREAT | O_TRUNC, 0600);
-		if (d < 0) return 0;
 	}
 	else if (flags & (FILE_ACCESS_WRITE | FILE_ACCESS_APPEND))
 	{
 		if (flags & FILE_OPEN_ALWAYS) mode |= O_CREAT;
 		d = open(filename, mode, 0600);
-		if (d < 0) return 0;
 	}
 	else
 	{
@@ -253,28 +266,44 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 			d = open(path, mode);
 			if (d < 0)
 			{
-				const HWFILE h = OpenFileFromLibrary(filename);
-				if (h != 0 || !(flags & FILE_OPEN_ALWAYS)) return h;
+				if (OpenFileFromLibrary(filename, &file->u.lib)) return file;
 
-				d = open(filename, mode | O_CREAT, 0600);
-				if (d < 0) return 0;
+				if (flags & FILE_OPEN_ALWAYS)
+				{
+					d = open(filename, mode | O_CREAT, 0600);
+				}
 			}
 		}
 	}
 
-	FILE* const f = fdopen(d, fmode);
-	if (f == NULL)
+	if (d >= 0)
 	{
+		FILE* const f = fdopen(d, fmode);
+		if (f != NULL)
+		{
+			file->flags  = SGPFILE_REAL;
+			file->u.file = f;
+			return file;
+		}
 		close(d);
-		return 0;
 	}
-	return CreateRealFileHandle(f);
+
+	MemFree(file);
+	return NULL;
 }
 
 
-void FileClose(const HWFILE hFile)
+void FileClose(const HWFILE f)
 {
-	CloseLibraryFile(hFile);
+	if (f->flags & SGPFILE_REAL)
+	{
+		fclose(f->u.file);
+	}
+	else
+	{
+		CloseLibraryFile(&f->u.lib);
+	}
+	MemFree(f);
 }
 
 
@@ -284,87 +313,83 @@ extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif
 
-BOOLEAN FileRead(const HWFILE hFile, void* const pDest, const UINT32 uiBytesToRead)
+BOOLEAN FileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
 	const UINT32 uiStartTime = GetJA2Clock();
 #endif
-	const BOOLEAN ret = LoadDataFromLibrary(hFile, pDest, uiBytesToRead);
+
+	BOOLEAN ret;
+	if (f->flags & SGPFILE_REAL)
+	{
+		ret = fread(pDest, uiBytesToRead, 1, f->u.file) == 1;
+	}
+	else
+	{
+		ret = LoadDataFromLibrary(&f->u.lib, pDest, uiBytesToRead);
+	}
+
 #ifdef JA2TESTVERSION
 	//Add the time that we spent in this function to the total.
 	uiTotalFileReadTime += GetJA2Clock() - uiStartTime;
 	uiTotalFileReadCalls++;
 #endif
+
 	return ret;
 }
 
 
-BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite)
+BOOLEAN FileWrite(const HWFILE f, const void* const pDest, const UINT32 uiBytesToWrite)
 {
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	// we cannot write to a library file
-	if (sLibraryID != REAL_FILE_LIBRARY_ID) return FALSE;
-
-	FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-	return fwrite(pDest, uiBytesToWrite, 1, hRealFile) == 1;
+	return
+		f->flags & SGPFILE_REAL &&
+		fwrite(pDest, uiBytesToWrite, 1, f->u.file) == 1;
 }
 
 
-BOOLEAN FileSeek(const HWFILE hFile, INT32 distance, const FileSeekMode how)
+BOOLEAN FileSeek(const HWFILE f, INT32 distance, const FileSeekMode how)
 {
-	return LibraryFileSeek(hFile, distance, how);
-}
-
-
-INT32 FileGetPos(const HWFILE hFile)
-{
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
+	if (f->flags & SGPFILE_REAL)
 	{
-		FILE* const hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-		return ftell(hRealFile);
+		int whence;
+		switch (how)
+		{
+			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
+
+			case FILE_SEEK_FROM_END:
+				whence = SEEK_END;
+				if (distance > 0) distance = -distance;
+				break;
+
+			default: whence = SEEK_CUR; break;
+		}
+
+		return fseek(f->u.file, distance, whence) == 0;
 	}
 	else
 	{
-		//if the library is open
-		if (IsLibraryOpened(sLibraryID))
-		{
-			const FileOpenStruct* const fo = &gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum];
-			if (fo->pFileHeader != NULL) // if the file is open
-			{
-				const UINT32 uiPositionInFile = fo->uiFilePosInFile;
-				return uiPositionInFile;
-			}
-		}
+		return LibraryFileSeek(&f->u.lib, distance, how);
 	}
-
-	return BAD_INDEX;
 }
 
 
-UINT32 FileGetSize(const HWFILE hFile)
+INT32 FileGetPos(const HWFILE f)
 {
-	INT16 sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
+	return f->flags & SGPFILE_REAL ? ftell(f->u.file) : f->u.lib.uiFilePosInFile;
+}
 
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
+
+UINT32 FileGetSize(const HWFILE f)
+{
+	if (f->flags & SGPFILE_REAL)
 	{
-		FILE* const f = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
 		struct stat sb;
-		if (fstat(fileno(f), &sb) != 0) return 0;
+		if (fstat(fileno(f->u.file), &sb) != 0) return 0;
 		return sb.st_size;
 	}
 	else
 	{
-		if (!IsLibraryOpened(sLibraryID)) return 0;
-		return gFileDataBase.pLibraries[sLibraryID].pOpenFiles[uiFileNum].pFileHeader->uiFileLength;
+		return f->u.lib.pFileHeader->uiFileLength;
 	}
 }
 
@@ -539,7 +564,7 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
+BOOLEAN GetFileManFileTime(const HWFILE f, SGP_FILETIME* const pCreationTime, SGP_FILETIME* const pLastAccessedTime, SGP_FILETIME* const pLastWriteTime)
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED
@@ -549,13 +574,9 @@ BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime
 	memset(pLastAccessedTime, 0, sizeof(*pLastAccessedTime));
 	memset(pLastWriteTime,    0, sizeof(*pLastWriteTime));
 
-	INT16  sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
+	if (f->flags & SGPFILE_REAL)
 	{
-		const HANDLE hRealFile = gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum].hRealFileHandle;
+		const HANDLE hRealFile = f->u.file;
 
 		//Gets the UTC file time for the 'real' file
 		SGP_FILETIME sCreationUtcFileTime;
@@ -575,7 +596,7 @@ BOOLEAN GetFileManFileTime(const HWFILE hFile, SGP_FILETIME* const pCreationTime
 	}
 	else
 	{
-		return GetLibraryFileTime(sLibraryID, uiFileNum, pLastWriteTime);
+		return GetLibraryFileTime(&f->u.lib, pLastWriteTime);
 	}
 #endif
 }
@@ -591,22 +612,9 @@ INT32	CompareSGPFileTimes(const SGP_FILETIME* const pFirstFileTime, const SGP_FI
 }
 
 
-FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE hFile)
+FILE* GetRealFileHandleFromFileManFileHandle(const HWFILE f)
 {
-	INT16  sLibraryID;
-	UINT32 uiFileNum;
-	GetLibraryAndFileIDFromLibraryFileHandle(hFile, &sLibraryID, &uiFileNum);
-
-	if (sLibraryID == REAL_FILE_LIBRARY_ID)
-	{
-		return gFileDataBase.RealFiles.pRealFilesOpen[uiFileNum];
-	}
-	else
-	{
-		const LibraryHeaderStruct* const lh = &gFileDataBase.pLibraries[sLibraryID];
-		if (lh->pOpenFiles[uiFileNum].pFileHeader != NULL) return lh->hLibraryHandle;
-	}
-	return NULL;
+	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
 }
 
 
