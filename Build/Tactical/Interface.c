@@ -2184,7 +2184,7 @@ void HandleTopMessages(void)
 	if (!gTopMessage.fCreated)
 	{
 		gfTopMessageDirty = TRUE;
-		AddTopMessage(ts->ubTopMessageType);
+		AddTopMessage((MESSAGE_TYPES)ts->ubTopMessageType);
 	}
 
 	switch (ts->ubTopMessageType)
