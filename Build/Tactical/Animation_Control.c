@@ -429,7 +429,7 @@ const ANI_SPEED_DEF gubAnimSwatSpeeds[TOTALBODYTYPES] =
   { -10, 2.2f }  // REGFEMALE
 };
 
-const ANI_SPEED_DEF gubAnimCrawlSpeeds[TOTALBODYTYPES]; // XXX TODO0011 only declared
+const ANI_SPEED_DEF gubAnimCrawlSpeeds[TOTALBODYTYPES] = { 0 }; // XXX TODO0011 only declared
 
 // Really only the first mercs are using any of these values....
 static const ANI_SPEED_DEF gubAnimCrawlingSpeeds[TOTALBODYTYPES] = // XXX TODO0011 unused, should probably be gubAnimCrawlSpeeds[]
