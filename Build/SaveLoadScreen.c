@@ -1255,7 +1255,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
 {
 	// make sure the entry is valid
-	if (0 <= bEntry || bEntry < NUM_SAVE_GAMES)
+	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
 	{
 		char zSavedGameName[512];
 		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
