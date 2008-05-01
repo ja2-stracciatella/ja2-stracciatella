@@ -40,9 +40,10 @@ CFLAGS += -I sgp
 
 #CFLAGS += -Wall
 #CFLAGS += -W
-CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
+CFLAGS += -Wsequence-point
+CFLAGS += -Wunused-label
 CFLAGS += -Wunused-variable
 CFLAGS += -Wwrite-strings
 
@@ -106,7 +107,9 @@ CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
 CCFLAGS += -Werror-implicit-function-declaration
 CCFLAGS += -Wimplicit-int
-CCFLAGS += -Wsequence-point
+CCFLAGS += -Wmissing-prototypes
+
+CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lm
@@ -461,11 +464,11 @@ LNGS += Build/Utils/_RussianText.c
 
 SRCS += $(LNGS)
 
-DEPS = $(filter %.d, $(SRCS:.c=.d))
-OBJS = $(filter %.o, $(SRCS:.c=.o))
+DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cc=.d))
+OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cc=.o))
 
 .SUFFIXES:
-.SUFFIXES: .c .d .o
+.SUFFIXES: .c .cc .d .o
 
 Q ?= @
 
@@ -487,9 +490,17 @@ $(BINARY): $(OBJS)
 	@echo '===> CC $<'
 	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
 
+.cc.o:
+	@echo '===> CXX $<'
+	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .c.d:
 	@echo '===> DEP $<'
 	$(Q)$(CC) $(CCFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
+
+.cc.d:
+	@echo '===> DEP $<'
+	$(Q)$(CXX) $(CXXFLAGS) -MM $< | sed 's#^$(@F:%.d=%.o):#$@ $(@:%.d=%.o):#' > $@
 
 clean distclean:
 	@echo '===> CLEAN'
