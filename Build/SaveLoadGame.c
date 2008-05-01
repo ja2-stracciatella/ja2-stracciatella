@@ -2464,11 +2464,12 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
 #endif
 
+	BOOLEAN Ret = FALSE;
+
 	//Get the file size of the source data file
 	UINT32 uiFileSize = FileGetSize( hSrcFile );
 	if (uiFileSize == 0) goto ret_close;
 
-	BOOLEAN Ret = FALSE;
 	// Write the the size of the file to the saved game file
 	if (FileWrite(hFile, &uiFileSize, sizeof(UINT32)))
 	{

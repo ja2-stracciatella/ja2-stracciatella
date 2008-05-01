@@ -684,28 +684,30 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			goto fail_vobj;
 		}
 
-		// Valid auxiliary data, so get # of frames from data
-		const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
-		a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
-
-		// get structure data if any
-		const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
-		if (pStructureFileRef != NULL)
 		{
-			INT16 sStartFrame = 0;
-			if (usSurfaceIndex == RGMPRONE)
-			{
-				sStartFrame = 5;
-			}
-			else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
-			{
-				sStartFrame = -1;
-			}
+			// Valid auxiliary data, so get # of frames from data
+			const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
+			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
 
-			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
+			// get structure data if any
+			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
+			if (pStructureFileRef != NULL)
 			{
-				SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
-				goto fail_vobj;
+				INT16 sStartFrame = 0;
+				if (usSurfaceIndex == RGMPRONE)
+				{
+					sStartFrame = 5;
+				}
+				else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
+				{
+					sStartFrame = -1;
+				}
+
+				if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
+				{
+					SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
+					goto fail_vobj;
+				}
 			}
 		}
 
