@@ -40,47 +40,47 @@ static void InitGameSettings(void);
 void LoadGameSettings(void)
 {
 	const HWFILE f = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ);
-	if (!f) goto fail;
-
-	GAME_SETTINGS* const g = &gGameSettings;
-	if (FileGetSize(f) != sizeof(*g))                              goto fail_close;
-	if (!FileRead(f, g, sizeof(*g)))                               goto fail_close;
-	if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail_close;
-	FileClose(f);
-
-	// Do checking to make sure the settings are valid
-	if (g->bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g->bLastSavedGameSlot) g->bLastSavedGameSlot = -1;
-	if (g->ubMusicVolumeSetting > HIGHVOLUME) g->ubMusicVolumeSetting = MIDVOLUME;
-	if (g->ubSoundEffectsVolume > HIGHVOLUME) g->ubSoundEffectsVolume = MIDVOLUME;
-	if (g->ubSpeechVolume       > HIGHVOLUME) g->ubSpeechVolume       = MIDVOLUME;
-
-	// Make sure that at least subtitles or speech is enabled
-	if (!g->fOptions[TOPTION_SUBTITLES] && !g->fOptions[TOPTION_SPEECH])
+	if (f)
 	{
-		g->fOptions[TOPTION_SUBTITLES] = TRUE;
-		g->fOptions[TOPTION_SPEECH   ] = TRUE;
-	}
+		GAME_SETTINGS* const g = &gGameSettings;
+		if (FileGetSize(f) != sizeof(*g))                              goto fail_close;
+		if (!FileRead(f, g, sizeof(*g)))                               goto fail_close;
+		if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail_close;
+		FileClose(f);
 
-	// Set the settings
-	SetSoundEffectsVolume(g->ubSoundEffectsVolume);
-	SetSpeechVolume(g->ubSpeechVolume);
-	MusicSetVolume(g->ubMusicVolumeSetting);
+		// Do checking to make sure the settings are valid
+		if (g->bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g->bLastSavedGameSlot) g->bLastSavedGameSlot = -1;
+		if (g->ubMusicVolumeSetting > HIGHVOLUME) g->ubMusicVolumeSetting = MIDVOLUME;
+		if (g->ubSoundEffectsVolume > HIGHVOLUME) g->ubSoundEffectsVolume = MIDVOLUME;
+		if (g->ubSpeechVolume       > HIGHVOLUME) g->ubSpeechVolume       = MIDVOLUME;
 
-	// If the user doesn't want the help screens present
-	if (g->fHideHelpInAllScreens)
-	{
-		gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;
-	}
-	else
-	{
-		// Set it so that every screens help will come up the first time (the 'x' will be set)
-		gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0xffff;
-	}
-	return;
+		// Make sure that at least subtitles or speech is enabled
+		if (!g->fOptions[TOPTION_SUBTITLES] && !g->fOptions[TOPTION_SPEECH])
+		{
+			g->fOptions[TOPTION_SUBTITLES] = TRUE;
+			g->fOptions[TOPTION_SPEECH   ] = TRUE;
+		}
+
+		// Set the settings
+		SetSoundEffectsVolume(g->ubSoundEffectsVolume);
+		SetSpeechVolume(g->ubSpeechVolume);
+		MusicSetVolume(g->ubMusicVolumeSetting);
+
+		// If the user doesn't want the help screens present
+		if (g->fHideHelpInAllScreens)
+		{
+			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;
+		}
+		else
+		{
+			// Set it so that every screens help will come up the first time (the 'x' will be set)
+			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0xffff;
+		}
+		return;
 
 fail_close:
-	FileClose(f);
-fail:
+		FileClose(f);
+	}
 	InitGameSettings();
 }
 

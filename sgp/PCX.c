@@ -111,41 +111,41 @@ static PcxObject* LoadPcx(const char* const filename)
 	if (f == 0) return NULL;
 
 	PcxHeader header;
-	if (!FileRead(f, &header, sizeof(header)) ||
-			header.ubManufacturer != 10           ||
-			header.ubEncoding     !=  1)
-	{ // We have an invalid pcx format
-		goto fail_f;
-	}
-
-	const UINT32 file_size = FileGetSize(f);
-	if (file_size == 0) goto fail_f;
-	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
-
-	PcxObject* const pcx_obj = MALLOC(PcxObject);
-	if (pcx_obj == NULL) goto fail_f;
-
-	pcx_obj->pPcxBuffer = MALLOCN(UINT8, buffer_size);
-	if (pcx_obj->pPcxBuffer == NULL) goto fail_pcx_obj;
-
-	pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
-	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
-	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
-	pcx_obj->uiBufferSize = buffer_size;
-
-	if (!FileRead(f, pcx_obj->pPcxBuffer, buffer_size) ||
-			!FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette)))
+	if (FileRead(f, &header, sizeof(header)) &&
+			header.ubManufacturer == 10          &&
+			header.ubEncoding     ==  1)
 	{
-		goto fail_pcx_buf;
-	}
+		const UINT32 file_size = FileGetSize(f);
+		if (file_size != 0)
+		{
+			const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
-	FileClose(f);
-	return pcx_obj;
+			PcxObject* const pcx_obj = MALLOC(PcxObject);
+			if (pcx_obj == NULL) goto fail_f;
+
+			pcx_obj->pPcxBuffer = MALLOCN(UINT8, buffer_size);
+			if (pcx_obj->pPcxBuffer == NULL) goto fail_pcx_obj;
+
+			pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
+			pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
+			pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
+			pcx_obj->uiBufferSize = buffer_size;
+
+			if (!FileRead(f, pcx_obj->pPcxBuffer, buffer_size) ||
+					!FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette)))
+			{
+				goto fail_pcx_buf;
+			}
+
+			FileClose(f);
+			return pcx_obj;
 
 fail_pcx_buf:
-	MemFree(pcx_obj->pPcxBuffer);
+			MemFree(pcx_obj->pPcxBuffer);
 fail_pcx_obj:
-	MemFree(pcx_obj);
+			MemFree(pcx_obj);
+		}
+	}
 fail_f:
 	FileClose(f);
 	return NULL;

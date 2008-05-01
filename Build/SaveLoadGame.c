@@ -2457,45 +2457,43 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 {
-	BOOLEAN Ret = FALSE;
-
 	HWFILE hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_READ);
-	if (!hSrcFile) goto ret_only;
+	if (!hSrcFile) return FALSE;
 
-	#ifdef JA2BETAVERSION
+#ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
-	#endif
-
+#endif
 
 	//Get the file size of the source data file
 	UINT32 uiFileSize = FileGetSize( hSrcFile );
 	if (uiFileSize == 0) goto ret_close;
 
+	BOOLEAN Ret = FALSE;
 	// Write the the size of the file to the saved game file
-	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) goto ret_close;
+	if (FileWrite(hFile, &uiFileSize, sizeof(UINT32)))
+	{
+		//Allocate a buffer to read the data into
+		UINT8* const pData = MALLOCN(UINT8, uiFileSize);
+		if (pData == NULL) goto ret_close;
 
-	//Allocate a buffer to read the data into
-	UINT8* const pData = MALLOCN(UINT8, uiFileSize);
-	if (pData == NULL) goto ret_close;
+		// Read the saource file into the buffer
+		if (!FileRead(hSrcFile, pData, uiFileSize)) goto ret_free;
 
-	// Read the saource file into the buffer
-	if (!FileRead(hSrcFile, pData, uiFileSize)) goto ret_free;
-
-	// Write the buffer to the saved game file
-	if (!FileWrite(hFile, pData, uiFileSize)) goto ret_free;
+		// Write the buffer to the saved game file
+		if (!FileWrite(hFile, pData, uiFileSize)) goto ret_free;
 
 #ifdef JA2BETAVERSION
-	//Write out the name of the temp file so we can track whcih ones get loaded, and saved
-	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
+		//Write out the name of the temp file so we can track whcih ones get loaded, and saved
+		WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
 #endif
 
-	Ret = TRUE;
+		Ret = TRUE;
 
 ret_free:
-	MemFree(pData);
+		MemFree(pData);
+	}
 ret_close:
 	FileClose(hSrcFile);
-ret_only:
 	return Ret;
 }
 

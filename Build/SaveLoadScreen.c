@@ -1255,25 +1255,26 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
 {
 	// make sure the entry is valid
-	if (bEntry < 0 || NUM_SAVE_GAMES <= bEntry) goto fail;
+	if (0 <= bEntry || bEntry < NUM_SAVE_GAMES)
+	{
+		char zSavedGameName[512];
+		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
 
-	char zSavedGameName[512];
-	CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
+		const HWFILE f = FileOpen(zSavedGameName, FILE_ACCESS_READ);
+		if (f)
+		{
+			const BOOLEAN success_read = FileRead(f, header, sizeof(*header));
+			FileClose(f);
+			if (success_read)
+			{
+				endof(header->zGameVersionNumber)[-1] =  '\0';
+				endof(header->sSavedGameDesc)[-1]     = L'\0';
+				return TRUE;
+			}
+		}
 
-	const HWFILE f = FileOpen(zSavedGameName, FILE_ACCESS_READ);
-	if (!f) goto fail_flag;
-
-	const BOOLEAN success_read = FileRead(f, header, sizeof(*header));
-	FileClose(f);
-	if (!success_read) goto fail_flag;
-
-	endof(header->zGameVersionNumber)[-1] =  '\0';
-	endof(header->sSavedGameDesc)[-1]     = L'\0';
-	return TRUE;
-
-fail_flag:
-	gbSaveGameArray[bEntry] = FALSE;
-fail:
+		gbSaveGameArray[bEntry] = FALSE;
+	}
 	memset(header, 0, sizeof(*header));
 	return FALSE;
 }
