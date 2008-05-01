@@ -370,6 +370,7 @@ static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
 static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue);
+static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -968,7 +969,7 @@ BOOLEAN DoSaveLoadMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiEx
 }
 
 
-void InitSaveGameArray(void)
+static void InitSaveGameArray(void)
 {
 	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
 	{

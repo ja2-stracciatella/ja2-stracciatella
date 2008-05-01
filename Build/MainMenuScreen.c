@@ -211,9 +211,6 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 BOOLEAN InitMainMenu(void)
 {
-	// Check to see whether saved game files exist
-	InitSaveGameArray();
-
 	CreateDestroyMainMenuButtons(TRUE);
 
 	// Load background graphic and add it
