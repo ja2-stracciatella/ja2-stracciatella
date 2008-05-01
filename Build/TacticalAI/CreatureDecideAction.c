@@ -1075,7 +1075,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
  BestShot.ubPossible  = FALSE;	// by default, assume Shooting isn't possible
  BestStab.ubPossible  = FALSE;	// by default, assume Stabbing isn't possible
 
- BestAttack.ubChanceToReallyHit = 0;
+ memset(&BestAttack, 0, sizeof(BestAttack)); // XXX HACK000E
 
  bSpitIn = NO_SLOT;
 
