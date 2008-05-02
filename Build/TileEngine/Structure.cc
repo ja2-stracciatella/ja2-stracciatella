@@ -216,9 +216,10 @@ void FreeAllStructureFiles( void )
 	}
 }
 
-BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
+
+void FreeStructureFile(STRUCTURE_FILE_REF* const pStructureFile)
 {
-	CHECKF( pStructureFile );
+	CHECKV( pStructureFile );
 
 	// unlink the file ref
 	if (pStructureFile->pPrev != NULL)
@@ -241,7 +242,6 @@ BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile )
 	}
 	// and free all the structures used!
 	FreeStructureFileRef( pStructureFile );
-	return( TRUE );
 }
 
 

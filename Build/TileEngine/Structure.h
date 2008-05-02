@@ -29,7 +29,7 @@
 // functions at the structure database level
 STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName);
 void FreeAllStructureFiles( void );
-BOOLEAN FreeStructureFile( STRUCTURE_FILE_REF * pStructureFile );
+void FreeStructureFile(STRUCTURE_FILE_REF*);
 
 //
 // functions at the structure instance level
