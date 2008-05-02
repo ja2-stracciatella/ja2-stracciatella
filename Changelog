@@ -1,4 +1,4 @@
-(r3952, r3955) Plug vanilla memory leaks.
+(r3952, r3955, r3957) Plug vanilla memory leaks.
 (r3920) Fix a vanilla string buffer overrun, occuring in the French and Italian translations, when displaying the turn message at the top in combat.
 (r3919) Fix a vanilla bug, which accessed uninitialised data.
 (r3918) Fix a bug in r3226, which broke saving/loading savegames in the Windows version.

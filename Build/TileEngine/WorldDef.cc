@@ -1,4 +1,5 @@
 #include "Animation_Data.h"
+#include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
@@ -2412,10 +2413,11 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	//Get the file size and alloc one huge buffer for it.
 	//We will use this buffer to transfer all of the data from.
 	uiFileSize = FileGetSize( hfile );
-	INT8*       pBuffer     = MALLOCN(INT8, uiFileSize);
-	INT8* const pBufferHead = pBuffer;
-	FileRead(hfile, pBuffer, uiFileSize);
+	SGP::Buffer<INT8> pBufferHead(uiFileSize);
+	FileRead(hfile, pBufferHead, uiFileSize);
 	FileClose( hfile );
+
+	INT8* pBuffer = pBufferHead;
 
 	// Read JA2 Version ID
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
@@ -2887,9 +2889,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 #ifdef JA2EDITOR
 	strlcpy(g_filename, puiFilename, lengthof(g_filename));
 #endif
-
-	//Remove this rather large chunk of memory from the system now!
-	MemFree( pBufferHead );
 
 #ifdef JA2TESTVERSION
 	uiLoadWorldTime = GetJA2Clock() - uiLoadWorldStartTime;
