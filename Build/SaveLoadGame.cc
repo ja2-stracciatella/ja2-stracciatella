@@ -2474,7 +2474,6 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 	// Write the the size of the file to the saved game file
 	if (FileWrite(hFile, &uiFileSize, sizeof(UINT32)))
 	{
-		//Allocate a buffer to read the data into
 		SGP::Buffer<UINT8> pData(uiFileSize);
 		if (pData == NULL) goto ret_close;
 
@@ -2497,83 +2496,44 @@ ret_close:
 }
 
 
-BOOLEAN LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile )
+BOOLEAN LoadFilesFromSavedGame(const char* const pSrcFileName, const HWFILE hFile)
 {
-	UINT32	uiFileSize;
-	HWFILE	hSrcFile;
+#ifdef JA2BETAVERSION
+	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
+#endif
 
-	#ifdef JA2BETAVERSION
-	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
-	#endif
+	const HWFILE hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	if (!hSrcFile) return FALSE;
 
-	//open the destination file to write to
-	hSrcFile = FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( !hSrcFile )
-	{
-		//error, we cant open the saved game file
-		return( FALSE );
-	}
-
+	BOOLEAN ret = FALSE;
 
 	// Read the size of the data
-	if (!FileRead(hFile, &uiFileSize, sizeof(UINT32)))
+	UINT32 uiFileSize;
+	if (!FileRead(hFile, &uiFileSize, sizeof(UINT32))) goto ret_close;
+
+	if (uiFileSize != 0)
 	{
-		FileClose( hSrcFile );
+		SGP::Buffer<UINT8> pData(uiFileSize);
+		if (pData == NULL) goto ret_close;
 
-		return(FALSE);
+		// Read into the buffer
+		if (!FileRead(hFile, pData, uiFileSize)) goto ret_close;
+
+		// Write the buffer to the new file
+		if (!FileWrite(hSrcFile, pData, uiFileSize))
+		{
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write to the %s File", pSrcFileName));
+			goto ret_close;
+		}
+
+#ifdef JA2BETAVERSION
+		WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
+#endif
 	}
-
-
-	//if there is nothing in the file, return;
-	if( uiFileSize == 0 )
-	{
-		FileClose( hSrcFile );
-		return( TRUE );
-	}
-
-	//Allocate a buffer to read the data into
-	UINT8* pData = MALLOCN(UINT8, uiFileSize);
-	if( pData == NULL )
-	{
-		FileClose( hSrcFile );
-		return( FALSE );
-	}
-
-
-	// Read into the buffer
-	if (!FileRead(hFile, pData, uiFileSize))
-	{
-		FileClose( hSrcFile );
-
-		//Free the buffer
-		MemFree( pData );
-
-		return(FALSE);
-	}
-
-
-
-	// Write the buffer to the new file
-	if (!FileWrite(hSrcFile, pData, uiFileSize))
-	{
-		FileClose( hSrcFile );
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write to the %s File", pSrcFileName ) );
-		//Free the buffer
-		MemFree( pData );
-
-		return(FALSE);
-	}
-
-	//Free the buffer
-	MemFree( pData );
-
-	//Close the source data file
-	FileClose( hSrcFile );
-
-	#ifdef JA2BETAVERSION
-		WriteTempFileNameToFile( pSrcFileName, uiFileSize, hFile );
-	#endif
-	return( TRUE );
+	ret = TRUE;
+ret_close:
+	FileClose(hSrcFile);
+	return ret;
 }
 
 
