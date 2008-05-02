@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "GameLoop.h"
@@ -2474,14 +2475,14 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 	if (FileWrite(hFile, &uiFileSize, sizeof(UINT32)))
 	{
 		//Allocate a buffer to read the data into
-		UINT8* const pData = MALLOCN(UINT8, uiFileSize);
+		SGP::Buffer<UINT8> pData(uiFileSize);
 		if (pData == NULL) goto ret_close;
 
 		// Read the saource file into the buffer
-		if (!FileRead(hSrcFile, pData, uiFileSize)) goto ret_free;
+		if (!FileRead(hSrcFile, pData, uiFileSize)) goto ret_close;
 
 		// Write the buffer to the saved game file
-		if (!FileWrite(hFile, pData, uiFileSize)) goto ret_free;
+		if (!FileWrite(hFile, pData, uiFileSize)) goto ret_close;
 
 #ifdef JA2BETAVERSION
 		//Write out the name of the temp file so we can track whcih ones get loaded, and saved
@@ -2489,9 +2490,6 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 #endif
 
 		Ret = TRUE;
-
-ret_free:
-		MemFree(pData);
 	}
 ret_close:
 	FileClose(hSrcFile);
