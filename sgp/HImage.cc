@@ -73,7 +73,7 @@ fail_img:
 static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents);
 
 
-BOOLEAN DestroyImage( HIMAGE hImage )
+void DestroyImage(SGPImage* const hImage)
 {
 	Assert( hImage != NULL );
 
@@ -82,8 +82,6 @@ BOOLEAN DestroyImage( HIMAGE hImage )
 
 	// Now free structure
 	MemFree( hImage );
-
-	return( TRUE );
 }
 
 
