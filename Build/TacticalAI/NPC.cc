@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Font_Control.h"
 #include "Types.h"
 #include "WCheck.h"
@@ -142,20 +143,12 @@ static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );
 
-	const UINT32 uiFileSize = sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS;
-	NPCQuoteInfo* pFileData = MALLOCN(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-	if (pFileData)
-	{
-		if (!FileRead(hFile, pFileData, uiFileSize))
-		{
-			MemFree( pFileData );
-			pFileData = NULL;
-		}
-	}
-
-	FileClose( hFile );
-
-	return( pFileData );
+	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
+	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
+	NPCQuoteInfo* const ret =
+		buf && FileRead(hFile, buf, uiFileSize) ? buf.Release() : NULL;
+	FileClose(hFile);
+	return ret;
 }
 
 
@@ -333,20 +326,12 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
 	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
 	CHECKN( hFile );
 
-	const UINT32 uiFileSize = sizeof( NPCQuoteInfo ) * NUM_NPC_QUOTE_RECORDS;
-	NPCQuoteInfo* pFileData = MALLOCN(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-	if (pFileData)
-	{
-		if (!FileRead(hFile, pFileData, uiFileSize))
-		{
-			MemFree( pFileData );
-			pFileData = NULL;
-		}
-	}
-
-	FileClose( hFile );
-
-	return( pFileData );
+	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
+	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
+	NPCQuoteInfo* const ret =
+		buf && FileRead(hFile, buf, uiFileSize) ? buf.Release() : NULL;
+	FileClose(hFile);
+	return ret;
 }
 
 
