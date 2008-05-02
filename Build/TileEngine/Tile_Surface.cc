@@ -51,7 +51,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			strcat( cStructureFilename, "." );
 		}
 		strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
-		STRUCTURE_FILE_REF* pStructureFileRef;
+		AutoStructureFileRef pStructureFileRef;
 		if (FileExists( cStructureFilename ))
 		{
 			pStructureFileRef = LoadStructureFile( cStructureFilename );
@@ -64,7 +64,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			if (hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
 			{
 				SET_ERROR("Structure file error: %s", cStructureFilename);
-				goto fail_structure;
+				goto fail_vobj;
 			}
 
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
@@ -72,19 +72,14 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
 			{
 				SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
-				goto fail_structure;
+				goto fail_vobj;
 			}
-		}
-		else
-		{
-			pStructureFileRef = NULL;
 		}
 
 		{
 			TILE_IMAGERY* const pTileSurf = MALLOCZ(TILE_IMAGERY);
 
 			pTileSurf->vo									= hVObject;
-			pTileSurf->pStructureFileRef	= pStructureFileRef;
 
 			if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
 			{
@@ -105,13 +100,12 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			// the hImage is no longer needed
 			DestroyImage( hImage );
 
+			pTileSurf->pStructureFileRef = pStructureFileRef.Release();
 			return( pTileSurf );
 
 fail_tile_imagery:
 			MemFree(pTileSurf);
 		}
-fail_structure:
-		FreeStructureFile(pStructureFileRef);
 fail_vobj:
 		DeleteVideoObject(hVObject);
 	}
