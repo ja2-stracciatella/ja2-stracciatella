@@ -189,7 +189,7 @@ SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 }
 
 
-BOOLEAN DeleteVideoObject(SGPVObject* const vo)
+void DeleteVideoObject(SGPVObject* const vo)
 {
 	VOBJECT_NODE* prev = NULL;
 	VOBJECT_NODE* curr = gpVObjectHead;
@@ -215,12 +215,11 @@ BOOLEAN DeleteVideoObject(SGPVObject* const vo)
 				guiVObjectSize = guiVObjectSize;
 			}
 #endif
-			return TRUE;
+			return;
 		}
 		prev = curr;
 		curr = curr->next;
 	}
-	return FALSE;
 }
 
 
