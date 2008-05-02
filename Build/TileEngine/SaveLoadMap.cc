@@ -106,8 +106,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	const UINT32 uiFileSize         = FileGetSize(hFile);
 	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
-	//Allocate memory for the buffer
-	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
+	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps(uiNumberOfElements);
 	if( pTempArrayOfMaps == NULL )
 	{
 		Assert( 0 );
@@ -269,9 +268,6 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 	{
 		ReSetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
 	}
-
-	//Free the memory used for the temp array
-	MemFree( pTempArrayOfMaps );
 
 	return( TRUE );
 }
