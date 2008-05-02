@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Structure.h"
@@ -784,7 +785,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
 	//Allocate memory for the buffer
-	MODIFY_MAP* const pTempArrayOfMaps = MALLOCN(MODIFY_MAP, uiNumberOfElements);
+	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps(uiNumberOfElements);
 	if( pTempArrayOfMaps == NULL )
 	{
 		Assert( 0 );

@@ -139,7 +139,6 @@ RemoveAllShadowsOfTypeRange(): O(n^2)
 RemoveAllTopmostsOfTypeRange(): O(n^2)
 RemoveAmmoGUI(), RemoveEquipGUI(), RemoveKeysGUI(), RemoveMoneyGUI(): empty, remove?
 RemoveGraphicFromTempFile(): file leak on error
-RemoveGraphicFromTempFile(): memory leak
 RemoveItemGUI(): callers
 RenderFaceOverlay(): users
 RenderItemDescriptionBox(): code duplication
