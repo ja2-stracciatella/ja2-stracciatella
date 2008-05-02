@@ -474,7 +474,7 @@ BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface* const src, SGPPaletteEntry*
 }
 
 
-BOOLEAN DeleteVideoSurface(SGPVSurface* const vs)
+void DeleteVideoSurface(SGPVSurface* const vs)
 {
 	VSURFACE_NODE* prev = NULL;
 	VSURFACE_NODE* curr = gpVSurfaceHead;
@@ -495,12 +495,11 @@ BOOLEAN DeleteVideoSurface(SGPVSurface* const vs)
 
 			MemFree(curr);
 			guiVSurfaceSize--;
-			return TRUE;
+			return;
 		}
 		prev = curr;
 		curr = curr->next;
 	}
-	return FALSE;
 }
 
 
