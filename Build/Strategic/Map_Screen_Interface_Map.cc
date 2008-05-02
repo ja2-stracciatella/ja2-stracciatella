@@ -1216,7 +1216,7 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 
 void InitializePalettesForMap(void)
 {
-	SGPVSurface* const uiTempMap = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
+	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
 	CHECKV(uiTempMap != NO_VSURFACE);
 
 	SGPPaletteEntry pal[256];
@@ -1226,8 +1226,6 @@ void InitializePalettesForMap(void)
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
 	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
 	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
-
-  DeleteVideoSurface(uiTempMap);
 }
 
 

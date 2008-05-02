@@ -1,6 +1,7 @@
 #ifndef VSURFACE_H
 #define VSURFACE_H
 
+#include "AutoObj.h"
 #include "Types.h"
 #include <SDL.h>
 
@@ -97,6 +98,8 @@ BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect
 BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 
 extern UINT32 guiVSurfaceSize;
+
+typedef SGP::AutoObj<SGPVSurface, DeleteVideoSurface>::Type AutoSGPVSurface;
 
 #ifdef __cplusplus
 }
