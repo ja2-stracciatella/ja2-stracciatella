@@ -940,16 +940,12 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 	const UINT32 uiFileSize         = FileGetSize(src);
 	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
 
-	MODIFY_MAP* const mm = MALLOCN(MODIFY_MAP, uiNumberOfElements);
+	SGP::Buffer<MODIFY_MAP> mm(uiNumberOfElements);
 	const BOOLEAN success_read =
 		mm != NULL &&
 		FileRead(src, mm, sizeof(*mm) * uiNumberOfElements);
 	FileClose(src);
-	if (!success_read)
-	{
-		if (mm != NULL) MemFree(mm);
-		return FALSE;
-	}
+	if (!success_read) return FALSE;
 
 	for (UINT32 i = 0; i < uiNumberOfElements; ++i)
 	{
@@ -967,6 +963,5 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 
 	const BOOLEAN success_write = FileWrite(dst, mm, uiFileSize);
 	FileClose(dst);
-	MemFree(mm);
 	return success_write;
 }
