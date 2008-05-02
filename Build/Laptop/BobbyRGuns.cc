@@ -442,7 +442,7 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INV
 static void DisableBobbyRButtons(void);
 static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static BOOLEAN DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
+static void DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
 static BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -721,7 +721,7 @@ static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 }
 
 
-static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
+static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
@@ -738,8 +738,6 @@ static BOOLEAN DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
 	DeleteVideoObject(uiImage);
-
-	return(TRUE);
 }
 
 
