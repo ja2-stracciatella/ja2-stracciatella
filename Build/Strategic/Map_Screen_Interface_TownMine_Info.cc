@@ -571,7 +571,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 {
 	// load the button
-	SGPVObject* const uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
+	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiObject, 0);
@@ -585,9 +585,6 @@ static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 
 	x += sWidthA + dx;
 	MakeButton(1, pMapPopUpInventoryText[1], x, y, MapTownMineExitButtonCallBack);
-
-	// delete video object
-	DeleteVideoObject(uiObject);
 
 /*
 	// if below ground disable
@@ -644,7 +641,7 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 // get the min width of the town mine info pop up box
 static void MinWidthOfTownMineInfoBox(void)
 {
-	SGPVObject* const uiObject = AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti");
+	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
 	INT16 sWidthA = GetVideoObjectETRLESubregionProperties(uiObject, 0)->usWidth;
@@ -652,6 +649,4 @@ static void MinWidthOfTownMineInfoBox(void)
 
 	INT16 sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;
-
-	DeleteVideoObject(uiObject);
 }

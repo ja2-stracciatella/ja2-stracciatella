@@ -292,7 +292,7 @@ static void DisplayMercFace(const ProfileID pid)
 	// Load the face graphic
 	char sTemp[100];
   sprintf(sTemp, "FACES/BIGFACES/%02d.sti", pid);
-	SGPVObject* const face = AddVideoObjectFromFile(sTemp);
+	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
 	CHECKV(face != NO_VOBJECT);
 
 	BOOLEAN        shaded;
@@ -345,8 +345,6 @@ static void DisplayMercFace(const ProfileID pid)
 	{
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, text, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
-
-	DeleteVideoObject(face);
 }
 
 

@@ -667,7 +667,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			return FALSE;
 	  }
 
-		SGPVObject* const hVObject = AddVideoObjectFromHImage(hImage);
+		AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
 		if (hVObject == NULL)
 		{
 			// Report error
@@ -681,49 +681,41 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 		{
 			// Report error
 			SET_ERROR("Invalid # of animations given");
-			goto fail_vobj;
+			return FALSE;
 		}
 
+		// Valid auxiliary data, so get # of frames from data
+		const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
+		a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
+
+		// get structure data if any
+		const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
+		if (pStructureFileRef != NULL)
 		{
-			// Valid auxiliary data, so get # of frames from data
-			const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
-			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
-
-			// get structure data if any
-			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
-			if (pStructureFileRef != NULL)
+			INT16 sStartFrame = 0;
+			if (usSurfaceIndex == RGMPRONE)
 			{
-				INT16 sStartFrame = 0;
-				if (usSurfaceIndex == RGMPRONE)
-				{
-					sStartFrame = 5;
-				}
-				else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
-				{
-					sStartFrame = -1;
-				}
+				sStartFrame = 5;
+			}
+			else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
+			{
+				sStartFrame = -1;
+			}
 
-				if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
-				{
-					SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
-					goto fail_vobj;
-				}
+			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
+			{
+				SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
+				return FALSE;
 			}
 		}
 
 		// Set video object index
-		a->hVideoObject = hVObject;
+		a->hVideoObject = hVObject.Release();
 
 		// Determine if we have a problem with #frames + directions ( ie mismatch )
 		if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->usNumberOfObjects)
 		{
 			AnimDebugMsg(String("Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex));
-		}
-
-		if (0) /* error handling */
-		{
-fail_vobj:
-			DeleteVideoObject(hVObject);
 		}
 	}
 

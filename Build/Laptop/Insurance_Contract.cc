@@ -387,7 +387,6 @@ static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSo
 {
 	const ProfileID ubMercID = pSoldier->ubProfile;
 	INT32		iCostOfContract=0;
-	char			sTemp[100];
 	wchar_t		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
 
@@ -400,27 +399,27 @@ static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSo
 
 	BltVideoObject(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
 
-	// load the mercs face graphic and add it
-	sprintf(sTemp, "FACES/%02d.sti", ubMercID);
-	SGPVObject* const uiInsMercFaceImage = AddVideoObjectFromFile(sTemp);
-	CHECKF(uiInsMercFaceImage != NO_VOBJECT);
-
-	//if the merc is dead, shade the face red
-	if( IsMercDead( ubMercID ) )
 	{
-		//if the merc is dead
-		//shade the face red, (to signify that he is dead)
-		uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		// load the mercs face graphic and add it
+		char sTemp[100];
+		sprintf(sTemp, "FACES/%02d.sti", ubMercID);
+		AutoSGPVObject uiInsMercFaceImage(AddVideoObjectFromFile(sTemp));
+		CHECKF(uiInsMercFaceImage != NO_VOBJECT);
 
-		//set the red pallete to the face
-		SetObjectShade(uiInsMercFaceImage, 0);
+		//if the merc is dead, shade the face red
+		if( IsMercDead( ubMercID ) )
+		{
+			//if the merc is dead
+			//shade the face red, (to signify that he is dead)
+			uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+
+			//set the red pallete to the face
+			SetObjectShade(uiInsMercFaceImage, 0);
+		}
+
+		//Get and display the mercs face
+		BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
 	}
-
-	//Get and display the mercs face
-	BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
-
-	// the face images isn't needed anymore so delete it
-	DeleteVideoObject(uiInsMercFaceImage);
 
 	//display the mercs nickname
 	DrawTextToScreen(gMercProfiles[ubMercID].zNickname, dx + INS_CTRCT_OG_NICK_NAME_OFFSET_X, dy + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

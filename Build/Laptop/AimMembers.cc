@@ -1045,7 +1045,7 @@ static void DisplayMercsFace(void)
 	// load the face graphic
 	char sTemp[100];
   sprintf(sTemp, "FACES/BIGFACES/%02d.sti", id);
-	SGPVObject* const face = AddVideoObjectFromFile(sTemp);
+	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
 	CHECKV(face != NO_VOBJECT);
 
 	BOOLEAN        shaded;
@@ -1083,7 +1083,6 @@ static void DisplayMercsFace(void)
 	}
 
 	BltVideoObject(FRAME_BUFFER, face, 0, FACE_X, FACE_Y);
-	DeleteVideoObject(face);
 
 	if (shaded)
 	{

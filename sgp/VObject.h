@@ -1,6 +1,7 @@
 #ifndef __VOBJECT_H
 #define __VOBJECT_H
 
+#include "AutoObj.h"
 #include "Types.h"
 
 
@@ -96,6 +97,8 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UIN
 BOOLEAN BltVideoObjectOnce(SGPVSurface* dst, const char* filename, UINT16 region, INT32 x, INT32 y);
 
 extern UINT32 guiVObjectSize;
+
+typedef SGP::AutoObj<SGPVObject, DeleteVideoObject>::Type AutoSGPVObject;
 
 #ifdef __cplusplus
 }

@@ -2252,11 +2252,10 @@ static void RenderAtmPanel(void)
 {
 	// just show basic panel
 	// bounding
-	SGPVObject* const uiBox = AddVideoObjectFromFile("LAPTOP/AtmButtons.sti");
+	AutoSGPVObject uiBox(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti"));
 	CHECKV(uiBox != NO_VOBJECT);
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
-	DeleteVideoObject(uiBox);
 }
 
 

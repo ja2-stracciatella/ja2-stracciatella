@@ -725,7 +725,7 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	SGPVObject* const uiImage = LoadTileGraphicForItem(item);
+	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
 
 	//center picture in frame
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiImage, 0);
@@ -737,7 +737,6 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);
-	DeleteVideoObject(uiImage);
 }
 
 
