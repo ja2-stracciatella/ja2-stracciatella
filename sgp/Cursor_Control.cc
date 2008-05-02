@@ -85,7 +85,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
 			Assert(CFData->Filename != NULL);
 
-			HIMAGE hImage = CreateImage(CFData->Filename, IMAGE_ALLDATA);
+			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
 			if (hImage == NULL) return FALSE;
 
 			CFData->hVObject = AddVideoObjectFromHImage(hImage);
@@ -101,9 +101,6 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 					CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
 				}
 			}
-
-			// the hImage is no longer needed
-			DestroyImage(hImage);
 		}
 
 		// Get ETRLE Data for this video object

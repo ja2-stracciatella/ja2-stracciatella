@@ -1,6 +1,7 @@
 #ifndef __IMAGE_H
 #define __IMAGE_H
 
+#include "AutoObj.h"
 #include "Types.h"
 
 // The HIMAGE module provides a common interface for managing image data. This module
@@ -157,6 +158,8 @@ void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
+
+typedef SGP::AutoObj<SGPImage, DestroyImage>::Type AutoSGPImage;
 
 #ifdef __cplusplus
 }

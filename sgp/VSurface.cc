@@ -131,7 +131,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 
 SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
-	const HIMAGE hImage = CreateImage(Filename, IMAGE_ALLIMAGEDATA);
+	AutoSGPImage hImage(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 	if (hImage == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
@@ -154,7 +154,6 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 		}
 	}
 
-	DestroyImage(hImage);
 	AddStandardVideoSurface(vs);
 	return vs;
 }

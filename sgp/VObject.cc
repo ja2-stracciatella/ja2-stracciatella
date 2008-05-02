@@ -176,16 +176,13 @@ static
 #endif
 SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
-	const HIMAGE hImage = CreateImage(ImageFile, IMAGE_ALLIMAGEDATA);
+	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
 	if (hImage == NULL)
 	{
 		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", ImageFile));
 		return NULL;
 	}
-
-	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
-	DestroyImage(hImage);
-	return vo;
+	return AddStandardVideoObjectFromHImage(hImage);
 }
 
 

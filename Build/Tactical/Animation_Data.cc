@@ -660,7 +660,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 		// Load into memory
 		AnimDebugMsg(String("Surface Database: Loading %d", usSurfaceIndex));
 
-		const HIMAGE hImage = CreateImage(a->Filename, IMAGE_ALLDATA);
+		AutoSGPImage hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
 	  if (hImage == NULL)
 	  {
 			SET_ERROR("Error: Could not load animation file %s", a->Filename);
@@ -673,7 +673,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			// Report error
 			SET_ERROR("Could not load animation file: %s", a->Filename);
 			// Video Object will set error conition.]
-			goto fail_image;
+			return FALSE;
 		}
 
 		// Get aux data
@@ -711,9 +711,6 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			}
 		}
 
-	  // the hImage is no longer needed
-	  DestroyImage(hImage);
-
 		// Set video object index
 		a->hVideoObject = hVObject;
 
@@ -727,9 +724,6 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 		{
 fail_vobj:
 			DeleteVideoObject(hVObject);
-fail_image:
-			DestroyImage(hImage);
-			return FALSE;
 		}
 	}
 
