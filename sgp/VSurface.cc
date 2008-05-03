@@ -318,8 +318,6 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 	CHECKF(hVSurface != NULL);
 
 	hVSurface->surface       = surface;
-	hVSurface->usHeight      = usHeight;
-	hVSurface->usWidth       = usWidth;
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
@@ -356,8 +354,8 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	Assert(hImage != NULL);
 
 	// Get Size of hImage and determine if it can fit
-	CHECKF(hImage->usWidth  >= hVSurface->usWidth);
-	CHECKF(hImage->usHeight >= hVSurface->usHeight);
+	CHECKF(hImage->usWidth  >= hVSurface->Width());
+	CHECKF(hImage->usHeight >= hVSurface->Height());
 
 	const UINT8 dst_bpp = hVSurface->BPP();
 
@@ -396,7 +394,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	}
 
 	// This HIMAGE function will transparently copy buffer
-	BOOLEAN Ret = CopyImageToBuffer(hImage, buffer_bpp, pDest, usEffectiveWidth, hVSurface->usHeight, usX, usY, &box);
+	BOOLEAN Ret = CopyImageToBuffer(hImage, buffer_bpp, pDest, usEffectiveWidth, hVSurface->Height(), usX, usY, &box);
 	if (!Ret)
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
@@ -546,12 +544,12 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 	{
 		// Here, use default, which is entire Video Surface
 		// Check Sizes, SRC size MUST be <= DEST size
-		if (dst->usHeight < src->usHeight)
+		if (dst->Height() < src->Height())
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 			return FALSE;
 		}
-		if (dst->usWidth < src->usWidth)
+		if (dst->Width() < src->Width())
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
 			return FALSE;
@@ -559,8 +557,8 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 
 		src_rect.x = 0;
 		src_rect.y = 0;
-		src_rect.w = src->usWidth;
-		src_rect.h = src->usHeight;
+		src_rect.w = src->Width();
+		src_rect.h = src->Height();
 	}
 
 	const UINT8 src_bpp = src->BPP();
@@ -602,8 +600,6 @@ static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
 {
 	SGPVSurface* const hVSurface = MALLOC(SGPVSurface);
 	hVSurface->surface       = surface;
-	hVSurface->usHeight      = surface->h;
-	hVSurface->usWidth       = surface->w;
 	hVSurface->pPalette      = NULL;
 	hVSurface->p16BPPPalette = NULL;
 
@@ -621,11 +617,11 @@ static BOOLEAN InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, 
 	if (Y2 < 0) return FALSE;
 	if (Y1 < 0) Y1 = 0;
 
-	if (X2 >= dst->usWidth)  X2 = dst->usWidth - 1;
-	if (Y2 >= dst->usHeight) Y2 = dst->usHeight - 1;
+	if (X2 >= dst->Width())  X2 = dst->Width() - 1;
+	if (Y2 >= dst->Height()) Y2 = dst->Height() - 1;
 
-	if (X1 >= dst->usWidth)  return FALSE;
-	if (Y1 >= dst->usHeight) return FALSE;
+	if (X1 >= dst->Width())  return FALSE;
+	if (Y1 >= dst->Height()) return FALSE;
 
 	if (X2 - X1 <= 0) return FALSE;
 	if (Y2 - Y1 <= 0) return FALSE;

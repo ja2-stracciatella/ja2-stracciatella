@@ -633,8 +633,8 @@ void DrawMap(void)
 			clip.iRight  = clip.iLeft + MAP_VIEW_WIDTH  + 2;
 			clip.iBottom = clip.iTop  + MAP_VIEW_HEIGHT - 1;
 
-			if (clip.iBottom > guiBIGMAP->usHeight) clip.iBottom = guiBIGMAP->usHeight;
-			if (clip.iRight  > guiBIGMAP->usWidth)  clip.iRight  = guiBIGMAP->usWidth;
+			if (clip.iBottom > guiBIGMAP->Height()) clip.iBottom = guiBIGMAP->Height();
+			if (clip.iRight  > guiBIGMAP->Width())  clip.iRight  = guiBIGMAP->Width();
 
 			BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 2, &clip);
 		}

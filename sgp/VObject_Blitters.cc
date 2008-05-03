@@ -5191,7 +5191,6 @@ BlitDone:
 BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, UINT8 *pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPRect *pRect)
 {
 	UINT16 *p16BPPPalette;
-	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip, LeftSkip, RightSkip, TopSkip, BlitLength, SrcSkip, BlitHeight;
 	INT32	 iTempX, iTempY;
@@ -5202,8 +5201,7 @@ BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, H
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	usHeight				= (UINT32)hSrcVSurface->usHeight;
-	usWidth					= (UINT32)hSrcVSurface->usWidth;
+	UINT32 const usWidth = hSrcVSurface->Width();
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5293,7 +5291,6 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 {
 	UINT16 *p16BPPPalette;
 //	UINT32 uiOffset;
-	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
 //	ETRLEObject *pTrav;
@@ -5305,8 +5302,8 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSU
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	usHeight				= (UINT32)hSrcVSurface->usHeight;
-	usWidth					= (UINT32)hSrcVSurface->usWidth;
+	UINT32 const usWidth  = hSrcVSurface->Width();
+	//UINT32 const usHeight = hSrcVSurface->Height();
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5436,7 +5433,6 @@ exactly half the size.
 BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
 {
 	UINT16 *p16BPPPalette;
-	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
 	INT32	 iTempX, iTempY;
@@ -5448,8 +5444,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, H
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	usHeight				= (UINT32)hSrcVSurface->usHeight;
-	usWidth					= (UINT32)hSrcVSurface->usWidth;
+	UINT32 const usWidth  = hSrcVSurface->Width();
+	UINT32       usHeight = hSrcVSurface->Height();
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5569,8 +5565,8 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 	CHECKF( iTempY   >= 0 );
 	CHECKF(	usWidth  >  0 );
 	CHECKF(	usHeight >  0 );
-	CHECKF( usHeight <= hSrcVSurface->usHeight);
-	CHECKF( usWidth <= hSrcVSurface->usWidth);
+	CHECKF(usWidth  <= hSrcVSurface->Width());
+	CHECKF(usHeight <= hSrcVSurface->Height());
 
 	SrcPtr				= (UINT8 *)pSrcBuffer + (uiSrcPitch*pRect->iTop) + (pRect->iLeft);
 	DestPtr				= (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
