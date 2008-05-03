@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "HImage.h"
 #include "Soldier_Control.h"
 #include "Types.h"
@@ -273,91 +274,57 @@ CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 #define STRUCTURE_FILE_ID_LEN 4
 
 
-static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFileRef, UINT32* puiStructureDataSize)
-{ // Loads a structure file's data as a honking chunk o' memory
-	STRUCTURE_FILE_HEADER			Header;
-	UINT32										uiDataSize;
-	BOOLEAN										fOk;
+// Loads a structure file's data as a honking chunk o' memory
+static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
+{
+	CHECKF(filename);
+	CHECKF(sfr);
 
-	CHECKF( szFileName );
-	CHECKF( pFileRef );
-	AutoSGPFile hInput(FileOpen(szFileName, FILE_ACCESS_READ));
-	if (!hInput) return FALSE;
+	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+	if (!f) return FALSE;
 
-	fOk = FileRead(hInput, &Header, sizeof(STRUCTURE_FILE_HEADER));
-	if (!fOk || strncmp(Header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 || Header.usNumberOfStructures == 0)
+	STRUCTURE_FILE_HEADER header;
+	if (!FileRead(f, &header, sizeof(STRUCTURE_FILE_HEADER))                ||
+			strncmp(header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
+			header.usNumberOfStructures == 0)
 	{
 		return FALSE;
 	}
-	pFileRef->usNumberOfStructures = Header.usNumberOfStructures;
-	if (Header.fFlags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
+
+	SGP::Buffer<AuxObjectData> aux_data;
+	SGP::Buffer<RelTileLoc>    tile_loc_data;
+	sfr->usNumberOfStructures = header.usNumberOfStructures;
+	if (header.fFlags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
-		uiDataSize = sizeof( AuxObjectData ) * Header.usNumberOfImages;
-		pFileRef->pAuxData = MALLOCN(AuxObjectData, Header.usNumberOfImages);
-		if (pFileRef->pAuxData == NULL) return FALSE;
+		const UINT16 n_images = header.usNumberOfImages;
+		aux_data.Allocate(n_images);
+		if (!aux_data) return FALSE;
+		if (!FileRead(f, aux_data, sizeof(*aux_data) * n_images)) return FALSE;
 
-		fOk = FileRead(hInput, pFileRef->pAuxData, uiDataSize);
-		if (!fOk)
+		const UINT16 n_tile_locs = header.usNumberOfImageTileLocsStored;
+		if (n_tile_locs > 0)
 		{
-			MemFree( pFileRef->pAuxData );
-			return FALSE;
-		}
-
-		if (Header.usNumberOfImageTileLocsStored > 0)
-		{
-			uiDataSize = sizeof( RelTileLoc ) * Header.usNumberOfImageTileLocsStored;
-			pFileRef->pTileLocData = MALLOCN(RelTileLoc, Header.usNumberOfImageTileLocsStored);
-			if (pFileRef->pTileLocData == NULL)
-			{
-				MemFree( pFileRef->pAuxData );
-				return FALSE;
-			}
-
-			fOk = FileRead(hInput, pFileRef->pTileLocData, uiDataSize);
-			if (!fOk)
-			{
-				MemFree( pFileRef->pAuxData );
-				return FALSE;
-			}
+			tile_loc_data.Allocate(n_tile_locs);
+			if (!tile_loc_data) return FALSE;
+			if (!FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs)) return FALSE;
 		}
 	}
-	if (Header.fFlags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
+
+	SGP::Buffer<UINT8> structure_data;
+	if (header.fFlags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
 	{
-		pFileRef->usNumberOfStructuresStored = Header.usNumberOfStructuresStored;
-		uiDataSize = Header.usStructureDataSize;
-		// Determine the size of the data, from the header just read,
-		// allocate enough memory and read it in
-		pFileRef->pubStructureData = MALLOCN(UINT8, uiDataSize);
-		if (pFileRef->pubStructureData == NULL)
-		{
-			if (pFileRef->pAuxData != NULL)
-			{
-				MemFree( pFileRef->pAuxData );
-				if (pFileRef->pTileLocData != NULL)
-				{
-					MemFree( pFileRef->pTileLocData );
-				}
-			}
-			return FALSE;
-		}
+		sfr->usNumberOfStructuresStored = header.usNumberOfStructuresStored;
+		const UINT16 data_size = header.usStructureDataSize;
+		structure_data.Allocate(data_size);
+		if (!structure_data) return FALSE;
+		if (!FileRead(f, structure_data, data_size)) return FALSE;
 
-		fOk = FileRead(hInput, pFileRef->pubStructureData, uiDataSize);
-		if (!fOk)
-		{
-			MemFree( pFileRef->pubStructureData );
-			if (pFileRef->pAuxData != NULL)
-			{
-				MemFree( pFileRef->pAuxData );
-				if (pFileRef->pTileLocData != NULL)
-				{
-					MemFree( pFileRef->pTileLocData );
-				}
-			}
-			return FALSE;
-		}
-
-		*puiStructureDataSize = uiDataSize;
+		*structure_data_size = data_size;
 	}
+
+	sfr->pAuxData         = aux_data.Release();
+	sfr->pTileLocData     = tile_loc_data.Release();
+	sfr->pubStructureData = structure_data.Release();
 	return TRUE;
 }
 
