@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Map_Edgepoints.h"
 #include "Soldier_Control.h"
 #include "PathAI.h"
@@ -1083,139 +1084,116 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 	return psArray[ Random( usArraySize ) ];
 }
 
-void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints )
-{
-	INT16 *psArray=NULL;
-	UINT16 usArraySize=0;
-	INT32 i=-1;
-	UINT16 usSlots, usCurrSlot;
 
-	AssertMsg( ubNumDesiredPoints > 0  && ubNumDesiredPoints <= 32,
-		String( "ChooseMapEdgepoints:  Desired points = %d, valid range is 1-32", ubNumDesiredPoints ) );
-	//First validate and get access to the correct array based on strategic direction.
-	//We will use the selected array to choose insertion gridno's.
-	switch( ubStrategicInsertionCode )
+void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints)
+{
+	AssertMsg(ubNumDesiredPoints > 0 && ubNumDesiredPoints <= 32, String("ChooseMapEdgepoints:  Desired points = %d, valid range is 1-32", ubNumDesiredPoints));
+
+	/* First validate and get access to the correct array based on strategic
+	 * direction.  We will use the selected array to choose insertion gridno's. */
+	INT16* psArray;
+	UINT16 usArraySize;
+	switch (ubStrategicInsertionCode)
 	{
 		case INSERTION_CODE_NORTH:
-			psArray = gps1stNorthEdgepointArray;
+			psArray     = gps1stNorthEdgepointArray;
 			usArraySize = gus1stNorthEdgepointArraySize;
 			break;
+
 		case INSERTION_CODE_EAST:
-			psArray = gps1stEastEdgepointArray;
+			psArray     = gps1stEastEdgepointArray;
 			usArraySize = gus1stEastEdgepointArraySize;
 			break;
+
 		case INSERTION_CODE_SOUTH:
-			psArray = gps1stSouthEdgepointArray;
+			psArray     = gps1stSouthEdgepointArray;
 			usArraySize = gus1stSouthEdgepointArraySize;
 			break;
+
 		case INSERTION_CODE_WEST:
-			psArray = gps1stWestEdgepointArray;
+			psArray     = gps1stWestEdgepointArray;
 			usArraySize = gus1stWestEdgepointArraySize;
 			break;
+
 		default:
-			AssertMsg( 0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
+			AssertMsg(0, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
+			psArray     = NULL;
+			usArraySize = 0;
 			break;
 	}
 	pMapEdgepointInfo->ubStrategicInsertionCode = ubStrategicInsertionCode;
-	#ifdef JA2BETAVERSION
-		if( !psArray || !usArraySize )
+
+#ifdef JA2BETAVERSION
+	if (!psArray || usArraySize == 0)
+	{
+		if (gMapInformation.sNorthGridNo  == -1 &&
+				gMapInformation.sEastGridNo   == -1 &&
+				gMapInformation.sSouthGridNo  == -1 &&
+				gMapInformation.sWestGridNo   == -1 &&
+				gMapInformation.sCenterGridNo == -1)
 		{
-			if( gMapInformation.sNorthGridNo == -1 && gMapInformation.sEastGridNo == -1 &&
-				  gMapInformation.sSouthGridNo == -1 && gMapInformation.sWestGridNo == -1 &&
-					gMapInformation.sCenterGridNo == -1 )
+			if (gbWorldSectorZ)
 			{
-				if( gbWorldSectorZ )
-				{
-					AssertMsg( 0,
-						String( "Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)",
-						gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ ) );
-				}
-				else
-				{
-					AssertMsg( 0,
-						String( "Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)",
-						gWorldSectorY + 'A' - 1, gWorldSectorX ) );
-				}
+				AssertMsg(0, String("Map %c%d_b%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
 			}
-			else switch( ubStrategicInsertionCode )
+			else
 			{
-				case INSERTION_CODE_NORTH:
-					AssertMsg( 0, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point. (LC : 1)" );
-					break;
-				case INSERTION_CODE_EAST:
-					AssertMsg( 0, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point. (LC : 1)" );
-					break;
-				case INSERTION_CODE_SOUTH:
-					AssertMsg( 0, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point. (LC : 1)" );
-					break;
-				case INSERTION_CODE_WEST:
-					AssertMsg( 0, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point.  NOTE:  Teleportation always uses the west entrypoint.  Some maps shouldn't have west entrypoints. (LC : 1)" );
-					break;
+				AssertMsg(0, String("Map %c%d(_a) doesn't have ANY entry points which means that it is impossible to generate map edgepoints. (LC : 1)", gWorldSectorY + 'A' - 1, gWorldSectorX));
 			}
 		}
-	#endif
-	if( !usArraySize )
+		else switch (ubStrategicInsertionCode)
+		{
+			case INSERTION_CODE_NORTH: AssertMsg(0, "This map doesn't have any north mapedgepoints.  Possibly because there is no north entry point. (LC : 1)"); break;
+			case INSERTION_CODE_EAST:  AssertMsg(0, "This map doesn't have any east mapedgepoints.  Possibly because there is no east entry point. (LC : 1)");   break;
+			case INSERTION_CODE_SOUTH: AssertMsg(0, "This map doesn't have any south mapedgepoints.  Possibly because there is no south entry point. (LC : 1)"); break;
+			case INSERTION_CODE_WEST:  AssertMsg(0, "This map doesn't have any west mapedgepoints.  Possibly because there is no west entry point.  NOTE:  Teleportation always uses the west entrypoint.  Some maps shouldn't have west entrypoints. (LC : 1)"); break;
+		}
+	}
+#endif
+
+	if (usArraySize == 0)
 	{
 		pMapEdgepointInfo->ubNumPoints = 0;
 		return;
 	}
 
-	// JA2 Gold: don't place people in the water.
-	// If any of the waypoints is on a water spot, we're going to have to remove it
-	INT16* const psTempArray = MALLOCN(INT16, usArraySize);
-	memcpy(psTempArray, psArray, sizeof(INT16) * usArraySize );
-	psArray = psTempArray;
-	for (i = 0; i < usArraySize; i++)
+	/* JA2 Gold: don't place people in the water.  If any of the waypoints is on a
+	 * water spot, we're going to have to remove it */
+	SGP::Buffer<INT16> psTempArray(usArraySize);
+	size_t n_usable = 0;
+	for (INT32 i = 0; i < usArraySize; ++i)
 	{
-		if (GetTerrainType(psArray[ i ]) == MED_WATER || GetTerrainType(psArray[ i ]) == DEEP_WATER)
-		{
-			if (i == usArraySize - 1)
-			{
-				// just axe it and we're done.
-				psArray[ i ] = 0;
-				usArraySize--;
-				break;
-			}
-			else
-			{
-				// replace this element in the array with the LAST element in the array, then decrement
-				// the array size
-				psArray[ i ] = psArray[usArraySize-1];
-				usArraySize--;
-				// we're going to have to check the array element we just copied into this spot, too
-				i--;
-			}
-		}
+		const UINT8 terrain = GetTerrainType(psArray[i]);
+		if (terrain == MED_WATER || terrain == DEEP_WATER) continue;
+
+		psTempArray[n_usable++] = psArray[i];
 	}
 
-	if( ubNumDesiredPoints >= usArraySize )
+	if (ubNumDesiredPoints >= n_usable)
 	{ //We don't have enough points for everyone, return them all.
-		pMapEdgepointInfo->ubNumPoints = (UINT8)usArraySize;
-		for( i = 0; i < usArraySize; i++ )
-			pMapEdgepointInfo->sGridNo[i] = psArray[i];
-
-		// JA2Gold: free the temp array
-		MemFree(psTempArray);
+		pMapEdgepointInfo->ubNumPoints = n_usable;
+		for (INT32 i = 0; i < n_usable; ++i)
+		{
+			pMapEdgepointInfo->sGridNo[i] = psTempArray[i];
+		}
 		return;
 	}
-	//We have more points, so choose them randomly.
-	usSlots = usArraySize;
-	usCurrSlot = 0;
+
+	// We have more points, so choose them randomly.
+	UINT16 usSlots    = n_usable;
+	UINT16 usCurrSlot = 0;
 	pMapEdgepointInfo->ubNumPoints = ubNumDesiredPoints;
-	for( i = 0; i < usArraySize; i++ )
+	for (INT32 i = 0; i < n_usable; ++i)
 	{
-		if( Random( usSlots ) < ubNumDesiredPoints )
+		if (Random(usSlots) < ubNumDesiredPoints)
 		{
-			pMapEdgepointInfo->sGridNo[ usCurrSlot++ ] = psArray[ i ];
-			ubNumDesiredPoints--;
+			pMapEdgepointInfo->sGridNo[usCurrSlot++] = psTempArray[i];
+			--ubNumDesiredPoints;
 		}
-		usSlots--;
+		--usSlots;
 	}
-
-	// JA2Gold: free the temp array
-	MemFree(psTempArray);
-
 }
+
 
 INT16 *gpReservedGridNos = NULL;
 INT16 gsReservedIndex	= 0;
