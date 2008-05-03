@@ -108,7 +108,6 @@ void EntryInitEditorItemsInfo()
 {
 	INT32 i;
 	eInfo.uiBuffer = 0;
-	eInfo.fKill = 0;
 	eInfo.fActive = 0;
 	eInfo.sWidth = 0;
 	eInfo.sHeight = 0;
@@ -279,7 +278,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	eInfo.uiBuffer = AddVideoSurface(eInfo.sWidth, eInfo.sHeight, PIXEL_DEPTH);
 	if (eInfo.uiBuffer == NO_VSURFACE)
 	{
-		eInfo.fKill = TRUE;
 		eInfo.fActive = FALSE;
 		return;
 	}
@@ -597,7 +595,6 @@ void ClearEditorItemsInfo()
 		eInfo.pusItemIndex = NULL;
 	}
 	DisableEditorRegion( ITEM_REGION_ID );
-	eInfo.fKill = 0;
 	eInfo.fActive = 0;
 	eInfo.sWidth = 0;
 	eInfo.sHeight = 0;

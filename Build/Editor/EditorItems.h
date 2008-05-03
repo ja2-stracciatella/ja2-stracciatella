@@ -5,7 +5,6 @@
 typedef struct{
 	BOOLEAN fGameInit;	//Used for initializing save variables the first time.
 											//This flag is initialize at
-	BOOLEAN fKill;			//flagged for deallocation.
 	BOOLEAN fActive;		//currently active
 	UINT16 *pusItemIndex;		//a dynamic array of Item indices
 	SGPVSurface* uiBuffer;
