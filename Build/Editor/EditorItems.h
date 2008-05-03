@@ -4,12 +4,10 @@
 
 typedef struct{
 	BOOLEAN fGameInit;	//Used for initializing save variables the first time.
-											//This flag is initialize at
 	BOOLEAN fActive;		//currently active
 	UINT16 *pusItemIndex;		//a dynamic array of Item indices
 	SGPVSurface* uiBuffer;
 	UINT32	uiItemType; //Weapons, ammo, armour, explosives, equipment
-	INT16		sWidth, sHeight;	//width and height of buffer
 	INT16   sNumItems;	//total number of items in the current class of item.
 	INT16		sSelItemIndex;	//currently selected item index.
 	INT16   sHilitedItemIndex;

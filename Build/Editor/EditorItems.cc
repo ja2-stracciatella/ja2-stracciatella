@@ -109,8 +109,6 @@ void EntryInitEditorItemsInfo()
 	INT32 i;
 	eInfo.uiBuffer = 0;
 	eInfo.fActive = 0;
-	eInfo.sWidth = 0;
-	eInfo.sHeight = 0;
 	eInfo.sScrollIndex = 0;
 	eInfo.sSelItemIndex = 0;
 	eInfo.sHilitedItemIndex = -1;
@@ -270,12 +268,12 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	//calculate the width of the buffer based on the number of items.
 	//every pair of items (odd rounded up) requires 60 pixels for width.
 	//the minimum buffer size is 420.  Height is always 80 pixels.
-	eInfo.sWidth = (eInfo.sNumItems > 12) ? ((eInfo.sNumItems+1)/2)*60 : 360;
-	eInfo.sHeight = 80;
+	const INT16 w = (eInfo.sNumItems > 12 ? (eInfo.sNumItems + 1) / 2 * 60 : 360);
+	const INT16 h = 80;
 	// Create item buffer
 
 	//!!!Memory check.  Create the item buffer
-	eInfo.uiBuffer = AddVideoSurface(eInfo.sWidth, eInfo.sHeight, PIXEL_DEPTH);
+	eInfo.uiBuffer = AddVideoSurface(w, h, PIXEL_DEPTH);
 	if (eInfo.uiBuffer == NO_VSURFACE)
 	{
 		eInfo.fActive = FALSE;
@@ -283,7 +281,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	}
 
 	//copy a blank chunk of the editor interface to the new buffer.
-	for( i=0; i<eInfo.sWidth; i+=60 )
+	for (i = 0; i < w; i += 60)
 	{
 		const SGPRect r = { 100, 360, 100 + 60, 360 + 80 };
 		BltVideoSurface(eInfo.uiBuffer, FRAME_BUFFER, i, 0, &r);
@@ -292,10 +290,10 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	x = 0;
 	y = 0;
 	usCounter = 0;
-	NewRect.iTop = 0;
-	NewRect.iBottom = eInfo.sHeight;
-	NewRect.iLeft = 0;
-	NewRect.iRight = eInfo.sWidth;
+	NewRect.iTop    = 0;
+	NewRect.iBottom = h;
+	NewRect.iLeft   = 0;
+	NewRect.iRight  = w;
 	GetClippingRect(&SaveRect);
 	SetClippingRect(&NewRect);
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_KEYS )
@@ -309,7 +307,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 			SetFont(SMALLCOMPFONT);
 			SetFontForeground( FONT_MCOLOR_WHITE );
-			SetFontDestBuffer(eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight);
+			SetFontDestBuffer(eInfo.uiBuffer, 0, 0, w, h);
 
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
@@ -407,7 +405,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 				SetFont(SMALLCOMPFONT);
 				SetFontForeground( FONT_MCOLOR_WHITE );
-				SetFontDestBuffer(eInfo.uiBuffer, 0, 0, eInfo.sWidth, eInfo.sHeight);
+				SetFontDestBuffer(eInfo.uiBuffer, 0, 0, w, h);
 
 
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
@@ -596,8 +594,6 @@ void ClearEditorItemsInfo()
 	}
 	DisableEditorRegion( ITEM_REGION_ID );
 	eInfo.fActive = 0;
-	eInfo.sWidth = 0;
-	eInfo.sHeight = 0;
 	eInfo.sNumItems = 0;
 	//save the highlighted selections
 	switch( eInfo.uiItemType )
